@@ -172,6 +172,7 @@ public partial class SpeechToTextViewModel : ObservableObject
     private StringBuilder _ffmpegLog = new();
     private readonly Lock _lockObj = new();
     private int _batchIndex = -1;
+    private IList<SpeechToTextJobItem> _jobItems = new List<SpeechToTextJobItem>(); // items for the current run: aliases BatchItems in batch mode, a standalone single item otherwise
     private string _error;
     private List<AudioClip>? _audioClips;
     private bool _audioClipsAutoStart;
@@ -1618,7 +1619,7 @@ public partial class SpeechToTextViewModel : ObservableObject
     {
         if (IsBatchMode)
         {
-            return string.Format(Se.Language.Video.AudioToText.TranscribingXOfY, _batchIndex + 1, BatchItems.Count);
+            return string.Format(Se.Language.Video.AudioToText.TranscribingXOfY, _batchIndex + 1, _jobItems.Count);
         }
         else
         {
@@ -1628,7 +1629,7 @@ public partial class SpeechToTextViewModel : ObservableObject
 
     private void StartNext(Subtitle? transcribedSubtitle)
     {
-        var currentItem = BatchItems[_batchIndex];
+        var currentItem = _jobItems[_batchIndex];
         if (transcribedSubtitle != null && transcribedSubtitle.Paragraphs.Count > 0)
         {
             currentItem.Status = Se.Language.General.Converted;
@@ -1644,7 +1645,7 @@ public partial class SpeechToTextViewModel : ObservableObject
         _filesToDelete.Clear();
 
         _batchIndex++;
-        if (_batchIndex < BatchItems.Count)
+        if (_batchIndex < _jobItems.Count)
         {
             ProgressValue = 0;
             _startTicks = 0;
@@ -1656,7 +1657,7 @@ public partial class SpeechToTextViewModel : ObservableObject
             ElapsedText = string.Empty;
             EstimatedText = string.Empty;
 
-            var jobItem = BatchItems[_batchIndex];
+            var jobItem = _jobItems[_batchIndex];
             _videoFileName = jobItem.InputVideoFileName;
             _videoInfo.TotalMilliseconds = jobItem.MediaInfo.Duration.TotalMilliseconds;
             _videoInfo.TotalSeconds = jobItem.MediaInfo.Duration.TotalSeconds;
@@ -1682,8 +1683,8 @@ public partial class SpeechToTextViewModel : ObservableObject
             return;
         }
 
-        var convertedJobs = BatchItems.Count(p => p.Status == Se.Language.General.Converted);
-        var failed = BatchItems.Count(p => p.Status != Se.Language.General.Converted);
+        var convertedJobs = _jobItems.Count(p => p.Status == Se.Language.General.Converted);
+        var failed = _jobItems.Count(p => p.Status != Se.Language.General.Converted);
 
         Dispatcher.UIThread.Invoke<Task>(async () =>
         {
@@ -3265,19 +3266,24 @@ public partial class SpeechToTextViewModel : ObservableObject
                 return;
             }
 
-            BatchItems.Clear(); // may hold stale items from an earlier batch-mode session
-            BatchItems.Add(new SpeechToTextJobItem(_videoFileName, string.Empty, mediaInfo));
+            // do not touch BatchItems here - it holds the user's queued batch list
+            _jobItems = new List<SpeechToTextJobItem> { new SpeechToTextJobItem(_videoFileName, string.Empty, mediaInfo) };
         }
+        else
+        {
+            _jobItems = BatchItems;
+        }
+
         _batchIndex = 0;
 
-        if (BatchItems.Count == 0)
+        if (_jobItems.Count == 0)
         {
             return;
         }
 
         if (IsBatchMode)
         {
-            var jobItem = BatchItems[0];
+            var jobItem = _jobItems[0];
             Dispatcher.UIThread.Post(() =>
             {
                 if (BatchGrid == null)
@@ -3291,11 +3297,11 @@ public partial class SpeechToTextViewModel : ObservableObject
         }
 
 
-        _videoFileName = BatchItems[0].InputVideoFileName;
-        _videoInfo.TotalMilliseconds = BatchItems[0].MediaInfo.Duration.TotalMilliseconds;
-        _videoInfo.TotalSeconds = BatchItems[0].MediaInfo.Duration.TotalSeconds;
-        _videoInfo.Width = BatchItems[0].MediaInfo.Dimension.Width;
-        _videoInfo.Height = BatchItems[0].MediaInfo.Dimension.Height;
+        _videoFileName = _jobItems[0].InputVideoFileName;
+        _videoInfo.TotalMilliseconds = _jobItems[0].MediaInfo.Duration.TotalMilliseconds;
+        _videoInfo.TotalSeconds = _jobItems[0].MediaInfo.Duration.TotalSeconds;
+        _videoInfo.Width = _jobItems[0].MediaInfo.Dimension.Width;
+        _videoInfo.Height = _jobItems[0].MediaInfo.Dimension.Height;
 
         ProgressOpacity = 1;
         ProgressText = Se.Language.General.GeneratingAudioFile;

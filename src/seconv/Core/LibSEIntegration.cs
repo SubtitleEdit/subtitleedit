@@ -172,6 +172,7 @@ internal static class LibSEIntegration
         var guessSubtitle = new UnknownFormatImporter { UseFrames = true }.AutoGuessImport(lines, filePath);
         if (guessSubtitle.Paragraphs.Count > 0 && HasPlausibleGuessedTiming(guessSubtitle))
         {
+            guessSubtitle.Paragraphs.RemoveAll(p => p.EndTime.TotalMilliseconds < p.StartTime.TotalMilliseconds);
             return (guessSubtitle, new SubRip());
         }
 
@@ -219,7 +220,13 @@ internal static class LibSEIntegration
 
     private static bool HasPlausibleGuessedTiming(Subtitle subtitle)
     {
-        return subtitle.Paragraphs.All(p => p.EndTime.TotalMilliseconds >= p.StartTime.TotalMilliseconds)
+        // Match UnknownFormatImporter's own tolerance: it accepts a guess containing up to
+        // two inverted cues (typos in an otherwise valid file), so rejecting the whole file
+        // for a single inverted cue would fail input that used to convert. Reject only when
+        // inversions dominate; the caller drops the inverted cues from the result.
+        var inverted = subtitle.Paragraphs.Count(p => p.EndTime.TotalMilliseconds < p.StartTime.TotalMilliseconds);
+        return inverted <= 2
+               && inverted < subtitle.Paragraphs.Count
                && subtitle.Paragraphs.Any(p => p.EndTime.TotalMilliseconds > 0);
     }
 

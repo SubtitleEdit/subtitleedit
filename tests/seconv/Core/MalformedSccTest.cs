@@ -115,4 +115,23 @@ public class MalformedSccTest : IDisposable
 
         Assert.Contains("Unable to determine subtitle format", ex.Message);
     }
+
+    // The flip side of the plausibility gate: UnknownFormatImporter itself tolerates up to
+    // two inverted cues (typos in an otherwise valid file), so one bad pair must not fail
+    // the whole conversion - the inverted cue is dropped, the rest converts.
+    [Fact]
+    public void UnknownFormatGuess_SingleInvertedCue_LoadsAndDropsInvertedCue()
+    {
+        var path = WriteFile("freeform-one-typo.txt",
+            "log entry alpha 0:00:01.0 0:00:03.0 Hello there\n" +
+            "log entry beta 0:00:04.0 0:00:06.0 Second line\n" +
+            "log entry gamma 0:00:09.0 0:00:07.0 Inverted typo\n" +
+            "log entry delta 0:00:10.0 0:00:12.0 Fourth line\n");
+
+        var (subtitle, _) = LibSEIntegration.LoadSubtitleWithFormat(path);
+
+        Assert.Equal(3, subtitle.Paragraphs.Count);
+        Assert.DoesNotContain(subtitle.Paragraphs, p => p.Text.Contains("Inverted typo"));
+        Assert.All(subtitle.Paragraphs, p => Assert.True(p.EndTime.TotalMilliseconds >= p.StartTime.TotalMilliseconds));
+    }
 }

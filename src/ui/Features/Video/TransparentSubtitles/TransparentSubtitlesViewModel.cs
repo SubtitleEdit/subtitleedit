@@ -486,13 +486,21 @@ public partial class TransparentSubtitlesViewModel : ObservableObject
             return inputSubtitle;
         }
 
-        var subtitle = new Subtitle();
+        var subtitle = new Subtitle
+        {
+            Header = inputSubtitle.Header, // keep ASSA styles + PlayRes
+            Footer = inputSubtitle.Footer,
+        };
+
         foreach (var p in inputSubtitle.Paragraphs)
         {
-            if (p.StartTime.TotalMilliseconds >= CutFrom.TotalMilliseconds &&
-                p.EndTime.TotalMilliseconds <= CutTo.TotalMilliseconds)
+            if (p.EndTime.TotalMilliseconds > CutFrom.TotalMilliseconds &&
+                p.StartTime.TotalMilliseconds < CutTo.TotalMilliseconds)
             {
-                subtitle.Paragraphs.Add(new Paragraph(p));
+                var paragraph = new Paragraph(p);
+                paragraph.StartTime.TotalMilliseconds = Math.Max(paragraph.StartTime.TotalMilliseconds, CutFrom.TotalMilliseconds);
+                paragraph.EndTime.TotalMilliseconds = Math.Min(paragraph.EndTime.TotalMilliseconds, CutTo.TotalMilliseconds);
+                subtitle.Paragraphs.Add(paragraph);
             }
         }
 

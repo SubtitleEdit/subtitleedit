@@ -1821,7 +1821,7 @@ public partial class OcrViewModel : ObservableObject
         if (result.OkPressed)
         {
             _preProcessingSettings = result.PreProcessingSettings;
-            foreach (var item in OcrSubtitleItems)
+            foreach (var item in _allOcrSubtitleItems) // not OcrSubtitleItems - it may be filtered to forced-only
             {
                 item.PreProcessingSettings = _preProcessingSettings;
             }
@@ -1901,7 +1901,7 @@ public partial class OcrViewModel : ObservableObject
             ? OcrSubtitleItems.IndexOf(SelectedOcrSubtitleItem)
             : -1;
 
-        foreach (var item in OcrSubtitleItems)
+        foreach (var item in _allOcrSubtitleItems) // not OcrSubtitleItems - it may be filtered to forced-only
         {
             item.InvalidateBitmap();
         }
