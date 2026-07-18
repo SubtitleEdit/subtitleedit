@@ -909,7 +909,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     else if (i + 4 <= text.Length && text.Substring(i, 4) == "</i>")
                     {
                         buffer[index] = 0x98;
-                        skipCount = 2;
+                        skipCount = 3;
                     }
                     else
                     {

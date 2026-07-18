@@ -31,4 +31,12 @@ public class FixStartWithUppercaseLetterAfterColonTest
     {
         Assert.Equal(expected, Fix(input, language));
     }
+
+    // Turkish: the little 'i' after the colon must be capitalized in place ("İ"),
+    // not written over the colon.
+    [Fact]
+    public void Turkish_CapitalizesLittleIAtLetterPosition()
+    {
+        Assert.Equal("Ali: İyi", Fix("Ali: iyi", "tr"));
+    }
 }
