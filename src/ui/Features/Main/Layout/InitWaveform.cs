@@ -378,6 +378,59 @@ public class InitWaveform
         };
         Attached.SetIcon(buttonPlayNext, IconNames.SkipNext);
 
+        // SE 4 "Translate tab" style text buttons: play a single line and stop at its end
+        // (unlike the icon PlayNext button, which keeps playing past the line).
+        var settingTextPrevious = GetToolbarSettingFor(SeWaveformToolbarItemType.TextPrevious);
+        var buttonTextPrevious = new NonSpaceButton
+        {
+            Content = Se.Language.General.Previous,
+            Margin = new Thickness(settingTextPrevious.LeftMargin, 0, settingTextPrevious.RightMargin, 0),
+            FontSize = settingTextPrevious.FontSize,
+            VerticalAlignment = VerticalAlignment.Center,
+            Command = vm.PlayPreviousAndStopCommand,
+            [ToolTip.TipProperty] = UiUtil.MakeToolTip(languageHints.TextPreviousHint, shortcuts, nameof(vm.PlayPreviousAndStopCommand)),
+        };
+
+        var settingTextPlay = GetToolbarSettingFor(SeWaveformToolbarItemType.TextPlay);
+        var buttonTextPlay = new NonSpaceButton
+        {
+            Content = Se.Language.General.Play,
+            Margin = new Thickness(settingTextPlay.LeftMargin, 0, settingTextPlay.RightMargin, 0),
+            FontSize = settingTextPlay.FontSize,
+            VerticalAlignment = VerticalAlignment.Center,
+            Command = vm.PlaySelectedLinesWithoutLoopCommand,
+            [ToolTip.TipProperty] = UiUtil.MakeToolTip(languageHints.TextPlayHint, shortcuts, nameof(vm.PlaySelectedLinesWithoutLoopCommand)),
+        };
+
+        var settingTextPause = GetToolbarSettingFor(SeWaveformToolbarItemType.TextPause);
+        var buttonTextPause = new NonSpaceButton
+        {
+            Content = Se.Language.General.Pause,
+            Margin = new Thickness(settingTextPause.LeftMargin, 0, settingTextPause.RightMargin, 0),
+            FontSize = settingTextPause.FontSize,
+            VerticalAlignment = VerticalAlignment.Center,
+            Command = vm.PauseCommand,
+            [ToolTip.TipProperty] = UiUtil.MakeToolTip(languageHints.TextPauseHint, shortcuts, nameof(vm.PauseCommand)),
+        };
+
+        var settingTextNext = GetToolbarSettingFor(SeWaveformToolbarItemType.TextNext);
+        var buttonTextNext = new NonSpaceButton
+        {
+            Content = Se.Language.General.Next,
+            Margin = new Thickness(settingTextNext.LeftMargin, 0, settingTextNext.RightMargin, 0),
+            FontSize = settingTextNext.FontSize,
+            VerticalAlignment = VerticalAlignment.Center,
+            Command = vm.PlayNextAndStopCommand,
+            [ToolTip.TipProperty] = UiUtil.MakeToolTip(languageHints.TextNextHint, shortcuts, nameof(vm.PlayNextAndStopCommand)),
+        };
+
+        // SE 4 parity: the Previous/Play/Next buttons put focus in the subtitle text box so the
+        // user can start typing right away (translate workflow). FocusTextBox posts the focus to
+        // the dispatcher, so it lands after the play command has run.
+        buttonTextPrevious.Click += (_, _) => vm.FocusTextBoxCommand.Execute(null);
+        buttonTextPlay.Click += (_, _) => vm.FocusTextBoxCommand.Execute(null);
+        buttonTextNext.Click += (_, _) => vm.FocusTextBoxCommand.Execute(null);
+
         var settingPlayNew = GetToolbarSettingFor(SeWaveformToolbarItemType.New);
         var buttonNew = new NonSpaceButton
         {
@@ -776,6 +829,10 @@ public class InitWaveform
             buttonPlaySelectedLines,
             buttonPlaySelectedLinesRepeat,
             buttonPlayNext,
+            buttonTextPrevious,
+            buttonTextPlay,
+            buttonTextPause,
+            buttonTextNext,
             buttonNew,
             buttonSetStartAndOffsetTheRest,
             buttonSetStart,
@@ -821,6 +878,10 @@ public class InitWaveform
         Button buttonPlaySelectedLines,
         Button buttonPlaySelectedLinesRepeat,
         Button buttonPlayNext,
+        Button buttonTextPrevious,
+        Button buttonTextPlay,
+        Button buttonTextPause,
+        Button buttonTextNext,
         Button buttonNew,
         Button buttonSetStartAndOffsetTheRest,
         Button buttonSetStart,
@@ -859,6 +920,18 @@ public class InitWaveform
                     break;
                 case SeWaveformToolbarItemType.PlayNext:
                     toolbarButtonForSort.Add(new SortedControl { Sort = item.SortOrder, Control = buttonPlayNext });
+                    break;
+                case SeWaveformToolbarItemType.TextPrevious:
+                    toolbarButtonForSort.Add(new SortedControl { Sort = item.SortOrder, Control = buttonTextPrevious });
+                    break;
+                case SeWaveformToolbarItemType.TextPlay:
+                    toolbarButtonForSort.Add(new SortedControl { Sort = item.SortOrder, Control = buttonTextPlay });
+                    break;
+                case SeWaveformToolbarItemType.TextPause:
+                    toolbarButtonForSort.Add(new SortedControl { Sort = item.SortOrder, Control = buttonTextPause });
+                    break;
+                case SeWaveformToolbarItemType.TextNext:
+                    toolbarButtonForSort.Add(new SortedControl { Sort = item.SortOrder, Control = buttonTextNext });
                     break;
                 case SeWaveformToolbarItemType.New:
                     toolbarButtonForSort.Add(new SortedControl { Sort = item.SortOrder, Control = buttonNew });
