@@ -1186,12 +1186,12 @@ namespace Nikse.SubtitleEdit.Core.Common
         {
             if (section.Bottom > Height)
             {
-                section = new SKRectI(section.Left, section.Top, section.Width, Height - section.Top);
+                section = new SKRectI(section.Left, section.Top, section.Right, Height);
             }
 
-            if (section.Width + section.Left > Width)
+            if (section.Right > Width)
             {
-                section = new SKRectI(section.Left, section.Top, Width - section.Left, section.Height);
+                section = new SKRectI(section.Left, section.Top, Width, section.Bottom);
             }
 
             var newBitmapData = new byte[section.Width * section.Height * 4];
