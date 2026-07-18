@@ -195,12 +195,20 @@ public class OcrWindow : Window
         Attached.SetIcon(toggleButtonFallbackDatabase, IconNames.DatabaseArrowRight);
         ToolTip.SetTip(toggleButtonFallbackDatabase, Se.Language.Ocr.FallbackOcrDatabase);
 
+        var toggleButtonShowOnlyForced = new ToggleButton();
+        Attached.SetIcon(toggleButtonShowOnlyForced, IconNames.Filter);
+        ToolTip.SetTip(toggleButtonShowOnlyForced, Se.Language.Ocr.ShowOnlyForcedSubtitles);
+        toggleButtonShowOnlyForced.Bind(ToggleButton.IsCheckedProperty, new Binding(nameof(vm.ShowOnlyForced)));
+        toggleButtonShowOnlyForced.Bind(Visual.IsVisibleProperty, new Binding(nameof(vm.HasForcedSubtitles)));
+        toggleButtonShowOnlyForced.Bind(InputElement.IsEnabledProperty, new Binding(nameof(vm.IsOcrRunning)) { Converter = new InverseBooleanConverter() });
+
         var panelRight = new StackPanel
         {
             Orientation = Orientation.Horizontal,
             HorizontalAlignment = HorizontalAlignment.Right,
             Children =
             {
+                toggleButtonShowOnlyForced,
                 toggleButtonCaptureAlignment,
                 toggleButtonPreProcessing,
                 toggleButtonVobSubColors,
@@ -409,6 +417,21 @@ public class OcrWindow : Window
             ItemsSource = vm.OcrSubtitleItems,
             Columns =
             {
+                new DataGridTemplateColumn
+                {
+                    Header = Se.Language.General.Forced,
+                    IsReadOnly = true,
+                    IsVisible = vm.HasForcedSubtitles,
+                    CellTheme = UiUtil.DataGridNoBorderNoPaddingCellTheme,
+                    CellTemplate = new FuncDataTemplate<OcrSubtitleItem>((_, _) =>
+                        new CheckBox
+                        {
+                            [!ToggleButton.IsCheckedProperty] = new Binding(nameof(OcrSubtitleItem.IsForced)) { Mode = BindingMode.OneWay },
+                            HorizontalAlignment = HorizontalAlignment.Center,
+                            IsHitTestVisible = false,
+                            Focusable = false,
+                        }),
+                },
                 new DataGridTextColumn
                 {
                     Header = Se.Language.General.NumberSymbol,
