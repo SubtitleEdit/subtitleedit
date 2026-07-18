@@ -52,10 +52,6 @@
 		<PackageReference Include="UTF.Unknown" Version="2.6.0" />
 	</ItemGroup>
 
-	<ItemGroup Condition=" '$(TargetFramework)' == 'netstandard2.1' ">
-		<PackageReference Include="Microsoft.Win32.Registry" Version="5.0.0" />
-	</ItemGroup>
-
 	<ItemGroup>
 		<None Include="$(MSBuildThisFileDirectory)LICENSE.txt" Pack="true" PackagePath="" />
 		<None Include="$(MSBuildThisFileDirectory)Readme.md" Pack="true" PackagePath="" />
