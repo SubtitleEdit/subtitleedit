@@ -91,6 +91,29 @@ public class HtmlUtilTest
     }
 
     [Fact]
+    public void FixInvalidItalicTagsDanglingStartTagAtEnd()
+    {
+        const string s = "<i>a</i><i>";
+        Assert.Equal("<i>a</i>", HtmlUtil.FixInvalidItalicTags(s));
+    }
+
+    [Fact]
+    public void FixInvalidItalicTagsDanglingStartTagKeepsCharBeforeTag()
+    {
+        // Used to become "<i>ab</i></i>" - the "c" was eaten and an extra end tag appended
+        const string s = "<i>ab</i>c<i>";
+        Assert.Equal("<i>ab</i>c", HtmlUtil.FixInvalidItalicTags(s));
+    }
+
+    [Fact]
+    public void FixInvalidItalicTagsDanglingStartTagKeepsWordBeforeTag()
+    {
+        // Used to become "<i>Hello</i> </i>" - the "d" was eaten
+        const string s = "<i>Hello</i> d<i>";
+        Assert.Equal("<i>Hello</i> d", HtmlUtil.FixInvalidItalicTags(s));
+    }
+
+    [Fact]
     public void EncodeNumericEncodesNonAsciiBmpChar()
     {
         Assert.Equal("Hi&#229;", HtmlUtil.EncodeNumeric("Hiå")); // å
