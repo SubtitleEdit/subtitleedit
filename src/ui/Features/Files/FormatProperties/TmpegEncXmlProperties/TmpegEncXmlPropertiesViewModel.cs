@@ -26,7 +26,7 @@ public partial class TmpegEncXmlPropertiesViewModel : ObservableObject
     {
         FontNames = new ObservableCollection<string>(FontHelper.GetSystemFonts());
         var fn = FontNames.FirstOrDefault(p => p == Se.Settings.Formats.TmpegEncXmlFontName);
-        SelectedFontName = fn ?? FontNames.FirstOrDefault<string>();
+        SelectedFontName = fn ?? FontNames.FirstOrDefault();
 
         FontHeight = Se.Settings.Formats.TmpegEncXmlFontHeight;
         OffsetX = Se.Settings.Formats.TmpegEncXmlOffsetX;
