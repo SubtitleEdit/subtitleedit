@@ -142,26 +142,10 @@ public class SyntaxHighlightingTextPresenter : TextPresenter
         var length = Math.Max(selectionStart, selectionEnd) - start;
         var isPassword = PasswordChar != default(char) && !RevealPassword;
 
-        // In an RTL paragraph the ASSA override-tag characters are permuted in the layout string
-        // (display only - Text is untouched) so the bidi reordering shows "{\an8}" instead of
-        // "{an8\}"; see AssaTagRtlLayout. Skipped during IME composition, where the combined
-        // text's indices are shifted by the preedit string.
-        var layoutText = text;
-        int[]? rtlTagMap = null;
-        if (!isPassword && string.IsNullOrEmpty(preeditText) && !string.IsNullOrEmpty(text) &&
-            FlowDirection == FlowDirection.RightToLeft &&
-            AssaTagRtlLayout.TryPermuteForRtlDisplay(text, out var permutedText, out var toSource))
-        {
-            layoutText = permutedText;
-            rtlTagMap = toSource;
-        }
-
-        var textStyleOverrides = isPassword ? null : BuildSyntaxSpans(text, typeface, rtlTagMap);
+        var textStyleOverrides = isPassword ? null : BuildSyntaxSpans(text, typeface);
 
         // Spell check underlines are skipped during IME composition: the combined text has the
         // preedit string spliced in at the caret, so the word positions would not line up.
-        // Word positions are valid on the permuted layout text too - the permutation only
-        // reorders characters inside override tags, which the word scan skips.
         if (!isPassword && string.IsNullOrEmpty(preeditText))
         {
             textStyleOverrides = ApplySpellCheckUnderlines(textStyleOverrides, text, typeface);
@@ -198,18 +182,16 @@ public class SyntaxHighlightingTextPresenter : TextPresenter
             return CreateTextLayoutInternal(this, constraint, new string(PasswordChar, text?.Length ?? 0), typeface, textStyleOverrides);
         }
 
-        return CreateTextLayoutInternal(this, constraint, layoutText, typeface, textStyleOverrides);
+        return CreateTextLayoutInternal(this, constraint, text, typeface, textStyleOverrides);
     }
 
     /// <summary>
     /// Builds sorted, non-overlapping spans covering the whole text: tag tokens get the color
     /// from <see cref="SubtitleSyntaxTokenizer"/> and the text between them gets the default
     /// foreground (gaps must be covered explicitly, otherwise the tag style bleeds into the
-    /// surrounding text). When <paramref name="rtlTagMap"/> is set the layout string is a
-    /// permutation of <paramref name="text"/> (see AssaTagRtlLayout) and the spans are emitted
-    /// in layout order so every character keeps its own color.
+    /// surrounding text).
     /// </summary>
-    private List<ValueSpan<TextRunProperties>>? BuildSyntaxSpans(string? text, Typeface typeface, int[]? rtlTagMap)
+    private List<ValueSpan<TextRunProperties>>? BuildSyntaxSpans(string? text, Typeface typeface)
     {
         if (string.IsNullOrEmpty(text))
         {
@@ -223,11 +205,6 @@ public class SyntaxHighlightingTextPresenter : TextPresenter
         }
 
         var defaultProperties = GetDefaultProperties(typeface);
-
-        if (rtlTagMap != null)
-        {
-            return BuildPermutedSyntaxSpans(text, tokens, rtlTagMap, defaultProperties);
-        }
 
         var spans = new List<ValueSpan<TextRunProperties>>(tokens.Count * 2 + 1);
         var position = 0;
@@ -251,41 +228,6 @@ public class SyntaxHighlightingTextPresenter : TextPresenter
         if (position < text.Length)
         {
             spans.Add(new ValueSpan<TextRunProperties>(position, text.Length - position, defaultProperties));
-        }
-
-        return spans;
-    }
-
-    /// <summary>
-    /// Token spans fragment across the RTL tag permutation, so colors are resolved per
-    /// character through the layout-to-source map and then run-length encoded back into spans.
-    /// </summary>
-    private List<ValueSpan<TextRunProperties>> BuildPermutedSyntaxSpans(string text,
-        List<SubtitleSyntaxTokenizer.ColoredRange> tokens, int[] rtlTagMap, GenericTextRunProperties defaultProperties)
-    {
-        var charColors = new Color?[text.Length];
-        foreach (var token in tokens)
-        {
-            var end = Math.Min(token.Start + token.Length, text.Length);
-            for (var i = Math.Max(0, token.Start); i < end; i++)
-            {
-                charColors[i] ??= token.Color; // overlapping token - first one wins
-            }
-        }
-
-        var spans = new List<ValueSpan<TextRunProperties>>();
-        var position = 0;
-        while (position < text.Length)
-        {
-            var color = charColors[rtlTagMap[position]];
-            var runStart = position;
-            while (position < text.Length && charColors[rtlTagMap[position]] == color)
-            {
-                position++;
-            }
-
-            spans.Add(new ValueSpan<TextRunProperties>(runStart, position - runStart,
-                color == null ? defaultProperties : GetTokenProperties(color.Value)));
         }
 
         return spans;
