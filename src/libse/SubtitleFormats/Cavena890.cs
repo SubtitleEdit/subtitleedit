@@ -909,7 +909,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     else if (i + 4 <= text.Length && text.Substring(i, 4) == "</i>")
                     {
                         buffer[index] = 0x98;
-                        skipCount = 2;
+                        skipCount = 3;
                     }
                     else
                     {
@@ -920,23 +920,42 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 }
                 else if (languageId == LanguageIdChineseTraditional || languageId == LanguageIdChineseSimplified)
                 {
+                    // The Chinese text field is UTF-16BE (the reader decodes it as byte pairs),
+                    // so every write must be a full pair to keep the pairing aligned. The old
+                    // code wrote only the high byte of each character (dropping the low byte)
+                    // and lone italic-marker bytes, so nothing could round-trip.
                     encoding = Encoding.GetEncoding(1201);
-                    if (index < 49)
+                    if (i + 3 < text.Length && text.Substring(i, 3) == "<i>")
                     {
-                        if (i + 3 < text.Length && text.Substring(i, 3) == "<i>")
+                        // In-band control code as a 0x00 XX pair - decodes to U+0088,
+                        // which FixText maps back to "<i>".
+                        if (index + 2 <= buffer.Length)
                         {
-                            buffer[index] = 0x88;
-                            skipCount = 2;
+                            buffer[index] = 0;
+                            buffer[index + 1] = 0x88;
+                            index += 2;
                         }
-                        else if (i + 4 <= text.Length && text.Substring(i, 4) == "</i>")
+
+                        skipCount = 2;
+                    }
+                    else if (i + 4 <= text.Length && text.Substring(i, 4) == "</i>")
+                    {
+                        if (index + 2 <= buffer.Length)
                         {
-                            buffer[index] = 0x98;
-                            skipCount = 3;
+                            buffer[index] = 0;
+                            buffer[index + 1] = 0x98;
+                            index += 2;
                         }
-                        else
+
+                        skipCount = 3;
+                    }
+                    else
+                    {
+                        var charBytes = encoding.GetBytes(new[] { current });
+                        if (index + charBytes.Length <= buffer.Length)
                         {
-                            buffer[index] = encoding.GetBytes(new[] { current })[0];
-                            index++;
+                            Buffer.BlockCopy(charBytes, 0, buffer, index, charBytes.Length);
+                            index += charBytes.Length;
                         }
                     }
                 }
@@ -1815,12 +1834,16 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     text = string.Empty;
                 }
 
-                var encoding = Encoding.Default; // which encoding?? Encoding.GetEncoding("ISO-8859-5")
-                text = text.Replace(encoding.GetString(new byte[] { 0x7F }), string.Empty); // Used to fill empty space upto 51 bytes
-                text = text.Replace(encoding.GetString(new byte[] { 0xBE }), "-");
+                // In-band control codes occupy a full 0x00 XX pair in the UTF-16BE text, so
+                // after decoding they appear as the corresponding U+00XX char. The old code
+                // compared against Encoding.Default.GetString(..), which is platform dependent
+                // (UTF-8 on .NET Core, where 0x88/0x98/0xBE all decode to U+FFFD - so any
+                // undecodable byte in the file was turned into "<i>").
+                text = text.Replace("\u007f", string.Empty); // Used to fill empty space upto 51 bytes
+                text = text.Replace("\u00be", "-");
                 text = FixColors(text);
-                text = text.Replace(encoding.GetString(new byte[] { 0x88 }), "<i>");
-                text = text.Replace(encoding.GetString(new byte[] { 0x98 }), "</i>");
+                text = text.Replace("\u0088", "<i>");
+                text = text.Replace("\u0098", "</i>");
 
                 if (text.Contains("<i></i>"))
                 {

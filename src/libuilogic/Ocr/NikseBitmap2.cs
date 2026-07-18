@@ -1547,7 +1547,7 @@ public class NikseBitmap2
     {
         for (var i = 0; i < _bitmapData.Length; i += 4)
         {
-            if (_bitmapData[i] != 0) // check alpha
+            if (_bitmapData[i + 3] != 0) // check alpha
             {
                 return false;
             }

@@ -109,7 +109,7 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
 
         private static StringContent MakeContent(string text, string sourceLanguageCode, string targetLanguageCode)
         {
-            var input = "{ \"source_lang\": \"" + sourceLanguageCode + "\", \"target_lang\": \"" + targetLanguageCode + "\", \"text\": \"" + Json.EncodeJsonText(text.Trim(), "\\n") + "\" }]}";
+            var input = "{ \"source_lang\": \"" + sourceLanguageCode + "\", \"target_lang\": \"" + targetLanguageCode + "\", \"text\": \"" + Json.EncodeJsonText(text.Trim(), "\\n") + "\" }";
             var content = new StringContent(input, Encoding.UTF8);
             return content;
         }

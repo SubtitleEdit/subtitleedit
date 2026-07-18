@@ -129,19 +129,22 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
 
         private static string GetAccessToken(string apiKey, string tokenEndpoint)
         {
-            using (var httpClient = DownloaderFactory.MakeHttpClient())
+            return Task.Run(async () =>
             {
-                httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-                httpClient.DefaultRequestHeaders.TryAddWithoutValidation(SecurityHeaderName, apiKey);
-                var response = httpClient.PostAsync(tokenEndpoint, new StringContent(string.Empty)).Result;
-                var result = response.Content.ReadAsStringAsync().Result;
-                if (!response.IsSuccessStatusCode)
+                using (var httpClient = DownloaderFactory.MakeHttpClient())
                 {
-                    SeLogger.Error($"{StaticName}: Error getting access token via {tokenEndpoint} and API key {apiKey}: {result}");
-                }
+                    httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                    httpClient.DefaultRequestHeaders.TryAddWithoutValidation(SecurityHeaderName, apiKey);
+                    var response = await httpClient.PostAsync(tokenEndpoint, new StringContent(string.Empty)).ConfigureAwait(false);
+                    var result = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+                    if (!response.IsSuccessStatusCode)
+                    {
+                        SeLogger.Error($"{StaticName}: Error getting access token via {tokenEndpoint} and API key {apiKey}: {result}");
+                    }
 
-                return response.Content.ReadAsStringAsync().Result;
-            }
+                    return result;
+                }
+            }).GetAwaiter().GetResult();
         }
 
         private static List<TranslationPair> GetTranslationPairs()
@@ -151,14 +154,17 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
                 return _translationPairs;
             }
 
-            using (var httpClient = DownloaderFactory.MakeHttpClient())
+            return Task.Run(async () =>
             {
-                httpClient.DefaultRequestHeaders.Add("user-agent", "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36");
-                httpClient.DefaultRequestHeaders.TryAddWithoutValidation("Content-Type", "application/json; charset=UTF-8");
-                var json = httpClient.GetStringAsync(LanguagesUrl).Result;
-                _translationPairs = FillTranslationPairsFromJson(json);
-                return _translationPairs;
-            }
+                using (var httpClient = DownloaderFactory.MakeHttpClient())
+                {
+                    httpClient.DefaultRequestHeaders.Add("user-agent", "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36");
+                    httpClient.DefaultRequestHeaders.TryAddWithoutValidation("Content-Type", "application/json; charset=UTF-8");
+                    var json = await httpClient.GetStringAsync(LanguagesUrl).ConfigureAwait(false);
+                    _translationPairs = FillTranslationPairsFromJson(json);
+                    return _translationPairs;
+                }
+            }).GetAwaiter().GetResult();
         }
 
         private static List<TranslationPair> FillTranslationPairsFromJson(string json)

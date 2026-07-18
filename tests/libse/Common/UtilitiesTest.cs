@@ -7,6 +7,27 @@ namespace LibSETests.Common;
 
 public class UtilitiesTest
 {
+    // SplitEndTags walks the line right-to-left, so each stripped tag must be prepended to
+    // "post" to preserve the original suffix order - it used to append, so nested closing
+    // tags came back reversed ("</font></i>") when callers rebuilt "pre + text + post".
+    [Fact]
+    public void SplitEndTagsNestedClosingTagsKeepOriginalOrder()
+    {
+        var post = string.Empty;
+        var s = Utilities.SplitEndTags("<font color=\"white\"><i>Hello</i></font>", ref post);
+        Assert.Equal("<font color=\"white\"><i>Hello", s);
+        Assert.Equal("</i></font>", post);
+    }
+
+    [Fact]
+    public void SplitEndTagsTagBeforeTrailingSpaceKeepsOriginalOrder()
+    {
+        var post = string.Empty;
+        var s = Utilities.SplitEndTags("Hello</i> ", ref post);
+        Assert.Equal("Hello", s);
+        Assert.Equal("</i> ", post);
+    }
+
     // WebVTT tracks in a Matroska container must be loaded as WebVTT, not SubRip.
     // MakeMKV (codec id "D_WEBVTT/*") prepends "<cue identifier>\n<cue settings>\n" to each
     // block, which previously leaked into the subtitle text (issue #11680).

@@ -969,15 +969,12 @@ namespace Nikse.SubtitleEdit.Core.Common
                 }
                 else
                 {
+                    // Remove the spurious last begin tag, keeping any text around it. The old
+                    // near-end branch here did "Substring(0, lastIndex - 1) + endTag", which ate
+                    // the character before the tag and appended an unbalanced end tag
+                    // ("<i>ab</i>c<i>" became "<i>ab</i></i>" - the "c" was lost).
                     var lastIndex = text.LastIndexOf(beginTag, StringComparison.Ordinal);
-                    if (text.Length > lastIndex + endTag.Length)
-                    {
-                        text = text.Substring(0, lastIndex) + text.Substring(lastIndex - 1 + endTag.Length);
-                    }
-                    else
-                    {
-                        text = text.Substring(0, lastIndex - 1) + endTag;
-                    }
+                    text = text.Remove(lastIndex, beginTag.Length);
                 }
                 if (text.StartsWith(beginTag, StringComparison.Ordinal) && text.EndsWith(endTag, StringComparison.Ordinal) && text.Contains(endTag + Environment.NewLine + beginTag))
                 {
@@ -1168,29 +1165,25 @@ namespace Nikse.SubtitleEdit.Core.Common
                 }
             }
 
+            // </i>Foo</i>     (two lines with only stray "</i>" tags - the subtitle was
+            // </i>Bar</i>      meant to be italic, so italicize each line that has a tag)
             if (noOfLines == 2 && italicBeginTagCount == 0 && italicEndTagCount == 4)
             {
                 var lines = text.SplitToLines();
-                if (lines.Count == 2 &&
-                    lines[0].StartsWith("</i>", StringComparison.InvariantCulture) && lines[1].EndsWith("</i>", StringComparison.InvariantCulture) &&
-                    lines[1].StartsWith("</i>", StringComparison.InvariantCulture) && lines[1].EndsWith("</i>", StringComparison.InvariantCulture))
+                if (lines.Count == 2)
                 {
-                    var s1 = lines[0].Replace("</i>", string.Empty);
-                    var s2 = lines[1].Replace("</i>", string.Empty);
-                    text = "<i>" + s1.Trim() + "</i>" + Environment.NewLine + "<i>" + s2.Trim() + "</i>";
+                    text = ItalicizeLineRemovingStrayTag(lines[0], endTag) + Environment.NewLine + ItalicizeLineRemovingStrayTag(lines[1], endTag);
                 }
             }
 
+            // <i>Foo<i>     (two lines with only stray "<i>" tags)
+            // <i>Bar<i>
             if (noOfLines == 2 && italicBeginTagCount == 4 && italicEndTagCount == 0)
             {
                 var lines = text.SplitToLines();
-                if (lines.Count == 2 &&
-                    lines[0].StartsWith("<i>", StringComparison.InvariantCulture) && lines[1].EndsWith("<i>", StringComparison.InvariantCulture) &&
-                    lines[1].StartsWith("<i>", StringComparison.InvariantCulture) && lines[1].EndsWith("<i>", StringComparison.InvariantCulture))
+                if (lines.Count == 2)
                 {
-                    var s1 = lines[0].Replace("<i>", string.Empty);
-                    var s2 = lines[1].Replace("<i>", string.Empty);
-                    text = "<i>" + s1.Trim() + "</i>" + Environment.NewLine + "<i>" + s2.Trim() + "</i>";
+                    text = ItalicizeLineRemovingStrayTag(lines[0], beginTag) + Environment.NewLine + ItalicizeLineRemovingStrayTag(lines[1], beginTag);
                 }
             }
 
@@ -1243,6 +1236,22 @@ namespace Nikse.SubtitleEdit.Core.Common
             }
 
             return preTags + text;
+        }
+
+        /// <summary>
+        /// Used by <see cref="FixInvalidItalicTags"/> for two-line subtitles that contain only
+        /// stray copies of a single italic tag (e.g. four "</i>" and no "<i>"): the tags carry no
+        /// pairing information, so a line containing the tag was meant to be italic - strip the
+        /// stray tags and wrap the whole line in proper tags. Lines without the tag are kept as-is.
+        /// </summary>
+        private static string ItalicizeLineRemovingStrayTag(string line, string strayTag)
+        {
+            if (!line.Contains(strayTag))
+            {
+                return line;
+            }
+
+            return "<i>" + line.Replace(strayTag, string.Empty).Trim() + "</i>";
         }
 
         /// <summary>

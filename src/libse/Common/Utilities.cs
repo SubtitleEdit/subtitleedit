@@ -3583,7 +3583,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                 updated = false;
                 if (s.EndsWith(' '))
                 {
-                    post += ' ';
+                    post = ' ' + post;
                     s = s.Remove(s.Length - 1, 1);
                     updated = true;
                 }
@@ -3591,14 +3591,14 @@ namespace Nikse.SubtitleEdit.Core.Common
                          s.EndsWith("</b>", StringComparison.OrdinalIgnoreCase) ||
                          s.EndsWith("</u>", StringComparison.OrdinalIgnoreCase))
                 {
-                    post += s.Substring(s.Length - 4, 4);
+                    post = s.Substring(s.Length - 4, 4) + post;
                     s = s.Remove(s.Length - 4, 4);
                     updated = true;
                 }
                 else if (s.EndsWith("</font>", StringComparison.OrdinalIgnoreCase))
                 {
                     var endFontTag = "</font>";
-                    post += endFontTag;
+                    post = endFontTag + post;
                     s = s.Remove(s.Length - endFontTag.Length, endFontTag.Length);
                     updated = true;
                 }

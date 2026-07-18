@@ -102,7 +102,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                 return encoding.GetString(bytes, 3, bytes.Length - 3).SplitToLines();
             }
 
-            if (bytes.Length > 2 && Equals(encoding, Encoding.Unicode) && bytes[0] == 0xfe && bytes[1] == 0xff)
+            if (bytes.Length > 2 && Equals(encoding, Encoding.Unicode) && bytes[0] == 0xff && bytes[1] == 0xfe)
             {
                 return encoding.GetString(bytes, 2, bytes.Length - 2).SplitToLines();
             }
