@@ -14,8 +14,7 @@ namespace Nikse.SubtitleEdit.Controls;
 
 /// <summary>
 /// A <see cref="TextPresenter"/> that colors HTML tags and ASS/SSA override tags while typing,
-/// using the same color scheme as the AvaloniaEdit colorizer (via
-/// <see cref="SubtitleSyntaxTokenizer"/>).
+/// using the shared subtitle syntax color scheme (via <see cref="SubtitleSyntaxTokenizer"/>).
 ///
 /// <see cref="CreateTextLayout"/> is a replica of the Avalonia 12.1.0 implementation with syntax
 /// highlight style overrides merged in; the private members it needs are reached with
@@ -54,6 +53,7 @@ public class SyntaxHighlightingTextPresenter : TextPresenter
     private double _cachedFontSize = double.NaN;
     private IBrush? _cachedForeground;
     private FontFeatureCollection? _cachedFontFeatures;
+    private bool _cachedIsDarkTheme;
 
     // Live spell check: the red underline decoration matches SpellCheckUnderlineTransformer's
     // (the AvaloniaEdit editor), so both editors underline identically.
@@ -76,18 +76,33 @@ public class SyntaxHighlightingTextPresenter : TextPresenter
     private string? _spellCheckedText;
     private List<SpellCheckWord> _spellCheckedWords = new();
 
+    // Syntax spans are cached per text so selection/caret layout passes (e.g. every pointer
+    // move during a mouse-drag selection) don't re-tokenize unchanged text. The cached list is
+    // never mutated: the overlay methods below always build new lists.
+    private string? _syntaxSpansText;
+    private List<ValueSpan<TextRunProperties>>? _syntaxSpans;
+
+    // The selection highlight properties are reused across layout passes while dragging.
+    private GenericTextRunProperties? _selectionProperties;
+    private IBrush? _cachedSelectionForeground;
+
     private GenericTextRunProperties GetDefaultProperties(Typeface typeface)
     {
+        // The theme is part of the key: the token colors from SubtitleSyntaxTokenizer are
+        // theme-dependent, so the spans cached below must not survive a variant switch.
+        var isDarkTheme = UiTheme.IsDarkThemeEnabled();
         if (_defaultProperties is null ||
             !typeface.Equals(_cachedTypeface) ||
             FontSize != _cachedFontSize ||
             !ReferenceEquals(Foreground, _cachedForeground) ||
-            !ReferenceEquals(FontFeatures, _cachedFontFeatures))
+            !ReferenceEquals(FontFeatures, _cachedFontFeatures) ||
+            isDarkTheme != _cachedIsDarkTheme)
         {
             _cachedTypeface = typeface;
             _cachedFontSize = FontSize;
             _cachedForeground = Foreground;
             _cachedFontFeatures = FontFeatures;
+            _cachedIsDarkTheme = isDarkTheme;
             _defaultProperties = new GenericTextRunProperties(
                 typeface,
                 FontSize,
@@ -95,6 +110,9 @@ public class SyntaxHighlightingTextPresenter : TextPresenter
                 fontFeatures: FontFeatures);
             _tokenPropertiesCache.Clear();
             _underlinedPropertiesCache.Clear();
+            _syntaxSpansText = null;
+            _syntaxSpans = null;
+            _selectionProperties = null;
         }
 
         return _defaultProperties;
@@ -165,12 +183,7 @@ public class SyntaxHighlightingTextPresenter : TextPresenter
         }
         else if (ShowSelectionHighlight && length > 0 && SelectionForegroundBrush != null)
         {
-            var selectionHighlight = new ValueSpan<TextRunProperties>(start, length,
-                new GenericTextRunProperties(
-                    typeface,
-                    FontSize,
-                    foregroundBrush: SelectionForegroundBrush,
-                    fontFeatures: FontFeatures));
+            var selectionHighlight = new ValueSpan<TextRunProperties>(start, length, GetSelectionProperties(typeface));
 
             textStyleOverrides = OverlaySpan(textStyleOverrides, selectionHighlight);
         }
@@ -198,39 +211,65 @@ public class SyntaxHighlightingTextPresenter : TextPresenter
             return null;
         }
 
-        var tokens = SubtitleSyntaxTokenizer.Tokenize(text);
-        if (tokens.Count == 0)
-        {
-            return null;
-        }
-
+        // GetDefaultProperties drops the cached spans when font/foreground changed, so it must
+        // run before the per-text cache check.
         var defaultProperties = GetDefaultProperties(typeface);
-
-        var spans = new List<ValueSpan<TextRunProperties>>(tokens.Count * 2 + 1);
-        var position = 0;
-        foreach (var token in tokens)
+        if (text == _syntaxSpansText)
         {
-            if (token.Start < position)
-            {
-                continue; // overlapping token - first one wins
-            }
-
-            if (token.Start > position)
-            {
-                spans.Add(new ValueSpan<TextRunProperties>(position, token.Start - position, defaultProperties));
-            }
-
-            spans.Add(new ValueSpan<TextRunProperties>(token.Start, token.Length, GetTokenProperties(token.Color)));
-
-            position = token.Start + token.Length;
+            return _syntaxSpans;
         }
 
-        if (position < text.Length)
+        List<ValueSpan<TextRunProperties>>? spans = null;
+        var tokens = SubtitleSyntaxTokenizer.Tokenize(text);
+        if (tokens.Count > 0)
         {
-            spans.Add(new ValueSpan<TextRunProperties>(position, text.Length - position, defaultProperties));
+            spans = new List<ValueSpan<TextRunProperties>>(tokens.Count * 2 + 1);
+            var position = 0;
+            foreach (var token in tokens)
+            {
+                if (token.Start < position)
+                {
+                    continue; // overlapping token - first one wins
+                }
+
+                if (token.Start > position)
+                {
+                    spans.Add(new ValueSpan<TextRunProperties>(position, token.Start - position, defaultProperties));
+                }
+
+                spans.Add(new ValueSpan<TextRunProperties>(token.Start, token.Length, GetTokenProperties(token.Color)));
+
+                position = token.Start + token.Length;
+            }
+
+            if (position < text.Length)
+            {
+                spans.Add(new ValueSpan<TextRunProperties>(position, text.Length - position, defaultProperties));
+            }
         }
 
+        _syntaxSpansText = text;
+        _syntaxSpans = spans;
         return spans;
+    }
+
+    private GenericTextRunProperties GetSelectionProperties(Typeface typeface)
+    {
+        // Refreshes the caches (and clears _selectionProperties) on font/foreground changes;
+        // needed here because the password path skips BuildSyntaxSpans.
+        GetDefaultProperties(typeface);
+
+        if (_selectionProperties is null || !ReferenceEquals(SelectionForegroundBrush, _cachedSelectionForeground))
+        {
+            _cachedSelectionForeground = SelectionForegroundBrush;
+            _selectionProperties = new GenericTextRunProperties(
+                _cachedTypeface,
+                _cachedFontSize,
+                foregroundBrush: SelectionForegroundBrush,
+                fontFeatures: _cachedFontFeatures);
+        }
+
+        return _selectionProperties;
     }
 
     protected override void OnAttachedToVisualTree(VisualTreeAttachmentEventArgs e)
@@ -242,6 +281,18 @@ public class SyntaxHighlightingTextPresenter : TextPresenter
         if (TemplatedParent is SyntaxHighlightingTextBox box)
         {
             box.SyntaxPresenter = this;
+        }
+    }
+
+    protected override void OnDetachedFromVisualTree(VisualTreeAttachmentEventArgs e)
+    {
+        base.OnDetachedFromVisualTree(e);
+
+        // Unregister so the owner never invalidates a presenter that left the tree (e.g. after
+        // a template swap).
+        if (TemplatedParent is SyntaxHighlightingTextBox box && ReferenceEquals(box.SyntaxPresenter, this))
+        {
+            box.SyntaxPresenter = null;
         }
     }
 

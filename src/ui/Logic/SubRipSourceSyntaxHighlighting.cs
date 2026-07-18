@@ -17,13 +17,14 @@ public partial class SubRipSourceSyntaxHighlighting : DocumentColorizingTransfor
     private static readonly IBrush TimeSeparatorBrush = new SolidColorBrush(Color.FromRgb(170, 110, 180));
     private static readonly Typeface BoldTypeface = new(FontFamily.Default, weight: FontWeight.Bold);
 
-    // HTML/ASS syntax highlighting colors (matching SubtitleSyntaxHighlighting.cs)
-    private static readonly Color ElementColor = Color.FromRgb(183, 89, 155);    // Soft purple - HTML element tags
-    private static readonly Color AttributeColor = Color.FromRgb(86, 156, 214);  // Soft blue - HTML attribute names
-    private static readonly Color CommentColor = Color.FromRgb(106, 153, 85);    // Soft green - HTML comments
-    private static readonly Color CharsColor = Color.FromRgb(128, 128, 128);     // Gray - delimiters and special chars
-    private static readonly Color ValuesColor = Color.FromRgb(206, 145, 120);    // Soft orange/peach - attribute values
-    private static readonly Color StyleColor = Color.FromRgb(156, 220, 254);     // Light cyan - CSS property values
+    // HTML/ASS syntax highlighting colors (the shared, theme-dependent scheme from
+    // SubtitleSyntaxTokenizer) - resolved per use so a theme switch is picked up.
+    private static Color ElementColor => SubtitleSyntaxTokenizer.ElementColor;
+    private static Color AttributeColor => SubtitleSyntaxTokenizer.AttributeColor;
+    private static Color CommentColor => SubtitleSyntaxTokenizer.CommentColor;
+    private static Color CharsColor => SubtitleSyntaxTokenizer.CharsColor;
+    private static Color ValuesColor => SubtitleSyntaxTokenizer.ValuesColor;
+    private static Color StyleColor => SubtitleSyntaxTokenizer.StyleColor;
 
     // SubRip number pattern (e.g., "1", "2", "123")
     [GeneratedRegex(@"^\d+$", RegexOptions.Multiline)]

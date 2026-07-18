@@ -10,7 +10,6 @@ using Avalonia.Interactivity;
 using Avalonia.Layout;
 using Avalonia.Media;
 using Avalonia.Styling;
-using AvaloniaEdit;
 using Nikse.SubtitleEdit.Controls;
 using Nikse.SubtitleEdit.Features.Options.Settings;
 using Nikse.SubtitleEdit.Features.Shared.TextBoxUtils;
@@ -49,32 +48,6 @@ public static partial class InitListViewAndEditBox
 
             // Clear the grid to help with garbage collection
             vm.SubtitleGrid.ItemsSource = null;
-        }
-
-        // Unhook events from old text editors if they exist
-        if (vm.EditTextBoxBindingCoordinator != null)
-        {
-            if (vm.EditTextBoxBindingCoordinator is TextEditorBindingCoordinator oldCoordinator)
-            {
-                oldCoordinator.DeInitialize();
-                if (vm.EditTextBox?.ContentControl != null)
-                {
-                    vm.EditTextBox.ContentControl.RemoveControlFromParent();
-                }
-            }
-            vm.EditTextBoxBindingCoordinator = null;
-        }
-
-        if (vm.EditTextBoxHelper is TextEditorBindingHelper helper)
-        {
-            helper.DeInitialize();
-            vm.EditTextBoxHelper = null;
-        }
-
-        if (vm.EditTextBoxOriginalHelper is TextEditorBindingHelper helperOriginal)
-        {
-            helperOriginal.DeInitialize();
-            vm.EditTextBoxOriginalHelper = null;
         }
 
         var mainGrid = new Grid
@@ -1424,7 +1397,7 @@ public static partial class InitListViewAndEditBox
         textEditGrid.Children.Add(panelSingleLineLengths);
         Grid.SetRow(panelSingleLineLengths, 2);
 
-        // Create a Flyout for the TextEditor
+        // Create a Flyout for the subtitle text box.
         // The TextBox may have TextAlignment=Center; that inherited property would otherwise flow
         // into the flyout's menu items. Override it at the presenter level so items are always left-aligned.
         var flyoutTextBoxPresenterTheme = new ControlTheme(typeof(MenuFlyoutPresenter))
@@ -1696,13 +1669,6 @@ public static partial class InitListViewAndEditBox
             Converter = booleanToGridLengthConverter
         });
 
-        // Set up coordinator to handle vm.PropertyChanged once for both text editors
-        var textEditorHelper = vm.EditTextBoxHelper as TextEditorBindingHelper;
-        var originalTextEditorHelper = vm.EditTextBoxOriginalHelper as TextEditorBindingHelper;
-        var coordinator = new TextEditorBindingCoordinator(vm, textEditorHelper, originalTextEditorHelper);
-        coordinator.Initialize();
-        vm.EditTextBoxBindingCoordinator = coordinator;
-
         return mainGrid;
     }
 
@@ -1829,77 +1795,6 @@ public static partial class InitListViewAndEditBox
         return textBox;
     }
 
-    private static Border MakeTextEditor(MainViewModel vm)
-    {
-        var textEditor = MakeTextEditor();
-
-        var defaultBorderBrush = UiUtil.GetBorderBrush();
-        var focusedBorderBrush = UiUtil.GetAccentBrush();
-
-        var textEditorBorder = new Border
-        {
-            Child = textEditor,
-            BorderThickness = new Thickness(1),
-            BorderBrush = defaultBorderBrush,
-            CornerRadius = new CornerRadius(3),
-            ClipToBounds = true,
-        };
-
-        var wrapper = new TextEditorWrapper(textEditor, textEditorBorder);
-
-        if (Se.Settings.Appearance.SubtitleTextBoxCenterText)
-        {
-            wrapper.SetAlignment(TextAlignment.Center);
-        }
-
-        vm.EditTextBox = wrapper;
-
-        SetupMacContextMenu(textEditor, vm);
-
-        var helper = new TextEditorBindingHelper(vm, textEditor, wrapper, textEditorBorder, defaultBorderBrush, focusedBorderBrush, isOriginal: false);
-        helper.Initialize();
-        vm.EditTextBoxHelper = helper;
-
-        textEditor.TextArea.AddHandler(InputElement.PointerPressedEvent, (_, e) => vm.StoreTextEditorPointerArgs(e), RoutingStrategies.Tunnel);
-
-        return textEditorBorder;
-    }
-
-    private static TextEditor MakeTextEditor()
-    {
-        var textEditor = new TextEditor
-        {
-            MinHeight = 92,
-            Height = 92,
-            FontSize = Se.Settings.Appearance.SubtitleTextBoxFontSize,
-            FontWeight = Se.Settings.Appearance.SubtitleTextBoxFontBold ? FontWeight.Bold : FontWeight.Normal,
-            ShowLineNumbers = false,
-            HorizontalScrollBarVisibility = Avalonia.Controls.Primitives.ScrollBarVisibility.Auto,
-            VerticalScrollBarVisibility = Avalonia.Controls.Primitives.ScrollBarVisibility.Auto,
-            Focusable = true,
-            Padding = new Thickness(6, 4, 4, 4),
-        };
-
-        // Expose an accessible name for screen readers. The TextArea is the element
-        // that actually receives keyboard focus, so it needs the name too.
-        AutomationProperties.SetName(textEditor, Se.Language.General.Text);
-        AutomationProperties.SetName(textEditor.TextArea, Se.Language.General.Text);
-
-        // Add syntax highlighting transformer
-        textEditor.TextArea.TextView.LineTransformers.Add(new SubtitleSyntaxHighlighting());
-
-        if (!string.IsNullOrEmpty(Se.Settings.Appearance.SubtitleTextBoxAndGridFontName))
-        {
-            textEditor.FontFamily = new FontFamily(Se.Settings.Appearance.SubtitleTextBoxAndGridFontName);
-        }
-
-        // Enable word wrap after the editor is otherwise configured so AvaloniaEdit
-        // can apply its built-in "wrap disables horizontal scrolling" behavior.
-        textEditor.WordWrap = true;
-
-        return textEditor;
-    }
-
     private static Avalonia.Controls.Control MakeTextBoxOriginal(MainViewModel vm)
     {
         var textBox = MakeSubtitleTextBox();
@@ -1913,40 +1808,6 @@ public static partial class InitListViewAndEditBox
 
         vm.EditTextBoxOriginal = new TextBoxWrapper(textBox);
         return textBox;
-    }
-
-    private static Border MakeTextEditorOriginal(MainViewModel vm)
-    {
-        var textEditor = MakeTextEditor();
-
-        var defaultBorderBrush = UiUtil.GetBorderBrush();
-        var focusedBorderBrush = UiUtil.GetAccentBrush();
-
-        var textEditorBorder = new Border
-        {
-            Child = textEditor,
-            BorderThickness = new Thickness(1),
-            BorderBrush = defaultBorderBrush,
-            CornerRadius = new CornerRadius(3),
-            ClipToBounds = true,
-        };
-
-        var wrapper = new TextEditorWrapper(textEditor, textEditorBorder);
-
-        if (Se.Settings.Appearance.SubtitleTextBoxCenterText)
-        {
-            wrapper.SetAlignment(TextAlignment.Center);
-        }
-
-        vm.EditTextBoxOriginal = wrapper;
-
-        SetupMacContextMenu(textEditor, vm);
-
-        var helper = new TextEditorBindingHelper(vm, textEditor, wrapper, textEditorBorder, defaultBorderBrush, focusedBorderBrush, isOriginal: true);
-        helper.Initialize();
-        vm.EditTextBoxOriginalHelper = helper;
-
-        return textEditorBorder;
     }
 
     /// <summary>
@@ -1991,46 +1852,4 @@ public static partial class InitListViewAndEditBox
             RoutingStrategies.Tunnel);
     }
 
-    /// <summary>
-    /// On macOS, Ctrl+Click is the right-click / context menu gesture.
-    /// AvaloniaEdit's SelectionMouseHandler attaches to TextArea.PointerPressed (bubble phase)
-    /// and treats Ctrl+Click as whole-word selection, clearing the selection in the process.
-    /// We intercept in the tunnel phase (before AvaloniaEdit) to mark the event as handled,
-    /// preventing selection loss, and then open the context menu on pointer release.
-    /// </summary>
-    private static void SetupMacContextMenu(TextEditor textEditor, MainViewModel vm)
-    {
-        if (!OperatingSystem.IsMacOS())
-        {
-            return;
-        }
-
-        // Tunnel phase fires before AvaloniaEdit's bubble-phase SelectionMouseHandler.
-        textEditor.TextArea.AddHandler(
-            InputElement.PointerPressedEvent,
-            (_, e) =>
-            {
-                var point = e.GetCurrentPoint(textEditor.TextArea);
-                if (point.Properties.IsLeftButtonPressed && e.KeyModifiers.HasFlag(KeyModifiers.Control))
-                {
-                    // Block AvaloniaEdit from treating this as a word-selection gesture.
-                    e.Handled = true;
-                }
-            },
-            RoutingStrategies.Tunnel);
-
-        // Now handle the release to actually show the context menu.
-        textEditor.TextArea.AddHandler(
-            InputElement.PointerReleasedEvent,
-            (_, e) =>
-            {
-                if (e.InitialPressMouseButton == MouseButton.Left &&
-                    e.KeyModifiers.HasFlag(KeyModifiers.Control) &&
-                    !e.KeyModifiers.HasFlag(KeyModifiers.Shift))
-                {
-                    vm.ControlMacPointerReleased(textEditor, e);
-                }
-            },
-            RoutingStrategies.Tunnel);
-    }
 }

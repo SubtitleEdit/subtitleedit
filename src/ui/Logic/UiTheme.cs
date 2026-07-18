@@ -38,7 +38,13 @@ public static class UiTheme
             var themeSetting = Se.Settings.Appearance.Theme;
             if (themeSetting == ThemeNameSystem)
             {
-                if (Application.Current!.ActualThemeVariant == ThemeVariant.Dark)
+                // No Application in unit tests or at design time - fall back to dark.
+                if (Application.Current == null)
+                {
+                    return ThemeNameDark;
+                }
+
+                if (Application.Current.ActualThemeVariant == ThemeVariant.Dark)
                 {
                     return ThemeNameDark;
                 }
