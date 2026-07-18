@@ -507,7 +507,7 @@ public partial class OcrViewModel : ObservableObject
             // Select the just-downloaded dictionary by its file name. Matching on the display name
             // fails on non-English UIs, because the list shows the localized culture name (e.g.
             // "slovensk") while the catalog entry carries the English/native name ("Slovenian").
-            var downloadedFileName = Path.GetFileName(result.DictionaryFileName ?? string.Empty);
+            var downloadedFileName = Path.GetFileName(result.SpellCheckDictionary?.DictionaryFileName ?? string.Empty);
             SelectedDictionary =
                 (!string.IsNullOrEmpty(downloadedFileName)
                     ? Dictionaries.FirstOrDefault(d => string.Equals(

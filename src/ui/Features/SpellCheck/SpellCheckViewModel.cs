@@ -249,9 +249,9 @@ public partial class SpellCheckViewModel : ObservableObject
         Dictionaries.AddRange(LanguageFavoritesHelper.Order(spellCheckLanguages, d => SpellCheckDictionaryDisplay.GetTwoLetterLanguageCode(d)));
         if (Dictionaries.Count > 0)
         {
-            if (!string.IsNullOrEmpty(Se.Settings.SpellCheck.LastLanguageDictionaryFile))
+            if (!string.IsNullOrEmpty(Se.Settings.SpellCheck.LastLanguageDictionaryName))
             {
-                SelectedDictionary = Dictionaries.FirstOrDefault(l => l.DictionaryFileName == Se.Settings.SpellCheck.LastLanguageDictionaryFile);
+                SelectedDictionary = Dictionaries.FirstOrDefault(l => l.Name == Se.Settings.SpellCheck.LastLanguageDictionaryName);
             }
 
             if (SelectedDictionary == null)
@@ -427,13 +427,14 @@ public partial class SpellCheckViewModel : ObservableObject
         previous?.Dispose();
     }
 
-    public void Initialize(ObservableCollection<SubtitleLineViewModel> paragraphs, int? selectedSubtitleIndex, IFocusSubtitleLine focusSubtitleLine, string? dictionaryFileName, bool sessionInProgress = false)
+    public void Initialize(ObservableCollection<SubtitleLineViewModel> paragraphs, int? selectedSubtitleIndex,
+        IFocusSubtitleLine focusSubtitleLine, SpellCheckDictionaryDisplay? spellCheckDictionary, bool sessionInProgress = false)
     {
         _focusSubtitleLine = focusSubtitleLine;
         _sessionInProgress = sessionInProgress;
         Paragraphs.Clear();
         Paragraphs.AddRange(paragraphs);
-        SetLanguage(dictionaryFileName);
+        SetLanguage(spellCheckDictionary);
 
         // Auto-attach the image source from the most recent OCR session so the original
         // bitmaps show up automatically when spell-checking OCR'd text - no manual load
@@ -568,7 +569,7 @@ public partial class SpellCheckViewModel : ObservableObject
         TotalAddedWords = _spellCheckManager.NoOfAddedWords;
     }
 
-    private void SetLanguage(string? dictionaryFileName)
+    private void SetLanguage(SpellCheckDictionaryDisplay? spellCheckDictionary)
     {
         if (Dictionaries.Count <= 0)
         {
@@ -630,21 +631,26 @@ public partial class SpellCheckViewModel : ObservableObject
         var threeLetterCode = Iso639Dash2LanguageCode.GetThreeLetterCodeFromTwoLetterCode(languageCode);
         SelectedDictionary = Dictionaries.FirstOrDefault(p => p.GetThreeLetterCode().Equals(threeLetterCode, StringComparison.OrdinalIgnoreCase));
 
-        if (!string.IsNullOrEmpty(dictionaryFileName))
+        if (spellCheckDictionary is not null)
         {
-            SelectedDictionary = Dictionaries.FirstOrDefault(l => l.DictionaryFileName.Equals(dictionaryFileName, StringComparison.OrdinalIgnoreCase));
+            // Hunspell entries are identified by dictionary file; MS Word entries have no file
+            // and are identified by name only.
+            SelectedDictionary = (!string.IsNullOrEmpty(spellCheckDictionary.DictionaryFileName)
+                    ? Dictionaries.FirstOrDefault(l => l.DictionaryFileName.Equals(spellCheckDictionary.DictionaryFileName, StringComparison.OrdinalIgnoreCase))
+                    : null)
+                ?? Dictionaries.FirstOrDefault(l => l.Name.Equals(spellCheckDictionary.Name, StringComparison.OrdinalIgnoreCase));
         }
 
         if (SelectedDictionary == null)
         {
-            SelectedDictionary = Dictionaries.FirstOrDefault(l => l.DictionaryFileName.StartsWith(languageCode, StringComparison.OrdinalIgnoreCase));
+            SelectedDictionary = Dictionaries.FirstOrDefault(l => l.Name.StartsWith(languageCode, StringComparison.OrdinalIgnoreCase));
         }
 
         if (SelectedDictionary == null)
         {
-            if (!string.IsNullOrEmpty(Se.Settings.SpellCheck.LastLanguageDictionaryFile))
+            if (!string.IsNullOrEmpty(Se.Settings.SpellCheck.LastLanguageDictionaryName))
             {
-                SelectedDictionary = Dictionaries.FirstOrDefault(l => l.DictionaryFileName == Se.Settings.SpellCheck.LastLanguageDictionaryFile);
+                SelectedDictionary = Dictionaries.FirstOrDefault(l => l.Name == Se.Settings.SpellCheck.LastLanguageDictionaryName);
             }
         }
 
@@ -790,7 +796,7 @@ public partial class SpellCheckViewModel : ObservableObject
         if (result.OkPressed)
         {
             LoadDictionaries();
-            SetLanguage(result.DictionaryFileName);
+            SetLanguage(result.SpellCheckDictionary);
         }
     }
 
@@ -950,7 +956,7 @@ public partial class SpellCheckViewModel : ObservableObject
                 if (result.OkPressed)
                 {
                     LoadDictionaries();
-                    SetLanguage(result.DictionaryFileName);
+                    SetLanguage(result.SpellCheckDictionary);
                     DoSpellCheck();
                 }
             }, DispatcherPriority.Background);

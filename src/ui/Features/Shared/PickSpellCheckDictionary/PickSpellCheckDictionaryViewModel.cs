@@ -104,7 +104,7 @@ public partial class PickSpellCheckDictionaryViewModel : ObservableObject
         if (result.OkPressed)
         {
             LoadDictionaries();
-            SelectedDictionary = Dictionaries.FirstOrDefault(d => d.DictionaryFileName == result.DictionaryFileName);
+            SelectedDictionary = Dictionaries.FirstOrDefault(d => d.DictionaryFileName == result.SpellCheckDictionary?.DictionaryFileName);
         }
     }
 
