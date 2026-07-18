@@ -113,6 +113,28 @@ public class HtmlUtilTest
         Assert.Equal("<i>Hello</i> d", HtmlUtil.FixInvalidItalicTags(s));
     }
 
+    // Two lines, four stray "</i>" tags, no "<i>" - each line with a tag becomes italic.
+    // The first six cases pin the long-standing behavior for shapes the old condition matched;
+    // the rest used to fall through and be returned with the invalid tags unchanged.
+    [Theory]
+    [InlineData("</i>Hello</i>|</i>World</i>", "<i>Hello</i>|<i>World</i>")]
+    [InlineData("</i>Hello|</i>a</i>World</i>", "<i>Hello</i>|<i>aWorld</i>")]
+    [InlineData("</i>Hello</i>x|</i>World</i>", "<i>Hellox</i>|<i>World</i>")]
+    [InlineData("<i>Hello<i>|<i>World<i>", "<i>Hello</i>|<i>World</i>")]
+    [InlineData("<i>Hello|<i>a<i>World<i>", "<i>Hello</i>|<i>aWorld</i>")]
+    [InlineData("<i>Hello<i>x|<i>World<i>", "<i>Hellox</i>|<i>World</i>")]
+    [InlineData("</i>Hello</i>a</i>|World</i>", "<i>Helloa</i>|<i>World</i>")]
+    [InlineData("a</i>b</i>|c</i>d</i>", "<i>ab</i>|<i>cd</i>")]
+    [InlineData("</i>Hello</i>b</i>c</i>|plain", "<i>Hellobc</i>|plain")]
+    [InlineData("<i>Hello<i>a<i>|World<i>", "<i>Helloa</i>|<i>World</i>")]
+    [InlineData("a<i>b<i>|c<i>d<i>", "<i>ab</i>|<i>cd</i>")]
+    [InlineData("<i>Hello<i>b<i>c<i>|plain", "<i>Hellobc</i>|plain")]
+    public void FixInvalidItalicTagsTwoLinesOnlyStrayTags(string input, string expected)
+    {
+        var s = input.Replace("|", Environment.NewLine);
+        Assert.Equal(expected.Replace("|", Environment.NewLine), HtmlUtil.FixInvalidItalicTags(s));
+    }
+
     [Fact]
     public void EncodeNumericEncodesNonAsciiBmpChar()
     {
