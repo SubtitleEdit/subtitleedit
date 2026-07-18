@@ -1,6 +1,6 @@
 {
   "title": "Subtitle Edit",
-  "version": "v5.1.0-beta15",
+  "version": "v5.1.0-rc8",
   "translatedBy": "",
   "cultureName": "bg-BG",
   "general": {
@@ -329,6 +329,7 @@
     "new": "Ново",
     "newDotDotDot": "Ново...",
     "newProfile": "Нов профил",
+    "next": "Следващо",
     "newSubtitleStartKeyDownSetEndKeyUp": "Вмъкване на субтитри: Начало при натискане на клавиша, край при натискане на клавиша",
     "setSubtitleStartAtVideoPositionSetEndAtKeyUpAndGoToNext": "Задаване на начало от позицията на видеото, задаване на край при натискане на клавиша нагоре и преминаване към следващото",
     "no": "Не",
@@ -423,6 +424,7 @@
     "poweredBy": "Задвижвано от",
     "prefix": "Префикс",
     "preview": "Преглед",
+    "previous": "Предишен",
     "profile": "Профил",
     "profileName": "Име на профила",
     "profiles": "Профили",
@@ -935,7 +937,11 @@
       "seekForwardHint": "Превъртане на видеото напред {0}",
       "seekAmountHint": "Търсена сума {0}",
       "seekVideo": "Търсене на видео (<< >>)",
-      "configureToolbarItems": "Конфигуриране на елементите на лентата с инструменти..."
+      "configureToolbarItems": "Конфигуриране на елементите на лентата с инструменти...",
+      "textPreviousHint": "Пусни предишния субтитър и спри в края {0}",
+      "textPlayHint": "Пусни текущия субтитър и спри в края {0}",
+      "textPauseHint": "Пауза на възпроизвеждането {0}",
+      "textNextHint": "Пусни следващия субтитър и спри в края {0}"
     },
     "audioTrackIsNowX": "Аудио записът вече е \"{0}“",
     "audioTrackX": "Аудио запис {0}",
@@ -1016,6 +1022,7 @@
     "xShotChangedLoaded": "Заредени са {0} промени в кадър",
     "youtubeDlDownloadedSuccessfully": "\"yt-dlp“ е изтеглен успешно.",
     "youtubeDlNotInstalledDownloadNow": "\"yt-dlp“ не е инсталиран и е необходим за възпроизвеждане на онлайн видеоклипове.\n\nДа се изтегли ли сега?",
+    "promptInsertSubtitleOverlap": "Вмъкнатите линии ще се припокриват със съществуващите линии.\n\nДа се вмъкне ли въпреки това?",
     "youtubeDlOutdatedDownloadNow": "„yt-dlp“ е остарял и може да не работи с онлайн видеоклипове.\n\nДа изтеглите ли текущата версия сега?",
     "insertUnicodeSymbol": "Вмъкни Unicode символ",
     "trimmedXLines": "Съкратени са {0} реда със субтитри",
@@ -1160,6 +1167,7 @@
       "paddingLeftRight": "Разминаване отляво/отдясно",
       "paddingTopBottom": "Подплата отгоре/отдолу",
       "previewTitle": "Преглед - текущ размер: {0}x{1}, целеви размер: {2}x{3}, мащабиране: {4}%",
+      "titleExportDvdSup": "DVD sup (MuxMan/Scenarist)",
       "titleExportVobSub": "VobSub (sub/idx)",
       "customTextFormatsDotDotDot": "_Персонализирани текстови формати...",
       "plainTextDotDotDot": "_Обикновен текст...",
@@ -2480,6 +2488,7 @@
       "maxLines": "Максимален брой редове",
       "unbreakSubtitlesShortThan": "Субтитрите Unbreak са по-къси от",
       "newEmptyDefaultMs": "Стандартно Траене на новите субтитри (мс)",
+      "timeCodeUpDownStepMs": "Време за ускорение/скъсяване (ms)",
       "promptBeforeDelete": "Подкана преди изтриване",
       "rememberPositionAndSize": "Запомни позицията и размера на прозореца",
       "openLastFileOnStart": "Отваряне на последния скорошен файл при стартиране",
@@ -2503,6 +2512,7 @@
       "errorBackgroundColor": "Цвят на фона на грешката",
       "waveformDrawGridLines": "Начертайте редове на мрежата",
       "waveformCenterVideoPosition": "Централна позиция на видеото",
+      "waveformCenterVideoPositionAlsoWhenPaused": "Центриране на видеото и по време на пауза",
       "waveformShowToolbar": "Показване на лентата с инструменти",
       "waveformShowToolbarEdit": "Редактиране на лентата с инструменти...",
       "waveformShowToolbarEditLabel": "Панел с инструменти за вълнова форма/спектрограма",
@@ -3138,6 +3148,7 @@
     "binarize": "Бинаризиране",
     "borderSize": "Размер на рамката",
     "captureTopAlign": "Автоматично откриване на подравняване на ASSA",
+    "showOnlyForcedSubtitles": "Показване само на задължителни субтитри",
     "ocrImage": "OCR изображение",
     "oneColor": "Един цвят (бял)",
     "darknessThreshold": "Праг на тъмнината",
@@ -3180,7 +3191,9 @@
     "pickFallbackDatabase": "Избор резервна OCR база данни",
     "fallbackOcrDatabase": "Резервна OCR база данни",
     "showAllOllamaModels": "Покажи всички модели (не само с визуално възприятие)",
-    "ollamaModelLikelyWrong": "Ollama returned без текст - избраният модел може да не поддържа OCR / Vision"
+    "ollamaModelLikelyWrong": "Ollama returned без текст - избраният модел може да не поддържа OCR / Vision",
+    "llamaCppNotDownloaded": "Енджин/моделът на llama.cpp не е изтеглен - изтегляне чрез настройки за пакетно конвертиране",
+    "llamaCppReturnedNoText": "llama.cpp не върна текст - проверете сървъра и модела"
   },
   "assa": {
     "assaDraw": "ASSA - жребий",
