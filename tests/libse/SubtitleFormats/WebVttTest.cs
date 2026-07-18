@@ -44,6 +44,21 @@ public class WebVttTest
     }
 
     [Fact]
+    public void LoadSubtitleSupportsHourlessEndTimestamp()
+    {
+        // WebVTT allows each timestamp independently to omit the hour part
+        var vtt = "WEBVTT\r\n\r\n00:00:05.000 --> 00:10.000\r\nHello there\r\n\r\n00:11.000 --> 00:00:14.000\r\nSecond cue";
+        var subtitle = LoadWebVttSubtitle(vtt);
+        Assert.Equal(2, subtitle.Paragraphs.Count);
+        Assert.Equal("Hello there", subtitle.Paragraphs[0].Text);
+        Assert.Equal(5000, subtitle.Paragraphs[0].StartTime.TotalMilliseconds);
+        Assert.Equal(10000, subtitle.Paragraphs[0].EndTime.TotalMilliseconds);
+        Assert.Equal("Second cue", subtitle.Paragraphs[1].Text);
+        Assert.Equal(11000, subtitle.Paragraphs[1].StartTime.TotalMilliseconds);
+        Assert.Equal(14000, subtitle.Paragraphs[1].EndTime.TotalMilliseconds);
+    }
+
+    [Fact]
     public void LoadSubtitleDoesNotMergeCuesWithDifferentTimeCodes()
     {
         var vtt = "WEBVTT\r\n\r\n00:00:01.000 --> 00:00:04.000\r\nHello\r\n\r\n00:00:05.000 --> 00:00:08.000\r\nWorld";

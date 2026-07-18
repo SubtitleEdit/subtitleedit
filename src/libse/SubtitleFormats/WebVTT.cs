@@ -17,6 +17,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         private static readonly Regex RegexTimeCodes = new Regex(@"^-?\d+:-?\d+:-?\d+\.-?\d+\s*-->\s*-?\d+:-?\d+:-?\d+\.-?\d+", RegexOptions.Compiled);
         private static readonly Regex RegexTimeCodesMiddle = new Regex(@"^-?\d+:-?\d+\.-?\d+\s*-->\s*-?\d+:-?\d+:-?\d+\.-?\d+", RegexOptions.Compiled);
         private static readonly Regex RegexTimeCodesShort = new Regex(@"^-?\d+:-?\d+\.-?\d+\s*-->\s*-?\d+:-?\d+\.-?\d+", RegexOptions.Compiled);
+        private static readonly Regex RegexTimeCodesEndShort = new Regex(@"^-?\d+:-?\d+:-?\d+\.-?\d+\s*-->\s*-?\d+:-?\d+\.-?\d+", RegexOptions.Compiled);
         private static readonly Regex RegexShortArrow = new Regex(@"-->\s*", RegexOptions.Compiled);
         private static readonly Regex RegexRemoveCTags = new Regex(@"\</?c([a-zA-Z\._\-\d%#]*)\>", RegexOptions.Compiled);
         private static readonly Regex RegexRemoveTimeCodes = new Regex(@"\<\d+:\d+:\d+\.\d+\>", RegexOptions.Compiled); // <00:00:10.049>
@@ -267,6 +268,11 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     s = "00:" + RegexShortArrow.Replace(s, "--> 00:", 1);
                 }
 
+                if (isTimeCode && RegexTimeCodesEndShort.IsMatch(s))
+                {
+                    s = RegexShortArrow.Replace(s, "--> 00:", 1); // start has hours, end is without hours
+                }
+
                 if (isNextTimeCode && Utilities.IsNumber(s) && p?.Text.Length > 0)
                 {
                     numbers++;
@@ -312,6 +318,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 else if (p != null && hadEmptyLine &&
                          (RegexTimeCodesMiddle.IsMatch(next) ||
                           RegexTimeCodesShort.IsMatch(next) ||
+                          RegexTimeCodesEndShort.IsMatch(next) ||
                           RegexTimeCodes.IsMatch(next)))
                 {
                     // can both be number or an "identifier" which can be text
