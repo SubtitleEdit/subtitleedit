@@ -12874,8 +12874,7 @@ public partial class MainViewModel :
         }
 
         var isAssa = SelectedSubtitleFormat is AdvancedSubStationAlpha;
-        var isWebVtt = SelectedSubtitleFormat is WebVTT;
-        if (selectionLength == 0)
+        if (selectionLength == 0 || selectionLength == tb.Text.Length)
         {
             tb.Text = _fontNameService.SetFontName(tb.Text, result.SelectedFontName, isAssa);
         }
@@ -12883,6 +12882,12 @@ public partial class MainViewModel :
         {
             var selectedText = tb.Text.Substring(selectionStart, selectionLength);
             selectedText = _fontNameService.SetFontName(selectedText, result.SelectedFontName, isAssa);
+
+            if (isAssa)
+            {
+                selectedText += "{\\fn}"; // reset to style font name after the selection
+            }
+
             tb.Text = tb.Text
                 .Remove(selectionStart, selectionLength)
                 .Insert(selectionStart, selectedText);
