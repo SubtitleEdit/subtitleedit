@@ -90,7 +90,7 @@ public class FolderHelper : IFolderHelper
             var startInfo = new ProcessStartInfo
             {
                 FileName = "explorer.exe",
-                Arguments = @"/select, " + selectedFile,
+                Arguments = $"/select,\"{selectedFile}\"",
                 UseShellExecute = false,
                 CreateNoWindow = true
             };
