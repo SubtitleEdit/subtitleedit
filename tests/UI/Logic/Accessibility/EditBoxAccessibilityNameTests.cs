@@ -48,7 +48,11 @@ public static class TestAppBuilder
 {
     public static AppBuilder BuildAvaloniaApp() =>
         AppBuilder.Configure<TestApp>()
-            .UseHeadless(new AvaloniaHeadlessPlatformOptions())
+            // Real Skia text shaping (not the headless drawing stub) so tests exercise the
+            // same glyph metrics and bidi-run geometry as the app; the RTL canary tests
+            // depend on it (HarfBuzz gives directional marks their true zero width).
+            .UseHeadless(new AvaloniaHeadlessPlatformOptions { UseHeadlessDrawing = false })
+            .UseSkia()
             .WithInterFont();
 }
 
