@@ -100,6 +100,8 @@ public partial class OcrViewModel : ObservableObject
     [ObservableProperty] private string _currentBitmapInfo;
     [ObservableProperty] private string _currentText;
     [ObservableProperty] private bool _isOcrRunning;
+    [ObservableProperty] private bool _hasForcedSubtitles;
+    [ObservableProperty] private bool _showOnlyForced;
     [ObservableProperty] private bool _isNOcrVisible;
     [ObservableProperty] private bool _isOllamaVisible;
     [ObservableProperty] private bool _isLlamaCppVisible;
@@ -166,6 +168,7 @@ public partial class OcrViewModel : ObservableObject
     public readonly List<SubtitleLineViewModel> OcredSubtitle;
 
     private IOcrSubtitle? _ocrSubtitle;
+    private List<OcrSubtitleItem> _allOcrSubtitleItems = new();
     private string _sourceFileName = string.Empty;
     private readonly INOcrCaseFixer _nOcrCaseFixer;
     private readonly IWindowService _windowService;
@@ -2132,6 +2135,7 @@ public partial class OcrViewModel : ObservableObject
         foreach (var item in itemsToRemove)
         {
             OcrSubtitleItems.Remove(item);
+            _allOcrSubtitleItems.Remove(item);
         }
 
         //foreach (var index in selectedIndices.OrderByDescending(p => p))
@@ -2158,9 +2162,11 @@ public partial class OcrViewModel : ObservableObject
 
     private void Renumber()
     {
-        for (var i = 0; i < OcrSubtitleItems.Count; i++)
+        // Renumber against the full list so numbers stay stable when the
+        // forced-only filter is active (filtered rows keep their track position).
+        for (var i = 0; i < _allOcrSubtitleItems.Count; i++)
         {
-            OcrSubtitleItems[i].Number = i + 1;
+            _allOcrSubtitleItems[i].Number = i + 1;
         }
     }
 
@@ -4440,12 +4446,34 @@ public partial class OcrViewModel : ObservableObject
         }, DispatcherPriority.Background);
     }
 
+    private void SetOcrSubtitleItems()
+    {
+        _allOcrSubtitleItems = _ocrSubtitle!.MakeOcrSubtitleItems();
+        HasForcedSubtitles = _allOcrSubtitleItems.Any(p => p.IsForced);
+        OcrSubtitleItems = new ObservableCollection<OcrSubtitleItem>(_allOcrSubtitleItems);
+    }
+
+    partial void OnShowOnlyForcedChanged(bool value)
+    {
+        if (_allOcrSubtitleItems.Count == 0)
+        {
+            return;
+        }
+
+        var selected = SelectedOcrSubtitleItem;
+        OcrSubtitleItems.Clear();
+        OcrSubtitleItems.AddRange(value ? _allOcrSubtitleItems.Where(p => p.IsForced) : _allOcrSubtitleItems);
+
+        var index = selected != null ? OcrSubtitleItems.IndexOf(selected) : -1;
+        SelectAndScrollToRow(index >= 0 ? index : 0);
+    }
+
     public void Initialize(List<BluRaySupParser.PcsData> subtitles, string fileName)
     {
         _sourceFileName = fileName;
         Title = string.Format(Se.Language.Ocr.OcrX, fileName);
         _ocrSubtitle = new OcrSubtitleBluRay(subtitles);
-        OcrSubtitleItems = new ObservableCollection<OcrSubtitleItem>(_ocrSubtitle.MakeOcrSubtitleItems());
+        SetOcrSubtitleItems();
     }
 
     public void Initialize(List<VobSubMergedPack> vobSubMergedPackList, List<SKColor> palette, string vobSubFileName)
@@ -4453,7 +4481,7 @@ public partial class OcrViewModel : ObservableObject
         _sourceFileName = vobSubFileName;
         Title = string.Format(Se.Language.Ocr.OcrX, vobSubFileName);
         _ocrSubtitle = new OcrSubtitleVobSub(vobSubMergedPackList, palette);
-        OcrSubtitleItems = new ObservableCollection<OcrSubtitleItem>(_ocrSubtitle.MakeOcrSubtitleItems());
+        SetOcrSubtitleItems();
         IsVobSubVisible = true;
         ApplyStoredVobSubColors();
     }
@@ -4463,7 +4491,7 @@ public partial class OcrViewModel : ObservableObject
         _sourceFileName = fileName;
         Title = string.Format(Se.Language.Ocr.OcrX, fileName);
         _ocrSubtitle = new OcrSubtitleMp4VobSub(mp4SubtitleTrack, paragraphs);
-        OcrSubtitleItems = new ObservableCollection<OcrSubtitleItem>(_ocrSubtitle.MakeOcrSubtitleItems());
+        SetOcrSubtitleItems();
     }
 
     public void Initialize(List<VobSubMergedPack> mergedVobSubPacks, List<SKColor> palette, MatroskaTrackInfo matroskaSubtitleInfo, string fileName)
@@ -4471,7 +4499,7 @@ public partial class OcrViewModel : ObservableObject
         _sourceFileName = fileName;
         Title = string.Format(Se.Language.Ocr.OcrX, fileName);
         _ocrSubtitle = new OcrSubtitleVobSub(mergedVobSubPacks, palette);
-        OcrSubtitleItems = new ObservableCollection<OcrSubtitleItem>(_ocrSubtitle.MakeOcrSubtitleItems());
+        SetOcrSubtitleItems();
         IsVobSubVisible = true;
         ApplyStoredVobSubColors();
     }
@@ -4481,7 +4509,7 @@ public partial class OcrViewModel : ObservableObject
         _sourceFileName = fileName;
         Title = string.Format(Se.Language.Ocr.OcrX, fileName);
         _ocrSubtitle = new OcrSubtitleMkvDvb(matroskaSubtitleInfo, subtitle, subtitleImages);
-        OcrSubtitleItems = new ObservableCollection<OcrSubtitleItem>(_ocrSubtitle.MakeOcrSubtitleItems());
+        SetOcrSubtitleItems();
     }
 
     public void Initialize(MatroskaTrackInfo matroskaSubtitleInfo, List<BluRaySupParser.PcsData> pcsDataList, string fileName)
@@ -4489,7 +4517,7 @@ public partial class OcrViewModel : ObservableObject
         _sourceFileName = fileName;
         Title = string.Format(Se.Language.Ocr.OcrX, fileName);
         _ocrSubtitle = new OcrSubtitleMkvBluRay(matroskaSubtitleInfo, pcsDataList);
-        OcrSubtitleItems = new ObservableCollection<OcrSubtitleItem>(_ocrSubtitle.MakeOcrSubtitleItems());
+        SetOcrSubtitleItems();
     }
 
     public void Initialize(IList<IBinaryParagraphWithPosition> list, string fileName)
@@ -4497,7 +4525,7 @@ public partial class OcrViewModel : ObservableObject
         _sourceFileName = fileName;
         Title = string.Format(Se.Language.Ocr.OcrX, fileName);
         _ocrSubtitle = new OcrSubtitleIBinaryParagraph(list);
-        OcrSubtitleItems = new ObservableCollection<OcrSubtitleItem>(_ocrSubtitle.MakeOcrSubtitleItems());
+        SetOcrSubtitleItems();
     }
 
     public void InitializeBdn(Subtitle subtitle, string fileName, bool isSon)
@@ -4505,7 +4533,7 @@ public partial class OcrViewModel : ObservableObject
         _sourceFileName = fileName;
         Title = string.Format(Se.Language.Ocr.OcrX, fileName);
         _ocrSubtitle = new OcrSubtitleBdn(subtitle, fileName, isSon);
-        OcrSubtitleItems = new ObservableCollection<OcrSubtitleItem>(_ocrSubtitle.MakeOcrSubtitleItems());
+        SetOcrSubtitleItems();
     }
 
     public void InitializeWebVtt(Subtitle subtitle, string fileName)
@@ -4513,7 +4541,7 @@ public partial class OcrViewModel : ObservableObject
         _sourceFileName = fileName;
         Title = string.Format(Se.Language.Ocr.OcrX, fileName);
         _ocrSubtitle = new OcrSubtitleWebVttImages(subtitle, fileName);
-        OcrSubtitleItems = new ObservableCollection<OcrSubtitleItem>(_ocrSubtitle.MakeOcrSubtitleItems());
+        SetOcrSubtitleItems();
     }
 
     public void InitializeSpDvdSup(string fileName)
@@ -4521,7 +4549,7 @@ public partial class OcrViewModel : ObservableObject
         _sourceFileName = fileName;
         Title = string.Format(Se.Language.Ocr.OcrX, fileName);
         _ocrSubtitle = new OcrSubtitleSpDvdSupImages(fileName);
-        OcrSubtitleItems = new ObservableCollection<OcrSubtitleItem>(_ocrSubtitle.MakeOcrSubtitleItems());
+        SetOcrSubtitleItems();
     }
 
     internal void Initialize(TransportStreamParser tsParser, List<TransportStreamSubtitle> subtitles, string fileName)
@@ -4529,7 +4557,7 @@ public partial class OcrViewModel : ObservableObject
         _sourceFileName = fileName;
         Title = string.Format(Se.Language.Ocr.OcrX, fileName);
         _ocrSubtitle = new OcrSubtitleTransportStream(tsParser, subtitles, fileName);
-        OcrSubtitleItems = new ObservableCollection<OcrSubtitleItem>(_ocrSubtitle.MakeOcrSubtitleItems());
+        SetOcrSubtitleItems();
     }
 
     internal void Initialize(List<ImportImageItem> images)
@@ -4537,7 +4565,7 @@ public partial class OcrViewModel : ObservableObject
         _sourceFileName = string.Empty;
         Title = string.Format(Se.Language.Ocr.OcrX, Se.Language.General.Images);
         _ocrSubtitle = new OcrImportImage(images);
-        OcrSubtitleItems = new ObservableCollection<OcrSubtitleItem>(_ocrSubtitle.MakeOcrSubtitleItems());
+        SetOcrSubtitleItems();
     }
 
     internal void InitializeDivX(List<XSub> list, string fileName)
@@ -4545,7 +4573,7 @@ public partial class OcrViewModel : ObservableObject
         _sourceFileName = fileName;
         Title = string.Format(Se.Language.Ocr.OcrX, "DivX");
         _ocrSubtitle = new OcrSubtitleDivX(list, fileName);
-        OcrSubtitleItems = new ObservableCollection<OcrSubtitleItem>(_ocrSubtitle.MakeOcrSubtitleItems());
+        SetOcrSubtitleItems();
     }
 
     private double CalculateRowHeight()

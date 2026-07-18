@@ -68,6 +68,7 @@ public class LanguageOcr
     public string Binarize { get; set; }
     public string BorderSize { get; set; }
     public string CaptureTopAlign { get; set; }
+    public string ShowOnlyForcedSubtitles { get; set; }
     public string OcrImage { get; set; }
     public string OneColor { get; set; }
     public string DarknessThreshold { get; set; }
@@ -180,6 +181,7 @@ public class LanguageOcr
         Binarize = "Binarize";
         BorderSize = "Border size";
         CaptureTopAlign = "Auto-detect ASSA alignment";
+        ShowOnlyForcedSubtitles = "Show only forced subtitles";
         OcrImage = "OCR image";
         OneColor = "One color (white)";
         DarknessThreshold = "Darkness threshold";
