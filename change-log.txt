@@ -3,6 +3,25 @@ Subtitle Edit Changelog
 
 -----------------------------------------------------------------------------------------------------
 
+v5.1.0-rc8 (18th of July 2026)
+
+* Waveform: add SE4-style Previous/Play/Pause/Next text buttons to the waveform toolbar
+* Subtitle text box: disable ligatures - letter pairs like "fi" no longer merge into one glyph, so the caret and mouse selection treat each character separately - thx subcor
+* Subtitle text box: roll back rc7's right-to-left ASSA tag rendering fix - clicking inside a tag in a right-to-left line could crash; the misplaced backslash is cosmetic only and the fix will return once Avalonia can render it safely - thx muaz978
+* ASSA: fix missing closing tag when setting font name on selected text - thx rRobis
+* Fix common errors: "Fix invalid italic tags" no longer eats the character before a dangling begin tag and now repairs more two-line stray-tag shapes
+* Cavena 890: fix Chinese write path so text and italics round-trip
+* Fix six silent text-corruption edge cases (nested closing tags, UTF-16 detection, "Fix uppercase 'i' inside words", Turkish casing after colon, Cavena 890 Hebrew italics, DVD Studio Pro bold+italic) - thx ivandrofly
+* Harden the binary subtitle parsers against malformed files (crashes, out-of-memory, infinite loops) - thx ivandrofly
+* Fix image edge cases in transparent-image detection and rectangle copying - thx ivandrofly
+* Network: fix proxy password decoding, a crash when no proxy is configured, and auto-translate request issues - thx ivandrofly
+* Performance: three core-library micro-optimizations
+* SeConv: malformed Scenarist SCC input no longer converts "successfully" to corrupt output - files where nothing can be decoded now fail with a clear error and a non-zero exit code, and partially damaged files convert with a warning (console and --json) - thx lthibault-stingray
+* Update Korean translation - thx 12si27
+* Update Italian translation - thx bovirus
+
+-----------------------------------------------------------------------------------------------------
+
 v5.1.0-rc7 (17th of July 2026)
 
 * Subtitle grid: "Insert subtitle after current line..." now works on any line, not only the last - and the inserted file keeps its own time codes like SE4 (only shifted when it would overlap the selected line), so pre-timed subtitles land at their real positions - thx UUMARTIN
