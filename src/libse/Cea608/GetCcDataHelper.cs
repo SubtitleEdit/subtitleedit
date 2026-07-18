@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.IO;
+using Nikse.SubtitleEdit.Core.Common;
 
 namespace Nikse.SubtitleEdit.Core.Cea608
 {
@@ -12,7 +13,7 @@ namespace Nikse.SubtitleEdit.Core.Cea608
             {
                 var buffer = new byte[4];
                 fs.Seek((long)i, SeekOrigin.Begin);
-                fs.Read(buffer, 0, buffer.Length);
+                fs.ReadFully(buffer, 0, buffer.Length);
                 var nalSize = GetUInt32(buffer, 0);
                 var flag = fs.ReadByte();
                 if (IsRbspNalUnitType(flag & 0x1F) && nalSize < 10_000)
@@ -42,7 +43,7 @@ namespace Nikse.SubtitleEdit.Core.Cea608
 
             var buffer = new byte[endPos - startPos];
             fs.Seek((long)startPos, SeekOrigin.Begin);
-            fs.Read(buffer, 0, buffer.Length);
+            fs.ReadFully(buffer, 0, buffer.Length);
 
             for (var x = startPos; x < endPos; x++)
             {

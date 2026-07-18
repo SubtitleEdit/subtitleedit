@@ -1096,7 +1096,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
             // check for Topfield .rec file
             ms.Seek(position, SeekOrigin.Begin);
-            ms.Read(m2TsTimeCodeBuffer, 0, 3);
+            ms.ReadFully(m2TsTimeCodeBuffer, 0, 3);
             if (m2TsTimeCodeBuffer[0] == 0x54 && m2TsTimeCodeBuffer[1] == 0x46 && m2TsTimeCodeBuffer[2] == 0x72)
             {
                 position = 3760;
@@ -1172,7 +1172,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             {
                 ms.Seek(0, SeekOrigin.Begin);
                 var buffer = new byte[192 + 192 + 5];
-                ms.Read(buffer, 0, buffer.Length);
+                ms.ReadFully(buffer, 0, buffer.Length);
                 if (buffer[0] == Packet.SynchronizationByte && buffer[188] == Packet.SynchronizationByte)
                 {
                     return false;

@@ -100,7 +100,7 @@ public class EbuTtDTest
         // First format whose IsMine claims the document wins - EbuTtD must beat the
         // generic TTML formats for its own output.
         var lines = raw.SplitToLines();
-        SubtitleFormat detected = null;
+        SubtitleFormat? detected = null;
         foreach (var candidate in SubtitleFormat.AllSubtitleFormats)
         {
             if (candidate.IsMine(lines, null))

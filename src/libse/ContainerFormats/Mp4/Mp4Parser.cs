@@ -786,7 +786,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4
                         if (readLength > 10 && readLength < 1_000_000)
                         {
                             var buffer = new byte[readLength];
-                            fs.Read(buffer, 0, readLength);
+                            fs.ReadFully(buffer, 0, readLength);
                             list.Add(Encoding.UTF8.GetString(buffer));
                         }
                     }
