@@ -329,6 +329,7 @@ public class LanguageGeneral
     public string New { get; set; }
     public string NewDotDotDot { get; set; }
     public string NewProfile { get; set; }
+    public string Next { get; set; }
     public string NewSubtitleStartKeyDownSetEndKeyUp { get; set; }
     public string SetSubtitleStartAtVideoPositionSetEndAtKeyUpAndGoToNext { get; set; }
     public string No { get; set; }
@@ -423,6 +424,7 @@ public class LanguageGeneral
     public string PoweredBy { get; set; }
     public string Prefix { get; set; }
     public string Preview { get; set; }
+    public string Previous { get; set; }
     public string Profile { get; set; }
     public string ProfileName { get; set; }
     public string Profiles { get; set; }
@@ -1086,6 +1088,7 @@ public class LanguageGeneral
         New = "New";
         NewDotDotDot = "New...";
         NewProfile = "New profile";
+        Next = "Next";
         NewSubtitleStartKeyDownSetEndKeyUp = "Insert subtitle: Start on key down, set end on key up";
         SetSubtitleStartAtVideoPositionSetEndAtKeyUpAndGoToNext = "Set start at video position set end on key up, and go to next";
         No = "No";
@@ -1180,6 +1183,7 @@ public class LanguageGeneral
         PoweredBy = "Powered by";
         Prefix = "Prefix";
         Preview = "Preview";
+        Previous = "Previous";
         Profile = "Profile";
         ProfileName = "Profile name";
         Profiles = "Profiles";

@@ -23,6 +23,10 @@ public class LanguageMainWaveform
     public string SeekAmountHint { get; set; }
     public string SeekVideo { get; set; }
     public string ConfigureToolbarItems { get; set; }
+    public string TextPreviousHint { get; set; }
+    public string TextPlayHint { get; set; }
+    public string TextPauseHint { get; set; }
+    public string TextNextHint { get; set; }
 
     public LanguageMainWaveform()
     {
@@ -47,5 +51,9 @@ public class LanguageMainWaveform
         SeekAmountHint = "Seek amount {0}";
         SeekVideo = "Seek video (<< >>)";
         ConfigureToolbarItems = "Configure toolbar items...";
+        TextPreviousHint = "Play previous subtitle and stop at end {0}";
+        TextPlayHint = "Play current subtitle and stop at end {0}";
+        TextPauseHint = "Pause playback {0}";
+        TextNextHint = "Play next subtitle and stop at end {0}";
     }
 }
