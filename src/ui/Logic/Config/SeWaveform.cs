@@ -154,14 +154,14 @@ public class SeWaveform
 
         ToolbarItems =
         [
+            new SeWaveformToolbarItem { Type = SeWaveformToolbarItemType.TextPrevious, IsVisible = false, SortOrder = 2 },
+            new SeWaveformToolbarItem { Type = SeWaveformToolbarItemType.TextPlay, IsVisible = false, SortOrder = 4 },
+            new SeWaveformToolbarItem { Type = SeWaveformToolbarItemType.TextPause, IsVisible = false, SortOrder = 6 },
+            new SeWaveformToolbarItem { Type = SeWaveformToolbarItemType.TextNext, IsVisible = false, SortOrder = 8 },
             new SeWaveformToolbarItem { Type = SeWaveformToolbarItemType.Play, IsVisible = true, SortOrder = 10 },
             new SeWaveformToolbarItem { Type = SeWaveformToolbarItemType.PlayNext, IsVisible = false, SortOrder = 20 },
             new SeWaveformToolbarItem { Type = SeWaveformToolbarItemType.PlaySelection, IsVisible = false, SortOrder = 30 },
             new SeWaveformToolbarItem { Type = SeWaveformToolbarItemType.Repeat, IsVisible = true, SortOrder = 40 },
-            new SeWaveformToolbarItem { Type = SeWaveformToolbarItemType.TextPrevious, IsVisible = false, SortOrder = 42 },
-            new SeWaveformToolbarItem { Type = SeWaveformToolbarItemType.TextPlay, IsVisible = false, SortOrder = 44 },
-            new SeWaveformToolbarItem { Type = SeWaveformToolbarItemType.TextPause, IsVisible = false, SortOrder = 46 },
-            new SeWaveformToolbarItem { Type = SeWaveformToolbarItemType.TextNext, IsVisible = false, SortOrder = 48 },
             new SeWaveformToolbarItem { Type = SeWaveformToolbarItemType.RemoveBlankLines, IsVisible = false, SortOrder = 50 },
             new SeWaveformToolbarItem { Type = SeWaveformToolbarItemType.New, IsVisible = true, SortOrder = 60 },
             new SeWaveformToolbarItem { Type = SeWaveformToolbarItemType.SetStart, IsVisible = true, SortOrder = 70 },
@@ -179,9 +179,11 @@ public class SeWaveform
     }
 
     /// <summary>
-    /// Appends any toolbar item types missing from a loaded (older) settings file so newly added
+    /// Adds any toolbar item types missing from a loaded (older) settings file so newly added
     /// items (e.g. VideoSeek) appear for existing users and InitWaveform's per-type lookup can't
-    /// throw. New items go just before "More" so it stays the last item, matching the defaults.
+    /// throw. Missing items take their sort order from the defaults, so when the user enables one
+    /// it shows up at its intended spot (the configure dialog rewrites sort orders as 10, 20, ...,
+    /// so a default below 10 lands left of everything, one above the maximum lands at the end).
     /// </summary>
     public void EnsureAllToolbarItems()
     {
@@ -190,10 +192,7 @@ public class SeWaveform
             ToolbarItems = new List<SeWaveformToolbarItem>();
         }
 
-        var moreItem = ToolbarItems.Find(p => p.Type == SeWaveformToolbarItemType.More);
-        var appendSortOrder = moreItem?.SortOrder - 5 ??
-                              (ToolbarItems.Count > 0 ? ToolbarItems.Max(p => p.SortOrder) + 10 : 10);
-
+        List<SeWaveformToolbarItem>? defaults = null;
         foreach (SeWaveformToolbarItemType type in System.Enum.GetValues(typeof(SeWaveformToolbarItemType)))
         {
             if (ToolbarItems.Exists(p => p.Type == type))
@@ -201,9 +200,14 @@ public class SeWaveform
                 continue;
             }
 
+            defaults ??= new SeWaveform().ToolbarItems;
+            var defaultItem = defaults.Find(p => p.Type == type);
+            var sortOrder = defaultItem?.SortOrder ??
+                            (ToolbarItems.Count > 0 ? ToolbarItems.Max(p => p.SortOrder) + 10 : 10);
+
             // Missing items were introduced after this settings file was written; add them hidden
-            // so an upgrade never silently rearranges a toolbar the user has already tuned.
-            ToolbarItems.Add(new SeWaveformToolbarItem { Type = type, IsVisible = false, SortOrder = appendSortOrder });
+            // so an upgrade never silently changes a toolbar the user has already tuned.
+            ToolbarItems.Add(new SeWaveformToolbarItem { Type = type, IsVisible = false, SortOrder = sortOrder });
         }
     }
 }
