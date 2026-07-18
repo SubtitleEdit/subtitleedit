@@ -271,7 +271,8 @@ public static class DownloadHashManager
             // otherwise users will be prompted to "update" to the same version they just got.
             [CrispAsr.WindowsCuda] = new[]
             {
-                "218b574a107b954283548ee0f753414b01d23686a360edf84b0ddb459b10f0eb", // v0.8.12 (current download URL)
+                "454c748f2b8b7ecbcb6b6f41d90440df5f26f979c57410eb7a953156cd710094", // v0.8.13 (current download URL)
+                "218b574a107b954283548ee0f753414b01d23686a360edf84b0ddb459b10f0eb", // v0.8.12
                 "b1d850975bb6a48f192e9a2da0ec8362c3668b811fc087a1cb1f164833bd3ced", // v0.8.11
                 "80496d05f71735757c4686f58f0f42c9668035804ca4884dc0219f6fe0b32a87", // v0.8.10
                 "0de7b2ed37862124b9083e533589fc9fc4fb6c893ccd99eadac096b92684afa0", // v0.8.9
@@ -304,7 +305,8 @@ public static class DownloadHashManager
             },
             [CrispAsr.WindowsVulkan] = new[]
             {
-                "900c8211aade1bd5086d51f3155eb09b4e9d81c0f905b3a02e65c3cb692175fe", // v0.8.12 (current download URL)
+                "33d2806c0ddd23b41fe681be5cf9e06eb31888826caa2267759d2f353bfa9e82", // v0.8.13 (current download URL)
+                "900c8211aade1bd5086d51f3155eb09b4e9d81c0f905b3a02e65c3cb692175fe", // v0.8.12
                 "d37725a7ff1e46a3d0fd8a44457a59043635b94c0ece43ccdcc093d4765f4d18", // v0.8.11
                 "3e90ca3499e7e284af6952c8cdd0c41ead39f805be1a064d29eaefa40175656f", // v0.8.10
                 "39b803fce62e534215e210a214376996754f0d5c9827cd5ba9cfd230084a5aff", // v0.8.9
@@ -337,7 +339,8 @@ public static class DownloadHashManager
             },
             [CrispAsr.WindowsCpu] = new[]
             {
-                "d6ff6adcfd2df2e90081466fceabce5a22dfd70c9e50d1fba59d54cf27db7483", // v0.8.12 (current download URL)
+                "13ad85c008ae74a189f7e1472082a527e4020a18c51f61d1b00e7ec5c72b358d", // v0.8.13 (current download URL)
+                "d6ff6adcfd2df2e90081466fceabce5a22dfd70c9e50d1fba59d54cf27db7483", // v0.8.12
                 "3722297ec384c6255d8cdff8f87b1de10a45e6bdf30147937a3cffd22ae5d6bf", // v0.8.11
                 "31f2de20ffc161e6501653590f1ce4ccaaeb83949277a4a1dcb3764f8ef3f0f1", // v0.8.10
                 "3ccc4ce194c5a5c9a435118a530d602ba23e2a291f099ee2ca698c5d37945656", // v0.8.9
@@ -363,7 +366,8 @@ public static class DownloadHashManager
             },
             [CrispAsr.WindowsCpuLegacy] = new[]
             {
-                "7782a5017c3297be07e254e0fa31bb1bc3fcc9b46650657e73e57ef45140a13f", // v0.8.12 (current download URL)
+                "f9f682223b93437a8a68d1a9d99149ceecf53040c53a1210ed413544c2685462", // v0.8.13 (current download URL)
+                "7782a5017c3297be07e254e0fa31bb1bc3fcc9b46650657e73e57ef45140a13f", // v0.8.12
                 "cbb11d7f12d814d35517539ac965a62392abc695e5284212186ed7bd2593af97", // v0.8.11
                 "fd83ce8e3ba7af727c24df18cce8c780371dafec5f27d5f122583190fafea481", // v0.8.10
                 "b3c5ee21ce5dae929b08459310293fc47491884ed0df60ffe2905b2a8ce1a8d9", // v0.8.9
@@ -395,7 +399,8 @@ public static class DownloadHashManager
             },
             [CrispAsr.MacOs] = new[]
             {
-                "8bdbefba837d151c1e42b85c16d89e48526149a25fb0f16d26f7f5948c9413a5", // v0.8.12 (current download URL)
+                "943b290c616e9d901e77d52ddd573433e46cbe75bb911fab9965b9a7a5985cb6", // v0.8.13 (current download URL)
+                "8bdbefba837d151c1e42b85c16d89e48526149a25fb0f16d26f7f5948c9413a5", // v0.8.12
                 "f41c78816cb2598693030790c5cfd54a51ce7593e2efff47e0899e8f48c00d59", // v0.8.11
                 "10bfbcfde8c96dfef64b21bd6efe3043ef3ed1005695baad0bdacaa7e54fae3a", // v0.8.10
                 "5d5fbaf60431142d1f99a23ed0d4b94923f6a235030694c6ea4ce5a68e2aa5da", // v0.8.9
@@ -428,7 +433,8 @@ public static class DownloadHashManager
             },
             [CrispAsr.Linux] = new[]
             {
-                "5163e89d84eee3f10e6e22c5c82f87668bc358fc029782e873660716d3069cc6", // v0.8.12 (current download URL)
+                "5b4ef551e6a3808611157af24f237de611b68b910238ef28aa2f602a28b20c54", // v0.8.13 (current download URL)
+                "5163e89d84eee3f10e6e22c5c82f87668bc358fc029782e873660716d3069cc6", // v0.8.12
                 "05fad4ff617ad18d2959751a85a38fed3bc6047fcfc96ae973a844cdfaaf81d0", // v0.8.11
                 "8d00a8876b0d4034e977556608f71fa6c3d4592fab9412ab9cd4137b5737a77b", // v0.8.10
                 "9137baa6cf689462093feb6123d0917e0df64bc9b2744ca0c68ada7e02845126", // v0.8.9
@@ -461,7 +467,8 @@ public static class DownloadHashManager
             },
             [CrispAsr.LinuxCuda] = new[]
             {
-                "6c4add67ce38b9e208184301aa9f986544b46ef116dfc356afd80348b9560882", // v0.8.12 (current download URL)
+                "780b25b90c2f4351589817ade07c8ca6bb855e2d496e6d216e382da38c42186d", // v0.8.13 (current download URL)
+                "6c4add67ce38b9e208184301aa9f986544b46ef116dfc356afd80348b9560882", // v0.8.12
                 "4daaaf5c79c5a94925a43659ad614baa2f6b8a70fb962cf38da6262e40e01f85", // v0.8.11
                 "c31024da7d58c02def75f2fd43fd17f12883da8712a87d370e2e360436dad109", // v0.8.10
                 "c77c81a46b9a31de53903386a4c471c2013ad03d9ec3c076fad2659b32454487", // v0.8.9
@@ -485,7 +492,8 @@ public static class DownloadHashManager
             },
             [CrispAsr.LinuxArm] = new[]
             {
-                "535e5b460318d6ea49676b0401d4f90fec089df8c5f90a8551a83dc84fad98fe", // v0.8.10 (current download URL)
+                "bb58272a2463e36bfb94d6c237e6a472c8ce7ecf3a6b2c521927a5f676a849ed", // v0.8.13 (current download URL; v0.8.11/v0.8.12 shipped no linux-arm64 build)
+                "535e5b460318d6ea49676b0401d4f90fec089df8c5f90a8551a83dc84fad98fe", // v0.8.10
                 "72872630b5ad93e11916b7871d686a3f8697377a2ee4e43ff7bbba8ddb915bc1", // v0.8.9
                 "c3e8e78a32d575840714d555f284f50496bb234edb180a78556ce1f8fcb17e9f", // v0.8.8
                 "683de00674aeeedcdf87547eebad8fba28077ac075a584edc5702c51253e7201", // v0.8.6
@@ -676,7 +684,8 @@ public static class DownloadHashManager
             // SHA-256 of crispasr.exe / crispasr extracted from each archive above.
             [CrispAsr.WindowsCudaExecutable] = new[]
             {
-                "e2a64859bf3294f96a7b0573b7226abe0d50b11ea76b6c67c6520c515f79b4c9", // v0.8.12 (current download URL)
+                "9911d530345d10ceecb31c152a87911ec964909921134b1bfe26ffa942da403a", // v0.8.13 (current download URL)
+                "e2a64859bf3294f96a7b0573b7226abe0d50b11ea76b6c67c6520c515f79b4c9", // v0.8.12
                 "e494ab0bcc88224c394bcfb6dc896e18a4ada6f4c16dda5d9b51dadf65e031ea", // v0.8.11
                 "cdd4383fe1b3e6f941c7131aac528420e8662f36b19ddab8ee923e1e3cb18e54", // v0.8.10
                 "9cfc4b40db5377aea5c19575f671318aae349b01ec598f69b100d6948b15dd07", // v0.8.9
@@ -694,7 +703,8 @@ public static class DownloadHashManager
             },
             [CrispAsr.WindowsVulkanExecutable] = new[]
             {
-                "6cc81f63014ed5665b69e93de14f97a96e68a3d6b4a7c06ecf9ffd7bd52cbcdf", // v0.8.12 (current download URL)
+                "685b1182fe7a6226fb9f815008d26606bb3a007a02aa436a84051584197ddd38", // v0.8.13 (current download URL)
+                "6cc81f63014ed5665b69e93de14f97a96e68a3d6b4a7c06ecf9ffd7bd52cbcdf", // v0.8.12
                 "e12f58bd5a8e3c48239abcb066782221e1f81abc50c4c488908582edc05ae32d", // v0.8.11
                 "154d1c46fcfdd9478effec946259a77d6f73b8ea5441cec683004f17c45fa9b8", // v0.8.10
                 "0987187a5761e65c4b09a9c791b393b5a8ad9ad9085082b83b5d12ccf4fa2d72", // v0.8.9
@@ -727,7 +737,8 @@ public static class DownloadHashManager
             },
             [CrispAsr.WindowsCpuExecutable] = new[]
             {
-                "2ba6be52a0ab0554b584eadfbf39635fcb839a7eabf9aec6e37fde0f12ab8788", // v0.8.12 (current download URL)
+                "3426e1d1fc33883e7b4e59a46b424d811154e101c0a4f09807a0f51d362672a6", // v0.8.13 (current download URL)
+                "2ba6be52a0ab0554b584eadfbf39635fcb839a7eabf9aec6e37fde0f12ab8788", // v0.8.12
                 "bc01019cd77664ab6ef065b2ce3745a9057aad2b7f42271e5a4f9c1deb4d5b81", // v0.8.11
                 "e082abff64dd5b926e0c03c5b76d6985d3ee51523877670728a6610bec40fd24", // v0.8.10
                 "6ac6269a7cb2e7fe24bef796509aff72cdcd5b0a30831894a688b2b04380ed9f", // v0.8.9
@@ -753,7 +764,8 @@ public static class DownloadHashManager
             },
             [CrispAsr.WindowsCpuLegacyExecutable] = new[]
             {
-                "9ed3e627931bf598f5abc0a4132027602c97e1240ea83a62a9a683fba71b7422", // v0.8.12 (current download URL)
+                "7dd11cea38d1299e472c8a0cc892ba23e149a36aeb4d7efe49270b9a018fd9e0", // v0.8.13 (current download URL)
+                "9ed3e627931bf598f5abc0a4132027602c97e1240ea83a62a9a683fba71b7422", // v0.8.12
                 "345a8951ff97d304d4647f068b20eb3aa7cfe2a19dc45f131581d6946e4bee13", // v0.8.11
                 "97277329dfc64815fb6e678168e20699aa4a549eb80c598792756c2254ee2762", // v0.8.10
                 "2509010640866d56f2baf7da15657cdf82332d06115bc27d3b3e102c360b8446", // v0.8.9
@@ -785,7 +797,8 @@ public static class DownloadHashManager
             },
             [CrispAsr.LinuxExecutable] = new[]
             {
-                "7415b2caee1a1cdc2236703c89edae50276095e94aff77bb7beae5f4907693f3", // v0.8.12 (current download URL)
+                "20a8445c0b6735cbe743eeff8bfa882478f28acc4354b7ade2cde9e70e194a60", // v0.8.13 (current download URL)
+                "7415b2caee1a1cdc2236703c89edae50276095e94aff77bb7beae5f4907693f3", // v0.8.12
                 "4938b4a1a27b3822c118fc945fbd925337ab7cbdf2fe0d368fbbebd4f90923ad", // v0.8.11
                 "3061e84fd0098bf7b4c6545513477072b2a503628ab1bb888f830bfb40754efb", // v0.8.10
                 "41c5bb60873b473667a0bc1973ecc99786e6f52127c03b5a9463203f93bb73d5", // v0.8.9
@@ -818,7 +831,8 @@ public static class DownloadHashManager
             },
             [CrispAsr.MacOsExecutable] = new[]
             {
-                "e6e9cb008e9f2cd73747c88c27f3da3628cd5cd214d885f01a7a682d26b3b821", // v0.8.12 (current download URL)
+                "11fb0c4c2d6c9d6abb20a09c2517c6599516387e2b3344dcb99c1bd5f49663d6", // v0.8.13 (current download URL)
+                "e6e9cb008e9f2cd73747c88c27f3da3628cd5cd214d885f01a7a682d26b3b821", // v0.8.12
                 "7adc14432cf93c5c8d9a798527f3b3c12134b2129f8df3a72ffaacae6288edb3", // v0.8.11
                 "fb0990c85de0a4e1993303842d7ac09fcc08bf26bdb032ba427477d6c4fdf091", // v0.8.10
                 "1d3d045d6e25efc3ea78d17f15871df23a11d5aaa08c1ccbce59fae5f737ba43", // v0.8.9
@@ -851,7 +865,8 @@ public static class DownloadHashManager
             },
             [CrispAsr.LinuxCudaExecutable] = new[]
             {
-                "ac9015b0c1608869416b3a14d0bf263a862b8d1b7cf2a599dcb5ccd3d7d82f29", // v0.8.12 (current download URL)
+                "7e1370bc422be5b087022ac59913ee4b74a1058cea20685c3c1ad2142a324efa", // v0.8.13 (current download URL)
+                "ac9015b0c1608869416b3a14d0bf263a862b8d1b7cf2a599dcb5ccd3d7d82f29", // v0.8.12
                 "fec843fc44c9d1f575e096e0b3e790d7ead12a3b36ee4cd327d9714e6d7d9372", // v0.8.11
                 "90cc2bcb31668de0f7c0d348f28d6ba94f440b562f9b7b604e85ebf2554c17cb", // v0.8.10
                 "abcc4706407df51f8d10cf81ad8bfddeebd8a9b9a8ff6f8682de467c686ab23e", // v0.8.9
@@ -875,7 +890,8 @@ public static class DownloadHashManager
             },
             [CrispAsr.LinuxArmExecutable] = new[]
             {
-                "6acb44b3838020b5ad1a544b59b9649712bc91e8117c8299bcc9cb8b9b40b40e", // v0.8.10 (current download URL)
+                "36457053e4b96f36a26ac2aa809f484521924f4be31e14a5f0c05fc1c9790149", // v0.8.13 (current download URL; v0.8.11/v0.8.12 shipped no linux-arm64 build)
+                "6acb44b3838020b5ad1a544b59b9649712bc91e8117c8299bcc9cb8b9b40b40e", // v0.8.10
                 "1097775f68dbccfdf8c01fb04ed9f6ea4c880c521cab619bd2f971beffdcf5fd", // v0.8.9
                 "b94519186ce7aef93a00c2afccaac2b6902b3d8f8b414d7d2621fca5981b30db", // v0.8.8
                 "c75922ed56e952dd408730e0b93e46c4acdd890f8748b86daadb8c5d708da162", // v0.8.6
