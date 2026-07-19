@@ -274,7 +274,10 @@ internal static class ContainerSubtitleLoader
             }
             subtitle.Renumber();
 
+            // Same fallback as the MP4 VTTC path: an MKV track without a declared language
+            // gets auto-detected instead of an empty language.
             var lang = SanitizeLang(track.Language);
+            lang = IsUndeclaredLanguage(lang) ? LanguageAutoDetect.AutoDetectGoogleLanguageOrNull(subtitle) ?? lang : lang;
             tracks.Add(new LoadedTrack(subtitle, format, lang, track.TrackNumber));
         }
 
@@ -291,8 +294,8 @@ internal static class ContainerSubtitleLoader
         {
             vttc.Renumber();
             var lang = SanitizeLang(parser.VttcLanguage);
-            lang = string.IsNullOrEmpty(lang) ? LanguageAutoDetect.AutoDetectGoogleLanguageOrNull(vttc) : lang;
-            tracks.Add(new LoadedTrack(vttc, new SubRip(), lang ?? string.Empty, null));
+            lang = IsUndeclaredLanguage(lang) ? LanguageAutoDetect.AutoDetectGoogleLanguageOrNull(vttc) ?? lang : lang;
+            tracks.Add(new LoadedTrack(vttc, new SubRip(), lang, null));
         }
 
         foreach (var track in parser.GetSubtitleTracks())
@@ -432,6 +435,14 @@ internal static class ContainerSubtitleLoader
     /// problematic in filenames on Windows. Note: "und" (ISO 639 "undetermined") is
     /// kept, so MKV tracks tagged as such still get a distinct suffix.
     /// </summary>
+    /// <summary>
+    /// True when a sanitized track language carries no usable information: empty, or the
+    /// ISO 639-2 "und" (undetermined) code that muxers like ffmpeg write when no language
+    /// was declared.
+    /// </summary>
+    internal static bool IsUndeclaredLanguage(string? lang) =>
+        string.IsNullOrEmpty(lang) || lang.Equals("und", StringComparison.OrdinalIgnoreCase);
+
     internal static string SanitizeLang(string? lang)
     {
         if (string.IsNullOrWhiteSpace(lang))
