@@ -14743,9 +14743,45 @@ public partial class MainViewModel :
             PauseVideoAndFreezePlayhead(videoPlayerControl);
         }
 
-        var result = await _windowService.ShowDialogAsync<TWindow, TViewModel>(owner ?? Window!, configureViewModel, configureWindow);
+        var usedOwner = owner ?? Window!;
+        var result = await _windowService.ShowDialogAsync<TWindow, TViewModel>(usedOwner, configureViewModel, configureWindow);
         _shortcutManager.ClearKeys();
+        if (usedOwner == Window)
+        {
+            RestoreFocusAfterDialogClose();
+        }
+
         return result;
+    }
+
+    /// <summary>
+    /// After a modal dialog closes, Avalonia restores keyboard focus to the owner's previously
+    /// focused element - but when that element is gone (e.g. a menu item in a since-closed
+    /// popup when the dialog was launched from the menu bar), the restore silently fails and
+    /// focus lands on the bare Window. Key events then route only to the Window - never through
+    /// MainView, where the shortcut KeyDown handler lives - so every shortcut (Ctrl+F, Ctrl+H,
+    /// ...) goes dead until the user clicks a control (#12634). Fall back to the subtitle grid,
+    /// like the menu-bar deactivation restore does. Deferred so a flow-specific focus set by
+    /// the dialog's caller afterwards wins; skipped while another (follow-up) dialog is active -
+    /// its own wrapper call runs the same restore when it closes.
+    /// </summary>
+    private void RestoreFocusAfterDialogClose()
+    {
+        Dispatcher.UIThread.Post(() =>
+        {
+            if (Window is not { IsActive: true })
+            {
+                return;
+            }
+
+            var focused = Window.FocusManager?.GetFocusedElement();
+            if (focused is Control control && control != Window)
+            {
+                return; // focus survived inside a real control - leave it be
+            }
+
+            SubtitleGrid?.Focus();
+        });
     }
 
     private void SplitSelectedLine(bool atVideoPosition, bool atTextBoxPosition)
