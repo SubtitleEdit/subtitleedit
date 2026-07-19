@@ -56,7 +56,6 @@ public class SeAutoTranslate
     public string OpenRouterApiKey { get; set; }
     public string OpenRouterModel { get; set; }
     public string NnlbServeUrl { get; set; }
-    public string NnlbApiUrl { get; set; }
     public string LibreTranslateApiKey { get; set; }
     public string LibreTranslateUrl { get; set; }
     public string DeepLApiKey { get; set; }
@@ -183,8 +182,6 @@ public class SeAutoTranslate
         NllbApiUrl = "http://localhost:7860/api/v4/";
         NllbServeModel = string.Empty;
         NllbServeUrl = "http://127.0.0.1:6060/";
-        NnlbApiUrl = "http://localhost:7860/api/v4/";
-        NnlbApiUrl = string.Empty;
         NnlbServeUrl = "http://127.0.0.1:6060/";
         NnlbServeUrl = string.Empty;
         OllamaModel = string.Empty;
