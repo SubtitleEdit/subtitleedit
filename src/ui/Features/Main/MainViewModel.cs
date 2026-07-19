@@ -5977,9 +5977,21 @@ public partial class MainViewModel :
             return;
         }
 
-        var dictionaryFileName = _currentSpellCheckDictionary?.DictionaryFileName ?? null;
-        var result = await ShowDialogAsync<SpellCheckWindow, SpellCheckViewModel>(
-            vm => { vm.Initialize(Subtitles, SelectedSubtitleIndex, this, dictionaryFileName, _spellCheckSessionInProgress); });
+        // Fall back to the last dictionary used, so the spell check window opens with the same
+        // language as the previous session instead of re-detecting it.
+        var spellCheckDictionary = _currentSpellCheckDictionary;
+        if (spellCheckDictionary == null && !string.IsNullOrEmpty(Se.Settings.SpellCheck.LastLanguageDictionaryName))
+        {
+            spellCheckDictionary = new SpellCheckDictionaryDisplay
+            {
+                Name = Se.Settings.SpellCheck.LastLanguageDictionaryName,
+                DictionaryFileName = Se.Settings.SpellCheck.LastLanguageDictionaryFile ?? string.Empty,
+            };
+        }
+        var result = await ShowDialogAsync<SpellCheckWindow, SpellCheckViewModel>(vm =>
+        {
+            vm.Initialize(Subtitles, SelectedSubtitleIndex, this, spellCheckDictionary, _spellCheckSessionInProgress);
+        });
 
         // Only an unfinished spell check leaves something to continue from, and only then is the
         // "continue spell check from current line?" prompt asked on the next run.
