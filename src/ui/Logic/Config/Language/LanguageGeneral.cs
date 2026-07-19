@@ -35,6 +35,7 @@ public class LanguageGeneral
     public string Ascending { get; set; }
     public string Descending { get; set; }
     public string AttachDotDotDot { get; set; }
+    public string AudioFileSaved { get; set; }
     public string AudioFiles { get; set; }
     public string AudioVisualizer { get; set; }
     public string Auto { get; set; }
@@ -670,6 +671,7 @@ public class LanguageGeneral
     public string VideoEncodingX { get; set; }
     public string VideoExtension { get; set; }
     public string VideoFile { get; set; }
+    public string VideoFileGenerated { get; set; }
     public string VideoFileGeneratedX { get; set; }
     public string VideoFiles { get; set; }
     public string VideoAndAudioFiles { get; set; }
@@ -794,6 +796,7 @@ public class LanguageGeneral
         Ascending = "Ascending";
         Descending = "Descending";
         AttachDotDotDot = "Attach...";
+        AudioFileSaved = "Audio file saved";
         AudioFiles = "Audio files";
         AudioVisualizer = "Audio visualizer";
         Auto = "Auto";
@@ -1429,6 +1432,7 @@ public class LanguageGeneral
         VideoEncodingX = "Video encoding: {0}";
         VideoExtension = "Video file extension";
         VideoFile = "Video file";
+        VideoFileGenerated = "Video file generated";
         VideoFileGeneratedX = "Video file generated: \"{0}\"";
         VideoFiles = "Video files";
         VideoAndAudioFiles = "Video and audio files";

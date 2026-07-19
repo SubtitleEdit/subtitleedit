@@ -8,6 +8,7 @@ using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using Nikse.SubtitleEdit.Features.Main;
 using Nikse.SubtitleEdit.Features.Shared;
+using Nikse.SubtitleEdit.Features.Shared.PromptFileSaved;
 using Nikse.SubtitleEdit.Features.Shared.PromptTextBox;
 using Nikse.SubtitleEdit.Features.Tools.MergeContinuationLines;
 using Nikse.SubtitleEdit.Features.Video.SpeechToText;
@@ -2063,20 +2064,30 @@ public partial class TextToSpeechViewModel : ObservableObject
             var outputFileName = await AddAudioToVideoFile(mergedAudioFileName, outputFolder, cancellationToken);
             if (!string.IsNullOrEmpty(outputFileName) && Window != null)
             {
-                await MessageBox.Show(
-                    Window,
-                    Se.Language.Video.TextToSpeech.Title,
-                    string.Format(Se.Language.General.VideoFileGeneratedX, outputFileName),
-                    MessageBoxButtons.OK,
-                    MessageBoxIcon.Information);
-
-                await _folderHelper.OpenFolder(Window!, outputFolder);
+                await _windowService.ShowDialogAsync<PromptFileSavedWindow, PromptFileSavedViewModel>(Window, vm =>
+                {
+                    vm.Initialize(
+                        Se.Language.General.VideoFileGenerated,
+                        string.Format(Se.Language.General.VideoFileGeneratedX, outputFileName),
+                        outputFileName,
+                        true,
+                        true);
+                });
             }
         }
-        else
+        else if (Window != null)
         {
-            var path = Path.GetDirectoryName(mergedAudioFileName)!;
-            await _folderHelper.OpenFolder(Window!, outputFolder);
+            // The bare-audio ending used to pop the output folder with no in-app confirmation at
+            // all - the saved-file prompt confirms the wav and offers show-in-folder/play instead.
+            await _windowService.ShowDialogAsync<PromptFileSavedWindow, PromptFileSavedViewModel>(Window, vm =>
+            {
+                vm.Initialize(
+                    Se.Language.General.AudioFileSaved,
+                    string.Format(Se.Language.General.FileSavedToX, mergedAudioFileName),
+                    mergedAudioFileName,
+                    true,
+                    true);
+            });
         }
     }
 

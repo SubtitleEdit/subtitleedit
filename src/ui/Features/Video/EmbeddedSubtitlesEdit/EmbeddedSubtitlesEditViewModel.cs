@@ -7,6 +7,7 @@ using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.ContainerFormats.Matroska;
 using Nikse.SubtitleEdit.Core.ContainerFormats.Mp4;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
+using Nikse.SubtitleEdit.Features.Shared.PromptFileSaved;
 using Nikse.SubtitleEdit.Features.Shared;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
@@ -191,7 +192,15 @@ public partial class EmbeddedSubtitlesEditViewModel : ObservableObject
         {
             ProgressValue = 0;
             IsGenerating = false;
-            await _folderHelper.OpenFolderWithFileSelected(Window!, _outputFileName);
+            await _windowService.ShowDialogAsync<PromptFileSavedWindow, PromptFileSavedViewModel>(Window!, vm =>
+            {
+                vm.Initialize(
+                    Se.Language.General.VideoFileGenerated,
+                    string.Format(Se.Language.General.VideoFileGeneratedX, _outputFileName),
+                    _outputFileName,
+                    true,
+                    true);
+            });
         });
     }
 
