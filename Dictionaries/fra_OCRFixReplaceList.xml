@@ -267,7 +267,23 @@
   </PartialLines>
   <BeginLines />
   <EndLines />
-  <RegularExpressions />
+  <RegularExpressions>
+    <!-- From #12644 (community-contributed, safety-reviewed) -->
+    <!-- "Il y a" misread as "ILy a" -->
+    <RegEx find="\bILy a\b" replaceWith="Il y a" />
+    <!-- d'ou is always d'où -->
+    <RegEx find="\b([Dd])'([Oo])u\b" replaceWith="${1}'${2}ù" />
+    <!-- S misread as 5 in S'il -->
+    <RegEx find="5 *'il\b" replaceWith="S'il" />
+    <!-- spaced apostrophe: s 'il / s 'ils -->
+    <RegEx find="([Ss]) 'il(s?)\b" replaceWith="${1}'il${2}" />
+    <!-- l misread as I in l'a -->
+    <RegEx find="\bI'a\b" replaceWith="l'a" />
+    <!-- spaced apostrophe after t' before vowel/h: "Je t' aime" -->
+    <RegEx find=" t' ([aehiouyéèêàùâîôûAEHIOUYÉÈÊÀÙÂÎÔÛ])" replaceWith=" t'${1}" />
+    <!-- S misread as 5 in SOS (letter O only - never the number 505) -->
+    <RegEx find="\b5(\.*)O(\.*)5(\.*)\b" replaceWith="S${1}O${2}S${3}" />
+  </RegularExpressions>
   <RegularExpressionsIfSpelledCorrectly>
 
     <!-- ============================================================ -->
@@ -372,5 +388,10 @@
     <!-- inLondon → in London -->
     <RegEx find="\bin([A-Z][a-zæøåöäéèàùâêîôûëïœç]+)\b" spellCheck="$1" replaceWith="in $1" />
 
+
+    <!-- From #12644: è/à misread - only applied when the fixed word is in the dictionary -->
+    <RegEx find="\b([MmPp])[eéêë]re\b" spellCheck="${1}ère" replaceWith="${1}ère" />
+    <RegEx find="\b([Tt])r[eéêë]s\b" spellCheck="${1}rès" replaceWith="${1}rès" />
+    <RegEx find="\bL[äáâ]\b" spellCheck="Là" replaceWith="Là" />
   </RegularExpressionsIfSpelledCorrectly>
 </OCRFixReplaceList>

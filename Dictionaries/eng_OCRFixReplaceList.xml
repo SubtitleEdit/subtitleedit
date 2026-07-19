@@ -3395,6 +3395,12 @@
 		<RegEx find="(2 )(nd\b)" replaceWith="2$2" />
 		<RegEx find="(3 )(rd\b)" replaceWith="3$2" />
 		<RegEx find="([456789])( th\b)" replaceWith="$1th" />
+		<!-- ü misread as ii: Fiihrer/Obergruppenfiihrer etc. (from #12644) -->
+		<RegEx find="iihrer" replaceWith="ührer" />
+		<!-- ñ misread as fi: Sefior/sefiorita, compafiero (from #12644) -->
+		<RegEx find="\b([Ss])efior" replaceWith="${1}eñor" />
+		<RegEx find="ompafier" replaceWith="ompañer" />
+		<RegEx find="ompafiar" replaceWith="ompañar" />
 	</RegularExpressions>
 	<RegularExpressionsIfSpelledCorrectly>
 		<RegEx find="\[([A-Zl]+)\]" replaceAllFrom="l" replaceAllTo="I" spellCheck="$1" replaceWith="[$1]" />		

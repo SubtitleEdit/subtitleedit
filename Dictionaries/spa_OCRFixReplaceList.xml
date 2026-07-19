@@ -366,6 +366,9 @@
     <Word from="Bartomeu" to="Bertomeu" />
     <Word from="Iocalizarlo" to="localizarlo" />
     <Word from="Ilámame" to="llámame" />
+    <!-- ! misread as l (from #12644) -->
+    <Word from="niñal" to="niña!" />
+    <Word from="túl" to="tú!" />
   </WholeWords>
   <PartialWordsAlways />
   <PartialWords />
@@ -948,5 +951,7 @@
     <RegEx find="\Bi(log[ao]s?\b)" replaceWith="í$1" />
     <RegEx find="\bIes\b" replaceWith="les" />
     <RegEx find="\bIos\b" replaceWith="los" />
+    <!-- ü misread as ii: Fiihrer/Obergruppenfiihrer etc. (from #12644) -->
+    <RegEx find="iihrer" replaceWith="ührer" />
   </RegularExpressions>
 </OCRFixReplaceList>

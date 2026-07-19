@@ -108,6 +108,8 @@
     <Word from="ziin" to="zijn" />
     <Word from="zonderjou" to="zonder jou" />
     <Word from="Zonderjou" to="Zonder jou" />
+    <!-- from #12644 -->
+    <Word from="wanner" to="wanneer" />
   </WholeWords>
   <PartialWordsAlways />
   <PartialWords>
@@ -137,6 +139,8 @@
     <RegEx find="\beIk" replaceWith="elk" />
     <RegEx find="\bler(land|se|s|)\b" replaceWith="Ier$1" />
     <RegEx find="comite\b" replaceWith="comité" />
+    <!-- doubled apostrophe before 'n / 't (from #12644) -->
+    <RegEx find="''([nt])\b" replaceWith="'${1}" />
   </RegularExpressions>
   <RegularExpressionsIfSpelledCorrectly>
 
