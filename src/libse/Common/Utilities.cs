@@ -3362,8 +3362,31 @@ namespace Nikse.SubtitleEdit.Core.Common
             return text;
         }
 
+        private static readonly char[] UnicodeControlCharsAndNoBreakSpace = { '\u200E', '\u200F', '\u202A', '\u202B', '\u202C', '\u202D', '\u202E', '\u00A0' };
+
+#if NET8_0_OR_GREATER
+        private static readonly System.Buffers.SearchValues<char> UnicodeControlCharsAndNoBreakSpaceSearchValues =
+            System.Buffers.SearchValues.Create(UnicodeControlCharsAndNoBreakSpace);
+#endif
+
         public static string RemoveUnicodeControlChars(string input)
         {
+            // Runs per line in fix passes and auto-break, and most lines contain none of the
+            // eight characters - bail with the original instance after one vectorized scan
+            // instead of eight chained Replace scans. Lines that do contain one keep the
+            // chained Replaces: .NET's vectorized Replace beats a scalar rewrite loop.
+#if NET8_0_OR_GREATER
+            if (!input.AsSpan().ContainsAny(UnicodeControlCharsAndNoBreakSpaceSearchValues))
+            {
+                return input;
+            }
+#else
+            if (input.AsSpan().IndexOfAny(UnicodeControlCharsAndNoBreakSpace) < 0)
+            {
+                return input;
+            }
+#endif
+
             return input.Replace("\u200E", string.Empty)
                 .Replace("\u200F", string.Empty)
                 .Replace("\u202A", string.Empty)

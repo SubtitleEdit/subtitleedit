@@ -815,13 +815,14 @@ namespace Nikse.SubtitleEdit.Core.Common
 
         public static string RemoveChar(this string value, params char[] charsToRemove)
         {
-            var h = new HashSet<char>(charsToRemove);
+            // Callers pass a handful of literal chars (3-13), so a vectorized linear probe
+            // beats allocating and hashing a HashSet per call.
             char[] array = new char[value.Length];
             int arrayIndex = 0;
             for (int i = 0; i < value.Length; i++)
             {
                 char ch = value[i];
-                if (!h.Contains(ch))
+                if (Array.IndexOf(charsToRemove, ch) < 0)
                 {
                     array[arrayIndex++] = ch;
                 }
