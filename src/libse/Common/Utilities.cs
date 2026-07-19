@@ -429,10 +429,6 @@ namespace Nikse.SubtitleEdit.Core.Common
 
         private static void AddOrAppendHtmlTag(Dictionary<int, string> htmlTags, int index, string tag)
         {
-#if NET8_0_OR_GREATER
-            ref var existing = ref System.Runtime.InteropServices.CollectionsMarshal.GetValueRefOrAddDefault(htmlTags, index, out _);
-            existing += tag; // null for a newly added key, so this both adds and appends
-#else
             if (htmlTags.TryGetValue(index, out var existing))
             {
                 htmlTags[index] = existing + tag;
@@ -441,7 +437,6 @@ namespace Nikse.SubtitleEdit.Core.Common
             {
                 htmlTags.Add(index, tag);
             }
-#endif
         }
 
         private static string ReInsertHtmlTagsAndCleanUp(string input, Dictionary<int, string> htmlTags)
