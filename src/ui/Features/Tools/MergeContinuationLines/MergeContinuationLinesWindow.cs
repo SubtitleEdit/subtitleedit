@@ -62,6 +62,9 @@ public class MergeContinuationLinesWindow : Window
         KeyDown += vm.KeyDown;
         Loaded += delegate { vm.Loaded(); };
         Closed += delegate { vm.OnClosed(); };
+
+        Closing += delegate { UiUtil.SaveWindowPosition(this); };
+        Loaded += delegate { UiUtil.RestoreWindowPosition(this); };
     }
 
     private static Grid MakeControlsView(MergeContinuationLinesViewModel vm)

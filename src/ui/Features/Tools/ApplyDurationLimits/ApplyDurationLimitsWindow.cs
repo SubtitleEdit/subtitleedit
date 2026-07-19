@@ -63,6 +63,9 @@ public class ApplyDurationLimitsWindow : Window
 
         Activated += delegate { buttonOk.Focus(); }; // hack to make OnKeyDown work
         KeyDown += vm.KeyDown;
+
+        Closing += delegate { UiUtil.SaveWindowPosition(this); };
+        Loaded += delegate { UiUtil.RestoreWindowPosition(this); };
     }
 
     private static Grid MakeControlsView(ApplyDurationLimitsViewModel vm)
