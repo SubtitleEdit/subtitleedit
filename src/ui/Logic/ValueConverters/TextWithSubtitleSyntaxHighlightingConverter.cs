@@ -1,6 +1,7 @@
 ﻿using Avalonia.Controls.Documents;
 using Avalonia.Data.Converters;
 using Avalonia.Media;
+using Avalonia.Media.Immutable;
 using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Features.SpellCheck;
 using Nikse.SubtitleEdit.Logic.Config;
@@ -44,6 +45,18 @@ public class TextWithSubtitleSyntaxHighlightingConverter : IValueConverter
     private static SolidColorBrush CharsBrush => GetBrush(SubtitleSyntaxTokenizer.CharsColor);
     private static SolidColorBrush ValuesBrush => GetBrush(SubtitleSyntaxTokenizer.ValuesColor);
     private static SolidColorBrush StyleBrush => GetBrush(SubtitleSyntaxTokenizer.StyleColor);
+
+    // One shared wavy-red underline for all misspelled words - a brush + decoration +
+    // collection used to be allocated per misspelled word on every cell repaint.
+    private static readonly TextDecoration MisspelledDecoration = new()
+    {
+        Location = TextDecorationLocation.Underline,
+        Stroke = new ImmutableSolidColorBrush(Colors.Red),
+        StrokeThickness = 1.5,
+        StrokeLineCap = PenLineCap.Round,
+    };
+
+    private static readonly TextDecorationCollection MisspelledDecorations = new() { MisspelledDecoration };
 
     public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
@@ -118,10 +131,13 @@ public class TextWithSubtitleSyntaxHighlightingConverter : IValueConverter
                     continue;
                 }
 
-                // First pass: check if there are any misspelled words in this run
-                var hasMisspelledWords = false;
-                foreach (var word in words)
+                // Single spell-check pass: remember each word's verdict so the run-splitting
+                // below doesn't run IsSpecialPattern + the Hunspell lookup a second time per
+                // word - this converter runs per text cell on every grid repaint.
+                bool[]? misspelled = null;
+                for (var wordIndex = 0; wordIndex < words.Count; wordIndex++)
                 {
+                    var word = words[wordIndex];
                     if (string.IsNullOrWhiteSpace(word.Text) || word.Length < 2)
                     {
                         continue;
@@ -129,13 +145,13 @@ public class TextWithSubtitleSyntaxHighlightingConverter : IValueConverter
 
                     if (!IsSpecialPattern(word, runText) && !_spellCheckManager.IsWordCorrect(word, runText))
                     {
-                        hasMisspelledWords = true;
-                        break;
+                        misspelled ??= new bool[words.Count];
+                        misspelled[wordIndex] = true;
                     }
                 }
 
                 // If no misspelled words, keep the run as-is to preserve color inheritance
-                if (!hasMisspelledWords)
+                if (misspelled == null)
                 {
                     newInlines.Add(run);
                     continue;
@@ -143,8 +159,9 @@ public class TextWithSubtitleSyntaxHighlightingConverter : IValueConverter
 
                 // Second pass: break up the run and add underlines to misspelled words
                 var lastIndex = 0;
-                foreach (var word in words)
+                for (var wordIndex = 0; wordIndex < words.Count; wordIndex++)
                 {
+                    var word = words[wordIndex];
                     if (string.IsNullOrWhiteSpace(word.Text) || word.Length < 2)
                     {
                         continue;
@@ -158,34 +175,22 @@ public class TextWithSubtitleSyntaxHighlightingConverter : IValueConverter
                         newInlines.Add(beforeRun);
                     }
 
-                    // Check if word is misspelled and not a special pattern
-                    var isMisspelled = !IsSpecialPattern(word, runText) && !_spellCheckManager.IsWordCorrect(word, runText);
-
                     // Create run for the word
                     var wordRun = CreateRunFromTemplate(run, word.Text);
-                    if (isMisspelled)
+                    if (misspelled[wordIndex])
                     {
-                        // Apply wavy red underline for misspelled words
-                        var wavyUnderline = new TextDecoration
-                        {
-                            Location = TextDecorationLocation.Underline,
-                            Stroke = new SolidColorBrush(Colors.Red),
-                            StrokeThickness = 1.5,
-                            StrokeLineCap = PenLineCap.Round
-                        };
-
-                        // Add to existing decorations instead of replacing them
+                        // Apply the shared wavy red underline - add to existing decorations
+                        // instead of replacing them
                         if (wordRun.TextDecorations == null || wordRun.TextDecorations.Count == 0)
                         {
-                            wordRun.TextDecorations = new TextDecorationCollection { wavyUnderline };
+                            wordRun.TextDecorations = MisspelledDecorations;
                         }
                         else
                         {
-                            var decorations = new List<TextDecoration>(wordRun.TextDecorations)
+                            wordRun.TextDecorations = new TextDecorationCollection(wordRun.TextDecorations)
                             {
-                                wavyUnderline
+                                MisspelledDecoration
                             };
-                            wordRun.TextDecorations = new TextDecorationCollection(decorations);
                         }
                     }
 
@@ -253,8 +258,18 @@ public class TextWithSubtitleSyntaxHighlightingConverter : IValueConverter
 
     private static bool IsSpecialPattern(SpellCheckWord word, string text)
     {
-        // Skip numbers
-        if (word.Text.All(c => char.IsDigit(c) || c == '.' || c == ',' || c == '-'))
+        // Skip numbers - plain loop, this runs per word per cell repaint (no LINQ enumerator)
+        var isNumber = true;
+        foreach (var c in word.Text)
+        {
+            if (!char.IsDigit(c) && c != '.' && c != ',' && c != '-')
+            {
+                isNumber = false;
+                break;
+            }
+        }
+
+        if (isNumber)
         {
             return true;
         }

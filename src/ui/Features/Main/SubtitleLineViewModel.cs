@@ -305,15 +305,17 @@ public partial class SubtitleLineViewModel : ObservableObject
                 return _transparentBrush;
             }
 
-            // Avalonia re-evaluates this getter on every cell repaint; strip HTML once
-            // and reuse across all settings-enabled branches below.
+            // Avalonia re-evaluates this getter on every cell repaint; strip HTML and split
+            // into lines once and reuse across all settings-enabled branches below.
             string? stripped = null;
+            List<string>? strippedLines = null;
 
             if (Se.Settings.General.ColorTextTooLong)
             {
                 stripped = SubtitleTextInfoHelper.StripHtml(Text);
+                strippedLines = stripped.SplitToLines();
 
-                foreach (var line in stripped.SplitToLines())
+                foreach (var line in strippedLines)
                 {
                     if (SubtitleTextInfoHelper.GetLineLength(line) > Se.Settings.General.SubtitleLineMaximumLength)
                     {
@@ -325,7 +327,8 @@ public partial class SubtitleLineViewModel : ObservableObject
             if (Se.Settings.General.ColorTextTooWide)
             {
                 stripped ??= SubtitleTextInfoHelper.StripHtml(Text);
-                foreach (var line in stripped.SplitToLines())
+                strippedLines ??= stripped.SplitToLines();
+                foreach (var line in strippedLines)
                 {
                     if (CalculatePixelWidth(line) > Se.Settings.General.ColorTextTooWidePixels)
                     {
@@ -337,7 +340,8 @@ public partial class SubtitleLineViewModel : ObservableObject
             if (Se.Settings.General.ColorTextTooManyLines)
             {
                 stripped ??= SubtitleTextInfoHelper.StripHtml(Text);
-                if (stripped.SplitToLines().Count > Se.Settings.General.MaxNumberOfLines)
+                strippedLines ??= stripped.SplitToLines();
+                if (strippedLines.Count > Se.Settings.General.MaxNumberOfLines)
                 {
                     return _errorBrush;
                 }

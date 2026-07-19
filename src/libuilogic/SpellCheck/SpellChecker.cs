@@ -32,7 +32,9 @@ public class SpellChecker : ISpellChecker, IDoSpell
 
     private WordList? _hunspellWeCantSpell;
     protected SpellCheckWordLists? WordLists;
-    protected readonly HashSet<string> SkipAllList = new();
+    // Case-insensitive so per-word membership tests need no ToUpperInvariant allocation -
+    // IsWordCorrect runs per word per grid cell repaint with live spell check on.
+    protected readonly HashSet<string> SkipAllList = new(StringComparer.OrdinalIgnoreCase);
     protected readonly Dictionary<string, string> ChangeAllDictionary = new();
     private string _twoLetterLanguageCode = string.Empty;
 
@@ -305,8 +307,8 @@ public class SpellChecker : ISpellChecker, IDoSpell
     {
         var word = spellCheckWord.Text;
 
-        if (SkipAllList.Contains(word.ToUpperInvariant()) ||
-            (word.StartsWith('\'') || word.EndsWith('\'')) && SkipAllList.Contains(word.Trim('\'').ToUpperInvariant()))
+        if (SkipAllList.Contains(word) ||
+            (word.StartsWith('\'') || word.EndsWith('\'')) && SkipAllList.Contains(word.Trim('\'')))
         {
             NoOfSkippedWords++;
             return true;
