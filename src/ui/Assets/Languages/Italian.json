@@ -1,7 +1,7 @@
 {
   "Title": "SubtitleEdit",
-  "Version": "v. 5.1.0 beta 15",
-  "TranslatedBy": "v. 17.07.2026 di bovirus",
+  "Version": "v. 5.1.0 RC8",
+  "TranslatedBy": "v. 19.07.2026 di bovirus",
   "CultureName": "it-IT",
   "General": {
     "Abort": "Annulla",
@@ -329,6 +329,7 @@
     "New": "Nuovo",
     "NewDotDotDot": "Nuovo...",
     "NewProfile": "Nuovo profilo",
+    "Next": "Successivo",
     "NewSubtitleStartKeyDownSetEndKeyUp": "Inserisci sottotitolo: inizia con il tasto giù, imposta la fine con il tasto su",
     "SetSubtitleStartAtVideoPositionSetEndAtKeyUpAndGoToNext": "Imposta l'inizio nella posizione del video, imposta la fine premendo il tasto su e vai al successivo",
     "No": "No",
@@ -423,6 +424,7 @@
     "PoweredBy": "Offerto da",
     "Prefix": "Prefisso:",
     "Preview": "Anteprima",
+    "Previous": "Precedente",
     "Profile": "Profilo",
     "ProfileName": "Nome profilo",
     "Profiles": "Profili",
@@ -1061,7 +1063,11 @@
       "SeekForwardHint": "Cerca video in avanti {0}",
       "SeekAmountHint": "Cerca importo {0}",
       "SeekVideo": "Cerca video (<< >>)",
-      "ConfigureToolbarItems": "Configura elementi barra strumenti..."
+      "ConfigureToolbarItems": "Configura elementi barra strumenti...",
+      "TextPreviousHint": "Riproduci sottotitolo precedente e alla fine fermati {0}",
+      "TextPlayHint": "Riproduci sottotitolo attuale e alla fine fermati {0}",
+      "TextPauseHint": "Metti in pausa la riproduzione {0}",
+      "TextNextHint": "Riproduci sottotitolo successivo e alla fine fermati {0}"
     }
   },
   "File": {
@@ -1185,6 +1191,7 @@
       "PaddingLeftRight": "Riempimento sinistra/destra",
       "PaddingTopBottom": "Riempimento alto/basso",
       "PreviewTitle": "Anteprima: dimensione attuale: {0}x{1}, dimensione destinazione: {2}x{3}, zoom: {4}%",
+      "TitleExportDvdSup": "DVD sup (MuxMan/Scenarista)",
       "TitleExportVobSub": "VobSub (sub/idx)",
       "CustomTextFormatsDotDotDot": "Formati  testo personali_zzati...",
       "PlainTextDotDotDot": "_Testo semplice...",
@@ -2481,6 +2488,7 @@
       "MaxLines": "Numero massimo di righe",
       "UnbreakSubtitlesShortThan": "Non interrompere sottotitoli più brevi di",
       "NewEmptyDefaultMs": "Durata predefinita nuovi sottotitoli (ms)",
+      "TimeCodeUpDownStepMs": "Incremento tempo su/giù (ms)",
       "PromptBeforeDelete": "Chiedi conferma prima dell'eliminazione",
       "RememberPositionAndSize": "Ricorda posizione/dimensioni finestra",
       "OpenLastFileOnStart": "All'avvio apri il file più recente",
@@ -3140,6 +3148,7 @@
     "Binarize": "Binarizza",
     "BorderSize": "Dimensione bordo",
     "CaptureTopAlign": "Allineamento superiore cattura",
+    "ShowOnlyForcedSubtitles": "Visualizza solo i sottotitoli forzati",
     "OcrImage": "Immagine OCR",
     "OneColor": "Un colore (bianco)",
     "DarknessThreshold": "Soglia oscurità",
@@ -3182,7 +3191,9 @@
     "PickFallbackDatabase": "Scegli il database OCR di riserva",
     "FallbackOcrDatabase": "Database OCR di riserva",
     "ShowAllOllamaModels": "Visualizza tutti i modelli (non solo quelli con visione)",
-    "OllamaModelLikelyWrong": "Ollama non ha restituito testo: il modello selezionato potrebbe non supportare OCR/visione"
+    "OllamaModelLikelyWrong": "Ollama non ha restituito testo: il modello selezionato potrebbe non supportare OCR/visione",
+    "LlamaCppNotDownloaded": "Motore/modello llama.cpp non scaricato: scarica tramite impostazioni conversione batch",
+    "LlamaCppReturnedNoText": "llama.cpp non ha restituito testo: controlla il server e il modello"
   },
   "Assa": {
     "AssaDraw": "Disegno ASSA",
