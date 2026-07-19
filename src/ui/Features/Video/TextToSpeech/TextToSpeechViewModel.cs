@@ -560,6 +560,12 @@ public partial class TextToSpeechViewModel : ObservableObject
 
     private bool _isPromptingForRefText;
 
+    // Reference WAVs whose transcript prompt the user dismissed this session. Selection changes
+    // re-fire the prompt (engine switch, voice-list refresh, re-picking the same voice), so
+    // without this memory a declined prompt kept coming back - "prompts several times for
+    // transcript". Cancel now means "not for this voice, stop asking" until the window reopens.
+    private readonly HashSet<string> _refTextPromptDeclined = new(StringComparer.OrdinalIgnoreCase);
+
     private async Task EnsureClonedVoiceRefTextAsync(Voice? voice)
     {
         if (_isPromptingForRefText || Window == null || voice == null)
@@ -618,7 +624,7 @@ public partial class TextToSpeechViewModel : ObservableObject
             }
         }
 
-        if (string.IsNullOrEmpty(wavPath))
+        if (string.IsNullOrEmpty(wavPath) || _refTextPromptDeclined.Contains(wavPath))
         {
             return;
         }
@@ -650,6 +656,7 @@ public partial class TextToSpeechViewModel : ObservableObject
 
             if (!result.OkPressed || string.IsNullOrWhiteSpace(result.Text))
             {
+                _refTextPromptDeclined.Add(wavPath);
                 return;
             }
 
@@ -1565,12 +1572,21 @@ public partial class TextToSpeechViewModel : ObservableObject
             return;
         }
 
+        // Keep the user's current pick across the refresh: this runs right after the ref-text
+        // prompt and after the voice-settings dialog, and re-selecting by the *saved* settings
+        // voice - only written on Generate/Test voice/OK, so stale mid-session - silently
+        // switched the combo to another voice. The user then generated with a different voice
+        // than the one they had just picked and transcribed.
+        var currentVoiceName = SelectedVoice?.Name;
+
         Voices.Clear();
         foreach (var voice in voices)
         {
             Voices.Add(voice);
         }
-        SelectedVoice = Voices.FirstOrDefault(v => v.Name == Se.Settings.Video.TextToSpeech.Voice) ?? Voices.FirstOrDefault();
+        SelectedVoice = Voices.FirstOrDefault(v => v.Name == currentVoiceName)
+                        ?? Voices.FirstOrDefault(v => v.Name == Se.Settings.Video.TextToSpeech.Voice)
+                        ?? Voices.FirstOrDefault();
         VoiceCount = Voices.Count;
         VoiceCountInfo = string.Format(Se.Language.Video.TextToSpeech.XVoices, Voices.Count);
         IsVoiceCountVisible = Voices.Count > 0;

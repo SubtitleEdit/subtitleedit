@@ -223,10 +223,30 @@ public class MossTtsCrispAsr : ITtsEngine
         }
 
         SeedVoicesFromQwen3TtsCppIfEmpty(voicesFolder);
+        NormalizeVoiceTranscriptsOnce(voicesFolder);
         return voicesFolder;
     }
 
     private static bool _voiceSeedAttempted;
+    private static bool _voicesNormalized;
+
+    /// <summary>
+    /// One-time per session: drop attribution-blurb sidecars and backfill missing transcriptions
+    /// from the sibling OmniVoice pack (same generic reference WAVs, real transcripts). Without
+    /// this every seeded voice was transcript-less, so merely browsing the voice combo fired the
+    /// missing-transcript prompt once per voice ("prompts several times for transcript") and
+    /// synth ran without ref-text, degrading the clone.
+    /// </summary>
+    private static void NormalizeVoiceTranscriptsOnce(string voicesFolder)
+    {
+        if (_voicesNormalized)
+        {
+            return;
+        }
+        _voicesNormalized = true;
+
+        Qwen3TtsCrispAsr.NormalizeVoiceTranscripts(voicesFolder);
+    }
 
     /// <summary>
     /// One-time best-effort seed of WAV reference voices from qwen3-tts.cpp's voices folder so
