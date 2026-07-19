@@ -372,7 +372,18 @@ public partial class AutoTranslateViewModel : ObservableObject
                 Se.Settings.AutoTranslate.LlamaCppApiUrl = apiUrl.Trim();
             }
             // Local mode stays server-managed: the API URL is set by LlamaCppServerManager and the
-            // model is persisted via OnSelectedLlamaCppModelChanged, so nothing else to save here.
+            // model is persisted via OnSelectedLlamaCppModelChanged.
+
+            // Model-specific prompt/sampling only apply in local mode, where we know which curated
+            // model the server runs (e.g. Hy-MT2's trained-in prompt); a remote server's model is
+            // unknown and a custom .gguf carries no template, so both fall back to the generic
+            // prompt and server-default sampling.
+            var curatedModel = LlamaCppUseRemoteServer ? null : SelectedLlamaCppModel?.Model;
+            Configuration.Settings.Tools.LlamaCppModelPrompt = curatedModel?.PromptTemplate ?? string.Empty;
+            Configuration.Settings.Tools.LlamaCppModelTemperature = curatedModel?.Temperature ?? -1;
+            Configuration.Settings.Tools.LlamaCppModelTopP = curatedModel?.TopP ?? -1;
+            Configuration.Settings.Tools.LlamaCppModelTopK = curatedModel?.TopK ?? -1;
+            Configuration.Settings.Tools.LlamaCppModelRepeatPenalty = curatedModel?.RepeatPenalty ?? -1;
         }
 
         if (engineType == typeof(OllamaTranslate))

@@ -29,7 +29,16 @@ public sealed record LlamaCppModel(
     string? MmprojFileName = null,
     string? MmprojUrl = null,
     string? ChatTemplate = null,
-    bool NoJinja = false);
+    bool NoJinja = false,
+    // Translation prompt this model was trained on ({0} = source language English name,
+    // {1} = target language English name); null = the user's generic llama.cpp prompt.
+    // Needed for Hy-MT2, which answers in Chinese when given the generic prompt.
+    string? PromptTemplate = null,
+    // Model-recommended sampling; -1 = leave the server default.
+    double Temperature = -1,
+    double TopP = -1,
+    int TopK = -1,
+    double RepeatPenalty = -1);
 
 /// <summary>
 /// Manages the local <c>llama-server</c> process used by the llama.cpp auto-translate and OCR
@@ -38,6 +47,14 @@ public sealed record LlamaCppModel(
 /// </summary>
 public static class LlamaCppServerManager
 {
+    // Tencent's official Hy-MT2 prompt - the model is trained on exactly this phrasing and
+    // expects the TARGET language's English name ({1}); {0} (source) is unused by design.
+    // The line-break sentence is our addition to Tencent's official wording: the 7B honors it
+    // reliably, the 1.8B only sometimes - lost breaks are restored by SE's auto-break like for
+    // the other LLM engines.
+    private const string HyMt2PromptTemplate =
+        "Translate the following text into {1}. Keep line breaks exactly the same. Note that you should only output the translated result without any additional explanation:";
+
     public static readonly IReadOnlyList<LlamaCppModel> TranslateModels = new[]
     {
         new LlamaCppModel("TranslateGemma 4B (Q4_K_M)", "translategemma-4b_Q4_K_M.gguf", "2.5 GB",
@@ -51,6 +68,9 @@ public static class LlamaCppServerManager
             ChatTemplate: "gemma", NoJinja: true),
         new LlamaCppModel("TranslateGemma 12B (Q4_K_M)", "translategemma-12b-it-q4_k_m.gguf", "7.3 GB",
             "https://huggingface.co/NikolayKozloff/translategemma-12b-it-Q4_K_M-GGUF/resolve/main/translategemma-12b-it-q4_k_m.gguf",
+            ChatTemplate: "gemma", NoJinja: true),
+        new LlamaCppModel("TranslateGemma 12B (Q5_K_M)", "translategemma-12b-it-q5_k_m.gguf", "8.5 GB",
+            "https://huggingface.co/NikolayKozloff/translategemma-12b-it-Q5_K_M-GGUF/resolve/main/translategemma-12b-it-q5_k_m.gguf",
             ChatTemplate: "gemma", NoJinja: true),
 
         // Alternative model family. Qwen 3 is the strongest open model for CJK
@@ -77,6 +97,26 @@ public static class LlamaCppServerManager
         new LlamaCppModel("Qwen 3.5 9B (Q4_K_M)", "Qwen_Qwen3.5-9B-Q4_K_M.gguf", "5.7 GB",
             "https://huggingface.co/bartowski/Qwen_Qwen3.5-9B-GGUF/resolve/main/Qwen_Qwen3.5-9B-Q4_K_M.gguf",
             ChatTemplate: "chatml", NoJinja: true),
+        new LlamaCppModel("Qwen 3.5 9B (Q8_0)", "Qwen_Qwen3.5-9B-Q8_0.gguf", "9.8 GB",
+            "https://huggingface.co/bartowski/Qwen_Qwen3.5-9B-GGUF/resolve/main/Qwen_Qwen3.5-9B-Q8_0.gguf",
+            ChatTemplate: "chatml", NoJinja: true),
+
+        // Hy-MT2 (Tencent Hunyuan-MT 2, 2026) - translation-specialized, official GGUFs, Apache-2.0.
+        // Excellent for its 33+5 supported languages (CJK, major European/Asian) but has NO Nordic
+        // languages (Danish/Swedish/Norwegian/Finnish), no Greek/Romanian/Hungarian - generation in
+        // unsupported languages produces garbage, hence the coverage note in the display name.
+        // Trained on a fixed prompt (PromptTemplate below, with language NAMES - the generic prompt
+        // makes it answer in Chinese) and Tencent-recommended sampling. Embedded chat template works
+        // as-is, so no ChatTemplate/NoJinja overrides.
+        new LlamaCppModel("Hy-MT2 7B (Q4_K_M) - 33 languages, no Nordic", "Hy-MT2-7B-Q4_K_M.gguf", "4.6 GB",
+            "https://huggingface.co/tencent/Hy-MT2-7B-GGUF/resolve/main/Hy-MT2-7B-Q4_K_M.gguf",
+            PromptTemplate: HyMt2PromptTemplate, Temperature: 0.7, TopP: 0.6, TopK: 20, RepeatPenalty: 1.05),
+        new LlamaCppModel("Hy-MT2 7B (Q8_0) - 33 languages, no Nordic", "HY-MT2-7B-Q8_0.gguf", "8.0 GB",
+            "https://huggingface.co/tencent/Hy-MT2-7B-GGUF/resolve/main/HY-MT2-7B-Q8_0.gguf",
+            PromptTemplate: HyMt2PromptTemplate, Temperature: 0.7, TopP: 0.6, TopK: 20, RepeatPenalty: 1.05),
+        new LlamaCppModel("Hy-MT2 1.8B (Q8_0) - 33 languages, no Nordic", "Hy-MT2-1.8B-Q8_0.gguf", "1.9 GB",
+            "https://huggingface.co/tencent/Hy-MT2-1.8B-GGUF/resolve/main/Hy-MT2-1.8B-Q8_0.gguf",
+            PromptTemplate: HyMt2PromptTemplate, Temperature: 0.7, TopP: 0.6, TopK: 20, RepeatPenalty: 1.05),
 
         // Aya Expanse 8B (Cohere) - a dedicated multilingual model (23 languages), a good translation
         // alternative to the Gemma/Qwen families. Uses its own embedded (Cohere) chat template, so we

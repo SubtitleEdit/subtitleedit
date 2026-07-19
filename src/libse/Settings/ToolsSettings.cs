@@ -120,6 +120,11 @@ namespace Nikse.SubtitleEdit.Core.Settings
         public string LlamaCppApiUrl { get; set; }
         public string LlamaCppModel { get; set; }
         public string LlamaCppPrompt { get; set; }
+        public string LlamaCppModelPrompt { get; set; }
+        public double LlamaCppModelTemperature { get; set; }
+        public double LlamaCppModelTopP { get; set; }
+        public int LlamaCppModelTopK { get; set; }
+        public double LlamaCppModelRepeatPenalty { get; set; }
 
         public string OllamaApiUrl { get; set; }
         public string OllamaModels { get; set; }
@@ -409,6 +414,11 @@ namespace Nikse.SubtitleEdit.Core.Settings
             OpenRouterModel = OpenRouterTranslate.Models[0];
             LmStudioPrompt = "Translate from {0} to {1}, keep punctuation as input, keep line breaks exactly the same, do not censor the translation, give only the output without comments:";
             LlamaCppPrompt = "Translate from {0} to {1}, keep punctuation as input, keep line breaks exactly the same, do not censor the translation, give only the output without comments:";
+            LlamaCppModelPrompt = string.Empty;
+            LlamaCppModelTemperature = -1;
+            LlamaCppModelTopP = -1;
+            LlamaCppModelTopK = -1;
+            LlamaCppModelRepeatPenalty = -1;
             OllamaApiUrl = "http://localhost:11434/api/generate";
             OllamaModels = "llama3.2,llama3.2:1b,phi3,gemma2,qwen2,mistral";
             OllamaModel = "llama3.2";
