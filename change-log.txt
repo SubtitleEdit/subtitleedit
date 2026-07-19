@@ -3,6 +3,30 @@ Subtitle Edit Changelog
 
 -----------------------------------------------------------------------------------------------------
 
+v5.1.0-rc9 (19th of July 2026)
+
+* Text to speech: add MOSS-TTS (CrispASR) engine with zero-shot voice cloning
+* OCR: new "Show only forced subtitles" filter and a Forced column - only the forced lines are OCR'ed and returned, like SE4 - thx heniowise
+* OCR: fix forced-filter edge cases - hidden lines now receive pre-processing/palette changes, deleting a visible line no longer wipes hidden lines' unknown words, delete is blocked while OCR runs, and the VobSub color chooser previews the correct image
+* Multiple replace: fix phantom empty line (and stray red mark) in the preview's Before column with regex rules on Windows - thx Davanix
+* Text to speech: harden the window's close path and add diagnostics for a reported crash when closing with OK - thx cvrle77
+* Text to speech: an audio playback failure in the review window no longer leaves all play/regenerate buttons dead
+* Speech to text: update CrispASR runtime to v0.8.13 - the linux-arm64 build is also back
+* Speech to text: single-mode transcribe no longer picks up a leftover queued file - and no longer wipes the batch queue
+* Auto-translate: fix languages with underscores in the engine name never matching (e.g. Google Translate V1 Chinese) and the dialog getting stuck on "Translating..."
+* Embedded subtitles (mkv): the dialog no longer locks up after a failed generate
+* Burn-in/transparent video: cutting now burns the correct lines, keeps ASSA styles/header, and includes lines straddling the cut boundary
+* Batch convert: "Open containing folder" now opens the file's folder on Windows when the path contains spaces - thx cyberbrix
+* Fix parser edge cases: SAMI crash on malformed files (broke format auto-detection), WebVTT cues with mixed short/long timestamps being dropped, TTML fractional seconds, MicroDVD lines with two empty time codes
+* SeConv: auto-detect the subtitle language for MP4/MKV container tracks with no declared language (or "und") - thx ivandrofly
+* Update Chinese Traditional translation - thx love80312
+* Update Russian translation - thx jekovcar
+* Update Bulgarian translation - thx jekovcar
+* Update Polish translation and interjections - thx potplayer-fanpack
+* Update Turkish translation - thx bilimiyorum
+
+-----------------------------------------------------------------------------------------------------
+
 v5.1.0-rc8 (18th of July 2026)
 
 * Waveform: add SE4-style Previous/Play/Pause/Next text buttons to the waveform toolbar
