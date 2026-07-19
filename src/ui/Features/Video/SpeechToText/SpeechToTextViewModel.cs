@@ -3611,9 +3611,13 @@ public partial class SpeechToTextViewModel : ObservableObject
                 }
             }
 
+            // --print-progress: crispasr streams "crispasr: progress = NN% (i/n slices)" lines
+            // in real time (parsed in OutputHandler), while the transcript segments only print
+            // once the whole file is done - without this the progress bar sat idle for the
+            // entire run and jumped straight to 100%.
             var crispParams = string.IsNullOrWhiteSpace(crispArgs)
-                ? $"--backend {crispAsrEngine.BackendName} {langPart}-m \"{crispModel}\"{alignerPart}{vadPart} -f \"{waveFileName}\" --output-srt"
-                : $"--backend {crispAsrEngine.BackendName} {langPart}-m \"{crispModel}\"{alignerPart}{vadPart} -f \"{waveFileName}\" --output-srt {crispArgs}";
+                ? $"--backend {crispAsrEngine.BackendName} {langPart}-m \"{crispModel}\"{alignerPart}{vadPart} -f \"{waveFileName}\" --output-srt --print-progress"
+                : $"--backend {crispAsrEngine.BackendName} {langPart}-m \"{crispModel}\"{alignerPart}{vadPart} -f \"{waveFileName}\" --output-srt --print-progress {crispArgs}";
 
             Se.WriteToolsLog($"{exe} {crispParams}");
 
@@ -4085,6 +4089,24 @@ public partial class SpeechToTextViewModel : ObservableObject
                     var pctString = arr[1].Trim().TrimEnd('%').TrimEnd();
                     if (double.TryParse(pctString, NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture,
                             out var pct))
+                    {
+                        _endSeconds = _videoInfo.TotalSeconds * pct / 100.0;
+                        _showProgressPct = pct;
+                    }
+                }
+            }
+            else if (line.StartsWith("crispasr: progress =", StringComparison.OrdinalIgnoreCase))
+            {
+                // crispasr --print-progress: "crispasr: progress =  14% (1/7 slices)" - streamed
+                // per 30 s slice for every ASR backend, while the transcript segments only print
+                // after the whole file is processed, so this is the only live progress source.
+                var arr = line.Split('=');
+                if (arr.Length == 2)
+                {
+                    var pctString = arr[1].TrimStart();
+                    var pctEnd = pctString.IndexOf('%');
+                    if (pctEnd > 0 && double.TryParse(pctString[..pctEnd], NumberStyles.AllowDecimalPoint,
+                            CultureInfo.InvariantCulture, out var pct))
                     {
                         _endSeconds = _videoInfo.TotalSeconds * pct / 100.0;
                         _showProgressPct = pct;
