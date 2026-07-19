@@ -73,6 +73,9 @@ public class WordListsWindow : Window
         Activated += delegate { buttonOk.Focus(); }; // hack to make OnKeyDown work
         Closing += (s, e) => _vm.Closing();
         Loaded += (s, e) => vm.Loaded();
+
+        Closing += delegate { UiUtil.SaveWindowPosition(this); };
+        Loaded += delegate { UiUtil.RestoreWindowPosition(this); };
     }
 
     // Panel header with the list's icon on a colored rounded square plus a count badge in the
