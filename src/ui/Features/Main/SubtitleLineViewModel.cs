@@ -260,6 +260,20 @@ public partial class SubtitleLineViewModel : ObservableObject
         }
     }
 
+    // Read-time memo for CPS/WPM: each value is read by its own column binding AND by the
+    // Cps/Wpm/Duration background brushes during the same row repaint, and every computation
+    // strips html tags and walks the text. Keyed on the exact inputs, so any Text or time
+    // change simply recomputes on the next read - no invalidation wiring to get wrong.
+    private string? _cpsCacheText;
+    private TimeSpan _cpsCacheStart;
+    private TimeSpan _cpsCacheEnd;
+    private double _cpsCacheValue;
+
+    private string? _wpmCacheText;
+    private TimeSpan _wpmCacheStart;
+    private TimeSpan _wpmCacheEnd;
+    private double _wpmCacheValue;
+
     public double CharactersPerSecond
     {
         get
@@ -274,7 +288,15 @@ public partial class SubtitleLineViewModel : ObservableObject
                 return 999.0;
             }
 
-            return SubtitleTextInfoHelper.GetCharactersPerSecond(Text, StartTime, EndTime);
+            if (!ReferenceEquals(_cpsCacheText, Text) || _cpsCacheStart != StartTime || _cpsCacheEnd != EndTime)
+            {
+                _cpsCacheText = Text;
+                _cpsCacheStart = StartTime;
+                _cpsCacheEnd = EndTime;
+                _cpsCacheValue = SubtitleTextInfoHelper.GetCharactersPerSecond(Text, StartTime, EndTime);
+            }
+
+            return _cpsCacheValue;
         }
     }
 
@@ -292,7 +314,15 @@ public partial class SubtitleLineViewModel : ObservableObject
                 return 999.0;
             }
 
-            return 60.0 / Duration.TotalSeconds * Text.CountWords();
+            if (!ReferenceEquals(_wpmCacheText, Text) || _wpmCacheStart != StartTime || _wpmCacheEnd != EndTime)
+            {
+                _wpmCacheText = Text;
+                _wpmCacheStart = StartTime;
+                _wpmCacheEnd = EndTime;
+                _wpmCacheValue = 60.0 / Duration.TotalSeconds * Text.CountWords();
+            }
+
+            return _wpmCacheValue;
         }
     }
 
