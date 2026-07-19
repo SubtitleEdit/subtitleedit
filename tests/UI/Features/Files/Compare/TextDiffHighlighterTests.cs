@@ -1,11 +1,53 @@
+using Avalonia.Controls.Documents;
 using Nikse.SubtitleEdit.Features.Files.Compare;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 
 namespace UITests.Features.Files.Compare;
 
 public class TextDiffHighlighterTests
 {
+    private static string JoinRuns(InlineCollection? inlines)
+        => string.Concat(inlines!.Cast<Run>().Select(r => r.Text));
+
+    [Fact]
+    public void CompareReplacement_CrLfBeforeVsLfAfter_NormalizesInsteadOfDiffingTheCr()
+    {
+        // Windows subtitle text carries \r\n while a regex replacement comes back \n-normalized
+        // (RegexUtils.ReplaceNewLineSafe). Diffing the raw strings isolated the \r in its own
+        // one-character run, and a \r/\n pair split across two runs renders as two line breaks -
+        // a phantom empty line (plus a red mark for the invisible \r) in the Multiple Replace
+        // preview's Before column (#12622).
+        var (before, after) = TextDiffHighlighter.CompareReplacement(
+            "Just don't move out\r\nof my school district, okay?",
+            "Just don't move out\nof my school district, ok?");
+
+        var beforeText = JoinRuns(before.Inlines);
+        var afterText = JoinRuns(after.Inlines);
+
+        Assert.Equal("Just don't move out\nof my school district, okay?", beforeText);
+        Assert.Equal("Just don't move out\nof my school district, ok?", afterText);
+        Assert.All(before.Inlines!.Cast<Run>(), r => Assert.DoesNotContain('\r', r.Text!));
+    }
+
+    [Fact]
+    public void Compare_CrLfVsLf_TreatedAsIdenticalText()
+    {
+        // The compare view gets one text per file: a CRLF file against an LF file must not paint
+        // every line break as a difference (same normalization as CompareReplacement, #12622).
+        var (left, right) = TextDiffHighlighter.Compare("First line\r\nSecond line", "First line\nSecond line");
+
+        var leftRun = Assert.IsType<Run>(Assert.Single(left.Inlines!));
+        var rightRun = Assert.IsType<Run>(Assert.Single(right.Inlines!));
+
+        // The identical-texts path adds a single uncolored run per side.
+        Assert.Equal("First line\nSecond line", leftRun.Text);
+        Assert.Equal("First line\nSecond line", rightRun.Text);
+        Assert.Null(leftRun.Background);
+        Assert.Null(rightRun.Background);
+    }
+
     [Fact]
     public void FindCommonParts_WhenContentIsReordered_MiddleCommon2IsSortedByText2Positions()
     {
