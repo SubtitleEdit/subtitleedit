@@ -290,24 +290,23 @@ internal static class ContainerSubtitleLoader
         if (parser.VttcSubtitle is { } vttc && vttc.Paragraphs.Count > 0)
         {
             vttc.Renumber();
-            var lang = SanitizeLang(parser.VttcLanguage)
-                ?? LanguageAutoDetect.AutoDetectGoogleLanguageOrNull(vttc)
-                ?? string.Empty;
-            tracks.Add(new LoadedTrack(vttc, new SubRip(), lang, null));
+            var lang = SanitizeLang(parser.VttcLanguage);
+            lang = string.IsNullOrEmpty(lang) ? LanguageAutoDetect.AutoDetectGoogleLanguageOrNull(vttc) : lang;
+            tracks.Add(new LoadedTrack(vttc, new SubRip(), lang ?? string.Empty, null));
         }
 
-        foreach (var trak in parser.GetSubtitleTracks())
+        foreach (var track in parser.GetSubtitleTracks())
         {
-            var trackId = (int)trak.Tkhd.TrackId;
+            var trackId = (int)track.Tkhd.TrackId;
             if (options.TrackNumbers.Count > 0 && !options.TrackNumbers.Contains(trackId))
             {
                 continue;
             }
-            if (trak.Mdia.IsVobSubSubtitle)
+            if (track.Mdia.IsVobSubSubtitle)
             {
                 try
                 {
-                    var vobSub = ImageOcrLoader.LoadMp4VobSub(trak, options);
+                    var vobSub = ImageOcrLoader.LoadMp4VobSub(track, options);
                     if (vobSub.Paragraphs.Count > 0)
                     {
                         var vobLang = LanguageAutoDetect.AutoDetectGoogleLanguageOrNull(vobSub) ?? string.Empty;
@@ -321,7 +320,7 @@ internal static class ContainerSubtitleLoader
                 continue;
             }
 
-            var paragraphs = trak.Mdia.Minf.Stbl.GetParagraphs();
+            var paragraphs = track.Mdia.Minf.Stbl.GetParagraphs();
             if (paragraphs.Count == 0)
             {
                 continue;
