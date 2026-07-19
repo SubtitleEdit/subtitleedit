@@ -11,7 +11,6 @@ using System.IO;
 using System.Net;
 using System.Net.Http;
 using System.Net.Sockets;
-using System.Runtime.InteropServices;
 using System.Text;
 using System.Text.Json;
 using System.Threading;
@@ -128,7 +127,7 @@ public class ChatterboxTtsCpp : ITtsEngine
         }
 
         var folder = Path.GetDirectoryName(exe);
-        var variant = RuntimeInformation.IsOSPlatform(OSPlatform.Windows) && folder != null
+        var variant = OperatingSystem.IsWindows() && folder != null
             ? DownloadHashManager.DetectCrispAsrWindowsVariant(folder)
             : null;
         var key = DownloadHashManager.ResolveCrispAsrExecutableKey(variant);

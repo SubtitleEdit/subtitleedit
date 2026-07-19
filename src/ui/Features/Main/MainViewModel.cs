@@ -170,7 +170,6 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Runtime.InteropServices;
 using System.Text;
 using System.Text.Encodings.Web;
 using System.Text.Json;
@@ -790,7 +789,7 @@ public partial class MainViewModel :
     {
         LibMpvDynamicPlayer.MpvPath = Se.DataFolder;
 
-        if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+        if (OperatingSystem.IsWindows())
         {
             var newFileName = DownloadLibMpvViewModel.GetFallbackLibMpvFileName(false);
             if (string.IsNullOrEmpty(Se.Settings.General.LibMpvPath) || !File.Exists(Se.Settings.General.LibMpvPath) || File.Exists(newFileName))
@@ -17880,7 +17879,7 @@ public partial class MainViewModel :
             Layout.InitNativeMacMenu.Sync(this);
         }
 
-        if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows) && string.IsNullOrEmpty(Se.Settings.General.LibMpvPath))
+        if (OperatingSystem.IsWindows() && string.IsNullOrEmpty(Se.Settings.General.LibMpvPath))
         {
             Dispatcher.UIThread.Post(async void () =>
             {
@@ -19848,7 +19847,7 @@ public partial class MainViewModel :
 
     private bool TryHandleMacTextDelete(KeyEventArgs keyEventArgs, Func<KeyEventArgs, bool> isKeyMatch, Func<ITextBoxWrapper, bool> deleteAction)
     {
-        if (!RuntimeInformation.IsOSPlatform(OSPlatform.OSX) || !isKeyMatch(keyEventArgs))
+        if (!OperatingSystem.IsMacOS() || !isKeyMatch(keyEventArgs))
         {
             return false;
         }
@@ -20135,7 +20134,7 @@ public partial class MainViewModel :
             return false;
         }
 
-        var isMac = RuntimeInformation.IsOSPlatform(OSPlatform.OSX);
+        var isMac = OperatingSystem.IsMacOS();
         var navModifiers = e.KeyModifiers & ~KeyModifiers.Shift;
         var isWordNav = navModifiers == KeyModifiers.Control || (isMac && navModifiers == KeyModifiers.Alt);
         var isLineNav = isMac && navModifiers == KeyModifiers.Meta;
@@ -20459,7 +20458,7 @@ public partial class MainViewModel :
                 if ((keyEventArgs.Key == Key.Left || keyEventArgs.Key == Key.Right)
                     && (keyEventArgs.KeyModifiers == KeyModifiers.None
                         || keyEventArgs.KeyModifiers == KeyModifiers.Control
-                        || (RuntimeInformation.IsOSPlatform(OSPlatform.OSX)
+                        || (OperatingSystem.IsMacOS()
                             && (keyEventArgs.KeyModifiers == KeyModifiers.Alt
                                 || keyEventArgs.KeyModifiers == (KeyModifiers.Shift | KeyModifiers.Alt)))))
                 {

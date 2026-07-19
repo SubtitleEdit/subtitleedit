@@ -8,7 +8,6 @@ using Nikse.SubtitleEdit.Logic.Download;
 using System;
 using System.Globalization;
 using System.IO;
-using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Timers;
@@ -65,11 +64,11 @@ public partial class DownloadYtDlpViewModel : ObservableObject
                 _done = true;
 
                 var fileName = YtDlpDownloadService.GetFullFileName();
-                if (File.Exists(fileName) && RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+                if (File.Exists(fileName) && OperatingSystem.IsMacOS())
                 {
                     MacHelper.MakeExecutable(fileName);
                 }
-                else if (File.Exists(fileName) && RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+                else if (File.Exists(fileName) && OperatingSystem.IsLinux())
                 {
                     LinuxHelper.MakeExecutable(fileName);
                 }

@@ -2,7 +2,6 @@ using Nikse.SubtitleEdit.Core.AudioToText;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 
 namespace Nikse.SubtitleEdit.Features.Video.SpeechToText.Engines;
@@ -22,7 +21,7 @@ public class WhisperCppEngine : ISpeechToTextEngine
             new WhisperEngineCpp(),
         };
 
-        if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+        if (OperatingSystem.IsWindows())
         {
             _backends.Add(new WhisperEngineCppCuBlas());
             _backends.Add(new WhisperEngineCppVulkan());

@@ -9,7 +9,6 @@ using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Logic.VideoPlayers;
 using Nikse.SubtitleEdit.Logic.VideoPlayers.LibMpvDynamic;
 using System;
-using System.Runtime.InteropServices;
 
 namespace Nikse.SubtitleEdit.Features.Main.Layout;
 
@@ -160,7 +159,7 @@ public static class InitVideoPlayer
     /// </summary>
     public static VideoPlayerControl MakeVideoPlayerPreferNonNative()
     {
-        if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows) && Se.Settings.Video.VideoPlayer != VideoPlayerName.MpvOpenGl)
+        if (OperatingSystem.IsWindows() && Se.Settings.Video.VideoPlayer != VideoPlayerName.MpvOpenGl)
         {
             var player = new LibMpvDynamicPlayer();
             if (player.CanLoad())

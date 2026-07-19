@@ -201,12 +201,12 @@ public partial class SpeechToTextViewModel : ObservableObject
         _fileHelper = fileHelper;
 
         Engines = [new WhisperCppEngine()];
-        if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+        if (OperatingSystem.IsWindows())
         {
             Engines.Add(new WhisperEnginePurfviewFasterWhisperXxl());
             Engines.Add(new WhisperEngineConstMe());
         }
-        else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux) &&
+        else if (OperatingSystem.IsLinux() &&
                  RuntimeInformation.ProcessArchitecture == Architecture.X64)
         {
             // Purfview only ships Windows and Linux x86_64 builds - there is no Linux ARM64
@@ -214,16 +214,16 @@ public partial class SpeechToTextViewModel : ObservableObject
             Engines.Add(new WhisperEnginePurfviewFasterWhisperXxl());
         }
 
-        if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows) ||
-            (RuntimeInformation.IsOSPlatform(OSPlatform.OSX) && RuntimeInformation.ProcessArchitecture == Architecture.Arm64) ||
-            (RuntimeInformation.IsOSPlatform(OSPlatform.Linux) && RuntimeInformation.ProcessArchitecture == Architecture.X64))
+        if (OperatingSystem.IsWindows() ||
+            (OperatingSystem.IsMacOS() && RuntimeInformation.ProcessArchitecture == Architecture.Arm64) ||
+            (OperatingSystem.IsLinux() && RuntimeInformation.ProcessArchitecture == Architecture.X64))
         {
             Engines.Add(new WhisperEngineCTranslate2());
         }
 
         // MLX Whisper runs Whisper on the Apple GPU / Neural Engine and is arm64-only, so offer it
         // only on Apple Silicon.
-        if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX) &&
+        if (OperatingSystem.IsMacOS() &&
             RuntimeInformation.ProcessArchitecture == Architecture.Arm64)
         {
             Engines.Add(new MlxWhisperMac());
@@ -239,9 +239,9 @@ public partial class SpeechToTextViewModel : ObservableObject
         Engines.Add(new OpenRouterSttEngine());
         Engines.Add(new DashScopeQwen3SttEngine());
 
-        if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows) ||
-            RuntimeInformation.IsOSPlatform(OSPlatform.Linux) ||
-            RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+        if (OperatingSystem.IsWindows() ||
+            OperatingSystem.IsLinux() ||
+            OperatingSystem.IsMacOS())
         {
             //Engines.Add(new ChatLlmCppEngine());
             Engines.Add(new Qwen3AsrCppEngine());
@@ -2414,7 +2414,7 @@ public partial class SpeechToTextViewModel : ObservableObject
             }
         }
         else if (engine is ICrispAsrEngine
-                 && RuntimeInformation.IsOSPlatform(OSPlatform.Linux)
+                 && OperatingSystem.IsLinux()
                  && RuntimeInformation.ProcessArchitecture != Architecture.Arm64)
         {
             var linuxAnswer = await PromptCrispAsrLinuxVariantAsync(CrispAsrEngine.StaticName);
@@ -2932,7 +2932,7 @@ public partial class SpeechToTextViewModel : ObservableObject
                     }
                 }
                 else if (engine is ICrispAsrEngine
-                         && RuntimeInformation.IsOSPlatform(OSPlatform.Linux)
+                         && OperatingSystem.IsLinux()
                          && RuntimeInformation.ProcessArchitecture != Architecture.Arm64)
                 {
                     var crispVariant = await PromptCrispAsrLinuxVariantAsync(engine.Name);
@@ -3844,7 +3844,7 @@ public partial class SpeechToTextViewModel : ObservableObject
             process.StartInfo.EnvironmentVariables["GGML_VULKAN_DEVICE"] = cppVulkanDevice;
         }
 
-        if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+        if (OperatingSystem.IsWindows())
         {
             if (!string.IsNullOrEmpty(Se.Settings.General.FfmpegPath) &&
                 process.StartInfo.EnvironmentVariables["Path"] != null)
@@ -3869,7 +3869,7 @@ public partial class SpeechToTextViewModel : ObservableObject
             }
         }
 
-        if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+        if (OperatingSystem.IsWindows())
         {
             if (!string.IsNullOrEmpty(whisperFolder) && process.StartInfo.EnvironmentVariables["Path"] != null)
             {
@@ -4487,7 +4487,7 @@ public partial class SpeechToTextViewModel : ObservableObject
         }
 
         var crispVariant = DownloadHashManager.GetCrispAsrVariant(key)
-                           ?? (RuntimeInformation.IsOSPlatform(OSPlatform.Windows) ? "vulkan" : string.Empty);
+                           ?? (OperatingSystem.IsWindows() ? "vulkan" : string.Empty);
 
         await _windowService.ShowDialogAsync<DownloadSpeechToTextEngineWindow, DownloadSpeechToTextEngineViewModel>(
             Window!, viewModel =>
@@ -4667,11 +4667,11 @@ public partial class SpeechToTextViewModel : ObservableObject
         try
         {
             string? variant = null;
-            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            if (OperatingSystem.IsWindows())
             {
                 variant = DownloadHashManager.DetectCrispAsrWindowsVariant(folder);
             }
-            else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux)
+            else if (OperatingSystem.IsLinux()
                      && RuntimeInformation.ProcessArchitecture != Architecture.Arm64)
             {
                 variant = DownloadHashManager.DetectCrispAsrLinuxVariant(folder);

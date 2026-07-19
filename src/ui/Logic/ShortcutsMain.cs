@@ -2,9 +2,9 @@ using CommunityToolkit.Mvvm.Input;
 using Nikse.SubtitleEdit.Features.Main;
 using Nikse.SubtitleEdit.Features.Options.Shortcuts;
 using Nikse.SubtitleEdit.Logic.Config;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.InteropServices;
 
 namespace Nikse.SubtitleEdit.Logic;
 
@@ -955,7 +955,7 @@ public static class ShortcutsMain
 
     private static string GetCommandOrWin()
     {
-        if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+        if (OperatingSystem.IsMacOS())
         {
             return "Win";
         }

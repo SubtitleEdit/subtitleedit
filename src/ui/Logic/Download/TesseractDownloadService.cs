@@ -1,7 +1,6 @@
 ﻿using System;
 using System.IO;
 using System.Net.Http;
-using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
 using Nikse.SubtitleEdit.Logic.Compression;
@@ -29,12 +28,12 @@ public class TesseractDownloadService : ITesseractDownloadService
 
     private static string GetTesseractUrl()
     {
-        if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+        if (OperatingSystem.IsWindows())
         {
             return WindowsUrl;
         }
 
-        if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+        if (OperatingSystem.IsMacOS())
         {
             return MacUrl;
         }

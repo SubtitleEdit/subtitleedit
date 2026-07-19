@@ -179,11 +179,11 @@ public partial class DownloadSpeechToTextEngineViewModel : ObservableObject
 
                     var folder = Engine.GetAndCreateWhisperFolder();
                     var skipFolder = Engine is ICrispAsrEngine
-                        ? RuntimeInformation.IsOSPlatform(OSPlatform.Linux)
+                        ? OperatingSystem.IsLinux()
                             ? (CrispAsrWindowsVariant == "cuda" && RuntimeInformation.ProcessArchitecture != Architecture.Arm64
                                 ? "crispasr-linux-x86_64-cuda"
                                 : "crispasr-linux-x86_64")
-                            : RuntimeInformation.IsOSPlatform(OSPlatform.OSX)
+                            : OperatingSystem.IsMacOS()
                                 ? "crispasr-macos"
                                 : CrispAsrWindowsVariant switch
                                 {
@@ -252,11 +252,11 @@ public partial class DownloadSpeechToTextEngineViewModel : ObservableObject
     {
         if (File.Exists(path))
         {
-            if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+            if (OperatingSystem.IsMacOS())
             {
                 MacHelper.MakeExecutable(path);
             }
-            else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+            else if (OperatingSystem.IsLinux())
             {
                 LinuxHelper.MakeExecutable(path);
             }
@@ -288,7 +288,7 @@ public partial class DownloadSpeechToTextEngineViewModel : ObservableObject
                 var ext = Path.GetExtension(file).ToLowerInvariant();
                 var name = Path.GetFileName(file);
                 var isBinary = ext is ".exe" or ".dll" or ".so" or ".dylib"
-                    || (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows)
+                    || (!OperatingSystem.IsWindows()
                         && (name == "crispasr" || name == "crispasr-quantize"));
                 if (!isBinary)
                 {
@@ -362,7 +362,7 @@ public partial class DownloadSpeechToTextEngineViewModel : ObservableObject
         _zipUnpacker.UnpackZipStream(_downloadStream, folder, skipFolderLevel, false, new List<string>(), null);
         _downloadStream.Dispose();
 
-        if (Engine == null || (!RuntimeInformation.IsOSPlatform(OSPlatform.OSX) && !RuntimeInformation.IsOSPlatform(OSPlatform.Linux)))
+        if (Engine == null || (!OperatingSystem.IsMacOS() && !OperatingSystem.IsLinux()))
         {
             return;
         }
@@ -433,9 +433,9 @@ public partial class DownloadSpeechToTextEngineViewModel : ObservableObject
     public void StartDownload()
     {
         var displayName = Engine is ICrispAsrEngine
-            ? RuntimeInformation.IsOSPlatform(OSPlatform.Windows)
+            ? OperatingSystem.IsWindows()
                 ? "Crisp ASR " + CrispAsrWindowsVariant
-                : RuntimeInformation.IsOSPlatform(OSPlatform.Linux) && CrispAsrWindowsVariant == "cuda"
+                : OperatingSystem.IsLinux() && CrispAsrWindowsVariant == "cuda"
                     ? "Crisp ASR cuda"
                     : "Crisp ASR"
             : Engine?.Name;
@@ -487,7 +487,7 @@ public partial class DownloadSpeechToTextEngineViewModel : ObservableObject
         }
         else if (Engine is ICrispAsrEngine)
         {
-            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            if (OperatingSystem.IsWindows())
             {
                 _downloadTask = CrispAsrWindowsVariant switch
                 {
@@ -497,7 +497,7 @@ public partial class DownloadSpeechToTextEngineViewModel : ObservableObject
                     _            => _crispAsrDownloadService.DownloadEngineWindowsVulkan(_downloadStream, downloadProgress, _cancellationTokenSource.Token),
                 };
             }
-            else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux)
+            else if (OperatingSystem.IsLinux()
                      && CrispAsrWindowsVariant == "cuda"
                      && RuntimeInformation.ProcessArchitecture != Architecture.Arm64)
             {

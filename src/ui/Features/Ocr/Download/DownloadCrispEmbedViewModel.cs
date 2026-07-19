@@ -74,7 +74,7 @@ public partial class DownloadCrispEmbedViewModel : ObservableObject
     {
         _isModelDownload = false;
         _engineVariant = variant;
-        var displayName = RuntimeInformation.IsOSPlatform(OSPlatform.Windows) || variant == "cuda"
+        var displayName = OperatingSystem.IsWindows() || variant == "cuda"
             ? $"{CrispEmbedEngine.StaticName} {_engineVariant}".TrimEnd()
             : CrispEmbedEngine.StaticName;
         TitleText = string.Format(Se.Language.General.DownloadingX, displayName);
@@ -168,14 +168,14 @@ public partial class DownloadCrispEmbedViewModel : ObservableObject
         _zipUnpacker.UnpackZipStream(_downloadStream, folder, string.Empty, false, new List<string>(), null);
         _downloadStream.Dispose();
 
-        if (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+        if (!OperatingSystem.IsWindows())
         {
             foreach (var name in CrispEmbedEngine.BinaryBaseNames)
             {
                 var path = Path.Combine(folder, name);
                 if (File.Exists(path))
                 {
-                    if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+                    if (OperatingSystem.IsMacOS())
                     {
                         MacHelper.MakeExecutable(path);
                     }
@@ -230,7 +230,7 @@ public partial class DownloadCrispEmbedViewModel : ObservableObject
                 var ext = Path.GetExtension(file).ToLowerInvariant();
                 var name = Path.GetFileName(file);
                 var isBinary = ext is ".exe" or ".dll" or ".so" or ".dylib"
-                    || (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows)
+                    || (!OperatingSystem.IsWindows()
                         && Array.IndexOf(CrispEmbedEngine.BinaryBaseNames, name) >= 0);
                 if (!isBinary)
                 {
@@ -267,7 +267,7 @@ public partial class DownloadCrispEmbedViewModel : ObservableObject
         {
             _downloadTask = _downloadService.DownloadModel(_model.Url, _modelTempFileName, downloadProgress, _cancellationTokenSource.Token);
         }
-        else if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+        else if (OperatingSystem.IsWindows())
         {
             _downloadTask = _engineVariant switch
             {
@@ -276,7 +276,7 @@ public partial class DownloadCrispEmbedViewModel : ObservableObject
                 _ => _downloadService.DownloadEngineWindowsVulkan(_downloadStream, downloadProgress, _cancellationTokenSource.Token),
             };
         }
-        else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux)
+        else if (OperatingSystem.IsLinux()
                  && _engineVariant == "cuda"
                  && RuntimeInformation.ProcessArchitecture != Architecture.Arm64)
         {

@@ -9,7 +9,6 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 
 namespace Nikse.SubtitleEdit.Logic.Media
@@ -648,7 +647,7 @@ namespace Nikse.SubtitleEdit.Logic.Media
 
             try
             {
-                if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                if (OperatingSystem.IsWindows())
                 {
                     // Windows: use explorer with the file path
                     Process.Start(new ProcessStartInfo
@@ -657,7 +656,7 @@ namespace Nikse.SubtitleEdit.Logic.Media
                         UseShellExecute = true
                     });
                 }
-                else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+                else if (OperatingSystem.IsMacOS())
                 {
                     // macOS: use 'open' command
                     Process.Start(new ProcessStartInfo
@@ -667,7 +666,7 @@ namespace Nikse.SubtitleEdit.Logic.Media
                         UseShellExecute = false
                     });
                 }
-                else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+                else if (OperatingSystem.IsLinux())
                 {
                     // Linux: use 'xdg-open' command
                     Process.Start(new ProcessStartInfo

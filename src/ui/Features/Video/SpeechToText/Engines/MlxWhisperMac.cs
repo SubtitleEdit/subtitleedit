@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using Avalonia.Platform;
 using Nikse.SubtitleEdit.Core.AudioToText;
@@ -78,7 +77,7 @@ public class MlxWhisperMac : ISpeechToTextEngine
 
     public bool IsEngineInstalled()
     {
-        if (!RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+        if (!OperatingSystem.IsMacOS())
         {
             return false;
         }

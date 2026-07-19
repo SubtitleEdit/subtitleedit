@@ -3,7 +3,6 @@ using Nikse.SubtitleEdit.Logic.Config;
 using System;
 using System.Diagnostics;
 using System.IO;
-using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
 
 namespace Nikse.SubtitleEdit.Logic.Media;
@@ -21,7 +20,7 @@ public static class FfmpegHelper
 
     public static bool IsFfmpegInstalled()
     {
-        if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+        if (OperatingSystem.IsLinux())
         {
             return true;
         }
@@ -64,7 +63,7 @@ public static class FfmpegHelper
     /// </summary>
     public static string GetSystemFfmpegPath()
     {
-        var exeName = RuntimeInformation.IsOSPlatform(OSPlatform.Windows) ? "ffmpeg.exe" : "ffmpeg";
+        var exeName = OperatingSystem.IsWindows() ? "ffmpeg.exe" : "ffmpeg";
         var pathValue = Environment.GetEnvironmentVariable("PATH");
         if (string.IsNullOrEmpty(pathValue))
         {

@@ -93,19 +93,19 @@ public class YtDlpDownloadService : IYtDlpDownloadService
 
     public static string GetFullFileName()
     {
-        if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+        if (OperatingSystem.IsWindows())
         {
             return Path.Combine(Se.DataFolder, "yt-dlp.exe");
         }
 
-        if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+        if (OperatingSystem.IsLinux())
         {
             return RuntimeInformation.ProcessArchitecture == Architecture.Arm64
                 ? Path.Combine(Se.DataFolder, "yt-dlp_linux_aarch64")
                 : Path.Combine(Se.DataFolder, "yt-dlp_linux");
         }
 
-        if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+        if (OperatingSystem.IsMacOS())
         {
             return Path.Combine(Se.DataFolder, "yt-dlp_macos");
         }
@@ -114,17 +114,17 @@ public class YtDlpDownloadService : IYtDlpDownloadService
     }
     private static string GetUrl()
     {
-        if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+        if (OperatingSystem.IsWindows())
         {
             return WindowsUrl;
         }
 
-        if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+        if (OperatingSystem.IsLinux())
         {
             return RuntimeInformation.ProcessArchitecture == Architecture.Arm64 ? LinuxArmUrl : LinuxUrl;
         }
 
-        if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+        if (OperatingSystem.IsMacOS())
         {
             return MacUrl;
         }

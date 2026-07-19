@@ -36,12 +36,12 @@ public class LibMpvDynamicNativeControl : NativeControlHost
     private IntPtr _originalWndProc = IntPtr.Zero;
 
     // Linux still needs the temporary hide/show workaround during live resize.
-    private static bool ShouldHideNativeControlDuringResize => RuntimeInformation.IsOSPlatform(OSPlatform.Linux);
+    private static bool ShouldHideNativeControlDuringResize => OperatingSystem.IsLinux();
 
     // On Windows, use a dedicated child HWND for the embedded renderer instead of
     // the parent host handle. Reusing the parent handle makes native video jump to
     // the top-left corner during live resize.
-    private static bool ShouldUseOwnedChildHandle => RuntimeInformation.IsOSPlatform(OSPlatform.Windows);
+    private static bool ShouldUseOwnedChildHandle => OperatingSystem.IsWindows();
 
     public LibMpvDynamicPlayer? Player => _mpvPlayer;
 
@@ -227,7 +227,7 @@ public class LibMpvDynamicNativeControl : NativeControlHost
             System.Diagnostics.Debug.WriteLine($"Failed to set wid: {_mpvPlayer.GetErrorString(err)}");
         }
 
-        if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+        if (OperatingSystem.IsLinux())
         {
             _mpvPlayer.SetOptionString("vo", "xv,x11,gpu");
         }
@@ -240,7 +240,7 @@ public class LibMpvDynamicNativeControl : NativeControlHost
         _mpvPlayer.SetOptionString("keep-open", "always");
         _mpvPlayer.SetOptionString("background-color", "#000000");
 
-        if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+        if (OperatingSystem.IsLinux())
         {
             _mpvPlayer.SetOptionString("idle", "yes");
             _mpvPlayer.SetOptionString("force-window", "yes");
@@ -261,15 +261,15 @@ public class LibMpvDynamicNativeControl : NativeControlHost
 
     private static string GetWindowIdString(IntPtr handle)
     {
-        if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+        if (OperatingSystem.IsWindows())
         {
             return handle.ToString();
         }
-        else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+        else if (OperatingSystem.IsLinux())
         {
             return handle.ToString();
         }
-        else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+        else if (OperatingSystem.IsMacOS())
         {
             return handle.ToString();
         }
@@ -398,7 +398,7 @@ public class LibMpvDynamicNativeControl : NativeControlHost
     protected override void OnPointerPressed(PointerPressedEventArgs e)
     {
         base.OnPointerPressed(e);
-        if (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows) &&
+        if (!OperatingSystem.IsWindows() &&
             e.GetCurrentPoint(this).Properties.IsLeftButtonPressed)
         {
             TogglePlayPause();

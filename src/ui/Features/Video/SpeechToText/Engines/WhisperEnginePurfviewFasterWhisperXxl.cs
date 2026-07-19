@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using Avalonia.Platform;
 using Nikse.SubtitleEdit.Core.AudioToText;
@@ -223,7 +222,7 @@ public class WhisperEnginePurfviewFasterWhisperXxl : ISpeechToTextEngine
 
     public string GetExecutableFileName()
     {
-        if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+        if (OperatingSystem.IsWindows())
         {
             return "faster-whisper-xxl.exe";
         }
@@ -241,11 +240,11 @@ public class WhisperEnginePurfviewFasterWhisperXxl : ISpeechToTextEngine
         get
         {
             // Bundles full CUDA + Python runtime, so the archive is large.
-            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            if (OperatingSystem.IsWindows())
             {
                 return "~1.4 GB";
             }
-            if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+            if (OperatingSystem.IsLinux())
             {
                 return "~1.6 GB";
             }

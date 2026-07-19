@@ -151,15 +151,15 @@ public static class ClipboardHelper
 
     public static async Task CopyImageToClipboard(Bitmap bitmap)
     {
-        if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+        if (OperatingSystem.IsWindows())
         {
             await CopyImageToClipboardWindows(bitmap);
         }
-        else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+        else if (OperatingSystem.IsLinux())
         {
             await CopyImageToClipboardLinux(bitmap);
         }
-        else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+        else if (OperatingSystem.IsMacOS())
         {
             await CopyImageToClipboardMacOS(bitmap);
         }

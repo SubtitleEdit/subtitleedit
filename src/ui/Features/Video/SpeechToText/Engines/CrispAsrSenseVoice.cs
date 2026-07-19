@@ -1,8 +1,8 @@
 ﻿using Nikse.SubtitleEdit.Core.AudioToText;
 using Nikse.SubtitleEdit.Logic.Config;
+using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Runtime.InteropServices;
 
 namespace Nikse.SubtitleEdit.Features.Video.SpeechToText.Engines;
 
@@ -131,7 +131,7 @@ public class CrispAsrSenseVoice : CrispAsrEngineBase
 
     internal static string GetExecutableFileName()
     {
-        if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+        if (OperatingSystem.IsWindows())
         {
             return "crispasr.exe";
         }

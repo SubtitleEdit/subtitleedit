@@ -48,7 +48,7 @@ public class Qwen3AsrCppDownloadService : IQwen3AsrCppDownloadService
             return false;
         }
 
-        return RuntimeInformation.IsOSPlatform(OSPlatform.Windows) || RuntimeInformation.IsOSPlatform(OSPlatform.Linux);
+        return OperatingSystem.IsWindows() || OperatingSystem.IsLinux();
     }
 
     public async Task DownloadEngine(Stream stream, IProgress<float>? progress, CancellationToken cancellationToken, bool useVulkan = false)
@@ -58,12 +58,12 @@ public class Qwen3AsrCppDownloadService : IQwen3AsrCppDownloadService
 
     private static string GetUrl(bool useVulkan)
     {
-        if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+        if (OperatingSystem.IsWindows())
         {
             return useVulkan ? WindowsVulkanUrl : WindowsUrl;
         }
 
-        if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+        if (OperatingSystem.IsLinux())
         {
             if (RuntimeInformation.ProcessArchitecture == Architecture.Arm64)
             {
@@ -73,7 +73,7 @@ public class Qwen3AsrCppDownloadService : IQwen3AsrCppDownloadService
             return useVulkan ? LinuxVulkanUrl : LinuxUrl;
         }
 
-        if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+        if (OperatingSystem.IsMacOS())
         {
             return RuntimeInformation.ProcessArchitecture == Architecture.Arm64 ? MacArmUrl : MacX64Url;
         }

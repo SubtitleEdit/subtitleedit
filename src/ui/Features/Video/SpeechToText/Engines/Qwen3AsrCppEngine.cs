@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using Avalonia.Platform;
 using Nikse.SubtitleEdit.Core.AudioToText;
@@ -202,7 +201,7 @@ public class Qwen3AsrCppEngine : ISpeechToTextEngine
 
     public string GetExecutableFileName()
     {
-        if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+        if (OperatingSystem.IsWindows())
         {
             return "qwen3-asr-cli.exe";
         }

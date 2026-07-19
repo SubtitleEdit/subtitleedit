@@ -1,4 +1,3 @@
-using System.Runtime.InteropServices;
 using Nikse.SubtitleEdit.Core.AudioToText;
 using Nikse.SubtitleEdit.Features.Video.SpeechToText.Engines;
 using Nikse.SubtitleEdit.Logic.Config;
@@ -12,7 +11,7 @@ public class WhisperCppEngineTests
     {
         var engine = new WhisperCppEngine();
 
-        if (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+        if (!OperatingSystem.IsWindows())
         {
             Assert.False(engine.TrySelectBackendChoice(WhisperChoice.CppCuBlas));
             Assert.IsType<WhisperEngineCpp>(engine.SelectedBackend);
@@ -39,7 +38,7 @@ public class WhisperCppEngineTests
             var engine = new WhisperCppEngine();
             var expectedBackend = engine.SelectedBackend;
 
-            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            if (OperatingSystem.IsWindows())
             {
                 Assert.True(engine.TrySelectBackendChoice(WhisperChoice.CppVulkan));
                 expectedBackend = engine.SelectedBackend;
