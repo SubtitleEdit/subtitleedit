@@ -72,6 +72,8 @@ public class PromptFileSavedWindow : Window
         buttonCopyPath.Padding = new Thickness(4);
         buttonCopyPath.Margin = new Thickness(2, 0, 0, 0);
         ToolTip.SetTip(buttonCopyPath, Se.Language.General.Copy);
+        vm.CopyPathButton = buttonCopyPath; // for the copied-feedback icon flip
+
         var panelPath = new StackPanel
         {
             Orientation = Orientation.Horizontal,
