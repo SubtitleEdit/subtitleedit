@@ -1968,6 +1968,15 @@ namespace Nikse.SubtitleEdit.Core.Common
 #endif
         }
 
+        private static void IncrementScore(Dictionary<string, int> scores, string language)
+        {
+#if NET8_0_OR_GREATER
+            System.Runtime.InteropServices.CollectionsMarshal.GetValueRefOrAddDefault(scores, language, out _)++;
+#else
+            scores[language]++;
+#endif
+        }
+
         public static string GetEncodingViaLetter(string text)
         {
             if (string.IsNullOrEmpty(text))
@@ -2000,26 +2009,26 @@ namespace Nikse.SubtitleEdit.Core.Common
             // Count all special characters
             foreach (var c in text)
             {
-                if (Letters.Arabic.Contains(c)) languageScores["ar"]++;
-                if (Letters.Korean.Contains(c)) languageScores["ko"]++;
-                if (Letters.Japanese.Contains(c)) languageScores["ja"]++;
-                if (Letters.Thai.Contains(c)) languageScores["th"]++;
-                if (Letters.Sinhalese.Contains(c)) languageScores["si"]++;
-                if (Letters.Urdu.Contains(c)) languageScores["ur"]++;
-                if (Letters.Russian.Contains(c)) languageScores["ru"]++;
-                if (Letters.Greek.Contains(c)) languageScores["el"]++;
-                if (Letters.Hebrew.Contains(c)) languageScores["he"]++;
-                if (Letters.Devanagari.Contains(c)) languageScores["hi"]++;
-                if (Letters.Bengali.Contains(c)) languageScores["bn"]++;
-                if (Letters.Armenian.Contains(c)) languageScores["hy"]++;
-                if (Letters.Georgian.Contains(c)) languageScores["ka"]++;
-                if (Letters.Chinese.Contains(c)) languageScores["zh"]++;
-                if (Letters.Amharic.Contains(c)) languageScores["am"]++;
-                if (Letters.Khmer.Contains(c)) languageScores["km"]++;
-                if (Letters.Deutsch.Contains(c)) languageScores["de"]++;
-                if (Letters.Swedish.Contains(c)) languageScores["sv"]++;
-                if (Letters.French.Contains(c)) languageScores["fr"]++;
-                if (Letters.Spanish.Contains(c)) languageScores["es"]++;
+                if (Letters.Arabic.Contains(c)) IncrementScore(languageScores, "ar");
+                if (Letters.Korean.Contains(c)) IncrementScore(languageScores, "ko");
+                if (Letters.Japanese.Contains(c)) IncrementScore(languageScores, "ja");
+                if (Letters.Thai.Contains(c)) IncrementScore(languageScores, "th");
+                if (Letters.Sinhalese.Contains(c)) IncrementScore(languageScores, "si");
+                if (Letters.Urdu.Contains(c)) IncrementScore(languageScores, "ur");
+                if (Letters.Russian.Contains(c)) IncrementScore(languageScores, "ru");
+                if (Letters.Greek.Contains(c)) IncrementScore(languageScores, "el");
+                if (Letters.Hebrew.Contains(c)) IncrementScore(languageScores, "he");
+                if (Letters.Devanagari.Contains(c)) IncrementScore(languageScores, "hi");
+                if (Letters.Bengali.Contains(c)) IncrementScore(languageScores, "bn");
+                if (Letters.Armenian.Contains(c)) IncrementScore(languageScores, "hy");
+                if (Letters.Georgian.Contains(c)) IncrementScore(languageScores, "ka");
+                if (Letters.Chinese.Contains(c)) IncrementScore(languageScores, "zh");
+                if (Letters.Amharic.Contains(c)) IncrementScore(languageScores, "am");
+                if (Letters.Khmer.Contains(c)) IncrementScore(languageScores, "km");
+                if (Letters.Deutsch.Contains(c)) IncrementScore(languageScores, "de");
+                if (Letters.Swedish.Contains(c)) IncrementScore(languageScores, "sv");
+                if (Letters.French.Contains(c)) IncrementScore(languageScores, "fr");
+                if (Letters.Spanish.Contains(c)) IncrementScore(languageScores, "es");
             }
 
             // Apply unique character bonuses for disambiguation
