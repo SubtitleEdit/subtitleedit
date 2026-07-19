@@ -345,14 +345,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                 {
                     string tag = s.Substring(six, endIndex - six + 1);
                     s = s.Remove(six, tag.Length);
-                    if (htmlTags.ContainsKey(six))
-                    {
-                        htmlTags[six] = htmlTags[six] + tag;
-                    }
-                    else
-                    {
-                        htmlTags.Add(six, tag);
-                    }
+                    AddOrAppendHtmlTag(htmlTags, six, tag);
                 }
                 else
                 {
@@ -432,6 +425,23 @@ namespace Nikse.SubtitleEdit.Core.Common
             }
 
             return text;
+        }
+
+        private static void AddOrAppendHtmlTag(Dictionary<int, string> htmlTags, int index, string tag)
+        {
+#if NET8_0_OR_GREATER
+            ref var existing = ref System.Runtime.InteropServices.CollectionsMarshal.GetValueRefOrAddDefault(htmlTags, index, out _);
+            existing += tag; // null for a newly added key, so this both adds and appends
+#else
+            if (htmlTags.TryGetValue(index, out var existing))
+            {
+                htmlTags[index] = existing + tag;
+            }
+            else
+            {
+                htmlTags.Add(index, tag);
+            }
+#endif
         }
 
         private static string ReInsertHtmlTagsAndCleanUp(string input, Dictionary<int, string> htmlTags)
@@ -604,14 +614,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                     if (endIndexAssTag > 0)
                     {
                         tagString = tagString.Substring(0, endIndexAssTag);
-                        if (htmlTags.ContainsKey(six))
-                        {
-                            htmlTags[six] = htmlTags[six] + tagString;
-                        }
-                        else
-                        {
-                            htmlTags.Add(six, tagString);
-                        }
+                        AddOrAppendHtmlTag(htmlTags, six, tagString);
 
                         s = s.Remove(six, endIndexAssTag);
                         continue;
@@ -628,14 +631,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                 {
                     var tag = s.Substring(six, endIndex - six + 1);
                     s = s.Remove(six, tag.Length);
-                    if (htmlTags.ContainsKey(six))
-                    {
-                        htmlTags[six] += tag;
-                    }
-                    else
-                    {
-                        htmlTags.Add(six, tag);
-                    }
+                    AddOrAppendHtmlTag(htmlTags, six, tag);
                 }
                 else
                 {
