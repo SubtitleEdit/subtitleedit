@@ -392,12 +392,11 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
             {
                 if (!string.IsNullOrEmpty(dic.Value.Text))
                 {
-                    if (TeletextSubtitlesLookup.ContainsKey(packetId))
+                    if (TeletextSubtitlesLookup.TryGetValue(packetId, out var innerDic))
                     {
-                        var innerDic = TeletextSubtitlesLookup[packetId];
-                        if (innerDic.ContainsKey(dic.Key))
+                        if (innerDic.TryGetValue(dic.Key, out var paragraphs))
                         {
-                            innerDic[dic.Key].Add(dic.Value);
+                            paragraphs.Add(dic.Value);
                         }
                         else
                         {
@@ -434,9 +433,9 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
 
             if (_isM2TransportStream || list.Any(p => p.IsDvbSubPicture))
             {
-                if (SubtitlesLookup.ContainsKey(packetId))
+                if (SubtitlesLookup.TryGetValue(packetId, out var existing))
                 {
-                    SubtitlesLookup[packetId].AddRange(list);
+                    existing.AddRange(list);
                 }
                 else
                 {
@@ -448,30 +447,32 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
             {
                 foreach (var pageNumber in item.PrepareTeletext().Where(p => p > 0))
                 {
-                    if (!teletextPages.ContainsKey(packetId))
+                    var pages = GetOrAddList(teletextPages, packetId);
+                    if (!pages.Contains(pageNumber))
                     {
-                        teletextPages.Add(packetId, new List<int> { pageNumber });
-                    }
-                    else
-                    {
-                        if (!teletextPages[packetId].Contains(pageNumber))
-                        {
-                            teletextPages[packetId].Add(pageNumber);
-                        }
+                        pages.Add(pageNumber);
                     }
                 }
 
-                if (teletextPesList.ContainsKey(packetId))
-                {
-                    teletextPesList[packetId].Add(item);
-                }
-                else
-                {
-                    teletextPesList.Add(packetId, new List<DvbSubPes> { item });
-                }
+                GetOrAddList(teletextPesList, packetId).Add(item);
             }
 
             return firstVideoMs;
+        }
+
+        private static List<T> GetOrAddList<T>(Dictionary<int, List<T>> dictionary, int key)
+        {
+#if NET8_0_OR_GREATER
+            ref var list = ref System.Runtime.InteropServices.CollectionsMarshal.GetValueRefOrAddDefault(dictionary, key, out _);
+            return list ??= new List<T>();
+#else
+            if (!dictionary.TryGetValue(key, out var list))
+            {
+                list = new List<T>();
+                dictionary.Add(key, list);
+            }
+            return list;
+#endif
         }
 
         public List<TransportStreamSubtitle> GetDvbSubtitles(int packetId)
