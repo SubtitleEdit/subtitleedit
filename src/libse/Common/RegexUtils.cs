@@ -246,8 +246,9 @@ namespace Nikse.SubtitleEdit.Core.Common
         }
 
         /// <summary>
-        /// Performs replace on regular expression. Line breaks are normalized to "\n" for both the match
-        /// and the returned text, so the pattern and the text agree regardless of \n vs \r\n.
+        /// Performs replace on regular expression. The match runs against line-feed-normalized text,
+        /// so the pattern's \n (see <see cref="FixNewLine"/>) matches regardless of \n vs \r\n; the
+        /// returned text uses <see cref="Environment.NewLine"/> like all other paragraph text.
         /// </summary>
         /// <param name="regularExpression">Regular expression to perform replace on</param>
         /// <param name="text">Text perform replace on</param>
@@ -257,18 +258,35 @@ namespace Nikse.SubtitleEdit.Core.Common
         /// <returns>Input string with regular expression replace applied</returns>
         public static string ReplaceNewLineSafe(Regex regularExpression, string text, string replaceWith, int count, int startIndex)
         {
-            // Match/return with line-feed-normalized line breaks so a pattern's \n (see FixNewLine)
+            // Match with line-feed-normalized line breaks so a pattern's \n (see FixNewLine)
             // matches regardless of whether the in-memory text uses \n or \r\n (#11956).
 
             // Fast path (runs per replace rule per subtitle line): text without \r or U+2028 round-trips
             // unchanged through the SplitToLines+Join normalization, so skip the four allocations.
             if (!ContainsNonLineFeedNewLine(text) && !ContainsNonLineFeedNewLine(replaceWith))
             {
-                return regularExpression.Replace(text, replaceWith, count, startIndex);
+                return RestorePlatformNewLines(regularExpression.Replace(text, replaceWith, count, startIndex));
             }
 
             text = regularExpression.Replace(string.Join("\n", text.SplitToLines()), replaceWith, count, startIndex);
-            return string.Join("\n", text.SplitToLines());
+            return RestorePlatformNewLines(text);
+        }
+
+        /// <summary>
+        /// Re-joins line-feed-normalized text with <see cref="Environment.NewLine"/>. The rest of
+        /// libse keeps paragraph text with platform newlines, and the format writers rely on it -
+        /// e.g. ASSA folds line breaks via <c>Replace(Environment.NewLine, "\\N")</c>, so a bare
+        /// \n left behind by the match normalization above was written as a physical newline
+        /// inside the Dialogue line, corrupting the saved file on Windows (#12620).
+        /// </summary>
+        private static string RestorePlatformNewLines(string text)
+        {
+            if (Environment.NewLine == "\n" || text.IndexOf('\n') < 0)
+            {
+                return text;
+            }
+
+            return string.Join(Environment.NewLine, text.SplitToLines());
         }
 
         public static int CountNewLineSafe(Regex regularExpression, string text)
