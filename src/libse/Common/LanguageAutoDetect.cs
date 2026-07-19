@@ -1934,6 +1934,10 @@ namespace Nikse.SubtitleEdit.Core.Common
 
         private static readonly char[] RightToLeftLetters = string.Concat(AutoDetectWordsArabic.Concat(AutoDetectWordsHebrew).Concat(AutoDetectWordsFarsi).Concat(AutoDetectWordsUrdu)).Distinct().ToArray();
 
+#if NET8_0_OR_GREATER
+        private static readonly System.Buffers.SearchValues<char> RightToLeftLetterSearchValues = System.Buffers.SearchValues.Create(RightToLeftLetters);
+#endif
+
         public static bool CouldBeRightToLeftLanguage(Subtitle subtitle)
         {
             const int maxNumberOfLinesToCheck = 20;
@@ -1950,6 +1954,9 @@ namespace Nikse.SubtitleEdit.Core.Common
 
         public static bool ContainsRightToLeftLetter(string text)
         {
+#if NET8_0_OR_GREATER
+            return text.AsSpan().ContainsAny(RightToLeftLetterSearchValues);
+#else
             foreach (var letter in RightToLeftLetters)
             {
                 if (text.Contains(letter))
@@ -1958,6 +1965,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                 }
             }
             return false;
+#endif
         }
 
         public static string GetEncodingViaLetter(string text)

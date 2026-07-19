@@ -13,6 +13,10 @@ namespace Nikse.SubtitleEdit.Core.Common
     {
         public static char[] UnicodeControlChars { get; } = { '\u200E', '\u200F', '\u202A', '\u202B', '\u202C', '\u202D', '\u202E' };
 
+#if NET8_0_OR_GREATER
+        private static readonly SearchValues<char> UnicodeControlCharsSearchValues = SearchValues.Create(UnicodeControlChars);
+#endif
+
         public static bool LineStartsWithHtmlTag(this string text, bool threeLengthTag, bool includeFont = false)
         {
             if (text == null || !threeLengthTag && !includeFont)
@@ -435,7 +439,11 @@ namespace Nikse.SubtitleEdit.Core.Common
 
         public static bool ContainsUnicodeControlChars(this string s)
         {
+#if NET8_0_OR_GREATER
+            return s.AsSpan().ContainsAny(UnicodeControlCharsSearchValues);
+#else
             return s.Contains(UnicodeControlChars);
+#endif
         }
 
         public static bool ContainsNonStandardNewLines(this string s)
@@ -503,7 +511,11 @@ namespace Nikse.SubtitleEdit.Core.Common
             for (var index = 0; index < max; index++)
             {
                 var ch = s[index];
+#if NET8_0_OR_GREATER
+                if (!char.IsControl(ch) && !char.IsWhiteSpace(ch) && !UnicodeControlCharsSearchValues.Contains(ch))
+#else
                 if (!char.IsControl(ch) && !char.IsWhiteSpace(ch) && !UnicodeControlChars.Contains(ch))
+#endif
                 {
                     return false;
                 }
