@@ -1916,11 +1916,34 @@ public partial class TextToSpeechViewModel : ObservableObject
     // OK closes the window accepting the session's subtitle changes: the main window then
     // applies merged lines and review text edits (MergedSubtitle/ReviewTextChanges) to the
     // open subtitle. Cancel (or Escape / title-bar close) discards them.
+    //
+    // Every step is guarded and logged: a report of the whole app dying on OK (#12626) could
+    // not be tied to any step here, so nothing in the close path may throw its way out of the
+    // command, and the tools-log breadcrumbs bisect where a hard (native) crash happens.
     [RelayCommand]
     private void Ok()
     {
-        SaveSettings();
-        _cancellationTokenSource.Cancel();
+        Se.WriteToolsLog("TTS window: OK clicked - closing");
+
+        try
+        {
+            SaveSettings();
+        }
+        catch (Exception ex)
+        {
+            SeLogger.Error(ex, "TTS window: saving settings on OK failed");
+        }
+
+        try
+        {
+            _cancellationTokenSource.Cancel();
+        }
+        catch (Exception ex)
+        {
+            // Cancel() runs registered callbacks synchronously - a throwing callback lands here.
+            SeLogger.Error(ex, "TTS window: cancelling the pipeline token on OK failed");
+        }
+
         IsGenerating = false;
         IsNotGenerating = true;
         ProgressOpacity = 0;
@@ -1935,7 +1958,16 @@ public partial class TextToSpeechViewModel : ObservableObject
         // user can adjust settings and generate again.
         if (IsGenerating)
         {
-            _cancellationTokenSource.Cancel();
+            Se.WriteToolsLog("TTS window: Cancel clicked during generation - stopping pipeline");
+            try
+            {
+                _cancellationTokenSource.Cancel();
+            }
+            catch (Exception ex)
+            {
+                SeLogger.Error(ex, "TTS window: cancelling the running pipeline failed");
+            }
+
             IsGenerating = false;
             IsNotGenerating = true;
             ProgressOpacity = 0;
@@ -1943,6 +1975,7 @@ public partial class TextToSpeechViewModel : ObservableObject
         }
 
         // Idle: close without applying anything to the main window (OkPressed stays false).
+        Se.WriteToolsLog("TTS window: Cancel clicked - closing");
         Close();
     }
 
@@ -3340,23 +3373,58 @@ public partial class TextToSpeechViewModel : ObservableObject
 
     internal void OnClosing(WindowClosingEventArgs e)
     {
+        // Each teardown step is guarded and bracketed by tools-log breadcrumbs: a report of the
+        // whole app dying when this window closes (#12626) left nothing in error-log.txt, which
+        // points at a hard (native) crash - the last breadcrumb then names the step that died.
+        Se.WriteToolsLog($"TTS window: closing (okPressed={OkPressed})");
+
         // Title-bar close during a run: cancel the pipeline so it unwinds instead of running
         // headless against a closed window (progress writes, folder picker, message boxes) while
         // StopAllCrispAsrServers below kills the engine server it is talking to.
-        try { _cancellationTokenSource?.Cancel(); } catch (ObjectDisposedException) { }
+        try
+        {
+            _cancellationTokenSource?.Cancel();
+        }
+        catch (Exception ex)
+        {
+            SeLogger.Error(ex, "TTS window close: cancelling the pipeline failed");
+        }
 
         // An enabled System.Timers.Timer is rooted: without stopping it here, every open/close
         // of this window leaked a view model whose Elapsed handler kept firing every 100 ms for
         // the rest of the session (ReviewSpeechViewModel already does this on close).
-        _timer.Stop();
-        _timer.Elapsed -= OnTimerOnElapsed;
-        _timer.Dispose();
-
-        lock (_playLock)
+        try
         {
-            _mpvContext?.Dispose();
-            _mpvContext = null;
+            _timer.Stop();
+            _timer.Elapsed -= OnTimerOnElapsed;
+            _timer.Dispose();
         }
+        catch (Exception ex)
+        {
+            SeLogger.Error(ex, "TTS window close: stopping the playback timer failed");
+        }
+
+        try
+        {
+            lock (_playLock)
+            {
+                if (_mpvContext != null)
+                {
+                    // Only used when Test voice played a clip. Stop before Dispose so libmpv
+                    // tears down from an idle state instead of mid-playback - this dispose is
+                    // the prime native-crash suspect in #12626.
+                    Se.WriteToolsLog("TTS window: disposing audio preview player (mpv)");
+                    _mpvContext.Stop();
+                    _mpvContext.Dispose();
+                    _mpvContext = null;
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            SeLogger.Error(ex, "TTS window close: disposing the audio preview player failed");
+        }
+
         // Release VRAM held by any still-running crispasr.exe servers so models don't stay
         // pinned for the rest of the SE session. Fire-and-forget on the threadpool — each
         // StopServer is Kill + WaitForExit(2000), so doing this on the UI thread could block
@@ -3364,7 +3432,17 @@ public partial class TextToSpeechViewModel : ObservableObject
         // performs the same teardown if SE exits before the task completes, so nothing is
         // left running.
         _ = Task.Run(StopAllCrispAsrServers);
-        UiUtil.SaveWindowPosition(Window);
+
+        try
+        {
+            UiUtil.SaveWindowPosition(Window);
+        }
+        catch (Exception ex)
+        {
+            SeLogger.Error(ex, "TTS window close: saving the window position failed");
+        }
+
+        Se.WriteToolsLog("TTS window: close cleanup done");
     }
 
     internal void OnLoaded(RoutedEventArgs e)

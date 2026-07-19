@@ -7115,9 +7115,23 @@ public partial class MainViewModel :
 
         // OK is the consent to apply the session's subtitle changes; Cancel/Escape/title-bar
         // close discards them.
+        Se.WriteToolsLog($"TTS window closed - okPressed={result.OkPressed}" +
+                         $", mergedLines={result.MergedSubtitle?.Paragraphs.Count ?? 0}" +
+                         $", reviewTextChanges={result.ReviewTextChanges.Count}");
         if (result.OkPressed)
         {
-            ApplyTtsChanges(result.MergedSubtitle, result.ReviewTextChanges);
+            // Guarded so a bad session (e.g. an imported one for another subtitle) can never
+            // turn consent-to-apply into a crash report; forced log so the failure is
+            // diagnosable even with tools logging off (#12626).
+            try
+            {
+                ApplyTtsChanges(result.MergedSubtitle, result.ReviewTextChanges);
+            }
+            catch (Exception ex)
+            {
+                SeLogger.Error(ex, "TTS: applying subtitle changes after OK failed");
+                Se.WriteToolsLog("TTS: applying subtitle changes after OK failed: " + ex, true);
+            }
         }
     }
 
