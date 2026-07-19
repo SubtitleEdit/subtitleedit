@@ -9,7 +9,6 @@ using Nikse.SubtitleEdit.Features.SpellCheck;
 using Nikse.SubtitleEdit.Logic;
 using System;
 using System.Linq;
-using System.Runtime.InteropServices;
 
 namespace Nikse.SubtitleEdit.Features.Shared.TextBoxUtils;
 
