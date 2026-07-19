@@ -140,6 +140,16 @@ public static class TtsVoiceInstaller
             minVersionNote: "v0.7.0 or newer");
 
     /// <summary>
+    /// Ensures the CrispASR runtime that MOSS-TTS (CrispASR) runs on is installed.
+    /// The moss-tts backend ships in CrispASR v0.8.13+ (SE's pinned release).
+    /// </summary>
+    public static Task<bool> EnsureCrispAsrForMossTts(Window? window, IWindowService windowService, bool forceRedownload)
+        => EnsureCrispAsrAsync(window, windowService, forceRedownload,
+            engineDisplayName: "MOSS-TTS (CrispASR)",
+            extraCapabilityCheck: null,
+            minVersionNote: "v0.8.13 or newer");
+
+    /// <summary>
     /// Shared CrispASR install/update flow used by all TTS engines that sit on the
     /// CrispASR runtime. Prompts refer to <paramref name="engineDisplayName"/> so users
     /// see the right engine name. <paramref name="extraCapabilityCheck"/> lets the caller

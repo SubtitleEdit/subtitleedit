@@ -21,6 +21,7 @@ using Nikse.SubtitleEdit.Features.Video.TextToSpeech.EncodingSettings;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.Engines;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.F5TtsCrispAsrSettings;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.VoxCPM2CrispAsrSettings;
+using Nikse.SubtitleEdit.Features.Video.TextToSpeech.MossTtsCrispAsrSettings;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.IndexTtsCrispAsrSettings;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.KokoroTtsSettings;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.PiperSettings;
@@ -235,6 +236,10 @@ public partial class TextToSpeechViewModel : ObservableObject
             // CrispASR v0.7.0, so synthesis is fast enough for the TTS-from-subtitles workflow.
             new VoxCPM2CrispAsr(),
 
+            // MOSS-TTS (CrispASR) — Qwen3-8B backbone + 1.6B transformer codec at 24 kHz with
+            // zero-shot voice cloning, via the moss-tts backend (#12617).
+            new MossTtsCrispAsr(),
+
             new ZonosTtsCrispAsr(),
 
             new ChatterboxTtsCpp(),
@@ -406,6 +411,10 @@ public partial class TextToSpeechViewModel : ObservableObject
         {
             Se.Settings.Video.TextToSpeech.VoxCPM2CrispAsrModel = SelectedModel ?? VoxCPM2CrispAsr.DefaultModelKey;
         }
+        else if (SelectedEngine is MossTtsCrispAsr)
+        {
+            Se.Settings.Video.TextToSpeech.MossTtsCrispAsrModel = SelectedModel ?? MossTtsCrispAsr.DefaultModelKey;
+        }
         else if (SelectedEngine is OmniVoiceTtsCpp)
         {
             Se.Settings.Video.TextToSpeech.OmniVoiceTtsCppInstruction = (Instruction ?? string.Empty).Trim();
@@ -563,6 +572,7 @@ public partial class TextToSpeechViewModel : ObservableObject
         string? wavPath = null;
         bool isCosyVoice3 = false;
         bool isVoxCPM2 = false;
+        bool isMossTts = false;
         bool isQwen3Clone = false;
         if (voice.EngineVoice is CosyVoice3Voice cosy && !string.IsNullOrEmpty(cosy.FilePath) && string.IsNullOrEmpty(cosy.RefText))
         {
@@ -584,6 +594,15 @@ public partial class TextToSpeechViewModel : ObservableObject
             {
                 wavPath = vox.FilePath;
                 isVoxCPM2 = true;
+            }
+        }
+        else if (voice.EngineVoice is MossTtsVoice moss && !string.IsNullOrEmpty(moss.FilePath))
+        {
+            var existing = TryReadRefTextSibling(moss.FilePath);
+            if (string.IsNullOrEmpty(existing))
+            {
+                wavPath = moss.FilePath;
+                isMossTts = true;
             }
         }
         else if (voice.EngineVoice is Voices.Qwen3TtsVoice qwen3 && !string.IsNullOrEmpty(qwen3.FilePath))
@@ -642,6 +661,10 @@ public partial class TextToSpeechViewModel : ObservableObject
             else if (isVoxCPM2)
             {
                 written = VoxCPM2CrispAsr.TryWriteRefTextSidecar(wavPath, result.Text);
+            }
+            else if (isMossTts)
+            {
+                written = MossTtsCrispAsr.TryWriteRefTextSidecar(wavPath, result.Text);
             }
             else if (isQwen3Clone)
             {
@@ -1010,6 +1033,10 @@ public partial class TextToSpeechViewModel : ObservableObject
         {
             VoxCPM2CrispAsr.StopServer();
         }
+        if (keepAlive is not MossTtsCrispAsr)
+        {
+            MossTtsCrispAsr.StopServer();
+        }
         if (keepAlive is not ZonosTtsCrispAsr)
         {
             ZonosTtsCrispAsr.StopServer();
@@ -1217,6 +1244,10 @@ public partial class TextToSpeechViewModel : ObservableObject
         {
             await _windowService.ShowDialogAsync<VoxCPM2CrispAsrSettingsWindow, VoxCPM2CrispAsrSettingsViewModel>(Window!, vm => vm.Initialize());
         }
+        else if (SelectedEngine is MossTtsCrispAsr)
+        {
+            await _windowService.ShowDialogAsync<MossTtsCrispAsrSettingsWindow, MossTtsCrispAsrSettingsViewModel>(Window!, vm => vm.Initialize());
+        }
         else if (SelectedEngine is KokoroTtsCpp)
         {
             await _windowService.ShowDialogAsync<KokoroTtsSettingsWindow, KokoroTtsSettingsViewModel>(Window!, vm => vm.Initialize());
@@ -1309,6 +1340,9 @@ public partial class TextToSpeechViewModel : ObservableObject
             case VoxCPM2CrispAsr:
                 await _windowService.ShowDialogAsync<DownloadTtsWindow, DownloadTtsViewModel>(Window!, vm => vm.StartDownloadVoxCPM2CrispAsrModels(VoxCPM2CrispAsr.ResolveModelKey(SelectedModel)));
                 break;
+            case MossTtsCrispAsr:
+                await _windowService.ShowDialogAsync<DownloadTtsWindow, DownloadTtsViewModel>(Window!, vm => vm.StartDownloadMossTtsCrispAsrModels(MossTtsCrispAsr.ResolveModelKey(SelectedModel)));
+                break;
             case ZonosTtsCrispAsr:
                 await _windowService.ShowDialogAsync<DownloadTtsWindow, DownloadTtsViewModel>(Window!, vm => vm.StartDownloadZonosTtsCrispAsrModels());
                 break;
@@ -1371,6 +1405,9 @@ public partial class TextToSpeechViewModel : ObservableObject
                 ? DownloadDotStatus.UpToDate
                 : DownloadDotStatus.NotInstalled,
             VoxCPM2CrispAsr => VoxCPM2CrispAsr.AreModelsInstalled(modelKey)
+                ? DownloadDotStatus.UpToDate
+                : DownloadDotStatus.NotInstalled,
+            MossTtsCrispAsr => MossTtsCrispAsr.AreModelsInstalled(modelKey)
                 ? DownloadDotStatus.UpToDate
                 : DownloadDotStatus.NotInstalled,
             ZonosTtsCrispAsr => ZonosTtsCrispAsr.AreModelsInstalled()
@@ -3201,6 +3238,16 @@ public partial class TextToSpeechViewModel : ObservableObject
             else if (SelectedEngine is VoxCPM2CrispAsr)
             {
                 SelectedModel = Models.FirstOrDefault(p => p == Se.Settings.Video.TextToSpeech.VoxCPM2CrispAsrModel);
+                if (string.IsNullOrEmpty(SelectedModel))
+                {
+                    SelectedModel = Models.FirstOrDefault();
+                }
+                IsEngineSettingsVisible = true;
+                IsModelDownloadVisible = true;
+            }
+            else if (SelectedEngine is MossTtsCrispAsr)
+            {
+                SelectedModel = Models.FirstOrDefault(p => p == Se.Settings.Video.TextToSpeech.MossTtsCrispAsrModel);
                 if (string.IsNullOrEmpty(SelectedModel))
                 {
                     SelectedModel = Models.FirstOrDefault();

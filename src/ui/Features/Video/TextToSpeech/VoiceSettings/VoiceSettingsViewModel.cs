@@ -214,6 +214,28 @@ public partial class VoiceSettingsViewModel : ObservableObject
                 ? voxEngine.ImportVoice(fileName, (result.Text ?? string.Empty).Trim())
                 : voxEngine.ImportVoice(fileName);
         }
+        else if (_engine is MossTtsCrispAsr mossEngine)
+        {
+            // MOSS-TTS clones zero-shot from audio alone; a transcription (ref-text) is optional
+            // but improves quality, so prompt like VoxCPM2 while allowing an empty answer.
+            var transcript = TryReadSiblingTranscript(fileName) ?? string.Empty;
+            var audioFileName = fileName;
+            var result = await _windowService.ShowDialogAsync<PromptTextBoxWindow, PromptTextBoxViewModel>(Window!, vm =>
+            {
+                vm.Initialize(
+                    Se.Language.Video.TextToSpeech.VoiceCloneTranscriptTitle,
+                    transcript,
+                    500,
+                    150);
+                vm.ConfigureExtraButton(
+                    Se.Language.Video.TextToSpeech.UseSpeechToTextDotDotDot,
+                    () => RunSpeechToTextAsync(audioFileName));
+            });
+
+            ok = result.OkPressed
+                ? mossEngine.ImportVoice(fileName, (result.Text ?? string.Empty).Trim())
+                : mossEngine.ImportVoice(fileName);
+        }
         else
         {
             ok = _engine.ImportVoice(fileName);
@@ -369,6 +391,7 @@ public partial class VoiceSettingsViewModel : ObservableObject
                                || engine.GetType() == typeof(CosyVoice3CrispAsr)
                                || engine.GetType() == typeof(F5TtsCrispAsr)
                                || engine.GetType() == typeof(VoxCPM2CrispAsr)
+                               || engine.GetType() == typeof(MossTtsCrispAsr)
                                || engine.GetType() == typeof(ZonosTtsCrispAsr)
                                || engine.GetType() == typeof(ChatterboxTtsCpp)
                                || engine.GetType() == typeof(OmniVoiceTtsCpp);

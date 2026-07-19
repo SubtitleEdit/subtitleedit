@@ -414,6 +414,44 @@ public static class TtsEngineInstaller
             return true;
         }
 
+        if (engine is MossTtsCrispAsr)
+        {
+            if (!await TtsVoiceInstaller.EnsureCrispAsrForMossTts(window, windowService, forceRedownload: false))
+            {
+                return false;
+            }
+
+            var mossModelKey = MossTtsCrispAsr.ResolveModelKey(model);
+            if (!MossTtsCrispAsr.AreModelsInstalled(mossModelKey))
+            {
+                var answer = await MessageBox.Show(
+                    window,
+                    "Download MOSS-TTS (CrispASR) model?",
+                    $"{Environment.NewLine}\"MOSS-TTS (CrispASR)\" ({mossModelKey}) requires a model.{Environment.NewLine}{Environment.NewLine}Download model?",
+                    MessageBoxButtons.YesNoCancel,
+                    MessageBoxIcon.Question);
+
+                if (answer != MessageBoxResult.Yes)
+                {
+                    return false;
+                }
+
+                var dlResult = await windowService.ShowDialogAsync<DownloadTtsWindow, DownloadTtsViewModel>(window, vm => vm.StartDownloadMossTtsCrispAsrModels(mossModelKey));
+                if (!dlResult.OkPressed || !MossTtsCrispAsr.AreModelsInstalled(mossModelKey))
+                {
+                    return false;
+                }
+
+                await Dispatcher.UIThread.InvokeAsync(async () =>
+                {
+                    await refreshVoices();
+                });
+                return true;
+            }
+
+            return true;
+        }
+
         if (engine is KokoroTtsCpp)
         {
             if (!await engine.IsInstalled(region))
