@@ -53,6 +53,9 @@ public class FindDoubleLinesWindow : Window
         Activated += delegate { buttonCancel.Focus(); }; // hack to make OnKeyDown work
 
         KeyDown += (s, e) => vm.OnKeyDown(e);
+
+        Closing += delegate { UiUtil.SaveWindowPosition(this); };
+        Loaded += delegate { UiUtil.RestoreWindowPosition(this); };
     }
 
     private static Border MakeGridView(FindDoubleLinesViewModel vm)

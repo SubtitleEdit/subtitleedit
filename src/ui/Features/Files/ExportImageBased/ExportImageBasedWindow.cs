@@ -104,6 +104,9 @@ public class ExportImageBasedWindow : Window
         KeyUp += (_, e) => vm.OnKeyUp(e);
         Loaded += (_, e) => vm.OnLoaded();
         Closing += (_, e) => vm.OnClosing();
+
+        Closing += delegate { UiUtil.SaveWindowPosition(this); };
+        Loaded += delegate { UiUtil.RestoreWindowPosition(this); };
     }
 
     private Border MakeSubtitlesView(ExportImageBasedViewModel vm)

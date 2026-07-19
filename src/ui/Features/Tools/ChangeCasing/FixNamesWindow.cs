@@ -103,6 +103,9 @@ public class FixNamesWindow : Window
         grid.Add(panelButtonsBottom, row, 0);
 
         Content = grid;
+
+        Closing += delegate { UiUtil.SaveWindowPosition(this); };
+        Loaded += delegate { UiUtil.RestoreWindowPosition(this); };
     }
 
     private static Border MakeNamesView(FixNamesViewModel vm)

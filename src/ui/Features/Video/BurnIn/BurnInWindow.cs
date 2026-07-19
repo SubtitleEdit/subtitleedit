@@ -170,6 +170,16 @@ public class BurnInWindow : Window
         KeyDown += (_, e) => vm.OnKeyDown(e);
 
         Opened += (_, _) => LockMinimumToContentSize();
+
+        Closing += delegate { UiUtil.SaveWindowPosition(this); };
+
+        // LockMinimumToContentSize sets Width/Height from a callback posted at Loaded priority, so
+        // restoring in a plain Loaded handler would be overwritten. Post at Background (which runs
+        // after Loaded) so the saved size wins, clamped by the content minimum set just before.
+        Loaded += delegate
+        {
+            Dispatcher.UIThread.Post(() => UiUtil.RestoreWindowPosition(this), DispatcherPriority.Background);
+        };
     }
 
     private void LockMinimumToContentSize()

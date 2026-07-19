@@ -62,6 +62,9 @@ public class MergeSameTextWindow : Window
 
         Activated += delegate { buttonCancel.Focus(); }; // hack to make OnKeyDown work
         KeyDown += vm.OnKeyDown;
+
+        Closing += delegate { UiUtil.SaveWindowPosition(this); };
+        Loaded += delegate { UiUtil.RestoreWindowPosition(this); };
     }
 
     private static StackPanel MakeControlsView(MergeSameTextViewModel vm)

@@ -66,6 +66,9 @@ public class ModifySelectionWindow : Window
             }
         };
         KeyDown += vm.KeyDown;
+
+        Closing += delegate { UiUtil.SaveWindowPosition(this); };
+        Loaded += delegate { UiUtil.RestoreWindowPosition(this); };
     }
 
     private static Border MakeRulesView(ModifySelectionViewModel vm, out TextBox textBoxRuleText)

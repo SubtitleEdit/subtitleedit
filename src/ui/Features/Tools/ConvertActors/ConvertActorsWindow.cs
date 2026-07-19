@@ -132,6 +132,9 @@ public class ConvertActorsWindow : Window
 
         Activated += delegate { buttonOk.Focus(); };
         KeyDown += (_, e) => vm.OnKeyDown(e);
+
+        Closing += delegate { UiUtil.SaveWindowPosition(this); };
+        Loaded += delegate { UiUtil.RestoreWindowPosition(this); };
     }
 
     private static Border MakeSubtitleView(ConvertActorsViewModel vm)

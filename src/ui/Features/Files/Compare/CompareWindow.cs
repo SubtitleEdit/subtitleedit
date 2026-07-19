@@ -147,6 +147,9 @@ public class CompareWindow : Window
             vm.LeftDataGrid.SelectionChanged += vm.LeftDataGridSelectionChanged;
             vm.RightDataGrid.SelectionChanged += vm.RightDataGridSelectionChanged;
         }
+
+        Closing += delegate { UiUtil.SaveWindowPosition(this); };
+        Loaded += delegate { UiUtil.RestoreWindowPosition(this); };
     }
 
     private Control MakeSubtitlesView(ObservableCollection<CompareItem> leftSubtitles, string v, object fileGridOnDragOverLeft, object fileGridOnDropLeft)
