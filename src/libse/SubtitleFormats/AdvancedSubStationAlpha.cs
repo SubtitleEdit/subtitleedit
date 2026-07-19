@@ -1125,19 +1125,28 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text"
             {
                 for (var i = 0; i < 10; i++) // just look ten times...
                 {
+                    // Each pattern check below is a single IndexOf (the old Contains-then-IndexOf
+                    // did every scan twice), and an iteration that changes nothing breaks out -
+                    // this runs per dialogue line on ASSA/SSA load, and a plain line used to pay
+                    // all ten iterations' scans for nothing.
+                    var changed = false;
+
                     bool italic;
-                    if (text.Contains(@"{\i1\"))
+                    var italicStart = text.IndexOf(@"{\i1\", StringComparison.Ordinal);
+                    if (italicStart >= 0)
                     {
-                        var start = text.IndexOf(@"{\i1\", StringComparison.Ordinal);
-                        text = text.Remove(start, 4).Insert(start, "<i>{");
+                        text = text.Remove(italicStart, 4).Insert(italicStart, "<i>{");
+                        changed = true;
                     }
 
-                    if (text.Contains(@"{\fn"))
+                    var fontNameStart = text.IndexOf(@"{\fn", StringComparison.Ordinal);
+                    if (fontNameStart >= 0)
                     {
-                        var start = text.IndexOf(@"{\fn", StringComparison.Ordinal);
+                        var start = fontNameStart;
                         var end = text.IndexOf('}', start);
                         if (end > 0 && !text.Substring(start).StartsWith("{\\fn}", StringComparison.Ordinal))
                         {
+                            changed = true;
                             var fontName = text.Substring(start + 4, end - (start + 4));
                             var extraTags = string.Empty;
                             CheckAndAddSubTags(ref fontName, ref extraTags, out var unknownTags, out italic);
@@ -1176,9 +1185,10 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text"
                         }
                     }
 
-                    if (text.Contains(@"{\fs"))
+                    var fontSizeStart = text.IndexOf(@"{\fs", StringComparison.Ordinal);
+                    if (fontSizeStart >= 0)
                     {
-                        var start = text.IndexOf(@"{\fs", StringComparison.Ordinal);
+                        var start = fontSizeStart;
                         var end = text.IndexOf('}', start);
                         if (end > 0 && !text.Substring(start).StartsWith("{\\fs}", StringComparison.Ordinal))
                         {
@@ -1187,6 +1197,7 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text"
                             CheckAndAddSubTags(ref fontSize, ref extraTags, out var unknownTags, out italic);
                             if (float.TryParse(fontSize, NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out _))
                             {
+                                changed = true;
                                 text = text.Remove(start, end - start + 1);
                                 if (italic)
                                 {
@@ -1223,12 +1234,14 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text"
                         }
                     }
 
-                    if (text.Contains(@"{\c"))
+                    var colorStart = text.IndexOf(@"{\c", StringComparison.Ordinal);
+                    if (colorStart >= 0)
                     {
-                        var start = text.IndexOf(@"{\c", StringComparison.Ordinal);
+                        var start = colorStart;
                         var end = text.IndexOf('}', start);
                         if (end > 0 && !text.Substring(start).StartsWith("{\\c}", StringComparison.Ordinal) && !text.Substring(start).StartsWith("{\\clip", StringComparison.Ordinal))
                         {
+                            changed = true;
                             var color = text.Substring(start + 4, end - (start + 4));
                             var extraTags = string.Empty;
                             CheckAndAddSubTags(ref color, ref extraTags, out var unknownTags, out italic);
@@ -1267,12 +1280,14 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text"
                         }
                     }
 
-                    if (text.Contains(@"{\1c")) // "1" specifices primary color
+                    var primaryColorStart = text.IndexOf(@"{\1c", StringComparison.Ordinal); // "1" specifices primary color
+                    if (primaryColorStart >= 0)
                     {
-                        var start = text.IndexOf(@"{\1c", StringComparison.Ordinal);
+                        var start = primaryColorStart;
                         var end = text.IndexOf('}', start);
                         if (end > 0 && !text.Substring(start).StartsWith("{\\1c}", StringComparison.Ordinal))
                         {
+                            changed = true;
                             var color = text.Substring(start + 5, end - (start + 5));
                             var extraTags = string.Empty;
                             CheckAndAddSubTags(ref color, ref extraTags, out var unknownTags, out italic);
@@ -1309,6 +1324,11 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text"
                                 text += "</font>";
                             }
                         }
+                    }
+
+                    if (!changed)
+                    {
+                        break; // nothing matched - the remaining iterations would scan for nothing
                     }
                 }
             }
