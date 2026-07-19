@@ -66,7 +66,7 @@ public class TextEditorWrapper : ITextBoxWrapper
         // Only apply on macOS: Option+Arrow is the word navigation key there.
         // On Windows/Linux, Ctrl+Arrow is used and AvaloniaEdit's default behavior
         // already matches the platform convention.
-        if (!isAlt || isCtrl || (e.Key != Key.Right && e.Key != Key.Left) || !RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+        if (!isAlt || isCtrl || (e.Key != Key.Right && e.Key != Key.Left) || !OperatingSystem.IsMacOS())
             return;
 
         var document = textArea.Document;

@@ -1548,7 +1548,7 @@ public static class DownloadHashManager
     /// </summary>
     public static string? ResolveCrispAsrKey(string? variant)
     {
-        if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+        if (OperatingSystem.IsLinux())
         {
             if (RuntimeInformation.ProcessArchitecture == Architecture.Arm64)
             {
@@ -1561,12 +1561,12 @@ public static class DownloadHashManager
             return CrispAsr.Linux;
         }
 
-        if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+        if (OperatingSystem.IsMacOS())
         {
             return CrispAsr.MacOs;
         }
 
-        if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+        if (OperatingSystem.IsWindows())
         {
             return variant switch
             {
@@ -1608,12 +1608,12 @@ public static class DownloadHashManager
     /// </summary>
     public static string? ResolveQwen3AsrCppKey(bool useVulkan)
     {
-        if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+        if (OperatingSystem.IsWindows())
         {
             return useVulkan ? Qwen3AsrCpp.WindowsVulkan : Qwen3AsrCpp.Windows;
         }
 
-        if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+        if (OperatingSystem.IsLinux())
         {
             if (RuntimeInformation.ProcessArchitecture == Architecture.Arm64)
             {
@@ -1623,7 +1623,7 @@ public static class DownloadHashManager
             return useVulkan ? Qwen3AsrCpp.LinuxVulkan : Qwen3AsrCpp.Linux;
         }
 
-        if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+        if (OperatingSystem.IsMacOS())
         {
             return RuntimeInformation.ProcessArchitecture == Architecture.Arm64 ? Qwen3AsrCpp.MacArm64 : Qwen3AsrCpp.MacX64;
         }
@@ -1686,7 +1686,7 @@ public static class DownloadHashManager
     /// </summary>
     public static string? ResolveCrispEmbedKey(string? variant)
     {
-        if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+        if (OperatingSystem.IsLinux())
         {
             if (RuntimeInformation.ProcessArchitecture == Architecture.Arm64)
             {
@@ -1699,12 +1699,12 @@ public static class DownloadHashManager
             return CrispEmbed.Linux;
         }
 
-        if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+        if (OperatingSystem.IsMacOS())
         {
             return CrispEmbed.MacOs;
         }
 
-        if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+        if (OperatingSystem.IsWindows())
         {
             return variant switch
             {
@@ -1760,7 +1760,7 @@ public static class DownloadHashManager
     /// </summary>
     public static string? ResolveCrispAsrExecutableKey(string? variant)
     {
-        if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+        if (OperatingSystem.IsLinux())
         {
             if (RuntimeInformation.ProcessArchitecture == Architecture.Arm64)
             {
@@ -1773,12 +1773,12 @@ public static class DownloadHashManager
             return CrispAsr.LinuxExecutable;
         }
 
-        if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+        if (OperatingSystem.IsMacOS())
         {
             return CrispAsr.MacOsExecutable;
         }
 
-        if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+        if (OperatingSystem.IsWindows())
         {
             return variant switch
             {
@@ -1924,7 +1924,7 @@ public static class DownloadHashManager
             return null;
         }
 
-        if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+        if (OperatingSystem.IsWindows())
         {
             return whisperChoice switch
             {
@@ -1935,12 +1935,12 @@ public static class DownloadHashManager
             };
         }
 
-        if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+        if (OperatingSystem.IsMacOS())
         {
             return whisperChoice == WhisperChoice.Cpp ? WhisperCpp.MacOs : null;
         }
 
-        if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+        if (OperatingSystem.IsLinux())
         {
             return whisperChoice switch
             {
@@ -1966,7 +1966,7 @@ public static class DownloadHashManager
             return null;
         }
 
-        if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+        if (OperatingSystem.IsWindows())
         {
             return whisperChoice switch
             {
@@ -1977,7 +1977,7 @@ public static class DownloadHashManager
             };
         }
 
-        if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+        if (OperatingSystem.IsMacOS())
         {
             return whisperChoice == WhisperChoice.Cpp ? WhisperCpp.MacOsExecutable : null;
         }
@@ -1991,7 +1991,7 @@ public static class DownloadHashManager
     /// </summary>
     public static string? ResolveLlamaCppKey(string? variant)
     {
-        if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+        if (OperatingSystem.IsWindows())
         {
             return variant switch
             {
@@ -2002,7 +2002,7 @@ public static class DownloadHashManager
             };
         }
 
-        if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+        if (OperatingSystem.IsLinux())
         {
             if (RuntimeInformation.ProcessArchitecture == Architecture.Arm64)
             {
@@ -2012,7 +2012,7 @@ public static class DownloadHashManager
             return variant == "vulkan" ? LlamaCpp.LinuxVulkan : LlamaCpp.LinuxCpu;
         }
 
-        if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+        if (OperatingSystem.IsMacOS())
         {
             return RuntimeInformation.ProcessArchitecture == Architecture.Arm64
                 ? LlamaCpp.MacOsArm64
@@ -2045,19 +2045,19 @@ public static class DownloadHashManager
     /// </summary>
     public static string? ResolveLlamaCppExecutableKey()
     {
-        if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+        if (OperatingSystem.IsWindows())
         {
             return LlamaCpp.WindowsExecutable;
         }
 
-        if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+        if (OperatingSystem.IsLinux())
         {
             return RuntimeInformation.ProcessArchitecture == Architecture.Arm64
                 ? LlamaCpp.LinuxArm64Executable
                 : LlamaCpp.LinuxExecutable;
         }
 
-        if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+        if (OperatingSystem.IsMacOS())
         {
             return RuntimeInformation.ProcessArchitecture == Architecture.Arm64
                 ? LlamaCpp.MacOsArm64Executable
@@ -2074,7 +2074,7 @@ public static class DownloadHashManager
     /// </summary>
     public static string? ResolveOmniVoiceKey(string? windowsVariant)
     {
-        if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+        if (OperatingSystem.IsWindows())
         {
             return windowsVariant switch
             {
@@ -2085,12 +2085,12 @@ public static class DownloadHashManager
             };
         }
 
-        if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+        if (OperatingSystem.IsMacOS())
         {
             return OmniVoice.MacOs;
         }
 
-        if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+        if (OperatingSystem.IsLinux())
         {
             return RuntimeInformation.ProcessArchitecture == Architecture.Arm64
                 ? OmniVoice.LinuxArm64
@@ -2106,7 +2106,7 @@ public static class DownloadHashManager
     /// </summary>
     public static string? ResolveQwen3TtsCppKey(string? windowsVariant)
     {
-        if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+        if (OperatingSystem.IsWindows())
         {
             return windowsVariant switch
             {
@@ -2117,12 +2117,12 @@ public static class DownloadHashManager
             };
         }
 
-        if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+        if (OperatingSystem.IsMacOS())
         {
             return Qwen3TtsCpp.MacOs;
         }
 
-        if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+        if (OperatingSystem.IsLinux())
         {
             return RuntimeInformation.ProcessArchitecture == Architecture.Arm64
                 ? Qwen3TtsCpp.LinuxArm64
@@ -2138,17 +2138,17 @@ public static class DownloadHashManager
     /// </summary>
     public static string? ResolveKokoroTtsCppKey()
     {
-        if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+        if (OperatingSystem.IsWindows())
         {
             return KokoroTtsCpp.Windows;
         }
 
-        if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+        if (OperatingSystem.IsMacOS())
         {
             return KokoroTtsCpp.MacOs;
         }
 
-        if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+        if (OperatingSystem.IsLinux())
         {
             return RuntimeInformation.ProcessArchitecture == Architecture.Arm64
                 ? KokoroTtsCpp.LinuxArm64
@@ -2164,17 +2164,17 @@ public static class DownloadHashManager
     /// </summary>
     public static string? ResolvePiperKey()
     {
-        if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+        if (OperatingSystem.IsWindows())
         {
             return Piper.Windows;
         }
 
-        if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+        if (OperatingSystem.IsMacOS())
         {
             return Piper.MacOs;
         }
 
-        if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+        if (OperatingSystem.IsLinux())
         {
             return RuntimeInformation.ProcessArchitecture == Architecture.Arm64
                 ? Piper.LinuxArm64

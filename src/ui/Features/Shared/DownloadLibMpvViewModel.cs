@@ -9,7 +9,6 @@ using Nikse.SubtitleEdit.Logic.Download;
 using System;
 using System.Globalization;
 using System.IO;
-using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Timers;
@@ -156,7 +155,7 @@ public partial class DownloadLibMpvViewModel : ObservableObject
 
     public static string GetLibMpvFileName()
     {
-        if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+        if (OperatingSystem.IsWindows())
         {
             return Path.Combine(Se.DataFolder, "libmpv-2.dll");
         }
@@ -172,7 +171,7 @@ public partial class DownloadLibMpvViewModel : ObservableObject
             Directory.CreateDirectory(newFolder);
         }
 
-        if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+        if (OperatingSystem.IsWindows())
         {
             return Path.Combine(newFolder, "libmpv-2.dll");
         }

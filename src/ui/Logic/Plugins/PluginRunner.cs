@@ -2,7 +2,6 @@ using Nikse.SubtitleEdit.Logic.Config;
 using System;
 using System.Diagnostics;
 using System.IO;
-using System.Runtime.InteropServices;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
@@ -122,7 +121,7 @@ public class PluginRunner : IPluginRunner
     // arrives without its +x bit. Set it here before launching.
     private static void EnsureExecutable(string path)
     {
-        if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+        if (OperatingSystem.IsWindows())
         {
             return;
         }

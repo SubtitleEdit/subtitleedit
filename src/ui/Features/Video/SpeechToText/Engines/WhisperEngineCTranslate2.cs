@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using Avalonia.Platform;
 using Nikse.SubtitleEdit.Core.AudioToText;
@@ -68,7 +67,7 @@ public class WhisperEngineCTranslate2 : ISpeechToTextEngine
     {
         string fullPath = Path.Combine(GetAndCreateWhisperFolder(), GetExecutableFileName());
 
-        if (!File.Exists(fullPath) && RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+        if (!File.Exists(fullPath) && OperatingSystem.IsLinux())
         {
             string[] paths = ["/usr/bin/whisper-cli", "usr/local/bin/"];
             foreach (var path in paths)
@@ -131,7 +130,7 @@ public class WhisperEngineCTranslate2 : ISpeechToTextEngine
 
     internal static string GetExecutableFileName()
     {
-        if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+        if (OperatingSystem.IsWindows())
         {
             return "whisper-ctranslate2.exe";
         }
@@ -148,15 +147,15 @@ public class WhisperEngineCTranslate2 : ISpeechToTextEngine
     {
         get
         {
-            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            if (OperatingSystem.IsWindows())
             {
                 return "~103 MB";
             }
-            if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+            if (OperatingSystem.IsLinux())
             {
                 return "~149 MB";
             }
-            if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+            if (OperatingSystem.IsMacOS())
             {
                 return "~76 MB";
             }

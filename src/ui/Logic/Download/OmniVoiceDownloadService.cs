@@ -114,7 +114,7 @@ public class OmniVoiceDownloadService : IOmniVoiceDownloadService
 
     private static string GetUrl(string windowsVariant)
     {
-        if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+        if (OperatingSystem.IsWindows())
         {
             return windowsVariant switch
             {
@@ -124,12 +124,12 @@ public class OmniVoiceDownloadService : IOmniVoiceDownloadService
             };
         }
 
-        if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+        if (OperatingSystem.IsMacOS())
         {
             return MacOsUrl;
         }
 
-        if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+        if (OperatingSystem.IsLinux())
         {
             return RuntimeInformation.ProcessArchitecture == Architecture.Arm64
                 ? LinuxArm64Url

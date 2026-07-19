@@ -54,11 +54,11 @@ public static class PlatformCursorManager
     {
         try
         {
-            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            if (OperatingSystem.IsWindows())
             {
                 ForceArrowCursorWindows();
             }
-            else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+            else if (OperatingSystem.IsLinux())
             {
                 ForceArrowCursorLinux();
             }

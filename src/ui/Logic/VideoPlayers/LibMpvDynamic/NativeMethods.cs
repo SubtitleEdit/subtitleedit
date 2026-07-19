@@ -33,10 +33,10 @@ internal static class NativeMethods
 
     static NativeMethods()
     {
-        if (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+        if (!OperatingSystem.IsWindows())
         {
             // On macOS, system libraries are in libSystem.dylib
-            if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+            if (OperatingSystem.IsMacOS())
             {
                 var libSystemNames = new[] { "libSystem.dylib", "libSystem.B.dylib" };
                 foreach (var name in libSystemNames)
@@ -149,7 +149,7 @@ internal static class NativeMethods
     // POSIX function wrappers
     internal static IntPtr setlocale(int category, string locale)
     {
-        if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+        if (OperatingSystem.IsWindows())
         {
             throw new PlatformNotSupportedException("setlocale is not supported on Windows");
         }
@@ -158,7 +158,7 @@ internal static class NativeMethods
 
     internal static IntPtr dlopen(string filename, int flags)
     {
-        if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+        if (OperatingSystem.IsWindows())
         {
             throw new PlatformNotSupportedException("dlopen is not supported on Windows");
         }
@@ -167,7 +167,7 @@ internal static class NativeMethods
 
     internal static IntPtr dlclose(IntPtr handle)
     {
-        if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+        if (OperatingSystem.IsWindows())
         {
             throw new PlatformNotSupportedException("dlclose is not supported on Windows");
         }
@@ -176,7 +176,7 @@ internal static class NativeMethods
 
     internal static IntPtr dlsym(IntPtr handle, string symbol)
     {
-        if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+        if (OperatingSystem.IsWindows())
         {
             throw new PlatformNotSupportedException("dlsym is not supported on Windows");
         }
@@ -185,7 +185,7 @@ internal static class NativeMethods
 
     internal static string? dlerror()
     {
-        if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+        if (OperatingSystem.IsWindows())
         {
             throw new PlatformNotSupportedException("dlerror is not supported on Windows");
         }
@@ -196,7 +196,7 @@ internal static class NativeMethods
     // Cross-platform wrappers
     internal static IntPtr CrossLoadLibrary(string fileName)
     {
-        if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+        if (OperatingSystem.IsWindows())
         {
             // For VLC on Windows, we need to help LoadLibrary find dependencies
             var directory = Path.GetDirectoryName(fileName);
@@ -247,7 +247,7 @@ internal static class NativeMethods
 
             return handle;
         }
-        else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+        else if (OperatingSystem.IsMacOS())
         {
             // On macOS, try using .NET's NativeLibrary.TryLoad first which handles @rpath and other macOS-specific features
             if (NativeLibrary.TryLoad(fileName, out var handle))
@@ -299,7 +299,7 @@ internal static class NativeMethods
 
     internal static void CrossFreeLibrary(IntPtr handle)
     {
-        if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+        if (OperatingSystem.IsWindows())
         {
             FreeLibrary(handle);
         }
@@ -311,7 +311,7 @@ internal static class NativeMethods
 
     internal static IntPtr CrossGetProcAddress(IntPtr handle, string name)
     {
-        if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+        if (OperatingSystem.IsWindows())
         {
             return GetProcAddress(handle, name);
         }

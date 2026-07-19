@@ -4159,7 +4159,7 @@ public partial class OcrViewModel : ObservableObject
 
     private async Task<bool> CheckAndDownloadTesseract()
     {
-        if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+        if (OperatingSystem.IsWindows())
         {
             var tesseractExe = Path.Combine(Se.TesseractFolder, "tesseract.exe");
             if (File.Exists(tesseractExe))
@@ -4213,7 +4213,7 @@ public partial class OcrViewModel : ObservableObject
             // ignore
         }
 
-        if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+        if (OperatingSystem.IsMacOS())
         {
             await MessageBox.Show(
                 Window!,
@@ -4225,7 +4225,7 @@ public partial class OcrViewModel : ObservableObject
                 MessageBoxIcon.Information);
         }
 
-        if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+        if (OperatingSystem.IsLinux())
         {
             await MessageBox.Show(
                 Window!,

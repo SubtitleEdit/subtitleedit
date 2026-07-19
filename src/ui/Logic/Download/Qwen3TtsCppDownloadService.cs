@@ -127,7 +127,7 @@ public class Qwen3TtsCppDownloadService : IQwen3TtsCppDownloadService
 
     private static string GetUrl(string windowsVariant)
     {
-        if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+        if (OperatingSystem.IsWindows())
         {
             return windowsVariant switch
             {
@@ -137,12 +137,12 @@ public class Qwen3TtsCppDownloadService : IQwen3TtsCppDownloadService
             };
         }
 
-        if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+        if (OperatingSystem.IsLinux())
         {
             return RuntimeInformation.ProcessArchitecture == Architecture.Arm64 ? LinuxArmUrl : LinuxUrl;
         }
 
-        if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+        if (OperatingSystem.IsMacOS())
         {
             return MacUrl;
         }

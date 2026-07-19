@@ -26,7 +26,6 @@ using System.Diagnostics;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
-using System.Runtime.InteropServices;
 
 namespace Nikse.SubtitleEdit.Logic;
 
@@ -3022,7 +3021,7 @@ public static class UiUtil
 
     internal static bool TryHandleWindowSystemMenu(KeyEventArgs e, Window? window)
     {
-        if (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows) || window == null)
+        if (!OperatingSystem.IsWindows() || window == null)
         {
             return false;
         }
@@ -3046,7 +3045,7 @@ public static class UiUtil
     /// </summary>
     internal static void RegisterWindowsSystemMenuClassHandler()
     {
-        if (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows) || _windowsSystemMenuClassHandlerRegistered)
+        if (!OperatingSystem.IsWindows() || _windowsSystemMenuClassHandlerRegistered)
         {
             return;
         }

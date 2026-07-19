@@ -241,15 +241,15 @@ public sealed class LibVlcDynamicPlayer : IDisposable, IVideoPlayer
 
     private static string[] GetLibraryNames()
     {
-        if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+        if (OperatingSystem.IsWindows())
         {
             return ["libvlc.dll"];
         }
-        else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+        else if (OperatingSystem.IsLinux())
         {
             return ["libvlc.so"];
         }
-        else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+        else if (OperatingSystem.IsMacOS())
         {
             return ["libvlc.dylib"];
         }
@@ -261,7 +261,7 @@ public sealed class LibVlcDynamicPlayer : IDisposable, IVideoPlayer
 
     private static string[] GetLibraryPaths()
     {
-        if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+        if (OperatingSystem.IsWindows())
         {
             return
             [
@@ -272,7 +272,7 @@ public sealed class LibVlcDynamicPlayer : IDisposable, IVideoPlayer
                 string.Empty,
             ];
         }
-        else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+        else if (OperatingSystem.IsLinux())
         {
             return
             [
@@ -292,7 +292,7 @@ public sealed class LibVlcDynamicPlayer : IDisposable, IVideoPlayer
                 "/snap/vlc/current/usr/lib",
             ];
         }
-        else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+        else if (OperatingSystem.IsMacOS())
         {
             return
             [
@@ -1076,7 +1076,7 @@ public sealed class LibVlcDynamicPlayer : IDisposable, IVideoPlayer
             return;
         }
 
-        if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+        if (OperatingSystem.IsWindows())
         {
             _libvlc_media_player_set_hwnd?.Invoke(_mediaPlayer, _windowHandle);
             System.Diagnostics.Debug.WriteLine($"Set HWND: {_windowHandle}");

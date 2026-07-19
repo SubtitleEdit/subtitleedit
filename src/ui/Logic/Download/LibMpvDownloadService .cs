@@ -28,7 +28,7 @@ public class LibMpvDownloadService : ILibMpvDownloadService
 
     private static string GetUrl()
     {
-        if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+        if (OperatingSystem.IsWindows())
         {
             return WindowsUrl;
         }
@@ -36,7 +36,7 @@ public class LibMpvDownloadService : ILibMpvDownloadService
         throw new PlatformNotSupportedException("Unsupported platform for libmpv download." + Environment.NewLine +
             RuntimeInformation.OSDescription);
 
-        //if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+        //if (OperatingSystem.IsMacOS())
         //{
         //    switch (RuntimeInformation.ProcessArchitecture)
         //    {

@@ -4,7 +4,6 @@ using Nikse.SubtitleEdit.Logic.Config;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 
 namespace Nikse.SubtitleEdit.Features.Video.SpeechToText.Engines;
@@ -152,7 +151,7 @@ public class ParakeetCppEngine : ISpeechToTextEngine
     }
 
     public string GetExecutableFileName() =>
-        RuntimeInformation.IsOSPlatform(OSPlatform.Windows) ? "parakeet.exe" : "parakeet";
+        OperatingSystem.IsWindows() ? "parakeet.exe" : "parakeet";
 
     public bool CanBeDownloaded() => true;
 

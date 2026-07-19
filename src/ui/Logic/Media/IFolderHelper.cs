@@ -1,8 +1,8 @@
 ﻿using System.Diagnostics;
 using Avalonia.Controls;
 using Avalonia.Platform.Storage;
+using System;
 using System.IO;
-using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 
 namespace Nikse.SubtitleEdit.Logic.Media;
@@ -37,7 +37,7 @@ public class FolderHelper : IFolderHelper
 
     public async Task OpenFolder(Window window, string folder)
     {
-        if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+        if (OperatingSystem.IsMacOS())
         {
             var startInfo = new ProcessStartInfo
             {
@@ -51,7 +51,7 @@ public class FolderHelper : IFolderHelper
             return;
         }
 
-        if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+        if (OperatingSystem.IsWindows())
         {
             var startInfo = new ProcessStartInfo
             {
@@ -71,7 +71,7 @@ public class FolderHelper : IFolderHelper
     
     public async Task OpenFolderWithFileSelected(Window window, string selectedFile)
     {
-        if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+        if (OperatingSystem.IsMacOS())
         {
             var startInfo = new ProcessStartInfo
             {
@@ -85,7 +85,7 @@ public class FolderHelper : IFolderHelper
             return;
         }
 
-        if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+        if (OperatingSystem.IsWindows())
         {
             var startInfo = new ProcessStartInfo
             {

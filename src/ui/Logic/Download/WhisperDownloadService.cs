@@ -74,7 +74,7 @@ public class WhisperDownloadService : IWhisperDownloadService
     {
         var url = DownloadUrlPurfviewFasterWhisperXxl;
 
-        if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+        if (OperatingSystem.IsLinux())
         {
             if (RuntimeInformation.ProcessArchitecture == Architecture.Arm64)
             {
@@ -84,7 +84,7 @@ public class WhisperDownloadService : IWhisperDownloadService
             url = DownloadUrlPurfviewFasterWhisperXxlLinux;
         }
 
-        if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+        if (OperatingSystem.IsMacOS())
         {
             throw new PlatformNotSupportedException("MacOS not supported.");
         }
@@ -109,17 +109,17 @@ public class WhisperDownloadService : IWhisperDownloadService
 
     private static string GetUrlTranslate2()
     {
-        if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+        if (OperatingSystem.IsWindows())
         {
             return WindowCTranslate2;
         }
         
-        if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX) && RuntimeInformation.ProcessArchitecture == Architecture.Arm64)
+        if (OperatingSystem.IsMacOS() && RuntimeInformation.ProcessArchitecture == Architecture.Arm64)
         {
             return MacArmCTranslate2;
         }
         
-        if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux) && RuntimeInformation.ProcessArchitecture == Architecture.X64)
+        if (OperatingSystem.IsLinux() && RuntimeInformation.ProcessArchitecture == Architecture.X64)
         {
             return LinuxCTranslate2;
         }
@@ -129,7 +129,7 @@ public class WhisperDownloadService : IWhisperDownloadService
 
     private static string GetUrlCppVulkan()
     {
-        if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+        if (OperatingSystem.IsWindows())
         {
             return WindowsUrlCppVulkan;
         }
@@ -139,12 +139,12 @@ public class WhisperDownloadService : IWhisperDownloadService
     
     private static string GetUrl()
     {
-        if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+        if (OperatingSystem.IsWindows())
         {
             return WindowsUrl;
         }
 
-        if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+        if (OperatingSystem.IsLinux())
         {
             if (RuntimeInformation.ProcessArchitecture == Architecture.Arm64)
             {
@@ -154,7 +154,7 @@ public class WhisperDownloadService : IWhisperDownloadService
             return LinuxUrl;
         }
 
-        if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+        if (OperatingSystem.IsMacOS())
         {
             switch (RuntimeInformation.ProcessArchitecture)
             {
@@ -172,12 +172,12 @@ public class WhisperDownloadService : IWhisperDownloadService
 
     private static string GetUrlCuBlas()
     {
-        if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+        if (OperatingSystem.IsWindows())
         {
             return WindowsUrlCuBlass;
         }
 
-        if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+        if (OperatingSystem.IsLinux())
         {
             if (RuntimeInformation.ProcessArchitecture == Architecture.Arm64)
             {

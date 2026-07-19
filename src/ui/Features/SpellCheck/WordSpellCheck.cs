@@ -42,7 +42,7 @@ public sealed class WordSpellCheck : IWordSpellChecker, IDisposable
 
     public static bool IsWordInstalled()
     {
-        if (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+        if (!OperatingSystem.IsWindows())
         {
             return false;
         }
@@ -60,7 +60,7 @@ public sealed class WordSpellCheck : IWordSpellChecker, IDisposable
 
     public bool Initialize()
     {
-        if (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+        if (!OperatingSystem.IsWindows())
         {
             return false;
         }

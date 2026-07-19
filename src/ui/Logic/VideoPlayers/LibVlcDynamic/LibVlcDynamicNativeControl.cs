@@ -31,8 +31,8 @@ public class LibVlcDynamicNativeControl : NativeControlHost
     // Extended Window Styles
     private const uint WS_EX_TRANSPARENT = 0x00000020;
 
-    private static bool ShouldUseOwnedChildHandle => RuntimeInformation.IsOSPlatform(OSPlatform.Windows);
-    private static bool ShouldUseOwnedX11Child => RuntimeInformation.IsOSPlatform(OSPlatform.Linux);
+    private static bool ShouldUseOwnedChildHandle => OperatingSystem.IsWindows();
+    private static bool ShouldUseOwnedX11Child => OperatingSystem.IsLinux();
 
     public LibVlcDynamicPlayer? Player => _vlcPlayer;
 

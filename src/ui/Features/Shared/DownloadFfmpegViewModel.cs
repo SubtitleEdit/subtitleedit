@@ -11,7 +11,6 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
-using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Timers;
@@ -90,7 +89,7 @@ public partial class DownloadFfmpegViewModel : ObservableObject
 
                 UnpackFfmpeg(ffmpegFileName);
 
-                if (File.Exists(ffmpegFileName) && RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+                if (File.Exists(ffmpegFileName) && OperatingSystem.IsMacOS())
                 {
                     MacHelper.MakeExecutable(ffmpegFileName);
                 }
@@ -132,12 +131,12 @@ public partial class DownloadFfmpegViewModel : ObservableObject
 
     public static string GetFfmpegFileName()
     {
-        if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+        if (OperatingSystem.IsWindows())
         {
             return Path.Combine(Se.FfmpegFolder, "ffmpeg.exe");
         }
 
-        if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+        if (OperatingSystem.IsMacOS())
         {
             var paths = new List<string>
             {
@@ -159,7 +158,7 @@ public partial class DownloadFfmpegViewModel : ObservableObject
             }
         }
 
-        if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+        if (OperatingSystem.IsLinux())
         {
             var paths = new List<string>
             {

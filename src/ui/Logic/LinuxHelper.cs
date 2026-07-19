@@ -1,7 +1,6 @@
 using System;
 using System.Diagnostics;
 using System.IO;
-using System.Runtime.InteropServices;
 
 namespace Nikse.SubtitleEdit.Logic;
 
@@ -19,7 +18,7 @@ public static class LinuxHelper
         try
         {
             // Verify we are actually on a Unix-like system
-            if (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            if (!OperatingSystem.IsWindows())
             {
                 // Get current permissions
                 var currentMode = File.GetUnixFileMode(filePath);

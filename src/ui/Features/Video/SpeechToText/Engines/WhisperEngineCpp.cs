@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using Avalonia.Platform;
 using Nikse.SubtitleEdit.Core.AudioToText;
@@ -81,7 +80,7 @@ public class WhisperEngineCpp : ISpeechToTextEngine
     {
         var fullPath = Path.Combine(GetAndCreateWhisperFolder(), GetExecutableFileName());
 
-        if (!File.Exists(fullPath) && RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+        if (!File.Exists(fullPath) && OperatingSystem.IsLinux())
         {
             string[] paths = ["/usr/bin/whisper-cli", "usr/local/bin/"];
             foreach (var path in paths)
@@ -179,7 +178,7 @@ public class WhisperEngineCpp : ISpeechToTextEngine
 
     private static string GetExecutableFileName()
     {
-        if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+        if (OperatingSystem.IsWindows())
         {
             return "whisper-cli.exe";
         }
@@ -197,15 +196,15 @@ public class WhisperEngineCpp : ISpeechToTextEngine
         get
         {
             // matches WhisperDownloadService.GetUrl() — the BLAS Windows build, Vulkan Linux build, or universal Mac build.
-            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            if (OperatingSystem.IsWindows())
             {
                 return "~14 MB";
             }
-            if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+            if (OperatingSystem.IsLinux())
             {
                 return "~18 MB";
             }
-            if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+            if (OperatingSystem.IsMacOS())
             {
                 return "~3 MB";
             }

@@ -201,7 +201,7 @@ public partial class DownloadTtsViewModel : ObservableObject
                 }
 
                 var path = Piper.GetPiperExecutableFileName();
-                if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+                if (OperatingSystem.IsLinux())
                 {
                     if (File.Exists(path))
                     {
@@ -209,7 +209,7 @@ public partial class DownloadTtsViewModel : ObservableObject
                         FixSymbolicLink(path);
                     }
                 }
-                else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+                else if (OperatingSystem.IsMacOS())
                 {
                     if (File.Exists(path))
                     {
@@ -324,14 +324,14 @@ public partial class DownloadTtsViewModel : ObservableObject
                 }
 
                 var exePath = Qwen3TtsCpp.GetExecutableFileName();
-                if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+                if (OperatingSystem.IsLinux())
                 {
                     if (File.Exists(exePath))
                     {
                         LinuxHelper.MakeExecutable(exePath);
                     }
                 }
-                else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+                else if (OperatingSystem.IsMacOS())
                 {
                     if (File.Exists(exePath))
                     {
@@ -476,14 +476,14 @@ public partial class DownloadTtsViewModel : ObservableObject
                 }
 
                 var exePath = KokoroTtsCpp.GetExecutableFileName();
-                if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+                if (OperatingSystem.IsLinux())
                 {
                     if (File.Exists(exePath))
                     {
                         LinuxHelper.MakeExecutable(exePath);
                     }
                 }
-                else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+                else if (OperatingSystem.IsMacOS())
                 {
                     if (File.Exists(exePath))
                     {
@@ -1216,7 +1216,7 @@ public partial class DownloadTtsViewModel : ObservableObject
 
                 var exePath = OmniVoiceTtsCpp.GetExecutableFileName();
                 var codecExePath = OmniVoiceTtsCpp.GetCodecExecutableFileName();
-                if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+                if (OperatingSystem.IsLinux())
                 {
                     if (File.Exists(exePath))
                     {
@@ -1227,7 +1227,7 @@ public partial class DownloadTtsViewModel : ObservableObject
                         LinuxHelper.MakeExecutable(codecExePath);
                     }
                 }
-                else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+                else if (OperatingSystem.IsMacOS())
                 {
                     if (File.Exists(exePath))
                     {

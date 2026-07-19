@@ -78,7 +78,7 @@ public class MlxWhisperMac : ISpeechToTextEngine
 
     public bool IsEngineInstalled()
     {
-        if (!RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+        if (!OperatingSystem.IsMacOS())
         {
             return false;
         }

@@ -203,15 +203,15 @@ public sealed class LibMpvDynamicPlayer : IDisposable, IVideoPlayer
 
     private static string[] GetLibraryNames()
     {
-        if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+        if (OperatingSystem.IsWindows())
         {
             return ["libmpv-2.dll"];
         }
-        else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+        else if (OperatingSystem.IsLinux())
         {
             return ["libmpv.so.2", "libmpv.so"];
         }
-        else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+        else if (OperatingSystem.IsMacOS())
         {
             return ["libmpv.dylib", "libmpv.2.dylib"];
         }
@@ -223,7 +223,7 @@ public sealed class LibMpvDynamicPlayer : IDisposable, IVideoPlayer
 
     private static string[] GetLibraryPaths()
     {
-        if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+        if (OperatingSystem.IsWindows())
         {
             return
             [
@@ -232,7 +232,7 @@ public sealed class LibMpvDynamicPlayer : IDisposable, IVideoPlayer
                 string.Empty,
             ];
         }
-        else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+        else if (OperatingSystem.IsLinux())
         {
             return
             [
@@ -252,7 +252,7 @@ public sealed class LibMpvDynamicPlayer : IDisposable, IVideoPlayer
                 "/lib/arm-linux-gnueabihf",
             ];
         }
-        else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+        else if (OperatingSystem.IsMacOS())
         {
             return
             [

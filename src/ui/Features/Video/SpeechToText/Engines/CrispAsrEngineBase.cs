@@ -3,7 +3,6 @@ using Nikse.SubtitleEdit.Core.AudioToText;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 
 namespace Nikse.SubtitleEdit.Features.Video.SpeechToText.Engines;
@@ -34,15 +33,15 @@ public abstract class CrispAsrEngineBase : ICrispAsrEngine
     {
         get
         {
-            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            if (OperatingSystem.IsWindows())
             {
                 return "~3 MB – 684 MB"; // CPU – CUDA depending on variant chosen at download time
             }
-            if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+            if (OperatingSystem.IsLinux())
             {
                 return "~5 MB";
             }
-            if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+            if (OperatingSystem.IsMacOS())
             {
                 return "~4 MB";
             }

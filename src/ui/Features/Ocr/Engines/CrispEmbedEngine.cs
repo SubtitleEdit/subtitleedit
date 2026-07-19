@@ -37,17 +37,17 @@ public static class CrispEmbedEngine
     {
         get
         {
-            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            if (OperatingSystem.IsWindows())
             {
                 return "~5 MB – 691 MB";
             }
 
-            if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+            if (OperatingSystem.IsLinux())
             {
                 return "~8 MB";
             }
 
-            if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+            if (OperatingSystem.IsMacOS())
             {
                 return "~6 MB";
             }
@@ -87,7 +87,7 @@ public static class CrispEmbedEngine
 
     public static string GetServerExecutableFileName()
     {
-        return RuntimeInformation.IsOSPlatform(OSPlatform.Windows) ? "crispembed-server.exe" : "crispembed-server";
+        return OperatingSystem.IsWindows() ? "crispembed-server.exe" : "crispembed-server";
     }
 
     public static string GetServerExecutable()

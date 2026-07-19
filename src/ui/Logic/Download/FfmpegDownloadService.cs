@@ -27,12 +27,12 @@ public class FfmpegDownloadService : IFfmpegDownloadService
 
     private static string GetFfmpegUrl()
     {
-        if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+        if (OperatingSystem.IsWindows())
         {
             return WindowsUrl;
         }
 
-        if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+        if (OperatingSystem.IsMacOS())
         {
             switch (RuntimeInformation.ProcessArchitecture)
             {
