@@ -1,5 +1,8 @@
 ﻿using Nikse.SubtitleEdit.Core.DetectEncoding;
 using System;
+#if NET8_0_OR_GREATER
+using System.Buffers;
+#endif
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
@@ -1935,7 +1938,7 @@ namespace Nikse.SubtitleEdit.Core.Common
         private static readonly char[] RightToLeftLetters = string.Concat(AutoDetectWordsArabic.Concat(AutoDetectWordsHebrew).Concat(AutoDetectWordsFarsi).Concat(AutoDetectWordsUrdu)).Distinct().ToArray();
 
 #if NET8_0_OR_GREATER
-        private static readonly System.Buffers.SearchValues<char> RightToLeftLetterSearchValues = System.Buffers.SearchValues.Create(RightToLeftLetters);
+        private static readonly SearchValues<char> RightToLeftLetterSearchValues = SearchValues.Create(RightToLeftLetters);
 #endif
 
         public static bool CouldBeRightToLeftLanguage(Subtitle subtitle)
@@ -1968,14 +1971,94 @@ namespace Nikse.SubtitleEdit.Core.Common
 #endif
         }
 
-        private static void IncrementScore(Dictionary<string, int> scores, string language)
+        // Score slots, in the order the language codes are reported. LetterSets is indexed in
+        // lock step with this array, and ties are broken in this order (see below), so the two
+        // must stay aligned.
+        private static readonly string[] LanguageCodes =
         {
+            "ar", "ko", "ja", "th", "si", "ur", "ru", "el", "he", "hi",
+            "bn", "hy", "ka", "zh", "am", "km", "de", "sv", "fr", "es"
+        };
+
+        // Slots in LanguageCodes that get a unique-character bonus. Derived rather than
+        // hard-coded so reordering LanguageCodes cannot silently misapply the bonuses.
+        private static readonly int IndexUr = Array.IndexOf(LanguageCodes, "ur");
+        private static readonly int IndexDe = Array.IndexOf(LanguageCodes, "de");
+        private static readonly int IndexSv = Array.IndexOf(LanguageCodes, "sv");
+        private static readonly int IndexFr = Array.IndexOf(LanguageCodes, "fr");
+        private static readonly int IndexEs = Array.IndexOf(LanguageCodes, "es");
+
+        private static readonly string[] PriorityOrder = { "zh", "ja", "ko", "th", "ur", "ar", "he", "ru", "el", "hi", "de", "fr", "es", "sv" };
+
+        private const string GermanUniqueLetters = "üßÜ";
+        private const string SwedishOnlyLetters = "åÅ";  // å is unique to Swedish among these languages
+        private const string FrenchUniqueLetters = "çÇœŒâêîôûÂÊÎÔÛŸ";
+        private const string SpanishUniqueLetters = "ñÑ¡¿";
+        private const string UrduUniqueLetters = "ﭖﭘﭙﭗﭦﭨﭩﭧﮮﮯﮦﮨﮩﮧﯼﯾﯿﯽﮪﮬﮭﮫﹱﹷﹹپچگےھیںۓڑ";
+
 #if NET8_0_OR_GREATER
-            System.Runtime.InteropServices.CollectionsMarshal.GetValueRefOrAddDefault(scores, language, out _)++;
-#else
-            scores[language]++;
-#endif
+        // SearchValues gives an O(1) probabilistic lookup instead of a linear scan over the
+        // const string, which is what dominated this method - it ran one scan per language
+        // per character.
+        private static readonly SearchValues<char>[] LetterSets =
+        {
+            SearchValues.Create(Letters.Arabic), SearchValues.Create(Letters.Korean),
+            SearchValues.Create(Letters.Japanese), SearchValues.Create(Letters.Thai),
+            SearchValues.Create(Letters.Sinhalese), SearchValues.Create(Letters.Urdu),
+            SearchValues.Create(Letters.Russian), SearchValues.Create(Letters.Greek),
+            SearchValues.Create(Letters.Hebrew), SearchValues.Create(Letters.Devanagari),
+            SearchValues.Create(Letters.Bengali), SearchValues.Create(Letters.Armenian),
+            SearchValues.Create(Letters.Georgian), SearchValues.Create(Letters.Chinese),
+            SearchValues.Create(Letters.Amharic), SearchValues.Create(Letters.Khmer),
+            SearchValues.Create(Letters.Deutsch), SearchValues.Create(Letters.Swedish),
+            SearchValues.Create(Letters.French), SearchValues.Create(Letters.Spanish)
+        };
+
+        private static readonly SearchValues<char> GermanUniqueSet = SearchValues.Create(GermanUniqueLetters);
+        private static readonly SearchValues<char> SwedishOnlySet = SearchValues.Create(SwedishOnlyLetters);
+        private static readonly SearchValues<char> FrenchUniqueSet = SearchValues.Create(FrenchUniqueLetters);
+        private static readonly SearchValues<char> SpanishUniqueSet = SearchValues.Create(SpanishUniqueLetters);
+        private static readonly SearchValues<char> UrduUniqueSet = SearchValues.Create(UrduUniqueLetters);
+
+        private static bool ContainsAny(string text, SearchValues<char> set)
+        {
+            return text.AsSpan().IndexOfAny(set) >= 0;
         }
+#else
+        // netstandard2.1 has no SearchValues; a HashSet is still a big win over the linear scan.
+        private static readonly HashSet<char>[] LetterSets =
+        {
+            new HashSet<char>(Letters.Arabic), new HashSet<char>(Letters.Korean),
+            new HashSet<char>(Letters.Japanese), new HashSet<char>(Letters.Thai),
+            new HashSet<char>(Letters.Sinhalese), new HashSet<char>(Letters.Urdu),
+            new HashSet<char>(Letters.Russian), new HashSet<char>(Letters.Greek),
+            new HashSet<char>(Letters.Hebrew), new HashSet<char>(Letters.Devanagari),
+            new HashSet<char>(Letters.Bengali), new HashSet<char>(Letters.Armenian),
+            new HashSet<char>(Letters.Georgian), new HashSet<char>(Letters.Chinese),
+            new HashSet<char>(Letters.Amharic), new HashSet<char>(Letters.Khmer),
+            new HashSet<char>(Letters.Deutsch), new HashSet<char>(Letters.Swedish),
+            new HashSet<char>(Letters.French), new HashSet<char>(Letters.Spanish)
+        };
+
+        private static readonly HashSet<char> GermanUniqueSet = new HashSet<char>(GermanUniqueLetters);
+        private static readonly HashSet<char> SwedishOnlySet = new HashSet<char>(SwedishOnlyLetters);
+        private static readonly HashSet<char> FrenchUniqueSet = new HashSet<char>(FrenchUniqueLetters);
+        private static readonly HashSet<char> SpanishUniqueSet = new HashSet<char>(SpanishUniqueLetters);
+        private static readonly HashSet<char> UrduUniqueSet = new HashSet<char>(UrduUniqueLetters);
+
+        private static bool ContainsAny(string text, HashSet<char> set)
+        {
+            foreach (var c in text)
+            {
+                if (set.Contains(c))
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+#endif
 
         public static string GetEncodingViaLetter(string text)
         {
@@ -1984,98 +2067,94 @@ namespace Nikse.SubtitleEdit.Core.Common
                 return null;
             }
 
-            var languageScores = new Dictionary<string, int>
-            {
-                { "ar", 0 }, { "ko", 0 }, { "ja", 0 }, { "th", 0 }, { "si", 0 },
-                { "ur", 0 }, { "ru", 0 }, { "el", 0 }, { "he", 0 }, { "hi", 0 },
-                { "bn", 0 }, { "hy", 0 }, { "ka", 0 }, { "zh", 0 }, { "am", 0 },
-                { "km", 0 }, { "de", 0 }, { "sv", 0 }, { "fr", 0 }, { "es", 0 }
-            };
-
-            // Define unique characters for each language
-            var germanUnique = new HashSet<char>("üßÜ");
-            var swedishOnly = new HashSet<char>("åÅ");  // å is unique to Swedish among these languages
-            var frenchUnique = new HashSet<char>("çÇœŒâêîôûÂÊÎÔÛŸ");
-            var spanishUnique = new HashSet<char>("ñÑ¡¿");
-            var urduUnique = new HashSet<char>("ﭖﭘﭙﭗﭦﭨﭩﭧﮮﮯﮦﮨﮩﮧﯼﯾﯿﯽﮪﮬﮭﮫﹱﹷﹹپچگےھیںۓڑ");
-
             // Check for unique characters first
-            var hasGermanUnique = text.Any(c => germanUnique.Contains(c));
-            var hasSwedishUnique = text.Any(c => swedishOnly.Contains(c));
-            var hasFrenchUnique = text.Any(c => frenchUnique.Contains(c));
-            var hasSpanishUnique = text.Any(c => spanishUnique.Contains(c));
-            var hasUrduUnique = text.Any(c => urduUnique.Contains(c));
+            var hasGermanUnique = ContainsAny(text, GermanUniqueSet);
+            var hasSwedishUnique = ContainsAny(text, SwedishOnlySet);
+            var hasFrenchUnique = ContainsAny(text, FrenchUniqueSet);
+            var hasSpanishUnique = ContainsAny(text, SpanishUniqueSet);
+            var hasUrduUnique = ContainsAny(text, UrduUniqueSet);
 
             // Count all special characters
+            var languageScores = new int[LanguageCodes.Length];
             foreach (var c in text)
             {
-                if (Letters.Arabic.Contains(c)) IncrementScore(languageScores, "ar");
-                if (Letters.Korean.Contains(c)) IncrementScore(languageScores, "ko");
-                if (Letters.Japanese.Contains(c)) IncrementScore(languageScores, "ja");
-                if (Letters.Thai.Contains(c)) IncrementScore(languageScores, "th");
-                if (Letters.Sinhalese.Contains(c)) IncrementScore(languageScores, "si");
-                if (Letters.Urdu.Contains(c)) IncrementScore(languageScores, "ur");
-                if (Letters.Russian.Contains(c)) IncrementScore(languageScores, "ru");
-                if (Letters.Greek.Contains(c)) IncrementScore(languageScores, "el");
-                if (Letters.Hebrew.Contains(c)) IncrementScore(languageScores, "he");
-                if (Letters.Devanagari.Contains(c)) IncrementScore(languageScores, "hi");
-                if (Letters.Bengali.Contains(c)) IncrementScore(languageScores, "bn");
-                if (Letters.Armenian.Contains(c)) IncrementScore(languageScores, "hy");
-                if (Letters.Georgian.Contains(c)) IncrementScore(languageScores, "ka");
-                if (Letters.Chinese.Contains(c)) IncrementScore(languageScores, "zh");
-                if (Letters.Amharic.Contains(c)) IncrementScore(languageScores, "am");
-                if (Letters.Khmer.Contains(c)) IncrementScore(languageScores, "km");
-                if (Letters.Deutsch.Contains(c)) IncrementScore(languageScores, "de");
-                if (Letters.Swedish.Contains(c)) IncrementScore(languageScores, "sv");
-                if (Letters.French.Contains(c)) IncrementScore(languageScores, "fr");
-                if (Letters.Spanish.Contains(c)) IncrementScore(languageScores, "es");
+                for (var i = 0; i < LetterSets.Length; i++)
+                {
+                    if (LetterSets[i].Contains(c))
+                    {
+                        languageScores[i]++;
+                    }
+                }
             }
 
             // Apply unique character bonuses for disambiguation
-            if (hasUrduUnique && languageScores["ur"] > 0)
+            if (hasUrduUnique && languageScores[IndexUr] > 0)
             {
-                languageScores["ur"] += 100;  // Strong boost for Urdu
+                languageScores[IndexUr] += 100;  // Strong boost for Urdu
             }
-            if (hasGermanUnique && languageScores["de"] > 0)
+            if (hasGermanUnique && languageScores[IndexDe] > 0)
             {
-                languageScores["de"] += 50;
+                languageScores[IndexDe] += 50;
             }
-            if (hasSwedishUnique && languageScores["sv"] > 0)
+            if (hasSwedishUnique && languageScores[IndexSv] > 0)
             {
-                languageScores["sv"] += 50;
+                languageScores[IndexSv] += 50;
             }
-            if (hasFrenchUnique && languageScores["fr"] > 0)
+            if (hasFrenchUnique && languageScores[IndexFr] > 0)
             {
-                languageScores["fr"] += 50;
+                languageScores[IndexFr] += 50;
             }
-            if (hasSpanishUnique && languageScores["es"] > 0)
+            if (hasSpanishUnique && languageScores[IndexEs] > 0)
             {
-                languageScores["es"] += 50;
+                languageScores[IndexEs] += 50;
             }
 
-            var maxScore = languageScores.Values.Max();
+            var maxScore = 0;
+            for (var i = 0; i < languageScores.Length; i++)
+            {
+                if (languageScores[i] > maxScore)
+                {
+                    maxScore = languageScores[i];
+                }
+            }
+
             if (maxScore < 1)
             {
                 return null;
             }
 
-            var topLanguages = languageScores.Where(x => x.Value == maxScore).ToList();
-            if (topLanguages.Count == 1)
+            var topCount = 0;
+            var firstTop = -1;
+            for (var i = 0; i < languageScores.Length; i++)
             {
-                return topLanguages[0].Key;
-            }
-
-            // Priority order for tie-breaking
-            var priorityOrder = new[] { "zh", "ja", "ko", "th", "ur", "ar", "he", "ru", "el", "hi", "de", "fr", "es", "sv" };
-            foreach (var lang in priorityOrder)
-            {
-                if (topLanguages.Any(x => x.Key == lang))
+                if (languageScores[i] == maxScore)
                 {
-                    return lang;
+                    topCount++;
+                    if (firstTop < 0)
+                    {
+                        firstTop = i;
+                    }
                 }
             }
 
-            return topLanguages[0].Key;
+            if (topCount == 1)
+            {
+                return LanguageCodes[firstTop];
+            }
+
+            // Priority order for tie-breaking
+            foreach (var lang in PriorityOrder)
+            {
+                for (var i = 0; i < languageScores.Length; i++)
+                {
+                    if (languageScores[i] == maxScore && LanguageCodes[i] == lang)
+                    {
+                        return lang;
+                    }
+                }
+            }
+
+            return LanguageCodes[firstTop];
         }
 
         public static bool IsLanguageWithoutPeriods(string language)
