@@ -326,7 +326,11 @@ public partial class VoiceSettingsViewModel : ObservableObject
 
         try
         {
-            return File.ReadAllText(siblingTextFile);
+            // Voice-pack sidecars can be Wikimedia attribution blurbs, not spoken
+            // transcriptions - pre-filling the transcript prompt with one poisons the
+            // ref-text when the user just clicks OK. Treat a blurb as "no transcript".
+            var text = File.ReadAllText(siblingTextFile);
+            return Qwen3TtsCrispAsr.LooksLikeAttributionBlurb(text) ? null : text;
         }
         catch
         {
