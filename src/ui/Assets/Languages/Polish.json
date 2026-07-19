@@ -1,7 +1,7 @@
 ﻿{
   "title": "Subtitle Edit",
-  "version": "v5.1.0-beta15",
-  "translatedBy": "Adam Malich - 18.07.2026",
+  "version": "v5.1.0-rc8",
+  "translatedBy": "Adam Malich - 19.07.2026",
   "cultureName": "pl-PL",
   "general": {
     "abort": "Przerwij",
@@ -329,6 +329,7 @@
     "new": "Nowy",
     "newDotDotDot": "Nowy...",
     "newProfile": "Nowy profil",
+    "next": "Następny",
     "newSubtitleStartKeyDownSetEndKeyUp": "Wstaw napisy: Rozpocznij przy naciśnięciu klawisza, ustaw koniec przy zwolnieniu klawisza",
     "setSubtitleStartAtVideoPositionSetEndAtKeyUpAndGoToNext": "Ustaw początek w pozycji wideo, ustaw koniec na klawisz w górę i przejdź do następnego",
     "no": "Nie",
@@ -423,6 +424,7 @@
     "poweredBy": "Obsługiwane przez",
     "prefix": "Prefiks",
     "preview": "Podgląd",
+    "previous": "Poprzedni",
     "profile": "Profil",
     "profileName": "Nazwa profilu",
     "profiles": "Profile",
@@ -935,7 +937,11 @@
       "seekForwardHint": "Przeszukaj wideo do przodu {0}",
       "seekAmountHint": "Wartości przeszukiwania {0}",
       "seekVideo": "Przeszukaj wideo (<< >>)",
-      "configureToolbarItems": "Konfiguruj elementy paska narzędzi..."
+      "configureToolbarItems": "Konfiguruj elementy paska narzędzi...",
+      "textPreviousHint": "Odtwórz poprzedni napis i zatrzymaj się po zakończeniu {0}",
+      "textPlayHint": "Odtwórz bieżący napis i zatrzymaj po zakończeniu {0}",
+      "textPauseHint": "Wstrzymaj odtwarzanie {0}",
+      "textNextHint": "Odtwórz następny napis i zatrzymaj po zakończeniu {0}"
     },
     "audioTrackIsNowX": "Ścieżka audio to teraz \"{0}\"",
     "audioTrackX": "Ścieżka audio {0}",
@@ -1161,6 +1167,7 @@
       "paddingLeftRight": "Wypełnienie po lewej/prawej",
       "paddingTopBottom": "Wypełnienie u góry/dołu",
       "previewTitle": "Podgląd – rozmiar aktualny: {0}x{1}, rozmiar docelowy: {2}x{3}, powiększenie: {4}%",
+      "titleExportDvdSup": "DVD sup (MuxMan/Scenarist)",
       "titleExportVobSub": "VobSub (sub/idx)",
       "customTextFormatsDotDotDot": "_Niestandardowe formaty tekstu...",
       "plainTextDotDotDot": "_Zwykły tekst...",
@@ -2481,6 +2488,7 @@
       "maxLines": "Maksymalna liczba linii",
       "unbreakSubtitlesShortThan": "Usuń łamanie napisów krótszych niż",
       "newEmptyDefaultMs": "Domyślny czas trwania nowego napisu (ms)",
+      "timeCodeUpDownStepMs": "Przyrost czasu w górę/w dół (ms)",
       "promptBeforeDelete": "Pytaj przed usunięciem",
       "rememberPositionAndSize": "Zapamiętaj położenie i rozmiar okna",
       "openLastFileOnStart": "Otwórz ostatni otwierany plik przy uruchomieniu",
@@ -3140,6 +3148,7 @@
     "binarize": "Binaryzacja",
     "borderSize": "Rozmiar obramowania",
     "captureTopAlign": "Automatyczne wykrywanie wyrównania ASSA",
+    "showOnlyForcedSubtitles": "Pokaż tylko wymuszone napisy",
     "ocrImage": "OCR obrazu",
     "oneColor": "Jeden kolor (biały)",
     "darknessThreshold": "Próg ciemności",
@@ -3182,7 +3191,9 @@
     "pickFallbackDatabase": "Wybierz rezerwową bazę danych OCR",
     "fallbackOcrDatabase": "Rezerwowa baza danych OCR",
     "showAllOllamaModels": "Pokaż wszystkie modele (nie tylko te z funkcją obsługującą obraz)",
-    "ollamaModelLikelyWrong": "Ollama nie zwrócił żadnego tekstu — wybrany model może nie obsługiwać funkcji OCR / obsługi obrazu"
+    "ollamaModelLikelyWrong": "Ollama nie zwrócił żadnego tekstu — wybrany model może nie obsługiwać funkcji OCR / obsługi obrazu",
+    "llamaCppNotDownloaded": "Nie pobrano llama.cpp engine/model — pobierz go, korzystając z ustawień konwersji wsadowej",
+    "llamaCppReturnedNoText": "llama.cpp nie zwrócił tekstu — sprawdź serwer i model"
   },
   "assa": {
     "assaDraw": "Rysuj ASSA",
