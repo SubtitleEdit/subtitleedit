@@ -7,6 +7,7 @@ using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Logic.Media;
+using Optris.Icons.Avalonia;
 using System;
 using System.IO;
 using System.Linq;
@@ -30,6 +31,7 @@ public partial class PromptFileSavedViewModel : ObservableObject
     [ObservableProperty] private bool _hasDurationChip;
 
     public Window? Window { get; set; }
+    public Button? CopyPathButton { get; internal set; }
 
     /// <summary>"Play" for audio/video files, "Open file" otherwise - same command either way.</summary>
     public string OpenFileButtonText { get; private set; }
@@ -155,9 +157,20 @@ public partial class PromptFileSavedViewModel : ObservableObject
     [RelayCommand]
     private async Task CopyPath()
     {
-        if (Window != null && !string.IsNullOrEmpty(_fileName))
+        if (Window == null || string.IsNullOrEmpty(_fileName))
         {
-            await ClipboardHelper.SetTextAsync(Window, _fileName);
+            return;
+        }
+
+        await ClipboardHelper.SetTextAsync(Window, _fileName);
+
+        // Same copied-feedback as the other copy buttons (e.g. speech-to-text's console log):
+        // flip the icon to a check for a moment, then back.
+        if (CopyPathButton != null)
+        {
+            Attached.SetIcon(CopyPathButton, IconNames.Check);
+            await Task.Delay(1500);
+            Attached.SetIcon(CopyPathButton, IconNames.Copy);
         }
     }
 
