@@ -45,16 +45,28 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
 
         public async Task<string> Translate(string text, string sourceLanguageCode, string targetLanguageCode, CancellationToken cancellationToken)
         {
-            if (string.IsNullOrWhiteSpace(Configuration.Settings.Tools.LlamaCppPrompt))
+            string prompt;
+            var modelPrompt = Configuration.Settings.Tools.LlamaCppModelPrompt;
+            if (!string.IsNullOrWhiteSpace(modelPrompt))
             {
-                Configuration.Settings.Tools.LlamaCppPrompt = new ToolsSettings().LlamaCppPrompt;
+                // A curated model with its own trained-in prompt (e.g. Hy-MT2). The "codes" this
+                // engine receives are already English language names - ListLanguages() puts the
+                // name in TranslationPair.Code - which is exactly what these templates expect.
+                prompt = string.Format(modelPrompt, sourceLanguageCode, targetLanguageCode);
             }
-            var prompt = string.Format(Configuration.Settings.Tools.LlamaCppPrompt, sourceLanguageCode, targetLanguageCode);
+            else
+            {
+                if (string.IsNullOrWhiteSpace(Configuration.Settings.Tools.LlamaCppPrompt))
+                {
+                    Configuration.Settings.Tools.LlamaCppPrompt = new ToolsSettings().LlamaCppPrompt;
+                }
+                prompt = string.Format(Configuration.Settings.Tools.LlamaCppPrompt, sourceLanguageCode, targetLanguageCode);
+            }
 
             // No "model" field: llama-server serves the single model it was started with, and for a
             // remote server the user's own llama-server does the same. Sending one would only risk a
             // mismatch with whatever that server has loaded.
-            var input = "{ \"messages\": [{ \"role\": \"user\", \"content\": \"" + Json.EncodeJsonText(prompt) + "\\n\\n" + Json.EncodeJsonText(text.Trim()) + "\" }]}";
+            var input = "{ \"messages\": [{ \"role\": \"user\", \"content\": \"" + Json.EncodeJsonText(prompt) + "\\n\\n" + Json.EncodeJsonText(text.Trim()) + "\" }]" + MakeSamplingJson() + "}";
             var content = new StringContent(input, Encoding.UTF8);
             content.Headers.ContentType = MediaTypeHeaderValue.Parse("application/json");
             var result = await _httpClient.PostAsync(string.Empty, content, cancellationToken);
@@ -86,6 +98,35 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
             outputText = ChatGptTranslate.RemovePreamble(text, outputText);
             outputText = ChatGptTranslate.DecodeUnicodeEscapes(outputText);
             return outputText.Trim();
+        }
+
+        /// <summary>
+        /// Model-recommended sampling parameters as extra JSON fields (empty when the selected
+        /// model defines none, keeping the server defaults - the behavior before per-model
+        /// sampling existed).
+        /// </summary>
+        private static string MakeSamplingJson()
+        {
+            var sb = new StringBuilder();
+            var tools = Configuration.Settings.Tools;
+            if (tools.LlamaCppModelTemperature >= 0)
+            {
+                sb.Append(", \"temperature\": ").Append(tools.LlamaCppModelTemperature.ToString(System.Globalization.CultureInfo.InvariantCulture));
+            }
+            if (tools.LlamaCppModelTopP >= 0)
+            {
+                sb.Append(", \"top_p\": ").Append(tools.LlamaCppModelTopP.ToString(System.Globalization.CultureInfo.InvariantCulture));
+            }
+            if (tools.LlamaCppModelTopK >= 0)
+            {
+                sb.Append(", \"top_k\": ").Append(tools.LlamaCppModelTopK.ToString(System.Globalization.CultureInfo.InvariantCulture));
+            }
+            if (tools.LlamaCppModelRepeatPenalty >= 0)
+            {
+                sb.Append(", \"repeat_penalty\": ").Append(tools.LlamaCppModelRepeatPenalty.ToString(System.Globalization.CultureInfo.InvariantCulture));
+            }
+
+            return sb.ToString();
         }
 
         public void Dispose()
