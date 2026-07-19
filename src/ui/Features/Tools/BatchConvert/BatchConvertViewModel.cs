@@ -2368,7 +2368,7 @@ public partial class BatchConvertViewModel : ObservableObject
             AutoTranslateModel = string.Empty;
             AutoTranslateModelBrowseIsVisible = false;
             AutoTranslateModelIsVisible = false;
-            AutoTranslateUrl = Se.Settings.AutoTranslate.NnlbApiUrl;
+            AutoTranslateUrl = Se.Settings.AutoTranslate.NllbApiUrl;
             AutoTranslateUrlIsVisible = true;
             AutoTranslateApiKey = string.Empty;
             AutoTranslateApiKeyIsVisible = false;

@@ -28,7 +28,16 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
             _httpClient = new HttpClient();
             _httpClient.DefaultRequestHeaders.TryAddWithoutValidation("Content-Type", "application/json");
             _httpClient.DefaultRequestHeaders.TryAddWithoutValidation("accept", "application/json");
-            _httpClient.BaseAddress = new Uri(Configuration.Settings.Tools.AutoTranslateNllbServeUrl);
+            // The endpoint is a relative URI against BaseAddress, and .NET drops the base's
+            // last path segment when it lacks a trailing slash - a user-entered
+            // ".../api/v4" then silently posts to ".../api/..." and 404s (#12641).
+            var url = Configuration.Settings.Tools.AutoTranslateNllbServeUrl;
+            if (!string.IsNullOrEmpty(url) && !url.EndsWith('/'))
+            {
+                url += "/";
+            }
+
+            _httpClient.BaseAddress = new Uri(url);
         }
 
         public List<TranslationPair> GetSupportedSourceLanguages()

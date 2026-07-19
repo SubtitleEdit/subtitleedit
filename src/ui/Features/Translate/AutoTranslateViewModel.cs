@@ -327,6 +327,21 @@ public partial class AutoTranslateViewModel : ObservableObject
             Configuration.Settings.Tools.AutoTranslateMyMemoryApiKey = apiKey.Trim();
         }
 
+        // Both NLLB engines read their base address from Configuration at Initialize; without
+        // these blocks the URL typed in the window was never written back, so only a hand-edited
+        // settings file could change the endpoint (#12641).
+        if (engineType == typeof(NoLanguageLeftBehindApi))
+        {
+            Configuration.Settings.Tools.AutoTranslateNllbApiUrl = apiUrl.Trim();
+            Se.Settings.AutoTranslate.NllbApiUrl = apiUrl.Trim();
+        }
+
+        if (engineType == typeof(NoLanguageLeftBehindServe))
+        {
+            Configuration.Settings.Tools.AutoTranslateNllbServeUrl = apiUrl.Trim();
+            Se.Settings.AutoTranslate.NllbServeUrl = apiUrl.Trim();
+        }
+
         if (engineType == typeof(ChatGptTranslate))
         {
             Configuration.Settings.Tools.ChatGptApiKey = apiKey.Trim();
@@ -372,6 +387,8 @@ public partial class AutoTranslateViewModel : ObservableObject
         {
             Configuration.Settings.Tools.AnthropicApiKey = apiKey.Trim();
             Configuration.Settings.Tools.AnthropicApiModel = apiModel.Trim();
+            Configuration.Settings.Tools.AnthropicApiUrl = apiUrl.Trim();
+            Se.Settings.AutoTranslate.AnthropicApiUrl = apiUrl.Trim();
         }
 
         if (engineType == typeof(LaraTranslate))
@@ -403,12 +420,16 @@ public partial class AutoTranslateViewModel : ObservableObject
         {
             Configuration.Settings.Tools.GroqApiKey = apiKey.Trim();
             Configuration.Settings.Tools.GroqModel = apiModel.Trim();
+            Configuration.Settings.Tools.GroqUrl = apiUrl.Trim();
+            Se.Settings.AutoTranslate.GroqUrl = apiUrl.Trim();
         }
 
         if (engineType == typeof(OpenRouterTranslate))
         {
             Configuration.Settings.Tools.OpenRouterApiKey = apiKey.Trim();
             Configuration.Settings.Tools.OpenRouterModel = apiModel.Trim();
+            Configuration.Settings.Tools.OpenRouterUrl = apiUrl.Trim();
+            Se.Settings.AutoTranslate.OpenRouterUrl = apiUrl.Trim();
         }
 
         if (engineType == typeof(GeminiTranslate))
@@ -421,6 +442,8 @@ public partial class AutoTranslateViewModel : ObservableObject
         {
             Configuration.Settings.Tools.NvidiaApiKey = apiKey.Trim();
             Configuration.Settings.Tools.NvidiaModel = apiModel.Trim();
+            Configuration.Settings.Tools.NvidiaUrl = apiUrl.Trim();
+            Se.Settings.AutoTranslate.NvidiaUrl = apiUrl.Trim();
         }
 
         if (engineType == typeof(MistralTranslate))
@@ -1646,8 +1669,8 @@ public partial class AutoTranslateViewModel : ObservableObject
             FillUrls(new List<string>
             {
                 Configuration.Settings.Tools.AutoTranslateNllbApiUrl,
-                "http://localhost:7860/api/v2/",
-                "https://winstxnhdw-nllb-api.hf.space/api/v2/",
+                "http://localhost:7860/api/v4/",
+                "https://winstxnhdw-nllb-api.hf.space/api/v4/",
             });
 
             return;
