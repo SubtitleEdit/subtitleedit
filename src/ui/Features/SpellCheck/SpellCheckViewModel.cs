@@ -25,6 +25,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
@@ -249,10 +250,7 @@ public partial class SpellCheckViewModel : ObservableObject
         Dictionaries.AddRange(LanguageFavoritesHelper.Order(spellCheckLanguages, d => SpellCheckDictionaryDisplay.GetTwoLetterLanguageCode(d)));
         if (Dictionaries.Count > 0)
         {
-            if (!string.IsNullOrEmpty(Se.Settings.SpellCheck.LastLanguageDictionaryName))
-            {
-                SelectedDictionary = Dictionaries.FirstOrDefault(l => l.Name == Se.Settings.SpellCheck.LastLanguageDictionaryName);
-            }
+            SelectedDictionary = FindLastUsedDictionary(Dictionaries);
 
             if (SelectedDictionary == null)
             {
@@ -569,6 +567,29 @@ public partial class SpellCheckViewModel : ObservableObject
         TotalAddedWords = _spellCheckManager.NoOfAddedWords;
     }
 
+    /// <summary>
+    /// Resolves the last-used dictionary from settings: by dictionary file when one was stored
+    /// (locale independent — hunspell display names come from CultureInfo.DisplayName and change
+    /// with the OS language), falling back to the stored display name (MS Word provider entries
+    /// have no file).
+    /// </summary>
+    private static SpellCheckDictionaryDisplay? FindLastUsedDictionary(ObservableCollection<SpellCheckDictionaryDisplay> dictionaries)
+    {
+        var file = Se.Settings.SpellCheck.LastLanguageDictionaryFile;
+        var byFile = string.IsNullOrEmpty(file)
+            ? null
+            : dictionaries.FirstOrDefault(l => l.DictionaryFileName.Equals(file, StringComparison.OrdinalIgnoreCase));
+        if (byFile != null)
+        {
+            return byFile;
+        }
+
+        var name = Se.Settings.SpellCheck.LastLanguageDictionaryName;
+        return string.IsNullOrEmpty(name)
+            ? null
+            : dictionaries.FirstOrDefault(l => l.Name == name);
+    }
+
     private void SetLanguage(SpellCheckDictionaryDisplay? spellCheckDictionary)
     {
         if (Dictionaries.Count <= 0)
@@ -634,24 +655,27 @@ public partial class SpellCheckViewModel : ObservableObject
         if (spellCheckDictionary is not null)
         {
             // Hunspell entries are identified by dictionary file; MS Word entries have no file
-            // and are identified by name only.
+            // and are identified by name only. When the passed dictionary matches nothing (file
+            // deleted since last session, name stored under another OS locale), keep the
+            // auto-detected dictionary instead of clearing it.
             SelectedDictionary = (!string.IsNullOrEmpty(spellCheckDictionary.DictionaryFileName)
                     ? Dictionaries.FirstOrDefault(l => l.DictionaryFileName.Equals(spellCheckDictionary.DictionaryFileName, StringComparison.OrdinalIgnoreCase))
                     : null)
-                ?? Dictionaries.FirstOrDefault(l => l.Name.Equals(spellCheckDictionary.Name, StringComparison.OrdinalIgnoreCase));
+                ?? Dictionaries.FirstOrDefault(l => l.Name.Equals(spellCheckDictionary.Name, StringComparison.OrdinalIgnoreCase))
+                ?? SelectedDictionary;
         }
 
         if (SelectedDictionary == null)
         {
-            SelectedDictionary = Dictionaries.FirstOrDefault(l => l.Name.StartsWith(languageCode, StringComparison.OrdinalIgnoreCase));
+            // Match on the file name ("de_DE.dic" starts with "de") — the display name is
+            // localized ("German"/"Deutsch") and does not reliably start with the ISO code.
+            SelectedDictionary = Dictionaries.FirstOrDefault(l =>
+                Path.GetFileName(l.DictionaryFileName).StartsWith(languageCode, StringComparison.OrdinalIgnoreCase));
         }
 
         if (SelectedDictionary == null)
         {
-            if (!string.IsNullOrEmpty(Se.Settings.SpellCheck.LastLanguageDictionaryName))
-            {
-                SelectedDictionary = Dictionaries.FirstOrDefault(l => l.Name == Se.Settings.SpellCheck.LastLanguageDictionaryName);
-            }
+            SelectedDictionary = FindLastUsedDictionary(Dictionaries);
         }
 
         if (SelectedDictionary == null && Dictionaries.Count > 0)
