@@ -254,50 +254,61 @@ namespace Nikse.SubtitleEdit.Controls
                 return;
             }
 
-            var c = e.Text[0];
-            if (!char.IsDigit(c))
-            {
-                e.Handled = true;
-                return;
-            }
-
             var caret = _textBox.CaretIndex;
+            var chars = _textBuffer.ToCharArray();
+            var changed = false;
 
-            // Skip separators (colons, commas, dots)
-            while (caret < _textBuffer.Length && IsSeparator(_textBuffer[caret]))
+            // An IME commit (or an X11 compose sequence) can deliver several characters in one
+            // event, so consume the whole string instead of only the first character.
+            foreach (var c in e.Text)
             {
+                // The mask holds ASCII digits only. char.IsDigit() also accepts full-width and
+                // Arabic-Indic digits, which every ParseTime() branch then fails to parse - that
+                // silently reset the time code to zero - so match the ASCII range explicitly.
+                if (c is < '0' or > '9')
+                {
+                    continue;
+                }
+
+                // Skip separators (colons, commas, dots)
+                while (caret < chars.Length && IsSeparator(chars[caret]))
+                {
+                    caret++;
+                }
+
+                if (caret >= chars.Length)
+                {
+                    break;
+                }
+
+                // Overwrite character at current position
+                chars[caret] = c;
+                changed = true;
+
+                // Move to next editable position
                 caret++;
+                while (caret < chars.Length && IsSeparator(chars[caret]))
+                {
+                    caret++;
+                }
             }
 
-            if (caret >= _textBuffer.Length)
+            e.Handled = true;
+
+            if (!changed)
             {
-                e.Handled = true;
                 return;
             }
 
-            // Overwrite character at current position
-            var chars = _textBuffer.ToCharArray();
-            chars[caret] = c;
             _textBuffer = new string(chars);
-
             _textBox.Text = _textBuffer;
-
-            // Move to next editable position
-            var nextPos = caret + 1;
-            while (nextPos < _textBuffer.Length && IsSeparator(_textBuffer[nextPos]))
-            {
-                nextPos++;
-            }
-
-            _textBox.CaretIndex = Math.Min(nextPos, _textBuffer.Length);
+            _textBox.CaretIndex = Math.Min(caret, _textBuffer.Length);
 
             // Update the bound value
             var newValue = ParseTime(_textBuffer);
             _isUpdatingFromValue = true;
             SetValue(ValueProperty, newValue);
             _isUpdatingFromValue = false;
-
-            e.Handled = true;
         }
 
         // The text box is masked and edits character-by-character via OnTextInput, but paste bypasses
