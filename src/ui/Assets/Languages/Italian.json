@@ -1,7 +1,7 @@
 {
   "Title": "SubtitleEdit",
   "Version": "v. 5.1.0 RC8",
-  "TranslatedBy": "v. 19.07.2026 di bovirus",
+  "TranslatedBy": "v. 20.07.2026 di bovirus",
   "CultureName": "it-IT",
   "General": {
     "Abort": "Annulla",
@@ -35,6 +35,7 @@
     "Ascending": "Ordine crescente",
     "Descending": "Discendente",
     "AttachDotDotDot": "Allega...",
+    "AudioFileSaved": "Salvato file audio",
     "AudioFiles": "File audio",
     "AudioVisualizer": "Visualizzatore audio",
     "Auto": "Immissione testo... continua automaticamente fermato",
@@ -670,6 +671,7 @@
     "VideoEncodingX": "Codifica video: {0}",
     "VideoExtension": "Estensione file video",
     "VideoFile": "File video",
+    "VideoFileGenerated": "Generato file video",
     "VideoFileGeneratedX": "File video generato: '{0}'",
     "VideoFiles": "File video",
     "VideoAndAudioFiles": "File video e audio",
