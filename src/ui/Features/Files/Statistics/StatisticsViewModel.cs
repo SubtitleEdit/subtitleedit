@@ -5,6 +5,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
+using Nikse.SubtitleEdit.Features.Shared.PromptFileSaved;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Logic.Config.Language;
@@ -12,6 +13,7 @@ using Nikse.SubtitleEdit.Logic.Media;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -48,10 +50,25 @@ public partial class StatisticsViewModel : ObservableObject
     [ObservableProperty] private string _textMostUsedWords;
     [ObservableProperty] private string _textMostUsedLines;
 
+    // Structured data for the dashboard view. Initialize runs before the window is
+    // constructed (see WindowService.ShowDialogAsync), so the window builds from these
+    // directly - no change notification needed.
+    public bool HasStatistics { get; private set; }
+    public string KpiSubtitles { get; private set; } = string.Empty;
+    public string KpiWords { get; private set; } = string.Empty;
+    public string KpiCharacters { get; private set; } = string.Empty;
+    public string KpiDuration { get; private set; } = string.Empty;
+    public List<StatRangeItem> Ranges { get; } = new();
+    public List<StatCheckItem> Checks { get; } = new();
+    public StatCpsHistogram CpsHistogram { get; private set; } = new();
+    public List<StatCountItem> TopWords { get; } = new();
+    public List<StatCountItem> TopLines { get; } = new();
+
     public Window? Window { get; internal set; }
     public bool OkPressed { get; private set; }
 
     private readonly IFileHelper _fileHelper;
+    private readonly IWindowService _windowService;
 
     private Subtitle _subtitle;
     private SubtitleFormat _format;
@@ -72,9 +89,10 @@ https://github.com/SubtitleEdit/subtitleedit
     private string _fileName;
 
     private static readonly char[] ExpectedChars = { '♪', '♫', '"', '(', ')', '[', ']', ' ', ',', '!', '?', '.', ':', ';', '-', '_', '@', '<', '>', '/', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '،', '؟', '؛' };
-    public StatisticsViewModel(IFileHelper fileHelper)
+    public StatisticsViewModel(IFileHelper fileHelper, IWindowService windowService)
     {
         _fileHelper = fileHelper;
+        _windowService = windowService;
 
         Title = string.Empty;
         TextGeneral = string.Empty;
@@ -101,6 +119,24 @@ https://github.com/SubtitleEdit/subtitleedit
     }
 
     [RelayCommand]
+    private async Task CopyMostUsedWords()
+    {
+        if (Window != null)
+        {
+            await ClipboardHelper.SetTextAsync(Window, TextMostUsedWords.Trim());
+        }
+    }
+
+    [RelayCommand]
+    private async Task CopyMostUsedLines()
+    {
+        if (Window != null)
+        {
+            await ClipboardHelper.SetTextAsync(Window, TextMostUsedLines.Trim());
+        }
+    }
+
+    [RelayCommand]
     private async Task Export()
     {
         var suggestFileName = "statistics.txt";
@@ -117,6 +153,12 @@ https://github.com/SubtitleEdit/subtitleedit
 
         var statistic = string.Format(WriteFormat, TextGeneral, TextMostUsedWords, TextMostUsedLines);
         System.IO.File.WriteAllText(textFileName, statistic);
+
+        _ = await _windowService.ShowDialogAsync<PromptFileSavedWindow, PromptFileSavedViewModel>(Window!, vm =>
+        {
+            vm.Initialize(Se.Language.General.FileSaved,
+                string.Format(Se.Language.General.FileSavedToX, System.IO.Path.GetFileName(textFileName)), textFileName, true, true);
+        });
     }
 
     private void Close()
@@ -191,6 +233,8 @@ https://github.com/SubtitleEdit/subtitleedit
         var aboveMaximumLineWidthCount = 0;
         var belowMinimumGapCount = 0;
 
+        var cpsBins = new int[(int)(StatCpsHistogram.AxisMax / StatCpsHistogram.BinSize)];
+
         for (var index = 0; index < _subtitle.Paragraphs.Count; index++)
         {
             var p = _subtitle.Paragraphs[index];
@@ -210,6 +254,9 @@ https://github.com/SubtitleEdit/subtitleedit
             minimumCharsSec = Math.Min(charsSec, minimumCharsSec);
             maximumCharsSec = Math.Max(charsSec, maximumCharsSec);
             totalCharsSec += charsSec;
+
+            var bin = Math.Clamp((int)(charsSec / StatCpsHistogram.BinSize), 0, cpsBins.Length - 1);
+            cpsBins[bin]++;
 
             var wpm = p.WordsPerMinute;
             minimumWpm = Math.Min(wpm, minimumWpm);
@@ -361,6 +408,128 @@ https://github.com/SubtitleEdit/subtitleedit
         }
 
         TextGeneral = sb.ToString().Trim();
+
+        BuildDashboardData(allText.ToString(), totalDuration,
+            minimumLineLength, maximumLineLength, totalLineLength,
+            minimumDuration, maximumDuration,
+            minimumCharsSec, maximumCharsSec, totalCharsSec,
+            minimumWpm, maximumWpm, totalWpm,
+            gapMinimum, gapMaximum, gapTotal,
+            aboveOptimalCpsCount, aboveMaximumCpsCount, aboveMaximumWpmCount,
+            belowMinimumDurationCount, aboveMaximumDurationCount,
+            aboveMaximumLineLengthCount, aboveMaximumLineWidthCount, belowMinimumGapCount,
+            cpsBins);
+    }
+
+    private void BuildDashboardData(string allText, double totalDuration,
+        int minimumLineLength, int maximumLineLength, long totalLineLength,
+        double minimumDuration, double maximumDuration,
+        double minimumCharsSec, double maximumCharsSec, double totalCharsSec,
+        double minimumWpm, double maximumWpm, double totalWpm,
+        double gapMinimum, double gapMaximum, double gapTotal,
+        int aboveOptimalCpsCount, int aboveMaximumCpsCount, int aboveMaximumWpmCount,
+        int belowMinimumDurationCount, int aboveMaximumDurationCount,
+        int aboveMaximumLineLengthCount, int aboveMaximumLineWidthCount, int belowMinimumGapCount,
+        int[] cpsBins)
+    {
+        var count = _subtitle.Paragraphs.Count;
+        var general = Configuration.Settings.General;
+
+        KpiSubtitles = count.ToString("#,##0", CultureInfo.CurrentCulture);
+        KpiWords = _totalWords.ToString("#,##0", CultureInfo.CurrentCulture);
+        KpiCharacters = allText.CountCharacters(false).ToString("#,##0", CultureInfo.CurrentCulture);
+        KpiDuration = new TimeCode(totalDuration).ToDisplayString();
+
+        Ranges.Clear();
+        Ranges.Add(MakeRange(_l.SubtitleLength, minimumLineLength, (double)totalLineLength / count, maximumLineLength, "#,##0", "#,##0.#"));
+        Ranges.Add(MakeRange(Se.Language.General.Duration,
+            minimumDuration / TimeCode.BaseUnit, totalDuration / count / TimeCode.BaseUnit, maximumDuration / TimeCode.BaseUnit, "0.0#", "0.0#"));
+        Ranges.Add(MakeRange(Se.Language.General.CharsPerSec, minimumCharsSec, totalCharsSec / count, maximumCharsSec, "0.0", "0.0"));
+        Ranges.Add(MakeRange(Se.Language.General.WordsPerMin, minimumWpm, totalWpm / count, maximumWpm, "#,##0", "#,##0"));
+        if (count > 1)
+        {
+            Ranges.Add(MakeRange(Se.Language.General.Gap, gapMinimum, gapTotal / (count - 1), gapMaximum, "#,##0", "#,##0"));
+        }
+
+        Checks.Clear();
+        Checks.Add(new StatCheckItem
+        {
+            Label = string.Format(_l.CpsAboveMaximumX, general.SubtitleMaximumCharactersPerSeconds),
+            Count = aboveMaximumCpsCount,
+            Severity = StatCheckSeverity.Critical,
+        });
+        Checks.Add(new StatCheckItem
+        {
+            Label = string.Format(_l.CpsAboveOptimalX, general.SubtitleOptimalCharactersPerSeconds),
+            Count = aboveOptimalCpsCount,
+            Severity = StatCheckSeverity.Warning,
+        });
+        Checks.Add(new StatCheckItem
+        {
+            Label = string.Format(_l.WpmAboveMaximumX, general.SubtitleMaximumWordsPerMinute),
+            Count = aboveMaximumWpmCount,
+            Severity = StatCheckSeverity.Warning,
+        });
+        Checks.Add(new StatCheckItem
+        {
+            Label = string.Format(_l.DurationBelowMinimumX, general.SubtitleMinimumDisplayMilliseconds / TimeCode.BaseUnit),
+            Count = belowMinimumDurationCount,
+            Severity = StatCheckSeverity.Serious,
+        });
+        Checks.Add(new StatCheckItem
+        {
+            Label = string.Format(_l.DurationAboveMaximumX, general.SubtitleMaximumDisplayMilliseconds / TimeCode.BaseUnit),
+            Count = aboveMaximumDurationCount,
+            Severity = StatCheckSeverity.Warning,
+        });
+        Checks.Add(new StatCheckItem
+        {
+            Label = string.Format(_l.LineTooLongX, general.SubtitleLineMaximumLength),
+            Count = aboveMaximumLineLengthCount,
+            Severity = StatCheckSeverity.Warning,
+        });
+        if (Configuration.Settings.Tools.ListViewSyntaxColorWideLines)
+        {
+            Checks.Add(new StatCheckItem
+            {
+                Label = string.Format(_l.LineTooWideX, general.SubtitleLineMaximumPixelWidth),
+                Count = aboveMaximumLineWidthCount,
+                Severity = StatCheckSeverity.Warning,
+            });
+        }
+        if (count > 1)
+        {
+            Checks.Add(new StatCheckItem
+            {
+                Label = string.Format(_l.GapBelowMinimumX, general.MinimumMillisecondsBetweenLines),
+                Count = belowMinimumGapCount,
+                Severity = StatCheckSeverity.Serious,
+            });
+        }
+
+        CpsHistogram = new StatCpsHistogram
+        {
+            Bins = new List<int>(cpsBins),
+            OptimalCps = general.SubtitleOptimalCharactersPerSeconds,
+            MaximumCps = general.SubtitleMaximumCharactersPerSeconds,
+        };
+
+        HasStatistics = true;
+    }
+
+    private static StatRangeItem MakeRange(string label, double min, double avg, double max, string minMaxFormat, string avgFormat)
+    {
+        // Negative minimums (overlapping lines give a negative gap) still render at the left edge.
+        var scale = max > 0 ? max : 1;
+        return new StatRangeItem
+        {
+            Label = label,
+            MinText = min.ToString(minMaxFormat, CultureInfo.CurrentCulture),
+            AvgText = avg.ToString(avgFormat, CultureInfo.CurrentCulture),
+            MaxText = max.ToString(minMaxFormat, CultureInfo.CurrentCulture),
+            MinFraction = Math.Clamp(min / scale, 0, 1),
+            AvgFraction = Math.Clamp(avg / scale, 0, 1),
+        };
     }
 
     private static int GetLineLength(Paragraph p)
@@ -657,6 +826,14 @@ https://github.com/SubtitleEdit/subtitleedit
         }
 
         TextMostUsedWords = sb.ToString();
+
+        TopWords.Clear();
+        TopWords.AddRange(hashtable
+            .Where(kv => kv.Value > 1)
+            .OrderByDescending(kv => kv.Value)
+            .ThenBy(kv => kv.Key, StringComparer.Ordinal)
+            .Take(8)
+            .Select(kv => new StatCountItem { Text = kv.Key, Count = kv.Value }));
     }
 
     private void CalculateMostUsedLines()
@@ -693,6 +870,14 @@ https://github.com/SubtitleEdit/subtitleedit
         }
 
         TextMostUsedLines = sb.ToString();
+
+        TopLines.Clear();
+        TopLines.AddRange(hashtable
+            .Where(kv => kv.Value > 1)
+            .OrderByDescending(kv => kv.Value)
+            .ThenBy(kv => kv.Key, StringComparer.Ordinal)
+            .Take(8)
+            .Select(kv => new StatCountItem { Text = kv.Key, Count = kv.Value }));
     }
 
     internal void KeyDown(object? sender, KeyEventArgs e)

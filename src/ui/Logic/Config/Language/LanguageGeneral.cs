@@ -712,6 +712,7 @@ public class LanguageGeneral
     public string XSubtitles { get; set; }
     public string Yes { get; set; }
     public string CopyToClipboard { get; set; }
+    public string CopiedToClipboard { get; set; }
     public string PlayCurrent { get; set; }
     public string LeftMargin { get; set; }
     public string RightMargin { get; set; }
@@ -1473,6 +1474,7 @@ public class LanguageGeneral
         XSubtitles = "{0:#,###,##0} subtitles";
         Yes = "Yes";
         CopyToClipboard = "Copy to clipboard";
+        CopiedToClipboard = "Copied to clipboard";
         PlayCurrent = "Play current";   
         LeftMargin = "Left margin";
         RightMargin = "Right margin";
