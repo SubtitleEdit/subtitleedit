@@ -107,6 +107,7 @@ public class PointSyncViaOtherWindow : Window
             },
         };
         dataGrid.Bind(DataGrid.SelectedItemProperty, new Binding(nameof(vm.SelectedSyncPoint)));
+        UiUtil.AttachHomeEndNavigation(dataGrid);
 
         var menuItemDelete = new MenuItem
         {
@@ -209,6 +210,7 @@ public class PointSyncViaOtherWindow : Window
             },
         };
         dataGrid.Bind(DataGrid.SelectedItemProperty, new Binding(nameof(vm.SelectedSubtitle)));
+        UiUtil.AttachHomeEndNavigation(dataGrid);
 
         grid.Add(panelHeader, 0);
         grid.Add(UiUtil.MakeBorderForControlNoPadding(dataGrid), 1);
@@ -308,6 +310,7 @@ public class PointSyncViaOtherWindow : Window
             },
         };
         dataGridSubtitle.Bind(DataGrid.SelectedItemProperty, new Binding(nameof(vm.SelectedOtherSubtitle)));
+        UiUtil.AttachHomeEndNavigation(dataGridSubtitle);
 
         // Clicking a line in the left grid scrolls this grid to the matching time (#12529)
         // without touching its selection.

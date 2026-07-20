@@ -104,6 +104,7 @@ public class PointSyncWindow : Window
         };
 
         dataGrid.Bind(DataGrid.SelectedItemProperty, new Binding(nameof(vm.SelectedSyncPoint)));
+        UiUtil.AttachHomeEndNavigation(dataGrid);
 
         var menuItemDelete = new MenuItem
         {
@@ -183,6 +184,7 @@ public class PointSyncWindow : Window
             },
         };
         dataGrid.Bind(DataGrid.SelectedItemProperty, new Binding(nameof(vm.SelectedSubtitle)));
+        UiUtil.AttachHomeEndNavigation(dataGrid);
 
         return UiUtil.MakeBorderForControlNoPadding(dataGrid);
     }
