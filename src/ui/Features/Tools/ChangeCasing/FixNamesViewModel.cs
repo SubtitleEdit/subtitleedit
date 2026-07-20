@@ -163,29 +163,39 @@ public partial class FixNamesViewModel : ObservableObject
     private void GeneratePreview()
     {
         var hits = new List<FixNameHitItem>();
+
+        // reusable array
+        var processingNames = new string[1];
+
+        // filter out non-active name to avoid extra processing
+        var activeNameItems = Names.Where(n => n.IsChecked).ToArray();
+        
         foreach (var p in _subtitle.Paragraphs)
         {
             var text = p.Text;
-            foreach (var item in Names)
+            foreach (var item in activeNameItems)
             {
-                var name = item.Name;
+                // no extra processing if paragraph doesn't contain name
+                if (!text.Contains(item.Name, StringComparison.OrdinalIgnoreCase))
+                {
+                    continue;
+                }
 
                 var textNoTags = HtmlUtil.RemoveHtmlTags(text, true);
+                
+                // has letter and not already uppercase
                 if (textNoTags != textNoTags.ToUpperInvariant())
                 {
-                    if (item.IsChecked && text != null && text.Contains(name, StringComparison.OrdinalIgnoreCase) && name.Length > 1 && name != name.ToLowerInvariant())
-                    {
-                        var st = new StrippableText(text);
-                        st.FixCasing(new List<string> { name }, true, false, false, string.Empty);
-                        text = st.MergedString;
-                    }
+                    var st = new StrippableText(text);
+                    processingNames[0] = item.Name;
+                    st.FixCasing(processingNames, true, false, false, string.Empty);
+                    text = st.MergedString;
                 }
             }
 
-            if (text != p.Text && p.Text != null && text != null)
+            if (text != p.Text)
             {
-                var hit = new FixNameHitItem(p.Text, p.Number, p.Text, text, true);
-                hits.Add(hit);
+                hits.Add(new FixNameHitItem(p.Text, p.Number, p.Text, text, true));
             }
         }
 
