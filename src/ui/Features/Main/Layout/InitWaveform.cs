@@ -317,6 +317,12 @@ public class InitWaveform
             }.BindIsVisible(vm, nameof(vm.ShowWaveformWaveformAndSpectrogram));
             flyout.Items.Add(showWaveformAndSpectrogramMenuItem);
 
+            // The flyout is reused across openings, so its menu items can keep keyboard focus
+            // after it closes while being detached from the visual tree - which leaves every
+            // shortcut dead until the user clicks something (#11744). Hooked here rather than
+            // on the control's initial flyout, which this replaces on every layout rebuild.
+            flyout.Closed += (_, _) => vm.RestoreFocusIfLost();
+
             vm.AudioVisualizer.MenuFlyout = flyout;
         }
 
