@@ -112,6 +112,11 @@ public class InitWaveform
             vm.AudioVisualizer.OnGenerateWaveformRequested += vm.AudioVisualizerOnGenerateWaveformRequested;
 
             vm.AudioVisualizer.FlyoutMenuOpening += vm.AudioVisualizerFlyoutMenuOpening;
+
+            // The waveform's context flyout is created once and reused, so when it closes its
+            // menu items can keep keyboard focus while detached from the visual tree - which
+            // leaves every shortcut dead until the user clicks something (#11744).
+            vm.AudioVisualizer.MenuFlyout.Closed += (_, _) => vm.RestoreFocusIfLost();
         }
         else
         {

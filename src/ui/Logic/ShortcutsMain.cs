@@ -678,7 +678,10 @@ public static class ShortcutsMain
         AddShortcut(shortcuts, vm.WaveformHorizontalZoomOutCommand, nameof(vm.WaveformHorizontalZoomOutCommand), ShortcutCategory.Waveform);
         AddShortcut(shortcuts, vm.WaveformVerticalZoomInCommand, nameof(vm.WaveformVerticalZoomInCommand), ShortcutCategory.Waveform);
         AddShortcut(shortcuts, vm.WaveformVerticalZoomOutCommand, nameof(vm.WaveformVerticalZoomOutCommand), ShortcutCategory.Waveform);
-        AddShortcut(shortcuts, vm.ToggleShotChangesAtVideoPositionCommand, nameof(vm.ToggleShotChangesAtVideoPositionCommand), ShortcutCategory.Waveform);
+        // General, not Waveform: it acts on the video position, not on anything the waveform has
+        // selected, and every other shot change command is General too. As a Waveform shortcut it
+        // only fired while the waveform had keyboard focus, which it often never gets (#11744).
+        AddShortcut(shortcuts, vm.ToggleShotChangesAtVideoPositionCommand, nameof(vm.ToggleShotChangesAtVideoPositionCommand), ShortcutCategory.General, ShortcutGroup.Video);
         AddShortcut(shortcuts, vm.ShowWaveformSeekSilenceCommand, nameof(vm.ShowWaveformSeekSilenceCommand), ShortcutCategory.Waveform);
         AddShortcut(shortcuts, vm.SeekSilenceBackCommand, nameof(vm.SeekSilenceBackCommand), ShortcutCategory.Waveform);
         AddShortcut(shortcuts, vm.SeekSilenceForwardCommand, nameof(vm.SeekSilenceForwardCommand), ShortcutCategory.Waveform);

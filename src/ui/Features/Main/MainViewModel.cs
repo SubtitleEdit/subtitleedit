@@ -14748,24 +14748,26 @@ public partial class MainViewModel :
         _shortcutManager.ClearKeys();
         if (usedOwner == Window)
         {
-            RestoreFocusAfterDialogClose();
+            RestoreFocusIfLost();
         }
 
         return result;
     }
 
     /// <summary>
-    /// After a modal dialog closes, Avalonia restores keyboard focus to the owner's previously
-    /// focused element - but when that element is gone (e.g. a menu item in a since-closed
-    /// popup when the dialog was launched from the menu bar), the restore silently fails and
-    /// focus lands on the bare Window. Key events then route only to the Window - never through
-    /// MainView, where the shortcut KeyDown handler lives - so every shortcut (Ctrl+F, Ctrl+H,
-    /// ...) goes dead until the user clicks a control (#12634). Fall back to the subtitle grid,
-    /// like the menu-bar deactivation restore does. Deferred so a flow-specific focus set by
-    /// the dialog's caller afterwards wins; skipped while another (follow-up) dialog is active -
-    /// its own wrapper call runs the same restore when it closes.
+    /// Puts keyboard focus back on the subtitle grid when a closing dialog, menu or context
+    /// flyout left it nowhere useful.
+    ///
+    /// Avalonia restores focus to the previously focused element, but when that element is gone
+    /// (e.g. a menu item in a since-closed popup) the restore silently fails and focus lands on
+    /// the bare Window - or stays on the detached MenuItem itself. Key events then never route
+    /// through MainView, where the shortcut KeyDown handler lives, so every shortcut goes dead
+    /// until the user clicks a control (#12634, #11744).
+    ///
+    /// Deferred so a flow-specific focus set by the caller afterwards wins; skipped while another
+    /// (follow-up) dialog is active - its own wrapper call runs the same restore when it closes.
     /// </summary>
-    private void RestoreFocusAfterDialogClose()
+    internal void RestoreFocusIfLost()
     {
         Dispatcher.UIThread.Post(() =>
         {
@@ -14775,9 +14777,12 @@ public partial class MainViewModel :
             }
 
             var focused = Window.FocusManager?.GetFocusedElement();
-            if (focused is Control control && control != Window)
+
+            // GetTopLevel is null for a control that has been detached from the visual tree,
+            // which is how a closed popup's menu item looks while still holding focus.
+            if (focused is Control control && control != Window && TopLevel.GetTopLevel(control) != null)
             {
-                return; // focus survived inside a real control - leave it be
+                return; // focus survived inside a real, on-screen control - leave it be
             }
 
             SubtitleGrid?.Focus();
@@ -20143,9 +20148,12 @@ public partial class MainViewModel :
 
         // A focused MenuItem belongs to a menu/flyout being navigated; let it keep the keys.
         // (Drop-down items are hosted in a popup, so a visual-parent walk to Menu would miss them.)
-        if (focusedElement is MenuItem)
+        // Only while it is actually on screen though: when a menu or context flyout closes, its
+        // items are detached from the visual tree but can remain the focused element - and a stale
+        // MenuItem here would swallow every shortcut until the user clicked something (#11744).
+        if (focusedElement is MenuItem menuItem)
         {
-            return true;
+            return TopLevel.GetTopLevel(menuItem) != null;
         }
 
         if (ReferenceEquals(focusedElement, Menu))
