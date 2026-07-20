@@ -509,6 +509,33 @@ public static class UiTheme
                 }
             },
 
+            // The two styles above paint every text box's inner PART_BorderElement with an
+            // opaque fill on hover/focus. Inside an editable ComboBox the text box covers the
+            // whole text column, on top of the combo's border, so that fill wipes the border
+            // out on hover, while the drop-down is open, and after selecting (the box keeps
+            // focus) - only the stretch around the arrow, which the text box does not cover,
+            // survives. Fluent guards against exactly this with inline
+            // TextControlBackgroundFocused/PointerOver=Transparent resources on the inner text
+            // box, but the styles above set the border element directly, bypassing resources -
+            // so undo them for text boxes hosted inside a ComboBox template. Later in the
+            // collection = wins over the two styles above.
+            new Style(x => x.OfType<ComboBox>().Template().OfType<TextBox>()
+                .Class(":focus").Template().OfType<Border>().Name("PART_BorderElement"))
+            {
+                Setters =
+                {
+                    new Setter(Border.BackgroundProperty, Brushes.Transparent)
+                }
+            },
+            new Style(x => x.OfType<ComboBox>().Template().OfType<TextBox>()
+                .Class(":pointerover").Template().OfType<Border>().Name("PART_BorderElement"))
+            {
+                Setters =
+                {
+                    new Setter(Border.BackgroundProperty, Brushes.Transparent)
+                }
+            },
+
             // Button
             new Style(x => x.OfType<Button>())
             {
