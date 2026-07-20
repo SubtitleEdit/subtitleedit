@@ -35,7 +35,8 @@ public partial class FixNamesViewModel : ObservableObject
     private NameList? _nameList;
     private List<string> _nameListInclMulti;
     private string _language;
-    private const string ExpectedEndChars = " ,.!?:;…')]<-\"\r\n";
+    private const string PrefixChars = "([ --'>\r\n¿¡\"”“„";
+    private const string SuffixChars = " ,.!?:;…')]<-\"\r\n";
     private readonly HashSet<string> _usedNames;
     private string _oldNames;
     private readonly System.Timers.Timer _previewTimer;
@@ -92,7 +93,6 @@ public partial class FixNamesViewModel : ObservableObject
     private void FindAllNames()
     {
         var text = HtmlUtil.RemoveHtmlTags(_subtitle.GetAllTexts());
-        var textToLower = text.ToLowerInvariant();
 
         _nameListInclMulti = _nameList!.GetAllNames(); // Will contains both one word names and multi names
         foreach (var s in ExtraNames.Split(','))
@@ -106,69 +106,58 @@ public partial class FixNamesViewModel : ObservableObject
 
         _usedNames.Clear();
         var names = new List<FixNameItem>();
+
+        string[] commonWords = ["US", "Lane", "Bill", "Rose"];
+        const string english = "en";
+        const string dont = "don't";
+
         foreach (var name in _nameListInclMulti)
         {
-            var startIndex = textToLower.IndexOf(name.ToLowerInvariant(), StringComparison.Ordinal);
-            if (startIndex >= 0)
+            var startIndex = text.IndexOf(name, StringComparison.OrdinalIgnoreCase);
+
+            // filter out invalid names
+            if (name.Length <= 1 || name == name.ToLowerInvariant())
             {
-                while (startIndex >= 0 && startIndex < text.Length &&
-                       textToLower.Substring(startIndex).Contains(name.ToLowerInvariant()) && name.Length > 1 && name != name.ToLowerInvariant())
+                continue;
+            }
+
+            while (startIndex >= 0)
+            {
+                if (IsWordBoundary(text, startIndex, name) && !text.AsSpan().Slice(startIndex, name.Length).Equals(name, StringComparison.Ordinal)) // do not add names where casing already is correct
                 {
-                    var startOk = startIndex == 0 || "([ --'>\r\n¿¡\"”“„".Contains(text[startIndex - 1]);
-                    if (startOk)
+                    if (!_usedNames.Contains(name))
                     {
-                        var end = startIndex + name.Length;
-                        var endOk = end <= text.Length;
-                        if (endOk)
+                        bool skip = false;
+                        var isChecked = true;
+                        if (_language.StartsWith(english, StringComparison.OrdinalIgnoreCase))
                         {
-                            endOk = end == text.Length || ExpectedEndChars.Contains(text[end]);
+                            skip = text.AsSpan()[startIndex..].StartsWith(dont, StringComparison.OrdinalIgnoreCase);
+                            isChecked = !commonWords.Contains(name);
                         }
 
-                        if (endOk && text.Substring(startIndex, name.Length) != name) // do not add names where casing already is correct
+                        if (!skip)
                         {
-                            if (!_usedNames.Contains(name))
-                            {
-                                var skip = false;
-                                var isChecked = true;
-                                if (_language.StartsWith("en", StringComparison.OrdinalIgnoreCase))
-                                {
-                                    var isDont = text.Substring(startIndex).StartsWith("don't", StringComparison.InvariantCultureIgnoreCase);
-                                    if (isDont)
-                                    {
-                                        skip = true;
-                                    }
-
-                                    var commonNamesAndWords = new List<string>
-                                    {
-                                        "US",
-                                        "Lane",
-                                        "Bill",
-                                        "Rose",
-                                    };
-                                    if (commonNamesAndWords.Contains(name))
-                                    {
-                                        isChecked = false;
-                                    }
-                                }
-
-                                if (!skip)
-                                {
-                                    _usedNames.Add(name);
-                                    names.Add(new FixNameItem(name, isChecked));
-                                    break; // break while
-                                }
-                            }
+                            _usedNames.Add(name);
+                            names.Add(new FixNameItem(name, isChecked));
+                            break; // break while
                         }
                     }
-
-                    startIndex = textToLower.IndexOf(name.ToLowerInvariant(), startIndex + 2, StringComparison.Ordinal);
                 }
+
+                startIndex = text.IndexOf(name, startIndex + name.Length, StringComparison.OrdinalIgnoreCase);
             }
         }
 
         Names.Clear();
         Names.AddRange(names);
-        NamesCount = string.Format("Names: {0:#,##0}", Names.Count);
+        NamesCount = $"Names: {Names.Count:#,##0}";
+    }
+
+    private bool IsWordBoundary(string text, int startIndex, string name)
+    {
+        var afterNameIndex = startIndex + name.Length;
+        return (startIndex == 0 || PrefixChars.Contains(text[startIndex - 1]))
+               && (afterNameIndex == text.Length || (afterNameIndex < text.Length && SuffixChars.Contains(text[afterNameIndex])));
     }
 
     private void GeneratePreview()
@@ -204,7 +193,7 @@ public partial class FixNamesViewModel : ObservableObject
         {
             Hits.Clear();
             Hits.AddRange(hits);
-            HitCount = string.Format("Hits: {0:#,##0}", Hits.Count);
+            HitCount = $"Hits: {Hits.Count:#,##0}";
         });
     }
 
