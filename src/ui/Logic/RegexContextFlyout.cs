@@ -30,6 +30,8 @@ public static class RegexContextFlyout
 
         vm.PropertyChanged += (_, _) => Update();
         Update();
+
+        UiUtil.AttachMacContextFlyoutHandler(textBox);
     }
 
     private static MenuFlyout MakeFindFlyout(TextBox textBox)
