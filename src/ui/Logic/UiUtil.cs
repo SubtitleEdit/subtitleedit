@@ -19,6 +19,7 @@ using Nikse.SubtitleEdit.Logic.ValueConverters;
 using Optris.Icons.Avalonia;
 using SkiaSharp;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
@@ -3108,5 +3109,36 @@ public static class UiUtil
                 e.Handled = true;
             }
         }, RoutingStrategies.Tunnel, handledEventsToo: true);
+    }
+
+    /// <summary>
+    /// Makes Home/End jump to the first/last row of <paramref name="dataGrid"/> and select it.
+    /// Avalonia's DataGrid only moves the cell cursor, which is why this is needed. Tunnel
+    /// phase so the grid's own navigation does not consume the key first.
+    /// </summary>
+    public static void AttachHomeEndNavigation(DataGrid dataGrid)
+    {
+        if (dataGrid == null)
+        {
+            return;
+        }
+
+        dataGrid.AddHandler(InputElement.KeyDownEvent, (object? _, KeyEventArgs e) =>
+        {
+            if (e.Key is not (Key.Home or Key.End) || e.Source is TextBox)
+            {
+                return;
+            }
+
+            if (dataGrid.ItemsSource is not IList items || items.Count == 0)
+            {
+                return;
+            }
+
+            var target = e.Key == Key.Home ? items[0] : items[^1];
+            dataGrid.SelectedItem = target;
+            dataGrid.ScrollIntoView(target, null);
+            e.Handled = true;
+        }, RoutingStrategies.Tunnel);
     }
 }
