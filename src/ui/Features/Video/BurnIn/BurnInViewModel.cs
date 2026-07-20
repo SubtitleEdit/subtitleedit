@@ -313,7 +313,9 @@ public partial class BurnInViewModel : ObservableObject
         {
             var percentage = (int)Math.Round((double)_processedFrames / JobItems[_jobItemIndex].TotalFrames * 100.0,
                 MidpointRounding.AwayFromZero);
-            percentage = Math.Clamp(percentage, 0, 100);
+            // Cap at 99 while ffmpeg is still running: the frame total can be underestimated
+            // (VFR sources), and "100%" that never finishes reads as a hang in bug reports.
+            percentage = Math.Clamp(percentage, 0, 99);
 
             var durationMs = (DateTime.UtcNow.Ticks - _startTicks) / 10_000;
             var msPerFrame = (float)durationMs / _processedFrames;
@@ -345,11 +347,7 @@ public partial class BurnInViewModel : ObservableObject
             }
 
             _ffmpegProcess = process;
-#pragma warning disable CA1416 // Validate platform compatibility
-            _ffmpegProcess.Start();
-#pragma warning restore CA1416 // Validate platform compatibility
-            _ffmpegProcess.BeginOutputReadLine();
-            _ffmpegProcess.BeginErrorReadLine();
+            StartFfmpegProcess(process, "two-pass encode (pass 2)");
 
             _timerGenerate.Start();
         });
@@ -377,7 +375,9 @@ public partial class BurnInViewModel : ObservableObject
         {
             var percentage = (int)Math.Round((double)_processedFrames / JobItems[_jobItemIndex].TotalFrames * 100.0,
                 MidpointRounding.AwayFromZero);
-            percentage = Math.Clamp(percentage, 0, 100);
+            // Cap at 99 while ffmpeg is still running: the frame total can be underestimated
+            // (VFR sources), and "100%" that never finishes reads as a hang in bug reports.
+            percentage = Math.Clamp(percentage, 0, 99);
 
             var durationMs = (DateTime.UtcNow.Ticks - _startTicks) / 10_000;
             var msPerFrame = (float)durationMs / _processedFrames;
@@ -402,6 +402,7 @@ public partial class BurnInViewModel : ObservableObject
         ProgressText = string.Empty;
 
         var jobItem = JobItems[_jobItemIndex];
+        Se.WriteToolsLog($"Burn-in ffmpeg finished with exit code {_ffmpegProcess.ExitCode} for \"{jobItem.OutputVideoFileName}\"");
 
         if (!File.Exists(jobItem.OutputVideoFileName))
         {
@@ -564,11 +565,7 @@ public partial class BurnInViewModel : ObservableObject
         }
 
         _ffmpegProcess = process;
-#pragma warning disable CA1416 // Validate platform compatibility
-        _ffmpegProcess.Start();
-#pragma warning restore CA1416 // Validate platform compatibility
-        _ffmpegProcess.BeginOutputReadLine();
-        _ffmpegProcess.BeginErrorReadLine();
+        StartFfmpegProcess(process, "two-pass analyze (pass 1)");
         _startTicks = DateTime.UtcNow.Ticks;
 
         return true;
@@ -666,11 +663,7 @@ public partial class BurnInViewModel : ObservableObject
         }
 
         _ffmpegProcess = process;
-#pragma warning disable CA1416 // Validate platform compatibility
-        _ffmpegProcess.Start();
-#pragma warning restore CA1416 // Validate platform compatibility
-        _ffmpegProcess.BeginOutputReadLine();
-        _ffmpegProcess.BeginErrorReadLine();
+        StartFfmpegProcess(process, "encode");
 
         return true;
     }
@@ -748,6 +741,21 @@ public partial class BurnInViewModel : ObservableObject
 
         var workingDirectory = Path.GetDirectoryName(jobItem.AssaSubtitleFileName) ?? string.Empty;
         return FfmpegGenerator.GetProcess(ffmpegParameters, OutputHandler, workingDirectory);
+    }
+
+    /// <summary>
+    /// Starts an ffmpeg pass with its full command line written to the tools log. Burn-in hangs
+    /// and failures were undiagnosable from user reports: the command was only logged on the
+    /// missing-output-file path, and a wedged ffmpeg logged nothing at all.
+    /// </summary>
+    private void StartFfmpegProcess(Process process, string stage)
+    {
+        Se.WriteToolsLog($"Burn-in {stage}: \"{process.StartInfo.FileName}\" {process.StartInfo.Arguments}");
+#pragma warning disable CA1416 // Validate platform compatibility
+        process.Start();
+#pragma warning restore CA1416 // Validate platform compatibility
+        process.BeginOutputReadLine();
+        process.BeginErrorReadLine();
     }
 
     private void OutputHandler(object sendingProcess, DataReceivedEventArgs outLine)
