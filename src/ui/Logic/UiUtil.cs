@@ -639,6 +639,35 @@ public static class UiUtil
         return MakeComboBox(sourceItems, viewModal, propertySelectedPath, null);
     }
 
+    /// <summary>
+    /// A text box with a drop-down of preset values - the user can still type anything.
+    /// Use where a handful of values cover most cases but the field is free text, e.g. the
+    /// music/pilcrow symbols in "Remove text for hearing impaired" (SE 4 parity).
+    /// </summary>
+    public static ComboBox MakeEditableComboBox(double width, IEnumerable<string> presets, object viewModel,
+        string propertyTextPath)
+    {
+        var comboBox = new ComboBox
+        {
+            Width = width,
+            IsEditable = true,
+            ItemsSource = presets.ToList(),
+            DataContext = viewModel,
+            HorizontalAlignment = HorizontalAlignment.Left,
+            VerticalAlignment = VerticalAlignment.Center,
+            HorizontalContentAlignment = HorizontalAlignment.Left,
+            VerticalContentAlignment = VerticalAlignment.Center,
+        };
+
+        comboBox.Bind(ComboBox.TextProperty, new Binding
+        {
+            Path = propertyTextPath,
+            Mode = BindingMode.TwoWay,
+        });
+
+        return comboBox;
+    }
+
     public static TextBox MakeTextBox(double width, object viewModel, string propertyTextPath)
     {
         return MakeTextBox(width, viewModel, propertyTextPath, null);
@@ -1576,6 +1605,7 @@ public static class UiUtil
         control.Margin = new Thickness(marginLeft, m.Top, m.Right, m.Bottom);
         return control;
     }
+
 
     public static CheckBox WithMarginLeft(this CheckBox control, int marginLeft)
     {

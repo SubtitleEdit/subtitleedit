@@ -15,6 +15,11 @@ namespace Nikse.SubtitleEdit.Features.Tools.RemoveTextForHearingImpaired;
 
 public class RemoveTextForHearingImpairedWindow : Window
 {
+    // Same presets the SE 4 combo boxes offered - awkward characters to type, and they cover
+    // nearly every real use of these fields. All three fields stay free text.
+    private static readonly string[] SymbolPresets = ["¶", "♪", "♫"];
+    private static readonly string[] ContainsPresets = ["¶", "♪", "♫", "♪,♫"];
+
     private readonly RemoveTextForHearingImpairedViewModel _vm;
 
     public RemoveTextForHearingImpairedWindow(RemoveTextForHearingImpairedViewModel vm)
@@ -117,9 +122,9 @@ public class RemoveTextForHearingImpairedWindow : Window
         var comboBoxParentheses = UiUtil.MakeCheckBox(Se.Language.Tools.RemoveTextForHearingImpaired.Parentheses, vm, nameof(vm.IsRemoveParenthesesOn));
 
         var checkBoxCustom = UiUtil.MakeCheckBox(string.Empty, vm, nameof(vm.IsRemoveCustomOn));
-        var textBoxCustomStart = UiUtil.MakeTextBox(30, vm, nameof(vm.CustomStart));
+        var textBoxCustomStart = UiUtil.MakeEditableComboBox(80, SymbolPresets, vm, nameof(vm.CustomStart));
         var labelAnd = UiUtil.MakeLabel(Se.Language.Tools.RemoveTextForHearingImpaired.And);
-        var textBoxCustomEnd = UiUtil.MakeTextBox(30, vm, nameof(vm.CustomEnd));
+        var textBoxCustomEnd = UiUtil.MakeEditableComboBox(80, SymbolPresets, vm, nameof(vm.CustomEnd));
         var panelCustom = new StackPanel
         {
             Orientation = Orientation.Horizontal,
@@ -221,7 +226,7 @@ public class RemoveTextForHearingImpairedWindow : Window
     private static Border MakeLineContainsView(RemoveTextForHearingImpairedViewModel vm)
     {
         var comboBoxLineContains = UiUtil.MakeCheckBox(Se.Language.Tools.RemoveTextForHearingImpaired.IfLineContains, vm, nameof(vm.IsRemoveTextContainsOn));
-        var textBoxContains = UiUtil.MakeTextBox(120, vm, nameof(vm.TextContains)).WithMarginLeft(5);
+        var textBoxContains = UiUtil.MakeEditableComboBox(150, ContainsPresets, vm, nameof(vm.TextContains)).WithMarginLeft(5);
         var panelContains = new StackPanel
         {
             Orientation = Orientation.Horizontal,
