@@ -3,6 +3,26 @@ Subtitle Edit Changelog
 
 -----------------------------------------------------------------------------------------------------
 
+v5.1.0-rc10 (20th of July 2026)
+
+* New "file saved" prompt - success check mark, file name and folder, size/duration info, copy path and Play/Open - now also used by text to speech and the video tools (burn-in, cut, re-encode, transparent subtitles, blank video, embedded subtitles)
+* Auto-translate via llama.cpp: add Hy-MT2 translation models (Tencent, 7B/1.8B - excellent for its 33 languages, no Nordic) plus larger TranslateGemma 12B and Qwen 3.5 9B quants (up to 10 GB)
+* Auto-translate: the URL field was ignored for winstxnhdw/nllb-api, NLLB-serve, Anthropic, Groq, OpenRouter and Nvidia - and nllb-api now tolerates a missing trailing slash in the URL - thx 3ftomi
+* Text to speech: fix the voice-clone transcript prompt appearing repeatedly and generation using a different voice than picked (MOSS-TTS and sibling clone engines)
+* Speech to text: live progress (and time remaining) for all CrispASR engines
+* Update CrispASR to v0.8.15
+* Fix Ctrl+F/Ctrl+H (and all other shortcuts) not responding after closing a dialog such as spell check, until clicking inside the window - thx fraternl
+* Multiple replace: fix regex rules corrupting ASSA \N line breaks on Windows - also covered Batch Convert's replace step and regex Find & Replace - thx Davanix
+* Burn-in: more compact settings so the window fits smaller screens, and audio settings tidied up
+* Remember window position/size for fix-list tool windows
+* Performance: much faster subtitle grid rendering (live spell check, CPS/WPM columns) and faster ASSA file loading
+* Performance: core-library micro-optimizations - thx ivandrofly
+* Update Japanese translation - thx hisui3393
+* Update Italian translation - thx bovirus
+* Update Polish translation - thx potplayer-fanpack
+
+-----------------------------------------------------------------------------------------------------
+
 v5.1.0-rc9 (19th of July 2026)
 
 * Text to speech: add MOSS-TTS (CrispASR) engine with zero-shot voice cloning
