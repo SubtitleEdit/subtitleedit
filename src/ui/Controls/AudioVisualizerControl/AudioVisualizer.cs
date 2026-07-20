@@ -207,6 +207,9 @@ public class AudioVisualizer : Control
     // Reads the user setting directly (like SnapToFrames) so the "Snap to shot changes"
     // checkbox actually takes effect, and does so live without re-wiring at every call site.
     public bool SnapToShotChanges => Se.Settings.Waveform.SnapToShotChanges;
+    // Defaults to true for the dialogs that host a waveform without touching this (visual sync,
+    // point sync, cut video) - there, hovering focuses so the waveform takes keys right away.
+    // The main window and the TTS review window assign it from Se.Settings.Waveform instead.
     public bool FocusOnMouseOver { get; set; } = true;
     public int WaveformHeightPercentage { get; set; } = 50;
     public Color WaveformFancyHighColor { get; set; } = Colors.Orange;

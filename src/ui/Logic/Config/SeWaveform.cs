@@ -126,6 +126,12 @@ public class SeWaveform
         SpectrogramStyle = nameof(SeSpectrogramStyle.Classic);
         LastDisplayMode = nameof(WaveformDisplayMode.OnlyWaveform);
         WaveformDrawStyle = Controls.AudioVisualizerControl.WaveformDrawStyle.Fancy.ToString();
+        // Off by default: focus-follows-mouse on the main waveform would steal keyboard focus
+        // while the user is typing in the edit box. Stated explicitly because the control's own
+        // property defaults to true for the dialogs that do not read this setting - for the main
+        // window and the TTS review window, this value is the one that wins.
+        FocusOnMouseOver = false;
+
         RightClickSelectsSubtitle = true;
         SingleClickAction = WaveformSingleClickActionType.SetVideoPositionAndPauseAndSelectSubtitle.ToString();
         DoubleClickAction = nameof(WaveformDoubleClickActionType.None);
