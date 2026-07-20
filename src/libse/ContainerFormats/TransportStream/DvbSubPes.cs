@@ -36,8 +36,18 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
         private readonly byte[] _dataBuffer;
 
         public DvbSubPes(byte[] buffer, int index)
+            : this(buffer, index, buffer.Length)
         {
-            if (buffer.Length < index + 9)
+        }
+
+        /// <summary>
+        /// Same as <see cref="DvbSubPes(byte[], int)"/>, but only the first
+        /// <paramref name="length"/> bytes of <paramref name="buffer"/> are valid
+        /// data - allows passing an oversized buffer, e.g. one rented from ArrayPool.
+        /// </summary>
+        public DvbSubPes(byte[] buffer, int index, int length)
+        {
+            if (length < index + 9)
             {
                 return;
             }
@@ -61,7 +71,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
 
             HeaderDataLength = buffer[index + 8];
 
-            if (buffer.Length <= index + 9 + HeaderDataLength)
+            if (length <= index + 9 + HeaderDataLength)
             {
                 return;
             }
@@ -74,7 +84,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
                     SubPictureStreamId = id;
                 }
             }
-            if (index + 9 + 4 < buffer.Length)
+            if (index + 9 + 4 < length)
             {
                 int tempIndex = index + 9;
                 if (PresentationTimestampDecodeTimestampFlags == 0b00000010 || PresentationTimestampDecodeTimestampFlags == 0b00000011)
@@ -97,9 +107,9 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
             int dataIndex = index + HeaderDataLength + 24 - Mpeg2HeaderLength;
             int dataSize = Length - (4 + HeaderDataLength);
 
-            if (dataSize < 0 || (dataSize + dataIndex > buffer.Length)) // to fix bad subs...
+            if (dataSize < 0 || (dataSize + dataIndex > length)) // to fix bad subs...
             {
-                dataSize = buffer.Length - dataIndex;
+                dataSize = length - dataIndex;
                 if (dataSize < 0)
                 {
                     return;
