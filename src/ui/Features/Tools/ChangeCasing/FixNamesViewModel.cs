@@ -37,6 +37,7 @@ public partial class FixNamesViewModel : ObservableObject
     private string _language;
     private const string PrefixChars = "([ --'>\r\n¿¡\"”“„";
     private const string SuffixChars = " ,.!?:;…')]<-\"\r\n";
+    private static readonly string[] CommonWords = ["US", "Lane", "Bill", "Rose"];
     private readonly HashSet<string> _usedNames;
     private string _oldNames;
     private readonly System.Timers.Timer _previewTimer;
@@ -107,32 +108,30 @@ public partial class FixNamesViewModel : ObservableObject
         _usedNames.Clear();
         var names = new List<FixNameItem>();
 
-        string[] commonWords = ["US", "Lane", "Bill", "Rose"];
         const string english = "en";
         const string dont = "don't";
 
         foreach (var name in _nameListInclMulti)
         {
-            var startIndex = text.IndexOf(name, StringComparison.OrdinalIgnoreCase);
-
             // filter out invalid names
             if (name.Length <= 1 || name == name.ToLowerInvariant())
             {
                 continue;
             }
 
+            var startIndex = text.IndexOf(name, StringComparison.OrdinalIgnoreCase);
             while (startIndex >= 0)
             {
                 if (IsWordBoundary(text, startIndex, name) && !text.AsSpan().Slice(startIndex, name.Length).Equals(name, StringComparison.Ordinal)) // do not add names where casing already is correct
                 {
                     if (!_usedNames.Contains(name))
                     {
-                        bool skip = false;
+                        var skip = false;
                         var isChecked = true;
                         if (_language.StartsWith(english, StringComparison.OrdinalIgnoreCase))
                         {
                             skip = text.AsSpan()[startIndex..].StartsWith(dont, StringComparison.OrdinalIgnoreCase);
-                            isChecked = !commonWords.Contains(name);
+                            isChecked = !CommonWords.Contains(name);
                         }
 
                         if (!skip)
@@ -153,11 +152,11 @@ public partial class FixNamesViewModel : ObservableObject
         NamesCount = $"Names: {Names.Count:#,##0}";
     }
 
-    private bool IsWordBoundary(string text, int startIndex, string name)
+    private static bool IsWordBoundary(string text, int startIndex, string name)
     {
         var afterNameIndex = startIndex + name.Length;
         return (startIndex == 0 || PrefixChars.Contains(text[startIndex - 1]))
-               && (afterNameIndex == text.Length || (afterNameIndex < text.Length && SuffixChars.Contains(text[afterNameIndex])));
+               && (afterNameIndex == text.Length || SuffixChars.Contains(text[afterNameIndex]));
     }
 
     private void GeneratePreview()
@@ -169,7 +168,7 @@ public partial class FixNamesViewModel : ObservableObject
 
         // filter out non-active name to avoid extra processing
         var activeNameItems = Names.Where(n => n.IsChecked).ToArray();
-        
+
         foreach (var p in _subtitle.Paragraphs)
         {
             var text = p.Text;
@@ -182,7 +181,7 @@ public partial class FixNamesViewModel : ObservableObject
                 }
 
                 var textNoTags = HtmlUtil.RemoveHtmlTags(text, true);
-                
+
                 // has letter and not already uppercase
                 if (textNoTags != textNoTags.ToUpperInvariant())
                 {
