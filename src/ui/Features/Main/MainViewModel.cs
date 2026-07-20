@@ -7423,54 +7423,44 @@ public partial class MainViewModel :
             return;
         }
 
+        var gapMs = Se.Settings.General.MinimumBetweenLines.GetMilliseconds();
+        var maxDurationMs = Se.Settings.General.SubtitleMaximumDisplayMilliseconds;
         foreach (var line in selectedLines)
         {
             var idx = Subtitles.IndexOf(line);
             var next = Subtitles.GetOrNull(idx + 1);
-            var shotChange = AudioVisualizer.ShotChanges.FirstOrDefault(s => s > line.EndTime.TotalSeconds - 0.01);
-            if (next == null && shotChange == 0)
+
+            // Leave the configured "out cues" gap before the shot change (Beautify time codes
+            // profile, two frames by default) - same as SE 4.x. Without it the line ends exactly
+            // on the shot change frame.
+            var candidateEndMs = ShotChangesHelper.GetNextShotChangeMinusGapInMs(
+                AudioVisualizer.ShotChanges,
+                new TimeCode(line.EndTime.TotalMilliseconds));
+
+            // Upper bound for the new end: the next shot change and, if present, the next
+            // subtitle's start minus the configured gap. Whichever is earlier wins so we never
+            // push the end past either constraint.
+            if (next != null)
+            {
+                var nextStartMinusGapMs = next.StartTime.TotalMilliseconds - gapMs;
+                candidateEndMs = candidateEndMs.HasValue
+                    ? Math.Min(candidateEndMs.Value, nextStartMinusGapMs)
+                    : nextStartMinusGapMs;
+            }
+
+            if (candidateEndMs == null)
             {
                 continue;
             }
 
-            if (shotChange == 0)
+            var newEndMs = candidateEndMs.Value;
+            var newDurationMs = newEndMs - line.StartTime.TotalMilliseconds;
+            if (newDurationMs <= 0 || newDurationMs > maxDurationMs)
             {
-                var newDuration = next!.StartTime - line.StartTime;
-                if (newDuration.TotalMilliseconds <= Se.Settings.General.SubtitleMaximumDisplayMilliseconds)
-                {
-                    line.EndTime = TimeSpan.FromMilliseconds(next.StartTime.TotalMilliseconds - Se.Settings.General.MinimumBetweenLines.GetMilliseconds());
-                }
-
                 continue;
             }
 
-            if (next == null)
-            {
-                var newDuration = TimeSpan.FromSeconds(shotChange) - line.StartTime;
-                if (newDuration.TotalMilliseconds <= Se.Settings.General.SubtitleMaximumDisplayMilliseconds)
-                {
-                    line.EndTime = TimeSpan.FromSeconds(shotChange);
-                }
-
-                continue;
-            }
-
-            if (TimeSpan.FromSeconds(shotChange) < next.StartTime)
-            {
-                var newDuration = TimeSpan.FromSeconds(shotChange) - line.StartTime;
-                if (newDuration.TotalMilliseconds <= Se.Settings.General.SubtitleMaximumDisplayMilliseconds)
-                {
-                    line.EndTime = TimeSpan.FromSeconds(shotChange);
-                }
-            }
-            else
-            {
-                var newDuration = next.StartTime - line.StartTime;
-                if (newDuration.TotalMilliseconds <= Se.Settings.General.SubtitleMaximumDisplayMilliseconds)
-                {
-                    line.EndTime = TimeSpan.FromMilliseconds(next.StartTime.TotalMilliseconds - Se.Settings.General.MinimumBetweenLines.GetMilliseconds());
-                }
-            }
+            line.EndTime = TimeSpan.FromMilliseconds(newEndMs);
         }
 
         _updateAudioVisualizer = true;
@@ -7593,7 +7583,13 @@ public partial class MainViewModel :
             // present, the previous subtitle's end plus the configured gap.
             // Whichever is later wins so we never pull the start back past
             // either constraint.
-            double? candidateStartMs = shotChange.HasValue ? shotChange.Value * 1000.0 : null;
+            //
+            // The shot change gets the configured "in cues" gap (Beautify time
+            // codes profile, two frames by default) so the line starts after the
+            // shot change rather than exactly on it - same as SE 4.x.
+            double? candidateStartMs = shotChange.HasValue
+                ? shotChange.Value * 1000.0 + TimeCodesBeautifierUtils.GetInCuesGapMs()
+                : null;
             if (prev != null)
             {
                 var prevEndPlusGapMs = prev.EndTime.TotalMilliseconds + gapMs;
