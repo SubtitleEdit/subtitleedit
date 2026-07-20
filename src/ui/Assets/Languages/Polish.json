@@ -1,7 +1,7 @@
 ﻿{
   "title": "Subtitle Edit",
   "version": "v5.1.0-rc8",
-  "translatedBy": "Adam Malich - 19.07.2026",
+  "translatedBy": "Adam Malich - 20.07.2026",
   "cultureName": "pl-PL",
   "general": {
     "abort": "Przerwij",
@@ -35,6 +35,7 @@
     "ascending": "Rosnąco",
     "descending": "Malejąco",
     "attachDotDotDot": "Przyłącz...",
+    "audioFileSaved": "Plik audio został zapisany",
     "audioFiles": "Pliki audio",
     "audioVisualizer": "Wizualizator audio",
     "auto": "Auto",
@@ -670,6 +671,7 @@
     "videoEncodingX": "Kodowanie wideo: {0}",
     "videoExtension": "Rozszerzenie pliku wideo ",
     "videoFile": "Plik wideo",
+    "videoFileGenerated": "Wygenerowano plik wideo",
     "videoFileGeneratedX": "Wygenerowano plik wideo: \"{0}\"",
     "videoFiles": "Pliki wideo",
     "videoAndAudioFiles": "Pliki wideo i audio",
