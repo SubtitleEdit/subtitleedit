@@ -16700,8 +16700,24 @@ public partial class MainViewModel :
     {
         if (matroskaSubtitleInfo.CodecId.Equals("S_HDMV/PGS", StringComparison.OrdinalIgnoreCase))
         {
-            var pgsSubtitle =
-                _bluRayHelper.LoadBluRaySubFromMatroska(matroskaSubtitleInfo, matroska, out var errorMessage);
+            // Off the UI thread with progress, like the other track types - a PGS track in a
+            // large mkv otherwise froze the window with no feedback (#6772).
+            var pgsError = string.Empty;
+            var pgsSubtitle = await ExtractFromMatroskaAsync(
+                matroska,
+                cb =>
+                {
+                    var list = _bluRayHelper.LoadBluRaySubFromMatroska(matroskaSubtitleInfo, matroska, out var err, cb);
+                    pgsError = err;
+                    return list;
+                });
+
+            if (!string.IsNullOrEmpty(pgsError))
+            {
+                // Was silently swallowed before, leaving an empty OCR window with no hint why.
+                await MessageBox.Show(Window!, Se.Language.General.Error, pgsError, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return false;
+            }
 
             Dispatcher.UIThread.Post(async () =>
             {
@@ -16942,11 +16958,12 @@ public partial class MainViewModel :
     private const long MatroskaProgressWindowMinFileSize = 25 * 1024 * 1024; // 25 MB
 
     /// <summary>
-    /// Extracts a Matroska track's blocks on a background thread so the UI stays
-    /// responsive, showing a determinate "Please wait..." window with percentage
-    /// progress for large files. Must be called on the UI thread.
+    /// Runs a Matroska extraction on a background thread so the UI stays responsive,
+    /// showing a determinate "Please wait..." window with percentage progress for large
+    /// files. The callback handed to <paramref name="extract"/> drives that progress bar.
+    /// Must be called on the UI thread.
     /// </summary>
-    private async Task<List<MatroskaSubtitle>> ExtractMatroskaSubtitleAsync(MatroskaFile matroska, int trackNumber)
+    private async Task<T> ExtractFromMatroskaAsync<T>(MatroskaFile matroska, Func<MatroskaFile.LoadMatroskaCallback, T> extract)
     {
         PleaseWaitViewModel? pleaseWaitVm = null;
         long fileSize = 0;
@@ -16968,12 +16985,21 @@ public partial class MainViewModel :
         try
         {
             var vm = pleaseWaitVm;
-            return await Task.Run(() => matroska.GetSubtitle(trackNumber, (pos, total) => vm?.ReportProgress(pos, total)));
+            return await Task.Run(() => extract((pos, total) => vm?.ReportProgress(pos, total)));
         }
         finally
         {
             pleaseWaitVm?.Close();
         }
+    }
+
+    /// <summary>
+    /// Extracts a Matroska track's blocks off the UI thread, with progress. See
+    /// <see cref="ExtractFromMatroskaAsync{T}"/>.
+    /// </summary>
+    private Task<List<MatroskaSubtitle>> ExtractMatroskaSubtitleAsync(MatroskaFile matroska, int trackNumber)
+    {
+        return ExtractFromMatroskaAsync(matroska, cb => matroska.GetSubtitle(trackNumber, cb));
     }
 
     private async Task<bool> LoadTextSTFromMatroska(MatroskaTrackInfo matroskaSubtitleInfo, MatroskaFile matroska)
