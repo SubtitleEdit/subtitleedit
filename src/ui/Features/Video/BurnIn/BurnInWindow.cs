@@ -29,6 +29,11 @@ public class BurnInWindow : Window
         vm.Window = this;
         DataContext = vm;
 
+        // Compact control sizing, scoped to this window: with the default Fluent heights the
+        // many settings rows made the window taller than small/scaled screens, clipping the
+        // bottom rows and drawing the progress bar over the buttons.
+        AddCompactControlStyles();
+
         var subtitleSettingsView = MakeSubtitlesView(vm);
         var videoSettingsView = MakeVideoSettingsView(vm);
         var cutView = MakeCutView(vm);
@@ -209,6 +214,78 @@ public class BurnInWindow : Window
     {
         base.OnClosing(e);
         _vm.CleanupPreview();
+    }
+
+    /// <summary>
+    /// Shrinks combo boxes and numeric up/downs (font, min-height, padding) for every control
+    /// in this window - the settings rows are what drive the window height, and each row's
+    /// height is its tallest control.
+    /// </summary>
+    private void AddCompactControlStyles()
+    {
+        Styles.Add(new Style(x => x.OfType<ComboBox>())
+        {
+            Setters =
+            {
+                new Setter(TemplatedControl.FontSizeProperty, 12.5),
+                new Setter(TemplatedControl.MinHeightProperty, 26.0),
+                new Setter(TemplatedControl.PaddingProperty, new Thickness(8, 2, 4, 2)),
+            },
+        });
+
+        Styles.Add(new Style(x => x.OfType<NumericUpDown>())
+        {
+            Setters =
+            {
+                new Setter(TemplatedControl.FontSizeProperty, 12.5),
+                new Setter(TemplatedControl.MinHeightProperty, 26.0),
+            },
+        });
+
+        // NumericUpDown's height is really decided by its templated TextBox and spinner.
+        Styles.Add(new Style(x => x.OfType<NumericUpDown>().Descendant().OfType<TextBox>())
+        {
+            Setters =
+            {
+                new Setter(TemplatedControl.MinHeightProperty, 24.0),
+                new Setter(TemplatedControl.PaddingProperty, new Thickness(6, 2)),
+            },
+        });
+
+        Styles.Add(new Style(x => x.OfType<NumericUpDown>().Descendant().OfType<ButtonSpinner>())
+        {
+            Setters =
+            {
+                new Setter(TemplatedControl.MinHeightProperty, 24.0),
+            },
+        });
+
+        // Same treatment for the time code up/down (cut from/to). Its inner TextBox keeps its
+        // template padding - UpdateMinWidth accounts for those exact values in the width math.
+        Styles.Add(new Style(x => x.OfType<TimeCodeUpDown>())
+        {
+            Setters =
+            {
+                new Setter(TemplatedControl.FontSizeProperty, 12.5),
+                new Setter(TemplatedControl.MinHeightProperty, 26.0),
+            },
+        });
+
+        Styles.Add(new Style(x => x.OfType<TimeCodeUpDown>().Descendant().OfType<TextBox>())
+        {
+            Setters =
+            {
+                new Setter(TemplatedControl.MinHeightProperty, 24.0),
+            },
+        });
+
+        Styles.Add(new Style(x => x.OfType<TimeCodeUpDown>().Descendant().OfType<ButtonSpinner>())
+        {
+            Setters =
+            {
+                new Setter(TemplatedControl.MinHeightProperty, 24.0),
+            },
+        });
     }
 
     private static Border MakeSubtitlesView(BurnInViewModel vm)
@@ -418,8 +495,8 @@ public class BurnInWindow : Window
         }.WithBindVisible(vm, nameof(vm.ShowAssaOnlyBox));
         grid.Add(panel, 0, 0, 9, 2);
 
-        grid.Add(labelLogo, 10, 0);
-        grid.Add(panelLogo, 10, 1);
+        grid.Add(labelLogo, 9, 0);
+        grid.Add(panelLogo, 9, 1);
 
         return UiUtil.MakeBorderForControl(grid).WithMarginBottom(5).WithMarginRight(5);
     }
@@ -640,17 +717,12 @@ public class BurnInWindow : Window
         var labelBitRate = UiUtil.MakeLabel(Se.Language.Video.BurnIn.BitRate);
         var comboBoxBitRate = UiUtil.MakeComboBox(vm.AudioBitRates, vm, nameof(vm.SelectedAudioBitRate));
 
+        // Only as many rows as are used: RowSpacing applies to empty Auto rows too, so the
+        // unused rows here used to leave a band of dead space at the bottom of the box.
         var grid = new Grid
         {
             RowDefinitions =
             {
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
@@ -667,15 +739,13 @@ public class BurnInWindow : Window
         };
 
         grid.Add(labelAudioEncoding, 0, 0);
-        grid.Add(comboBoxAudioEncoding, 0, 1);
+        grid.Add(UiUtil.MakeHorizontalPanel(comboBoxAudioEncoding, checkBoxStereo), 0, 1);
 
-        grid.Add(checkBoxStereo, 1, 1);
+        grid.Add(labelSampleRate, 1, 0);
+        grid.Add(comboBoxSampleRate, 1, 1);
 
-        grid.Add(labelSampleRate, 2, 0);
-        grid.Add(comboBoxSampleRate, 2, 1);
-
-        grid.Add(labelBitRate, 3, 0);
-        grid.Add(comboBoxBitRate, 3, 1);
+        grid.Add(labelBitRate, 2, 0);
+        grid.Add(comboBoxBitRate, 2, 1);
 
         return UiUtil.MakeBorderForControl(grid).WithMarginBottom(5).WithMarginRight(5);
     }
