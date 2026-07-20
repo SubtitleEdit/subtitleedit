@@ -21,6 +21,7 @@ using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.ContainerFormats.Matroska;
 using System.Text;
 using SkiaSharp;
+using System.Buffers;
 using System.Collections.Generic;
 using System.IO;
 using System;
@@ -612,7 +613,7 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
 
         private static PcsData ParsePicture(byte[] buffer, SupSegment segment)
         {
-            if (buffer.Length < 11)
+            if (segment.Size < 11)
             {
                 return new PcsData
                 {
@@ -648,6 +649,11 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
                 pcs.PcsObjects = new List<PcsObject>();
                 for (var compObjIndex = 0; compObjIndex < compositionObjectCount; compObjIndex++)
                 {
+                    if (11 + offset + 8 > segment.Size)
+                    {
+                        break;
+                    }
+
                     var pcsObj = ParsePcs(buffer, offset);
                     pcs.PcsObjects.Add(pcsObj);
                     sb.AppendLine();
@@ -751,7 +757,7 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
                 // smaller than that — `new byte[Size - 11]` then throws
                 // OverflowException and aborts the whole SUP parse. Bail out with
                 // an empty fragment instead so the rest of the file is still read.
-                if (segment.Size < 11 || buffer.Length < 11)
+                if (segment.Size < 11)
                 {
                     return new OdsData { IsFirst = true, Fragment = info, ObjectId = objId, ObjectVersion = objVer, Message = "ODS too short" };
                 }
@@ -776,7 +782,7 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
 
             // Continuation-fragment ODS layout: 4-byte header before image bytes.
             // Same defensive guard as the first-fragment branch above.
-            if (segment.Size < 4 || buffer.Length < 4)
+            if (segment.Size < 4)
             {
                 return new OdsData { IsFirst = false, Fragment = info, ObjectId = objId, ObjectVersion = objVer, Message = "ODS too short" };
             }
@@ -804,6 +810,11 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
             var pcsList = new List<PcsData>();
             var headerBuffer = fromMatroskaFile ? new byte[3] : new byte[HeaderSize];
 
+            // Segment.Size is a 16-bit field, so one rented buffer covers every
+            // segment — avoids a fresh allocation per segment in the loop below.
+            // Reads must be bounded by segment.Size, not buffer length: the
+            // rented array is larger and holds stale data from prior segments.
+            var buffer = ArrayPool<byte>.Shared.Rent(ushort.MaxValue);
             while (ms.Read(headerBuffer, 0, headerBuffer.Length) == headerBuffer.Length)
             {
                 var segment = fromMatroskaFile ? ParseSegmentHeaderFromMatroska(headerBuffer) : ParseSegmentHeader(headerBuffer, log);
@@ -812,9 +823,8 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
                 try
                 {
                     // Read segment data
-                    var buffer = new byte[segment.Size];
-                    var bytesRead = ms.Read(buffer, 0, buffer.Length);
-                    if (bytesRead < buffer.Length)
+                    var bytesRead = ms.Read(buffer, 0, segment.Size);
+                    if (bytesRead < segment.Size)
                     {
                         break;
                     }
@@ -943,6 +953,11 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
                                 var offset = 0;
                                 for (var nextWindow = 0; nextWindow < windowCount; nextWindow++)
                                 {
+                                    if (1 + offset + 9 > segment.Size)
+                                    {
+                                        break;
+                                    }
+
                                     int windowId = buffer[1 + offset];
                                     var x = BigEndianInt16(buffer, 2 + offset);
                                     var y = BigEndianInt16(buffer, 4 + offset);
@@ -983,6 +998,7 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
                 position += segment.Size;
                 segmentCount++;
             }
+            ArrayPool<byte>.Shared.Return(buffer);
 
             if (latestPcs != null)
             {
