@@ -543,29 +543,36 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
                 bufferSize += p.Payload.Length;
             }
 
-            var pesData = new byte[bufferSize];
-            var span = pesData.AsSpan();
-            var offset = 0;
-            foreach (var p in packetList)
+            // DvbSubPes copies the data it keeps, so the concatenation buffer is
+            // only needed while the constructor runs - rent it instead of
+            // allocating per PES packet. Rented buffers can be larger than
+            // requested, so the valid length is passed along explicitly.
+            var pesData = ArrayPool<byte>.Shared.Rent(bufferSize);
+            try
             {
-                p.Payload.AsSpan().CopyTo(span.Slice(offset));
-                offset += p.Payload.Length;
-            }
+                var span = pesData.AsSpan();
+                var offset = 0;
+                foreach (var p in packetList)
+                {
+                    p.Payload.AsSpan().CopyTo(span.Slice(offset));
+                    offset += p.Payload.Length;
+                }
 
-            DvbSubPes pes;
-            if (VobSubParser.IsMpeg2PackHeader(pesData))
-            {
-                pes = new DvbSubPes(pesData, Mpeg2Header.Length);
+                DvbSubPes pes;
+                if (bufferSize >= 4 && VobSubParser.IsMpeg2PackHeader(pesData))
+                {
+                    pes = new DvbSubPes(pesData, Mpeg2Header.Length, bufferSize);
+                }
+                else
+                {
+                    pes = new DvbSubPes(pesData, 0, bufferSize);
+                }
+                list.Add(pes);
             }
-            else if (VobSubParser.IsPrivateStream1(pesData, 0))
+            finally
             {
-                pes = new DvbSubPes(pesData, 0);
+                ArrayPool<byte>.Shared.Return(pesData);
             }
-            else
-            {
-                pes = new DvbSubPes(pesData, 0);
-            }
-            list.Add(pes);
         }
 
         public static bool IsM2TransportStream(Stream ms)
