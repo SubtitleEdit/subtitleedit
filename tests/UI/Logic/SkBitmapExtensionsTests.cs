@@ -46,6 +46,43 @@ public class SkBitmapExtensionsTests
         Assert.Equal((byte)255, decoded.GetPixel(31, 0).Red);
     }
 
+    [Fact]
+    public void ImportImageItemDecodesRealInpaintDelogoImage()
+    {
+        // Real grayscale PNG from issue #12694's sample zip - the InpaintDelogo naming
+        // carries the timecodes, and the 8-bit grayscale payload used to decode to
+        // Gray8 and render as noise.
+        var path = Path.Combine(AppContext.BaseDirectory, "Files", "00_02_09_640__00_02_16_920.png");
+        var item = new Nikse.SubtitleEdit.Features.Files.ImportImages.ImportImageItem(path);
+
+        Assert.Equal(TimeSpan.Parse("00:02:09.640"), item.Start);
+        Assert.Equal(TimeSpan.Parse("00:02:16.920"), item.End);
+
+        using var bitmap = item.GetBitmap();
+        Assert.Equal(SKColorType.Bgra8888, bitmap.ColorType);
+        Assert.Equal(1120, bitmap.Width);
+        Assert.Equal(140, bitmap.Height);
+
+        // The image is white text on black: both extremes must be present, and every
+        // pixel gray (R==G==B) - garbled stride reads produced colored noise instead.
+        var sawBlack = false;
+        var sawWhite = false;
+        for (var y = 0; y < bitmap.Height; y += 4)
+        {
+            for (var x = 0; x < bitmap.Width; x += 4)
+            {
+                var pixel = bitmap.GetPixel(x, y);
+                Assert.Equal(pixel.Red, pixel.Green);
+                Assert.Equal(pixel.Red, pixel.Blue);
+                sawBlack |= pixel.Red < 32;
+                sawWhite |= pixel.Red > 224;
+            }
+        }
+
+        Assert.True(sawBlack, "expected black background pixels");
+        Assert.True(sawWhite, "expected white text pixels");
+    }
+
     [AvaloniaFact]
     public void ToAvaloniaBitmapConvertsGray8WithoutGarbling()
     {
