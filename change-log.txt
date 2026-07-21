@@ -3,6 +3,26 @@ Subtitle Edit Changelog
 
 -----------------------------------------------------------------------------------------------------
 
+v5.1.0-rc11 (21st of July 2026)
+
+* Remove text for hearing impaired: symbol preset combos for the custom before/after fields (SE 4 parity)
+* Point sync: Home/End jumps to first/last line
+* Fix UI freeze when opening a raw PGS .sup (no "PG" headers, e.g. Matroska raw-mode extraction) - now offers OCR import with placeholder timings or advice to re-extract - thx HellbringerOnline
+* MKV import: show progress for PGS tracks and surface extraction errors - thx lukastribus
+* Fix menus and flyouts leaving keyboard shortcuts unresponsive until clicking inside the window
+* Extend to shot change: leave the configured gap before the shot change
+* Fix light title bar in non-modal windows on dark theme - thx Surlime
+* Remember position/size for ASSA styles/attachments windows - thx Davanix
+* Time code box: reject non-ASCII digits and consume full IME commits - thx lucvdv1
+* Burn-in: log the ffmpeg command line, and never let ffmpeg wait on stdin
+* Performance: pooled buffers in Blu-ray sup and transport stream parsing, faster "fix names" in change casing - thx ivandrofly
+* Update Polish translation - thx potplayer-fanpack
+* Update Korean translation - thx 12si27
+* Update Turkish translation - thx bilimiyorum
+* Update Italian translation - thx bovirus
+
+-----------------------------------------------------------------------------------------------------
+
 v5.1.0-rc10 (20th of July 2026)
 
 * New "file saved" prompt - success check mark, file name and folder, size/duration info, copy path and Play/Open - now also used by text to speech and the video tools (burn-in, cut, re-encode, transparent subtitles, blank video, embedded subtitles)
