@@ -15563,6 +15563,52 @@ public partial class MainViewModel :
                 }
             }
 
+            // A .sup that failed IsBluRaySup may be a raw PGS elementary stream (Matroska track
+            // extracted in raw mode - no "PG"/PTS/DTS headers). The images decode fine, but the
+            // timestamps live in the container and are gone, so offer OCR with placeholder
+            // timings instead of letting megabytes of binary fall through to the generic text
+            // importer (issue #12683).
+            if ((ext == ".sup" || ext == ".pgs") && FileUtil.IsRawPgsSegmentStream(fileName))
+            {
+                var rawPgsAnswer = await MessageBox.Show(Window!,
+                    Se.Language.General.Error,
+                    Se.Language.Main.ErrorLoadRawPgsPrompt,
+                    MessageBoxButtons.YesNo,
+                    MessageBoxIcon.Question);
+                if (rawPgsAnswer != MessageBoxResult.Yes)
+                {
+                    return;
+                }
+
+                var rawPgsLog = new StringBuilder();
+                var rawPgsSubtitles = BluRaySupParser.ParseRawPgsSegmentStream(fileName, rawPgsLog);
+                if (rawPgsSubtitles.Count == 0)
+                {
+                    await MessageBox.Show(Window!,
+                        Se.Language.General.Error,
+                        Se.Language.General.NoSubtitlesFound,
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Error);
+                    return;
+                }
+
+                BluRaySupParser.SetPlaceholderTimings(rawPgsSubtitles);
+                Dispatcher.UIThread.Post(async () =>
+                {
+                    var result = await ShowDialogAsync<OcrWindow, OcrViewModel>(vm => { vm.Initialize(rawPgsSubtitles, fileName); });
+
+                    if (result.OkPressed)
+                    {
+                        VideoCloseFile();
+                        _subtitleFileName = Utilities.GetPathAndFileNameWithoutExtension(fileName);
+                        _converted = true;
+                        ReplaceSubtitles(result.OcredSubtitle);
+                        SelectAndScrollToRow(0);
+                    }
+                });
+                return;
+            }
+
             if ((ext == ".mp4" || ext == ".m4v" || ext == ".3gp" || ext == ".mov" || ext == ".cmaf" || ext == ".m4a" || ext == ".m4b") &&
                 fileSize > 2000 || ext == ".m4s")
             {

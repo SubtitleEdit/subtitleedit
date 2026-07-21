@@ -382,6 +382,47 @@ namespace Nikse.SubtitleEdit.Core.Common
         }
 
         /// <summary>
+        /// Checks if a file is a raw PGS elementary stream, i.e. a sequence of PGS display
+        /// segments without the "PG" + PTS/DTS headers a standalone Blu-ray .sup file has.
+        /// Such files come from extracting an S_HDMV/PGS Matroska track in raw mode; the
+        /// timestamps live in the container, so the raw stream cannot be timed (issue #12683).
+        /// </summary>
+        /// <param name="fileName">The file to check.</param>
+        /// <returns>True if the file starts with a chain of valid raw PGS segments, otherwise false.</returns>
+        public static bool IsRawPgsSegmentStream(string fileName)
+        {
+            using (var fs = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+            {
+                var buffer = new byte[64 * 1024];
+                var bytesRead = fs.Read(buffer, 0, buffer.Length);
+
+                // Each raw segment is: type (1 byte) + payload size (2 bytes, big endian) + payload.
+                // Require a chain of valid segment types to avoid false positives on other binary
+                // files that happen to start with one plausible byte.
+                var validSegments = 0;
+                var position = 0;
+                while (position + 3 <= bytesRead)
+                {
+                    var segmentType = buffer[position];
+                    if (segmentType != 0x14 && // PDS (palette)
+                        segmentType != 0x15 && // ODS (object/bitmap)
+                        segmentType != 0x16 && // PCS (presentation composition)
+                        segmentType != 0x17 && // WDS (window)
+                        segmentType != 0x80)   // END of display set
+                    {
+                        return false;
+                    }
+
+                    var payloadSize = (buffer[position + 1] << 8) + buffer[position + 2];
+                    position += 3 + payloadSize;
+                    validSegments++;
+                }
+
+                return validSegments >= 3;
+            }
+        }
+
+        /// <summary>
         /// Determines if a file is a transport stream by inspecting its contents.
         /// </summary>
         /// <param name="fileName">The name of the file to check.</param>

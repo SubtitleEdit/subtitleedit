@@ -485,6 +485,45 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
             }
         }
 
+        /// <summary>
+        /// Parses a raw PGS elementary stream: display segments without the "PG" + PTS/DTS
+        /// wrapper, exactly as they are stored inside a Matroska S_HDMV/PGS track (and as
+        /// dumped by raw-mode extraction). Such a stream carries no timestamps - they live
+        /// in the container - so all returned start/end times are zero and the caller must
+        /// assign timing (issue #12683).
+        /// </summary>
+        /// <param name="fileName">Raw PGS file name</param>
+        /// <param name="log">Parsing info is logged here</param>
+        /// <returns>List of BluRaySupPictures with untimed display sets</returns>
+        public static List<PcsData> ParseRawPgsSegmentStream(string fileName, StringBuilder log)
+        {
+            using (var fs = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+            {
+                var lastPalettes = new Dictionary<int, List<PaletteInfo>>();
+                var lastBitmapObjects = new Dictionary<int, List<OdsData>>();
+                return ParseBluRaySup(fs, log, true, lastPalettes, lastBitmapObjects);
+            }
+        }
+
+        /// <summary>
+        /// Assigns sequential placeholder timings to untimed display sets (see
+        /// <see cref="ParseRawPgsSegmentStream"/>): 3 seconds shown, 1 second gap.
+        /// The result is deliberately uniform so it is obvious the timing is synthetic
+        /// and must be adjusted manually after OCR.
+        /// </summary>
+        public static void SetPlaceholderTimings(List<PcsData> subtitles)
+        {
+            const long ticksPerMillisecond = 90; // PTS is a 90 kHz clock
+            const long durationMs = 3000;
+            const long gapMs = 1000;
+            for (var i = 0; i < subtitles.Count; i++)
+            {
+                var startMs = i * (durationMs + gapMs);
+                subtitles[i].StartTime = startMs * ticksPerMillisecond;
+                subtitles[i].EndTime = (startMs + durationMs) * ticksPerMillisecond;
+            }
+        }
+
         public static List<PcsData> ParseBluRaySupFromMatroska(MatroskaTrackInfo matroskaSubtitleInfo, MatroskaFile matroska)
         {
             var sub = matroska.GetSubtitle(matroskaSubtitleInfo.TrackNumber, null);

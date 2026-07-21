@@ -27,6 +27,13 @@ public sealed class UndoRedoManager : IUndoRedoManager
     // threads (plain int reads aren't guaranteed visible on weak memory
     // architectures).
     private int _disposed;
+    // Reentrancy gate for CheckForChanges. The timer fires every 250ms on the thread
+    // pool regardless of whether the previous tick finished; when the UI thread is
+    // busy for a long stretch (e.g. parsing a large file), each tick would otherwise
+    // pile up blocked in the client's dispatcher marshaling and force the pool to
+    // inject hundreds of threads — issue #12683. Interlocked so overlapping ticks
+    // return immediately instead of queueing.
+    private int _checkForChangesInProgress;
     // Narrowed from 1s → 250ms to reduce the window in which two distinct user
     // actions (e.g. text edit + waveform drag) get bundled into a single undo
     // entry — issue #11280. CheckForChanges is gated by IsTyping() and
@@ -258,6 +265,12 @@ public sealed class UndoRedoManager : IUndoRedoManager
             return;
         }
 
+        // See the field comment: only one tick may run at a time.
+        if (Interlocked.CompareExchange(ref _checkForChangesInProgress, 1, 0) != 0)
+        {
+            return;
+        }
+
         try
         {
             // Both GetFastHash and MakeUndoRedoObject enumerate the subtitle
@@ -306,6 +319,10 @@ public sealed class UndoRedoManager : IUndoRedoManager
             // silently used to hide real bugs in MakeUndoRedoObject and friends.
             // Log so they're at least diagnosable.
             Se.LogError(ex, "UndoRedoManager.CheckForChanges");
+        }
+        finally
+        {
+            Volatile.Write(ref _checkForChangesInProgress, 0);
         }
     }
 
