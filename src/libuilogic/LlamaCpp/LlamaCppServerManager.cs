@@ -73,6 +73,19 @@ public static class LlamaCppServerManager
             "https://huggingface.co/NikolayKozloff/translategemma-12b-it-Q5_K_M-GGUF/resolve/main/translategemma-12b-it-q5_k_m.gguf",
             ChatTemplate: "gemma", NoJinja: true),
 
+        // Gemma 4 (Google, 2026) - 140+ languages, the strongest general model here for translation
+        // into non-English targets. NOTE: unlike Gemma 2/3 this must use its own embedded Jinja
+        // template - Gemma 4 replaced the <start_of_turn> scheme with <|turn>role ... <turn|>, so
+        // llama.cpp's built-in "gemma" template does NOT apply and forcing it produces garbage.
+        // Its template defaults enable_thinking to false, so output is clean translation.
+        new LlamaCppModel("Gemma 4 E4B it (Q4_K_M)", "google_gemma-4-E4B-it-Q4_K_M.gguf", "5.4 GB",
+            "https://huggingface.co/bartowski/google_gemma-4-E4B-it-GGUF/resolve/main/google_gemma-4-E4B-it-Q4_K_M.gguf"),
+        new LlamaCppModel("Gemma 4 E4B it (Q8_0)", "google_gemma-4-E4B-it-Q8_0.gguf", "8.0 GB",
+            "https://huggingface.co/bartowski/google_gemma-4-E4B-it-GGUF/resolve/main/google_gemma-4-E4B-it-Q8_0.gguf"),
+        // The 12B repo (and its file names) drop the "google_" prefix the E4B repo uses.
+        new LlamaCppModel("Gemma 4 12B it (Q4_K_M)", "gemma-4-12B-it-Q4_K_M.gguf", "7.6 GB",
+            "https://huggingface.co/bartowski/gemma-4-12B-it-GGUF/resolve/main/gemma-4-12B-it-Q4_K_M.gguf"),
+
         // Alternative model family. Qwen 3 is the strongest open model for CJK
         // (Chinese/Japanese/Korean) and competitive elsewhere — useful fallback
         // when Gemma's quirks bite (occasional refusals, formatting drift, etc).
@@ -131,7 +144,7 @@ public static class LlamaCppServerManager
 
     // Models for the AI review tool (proofreading). Translation-tuned models (TranslateGemma,
     // Aya) are deliberately absent - proofreading needs general instruction-following and strict
-    // JSON output, where the plain instruct models are much stronger. Kept to <= 8 GB.
+    // JSON output, where the plain instruct models are much stronger. Kept to <= 10 GB.
     public static readonly IReadOnlyList<LlamaCppModel> ReviewModels = new[]
     {
         new LlamaCppModel("Qwen 3.5 4B (Q4_K_M)", "Qwen_Qwen3.5-4B-Q4_K_M.gguf", "2.8 GB",
@@ -143,12 +156,23 @@ public static class LlamaCppServerManager
         new LlamaCppModel("Qwen 3.5 9B (Q4_K_M)", "Qwen_Qwen3.5-9B-Q4_K_M.gguf", "5.7 GB",
             "https://huggingface.co/bartowski/Qwen_Qwen3.5-9B-GGUF/resolve/main/Qwen_Qwen3.5-9B-Q4_K_M.gguf",
             ChatTemplate: "chatml", NoJinja: true),
+        new LlamaCppModel("Qwen 3.5 9B (Q8_0)", "Qwen_Qwen3.5-9B-Q8_0.gguf", "9.8 GB",
+            "https://huggingface.co/bartowski/Qwen_Qwen3.5-9B-GGUF/resolve/main/Qwen_Qwen3.5-9B-Q8_0.gguf",
+            ChatTemplate: "chatml", NoJinja: true),
         new LlamaCppModel("Gemma 3 4B it (Q4_K_M)", "google_gemma-3-4b-it-Q4_K_M.gguf", "2.5 GB",
             "https://huggingface.co/bartowski/google_gemma-3-4b-it-GGUF/resolve/main/google_gemma-3-4b-it-Q4_K_M.gguf",
             ChatTemplate: "gemma", NoJinja: true),
         new LlamaCppModel("Gemma 3 12B it (Q4_K_M)", "google_gemma-3-12b-it-Q4_K_M.gguf", "7.3 GB",
             "https://huggingface.co/bartowski/google_gemma-3-12b-it-GGUF/resolve/main/google_gemma-3-12b-it-Q4_K_M.gguf",
             ChatTemplate: "gemma", NoJinja: true),
+        // Gemma 4 uses its own embedded Jinja template - see the note in TranslateModels; the
+        // built-in "gemma" template above is the Gemma 2/3 format and must not be forced here.
+        new LlamaCppModel("Gemma 4 E4B it (Q4_K_M)", "google_gemma-4-E4B-it-Q4_K_M.gguf", "5.4 GB",
+            "https://huggingface.co/bartowski/google_gemma-4-E4B-it-GGUF/resolve/main/google_gemma-4-E4B-it-Q4_K_M.gguf"),
+        new LlamaCppModel("Gemma 4 E4B it (Q8_0)", "google_gemma-4-E4B-it-Q8_0.gguf", "8.0 GB",
+            "https://huggingface.co/bartowski/google_gemma-4-E4B-it-GGUF/resolve/main/google_gemma-4-E4B-it-Q8_0.gguf"),
+        new LlamaCppModel("Gemma 4 12B it (Q4_K_M)", "gemma-4-12B-it-Q4_K_M.gguf", "7.6 GB",
+            "https://huggingface.co/bartowski/gemma-4-12B-it-GGUF/resolve/main/gemma-4-12B-it-Q4_K_M.gguf"),
 
         // Different families for second opinions. Llama 3.1 is the strongest English
         // proofreader of its size; EuroLLM is trained specifically on the European languages
@@ -290,8 +314,13 @@ public static class LlamaCppServerManager
             return (curated.ChatTemplate, curated.NoJinja);
         }
 
+        // Gemma 4 dropped the <start_of_turn> scheme for <|turn>role ... <turn|>, so the built-in
+        // "gemma" template does not apply - fall through and let its embedded Jinja template win.
+        var isGemma4 = fileName.Contains("gemma-4", StringComparison.OrdinalIgnoreCase) ||
+                       fileName.Contains("gemma4", StringComparison.OrdinalIgnoreCase);
+
         // Matches "translategemma-27b-it.Q4_K_M.gguf", "google_gemma-3-27b-it-Q4_K_M.gguf", etc.
-        if (fileName.Contains("gemma", StringComparison.OrdinalIgnoreCase))
+        if (!isGemma4 && fileName.Contains("gemma", StringComparison.OrdinalIgnoreCase))
         {
             return ("gemma", true);
         }
