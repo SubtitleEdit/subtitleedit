@@ -15559,6 +15559,7 @@ public partial class MainViewModel :
                         if (result.OkPressed)
                         {
                             VideoCloseFile();
+                            ResetSubtitle();
                             _subtitleFileName = Utilities.GetPathAndFileNameWithoutExtension(fileName);
                             _converted = true;
                             ReplaceSubtitles(result.OcredSubtitle);
@@ -15606,6 +15607,7 @@ public partial class MainViewModel :
                     if (result.OkPressed)
                     {
                         VideoCloseFile();
+                        ResetSubtitle();
                         _subtitleFileName = Utilities.GetPathAndFileNameWithoutExtension(fileName);
                         _converted = true;
                         ReplaceSubtitles(result.OcredSubtitle);
@@ -16481,6 +16483,7 @@ public partial class MainViewModel :
             if (result.OkPressed)
             {
                 VideoCloseFile();
+                ResetSubtitle();
                 _subtitleFileName = Utilities.GetPathAndFileNameWithoutExtension(fileName);
                 ReplaceSubtitles(result.OcredSubtitle);
                 SelectAndScrollToRow(0);
@@ -16779,6 +16782,7 @@ public partial class MainViewModel :
                 if (result.OkPressed)
                 {
                     VideoCloseFile();
+                    ResetSubtitle();
                     _subtitleFileName = Utilities.GetPathAndFileNameWithoutExtension(fileName);
                     _converted = true;
                     ReplaceSubtitles(result.OcredSubtitle);
@@ -16993,6 +16997,7 @@ public partial class MainViewModel :
             if (result.OkPressed)
             {
                 VideoCloseFile();
+                ResetSubtitle();
                 _subtitleFileName = Utilities.GetPathAndFileNameWithoutExtension(fileName);
                 ReplaceSubtitles(result.OcredSubtitle);
                 SelectAndScrollToRow(0);
@@ -17140,6 +17145,7 @@ public partial class MainViewModel :
         if (result.OkPressed)
         {
             VideoCloseFile();
+            ResetSubtitle();
             _subtitleFileName = Utilities.GetPathAndFileNameWithoutExtension(vobSubFileName);
             _converted = true;
             ReplaceSubtitles(result.OcredSubtitle);
@@ -18114,6 +18120,14 @@ public partial class MainViewModel :
 
                         await SubtitleOpen(first.SubtitleFileName, first.VideoFileName, first.SelectedLine, null, skipLoadVideo, first.AudioTrack);
                         await SeekVideoToSelectedLineAsync();
+
+                        // Restore the original/translator-mode file too - otherwise only the
+                        // translation comes back on start-up, unlike the Reopen menu (issue #12705).
+                        if (!string.IsNullOrEmpty(first.SubtitleFileNameOriginal) &&
+                            File.Exists(first.SubtitleFileNameOriginal))
+                        {
+                            await SubtitleOpenOriginal(first.SelectedLine, first.SubtitleFileNameOriginal);
+                        }
 
                         SetRecentFileProperties(first);
                     }
