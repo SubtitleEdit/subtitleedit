@@ -1,7 +1,9 @@
 using Avalonia.Controls;
 using Avalonia.Headless.XUnit;
+using Avalonia.Controls.Presenters;
 using Avalonia.VisualTree;
 using Nikse.SubtitleEdit.Features.Edit.ShowHistory;
+using Nikse.SubtitleEdit.Logic.Config;
 
 namespace UITests.Features.Edit;
 
@@ -77,6 +79,65 @@ public class ShowHistoryTableViewTests
 
         Assert.Same(vm.HistoryItems[1], vm.SelectedHistoryItem);
         Assert.True(vm.IsRollbackEnabled);
+    }
+
+    [AvaloniaTheory]
+    [InlineData("None", 0, 0)]
+    [InlineData("Horizontal", 0, 1)]
+    [InlineData("Vertical", 1, 0)]
+    [InlineData("All", 1, 1)]
+    public void ShowHistoryWindow_CellBordersFollowGridLinesSetting(string setting, double right, double bottom)
+    {
+        var previous = Se.Settings.Appearance.GridLinesAppearance;
+        try
+        {
+            Se.Settings.Appearance.GridLinesAppearance = setting;
+
+            var window = new ShowHistoryWindow(MakeViewModel(3));
+            window.Show();
+
+            var cells = GetTableView(window).GetVisualDescendants().OfType<TableViewCell>().ToList();
+            Assert.NotEmpty(cells);
+            foreach (var cell in cells)
+            {
+                Assert.Equal(right, cell.BorderThickness.Right);
+                Assert.Equal(bottom, cell.BorderThickness.Bottom);
+                Assert.Equal(0, cell.BorderThickness.Left);
+                Assert.Equal(0, cell.BorderThickness.Top);
+            }
+        }
+        finally
+        {
+            Se.Settings.Appearance.GridLinesAppearance = previous;
+        }
+    }
+
+    [AvaloniaFact]
+    public void ShowHistoryWindow_CellPresenterActuallyPaintsTheBorder()
+    {
+        // Setting TableViewCell.BorderThickness alone draws nothing: the control's built-in
+        // template only template-binds Background, so UiUtil supplies a template that passes
+        // the border properties to the ContentPresenter (which paints the border in Avalonia).
+        // Without that, grid lines are silently missing.
+        var previous = Se.Settings.Appearance.GridLinesAppearance;
+        try
+        {
+            Se.Settings.Appearance.GridLinesAppearance = "All";
+
+            var window = new ShowHistoryWindow(MakeViewModel(3));
+            window.Show();
+
+            var cell = GetTableView(window).GetVisualDescendants().OfType<TableViewCell>().First();
+            var presenter = cell.GetVisualDescendants().OfType<ContentPresenter>().First();
+
+            Assert.Equal(1, presenter.BorderThickness.Right);
+            Assert.Equal(1, presenter.BorderThickness.Bottom);
+            Assert.NotNull(presenter.BorderBrush);
+        }
+        finally
+        {
+            Se.Settings.Appearance.GridLinesAppearance = previous;
+        }
     }
 
     [AvaloniaFact]

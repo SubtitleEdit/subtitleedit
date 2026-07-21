@@ -2,6 +2,8 @@ using Avalonia;
 using Avalonia.Automation;
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
+using Avalonia.Controls.Presenters;
+using Avalonia.Controls.Templates;
 using Avalonia.Data;
 using Avalonia.Data.Converters;
 using Avalonia.Input;
@@ -35,6 +37,61 @@ public static class UiUtil
     public const int WindowMarginWidth = 12;
     public const int CornerRadius = 4;
     public const int SplitterWidthOrHeight = 4;
+
+    /// <summary>
+    /// Grid lines for <see cref="TableView"/>, which - unlike DataGrid - has no
+    /// GridLinesVisibility property. Drawn as cell borders from the same
+    /// Appearance.GridLinesAppearance setting (a <see cref="DataGridGridLinesVisibility"/>
+    /// name) and compact-mode padding the DataGrid cell themes above use, so both
+    /// controls honour the user's "Show grid lines" choice identically.
+    /// </summary>
+    public static ControlTheme TableViewCellTheme => GetTableViewCellTheme(noPadding: false);
+
+    /// <summary>As <see cref="TableViewCellTheme"/> but with no cell padding, for cells hosting their own controls.</summary>
+    public static ControlTheme TableViewNoPaddingCellTheme => GetTableViewCellTheme(noPadding: true);
+
+    private static ControlTheme GetTableViewCellTheme(bool noPadding)
+    {
+        var showVertical =
+            Se.Settings.Appearance.GridLinesAppearance == nameof(DataGridGridLinesVisibility.Vertical) ||
+            Se.Settings.Appearance.GridLinesAppearance == nameof(DataGridGridLinesVisibility.All);
+
+        var showHorizontal =
+            Se.Settings.Appearance.GridLinesAppearance == nameof(DataGridGridLinesVisibility.Horizontal) ||
+            Se.Settings.Appearance.GridLinesAppearance == nameof(DataGridGridLinesVisibility.All);
+
+        var padding = noPadding || Se.Settings.Appearance.GridCompactMode ? 0 : 4;
+
+        return new ControlTheme(typeof(TableViewCell))
+        {
+            Setters =
+            {
+                new Setter(TableViewCell.BackgroundProperty, Brushes.Transparent),
+                new Setter(TableViewCell.PaddingProperty, new Thickness(padding)),
+                new Setter(TableViewCell.BorderBrushProperty, GetBorderBrush()),
+                new Setter(TableViewCell.BorderThicknessProperty,
+                    new Thickness(0, 0, showVertical ? 1 : 0, showHorizontal ? 1 : 0)), // vertical and horizontal lines
+                new Setter(TableViewCell.TemplateProperty, TableViewCellTemplate),
+            }
+        };
+    }
+
+    // TableViewCell's built-in template only template-binds Background, so the border
+    // properties set above would never be drawn. Bind them through to the presenter
+    // (which renders its own border) so the grid lines actually appear.
+    private static readonly FuncControlTemplate<TableViewCell> TableViewCellTemplate =
+        new((_, scope) => new ContentPresenter
+        {
+            Name = "PART_ContentPresenter",
+            [!ContentPresenter.ContentProperty] = new TemplateBinding(ContentControl.ContentProperty),
+            [!ContentPresenter.ContentTemplateProperty] = new TemplateBinding(ContentControl.ContentTemplateProperty),
+            [!ContentPresenter.BackgroundProperty] = new TemplateBinding(TemplatedControl.BackgroundProperty),
+            [!ContentPresenter.BorderBrushProperty] = new TemplateBinding(TemplatedControl.BorderBrushProperty),
+            [!ContentPresenter.BorderThicknessProperty] = new TemplateBinding(TemplatedControl.BorderThicknessProperty),
+            [!ContentPresenter.PaddingProperty] = new TemplateBinding(TemplatedControl.PaddingProperty),
+            [!ContentPresenter.HorizontalContentAlignmentProperty] = new TemplateBinding(ContentControl.HorizontalContentAlignmentProperty),
+            [!ContentPresenter.VerticalContentAlignmentProperty] = new TemplateBinding(ContentControl.VerticalContentAlignmentProperty),
+        }.RegisterInNameScope(scope));
 
     public static ControlTheme DataGridNoBorderCellTheme => GetDataGridNoBorderCellTheme();
 

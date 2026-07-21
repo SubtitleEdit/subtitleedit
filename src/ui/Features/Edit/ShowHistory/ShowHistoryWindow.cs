@@ -40,12 +40,14 @@ public class ShowHistoryWindow : Window
                     Header = Se.Language.General.Time,
                     Binding = new Binding(nameof(ShowHistoryDisplayItem.Time)),
                     Width = GridLength.Auto,
+                    CellTheme = UiUtil.TableViewCellTheme,
                 },
                 new TableViewColumn
                 {
                     Header = Se.Language.General.Description,
                     Binding = new Binding(nameof(ShowHistoryDisplayItem.Description)),
                     Width = new GridLength(3, GridUnitType.Star),
+                    CellTheme = UiUtil.TableViewCellTheme,
                 },
             },
         };
