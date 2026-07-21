@@ -3,6 +3,12 @@ Subtitle Edit Changelog
 
 -----------------------------------------------------------------------------------------------------
 
+v5.1.0-rc11 (unreleased)
+
+* Fix UI freeze when opening a raw PGS .sup (no "PG" headers, e.g. Matroska raw-mode extraction) - now offers OCR import with placeholder timings or advice to re-extract - thx HellbringerOnline
+
+-----------------------------------------------------------------------------------------------------
+
 v5.1.0-rc10 (20th of July 2026)
 
 * New "file saved" prompt - success check mark, file name and folder, size/duration info, copy path and Play/Open - now also used by text to speech and the video tools (burn-in, cut, re-encode, transparent subtitles, blank video, embedded subtitles)
