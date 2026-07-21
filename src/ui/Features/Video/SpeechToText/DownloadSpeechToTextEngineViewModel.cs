@@ -36,7 +36,8 @@ public partial class DownloadSpeechToTextEngineViewModel : ObservableObject
 
     /// <summary>
     /// CrispASR download variant. On Windows: "cpu", "cpu-legacy", "vulkan", or "cuda" (defaults to "vulkan").
-    /// On Linux x86_64: "cuda" or null/empty for the default CPU build. Ignored on macOS / Linux ARM64.
+    /// On Linux x86_64: "cuda", "cuda13", "vulkan", "hip", or null/empty for the default CPU build.
+    /// Ignored on macOS / Linux ARM64.
     /// </summary>
     public string CrispAsrWindowsVariant { get; set; } = "vulkan";
 
@@ -180,9 +181,16 @@ public partial class DownloadSpeechToTextEngineViewModel : ObservableObject
                     var folder = Engine.GetAndCreateWhisperFolder();
                     var skipFolder = Engine is ICrispAsrEngine
                         ? OperatingSystem.IsLinux()
-                            ? (CrispAsrWindowsVariant == "cuda" && RuntimeInformation.ProcessArchitecture != Architecture.Arm64
-                                ? "crispasr-linux-x86_64-cuda"
-                                : "crispasr-linux-x86_64")
+                            ? (RuntimeInformation.ProcessArchitecture == Architecture.Arm64
+                                ? "crispasr-linux-arm64"
+                                : CrispAsrWindowsVariant switch
+                                {
+                                    "cuda"   => "crispasr-linux-x86_64-cuda",
+                                    "cuda13" => "crispasr-linux-x86_64-cuda13",
+                                    "vulkan" => "crispasr-linux-x86_64-vulkan",
+                                    "hip"    => "crispasr-linux-x86_64-hip",
+                                    _        => "crispasr-linux-x86_64",
+                                })
                             : OperatingSystem.IsMacOS()
                                 ? "crispasr-macos"
                                 : CrispAsrWindowsVariant switch
@@ -435,8 +443,10 @@ public partial class DownloadSpeechToTextEngineViewModel : ObservableObject
         var displayName = Engine is ICrispAsrEngine
             ? OperatingSystem.IsWindows()
                 ? "Crisp ASR " + CrispAsrWindowsVariant
-                : OperatingSystem.IsLinux() && CrispAsrWindowsVariant == "cuda"
-                    ? "Crisp ASR cuda"
+                : OperatingSystem.IsLinux()
+                  && RuntimeInformation.ProcessArchitecture != Architecture.Arm64
+                  && CrispAsrWindowsVariant is "cuda" or "cuda13" or "vulkan" or "hip"
+                    ? "Crisp ASR " + CrispAsrWindowsVariant
                     : "Crisp ASR"
             : Engine?.Name;
         TitleText = string.Format(Se.Language.General.DownloadingX, displayName);
@@ -498,10 +508,16 @@ public partial class DownloadSpeechToTextEngineViewModel : ObservableObject
                 };
             }
             else if (OperatingSystem.IsLinux()
-                     && CrispAsrWindowsVariant == "cuda"
-                     && RuntimeInformation.ProcessArchitecture != Architecture.Arm64)
+                     && RuntimeInformation.ProcessArchitecture != Architecture.Arm64
+                     && CrispAsrWindowsVariant is "cuda" or "cuda13" or "vulkan" or "hip")
             {
-                _downloadTask = _crispAsrDownloadService.DownloadEngineLinuxCuda(_downloadStream, downloadProgress, _cancellationTokenSource.Token);
+                _downloadTask = CrispAsrWindowsVariant switch
+                {
+                    "cuda13" => _crispAsrDownloadService.DownloadEngineLinuxCuda13(_downloadStream, downloadProgress, _cancellationTokenSource.Token),
+                    "vulkan" => _crispAsrDownloadService.DownloadEngineLinuxVulkan(_downloadStream, downloadProgress, _cancellationTokenSource.Token),
+                    "hip"    => _crispAsrDownloadService.DownloadEngineLinuxHip(_downloadStream, downloadProgress, _cancellationTokenSource.Token),
+                    _        => _crispAsrDownloadService.DownloadEngineLinuxCuda(_downloadStream, downloadProgress, _cancellationTokenSource.Token),
+                };
             }
             else
             {

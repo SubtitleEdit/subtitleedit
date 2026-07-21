@@ -10,6 +10,7 @@ using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Download;
 using System;
 using System.IO;
+using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 
 namespace Nikse.SubtitleEdit.Features.Video.TextToSpeech;
@@ -141,7 +142,7 @@ public static class TtsVoiceInstaller
 
     /// <summary>
     /// Ensures the CrispASR runtime that MOSS-TTS (CrispASR) runs on is installed.
-    /// The moss-tts backend ships in CrispASR v0.8.13+ (SE's pinned release).
+    /// The moss-tts backend ships in CrispASR v0.8.13 and newer (SE pins v0.8.20).
     /// </summary>
     public static Task<bool> EnsureCrispAsrForMossTts(Window? window, IWindowService windowService, bool forceRedownload)
         => EnsureCrispAsrAsync(window, windowService, forceRedownload,
@@ -184,9 +185,20 @@ public static class TtsVoiceInstaller
         {
             // Already installed - re-download with the variant the user originally picked.
             var folder = crispAsrEngine.GetAndCreateWhisperFolder();
-            crispVariant = (Configuration.IsRunningOnWindows
-                ? DownloadHashManager.DetectCrispAsrWindowsVariant(folder)
-                : null) ?? "vulkan";
+            if (Configuration.IsRunningOnWindows)
+            {
+                crispVariant = DownloadHashManager.DetectCrispAsrWindowsVariant(folder) ?? "vulkan";
+            }
+            else if (Configuration.IsRunningOnLinux && RuntimeInformation.ProcessArchitecture != Architecture.Arm64)
+            {
+                // Empty means the default CPU build; the GPU builds ("cuda" / "cuda13" /
+                // "vulkan" / "hip") are only detectable via sidecar or executable hash.
+                crispVariant = DownloadHashManager.DetectCrispAsrLinuxVariant(folder) ?? string.Empty;
+            }
+            else
+            {
+                crispVariant = string.Empty; // ignored on macOS / Linux ARM64
+            }
 
             var versionRequirement = !string.IsNullOrEmpty(minVersionNote)
                 ? $" needs CrispASR {minVersionNote}"
@@ -261,6 +273,16 @@ public static class TtsVoiceInstaller
                 }
             }
         }
+        else if (Configuration.IsRunningOnLinux && RuntimeInformation.ProcessArchitecture != Architecture.Arm64)
+        {
+            var linuxAnswer = await PromptCrispAsrLinuxVariantAsync(window, engineDisplayName);
+            if (linuxAnswer == null)
+            {
+                return false;
+            }
+
+            crispVariant = linuxAnswer;
+        }
         else
         {
             var answer = await MessageBox.Show(
@@ -275,7 +297,7 @@ public static class TtsVoiceInstaller
                 return false;
             }
 
-            crispVariant = "vulkan"; // ignored on non-Windows
+            crispVariant = string.Empty; // ignored on macOS / Linux ARM64
         }
 
         var dlVm = await windowService.ShowDialogAsync<DownloadSpeechToTextEngineWindow, DownloadSpeechToTextEngineViewModel>(
@@ -315,6 +337,52 @@ public static class TtsVoiceInstaller
         {
             MessageBoxResult.Custom1 => "cpu",
             MessageBoxResult.Custom2 => "cpu-legacy",
+            _ => null,
+        };
+    }
+
+    /// <summary>
+    /// Linux x86_64 build prompt: CPU, Vulkan (any GPU), CUDA (NVIDIA) or ROCm (AMD).
+    /// Returns "vulkan" / "cuda" / "cuda13" / "hip", empty string for the default CPU build,
+    /// or null when the user cancels.
+    /// </summary>
+    private static async Task<string?> PromptCrispAsrLinuxVariantAsync(Window window, string engineDisplayName)
+    {
+        var answer = await MessageBox.Show(
+            window,
+            "Download CrispASR?",
+            $"{Environment.NewLine}\"{engineDisplayName}\" runs through the CrispASR runtime. Select a build to download:",
+            MessageBoxButtons.Cancel,
+            MessageBoxIcon.Question,
+            "CPU",
+            "Vulkan",
+            "CUDA",
+            "ROCm");
+
+        if (answer == MessageBoxResult.Custom3)
+        {
+            var cudaAnswer = await MessageBox.Show(
+                window,
+                "CrispASR CUDA build",
+                $"{Environment.NewLine}CUDA 12 works with most current NVIDIA drivers.{Environment.NewLine}{Environment.NewLine}Pick CUDA 13 only if your driver stack is built for CUDA 13.",
+                MessageBoxButtons.Cancel,
+                MessageBoxIcon.Question,
+                "CUDA 12",
+                "CUDA 13");
+
+            return cudaAnswer switch
+            {
+                MessageBoxResult.Custom1 => "cuda",
+                MessageBoxResult.Custom2 => "cuda13",
+                _ => null,
+            };
+        }
+
+        return answer switch
+        {
+            MessageBoxResult.Custom1 => string.Empty,
+            MessageBoxResult.Custom2 => "vulkan",
+            MessageBoxResult.Custom4 => "hip",
             _ => null,
         };
     }
