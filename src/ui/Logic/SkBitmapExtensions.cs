@@ -9,6 +9,24 @@ namespace Nikse.SubtitleEdit.Logic;
 
 internal static class SkBitmapExtensions
 {
+    /// <summary>
+    /// Decodes an image to 32-bit BGRA regardless of the source format. SKBitmap.Decode
+    /// preserves the file's color type (e.g. an 8-bit grayscale PNG decodes to Gray8,
+    /// 1 byte/pixel), but SE's pixel-walking code assumes 4 bytes/pixel throughout -
+    /// grayscale images from InpaintDelogo rendered as noise (issue #12694).
+    /// </summary>
+    public static SKBitmap DecodeToBgra8888(byte[] imageBytes)
+    {
+        using var codec = SKCodec.Create(new MemoryStream(imageBytes));
+        if (codec == null)
+        {
+            return new SKBitmap(1, 1, SKColorType.Bgra8888, SKAlphaType.Premul);
+        }
+
+        var info = new SKImageInfo(codec.Info.Width, codec.Info.Height, SKColorType.Bgra8888, SKAlphaType.Premul);
+        return SKBitmap.Decode(codec, info) ?? new SKBitmap(1, 1, SKColorType.Bgra8888, SKAlphaType.Premul);
+    }
+
     public static SKBitmap MakeImageBrighter(SKBitmap bitmap, float brightnessIncrease = 0.25f)
     {
         using var canvas = new SKCanvas(bitmap);
@@ -171,6 +189,18 @@ internal static class SkBitmapExtensions
         if (skBitmap.Width <= 0 || skBitmap.Height <= 0)
         {
             return new WriteableBitmap(new PixelSize(1, 1), Vector.One, PixelFormat.Bgra8888, AlphaFormat.Premul);
+        }
+
+        // The row loop below reads 4 bytes per pixel; anything narrower (Gray8 from a
+        // grayscale PNG, Rgb565, ...) would render as noise and read past the pixel
+        // buffer (issue #12694). Convert first.
+        if (skBitmap.ColorType != SKColorType.Bgra8888)
+        {
+            using var converted = skBitmap.Copy(SKColorType.Bgra8888);
+            if (converted != null)
+            {
+                return converted.ToAvaloniaBitmap();
+            }
         }
 
         var bitmap = new WriteableBitmap(
