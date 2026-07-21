@@ -394,7 +394,16 @@ namespace Nikse.SubtitleEdit.Core.Common
             using (var fs = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
             {
                 var buffer = new byte[64 * 1024];
-                var bytesRead = fs.Read(buffer, 0, buffer.Length);
+                // Read may return fewer bytes than requested (network shares, filter
+                // drivers) - fill until EOF or the sniff buffer is full so a partial
+                // first read can't misclassify a genuine raw PGS stream.
+                var bytesRead = 0;
+                int read;
+                while (bytesRead < buffer.Length &&
+                       (read = fs.Read(buffer, bytesRead, buffer.Length - bytesRead)) > 0)
+                {
+                    bytesRead += read;
+                }
 
                 // Each raw segment is: type (1 byte) + payload size (2 bytes, big endian) + payload.
                 // Require a chain of valid segment types to avoid false positives on other binary

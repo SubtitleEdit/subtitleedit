@@ -197,10 +197,14 @@ internal static class SkBitmapExtensions
         if (skBitmap.ColorType != SKColorType.Bgra8888)
         {
             using var converted = skBitmap.Copy(SKColorType.Bgra8888);
-            if (converted != null)
+            if (converted == null)
             {
-                return converted.ToAvaloniaBitmap();
+                // Unconvertible color type - never fall through to the 4-bytes/pixel
+                // walk below, it would read past the pixel buffer.
+                return new WriteableBitmap(new PixelSize(1, 1), Vector.One, PixelFormat.Bgra8888, AlphaFormat.Premul);
             }
+
+            return converted.ToAvaloniaBitmap();
         }
 
         var bitmap = new WriteableBitmap(
