@@ -1767,6 +1767,51 @@ public static class UiUtil
         };
     }
 
+    private static ImageBrush? _checkerboardBrush;
+
+    /// <summary>
+    /// Theme-independent checkerboard backdrop for image previews whose content can be pure
+    /// white, pure black or transparent (e.g. OCR bitmaps and pre-processing output). Two
+    /// mid-tone grays so both extremes stay visible in light and dark theme (issue #12692).
+    /// </summary>
+    public static ImageBrush GetCheckerboardBrush()
+    {
+        if (_checkerboardBrush != null)
+        {
+            return _checkerboardBrush;
+        }
+
+        const int tileSize = 16; // 2x2 squares of 8px
+        const int squareSize = tileSize / 2;
+        var bitmap = new Avalonia.Media.Imaging.WriteableBitmap(
+            new PixelSize(tileSize, tileSize),
+            new Vector(96, 96),
+            PixelFormat.Bgra8888,
+            AlphaFormat.Opaque);
+        using (var frameBuffer = bitmap.Lock())
+        {
+            unsafe
+            {
+                var pixels = (uint*)frameBuffer.Address;
+                for (var y = 0; y < tileSize; y++)
+                {
+                    for (var x = 0; x < tileSize; x++)
+                    {
+                        var isDark = (x / squareSize + y / squareSize) % 2 == 0;
+                        pixels[y * frameBuffer.RowBytes / 4 + x] = isDark ? 0xFF666666 : 0xFF999999;
+                    }
+                }
+            }
+        }
+
+        _checkerboardBrush = new ImageBrush(bitmap)
+        {
+            TileMode = TileMode.Tile,
+            DestinationRect = new RelativeRect(0, 0, tileSize, tileSize, RelativeUnit.Absolute),
+        };
+        return _checkerboardBrush;
+    }
+
     public static Border MakeBorderForControl(Control control)
     {
         return new Border

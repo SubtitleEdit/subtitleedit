@@ -148,7 +148,9 @@ public class PreProcessingWindow : Window
             MaxHeight = 200,
         };
 
-        return UiUtil.MakeBorderForControl(image);
+        var border = UiUtil.MakeBorderForControl(image);
+        border.Background = UiUtil.GetCheckerboardBrush();
+        return border;
     }
 
     private static Border MakePostProcessedImageView(PreProcessingViewModel vm)
@@ -163,6 +165,8 @@ public class PreProcessingWindow : Window
             MaxHeight = 200,
         };
 
-        return UiUtil.MakeBorderForControl(image);
+        var border = UiUtil.MakeBorderForControl(image);
+        border.Background = UiUtil.GetCheckerboardBrush();
+        return border;
     }
 }

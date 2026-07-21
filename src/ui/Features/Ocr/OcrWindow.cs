@@ -477,11 +477,12 @@ public class OcrWindow : Window
                             image.Bind(Image.MaxHeightProperty, new Binding(nameof(vm.ImageMaxHeight)) { Source = vm });
                             image.Bind(Image.MaxWidthProperty, new Binding(nameof(vm.ImageMaxWidth)) { Source = vm });
 
-                            // Subtitle bitmaps are usually light text on a transparent background, which
-                            // is invisible on a light grid - give them a dark backdrop so they show.
+                            // Subtitle bitmaps can be light or dark text on a transparent background,
+                            // both invisible on a matching flat backdrop - use the mid-gray checkerboard
+                            // so any content shows in either theme (issue #12692).
                             var imageContainer = new Border
                             {
-                                Background = new Avalonia.Media.SolidColorBrush(Avalonia.Media.Color.FromRgb(0x2D, 0x2D, 0x30)),
+                                Background = UiUtil.GetCheckerboardBrush(),
                                 CornerRadius = new CornerRadius(3),
                                 Padding = new Thickness(3),
                                 Child = image,
