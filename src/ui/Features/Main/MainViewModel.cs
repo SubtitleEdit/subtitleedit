@@ -3984,16 +3984,20 @@ public partial class MainViewModel :
         _updateAudioVisualizer = true;
     }
 
+    // Path-qualified on purpose: every caller feeds this straight to a save picker, which
+    // strips the directory off the suggested name and uses it as the start folder - so an
+    // export defaults to the folder of the current subtitle (or video) instead of wherever
+    // a picker was last used.
     private string GetNewFileName()
     {
         if (!string.IsNullOrEmpty(_subtitleFileName))
         {
-            return Path.GetFileNameWithoutExtension(_subtitleFileName);
+            return Utilities.GetPathAndFileNameWithoutExtension(_subtitleFileName);
         }
 
         if (!string.IsNullOrEmpty(_videoFileName))
         {
-            return Path.GetFileNameWithoutExtension(_videoFileName);
+            return Utilities.GetPathAndFileNameWithoutExtension(_videoFileName);
         }
 
         return string.Empty;

@@ -378,7 +378,9 @@ public partial class ExportImageBasedViewModel : ObservableObject
             var suggestedFileName = string.Empty;
             if (!string.IsNullOrWhiteSpace(_subtitleFileName))
             {
-                suggestedFileName = System.IO.Path.GetFileNameWithoutExtension(_subtitleFileName);
+                // Keep the folder: the picker uses it as the start location and shows only the
+                // file name, so the export defaults next to the subtitle being exported.
+                suggestedFileName = Utilities.GetPathAndFileNameWithoutExtension(_subtitleFileName);
             }
                 
             fileOrFolderName = await _fileHelper.PickSaveSubtitleFile(Window!, _exportImageHandler.Extension,

@@ -127,7 +127,7 @@ public partial class PickMatroskaTrackViewModel : ObservableObject
         }
         else if (trackInfo.CodecId == MatroskaTrackType.BluRay && subtitles != null && _matroskaFile != null)
         {
-            var suggestedFileName = Path.GetFileNameWithoutExtension(_fileName);
+            var suggestedFileName = Utilities.GetPathAndFileNameWithoutExtension(_fileName);
             var fileName = await _fileHelper.PickSaveSubtitleFile(Window, ".sup", suggestedFileName, Se.Language.General.SaveFileAsTitle);
             if (string.IsNullOrEmpty(fileName))
             {
@@ -185,7 +185,7 @@ public partial class PickMatroskaTrackViewModel : ObservableObject
         var sub = new Subtitle();
         Utilities.LoadMatroskaTextSubtitle(trackInfo, _matroskaFile, subtitles, sub);
         var rawText = format.ToText(sub, string.Empty);
-        var suggestedFileName = Path.GetFileNameWithoutExtension(_fileName);
+        var suggestedFileName = Utilities.GetPathAndFileNameWithoutExtension(_fileName);
         var fileName = await _fileHelper.PickSaveSubtitleFile(window, format.Extension, suggestedFileName, Se.Language.General.SaveFileAsTitle);
 
         if (!string.IsNullOrEmpty(fileName))

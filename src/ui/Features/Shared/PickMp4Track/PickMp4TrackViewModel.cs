@@ -95,7 +95,7 @@ public partial class PickMp4TrackViewModel : ObservableObject
             return;
         }
 
-        var suggestedFileName = Path.GetFileNameWithoutExtension(_fileName);
+        var suggestedFileName = Utilities.GetPathAndFileNameWithoutExtension(_fileName);
 
         if (track.Mdia.IsVobSubSubtitle)
         {
