@@ -976,7 +976,10 @@ namespace Nikse.SubtitleEdit.Core.Common
 
         private static Subtitle ImportSubtitleWithNoLineBreaks(string text)
         {
-            var regex = new Regex(@"^\d+ \d+:\d+:\d+[.,:;]\d+ --> \d+:\d+:\d+[.,:;]\d+\b", RegexOptions.Compiled); // e.g.: 1 00:00:01.502 --> 00:00:03.604
+            // \G anchors at the startat position passed to Match(text, i) below - matching
+            // in place instead of allocating text.Substring(i) per digit, which made this
+            // loop O(n²) on large inputs with many numeric characters (issue #12683).
+            var regex = new Regex(@"\G\d+ \d+:\d+:\d+[.,:;]\d+ --> \d+:\d+:\d+[.,:;]\d+\b", RegexOptions.Compiled); // e.g.: 1 00:00:01.502 --> 00:00:03.604
             var subtitle = new Subtitle();
             int i = 0;
             var sb = new StringBuilder();
@@ -986,7 +989,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                 var ch = text[i];
                 if (char.IsNumber(ch))
                 {
-                    var match = regex.Match(text.Substring(i));
+                    var match = regex.Match(text, i);
                     if (match.Success)
                     {
                         if (p != null)
@@ -1008,6 +1011,12 @@ namespace Nikse.SubtitleEdit.Core.Common
                             continue;
                         }
                     }
+
+                    if (char.IsDigit(ch))
+                    {
+                        AppendDigitRun(text, sb, ref i);
+                        continue;
+                    }
                 }
                 sb.Append(ch);
                 i++;
@@ -1021,9 +1030,28 @@ namespace Nikse.SubtitleEdit.Core.Common
             return subtitle;
         }
 
+        /// <summary>
+        /// Appends the run of decimal digits starting at <paramref name="i"/> and advances past it.
+        /// The time code regexes' leading \d+ must consume digits up to the first non-digit no
+        /// matter where in the run the match attempt starts, so a failed attempt at the run's
+        /// first digit fails at every later digit too - retrying there just made digit-heavy
+        /// binary input quadratic (issue #12683).
+        /// </summary>
+        private static void AppendDigitRun(string text, StringBuilder sb, ref int i)
+        {
+            do
+            {
+                sb.Append(text[i]);
+                i++;
+            }
+            while (i < text.Length && char.IsDigit(text[i]));
+        }
+
         private static Subtitle ImportSubtitleWithNoLineBreaksWithExtraSpaces(string text)
         {
-            var regex = new Regex(@"^(\d+: *)?\d+ *: *\d+[.,:;] *\d+ *-{0,3}> *(\d+: *)?\d+ *: *\d+[.,:;] *\d+\b", RegexOptions.Compiled); // e.g.: 1 00:00:01.502 --> 00:00:03.604
+            // \G anchors at the startat position passed to Match(text, i) below - see
+            // ImportSubtitleWithNoLineBreaks for why Substring(i) is not used here.
+            var regex = new Regex(@"\G(\d+: *)?\d+ *: *\d+[.,:;] *\d+ *-{0,3}> *(\d+: *)?\d+ *: *\d+[.,:;] *\d+\b", RegexOptions.Compiled); // e.g.: 1 00:00:01.502 --> 00:00:03.604
             var subtitle = new Subtitle();
             int i = 0;
             var sb = new StringBuilder();
@@ -1033,7 +1061,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                 var ch = text[i];
                 if (char.IsNumber(ch))
                 {
-                    var match = regex.Match(text.Substring(i));
+                    var match = regex.Match(text, i);
                     if (match.Success)
                     {
                         if (p != null)
@@ -1054,6 +1082,12 @@ namespace Nikse.SubtitleEdit.Core.Common
                             subtitle.Paragraphs.Add(p);
                             continue;
                         }
+                    }
+
+                    if (char.IsDigit(ch))
+                    {
+                        AppendDigitRun(text, sb, ref i);
+                        continue;
                     }
                 }
                 sb.Append(ch);

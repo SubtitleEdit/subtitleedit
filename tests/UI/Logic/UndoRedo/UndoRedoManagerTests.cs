@@ -22,6 +22,24 @@ public class UndoRedoManagerTests
             MakeItem(description, Hash, Subtitles);
     }
 
+    private sealed class BlockingHashClient : IUndoRedoClient
+    {
+        public ManualResetEventSlim HashEntered { get; } = new();
+        public ManualResetEventSlim ReleaseHash { get; } = new();
+        public int HashCalls;
+
+        public int GetFastHash()
+        {
+            Interlocked.Increment(ref HashCalls);
+            HashEntered.Set();
+            ReleaseHash.Wait(TimeSpan.FromSeconds(10));
+            return 1;
+        }
+
+        public bool IsTyping() => false;
+        public UndoRedoItem MakeUndoRedoObject(string description) => MakeItem(description, 1);
+    }
+
     // -----------------------------------------------------------------------
     // Helpers
     // -----------------------------------------------------------------------
@@ -481,6 +499,29 @@ public class UndoRedoManagerTests
         manager.CheckForChanges(null);
 
         Assert.Equal(0, manager.UndoCount);
+    }
+
+    [Fact]
+    public void CheckForChanges_OverlappingTick_ReturnsWithoutCallingClient()
+    {
+        // Regression for issue #12683: the 250ms timer keeps firing while a previous
+        // tick is still blocked inside the client (marshaling to a busy UI thread);
+        // each overlapping tick stacked another blocked thread-pool thread — the
+        // reported dump had 492 threads. Overlapping ticks must bail immediately.
+        var client = new BlockingHashClient();
+        var manager = new UndoRedoManager();
+        manager.SetupChangeDetection(client, TimeSpan.FromHours(1));
+        manager.StartChangeDetection();
+
+        var firstTick = Task.Run(() => manager.CheckForChanges(null));
+        Assert.True(client.HashEntered.Wait(TimeSpan.FromSeconds(10)));
+
+        manager.CheckForChanges(null); // overlapping tick while the first is blocked
+
+        Assert.Equal(1, Volatile.Read(ref client.HashCalls));
+
+        client.ReleaseHash.Set();
+        Assert.True(firstTick.Wait(TimeSpan.FromSeconds(10)));
     }
 
     // -----------------------------------------------------------------------

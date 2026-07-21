@@ -15563,6 +15563,20 @@ public partial class MainViewModel :
                 }
             }
 
+            // A .sup that failed IsBluRaySup may be a raw PGS elementary stream (Matroska track
+            // extracted in raw mode - no "PG"/PTS/DTS headers, so no timestamps to recover).
+            // Reject it here with an actionable message instead of letting megabytes of binary
+            // fall through to the generic text importer (issue #12683).
+            if ((ext == ".sup" || ext == ".pgs") && FileUtil.IsRawPgsSegmentStream(fileName))
+            {
+                await MessageBox.Show(Window!,
+                    Se.Language.General.Error,
+                    Se.Language.Main.ErrorLoadRawPgs,
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Error);
+                return;
+            }
+
             if ((ext == ".mp4" || ext == ".m4v" || ext == ".3gp" || ext == ".mov" || ext == ".cmaf" || ext == ".m4a" || ext == ".m4b") &&
                 fileSize > 2000 || ext == ".m4s")
             {
