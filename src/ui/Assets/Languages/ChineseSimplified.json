@@ -1397,7 +1397,7 @@
       "categoryOther": "其他",
       "xNeedACloserLook": "{0} 条建议需要仔细核对",
       "lineX": "第 {0} 条",
-      "linesXToY": "第{ 0}-{1} 条",
+      "linesXToY": "第 {0}-{1} 条",
       "largeChangeWarning": "大幅度修改，疑似全文重写，请仔细检查",
       "engineError": "无法连接 AI 引擎: {0}",
       "setupHint": "请先在 工具 -> AI 审阅 选择引擎与模型。"

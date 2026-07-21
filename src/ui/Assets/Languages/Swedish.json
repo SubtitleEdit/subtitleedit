@@ -3178,7 +3178,7 @@
     "vobSubIsolateColors": "Isolera VobSub-färger för OCR",
     "vobSubIsolateColorsHint": "Bygg om varje VobSub-bild till skarp svart text på vit bakgrund före OCR genom att behålla den vanligaste färgen (texten) och ta bort kontur- och kantutjämningsfärgerna. Förbättrar igenkänningen på skivor där grå konturer får tecken att flyta ihop.",
     "llamaCppOcrSettingsTitle": "llama.cpp OCR-inställningar",
-    "llamaCppOcrPromptHint": "Använd {språk} för att infoga det valda OCR-språket.",
+    "llamaCppOcrPromptHint": "Använd {language} för att infoga det valda OCR-språket.",
     "llamaCppOcrPromptEmpty": "Uppmaningen kan inte vara tom.",
     "llamaCppOcrPromptMissingLanguagePlaceholder": "Uppmaningen måste innehålla platshållaren {language}.",
     "llamaCppOcrTimeoutMinutes": "Begär timeout (minuter)",

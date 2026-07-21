@@ -203,7 +203,7 @@
     "HidePreview": "Vorschau ausblenden",
     "History": "Verlauf",
     "Horizontal": "Horizontal",
-    "HourMinutesSecondsDecimalSeparatorMilliseconds": "HH:MM:SS:fff",
+    "HourMinutesSecondsDecimalSeparatorMilliseconds": "HH:MM:SS{0}fff",
     "HourMinutesSecondsFrames": "HH:MM:SS:FF",
     "Ip": "IP",
     "Image": "Bild",
