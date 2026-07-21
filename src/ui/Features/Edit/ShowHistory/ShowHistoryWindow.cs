@@ -19,37 +19,39 @@ public class ShowHistoryWindow : Window
         vm.Window = this;
         DataContext = vm;
 
-        var dataGrid = new DataGrid
+        // TableView (Avalonia 12.1) pilot - DataGrid is in maintenance mode upstream and
+        // TableView is the recommended control for read-only tabular data. This window is
+        // the simplest grid in SE (read-only, no sorting, no cell themes), so it is used to
+        // validate look and behaviour parity before considering wider adoption.
+        var tableView = new TableView
         {
-            AutoGenerateColumns = false,
-            IsReadOnly = true,
-            SelectionMode = DataGridSelectionMode.Single,
+            SelectionMode = SelectionMode.Single,
             Margin = new Thickness(0, 10, 0, 0),
-            [!DataGrid.ItemsSourceProperty] = new Binding(nameof(vm.HistoryItems)),
-            [!DataGrid.SelectedItemProperty] = new Binding(nameof(vm.SelectedHistoryItem)),
+            [!TableView.ItemsSourceProperty] = new Binding(nameof(vm.HistoryItems)),
+            [!TableView.SelectedItemProperty] = new Binding(nameof(vm.SelectedHistoryItem)),
             Width = double.NaN,
             Height = double.NaN,
             HorizontalAlignment = HorizontalAlignment.Stretch,
             VerticalAlignment = VerticalAlignment.Stretch,
             Columns =
             {
-                new DataGridTextColumn
+                new TableViewColumn
                 {
                     Header = Se.Language.General.Time,
                     Binding = new Binding(nameof(ShowHistoryDisplayItem.Time)),
-                    Width = new DataGridLength(1, DataGridLengthUnitType.Auto)
+                    Width = GridLength.Auto,
                 },
-                new DataGridTextColumn
+                new TableViewColumn
                 {
                     Header = Se.Language.General.Description,
                     Binding = new Binding(nameof(ShowHistoryDisplayItem.Description)),
-                    Width = new DataGridLength(3, DataGridLengthUnitType.Star)
-                }
+                    Width = new GridLength(3, GridUnitType.Star),
+                },
             },
         };
-        dataGrid.SelectionChanged += (sender, args) =>
+        tableView.SelectionChanged += (sender, args) =>
         {
-            vm.IsRollbackEnabled = dataGrid.SelectedItem != null;
+            vm.IsRollbackEnabled = tableView.SelectedItem != null;
         };
 
         var buttonRollback = UiUtil.MakeButton(Se.Language.Edit.RestoreSelected, vm.RollbackToCommand).WithBindEnabled(nameof(vm.IsRollbackEnabled));
@@ -77,7 +79,7 @@ public class ShowHistoryWindow : Window
             HorizontalAlignment = HorizontalAlignment.Stretch,
         };
 
-        grid.Add(dataGrid, 0, 0);
+        grid.Add(tableView, 0, 0);
         grid.Add(panelButtons, 1, 0);
 
         Content = grid;
