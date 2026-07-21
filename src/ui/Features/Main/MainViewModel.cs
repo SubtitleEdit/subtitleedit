@@ -7432,10 +7432,15 @@ public partial class MainViewModel :
 
             // Leave the configured "out cues" gap before the shot change (Beautify time codes
             // profile, two frames by default) - same as SE 4.x. Without it the line ends exactly
-            // on the shot change frame.
-            var candidateEndMs = ShotChangesHelper.GetNextShotChangeMinusGapInMs(
-                AudioVisualizer.ShotChanges,
-                new TimeCode(line.EndTime.TotalMilliseconds));
+            // on the shot change frame. The lookup filters on the gap-adjusted position being
+            // strictly after the current end: GetNextShotChangeMinusGapInMs's frame tolerance
+            // could pick a shot change just BEFORE the end and, after subtracting the gap, move
+            // the end ~2-3 frames backward instead of extending.
+            var outCuesGapMs = TimeCodesBeautifierUtils.GetOutCuesGapMs();
+            var candidateEndMs = AudioVisualizer.ShotChanges
+                .Select(s => s * 1000.0 - outCuesGapMs)
+                .Cast<double?>()
+                .FirstOrDefault(ms => ms > line.EndTime.TotalMilliseconds);
 
             // Upper bound for the new end: the next shot change and, if present, the next
             // subtitle's start minus the configured gap. Whichever is earlier wins so we never
@@ -7575,21 +7580,22 @@ public partial class MainViewModel :
             // at t=0 isn't conflated with the default value. Strict `<` so
             // shot changes at or after the current start can't qualify and
             // cause "extend to previous" to actually move the start forward.
-            var shotChange = AudioVisualizer.ShotChanges
+            // The shot change gets the configured "in cues" gap (Beautify time
+            // codes profile, two frames by default) so the line starts after the
+            // shot change rather than exactly on it - same as SE 4.x. The strict
+            // comparison applies to the gap-adjusted position: comparing the raw
+            // shot change and adding the gap afterwards could land AFTER the
+            // current start and make "extend to previous" shorten the line.
+            var inCuesGapMs = TimeCodesBeautifierUtils.GetInCuesGapMs();
+            double? candidateStartMs = AudioVisualizer.ShotChanges
+                .Select(s => s * 1000.0 + inCuesGapMs)
                 .Cast<double?>()
-                .LastOrDefault(s => s < line.StartTime.TotalSeconds);
+                .LastOrDefault(ms => ms < line.StartTime.TotalMilliseconds);
 
             // Lower bound for the new start: the previous shot change and, if
             // present, the previous subtitle's end plus the configured gap.
             // Whichever is later wins so we never pull the start back past
             // either constraint.
-            //
-            // The shot change gets the configured "in cues" gap (Beautify time
-            // codes profile, two frames by default) so the line starts after the
-            // shot change rather than exactly on it - same as SE 4.x.
-            double? candidateStartMs = shotChange.HasValue
-                ? shotChange.Value * 1000.0 + TimeCodesBeautifierUtils.GetInCuesGapMs()
-                : null;
             if (prev != null)
             {
                 var prevEndPlusGapMs = prev.EndTime.TotalMilliseconds + gapMs;

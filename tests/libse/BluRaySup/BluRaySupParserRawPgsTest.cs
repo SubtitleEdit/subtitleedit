@@ -103,6 +103,31 @@ public class BluRaySupParserRawPgsTest
     }
 
     [Fact]
+    public void TruncatedOdsSegmentDoesNotCorruptOtherObjects()
+    {
+        // A truncated ODS (fewer than the 4 header bytes) must be skipped, not parsed
+        // from stale rented-buffer bytes left by the previous segment - stale reads could
+        // fabricate an ObjectId and overwrite a real object's image data.
+        var raw = StripPgHeaders(CreateSupContent(2)).ToList();
+        raw.AddRange(new byte[] { 0x15, 0x00, 0x02, 0x00, 0x00 }); // ODS, size 2: truncated
+        raw.AddRange(new byte[] { 0x80, 0x00, 0x00 }); // END
+
+        WithTempFile(raw.ToArray(), path =>
+        {
+            var pcsDataList = BluRaySupParser.ParseRawPgsSegmentStream(path, new StringBuilder());
+            var withImages = pcsDataList.Where(p => p.PcsObjects.Count > 0).ToList();
+            Assert.Equal(2, withImages.Count);
+
+            foreach (var pcsData in withImages)
+            {
+                using var decoded = pcsData.GetBitmap();
+                Assert.Equal(64, decoded.Width); // image data intact, not clobbered
+                Assert.Equal(32, decoded.Height);
+            }
+        });
+    }
+
+    [Fact]
     public void SetPlaceholderTimingsAssignsSequentialNonOverlappingTimes()
     {
         var sup = CreateSupContent(3);
