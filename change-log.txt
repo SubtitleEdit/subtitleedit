@@ -3,7 +3,7 @@ Subtitle Edit Changelog
 
 -----------------------------------------------------------------------------------------------------
 
-v5.1.0-rc11 (unreleased)
+v5.1.0-rc11 (21st of July 2026)
 
 * Remove text for hearing impaired: symbol preset combos for the custom before/after fields (SE 4 parity)
 * Point sync: Home/End jumps to first/last line
