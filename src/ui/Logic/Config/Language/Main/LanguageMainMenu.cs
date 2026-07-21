@@ -63,6 +63,7 @@ public class LanguageMainMenu
     public string SnapAllTimesToFrames { get; set; }
     public string Renumber { get; set; }
     public string RemoveTextForHearingImpaired { get; set; }
+    public string RemoveUnicodeCharacters { get; set; }
     public string ConvertActors { get; set; }
     public string JoinSubtitles { get; set; }
     public string SplitSubtitle { get; set; }
@@ -196,6 +197,7 @@ public class LanguageMainMenu
         SnapAllTimesToFrames = "Snap all times to frames";
         Renumber = "Renumber...";
         RemoveTextForHearingImpaired = "_Remove text for hearing impaired...";
+        RemoveUnicodeCharacters = "Remove/replace _Unicode characters...";
         ConvertActors = "Convert actors...";
         ChangeCasing = "_Change casing...";
         ChangeFormatting = "Change formatting...";
