@@ -1,6 +1,8 @@
+using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Headless.XUnit;
 using Avalonia.Controls.Presenters;
+using Avalonia.Threading;
 using Avalonia.VisualTree;
 using Nikse.SubtitleEdit.Features.Edit.ShowHistory;
 using Nikse.SubtitleEdit.Logic.Config;
@@ -33,12 +35,87 @@ public class ShowHistoryTableViewTests
     private static TableView GetTableView(Window window) =>
         window.GetVisualDescendants().OfType<TableView>().Single();
 
+    /// <summary>Shows the window and settles layout - the grid-line alignment is applied on Loaded.</summary>
+    private static ShowHistoryWindow ShowWindow(ShowHistoryViewModel vm)
+    {
+        var window = new ShowHistoryWindow(vm);
+        window.Show();
+        Dispatcher.UIThread.RunJobs();
+        window.UpdateLayout();
+        return window;
+    }
+
+    private static double AbsoluteX(Visual visual, Visual relativeTo) =>
+        visual.TranslatePoint(new Point(0, 0), relativeTo)!.Value.X;
+
+    private static double AbsoluteY(Visual visual, Visual relativeTo) =>
+        visual.TranslatePoint(new Point(0, 0), relativeTo)!.Value.Y;
+
+    [AvaloniaFact]
+    public void ShowHistoryWindow_HeaderAndCellGridLinesAlign()
+    {
+        // TableView insets the header inside a Border with hard-coded padding while rows sit flush
+        // against the control edge, so the header's column divider was drawn 6px right of the cell
+        // dividers below it - and in a different colour, because the built-in header draws its
+        // separator as a semi-transparent rectangle inside the resize thumb.
+        var previous = Se.Settings.Appearance.GridLinesAppearance;
+        try
+        {
+            Se.Settings.Appearance.GridLinesAppearance = "All";
+
+            var window = ShowWindow(MakeViewModel(3));
+            var tableView = GetTableView(window);
+
+            var headers = tableView.GetVisualDescendants().OfType<TableViewColumnHeader>().ToList();
+            var firstRow = tableView.GetVisualDescendants().OfType<TableViewRow>().First();
+            var cells = firstRow.GetVisualDescendants().OfType<TableViewCell>().ToList();
+            Assert.Equal(2, headers.Count);
+            Assert.Equal(2, cells.Count);
+
+            // The divider between column 1 and 2 must be at the same x in the header and the rows.
+            var headerDividerX = AbsoluteX(headers[0], tableView) + headers[0].Bounds.Width;
+            var cellDividerX = AbsoluteX(cells[0], tableView) + cells[0].Bounds.Width;
+            Assert.Equal(cellDividerX, headerDividerX);
+
+            // Both draw their lines with the same brush, unlike the built-in header separator.
+            Assert.Equal(headers[0].BorderBrush?.ToString(), cells[0].BorderBrush?.ToString());
+        }
+        finally
+        {
+            Se.Settings.Appearance.GridLinesAppearance = previous;
+        }
+    }
+
+    [AvaloniaFact]
+    public void ShowHistoryWindow_HeaderBottomLineTouchesTheFirstRow()
+    {
+        // The cells only draw bottom borders, so without a header bottom line the first row had no
+        // line above it - and the line has to sit exactly on the row's top edge, not float above it.
+        var previous = Se.Settings.Appearance.GridLinesAppearance;
+        try
+        {
+            Se.Settings.Appearance.GridLinesAppearance = "All";
+
+            var window = ShowWindow(MakeViewModel(3));
+            var tableView = GetTableView(window);
+
+            var header = tableView.GetVisualDescendants().OfType<TableViewColumnHeader>().First();
+            var firstRow = tableView.GetVisualDescendants().OfType<TableViewRow>().First();
+
+            Assert.Equal(1, header.BorderThickness.Bottom);
+            Assert.Equal(AbsoluteY(header, tableView) + header.Bounds.Height, AbsoluteY(firstRow, tableView));
+        }
+        finally
+        {
+            Se.Settings.Appearance.GridLinesAppearance = previous;
+        }
+    }
+
     [AvaloniaFact]
     public void ShowHistoryWindow_UsesTableViewWithBothColumns()
     {
         var vm = MakeViewModel(3);
-        var window = new ShowHistoryWindow(vm);
-        window.Show();
+        var window = ShowWindow(vm);
 
         var tableView = GetTableView(window);
 
@@ -52,8 +129,7 @@ public class ShowHistoryTableViewTests
     public void ShowHistoryWindow_RealizesRowsAndRendersCellText()
     {
         var vm = MakeViewModel(3);
-        var window = new ShowHistoryWindow(vm);
-        window.Show();
+        var window = ShowWindow(vm);
 
         var tableView = GetTableView(window);
         var rows = tableView.GetVisualDescendants().OfType<TableViewRow>().ToList();
@@ -69,8 +145,7 @@ public class ShowHistoryTableViewTests
     public void ShowHistoryWindow_SelectionUpdatesViewModelAndEnablesRollback()
     {
         var vm = MakeViewModel(3);
-        var window = new ShowHistoryWindow(vm);
-        window.Show();
+        var window = ShowWindow(vm);
 
         var tableView = GetTableView(window);
         Assert.False(vm.IsRollbackEnabled);
@@ -93,8 +168,7 @@ public class ShowHistoryTableViewTests
         {
             Se.Settings.Appearance.GridLinesAppearance = setting;
 
-            var window = new ShowHistoryWindow(MakeViewModel(3));
-            window.Show();
+            var window = ShowWindow(MakeViewModel(3));
 
             var cells = GetTableView(window).GetVisualDescendants().OfType<TableViewCell>().ToList();
             Assert.NotEmpty(cells);
@@ -124,8 +198,7 @@ public class ShowHistoryTableViewTests
         {
             Se.Settings.Appearance.GridLinesAppearance = "All";
 
-            var window = new ShowHistoryWindow(MakeViewModel(3));
-            window.Show();
+            var window = ShowWindow(MakeViewModel(3));
 
             var cell = GetTableView(window).GetVisualDescendants().OfType<TableViewCell>().First();
             var presenter = cell.GetVisualDescendants().OfType<ContentPresenter>().First();
@@ -151,8 +224,7 @@ public class ShowHistoryTableViewTests
         {
             Se.Settings.Appearance.GridLinesAppearance = "All";
 
-            var window = new ShowHistoryWindow(MakeViewModel(4));
-            window.Show();
+            var window = ShowWindow(MakeViewModel(4));
 
             var tableView = GetTableView(window);
             var rows = tableView.GetVisualDescendants().OfType<TableViewRow>().ToList();
@@ -193,8 +265,7 @@ public class ShowHistoryTableViewTests
         // The old DataGrid virtualized; TableView derives from ListBox and must too,
         // otherwise a long undo history would realize thousands of rows.
         var vm = MakeViewModel(2000);
-        var window = new ShowHistoryWindow(vm);
-        window.Show();
+        var window = ShowWindow(vm);
 
         var tableView = GetTableView(window);
         var realized = tableView.GetVisualDescendants().OfType<TableViewRow>().Count();

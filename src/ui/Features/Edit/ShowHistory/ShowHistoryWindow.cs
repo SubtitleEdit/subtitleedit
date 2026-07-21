@@ -41,6 +41,7 @@ public class ShowHistoryWindow : Window
                     Binding = new Binding(nameof(ShowHistoryDisplayItem.Time)),
                     Width = GridLength.Auto,
                     CellTheme = UiUtil.TableViewCellTheme,
+                    HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
                 },
                 new TableViewColumn
                 {
@@ -48,6 +49,7 @@ public class ShowHistoryWindow : Window
                     Binding = new Binding(nameof(ShowHistoryDisplayItem.Description)),
                     Width = new GridLength(3, GridUnitType.Star),
                     CellTheme = UiUtil.TableViewCellTheme,
+                    HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
                 },
             },
         };

@@ -12,6 +12,7 @@ using Avalonia.Layout;
 using Avalonia.Media;
 using Avalonia.Platform;
 using Avalonia.Styling;
+using Avalonia.VisualTree;
 using Avalonia.Threading;
 using CommunityToolkit.Mvvm.Input;
 using Nikse.SubtitleEdit.Features.Shared.ColorPicker;
@@ -82,6 +83,70 @@ public static class UiUtil
     }
 
     /// <summary>
+    /// Column-header theme matching <see cref="TableViewCellTheme"/>: the same border brush and
+    /// text inset, a bottom line closing the top of the first row, and a right line continuing
+    /// the cells' vertical grid line. The built-in header draws its separator as a semi-transparent
+    /// rectangle inside the resize Thumb, which is both a different colour and 6px off from the
+    /// cell borders - <see cref="ApplyTableViewRowStyle"/> hides it and aligns the rows.
+    /// </summary>
+    public static ControlTheme TableViewColumnHeaderTheme => GetTableViewColumnHeaderTheme();
+
+    private static ControlTheme GetTableViewColumnHeaderTheme()
+    {
+        var showVertical =
+            Se.Settings.Appearance.GridLinesAppearance == nameof(DataGridGridLinesVisibility.Vertical) ||
+            Se.Settings.Appearance.GridLinesAppearance == nameof(DataGridGridLinesVisibility.All);
+
+        return new ControlTheme(typeof(TableViewColumnHeader))
+        {
+            Setters =
+            {
+                new Setter(TableViewColumnHeader.BackgroundProperty, Brushes.Transparent),
+                new Setter(TableViewColumnHeader.PaddingProperty, new Thickness(4, 2, 4, 4)),
+                new Setter(TableViewColumnHeader.BorderBrushProperty, GetBorderBrush()),
+                // The bottom line always shows: it separates the header from the first row the way
+                // DataGrid's header does, independently of the horizontal grid-line setting.
+                new Setter(TableViewColumnHeader.BorderThicknessProperty, new Thickness(0, 0, showVertical ? 1 : 0, 1)),
+                new Setter(TableViewColumnHeader.TemplateProperty, TableViewColumnHeaderTemplate),
+            }
+        };
+    }
+
+    // Mirrors the built-in header template (content + resize thumb) but routes the border
+    // properties to the presenter so the header's lines match the cells', and drops the
+    // thumb's own off-colour separator rectangle.
+    private static readonly FuncControlTemplate<TableViewColumnHeader> TableViewColumnHeaderTemplate =
+        new((_, scope) =>
+        {
+            var presenter = new ContentPresenter
+            {
+                Name = "PART_ContentPresenter",
+                [!ContentPresenter.ContentProperty] = new TemplateBinding(ContentControl.ContentProperty),
+                [!ContentPresenter.ContentTemplateProperty] = new TemplateBinding(ContentControl.ContentTemplateProperty),
+                [!ContentPresenter.BackgroundProperty] = new TemplateBinding(TemplatedControl.BackgroundProperty),
+                [!ContentPresenter.BorderBrushProperty] = new TemplateBinding(TemplatedControl.BorderBrushProperty),
+                [!ContentPresenter.BorderThicknessProperty] = new TemplateBinding(TemplatedControl.BorderThicknessProperty),
+                [!ContentPresenter.PaddingProperty] = new TemplateBinding(TemplatedControl.PaddingProperty),
+                [!ContentPresenter.HorizontalContentAlignmentProperty] = new TemplateBinding(ContentControl.HorizontalContentAlignmentProperty),
+                [!ContentPresenter.VerticalContentAlignmentProperty] = new TemplateBinding(ContentControl.VerticalContentAlignmentProperty),
+            }.RegisterInNameScope(scope);
+
+            // Keep the resize grip - TableViewColumn.CanUserResize works through it.
+            var thumb = new Thumb
+            {
+                Name = "PART_Resizer",
+                Width = 12,
+                Margin = new Thickness(0, 0, -6, 0),
+                HorizontalAlignment = HorizontalAlignment.Right,
+                Cursor = new Cursor(StandardCursorType.SizeWestEast),
+                Background = Brushes.Transparent,
+                Template = new FuncControlTemplate<Thumb>((_, _) => new Border { Background = Brushes.Transparent }),
+            }.RegisterInNameScope(scope);
+
+            return new Panel { Children = { presenter, thumb } };
+        });
+
+    /// <summary>
     /// Makes <see cref="TableView"/> rows tight to their cells. TableViewRow is a ListBoxItem
     /// and its default padding sits *outside* the cells, so cell borders would be drawn inside
     /// the row - horizontal lines floating above the row edge and vertical lines broken into
@@ -98,6 +163,22 @@ public static class UiUtil
                 new Setter(TableViewRow.MinHeightProperty, 0.0),
             }
         });
+
+        // TableView's template wraps the header in a Border with hard-coded 6,9,6,12 padding
+        // while rows sit flush against the control edge. Left alone the header's column border
+        // lands 6px right of the cell borders below it, and its bottom line floats 12px above
+        // the first row. The Border is an unnamed template part, so it can't be reached by a
+        // selector - zero its padding once the template is applied.
+        tableView.Loaded += (_, _) =>
+        {
+            var headersPresenter = tableView.GetVisualDescendants()
+                .OfType<TableViewColumnHeadersPresenter>()
+                .FirstOrDefault();
+            if (headersPresenter?.GetVisualParent() is Border headerBorder)
+            {
+                headerBorder.Padding = new Thickness(0);
+            }
+        };
     }
 
     // TableViewCell's built-in template only template-binds Background, so the border
