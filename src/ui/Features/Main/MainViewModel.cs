@@ -311,6 +311,12 @@ public partial class MainViewModel :
     private string? _subtitleFileName;
     private string? _subtitleFileNameOriginal;
     private bool _converted;
+
+    // A file name the app derived on the user's behalf (auto-translate picking a target
+    // language) that must win over the "guess from video or subtitle" SaveAsBehavior
+    // setting - that setting answers "no name yet, what do we suggest?", and here there is
+    // one. Consumed and cleared by the next "Save as".
+    private string? _saveAsFileNameSuggestion;
     private Subtitle _subtitle;
     private Subtitle? _subtitleSecondary;
     private Subtitle _subtitleOriginal;
@@ -1840,6 +1846,7 @@ public partial class MainViewModel :
         _subtitleFileNameOriginal = string.Empty;
         _subtitleOriginal = new Subtitle();
         _changeSubtitleHashOriginal = GetFastHashOriginal();
+        _saveAsFileNameSuggestion = null;
 
         _visibleLayers = null;
         ShowLayerFilterIcon = false;
@@ -8273,6 +8280,11 @@ public partial class MainViewModel :
             }
 
             _subtitleFileName = Path.Combine(directory, nameWithoutExt + "." + targetLanguageCode + extension);
+
+            // Saving must offer the translated name, not the video's name - otherwise the
+            // default video-first SaveAsBehavior suggests overwriting the subtitle that was
+            // just translated from.
+            _saveAsFileNameSuggestion = _subtitleFileName;
         }
         else
         {
@@ -17585,7 +17597,13 @@ public partial class MainViewModel :
     {
         var newFileName = "New";
         var behavior = Se.Settings.General.SaveAsBehavior;
-        if (behavior == nameof(SaveAsBehaviourType.UseSubtitleFileNameThenVideoFileName))
+
+        // An app-derived name (auto-translate) beats the behavior setting - see the field comment.
+        if (!string.IsNullOrEmpty(_saveAsFileNameSuggestion))
+        {
+            newFileName = GetFileNameWithoutExtension(_saveAsFileNameSuggestion);
+        }
+        else if (behavior == nameof(SaveAsBehaviourType.UseSubtitleFileNameThenVideoFileName))
         {
             if (!string.IsNullOrEmpty(_subtitleFileName))
             {
@@ -17702,6 +17720,7 @@ public partial class MainViewModel :
         _subtitleFileName = saveAsResult.FileName;
         _subtitle.FileName = saveAsResult.FileName;
         _converted = false;
+        _saveAsFileNameSuggestion = null;
         _lastOpenSaveFormat = saveAsResult.SubtitleFormat;
 
         // When "Save as" targets a different format than the one currently loaded, convert the source
