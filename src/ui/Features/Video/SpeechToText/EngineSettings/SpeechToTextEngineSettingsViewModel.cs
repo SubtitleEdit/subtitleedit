@@ -183,7 +183,14 @@ public partial class SpeechToTextEngineSettingsViewModel : ObservableObject
                     return "Linux ARM64 (CPU)";
                 }
                 var linuxVariant = DownloadHashManager.DetectCrispAsrLinuxVariant(folder);
-                return linuxVariant == "cuda" ? "Linux x64 (CUDA)" : "Linux x64 (CPU)";
+                return linuxVariant switch
+                {
+                    "cuda" => "Linux x64 (CUDA)",
+                    "cuda13" => "Linux x64 (CUDA 13)",
+                    "vulkan" => "Linux x64 (Vulkan)",
+                    "hip" => "Linux x64 (ROCm)",
+                    _ => "Linux x64 (CPU)",
+                };
             }
 
             var winVariant = DownloadHashManager.DetectCrispAsrWindowsVariant(folder);

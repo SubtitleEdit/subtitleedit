@@ -2495,7 +2495,8 @@ public partial class SpeechToTextViewModel : ObservableObject
     }
 
     /// <summary>
-    /// Linux x86_64 build prompt: CPU vs CUDA. Returns "cuda", empty string for the default CPU build,
+    /// Linux x86_64 build prompt: CPU, Vulkan (any GPU), CUDA (NVIDIA) or ROCm (AMD).
+    /// Returns "vulkan" / "cuda" / "cuda13" / "hip", empty string for the default CPU build,
     /// or null when the user cancels.
     /// </summary>
     private async Task<string?> PromptCrispAsrLinuxVariantAsync(string engineName)
@@ -2507,12 +2508,43 @@ public partial class SpeechToTextViewModel : ObservableObject
             MessageBoxButtons.Cancel,
             MessageBoxIcon.Question,
             "CPU",
-            "CUDA");
+            "Vulkan",
+            "CUDA",
+            "ROCm");
+
+        if (answer == MessageBoxResult.Custom3)
+        {
+            return await PromptCrispAsrLinuxCudaVersionAsync();
+        }
 
         return answer switch
         {
             MessageBoxResult.Custom1 => string.Empty,
-            MessageBoxResult.Custom2 => "cuda",
+            MessageBoxResult.Custom2 => "vulkan",
+            MessageBoxResult.Custom4 => "hip",
+            _ => null,
+        };
+    }
+
+    /// <summary>
+    /// Follow-up prompt after the user picks "CUDA" in the Linux CrispASR variant selector.
+    /// Returns "cuda" (CUDA 12 build) or "cuda13", or null when the user cancels.
+    /// </summary>
+    private async Task<string?> PromptCrispAsrLinuxCudaVersionAsync()
+    {
+        var answer = await MessageBox.Show(
+            Window!,
+            "CrispASR CUDA build",
+            $"{Environment.NewLine}CUDA 12 works with most current NVIDIA drivers.{Environment.NewLine}{Environment.NewLine}Pick CUDA 13 only if your driver stack is built for CUDA 13.",
+            MessageBoxButtons.Cancel,
+            MessageBoxIcon.Question,
+            "CUDA 12",
+            "CUDA 13");
+
+        return answer switch
+        {
+            MessageBoxResult.Custom1 => "cuda",
+            MessageBoxResult.Custom2 => "cuda13",
             _ => null,
         };
     }
