@@ -60,20 +60,44 @@ public static class UiUtil
             Se.Settings.Appearance.GridLinesAppearance == nameof(DataGridGridLinesVisibility.Horizontal) ||
             Se.Settings.Appearance.GridLinesAppearance == nameof(DataGridGridLinesVisibility.All);
 
-        var padding = noPadding || Se.Settings.Appearance.GridCompactMode ? 0 : 4;
+        // Horizontal inset keeps text off the vertical grid line; the vertical inset sets the
+        // row height, because ApplyTableViewRowStyle zeroes the row's own padding (the cell must
+        // fill the row or its borders float inside it instead of forming continuous lines).
+        var padding = noPadding
+            ? new Thickness(0)
+            : new Thickness(4, Se.Settings.Appearance.GridCompactMode ? 2 : 6);
 
         return new ControlTheme(typeof(TableViewCell))
         {
             Setters =
             {
                 new Setter(TableViewCell.BackgroundProperty, Brushes.Transparent),
-                new Setter(TableViewCell.PaddingProperty, new Thickness(padding)),
+                new Setter(TableViewCell.PaddingProperty, padding),
                 new Setter(TableViewCell.BorderBrushProperty, GetBorderBrush()),
                 new Setter(TableViewCell.BorderThicknessProperty,
                     new Thickness(0, 0, showVertical ? 1 : 0, showHorizontal ? 1 : 0)), // vertical and horizontal lines
                 new Setter(TableViewCell.TemplateProperty, TableViewCellTemplate),
             }
         };
+    }
+
+    /// <summary>
+    /// Makes <see cref="TableView"/> rows tight to their cells. TableViewRow is a ListBoxItem
+    /// and its default padding sits *outside* the cells, so cell borders would be drawn inside
+    /// the row - horizontal lines floating above the row edge and vertical lines broken into
+    /// one segment per row instead of continuous columns. The cells carry the inset instead
+    /// (see the cell themes above). Call this on any TableView using those cell themes.
+    /// </summary>
+    public static void ApplyTableViewRowStyle(TableView tableView)
+    {
+        tableView.Styles.Add(new Style(x => x.OfType<TableViewRow>())
+        {
+            Setters =
+            {
+                new Setter(TableViewRow.PaddingProperty, new Thickness(0)),
+                new Setter(TableViewRow.MinHeightProperty, 0.0),
+            }
+        });
     }
 
     // TableViewCell's built-in template only template-binds Background, so the border

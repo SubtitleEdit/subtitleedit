@@ -141,6 +141,53 @@ public class ShowHistoryTableViewTests
     }
 
     [AvaloniaFact]
+    public void ShowHistoryWindow_CellsFillTheirRowSoGridLinesAreContinuous()
+    {
+        // TableViewRow is a ListBoxItem whose default padding sits outside the cells. Left as-is,
+        // cells were 18px inside 39px rows, so the horizontal line floated above the row edge and
+        // the vertical line was drawn as one short segment per row instead of a continuous column.
+        var previous = Se.Settings.Appearance.GridLinesAppearance;
+        try
+        {
+            Se.Settings.Appearance.GridLinesAppearance = "All";
+
+            var window = new ShowHistoryWindow(MakeViewModel(4));
+            window.Show();
+
+            var tableView = GetTableView(window);
+            var rows = tableView.GetVisualDescendants().OfType<TableViewRow>().ToList();
+            Assert.True(rows.Count >= 2);
+
+            foreach (var row in rows)
+            {
+                var cells = row.GetVisualDescendants().OfType<TableViewCell>().ToList();
+                Assert.Equal(2, cells.Count);
+
+                // Every cell spans the full row height, so its bottom/right borders land on the
+                // row edges and join up with the neighbouring rows' lines.
+                foreach (var cell in cells)
+                {
+                    Assert.Equal(row.Bounds.Height, cell.Bounds.Height);
+                }
+
+                // Cells tile horizontally without gaps.
+                Assert.Equal(0, cells[0].Bounds.X);
+                Assert.Equal(cells[0].Bounds.Right, cells[1].Bounds.X);
+            }
+
+            // Rows are stacked without vertical gaps, so vertical lines are unbroken.
+            for (var i = 1; i < rows.Count; i++)
+            {
+                Assert.Equal(rows[i - 1].Bounds.Bottom, rows[i].Bounds.Y);
+            }
+        }
+        finally
+        {
+            Se.Settings.Appearance.GridLinesAppearance = previous;
+        }
+    }
+
+    [AvaloniaFact]
     public void ShowHistoryWindow_VirtualizesLargeHistory()
     {
         // The old DataGrid virtualized; TableView derives from ListBox and must too,
