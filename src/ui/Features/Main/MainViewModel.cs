@@ -15564,16 +15564,48 @@ public partial class MainViewModel :
             }
 
             // A .sup that failed IsBluRaySup may be a raw PGS elementary stream (Matroska track
-            // extracted in raw mode - no "PG"/PTS/DTS headers, so no timestamps to recover).
-            // Reject it here with an actionable message instead of letting megabytes of binary
-            // fall through to the generic text importer (issue #12683).
+            // extracted in raw mode - no "PG"/PTS/DTS headers). The images decode fine, but the
+            // timestamps live in the container and are gone, so offer OCR with placeholder
+            // timings instead of letting megabytes of binary fall through to the generic text
+            // importer (issue #12683).
             if ((ext == ".sup" || ext == ".pgs") && FileUtil.IsRawPgsSegmentStream(fileName))
             {
-                await MessageBox.Show(Window!,
+                var rawPgsAnswer = await MessageBox.Show(Window!,
                     Se.Language.General.Error,
-                    Se.Language.Main.ErrorLoadRawPgs,
-                    MessageBoxButtons.OK,
-                    MessageBoxIcon.Error);
+                    Se.Language.Main.ErrorLoadRawPgsPrompt,
+                    MessageBoxButtons.YesNo,
+                    MessageBoxIcon.Question);
+                if (rawPgsAnswer != MessageBoxResult.Yes)
+                {
+                    return;
+                }
+
+                var rawPgsLog = new StringBuilder();
+                var rawPgsSubtitles = BluRaySupParser.ParseRawPgsSegmentStream(fileName, rawPgsLog);
+                if (rawPgsSubtitles.Count == 0)
+                {
+                    await MessageBox.Show(Window!,
+                        Se.Language.General.Error,
+                        Se.Language.General.NoSubtitlesFound,
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Error);
+                    return;
+                }
+
+                BluRaySupParser.SetPlaceholderTimings(rawPgsSubtitles);
+                Dispatcher.UIThread.Post(async () =>
+                {
+                    var result = await ShowDialogAsync<OcrWindow, OcrViewModel>(vm => { vm.Initialize(rawPgsSubtitles, fileName); });
+
+                    if (result.OkPressed)
+                    {
+                        VideoCloseFile();
+                        _subtitleFileName = Utilities.GetPathAndFileNameWithoutExtension(fileName);
+                        _converted = true;
+                        ReplaceSubtitles(result.OcredSubtitle);
+                        SelectAndScrollToRow(0);
+                    }
+                });
                 return;
             }
 

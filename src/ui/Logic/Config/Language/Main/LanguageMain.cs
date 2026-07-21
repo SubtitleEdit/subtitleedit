@@ -24,7 +24,7 @@ public class LanguageMain
     public string ErrorLoadJpg { get; set; }
     public string ErrorLoadPng { get; set; }
     public string ErrorLoadRar { get; set; }
-    public string ErrorLoadRawPgs { get; set; }
+    public string ErrorLoadRawPgsPrompt { get; set; }
     public string ErrorLoadSrr { get; set; }
     public string ErrorLoadTorrent { get; set; }
     public string ErrorLoadZip { get; set; }
@@ -154,7 +154,7 @@ public class LanguageMain
         ErrorLoadJpg = "This file seems to be a JPG image file.\n\nSubtitle Edit cannot open image files.";
         ErrorLoadPng = "This file seems to be a PNG image file.\n\nSubtitle Edit cannot open image files.";
         ErrorLoadRar = "This file seems to be a compressed 7-Zip file.\n\nSubtitle Edit cannot open compressed files.";
-        ErrorLoadRawPgs = "This file seems to be a raw PGS stream without the Blu-ray SUP \"PG\" headers, so it contains no timestamps.\n\nThis usually happens when a Matroska PGS track is extracted in \"raw\" mode. Re-extract the track in normal track mode (e.g. \"mkvextract tracks\" without --raw), or open the original Matroska file directly in Subtitle Edit.";
+        ErrorLoadRawPgsPrompt = "This file seems to be a raw PGS stream without the Blu-ray SUP \"PG\" headers, so it contains no timestamps.\n\nThis usually happens when a Matroska PGS track is extracted in \"raw\" mode. For correct timings, re-extract the track in normal track mode (e.g. \"mkvextract tracks\" without --raw), or open the original Matroska file directly in Subtitle Edit.\n\nDo you want to import the subtitle images anyway, with auto-generated placeholder timings that must be fixed manually?";
         ErrorLoadSrr = "This file seems to be a ReScene SRR file.\n\nSubtitle Edit cannot open SRR files.";
         ErrorLoadTorrent = "This file seems to be a BitTorrent file.\n\nSubtitle Edit cannot open torrent files.";
         ErrorLoadZip = "This file seems to be a compressed ZIP file.\n\nSubtitle Edit cannot open compressed files.";
