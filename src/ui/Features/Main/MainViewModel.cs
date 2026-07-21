@@ -22435,6 +22435,13 @@ public partial class MainViewModel :
 
     internal async void OnSubtitleGridSingleTapped(object? sender, TappedEventArgs e)
     {
+        // Tapping a row means "select this line", so collapse any leftover text
+        // selection in the edit box (for example the fragment a search selected)
+        // and let line level actions such as italic apply to the whole line.
+        // Re-tapping the already selected row raises no SelectionChanged, so this
+        // cannot rely on SubtitleGridSelectionChanged. See issue #12688.
+        EditTextBox.ClearSelection();
+
         _singleTapCancellationTokenSource?.Cancel();
         var cts = _singleTapCancellationTokenSource = new CancellationTokenSource();
 
