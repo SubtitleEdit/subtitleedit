@@ -164,4 +164,23 @@ public class Tx3GTextOnlyTest
 
         Assert.Equal("tx3g", format.Name);
     }
+
+    // tx3g is binary, so it must also be offered to the binary load paths - batch convert, OCR,
+    // point sync, join subtitles and seconv all iterate GetBinaryFormats rather than
+    // AllSubtitleFormats.
+    [Fact]
+    public void IsRegisteredAsABinaryFormat()
+    {
+        Assert.Contains(SubtitleFormat.GetBinaryFormats(false), f => f.Name == "tx3g");
+    }
+
+    // The binary load path calls IsMine(null, fileName) - a null line list must not throw.
+    [Fact]
+    public void IsMineAcceptsNullLines()
+    {
+        var format = SubtitleFormat.GetBinaryFormats(false).First(f => f.Name == "tx3g");
+
+        Assert.True(format.IsMine(null, "Files/sample_tx3g.tx3g"));
+        Assert.False(format.IsMine(null, "Files/auto_detect_Danish.srt"));
+    }
 }

@@ -667,6 +667,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 new Pns(),
                 new PlayCaptionsFreeEditor(),
                 new VideoCdDat(),
+                new Tx3GTextOnly(),
             };
         }
 
