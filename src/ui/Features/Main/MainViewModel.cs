@@ -645,7 +645,13 @@ public partial class MainViewModel :
         SetVideoOffsetText = Se.Language.Main.Menu.SetVideoOffset;
         WaveformGeneratingText = string.Empty;
 
-        themeInitializer.UpdateThemesIfNeeded().ConfigureAwait(true);
+        // Deliberately not awaited - the constructor has to return so the window can show. The
+        // continuation is what matters: without it a failure to unpack Themes.zip was an
+        // unobserved task exception, leaving every toolbar icon to fail later with nothing in
+        // the log explaining why.
+        _ = themeInitializer.UpdateThemesIfNeeded().ContinueWith(
+            t => Se.LogError(t.Exception!, "Could not unpack themes"),
+            TaskContinuationOptions.OnlyOnFaulted);
         Dispatcher.UIThread.Post(async void () =>
         {
             try

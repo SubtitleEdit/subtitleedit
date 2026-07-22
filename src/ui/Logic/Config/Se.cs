@@ -75,11 +75,21 @@ public class Se
         var programFiles = Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles);
         var programFilesX86 = Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86);
 
+        // Portable mode - keeping data next to the executable - is a Windows notion: a zip
+        // install that lives outside Program Files. Off Windows both folder paths come back
+        // empty, and StartsWith(string.Empty) is always true, so every install already counted
+        // as "in Program Files" and used the per-user data folder. That is the behaviour we
+        // want off Windows, but it was reached by accident; state it outright, because flipping
+        // it would move the data folder out from under existing macOS and Linux installs.
         IsInstalledInProgramFiles =
-            ExePath.StartsWith(programFiles, StringComparison.OrdinalIgnoreCase) ||
-            ExePath.StartsWith(programFilesX86, StringComparison.OrdinalIgnoreCase);
+            !OperatingSystem.IsWindows() ||
+            IsUnder(ExePath, programFiles) ||
+            IsUnder(ExePath, programFilesX86);
 
         IsPortable = !IsInstalledInProgramFiles;
+
+        static bool IsUnder(string path, string root) =>
+            !string.IsNullOrEmpty(root) && path.StartsWith(root, StringComparison.OrdinalIgnoreCase);
 
         DataFolder = IsPortable
             ? ExePath

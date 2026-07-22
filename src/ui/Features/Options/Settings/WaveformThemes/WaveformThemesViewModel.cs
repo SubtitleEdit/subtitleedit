@@ -3,10 +3,12 @@ using Avalonia.Media;
 using Avalonia.Platform.Storage;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using Nikse.SubtitleEdit.Features.Shared;
 using Nikse.SubtitleEdit.Features.Shared.PromptTextBox;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Logic.Media;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
@@ -196,10 +198,6 @@ public partial class WaveformThemesViewModel : ObservableObject
         }
 
         var path = files[0].Path.LocalPath;
-        if (!File.Exists(path))
-        {
-            return;
-        }
 
         try
         {
@@ -210,16 +208,33 @@ public partial class WaveformThemesViewModel : ObservableObject
             });
             if (dto == null)
             {
-                return;
+                throw new InvalidOperationException("Not a waveform theme file.");
             }
 
             var theme = dto.ToThemeDisplay(Path.GetFileNameWithoutExtension(path));
             Themes.Add(theme);
             SelectedTheme = theme;
         }
-        catch
+        catch (Exception exception)
         {
-            // Silently ignore malformed files
+            // The user picked this file, so a failure has to be reported - silently doing
+            // nothing looks identical to a successful import of an empty theme.
+            await ShowFileErrorAsync(Se.Language.General.CouldNotOpenFileXErrorY, path, exception);
+        }
+    }
+
+    private async Task ShowFileErrorAsync(string format, string path, Exception exception)
+    {
+        Se.LogError(exception, string.Format(format, path, exception.Message));
+
+        if (Window != null)
+        {
+            await MessageBox.Show(
+                Window,
+                Se.Language.General.Error,
+                string.Format(format, path, exception.Message),
+                MessageBoxButtons.OK,
+                MessageBoxIcon.Error);
         }
     }
 
@@ -277,9 +292,10 @@ public partial class WaveformThemesViewModel : ObservableObject
             var json = JsonSerializer.Serialize(dto, new JsonSerializerOptions { WriteIndented = true });
             File.WriteAllText(file.Path.LocalPath, json);
         }
-        catch
+        catch (Exception exception)
         {
-            // Silently ignore write errors
+            await ShowFileErrorAsync(
+                Se.Language.General.CouldNotSaveFileXErrorY, file.Path.LocalPath, exception);
         }
     }
 
