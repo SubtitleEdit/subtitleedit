@@ -19,8 +19,12 @@ public class LanguageInitializer() : ILanguageInitializer
     {
         if (await NeedsUpdate())
         {
-            await Unpack();
-            WriteNewVersionFile();
+            // Only stamp the version once everything actually landed. Stamping regardless would
+            // mark a half-unpacked folder as current, and this version would then never retry.
+            if (await Unpack())
+            {
+                WriteNewVersionFile();
+            }
         }
     }
 
@@ -71,13 +75,16 @@ public class LanguageInitializer() : ILanguageInitializer
         return false;
     }
 
-    private async Task Unpack()
+    /// <returns><see langword="true"/> when every language file was written.</returns>
+    private async Task<bool> Unpack()
     {
         var outputDir = Se.TranslationFolder;
         if (!Directory.Exists(outputDir))
         {
             Directory.CreateDirectory(outputDir);
         }
+
+        var allWritten = true;
 
         foreach (var uri in AssetLoader.GetAssets(LanguagesFolderUri, null))
         {
@@ -97,7 +104,10 @@ public class LanguageInitializer() : ILanguageInitializer
             catch
             {
                 Se.LogError($"Could not unpack language file \"{fileName}\".");
+                allWritten = false;
             }
         }
+
+        return allWritten;
     }
 }

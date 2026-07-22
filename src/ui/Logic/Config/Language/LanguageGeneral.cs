@@ -119,6 +119,7 @@ public class LanguageGeneral
     public string CopyImageToClipboard { get; set; }
     public string CopyTextToClipboard { get; set; }
     public string CouldNotSaveFileXErrorY { get; set; }
+    public string CouldNotOpenFileXErrorY { get; set; }
     public string Count { get; set; }
     public string Cps { get; set; }
     public string CurrentSubtitle { get; set; }
@@ -880,6 +881,7 @@ public class LanguageGeneral
         CopyImageToClipboard = "Copy image to clipboard";
         CopyTextToClipboard = "Copy text to clipboard";
         CouldNotSaveFileXErrorY = "Could not save file \"{0}\". Error: {1}";
+        CouldNotOpenFileXErrorY = "Could not open file \"{0}\". Error: {1}";
         Count = "Count";
         Cps = "Chars/sec";
         CurrentSubtitle = "Current subtitle";

@@ -1,5 +1,6 @@
 using Avalonia.Platform;
 using Nikse.SubtitleEdit.Core.AudioToText;
+using Nikse.SubtitleEdit.Logic.Config;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -58,18 +59,29 @@ public abstract class CrispAsrEngineBase : ICrispAsrEngine
 
     public virtual async Task<string> GetHelpText()
     {
+        // The per-backend asset name is derived from Name, so a backend added without its
+        // matching .txt would throw straight into the caller's RelayCommand. Fall back to the
+        // shared text instead - missing help is not worth taking the dialog down for.
         var assetName = $"{Name.Replace(" ", string.Empty)}.txt";
         var uri = new Uri($"avares://SubtitleEdit/Assets/SpeechToText/{assetName}");
         var commonUri = new Uri("avares://SubtitleEdit/Assets/SpeechToText/CrispASRCommon.txt");
 
-        await using var headerStream = AssetLoader.Open(uri);
-        using var headerReader = new StreamReader(headerStream);
-        var header = await headerReader.ReadToEndAsync();
+        var header = string.Empty;
+        try
+        {
+            await using var headerStream = AssetLoader.Open(uri);
+            using var headerReader = new StreamReader(headerStream);
+            header = (await headerReader.ReadToEndAsync()).TrimEnd();
+        }
+        catch
+        {
+            Se.LogError($"No help text asset \"{assetName}\" for speech-to-text backend \"{Name}\".");
+        }
 
         await using var commonStream = AssetLoader.Open(commonUri);
         using var commonReader = new StreamReader(commonStream);
         var common = await commonReader.ReadToEndAsync();
 
-        return header.TrimEnd() + Environment.NewLine + common;
+        return header.Length == 0 ? common : header + Environment.NewLine + common;
     }
 }
