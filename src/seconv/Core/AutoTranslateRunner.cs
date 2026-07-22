@@ -1,8 +1,8 @@
 using Nikse.SubtitleEdit.Core.AutoTranslate;
 using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.Translate;
-using Nikse.SubtitleEdit.Features.Translate;
-using Nikse.SubtitleEdit.Logic.LlamaCpp;
+using Nikse.SubtitleEdit.UiLogic.LlamaCpp;
+using Nikse.SubtitleEdit.UiLogic.Translate;
 
 namespace SeConv.Core;
 

@@ -18,6 +18,7 @@ using Optris.Icons.Avalonia;
 using System;
 using System.Collections;
 using System.ComponentModel;
+using Nikse.SubtitleEdit.UiLogic.Ocr.FixEngine;
 using MenuItem = Avalonia.Controls.MenuItem;
 
 namespace Nikse.SubtitleEdit.Features.Ocr;

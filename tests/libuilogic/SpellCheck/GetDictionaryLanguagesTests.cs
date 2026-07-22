@@ -1,7 +1,7 @@
 using System;
 using System.IO;
 using System.Linq;
-using Nikse.SubtitleEdit.Features.SpellCheck;
+using Nikse.SubtitleEdit.UiLogic.SpellCheck;
 
 namespace LibUiLogicTests.SpellCheck;
 

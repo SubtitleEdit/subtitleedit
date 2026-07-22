@@ -1,5 +1,6 @@
 using Nikse.SubtitleEdit.Features.Ocr.FixEngine;
 using System.Text.RegularExpressions;
+using Nikse.SubtitleEdit.UiLogic.Ocr.FixEngine;
 
 namespace UITests.Features.Ocr.FixEngine;
 

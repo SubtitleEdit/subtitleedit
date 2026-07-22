@@ -1,8 +1,4 @@
-using System;
-
-// Kept in the original UI namespace so existing references resolve unchanged after the spell-check /
-// OCR-fix engine moved into libuilogic (shared by UI and seconv).
-namespace Nikse.SubtitleEdit.Features.SpellCheck;
+namespace Nikse.SubtitleEdit.UiLogic.SpellCheck;
 
 /// <summary>
 /// Config seam for the shared spell-check / OCR-fix engine. The UI wires these to its live

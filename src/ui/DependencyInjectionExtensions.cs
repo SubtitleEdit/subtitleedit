@@ -173,6 +173,9 @@ using Nikse.SubtitleEdit.UiLogic.Ocr;
 using Nikse.SubtitleEdit.Logic.Ocr;
 using Nikse.SubtitleEdit.Logic.Ocr.GoogleLens;
 using Nikse.SubtitleEdit.Logic.UndoRedo;
+using Nikse.SubtitleEdit.UiLogic.LlamaCpp;
+using Nikse.SubtitleEdit.UiLogic.Ocr.FixEngine;
+using Nikse.SubtitleEdit.UiLogic.SpellCheck;
 using AssaApplyCustomOverrideTagsViewModel = Nikse.SubtitleEdit.Features.Assa.AssaApplyCustomOverrideTags.AssaApplyCustomOverrideTagsViewModel;
 using SpeechToTextViewModel = Nikse.SubtitleEdit.Features.Video.SpeechToText.SpeechToTextViewModel;
 using AudioVisualizerUndockedViewModel = Nikse.SubtitleEdit.Features.Shared.Undocked.AudioVisualizerUndockedViewModel;
@@ -201,8 +204,8 @@ public static class DependencyInjectionExtensions
     {
         // LlamaCppServerManager lives in libuilogic (shared with seconv) and cannot see the
         // UI's Se config - point it at the UI's llama.cpp folder and tools log explicitly.
-        Logic.LlamaCpp.LlamaCppServerManager.FolderOverride = Logic.Config.Se.LlamaCppFolder;
-        Logic.LlamaCpp.LlamaCppServerManager.LogAction = Logic.Config.Se.WriteToolsLog;
+        LlamaCppServerManager.FolderOverride = Logic.Config.Se.LlamaCppFolder;
+        LlamaCppServerManager.LogAction = Logic.Config.Se.WriteToolsLog;
 
         // Misc services
         collection.AddTransient<IBinaryOcrMatcher, BinaryOcrMatcher>();

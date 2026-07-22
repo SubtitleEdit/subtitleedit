@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-
-namespace Nikse.SubtitleEdit.Features.Ocr.FixEngine;
+﻿namespace Nikse.SubtitleEdit.UiLogic.Ocr.FixEngine;
 
 public static class UnknownWordGuesser
 {

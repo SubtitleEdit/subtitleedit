@@ -1,6 +1,6 @@
 using Nikse.SubtitleEdit.Core.AutoTranslate;
 using Nikse.SubtitleEdit.Core.Common;
-using Nikse.SubtitleEdit.Logic.LlamaCpp;
+using Nikse.SubtitleEdit.UiLogic.LlamaCpp;
 using SeConv.Core;
 using Xunit;
 

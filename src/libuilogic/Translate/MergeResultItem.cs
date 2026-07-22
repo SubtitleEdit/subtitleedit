@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace Nikse.SubtitleEdit.Features.Translate;
+﻿namespace Nikse.SubtitleEdit.UiLogic.Translate;
 
 public static partial class MergeAndSplitHelper
 {

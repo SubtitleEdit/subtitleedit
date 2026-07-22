@@ -2,6 +2,7 @@ using Avalonia.Controls;
 using Avalonia.Input;
 using Nikse.SubtitleEdit.Features.SpellCheck;
 using System.Collections.Generic;
+using Nikse.SubtitleEdit.UiLogic.SpellCheck;
 
 namespace Nikse.SubtitleEdit.Features.Shared.TextBoxUtils;
 

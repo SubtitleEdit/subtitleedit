@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace Nikse.SubtitleEdit.Features.Ocr.FixEngine;
+﻿namespace Nikse.SubtitleEdit.UiLogic.Ocr.FixEngine;
 
 public class OcrFixLineResult
 {

@@ -1,7 +1,6 @@
-﻿using System.Collections.Generic;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 
-namespace Nikse.SubtitleEdit.Features.Ocr.FixEngine;
+namespace Nikse.SubtitleEdit.UiLogic.Ocr.FixEngine;
 
 [DebuggerDisplay("'{Word}' - {LinePartType} - pos {WordIndex} - spellcheck: {IsSpellCheckedOk}")]
 public class OcrFixLinePartResult

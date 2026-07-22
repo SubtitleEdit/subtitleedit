@@ -1,17 +1,12 @@
-﻿using Nikse.SubtitleEdit.Core.AutoTranslate;
+﻿using System.Collections.ObjectModel;
+using System.Text;
+using System.Text.RegularExpressions;
+using Nikse.SubtitleEdit.Core.AutoTranslate;
 using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.Settings;
 using Nikse.SubtitleEdit.Core.Translate;
-using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Text.RegularExpressions;
-using System.Threading;
-using System.Threading.Tasks;
 
-namespace Nikse.SubtitleEdit.Features.Translate;
+namespace Nikse.SubtitleEdit.UiLogic.Translate;
 
 public static partial class MergeAndSplitHelper
 {
@@ -246,7 +241,7 @@ public static partial class MergeAndSplitHelper
 
         var totalProcessed = currentRowIndex - index;
         if (totalProcessed == mergeResult.ParagraphCount &&
-            HasSameEmptyLines(rows.Skip(index).Take(totalProcessed).Select(p => p.TranslatedText).ToList(),
+            HasSameEmptyLines(rows.Skip(index).Take(totalProcessed).Select<TranslateRow, string>(p => p.TranslatedText).ToList(),
                               rows.Skip(index).Take(totalProcessed).Select(p => p.Text).ToList(), 0))
         {
             return ApplyFormattingToExistingTranslations(rows, index, formattingList, mergeResult.ParagraphCount);

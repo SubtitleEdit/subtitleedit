@@ -1,9 +1,7 @@
-﻿using System;
-using System.Globalization;
-using System.IO;
+﻿using System.Globalization;
 using Nikse.SubtitleEdit.Core.Common;
 
-namespace Nikse.SubtitleEdit.Features.SpellCheck;
+namespace Nikse.SubtitleEdit.UiLogic.SpellCheck;
 
 public class SpellCheckDictionaryDisplay
 {
