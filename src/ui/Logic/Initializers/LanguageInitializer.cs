@@ -13,44 +13,7 @@ public interface ILanguageInitializer
 
 public class LanguageInitializer() : ILanguageInitializer
 {
-    // List of available language files in Assets/Languages folder
-    private static readonly string[] LanguageFiles =
-    [
-        "Arabic",
-        "Basque",
-        "Bulgarian",
-        "ChineseSimplified",
-        "ChineseTraditional",
-        "Czech",
-        "Danish",
-        "Dutch",
-        "English",
-        "Estonian",
-        "Farsi",
-        "Finnish",
-        "French",
-        "German",
-        "Hebrew",
-        "Hungarian",
-        "Italian",
-        "Japanese",
-        "Korean",
-        "Norwegian",
-        "Macedonian",
-        "Persian",
-        "Polish",
-        "Portuguese",
-        "Portuguese (Brazil)",
-        "Romanian",
-        "Russian",
-        "Slovak",
-        "Spanish",
-        "Swedish",
-        "Thai",
-        "Turkish",
-        "Ukrainian",
-        "Vietnamese",
-    ];
+    private static readonly Uri LanguagesFolderUri = new("avares://SubtitleEdit/Assets/Languages");
 
     public async Task UpdateLanguagesIfNeeded()
     {
@@ -116,19 +79,24 @@ public class LanguageInitializer() : ILanguageInitializer
             Directory.CreateDirectory(outputDir);
         }
 
-        foreach (var languageFile in LanguageFiles)
+        foreach (var uri in AssetLoader.GetAssets(LanguagesFolderUri, null))
         {
+            var fileName = Path.GetFileName(Uri.UnescapeDataString(uri.AbsolutePath));
+            if (!fileName.EndsWith(".json", StringComparison.OrdinalIgnoreCase))
+            {
+                continue;
+            }
+
             try
             {
-                var uri = new Uri($"avares://SubtitleEdit/Assets/Languages/{languageFile}.json");
                 await using var stream = AssetLoader.Open(uri);
-                var outputPath = Path.Combine(outputDir, $"{languageFile}.json");
+                var outputPath = Path.Combine(outputDir, fileName);
                 await using var fileStream = File.Create(outputPath);
                 await stream.CopyToAsync(fileStream);
             }
             catch
             {
-                // Ignore
+                Se.LogError($"Could not unpack language file \"{fileName}\".");
             }
         }
     }
