@@ -32,7 +32,13 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 while (i  + 4 < buffer.Length)
                 {
                     var boxLength = GetUInt(buffer, i);
-                    if (boxLength > 500 || i + 4 + boxLength > buffer.Length)
+
+                    // GetUInt returns int, so a length with the high bit set (leading byte >= 0x80)
+                    // reads back negative. A negative length slips past both checks below - it is
+                    // not > 500, and "i + 4 + boxLength" is smaller than the buffer, not larger -
+                    // and then throws in Encoding.GetString. Zero is rejected too: it would append
+                    // an empty paragraph for every 4 bytes of input.
+                    if (boxLength <= 0 || boxLength > 500 || i + 4 + boxLength > buffer.Length)
                     {
                         break;
                     }
