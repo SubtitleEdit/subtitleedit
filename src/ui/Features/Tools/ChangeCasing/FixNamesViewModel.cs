@@ -63,18 +63,20 @@ public partial class FixNamesViewModel : ObservableObject
         Subtitle = new Subtitle();
 
         _previewTimer = new System.Timers.Timer(500);
-        _previewTimer.Elapsed += (sender, args) =>
+        _previewTimer.Elapsed += PreviewTimerElapsed;
+    }
+
+    private void PreviewTimerElapsed(object? sender, System.Timers.ElapsedEventArgs e)
+    {
+        var namesString = string.Join(' ', Names.Where(p => p.IsChecked).Select(p => p.Name));
+        if (namesString != _oldNames && !_loading)
         {
-            var namesString = string.Join(' ', Names.Where(p => p.IsChecked).Select(p => p.Name));
-            if (namesString != _oldNames && !_loading)
+            lock (_lock)
             {
-                lock (_lock)
-                {
-                    GeneratePreview();
-                    _oldNames = namesString;
-                }
+                GeneratePreview();
+                _oldNames = namesString;
             }
-        };
+        }
     }
 
     internal void Initialize(Subtitle subtitle)
@@ -268,12 +270,14 @@ public partial class FixNamesViewModel : ObservableObject
         Info = $"Change casing - lines changed: {noOfLinesChanged}";
 
         OkPressed = true;
+        _previewTimer.StopAndDispose(PreviewTimerElapsed);
         Window?.Close();
     }
 
     [RelayCommand]
     public void Cancel()
     {
+        _previewTimer.StopAndDispose(PreviewTimerElapsed);
         Window?.Close();
     }
 

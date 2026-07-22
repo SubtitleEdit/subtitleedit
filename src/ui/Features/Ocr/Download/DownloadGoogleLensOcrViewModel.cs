@@ -3,6 +3,7 @@ using Avalonia.Input;
 using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Logic.Download;
 using Nikse.SubtitleEdit.Logic.SevenZipExtractor;
@@ -120,7 +121,7 @@ public partial class DownloadGoogleLensOcrViewModel : ObservableObject
     {
         _cancellationTokenSource?.Cancel();
         _done = true;
-        _timer.Stop();
+        _timer.StopAndDispose(OnTimerOnElapsed);
         Close();
     }
 

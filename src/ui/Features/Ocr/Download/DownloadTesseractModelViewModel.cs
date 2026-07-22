@@ -4,6 +4,7 @@ using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Nikse.SubtitleEdit.Core.Common;
+using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Logic.Download;
 using System;
@@ -132,7 +133,7 @@ public partial class DownloadTesseractModelViewModel : ObservableObject
     {
         _cancellationTokenSource?.Cancel();
         _done = true;
-        _timer.Stop();
+        _timer.StopAndDispose(OnTimerOnElapsed);
         Close();
     }
 

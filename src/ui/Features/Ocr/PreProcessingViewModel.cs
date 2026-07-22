@@ -53,15 +53,17 @@ public partial class PreProcessingViewModel : ObservableObject
         OneColorDarknessThreshold = preProcessingSettings.OneColorDarknessThreshold;
 
         SourceBitmap = sourceBitmap.ToAvaloniaBitmap();
-        
-        _timerUpdatePreview.Elapsed += (s, e) =>
-        {
-            _timerUpdatePreview.Stop();
-            UpdatePreview();
-            _timerUpdatePreview.Start();
-        };
+
+        _timerUpdatePreview.Elapsed += TimerUpdatePreviewElapsed;
         _timerUpdatePreview.Start();
         _dirty = true;
+    }
+
+    private void TimerUpdatePreviewElapsed(object? sender, System.Timers.ElapsedEventArgs e)
+    {
+        _timerUpdatePreview.Stop();
+        UpdatePreview();
+        _timerUpdatePreview.Start();
     }
 
     private void UpdatePreview()
@@ -82,6 +84,7 @@ public partial class PreProcessingViewModel : ObservableObject
         UpdateSettings();
 
         OkPressed = true;
+        _timerUpdatePreview.StopAndDispose(TimerUpdatePreviewElapsed);
         Window?.Close();
     }
 
@@ -102,6 +105,7 @@ public partial class PreProcessingViewModel : ObservableObject
     [RelayCommand]
     private void Cancel()
     {
+        _timerUpdatePreview.StopAndDispose(TimerUpdatePreviewElapsed);
         Window?.Close();
     }
 
@@ -110,6 +114,7 @@ public partial class PreProcessingViewModel : ObservableObject
         if (e.Key == Key.Escape)
         {
             e.Handled = true;
+            _timerUpdatePreview.StopAndDispose(TimerUpdatePreviewElapsed);
             Window?.Close();
         }
     }

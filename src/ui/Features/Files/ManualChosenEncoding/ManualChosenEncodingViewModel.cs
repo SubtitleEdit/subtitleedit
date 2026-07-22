@@ -42,19 +42,21 @@ public partial class ManualChosenEncodingViewModel : ObservableObject
         _fileBuffer = [];
 
         _timerSearch = new System.Timers.Timer(500);
-        _timerSearch.Elapsed += (s, e) =>
+        _timerSearch.Elapsed += TimerSearchElapsed;
+    }
+
+    private void TimerSearchElapsed(object? sender, System.Timers.ElapsedEventArgs e)
+    {
+        _timerSearch.Stop();
+        if (_dirty)
         {
-            _timerSearch.Stop();
-            if (_dirty)
+            Dispatcher.UIThread.Invoke(() =>
             {
-                Dispatcher.UIThread.Invoke(() =>
-                {
-                    _dirty = false;
-                    UpdateSearchEncodings();
-                });
-            }
-            _timerSearch.Start();
-        };
+                _dirty = false;
+                UpdateSearchEncodings();
+            });
+        }
+        _timerSearch.Start();
     }
 
     private void UpdateSearchEncodings()
@@ -89,12 +91,14 @@ public partial class ManualChosenEncodingViewModel : ObservableObject
     private void Ok()
     {
         OkPressed = true;
+        _timerSearch.StopAndDispose(TimerSearchElapsed);
         Window?.Close();
     }
 
     [RelayCommand]
     private void Cancel()
     {
+        _timerSearch.StopAndDispose(TimerSearchElapsed);
         Window?.Close();
     }
 
@@ -103,6 +107,7 @@ public partial class ManualChosenEncodingViewModel : ObservableObject
         if (e.Key == Key.Escape)
         {
             e.Handled = true;
+            _timerSearch.StopAndDispose(TimerSearchElapsed);
             Window?.Close();
         }
     }

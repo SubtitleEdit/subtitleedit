@@ -42,21 +42,23 @@ public partial class PickFontNameViewModel : ObservableObject
         ImagePreview = new SKBitmap(1, 1, true).ToAvaloniaBitmap();
 
         _timerUpdate = new System.Timers.Timer(500);
-        _timerUpdate.Elapsed += (s, e) =>
+        _timerUpdate.Elapsed += TimerUpdateElapsed;
+    }
+
+    private void TimerUpdateElapsed(object? sender, System.Timers.ElapsedEventArgs e)
+    {
+        _timerUpdate.Stop();
+        if (_dirtySearch)
         {
-            _timerUpdate.Stop();
-            if (_dirtySearch)
-            {
-                _dirtySearch = false;
-                UpdateSearch();
-            }
-            if (_dirtyPreview)
-            {
-                _dirtyPreview = false;
-                UpdatePreview();
-            }
-            _timerUpdate.Start();
-        };
+            _dirtySearch = false;
+            UpdateSearch();
+        }
+        if (_dirtyPreview)
+        {
+            _dirtyPreview = false;
+            UpdatePreview();
+        }
+        _timerUpdate.Start();
     }
 
     internal void Initialize(bool isFontSizeVisible = false, bool isFontBoldVisible = false)
@@ -157,12 +159,14 @@ public partial class PickFontNameViewModel : ObservableObject
     private void Ok()
     {
         OkPressed = true;
+        _timerUpdate.StopAndDispose(TimerUpdateElapsed);
         Window?.Close();
     }
 
     [RelayCommand]
     private void Cancel()
     {
+        _timerUpdate.StopAndDispose(TimerUpdateElapsed);
         Window?.Close();
     }
 
@@ -171,6 +175,7 @@ public partial class PickFontNameViewModel : ObservableObject
         if (e.Key == Key.Escape)
         {
             e.Handled = true;
+            _timerUpdate.StopAndDispose(TimerUpdateElapsed);
             Window?.Close();
         }
     }

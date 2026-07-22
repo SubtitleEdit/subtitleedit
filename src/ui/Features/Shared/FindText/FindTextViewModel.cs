@@ -80,12 +80,14 @@ public partial class FindTextViewModel : ObservableObject
     private void Ok()
     {
         OkPressed = true;
+        _searchTimer.StopAndDispose(_searchTimer_Elapsed);
         Window?.Close();
     }
 
     [RelayCommand]
     private void Cancel()
     {
+        _searchTimer.StopAndDispose(_searchTimer_Elapsed);
         Window?.Close();
     }
 
@@ -94,6 +96,7 @@ public partial class FindTextViewModel : ObservableObject
         if (e.Key == Key.Escape)
         {
             e.Handled = true;
+            _searchTimer.StopAndDispose(_searchTimer_Elapsed);
             Window?.Close();
         }
     }

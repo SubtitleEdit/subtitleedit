@@ -116,7 +116,7 @@ public partial class DownloadYtDlpViewModel : ObservableObject
     {
         _cancellationTokenSource?.Cancel();
         _done = true;
-        _timer.Stop();
+        _timer.StopAndDispose(OnTimerOnElapsed);
         Close();
     }
 

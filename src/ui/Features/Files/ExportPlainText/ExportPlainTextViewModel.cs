@@ -283,6 +283,7 @@ public partial class ExportPlainTextViewModel : ObservableObject
     {
         SaveSettings();
         OkPressed = true;
+        _timerUpdatePreview.StopAndDispose(TimerUpdatePreviewElapsed);
         Window?.Close();
     }
 
@@ -290,6 +291,7 @@ public partial class ExportPlainTextViewModel : ObservableObject
     private void Cancel()
     {
         SaveSettings();
+        _timerUpdatePreview.StopAndDispose(TimerUpdatePreviewElapsed);
         Window?.Close();
     }
 
@@ -298,6 +300,7 @@ public partial class ExportPlainTextViewModel : ObservableObject
         if (e.Key == Key.Escape)
         {
             e.Handled = true;
+            _timerUpdatePreview.StopAndDispose(TimerUpdatePreviewElapsed);
             Window?.Close();
         }
     }

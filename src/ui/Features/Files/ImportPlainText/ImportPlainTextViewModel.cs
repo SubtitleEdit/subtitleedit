@@ -381,6 +381,7 @@ public partial class ImportPlainTextViewModel : ObservableObject
 
     private void Close()
     {
+        _timerUpdatePreview.StopAndDispose(TimerUpdatePreviewElapsed);
         Dispatcher.UIThread.Post(() =>
         {
             Window?.Close();

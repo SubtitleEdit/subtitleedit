@@ -419,6 +419,7 @@ public partial class DownloadSpeechToTextEngineViewModel : ObservableObject
 
     private void Close()
     {
+        _timer.StopAndDispose(OnTimerOnElapsed);
         Dispatcher.UIThread.Post(() =>
         {
             Window?.Close();

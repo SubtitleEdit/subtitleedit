@@ -403,22 +403,24 @@ public partial class BatchConvertViewModel : ObservableObject
         LoadSettings();
         FilterComboBoxChanged();
         _filesTimer = new System.Timers.Timer(250);
-        _filesTimer.Elapsed += (sender, args) =>
-        {
-            Dispatcher.UIThread.Post(() =>
-            {
-                _filesTimer.Stop();
-
-                if (_isFilesDirty)
-                {
-                    _isFilesDirty = false;
-                    UpdateFilteredFiles();
-                }
-
-                _filesTimer.Start();
-            });
-        };
+        _filesTimer.Elapsed += FilesTimerElapsed;
         _filesTimer.Start();
+    }
+
+    private void FilesTimerElapsed(object? sender, System.Timers.ElapsedEventArgs e)
+    {
+        Dispatcher.UIThread.Post(() =>
+        {
+            _filesTimer.Stop();
+
+            if (_isFilesDirty)
+            {
+                _isFilesDirty = false;
+                UpdateFilteredFiles();
+            }
+
+            _filesTimer.Start();
+        });
     }
 
     private void UpdateFilteredFiles()
@@ -835,6 +837,7 @@ public partial class BatchConvertViewModel : ObservableObject
     {
         SaveSettings();
         OkPressed = true;
+        _filesTimer.StopAndDispose(FilesTimerElapsed);
         Window?.Close();
     }
 
@@ -1861,6 +1864,7 @@ public partial class BatchConvertViewModel : ObservableObject
         if (e.Key == Key.Escape)
         {
             e.Handled = true;
+            _filesTimer.StopAndDispose(FilesTimerElapsed);
             Window?.Close();
         }
         else if (UiUtil.IsHelp(e))

@@ -4,6 +4,7 @@ using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Nikse.SubtitleEdit.Features.Main;
+using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -47,18 +48,20 @@ public partial class ModifySelectionViewModel : ObservableObject
         LoadSettings();
 
         _previewTimer = new System.Timers.Timer(250);
-        _previewTimer.Elapsed += (sender, args) =>
+        _previewTimer.Elapsed += PreviewTimerElapsed;
+    }
+
+    private void PreviewTimerElapsed(object? sender, System.Timers.ElapsedEventArgs e)
+    {
+        _previewTimer.Stop();
+
+        if (_isDirty)
         {
-            _previewTimer.Stop();
+            _isDirty = false;
+            UpdatePreview();
+        }
 
-            if (_isDirty)
-            {
-                _isDirty = false;
-                UpdatePreview();
-            }
-
-            _previewTimer.Start();
-        };
+        _previewTimer.Start();
     }
 
     private void UpdatePreview()
@@ -163,12 +166,14 @@ public partial class ModifySelectionViewModel : ObservableObject
 
         SaveSettings();
         OkPressed = true;
+        _previewTimer.StopAndDispose(PreviewTimerElapsed);
         Window?.Close();
     }
 
     [RelayCommand]
     private void Cancel()
     {
+        _previewTimer.StopAndDispose(PreviewTimerElapsed);
         Window?.Close();
     }
 
@@ -177,6 +182,7 @@ public partial class ModifySelectionViewModel : ObservableObject
         if (e.Key == Key.Escape)
         {
             e.Handled = true;
+            _previewTimer.StopAndDispose(PreviewTimerElapsed);
             Window?.Close();
         }
     }

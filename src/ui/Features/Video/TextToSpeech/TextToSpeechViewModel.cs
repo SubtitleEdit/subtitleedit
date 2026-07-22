@@ -3422,9 +3422,7 @@ public partial class TextToSpeechViewModel : ObservableObject
         // the rest of the session (ReviewSpeechViewModel already does this on close).
         try
         {
-            _timer.Stop();
-            _timer.Elapsed -= OnTimerOnElapsed;
-            _timer.Dispose();
+            _timer.StopAndDispose(OnTimerOnElapsed);
         }
         catch (Exception ex)
         {

@@ -866,6 +866,11 @@ public partial class SpellCheckViewModel : ObservableObject
         OkPressed = true;
         Se.Settings.SpellCheck.LastLanguageDictionaryName = SelectedDictionary?.Name;
         Se.Settings.SpellCheck.LastLanguageDictionaryFile = SelectedDictionary?.DictionaryFileName;
+        if (_statusTimer != null)
+        {
+            _statusTimer.StopAndDispose(StatusTimerElapsed);
+        }
+
         Dispatcher.UIThread.Invoke(() => { Window?.Close(); });
     }
 
@@ -874,6 +879,11 @@ public partial class SpellCheckViewModel : ObservableObject
         if (e.Key == Key.Escape)
         {
             e.Handled = true;
+            if (_statusTimer != null)
+            {
+                _statusTimer.StopAndDispose(StatusTimerElapsed);
+            }
+
             Window?.Close();
         }
         else if (UiUtil.IsHelp(e))
@@ -1108,24 +1118,26 @@ public partial class SpellCheckViewModel : ObservableObject
         _statusTimer?.Dispose();
 
         _statusTimer = new System.Timers.Timer(3000);
-        _statusTimer.Elapsed += (sender, e) =>
-        {
-            Dispatcher.UIThread.Post(() =>
-            {
-                try
-                {
-                    StatusText = string.Empty;
-                    _statusTimer?.Dispose();
-                    _statusTimer = null;
-                }
-                catch
-                {
-                    // ignore
-                }
-            });
-        };
+        _statusTimer.Elapsed += StatusTimerElapsed;
         _statusTimer.AutoReset = false;
         _statusTimer.Start();
+    }
+
+    private void StatusTimerElapsed(object? sender, System.Timers.ElapsedEventArgs e)
+    {
+        Dispatcher.UIThread.Post(() =>
+        {
+            try
+            {
+                StatusText = string.Empty;
+                _statusTimer?.Dispose();
+                _statusTimer = null;
+            }
+            catch
+            {
+                // ignore
+            }
+        });
     }
 
     internal void ListBoxSuggestionsDoubleTapped(object? sender, TappedEventArgs e)

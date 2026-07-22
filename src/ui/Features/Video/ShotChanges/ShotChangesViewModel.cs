@@ -250,6 +250,7 @@ public partial class ShotChangesViewModel : ObservableObject
         {
             SaveSettings();
             OkPressed = true;
+            _timerGenerate.StopAndDispose(TimerGenerateElapsed);
             Window?.Close();
         });
     }
@@ -263,6 +264,7 @@ public partial class ShotChangesViewModel : ObservableObject
             return;
         }
 
+        _timerGenerate.StopAndDispose(TimerGenerateElapsed);
         Window?.Close();
     }
 
@@ -498,6 +500,7 @@ public partial class ShotChangesViewModel : ObservableObject
         if (e.Key == Key.Escape)
         {
             e.Handled = true;
+            _timerGenerate.StopAndDispose(TimerGenerateElapsed);
             Window?.Close();
         }
         else if (UiUtil.IsHelp(e))

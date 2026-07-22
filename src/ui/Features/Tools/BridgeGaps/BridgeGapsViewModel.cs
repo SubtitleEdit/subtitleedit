@@ -45,16 +45,18 @@ public partial class BridgeGapsViewModel : ObservableObject
         LoadSettings();
 
         _timerUpdatePreview = new System.Timers.Timer(500);
-        _timerUpdatePreview.Elapsed += (s, e) =>
+        _timerUpdatePreview.Elapsed += TimerUpdatePreviewElapsed;
+    }
+
+    private void TimerUpdatePreviewElapsed(object? sender, System.Timers.ElapsedEventArgs e)
+    {
+        _timerUpdatePreview.Stop();
+        if (_dirty)
         {
-            _timerUpdatePreview.Stop();
-            if (_dirty)
-            {
-                _dirty = false;
-                UpdatePreview();
-            }
-            _timerUpdatePreview.Start();
-        };
+            _dirty = false;
+            UpdatePreview();
+        }
+        _timerUpdatePreview.Start();
     }
 
     private void UpdatePreview()
@@ -139,12 +141,14 @@ public partial class BridgeGapsViewModel : ObservableObject
     {
         SaveSettings();
         OkPressed = true;
+        _timerUpdatePreview.StopAndDispose(TimerUpdatePreviewElapsed);
         Window?.Close();
     }
 
     [RelayCommand]
     private void Cancel()
     {
+        _timerUpdatePreview.StopAndDispose(TimerUpdatePreviewElapsed);
         Window?.Close();
     }
 
@@ -153,6 +157,7 @@ public partial class BridgeGapsViewModel : ObservableObject
         if (e.Key == Key.Escape)
         {
             e.Handled = true;
+            _timerUpdatePreview.StopAndDispose(TimerUpdatePreviewElapsed);
             Window?.Close();
         }
         else if (UiUtil.IsHelp(e))

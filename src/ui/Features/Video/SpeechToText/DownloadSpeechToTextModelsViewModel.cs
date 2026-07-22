@@ -18,6 +18,7 @@ using Nikse.SubtitleEdit.Core.AudioToText;
 using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Features.Shared;
 using Nikse.SubtitleEdit.Features.Video.SpeechToText.Engines;
+using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Logic.Download;
 using Nikse.SubtitleEdit.Logic.Media;
@@ -260,6 +261,7 @@ public partial class DownloadSpeechToTextModelsViewModel : ObservableObject
 
     private void Close()
     {
+        _timer.StopAndDispose(OnTimerOnElapsed);
         Dispatcher.UIThread.Post(() =>
         {
             Window?.Close();

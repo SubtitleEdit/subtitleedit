@@ -2049,9 +2049,7 @@ public partial class DownloadTtsViewModel : ObservableObject
     internal void OnClosing()
     {
         try { _cancellationTokenSource.Cancel(); } catch (ObjectDisposedException) { }
-        _timer.Stop();
-        _timer.Elapsed -= OnTimerOnElapsed;
-        _timer.Dispose();
+        _timer.StopAndDispose(OnTimerOnElapsed);
 
         DisposeQuietly(_downloadStream);
         DisposeQuietly(_downloadStreamModel);

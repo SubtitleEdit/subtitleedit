@@ -659,6 +659,7 @@ public partial class ExportImageBasedViewModel : ObservableObject
 
     private void Close()
     {
+        _timerUpdatePreview.StopAndDispose(TimerUpdatePreviewElapsed);
         Dispatcher.UIThread.Post(() => { Window?.Close(); });
     }
 

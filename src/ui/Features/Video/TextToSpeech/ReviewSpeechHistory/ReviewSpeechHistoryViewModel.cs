@@ -198,7 +198,7 @@ public partial class ReviewSpeechHistoryViewModel : ObservableObject
 
     internal void OnWindowClosing(WindowClosingEventArgs e)
     {
-        _timer.Stop();
+        _timer.StopAndDispose(OnTimerOnElapsed);
         _cancellationTokenSource.Cancel();
         lock (_playLock)
         {

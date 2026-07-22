@@ -3,6 +3,7 @@ using Avalonia.Input;
 using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Logic.Download;
 using System;
@@ -238,7 +239,7 @@ public partial class DownloadVideoFromUrlViewModel : ObservableObject
 
             if (_downloadTask.IsCompletedSuccessfully)
             {
-                _timer.Stop();
+                _timer.StopAndDispose(OnTimerElapsed);
                 _done = true;
                 Success = File.Exists(OutputPath);
                 if (!Success)
@@ -252,7 +253,7 @@ public partial class DownloadVideoFromUrlViewModel : ObservableObject
             }
             else if (_downloadTask.IsFaulted)
             {
-                _timer.Stop();
+                _timer.StopAndDispose(OnTimerElapsed);
                 _done = true;
 
                 var ex = _downloadTask.Exception?.InnerException ?? _downloadTask.Exception;
@@ -272,7 +273,7 @@ public partial class DownloadVideoFromUrlViewModel : ObservableObject
             }
             else if (_downloadTask.IsCanceled)
             {
-                _timer.Stop();
+                _timer.StopAndDispose(OnTimerElapsed);
                 _done = true;
                 TryDeletePartial();
                 Close();

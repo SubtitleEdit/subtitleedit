@@ -54,6 +54,7 @@ public partial class ImageBasedPreviewViewModel : ObservableObject
     [RelayCommand]
     private void Ok()
     {
+        _timerUpdatePreview.StopAndDispose(TimerUpdatePreviewElapsed);
         Dispatcher.UIThread.Post(() =>
         {
             Window?.Close();
@@ -65,6 +66,7 @@ public partial class ImageBasedPreviewViewModel : ObservableObject
         if (e.Key == Key.Escape)
         {
             e.Handled = true;
+            _timerUpdatePreview.StopAndDispose(TimerUpdatePreviewElapsed);
             Window?.Close();
         }
     }

@@ -63,19 +63,20 @@ public partial class CustomContinuationStyleViewModel : ObservableObject
         };
 
         _previewTimer = new System.Timers.Timer(500);
-        _previewTimer.Elapsed += (sender, args) =>
+        _previewTimer.Elapsed += PreviewTimerElapsed;
+    }
+
+    private void PreviewTimerElapsed(object? sender, System.Timers.ElapsedEventArgs e)
+    {
+        _previewTimer.Stop();
+
+        if (_isDirty)
         {
-            _previewTimer.Stop();
+            Avalonia.Threading.Dispatcher.UIThread.InvokeAsync(UpdatePreview);
+            _isDirty = false;
+        }
 
-            if (_isDirty)
-            {
-                Avalonia.Threading.Dispatcher.UIThread.InvokeAsync(UpdatePreview);
-                _isDirty = false;
-            }
-
-            _previewTimer.Start();
-        };
-
+        _previewTimer.Start();
     }
 
     public void Initialize(CustomContinuationStyle style)
@@ -200,12 +201,14 @@ public partial class CustomContinuationStyleViewModel : ObservableObject
     private void Ok()
     {
         OkPressed = true;
+        _previewTimer.StopAndDispose(PreviewTimerElapsed);
         Window?.Close();
     }
 
     [RelayCommand]
     private void Cancel()
     {
+        _previewTimer.StopAndDispose(PreviewTimerElapsed);
         Window?.Close();
     }
 
@@ -290,6 +293,7 @@ public partial class CustomContinuationStyleViewModel : ObservableObject
         if (e.Key == Key.Escape)
         {
             e.Handled = true;
+            _previewTimer.StopAndDispose(PreviewTimerElapsed);
             Window?.Close();
         }
     }

@@ -1817,9 +1817,7 @@ public partial class ReviewSpeechViewModel : ObservableObject
         var regenerateInFlight = !IsRegenerateEnabled;
 
         _skipAutoContinue = true;
-        _timer.Stop();
-        _timer.Elapsed -= OnTimerOnElapsed;
-        _timer.Dispose();
+        _timer.StopAndDispose(OnTimerOnElapsed);
         try { _cancellationTokenSource.Cancel(); } catch (ObjectDisposedException) { }
         if (!regenerateInFlight)
         {

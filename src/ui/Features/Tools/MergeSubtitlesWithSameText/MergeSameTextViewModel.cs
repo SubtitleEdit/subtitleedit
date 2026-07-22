@@ -44,19 +44,21 @@ public partial class MergeSameTextViewModel : ObservableObject
 
         _subtitles = new List<SubtitleLineViewModel>();
         _timerUpdatePreview = new System.Timers.Timer(250);
-        _timerUpdatePreview.Elapsed += (s, e) =>
+        _timerUpdatePreview.Elapsed += TimerUpdatePreviewElapsed;
+    }
+
+    private void TimerUpdatePreviewElapsed(object? sender, System.Timers.ElapsedEventArgs e)
+    {
+        _timerUpdatePreview.Stop();
+        if (_dirty)
         {
-            _timerUpdatePreview.Stop();
-            if (_dirty)
+            Dispatcher.UIThread.Invoke(() =>
             {
-                Dispatcher.UIThread.Invoke(() =>
-                {
-                    _dirty = false;
-                    UpdatePreview();
-                });
-            }
-            _timerUpdatePreview.Start();
-        };
+                _dirty = false;
+                UpdatePreview();
+            });
+        }
+        _timerUpdatePreview.Start();
     }
 
     public void Initialize(List<SubtitleLineViewModel> subtitles)
@@ -238,12 +240,14 @@ public partial class MergeSameTextViewModel : ObservableObject
         SaveSettings();
         ResultSubtitles = BuildResultSubtitles();
         OkPressed = true;
+        _timerUpdatePreview.StopAndDispose(TimerUpdatePreviewElapsed);
         Window?.Close();
     }
 
     [RelayCommand]
     private void Cancel()
     {
+        _timerUpdatePreview.StopAndDispose(TimerUpdatePreviewElapsed);
         Window?.Close();
     }
 
@@ -275,6 +279,7 @@ public partial class MergeSameTextViewModel : ObservableObject
         if (e.Key == Key.Escape)
         {
             e.Handled = true;
+            _timerUpdatePreview.StopAndDispose(TimerUpdatePreviewElapsed);
             Window?.Close();
         }
         else if (UiUtil.IsHelp(e))

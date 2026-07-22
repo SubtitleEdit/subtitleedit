@@ -82,12 +82,14 @@ public partial class SsaStylesViewModel : ObservableObject
         LoadSettings();
 
         _timerUpdatePreview = new System.Timers.Timer(500);
-        _timerUpdatePreview.Elapsed += (s, e) =>
-        {
-            _timerUpdatePreview.Stop();
-            UpdatePreview();
-            _timerUpdatePreview.Start();
-        };
+        _timerUpdatePreview.Elapsed += TimerUpdatePreviewElapsed;
+    }
+
+    private void TimerUpdatePreviewElapsed(object? sender, System.Timers.ElapsedEventArgs e)
+    {
+        _timerUpdatePreview.Stop();
+        UpdatePreview();
+        _timerUpdatePreview.Start();
     }
 
     [RelayCommand]
@@ -565,6 +567,7 @@ public partial class SsaStylesViewModel : ObservableObject
 
     private void Close()
     {
+        _timerUpdatePreview.StopAndDispose(TimerUpdatePreviewElapsed);
         Dispatcher.UIThread.Post(() => { Window?.Close(); });
     }
 

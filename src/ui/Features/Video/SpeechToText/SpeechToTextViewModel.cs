@@ -4816,6 +4816,8 @@ public partial class SpeechToTextViewModel : ObservableObject
 
     internal void OnWindowClosing(WindowClosingEventArgs e)
     {
+        _timerWhisper.StopAndDispose(OnTimerWhisperOnElapsed);
+        _timerAudioExtract.StopAndDispose(OnTimerAudioExtractOnElapsed);
         UiUtil.SaveWindowPosition(Window);
         Task.Run(() => { DeleteTempFiles(); });
     }

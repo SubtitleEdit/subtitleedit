@@ -35,16 +35,18 @@ public partial class SyntaxColorTooWideSettingsViewModel : ObservableObject
         _imagePreview = new SKBitmap(1, 1, true).ToAvaloniaBitmap();
 
         _updateTimer = new System.Timers.Timer(300);
-        _updateTimer.Elapsed += (_, _) =>
+        _updateTimer.Elapsed += UpdateTimerElapsed;
+    }
+
+    private void UpdateTimerElapsed(object? sender, System.Timers.ElapsedEventArgs e)
+    {
+        _updateTimer.Stop();
+        if (_previewDirty)
         {
-            _updateTimer.Stop();
-            if (_previewDirty)
-            {
-                _previewDirty = false;
-                UpdatePreview();
-            }
-            _updateTimer.Start();
-        };
+            _previewDirty = false;
+            UpdatePreview();
+        }
+        _updateTimer.Start();
     }
 
     internal void Initialize(int tooWidePixels, string fontName, int fontSize)
@@ -173,7 +175,7 @@ public partial class SyntaxColorTooWideSettingsViewModel : ObservableObject
     [RelayCommand]
     private void Ok()
     {
-        _updateTimer.Stop();
+        _updateTimer.StopAndDispose(UpdateTimerElapsed);
         OkPressed = true;
         Window?.Close();
     }
@@ -181,7 +183,7 @@ public partial class SyntaxColorTooWideSettingsViewModel : ObservableObject
     [RelayCommand]
     private void Cancel()
     {
-        _updateTimer.Stop();
+        _updateTimer.StopAndDispose(UpdateTimerElapsed);
         Window?.Close();
     }
 
@@ -190,7 +192,7 @@ public partial class SyntaxColorTooWideSettingsViewModel : ObservableObject
         if (e.Key == Key.Escape)
         {
             e.Handled = true;
-            _updateTimer.Stop();
+            _updateTimer.StopAndDispose(UpdateTimerElapsed);
             Window?.Close();
         }
     }

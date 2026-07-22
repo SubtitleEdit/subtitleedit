@@ -158,7 +158,7 @@ public partial class GetDictionariesViewModel : ObservableObject
 
     private void Close()
     {
-        _timer.Stop();
+        _timer.StopAndDispose(OnTimerOnElapsed);
         Dispatcher.UIThread.Post(() => { Window?.Close(); });
     }
 

@@ -40,16 +40,18 @@ public partial class MergeContinuationLinesViewModel : ObservableObject
         MaxCharacters = Se.Settings.General.SubtitleLineMaximumLength * Se.Settings.General.MaxNumberOfLines;
 
         _previewTimer = new System.Timers.Timer(250);
-        _previewTimer.Elapsed += (_, _) =>
+        _previewTimer.Elapsed += PreviewTimerElapsed;
+    }
+
+    private void PreviewTimerElapsed(object? sender, System.Timers.ElapsedEventArgs e)
+    {
+        _previewTimer.Stop();
+        if (_isDirty)
         {
-            _previewTimer.Stop();
-            if (_isDirty)
-            {
-                _isDirty = false;
-                UpdatePreview();
-            }
-            _previewTimer.Start();
-        };
+            _isDirty = false;
+            UpdatePreview();
+        }
+        _previewTimer.Start();
     }
 
     public void Initialize(List<SubtitleLineViewModel> subtitles, string? language, int? maxGapMs = null, int? maxCharacters = null)
@@ -95,12 +97,14 @@ public partial class MergeContinuationLinesViewModel : ObservableObject
     {
         AllSubtitlesFixed = MergeContinuationLinesHelper.Apply(_allSubtitles, Candidates, _language);
         OkPressed = true;
+        _previewTimer.StopAndDispose(PreviewTimerElapsed);
         Window?.Close();
     }
 
     [RelayCommand]
     private void Cancel()
     {
+        _previewTimer.StopAndDispose(PreviewTimerElapsed);
         Window?.Close();
     }
 
@@ -108,8 +112,7 @@ public partial class MergeContinuationLinesViewModel : ObservableObject
     // (and the subtitles it references) can be garbage-collected after the dialog goes away.
     internal void OnClosed()
     {
-        _previewTimer.Stop();
-        _previewTimer.Dispose();
+        _previewTimer.StopAndDispose(PreviewTimerElapsed);
     }
 
     [RelayCommand]
@@ -140,6 +143,7 @@ public partial class MergeContinuationLinesViewModel : ObservableObject
         if (e.Key == Key.Escape)
         {
             e.Handled = true;
+            _previewTimer.StopAndDispose(PreviewTimerElapsed);
             Window?.Close();
         }
     }

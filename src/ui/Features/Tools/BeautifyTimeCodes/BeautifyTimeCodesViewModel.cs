@@ -60,7 +60,18 @@ public partial class BeautifyTimeCodesViewModel : ObservableObject, IDisposable
 
         _timerUpdatePreview = new System.Timers.Timer(500);
         _timerUpdatePreview.AutoReset = false;
-        _timerUpdatePreview.Elapsed += (s, e) =>
+        _timerUpdatePreview.Elapsed += TimerUpdatePreviewElapsed;
+    }
+
+    private void TimerUpdatePreviewElapsed(object? sender, System.Timers.ElapsedEventArgs e)
+    {
+        if (!_dirty || _updateInProgress)
+        {
+            _timerUpdatePreview.Start();
+            return;
+        }
+
+        lock (_timerLock)
         {
             if (!_dirty || _updateInProgress)
             {
@@ -68,20 +79,11 @@ public partial class BeautifyTimeCodesViewModel : ObservableObject, IDisposable
                 return;
             }
 
-            lock (_timerLock)
-            {
-                if (!_dirty || _updateInProgress)
-                {
-                    _timerUpdatePreview.Start();
-                    return;
-                }
+            _dirty = false;
+            _updateInProgress = true;
+        }
 
-                _dirty = false;
-                _updateInProgress = true;
-            }
-
-            UpdatePreview();
-        };
+        UpdatePreview();
     }
 
     private void UpdatePreview()
@@ -597,7 +599,7 @@ public partial class BeautifyTimeCodesViewModel : ObservableObject, IDisposable
     private void Ok()
     {
         StopPositionTimer();
-        _timerUpdatePreview.Stop();
+        _timerUpdatePreview.StopAndDispose(TimerUpdatePreviewElapsed);
 
         // Apply final beautification to commit the result back to _allSubtitles
         var subtitle = BuildSubtitleFromRows();
@@ -620,7 +622,7 @@ public partial class BeautifyTimeCodesViewModel : ObservableObject, IDisposable
     private void Cancel()
     {
         StopPositionTimer();
-        _timerUpdatePreview.Stop();
+        _timerUpdatePreview.StopAndDispose(TimerUpdatePreviewElapsed);
         Window?.Close();
     }
 
@@ -663,7 +665,6 @@ public partial class BeautifyTimeCodesViewModel : ObservableObject, IDisposable
 
         _disposed = true;
         StopPositionTimer();
-        _timerUpdatePreview.Stop();
-        _timerUpdatePreview.Dispose();
+        _timerUpdatePreview.StopAndDispose(TimerUpdatePreviewElapsed);
     }
 }

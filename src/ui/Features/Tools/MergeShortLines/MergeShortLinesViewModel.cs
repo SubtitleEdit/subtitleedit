@@ -47,18 +47,20 @@ public partial class MergeShortLinesViewModel : ObservableObject
         LoadSettings();
 
         _previewTimer = new System.Timers.Timer(250);
-        _previewTimer.Elapsed += (sender, args) =>
+        _previewTimer.Elapsed += PreviewTimerElapsed;
+    }
+
+    private void PreviewTimerElapsed(object? sender, System.Timers.ElapsedEventArgs e)
+    {
+        _previewTimer.Stop();
+
+        if (_isDirty)
         {
-            _previewTimer.Stop();
+            _isDirty = false;
+            UpdatePreview();
+        }
 
-            if (_isDirty)
-            {
-                _isDirty = false;
-                UpdatePreview();
-            }
-
-            _previewTimer.Start();
-        };
+        _previewTimer.Start();
     }
 
     private void UpdatePreview()
@@ -134,12 +136,14 @@ public partial class MergeShortLinesViewModel : ObservableObject
 
         SaveSettings();
         OkPressed = true;
+        _previewTimer.StopAndDispose(PreviewTimerElapsed);
         Window?.Close();
     }
 
     [RelayCommand]
     private void Cancel()
     {
+        _previewTimer.StopAndDispose(PreviewTimerElapsed);
         Window?.Close();
     }
 
@@ -148,6 +152,7 @@ public partial class MergeShortLinesViewModel : ObservableObject
         if (e.Key == Key.Escape)
         {
             e.Handled = true;
+            _previewTimer.StopAndDispose(PreviewTimerElapsed);
             Window?.Close();
         }
         else if (UiUtil.IsHelp(e))
