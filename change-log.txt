@@ -3,6 +3,24 @@ Subtitle Edit Changelog
 
 -----------------------------------------------------------------------------------------------------
 
+v5.1.0-rc12 (22nd of July 2026)
+
+* Auto-translate/AI review via llama.cpp: add Gemma 4 (E4B/12B, 140+ languages), Qwen 3.6 35B-A3B (mixture-of-experts - fast on CPU) and Qwen 3.5 9B Q8_0
+* Update CrispASR to v0.8.20 and offer three Linux GPU builds
+* Offer the translated file name when saving after auto-translate, instead of the video file name
+* Default exports to the source file's folder - Matroska/MP4 track pickers, main window export and image export
+* Reopen the original subtitle on start-up too, not just the translated one - thx radektuma
+* Extend to shot change: fix the previous/next commands shortening the line instead of extending it
+* Fix garbled import of grayscale images, e.g. from InpaintDelogo - thx Codling
+* OCR: checkerboard backdrop for image previews, so white-on-white pre-processing output stays visible - thx alexantr
+* Fix stale buffer reads on truncated segments in Blu-ray sup parsing
+* Convert actors: stop the preview timer when closing the window with Esc - thx ivandrofly
+* Sync all language files with English.json - 3,084 added/translated strings across 27 languages
+* Fix translations missing format placeholders (169 strings, 12 languages)
+* Update Japanese translation - thx hisui3393
+
+-----------------------------------------------------------------------------------------------------
+
 v5.1.0-rc11 (21st of July 2026)
 
 * Remove text for hearing impaired: symbol preset combos for the custom before/after fields (SE 4 parity)
