@@ -23,24 +23,9 @@ public class NOcrLine
         End = new OcrPoint(end.X, end.Y);
     }
 
-    public static OcrPointF PointPixelsToPercent(OcrPoint p, int pixelWidth, int pixelHeight)
-    {
-        return new OcrPointF((float)(p.X * 100.0 / pixelWidth), (float)(p.Y * 100.0 / pixelHeight));
-    }
-
     public override string ToString()
     {
         return string.Format(CultureInfo.InvariantCulture, "{0},{1} -> {2},{3} ", Start.X, Start.Y, End.X, End.Y);
-    }
-
-    public OcrPointF GetStartPercent(int width, int height)
-    {
-        return PointPixelsToPercent(Start, width, height);
-    }
-
-    public OcrPointF GetEnd(int width, int height)
-    {
-        return PointPixelsToPercent(End, width, height);
     }
 
     public IEnumerable<OcrPoint> GetPoints()

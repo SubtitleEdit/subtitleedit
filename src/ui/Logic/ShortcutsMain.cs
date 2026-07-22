@@ -60,7 +60,14 @@ public static class ShortcutsMain
         list.Add(new AvailableShortcut(command, name, category) { Group = group });
     }
 
-    public static readonly Dictionary<string, string> CommandTranslationLookup = BuildCommandTranslations();
+    // Built on first read rather than in the static initializer: LoadShortcuts() touches this
+    // type during the MainViewModel ctor, which used to build all 362 entries (~5-10 ms) on the
+    // start-up path, while the only reader is the Options > Shortcuts dialog. Lazy hands out the
+    // same Dictionary instance every time, so callers that mutate it in place still work.
+    private static readonly Lazy<Dictionary<string, string>> LazyCommandTranslationLookup =
+        new Lazy<Dictionary<string, string>>(BuildCommandTranslations);
+
+    public static Dictionary<string, string> CommandTranslationLookup => LazyCommandTranslationLookup.Value;
 
     // Rebuilds CommandTranslationLookup in place so callers keep their reference to
     // the same dictionary instance. Call after Se.Language has been swapped (e.g.,

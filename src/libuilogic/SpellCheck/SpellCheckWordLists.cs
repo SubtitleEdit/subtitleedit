@@ -168,11 +168,6 @@ public class SpellCheckWordLists
         return Path.Combine(_dictionaryFolder, _languageName + "_UseAlways.xml");
     }
 
-    public void UseAlwaysListAdd(string newKey, string newValue)
-    {
-        SaveUseAlwaysList(newKey, newValue);
-    }
-
     public void UseAlwaysListRemove(string key)
     {
         SaveUseAlwaysList(null, null, key);
@@ -222,11 +217,6 @@ public class SpellCheckWordLists
         Utilities.RemoveFromUserDictionary(word, _languageName);
     }
 
-    public HashSet<string> GetSeAndUserWords()
-    {
-        return _userWordList;
-    }
-
     public void RemoveName(string word)
     {
         if (word == null || word.Length <= 1 || !_names.Contains(word))
@@ -252,94 +242,6 @@ public class SpellCheckWordLists
         }
 
         _nameList.Remove(word);
-    }
-
-    public string ReplaceKnownWordsOrNamesWithBlanks(string s)
-    {
-        var replaceIds = new List<string>();
-        var replaceNames = new List<string>();
-        GetTextWithoutUserWordsAndNames(replaceIds, replaceNames, s);
-        foreach (string name in replaceNames)
-        {
-            int start = s.IndexOf(name, StringComparison.Ordinal);
-            while (start >= 0)
-            {
-                bool startOk = start == 0 || SplitChars.Contains(s[start - 1]) || char.IsControl(s[start - 1]);
-                if (startOk)
-                {
-                    int end = start + name.Length;
-                    bool endOk = end >= s.Length || SplitChars.Contains(s[end]) || char.IsControl(s[end]);
-                    if (endOk)
-                    {
-                        s = s.Remove(start, name.Length).Insert(start, string.Empty.PadLeft(name.Length));
-                    }
-                }
-
-                if (start + 1 < s.Length)
-                {
-                    start = s.IndexOf(name, start + 1, StringComparison.Ordinal);
-                }
-                else
-                {
-                    start = -1;
-                }
-            }
-        }
-        return s;
-    }
-
-    public string ReplaceHtmlTagsWithBlanks(string s)
-    {
-        int start = s.IndexOf('<');
-        while (start >= 0)
-        {
-            int end = s.IndexOf('>', start + 1);
-            if (end < start)
-            {
-                break;
-            }
-
-            int l = end - start + 1;
-            s = s.Remove(start, l).Insert(start, string.Empty.PadLeft(l));
-            end++;
-            if (end >= s.Length)
-            {
-                break;
-            }
-
-            start = s.IndexOf('<', end);
-        }
-        return s;
-    }
-
-    public string ReplaceAssTagsWithBlanks(string s)
-    {
-        int start = s.IndexOf("{\\", StringComparison.Ordinal);
-        int end = s.IndexOf('}');
-        if (start < 0 || end < 0 || end < start)
-        {
-            return s;
-        }
-
-        while (start >= 0)
-        {
-            end = s.IndexOf('}', start + 1);
-            if (end < start)
-            {
-                break;
-            }
-
-            int l = end - start + 1;
-            s = s.Remove(start, l).Insert(start, string.Empty.PadLeft(l));
-            end++;
-            if (end >= s.Length)
-            {
-                break;
-            }
-
-            start = s.IndexOf("{\\", end, StringComparison.Ordinal);
-        }
-        return s;
     }
 
     public bool IsWordInUserPhrases(int index, List<SpellCheckWord> words)
@@ -370,63 +272,6 @@ public class SpellCheckWordLists
             }
         }
         return false;
-    }
-
-    /// <summary>
-    /// Removes words with dash'es that are correct, so spell check can ignore the combination (do not split correct words with dash'es)
-    /// </summary>
-    private void GetTextWithoutUserWordsAndNames(List<string> replaceIds, List<string> replaceNames, string text)
-    {
-        string[] wordsWithDash = text.Split(SplitChars2, StringSplitOptions.RemoveEmptyEntries);
-        foreach (string w in wordsWithDash)
-        {
-            if (w.Contains('-') && _doSpell.DoSpell(w) && !_wordsWithDashesOrPeriods.Contains(w))
-            {
-                _wordsWithDashesOrPeriods.Add(w);
-            }
-        }
-
-        if (text.Contains(PeriodAndDash))
-        {
-            int i = 0;
-            foreach (string wordWithDashesOrPeriods in _wordsWithDashesOrPeriods)
-            {
-                bool found = true;
-                int startSearchIndex = 0;
-                while (found)
-                {
-                    int indexStart = text.IndexOf(wordWithDashesOrPeriods, startSearchIndex, StringComparison.Ordinal);
-
-                    if (indexStart >= 0)
-                    {
-                        int endIndexPlus = indexStart + wordWithDashesOrPeriods.Length;
-                        bool startOk = indexStart == 0 || (@" (['""" + "\r\n").Contains(text[indexStart - 1]);
-                        bool endOk = endIndexPlus == text.Length;
-                        if (!endOk && endIndexPlus < text.Length && @",!?:;. ])<'""".Contains(text[endIndexPlus]))
-                        {
-                            endOk = true;
-                        }
-
-                        if (startOk && endOk)
-                        {
-                            i++;
-                            string id = $"_@{i}_";
-                            replaceIds.Add(id);
-                            replaceNames.Add(wordWithDashesOrPeriods);
-                            text = text.Remove(indexStart, wordWithDashesOrPeriods.Length).Insert(indexStart, id);
-                        }
-                        else
-                        {
-                            startSearchIndex = indexStart + 1;
-                        }
-                    }
-                    else
-                    {
-                        found = false;
-                    }
-                }
-            }
-        }
     }
 
     public bool AddName(string word)

@@ -216,35 +216,6 @@ public class BinaryOcrBitmap
         Colors[Width * y + x] = 1;
     }
 
-    /// <summary>
-    /// Copies a rectangle from the bitmap to a new bitmap
-    /// </summary>
-    /// <param name="section">Source rectangle</param>
-    /// <returns>Rectangle from current image as new bitmap</returns>
-    public ManagedBitmap GetRectangle(SKRectI section)
-    {
-        var newRectangle = new ManagedBitmap(section.Width, section.Height);
-
-        int recty = 0;
-        for (int y = section.Top; y < section.Top + section.Height; y++)
-        {
-            int rectx = 0;
-            for (int x = section.Left; x < section.Left + section.Width; x++)
-            {
-                var c = SKColors.Transparent;
-                if (GetPixel(x, y) > 0)
-                {
-                    c = SKColors.White;
-                }
-
-                newRectangle.SetPixel(rectx, recty, c);
-                rectx++;
-            }
-            recty++;
-        }
-        return newRectangle;
-    }
-
     public SKBitmap ToSKBitmap()
     {
         return ToOldBitmap(SKColors.White);

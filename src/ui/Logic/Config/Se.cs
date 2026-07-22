@@ -9,6 +9,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Text.Json;
+using System.Threading.Tasks;
 
 namespace Nikse.SubtitleEdit.Logic.Config;
 
@@ -68,6 +69,10 @@ public class Se
     public static readonly string ExePath;
     public static readonly string DataFolder;
     internal static string? SettingsFilePathOverride { get; set; }
+
+    /// <summary>Name of the translation currently held in <see cref="Language"/>, so repeat
+    /// <see cref="LoadLanguage()"/> calls for the same language skip the expensive deserialize.</summary>
+    private static string? _loadedLanguage;
 
     static Se()
     {
@@ -343,6 +348,15 @@ public class Se
             return;
         }
 
+        // MainView.Build() calls this again as a safety net for windows created via other entry
+        // points, and File > New window repeats it per window. Deserializing the ~185 KB / ~3300
+        // property translation graph costs well over 100 ms, so only do it when the loaded
+        // translation isn't already the requested one.
+        if (_loadedLanguage == Settings.General.Language)
+        {
+            return;
+        }
+
         try
         {
             var jsonFileName = Path.Combine(TranslationFolder, Settings.General.Language + ".json");
@@ -351,19 +365,40 @@ public class Se
                 return;
             }
 
-            var json = System.IO.File.ReadAllText(jsonFileName, Encoding.UTF8);
-            var language = JsonSerializer.Deserialize<SeLanguage>(json, new JsonSerializerOptions
-            {
-                PropertyNameCaseInsensitive = true,
-            });
+            using var stream = System.IO.File.OpenRead(jsonFileName);
+            var language = JsonSerializer.Deserialize(stream, SeLanguageJsonContext.Default.SeLanguage);
             if (language != null)
             {
                 Language = language;
+                _loadedLanguage = Settings.General.Language;
             }
         }
         catch (Exception exception)
         {
             Se.LogError(exception, "Failed to load UI language");
+        }
+    }
+
+    /// <summary>
+    /// Loads a translation file chosen at runtime (Options > Language) into <see cref="Language"/>.
+    /// Goes through here rather than assigning <see cref="Language"/> directly so the
+    /// already-loaded marker stays in step and a later <see cref="LoadLanguage()"/> — e.g. from a
+    /// new editor window — doesn't skip a language it hasn't actually loaded.
+    /// </summary>
+    public static async Task LoadLanguageFromFileAsync(string jsonFileName)
+    {
+        try
+        {
+            await using var stream = System.IO.File.OpenRead(jsonFileName);
+            var language = await JsonSerializer.DeserializeAsync(stream, SeLanguageJsonContext.Default.SeLanguage);
+            Language = language ?? new SeLanguage();
+            _loadedLanguage = language == null ? null : Path.GetFileNameWithoutExtension(jsonFileName);
+        }
+        catch (Exception exception)
+        {
+            Se.LogError(exception, "Failed to load UI language from " + jsonFileName);
+            Language = new SeLanguage();
+            _loadedLanguage = null;
         }
     }
 

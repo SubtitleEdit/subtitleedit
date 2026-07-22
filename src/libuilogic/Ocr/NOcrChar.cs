@@ -519,7 +519,7 @@ public class NOcrChar
             return false;
         }
 
-        foreach (var point in op.ScaledGetPoints(nOcrChar, nbmp.Width, nbmp.Height))
+        foreach (var point in op.ScaledWalkPoints(nOcrChar, nbmp.Width, nbmp.Height))
         {
             if (point.X < 0 || point.Y < 0 || point.X >= nbmp.Width || point.Y >= nbmp.Height)
             {
@@ -562,7 +562,7 @@ public class NOcrChar
 
     internal static bool IsMatchPointBackGround(NOcrLine op, bool loose, NikseBitmap2 nbmp, NOcrChar nOcrChar)
     {
-        foreach (var point in op.ScaledGetPoints(nOcrChar, nbmp.Width, nbmp.Height))
+        foreach (var point in op.ScaledWalkPoints(nOcrChar, nbmp.Width, nbmp.Height))
         {
             if (point.X < 0 || point.Y < 0 || point.X >= nbmp.Width || point.Y >= nbmp.Height)
             {

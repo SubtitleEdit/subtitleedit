@@ -5,6 +5,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using System.Xml;
 
 namespace Nikse.SubtitleEdit.Core.SubtitleFormats
@@ -16,7 +17,36 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         private static IList<SubtitleFormat> _allSubtitleFormats;
         private static IList<SubtitleFormat> _subtitleFormatsWithDefaultOrder;
 
+        /// <summary>
+        /// Guards the format cache below. Building it loads and JIT-compiles ~330 types, which is
+        /// why <see cref="WarmUpAsync"/> exists to do it off the start-up critical path - and that
+        /// makes concurrent access real. A lock rather than a lazy/volatile publish because the
+        /// build deliberately assigns <see cref="_allSubtitleFormats"/> before ordering it, so
+        /// <see cref="GetOrderedFormatsList"/> can re-enter this property through
+        /// <c>Utilities.GetSubtitleFormatByFriendlyName</c>; Monitor is re-entrant on the same
+        /// thread, so that keeps working, while another thread can no longer observe the
+        /// intermediate unordered list.
+        /// </summary>
+        private static readonly object SubtitleFormatsLock = new object();
+
         protected static readonly char[] SplitCharColon = { ':' };
+
+        /// <summary>
+        /// Builds the format cache on a worker thread so the ~330 type loads and constructor JITs
+        /// overlap with other start-up work instead of blocking the first window. Purely an
+        /// optimisation: any caller touching <see cref="AllSubtitleFormats"/> first, or while this
+        /// is still running, simply blocks on the same lock and gets the same list.
+        /// </summary>
+        public static Task WarmUpAsync()
+        {
+            return Task.Run(() =>
+            {
+                foreach (var unused in AllSubtitleFormats)
+                {
+                    // Enumerating is enough - the work happens in the property getter.
+                }
+            });
+        }
 
         /// <summary>
         /// Text formats supported by Subtitle Edit
@@ -25,6 +55,15 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         {
             get
             {
+                lock (SubtitleFormatsLock)
+                {
+                    return GetOrBuildAllSubtitleFormats();
+                }
+            }
+        }
+
+        private static IEnumerable<SubtitleFormat> GetOrBuildAllSubtitleFormats()
+        {
                 if (_allSubtitleFormats != null)
                 {
                     if (SubtitleFormatsOrderChanged)
@@ -378,7 +417,6 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 _allSubtitleFormats = GetOrderedFormatsList(_subtitleFormatsWithDefaultOrder);
 
                 return _allSubtitleFormats;
-            }
         }
 
         protected int _errorCount;
