@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
 		<OutputType>WinExe</OutputType>
 		<TargetFramework>net10.0</TargetFramework>
@@ -57,180 +57,27 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<None Remove="Assets\Dictionaries.zip" />
-		<None Remove="Assets\FileTypes\ass.ico" />
-		<None Remove="Assets\FileTypes\dfxp.ico" />
-		<None Remove="Assets\FileTypes\itt.ico" />
-		<None Remove="Assets\FileTypes\lrc.ico" />
-		<None Remove="Assets\FileTypes\sbv.ico" />
-		<None Remove="Assets\FileTypes\smi.ico" />
-		<None Remove="Assets\FileTypes\srt.ico" />
-		<None Remove="Assets\FileTypes\ssa.ico" />
-		<None Remove="Assets\FileTypes\stl.ico" />
-		<None Remove="Assets\FileTypes\sub.ico" />
-		<None Remove="Assets\FileTypes\sup.ico" />
-		<None Remove="Assets\FileTypes\vtt.ico" />
-		<None Remove="Assets\HunspellDictionaries.json" />
-		<None Remove="Assets\Languages\*.json" />
-		<None Remove="Assets\NetflixGlyphs.zip" />
-		<None Remove="Assets\SevenZip\7z-linux64.zip" />
-		<None Remove="Assets\SevenZip\7zaWindows64.zip" />
-		<None Remove="Assets\SevenZip\7zrLinux64.zip" />
-		<None Remove="Assets\SevenZip\7zxa.dll" />
-		<None Remove="Assets\TextToSpeech\AllTalkVoices.json" />
-		<None Remove="Assets\TextToSpeech\AzureVoices.json" />
-		<None Remove="Assets\TextToSpeech\ElevenLabsVoices.json" />
-		<None Remove="Assets\TextToSpeech\MistralVoices.json" />
-		<None Remove="Assets\TextToSpeech\MurfVoices.json" />
-		<None Remove="Assets\TextToSpeech\PiperVoices.json" />
-		<None Remove="Assets\Themes.zip" />
-		<None Remove="Assets\SpeechToText\PurfviewFasterWhisper.txt" />
-		<None Remove="Assets\SpeechToText\PurfviewFasterWhisperXXL.txt" />
-		<None Remove="Assets\SpeechToText\WhisperCPP.txt" />
-		<None Remove="Assets\SpeechToText\WhisperOpenAI.txt" />
-		<None Remove="Styles.xaml" />
-		<AvaloniaResource Include="Assets\Dictionaries.zip" />
+		<!--
+		  Everything under Assets ships as an embedded Avalonia resource. These are globs
+		  rather than a file-per-line list so a newly added asset cannot be forgotten - that
+		  is exactly how ChineseTraditional.json ended up missing from builds (issue #12722).
+		  Assets\Themes\** is excluded in the ItemGroup near the top of this file.
+		  The patterns are scoped by extension on purpose: a bare * would also sweep up
+		  stray files such as the .DS_Store that macOS drops into these folders.
+		-->
+		<None Remove="Assets\**" />
+		<AvaloniaResource Include="Assets\*.ico" />
+		<AvaloniaResource Include="Assets\*.json" />
+		<AvaloniaResource Include="Assets\*.png" />
+		<AvaloniaResource Include="Assets\*.zip" />
+		<AvaloniaResource Include="Assets\FileTypes\*.ico" />
 		<AvaloniaResource Include="Assets\Languages\*.json" />
-		<AvaloniaResource Include="Assets\Layout\Layout01.png" />
-		<AvaloniaResource Include="Assets\Layout\Layout02.png" />
-		<AvaloniaResource Include="Assets\Layout\Layout03.png" />
-		<AvaloniaResource Include="Assets\Layout\Layout04.png" />
-		<AvaloniaResource Include="Assets\Layout\Layout05.png" />
-		<AvaloniaResource Include="Assets\Layout\Layout06.png" />
-		<AvaloniaResource Include="Assets\Layout\Layout07.png" />
-		<AvaloniaResource Include="Assets\Layout\Layout08.png" />
-		<AvaloniaResource Include="Assets\Layout\Layout09.png" />
-		<AvaloniaResource Include="Assets\Layout\Layout10.png" />
-		<AvaloniaResource Include="Assets\Layout\Layout11.png" />
-		<AvaloniaResource Include="Assets\Layout\Layout12.png" />
-		<AvaloniaResource Include="Assets\NetflixGlyphs.zip" />
-		<AvaloniaResource Include="Assets\SevenZip\7zaWindows64.zip" />
-		<AvaloniaResource Include="Assets\SevenZip\7zrLinux64.zip" />
-		<AvaloniaResource Include="Assets\SpeechToText\CrispASRCommon.txt">
-		  <CopyToOutputDirectory></CopyToOutputDirectory>
-		</AvaloniaResource>
-		<AvaloniaResource Include="Assets\SpeechToText\CrispASRCanary.txt">
-		  <CopyToOutputDirectory></CopyToOutputDirectory>
-		</AvaloniaResource>
-		<AvaloniaResource Include="Assets\SpeechToText\CrispASRQwen3.txt">
-		  <CopyToOutputDirectory></CopyToOutputDirectory>
-		</AvaloniaResource>
-		<AvaloniaResource Include="Assets\SpeechToText\CrispASRCohere.txt">
-		  <CopyToOutputDirectory></CopyToOutputDirectory>
-		</AvaloniaResource>
-		<AvaloniaResource Include="Assets\SpeechToText\CrispASRFireRed.txt">
-		  <CopyToOutputDirectory></CopyToOutputDirectory>
-		</AvaloniaResource>
-		<AvaloniaResource Include="Assets\SpeechToText\CrispASRFun-ASRNano.txt">
-		  <CopyToOutputDirectory></CopyToOutputDirectory>
-		</AvaloniaResource>
-		<AvaloniaResource Include="Assets\SpeechToText\CrispASRFun-ASRMLTNano.txt">
-		  <CopyToOutputDirectory></CopyToOutputDirectory>
-		</AvaloniaResource>
-		<AvaloniaResource Include="Assets\SpeechToText\CrispASRGLM.txt">
-		  <CopyToOutputDirectory></CopyToOutputDirectory>
-		</AvaloniaResource>
-		<AvaloniaResource Include="Assets\SpeechToText\CrispASRGranite.txt">
-		  <CopyToOutputDirectory></CopyToOutputDirectory>
-		</AvaloniaResource>
-		<AvaloniaResource Include="Assets\SpeechToText\CrispASRParakeet.txt">
-		  <CopyToOutputDirectory></CopyToOutputDirectory>
-		</AvaloniaResource>
-		<AvaloniaResource Include="Assets\SpeechToText\CrispASROmni.txt">
-		  <CopyToOutputDirectory></CopyToOutputDirectory>
-		</AvaloniaResource>
-		<AvaloniaResource Include="Assets\SpeechToText\CrispASRKyutai.txt">
-		  <CopyToOutputDirectory></CopyToOutputDirectory>
-		</AvaloniaResource>
-		<AvaloniaResource Include="Assets\SpeechToText\CrispASRMega.txt">
-		  <CopyToOutputDirectory></CopyToOutputDirectory>
-		</AvaloniaResource>
-		<AvaloniaResource Include="Assets\SpeechToText\CrispASRMOSSDiarize.txt">
-		  <CopyToOutputDirectory></CopyToOutputDirectory>
-		</AvaloniaResource>
-		<AvaloniaResource Include="Assets\SpeechToText\CrispASRSenseVoice.txt">
-		  <CopyToOutputDirectory></CopyToOutputDirectory>
-		</AvaloniaResource>
-		<AvaloniaResource Include="Assets\SpeechToText\CrispASRARK.txt">
-		  <CopyToOutputDirectory></CopyToOutputDirectory>
-		</AvaloniaResource>
-		<AvaloniaResource Include="Assets\Themes.zip" />
-		<AvaloniaResource Include="Assets\SpeechToText\PurfviewFasterWhisper.txt">
-			<CopyToOutputDirectory></CopyToOutputDirectory>
-		</AvaloniaResource>
-		<AvaloniaResource Include="Assets\SpeechToText\PurfviewFasterWhisperXXL.txt">
-			<CopyToOutputDirectory></CopyToOutputDirectory>
-		</AvaloniaResource>
-		<AvaloniaResource Include="Assets\SpeechToText\Qwen3ASRCPP.txt" />
-		<AvaloniaResource Include="Assets\SpeechToText\WhisperConst-me.txt">
-			<CopyToOutputDirectory></CopyToOutputDirectory>
-		</AvaloniaResource>
-		<AvaloniaResource Include="Assets\SpeechToText\WhisperCPPcuBLAS.txt">
-		  <CopyToOutputDirectory></CopyToOutputDirectory>
-		</AvaloniaResource>
-		<AvaloniaResource Include="Assets\SpeechToText\WhisperCPPVulkan.txt">
-		  <CopyToOutputDirectory></CopyToOutputDirectory>
-		</AvaloniaResource>
-		<AvaloniaResource Include="Assets\SpeechToText\WhisperCPP.txt">
-			<CopyToOutputDirectory></CopyToOutputDirectory>
-		</AvaloniaResource>
-		<AvaloniaResource Include="Assets\SpeechToText\ChatLLM.cpp.txt">
-		  <CopyToOutputDirectory></CopyToOutputDirectory>
-		</AvaloniaResource>
-		<AvaloniaResource Include="Assets\SpeechToText\WhisperOpenAI.txt">
-			<CopyToOutputDirectory></CopyToOutputDirectory>
-		</AvaloniaResource>
-		<AvaloniaResource Include="Assets\SpeechToText\OpenRouter.txt" />
-		<AvaloniaResource Include="Assets\SpeechToText\AlibabaQwen3Asr.txt" />
+		<AvaloniaResource Include="Assets\Layout\*.png" />
+		<AvaloniaResource Include="Assets\SevenZip\*.zip" />
+		<AvaloniaResource Include="Assets\SpeechToText\*.py" />
+		<AvaloniaResource Include="Assets\SpeechToText\*.txt" />
+		<AvaloniaResource Include="Assets\TextToSpeech\*.json" />
 		<Content Include="SE.ico" />
-		<None Remove="Assets\Ocr.zip" />
-		<AvaloniaResource Include="Assets\Ocr.zip" />
-		<None Remove="Assets\about.png" />
-		<AvaloniaResource Include="Assets\about.png" />
-		<None Remove="Assets\about1.png" />
-		<AvaloniaResource Include="Assets\about1.png" />
-		<None Remove="Assets\about2.png" />
-		<AvaloniaResource Include="Assets\about2.png" />
-		<None Remove="Assets\about3.png" />
-		<AvaloniaResource Include="Assets\about3.png" />
-		<None Remove="Assets\SpeechToText\WhisperCTranslate2.txt" />
-		<AvaloniaResource Include="Assets\SpeechToText\WhisperCTranslate2.txt" />
-		<None Remove="Assets\SpeechToText\MLXWhisper.txt" />
-		<AvaloniaResource Include="Assets\SpeechToText\MLXWhisper.txt" />
-		<None Remove="Assets\SpeechToText\mlx_whisper_transcribe.py" />
-		<AvaloniaResource Include="Assets\SpeechToText\mlx_whisper_transcribe.py" />
-	</ItemGroup>
-
-	<ItemGroup>
-		<AvaloniaResource Include="Assets\FileTypes\ass.ico" />
-		<AvaloniaResource Include="Assets\FileTypes\dfxp.ico" />
-		<AvaloniaResource Include="Assets\FileTypes\itt.ico" />
-		<AvaloniaResource Include="Assets\FileTypes\lrc.ico" />
-		<AvaloniaResource Include="Assets\FileTypes\sbv.ico" />
-		<AvaloniaResource Include="Assets\FileTypes\smi.ico" />
-		<AvaloniaResource Include="Assets\FileTypes\srt.ico" />
-		<AvaloniaResource Include="Assets\FileTypes\ssa.ico" />
-		<AvaloniaResource Include="Assets\FileTypes\stl.ico" />
-		<AvaloniaResource Include="Assets\FileTypes\sub.ico" />
-		<AvaloniaResource Include="Assets\FileTypes\sup.ico" />
-		<AvaloniaResource Include="Assets\FileTypes\vtt.ico" />
-		<AvaloniaResource Include="Assets\SE.png" />
-	</ItemGroup>
-
-	<ItemGroup>
-		<None Remove="Assets\se.ico" />
-		<AvaloniaResource Include="Assets\se.ico" />
-	</ItemGroup>
-
-	<ItemGroup>
-		<AvaloniaResource Include="Assets\HunspellDictionaries.json" />
-		<AvaloniaResource Include="Assets\TextToSpeech\AllTalkVoices.json" />
-		<AvaloniaResource Include="Assets\TextToSpeech\AzureVoices.json" />
-		<AvaloniaResource Include="Assets\TextToSpeech\ElevenLabsVoices.json" />
-		<AvaloniaResource Include="Assets\TextToSpeech\MistralVoices.json" />
-		<AvaloniaResource Include="Assets\TextToSpeech\MurfVoices.json" />
-		<AvaloniaResource Include="Assets\TextToSpeech\GoogleVoices.json" />
-		<AvaloniaResource Include="Assets\TextToSpeech\PiperVoices.json" />
 	</ItemGroup>
 
 	<ItemGroup>
