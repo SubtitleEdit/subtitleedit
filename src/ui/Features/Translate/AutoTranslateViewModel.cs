@@ -18,6 +18,7 @@ using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Logic.Download;
 using Nikse.SubtitleEdit.Logic.Media;
+using Nikse.SubtitleEdit.UiLogic;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -1170,7 +1171,7 @@ public partial class AutoTranslateViewModel : ObservableObject
                 return null;
             }
 
-            var hash = DownloadHashManager.ComputeSha256(LlamaCppServerManager.GetExecutable());
+            var hash = Sha256Util.ComputeSha256(LlamaCppServerManager.GetExecutable());
             return hash == null ? null : (key, hash);
         }
         catch

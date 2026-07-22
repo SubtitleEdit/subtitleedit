@@ -19,6 +19,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Timers;
 using Timer = System.Timers.Timer;
+using Nikse.SubtitleEdit.UiLogic;
 
 namespace Nikse.SubtitleEdit.Features.Video.SpeechToText;
 
@@ -331,7 +332,7 @@ public partial class DownloadSpeechToTextEngineViewModel : ObservableObject
             }
 
             _downloadStream.Position = 0;
-            var hash = DownloadHashManager.ComputeSha256(_downloadStream);
+            var hash = Sha256Util.ComputeSha256(_downloadStream);
 
             var sidecar = Path.Combine(folder, ".installed.sha256");
             File.WriteAllText(sidecar, key + Environment.NewLine + hash);
@@ -353,7 +354,7 @@ public partial class DownloadSpeechToTextEngineViewModel : ObservableObject
             }
 
             _downloadStream.Position = 0;
-            var hash = DownloadHashManager.ComputeSha256(_downloadStream);
+            var hash = Sha256Util.ComputeSha256(_downloadStream);
 
             var sidecar = Path.Combine(folder, ".installed.sha256");
             File.WriteAllText(sidecar, key + Environment.NewLine + hash);

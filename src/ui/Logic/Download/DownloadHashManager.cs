@@ -3,10 +3,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
-using System.Security.Cryptography;
-using System.Threading;
-using System.Threading.Tasks;
 using Nikse.SubtitleEdit.Core.AudioToText;
+using Nikse.SubtitleEdit.UiLogic;
 
 namespace Nikse.SubtitleEdit.Logic.Download;
 
@@ -1564,7 +1562,7 @@ public static class DownloadHashManager
             }
 
             archiveStream.Position = 0;
-            var hash = ComputeSha256(archiveStream);
+            var hash = Sha256Util.ComputeSha256(archiveStream);
 
             var sidecar = Path.Combine(installFolder, ".installed.sha256");
             File.WriteAllText(sidecar, key + Environment.NewLine + hash);
@@ -1593,35 +1591,6 @@ public static class DownloadHashManager
         return KnownHashes.TryGetValue(key, out var hashes)
             ? hashes
             : Array.Empty<string>();
-    }
-
-    /// <summary>
-    /// Computes the lower-case hex SHA-256 of the file at <paramref name="filePath"/>.
-    /// Returns null when the file does not exist.
-    /// </summary>
-    public static string? ComputeSha256(string filePath)
-    {
-        if (!File.Exists(filePath))
-        {
-            return null;
-        }
-
-        using var stream = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.Read);
-        return ComputeSha256(stream);
-    }
-
-    public static string ComputeSha256(Stream stream)
-    {
-        using var sha = SHA256.Create();
-        var hash = sha.ComputeHash(stream);
-        return Convert.ToHexString(hash).ToLowerInvariant();
-    }
-
-    public static async Task<string> ComputeSha256Async(Stream stream, CancellationToken cancellationToken = default)
-    {
-        using var sha = SHA256.Create();
-        var hash = await sha.ComputeHashAsync(stream, cancellationToken).ConfigureAwait(false);
-        return Convert.ToHexString(hash).ToLowerInvariant();
     }
 
     /// <summary>
@@ -1929,7 +1898,7 @@ public static class DownloadHashManager
 
         // No usable sidecar — match the EXE against known CPU-legacy hashes so older
         // installs (made before the sidecar existed) are still recognised as legacy.
-        var exeHash = ComputeSha256(exe);
+        var exeHash = Sha256Util.ComputeSha256(exe);
         if (exeHash != null)
         {
             foreach (var legacy in GetKnownHashes(CrispAsr.WindowsCpuLegacyExecutable))
@@ -1989,7 +1958,7 @@ public static class DownloadHashManager
             return null;
         }
 
-        var exeHash = ComputeSha256(exe);
+        var exeHash = Sha256Util.ComputeSha256(exe);
         if (exeHash != null)
         {
             foreach (var gpu in gpuVariants)

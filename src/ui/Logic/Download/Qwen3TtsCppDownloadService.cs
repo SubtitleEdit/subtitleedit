@@ -5,6 +5,7 @@ using System.Net.Http;
 using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
+using Nikse.SubtitleEdit.UiLogic;
 
 namespace Nikse.SubtitleEdit.Logic.Download;
 
@@ -61,19 +62,19 @@ public class Qwen3TtsCppDownloadService : IQwen3TtsCppDownloadService
     public async Task DownloadEngine(Stream stream, string windowsVariant, IProgress<float>? progress, CancellationToken cancellationToken)
     {
         await DownloadHelper.DownloadFileAsync(_httpClient, GetUrl(windowsVariant), stream, progress, cancellationToken);
-        VerifyArchive(stream, DownloadHashManager.ResolveQwen3TtsCppKey(windowsVariant), "engine");
+        await VerifyArchive(stream, DownloadHashManager.ResolveQwen3TtsCppKey(windowsVariant), "engine", cancellationToken);
     }
 
     public async Task DownloadVoices(Stream stream, IProgress<float>? progress, CancellationToken cancellationToken)
     {
         await DownloadHelper.DownloadFileAsync(_httpClient, VoicesUrl, stream, progress, cancellationToken);
-        VerifyArchive(stream, DownloadHashManager.Qwen3TtsCpp.Voices, "voices");
+        await VerifyArchive(stream, DownloadHashManager.Qwen3TtsCpp.Voices, "voices", cancellationToken);
     }
 
     // Compares the downloaded bytes against the known SHA-256 for this key and throws on mismatch
     // so the caller's IsFaulted branch surfaces "Download failed" instead of silently unpacking a
     // truncated or tampered file. Mirrors OmniVoiceDownloadService.VerifyArchive.
-    private static void VerifyArchive(Stream stream, string? key, string label)
+    private static async Task VerifyArchive(Stream stream, string? key, string label, CancellationToken cancellationToken)
     {
         if (string.IsNullOrEmpty(key) || stream.Length == 0)
         {
@@ -87,7 +88,7 @@ public class Qwen3TtsCppDownloadService : IQwen3TtsCppDownloadService
         }
 
         stream.Position = 0;
-        var actual = DownloadHashManager.ComputeSha256(stream);
+        var actual = await Sha256Util.ComputeSha256Async(stream, cancellationToken);
         stream.Position = 0;
 
         if (!string.Equals(expected, actual, StringComparison.OrdinalIgnoreCase))

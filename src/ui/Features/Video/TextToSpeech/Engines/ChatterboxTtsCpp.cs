@@ -4,6 +4,7 @@ using Nikse.SubtitleEdit.Features.Video.TextToSpeech.Voices;
 using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Logic.Download;
 using Nikse.SubtitleEdit.Logic.Media;
+using Nikse.SubtitleEdit.UiLogic;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -136,7 +137,7 @@ public class ChatterboxTtsCpp : ITtsEngine
             return true;
         }
 
-        var hash = DownloadHashManager.ComputeSha256(exe);
+        var hash = Sha256Util.ComputeSha256(exe);
         if (hash == null)
         {
             return true;
