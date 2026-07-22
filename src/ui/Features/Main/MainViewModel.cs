@@ -9646,14 +9646,7 @@ public partial class MainViewModel :
 
     private async Task LoadLanguage(string jsonFileName)
     {
-        var json = await File.ReadAllTextAsync(jsonFileName, Encoding.UTF8);
-        var language = JsonSerializer.Deserialize<SeLanguage>(json,
-            new JsonSerializerOptions
-            {
-                PropertyNameCaseInsensitive = true,
-            });
-
-        Se.Language = language ?? new SeLanguage();
+        await Se.LoadLanguageFromFileAsync(jsonFileName);
 
         // Rebuild settings-page dropdown labels that capture Se.Language at type init.
         SettingsViewModel.ReloadLanguageMaps();

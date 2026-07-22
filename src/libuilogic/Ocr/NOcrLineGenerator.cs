@@ -257,7 +257,7 @@ internal static class NOcrLineGenerator
 
         var total = 0;
         var bg = 0;
-        foreach (var point in op.ScaledGetPoints(nOcrChar, nbmp.Width, nbmp.Height))
+        foreach (var point in op.ScaledWalkPoints(nOcrChar, nbmp.Width, nbmp.Height))
         {
             if (point.X < 0 || point.Y < 0 || point.X >= nbmp.Width || point.Y >= nbmp.Height)
             {
@@ -290,7 +290,7 @@ internal static class NOcrLineGenerator
             return false;
         }
 
-        foreach (var point in op.ScaledGetPoints(nOcrChar, nbmp.Width, nbmp.Height))
+        foreach (var point in op.ScaledWalkPoints(nOcrChar, nbmp.Width, nbmp.Height))
         {
             if (point.X < 0 || point.Y < 0 || point.X >= nbmp.Width || point.Y >= nbmp.Height)
             {

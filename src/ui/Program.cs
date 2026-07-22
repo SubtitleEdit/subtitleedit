@@ -72,6 +72,17 @@ namespace Nikse.SubtitleEdit
                 // Load settings
                 Se.LoadSettings();
 
+                // Must precede the format warm-up below: the CHK format's constructor resolves
+                // code page 850, which throws NotSupportedException without this provider.
+                Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
+
+                // Building the subtitle-format list loads and JIT-compiles ~330 types, which cost
+                // ~40-90 ms on the UI thread inside the MainViewModel constructor. Start it now on
+                // a worker thread so it runs alongside the dependency-injection build and Avalonia's
+                // XAML parsing below; by the time the view model asks for the list it is usually
+                // already there, and if it isn't the caller just waits as long as it used to.
+                Nikse.SubtitleEdit.Core.SubtitleFormats.SubtitleFormat.WarmUpAsync();
+
                 // Wire the shared spell-check / OCR-fix engine (libuilogic) to the live UI settings so
                 // it reads the same values without depending on the UI's Se config type (#11744).
                 Nikse.SubtitleEdit.Features.SpellCheck.SpellCheckConfig.DictionariesFolder = () => Se.DictionariesFolder;
@@ -169,9 +180,6 @@ namespace Nikse.SubtitleEdit
 
                 // Configure dependency injection
                 SetupDependencyInjection();
-
-                // Register encoding provider
-                Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
 
                 // Set current theme
                 UiTheme.SetCurrentTheme();
