@@ -34,20 +34,7 @@ public static class InitToolbar
 
     private static void EnsureImagePath()
     {
-        _imagePath = Path.Combine(Se.ThemesFolder, UiTheme.ThemeName);
-        if (!Directory.Exists(_imagePath))
-        {
-            _imagePath = Path.Combine(Se.ThemesFolder, "Dark");
-        }
-
-        if (!string.IsNullOrEmpty(Se.Settings.Appearance.IconTheme) && Se.Settings.Appearance.IconTheme != Se.Language.General.Auto)
-        {
-            var path = Path.Combine(Se.ThemesFolder, Se.Settings.Appearance.IconTheme);
-            if (Directory.Exists(path))
-            {
-                _imagePath = path;
-            }
-        }
+        _imagePath = UiTheme.ImageFolder;
     }
 
     private static Grid CreateToolbar(MainViewModel vm)
