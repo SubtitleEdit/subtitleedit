@@ -399,6 +399,8 @@ public class LanguageGeneral
     public string PickLayer { get; set; }
     public string PickOllamaModel { get; set; }
     public string LlamaCppUseRemoteServer { get; set; }
+    public string LlamaCppEngineSettings { get; set; }
+    public string LlamaCppEngineSettingsSubtitle { get; set; }
     public string PickOutputFolder { get; set; }
     public string PickResolutionFromCurrentVideo { get; set; }
     public string PickResolutionFromVideoDotDotDot { get; set; }
@@ -1161,6 +1163,8 @@ public class LanguageGeneral
         PickLayer = "Set layer";
         PickOllamaModel = "Pick Ollama model";
         LlamaCppUseRemoteServer = "Use external server (URL)";
+        LlamaCppEngineSettings = "llama.cpp engine settings";
+        LlamaCppEngineSettingsSubtitle = "Local llama.cpp server build";
         PickOutputFolder = "Pick output folder";
         PickResolutionFromCurrentVideo = "Pick resolution from current video";
         PickResolutionFromVideoDotDotDot = "Pick resolution from video...";

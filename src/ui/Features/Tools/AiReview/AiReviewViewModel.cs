@@ -6,8 +6,10 @@ using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using Nikse.SubtitleEdit.Features.Shared;
 using Nikse.SubtitleEdit.Features.Translate;
+using Nikse.SubtitleEdit.Features.Translate.LlamaCppEngineSettings;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
+using Nikse.SubtitleEdit.Logic.Download;
 using Nikse.SubtitleEdit.Logic.LlamaCpp;
 using System;
 using System.Collections.Generic;
@@ -172,6 +174,51 @@ public partial class AiReviewViewModel : ObservableObject
             LlamaCppModels,
             LlamaCppServerManager.GetAllReviewModels(),
             selectedFileName);
+    }
+
+    /// <summary>
+    /// Opens the shared llama.cpp engine settings dialog (installed backend, pinned release, install
+    /// status). Its download button stops the server first - it holds llama-server open, so a running
+    /// server would block replacing the binary - then re-downloads and refreshes the model dots.
+    /// </summary>
+    [RelayCommand]
+    private async Task ShowLlamaCppEngineSettings()
+    {
+        if (Window == null)
+        {
+            return;
+        }
+
+        await _windowService.ShowDialogAsync<LlamaCppEngineSettingsWindow, LlamaCppEngineSettingsViewModel>(
+            Window,
+            vm => vm.Initialize(RedownloadLlamaCppEngineAsync));
+
+        RefreshLlamaCppModels();
+    }
+
+    private async Task RedownloadLlamaCppEngineAsync()
+    {
+        if (Window == null)
+        {
+            return;
+        }
+
+        LlamaCppServerManager.StopServer();
+
+        // Reuse the installed backend so the user is not re-asked CPU/Vulkan/CUDA on a re-download;
+        // null on a fresh install (or off Windows), which lets DownloadAsync prompt.
+        var variant = OperatingSystem.IsWindows()
+            ? DownloadHashManager.DetectLlamaCppWindowsVariant(LlamaCppServerManager.GetAndCreateFolder())
+            : null;
+
+        await LlamaCppDownloadHelper.DownloadAsync(
+            Window,
+            _windowService,
+            SelectedLlamaCppModel?.Model,
+            variant,
+            forceEngineDownload: true);
+
+        RefreshLlamaCppModels();
     }
 
     private void SaveSettings()

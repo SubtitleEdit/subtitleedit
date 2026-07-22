@@ -129,6 +129,7 @@ using Nikse.SubtitleEdit.Features.Tools.SortBy;
 using Nikse.SubtitleEdit.Features.Tools.SplitBreakLongLines;
 using Nikse.SubtitleEdit.Features.Tools.SplitSubtitle;
 using Nikse.SubtitleEdit.Features.Translate;
+using Nikse.SubtitleEdit.Features.Translate.LlamaCppEngineSettings;
 using Nikse.SubtitleEdit.Features.Video.BlankVideo;
 using Nikse.SubtitleEdit.Features.Video.BurnIn;
 using Nikse.SubtitleEdit.Features.Video.CutVideo;
@@ -427,6 +428,7 @@ public static class DependencyInjectionExtensions
         collection.AddTransient<NOcrInspectViewModel>();
         collection.AddTransient<NOcrSettingsViewModel>();
         collection.AddTransient<LlamaCppOcrSettingsViewModel>();
+        collection.AddTransient<LlamaCppEngineSettingsViewModel>();
         collection.AddTransient<OcrViewModel>();
         collection.AddTransient<OmniVoiceSettingsViewModel>();
         collection.AddTransient<Qwen3TtsSettingsViewModel>();

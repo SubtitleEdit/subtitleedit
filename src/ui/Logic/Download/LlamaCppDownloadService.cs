@@ -16,8 +16,13 @@ public interface ILlamaCppDownloadService
 
 public class LlamaCppDownloadService(HttpClient httpClient) : ILlamaCppDownloadService
 {
-    private const string Version = "b10035";
-    private const string BaseUrl = "https://github.com/ggml-org/llama.cpp/releases/download/" + Version + "/";
+    /// <summary>
+    /// The pinned llama.cpp release tag. Public so the engine settings dialog can show which build
+    /// SE downloads; index 0 of every <see cref="DownloadHashManager.LlamaCpp"/> hash list must match it.
+    /// </summary>
+    public const string ReleaseTag = "b10035";
+
+    private const string BaseUrl = "https://github.com/ggml-org/llama.cpp/releases/download/" + ReleaseTag + "/";
 
     public const string VariantCpu = "cpu";
     public const string VariantVulkan = "vulkan";
@@ -81,9 +86,9 @@ public class LlamaCppDownloadService(HttpClient httpClient) : ILlamaCppDownloadS
         {
             return variant switch
             {
-                VariantCuda => BaseUrl + "llama-" + Version + "-bin-win-cuda-12.4-x64.zip",
-                VariantVulkan => BaseUrl + "llama-" + Version + "-bin-win-vulkan-x64.zip",
-                _ => BaseUrl + "llama-" + Version + "-bin-win-cpu-x64.zip",
+                VariantCuda => BaseUrl + "llama-" + ReleaseTag + "-bin-win-cuda-12.4-x64.zip",
+                VariantVulkan => BaseUrl + "llama-" + ReleaseTag + "-bin-win-vulkan-x64.zip",
+                _ => BaseUrl + "llama-" + ReleaseTag + "-bin-win-cpu-x64.zip",
             };
         }
 
@@ -97,20 +102,20 @@ public class LlamaCppDownloadService(HttpClient httpClient) : ILlamaCppDownloadS
                 }
 
                 return variant == VariantVulkan
-                    ? BaseUrl + "llama-" + Version + "-bin-ubuntu-vulkan-arm64.tar.gz"
-                    : BaseUrl + "llama-" + Version + "-bin-ubuntu-arm64.tar.gz";
+                    ? BaseUrl + "llama-" + ReleaseTag + "-bin-ubuntu-vulkan-arm64.tar.gz"
+                    : BaseUrl + "llama-" + ReleaseTag + "-bin-ubuntu-arm64.tar.gz";
             }
 
             return variant == VariantVulkan
-                ? BaseUrl + "llama-" + Version + "-bin-ubuntu-vulkan-x64.tar.gz"
-                : BaseUrl + "llama-" + Version + "-bin-ubuntu-x64.tar.gz";
+                ? BaseUrl + "llama-" + ReleaseTag + "-bin-ubuntu-vulkan-x64.tar.gz"
+                : BaseUrl + "llama-" + ReleaseTag + "-bin-ubuntu-x64.tar.gz";
         }
 
         if (OperatingSystem.IsMacOS())
         {
             return RuntimeInformation.ProcessArchitecture == Architecture.Arm64
-                ? BaseUrl + "llama-" + Version + "-bin-macos-arm64.tar.gz"
-                : BaseUrl + "llama-" + Version + "-bin-macos-x64.tar.gz";
+                ? BaseUrl + "llama-" + ReleaseTag + "-bin-macos-arm64.tar.gz"
+                : BaseUrl + "llama-" + ReleaseTag + "-bin-macos-x64.tar.gz";
         }
 
         throw new PlatformNotSupportedException("llama.cpp download is not supported on this platform.");

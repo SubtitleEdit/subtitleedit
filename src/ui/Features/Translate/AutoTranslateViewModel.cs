@@ -11,6 +11,7 @@ using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using Nikse.SubtitleEdit.Core.Translate;
 using Nikse.SubtitleEdit.Features.Ocr;
 using Nikse.SubtitleEdit.Features.Shared;
+using Nikse.SubtitleEdit.Features.Translate.LlamaCppEngineSettings;
 using Nikse.SubtitleEdit.Features.Video.SpeechToText;
 using Nikse.SubtitleEdit.Features.Video.SpeechToText.Engines;
 using Nikse.SubtitleEdit.Logic.LlamaCpp;
@@ -967,6 +968,32 @@ public partial class AutoTranslateViewModel : ObservableObject
         }
 
         RefreshDownloadDots?.Invoke();
+    }
+
+    /// <summary>
+    /// Opens the llama.cpp engine settings dialog (installed backend, pinned release, install status).
+    /// Its download button routes back through <see cref="UpdateLlamaCppEngineAsync"/> so the running
+    /// server is stopped first and the model list and status dots refresh afterwards.
+    /// </summary>
+    [RelayCommand]
+    private async Task ShowLlamaCppEngineSettings()
+    {
+        if (Window == null)
+        {
+            return;
+        }
+
+        // Pass the key of the outdated install when there is one, so the re-download picks the same
+        // backend. Otherwise pass empty: UpdateLlamaCppEngineAsync then falls back to detecting the
+        // variant from the install folder, and to asking the user when nothing is installed yet.
+        var installedKey = GetLlamaCppEngineUpdate()?.key ?? string.Empty;
+
+        await _windowService.ShowDialogAsync<LlamaCppEngineSettingsWindow, LlamaCppEngineSettingsViewModel>(
+            Window,
+            vm => vm.Initialize(() => UpdateLlamaCppEngineAsync(installedKey)));
+
+        RefreshDownloadDots?.Invoke();
+        RefreshEngineUpdateButton();
     }
 
     [RelayCommand]
