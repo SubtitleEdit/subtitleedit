@@ -1,14 +1,9 @@
-﻿using Nikse.SubtitleEdit.Core.AutoTranslate;
+﻿using System.Collections.ObjectModel;
+using Nikse.SubtitleEdit.Core.AutoTranslate;
 using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.Translate;
-using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 
-namespace Nikse.SubtitleEdit.Features.Translate;
+namespace Nikse.SubtitleEdit.UiLogic.Translate;
 
 public class DoAutoTranslate
 {

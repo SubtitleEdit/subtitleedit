@@ -1,5 +1,6 @@
 using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
+using Nikse.SubtitleEdit.UiLogic.SpellCheck;
 using Spectre.Console;
 
 namespace SeConv.Core;
@@ -711,10 +712,10 @@ internal class SubtitleConverter
             // Wire the shared spell-check / OCR-fix engine (libuilogic) to seconv's options so the
             // "Fix common OCR errors" pass can run headless. Use --dictionary-folder when given, else
             // fall back to the dictionaries bundled into seconv (English out of the box) (#11744).
-            Nikse.SubtitleEdit.Features.SpellCheck.SpellCheckConfig.DictionariesFolder = () =>
+            SpellCheckConfig.DictionariesFolder = () =>
                 !string.IsNullOrEmpty(options.DictionaryFolder) ? options.DictionaryFolder : BundledDictionaries.GetFolder();
-            Nikse.SubtitleEdit.Features.SpellCheck.SpellCheckConfig.UseWordSplitList = () => true;
-            Nikse.SubtitleEdit.Features.SpellCheck.SpellCheckConfig.TreatInApostropheAsIng = () => false;
+            SpellCheckConfig.UseWordSplitList = () => true;
+            SpellCheckConfig.TreatInApostropheAsIng = () => false;
 
             LibSEIntegration.ApplyOperations(
                 subtitle,

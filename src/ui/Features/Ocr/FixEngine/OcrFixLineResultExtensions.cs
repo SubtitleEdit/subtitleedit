@@ -3,6 +3,7 @@ using Avalonia.Controls.Documents;
 using Avalonia.Media;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
+using Nikse.SubtitleEdit.UiLogic.Ocr.FixEngine;
 
 namespace Nikse.SubtitleEdit.Features.Ocr.FixEngine;
 

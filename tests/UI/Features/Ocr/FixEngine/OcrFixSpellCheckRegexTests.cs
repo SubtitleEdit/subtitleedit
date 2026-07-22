@@ -4,6 +4,8 @@ using Nikse.SubtitleEdit.Features.SpellCheck;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using Nikse.SubtitleEdit.UiLogic.Ocr.FixEngine;
+using Nikse.SubtitleEdit.UiLogic.SpellCheck;
 
 namespace UITests.Features.Ocr.FixEngine;
 

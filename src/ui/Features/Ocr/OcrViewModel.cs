@@ -56,6 +56,9 @@ using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
+using Nikse.SubtitleEdit.UiLogic.LlamaCpp;
+using Nikse.SubtitleEdit.UiLogic.Ocr.FixEngine;
+using Nikse.SubtitleEdit.UiLogic.SpellCheck;
 
 namespace Nikse.SubtitleEdit.Features.Ocr;
 

@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using System.Xml.Linq;
+using Nikse.SubtitleEdit.UiLogic.SpellCheck;
 using Tmds.DBus.Protocol;
 
 namespace Nikse.SubtitleEdit.Features.Shared.AddToUserDictionary;

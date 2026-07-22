@@ -1,9 +1,6 @@
 using Nikse.SubtitleEdit.Core.Interfaces;
-using System.Collections.Generic;
 
-// Kept in the original UI namespace so existing `using Nikse.SubtitleEdit.Features.SpellCheck;`
-// references keep resolving after the type moved into libuilogic (shared by UI and seconv).
-namespace Nikse.SubtitleEdit.Features.SpellCheck;
+namespace Nikse.SubtitleEdit.UiLogic.SpellCheck;
 
 public record WordSpellCheckLanguage(string Name, int LanguageId);
 

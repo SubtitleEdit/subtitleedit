@@ -3,6 +3,7 @@ using Nikse.SubtitleEdit.Features.SpellCheck;
 using Nikse.SubtitleEdit.Logic.Config;
 using System;
 using System.IO;
+using Nikse.SubtitleEdit.UiLogic.SpellCheck;
 
 namespace UITests.Features.SpellCheck;
 

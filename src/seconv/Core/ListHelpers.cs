@@ -1,7 +1,7 @@
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
-using Nikse.SubtitleEdit.Logic.LlamaCpp;
 using Spectre.Console;
 using System.Text;
+using Nikse.SubtitleEdit.UiLogic.LlamaCpp;
 
 namespace SeConv.Core;
 

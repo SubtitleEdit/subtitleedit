@@ -1,14 +1,10 @@
-﻿using Nikse.SubtitleEdit.Core.Common;
-using Nikse.SubtitleEdit.Features.Ocr.FixEngine;
-using Nikse.SubtitleEdit.Features.SpellCheck;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Text;
+﻿using System.Text;
 using System.Text.RegularExpressions;
 using System.Xml;
+using Nikse.SubtitleEdit.Core.Common;
+using Nikse.SubtitleEdit.UiLogic.SpellCheck;
 
-namespace Nikse.SubtitleEdit.Core.Dictionaries
+namespace Nikse.SubtitleEdit.UiLogic.Ocr.FixEngine
 {
     public class OcrFixReplaceList2
     {

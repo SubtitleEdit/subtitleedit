@@ -21,6 +21,7 @@ using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Nikse.SubtitleEdit.UiLogic.Ocr.FixEngine;
 
 namespace Nikse.SubtitleEdit.Features.Tools.FixCommonErrors;
 

@@ -11,6 +11,7 @@ using Nikse.SubtitleEdit.Logic.Download;
 using Nikse.SubtitleEdit.Logic.LlamaCpp;
 using System;
 using System.Threading.Tasks;
+using Nikse.SubtitleEdit.UiLogic.LlamaCpp;
 
 namespace Nikse.SubtitleEdit.Features.Ocr;
 

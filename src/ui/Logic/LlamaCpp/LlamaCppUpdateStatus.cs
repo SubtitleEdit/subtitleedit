@@ -1,6 +1,7 @@
 using Nikse.SubtitleEdit.Logic.Download;
 using System.IO;
 using Nikse.SubtitleEdit.UiLogic;
+using Nikse.SubtitleEdit.UiLogic.LlamaCpp;
 
 namespace Nikse.SubtitleEdit.Logic.LlamaCpp;
 

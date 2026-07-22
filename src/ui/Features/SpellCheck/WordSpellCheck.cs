@@ -3,6 +3,7 @@ using Nikse.SubtitleEdit.Core.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
+using Nikse.SubtitleEdit.UiLogic.SpellCheck;
 
 namespace Nikse.SubtitleEdit.Features.SpellCheck;
 

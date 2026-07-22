@@ -25,6 +25,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
+using Nikse.SubtitleEdit.UiLogic.LlamaCpp;
 
 namespace Nikse.SubtitleEdit.Features.Video.VideoOcr;
 

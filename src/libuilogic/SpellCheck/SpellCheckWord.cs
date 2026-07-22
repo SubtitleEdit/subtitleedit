@@ -1,4 +1,4 @@
-﻿namespace Nikse.SubtitleEdit.Features.SpellCheck;
+﻿namespace Nikse.SubtitleEdit.UiLogic.SpellCheck;
 
 public class SpellCheckWord
 {

@@ -1,13 +1,9 @@
 ﻿using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.Dictionaries;
 using Nikse.SubtitleEdit.Core.Interfaces;
-using Nikse.SubtitleEdit.Features.SpellCheck;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
+using Nikse.SubtitleEdit.UiLogic.SpellCheck;
 
-namespace Nikse.SubtitleEdit.Features.Ocr.FixEngine;
+namespace Nikse.SubtitleEdit.UiLogic.Ocr.FixEngine;
 
 public interface IOcrFixEngine
 {

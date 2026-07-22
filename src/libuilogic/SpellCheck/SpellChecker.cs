@@ -1,13 +1,9 @@
-using Nikse.SubtitleEdit.Core.Interfaces;
-using System;
-using System.Collections.Generic;
 using System.Globalization;
-using System.IO;
-using System.Linq;
 using System.Text.RegularExpressions;
+using Nikse.SubtitleEdit.Core.Interfaces;
 using WeCantSpell.Hunspell;
 
-namespace Nikse.SubtitleEdit.Features.SpellCheck;
+namespace Nikse.SubtitleEdit.UiLogic.SpellCheck;
 
 /// <summary>
 /// Framework-agnostic spell-checking core: Hunspell (pure-managed WeCantSpell) plus the names /

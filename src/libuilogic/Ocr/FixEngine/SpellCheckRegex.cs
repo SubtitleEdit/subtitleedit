@@ -1,9 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text.RegularExpressions;
+﻿using System.Text.RegularExpressions;
 using System.Xml;
 
-namespace Nikse.SubtitleEdit.Features.Ocr.FixEngine;
+namespace Nikse.SubtitleEdit.UiLogic.Ocr.FixEngine;
 // XML:
 //    <RegularExpressionsIfSpelledCorrectly>
 //        <RegEx find = "\b([A-Z][a-z]+)'s\b" spellCheck="$1" replaceWith="$1's" /> <!-- David's -->
