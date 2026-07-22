@@ -114,6 +114,18 @@ public static class LlamaCppServerManager
             "https://huggingface.co/bartowski/Qwen_Qwen3.5-9B-GGUF/resolve/main/Qwen_Qwen3.5-9B-Q8_0.gguf",
             ChatTemplate: "chatml", NoJinja: true),
 
+        // Qwen 3.6 35B-A3B - a mixture-of-experts model: 35B total but only ~3B active per token, so
+        // it generates fast even fully on CPU. That makes it the option for machines with plenty of
+        // RAM but no usable GPU. The catch is the quant: UD-IQ2_M is 2-bit, and low-bit hurts MoE
+        // more than dense models (few active params means little redundancy to absorb the error), so
+        // translation quality may well trail the much smaller Qwen 3.5 9B Q4_K_M - hence the note in
+        // the display name. IQ2_M is nonetheless the smallest Qwen 3.6 build available; every other
+        // quant of this model is larger, not smaller. Its GGUF reports architecture "qwen35moe" (the
+        // Qwen 3.5 MoE arch), which the pinned engine already supports.
+        new LlamaCppModel("Qwen 3.6 35B-A3B (IQ2_M) - fast on CPU, 2-bit quality", "Qwen3.6-35B-A3B-UD-IQ2_M.gguf", "11.5 GB",
+            "https://huggingface.co/unsloth/Qwen3.6-35B-A3B-GGUF/resolve/main/Qwen3.6-35B-A3B-UD-IQ2_M.gguf",
+            ChatTemplate: "chatml", NoJinja: true),
+
         // Hy-MT2 (Tencent Hunyuan-MT 2, 2026) - translation-specialized, official GGUFs, Apache-2.0.
         // Excellent for its 33+5 supported languages (CJK, major European/Asian) but has NO Nordic
         // languages (Danish/Swedish/Norwegian/Finnish), no Greek/Romanian/Hungarian - generation in
@@ -144,7 +156,7 @@ public static class LlamaCppServerManager
 
     // Models for the AI review tool (proofreading). Translation-tuned models (TranslateGemma,
     // Aya) are deliberately absent - proofreading needs general instruction-following and strict
-    // JSON output, where the plain instruct models are much stronger. Kept to <= 10 GB.
+    // JSON output, where the plain instruct models are much stronger. Kept to <= 12 GB.
     public static readonly IReadOnlyList<LlamaCppModel> ReviewModels = new[]
     {
         new LlamaCppModel("Qwen 3.5 4B (Q4_K_M)", "Qwen_Qwen3.5-4B-Q4_K_M.gguf", "2.8 GB",
@@ -158,6 +170,10 @@ public static class LlamaCppServerManager
             ChatTemplate: "chatml", NoJinja: true),
         new LlamaCppModel("Qwen 3.5 9B (Q8_0)", "Qwen_Qwen3.5-9B-Q8_0.gguf", "9.8 GB",
             "https://huggingface.co/bartowski/Qwen_Qwen3.5-9B-GGUF/resolve/main/Qwen_Qwen3.5-9B-Q8_0.gguf",
+            ChatTemplate: "chatml", NoJinja: true),
+        // MoE, ~3B active - fast on CPU; see the note in TranslateModels for the 2-bit caveat.
+        new LlamaCppModel("Qwen 3.6 35B-A3B (IQ2_M) - fast on CPU, 2-bit quality", "Qwen3.6-35B-A3B-UD-IQ2_M.gguf", "11.5 GB",
+            "https://huggingface.co/unsloth/Qwen3.6-35B-A3B-GGUF/resolve/main/Qwen3.6-35B-A3B-UD-IQ2_M.gguf",
             ChatTemplate: "chatml", NoJinja: true),
         new LlamaCppModel("Gemma 3 4B it (Q4_K_M)", "google_gemma-3-4b-it-Q4_K_M.gguf", "2.5 GB",
             "https://huggingface.co/bartowski/google_gemma-3-4b-it-GGUF/resolve/main/google_gemma-3-4b-it-Q4_K_M.gguf",
