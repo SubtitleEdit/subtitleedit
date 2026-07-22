@@ -3,6 +3,25 @@ Subtitle Edit Changelog
 
 -----------------------------------------------------------------------------------------------------
 
+v5.1.0-rc13 (22nd of July 2026)
+
+* llama.cpp: engine settings dialog showing backend, install status, pinned release and install folder - reachable from auto-translate, AI review and the AI assistant
+* Show llama.cpp install status dots in the AI review and AI assistant engine combo boxes
+* Start-up: non-English languages load about 3.5x faster - source-generated JSON, and the translation file is no longer read twice
+* Build the subtitle format list off the critical path, cutting further start-up time
+* Speed up MP4/MOV parsing up to 2.3x on large files, and fix two sample table faults
+* OCR: speed up two hot loops
+* Fix Traditional Chinese missing from the UI language list - thx SunnyLeu
+* Fix message box icons never loading - they now also follow the active theme instead of always using Dark
+* Waveform themes: report import/export errors instead of failing silently - an unwritable export path reported success while writing nothing
+* Retry asset unpacking after a failed first run, instead of marking the folder up to date
+* Fix alternating row colors not updating when the system theme changes - thx pdjdev
+* Add the missing help text for OpenAI-compatible server
+* Remove the dead Parakeet.cpp engine
+* Faster SHA-256 hashing and byte parsing via one-shot HashData and BinaryPrimitives - thx ivandrofly
+
+-----------------------------------------------------------------------------------------------------
+
 v5.1.0-rc12 (22nd of July 2026)
 
 * Auto-translate/AI review via llama.cpp: add Gemma 4 (E4B/12B, 140+ languages), Qwen 3.6 35B-A3B (mixture-of-experts - fast on CPU) and Qwen 3.5 9B Q8_0
