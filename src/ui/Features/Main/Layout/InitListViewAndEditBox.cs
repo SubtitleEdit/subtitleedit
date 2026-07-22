@@ -50,6 +50,8 @@ public static partial class InitListViewAndEditBox
             vm.SubtitleGrid.ItemsSource = null;
         }
 
+        vm.SubtitleGridAlternatingRowBrush = null;
+
         var mainGrid = new Grid
         {
             RowDefinitions = new RowDefinitions("*,Auto"),
@@ -107,7 +109,7 @@ public static partial class InitListViewAndEditBox
         var booleanAndConverter = BooleanAndConverter.Instance;
 
         // Optional alternating row background (Options > Settings > Appearance)
-        IBrush? alternatingRowBrush = null;
+        SolidColorBrush? alternatingRowBrush = null;
         if (Se.Settings.Appearance.GridAlternatingRows)
         {
             var isDark = Application.Current?.ActualThemeVariant == ThemeVariant.Dark;
@@ -119,6 +121,7 @@ public static partial class InitListViewAndEditBox
                 if (!string.IsNullOrWhiteSpace(altColorHex))
                 {
                     alternatingRowBrush = new SolidColorBrush(altColorHex.FromHexToColor());
+                    vm.SubtitleGridAlternatingRowBrush = alternatingRowBrush;
                 }
             }
             catch

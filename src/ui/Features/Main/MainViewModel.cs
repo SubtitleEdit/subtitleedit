@@ -1,4 +1,5 @@
 using Nikse.SubtitleEdit.UiLogic.Export;
+using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
 using Avalonia.Data;
@@ -6,6 +7,7 @@ using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Layout;
 using Avalonia.Media;
+using Avalonia.Styling;
 using Avalonia.Threading;
 using Avalonia.VisualTree;
 using AvaloniaEdit;
@@ -282,6 +284,7 @@ public partial class MainViewModel :
 
     public DataGrid SubtitleGrid { get; set; }
     public Border? SubtitleGridDropHost { get; set; }
+    public SolidColorBrush? SubtitleGridAlternatingRowBrush { get; set; }
     public Window? Window { get; set; }
     public Grid ContentGrid { get; set; }
     public MainView? MainView { get; set; }
@@ -8938,6 +8941,23 @@ public partial class MainViewModel :
     private void OnSystemThemeChanged()
     {
         RebuildToolbar();
+
+        // The rows keep a shared brush, rather than a theme-resource binding. Updating its
+        // Color notifies every realized row without rebuilding the grid (and losing its state).
+        if (SubtitleGridAlternatingRowBrush != null)
+        {
+            var colorHex = Application.Current?.ActualThemeVariant == ThemeVariant.Dark
+                ? Se.Settings.Appearance.GridAlternatingRowColorDark
+                : Se.Settings.Appearance.GridAlternatingRowColor;
+            try
+            {
+                SubtitleGridAlternatingRowBrush.Color = colorHex.FromHexToColor();
+            }
+            catch
+            {
+                // Keep the current brush color when the configured value is invalid.
+            }
+        }
 
         // The syntax highlighting scheme is theme-dependent. The edit box re-colors itself
         // (its presenter keys its caches on the theme), but the grid rows hold converted
