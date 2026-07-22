@@ -36,11 +36,18 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     // GetUInt returns int, so a length with the high bit set (leading byte >= 0x80)
                     // reads back negative. A negative length slips past both checks below - it is
                     // not > 500, and "i + 4 + boxLength" is smaller than the buffer, not larger -
-                    // and then throws in Encoding.GetString. Zero is rejected too: it would append
-                    // an empty paragraph for every 4 bytes of input.
-                    if (boxLength <= 0 || boxLength > 500 || i + 4 + boxLength > buffer.Length)
+                    // and then throws in Encoding.GetString.
+                    if (boxLength < 0 || boxLength > 500 || i + 4 + boxLength > buffer.Length)
                     {
                         break;
+                    }
+
+                    // A zero length is legal: timed text uses empty samples to clear the screen
+                    // between cues. Skip it rather than appending an empty paragraph.
+                    if (boxLength == 0)
+                    {
+                        i += 4;
+                        continue;
                     }
 
                     if (boxLength > 10 && buffer[i + 4] == 0x73 && buffer[i + 4 + 1] == 0x74 && buffer[i + 4 + 2] == 0x79 && buffer[i + 4 + 3] == 0x6C && buffer[i + 4 + 4] == 0) // styl + 0

@@ -36,13 +36,30 @@ public class Tx3GTextOnlyTest
         Assert.Empty(subtitle.Paragraphs);
     }
 
-    // A zero length terminated the loop only after appending an empty paragraph per 4 bytes.
+    // A zero length is legal - timed text uses empty samples to clear the screen between cues.
+    // It used to append an empty paragraph for every 4 bytes; it should be skipped instead.
     [Fact]
-    public void ZeroBoxLengthProducesNoParagraphs()
+    public void ZeroBoxLengthIsSkippedNotTreatedAsText()
     {
-        var subtitle = Load(new byte[] { 0x00, 0x00, 0x00, 0x00, 65, 66, 67, 68, 69, 70 });
+        var subtitle = Load(new byte[] { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 });
 
         Assert.Empty(subtitle.Paragraphs);
+    }
+
+    // Parsing must continue past a clear-screen sample rather than stopping at it.
+    [Fact]
+    public void ZeroBoxLengthDoesNotStopParsing()
+    {
+        var subtitle = Load(new byte[]
+        {
+            0x00, 0x00, 0x00, 0x02, 65, 66, // "AB"
+            0x00, 0x00, 0x00, 0x00, // clear screen
+            0x00, 0x00, 0x00, 0x03, 67, 68, 69, // "CDE"
+        });
+
+        Assert.Equal(2, subtitle.Paragraphs.Count);
+        Assert.Equal("AB", subtitle.Paragraphs[0].Text);
+        Assert.Equal("CDE", subtitle.Paragraphs[1].Text);
     }
 
     [Fact]
