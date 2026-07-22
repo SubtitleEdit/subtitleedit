@@ -1,0 +1,77 @@
+name: Run benchmarks
+
+# Benchmarks are not run on every push - they take a few minutes per runner and the results are
+# only meaningful when someone is actually looking at them. This triggers manually, plus on PRs
+# that touch the benchmark project itself so a change to a benchmark gets validated.
+on:
+  workflow_dispatch:
+    inputs:
+      filter:
+        description: 'BenchmarkDotNet filter (e.g. *BinaryPrimitives* or * for everything)'
+        required: true
+        default: '*'
+        type: string
+  pull_request:
+    paths:
+      - 'tests/benchmarks/**'
+      - '.github/workflows/benchmarks.yml'
+
+concurrency:
+  group: benchmarks-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  benchmark:
+    name: ${{ matrix.label }}
+    runs-on: ${{ matrix.runner }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - runner: ubuntu-latest
+            label: linux-x64
+          - runner: windows-latest
+            label: windows-x64
+          - runner: macos-latest
+            label: macos-arm64
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '10.0.x'
+
+      - name: Run benchmarks
+        shell: bash
+        # BenchmarkDotNet refuses to produce numbers from a Debug build, hence -c Release.
+        run: |
+          dotnet run --project tests/benchmarks/LibSEBenchmarks.csproj -c Release -- \
+            --filter '${{ inputs.filter || '*' }}' \
+            --artifacts ./BenchmarkDotNet.Artifacts
+
+      - name: Publish results to job summary
+        if: always()
+        shell: bash
+        run: |
+          echo "## Benchmark results - ${{ matrix.label }}" >> "$GITHUB_STEP_SUMMARY"
+          echo "" >> "$GITHUB_STEP_SUMMARY"
+          shopt -s nullglob
+          reports=(./BenchmarkDotNet.Artifacts/results/*-report-github.md)
+          if [ ${#reports[@]} -eq 0 ]; then
+            echo "_No report produced - see the job log._" >> "$GITHUB_STEP_SUMMARY"
+            exit 0
+          fi
+          for report in "${reports[@]}"; do
+            cat "$report" >> "$GITHUB_STEP_SUMMARY"
+            echo "" >> "$GITHUB_STEP_SUMMARY"
+          done
+
+      - name: Upload benchmark artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: benchmark-results-${{ matrix.label }}
+          path: ./BenchmarkDotNet.Artifacts/results/
+          if-no-files-found: warn
