@@ -7,6 +7,7 @@ using Avalonia.Media.Imaging;
 using CommunityToolkit.Mvvm.Input;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
+using System.IO;
 using System.Threading.Tasks;
 
 namespace Nikse.SubtitleEdit.Features.Shared;
@@ -92,14 +93,16 @@ public class MessageBox : Window
 
         if (icon != MessageBoxIcon.None)
         {
-            var iconPath = $"Assets/Themes/Dark/{icon}.png";
+            // Theme images are unpacked from Themes.zip into Se.ThemesFolder at start-up; a path
+            // relative to the working directory never resolved, so no icon was ever shown here.
+            var iconPath = Path.Combine(UiTheme.ImageFolder, $"{icon}.png");
             try
             {
                 iconImage.Source = new Bitmap(iconPath);
             }
             catch
             {
-                // If icon not found, silently ignore
+                Se.LogError($"Could not load message box icon \"{iconPath}\".");
             }
 
             grid.Children.Add(iconImage);

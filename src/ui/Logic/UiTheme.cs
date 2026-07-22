@@ -12,6 +12,7 @@ using AvaloniaEdit;
 using AvaloniaEdit.Editing;
 using Nikse.SubtitleEdit.Logic.Config;
 using System;
+using System.IO;
 using System.Linq;
 
 namespace Nikse.SubtitleEdit.Logic;
@@ -59,6 +60,36 @@ public static class UiTheme
     public static bool IsDarkThemeEnabled()
     {
         return ThemeName == ThemeNameDark;
+    }
+
+    /// <summary>
+    /// Folder holding the current theme's images. These are unpacked from Themes.zip into
+    /// <see cref="Se.ThemesFolder"/> at start-up - they are not embedded assets, so they cannot
+    /// be reached through an avares:// URI. Falls back to Dark when the active theme ships no
+    /// image folder of its own (Pastel, for instance), and an explicit icon theme wins over both.
+    /// </summary>
+    public static string ImageFolder
+    {
+        get
+        {
+            var folder = Path.Combine(Se.ThemesFolder, ThemeName);
+            if (!Directory.Exists(folder))
+            {
+                folder = Path.Combine(Se.ThemesFolder, ThemeNameDark);
+            }
+
+            var iconTheme = Se.Settings.Appearance.IconTheme;
+            if (!string.IsNullOrEmpty(iconTheme) && iconTheme != Se.Language.General.Auto)
+            {
+                var iconThemeFolder = Path.Combine(Se.ThemesFolder, iconTheme);
+                if (Directory.Exists(iconThemeFolder))
+                {
+                    folder = iconThemeFolder;
+                }
+            }
+
+            return folder;
+        }
     }
 
     public static void SetCurrentTheme()
