@@ -610,6 +610,14 @@ jobs:
           app="./SubtitleEdit-${{ matrix.arch_label }}.app"
           cp -R "./installer/macBundle/SubtitleEdit.app" "$app"
 
+          # .gitkeep only exists so git tracks the empty Contents/MacOS folder.
+          # codesign treats every file in MacOS/ as code, so leaving it in place
+          # makes `codesign --verify --deep --strict` fail the whole bundle with
+          # "code object is not signed at all". Unsigned builds never hit this,
+          # because they strip the signature instead of verifying it.
+          # .DS_Store can arrive the same way and is unsignable for the same reason.
+          find "$app" \( -name ".gitkeep" -o -name ".DS_Store" \) -delete
+
           cp "./publish/macos-${{ matrix.arch }}/SubtitleEdit" "$app/Contents/MacOS/"
           cp "./publish/macos-${{ matrix.arch }}/"*.dylib "$app/Contents/MacOS/" 2>/dev/null || true
           chmod +x "$app/Contents/MacOS/SubtitleEdit"
