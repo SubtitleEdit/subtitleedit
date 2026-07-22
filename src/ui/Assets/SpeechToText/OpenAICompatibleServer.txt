@@ -1,0 +1,32 @@
+OpenAI Compatible Server speech-to-text
+
+Sends audio to any server that implements OpenAI's /v1/audio/transcriptions
+API - OpenAI itself, a hosted provider, or a transcription server running on
+your own machine.
+
+Setup:
+1. Enter the STT Endpoint URL, for example:
+     http://localhost:8000/v1/audio/transcriptions   (local server)
+     https://api.openai.com/v1/audio/transcriptions  (OpenAI)
+2. Enter the API Key. Local servers usually need no key - leave it empty.
+3. Enter the Model the server expects, for example whisper-1.
+
+Only the endpoint URL is required; everything else has a working default.
+
+Settings:
+- Language Hint (e.g. en, de, es) can improve accuracy; leave empty to auto-detect.
+- Prompt gives the model context, such as names or spellings it should get right.
+- Temperature defaults to 0, which gives the most consistent transcript.
+- Extra Headers passes additional HTTP headers, one per line, for servers that
+  need them.
+- Timeout defaults to 300 seconds.
+- Stream response sends 'stream=true' to receive live text deltas (SSE). Turn it
+  off for servers that reject the 'stream' parameter, such as Groq.
+- Audio upload format defaults to MP3. OpenAI caps uploads at 25 MB, so MP3/M4A/
+  WebM (Opus) are recommended for long videos; WAV is lossless but ~5x larger.
+
+Audio larger than 24 MB is split into chunks of about 23 MB and transcribed in
+sequence, then joined back into one subtitle.
+
+See https://platform.openai.com/docs/guides/speech-to-text for the API these
+servers implement.
