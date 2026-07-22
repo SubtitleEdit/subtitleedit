@@ -1,4 +1,5 @@
-﻿using System;
+using System;
+using System.Buffers;
 using System.Buffers.Binary;
 using System.Collections.Generic;
 using System.IO;
@@ -11,20 +12,54 @@ namespace Nikse.SubtitleEdit.Core.Cea608
         public static List<CcData> GetCcData(Stream fs, ulong startPos, ulong size)
         {
             var fieldData = new List<CcData>();
-            for (var i = startPos; i < startPos + size - 5; i++)
+            if (size < 6 || size > int.MaxValue)
             {
-                var buffer = new byte[4];
-                fs.Seek((long)i, SeekOrigin.Begin);
-                fs.ReadFully(buffer, 0, buffer.Length);
-                var nalSize = BinaryPrimitives.ReadUInt32BigEndian(buffer);
-                var flag = fs.ReadByte();
-                if (IsRbspNalUnitType(flag & 0x1F) && nalSize < 10_000)
-                {
-                    var seiData = GetSeiData(fs, i + 5, i + nalSize + 3);
-                    ParseCcDataFromSei(seiData, fieldData);
-                }
+                return fieldData;
+            }
 
-                i += nalSize + 3;
+            var length = (int)size;
+
+            // Read the sample once instead of seeking and reading 5 bytes per NAL unit.
+            // The walk below only ever moves forward inside the sample, so a single
+            // sequential read is equivalent - and on a file with a few hundred thousand
+            // video samples it replaces millions of tiny reads with one read per sample.
+            var sample = ArrayPool<byte>.Shared.Rent(length);
+            try
+            {
+                fs.Seek((long)startPos, SeekOrigin.Begin);
+                var read = fs.ReadFully(sample, 0, length);
+
+                var i = 0;
+                while (i + 5 < read)
+                {
+                    var nalSize = BinaryPrimitives.ReadUInt32BigEndian(sample.AsSpan(i, 4));
+                    var flag = sample[i + 4];
+                    if (IsRbspNalUnitType(flag & 0x1F) && nalSize < 10_000)
+                    {
+                        // SEI payload spans [i + 5, i + nalSize + 3), clamped to what was read
+                        var seiStart = i + 5;
+                        var seiEnd = (int)Math.Min((long)i + nalSize + 3, read);
+                        if (seiEnd > seiStart)
+                        {
+                            var seiData = UnescapeSeiData(sample.AsSpan(seiStart, seiEnd - seiStart));
+                            ParseCcDataFromSei(seiData, fieldData);
+                        }
+                    }
+
+                    // nalSize is unsigned and unvalidated here; widen so a bogus size
+                    // cannot overflow the index into a negative value and loop forever
+                    var advance = (long)nalSize + 4;
+                    if (i + advance > read)
+                    {
+                        break;
+                    }
+
+                    i += (int)advance;
+                }
+            }
+            finally
+            {
+                ArrayPool<byte>.Shared.Return(sample);
             }
 
             return fieldData;
@@ -37,33 +72,54 @@ namespace Nikse.SubtitleEdit.Core.Cea608
 
         public static byte[] GetSeiData(Stream fs, ulong startPos, ulong endPos)
         {
-            var data = new List<byte>();
-            if (endPos <= startPos)
+            if (endPos <= startPos || endPos - startPos > int.MaxValue)
             {
-                return data.ToArray();
+                return Array.Empty<byte>();
             }
 
             var buffer = new byte[endPos - startPos];
             fs.Seek((long)startPos, SeekOrigin.Begin);
-            fs.ReadFully(buffer, 0, buffer.Length);
+            var read = fs.ReadFully(buffer, 0, buffer.Length);
 
-            for (var x = startPos; x < endPos; x++)
+            return UnescapeSeiData(buffer.AsSpan(0, read));
+        }
+
+        /// <summary>
+        /// Strips H.264 emulation prevention bytes: the 0x03 in any 00 00 03 sequence.
+        /// </summary>
+        private static byte[] UnescapeSeiData(ReadOnlySpan<byte> source)
+        {
+            if (source.Length == 0)
             {
-                var idx = x - startPos;
+                return Array.Empty<byte>();
+            }
 
-                if (x + 2 < endPos && buffer[idx] == 0x00 && buffer[idx + 1] == 0x00 && buffer[idx + 2] == 0x03)
+            // Output is never longer than the input, so one exact-sized buffer is
+            // enough - no growing List<byte> plus a copy in ToArray().
+            var data = new byte[source.Length];
+            var count = 0;
+            for (var i = 0; i < source.Length; i++)
+            {
+                if (i + 2 < source.Length && source[i] == 0x00 && source[i + 1] == 0x00 && source[i + 2] == 0x03)
                 {
-                    data.Add(0x00);
-                    data.Add(0x00);
-                    x += 2;
+                    data[count++] = 0x00;
+                    data[count++] = 0x00;
+                    i += 2;
                 }
                 else
                 {
-                    data.Add(buffer[idx]);
+                    data[count++] = source[i];
                 }
             }
 
-            return data.ToArray();
+            if (count == data.Length)
+            {
+                return data;
+            }
+
+            var trimmed = new byte[count];
+            Array.Copy(data, trimmed, count);
+            return trimmed;
         }
 
         public static void ParseCcDataFromSei(byte[] buffer, List<CcData> fieldData)

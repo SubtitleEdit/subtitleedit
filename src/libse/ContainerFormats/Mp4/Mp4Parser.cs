@@ -160,15 +160,6 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4
                     return;
                 }
 
-                var savedPos = fs.Position;
-                var bytesToRead = (int)Math.Min(100L, Math.Max(0L, (long)Size - 8));
-                if (bytesToRead > 0)
-                {
-                    var headerBytes = new byte[bytesToRead];
-                    var headerBytesRead = fs.Read(headerBytes, 0, bytesToRead);
-                    fs.Seek(savedPos, SeekOrigin.Begin);
-                }
-
                 if (Name == "moov" && Moov == null)
                 {
                     Moov = new Moov(fs, Position); // only scan first "moov" element
@@ -296,14 +287,13 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4
                 var timeScale = stbl.TimeScale > 0 ? stbl.TimeScale : (Moov?.Mvhd?.TimeScale ?? 1000UL);
                 var ccDataList = new List<CcData>();
                 var samplesScanned = 0;
-                var ccTypeCounts = new int[4];
 
                 using (var fs = new FileStream(FileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
                 {
                     uint samplesPerChunk = 1;
                     var index = 0;
                     ulong totalTicks = 0;
-                    var stscLookup = stbl.Stsc.ToDictionary(p => p.FirstChunk);
+                    var stscLookup = stbl.GetStscLookup();
                     var done = false;
 
                     for (var chunkIndex = 0; chunkIndex < stbl.ChunkOffsets.Count && !done; chunkIndex++)
@@ -345,15 +335,6 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4
                                 {
                                     cc.Time = pts;
                                     ccDataList.Add(cc);
-                                    if (cc.Type >= 0 && cc.Type < ccTypeCounts.Length)
-                                    {
-                                        ccTypeCounts[cc.Type]++;
-                                    }
-                                }
-
-                                if (samplesScanned == 0)
-                                {
-                                    CountRawCcTypes(fs, chunkOffset, scanSize, ccTypeCounts);
                                 }
                             }
 
@@ -365,7 +346,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4
                     }
                 }
 
-                //debugInfo.AppendLine($"CheckForMoovVideoCea608: scanned={samplesScanned}, cea608entries={ccDataList.Count} (type0={ccTypeCounts[0]}, type1={ccTypeCounts[1]}, type2={ccTypeCounts[2]}, type3={ccTypeCounts[3]})");
+                //debugInfo.AppendLine($"CheckForMoovVideoCea608: scanned={samplesScanned}, cea608entries={ccDataList.Count}");
 
                 if (ccDataList.Count == 0)
                 {
@@ -571,49 +552,6 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4
                 : frameTimesMs.Count - 1;
             var startMs = frameTimesMs[startIndex];
             TrunCea708Subtitle.Paragraphs.Add(new Paragraph(text.Trim(), startMs, endMs));
-        }
-
-        private static void CountRawCcTypes(Stream fs, ulong chunkOffset, ulong scanSize, int[] ccTypeCounts)
-        {
-            try
-            {
-                var atscId = new byte[] { 0xB5, 0x00, 0x31, 0x47, 0x41, 0x39, 0x34, 0x03 };
-                var buf = new byte[scanSize];
-                fs.Seek((long)chunkOffset, SeekOrigin.Begin);
-                var read = fs.Read(buf, 0, buf.Length);
-
-                for (var pos = 0; pos < read - 20; pos++)
-                {
-                    var match = true;
-                    for (var k = 0; k < atscId.Length; k++)
-                    {
-                        if (buf[pos + k] != atscId[k]) { match = false; break; }
-                    }
-
-                    if (!match)
-                    {
-                        continue;
-                    }
-
-                    var flagsByte = buf[pos + 8];          // byte after 8-byte ATSC id: cc_data_flags
-                    var ccCount = flagsByte & 0x1F;
-                    var emDataPresent = (flagsByte >> 7) & 1; // process_em_data_flag
-                    var ccStart = pos + 9 + emDataPresent; // skip id(8) + flags(1) + optional em_data(1)
-                    var rawTypeCounts = new int[4];
-                    for (var j = 0; j < ccCount && ccStart + j * 3 + 2 < read; j++)
-                    {
-                        var marker = buf[ccStart + j * 3];
-                        var ccType = marker & 0x3;
-                        if (ccType < 4) rawTypeCounts[ccType]++;
-                    }
-
-                    break;
-                }
-            }
-            catch
-            {
-                // ignore debug errors
-            }
         }
 
         private void CheckForTrunCea608()

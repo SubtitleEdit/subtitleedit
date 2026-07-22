@@ -8,6 +8,8 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
 {
     public class Box
     {
+        private static readonly char[] LineBreakChars = { '\r', '\n' };
+
         public byte[] Buffer;
         public ulong Position;
         public ulong StartPosition;
@@ -57,7 +59,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
             var text = Encoding.UTF8.GetString(buffer.AsSpan(index, count));
 
             // Only normalize line endings if they exist
-            if (text.IndexOfAny(new[] { '\r', '\n' }) >= 0)
+            if (text.IndexOfAny(LineBreakChars) >= 0)
             {
                 return string.Join(Environment.NewLine, text.SplitToLines());
             }
