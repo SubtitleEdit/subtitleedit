@@ -323,6 +323,7 @@ public partial class ConvertActorsViewModel : ObservableObject
         if (e.Key == Key.Escape)
         {
             e.Handled = true;
+            _timerUpdatePreview.Stop();
             Window?.Close();
         }
         else if (UiUtil.IsHelp(e))
