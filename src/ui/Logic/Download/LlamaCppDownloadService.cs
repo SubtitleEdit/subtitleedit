@@ -4,6 +4,7 @@ using System.Net.Http;
 using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
+using Nikse.SubtitleEdit.UiLogic;
 
 namespace Nikse.SubtitleEdit.Logic.Download;
 
@@ -31,13 +32,13 @@ public class LlamaCppDownloadService(HttpClient httpClient) : ILlamaCppDownloadS
     public async Task DownloadEngine(Stream stream, string variant, IProgress<float>? progress, CancellationToken cancellationToken)
     {
         await DownloadHelper.DownloadFileAsync(httpClient, GetEngineUrl(variant), stream, progress, cancellationToken);
-        VerifyArchive(stream, DownloadHashManager.ResolveLlamaCppKey(variant), "engine");
+        await VerifyArchive(stream, DownloadHashManager.ResolveLlamaCppKey(variant), "engine", cancellationToken);
     }
 
     // Compares the downloaded bytes against the known SHA-256 for this key and throws on mismatch
     // so the caller's IsFaulted branch surfaces "Download failed" instead of silently unpacking a
     // truncated or tampered file. Mirrors Qwen3TtsCppDownloadService.VerifyArchive.
-    private static void VerifyArchive(Stream stream, string? key, string label)
+    private static async Task VerifyArchive(Stream stream, string? key, string label, CancellationToken cancellationToken)
     {
         if (string.IsNullOrEmpty(key) || stream.Length == 0)
         {
@@ -51,7 +52,7 @@ public class LlamaCppDownloadService(HttpClient httpClient) : ILlamaCppDownloadS
         }
 
         stream.Position = 0;
-        var actual = DownloadHashManager.ComputeSha256(stream);
+        var actual = await Sha256Util.ComputeSha256Async(stream, cancellationToken);
         stream.Position = 0;
 
         if (!string.Equals(expected, actual, StringComparison.OrdinalIgnoreCase))
@@ -64,7 +65,7 @@ public class LlamaCppDownloadService(HttpClient httpClient) : ILlamaCppDownloadS
     public async Task DownloadCudaRuntime(Stream stream, IProgress<float>? progress, CancellationToken cancellationToken)
     {
         await DownloadHelper.DownloadFileAsync(httpClient, BaseUrl + "cudart-llama-bin-win-cuda-12.4-x64.zip", stream, progress, cancellationToken);
-        VerifyArchive(stream, DownloadHashManager.LlamaCpp.WindowsCudaRuntime, "CUDA runtime");
+        await VerifyArchive(stream, DownloadHashManager.LlamaCpp.WindowsCudaRuntime, "CUDA runtime", cancellationToken);
     }
 
     public async Task DownloadModel(string url, string destinationFileName, IProgress<float>? progress, CancellationToken cancellationToken)

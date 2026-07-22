@@ -11,6 +11,7 @@ using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Compression;
 using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Logic.Download;
+using Nikse.SubtitleEdit.UiLogic;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -1626,7 +1627,7 @@ public partial class DownloadTtsViewModel : ObservableObject
             }
 
             archiveStream.Position = 0;
-            var hash = DownloadHashManager.ComputeSha256(archiveStream);
+            var hash = Sha256Util.ComputeSha256(archiveStream);
 
             var sidecar = Path.Combine(folder, ".installed.sha256");
             File.WriteAllText(sidecar, key + Environment.NewLine + hash);

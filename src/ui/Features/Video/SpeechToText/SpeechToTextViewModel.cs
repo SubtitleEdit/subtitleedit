@@ -17,6 +17,7 @@ using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Logic.Download;
 using Nikse.SubtitleEdit.Logic.Media;
+using Nikse.SubtitleEdit.UiLogic;
 using Optris.Icons.Avalonia;
 using System.Net.Http;
 using System;
@@ -4576,7 +4577,7 @@ public partial class SpeechToTextViewModel : ObservableObject
         if (lookup == null)
         {
             var key = DownloadHashManager.ResolveQwen3AsrCppExecutableKey(useVulkan);
-            var hash = key == null ? null : DownloadHashManager.ComputeSha256(engine.GetExecutable());
+            var hash = key == null ? null : await Sha256Util.ComputeSha256Async(engine.GetExecutable());
             lookup = key == null || hash == null ? null : (key, hash);
         }
 
@@ -4676,7 +4677,7 @@ public partial class SpeechToTextViewModel : ObservableObject
             }
 
             var exePath = engine.GetExecutable();
-            var hash = DownloadHashManager.ComputeSha256(exePath);
+            var hash = Sha256Util.ComputeSha256(exePath);
             return hash == null ? null : (key, hash);
         }
         catch
@@ -4737,7 +4738,7 @@ public partial class SpeechToTextViewModel : ObservableObject
             }
 
             var exePath = engine.GetExecutable();
-            var hash = DownloadHashManager.ComputeSha256(exePath);
+            var hash = Sha256Util.ComputeSha256(exePath);
             return hash == null ? null : (key, hash);
         }
         catch

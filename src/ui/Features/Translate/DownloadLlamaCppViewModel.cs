@@ -14,6 +14,7 @@ using System.Globalization;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
+using Nikse.SubtitleEdit.UiLogic;
 
 namespace Nikse.SubtitleEdit.Features.Translate;
 
@@ -189,7 +190,7 @@ public partial class DownloadLlamaCppViewModel : ObservableObject
             }
 
             engineStream.Position = 0;
-            var hash = DownloadHashManager.ComputeSha256(engineStream);
+            var hash = Sha256Util.ComputeSha256(engineStream);
 
             var sidecar = Path.Combine(folder, ".installed.sha256");
             File.WriteAllText(sidecar, key + Environment.NewLine + hash);
