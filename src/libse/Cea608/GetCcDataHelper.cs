@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Buffers.Binary;
+using System.Collections.Generic;
 using System.IO;
 using Nikse.SubtitleEdit.Core.Common;
 
@@ -14,7 +16,7 @@ namespace Nikse.SubtitleEdit.Core.Cea608
                 var buffer = new byte[4];
                 fs.Seek((long)i, SeekOrigin.Begin);
                 fs.ReadFully(buffer, 0, buffer.Length);
-                var nalSize = GetUInt32(buffer, 0);
+                var nalSize = BinaryPrimitives.ReadUInt32BigEndian(buffer);
                 var flag = fs.ReadByte();
                 if (IsRbspNalUnitType(flag & 0x1F) && nalSize < 10_000)
                 {
@@ -144,13 +146,8 @@ namespace Nikse.SubtitleEdit.Core.Cea608
             // buffer[pos + 8], so a buffer ending right after the two magic words must not match
             return payloadType == 4 &&
                    pos + 8 < buffer.Length &&
-                   GetUInt32(buffer, pos) == 3036688711 &&
-                   GetUInt32(buffer, pos + 4) == 1094267907;
-        }
-
-        private static uint GetUInt32(byte[] buffer, int pos)
-        {
-            return (uint)((buffer[pos + 0] << 24) + (buffer[pos + 1] << 16) + (buffer[pos + 2] << 8) + buffer[pos + 3]);
+                   BinaryPrimitives.ReadUInt32BigEndian(buffer.AsSpan(pos)) == 3036688711 &&
+                   BinaryPrimitives.ReadUInt32BigEndian(buffer.AsSpan(pos + 4)) == 1094267907;
         }
     }
 }

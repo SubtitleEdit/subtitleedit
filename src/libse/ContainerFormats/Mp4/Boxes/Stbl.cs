@@ -3,6 +3,7 @@ using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using Nikse.SubtitleEdit.Core.VobSub;
 using System;
+using System.Buffers.Binary;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -269,7 +270,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
                                 if (fs.Read(boxHeader, 0, 8) < 8)
                                     break;
 
-                                var boxSize = GetUInt(boxHeader.AsSpan(0, 4));
+                                var boxSize = BinaryPrimitives.ReadUInt32BigEndian(boxHeader.AsSpan(0, 4));
                                 var boxName = GetString(boxHeader, 4, 4);
                                 if (boxSize < 8)
                                     break;
@@ -304,7 +305,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
                             fs.Seek((long)sampleOffset, SeekOrigin.Begin);
                             var buffer = new byte[2];
                             fs.ReadFully(buffer, 0, buffer.Length);
-                            var textSize = (uint)GetWord(buffer, 0);
+                            var textSize = (uint)BinaryPrimitives.ReadUInt16BigEndian(buffer);
 
                             if (textSize > 0)
                             {

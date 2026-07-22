@@ -1,5 +1,6 @@
 ﻿using Nikse.SubtitleEdit.Core.Common;
 using System;
+using System.Buffers.Binary;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
@@ -17,11 +18,6 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             throw new NotImplementedException();
         }
 
-        public static int GetUInt(byte[] buffer, int index)
-        {
-            return (buffer[index] << 24) + (buffer[index + 1] << 16) + (buffer[index + 2] << 8) + buffer[index + 3];
-        }
-
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)
         {
             subtitle.Paragraphs.Clear();
@@ -29,9 +25,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             {
                 var buffer = FileUtil.ReadAllBytesShared(fileName);
                 int i = 0;
-                while (i  + 4 < buffer.Length)
+                while (i + 4 < buffer.Length)
                 {
-                    var boxLength = GetUInt(buffer, i);
+                    var boxLength = BinaryPrimitives.ReadInt32BigEndian(buffer.AsSpan(i));
                     if (boxLength > 500 || i + 4 + boxLength > buffer.Length)
                     {
                         break;
