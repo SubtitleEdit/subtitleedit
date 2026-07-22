@@ -246,6 +246,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     new TwentyThreeJson(),
                     new TwentyThreeJsonEmbed(),
                     new TwentyThreeJsonEmbedWebSrt(),
+                    new Tx3GTextOnly(),
                     new UniversalSubtitleFormat(),
                     new UTSubtitleXml(),
                     new Utx(),
