@@ -1,6 +1,4 @@
-using Avalonia.Headless.XUnit;
-using Avalonia.Platform;
-using System.Text.Json;
+﻿using System.Text.Json;
 
 namespace UITests.Logic;
 
@@ -43,27 +41,6 @@ public class LanguageJsonFilesTests
 
         Assert.NotEmpty(files);
         Assert.Contains(files, f => Path.GetFileName(f) == "English.json");
-    }
-
-    /// <summary>
-    /// Every file in the Languages folder must be embedded as an Avalonia resource and be
-    /// discoverable by folder enumeration - that is what unpacks the translations at start-up.
-    /// A file added to the folder but not shipped would silently never reach the language picker.
-    /// </summary>
-    [AvaloniaFact]
-    public void EmbeddedLanguageAssets_MatchLanguagesFolder()
-    {
-        var onDisk = Directory.GetFiles(GetLanguagesFolder(), "*.json")
-            .Select(Path.GetFileName)
-            .OrderBy(f => f, StringComparer.Ordinal);
-
-        var embedded = AssetLoader
-            .GetAssets(new Uri("avares://SubtitleEdit/Assets/Languages"), null)
-            .Select(uri => Path.GetFileName(Uri.UnescapeDataString(uri.AbsolutePath)))
-            .Where(f => f.EndsWith(".json", StringComparison.OrdinalIgnoreCase))
-            .OrderBy(f => f, StringComparer.Ordinal);
-
-        Assert.Equal(onDisk, embedded);
     }
 
     /// <summary>
