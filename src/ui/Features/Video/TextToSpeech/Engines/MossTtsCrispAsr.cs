@@ -446,28 +446,7 @@ public class MossTtsCrispAsr : ITtsEngine
         var outputFileName = Path.Combine(GetSetFolder(), Guid.NewGuid() + ".wav");
 
         var speed = Math.Clamp(Se.Settings.Video.TextToSpeech.MossTtsCrispAsrSpeed, 0.25, 4.0);
-        var payload = new Dictionary<string, object>
-        {
-            ["input"] = text,
-            ["response_format"] = "wav",
-            // The OpenAI-compat server resolves `voice` as a NAME listed by /v1/voices (the file
-            // stem inside --voice-dir). Passing a full path makes the server hang indefinitely,
-            // so send the reference WAV's base name — it lives in the voices folder = --voice-dir.
-            ["voice"] = Path.GetFileNameWithoutExtension(mossVoice.FilePath),
-            ["speed"] = speed,
-            // Voice cloning is gated behind a consent attestation (the server returns HTTP 400
-            // consent_required without it). The user supplies their own reference voice by
-            // importing a WAV into SE, which is the act being attested here.
-            ["consent_attestation"] = "I have the speaker's consent, or it is my own voice.",
-            // Skip the audible AI-disclosure prefix CrispASR otherwise prepends to cloned audio;
-            // SE surfaces the AI-generated nature in its UI. The inaudible watermark + C2PA
-            // provenance metadata stay embedded regardless (defaults to true server-side).
-            ["spoken_disclaimer"] = false,
-        };
-        if (!string.IsNullOrEmpty(refText))
-        {
-            payload["ref_text"] = refText;
-        }
+        var payload = BuildSpeakPayload(text, speed);
 
         var body = JsonSerializer.Serialize(payload);
         using var content = new StringContent(body, Encoding.UTF8, "application/json");
@@ -528,6 +507,46 @@ public class MossTtsCrispAsr : ITtsEngine
         }
 
         return new TtsResult(outputFileName, text);
+    }
+
+    /// <summary>
+    /// Builds the <c>/v1/audio/speech</c> JSON payload. Extracted so the #12757 fix (no per-request
+    /// <c>voice</c> field) is unit-testable without a running crispasr server.
+    /// </summary>
+    /// <remarks>
+    /// Deliberately sends NO <c>voice</c> or <c>ref_text</c> field. The crispasr <c>moss-tts</c>
+    /// backend loads the clone reference from the server's startup <c>--voice &lt;path&gt;</c>
+    /// (and <c>--ref-text</c>) flags — which <see cref="EnsureServerRunningAsync"/> always passes,
+    /// restarting the server whenever the selected voice changes. A per-request <c>voice</c> value
+    /// OVERRIDES that startup path with a bare NAME the moss backend then tries to open as a file;
+    /// it fails (<c>crispasr[moss-tts]: failed to load reference audio</c>) and SILENTLY falls back
+    /// to zero-shot, so every line comes out in a different random voice — the #12757 bug (voices
+    /// even flipping male/female). A per-request full path is rejected outright (HTTP 400,
+    /// "'voice' must not contain … path separators"), so omitting the field is the only way to
+    /// clone. Verified end-to-end against crispasr 0.8.20: with no <c>voice</c> field the server
+    /// logs <c>cloning voice from '…/Arnold.wav'</c> and every line holds the reference speaker.
+    ///
+    /// Also sends NO <c>seed</c>: the reference conditioning already keeps the speaker consistent,
+    /// and letting the server re-roll each call means an occasional bad render of a short line
+    /// (MOSS-TTS Q4_K sometimes rushes the words + trails silence) comes out clean on regenerate —
+    /// a fixed seed would lock that bad render in permanently.
+    /// </remarks>
+    internal static Dictionary<string, object> BuildSpeakPayload(string text, double speed)
+    {
+        return new Dictionary<string, object>
+        {
+            ["input"] = text,
+            ["response_format"] = "wav",
+            ["speed"] = speed,
+            // Voice cloning is gated behind a consent attestation (the server returns HTTP 400
+            // consent_required without it). The user supplies their own reference voice by
+            // importing a WAV into SE, which is the act being attested here.
+            ["consent_attestation"] = "I have the speaker's consent, or it is my own voice.",
+            // Skip the audible AI-disclosure prefix CrispASR otherwise prepends to cloned audio;
+            // SE surfaces the AI-generated nature in its UI. The inaudible watermark + C2PA
+            // provenance metadata stay embedded regardless (defaults to true server-side).
+            ["spoken_disclaimer"] = false,
+        };
     }
 
     private static string TryReadRefText(string wavPath)
