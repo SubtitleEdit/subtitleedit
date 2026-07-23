@@ -342,6 +342,25 @@ modules:
         url: https://raw.githubusercontent.com/notofonts/noto-cjk/f8d157532fbfaeda587e826d4cd5b21a49186f7c/Sans/OTC/NotoSansCJK-Regular.ttc
         sha256: b76b0433203017ca80401b2ee0dd69350349871c4b19d504c34dbdd80541690a
 
+  # --- 7-Zip (7zr) ---
+  #
+  # SE unpacks downloaded engines/models from .7z archives. The portable build
+  # extracts a bundled 7zr into the writable app data folder at first use and
+  # executes it from there - which fails on noexec home/data mounts and only
+  # exists for x86_64. Building 7zr into /app/bin gives a read-only,
+  # always-executable binary that Unpacker prefers over the extracted one,
+  # and enables fast .7z extraction on ARM64 too.
+  - name: sevenzip
+    buildsystem: simple
+    build-commands:
+      - make -C CPP/7zip/Bundles/Alone7z -f makefile.gcc
+      - install -Dm755 CPP/7zip/Bundles/Alone7z/_o/7zr /app/bin/7zr
+    sources:
+      - type: archive
+        url: https://github.com/ip7z/7zip/releases/download/25.01/7z2501-src.tar.xz
+        sha256: ed087f83ee789c1ea5f39c464c55a5c9d4008deb0efe900814f2df262b82c36e
+        strip-components: 0
+
   # --- SubtitleEdit application ---
 
   - name: subtitleedit

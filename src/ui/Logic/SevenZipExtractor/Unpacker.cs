@@ -19,6 +19,27 @@ public static class Unpacker
             updateProgressText(Se.Language.General.Unpacking7ZipArchiveDotDotDot);
         });
 
+        if (OperatingSystem.IsLinux())
+        {
+            // Prefer a pre-installed 7-zip (e.g. /app/bin/7zr bundled in the Flatpak, or a
+            // distro p7zip) - it lives on a read-only, always-executable mount, unlike the
+            // 7zr unpacked to the app data folder below, which can fail on noexec setups.
+            // Also the only fast path on Linux ARM64, where no 7zr asset is bundled.
+            var linuxSevenZipPath = GetLinuxSevenZipPath();
+            if (linuxSevenZipPath != null)
+            {
+                try
+                {
+                    Unpack7ZipViaSystemExecutable(linuxSevenZipPath, tempFileName, dir, skipFolderLevel, cancellationTokenSource, updateProgressText);
+                    return;
+                }
+                catch (Exception exception)
+                {
+                    Se.LogError(exception, $"System 7-zip extraction of \"{tempFileName}\" failed, trying next extraction method");
+                }
+            }
+        }
+
         if (OperatingSystem.IsWindows() ||
             (OperatingSystem.IsLinux() && RuntimeInformation.ProcessArchitecture == Architecture.X64))
         {
@@ -53,6 +74,30 @@ public static class Unpacker
         }
 
         Extract7ZipSlow(tempFileName, dir, skipFolderLevel, cancellationTokenSource, updateProgressText);
+    }
+
+    private static string? GetLinuxSevenZipPath()
+    {
+        // 7zr (7z-archives only) and 7zz/7z (full) all support "x <archive> -o<dir> -y"
+        var paths = new[]
+        {
+            "/app/bin/7zr",   // bundled in the Flatpak
+            "/usr/bin/7zr",
+            "/usr/bin/7zz",
+            "/usr/bin/7z",
+            "/usr/local/bin/7zz",
+            "/usr/local/bin/7z"
+        };
+
+        foreach (var path in paths)
+        {
+            if (File.Exists(path))
+            {
+                return path;
+            }
+        }
+
+        return null;
     }
 
     private static string? GetMacSevenZipPath()
