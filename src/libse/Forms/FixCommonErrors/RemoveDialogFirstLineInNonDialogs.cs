@@ -131,14 +131,14 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
         }
 
         /// <summary>
-        /// True if a dash follows the end of a sentence, like "Hi there. - Hello!".
+        /// True if a dash follows the end of a sentence, like "Hi there. - Hello!" or "[phone rings] - Hello!".
         /// </summary>
         private static bool StartsSentenceWithDash(string text)
         {
             for (var i = 2; i < text.Length; i++)
             {
                 if (text[i - 1] == ' ' && IsDash(text[i]) &&
-                    (text[i - 2] == '.' || text[i - 2] == '!' || text[i - 2] == '?'))
+                    (text[i - 2] == '.' || text[i - 2] == '!' || text[i - 2] == '?' || text[i - 2] == ']' || text[i - 2] == ')'))
                 {
                     return true;
                 }
