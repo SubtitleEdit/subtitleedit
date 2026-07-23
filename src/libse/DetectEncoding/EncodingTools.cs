@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq;
 using System.Text;
 using UtfUnknown;
 
@@ -14,23 +13,16 @@ namespace Nikse.SubtitleEdit.Core.DetectEncoding
         /// <returns>the detected encoding or the default encoding if the detection failed</returns>
         public static Encoding DetectInputCodepage(byte[] input)
         {
-            var detected = DetectInputCodePages(input, 1);
-            return detected.Length > 0 && detected[0] != null ? detected[0] : Encoding.Default;
+            return DetectInputCodePages(input) ?? Encoding.Default;
         }
 
         /// <summary>
-        /// Returns up to maxEncodings code pages that are assumed to be appropriate
+        /// Returns the most probable encoding from a byte array.
         /// </summary>
-        /// <param name="input">array containing the raw data</param>
-        /// <param name="maxEncodings">maximum number of encodings to detect</param>
-        /// <returns>an array of Encoding with assumed encodings</returns>
-        private static Encoding[] DetectInputCodePages(byte[] input, int maxEncodings)
+        /// <param name="input">Array containing the raw data.</param>
+        /// <returns>The detected encoding with the highest confidence, or ASCII encoding if no confident detection is found.</returns>
+        private static Encoding DetectInputCodePages(byte[] input)
         {
-            if (maxEncodings < 1)
-            {
-                throw new ArgumentOutOfRangeException(nameof(maxEncodings), "at least one encoding must be returned");
-            }
-
             if (input == null)
             {
                 throw new ArgumentNullException(nameof(input));
@@ -39,12 +31,24 @@ namespace Nikse.SubtitleEdit.Core.DetectEncoding
             // empty strings can always be encoded as ASCII
             if (input.Length == 0)
             {
-                return new[] { Encoding.ASCII };
+                return Encoding.ASCII;
             }
 
             // use UTF.Unknown to detect from input byte string
             var detectionResult = CharsetDetector.DetectFromBytes(input);
-            return detectionResult.Details.OrderByDescending(p => p.Confidence).Select(p => p.Encoding).Take(maxEncodings).ToArray();
+
+            var confidence = 0f;
+            Encoding encoding = Encoding.ASCII;
+            for (var i = 0; i < detectionResult.Details.Count; i++)
+            {
+                if (detectionResult.Details[i].Confidence > confidence)
+                {
+                    confidence = detectionResult.Details[i].Confidence;
+                    encoding = detectionResult.Details[i].Encoding;
+                }
+            }
+
+            return encoding;
         }
     }
 }
