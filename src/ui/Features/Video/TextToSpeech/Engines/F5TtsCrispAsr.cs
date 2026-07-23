@@ -379,28 +379,24 @@ public class F5TtsCrispAsr : ITtsEngine
         var outputFileName = Path.Combine(GetSetFolder(), Guid.NewGuid() + ".wav");
 
         var speed = Math.Clamp(Se.Settings.Video.TextToSpeech.F5TtsCrispAsrSpeed, 0.25, 4.0);
+        // Deliberately NO `voice` / `ref_text` field: the server rejects absolute paths outright
+        // (HTTP 400, "'voice' must not contain … path separators" — path-traversal guard), so
+        // sending f5Voice.FilePath failed every synthesis. The f5-tts backend reads the reference
+        // from the startup --voice / --ref-text flags (no bare-name resolution), and the server
+        // restarts on (voice, ref-text) change — see EnsureServerRunningAsync. Same bug family as
+        // MOSS-TTS #12757.
         var payload = new Dictionary<string, object>
         {
             ["input"] = text,
             ["response_format"] = "wav",
-            ["voice"] = f5Voice.FilePath,
             ["speed"] = speed,
-            // F5-TTS gates voice cloning behind a consent attestation (CrispASR v0.7.0 returns
-            // HTTP 400 consent_required without it). The user supplies their own reference voice
-            // by importing a WAV into SE, which is the act being attested here.
+            // Attests the user's own imported reference; the server logs it for cloned synthesis.
             ["consent_attestation"] = "I have the speaker's consent, or it is my own voice.",
             // Skip the audible AI-disclosure prefix CrispASR otherwise prepends to cloned audio;
             // SE surfaces the AI-generated nature in its UI. The inaudible watermark + C2PA
             // provenance metadata stay embedded regardless (defaults to true server-side).
             ["spoken_disclaimer"] = false,
         };
-        if (!string.IsNullOrEmpty(refText))
-        {
-            // TODO: verify field name. CrispASR's CLI uses `--ref-text`; the OpenAI-compat
-            // server may expose this as `ref_text`, `ref-text`, or `instructions`. Adjust
-            // once a real synth round-trip confirms which key the backend reads.
-            payload["ref_text"] = refText;
-        }
 
         var body = JsonSerializer.Serialize(payload);
         using var content = new StringContent(body, Encoding.UTF8, "application/json");
