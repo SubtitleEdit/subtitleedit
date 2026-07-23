@@ -474,6 +474,7 @@ internal sealed class ConvertCommand : AsyncCommand<ConvertCommand.Settings>
             // Load --settings:path.json overrides into libse Configuration before any conversion.
             // --profile <name> selects a named overlay from the same file.
             var imageStyle = new ImageExportStyle();
+            var settingsWarnings = new List<string>();
             if (!string.IsNullOrWhiteSpace(settings.SettingsPath))
             {
                 try
@@ -485,12 +486,21 @@ internal sealed class ConvertCommand : AsyncCommand<ConvertCommand.Settings>
                     // Unknown keys are ignored by the JSON reader, which used to mean a typo - or a
                     // key from a newer seconv - silently produced default output (issue #12437).
                     var unknownKeys = seConvSettings.GetUnknownKeys().ToList();
-                    if (unknownKeys.Count > 0 && !silent)
+                    if (unknownKeys.Count > 0)
                     {
-                        AnsiConsole.MarkupLineInterpolated(
-                            $"[yellow]Warning: ignoring unknown key(s) in --settings file: {string.Join(", ", unknownKeys)}[/]");
-                        AnsiConsole.MarkupLine(
-                            "[yellow]Check for typos, or update seconv if the key was added in a newer version.[/]");
+                        // Also recorded in the result warnings below, so --quiet and --json
+                        // consumers see it too — the typo-produces-default-output failure this
+                        // warning exists for hits scripted runs hardest.
+                        settingsWarnings.Add(
+                            $"Ignoring unknown key(s) in --settings file: {string.Join(", ", unknownKeys)}. " +
+                            "Check for typos, or update seconv if the key was added in a newer version.");
+                        if (!silent)
+                        {
+                            AnsiConsole.MarkupLineInterpolated(
+                                $"[yellow]Warning: ignoring unknown key(s) in --settings file: {string.Join(", ", unknownKeys)}[/]");
+                            AnsiConsole.MarkupLine(
+                                "[yellow]Check for typos, or update seconv if the key was added in a newer version.[/]");
+                        }
                     }
                 }
                 catch (Exception ex)
@@ -748,6 +758,14 @@ internal sealed class ConvertCommand : AsyncCommand<ConvertCommand.Settings>
             var converter = new SubtitleConverter();
             var result = await converter.ConvertAsync(options);
             stopwatch.Stop();
+
+            // Surface settings-file warnings in the machine-readable output too; in non-silent
+            // mode they were already printed above, but --quiet/--json would otherwise drop
+            // them entirely (the silent-typo failure from issue #12437).
+            if (settingsWarnings.Count > 0 && silent)
+            {
+                result.Warnings.InsertRange(0, settingsWarnings);
+            }
 
             var elapsed = FormatElapsed(stopwatch.Elapsed);
 
