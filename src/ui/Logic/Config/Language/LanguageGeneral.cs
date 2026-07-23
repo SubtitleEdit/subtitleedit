@@ -1237,6 +1237,7 @@ public class LanguageGeneral
         ReverseRightToLeftStartEnd = "Reverse RTL start/end";
         Right = "Right";
         RightToLeft = "Right to left";
+        Romanize = "Romanize";
         Rules = "Rules";
         SaveChangesMessage = "Do you want to save changes to the current subtitle file?";
         SaveChangesTitle = "Save changes?";

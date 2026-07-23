@@ -5157,6 +5157,11 @@ public partial class MainViewModel :
 
         var result = await ShowDialogAsync<RomanizeWindow, RomanizeViewModel>(vm => { vm.Initialize(Subtitles.ToList()); });
 
+        if (!result.OkPressed)
+        {
+            return;
+        }
+
         ResetSubtitle();
         SetSubtitles([.. result.Subtitles.Select((subtitle, index) =>
         {
