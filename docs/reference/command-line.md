@@ -459,6 +459,7 @@ Operations run after the structural transforms (offset, fps, renumber, adjust-du
 | `--delete-contains:<word>` | Delete entries containing the given word |
 | `--fix-common-errors` | Fix common subtitle errors (all 39 rules) |
 | `--fix-common-errors-rules:<list>` | Run a subset of FCE rules (CSV; supports `all,-RuleId`) |
+| `--fce-language:<code>` | Force the language for FCE language-gated rules (code or English name, e.g. `es` / `Spanish`); default: auto-detect from content |
 | `--fix-rtl-via-unicode-chars` | Fix RTL via Unicode characters |
 | `--merge-same-texts` | Merge entries with same text |
 | `--merge-same-time-codes` | Merge entries with same time codes |
@@ -484,10 +485,16 @@ seconv *.srt subrip --remove-text-for-hi --merge-same-texts --split-long-lines -
 seconv movie.srt subrip --fix-common-errors                                  # all rules
 seconv movie.srt subrip --fix-common-errors-rules:FixCommas,FixMissingSpaces
 seconv movie.srt subrip --fix-common-errors-rules:all,-FixDanishLetterI      # all except one
-seconv list-fce-rules                                                        # show rule IDs
+seconv movie.srt subrip --fix-common-errors --fce-language:es                # force the Spanish gate
+seconv list-fce-rules                                                        # show rule IDs (marks language gates)
 ```
 
-**Language-specific rules.** A few rules only make sense for one language and mirror the GUI's *Fix Common Errors* window, which only offers them when the detected language matches: `FixAloneLowercaseIToUppercaseI` (English), `FixDanishLetterI` (Danish), `FixSpanishInvertedQuestionAndExclamationMarks` (Spanish), and `FixTurkishAnsiToUnicode` (Turkish). In the default all-rules pass these run only when auto-detection agrees, so e.g. the Spanish inverted-`¿` fix never lands on English content (issue #11037). Naming such a rule explicitly in `--fix-common-errors-rules` currently forces it on regardless of the detected language.
+**Language-specific rules.** A few rules only make sense for one language and mirror the GUI's *Fix Common Errors* window, which only offers them when the detected language matches: `FixAloneLowercaseIToUppercaseI` (English), `FixDanishLetterI` (Danish), `FixSpanishInvertedQuestionAndExclamationMarks` (Spanish), and `FixTurkishAnsiToUnicode` (Turkish). `seconv list-fce-rules` marks each gated rule with its language in a *Language gate* column. In the default all-rules pass these run only when auto-detection agrees, so e.g. the Spanish inverted-`¿` fix never lands on English content (issue #11037).
+
+There are two ways to override the gate:
+
+- **`--fce-language:<code>`** forces the language used for *all* gated rules (and the OCR-fix pass). Use it when a genuinely Spanish/Danish/Turkish file mis-detects (e.g. it's too short) so the right rule still runs. Accepts a two-letter code, three-letter code, or English name (`es`, `spa`, `Spanish`); an unrecognized value warns and falls back to auto-detection.
+- **Naming a gated rule explicitly** in `--fix-common-errors-rules` forces just that rule on, regardless of the detected language.
 
 **Rule selection is CLI-only.** The set of rules is chosen with `--fix-common-errors-rules`, not through the `--settings` JSON. The settings file shapes *how* the rules behave (line length, min gap, dialog/continuation style, CPS — see [Settings JSON](#settings-json)); it does not select which rules run.
 

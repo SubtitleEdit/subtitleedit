@@ -564,12 +564,15 @@ internal static class LibSEIntegration
     /// <c>null</c> or empty to run all FCE rules. <paramref name="fixCommonErrorsExplicitlyNamedRules"/>
     /// is the set of rules the user named by hand (used to bypass FCE language gating);
     /// pass empty for "no explicit selection" (implicit-all CLI path).
+    /// <paramref name="fixCommonErrorsLanguage"/> forces the language used for FCE gating /
+    /// OCR-fix (from <c>--fce-language</c>); pass <c>null</c> to auto-detect from content.
     /// </summary>
     public static void ApplyOperations(
         Subtitle subtitle,
         List<string> operations,
         IReadOnlyList<string>? fixCommonErrorsRules = null,
-        IReadOnlyList<string>? fixCommonErrorsExplicitlyNamedRules = null)
+        IReadOnlyList<string>? fixCommonErrorsExplicitlyNamedRules = null,
+        string? fixCommonErrorsLanguage = null)
     {
         if (subtitle == null || operations == null || operations.Count == 0)
         {
@@ -578,7 +581,7 @@ internal static class LibSEIntegration
 
         foreach (var operation in operations)
         {
-            ApplyOperation(subtitle, operation, fixCommonErrorsRules, fixCommonErrorsExplicitlyNamedRules);
+            ApplyOperation(subtitle, operation, fixCommonErrorsRules, fixCommonErrorsExplicitlyNamedRules, fixCommonErrorsLanguage);
         }
     }
 
@@ -586,12 +589,13 @@ internal static class LibSEIntegration
         Subtitle subtitle,
         string operation,
         IReadOnlyList<string>? fixCommonErrorsRules,
-        IReadOnlyList<string>? fixCommonErrorsExplicitlyNamedRules)
+        IReadOnlyList<string>? fixCommonErrorsExplicitlyNamedRules,
+        string? fixCommonErrorsLanguage)
     {
         switch (operation.ToLowerInvariant())
         {
             case "fixcommonerrors":
-                FixCommonErrorsRunner.Run(subtitle, fixCommonErrorsRules, fixCommonErrorsExplicitlyNamedRules);
+                FixCommonErrorsRunner.Run(subtitle, fixCommonErrorsRules, fixCommonErrorsExplicitlyNamedRules, fixCommonErrorsLanguage);
                 break;
 
             case "removetextforhi":

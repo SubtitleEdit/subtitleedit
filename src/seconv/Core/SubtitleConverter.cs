@@ -721,7 +721,8 @@ internal class SubtitleConverter
                 subtitle,
                 options.Operations,
                 options.FixCommonErrorsRules,
-                options.FixCommonErrorsExplicitlyNamedRules);
+                options.FixCommonErrorsExplicitlyNamedRules,
+                options.FixCommonErrorsLanguage);
         }
 
         if (options.BridgeGapsMaxMs.HasValue && options.BridgeGapsMaxMs.Value > 0)
@@ -851,6 +852,13 @@ internal record class ConversionOptions
     /// "implicit all-rules pass" (gates stay active).
     /// </summary>
     public IReadOnlyList<string> FixCommonErrorsExplicitlyNamedRules { get; init; } = [];
+
+    /// <summary>
+    /// Forces the language used for FCE gating and OCR-fix (from <c>--fce-language</c>).
+    /// Null/blank = auto-detect from subtitle content. Accepts a two-letter code, three-letter
+    /// code, or English name (see <see cref="FixCommonErrorsRunner.NormalizeLanguageOverride"/>).
+    /// </summary>
+    public string? FixCommonErrorsLanguage { get; init; }
     public int? DeleteFirst { get; init; }
     public int? DeleteLast { get; init; }
     public string? DeleteContains { get; init; }

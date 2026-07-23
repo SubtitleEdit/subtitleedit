@@ -76,18 +76,29 @@ internal static class ListHelpers
         AnsiConsole.WriteLine();
         var table = new Table().Border(TableBorder.Rounded);
         table.AddColumn("[yellow]Rule ID[/]");
+        table.AddColumn("[yellow]Language gate[/]");
 
+        var gates = FixCommonErrorsRunner.LanguageGates;
         foreach (var id in FixCommonErrorsRunner.AvailableRuleIds)
         {
-            table.AddRow($"[green]{id}[/]");
+            // Language-gated rules only run when the subtitle's language (auto-detected, or
+            // forced via --fce-language) matches. Mark them so the gate is discoverable from
+            // the CLI without reading the source.
+            var gate = gates.TryGetValue(id, out var lang) ? $"[magenta]{lang} only[/]" : "[dim]—[/]";
+            table.AddRow($"[green]{id}[/]", gate);
         }
 
         AnsiConsole.Write(table);
         AnsiConsole.MarkupLine(
+            "\n[dim]Language-gated rules run only when the subtitle auto-detects to that language.[/]\n" +
+            "[dim]Force it with[/] [green]--fce-language:<code>[/][dim], or bypass the gate by naming the rule explicitly.[/]");
+        AnsiConsole.MarkupLine(
             "\n[dim]Examples:[/]\n" +
-            "  [dim]--FixCommonErrors[/]                                       [dim]# all rules[/]\n" +
+            "  [dim]--FixCommonErrors[/]                                       [dim]# all rules (gates active)[/]\n" +
             "  [dim]--FixCommonErrorsRules:FixCommas,FixEllipsesStart[/]       [dim]# only these two[/]\n" +
-            "  [dim]--FixCommonErrorsRules:all,-FixDanishLetterI[/]            [dim]# all except one[/]");
+            "  [dim]--FixCommonErrorsRules:all,-FixDanishLetterI[/]            [dim]# all except one[/]\n" +
+            "  [dim]--FixCommonErrors --fce-language:es[/]                     [dim]# force Spanish gate[/]\n" +
+            "  [dim]--FixCommonErrorsRules:FixSpanishInvertedQuestionAndExclamationMarks[/]  [dim]# bypass gate[/]");
     }
 
     public static void PrintOcrEngines()

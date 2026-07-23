@@ -329,6 +329,10 @@ internal sealed class ConvertCommand : AsyncCommand<ConvertCommand.Settings>
         [Description("Comma-separated FCE rule IDs (or 'all,-RuleId' to subtract). See: seconv list-fce-rules")]
         public string? FixCommonErrorsRules { get; init; }
 
+        [CommandOption("--fce-language|--FixCommonErrorsLanguage")]
+        [Description("Force the language for FCE language-gated rules (code or English name, e.g. es or Spanish); default: auto-detect from content")]
+        public string? FixCommonErrorsLanguage { get; init; }
+
         [CommandOption("--fix-rtl-via-unicode-chars|--FixRtlViaUnicodeChars")]
         [Description("Fix RTL via Unicode characters")]
         public bool FixRtlViaUnicodeChars { get; init; }
@@ -537,6 +541,16 @@ internal sealed class ConvertCommand : AsyncCommand<ConvertCommand.Settings>
                     AnsiConsole.MarkupLineInterpolated($"[red]Error: {ex.Message}[/]");
                     return 1;
                 }
+
+                // A supplied --fce-language that can't be resolved falls back to auto-detect;
+                // warn so a typo ("--fce-language:spanihs") isn't silently ignored.
+                if (!silent
+                    && !string.IsNullOrWhiteSpace(settings.FixCommonErrorsLanguage)
+                    && FixCommonErrorsRunner.NormalizeLanguageOverride(settings.FixCommonErrorsLanguage) == null)
+                {
+                    AnsiConsole.MarkupLineInterpolated(
+                        $"[yellow]Warning: --fce-language '{settings.FixCommonErrorsLanguage}' not recognized; falling back to auto-detected language.[/]");
+                }
             }
 
             // Build operations list. Operations run in the order the user typed them and
@@ -637,6 +651,7 @@ internal sealed class ConvertCommand : AsyncCommand<ConvertCommand.Settings>
                 Operations = operations,
                 FixCommonErrorsRules = fceRules,
                 FixCommonErrorsExplicitlyNamedRules = fceExplicitlyNamed,
+                FixCommonErrorsLanguage = settings.FixCommonErrorsLanguage,
                 DeleteFirst = settings.DeleteFirst,
                 DeleteLast = settings.DeleteLast,
                 DeleteContains = settings.DeleteContains,
