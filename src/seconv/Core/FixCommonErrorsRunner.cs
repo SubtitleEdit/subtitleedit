@@ -51,6 +51,60 @@ internal static class FixCommonErrorsRunner
         };
 
     /// <summary>
+    /// Maps each CLI rule ID to the label the GUI's <em>Fix Common Errors</em> window shows for
+    /// the same rule, so users who prototyped in the desktop app can find the matching
+    /// <c>--fix-common-errors-rules</c> ID (issue #11037 review). Single source of truth for the
+    /// <c>list-fce-rules</c> "GUI equivalent" column and the published rule-mapping table.
+    /// Kept in sync with the GUI strings in <c>LanguageFixCommonErrors</c> /
+    /// <c>FixCommonErrorsViewModel.MakeDefaultRules</c>; a test asserts every
+    /// <see cref="AvailableRuleIds"/> entry has a label here.
+    /// </summary>
+    public static IReadOnlyDictionary<string, string> GuiLabels { get; } =
+        new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
+        {
+            [nameof(AddMissingQuotes)] = "Add missing quotes (\")",
+            [nameof(Fix3PlusLines)] = "Fix subtitles with more than two lines",
+            [nameof(FixAloneLowercaseIToUppercaseI)] = "Fix alone lowercase 'i' to 'I' (English)",
+            [nameof(FixCommas)] = "Fix commas",
+            [nameof(FixContinuationStyle)] = "Fix continuation style",
+            [nameof(FixDanishLetterI)] = "Fix Danish letter 'i'",
+            [nameof(FixDialogsOnOneLine)] = "Split dialogs on one line",
+            [nameof(FixDoubleApostrophes)] = "Fix double apostrophe characters ('') to a single quote (\")",
+            [nameof(FixDoubleDash)] = "Fix '--' -> '...'",
+            [nameof(FixDoubleGreaterThan)] = "Remove '>>'",
+            [nameof(FixEllipsesStart)] = "Remove leading '...'",
+            [nameof(FixEmptyLines)] = "Remove empty lines/unused line breaks",
+            [nameof(FixHyphensInDialog)] = "Fix dash in dialogs via style",
+            [nameof(FixHyphensRemoveDashSingleLine)] = "Remove dialog dashes in single lines",
+            [nameof(FixInvalidItalicTags)] = "Fix invalid italic tags",
+            [nameof(FixLongDisplayTimes)] = "Fix long display times",
+            [nameof(FixLongLines)] = "Break long lines",
+            [nameof(FixMissingOpenBracket)] = "Fix missing [ or ( in line",
+            [nameof(FixMissingPeriodsAtEndOfLine)] = "Add period after lines where next line starts with uppercase letter",
+            [nameof(FixMissingSpaces)] = "Fix missing spaces",
+            [nameof(FixMusicNotation)] = "Replace music symbols with preferred symbol",
+            [nameof(FixOverlappingDisplayTimes)] = "Fix overlapping display times",
+            [nameof(FixShortDisplayTimes)] = "Fix short display times",
+            [nameof(FixShortGaps)] = "Fix short gaps",
+            [nameof(FixShortLines)] = "Remove line breaks in short texts with only one sentence",
+            [nameof(FixShortLinesAll)] = "Remove line breaks in short texts (all except dialogs)",
+            [nameof(FixShortLinesPixelWidth)] = "Unbreak subtitles that can fit on one line (pixel width)",
+            [nameof(FixSpanishInvertedQuestionAndExclamationMarks)] = "Fix Spanish inverted question and exclamation marks",
+            [nameof(FixStartWithUppercaseLetterAfterColon)] = "Start with uppercase letter after colon/semicolon",
+            [nameof(FixStartWithUppercaseLetterAfterParagraph)] = "Start with uppercase letter after paragraph",
+            [nameof(FixStartWithUppercaseLetterAfterPeriodInsideParagraph)] = "Start with uppercase letter after period inside paragraph",
+            [nameof(FixTurkishAnsiToUnicode)] = "Fix Turkish ANSI (Icelandic) letters to Unicode",
+            [nameof(FixUnnecessaryLeadingDots)] = "Remove unnecessary leading dots",
+            [nameof(FixUnneededPeriods)] = "Remove unneeded periods",
+            [nameof(FixUnneededSpaces)] = "Remove unneeded spaces",
+            [nameof(FixUppercaseIInsideWords)] = "Fix uppercase 'i' inside lowercase words (OCR error)",
+            [nameof(NormalizeStrings)] = "Normalize strings",
+            [nameof(RemoveDialogFirstLineInNonDialogs)] = "Remove start dash in first line for non-dialogs",
+            [nameof(RemoveSpaceBetweenNumbers)] = "Remove space between numbers",
+            [OcrFixRuleId] = "Fix common OCR errors (using OCR replace list)",
+        };
+
+    /// <summary>
     /// Runs every available rule against the subtitle. Equivalent to
     /// <c>Run(subtitle, null)</c>.
     /// </summary>

@@ -156,6 +156,34 @@ public class FixCommonErrorsRunnerTest
         Assert.Contains("NotARealRule", ex.Message);
     }
 
+    // Issue #11037 review: users prototype in the GUI, then script. Every rule the CLI
+    // can run must expose a GUI-equivalent label so `list-fce-rules` / the docs can map
+    // CLI IDs back to the desktop window's check-boxes. This guards against a new rule
+    // being added to the runner without a matching label.
+    [Fact]
+    public void GuiLabels_CoversEveryAvailableRule_WithNonEmptyText()
+    {
+        foreach (var id in FixCommonErrorsRunner.AvailableRuleIds)
+        {
+            Assert.True(
+                FixCommonErrorsRunner.GuiLabels.TryGetValue(id, out var label),
+                $"Rule '{id}' has no GUI-equivalent label in FixCommonErrorsRunner.GuiLabels.");
+            Assert.False(string.IsNullOrWhiteSpace(label), $"GUI label for '{id}' is empty.");
+        }
+    }
+
+    [Fact]
+    public void GuiLabels_HasNoLabelForUnknownRule()
+    {
+        // Keep the map tight to the rule set — a stray key would silently drift from
+        // AvailableRuleIds and never surface in list-fce-rules.
+        var available = new HashSet<string>(FixCommonErrorsRunner.AvailableRuleIds, System.StringComparer.OrdinalIgnoreCase);
+        foreach (var id in FixCommonErrorsRunner.GuiLabels.Keys)
+        {
+            Assert.Contains(id, available);
+        }
+    }
+
     // -------------------------------------------------------------------------
     // Issue #11037 item 3: language-conditional rules should mirror the GUI's
     // Fix Common Errors window — Spanish-only rules don't run on non-Spanish

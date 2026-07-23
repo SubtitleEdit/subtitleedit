@@ -477,6 +477,15 @@ Operations run after the structural transforms (offset, fps, renumber, adjust-du
 seconv *.srt subrip --remove-text-for-hi --merge-same-texts --split-long-lines --overwrite
 ```
 
+#### `--apply-min-gap` vs `--fix-common-errors-rules:FixOverlappingDisplayTimes`
+
+Both touch boundary timings but solve different problems:
+
+- **`--apply-min-gap[:<ms>]`** walks every pair of adjacent paragraphs and, when the gap is shorter than `<ms>`, **shortens the previous cue's end time** to open it up. It does **not** move the next cue's start. Pairs are also **skipped** when shortening would drop the previous cue below `General.SubtitleMinimumDisplayMilliseconds` — so this is best-effort, not a hard guarantee. Use it for delivery specs (e.g. broadcast standards that ask for 2 frames between cues) while accepting that minimum-display-duration collisions are left alone.
+- **`FixOverlappingDisplayTimes`** is one rule inside Fix Common Errors and only resolves cases where a paragraph's end > the next paragraph's start (a true overlap). It does *not* enforce a non-zero minimum gap once overlaps are gone.
+
+In most batch pipelines `--apply-min-gap` is the better choice; reach for the FCE rule when you specifically want to keep the tight gaps the source already has and only repair true overlaps.
+
 ### FixCommonErrors rule selection
 
 `--fix-common-errors` (no value) runs all 39 rules. Pass `--fix-common-errors-rules:<list>` to pick a subset — supplying that option implies `--fix-common-errors`.
@@ -498,7 +507,54 @@ There are two ways to override the gate:
 
 **Rule selection is CLI-only.** The set of rules is chosen with `--fix-common-errors-rules`, not through the `--settings` JSON. The settings file shapes *how* the rules behave (line length, min gap, dialog/continuation style, CPS — see [Settings JSON](#settings-json)); it does not select which rules run.
 
-`FixCommonOcrErrors` is intentionally excluded — it requires UI-side spell-check and OCR-engine setup that seconv doesn't carry.
+`FixCommonOcrErrors` runs only when a dictionary folder is available — bundled for English, or supplied via `--dictionary-folder` for other languages (see [OCR options](#ocr)). Without one, that rule is skipped and every other rule still runs.
+
+#### Rule ID ↔ GUI equivalent
+
+The CLI rule IDs match the check-box rules in the desktop app's *Fix Common Errors* window. If you prototyped a fix set in the GUI, use this table (or `seconv list-fce-rules`, which prints the same three columns) to find the matching `--fix-common-errors-rules` IDs. *Language gate* marks rules that only run for one detected language (override with `--fce-language`, or by naming the rule).
+
+| Rule ID | GUI equivalent | Language gate |
+|---|---|---|
+| `AddMissingQuotes` | Add missing quotes (") | — |
+| `Fix3PlusLines` | Fix subtitles with more than two lines | — |
+| `FixAloneLowercaseIToUppercaseI` | Fix alone lowercase 'i' to 'I' (English) | en only |
+| `FixCommas` | Fix commas | — |
+| `FixContinuationStyle` | Fix continuation style | — |
+| `FixDanishLetterI` | Fix Danish letter 'i' | da only |
+| `FixDialogsOnOneLine` | Split dialogs on one line | — |
+| `FixDoubleApostrophes` | Fix double apostrophe characters ('') to a single quote (") | — |
+| `FixDoubleDash` | Fix '--' -> '...' | — |
+| `FixDoubleGreaterThan` | Remove '>>' | — |
+| `FixEllipsesStart` | Remove leading '...' | — |
+| `FixEmptyLines` | Remove empty lines/unused line breaks | — |
+| `FixHyphensInDialog` | Fix dash in dialogs via style | — |
+| `FixHyphensRemoveDashSingleLine` | Remove dialog dashes in single lines | — |
+| `FixInvalidItalicTags` | Fix invalid italic tags | — |
+| `FixLongDisplayTimes` | Fix long display times | — |
+| `FixLongLines` | Break long lines | — |
+| `FixMissingOpenBracket` | Fix missing [ or ( in line | — |
+| `FixMissingPeriodsAtEndOfLine` | Add period after lines where next line starts with uppercase letter | — |
+| `FixMissingSpaces` | Fix missing spaces | — |
+| `FixMusicNotation` | Replace music symbols with preferred symbol | — |
+| `FixOverlappingDisplayTimes` | Fix overlapping display times | — |
+| `FixShortDisplayTimes` | Fix short display times | — |
+| `FixShortGaps` | Fix short gaps | — |
+| `FixShortLines` | Remove line breaks in short texts with only one sentence | — |
+| `FixShortLinesAll` | Remove line breaks in short texts (all except dialogs) | — |
+| `FixShortLinesPixelWidth` | Unbreak subtitles that can fit on one line (pixel width) | — |
+| `FixSpanishInvertedQuestionAndExclamationMarks` | Fix Spanish inverted question and exclamation marks | es only |
+| `FixStartWithUppercaseLetterAfterColon` | Start with uppercase letter after colon/semicolon | — |
+| `FixStartWithUppercaseLetterAfterParagraph` | Start with uppercase letter after paragraph | — |
+| `FixStartWithUppercaseLetterAfterPeriodInsideParagraph` | Start with uppercase letter after period inside paragraph | — |
+| `FixTurkishAnsiToUnicode` | Fix Turkish ANSI (Icelandic) letters to Unicode | tr only |
+| `FixUnnecessaryLeadingDots` | Remove unnecessary leading dots | — |
+| `FixUnneededPeriods` | Remove unneeded periods | — |
+| `FixUnneededSpaces` | Remove unneeded spaces | — |
+| `FixUppercaseIInsideWords` | Fix uppercase 'i' inside lowercase words (OCR error) | — |
+| `NormalizeStrings` | Normalize strings | — |
+| `RemoveDialogFirstLineInNonDialogs` | Remove start dash in first line for non-dialogs | — |
+| `RemoveSpaceBetweenNumbers` | Remove space between numbers | — |
+| `FixCommonOcrErrors` | Fix common OCR errors (using OCR replace list) | — |
 
 ## Output format aliases
 
