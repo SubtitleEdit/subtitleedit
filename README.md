@@ -33,11 +33,6 @@ As of **v5.1.0-rc13**, the `.dmg` is signed with an Apple Developer ID and notar
 2. In the window that appears, **drag `Subtitle Edit.app` into your `Applications` folder**.
 3. Open **Subtitle Edit** from Applications (or Launchpad).
 
-> **Older releases (before v5.1.0-rc13) were unsigned.** If Gatekeeper blocks such a build, either right-click the app and choose **Open**, or remove the quarantine flag in Terminal:
-> ```bash
-> sudo xattr -rd com.apple.quarantine "/Applications/Subtitle Edit.app"
-> ```
-
 ### Linux
 
 #### Flatpak (any distribution)
