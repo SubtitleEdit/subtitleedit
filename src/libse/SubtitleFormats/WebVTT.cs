@@ -2,7 +2,6 @@ using Nikse.SubtitleEdit.Core.Common;
 using SkiaSharp;
 using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -102,7 +101,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             return sb.ToString().Trim();
         }
 
-        internal static string GetPositionInfoFromAssTag(Paragraph p)
+        internal static string GetPositionInfoFromAssTag(Paragraph p, string cueSettings = null)
         {
             string positionInfo;
             if (p.Text.StartsWith("{\\an1", StringComparison.Ordinal))
@@ -139,7 +138,12 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             }
             else
             {
-                positionInfo = Configuration.Settings.SubtitleSettings.WebVttCueAn2;
+                // Treat \an2 as the default alignment and preserve any raw cue settings.
+                positionInfo = !string.IsNullOrEmpty(cueSettings)
+                    ? cueSettings
+                    : string.IsNullOrEmpty(p.Style)
+                        ? Configuration.Settings.SubtitleSettings.WebVttCueAn2
+                        : p.Style;
             }
 
             return (" " + positionInfo).TrimEnd();
@@ -302,8 +306,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         p.StartTime.TotalMilliseconds += addSeconds * 1000;
                         p.EndTime.TotalMilliseconds += addSeconds * 1000;
 
-                        positionInfo = GetPositionInfo(s);
-                        p.Style = GetPositionInfoRaw(s);
+                        positionInfo = GetAssAlignmentTagFromCueSettings(s);
+                        p.Style = string.IsNullOrEmpty(positionInfo)
+                            ? GetPositionInfoRaw(s)
+                            : string.Empty;
                         p.Region = GetRegion(s);
                     }
                     catch (Exception exception)
@@ -486,110 +492,72 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             return 0;
         }
 
-        internal static string GetPositionInfo(string s)
+        internal static string GetAssAlignmentTagFromCueSettings(string s)
         {
-            //position: x --- 0% = left, 100% = right (horizontal)
-            //line: x --- 0 or -16 or 0% = top, 16 or -1 or 100% = bottom (vertical)
-            var pos = GetTag(s, "position:");
-            var line = GetTag(s, "line:");
-            var positionInfo = string.Empty;
-            var hAlignLeft = false;
-            var hAlignRight = false;
-            var vAlignTop = false;
-            var vAlignMiddle = false;
-            double number;
-
-            if (!string.IsNullOrEmpty(pos) && pos.EndsWith('%') && double.TryParse(pos.TrimEnd('%'), NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out number))
+            var cueSettings = GetPositionInfoRaw(s).Trim();
+            if (string.IsNullOrEmpty(cueSettings))
             {
-                if (number < 25)
-                {
-                    hAlignLeft = true;
-                }
-                else if (number > 75)
-                {
-                    hAlignRight = true;
-                }
+                return string.Empty;
             }
 
-            if (!string.IsNullOrEmpty(line))
+            var subtitleSettings = Configuration.Settings.SubtitleSettings;
+
+            if (cueSettings == subtitleSettings.WebVttCueAn1)
             {
-                line = line.Trim();
-                if (line.EndsWith('%'))
-                {
-                    if (double.TryParse(line.TrimEnd('%'), NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out number))
-                    {
-                        if (number < 25)
-                        {
-                            vAlignTop = true;
-                        }
-                        else if (number < 75)
-                        {
-                            vAlignMiddle = true;
-                        }
-                    }
-                }
-                else
-                {
-                    if (double.TryParse(line, NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out number))
-                    {
-                        if (number >= 0 && number <= 7)
-                        {
-                            vAlignTop = true; // Positive numbers indicate top down
-                        }
-                        else if (number > 7 && number < 11)
-                        {
-                            vAlignMiddle = true;
-                        }
-                    }
-                }
-            }
-
-            if (hAlignLeft)
-            {
-                if (vAlignTop)
-                {
-                    return "{\\an7}";
-                }
-
-                if (vAlignMiddle)
-                {
-                    return "{\\an4}";
-                }
-
                 return "{\\an1}";
             }
 
-            if (hAlignRight)
+            if (cueSettings == subtitleSettings.WebVttCueAn2)
             {
-                if (vAlignTop)
-                {
-                    return "{\\an9}";
-                }
+                return "{\\an2}";
+            }
 
-                if (vAlignMiddle)
-                {
-                    return "{\\an6}";
-                }
-
+            if (cueSettings == subtitleSettings.WebVttCueAn3)
+            {
                 return "{\\an3}";
             }
 
-            if (vAlignTop)
+            if (cueSettings == subtitleSettings.WebVttCueAn4)
             {
-                return "{\\an8}";
+                return "{\\an4}";
             }
 
-            if (vAlignMiddle)
+            if (cueSettings == subtitleSettings.WebVttCueAn5)
             {
                 return "{\\an5}";
             }
 
-            return positionInfo;
+            if (cueSettings == subtitleSettings.WebVttCueAn6)
+            {
+                return "{\\an6}";
+            }
+
+            if (cueSettings == subtitleSettings.WebVttCueAn7)
+            {
+                return "{\\an7}";
+            }
+
+            if (cueSettings == subtitleSettings.WebVttCueAn8)
+            {
+                return "{\\an8}";
+            }
+
+            if (cueSettings == subtitleSettings.WebVttCueAn9)
+            {
+                return "{\\an9}";
+            }
+
+            return string.Empty;
         }
 
         internal static string GetPositionInfoRaw(string s)
         {
             //line: 72.69 % align:left position:44.90 % size:10.21 %
+            if (string.IsNullOrEmpty(s))
+            {
+                return string.Empty;
+            }
+
             var list = new List<int>();
 
             var idx = s.IndexOf("line:", StringComparison.Ordinal);

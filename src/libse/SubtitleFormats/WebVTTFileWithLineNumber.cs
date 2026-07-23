@@ -24,7 +24,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         {
             const string timeCodeFormatNoHours = "{0:00}:{1:00}.{2:000}"; // mm:ss.cc
             const string timeCodeFormatHours = "{0:00}:{1:00}:{2:00}.{3:000}"; // hh:mm:ss.cc
-            const string paragraphWriteFormat = "{0} --> {1}{2}{5}{3}{4}{5}";
+            const string paragraphWriteFormat = "{0} --> {1}{2}{4}{3}{4}";
 
             var sb = new StringBuilder();
             sb.AppendLine("WEBVTT FILE");
@@ -34,7 +34,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             {
                 var start = string.Format(timeCodeFormatNoHours, p.StartTime.Minutes, p.StartTime.Seconds, p.StartTime.Milliseconds);
                 var end = string.Format(timeCodeFormatNoHours, p.EndTime.Minutes, p.EndTime.Seconds, p.EndTime.Milliseconds);
-                var positionInfo = WebVTT.GetPositionInfoFromAssTag(p);
+                var positionInfo = WebVTT.GetPositionInfoFromAssTag(p, p.Extra);
 
                 if (p.StartTime.Hours > 0 || p.EndTime.Hours > 0)
                 {
@@ -42,15 +42,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     end = string.Format(timeCodeFormatHours, p.EndTime.Hours, p.EndTime.Minutes, p.EndTime.Seconds, p.EndTime.Milliseconds);
                 }
 
-                var style = string.Empty;
-                if (!string.IsNullOrEmpty(p.Extra) && subtitle.Header == "WEBVTT FILE")
-                {
-                    style = p.Extra;
-                }
-
                 sb.Append(count);
                 sb.AppendLine();
-                sb.AppendLine(string.Format(paragraphWriteFormat, start, end, positionInfo, WebVTT.FormatText(p), style, Environment.NewLine));
+                sb.AppendLine(string.Format(paragraphWriteFormat, start, end, positionInfo, WebVTT.FormatText(p), Environment.NewLine));
                 count++;
             }
 
@@ -112,8 +106,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                             StartTime = WebVTT.GetTimeCodeFromString(parts[0]),
                             EndTime = WebVTT.GetTimeCodeFromString(parts[1])
                         };
-                        positionInfo = WebVTT.GetPositionInfo(s);
-                        p.Extra = WebVTT.GetPositionInfoRaw(s);
+                        positionInfo = WebVTT.GetAssAlignmentTagFromCueSettings(s);
+                        p.Extra = string.IsNullOrEmpty(positionInfo)
+                            ? WebVTT.GetPositionInfoRaw(s)
+                            : string.Empty;
                         p.Region = WebVTT.GetRegion(s);
                     }
                     catch (Exception exception)

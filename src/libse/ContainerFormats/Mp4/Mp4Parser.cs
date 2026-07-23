@@ -644,11 +644,17 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4
         private void AddVttParagraph(double timeTotalMs, string payload, double before, string style)
         {
             var p = new Paragraph(payload, before, timeTotalMs);
-            var positionInfo = WebVTT.GetPositionInfo(style);
+            var positionInfo = WebVTT.GetAssAlignmentTagFromCueSettings(style);
             if (!string.IsNullOrEmpty(positionInfo))
             {
                 p.Text = positionInfo + p.Text;
-                p.Extra = style;
+            }
+
+            p.Style = string.IsNullOrEmpty(positionInfo)
+                ? WebVTT.GetPositionInfoRaw(style)
+                : string.Empty;
+            if (!string.IsNullOrEmpty(p.Style) || !string.IsNullOrEmpty(positionInfo))
+            {
                 VttcSubtitle.Header = "WEBVTT";
             }
             VttcSubtitle.Paragraphs.Add(p);

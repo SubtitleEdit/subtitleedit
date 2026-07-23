@@ -76,6 +76,74 @@ public class WebVttTest
         Assert.Equal("World", subtitle.Paragraphs[1].Text);
     }
 
+    [Fact]
+    public void LoadAndSave_PreservesCueSettingsThatDoNotMatchAnPreset()
+    {
+        var vtt = "WEBVTT\r\n\r\n00:00:21.731 --> 00:00:23.356 position:3% line:5% align:left\r\nHello";
+        var subtitle = LoadWebVttSubtitle(vtt);
+
+        Assert.Equal("position:3% line:5% align:left", subtitle.Paragraphs[0].Style);
+        Assert.Equal("Hello", subtitle.Paragraphs[0].Text);
+
+        var saved = new WebVTT().ToText(subtitle, null);
+
+        Assert.Contains("00:00:21.731 --> 00:00:23.356 position:3% line:5% align:left", saved);
+    }
+
+    [Fact]
+    public void LoadSubtitle_ConvertsCueSettingsMatchingAnPresetToAssTag()
+    {
+        var vtt = "WEBVTT\r\n\r\n00:00:21.731 --> 00:00:23.356 position:20% line:20%\r\nHello";
+        var subtitle = LoadWebVttSubtitle(vtt);
+
+        Assert.Equal("{\\an7}Hello", subtitle.Paragraphs[0].Text);
+        Assert.Equal(string.Empty, subtitle.Paragraphs[0].Style);
+    }
+
+    [Fact]
+    public void Save_RemovingLoadedAnTagDoesNotKeepItsOriginalCueSettings()
+    {
+        var vtt = "WEBVTT\r\n\r\n00:00:21.731 --> 00:00:23.356 position:20% line:20%\r\nHello";
+        var subtitle = LoadWebVttSubtitle(vtt);
+        subtitle.Paragraphs[0].Text = "Hello";
+
+        var saved = new WebVTT().ToText(subtitle, null);
+
+        Assert.DoesNotContain("position:20% line:20%", saved);
+    }
+
+    [Fact]
+    public void FileWithLineNumber_LoadAndSave_PreservesCueSettingsThatDoNotMatchAnPreset()
+    {
+        var vtt = "WEBVTT FILE\r\n\r\n1\r\n00:00.000 --> 00:02.000 position:3% line:5% align:left\r\nHello";
+        var subtitle = new Subtitle();
+        var format = new WebVTTFileWithLineNumber();
+        format.LoadSubtitle(subtitle, new List<string>(vtt.Split(new[] { "\r\n" }, StringSplitOptions.None)), null);
+
+        Assert.Equal("position:3% line:5% align:left", subtitle.Paragraphs[0].Extra);
+
+        var saved = format.ToText(subtitle, null);
+
+        Assert.Contains("00:00.000 --> 00:02.000 position:3% line:5% align:left", saved);
+    }
+
+    [Fact]
+    public void Save_AnTagOverridesExistingCueSettings()
+    {
+        var subtitle = new Subtitle();
+        subtitle.Paragraphs.Add(new Paragraph
+        {
+            StartTime = new TimeCode(0, 0, 21, 731),
+            EndTime = new TimeCode(0, 0, 23, 356),
+            Style = "position:10% line:3%",
+            Text = "{\\an7}Hello"
+        });
+
+        var saved = new WebVTT().ToText(subtitle, null);
+
+        Assert.Contains("00:00:21.731 --> 00:00:23.356 position:20% line:20%", saved);
+    }
+
     // Regression coverage for https://github.com/SubtitleEdit/subtitleedit/issues/10676
     // Apple TV WebVTT files carry `X-TIMESTAMP-MAP=MPEGTS:900000,LOCAL:00:00:00.000` (HLS segment metadata)
     // and a STYLE block using class selectors like `.styledotAB9216dotitalic` for italic/bold/color.
