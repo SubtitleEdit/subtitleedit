@@ -473,6 +473,7 @@ public class LanguageGeneral
     public string Right { get; set; }
     public string RightToLeft { get; set; }
     public string Rules { get; set; }
+    public string Romanize { get; set; }
     public string SaveChangesMessage { get; set; }
     public string SaveChangesTitle { get; set; }
     public string SaveChangesToX { get; set; }

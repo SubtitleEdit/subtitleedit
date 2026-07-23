@@ -125,6 +125,7 @@ using Nikse.SubtitleEdit.Features.Tools.MergeSubtitlesWithSameText;
 using Nikse.SubtitleEdit.Features.Tools.MergeSubtitlesWithSameTimeCodes;
 using Nikse.SubtitleEdit.Features.Tools.RemoveTextForHearingImpaired;
 using Nikse.SubtitleEdit.Features.Tools.Renumber;
+using Nikse.SubtitleEdit.Features.Tools.Romanize;
 using Nikse.SubtitleEdit.Features.Tools.SortBy;
 using Nikse.SubtitleEdit.Features.Tools.SplitBreakLongLines;
 using Nikse.SubtitleEdit.Features.Tools.SplitSubtitle;
@@ -479,6 +480,7 @@ public static class DependencyInjectionExtensions
         collection.AddTransient<ReEncodeVideoViewModel>();
         collection.AddTransient<RemoveTextForHearingImpairedViewModel>();
         collection.AddTransient<RenumberViewModel>();
+        collection.AddTransient<RomanizeViewModel>();
         collection.AddTransient<ReplaceViewModel>();
         collection.AddTransient<RestoreAutoBackupViewModel>();
         collection.AddTransient<GeneratingAudioViewModel>();

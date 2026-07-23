@@ -132,6 +132,7 @@ using Nikse.SubtitleEdit.Features.Tools.MergeSubtitlesWithSameText;
 using Nikse.SubtitleEdit.Features.Tools.MergeSubtitlesWithSameTimeCodes;
 using Nikse.SubtitleEdit.Features.Tools.RemoveTextForHearingImpaired;
 using Nikse.SubtitleEdit.Features.Tools.Renumber;
+using Nikse.SubtitleEdit.Features.Tools.Romanize;
 using Nikse.SubtitleEdit.Features.Tools.SortBy;
 using Nikse.SubtitleEdit.Features.Tools.SplitBreakLongLines;
 using Nikse.SubtitleEdit.Features.Tools.SplitSubtitle;
@@ -5138,6 +5139,36 @@ public partial class MainViewModel :
         }
 
         _ = await ShowDialogAsync<RenumberWindow, RenumberViewModel>(vm => { vm.Initialize(Subtitles.ToList()); });
+    }
+
+    [RelayCommand]
+    private async Task ShowToolsRomanize()
+    {
+        if (Window == null)
+        {
+            return;
+        }
+
+        if (IsEmpty)
+        {
+            ShowSubtitleNotLoadedMessage();
+            return;
+        }
+
+        var result = await ShowDialogAsync<RomanizeWindow, RomanizeViewModel>(vm => { vm.Initialize(Subtitles.ToList()); });
+
+        ResetSubtitle();
+        SetSubtitles([.. result.Subtitles.Select((subtitle, index) =>
+        {
+            if (result.SubtitleItems[index].LineNumber != subtitle.Number)
+                throw new InvalidOperationException("This should not happen");
+
+            subtitle.Text = result.SubtitleItems[index].TextRomanized;
+
+            return subtitle;
+        })]);
+        
+        SelectAndScrollToRow(0);
     }
 
     [RelayCommand]

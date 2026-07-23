@@ -523,6 +523,11 @@ public static class InitMenu
             },
             new MenuItem
             {
+                Header = l.Romanize,
+                Command = vm.ShowToolsRomanizeCommand,
+            },
+            new MenuItem
+            {
                 Header = l.RemoveTextForHearingImpaired,
                 Command = vm.ShowToolsRemoveTextForHearingImpairedCommand,
             },
