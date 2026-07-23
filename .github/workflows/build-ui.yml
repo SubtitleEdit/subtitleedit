@@ -699,7 +699,37 @@ jobs:
             codesign --verify --verbose "$dmg_out"
 
             echo "Notarizing DMG..."
-            xcrun notarytool submit "$dmg_out" --apple-id "${{ secrets.APPLE_ID_USER }}" --password "${{ secrets.APPLE_APP_SPECIFIC_PASSWORD }}" --team-id "${{ secrets.APPLE_TEAM_ID }}" --wait
+            # `notarytool submit --wait` is a single long-poll that can hang for
+            # hours after Apple has already accepted the submission - a v5.1.0-rc13
+            # build sat on --wait until GitHub's 6h job limit killed it, while the
+            # submission itself was Accepted within minutes. Submit once to get the
+            # id, then poll `notarytool info` (short request/response calls) in a
+            # bounded loop so a stuck long-poll can no longer block the job.
+            auth=(--apple-id "${{ secrets.APPLE_ID_USER }}" --password "${{ secrets.APPLE_APP_SPECIFIC_PASSWORD }}" --team-id "${{ secrets.APPLE_TEAM_ID }}")
+            submission_id=$(xcrun notarytool submit "$dmg_out" "${auth[@]}" --output-format json | python3 -c "import sys, json; print(json.load(sys.stdin)['id'])")
+            echo "Notarization submission id: $submission_id"
+
+            status="In Progress"
+            # 60 * 30s = 30 min ceiling. Apple's own target is 15 min for 90% of
+            # submissions, so this leaves generous headroom without risking the 6h kill.
+            for i in $(seq 1 60); do
+              sleep 30
+              # Tolerate a transient poll failure (this step runs under set -e):
+              # fall back to "In Progress" so one bad request just retries next tick
+              # instead of killing the job.
+              status=$(xcrun notarytool info "$submission_id" "${auth[@]}" --output-format json 2>/dev/null | python3 -c "import sys, json; print(json.load(sys.stdin)['status'])" 2>/dev/null || echo "In Progress")
+              echo "  [$i] status: $status"
+              [ "$status" != "In Progress" ] && break
+            done
+
+            if [ "$status" != "Accepted" ]; then
+              echo "::error::Notarization did not succeed (status: $status)"
+              # Surface Apple's reasons rather than failing blind - the previous
+              # workflow printed nothing on rejection.
+              xcrun notarytool log "$submission_id" "${auth[@]}" || true
+              exit 1
+            fi
+
             xcrun stapler staple "$dmg_out"
             xcrun stapler validate "$dmg_out"
           fi
