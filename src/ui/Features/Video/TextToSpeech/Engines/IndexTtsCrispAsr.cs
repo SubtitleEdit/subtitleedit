@@ -398,15 +398,18 @@ public class IndexTtsCrispAsr : ITtsEngine
         // Qwen3 CustomVoice there is no `ref-text` parameter. v1.5 has no `instructions`
         // (emotion control) — that's IndexTTS-2 which isn't in CrispASR yet.
         var speed = Math.Clamp(Se.Settings.Video.TextToSpeech.IndexTtsCrispAsrSpeed, 0.25, 4.0);
+        // Deliberately NO `voice` field: the server rejects absolute paths outright (HTTP 400,
+        // "'voice' must not contain … path separators" — path-traversal guard), so sending
+        // indexVoice.FilePath failed every synthesis. The indextts backend loads the reference
+        // once at init from the startup --voice flag anyway (per-request voice is never re-read),
+        // and the server restarts on voice change — see EnsureServerRunningAsync. Same bug family
+        // as MOSS-TTS #12757.
         var payload = new Dictionary<string, object>
         {
             ["input"] = inputText,
             ["response_format"] = "wav",
-            ["voice"] = indexVoice.FilePath,
             ["speed"] = speed,
-            // IndexTTS gates voice cloning behind a consent attestation (CrispASR v0.7.0 returns
-            // HTTP 400 consent_required without it). The user supplies their own reference voice
-            // by importing a WAV into SE, which is the act being attested here.
+            // Attests the user's own imported reference; the server logs it for cloned synthesis.
             ["consent_attestation"] = "I have the speaker's consent, or it is my own voice.",
             // Skip the audible AI-disclosure prefix CrispASR otherwise prepends to cloned audio;
             // SE surfaces the AI-generated nature in its UI. The inaudible watermark + C2PA

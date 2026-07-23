@@ -487,23 +487,21 @@ public class CosyVoice3CrispAsr : ITtsEngine
         var outputFileName = Path.Combine(GetSetFolder(), Guid.NewGuid() + ".wav");
 
         var speed = Math.Clamp(Se.Settings.Video.TextToSpeech.CosyVoice3CrispAsrSpeed, 0.25, 4.0);
+        // Deliberately NO `voice` / `ref_text` field: for cloning, voiceArg is an absolute WAV
+        // path, which the server rejects outright (HTTP 400, "'voice' must not contain … path
+        // separators" — path-traversal guard), so every clone synthesis failed. The backend gets
+        // both voice (preset name or WAV path) and ref-text from the startup --voice/--ref-text
+        // flags instead, and the server restarts on (voiceArg, ref-text) change — see
+        // EnsureServerRunningAsync. Same bug family as MOSS-TTS #12757.
         var payload = new Dictionary<string, object>
         {
             ["input"] = text,
             ["response_format"] = "wav",
-            ["voice"] = voiceArg,
             ["speed"] = speed,
         };
         if (isClone)
         {
-            // ref_text mirrors the F5-TTS payload guess. CosyVoice3's voice + ref_text are
-            // baked at server startup (see EnsureServerRunningAsync) so this field is mostly
-            // informational, but we send it for logging + future server versions that read it
-            // per-request.
-            payload["ref_text"] = cosyVoice.RefText;
-            // Cloning is gated behind a consent attestation (CrispASR v0.7.0 returns HTTP 400
-            // consent_required without it). The user supplies their own reference voice by
-            // importing a WAV into SE, which is the act being attested here.
+            // Attests the user's own imported reference; the server logs it for cloned synthesis.
             payload["consent_attestation"] = "I have the speaker's consent, or it is my own voice.";
             // Skip the audible AI-disclosure prefix CrispASR otherwise prepends to cloned audio;
             // SE surfaces the AI-generated nature in its UI. The inaudible watermark + C2PA

@@ -418,30 +418,25 @@ public class VoxCPM2CrispAsr : ITtsEngine
         var outputFileName = Path.Combine(GetSetFolder(), Guid.NewGuid() + ".wav");
 
         var speed = Math.Clamp(Se.Settings.Video.TextToSpeech.VoxCPM2CrispAsrSpeed, 0.25, 4.0);
+        // Deliberately NO `voice` / `ref_text` field: the voxcpm2 backend treats a per-request
+        // `voice` as a FILE PATH (read_wav_mono_pcm16) that OVERRIDES the startup --voice, so the
+        // bare stem SE used to send failed to load and silently fell back to zero-shot — a random
+        // speaker per line, the same bug MOSS-TTS had (#12757). With the field omitted the backend
+        // falls back to the init-time --voice path (server mode never sets tts_voice_clone_consent,
+        // so the empty-voice branch resolves to voice_path_) and clones the reference. The server
+        // restarts on (voice, ref-text) change — see EnsureServerRunningAsync.
         var payload = new Dictionary<string, object>
         {
             ["input"] = text,
             ["response_format"] = "wav",
-            // The OpenAI-compat server resolves `voice` as a NAME listed by /v1/voices (the file
-            // stem inside --voice-dir). Passing a full path makes the server hang indefinitely,
-            // so send the reference WAV's base name — it lives in the voices folder = --voice-dir.
-            ["voice"] = Path.GetFileNameWithoutExtension(voxVoice.FilePath),
             ["speed"] = speed,
-            // VoxCPM2 gates voice cloning behind a consent attestation (CrispASR v0.7.0 returns
-            // HTTP 400 consent_required without it). The user supplies their own reference voice
-            // by importing a WAV into SE, which is the act being attested here.
+            // Attests the user's own imported reference; the server logs it for cloned synthesis.
             ["consent_attestation"] = "I have the speaker's consent, or it is my own voice.",
             // Skip the audible AI-disclosure prefix CrispASR otherwise prepends to cloned audio;
             // SE surfaces the AI-generated nature in its UI. The inaudible watermark + C2PA
             // provenance metadata stay embedded regardless (defaults to true server-side).
             ["spoken_disclaimer"] = false,
         };
-        if (!string.IsNullOrEmpty(refText))
-        {
-            // TODO: verify field name against a real v0.7.0 binary — the OpenAI-compat server
-            // may expose this as ref_text / ref-text / instructions.
-            payload["ref_text"] = refText;
-        }
 
         var body = JsonSerializer.Serialize(payload);
         using var content = new StringContent(body, Encoding.UTF8, "application/json");
