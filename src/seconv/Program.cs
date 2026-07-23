@@ -64,6 +64,18 @@ internal class Program
                 ListHelpers.PrintFixCommonErrorsRules();
                 return 0;
             }
+            if (first.Equals("dump-settings", StringComparison.OrdinalIgnoreCase) ||
+                first.Equals("default-settings", StringComparison.OrdinalIgnoreCase))
+            {
+                // Pure JSON to stdout so `seconv dump-settings > my.json` yields a clean file;
+                // the usage hint goes to stderr so it never lands in the redirected output.
+                Console.Out.WriteLine(SeConvSettings.DumpDefaults());
+                Console.Error.WriteLine(
+                    "// Above: seconv's settings schema with the current libse defaults. " +
+                    "Redirect to a file and pass it via --settings:<path.json>. " +
+                    "Note: these are seconv's key names, not the SE GUI's Settings.json.");
+                return 0;
+            }
             if (first.Equals("info", StringComparison.OrdinalIgnoreCase))
             {
                 return RunInfoCommand(args.Skip(1).ToArray());
