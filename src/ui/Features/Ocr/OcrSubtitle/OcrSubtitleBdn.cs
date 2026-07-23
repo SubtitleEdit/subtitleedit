@@ -1,19 +1,25 @@
 ﻿using Nikse.SubtitleEdit.Core.Common;
+using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using SkiaSharp;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 
 namespace Nikse.SubtitleEdit.Features.Ocr.OcrSubtitle;
 
 public class OcrSubtitleBdn : IOcrSubtitle
 {
+    private static readonly SKPointI NoPosition = new SKPointI(-1, -1);
+    private static readonly SKSizeI NoScreenSize = new SKSizeI(-1, -1);
+
     public int Count { get; private set; }
     private readonly Subtitle _bdnXmlSubtitle;
     private readonly string _bdnFileName;
     private readonly bool _isSon;
     private readonly bool _makeTransparent;
     private readonly bool _autoTransparentBackground;
+    private SKSizeI? _screenSize;
 
     public OcrSubtitleBdn(Subtitle subtitle, string bdnFileName, bool isSon, bool makeTransparent = false, bool autoTransparentBackground = false)
     {
@@ -308,11 +314,40 @@ public class OcrSubtitleBdn : IOcrSubtitle
 
     public SKPointI GetPosition(int index)
     {
-        return new SKPointI(-1, -1);
+        if (index < 0 || index >= _bdnXmlSubtitle.Paragraphs.Count)
+        {
+            return NoPosition;
+        }
+
+        // BdnXml.LoadSubtitle puts the graphic "X,Y" in Extra - but Extra holds an image file name
+        // for the Dost/TimedTextImage input this class is also used for, so only take it when it parses.
+        var extra = _bdnXmlSubtitle.Paragraphs[index].Extra;
+        if (string.IsNullOrEmpty(extra))
+        {
+            return NoPosition;
+        }
+
+        var parts = extra.Split(',');
+        if (parts.Length == 2 &&
+            int.TryParse(parts[0].Trim(), NumberStyles.Integer, CultureInfo.InvariantCulture, out var x) &&
+            int.TryParse(parts[1].Trim(), NumberStyles.Integer, CultureInfo.InvariantCulture, out var y) &&
+            x >= 0 && y >= 0)
+        {
+            return new SKPointI(x, y);
+        }
+
+        return NoPosition;
     }
 
     public SKSizeI GetScreenSize(int index)
     {
-        return new SKSizeI(-1, -1);
+        if (_screenSize == null)
+        {
+            _screenSize = BdnXml.TryGetVideoSize(_bdnXmlSubtitle.Header, out var width, out var height)
+                ? new SKSizeI(width, height)
+                : NoScreenSize;
+        }
+
+        return _screenSize.Value;
     }
 }

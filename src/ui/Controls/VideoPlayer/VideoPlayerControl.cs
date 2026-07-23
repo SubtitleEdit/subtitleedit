@@ -273,7 +273,9 @@ namespace Nikse.SubtitleEdit.Controls.VideoPlayer
             };
 
             // Play
-            _buttonPlay = new Button
+            // NonSpaceButton: a focused Button would otherwise consume/duplicate the global
+            // play/pause Space shortcut once clicked with the mouse (issue #12759).
+            _buttonPlay = new NonSpaceButton
             {
                 Margin = new Thickness(0, 0, 3, 0),
                 [AutomationProperties.NameProperty] = Se.Language.General.Play,
@@ -298,7 +300,7 @@ namespace Nikse.SubtitleEdit.Controls.VideoPlayer
             stackPanel.Children.Add(_buttonPlay);
 
             // Stop
-            var buttonStop = new Button
+            var buttonStop = new NonSpaceButton
             {
                 Margin = new Thickness(0, 0, 3, 0),
                 [AutomationProperties.NameProperty] = Se.Language.General.Stop,
@@ -326,7 +328,7 @@ namespace Nikse.SubtitleEdit.Controls.VideoPlayer
             });
 
             // Fullscreen
-            _buttonFullScreen = new Button
+            _buttonFullScreen = new NonSpaceButton
             {
                 Margin = new Thickness(0, 0, 3, 0),
                 [AutomationProperties.NameProperty] = Se.Language.General.FullScreen,
@@ -350,7 +352,7 @@ namespace Nikse.SubtitleEdit.Controls.VideoPlayer
             });
 
 
-            _buttonFullScreenCollapse = new Button()
+            _buttonFullScreenCollapse = new NonSpaceButton()
             {
                 Margin = new Thickness(0, 0, 3, 0),
                 IsVisible = false,

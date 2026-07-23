@@ -101,7 +101,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     var position = string.Empty;
                     foreach (XmlNode graphic in node.SelectNodes("Graphic"))
                     {
-                        if (graphic.Attributes["X"] != null || graphic.Attributes["Y"] != null)
+                        if (graphic.Attributes["X"] != null && graphic.Attributes["Y"] != null)
                         {
                             position = graphic.Attributes["X"].InnerText + "," + graphic.Attributes["Y"].InnerText;
                         }
@@ -138,8 +138,81 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 }
             }
 
+            // keep the source xml around so callers can read the video size, see TryGetVideoSize
+            subtitle.Header = xmlString;
+
             subtitle.Renumber();
         }
 
+        /// <summary>
+        /// Reads the video size from a BDN xml "Description/Format" node, e.g. VideoFormat="1080p" or VideoFormat="1920x1080".
+        /// </summary>
+        /// <param name="xmlString">Raw BDN xml - typically <see cref="Subtitle.Header"/> after a <see cref="LoadSubtitle"/> call.</param>
+        public static bool TryGetVideoSize(string xmlString, out int width, out int height)
+        {
+            width = 0;
+            height = 0;
+
+            if (string.IsNullOrEmpty(xmlString) || !xmlString.Contains("<BDN"))
+            {
+                return false;
+            }
+
+            try
+            {
+                var xml = new XmlDocument { XmlResolver = null };
+                xml.LoadXml(xmlString);
+                var videoFormat = xml.DocumentElement?.SelectSingleNode("Description/Format")?.Attributes?["VideoFormat"]?.InnerText;
+                if (string.IsNullOrWhiteSpace(videoFormat))
+                {
+                    return false;
+                }
+
+                switch (videoFormat.Trim().ToLowerInvariant())
+                {
+                    case "480i":
+                    case "480p":
+                        width = 720;
+                        height = 480;
+                        return true;
+                    case "576i":
+                    case "576p":
+                        width = 720;
+                        height = 576;
+                        return true;
+                    case "720p":
+                        width = 1280;
+                        height = 720;
+                        return true;
+                    case "1080i":
+                    case "1080p":
+                        width = 1920;
+                        height = 1080;
+                        return true;
+                    case "2160p":
+                        width = 3840;
+                        height = 2160;
+                        return true;
+                }
+
+                // "1920x1080" style, as written by the Subtitle Edit BDN xml exporter for non-standard sizes
+                var parts = videoFormat.Split('x', 'X');
+                if (parts.Length == 2 &&
+                    int.TryParse(parts[0].Trim(), NumberStyles.Integer, CultureInfo.InvariantCulture, out var w) &&
+                    int.TryParse(parts[1].Trim(), NumberStyles.Integer, CultureInfo.InvariantCulture, out var h) &&
+                    w > 0 && h > 0)
+                {
+                    width = w;
+                    height = h;
+                    return true;
+                }
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine(ex.Message);
+            }
+
+            return false;
+        }
     }
 }

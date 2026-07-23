@@ -115,6 +115,10 @@ public class BinaryAdjustColorWindow : Window
 
         scrollViewer.Content = image;
 
-        return UiUtil.MakeBorderForControl(scrollViewer);
+        // Image based subtitles are light or dark text on a transparent background, both
+        // invisible on a matching flat backdrop - use the mid-gray checkerboard (issue #12692).
+        var border = UiUtil.MakeBorderForControl(scrollViewer);
+        border.Background = UiUtil.GetCheckerboardBrush();
+        return border;
     }
 }

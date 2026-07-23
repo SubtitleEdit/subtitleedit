@@ -2574,9 +2574,14 @@ public partial class TextToSpeechViewModel : ObservableObject
         var rawText = _castKind == ActorVoiceDetector.CastKind.WebVttVoices
             ? ActorVoiceDetector.StripWebVttVoiceTags(paragraph.Text)
             : paragraph.Text;
+        // Strip formatting markup (<i>…</i>, <font …>, {\an8}, …) before synthesis. TTS engines
+        // don't interpret subtitle tags, and some — notably MOSS-TTS (CrispASR) — vocalize them
+        // ("<i>" spoken as "I") or run away into garbled audio rather than ignoring them (#12757).
+        // No engine should ever receive them, so strip HTML + SSA/ASS tags centrally.
+        var cleanText = HtmlUtil.RemoveHtmlTags(rawText, alsoSsaTags: true);
         // Unbreak line endings centrally so every engine sees a single flowing line —
         // many TTS engines otherwise insert weird pauses on \r\n.
-        var text = Utilities.UnbreakLine(rawText);
+        var text = Utilities.UnbreakLine(cleanText);
 
         // Fallbacks must carry the panel's instruction, not "": TtsInstructionSwap swaps the
         // engine's saved instruction to whatever is passed here for the duration of the Speak

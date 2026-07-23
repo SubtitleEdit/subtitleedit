@@ -1,4 +1,5 @@
 using Nikse.SubtitleEdit.Core.BluRaySup;
+using SkiaSharp;
 using System.IO;
 using System.Text;
 
@@ -189,5 +190,74 @@ public class BluRaySupParserTest
         var pcsList = Parse(ms);
 
         Assert.Single(pcsList); // the empty clearing PCS was removed, not inflated
+    }
+
+    // Palette entry 0 transparent, entry 1 opaque - "00 84 00" is a run of four palette-0 pixels.
+    private static byte[] MakeOdsPayloadWithTransparentRun()
+    {
+        var rle = new byte[18];
+        for (var row = 0; row < 2; row++)
+        {
+            var o = row * 9;
+            rle[o] = 0x01;
+            rle[o + 1] = 0x01;
+            rle[o + 2] = 0x01;
+            rle[o + 3] = 0x01;
+            rle[o + 4] = 0x00; // 00 84 00 -> four times palette entry 0
+            rle[o + 5] = 0x84;
+            rle[o + 6] = 0x00;
+            // rle[o + 7] and [o + 8] stay 0x00 0x00 = end of line
+        }
+
+        var payload = new byte[11 + rle.Length];
+        payload[3] = 0xC0; // first and last in sequence
+        payload[6] = (byte)(rle.Length + 4);
+        payload[8] = 0x08; // width 8
+        payload[10] = 0x02; // height 2
+        rle.CopyTo(payload, 11);
+        return payload;
+    }
+
+    private static byte[] MakePdsPayloadWithTransparentEntry()
+    {
+        return new byte[]
+        {
+            0x00, 0x00,                   // palette id, version
+            0x00, 0xEB, 0x80, 0x80, 0x00, // entry 0: transparent (alpha 0)
+            0x01, 0x10, 0x80, 0x80, 0xFF, // entry 1: black, opaque
+        };
+    }
+
+    // Transparent palette entries are forced to black (BluRaySupParser.DecodePalette), so an
+    // alpha-less bitmap turns the whole background into a solid black block - see issue #12761.
+    [Fact]
+    public void DecodedImageKeepsTransparency()
+    {
+        var ms = new MemoryStream();
+        WriteSegment(ms, 0x16, Pts1, MakePcsPayload(1, withObject: true));
+        WriteSegment(ms, 0x17, Pts1, MakeWdsPayload());
+        WriteSegment(ms, 0x14, Pts1, MakePdsPayloadWithTransparentEntry());
+        WriteSegment(ms, 0x15, Pts1, MakeOdsPayloadWithTransparentRun());
+        WriteSegment(ms, 0x80, Pts1, System.Array.Empty<byte>());
+        WriteSegment(ms, 0x16, Pts2, MakePcsPayload(0, withObject: false));
+        WriteSegment(ms, 0x80, Pts2, System.Array.Empty<byte>());
+        ms.Position = 0;
+
+        var pcs = Assert.Single(Parse(ms));
+        using var bitmap = pcs.GetBitmap();
+
+        Assert.NotEqual(SKAlphaType.Opaque, bitmap.AlphaType);
+        Assert.Equal(255, bitmap.GetPixel(0, 0).Alpha); // drawn pixel
+        Assert.Equal(0, bitmap.GetPixel(4, 0).Alpha);   // transparent run
+        Assert.Equal(0, bitmap.GetPixel(7, 1).Alpha);
+
+        // the symptom users see is in the encoded png, so pin that too
+        using var image = SKImage.FromBitmap(bitmap);
+        using var data = image.Encode(SKEncodedImageFormat.Png, 100);
+        using var decoded = SKBitmap.Decode(data.ToArray());
+        Assert.Equal(255, decoded.GetPixel(0, 0).Alpha);
+        Assert.Equal(0, decoded.GetPixel(4, 0).Alpha);
+
+        ms.Dispose();
     }
 }

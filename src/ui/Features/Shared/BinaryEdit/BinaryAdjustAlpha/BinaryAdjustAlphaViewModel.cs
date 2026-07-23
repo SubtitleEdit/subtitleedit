@@ -133,9 +133,12 @@ public partial class BinaryAdjustAlphaViewModel : ObservableObject, IDisposable
         }
     }
 
-    private static SKBitmap AdjustAlpha(SKBitmap originalBitmap, float alphaAdjustment, byte transparencyThreshold)
+    private static SKBitmap AdjustAlpha(SKBitmap premultipliedBitmap, float alphaAdjustment, byte transparencyThreshold)
     {
-        var adjustedBitmap = new SKBitmap(originalBitmap.Width, originalBitmap.Height, SKColorType.Bgra8888, SKAlphaType.Premul);
+        // Work in straight alpha: changing A while leaving premultiplied R, G and B alone
+        // would produce RGB > A, which Skia renders as clipped, over-bright edges.
+        using var originalBitmap = premultipliedBitmap.ToUnpremultiplied();
+        var adjustedBitmap = new SKBitmap(originalBitmap.Width, originalBitmap.Height, SKColorType.Bgra8888, SKAlphaType.Unpremul);
 
         unsafe
         {

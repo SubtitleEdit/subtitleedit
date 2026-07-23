@@ -61,10 +61,9 @@ internal sealed class AutoTranslateRunner
                 if (!string.IsNullOrEmpty(url))
                 {
                     // User-managed server. LlamaCppTranslate posts to the URL as-is, so accept a
-                    // bare host:port and complete it to the chat/completions endpoint.
-                    tools.LlamaCppApiUrl = url.Contains("/v1/", StringComparison.OrdinalIgnoreCase)
-                        ? url
-                        : url.TrimEnd('/') + "/v1/chat/completions";
+                    // bare host:port or an OpenAI-style ".../v1" base and complete either to the
+                    // chat/completions endpoint (without doubling an already-present /v1).
+                    tools.LlamaCppApiUrl = CompleteChatCompletionsUrl(url);
                 }
                 else
                 {
@@ -168,6 +167,26 @@ internal sealed class AutoTranslateRunner
                 subtitle.Paragraphs[i].Text = rows[i].TranslatedText;
             }
         }
+    }
+
+    /// <summary>
+    /// Completes a user-supplied --translate-url to the full chat/completions endpoint.
+    /// Accepts a bare <c>host:port</c>, an OpenAI-style <c>.../v1</c> base (with or without
+    /// trailing slash), or an already-complete <c>.../chat/completions</c> URL — the old
+    /// <c>Contains("/v1/")</c> check missed the no-trailing-slash base form and produced
+    /// <c>.../v1/v1/chat/completions</c>.
+    /// </summary>
+    internal static string CompleteChatCompletionsUrl(string url)
+    {
+        var trimmed = url.TrimEnd('/');
+        if (trimmed.EndsWith("/chat/completions", StringComparison.OrdinalIgnoreCase))
+        {
+            return trimmed;
+        }
+
+        return trimmed.EndsWith("/v1", StringComparison.OrdinalIgnoreCase)
+            ? trimmed + "/chat/completions"
+            : trimmed + "/v1/chat/completions";
     }
 
     internal static TranslationPair ResolveLanguage(List<TranslationPair> languages, string requested, string kind)

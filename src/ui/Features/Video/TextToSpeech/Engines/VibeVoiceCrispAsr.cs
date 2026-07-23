@@ -376,21 +376,27 @@ public class VibeVoiceCrispAsr : ITtsEngine
         // OpenAI-compatible /v1/audio/speech payload. CrispASR's vibevoice backends look at:
         //   - `input`             — the text to synthesise
         //   - `response_format`   — "wav"
-        //   - `voice`             — absolute WAV path or filename in --voice-dir
+        //   - `voice`             — see below
         //   - `speed`             — server-side linear resample of the synth output (0.25-4.0).
         //                           VibeVoice 1.5B tends to be on the slow side; default is 1.1
         //                           and the user can override in the engine settings dialog.
         // VibeVoice does not use `instructions` or `ref-text` (those are qwen3-tts-only).
+        //
+        // `voice` must be the extension-less STEM of the reference file: the server rejects
+        // absolute paths outright (HTTP 400, "'voice' must not contain … path separators" —
+        // path-traversal guard), so the full FilePath SE used to send failed every synthesis.
+        // The vibevoice backend resolves a bare name (no path separators, no .wav/.gguf suffix)
+        // against --voice-dir as <stem>.gguf then <stem>.wav, loading the WAV-clone path per
+        // request — which is why this engine, unlike the others, needs no startup --voice flag
+        // or server restart on voice change. Same bug family as MOSS-TTS #12757.
         var speed = Math.Clamp(Se.Settings.Video.TextToSpeech.VibeVoiceCrispAsrSpeed, 0.25, 4.0);
         var payload = new Dictionary<string, object>
         {
             ["input"] = inputText,
             ["response_format"] = "wav",
-            ["voice"] = vibeVoice.FilePath,
+            ["voice"] = Path.GetFileNameWithoutExtension(vibeVoice.FilePath),
             ["speed"] = speed,
-            // VibeVoice gates voice cloning behind a consent attestation (CrispASR v0.7.0 returns
-            // HTTP 400 consent_required without it). The user supplies their own reference voice
-            // by importing a WAV into SE, which is the act being attested here.
+            // Attests the user's own imported reference; the server logs it for cloned synthesis.
             ["consent_attestation"] = "I have the speaker's consent, or it is my own voice.",
             // Skip the audible AI-disclosure prefix CrispASR otherwise prepends to cloned audio;
             // SE surfaces the AI-generated nature in its UI. The inaudible watermark + C2PA

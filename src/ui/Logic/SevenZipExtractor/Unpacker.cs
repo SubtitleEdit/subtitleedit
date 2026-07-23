@@ -19,16 +19,41 @@ public static class Unpacker
             updateProgressText(Se.Language.General.Unpacking7ZipArchiveDotDotDot);
         });
 
-        if (OperatingSystem.IsWindows())
+        if (OperatingSystem.IsLinux())
         {
-            Unpack7ZipVia77zExecutable(tempFileName, dir, skipFolderLevel, cancellationTokenSource, updateProgressText);
-            return;
+            // Prefer a pre-installed 7-zip (e.g. /app/bin/7zr bundled in the Flatpak, or a
+            // distro p7zip) - it lives on a read-only, always-executable mount, unlike the
+            // 7zr unpacked to the app data folder below, which can fail on noexec setups.
+            // Also the only fast path on Linux ARM64, where no 7zr asset is bundled.
+            var linuxSevenZipPath = GetLinuxSevenZipPath();
+            if (linuxSevenZipPath != null)
+            {
+                try
+                {
+                    Unpack7ZipViaSystemExecutable(linuxSevenZipPath, tempFileName, dir, skipFolderLevel, cancellationTokenSource, updateProgressText);
+                    return;
+                }
+                catch (Exception exception)
+                {
+                    Se.LogError(exception, $"System 7-zip extraction of \"{tempFileName}\" failed, trying next extraction method");
+                }
+            }
         }
 
-        if (OperatingSystem.IsLinux() && RuntimeInformation.ProcessArchitecture == Architecture.X64)
+        if (OperatingSystem.IsWindows() ||
+            (OperatingSystem.IsLinux() && RuntimeInformation.ProcessArchitecture == Architecture.X64))
         {
-            Unpack7ZipVia77zExecutable(tempFileName, dir, skipFolderLevel, cancellationTokenSource, updateProgressText);
-            return;
+            try
+            {
+                Unpack7ZipVia77zExecutable(tempFileName, dir, skipFolderLevel, cancellationTokenSource, updateProgressText);
+                return;
+            }
+            catch (Exception exception)
+            {
+                // e.g. bundled 7zr/7za missing or not executable (seen in Flatpak) - fall
+                // back to the managed extractor instead of failing the whole install.
+                Se.LogError(exception, $"7-zip executable extraction of \"{tempFileName}\" failed, falling back to managed extraction");
+            }
         }
 
         if (OperatingSystem.IsMacOS())
@@ -36,12 +61,43 @@ public static class Unpacker
             var macSevenZipPath = GetMacSevenZipPath();
             if (macSevenZipPath != null)
             {
-                Unpack7ZipViaSystemExecutable(macSevenZipPath, tempFileName, dir, skipFolderLevel, cancellationTokenSource, updateProgressText);
-                return;
+                try
+                {
+                    Unpack7ZipViaSystemExecutable(macSevenZipPath, tempFileName, dir, skipFolderLevel, cancellationTokenSource, updateProgressText);
+                    return;
+                }
+                catch (Exception exception)
+                {
+                    Se.LogError(exception, $"System 7zz extraction of \"{tempFileName}\" failed, falling back to managed extraction");
+                }
             }
         }
 
         Extract7ZipSlow(tempFileName, dir, skipFolderLevel, cancellationTokenSource, updateProgressText);
+    }
+
+    private static string? GetLinuxSevenZipPath()
+    {
+        // 7zr (7z-archives only) and 7zz/7z (full) all support "x <archive> -o<dir> -y"
+        var paths = new[]
+        {
+            "/app/bin/7zr",   // bundled in the Flatpak
+            "/usr/bin/7zr",
+            "/usr/bin/7zz",
+            "/usr/bin/7z",
+            "/usr/local/bin/7zz",
+            "/usr/local/bin/7z"
+        };
+
+        foreach (var path in paths)
+        {
+            if (File.Exists(path))
+            {
+                return path;
+            }
+        }
+
+        return null;
     }
 
     private static string? GetMacSevenZipPath()
@@ -121,7 +177,7 @@ public static class Unpacker
             if (process.ExitCode != 0)
             {
                 var error = process.StandardError.ReadToEnd();
-                throw new Exception($"7zz extraction failed with exit code {process.ExitCode}: {error}");
+                throw new Exception($"7zz extraction failed with exit code {process.ExitCode} (command: \"{sevenZipPath}\" x \"{tempFileName}\" -o\"{extractPath}\" -y): {error}");
             }
 
             // If we need to skip folder levels, move files from temp to final destination
@@ -192,7 +248,14 @@ public static class Unpacker
                 }
             };
 
-            process.Start();
+            try
+            {
+                process.Start();
+            }
+            catch (Exception exception)
+            {
+                throw new Exception($"Could not start 7-zip (command: \"{sevenZipPath}\" x \"{tempFileName}\" -o\"{extractPath}\" -y)", exception);
+            }
 
             while (!process.StandardOutput.EndOfStream)
             {
@@ -225,7 +288,7 @@ public static class Unpacker
             if (process.ExitCode != 0)
             {
                 var error = process.StandardError.ReadToEnd();
-                throw new Exception($"7zip extraction failed with exit code {process.ExitCode}: {error}");
+                throw new Exception($"7zip extraction failed with exit code {process.ExitCode} (command: \"{sevenZipPath}\" x \"{tempFileName}\" -o\"{extractPath}\" -y): {error}");
             }
 
             // If we need to skip folder levels, move files from temp to final destination
