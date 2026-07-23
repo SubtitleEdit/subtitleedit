@@ -19,16 +19,20 @@ public static class Unpacker
             updateProgressText(Se.Language.General.Unpacking7ZipArchiveDotDotDot);
         });
 
-        if (OperatingSystem.IsWindows())
+        if (OperatingSystem.IsWindows() ||
+            (OperatingSystem.IsLinux() && RuntimeInformation.ProcessArchitecture == Architecture.X64))
         {
-            Unpack7ZipVia77zExecutable(tempFileName, dir, skipFolderLevel, cancellationTokenSource, updateProgressText);
-            return;
-        }
-
-        if (OperatingSystem.IsLinux() && RuntimeInformation.ProcessArchitecture == Architecture.X64)
-        {
-            Unpack7ZipVia77zExecutable(tempFileName, dir, skipFolderLevel, cancellationTokenSource, updateProgressText);
-            return;
+            try
+            {
+                Unpack7ZipVia77zExecutable(tempFileName, dir, skipFolderLevel, cancellationTokenSource, updateProgressText);
+                return;
+            }
+            catch (Exception exception)
+            {
+                // e.g. bundled 7zr/7za missing or not executable (seen in Flatpak) - fall
+                // back to the managed extractor instead of failing the whole install.
+                Se.LogError(exception, $"7-zip executable extraction of \"{tempFileName}\" failed, falling back to managed extraction");
+            }
         }
 
         if (OperatingSystem.IsMacOS())
@@ -36,8 +40,15 @@ public static class Unpacker
             var macSevenZipPath = GetMacSevenZipPath();
             if (macSevenZipPath != null)
             {
-                Unpack7ZipViaSystemExecutable(macSevenZipPath, tempFileName, dir, skipFolderLevel, cancellationTokenSource, updateProgressText);
-                return;
+                try
+                {
+                    Unpack7ZipViaSystemExecutable(macSevenZipPath, tempFileName, dir, skipFolderLevel, cancellationTokenSource, updateProgressText);
+                    return;
+                }
+                catch (Exception exception)
+                {
+                    Se.LogError(exception, $"System 7zz extraction of \"{tempFileName}\" failed, falling back to managed extraction");
+                }
             }
         }
 
@@ -121,7 +132,7 @@ public static class Unpacker
             if (process.ExitCode != 0)
             {
                 var error = process.StandardError.ReadToEnd();
-                throw new Exception($"7zz extraction failed with exit code {process.ExitCode}: {error}");
+                throw new Exception($"7zz extraction failed with exit code {process.ExitCode} (command: \"{sevenZipPath}\" x \"{tempFileName}\" -o\"{extractPath}\" -y): {error}");
             }
 
             // If we need to skip folder levels, move files from temp to final destination
@@ -192,7 +203,14 @@ public static class Unpacker
                 }
             };
 
-            process.Start();
+            try
+            {
+                process.Start();
+            }
+            catch (Exception exception)
+            {
+                throw new Exception($"Could not start 7-zip (command: \"{sevenZipPath}\" x \"{tempFileName}\" -o\"{extractPath}\" -y)", exception);
+            }
 
             while (!process.StandardOutput.EndOfStream)
             {
@@ -225,7 +243,7 @@ public static class Unpacker
             if (process.ExitCode != 0)
             {
                 var error = process.StandardError.ReadToEnd();
-                throw new Exception($"7zip extraction failed with exit code {process.ExitCode}: {error}");
+                throw new Exception($"7zip extraction failed with exit code {process.ExitCode} (command: \"{sevenZipPath}\" x \"{tempFileName}\" -o\"{extractPath}\" -y): {error}");
             }
 
             // If we need to skip folder levels, move files from temp to final destination

@@ -84,7 +84,19 @@ public partial class DownloadGoogleLensOcrViewModel : ObservableObject, IClosing
                     return;
                 }
 
-                Unpacker.Extract7Zip(_tempFileName, Se.GoogleLensOcrFolder, "Chrome-Lens-OCR-v3.4.0", _cancellationTokenSource, text => ProgressText = text); 
+                try
+                {
+                    Unpacker.Extract7Zip(_tempFileName, Se.GoogleLensOcrFolder, "Chrome-Lens-OCR-v3.4.0", _cancellationTokenSource, text => ProgressText = text);
+                }
+                catch (Exception exception)
+                {
+                    // Timer callbacks swallow exceptions, so an unpack failure would
+                    // otherwise hang the dialog with no error shown (#12127).
+                    Se.LogError(exception, "Google Lens OCR unpack failed");
+                    ProgressText = "Unpacking failed";
+                    Error = exception.Message;
+                    return;
+                }
 
                 OkPressed = true;
                 Close();
