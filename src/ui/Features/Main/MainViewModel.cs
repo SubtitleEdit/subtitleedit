@@ -382,7 +382,8 @@ public partial class MainViewModel :
     private bool _pauseRequested; // a pause command fired; freeze the cursor now, before mpv's IsPlaying flips
     private long _playheadPauseSettleTs; // when we last paused; briefly hold the estimate so it doesn't snap back
     private const double PlayheadPauseSettleMs = 300; // mpv's reported position lags ~100-200 ms after a pause
-    private const double PlayheadPausedEaseFactor = 0.25; // per-tick fraction for closing small paused-state gaps (~0.1 s converges in ~10 ticks / ~160 ms)
+    private bool _playheadPausedSettled; // set once mpv's clock has come to rest after a pause and the cursor has landed on it
+    private const double PlayheadPausedSettleStableMs = 100; // mpv's position unchanged this long after a pause = its clock is at rest -> snap the cursor there once
     private CancellationTokenSource _videoOpenTokenSource;
     private readonly HashSet<string> _waveformsBeingGenerated = new(StringComparer.OrdinalIgnoreCase);
     private readonly Lock _waveformsBeingGeneratedLock = new();
@@ -1186,6 +1187,7 @@ public partial class MainViewModel :
     internal void RequestPausePlayheadFreeze()
     {
         _pauseRequested = true;
+        _playheadPausedSettled = false; // reconcile the cursor to mpv's final frame once this pause settles
         _playheadPauseSettleTs = Stopwatch.GetTimestamp();
     }
 
@@ -21651,10 +21653,10 @@ public partial class MainViewModel :
                 return rawPosition;
             }
 
-            // Paused arrival (stop button / click-to-pause seeks): keep showing the pinned value
-            // and let the paused-branch easing below close the small arrival residual (up to the
-            // 0.15 s tolerance) over a few ticks — snapping here showed as a tiny cursor jump
-            // right after stopping.
+            // Paused arrival (stop button / click-to-pause seeks): keep the cursor at the pinned
+            // value. It's flagged settled (see PinPlayheadTo), so the paused branch below holds it
+            // there rather than pulling it onto mpv's raw position — the cursor stays exactly where
+            // the user aimed instead of twitching to mpv's nearest reported spot.
             return _playheadEstimateSeconds;
         }
 
@@ -21723,50 +21725,55 @@ public partial class MainViewModel :
         {
             // Paused - or a pause was just requested via a command, so we freeze here immediately
             // (before mpv's IsPlaying flips ~100 ms later) so the cursor stops on the keypress instead
-            // of gliding on. mpv's reported position also lags ~100-200 ms after a pause, so hold the
-            // frozen estimate for a short settle window rather than snapping to that stale value (which
-            // caused the backward jitter); release on a large gap (a real seek) or once mpv settles.
-            // (#12033 follow-up)
-            var settleElapsedMs = (nowTimestamp - _playheadPauseSettleTs) / (double)Stopwatch.Frequency * 1000.0;
-
+            // of gliding on (#12033 follow-up). mpv then keeps decoding for ~100-200 ms and its reported
+            // position settles a little past (or, if we'd extrapolated ahead, behind) the frozen spot.
+            // We hold the cursor dead-frozen through that wind-down and, the moment mpv's clock comes to
+            // rest, snap once to that final frame. Landing in a single step at settle - instead of easing
+            // toward it a few hundred ms later - keeps all cursor motion coincident with the pause, so the
+            // cursor no longer drifts forward/backward after the time display has already stopped (#12740).
             if (!vp.IsPlaying)
             {
-                if (_playheadWasPlaying && !_pauseRequested)
+                if (_playheadWasPlaying)
                 {
-                    _playheadPauseSettleTs = nowTimestamp; // fallback arming for pauses not via a command
-                    settleElapsedMs = 0;
+                    _playheadPausedSettled = false; // play -> pause edge: wait for mpv's clock to settle
                 }
 
                 _pauseRequested = false; // mpv has actually paused now
             }
-            else if (settleElapsedMs >= PlayheadPauseSettleMs)
+            else
             {
-                // Pause didn't take within the window (mpv still playing): stop forcing the freeze so
-                // the cursor resumes tracking next tick rather than getting stuck.
-                _pauseRequested = false;
-            }
-
-            var holdForPause = _playheadValid
-                               && settleElapsedMs < PlayheadPauseSettleMs
-                               && Math.Abs(_playheadEstimateSeconds - rawPosition) < PlayheadResyncThresholdSeconds;
-
-            if (!holdForPause)
-            {
-                // Reconcile with mpv's settled position. Small gaps (the ~100 ms mpv keeps playing
-                // after a pause request, or a stop-pin's arrival tolerance) are eased over a few
-                // ticks instead of snapped — the snap showed as a tiny cursor jump shortly after
-                // pausing/stopping. Real discontinuities (seeks beyond the resync threshold) and
-                // sub-visible gaps still snap.
-                var gap = rawPosition - _playheadEstimateSeconds;
-                if (!_playheadValid || Math.Abs(gap) < 0.002 || Math.Abs(gap) >= PlayheadResyncThresholdSeconds)
+                // Pause requested but mpv still reports playing (~100 ms before IsPlaying flips): keep
+                // frozen. Bail out if the pause never takes, so the cursor can't get stuck.
+                var settleElapsedMs = (nowTimestamp - _playheadPauseSettleTs) / (double)Stopwatch.Frequency * 1000.0;
+                if (settleElapsedMs >= PlayheadPauseSettleMs)
                 {
-                    _playheadEstimateSeconds = rawPosition;
-                }
-                else
-                {
-                    _playheadEstimateSeconds += gap * PlayheadPausedEaseFactor;
+                    _pauseRequested = false;
                 }
             }
+
+            var rawChanged = Math.Abs(rawPosition - _playheadLastRealSeconds) > 0.0005;
+            if (rawChanged)
+            {
+                _playheadLastRawChangeTs = nowTimestamp;
+            }
+
+            var rawStableMs = (nowTimestamp - _playheadLastRawChangeTs) / (double)Stopwatch.Frequency * 1000.0;
+            var gap = rawPosition - _playheadEstimateSeconds;
+
+            if (!_playheadValid || Math.Abs(gap) < 0.002 || Math.Abs(gap) >= PlayheadResyncThresholdSeconds)
+            {
+                // Invalid, a sub-visible gap, or a real discontinuity (a seek while paused): snap.
+                _playheadEstimateSeconds = rawPosition;
+                _playheadPausedSettled = true;
+            }
+            else if (!_playheadPausedSettled && !vp.IsPlaying && rawStableMs >= PlayheadPausedSettleStableMs)
+            {
+                // mpv's clock has come to rest at the true paused frame: land on it, once, then hold.
+                _playheadEstimateSeconds = rawPosition;
+                _playheadPausedSettled = true;
+            }
+            // else: still winding down, or already settled with a small residual -> hold frozen (no
+            // easing => no post-pause drift).
 
             _playheadValid = true;
         }
@@ -21785,6 +21792,7 @@ public partial class MainViewModel :
         _playheadSeekTargetTs = Stopwatch.GetTimestamp();
         _playheadEstimateSeconds = targetSeconds;
         _playheadValid = true;
+        _playheadPausedSettled = true; // the cursor is authoritative at the pinned spot; don't pull it to mpv's raw position
         _playheadLastRealSeconds = targetSeconds;
         _playheadLastTimestamp = _playheadSeekTargetTs;
 
