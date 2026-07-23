@@ -1847,6 +1847,12 @@ public partial class MainViewModel :
         SelectedEncoding = Encodings.FirstOrDefault(p => p.DisplayName == Se.Settings.General.DefaultEncoding) ??
                            Encodings[0];
         _subtitleFileName = string.Empty;
+        // A fresh/opened subtitle starts as "not converted". Without this reset the flag is sticky:
+        // an import path (OCR, MKV, Transport Stream, transcription, ...) sets _converted = true and it
+        // is only ever cleared by Save-as - so opening a normal file afterwards left it true, which
+        // silently disabled auto-save and diverted Ctrl+S to "Save as" for the rest of the session
+        // (issue #12753). Import paths set _converted = true again *after* their ResetSubtitle() call.
+        _converted = false;
         _subtitle = new Subtitle();
         if (SelectedSubtitleFormat is AdvancedSubStationAlpha)
         {
@@ -22108,11 +22114,12 @@ public partial class MainViewModel :
 
         // Only auto-save real, already-named files in their current format. Anything that would
         // open a "Save as" dialog (untitled, converted, format change) is left to the user.
-        if (IsEmpty ||
-            string.IsNullOrEmpty(_subtitleFileName) ||
-            _converted ||
-            _lastOpenSaveFormat == null ||
-            _lastOpenSaveFormat.Name != SelectedSubtitleFormat.Name)
+        if (!AutoSaveEligibility.CanWriteBack(
+                IsEmpty,
+                !string.IsNullOrEmpty(_subtitleFileName),
+                _converted,
+                _lastOpenSaveFormat?.Name,
+                SelectedSubtitleFormat.Name))
         {
             return;
         }
