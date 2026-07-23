@@ -169,6 +169,34 @@ internal static class SkBitmapExtensions
         return data.ToArray();
     }
 
+    /// <summary>
+    /// Returns a Bgra8888/Unpremul copy, i.e. with straight (non-premultiplied) color values.
+    /// <see cref="ToSkBitmap"/> hands back premultiplied pixels, where R, G and B are already
+    /// scaled by A. Per-pixel editing math (brightness, color, alpha) needs straight values:
+    /// scaled color makes an operation's strength depend on the pixel's alpha, and storing a
+    /// changed alpha next to unscaled color yields RGB > A, which Skia renders as clipped
+    /// halos. <see cref="ToAvaloniaBitmap"/> premultiplies again on the way back.
+    /// </summary>
+    public static SKBitmap ToUnpremultiplied(this SKBitmap bitmap)
+    {
+        if (bitmap.Width <= 0 || bitmap.Height <= 0)
+        {
+            return bitmap.Copy();
+        }
+
+        var info = new SKImageInfo(bitmap.Width, bitmap.Height, SKColorType.Bgra8888, SKAlphaType.Unpremul);
+        var unpremultiplied = new SKBitmap(info);
+        using var image = SKImage.FromBitmap(bitmap);
+        if (image == null || !image.ReadPixels(info, unpremultiplied.GetPixels(), unpremultiplied.RowBytes, 0, 0))
+        {
+            // Conversion failed - hand back a plain copy so callers still get valid pixels.
+            unpremultiplied.Dispose();
+            return bitmap.Copy();
+        }
+
+        return unpremultiplied;
+    }
+
     // Original simple code for ToAvaloniaBitmap :
     //public static Bitmap ToAvaloniaBitmapOld(this SKBitmap skBitmap)
     //{

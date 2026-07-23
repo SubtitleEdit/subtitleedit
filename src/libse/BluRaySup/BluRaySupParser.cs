@@ -179,7 +179,9 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
                     return new SKBitmap(1, 1);
                 }
 
-                var bm = new SKBitmap(w, h, SKColorType.Rgba8888, SKAlphaType.Opaque);
+                // Unpremul (not Premul) as FillPixels/PutPixelFast below write straight, non-premultiplied RGBA.
+                // Opaque here would make Skia drop the alpha channel when encoding (transparent areas turn black).
+                var bm = new SKBitmap(w, h, SKColorType.Rgba8888, SKAlphaType.Unpremul);
                 var pixelPtr = bm.GetPixels(); // Writable pixel buffer
                 if (pixelPtr == IntPtr.Zero)
                 {

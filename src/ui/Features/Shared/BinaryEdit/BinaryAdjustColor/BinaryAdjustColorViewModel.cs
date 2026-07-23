@@ -125,13 +125,17 @@ public partial class BinaryAdjustColorViewModel : ObservableObject, IDisposable
         }
     }
 
-    private static SKBitmap ColorBitmap(SKBitmap originalBitmap, byte r, byte g, byte b)
+    private static SKBitmap ColorBitmap(SKBitmap premultipliedBitmap, byte r, byte g, byte b)
     {
         var redPercent = r * 100.0 / 255;
         var greenPercent = g * 100.0 / 255;
         var bluePercent = b * 100.0 / 255;
 
-        var adjustedBitmap = new SKBitmap(originalBitmap.Width, originalBitmap.Height, SKColorType.Bgra8888, SKAlphaType.Premul);
+        // Work in straight alpha: the "total" brightness test below is meaningless on
+        // premultiplied color, where a faint anti-aliased pixel falls under the threshold
+        // and keeps its original color, leaving a fringe around the recolored text.
+        using var originalBitmap = premultipliedBitmap.ToUnpremultiplied();
+        var adjustedBitmap = new SKBitmap(originalBitmap.Width, originalBitmap.Height, SKColorType.Bgra8888, SKAlphaType.Unpremul);
 
         unsafe
         {
