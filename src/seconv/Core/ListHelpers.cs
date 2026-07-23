@@ -76,21 +76,28 @@ internal static class ListHelpers
         AnsiConsole.WriteLine();
         var table = new Table().Border(TableBorder.Rounded);
         table.AddColumn("[yellow]Rule ID[/]");
+        table.AddColumn("[yellow]GUI equivalent[/]");
         table.AddColumn("[yellow]Language gate[/]");
 
         var gates = FixCommonErrorsRunner.LanguageGates;
+        var guiLabels = FixCommonErrorsRunner.GuiLabels;
         foreach (var id in FixCommonErrorsRunner.AvailableRuleIds)
         {
+            // GUI equivalent: the checkbox label the desktop Fix Common Errors window shows for
+            // this rule, so users who prototyped in the GUI can find the matching CLI ID (#11037).
+            var gui = guiLabels.TryGetValue(id, out var label) ? $"[cyan]{label.EscapeMarkup()}[/]" : "[dim]—[/]";
+
             // Language-gated rules only run when the subtitle's language (auto-detected, or
             // forced via --fce-language) matches. Mark them so the gate is discoverable from
             // the CLI without reading the source.
             var gate = gates.TryGetValue(id, out var lang) ? $"[magenta]{lang} only[/]" : "[dim]—[/]";
-            table.AddRow($"[green]{id}[/]", gate);
+            table.AddRow($"[green]{id}[/]", gui, gate);
         }
 
         AnsiConsole.Write(table);
         AnsiConsole.MarkupLine(
-            "\n[dim]Language-gated rules run only when the subtitle auto-detects to that language.[/]\n" +
+            "\n[dim]The GUI equivalent is the checkbox label in the desktop Fix Common Errors window.[/]\n" +
+            "[dim]Language-gated rules run only when the subtitle auto-detects to that language.[/]\n" +
             "[dim]Force it with[/] [green]--fce-language:<code>[/][dim], or bypass the gate by naming the rule explicitly.[/]");
         AnsiConsole.MarkupLine(
             "\n[dim]Examples:[/]\n" +
