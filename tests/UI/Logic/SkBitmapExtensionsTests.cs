@@ -114,4 +114,99 @@ public class SkBitmapExtensionsTests
         Assert.Equal(255, buffer[3]); // first pixel alpha: opaque
         Assert.Equal(255, buffer[31 * 4]); // last pixel of row 0, blue channel: white
     }
+
+    // A premultiplied half-transparent white pixel, i.e. what ToSkBitmap hands the
+    // Binary edit image tools: straight (255,255,255,128) is stored as (128,128,128,128).
+    private static SKBitmap MakePremultipliedHalfTransparentWhite(int width = 1, int height = 1)
+    {
+        var bitmap = new SKBitmap(new SKImageInfo(width, height, SKColorType.Bgra8888, SKAlphaType.Premul));
+        var bytes = new byte[width * height * 4];
+        for (var i = 0; i < width * height; i++)
+        {
+            bytes[i * 4] = 128; // blue
+            bytes[i * 4 + 1] = 128; // green
+            bytes[i * 4 + 2] = 128; // red
+            bytes[i * 4 + 3] = 128; // alpha
+        }
+
+        Marshal.Copy(bytes, 0, bitmap.GetPixels(), bytes.Length);
+        return bitmap;
+    }
+
+    [Fact]
+    public void ToUnpremultipliedRecoversStraightColor()
+    {
+        using var premultiplied = MakePremultipliedHalfTransparentWhite();
+
+        using var straight = premultiplied.ToUnpremultiplied();
+
+        Assert.Equal(SKAlphaType.Unpremul, straight.AlphaType);
+        Assert.Equal(SKColorType.Bgra8888, straight.ColorType);
+
+        var pixel = straight.GetPixel(0, 0);
+        Assert.Equal((byte)255, pixel.Red);
+        Assert.Equal((byte)255, pixel.Green);
+        Assert.Equal((byte)255, pixel.Blue);
+        Assert.Equal((byte)128, pixel.Alpha);
+    }
+
+    // The image tools index pixels as y * Width + x, which assumes tightly packed rows.
+    [Theory]
+    [InlineData(1)]
+    [InlineData(7)]
+    [InlineData(401)]
+    [InlineData(911)]
+    public void ToUnpremultipliedKeepsRowsTightlyPacked(int width)
+    {
+        using var premultiplied = MakePremultipliedHalfTransparentWhite(width, 3);
+
+        using var straight = premultiplied.ToUnpremultiplied();
+
+        Assert.Equal(width * 4, straight.RowBytes);
+        Assert.Equal((byte)255, straight.GetPixel(width - 1, 2).Red);
+    }
+
+    [Fact]
+    public void ToUnpremultipliedHandlesEmptyBitmap()
+    {
+        using var empty = new SKBitmap(0, 0);
+
+        using var straight = empty.ToUnpremultiplied();
+
+        Assert.NotNull(straight);
+    }
+
+    // Lowering alpha in straight space and letting ToAvaloniaBitmap premultiply again must
+    // keep R,G,B <= A. Editing the premultiplied bytes directly left RGB at 128 with A at 64,
+    // which Skia renders as clipped, over-bright edges.
+    [AvaloniaFact]
+    public void AlphaEditRoundTripStaysValidPremultiplied()
+    {
+        using var premultiplied = MakePremultipliedHalfTransparentWhite();
+        using var straight = premultiplied.ToUnpremultiplied();
+
+        // What the image tools do: change alpha only, colour is left alone.
+        using var edited = new SKBitmap(new SKImageInfo(1, 1, SKColorType.Bgra8888, SKAlphaType.Unpremul));
+        var source = straight.GetPixel(0, 0);
+        Marshal.Copy(new[] { (byte)source.Blue, (byte)source.Green, (byte)source.Red, (byte)64 }, 0, edited.GetPixels(), 4);
+
+        var avaloniaBitmap = edited.ToAvaloniaBitmap();
+
+        var buffer = new byte[4];
+        var handle = GCHandle.Alloc(buffer, GCHandleType.Pinned);
+        try
+        {
+            avaloniaBitmap.CopyPixels(new Avalonia.PixelRect(0, 0, 1, 1), handle.AddrOfPinnedObject(), buffer.Length, 4);
+        }
+        finally
+        {
+            handle.Free();
+        }
+
+        var alpha = buffer[3];
+        Assert.Equal(64, alpha);
+        Assert.True(buffer[0] <= alpha, $"blue {buffer[0]} exceeds alpha {alpha}");
+        Assert.True(buffer[1] <= alpha, $"green {buffer[1]} exceeds alpha {alpha}");
+        Assert.True(buffer[2] <= alpha, $"red {buffer[2]} exceeds alpha {alpha}");
+    }
 }

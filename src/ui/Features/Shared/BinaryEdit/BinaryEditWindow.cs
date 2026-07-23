@@ -740,7 +740,18 @@ public class BinaryEditWindow : Window
                     Stretch = Stretch.Uniform,
                     [!Image.SourceProperty] = new Binding(nameof(BinarySubtitleItem.Bitmap)),
                 };
-                return image;
+
+                // Subtitle bitmaps are light or dark text on a transparent background, both
+                // invisible on a matching flat row backdrop - use the mid-gray checkerboard
+                // so any content shows in either theme (issue #12692).
+                return new Border
+                {
+                    Background = UiUtil.GetCheckerboardBrush(),
+                    CornerRadius = new CornerRadius(3),
+                    Padding = new Thickness(2),
+                    HorizontalAlignment = HorizontalAlignment.Left,
+                    Child = image,
+                };
             }),
             CellTheme = UiUtil.DataGridNoBorderNoPaddingCellTheme,
         });

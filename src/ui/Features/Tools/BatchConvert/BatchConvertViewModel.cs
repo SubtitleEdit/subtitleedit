@@ -1586,6 +1586,33 @@ public partial class BatchConvertViewModel : ObservableObject, IClosingCleanup
         };
     }
 
+    private static Subtitle? TryLoadBdnXml(string fileName)
+    {
+        try
+        {
+            var lines = FileUtil.ReadAllLinesShared(fileName, LanguageAutoDetect.GetEncodingFromFile(fileName));
+            var bdnXml = new BdnXml();
+            if (!bdnXml.IsMine(lines, fileName))
+            {
+                return null;
+            }
+
+            var subtitle = new Subtitle();
+            bdnXml.LoadSubtitle(subtitle, lines, fileName);
+            if (subtitle.Paragraphs.Count == 0)
+            {
+                return null;
+            }
+
+            subtitle.OriginalFormat = bdnXml;
+            return subtitle;
+        }
+        catch
+        {
+            return null;
+        }
+    }
+
     // Parses a file and appends the resulting item(s) to _allBatchItems only (no UI-bound
     // collection touched), so it is safe to call from a background thread. Returns the items
     // added for this file; callers add them to the visible BatchItems on the UI thread.
@@ -1605,6 +1632,19 @@ public partial class BatchConvertViewModel : ObservableObject, IClosingCleanup
         if (ext == ".sub" && FileUtil.IsVobSub(fileName))
         {
             format = BatchConverter.FormatVobSub;
+        }
+
+        if (ext == ".xml" && fileInfo.Length < 20_000_000)
+        {
+            // BDN xml only lives in SubtitleFormat.GetTextOtherFormats(), so neither Subtitle.Parse
+            // nor the GetBinaryFormats() fallback below would ever find it. The "<BDN" requirement in
+            // BdnXml.LoadSubtitle keeps this from stealing other xml formats like TTML.
+            var bdnSubtitle = TryLoadBdnXml(fileName);
+            if (bdnSubtitle != null)
+            {
+                format = BatchConverter.FormatBdnXml;
+                subtitle = bdnSubtitle;
+            }
         }
 
         if (ext == ".mkv" || ext == ".mks")

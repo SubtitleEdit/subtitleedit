@@ -136,9 +136,12 @@ public partial class BinaryAdjustBrightnessViewModel : ObservableObject, IDispos
         }
     }
 
-    private static SKBitmap AdjustBrightness(SKBitmap originalBitmap, float brightness, float contrast, float gamma)
+    private static SKBitmap AdjustBrightness(SKBitmap premultipliedBitmap, float brightness, float contrast, float gamma)
     {
-        var adjustedBitmap = new SKBitmap(originalBitmap.Width, originalBitmap.Height, SKColorType.Bgra8888, SKAlphaType.Premul);
+        // Work in straight alpha: premultiplied color already carries the pixel's alpha, so
+        // brightening it would scale with transparency and could push RGB above A (halos).
+        using var originalBitmap = premultipliedBitmap.ToUnpremultiplied();
+        var adjustedBitmap = new SKBitmap(originalBitmap.Width, originalBitmap.Height, SKColorType.Bgra8888, SKAlphaType.Unpremul);
 
         // Normalize values for calculations
         var brightnessAdjust = brightness; // -100 to 100
