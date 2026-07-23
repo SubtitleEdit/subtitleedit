@@ -14,7 +14,7 @@ using System.Linq;
 
 namespace Nikse.SubtitleEdit.Features.Tools.MergeSubtitlesWithSameTimeCodes;
 
-public partial class MergeSameTimeCodesViewModel : ObservableObject
+public partial class MergeSameTimeCodesViewModel : ObservableObject, IClosingCleanup
 {
     [ObservableProperty] private ObservableCollection<MergeDisplayItem> _mergeItems;
     [ObservableProperty] private MergeDisplayItem? _selectedMergeItem;
@@ -32,6 +32,7 @@ public partial class MergeSameTimeCodesViewModel : ObservableObject
     public DataGrid SubtitleGrid { get; set; }
 
     private readonly System.Timers.Timer _timerUpdatePreview;
+    private volatile bool _isClosing;
     private bool _dirty;
     private string _language;
     private List<SubtitleLineViewModel> _subtitles;
@@ -48,19 +49,37 @@ public partial class MergeSameTimeCodesViewModel : ObservableObject
         _language = "en";
         _subtitles = new List<SubtitleLineViewModel>();
         _timerUpdatePreview = new System.Timers.Timer(500);
-        _timerUpdatePreview.Elapsed += (s, e) =>
+        _timerUpdatePreview.Elapsed += TimerUpdatePreviewElapsed;
+    }
+
+    private void TimerUpdatePreviewElapsed(object? sender, System.Timers.ElapsedEventArgs e)
+    {
+        if (_isClosing)
         {
-            _timerUpdatePreview.Stop();
-            if (_dirty)
+            return;
+        }
+
+        _timerUpdatePreview.Stop();
+        if (_dirty)
+        {
+            Dispatcher.UIThread.Invoke(() =>
             {
-                Dispatcher.UIThread.Invoke(() =>
-                {
-                    _dirty = false;
-                    UpdatePreview();
-                });
-            }
+                _dirty = false;
+                UpdatePreview();
+            });
+        }
+
+        // Guard the restart: OnClosingCleanup may have disposed the timer while this handler ran (#12739).
+        if (!_isClosing)
+        {
             _timerUpdatePreview.Start();
-        };
+        }
+    }
+
+    public void OnClosingCleanup()
+    {
+        _isClosing = true;
+        _timerUpdatePreview.StopAndDispose(TimerUpdatePreviewElapsed);
     }
 
     public void Initialize(List<SubtitleLineViewModel> subtitles, Subtitle subtitle)

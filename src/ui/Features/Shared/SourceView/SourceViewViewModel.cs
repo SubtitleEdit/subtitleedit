@@ -19,7 +19,7 @@ using System.Threading.Tasks;
 
 namespace Nikse.SubtitleEdit.Features.Shared.SourceView;
 
-public partial class SourceViewViewModel : ObservableObject
+public partial class SourceViewViewModel : ObservableObject, IClosingCleanup
 {
     [ObservableProperty] private string _title;
     [ObservableProperty] private string _text;
@@ -52,38 +52,45 @@ public partial class SourceViewViewModel : ObservableObject
         PasteCommand = new RelayCommand(() => SourceViewTextBox.Paste());
 
         _cursorTimer = new System.Timers.Timer(200);
-        _cursorTimer.Elapsed += (sender, args) =>
+        _cursorTimer.Elapsed += CursorTimerElapsed;
+    }
+
+    private void CursorTimerElapsed(object? sender, System.Timers.ElapsedEventArgs e)
+    {
+        if (SourceViewTextBox == null)
         {
-            if (SourceViewTextBox == null)
+            return;
+        }
+
+        Dispatcher.UIThread.Post(() =>
+        {
+            var caretIndex = SourceViewTextBox.CaretIndex;
+            var text = SourceViewTextBox.Text ?? string.Empty;
+
+            // Calculate line and column
+            var lineNumber = 1;
+            var columnNumber = 1;
+
+            for (int i = 0; i < Math.Min(caretIndex, text.Length); i++)
             {
-                return;
+                if (text[i] == '\n')
+                {
+                    lineNumber++;
+                    columnNumber = 1;
+                }
+                else if (text[i] != '\r') // Skip carriage return
+                {
+                    columnNumber++;
+                }
             }
 
-            Dispatcher.UIThread.Post(() =>
-            {
-                var caretIndex = SourceViewTextBox.CaretIndex;
-                var text = SourceViewTextBox.Text ?? string.Empty;
+            LineAndColumnInfo = string.Format(Se.Language.General.LineXColumnY, lineNumber, columnNumber);
+        });
+    }
 
-                // Calculate line and column
-                var lineNumber = 1;
-                var columnNumber = 1;
-
-                for (int i = 0; i < Math.Min(caretIndex, text.Length); i++)
-                {
-                    if (text[i] == '\n')
-                    {
-                        lineNumber++;
-                        columnNumber = 1;
-                    }
-                    else if (text[i] != '\r') // Skip carriage return
-                    {
-                        columnNumber++;
-                    }
-                }
-
-                LineAndColumnInfo = string.Format(Se.Language.General.LineXColumnY, lineNumber, columnNumber);
-            });
-        };
+    public void OnClosingCleanup()
+    {
+        _cursorTimer.StopAndDispose(CursorTimerElapsed);
     }
 
     internal void Initialize(

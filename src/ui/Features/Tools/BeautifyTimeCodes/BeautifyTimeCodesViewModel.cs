@@ -60,28 +60,46 @@ public partial class BeautifyTimeCodesViewModel : ObservableObject, IDisposable
 
         _timerUpdatePreview = new System.Timers.Timer(500);
         _timerUpdatePreview.AutoReset = false;
-        _timerUpdatePreview.Elapsed += (s, e) =>
+        _timerUpdatePreview.Elapsed += TimerUpdatePreviewElapsed;
+    }
+
+    private void TimerUpdatePreviewElapsed(object? sender, System.Timers.ElapsedEventArgs e)
+    {
+        // Dispose() (wired from the window's Closing) may run on the UI thread while this handler
+        // runs on a thread-pool thread; Start() on the disposed timer throws ObjectDisposedException
+        // (no longer swallowed on modern .NET), so bail out and never restart once disposed. (#12739)
+        if (_disposed)
+        {
+            return;
+        }
+
+        if (!_dirty || _updateInProgress)
+        {
+            if (!_disposed)
+            {
+                _timerUpdatePreview.Start();
+            }
+
+            return;
+        }
+
+        lock (_timerLock)
         {
             if (!_dirty || _updateInProgress)
             {
-                _timerUpdatePreview.Start();
+                if (!_disposed)
+                {
+                    _timerUpdatePreview.Start();
+                }
+
                 return;
             }
 
-            lock (_timerLock)
-            {
-                if (!_dirty || _updateInProgress)
-                {
-                    _timerUpdatePreview.Start();
-                    return;
-                }
+            _dirty = false;
+            _updateInProgress = true;
+        }
 
-                _dirty = false;
-                _updateInProgress = true;
-            }
-
-            UpdatePreview();
-        };
+        UpdatePreview();
     }
 
     private void UpdatePreview()
@@ -525,8 +543,11 @@ public partial class BeautifyTimeCodesViewModel : ObservableObject, IDisposable
             AudioVisualizerOriginal.InvalidateVisual();
             AudioVisualizerBeautified.InvalidateVisual();
 
-            _timerUpdatePreview.Start();
-            StartPositionTimer();
+            if (!_disposed)
+            {
+                _timerUpdatePreview.Start();
+                StartPositionTimer();
+            }
         });
     }
 
@@ -597,7 +618,7 @@ public partial class BeautifyTimeCodesViewModel : ObservableObject, IDisposable
     private void Ok()
     {
         StopPositionTimer();
-        _timerUpdatePreview.Stop();
+        _timerUpdatePreview.StopAndDispose(TimerUpdatePreviewElapsed);
 
         // Apply final beautification to commit the result back to _allSubtitles
         var subtitle = BuildSubtitleFromRows();
@@ -620,7 +641,7 @@ public partial class BeautifyTimeCodesViewModel : ObservableObject, IDisposable
     private void Cancel()
     {
         StopPositionTimer();
-        _timerUpdatePreview.Stop();
+        _timerUpdatePreview.StopAndDispose(TimerUpdatePreviewElapsed);
         Window?.Close();
     }
 
@@ -663,7 +684,6 @@ public partial class BeautifyTimeCodesViewModel : ObservableObject, IDisposable
 
         _disposed = true;
         StopPositionTimer();
-        _timerUpdatePreview.Stop();
-        _timerUpdatePreview.Dispose();
+        _timerUpdatePreview.StopAndDispose(TimerUpdatePreviewElapsed);
     }
 }

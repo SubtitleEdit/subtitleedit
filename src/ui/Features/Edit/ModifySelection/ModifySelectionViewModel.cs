@@ -4,6 +4,7 @@ using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Nikse.SubtitleEdit.Features.Main;
+using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -11,7 +12,7 @@ using System.Linq;
 
 namespace Nikse.SubtitleEdit.Features.Edit.ModifySelection;
 
-public partial class ModifySelectionViewModel : ObservableObject
+public partial class ModifySelectionViewModel : ObservableObject, IClosingCleanup
 {
     [ObservableProperty] private ObservableCollection<ModifySelectionRule> _rules;
     [ObservableProperty] private ModifySelectionRule? _selectedRule;
@@ -31,6 +32,7 @@ public partial class ModifySelectionViewModel : ObservableObject
 
     private List<SubtitleLineViewModel> _allSubtitles;
     private readonly System.Timers.Timer _previewTimer;
+    private volatile bool _isClosing;
     private readonly Dictionary<RuleType, double> _ruleNumbers;
     private RuleType? _activeRuleType;
     private bool _isDirty;
@@ -47,18 +49,35 @@ public partial class ModifySelectionViewModel : ObservableObject
         LoadSettings();
 
         _previewTimer = new System.Timers.Timer(250);
-        _previewTimer.Elapsed += (sender, args) =>
+        _previewTimer.Elapsed += PreviewTimerElapsed;
+    }
+
+    private void PreviewTimerElapsed(object? sender, System.Timers.ElapsedEventArgs e)
+    {
+        if (_isClosing)
         {
-            _previewTimer.Stop();
+            return;
+        }
 
-            if (_isDirty)
-            {
-                _isDirty = false;
-                UpdatePreview();
-            }
+        _previewTimer.Stop();
 
+        if (_isDirty)
+        {
+            _isDirty = false;
+            UpdatePreview();
+        }
+
+        // Guard the restart: OnClosingCleanup may have disposed the timer while this handler ran (#12739).
+        if (!_isClosing)
+        {
             _previewTimer.Start();
-        };
+        }
+    }
+
+    public void OnClosingCleanup()
+    {
+        _isClosing = true;
+        _previewTimer.StopAndDispose(PreviewTimerElapsed);
     }
 
     private void UpdatePreview()

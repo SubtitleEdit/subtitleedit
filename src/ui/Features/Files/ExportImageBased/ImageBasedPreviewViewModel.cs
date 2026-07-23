@@ -12,7 +12,7 @@ using System.Timers;
 
 namespace Nikse.SubtitleEdit.Features.Files.ExportImageBased;
 
-public partial class ImageBasedPreviewViewModel : ObservableObject
+public partial class ImageBasedPreviewViewModel : ObservableObject, IClosingCleanup
 {
     [ObservableProperty] private Bitmap _bitmapPreview;
     [ObservableProperty] private string _title;
@@ -36,6 +36,11 @@ public partial class ImageBasedPreviewViewModel : ObservableObject
     private void TimerUpdatePreviewElapsed(object? sender, ElapsedEventArgs e)
     {
         UpdateTitle();
+    }
+
+    public void OnClosingCleanup()
+    {
+        _timerUpdatePreview.StopAndDispose(TimerUpdatePreviewElapsed);
     }
 
     public void Initialize(SKBitmap bitmap, int width, int height, int x, int y)

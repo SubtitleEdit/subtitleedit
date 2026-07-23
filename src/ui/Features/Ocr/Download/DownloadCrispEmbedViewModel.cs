@@ -23,7 +23,7 @@ namespace Nikse.SubtitleEdit.Features.Ocr.Download;
 /// Downloads either the CrispEmbed engine binaries (release archive, variant-aware, with an
 /// .installed.sha256 sidecar for update tracking) or a single GGUF model (streamed to disk).
 /// </summary>
-public partial class DownloadCrispEmbedViewModel : ObservableObject
+public partial class DownloadCrispEmbedViewModel : ObservableObject, IClosingCleanup
 {
     [ObservableProperty] private string _titleText;
     [ObservableProperty] private double _progressValue;
@@ -303,9 +303,13 @@ public partial class DownloadCrispEmbedViewModel : ObservableObject
     {
         _cancellationTokenSource?.Cancel();
         _done = true;
-        _timer.Stop();
         DeleteTempModelFile();
         Close();
+    }
+
+    public void OnClosingCleanup()
+    {
+        _timer.StopAndDispose(OnTimerOnElapsed);
     }
 
     private void DeleteTempModelFile()

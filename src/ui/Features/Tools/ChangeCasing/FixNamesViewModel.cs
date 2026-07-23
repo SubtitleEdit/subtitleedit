@@ -17,7 +17,7 @@ using System.Threading;
 
 namespace Nikse.SubtitleEdit.Features.Tools.ChangeCasing;
 
-public partial class FixNamesViewModel : ObservableObject
+public partial class FixNamesViewModel : ObservableObject, IClosingCleanup
 {
     [ObservableProperty] private ObservableCollection<FixNameItem> _names;
     [ObservableProperty] private ObservableCollection<FixNameHitItem> _hits;
@@ -63,18 +63,25 @@ public partial class FixNamesViewModel : ObservableObject
         Subtitle = new Subtitle();
 
         _previewTimer = new System.Timers.Timer(500);
-        _previewTimer.Elapsed += (sender, args) =>
+        _previewTimer.Elapsed += PreviewTimerElapsed;
+    }
+
+    private void PreviewTimerElapsed(object? sender, System.Timers.ElapsedEventArgs e)
+    {
+        var namesString = string.Join(' ', Names.Where(p => p.IsChecked).Select(p => p.Name));
+        if (namesString != _oldNames && !_loading)
         {
-            var namesString = string.Join(' ', Names.Where(p => p.IsChecked).Select(p => p.Name));
-            if (namesString != _oldNames && !_loading)
+            lock (_lock)
             {
-                lock (_lock)
-                {
-                    GeneratePreview();
-                    _oldNames = namesString;
-                }
+                GeneratePreview();
+                _oldNames = namesString;
             }
-        };
+        }
+    }
+
+    public void OnClosingCleanup()
+    {
+        _previewTimer.StopAndDispose(PreviewTimerElapsed);
     }
 
     internal void Initialize(Subtitle subtitle)

@@ -49,7 +49,7 @@ using Nikse.SubtitleEdit.UiLogic.LlamaCpp;
 
 namespace Nikse.SubtitleEdit.Features.Tools.BatchConvert;
 
-public partial class BatchConvertViewModel : ObservableObject
+public partial class BatchConvertViewModel : ObservableObject, IClosingCleanup
 {
     [ObservableProperty] private ObservableCollection<BatchConvertItem> _batchItems;
     [ObservableProperty] private BatchConvertItem? _selectedBatchItem;
@@ -237,6 +237,7 @@ public partial class BatchConvertViewModel : ObservableObject
     private List<BatchConvertItem> _allBatchItems;
     private readonly System.Timers.Timer _filesTimer;
     private bool _isFilesDirty;
+    private volatile bool _isClosing;
     private readonly IWindowService _windowService;
     private readonly IFileHelper _fileHelper;
     private readonly IFolderHelper _folderHelper;
@@ -403,22 +404,46 @@ public partial class BatchConvertViewModel : ObservableObject
         LoadSettings();
         FilterComboBoxChanged();
         _filesTimer = new System.Timers.Timer(250);
-        _filesTimer.Elapsed += (sender, args) =>
-        {
-            Dispatcher.UIThread.Post(() =>
-            {
-                _filesTimer.Stop();
-
-                if (_isFilesDirty)
-                {
-                    _isFilesDirty = false;
-                    UpdateFilteredFiles();
-                }
-
-                _filesTimer.Start();
-            });
-        };
+        _filesTimer.Elapsed += FilesTimerElapsed;
         _filesTimer.Start();
+    }
+
+    private void FilesTimerElapsed(object? sender, System.Timers.ElapsedEventArgs e)
+    {
+        if (_isClosing)
+        {
+            return;
+        }
+
+        Dispatcher.UIThread.Post(() =>
+        {
+            if (_isClosing)
+            {
+                return;
+            }
+
+            _filesTimer.Stop();
+
+            if (_isFilesDirty)
+            {
+                _isFilesDirty = false;
+                UpdateFilteredFiles();
+            }
+
+            // Guard the restart: OnClosingCleanup may have disposed the timer while this posted
+            // action was queued, and Start() on a disposed timer throws ObjectDisposedException
+            // (no longer swallowed on modern .NET), crashing the UI thread. (#12739)
+            if (!_isClosing)
+            {
+                _filesTimer.Start();
+            }
+        });
+    }
+
+    public void OnClosingCleanup()
+    {
+        _isClosing = true;
+        _filesTimer.StopAndDispose(FilesTimerElapsed);
     }
 
     private void UpdateFilteredFiles()

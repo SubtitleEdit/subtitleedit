@@ -4,6 +4,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Nikse.SubtitleEdit.Features.Main;
 using Nikse.SubtitleEdit.Features.Shared;
+using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.UiLogic.Export;
 using System.Collections.Generic;
@@ -12,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace Nikse.SubtitleEdit.Features.Files.ExportCustomTextFormat;
 
-public partial class EditCustomTextFormatViewModel : ObservableObject
+public partial class EditCustomTextFormatViewModel : ObservableObject, IClosingCleanup
 {
     [ObservableProperty] private CustomFormatItem? _selectedCustomFormat;
     [ObservableProperty] private string _previewText;
@@ -70,16 +71,23 @@ public partial class EditCustomTextFormatViewModel : ObservableObject
         _subtitleTitle = string.Empty;
 
         _previewTimer = new System.Timers.Timer(500);
-        _previewTimer.Elapsed += (sender, args) =>
-        {
-            if (SelectedCustomFormat == null)
-            {
-                PreviewText = string.Empty;
-                return;
-            }
+        _previewTimer.Elapsed += PreviewTimerElapsed;
+    }
 
-            PreviewText = CustomTextFormatter.GenerateCustomText(SelectedCustomFormat.ToTemplate(), _subtitles.Where(s => s.Paragraph != null).Select(s => s.Paragraph!).ToList(), _subtitleTitle, _videoFileName ?? string.Empty);
-        };
+    private void PreviewTimerElapsed(object? sender, System.Timers.ElapsedEventArgs e)
+    {
+        if (SelectedCustomFormat == null)
+        {
+            PreviewText = string.Empty;
+            return;
+        }
+
+        PreviewText = CustomTextFormatter.GenerateCustomText(SelectedCustomFormat.ToTemplate(), _subtitles.Where(s => s.Paragraph != null).Select(s => s.Paragraph!).ToList(), _subtitleTitle, _videoFileName ?? string.Empty);
+    }
+
+    public void OnClosingCleanup()
+    {
+        _previewTimer.StopAndDispose(PreviewTimerElapsed);
     }
 
 
@@ -134,7 +142,6 @@ public partial class EditCustomTextFormatViewModel : ObservableObject
             return;
         }
 
-        _previewTimer.Stop();
         OkPressed = true;
         Window?.Close();
     }
@@ -142,7 +149,6 @@ public partial class EditCustomTextFormatViewModel : ObservableObject
     [RelayCommand]
     private void Cancel()
     {
-        _previewTimer.Stop();
         Window?.Close();
     }
 

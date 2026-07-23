@@ -4,6 +4,7 @@ using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Nikse.SubtitleEdit.Core.Common;
+using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Logic.Download;
 using System;
@@ -18,7 +19,7 @@ using Timer = System.Timers.Timer;
 
 namespace Nikse.SubtitleEdit.Features.Ocr.Download;
 
-public partial class DownloadTesseractModelViewModel : ObservableObject
+public partial class DownloadTesseractModelViewModel : ObservableObject, IClosingCleanup
 {
     [ObservableProperty] private ObservableCollection<TesseractDictionary> _tesseractDictionaryItems;
     [ObservableProperty] private TesseractDictionary? _selectedTesseractDictionaryItem;
@@ -132,8 +133,12 @@ public partial class DownloadTesseractModelViewModel : ObservableObject
     {
         _cancellationTokenSource?.Cancel();
         _done = true;
-        _timer.Stop();
         Close();
+    }
+
+    public void OnClosingCleanup()
+    {
+        _timer.StopAndDispose(OnTimerOnElapsed);
     }
 
     [RelayCommand]

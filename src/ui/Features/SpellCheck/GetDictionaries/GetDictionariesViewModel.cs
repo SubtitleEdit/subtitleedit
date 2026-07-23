@@ -23,7 +23,7 @@ using Nikse.SubtitleEdit.UiLogic.SpellCheck;
 
 namespace Nikse.SubtitleEdit.Features.SpellCheck.GetDictionaries;
 
-public partial class GetDictionariesViewModel : ObservableObject
+public partial class GetDictionariesViewModel : ObservableObject, IClosingCleanup
 {
     [ObservableProperty] private ObservableCollection<GetSpellCheckDictionaryDisplay> _dictionaries;
     [ObservableProperty] private GetSpellCheckDictionaryDisplay? selectedDictionary;
@@ -158,8 +158,12 @@ public partial class GetDictionariesViewModel : ObservableObject
 
     private void Close()
     {
-        _timer.Stop();
         Dispatcher.UIThread.Post(() => { Window?.Close(); });
+    }
+
+    public void OnClosingCleanup()
+    {
+        _timer.StopAndDispose(OnTimerOnElapsed);
     }
 
     /// <summary>
@@ -409,7 +413,6 @@ public partial class GetDictionariesViewModel : ObservableObject
     [RelayCommand]
     private void Ok()
     {
-        _timer.Stop();
         Close();
     }
 
@@ -417,7 +420,6 @@ public partial class GetDictionariesViewModel : ObservableObject
     private void Cancel()
     {
         _cancellationTokenSource.Cancel();
-        _timer.Stop();
         _done = true;
         Close();
     }

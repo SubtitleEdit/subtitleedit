@@ -13,7 +13,7 @@ using System.Collections.ObjectModel;
 
 namespace Nikse.SubtitleEdit.Features.Shared.PickFontName;
 
-public partial class PickFontNameViewModel : ObservableObject
+public partial class PickFontNameViewModel : ObservableObject, IClosingCleanup
 {
     [ObservableProperty] private string _searchText;
     [ObservableProperty] private ObservableCollection<string> _fontNames;
@@ -30,6 +30,7 @@ public partial class PickFontNameViewModel : ObservableObject
 
     private List<string> _allFontNames;
     private readonly System.Timers.Timer _timerUpdate;
+    private volatile bool _isClosing;
     private bool _dirtySearch;
     private bool _dirtyPreview;
 
@@ -42,21 +43,39 @@ public partial class PickFontNameViewModel : ObservableObject
         ImagePreview = new SKBitmap(1, 1, true).ToAvaloniaBitmap();
 
         _timerUpdate = new System.Timers.Timer(500);
-        _timerUpdate.Elapsed += (s, e) =>
+        _timerUpdate.Elapsed += TimerUpdateElapsed;
+    }
+
+    private void TimerUpdateElapsed(object? sender, System.Timers.ElapsedEventArgs e)
+    {
+        if (_isClosing)
         {
-            _timerUpdate.Stop();
-            if (_dirtySearch)
-            {
-                _dirtySearch = false;
-                UpdateSearch();
-            }
-            if (_dirtyPreview)
-            {
-                _dirtyPreview = false;
-                UpdatePreview();
-            }
+            return;
+        }
+
+        _timerUpdate.Stop();
+        if (_dirtySearch)
+        {
+            _dirtySearch = false;
+            UpdateSearch();
+        }
+        if (_dirtyPreview)
+        {
+            _dirtyPreview = false;
+            UpdatePreview();
+        }
+
+        // Guard the restart: OnClosingCleanup may have disposed the timer while this handler ran (#12739).
+        if (!_isClosing)
+        {
             _timerUpdate.Start();
-        };
+        }
+    }
+
+    public void OnClosingCleanup()
+    {
+        _isClosing = true;
+        _timerUpdate.StopAndDispose(TimerUpdateElapsed);
     }
 
     internal void Initialize(bool isFontSizeVisible = false, bool isFontBoldVisible = false)

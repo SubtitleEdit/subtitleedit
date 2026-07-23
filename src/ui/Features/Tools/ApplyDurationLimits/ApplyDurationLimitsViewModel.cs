@@ -15,7 +15,7 @@ using Nikse.SubtitleEdit.Logic;
 
 namespace Nikse.SubtitleEdit.Features.Tools.ApplyDurationLimits;
 
-public partial class ApplyDurationLimitsViewModel : ObservableObject
+public partial class ApplyDurationLimitsViewModel : ObservableObject, IClosingCleanup
 {
     [ObservableProperty] private ObservableCollection<ApplyDurationLimitItem> _fixes;
     [ObservableProperty] private ApplyDurationLimitItem? _selectedFix;
@@ -42,6 +42,7 @@ public partial class ApplyDurationLimitsViewModel : ObservableObject
     private List<SubtitleLineViewModel> _allSubtitles;
 
     private readonly System.Timers.Timer _previewTimer;
+    private volatile bool _isClosing;
     private bool _isDirty;
     private List<double> _shotChanges;
 
@@ -58,18 +59,37 @@ public partial class ApplyDurationLimitsViewModel : ObservableObject
         LoadSettings();
 
         _previewTimer = new System.Timers.Timer(250);
-        _previewTimer.Elapsed += (sender, args) =>
+        _previewTimer.Elapsed += PreviewTimerElapsed;
+    }
+
+    private void PreviewTimerElapsed(object? sender, System.Timers.ElapsedEventArgs e)
+    {
+        if (_isClosing)
         {
-            _previewTimer.Stop();
+            return;
+        }
 
-            if (_isDirty)
-            {
-                _isDirty = false;
-                UpdatePreview();
-            }
+        _previewTimer.Stop();
 
+        if (_isDirty)
+        {
+            _isDirty = false;
+            UpdatePreview();
+        }
+
+        // Guard the restart: OnClosingCleanup may have disposed the timer while this handler ran,
+        // and Start() on a disposed timer throws ObjectDisposedException (no longer swallowed on
+        // modern .NET), crashing the app from a thread-pool thread. (#12739)
+        if (!_isClosing)
+        {
             _previewTimer.Start();
-        };
+        }
+    }
+
+    public void OnClosingCleanup()
+    {
+        _isClosing = true;
+        _previewTimer.StopAndDispose(PreviewTimerElapsed);
     }
 
     private void UpdatePreview()

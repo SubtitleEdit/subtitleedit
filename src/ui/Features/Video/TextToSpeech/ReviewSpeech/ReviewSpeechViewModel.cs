@@ -119,6 +119,7 @@ public partial class ReviewSpeechViewModel : ObservableObject
     private LibMpvDynamicPlayer? _mpvContext;
     private Lock _playLock;
     private readonly Timer _timer;
+    private volatile bool _isClosing;
     private string _videoFileName;
     private string _waveFolder;
     private CancellationTokenSource _cancellationTokenSource;
@@ -166,6 +167,11 @@ public partial class ReviewSpeechViewModel : ObservableObject
 
     private async void OnTimerOnElapsed(object? sender, ElapsedEventArgs args)
     {
+        if (_isClosing)
+        {
+            return;
+        }
+
         try
         {
             _timer.Stop();
@@ -248,7 +254,12 @@ public partial class ReviewSpeechViewModel : ObservableObject
                 IsStopVisible = true;
             });
 
-            _timer.Start();
+            // OnClosing may have disposed the timer while this async handler awaited; Start() on a
+            // disposed timer throws ObjectDisposedException (no longer swallowed on modern .NET). (#12739)
+            if (!_isClosing)
+            {
+                _timer.Start();
+            }
         }
         catch (Exception ex)
         {
@@ -1817,9 +1828,8 @@ public partial class ReviewSpeechViewModel : ObservableObject
         var regenerateInFlight = !IsRegenerateEnabled;
 
         _skipAutoContinue = true;
-        _timer.Stop();
-        _timer.Elapsed -= OnTimerOnElapsed;
-        _timer.Dispose();
+        _isClosing = true;
+        _timer.StopAndDispose(OnTimerOnElapsed);
         try { _cancellationTokenSource.Cancel(); } catch (ObjectDisposedException) { }
         if (!regenerateInFlight)
         {

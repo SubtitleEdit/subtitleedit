@@ -3,6 +3,7 @@ using Avalonia.Input;
 using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Compression;
 using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Logic.Download;
@@ -16,7 +17,7 @@ using Timer = System.Timers.Timer;
 
 namespace Nikse.SubtitleEdit.Features.Shared;
 
-public partial class DownloadLibMpvViewModel : ObservableObject
+public partial class DownloadLibMpvViewModel : ObservableObject, IClosingCleanup
 {
     [ObservableProperty] private double _progress;
     [ObservableProperty] private string _statusText;
@@ -192,8 +193,12 @@ public partial class DownloadLibMpvViewModel : ObservableObject
     {
         _cancellationTokenSource?.Cancel();
         _done = true;
-        _timer.Stop();
         Close();
+    }
+
+    public void OnClosingCleanup()
+    {
+        _timer.StopAndDispose(OnTimerOnElapsed);
     }
 
     public void StartDownload()

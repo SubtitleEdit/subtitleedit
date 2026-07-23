@@ -25,7 +25,7 @@ using System.Xml;
 
 namespace Nikse.SubtitleEdit.Features.Video.ShotChanges;
 
-public partial class ShotChangesViewModel : ObservableObject
+public partial class ShotChangesViewModel : ObservableObject, IClosingCleanup
 {
     [ObservableProperty] private ObservableCollection<TimeItem> _ffmpegLines;
     [ObservableProperty] private TimeItem? _selectedFfmpegLine;
@@ -264,6 +264,11 @@ public partial class ShotChangesViewModel : ObservableObject
         }
 
         Window?.Close();
+    }
+
+    public void OnClosingCleanup()
+    {
+        _timerGenerate.StopAndDispose(TimerGenerateElapsed);
     }
 
     /// <summary>

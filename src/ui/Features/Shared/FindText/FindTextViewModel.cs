@@ -13,7 +13,7 @@ using System.Threading;
 
 namespace Nikse.SubtitleEdit.Features.Shared.FindText;
 
-public partial class FindTextViewModel : ObservableObject
+public partial class FindTextViewModel : ObservableObject, IClosingCleanup
 {
     [ObservableProperty] private string _title;
     [ObservableProperty] private string _searchText;
@@ -66,6 +66,11 @@ public partial class FindTextViewModel : ObservableObject
                 Subtitles.AddRange(_allSubtitles.Where(p => p.Text.Contains(SearchText, System.StringComparison.InvariantCultureIgnoreCase)));
             });
         }
+    }
+
+    public void OnClosingCleanup()
+    {
+        _searchTimer.StopAndDispose(_searchTimer_Elapsed);
     }
 
     internal void Initialize(List<SubtitleLineViewModel> subtitleLines, string title)

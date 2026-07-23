@@ -3,6 +3,7 @@ using Avalonia.Input;
 using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Logic.Download;
 using Nikse.SubtitleEdit.Logic.SevenZipExtractor;
@@ -16,7 +17,7 @@ using Timer = System.Timers.Timer;
 
 namespace Nikse.SubtitleEdit.Features.Shared;
 
-public partial class DownloadLibVlcViewModel : ObservableObject
+public partial class DownloadLibVlcViewModel : ObservableObject, IClosingCleanup
 {
     [ObservableProperty] private double _progressValue;
     [ObservableProperty] private string _progressText;
@@ -145,8 +146,12 @@ public partial class DownloadLibVlcViewModel : ObservableObject
     {
         _cancellationTokenSource?.Cancel();
         _done = true;
-        _timer.Stop();
         Close();
+    }
+
+    public void OnClosingCleanup()
+    {
+        _timer.StopAndDispose(OnTimerOnElapsed);
     }
 
     public void StartDownload()

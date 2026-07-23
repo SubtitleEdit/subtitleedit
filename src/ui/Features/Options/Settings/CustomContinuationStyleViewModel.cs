@@ -11,7 +11,7 @@ using System.Linq;
 
 namespace Nikse.SubtitleEdit.Features.Options.Settings;
 
-public partial class CustomContinuationStyleViewModel : ObservableObject
+public partial class CustomContinuationStyleViewModel : ObservableObject, IClosingCleanup
 {
     [ObservableProperty] private ObservableCollection<string> _preAndSuffixes;
 
@@ -37,6 +37,7 @@ public partial class CustomContinuationStyleViewModel : ObservableObject
     public StackPanel PanelPreview { get; internal set; }
 
     private bool _isDirty;
+    private volatile bool _isClosing;
     private readonly System.Timers.Timer _previewTimer;
 
     public CustomContinuationStyleViewModel()
@@ -63,19 +64,35 @@ public partial class CustomContinuationStyleViewModel : ObservableObject
         };
 
         _previewTimer = new System.Timers.Timer(500);
-        _previewTimer.Elapsed += (sender, args) =>
+        _previewTimer.Elapsed += PreviewTimerElapsed;
+    }
+
+    private void PreviewTimerElapsed(object? sender, System.Timers.ElapsedEventArgs e)
+    {
+        if (_isClosing)
         {
-            _previewTimer.Stop();
+            return;
+        }
 
-            if (_isDirty)
-            {
-                Avalonia.Threading.Dispatcher.UIThread.InvokeAsync(UpdatePreview);
-                _isDirty = false;
-            }
+        _previewTimer.Stop();
 
+        if (_isDirty)
+        {
+            Avalonia.Threading.Dispatcher.UIThread.InvokeAsync(UpdatePreview);
+            _isDirty = false;
+        }
+
+        // Guard the restart: OnClosingCleanup may have disposed the timer while this handler ran (#12739).
+        if (!_isClosing)
+        {
             _previewTimer.Start();
-        };
+        }
+    }
 
+    public void OnClosingCleanup()
+    {
+        _isClosing = true;
+        _previewTimer.StopAndDispose(PreviewTimerElapsed);
     }
 
     public void Initialize(CustomContinuationStyle style)

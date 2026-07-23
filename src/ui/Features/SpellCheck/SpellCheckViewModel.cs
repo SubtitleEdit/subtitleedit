@@ -33,7 +33,7 @@ using Nikse.SubtitleEdit.UiLogic.SpellCheck;
 
 namespace Nikse.SubtitleEdit.Features.SpellCheck;
 
-public partial class SpellCheckViewModel : ObservableObject
+public partial class SpellCheckViewModel : ObservableObject, IClosingCleanup
 {
     [ObservableProperty] private string _lineText;
     [ObservableProperty] private string _wholeText;
@@ -1104,28 +1104,35 @@ public partial class SpellCheckViewModel : ObservableObject
     {
         StatusText = statusText;
 
-        _statusTimer?.Stop();
-        _statusTimer?.Dispose();
+        _statusTimer?.StopAndDispose(StatusTimerElapsed);
 
         _statusTimer = new System.Timers.Timer(3000);
-        _statusTimer.Elapsed += (sender, e) =>
-        {
-            Dispatcher.UIThread.Post(() =>
-            {
-                try
-                {
-                    StatusText = string.Empty;
-                    _statusTimer?.Dispose();
-                    _statusTimer = null;
-                }
-                catch
-                {
-                    // ignore
-                }
-            });
-        };
+        _statusTimer.Elapsed += StatusTimerElapsed;
         _statusTimer.AutoReset = false;
         _statusTimer.Start();
+    }
+
+    public void OnClosingCleanup()
+    {
+        _statusTimer?.StopAndDispose(StatusTimerElapsed);
+        _statusTimer = null;
+    }
+
+    private void StatusTimerElapsed(object? sender, System.Timers.ElapsedEventArgs e)
+    {
+        Dispatcher.UIThread.Post(() =>
+        {
+            try
+            {
+                StatusText = string.Empty;
+                _statusTimer?.Dispose();
+                _statusTimer = null;
+            }
+            catch
+            {
+                // ignore
+            }
+        });
     }
 
     internal void ListBoxSuggestionsDoubleTapped(object? sender, TappedEventArgs e)

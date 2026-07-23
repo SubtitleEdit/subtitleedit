@@ -3,6 +3,7 @@ using Avalonia.Input;
 using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Logic.Download;
 using System;
@@ -17,7 +18,7 @@ using Timer = System.Timers.Timer;
 
 namespace Nikse.SubtitleEdit.Features.Video.OpenFromUrl;
 
-public partial class DownloadVideoFromUrlViewModel : ObservableObject
+public partial class DownloadVideoFromUrlViewModel : ObservableObject, IClosingCleanup
 {
     [ObservableProperty] private double _progress;
     [ObservableProperty] private string _statusText;
@@ -310,6 +311,11 @@ public partial class DownloadVideoFromUrlViewModel : ObservableObject
 
         _cancellationTokenSource.Cancel();
         // Let the timer pick up the cancellation and close cleanly.
+    }
+
+    public void OnClosingCleanup()
+    {
+        _timer.StopAndDispose(OnTimerElapsed);
     }
 
     private void Close()

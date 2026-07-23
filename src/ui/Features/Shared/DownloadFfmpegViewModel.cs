@@ -18,7 +18,7 @@ using Timer = System.Timers.Timer;
 
 namespace Nikse.SubtitleEdit.Features.Shared;
 
-public partial class DownloadFfmpegViewModel : ObservableObject
+public partial class DownloadFfmpegViewModel : ObservableObject, IClosingCleanup
 {
     [ObservableProperty] private double _progress;
     [ObservableProperty] private string _statusText;
@@ -198,8 +198,12 @@ public partial class DownloadFfmpegViewModel : ObservableObject
     {
         _cancellationTokenSource?.Cancel();
         _done = true;
-        _timer.Stop();
         Close();
+    }
+
+    public void OnClosingCleanup()
+    {
+        _timer.StopAndDispose(OnTimerOnElapsed);
     }
 
     public void StartDownload()

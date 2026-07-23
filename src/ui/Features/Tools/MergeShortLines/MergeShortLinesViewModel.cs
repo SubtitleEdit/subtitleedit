@@ -11,7 +11,7 @@ using System.Collections.ObjectModel;
 
 namespace Nikse.SubtitleEdit.Features.Tools.MergeShortLines;
 
-public partial class MergeShortLinesViewModel : ObservableObject
+public partial class MergeShortLinesViewModel : ObservableObject, IClosingCleanup
 {
     [ObservableProperty] private ObservableCollection<MergeShortLinesItem> _fixes;
     [ObservableProperty] private MergeShortLinesItem? _selectedFix;
@@ -32,6 +32,7 @@ public partial class MergeShortLinesViewModel : ObservableObject
     private List<SubtitleLineViewModel> _allSubtitles;
 
     private readonly System.Timers.Timer _previewTimer;
+    private volatile bool _isClosing;
     private bool _isDirty;
     private List<double> _shotChanges;
 
@@ -47,18 +48,35 @@ public partial class MergeShortLinesViewModel : ObservableObject
         LoadSettings();
 
         _previewTimer = new System.Timers.Timer(250);
-        _previewTimer.Elapsed += (sender, args) =>
+        _previewTimer.Elapsed += PreviewTimerElapsed;
+    }
+
+    private void PreviewTimerElapsed(object? sender, System.Timers.ElapsedEventArgs e)
+    {
+        if (_isClosing)
         {
-            _previewTimer.Stop();
+            return;
+        }
 
-            if (_isDirty)
-            {
-                _isDirty = false;
-                UpdatePreview();
-            }
+        _previewTimer.Stop();
 
+        if (_isDirty)
+        {
+            _isDirty = false;
+            UpdatePreview();
+        }
+
+        // Guard the restart: OnClosingCleanup may have disposed the timer while this handler ran (#12739).
+        if (!_isClosing)
+        {
             _previewTimer.Start();
-        };
+        }
+    }
+
+    public void OnClosingCleanup()
+    {
+        _isClosing = true;
+        _previewTimer.StopAndDispose(PreviewTimerElapsed);
     }
 
     private void UpdatePreview()

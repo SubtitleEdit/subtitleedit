@@ -23,7 +23,7 @@ using Nikse.SubtitleEdit.UiLogic;
 
 namespace Nikse.SubtitleEdit.Features.Video.SpeechToText;
 
-public partial class DownloadSpeechToTextEngineViewModel : ObservableObject
+public partial class DownloadSpeechToTextEngineViewModel : ObservableObject, IClosingCleanup
 {
     [ObservableProperty] private string _titleText;
     [ObservableProperty] private double _progressOpacity;
@@ -54,6 +54,7 @@ public partial class DownloadSpeechToTextEngineViewModel : ObservableObject
     private readonly ICrispAsrDownloadService _crispAsrDownloadService;
     private Task? _downloadTask;
     private readonly Timer _timer;
+    private volatile bool _isClosing;
     private readonly CancellationTokenSource _cancellationTokenSource;
     private readonly MemoryStream _downloadStream;
 
@@ -109,6 +110,11 @@ public partial class DownloadSpeechToTextEngineViewModel : ObservableObject
     {
         lock (_lockObj)
         {
+            if (_isClosing)
+            {
+                return;
+            }
+
             _timer.Stop();
             // IsCompletedSuccessfully (not the broader IsCompleted, which is also true for
             // Faulted/Canceled tasks) so a download that threw - e.g. Faster-Whisper-XXL's
@@ -253,7 +259,13 @@ public partial class DownloadSpeechToTextEngineViewModel : ObservableObject
                 return;
             }
 
-            _timer.Start();
+            // Guard the restart: OnClosingCleanup may have disposed the timer while this
+            // handler ran, and Start() on a disposed timer throws ObjectDisposedException,
+            // crashing the app from a thread-pool thread. (#12739)
+            if (!_isClosing)
+            {
+                _timer.Start();
+            }
         }
     }
 
@@ -425,6 +437,12 @@ public partial class DownloadSpeechToTextEngineViewModel : ObservableObject
         });
     }
 
+    public void OnClosingCleanup()
+    {
+        _isClosing = true;
+        _timer.StopAndDispose(OnTimerOnElapsed);
+    }
+
     [RelayCommand]
     private void CommandCancel()
     {
@@ -434,7 +452,6 @@ public partial class DownloadSpeechToTextEngineViewModel : ObservableObject
     private void Cancel()
     {
         _cancellationTokenSource?.Cancel();
-        _timer.Stop();
         StopIndeterminateProgress();
         Close();
     }
