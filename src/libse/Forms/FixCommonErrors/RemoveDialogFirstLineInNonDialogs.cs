@@ -1,4 +1,4 @@
-﻿using Nikse.SubtitleEdit.Core.Common;
+using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.Interfaces;
 
 namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
@@ -10,30 +10,35 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
             public static string RemoveDialogFirstInNonDialogs { get; set; } = "Remove start dash in non dialogs";
         }
 
+        /// <summary>
+        /// Dash characters that can be used as dialog marker - see issue #12748.
+        /// </summary>
+        private static readonly char[] DashChars =
+        {
+            '-', // Hyphen-Minus (-, U+002D)
+            '‐', // Hyphen (‐, U+2010)
+            '‑', // Non-breaking hyphen (‑, U+2011)
+            '‒', // Figure dash (‒, U+2012)
+            '–', // En dash (–, U+2013)
+            '—', // Em dash (—, U+2014)
+            '―', // Horizontal bar (―, U+2015)
+            '−', // Minus sign (−, U+2212)
+        };
+
         public void Fix(Subtitle subtitle, IFixCallbacks callbacks)
         {
             var fixAction = Language.RemoveDialogFirstInNonDialogs;
             var noOfFixes = 0;
-            const char hyphenMinus = '-'; // Hyphen-Minus (-, U+002D)
-            const char hyphen = '‐'; // Hyphen (‐, U+2010)
-            for (int i = 0; i < subtitle.Paragraphs.Count; i++)
+            foreach (var p in subtitle.Paragraphs)
             {
-                var p = subtitle.Paragraphs[i];
                 var oldText = p.Text;
-                var text = p.Text;
-                var noHtml = HtmlUtil.RemoveHtmlTags(text, true).TrimStart();
-
-
-                var count = Utilities.CountTagInText(text, hyphenMinus) + Utilities.CountTagInText(text, hyphen);
-                if (count == 0 || !noHtml.StartsWith(hyphenMinus) && !noHtml.StartsWith(hyphen))
+                var noHtml = HtmlUtil.RemoveHtmlTags(oldText, true).TrimStart();
+                if (noHtml.Length == 0 || !IsDash(noHtml[0]))
                 {
                     continue;
                 }
 
-                // test the two different dashes
-                text = RemoveDash(text, noHtml, hyphenMinus); 
-                text = RemoveDash(text, noHtml, hyphen);
-
+                var text = RemoveDash(oldText, noHtml, noHtml[0]);
                 if (oldText != text && callbacks.AllowFix(p, fixAction))
                 {
                     p.Text = text;
@@ -41,50 +46,49 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                     callbacks.AddFixToListView(p, fixAction, oldText, p.Text);
                 }
             }
+
             callbacks.UpdateFixStatus(noOfFixes, Language.RemoveDialogFirstInNonDialogs);
         }
 
         private static string RemoveDash(string text, string noHtml, char dashChar)
         {
-            var count = Utilities.CountTagInText(text, dashChar);
-            if (count == 1)
+            if (CountDashes(noHtml) == 1)
             {
-                text = RemoveFirstDash(text, dashChar);
+                return RemoveFirstDash(text, dashChar);
             }
-            else if (count > 1)
+
+            // more than one dash - only remove the first one if the others cannot be a dialog marker
+            if (StartsSentenceWithDash(noHtml))
             {
-                var lines = noHtml.SplitToLines();
-                if (lines.Count == 1)
+                return text;
+            }
+
+            var lines = noHtml.SplitToLines();
+            if (lines.Count > 3)
+            {
+                return text;
+            }
+
+            for (var i = 1; i < lines.Count; i++)
+            {
+                var line = lines[i].TrimStart();
+                if (line.Length > 0 && IsDash(line[0]))
                 {
-                    if (!noHtml.Contains(". " + dashChar) && !noHtml.Contains("! " + dashChar) && !noHtml.Contains("? " + dashChar))
-                    {
-                        text = RemoveFirstDash(text, dashChar);
-                    }
-                }
-                else if (lines.Count == 2)
-                {
-                    if (!noHtml.Contains(". " + dashChar) && !noHtml.Contains("! " + dashChar) && !noHtml.Contains("? " + dashChar) && !lines[1].StartsWith(dashChar))
-                    {
-                        text = RemoveFirstDash(text, dashChar);
-                    }
-                }
-                else if (lines.Count == 3)
-                {
-                    if (!noHtml.Contains(". " + dashChar) && !noHtml.Contains("! " + dashChar) && !noHtml.Contains("? " + dashChar) &&
-                        !lines[1].StartsWith(dashChar) &&
-                        !lines[2].StartsWith(dashChar))
-                    {
-                        text = RemoveFirstDash(text, dashChar);
-                    }
+                    return text;
                 }
             }
 
-            return text;
+            return RemoveFirstDash(text, dashChar);
         }
 
         private static string RemoveFirstDash(string text, char dashChar)
         {
-            var idx = text.IndexOf(dashChar);
+            var idx = IndexOfDashOutsideTag(text, dashChar);
+            if (idx < 0)
+            {
+                return text;
+            }
+
             if (idx + 1 < text.Length && text[idx + 1] == ' ')
             {
                 text = text.Remove(idx + 1, 1);
@@ -98,6 +102,76 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
             }
 
             return text;
+        }
+
+        /// <summary>
+        /// Index of the first dash which is not inside an html/assa tag.
+        /// </summary>
+        private static int IndexOfDashOutsideTag(string text, char dashChar)
+        {
+            var insideTag = false;
+            for (var i = 0; i < text.Length; i++)
+            {
+                var ch = text[i];
+                if (ch == '<' || ch == '{')
+                {
+                    insideTag = true;
+                }
+                else if (ch == '>' || ch == '}')
+                {
+                    insideTag = false;
+                }
+                else if (!insideTag && ch == dashChar)
+                {
+                    return i;
+                }
+            }
+
+            return -1;
+        }
+
+        /// <summary>
+        /// True if a dash follows the end of a sentence, like "Hi there. - Hello!".
+        /// </summary>
+        private static bool StartsSentenceWithDash(string text)
+        {
+            for (var i = 2; i < text.Length; i++)
+            {
+                if (text[i - 1] == ' ' && IsDash(text[i]) &&
+                    (text[i - 2] == '.' || text[i - 2] == '!' || text[i - 2] == '?'))
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        private static int CountDashes(string text)
+        {
+            var count = 0;
+            foreach (var ch in text)
+            {
+                if (IsDash(ch))
+                {
+                    count++;
+                }
+            }
+
+            return count;
+        }
+
+        private static bool IsDash(char ch)
+        {
+            foreach (var dashChar in DashChars)
+            {
+                if (ch == dashChar)
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
     }
 }
