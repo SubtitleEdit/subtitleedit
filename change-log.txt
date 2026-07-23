@@ -3,7 +3,7 @@ Subtitle Edit Changelog
 
 -----------------------------------------------------------------------------------------------------
 
-v5.1.0-rc13 (22nd of July 2026)
+v5.1.0-rc13 (23rd of July 2026)
 
 * llama.cpp: engine settings dialog showing backend, install status, pinned release and install folder - reachable from auto-translate, AI review and the AI assistant
 * Show llama.cpp install status dots in the AI review and AI assistant engine combo boxes
