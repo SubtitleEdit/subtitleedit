@@ -771,7 +771,11 @@ internal class SubtitleConverter
         string baseName;
         if (!string.IsNullOrEmpty(options.OutputFilename))
         {
-            baseName = options.OutputFilename;
+            // A relative --output-filename still lands in --output-folder; an absolute
+            // one wins outright.
+            baseName = !string.IsNullOrEmpty(options.OutputFolder) && !Path.IsPathRooted(options.OutputFilename)
+                ? Path.Combine(options.OutputFolder, options.OutputFilename)
+                : options.OutputFilename;
         }
         else
         {

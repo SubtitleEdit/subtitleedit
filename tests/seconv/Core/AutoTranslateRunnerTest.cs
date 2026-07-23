@@ -225,4 +225,18 @@ public class AutoTranslateRunnerTest : IDisposable
         Assert.Equal("de", AutoTranslateRunner.ResolveLanguage(languages, "german", "target").TwoLetterIsoLanguageName);
         Assert.Throws<InvalidOperationException>(() => AutoTranslateRunner.ResolveLanguage(languages, "klingon", "target"));
     }
+
+    // The OpenAI-style ".../v1" base (no trailing slash) used to fail the old "/v1/" check
+    // and come out as ".../v1/v1/chat/completions".
+    [Theory]
+    [InlineData("http://localhost:8080", "http://localhost:8080/v1/chat/completions")]
+    [InlineData("http://localhost:8080/", "http://localhost:8080/v1/chat/completions")]
+    [InlineData("http://localhost:8080/v1", "http://localhost:8080/v1/chat/completions")]
+    [InlineData("http://localhost:8080/v1/", "http://localhost:8080/v1/chat/completions")]
+    [InlineData("http://localhost:8080/v1/chat/completions", "http://localhost:8080/v1/chat/completions")]
+    [InlineData("http://localhost:8080/V1/Chat/Completions", "http://localhost:8080/V1/Chat/Completions")]
+    public void CompleteChatCompletionsUrl_CompletesWithoutDoublingV1(string input, string expected)
+    {
+        Assert.Equal(expected, AutoTranslateRunner.CompleteChatCompletionsUrl(input));
+    }
 }

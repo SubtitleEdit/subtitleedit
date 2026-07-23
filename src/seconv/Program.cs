@@ -120,12 +120,20 @@ internal class Program
     /// Skips path-like arguments (anything containing a path separator after the leading
     /// slash) so Unix absolute paths and Windows drive paths pass through unchanged.
     /// </summary>
-    private static string[] ConvertLegacyArguments(string[] args)
+    internal static string[] ConvertLegacyArguments(string[] args)
     {
         var converted = new List<string>();
 
         foreach (var arg in args)
         {
+            // SE 4.x invocations start with a "/convert" verb; modern seconv has no such
+            // option, so drop the token entirely — the remaining pattern/format positionals
+            // and rewritten /option:value args match the modern grammar.
+            if (arg.Equals("/convert", StringComparison.OrdinalIgnoreCase))
+            {
+                continue;
+            }
+
             if (arg.StartsWith('/') && arg != "/?" && arg != "/help" && !LooksLikePath(arg))
             {
                 converted.Add("--" + arg.Substring(1));
