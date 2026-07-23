@@ -116,156 +116,176 @@ public partial class DownloadSpeechToTextEngineViewModel : ObservableObject, ICl
             }
 
             _timer.Stop();
-            // IsCompletedSuccessfully (not the broader IsCompleted, which is also true for
-            // Faulted/Canceled tasks) so a download that threw - e.g. Faster-Whisper-XXL's
-            // PlatformNotSupportedException on Linux ARM64 or macOS - falls through to the
-            // IsFaulted branch below instead of unpacking a file that was never downloaded,
-            // which left the dialog stuck on "Unpacking..." indefinitely.
-            if (_downloadTask is { IsCompletedSuccessfully: true } && Engine != null)
+
+            try
             {
-                if (Engine.Name == WhisperEnginePurfviewFasterWhisperXxl.StaticName)
-                {
-                    var dir = Engine.GetAndCreateWhisperFolder();
-                    var tempFileName = Path.Combine(dir, Engine.Name + ".7z");
-
-                    TitleText = Se.Language.General.Unpacking7ZipArchiveDotDotDot;
-                    StartIndeterminateProgress();
-                    Unpacker.Extract7Zip(tempFileName, dir, "Faster-Whisper-XXL", _cancellationTokenSource, text => ProgressText = text);
-                    StopIndeterminateProgress();
-
-                    try
-                    {
-                        File.Delete(tempFileName);
-
-                        var path = Engine.GetExecutable();
-                        MakeExecutable(path);
-                    }
-                    catch
-                    {
-                        // ignore
-                    }
-
-                    if (_cancellationTokenSource.IsCancellationRequested)
-                    {
-                        Cancel();
-                        return;
-                    }
-
-                    DownloadAndUnpackSileroVad(dir);
-
-                    OkPressed = true;
-                    Close();
-                }
-                else if (Engine.Name == WhisperEngineCTranslate2.StaticName)
-                {
-                    var dir = Engine.GetAndCreateWhisperFolder();
-
-                    TitleText = string.Format(Se.Language.General.UnpackingX, Engine.Name);
-                    StartIndeterminateProgress();
-                    Unpack(dir, string.Empty);
-                    StopIndeterminateProgress();
-
-                    if (_cancellationTokenSource.IsCancellationRequested)
-                    {
-                        Cancel();
-                        return;
-                    }
-
-                    DownloadAndUnpackSileroVad(dir);
-
-                    OkPressed = true;
-                    Close();
-                }
-                else
-                {
-                    if (_downloadStream.Length == 0)
-                    {
-                        ProgressText = "Download failed";
-                        Error = "No data received";
-                        return;
-                    }
-
-                    var folder = Engine.GetAndCreateWhisperFolder();
-                    var skipFolder = Engine is ICrispAsrEngine
-                        ? OperatingSystem.IsLinux()
-                            ? (RuntimeInformation.ProcessArchitecture == Architecture.Arm64
-                                ? "crispasr-linux-arm64"
-                                : CrispAsrWindowsVariant switch
-                                {
-                                    "cuda"   => "crispasr-linux-x86_64-cuda",
-                                    "cuda13" => "crispasr-linux-x86_64-cuda13",
-                                    "vulkan" => "crispasr-linux-x86_64-vulkan",
-                                    "hip"    => "crispasr-linux-x86_64-hip",
-                                    _        => "crispasr-linux-x86_64",
-                                })
-                            : OperatingSystem.IsMacOS()
-                                ? "crispasr-macos"
-                                : CrispAsrWindowsVariant switch
-                                {
-                                    "cuda"       => "crispasr-windows-x86_64-cuda",
-                                    "cpu"        => "crispasr-windows-x86_64-cpu",
-                                    "cpu-legacy" => "crispasr-windows-x86_64-cpu-legacy",
-                                    "vulkan"     => "crispasr-windows-x86_64-vulkan",
-                                    _            => Engine.UnpackSkipFolder,
-                                }
-                        : Engine.UnpackSkipFolder;
-
-                    if (Engine is ICrispAsrEngine)
-                    {
-                        WriteCrispAsrInstalledHash(folder);
-                        RemoveStaleCrispAsrBinaries(folder);
-                    }
-                    else if (Engine is WhisperEngineCpp or WhisperEngineCppCuBlas or WhisperEngineCppVulkan)
-                    {
-                        WriteWhisperCppInstalledHash(folder);
-                    }
-                    else if (Engine is Qwen3AsrCppEngine)
-                    {
-                        // Sidecar powers the update prompt (issue #11375 - broken-JSON builds
-                        // stayed installed forever because nothing recognized them as outdated).
-                        DownloadHashManager.WriteSidecar(folder,
-                            DownloadHashManager.ResolveQwen3AsrCppKey(Qwen3AsrUseVulkan), _downloadStream);
-                    }
-
-                    TitleText = Se.Language.Video.AudioToText.UnpackingSpeechToTextEngine;
-                    Unpack(folder, skipFolder);
-
-                    if (Engine is not (ChatLlmCppEngine or Qwen3AsrCppEngine))
-                    {
-                        DownloadAndUnpackSileroVad(folder);
-                    }
-
-                    OkPressed = true;
-                    Close();
-                }
-
-                return;
+                ProcessDownloadState();
             }
-
-            if (_downloadTask is { IsFaulted: true })
+            catch (Exception exception)
             {
-                var ex = _downloadTask.Exception?.InnerException ?? _downloadTask.Exception;
-                if (ex is OperationCanceledException)
+                // An exception thrown from a timer callback is swallowed silently, and the
+                // timer was already stopped above - so without this catch the dialog would
+                // hang forever with no error shown, e.g. when the 7-zip unpack fails on the
+                // Flatpak build (#12127).
+                StopIndeterminateProgress();
+                Se.LogError(exception, "Speech-to-text engine download/unpack failed");
+                ProgressText = "Unpacking failed";
+                Error = exception.Message;
+            }
+        }
+    }
+
+    private void ProcessDownloadState()
+    {
+        // IsCompletedSuccessfully (not the broader IsCompleted, which is also true for
+        // Faulted/Canceled tasks) so a download that threw - e.g. Faster-Whisper-XXL's
+        // PlatformNotSupportedException on Linux ARM64 or macOS - falls through to the
+        // IsFaulted branch below instead of unpacking a file that was never downloaded,
+        // which left the dialog stuck on "Unpacking..." indefinitely.
+        if (_downloadTask is { IsCompletedSuccessfully: true } && Engine != null)
+        {
+            if (Engine.Name == WhisperEnginePurfviewFasterWhisperXxl.StaticName)
+            {
+                var dir = Engine.GetAndCreateWhisperFolder();
+                var tempFileName = Path.Combine(dir, Engine.Name + ".7z");
+
+                TitleText = Se.Language.General.Unpacking7ZipArchiveDotDotDot;
+                StartIndeterminateProgress();
+                Unpacker.Extract7Zip(tempFileName, dir, "Faster-Whisper-XXL", _cancellationTokenSource, text => ProgressText = text);
+                StopIndeterminateProgress();
+
+                try
                 {
-                    ProgressText = "Download canceled";
-                    Close();
+                    File.Delete(tempFileName);
+
+                    var path = Engine.GetExecutable();
+                    MakeExecutable(path);
                 }
-                else
+                catch
+                {
+                    // ignore
+                }
+
+                if (_cancellationTokenSource.IsCancellationRequested)
+                {
+                    Cancel();
+                    return;
+                }
+
+                DownloadAndUnpackSileroVad(dir);
+
+                OkPressed = true;
+                Close();
+            }
+            else if (Engine.Name == WhisperEngineCTranslate2.StaticName)
+            {
+                var dir = Engine.GetAndCreateWhisperFolder();
+
+                TitleText = string.Format(Se.Language.General.UnpackingX, Engine.Name);
+                StartIndeterminateProgress();
+                Unpack(dir, string.Empty);
+                StopIndeterminateProgress();
+
+                if (_cancellationTokenSource.IsCancellationRequested)
+                {
+                    Cancel();
+                    return;
+                }
+
+                DownloadAndUnpackSileroVad(dir);
+
+                OkPressed = true;
+                Close();
+            }
+            else
+            {
+                if (_downloadStream.Length == 0)
                 {
                     ProgressText = "Download failed";
-                    Error = ex?.Message ?? "Unknown error";
+                    Error = "No data received";
+                    return;
                 }
 
-                return;
+                var folder = Engine.GetAndCreateWhisperFolder();
+                var skipFolder = Engine is ICrispAsrEngine
+                    ? OperatingSystem.IsLinux()
+                        ? (RuntimeInformation.ProcessArchitecture == Architecture.Arm64
+                            ? "crispasr-linux-arm64"
+                            : CrispAsrWindowsVariant switch
+                            {
+                                "cuda"   => "crispasr-linux-x86_64-cuda",
+                                "cuda13" => "crispasr-linux-x86_64-cuda13",
+                                "vulkan" => "crispasr-linux-x86_64-vulkan",
+                                "hip"    => "crispasr-linux-x86_64-hip",
+                                _        => "crispasr-linux-x86_64",
+                            })
+                        : OperatingSystem.IsMacOS()
+                            ? "crispasr-macos"
+                            : CrispAsrWindowsVariant switch
+                            {
+                                "cuda"       => "crispasr-windows-x86_64-cuda",
+                                "cpu"        => "crispasr-windows-x86_64-cpu",
+                                "cpu-legacy" => "crispasr-windows-x86_64-cpu-legacy",
+                                "vulkan"     => "crispasr-windows-x86_64-vulkan",
+                                _            => Engine.UnpackSkipFolder,
+                            }
+                    : Engine.UnpackSkipFolder;
+
+                if (Engine is ICrispAsrEngine)
+                {
+                    WriteCrispAsrInstalledHash(folder);
+                    RemoveStaleCrispAsrBinaries(folder);
+                }
+                else if (Engine is WhisperEngineCpp or WhisperEngineCppCuBlas or WhisperEngineCppVulkan)
+                {
+                    WriteWhisperCppInstalledHash(folder);
+                }
+                else if (Engine is Qwen3AsrCppEngine)
+                {
+                    // Sidecar powers the update prompt (issue #11375 - broken-JSON builds
+                    // stayed installed forever because nothing recognized them as outdated).
+                    DownloadHashManager.WriteSidecar(folder,
+                        DownloadHashManager.ResolveQwen3AsrCppKey(Qwen3AsrUseVulkan), _downloadStream);
+                }
+
+                TitleText = Se.Language.Video.AudioToText.UnpackingSpeechToTextEngine;
+                Unpack(folder, skipFolder);
+
+                if (Engine is not (ChatLlmCppEngine or Qwen3AsrCppEngine))
+                {
+                    DownloadAndUnpackSileroVad(folder);
+                }
+
+                OkPressed = true;
+                Close();
             }
 
-            // Guard the restart: OnClosingCleanup may have disposed the timer while this
-            // handler ran, and Start() on a disposed timer throws ObjectDisposedException,
-            // crashing the app from a thread-pool thread. (#12739)
-            if (!_isClosing)
+            return;
+        }
+
+        if (_downloadTask is { IsFaulted: true })
+        {
+            var ex = _downloadTask.Exception?.InnerException ?? _downloadTask.Exception;
+            if (ex is OperationCanceledException)
             {
-                _timer.Start();
+                ProgressText = "Download canceled";
+                Close();
             }
+            else
+            {
+                ProgressText = "Download failed";
+                Error = ex?.Message ?? "Unknown error";
+            }
+
+            return;
+        }
+
+        // Guard the restart: OnClosingCleanup may have disposed the timer while this
+        // handler ran, and Start() on a disposed timer throws ObjectDisposedException,
+        // crashing the app from a thread-pool thread. (#12739)
+        if (!_isClosing)
+        {
+            _timer.Start();
         }
     }
 

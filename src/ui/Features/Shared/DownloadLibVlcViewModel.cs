@@ -93,7 +93,22 @@ public partial class DownloadLibVlcViewModel : ObservableObject, IClosingCleanup
                 }
 
                 StartIndeterminateProgress();
-                Unpacker.Extract7Zip(_tempFileName, Se.VlcFolder, "vlc-3.0.23", _cancellationTokenSource, text => ProgressText = text);
+
+                try
+                {
+                    Unpacker.Extract7Zip(_tempFileName, Se.VlcFolder, "vlc-3.0.23", _cancellationTokenSource, text => ProgressText = text);
+                }
+                catch (Exception exception)
+                {
+                    // Timer callbacks swallow exceptions, so an unpack failure would
+                    // otherwise hang the dialog with no error shown (#12127).
+                    Se.LogError(exception, "libVLC unpack failed");
+                    StopIndeterminateProgress();
+                    ProgressText = "Unpacking failed";
+                    Error = exception.Message;
+                    return;
+                }
+
                 StopIndeterminateProgress();
 
                 OkPressed = true;
