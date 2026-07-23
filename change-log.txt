@@ -19,6 +19,10 @@ v5.1.0-rc13 (23rd of July 2026)
 * Add the missing help text for OpenAI-compatible server
 * Remove the dead Parakeet.cpp engine
 * Faster SHA-256 hashing and byte parsing via one-shot HashData and BinaryPrimitives - thx ivandrofly
+* Fix the waveform playhead drifting slightly forward or backward just after pausing - thx Davanix
+* Stop and dispose dialog timers on every window-close path, fixing a leak and a rare close-time crash - thx ivandrofly
+* OCR: keep the preview checkerboard backdrop out of the character grid
+* macOS: strip a stray .gitkeep from the app bundle so code signing succeeds
 
 -----------------------------------------------------------------------------------------------------
 
