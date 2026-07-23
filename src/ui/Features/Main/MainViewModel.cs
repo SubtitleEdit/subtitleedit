@@ -21727,10 +21727,11 @@ public partial class MainViewModel :
             // (before mpv's IsPlaying flips ~100 ms later) so the cursor stops on the keypress instead
             // of gliding on (#12033 follow-up). mpv then keeps decoding for ~100-200 ms and its reported
             // position settles a little past (or, if we'd extrapolated ahead, behind) the frozen spot.
-            // We hold the cursor dead-frozen through that wind-down and, the moment mpv's clock comes to
-            // rest, snap once to that final frame. Landing in a single step at settle - instead of easing
-            // toward it a few hundred ms later - keeps all cursor motion coincident with the pause, so the
-            // cursor no longer drifts forward/backward after the time display has already stopped (#12740).
+            // We hold the cursor dead-frozen at the keypress instant and do NOT reconcile that small
+            // residual: the video frame stopped where the cursor is, and any later move toward mpv's
+            // settled frame - whether eased or snapped in one step - reads as the cursor drifting a
+            // moment after the numeric time display has already stopped (#12740). Only a real
+            // discontinuity (a seek while paused, beyond the resync threshold) moves the cursor now.
             if (!vp.IsPlaying)
             {
                 if (_playheadWasPlaying)
@@ -21768,12 +21769,14 @@ public partial class MainViewModel :
             }
             else if (!_playheadPausedSettled && !vp.IsPlaying && rawStableMs >= PlayheadPausedSettleStableMs)
             {
-                // mpv's clock has come to rest at the true paused frame: land on it, once, then hold.
-                _playheadEstimateSeconds = rawPosition;
+                // mpv's clock has come to rest after the pause wind-down. Hold the cursor at the frozen
+                // keypress spot rather than snapping to mpv's settled frame: the video stopped where the
+                // cursor already is, and snapping here showed as the cursor shifting slightly after the
+                // numeric time display had already stopped (#12740). Just mark settled so we stop watching.
                 _playheadPausedSettled = true;
             }
             // else: still winding down, or already settled with a small residual -> hold frozen (no
-            // easing => no post-pause drift).
+            // easing, no delayed snap => no post-pause drift).
 
             _playheadValid = true;
         }
