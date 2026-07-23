@@ -185,10 +185,10 @@ public class FixCommonErrorsRunnerTest
     }
 
     // -------------------------------------------------------------------------
-    // Issue #11037 item 3: language-conditional rules should mirror the GUI's
-    // Fix Common Errors window — Spanish-only rules don't run on non-Spanish
-    // content in the default "all rules" pass, but the user can still opt in
-    // via an explicit --FixCommonErrorsRules list.
+    // Issue #11037 item 3: language-conditional rules mirror the GUI's Fix Common
+    // Errors window — Spanish-only rules run only when the language matches
+    // (auto-detected, or forced via --fce-language). Naming a gated rule in
+    // --FixCommonErrorsRules selects it but does not bypass its language gate.
     // -------------------------------------------------------------------------
 
     [Fact]
@@ -222,50 +222,48 @@ public class FixCommonErrorsRunnerTest
     }
 
     [Fact]
-    public void Run_WithExplicitSpanishRule_AppliesEvenOnNonSpanishText()
+    public void Run_NamingSpanishRule_DoesNotBypassGateOnNonSpanish()
     {
-        // Opt-in path: --FixCommonErrorsRules:FixSpanishInvertedQuestionAndExclamationMarks
-        // runs the rule regardless of detected language.
+        // Selecting the Spanish rule by name no longer forces it past the language gate:
+        // on English content it stays gated off, so no leading '¿' is inserted (#11037).
         var sub = new Subtitle();
         sub.Paragraphs.Add(new Paragraph("Are you coming home tonight?", 0, 3000));
         sub.Renumber();
 
         FixCommonErrorsRunner.Run(sub, new[] { "FixSpanishInvertedQuestionAndExclamationMarks" });
 
-        Assert.Contains('¿', sub.Paragraphs[0].Text);
+        Assert.DoesNotContain('¿', sub.Paragraphs[0].Text);
+        Assert.DoesNotContain('¡', sub.Paragraphs[0].Text);
     }
 
     [Fact]
     public void Run_CliImplicitPath_GatesSpanishOnNonSpanish()
     {
-        // Regression for Copilot review on #11300: ConvertCommand pre-resolves a bare
-        // --FixCommonErrors to the full rule list via ResolveRuleIds(null), then passes
-        // that into Run. With the old single-arg overload, wanted was non-null so the
-        // gate never fired and Spanish marks landed on English content.
-        // The new explicitlyNamedRules=[] signal restores the gate for that path.
+        // ConvertCommand pre-resolves a bare --FixCommonErrors to the full rule list via
+        // ResolveRuleIds(null), then passes that into Run. The Spanish rule must stay gated
+        // off on English content even though it is in the resolved "wanted" set.
         var sub = new Subtitle();
         sub.Paragraphs.Add(new Paragraph("Are you coming home tonight?", 0, 3000));
         sub.Renumber();
 
         var allRules = FixCommonErrorsRunner.AvailableRuleIds;
-        FixCommonErrorsRunner.Run(sub, allRules, explicitlyNamedRules: []);
+        FixCommonErrorsRunner.Run(sub, allRules);
 
         Assert.DoesNotContain('¿', sub.Paragraphs[0].Text);
         Assert.DoesNotContain('¡', sub.Paragraphs[0].Text);
     }
 
     [Fact]
-    public void Run_CliExplicitPath_ApplySpanishEvenOnNonSpanish()
+    public void Run_NamingSpanishRule_WithFceLanguage_AppliesOnNonSpanish()
     {
-        // CLI path with --FixCommonErrorsRules:FixSpanishInvertedQuestionAndExclamationMarks
-        // forwards the named rule as both wanted and explicitly-named, so the gate is
-        // bypassed and the rule fires on English content.
+        // The escape hatch: naming the rule and forcing --fce-language:es opens the gate,
+        // so the rule fires even on content that auto-detects as English.
         var sub = new Subtitle();
         sub.Paragraphs.Add(new Paragraph("Are you coming home tonight?", 0, 3000));
         sub.Renumber();
 
         var rules = new[] { "FixSpanishInvertedQuestionAndExclamationMarks" };
-        FixCommonErrorsRunner.Run(sub, rules, explicitlyNamedRules: rules);
+        FixCommonErrorsRunner.Run(sub, rules, languageOverride: "es");
 
         Assert.Contains('¿', sub.Paragraphs[0].Text);
     }
@@ -280,7 +278,7 @@ public class FixCommonErrorsRunnerTest
         sub.Renumber();
 
         var allRules = FixCommonErrorsRunner.AvailableRuleIds;
-        FixCommonErrorsRunner.Run(sub, allRules, explicitlyNamedRules: [], languageOverride: "es");
+        FixCommonErrorsRunner.Run(sub, allRules, languageOverride: "es");
 
         Assert.Contains('¿', sub.Paragraphs[0].Text);
     }
@@ -294,7 +292,7 @@ public class FixCommonErrorsRunnerTest
         sub.Renumber();
 
         var allRules = FixCommonErrorsRunner.AvailableRuleIds;
-        FixCommonErrorsRunner.Run(sub, allRules, explicitlyNamedRules: [], languageOverride: "Spanish");
+        FixCommonErrorsRunner.Run(sub, allRules, languageOverride: "Spanish");
 
         Assert.Contains('¿', sub.Paragraphs[0].Text);
     }
@@ -328,29 +326,6 @@ public class FixCommonErrorsRunnerTest
         Assert.Equal("da", gates["FixDanishLetterI"]);
         Assert.Equal("es", gates["FixSpanishInvertedQuestionAndExclamationMarks"]);
         Assert.Equal("tr", gates["FixTurkishAnsiToUnicode"]);
-    }
-
-    [Fact]
-    public void ParseExplicitlyNamedRules_NullOrAllOrNegations_ReturnsEmpty()
-    {
-        // "implicit-all" spec forms — nothing the user named by hand.
-        Assert.Empty(FixCommonErrorsRunner.ParseExplicitlyNamedRules(null));
-        Assert.Empty(FixCommonErrorsRunner.ParseExplicitlyNamedRules(""));
-        Assert.Empty(FixCommonErrorsRunner.ParseExplicitlyNamedRules("   "));
-        Assert.Empty(FixCommonErrorsRunner.ParseExplicitlyNamedRules("all"));
-        Assert.Empty(FixCommonErrorsRunner.ParseExplicitlyNamedRules("all,-FixDanishLetterI"));
-        Assert.Empty(FixCommonErrorsRunner.ParseExplicitlyNamedRules("-FixCommas,-FixDanishLetterI"));
-    }
-
-    [Fact]
-    public void ParseExplicitlyNamedRules_PositiveTokens_AreCapturedExactly()
-    {
-        var named = FixCommonErrorsRunner.ParseExplicitlyNamedRules(
-            "FixSpanishInvertedQuestionAndExclamationMarks,-FixDanishLetterI,FixCommas");
-
-        Assert.Equal(
-            new[] { "FixSpanishInvertedQuestionAndExclamationMarks", "FixCommas" },
-            named);
     }
 
     [Fact]

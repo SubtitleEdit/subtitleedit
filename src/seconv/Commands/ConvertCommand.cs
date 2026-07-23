@@ -523,18 +523,13 @@ internal sealed class ConvertCommand : AsyncCommand<ConvertCommand.Settings>
 
             // Resolve FCE rule selection. Passing --FixCommonErrorsRules implicitly
             // enables --FixCommonErrors so users don't have to specify both.
-            // We also parse out which rules the user named by hand — that's a separate
-            // signal from the resolved set so language-conditional rules can bypass
-            // their gate when explicitly requested (see FixCommonErrorsRunner.Run).
             IReadOnlyList<string> fceRules = [];
-            IReadOnlyList<string> fceExplicitlyNamed = [];
             var fceRequested = settings.FixCommonErrors || !string.IsNullOrWhiteSpace(settings.FixCommonErrorsRules);
             if (fceRequested)
             {
                 try
                 {
                     fceRules = FixCommonErrorsRunner.ResolveRuleIds(settings.FixCommonErrorsRules);
-                    fceExplicitlyNamed = FixCommonErrorsRunner.ParseExplicitlyNamedRules(settings.FixCommonErrorsRules);
                 }
                 catch (ArgumentException ex)
                 {
@@ -650,7 +645,6 @@ internal sealed class ConvertCommand : AsyncCommand<ConvertCommand.Settings>
                 Overwrite = settings.Overwrite,
                 Operations = operations,
                 FixCommonErrorsRules = fceRules,
-                FixCommonErrorsExplicitlyNamedRules = fceExplicitlyNamed,
                 FixCommonErrorsLanguage = settings.FixCommonErrorsLanguage,
                 DeleteFirst = settings.DeleteFirst,
                 DeleteLast = settings.DeleteLast,
