@@ -8,7 +8,7 @@ using SkiaSharp;
 
 namespace Nikse.SubtitleEdit.Features.Ocr;
 
-public partial class PreProcessingViewModel : ObservableObject
+public partial class PreProcessingViewModel : ObservableObject, IClosingCleanup
 {
     [ObservableProperty] private bool _cropTransparentColors;
     [ObservableProperty] private bool _inverseColors;
@@ -27,6 +27,7 @@ public partial class PreProcessingViewModel : ObservableObject
     public bool OkPressed { get; private set; }
 
     private bool _dirty;
+    private volatile bool _isClosing;
     private readonly System.Timers.Timer _timerUpdatePreview;
 
     public PreProcessingViewModel()
@@ -61,9 +62,21 @@ public partial class PreProcessingViewModel : ObservableObject
 
     private void TimerUpdatePreviewElapsed(object? sender, System.Timers.ElapsedEventArgs e)
     {
+        if (_isClosing)
+        {
+            return;
+        }
+
         _timerUpdatePreview.Stop();
         UpdatePreview();
-        _timerUpdatePreview.Start();
+
+        // Guard the restart: OnClosingCleanup may have disposed the timer while this
+        // handler ran, and Start() on a disposed timer throws ObjectDisposedException,
+        // crashing the app from a thread-pool thread. (#12739)
+        if (!_isClosing)
+        {
+            _timerUpdatePreview.Start();
+        }
     }
 
     private void UpdatePreview()
@@ -84,8 +97,13 @@ public partial class PreProcessingViewModel : ObservableObject
         UpdateSettings();
 
         OkPressed = true;
-        _timerUpdatePreview.StopAndDispose(TimerUpdatePreviewElapsed);
         Window?.Close();
+    }
+
+    public void OnClosingCleanup()
+    {
+        _isClosing = true;
+        _timerUpdatePreview.StopAndDispose(TimerUpdatePreviewElapsed);
     }
 
     private void UpdateSettings()
@@ -105,7 +123,6 @@ public partial class PreProcessingViewModel : ObservableObject
     [RelayCommand]
     private void Cancel()
     {
-        _timerUpdatePreview.StopAndDispose(TimerUpdatePreviewElapsed);
         Window?.Close();
     }
 
@@ -114,7 +131,6 @@ public partial class PreProcessingViewModel : ObservableObject
         if (e.Key == Key.Escape)
         {
             e.Handled = true;
-            _timerUpdatePreview.StopAndDispose(TimerUpdatePreviewElapsed);
             Window?.Close();
         }
     }

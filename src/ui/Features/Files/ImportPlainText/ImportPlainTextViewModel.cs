@@ -20,7 +20,7 @@ using System.Timers;
 
 namespace Nikse.SubtitleEdit.Features.Files.ImportPlainText;
 
-public partial class ImportPlainTextViewModel : ObservableObject
+public partial class ImportPlainTextViewModel : ObservableObject, IClosingCleanup
 {
     [ObservableProperty] private ObservableCollection<SubtitleLineViewModel> _subtitles;
     [ObservableProperty] private SubtitleLineViewModel? _selectedSubtitle;
@@ -381,11 +381,15 @@ public partial class ImportPlainTextViewModel : ObservableObject
 
     private void Close()
     {
-        _timerUpdatePreview.StopAndDispose(TimerUpdatePreviewElapsed);
         Dispatcher.UIThread.Post(() =>
         {
             Window?.Close();
         });
+    }
+
+    public void OnClosingCleanup()
+    {
+        _timerUpdatePreview.StopAndDispose(TimerUpdatePreviewElapsed);
     }
 
     internal void KeyDown(object? sender, KeyEventArgs e)

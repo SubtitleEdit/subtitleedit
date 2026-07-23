@@ -17,7 +17,7 @@ using Timer = System.Timers.Timer;
 
 namespace Nikse.SubtitleEdit.Features.Shared;
 
-public partial class DownloadLibMpvViewModel : ObservableObject
+public partial class DownloadLibMpvViewModel : ObservableObject, IClosingCleanup
 {
     [ObservableProperty] private double _progress;
     [ObservableProperty] private string _statusText;
@@ -193,8 +193,12 @@ public partial class DownloadLibMpvViewModel : ObservableObject
     {
         _cancellationTokenSource?.Cancel();
         _done = true;
-        _timer.StopAndDispose(OnTimerOnElapsed);
         Close();
+    }
+
+    public void OnClosingCleanup()
+    {
+        _timer.StopAndDispose(OnTimerOnElapsed);
     }
 
     public void StartDownload()

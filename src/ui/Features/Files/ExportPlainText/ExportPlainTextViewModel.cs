@@ -17,7 +17,7 @@ using Nikse.SubtitleEdit.Logic.Media;
 
 namespace Nikse.SubtitleEdit.Features.Files.ExportPlainText;
 
-public partial class ExportPlainTextViewModel : ObservableObject
+public partial class ExportPlainTextViewModel : ObservableObject, IClosingCleanup
 {
     // settings controls
     [ObservableProperty] private bool _formatTextNone;
@@ -51,6 +51,7 @@ public partial class ExportPlainTextViewModel : ObservableObject
     private string? _videoFileName;
     private string _title;
     private readonly System.Timers.Timer _timerUpdatePreview;
+    private volatile bool _isClosing;
     private bool _dirty;
     private string? _subtitleFileName;
 
@@ -140,6 +141,11 @@ public partial class ExportPlainTextViewModel : ObservableObject
 
     private void TimerUpdatePreviewElapsed(object? sender, ElapsedEventArgs e)
     {
+        if (_isClosing)
+        {
+            return;
+        }
+
         _timerUpdatePreview.Stop();
 
         if (_dirty)
@@ -148,7 +154,18 @@ public partial class ExportPlainTextViewModel : ObservableObject
             PreviewText = GetExportText();
         }
 
-        _timerUpdatePreview.Start();
+        // Guard the restart: OnClosingCleanup may have disposed the timer while this handler
+        // ran, and Start() on a disposed timer throws ObjectDisposedException. (#12739)
+        if (!_isClosing)
+        {
+            _timerUpdatePreview.Start();
+        }
+    }
+
+    public void OnClosingCleanup()
+    {
+        _isClosing = true;
+        _timerUpdatePreview.StopAndDispose(TimerUpdatePreviewElapsed);
     }
 
     private string GetExportText()
@@ -283,7 +300,6 @@ public partial class ExportPlainTextViewModel : ObservableObject
     {
         SaveSettings();
         OkPressed = true;
-        _timerUpdatePreview.StopAndDispose(TimerUpdatePreviewElapsed);
         Window?.Close();
     }
 
@@ -291,7 +307,6 @@ public partial class ExportPlainTextViewModel : ObservableObject
     private void Cancel()
     {
         SaveSettings();
-        _timerUpdatePreview.StopAndDispose(TimerUpdatePreviewElapsed);
         Window?.Close();
     }
 
@@ -300,7 +315,6 @@ public partial class ExportPlainTextViewModel : ObservableObject
         if (e.Key == Key.Escape)
         {
             e.Handled = true;
-            _timerUpdatePreview.StopAndDispose(TimerUpdatePreviewElapsed);
             Window?.Close();
         }
     }

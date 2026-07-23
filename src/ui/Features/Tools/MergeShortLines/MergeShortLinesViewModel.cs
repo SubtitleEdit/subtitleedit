@@ -11,7 +11,7 @@ using System.Collections.ObjectModel;
 
 namespace Nikse.SubtitleEdit.Features.Tools.MergeShortLines;
 
-public partial class MergeShortLinesViewModel : ObservableObject
+public partial class MergeShortLinesViewModel : ObservableObject, IClosingCleanup
 {
     [ObservableProperty] private ObservableCollection<MergeShortLinesItem> _fixes;
     [ObservableProperty] private MergeShortLinesItem? _selectedFix;
@@ -32,6 +32,7 @@ public partial class MergeShortLinesViewModel : ObservableObject
     private List<SubtitleLineViewModel> _allSubtitles;
 
     private readonly System.Timers.Timer _previewTimer;
+    private volatile bool _isClosing;
     private bool _isDirty;
     private List<double> _shotChanges;
 
@@ -52,6 +53,11 @@ public partial class MergeShortLinesViewModel : ObservableObject
 
     private void PreviewTimerElapsed(object? sender, System.Timers.ElapsedEventArgs e)
     {
+        if (_isClosing)
+        {
+            return;
+        }
+
         _previewTimer.Stop();
 
         if (_isDirty)
@@ -60,7 +66,17 @@ public partial class MergeShortLinesViewModel : ObservableObject
             UpdatePreview();
         }
 
-        _previewTimer.Start();
+        // Guard the restart: OnClosingCleanup may have disposed the timer while this handler ran (#12739).
+        if (!_isClosing)
+        {
+            _previewTimer.Start();
+        }
+    }
+
+    public void OnClosingCleanup()
+    {
+        _isClosing = true;
+        _previewTimer.StopAndDispose(PreviewTimerElapsed);
     }
 
     private void UpdatePreview()
@@ -136,14 +152,12 @@ public partial class MergeShortLinesViewModel : ObservableObject
 
         SaveSettings();
         OkPressed = true;
-        _previewTimer.StopAndDispose(PreviewTimerElapsed);
         Window?.Close();
     }
 
     [RelayCommand]
     private void Cancel()
     {
-        _previewTimer.StopAndDispose(PreviewTimerElapsed);
         Window?.Close();
     }
 
@@ -152,7 +166,6 @@ public partial class MergeShortLinesViewModel : ObservableObject
         if (e.Key == Key.Escape)
         {
             e.Handled = true;
-            _previewTimer.StopAndDispose(PreviewTimerElapsed);
             Window?.Close();
         }
         else if (UiUtil.IsHelp(e))

@@ -11,7 +11,7 @@ using System.Collections.ObjectModel;
 
 namespace Nikse.SubtitleEdit.Features.Options.Settings.SyntaxColorTooWideSettings;
 
-public partial class SyntaxColorTooWideSettingsViewModel : ObservableObject
+public partial class SyntaxColorTooWideSettingsViewModel : ObservableObject, IClosingCleanup
 {
     [ObservableProperty] private ObservableCollection<string> _fonts = [];
     [ObservableProperty] private string _selectedFont = string.Empty;
@@ -26,6 +26,7 @@ public partial class SyntaxColorTooWideSettingsViewModel : ObservableObject
     public bool OkPressed { get; private set; }
 
     private bool _previewDirty;
+    private volatile bool _isClosing;
     private readonly System.Timers.Timer _updateTimer;
 
     public SyntaxColorTooWideSettingsViewModel()
@@ -40,13 +41,29 @@ public partial class SyntaxColorTooWideSettingsViewModel : ObservableObject
 
     private void UpdateTimerElapsed(object? sender, System.Timers.ElapsedEventArgs e)
     {
+        if (_isClosing)
+        {
+            return;
+        }
+
         _updateTimer.Stop();
         if (_previewDirty)
         {
             _previewDirty = false;
             UpdatePreview();
         }
-        _updateTimer.Start();
+
+        // Guard the restart: OnClosingCleanup may have disposed the timer while this handler ran (#12739).
+        if (!_isClosing)
+        {
+            _updateTimer.Start();
+        }
+    }
+
+    public void OnClosingCleanup()
+    {
+        _isClosing = true;
+        _updateTimer.StopAndDispose(UpdateTimerElapsed);
     }
 
     internal void Initialize(int tooWidePixels, string fontName, int fontSize)
@@ -175,7 +192,6 @@ public partial class SyntaxColorTooWideSettingsViewModel : ObservableObject
     [RelayCommand]
     private void Ok()
     {
-        _updateTimer.StopAndDispose(UpdateTimerElapsed);
         OkPressed = true;
         Window?.Close();
     }
@@ -183,7 +199,6 @@ public partial class SyntaxColorTooWideSettingsViewModel : ObservableObject
     [RelayCommand]
     private void Cancel()
     {
-        _updateTimer.StopAndDispose(UpdateTimerElapsed);
         Window?.Close();
     }
 
@@ -192,7 +207,6 @@ public partial class SyntaxColorTooWideSettingsViewModel : ObservableObject
         if (e.Key == Key.Escape)
         {
             e.Handled = true;
-            _updateTimer.StopAndDispose(UpdateTimerElapsed);
             Window?.Close();
         }
     }

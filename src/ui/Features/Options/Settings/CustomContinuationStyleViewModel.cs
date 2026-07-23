@@ -11,7 +11,7 @@ using System.Linq;
 
 namespace Nikse.SubtitleEdit.Features.Options.Settings;
 
-public partial class CustomContinuationStyleViewModel : ObservableObject
+public partial class CustomContinuationStyleViewModel : ObservableObject, IClosingCleanup
 {
     [ObservableProperty] private ObservableCollection<string> _preAndSuffixes;
 
@@ -37,6 +37,7 @@ public partial class CustomContinuationStyleViewModel : ObservableObject
     public StackPanel PanelPreview { get; internal set; }
 
     private bool _isDirty;
+    private volatile bool _isClosing;
     private readonly System.Timers.Timer _previewTimer;
 
     public CustomContinuationStyleViewModel()
@@ -68,6 +69,11 @@ public partial class CustomContinuationStyleViewModel : ObservableObject
 
     private void PreviewTimerElapsed(object? sender, System.Timers.ElapsedEventArgs e)
     {
+        if (_isClosing)
+        {
+            return;
+        }
+
         _previewTimer.Stop();
 
         if (_isDirty)
@@ -76,7 +82,17 @@ public partial class CustomContinuationStyleViewModel : ObservableObject
             _isDirty = false;
         }
 
-        _previewTimer.Start();
+        // Guard the restart: OnClosingCleanup may have disposed the timer while this handler ran (#12739).
+        if (!_isClosing)
+        {
+            _previewTimer.Start();
+        }
+    }
+
+    public void OnClosingCleanup()
+    {
+        _isClosing = true;
+        _previewTimer.StopAndDispose(PreviewTimerElapsed);
     }
 
     public void Initialize(CustomContinuationStyle style)
@@ -201,14 +217,12 @@ public partial class CustomContinuationStyleViewModel : ObservableObject
     private void Ok()
     {
         OkPressed = true;
-        _previewTimer.StopAndDispose(PreviewTimerElapsed);
         Window?.Close();
     }
 
     [RelayCommand]
     private void Cancel()
     {
-        _previewTimer.StopAndDispose(PreviewTimerElapsed);
         Window?.Close();
     }
 
@@ -293,7 +307,6 @@ public partial class CustomContinuationStyleViewModel : ObservableObject
         if (e.Key == Key.Escape)
         {
             e.Handled = true;
-            _previewTimer.StopAndDispose(PreviewTimerElapsed);
             Window?.Close();
         }
     }

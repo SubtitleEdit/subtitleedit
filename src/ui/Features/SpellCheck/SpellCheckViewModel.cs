@@ -33,7 +33,7 @@ using Nikse.SubtitleEdit.UiLogic.SpellCheck;
 
 namespace Nikse.SubtitleEdit.Features.SpellCheck;
 
-public partial class SpellCheckViewModel : ObservableObject
+public partial class SpellCheckViewModel : ObservableObject, IClosingCleanup
 {
     [ObservableProperty] private string _lineText;
     [ObservableProperty] private string _wholeText;
@@ -866,11 +866,6 @@ public partial class SpellCheckViewModel : ObservableObject
         OkPressed = true;
         Se.Settings.SpellCheck.LastLanguageDictionaryName = SelectedDictionary?.Name;
         Se.Settings.SpellCheck.LastLanguageDictionaryFile = SelectedDictionary?.DictionaryFileName;
-        if (_statusTimer != null)
-        {
-            _statusTimer.StopAndDispose(StatusTimerElapsed);
-        }
-
         Dispatcher.UIThread.Invoke(() => { Window?.Close(); });
     }
 
@@ -879,11 +874,6 @@ public partial class SpellCheckViewModel : ObservableObject
         if (e.Key == Key.Escape)
         {
             e.Handled = true;
-            if (_statusTimer != null)
-            {
-                _statusTimer.StopAndDispose(StatusTimerElapsed);
-            }
-
             Window?.Close();
         }
         else if (UiUtil.IsHelp(e))
@@ -1114,13 +1104,18 @@ public partial class SpellCheckViewModel : ObservableObject
     {
         StatusText = statusText;
 
-        _statusTimer?.Stop();
-        _statusTimer?.Dispose();
+        _statusTimer?.StopAndDispose(StatusTimerElapsed);
 
         _statusTimer = new System.Timers.Timer(3000);
         _statusTimer.Elapsed += StatusTimerElapsed;
         _statusTimer.AutoReset = false;
         _statusTimer.Start();
+    }
+
+    public void OnClosingCleanup()
+    {
+        _statusTimer?.StopAndDispose(StatusTimerElapsed);
+        _statusTimer = null;
     }
 
     private void StatusTimerElapsed(object? sender, System.Timers.ElapsedEventArgs e)

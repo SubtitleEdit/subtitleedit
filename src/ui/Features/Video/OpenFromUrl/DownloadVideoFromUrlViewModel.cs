@@ -18,7 +18,7 @@ using Timer = System.Timers.Timer;
 
 namespace Nikse.SubtitleEdit.Features.Video.OpenFromUrl;
 
-public partial class DownloadVideoFromUrlViewModel : ObservableObject
+public partial class DownloadVideoFromUrlViewModel : ObservableObject, IClosingCleanup
 {
     [ObservableProperty] private double _progress;
     [ObservableProperty] private string _statusText;
@@ -239,7 +239,7 @@ public partial class DownloadVideoFromUrlViewModel : ObservableObject
 
             if (_downloadTask.IsCompletedSuccessfully)
             {
-                _timer.StopAndDispose(OnTimerElapsed);
+                _timer.Stop();
                 _done = true;
                 Success = File.Exists(OutputPath);
                 if (!Success)
@@ -253,7 +253,7 @@ public partial class DownloadVideoFromUrlViewModel : ObservableObject
             }
             else if (_downloadTask.IsFaulted)
             {
-                _timer.StopAndDispose(OnTimerElapsed);
+                _timer.Stop();
                 _done = true;
 
                 var ex = _downloadTask.Exception?.InnerException ?? _downloadTask.Exception;
@@ -273,7 +273,7 @@ public partial class DownloadVideoFromUrlViewModel : ObservableObject
             }
             else if (_downloadTask.IsCanceled)
             {
-                _timer.StopAndDispose(OnTimerElapsed);
+                _timer.Stop();
                 _done = true;
                 TryDeletePartial();
                 Close();
@@ -311,6 +311,11 @@ public partial class DownloadVideoFromUrlViewModel : ObservableObject
 
         _cancellationTokenSource.Cancel();
         // Let the timer pick up the cancellation and close cleanly.
+    }
+
+    public void OnClosingCleanup()
+    {
+        _timer.StopAndDispose(OnTimerElapsed);
     }
 
     private void Close()

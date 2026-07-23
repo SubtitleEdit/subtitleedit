@@ -65,9 +65,21 @@ public partial class BeautifyTimeCodesViewModel : ObservableObject, IDisposable
 
     private void TimerUpdatePreviewElapsed(object? sender, System.Timers.ElapsedEventArgs e)
     {
+        // Dispose() (wired from the window's Closing) may run on the UI thread while this handler
+        // runs on a thread-pool thread; Start() on the disposed timer throws ObjectDisposedException
+        // (no longer swallowed on modern .NET), so bail out and never restart once disposed. (#12739)
+        if (_disposed)
+        {
+            return;
+        }
+
         if (!_dirty || _updateInProgress)
         {
-            _timerUpdatePreview.Start();
+            if (!_disposed)
+            {
+                _timerUpdatePreview.Start();
+            }
+
             return;
         }
 
@@ -75,7 +87,11 @@ public partial class BeautifyTimeCodesViewModel : ObservableObject, IDisposable
         {
             if (!_dirty || _updateInProgress)
             {
-                _timerUpdatePreview.Start();
+                if (!_disposed)
+                {
+                    _timerUpdatePreview.Start();
+                }
+
                 return;
             }
 
@@ -527,8 +543,11 @@ public partial class BeautifyTimeCodesViewModel : ObservableObject, IDisposable
             AudioVisualizerOriginal.InvalidateVisual();
             AudioVisualizerBeautified.InvalidateVisual();
 
-            _timerUpdatePreview.Start();
-            StartPositionTimer();
+            if (!_disposed)
+            {
+                _timerUpdatePreview.Start();
+                StartPositionTimer();
+            }
         });
     }
 

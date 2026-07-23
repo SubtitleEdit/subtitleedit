@@ -13,7 +13,7 @@ using System.Collections.ObjectModel;
 
 namespace Nikse.SubtitleEdit.Features.Tools.SplitBreakLongLines;
 
-public partial class SplitBreakLongLinesViewModel : ObservableObject
+public partial class SplitBreakLongLinesViewModel : ObservableObject, IClosingCleanup
 {
     [ObservableProperty] private ObservableCollection<SplitBreakLongLinesItem> _fixes;
     [ObservableProperty] private SplitBreakLongLinesItem? _selectedFix;
@@ -36,6 +36,7 @@ public partial class SplitBreakLongLinesViewModel : ObservableObject
     private List<SubtitleLineViewModel> _allSubtitles;
 
     private readonly System.Timers.Timer _previewTimer;
+    private volatile bool _isClosing;
     private bool _isDirty;
 
     public SplitBreakLongLinesViewModel()
@@ -54,6 +55,11 @@ public partial class SplitBreakLongLinesViewModel : ObservableObject
 
     private void PreviewTimerElapsed(object? sender, System.Timers.ElapsedEventArgs e)
     {
+        if (_isClosing)
+        {
+            return;
+        }
+
         _previewTimer.Stop();
 
         if (_isDirty)
@@ -62,7 +68,19 @@ public partial class SplitBreakLongLinesViewModel : ObservableObject
             UpdatePreview();
         }
 
-        _previewTimer.Start();
+        // Guard the restart: OnClosingCleanup may have disposed the timer while this handler ran,
+        // and Start() on a disposed timer throws ObjectDisposedException (no longer swallowed on
+        // modern .NET), crashing the app from a thread-pool thread. (#12739)
+        if (!_isClosing)
+        {
+            _previewTimer.Start();
+        }
+    }
+
+    public void OnClosingCleanup()
+    {
+        _isClosing = true;
+        _previewTimer.StopAndDispose(PreviewTimerElapsed);
     }
 
     private void UpdatePreview()
@@ -584,14 +602,12 @@ public partial class SplitBreakLongLinesViewModel : ObservableObject
 
         SaveSettings();
         OkPressed = true;
-        _previewTimer.StopAndDispose(PreviewTimerElapsed);
         Window?.Close();
     }
 
     [RelayCommand]
     private void Cancel()
     {
-        _previewTimer.StopAndDispose(PreviewTimerElapsed);
         Window?.Close();
     }
 
@@ -600,7 +616,6 @@ public partial class SplitBreakLongLinesViewModel : ObservableObject
         if (e.Key == Key.Escape)
         {
             e.Handled = true;
-            _previewTimer.StopAndDispose(PreviewTimerElapsed);
             Window?.Close();
         }
         else if (UiUtil.IsHelp(e))

@@ -14,7 +14,7 @@ using System.Linq;
 
 namespace Nikse.SubtitleEdit.Features.Tools.MergeSubtitlesWithSameTimeCodes;
 
-public partial class MergeSameTimeCodesViewModel : ObservableObject
+public partial class MergeSameTimeCodesViewModel : ObservableObject, IClosingCleanup
 {
     [ObservableProperty] private ObservableCollection<MergeDisplayItem> _mergeItems;
     [ObservableProperty] private MergeDisplayItem? _selectedMergeItem;
@@ -32,6 +32,7 @@ public partial class MergeSameTimeCodesViewModel : ObservableObject
     public DataGrid SubtitleGrid { get; set; }
 
     private readonly System.Timers.Timer _timerUpdatePreview;
+    private volatile bool _isClosing;
     private bool _dirty;
     private string _language;
     private List<SubtitleLineViewModel> _subtitles;
@@ -53,6 +54,11 @@ public partial class MergeSameTimeCodesViewModel : ObservableObject
 
     private void TimerUpdatePreviewElapsed(object? sender, System.Timers.ElapsedEventArgs e)
     {
+        if (_isClosing)
+        {
+            return;
+        }
+
         _timerUpdatePreview.Stop();
         if (_dirty)
         {
@@ -62,7 +68,18 @@ public partial class MergeSameTimeCodesViewModel : ObservableObject
                 UpdatePreview();
             });
         }
-        _timerUpdatePreview.Start();
+
+        // Guard the restart: OnClosingCleanup may have disposed the timer while this handler ran (#12739).
+        if (!_isClosing)
+        {
+            _timerUpdatePreview.Start();
+        }
+    }
+
+    public void OnClosingCleanup()
+    {
+        _isClosing = true;
+        _timerUpdatePreview.StopAndDispose(TimerUpdatePreviewElapsed);
     }
 
     public void Initialize(List<SubtitleLineViewModel> subtitles, Subtitle subtitle)
@@ -285,14 +302,12 @@ public partial class MergeSameTimeCodesViewModel : ObservableObject
         SaveSettings();
         ResultSubtitles = BuildResultSubtitles();
         OkPressed = true;
-        _timerUpdatePreview.StopAndDispose(TimerUpdatePreviewElapsed);
         Window?.Close();
     }
 
     [RelayCommand]
     private void Cancel()
     {
-        _timerUpdatePreview.StopAndDispose(TimerUpdatePreviewElapsed);
         Window?.Close();
     }
 
@@ -324,7 +339,6 @@ public partial class MergeSameTimeCodesViewModel : ObservableObject
         if (e.Key == Key.Escape)
         {
             e.Handled = true;
-            _timerUpdatePreview.StopAndDispose(TimerUpdatePreviewElapsed);
             Window?.Close();
         }
         else if (UiUtil.IsHelp(e))

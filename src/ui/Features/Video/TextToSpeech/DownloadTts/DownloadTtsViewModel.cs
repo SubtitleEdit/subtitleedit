@@ -75,6 +75,7 @@ public partial class DownloadTtsViewModel : ObservableObject
     private string _omniVoiceVariant = OmniVoiceDownloadService.WindowsVariantVulkan;
     private string _qwen3TtsCppVariant = Qwen3TtsCppDownloadService.WindowsVariantVulkan;
     private readonly Timer _timer = new();
+    private volatile bool _isClosing;
 
     private readonly ITtsDownloadService _ttsDownloadService;
     private readonly IQwen3TtsCppDownloadService _qwen3TtsCppDownloadService;
@@ -173,6 +174,11 @@ public partial class DownloadTtsViewModel : ObservableObject
 
     private void OnTimerOnElapsed(object? sender, ElapsedEventArgs args)
     {
+        if (_isClosing)
+        {
+            return;
+        }
+
         lock (_lock)
         {
             if (!_timer.Enabled)
@@ -372,7 +378,10 @@ public partial class DownloadTtsViewModel : ObservableObject
                 });
                 _downloadTaskQwen3TtsCppVoices = _qwen3TtsCppDownloadService.DownloadVoices(
                     _downloadStreamQwen3TtsCppVoices, voicesProgress, _cancellationTokenSource.Token);
-                _timer.Start();
+                if (!_isClosing)
+                {
+                    _timer.Start();
+                }
             }
             else if (_downloadTaskQwen3TtsCpp is { IsFaulted: true })
             {
@@ -2049,6 +2058,7 @@ public partial class DownloadTtsViewModel : ObservableObject
     internal void OnClosing()
     {
         try { _cancellationTokenSource.Cancel(); } catch (ObjectDisposedException) { }
+        _isClosing = true;
         _timer.StopAndDispose(OnTimerOnElapsed);
 
         DisposeQuietly(_downloadStream);

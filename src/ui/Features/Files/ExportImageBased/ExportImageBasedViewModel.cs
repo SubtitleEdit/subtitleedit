@@ -29,7 +29,7 @@ using System.Timers;
 
 namespace Nikse.SubtitleEdit.Features.Files.ExportImageBased;
 
-public partial class ExportImageBasedViewModel : ObservableObject
+public partial class ExportImageBasedViewModel : ObservableObject, IClosingCleanup
 {
     [ObservableProperty] private string _title;
     [ObservableProperty] private ObservableCollection<SubtitleLineViewModel> _subtitles;
@@ -659,8 +659,12 @@ public partial class ExportImageBasedViewModel : ObservableObject
 
     private void Close()
     {
-        _timerUpdatePreview.StopAndDispose(TimerUpdatePreviewElapsed);
         Dispatcher.UIThread.Post(() => { Window?.Close(); });
+    }
+
+    public void OnClosingCleanup()
+    {
+        _timerUpdatePreview.StopAndDispose(TimerUpdatePreviewElapsed);
     }
 
     public void Initialize(

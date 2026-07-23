@@ -23,7 +23,7 @@ using System.Threading.Tasks;
 
 namespace Nikse.SubtitleEdit.Features.Ssa;
 
-public partial class SsaStylesViewModel : ObservableObject
+public partial class SsaStylesViewModel : ObservableObject, IClosingCleanup
 {
     [ObservableProperty] private string _title;
     [ObservableProperty] private ObservableCollection<StyleDisplay> _fileStyles;
@@ -58,6 +58,7 @@ public partial class SsaStylesViewModel : ObservableObject
     private IApplySsaStyles? _applySsaStyles;
     private Subtitle _subtitle;
     private string _subtitleFileName;
+    private volatile bool _isClosing;
     private readonly System.Timers.Timer _timerUpdatePreview;
 
     public SsaStylesViewModel(IFileHelper fileHelper, IWindowService windowService)
@@ -87,9 +88,21 @@ public partial class SsaStylesViewModel : ObservableObject
 
     private void TimerUpdatePreviewElapsed(object? sender, System.Timers.ElapsedEventArgs e)
     {
+        if (_isClosing)
+        {
+            return;
+        }
+
         _timerUpdatePreview.Stop();
         UpdatePreview();
-        _timerUpdatePreview.Start();
+
+        // Guard the restart: OnClosingCleanup may have disposed the timer while this
+        // handler ran, and Start() on a disposed timer throws ObjectDisposedException,
+        // crashing the app from a thread-pool thread. (#12739)
+        if (!_isClosing)
+        {
+            _timerUpdatePreview.Start();
+        }
     }
 
     [RelayCommand]
@@ -567,8 +580,13 @@ public partial class SsaStylesViewModel : ObservableObject
 
     private void Close()
     {
-        _timerUpdatePreview.StopAndDispose(TimerUpdatePreviewElapsed);
         Dispatcher.UIThread.Post(() => { Window?.Close(); });
+    }
+
+    public void OnClosingCleanup()
+    {
+        _isClosing = true;
+        _timerUpdatePreview.StopAndDispose(TimerUpdatePreviewElapsed);
     }
 
     public void Initialize(

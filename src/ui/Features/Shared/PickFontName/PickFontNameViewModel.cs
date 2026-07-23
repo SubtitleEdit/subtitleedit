@@ -13,7 +13,7 @@ using System.Collections.ObjectModel;
 
 namespace Nikse.SubtitleEdit.Features.Shared.PickFontName;
 
-public partial class PickFontNameViewModel : ObservableObject
+public partial class PickFontNameViewModel : ObservableObject, IClosingCleanup
 {
     [ObservableProperty] private string _searchText;
     [ObservableProperty] private ObservableCollection<string> _fontNames;
@@ -30,6 +30,7 @@ public partial class PickFontNameViewModel : ObservableObject
 
     private List<string> _allFontNames;
     private readonly System.Timers.Timer _timerUpdate;
+    private volatile bool _isClosing;
     private bool _dirtySearch;
     private bool _dirtyPreview;
 
@@ -47,6 +48,11 @@ public partial class PickFontNameViewModel : ObservableObject
 
     private void TimerUpdateElapsed(object? sender, System.Timers.ElapsedEventArgs e)
     {
+        if (_isClosing)
+        {
+            return;
+        }
+
         _timerUpdate.Stop();
         if (_dirtySearch)
         {
@@ -58,7 +64,18 @@ public partial class PickFontNameViewModel : ObservableObject
             _dirtyPreview = false;
             UpdatePreview();
         }
-        _timerUpdate.Start();
+
+        // Guard the restart: OnClosingCleanup may have disposed the timer while this handler ran (#12739).
+        if (!_isClosing)
+        {
+            _timerUpdate.Start();
+        }
+    }
+
+    public void OnClosingCleanup()
+    {
+        _isClosing = true;
+        _timerUpdate.StopAndDispose(TimerUpdateElapsed);
     }
 
     internal void Initialize(bool isFontSizeVisible = false, bool isFontBoldVisible = false)
@@ -159,14 +176,12 @@ public partial class PickFontNameViewModel : ObservableObject
     private void Ok()
     {
         OkPressed = true;
-        _timerUpdate.StopAndDispose(TimerUpdateElapsed);
         Window?.Close();
     }
 
     [RelayCommand]
     private void Cancel()
     {
-        _timerUpdate.StopAndDispose(TimerUpdateElapsed);
         Window?.Close();
     }
 
@@ -175,7 +190,6 @@ public partial class PickFontNameViewModel : ObservableObject
         if (e.Key == Key.Escape)
         {
             e.Handled = true;
-            _timerUpdate.StopAndDispose(TimerUpdateElapsed);
             Window?.Close();
         }
     }

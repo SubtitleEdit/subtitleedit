@@ -20,7 +20,7 @@ using Timer = System.Timers.Timer;
 
 namespace Nikse.SubtitleEdit.Features.Ocr.Download;
 
-public partial class DownloadPaddleOcrViewModel : ObservableObject
+public partial class DownloadPaddleOcrViewModel : ObservableObject, IClosingCleanup
 {
     [ObservableProperty] private double _progressValue;
     [ObservableProperty] private string _progressText;
@@ -231,8 +231,12 @@ public partial class DownloadPaddleOcrViewModel : ObservableObject
     {
         _cancellationTokenSource?.Cancel();
         _done = true;
-        _timer.StopAndDispose(OnTimerOnElapsed);
         Close();
+    }
+
+    public void OnClosingCleanup()
+    {
+        _timer.StopAndDispose(OnTimerOnElapsed);
     }
 
     public void StartDownload()

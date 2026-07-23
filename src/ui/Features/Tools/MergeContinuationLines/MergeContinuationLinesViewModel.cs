@@ -11,7 +11,7 @@ using System.Collections.ObjectModel;
 
 namespace Nikse.SubtitleEdit.Features.Tools.MergeContinuationLines;
 
-public partial class MergeContinuationLinesViewModel : ObservableObject
+public partial class MergeContinuationLinesViewModel : ObservableObject, IClosingCleanup
 {
     [ObservableProperty] private ObservableCollection<MergeContinuationLinesCandidate> _candidates;
     [ObservableProperty] private MergeContinuationLinesCandidate? _selectedCandidate;
@@ -27,6 +27,7 @@ public partial class MergeContinuationLinesViewModel : ObservableObject
     private List<SubtitleLineViewModel> _allSubtitles;
     private string? _language;
     private readonly System.Timers.Timer _previewTimer;
+    private volatile bool _isClosing;
     private bool _isDirty;
 
     public MergeContinuationLinesViewModel()
@@ -45,13 +46,29 @@ public partial class MergeContinuationLinesViewModel : ObservableObject
 
     private void PreviewTimerElapsed(object? sender, System.Timers.ElapsedEventArgs e)
     {
+        if (_isClosing)
+        {
+            return;
+        }
+
         _previewTimer.Stop();
         if (_isDirty)
         {
             _isDirty = false;
             UpdatePreview();
         }
-        _previewTimer.Start();
+
+        // Guard the restart: OnClosingCleanup may have disposed the timer while this handler ran (#12739).
+        if (!_isClosing)
+        {
+            _previewTimer.Start();
+        }
+    }
+
+    public void OnClosingCleanup()
+    {
+        _isClosing = true;
+        _previewTimer.StopAndDispose(PreviewTimerElapsed);
     }
 
     public void Initialize(List<SubtitleLineViewModel> subtitles, string? language, int? maxGapMs = null, int? maxCharacters = null)
@@ -97,22 +114,13 @@ public partial class MergeContinuationLinesViewModel : ObservableObject
     {
         AllSubtitlesFixed = MergeContinuationLinesHelper.Apply(_allSubtitles, Candidates, _language);
         OkPressed = true;
-        _previewTimer.StopAndDispose(PreviewTimerElapsed);
         Window?.Close();
     }
 
     [RelayCommand]
     private void Cancel()
     {
-        _previewTimer.StopAndDispose(PreviewTimerElapsed);
         Window?.Close();
-    }
-
-    // Called from the window's Closed event. Stops the recurring preview timer so the VM
-    // (and the subtitles it references) can be garbage-collected after the dialog goes away.
-    internal void OnClosed()
-    {
-        _previewTimer.StopAndDispose(PreviewTimerElapsed);
     }
 
     [RelayCommand]
@@ -143,7 +151,6 @@ public partial class MergeContinuationLinesViewModel : ObservableObject
         if (e.Key == Key.Escape)
         {
             e.Handled = true;
-            _previewTimer.StopAndDispose(PreviewTimerElapsed);
             Window?.Close();
         }
     }

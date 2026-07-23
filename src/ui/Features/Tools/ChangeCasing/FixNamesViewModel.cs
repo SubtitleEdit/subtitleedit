@@ -17,7 +17,7 @@ using System.Threading;
 
 namespace Nikse.SubtitleEdit.Features.Tools.ChangeCasing;
 
-public partial class FixNamesViewModel : ObservableObject
+public partial class FixNamesViewModel : ObservableObject, IClosingCleanup
 {
     [ObservableProperty] private ObservableCollection<FixNameItem> _names;
     [ObservableProperty] private ObservableCollection<FixNameHitItem> _hits;
@@ -77,6 +77,11 @@ public partial class FixNamesViewModel : ObservableObject
                 _oldNames = namesString;
             }
         }
+    }
+
+    public void OnClosingCleanup()
+    {
+        _previewTimer.StopAndDispose(PreviewTimerElapsed);
     }
 
     internal void Initialize(Subtitle subtitle)
@@ -270,14 +275,12 @@ public partial class FixNamesViewModel : ObservableObject
         Info = $"Change casing - lines changed: {noOfLinesChanged}";
 
         OkPressed = true;
-        _previewTimer.StopAndDispose(PreviewTimerElapsed);
         Window?.Close();
     }
 
     [RelayCommand]
     public void Cancel()
     {
-        _previewTimer.StopAndDispose(PreviewTimerElapsed);
         Window?.Close();
     }
 

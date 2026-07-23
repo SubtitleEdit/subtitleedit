@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace Nikse.SubtitleEdit.Features.Files.ExportCustomTextFormat;
 
-public partial class EditCustomTextFormatViewModel : ObservableObject
+public partial class EditCustomTextFormatViewModel : ObservableObject, IClosingCleanup
 {
     [ObservableProperty] private CustomFormatItem? _selectedCustomFormat;
     [ObservableProperty] private string _previewText;
@@ -85,6 +85,11 @@ public partial class EditCustomTextFormatViewModel : ObservableObject
         PreviewText = CustomTextFormatter.GenerateCustomText(SelectedCustomFormat.ToTemplate(), _subtitles.Where(s => s.Paragraph != null).Select(s => s.Paragraph!).ToList(), _subtitleTitle, _videoFileName ?? string.Empty);
     }
 
+    public void OnClosingCleanup()
+    {
+        _previewTimer.StopAndDispose(PreviewTimerElapsed);
+    }
+
 
     [RelayCommand]
     private void InsertHeaderTag(string tag)
@@ -137,7 +142,6 @@ public partial class EditCustomTextFormatViewModel : ObservableObject
             return;
         }
 
-        _previewTimer.StopAndDispose(PreviewTimerElapsed);
         OkPressed = true;
         Window?.Close();
     }
@@ -145,7 +149,6 @@ public partial class EditCustomTextFormatViewModel : ObservableObject
     [RelayCommand]
     private void Cancel()
     {
-        _previewTimer.StopAndDispose(PreviewTimerElapsed);
         Window?.Close();
     }
 
@@ -154,7 +157,6 @@ public partial class EditCustomTextFormatViewModel : ObservableObject
         if (e.Key == Key.Escape)
         {
             e.Handled = true;
-            _previewTimer.StopAndDispose(PreviewTimerElapsed);
             Window?.Close();
         }
     }

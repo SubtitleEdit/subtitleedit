@@ -12,7 +12,7 @@ using System.Linq;
 
 namespace Nikse.SubtitleEdit.Features.Edit.ModifySelection;
 
-public partial class ModifySelectionViewModel : ObservableObject
+public partial class ModifySelectionViewModel : ObservableObject, IClosingCleanup
 {
     [ObservableProperty] private ObservableCollection<ModifySelectionRule> _rules;
     [ObservableProperty] private ModifySelectionRule? _selectedRule;
@@ -32,6 +32,7 @@ public partial class ModifySelectionViewModel : ObservableObject
 
     private List<SubtitleLineViewModel> _allSubtitles;
     private readonly System.Timers.Timer _previewTimer;
+    private volatile bool _isClosing;
     private readonly Dictionary<RuleType, double> _ruleNumbers;
     private RuleType? _activeRuleType;
     private bool _isDirty;
@@ -53,6 +54,11 @@ public partial class ModifySelectionViewModel : ObservableObject
 
     private void PreviewTimerElapsed(object? sender, System.Timers.ElapsedEventArgs e)
     {
+        if (_isClosing)
+        {
+            return;
+        }
+
         _previewTimer.Stop();
 
         if (_isDirty)
@@ -61,7 +67,17 @@ public partial class ModifySelectionViewModel : ObservableObject
             UpdatePreview();
         }
 
-        _previewTimer.Start();
+        // Guard the restart: OnClosingCleanup may have disposed the timer while this handler ran (#12739).
+        if (!_isClosing)
+        {
+            _previewTimer.Start();
+        }
+    }
+
+    public void OnClosingCleanup()
+    {
+        _isClosing = true;
+        _previewTimer.StopAndDispose(PreviewTimerElapsed);
     }
 
     private void UpdatePreview()
@@ -166,14 +182,12 @@ public partial class ModifySelectionViewModel : ObservableObject
 
         SaveSettings();
         OkPressed = true;
-        _previewTimer.StopAndDispose(PreviewTimerElapsed);
         Window?.Close();
     }
 
     [RelayCommand]
     private void Cancel()
     {
-        _previewTimer.StopAndDispose(PreviewTimerElapsed);
         Window?.Close();
     }
 
@@ -182,7 +196,6 @@ public partial class ModifySelectionViewModel : ObservableObject
         if (e.Key == Key.Escape)
         {
             e.Handled = true;
-            _previewTimer.StopAndDispose(PreviewTimerElapsed);
             Window?.Close();
         }
     }

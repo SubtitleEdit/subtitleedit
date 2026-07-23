@@ -17,7 +17,7 @@ using System.Threading.Tasks;
 
 namespace Nikse.SubtitleEdit.Features.Tools.SplitSubtitle;
 
-public partial class SplitSubtitleViewModel : ObservableObject
+public partial class SplitSubtitleViewModel : ObservableObject, IClosingCleanup
 {
     [ObservableProperty] private ObservableCollection<SplitDisplayItem> _splitItems;
     [ObservableProperty] private SplitDisplayItem? _selectedSpiltItem;
@@ -44,6 +44,7 @@ public partial class SplitSubtitleViewModel : ObservableObject
     private string _subtitleFileName;
     private List<Subtitle> _parts;
     private readonly System.Timers.Timer _timerUpdatePreview;
+    private volatile bool _isClosing;
     private bool _dirty;
     private bool _loading;
 
@@ -76,13 +77,31 @@ public partial class SplitSubtitleViewModel : ObservableObject
 
     private void TimerUpdatePreviewElapsed(object? sender, System.Timers.ElapsedEventArgs e)
     {
+        if (_isClosing)
+        {
+            return;
+        }
+
         _timerUpdatePreview.Stop();
         if (_dirty)
         {
             _dirty = false;
             UpdateSplit();
         }
-        _timerUpdatePreview.Start();
+
+        // Guard the restart: OnClosingCleanup may have disposed the timer while this handler ran,
+        // and Start() on a disposed timer throws ObjectDisposedException (no longer swallowed on
+        // modern .NET), crashing the app from a thread-pool thread. (#12739)
+        if (!_isClosing)
+        {
+            _timerUpdatePreview.Start();
+        }
+    }
+
+    public void OnClosingCleanup()
+    {
+        _isClosing = true;
+        _timerUpdatePreview.StopAndDispose(TimerUpdatePreviewElapsed);
     }
 
     public void Initialize(string fileName, Subtitle subtitle)
@@ -202,14 +221,12 @@ public partial class SplitSubtitleViewModel : ObservableObject
         });
 
         OkPressed = true;
-        _timerUpdatePreview.StopAndDispose(TimerUpdatePreviewElapsed);
         Window?.Close();
     }
 
     [RelayCommand]
     private void Cancel()
     {
-        _timerUpdatePreview.StopAndDispose(TimerUpdatePreviewElapsed);
         Window?.Close();
     }
 
@@ -305,7 +322,6 @@ public partial class SplitSubtitleViewModel : ObservableObject
         if (e.Key == Key.Escape)
         {
             e.Handled = true;
-            _timerUpdatePreview.StopAndDispose(TimerUpdatePreviewElapsed);
             Window?.Close();
         }
         else if (UiUtil.IsHelp(e))

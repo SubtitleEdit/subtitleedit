@@ -12,7 +12,7 @@ using System.Timers;
 
 namespace Nikse.SubtitleEdit.Features.Files.ExportImageBased;
 
-public partial class ImageBasedPreviewViewModel : ObservableObject
+public partial class ImageBasedPreviewViewModel : ObservableObject, IClosingCleanup
 {
     [ObservableProperty] private Bitmap _bitmapPreview;
     [ObservableProperty] private string _title;
@@ -38,6 +38,11 @@ public partial class ImageBasedPreviewViewModel : ObservableObject
         UpdateTitle();
     }
 
+    public void OnClosingCleanup()
+    {
+        _timerUpdatePreview.StopAndDispose(TimerUpdatePreviewElapsed);
+    }
+
     public void Initialize(SKBitmap bitmap, int width, int height, int x, int y)
     {
         var skBitmap = new SKBitmap(width, height, true);
@@ -54,7 +59,6 @@ public partial class ImageBasedPreviewViewModel : ObservableObject
     [RelayCommand]
     private void Ok()
     {
-        _timerUpdatePreview.StopAndDispose(TimerUpdatePreviewElapsed);
         Dispatcher.UIThread.Post(() =>
         {
             Window?.Close();
@@ -66,7 +70,6 @@ public partial class ImageBasedPreviewViewModel : ObservableObject
         if (e.Key == Key.Escape)
         {
             e.Handled = true;
-            _timerUpdatePreview.StopAndDispose(TimerUpdatePreviewElapsed);
             Window?.Close();
         }
     }

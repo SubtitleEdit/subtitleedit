@@ -19,7 +19,7 @@ using System.Threading.Tasks;
 
 namespace Nikse.SubtitleEdit.Features.Shared.SourceView;
 
-public partial class SourceViewViewModel : ObservableObject
+public partial class SourceViewViewModel : ObservableObject, IClosingCleanup
 {
     [ObservableProperty] private string _title;
     [ObservableProperty] private string _text;
@@ -86,6 +86,11 @@ public partial class SourceViewViewModel : ObservableObject
 
             LineAndColumnInfo = string.Format(Se.Language.General.LineXColumnY, lineNumber, columnNumber);
         });
+    }
+
+    public void OnClosingCleanup()
+    {
+        _cursorTimer.StopAndDispose(CursorTimerElapsed);
     }
 
     internal void Initialize(
@@ -311,7 +316,6 @@ public partial class SourceViewViewModel : ObservableObject
         if (string.IsNullOrEmpty(text))
         {
             OkPressed = false;
-            _cursorTimer.StopAndDispose(CursorTimerElapsed);
             Window?.Close();
             return;
         }
@@ -324,7 +328,6 @@ public partial class SourceViewViewModel : ObservableObject
             Subtitle.Paragraphs.Clear();
             Subtitle.Paragraphs.AddRange(subtitle.Paragraphs);
             OkPressed = true;
-            _cursorTimer.StopAndDispose(CursorTimerElapsed);
             Window?.Close();
             return;
         }
@@ -335,7 +338,6 @@ public partial class SourceViewViewModel : ObservableObject
             Subtitle.Paragraphs.Clear();
             Subtitle.Paragraphs.AddRange(subtitle.Paragraphs);
             OkPressed = true;
-            _cursorTimer.StopAndDispose(CursorTimerElapsed);
             Window?.Close();
             return;
         }
@@ -383,7 +385,6 @@ public partial class SourceViewViewModel : ObservableObject
     [RelayCommand]
     private void Cancel()
     {
-        _cursorTimer.StopAndDispose(CursorTimerElapsed);
         Window?.Close();
     }
 
@@ -392,7 +393,6 @@ public partial class SourceViewViewModel : ObservableObject
         if (e.Key == Key.Escape)
         {
             e.Handled = true;
-            _cursorTimer.StopAndDispose(CursorTimerElapsed);
             Window?.Close();
         }
     }

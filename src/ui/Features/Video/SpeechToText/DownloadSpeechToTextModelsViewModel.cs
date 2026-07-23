@@ -26,7 +26,7 @@ using Timer = System.Timers.Timer;
 
 namespace Nikse.SubtitleEdit.Features.Video.SpeechToText;
 
-public partial class DownloadSpeechToTextModelsViewModel : ObservableObject
+public partial class DownloadSpeechToTextModelsViewModel : ObservableObject, IClosingCleanup
 {
 
     [ObservableProperty] private ObservableCollection<SpeechToTextModelDisplay> _models;
@@ -55,6 +55,7 @@ public partial class DownloadSpeechToTextModelsViewModel : ObservableObject
 
     private const string TemporaryFileExtension = ".$$$";
     private readonly Timer _timer;
+    private volatile bool _isClosing;
     private readonly CancellationTokenSource _cancellationTokenSource;
 
     public DownloadSpeechToTextModelsViewModel(IWhisperDownloadService whisperDownloadService, IFolderHelper folderHelper)
@@ -103,6 +104,11 @@ public partial class DownloadSpeechToTextModelsViewModel : ObservableObject
     {
         lock (_lockObj)
         {
+            if (_isClosing)
+            {
+                return;
+            }
+
             _timer.Stop();
 
             // IsCompletedSuccessfully, not the broader IsCompleted (also true for
@@ -145,7 +151,13 @@ public partial class DownloadSpeechToTextModelsViewModel : ObservableObject
                 return;
             }
 
-            _timer.Start();
+            // Guard the restart: OnClosingCleanup may have disposed the timer while this
+            // handler ran, and Start() on a disposed timer throws ObjectDisposedException,
+            // crashing the app from a thread-pool thread. (#12739)
+            if (!_isClosing)
+            {
+                _timer.Start();
+            }
         }
     }
 
@@ -169,7 +181,11 @@ public partial class DownloadSpeechToTextModelsViewModel : ObservableObject
             _downloadTask = _whisperDownloadService.DownloadFile(url, _downloadFileName, MakeDownloadProgress(), _cancellationTokenSource.Token);
             ProgressFileName = string.Format(Se.Language.General.FileNameX, Path.GetFileName(url));
             ProgressValue = 0;
-            _timer.Start();
+            // Guard the restart against a concurrent OnClosingCleanup disposal (#12739).
+            if (!_isClosing)
+            {
+                _timer.Start();
+            }
 
             return;
         }
@@ -261,18 +277,22 @@ public partial class DownloadSpeechToTextModelsViewModel : ObservableObject
 
     private void Close()
     {
-        _timer.StopAndDispose(OnTimerOnElapsed);
         Dispatcher.UIThread.Post(() =>
         {
             Window?.Close();
         });
     }
 
+    public void OnClosingCleanup()
+    {
+        _isClosing = true;
+        _timer.StopAndDispose(OnTimerOnElapsed);
+    }
+
     [RelayCommand]
     private void Cancel()
     {
         _cancellationTokenSource?.Cancel();
-        _timer.Stop();
         OkPressed = false;
         Close();
     }

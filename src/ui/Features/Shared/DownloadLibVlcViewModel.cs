@@ -17,7 +17,7 @@ using Timer = System.Timers.Timer;
 
 namespace Nikse.SubtitleEdit.Features.Shared;
 
-public partial class DownloadLibVlcViewModel : ObservableObject
+public partial class DownloadLibVlcViewModel : ObservableObject, IClosingCleanup
 {
     [ObservableProperty] private double _progressValue;
     [ObservableProperty] private string _progressText;
@@ -146,8 +146,12 @@ public partial class DownloadLibVlcViewModel : ObservableObject
     {
         _cancellationTokenSource?.Cancel();
         _done = true;
-        _timer.StopAndDispose(OnTimerOnElapsed);
         Close();
+    }
+
+    public void OnClosingCleanup()
+    {
+        _timer.StopAndDispose(OnTimerOnElapsed);
     }
 
     public void StartDownload()

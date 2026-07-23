@@ -19,7 +19,7 @@ using Timer = System.Timers.Timer;
 
 namespace Nikse.SubtitleEdit.Features.Ocr.Download;
 
-public partial class DownloadTesseractModelViewModel : ObservableObject
+public partial class DownloadTesseractModelViewModel : ObservableObject, IClosingCleanup
 {
     [ObservableProperty] private ObservableCollection<TesseractDictionary> _tesseractDictionaryItems;
     [ObservableProperty] private TesseractDictionary? _selectedTesseractDictionaryItem;
@@ -133,8 +133,12 @@ public partial class DownloadTesseractModelViewModel : ObservableObject
     {
         _cancellationTokenSource?.Cancel();
         _done = true;
-        _timer.StopAndDispose(OnTimerOnElapsed);
         Close();
+    }
+
+    public void OnClosingCleanup()
+    {
+        _timer.StopAndDispose(OnTimerOnElapsed);
     }
 
     [RelayCommand]

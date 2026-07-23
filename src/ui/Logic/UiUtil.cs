@@ -2866,6 +2866,19 @@ public static class UiUtil
         window.Icon = GetSeIcon();
         window.Name = name;
 
+        // Stop and dispose any background timers the view model owns the moment the window closes,
+        // whatever the close path (buttons, Escape, title-bar X, Alt+F4). Without this a running
+        // System.Timers.Timer keeps its (captured) view model - and the whole closed window - alive
+        // and ticking. Wired here, in the one place every window funnels through, so individual
+        // dialogs don't each have to remember to do it. (#12739)
+        window.Closed += (_, _) =>
+        {
+            if (window.DataContext is IClosingCleanup cleanup)
+            {
+                cleanup.OnClosingCleanup();
+            }
+        };
+
         // On small or high-DPI screens (e.g. 1920x1080 at 150% = 1280x853 DIPs of
         // working area) SizeToContent windows can measure taller/wider than the screen,
         // leaving the bottom buttons unreachable - Avalonia does not cap them itself.

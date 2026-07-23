@@ -61,7 +61,6 @@ public class MergeContinuationLinesWindow : Window
         Activated += delegate { buttonOk.Focus(); };
         KeyDown += vm.KeyDown;
         Loaded += delegate { vm.Loaded(); };
-        Closed += delegate { vm.OnClosed(); };
 
         Closing += delegate { UiUtil.SaveWindowPosition(this); };
         Loaded += delegate { UiUtil.RestoreWindowPosition(this); };

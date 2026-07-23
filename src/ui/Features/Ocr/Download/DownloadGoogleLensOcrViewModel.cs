@@ -17,7 +17,7 @@ using Timer = System.Timers.Timer;
 
 namespace Nikse.SubtitleEdit.Features.Ocr.Download;
 
-public partial class DownloadGoogleLensOcrViewModel : ObservableObject
+public partial class DownloadGoogleLensOcrViewModel : ObservableObject, IClosingCleanup
 {
     [ObservableProperty] private double _progressValue;
     [ObservableProperty] private string _progressText;
@@ -121,8 +121,12 @@ public partial class DownloadGoogleLensOcrViewModel : ObservableObject
     {
         _cancellationTokenSource?.Cancel();
         _done = true;
-        _timer.StopAndDispose(OnTimerOnElapsed);
         Close();
+    }
+
+    public void OnClosingCleanup()
+    {
+        _timer.StopAndDispose(OnTimerOnElapsed);
     }
 
     public void StartDownload()

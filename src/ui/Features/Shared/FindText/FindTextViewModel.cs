@@ -13,7 +13,7 @@ using System.Threading;
 
 namespace Nikse.SubtitleEdit.Features.Shared.FindText;
 
-public partial class FindTextViewModel : ObservableObject
+public partial class FindTextViewModel : ObservableObject, IClosingCleanup
 {
     [ObservableProperty] private string _title;
     [ObservableProperty] private string _searchText;
@@ -68,6 +68,11 @@ public partial class FindTextViewModel : ObservableObject
         }
     }
 
+    public void OnClosingCleanup()
+    {
+        _searchTimer.StopAndDispose(_searchTimer_Elapsed);
+    }
+
     internal void Initialize(List<SubtitleLineViewModel> subtitleLines, string title)
     {
         Title = title;
@@ -80,14 +85,12 @@ public partial class FindTextViewModel : ObservableObject
     private void Ok()
     {
         OkPressed = true;
-        _searchTimer.StopAndDispose(_searchTimer_Elapsed);
         Window?.Close();
     }
 
     [RelayCommand]
     private void Cancel()
     {
-        _searchTimer.StopAndDispose(_searchTimer_Elapsed);
         Window?.Close();
     }
 
@@ -96,7 +99,6 @@ public partial class FindTextViewModel : ObservableObject
         if (e.Key == Key.Escape)
         {
             e.Handled = true;
-            _searchTimer.StopAndDispose(_searchTimer_Elapsed);
             Window?.Close();
         }
     }
