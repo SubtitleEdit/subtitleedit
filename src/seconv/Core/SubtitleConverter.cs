@@ -721,7 +721,6 @@ internal class SubtitleConverter
                 subtitle,
                 options.Operations,
                 options.FixCommonErrorsRules,
-                options.FixCommonErrorsExplicitlyNamedRules,
                 options.FixCommonErrorsLanguage);
         }
 
@@ -844,14 +843,6 @@ internal record class ConversionOptions
     /// Resolve via <see cref="FixCommonErrorsRunner.ResolveRuleIds"/>.
     /// </summary>
     public IReadOnlyList<string> FixCommonErrorsRules { get; init; } = [];
-
-    /// <summary>
-    /// Rules the user named by hand in <c>--FixCommonErrorsRules</c>. Used to bypass
-    /// language gating for explicitly-requested rules. Populate via
-    /// <see cref="FixCommonErrorsRunner.ParseExplicitlyNamedRules"/>. Empty means
-    /// "implicit all-rules pass" (gates stay active).
-    /// </summary>
-    public IReadOnlyList<string> FixCommonErrorsExplicitlyNamedRules { get; init; } = [];
 
     /// <summary>
     /// Forces the language used for FCE gating and OCR-fix (from <c>--fce-language</c>).

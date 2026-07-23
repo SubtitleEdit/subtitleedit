@@ -97,15 +97,15 @@ internal static class ListHelpers
         AnsiConsole.Write(table);
         AnsiConsole.MarkupLine(
             "\n[dim]The GUI equivalent is the checkbox label in the desktop Fix Common Errors window.[/]\n" +
-            "[dim]Language-gated rules run only when the subtitle auto-detects to that language.[/]\n" +
-            "[dim]Force it with[/] [green]--fce-language:<code>[/][dim], or bypass the gate by naming the rule explicitly.[/]");
+            "[dim]Language-gated rules run only when the language matches — auto-detected, or forced with[/] " +
+            "[green]--fce-language:<code>[/][dim]. Naming a gated rule selects it but does not bypass the gate.[/]");
         AnsiConsole.MarkupLine(
             "\n[dim]Examples:[/]\n" +
             "  [dim]--FixCommonErrors[/]                                       [dim]# all rules (gates active)[/]\n" +
             "  [dim]--FixCommonErrorsRules:FixCommas,FixEllipsesStart[/]       [dim]# only these two[/]\n" +
             "  [dim]--FixCommonErrorsRules:all,-FixDanishLetterI[/]            [dim]# all except one[/]\n" +
             "  [dim]--FixCommonErrors --fce-language:es[/]                     [dim]# force Spanish gate[/]\n" +
-            "  [dim]--FixCommonErrorsRules:FixSpanishInvertedQuestionAndExclamationMarks[/]  [dim]# bypass gate[/]");
+            "  [dim]--FixCommonErrorsRules:FixSpanishInvertedQuestionAndExclamationMarks --fce-language:es[/]  [dim]# force a named gated rule[/]");
     }
 
     public static void PrintOcrEngines()

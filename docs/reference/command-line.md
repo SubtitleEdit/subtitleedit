@@ -498,12 +498,11 @@ seconv movie.srt subrip --fix-common-errors --fce-language:es                # f
 seconv list-fce-rules                                                        # show rule IDs (marks language gates)
 ```
 
-**Language-specific rules.** A few rules only make sense for one language and mirror the GUI's *Fix Common Errors* window, which only offers them when the detected language matches: `FixAloneLowercaseIToUppercaseI` (English), `FixDanishLetterI` (Danish), `FixSpanishInvertedQuestionAndExclamationMarks` (Spanish), and `FixTurkishAnsiToUnicode` (Turkish). `seconv list-fce-rules` marks each gated rule with its language in a *Language gate* column. In the default all-rules pass these run only when auto-detection agrees, so e.g. the Spanish inverted-`¿` fix never lands on English content (issue #11037).
+**Language-specific rules.** A few rules only make sense for one language and mirror the GUI's *Fix Common Errors* window, which only offers them when the detected language matches: `FixAloneLowercaseIToUppercaseI` (English), `FixDanishLetterI` (Danish), `FixSpanishInvertedQuestionAndExclamationMarks` (Spanish), and `FixTurkishAnsiToUnicode` (Turkish). `seconv list-fce-rules` marks each gated rule with its language in a *Language gate* column. These run **only when the language matches** — so e.g. the Spanish inverted-`¿` fix never lands on English content (issue #11037). This holds however the rule was selected: naming it in `--fix-common-errors-rules` picks it into the run but does **not** bypass the gate, which makes mixed-language batches safe (a Spanish rule in your rule set self-skips on the English and French files).
 
-There are two ways to override the gate:
+The language is auto-detected from the content. To force it:
 
-- **`--fce-language:<code>`** forces the language used for *all* gated rules (and the OCR-fix pass). Use it when a genuinely Spanish/Danish/Turkish file mis-detects (e.g. it's too short) so the right rule still runs. Accepts a two-letter code, three-letter code, or English name (`es`, `spa`, `Spanish`); an unrecognized value warns and falls back to auto-detection.
-- **Naming a gated rule explicitly** in `--fix-common-errors-rules` forces just that rule on, regardless of the detected language.
+- **`--fce-language:<code>`** forces the language used for *all* gated rules (and the OCR-fix pass). Use it when a genuinely Spanish/Danish/Turkish file mis-detects (e.g. it's too short), or to run a named language rule on content that would auto-detect as something else. Accepts a two-letter code, three-letter code, or English name (`es`, `spa`, `Spanish`); an unrecognized value warns and falls back to auto-detection.
 
 **Rule selection is CLI-only.** The set of rules is chosen with `--fix-common-errors-rules`, not through the `--settings` JSON. The settings file shapes *how* the rules behave (line length, min gap, dialog/continuation style, CPS — see [Settings JSON](#settings-json)); it does not select which rules run.
 
