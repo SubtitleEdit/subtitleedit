@@ -4,6 +4,7 @@ using Nikse.SubtitleEdit.Core.Interfaces;
 using Nikse.SubtitleEdit.UiLogic.Ocr.FixEngine;
 using Nikse.SubtitleEdit.UiLogic.SpellCheck;
 using SkiaSharp;
+using System.Globalization;
 
 namespace SeConv.Core;
 
@@ -32,6 +33,22 @@ internal static class FixCommonErrorsRunner
 
     public static IReadOnlyList<string> AvailableRuleIds { get; } =
         Rules.Select(r => r.Id).Append(OcrFixRuleId).ToArray();
+
+    /// <summary>
+    /// Rules that only run when the subtitle's language (auto-detected, or forced via
+    /// <c>--fce-language</c>) matches the mapped two-letter ISO code. Single source of truth
+    /// for both the runtime gate (<see cref="IsLanguageOnlyRule"/>) and the <c>list-fce-rules</c>
+    /// display. Mirrors the GUI's per-language rule additions in <c>FixCommonErrorsViewModel</c>.
+    /// A gated rule can always be forced by naming it explicitly in <c>--FixCommonErrorsRules</c>.
+    /// </summary>
+    public static IReadOnlyDictionary<string, string> LanguageGates { get; } =
+        new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
+        {
+            [nameof(FixAloneLowercaseIToUppercaseI)] = "en",
+            [nameof(FixDanishLetterI)] = "da",
+            [nameof(FixSpanishInvertedQuestionAndExclamationMarks)] = "es",
+            [nameof(FixTurkishAnsiToUnicode)] = "tr",
+        };
 
     /// <summary>
     /// Runs every available rule against the subtitle. Equivalent to
@@ -63,7 +80,8 @@ internal static class FixCommonErrorsRunner
     public static void Run(
         Subtitle subtitle,
         IReadOnlyCollection<string>? ruleIds,
-        IReadOnlyCollection<string>? explicitlyNamedRules)
+        IReadOnlyCollection<string>? explicitlyNamedRules,
+        string? languageOverride = null)
     {
         if (subtitle == null || subtitle.Paragraphs.Count == 0)
         {
@@ -93,7 +111,12 @@ internal static class FixCommonErrorsRunner
             explicitlyNamed = new HashSet<string>(explicitlyNamedRules, StringComparer.OrdinalIgnoreCase);
         }
 
-        var language = LanguageAutoDetect.AutoDetectGoogleLanguageOrNull(subtitle) ?? "en";
+        // --fce-language forces the language used for gating (and OCR-fix), so a genuinely
+        // Spanish/Danish/Turkish file that auto-detects wrong still gets its per-language
+        // rule. Falls back to content auto-detection, then "en".
+        var language = NormalizeLanguageOverride(languageOverride)
+            ?? LanguageAutoDetect.AutoDetectGoogleLanguageOrNull(subtitle)
+            ?? "en";
         var callbacks = new EmptyFixCallback
         {
             Language = language,
@@ -261,19 +284,36 @@ internal static class FixCommonErrorsRunner
     /// Bypassable via explicit <c>--FixCommonErrorsRules</c>.
     /// </summary>
     private static bool IsLanguageOnlyRule(string ruleId, string language)
+        => LanguageGates.TryGetValue(ruleId, out var required)
+           && !required.Equals(language, StringComparison.OrdinalIgnoreCase);
+
+    /// <summary>
+    /// Normalizes a user-supplied <c>--fce-language</c> value to a two-letter ISO code so it can
+    /// match the <see cref="LanguageGates"/> map. Accepts a two-letter code (<c>es</c>), a
+    /// three-letter code (<c>spa</c>), or an English name (<c>Spanish</c>). Returns <c>null</c>
+    /// for null/blank input (no override) or when the value can't be resolved — the caller then
+    /// falls back to content auto-detection.
+    /// </summary>
+    internal static string? NormalizeLanguageOverride(string? value)
     {
-        return ruleId switch
+        if (string.IsNullOrWhiteSpace(value))
         {
-            "FixAloneLowercaseIToUppercaseI"
-                => !"en".Equals(language, StringComparison.OrdinalIgnoreCase),
-            "FixDanishLetterI"
-                => !"da".Equals(language, StringComparison.OrdinalIgnoreCase),
-            "FixSpanishInvertedQuestionAndExclamationMarks"
-                => !"es".Equals(language, StringComparison.OrdinalIgnoreCase),
-            "FixTurkishAnsiToUnicode"
-                => !"tr".Equals(language, StringComparison.OrdinalIgnoreCase),
-            _ => false,
-        };
+            return null;
+        }
+
+        var v = value.Trim();
+        if (v.Length == 2)
+        {
+            return v.ToLowerInvariant();
+        }
+
+        var culture = CultureInfo.GetCultures(CultureTypes.NeutralCultures)
+            .FirstOrDefault(c =>
+                c.TwoLetterISOLanguageName.Equals(v, StringComparison.OrdinalIgnoreCase)
+                || c.ThreeLetterISOLanguageName.Equals(v, StringComparison.OrdinalIgnoreCase)
+                || c.EnglishName.Equals(v, StringComparison.OrdinalIgnoreCase));
+
+        return culture?.TwoLetterISOLanguageName;
     }
 
     /// <summary>

@@ -243,6 +243,66 @@ public class FixCommonErrorsRunnerTest
     }
 
     [Fact]
+    public void Run_WithFceLanguageOverride_ForcesGateOnNonSpanish()
+    {
+        // --fce-language:es forces the Spanish gate open even for content that would
+        // auto-detect as something else — the escape hatch for short/mis-detected files.
+        var sub = new Subtitle();
+        sub.Paragraphs.Add(new Paragraph("Are you coming home tonight?", 0, 3000));
+        sub.Renumber();
+
+        var allRules = FixCommonErrorsRunner.AvailableRuleIds;
+        FixCommonErrorsRunner.Run(sub, allRules, explicitlyNamedRules: [], languageOverride: "es");
+
+        Assert.Contains('¿', sub.Paragraphs[0].Text);
+    }
+
+    [Fact]
+    public void Run_WithFceLanguageOverride_AcceptsEnglishName()
+    {
+        // The override normalizes an English name ("Spanish") to its two-letter code.
+        var sub = new Subtitle();
+        sub.Paragraphs.Add(new Paragraph("Are you coming home tonight?", 0, 3000));
+        sub.Renumber();
+
+        var allRules = FixCommonErrorsRunner.AvailableRuleIds;
+        FixCommonErrorsRunner.Run(sub, allRules, explicitlyNamedRules: [], languageOverride: "Spanish");
+
+        Assert.Contains('¿', sub.Paragraphs[0].Text);
+    }
+
+    [Theory]
+    [InlineData("es", "es")]
+    [InlineData("ES", "es")]
+    [InlineData("spa", "es")]
+    [InlineData("Spanish", "es")]
+    [InlineData("English", "en")]
+    public void NormalizeLanguageOverride_ResolvesCodesAndNames(string input, string expected)
+    {
+        Assert.Equal(expected, FixCommonErrorsRunner.NormalizeLanguageOverride(input));
+    }
+
+    [Theory]
+    [InlineData(null)]
+    [InlineData("")]
+    [InlineData("   ")]
+    [InlineData("spanihs")]
+    public void NormalizeLanguageOverride_BlankOrUnknown_ReturnsNull(string? input)
+    {
+        Assert.Null(FixCommonErrorsRunner.NormalizeLanguageOverride(input));
+    }
+
+    [Fact]
+    public void LanguageGates_MapExpectedRulesToCodes()
+    {
+        var gates = FixCommonErrorsRunner.LanguageGates;
+        Assert.Equal("en", gates["FixAloneLowercaseIToUppercaseI"]);
+        Assert.Equal("da", gates["FixDanishLetterI"]);
+        Assert.Equal("es", gates["FixSpanishInvertedQuestionAndExclamationMarks"]);
+        Assert.Equal("tr", gates["FixTurkishAnsiToUnicode"]);
+    }
+
+    [Fact]
     public void ParseExplicitlyNamedRules_NullOrAllOrNegations_ReturnsEmpty()
     {
         // "implicit-all" spec forms — nothing the user named by hand.
