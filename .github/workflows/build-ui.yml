@@ -722,7 +722,13 @@ jobs:
               [ "$status" != "In Progress" ] && break
             done
 
-            if [ "$status" != "Accepted" ]; then
+            if [ "$status" = "In Progress" ]; then
+              # Loop hit the 30-min ceiling without a verdict: this is a timeout, not a
+              # rejection. notarytool log has nothing for an incomplete submission, so
+              # don't fetch it - just say so. Apple may still accept it; check history.
+              echo "::error::Notarization still In Progress after 30 min (submission $submission_id) - check 'notarytool history'"
+              exit 1
+            elif [ "$status" != "Accepted" ]; then
               echo "::error::Notarization did not succeed (status: $status)"
               # Surface Apple's reasons rather than failing blind - the previous
               # workflow printed nothing on rejection.
