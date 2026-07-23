@@ -21761,11 +21761,22 @@ public partial class MainViewModel :
             var rawStableMs = (nowTimestamp - _playheadLastRawChangeTs) / (double)Stopwatch.Frequency * 1000.0;
             var gap = rawPosition - _playheadEstimateSeconds;
 
-            if (!_playheadValid || Math.Abs(gap) < 0.002 || Math.Abs(gap) >= PlayheadResyncThresholdSeconds)
+            if (!_playheadValid || Math.Abs(gap) >= PlayheadResyncThresholdSeconds)
             {
-                // Invalid, a sub-visible gap, or a real discontinuity (a seek while paused): snap.
+                // Invalid state, or a real discontinuity (a big seek while paused): snap, and treat the
+                // pause as settled. (No sub-visible < 2 ms snap here: it would flip _playheadPausedSettled
+                // early if mpv's position crossed the frozen spot mid-wind-down, and the seek-follow branch
+                // below would then track the rest of the wind-down - the very drift #12740 removed.)
                 _playheadEstimateSeconds = rawPosition;
                 _playheadPausedSettled = true;
+            }
+            else if (_playheadPausedSettled && rawChanged)
+            {
+                // Already settled after the pause, and mpv's position just moved: this is a real seek
+                // while paused (millisecond nudge, frame step, native mpv frame step) - not the pause
+                // wind-down. Follow it so the cursor lands on the stepped frame and stays centered
+                // (#12742 follow-up). Snapping, rather than easing, puts the cursor on the frame at once.
+                _playheadEstimateSeconds = rawPosition;
             }
             else if (!_playheadPausedSettled && !vp.IsPlaying && rawStableMs >= PlayheadPausedSettleStableMs)
             {
@@ -21775,8 +21786,8 @@ public partial class MainViewModel :
                 // numeric time display had already stopped (#12740). Just mark settled so we stop watching.
                 _playheadPausedSettled = true;
             }
-            // else: still winding down, or already settled with a small residual -> hold frozen (no
-            // easing, no delayed snap => no post-pause drift).
+            // else: still winding down, or settled with a standing residual and raw at rest -> hold frozen
+            // (no easing, no delayed snap => no post-pause drift).
 
             _playheadValid = true;
         }
