@@ -39,7 +39,9 @@ internal static class FixCommonErrorsRunner
     /// <c>--fce-language</c>) matches the mapped two-letter ISO code. Single source of truth
     /// for both the runtime gate (<see cref="IsLanguageOnlyRule"/>) and the <c>list-fce-rules</c>
     /// display. Mirrors the GUI's per-language rule additions in <c>FixCommonErrorsViewModel</c>.
-    /// A gated rule can always be forced by naming it explicitly in <c>--FixCommonErrorsRules</c>.
+    /// A gated rule runs only when the language matches — auto-detected from the content, or
+    /// forced with <c>--fce-language:&lt;code&gt;</c>. Naming it in <c>--FixCommonErrorsRules</c>
+    /// selects it but does not bypass the gate (issue #11037).
     /// </summary>
     public static IReadOnlyDictionary<string, string> LanguageGates { get; } =
         new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
@@ -111,30 +113,15 @@ internal static class FixCommonErrorsRunner
     public static void RunAll(Subtitle subtitle) => Run(subtitle, null);
 
     /// <summary>
-    /// Back-compat overload. Pass <c>null</c> or an empty collection to run all rules
-    /// (gates language-conditional rules to their language). When a non-empty list is
-    /// passed, every entry is treated as both <em>wanted</em> and <em>explicitly named</em> —
-    /// language gates are bypassed for those rules. Rules execute in canonical order,
-    /// not caller order, to keep behaviour stable across invocations.
-    /// </summary>
-    public static void Run(Subtitle subtitle, IReadOnlyCollection<string>? ruleIds)
-        => Run(subtitle, ruleIds, explicitlyNamedRules: ruleIds);
-
-    /// <summary>
-    /// Runs the specified rules.
-    /// <para><paramref name="ruleIds"/> selects which rules execute (<c>null</c>/empty = all).</para>
-    /// <para><paramref name="explicitlyNamedRules"/> lists rules the user named by hand —
-    /// these bypass language gating. <c>null</c> means "no signal, treat <paramref name="ruleIds"/>
-    /// as explicit" (back-compat); an empty collection means "no rule was explicitly named"
-    /// (the CLI's implicit <c>--FixCommonErrors</c> path), which keeps language gates active.</para>
-    /// The split matters because the CLI pre-resolves a bare <c>--FixCommonErrors</c> to
-    /// the full rule list, so a <c>wanted == null</c> check alone would never fire for the
-    /// default path — see <see cref="ParseExplicitlyNamedRules"/>.
+    /// Runs the specified rules. <paramref name="ruleIds"/> selects which rules execute
+    /// (<c>null</c>/empty = all). Language-conditional rules run only when the language matches
+    /// (see <paramref name="languageOverride"/> / auto-detect); selecting one by name does not
+    /// bypass its gate. Rules execute in canonical order, not caller order, to keep behaviour
+    /// stable across invocations.
     /// </summary>
     public static void Run(
         Subtitle subtitle,
         IReadOnlyCollection<string>? ruleIds,
-        IReadOnlyCollection<string>? explicitlyNamedRules,
         string? languageOverride = null)
     {
         if (subtitle == null || subtitle.Paragraphs.Count == 0)
@@ -146,23 +133,6 @@ internal static class FixCommonErrorsRunner
         if (ruleIds != null && ruleIds.Count > 0)
         {
             wanted = new HashSet<string>(ruleIds, StringComparer.OrdinalIgnoreCase);
-        }
-
-        // null = treat wanted as explicit (back-compat path used by direct callers / tests).
-        // empty = "user named nothing" — keeps language gates fully active.
-        // non-empty = exact set of rules the user typed by hand.
-        HashSet<string>? explicitlyNamed;
-        if (explicitlyNamedRules == null)
-        {
-            explicitlyNamed = wanted;
-        }
-        else if (explicitlyNamedRules.Count == 0)
-        {
-            explicitlyNamed = null;
-        }
-        else
-        {
-            explicitlyNamed = new HashSet<string>(explicitlyNamedRules, StringComparer.OrdinalIgnoreCase);
         }
 
         // --fce-language forces the language used for gating (and OCR-fix), so a genuinely
@@ -183,7 +153,7 @@ internal static class FixCommonErrorsRunner
         var previousSnapshot = Snapshot(subtitle);
         for (var pass = 0; pass < MaxPasses; pass++)
         {
-            RunSinglePass(subtitle, wanted, explicitlyNamed, language, callbacks);
+            RunSinglePass(subtitle, wanted, language, callbacks);
 
             var snapshot = Snapshot(subtitle);
             if (snapshot == previousSnapshot)
@@ -251,7 +221,6 @@ internal static class FixCommonErrorsRunner
     private static void RunSinglePass(
         Subtitle subtitle,
         HashSet<string>? wanted,
-        HashSet<string>? explicitlyNamed,
         string language,
         EmptyFixCallback callbacks)
     {
@@ -266,9 +235,9 @@ internal static class FixCommonErrorsRunner
             // (FixCommonErrorsViewModel.cs:359-377), which only surfaces these rules
             // when the detected language matches. Running e.g. the Spanish inverted-mark
             // fix on French content would insert ¿ / ¡ on every question — issue #11037.
-            // The user can still opt in explicitly by naming the rule in --FixCommonErrorsRules.
-            if (IsLanguageOnlyRule(id, language)
-                && (explicitlyNamed == null || !explicitlyNamed.Contains(id)))
+            // Naming the rule in --FixCommonErrorsRules selects it but does not bypass the
+            // gate; force a mismatching language with --fce-language:<code> instead.
+            if (IsLanguageOnlyRule(id, language))
             {
                 continue;
             }
@@ -313,29 +282,9 @@ internal static class FixCommonErrorsRunner
     }
 
     /// <summary>
-    /// Extracts the rule IDs a user named by hand in a <c>--FixCommonErrorsRules</c> spec.
-    /// Returns an empty list for null / empty / whitespace / <c>all</c> specs (= no rule
-    /// was explicitly named). Negative tokens (<c>-FixCommas</c>) and the literal <c>all</c>
-    /// are excluded — only positive, named rules count as "explicit". Unknown rule names
-    /// are kept as-is here; <see cref="ResolveRuleIds"/> is responsible for validation.
-    /// </summary>
-    public static IReadOnlyList<string> ParseExplicitlyNamedRules(string? spec)
-    {
-        if (string.IsNullOrWhiteSpace(spec))
-        {
-            return [];
-        }
-
-        return spec.Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)
-            .Where(t => !t.StartsWith('-') && !"all".Equals(t, StringComparison.OrdinalIgnoreCase))
-            .ToArray();
-    }
-
-    /// <summary>
     /// Returns true when <paramref name="ruleId"/> is a language-conditional rule
     /// that should not run because the detected language doesn't match. Mirrors
     /// the GUI's per-language rule additions in <c>FixCommonErrorsViewModel</c>.
-    /// Bypassable via explicit <c>--FixCommonErrorsRules</c>.
     /// </summary>
     private static bool IsLanguageOnlyRule(string ruleId, string language)
         => LanguageGates.TryGetValue(ruleId, out var required)
