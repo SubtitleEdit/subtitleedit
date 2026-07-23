@@ -1,6 +1,6 @@
 # Subtitle Edit - Documentation
 
-Subtitle Edit is a free, open-source editor for video subtitles. This is the documentation for the Avalonia-based cross-platform version (Subtitle Edit 5).
+Subtitle Edit is a free, open-source editor for video subtitles. This is the documentation for the cross-platform version (Subtitle Edit 5).
 
 ## Getting Started
 
