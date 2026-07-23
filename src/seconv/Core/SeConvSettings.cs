@@ -2,6 +2,7 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.Enums;
+using SkiaSharp;
 
 namespace SeConv.Core;
 
@@ -49,6 +50,112 @@ internal sealed class SeConvSettings
         return JsonSerializer.Deserialize<SeConvSettings>(json, JsonOptions)
             ?? throw new InvalidDataException($"Settings file is empty or null: {path}");
     }
+
+    /// <summary>
+    /// Serializes a complete settings file populated with the current libse defaults —
+    /// every key seconv understands, with its correct (camelCase) name and default value.
+    /// Backs <c>seconv dump-settings</c>, which users redirect to a file as a starting point
+    /// (issue #11037): it teaches the schema, so no one has to guess that the key is
+    /// <c>removeIfAllUppercase</c> and not the GUI's <c>IsRemoveTextUppercaseLineOn</c>.
+    /// <para>Built by mirroring <see cref="Configuration.Settings"/> (the same source
+    /// <see cref="ApplyBaseSections"/> writes back into) and a fresh <see cref="ImageExportStyle"/>,
+    /// so the output round-trips through <see cref="Load"/> with zero unknown keys — the dump
+    /// can never drift from what the loader accepts.</para>
+    /// </summary>
+    public static string DumpDefaults()
+    {
+        var s = Configuration.Settings;
+        var g = s.General;
+        var hi = s.RemoveTextForHearingImpaired;
+        var style = new ImageExportStyle();
+
+        var defaults = new SeConvSettings
+        {
+            General = new GeneralSection
+            {
+                SubtitleLineMaximumLength = g.SubtitleLineMaximumLength,
+                SubtitleMinimumDisplayMilliseconds = g.SubtitleMinimumDisplayMilliseconds,
+                SubtitleMaximumDisplayMilliseconds = g.SubtitleMaximumDisplayMilliseconds,
+                CurrentFrameRate = g.CurrentFrameRate,
+                DefaultFrameRate = g.DefaultFrameRate,
+                MinimumMillisecondsBetweenLines = g.MinimumMillisecondsBetweenLines,
+                MaxNumberOfLines = g.MaxNumberOfLines,
+                MergeLinesShorterThan = g.MergeLinesShorterThan,
+                SubtitleMaximumCharactersPerSeconds = g.SubtitleMaximumCharactersPerSeconds,
+                SubtitleOptimalCharactersPerSeconds = g.SubtitleOptimalCharactersPerSeconds,
+                SubtitleMaximumWordsPerMinute = g.SubtitleMaximumWordsPerMinute,
+                DialogStyle = g.DialogStyle.ToString(),
+                ContinuationStyle = g.ContinuationStyle.ToString(),
+            },
+            Tools = new ToolsSection
+            {
+                MergeShortLinesMaxGap = s.Tools.MergeShortLinesMaxGap,
+                MergeShortLinesOnlyContinuous = s.Tools.MergeShortLinesOnlyContinuous,
+            },
+            RemoveTextForHearingImpaired = new RemoveHiSection
+            {
+                RemoveTextBetweenBrackets = hi.RemoveTextBetweenBrackets,
+                RemoveTextBetweenParentheses = hi.RemoveTextBetweenParentheses,
+                RemoveTextBetweenCurlyBrackets = hi.RemoveTextBetweenCurlyBrackets,
+                RemoveTextBetweenQuestionMarks = hi.RemoveTextBetweenQuestionMarks,
+                RemoveTextBetweenCustom = hi.RemoveTextBetweenCustom,
+                RemoveTextBetweenCustomBefore = hi.RemoveTextBetweenCustomBefore,
+                RemoveTextBetweenCustomAfter = hi.RemoveTextBetweenCustomAfter,
+                RemoveTextBetweenOnlySeparateLines = hi.RemoveTextBetweenOnlySeparateLines,
+                RemoveTextBeforeColon = hi.RemoveTextBeforeColon,
+                RemoveTextBeforeColonOnlyIfUppercase = hi.RemoveTextBeforeColonOnlyIfUppercase,
+                RemoveTextBeforeColonOnlyOnSeparateLine = hi.RemoveTextBeforeColonOnlyOnSeparateLine,
+                RemoveInterjections = hi.RemoveInterjections,
+                RemoveInterjectionsOnlyOnSeparateLine = hi.RemoveInterjectionsOnlyOnSeparateLine,
+                RemoveIfContains = hi.RemoveIfContains,
+                RemoveIfAllUppercase = hi.RemoveIfAllUppercase,
+                RemoveIfContainsText = hi.RemoveIfContainsText,
+                RemoveIfOnlyMusicSymbols = hi.RemoveIfOnlyMusicSymbols,
+            },
+            ExportImages = new ExportImagesSection
+            {
+                FontName = style.FontName,
+                FontSize = style.FontSize,
+                FontColor = ToHex(style.FontColor),
+                IsBold = style.IsBold,
+                OutlineColor = ToHex(style.OutlineColor),
+                OutlineWidth = style.OutlineWidth,
+                ShadowColor = ToHex(style.ShadowColor),
+                ShadowWidth = style.ShadowWidth,
+                BackgroundColor = ToHex(style.BackgroundColor),
+                BackgroundCornerRadius = style.BackgroundCornerRadius,
+                // EffectiveBoxType resolves the null "auto" into the concrete default (none),
+                // so the dumped file shows a real, editable value rather than a blank.
+                BoxType = style.EffectiveBoxType.ToString(),
+                BoxPaddingLeft = style.BoxPaddingLeft,
+                BoxPaddingRight = style.BoxPaddingRight,
+                BoxPaddingTop = style.BoxPaddingTop,
+                BoxPaddingBottom = style.BoxPaddingBottom,
+                LineSpacingPercent = style.LineSpacingPercent,
+                Alignment = style.Alignment.ToString(),
+                ContentAlignment = style.ContentAlignment.ToString(),
+                // BottomTopMargin / LeftRightMargin left unset: their default is "5% of the
+                // screen", not a fixed pixel count, so there is no honest number to emit.
+            },
+        };
+
+        var options = new JsonSerializerOptions(JsonOptions)
+        {
+            WriteIndented = true,
+            // Omit the null "auto" values (margins) rather than writing `null`, so every key
+            // in the file is a concrete, copy-paste-ready default.
+            DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
+            // Print non-ASCII (e.g. the ¶ HI separator) literally instead of as ¶ — this
+            // is a file for humans to read and edit. Safe here: the output is written to a file,
+            // not embedded in HTML.
+            Encoder = System.Text.Encodings.Web.JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
+        };
+
+        return JsonSerializer.Serialize(defaults, options);
+    }
+
+    // "#AARRGGBB" — the fully-qualified form ExportImagesSection.ApplyTo parses back exactly.
+    private static string ToHex(SKColor c) => $"#{c.Alpha:X2}{c.Red:X2}{c.Green:X2}{c.Blue:X2}";
 
     /// <summary>
     /// Keys in the JSON that match no known section or property - typos, or keys from a newer

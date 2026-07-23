@@ -98,6 +98,7 @@ internal static class HelpDisplay
         ShowParameter("list-pac-codepages", "List PAC code pages (--pac-codepage values)");
         ShowParameter("list-ocr-engines", "List OCR engines + installation status");
         ShowParameter("list-fce-rules", "List FixCommonErrors rule IDs");
+        ShowParameter("dump-settings", "Print a full --settings JSON with libse defaults (redirect to a file)");
         ShowParameter("info <file>", "Print format / encoding / duration / language info");
         ShowParameter("lint <pattern>", "Validate subtitle(s); exit 1 if any issues found");
 
@@ -166,11 +167,22 @@ internal static class HelpDisplay
         // Pad based on the visible length (param.Length) rather than the markup-escaped
         // length: Spectre.Console renders "[[" / "]]" as single chars, so columns drift
         // if we let the formatter pad against the escaped string.
-        var escapedParam = param.Replace("<", "[[").Replace(">", "]]");
-        var escapedDescription = description.Replace("<", "[[").Replace(">", "]]");
+        // Escape literal square brackets ('[' -> '[[') BEFORE turning '<'/'>' into display
+        // brackets, so an option like "--apply-min-gap[:<ms>]" doesn't feed Spectre a stray
+        // "[:" it reads as a broken markup tag (which threw mid-render and truncated --help).
+        var escapedParam = EscapeForMarkup(param);
+        var escapedDescription = EscapeForMarkup(description);
         var pad = Math.Max(1, ParamColumnWidth - param.Length);
         AnsiConsole.MarkupLine($"  [yellow]{escapedParam}[/]{new string(' ', pad)}[dim]{escapedDescription}[/]");
     }
+
+    // Renders literal '[' ']' and the '<value>' convention as visible square brackets.
+    // Spectre uses '[[' / ']]' as the escape for a literal '[' / ']', so both the real
+    // brackets and the angle-bracket placeholders map onto that same doubled form.
+    // Literal-bracket escaping must run first, or the '[[' produced from '<' gets escaped again.
+    private static string EscapeForMarkup(string text) =>
+        text.Replace("[", "[[").Replace("]", "]]")
+            .Replace("<", "[[").Replace(">", "]]");
 
     private static void ShowExample(string command, string description)
     {

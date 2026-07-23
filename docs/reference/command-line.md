@@ -73,6 +73,7 @@ seconv list-encodings       # list text encodings
 seconv list-pac-codepages   # list PAC code pages
 seconv list-ocr-engines     # list OCR engines + installation status
 seconv list-fce-rules       # list FixCommonErrors rule IDs
+seconv dump-settings        # print a full --settings JSON with libse defaults
 seconv info <file>          # print format/encoding/duration/language for a file
 seconv lint <pattern>       # validate subtitle(s); exit 1 if issues found
 seconv --help               # show help
@@ -362,6 +363,14 @@ Available template tokens: `{title}`, `{number}`, `{start}`, `{end}`, `{duration
 
 #### Settings JSON
 
+> **This is seconv's own schema — not the Subtitle Edit GUI's `Settings.json`.** The desktop app's settings file uses different key names (e.g. the GUI's `IsRemoveTextUppercaseLineOn` is `removeIfAllUppercase` here) and a different structure; feeding it to `--settings` won't do what you expect (unrecognized keys are ignored with a warning). To get a correct starter file, run **`seconv dump-settings`** — it prints this whole schema populated with the current libse defaults:
+>
+> ```bash
+> seconv dump-settings > my-settings.json   # edit, then: --settings:my-settings.json
+> ```
+
+The keys and defaults below are exactly what `dump-settings` emits:
+
 ```json
 {
   "general": {
@@ -477,6 +486,10 @@ seconv movie.srt subrip --fix-common-errors-rules:FixCommas,FixMissingSpaces
 seconv movie.srt subrip --fix-common-errors-rules:all,-FixDanishLetterI      # all except one
 seconv list-fce-rules                                                        # show rule IDs
 ```
+
+**Language-specific rules.** A few rules only make sense for one language and mirror the GUI's *Fix Common Errors* window, which only offers them when the detected language matches: `FixAloneLowercaseIToUppercaseI` (English), `FixDanishLetterI` (Danish), `FixSpanishInvertedQuestionAndExclamationMarks` (Spanish), and `FixTurkishAnsiToUnicode` (Turkish). In the default all-rules pass these run only when auto-detection agrees, so e.g. the Spanish inverted-`¿` fix never lands on English content (issue #11037). Naming such a rule explicitly in `--fix-common-errors-rules` currently forces it on regardless of the detected language.
+
+**Rule selection is CLI-only.** The set of rules is chosen with `--fix-common-errors-rules`, not through the `--settings` JSON. The settings file shapes *how* the rules behave (line length, min gap, dialog/continuation style, CPS — see [Settings JSON](#settings-json)); it does not select which rules run.
 
 `FixCommonOcrErrors` is intentionally excluded — it requires UI-side spell-check and OCR-engine setup that seconv doesn't carry.
 
