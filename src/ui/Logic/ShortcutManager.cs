@@ -22,6 +22,7 @@ public class ShortcutManager : IShortcutManager
     private bool _isDirty = true;
     private bool _isControlPressed = false;
     private bool _isShiftPressed = false;
+    private bool _isRightAltPressed = false;
 
     public static string GetKeyDisplayName(string key)
     {
@@ -236,6 +237,10 @@ public class ShortcutManager : IShortcutManager
         }
 
         var key = GetShortcutKey(e);
+        if (key == Key.RightAlt)
+        {
+            _isRightAltPressed = true;
+        }
 
         // Skip standalone modifier-like keys: Ctrl/Shift/Alt/Win redundantly
         // duplicate KeyEventArgs.KeyModifiers, and NumLock is a state toggle —
@@ -255,6 +260,11 @@ public class ShortcutManager : IShortcutManager
 
     public void OnKeyReleased(object? sender, KeyEventArgs e)
     {
+        if (e.Key == Key.RightAlt)
+        {
+            _isRightAltPressed = false;
+        }
+
         if (e.Key is Key.ImeProcessed or Key.ImeConvert or Key.ImeNonConvert or
             Key.ImeAccept or Key.ImeModeChange or Key.DeadCharProcessed or Key.None)
         {
@@ -277,6 +287,7 @@ public class ShortcutManager : IShortcutManager
         _activeKeyNames.Clear();
         _isControlPressed = false;
         _isShiftPressed = false;
+        _isRightAltPressed = false;
     }
 
     public void RegisterShortcut(ShortCut shortcut)
@@ -336,6 +347,23 @@ public class ShortcutManager : IShortcutManager
 
     public IRelayCommand? CheckShortcuts(KeyEventArgs keyEventArgs, string activeControl)
     {
+        // Windows reports AltGr as a synthetic LeftCtrl followed by RightAlt.
+        // Modifier transitions must not complete a shortcut using a still-held typing key.
+        if (keyEventArgs.Key is Key.LeftCtrl or Key.RightCtrl or
+            Key.LeftShift or Key.RightShift or
+            Key.LeftAlt or Key.RightAlt or
+            Key.LWin or Key.RWin or Key.NumLock)
+        {
+            return null;
+        }
+
+        // Prefer the character produced by AltGr over an equivalent Ctrl+Alt shortcut.
+        if (_isRightAltPressed &&
+            keyEventArgs.KeyModifiers.HasFlag(KeyModifiers.Control | KeyModifiers.Alt))
+        {
+            return null;
+        }
+
         if (_isDirty || _lookupTable is null)
         {
             RebuildLookupTable();

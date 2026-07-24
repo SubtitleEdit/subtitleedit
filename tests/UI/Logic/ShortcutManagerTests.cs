@@ -1,4 +1,6 @@
 using Avalonia.Input;
+using CommunityToolkit.Mvvm.Input;
+using Nikse.SubtitleEdit.Features.Options.Shortcuts;
 using Nikse.SubtitleEdit.Logic;
 using System.Collections.Generic;
 
@@ -6,6 +8,16 @@ namespace UITests.Logic;
 
 public class ShortcutManagerTests
 {
+    private static KeyEventArgs KeyEvent(Key key, PhysicalKey physicalKey, KeyModifiers modifiers)
+    {
+        return new KeyEventArgs
+        {
+            Key = key,
+            PhysicalKey = physicalKey,
+            KeyModifiers = modifiers,
+        };
+    }
+
     [Theory]
     [InlineData(Key.Home, PhysicalKey.NumPad7, Key.NumPad7)]
     [InlineData(Key.Left, PhysicalKey.NumPad4, Key.NumPad4)]
@@ -122,5 +134,35 @@ public class ShortcutManagerTests
         ShortcutManager.MigrateLegacyOemKeys(keys);
 
         Assert.Equal(new[] { "Control", "F5", "NumPad7", "Period" }, keys);
+    }
+
+    [Fact]
+    public void AltGrTypingDoesNotCompleteShortcuts()
+    {
+        var manager = new ShortcutManager();
+        var category = ShortcutCategory.SubtitleGridAndTextBox;
+        var command = new RelayCommand(() => { });
+        manager.RegisterShortcut(new ShortCut("Italic", ["Control", "I"], category, command));
+        manager.RegisterShortcut(new ShortCut("AltGr E", ["Control", "Alt", "E"], category, command));
+
+        var i = KeyEvent(Key.I, PhysicalKey.I, KeyModifiers.None);
+        manager.OnKeyPressed(null, i);
+
+        var syntheticControl = KeyEvent(Key.LeftCtrl, PhysicalKey.ControlLeft, KeyModifiers.Control);
+        manager.OnKeyPressed(null, syntheticControl);
+        Assert.Null(manager.CheckShortcuts(syntheticControl, category.ToString()));
+
+        var altGr = KeyEvent(Key.RightAlt, PhysicalKey.AltRight, KeyModifiers.Control | KeyModifiers.Alt);
+        manager.OnKeyPressed(null, altGr);
+        Assert.Null(manager.CheckShortcuts(altGr, category.ToString()));
+
+        manager.OnKeyReleased(null, i);
+        var e = KeyEvent(Key.E, PhysicalKey.E, KeyModifiers.Control | KeyModifiers.Alt);
+        manager.OnKeyPressed(null, e);
+        Assert.Null(manager.CheckShortcuts(e, category.ToString()));
+
+        manager.ClearKeys();
+        manager.OnKeyPressed(null, e);
+        Assert.Same(command, manager.CheckShortcuts(e, category.ToString()));
     }
 }
