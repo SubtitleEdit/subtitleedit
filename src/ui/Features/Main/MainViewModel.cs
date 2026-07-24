@@ -10907,7 +10907,7 @@ public partial class MainViewModel :
         var result =
             await ShowDialogAsync<ShowHistoryWindow, ShowHistoryViewModel>(vm => { vm.Initialize(_undoRedoManager); });
 
-        if (result.OkPressed && result.SelectedHistoryItem != null && result.SelectedHistoryItem.Hash != GetFastHash())
+        if (result.OkPressed && result.SelectedHistoryItem != null && result.SelectedHistoryItem.Hash != GetUndoRedoHash())
         {
             var undoCount = _undoRedoManager.UndoCount;
             for (var i = 0; i < undoCount; i++)
@@ -15119,7 +15119,7 @@ public partial class MainViewModel :
         return new UndoRedoItem(
             description,
             Subtitles.Select(p => new SubtitleLineViewModel(p)).ToArray(),
-            GetFastHash(),
+            GetUndoRedoHash(),
             _subtitleFileName,
             [SelectedSubtitleIndex ?? 0],
             1,
@@ -18909,6 +18909,26 @@ public partial class MainViewModel :
         }
 
         return false;
+    }
+
+    // Hash used by undo change detection. Undo snapshots capture and restore OriginalText,
+    // so the hash must cover the original too - with only GetFastHash, loading or editing an
+    // original never produced an undo entry, and the first Ctrl+Z restored a pre-load
+    // snapshot, wiping the whole original column (#12786). Save-tracking still uses
+    // GetFastHash/GetFastHashOriginal separately.
+    int IUndoRedoClient.GetFastHash() => GetUndoRedoHash();
+
+    public int GetUndoRedoHash()
+    {
+        if (!Dispatcher.UIThread.CheckAccess())
+        {
+            return Dispatcher.UIThread.Invoke(GetUndoRedoHash);
+        }
+
+        unchecked
+        {
+            return GetFastHash() * 31 + GetFastHashOriginal();
+        }
     }
 
     public int GetFastHash()
