@@ -21,13 +21,13 @@ public class CrispEmbedDownloadService : ICrispEmbedDownloadService
 {
     private readonly HttpClient _httpClient;
 
-    private const string WindowsCudaUrl = "https://github.com/CrispStrobe/CrispEmbed/releases/download/v0.15.0/crispembed-windows-x86_64-cuda.zip";
-    private const string WindowsVulkanUrl = "https://github.com/CrispStrobe/CrispEmbed/releases/download/v0.15.0/crispembed-windows-x86_64-vulkan.zip";
-    private const string WindowsCpuUrl = "https://github.com/CrispStrobe/CrispEmbed/releases/download/v0.15.0/crispembed-windows-x86_64.zip";
-    private const string MacUrl = "https://github.com/CrispStrobe/CrispEmbed/releases/download/v0.15.0/crispembed-macos-arm64.tar.gz";
-    private const string LinuxUrl = "https://github.com/CrispStrobe/CrispEmbed/releases/download/v0.15.0/crispembed-linux-x86_64.tar.gz";
-    private const string LinuxCudaUrl = "https://github.com/CrispStrobe/CrispEmbed/releases/download/v0.15.0/crispembed-linux-x86_64-cuda.tar.gz";
-    private const string LinuxArmUrl = "https://github.com/CrispStrobe/CrispEmbed/releases/download/v0.15.0/crispembed-linux-arm64.tar.gz";
+    private const string WindowsCudaUrl = "https://github.com/CrispStrobe/CrispEmbed/releases/download/v0.16.1/crispembed-windows-x86_64-cuda.zip";
+    private const string WindowsVulkanUrl = "https://github.com/CrispStrobe/CrispEmbed/releases/download/v0.16.1/crispembed-windows-x86_64-vulkan.zip";
+    private const string WindowsCpuUrl = "https://github.com/CrispStrobe/CrispEmbed/releases/download/v0.16.1/crispembed-windows-x86_64.zip";
+    private const string MacUrl = "https://github.com/CrispStrobe/CrispEmbed/releases/download/v0.16.1/crispembed-macos-arm64.tar.gz";
+    private const string LinuxUrl = "https://github.com/CrispStrobe/CrispEmbed/releases/download/v0.16.1/crispembed-linux-x86_64.tar.gz";
+    private const string LinuxCudaUrl = "https://github.com/CrispStrobe/CrispEmbed/releases/download/v0.16.1/crispembed-linux-x86_64-cuda.tar.gz";
+    private const string LinuxArmUrl = "https://github.com/CrispStrobe/CrispEmbed/releases/download/v0.16.1/crispembed-linux-arm64.tar.gz";
 
     public CrispEmbedDownloadService(HttpClient httpClient)
     {
