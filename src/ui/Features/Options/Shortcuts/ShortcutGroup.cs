@@ -1,4 +1,6 @@
+using Avalonia;
 using Avalonia.Media;
+using Avalonia.Styling;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 
@@ -83,6 +85,19 @@ public static class ShortcutGroupUi
     {
         var color = ((SolidColorBrush)GetBrush(group)).Color;
         return new SolidColorBrush(color, 0.28);
+    }
+
+    // Text variant of the group color: on the light theme the mid-saturation tones are too
+    // faint for body text (#12778), so darken them; on dark the plain group color is fine.
+    public static IBrush GetTextBrush(ShortcutGroup group)
+    {
+        var color = ((SolidColorBrush)GetBrush(group)).Color;
+        if (Application.Current?.ActualThemeVariant == ThemeVariant.Dark)
+        {
+            return new SolidColorBrush(color);
+        }
+
+        return new SolidColorBrush(Color.FromRgb((byte)(color.R * 0.55), (byte)(color.G * 0.55), (byte)(color.B * 0.55)));
     }
 
     // Mid-saturation tones picked to stay readable on both the dark and light theme.

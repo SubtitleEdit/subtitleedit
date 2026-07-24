@@ -245,16 +245,17 @@ public class ShortcutsWindow : Window
                     IsReadOnly = true,
                     CellTemplate = new FuncDataTemplate<ShortcutTreeNode>((_, _) =>
                     {
-                        // Category name in the group color so the grouping reads at a glance.
+                        // Category name in the group color so the grouping reads at a glance
+                        // (text variant: darkened on the light theme for contrast, #12778).
                         var text = new TextBlock
                         {
                             FontSize = 12,
                             FontWeight = FontWeight.Medium,
                             VerticalAlignment = VerticalAlignment.Center,
-                            Margin = new Thickness(2, 0, 6, 0),
+                            Margin = new Thickness(2, 0, 14, 0),
                         };
                         text.Bind(TextBlock.TextProperty, new Binding(nameof(ShortcutTreeNode.GroupName)));
-                        text.Bind(TextBlock.ForegroundProperty, new Binding(nameof(ShortcutTreeNode.GroupBrush)));
+                        text.Bind(TextBlock.ForegroundProperty, new Binding(nameof(ShortcutTreeNode.GroupTextBrush)));
                         return text;
                     }),
                 },
@@ -464,12 +465,22 @@ public class ShortcutsWindow : Window
 
         // browse button
         var buttonBrowse = UiUtil.MakeButtonBrowse(vm.ShowGetKeyCommand);
+        if (Se.Settings.Appearance.ShowHints)
+        {
+            ToolTip.SetTip(buttonBrowse, Se.Language.Options.Shortcuts.DetectKey);
+        }
+
         editPanel.Children.Add(buttonBrowse);
         buttonBrowse.Bind(IsEnabledProperty, new Binding(nameof(vm.IsControlsEnabled)) { Source = vm });
         buttonBrowse.Margin = new Thickness(0, 0, 9, 0);
 
         // configure button
         var buttonConfig = UiUtil.MakeButton(vm.ConfigureCommand, IconNames.Settings);
+        if (Se.Settings.Appearance.ShowHints)
+        {
+            ToolTip.SetTip(buttonConfig, Se.Language.Options.Shortcuts.Settings);
+        }
+
         editPanel.Children.Add(buttonConfig);
         buttonConfig.Bind(IsEnabledProperty, new Binding(nameof(vm.IsControlsEnabled)) { Source = vm });
         buttonConfig.Bind(IsVisibleProperty, new Binding(nameof(vm.IsConfigureVisible)) { Source = vm });
