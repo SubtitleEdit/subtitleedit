@@ -71,9 +71,7 @@ public static class InitVideoPlayer
         control.FullScreenCommand = vm.VideoFullScreenCommand;
         videoPlayerControl = control;
         vm.VideoPlayerControl = control;
-        control.Volume = Se.Settings.Video.Volume;
         control.VideoPlayerDisplayTimeLeft = Se.Settings.Video.VideoPlayerDisplayTimeLeft;
-        control.VolumeChanged += v => { Se.Settings.Video.Volume = v; };
         control.ToggleDisplayProgressTextModeRequested += () => { vm.ToggleVideoPlayerDisplayTimeLeftCommand.Execute(null); };
         control.VideoFileNamePointerPressed += vm.VideoPlayerControlPointerPressed;
         control.SurfacePointerPressed += (_, _) => vm.VideoPlayerAreaPointerPressed();
@@ -174,13 +172,16 @@ public static class InitVideoPlayer
 
     private static VideoPlayerControl MakeVideoPlayerControl(IVideoPlayer videoPlayer, Control view)
     {
-        return new VideoPlayerControl(videoPlayer)
+        var control = new VideoPlayerControl(videoPlayer)
         {
             PlayerContent = view,
             StopIsVisible = Se.Settings.Video.ShowStopButton,
             FullScreenIsVisible = Se.Settings.Video.ShowFullscreenButton,
             VerticalAlignment = VerticalAlignment.Stretch,
             HorizontalAlignment = HorizontalAlignment.Stretch,
+            Volume = Se.Settings.Video.Volume,
         };
+        control.VolumeChanged += v => { Se.Settings.Video.Volume = v; };
+        return control;
     }
 }
