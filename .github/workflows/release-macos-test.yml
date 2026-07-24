@@ -1,0 +1,295 @@
+name: Release macOS test build
+
+# Builds and publishes UNSIGNED macOS test DMGs (Apple Silicon + Intel) from the
+# current branch and attaches them to a GitHub pre-release on this fork, so they
+# can be handed to Mac testers (e.g. to try the MLX Whisper Mac GPU engine).
+#
+# This is a macOS-only, fork-friendly slimmed copy of build-ui.yml's macOS path:
+# the release is gated ONLY on the Mac build (not on Windows/Linux/Flatpak), and
+# code signing/notarization are skipped (no certificate on a fork).
+
+on:
+  workflow_dispatch:
+    inputs:
+      release_tag:
+        description: 'Release tag (blank = auto timestamp, e.g. macos-test-YYYYMMDD-HHMMSS)'
+        required: false
+        default: ''
+        type: string
+
+env:
+  IINA_VERSION: v1.4.2
+  IINA_SHA256: 2e0fd89fbba1c92a6c115171e5b51904883bb497fbe513a6961d080fbab08ff6
+
+jobs:
+  build-macos:
+    runs-on: macos-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - arch: arm64
+            arch_label: ARM64
+            runtime: osx-arm64
+            ffmpeg_url: https://www.osxexperts.net/ffmpeg81arm.zip
+            ffmpeg_sha256: ebb82529562b71170807bbc6b0e7eb4f0b13af8cbb0e085bb9e8f6fe709598ad
+            dmg_format: UDBZ
+            expected_arch: arm64
+          - arch: x64
+            arch_label: x64
+            runtime: osx-x64
+            ffmpeg_url: https://www.osxexperts.net/ffmpeg80intel.zip
+            ffmpeg_sha256: 2d24d22db78c87f394a5822867acd5c5dc5e762cd261a44bd26923f3a5af3e07
+            dmg_format: UDZO
+            expected_arch: x86_64
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: '10.0.x'
+
+      - name: Extract version from Se.cs
+        run: |
+          set -e
+          line=$(grep -E 'public[[:space:]]+static[[:space:]]+string[[:space:]]+Version[[:space:]]*\{' src/ui/Logic/Config/Se.cs)
+          version_string=$(printf '%s' "$line" | sed -E 's/.*"v([^"]+)".*/\1/')
+          numeric_part="${version_string%%-*}"
+          suffix=""
+          case "$version_string" in
+            *-*) suffix="${version_string#*-}" ;;
+          esac
+          dot_count=$(printf '%s' "$numeric_part" | tr -cd '.' | wc -c | tr -d ' ')
+          case "$dot_count" in
+            0) numeric_part="${numeric_part}.0.0" ;;
+            1) numeric_part="${numeric_part}.0" ;;
+          esac
+          revision=$(printf '%s' "$suffix" | grep -oE '[0-9]+$' || true)
+          revision=${revision:-0}
+          app_ver_full="${numeric_part}.${revision}"
+          echo "APP_VER_DISPLAY=$version_string" >> "$GITHUB_ENV"
+          echo "APP_VER_FULL=$app_ver_full" >> "$GITHUB_ENV"
+
+      - name: Restore dependencies
+        run: dotnet restore
+
+      - name: Build
+        run: dotnet build --configuration Release --no-restore
+
+      - name: Download + verify static ffmpeg (${{ matrix.arch }})
+        run: |
+          set -e
+          curl -fL -o ffmpeg.zip "${{ matrix.ffmpeg_url }}"
+          echo "${{ matrix.ffmpeg_sha256 }}  ffmpeg.zip" | shasum -a 256 -c -
+          mkdir -p ffmpeg-temp
+          unzip -o ffmpeg.zip -d ffmpeg-temp
+          rm ffmpeg.zip
+          if [ ! -f ffmpeg-temp/ffmpeg ]; then
+            found=$(find ffmpeg-temp -maxdepth 3 -type f -name ffmpeg | head -1)
+            [ -n "$found" ] && mv "$found" ffmpeg-temp/ffmpeg
+          fi
+          chmod +x ffmpeg-temp/ffmpeg
+          archs=$(lipo -archs ffmpeg-temp/ffmpeg)
+          if [ "$archs" != "${{ matrix.expected_arch }}" ]; then
+            echo "ERROR: ffmpeg binary archs are '$archs', expected exactly '${{ matrix.expected_arch }}'"
+            exit 1
+          fi
+
+      - name: Download + verify + extract libmpv from IINA
+        run: |
+          set -e
+          curl -fL -o iina.dmg "https://github.com/iina/iina/releases/download/${IINA_VERSION}/IINA.${IINA_VERSION}.dmg"
+          echo "${IINA_SHA256}  iina.dmg" | shasum -a 256 -c -
+          hdiutil attach iina.dmg -nobrowse -readonly -mountpoint ./iina-mnt
+          mkdir -p libmpv-temp
+          for dylib in ./iina-mnt/IINA.app/Contents/Frameworks/*.dylib; do
+            name=$(basename "$dylib")
+            case "$name" in
+              libswift_*) continue ;;
+            esac
+            cp -L "$dylib" "./libmpv-temp/$name"
+          done
+          hdiutil detach ./iina-mnt
+          rm -f iina.dmg
+          [ -f libmpv-temp/libmpv.2.dylib ] || {
+            echo "ERROR: libmpv.2.dylib not extracted from IINA - did the bundle layout change?"; exit 1;
+          }
+
+      - name: Publish macOS app (${{ matrix.arch }})
+        run: |
+          set -e
+          dotnet publish src/ui/UI.csproj -c Release -r ${{ matrix.runtime }} --self-contained true \
+            -p:PublishSingleFile=true \
+            -p:DebugSymbols=false \
+            -p:DebugType=none \
+            -p:Version="$APP_VER_FULL" \
+            -p:FileVersion="$APP_VER_FULL" \
+            -p:InformationalVersion="$APP_VER_DISPLAY" \
+            -o ./publish/macos-${{ matrix.arch }}
+          find ./publish/macos-${{ matrix.arch }} -name "*.pdb" -delete
+          archs=$(lipo -archs ./publish/macos-${{ matrix.arch }}/SubtitleEdit)
+          if [ "$archs" != "${{ matrix.expected_arch }}" ]; then
+            echo "ERROR: SubtitleEdit binary archs are '$archs', expected exactly '${{ matrix.expected_arch }}'"
+            exit 1
+          fi
+
+      - name: Update Info.plist with version from Se.cs
+        run: |
+          chmod +x ./installer/macBundle/update-plist-version.sh
+          ./installer/macBundle/update-plist-version.sh
+
+      - name: Assemble and package unsigned DMG (${{ matrix.arch }})
+        run: |
+          set -e
+          app="./SubtitleEdit-${{ matrix.arch_label }}.app"
+          cp -R "./installer/macBundle/SubtitleEdit.app" "$app"
+
+          cp "./publish/macos-${{ matrix.arch }}/SubtitleEdit" "$app/Contents/MacOS/"
+          cp "./publish/macos-${{ matrix.arch }}/"*.dylib "$app/Contents/MacOS/" 2>/dev/null || true
+          chmod +x "$app/Contents/MacOS/SubtitleEdit"
+          rm -rf "./publish/macos-${{ matrix.arch }}"
+
+          cp "./ffmpeg-temp/ffmpeg" "$app/Contents/MacOS/"
+          chmod +x "$app/Contents/MacOS/ffmpeg"
+          rm -rf "./ffmpeg-temp"
+
+          mkdir -p "$app/Contents/Frameworks"
+          cp "./libmpv-temp/"*.dylib "$app/Contents/Frameworks/"
+          chmod -R 755 "$app/Contents/Frameworks/"
+          rm -rf "./libmpv-temp"
+
+          executable="$app/Contents/MacOS/SubtitleEdit"
+          if ! otool -l "$executable" | grep -q "@executable_path/../Frameworks"; then
+            install_name_tool -add_rpath "@executable_path/../Frameworks" "$executable" || true
+          fi
+
+          # No Apple Developer ID here, so ad-hoc sign (sign -) instead of removing the
+          # signature. On Apple Silicon an app with NO signature is killed by the kernel and
+          # won't run at all; an ad-hoc signature makes it launchable once the user clears the
+          # download quarantine (Gatekeeper). Sign inside-out: nested dylibs + bundled ffmpeg
+          # first, then the app bundle. No --options runtime, so .NET's JIT works without
+          # hardened-runtime entitlements. This does NOT bypass Gatekeeper - the user still
+          # allows it once via the bundled fix-unsigned-app.sh / `xattr -cr` / Open Anyway.
+          for f in "$app/Contents/Frameworks/"*.dylib "$app/Contents/MacOS/"*.dylib "$app/Contents/MacOS/ffmpeg"; do
+            [ -f "$f" ] || continue
+            codesign --force --sign - "$f" 2>/dev/null || true
+          done
+          codesign --force --sign - "$app/Contents/MacOS/SubtitleEdit" 2>/dev/null || true
+          codesign --force --sign - "$app" 2>/dev/null || true
+
+          dmg_dir="./dmg-temp-${{ matrix.arch }}"
+          dmg_out="./SubtitleEdit-macOS-${{ matrix.arch_label }}.dmg"
+          mkdir -p "$dmg_dir"
+          cp -R "$app" "$dmg_dir/Subtitle Edit.app"
+          rm -rf "$app"
+
+          cp "./LICENSE" "$dmg_dir/LICENSE"
+          cp "./installer/macBundle/THIRD_PARTY_LICENSES.txt" "$dmg_dir/THIRD_PARTY_LICENSES.txt"
+          cp "./installer/macBundle/README-macOS.txt" "$dmg_dir/README-macOS.txt"
+          cp "./installer/macBundle/fix-unsigned-app.sh" "$dmg_dir/fix-unsigned-app.sh"
+          chmod +x "$dmg_dir/fix-unsigned-app.sh"
+          ln -s /Applications "$dmg_dir/Applications"
+
+          sync
+          attempts=0
+          until hdiutil create -volname "SubtitleEdit ${{ matrix.arch_label }}" -srcfolder "$dmg_dir" -ov -format ${{ matrix.dmg_format }} "$dmg_out"; do
+            attempts=$((attempts + 1))
+            if [ "$attempts" -ge 3 ]; then
+              echo "::error::hdiutil create failed after $attempts attempts"
+              exit 1
+            fi
+            echo "hdiutil create failed (attempt $attempts), retrying in 5s..."
+            sleep 5
+          done
+          rm -rf "$dmg_dir"
+
+      - name: Upload macOS DMG artifact
+        uses: actions/upload-artifact@v5
+        with:
+          name: macos-dmg-${{ matrix.arch }}
+          path: ./SubtitleEdit-macOS-${{ matrix.arch_label }}.dmg
+          overwrite: true
+
+  create-release:
+    needs: [build-macos]
+    # Publish whatever arch builds succeeded. The Intel/x64 leg depends on an external static
+    # ffmpeg whose architecture occasionally changes upstream and breaks that leg; don't let that
+    # block the (primary) Apple Silicon DMG from being released.
+    if: ${{ !cancelled() }}
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Generate release tag
+        id: tag
+        run: |
+          if [ -n "${{ inputs.release_tag }}" ]; then
+            echo "tag=$(echo '${{ inputs.release_tag }}' | xargs)" >> $GITHUB_OUTPUT
+          else
+            echo "tag=macos-test-$(date +'%Y%m%d-%H%M%S')" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Download macOS artifacts
+        uses: actions/download-artifact@v5
+        with:
+          path: ./artifacts
+        continue-on-error: true
+
+      - name: Stage release assets
+        run: |
+          mkdir -p ./release-assets
+          # Copy whichever DMGs were produced; a failed arch leg simply has no artifact.
+          cp ./artifacts/macos-dmg-arm64/*.dmg ./release-assets/ 2>/dev/null || true
+          cp ./artifacts/macos-dmg-x64/*.dmg ./release-assets/ 2>/dev/null || true
+          ls -la ./release-assets/
+          if [ -z "$(ls -A ./release-assets/ 2>/dev/null)" ]; then
+            echo "::error::No DMG artifacts were produced by any arch build."
+            exit 1
+          fi
+
+      - name: Create pre-release with macOS DMGs
+        uses: softprops/action-gh-release@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ steps.tag.outputs.tag }}
+          name: "macOS test build - ${{ steps.tag.outputs.tag }}"
+          prerelease: true
+          draft: false
+          body: |
+            **Unsigned macOS test build** with the **MLX Whisper Mac** (Apple GPU) speech-to-text engine.
+
+            ### Downloads
+            - **Apple Silicon (M1/M2/M3/M4/M5):** `SubtitleEdit-macOS-ARM64.dmg`
+            - **Intel:** `SubtitleEdit-macOS-x64.dmg`
+
+            ### Install (the app is unsigned, required Terminal steps)
+            This build has no paid Apple Developer signature, so macOS will otherwise show
+            *"Subtitle Edit is damaged"* or kill it on launch (especially on Apple Silicon). This is
+            expected, and it is not a defect in the build. After dragging **Subtitle Edit** to your
+            Applications folder, run these three commands in **Terminal**:
+
+            ```bash
+            codesign --force --deep --sign - "/Applications/Subtitle Edit.app"
+            xattr -cr "/Applications/Subtitle Edit.app"
+            open "/Applications/Subtitle Edit.app"
+            ```
+
+            - The first line re-signs the app with a local ad-hoc signature so Apple Silicon will run it.
+            - The second clears the download quarantine.
+            - The third launches it. After this it opens normally every time.
+
+            If `codesign` reports a permission error, prefix it with `sudo`. See `README-macOS.txt` in the DMG for more.
+
+            ### Trying the MLX Whisper Mac engine (Apple GPU)
+            1. Install the backend once: `pip3 install mlx-whisper`
+            2. In Subtitle Edit: **Video → Audio to text (Whisper)**, pick **MLX Whisper Mac**, choose model **large-v3-turbo** and transcribe.
+            3. The model downloads automatically on first use. Inference runs on the Apple GPU / Neural Engine via MLX, which is much faster than CPU on M-series Macs.
+
+            This is a community **test build** from a fork, not an official Subtitle Edit release.
+          files: |
+            ./release-assets/SubtitleEdit-macOS-ARM64.dmg
+            ./release-assets/SubtitleEdit-macOS-x64.dmg
