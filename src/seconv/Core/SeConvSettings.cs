@@ -145,10 +145,10 @@ internal sealed class SeConvSettings
             // Omit the null "auto" values (margins) rather than writing `null`, so every key
             // in the file is a concrete, copy-paste-ready default.
             DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
-            // Print non-ASCII (e.g. the ¶ HI separator) literally instead of as ¶ — this
-            // is a file for humans to read and edit. Safe here: the output is written to a file,
-            // not embedded in HTML.
-            Encoder = System.Text.Encodings.Web.JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
+            // Non-ASCII (e.g. the ¶ HI separator) is escaped as ¶ (the default encoder):
+            // the dump goes through Console.Out, and on Windows a literal ¶ was written in the
+            // OEM codepage as raw byte 0x14, breaking the file's round-trip (#12793). ASCII-only
+            // output is immune to console codepages, and JSON parsers unescape it identically.
         };
 
         return JsonSerializer.Serialize(defaults, options);
