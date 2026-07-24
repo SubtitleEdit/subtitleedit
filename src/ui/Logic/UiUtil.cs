@@ -120,6 +120,24 @@ public static class UiUtil
         return MakeButton(text, null);
     }
 
+    private static readonly string[] GoodFontNames =
+    {
+        "Segoe UI",
+        "San Francisco",
+        "SF Pro Text",
+        "Roboto",
+        "Open Sans",
+        "Lato",
+        "Source Sans Pro",
+        "Calibri",
+        "Verdana",
+        "Tahoma",
+        "Inter",
+        "Noto Sans",
+        "System UI",
+        "Arial",
+    };
+
     public static string GetDefaultFontName()
     {
         if (!string.IsNullOrEmpty(Se.Settings.Appearance.FontName))
@@ -128,25 +146,7 @@ public static class UiUtil
         }
 
         var systemFontNames = FontHelper.GetSystemFonts();
-        var goodFontNames = new List<string>()
-        {
-            "Segoe UI",
-            "San Francisco",
-            "SF Pro Text",
-            "Roboto",
-            "Open Sans",
-            "Lato",
-            "Source Sans Pro",
-            "Calibri",
-            "Verdana",
-            "Tahoma",
-            "Inter",
-            "Noto Sans",
-            "System UI",
-            "Arial",
-        };
-
-        foreach (var goodFontName in goodFontNames)
+        foreach (var goodFontName in GoodFontNames)
         {
             if (systemFontNames.Contains(goodFontName))
             {
@@ -157,38 +157,32 @@ public static class UiUtil
         return systemFontNames.First();
     }
 
+    // These brushes are handed out from many hot construction paths (borders, separators,
+    // grid cell themes), so cache immutable instances per theme/opacity instead of allocating
+    // a new SolidColorBrush on every call. ImmutableSolidColorBrush is safe to share.
+    private static readonly Dictionary<(bool IsDark, double Opacity), IBrush> TextBrushCache = new();
+
     public static IBrush GetTextColor(double opacity = 1.0)
     {
-        var app = Application.Current;
-        if (app == null)
+        var isDark = Application.Current?.ActualThemeVariant == ThemeVariant.Dark;
+        var key = (isDark, opacity);
+        if (!TextBrushCache.TryGetValue(key, out var brush))
         {
-            return new SolidColorBrush(Colors.Black, opacity);
+            brush = new Avalonia.Media.Immutable.ImmutableSolidColorBrush(isDark ? Colors.White : Colors.Black, opacity);
+            TextBrushCache[key] = brush;
         }
 
-        var theme = app.ActualThemeVariant;
-        if (theme == ThemeVariant.Dark)
-        {
-            return new SolidColorBrush(Colors.White, opacity);
-        }
-
-        return new SolidColorBrush(Colors.Black, opacity);
+        return brush;
     }
+
+    private static readonly IBrush BorderBrushDark = new Avalonia.Media.Immutable.ImmutableSolidColorBrush(Colors.White, 0.5);
+    private static readonly IBrush BorderBrushLight = new Avalonia.Media.Immutable.ImmutableSolidColorBrush(Colors.Black, 0.5);
 
     public static IBrush GetBorderBrush()
     {
-        var app = Application.Current;
-        if (app == null)
-        {
-            return new SolidColorBrush(Colors.Black);
-        }
-
-        var theme = app.ActualThemeVariant;
-        if (theme == ThemeVariant.Dark)
-        {
-            return new SolidColorBrush(Colors.White, 0.5);
-        }
-
-        return new SolidColorBrush(Colors.Black, 0.5);
+        return Application.Current?.ActualThemeVariant == ThemeVariant.Dark
+            ? BorderBrushDark
+            : BorderBrushLight;
     }
 
     public static IBrush GetAccentBrush()
@@ -320,11 +314,13 @@ public static class UiUtil
         var upper = char.ToUpperInvariant(c);
         if (upper >= 'A' && upper <= 'Z')
         {
-            return Enum.TryParse(upper.ToString(), out key);
+            key = Key.A + (upper - 'A');
+            return true;
         }
         if (upper >= '0' && upper <= '9')
         {
-            return Enum.TryParse("D" + upper, out key);
+            key = Key.D0 + (upper - '0');
+            return true;
         }
         key = Key.None;
         return false;
@@ -2636,17 +2632,16 @@ public static class UiUtil
         return theme == ThemeVariant.Dark;
     }
 
+    private static readonly SKColor CheckerboardLight = new(0xFFEEEEEE);
+    private static readonly SKColor CheckerboardDark = new(0xFFBBBBBB);
+    private static readonly SKColor CheckerboardLightDarkTheme = new(0xFF333333);
+    private static readonly SKColor CheckerboardDarkDarkTheme = new(0xFF555555);
+
     public static void DrawCheckerboardBackground(SKCanvas canvas, int width, int height, int squareSize = 16)
     {
-        // Define colors for the checkerboard pattern        
-        var lightColor = SKColor.Parse("#EEEEEE");
-        var darkColor = SKColor.Parse("#BBBBBB");
-
-        if (UiUtil.IsDarkTheme())
-        {
-            lightColor = SKColor.Parse("#333333"); // Darker color for light squares in dark theme
-            darkColor = SKColor.Parse("#555555"); // Lighter color for dark squares in dark theme
-        }
+        var isDarkTheme = IsDarkTheme();
+        var lightColor = isDarkTheme ? CheckerboardLightDarkTheme : CheckerboardLight;
+        var darkColor = isDarkTheme ? CheckerboardDarkDarkTheme : CheckerboardDark;
 
         using (var lightPaint = new SKPaint { Color = lightColor, Style = SKPaintStyle.Fill })
         using (var darkPaint = new SKPaint { Color = darkColor, Style = SKPaintStyle.Fill })
@@ -2774,22 +2769,13 @@ public static class UiUtil
 
     internal static DataGridGridLinesVisibility GetGridLinesVisibility()
     {
-        if (Se.Settings.Appearance.GridLinesAppearance == DataGridGridLinesVisibility.Horizontal.ToString())
+        return Se.Settings.Appearance.GridLinesAppearance switch
         {
-            return DataGridGridLinesVisibility.Horizontal;
-        }
-
-        if (Se.Settings.Appearance.GridLinesAppearance == DataGridGridLinesVisibility.Vertical.ToString())
-        {
-            return DataGridGridLinesVisibility.Vertical;
-        }
-
-        if (Se.Settings.Appearance.GridLinesAppearance == DataGridGridLinesVisibility.All.ToString())
-        {
-            return DataGridGridLinesVisibility.All;
-        }
-
-        return DataGridGridLinesVisibility.None;
+            nameof(DataGridGridLinesVisibility.Horizontal) => DataGridGridLinesVisibility.Horizontal,
+            nameof(DataGridGridLinesVisibility.Vertical) => DataGridGridLinesVisibility.Vertical,
+            nameof(DataGridGridLinesVisibility.All) => DataGridGridLinesVisibility.All,
+            _ => DataGridGridLinesVisibility.None,
+        };
     }
 
     internal static Color GetDarkThemeBackgroundColor()
