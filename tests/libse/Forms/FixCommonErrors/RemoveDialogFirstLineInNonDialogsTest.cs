@@ -50,6 +50,14 @@ public class RemoveDialogFirstLineInNonDialogsTest
         Assert.Equal(input, Fix(input));
     }
 
+    [Theory]
+    [InlineData("- [phone rings] - Hello!")]
+    [InlineData("- (sighs) - Who's there?")]
+    public void KeepsStartDash_WhenDialogFollowsBracketOrParenthesis(string input)
+    {
+        Assert.Equal(input, Fix(input));
+    }
+
     [Fact]
     public void KeepsStartDash_WhenSecondLineUsesAnotherDashCharacter()
     {
