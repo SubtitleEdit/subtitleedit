@@ -19721,15 +19721,26 @@ public partial class MainViewModel :
             return;
         }
 
-        // Insert spell check items at the beginning of the menu
+        // Insert spell check items at the top of the menu, but below the ASSA Styles/Actors
+        // items when those are shown - they should stay first (#11744).
         var insertIndex = 0;
+        if (AreAssaContentMenuItemsVisible && MenuItemActors != null)
+        {
+            var actorsIndex = flyout.Items.IndexOf(MenuItemActors);
+            if (actorsIndex >= 0)
+            {
+                insertIndex = actorsIndex + 2; // after the Actors item and its separator
+            }
+        }
 
+        var hasMisspelledWords = false;
         var cell = pointerArgs == null ? null : GetSubtitleGridSpellCheckCell(pointerArgs);
         if (cell != null)
         {
             var (line, isOriginal) = cell.Value;
             var text = isOriginal ? line.OriginalText : line.Text;
             var words = GetMisspelledWords(text);
+            hasMisspelledWords = words.Count > 0;
 
             if (words.Count == 1)
             {
@@ -19768,10 +19779,21 @@ public partial class MainViewModel :
             Tag = "SpellCheck"
         };
         changeDictionary.Click += (_, _) => { CommandPickLiveSpellCheckDictionary(); };
-        flyout.Items.Insert(insertIndex++, changeDictionary);
 
-        // Add separator after spell check items
-        flyout.Items.Insert(insertIndex, new Separator { Tag = "SpellCheck" });
+        if (hasMisspelledWords)
+        {
+            flyout.Items.Insert(insertIndex++, changeDictionary);
+
+            // Add separator after spell check items
+            flyout.Items.Insert(insertIndex, new Separator { Tag = "SpellCheck" });
+        }
+        else
+        {
+            // No misspelling context for the click, so don't hoist the dictionary picker to the
+            // top of the menu - park it at the bottom instead (#11744).
+            flyout.Items.Add(new Separator { Tag = "SpellCheck" });
+            flyout.Items.Add(changeDictionary);
+        }
     }
 
     /// <summary>
