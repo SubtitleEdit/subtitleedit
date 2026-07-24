@@ -86,6 +86,22 @@ internal static class ContainerSubtitleLoader
             return null;
         }
 
+        if (ext == ".idx")
+        {
+            // 5.0.0 accepted the .idx of a VobSub pair as the input file; keep that working
+            // by redirecting to the companion .sub (which holds the actual subpictures) and
+            // using the given .idx for timing + palette (issue #12772).
+            var subPath = Path.ChangeExtension(filePath, ".sub");
+            if (!File.Exists(subPath))
+            {
+                throw new InvalidOperationException(
+                    $"VobSub '.idx' input has no companion '.sub' ({Path.GetFileName(subPath)}) — "
+                    + "the .idx only holds timing and palette; the subtitle images live in the .sub.");
+            }
+
+            return LoadVobSub(subPath, filePath, options);
+        }
+
         if (ext is ".ts" or ".m2ts" or ".mts")
         {
             return LoadTransportStream(filePath, options);
