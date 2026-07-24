@@ -56,11 +56,11 @@
       },
       "Avalonia.Markup.Declarative": {
         "type": "Direct",
-        "requested": "[12.0.5, )",
-        "resolved": "12.0.5",
-        "contentHash": "kW84kGAEOMdDVgFgcCgip76uMvK53L3L9HoOtHDUdNqAAHOC+melGAUS9Ngthzx6Bhxk5In5DrcYJvMRpOL5ZA==",
+        "requested": "[12.1.0, )",
+        "resolved": "12.1.0",
+        "contentHash": "A65pPyYQzJ49Dnia1oVZi8R/vS4q7Vga+Jd/UaNzl3lCxv8HdzHFaBadXfjfU5sOnA7y8k6epEhB2xlboBmXMQ==",
         "dependencies": {
-          "Avalonia": "12.0.5"
+          "Avalonia": "12.1.0"
         }
       },
       "Avalonia.Themes.Fluent": {
@@ -174,9 +174,9 @@
       },
       "SharpCompress": {
         "type": "Direct",
-        "requested": "[0.49.1, )",
-        "resolved": "0.49.1",
-        "contentHash": "Meygd8HAnUgqYzxvCsaYR5XnZAG2xBmxkQHVGi/HkCjrvEq+tiM+VPQRvYLxsbse3KUmec65ccdMiOXv8CkjsA=="
+        "requested": "[0.50.0, )",
+        "resolved": "0.50.0",
+        "contentHash": "EzoWIzA31rb/kADwHkcmdT1rzqnT91kR/Df8X/gqd3qvXhgMbCzyKIWH6M3LTDwPIr0uLoXfX9fvThidXHBdyQ=="
       },
       "SkiaSharp.HarfBuzz": {
         "type": "Direct",
