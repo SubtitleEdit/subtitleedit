@@ -221,6 +221,7 @@ internal static class ImageOcrLoader
         IReadOnlyList<BitmapSubtitleLoader.BitmapSubtitleItem> items, IOcrEngine? ocr, bool isolateColors = false)
     {
         var subtitle = new Subtitle();
+        var blankCount = 0;
         foreach (var item in items)
         {
             string text;
@@ -243,7 +244,20 @@ internal static class ImageOcrLoader
                 subtitle.Paragraphs.Add(new LibSeParagraph(
                     text, item.StartTime.TotalMilliseconds, item.EndTime.TotalMilliseconds));
             }
+            else
+            {
+                blankCount++;
+            }
         }
+
+        if (blankCount > 0)
+        {
+            // Issue #12772: these used to vanish without a trace, making it look like the
+            // source had fewer subtitles than the GUI sees.
+            AnsiConsole.MarkupLine(
+                $"[yellow]Note: {blankCount} image(s) produced no OCR text and were dropped.[/]");
+        }
+
         subtitle.Renumber();
         return subtitle;
     }

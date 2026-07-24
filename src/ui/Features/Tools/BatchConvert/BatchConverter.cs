@@ -156,7 +156,7 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
                             if (trackId == track.TrackNumber.ToString(CultureInfo.InvariantCulture))
                             {
                                 var vobSubs = LoadVobSubFromMatroska(track, matroska, out var idx);
-                                imageSubtitle = new OcrSubtitleVobSub(vobSubs)
+                                imageSubtitle = new OcrSubtitleVobSub(vobSubs, idx?.Palette)
                                 {
                                     IsolateColors = Se.Settings.Tools.BatchConvert.VobSubIsolateColors,
                                 };

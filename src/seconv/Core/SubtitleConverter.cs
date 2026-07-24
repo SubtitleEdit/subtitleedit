@@ -320,6 +320,22 @@ internal class SubtitleConverter
             return false;
         }
 
+        if (ext == ".idx")
+        {
+            // Accept the .idx of a VobSub pair as input (5.0.0 did): redirect to the
+            // companion .sub and use this .idx for timing + palette (issue #12772).
+            var subPath = Path.ChangeExtension(inputFile, ".sub");
+            if (!File.Exists(subPath))
+            {
+                throw new InvalidOperationException(
+                    $"VobSub '.idx' input has no companion '.sub' ({Path.GetFileName(subPath)}) — "
+                    + "the .idx only holds timing and palette; the subtitle images live in the .sub.");
+            }
+
+            return await PassThroughSingleStreamAsync(subPath, options, result, fileIndex,
+                () => BitmapSubtitleLoader.LoadVobSub(subPath, inputFile, isPal: true));
+        }
+
         if (ext is ".mkv" or ".mks")
         {
             return await PassThroughMatroskaPgsAsync(inputFile, options, result, fileIndex);

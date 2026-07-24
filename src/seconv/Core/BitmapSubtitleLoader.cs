@@ -90,6 +90,16 @@ internal static class BitmapSubtitleLoader
         var items = new List<BitmapSubtitleItem>(packs.Count);
         foreach (var pack in packs)
         {
+            // Without the .idx CLUT, SubPicture.GetBitmap skips both the SetColor and
+            // SetContrast (per-plane alpha) display commands, so normally-transparent
+            // outline/anti-alias planes render opaque and fuse into the glyphs — the
+            // garbled OCR in issue #12772 ('-'→'=', 'S'→'$'). Mirrors the GUI, which
+            // always passes VobSubParser.IdxPalette.
+            if (parser.IdxPalette.Count > 0)
+            {
+                pack.Palette = parser.IdxPalette;
+            }
+
             var bmp = pack.GetBitmap();
             if (bmp is null)
             {
@@ -136,6 +146,11 @@ internal static class BitmapSubtitleLoader
                 $"VobSub MKV track #{track.TrackNumber} is compressed (content encoding 1), which isn't supported.");
         }
 
+        // The track's CodecPrivate holds the .idx text, including the CLUT palette. Without
+        // it SubPicture.GetBitmap skips SetColor/SetContrast and renders normally-transparent
+        // planes opaque (issue #12772) — same fix as LoadVobSub; mirrors the GUI MKV path.
+        var palette = GetVobSubIdxPalette(track.GetCodecPrivate());
+
         var sub = matroska.GetSubtitle(track.TrackNumber, null);
         var packs = new List<VobSubMergedPack>(sub.Count);
         foreach (var p in sub)
@@ -143,6 +158,7 @@ internal static class BitmapSubtitleLoader
             packs.Add(new VobSubMergedPack(p.GetData(track), TimeSpan.FromMilliseconds(p.Start), 32, null)
             {
                 EndTime = TimeSpan.FromMilliseconds(p.End),
+                Palette = palette,
             });
 
             // Fix overlapping time codes (some Handbrake versions emit them) by clamping the
@@ -173,6 +189,21 @@ internal static class BitmapSubtitleLoader
             throw new InvalidOperationException($"No VobSub subtitles in MKV track #{track.TrackNumber}.");
         }
         return items;
+    }
+
+    /// <summary>
+    /// Palette (CLUT) from a Matroska VobSub track's CodecPrivate .idx text, or null when the
+    /// track carries none — <see cref="SubPicture.GetBitmap"/> then falls back to its defaults.
+    /// </summary>
+    internal static List<SKColor>? GetVobSubIdxPalette(string? codecPrivate)
+    {
+        if (string.IsNullOrWhiteSpace(codecPrivate))
+        {
+            return null;
+        }
+
+        var palette = new Idx(codecPrivate.SplitToLines()).Palette;
+        return palette.Count > 0 ? palette : null;
     }
 
     /// <summary>
