@@ -152,17 +152,101 @@ public class ShortcutManagerTests
         manager.OnKeyPressed(null, syntheticControl);
         Assert.Null(manager.CheckShortcuts(syntheticControl, category.ToString()));
 
-        var altGr = KeyEvent(Key.RightAlt, PhysicalKey.AltRight, KeyModifiers.Control | KeyModifiers.Alt);
+        // Keep physical right Alt authoritative even if the logical key differs.
+        var altGr = KeyEvent(Key.LeftAlt, PhysicalKey.AltRight, KeyModifiers.Control | KeyModifiers.Alt);
         manager.OnKeyPressed(null, altGr);
         Assert.Null(manager.CheckShortcuts(altGr, category.ToString()));
 
-        manager.OnKeyReleased(null, i);
+        manager.OnKeyReleased(
+            null,
+            KeyEvent(Key.I, PhysicalKey.I, KeyModifiers.Control | KeyModifiers.Alt));
         var e = KeyEvent(Key.E, PhysicalKey.E, KeyModifiers.Control | KeyModifiers.Alt);
         manager.OnKeyPressed(null, e);
-        Assert.Null(manager.CheckShortcuts(e, category.ToString()));
+        var altGrCommand = manager.CheckShortcuts(e, category.ToString());
+        if (OperatingSystem.IsWindows())
+        {
+            Assert.Null(altGrCommand);
+        }
+        else
+        {
+            Assert.Same(command, altGrCommand);
+        }
 
         manager.ClearKeys();
         manager.OnKeyPressed(null, e);
         Assert.Same(command, manager.CheckShortcuts(e, category.ToString()));
+    }
+
+    [Fact]
+    public void ShiftAltGrTypingDoesNotCompleteShortcut()
+    {
+        if (!OperatingSystem.IsWindows())
+        {
+            return;
+        }
+
+        var manager = new ShortcutManager();
+        var category = ShortcutCategory.General;
+        var command = new RelayCommand(() => { });
+        manager.RegisterShortcut(new ShortCut(
+            "Save language file",
+            ["Control", "Alt", "Shift", "L"],
+            category,
+            command));
+
+        var shift = KeyEvent(Key.LeftShift, PhysicalKey.ShiftLeft, KeyModifiers.Shift);
+        manager.OnKeyPressed(null, shift);
+        var syntheticControl = KeyEvent(
+            Key.LeftCtrl,
+            PhysicalKey.ControlLeft,
+            KeyModifiers.Control | KeyModifiers.Shift);
+        manager.OnKeyPressed(null, syntheticControl);
+        var altGr = KeyEvent(
+            Key.LeftAlt,
+            PhysicalKey.AltRight,
+            KeyModifiers.Control | KeyModifiers.Alt | KeyModifiers.Shift);
+        manager.OnKeyPressed(null, altGr);
+        var l = KeyEvent(
+            Key.L,
+            PhysicalKey.L,
+            KeyModifiers.Control | KeyModifiers.Alt | KeyModifiers.Shift);
+        manager.OnKeyPressed(null, l);
+
+        Assert.Null(manager.CheckShortcuts(l, category.ToString()));
+    }
+
+    [Fact]
+    public void MissingAltGrKeyUpDoesNotBlockLaterLeftControlAltShortcut()
+    {
+        var manager = new ShortcutManager();
+        var category = ShortcutCategory.General;
+        var command = new RelayCommand(() => { });
+        manager.RegisterShortcut(new ShortCut("Left Ctrl+Alt+E", ["Control", "Alt", "E"], category, command));
+
+        var altGr = KeyEvent(Key.RightAlt, PhysicalKey.AltRight, KeyModifiers.Control | KeyModifiers.Alt);
+        manager.OnKeyPressed(null, altGr);
+
+        var leftControl = KeyEvent(Key.LeftCtrl, PhysicalKey.ControlLeft, KeyModifiers.Control);
+        manager.OnKeyPressed(null, leftControl);
+        var leftAlt = KeyEvent(Key.LeftAlt, PhysicalKey.AltLeft, KeyModifiers.Control | KeyModifiers.Alt);
+        manager.OnKeyPressed(null, leftAlt);
+        var e = KeyEvent(Key.E, PhysicalKey.E, KeyModifiers.Control | KeyModifiers.Alt);
+        manager.OnKeyPressed(null, e);
+
+        Assert.Same(command, manager.CheckShortcuts(e, category.ToString()));
+    }
+
+    [Fact]
+    public void ModifierOnlyShortcutStillWorks()
+    {
+        var manager = new ShortcutManager();
+        var category = ShortcutCategory.General;
+        var command = new RelayCommand(() => { });
+        manager.RegisterShortcut(new ShortCut("Control only", ["Control"], category, command));
+
+        var control = KeyEvent(Key.LeftCtrl, PhysicalKey.ControlLeft, KeyModifiers.Control);
+        manager.OnKeyPressed(null, control);
+
+        Assert.Same(command, manager.CheckShortcuts(control, category.ToString()));
     }
 }
