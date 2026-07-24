@@ -1,5 +1,6 @@
 using Avalonia.Controls;
 using Avalonia.Data;
+using Avalonia.Interactivity;
 using Avalonia.Layout;
 using AvaloniaEdit;
 using Nikse.SubtitleEdit.Logic;
@@ -78,7 +79,9 @@ public class SourceViewWindow : Window
         Content = grid;
 
         Opened += delegate { Avalonia.Threading.Dispatcher.UIThread.Post(vm.FocusEditor); };
-        KeyDown += (_, e) => vm.OnKeyDown(e);
+
+        // Tunnel, as the AvaloniaEdit text area consumes Escape before it can bubble up to the window.
+        AddHandler(KeyDownEvent, (_, e) => vm.OnKeyDown(e), RoutingStrategies.Tunnel);
 
         Closing += delegate { UiUtil.SaveWindowPosition(this); };
         Loaded += delegate { UiUtil.RestoreWindowPosition(this); };
