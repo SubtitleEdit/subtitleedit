@@ -14,6 +14,19 @@ internal class Program
         // libHarfBuzzSharp deep-binds its own hb_* symbols and doesn't crash on Linux (#11864).
         Nikse.SubtitleEdit.UiLogic.HarfBuzzNativeFix.Apply();
 
+        // On Windows the console defaults to the legacy OEM codepage, which mangles any
+        // non-ASCII output (file names, previews - and it wrote the ¶ HI separator in
+        // dump-settings as raw byte 0x14, #12793). Redirected output stays UTF-8 too.
+        // Skipped when stdout is not attached to a console handle it can configure.
+        try
+        {
+            Console.OutputEncoding = System.Text.Encoding.UTF8;
+        }
+        catch (Exception)
+        {
+            // No console (service/pipe edge cases) - keep the default encoding.
+        }
+
         // Encoding code pages and the headless EBU UI helper are wired by the
         // module initializer in SeConv.Core.Bootstrap.
 
