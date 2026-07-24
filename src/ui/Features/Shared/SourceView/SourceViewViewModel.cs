@@ -388,7 +388,7 @@ public partial class SourceViewViewModel : ObservableObject, IClosingCleanup
         Window?.Close();
     }
 
-    internal void OnKeyDown(KeyEventArgs e)
+    internal void OnKeyDown(object? sender, KeyEventArgs e)
     {
         if (e.Key == Key.Escape)
         {
