@@ -3622,13 +3622,16 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             // labelTranslateTip
             // 
-            this.labelTranslateTip.AutoSize = true;
+            this.labelTranslateTip.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top
+            | System.Windows.Forms.AnchorStyles.Left)));
+            this.labelTranslateTip.AutoSize = false;
             this.labelTranslateTip.ForeColor = System.Drawing.Color.Gray;
-            this.labelTranslateTip.Location = new System.Drawing.Point(10, 225);
+            this.labelTranslateTip.Location = new System.Drawing.Point(6, 201);
             this.labelTranslateTip.Name = "labelTranslateTip";
-            this.labelTranslateTip.Size = new System.Drawing.Size(294, 13);
+            this.labelTranslateTip.Size = new System.Drawing.Size(130, 50);
             this.labelTranslateTip.TabIndex = 7;
             this.labelTranslateTip.Text = "Tip: Use <alt+arrow up/down> to go to previous/next subtitle";
+            this.labelTranslateTip.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // groupBoxTranslateSearch
             // 
@@ -3637,19 +3640,24 @@ namespace Nikse.SubtitleEdit.Forms
             this.groupBoxTranslateSearch.Controls.Add(this.buttonGoogleTranslateIt);
             this.groupBoxTranslateSearch.Controls.Add(this.buttonGoogleIt);
             this.groupBoxTranslateSearch.Controls.Add(this.textBoxSearchWord);
-            this.groupBoxTranslateSearch.Location = new System.Drawing.Point(192, 68);
+            this.groupBoxTranslateSearch.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top
+            | System.Windows.Forms.AnchorStyles.Bottom) | System.Windows.Forms.AnchorStyles.Left)));
+            this.groupBoxTranslateSearch.Location = new System.Drawing.Point(141, 70);
+            this.groupBoxTranslateSearch.MinimumSize = new System.Drawing.Size(307, 150);
             this.groupBoxTranslateSearch.Name = "groupBoxTranslateSearch";
-            this.groupBoxTranslateSearch.Size = new System.Drawing.Size(256, 150);
+            this.groupBoxTranslateSearch.Size = new System.Drawing.Size(307, 184);
             this.groupBoxTranslateSearch.TabIndex = 6;
             this.groupBoxTranslateSearch.TabStop = false;
             this.groupBoxTranslateSearch.Text = "Search text online";
             // 
             // buttonCustomUrl2
             // 
+            this.buttonCustomUrl2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom
+            | System.Windows.Forms.AnchorStyles.Left) | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonCustomUrl2.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonCustomUrl2.Location = new System.Drawing.Point(6, 118);
+            this.buttonCustomUrl2.Location = new System.Drawing.Point(6, 154);
             this.buttonCustomUrl2.Name = "buttonCustomUrl2";
-            this.buttonCustomUrl2.Size = new System.Drawing.Size(244, 23);
+            this.buttonCustomUrl2.Size = new System.Drawing.Size(295, 23);
             this.buttonCustomUrl2.TabIndex = 4;
             this.buttonCustomUrl2.Text = "Custom URL";
             this.buttonCustomUrl2.UseVisualStyleBackColor = true;
@@ -3657,10 +3665,12 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             // buttonCustomUrl1
             // 
+            this.buttonCustomUrl1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom
+            | System.Windows.Forms.AnchorStyles.Left) | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonCustomUrl1.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonCustomUrl1.Location = new System.Drawing.Point(6, 91);
+            this.buttonCustomUrl1.Location = new System.Drawing.Point(6, 129);
             this.buttonCustomUrl1.Name = "buttonCustomUrl1";
-            this.buttonCustomUrl1.Size = new System.Drawing.Size(244, 23);
+            this.buttonCustomUrl1.Size = new System.Drawing.Size(295, 23);
             this.buttonCustomUrl1.TabIndex = 3;
             this.buttonCustomUrl1.Text = "Custom URL";
             this.buttonCustomUrl1.UseVisualStyleBackColor = true;
@@ -3668,10 +3678,12 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             // buttonGoogleTranslateIt
             // 
+            this.buttonGoogleTranslateIt.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonGoogleTranslateIt.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonGoogleTranslateIt.Location = new System.Drawing.Point(132, 63);
+            this.buttonGoogleTranslateIt.Location = new System.Drawing.Point(156, 104);
             this.buttonGoogleTranslateIt.Name = "buttonGoogleTranslateIt";
-            this.buttonGoogleTranslateIt.Size = new System.Drawing.Size(118, 23);
+            this.buttonGoogleTranslateIt.Size = new System.Drawing.Size(145, 23);
             this.buttonGoogleTranslateIt.TabIndex = 2;
             this.buttonGoogleTranslateIt.Text = "Google translate it";
             this.buttonGoogleTranslateIt.UseVisualStyleBackColor = true;
@@ -3679,10 +3691,12 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             // buttonGoogleIt
             // 
+            this.buttonGoogleIt.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom
+            | System.Windows.Forms.AnchorStyles.Left)));
             this.buttonGoogleIt.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonGoogleIt.Location = new System.Drawing.Point(6, 63);
+            this.buttonGoogleIt.Location = new System.Drawing.Point(6, 104);
             this.buttonGoogleIt.Name = "buttonGoogleIt";
-            this.buttonGoogleIt.Size = new System.Drawing.Size(120, 23);
+            this.buttonGoogleIt.Size = new System.Drawing.Size(145, 23);
             this.buttonGoogleIt.TabIndex = 1;
             this.buttonGoogleIt.Text = "Google it";
             this.buttonGoogleIt.UseVisualStyleBackColor = true;
@@ -3690,13 +3704,18 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             // textBoxSearchWord
             // 
+            this.textBoxSearchWord.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top
+            | System.Windows.Forms.AnchorStyles.Bottom)
+            | System.Windows.Forms.AnchorStyles.Left)
+            | System.Windows.Forms.AnchorStyles.Right));
             this.textBoxSearchWord.BackColor = System.Drawing.SystemColors.Window;
             this.textBoxSearchWord.FocusedColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
             this.textBoxSearchWord.Font = new System.Drawing.Font("Tahoma", 12F, System.Drawing.FontStyle.Bold);
             this.textBoxSearchWord.Location = new System.Drawing.Point(6, 18);
+            this.textBoxSearchWord.MinimumSize = new System.Drawing.Size(0, 46);
             this.textBoxSearchWord.Multiline = true;
             this.textBoxSearchWord.Name = "textBoxSearchWord";
-            this.textBoxSearchWord.Size = new System.Drawing.Size(244, 39);
+            this.textBoxSearchWord.Size = new System.Drawing.Size(295, 80);
             this.textBoxSearchWord.TabIndex = 0;
             // 
             // groupBoxAutoContinue
@@ -3704,9 +3723,9 @@ namespace Nikse.SubtitleEdit.Forms
             this.groupBoxAutoContinue.Controls.Add(this.comboBoxAutoContinue);
             this.groupBoxAutoContinue.Controls.Add(this.labelAutoContinueDelay);
             this.groupBoxAutoContinue.Controls.Add(this.checkBoxAutoContinue);
-            this.groupBoxAutoContinue.Location = new System.Drawing.Point(6, 120);
+            this.groupBoxAutoContinue.Location = new System.Drawing.Point(6, 104);
             this.groupBoxAutoContinue.Name = "groupBoxAutoContinue";
-            this.groupBoxAutoContinue.Size = new System.Drawing.Size(182, 98);
+            this.groupBoxAutoContinue.Size = new System.Drawing.Size(130, 92);
             this.groupBoxAutoContinue.TabIndex = 1;
             this.groupBoxAutoContinue.TabStop = false;
             this.groupBoxAutoContinue.Text = "Auto continue";
@@ -3773,7 +3792,7 @@ namespace Nikse.SubtitleEdit.Forms
             // buttonStop
             // 
             this.buttonStop.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonStop.Location = new System.Drawing.Point(282, 42);
+            this.buttonStop.Location = new System.Drawing.Point(257, 42);
             this.buttonStop.Name = "buttonStop";
             this.buttonStop.Size = new System.Drawing.Size(76, 23);
             this.buttonStop.TabIndex = 5;
@@ -3786,9 +3805,9 @@ namespace Nikse.SubtitleEdit.Forms
             this.groupBoxAutoRepeat.Controls.Add(this.comboBoxAutoRepeat);
             this.groupBoxAutoRepeat.Controls.Add(this.labelAutoRepeatCount);
             this.groupBoxAutoRepeat.Controls.Add(this.checkBoxAutoRepeatOn);
-            this.groupBoxAutoRepeat.Location = new System.Drawing.Point(6, 14);
+            this.groupBoxAutoRepeat.Location = new System.Drawing.Point(6, 6);
             this.groupBoxAutoRepeat.Name = "groupBoxAutoRepeat";
-            this.groupBoxAutoRepeat.Size = new System.Drawing.Size(182, 100);
+            this.groupBoxAutoRepeat.Size = new System.Drawing.Size(130, 92);
             this.groupBoxAutoRepeat.TabIndex = 0;
             this.groupBoxAutoRepeat.TabStop = false;
             this.groupBoxAutoRepeat.Text = "Auto repeat";
@@ -3851,7 +3870,7 @@ namespace Nikse.SubtitleEdit.Forms
             // buttonPlayPrevious
             // 
             this.buttonPlayPrevious.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonPlayPrevious.Location = new System.Drawing.Point(200, 14);
+            this.buttonPlayPrevious.Location = new System.Drawing.Point(175, 14);
             this.buttonPlayPrevious.Name = "buttonPlayPrevious";
             this.buttonPlayPrevious.Size = new System.Drawing.Size(76, 23);
             this.buttonPlayPrevious.TabIndex = 2;
@@ -3862,7 +3881,7 @@ namespace Nikse.SubtitleEdit.Forms
             // buttonPlayCurrent
             // 
             this.buttonPlayCurrent.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonPlayCurrent.Location = new System.Drawing.Point(282, 14);
+            this.buttonPlayCurrent.Location = new System.Drawing.Point(257, 14);
             this.buttonPlayCurrent.Name = "buttonPlayCurrent";
             this.buttonPlayCurrent.Size = new System.Drawing.Size(76, 23);
             this.buttonPlayCurrent.TabIndex = 3;
@@ -3873,7 +3892,7 @@ namespace Nikse.SubtitleEdit.Forms
             // buttonPlayNext
             // 
             this.buttonPlayNext.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonPlayNext.Location = new System.Drawing.Point(363, 14);
+            this.buttonPlayNext.Location = new System.Drawing.Point(338, 14);
             this.buttonPlayNext.Name = "buttonPlayNext";
             this.buttonPlayNext.Size = new System.Drawing.Size(76, 23);
             this.buttonPlayNext.TabIndex = 4;
