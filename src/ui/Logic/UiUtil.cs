@@ -280,12 +280,29 @@ public static class UiUtil
         if (Se.Settings.Appearance.UseFocusedButtonBackgroundColor)
         {
             var focusStyle = new Style(x => x.OfType<Button>().Class(":focus"));
-            focusStyle.Setters.Add(new Setter(Button.BackgroundProperty, new SolidColorBrush(Se.Settings.Appearance.FocusedButtonBackgroundColor.FromHexToColor())));
+            focusStyle.Setters.Add(new Setter(Button.BackgroundProperty, GetFocusedButtonBackgroundBrush()));
             //focusStyle.Setters.Add(new Setter(Button.ForegroundProperty, Brushes.White));
             button.Styles.Add(focusStyle);
         }
 
         return button;
+    }
+
+    private static IBrush? _focusedButtonBackgroundBrush;
+    private static string? _focusedButtonBackgroundHex;
+
+    // Every button parses the configured hex color and allocated a brush; cache one
+    // immutable brush and only rebuild it when the setting changes.
+    private static IBrush GetFocusedButtonBackgroundBrush()
+    {
+        var hex = Se.Settings.Appearance.FocusedButtonBackgroundColor;
+        if (_focusedButtonBackgroundBrush == null || _focusedButtonBackgroundHex != hex)
+        {
+            _focusedButtonBackgroundBrush = new Avalonia.Media.Immutable.ImmutableSolidColorBrush(hex.FromHexToColor());
+            _focusedButtonBackgroundHex = hex;
+        }
+
+        return _focusedButtonBackgroundBrush;
     }
 
     // Parses a single `_` access-key marker out of a button label and returns the visible text plus
@@ -1921,6 +1938,22 @@ public static class UiUtil
         return new Thickness(WindowMarginWidth, WindowMarginWidth * 2, WindowMarginWidth, WindowMarginWidth);
     }
 
+    // Property lookups here run on every swatch read/refresh; cache PropertyInfo per
+    // (declaring type, property name) so repeated reflection resolves are dictionary hits.
+    private static readonly Dictionary<(Type Type, string Name), PropertyInfo?> PropertyInfoCache = new();
+
+    private static PropertyInfo? GetCachedProperty(object owner, string name)
+    {
+        var key = (owner.GetType(), name);
+        if (!PropertyInfoCache.TryGetValue(key, out var pi))
+        {
+            pi = key.Item1.GetProperty(name, BindingFlags.Public | BindingFlags.Instance);
+            PropertyInfoCache[key] = pi;
+        }
+
+        return pi;
+    }
+
     internal static Button MakeColorPickerButton(object source, string colorPropertyPath, bool showAlpha = true)
     {
         var pathParts = colorPropertyPath.Split('.');
@@ -1934,14 +1967,14 @@ public static class UiUtil
                 {
                     return (null, null);
                 }
-                var pi = current.GetType().GetProperty(pathParts[i], BindingFlags.Public | BindingFlags.Instance);
+                var pi = GetCachedProperty(current, pathParts[i]);
                 current = pi?.GetValue(current);
             }
             if (current == null)
             {
                 return (null, null);
             }
-            var leafProp = current.GetType().GetProperty(pathParts[^1], BindingFlags.Public | BindingFlags.Instance);
+            var leafProp = GetCachedProperty(current, pathParts[^1]);
             return (current, leafProp);
         }
 
@@ -2028,7 +2061,7 @@ public static class UiUtil
                     {
                         break;
                     }
-                    var pi = current.GetType().GetProperty(pathParts[i], BindingFlags.Public | BindingFlags.Instance);
+                    var pi = GetCachedProperty(current, pathParts[i]);
                     current = pi?.GetValue(current);
                 }
             }
@@ -2827,11 +2860,12 @@ public static class UiUtil
 
     public static string? MakeToolTip(string hint, List<ShortCut> shortcuts, string shortcutName = "")
     {
-        string shortcutString = MakeShortcutsString(shortcuts, shortcutName);
+        if (!Se.Settings.Appearance.ShowHints)
+        {
+            return null;
+        }
 
-        return Se.Settings.Appearance.ShowHints
-            ? string.Format(hint, shortcutString).Trim()
-            : null;
+        return string.Format(hint, MakeShortcutsString(shortcuts, shortcutName)).Trim();
     }
 
     public static string MakeShortcutsString(List<ShortCut> shortcuts, string shortcutName)
@@ -3046,7 +3080,7 @@ public static class UiUtil
 
     public static void ShowHelp(string helpName, string section = "")
     {
-        var helpUrl = string.Format($"http://subtitleedit.github.io/subtitleedit/{helpName}.html");
+        var helpUrl = $"http://subtitleedit.github.io/subtitleedit/{helpName}.html";
         if (!string.IsNullOrEmpty(section))
         {
             helpUrl += $"#{section}";
@@ -3057,8 +3091,7 @@ public static class UiUtil
 
     public static void ShowHelp()
     {
-        var helpUrl = string.Format($"http://subtitleedit.github.io/subtitleedit");
-        OpenUrl(helpUrl);
+        OpenUrl("http://subtitleedit.github.io/subtitleedit");
     }
 
     public static void OpenUrl(string url)
