@@ -3,6 +3,30 @@ Subtitle Edit Changelog
 
 -----------------------------------------------------------------------------------------------------
 
+v5.1.0-rc14 (24th of July 2026)
+
+* Complete overhaul of the French translation - thx Need74
+* Update the CrispEmbed OCR runtime to v0.16.1
+* Improve language auto-detection for short subtitles
+* Waveform: hold the playhead frozen after pause, and keep the cursor centered on small paused seeks - thx Davanix
+* Fix Space no longer toggling play/pause after clicking the video player play/pause button - thx Davanix
+* Fix auto-save silently stopping after an import (converted flag was sticky)
+* Fix MOSS-TTS cloning random voices instead of the chosen reference voice, and apply the same fix to the other CrispASR cloning engines - thx subof
+* Strip subtitle formatting tags before TTS synthesis - thx subof
+* Fix image format conversion issues in batch mode - PGS alpha and BDN XML input - thx Lukewarm1141
+* Keep the start dash when a dialog line follows a bracket or parenthesis - thx ivandrofly
+* Handle non-ASCII dashes in "Remove dash in first line in non dialogs" - thx fraternl
+* Better encoding detection via UtfUnknown's best match - thx ivandrofly
+* Surface 7-zip unpack failures instead of hanging the download dialogs
+* Flatpak: bundle 7zr and prefer a system 7-zip on Linux
+* seconv: apply the .idx palette when decoding VobSub, and accept .idx files as input - thx albino1
+* seconv: gate language-specific fix-common-errors rules by subtitle language, with a --fce-language override
+* seconv: map fix-common-errors rule IDs to their GUI labels, add dump-settings, restore --settings and --apply-min-gap docs, and fix a --help crash
+* seconv: fix four bugs found in a targeted bug hunt
+* macOS: docs and release notes now reflect that the app is signed and notarized
+
+-----------------------------------------------------------------------------------------------------
+
 v5.1.0-rc13 (23rd of July 2026)
 
 * llama.cpp: engine settings dialog showing backend, install status, pinned release and install folder - reachable from auto-translate, AI review and the AI assistant
