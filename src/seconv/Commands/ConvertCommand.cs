@@ -123,7 +123,7 @@ internal sealed class ConvertCommand : AsyncCommand<ConvertCommand.Settings>
         public bool TimeCodesOnly { get; init; }
 
         [CommandOption("--no-vobsub-isolate-colors|--novobsubisolatecolors")]
-        [Description("Disable VobSub OCR colour isolation (on by default). Isolation binarises each subpicture to black-on-white by keeping the most frequent opaque colour (glyph fill) and dropping the outline/anti-alias colours; pass this to OCR the raw palette instead")]
+        [Description("Disable VobSub OCR colour isolation (on by default). Isolation binarises each subpicture to black-on-white by keeping the innermost colour plane (glyph fill) and dropping the outline/anti-alias colours; pass this to OCR the raw palette instead")]
         public bool NoVobSubIsolateColors { get; init; }
 
         [CommandOption("--no-pgs-isolate-colors|--nopgsisolatecolors")]
