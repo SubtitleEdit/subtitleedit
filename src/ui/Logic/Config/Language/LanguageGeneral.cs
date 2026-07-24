@@ -473,6 +473,7 @@ public class LanguageGeneral
     public string Right { get; set; }
     public string RightToLeft { get; set; }
     public string Rules { get; set; }
+    public string Romanize { get; set; }
     public string SaveChangesMessage { get; set; }
     public string SaveChangesTitle { get; set; }
     public string SaveChangesToX { get; set; }
@@ -1236,6 +1237,7 @@ public class LanguageGeneral
         ReverseRightToLeftStartEnd = "Reverse RTL start/end";
         Right = "Right";
         RightToLeft = "Right to left";
+        Romanize = "Romanize";
         Rules = "Rules";
         SaveChangesMessage = "Do you want to save changes to the current subtitle file?";
         SaveChangesTitle = "Save changes?";
