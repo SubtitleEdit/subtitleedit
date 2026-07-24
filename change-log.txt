@@ -6,6 +6,7 @@ Subtitle Edit Changelog
 v5.1.0-rc14 (24th of July 2026)
 
 * Complete overhaul of the French translation - thx Need74
+* Update the CrispEmbed OCR runtime to v0.16.1
 * Improve language auto-detection for short subtitles
 * Waveform: hold the playhead frozen after pause, and keep the cursor centered on small paused seeks - thx Davanix
 * Fix Space no longer toggling play/pause after clicking the video player play/pause button - thx Davanix
