@@ -161,4 +161,36 @@ public class VobSubPaletteTest : IDisposable
         Assert.False(result.Success);
         Assert.Contains(result.Errors, e => e.Contains("companion '.sub'"));
     }
+
+    [Fact]
+    public void LoadVobSub_ZeroDurationCue_GetsClampedEndTime()
+    {
+        // Issue #12772 part 3: many discs omit the subpicture's own delay command, so
+        // EndTimeCode == StartTimeCode and the .sup export wrote start==end on 740 of
+        // 1,115 cues. A zero-duration cue must be extended (default duration, capped at
+        // the next cue's start).
+        var subPath = WritePair(new SKColor(255, 0, 0));
+        var idxPath = Path.ChangeExtension(subPath, ".idx");
+
+        var items = BitmapSubtitleLoader.LoadVobSub(subPath, idxPath, isPal: true);
+
+        foreach (var item in items)
+        {
+            Assert.True(item.EndTime.TotalMilliseconds > item.StartTime.TotalMilliseconds,
+                $"cue at {item.StartTime} still has a zero/negative duration");
+            item.Dispose();
+        }
+    }
+
+    [Fact]
+    public void GetVobSubIdxScreenSize_ParsesSizeLine_AndFallsBack()
+    {
+        Assert.Equal((720, 480), BitmapSubtitleLoader.GetVobSubIdxScreenSize("size: 720x480\npalette: 000000"));
+        Assert.Equal((1920, 1080), BitmapSubtitleLoader.GetVobSubIdxScreenSize("SIZE: 1920x1080"));
+
+        // Missing / malformed → DVD PAL default.
+        Assert.Equal((720, 576), BitmapSubtitleLoader.GetVobSubIdxScreenSize(null));
+        Assert.Equal((720, 576), BitmapSubtitleLoader.GetVobSubIdxScreenSize("palette: 000000"));
+        Assert.Equal((720, 576), BitmapSubtitleLoader.GetVobSubIdxScreenSize("size: banana"));
+    }
 }
