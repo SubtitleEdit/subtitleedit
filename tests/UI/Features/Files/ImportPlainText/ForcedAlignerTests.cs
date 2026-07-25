@@ -12,6 +12,8 @@ public class ForcedAlignerTests
         Se.Settings.General.UseFrameMode = false;
         Se.Settings.General.MinimumBetweenLines = new MsOrFramesValue { Milliseconds = 24 };
         Se.Settings.General.SubtitleMinimumDisplayMilliseconds = 1000;
+        Se.Settings.General.SubtitleMaximumDisplayMilliseconds = 8000;
+        Se.Settings.General.SubtitleOptimalCharactersPerSeconds = 15.0;
     }
 
     /// <summary>
@@ -237,6 +239,110 @@ public class ForcedAlignerTests
             await Assert.ThrowsAnyAsync<OperationCanceledException>(() =>
                 new ForcedAligner(new FakeRunner(240), new FakeAudio(3600, folder))
                     .AlignAsync(Script(500), null, cts.Token));
+        }
+        finally
+        {
+            Directory.Delete(folder, true);
+        }
+    }
+
+    /// <summary>
+    /// Stands in for an aligner on sparse audio: it ends each cue where the next one
+    /// begins, so a line followed by music or action absorbs all of it.
+    /// </summary>
+    private sealed class StretchingRunner : ForcedAligner.IRunner
+    {
+        public Task<string> AlignAsync(string audioFileName, string textFileName, CancellationToken cancellationToken)
+        {
+            var lines = File.ReadAllLines(textFileName).Where(l => !string.IsNullOrWhiteSpace(l)).ToList();
+            var srt = new System.Text.StringBuilder();
+            var t = 0.0;
+            for (var i = 0; i < lines.Count; i++)
+            {
+                // 3 s of speech, then a 12 s gap swallowed by the same cue.
+                var end = t + 15.0;
+                srt.AppendLine((i + 1).ToString());
+                srt.AppendLine($"{Fmt(t)} --> {Fmt(end)}");
+                srt.AppendLine(lines[i]);
+                srt.AppendLine();
+                t = end;
+            }
+
+            return Task.FromResult(srt.ToString());
+
+            static string Fmt(double seconds)
+            {
+                var t = TimeSpan.FromSeconds(seconds);
+                return $"{t.Hours:00}:{t.Minutes:00}:{t.Seconds:00},{t.Milliseconds:000}";
+            }
+        }
+    }
+
+    [Fact]
+    public async Task CuesStretchedOverSilence_AreTrimmedToReadingTime()
+    {
+        // A forced aligner ends a segment where the next one starts, so on a recording
+        // that is half music the cue before each gap runs for the whole gap. Measured on
+        // 56% speech audio this produced 40 cues over ten seconds, one of them 16.8 s,
+        // against a true maximum of 4.4 s.
+        var folder = Directory.CreateTempSubdirectory().FullName;
+        try
+        {
+            var lines = Script(20);
+
+            await new ForcedAligner(new StretchingRunner(), new FakeAudio(300, folder)).AlignAsync(lines);
+
+            var maxDurationMs = Se.Settings.General.SubtitleMaximumDisplayMilliseconds;
+            var timed = lines.Where(l => l.EndTime > TimeSpan.Zero).ToList();
+            Assert.True(timed.Count >= 15, $"expected most lines to get time codes, only {timed.Count} did");
+            foreach (var line in timed)
+            {
+                Assert.True(
+                    line.Duration.TotalMilliseconds <= maxDurationMs,
+                    $"a cue lasted {line.Duration.TotalSeconds:F1} s, over the {maxDurationMs / 1000.0:F0} s maximum");
+            }
+        }
+        finally
+        {
+            Directory.Delete(folder, true);
+        }
+    }
+
+    [Fact]
+    public async Task BlankLinesInTheScript_DoNotShiftEveryFollowingLine()
+    {
+        // crispasr silently drops blank and whitespace-only rows from its --text-file:
+        // feeding it 5 lines with 2 blanks returns 3 cues. Matching cue N to line N then
+        // shifts every later line, cumulatively, for the rest of the file - which is what
+        // "the timing is way off" looked like on a real script. FakeRunner reproduces the
+        // dropping because it filters empty lines the same way.
+        var folder = Directory.CreateTempSubdirectory().FullName;
+        try
+        {
+            var lines = new List<SubtitleLineViewModel>();
+            for (var i = 0; i < 12; i++)
+            {
+                lines.Add(new SubtitleLineViewModel { Text = $"Spoken line {i} with several words" });
+                if (i % 3 == 2)
+                {
+                    lines.Add(new SubtitleLineViewModel { Text = i % 6 == 2 ? string.Empty : "   " });
+                }
+            }
+
+            var spoken = lines.Where(l => !string.IsNullOrWhiteSpace(l.Text)).ToList();
+
+            await new ForcedAligner(new FakeRunner(240), new FakeAudio(240, folder)).AlignAsync(lines);
+
+            // Each spoken line must land where the fake actually speaks it: 10 chars/sec
+            // over the spoken lines only, blanks contributing nothing.
+            var trueStart = 0.0;
+            foreach (var line in spoken)
+            {
+                Assert.True(
+                    Math.Abs(line.StartTime.TotalSeconds - trueStart) < 1.0,
+                    $"\"{line.Text}\" starts at {line.StartTime.TotalSeconds:F1}s, spoken at {trueStart:F1}s");
+                trueStart += line.Text.Length / 10.0;
+            }
         }
         finally
         {

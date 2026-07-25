@@ -29,6 +29,7 @@ using Nikse.SubtitleEdit.Features.Files.FormatProperties.WebVttProperties;
 using Nikse.SubtitleEdit.Features.Files.ImportImages;
 using Nikse.SubtitleEdit.Features.Files.ImportCsvXlsxCustomColumns;
 using Nikse.SubtitleEdit.Features.Files.ImportPlainText;
+using Nikse.SubtitleEdit.Features.Files.ImportPlainText.ForcedAlignerSetup;
 using Nikse.SubtitleEdit.Features.Files.ManualChosenEncoding;
 using Nikse.SubtitleEdit.Features.Files.RestoreAutoBackup;
 using Nikse.SubtitleEdit.Features.Files.Statistics;
@@ -456,6 +457,7 @@ public static class DependencyInjectionExtensions
         collection.AddTransient<PickLayerViewModel>();
         collection.AddTransient<PickMatroskaTrackViewModel>();
         collection.AddTransient<PickMillisecondsViewModel>();
+        collection.AddTransient<ForcedAlignerSetupViewModel>();
         collection.AddTransient<PickMp4TrackViewModel>();
         collection.AddTransient<PickOllamaModelViewModel>();
         collection.AddTransient<PickRuleProfileViewModel>();

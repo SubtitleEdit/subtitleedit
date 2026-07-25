@@ -7,6 +7,7 @@ using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Features.Main;
 using Nikse.SubtitleEdit.Features.Shared;
 using Nikse.SubtitleEdit.Features.Video.SpeechToText;
+using Nikse.SubtitleEdit.Features.Files.ImportPlainText.ForcedAlignerSetup;
 using Nikse.SubtitleEdit.Features.Video.SpeechToText.Engines;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
@@ -366,72 +367,17 @@ public partial class ImportPlainTextViewModel : ObservableObject, IClosingCleanu
             _videoFileName = picked;
         }
 
-        var engine = new CrispAsrParakeet();
-        var executable = engine.GetExecutable();
-        if (!File.Exists(executable))
-        {
-            await MessageBox.Show(
-                Window,
-                Se.Language.General.Error,
-                "The forced aligner needs the Crisp ASR engine, which is not installed yet."
-                + Environment.NewLine
-                + "Install it from \"Video\" -> \"Audio to text\" and try again.",
-                MessageBoxButtons.OK,
-                MessageBoxIcon.Error);
-            return;
-        }
+        // Let the user pick the aligner (and install or update the engine) rather than
+        // silently using whatever speech-to-text happens to be configured with.
+        var setupVm = await _windowService.ShowDialogAsync<ForcedAlignerSetupWindow, ForcedAlignerSetupViewModel>(
+            Window, viewModel => viewModel.Initialize());
 
-        var aligner = ResolveForcedAligner();
-        var alignerPath = engine.GetModelForCmdLine(aligner.FileName);
-        if (!File.Exists(alignerPath) && !await DownloadAlignerAsync(engine, aligner))
+        if (!setupVm.OkPressed)
         {
             return;
         }
 
-        await RunForcedAlignerAsync(executable, alignerPath);
-    }
-
-    /// <summary>
-    /// The aligner chosen for speech-to-text is reused when it is a real model. The
-    /// "built-in" choice means "let the ASR backend do its own timing", which standalone
-    /// alignment cannot use, so fall back to the curated multilingual default.
-    /// </summary>
-    private static ForcedAlignerOption ResolveForcedAligner()
-    {
-        var configured = ForcedAlignerOption.FromChoice(Se.Settings.Tools.AudioToText.CrispAsrForcedAligner);
-        return configured.IsBuiltIn ? ForcedAlignerOption.CanaryCtc() : configured;
-    }
-
-    private async Task<bool> DownloadAlignerAsync(CrispAsrParakeet engine, ForcedAlignerOption aligner)
-    {
-        var answer = await MessageBox.Show(
-            Window!,
-            $"Download {aligner.BaseDisplay}?",
-            $"Aligning needs '{aligner.BaseDisplay}', which is not installed."
-            + Environment.NewLine
-            + $"Download {aligner.FileName} ({aligner.Size})?",
-            MessageBoxButtons.YesNoCancel,
-            MessageBoxIcon.Question);
-
-        if (answer != MessageBoxResult.Yes)
-        {
-            return false;
-        }
-
-        var display = new SpeechToTextModelDisplay
-        {
-            Model = aligner.ToWhisperModel(),
-            Engine = engine,
-        };
-
-        var vm = await _windowService.ShowDialogAsync<DownloadSpeechToTextModelsWindow, DownloadSpeechToTextModelsViewModel>(
-            Window!, viewModel =>
-            {
-                viewModel.SetModels(new ObservableCollection<SpeechToTextModelDisplay> { display }, engine, display);
-                viewModel.StartDownload();
-            });
-
-        return vm.OkPressed;
+        await RunForcedAlignerAsync(setupVm.ExecutablePath, setupVm.AlignerModelPath);
     }
 
     private async Task RunForcedAlignerAsync(string executable, string alignerPath)
