@@ -11,22 +11,47 @@ public class IsSelectedHelper
     private int _lastPosition = int.MaxValue;
     private SelectionRange _nextSelection;
 
-    public void Reset(List<SubtitleLineViewModel> paragraphs, int sampleRate)
+    /// <summary>
+    /// Loads the selection ranges that can affect the sample window
+    /// [<paramref name="windowStartSample"/>, <paramref name="windowEndSample"/>] - i.e. the
+    /// horizontal span the waveform is about to draw.
+    /// </summary>
+    /// <remarks>
+    /// Keeping only the ranges that intersect the window matters: <see cref="FindNextSelection"/>
+    /// re-scans every loaded range each time the per-pixel walk passes the current one, so with
+    /// "select all" on a large subtitle the unfiltered list turned the waveform rebuild into
+    /// O(pixels x selection). Filtering is exact, not an approximation - <see cref="IsSelected"/>
+    /// is only ever asked about positions inside the window, and a range outside it can never
+    /// contain one.
+    /// </remarks>
+    public void Reset(List<SubtitleLineViewModel> paragraphs, int sampleRate, int windowStartSample, int windowEndSample)
     {
-        _rangeCount = paragraphs.Count;
-        if (_ranges.Length < _rangeCount)
+        var count = paragraphs.Count;
+        if (_ranges.Length < count)
         {
-            Array.Resize(ref _ranges, _rangeCount);
+            Array.Resize(ref _ranges, count);
         }
 
-        for (var index = 0; index < _rangeCount; index++)
+        var kept = 0;
+        for (var index = 0; index < count; index++)
         {
             var p = paragraphs[index];
             var start = (int)Math.Round(p.StartTime.TotalSeconds * sampleRate);
+            if (start > windowEndSample)
+            {
+                continue;
+            }
+
             var end = (int)Math.Round(p.EndTime.TotalSeconds * sampleRate);
-            _ranges[index] = new SelectionRange(start, end);
+            if (end < windowStartSample)
+            {
+                continue;
+            }
+
+            _ranges[kept++] = new SelectionRange(start, end);
         }
 
+        _rangeCount = kept;
         _lastPosition = int.MaxValue;
         _nextSelection = new SelectionRange(int.MaxValue, int.MaxValue);
     }
