@@ -36,6 +36,14 @@
     "Description": "Arabic spell checker (LibreOffice)"
   },
   {
+    "EnglishName": "Armenian",
+    "NativeName": "Հայերեն",
+    "Files": [
+      "https://github.com/SubtitleEdit/support-files/raw/master/hunspell/hy_AM.zip"
+    ],
+    "Description": "Armenian (Eastern) spell checker - araktransfer (GPL/LGPL/MPL)"
+  },
+  {
     "EnglishName": "Assamese",
     "NativeName": "অসমীয়া",
     "Files": [
@@ -224,6 +232,14 @@
     "Description": "Estonian spell checker (LibreOffice)"
   },
   {
+    "EnglishName": "Faroese",
+    "NativeName": "Føroyskt",
+    "Files": [
+      "https://github.com/SubtitleEdit/support-files/raw/master/hunspell/fo_FO.zip"
+    ],
+    "Description": "Faroese spell checker - Fróðskaparsetur Føroya (GPL/LGPL/MPL)"
+  },
+  {
     "EnglishName": "Farsi (Persian)",
     "NativeName": "فارسی",
     "Files": [
@@ -257,6 +273,14 @@
       "https://raw.githubusercontent.com/LibreOffice/dictionaries/master/gl/gl_ES.dic"
     ],
     "Description": "Galician spell checker (LibreOffice)"
+  },
+  {
+    "EnglishName": "Georgian",
+    "NativeName": "ქართული",
+    "Files": [
+      "https://github.com/SubtitleEdit/support-files/raw/master/hunspell/ka_GE.zip"
+    ],
+    "Description": "Georgian spell checker - gamag/ka_GE.spell (MIT)"
   },
   {
     "EnglishName": "German (Austria)",
@@ -442,6 +466,14 @@
       "https://extensions.libreoffice.org/assets/downloads/z/lower-sorbian-spelling-dictionary-1-5-0.oxt"
     ],
     "Description": "Lower Sorbian dictionary 1.4.6"
+  },
+  {
+    "EnglishName": "Luxembourgish",
+    "NativeName": "Lëtzebuergesch",
+    "Files": [
+      "https://github.com/SubtitleEdit/support-files/raw/master/hunspell/lb_LU.zip"
+    ],
+    "Description": "Luxembourgish spell checker - spellchecker.lu (EUPL 1.1)"
   },
   {
     "EnglishName": "Macedonian",
