@@ -21438,6 +21438,23 @@ public partial class MainViewModel :
         SubtitleGridSelectionChanged();
     }
 
+    /// <summary>
+    /// Index of <paramref name="item"/> in <see cref="Subtitles"/>, probing the grid's own
+    /// selected index first. ObservableCollection.IndexOf is a linear scan with a virtual
+    /// Equals per element; this runs on every selection change (so on every arrow key), and
+    /// the grid already knows the answer whenever the item is the current single selection.
+    /// </summary>
+    private int IndexOfSubtitle(SubtitleLineViewModel item)
+    {
+        var hinted = SubtitleGrid.SelectedIndex;
+        if (hinted >= 0 && hinted < Subtitles.Count && ReferenceEquals(Subtitles[hinted], item))
+        {
+            return hinted;
+        }
+
+        return Subtitles.IndexOf(item);
+    }
+
     private void SubtitleGridSelectionChanged()
     {
         var selectedItems = SubtitleGrid.SelectedItems;
@@ -21495,7 +21512,7 @@ public partial class MainViewModel :
             return;
         }
 
-        var idx = Subtitles.IndexOf(item);
+        var idx = IndexOfSubtitle(item);
         StatusTextRight = $"{(idx + 1):N0}/{Subtitles.Count:N0}";
         if (item == SelectedSubtitle && item.Text == EditText)
         {
@@ -21540,32 +21557,11 @@ public partial class MainViewModel :
         var cps = SubtitleTextInfoHelper.GetCharactersPerSecond(text, item.StartTime, item.EndTime);
 
         var lines = text.SplitToLines();
-        PanelSingleLineLengthsOriginal.Children.Clear();
-        PanelSingleLineLengthsOriginal.Children.Add(UiUtil.MakeTextBlock(Se.Language.Main.SingleLineLength)
-            .WithFontSize(12)
-            .WithPadding(2));
-        var first = true;
-        for (var i = 0; i < lines.Count; i++)
-        {
-            if (first)
-            {
-                first = false;
-            }
-            else
-            {
-                PanelSingleLineLengthsOriginal.Children.Add(UiUtil.MakeTextBlock("/").WithFontSize(12).WithPadding(2));
-            }
-
-            var lineLength = SubtitleTextInfoHelper.GetLineLength(lines[i]);
-            var tb = UiUtil.MakeTextBlock(lineLength.ToString(CultureInfo.InvariantCulture)).WithFontSize(12).WithPadding(2);
-            if (Se.Settings.General.ColorTextTooLong &&
-                lineLength > Se.Settings.General.SubtitleLineMaximumLength)
-            {
-                tb.Background = _errorBrush;
-            }
-
-            PanelSingleLineLengthsOriginal.Children.Add(tb);
-        }
+        SubtitleTextInfoHelper.FillLineLengthPanel(
+            PanelSingleLineLengthsOriginal,
+            lines,
+            Se.Settings.General.ColorTextTooLong,
+            Se.Settings.General.SubtitleLineMaximumLength);
 
         EditTextCharactersPerSecondOriginal = string.Format(Se.Language.Main.CharactersPerSecond, $"{cps:0.0}");
         EditTextTotalLengthOriginal = string.Format(Se.Language.Main.TotalCharacters, totalLength);

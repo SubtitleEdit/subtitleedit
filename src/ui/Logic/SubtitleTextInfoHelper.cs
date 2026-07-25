@@ -57,27 +57,7 @@ internal static class SubtitleTextInfoHelper
         var lines = cleanText.SplitToLines();
         var lineCount = lines.Count;
 
-        var children = new List<Control>(1 + lineCount + Math.Max(0, lineCount - 1));
-        children.Add(UiUtil.MakeTextBlock(Se.Language.Main.SingleLineLength).WithFontSize(12).WithPadding(2));
-        for (var i = 0; i < lineCount; i++)
-        {
-            if (i > 0)
-            {
-                children.Add(UiUtil.MakeTextBlock("/").WithFontSize(12).WithPadding(2));
-            }
-
-            var lineLength = GetLineLength(lines[i]);
-            var tb = UiUtil.MakeTextBlock(lineLength.ToString(CultureInfo.InvariantCulture)).WithFontSize(12).WithPadding(2);
-            if (colorTextTooLong && lineLength > maxLineLength)
-            {
-                tb.Background = _errorBrush;
-            }
-
-            children.Add(tb);
-        }
-
-        panel.Children.Clear();
-        panel.Children.AddRange(children);
+        FillLineLengthPanel(panel, lines, colorTextTooLong, maxLineLength);
 
         var totalBackground = colorTextTooLong && totalLength > maxLineLength * lineCount
             ? _errorBrush
@@ -86,6 +66,73 @@ internal static class SubtitleTextInfoHelper
             totalLength,
             string.Format(Se.Language.Main.TotalCharacters, totalLength),
             totalBackground);
+    }
+
+    /// <summary>
+    /// Fills <paramref name="panel"/> with the "Single line length: 12 / 30" labels, reusing the
+    /// text blocks that are already there.
+    /// </summary>
+    /// <remarks>
+    /// This runs on every keystroke in the edit box (and on every selection change), so the old
+    /// Clear + rebuild threw away a handful of TextBlocks and re-added them to the logical and
+    /// visual tree each time. Rewriting Text/Background in place keeps the tree untouched, so
+    /// typing only costs a measure of the labels that actually changed.
+    /// </remarks>
+    internal static void FillLineLengthPanel(StackPanel panel, List<string> lines, bool colorTextTooLong, int maxLineLength)
+    {
+        var children = panel.Children;
+        var needed = 1 + lines.Count + Math.Max(0, lines.Count - 1);
+        while (children.Count > needed)
+        {
+            children.RemoveAt(children.Count - 1);
+        }
+
+        var index = 0;
+        SetLabel(children, ref index, Se.Language.Main.SingleLineLength, null);
+        for (var i = 0; i < lines.Count; i++)
+        {
+            if (i > 0)
+            {
+                SetLabel(children, ref index, "/", null);
+            }
+
+            var lineLength = GetLineLength(lines[i]);
+            SetLabel(children,
+                ref index,
+                lineLength.ToString(CultureInfo.InvariantCulture),
+                colorTextTooLong && lineLength > maxLineLength ? _errorBrush : null);
+        }
+    }
+
+    private static void SetLabel(Avalonia.Controls.Controls children, ref int index, string text, IBrush? background)
+    {
+        if (index < children.Count && children[index] is TextBlock existing)
+        {
+            if (existing.Text != text)
+            {
+                existing.Text = text;
+            }
+
+            if (!ReferenceEquals(existing.Background, background))
+            {
+                existing.Background = background;
+            }
+        }
+        else
+        {
+            var tb = UiUtil.MakeTextBlock(text).WithFontSize(12).WithPadding(2);
+            tb.Background = background;
+            if (index < children.Count)
+            {
+                children[index] = tb; // a foreign control ended up in the panel - replace it
+            }
+            else
+            {
+                children.Add(tb);
+            }
+        }
+
+        index++;
     }
 
     internal static void UpdateGaps(IList<SubtitleLineViewModel> items)
