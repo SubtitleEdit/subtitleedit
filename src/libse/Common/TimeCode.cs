@@ -362,93 +362,47 @@ namespace Nikse.SubtitleEdit.Core.Common
             return pre + s;
         }
 
-        public string ToHHMMSSFF()
+        public string ToHHMMSSFF() => ToFrameString(':');
+
+        public string ToHHMMSS() => ToFrameString(':', includeFrames: false);
+
+        public string ToHHMMSSFFDropFrame() => ToFrameString(';');
+
+        public string ToSSFF() => ToFrameString(':', includeHoursAndMinutes: false);
+
+        public string ToHHMMSSPeriodFF() => ToFrameString('.');
+
+        // The five frame-based formats above were five copies of this method that differed only
+        // in the separator and which components they include - including the "rounds up to a whole
+        // second" carry, which is easy to get subtly wrong in one copy only.
+        private string ToFrameString(char frameSeparator, bool includeHoursAndMinutes = true, bool includeFrames = true)
         {
-            string s;
             var ts = TimeSpan;
             var frameRate = Configuration.Settings.General.CurrentFrameRate;
             var frames = Math.Round(ts.Milliseconds / (BaseUnit / frameRate));
-            if (frames >= frameRate - 0.001)
-            {
-                var newTs = ts.Add(new TimeSpan(0, 0, 1));
-                s = FormatFrameTime(newTs.Days * 24 + newTs.Hours, newTs.Minutes, newTs.Seconds, 0, ':');
-            }
-            else
-            {
-                s = FormatFrameTime(ts.Days * 24 + ts.Hours, ts.Minutes, ts.Seconds, SubtitleFormat.MillisecondsToFramesMaxFrameRate(ts.Milliseconds), ':');
-            }
 
-            return PrefixSign(s);
-        }
-
-        public string ToHHMMSS()
-        {
             string s;
-            var ts = TimeSpan;
-            var frameRate = Configuration.Settings.General.CurrentFrameRate;
-            var frames = Math.Round(ts.Milliseconds / (BaseUnit / frameRate));
             if (frames >= frameRate - 0.001)
             {
-                var newTs = ts.Add(new TimeSpan(0, 0, 1));
-                s = FormatFrameTime(newTs.Days * 24 + newTs.Hours, newTs.Minutes, newTs.Seconds, 0, ':', includeFrames: false);
+                // Carry into the next second. ToSSFF deliberately does not carry into
+                // minutes/hours, matching what it did as a separate method.
+                if (includeHoursAndMinutes)
+                {
+                    var newTs = ts.Add(new TimeSpan(0, 0, 1));
+                    s = FormatFrameTime(newTs.Days * 24 + newTs.Hours, newTs.Minutes, newTs.Seconds, 0, frameSeparator, true, includeFrames);
+                }
+                else
+                {
+                    s = FormatFrameTime(0, 0, ts.Seconds + 1, 0, frameSeparator, false, includeFrames);
+                }
             }
             else
             {
-                s = FormatFrameTime(ts.Days * 24 + ts.Hours, ts.Minutes, ts.Seconds, 0, ':', includeFrames: false);
-            }
-            return PrefixSign(s);
-        }
-
-        public string ToHHMMSSFFDropFrame()
-        {
-            string s;
-            var ts = TimeSpan;
-            var frameRate = Configuration.Settings.General.CurrentFrameRate;
-            var frames = Math.Round(ts.Milliseconds / (BaseUnit / frameRate));
-            if (frames >= frameRate - 0.001)
-            {
-                var newTs = ts.Add(new TimeSpan(0, 0, 1));
-                s = FormatFrameTime(newTs.Days * 24 + newTs.Hours, newTs.Minutes, newTs.Seconds, 0, ';');
-            }
-            else
-            {
-                s = FormatFrameTime(ts.Days * 24 + ts.Hours, ts.Minutes, ts.Seconds, SubtitleFormat.MillisecondsToFramesMaxFrameRate(ts.Milliseconds), ';');
-            }
-            return PrefixSign(s);
-        }
-
-        public string ToSSFF()
-        {
-            string s;
-            var ts = TimeSpan;
-            var frameRate = Configuration.Settings.General.CurrentFrameRate;
-            var frames = Math.Round(ts.Milliseconds / (BaseUnit / frameRate));
-            if (frames >= frameRate - 0.001)
-            {
-                s = FormatFrameTime(0, 0, ts.Seconds + 1, 0, ':', includeHoursAndMinutes: false);
-            }
-            else
-            {
-                s = FormatFrameTime(0, 0, ts.Seconds, SubtitleFormat.MillisecondsToFramesMaxFrameRate(ts.Milliseconds), ':', includeHoursAndMinutes: false);
-            }
-
-            return PrefixSign(s);
-        }
-
-        public string ToHHMMSSPeriodFF()
-        {
-            string s;
-            var ts = TimeSpan;
-            var frameRate = Configuration.Settings.General.CurrentFrameRate;
-            var frames = Math.Round(ts.Milliseconds / (BaseUnit / frameRate));
-            if (frames >= frameRate - 0.001)
-            {
-                var newTs = ts.Add(new TimeSpan(0, 0, 1));
-                s = FormatFrameTime(newTs.Days * 24 + newTs.Hours, newTs.Minutes, newTs.Seconds, 0, '.');
-            }
-            else
-            {
-                s = FormatFrameTime(ts.Days * 24 + ts.Hours, ts.Minutes, ts.Seconds, SubtitleFormat.MillisecondsToFramesMaxFrameRate(ts.Milliseconds), '.');
+                // ToHHMMSS drops the frame component entirely, so it never computed one.
+                var frameComponent = includeFrames ? SubtitleFormat.MillisecondsToFramesMaxFrameRate(ts.Milliseconds) : 0;
+                s = includeHoursAndMinutes
+                    ? FormatFrameTime(ts.Days * 24 + ts.Hours, ts.Minutes, ts.Seconds, frameComponent, frameSeparator, true, includeFrames)
+                    : FormatFrameTime(0, 0, ts.Seconds, frameComponent, frameSeparator, false, includeFrames);
             }
 
             return PrefixSign(s);
@@ -481,7 +435,37 @@ namespace Nikse.SubtitleEdit.Core.Common
             return new string(buffer.Slice(0, pos));
         }
 
-        private string PrefixSign(string time) => TotalMilliseconds >= 0 ? time : $"-{time.RemoveChar('-')}";
+        // The negative path used to be $"-{time.RemoveChar('-')}", which allocated a char[], the
+        // stripped string and the interpolated result on top of the string being fixed up - 208
+        // bytes where the positive path costs 48. Write the sign and the kept characters straight
+        // into one buffer instead. The formatters above never produce a time longer than their
+        // stack buffers, so a rented span is not worth it.
+        private string PrefixSign(string time)
+        {
+            if (TotalMilliseconds >= 0)
+            {
+                return time;
+            }
+
+            const int maxStackChars = 64;
+            if (time.Length >= maxStackChars)
+            {
+                return "-" + time.RemoveChar('-'); // not reachable from the formatters; no unbounded stackalloc
+            }
+
+            Span<char> buffer = stackalloc char[time.Length + 1];
+            buffer[0] = '-';
+            var pos = 1;
+            foreach (var c in time)
+            {
+                if (c != '-')
+                {
+                    buffer[pos++] = c;
+                }
+            }
+
+            return new string(buffer.Slice(0, pos));
+        }
 
         public string ToDisplayString()
         {
