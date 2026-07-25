@@ -189,6 +189,19 @@ public sealed class WordSpellCheck : IWordSpellChecker, IDisposable
         {
             range.NoProofing = false;
             range.LanguageID = _currentLanguage.LanguageId;
+
+            try
+            {
+                // If "Detect language automatically" is on, Word re-detects the language of text as
+                // it arrives and would override the LanguageID just set. LanguageDetected = true
+                // marks the range as already determined, so Word leaves it alone. Done per range
+                // rather than via Application.CheckLanguage, which is a persisted user preference.
+                range.LanguageDetected = true;
+            }
+            catch
+            {
+                // ignored - not available unless Word is set up for multilingual editing
+            }
         }
 
         // Word caches proofing state per document; force a re-check of the new text and language.
