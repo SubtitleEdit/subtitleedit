@@ -71,6 +71,27 @@ public static class PlatformCursorManager
         }
     }
 
+    /// <summary>
+    /// Forces the OS to hide the cursor by clearing it directly via OS APIs.
+    /// Used together with WM_SETCURSOR handling so the pointer stays hidden over the
+    /// embedded video window (libmpv with wid) while the full-screen overlay is hidden.
+    /// </summary>
+    public static void HideCursor()
+    {
+        try
+        {
+            if (OperatingSystem.IsWindows())
+            {
+                SetCursor(IntPtr.Zero);
+            }
+            // Linux/macOS: rely on Avalonia's cursor management (StandardCursorType.None)
+        }
+        catch
+        {
+            // Silently ignore errors - cursor hiding is a best-effort operation
+        }
+    }
+
     private static void ForceArrowCursorWindows()
     {
         var arrowCursor = LoadCursor(IntPtr.Zero, IDC_ARROW);

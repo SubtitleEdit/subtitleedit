@@ -978,12 +978,43 @@ namespace Nikse.SubtitleEdit.Controls.VideoPlayer
 
         private void ShowControls()
         {
-            Dispatcher.UIThread.Post(() => { _gridProgress.IsVisible = true; });
+            Dispatcher.UIThread.Post(() =>
+            {
+                _gridProgress.IsVisible = true;
+                SetVideoCursorHidden(false);
+            });
         }
 
         private void HideControls()
         {
-            Dispatcher.UIThread.Post(() => { _gridProgress.IsVisible = false; });
+            Dispatcher.UIThread.Post(() =>
+            {
+                _gridProgress.IsVisible = false;
+                SetVideoCursorHidden(true);
+            });
+        }
+
+        /// <summary>
+        /// Auto-hides the mouse pointer together with the on-screen controls while in
+        /// full screen, matching Subtitle Edit 4 behavior (issue #12826). The pointer is
+        /// only hidden in full screen; the docked player always keeps it visible.
+        /// </summary>
+        private void SetVideoCursorHidden(bool hidden)
+        {
+            if (!IsFullScreen)
+            {
+                hidden = false;
+            }
+
+            Cursor = new Cursor(hidden ? StandardCursorType.None : StandardCursorType.Arrow);
+
+            // The mpv "wid" player renders into a native child window that sits on top of
+            // Avalonia, so the Cursor above doesn't cover the video area. Route the request
+            // to the native control, which hides the pointer via its own WndProc.
+            if (PlayerContent is LibMpvDynamicNativeControl nativeControl)
+            {
+                nativeControl.SetCursorHidden(hidden);
+            }
         }
 
         internal void SetSpeed(double speed)
