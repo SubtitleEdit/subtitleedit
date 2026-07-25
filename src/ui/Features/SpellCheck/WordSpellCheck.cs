@@ -10,10 +10,13 @@ namespace Nikse.SubtitleEdit.Features.SpellCheck;
 
 public sealed class WordSpellCheck : IWordSpellChecker, IDisposable
 {
+    private const int MaxFailedRecoveries = 3;
+
     private dynamic? _wordApp;
     private dynamic? _managedDocument;
     private bool _disposed;
     private bool _comFailureLogged;
+    private int _failedRecoveries;
     private WordSpellCheckLanguage? _currentLanguage;
 
     /// <summary>
@@ -77,16 +80,11 @@ public sealed class WordSpellCheck : IWordSpellChecker, IDisposable
             return true;
         }
 
-        try
-        {
-            var range = PrepareRange(word);
-            return (int)range!.SpellingErrors.Count == 0;
-        }
-        catch (Exception exception)
-        {
-            LogComFailureOnce(exception, $"Word spell check failed for \"{word}\"");
-            return true;
-        }
+        return RunWithRange(
+            word,
+            range => (int)range.SpellingErrors.Count == 0,
+            true, // a word that could not be checked is left alone rather than flagged
+            $"Word spell check failed for \"{word}\"");
     }
 
     public List<WordSpellCheckLanguage> GetInstalledLanguages()
@@ -127,27 +125,87 @@ public sealed class WordSpellCheck : IWordSpellChecker, IDisposable
 
     public List<string> GetSuggestions(string word)
     {
-        var suggestions = new List<string>();
-
         if (_wordApp == null || string.IsNullOrWhiteSpace(word))
         {
-            return suggestions;
+            return new List<string>();
+        }
+
+        return RunWithRange(
+            word,
+            range =>
+            {
+                var suggestions = new List<string>();
+                foreach (var suggestion in range.GetSpellingSuggestions())
+                {
+                    suggestions.Add((string)suggestion.Name);
+                }
+
+                return suggestions;
+            },
+            new List<string>(),
+            $"Word spell check suggestions failed for \"{word}\"");
+    }
+
+    /// <summary>
+    /// Puts <paramref name="word"/> into the managed document and runs <paramref name="operation"/>
+    /// on the resulting range, returning <paramref name="fallback"/> if that cannot be done.
+    /// </summary>
+    /// <remarks>
+    /// The document is dropped and re-created on failure before retrying: Word may have been closed
+    /// or have crashed mid-run, and since a failed check leaves the word as correctly spelled, every
+    /// remaining word of the subtitle would otherwise come back without a single spelling error.
+    /// Recovery is abandoned after <see cref="MaxFailedRecoveries"/> failures in a row so a failure
+    /// that re-creating the document cannot fix does not cost a new document per word.
+    /// </remarks>
+    private T RunWithRange<T>(string word, Func<dynamic, T> operation, T fallback, string failureMessage)
+    {
+        while (true)
+        {
+            try
+            {
+                var result = operation(PrepareRange(word));
+                _failedRecoveries = 0;
+                return result;
+            }
+            catch (Exception exception)
+            {
+                LogComFailureOnce(exception, failureMessage);
+
+                if (_failedRecoveries >= MaxFailedRecoveries)
+                {
+                    return fallback;
+                }
+
+                _failedRecoveries++;
+                DiscardDocument();
+            }
+        }
+    }
+
+    /// <summary>
+    /// Drops the tracked document so the next call opens a fresh one. Swallows errors from closing
+    /// it - the document is on its way out, and it may well be gone already.
+    /// </summary>
+    private void DiscardDocument()
+    {
+        if (_managedDocument == null)
+        {
+            return;
         }
 
         try
         {
-            var range = PrepareRange(word);
-            foreach (var suggestion in range!.GetSpellingSuggestions())
-            {
-                suggestions.Add((string)suggestion.Name);
-            }
+            _managedDocument.Close(false); // false = don't save changes
+            Marshal.ReleaseComObject(_managedDocument);
         }
-        catch (Exception exception)
+        catch
         {
-            LogComFailureOnce(exception, $"Word spell check suggestions failed for \"{word}\"");
+            // ignored
         }
-
-        return suggestions;
+        finally
+        {
+            _managedDocument = null;
+        }
     }
 
     /// <summary>
@@ -235,12 +293,7 @@ public sealed class WordSpellCheck : IWordSpellChecker, IDisposable
         {
             try
             {
-                if (_managedDocument != null)
-                {
-                    _managedDocument.Close(false); // false = don't save changes
-                    Marshal.ReleaseComObject(_managedDocument);
-                    _managedDocument = null;
-                }
+                DiscardDocument();
 
                 _wordApp.Quit();
                 Marshal.ReleaseComObject(_wordApp);
