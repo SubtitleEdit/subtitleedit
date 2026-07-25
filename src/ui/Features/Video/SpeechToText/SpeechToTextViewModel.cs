@@ -179,6 +179,7 @@ public partial class SpeechToTextViewModel : ObservableObject
     private bool _audioClipsAutoStart;
     private string _chatLlmText = string.Empty;
     private string _qwen3AsrOutputJsonPath = string.Empty;
+    private int? _qwen3AsrExitCode;
 
     private readonly IWindowService _windowService;
     private readonly IFileHelper _fileHelper;
@@ -714,6 +715,18 @@ public partial class SpeechToTextViewModel : ObservableObject
             _timerWhisper.Stop();
 
             var settings = Se.Settings.Tools.AudioToText;
+
+            // Grab the exit code before disposing - it is the key diagnostic when the engine
+            // dies without producing output (e.g. a Qwen3 ASR GPU/Vulkan crash, issue #12815).
+            try
+            {
+                _qwen3AsrExitCode = _whisperProcess.ExitCode;
+            }
+            catch
+            {
+                _qwen3AsrExitCode = null;
+            }
+
             _whisperProcess.Dispose();
 
             var engine = GetEffectiveSelectedEngine();
@@ -904,6 +917,27 @@ public partial class SpeechToTextViewModel : ObservableObject
         var jsonPath = _qwen3AsrOutputJsonPath;
         if (string.IsNullOrEmpty(jsonPath) || !File.Exists(jsonPath))
         {
+            var exitCode = _qwen3AsrExitCode;
+            var isVulkan = false;
+            try
+            {
+                var folder = new Qwen3AsrCppEngine().GetAndCreateWhisperFolder();
+                isVulkan = DownloadHashManager.IsQwen3AsrCppVulkanInstall(folder);
+            }
+            catch
+            {
+                // best-effort diagnostics only
+            }
+
+            // The engine ran but produced no output JSON - almost always a native crash of the
+            // GPU (Vulkan) build. Record the exit code (0xC0000005-style values indicate a hard
+            // crash) and force it to the tools log, since that setting is off by default and
+            // otherwise there is no record of why it failed (issue #12815).
+            var exitCodeText = exitCode.HasValue
+                ? $"exit code {exitCode.Value} (0x{(uint)exitCode.Value:X8})"
+                : "exit code unavailable";
+            Se.WriteToolsLog($"Qwen3 ASR CPP produced no output JSON; {exitCodeText}; Vulkan build: {isVulkan}", true);
+
             Dispatcher.UIThread.Invoke<Task>(async () =>
             {
                 LogToConsole($"Speech to text ({settings.WhisperChoice}) done in {_sw.Elapsed}{Environment.NewLine}");
@@ -912,7 +946,14 @@ public partial class SpeechToTextViewModel : ObservableObject
                     await MessageBox.Show(Window!, $"Unknown argument: {settings.WhisperCustomCommandLineArguments}",
                         "Unknown argument. Please check the advanced settings.");
                 }
-                LogToConsole($"Speech to text: Could not find output JSON file{Environment.NewLine}");
+                LogToConsole($"Speech to text: Could not find output JSON file ({exitCodeText}){Environment.NewLine}");
+                if (exitCode is not (null or 0))
+                {
+                    var url = new Qwen3AsrCppEngine().Url;
+                    LogToConsole(isVulkan
+                        ? $"The Qwen3 ASR GPU (Vulkan) engine crashed before producing output. Try the CPU build instead (re-download the engine and choose CPU), or report it at {url}{Environment.NewLine}"
+                        : $"The Qwen3 ASR engine crashed before producing output. Try re-running, a different model, or report it at {url}{Environment.NewLine}");
+                }
                 ProgressValue = 100;
                 IsTranscribeEnabled = true;
                 await Task.CompletedTask;
@@ -3549,6 +3590,7 @@ public partial class SpeechToTextViewModel : ObservableObject
             var exe = qwen3Asr.GetExecutable();
             var alignerModel = qwen3Asr.ForcedAlignerModel;
             _qwen3AsrOutputJsonPath = Path.Combine(Path.GetTempPath(), $"qwen3_asr_{Guid.NewGuid():N}.json");
+            _qwen3AsrExitCode = null;
             var qwen3ExtraArgs = engine.CommandLineParameter;
 
             var qwen3Params = string.IsNullOrWhiteSpace(qwen3ExtraArgs)
