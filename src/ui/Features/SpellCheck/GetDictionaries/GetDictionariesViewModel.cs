@@ -295,11 +295,11 @@ public partial class GetDictionariesViewModel : ObservableObject, IClosingCleanu
         }
 
         var englishName = CultureInfo.CurrentCulture.EnglishName;
-        if (englishName.Contains('(') && englishName.Contains(')'))
+        var startIndex = englishName.IndexOf('(') + 1;
+        var endIndex = englishName.IndexOf(')', startIndex);
+        if (startIndex > 0 && endIndex > startIndex)
         {
-            var start = englishName.IndexOf('(') + 1;
-            var end = englishName.IndexOf(')');
-            englishName = englishName.Substring(start, end - start).Trim();
+            englishName = englishName.Substring(startIndex, endIndex - startIndex).Trim();
         }
 
         var selected = Dictionaries.FirstOrDefault(d => d.EnglishName.Contains(englishName, StringComparison.OrdinalIgnoreCase) ||

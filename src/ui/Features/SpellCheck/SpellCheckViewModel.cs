@@ -618,12 +618,12 @@ public partial class SpellCheckViewModel : ObservableObject, IClosingCleanup
                 var languages = _spellCheckManager.WordSpellChecker.GetInstalledLanguages();
                 var culture = new CultureInfo(languageCode);
                 var text = culture.NativeName; // "Português (Portugal)"
-                if (text.Contains('(') && text.Contains(')'))
+                var startIndex = text.IndexOf('(') + 1;
+                var endIndex = text.IndexOf(')', startIndex);
+                if (startIndex > 0 && endIndex > startIndex)
                 {
-                    var start = text.IndexOf('(');
-                    var end = text.IndexOf(')');
-                    var languageName = text.Substring(start + 1, end - start - 1);
-                    if (!string.IsNullOrWhiteSpace(Se.Settings.SpellCheck.LastLanguageDictionaryName) && Se.Settings.SpellCheck.LastLanguageDictionaryName.Contains(languageName, StringComparison.OrdinalIgnoreCase))
+                    var languageName = text.AsMemory(startIndex, endIndex - startIndex);
+                    if (!string.IsNullOrWhiteSpace(Se.Settings.SpellCheck.LastLanguageDictionaryName) && Se.Settings.SpellCheck.LastLanguageDictionaryName.Contains(languageName.Span, StringComparison.OrdinalIgnoreCase))
                     {
                         var selectedLan = languages.FirstOrDefault(l => l.Name.Contains(Se.Settings.SpellCheck.LastLanguageDictionaryName, StringComparison.OrdinalIgnoreCase));
                         if (selectedLan != null)
@@ -634,12 +634,11 @@ public partial class SpellCheckViewModel : ObservableObject, IClosingCleanup
                         }
                     }
 
-                    var selectedLanguage = languages.FirstOrDefault(l => l.Name.Contains(languageName, StringComparison.OrdinalIgnoreCase));
+                    var selectedLanguage = languages.FirstOrDefault(l => l.Name.Contains(languageName.Span, StringComparison.OrdinalIgnoreCase));
                     if (selectedLanguage != null)
                     {
                         _spellCheckManager.WordSpellChecker.CurrentLanguage = selectedLanguage;
                         SelectedDictionary = Dictionaries.FirstOrDefault(l => l.Name.Equals(selectedLanguage.Name, StringComparison.OrdinalIgnoreCase));
-                        return;
                     }
                 }
             }
