@@ -10,136 +10,91 @@ public class ForcedAlignPlannerTests
         => Enumerable.Range(0, count).Select(_ => new string('x', length)).ToList();
 
     [Fact]
-    public void LinesForWindow_OvershootsOnlyModestly()
+    public void ChunkSize_LeavesTheWindowMostlyEmpty()
     {
-        // 40 chars per line, 10 chars/second => 4 seconds of speech per line.
-        // A 240 s window holds 60 lines; at 1.15x overshoot we feed 69.
-        var take = ForcedAlignPlanner.LinesForWindow(Lines(500), 240, 10, Defaults, isLastWindow: false);
+        // The whole approach depends on the window holding far more audio than the chunk's
+        // text needs. 40-char lines at 15 chars/second are ~2.7 s each; a 120 s window
+        // takes 35% of that in text, so ~15 lines' worth - capped to 12 by line count.
+        var take = ForcedAlignPlanner.ChunkSize(Lines(500), 120, 15, Defaults);
 
-        Assert.InRange(take, 66, 72);
+        Assert.Equal(12, take);
     }
 
     [Fact]
-    public void LinesForWindow_LastWindowTakesEverythingLeft()
+    public void ChunkSize_CapsOnReadingTimeForLongLines()
     {
-        // Nothing may be dropped off the end just because the estimate says it won't fit.
-        var take = ForcedAlignPlanner.LinesForWindow(Lines(500), 240, 10, Defaults, isLastWindow: true);
+        // Long lines hit the reading-time budget before the line count, which is what keeps
+        // the slack that lets the aligner skip audio the script does not cover.
+        var take = ForcedAlignPlanner.ChunkSize(Lines(500, 400), 120, 15, Defaults);
 
-        Assert.Equal(500, take);
+        Assert.InRange(take, 1, 2);
     }
 
     [Fact]
-    public void LinesForWindow_AlwaysTakesAtLeastOneLine()
+    public void ChunkSize_AlwaysTakesAtLeastOneLine()
     {
-        // A very long line against a tiny window must not plan zero work forever.
-        var take = ForcedAlignPlanner.LinesForWindow(Lines(3, 10000), 1, 10, Defaults, isLastWindow: false);
-
-        Assert.Equal(1, take);
+        Assert.Equal(1, ForcedAlignPlanner.ChunkSize(Lines(3, 10000), 10, 15, Defaults));
+        Assert.Equal(0, ForcedAlignPlanner.ChunkSize(new List<string>(), 120, 15, Defaults));
     }
 
     [Fact]
-    public void AcceptCount_DiscardsCuesNearTheWindowEdge()
+    public void AcceptChunk_StopsWhenTheAlignerStartsFillingSpace()
     {
-        // The overshoot text is crammed into the tail, so cues there are not trustworthy.
+        // Measured shape: the first cues track real speech back to back, then one opens
+        // far after the previous closed and the rest run away down the window.
+        var reading = new List<double> { 3, 3, 3, 3, 3 };
         var cues = new List<ForcedAlignPlanner.Cue>
         {
-            new(0, 50),
-            new(50, 100),
-            new(100, 150),   // 150 <= 180 (75% of 240) - kept
-            new(150, 200),   // past the accept limit - dropped
-            new(200, 239),
+            new(0, 2.8),
+            new(3.0, 5.9),
+            new(6.1, 8.9),
+            new(63.0, 65.9),   // 54 s gap - the aligner has stopped tracking
+            new(66.1, 69.0),
         };
 
-        var accepted = ForcedAlignPlanner.AcceptCount(cues, 240, Defaults, isLastWindow: false);
-
-        Assert.Equal(3, accepted);
+        Assert.Equal(3, ForcedAlignPlanner.AcceptChunk(cues, reading));
     }
 
     [Fact]
-    public void AcceptCount_LastWindowKeepsEverything()
+    public void AcceptChunk_StopsOnACueFarLongerThanItsText()
     {
-        var cues = new List<ForcedAlignPlanner.Cue> { new(0, 100), new(100, 230), new(230, 239) };
-
-        Assert.Equal(3, ForcedAlignPlanner.AcceptCount(cues, 240, Defaults, isLastWindow: true));
-    }
-
-    [Fact]
-    public void AcceptCount_NeverReturnsZeroWhenCuesExist()
-    {
-        // Every cue sits past the accept limit. Returning 0 would re-plan the same window
-        // forever, so some progress has to be forced.
-        var cues = new List<ForcedAlignPlanner.Cue> { new(200, 210), new(210, 220), new(220, 230) };
-
-        var accepted = ForcedAlignPlanner.AcceptCount(cues, 240, Defaults, isLastWindow: false);
-
-        Assert.True(accepted >= 1);
-    }
-
-    [Fact]
-    public void AcceptCount_RespectsTailGuardOnShortWindows()
-    {
-        // With a 4 s window the guard (1 s) binds before the 75% fraction (3 s).
-        var options = new ForcedAlignPlanner.Options { AcceptFraction = 0.95, TailGuardSeconds = 1.0 };
-        var cues = new List<ForcedAlignPlanner.Cue> { new(0, 2.9), new(2.9, 3.5) };
-
-        Assert.Equal(1, ForcedAlignPlanner.AcceptCount(cues, 4, options, isLastWindow: false));
-    }
-
-    [Fact]
-    public void TrimImplausible_CutsAtASustainedRunOfSqueezedCues()
-    {
-        // Ratios measured against ground truth past a 90 s passage missing from the
-        // script: correctly placed lines ran at 0.84-0.89 of reading time, lines crammed
-        // onto the missing passage's audio at 0.36-0.48.
-        var reading = new List<double> { 5, 5, 5, 5, 5, 5 };
+        var reading = new List<double> { 3, 3, 3 };
         var cues = new List<ForcedAlignPlanner.Cue>
         {
-            new(0, 4.3),      // 0.86
-            new(4.3, 8.6),    // 0.86
-            new(8.6, 12.8),   // 0.84
-            new(12.8, 14.8),  // 0.40 - squeezed
-            new(14.8, 16.7),  // 0.38 - squeezed
-            new(16.7, 18.5),  // 0.36 - squeezed
+            new(0, 2.8),
+            new(3.0, 5.9),
+            new(6.1, 30.0),   // 24 s for 3 s of text
         };
 
-        Assert.Equal(3, ForcedAlignPlanner.TrimImplausible(cues, reading, 6));
+        Assert.Equal(2, ForcedAlignPlanner.AcceptChunk(cues, reading));
     }
 
     [Fact]
-    public void TrimImplausible_IgnoresAnIsolatedShortCue()
+    public void AcceptChunk_ToleratesTheFirstCueAbsorbingLeadingAudio()
     {
-        // One quickly-delivered line is not evidence that the script has drifted off the
-        // audio; only a sustained run is.
-        var reading = new List<double> { 5, 5, 5, 5 };
+        // The first cue soaks up whatever leading audio the script says nothing about, so
+        // its length proves nothing and must not veto the whole chunk.
+        var reading = new List<double> { 3, 3, 3 };
         var cues = new List<ForcedAlignPlanner.Cue>
         {
-            new(0, 4.3),
-            new(4.3, 6.3),    // 0.40 - one short line
-            new(6.3, 10.6),
-            new(10.6, 14.9),
+            new(0, 110.0),      // 110 s for 3 s of text - expected, not a failure
+            new(110.2, 113.0),
+            new(113.2, 116.0),
         };
 
-        Assert.Equal(4, ForcedAlignPlanner.TrimImplausible(cues, reading, 4));
+        Assert.Equal(3, ForcedAlignPlanner.AcceptChunk(cues, reading));
     }
 
     [Fact]
-    public void TrimImplausible_LeavesAWellAlignedWindowAlone()
+    public void AcceptChunk_AcceptsACleanChunkWhole()
     {
-        var reading = new List<double> { 4, 4, 4 };
-        var cues = new List<ForcedAlignPlanner.Cue> { new(0, 3.6), new(3.6, 7.2), new(7.2, 10.8) };
+        var reading = new List<double> { 3, 3, 3, 3 };
+        var cues = new List<ForcedAlignPlanner.Cue>
+        {
+            new(0, 2.8), new(3.0, 5.9), new(6.1, 8.9), new(9.1, 11.9),
+        };
 
-        Assert.Equal(3, ForcedAlignPlanner.TrimImplausible(cues, reading, 3));
-    }
-
-    [Fact]
-    public void TrimImplausible_CanRejectAWholeWindow()
-    {
-        // Everything squeezed from the start - the caller steps the audio cursor on
-        // instead of consuming any script.
-        var reading = new List<double> { 5, 5, 5 };
-        var cues = new List<ForcedAlignPlanner.Cue> { new(0, 1.8), new(1.8, 3.5), new(3.5, 5.2) };
-
-        Assert.Equal(0, ForcedAlignPlanner.TrimImplausible(cues, reading, 3));
+        Assert.Equal(4, ForcedAlignPlanner.AcceptChunk(cues, reading));
     }
 
     [Fact]

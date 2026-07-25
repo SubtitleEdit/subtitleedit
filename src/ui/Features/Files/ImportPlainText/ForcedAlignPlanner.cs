@@ -21,23 +21,33 @@ public static class ForcedAlignPlanner
 
     public sealed record Options
     {
-        /// <summary>Target window length. 240 s sits well inside the quadratic cost curve.</summary>
-        public double WindowSeconds { get; init; } = 240;
+        /// <summary>
+        /// Window length. Only needs to be long enough to hold a chunk's speech plus
+        /// whatever unmatched audio has to be skipped over, and encoder cost is quadratic -
+        /// 240 s costs ~25 s per run against ~7 s at 120 s - so it is kept modest. Chunks
+        /// are re-aligned from wherever the previous one ended, so a gap longer than one
+        /// window is still crossed, just over several of them.
+        /// </summary>
+        public double WindowSeconds { get; init; } = 120;
 
         /// <summary>
-        /// How much more text than we think fits is fed to a window. Kept deliberately
-        /// small: forced alignment has to consume every token it is given, so once it runs
-        /// short of audio it starts taking time from real speech. Measured with a 1.7x
-        /// overshoot, alignment held for the first third of a window and then drifted by
-        /// up to 166 s; at 1.15x the distortion stays in the discarded tail.
+        /// Lines handed to the aligner at a time. Deliberately far less text than the window
+        /// holds: given slack, CTC alignment places the text where it acoustically belongs
+        /// and emits blanks over the rest, so audio the script says nothing about is simply
+        /// skipped. Measured feeding 8 lines against a 240 s window whose matching speech
+        /// only starts 182 s in - every interior line landed within 60 ms.
+        ///
+        /// Filling the window instead is what forces the failure: the aligner must consume
+        /// every line it is given, so it crushes them onto whatever audio is there.
         /// </summary>
-        public double Overshoot { get; init; } = 1.15;
+        public int LinesPerChunk { get; init; } = 12;
 
-        /// <summary>Fraction of a window whose cues are trusted; the rest is re-aligned by the next window.</summary>
-        public double AcceptFraction { get; init; } = 0.75;
-
-        /// <summary>Cues ending within this much of the window edge are never trusted.</summary>
-        public double TailGuardSeconds { get; init; } = 1.0;
+        /// <summary>
+        /// A chunk's text must stay well under the window, or the slack disappears and the
+        /// aligner is back to being forced. Chunks are cut at whichever comes first, this
+        /// share of the window's worth of reading time or <see cref="LinesPerChunk"/>.
+        /// </summary>
+        public double MaxChunkShareOfWindow { get; init; } = 0.35;
 
         /// <summary>
         /// How far the audio cursor creeps when a window aligns to nothing usable, as
@@ -49,15 +59,15 @@ public static class ForcedAlignPlanner
     }
 
     /// <summary>
-    /// How many of the remaining lines to feed a window. The last window always gets
-    /// everything left, so no line is ever dropped.
+    /// How many lines to hand the aligner for one window: a small chunk, capped both by
+    /// line count and by reading time, so the window keeps the slack that lets the aligner
+    /// skip audio the script does not cover.
     /// </summary>
-    public static int LinesForWindow(
+    public static int ChunkSize(
         IReadOnlyList<string> remainingLines,
         double windowSeconds,
-        double charsPerSecond,
-        Options options,
-        bool isLastWindow)
+        double readingCharsPerSecond,
+        Options options)
     {
         ArgumentNullException.ThrowIfNull(remainingLines);
         ArgumentNullException.ThrowIfNull(options);
@@ -67,119 +77,71 @@ public static class ForcedAlignPlanner
             return 0;
         }
 
-        if (isLastWindow || charsPerSecond <= 0 || windowSeconds <= 0)
-        {
-            return remainingLines.Count;
-        }
-
-        var budget = windowSeconds * charsPerSecond * options.Overshoot;
-        var accumulated = 0.0;
+        var budgetSeconds = windowSeconds * options.MaxChunkShareOfWindow;
         var take = 0;
+        var seconds = 0.0;
+
         foreach (var line in remainingLines)
         {
-            take++;
-            accumulated += line.Length;
-            if (accumulated >= budget)
+            var lineSeconds = readingCharsPerSecond > 0 ? line.Length / readingCharsPerSecond : 0;
+            if (take > 0 && (take >= options.LinesPerChunk || seconds + lineSeconds > budgetSeconds))
             {
                 break;
             }
+
+            seconds += lineSeconds;
+            take++;
         }
 
         return Math.Max(1, take);
     }
 
     /// <summary>
-    /// How many of a window's cues to keep. Cues near the window edge are discarded and
-    /// realigned by the next window, because that is where the overshoot text is crammed.
+    /// How many of a chunk's cues to believe.
+    ///
+    /// A chunk deliberately carries less text than its window holds, so once the aligner
+    /// runs out of script it smears the remaining cues across the leftover audio. Measured
+    /// feeding 12 lines whose speech ends 43 s into a 240 s window: the first ten landed
+    /// within 60 ms, then the next cue opened 54 s after its predecessor closed and the
+    /// rest ran away down the window.
+    ///
+    /// So accepting stops at the first cue that either opens implausibly long after the
+    /// previous one closed, or lasts far longer than its text takes to read. Consecutive
+    /// script lines are consecutive speech; a minute of silence between them means the
+    /// aligner has stopped tracking and is filling space.
     /// </summary>
-    public static int AcceptCount(
+    public static int AcceptChunk(
         IReadOnlyList<Cue> cues,
-        double windowSeconds,
-        Options options,
-        bool isLastWindow)
+        IReadOnlyList<double> readingSeconds,
+        double maxGapSeconds = 12.0,
+        double maxDurationRatio = 2.5)
     {
         ArgumentNullException.ThrowIfNull(cues);
-        ArgumentNullException.ThrowIfNull(options);
-
-        if (cues.Count == 0)
-        {
-            return 0;
-        }
-
-        if (isLastWindow)
-        {
-            return cues.Count;
-        }
-
-        var limit = Math.Min(
-            windowSeconds * options.AcceptFraction,
-            windowSeconds - options.TailGuardSeconds);
+        ArgumentNullException.ThrowIfNull(readingSeconds);
 
         var accepted = 0;
-        foreach (var cue in cues)
+        for (var i = 0; i < cues.Count && i < readingSeconds.Count; i++)
         {
-            if (cue.EndSeconds > limit)
+            if (i > 0 && cues[i].StartSeconds - cues[i - 1].EndSeconds > maxGapSeconds)
             {
                 break;
+            }
+
+            // The first cue absorbs whatever leading audio the script does not cover, so
+            // its length says nothing; every later one should match its text.
+            if (i > 0 && readingSeconds[i] > 0)
+            {
+                var duration = cues[i].EndSeconds - cues[i].StartSeconds;
+                if (duration > readingSeconds[i] * maxDurationRatio)
+                {
+                    break;
+                }
             }
 
             accepted++;
         }
 
-        // Never stall. A window whose cues all sit past the limit still has to yield
-        // something, or the same window is planned again forever.
-        return accepted > 0 ? accepted : Math.Max(1, cues.Count / 3);
-    }
-
-    /// <summary>
-    /// Drops cues the aligner clearly had to force. A forced aligner cannot skip audio -
-    /// it must place every line it is given - so when the script is missing something that
-    /// is actually spoken, the following lines get crammed onto the audio of the missing
-    /// passage. Measured against ground truth with a 90 s omission, correctly placed lines
-    /// ran at 0.84-0.89 of their reading time while crammed ones sat at 0.36-0.48, so the
-    /// ratio separates them cleanly.
-    ///
-    /// Accepting stops at the start of a sustained run of squeezed cues; the caller then
-    /// steps the audio cursor forward without consuming those lines, which is what lets it
-    /// walk past the unmatched passage and pick the script up again on the other side.
-    /// </summary>
-    /// <param name="readingSeconds">How long each fed line takes to read, same order as the cues.</param>
-    public static int TrimImplausible(
-        IReadOnlyList<Cue> cues,
-        IReadOnlyList<double> readingSeconds,
-        int accepted,
-        double minRatio = 0.55,
-        int runLength = 2)
-    {
-        ArgumentNullException.ThrowIfNull(cues);
-        ArgumentNullException.ThrowIfNull(readingSeconds);
-
-        var run = 0;
-        for (var i = 0; i < accepted && i < cues.Count && i < readingSeconds.Count; i++)
-        {
-            var reading = readingSeconds[i];
-            if (reading <= 0)
-            {
-                run = 0;
-                continue;
-            }
-
-            var ratio = (cues[i].EndSeconds - cues[i].StartSeconds) / reading;
-            if (ratio < minRatio)
-            {
-                run++;
-                if (run >= runLength)
-                {
-                    // Cut before the whole run, not just the cue that tripped the counter.
-                    return Math.Max(0, i - run + 1);
-                }
-            }
-            else
-            {
-                run = 0;
-            }
-        }
-
         return accepted;
     }
+
 }

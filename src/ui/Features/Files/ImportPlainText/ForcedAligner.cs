@@ -86,38 +86,28 @@ public sealed class ForcedAligner
 
         var silences = await DetectSilenceSafelyAsync(cancellationToken).ConfigureAwait(false);
 
-        // A fixed rate over the whole file, deliberately not re-estimated as we go. The
-        // obvious refinement - learn the rate from each window's output - feeds back on
-        // itself: over-feeding a window makes the aligner compress its cues, a compressed
-        // window looks like faster speech, and the next window is over-fed harder still.
-        var charsPerSecond = Math.Max(1.0, texts.Sum(t => t.Length) / _audio.TotalSeconds);
+        var optimalCps = Se.Settings.General.SubtitleOptimalCharactersPerSeconds;
+        var readingCps = optimalCps > 0 ? optimalCps : 15.0;
 
         var aligned = new List<(double Start, double End)>(texts.Count);
         var cursor = 0;
         var position = 0.0;
         var windowIndex = 0;
-
-        // The window slides to wherever the last trusted cue ended rather than stepping
-        // along a fixed grid. Only part of each window is trusted (the tail is where
-        // overshoot text gets crammed), so a fixed grid would advance the audio by a full
-        // window while advancing the script by less - the script would fall progressively
-        // further behind the audio over a long file.
-        var estimatedWindows = Math.Max(1, (int)Math.Ceiling(_audio.TotalSeconds / (_options.WindowSeconds * _options.AcceptFraction)));
+        var estimatedChunks = Math.Max(1, (int)Math.Ceiling(texts.Count / (double)_options.LinesPerChunk));
 
         while (cursor < texts.Count && position < _audio.TotalSeconds - 0.25)
         {
             cancellationToken.ThrowIfCancellationRequested();
 
             var windowEnd = SnapWindowEnd(position + _options.WindowSeconds, silences);
-            var isLast = windowEnd >= _audio.TotalSeconds - 0.25;
-            var windowLength = windowEnd - position;
+            var windowLength = Math.Min(windowEnd, _audio.TotalSeconds) - position;
             if (windowLength <= 0)
             {
                 break;
             }
 
             var remaining = texts.Skip(cursor).ToList();
-            var take = ForcedAlignPlanner.LinesForWindow(remaining, windowLength, charsPerSecond, _options, isLast);
+            var take = ForcedAlignPlanner.ChunkSize(remaining, windowLength, readingCps, _options);
             if (take == 0)
             {
                 break;
@@ -125,27 +115,30 @@ public sealed class ForcedAligner
 
             var fed = remaining.Take(take).ToList();
             var cues = await AlignWindowAsync(position, windowLength, fed, cancellationToken).ConfigureAwait(false);
-
-            // Cue N is line N only while the aligner returns exactly one cue per line we
-            // gave it. If it ever returns fewer, trust only that many rather than letting
-            // the mismatch shift every later line.
-            var accept = ForcedAlignPlanner.AcceptCount(cues, windowLength, _options, isLast);
-            accept = Math.Min(accept, fed.Count);
-
-            // Discard anything the aligner had to squeeze onto audio that does not contain
-            // it - that is what happens past a passage the script is missing.
-            var optimalCps = Se.Settings.General.SubtitleOptimalCharactersPerSeconds;
-            if (optimalCps > 0)
+            if (cues.Count != fed.Count)
             {
-                var readingSeconds = fed.Select(t => t.Length / optimalCps).ToList();
-                accept = ForcedAlignPlanner.TrimImplausible(cues, readingSeconds, accept);
+                // Cue N is line N only while the aligner returns one cue per line. Anything
+                // else and the mapping is guesswork, so step on rather than misplace lines.
+                position += _options.SkipSeconds;
+                windowIndex++;
+                continue;
+            }
+
+            var readingSeconds = fed.Select(t => t.Length / readingCps).ToList();
+            var accept = ForcedAlignPlanner.AcceptChunk(cues, readingSeconds);
+
+            // The last cue accepted has no following word to stop at, so its end runs on;
+            // leave that line for the next chunk unless this chunk holds the rest of the
+            // script, in which case there is no next chunk to place it and its length is
+            // clamped to reading time anyway.
+            var isFinal = cursor + take >= texts.Count;
+            if (!isFinal && accept > 1)
+            {
+                accept--;
             }
 
             if (accept == 0)
             {
-                // Either nothing came back, or everything looked forced. Creep the audio
-                // cursor on without consuming any script: over a few windows this walks
-                // past the unmatched passage and picks the script up on the far side.
                 position += _options.SkipSeconds;
                 windowIndex++;
                 continue;
@@ -153,22 +146,93 @@ public sealed class ForcedAligner
 
             for (var i = 0; i < accept; i++)
             {
-                aligned.Add((position + cues[i].StartSeconds, position + cues[i].EndSeconds));
+                var startSeconds = position + cues[i].StartSeconds;
+                var endSeconds = position + cues[i].EndSeconds;
+
+                // The first cue absorbs all the leading audio the script says nothing about,
+                // so its start is meaningless while its end is sound. Take the end and work
+                // backwards. Later cues in the chunk are bounded on both sides and exact.
+                if (i == 0 && endSeconds - startSeconds > readingSeconds[0] * 1.5)
+                {
+                    startSeconds = Math.Max(position, endSeconds - readingSeconds[0]);
+                }
+
+                // A cue with no following word runs on to the end of the window, and the
+                // audio cursor follows the last cue's end - so an unclamped end drives the
+                // cursor to the end of the file and starves whatever script is still left.
+                var cappedEnd = Math.Max(startSeconds + 0.05, Math.Min(endSeconds, startSeconds + (readingSeconds[i] * 2.0)));
+                aligned.Add((startSeconds, cappedEnd));
             }
 
-            var consumedSeconds = cues[accept - 1].EndSeconds;
             cursor += accept;
             windowIndex++;
 
-            var nextPosition = position + consumedSeconds;
+            var nextPosition = aligned[^1].End;
             if (nextPosition <= position + 0.25)
             {
-                // Guard against a window that consumed no meaningful audio.
-                nextPosition = position + (_options.WindowSeconds * _options.AcceptFraction);
+                nextPosition = position + _options.SkipSeconds;
             }
 
             position = nextPosition;
-            progress?.Report(new Progress(windowIndex, Math.Max(windowIndex, estimatedWindows), cursor, texts.Count));
+            progress?.Report(new Progress(windowIndex, Math.Max(windowIndex, estimatedChunks), cursor, texts.Count));
+        }
+
+        // The main loop stops when the audio cursor reaches the end, which can leave the
+        // last few lines untimed - the cursor is driven by where cues land, so it can run
+        // out slightly ahead of the script. Give whatever is left one pass over the closing
+        // stretch of audio rather than shipping lines with no time codes at all.
+        if (cursor < texts.Count)
+        {
+            // Start exactly where the last placed cue ended. Widening this to a full window
+            // pulls in speech the remaining lines have nothing to do with, and the aligner
+            // then puts them among it - measured 15 s late, some past the end of the file.
+            var tailStart = aligned.Count > 0 ? aligned[^1].End : 0;
+            var tailLength = _audio.TotalSeconds - tailStart;
+
+            if (tailLength > 0.5)
+            {
+                var fed = texts.Skip(cursor).ToList();
+                try
+                {
+                    var cues = await AlignWindowAsync(tailStart, tailLength, fed, cancellationToken)
+                        .ConfigureAwait(false);
+
+                    if (cues.Count == fed.Count)
+                    {
+                        foreach (var cue in cues)
+                        {
+                            aligned.Add((tailStart + cue.StartSeconds, tailStart + cue.EndSeconds));
+                        }
+
+                        cursor = texts.Count;
+                    }
+                }
+                catch (OperationCanceledException)
+                {
+                    throw;
+                }
+                catch
+                {
+                    // Fall through to the deterministic layout below.
+                }
+            }
+
+            // Whatever is still unplaced gets laid out by reading time from the last cue.
+            // By this point the remaining audio is too short to give the aligner any slack -
+            // it has to cram, and a crammed guess is worse than an even spread. Better an
+            // approximate last few lines than lines with no time codes at all.
+            if (cursor < texts.Count)
+            {
+                var at = aligned.Count > 0 ? aligned[^1].End : 0;
+                for (var i = cursor; i < texts.Count; i++)
+                {
+                    var seconds = Math.Max(0.5, texts[i].Length / readingCps);
+                    aligned.Add((at, at + seconds));
+                    at += seconds;
+                }
+
+                cursor = texts.Count;
+            }
         }
 
         ApplyTimeCodes(lines, aligned, texts, alignable);
