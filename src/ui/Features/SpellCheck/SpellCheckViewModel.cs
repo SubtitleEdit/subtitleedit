@@ -999,7 +999,9 @@ public partial class SpellCheckViewModel : ObservableObject, IClosingCleanup
             _lastSpellCheckResult = results[0];
             SelectedParagraph = results[0].Paragraph;
 
-            var suggestions = _spellCheckManager.GetSuggestions(results[0].Word.Text);
+            // Already looked up while scanning - asking again costs a second round trip to the
+            // spell-check backend (a whole document check with the MS Word backend) for nothing.
+            var suggestions = results[0].Suggestions;
             Suggestions.Clear();
             foreach (var suggestion in suggestions)
             {
