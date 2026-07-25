@@ -55,7 +55,12 @@ public partial class OcrFixEngine : IOcrFixEngine, IDoSpell
         _twoLetterIsoLanguageName = twoLetterIsoLanguageName;
         _spellCheckManager.Initialize(spellCheckDictionary.DictionaryFileName, twoLetterIsoLanguageName);
 
-        _fiveLetterName = Path.GetFileNameWithoutExtension(spellCheckDictionary.DictionaryFileName);
+        // Use the same normalized five-letter language name that the main spell checker and the OCR
+        // "add to user dictionary" write path use (e.g. es_ANY -> es_ES). Using the raw file base name
+        // here made ReloadNames() read a different *_user.xml than words were saved to, so newly added
+        // user-dictionary words were never recognized and the prompt kept re-opening the same word (#12824).
+        _fiveLetterName = spellCheckDictionary.GetFiveLetterLanguageName()
+                          ?? Path.GetFileNameWithoutExtension(spellCheckDictionary.DictionaryFileName);
 
         _threeLetterIsoLanguageName = threeLetterIsoLanguageName;
         _subtitle = subtitle;
