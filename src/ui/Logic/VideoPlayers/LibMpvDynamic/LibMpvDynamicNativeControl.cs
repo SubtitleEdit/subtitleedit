@@ -26,6 +26,7 @@ public class LibMpvDynamicNativeControl : NativeControlHost
     private const uint WM_PAINT = 0x000F;
     private const uint WM_LBUTTONDOWN = 0x0201;
     private const uint WM_NCHITTEST = 0x0084;
+    private const uint WM_SETCURSOR = 0x0020;
     private const int GWLP_WNDPROC = -4;
     private const int HTCLIENT = 1;
     private const int COLOR_BACKGROUND = 1;
@@ -34,6 +35,11 @@ public class LibMpvDynamicNativeControl : NativeControlHost
     private delegate IntPtr WndProcDelegate(IntPtr hWnd, uint msg, IntPtr wParam, IntPtr lParam);
     private WndProcDelegate? _customWndProc;
     private IntPtr _originalWndProc = IntPtr.Zero;
+
+    // Set while the full-screen overlay auto-hides the pointer. The embedded video
+    // HWND renders on top of Avalonia, so hiding it goes through WM_SETCURSOR here
+    // rather than through Avalonia's Cursor property.
+    private volatile bool _cursorHidden;
 
     // Linux still needs the temporary hide/show workaround during live resize.
     private static bool ShouldHideNativeControlDuringResize => OperatingSystem.IsLinux();
@@ -280,6 +286,9 @@ public class LibMpvDynamicNativeControl : NativeControlHost
     [DllImport("user32.dll")]
     private static extern bool ShowWindow(IntPtr hWnd, int nCmdShow);
 
+    [DllImport("user32.dll")]
+    private static extern IntPtr SetCursor(IntPtr hCursor);
+
     [DllImport("user32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
     private static extern IntPtr CreateWindowExW(
         uint dwExStyle,
@@ -351,6 +360,15 @@ public class LibMpvDynamicNativeControl : NativeControlHost
             // WM_LBUTTONDOWN is actually delivered here.
             return new IntPtr(HTCLIENT);
         }
+        if (msg == WM_SETCURSOR && _cursorHidden)
+        {
+            // While the full-screen overlay is hidden, keep the pointer hidden over the
+            // embedded video window. The STATIC class otherwise re-asserts the arrow
+            // cursor on every WM_SETCURSOR (sent as the mouse moves), so clearing the
+            // cursor and returning TRUE (stop further processing) is what keeps it hidden.
+            SetCursor(IntPtr.Zero);
+            return new IntPtr(1);
+        }
         if (msg == WM_ERASEBKGND)
         {
             if (!string.IsNullOrEmpty(_mpvPlayer?.FileName))
@@ -404,6 +422,27 @@ public class LibMpvDynamicNativeControl : NativeControlHost
             TogglePlayPause();
             e.Handled = true;
         }
+    }
+
+    /// <summary>
+    /// Hides or shows the mouse pointer over the embedded video window. Used by the
+    /// full-screen auto-hide so the cursor disappears with the on-screen controls.
+    /// </summary>
+    public void SetCursorHidden(bool hidden)
+    {
+        _cursorHidden = hidden;
+        Dispatcher.UIThread.Post(() =>
+        {
+            Cursor = new Cursor(hidden ? StandardCursorType.None : StandardCursorType.Arrow);
+            if (hidden)
+            {
+                PlatformCursorManager.HideCursor();
+            }
+            else
+            {
+                PlatformCursorManager.ForceArrowCursor();
+            }
+        });
     }
 
     public void LoadFile(string path)
