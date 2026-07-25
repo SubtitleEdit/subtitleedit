@@ -793,7 +793,7 @@ public partial class FixCommonErrorsViewModel : ObservableObject, IFixCallbacks
             return true;
         }
 
-        var allowFix = Fixes.Any(f => f.Paragraph.Id.ToLowerInvariant() == p.Id.ToLowerInvariant() && f.Action == action && f.IsSelected);
+        var allowFix = Fixes.Any(f => f.Paragraph.Id == p.Id && f.Action == action && f.IsSelected);
         return allowFix;
     }
 
@@ -804,7 +804,7 @@ public partial class FixCommonErrorsViewModel : ObservableObject, IFixCallbacks
             return;
         }
 
-        var oldFix = _oldFixes.FirstOrDefault(f => f.Paragraph.Id.ToLowerInvariant() == p.Id.ToLowerInvariant() && f.Action == action);
+        var oldFix = _oldFixes.FirstOrDefault(f => f.Paragraph.Id == p.Id && f.Action == action);
         var isSelected = oldFix is not { IsSelected: false };
 
         AddFix(new FixDisplayItem(p, p.Number, action, before, after, isSelected));
@@ -817,7 +817,7 @@ public partial class FixCommonErrorsViewModel : ObservableObject, IFixCallbacks
             return;
         }
 
-        var oldFix = _oldFixes.FirstOrDefault(f => f.Paragraph.Id.ToLowerInvariant() == p.Id.ToLowerInvariant() && f.Action == action);
+        var oldFix = _oldFixes.FirstOrDefault(f => f.Paragraph.Id == p.Id && f.Action == action);
         var isSelected = isChecked;
         if (oldFix is { IsSelected: false })
         {

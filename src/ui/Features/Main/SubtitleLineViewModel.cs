@@ -163,7 +163,7 @@ public partial class SubtitleLineViewModel : ObservableObject
         StartTime = TimeSpan.FromMilliseconds(paragraph.StartTime.TotalMilliseconds);
         EndTime = TimeSpan.FromMilliseconds(paragraph.EndTime.TotalMilliseconds);
         UpdateDuration();
-        Id = Guid.TryParse(paragraph.Id, out var guid) ? guid : Guid.NewGuid();
+        Id = paragraph.Id ?? Guid.NewGuid();
         Paragraph = paragraph;
         Bookmark = paragraph.Bookmark;
 

@@ -91,7 +91,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             return Paragraphs[index];
         }
 
-        public Paragraph GetParagraphOrDefaultById(string id)
+        public Paragraph GetParagraphOrDefaultById(Guid? id)
         {
             return Paragraphs.Find(p => p.Id == id);
         }
@@ -832,10 +832,11 @@ namespace Nikse.SubtitleEdit.Core.Common
         /// </summary>
         /// <param name="ids">IDs of paragraphs/lines to delete</param>
         /// <returns>Number of lines deleted</returns>
-        public int RemoveParagraphsByIds(IEnumerable<string> ids)
+        public int RemoveParagraphsByIds(IEnumerable<Guid?> ids)
         {
             var beforeCount = Paragraphs.Count;
-            Paragraphs = Paragraphs.Where(p => !ids.Contains(p.Id)).ToList();
+            var idSet = new HashSet<Guid?>(ids);
+            Paragraphs = Paragraphs.Where(p => !idSet.Contains(p.Id)).ToList();
             return beforeCount - Paragraphs.Count;
         }
 
@@ -860,7 +861,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                     Paragraphs = Paragraphs.OrderBy(p => p.DurationTotalMilliseconds).ThenBy(p => p.Number).ToList();
                     break;
                 case SubtitleSortCriteria.Gap:
-                    var lookupDictionary = new Dictionary<string, double>();
+                    var lookupDictionary = new Dictionary<Guid?, double>();
                     for (var index = 0; index < Paragraphs.Count; index++)
                     {
                         var paragraph = Paragraphs[index];
