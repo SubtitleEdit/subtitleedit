@@ -3,6 +3,27 @@ Subtitle Edit Changelog
 
 -----------------------------------------------------------------------------------------------------
 
+v5.1.0-rc15 (25th of July 2026)
+
+* Add Indonesian, Vietnamese, Greek, and Thai UI translations
+* Update llama.cpp to b10103
+* Auto-translate via DeepSeek: turn off the new default thinking mode for instant translations again, and migrate the retired deepseek-chat/deepseek-reasoner model IDs - thx itallfelldown5241023
+* Export plain text: word wrap the preview, and remember the window position and size - thx subof
+* Apply the saved volume to all video player windows - thx CDoggyDog62
+* Shortcuts window: darker category text in light mode, wider category column and button hints - thx GrampaWildWilly
+* Subtitle grid menu: keep Styles/Actors at the top and move the dictionary picker down
+* Allow Escape to close the source view window - thx ivandrofly
+* Fix undo deleting all lines of the original subtitle in translation mode - thx abasameer
+* Fix the MS Word spell check engine checking against Word's default language instead of the selected dictionary - thx sergechaly
+* Fix AltGr shortcut handling racing with typing - thx Ironship
+* Fix out-of-range parsing of culture names with unbalanced parentheses - thx ivandrofly
+* Performance: micro-optimize hot UI helpers, and deserialize JSON directly from streams - thx ivandrofly
+* seconv: fix VobSub OCR isolation, MKV VobSub passthrough, durations and silent drops - thx albino1
+* seconv: fix dump-settings mangling non-ASCII characters on Windows - thx Hlsgs
+* seconv: use canonical kebab-case flags in list-fce-rules output - thx Hlsgs
+
+-----------------------------------------------------------------------------------------------------
+
 v5.1.0-rc14 (24th of July 2026)
 
 * Complete overhaul of the French translation - thx Need74
