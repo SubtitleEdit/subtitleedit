@@ -16,7 +16,7 @@ public class SubtitleTest
         sub.Paragraphs.Add(p2);
         sub.Paragraphs.Add(p3);
 
-        int removedCount = sub.RemoveParagraphsByIds(new List<string> { p2.Id });
+        int removedCount = sub.RemoveParagraphsByIds(new List<Guid?> { p2.Id });
         Assert.Equal(1, removedCount);
         Assert.Equal(2, sub.Paragraphs.Count);
         Assert.Equal(sub.Paragraphs[0], p1);
@@ -34,7 +34,7 @@ public class SubtitleTest
         sub.Paragraphs.Add(p2);
         sub.Paragraphs.Add(p3);
 
-        int removedCount = sub.RemoveParagraphsByIds(new List<string> { p2.Id, p3.Id });
+        int removedCount = sub.RemoveParagraphsByIds(new List<Guid?> { p2.Id, p3.Id });
         Assert.Equal(2, removedCount);
         Assert.Single(sub.Paragraphs);
         Assert.Equal(sub.Paragraphs[0], p1);

@@ -7,7 +7,7 @@ namespace Nikse.SubtitleEdit.Core.Forms
 {
     public static class DurationsBridgeGaps
     {
-        public static int BridgeGaps(Subtitle subtitle, int minMsBetweenLines, bool divideEven, double maxMs, List<int> fixedIndexes, Dictionary<string, string> dic, bool useFrames)
+        public static int BridgeGaps(Subtitle subtitle, int minMsBetweenLines, bool divideEven, double maxMs, List<int> fixedIndexes, Dictionary<Guid?, string> dic, bool useFrames)
         {
             int fixedCount = 0;
             if (minMsBetweenLines > maxMs)

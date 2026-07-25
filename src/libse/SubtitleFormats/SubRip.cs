@@ -226,12 +226,12 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                             line = _regExWsrtItalicEnd.Replace(line, "</i>");
                         }
 
-                        if (_paragraph.Text.Length > 0)
-                        {
-                            _paragraph.Text += Environment.NewLine;
-                        }
-
-                        _paragraph.Text += line.Replace('\0', ' ').TrimEnd();
+                        // One string.Concat instead of two "+=" - appending the newline and the
+                        // text separately allocated an extra intermediate string per text line.
+                        var textToAppend = line.Replace('\0', ' ').TrimEnd();
+                        _paragraph.Text = _paragraph.Text.Length == 0
+                            ? textToAppend
+                            : _paragraph.Text + Environment.NewLine + textToAppend;
 
                         if (string.IsNullOrWhiteSpace(line) && Utilities.IsInteger(next) && TryReadTimeCodesLine(nextNext, null, false))
                         {
@@ -280,6 +280,21 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         private bool TryReadTimeCodesLine(string input, Paragraph paragraph, bool validate)
         {
             if (string.IsNullOrEmpty(input) || input.Length < 10)
+            {
+                return false;
+            }
+
+            // No '>' means this cannot be a time code line, so bail before the normalization
+            // below. Exact, not a heuristic: to return true the code must get past step 7 ('-')
+            // and step 8 ('>') of IsValidTimeCode *and* split into 8 numeric groups, which only
+            // the "-->" separator produces - and every separator variant normalized below
+            // ("->", "—>", "-->>", ...) contains '>' too, as does a bare ">". None of the other
+            // replacements can introduce one.
+            //
+            // Without this, any ordinary subtitle line that merely starts with a digit ("1999
+            // was a long time ago.") fell through to the ~20 allocating Replace calls, twice per
+            // line - and once more per neighbouring blank line via IsText.
+            if (input.IndexOf('>') < 0)
             {
                 return false;
             }
