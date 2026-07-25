@@ -11,6 +11,7 @@ public sealed class WordSpellCheck : IWordSpellChecker, IDisposable
 {
     private dynamic? _wordApp;
     private dynamic? _managedDocument;
+    private dynamic? _mainDictionary;
     private bool _disposed;
     private WordSpellCheckLanguage? _currentLanguage;
 
@@ -20,6 +21,7 @@ public sealed class WordSpellCheck : IWordSpellChecker, IDisposable
         set
         {
             _currentLanguage = value;
+            _mainDictionary = null;
 
             if (_wordApp == null || value == null)
             {
@@ -29,14 +31,17 @@ public sealed class WordSpellCheck : IWordSpellChecker, IDisposable
             try
             {
                 EnsureDocumentOpen();
-                if (value != null)
-                {
-                    _managedDocument!.Content.LanguageID = value.LanguageId;
-                }
+                _managedDocument!.Content.LanguageID = value!.LanguageId;
+
+                // Application.CheckSpelling/GetSpellingSuggestions on a bare string ignore the
+                // document language and use Word's default proofing dictionary, so the selected
+                // language's dictionary must be passed explicitly as MainDictionary (issue #12769).
+                _mainDictionary = _wordApp!.Languages[value.LanguageId].ActiveSpellingDictionary;
             }
             catch
             {
-                // ignored
+                // ignored - _mainDictionary stays null and spell check falls back to
+                // Word's default proofing language
             }
         }
     }
@@ -93,6 +98,11 @@ public sealed class WordSpellCheck : IWordSpellChecker, IDisposable
 
         try
         {
+            if (_mainDictionary != null)
+            {
+                return (bool)_wordApp!.CheckSpelling(word, MainDictionary: _mainDictionary);
+            }
+
             return (bool)_wordApp!.CheckSpelling(word);
         }
         catch
@@ -148,7 +158,9 @@ public sealed class WordSpellCheck : IWordSpellChecker, IDisposable
 
         try
         {
-            var spellingSuggestions = _wordApp!.GetSpellingSuggestions(word);
+            var spellingSuggestions = _mainDictionary != null
+                ? _wordApp!.GetSpellingSuggestions(word, MainDictionary: _mainDictionary)
+                : _wordApp!.GetSpellingSuggestions(word);
             foreach (var suggestion in spellingSuggestions)
             {
                 suggestions.Add((string)suggestion.Name);
@@ -187,6 +199,12 @@ public sealed class WordSpellCheck : IWordSpellChecker, IDisposable
         {
             try
             {
+                if (_mainDictionary != null)
+                {
+                    Marshal.ReleaseComObject(_mainDictionary);
+                    _mainDictionary = null;
+                }
+
                 if (_managedDocument != null)
                 {
                     _managedDocument.Close(false); // false = don't save changes
