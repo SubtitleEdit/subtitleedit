@@ -42,6 +42,8 @@ public class LanguageImport
     public string UseFixedDuration { get; set; }
     public string FixedDurationMs { get; set; }
     public string AlignViaSpeechToText { get; set; }
+    public string AlignViaForcedAligner { get; set; }
+    public string ForcedAlignerProgress { get; set; }
 
     public LanguageImport()
     {
@@ -89,6 +91,8 @@ Rules:
         UseFixedDuration = "Use fixed duration";
         FixedDurationMs = "Fixed duration (ms)";
         AlignViaSpeechToText = "Align time codes via \"Speech to text\"...";
+        AlignViaForcedAligner = "Align time codes via forced aligner...";
+        ForcedAlignerProgress = "Aligning... window {0} of {1}, {2} of {3} lines";
         CsvXlsxCustomColumnsDotDotDot = "CSV/XLSX with custom columns...";
         TitleImportCsvXlsxCustomColumns = "Import CSV/XLSX with custom columns";
         DetectedSeparatorX = "Detected separator: {0}";

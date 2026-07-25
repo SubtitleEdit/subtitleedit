@@ -67,15 +67,24 @@ public class ImportPlainTextWindow : Window
 
         var labelNumberOfSubtitles = UiUtil.MakeLabel().WithBindText(vm, nameof(vm.NumberOfSubtitles)).WithAlignmentTop();
 
+        // Progress sits next to the line count; forced alignment of a long video runs for
+        // minutes, so the window must show that something is happening.
+        var labelAlignProgress = UiUtil.MakeLabel()
+            .WithBindText(vm, nameof(vm.AlignProgress))
+            .WithAlignmentTop()
+            .WithBindVisible(vm, nameof(vm.IsAligning));
+
         var buttonAlignViaWhisper = UiUtil.MakeButton(Se.Language.File.Import.AlignViaSpeechToText, vm.AlignScriptWithTimestampsFromWhisperCommand);
+        var buttonAlignViaForcedAligner = UiUtil.MakeButton(Se.Language.File.Import.AlignViaForcedAligner, vm.AlignScriptWithForcedAlignerCommand);
         var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand);
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
-        var panelButtons = UiUtil.MakeButtonBar(buttonAlignViaWhisper, buttonOk, buttonCancel);
+        var panelButtons = UiUtil.MakeButtonBar(buttonAlignViaForcedAligner, buttonAlignViaWhisper, buttonOk, buttonCancel);
 
         grid.Add(panelImport, 0);
         grid.Add(MakeTextBoxAndControlsView(vm), 1);
         grid.Add(MakeSubtitleGridView(vm), 2);
         grid.Add(labelNumberOfSubtitles, 3, 0);
+        grid.Add(labelAlignProgress, 3, 0);
         grid.Add(panelButtons, 3, 0);
 
         Content = grid;
