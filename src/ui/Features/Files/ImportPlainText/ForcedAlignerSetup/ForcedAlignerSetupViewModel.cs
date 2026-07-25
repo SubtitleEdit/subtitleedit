@@ -1,4 +1,5 @@
 using Avalonia.Controls;
+using Avalonia.Media;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Nikse.SubtitleEdit.Features.Shared;
@@ -20,6 +21,8 @@ public partial class ForcedAlignerSetupViewModel : ObservableObject
     [ObservableProperty] private ForcedAlignerOption? _selectedAligner;
     [ObservableProperty] private string _engineStatus;
     [ObservableProperty] private string _alignerStatus;
+    [ObservableProperty] private IBrush? _engineDotBrush;
+    [ObservableProperty] private IBrush? _alignerDotBrush;
     [ObservableProperty] private bool _isEngineInstalled;
     [ObservableProperty] private bool _isBusy;
     [ObservableProperty] private int _windowSeconds;
@@ -50,9 +53,7 @@ public partial class ForcedAlignerSetupViewModel : ObservableObject
         foreach (var option in ForcedAlignerOption.All().Where(o => !o.IsBuiltIn))
         {
             option.IsInstalled = File.Exists(_engine.GetModelForCmdLine(option.FileName));
-            option.Display = option.IsInstalled
-                ? option.BaseDisplay
-                : $"{option.BaseDisplay}  -  not installed ({option.Size})";
+            option.Display = option.BaseDisplay;
             Aligners.Add(option);
         }
 
@@ -67,19 +68,31 @@ public partial class ForcedAlignerSetupViewModel : ObservableObject
     private void RefreshStatus()
     {
         IsEngineInstalled = File.Exists(_engine.GetExecutable());
+
+        var engineDotStatus = IsEngineInstalled ? DownloadDotStatus.UpToDate : DownloadDotStatus.NotInstalled;
+        EngineDotBrush = StatusDots.BrushFor(engineDotStatus);
         EngineStatus = IsEngineInstalled
-            ? $"Crisp ASR engine installed ({CrispAsrVersion.TryGet(_engine.GetExecutable()) ?? "version unknown"})"
-            : "Crisp ASR engine is not installed";
+            ? $"Crisp ASR {CrispAsrVersion.TryGet(_engine.GetExecutable()) ?? "(version unknown)"} - {StatusDots.StatusText(engineDotStatus)}"
+            : $"Crisp ASR - {StatusDots.StatusText(engineDotStatus)}";
 
         if (SelectedAligner == null)
         {
             AlignerStatus = string.Empty;
+            AlignerDotBrush = null;
             return;
         }
 
+        // Re-check the file rather than trusting the flag from Initialize: the model may
+        // have been downloaded since this window opened.
+        SelectedAligner.IsInstalled = File.Exists(_engine.GetModelForCmdLine(SelectedAligner.FileName));
+
+        var alignerDotStatus = SelectedAligner.IsInstalled
+            ? DownloadDotStatus.UpToDate
+            : DownloadDotStatus.NotInstalled;
+        AlignerDotBrush = StatusDots.BrushFor(alignerDotStatus);
         AlignerStatus = SelectedAligner.IsInstalled
-            ? $"{SelectedAligner.FileName} is installed"
-            : $"{SelectedAligner.FileName} will be downloaded ({SelectedAligner.Size})";
+            ? $"{SelectedAligner.FileName} - {StatusDots.StatusText(alignerDotStatus)}"
+            : $"{SelectedAligner.FileName} - {StatusDots.StatusText(alignerDotStatus)}, {SelectedAligner.Size} will be downloaded";
     }
 
     partial void OnSelectedAlignerChanged(ForcedAlignerOption? value) => RefreshStatus();

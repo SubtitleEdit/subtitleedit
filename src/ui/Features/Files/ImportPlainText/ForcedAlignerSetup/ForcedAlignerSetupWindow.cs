@@ -1,7 +1,13 @@
+using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Controls.Shapes;
+using Avalonia.Data;
+using Avalonia.Media;
 using Avalonia.Layout;
+using Nikse.SubtitleEdit.Features.Video.SpeechToText.Engines;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
+using Optris.Icons.Avalonia;
 
 namespace Nikse.SubtitleEdit.Features.Files.ImportPlainText.ForcedAlignerSetup;
 
@@ -20,20 +26,90 @@ public class ForcedAlignerSetupWindow : Window
         DataContext = vm;
 
         var labelIntro = UiUtil.MakeTextBlock(Se.Language.File.Import.ForcedAlignerSetupIntro);
-        labelIntro.TextWrapping = Avalonia.Media.TextWrapping.Wrap;
-        labelIntro.MaxWidth = 570;
+        labelIntro.TextWrapping = TextWrapping.Wrap;
+        labelIntro.MaxWidth = 530;
+        labelIntro.VerticalAlignment = VerticalAlignment.Center;
+
+        var introIcon = new ContentControl
+        {
+            FontSize = 15,
+            Foreground = Brushes.White,
+            HorizontalAlignment = HorizontalAlignment.Center,
+            VerticalAlignment = VerticalAlignment.Center,
+        };
+        Attached.SetIcon(introIcon, IconNames.Waveform);
+
+        var introGlyph = new Border
+        {
+            Width = 28,
+            Height = 28,
+            CornerRadius = new CornerRadius(7),
+            Background = StatusDots.Green,
+            Margin = new Thickness(0, 0, 10, 0),
+            VerticalAlignment = VerticalAlignment.Top,
+            Child = introIcon,
+        };
+
+        var panelIntro = new StackPanel
+        {
+            Orientation = Orientation.Horizontal,
+            Children = { introGlyph, labelIntro },
+        };
 
         var labelEngine = UiUtil.MakeLabel(Se.Language.File.Import.ForcedAlignerEngine);
-        var labelEngineStatus = UiUtil.MakeLabel().WithBindText(vm, nameof(vm.EngineStatus));
+
+        // Same dot vocabulary as everywhere else: green installed, amber update waiting,
+        // grey not installed - always paired with text, never colour alone.
+        var engineDot = new Ellipse
+        {
+            Width = 10,
+            Height = 10,
+            VerticalAlignment = VerticalAlignment.Center,
+            Margin = new Thickness(0, 0, 6, 0),
+        };
+        engineDot.Bind(Shape.FillProperty, new Binding(nameof(vm.EngineDotBrush)));
+
+        var labelEngineStatus = UiUtil.MakeTextBlock(string.Empty, vm, nameof(vm.EngineStatus), null);
+        labelEngineStatus.VerticalAlignment = VerticalAlignment.Center;
+
+        var panelEngineStatus = new StackPanel
+        {
+            Orientation = Orientation.Horizontal,
+            VerticalAlignment = VerticalAlignment.Center,
+            Children = { engineDot, labelEngineStatus },
+        };
+
         var buttonDownloadEngine = UiUtil.MakeButton(
             Se.Language.File.Import.ForcedAlignerDownloadEngine, vm.DownloadEngineCommand);
+        Attached.SetIcon(buttonDownloadEngine, IconNames.CloudDownload);
 
         var labelAligner = UiUtil.MakeLabel(Se.Language.File.Import.ForcedAlignerModel);
         var comboAligner = UiUtil.MakeComboBox(vm.Aligners, vm, nameof(vm.SelectedAligner));
         comboAligner.HorizontalAlignment = HorizontalAlignment.Stretch;
         comboAligner.Width = 420;
+        comboAligner.ItemTemplate = StatusDots.ComboItemTemplate<ForcedAlignerOption>(
+            aligner => aligner.BaseDisplay,
+            aligner => aligner.Size,
+            aligner => aligner.IsInstalled ? DownloadDotStatus.UpToDate : DownloadDotStatus.NotInstalled);
 
-        var labelAlignerStatus = UiUtil.MakeLabel().WithBindText(vm, nameof(vm.AlignerStatus));
+        var alignerDot = new Ellipse
+        {
+            Width = 10,
+            Height = 10,
+            VerticalAlignment = VerticalAlignment.Center,
+            Margin = new Thickness(0, 0, 6, 0),
+        };
+        alignerDot.Bind(Shape.FillProperty, new Binding(nameof(vm.AlignerDotBrush)));
+
+        var labelAlignerStatusText = UiUtil.MakeTextBlock(string.Empty, vm, nameof(vm.AlignerStatus), null);
+        labelAlignerStatusText.VerticalAlignment = VerticalAlignment.Center;
+
+        var labelAlignerStatus = new StackPanel
+        {
+            Orientation = Orientation.Horizontal,
+            VerticalAlignment = VerticalAlignment.Center,
+            Children = { alignerDot, labelAlignerStatusText },
+        };
 
         var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand);
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
@@ -61,10 +137,10 @@ public class ForcedAlignerSetupWindow : Window
             HorizontalAlignment = HorizontalAlignment.Stretch,
         };
 
-        grid.Add(labelIntro, 0, 0, 1, 2);
+        grid.Add(panelIntro, 0, 0, 1, 2);
         grid.Add(labelEngine, 1, 0);
         grid.Add(buttonDownloadEngine, 1, 1);
-        grid.Add(labelEngineStatus, 2, 0, 1, 2);
+        grid.Add(panelEngineStatus, 2, 0, 1, 2);
         grid.Add(labelAligner, 3, 0);
         grid.Add(comboAligner, 3, 1);
         grid.Add(labelAlignerStatus, 4, 0, 1, 2);
