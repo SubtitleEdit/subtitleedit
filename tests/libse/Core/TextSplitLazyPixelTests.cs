@@ -53,16 +53,59 @@ public class TextSplitLazyPixelTests : IDisposable
     }
 
     /// <summary>
-    /// A line over the 1000 character cutoff contributes no entry to LengthPixels - long-standing
-    /// behaviour that callers like IsBottomHeavy depend on the shape of.
+    /// A line over the 1000 character cutoff is estimated rather than measured, but it still
+    /// contributes an entry - IsBottomHeavy and DiffFromAveragePixelBottomHeavy index both slots.
     /// </summary>
     [Fact]
-    public void LengthPixels_SkipsLinesOverTheCutoff()
+    public void LengthPixels_EstimatesLinesOverTheCutoff()
     {
         Configuration.Settings.Tools.AutoBreakUsePixelWidth = true;
         var result = Make(new string('x', 1200), "short");
 
-        Assert.Single(result.LengthPixels);
+        Assert.Equal(2, result.LengthPixels.Count);
+        Assert.Equal(1200 * 7, result.LengthPixels[0]);
+        Assert.True(result.LengthPixels[1] > 0);
+
+        // Both slots present means these no longer throw.
+        Assert.False(result.IsBottomHeavy);
+        Assert.True(result.DiffFromAveragePixelBottomHeavy() > 0);
+    }
+
+    /// <summary>
+    /// SpaceLengthPixels is a process-wide static holding the width of one space, and
+    /// TotalLengthPixels subtracts it. An over-long line used to overwrite it with a line
+    /// length, skewing every later line break in the process.
+    /// </summary>
+    [Fact]
+    public void SpaceLengthPixels_IsNotClobberedByAnOverLongLine()
+    {
+        Configuration.Settings.Tools.AutoBreakUsePixelWidth = true;
+
+        // Force it to be initialised from a normal split first.
+        _ = Make("hello", "world").LengthPixels;
+        var spaceWidth = TextSplitResult.SpaceLengthPixels;
+        Assert.True(spaceWidth > 0 && spaceWidth < 100, $"expected a space width, got {spaceWidth}");
+
+        _ = Make(new string('x', 1200), new string('y', 1500)).LengthPixels;
+
+        Assert.Equal(spaceWidth, TextSplitResult.SpaceLengthPixels);
+    }
+
+    [Fact]
+    public void AutoBreak_AfterAnOverLongLine_IsUnaffected()
+    {
+        Configuration.Settings.Tools.AutoBreakUsePixelWidth = true;
+        const string text = "It was the best of times, it was the worst of times, it was the age of wisdom.";
+
+        var before = new TextSplit(text, 43, "en").AutoBreak(true, true, true, true);
+
+        // Previously this poisoned SpaceLengthPixels for the rest of the process.
+        _ = new TextSplit(new string('x', 1200) + " " + new string('y', 1200), 43, "en")
+            .AutoBreak(true, true, true, true);
+
+        var after = new TextSplit(text, 43, "en").AutoBreak(true, true, true, true);
+
+        Assert.Equal(before, after);
     }
 
     [Fact]

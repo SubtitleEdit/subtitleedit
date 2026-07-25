@@ -99,9 +99,8 @@ namespace Nikse.SubtitleEdit.Core.Common
         // all. Measuring in the constructor meant a Skia MeasureText call per line of every
         // candidate regardless; deferring it to first read skips the ones nothing looks at.
         //
-        // The body is the constructor's original code, unchanged, so the entries added to the
-        // list (note the >1000 branches add none) and the SpaceLengthPixels side effects stay
-        // exactly as they were.
+        // The body is the constructor's original code apart from the over-long-line fix in
+        // EstimateOrMeasure below.
         private void EnsurePixelsMeasured()
         {
             if (_pixelsMeasured)
@@ -116,29 +115,27 @@ namespace Nikse.SubtitleEdit.Core.Common
                 return;
             }
 
-            if (Lines[0].Length > 1000)
-            {
-                SpaceLengthPixels = Lines[0].Length * 7;
-            }
-            else
-            {
-                _lengthPixels.Add(GetWidth(Lines[0]));
-            }
-
-            if (Lines[1].Length > 1000)
-            {
-                SpaceLengthPixels = Lines[1].Length * 7;
-            }
-            else
-            {
-                _lengthPixels.Add(GetWidth(Lines[1]));
-            }
+            _lengthPixels.Add(EstimateOrMeasure(Lines[0]));
+            _lengthPixels.Add(EstimateOrMeasure(Lines[1]));
 
             if (Math.Abs(SpaceLengthPixels) < 0.01)
             {
                 SpaceLengthPixels = GetWidth(" ");
             }
         }
+
+        // A line past the cutoff is estimated rather than measured, the same trick GetWidth
+        // already uses above it for text over 128 characters.
+        //
+        // This used to assign the estimate to SpaceLengthPixels instead of adding it to the
+        // list, which was wrong twice over. SpaceLengthPixels is a process-wide static holding
+        // the width of a single space, and TotalLengthPixels subtracts it - so one long line
+        // left it at (for example) 8400 instead of ~3.33 and skewed every later line break in
+        // the process. And because nothing was added to the list, LengthPixels came back with
+        // fewer than two entries, which IsBottomHeavy and DiffFromAveragePixelBottomHeavy index
+        // directly.
+        private static float EstimateOrMeasure(string line)
+            => line.Length > 1000 ? line.Length * 7 : GetWidth(line);
 
         public bool IsLineLengthOkay(int singleLineMaxLength)
         {
