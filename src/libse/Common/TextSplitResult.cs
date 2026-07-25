@@ -8,12 +8,32 @@ namespace Nikse.SubtitleEdit.Core.Common
     public class TextSplitResult
     {
         public List<string> Lines { get; set; }
-        public List<float> LengthPixels { get; set; }
+
+        /// <summary>
+        /// Per-line pixel widths. Measured on first read - see <see cref="EnsurePixelsMeasured"/>.
+        /// </summary>
+        public List<float> LengthPixels
+        {
+            get
+            {
+                EnsurePixelsMeasured();
+                return _lengthPixels;
+            }
+            set
+            {
+                _lengthPixels = value;
+                _pixelsMeasured = true;
+            }
+        }
+
         public List<int> LengthCharacters { get; set; }
         public bool IsBottomHeavy => LengthPixels[1] + 2 > LengthPixels[0]; // allow a small diff of 2 pixels
         public static float SpaceLengthPixels { get; set; }
         public double TotalLength => Lines.Sum(p => p.Length);
         public double TotalLengthPixels => LengthPixels.Sum(p => p) - SpaceLengthPixels;
+
+        private List<float> _lengthPixels;
+        private bool _pixelsMeasured;
 
         // SkiaSharp resolves a default typeface the first time SKFont's object
         // initializer runs; on headless Linux setups without fontconfig (e.g. the
@@ -65,37 +85,58 @@ namespace Nikse.SubtitleEdit.Core.Common
         public TextSplitResult(List<string> lines)
         {
             Lines = lines;
-            LengthPixels = new List<float>();
-            if (Configuration.Settings.Tools.AutoBreakUsePixelWidth)
-            {
-                if (Lines[0].Length > 1000)
-                {
-                    SpaceLengthPixels = Lines[0].Length * 7;
-                }
-                else
-                {
-                    LengthPixels.Add(GetWidth(Lines[0]));
-                }
-
-                if (Lines[1].Length > 1000)
-                {
-                    SpaceLengthPixels = Lines[1].Length * 7;
-                }
-                else
-                {
-                    LengthPixels.Add(GetWidth(Lines[1]));
-                }
-
-                if (Math.Abs(SpaceLengthPixels) < 0.01)
-                {
-                    SpaceLengthPixels = GetWidth(" ");
-                }
-            }
 
             LengthCharacters = new List<int>();
             foreach (var line in lines)
             {
                 LengthCharacters.Add(line.Length);
+            }
+        }
+
+        // TextSplit builds one of these per space in the line, but only the candidates that
+        // survive the IsLineLengthOkay/IsDialog filters are ever ordered by pixel width - and
+        // GetBestLengthSplit orders by character count, so its candidates need no measuring at
+        // all. Measuring in the constructor meant a Skia MeasureText call per line of every
+        // candidate regardless; deferring it to first read skips the ones nothing looks at.
+        //
+        // The body is the constructor's original code, unchanged, so the entries added to the
+        // list (note the >1000 branches add none) and the SpaceLengthPixels side effects stay
+        // exactly as they were.
+        private void EnsurePixelsMeasured()
+        {
+            if (_pixelsMeasured)
+            {
+                return;
+            }
+
+            _pixelsMeasured = true;
+            _lengthPixels = new List<float>();
+            if (!Configuration.Settings.Tools.AutoBreakUsePixelWidth)
+            {
+                return;
+            }
+
+            if (Lines[0].Length > 1000)
+            {
+                SpaceLengthPixels = Lines[0].Length * 7;
+            }
+            else
+            {
+                _lengthPixels.Add(GetWidth(Lines[0]));
+            }
+
+            if (Lines[1].Length > 1000)
+            {
+                SpaceLengthPixels = Lines[1].Length * 7;
+            }
+            else
+            {
+                _lengthPixels.Add(GetWidth(Lines[1]));
+            }
+
+            if (Math.Abs(SpaceLengthPixels) < 0.01)
+            {
+                SpaceLengthPixels = GetWidth(" ");
             }
         }
 

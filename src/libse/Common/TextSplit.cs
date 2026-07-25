@@ -25,18 +25,23 @@ namespace Nikse.SubtitleEdit.Core.Common
                 {
                     var l1 = text.Substring(0, i).Trim();
                     var l2 = text.Substring(i + 1).Trim();
-                    _allSplits.Add(new TextSplitResult(new List<string> { l1, l2 }));
+
+                    // One result shared by both lists. _splits is a subset of _allSplits, so
+                    // building a second identical instance measured the same two lines twice.
+                    var split = new TextSplitResult(new List<string> { l1, l2 });
+                    _allSplits.Add(split);
                     if (Utilities.CanBreak(text, i, language))
                     {
-                        _splits.Add(new TextSplitResult(new List<string> { l1, l2 }));
+                        _splits.Add(split);
                     }
                 }
                 else if ((language == "zh" || language == "ja" || language == "ko") && "，。？、?".Contains(text[i]))
                 {
                     var l1 = text.Substring(0, i + 1).Trim();
                     var l2 = text.Substring(i + 1).Trim();
-                    _allSplits.Add(new TextSplitResult(new List<string> { l1, l2 }));
-                    _splits.Add(new TextSplitResult(new List<string> { l1, l2 }));
+                    var split = new TextSplitResult(new List<string> { l1, l2 });
+                    _allSplits.Add(split);
+                    _splits.Add(split);
                 }
             }
         }
