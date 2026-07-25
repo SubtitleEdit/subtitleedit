@@ -49,6 +49,8 @@ public class LanguageImport
     public string ForcedAlignerEngine { get; set; }
     public string ForcedAlignerModel { get; set; }
     public string ForcedAlignerDownloadEngine { get; set; }
+    public string ForcedAlignerHandleMissingText { get; set; }
+    public string ForcedAlignerHandleMissingTextHint { get; set; }
 
     public LanguageImport()
     {
@@ -103,6 +105,8 @@ Rules:
         ForcedAlignerEngine = "Engine";
         ForcedAlignerModel = "Aligner model";
         ForcedAlignerDownloadEngine = "Download / update engine...";
+        ForcedAlignerHandleMissingText = "Handle text missing from the script";
+        ForcedAlignerHandleMissingTextHint = "Transcribes the audio first so lines can be located even where the script leaves something out. Slower, and needs a speech-to-text model.";
         CsvXlsxCustomColumnsDotDotDot = "CSV/XLSX with custom columns...";
         TitleImportCsvXlsxCustomColumns = "Import CSV/XLSX with custom columns";
         DetectedSeparatorX = "Detected separator: {0}";

@@ -111,6 +111,19 @@ public class ForcedAlignerSetupWindow : Window
             Children = { alignerDot, labelAlignerStatusText },
         };
 
+        var checkBoxHandleMissing = UiUtil.MakeCheckBox(
+            Se.Language.File.Import.ForcedAlignerHandleMissingText, vm, nameof(vm.HandleMissingText));
+        if (Se.Settings.Appearance.ShowHints)
+        {
+            ToolTip.SetTip(checkBoxHandleMissing, Se.Language.File.Import.ForcedAlignerHandleMissingTextHint);
+        }
+
+        var labelHandleMissingHint = UiUtil.MakeTextBlock(Se.Language.File.Import.ForcedAlignerHandleMissingTextHint);
+        labelHandleMissingHint.TextWrapping = TextWrapping.Wrap;
+        labelHandleMissingHint.MaxWidth = 530;
+        labelHandleMissingHint.Opacity = 0.6;
+        labelHandleMissingHint.Margin = new Thickness(24, 0, 0, 0);
+
         var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand);
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
         var panelButtons = UiUtil.MakeButtonBar(buttonOk, buttonCancel);
@@ -124,6 +137,8 @@ public class ForcedAlignerSetupWindow : Window
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // engine status
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // aligner
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // aligner status
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // missing-text option
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // option hint
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // buttons
             },
             ColumnDefinitions =
@@ -144,7 +159,9 @@ public class ForcedAlignerSetupWindow : Window
         grid.Add(labelAligner, 3, 0);
         grid.Add(comboAligner, 3, 1);
         grid.Add(labelAlignerStatus, 4, 0, 1, 2);
-        grid.Add(panelButtons, 5, 0, 1, 2);
+        grid.Add(checkBoxHandleMissing, 5, 0, 1, 2);
+        grid.Add(labelHandleMissingHint, 6, 0, 1, 2);
+        grid.Add(panelButtons, 7, 0, 1, 2);
 
         Content = grid;
 
