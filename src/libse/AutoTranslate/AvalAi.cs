@@ -65,7 +65,6 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
             // DeepSeek
             "deepseek-v4-pro",
             "deepseek-v4-flash",
-            "deepseek-chat",
 
             // Other notable models
             "qwen3.6-max"

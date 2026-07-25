@@ -65,13 +65,24 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
                 model = Models[0];
                 Configuration.Settings.Tools.DeepSeekModel = model;
             }
+            else if (model == "deepseek-chat") // removed 2026/07/24
+            {
+                model = "deepseek-v4-flash";
+                Configuration.Settings.Tools.DeepSeekModel = model;
+            }
+            else if (model == "deepseek-reasoner") // removed 2026/07/24
+            {
+                model = "deepseek-v4-pro";
+                Configuration.Settings.Tools.DeepSeekModel = model;
+            }
 
             if (string.IsNullOrEmpty(Configuration.Settings.Tools.DeepSeekPrompt))
             {
                 Configuration.Settings.Tools.DeepSeekPrompt = new ToolsSettings().DeepSeekPrompt;
             }
             var prompt = string.Format(Configuration.Settings.Tools.DeepSeekPrompt, sourceLanguageCode, targetLanguageCode);
-            var input = "{\"model\": \"" + model + "\",\"messages\": [{ \"role\": \"user\", \"content\": \"" + Json.EncodeJsonText(prompt) + "\\n\\n" + Json.EncodeJsonText(text.Trim()) + "\" }]}";
+            // v4 models default to thinking mode - disable it to keep translations fast and cheap
+            var input = "{\"model\": \"" + model + "\",\"thinking\": {\"type\": \"disabled\"},\"messages\": [{ \"role\": \"user\", \"content\": \"" + Json.EncodeJsonText(prompt) + "\\n\\n" + Json.EncodeJsonText(text.Trim()) + "\" }]}";
 
             int[] retryDelays = { 2555, 5007, 9013 };
             HttpResponseMessage result = null;
