@@ -38,6 +38,14 @@ public static class ForcedAlignPlanner
 
         /// <summary>Cues ending within this much of the window edge are never trusted.</summary>
         public double TailGuardSeconds { get; init; } = 1.0;
+
+        /// <summary>
+        /// How far the audio cursor creeps when a window aligns to nothing usable, as
+        /// happens over a passage the script is missing. Deliberately small: the cursor has
+        /// to stop as soon as it reaches the audio the script resumes at, and a stride of
+        /// most-of-a-window sails straight past it and never re-syncs.
+        /// </summary>
+        public double SkipSeconds { get; init; } = 15.0;
     }
 
     /// <summary>
@@ -121,5 +129,57 @@ public static class ForcedAlignPlanner
         // Never stall. A window whose cues all sit past the limit still has to yield
         // something, or the same window is planned again forever.
         return accepted > 0 ? accepted : Math.Max(1, cues.Count / 3);
+    }
+
+    /// <summary>
+    /// Drops cues the aligner clearly had to force. A forced aligner cannot skip audio -
+    /// it must place every line it is given - so when the script is missing something that
+    /// is actually spoken, the following lines get crammed onto the audio of the missing
+    /// passage. Measured against ground truth with a 90 s omission, correctly placed lines
+    /// ran at 0.84-0.89 of their reading time while crammed ones sat at 0.36-0.48, so the
+    /// ratio separates them cleanly.
+    ///
+    /// Accepting stops at the start of a sustained run of squeezed cues; the caller then
+    /// steps the audio cursor forward without consuming those lines, which is what lets it
+    /// walk past the unmatched passage and pick the script up again on the other side.
+    /// </summary>
+    /// <param name="readingSeconds">How long each fed line takes to read, same order as the cues.</param>
+    public static int TrimImplausible(
+        IReadOnlyList<Cue> cues,
+        IReadOnlyList<double> readingSeconds,
+        int accepted,
+        double minRatio = 0.55,
+        int runLength = 2)
+    {
+        ArgumentNullException.ThrowIfNull(cues);
+        ArgumentNullException.ThrowIfNull(readingSeconds);
+
+        var run = 0;
+        for (var i = 0; i < accepted && i < cues.Count && i < readingSeconds.Count; i++)
+        {
+            var reading = readingSeconds[i];
+            if (reading <= 0)
+            {
+                run = 0;
+                continue;
+            }
+
+            var ratio = (cues[i].EndSeconds - cues[i].StartSeconds) / reading;
+            if (ratio < minRatio)
+            {
+                run++;
+                if (run >= runLength)
+                {
+                    // Cut before the whole run, not just the cue that tripped the counter.
+                    return Math.Max(0, i - run + 1);
+                }
+            }
+            else
+            {
+                run = 0;
+            }
+        }
+
+        return accepted;
     }
 }

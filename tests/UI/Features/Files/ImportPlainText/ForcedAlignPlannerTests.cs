@@ -86,6 +86,63 @@ public class ForcedAlignPlannerTests
     }
 
     [Fact]
+    public void TrimImplausible_CutsAtASustainedRunOfSqueezedCues()
+    {
+        // Ratios measured against ground truth past a 90 s passage missing from the
+        // script: correctly placed lines ran at 0.84-0.89 of reading time, lines crammed
+        // onto the missing passage's audio at 0.36-0.48.
+        var reading = new List<double> { 5, 5, 5, 5, 5, 5 };
+        var cues = new List<ForcedAlignPlanner.Cue>
+        {
+            new(0, 4.3),      // 0.86
+            new(4.3, 8.6),    // 0.86
+            new(8.6, 12.8),   // 0.84
+            new(12.8, 14.8),  // 0.40 - squeezed
+            new(14.8, 16.7),  // 0.38 - squeezed
+            new(16.7, 18.5),  // 0.36 - squeezed
+        };
+
+        Assert.Equal(3, ForcedAlignPlanner.TrimImplausible(cues, reading, 6));
+    }
+
+    [Fact]
+    public void TrimImplausible_IgnoresAnIsolatedShortCue()
+    {
+        // One quickly-delivered line is not evidence that the script has drifted off the
+        // audio; only a sustained run is.
+        var reading = new List<double> { 5, 5, 5, 5 };
+        var cues = new List<ForcedAlignPlanner.Cue>
+        {
+            new(0, 4.3),
+            new(4.3, 6.3),    // 0.40 - one short line
+            new(6.3, 10.6),
+            new(10.6, 14.9),
+        };
+
+        Assert.Equal(4, ForcedAlignPlanner.TrimImplausible(cues, reading, 4));
+    }
+
+    [Fact]
+    public void TrimImplausible_LeavesAWellAlignedWindowAlone()
+    {
+        var reading = new List<double> { 4, 4, 4 };
+        var cues = new List<ForcedAlignPlanner.Cue> { new(0, 3.6), new(3.6, 7.2), new(7.2, 10.8) };
+
+        Assert.Equal(3, ForcedAlignPlanner.TrimImplausible(cues, reading, 3));
+    }
+
+    [Fact]
+    public void TrimImplausible_CanRejectAWholeWindow()
+    {
+        // Everything squeezed from the start - the caller steps the audio cursor on
+        // instead of consuming any script.
+        var reading = new List<double> { 5, 5, 5 };
+        var cues = new List<ForcedAlignPlanner.Cue> { new(0, 1.8), new(1.8, 3.5), new(3.5, 5.2) };
+
+        Assert.Equal(0, ForcedAlignPlanner.TrimImplausible(cues, reading, 3));
+    }
+
+    [Fact]
     public void ParseCues_ReadsAlignerSrtOutput()
     {
         var srt = "1\n00:00:00,160 --> 00:00:03,360\nThe engineer repaired the radio\n\n"

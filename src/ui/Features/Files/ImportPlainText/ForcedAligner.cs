@@ -132,11 +132,21 @@ public sealed class ForcedAligner
             var accept = ForcedAlignPlanner.AcceptCount(cues, windowLength, _options, isLast);
             accept = Math.Min(accept, fed.Count);
 
+            // Discard anything the aligner had to squeeze onto audio that does not contain
+            // it - that is what happens past a passage the script is missing.
+            var optimalCps = Se.Settings.General.SubtitleOptimalCharactersPerSeconds;
+            if (optimalCps > 0)
+            {
+                var readingSeconds = fed.Select(t => t.Length / optimalCps).ToList();
+                accept = ForcedAlignPlanner.TrimImplausible(cues, readingSeconds, accept);
+            }
+
             if (accept == 0)
             {
-                // Nothing usable came back. Step past this stretch of audio rather than
-                // planning the identical window again forever.
-                position += _options.WindowSeconds * _options.AcceptFraction;
+                // Either nothing came back, or everything looked forced. Creep the audio
+                // cursor on without consuming any script: over a few windows this walks
+                // past the unmatched passage and picks the script up on the far side.
+                position += _options.SkipSeconds;
                 windowIndex++;
                 continue;
             }
