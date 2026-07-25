@@ -39,18 +39,8 @@ public static class ScriptSyncService
     /// time codes interpolated from their neighbours, so this is a confidence signal
     /// rather than a count of lines left untimed.
     /// </param>
-    /// <param name="DirectMatches">
-    /// Per line, whether it matched transcription words directly rather than having its
-    /// time codes interpolated. Callers refining these timings - see
-    /// <see cref="HybridAligner"/> - use it to tell a trustworthy anchor from a guess.
-    /// </param>
-    public readonly record struct SyncResult(int TotalLines, int UnmatchedLines, IReadOnlyList<bool> DirectMatches)
+    public readonly record struct SyncResult(int TotalLines, int UnmatchedLines)
     {
-        public SyncResult(int totalLines, int unmatchedLines)
-            : this(totalLines, unmatchedLines, Array.Empty<bool>())
-        {
-        }
-
         public int MatchedLines => TotalLines - UnmatchedLines;
     }
 
@@ -169,7 +159,7 @@ public static class ScriptSyncService
             scriptLines[i].UpdateDuration();
         }
 
-        return new SyncResult(scriptLines.Count, unmatched, lineHasMatch);
+        return new SyncResult(scriptLines.Count, unmatched);
     }
 
     private static List<int> AlignWords(List<string> scriptWords, List<WordTimestamp> whisperWords)

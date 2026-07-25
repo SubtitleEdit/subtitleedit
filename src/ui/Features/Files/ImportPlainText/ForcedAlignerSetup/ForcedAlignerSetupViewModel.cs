@@ -26,7 +26,6 @@ public partial class ForcedAlignerSetupViewModel : ObservableObject
     [ObservableProperty] private bool _isEngineInstalled;
     [ObservableProperty] private bool _isBusy;
     [ObservableProperty] private int _windowSeconds;
-    [ObservableProperty] private bool _handleMissingText;
 
     public Window? Window { get; set; }
     public bool OkPressed { get; private set; }
@@ -45,9 +44,6 @@ public partial class ForcedAlignerSetupViewModel : ObservableObject
         _engineStatus = string.Empty;
         _alignerStatus = string.Empty;
         _windowSeconds = 240;
-        // On by default: a script that matches the audio exactly is the exception, and
-        // this is the only thing that copes when it does not.
-        _handleMissingText = true;
     }
 
     public void Initialize()
