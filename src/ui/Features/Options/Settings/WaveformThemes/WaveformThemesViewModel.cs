@@ -201,8 +201,8 @@ public partial class WaveformThemesViewModel : ObservableObject
 
         try
         {
-            var json = File.ReadAllText(path);
-            var dto = JsonSerializer.Deserialize<WaveformThemeDto>(json, new JsonSerializerOptions
+            await using var stream = File.OpenRead(path);
+            var dto = await JsonSerializer.DeserializeAsync<WaveformThemeDto>(stream, new JsonSerializerOptions
             {
                 PropertyNameCaseInsensitive = true,
             });

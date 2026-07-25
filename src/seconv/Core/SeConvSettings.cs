@@ -46,8 +46,8 @@ internal sealed class SeConvSettings
             throw new FileNotFoundException($"Settings file not found: {path}", path);
         }
 
-        var json = File.ReadAllText(path);
-        return JsonSerializer.Deserialize<SeConvSettings>(json, JsonOptions)
+        using var stream = File.OpenRead(path);
+        return JsonSerializer.Deserialize<SeConvSettings>(stream, JsonOptions)
             ?? throw new InvalidDataException($"Settings file is empty or null: {path}");
     }
 

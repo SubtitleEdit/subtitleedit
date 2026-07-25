@@ -117,8 +117,8 @@ public partial class ProfilesViewModel : ObservableObject
         List<ProfileDisplay>? imported = null;
         try
         {
-            var json = System.IO.File.ReadAllText(fileName);
-            var temp = JsonSerializer.Deserialize<ProfileImportExport>(json, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+            await using var stream = System.IO.File.OpenRead(fileName);
+            var temp = await JsonSerializer.DeserializeAsync<ProfileImportExport>(stream, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
             if (temp == null)
             {
                 imported = new List<ProfileDisplay>();

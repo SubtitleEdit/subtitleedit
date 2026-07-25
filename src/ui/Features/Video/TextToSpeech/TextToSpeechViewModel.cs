@@ -1628,8 +1628,8 @@ public partial class TextToSpeechViewModel : ObservableObject
             return;
         }
 
-        var json = await File.ReadAllTextAsync(fileName, _cancellationToken);
-        var importExport = JsonSerializer.Deserialize<TtsImportExport>(json);
+        await using var stream = File.OpenRead(fileName);
+        var importExport = await JsonSerializer.DeserializeAsync<TtsImportExport>(stream, cancellationToken: _cancellationToken);
         if (importExport == null)
         {
             var answer = await MessageBox.Show(

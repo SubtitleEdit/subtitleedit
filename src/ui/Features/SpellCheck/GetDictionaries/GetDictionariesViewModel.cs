@@ -278,17 +278,13 @@ public partial class GetDictionariesViewModel : ObservableObject, IClosingCleanu
     {
         var uri = new Uri("avares://SubtitleEdit/Assets/HunspellDictionaries.json");
         using var stream = AssetLoader.Open(uri);
-        using var reader = new StreamReader(stream);
-
-        var jsonContent = reader.ReadToEnd();
-
         var options = new JsonSerializerOptions
         {
             PropertyNameCaseInsensitive = true,
             PropertyNamingPolicy = JsonNamingPolicy.CamelCase
         };
 
-        var dictionaries = JsonSerializer.Deserialize<List<GetSpellCheckDictionaryDisplay>>(jsonContent, options);
+        var dictionaries = JsonSerializer.Deserialize<List<GetSpellCheckDictionaryDisplay>>(stream, options);
         foreach (var dictionary in dictionaries ?? new List<GetSpellCheckDictionaryDisplay>())
         {
             Dictionaries.Add(dictionary);

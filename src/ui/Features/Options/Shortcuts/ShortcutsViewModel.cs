@@ -331,7 +331,7 @@ public partial class ShortcutsViewModel : ObservableObject
 
         try
         {
-            var json = await System.IO.File.ReadAllTextAsync(fileName, System.Text.Encoding.UTF8);
+            await using var stream = System.IO.File.OpenRead(fileName);
             var options = new System.Text.Json.JsonSerializerOptions
             {
                 PropertyNameCaseInsensitive = true,
@@ -339,7 +339,7 @@ public partial class ShortcutsViewModel : ObservableObject
                 AllowTrailingCommas = true,
             };
 
-            var importedShortcuts = System.Text.Json.JsonSerializer.Deserialize<List<SeShortCut>>(json, options);
+            var importedShortcuts = await System.Text.Json.JsonSerializer.DeserializeAsync<List<SeShortCut>>(stream, options);
             if (importedShortcuts == null || importedShortcuts.Count == 0)
             {
                 await MessageBox.Show(Window, Se.Language.General.Error, "No shortcuts found in file.", MessageBoxButtons.OK, MessageBoxIcon.Error);
