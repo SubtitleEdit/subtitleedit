@@ -10,6 +10,7 @@ namespace Nikse.SubtitleEdit.Logic;
 
 public class ShortcutManager : IShortcutManager
 {
+    private const KeyModifiers ControlAltModifiers = KeyModifiers.Control | KeyModifiers.Alt;
     private readonly HashSet<Key> _activeKeys = [];
     // Parallel to _activeKeys but uses the physical-key-aware string token (see
     // GetShortcutKeyName). Numpad keys collapse to NumLock-on names in Avalonia's
@@ -22,6 +23,7 @@ public class ShortcutManager : IShortcutManager
     private bool _isDirty = true;
     private bool _isControlPressed = false;
     private bool _isShiftPressed = false;
+    private bool _isWindowsAltGrPressed = false;
 
     public static string GetKeyDisplayName(string key)
     {
@@ -236,6 +238,20 @@ public class ShortcutManager : IShortcutManager
         }
 
         var key = GetShortcutKey(e);
+        var isRightAlt = key == Key.RightAlt || e.PhysicalKey == PhysicalKey.AltRight;
+        var isControlAltPressed = (e.KeyModifiers & ControlAltModifiers) == ControlAltModifiers;
+        if (!isControlAltPressed)
+        {
+            _isWindowsAltGrPressed = false;
+        }
+
+        // Track physical right Alt independently of the logical layout mapping.
+        if (OperatingSystem.IsWindows() &&
+            isRightAlt &&
+            isControlAltPressed)
+        {
+            _isWindowsAltGrPressed = true;
+        }
 
         // Skip standalone modifier-like keys: Ctrl/Shift/Alt/Win redundantly
         // duplicate KeyEventArgs.KeyModifiers, and NumLock is a state toggle —
@@ -255,6 +271,13 @@ public class ShortcutManager : IShortcutManager
 
     public void OnKeyReleased(object? sender, KeyEventArgs e)
     {
+        if (e.Key == Key.RightAlt ||
+            e.PhysicalKey == PhysicalKey.AltRight ||
+            (e.KeyModifiers & ControlAltModifiers) != ControlAltModifiers)
+        {
+            _isWindowsAltGrPressed = false;
+        }
+
         if (e.Key is Key.ImeProcessed or Key.ImeConvert or Key.ImeNonConvert or
             Key.ImeAccept or Key.ImeModeChange or Key.DeadCharProcessed or Key.None)
         {
@@ -277,6 +300,7 @@ public class ShortcutManager : IShortcutManager
         _activeKeyNames.Clear();
         _isControlPressed = false;
         _isShiftPressed = false;
+        _isWindowsAltGrPressed = false;
     }
 
     public void RegisterShortcut(ShortCut shortcut)
@@ -336,6 +360,24 @@ public class ShortcutManager : IShortcutManager
 
     public IRelayCommand? CheckShortcuts(KeyEventArgs keyEventArgs, string activeControl)
     {
+        // Windows reports AltGr as a synthetic LeftCtrl followed by RightAlt.
+        // Modifier transitions must not complete a shortcut using a still-held typing key.
+        if (keyEventArgs.Key is (Key.LeftCtrl or Key.RightCtrl or
+            Key.LeftShift or Key.RightShift or
+            Key.LeftAlt or Key.RightAlt or
+            Key.LWin or Key.RWin or Key.NumLock) &&
+            _activeKeyNames.Count > 0)
+        {
+            return null;
+        }
+
+        // Prefer the character produced by AltGr over an equivalent Ctrl+Alt shortcut.
+        if (_isWindowsAltGrPressed &&
+            (keyEventArgs.KeyModifiers & ControlAltModifiers) == ControlAltModifiers)
+        {
+            return null;
+        }
+
         if (_isDirty || _lookupTable is null)
         {
             RebuildLookupTable();
