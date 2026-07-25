@@ -50,6 +50,26 @@ public static class ForcedAlignPlanner
         public double MaxChunkShareOfWindow { get; init; } = 0.35;
 
         /// <summary>
+        /// Lines refined together in the second pass. Small, so each batch's window is
+        /// short: the refine pass is anchored on the first pass's answer, so the aligner
+        /// gets nearly exactly the audio its text belongs to, and quadratic encoder cost
+        /// makes short windows almost free.
+        /// </summary>
+        public int RefineBatchLines { get; init; } = 6;
+
+        /// <summary>Audio kept either side of a refine batch, in case the first pass clipped its edges.</summary>
+        public double RefinePaddingSeconds { get; init; } = 3.0;
+
+        /// <summary>
+        /// How far the refine pass may move a line. It exists to sharpen a time that is
+        /// already about right, not to relocate one - a batch whose window was anchored on
+        /// a bad first-pass guess would otherwise be re-fitted just as confidently to the
+        /// wrong audio. A move beyond this is treated as disagreement and the first pass's
+        /// answer is kept.
+        /// </summary>
+        public double MaxRefineShiftSeconds { get; init; } = 2.5;
+
+        /// <summary>
         /// How far the audio cursor creeps when a window aligns to nothing usable, as
         /// happens over a passage the script is missing. Deliberately small: the cursor has
         /// to stop as soon as it reaches the audio the script resumes at, and a stride of

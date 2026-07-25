@@ -38,6 +38,7 @@ public partial class ImportPlainTextViewModel : ObservableObject, IClosingCleanu
     [ObservableProperty] private string _numberOfSubtitles;
     [ObservableProperty] private bool _isAligning;
     [ObservableProperty] private string _alignProgress;
+    [ObservableProperty] private double _alignPercent;
 
     public Window? Window { get; internal set; }
     public bool OkPressed { get; private set; }
@@ -389,6 +390,7 @@ public partial class ImportPlainTextViewModel : ObservableObject, IClosingCleanu
         try
         {
             IsAligning = true;
+            AlignPercent = 0;
             AlignProgress = "Extracting audio...";
 
             if (!await ExtractAudioForAlignmentAsync(audioFileName))
@@ -420,9 +422,12 @@ public partial class ImportPlainTextViewModel : ObservableObject, IClosingCleanu
             var forcedAligner = new ForcedAligner(runner, audio);
 
             var progress = new Progress<ForcedAligner.Progress>(p => Dispatcher.UIThread.Post(() =>
+            {
                 AlignProgress = string.Format(
                     Se.Language.File.Import.ForcedAlignerProgress,
-                    p.WindowIndex, p.WindowCount, p.LinesAligned, p.LinesTotal)));
+                    p.WindowIndex, p.WindowCount, p.LinesAligned, p.LinesTotal);
+                AlignPercent = p.Percent;
+            }));
 
             var result = await forcedAligner.AlignAsync(lines, progress);
 
@@ -454,6 +459,7 @@ public partial class ImportPlainTextViewModel : ObservableObject, IClosingCleanu
         {
             IsAligning = false;
             AlignProgress = string.Empty;
+            AlignPercent = 0;
             TryDeleteFolder(workFolder);
         }
     }

@@ -1,3 +1,4 @@
+using Avalonia;
 ﻿using Avalonia.Controls;
 using Avalonia.Data;
 using Avalonia.Input;
@@ -74,6 +75,28 @@ public class ImportPlainTextWindow : Window
             .WithAlignmentTop()
             .WithBindVisible(vm, nameof(vm.IsAligning));
 
+        // Alignment on a long video runs for minutes over many chunks, so show how far it
+        // has actually got rather than just that something is happening.
+        var progressBarAlign = new ProgressBar
+        {
+            Minimum = 0,
+            Maximum = 100,
+            Width = 220,
+            Height = 6,
+            VerticalAlignment = VerticalAlignment.Center,
+            Margin = new Thickness(0, 4, 10, 0),
+        };
+        progressBarAlign.Bind(ProgressBar.ValueProperty, new Binding(nameof(vm.AlignPercent)));
+        progressBarAlign.Bind(IsVisibleProperty, new Binding(nameof(vm.IsAligning)));
+
+        var panelAlignProgress = new StackPanel
+        {
+            Orientation = Orientation.Horizontal,
+            HorizontalAlignment = HorizontalAlignment.Left,
+            VerticalAlignment = VerticalAlignment.Top,
+            Children = { progressBarAlign, labelAlignProgress },
+        };
+
         var buttonAlignViaWhisper = UiUtil.MakeButton(Se.Language.File.Import.AlignViaSpeechToText, vm.AlignScriptWithTimestampsFromWhisperCommand);
         var buttonAlignViaForcedAligner = UiUtil.MakeButton(Se.Language.File.Import.AlignViaForcedAligner, vm.AlignScriptWithForcedAlignerCommand);
         var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand);
@@ -84,7 +107,7 @@ public class ImportPlainTextWindow : Window
         grid.Add(MakeTextBoxAndControlsView(vm), 1);
         grid.Add(MakeSubtitleGridView(vm), 2);
         grid.Add(labelNumberOfSubtitles, 3, 0);
-        grid.Add(labelAlignProgress, 3, 0);
+        grid.Add(panelAlignProgress, 3, 0);
         grid.Add(panelButtons, 3, 0);
 
         Content = grid;

@@ -35,7 +35,11 @@ public sealed class ForcedAligner
         Task<string> ExtractWindowAsync(double startSeconds, double durationSeconds, CancellationToken cancellationToken);
     }
 
-    public sealed record Progress(int WindowIndex, int WindowCount, int LinesAligned, int LinesTotal);
+    /// <param name="Percent">
+    /// Overall completion, 0-100. The two passes share the bar: aligning fills the first
+    /// 70%, refining the rest, roughly matching how long each takes.
+    /// </param>
+    public sealed record Progress(int WindowIndex, int WindowCount, int LinesAligned, int LinesTotal, double Percent);
 
     public sealed record Result(int TotalLines, int AlignedLines)
     {
@@ -90,6 +94,7 @@ public sealed class ForcedAligner
         var readingCps = optimalCps > 0 ? optimalCps : 15.0;
 
         var aligned = new List<(double Start, double End)>(texts.Count);
+        var estimated = new HashSet<int>();
         var cursor = 0;
         var position = 0.0;
         var windowIndex = 0;
@@ -174,7 +179,12 @@ public sealed class ForcedAligner
             }
 
             position = nextPosition;
-            progress?.Report(new Progress(windowIndex, Math.Max(windowIndex, estimatedChunks), cursor, texts.Count));
+            progress?.Report(new Progress(
+                windowIndex,
+                Math.Max(windowIndex, estimatedChunks),
+                cursor,
+                texts.Count,
+                texts.Count > 0 ? cursor / (double)texts.Count * 70.0 : 0));
         }
 
         // The main loop stops when the audio cursor reaches the end, which can leave the
@@ -224,10 +234,23 @@ public sealed class ForcedAligner
             if (cursor < texts.Count)
             {
                 var at = aligned.Count > 0 ? aligned[^1].End : 0;
+                var wanted = 0.0;
                 for (var i = cursor; i < texts.Count; i++)
                 {
-                    var seconds = Math.Max(0.5, texts[i].Length / readingCps);
-                    aligned.Add((at, at + seconds));
+                    wanted += Math.Max(0.5, texts[i].Length / readingCps);
+                }
+
+                // Squeeze them into the audio that is actually left rather than running on
+                // past the end of the file. Times beyond the recording are not just wrong,
+                // they are unrefinable - the second pass clamps their window to nothing.
+                var available = Math.Max(0.5, _audio.TotalSeconds - at);
+                var scale = wanted > available ? available / wanted : 1.0;
+
+                for (var i = cursor; i < texts.Count; i++)
+                {
+                    var seconds = Math.Max(0.5, texts[i].Length / readingCps) * scale;
+                    estimated.Add(aligned.Count);
+                    aligned.Add((at, Math.Min(_audio.TotalSeconds, at + seconds)));
                     at += seconds;
                 }
 
@@ -235,8 +258,116 @@ public sealed class ForcedAligner
             }
         }
 
-        ApplyTimeCodes(lines, aligned, texts, alignable);
+        aligned = await RefineAsync(aligned, texts, readingCps, estimated, progress, cancellationToken).ConfigureAwait(false);
+
+        ApplyTimeCodes(lines, aligned, texts, alignable, _audio.TotalSeconds);
         return new Result(allTexts.Count, aligned.Count);
+    }
+
+    /// <summary>
+    /// Second pass: re-align each small batch of lines against a window drawn tightly
+    /// round where the first pass put them.
+    ///
+    /// The first pass has to keep its windows loose, because it does not yet know where
+    /// anything is - which costs precision at every chunk edge, and leaves the closing
+    /// lines laid out by reading time. Once every line has an approximate position that
+    /// constraint is gone: a batch's window can be a few seconds of audio holding exactly
+    /// that batch's speech, which is the condition a forced aligner is best at.
+    ///
+    /// A refined time is only taken when it agrees with the first pass to within
+    /// <see cref="ForcedAlignPlanner.Options.MaxRefineShiftSeconds"/>. Anchored on a bad
+    /// first-pass guess the aligner would re-fit the batch to the wrong audio just as
+    /// confidently, so disagreement is treated as a reason to keep what we had.
+    /// </summary>
+    private async Task<List<(double Start, double End)>> RefineAsync(
+        List<(double Start, double End)> aligned,
+        IReadOnlyList<string> texts,
+        double readingCps,
+        IReadOnlySet<int> estimated,
+        IProgress<Progress>? progress,
+        CancellationToken cancellationToken)
+    {
+        if (aligned.Count == 0)
+        {
+            return aligned;
+        }
+
+        var refined = new List<(double Start, double End)>(aligned);
+        var batches = (int)Math.Ceiling(aligned.Count / (double)_options.RefineBatchLines);
+
+        for (var b = 0; b < batches; b++)
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+
+            var first = b * _options.RefineBatchLines;
+            var last = Math.Min(first + _options.RefineBatchLines, aligned.Count) - 1;
+            if (last <= first)
+            {
+                continue;
+            }
+
+            var start = Math.Max(0, aligned[first].Start - _options.RefinePaddingSeconds);
+            var end = Math.Min(_audio.TotalSeconds, aligned[last].End + _options.RefinePaddingSeconds);
+            var length = end - start;
+            if (length <= 0.5)
+            {
+                continue;
+            }
+
+            var fed = new List<string>();
+            for (var i = first; i <= last; i++)
+            {
+                fed.Add(texts[i]);
+            }
+
+            IReadOnlyList<ForcedAlignPlanner.Cue> cues;
+            try
+            {
+                cues = await AlignWindowAsync(start, length, fed, cancellationToken).ConfigureAwait(false);
+            }
+            catch (OperationCanceledException)
+            {
+                throw;
+            }
+            catch
+            {
+                continue;
+            }
+
+            if (cues.Count != fed.Count)
+            {
+                continue;
+            }
+
+            for (var k = 0; k < cues.Count; k++)
+            {
+                var index = first + k;
+                var newStart = start + cues[k].StartSeconds;
+                var newEnd = start + cues[k].EndSeconds;
+
+                // Lines the first pass could only estimate - the closing ones, laid out by
+                // reading time once the audio ran short of window - have no measured time to
+                // disagree with, so the guard would only preserve a guess.
+                if (!estimated.Contains(index) &&
+                    Math.Abs(newStart - aligned[index].Start) > _options.MaxRefineShiftSeconds)
+                {
+                    continue;
+                }
+
+                // The batch's last cue has no following word to stop at, so its end still
+                // runs to the window edge; keep it honest against reading time.
+                var cappedEnd = Math.Max(
+                    newStart + 0.05,
+                    Math.Min(newEnd, newStart + (texts[index].Length / readingCps * 2.0)));
+
+                refined[index] = (newStart, cappedEnd);
+            }
+
+            progress?.Report(new Progress(
+                b + 1, batches, aligned.Count, texts.Count, 70.0 + ((b + 1) / (double)batches * 30.0)));
+        }
+
+        return refined;
     }
 
     private async Task<IReadOnlyList<OpenAiSttChunker.SilenceInterval>> DetectSilenceSafelyAsync(CancellationToken cancellationToken)
@@ -345,7 +476,8 @@ public sealed class ForcedAligner
         IList<SubtitleLineViewModel> lines,
         List<(double Start, double End)> aligned,
         IReadOnlyList<string> texts,
-        IReadOnlyList<int> alignable)
+        IReadOnlyList<int> alignable,
+        double audioSeconds)
     {
         var minGapMs = Se.Settings.General.MinimumBetweenLines.GetMilliseconds();
         var minDurationMs = (double)Se.Settings.General.SubtitleMinimumDisplayMilliseconds;
@@ -388,6 +520,15 @@ public sealed class ForcedAligner
             }
 
             var endMs = startMs + Math.Max(durationMs, 1);
+
+            // Nothing may run past the end of the recording. A cue placed near the end can
+            // otherwise have reading time added on top and finish after the video does.
+            var audioMs = audioSeconds * 1000.0;
+            if (audioMs > 0 && endMs > audioMs)
+            {
+                endMs = audioMs;
+                startMs = Math.Min(startMs, Math.Max(0, endMs - minDurationMs));
+            }
 
             lines[lineIndex].StartTime = TimeSpan.FromMilliseconds(startMs);
             lines[lineIndex].EndTime = TimeSpan.FromMilliseconds(endMs);
