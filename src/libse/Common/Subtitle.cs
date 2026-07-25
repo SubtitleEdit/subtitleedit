@@ -430,9 +430,13 @@ namespace Nikse.SubtitleEdit.Core.Common
 
         public void AdjustDisplayTimeUsingPercent(double percent, List<int> selectedIndexes, List<double> shotChanges = null, bool enforceDurationLimits = true)
         {
+            // List.Contains per paragraph made this O(paragraphs * selection) - quadratic with
+            // "select all". The ascending walk has to stay: each iteration reads the next
+            // paragraph's (possibly already adjusted) start time.
+            var selected = selectedIndexes == null ? null : new HashSet<int>(selectedIndexes);
             for (int i = 0; i < Paragraphs.Count; i++)
             {
-                if (selectedIndexes == null || selectedIndexes.Contains(i))
+                if (selected == null || selected.Contains(i))
                 {
                     double nextStartMilliseconds = double.MaxValue;
                     if (i + 1 < Paragraphs.Count)
@@ -630,9 +634,12 @@ namespace Nikse.SubtitleEdit.Core.Common
 
         public void SetFixedDuration(List<int> selectedIndexes, double fixedDurationMilliseconds, List<double> shotChanges = null)
         {
+            // See AdjustDisplayTimeUsingPercent: probing a set instead of the list keeps this
+            // linear when the whole subtitle is selected.
+            var selected = selectedIndexes == null ? null : new HashSet<int>(selectedIndexes);
             for (var i = 0; i < Paragraphs.Count; i++)
             {
-                if (selectedIndexes == null || selectedIndexes.Contains(i))
+                if (selected == null || selected.Contains(i))
                 {
                     var p = GetParagraphOrDefault(i);
                     if (p == null)
@@ -790,14 +797,10 @@ namespace Nikse.SubtitleEdit.Core.Common
             }
 
             var firstNumber = Paragraphs[0].Number;
-            for (var i = Paragraphs.Count - 1; i >= 0; i--)
-            {
-                var p = Paragraphs[i];
-                if (p.Text.IsOnlyControlCharactersOrWhiteSpace())
-                {
-                    Paragraphs.RemoveAt(i);
-                }
-            }
+
+            // RemoveAt shifts every following element, so removing k lines one at a time was
+            // O(paragraphs * k). RemoveAll compacts in a single pass.
+            Paragraphs.RemoveAll(p => p.Text.IsOnlyControlCharactersOrWhiteSpace());
 
             if (count != Paragraphs.Count)
             {
