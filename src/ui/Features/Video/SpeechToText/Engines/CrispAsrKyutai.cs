@@ -53,6 +53,37 @@ public class CrispAsrKyutai : CrispAsrEngineBase
                     "https://huggingface.co/cstr/kyutai-stt-1b-GGUF/resolve/main/kyutai-stt-1b.gguf"
                 ],
             },
+
+            // 48-layer 2.6b variant: English only (unlike the en+fr 1b above) and a 3.5 s
+            // lookahead, so it trades latency for accuracy - fine for file transcription.
+            // File names carry no "-en" suffix even though the repo does.
+            new WhisperModel
+            {
+                Name = "kyutai-stt-2.6b-q4_k.gguf",
+                Size = "1.47 GB",
+                Urls =
+                [
+                    "https://huggingface.co/cstr/kyutai-stt-2.6b-en-GGUF/resolve/main/kyutai-stt-2.6b-q4_k.gguf"
+                ],
+            },
+            new WhisperModel
+            {
+                Name = "kyutai-stt-2.6b-q8_0.gguf",
+                Size = "2.70 GB",
+                Urls =
+                [
+                    "https://huggingface.co/cstr/kyutai-stt-2.6b-en-GGUF/resolve/main/kyutai-stt-2.6b-q8_0.gguf"
+                ],
+            },
+            new WhisperModel
+            {
+                Name = "kyutai-stt-2.6b-f16.gguf",
+                Size = "5.01 GB",
+                Urls =
+                [
+                    "https://huggingface.co/cstr/kyutai-stt-2.6b-en-GGUF/resolve/main/kyutai-stt-2.6b-f16.gguf"
+                ],
+            },
        };
 
     public override string Extension => string.Empty;
