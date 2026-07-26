@@ -31,10 +31,11 @@ namespace Nikse.SubtitleEdit.Features.Video.TextToSpeech.Engines;
 ///       --ref-text "Transcript of the reference audio" \
 ///       --tts "Hello, how are you today?" --tts-output out.wav
 ///
-/// Server-mode flag layout is unconfirmed in CrispASR 0.6.12's README. This implementation
-/// assumes the same per-request payload shape Qwen3 CustomVoice uses (voice = WAV path,
-/// ref_text = transcription) and falls back to a startup --voice / --ref-text if needed
-/// (toggle <see cref="UseStartupVoiceFlags"/> below). Verify against an actual 0.6.12 binary.
+/// Server mode takes the reference from the startup <c>--voice</c> / <c>--ref-text</c> flags, not
+/// from the request: the payload carries no <c>voice</c> or <c>ref_text</c> field at all (see
+/// <see cref="UseStartupVoiceFlags"/> and the remarks on the payload builder). Re-verified against
+/// crispasr 0.8.23 — the server logs the clone reference at startup and every line holds that
+/// speaker.
 /// </summary>
 public class F5TtsCrispAsr : ITtsEngine
 {
