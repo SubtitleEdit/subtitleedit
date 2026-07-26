@@ -591,6 +591,7 @@ public class Se
         Configuration.Settings.Tools.OpenAiCompatibleSttPrompt = Settings.Tools.OpenAiCompatibleSttPrompt;
         Configuration.Settings.Tools.OpenAiCompatibleSttAutoTranscribeOnAudioSelection = Settings.Tools.OpenAiCompatibleSttAutoTranscribeOnAudioSelection;
         Configuration.Settings.Tools.OpenAiCompatibleSttStream = Settings.Tools.OpenAiCompatibleSttStream;
+        Configuration.Settings.Tools.OpenAiCompatibleSttAudioFormat = Settings.Tools.OpenAiCompatibleSttAudioFormat;
 
         Configuration.Settings.Tools.OpenRouterSttApiKey = Settings.Tools.OpenRouterSttApiKey;
         Configuration.Settings.Tools.OpenRouterSttModel = Settings.Tools.OpenRouterSttModel;
