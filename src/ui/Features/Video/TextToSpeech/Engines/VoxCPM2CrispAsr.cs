@@ -41,8 +41,9 @@ namespace Nikse.SubtitleEdit.Features.Video.TextToSpeech.Engines;
 ///
 /// Cloning is zero-shot from audio alone; an adjacent .txt transcription (ref-text) is optional
 /// but improves quality, so we pass <c>--ref-text</c> when a sidecar is present (same layout as
-/// F5-TTS / Qwen3 CustomVoice). Server-mode payload shape mirrors the other CrispASR TTS engines
-/// and should be verified against an actual v0.7.0 binary.
+/// F5-TTS / Qwen3 CustomVoice). Verified against crispasr 0.8.23: the reference comes from the
+/// startup <c>--voice</c> flag — the server logs "loaded reference audio '&lt;path&gt;'" and
+/// resamples it to 16 kHz — and the request carries no <c>voice</c> field.
 /// </summary>
 public class VoxCPM2CrispAsr : ITtsEngine
 {
@@ -66,10 +67,10 @@ public class VoxCPM2CrispAsr : ITtsEngine
 
     public const string BackendName = "voxcpm2-tts";
 
-    // Confirmed-by-analogy with F5-TTS/IndexTTS: the cloning backends read the reference audio
-    // from the startup --voice flag, so the server is torn down and restarted when the selected
-    // voice or ref-text changes (keyed by (model, voice, ref-text) below). Verify against a real
-    // v0.7.0 binary; if voxcpm2-tts honours a per-request voice field this can be set to false.
+    // Confirmed on crispasr 0.8.23: voxcpm2-tts reads the reference audio from the startup --voice
+    // flag, so the server is torn down and restarted when the selected voice or ref-text changes
+    // (keyed by (model, voice, ref-text) below). A per-request full path also hangs the server, so
+    // startup flags are the only workable shape here.
     private static readonly bool UseStartupVoiceFlags = true;
 
     /// <summary>
