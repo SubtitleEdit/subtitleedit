@@ -51,6 +51,14 @@ public class SeVideoTextToSpeech
     public string GoogleApiKey { get; set; }
     public string GoogleKeyFile { get; set; }
 
+    // CrispASR voice cloning: the user accepts responsibility for having the speaker's consent and
+    // for disclosing that the result is AI-generated. Drives the `consent_attestation` /
+    // `marking_attestation` fields the crispasr server requires before it will clone a voice, and
+    // the provenance opt-out flags (--no-watermark / --no-c2pa) SE passes at server start.
+    // Turn it off and CrispASR keeps its audible AI disclaimer, inaudible watermark and C2PA
+    // manifest, and refuses to clone a reference WAV at all.
+    public bool AcceptVoiceCloning { get; set; }
+
     // Pro audio post-processing
     public bool ProAudioChainEnabled { get; set; }
 
@@ -131,6 +139,7 @@ public class SeVideoTextToSpeech
         KokoroVoice = "af_maple";
         GoogleApiKey = string.Empty;
         GoogleKeyFile = string.Empty;
+        AcceptVoiceCloning = true;
         ProAudioChainEnabled = false;
         AudioDuckingEnabled = false;
         AudioDuckingOriginalVolume = 15;

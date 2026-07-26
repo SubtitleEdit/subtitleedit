@@ -2,6 +2,7 @@ using Nikse.SubtitleEdit.Features.Video.TextToSpeech.Engines;
 
 namespace UITests.Features.Video.TextToSpeech.Engines;
 
+[Collection(TtsSettingsCollection.Name)]
 public class MossTtsCrispAsrTests
 {
     [Fact]
@@ -38,6 +39,8 @@ public class MossTtsCrispAsrTests
     [Fact]
     public void BuildSpeakPayload_CarriesCoreFields()
     {
+        using var _ = new AcceptVoiceCloningScope(true);
+
         var payload = MossTtsCrispAsr.BuildSpeakPayload("hello world", 1.25);
 
         Assert.Equal("hello world", payload["input"]);
@@ -45,5 +48,29 @@ public class MossTtsCrispAsrTests
         Assert.Equal(1.25, payload["speed"]);
         Assert.Equal(false, payload["spoken_disclaimer"]);
         Assert.True(payload.ContainsKey("consent_attestation"));
+    }
+
+    [Fact]
+    public void BuildSpeakPayload_WhenVoiceCloningAccepted_SendsMarkingAttestation()
+    {
+        // CrispASR v0.8.22+ rejects "spoken_disclaimer": false on a clone without this field.
+        using var _ = new AcceptVoiceCloningScope(true);
+
+        var payload = MossTtsCrispAsr.BuildSpeakPayload("hello", 1.0);
+
+        Assert.True(payload.ContainsKey("marking_attestation"));
+    }
+
+    [Fact]
+    public void BuildSpeakPayload_WhenVoiceCloningNotAccepted_SendsNoAttestations()
+    {
+        using var _ = new AcceptVoiceCloningScope(false);
+
+        var payload = MossTtsCrispAsr.BuildSpeakPayload("hello", 1.0);
+
+        Assert.False(payload.ContainsKey("consent_attestation"));
+        Assert.False(payload.ContainsKey("marking_attestation"));
+        Assert.False(payload.ContainsKey("spoken_disclaimer"));
+        Assert.Equal("hello", payload["input"]);
     }
 }
