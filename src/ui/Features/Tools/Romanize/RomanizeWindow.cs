@@ -1,12 +1,16 @@
+using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Controls.Templates;
 using Avalonia.Data;
 using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Layout;
+using Avalonia.Media;
 
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 
+using System;
 using System.Collections;
 
 namespace Nikse.SubtitleEdit.Features.Tools.Romanize;
@@ -57,7 +61,7 @@ public class RomanizeWindow : Window
         Activated += delegate { buttonOk.Focus(); }; // hack to make OnKeyDown work
         KeyDown += vm.KeyDown;
 
-        vm.RomanizeCommand.Execute(null);
+        vm.RomanizeAllCommand.Execute(null);
     }
 
     private static Grid MakeLanguagesView(RomanizeViewModel vm)
@@ -87,20 +91,22 @@ public class RomanizeWindow : Window
         };
         var korean = new CheckBox
         {
-            Content = Se.Language.Tools.Romanize.Korean
+            Content = Se.Language.Tools.Romanize.Korean,
+
+            [!CheckBox.IsCheckedProperty] = new Binding(nameof(RomanizeViewModel.RomanizeKorean))
         };
         var japanese = new CheckBox
         {
-            Content = Se.Language.Tools.Romanize.Japanese
+            Content = Se.Language.Tools.Romanize.Japanese,
+
+            [!CheckBox.IsCheckedProperty] = new Binding(nameof(RomanizeViewModel.RomanizeJapanese))
         };
         var russian = new CheckBox
         {
             Content = Se.Language.Tools.Romanize.Russian,
-        };
 
-        korean.Bind(CheckBox.IsCheckedProperty, new Binding(nameof(RomanizeViewModel.RomanizeKorean)));
-        japanese.Bind(CheckBox.IsCheckedProperty, new Binding(nameof(RomanizeViewModel.RomanizeJapanese)));
-        russian.Bind(CheckBox.IsCheckedProperty, new Binding(nameof(RomanizeViewModel.RomanizeRussian)));
+            [!CheckBox.IsCheckedProperty] = new Binding(nameof(RomanizeViewModel.RomanizeRussian))
+        };
 
         grid.Add(toggletitle, 0, 0, 1, 3);
         grid.Add(korean, 1, 0);
@@ -145,20 +151,80 @@ public class RomanizeWindow : Window
                     Header = Se.Language.General.NumberSymbol,
                     Binding = new Binding(nameof(RomanizeSubtitleLineItem.LineNumber)),
                     CellTheme = UiUtil.DataGridNoBorderNoPaddingCellTheme,
+                    Width = new DataGridLength(1, DataGridLengthUnitType.Auto),
                     IsReadOnly = true,
                 },
                 new DataGridTextColumn
                 {
                     Header = Se.Language.General.OriginalText,
                     Binding = new Binding(nameof(RomanizeSubtitleLineItem.TextOriginal)),
-                    Width = new DataGridLength(1, DataGridLengthUnitType.Star),
+                    Width = new DataGridLength(1, DataGridLengthUnitType.Auto),
                     CellTheme = UiUtil.DataGridNoBorderCellTheme,
                     IsReadOnly = true,
+                },
+                new DataGridTemplateColumn
+                {
+                    Header = Se.Language.General.MergeLines,
+                    Width = new DataGridLength(1, DataGridLengthUnitType.Auto),
+                    CellTheme = UiUtil.DataGridNoBorderCellTheme,
+                    CellTemplate = new FuncDataTemplate<RomanizeSubtitleLineItem>((item, _) =>
+                    {
+                        var checkbox = new CheckBox
+                        {
+                            HorizontalAlignment = HorizontalAlignment.Center,
+                            VerticalAlignment = VerticalAlignment.Center,
+                            
+                            [!CheckBox.IsCheckedProperty] = new Binding(nameof(RomanizeSubtitleLineItem.Merged)),
+                        };
+
+                        checkbox.Click += (obj, args) =>
+                        {
+                            if (item.LineNumber.HasValue)
+                                vm.RomanizeSingleCommand.Execute(item.LineNumber.Value - 1);
+                        };
+
+                        return checkbox;
+                    }),
+                },
+                new DataGridTemplateColumn
+                {
+                    Header = Se.Language.General.Position,
+                    Width = new DataGridLength(1, DataGridLengthUnitType.Auto),
+                    CellTheme = UiUtil.DataGridNoBorderCellTheme,
+                    CellTemplate = new FuncDataTemplate<RomanizeSubtitleLineItem>((item, _) =>
+                    {
+                        var combobox = new ComboBox
+                        {
+                            Background = Brushes.Transparent,
+                            BorderThickness = new Thickness(0),
+                            HorizontalAlignment = HorizontalAlignment.Stretch,
+                            VerticalAlignment = VerticalAlignment.Center,
+                            ItemsSource = Enum.GetValues<RomanizedLinePositions>(),
+
+                            [!ComboBox.SelectedItemProperty] = new Binding(nameof(RomanizeSubtitleLineItem.RomanizedLinePosition)),
+                        };
+
+                        combobox.SelectionChanged += (obj, args) =>
+                        {
+                            if (args.AddedItems?.Count == 1 && 
+                                args.RemovedItems?.Count == 1 && 
+                                item.LineNumber.HasValue && 
+                                Enum.TryParse(args.AddedItems[0]!.ToString(), out RomanizedLinePositions _placement))
+                            {
+                                int number = item.LineNumber.Value - 1;
+                                
+                                vm.SubtitleItems[number].RomanizedLinePosition = _placement;
+                                vm.RomanizeSingleCommand.Execute(number);
+                            }
+                        };
+
+                        return combobox;
+                    }),
                 },
                 new DataGridTextColumn
                 {
                     Header = Se.Language.General.Romanize,
-                    Binding = new Binding(nameof(RomanizeSubtitleLineItem.TextRomanized)),
+                    Binding = new Binding(nameof(RomanizeSubtitleLineItem.Text)),
                     Width = new DataGridLength(1, DataGridLengthUnitType.Star),
                     CellTheme = UiUtil.DataGridNoBorderCellTheme,
                     IsReadOnly = false,

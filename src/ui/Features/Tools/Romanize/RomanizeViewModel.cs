@@ -50,7 +50,7 @@ public partial class RomanizeViewModel : ObservableObject
             case nameof(RomanizeJapanese):
             case nameof(RomanizeKorean):
             case nameof(RomanizeRussian):
-                Romanize();
+                RomanizeAll();
                 break;
 
             default: break;
@@ -78,26 +78,73 @@ public partial class RomanizeViewModel : ObservableObject
         Window?.Close();
     }
     [RelayCommand]
-    private void Romanize()
+    private void RomanizeAll()
     {
-        List<RomanizeSubtitleLineItem> subtitles = [.. Subtitles.Select(_ => new RomanizeSubtitleLineItem
+        List<RomanizeSubtitleLineItem> subtitles = [.. Subtitles.Select(_ =>
         {
-            LineNumber = _.Number,
-            TextOriginal = _.Text,
-            TextRomanized = IRomanizer.RomanizeText(_.Text, new CultureInfo?[]
+            string text = IRomanizer.RomanizeText(_.Text, new CultureInfo?[]
             {
                 RomanizeJapanese ? JapaneseRomanizer.Culture : null,
                 RomanizeKorean ? KoreanRomanizer.Culture : null,
                 RomanizeRussian ? RussianRomanizer.Culture : null,
 
-            }.OfType<CultureInfo>())
+            }.OfType<CultureInfo>());
 
+            return new RomanizeSubtitleLineItem
+            {
+                LineNumber = _.Number,
+                Text = text,
+                TextRomanized = text,
+                TextOriginal = _.Text,
+            };
         })];
 
         Dispatcher.UIThread.Post(() =>
         {
             SubtitleItems.Clear();
             SubtitleItems.AddRange(subtitles);
+        });
+    }
+    [RelayCommand]
+    private void RomanizeSingle(int index)
+    {
+        var previous = SubtitleItems.ElementAt(index);
+        var subtitle = new RomanizeSubtitleLineItem
+        {
+            Merged = previous.Merged,
+            RomanizedLinePosition = previous.RomanizedLinePosition,
+
+            LineNumber = Subtitles[index].Number,
+            TextOriginal = Subtitles[index].Text,
+            TextRomanized = IRomanizer.RomanizeText(Subtitles[index].Text, new CultureInfo?[]
+            {
+                RomanizeJapanese ? JapaneseRomanizer.Culture : null,
+                RomanizeKorean ? KoreanRomanizer.Culture : null,
+                RomanizeRussian ? RussianRomanizer.Culture : null,
+
+            }.OfType<CultureInfo>()),
+        };
+
+        string original = subtitle.TextOriginal, romanized = subtitle.TextRomanized;
+
+        if (subtitle.Merged)
+        {
+            original = subtitle.TextOriginal.Replace("\r", " ").Replace("\n", " ");
+            romanized = subtitle.TextRomanized.Replace("\r", " ").Replace("\n", " ");
+        }
+
+        subtitle.Text = subtitle.RomanizedLinePosition switch
+        {
+            RomanizedLinePositions.Above => string.Format("{0}\n{1}", romanized, original),
+            RomanizedLinePositions.Below => string.Format("{0}\n{1}", original, romanized),
+            RomanizedLinePositions.Before => string.Format("{0} {1}", romanized, original),
+            RomanizedLinePositions.After => string.Format("{0} {1}", original, romanized),
+            RomanizedLinePositions.Replace or _ => romanized
+        };
+
+        Dispatcher.UIThread.Post(() =>
+        {
+            SubtitleItems[index] = subtitle;
         });
     }
 
