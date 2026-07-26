@@ -24,11 +24,7 @@ public class CrispAsrDownloadService : ICrispAsrDownloadService
 {
     private readonly HttpClient _httpClient;
 
-    // Still v0.8.20: the v0.8.23 release does not carry crispasr-windows-x86_64-cuda.zip (the
-    // Windows CUDA job had not produced it when this was pinned). CUDA never had the Vulkan TTS
-    // bug v0.8.23 fixes, so Windows CUDA users lose nothing by staying a few releases back until
-    // the asset ships.
-    private const string WindowsCudaUrl = "https://github.com/CrispStrobe/CrispASR/releases/download/v0.8.20/crispasr-windows-x86_64-cuda.zip";
+    private const string WindowsCudaUrl = "https://github.com/CrispStrobe/CrispASR/releases/download/v0.8.23/crispasr-windows-x86_64-cuda.zip";
     private const string WindowsVulkanUrl = "https://github.com/CrispStrobe/CrispASR/releases/download/v0.8.23/crispasr-windows-x86_64-vulkan.zip";
     private const string WindowsCpuUrl = "https://github.com/CrispStrobe/CrispASR/releases/download/v0.8.23/crispasr-windows-x86_64-cpu.zip";
     private const string WindowsCpuLegacyUrl = "https://github.com/CrispStrobe/CrispASR/releases/download/v0.8.23/crispasr-windows-x86_64-cpu-legacy.zip";
