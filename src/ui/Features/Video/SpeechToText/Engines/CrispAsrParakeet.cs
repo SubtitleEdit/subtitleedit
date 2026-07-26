@@ -141,8 +141,9 @@ public class CrispAsrParakeet : CrispAsrEngineBase
                 ],
             },
 
-            // Largest TDT variant - the accuracy ceiling for this backend, at roughly
-            // double the download of tdt-0.6b-v3.
+            // Largest TDT variant - the accuracy ceiling for this backend. Roughly
+            // 1.3x-1.6x the download of tdt-0.6b-v3 depending on quant (652 MB vs
+            // 489 MB at q4_k, 2.00 GB vs 1.26 GB unquantized).
             new WhisperModel
             {
                 Name = "parakeet-tdt-1.1b-q4_k.gguf",

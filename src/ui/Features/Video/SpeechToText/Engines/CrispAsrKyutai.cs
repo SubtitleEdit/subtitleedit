@@ -54,9 +54,13 @@ public class CrispAsrKyutai : CrispAsrEngineBase
                 ],
             },
 
-            // 48-layer 2.6b variant: English only (unlike the en+fr 1b above) and a 3.5 s
-            // lookahead, so it trades latency for accuracy - fine for file transcription.
-            // File names carry no "-en" suffix even though the repo does.
+            // 48-layer 2.6b variant with a 3.5 s lookahead, so it trades latency for
+            // accuracy - fine for file transcription. File names carry no "-en" suffix
+            // even though the repo does.
+            //
+            // English only. The Languages list above is engine-wide and is passed through
+            // as a command-line flag, so "fr" applies to the 1b model only - pair the
+            // 2.6b model with "en".
             new WhisperModel
             {
                 Name = "kyutai-stt-2.6b-q4_k.gguf",
