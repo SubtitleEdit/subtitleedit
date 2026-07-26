@@ -511,6 +511,56 @@ public class OpenAiSttServiceTests
         }
     }
 
+    [Fact]
+    public async Task TranscribeAsync_SendsFileAsLastMultipartField()
+    {
+        // Issue #12860: xAI's /v1/stt documents that "file" must be the final
+        // field in the multipart form — parameters written after the payload are
+        // not seen. Harmless for OpenAI, which ignores field order.
+        var fieldOrder = new List<string>();
+        using var handler = new StubHandler(async (req, ct) =>
+        {
+            if (req.Content is MultipartFormDataContent multipart)
+            {
+                foreach (var part in multipart)
+                {
+                    var name = part.Headers.ContentDisposition?.Name?.Trim('"') ?? string.Empty;
+                    if (!string.IsNullOrEmpty(name))
+                    {
+                        fieldOrder.Add(name);
+                    }
+
+                    if (name == "file")
+                    {
+                        // Drain so the request completes cleanly.
+                        await part.ReadAsByteArrayAsync(ct);
+                    }
+                }
+            }
+            return JsonResponse("""{"text":"ok"}""");
+        });
+        using var client = new HttpClient(handler);
+        var settings = MakeSettings();
+        settings.Prompt = "names: Nikse";
+        settings.Temperature = 0.5;
+        var service = new OpenAiSttService(client, settings);
+
+        var ct = TestContext.Current.CancellationToken;
+        var wav = MakeTinyWav();
+        try
+        {
+            await service.TranscribeAsync(wav, cancellationToken: ct);
+
+            Assert.Contains("model", fieldOrder);
+            Assert.Contains("prompt", fieldOrder);
+            Assert.Equal("file", fieldOrder[^1]);
+        }
+        finally
+        {
+            File.Delete(wav);
+        }
+    }
+
     [Theory]
     [InlineData("mp3", "audio/mpeg")]
     [InlineData("m4a", "audio/mp4")]

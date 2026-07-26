@@ -154,6 +154,16 @@ public partial class SpeechToTextViewModel : ObservableObject
     private readonly VideoInfo _videoInfo = new();
     private bool _abort;
     private CancellationTokenSource? _openAiCts;
+
+    /// <summary>
+    /// Language code reported by an online STT provider for the current run.
+    /// Post-processing needs a language, and online engines have no entry in the
+    /// shared language dropdown — so when the user leaves the per-engine hint
+    /// empty (auto-detect), this is what keeps merge/split/line-breaking from
+    /// being skipped entirely (issue #12860).
+    /// </summary>
+    private string? _onlineDetectedLanguage;
+
     private readonly List<ResultText> _resultList = new();
     private bool _useCenterChannelOnly;
 
@@ -1128,14 +1138,16 @@ public partial class SpeechToTextViewModel : ObservableObject
         // moment for these engines — there is no separate OK button.
         SaveSettings();
 
+        _onlineDetectedLanguage = null;
+
         var transcriber = engine.CreateTranscriber(out var configError);
         if (transcriber == null)
         {
             await Dispatcher.UIThread.InvokeAsync(async () =>
             {
                 await MessageBox.Show(Window!,
-                    configError ?? Se.Language.General.OpenAiCompatibleSttUrlMissing,
-                    Se.Language.General.ConfigurationRequired);
+                    Se.Language.General.ConfigurationRequired,
+                    configError ?? Se.Language.General.OpenAiCompatibleSttUrlMissing);
                 IsTranscribeEnabled = true;
             });
             return;
@@ -1158,8 +1170,8 @@ public partial class SpeechToTextViewModel : ObservableObject
             await Dispatcher.UIThread.InvokeAsync(async () =>
             {
                 await MessageBox.Show(Window!,
-                    string.Format(Se.Language.General.OpenAiCompatibleSttUrlNotResponding, probeError),
-                    Se.Language.General.TranscriptionError);
+                    Se.Language.General.TranscriptionError,
+                    string.Format(Se.Language.General.OpenAiCompatibleSttUrlNotResponding, probeError));
                 IsTranscribeEnabled = true;
             });
             return;
@@ -1206,6 +1218,7 @@ public partial class SpeechToTextViewModel : ObservableObject
             else
             {
                 var response = await service.TranscribeAsync(audioFileName, language, null, segmentProgress, cancellationToken);
+                RememberDetectedLanguage(response);
                 IngestTranscriptionResponse(
                     response,
                     subtitle,
@@ -1272,9 +1285,12 @@ public partial class SpeechToTextViewModel : ObservableObject
         catch (HttpRequestException ex)
         {
             // Log the full exception before simplifying the dialog text — the
-            // response body (e.g. DashScope's error code) is the only clue to
-            // what actually failed, and the dialog may hide it.
-            Se.WriteToolsLog($"Online STT transcription failed ({engine.Name}): {ex}");
+            // response body (e.g. DashScope's error code, or xAI's "check the
+            // URL" for a wrong endpoint path) is the only clue to what actually
+            // failed. Force the write: "write tools log" is off by default, so
+            // without it the server's answer is gone the moment the user closes
+            // the dialog (issue #12860).
+            Se.WriteToolsLog($"Online STT transcription failed ({engine.Name}): {ex}", true);
 
             var message = ex.Message;
             if (message.Contains("401") || message.Contains("Unauthorized"))
@@ -1294,7 +1310,7 @@ public partial class SpeechToTextViewModel : ObservableObject
 
             await Dispatcher.UIThread.InvokeAsync(async () =>
             {
-                await MessageBox.Show(Window!, message, Se.Language.General.TranscriptionError);
+                await MessageBox.Show(Window!, Se.Language.General.TranscriptionError, message);
                 IsTranscribeEnabled = true;
             });
         }
@@ -1303,11 +1319,11 @@ public partial class SpeechToTextViewModel : ObservableObject
             // Raised by the online STT services when their own timeout fires
             // (distinct from a user cancel, which arrives as
             // OperationCanceledException above).
-            Se.WriteToolsLog($"Online STT transcription timed out ({engine.Name}): {ex.Message}");
+            Se.WriteToolsLog($"Online STT transcription timed out ({engine.Name}): {ex.Message}", true);
 
             await Dispatcher.UIThread.InvokeAsync(async () =>
             {
-                await MessageBox.Show(Window!, Se.Language.General.RequestTimeout, Se.Language.General.TranscriptionError);
+                await MessageBox.Show(Window!, Se.Language.General.TranscriptionError, Se.Language.General.RequestTimeout);
                 IsTranscribeEnabled = true;
             });
 
@@ -1332,11 +1348,11 @@ public partial class SpeechToTextViewModel : ObservableObject
         }
         catch (Exception ex)
         {
-            Se.WriteToolsLog($"Online STT transcription failed ({engine.Name}): {ex}");
+            Se.WriteToolsLog($"Online STT transcription failed ({engine.Name}): {ex}", true);
 
             await Dispatcher.UIThread.InvokeAsync(async () =>
             {
-                await MessageBox.Show(Window!, $"{Se.Language.General.TranscriptionFailed}: {ex.Message}", "Error");
+                await MessageBox.Show(Window!, Se.Language.General.TranscriptionError, $"{Se.Language.General.TranscriptionFailed}: {ex.Message}");
                 IsTranscribeEnabled = true;
             });
         }
@@ -1553,6 +1569,7 @@ public partial class SpeechToTextViewModel : ObservableObject
                 var chunkResponse = await service.TranscribeAsync(
                     chunkPath, language, null, offsettingProgress, cancellationToken);
 
+                RememberDetectedLanguage(chunkResponse);
                 IngestTranscriptionResponse(
                     chunkResponse,
                     subtitle,
@@ -1842,17 +1859,57 @@ public partial class SpeechToTextViewModel : ObservableObject
     /// <summary>
     /// The language hint configured for the selected online STT engine, or null
     /// for local engines. Online engines don't use the shared language dropdown
-    /// (it's nulled out), so post-processing reads the per-engine setting instead.
+    /// (it's nulled out), so post-processing reads the per-engine setting instead
+    /// — falling back to the language the provider detected when that setting is
+    /// left empty.
     /// </summary>
     private string? GetOnlineEngineLanguageHint()
     {
-        return GetEffectiveSelectedEngine() switch
+        var configured = GetEffectiveSelectedEngine() switch
         {
             OpenRouterSttEngine => Se.Settings.Tools.OpenRouterSttLanguage,
             DashScopeQwen3SttEngine => Se.Settings.Tools.DashScopeSttLanguage,
             OpenAiCompatibleSttEngine => Se.Settings.Tools.OpenAiCompatibleSttLanguage,
             _ => null,
         };
+
+        if (configured == null || !string.IsNullOrWhiteSpace(configured))
+        {
+            return configured;
+        }
+
+        // Hint left empty (auto-detect): use whatever language the provider said
+        // it recognized, so post-processing still runs (issue #12860).
+        return _onlineDetectedLanguage;
+    }
+
+    /// <summary>
+    /// Note the language an online provider reported for this run. Providers are
+    /// inconsistent here — OpenAI's verbose_json says "english" while others send
+    /// "en" — so a full name is mapped back to its whisper language code. The
+    /// first non-empty value wins; later chunks don't overwrite it.
+    /// </summary>
+    private void RememberDetectedLanguage(OpenAiCompatibleSttResponse response)
+    {
+        if (!string.IsNullOrEmpty(_onlineDetectedLanguage) || string.IsNullOrWhiteSpace(response.Language))
+        {
+            return;
+        }
+
+        var reported = response.Language.Trim();
+        if (reported.Length == 2)
+        {
+            _onlineDetectedLanguage = reported.ToLowerInvariant();
+            return;
+        }
+
+        var match = WhisperLanguage.Languages.FirstOrDefault(p =>
+            p.Name.Equals(reported, StringComparison.OrdinalIgnoreCase) ||
+            p.Code.Equals(reported, StringComparison.OrdinalIgnoreCase));
+        if (match != null)
+        {
+            _onlineDetectedLanguage = match.Code;
+        }
     }
 
     private WavePeakData2? MakeWavePeaks()
