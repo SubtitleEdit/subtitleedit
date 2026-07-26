@@ -1999,12 +1999,45 @@ public class AudioVisualizer : Control
     // Pooled x positions for the grid, so the per-frame collection below doesn't allocate.
     private readonly List<double> _gridLineXPositions = new(256);
 
+    // Cached grid geometry. Same reasoning as the waveform cache below: the grid is a few hundred
+    // figures and depends only on the view state, but Render runs at ~60 fps while the cursor
+    // moves - so without this we rebuilt (and threw away) the whole StreamGeometry every frame.
+    private Geometry? _gridLinesGeometry;
+    private GridLinesCacheKey _gridLinesCacheKey;
+
+    private readonly record struct GridLinesCacheKey(
+        double Width,
+        double Height,
+        double StartPositionSeconds,
+        double ZoomFactor,
+        int SampleRate,
+        bool FrameMode,
+        double FrameRate);
+
     private void DrawAllGridLines(DrawingContext context, ref RenderContext renderCtx)
     {
         if (!DrawGridLines)
         {
             return;
         }
+
+        var cacheKey = new GridLinesCacheKey(
+            renderCtx.Width,
+            renderCtx.Height,
+            renderCtx.StartPositionSeconds,
+            renderCtx.ZoomFactor,
+            renderCtx.SampleRate,
+            Se.Settings.General.UseFrameMode,
+            Se.Settings.General.CurrentFrameRate);
+
+        if (_gridLinesGeometry != null && _gridLinesCacheKey.Equals(cacheKey))
+        {
+            context.DrawGeometry(null, _paintGridLines, _gridLinesGeometry);
+            return;
+        }
+
+        _gridLinesGeometry = null;
+        _gridLinesCacheKey = cacheKey;
 
         var width = renderCtx.Width;
         var height = renderCtx.Height;
@@ -2110,6 +2143,7 @@ public class AudioVisualizer : Control
             }
         }
 
+        _gridLinesGeometry = geom;
         context.DrawGeometry(null, _paintGridLines, geom);
     }
 
@@ -2238,7 +2272,6 @@ public class AudioVisualizer : Control
 
     private void BuildWaveFormFancy(double waveformHeight, ref RenderContext renderCtx)
     {
-        _isSelectedHelper.Reset(AllSelectedParagraphs, renderCtx.SampleRate);
         var isSelectedHelper = _isSelectedHelper;
         var halfWaveformHeight = waveformHeight / 2;
         var div = renderCtx.SampleRate * renderCtx.ZoomFactor;
@@ -2263,6 +2296,8 @@ public class AudioVisualizer : Control
         var startSample = renderCtx.StartPositionSeconds * renderCtx.SampleRate;
         var samplesPerPixel = renderCtx.SampleRate / div;
         var yScaleHalf = verticalZoomFactor / highestPeak * halfWaveformHeight;
+
+        isSelectedHelper.Reset(AllSelectedParagraphs, renderCtx.SampleRate, (int)startSample, (int)(startSample + width * samplesPerPixel));
 
         // Calculate the threshold for color transitions (as a fraction of the highest peak)
         var lowThreshold = highestPeak * 0.3;
@@ -2410,7 +2445,6 @@ public class AudioVisualizer : Control
 
     private void BuildWaveFormClassic(double waveformHeight, ref RenderContext renderCtx)
     {
-        _isSelectedHelper.Reset(AllSelectedParagraphs, renderCtx.SampleRate);
         var isSelectedHelper = _isSelectedHelper;
         var halfWaveformHeight = waveformHeight / 2;
         var div = renderCtx.SampleRate * renderCtx.ZoomFactor;
@@ -2433,6 +2467,8 @@ public class AudioVisualizer : Control
         var startSample = renderCtx.StartPositionSeconds * renderCtx.SampleRate;
         var samplesPerPixel = renderCtx.SampleRate / div;
         var yScaleHalf = verticalZoomFactor / highestPeak * halfWaveformHeight;
+
+        isSelectedHelper.Reset(AllSelectedParagraphs, renderCtx.SampleRate, (int)startSample, (int)(startSample + width * samplesPerPixel));
 
         var unselectedLines = _classicUnselectedLines;
         var selectedLines = _classicSelectedLines;
@@ -2643,14 +2679,21 @@ public class AudioVisualizer : Control
         var endPositionMilliseconds = RelativeXPositionToSecondsOptimized(renderCtx.Width, renderCtx.SampleRate, renderCtx.StartPositionSeconds, renderCtx.ZoomFactor) * 1000.0;
 
         // List.Contains per visible paragraph is O(selection) - with "select all" on a large
-        // subtitle that is millions of compares per frame, so probe a set instead.
+        // subtitle that is millions of compares per frame, so probe a set instead. Only the
+        // paragraphs inside the visible window are ever probed, so hashing the rest of a
+        // "select all" is pure waste: two time compares are far cheaper than a HashSet insert.
         _selectedParagraphsRenderSet.Clear();
         var allSelected = AllSelectedParagraphs;
         if (allSelected != null)
         {
-            foreach (var selected in allSelected)
+            for (var i = 0; i < allSelected.Count; i++)
             {
-                _selectedParagraphsRenderSet.Add(selected);
+                var selected = allSelected[i];
+                if (selected.EndTime.TotalMilliseconds >= startPositionMilliseconds &&
+                    selected.StartTime.TotalMilliseconds <= endPositionMilliseconds)
+                {
+                    _selectedParagraphsRenderSet.Add(selected);
+                }
             }
         }
 
@@ -3643,6 +3686,7 @@ public class AudioVisualizer : Control
         _paragraphFormattedTextCache.Clear();
         _paragraphTextCache.Clear();
         _waveformCacheValid = false;
+        _gridLinesGeometry = null;
 
         _paintText = new SolidColorBrush(Se.Settings.Waveform.WaveformTextColor.FromHexToColor());
         _typeface = new Typeface(UiUtil.GetDefaultFontName(), FontStyle.Normal, Se.Settings.Waveform.WaveformTextFontBold ? FontWeight.Bold : FontWeight.Normal);

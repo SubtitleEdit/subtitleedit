@@ -4,6 +4,7 @@ using Avalonia.Controls.Primitives;
 using Avalonia.Controls.Shapes;
 using Avalonia.Data;
 using Avalonia.Input;
+using Avalonia.Interactivity;
 using Avalonia.Layout;
 using Avalonia.Media;
 using System;
@@ -141,6 +142,11 @@ public class BinaryEditWindow : Window
         Content = mainGrid;
         AddHandler(KeyDownEvent, (_, args) => vm.OnKeyDown(args), handledEventsToo: true);
         AddHandler(KeyUpEvent, (_, args) => vm.OnKeyUp(args), handledEventsToo: true);
+
+        // Tunnelling, and handledEventsToo since controls may mark their presses handled: needed to see
+        // that Alt was held for a mouse gesture and cancel the menu-bar activation that would otherwise
+        // fire on the Alt release (discussion #11744).
+        AddHandler(PointerPressedEvent, vm.OnPointerPressed, RoutingStrategies.Tunnel, handledEventsToo: true);
         Loaded += (_, _) =>
         {
             // Measure controls at natural (unconstrained) size so MinWidth is font-size-aware

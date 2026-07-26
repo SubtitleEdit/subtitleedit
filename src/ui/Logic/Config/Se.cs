@@ -17,7 +17,7 @@ public class Se
 {
     internal const int CurrentMacOsFontMigrationVersion = 1;
 
-    public static string Version { get; set; } = "v5.1.0-rc14";
+    public static string Version { get; set; } = "v5.1.0-rc16";
 
     public SeGeneral General { get; set; } = new();
     public List<SeShortCut> Shortcuts { get; set; } = new();
@@ -591,6 +591,7 @@ public class Se
         Configuration.Settings.Tools.OpenAiCompatibleSttPrompt = Settings.Tools.OpenAiCompatibleSttPrompt;
         Configuration.Settings.Tools.OpenAiCompatibleSttAutoTranscribeOnAudioSelection = Settings.Tools.OpenAiCompatibleSttAutoTranscribeOnAudioSelection;
         Configuration.Settings.Tools.OpenAiCompatibleSttStream = Settings.Tools.OpenAiCompatibleSttStream;
+        Configuration.Settings.Tools.OpenAiCompatibleSttAudioFormat = Settings.Tools.OpenAiCompatibleSttAudioFormat;
 
         Configuration.Settings.Tools.OpenRouterSttApiKey = Settings.Tools.OpenRouterSttApiKey;
         Configuration.Settings.Tools.OpenRouterSttModel = Settings.Tools.OpenRouterSttModel;

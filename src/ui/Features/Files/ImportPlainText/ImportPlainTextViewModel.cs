@@ -321,7 +321,8 @@ public partial class ImportPlainTextViewModel : ObservableObject, IClosingCleanu
                 Window,
                 Se.Language.General.Warning,
                 $"Alignment matched {result.MatchedLines} of {result.TotalLines} lines. "
-                + $"{result.UnmatchedLines} line(s) could not be aligned and kept their original time codes. "
+                + $"{result.UnmatchedLines} line(s) had no match in the transcription and were timed by "
+                + "interpolating between their neighbours, so their time codes are approximate. "
                 + "If the audio language or content doesn't match the script, the transcription may be off.",
                 MessageBoxButtons.OK,
                 MessageBoxIcon.Warning);

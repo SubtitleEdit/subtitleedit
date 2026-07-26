@@ -15,8 +15,8 @@ public static class CookieManager
         {
             if (File.Exists(CookieFileName))
             {
-                var json = File.ReadAllText(CookieFileName);
-                var cookies = JsonSerializer.Deserialize<Dictionary<string, Cookie>>(json);
+                using var stream = File.OpenRead(CookieFileName);
+                var cookies = JsonSerializer.Deserialize<Dictionary<string, Cookie>>(stream);
                 if (cookies != null)
                 {
                     Console.WriteLine($"Loaded {cookies.Count} cookies from {CookieFileName}");

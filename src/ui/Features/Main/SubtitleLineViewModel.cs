@@ -163,7 +163,7 @@ public partial class SubtitleLineViewModel : ObservableObject
         StartTime = TimeSpan.FromMilliseconds(paragraph.StartTime.TotalMilliseconds);
         EndTime = TimeSpan.FromMilliseconds(paragraph.EndTime.TotalMilliseconds);
         UpdateDuration();
-        Id = Guid.TryParse(paragraph.Id, out var guid) ? guid : Guid.NewGuid();
+        Id = paragraph.Id ?? Guid.NewGuid();
         Paragraph = paragraph;
         Bookmark = paragraph.Bookmark;
 
@@ -235,13 +235,28 @@ public partial class SubtitleLineViewModel : ObservableObject
         return p;
     }
 
+    // Read-time memo, see CharactersPerSecond below: the pixel-width column binding re-reads this
+    // on every cell repaint and each read shapes every line with HarfBuzz.
+    private string? _pixelWidthCacheText;
+    private string? _pixelWidthCacheFontName;
+    private int _pixelWidthCacheFontSize;
+    private int _pixelWidthCacheValue;
+
     public int PixelWidth
     {
         get
         {
-            if (!Se.Settings.General.ShowColumnPixelWidth && !Se.Settings.General.ColorTextTooWide)
+            var general = Se.Settings.General;
+            if (!general.ShowColumnPixelWidth && !general.ColorTextTooWide)
             {
                 return 0;
+            }
+
+            if (ReferenceEquals(_pixelWidthCacheText, Text) &&
+                _pixelWidthCacheFontName == general.ColorTextTooWideFontName &&
+                _pixelWidthCacheFontSize == general.ColorTextTooWideFontSize)
+            {
+                return _pixelWidthCacheValue;
             }
 
             var text = HtmlUtil.RemoveHtmlTags(Text, true);
@@ -256,6 +271,10 @@ public partial class SubtitleLineViewModel : ObservableObject
                 }
             }
 
+            _pixelWidthCacheText = Text;
+            _pixelWidthCacheFontName = general.ColorTextTooWideFontName;
+            _pixelWidthCacheFontSize = general.ColorTextTooWideFontSize;
+            _pixelWidthCacheValue = maxWidth;
             return maxWidth;
         }
     }
@@ -326,6 +345,44 @@ public partial class SubtitleLineViewModel : ObservableObject
         }
     }
 
+    // Read-time memo for the text error highlight, same idea as the CPS/WPM memos above: the
+    // grid re-reads this getter on every cell repaint, and each evaluation strips html, splits
+    // into lines and (with ColorTextTooWide on) shapes every line with HarfBuzz. The key is the
+    // text plus every setting the answer depends on, so a settings change simply recomputes on
+    // the next read. Only the verdict is memoized, never the brush - the error brush instance is
+    // replaced when the user picks another error color.
+    private string? _textErrorCacheText;
+    private TextErrorSettings _textErrorCacheSettings;
+    private bool _textErrorCacheValue;
+
+    private readonly record struct TextErrorSettings(
+        bool ColorTextTooLong,
+        int MaxLineLength,
+        bool ColorTextTooWide,
+        int MaxPixelWidth,
+        string FontName,
+        int FontSize,
+        bool ColorTextTooManyLines,
+        int MaxNumberOfLines,
+        string? LengthStrategy)
+    {
+        public static TextErrorSettings Current()
+        {
+            var general = Se.Settings.General;
+            return new TextErrorSettings(
+                general.ColorTextTooLong,
+                general.SubtitleLineMaximumLength,
+                general.ColorTextTooWide,
+                general.ColorTextTooWidePixels,
+                general.ColorTextTooWideFontName,
+                general.ColorTextTooWideFontSize,
+                general.ColorTextTooManyLines,
+                general.MaxNumberOfLines,
+                // GetLineLength counts through this strategy, so it belongs in the key too.
+                Configuration.Settings.General.CpsLineLengthStrategy);
+        }
+    }
+
     public IBrush TextBackgroundBrush
     {
         get
@@ -335,50 +392,62 @@ public partial class SubtitleLineViewModel : ObservableObject
                 return _transparentBrush;
             }
 
-            // Avalonia re-evaluates this getter on every cell repaint; strip HTML and split
-            // into lines once and reuse across all settings-enabled branches below.
-            string? stripped = null;
-            List<string>? strippedLines = null;
-
-            if (Se.Settings.General.ColorTextTooLong)
+            var settings = TextErrorSettings.Current();
+            if (!ReferenceEquals(_textErrorCacheText, Text) || !_textErrorCacheSettings.Equals(settings))
             {
-                stripped = SubtitleTextInfoHelper.StripHtml(Text);
-                strippedLines = stripped.SplitToLines();
-
-                foreach (var line in strippedLines)
-                {
-                    if (SubtitleTextInfoHelper.GetLineLength(line) > Se.Settings.General.SubtitleLineMaximumLength)
-                    {
-                        return _errorBrush;
-                    }
-                }
+                _textErrorCacheText = Text;
+                _textErrorCacheSettings = settings;
+                _textErrorCacheValue = HasTextError(Text, settings);
             }
 
-            if (Se.Settings.General.ColorTextTooWide)
-            {
-                stripped ??= SubtitleTextInfoHelper.StripHtml(Text);
-                strippedLines ??= stripped.SplitToLines();
-                foreach (var line in strippedLines)
-                {
-                    if (CalculatePixelWidth(line) > Se.Settings.General.ColorTextTooWidePixels)
-                    {
-                        return _errorBrush;
-                    }
-                }
-            }
-
-            if (Se.Settings.General.ColorTextTooManyLines)
-            {
-                stripped ??= SubtitleTextInfoHelper.StripHtml(Text);
-                strippedLines ??= stripped.SplitToLines();
-                if (strippedLines.Count > Se.Settings.General.MaxNumberOfLines)
-                {
-                    return _errorBrush;
-                }
-            }
-
-            return _transparentBrush;
+            return _textErrorCacheValue ? _errorBrush : _transparentBrush;
         }
+    }
+
+    private static bool HasTextError(string text, TextErrorSettings settings)
+    {
+        // Strip HTML and split into lines once and reuse across all settings-enabled branches.
+        string? stripped = null;
+        List<string>? strippedLines = null;
+
+        if (settings.ColorTextTooLong)
+        {
+            stripped = SubtitleTextInfoHelper.StripHtml(text);
+            strippedLines = stripped.SplitToLines();
+
+            foreach (var line in strippedLines)
+            {
+                if (SubtitleTextInfoHelper.GetLineLength(line) > settings.MaxLineLength)
+                {
+                    return true;
+                }
+            }
+        }
+
+        if (settings.ColorTextTooWide)
+        {
+            stripped ??= SubtitleTextInfoHelper.StripHtml(text);
+            strippedLines ??= stripped.SplitToLines();
+            foreach (var line in strippedLines)
+            {
+                if (CalculatePixelWidth(line) > settings.MaxPixelWidth)
+                {
+                    return true;
+                }
+            }
+        }
+
+        if (settings.ColorTextTooManyLines)
+        {
+            stripped ??= SubtitleTextInfoHelper.StripHtml(text);
+            strippedLines ??= stripped.SplitToLines();
+            if (strippedLines.Count > settings.MaxNumberOfLines)
+            {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     private static readonly Dictionary<(string name, int size), (SKFont font, SKShaper shaper)> _fontCache = [];

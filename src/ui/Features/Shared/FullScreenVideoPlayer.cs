@@ -28,7 +28,8 @@ public class FullScreenVideoWindow : Window
         List<string>? toggleShortcutKeys = null,
         List<string>? showMediaInformationKeys = null,
         Action<Window>? showMediaInformation = null,
-        IReadOnlyList<(string name, List<string> keys, IRelayCommand command)>? extraBindings = null)
+        IReadOnlyList<(string name, List<string> keys, IRelayCommand command)>? extraBindings = null,
+        Action<Controls.VideoPlayer.VideoPlayerControl>? onPlayerReady = null)
     {
         WindowState = WindowState.FullScreen;
         WindowDecorations = WindowDecorations.None;
@@ -216,6 +217,11 @@ public class FullScreenVideoWindow : Window
             videoPlayer.VideoPlayer.Position = position;
             videoPlayer.Position = position;
             videoPlayer.Volume = volume;
+
+            // Position and volume are not the only state the fresh player starts over with -
+            // let the caller re-apply whatever else it tracks (the selected audio track, #12844).
+            onPlayerReady?.Invoke(videoPlayer);
+
             Dispatcher.UIThread.Post(() =>
             {
                 videoPlayer.VideoPlayer.Position = position;

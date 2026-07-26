@@ -502,26 +502,27 @@ public class UndoRedoManagerTests
     }
 
     [Fact]
-    public void CheckForChanges_OverlappingTick_ReturnsWithoutCallingClient()
+    public async Task CheckForChanges_OverlappingTick_ReturnsWithoutCallingClient()
     {
         // Regression for issue #12683: the 250ms timer keeps firing while a previous
         // tick is still blocked inside the client (marshaling to a busy UI thread);
         // each overlapping tick stacked another blocked thread-pool thread — the
         // reported dump had 492 threads. Overlapping ticks must bail immediately.
+        var cancellationToken = TestContext.Current.CancellationToken;
         var client = new BlockingHashClient();
         var manager = new UndoRedoManager();
         manager.SetupChangeDetection(client, TimeSpan.FromHours(1));
         manager.StartChangeDetection();
 
-        var firstTick = Task.Run(() => manager.CheckForChanges(null));
-        Assert.True(client.HashEntered.Wait(TimeSpan.FromSeconds(10)));
+        var firstTick = Task.Run(() => manager.CheckForChanges(null), cancellationToken);
+        Assert.True(client.HashEntered.Wait(TimeSpan.FromSeconds(10), cancellationToken));
 
         manager.CheckForChanges(null); // overlapping tick while the first is blocked
 
         Assert.Equal(1, Volatile.Read(ref client.HashCalls));
 
         client.ReleaseHash.Set();
-        Assert.True(firstTick.Wait(TimeSpan.FromSeconds(10)));
+        await firstTick.WaitAsync(TimeSpan.FromSeconds(10), cancellationToken);
     }
 
     // -----------------------------------------------------------------------

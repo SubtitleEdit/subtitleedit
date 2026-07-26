@@ -28,8 +28,8 @@ namespace Nikse.SubtitleEdit.Core.Common
             // a large share of words are sentence-initial and case-sensitive matching used to
             // miss them (e.g. "Você"/"Burada" not matching the lowercase list entries).
             var pattern = "\\b(" + string.Join("|", words) + ")\\b";
-            var regex = WordCountRegexCache.GetOrAdd("(?i)" + pattern, p =>
-                new Regex(pattern, RegexOptions.CultureInvariant | RegexOptions.ExplicitCapture | RegexOptions.Compiled | RegexOptions.IgnoreCase));
+            var regex = WordCountRegexCache.GetOrAdd(pattern, p =>
+                new Regex(p, RegexOptions.CultureInvariant | RegexOptions.ExplicitCapture | RegexOptions.Compiled | RegexOptions.IgnoreCase));
             return regex.Matches(text).Count;
         }
 

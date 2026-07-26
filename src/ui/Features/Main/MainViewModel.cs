@@ -303,6 +303,7 @@ public partial class MainViewModel :
     FindViewModel? _findViewModel;
     Control? _findPreviousFocus;
     Control? _focusBeforeMainMenu;
+    readonly AltMenuActivationGuard _altMenuActivationGuard = new();
     bool _findClosingProgrammatically;
     ReplaceViewModel? _replaceViewModel;
     Control? _replacePreviousFocus;
@@ -969,6 +970,23 @@ public partial class MainViewModel :
         {
             GetVideoPlayerControl()?.SetSpeed(speed);
         }
+    }
+
+    /// <summary>
+    /// Pushes the currently selected audio track (<see cref="_audioTrack"/>) to <paramref name="player"/>.
+    /// Going fullscreen and undocking both create a brand new player that re-opens the video file, and a
+    /// freshly opened mpv always starts on its own default track - so a second language picked via
+    /// "Video > Audio tracks" was silently replaced by the first one (issue #12844).
+    /// </summary>
+    internal void ReapplySelectedAudioTrack(VideoPlayerControl? player)
+    {
+        var audioTrack = _audioTrack;
+        if (audioTrack == null || player?.VideoPlayer is not LibMpvDynamicPlayer mpv)
+        {
+            return;
+        }
+
+        mpv.SetAudioTrack(audioTrack.Id);
     }
 
     private void RefreshSubtitlePreview()
@@ -6003,6 +6021,11 @@ public partial class MainViewModel :
     {
         AreVideoControlsUndocked = false;
         var videoFileName = _videoFileName ?? string.Empty;
+
+        // Re-docking re-opens the video in the rebuilt layout's player, and VideoOpenFile clears
+        // _audioTrack on entry - so remember the selected track now and ask for it back, or the
+        // undocked window's second language turns back into the first one (issue #12844).
+        var desiredAudioTrackId = _audioTrack?.Id ?? -1;
         VideoCloseFile();
 
         if (_videoPlayerUndockedViewModel != null)
@@ -6022,7 +6045,7 @@ public partial class MainViewModel :
 
         if (!string.IsNullOrEmpty(videoFileName))
         {
-            Dispatcher.UIThread.Post(async void () => { await VideoOpenFile(videoFileName); });
+            Dispatcher.UIThread.Post(async void () => { await VideoOpenFile(videoFileName, desiredAudioTrackId); });
             RefreshSubtitlePreview();
         }
     }
@@ -12497,8 +12520,15 @@ public partial class MainViewModel :
             control!.Position = _fullScreenVideoPlayerControl.Position;
             control!.Volume = _fullScreenVideoPlayerControl.Volume;
             _fullScreenVideoPlayerControl = null;
+
+            // A track switched while fullscreen (toggle-audio-track shortcut) only ever reached the
+            // fullscreen player, so hand it to the player we are going back to - otherwise playback
+            // and the audio track menu disagree after leaving fullscreen (issue #12844).
+            ReapplySelectedAudioTrack(control);
+            var _ = Task.Run(LoadAudioTrackMenuItems);
+
             Dispatcher.UIThread.Post(() => SubtitleGrid.Focus());
-        }, toggleKeys, showMediaInfoKeys, showMediaInformationOwnedBy, extraBindings);
+        }, toggleKeys, showMediaInfoKeys, showMediaInformationOwnedBy, extraBindings, ReapplySelectedAudioTrack);
         fullScreenWindow.Show(Window!);
         _shortcutManager.ClearKeys();
 
@@ -16739,8 +16769,9 @@ public partial class MainViewModel :
                     {
                         if (!IsImageSubtitleTrack(result.SelectedMatroskaTrack))
                         {
-                            _subtitleFileName = Utilities.GetPathAndFileNameWithoutExtension(fileName);
-                            _converted = true;
+                            // File name + "converted" flag are set by LoadMatroskaSubtitle itself, so the
+                            // auto-import (single track) path gets them too - it used to stay "Untitled"
+                            // until the first save (#12848).
                             SelectAndScrollToRow(0);
 
                             if (Se.Settings.Video.AutoOpen)
@@ -16863,7 +16894,7 @@ public partial class MainViewModel :
                 {
                     VideoCloseFile();
                     ResetSubtitle();
-                    _subtitleFileName = Utilities.GetPathAndFileNameWithoutExtension(fileName);
+                    _subtitleFileName = Utilities.GetPathAndFileNameWithoutExtension(fileName) + SelectedSubtitleFormat.Extension;
                     _converted = true;
                     ReplaceSubtitles(result.OcredSubtitle);
                     Renumber();
@@ -16901,6 +16932,11 @@ public partial class MainViewModel :
         _subtitle = subtitle;
         _subtitle.Renumber();
         ReplaceSubtitles(_subtitle.Paragraphs.Select(p => new SubtitleLineViewModel(p, SelectedSubtitleFormat)));
+
+        // Provisional file name (video name + subtitle extension) right after the import, like SE4 -
+        // ResetSubtitle above cleared it, and only the "pick track" path used to restore it, so an
+        // auto-imported single track showed "Untitled" in the title bar and save prompt (#12848).
+        _subtitleFileName = Utilities.GetPathAndFileNameWithoutExtension(fileName) + SelectedSubtitleFormat.Extension;
         _converted = true;
 
         return true;
@@ -17006,7 +17042,10 @@ public partial class MainViewModel :
             {
                 VideoCloseFile();
                 ResetSubtitle();
-                _subtitleFileName = Utilities.GetPathAndFileNameWithoutExtension(fileName);
+                // ResetSubtitle clears _converted; without setting it again Ctrl+S could write straight
+                // to the (extension-less) container name instead of going to "Save as".
+                _subtitleFileName = Utilities.GetPathAndFileNameWithoutExtension(fileName) + SelectedSubtitleFormat.Extension;
+                _converted = true;
                 ReplaceSubtitles(result.OcredSubtitle);
                 Renumber();
                 SelectAndScrollToRow(0);
@@ -17078,7 +17117,8 @@ public partial class MainViewModel :
             {
                 VideoCloseFile();
                 ResetSubtitle();
-                _subtitleFileName = Utilities.GetPathAndFileNameWithoutExtension(fileName);
+                _subtitleFileName = Utilities.GetPathAndFileNameWithoutExtension(fileName) + SelectedSubtitleFormat.Extension;
+                _converted = true;
                 ReplaceSubtitles(result.OcredSubtitle);
                 SelectAndScrollToRow(0);
                 if (Se.Settings.Video.AutoOpen && fileName.EndsWith(".mkv", StringComparison.OrdinalIgnoreCase))
@@ -17158,12 +17198,9 @@ public partial class MainViewModel :
         _subtitle.Renumber();
         ReplaceSubtitles(_subtitle.Paragraphs.Select(p => new SubtitleLineViewModel(p, SelectedSubtitleFormat)));
 
-
-        if (matroska.Path.EndsWith(".mkv", StringComparison.OrdinalIgnoreCase) ||
-            matroska.Path.EndsWith(".mks", StringComparison.OrdinalIgnoreCase))
-        {
-            _subtitleFileName = matroska.Path.Remove(matroska.Path.Length - 4) + SelectedSubtitleFormat.Extension;
-        }
+        // Any container extension, not just the four-char .mkv/.mks - a TextST track in e.g. a .webm
+        // otherwise kept the empty file name from ResetSubtitle and showed up as "Untitled" (#12848).
+        _subtitleFileName = Utilities.GetPathAndFileNameWithoutExtension(matroska.Path) + SelectedSubtitleFormat.Extension;
 
         SelectAndScrollToRow(0);
 
@@ -17226,7 +17263,7 @@ public partial class MainViewModel :
         {
             VideoCloseFile();
             ResetSubtitle();
-            _subtitleFileName = Utilities.GetPathAndFileNameWithoutExtension(vobSubFileName);
+            _subtitleFileName = Utilities.GetPathAndFileNameWithoutExtension(vobSubFileName) + SelectedSubtitleFormat.Extension;
             _converted = true;
             ReplaceSubtitles(result.OcredSubtitle);
             SelectAndScrollToRow(0);
@@ -20335,6 +20372,7 @@ public partial class MainViewModel :
         // every shortcut afterwards (Ctrl+I, Find, Replace, ...) unable to match until the set was
         // cleared by some other action (issue #11548).
         _shortcutManager.ClearKeys();
+        _altMenuActivationGuard.Reset();
 
         // A task switch (Alt+Tab) must also drop any active menu-bar state. Otherwise Avalonia leaves
         // the access-key underlines / selection armed and they reappear when the window is re-activated,
@@ -20373,20 +20411,29 @@ public partial class MainViewModel :
             return TopLevel.GetTopLevel(menuItem) != null;
         }
 
-        if (ReferenceEquals(focusedElement, Menu))
+        return IsWithinMainMenu(focusedElement as Visual);
+    }
+
+    /// <summary>
+    /// True when <paramref name="visual"/> is the main menu itself or lives inside it. Drop-down items
+    /// are hosted in a popup, so they are not covered here - callers that need them check for a focused
+    /// <see cref="MenuItem"/> (see <see cref="IsMainMenuFocused"/>) or for an open menu.
+    /// </summary>
+    private bool IsWithinMainMenu(Visual? visual)
+    {
+        if (Menu == null)
         {
-            return true;
+            return false;
         }
 
-        var parent = (focusedElement as Avalonia.Visual)?.GetVisualParent();
-        while (parent != null)
+        while (visual != null)
         {
-            if (ReferenceEquals(parent, Menu))
+            if (ReferenceEquals(visual, Menu))
             {
                 return true;
             }
 
-            parent = parent.GetVisualParent();
+            visual = visual.GetVisualParent();
         }
 
         return false;
@@ -20607,6 +20654,79 @@ public partial class MainViewModel :
         return i;
     }
 
+    // How long a typed digit keeps collecting following digits before the number restarts,
+    // matching the Win32 list-view type-ahead timeout SE 4 inherited.
+    private const long SubtitleGridNumberNavigationTimeoutMs = 1000;
+
+    private string _subtitleGridNumberNavigationDigits = string.Empty;
+    private long _subtitleGridNumberNavigationLastKeyMs;
+
+    /// <summary>
+    /// Restores SE 4's "type a number to jump to that line" grid navigation (#12838). SE 4 never
+    /// implemented this - its grid was a Win32 ListView, which gives incremental type-ahead search
+    /// for free and matches against the first column, i.e. the line number. So typing 1 selected
+    /// line 1, and 1 then 2 in quick succession selected line 12. Avalonia's DataGrid has no
+    /// type-ahead at all, so accumulate bare digits here instead.
+    /// </summary>
+    private bool TryHandleSubtitleGridNumberNavigation(KeyEventArgs keyEventArgs)
+    {
+        // Deliberately reads keyEventArgs.Key rather than ShortcutManager.GetShortcutKey: with
+        // NumLock off the numpad digits arrive as Insert/End/Down/..., and those must stay
+        // navigation keys instead of being folded back into NumPad0-9 and eaten as digits.
+        var digit = keyEventArgs.Key switch
+        {
+            >= Key.D0 and <= Key.D9 => keyEventArgs.Key - Key.D0,
+            >= Key.NumPad0 and <= Key.NumPad9 => keyEventArgs.Key - Key.NumPad0,
+            _ => -1,
+        };
+
+        if (digit < 0 || keyEventArgs.KeyModifiers != KeyModifiers.None || Subtitles.Count == 0)
+        {
+            _subtitleGridNumberNavigationDigits = string.Empty;
+            return false;
+        }
+
+        // A user-assigned bare-digit shortcut wins over the type-ahead, like a user-assigned F10
+        // wins over activating the menu bar (#12504).
+        if (_shortcutManager.HasSingleKeyShortcut(ShortcutManager.GetShortcutKeyName(keyEventArgs)))
+        {
+            _subtitleGridNumberNavigationDigits = string.Empty;
+            return false;
+        }
+
+        var ms = Environment.TickCount64;
+        if (ms - _subtitleGridNumberNavigationLastKeyMs > SubtitleGridNumberNavigationTimeoutMs)
+        {
+            _subtitleGridNumberNavigationDigits = string.Empty;
+        }
+
+        _subtitleGridNumberNavigationLastKeyMs = ms;
+
+        var digitChar = (char)('0' + digit);
+        var digits = _subtitleGridNumberNavigationDigits + digitChar;
+        if (!int.TryParse(digits, out var lineNumber) || lineNumber > Subtitles.Count)
+        {
+            // Appending would overshoot the last line, so start a fresh number from this digit -
+            // typing 9 twice in a 50-line file should keep landing on line 9, not nowhere.
+            digits = digitChar.ToString();
+            if (!int.TryParse(digits, out lineNumber) || lineNumber > Subtitles.Count)
+            {
+                _subtitleGridNumberNavigationDigits = string.Empty;
+                return false;
+            }
+        }
+
+        _subtitleGridNumberNavigationDigits = digits;
+
+        // Leading zeros are collected but name no line - keep waiting for a real digit.
+        if (lineNumber >= 1)
+        {
+            SelectAndScrollToRow(lineNumber - 1);
+        }
+
+        return true;
+    }
+
     internal void OnKeyDownHandler(object? sender, KeyEventArgs keyEventArgs)
     {
         lock (_onKeyDownHandlerLock)
@@ -20768,6 +20888,12 @@ public partial class MainViewModel :
 
             if (IsSubtitleGridFocused())
             {
+                if (TryHandleSubtitleGridNumberNavigation(keyEventArgs))
+                {
+                    keyEventArgs.Handled = true;
+                    return;
+                }
+
                 if (keyEventArgs.Key == Key.Down && keyEventArgs.KeyModifiers == KeyModifiers.Shift && Subtitles.Count > 0)
                 {
                     keyEventArgs.Handled = true;
@@ -20929,12 +21055,49 @@ public partial class MainViewModel :
         ReferenceEquals(command, TextBoxSelectAllCommand) ||
         ReferenceEquals(command, TextBoxDeleteSelectionCommand);
 
+    /// <summary>
+    /// Tunnelling pointer handler that tells <see cref="_altMenuActivationGuard"/> when Alt was used as
+    /// a mouse modifier (e.g. Alt+drag in the waveform), so the menu-bar activation Avalonia performs on
+    /// the following Alt release can be undone again (discussion #11744).
+    /// </summary>
+    internal void OnPointerPressedHandler(object? sender, PointerPressedEventArgs e)
+    {
+        if (!e.KeyModifiers.HasFlag(KeyModifiers.Alt))
+        {
+            return; // plain clicks arm nothing, and this runs on every press in the window
+        }
+
+        var isMenuPress = Menu is { IsOpen: true } || IsWithinMainMenu(e.Source as Visual);
+        _altMenuActivationGuard.NotifyPointerPressed(true, isMenuPress);
+
+        // The clicked control takes focus while the press is being handled, so read the resulting focus
+        // afterwards - that is where focus must return when the activation is undone. Posted at Normal
+        // priority, which runs before the next input event (the Alt release) is dispatched.
+        Dispatcher.UIThread.Post(() =>
+            _altMenuActivationGuard.NotifyFocusAfterPointerPress(Window?.FocusManager?.GetFocusedElement() as Control));
+    }
+
     public void OnKeyUpHandler(object? sender, KeyEventArgs e)
     {
         if (_setEndAtKeyUpLine != null)
         {
             _setEndAtKeyUpLine = null;
             _setEndAtKeyUpLineGoToNext = false;
+        }
+
+        // Undo the menu-bar activation Avalonia performs when Alt is released after an Alt+click/drag.
+        // Its AccessKeyHandler runs in the window's tunnel phase, so the menu is already open and
+        // focused by the time we get here - without this, IsMainMenuFocused() in OnKeyDownHandler
+        // swallows every shortcut until the user clicks something (discussion #11744).
+        if (_altMenuActivationGuard.TryConsumeAltRelease(e.Key, out var focusToRestore) &&
+            (Menu is { IsOpen: true } || IsMainMenuFocused()))
+        {
+            if (focusToRestore is { IsEffectivelyVisible: true })
+            {
+                _focusBeforeMainMenu = focusToRestore;
+            }
+
+            DeactivateMainMenu();
         }
 
         _shortcutManager.OnKeyReleased(this, e);
@@ -21474,6 +21637,23 @@ public partial class MainViewModel :
         SubtitleGridSelectionChanged();
     }
 
+    /// <summary>
+    /// Index of <paramref name="item"/> in <see cref="Subtitles"/>, probing the grid's own
+    /// selected index first. ObservableCollection.IndexOf is a linear scan with a virtual
+    /// Equals per element; this runs on every selection change (so on every arrow key), and
+    /// the grid already knows the answer whenever the item is the current single selection.
+    /// </summary>
+    private int IndexOfSubtitle(SubtitleLineViewModel item)
+    {
+        var hinted = SubtitleGrid.SelectedIndex;
+        if (hinted >= 0 && hinted < Subtitles.Count && ReferenceEquals(Subtitles[hinted], item))
+        {
+            return hinted;
+        }
+
+        return Subtitles.IndexOf(item);
+    }
+
     private void SubtitleGridSelectionChanged()
     {
         var selectedItems = SubtitleGrid.SelectedItems;
@@ -21531,7 +21711,7 @@ public partial class MainViewModel :
             return;
         }
 
-        var idx = Subtitles.IndexOf(item);
+        var idx = IndexOfSubtitle(item);
         StatusTextRight = $"{(idx + 1):N0}/{Subtitles.Count:N0}";
         if (item == SelectedSubtitle && item.Text == EditText)
         {
@@ -21576,32 +21756,11 @@ public partial class MainViewModel :
         var cps = SubtitleTextInfoHelper.GetCharactersPerSecond(text, item.StartTime, item.EndTime);
 
         var lines = text.SplitToLines();
-        PanelSingleLineLengthsOriginal.Children.Clear();
-        PanelSingleLineLengthsOriginal.Children.Add(UiUtil.MakeTextBlock(Se.Language.Main.SingleLineLength)
-            .WithFontSize(12)
-            .WithPadding(2));
-        var first = true;
-        for (var i = 0; i < lines.Count; i++)
-        {
-            if (first)
-            {
-                first = false;
-            }
-            else
-            {
-                PanelSingleLineLengthsOriginal.Children.Add(UiUtil.MakeTextBlock("/").WithFontSize(12).WithPadding(2));
-            }
-
-            var lineLength = SubtitleTextInfoHelper.GetLineLength(lines[i]);
-            var tb = UiUtil.MakeTextBlock(lineLength.ToString(CultureInfo.InvariantCulture)).WithFontSize(12).WithPadding(2);
-            if (Se.Settings.General.ColorTextTooLong &&
-                lineLength > Se.Settings.General.SubtitleLineMaximumLength)
-            {
-                tb.Background = _errorBrush;
-            }
-
-            PanelSingleLineLengthsOriginal.Children.Add(tb);
-        }
+        SubtitleTextInfoHelper.FillLineLengthPanel(
+            PanelSingleLineLengthsOriginal,
+            lines,
+            Se.Settings.General.ColorTextTooLong,
+            Se.Settings.General.SubtitleLineMaximumLength);
 
         EditTextCharactersPerSecondOriginal = string.Format(Se.Language.Main.CharactersPerSecond, $"{cps:0.0}");
         EditTextTotalLengthOriginal = string.Format(Se.Language.Main.TotalCharacters, totalLength);

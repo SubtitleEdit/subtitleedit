@@ -41,8 +41,9 @@ namespace Nikse.SubtitleEdit.Features.Video.TextToSpeech.Engines;
 ///
 /// Cloning is zero-shot from audio alone; an adjacent .txt transcription (ref-text) is optional
 /// but improves quality, so we pass <c>--ref-text</c> when a sidecar is present (same layout as
-/// F5-TTS / Qwen3 CustomVoice). Server-mode payload shape mirrors the other CrispASR TTS engines
-/// and should be verified against an actual v0.7.0 binary.
+/// F5-TTS / Qwen3 CustomVoice). Verified against crispasr 0.8.23: the reference comes from the
+/// startup <c>--voice</c> flag — the server logs "loaded reference audio '&lt;path&gt;'" and
+/// resamples it to 16 kHz — and the request carries no <c>voice</c> field.
 /// </summary>
 public class VoxCPM2CrispAsr : ITtsEngine
 {
@@ -66,10 +67,10 @@ public class VoxCPM2CrispAsr : ITtsEngine
 
     public const string BackendName = "voxcpm2-tts";
 
-    // Confirmed-by-analogy with F5-TTS/IndexTTS: the cloning backends read the reference audio
-    // from the startup --voice flag, so the server is torn down and restarted when the selected
-    // voice or ref-text changes (keyed by (model, voice, ref-text) below). Verify against a real
-    // v0.7.0 binary; if voxcpm2-tts honours a per-request voice field this can be set to false.
+    // Confirmed on crispasr 0.8.23: voxcpm2-tts reads the reference audio from the startup --voice
+    // flag, so the server is torn down and restarted when the selected voice or ref-text changes
+    // (keyed by (model, voice, ref-text) below). A per-request full path also hangs the server, so
+    // startup flags are the only workable shape here.
     private static readonly bool UseStartupVoiceFlags = true;
 
     /// <summary>
@@ -218,10 +219,29 @@ public class VoxCPM2CrispAsr : ITtsEngine
         }
 
         SeedVoicesFromQwen3TtsCppIfEmpty(voicesFolder);
+        NormalizeVoiceTranscriptsOnce(voicesFolder);
         return voicesFolder;
     }
 
     private static bool _voiceSeedAttempted;
+    private static bool _voicesNormalized;
+
+    /// <summary>
+    /// One-time per session: drop unusable ref-text sidecars and backfill missing transcriptions
+    /// from the sibling OmniVoice pack (same generic reference WAVs, real transcripts), so browsing
+    /// the voice combo does not fire the missing-transcript prompt once per seeded voice. Same fix
+    /// MOSS-TTS already carried.
+    /// </summary>
+    private static void NormalizeVoiceTranscriptsOnce(string voicesFolder)
+    {
+        if (_voicesNormalized)
+        {
+            return;
+        }
+        _voicesNormalized = true;
+
+        Qwen3TtsCrispAsr.NormalizeVoiceTranscripts(voicesFolder);
+    }
 
     /// <summary>
     /// One-time best-effort seed of WAV reference voices from qwen3-tts.cpp's voices folder so
@@ -291,7 +311,7 @@ public class VoxCPM2CrispAsr : ITtsEngine
                         // missing-transcription prompt. Same filter Qwen3 (CrispASR) applies.
                         try
                         {
-                            if (!Qwen3TtsCrispAsr.LooksLikeAttributionBlurb(File.ReadAllText(sidecar)))
+                            if (!Qwen3TtsCrispAsr.LooksLikeUnusableTranscript(File.ReadAllText(sidecar)))
                             {
                                 File.Copy(sidecar, sidecarDest);
                             }
@@ -430,13 +450,11 @@ public class VoxCPM2CrispAsr : ITtsEngine
             ["input"] = text,
             ["response_format"] = "wav",
             ["speed"] = speed,
-            // Attests the user's own imported reference; the server logs it for cloned synthesis.
-            ["consent_attestation"] = "I have the speaker's consent, or it is my own voice.",
-            // Skip the audible AI-disclosure prefix CrispASR otherwise prepends to cloned audio;
-            // SE surfaces the AI-generated nature in its UI. The inaudible watermark + C2PA
-            // provenance metadata stay embedded regardless (defaults to true server-side).
-            ["spoken_disclaimer"] = false,
         };
+
+        // Attests the user's own imported reference and the AI-disclosure duty; see
+        // CrispAsrTtsProvenance. Skipped when voice cloning has not been accepted in settings.
+        CrispAsrTtsProvenance.AddSpeechAttestations(payload);
 
         var body = JsonSerializer.Serialize(payload);
         using var content = new StringContent(body, Encoding.UTF8, "application/json");
@@ -513,7 +531,7 @@ public class VoxCPM2CrispAsr : ITtsEngine
             // transcriptions - treat them as "no transcript" (same read-time filter Qwen3
             // CrispASR applies) so they neither poison ref-text nor suppress the prompt.
             var text = File.ReadAllText(sidecar).Trim();
-            return Qwen3TtsCrispAsr.LooksLikeAttributionBlurb(text) ? string.Empty : text;
+            return Qwen3TtsCrispAsr.LooksLikeUnusableTranscript(text) ? string.Empty : text;
         }
         catch
         {
@@ -616,6 +634,7 @@ public class VoxCPM2CrispAsr : ITtsEngine
             psi.ArgumentList.Add(port.ToString());
             psi.ArgumentList.Add("--voice-dir");
             psi.ArgumentList.Add(GetSetVoicesFolder());
+            CrispAsrTtsProvenance.AddServerMarkingArgs(psi.ArgumentList, exe);
 
             if (UseStartupVoiceFlags)
             {

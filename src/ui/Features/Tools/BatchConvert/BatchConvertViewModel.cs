@@ -2609,6 +2609,16 @@ public partial class BatchConvertViewModel : ObservableObject, IClosingCleanup
         IsOpenContainingFolderVisible = FileGrid.SelectedItems.Count == 1;
     }
 
+    internal void FileGridKeyDown(object? sender, KeyEventArgs e)
+    {
+        // Delete removes the selected files, like the "Remove" button/context menu item.
+        if (e.Key == Key.Delete && e.Source is not TextBox && !IsConverting)
+        {
+            e.Handled = true;
+            RemoveSelectedFilesCommand.Execute(null);
+        }
+    }
+
     internal void ComboBoxSubtitleFormatPointerPressed(object? sender, PointerPressedEventArgs e)
     {
         // Open the format picker on right-click (or Mac Ctrl+left-click), like the main window's

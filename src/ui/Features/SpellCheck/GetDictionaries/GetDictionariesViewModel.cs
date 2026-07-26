@@ -58,11 +58,15 @@ public partial class GetDictionariesViewModel : ObservableObject, IClosingCleanu
     {
         { "Finnish", "fi" },
         { "Polish", "pl_PL" },
+        { "Armenian", "hy_AM" },
         { "Basque", "eu" },
+        { "Faroese", "fo_FO" },
+        { "Georgian", "ka_GE" },
         { "Irish", "ga" },
         { "Khmer", "km" },
         { "Latin", "la" },
         { "Lower Sorbian", "dsb" },
+        { "Luxembourgish", "lb_LU" },
         { "Malay", "ms" },
         { "Malayalam", "ml" },
         { "Macedonian", "mk" },
@@ -278,28 +282,24 @@ public partial class GetDictionariesViewModel : ObservableObject, IClosingCleanu
     {
         var uri = new Uri("avares://SubtitleEdit/Assets/HunspellDictionaries.json");
         using var stream = AssetLoader.Open(uri);
-        using var reader = new StreamReader(stream);
-
-        var jsonContent = reader.ReadToEnd();
-
         var options = new JsonSerializerOptions
         {
             PropertyNameCaseInsensitive = true,
             PropertyNamingPolicy = JsonNamingPolicy.CamelCase
         };
 
-        var dictionaries = JsonSerializer.Deserialize<List<GetSpellCheckDictionaryDisplay>>(jsonContent, options);
+        var dictionaries = JsonSerializer.Deserialize<List<GetSpellCheckDictionaryDisplay>>(stream, options);
         foreach (var dictionary in dictionaries ?? new List<GetSpellCheckDictionaryDisplay>())
         {
             Dictionaries.Add(dictionary);
         }
 
         var englishName = CultureInfo.CurrentCulture.EnglishName;
-        if (englishName.Contains('(') && englishName.Contains(')'))
+        var startIndex = englishName.IndexOf('(') + 1;
+        var endIndex = englishName.IndexOf(')', startIndex);
+        if (startIndex > 0 && endIndex > startIndex)
         {
-            var start = englishName.IndexOf('(') + 1;
-            var end = englishName.IndexOf(')');
-            englishName = englishName.Substring(start, end - start).Trim();
+            englishName = englishName.Substring(startIndex, endIndex - startIndex).Trim();
         }
 
         var selected = Dictionaries.FirstOrDefault(d => d.EnglishName.Contains(englishName, StringComparison.OrdinalIgnoreCase) ||

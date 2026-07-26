@@ -316,7 +316,7 @@ public class MossTtsCrispAsr : ITtsEngine
                         // missing-transcription prompt. Same filter Qwen3 (CrispASR) applies.
                         try
                         {
-                            if (!Qwen3TtsCrispAsr.LooksLikeAttributionBlurb(File.ReadAllText(sidecar)))
+                            if (!Qwen3TtsCrispAsr.LooksLikeUnusableTranscript(File.ReadAllText(sidecar)))
                             {
                                 File.Copy(sidecar, sidecarDest);
                             }
@@ -533,20 +533,20 @@ public class MossTtsCrispAsr : ITtsEngine
     /// </remarks>
     internal static Dictionary<string, object> BuildSpeakPayload(string text, double speed)
     {
-        return new Dictionary<string, object>
+        var payload = new Dictionary<string, object>
         {
             ["input"] = text,
             ["response_format"] = "wav",
             ["speed"] = speed,
-            // Voice cloning is gated behind a consent attestation (the server returns HTTP 400
-            // consent_required without it). The user supplies their own reference voice by
-            // importing a WAV into SE, which is the act being attested here.
-            ["consent_attestation"] = "I have the speaker's consent, or it is my own voice.",
-            // Skip the audible AI-disclosure prefix CrispASR otherwise prepends to cloned audio;
-            // SE surfaces the AI-generated nature in its UI. The inaudible watermark + C2PA
-            // provenance metadata stay embedded regardless (defaults to true server-side).
-            ["spoken_disclaimer"] = false,
         };
+
+        // Voice cloning is gated behind a consent attestation and, since CrispASR v0.8.22, a
+        // marking attestation when the spoken disclaimer is skipped. The user supplies their own
+        // reference voice by importing a WAV into SE, which is the act being attested here — and
+        // only when they have accepted voice cloning in settings. See CrispAsrTtsProvenance.
+        CrispAsrTtsProvenance.AddSpeechAttestations(payload);
+
+        return payload;
     }
 
     private static string TryReadRefText(string wavPath)
@@ -563,7 +563,7 @@ public class MossTtsCrispAsr : ITtsEngine
             // transcriptions - treat them as "no transcript" (same read-time filter Qwen3
             // CrispASR applies) so they neither poison ref-text nor suppress the prompt.
             var text = File.ReadAllText(sidecar).Trim();
-            return Qwen3TtsCrispAsr.LooksLikeAttributionBlurb(text) ? string.Empty : text;
+            return Qwen3TtsCrispAsr.LooksLikeUnusableTranscript(text) ? string.Empty : text;
         }
         catch
         {
@@ -672,6 +672,7 @@ public class MossTtsCrispAsr : ITtsEngine
             psi.ArgumentList.Add(port.ToString());
             psi.ArgumentList.Add("--voice-dir");
             psi.ArgumentList.Add(GetSetVoicesFolder());
+            CrispAsrTtsProvenance.AddServerMarkingArgs(psi.ArgumentList, exe);
 
             if (UseStartupVoiceFlags)
             {

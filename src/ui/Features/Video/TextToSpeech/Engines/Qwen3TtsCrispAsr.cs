@@ -478,7 +478,7 @@ public class Qwen3TtsCrispAsr : ITtsEngine
                 if (File.Exists(sidecar))
                 {
                     var text = File.ReadAllText(sidecar).Trim();
-                    if (!string.IsNullOrWhiteSpace(text) && !LooksLikeAttributionBlurb(text))
+                    if (!LooksLikeUnusableTranscript(text))
                     {
                         continue; // already carries a usable transcription
                     }
@@ -536,7 +536,7 @@ public class Qwen3TtsCrispAsr : ITtsEngine
             }
 
             var text = File.ReadAllText(sidecar).Trim();
-            return string.IsNullOrWhiteSpace(text) || LooksLikeAttributionBlurb(text) ? null : text;
+            return LooksLikeUnusableTranscript(text) ? null : text;
         }
         catch
         {
@@ -587,6 +587,37 @@ public class Qwen3TtsCrispAsr : ITtsEngine
             || text.Contains("This file is licensed", StringComparison.OrdinalIgnoreCase)
             || text.Contains("Downsampled to", StringComparison.OrdinalIgnoreCase);
     }
+
+    /// <summary>
+    /// True when a <c>.txt</c> sidecar cannot be a spoken transcription of its reference WAV, so it
+    /// must be treated as "no transcript" rather than fed to a backend as ref-text.
+    /// </summary>
+    /// <remarks>
+    /// Covers <see cref="LooksLikeAttributionBlurb"/> plus anything carrying subtitle markup. A
+    /// transcript filled in via "Use speech to text…" is joined straight out of the transcription,
+    /// so an STT engine configured for karaoke output (faster-whisper's <c>--highlight_words</c>,
+    /// whisper.cpp's <c>-owts</c>) yields one cue per word, each repeating the whole sentence with
+    /// the current word wrapped in <c>&lt;u&gt;</c> — kilobytes of tag-laced repetition that reads
+    /// as a valid transcript to every other check. CosyVoice3 hands that to the s3tok tokenizer and
+    /// renders the ref-text instead of the requested line. Nothing spoken contains markup, so its
+    /// presence is a reliable tell, and dropping the sidecar lets the OmniVoice backfill replace it.
+    /// </remarks>
+    public static bool LooksLikeUnusableTranscript(string? text)
+    {
+        if (string.IsNullOrWhiteSpace(text))
+        {
+            return true;
+        }
+
+        if (LooksLikeAttributionBlurb(text))
+        {
+            return true;
+        }
+
+        return SubtitleMarkupHints.Any(hint => text.Contains(hint, StringComparison.OrdinalIgnoreCase));
+    }
+
+    private static readonly string[] SubtitleMarkupHints = { "<u>", "</u>", "<i>", "</i>", "<b>", "<font", "{\\" };
 
     public static string GetTalkerPath(string? modelKey = null) =>
         Path.Combine(GetSetModelsFolder(), GetTalkerFileName(modelKey));
@@ -765,13 +796,10 @@ public class Qwen3TtsCrispAsr : ITtsEngine
         if (modelKey == ModelKeyClone && !string.IsNullOrEmpty(qwen3Voice.FilePath))
         {
             payload["voice"] = Path.GetFileNameWithoutExtension(qwen3Voice.FilePath);
-            // The reference is the user's own imported WAV — attest consent so the request also
-            // works against CrispASR builds that gate cloning on it.
-            payload["consent_attestation"] = "I have the speaker's consent, or it is my own voice.";
-            // Skip the audible AI-disclosure prefix CrispASR otherwise prepends to cloned audio;
-            // SE surfaces the AI-generated nature in its UI. The inaudible watermark + C2PA
-            // provenance metadata stay embedded regardless (defaults to true server-side).
-            payload["spoken_disclaimer"] = false;
+            // The reference is the user's own imported WAV — attest consent and the AI-disclosure
+            // duty so the request also works against CrispASR builds that gate cloning on it. See
+            // CrispAsrTtsProvenance; skipped when voice cloning has not been accepted in settings.
+            CrispAsrTtsProvenance.AddSpeechAttestations(payload);
         }
         else if (modelKey == ModelKeyCustomVoice && !string.IsNullOrEmpty(qwen3Voice.Voice))
         {
@@ -953,6 +981,7 @@ public class Qwen3TtsCrispAsr : ITtsEngine
             // makes /v1/voices reflect any imported reference WAVs.
             psi.ArgumentList.Add("--voice-dir");
             psi.ArgumentList.Add(GetSetVoicesFolder());
+            CrispAsrTtsProvenance.AddServerMarkingArgs(psi.ArgumentList, exe);
 
             var process = Process.Start(psi)
                 ?? throw new InvalidOperationException("Failed to start crispasr (qwen3-tts)");

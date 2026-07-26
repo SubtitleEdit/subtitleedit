@@ -31,10 +31,11 @@ namespace Nikse.SubtitleEdit.Features.Video.TextToSpeech.Engines;
 ///       --ref-text "Transcript of the reference audio" \
 ///       --tts "Hello, how are you today?" --tts-output out.wav
 ///
-/// Server-mode flag layout is unconfirmed in CrispASR 0.6.12's README. This implementation
-/// assumes the same per-request payload shape Qwen3 CustomVoice uses (voice = WAV path,
-/// ref_text = transcription) and falls back to a startup --voice / --ref-text if needed
-/// (toggle <see cref="UseStartupVoiceFlags"/> below). Verify against an actual 0.6.12 binary.
+/// Server mode takes the reference from the startup <c>--voice</c> / <c>--ref-text</c> flags, not
+/// from the request: the payload carries no <c>voice</c> or <c>ref_text</c> field at all (see
+/// <see cref="UseStartupVoiceFlags"/> and the remarks on the payload builder). Re-verified against
+/// crispasr 0.8.23 — the server logs the clone reference at startup and every line holds that
+/// speaker.
 /// </summary>
 public class F5TtsCrispAsr : ITtsEngine
 {
@@ -190,10 +191,29 @@ public class F5TtsCrispAsr : ITtsEngine
         }
 
         SeedVoicesFromQwen3TtsCppIfEmpty(voicesFolder);
+        NormalizeVoiceTranscriptsOnce(voicesFolder);
         return voicesFolder;
     }
 
     private static bool _voiceSeedAttempted;
+    private static bool _voicesNormalized;
+
+    /// <summary>
+    /// One-time per session: drop unusable ref-text sidecars and backfill missing transcriptions
+    /// from the sibling OmniVoice pack (same generic reference WAVs, real transcripts), so browsing
+    /// the voice combo does not fire the missing-transcript prompt once per seeded voice. Same fix
+    /// MOSS-TTS already carried.
+    /// </summary>
+    private static void NormalizeVoiceTranscriptsOnce(string voicesFolder)
+    {
+        if (_voicesNormalized)
+        {
+            return;
+        }
+        _voicesNormalized = true;
+
+        Qwen3TtsCrispAsr.NormalizeVoiceTranscripts(voicesFolder);
+    }
 
     /// <summary>
     /// One-time best-effort seed of WAV reference voices from qwen3-tts.cpp's voices folder.
@@ -263,7 +283,7 @@ public class F5TtsCrispAsr : ITtsEngine
                         // missing-transcription prompt. Same filter Qwen3 (CrispASR) applies.
                         try
                         {
-                            if (!Qwen3TtsCrispAsr.LooksLikeAttributionBlurb(File.ReadAllText(sidecar)))
+                            if (!Qwen3TtsCrispAsr.LooksLikeUnusableTranscript(File.ReadAllText(sidecar)))
                             {
                                 File.Copy(sidecar, sidecarDest);
                             }
@@ -390,13 +410,11 @@ public class F5TtsCrispAsr : ITtsEngine
             ["input"] = text,
             ["response_format"] = "wav",
             ["speed"] = speed,
-            // Attests the user's own imported reference; the server logs it for cloned synthesis.
-            ["consent_attestation"] = "I have the speaker's consent, or it is my own voice.",
-            // Skip the audible AI-disclosure prefix CrispASR otherwise prepends to cloned audio;
-            // SE surfaces the AI-generated nature in its UI. The inaudible watermark + C2PA
-            // provenance metadata stay embedded regardless (defaults to true server-side).
-            ["spoken_disclaimer"] = false,
         };
+
+        // Attests the user's own imported reference and the AI-disclosure duty; see
+        // CrispAsrTtsProvenance. Skipped when voice cloning has not been accepted in settings.
+        CrispAsrTtsProvenance.AddSpeechAttestations(payload);
 
         var body = JsonSerializer.Serialize(payload);
         using var content = new StringContent(body, Encoding.UTF8, "application/json");
@@ -473,7 +491,7 @@ public class F5TtsCrispAsr : ITtsEngine
             // transcriptions - treat them as "no transcript" (same read-time filter Qwen3
             // CrispASR applies) so they neither poison ref-text nor suppress the prompt.
             var text = File.ReadAllText(sidecar).Trim();
-            return Qwen3TtsCrispAsr.LooksLikeAttributionBlurb(text) ? string.Empty : text;
+            return Qwen3TtsCrispAsr.LooksLikeUnusableTranscript(text) ? string.Empty : text;
         }
         catch
         {
@@ -579,6 +597,7 @@ public class F5TtsCrispAsr : ITtsEngine
             psi.ArgumentList.Add(port.ToString());
             psi.ArgumentList.Add("--voice-dir");
             psi.ArgumentList.Add(GetSetVoicesFolder());
+            CrispAsrTtsProvenance.AddServerMarkingArgs(psi.ArgumentList, exe);
 
             if (UseStartupVoiceFlags)
             {

@@ -220,6 +220,7 @@ public class BatchConvertWindow : Window
             },
         };
         dataGrid.Bind(DataGrid.SelectedItemProperty, new Binding(nameof(vm.SelectedBatchItem)) { Source = vm });
+        dataGrid.KeyDown += vm.FileGridKeyDown;
         vm.FileGrid = dataGrid;
         _ = new DataGridCheckboxMultiSelect<BatchConvertItem>(dataGrid);
 

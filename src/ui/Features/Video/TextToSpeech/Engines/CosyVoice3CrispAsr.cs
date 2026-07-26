@@ -246,10 +246,31 @@ public class CosyVoice3CrispAsr : ITtsEngine
         }
 
         SeedVoicesFromQwen3TtsCppIfEmpty(voicesFolder);
+        NormalizeVoiceTranscriptsOnce(voicesFolder);
         return voicesFolder;
     }
 
     private static bool _voiceSeedAttempted;
+    private static bool _voicesNormalized;
+
+    /// <summary>
+    /// One-time per session: drop unusable ref-text sidecars and backfill missing transcriptions
+    /// from the sibling OmniVoice pack (same generic reference WAVs, real transcripts). CosyVoice3
+    /// needs ref-text more than any sibling — it fails outright without one — yet it was the engine
+    /// that never ran this, so of the seeded voices only the single one that happened to ship a real
+    /// transcript was usable. Browsing the voice combo fired the missing-transcript prompt once per
+    /// voice, and MOSS-TTS had the identical bug fixed this way.
+    /// </summary>
+    private static void NormalizeVoiceTranscriptsOnce(string voicesFolder)
+    {
+        if (_voicesNormalized)
+        {
+            return;
+        }
+        _voicesNormalized = true;
+
+        Qwen3TtsCrispAsr.NormalizeVoiceTranscripts(voicesFolder);
+    }
 
     /// <summary>
     /// One-time best-effort seed of WAV reference voices from qwen3-tts.cpp's voices folder.
@@ -317,7 +338,7 @@ public class CosyVoice3CrispAsr : ITtsEngine
                         // missing-transcription prompt. Same filter Qwen3 (CrispASR) applies.
                         try
                         {
-                            if (!Qwen3TtsCrispAsr.LooksLikeAttributionBlurb(File.ReadAllText(sidecar)))
+                            if (!Qwen3TtsCrispAsr.LooksLikeUnusableTranscript(File.ReadAllText(sidecar)))
                             {
                                 File.Copy(sidecar, sidecarDest);
                             }
@@ -423,7 +444,7 @@ public class CosyVoice3CrispAsr : ITtsEngine
             // transcriptions - treat them as "no transcript" (same read-time filter Qwen3
             // CrispASR applies) so they neither poison ref-text nor suppress the prompt.
             var text = File.ReadAllText(sidecar).Trim();
-            return Qwen3TtsCrispAsr.LooksLikeAttributionBlurb(text) ? string.Empty : text;
+            return Qwen3TtsCrispAsr.LooksLikeUnusableTranscript(text) ? string.Empty : text;
         }
         catch
         {
@@ -501,12 +522,9 @@ public class CosyVoice3CrispAsr : ITtsEngine
         };
         if (isClone)
         {
-            // Attests the user's own imported reference; the server logs it for cloned synthesis.
-            payload["consent_attestation"] = "I have the speaker's consent, or it is my own voice.";
-            // Skip the audible AI-disclosure prefix CrispASR otherwise prepends to cloned audio;
-            // SE surfaces the AI-generated nature in its UI. The inaudible watermark + C2PA
-            // provenance metadata stay embedded regardless (defaults to true server-side).
-            payload["spoken_disclaimer"] = false;
+            // Attests the user's own imported reference and the AI-disclosure duty; see
+            // CrispAsrTtsProvenance. Skipped when voice cloning has not been accepted in settings.
+            CrispAsrTtsProvenance.AddSpeechAttestations(payload);
         }
 
         var body = JsonSerializer.Serialize(payload);
@@ -688,6 +706,8 @@ public class CosyVoice3CrispAsr : ITtsEngine
                 psi.ArgumentList.Add("--ref-text");
                 psi.ArgumentList.Add(refText);
             }
+
+            CrispAsrTtsProvenance.AddServerMarkingArgs(psi.ArgumentList, exe);
 
             var process = Process.Start(psi)
                 ?? throw new InvalidOperationException("Failed to start crispasr (cosyvoice3-tts)");

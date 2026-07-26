@@ -37,7 +37,17 @@ namespace Nikse.SubtitleEdit.Core.Common
 
         public int Layer { get; set; }
 
-        public string Id { get; }
+        /// <summary>
+        /// Identity of this paragraph, stable for its lifetime. Nullable so a paragraph can
+        /// explicitly carry "no id".
+        /// </summary>
+        /// <remarks>
+        /// A Guid rather than its string form: the value lives inline in the object, so reading a
+        /// subtitle no longer allocates a 36-char string per paragraph (~96 bytes each - a
+        /// measurable share of the allocation for loading a large file), and the callers that
+        /// compared ids no longer round-trip through string.
+        /// </remarks>
+        public Guid? Id { get; }
 
         public string Language { get; set; }
 
@@ -49,9 +59,9 @@ namespace Nikse.SubtitleEdit.Core.Common
 
         public bool IsDefault => Math.Abs(StartTime.TotalMilliseconds) < 0.01 && Math.Abs(EndTime.TotalMilliseconds) < 0.01 && string.IsNullOrEmpty(Text);
 
-        private static string GenerateId()
+        private static Guid GenerateId()
         {
-            return Guid.NewGuid().ToString();
+            return Guid.NewGuid();
         }
 
         public Paragraph() : this(new TimeCode(), new TimeCode(), string.Empty)

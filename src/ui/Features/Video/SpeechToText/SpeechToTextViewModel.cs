@@ -154,6 +154,16 @@ public partial class SpeechToTextViewModel : ObservableObject
     private readonly VideoInfo _videoInfo = new();
     private bool _abort;
     private CancellationTokenSource? _openAiCts;
+
+    /// <summary>
+    /// Language code reported by an online STT provider for the current run.
+    /// Post-processing needs a language, and online engines have no entry in the
+    /// shared language dropdown — so when the user leaves the per-engine hint
+    /// empty (auto-detect), this is what keeps merge/split/line-breaking from
+    /// being skipped entirely (issue #12860).
+    /// </summary>
+    private string? _onlineDetectedLanguage;
+
     private readonly List<ResultText> _resultList = new();
     private bool _useCenterChannelOnly;
 
@@ -179,6 +189,7 @@ public partial class SpeechToTextViewModel : ObservableObject
     private bool _audioClipsAutoStart;
     private string _chatLlmText = string.Empty;
     private string _qwen3AsrOutputJsonPath = string.Empty;
+    private int? _qwen3AsrExitCode;
 
     private readonly IWindowService _windowService;
     private readonly IFileHelper _fileHelper;
@@ -714,6 +725,18 @@ public partial class SpeechToTextViewModel : ObservableObject
             _timerWhisper.Stop();
 
             var settings = Se.Settings.Tools.AudioToText;
+
+            // Grab the exit code before disposing - it is the key diagnostic when the engine
+            // dies without producing output (e.g. a Qwen3 ASR GPU/Vulkan crash, issue #12815).
+            try
+            {
+                _qwen3AsrExitCode = _whisperProcess.ExitCode;
+            }
+            catch
+            {
+                _qwen3AsrExitCode = null;
+            }
+
             _whisperProcess.Dispose();
 
             var engine = GetEffectiveSelectedEngine();
@@ -904,6 +927,27 @@ public partial class SpeechToTextViewModel : ObservableObject
         var jsonPath = _qwen3AsrOutputJsonPath;
         if (string.IsNullOrEmpty(jsonPath) || !File.Exists(jsonPath))
         {
+            var exitCode = _qwen3AsrExitCode;
+            var isVulkan = false;
+            try
+            {
+                var folder = new Qwen3AsrCppEngine().GetAndCreateWhisperFolder();
+                isVulkan = DownloadHashManager.IsQwen3AsrCppVulkanInstall(folder);
+            }
+            catch
+            {
+                // best-effort diagnostics only
+            }
+
+            // The engine ran but produced no output JSON - almost always a native crash of the
+            // GPU (Vulkan) build. Record the exit code (0xC0000005-style values indicate a hard
+            // crash) and force it to the tools log, since that setting is off by default and
+            // otherwise there is no record of why it failed (issue #12815).
+            var exitCodeText = exitCode.HasValue
+                ? $"exit code {exitCode.Value} (0x{(uint)exitCode.Value:X8})"
+                : "exit code unavailable";
+            Se.WriteToolsLog($"Qwen3 ASR CPP produced no output JSON; {exitCodeText}; Vulkan build: {isVulkan}", true);
+
             Dispatcher.UIThread.Invoke<Task>(async () =>
             {
                 LogToConsole($"Speech to text ({settings.WhisperChoice}) done in {_sw.Elapsed}{Environment.NewLine}");
@@ -912,7 +956,14 @@ public partial class SpeechToTextViewModel : ObservableObject
                     await MessageBox.Show(Window!, $"Unknown argument: {settings.WhisperCustomCommandLineArguments}",
                         "Unknown argument. Please check the advanced settings.");
                 }
-                LogToConsole($"Speech to text: Could not find output JSON file{Environment.NewLine}");
+                LogToConsole($"Speech to text: Could not find output JSON file ({exitCodeText}){Environment.NewLine}");
+                if (exitCode is not (null or 0))
+                {
+                    var url = new Qwen3AsrCppEngine().Url;
+                    LogToConsole(isVulkan
+                        ? $"The Qwen3 ASR GPU (Vulkan) engine crashed before producing output. Try the CPU build instead (re-download the engine and choose CPU), or report it at {url}{Environment.NewLine}"
+                        : $"The Qwen3 ASR engine crashed before producing output. Try re-running, a different model, or report it at {url}{Environment.NewLine}");
+                }
                 ProgressValue = 100;
                 IsTranscribeEnabled = true;
                 await Task.CompletedTask;
@@ -1087,14 +1138,16 @@ public partial class SpeechToTextViewModel : ObservableObject
         // moment for these engines — there is no separate OK button.
         SaveSettings();
 
+        _onlineDetectedLanguage = null;
+
         var transcriber = engine.CreateTranscriber(out var configError);
         if (transcriber == null)
         {
             await Dispatcher.UIThread.InvokeAsync(async () =>
             {
                 await MessageBox.Show(Window!,
-                    configError ?? Se.Language.General.OpenAiCompatibleSttUrlMissing,
-                    Se.Language.General.ConfigurationRequired);
+                    Se.Language.General.ConfigurationRequired,
+                    configError ?? Se.Language.General.OpenAiCompatibleSttUrlMissing);
                 IsTranscribeEnabled = true;
             });
             return;
@@ -1117,8 +1170,8 @@ public partial class SpeechToTextViewModel : ObservableObject
             await Dispatcher.UIThread.InvokeAsync(async () =>
             {
                 await MessageBox.Show(Window!,
-                    string.Format(Se.Language.General.OpenAiCompatibleSttUrlNotResponding, probeError),
-                    Se.Language.General.TranscriptionError);
+                    Se.Language.General.TranscriptionError,
+                    string.Format(Se.Language.General.OpenAiCompatibleSttUrlNotResponding, probeError));
                 IsTranscribeEnabled = true;
             });
             return;
@@ -1165,6 +1218,7 @@ public partial class SpeechToTextViewModel : ObservableObject
             else
             {
                 var response = await service.TranscribeAsync(audioFileName, language, null, segmentProgress, cancellationToken);
+                RememberDetectedLanguage(response);
                 IngestTranscriptionResponse(
                     response,
                     subtitle,
@@ -1231,9 +1285,12 @@ public partial class SpeechToTextViewModel : ObservableObject
         catch (HttpRequestException ex)
         {
             // Log the full exception before simplifying the dialog text — the
-            // response body (e.g. DashScope's error code) is the only clue to
-            // what actually failed, and the dialog may hide it.
-            Se.WriteToolsLog($"Online STT transcription failed ({engine.Name}): {ex}");
+            // response body (e.g. DashScope's error code, or xAI's "check the
+            // URL" for a wrong endpoint path) is the only clue to what actually
+            // failed. Force the write: "write tools log" is off by default, so
+            // without it the server's answer is gone the moment the user closes
+            // the dialog (issue #12860).
+            Se.WriteToolsLog($"Online STT transcription failed ({engine.Name}): {ex}", true);
 
             var message = ex.Message;
             if (message.Contains("401") || message.Contains("Unauthorized"))
@@ -1253,7 +1310,7 @@ public partial class SpeechToTextViewModel : ObservableObject
 
             await Dispatcher.UIThread.InvokeAsync(async () =>
             {
-                await MessageBox.Show(Window!, message, Se.Language.General.TranscriptionError);
+                await MessageBox.Show(Window!, Se.Language.General.TranscriptionError, message);
                 IsTranscribeEnabled = true;
             });
         }
@@ -1262,11 +1319,11 @@ public partial class SpeechToTextViewModel : ObservableObject
             // Raised by the online STT services when their own timeout fires
             // (distinct from a user cancel, which arrives as
             // OperationCanceledException above).
-            Se.WriteToolsLog($"Online STT transcription timed out ({engine.Name}): {ex.Message}");
+            Se.WriteToolsLog($"Online STT transcription timed out ({engine.Name}): {ex.Message}", true);
 
             await Dispatcher.UIThread.InvokeAsync(async () =>
             {
-                await MessageBox.Show(Window!, Se.Language.General.RequestTimeout, Se.Language.General.TranscriptionError);
+                await MessageBox.Show(Window!, Se.Language.General.TranscriptionError, Se.Language.General.RequestTimeout);
                 IsTranscribeEnabled = true;
             });
 
@@ -1291,11 +1348,11 @@ public partial class SpeechToTextViewModel : ObservableObject
         }
         catch (Exception ex)
         {
-            Se.WriteToolsLog($"Online STT transcription failed ({engine.Name}): {ex}");
+            Se.WriteToolsLog($"Online STT transcription failed ({engine.Name}): {ex}", true);
 
             await Dispatcher.UIThread.InvokeAsync(async () =>
             {
-                await MessageBox.Show(Window!, $"{Se.Language.General.TranscriptionFailed}: {ex.Message}", "Error");
+                await MessageBox.Show(Window!, Se.Language.General.TranscriptionError, $"{Se.Language.General.TranscriptionFailed}: {ex.Message}");
                 IsTranscribeEnabled = true;
             });
         }
@@ -1512,6 +1569,7 @@ public partial class SpeechToTextViewModel : ObservableObject
                 var chunkResponse = await service.TranscribeAsync(
                     chunkPath, language, null, offsettingProgress, cancellationToken);
 
+                RememberDetectedLanguage(chunkResponse);
                 IngestTranscriptionResponse(
                     chunkResponse,
                     subtitle,
@@ -1801,17 +1859,57 @@ public partial class SpeechToTextViewModel : ObservableObject
     /// <summary>
     /// The language hint configured for the selected online STT engine, or null
     /// for local engines. Online engines don't use the shared language dropdown
-    /// (it's nulled out), so post-processing reads the per-engine setting instead.
+    /// (it's nulled out), so post-processing reads the per-engine setting instead
+    /// — falling back to the language the provider detected when that setting is
+    /// left empty.
     /// </summary>
     private string? GetOnlineEngineLanguageHint()
     {
-        return GetEffectiveSelectedEngine() switch
+        var configured = GetEffectiveSelectedEngine() switch
         {
             OpenRouterSttEngine => Se.Settings.Tools.OpenRouterSttLanguage,
             DashScopeQwen3SttEngine => Se.Settings.Tools.DashScopeSttLanguage,
             OpenAiCompatibleSttEngine => Se.Settings.Tools.OpenAiCompatibleSttLanguage,
             _ => null,
         };
+
+        if (configured == null || !string.IsNullOrWhiteSpace(configured))
+        {
+            return configured;
+        }
+
+        // Hint left empty (auto-detect): use whatever language the provider said
+        // it recognized, so post-processing still runs (issue #12860).
+        return _onlineDetectedLanguage;
+    }
+
+    /// <summary>
+    /// Note the language an online provider reported for this run. Providers are
+    /// inconsistent here — OpenAI's verbose_json says "english" while others send
+    /// "en" — so a full name is mapped back to its whisper language code. The
+    /// first non-empty value wins; later chunks don't overwrite it.
+    /// </summary>
+    private void RememberDetectedLanguage(OpenAiCompatibleSttResponse response)
+    {
+        if (!string.IsNullOrEmpty(_onlineDetectedLanguage) || string.IsNullOrWhiteSpace(response.Language))
+        {
+            return;
+        }
+
+        var reported = response.Language.Trim();
+        if (reported.Length == 2)
+        {
+            _onlineDetectedLanguage = reported.ToLowerInvariant();
+            return;
+        }
+
+        var match = WhisperLanguage.Languages.FirstOrDefault(p =>
+            p.Name.Equals(reported, StringComparison.OrdinalIgnoreCase) ||
+            p.Code.Equals(reported, StringComparison.OrdinalIgnoreCase));
+        if (match != null)
+        {
+            _onlineDetectedLanguage = match.Code;
+        }
     }
 
     private WavePeakData2? MakeWavePeaks()
@@ -3549,6 +3647,7 @@ public partial class SpeechToTextViewModel : ObservableObject
             var exe = qwen3Asr.GetExecutable();
             var alignerModel = qwen3Asr.ForcedAlignerModel;
             _qwen3AsrOutputJsonPath = Path.Combine(Path.GetTempPath(), $"qwen3_asr_{Guid.NewGuid():N}.json");
+            _qwen3AsrExitCode = null;
             var qwen3ExtraArgs = engine.CommandLineParameter;
 
             var qwen3Params = string.IsNullOrWhiteSpace(qwen3ExtraArgs)

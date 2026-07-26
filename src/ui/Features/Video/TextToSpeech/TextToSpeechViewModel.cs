@@ -46,6 +46,7 @@ using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Text.Json;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Timers;
@@ -711,7 +712,7 @@ public partial class TextToSpeechViewModel : ObservableObject
             // An attribution-blurb sidecar (pre-filter seeding) is not a transcript - report it
             // as missing so the transcript prompt still fires instead of being suppressed.
             var text = File.ReadAllText(sidecar).Trim();
-            return Qwen3TtsCrispAsr.LooksLikeAttributionBlurb(text) ? null : text;
+            return Qwen3TtsCrispAsr.LooksLikeUnusableTranscript(text) ? null : text;
         }
         catch
         {
@@ -736,10 +737,98 @@ public partial class TextToSpeechViewModel : ObservableObject
             return null;
         }
 
-        return string.Join(' ', sttResult.TranscribedSubtitle.Paragraphs
-            .Select(p => p.Text?.Replace('\n', ' ').Replace('\r', ' ').Trim())
-            .Where(t => !string.IsNullOrWhiteSpace(t)));
+        return BuildRefTextFromTranscription(sttResult.TranscribedSubtitle.Paragraphs.Select(p => p.Text));
     }
+
+    /// <summary>
+    /// Flattens a transcription into the single plain sentence a cloning backend wants as ref-text.
+    /// </summary>
+    /// <remarks>
+    /// Strips subtitle markup and drops cues whose text the result already contains. Both matter
+    /// because the transcription comes from whatever the user has configured under Audio to text,
+    /// and a karaoke setup — faster-whisper's <c>--highlight_words</c>, whisper.cpp's <c>-owts</c> —
+    /// emits one cue per word, each repeating the entire sentence with the current word wrapped in
+    /// <c>&lt;u&gt;</c>. Joining that raw produced kilobytes of tag-laced repetition, which
+    /// CosyVoice3 then rendered instead of the line it was asked to speak. With the markup gone
+    /// those cues are identical, so the containment check collapses them back to one sentence.
+    /// </remarks>
+    internal static string BuildRefTextFromTranscription(IEnumerable<string?> paragraphTexts)
+    {
+        var parts = new List<string>();
+        foreach (var raw in paragraphTexts)
+        {
+            if (string.IsNullOrWhiteSpace(raw))
+            {
+                continue;
+            }
+
+            var text = HtmlUtil.RemoveHtmlTags(raw, true)
+                .Replace('\n', ' ')
+                .Replace('\r', ' ')
+                .Trim();
+            text = Regex.Replace(text, @"\s{2,}", " ");
+            if (string.IsNullOrWhiteSpace(text))
+            {
+                continue;
+            }
+
+            // Skip a cue the result already covers: identical karaoke repeats, and the growing
+            // prefixes some word-timestamp modes emit. Cheap because ref-text stays short.
+            if (parts.Any(p => CoversWords(p, text)))
+            {
+                continue;
+            }
+
+            // Conversely, drop an earlier part this cue supersedes.
+            parts.RemoveAll(p => CoversWords(text, p));
+            parts.Add(text);
+        }
+
+        return string.Join(' ', parts);
+    }
+
+    /// <summary>
+    /// True when <paramref name="inner"/>'s words appear as a contiguous run inside
+    /// <paramref name="outer"/>'s words.
+    /// </summary>
+    /// <remarks>
+    /// Whole words, not raw substrings: a plain <c>Contains</c> also matches inside a word, so a
+    /// cue of "Yes" was dropped by a later "Yesterday we left.", and "I" — about as common as cues
+    /// get — by any later cue containing "It". The ref-text then no longer matched the reference
+    /// audio, which is the mismatch that degrades cloning in the first place.
+    /// </remarks>
+    private static bool CoversWords(string outer, string inner)
+    {
+        var outerWords = SplitWords(outer);
+        var innerWords = SplitWords(inner);
+        if (innerWords.Length == 0 || innerWords.Length > outerWords.Length)
+        {
+            return false;
+        }
+
+        for (var start = 0; start + innerWords.Length <= outerWords.Length; start++)
+        {
+            var matched = true;
+            for (var i = 0; i < innerWords.Length; i++)
+            {
+                if (!string.Equals(outerWords[start + i], innerWords[i], StringComparison.OrdinalIgnoreCase))
+                {
+                    matched = false;
+                    break;
+                }
+            }
+
+            if (matched)
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private static string[] SplitWords(string text) =>
+        text.Split((char[]?)null, StringSplitOptions.RemoveEmptyEntries);
 
     private static ObservableCollection<string> BuildKeywordOptions(string[] keywords)
     {
@@ -1628,8 +1717,8 @@ public partial class TextToSpeechViewModel : ObservableObject
             return;
         }
 
-        var json = await File.ReadAllTextAsync(fileName, _cancellationToken);
-        var importExport = JsonSerializer.Deserialize<TtsImportExport>(json);
+        await using var stream = File.OpenRead(fileName);
+        var importExport = await JsonSerializer.DeserializeAsync<TtsImportExport>(stream, cancellationToken: _cancellationToken);
         if (importExport == null)
         {
             var answer = await MessageBox.Show(
