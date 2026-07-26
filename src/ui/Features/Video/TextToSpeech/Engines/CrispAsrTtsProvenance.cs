@@ -1,10 +1,10 @@
 using Nikse.SubtitleEdit.Logic.Config;
-using Nikse.SubtitleEdit.Logic.Download;
-using Nikse.SubtitleEdit.UiLogic;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.IO;
+using System.Linq;
 
 namespace Nikse.SubtitleEdit.Features.Video.TextToSpeech.Engines;
 
@@ -26,7 +26,8 @@ namespace Nikse.SubtitleEdit.Features.Video.TextToSpeech.Engines;
 ///   <item><c>--no-watermark --no-c2pa --accept-marking-responsibility</c> — SE opts out of the
 ///   inaudible AudioSeal watermark and the C2PA manifest chunk, both of which alter the rendered
 ///   audio/container that then gets muxed into the user's video. The server refuses either opt-out
-///   without the attestation flag.</item>
+///   without the attestation flag, and only understands the attestation flag from v0.8.22, so the
+///   set is passed only when the binary's own <c>--help</c> lists all three.</item>
 /// </list>
 ///
 /// All of it is behind <see cref="SeVideoTextToSpeech.AcceptVoiceCloning"/> (default on): with the
@@ -63,12 +64,25 @@ public static class CrispAsrTtsProvenance
     }
 
     /// <summary>
+    /// The flags SE passes to opt out of provenance marking. All three have to be understood by the
+    /// binary before any of them is passed — <c>--accept-marking-responsibility</c> is what the
+    /// server demands before it will honour either opt-out, and it only exists from v0.8.22.
+    /// </summary>
+    private static readonly string[] MarkingOptOutFlags =
+    {
+        "--no-watermark",
+        "--no-c2pa",
+        "--accept-marking-responsibility",
+    };
+
+    /// <summary>
     /// Appends the provenance opt-out flags to a <c>crispasr --server</c> argument list.
     /// </summary>
     /// <remarks>
-    /// Skipped unless the installed binary is known to understand them (v0.8.22+): crispasr aborts
-    /// on an unknown argument, so passing them to an older install the user declined to update
-    /// would break TTS outright.
+    /// Skipped unless the binary's own <c>--help</c> lists all of them: crispasr treats an unknown
+    /// argument as fatal ("error: unknown argument", usage dump, exit 0), so passing them to an
+    /// older install breaks TTS outright. v0.8.20 is the trap — it has <c>--no-watermark</c> but
+    /// neither <c>--no-c2pa</c> nor <c>--accept-marking-responsibility</c>.
     /// </remarks>
     public static void AddServerMarkingArgs(Collection<string> args, string crispAsrExecutable)
     {
@@ -77,16 +91,25 @@ public static class CrispAsrTtsProvenance
             return;
         }
 
-        args.Add("--no-watermark");
-        args.Add("--no-c2pa");
-        args.Add("--accept-marking-responsibility");
+        foreach (var flag in MarkingOptOutFlags)
+        {
+            args.Add(flag);
+        }
     }
 
     /// <summary>
-    /// True when the installed crispasr executable is a release that has the provenance opt-out
-    /// flags. A hash matching a known *older* release says "definitely too old"; an unrecognised
-    /// hash (custom local build) is given the benefit of the doubt, as elsewhere in SE.
+    /// True when the crispasr binary's <c>--help</c> documents every flag in
+    /// <see cref="MarkingOptOutFlags"/>.
     /// </summary>
+    /// <remarks>
+    /// Asks the binary rather than inferring from its hash. A locally built crispasr — or any
+    /// release SE never tracked — has an unrecognised hash, and guessing "probably new enough"
+    /// there is what breaks server startup; guessing "probably too old" would silently drop the
+    /// opt-out on a perfectly capable build. <c>--help</c> costs a few milliseconds and answers
+    /// the actual question, and the result is cached per (path, size, write time) so a
+    /// re-download re-probes. Anything unexpected — cannot start, times out, no help text — fails
+    /// closed, i.e. CrispASR keeps marking its output, which is the safe direction.
+    /// </remarks>
     public static bool SupportsMarkingOptOut(string crispAsrExecutable)
     {
         if (string.IsNullOrEmpty(crispAsrExecutable) || !File.Exists(crispAsrExecutable))
@@ -94,29 +117,104 @@ public static class CrispAsrTtsProvenance
             return false;
         }
 
-        var folder = Path.GetDirectoryName(crispAsrExecutable);
-        string? variant = null;
-        if (folder != null)
+        string cacheKey;
+        try
         {
-            variant = OperatingSystem.IsWindows()
-                ? DownloadHashManager.DetectCrispAsrWindowsVariant(folder)
-                : OperatingSystem.IsLinux()
-                    ? DownloadHashManager.DetectCrispAsrLinuxVariant(folder)
-                    : null;
+            var info = new FileInfo(crispAsrExecutable);
+            cacheKey = $"{info.FullName}|{info.Length}|{info.LastWriteTimeUtc.Ticks}";
+        }
+        catch
+        {
+            return false;
         }
 
-        var key = DownloadHashManager.ResolveCrispAsrExecutableKey(variant);
-        if (key == null)
+        lock (SupportCacheLock)
         {
-            return true;
+            if (SupportCache.TryGetValue(cacheKey, out var cached))
+            {
+                return cached;
+            }
         }
 
-        var hash = Sha256Util.ComputeSha256(crispAsrExecutable);
-        if (hash == null)
+        var help = HelpTextProvider(crispAsrExecutable);
+        var supported = help != null
+            && MarkingOptOutFlags.All(flag => help.Contains(flag, StringComparison.Ordinal));
+
+        lock (SupportCacheLock)
         {
-            return true;
+            SupportCache[cacheKey] = supported;
         }
 
-        return DownloadHashManager.GetStatus(key, hash) != DownloadHashManager.UpdateStatus.UpdateAvailable;
+        return supported;
+    }
+
+    private static readonly Dictionary<string, bool> SupportCache = new();
+    private static readonly object SupportCacheLock = new();
+
+    /// <summary>
+    /// How <see cref="SupportsMarkingOptOut"/> gets the binary's help text. Swappable so the flag
+    /// decision can be tested without spawning a stub executable, which is not portable between
+    /// the dev machines and the Windows CI.
+    /// </summary>
+    internal static Func<string, string?> HelpTextProvider { get; set; } = ReadHelpText;
+
+    internal static void ClearSupportCache()
+    {
+        lock (SupportCacheLock)
+        {
+            SupportCache.Clear();
+        }
+    }
+
+    private static string? ReadHelpText(string crispAsrExecutable)
+    {
+        try
+        {
+            var psi = new ProcessStartInfo
+            {
+                FileName = crispAsrExecutable,
+                WorkingDirectory = Path.GetDirectoryName(crispAsrExecutable) ?? string.Empty,
+                UseShellExecute = false,
+                CreateNoWindow = true,
+                RedirectStandardOutput = true,
+                RedirectStandardError = true,
+            };
+            psi.ArgumentList.Add("--help");
+
+            using var process = Process.Start(psi);
+            if (process == null)
+            {
+                return null;
+            }
+
+            // crispasr prints its usage to stdout, but be indifferent to which stream it lands on.
+            var help = process.StandardOutput.ReadToEnd() + process.StandardError.ReadToEnd();
+            if (!process.WaitForExit(HelpProbeTimeoutMs))
+            {
+                TryKill(process);
+                return null;
+            }
+
+            return help;
+        }
+        catch (Exception exception)
+        {
+            Se.LogError(exception, "CrispASR marking opt-out probe failed for " + crispAsrExecutable);
+            return null;
+        }
+    }
+
+    private const int HelpProbeTimeoutMs = 15_000;
+
+    private static void TryKill(Process process)
+    {
+        try
+        {
+            process.Kill(entireProcessTree: true);
+        }
+        catch
+        {
+            // best effort — the probe already failed closed
+        }
     }
 }

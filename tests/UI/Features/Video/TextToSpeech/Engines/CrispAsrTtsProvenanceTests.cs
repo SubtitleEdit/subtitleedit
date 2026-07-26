@@ -74,13 +74,28 @@ public class CrispAsrTtsProvenanceTests
     public void AddServerMarkingArgs_WithNoInstalledExecutable_AddsNothing()
     {
         // crispasr aborts on an unknown argument, so the opt-out flags must never be passed to a
-        // binary we cannot confirm is new enough to understand them.
+        // binary we cannot confirm understands them.
         using var _ = new AcceptVoiceCloningScope(true);
         var args = new Collection<string> { "--server" };
 
         CrispAsrTtsProvenance.AddServerMarkingArgs(args, Path.Combine(Path.GetTempPath(), "no-such-crispasr"));
 
         Assert.Equal(new[] { "--server" }, args);
+    }
+
+    [Fact]
+    public void AddServerMarkingArgs_WhenSupported_AddsAllThreeFlags()
+    {
+        using var _ = new AcceptVoiceCloningScope(true);
+        using var stub = FakeCrispAsr.WithHelpText(
+            "--no-watermark disable it\n--no-c2pa disable that\n--accept-marking-responsibility attest");
+        var args = new Collection<string> { "--server" };
+
+        CrispAsrTtsProvenance.AddServerMarkingArgs(args, stub.Path);
+
+        Assert.Equal(
+            new[] { "--server", "--no-watermark", "--no-c2pa", "--accept-marking-responsibility" },
+            args);
     }
 
     [Fact]
@@ -91,26 +106,108 @@ public class CrispAsrTtsProvenanceTests
     }
 
     [Fact]
-    public void SupportsMarkingOptOut_WithUnknownBuild_IsTrue()
+    public void SupportsMarkingOptOut_WithHelpListingAllThreeFlags_IsTrue()
     {
-        // An unrecognised hash is a custom local build; SE gives those the benefit of the doubt
-        // rather than silently dropping the flags (same call the chatterbox capability check makes).
-        var exe = Path.Combine(Path.GetTempPath(), "crispasr-" + Guid.NewGuid().ToString("N"));
-        File.WriteAllText(exe, "not a real crispasr build");
-        try
-        {
-            Assert.True(CrispAsrTtsProvenance.SupportsMarkingOptOut(exe));
-        }
-        finally
-        {
-            File.Delete(exe);
-        }
+        using var stub = FakeCrispAsr.WithHelpText(
+            "--no-watermark x\n--no-c2pa y\n--accept-marking-responsibility z");
+
+        Assert.True(CrispAsrTtsProvenance.SupportsMarkingOptOut(stub.Path));
+    }
+
+    [Fact]
+    public void SupportsMarkingOptOut_WithV0820StyleHelp_IsFalse()
+    {
+        // The regression this replaced a hash check for: crispasr v0.8.20 documents --no-watermark
+        // but neither --no-c2pa nor --accept-marking-responsibility, and passing the full set to it
+        // makes the server print usage and exit instead of starting.
+        using var stub = FakeCrispAsr.WithHelpText(
+            "--no-spoken-disclaimer skip it\n--no-watermark disable the watermark");
+
+        Assert.False(CrispAsrTtsProvenance.SupportsMarkingOptOut(stub.Path));
+    }
+
+    [Fact]
+    public void SupportsMarkingOptOut_WithAnExecutableThatIsNotCrispAsr_IsFalse()
+    {
+        // Fails closed: a binary that cannot be run, or prints nothing useful, keeps the marking on.
+        using var stub = FakeCrispAsr.WithHelpText(string.Empty);
+
+        Assert.False(CrispAsrTtsProvenance.SupportsMarkingOptOut(stub.Path));
+    }
+
+    [Fact]
+    public void SupportsMarkingOptOut_WhenHelpCannotBeRead_IsFalse()
+    {
+        using var stub = FakeCrispAsr.WithHelpText(null);
+
+        Assert.False(CrispAsrTtsProvenance.SupportsMarkingOptOut(stub.Path));
+    }
+
+    [Fact]
+    public void SupportsMarkingOptOut_ProbesEachBinaryOnce()
+    {
+        var calls = 0;
+        using var stub = FakeCrispAsr.WithHelpText(
+            "--no-watermark x\n--no-c2pa y\n--accept-marking-responsibility z",
+            onProbe: () => calls++);
+
+        Assert.True(CrispAsrTtsProvenance.SupportsMarkingOptOut(stub.Path));
+        Assert.True(CrispAsrTtsProvenance.SupportsMarkingOptOut(stub.Path));
+
+        Assert.Equal(1, calls);
     }
 
     [Fact]
     public void AcceptVoiceCloning_DefaultsToOn()
     {
         Assert.True(new SeVideoTextToSpeech().AcceptVoiceCloning);
+    }
+}
+
+/// <summary>
+/// Stands in for an installed crispasr binary: a real file on disk (so the existence and
+/// cache-key checks are exercised) whose <c>--help</c> output is whatever the test says, without
+/// spawning a stub executable — writing one portable across macOS/Linux and the Windows CI is not
+/// worth it when the decision under test is "does this help text list the flags".
+/// </summary>
+internal sealed class FakeCrispAsr : IDisposable
+{
+    private readonly Func<string, string?> _originalProvider;
+
+    public string Path { get; }
+
+    private FakeCrispAsr(string? helpText, Action? onProbe)
+    {
+        Path = System.IO.Path.Combine(
+            System.IO.Path.GetTempPath(),
+            "crispasr-stub-" + Guid.NewGuid().ToString("N"));
+        File.WriteAllText(Path, "stub");
+
+        _originalProvider = CrispAsrTtsProvenance.HelpTextProvider;
+        CrispAsrTtsProvenance.ClearSupportCache();
+        CrispAsrTtsProvenance.HelpTextProvider = requested =>
+        {
+            onProbe?.Invoke();
+            return requested == Path ? helpText : _originalProvider(requested);
+        };
+    }
+
+    public static FakeCrispAsr WithHelpText(string? helpText, Action? onProbe = null)
+        => new(helpText, onProbe);
+
+    public void Dispose()
+    {
+        CrispAsrTtsProvenance.HelpTextProvider = _originalProvider;
+        CrispAsrTtsProvenance.ClearSupportCache();
+
+        try
+        {
+            File.Delete(Path);
+        }
+        catch
+        {
+            // temp file — nothing depends on it being gone
+        }
     }
 }
 
