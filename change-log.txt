@@ -3,6 +3,23 @@ Subtitle Edit Changelog
 
 -----------------------------------------------------------------------------------------------------
 
+v5.1.0-rc16 (26th of July 2026)
+
+* Add Georgian, Armenian, Luxembourgish and Faroese spell check dictionaries
+* Update the Qwen3 ASR CPP engine to v0.1.7 - fixes the discrete GPU (Vulkan) crash - thx HanRU01
+* Auto-hide the mouse cursor in fullscreen video - thx Davanix
+* Batch convert: let Delete remove the selected files - thx SiriosDev
+* Batch convert: keep the ASSA settings between sessions - thx SiriosDev
+* Fix script alignment desyncing on the second sentence in "Import plain text" align-via-speech-to-text - thx subof
+* Fix Alt+drag killing all shortcuts, and run alignment shortcuts in the text box - thx torvchen
+* MS Word spell check: check words in a range so the selected dictionary language is used, and recover a dead Word session - thx sergechaly
+* Fix OCR "add to user dictionary" not advancing to the next word - thx Rumbah2
+* Fix false-positive ¿que -> ¿qué accenting in the Spanish OCR fix list - thx fraternl
+* Qwen3 ASR: report the exit code and suggest the CPU build when a GPU run crashes - thx HanRU01
+* Performance: 10-25x faster auto line-breaking, faster .srt reading, waveform render and subtitle grid, and linear adjust-display-time/set-fixed-duration/remove-empty-lines
+
+-----------------------------------------------------------------------------------------------------
+
 v5.1.0-rc15 (25th of July 2026)
 
 * Add Indonesian, Vietnamese, Greek, and Thai UI translations
