@@ -16703,8 +16703,9 @@ public partial class MainViewModel :
                     {
                         if (!IsImageSubtitleTrack(result.SelectedMatroskaTrack))
                         {
-                            _subtitleFileName = Utilities.GetPathAndFileNameWithoutExtension(fileName);
-                            _converted = true;
+                            // File name + "converted" flag are set by LoadMatroskaSubtitle itself, so the
+                            // auto-import (single track) path gets them too - it used to stay "Untitled"
+                            // until the first save (#12848).
                             SelectAndScrollToRow(0);
 
                             if (Se.Settings.Video.AutoOpen)
@@ -16827,7 +16828,7 @@ public partial class MainViewModel :
                 {
                     VideoCloseFile();
                     ResetSubtitle();
-                    _subtitleFileName = Utilities.GetPathAndFileNameWithoutExtension(fileName);
+                    _subtitleFileName = Utilities.GetPathAndFileNameWithoutExtension(fileName) + SelectedSubtitleFormat.Extension;
                     _converted = true;
                     ReplaceSubtitles(result.OcredSubtitle);
                     Renumber();
@@ -16865,6 +16866,11 @@ public partial class MainViewModel :
         _subtitle = subtitle;
         _subtitle.Renumber();
         ReplaceSubtitles(_subtitle.Paragraphs.Select(p => new SubtitleLineViewModel(p, SelectedSubtitleFormat)));
+
+        // Provisional file name (video name + subtitle extension) right after the import, like SE4 -
+        // ResetSubtitle above cleared it, and only the "pick track" path used to restore it, so an
+        // auto-imported single track showed "Untitled" in the title bar and save prompt (#12848).
+        _subtitleFileName = Utilities.GetPathAndFileNameWithoutExtension(fileName) + SelectedSubtitleFormat.Extension;
         _converted = true;
 
         return true;
@@ -16970,7 +16976,10 @@ public partial class MainViewModel :
             {
                 VideoCloseFile();
                 ResetSubtitle();
-                _subtitleFileName = Utilities.GetPathAndFileNameWithoutExtension(fileName);
+                // ResetSubtitle clears _converted; without setting it again Ctrl+S could write straight
+                // to the (extension-less) container name instead of going to "Save as".
+                _subtitleFileName = Utilities.GetPathAndFileNameWithoutExtension(fileName) + SelectedSubtitleFormat.Extension;
+                _converted = true;
                 ReplaceSubtitles(result.OcredSubtitle);
                 Renumber();
                 SelectAndScrollToRow(0);
@@ -17042,7 +17051,8 @@ public partial class MainViewModel :
             {
                 VideoCloseFile();
                 ResetSubtitle();
-                _subtitleFileName = Utilities.GetPathAndFileNameWithoutExtension(fileName);
+                _subtitleFileName = Utilities.GetPathAndFileNameWithoutExtension(fileName) + SelectedSubtitleFormat.Extension;
+                _converted = true;
                 ReplaceSubtitles(result.OcredSubtitle);
                 SelectAndScrollToRow(0);
                 if (Se.Settings.Video.AutoOpen && fileName.EndsWith(".mkv", StringComparison.OrdinalIgnoreCase))
@@ -17122,12 +17132,9 @@ public partial class MainViewModel :
         _subtitle.Renumber();
         ReplaceSubtitles(_subtitle.Paragraphs.Select(p => new SubtitleLineViewModel(p, SelectedSubtitleFormat)));
 
-
-        if (matroska.Path.EndsWith(".mkv", StringComparison.OrdinalIgnoreCase) ||
-            matroska.Path.EndsWith(".mks", StringComparison.OrdinalIgnoreCase))
-        {
-            _subtitleFileName = matroska.Path.Remove(matroska.Path.Length - 4) + SelectedSubtitleFormat.Extension;
-        }
+        // Any container extension, not just the four-char .mkv/.mks - a TextST track in e.g. a .webm
+        // otherwise kept the empty file name from ResetSubtitle and showed up as "Untitled" (#12848).
+        _subtitleFileName = Utilities.GetPathAndFileNameWithoutExtension(matroska.Path) + SelectedSubtitleFormat.Extension;
 
         SelectAndScrollToRow(0);
 
@@ -17190,7 +17197,7 @@ public partial class MainViewModel :
         {
             VideoCloseFile();
             ResetSubtitle();
-            _subtitleFileName = Utilities.GetPathAndFileNameWithoutExtension(vobSubFileName);
+            _subtitleFileName = Utilities.GetPathAndFileNameWithoutExtension(vobSubFileName) + SelectedSubtitleFormat.Extension;
             _converted = true;
             ReplaceSubtitles(result.OcredSubtitle);
             SelectAndScrollToRow(0);
