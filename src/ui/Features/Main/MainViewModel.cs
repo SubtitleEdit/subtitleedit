@@ -20618,6 +20618,79 @@ public partial class MainViewModel :
         return i;
     }
 
+    // How long a typed digit keeps collecting following digits before the number restarts,
+    // matching the Win32 list-view type-ahead timeout SE 4 inherited.
+    private const long SubtitleGridNumberNavigationTimeoutMs = 1000;
+
+    private string _subtitleGridNumberNavigationDigits = string.Empty;
+    private long _subtitleGridNumberNavigationLastKeyMs;
+
+    /// <summary>
+    /// Restores SE 4's "type a number to jump to that line" grid navigation (#12838). SE 4 never
+    /// implemented this - its grid was a Win32 ListView, which gives incremental type-ahead search
+    /// for free and matches against the first column, i.e. the line number. So typing 1 selected
+    /// line 1, and 1 then 2 in quick succession selected line 12. Avalonia's DataGrid has no
+    /// type-ahead at all, so accumulate bare digits here instead.
+    /// </summary>
+    private bool TryHandleSubtitleGridNumberNavigation(KeyEventArgs keyEventArgs)
+    {
+        // Deliberately reads keyEventArgs.Key rather than ShortcutManager.GetShortcutKey: with
+        // NumLock off the numpad digits arrive as Insert/End/Down/..., and those must stay
+        // navigation keys instead of being folded back into NumPad0-9 and eaten as digits.
+        var digit = keyEventArgs.Key switch
+        {
+            >= Key.D0 and <= Key.D9 => keyEventArgs.Key - Key.D0,
+            >= Key.NumPad0 and <= Key.NumPad9 => keyEventArgs.Key - Key.NumPad0,
+            _ => -1,
+        };
+
+        if (digit < 0 || keyEventArgs.KeyModifiers != KeyModifiers.None || Subtitles.Count == 0)
+        {
+            _subtitleGridNumberNavigationDigits = string.Empty;
+            return false;
+        }
+
+        // A user-assigned bare-digit shortcut wins over the type-ahead, like a user-assigned F10
+        // wins over activating the menu bar (#12504).
+        if (_shortcutManager.HasSingleKeyShortcut(ShortcutManager.GetShortcutKeyName(keyEventArgs)))
+        {
+            _subtitleGridNumberNavigationDigits = string.Empty;
+            return false;
+        }
+
+        var ms = Environment.TickCount64;
+        if (ms - _subtitleGridNumberNavigationLastKeyMs > SubtitleGridNumberNavigationTimeoutMs)
+        {
+            _subtitleGridNumberNavigationDigits = string.Empty;
+        }
+
+        _subtitleGridNumberNavigationLastKeyMs = ms;
+
+        var digitChar = (char)('0' + digit);
+        var digits = _subtitleGridNumberNavigationDigits + digitChar;
+        if (!int.TryParse(digits, out var lineNumber) || lineNumber > Subtitles.Count)
+        {
+            // Appending would overshoot the last line, so start a fresh number from this digit -
+            // typing 9 twice in a 50-line file should keep landing on line 9, not nowhere.
+            digits = digitChar.ToString();
+            if (!int.TryParse(digits, out lineNumber) || lineNumber > Subtitles.Count)
+            {
+                _subtitleGridNumberNavigationDigits = string.Empty;
+                return false;
+            }
+        }
+
+        _subtitleGridNumberNavigationDigits = digits;
+
+        // Leading zeros are collected but name no line - keep waiting for a real digit.
+        if (lineNumber >= 1)
+        {
+            SelectAndScrollToRow(lineNumber - 1);
+        }
+
+        return true;
+    }
+
     internal void OnKeyDownHandler(object? sender, KeyEventArgs keyEventArgs)
     {
         lock (_onKeyDownHandlerLock)
@@ -20779,6 +20852,12 @@ public partial class MainViewModel :
 
             if (IsSubtitleGridFocused())
             {
+                if (TryHandleSubtitleGridNumberNavigation(keyEventArgs))
+                {
+                    keyEventArgs.Handled = true;
+                    return;
+                }
+
                 if (keyEventArgs.Key == Key.Down && keyEventArgs.KeyModifiers == KeyModifiers.Shift && Subtitles.Count > 0)
                 {
                     keyEventArgs.Handled = true;
