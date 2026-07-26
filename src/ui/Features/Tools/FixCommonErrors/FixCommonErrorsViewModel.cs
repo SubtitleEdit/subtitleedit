@@ -45,6 +45,7 @@ public partial class FixCommonErrorsViewModel : ObservableObject, IFixCallbacks
     [ObservableProperty] private bool _tryToGuessUnknownWords;
     [ObservableProperty] private string _step2Title;
     [ObservableProperty] private string _fixesAppliedText = string.Empty;
+    [ObservableProperty] private bool _nothingToFixIsVisible;
     [ObservableProperty] private string _editTextTotalLength = string.Empty;
     [ObservableProperty] private IBrush _editTextTotalLengthBackground = Brushes.Transparent;
 
@@ -519,6 +520,10 @@ public partial class FixCommonErrorsViewModel : ObservableObject, IFixCallbacks
         VisibleFixes.Clear();
         _previewMode = true;
         ApplyFixes();
+
+        // Confirm that the scan actually ran when it came up empty - the counters do not change in
+        // that case, so without this "Refresh available fixes" looks like a dead button (#12849).
+        NothingToFixIsVisible = SelectedProfile != null && Fixes.Count == 0;
     }
 
     private void ApplyFixes()

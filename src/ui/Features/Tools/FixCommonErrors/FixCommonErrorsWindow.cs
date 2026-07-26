@@ -4,6 +4,7 @@ using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
 using Avalonia.Controls.Templates;
 using Avalonia.Data;
+using Avalonia.Data.Converters;
 using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Layout;
@@ -217,12 +218,48 @@ public class FixCommonErrorsWindow : Window
 
         var labelFixesApplied = UiUtil.MakeTextBlock(string.Empty);
         labelFixesApplied.Bind(TextBlock.TextProperty, new Binding(nameof(vm.FixesAppliedText)));
-        labelFixesApplied.Bind(IsVisibleProperty, new Binding(nameof(vm.Step2IsVisible)));
-        labelFixesApplied.HorizontalAlignment = HorizontalAlignment.Left;
+        labelFixesApplied.Bind(IsVisibleProperty, new Binding(nameof(vm.FixesAppliedText)) { Converter = StringConverters.IsNotNullOrEmpty });
         labelFixesApplied.VerticalAlignment = VerticalAlignment.Center;
-        grid.Children.Add(labelFixesApplied);
-        Grid.SetRow(labelFixesApplied, 2);
-        Grid.SetColumn(labelFixesApplied, 0);
+
+        // Green check + "Nothing to fix" so an empty re-scan gives visible feedback; the counters
+        // stay as they were, which on its own reads as "the button did nothing" (#12849).
+        var nothingToFixBrush = new SolidColorBrush(UiTheme.IsDarkThemeEnabled()
+            ? Color.FromRgb(0x6e, 0xcb, 0x87)
+            : Color.FromRgb(0x1e, 0x7e, 0x34));
+        var nothingToFixText = UiUtil.MakeTextBlock(Se.Language.Tools.FixCommonErrors.NothingToFix);
+        nothingToFixText.Foreground = nothingToFixBrush;
+        nothingToFixText.VerticalAlignment = VerticalAlignment.Center;
+        var nothingToFixPanel = new StackPanel
+        {
+            Orientation = Orientation.Horizontal,
+            Spacing = 6,
+            VerticalAlignment = VerticalAlignment.Center,
+            Children =
+            {
+                new Optris.Icons.Avalonia.Icon
+                {
+                    Value = IconNames.CheckCircle,
+                    FontSize = 16,
+                    Foreground = nothingToFixBrush,
+                    VerticalAlignment = VerticalAlignment.Center,
+                },
+                nothingToFixText,
+            },
+        };
+        nothingToFixPanel.Bind(IsVisibleProperty, new Binding(nameof(vm.NothingToFixIsVisible)));
+
+        var panelStep2Status = new StackPanel
+        {
+            Orientation = Orientation.Horizontal,
+            Spacing = 15,
+            HorizontalAlignment = HorizontalAlignment.Left,
+            VerticalAlignment = VerticalAlignment.Center,
+            Children = { labelFixesApplied, nothingToFixPanel },
+        };
+        panelStep2Status.Bind(IsVisibleProperty, new Binding(nameof(vm.Step2IsVisible)));
+        grid.Children.Add(panelStep2Status);
+        Grid.SetRow(panelStep2Status, 2);
+        Grid.SetColumn(panelStep2Status, 0);
 
         grid.Children.Add(buttonPanelRight);
         Grid.SetRow(buttonPanelRight, 2);
