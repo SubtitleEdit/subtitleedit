@@ -193,25 +193,65 @@ public sealed class ForcedAligner
         // stretch of audio rather than shipping lines with no time codes at all.
         if (cursor < texts.Count)
         {
-            // Start exactly where the last placed cue ended. Widening this to a full window
-            // pulls in speech the remaining lines have nothing to do with, and the aligner
-            // then puts them among it - measured 15 s late, some past the end of the file.
-            var tailStart = aligned.Count > 0 ? aligned[^1].End : 0;
+            // The closing lines are the one place the normal loop cannot give the aligner
+            // slack: the window can only run forward, and at the end of a file there is no
+            // forward left. Aligning them against just the audio that remains is the
+            // "filled window" case again, and it placed them ~15 s late.
+            //
+            // So the last chunk takes its slack backwards instead. A few already-placed
+            // lines are re-aligned along with the unplaced ones, over a window reaching
+            // back from the end of the recording - the aligner gets room on the leading
+            // side, which is the side it tolerates, and the overlap keeps the seam honest.
+            // One line of overlap only. Reaching further back drags that speech into the
+            // window too, which fills it up and removes the very slack this needs - the
+            // window has to be long relative to the text in it, not just long.
+            var rejoin = Math.Max(0, cursor - 1);
+            var fed = texts.Skip(rejoin).ToList();
+
+            var needed = fed.Sum(t => t.Length) / readingCps;
+            var tailStart = Math.Max(0, _audio.TotalSeconds - Math.Max(needed * 3.0, _options.WindowSeconds / 2.0));
+
+            // Never reach back past what is already settled.
+            if (rejoin > 0 && rejoin - 1 < aligned.Count)
+            {
+                tailStart = Math.Max(tailStart, aligned[rejoin - 1].End);
+            }
+
             var tailLength = _audio.TotalSeconds - tailStart;
 
             if (tailLength > 0.5)
             {
-                var fed = texts.Skip(cursor).ToList();
                 try
                 {
                     var cues = await AlignWindowAsync(tailStart, tailLength, fed, cancellationToken)
                         .ConfigureAwait(false);
 
-                    if (cues.Count == fed.Count)
+                    // No overlap to check against, so sanity-check the shape instead:
+                    // one cue per line, in order, and inside the window.
+                    var sane = cues.Count == fed.Count;
+                    for (var k = 1; sane && k < cues.Count; k++)
                     {
-                        foreach (var cue in cues)
+                        sane = cues[k].StartSeconds >= cues[k - 1].StartSeconds;
+                    }
+
+                    if (sane)
+                    {
+                        aligned.RemoveRange(rejoin, aligned.Count - rejoin);
+
+                        for (var k = 0; k < cues.Count; k++)
                         {
-                            aligned.Add((tailStart + cue.StartSeconds, tailStart + cue.EndSeconds));
+                            var cueStart = tailStart + cues[k].StartSeconds;
+                            var cueEnd = tailStart + cues[k].EndSeconds;
+                            var reading = texts[rejoin + k].Length / readingCps;
+
+                            // Same leading-absorb correction the main loop applies: this
+                            // window deliberately starts well before the text it holds.
+                            if (k == 0 && cueEnd - cueStart > reading * 1.5)
+                            {
+                                cueStart = Math.Max(tailStart, cueEnd - reading);
+                            }
+
+                            aligned.Add((cueStart, Math.Max(cueStart + 0.05, cueEnd)));
                         }
 
                         cursor = texts.Count;

@@ -66,7 +66,13 @@ public class ImportPlainTextWindow : Window
             Spacing = 10,
         };
 
+        // Shares its cell with the alignment progress, so it steps aside while that runs.
         var labelNumberOfSubtitles = UiUtil.MakeLabel().WithBindText(vm, nameof(vm.NumberOfSubtitles)).WithAlignmentTop();
+        labelNumberOfSubtitles.Bind(IsVisibleProperty, new Binding(nameof(vm.IsAligning))
+        {
+            Source = vm,
+            Converter = new InverseBooleanConverter(),
+        });
 
         // Progress sits next to the line count; forced alignment of a long video runs for
         // minutes, so the window must show that something is happening.
