@@ -396,13 +396,11 @@ public class VibeVoiceCrispAsr : ITtsEngine
             ["response_format"] = "wav",
             ["voice"] = Path.GetFileNameWithoutExtension(vibeVoice.FilePath),
             ["speed"] = speed,
-            // Attests the user's own imported reference; the server logs it for cloned synthesis.
-            ["consent_attestation"] = "I have the speaker's consent, or it is my own voice.",
-            // Skip the audible AI-disclosure prefix CrispASR otherwise prepends to cloned audio;
-            // SE surfaces the AI-generated nature in its UI. The inaudible watermark + C2PA
-            // provenance metadata stay embedded regardless (defaults to true server-side).
-            ["spoken_disclaimer"] = false,
         };
+
+        // Attests the user's own imported reference and the AI-disclosure duty; see
+        // CrispAsrTtsProvenance. Skipped when voice cloning has not been accepted in settings.
+        CrispAsrTtsProvenance.AddSpeechAttestations(payload);
 
         var body = JsonSerializer.Serialize(payload);
         using var content = new StringContent(body, Encoding.UTF8, "application/json");
@@ -561,6 +559,7 @@ public class VibeVoiceCrispAsr : ITtsEngine
             // /v1/audio/speech gates `voice` field on --voice-dir being set. Same as Qwen3.
             psi.ArgumentList.Add("--voice-dir");
             psi.ArgumentList.Add(GetSetVoicesFolder());
+            CrispAsrTtsProvenance.AddServerMarkingArgs(psi.ArgumentList, exe);
 
             var process = Process.Start(psi)
                 ?? throw new InvalidOperationException("Failed to start crispasr (vibevoice)");
