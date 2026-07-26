@@ -971,6 +971,23 @@ public partial class MainViewModel :
         }
     }
 
+    /// <summary>
+    /// Pushes the currently selected audio track (<see cref="_audioTrack"/>) to <paramref name="player"/>.
+    /// Going fullscreen and undocking both create a brand new player that re-opens the video file, and a
+    /// freshly opened mpv always starts on its own default track - so a second language picked via
+    /// "Video > Audio tracks" was silently replaced by the first one (issue #12844).
+    /// </summary>
+    internal void ReapplySelectedAudioTrack(VideoPlayerControl? player)
+    {
+        var audioTrack = _audioTrack;
+        if (audioTrack == null || player?.VideoPlayer is not LibMpvDynamicPlayer mpv)
+        {
+            return;
+        }
+
+        mpv.SetAudioTrack(audioTrack.Id);
+    }
+
     private void RefreshSubtitlePreview()
     {
         _mpvReloader.Reset();
@@ -5968,6 +5985,11 @@ public partial class MainViewModel :
     {
         AreVideoControlsUndocked = false;
         var videoFileName = _videoFileName ?? string.Empty;
+
+        // Re-docking re-opens the video in the rebuilt layout's player, and VideoOpenFile clears
+        // _audioTrack on entry - so remember the selected track now and ask for it back, or the
+        // undocked window's second language turns back into the first one (issue #12844).
+        var desiredAudioTrackId = _audioTrack?.Id ?? -1;
         VideoCloseFile();
 
         if (_videoPlayerUndockedViewModel != null)
@@ -5987,7 +6009,7 @@ public partial class MainViewModel :
 
         if (!string.IsNullOrEmpty(videoFileName))
         {
-            Dispatcher.UIThread.Post(async void () => { await VideoOpenFile(videoFileName); });
+            Dispatcher.UIThread.Post(async void () => { await VideoOpenFile(videoFileName, desiredAudioTrackId); });
             RefreshSubtitlePreview();
         }
     }
@@ -12462,8 +12484,15 @@ public partial class MainViewModel :
             control!.Position = _fullScreenVideoPlayerControl.Position;
             control!.Volume = _fullScreenVideoPlayerControl.Volume;
             _fullScreenVideoPlayerControl = null;
+
+            // A track switched while fullscreen (toggle-audio-track shortcut) only ever reached the
+            // fullscreen player, so hand it to the player we are going back to - otherwise playback
+            // and the audio track menu disagree after leaving fullscreen (issue #12844).
+            ReapplySelectedAudioTrack(control);
+            var _ = Task.Run(LoadAudioTrackMenuItems);
+
             Dispatcher.UIThread.Post(() => SubtitleGrid.Focus());
-        }, toggleKeys, showMediaInfoKeys, showMediaInformationOwnedBy, extraBindings);
+        }, toggleKeys, showMediaInfoKeys, showMediaInformationOwnedBy, extraBindings, ReapplySelectedAudioTrack);
         fullScreenWindow.Show(Window!);
         _shortcutManager.ClearKeys();
 
