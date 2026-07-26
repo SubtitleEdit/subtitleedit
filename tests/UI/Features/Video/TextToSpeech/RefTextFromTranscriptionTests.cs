@@ -71,6 +71,21 @@ public class RefTextFromTranscriptionTests
         Assert.Equal("Real text.", refText);
     }
 
+    [Theory]
+    [InlineData("Yes", "Yesterday we left.", "Yes Yesterday we left.")]
+    [InlineData("I", "It is fine.", "I It is fine.")]
+    [InlineData("No", "Nothing happened.", "No Nothing happened.")]
+    [InlineData("an", "Another day.", "an Another day.")]
+    public void KeepsAShortCueThatIsOnlyASubstringOfALaterWord(string first, string second, string expected)
+    {
+        // Dedup is by whole words. Matching raw substrings dropped "Yes" into "Yesterday" and "I"
+        // into "It" — losing words the speaker actually said, so the ref-text stopped matching the
+        // reference audio.
+        var refText = TextToSpeechViewModel.BuildRefTextFromTranscription(new[] { first, second });
+
+        Assert.Equal(expected, refText);
+    }
+
     [Fact]
     public void CollapsesGrowingPrefixCues()
     {

@@ -774,18 +774,61 @@ public partial class TextToSpeechViewModel : ObservableObject
 
             // Skip a cue the result already covers: identical karaoke repeats, and the growing
             // prefixes some word-timestamp modes emit. Cheap because ref-text stays short.
-            if (parts.Any(p => p.Contains(text, StringComparison.OrdinalIgnoreCase)))
+            if (parts.Any(p => CoversWords(p, text)))
             {
                 continue;
             }
 
             // Conversely, drop an earlier part this cue supersedes.
-            parts.RemoveAll(p => text.Contains(p, StringComparison.OrdinalIgnoreCase));
+            parts.RemoveAll(p => CoversWords(text, p));
             parts.Add(text);
         }
 
         return string.Join(' ', parts);
     }
+
+    /// <summary>
+    /// True when <paramref name="inner"/>'s words appear as a contiguous run inside
+    /// <paramref name="outer"/>'s words.
+    /// </summary>
+    /// <remarks>
+    /// Whole words, not raw substrings: a plain <c>Contains</c> also matches inside a word, so a
+    /// cue of "Yes" was dropped by a later "Yesterday we left.", and "I" — about as common as cues
+    /// get — by any later cue containing "It". The ref-text then no longer matched the reference
+    /// audio, which is the mismatch that degrades cloning in the first place.
+    /// </remarks>
+    private static bool CoversWords(string outer, string inner)
+    {
+        var outerWords = SplitWords(outer);
+        var innerWords = SplitWords(inner);
+        if (innerWords.Length == 0 || innerWords.Length > outerWords.Length)
+        {
+            return false;
+        }
+
+        for (var start = 0; start + innerWords.Length <= outerWords.Length; start++)
+        {
+            var matched = true;
+            for (var i = 0; i < innerWords.Length; i++)
+            {
+                if (!string.Equals(outerWords[start + i], innerWords[i], StringComparison.OrdinalIgnoreCase))
+                {
+                    matched = false;
+                    break;
+                }
+            }
+
+            if (matched)
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private static string[] SplitWords(string text) =>
+        text.Split((char[]?)null, StringSplitOptions.RemoveEmptyEntries);
 
     private static ObservableCollection<string> BuildKeywordOptions(string[] keywords)
     {
