@@ -79,6 +79,7 @@ public partial class BinaryEditViewModel : ObservableObject
 
     private ScrollViewer? _subtitleGridScrollViewer;
     private Control? _focusBeforeMenu;
+    private readonly AltMenuActivationGuard _altMenuActivationGuard = new();
 
     private readonly IFileHelper _fileHelper;
     private readonly IFolderHelper _folderHelper;
@@ -2448,8 +2449,63 @@ public partial class BinaryEditViewModel : ObservableObject
         }
     }
 
+    /// <summary>
+    /// Tunnelling pointer handler that tells <see cref="_altMenuActivationGuard"/> when Alt was used as
+    /// a mouse modifier, so the menu-bar activation Avalonia performs on the following Alt release can
+    /// be undone again (discussion #11744).
+    /// </summary>
+    internal void OnPointerPressed(object? sender, PointerPressedEventArgs e)
+    {
+        if (!e.KeyModifiers.HasFlag(KeyModifiers.Alt))
+        {
+            return; // plain clicks arm nothing, and this runs on every press in the window
+        }
+
+        var isMenuPress = Menu is { IsOpen: true } || IsWithinMenu(e.Source as Visual);
+        _altMenuActivationGuard.NotifyPointerPressed(true, isMenuPress);
+
+        // The clicked control takes focus while the press is being handled, so read the resulting focus
+        // afterwards - that is where focus must return when the activation is undone.
+        Dispatcher.UIThread.Post(() =>
+            _altMenuActivationGuard.NotifyFocusAfterPointerPress(Window?.FocusManager?.GetFocusedElement() as Control));
+    }
+
+    private bool IsWithinMenu(Visual? visual)
+    {
+        if (Menu == null)
+        {
+            return false;
+        }
+
+        while (visual != null)
+        {
+            if (ReferenceEquals(visual, Menu))
+            {
+                return true;
+            }
+
+            visual = visual.GetVisualParent();
+        }
+
+        return false;
+    }
+
     public void OnKeyUp(KeyEventArgs e)
     {
+        // Undo the menu-bar activation Avalonia performs when Alt is released after an Alt+click/drag -
+        // otherwise the IsMenuFocused() guard in OnKeyDown swallows every shortcut until the user clicks
+        // something (discussion #11744).
+        if (_altMenuActivationGuard.TryConsumeAltRelease(e.Key, out var focusToRestore) &&
+            (Menu is { IsOpen: true } || IsMenuFocused()))
+        {
+            if (focusToRestore is { IsEffectivelyVisible: true })
+            {
+                _focusBeforeMenu = focusToRestore;
+            }
+
+            DeactivateMenu();
+        }
+
         _shortcutManager.OnKeyReleased(this, e);
     }
 
@@ -2518,6 +2574,7 @@ public partial class BinaryEditViewModel : ObservableObject
         // A task switch (Alt+Tab) must drop any active menu-bar state, otherwise Avalonia leaves
         // the access-key underlines / selection armed and they reappear when the window is re-activated
         // (#11745 beta-2 feedback).
+        _altMenuActivationGuard.Reset();
         if (Menu is { IsOpen: true } || IsMenuFocused())
         {
             DeactivateMenu();

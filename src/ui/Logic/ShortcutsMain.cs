@@ -487,16 +487,18 @@ public static class ShortcutsMain
         AddShortcut(shortcuts, vm.DeleteSelectedLinesCommand, nameof(vm.DeleteSelectedLinesCommand), ShortcutCategory.SubtitleGrid);
         AddShortcut(shortcuts, vm.RippleDeleteSelectedLinesCommand, nameof(vm.RippleDeleteSelectedLinesCommand), ShortcutCategory.General);
         AddShortcut(shortcuts, vm.DuplicateSelectedLinesCommand, nameof(vm.DuplicateSelectedLinesCommand), ShortcutCategory.SubtitleGrid);
-        AddShortcut(shortcuts, vm.ShowAlignmentPickerCommand, nameof(vm.ShowAlignmentPickerCommand), ShortcutCategory.SubtitleGrid);
-        AddShortcut(shortcuts, vm.DoAlignmentAn1Command, nameof(vm.DoAlignmentAn1Command), ShortcutCategory.SubtitleGrid);
-        AddShortcut(shortcuts, vm.DoAlignmentAn2Command, nameof(vm.DoAlignmentAn2Command), ShortcutCategory.SubtitleGrid);
-        AddShortcut(shortcuts, vm.DoAlignmentAn3Command, nameof(vm.DoAlignmentAn3Command), ShortcutCategory.SubtitleGrid);
-        AddShortcut(shortcuts, vm.DoAlignmentAn4Command, nameof(vm.DoAlignmentAn4Command), ShortcutCategory.SubtitleGrid);
-        AddShortcut(shortcuts, vm.DoAlignmentAn5Command, nameof(vm.DoAlignmentAn5Command), ShortcutCategory.SubtitleGrid);
-        AddShortcut(shortcuts, vm.DoAlignmentAn6Command, nameof(vm.DoAlignmentAn6Command), ShortcutCategory.SubtitleGrid);
-        AddShortcut(shortcuts, vm.DoAlignmentAn7Command, nameof(vm.DoAlignmentAn7Command), ShortcutCategory.SubtitleGrid);
-        AddShortcut(shortcuts, vm.DoAlignmentAn8Command, nameof(vm.DoAlignmentAn8Command), ShortcutCategory.SubtitleGrid);
-        AddShortcut(shortcuts, vm.DoAlignmentAn9Command, nameof(vm.DoAlignmentAn9Command), ShortcutCategory.SubtitleGrid);
+        // Alignment works on the selected lines regardless of where focus is, so these are active in
+        // the text box too - not only in the subtitle grid (discussion #11744).
+        AddShortcut(shortcuts, vm.ShowAlignmentPickerCommand, nameof(vm.ShowAlignmentPickerCommand), ShortcutCategory.SubtitleGridAndTextBox);
+        AddShortcut(shortcuts, vm.DoAlignmentAn1Command, nameof(vm.DoAlignmentAn1Command), ShortcutCategory.SubtitleGridAndTextBox);
+        AddShortcut(shortcuts, vm.DoAlignmentAn2Command, nameof(vm.DoAlignmentAn2Command), ShortcutCategory.SubtitleGridAndTextBox);
+        AddShortcut(shortcuts, vm.DoAlignmentAn3Command, nameof(vm.DoAlignmentAn3Command), ShortcutCategory.SubtitleGridAndTextBox);
+        AddShortcut(shortcuts, vm.DoAlignmentAn4Command, nameof(vm.DoAlignmentAn4Command), ShortcutCategory.SubtitleGridAndTextBox);
+        AddShortcut(shortcuts, vm.DoAlignmentAn5Command, nameof(vm.DoAlignmentAn5Command), ShortcutCategory.SubtitleGridAndTextBox);
+        AddShortcut(shortcuts, vm.DoAlignmentAn6Command, nameof(vm.DoAlignmentAn6Command), ShortcutCategory.SubtitleGridAndTextBox);
+        AddShortcut(shortcuts, vm.DoAlignmentAn7Command, nameof(vm.DoAlignmentAn7Command), ShortcutCategory.SubtitleGridAndTextBox);
+        AddShortcut(shortcuts, vm.DoAlignmentAn8Command, nameof(vm.DoAlignmentAn8Command), ShortcutCategory.SubtitleGridAndTextBox);
+        AddShortcut(shortcuts, vm.DoAlignmentAn9Command, nameof(vm.DoAlignmentAn9Command), ShortcutCategory.SubtitleGridAndTextBox);
         AddShortcut(shortcuts, vm.AddOrEditBookmarkCommand, nameof(vm.AddOrEditBookmarkCommand), ShortcutCategory.General);
         AddShortcut(shortcuts, vm.ToggleBookmarkSelectedLinesNoTextCommand, nameof(vm.ToggleBookmarkSelectedLinesNoTextCommand), ShortcutCategory.General);
         AddShortcut(shortcuts, vm.CopyTextFromOriginalToTranslationCommand, nameof(vm.CopyTextFromOriginalToTranslationCommand), ShortcutCategory.SubtitleGrid, ShortcutGroup.Translate);
