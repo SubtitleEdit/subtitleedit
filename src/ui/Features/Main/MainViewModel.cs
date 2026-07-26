@@ -302,6 +302,7 @@ public partial class MainViewModel :
     FindViewModel? _findViewModel;
     Control? _findPreviousFocus;
     Control? _focusBeforeMainMenu;
+    readonly AltMenuActivationGuard _altMenuActivationGuard = new();
     bool _findClosingProgrammatically;
     ReplaceViewModel? _replaceViewModel;
     Control? _replacePreviousFocus;
@@ -20299,6 +20300,7 @@ public partial class MainViewModel :
         // every shortcut afterwards (Ctrl+I, Find, Replace, ...) unable to match until the set was
         // cleared by some other action (issue #11548).
         _shortcutManager.ClearKeys();
+        _altMenuActivationGuard.Reset();
 
         // A task switch (Alt+Tab) must also drop any active menu-bar state. Otherwise Avalonia leaves
         // the access-key underlines / selection armed and they reappear when the window is re-activated,
@@ -20337,20 +20339,29 @@ public partial class MainViewModel :
             return TopLevel.GetTopLevel(menuItem) != null;
         }
 
-        if (ReferenceEquals(focusedElement, Menu))
+        return IsWithinMainMenu(focusedElement as Visual);
+    }
+
+    /// <summary>
+    /// True when <paramref name="visual"/> is the main menu itself or lives inside it. Drop-down items
+    /// are hosted in a popup, so they are not covered here - callers that need them check for a focused
+    /// <see cref="MenuItem"/> (see <see cref="IsMainMenuFocused"/>) or for an open menu.
+    /// </summary>
+    private bool IsWithinMainMenu(Visual? visual)
+    {
+        if (Menu == null)
         {
-            return true;
+            return false;
         }
 
-        var parent = (focusedElement as Avalonia.Visual)?.GetVisualParent();
-        while (parent != null)
+        while (visual != null)
         {
-            if (ReferenceEquals(parent, Menu))
+            if (ReferenceEquals(visual, Menu))
             {
                 return true;
             }
 
-            parent = parent.GetVisualParent();
+            visual = visual.GetVisualParent();
         }
 
         return false;
@@ -20893,12 +20904,49 @@ public partial class MainViewModel :
         ReferenceEquals(command, TextBoxSelectAllCommand) ||
         ReferenceEquals(command, TextBoxDeleteSelectionCommand);
 
+    /// <summary>
+    /// Tunnelling pointer handler that tells <see cref="_altMenuActivationGuard"/> when Alt was used as
+    /// a mouse modifier (e.g. Alt+drag in the waveform), so the menu-bar activation Avalonia performs on
+    /// the following Alt release can be undone again (discussion #11744).
+    /// </summary>
+    internal void OnPointerPressedHandler(object? sender, PointerPressedEventArgs e)
+    {
+        if (!e.KeyModifiers.HasFlag(KeyModifiers.Alt))
+        {
+            return; // plain clicks arm nothing, and this runs on every press in the window
+        }
+
+        var isMenuPress = Menu is { IsOpen: true } || IsWithinMainMenu(e.Source as Visual);
+        _altMenuActivationGuard.NotifyPointerPressed(true, isMenuPress);
+
+        // The clicked control takes focus while the press is being handled, so read the resulting focus
+        // afterwards - that is where focus must return when the activation is undone. Posted at Normal
+        // priority, which runs before the next input event (the Alt release) is dispatched.
+        Dispatcher.UIThread.Post(() =>
+            _altMenuActivationGuard.NotifyFocusAfterPointerPress(Window?.FocusManager?.GetFocusedElement() as Control));
+    }
+
     public void OnKeyUpHandler(object? sender, KeyEventArgs e)
     {
         if (_setEndAtKeyUpLine != null)
         {
             _setEndAtKeyUpLine = null;
             _setEndAtKeyUpLineGoToNext = false;
+        }
+
+        // Undo the menu-bar activation Avalonia performs when Alt is released after an Alt+click/drag.
+        // Its AccessKeyHandler runs in the window's tunnel phase, so the menu is already open and
+        // focused by the time we get here - without this, IsMainMenuFocused() in OnKeyDownHandler
+        // swallows every shortcut until the user clicks something (discussion #11744).
+        if (_altMenuActivationGuard.TryConsumeAltRelease(e.Key, out var focusToRestore) &&
+            (Menu is { IsOpen: true } || IsMainMenuFocused()))
+        {
+            if (focusToRestore is { IsEffectivelyVisible: true })
+            {
+                _focusBeforeMainMenu = focusToRestore;
+            }
+
+            DeactivateMainMenu();
         }
 
         _shortcutManager.OnKeyReleased(this, e);
