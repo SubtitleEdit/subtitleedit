@@ -316,7 +316,7 @@ public class MossTtsCrispAsr : ITtsEngine
                         // missing-transcription prompt. Same filter Qwen3 (CrispASR) applies.
                         try
                         {
-                            if (!Qwen3TtsCrispAsr.LooksLikeAttributionBlurb(File.ReadAllText(sidecar)))
+                            if (!Qwen3TtsCrispAsr.LooksLikeUnusableTranscript(File.ReadAllText(sidecar)))
                             {
                                 File.Copy(sidecar, sidecarDest);
                             }
@@ -563,7 +563,7 @@ public class MossTtsCrispAsr : ITtsEngine
             // transcriptions - treat them as "no transcript" (same read-time filter Qwen3
             // CrispASR applies) so they neither poison ref-text nor suppress the prompt.
             var text = File.ReadAllText(sidecar).Trim();
-            return Qwen3TtsCrispAsr.LooksLikeAttributionBlurb(text) ? string.Empty : text;
+            return Qwen3TtsCrispAsr.LooksLikeUnusableTranscript(text) ? string.Empty : text;
         }
         catch
         {

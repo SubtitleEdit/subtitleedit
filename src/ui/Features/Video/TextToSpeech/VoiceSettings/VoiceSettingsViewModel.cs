@@ -167,7 +167,7 @@ public partial class VoiceSettingsViewModel : ObservableObject
             // it. Either way show the result for a quick review/correction (clone quality is
             // sensitive to ref-text accuracy), keeping the STT button to re-run if needed.
             var transcript = TryReadSiblingTranscript(fileName);
-            if (string.IsNullOrWhiteSpace(transcript) || Qwen3TtsCrispAsr.LooksLikeAttributionBlurb(transcript))
+            if (Qwen3TtsCrispAsr.LooksLikeUnusableTranscript(transcript))
             {
                 transcript = await RunSpeechToTextAsync(fileName) ?? string.Empty;
             }
@@ -330,7 +330,7 @@ public partial class VoiceSettingsViewModel : ObservableObject
             // transcriptions - pre-filling the transcript prompt with one poisons the
             // ref-text when the user just clicks OK. Treat a blurb as "no transcript".
             var text = File.ReadAllText(siblingTextFile);
-            return Qwen3TtsCrispAsr.LooksLikeAttributionBlurb(text) ? null : text;
+            return Qwen3TtsCrispAsr.LooksLikeUnusableTranscript(text) ? null : text;
         }
         catch
         {
