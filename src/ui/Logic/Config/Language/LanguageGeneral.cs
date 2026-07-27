@@ -741,6 +741,7 @@ public class LanguageGeneral
     public string OpenAiCompatibleSttLanguage { get; set; }
     public string OpenAiCompatibleSttTemperature { get; set; }
     public string OpenAiCompatibleSttPrompt { get; set; }
+    public string OpenAiCompatibleSttModelRejectedHint { get; set; }
     public string DashScopeSttRegion { get; set; }
     public string DashScopeSttEnableWords { get; set; }
     public string DashScopeSttRegionKeyHint { get; set; }
@@ -1505,6 +1506,7 @@ public class LanguageGeneral
         OpenAiCompatibleSttLanguage = "Language Hint";
         OpenAiCompatibleSttTemperature = "Temperature";
         OpenAiCompatibleSttPrompt = "Prompt";
+        OpenAiCompatibleSttModelRejectedHint = "The server rejected the model name. Not every OpenAI compatible endpoint takes a model - xAI's https://api.x.ai/v1/stt, for one, has no 'model' parameter at all. Try clearing the Model field.";
         DashScopeSttRegion = "Region";
         DashScopeSttEnableWords = "Word-level timestamps";
         DashScopeSttRegionKeyHint = "Note: Alibaba Cloud Model Studio API keys are region-specific - make sure the selected region matches the region where the API key was created (China vs. International).";
