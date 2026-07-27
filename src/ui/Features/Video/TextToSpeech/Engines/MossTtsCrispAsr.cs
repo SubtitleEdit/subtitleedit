@@ -45,6 +45,12 @@ namespace Nikse.SubtitleEdit.Features.Video.TextToSpeech.Engines;
 /// but improves quality, so we pass <c>--ref-text</c> when a sidecar is present (same layout as
 /// VoxCPM2 / F5-TTS / Qwen3 CustomVoice).
 ///
+/// The target language is offered as a combo (<see cref="MossTtsLanguages"/>) and passed as the
+/// startup <c>-l</c> flag — <c>/v1/audio/speech</c> has no per-request language field, so it is
+/// part of the server key like the voice. Without it the model's prompt carries
+/// <c>- Language: None</c>, which is what SE did until #12757 surfaced heavily accented
+/// cross-lingual clones.
+///
 /// Verified against the pinned v0.8.13 binary on Apple M4 / Metal:
 /// - basic synth: 3.6 s of 24 kHz mono in 22 s wall (cold start incl. model load)
 /// - cloning: --voice + --ref-text produces intelligible output in the reference voice
@@ -57,7 +63,7 @@ public class MossTtsCrispAsr : ITtsEngine
 {
     public string Name => "MOSS-TTS (CrispASR)";
     public string Description => "MOSS-TTS v1.5 24 kHz TTS with zero-shot voice cloning, via CrispASR";
-    public bool HasLanguageParameter => false;
+    public bool HasLanguageParameter => true;
     public bool HasApiKey => false;
     public bool HasRegion => false;
     public bool HasModel => true;
@@ -156,6 +162,8 @@ public class MossTtsCrispAsr : ITtsEngine
     // restart so the new --voice path takes effect.
     private static string? _serverVoicePath;
     private static string? _serverRefText;
+    // Value of the startup -l flag (empty = Auto / no flag); part of the server key.
+    private static string? _serverLanguageArg;
     private static bool _processExitHooked;
     private static readonly StringBuilder _serverLog = new();
 
@@ -411,7 +419,7 @@ public class MossTtsCrispAsr : ITtsEngine
 
     public Task<string[]> GetModels() => Task.FromResult(new[] { ModelKeyQ4K, ModelKeyF16 });
 
-    public Task<TtsLanguage[]> GetLanguages(Voice voice, string? model) => Task.FromResult(Array.Empty<TtsLanguage>());
+    public Task<TtsLanguage[]> GetLanguages(Voice voice, string? model) => Task.FromResult(MossTtsLanguages.All);
 
     public Task<Voice[]> RefreshVoices(string language, CancellationToken cancellationToken) =>
         GetVoices(language);
@@ -441,7 +449,8 @@ public class MossTtsCrispAsr : ITtsEngine
 
         var refText = TryReadRefText(mossVoice.FilePath);
         var modelKey = ResolveModelKey(model);
-        await EnsureServerRunningAsync(modelKey, mossVoice.FilePath, refText, cancellationToken);
+        var languageArg = MossTtsLanguages.ResolveLanguageArg(language);
+        await EnsureServerRunningAsync(modelKey, mossVoice.FilePath, refText, languageArg, cancellationToken);
 
         var outputFileName = Path.Combine(GetSetFolder(), Guid.NewGuid() + ".wav");
 
@@ -450,7 +459,7 @@ public class MossTtsCrispAsr : ITtsEngine
 
         var body = JsonSerializer.Serialize(payload);
         using var content = new StringContent(body, Encoding.UTF8, "application/json");
-        Se.WriteToolsLog($"MOSS-TTS (CrispASR): POST {ServerBaseUrl}/v1/audio/speech (voice={mossVoice}, refTextLen={refText.Length}, textLen={text.Length})");
+        Se.WriteToolsLog($"MOSS-TTS (CrispASR): POST {ServerBaseUrl}/v1/audio/speech (voice={mossVoice}, refTextLen={refText.Length}, textLen={text.Length}, language={(string.IsNullOrEmpty(languageArg) ? "(auto)" : languageArg)})");
 
         HttpResponseMessage response;
         try
@@ -603,11 +612,15 @@ public class MossTtsCrispAsr : ITtsEngine
         }
     }
 
-    private static async Task EnsureServerRunningAsync(string modelKey, string voicePath, string refText, CancellationToken ct)
+    private static async Task EnsureServerRunningAsync(string modelKey, string voicePath, string refText, string languageArg, CancellationToken ct)
     {
+        // Language joins (model, voice, ref-text) in the server key: /v1/audio/speech has no
+        // per-request `language` field, so the only way to reach moss-tts with one is the startup
+        // -l flag — which means switching language needs a fresh server, same as switching voice.
         bool MatchesCurrent() =>
             _serverProcess is { HasExited: false } && _serverPort != 0
             && string.Equals(_serverModelKey, modelKey, StringComparison.OrdinalIgnoreCase)
+            && string.Equals(_serverLanguageArg, languageArg, StringComparison.OrdinalIgnoreCase)
             && (!UseStartupVoiceFlags
                 || (string.Equals(_serverVoicePath, voicePath, StringComparison.OrdinalIgnoreCase)
                     && string.Equals(_serverRefText, refText, StringComparison.Ordinal)));
@@ -674,6 +687,14 @@ public class MossTtsCrispAsr : ITtsEngine
             psi.ArgumentList.Add(GetSetVoicesFolder());
             CrispAsrTtsProvenance.AddServerMarkingArgs(psi.ArgumentList, exe);
 
+            // Target language for the prompt's "- Language:" field. Empty = Auto (no flag), which
+            // leaves the field at "None" and lets the model infer from the text.
+            if (!string.IsNullOrEmpty(languageArg))
+            {
+                psi.ArgumentList.Add("-l");
+                psi.ArgumentList.Add(languageArg);
+            }
+
             if (UseStartupVoiceFlags)
             {
                 psi.ArgumentList.Add("--voice");
@@ -711,6 +732,7 @@ public class MossTtsCrispAsr : ITtsEngine
             _serverModelKey = modelKey;
             _serverVoicePath = voicePath;
             _serverRefText = refText;
+            _serverLanguageArg = languageArg;
             HookProcessExitOnce();
 
             // First-run auto-download (backbone + codec is up to ~20.5 GB) needs a generous
@@ -730,6 +752,7 @@ public class MossTtsCrispAsr : ITtsEngine
                     _serverModelKey = null;
                     _serverVoicePath = null;
                     _serverRefText = null;
+                    _serverLanguageArg = null;
                     throw new InvalidOperationException(
                         $"crispasr (moss-tts) exited during startup (code {exitCode}). Output: {tail}"
                         + LaunchCmdSuffix(exitedLaunchCommand));
@@ -813,6 +836,7 @@ public class MossTtsCrispAsr : ITtsEngine
         _serverModelKey = null;
         _serverVoicePath = null;
         _serverRefText = null;
+        _serverLanguageArg = null;
         if (p == null)
         {
             return;

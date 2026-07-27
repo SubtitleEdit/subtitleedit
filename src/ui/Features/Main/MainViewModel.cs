@@ -10787,6 +10787,14 @@ public partial class MainViewModel :
             return;
         }
 
+        // Only surround the selected text when editing a single line with part of the text
+        // selected - like SE 4 does (#12873).
+        if (selectedItems.Count == 1 && SurroundTextBoxSelection(surroundLeft, surroundRight))
+        {
+            _updateAudioVisualizer = true;
+            return;
+        }
+
         var first = selectedItems.First();
         first.Text = Utilities.ToggleSymbols(surroundLeft, first.Text, surroundRight, out var added);
 
@@ -10798,6 +10806,12 @@ public partial class MainViewModel :
         }
 
         _updateAudioVisualizer = true;
+    }
+
+    private bool SurroundTextBoxSelection(string surroundLeft, string surroundRight)
+    {
+        var tb = GetFocusedTextBoxWrapper();
+        return tb != null && TextBoxSurroundToggler.ToggleSelection(tb, surroundLeft, surroundRight);
     }
 
     [RelayCommand]

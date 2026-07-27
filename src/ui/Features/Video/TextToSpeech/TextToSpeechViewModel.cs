@@ -416,6 +416,7 @@ public partial class TextToSpeechViewModel : ObservableObject
         else if (SelectedEngine is MossTtsCrispAsr)
         {
             Se.Settings.Video.TextToSpeech.MossTtsCrispAsrModel = SelectedModel ?? MossTtsCrispAsr.DefaultModelKey;
+            Se.Settings.Video.TextToSpeech.MossTtsCrispAsrLanguage = SelectedLanguage?.Name ?? string.Empty;
         }
         else if (SelectedEngine is OmniVoiceTtsCpp)
         {
@@ -1564,7 +1565,11 @@ public partial class TextToSpeechViewModel : ObservableObject
         var testVoiceToken = generatingAudioVm.CancellationTokenSource.Token;
         try
         {
-            var result = await engine.Speak(text, _waveFolder, voice, SelectedLanguage, SelectedRegion, SelectedModel, testVoiceToken);
+            // Off the UI thread — Speak() does its server startup synchronously before its first
+            // await, so awaiting it directly kept the dispatcher busy and left the "please wait"
+            // popup above unpainted for the whole spawn (#12878).
+            var result = await Task.Run(() =>
+                engine.Speak(text, _waveFolder, voice, SelectedLanguage, SelectedRegion, SelectedModel, testVoiceToken));
             if (!testVoiceToken.IsCancellationRequested)
             {
                 if (result.Error || string.IsNullOrEmpty(result.FileName) || !File.Exists(result.FileName))
@@ -3275,9 +3280,15 @@ public partial class TextToSpeechViewModel : ObservableObject
 
                 // OmniVoice has 646 alphabetically-sorted languages; the first entry ("Abadi") is
                 // a useless default. Default to English so the engine is usable out of the box.
-                SelectedLanguage = engine is OmniVoiceTtsCpp
-                    ? Languages.FirstOrDefault(l => l.Code == "en") ?? Languages.FirstOrDefault()
-                    : Languages.FirstOrDefault();
+                // MOSS-TTS restores the saved pick (its list leads with "Auto", which is also the
+                // right fallback - it reproduces the pre-language-selection behaviour).
+                SelectedLanguage = engine switch
+                {
+                    OmniVoiceTtsCpp => Languages.FirstOrDefault(l => l.Code == "en") ?? Languages.FirstOrDefault(),
+                    MossTtsCrispAsr => Languages.FirstOrDefault(l => l.Name == Se.Settings.Video.TextToSpeech.MossTtsCrispAsrLanguage)
+                                       ?? Languages.FirstOrDefault(),
+                    _ => Languages.FirstOrDefault(),
+                };
             }
             else if (SelectedVoice == null)
             {
@@ -3608,6 +3619,8 @@ public partial class TextToSpeechViewModel : ObservableObject
             return;
         }
 
+        var previousLanguageName = SelectedLanguage?.Name;
+
         Dispatcher.UIThread.PostSafe(async () =>
         {
             if (engine.HasLanguageParameter)
@@ -3619,7 +3632,10 @@ public partial class TextToSpeechViewModel : ObservableObject
                     Languages.Add(language);
                 }
 
-                SelectedLanguage = Languages.FirstOrDefault(p => p.Name == Se.Settings.Video.TextToSpeech.ElevenLabsLanguage);
+                // Keep the language the user already picked when it survives the model switch -
+                // otherwise a MOSS-TTS quant change (Q4_K <-> F16) silently re-selects English.
+                SelectedLanguage = Languages.FirstOrDefault(p => p.Name == previousLanguageName)
+                                   ?? Languages.FirstOrDefault(p => p.Name == Se.Settings.Video.TextToSpeech.ElevenLabsLanguage);
                 if (SelectedLanguage == null)
                 {
                     SelectedLanguage = Languages.FirstOrDefault(p => p.Code == "en");

@@ -1,7 +1,7 @@
 ﻿{
   "title": "Subtitle Edit",
-  "version": "v5.1.0-rc8",
-  "translatedBy": "Adam Malich - 20.07.2026",
+  "version": "v5.1.0-rc17",
+  "translatedBy": "Adam Malich - 27.07.2026",
   "cultureName": "pl-PL",
   "general": {
     "abort": "Przerwij",
@@ -2206,8 +2206,8 @@
       "framesPerSecond": "Liczba klatek na sekundę",
       "textBrightnessMinimum": "Minimalna jasność tekstu (0=off)",
       "postProcessing": "Przetwarzanie końcowe",
-      "textSimilarityPercent": "Połącz linie o podobnym wyglądzie (%)",
-      "maxGapMs": "Maksymalny odstęp między liniami (ms)",
+      "textSimilarityPercent": "Połącz linie, gdy podobieństwo (%)",
+      "maxGapMs": "Maks. odstęp między liniami (ms)",
       "minDurationMs": "Minimalny czas trwania (ms)",
       "addAssaPositionTag": "Dodaj tag pozycji ASSA (np. {\\an8})",
       "startOcr": "Rozpocznij OCR",

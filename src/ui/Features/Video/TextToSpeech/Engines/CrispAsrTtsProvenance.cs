@@ -5,6 +5,7 @@ using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Nikse.SubtitleEdit.Features.Video.TextToSpeech.Engines;
 
@@ -187,15 +188,29 @@ public static class CrispAsrTtsProvenance
                 return null;
             }
 
-            // crispasr prints its usage to stdout, but be indifferent to which stream it lands on.
-            var help = process.StandardOutput.ReadToEnd() + process.StandardError.ReadToEnd();
+            // Drain both pipes concurrently. crispasr writes its whole ~25 KB usage dump to
+            // stderr and nothing at all to stdout, so reading stdout to EOF first deadlocked on
+            // Windows (#12878): the child blocks once the 4 KB stderr pipe is full, stdout never
+            // reaches EOF because the child cannot exit, and WaitForExit below is never even
+            // reached — the app froze on the UI thread for good. Unix escaped it only because its
+            // pipe buffer is 64 KB. Starting both reads before waiting also means the timeout
+            // actually governs the probe.
+            var stdout = process.StandardOutput.ReadToEndAsync();
+            var stderr = process.StandardError.ReadToEndAsync();
             if (!process.WaitForExit(HelpProbeTimeoutMs))
             {
                 TryKill(process);
                 return null;
             }
 
-            return help;
+            // The process has exited, so both pipes are at EOF and these are already complete.
+            // Bounded anyway so a wedged read cannot outlive the probe.
+            if (!Task.WaitAll(new Task[] { stdout, stderr }, HelpProbeTimeoutMs))
+            {
+                return null;
+            }
+
+            return stdout.Result + stderr.Result;
         }
         catch (Exception exception)
         {

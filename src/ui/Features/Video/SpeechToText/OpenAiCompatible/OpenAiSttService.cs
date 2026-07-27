@@ -222,9 +222,14 @@ public class OpenAiSttService : ISttTranscriber
                 $"Status: {statusCode} {response.StatusCode}{Environment.NewLine}" +
                 $"RequestParams: {paramSummary}{Environment.NewLine}" +
                 $"ResponseBody: {errorContent}");
+            // Carry the status code on the exception: the caller turns a 4xx that
+            // complains about "model" into a hint about the Model field, and
+            // sniffing the number back out of the message is fragile (issue #12877).
             throw new HttpRequestException(
                 $"STT request failed with status {statusCode} ({response.StatusCode}) " +
-                $"calling {safeEndpoint}. Response: {errorContent}");
+                $"calling {safeEndpoint}. Response: {errorContent}",
+                null,
+                response.StatusCode);
         }
 
         // Check if streaming (SSE)
