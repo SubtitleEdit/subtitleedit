@@ -11,7 +11,7 @@ namespace Nikse.SubtitleEdit.Logic.Download;
 public interface ILlamaCppDownloadService
 {
     Task DownloadEngine(Stream stream, string variant, IProgress<float>? progress, CancellationToken cancellationToken);
-    Task DownloadCudaRuntime(Stream stream, IProgress<float>? progress, CancellationToken cancellationToken);
+    Task DownloadCudaRuntime(Stream stream, string variant, IProgress<float>? progress, CancellationToken cancellationToken);
     Task DownloadModel(string url, string destinationFileName, IProgress<float>? progress, CancellationToken cancellationToken);
 }
 
@@ -21,13 +21,18 @@ public class LlamaCppDownloadService(HttpClient httpClient) : ILlamaCppDownloadS
     /// The pinned llama.cpp release tag. Public so the engine settings dialog can show which build
     /// SE downloads; index 0 of every <see cref="DownloadHashManager.LlamaCpp"/> hash list must match it.
     /// </summary>
-    public const string ReleaseTag = "b10103";
+    public const string ReleaseTag = "b10142";
 
     private const string BaseUrl = "https://github.com/ggml-org/llama.cpp/releases/download/" + ReleaseTag + "/";
 
     public const string VariantCpu = "cpu";
     public const string VariantVulkan = "vulkan";
+
+    /// <summary>The CUDA 12.4 build - works with most current NVIDIA drivers.</summary>
     public const string VariantCuda = "cuda";
+
+    /// <summary>The CUDA 13.3 build - for driver stacks built for CUDA 13.</summary>
+    public const string VariantCuda13 = "cuda13";
 
     public async Task DownloadEngine(Stream stream, string variant, IProgress<float>? progress, CancellationToken cancellationToken)
     {
@@ -62,10 +67,16 @@ public class LlamaCppDownloadService(HttpClient httpClient) : ILlamaCppDownloadS
         }
     }
 
-    public async Task DownloadCudaRuntime(Stream stream, IProgress<float>? progress, CancellationToken cancellationToken)
+    public async Task DownloadCudaRuntime(Stream stream, string variant, IProgress<float>? progress, CancellationToken cancellationToken)
     {
-        await DownloadHelper.DownloadFileAsync(httpClient, BaseUrl + "cudart-llama-bin-win-cuda-12.4-x64.zip", stream, progress, cancellationToken);
-        await VerifyArchive(stream, DownloadHashManager.LlamaCpp.WindowsCudaRuntime, "CUDA runtime", cancellationToken);
+        // The two CUDA builds need different redistributables (cudart64_12.dll vs cudart64_13.dll),
+        // so the runtime archive has to follow whichever engine variant was picked.
+        var isCuda13 = variant == VariantCuda13;
+        var url = BaseUrl + (isCuda13 ? "cudart-llama-bin-win-cuda-13.3-x64.zip" : "cudart-llama-bin-win-cuda-12.4-x64.zip");
+        var key = isCuda13 ? DownloadHashManager.LlamaCpp.WindowsCuda13Runtime : DownloadHashManager.LlamaCpp.WindowsCudaRuntime;
+
+        await DownloadHelper.DownloadFileAsync(httpClient, url, stream, progress, cancellationToken);
+        await VerifyArchive(stream, key, "CUDA runtime", cancellationToken);
     }
 
     public async Task DownloadModel(string url, string destinationFileName, IProgress<float>? progress, CancellationToken cancellationToken)
@@ -78,7 +89,7 @@ public class LlamaCppDownloadService(HttpClient httpClient) : ILlamaCppDownloadS
     /// </summary>
     public static bool VariantNeedsCudaRuntime(string variant)
     {
-        return OperatingSystem.IsWindows() && variant == VariantCuda;
+        return OperatingSystem.IsWindows() && (variant == VariantCuda || variant == VariantCuda13);
     }
 
     private static string GetEngineUrl(string variant)
@@ -88,6 +99,7 @@ public class LlamaCppDownloadService(HttpClient httpClient) : ILlamaCppDownloadS
             return variant switch
             {
                 VariantCuda => BaseUrl + "llama-" + ReleaseTag + "-bin-win-cuda-12.4-x64.zip",
+                VariantCuda13 => BaseUrl + "llama-" + ReleaseTag + "-bin-win-cuda-13.3-x64.zip",
                 VariantVulkan => BaseUrl + "llama-" + ReleaseTag + "-bin-win-vulkan-x64.zip",
                 _ => BaseUrl + "llama-" + ReleaseTag + "-bin-win-cpu-x64.zip",
             };

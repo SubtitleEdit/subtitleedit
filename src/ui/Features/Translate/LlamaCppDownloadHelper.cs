@@ -169,7 +169,7 @@ public static class LlamaCppDownloadHelper
             {
                 MessageBoxResult.Custom1 => Logic.Download.LlamaCppDownloadService.VariantCpu,
                 MessageBoxResult.Custom2 => Logic.Download.LlamaCppDownloadService.VariantVulkan,
-                MessageBoxResult.Custom3 => Logic.Download.LlamaCppDownloadService.VariantCuda,
+                MessageBoxResult.Custom3 => await PromptCudaVersionAsync(owner),
                 _ => null,
             } ?? string.Empty;
 
@@ -195,6 +195,30 @@ public static class LlamaCppDownloadHelper
         }
 
         return model?.FileName ?? string.Empty;
+    }
+
+    /// <summary>
+    /// Follow-up prompt after the user picks "CUDA" in the Windows build selector - llama.cpp ships
+    /// both a CUDA 12.4 and a CUDA 13.3 build. Returns "cuda" (CUDA 12) or "cuda13", or null when
+    /// the user cancels. Mirrors the CrispASR CUDA version prompt.
+    /// </summary>
+    private static async Task<string?> PromptCudaVersionAsync(Window owner)
+    {
+        var answer = await MessageBox.Show(
+            owner,
+            "llama.cpp CUDA build",
+            $"{Environment.NewLine}CUDA 12 works with most current NVIDIA drivers.{Environment.NewLine}{Environment.NewLine}Pick CUDA 13 only if your driver stack is built for CUDA 13.",
+            MessageBoxButtons.Cancel,
+            MessageBoxIcon.Question,
+            "CUDA 12",
+            "CUDA 13");
+
+        return answer switch
+        {
+            MessageBoxResult.Custom1 => Logic.Download.LlamaCppDownloadService.VariantCuda,
+            MessageBoxResult.Custom2 => Logic.Download.LlamaCppDownloadService.VariantCuda13,
+            _ => null,
+        };
     }
 
     /// <summary>
