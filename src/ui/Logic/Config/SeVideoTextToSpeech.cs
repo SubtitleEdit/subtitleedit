@@ -44,6 +44,8 @@ public class SeVideoTextToSpeech
     public double VoxCPM2CrispAsrSpeed { get; set; }
     public string MossTtsCrispAsrModel { get; set; }
     public double MossTtsCrispAsrSpeed { get; set; }
+    // Display name of the picked MOSS-TTS target language ("Auto" = let the model infer it).
+    public string MossTtsCrispAsrLanguage { get; set; }
     public string OmniVoiceTtsCppVulkanPath { get; set; }
     public string OmniVoiceTtsCppInstruction { get; set; }
     public string ChatterboxModel { get; set; }
@@ -133,6 +135,7 @@ public class SeVideoTextToSpeech
         VoxCPM2CrispAsrSpeed = 1.0;
         MossTtsCrispAsrModel = "Q4_K (~10.5 GB incl. codec)";
         MossTtsCrispAsrSpeed = 1.0;
+        MossTtsCrispAsrLanguage = string.Empty;
         OmniVoiceTtsCppVulkanPath = string.Empty;
         OmniVoiceTtsCppInstruction = string.Empty;
         ChatterboxModel = "Base";
