@@ -133,10 +133,10 @@ public partial class DownloadSpeechToTextModelsViewModel : ObservableObject, ICl
                     return;
                 }
 
-                // A 404 (FileNotFoundException) on an optional file isn't fatal: each model
-                // ships only one of vocabulary.txt / vocabulary.json, but the URL list asks for
-                // both, so one always 404s. Skip it and continue, like faster-whisper-xxl.exe
-                // does - only model.bin is required. (#12133 follow-up)
+                // A 404 (FileNotFoundException) on an optional file isn't fatal: the URL list is
+                // the union of file names across all models, so every model 404s on some of them.
+                // Skip those and continue, like faster-whisper-xxl.exe does - only model.bin is
+                // required. (#12133 follow-up, #8703)
                 if (ex is FileNotFoundException && IsOptionalFile(_downloadUrls[_downloadIndex]))
                 {
                     DeletePartialDownload();
@@ -161,9 +161,11 @@ public partial class DownloadSpeechToTextModelsViewModel : ObservableObject, ICl
         }
     }
 
-    // Files a model may or may not ship. A model provides exactly one vocabulary variant,
-    // but the URL list requests both, so a 404 on one of these is expected, not an error.
-    private static readonly string[] OptionalFileNames = { "vocabulary.txt", "vocabulary.json" };
+    // Files a model may or may not ship, so a 404 on one of these is expected, not an error.
+    // A model provides exactly one vocabulary variant, but the URL list requests both. And the
+    // older Systran/faster-whisper-* repos (tiny ... large-v2) ship no preprocessor_config.json
+    // at all - faster-whisper then falls back to the default feature extractor settings.
+    private static readonly string[] OptionalFileNames = { "vocabulary.txt", "vocabulary.json", "preprocessor_config.json" };
 
     private static bool IsOptionalFile(string url)
     {
