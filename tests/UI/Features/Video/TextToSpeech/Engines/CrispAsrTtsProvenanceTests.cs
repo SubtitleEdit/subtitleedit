@@ -162,6 +162,78 @@ public class CrispAsrTtsProvenanceTests
     {
         Assert.True(new SeVideoTextToSpeech().AcceptVoiceCloning);
     }
+
+    [Fact]
+    public async Task RealHelpProbe_WithLargeStderrAndEmptyStdout_DoesNotDeadlock()
+    {
+        // #12878: the real probe read stdout to EOF *before* touching stderr. crispasr writes its
+        // whole ~25 KB usage dump to stderr and nothing at all to stdout, so the child blocked once
+        // the pipe filled, stdout never reached EOF, and the probe hung forever - on the UI thread,
+        // freezing the app on every CrispASR TTS generation. Every other test here stubs
+        // HelpTextProvider, which is exactly why this went unnoticed; this one runs the real thing.
+        //
+        // 1 MB is past any platform's pipe buffer (4 KB on Windows, 64 KB on Unix), so the old
+        // sequential read deadlocks here regardless of where the suite runs.
+        if (OperatingSystem.IsWindows())
+        {
+            Assert.Skip("Needs a shebang stub; Process.Start cannot launch a .cmd with UseShellExecute=false.");
+        }
+
+        const int payloadBytes = 1024 * 1024;
+        using var stub = ShellStub.WritingToStdErr(payloadBytes);
+
+        var probe = Task.Run(() => CrispAsrTtsProvenance.HelpTextProvider(stub.Path));
+        var finished = await Task.WhenAny(
+            probe,
+            Task.Delay(TimeSpan.FromSeconds(30), TestContext.Current.CancellationToken));
+
+        Assert.True(ReferenceEquals(finished, probe), "the --help probe deadlocked");
+        Assert.Equal(payloadBytes, (await probe)?.Length);
+    }
+}
+
+/// <summary>
+/// A real executable stub (shebang script) that, given <c>--help</c>, floods stderr and writes
+/// nothing to stdout - the shape of output that deadlocked the probe in #12878. Unix only; see the
+/// skip in the test that uses it.
+/// </summary>
+internal sealed class ShellStub : IDisposable
+{
+    public string Path { get; }
+
+    private ShellStub(int stdErrBytes)
+    {
+        Path = System.IO.Path.Combine(
+            System.IO.Path.GetTempPath(),
+            "crispasr-flood-" + Guid.NewGuid().ToString("N") + ".sh");
+
+        // Generate the payload rather than embedding it, so the script stays small and the byte
+        // count exact. Nothing is written to stdout - that is the half of the shape that matters.
+        File.WriteAllText(
+            Path,
+            "#!/bin/sh\n"
+            + $"awk 'BEGIN {{ for (i = 0; i < {stdErrBytes}; i++) printf \"x\" }}' 1>&2\n");
+        if (!OperatingSystem.IsWindows())
+        {
+            File.SetUnixFileMode(
+                Path,
+                UnixFileMode.UserRead | UnixFileMode.UserWrite | UnixFileMode.UserExecute);
+        }
+    }
+
+    public static ShellStub WritingToStdErr(int stdErrBytes) => new(stdErrBytes);
+
+    public void Dispose()
+    {
+        try
+        {
+            File.Delete(Path);
+        }
+        catch
+        {
+            // temp file - nothing depends on it being gone
+        }
+    }
 }
 
 /// <summary>
