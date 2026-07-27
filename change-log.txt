@@ -3,6 +3,25 @@ Subtitle Edit Changelog
 
 -----------------------------------------------------------------------------------------------------
 
+v5.1.0-rc17 (27th of July 2026)
+
+* Update llama.cpp to b10142 and offer the CUDA 13 build on Windows
+* Update CrispASR to v0.8.23 - fixes garbled/hung CosyVoice3, Qwen3-TTS and Zonos audio on the Vulkan build, and voice cloning now needs to be enabled in settings - thx CrispStrobe
+* Add 4 Parakeet and 1 Kyutai speech-to-text model to the CrispASR engines
+* MOSS-TTS: add a target language dropdown, so cross-lingual voice clones are no longer heavily accented - thx subof
+* Fix CosyVoice3, VoxCPM2 and F5-TTS asking for a voice transcription the voice pack already ships, and fix ref-text cues being dropped when one was a substring of a word in another
+* Speech to text: don't fail the Faster-Whisper model download when preprocessor_config.json is missing - thx oep42
+* Speech to text: make online/OpenAI-compatible server failures readable, and send the audio file last - thx acc4github
+* Restore type-a-number line navigation in the subtitle grid - thx SiriosDev
+* Fix common errors: show a green check and "Nothing to fix" when a re-scan finds nothing - thx Davanix
+* Fix auto-imported Matroska tracks staying "Untitled" until the first save - thx Davanix
+* Keep the selected audio track when going fullscreen or undocking - thx routineCode
+* Update the OCR fix replace list with new entries - thx diomed
+* Update the French translation - thx Need74
+* Linux/macOS: stop the app data folder from being resolved against the working directory - thx ivandrofly
+
+-----------------------------------------------------------------------------------------------------
+
 v5.1.0-rc16 (26th of July 2026)
 
 * Add Georgian, Armenian, Luxembourgish and Faroese spell check dictionaries
