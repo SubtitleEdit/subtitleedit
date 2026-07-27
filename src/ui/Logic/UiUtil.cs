@@ -2266,14 +2266,7 @@ public static class UiUtil
             });
         }
 
-        control.AddHandler(InputElement.PointerWheelChangedEvent, (s, e) =>
-        {
-            control.Value = Math.Clamp((control.Value ?? 0) + (e.Delta.Y > 0 ? control.Increment : -control.Increment),
-                                        control.Minimum,
-                                        control.Maximum);
-            e.Handled = true;
-        });
-
+        MakeNumeriUpDownMouseWheelHandler(control);
         ForwardAutomationNameToInnerTextBox(control);
 
         return control;
@@ -2317,14 +2310,7 @@ public static class UiUtil
             });
         }
 
-        control.AddHandler(InputElement.PointerWheelChangedEvent, (s, e) =>
-        {
-            control.Value = Math.Clamp((control.Value ?? 0) + (e.Delta.Y > 0 ? control.Increment : -control.Increment),
-                                        control.Minimum,
-                                        control.Maximum);
-            e.Handled = true;
-        });
-
+        MakeNumeriUpDownMouseWheelHandler(control);
         ForwardAutomationNameToInnerTextBox(control);
 
         return control;
@@ -2450,11 +2436,23 @@ public static class UiUtil
         return control;
     }
 
+    /// <summary>
+    /// Lets the mouse wheel step a <see cref="NumericUpDown"/> - but only while it has keyboard
+    /// focus. Without that guard, scrolling a dialog with the pointer merely passing over a numeric
+    /// field silently changed the value and swallowed the scroll, so e.g. "Waveform text font size"
+    /// walked down to its minimum of 10 while the user scrolled the settings page (issue #12864).
+    /// </summary>
     private static void MakeNumeriUpDownMouseWheelHandler(NumericUpDown control)
     {
         control.AddHandler(InputElement.PointerWheelChangedEvent, (s, e) =>
         {
-            control.Value = Math.Clamp((control.Value ?? 0) + (e.Delta.Y > 0 ? control.Increment : -control.Increment),
+            if (!control.IsKeyboardFocusWithin)
+            {
+                return;
+            }
+
+            var current = control.Value ?? Math.Clamp(0m, control.Minimum, control.Maximum);
+            control.Value = Math.Clamp(current + (e.Delta.Y > 0 ? control.Increment : -control.Increment),
                                         control.Minimum,
                                         control.Maximum);
             e.Handled = true;
