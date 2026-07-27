@@ -1433,14 +1433,16 @@ public static partial class InitListViewAndEditBox
 
         flyoutTextBox.Items.Add(new Separator());
 
-        var menuItemTextBoxSplitAtCursor = new MenuItem { Header = Se.Language.General.SplitLineAtTextBoxCursorPosition };
-        menuItemTextBoxSplitAtCursor.Command = vm.SplitAtTextBoxCursorPositionCommand;
-        flyoutTextBox.Items.Add(menuItemTextBoxSplitAtCursor);
-
+        // Keep the SE4 order here: "at cursor/video position" first, then "at cursor position".
+        // Swapping them broke muscle memory for people coming from SE4 (see issue #12888).
         var menuItemTextBoxSplitAtCursorAndVideoPosition = new MenuItem { Header = Se.Language.General.SplitLineAtVideoAndTextBoxPosition };
         menuItemTextBoxSplitAtCursorAndVideoPosition.Bind(Visual.IsVisibleProperty, new Binding(nameof(vm.IsTextBoxSplitAtCursorAndVideoPositionVisible)));
         menuItemTextBoxSplitAtCursorAndVideoPosition.Command = vm.SplitAtVideoPositionAndTextBoxCursorPositionCommand;
         flyoutTextBox.Items.Add(menuItemTextBoxSplitAtCursorAndVideoPosition);
+
+        var menuItemTextBoxSplitAtCursor = new MenuItem { Header = Se.Language.General.SplitLineAtTextBoxCursorPosition };
+        menuItemTextBoxSplitAtCursor.Command = vm.SplitAtTextBoxCursorPositionCommand;
+        flyoutTextBox.Items.Add(menuItemTextBoxSplitAtCursor);
 
         flyoutTextBox.Items.Add(new Separator());
 
