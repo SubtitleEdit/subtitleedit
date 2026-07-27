@@ -135,7 +135,8 @@ public partial class LlamaCppEngineSettingsViewModel : ObservableObject
 
         return DownloadHashManager.DetectLlamaCppWindowsVariant(folder) switch
         {
-            "cuda" => "Windows x64 (CUDA)",
+            "cuda" => "Windows x64 (CUDA 12)",
+            "cuda13" => "Windows x64 (CUDA 13)",
             "vulkan" => "Windows x64 (Vulkan)",
             "cpu" => "Windows x64 (CPU)",
             _ => "Windows x64",
