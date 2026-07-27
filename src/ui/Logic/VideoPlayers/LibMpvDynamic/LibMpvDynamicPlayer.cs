@@ -1469,6 +1469,27 @@ public sealed class LibMpvDynamicPlayer : IDisposable, IVideoPlayer
                     trackInfo.FfIndex = (int)ffIndex;
                 }
 
+                // Get track codec (optional) - used to estimate waveform-extraction time.
+                var codecPtr = IntPtr.Zero;
+                var codecBytes = GetUtf8Bytes($"track-list/{i}/codec");
+                err = _mpvGetPropertyString(_mpv, codecBytes, MPV_FORMAT_STRING, ref codecPtr);
+
+                if (err >= 0 && codecPtr != IntPtr.Zero)
+                {
+                    trackInfo.Codec = Marshal.PtrToStringUTF8(codecPtr);
+                    _mpvFree(codecPtr);
+                }
+
+                // Get track channel count (optional) - used for a friendly "7.1"/"5.1" label.
+                double channelCount = 0;
+                var channelBytes = GetUtf8Bytes($"track-list/{i}/demux-channel-count");
+                err = _mpvGetPropertyDouble(_mpv, channelBytes, MPV_FORMAT_DOUBLE, ref channelCount);
+
+                if (err >= 0 && channelCount > 0)
+                {
+                    trackInfo.Channels = (int)channelCount;
+                }
+
                 // Get track selected status
                 double selectedValue = 0;
                 var selectedBytes = GetUtf8Bytes($"track-list/{i}/selected");

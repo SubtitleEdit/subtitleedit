@@ -45,9 +45,37 @@ public static class InitFooter
         var labelWaveFormText = UiUtil.MakeLabel()
             .WithBindText(vm, vm => vm.WaveformGeneratingText)
             .WithBindVisible(vm, vm => vm.IsWaveformGenerating)
-            .WithMarginRight(15);
+            .WithMarginRight(4);
         labelWaveFormText.Opacity = 0.5;
-        grid.Add(labelWaveFormText, 0, 1);
+
+        // Cancel button (X) shown next to the "Extracting wave info... NN%" status while generating.
+        var cancelLabel = Se.Language.General.Cancel.Replace("_", string.Empty);
+        var buttonCancelWaveform = new Button
+        {
+            Content = new Icon
+            {
+                Value = IconNames.Close,
+                FontSize = 14,
+                [ToolTip.TipProperty] = cancelLabel,
+            },
+            [AutomationProperties.NameProperty] = cancelLabel,
+            Background = null,
+            BorderBrush = null,
+            Padding = new Thickness(2, 0, 2, 0),
+            Margin = new Thickness(0, 0, 15, 0),
+            VerticalAlignment = VerticalAlignment.Center,
+            DataContext = vm,
+            [!Button.CommandProperty] = new Binding(nameof(vm.CancelWaveformExtractionCommand)),
+            [!Visual.IsVisibleProperty] = new Binding(nameof(vm.IsWaveformGenerating)),
+        };
+
+        var waveformStatusPanel = new StackPanel
+        {
+            Orientation = Orientation.Horizontal,
+            VerticalAlignment = VerticalAlignment.Center,
+            Children = { labelWaveFormText, buttonCancelWaveform },
+        };
+        grid.Add(waveformStatusPanel, 0, 1);
 
         vm.StatusTextLeftLabel = new TextBlock
         {

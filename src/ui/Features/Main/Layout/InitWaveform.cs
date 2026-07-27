@@ -837,6 +837,45 @@ public class InitWaveform
             }
         }
 
+        // Audio-track picker: choose which audio track the waveform is extracted from. Shown only
+        // when the open video has more than one audio track (IsAudioTracksVisible). Each item's label
+        // includes a rough extraction-time estimate, so a heavy lossless track (e.g. TrueHD ~5 min)
+        // vs. a light one (e.g. AC3 ~25 sec) is obvious before choosing.
+        var audioTracksLabel = Se.Language.Main.Menu.AudioTracks.Replace("_", string.Empty);
+        var iconAudioTrack = new Icon
+        {
+            Value = IconNames.Waveform,
+            VerticalAlignment = VerticalAlignment.Center,
+            Margin = new Thickness(10, 0, 4, 0),
+            FontSize = 18,
+        };
+        var comboBoxAudioTrack = new ComboBox
+        {
+            VerticalAlignment = VerticalAlignment.Center,
+            Margin = new Thickness(0, 0, 10, 0),
+            FontSize = 12,
+            MaxHeight = 22,
+            MinHeight = 22,
+            MinWidth = 0,
+            Padding = new Thickness(4, 2, 0, 2),
+            Background = Brushes.Transparent,
+            BorderThickness = new Thickness(0),
+            [ToolTip.TipProperty] = audioTracksLabel,
+            [AutomationProperties.NameProperty] = audioTracksLabel,
+        };
+        comboBoxAudioTrack.Bind(ItemsControl.ItemsSourceProperty, new Binding(nameof(vm.WaveformAudioTracks)));
+        comboBoxAudioTrack.Bind(SelectingItemsControl.SelectedItemProperty, new Binding(nameof(vm.SelectedWaveformAudioTrack)) { Mode = BindingMode.TwoWay });
+
+        var panelAudioTrack = new StackPanel
+        {
+            Orientation = Orientation.Horizontal,
+            VerticalAlignment = VerticalAlignment.Center,
+            DataContext = vm,
+            Children = { iconAudioTrack, comboBoxAudioTrack },
+        };
+        panelAudioTrack.Bind(StackPanel.IsVisibleProperty, new Binding(nameof(vm.IsAudioTracksVisible)));
+        controlsPanel.Children.Add(panelAudioTrack);
+
         mainGrid.Children.Add(controlsPanel);
         Grid.SetRow(controlsPanel, 1);
 
