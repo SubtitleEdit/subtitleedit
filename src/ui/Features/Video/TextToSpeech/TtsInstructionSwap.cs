@@ -32,7 +32,12 @@ public static class TtsInstructionSwap
         var previous = Swap(engine, instruction);
         try
         {
-            return await speak();
+            // Task.Run, not a bare await: every engine's Speak() runs a stretch of synchronous
+            // work before its first real await (Process.Start of the local server, --help probes,
+            // file checks), and awaiting it from a command handler runs all of that on the UI
+            // thread. That is how the CrispASR --help probe froze the whole app in #12878, and
+            // even without a deadlock it stalls the window for as long as a server takes to spawn.
+            return await Task.Run(speak);
         }
         finally
         {

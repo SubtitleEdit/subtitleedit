@@ -1565,7 +1565,11 @@ public partial class TextToSpeechViewModel : ObservableObject
         var testVoiceToken = generatingAudioVm.CancellationTokenSource.Token;
         try
         {
-            var result = await engine.Speak(text, _waveFolder, voice, SelectedLanguage, SelectedRegion, SelectedModel, testVoiceToken);
+            // Off the UI thread — Speak() does its server startup synchronously before its first
+            // await, so awaiting it directly kept the dispatcher busy and left the "please wait"
+            // popup above unpainted for the whole spawn (#12878).
+            var result = await Task.Run(() =>
+                engine.Speak(text, _waveFolder, voice, SelectedLanguage, SelectedRegion, SelectedModel, testVoiceToken));
             if (!testVoiceToken.IsCancellationRequested)
             {
                 if (result.Error || string.IsNullOrEmpty(result.FileName) || !File.Exists(result.FileName))

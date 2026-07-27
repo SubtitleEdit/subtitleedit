@@ -172,7 +172,10 @@ public static class TtsVoiceInstaller
         }
 
         var isInstalled = File.Exists(ChatterboxTtsCpp.GetCrispAsrExecutable());
-        var isCapable = isInstalled && (extraCapabilityCheck?.Invoke() ?? true);
+        // Off the UI thread: the capability check SHA-256s the whole crispasr executable
+        // (hundreds of MB in the GPU builds), which visibly stalled the window on click.
+        var isCapable = isInstalled
+            && (extraCapabilityCheck == null || await Task.Run(extraCapabilityCheck));
         if (!forceRedownload && isInstalled && isCapable)
         {
             return true;
