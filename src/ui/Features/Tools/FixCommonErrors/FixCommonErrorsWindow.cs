@@ -248,13 +248,20 @@ public class FixCommonErrorsWindow : Window
         };
         nothingToFixPanel.Bind(IsVisibleProperty, new Binding(nameof(vm.NothingToFixIsVisible)));
 
+        // "Analyzing..." while a re-scan runs, so a scan that ends in the same state as it started
+        // still shows that it ran - this is what SE4 does on every re-scan (#12849).
+        var analysingText = UiUtil.MakeTextBlock(Se.Language.Tools.FixCommonErrors.Analysing);
+        analysingText.VerticalAlignment = VerticalAlignment.Center;
+        analysingText.Opacity = 0.75;
+        analysingText.Bind(IsVisibleProperty, new Binding(nameof(vm.AnalysingIsVisible)));
+
         var panelStep2Status = new StackPanel
         {
             Orientation = Orientation.Horizontal,
             Spacing = 15,
             HorizontalAlignment = HorizontalAlignment.Left,
             VerticalAlignment = VerticalAlignment.Center,
-            Children = { labelFixesApplied, nothingToFixPanel },
+            Children = { labelFixesApplied, nothingToFixPanel, analysingText },
         };
         panelStep2Status.Bind(IsVisibleProperty, new Binding(nameof(vm.Step2IsVisible)));
         grid.Children.Add(panelStep2Status);
