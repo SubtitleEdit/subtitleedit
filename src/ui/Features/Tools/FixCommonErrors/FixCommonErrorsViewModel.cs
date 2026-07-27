@@ -27,6 +27,12 @@ namespace Nikse.SubtitleEdit.Features.Tools.FixCommonErrors;
 
 public partial class FixCommonErrorsViewModel : ObservableObject, IFixCallbacks
 {
+    // A scan often takes only a frame or two, so "Analyzing..." has to be held for a moment to be seen at all.
+    private const int AnalysingMinimumVisibleMilliseconds = 250;
+
+    // Long enough for the dispatcher to get a frame out before the scan blocks the UI thread again.
+    private const int AnalysingPaintDelayMilliseconds = 20;
+
     [ObservableProperty] private string _searchText;
     [ObservableProperty] private ObservableCollection<LanguageDisplayItem> _languages;
     [ObservableProperty] private LanguageDisplayItem? _selectedLanguage;
@@ -46,6 +52,7 @@ public partial class FixCommonErrorsViewModel : ObservableObject, IFixCallbacks
     [ObservableProperty] private string _step2Title;
     [ObservableProperty] private string _fixesAppliedText = string.Empty;
     [ObservableProperty] private bool _nothingToFixIsVisible;
+    [ObservableProperty] private bool _analysingIsVisible;
     [ObservableProperty] private string _editTextTotalLength = string.Empty;
     [ObservableProperty] private IBrush _editTextTotalLengthBackground = Brushes.Transparent;
 
@@ -66,6 +73,8 @@ public partial class FixCommonErrorsViewModel : ObservableObject, IFixCallbacks
     private bool _previewMode = true;
     public List<int> DeleteIndices = new();
     private List<FixDisplayItem> _oldFixes = new();
+    private bool _nothingToFix;
+    private bool _isAnalysing;
     private LanguageDisplayItem _oldSelectedLanguage;
     private int _totalErrors;
     private int _totalFixes;
@@ -199,19 +208,22 @@ public partial class FixCommonErrorsViewModel : ObservableObject, IFixCallbacks
     }
 
     [RelayCommand]
-    public void DoRefreshFixes()
+    public async Task DoRefreshFixes()
     {
-        RefreshFixes();
+        await RunScanWithFeedbackAsync(RefreshFixes);
     }
 
     [RelayCommand]
-    private void DoApplyFixes()
+    private async Task DoApplyFixes()
     {
-        _previewMode = false;
-        ApplyFixes();
+        await RunScanWithFeedbackAsync(() =>
+        {
+            _previewMode = false;
+            ApplyFixes();
 
-        RefreshFixes();
-        FixesAppliedText = string.Format(_language.XFixesApplied, _totalFixes);
+            RefreshFixes();
+            FixesAppliedText = string.Format(_language.XFixesApplied, _totalFixes);
+        });
     }
 
     [RelayCommand]
@@ -221,21 +233,33 @@ public partial class FixCommonErrorsViewModel : ObservableObject, IFixCallbacks
         Step1IsVisible = true;
     }
 
+    // Used when step 1 is skipped at startup - the window is not up yet, so there is nothing to flash on.
     private void ShowStep2()
+    {
+        EnterStep2();
+        RefreshFixes();
+    }
+
+    private async Task ShowStep2Async()
+    {
+        EnterStep2();
+        await RunScanWithFeedbackAsync(RefreshFixes);
+    }
+
+    private void EnterStep2()
     {
         Step1IsVisible = false;
         Step2IsVisible = true;
         _oldSelectedLanguage = SelectedLanguage!;
         _totalFixes = 0;
         FixesAppliedText = string.Empty;
-        RefreshFixes();
     }
 
     [RelayCommand]
-    private void ToApplyFixes()
+    private async Task ToApplyFixes()
     {
         SaveProfiles();
-        ShowStep2();
+        await ShowStep2Async();
     }
 
     [RelayCommand]
@@ -435,12 +459,15 @@ public partial class FixCommonErrorsViewModel : ObservableObject, IFixCallbacks
     }
 
     [RelayCommand]
-    public void ApplySelectedFixes()
+    public async Task ApplySelectedFixes()
     {
-        _previewMode = false;
-        ApplyFixes();
+        await RunScanWithFeedbackAsync(() =>
+        {
+            _previewMode = false;
+            ApplyFixes();
 
-        RefreshFixes();
+            RefreshFixes();
+        });
     }
 
     partial void OnSelectedParagraphChanged(SubtitleLineViewModel? oldValue, SubtitleLineViewModel? newValue)
@@ -470,7 +497,7 @@ public partial class FixCommonErrorsViewModel : ObservableObject, IFixCallbacks
         // Re-scan so the fix list reflects the toggle right away; while step 1 is up there is no list yet.
         if (Step2IsVisible)
         {
-            RefreshFixes();
+            _ = RunScanWithFeedbackAsync(RefreshFixes);
         }
     }
 
@@ -513,6 +540,36 @@ public partial class FixCommonErrorsViewModel : ObservableObject, IFixCallbacks
         EditTextTotalLengthBackground = info.TotalBackground;
     }
 
+    // Flash "Analyzing..." around a re-scan. A repeat scan that finds nothing changes nothing on
+    // screen, so without this there is still no sign that the button did anything (#12849). The scan
+    // itself runs on the UI thread - it mutates collections bound to the grid - so the status has to
+    // be painted before it starts and held for a moment after it ends.
+    private async Task RunScanWithFeedbackAsync(Action scan)
+    {
+        if (_isAnalysing)
+        {
+            return;
+        }
+
+        _isAnalysing = true;
+        try
+        {
+            NothingToFixIsVisible = false;
+            AnalysingIsVisible = true;
+            await Task.Delay(AnalysingPaintDelayMilliseconds);
+
+            scan();
+
+            await Task.Delay(AnalysingMinimumVisibleMilliseconds);
+        }
+        finally
+        {
+            AnalysingIsVisible = false;
+            NothingToFixIsVisible = _nothingToFix;
+            _isAnalysing = false;
+        }
+    }
+
     private void RefreshFixes()
     {
         _oldFixes = new List<FixDisplayItem>(Fixes);
@@ -523,7 +580,8 @@ public partial class FixCommonErrorsViewModel : ObservableObject, IFixCallbacks
 
         // Confirm that the scan actually ran when it came up empty - the counters do not change in
         // that case, so without this "Refresh available fixes" looks like a dead button (#12849).
-        NothingToFixIsVisible = SelectedProfile != null && Fixes.Count == 0;
+        _nothingToFix = SelectedProfile != null && Fixes.Count == 0;
+        NothingToFixIsVisible = _nothingToFix && !AnalysingIsVisible;
     }
 
     private void ApplyFixes()
