@@ -16,6 +16,11 @@ Trqnform non-latin letter languages to their roman equivalent
 
 Subtitle Edit rewrites the text in in latin-letter equivalence. Timing, text, formatting, and comments are not changed.
 
+## Options
+
+- **Merge** — Merges source for single line result
+- **Position** — The position of the romanized text in reference to the original text
+
 ## Keyboard Shortcuts
 
 | Key | Action |

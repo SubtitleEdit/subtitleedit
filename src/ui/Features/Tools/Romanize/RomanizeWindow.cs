@@ -1,5 +1,6 @@
 using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Controls.Primitives;
 using Avalonia.Controls.Templates;
 using Avalonia.Data;
 using Avalonia.Input;
@@ -73,6 +74,7 @@ public class RomanizeWindow : Window
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
             },
             ColumnDefinitions =
             {
@@ -108,10 +110,59 @@ public class RomanizeWindow : Window
             [!CheckBox.IsCheckedProperty] = new Binding(nameof(RomanizeViewModel.RomanizeRussian))
         };
 
+        var operationstitle = new TextBlock
+        {
+            Text = Se.Language.Tools.Romanize.OperationsTitle
+        };
+        var merge = new CheckBox
+        {
+            Content = Se.Language.General.MergeLines,
+            IsChecked = vm.SubtitleItemsMerged ?? default,
+            HorizontalContentAlignment = HorizontalAlignment.Left,
+            HorizontalAlignment = HorizontalAlignment.Center,
+            VerticalAlignment = VerticalAlignment.Center,
+
+            [!CheckBox.IsCheckedProperty] = new Binding(nameof(RomanizeViewModel.SubtitleItemsMerged))
+            {
+                Mode = BindingMode.OneWayToSource
+            },
+        };
+        var position = new ComboBox
+        {
+            Background = Brushes.Transparent,
+            BorderThickness = new Thickness(0),
+            Margin = new Thickness(0, 1, 0, 0),
+            SelectedValue = vm.SubtitleItemsRomanizedLinePosition ?? default,
+            HorizontalAlignment = HorizontalAlignment.Left,
+            VerticalAlignment = VerticalAlignment.Center,
+            ItemsSource = Enum.GetValues<RomanizedLinePositions>(),
+
+            [!ComboBox.SelectedItemProperty] = new Binding(nameof(RomanizeViewModel.SubtitleItemsRomanizedLinePosition))
+            {
+                Mode = BindingMode.OneWayToSource,
+            },
+
+            ItemTemplate = new FuncDataTemplate<RomanizedLinePositions>((item, nameScope) => new TextBlock
+            {
+                Text = item.ToString()
+            }),
+
+            SelectionBoxItemTemplate = new FuncDataTemplate<RomanizedLinePositions>((item, nameScope) => new TextBlock
+            {
+                Text = string.Format("{0}: {1}", Se.Language.General.Position, item)
+            }),
+        };
+
+        merge.Click += (obj, args) => vm.RomanizeAllCommand.Execute(null);
+        position.SelectionChanged += (obj, args) => vm.RomanizeAllCommand.Execute(null);
+
         grid.Add(toggletitle, 0, 0, 1, 3);
         grid.Add(korean, 1, 0);
         grid.Add(japanese, 1, 1);
         grid.Add(russian, 1, 2);
+        grid.Add(operationstitle, 2, 0, 1, 3);
+        grid.Add(merge, 3, 0);
+        grid.Add(position, 3, 1, 1, 2);
 
         return grid;
     }
@@ -164,8 +215,9 @@ public class RomanizeWindow : Window
                 },
                 new DataGridTemplateColumn
                 {
-                    Header = Se.Language.General.MergeLines,
                     Width = new DataGridLength(1, DataGridLengthUnitType.Auto),
+
+                    Header = Se.Language.General.MergeLines,
                     CellTheme = UiUtil.DataGridNoBorderCellTheme,
                     CellTemplate = new FuncDataTemplate<RomanizeSubtitleLineItem>((item, _) =>
                     {
@@ -188,8 +240,9 @@ public class RomanizeWindow : Window
                 },
                 new DataGridTemplateColumn
                 {
-                    Header = Se.Language.General.Position,
                     Width = new DataGridLength(1, DataGridLengthUnitType.Auto),
+                    
+                    Header = Se.Language.General.Position,
                     CellTheme = UiUtil.DataGridNoBorderCellTheme,
                     CellTemplate = new FuncDataTemplate<RomanizeSubtitleLineItem>((item, _) =>
                     {
