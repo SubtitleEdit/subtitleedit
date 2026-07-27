@@ -96,9 +96,15 @@ public class Se
         static bool IsUnder(string path, string root) =>
             !string.IsNullOrEmpty(root) && path.StartsWith(root, StringComparison.OrdinalIgnoreCase);
 
-        DataFolder = IsPortable
-            ? ExePath
-            : Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Subtitle Edit");
+        // SpecialFolderOption.Create matters off Windows: with the default (None) the runtime
+        // hands back an EMPTY string whenever ~/.config does not exist yet - a fresh account, a
+        // container, a sandboxed HOME - which quietly turned DataFolder into the relative
+        // "Subtitle Edit" and scattered settings, dictionaries and themes into whatever the
+        // working directory happened to be. Create resolves the folder and makes it instead.
+        var appDataFolder = Environment.GetFolderPath(
+            Environment.SpecialFolder.ApplicationData, Environment.SpecialFolderOption.Create);
+
+        DataFolder = ResolveDataFolder(IsPortable, ExePath, appDataFolder);
 
         try
         {
@@ -116,6 +122,19 @@ public class Se
         Configuration.BaseDirectory = Se.DataFolder;
         NetflixQualityCheck.NetflixCheckShotChange.ShotChangeDirectory = Se.ShotChangesFolder;
     }
+
+    /// <summary>
+    /// Picks the data folder from the portable flag and the per-user application-data folder.
+    /// Falls back to the executable folder when there is no application-data folder at all -
+    /// <see cref="Environment.GetFolderPath(Environment.SpecialFolder)"/> can still come back
+    /// empty off Windows, for instance with HOME unset - so the result is always absolute and
+    /// never resolves against the working directory. Split out of the static constructor
+    /// because that reads the real environment and runs only once per process.
+    /// </summary>
+    internal static string ResolveDataFolder(bool isPortable, string exePath, string appDataFolder)
+        => isPortable || string.IsNullOrEmpty(appDataFolder)
+            ? exePath
+            : Path.Combine(appDataFolder, "Subtitle Edit");
 
     private static string? _dictionariesFolder;
     public static string DictionariesFolder

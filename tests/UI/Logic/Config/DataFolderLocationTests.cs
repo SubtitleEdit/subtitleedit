@@ -28,6 +28,21 @@ public class DataFolderLocationTests
     }
 
     /// <summary>
+    /// Off Windows <c>GetFolderPath(ApplicationData)</c> returns an empty string when the folder
+    /// does not exist yet, so <c>Path.Combine(..., "Subtitle Edit")</c> used to yield the bare
+    /// relative "Subtitle Edit" - settings, dictionaries and themes then landed in whatever
+    /// directory the app happened to be started from. Anything absolute beats that.
+    /// </summary>
+    [Fact]
+    public void MissingApplicationDataFolder_FallsBackToTheExeFolder_NeverARelativePath()
+    {
+        var resolved = Se.ResolveDataFolder(isPortable: false, Se.ExePath, appDataFolder: string.Empty);
+
+        Assert.Equal(Se.ExePath, resolved);
+        Assert.True(Path.IsPathRooted(resolved), $"\"{resolved}\" is not an absolute path.");
+    }
+
+    /// <summary>
     /// Every runtime folder hangs off DataFolder, so pinning that pins the rest. Guards against
     /// a stray absolute or working-directory-relative path creeping back in.
     /// </summary>
