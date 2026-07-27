@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 
 namespace Nikse.SubtitleEdit.UiLogic.Export;
 
@@ -21,7 +22,7 @@ public static class FontFaces
 
     private static List<string>? _facesCache;
     private static Dictionary<string, FaceInfo>? _faceMapCache;
-    private static readonly object Gate = new();
+    private static readonly Lock Gate = new();
 
     /// <summary>All installed font faces by their Win32/GDI (name ID 1) names, sorted.</summary>
     public static List<string> GetFontFaces()

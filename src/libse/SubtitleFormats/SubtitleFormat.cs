@@ -23,11 +23,15 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         /// makes concurrent access real. A lock rather than a lazy/volatile publish because the
         /// build deliberately assigns <see cref="_allSubtitleFormats"/> before ordering it, so
         /// <see cref="GetOrderedFormatsList"/> can re-enter this property through
-        /// <c>Utilities.GetSubtitleFormatByFriendlyName</c>; Monitor is re-entrant on the same
+        /// <c>Utilities.GetSubtitleFormatByFriendlyName</c>; the lock is re-entrant on the same
         /// thread, so that keeps working, while another thread can no longer observe the
         /// intermediate unordered list.
         /// </summary>
+#if NET9_0_OR_GREATER
+        private static readonly System.Threading.Lock SubtitleFormatsLock = new System.Threading.Lock();
+#else
         private static readonly object SubtitleFormatsLock = new object();
+#endif
 
         protected static readonly char[] SplitCharColon = { ':' };
 
