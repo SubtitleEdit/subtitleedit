@@ -1,7 +1,7 @@
 {
   "title": "Subtitle Edit",
   "version": "v. 5.1.0 RC8",
-  "translatedBy": "V. 26.07.2026 di bovirus",
+  "translatedBy": "v. 26.07.2026 di bovirus",
   "cultureName": "it-IT",
   "general": {
     "abort": "Annulla",
@@ -1070,7 +1070,7 @@
     "setUpLikeSe4ShortcutsAddedX": "Tasti rapidi aggiunti/aggiornati: {0}",
     "setUpLikeSe4ShortcutsSkippedX": "Tasti rapidi saltati (nessuna corrispondenza): {0}",
     "setUpLikeSe4ReplaceRulesAddedXY": "Regole sostituzione aggiunte: {0} (in {1} nuove categorie)",
-    "setUpLikeSe4ThemeSet": "Tema, icone barra strumenti e forma d'onda impostati in base all'aspetto di Subtitle Edit 4.",
+    "setUpLikeSe4ThemeSet": "Tema, icone barra strumenti e forma d'onda impostati in base all'aspetto di Subtitle Edit 4."
   },
   "File": {
     "ebuSaveOptions": {
@@ -1310,7 +1310,7 @@
     "pickMatroskaTrackX": "Scegli traccia Matroska - {0}",
     "rosettaProperties": "Proprietà Timed Text Rosetta IMSC",
     "rosettaFontSize": "Dimensione font (altezza riga)",
-    "xProperties": "Proprietà {0}",
+    "xProperties": "Proprietà {0}"
   },
   "Edit": {
     "modifySelection": {
