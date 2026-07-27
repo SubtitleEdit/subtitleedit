@@ -27,6 +27,13 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         /// thread, so that keeps working, while another thread can no longer observe the
         /// intermediate unordered list.
         /// </summary>
+        /// <remarks>
+        /// Stays a plain <see cref="object"/> - unlike the rest of the code base, which uses
+        /// <c>System.Threading.Lock</c> - because LibSE also targets netstandard2.1, where that
+        /// type does not exist. Guarding one field with <c>#if NET9_0_OR_GREATER</c> is not worth
+        /// the target-framework conditional: the lock is taken a handful of times at start-up, so
+        /// there is nothing to gain from the faster primitive.
+        /// </remarks>
         private static readonly object SubtitleFormatsLock = new object();
 
         protected static readonly char[] SplitCharColon = { ':' };

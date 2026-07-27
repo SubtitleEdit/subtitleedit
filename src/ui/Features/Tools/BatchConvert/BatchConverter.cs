@@ -750,7 +750,7 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
         item.Subtitle = new Subtitle();
         var results = new Paragraph[totalCount];
         var processedCount = 0;
-        var lockObj = new object();
+        var lockObj = new Lock();
 
         Parallel.For(0, totalCount, new ParallelOptions
         {
@@ -1015,7 +1015,7 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
         var totalCount = imageSubtitles.Count;
         var results = new Paragraph[totalCount];
         var processedCount = 0;
-        var lockObj = new object();
+        var lockObj = new Lock();
 
         Parallel.For(
             0,

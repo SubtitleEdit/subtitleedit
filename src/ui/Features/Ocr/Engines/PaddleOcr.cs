@@ -29,7 +29,7 @@ public partial class PaddleOcr
     private CancellationToken _cancellationToken;
     private readonly Stopwatch _batchStopwatch = new();
     private readonly StringBuilder _errorOutput = new();
-    private readonly object _errorLock = new();
+    private readonly Lock _errorLock = new();
 
     public static List<string> UrlsWindowsCpu =
         ["https://github.com/timminator/PaddleOCR-Standalone/releases/download/v1.4.0/PaddleOCR-CPU-v1.4.0.7z"];
