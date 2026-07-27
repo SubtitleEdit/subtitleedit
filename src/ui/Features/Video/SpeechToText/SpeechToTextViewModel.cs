@@ -1307,6 +1307,10 @@ public partial class SpeechToTextViewModel : ObservableObject
             {
                 message = Se.Language.General.RequestTimeout;
             }
+            else if (IsModelRejectedByServer(ex, engine))
+            {
+                message += Environment.NewLine + Environment.NewLine + Se.Language.General.OpenAiCompatibleSttModelRejectedHint;
+            }
 
             await Dispatcher.UIThread.InvokeAsync(async () =>
             {
@@ -1814,6 +1818,15 @@ public partial class SpeechToTextViewModel : ObservableObject
 
         if (string.IsNullOrWhiteSpace(languageCode))
         {
+            // Last resort: read the language off the transcript itself. Providers
+            // that never report one leave the hint fallback empty - xAI's /v1/stt
+            // documents its "language" response field as "currently empty" - and
+            // without a code the whole post-processing step is skipped (#12877).
+            languageCode = LanguageAutoDetect.AutoDetectGoogleLanguageOrNull(transcript);
+        }
+
+        if (string.IsNullOrWhiteSpace(languageCode))
+        {
             return transcript;
         }
 
@@ -1910,6 +1923,37 @@ public partial class SpeechToTextViewModel : ObservableObject
         {
             _onlineDetectedLanguage = match.Code;
         }
+    }
+
+    /// <summary>
+    /// True when a failed OpenAI-compatible STT request looks like the server
+    /// turning down the configured model name. Endpoints differ on this: xAI's
+    /// /v1/stt has no "model" parameter and answers 404 for any value sent,
+    /// while others accept only their own ids - so the fix is to clear the
+    /// field, which isn't something the raw server message says (issue #12877).
+    /// </summary>
+    private static bool IsModelRejectedByServer(HttpRequestException ex, ISpeechToTextEngine engine)
+    {
+        if (engine is not OpenAiCompatibleSttEngine)
+        {
+            return false;
+        }
+
+        var model = Se.Settings.Tools.OpenAiCompatibleSttModel;
+        if (string.IsNullOrWhiteSpace(model))
+        {
+            return false;
+        }
+
+        if (ex.StatusCode is not { } status || (int)status < 400 || (int)status >= 500)
+        {
+            return false;
+        }
+
+        // The message holds the server's response body, so an error naming the
+        // model we sent - or just talking about models at all - points at the field.
+        return ex.Message.Contains(model.Trim(), StringComparison.OrdinalIgnoreCase) ||
+               ex.Message.Contains("model", StringComparison.OrdinalIgnoreCase);
     }
 
     private WavePeakData2? MakeWavePeaks()
