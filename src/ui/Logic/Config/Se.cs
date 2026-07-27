@@ -96,9 +96,7 @@ public class Se
         static bool IsUnder(string path, string root) =>
             !string.IsNullOrEmpty(root) && path.StartsWith(root, StringComparison.OrdinalIgnoreCase);
 
-        DataFolder = IsPortable
-            ? ExePath
-            : Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Subtitle Edit");
+        DataFolder = ResolveDataFolder(IsPortable, ExePath, GetApplicationDataFolder());
 
         try
         {
@@ -116,6 +114,41 @@ public class Se
         Configuration.BaseDirectory = Se.DataFolder;
         NetflixQualityCheck.NetflixCheckShotChange.ShotChangeDirectory = Se.ShotChangesFolder;
     }
+
+    /// <summary>
+    /// The per-user application-data folder - <c>%AppData%</c> on Windows, <c>$XDG_CONFIG_HOME</c>
+    /// or <c>~/.config</c> on Linux, <c>~/Library/Application Support</c> on macOS.
+    /// <para>
+    /// The folder option matters off Windows. With the default (None) the runtime hands back an
+    /// EMPTY string whenever the folder does not exist yet - a fresh account, a container, a
+    /// sandboxed HOME - which quietly turned DataFolder into the relative "Subtitle Edit" and
+    /// scattered settings, dictionaries and themes into whatever the working directory happened
+    /// to be. DoNotVerify asks for the path only: it never touches the file system, so it cannot
+    /// come back empty for a folder that is merely missing, and it cannot throw. Creating the
+    /// folder is left to the guarded <see cref="Directory.CreateDirectory(string)"/> in the
+    /// static constructor, which makes the whole chain and logs on failure. The Create option
+    /// would create it here instead, but it throws when the folder is missing AND uncreatable
+    /// (a read-only or non-existent HOME) - and a throw in the static constructor takes the app
+    /// down at startup, before there is a window to report it in.
+    /// </para>
+    /// </summary>
+    internal static string GetApplicationDataFolder()
+        => Environment.GetFolderPath(
+            Environment.SpecialFolder.ApplicationData, Environment.SpecialFolderOption.DoNotVerify);
+
+    /// <summary>
+    /// Picks the data folder from the portable flag and the per-user application-data folder.
+    /// Falls back to the executable folder when there is no application-data folder at all -
+    /// <see cref="Environment.GetFolderPath(Environment.SpecialFolder)"/> still comes back empty
+    /// off Windows when the home directory cannot be determined (no HOME and no passwd entry, as
+    /// in a container running under an unknown uid) - so the result is always absolute and never
+    /// resolves against the working directory. Split out of the static constructor because that
+    /// reads the real environment and runs only once per process.
+    /// </summary>
+    internal static string ResolveDataFolder(bool isPortable, string exePath, string appDataFolder)
+        => isPortable || string.IsNullOrEmpty(appDataFolder)
+            ? exePath
+            : Path.Combine(appDataFolder, "Subtitle Edit");
 
     private static string? _dictionariesFolder;
     public static string DictionariesFolder
