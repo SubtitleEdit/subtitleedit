@@ -8,7 +8,7 @@ namespace Nikse.SubtitleEdit.Core.Common
     /// Shared "favorite languages" used to bubble the user's preferred languages to the top of
     /// the various language combo boxes (auto-translate, speech-to-text, OCR, spell check, ...).
     /// Favorites are stored as a ";"-separated list of two-letter ISO 639-1 codes in
-    /// <see cref="GeneralSettings.FavoriteLanguages"/>.
+    /// the settings' <c>FavoriteLanguages</c> value.
     /// </summary>
     public static class LanguageFavorites
     {

@@ -148,6 +148,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         /// Reads the video size from a BDN xml "Description/Format" node, e.g. VideoFormat="1080p" or VideoFormat="1920x1080".
         /// </summary>
         /// <param name="xmlString">Raw BDN xml - typically <see cref="Subtitle.Header"/> after a <see cref="LoadSubtitle"/> call.</param>
+        /// <param name="width">Video width, or 0 if not found</param>
+        /// <param name="height">Video height, or 0 if not found</param>
         public static bool TryGetVideoSize(string xmlString, out int width, out int height)
         {
             width = 0;

@@ -543,7 +543,7 @@ namespace Nikse.SubtitleEdit.Core.Common
         }
 
         /// <summary>
-        /// Optimized method to remove common html tags, like <i>, <b>, <u>, and <font>
+        /// Optimized method to remove common html tags, like &lt;i&gt;, &lt;b&gt;, &lt;u&gt;, and &lt;font&gt;
         /// </summary>
         /// <param name="s">Text to remove html tags from</param>
         /// <returns>Text stripped from common html tags</returns>
@@ -1246,7 +1246,7 @@ namespace Nikse.SubtitleEdit.Core.Common
 
         /// <summary>
         /// Used by <see cref="FixInvalidItalicTags"/> for two-line subtitles that contain only
-        /// stray copies of a single italic tag (e.g. four "</i>" and no "<i>"): the tags carry no
+        /// stray copies of a single italic tag (e.g. four "&lt;/i&gt;" and no "&lt;i&gt;"): the tags carry no
         /// pairing information, so a line containing the tag was meant to be italic - strip the
         /// stray tags and wrap the whole line in proper tags. Lines without the tag are kept as-is.
         /// </summary>
@@ -1471,7 +1471,7 @@ namespace Nikse.SubtitleEdit.Core.Common
         /// "rgb(r, g, b)", "rgba(r, g, b, a)", or a hex color string like "#RRGGBB" or "#RRGGBBAA".
         /// </summary>
         /// <param name="s">The string representation of the color.</param>
-        /// <returns>A Color object corresponding to the input string. If the string cannot be parsed, the default color is white.</returns
+        /// <returns>A Color object corresponding to the input string. If the string cannot be parsed, the default color is white.</returns>
         public static SKColor GetColorFromString(string s)
         {
             try
@@ -1527,11 +1527,6 @@ namespace Nikse.SubtitleEdit.Core.Common
             }
         }
 
-        /// <summary>
-        /// Remove color tags from the input string, adjusting for potentially surrounding font tags.
-        /// </summary>
-        /// <param name="input">The string from which to remove color tags.</param>
-        /// <returns>A new string with color tags removed.</returns>
 #if NET7_0_OR_GREATER
         [GeneratedRegex("[ ]*(COLOR|color|Color)=[\"']*[#\\dA-Za-z]*[\"']*[ ]*")]
         private static partial Regex ColorAttributeRegexGen();
@@ -1540,6 +1535,11 @@ namespace Nikse.SubtitleEdit.Core.Common
         private static readonly Regex ColorAttributeRegex = new Regex("[ ]*(COLOR|color|Color)=[\"']*[#\\dA-Za-z]*[\"']*[ ]*", RegexOptions.Compiled);
 #endif
 
+        /// <summary>
+        /// Remove color tags from the input string, adjusting for potentially surrounding font tags.
+        /// </summary>
+        /// <param name="input">The string from which to remove color tags.</param>
+        /// <returns>A new string with color tags removed.</returns>
         public static string RemoveColorTags(string input)
         {
             var r = ColorAttributeRegex;
@@ -1758,7 +1758,7 @@ namespace Nikse.SubtitleEdit.Core.Common
         /// Determines if the provided HTML tag is an opening tag.
         /// </summary>
         /// <param name="tag">The HTML tag to check.</param>
-        /// <returns>True if the tag is an opening tag, otherwise false.</returns
+        /// <returns>True if the tag is an opening tag, otherwise false.</returns>
         public static bool IsOpenTag(string tag) => tag.Length > 1 && tag[1] != '/';
 
         /// <summary>
