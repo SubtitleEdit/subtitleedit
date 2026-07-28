@@ -13,10 +13,10 @@ using Nikse.SubtitleEdit.Logic;
 namespace UITests.Logic;
 
 /// <summary>
-/// A plain press on the trough of a DataGrid's vertical scroll bar must page exactly one
-/// viewport toward the cursor and stop paging on release. The theme's trough RepeatButton
-/// kept repeating past the cursor to the end because Button only re-evaluates IsPressed
-/// on PointerMoved, so DataGridScrollBarBehavior handles the press itself (#12438 follow-up).
+/// A press on the trough of a DataGrid's vertical scroll bar pages toward the cursor and pauses
+/// when the thumb reaches it, instead of running to the end of the list like the theme's trough
+/// RepeatButton did (#12894). The headless dispatcher never fires a DispatcherTimer, so the
+/// repeats are stepped by hand through TickTroughHoldPagingForTest.
 /// </summary>
 public class DataGridScrollBarTroughPagingTests
 {
@@ -57,14 +57,38 @@ public class DataGridScrollBarTroughPagingTests
         return (window, grid, scrollBar);
     }
 
+    private static Track TrackOf(ScrollBar scrollBar) => scrollBar.GetVisualDescendants().OfType<Track>().First();
+
+    // A point centered horizontally, at the given fraction down the track, in window coordinates.
+    private static Point TrackPoint(Window window, ScrollBar scrollBar, double fraction)
+    {
+        var track = TrackOf(scrollBar);
+        return track.TranslatePoint(new Point(track.Bounds.Width / 2, track.Bounds.Height * fraction), window)!.Value;
+    }
+
     private static Point TroughPointBelowThumb(Window window, ScrollBar scrollBar)
     {
-        var track = scrollBar.GetVisualDescendants().OfType<Track>().First();
-        var thumb = track.Thumb!;
+        var track = TrackOf(scrollBar);
 
-        // A point centered horizontally, well below the thumb (Value is 0, thumb at top).
-        var yInTrack = (thumb.Bounds.Y + thumb.Bounds.Height + track.Bounds.Height) / 2;
+        // Well below the thumb, which sits at the top while Value is 0.
+        var yInTrack = (track.Thumb!.Bounds.Bottom + track.Bounds.Height) / 2;
         return track.TranslatePoint(new Point(track.Bounds.Width / 2, yInTrack), window)!.Value;
+    }
+
+    private static void Repeat(Window window, DataGrid grid, ScrollBar scrollBar, int ticks)
+    {
+        for (var i = 0; i < ticks; i++)
+        {
+            DataGridScrollBarBehavior.TickTroughHoldPagingForTest(grid, scrollBar);
+            window.UpdateLayout();
+        }
+    }
+
+    // True once the thumb has caught up with the pointer, so paging should have paused.
+    private static bool ThumbReached(Window window, ScrollBar scrollBar, Point windowPoint)
+    {
+        var track = TrackOf(scrollBar);
+        return track.Thumb!.Bounds.Bottom >= window.TranslatePoint(windowPoint, track)!.Value.Y;
     }
 
     [AvaloniaFact]
@@ -72,13 +96,67 @@ public class DataGridScrollBarTroughPagingTests
     {
         var (window, _, scrollBar) = BuildShownGrid();
         Assert.True(scrollBar.Maximum > 0, "grid should have enough rows to scroll");
+        Assert.True(scrollBar.LargeChange > 1, "LargeChange should follow the viewport, not RangeBase's default");
         Assert.Equal(0, scrollBar.Value);
 
         var point = TroughPointBelowThumb(window, scrollBar);
         window.MouseDown(point, MouseButton.Left);
 
-        // One immediate page of one viewport; the repeat timer has not ticked yet.
+        // One immediate page of one viewport; the repeat has not been stepped yet.
         Assert.Equal(scrollBar.LargeChange, scrollBar.Value, 3);
+
+        window.MouseUp(point, MouseButton.Left);
+    }
+
+    [AvaloniaFact]
+    public void TroughHold_PausesWhenThumbReachesPointer()
+    {
+        var (window, grid, scrollBar) = BuildShownGrid();
+
+        var point = TroughPointBelowThumb(window, scrollBar);
+        window.MouseDown(point, MouseButton.Left);
+        Repeat(window, grid, scrollBar, 50);
+
+        Assert.True(ThumbReached(window, scrollBar, point), "the thumb should have reached the pointer");
+        Assert.True(scrollBar.Value > 0, "the hold should have paged");
+        Assert.True(scrollBar.Value < scrollBar.Maximum, $"paging ran past the pointer to the end ({scrollBar.Value} of {scrollBar.Maximum})");
+
+        window.MouseUp(point, MouseButton.Left);
+    }
+
+    [AvaloniaFact]
+    public void TroughHold_ResumesWhenPointerMovesFurther()
+    {
+        var (window, grid, scrollBar) = BuildShownGrid();
+
+        var point = TroughPointBelowThumb(window, scrollBar);
+        window.MouseDown(point, MouseButton.Left);
+        Repeat(window, grid, scrollBar, 50);
+        var pausedValue = scrollBar.Value;
+
+        var lower = TrackPoint(window, scrollBar, 0.95);
+        window.MouseMove(lower);
+        Repeat(window, grid, scrollBar, 50);
+
+        Assert.True(scrollBar.Value > pausedValue, "paging should resume when the pointer moves further down");
+
+        window.MouseUp(lower, MouseButton.Left);
+    }
+
+    [AvaloniaFact]
+    public void TroughHold_DoesNotReverseWhenPointerMovesBack()
+    {
+        var (window, grid, scrollBar) = BuildShownGrid();
+
+        var point = TroughPointBelowThumb(window, scrollBar);
+        window.MouseDown(point, MouseButton.Left);
+        Repeat(window, grid, scrollBar, 50);
+        var pausedValue = scrollBar.Value;
+
+        window.MouseMove(TrackPoint(window, scrollBar, 0.0));
+        Repeat(window, grid, scrollBar, 10);
+
+        Assert.Equal(pausedValue, scrollBar.Value);
 
         window.MouseUp(point, MouseButton.Left);
     }
@@ -86,16 +164,14 @@ public class DataGridScrollBarTroughPagingTests
     [AvaloniaFact]
     public void TroughRelease_StopsPaging()
     {
-        var (window, _, scrollBar) = BuildShownGrid();
+        var (window, grid, scrollBar) = BuildShownGrid();
 
         var point = TroughPointBelowThumb(window, scrollBar);
         window.MouseDown(point, MouseButton.Left);
         window.MouseUp(point, MouseButton.Left);
 
         var valueAfterRelease = scrollBar.Value;
-        Avalonia.Threading.Dispatcher.UIThread.RunJobs();
-        AvaloniaHeadlessPlatform.ForceRenderTimerTick();
-        Avalonia.Threading.Dispatcher.UIThread.RunJobs();
+        Repeat(window, grid, scrollBar, 10);
 
         Assert.Equal(valueAfterRelease, scrollBar.Value);
     }
@@ -103,15 +179,17 @@ public class DataGridScrollBarTroughPagingTests
     [AvaloniaFact]
     public void ThumbPress_DoesNotPage()
     {
-        var (window, _, scrollBar) = BuildShownGrid();
+        var (window, grid, scrollBar) = BuildShownGrid();
 
-        var track = scrollBar.GetVisualDescendants().OfType<Track>().First();
-        var thumb = track.Thumb!;
+        var thumb = TrackOf(scrollBar).Thumb!;
         var thumbCenter = thumb.TranslatePoint(
             new Point(thumb.Bounds.Width / 2, thumb.Bounds.Height / 2), window)!.Value;
 
         window.MouseDown(thumbCenter, MouseButton.Left);
+        Repeat(window, grid, scrollBar, 10);
+
         Assert.Equal(0, scrollBar.Value);
+
         window.MouseUp(thumbCenter, MouseButton.Left);
     }
 }

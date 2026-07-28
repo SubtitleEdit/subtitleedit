@@ -28,16 +28,18 @@ namespace Nikse.SubtitleEdit.Logic;
 /// The DataGrid hooks the scroll bar's Scroll event (not ValueChanged) to refresh its
 /// rows, so a programmatic jump also invokes the grid's internal ProcessVerticalScroll.
 ///
-/// Press-and-hold on the trough is also handled here rather than left to the theme's
-/// trough RepeatButton. That button keeps repeating while IsPressed, and Button only
-/// re-evaluates IsPressed on PointerMoved — with a stationary cursor no move event
-/// arrives as the thumb slides under it, so it pages straight past the cursor to the
-/// end. This class pages toward the cursor and pauses when the thumb reaches it,
-/// resuming only if the pointer moves further along, like the Windows scroll bar.
+/// Press-and-hold is handled here too: the theme's trough RepeatButton repeats while
+/// IsPressed, and Button only re-evaluates IsPressed on PointerMoved, so with a stationary
+/// cursor it pages past the cursor to the end (issue #12894). This pages toward the cursor
+/// and pauses when the thumb reaches it.
 /// </summary>
 public static class DataGridScrollBarBehavior
 {
     private const string VerticalScrollBarPartName = "PART_VerticalScrollbar";
+
+    // Avalonia's RepeatButton defaults, so the trough repeats like every other scroll bar.
+    private static readonly TimeSpan RepeatDelay = TimeSpan.FromMilliseconds(300);
+    private static readonly TimeSpan RepeatInterval = TimeSpan.FromMilliseconds(100);
 
     private static readonly MethodInfo? ProcessVerticalScrollMethod = typeof(DataGrid).GetMethod(
         "ProcessVerticalScroll",
@@ -57,6 +59,10 @@ public static class DataGridScrollBarBehavior
     // scroll bar once, and the discarded template's scroll bar (with its handlers) is dropped.
     private static readonly AttachedProperty<bool> WiredProperty =
         AvaloniaProperty.RegisterAttached<DataGrid, bool>("TroughPagingWired", typeof(DataGridScrollBarBehavior));
+
+    // Non-null only while the left button is held on that scroll bar's trough.
+    private static readonly AttachedProperty<TroughHoldState?> HoldStateProperty =
+        AvaloniaProperty.RegisterAttached<ScrollBar, TroughHoldState?>("TroughHoldState", typeof(DataGridScrollBarBehavior));
 
     public static void SetEnableTroughPaging(DataGrid grid, bool value) => grid.SetValue(EnableTroughPagingProperty, value);
 
@@ -97,13 +103,7 @@ public static class DataGridScrollBarBehavior
                 }
             };
 
-            // One state instance per applied template: a re-template wires a fresh scroll
-            // bar with fresh state, and the discarded template's timer dies with its capture.
-            var holdState = new TroughHoldState();
-
-            // Shift + trough click jumps to the click position, a plain trough press pages
-            // and repeats toward the cursor, both matching the Windows scroll bar. Tunnel so
-            // this runs before the theme's trough repeat button can engage.
+            // Tunnel so this runs before the theme's trough repeat button can engage.
             verticalScrollBar.AddHandler(
                 InputElement.PointerPressedEvent,
                 (_, args) =>
@@ -114,118 +114,149 @@ public static class DataGridScrollBarBehavior
                     }
                     else
                     {
-                        StartTroughHoldPaging(grid, verticalScrollBar, holdState, args);
+                        StartTroughHoldPaging(grid, verticalScrollBar, args);
                     }
                 },
                 RoutingStrategies.Tunnel);
 
             verticalScrollBar.PointerMoved += (_, args) =>
             {
-                if (holdState.IsActive)
+                if (GetHoldState(verticalScrollBar) is { } state)
                 {
-                    holdState.PointerPosition = args.GetPosition(verticalScrollBar);
+                    state.PointerPosition = args.GetPosition(verticalScrollBar);
                 }
             };
 
             verticalScrollBar.PointerReleased += (_, args) =>
             {
-                if (holdState.IsActive && args.InitialPressMouseButton == MouseButton.Left)
+                if (GetHoldState(verticalScrollBar) != null && args.InitialPressMouseButton == MouseButton.Left)
                 {
-                    StopTroughHoldPaging(holdState);
+                    StopTroughHoldPaging(verticalScrollBar);
                     args.Pointer.Capture(null);
                     args.Handled = true;
                 }
             };
 
-            verticalScrollBar.PointerCaptureLost += (_, _) => StopTroughHoldPaging(holdState);
+            // Covers a release outside the window, window deactivation and a re-template mid-hold.
+            verticalScrollBar.PointerCaptureLost += (_, _) => StopTroughHoldPaging(verticalScrollBar);
         };
     }
 
-    // Per scroll bar state for a press-and-hold on the trough, captured by that scroll
-    // bar's handlers. The direction is latched at press time (Windows-style) because
-    // re-deciding it per tick would ping-pong around the cursor once a page overshoots.
+    // State for a press-and-hold on one scroll bar's trough. The direction is latched at press
+    // time (Windows-style): re-deciding it per tick would ping-pong once a page overshoots.
     private sealed class TroughHoldState
     {
-        public DispatcherTimer? Timer;
-        public bool IsActive;
-        public bool PageDown;
-        public Point PointerPosition; // last pointer position, in scroll bar coordinates
+        public required DispatcherTimer Timer { get; init; }
+        public required IPointer Pointer { get; init; }
+        public required Track Track { get; init; }
+        public required bool PageDown { get; init; }
+        public Point PointerPosition { get; set; } // in scroll bar coordinates
     }
 
-    private static void StartTroughHoldPaging(DataGrid grid, ScrollBar verticalScrollBar, TroughHoldState holdState, PointerPressedEventArgs e)
+    private static void StartTroughHoldPaging(DataGrid grid, ScrollBar verticalScrollBar, PointerPressedEventArgs e)
     {
-        if (holdState.IsActive ||
+        // Without ProcessVerticalScroll a page would move the thumb but not the rows, so leave
+        // the press to the theme's repeat button instead of swallowing it.
+        if (ProcessVerticalScrollMethod == null ||
+            GetHoldState(verticalScrollBar) != null ||
             !e.GetCurrentPoint(verticalScrollBar).Properties.IsLeftButtonPressed ||
-            !TryGetTroughPress(verticalScrollBar, e, out _, out _, out var isBelowThumb))
+            !TryGetTroughPress(verticalScrollBar, e, out var track, out _, out var isBelowThumb))
         {
             return;
         }
 
-        holdState.IsActive = true;
-        holdState.PageDown = isBelowThumb;
-        holdState.PointerPosition = e.GetPosition(verticalScrollBar);
-        e.Pointer.Capture(verticalScrollBar);
+        var timer = new DispatcherTimer { Interval = RepeatDelay };
+        var state = new TroughHoldState
+        {
+            Timer = timer,
+            Pointer = e.Pointer,
+            Track = track,
+            PageDown = isBelowThumb,
+            PointerPosition = e.GetPosition(verticalScrollBar),
+        };
 
-        PageOnce(grid, verticalScrollBar, isBelowThumb);
-
-        // First repeat after the RepeatButton default delay, then its default rate, so the
-        // grid's trough feels the same as every other Avalonia scroll bar in the app.
-        var timer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(300) };
         timer.Tick += (_, _) =>
         {
-            timer.Interval = TimeSpan.FromMilliseconds(100);
-            TickTroughHoldPaging(grid, verticalScrollBar, holdState);
+            timer.Interval = RepeatInterval;
+            TickTroughHoldPaging(grid, verticalScrollBar, state);
         };
-        holdState.Timer = timer;
+
+        verticalScrollBar.SetValue(HoldStateProperty, state);
+        e.Pointer.Capture(verticalScrollBar);
+        PageOnce(grid, verticalScrollBar, state.PageDown);
         timer.Start();
 
         // Keep the trough repeat button from setting IsPressed and starting its own repeat.
         e.Handled = true;
     }
 
-    private static void TickTroughHoldPaging(DataGrid grid, ScrollBar verticalScrollBar, TroughHoldState holdState)
+    private static void TickTroughHoldPaging(DataGrid grid, ScrollBar verticalScrollBar, TroughHoldState state)
     {
-        var track = verticalScrollBar.GetVisualDescendants().OfType<Track>().FirstOrDefault();
-        var thumb = track?.Thumb;
-        if (track == null || thumb == null)
+        // A missed release, or a capture taken elsewhere, must not leave the timer paging.
+        if (state.Pointer.Captured != verticalScrollBar)
         {
+            StopTroughHoldPaging(verticalScrollBar);
             return;
         }
 
-        var posY = verticalScrollBar.TranslatePoint(holdState.PointerPosition, track)?.Y;
-        if (posY == null)
+        var thumb = state.Track.Thumb;
+        var posY = verticalScrollBar.TranslatePoint(state.PointerPosition, state.Track)?.Y;
+        if (thumb == null || posY == null)
         {
             return;
         }
 
         // Pause (not stop) once the thumb has reached the pointer: paging resumes if the
         // pointer moves further in the latched direction, like the Windows scroll bar.
-        var shouldPage = holdState.PageDown
-            ? posY > thumb.Bounds.Y + thumb.Bounds.Height
-            : posY < thumb.Bounds.Y;
-        if (shouldPage)
+        if (ShouldPage(posY.Value, thumb.Bounds, state.PageDown))
         {
-            PageOnce(grid, verticalScrollBar, holdState.PageDown);
+            PageOnce(grid, verticalScrollBar, state.PageDown);
         }
+    }
+
+    private static bool ShouldPage(double posY, Rect thumbBounds, bool pageDown)
+    {
+        return pageDown ? posY > thumbBounds.Bottom : posY < thumbBounds.Top;
     }
 
     private static void PageOnce(DataGrid grid, ScrollBar verticalScrollBar, bool pageDown)
     {
         var delta = pageDown ? verticalScrollBar.LargeChange : -verticalScrollBar.LargeChange;
-        verticalScrollBar.Value = Math.Clamp(verticalScrollBar.Value + delta, verticalScrollBar.Minimum, verticalScrollBar.Maximum);
+        var newValue = Math.Clamp(verticalScrollBar.Value + delta, verticalScrollBar.Minimum, verticalScrollBar.Maximum);
+        if (newValue == verticalScrollBar.Value)
+        {
+            return;
+        }
+
+        verticalScrollBar.Value = newValue;
         ProcessVerticalScrollMethod?.Invoke(grid, new object[] { ScrollEventType.EndScroll });
     }
 
-    private static void StopTroughHoldPaging(TroughHoldState holdState)
+    private static TroughHoldState? GetHoldState(ScrollBar verticalScrollBar) => verticalScrollBar.GetValue(HoldStateProperty);
+
+    private static void StopTroughHoldPaging(ScrollBar verticalScrollBar)
     {
-        holdState.Timer?.Stop();
-        holdState.Timer = null;
-        holdState.IsActive = false;
+        if (GetHoldState(verticalScrollBar) is { } state)
+        {
+            state.Timer.Stop();
+            verticalScrollBar.SetValue(HoldStateProperty, null);
+        }
+    }
+
+    // The headless test dispatcher never fires a DispatcherTimer, so the tests step the repeat
+    // by hand (DataGridScrollBarTroughPagingTests).
+    internal static void TickTroughHoldPagingForTest(DataGrid grid, ScrollBar verticalScrollBar)
+    {
+        if (GetHoldState(verticalScrollBar) is { } state)
+        {
+            TickTroughHoldPaging(grid, verticalScrollBar, state);
+        }
     }
 
     private static void JumpToClickPosition(DataGrid grid, ScrollBar verticalScrollBar, PointerPressedEventArgs e)
     {
-        if (!e.GetCurrentPoint(verticalScrollBar).Properties.IsLeftButtonPressed ||
+        if (ProcessVerticalScrollMethod == null ||
+            !e.GetCurrentPoint(verticalScrollBar).Properties.IsLeftButtonPressed ||
             !TryGetTroughPress(verticalScrollBar, e, out var track, out var posY, out _))
         {
             return;
@@ -242,17 +273,15 @@ public static class DataGridScrollBarBehavior
         var newValue = verticalScrollBar.Minimum + (fraction * range);
         verticalScrollBar.Value = Math.Clamp(newValue, verticalScrollBar.Minimum, verticalScrollBar.Maximum);
 
-        ProcessVerticalScrollMethod?.Invoke(grid, new object[] { ScrollEventType.EndScroll });
+        ProcessVerticalScrollMethod.Invoke(grid, new object[] { ScrollEventType.EndScroll });
         e.Handled = true;
     }
 
     /// <summary>
-    /// Returns the track and the press's track-relative Y for a genuine trough press, or
-    /// false for presses outside the track (the line step arrows), on the thumb itself
-    /// (which begins a normal drag), or when there is nothing to scroll; without this guard
-    /// a press on an arrow or the thumb would jump or page unexpectedly. (#12438 review)
-    /// Shared by the shift+click jump and the plain press hold-paging so both agree on
-    /// what counts as the trough.
+    /// Returns the track and the press's track-relative Y for a genuine trough press, or false
+    /// for presses outside the track (the line step arrows), on the thumb itself (which begins a
+    /// normal drag), or when there is nothing to scroll (#12438 review). Shared by the shift+click
+    /// jump and the hold paging so both agree on what counts as the trough.
     /// </summary>
     private static bool TryGetTroughPress(ScrollBar verticalScrollBar, PointerEventArgs e, out Track track, out double posY, out bool isBelowThumb)
     {
@@ -281,13 +310,12 @@ public static class DataGridScrollBarBehavior
         var thumb = foundTrack.Thumb;
         if (thumb != null)
         {
-            var thumbTop = thumb.Bounds.Y;
-            if (y >= thumbTop && y <= thumbTop + thumb.Bounds.Height)
+            if (y >= thumb.Bounds.Top && y <= thumb.Bounds.Bottom)
             {
                 return false;
             }
 
-            isBelowThumb = y > thumbTop + thumb.Bounds.Height;
+            isBelowThumb = y > thumb.Bounds.Bottom;
         }
         else
         {
