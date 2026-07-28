@@ -2389,13 +2389,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             return text;
         }
 
-        /// <summary>
-        /// Remove unneeded spaces
-        /// </summary>
-        /// <param name="input">text string to remove unneeded spaces from</param>
-        /// <param name="language">two letter language id string</param>
-        /// <returns>text with unneeded spaces removed</returns>
-                // RemoveUnneededSpaces runs per line (auto-trim white space, fix common errors) and
+        // RemoveUnneededSpaces runs per line (auto-trim white space, fix common errors) and
         // Environment.NewLine is not a compile-time constant, so each of these was a
         // string.Concat executed on every call. Same treatment as the RemoveLineBreaks
         // patterns above.
@@ -2423,6 +2417,12 @@ namespace Nikse.SubtitleEdit.Core.Common
         private static readonly string RunSpaceQuoteNewLine = " \"" + Environment.NewLine;
         private static readonly string RunQuoteNewLine = "\"" + Environment.NewLine;
 
+        /// <summary>
+        /// Remove unneeded spaces
+        /// </summary>
+        /// <param name="input">text string to remove unneeded spaces from</param>
+        /// <param name="language">two letter language id string</param>
+        /// <returns>text with unneeded spaces removed</returns>
         public static string RemoveUnneededSpaces(string input, string language)
         {
             const char zeroWidthSpace = '\u200B';

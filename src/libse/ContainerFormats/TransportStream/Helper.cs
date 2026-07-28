@@ -9,7 +9,6 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
         /// Reads bytes in big-endian order and returns as unsigned 32-bit integer
         /// </summary>
         /// <param name="buffer">Source byte array</param>
-        /// <param name="index">Start index</param>
         /// <param name="count">Number of bytes to read (max 4)</param>
         /// <returns>Value as uint</returns>
         public static uint GetEndian(ReadOnlySpan<byte> buffer, int count)
@@ -38,7 +37,6 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
         /// Get two bytes word stored in big-endian order
         /// </summary>
         /// <param name="buffer">Byte array</param>
-        /// <param name="index">Index in byte array</param>
         /// <returns>Word as int</returns>
         public static int GetEndianWord(ReadOnlySpan<byte> buffer)
         {
