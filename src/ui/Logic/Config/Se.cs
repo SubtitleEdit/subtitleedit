@@ -641,6 +641,7 @@ public class Se
         Configuration.Settings.Tools.DashScopeSttTimeoutSeconds = Settings.Tools.DashScopeSttTimeoutSeconds;
 
         Configuration.Settings.Tools.AutoTranslateLastName = Settings.AutoTranslate.AutoTranslateLastName;
+        Configuration.Settings.Tools.AutoTranslateDelaySeconds = (int)Math.Round(Settings.AutoTranslate.RequestDelaySeconds, MidpointRounding.AwayFromZero);
 
         // BeautifyTimeCodes profile: skip apply on a fresh install so libse's built-in
         // default-preset values stay intact. Once the user clicks OK in the profile editor,

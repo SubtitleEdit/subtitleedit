@@ -14,6 +14,8 @@ public static partial class MergeAndSplitHelper
     private const int MaxGapBetweenContinuousLinesMs = 1000;
     private const char PeriodPlaceholder = '¤';
 
+    private static DateTime _lastTranslateCompletedUtc = DateTime.MinValue;
+
     public static bool MergeSplitProblems { get; set; }
 
     public static async Task<int> MergeAndTranslateIfPossible(
@@ -38,7 +40,9 @@ public static partial class MergeAndSplitHelper
             return 0;
         }
 
+        await DelayBetweenRequestsIfNeeded(cancellationToken);
         var mergedTranslation = await autoTranslator.Translate(mergeResult.Text, source.Code, target.Code, cancellationToken);
+        _lastTranslateCompletedUtc = DateTime.UtcNow;
 
         if (forceSingleLineMode || mergeResult.ParagraphCount == 1)
         {
@@ -46,6 +50,30 @@ public static partial class MergeAndSplitHelper
         }
 
         return TrySplitStrategies(rows, target, index, tempSubtitle, formattingList, mergeResult, mergedTranslation);
+    }
+
+    /// <summary>
+    /// Honours the user's "delay in seconds between requests" setting by waiting until that delay
+    /// has passed since the previous request finished. Cloud engines enforce strict requests-per-second
+    /// limits and answer with 429 when they are exceeded (#12921).
+    /// </summary>
+    /// <remarks>
+    /// The timestamp is not reset between runs on purpose: an idle period longer than the delay
+    /// already satisfies it, so the first request of a run never waits.
+    /// </remarks>
+    private static async Task DelayBetweenRequestsIfNeeded(CancellationToken cancellationToken)
+    {
+        var delaySeconds = Configuration.Settings.Tools.AutoTranslateDelaySeconds;
+        if (delaySeconds <= 0)
+        {
+            return;
+        }
+
+        var remaining = TimeSpan.FromSeconds(delaySeconds) - (DateTime.UtcNow - _lastTranslateCompletedUtc);
+        if (remaining > TimeSpan.Zero)
+        {
+            await Task.Delay(remaining, cancellationToken);
+        }
     }
 
     private static TranslateRow[] CreateTempSubtitle(ObservableCollection<TranslateRow> rows)
