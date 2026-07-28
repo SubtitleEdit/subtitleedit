@@ -8,7 +8,7 @@
 		<GeneratePackageOnBuild>false</GeneratePackageOnBuild>
 		<PackageId>libse</PackageId>
 		<!-- Default version for local packs; the publish-nuget workflow overrides this with -p:Version= -->
-		<Version>5.1.0-rc18</Version>
+		<Version>5.1.0</Version>
 		<Description>Subtitle Edit's subtitle library - read/write 300+ subtitle formats (SubRip, ASSA, WebVTT, EBU STL, Blu-ray sup, and many more), fix common errors, auto-break lines, convert formats, and more.</Description>
 		<PackageProjectUrl>https://github.com/SubtitleEdit/subtitleedit/tree/main/src/libse</PackageProjectUrl>
 		<RepositoryUrl>https://github.com/SubtitleEdit/subtitleedit</RepositoryUrl>
