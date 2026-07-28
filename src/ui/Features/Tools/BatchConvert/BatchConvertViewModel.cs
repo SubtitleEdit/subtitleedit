@@ -246,6 +246,7 @@ public partial class BatchConvertViewModel : ObservableObject, IClosingCleanup
     private CancellationToken _cancellationToken;
     private CancellationTokenSource _cancellationTokenSource;
     private CancellationTokenSource _addFilesCancellationTokenSource = new();
+    private CancellationTokenSource? _statusClearCts; // supersedes the pending status-clear timer
     private List<string> _encodings;
     private List<string> _targetFormatsWithSettings;
 
@@ -2297,14 +2298,36 @@ public partial class BatchConvertViewModel : ObservableObject, IClosingCleanup
         });
     }
 
-    private async Task ShowStatus(string statusText)
+    private Task ShowStatus(string statusText)
     {
-        StatusText = statusText;
-        var _ = Task.Run(async () =>
+        // Post so callers on background threads (the convert Task.Run) set the
+        // bound property on the UI thread, and so the supersede logic below is
+        // serialized — a new status must cancel the previous clear timer, or an
+        // older 6-second timer would wipe a newer message early.
+        Dispatcher.UIThread.Post(() =>
         {
-            await Task.Delay(6000, _cancellationToken).ConfigureAwait(false);
-            StatusText = string.Empty;
-        }); 
+            StatusText = statusText;
+            _statusClearCts?.Cancel();
+            var cts = new CancellationTokenSource();
+            _statusClearCts = cts;
+            _ = ClearStatusAfterDelay(cts.Token);
+        });
+
+        return Task.CompletedTask;
+    }
+
+    private async Task ClearStatusAfterDelay(CancellationToken token)
+    {
+        try
+        {
+            await Task.Delay(6000, token);
+        }
+        catch (OperationCanceledException)
+        {
+            return; // superseded by a newer status message
+        }
+
+        StatusText = string.Empty;
     }
 
     internal void FileGridOnDragOver(object? sender, DragEventArgs e)

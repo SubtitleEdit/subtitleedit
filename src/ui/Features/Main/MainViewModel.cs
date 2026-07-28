@@ -17952,7 +17952,10 @@ public partial class MainViewModel :
 
     private void ShowStatus(string message, int delayMs = 3000)
     {
-        Task.Run(() => ShowStatusWithWaitAsync(message, delayMs));
+        // Post (not Task.Run) so the _statusFadeCts cancel/swap below is serialized
+        // on the UI thread — two rapid calls racing on the field from thread-pool
+        // threads could leave a stale timer alive to clear the newer message early.
+        Dispatcher.UIThread.Post(() => _ = ShowStatusWithWaitAsync(message, delayMs));
     }
 
     private async Task ShowStatusWithWaitAsync(string message, int delayMs = 3000)

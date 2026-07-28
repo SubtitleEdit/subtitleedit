@@ -4,6 +4,7 @@ using Avalonia.Input;
 using Avalonia.Media;
 using Avalonia.Media.Imaging;
 using Avalonia.Platform;
+using Nikse.SubtitleEdit.Logic.Config;
 using System;
 using System.Threading;
 
@@ -166,12 +167,17 @@ public class LibVlcDynamicSoftwareControl : Control
         _isInitialized = false;
     }
 
-    public void LoadFile(string path)
+    public async void LoadFile(string path)
     {
-        _vlcPlayer?.LoadFile(path);
-        
+        if (_vlcPlayer == null)
+        {
+            return;
+        }
+
+        var loadTask = _vlcPlayer.LoadFile(path);
+
         // Update video dimensions after loading file
-        System.Threading.Tasks.Task.Run(async () =>
+        _ = System.Threading.Tasks.Task.Run(async () =>
         {
             // Wait a bit for VLC to initialize the media
             await System.Threading.Tasks.Task.Delay(500);
@@ -181,6 +187,16 @@ public class LibVlcDynamicSoftwareControl : Control
                 InvalidateVisual();
             });
         });
+
+        try
+        {
+            await loadTask;
+        }
+        catch (Exception exception)
+        {
+            // The load task was previously discarded, hiding open failures entirely.
+            Se.LogError(exception, $"VLC failed to load video file: {path}");
+        }
     }
 
     public void TogglePlayPause()
