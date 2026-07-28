@@ -174,22 +174,22 @@ public class LibVlcDynamicSoftwareControl : Control
             return;
         }
 
-        var loadTask = _vlcPlayer.LoadFile(path);
-
-        // Update video dimensions after loading file
-        _ = System.Threading.Tasks.Task.Run(async () =>
-        {
-            // Wait a bit for VLC to initialize the media
-            await System.Threading.Tasks.Task.Delay(500);
-            Avalonia.Threading.Dispatcher.UIThread.Post(() =>
-            {
-                UpdateVideoDimensions();
-                InvalidateVisual();
-            });
-        });
-
         try
         {
+            var loadTask = _vlcPlayer.LoadFile(path);
+
+            // Update video dimensions after loading file
+            _ = System.Threading.Tasks.Task.Run(async () =>
+            {
+                // Wait a bit for VLC to initialize the media
+                await System.Threading.Tasks.Task.Delay(500);
+                Avalonia.Threading.Dispatcher.UIThread.Post(() =>
+                {
+                    UpdateVideoDimensions();
+                    InvalidateVisual();
+                });
+            });
+
             await loadTask;
         }
         catch (Exception exception)

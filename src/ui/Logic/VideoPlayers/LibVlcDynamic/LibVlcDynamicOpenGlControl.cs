@@ -214,22 +214,22 @@ public class LibVlcDynamicOpenGlControl : OpenGlControlBase
             return;
         }
 
-        var loadTask = _vlcPlayer.LoadFile(path);
-
-        // Update video dimensions after loading file
-        _ = System.Threading.Tasks.Task.Run(async () =>
-        {
-            // Wait a bit for VLC to initialize the media
-            await System.Threading.Tasks.Task.Delay(500);
-            Avalonia.Threading.Dispatcher.UIThread.Post(() =>
-            {
-                UpdateVideoDimensions();
-                RequestNextFrameRendering();
-            });
-        });
-
         try
         {
+            var loadTask = _vlcPlayer.LoadFile(path);
+
+            // Update video dimensions after loading file
+            _ = System.Threading.Tasks.Task.Run(async () =>
+            {
+                // Wait a bit for VLC to initialize the media
+                await System.Threading.Tasks.Task.Delay(500);
+                Avalonia.Threading.Dispatcher.UIThread.Post(() =>
+                {
+                    UpdateVideoDimensions();
+                    RequestNextFrameRendering();
+                });
+            });
+
             await loadTask;
         }
         catch (Exception exception)

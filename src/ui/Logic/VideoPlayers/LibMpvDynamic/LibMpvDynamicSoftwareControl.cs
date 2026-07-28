@@ -176,13 +176,13 @@ public class LibMpvDynamicSoftwareControl : Control
             return;
         }
 
-        var loadTask = _mpvPlayer.LoadFile(path);
-
-        // Trigger initial render
-        InvalidateVisual();
-
         try
         {
+            var loadTask = _mpvPlayer.LoadFile(path);
+
+            // Trigger initial render
+            InvalidateVisual();
+
             await loadTask;
         }
         catch (Exception exception)

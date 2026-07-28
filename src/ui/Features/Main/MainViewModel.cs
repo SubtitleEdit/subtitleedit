@@ -22304,7 +22304,7 @@ public partial class MainViewModel :
                     subtitle.Paragraphs.RemoveAll(p => !_visibleLayers!.Contains(p.Layer));
                 }
 
-                RunPreviewRefresh(() => _mpvReloader.RefreshMpv(mpv, subtitle, _subtitleSecondary, SelectedSubtitleFormat));
+                _ = RunPreviewRefresh(() => _mpvReloader.RefreshMpv(mpv, subtitle, _subtitleSecondary, SelectedSubtitleFormat));
             }
             else if (vp.VideoPlayer is LibVlcDynamicPlayer vlc)
             {
@@ -22315,13 +22315,13 @@ public partial class MainViewModel :
                     subtitle.Paragraphs.RemoveAll(p => !_visibleLayers!.Contains(p.Layer));
                 }
 
-                RunPreviewRefresh(() => _vlcReloader.RefreshVlc(vlc, subtitle, _subtitleSecondary, SelectedSubtitleFormat));
+                _ = RunPreviewRefresh(() => _vlcReloader.RefreshVlc(vlc, subtitle, _subtitleSecondary, SelectedSubtitleFormat));
             }
         };
         _slowTimer.Start();
     }
 
-    private async void RunPreviewRefresh(Func<Task> refresh)
+    private async Task RunPreviewRefresh(Func<Task> refresh)
     {
         _mpvPreviewRefreshBusy = true;
         try
