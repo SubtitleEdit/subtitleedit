@@ -965,7 +965,7 @@ public partial class MainViewModel :
     /// </summary>
     private void ReapplyPlaybackSpeed()
     {
-        if (SelectedSpeed != null && SelectedSpeed.EndsWith("x", StringComparison.Ordinal) &&
+        if (SelectedSpeed != null && SelectedSpeed.EndsWith('x') &&
             double.TryParse(SelectedSpeed.Trim('x'), NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out var speed))
         {
             GetVideoPlayerControl()?.SetSpeed(speed);

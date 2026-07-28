@@ -878,7 +878,7 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
         for (var i = 0; i < matches.Count - 1; i++)
         {
             var match = matches[i];
-            if (match.Text.EndsWith("1", StringComparison.Ordinal) && !match.Italic)
+            if (match.Text.EndsWith('1') && !match.Italic)
             {
                 var pixelsLess = 0;
                 if (pixelsAreSpace > 7)

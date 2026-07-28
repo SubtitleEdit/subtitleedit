@@ -43,7 +43,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             }
 
             string allText = sb.ToString().Trim();
-            if (!(allText.StartsWith("{", StringComparison.Ordinal) || allText.Contains("dDurationMs", StringComparison.Ordinal)))
+            if (!(allText.StartsWith('{') || allText.Contains("dDurationMs", StringComparison.Ordinal)))
             {
                 return;
             }

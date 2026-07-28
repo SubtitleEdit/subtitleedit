@@ -102,7 +102,7 @@ namespace Nikse.SubtitleEdit.Core.Translate
             }
 
             // Square brackets
-            if (text.StartsWith("[", StringComparison.Ordinal) && text.EndsWith("]", StringComparison.Ordinal) &&
+            if (text.StartsWith('[') && text.EndsWith(']') &&
                 Utilities.GetNumberOfLines(text) == 1 && Utilities.CountTagInText(text, "[") == 1 &&
                 Utilities.GetNumberOfLines(text) == 1 && Utilities.CountTagInText(text, "]") == 1)
             {

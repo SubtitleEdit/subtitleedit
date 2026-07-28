@@ -894,13 +894,13 @@ namespace Nikse.SubtitleEdit.Core.Common
                 return false;
             }
 
-            var lineStartIndex = (position > 0 && position < input.Length) ? input.LastIndexOf("\n", position, StringComparison.Ordinal) : 0;
+            var lineStartIndex = (position > 0 && position < input.Length) ? input.LastIndexOf('\n', position) : 0;
             if (lineStartIndex == -1)
             {
                 lineStartIndex = 0;
             }
 
-            var lineEndIndex = (position > 0 && position < input.Length) ? input.IndexOf("\n", position, StringComparison.Ordinal) : input.Length;
+            var lineEndIndex = (position > 0 && position < input.Length) ? input.IndexOf('\n', position) : input.Length;
             if (lineEndIndex == -1)
             {
                 lineEndIndex = input.Length;
@@ -908,7 +908,7 @@ namespace Nikse.SubtitleEdit.Core.Common
 
             input = input.Substring(lineStartIndex, lineEndIndex - lineStartIndex);
 
-            var startIndex = input.IndexOf("<", StringComparison.Ordinal);
+            var startIndex = input.IndexOf('<');
             if (startIndex < 0)
             {
                 return false;
@@ -920,11 +920,11 @@ namespace Nikse.SubtitleEdit.Core.Common
                 if (startIndex == endIndex)
                 {
                     startIndex = 0;
-                    endIndex = input.IndexOf(">", endIndex, StringComparison.Ordinal) + 1;
+                    endIndex = input.IndexOf('>', endIndex) + 1;
                 }
                 else
                 {
-                    endIndex = input.IndexOf(">", endIndex, StringComparison.Ordinal) + 1;
+                    endIndex = input.IndexOf('>', endIndex) + 1;
                 }
             }
             else
