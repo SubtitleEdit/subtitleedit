@@ -608,10 +608,11 @@ namespace Nikse.SubtitleEdit.Core.Common
             if (subtitle.Paragraphs.Count > 5)
             {
                 string prefix = subtitle.Paragraphs[0].Text;
+                var newPrefix = new StringBuilder();
                 foreach (var paragraph in subtitle.Paragraphs)
                 {
                     string text = paragraph.Text.Trim();
-                    var newPrefix = new StringBuilder();
+                    newPrefix.Clear();
                     int i = 0;
                     while (i < prefix.Length && i < text.Length && text[i] == prefix[i])
                     {
@@ -771,7 +772,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                                 subtitle.Paragraphs.Add(p);
                             }
                             p = new Paragraph();
-                            sb = new StringBuilder();
+                            sb.Clear();
                             p.StartTime = DecodeTime(start);
                             p.EndTime = DecodeTime(end);
                         }

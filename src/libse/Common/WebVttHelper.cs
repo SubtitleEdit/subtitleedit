@@ -43,14 +43,14 @@ namespace Nikse.SubtitleEdit.Core.Common
                     {
                         styleOn = false;
                         AddStyle(result, currentStyle);
-                        currentStyle = new StringBuilder();
+                        currentStyle.Clear();
                     }
                     else
                     {
                         if (cueOn && s.StartsWith("::cue(", StringComparison.Ordinal))
                         {
                             AddStyle(result, currentStyle);
-                            currentStyle = new StringBuilder();
+                            currentStyle.Clear();
                         }
 
                         if (s.StartsWith("::cue(", StringComparison.Ordinal))
