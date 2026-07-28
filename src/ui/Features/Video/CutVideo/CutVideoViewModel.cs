@@ -845,8 +845,6 @@ public partial class CutVideoViewModel : ObservableObject
                 }
             }
 
-            var keys = _shortcutManager.GetActiveKeys().Select(p => p.ToString()).ToList();
-            var hashCode = ShortCut.CalculateHash(keys, ShortcutCategory.General.ToString());
             var rc = _shortcutManager.CheckShortcuts(keyEventArgs, ShortcutCategory.General.ToString().ToLowerInvariant());
             if (rc != null)
             {

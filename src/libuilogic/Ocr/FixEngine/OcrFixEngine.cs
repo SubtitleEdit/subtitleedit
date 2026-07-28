@@ -297,7 +297,11 @@ public partial class OcrFixEngine : IOcrFixEngine, IDoSpell
                 isWordCorrect = true;
             }
 
-            var lineText = splitLine.GetText();
+            // Only build the line text when it can still be read: every use below is guarded by
+            // !isWordCorrect, and isWordCorrect never flips back to false. GetText walks all
+            // words of the line, so skipping it for already-correct words (the common case)
+            // saves a StringBuilder + string per word.
+            var lineText = isWordCorrect ? string.Empty : splitLine.GetText();
             if (!isWordCorrect && _spellCheckWordLists.HasNameExtended(result, lineText))
             {
                 isWordCorrect = true;

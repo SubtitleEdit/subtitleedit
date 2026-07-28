@@ -464,7 +464,19 @@ public partial class MainViewModel :
     public StackPanel PanelSingleLineLengthsOriginal { get; set; }
     public MenuItem MenuItemStyles { get; set; }
     public MenuItem MenuItemActors { get; set; }
-    public Button ButtonWaveformPlay { get; set; }
+    private Button _buttonWaveformPlay = null!;
+
+    public Button ButtonWaveformPlay
+    {
+        get => _buttonWaveformPlay;
+        set
+        {
+            // Layout (re)initialization swaps in a fresh button; forget the cached icon state
+            // so the next position-timer tick writes an explicit icon to the new control.
+            _buttonWaveformPlay = value;
+            _waveformPlayIconIsPause = null;
+        }
+    }
     public MenuItem AudioTraksMenuItem { get; set; }
     public TextWithSubtitleSyntaxHighlightingConverter SubtitleDataGridSyntaxHighlighting { get; internal set; }
 
@@ -11019,7 +11031,7 @@ public partial class MainViewModel :
             window.AddHandler(InputElement.KeyUpEvent, _shortcutManager.OnKeyReleased, RoutingStrategies.Bubble);
             window.KeyDown += async (_, e) =>
             {
-                var cmd = _shortcutManager.CheckShortcuts(e, ShortcutCategory.General.ToString());
+                var cmd = _shortcutManager.CheckShortcuts(e, CategoryGeneral);
                 if (ReferenceEquals(cmd, ShowReplaceCommand))
                 {
                     e.Handled = true;
@@ -11374,7 +11386,7 @@ public partial class MainViewModel :
             window.AddHandler(InputElement.KeyUpEvent, _shortcutManager.OnKeyReleased, RoutingStrategies.Bubble);
             window.KeyDown += async (_, e) =>
             {
-                var cmd = _shortcutManager.CheckShortcuts(e, ShortcutCategory.General.ToString());
+                var cmd = _shortcutManager.CheckShortcuts(e, CategoryGeneral);
                 if (ReferenceEquals(cmd, ShowReplaceCommand))
                 {
                     e.Handled = true;
@@ -20816,7 +20828,7 @@ public partial class MainViewModel :
             }
 
             _shortcutManager.OnKeyPressed(this, keyEventArgs);
-            if (_shortcutManager.GetActiveKeys().Count == 0)
+            if (_shortcutManager.ActiveKeyCount == 0)
             {
                 return;
             }
@@ -20846,11 +20858,8 @@ public partial class MainViewModel :
                     return;
                 }
 
-                var currentKeys = _shortcutManager.GetActiveKeys();
-                if (currentKeys.Count == 1)
+                if (_shortcutManager.TryGetSingleActiveKey(out var key))
                 {
-                    var key = currentKeys.First();
-
                     if (EditTextBox.IsFocused && key == Key.Return &&
                         keyEventArgs.KeyModifiers == KeyModifiers.None &&
                         Se.Settings.General.SubtitleTextBoxLimitNewLines)
@@ -20966,10 +20975,10 @@ public partial class MainViewModel :
                     return;
                 }
 
-                var relayCommand = _shortcutManager.CheckShortcuts(keyEventArgs, ShortcutCategory.SubtitleGrid.ToString());
+                var relayCommand = _shortcutManager.CheckShortcuts(keyEventArgs, CategorySubtitleGrid);
                 if (relayCommand == null)
                 {
-                    relayCommand = _shortcutManager.CheckShortcuts(keyEventArgs, ShortcutCategory.SubtitleGridAndTextBox.ToString());
+                    relayCommand = _shortcutManager.CheckShortcuts(keyEventArgs, CategorySubtitleGridAndTextBox);
                 }
 
                 if (relayCommand != null)
@@ -20982,7 +20991,7 @@ public partial class MainViewModel :
 
             if (AudioVisualizer != null && AudioVisualizer.IsFocused)
             {
-                var relayCommand = _shortcutManager.CheckShortcuts(keyEventArgs, ShortcutCategory.Waveform.ToString());
+                var relayCommand = _shortcutManager.CheckShortcuts(keyEventArgs, CategoryWaveform);
                 if (relayCommand != null)
                 {
                     keyEventArgs.Handled = true;
@@ -21000,7 +21009,7 @@ public partial class MainViewModel :
                 // dispatched here - they were previously registered but never run (#11906). The native
                 // clipboard commands (Cut/Copy/Paste/Select all) are skipped so Avalonia's built-in
                 // handling keeps working on whichever text box is focused.
-                var textBoxCommand = _shortcutManager.CheckShortcuts(keyEventArgs, ShortcutCategory.TextBox.ToString());
+                var textBoxCommand = _shortcutManager.CheckShortcuts(keyEventArgs, CategoryTextBox);
                 if (textBoxCommand != null && !IsNativeTextBoxClipboardCommand(textBoxCommand))
                 {
                     keyEventArgs.Handled = true;
@@ -21008,7 +21017,7 @@ public partial class MainViewModel :
                     return;
                 }
 
-                var relayCommand = _shortcutManager.CheckShortcuts(keyEventArgs, ShortcutCategory.SubtitleGridAndTextBox.ToString());
+                var relayCommand = _shortcutManager.CheckShortcuts(keyEventArgs, CategorySubtitleGridAndTextBox);
                 if (relayCommand != null)
                 {
                     keyEventArgs.Handled = true;
@@ -21017,10 +21026,7 @@ public partial class MainViewModel :
                 }
             }
 
-            var keys = _shortcutManager.GetActiveKeys().Select(p => p.ToString()).ToList();
-            var hashCode = ShortCut.CalculateHash(keys, ShortcutCategory.General.ToString());
-
-            var rc = _shortcutManager.CheckShortcuts(keyEventArgs, ShortcutCategory.General.ToString().ToLowerInvariant());
+            var rc = _shortcutManager.CheckShortcuts(keyEventArgs, CategoryGeneralLower);
             if (rc != null)
             {
                 keyEventArgs.Handled = true;
@@ -21667,7 +21673,15 @@ public partial class MainViewModel :
             return;
         }
 
-        _selectedSubtitles = selectedItems.Cast<SubtitleLineViewModel>().ToList();
+        // Typed copy with capacity - Cast<T>().ToList() allocates a cast iterator and grows
+        // the list from default capacity, on every selection change (so on every arrow key).
+        var selectedSubtitles = new List<SubtitleLineViewModel>(selectedItems.Count);
+        for (var selIdx = 0; selIdx < selectedItems.Count; selIdx++)
+        {
+            selectedSubtitles.Add((SubtitleLineViewModel)selectedItems[selIdx]!);
+        }
+
+        _selectedSubtitles = selectedSubtitles;
         if (selectedItems.Count > 1)
         {
             StatusTextRight = string.Format(Se.Language.Main.XLinesSelectedOfY, selectedItems.Count, Subtitles.Count);
@@ -21732,8 +21746,25 @@ public partial class MainViewModel :
         EditTextTotalLengthBackground = totalBg;
     }
 
+    // Repopulate the original-text info panel when the column is turned (back) on - the
+    // guard below skips the work while it is hidden, so its values can be stale here.
+    partial void OnShowColumnOriginalTextChanged(bool value)
+    {
+        if (value && SelectedSubtitle != null)
+        {
+            MakeSubtitleTextInfoOriginal(SelectedSubtitle.OriginalText, SelectedSubtitle);
+        }
+    }
+
     private void MakeSubtitleTextInfoOriginal(string text, SubtitleLineViewModel item)
     {
+        // The original column is hidden most of the time, but this ran (StripHtml, character
+        // count, SplitToLines, two string.Formats) on every selection change regardless.
+        if (!ShowColumnOriginalText)
+        {
+            return;
+        }
+
         text ??= string.Empty;
 
         text = SubtitleTextInfoHelper.StripHtml(text);
@@ -22164,7 +22195,13 @@ public partial class MainViewModel :
 
                 if (isPlaying)
                 {
-                    Optris.Icons.Avalonia.Attached.SetIcon(ButtonWaveformPlay, IconNames.Pause);
+                    // Only write the attached property when the icon actually flips - this
+                    // branch runs on every 50 ms position-timer tick.
+                    if (_waveformPlayIconIsPause != true)
+                    {
+                        _waveformPlayIconIsPause = true;
+                        Optris.Icons.Avalonia.Attached.SetIcon(ButtonWaveformPlay, IconNames.Pause);
+                    }
 
                     if (_playSelectionItem != null && mediaPlayerSeconds >= _playSelectionItem.EndSeconds)
                     {
@@ -22194,7 +22231,12 @@ public partial class MainViewModel :
                 }
                 else
                 {
-                    Optris.Icons.Avalonia.Attached.SetIcon(ButtonWaveformPlay, IconNames.Play);
+                    if (_waveformPlayIconIsPause != false)
+                    {
+                        _waveformPlayIconIsPause = false;
+                        Optris.Icons.Avalonia.Attached.SetIcon(ButtonWaveformPlay, IconNames.Play);
+                    }
+
                     ResetPlaySelection();
 
                     // "Center also while paused" scrub-editing (SE 4's locked mode): while the user
@@ -22460,11 +22502,29 @@ public partial class MainViewModel :
             text = "*" + text;
         }
 
-        if (Window != null)
+        // This runs on the 400 ms slow timer; skip the Avalonia property set (and its change
+        // machinery) when the title hasn't actually changed - which is almost every tick.
+        if (Window != null && !string.Equals(text, _lastWindowTitle, StringComparison.Ordinal))
         {
+            _lastWindowTitle = text;
             Window.Title = text;
         }
     }
+
+    // Category name strings for CheckShortcuts - Enum.ToString() allocates on every call,
+    // and the window key handler probes several categories per keystroke.
+    private static readonly string CategoryGeneral = ShortcutCategory.General.ToString();
+    private static readonly string CategoryGeneralLower = ShortcutCategory.General.ToString().ToLowerInvariant();
+    private static readonly string CategorySubtitleGrid = ShortcutCategory.SubtitleGrid.ToString();
+    private static readonly string CategorySubtitleGridAndTextBox = ShortcutCategory.SubtitleGridAndTextBox.ToString();
+    private static readonly string CategoryWaveform = ShortcutCategory.Waveform.ToString();
+    private static readonly string CategoryTextBox = ShortcutCategory.TextBox.ToString();
+
+    private string? _lastWindowTitle;
+
+    // Last state written to the waveform play/pause button icon; null until first write so
+    // the first position-timer tick always sets an explicit icon.
+    private bool? _waveformPlayIconIsPause;
 
     private void UpdateGaps()
     {

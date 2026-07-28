@@ -625,9 +625,9 @@ namespace Nikse.SubtitleEdit.Core.Common
             }
 
             var s = RemoveLineBreaks(text);
-            while (s.Contains("  "))
+            if (s.Contains("  ", StringComparison.Ordinal))
             {
-                s = s.Replace("  ", " ");
+                s = CollapseSpaceRuns(s);
             }
 
             if (s.CountCharacters(false) < mergeLinesShorterThan)
@@ -660,16 +660,17 @@ namespace Nikse.SubtitleEdit.Core.Common
                             || tagSpan.StartsWith("<i".AsSpan(), StringComparison.OrdinalIgnoreCase)
                             || tagSpan.StartsWith("</i".AsSpan(), StringComparison.OrdinalIgnoreCase);
                 }
-                else if (letter == '{' && s.Substring(six).StartsWith("{\\"))
+                else if (letter == '{' && six + 1 < s.Length && s[six + 1] == '\\')
                 {
-                    var tagString = s.Substring(six);
-                    var endIndexAssTag = tagString.IndexOf('}') + 1;
-                    if (endIndexAssTag > 0)
+                    // Used to Substring the whole remainder (twice) per '{' and probe it with
+                    // the culture-sensitive StartsWith(string).
+                    var closeIdx = s.IndexOf('}', six);
+                    if (closeIdx >= 0)
                     {
-                        tagString = tagString.Substring(0, endIndexAssTag);
+                        var tagString = s.Substring(six, closeIdx - six + 1);
                         AddOrAppendHtmlTag(htmlTags, six, tagString);
 
-                        s = s.Remove(six, endIndexAssTag);
+                        s = s.Remove(six, closeIdx - six + 1);
                         continue;
                     }
                 }
@@ -715,6 +716,37 @@ namespace Nikse.SubtitleEdit.Core.Common
             s = s.Replace(" " + Environment.NewLine, Environment.NewLine);
             s = s.Replace(Environment.NewLine + " ", Environment.NewLine);
             return s.TrimEnd();
+        }
+
+        // Collapses every run of two or more spaces to a single space in one pass - the same
+        // result the old `while (Contains("  ")) Replace("  ", " ")` loop converged on, which
+        // allocated a new string per pass (O(n * runs) on space-heavy lines).
+        private static string CollapseSpaceRuns(string s)
+        {
+            var buffer = new char[s.Length];
+            var pos = 0;
+            var previousWasSpace = false;
+            for (var i = 0; i < s.Length; i++)
+            {
+                var ch = s[i];
+                if (ch == ' ')
+                {
+                    if (previousWasSpace)
+                    {
+                        continue;
+                    }
+
+                    previousWasSpace = true;
+                }
+                else
+                {
+                    previousWasSpace = false;
+                }
+
+                buffer[pos++] = ch;
+            }
+
+            return new string(buffer, 0, pos);
         }
 
         // Patterns for RemoveLineBreaks - static so the per-call "</i> " + Environment.NewLine
@@ -876,6 +908,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                 var writeIdx = 0;
                 var i = 0;
                 var len = input.Length;
+                var modified = false;
 
                 while (i < len)
                 {
@@ -892,6 +925,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                                 input.AsSpan(i, closingBrace - i + 1).StartsWith("{Kara Effector".AsSpan()))
                             {
                                 i = closingBrace + 1;
+                                modified = true;
                                 continue;
                             }
                         }
@@ -908,12 +942,14 @@ namespace Nikse.SubtitleEdit.Core.Common
                             }
 
                             i += 2;
+                            modified = true;
                             continue;
                         }
                         if (next == 'h')
                         {
                             rented[writeIdx++] = ' ';
                             i += 2;
+                            modified = true;
                             continue;
                         }
                     }
@@ -923,7 +959,10 @@ namespace Nikse.SubtitleEdit.Core.Common
                     i++;
                 }
 
-                var result = new string(rented, 0, writeIdx);
+                // A line can pass the '{'/'\\' fast check above without containing anything to
+                // strip (e.g. a stray backslash) - every char was copied verbatim then, so
+                // return the input instead of an identical copy.
+                var result = modified ? new string(rented, 0, writeIdx) : input;
 
                 if (removeDrawingTags && result.StartsWith("m ", StringComparison.Ordinal))
                 {
@@ -1357,6 +1396,11 @@ namespace Nikse.SubtitleEdit.Core.Common
         public static readonly string LowercaseLetters = Configuration.Settings.General.UppercaseLetters.ToLowerInvariant() + "αβγδεζηθικλμνξοπρσςτυφχψωήάόέ";
         public static readonly string LowercaseLettersWithNumbers = LowercaseLetters + "0123456789";
         public static readonly string AllLetters = UppercaseLetters + LowercaseLetters;
+
+        // QualifiesForMerge runs per adjacent paragraph pair in the merge fixes; concatenating
+        // this ~135-char set (plus a one-char Substring) on every call added two allocations
+        // per pair. Declared after AllLetters - static field initializers run in order.
+        private static readonly string LineContinuationEndChars = AllLetters + "…,-$%";
         public static readonly string AllLettersAndNumbers = UppercaseLetters + LowercaseLettersWithNumbers;
 
         public static SKColor GetColorFromUserName(string userName)
@@ -3295,7 +3339,7 @@ namespace Nikse.SubtitleEdit.Core.Common
 
                     var lastChar = s[s.Length - 1];
                     var isLineContinuation = s.EndsWith("...", StringComparison.Ordinal) ||
-                                              (AllLetters + "…,-$%").Contains(s.Substring(s.Length - 1)) ||
+                                              LineContinuationEndChars.IndexOf(lastChar) >= 0 ||
                                               (CalcCjk.IsCjk(lastChar) && !IsCjkSentenceEnding(lastChar));
 
                     if (s.EndsWith('♪') || nextText.StartsWith('♪'))

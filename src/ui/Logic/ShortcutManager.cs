@@ -151,12 +151,13 @@ public class ShortcutManager : IShortcutManager
         // collides with Shift+,. The non-ASCII '<' next to Z is mis-reported
         // as OemComma for the same reason. Fall back to the layout-independent
         // PhysicalKey so each physical key gets a unique, stable token.
-        if (key.ToString().StartsWith("Oem", StringComparison.Ordinal))
+        var plainKeyName = key.ToString();
+        if (plainKeyName.StartsWith("Oem", StringComparison.Ordinal))
         {
             return physicalKey.ToString();
         }
 
-        return key.ToString();
+        return plainKeyName;
     }
 
     // Maps tokens that were stored before the PhysicalKey fix onto the modern
@@ -422,11 +423,29 @@ public class ShortcutManager : IShortcutManager
             return shortcut.Action;
         }
 
-        // 2. Check normalized hash with activeControl
-        var normalizedHash = CalculateNormalizedHash(currentInputKeys, activeControl);
-        if (normalizedHash != inputHash && _lookupTable!.TryGetValue(normalizedHash, out shortcut))
+        // 2. Check normalized hash with activeControl. In practice no token normalizes on a
+        // real keypress (_activeKeyNames excludes the modifier keys themselves and the
+        // modifiers appended above are already canonical), so only build the second list and
+        // hash when normalization actually changes something. NormalizeKeyToken returns the
+        // input instance for unmatched tokens, so a reference check suffices.
+        List<string>? normalizedKeys = null;
+        for (var keyIndex = 0; keyIndex < currentInputKeys.Count; keyIndex++)
         {
-            return shortcut.Action;
+            var normalized = NormalizeKeyToken(currentInputKeys[keyIndex]);
+            if (!ReferenceEquals(normalized, currentInputKeys[keyIndex]))
+            {
+                normalizedKeys ??= new List<string>(currentInputKeys);
+                normalizedKeys[keyIndex] = normalized;
+            }
+        }
+
+        if (normalizedKeys != null)
+        {
+            var normalizedHash = ShortCut.CalculateHash(normalizedKeys, activeControl);
+            if (normalizedHash != inputHash && _lookupTable!.TryGetValue(normalizedHash, out shortcut))
+            {
+                return shortcut.Action;
+            }
         }
 
         return null;
@@ -461,6 +480,27 @@ public class ShortcutManager : IShortcutManager
     }
 
     public HashSet<Key> GetActiveKeys() => [.. _activeKeys];
+
+    /// <summary>
+    /// Allocation-free alternatives to <see cref="GetActiveKeys"/> for the per-keystroke
+    /// probes in the window key handler, which only need the count or the single active key.
+    /// </summary>
+    public int ActiveKeyCount => _activeKeys.Count;
+
+    public bool TryGetSingleActiveKey(out Key key)
+    {
+        if (_activeKeys.Count == 1)
+        {
+            foreach (var k in _activeKeys)
+            {
+                key = k;
+                return true;
+            }
+        }
+
+        key = default;
+        return false;
+    }
 
     public bool IsControlPressed() => _isControlPressed;
     public bool IsShiftPressed() => _isShiftPressed;

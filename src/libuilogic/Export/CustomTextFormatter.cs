@@ -6,10 +6,20 @@ using System.Text.RegularExpressions;
 
 namespace Nikse.SubtitleEdit.UiLogic.Export;
 
-public static class CustomTextFormatter
+public static partial class CustomTextFormatter
 {
     public const string EnglishDoNotModify = "[Do not modify]";
     private static readonly Regex CurlyCodePattern = new Regex("{\\d+[,:]*[A-Z\\d-]*}", RegexOptions.Compiled);
+
+    // GetTimeCode runs three times per paragraph; the static Regex.IsMatch/Replace overloads
+    // it used went through the global regex cache (a lock + key hash) on every call.
+    [GeneratedRegex("z+")]
+    private static partial Regex ZRunRegexGen();
+    private static readonly Regex ZRunRegex = ZRunRegexGen();
+
+    [GeneratedRegex("s+")]
+    private static partial Regex SRunRegexGen();
+    private static readonly Regex SRunRegex = SRunRegexGen();
 
     public static string GenerateCustomText(CustomFormatTemplate customFormat, List<Paragraph> subtitles, string title, string videoFileName)
     {
@@ -141,9 +151,15 @@ public static class CustomTextFormatter
 
     private static string ReplaceMilliseconds(string template, TimeCode timeCode)
     {
-        var isPureZMode = Regex.IsMatch(template, @"^z+$");
+        if (template.IndexOf('z') < 0)
+        {
+            return template;
+        }
 
-        return Regex.Replace(template, @"z+", match =>
+        // "^z+$" for a non-empty template == "no non-'z' character present".
+        var isPureZMode = template.AsSpan().IndexOfAnyExcept('z') < 0;
+
+        return ZRunRegex.Replace(template, match =>
         {
             var zCount = match.Value.Length;
 
@@ -207,9 +223,14 @@ public static class CustomTextFormatter
 
     private static string ReplaceSeconds(string template, TimeCode timeCode)
     {
-        var isPureSMode = Regex.IsMatch(template, @"^s+$");
+        if (template.IndexOf('s') < 0)
+        {
+            return template;
+        }
 
-        return Regex.Replace(template, @"s+", match =>
+        var isPureSMode = template.AsSpan().IndexOfAnyExcept('s') < 0;
+
+        return SRunRegex.Replace(template, match =>
         {
             var length = match.Value.Length;
 
@@ -228,14 +249,32 @@ public static class CustomTextFormatter
 
     private static string ReplaceStandardComponents(string template, TimeCode timeCode)
     {
-        // Process longer patterns first to avoid partial matches
-        return template
-            .Replace("hh", $"{Math.Abs(timeCode.Hours):00}")
-            .Replace("mm", $"{Math.Abs(timeCode.Minutes):00}")
-            .Replace("ff", $"{SubtitleFormat.MillisecondsToFrames(timeCode.TotalMilliseconds):00}")
-            .Replace("h", $"{Math.Abs(timeCode.Hours)}")
-            .Replace("m", $"{Math.Abs(timeCode.Minutes)}")
-            .Replace("f", $"{SubtitleFormat.MillisecondsToFramesMaxFrameRate(timeCode.Milliseconds):00}");
+        // Process longer patterns first to avoid partial matches. Each component's value is
+        // only formatted when its letter occurs in the template (the replaced digits cannot
+        // introduce new pattern letters, so grouping "hh" with "h" is safe), and every
+        // TimeCode getter re-runs a TimeSpan conversion - so read them at most once.
+        var result = template;
+        if (result.IndexOf('h') >= 0)
+        {
+            var hours = Math.Abs(timeCode.Hours);
+            result = result.Replace("hh", hours.ToString("00"))
+                           .Replace("h", hours.ToString());
+        }
+
+        if (result.IndexOf('m') >= 0)
+        {
+            var minutes = Math.Abs(timeCode.Minutes);
+            result = result.Replace("mm", minutes.ToString("00"))
+                           .Replace("m", minutes.ToString());
+        }
+
+        if (result.IndexOf('f') >= 0)
+        {
+            result = result.Replace("ff", SubtitleFormat.MillisecondsToFrames(timeCode.TotalMilliseconds).ToString("00"))
+                           .Replace("f", SubtitleFormat.MillisecondsToFramesMaxFrameRate(timeCode.Milliseconds).ToString("00"));
+        }
+
+        return result;
     }
 
     internal static string GetParagraph(string template, string start, string end, string text, string originalText, int number, string actor, TimeCode duration, string gap, string timeCodeTemplate, Paragraph p, string videoFileName)

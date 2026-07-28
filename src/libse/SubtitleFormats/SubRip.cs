@@ -61,14 +61,19 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         public override string ToText(Subtitle subtitle, string title)
         {
-            const string paragraphWriteFormat = "{0}{4}{1} --> {2}{4}{3}{4}{4}";
-
+            // Append the parts directly: AppendFormat re-parsed the composite format and boxed
+            // p.Number per paragraph, and "sb.ToString().Trim() + ..." allocated the whole
+            // multi-megabyte output twice more.
             var sb = new StringBuilder();
             foreach (var p in subtitle.Paragraphs)
             {
-                sb.AppendFormat(paragraphWriteFormat, p.Number, p.StartTime, p.EndTime, p.Text, Environment.NewLine);
+                sb.Append(p.Number).Append(Environment.NewLine);
+                sb.Append(p.StartTime.ToString()).Append(" --> ").Append(p.EndTime.ToString()).Append(Environment.NewLine);
+                sb.Append(p.Text).Append(Environment.NewLine).Append(Environment.NewLine);
             }
-            return sb.ToString().Trim() + Environment.NewLine + Environment.NewLine;
+
+            TrimBuilder(sb);
+            return sb.Append(Environment.NewLine).Append(Environment.NewLine).ToString();
         }
 
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)
