@@ -851,12 +851,13 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
             var topRegions = GetRegionsTopFromHeader(xml);
             XmlNode lastDiv = null;
+            var pText = new StringBuilder();
             foreach (XmlNode node in body.SelectNodes("//ttml:p", nsmgr))
             {
                 try
                 {
                     // Parse and convert paragraph text
-                    var pText = new StringBuilder();
+                    pText.Clear();
                     ReadParagraph(pText, node, styles, xml);
 
                     // Time codes

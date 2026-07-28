@@ -64,7 +64,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 var s = string.Empty;
                 if (idx > 0)
                 {
-                    sb = new StringBuilder();
+                    sb.Clear();
                     var arr = parser.GetArrayElements(element.Substring(idx));
                     foreach (var line in arr)
                     {

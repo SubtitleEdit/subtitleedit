@@ -112,6 +112,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             var json = allText.Substring(startIndex);
             var parser = new SeJsonParser();
             var items = parser.GetArrayElementsByName(json, "SubtitleItems");
+            var text = new StringBuilder();
             foreach (var item in items)
             {
                 var textLines = parser.GetArrayElementsByName(item, "TextLines");
@@ -119,7 +120,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 var hideTime = parser.GetAllTagsByNameAsStrings(item, "HideTime");
                 if (textLines.Count > 0 && showTime.Count == 1 && hideTime.Count == 1 && long.TryParse(showTime[0], out var startMs) && long.TryParse(hideTime[0], out var endMs))
                 {
-                    var text = new StringBuilder();
+                    text.Clear();
                     foreach (var line in textLines)
                     {
                         text.AppendLine(Json.DecodeJsonText(line));

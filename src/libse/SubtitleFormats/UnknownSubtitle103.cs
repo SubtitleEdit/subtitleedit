@@ -24,13 +24,15 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             sb.AppendLine();
             sb.AppendLine();
             string writeFormat = string.Empty.PadLeft(16, ' ') + "{0} ";
+            var text = new StringBuilder();
             for (var index = 0; index < subtitle.Paragraphs.Count; index++)
             {
                 var p = subtitle.Paragraphs[index];
                 var start = p.StartTime.Hours.ToString().PadLeft(2, '0') + ":" +
                             p.StartTime.Minutes.ToString().PadLeft(2, '0') + ":" +
                             p.StartTime.Seconds.ToString().PadLeft(2, '0');
-                var text = new StringBuilder(Utilities.UnbreakLine(HtmlUtil.RemoveHtmlTags(p.Text, true)));
+                text.Clear();
+                text.Append(Utilities.UnbreakLine(HtmlUtil.RemoveHtmlTags(p.Text, true)));
                 while (text.Length < (73 - 17))
                 {
                     text.Append(" ");

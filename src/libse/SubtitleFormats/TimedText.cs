@@ -157,11 +157,12 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             }
             bool couldBeFrames = true;
             bool couldBeMillisecondsWithMissingLastDigit = true;
+            var pText = new StringBuilder();
             foreach (XmlNode node in div.ChildNodes)
             {
                 try
                 {
-                    var pText = new StringBuilder();
+                    pText.Clear();
                     var styleName = string.Empty;
                     if (node.Attributes?["style"] != null)
                     {

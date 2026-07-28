@@ -91,13 +91,14 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 }
             }
 
+            var textBuilder = new StringBuilder();
             foreach (XmlNode node in xml.DocumentElement.SelectNodes("Events/Event"))
             {
                 try
                 {
                     var start = node.Attributes["InTC"].InnerText;
                     var end = node.Attributes["OutTC"].InnerText;
-                    var textBuilder = new StringBuilder();
+                    textBuilder.Clear();
                     var position = string.Empty;
                     foreach (XmlNode graphic in node.SelectNodes("Graphic"))
                     {

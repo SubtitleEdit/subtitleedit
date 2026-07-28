@@ -76,11 +76,12 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
             bool couldBeFrames = true;
             bool couldBeMillisecondsWithMissingLastDigit = true;
+            var pText = new StringBuilder();
             foreach (XmlNode node in body.ChildNodes)
             {
                 try
                 {
-                    var pText = new StringBuilder();
+                    pText.Clear();
                     foreach (XmlNode innerNode in node.ChildNodes)
                     {
                         if (innerNode.Name == "image" || innerNode.Name.EndsWith(":image", StringComparison.Ordinal))

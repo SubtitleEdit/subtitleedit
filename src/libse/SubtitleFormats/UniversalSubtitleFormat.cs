@@ -130,6 +130,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 return;
             }
 
+            var text = new StringBuilder();
             foreach (XmlNode node in xml.DocumentElement.SelectNodes("subtitles/subtitle"))
             {
                 try
@@ -137,7 +138,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     string start = node.Attributes["start"].InnerText;
                     string stop = node.Attributes["stop"].InnerText;
 
-                    var text = new StringBuilder();
+                    text.Clear();
                     foreach (XmlNode innerNode in node.SelectSingleNode("text").ChildNodes)
                     {
                         switch (innerNode.Name.Replace("tt:", string.Empty))

@@ -134,11 +134,12 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             }
 
             var splitChars = new[] { ':' };
+            var textBuilder = new StringBuilder();
             foreach (XmlNode subNode in subtitles.SelectNodes("Subtitle"))
             {
                 var inCue = subNode.Attributes["incue"];
                 var outCue = subNode.Attributes["outcue"];
-                var textBuilder = new StringBuilder();
+                textBuilder.Clear();
                 var rowsNode = subNode.SelectSingleNode("Rows");
                 if (inCue == null || outCue == null || rowsNode == null)
                 {
