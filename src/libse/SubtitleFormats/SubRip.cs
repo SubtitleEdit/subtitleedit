@@ -7,15 +7,25 @@ using System.Text.RegularExpressions;
 
 namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 {
-    public class SubRip : SubtitleFormat
+    public partial class SubRip : SubtitleFormat
     {
         public string Errors { get; private set; }
         private StringBuilder _errors;
         private int _lineNumber;
         private bool _isMsFrames;
         private bool _isWsrt;
+#if NET7_0_OR_GREATER
+        [GeneratedRegex(@"<3\d>")]
+        private static partial Regex _regExWsrtItalicStartGen();
+        private static readonly Regex _regExWsrtItalicStart = _regExWsrtItalicStartGen();
+
+        [GeneratedRegex(@"</3\d>")]
+        private static partial Regex _regExWsrtItalicEndGen();
+        private static readonly Regex _regExWsrtItalicEnd = _regExWsrtItalicEndGen();
+#else
         private static Regex _regExWsrtItalicStart = new Regex(@"<3\d>", RegexOptions.Compiled);
         private static Regex _regExWsrtItalicEnd = new Regex(@"</3\d>", RegexOptions.Compiled);
+#endif
 
         private enum ExpectingLine
         {

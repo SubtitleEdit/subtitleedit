@@ -8,10 +8,20 @@ using System.Text.RegularExpressions;
 
 namespace Nikse.SubtitleEdit.Core.Common
 {
-    public static class WebVttToAssa
+    public static partial class WebVttToAssa
     {
+#if NET7_0_OR_GREATER
+        [GeneratedRegex("<c\\.[a-z-_\\.A-Z#\\d]+>")]
+        private static partial Regex LineTagRegexGen();
+        private static readonly Regex LineTagRegex = LineTagRegexGen();
+
+        [GeneratedRegex(@"</?c[a-z-_\.A-Z#\d]*>")]
+        private static partial Regex LineTagRegexMoreGen();
+        private static readonly Regex LineTagRegexMore = LineTagRegexMoreGen();
+#else
         private static readonly Regex LineTagRegex = new Regex("<c\\.[a-z-_\\.A-Z#\\d]+>", RegexOptions.Compiled);
         private static readonly Regex LineTagRegexMore = new Regex(@"</?c[a-z-_\.A-Z#\d]*>", RegexOptions.Compiled);
+#endif
 
         public static Subtitle Convert(Subtitle webVttSubtitle, SsaStyle defaultStyle, int videoWidth, int videoHeight)
         {
