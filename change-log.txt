@@ -3,6 +3,22 @@ Subtitle Edit Changelog
 
 -----------------------------------------------------------------------------------------------------
 
+v5.1.0-rc18 (28th of July 2026)
+
+* Set sync point: add a time code box so the sync point can be typed directly (SE4 parity)
+* Fix CrispASR text to speech freezing the app on every generation - thx subof
+* Speech to text: point at the Model field when an OpenAI-compatible server rejects it - thx acc4github
+* Surround only the selected text with music symbols - thx fraternl
+* Fix common errors: flash "Analyzing..." on every re-scan - thx Davanix
+* Restore the SE4 order of the two split items in the text box right-click menu - thx Chouu
+* Fix truncated labels and narrow controls in two spell check dialogs - thx bovirus
+* Fix the subtitle grid scroll bar paging past the cursor when holding the trough - thx ivandrofly
+* Fill in the missing Dutch translations - thx Albertos22
+* Update the Italian translation - thx bovirus
+* Improve the Polish translation of the OCR embedded subtitles dialog - thx potplayer-fanpack
+
+-----------------------------------------------------------------------------------------------------
+
 v5.1.0-rc17 (27th of July 2026)
 
 * Update llama.cpp to b10142 and offer the CUDA 13 build on Windows
