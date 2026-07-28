@@ -4,17 +4,29 @@ using System.Text.RegularExpressions;
 
 namespace Nikse.SubtitleEdit.Core.Common
 {
-    public static class RegexUtils
+    public static partial class RegexUtils
     {
         // Others classes may want to use this regex.
+#if NET7_0_OR_GREATER
+        [GeneratedRegex(@"\bi\b")]
+        private static partial Regex LittleIRegexGen();
+        public static readonly Regex LittleIRegex = LittleIRegexGen();
+#else
         public static readonly Regex LittleIRegex = new Regex(@"\bi\b", RegexOptions.Compiled);
+#endif
 
         /// <summary>
         /// Will be constructed only once.
         /// </summary>
-        public static class DanishLetterI
+        public static partial class DanishLetterI
         {
+#if NET7_0_OR_GREATER
+            [GeneratedRegex(@"\bi(dag|går|morgen|alt|gang|stand|øvrigt)\b")]
+            private static partial Regex DanishLetterIRegexGen();
+            public static readonly Regex DanishLetterIRegex = DanishLetterIRegexGen();
+#else
             public static readonly Regex DanishLetterIRegex = new Regex(@"\bi(dag|går|morgen|alt|gang|stand|øvrigt)\b", RegexOptions.Compiled);
+#endif
 
             private static readonly IList<Regex> RegexList;
 

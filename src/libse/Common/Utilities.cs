@@ -17,7 +17,7 @@ using System.Xml;
 
 namespace Nikse.SubtitleEdit.Core.Common
 {
-    public static class Utilities
+    public static partial class Utilities
     {
         /// <summary>
         /// Cached environment new line characters for faster lookup.
@@ -52,6 +52,47 @@ namespace Nikse.SubtitleEdit.Core.Common
             return newText;
         }
 
+#if NET7_0_OR_GREATER
+        [GeneratedRegex(@"\b\d+[\.:;] \d+\b")]
+        private static partial Regex NumberSeparatorNumberRegExGen();
+        private static readonly Regex NumberSeparatorNumberRegEx = NumberSeparatorNumberRegExGen();
+
+        [GeneratedRegex("^\\d+$")]
+        private static partial Regex RegexIsNumberGen();
+        private static readonly Regex RegexIsNumber = RegexIsNumberGen();
+
+        [GeneratedRegex("^\\d+x\\d+$")]
+        private static partial Regex RegexIsEpisodeNumberGen();
+        private static readonly Regex RegexIsEpisodeNumber = RegexIsEpisodeNumberGen();
+
+        [GeneratedRegex(@"(\d) (\.)")]
+        private static partial Regex RegexNumberSpacePeriodGen();
+        private static readonly Regex RegexNumberSpacePeriod = RegexNumberSpacePeriodGen();
+
+        [GeneratedRegex(@"(1) (st)\b")]
+        private static partial Regex RegexOrdinalStGen();
+        private static readonly Regex RegexOrdinalSt = RegexOrdinalStGen();
+
+        [GeneratedRegex(@"(2) (nd)\b")]
+        private static partial Regex RegexOrdinalNdGen();
+        private static readonly Regex RegexOrdinalNd = RegexOrdinalNdGen();
+
+        [GeneratedRegex(@"(3) (rd)\b")]
+        private static partial Regex RegexOrdinalRdGen();
+        private static readonly Regex RegexOrdinalRd = RegexOrdinalRdGen();
+
+        [GeneratedRegex(@"([0456789]) (th)\b")]
+        private static partial Regex RegexOrdinalThGen();
+        private static readonly Regex RegexOrdinalTh = RegexOrdinalThGen();
+
+        [GeneratedRegex(@"\bو ")]
+        private static partial Regex RegexArabicWawSpaceGen();
+        private static readonly Regex RegexArabicWawSpace = RegexArabicWawSpaceGen();
+
+        [GeneratedRegex(@"[a-z] \. [A-Z]")]
+        private static partial Regex RegexLetterSpacePeriodSpaceLetterGen();
+        private static readonly Regex RegexLetterSpacePeriodSpaceLetter = RegexLetterSpacePeriodSpaceLetterGen();
+#else
         private static readonly Regex NumberSeparatorNumberRegEx = new Regex(@"\b\d+[\.:;] \d+\b", RegexOptions.Compiled);
         private static readonly Regex RegexIsNumber = new Regex("^\\d+$", RegexOptions.Compiled);
         private static readonly Regex RegexIsEpisodeNumber = new Regex("^\\d+x\\d+$", RegexOptions.Compiled);
@@ -62,6 +103,7 @@ namespace Nikse.SubtitleEdit.Core.Common
         private static readonly Regex RegexOrdinalTh = new Regex(@"([0456789]) (th)\b", RegexOptions.Compiled);
         private static readonly Regex RegexArabicWawSpace = new Regex(@"\bو ", RegexOptions.Compiled);
         private static readonly Regex RegexLetterSpacePeriodSpaceLetter = new Regex(@"[a-z] \. [A-Z]", RegexOptions.Compiled);
+#endif
 
         public static string[] VideoFileExtensions { get; } = { ".avi", ".mkv", ".wmv", ".mpg", ".mpeg", ".divx", ".mp4", ".asf", ".flv", ".mov", ".m4v", ".vob", ".ogv", ".webm", ".ts", ".tts", ".m2ts", ".mts", ".avs", ".mxf" };
         public static string[] AudioFileExtensions { get; } = { ".mp3", ".wav", ".wma", ".ogg", ".mpa", ".m4a", ".ape", ".aiff", ".flac", ".aac", ".ac3", ".eac3", ".mka", ".opus", ".adts", ".m4b" };
@@ -1557,7 +1599,13 @@ namespace Nikse.SubtitleEdit.Core.Common
             return Uri.UnescapeDataString(text);
         }
 
+#if NET7_0_OR_GREATER
+        [GeneratedRegex(@"\d\d+")]
+        private static partial Regex TwoOrMoreDigitsNumberGen();
+        private static readonly Regex TwoOrMoreDigitsNumber = TwoOrMoreDigitsNumberGen();
+#else
         private static readonly Regex TwoOrMoreDigitsNumber = new Regex(@"\d\d+", RegexOptions.Compiled);
+#endif
         private const string PrePostStringsToReverse = @"-— !?.…""،,():;[]+~*/<>&^%$#\\|'";
 
         public static string ReverseStartAndEndingForRightToLeft(string s)
@@ -2299,7 +2347,13 @@ namespace Nikse.SubtitleEdit.Core.Common
             return sb.ToString();
         }
 
+#if NET7_0_OR_GREATER
+        [GeneratedRegex(@"(?<=\b\d+) \d(?!/\d)")]
+        private static partial Regex RemoveSpaceBetweenNumbersRegexGen();
+        private static readonly Regex RemoveSpaceBetweenNumbersRegex = RemoveSpaceBetweenNumbersRegexGen();
+#else
         private static readonly Regex RemoveSpaceBetweenNumbersRegex = new Regex(@"(?<=\b\d+) \d(?!/\d)", RegexOptions.Compiled);
+#endif
 
         public static string RemoveSpaceBetweenNumbers(string text)
         {

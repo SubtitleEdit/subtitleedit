@@ -10,11 +10,23 @@ using System.Xml;
 
 namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 {
-    public class AdvancedSubStationAlpha : SubtitleFormat
+    public partial class AdvancedSubStationAlpha : SubtitleFormat
     {
+#if NET7_0_OR_GREATER
+        [GeneratedRegex(@"\\p[123456789]")]
+        private static partial Regex RegexDrawStartGen();
+        private static readonly Regex RegexDrawStart = RegexDrawStartGen();
+#else
         private static readonly Regex RegexDrawStart = new Regex(@"\\p[123456789]", RegexOptions.Compiled);
+#endif
 
+#if NET7_0_OR_GREATER
+        [GeneratedRegex("ScriptType: *v4.00")]
+        private static partial Regex ScriptTypeFinderGen();
+        private static readonly Regex ScriptTypeFinder = ScriptTypeFinderGen();
+#else
         private static readonly Regex ScriptTypeFinder = new Regex("ScriptType: *v4.00", RegexOptions.Compiled);
+#endif
         public string Errors { get; private set; }
 
         public static string DefaultStyle

@@ -11,7 +11,7 @@ namespace Nikse.SubtitleEdit.Core.Common
     /// <summary>
     /// HTML specific string manipulations.
     /// </summary>
-    public static class HtmlUtil
+    public static partial class HtmlUtil
     {
         /// <summary>
         /// Represents the HTML tag used for italic text formatting.
@@ -38,7 +38,13 @@ namespace Nikse.SubtitleEdit.Core.Common
         /// </summary>
         public static string TagCyrillicI => "\u0456"; // Cyrillic Small Letter Byelorussian-Ukrainian i (http://graphemica.com/%D1%96)
 
+#if NET7_0_OR_GREATER
+        [GeneratedRegex(@"<\s*(?:/\s*)?(\w+)[^>]*>")]
+        private static partial Regex TagOpenRegexGen();
+        private static readonly Regex TagOpenRegex = TagOpenRegexGen();
+#else
         private static readonly Regex TagOpenRegex = new Regex(@"<\s*(?:/\s*)?(\w+)[^>]*>", RegexOptions.Compiled);
+#endif
 
         /// <summary>
         /// Remove all of the specified opening and closing tags from the source HTML string.
@@ -1526,7 +1532,13 @@ namespace Nikse.SubtitleEdit.Core.Common
         /// </summary>
         /// <param name="input">The string from which to remove color tags.</param>
         /// <returns>A new string with color tags removed.</returns>
+#if NET7_0_OR_GREATER
+        [GeneratedRegex("[ ]*(COLOR|color|Color)=[\"']*[#\\dA-Za-z]*[\"']*[ ]*")]
+        private static partial Regex ColorAttributeRegexGen();
+        private static readonly Regex ColorAttributeRegex = ColorAttributeRegexGen();
+#else
         private static readonly Regex ColorAttributeRegex = new Regex("[ ]*(COLOR|color|Color)=[\"']*[#\\dA-Za-z]*[\"']*[ ]*", RegexOptions.Compiled);
+#endif
 
         public static string RemoveColorTags(string input)
         {
@@ -1575,10 +1587,28 @@ namespace Nikse.SubtitleEdit.Core.Common
             return s.Trim();
         }
 
+#if NET7_0_OR_GREATER
+        [GeneratedRegex("[ ]*(FACE|face|Face)=[\"']*[\\d\\p{L} ]*[\"']*[ ]*")]
+        private static partial Regex FontFaceAttributeRegexGen();
+        private static readonly Regex FontFaceAttributeRegex = FontFaceAttributeRegexGen();
+
+        [GeneratedRegex("{\\\\fn[a-zA-Z \\d]+}")]
+        private static partial Regex AssaFontNameOnlyTagRegexGen();
+        private static readonly Regex AssaFontNameOnlyTagRegex = AssaFontNameOnlyTagRegexGen();
+
+        [GeneratedRegex("\\\\fn[a-zA-Z \\d]+}")]
+        private static partial Regex AssaFontNameLastTagRegexGen();
+        private static readonly Regex AssaFontNameLastTagRegex = AssaFontNameLastTagRegexGen();
+
+        [GeneratedRegex("\\\\fn[a-zA-Z \\d]+\\\\")]
+        private static partial Regex AssaFontNameInnerTagRegexGen();
+        private static readonly Regex AssaFontNameInnerTagRegex = AssaFontNameInnerTagRegexGen();
+#else
         private static readonly Regex FontFaceAttributeRegex = new Regex("[ ]*(FACE|face|Face)=[\"']*[\\d\\p{L} ]*[\"']*[ ]*", RegexOptions.Compiled);
         private static readonly Regex AssaFontNameOnlyTagRegex = new Regex("{\\\\fn[a-zA-Z \\d]+}", RegexOptions.Compiled);
         private static readonly Regex AssaFontNameLastTagRegex = new Regex("\\\\fn[a-zA-Z \\d]+}", RegexOptions.Compiled);
         private static readonly Regex AssaFontNameInnerTagRegex = new Regex("\\\\fn[a-zA-Z \\d]+\\\\", RegexOptions.Compiled);
+#endif
 
         /// <summary>
         /// Remove font tag from HTML or ASSA.
