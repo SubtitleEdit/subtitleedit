@@ -29,6 +29,8 @@ public class MossTtsCrispAsrDownloadService : IMossTtsCrispAsrDownloadService
     private static readonly Dictionary<string, string> ModelUrls = new(StringComparer.OrdinalIgnoreCase)
     {
         [MossTtsCrispAsr.ModelQ4KFileName] = RepoBase + MossTtsCrispAsr.ModelQ4KFileName,
+        [MossTtsCrispAsr.ModelQ6KFileName] = RepoBase + MossTtsCrispAsr.ModelQ6KFileName,
+        [MossTtsCrispAsr.ModelQ8FileName] = RepoBase + MossTtsCrispAsr.ModelQ8FileName,
         [MossTtsCrispAsr.ModelF16FileName] = RepoBase + MossTtsCrispAsr.ModelF16FileName,
         [MossTtsCrispAsr.CodecFileName] = RepoBase + MossTtsCrispAsr.CodecFileName,
     };
@@ -99,6 +101,14 @@ public class MossTtsCrispAsrDownloadService : IMossTtsCrispAsrDownloadService
         if (string.Equals(fileName, MossTtsCrispAsr.ModelQ4KFileName, StringComparison.OrdinalIgnoreCase))
         {
             return DownloadHashManager.MossTtsCrispAsr.ModelQ4K;
+        }
+        if (string.Equals(fileName, MossTtsCrispAsr.ModelQ6KFileName, StringComparison.OrdinalIgnoreCase))
+        {
+            return DownloadHashManager.MossTtsCrispAsr.ModelQ6K;
+        }
+        if (string.Equals(fileName, MossTtsCrispAsr.ModelQ8FileName, StringComparison.OrdinalIgnoreCase))
+        {
+            return DownloadHashManager.MossTtsCrispAsr.ModelQ8;
         }
         if (string.Equals(fileName, MossTtsCrispAsr.ModelF16FileName, StringComparison.OrdinalIgnoreCase))
         {
