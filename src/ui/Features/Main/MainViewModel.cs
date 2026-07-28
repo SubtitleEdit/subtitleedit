@@ -19104,12 +19104,20 @@ public partial class MainViewModel :
 
         var processedSeconds = microseconds / 1_000_000.0;
         var percent = (int)Math.Clamp(processedSeconds / totalDurationSeconds * 100.0, 0, 100);
-        if (percent <= _lastWaveExtractPercent)
-        {
-            return;
-        }
 
-        _lastWaveExtractPercent = percent;
+        // Atomic monotonic-max: only a strictly-greater percent wins, from any thread, so the label
+        // can never be pushed backward even if callbacks from a superseded run briefly overlap ours.
+        int last;
+        do
+        {
+            last = Volatile.Read(ref _lastWaveExtractPercent);
+            if (percent <= last)
+            {
+                return;
+            }
+        }
+        while (System.Threading.Interlocked.CompareExchange(ref _lastWaveExtractPercent, percent, last) != last);
+
         Dispatcher.UIThread.Post(() =>
         {
             // Re-check: a newer run may have started between this post and its execution.
