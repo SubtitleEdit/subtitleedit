@@ -1494,6 +1494,15 @@ public partial class AutoTranslateViewModel : ObservableObject
             {
                 var details = new System.Text.StringBuilder();
 
+                // Lead with the endpoint actually used - reports often only show the error
+                // dialog, and a wrong URL/port is invisible without it (#12907).
+                var configuredApiUrl = GetConfiguredApiUrl(translator);
+                if (!string.IsNullOrWhiteSpace(configuredApiUrl))
+                {
+                    details.AppendLine("API url: " + configuredApiUrl);
+                    details.AppendLine();
+                }
+
                 try
                 {
                     var json = translator.Error;
@@ -1553,6 +1562,37 @@ public partial class AutoTranslateViewModel : ObservableObject
                 SelectAndScrollToRow(Rows.IndexOf(lastTranslatedRow));
             }
         }
+    }
+
+    /// <summary>
+    /// The endpoint the given engine reads at Initialize, mirroring the SaveSettings blocks.
+    /// Empty for engines without a configurable URL (and for Papago, whose "URL" is a client ID).
+    /// </summary>
+    private static string GetConfiguredApiUrl(IAutoTranslator translator)
+    {
+        var settings = Configuration.Settings.Tools;
+        return translator switch
+        {
+            DeepLTranslate => settings.AutoTranslateDeepLUrl,
+            LibreTranslate => settings.AutoTranslateLibreUrl,
+            NoLanguageLeftBehindApi => settings.AutoTranslateNllbApiUrl,
+            NoLanguageLeftBehindServe => settings.AutoTranslateNllbServeUrl,
+            ChatGptTranslate => settings.ChatGptUrl,
+            OpenAiCompatibleTranslate => settings.OpenAiCompatibleTranslateUrl,
+            LmStudioTranslate => settings.LmStudioApiUrl,
+            OllamaTranslate => settings.OllamaApiUrl,
+            LlamaCppTranslate => settings.LlamaCppApiUrl,
+            AnthropicTranslate => settings.AnthropicApiUrl,
+            GroqTranslate => settings.GroqUrl,
+            OpenRouterTranslate => settings.OpenRouterUrl,
+            LaraTranslate => settings.LaraUrl,
+            PerplexityTranslate => settings.PerplexityUrl,
+            NvidiaTranslate => settings.NvidiaUrl,
+            MistralTranslate => settings.AutoTranslateMistralUrl,
+            DeepSeekTranslate => settings.DeepSeekUrl,
+            BaiduTranslate => settings.BaiduUrl,
+            _ => string.Empty,
+        };
     }
 
     private void SelectAndScrollToRow(int index)
