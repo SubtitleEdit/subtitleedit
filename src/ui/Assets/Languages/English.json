@@ -117,6 +117,7 @@
     "convertingXofYDotDoDot": "Converting {0:#,###,##0}/{1:#,###,##0}...",
     "copy": "Copy",
     "copyImageToClipboard": "Copy image to clipboard",
+    "copySubtitleText": "Copy subtitle",
     "copyTextToClipboard": "Copy text to clipboard",
     "couldNotSaveFileXErrorY": "Could not save file \"{0}\". Error: {1}",
     "count": "Count",
