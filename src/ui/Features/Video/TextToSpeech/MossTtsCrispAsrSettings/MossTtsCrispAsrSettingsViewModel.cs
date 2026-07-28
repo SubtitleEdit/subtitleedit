@@ -34,6 +34,12 @@ public partial class MossTtsCrispAsrSettingsViewModel : ObservableObject
     [ObservableProperty] private string _modelQ4KLabel = string.Empty;
     [ObservableProperty] private IBrush _modelQ4KBrush = Grey();
 
+    [ObservableProperty] private string _modelQ6KLabel = string.Empty;
+    [ObservableProperty] private IBrush _modelQ6KBrush = Grey();
+
+    [ObservableProperty] private string _modelQ8Label = string.Empty;
+    [ObservableProperty] private IBrush _modelQ8Brush = Grey();
+
     [ObservableProperty] private string _modelF16Label = string.Empty;
     [ObservableProperty] private IBrush _modelF16Brush = Grey();
 
@@ -126,6 +132,18 @@ public partial class MossTtsCrispAsrSettingsViewModel : ObservableObject
             IsEngineInstalled,
             label => ModelQ4KLabel = label,
             brush => ModelQ4KBrush = brush);
+
+        ApplyModelStatus(
+            MossTtsCrispAsr.AreModelsInstalled(MossTtsCrispAsr.ModelKeyQ6K),
+            IsEngineInstalled,
+            label => ModelQ6KLabel = label,
+            brush => ModelQ6KBrush = brush);
+
+        ApplyModelStatus(
+            MossTtsCrispAsr.AreModelsInstalled(MossTtsCrispAsr.ModelKeyQ8),
+            IsEngineInstalled,
+            label => ModelQ8Label = label,
+            brush => ModelQ8Brush = brush);
 
         ApplyModelStatus(
             MossTtsCrispAsr.AreModelsInstalled(MossTtsCrispAsr.ModelKeyF16),

@@ -227,9 +227,11 @@ public static class DownloadHashManager
 
     public static class MossTtsCrispAsr
     {
-        // SHA-256 of each GGUF the moss-tts backend needs: the two backbone quants and the
+        // SHA-256 of each GGUF the moss-tts backend needs: the four backbone quants and the
         // shared moss-tts-v1.5-codec.gguf companion. Hashes are the HF LFS oid from the tree API.
         public const string ModelQ4K = "MossTtsCrispAsr.ModelQ4K";
+        public const string ModelQ6K = "MossTtsCrispAsr.ModelQ6K";
+        public const string ModelQ8 = "MossTtsCrispAsr.ModelQ8";
         public const string ModelF16 = "MossTtsCrispAsr.ModelF16";
         public const string Codec = "MossTtsCrispAsr.Codec";
     }
@@ -1448,6 +1450,14 @@ public static class DownloadHashManager
             [MossTtsCrispAsr.ModelQ4K] = new[]
             {
                 "9e7fb9ed28339be5327dce16f9bd53c67220cbf119a9c767f513d28d1fa80547", // moss-tts-v1.5-q4_k.gguf
+            },
+            [MossTtsCrispAsr.ModelQ6K] = new[]
+            {
+                "5004d550a08c6d39aba1efdf72459a9da90b25e67c1ce62d6b08ef3ea22b85e8", // moss-tts-v1.5-q6_k.gguf
+            },
+            [MossTtsCrispAsr.ModelQ8] = new[]
+            {
+                "25a69f762ad67b3dee2191b2f3fa8d3fdb3433d6f2938aaae0efc23921408ba4", // moss-tts-v1.5-q8_0.gguf
             },
             [MossTtsCrispAsr.ModelF16] = new[]
             {
