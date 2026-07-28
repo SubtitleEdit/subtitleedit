@@ -45,17 +45,20 @@ public class ItalicTextMerger
         var words = GroupIntoWords(chars);
         var segments = new List<TextSegment>();
 
-        foreach (var word in words)
+        // Indexed loop: the loop body used to call words.IndexOf(word) - a linear scan inside
+        // the loop already iterating words, i.e. O(n^2) per OCR'd line.
+        for (var wordIndex = 0; wordIndex < words.Count; wordIndex++)
         {
+            var word = words[wordIndex];
             bool shouldBeItalic = word.IsWhitespace ? false : GetMajorityItalic(word.Chars);
-            string text = string.Concat(word.Chars.Select(c => c.Text));
+            string text = ConcatCharTexts(word.Chars);
 
             // If this is whitespace, check if we can merge it with surrounding italic content
             if (word.IsWhitespace)
             {
                 // Check if previous and next non-whitespace segments are both italic
                 bool prevIsItalic = GetPreviousNonWhitespaceItalic(segments);
-                bool nextIsItalic = GetNextNonWhitespaceItalic(words, words.IndexOf(word));
+                bool nextIsItalic = GetNextNonWhitespaceItalic(words, wordIndex);
 
                 // If surrounded by italic content, include whitespace in italic
                 shouldBeItalic = prevIsItalic && nextIsItalic;
@@ -155,17 +158,20 @@ public class ItalicTextMerger
         var words = GroupIntoWords(chars);
         var segments = new List<TextSegment>();
 
-        foreach (var word in words)
+        // Indexed loop: the loop body used to call words.IndexOf(word) - a linear scan inside
+        // the loop already iterating words, i.e. O(n^2) per OCR'd line.
+        for (var wordIndex = 0; wordIndex < words.Count; wordIndex++)
         {
+            var word = words[wordIndex];
             bool shouldBeItalic = word.IsWhitespace ? false : GetMajorityItalic(word.Chars);
-            string text = string.Concat(word.Chars.Select(c => c.Text));
+            string text = ConcatCharTexts(word.Chars);
 
             // If this is whitespace, check if we can merge it with surrounding italic content
             if (word.IsWhitespace)
             {
                 // Check if previous and next non-whitespace segments are both italic
                 bool prevIsItalic = GetPreviousNonWhitespaceItalic(segments);
-                bool nextIsItalic = GetNextNonWhitespaceItalic(words, words.IndexOf(word));
+                bool nextIsItalic = GetNextNonWhitespaceItalic(words, wordIndex);
 
                 // If surrounded by italic content, include whitespace in italic
                 shouldBeItalic = prevIsItalic && nextIsItalic;
@@ -248,6 +254,7 @@ public class ItalicTextMerger
 
         var merged = new List<TextSegment>();
         var currentSegment = segments[0];
+        StringBuilder? mergedText = null; // string concat per merged segment was quadratic
 
         for (int i = 1; i < segments.Count; i++)
         {
@@ -256,18 +263,26 @@ public class ItalicTextMerger
             // Merge if both have same italic formatting
             if (currentSegment.ShouldBeItalic == nextSegment.ShouldBeItalic)
             {
-                currentSegment = new TextSegment
-                {
-                    Text = currentSegment.Text + nextSegment.Text,
-                    ShouldBeItalic = currentSegment.ShouldBeItalic,
-                    IsWhitespace = currentSegment.IsWhitespace && nextSegment.IsWhitespace
-                };
+                mergedText ??= new StringBuilder(currentSegment.Text);
+                mergedText.Append(nextSegment.Text);
+                currentSegment.IsWhitespace = currentSegment.IsWhitespace && nextSegment.IsWhitespace;
             }
             else
             {
+                if (mergedText != null)
+                {
+                    currentSegment.Text = mergedText.ToString();
+                    mergedText = null;
+                }
+
                 merged.Add(currentSegment);
                 currentSegment = nextSegment;
             }
+        }
+
+        if (mergedText != null)
+        {
+            currentSegment.Text = mergedText.ToString();
         }
 
         merged.Add(currentSegment);
@@ -281,7 +296,15 @@ public class ItalicTextMerger
             return false;
         }
 
-        int italicCount = wordChars.Count(c => c.Italic);
+        var italicCount = 0;
+        for (var i = 0; i < wordChars.Count; i++)
+        {
+            if (wordChars[i].Italic)
+            {
+                italicCount++;
+            }
+        }
+
         int nonItalicCount = wordChars.Count - italicCount;
 
         return italicCount >= nonItalicCount;
@@ -289,7 +312,36 @@ public class ItalicTextMerger
 
     private static bool IsWhitespace(string text)
     {
-        return string.IsNullOrEmpty(text) || text.All(char.IsWhiteSpace);
+        if (string.IsNullOrEmpty(text))
+        {
+            return true;
+        }
+
+        for (var i = 0; i < text.Length; i++)
+        {
+            if (!char.IsWhiteSpace(text[i]))
+            {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    private static string ConcatCharTexts(List<NOcrChar> chars)
+    {
+        if (chars.Count == 1)
+        {
+            return chars[0].Text;
+        }
+
+        var sb = new StringBuilder(chars.Count);
+        for (var i = 0; i < chars.Count; i++)
+        {
+            sb.Append(chars[i].Text);
+        }
+
+        return sb.ToString();
     }
 
     private class WordGroup

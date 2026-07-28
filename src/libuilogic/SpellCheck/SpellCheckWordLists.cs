@@ -26,6 +26,12 @@ public class SpellCheckWordLists
     private readonly HashSet<string> _namesListUppercase = new HashSet<string>();
     private readonly HashSet<string> _namesListWithApostrophe = new HashSet<string>();
     private readonly HashSet<string> _wordsWithDashesOrPeriods = new HashSet<string>();
+
+    // Parallel to _wordsWithDashesOrPeriods with the split parts precomputed once.
+    // IsPartOfKnownDashOrPeriodName runs per word during live spell check (and up to four
+    // times per word from the OCR fix engine); splitting every combined name on every call
+    // allocated a string[] plus one string per part, per entry, per word.
+    private readonly List<KeyValuePair<string, string[]>> _wordsWithDashesOrPeriodsParts = new List<KeyValuePair<string, string[]>>();
     private readonly HashSet<string> _userWordList = new HashSet<string>();
     private readonly HashSet<string> _userPhraseList = new HashSet<string>();
     private readonly string _dictionaryFolder;
@@ -110,8 +116,16 @@ public class SpellCheckWordLists
         {
             if (word.Contains(PeriodAndDash))
             {
-                _wordsWithDashesOrPeriods.Add(word);
+                AddWordWithDashesOrPeriods(word);
             }
+        }
+    }
+
+    private void AddWordWithDashesOrPeriods(string word)
+    {
+        if (_wordsWithDashesOrPeriods.Add(word))
+        {
+            _wordsWithDashesOrPeriodsParts.Add(new KeyValuePair<string, string[]>(word, word.Split(PeriodAndDash, StringSplitOptions.RemoveEmptyEntries)));
         }
     }
 
@@ -294,7 +308,7 @@ public class SpellCheckWordLists
             _namesListWithApostrophe.Add(word + "'");
         }
 
-        _wordsWithDashesOrPeriods.Add(word);
+        AddWordWithDashesOrPeriods(word);
 
         var namesList = new NameList(_dictionaryFolder, _languageName, false, string.Empty);
         namesList.Add(word);
@@ -353,10 +367,9 @@ public class SpellCheckWordLists
             return false;
         }
 
-        foreach (var combined in _wordsWithDashesOrPeriods)
+        foreach (var kv in _wordsWithDashesOrPeriodsParts)
         {
-            var parts = combined.Split(PeriodAndDash, StringSplitOptions.RemoveEmptyEntries);
-            if (Array.IndexOf(parts, word) >= 0 && text.Contains(combined, StringComparison.Ordinal))
+            if (Array.IndexOf(kv.Value, word) >= 0 && text.Contains(kv.Key, StringComparison.Ordinal))
             {
                 return true;
             }
