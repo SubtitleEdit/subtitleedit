@@ -65,7 +65,7 @@ public class SetSyncPointWindow : Window
                 Mode = BindingMode.TwoWay,
             },
         };
-        AutomationProperties.SetName(vm.TimeCodeUpDownSyncPoint, Se.Language.Sync.SyncPointTimeCode);
+        AutomationProperties.SetName(vm.TimeCodeUpDownSyncPoint, Se.Language.General.VideoPosition);
 
         var panelTimeCode = new StackPanel
         {
@@ -73,7 +73,7 @@ public class SetSyncPointWindow : Window
             Spacing = 10,
             Children =
             {
-                UiUtil.MakeLabel(Se.Language.Sync.SyncPointTimeCode),
+                UiUtil.MakeLabel(Se.Language.General.VideoPosition),
                 vm.TimeCodeUpDownSyncPoint,
             }
         };
