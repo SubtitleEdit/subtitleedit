@@ -1,4 +1,5 @@
 ﻿using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using Nikse.SubtitleEdit.Logic.Compression;
 using Nikse.SubtitleEdit.Logic.Config;
@@ -9,9 +10,16 @@ public static class DictionaryLoader
 {
     public static async Task UnpackIfNotFound()
     {
+        // Also unpack when the folder exists but is empty: the folder is created
+        // before the unpack runs, so an unpack that failed (or was interrupted)
+        // would otherwise never be retried.
         if (!Directory.Exists(Se.DictionariesFolder))
         {
             Directory.CreateDirectory(Se.DictionariesFolder);
+            await UnpackDictionaries();
+        }
+        else if (!Directory.EnumerateFileSystemEntries(Se.DictionariesFolder).Any())
+        {
             await UnpackDictionaries();
         }
     }

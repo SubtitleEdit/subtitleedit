@@ -1156,13 +1156,30 @@ public partial class SpeechToTextViewModel : ObservableObject
         ProgressText = Se.Language.Video.AudioToText.Transcribing;
         ProgressValue = 5;
 
-        var probeError = await ProbeOpenAiUrlAsync(engine.ProbeUrl, cancellationToken);
-        if (probeError != null)
+        string? probeError;
+        try
         {
-            LogToConsole($"Online STT endpoint probe failed: {probeError}. Retrying...");
-            // Brief delay so transient DNS/socket hiccups have a chance to recover before retrying.
-            await Task.Delay(300, cancellationToken);
             probeError = await ProbeOpenAiUrlAsync(engine.ProbeUrl, cancellationToken);
+            if (probeError != null)
+            {
+                LogToConsole($"Online STT endpoint probe failed: {probeError}. Retrying...");
+                // Brief delay so transient DNS/socket hiccups have a chance to recover before retrying.
+                await Task.Delay(300, cancellationToken);
+                probeError = await ProbeOpenAiUrlAsync(engine.ProbeUrl, cancellationToken);
+            }
+        }
+        catch (OperationCanceledException)
+        {
+            // This runs as a fire-and-forget task, so a cancel during the probe phase
+            // (up to two 8-second probes) must reset the UI here — nothing downstream
+            // will, and the window would otherwise be stuck on a live progress bar.
+            LogToConsole("Transcription cancelled by user");
+            await Dispatcher.UIThread.InvokeAsync(() =>
+            {
+                IsTranscribeEnabled = true;
+                HideProgressBar();
+            });
+            return;
         }
 
         if (probeError != null)

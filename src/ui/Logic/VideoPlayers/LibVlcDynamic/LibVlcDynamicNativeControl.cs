@@ -2,6 +2,7 @@ using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Platform;
 using Avalonia.Threading;
+using Nikse.SubtitleEdit.Logic.Config;
 using System;
 using System.Runtime.InteropServices;
 
@@ -284,13 +285,21 @@ public class LibVlcDynamicNativeControl : NativeControlHost
             return;
         }
 
-        await _vlcPlayer.LoadFile(path);
+        try
+        {
+            await _vlcPlayer.LoadFile(path);
 
-        // Wait a bit for VLC to parse the media information
-        // This ensures Duration and other metadata are available
-        await System.Threading.Tasks.Task.Delay(300);
+            // Wait a bit for VLC to parse the media information
+            // This ensures Duration and other metadata are available
+            await System.Threading.Tasks.Task.Delay(300);
 
-        System.Diagnostics.Debug.WriteLine($"File loaded, duration: {_vlcPlayer.Duration}s");
+            System.Diagnostics.Debug.WriteLine($"File loaded, duration: {_vlcPlayer.Duration}s");
+        }
+        catch (Exception exception)
+        {
+            // async void: a throw here would otherwise crash the process.
+            Se.LogError(exception, $"VLC failed to load video file: {path}");
+        }
     }
 
     public void TogglePlayPause()
