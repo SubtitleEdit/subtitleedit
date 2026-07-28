@@ -17,6 +17,13 @@ jobs:
   pack:
     runs-on: ubuntu-latest
 
+    # To gate publishing behind a manual approval: create a GitHub environment,
+    # add "environment: <name>" here, and set the same name in the nuget.org
+    # trusted publishing policy.
+    permissions:
+      id-token: write   # required for nuget.org trusted publishing (OIDC)
+      contents: read
+
     steps:
       - uses: actions/checkout@v4
 
@@ -49,10 +56,17 @@ jobs:
           name: libse-nuget-${{ inputs.version }}
           path: nupkg/*
 
+      - name: NuGet login (trusted publishing)
+        id: nuget-login
+        if: ${{ inputs.push_to_nuget }}
+        uses: NuGet/login@v1
+        with:
+          user: niksedk
+
       - name: Push to nuget.org
         if: ${{ inputs.push_to_nuget }}
         run: >
           dotnet nuget push "nupkg/*.nupkg"
-          --api-key "${{ secrets.NUGET_API_KEY }}"
+          --api-key "${{ steps.nuget-login.outputs.NUGET_API_KEY }}"
           --source https://api.nuget.org/v3/index.json
           --skip-duplicate
