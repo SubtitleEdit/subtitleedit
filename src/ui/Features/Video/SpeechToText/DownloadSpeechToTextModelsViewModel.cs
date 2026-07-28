@@ -446,7 +446,19 @@ public partial class DownloadSpeechToTextModelsViewModel : ObservableObject, ICl
 
     internal async void StartDownload()
     {
-        await Task.Delay(200);
-        Download();
+        try
+        {
+            await Task.Delay(200);
+            Download();
+        }
+        catch (Exception exception)
+        {
+            // async void: without this catch a throw from Download() (bad URL list,
+            // path failure) would land in the dispatcher unhandled and crash the app,
+            // with the caller unable to observe it.
+            Se.LogError(exception, "Speech-to-text model download failed to start");
+            ProgressText = "Download failed";
+            Error = exception.Message;
+        }
     }
 }

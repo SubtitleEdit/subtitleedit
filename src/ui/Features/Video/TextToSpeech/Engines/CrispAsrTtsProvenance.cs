@@ -5,6 +5,7 @@ using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Nikse.SubtitleEdit.Features.Video.TextToSpeech.Engines;
@@ -150,7 +151,7 @@ public static class CrispAsrTtsProvenance
     }
 
     private static readonly Dictionary<string, bool> SupportCache = new();
-    private static readonly object SupportCacheLock = new();
+    private static readonly Lock SupportCacheLock = new();
 
     /// <summary>
     /// How <see cref="SupportsMarkingOptOut"/> gets the binary's help text. Swappable so the flag

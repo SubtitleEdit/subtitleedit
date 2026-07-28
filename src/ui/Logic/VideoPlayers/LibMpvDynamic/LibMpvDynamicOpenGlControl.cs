@@ -3,6 +3,7 @@ using Avalonia.Input;
 using Avalonia.OpenGL;
 using Avalonia.OpenGL.Controls;
 using Avalonia.Threading;
+using Nikse.SubtitleEdit.Logic.Config;
 using System;
 using System.Runtime.InteropServices;
 
@@ -140,9 +141,22 @@ public class LibMpvDynamicOpenGlControl : OpenGlControlBase
         base.OnOpenGlDeinit(gl);
     }
 
-    public void LoadFile(string path)
+    public async void LoadFile(string path)
     {
-        _mpvPlayer?.LoadFile(path);
+        if (_mpvPlayer == null)
+        {
+            return;
+        }
+
+        try
+        {
+            await _mpvPlayer.LoadFile(path);
+        }
+        catch (Exception exception)
+        {
+            // The load task was previously discarded, hiding open failures entirely.
+            Se.LogError(exception, $"mpv failed to load video file: {path}");
+        }
     }
 
     public void TogglePlayPause()
