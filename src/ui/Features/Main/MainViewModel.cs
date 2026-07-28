@@ -21835,8 +21835,11 @@ public partial class MainViewModel :
         }
     }
 
-    private double UpdatePlayheadEstimate(VideoPlayerControl vp)
+    private double UpdatePlayheadEstimate(VideoPlayerControl vp, bool isPlaying)
     {
+        // isPlaying is read once by the caller and passed in: every IsPlaying get is a
+        // synchronous P/Invoke into the mpv core, and this method used to ask up to four
+        // times per 16 ms cursor tick.
         var rawPosition = vp.VideoPlayer.Position;
         if (IsSmpteTimingEnabled)
         {
@@ -21868,7 +21871,7 @@ public partial class MainViewModel :
             _playheadLastRealSeconds = rawPosition;
             _playheadLastTimestamp = nowTimestamp;
 
-            if (vp.IsPlaying)
+            if (isPlaying)
             {
                 _playheadEstimateSeconds = rawPosition;
                 return rawPosition;
@@ -21881,7 +21884,7 @@ public partial class MainViewModel :
             return _playheadEstimateSeconds;
         }
 
-        if (vp.IsPlaying && !_pauseRequested && _playheadValid && _playheadLastRealSeconds >= 0)
+        if (isPlaying && !_pauseRequested && _playheadValid && _playheadLastRealSeconds >= 0)
         {
             var elapsedSeconds = (nowTimestamp - _playheadLastTimestamp) / (double)Stopwatch.Frequency;
             if (elapsedSeconds < 0)
@@ -21953,7 +21956,7 @@ public partial class MainViewModel :
             // settled frame - whether eased or snapped in one step - reads as the cursor drifting a
             // moment after the numeric time display has already stopped (#12740). Only a real
             // discontinuity (a seek while paused, beyond the resync threshold) moves the cursor now.
-            if (!vp.IsPlaying)
+            if (!isPlaying)
             {
                 if (_playheadWasPlaying)
                 {
@@ -21999,7 +22002,7 @@ public partial class MainViewModel :
                 // (#12742 follow-up). Snapping, rather than easing, puts the cursor on the frame at once.
                 _playheadEstimateSeconds = rawPosition;
             }
-            else if (!_playheadPausedSettled && !vp.IsPlaying && rawStableMs >= PlayheadPausedSettleStableMs)
+            else if (!_playheadPausedSettled && !isPlaying && rawStableMs >= PlayheadPausedSettleStableMs)
             {
                 // mpv's clock has come to rest after the pause wind-down. Hold the cursor at the frozen
                 // keypress spot rather than snapping to mpv's settled frame: the video stopped where the
@@ -22015,7 +22018,7 @@ public partial class MainViewModel :
 
         _playheadLastRealSeconds = rawPosition;
         _playheadLastTimestamp = nowTimestamp;
-        _playheadWasPlaying = vp.IsPlaying;
+        _playheadWasPlaying = isPlaying;
         return _playheadEstimateSeconds;
     }
 
@@ -22231,7 +22234,10 @@ public partial class MainViewModel :
             // its source of truth (SelectCurrentSubtitleWhilePlaying, play-selection end detection, the
             // auto-scroll branches), and some layouts have a video player but no waveform. Only the
             // visual updates below need the AudioVisualizer.
-            var est = UpdatePlayheadEstimate(vp);
+            // Read IsPlaying once per tick - each get is a synchronous P/Invoke into the mpv core,
+            // and this tick (estimate + centering) used to issue up to six of them at ~60 fps.
+            var isPlaying = vp.IsPlaying;
+            var est = UpdatePlayheadEstimate(vp, isPlaying);
 
             var av = AudioVisualizer;
             if (av != null)
@@ -22244,10 +22250,10 @@ public partial class MainViewModel :
                 // With "center also while paused" on, paused position changes (wheel scrub, waveform
                 // clicks, shortcuts) recenter too — but only on actual changes, so the user can still
                 // scroll around the waveform freely while the play-head is at rest.
-                var centerPausedChange = WaveformCenter && !vp.IsPlaying &&
+                var centerPausedChange = WaveformCenter && !isPlaying &&
                                          Se.Settings.Waveform.CenterVideoPositionAlsoWhenPaused &&
                                          Math.Abs(est - _pausedCenterLastSeconds) > 0.001;
-                if (WaveformCenter && av.WavePeaks != null && (vp.IsPlaying || centerPausedChange))
+                if (WaveformCenter && av.WavePeaks != null && (isPlaying || centerPausedChange))
                 {
                     var halfSeconds = (av.EndPositionSeconds - av.StartPositionSeconds) / 2.0;
                     av.StartPositionSeconds = Math.Max(0, est - halfSeconds);

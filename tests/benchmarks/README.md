@@ -28,6 +28,7 @@ Reports land in `tests/benchmarks/BenchmarkDotNet.Artifacts/results/` (gitignore
 | `SubtitleLineViewModelBenchmarks` | The row getters the grid re-reads as rows are recycled - text error highlight and CPS. |
 | `SubtitleGridSelectionBenchmarks` | What `SubtitleGridSelectionChanged` does per selection change: copy the selection, find the line's index. |
 | `WaveformBufferBenchmarks` | The 50 ms position timer's refill of the waveform's subtitle buffer. |
+| `AudioVisualizerRenderBenchmarks` | One full playback frame of the real `AudioVisualizer.Render` (headless, real Skia, record-only): static view vs center-mode scrolling vs a forced geometry rebuild. |
 
 Benchmarks that model a collection the app gets from Avalonia (e.g. `DataGrid.SelectedItems`)
 reproduce its interface surface rather than substituting a `List<T>` - `SelectedItems` only
