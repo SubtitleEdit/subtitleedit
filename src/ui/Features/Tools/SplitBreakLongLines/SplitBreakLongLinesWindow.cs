@@ -71,6 +71,7 @@ public class SplitBreakLongLinesWindow : Window
             {
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
             },
             ColumnDefinitions =
             {
@@ -100,6 +101,15 @@ public class SplitBreakLongLinesWindow : Window
         var numericUpDownMaxNumberOfLines = UiUtil.MakeNumericUpDownInt(1, 10, 2, 130, vm, nameof(vm.MaxNumberOfLines));
         numericUpDownMaxNumberOfLines.ValueChanged += (s, e) => vm.SetChanged();
 
+        var labelUnbreakLinesShorterThan = UiUtil.MakeLabel(Se.Language.Options.Settings.UnbreakSubtitlesShortThan);
+        var numericUpDownUnbreakLinesShorterThan = UiUtil.MakeNumericUpDownInt(1, 1000, 33, 130, vm, nameof(vm.UnbreakLinesShorterThan));
+        numericUpDownUnbreakLinesShorterThan.ValueChanged += (s, e) => vm.SetChanged();
+        if (Se.Settings.Appearance.ShowHints)
+        {
+            ToolTip.SetTip(labelUnbreakLinesShorterThan, Se.Language.Tools.SplitBreakLongLines.UnbreakLinesShorterThanHint);
+            ToolTip.SetTip(numericUpDownUnbreakLinesShorterThan, Se.Language.Tools.SplitBreakLongLines.UnbreakLinesShorterThanHint);
+        }
+
         grid.Add(checkBoxSplitLongLines, 0);
         grid.Add(labelSingleLineMaxLength, 0, 1);
         grid.Add(numericUpDownSingleLineMaxLength, 0, 2);
@@ -107,6 +117,9 @@ public class SplitBreakLongLinesWindow : Window
         grid.Add(checkBoxRebalanceLongLines, 1);
         grid.Add(labelMaxNumberOfLines, 1, 1);
         grid.Add(numericUpDownMaxNumberOfLines, 1, 2);
+
+        grid.Add(labelUnbreakLinesShorterThan, 2, 1);
+        grid.Add(numericUpDownUnbreakLinesShorterThan, 2, 2);
 
         return grid;
     }
