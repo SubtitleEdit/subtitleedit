@@ -313,6 +313,7 @@ public partial class MainViewModel :
 
     private bool _updateAudioVisualizer;
     private bool _mpvPreviewDirty = true; // true = subtitle preview needs refresh in mpv
+    private bool _mpvPreviewRefreshBusy; // a refresh is in flight; skip ticks until it lands
     private string? _subtitleFileName;
     private string? _subtitleFileNameOriginal;
     private bool _converted;
@@ -18879,7 +18880,10 @@ public partial class MainViewModel :
                         break;
                     }
 
-                    await Task.Delay(100, _videoOpenTokenSource.Token).ConfigureAwait(false);
+                    // Deliberately NOT the cancellation token: cancel almost always lands
+                    // while this delay is pending, and a token here would throw us out of
+                    // the loop before the Kill above ever runs, orphaning ffmpeg.
+                    await Task.Delay(100, CancellationToken.None).ConfigureAwait(false);
                 }
 
                 if (!_videoOpenTokenSource.IsCancellationRequested && AudioVisualizer != null && AudioVisualizer.ShotChanges != null)
@@ -22277,7 +22281,7 @@ public partial class MainViewModel :
             AutoSaveTick(mainHash, originalHash);
 
             var vp = GetVideoPlayerControl();
-            if (!_mpvPreviewDirty || vp == null)
+            if (!_mpvPreviewDirty || vp == null || _mpvPreviewRefreshBusy)
             {
                 return;
             }
@@ -22297,7 +22301,7 @@ public partial class MainViewModel :
                     subtitle.Paragraphs.RemoveAll(p => !_visibleLayers!.Contains(p.Layer));
                 }
 
-                _mpvReloader.RefreshMpv(mpv, subtitle, _subtitleSecondary, SelectedSubtitleFormat).ConfigureAwait(false);
+                RunPreviewRefresh(() => _mpvReloader.RefreshMpv(mpv, subtitle, _subtitleSecondary, SelectedSubtitleFormat));
             }
             else if (vp.VideoPlayer is LibVlcDynamicPlayer vlc)
             {
@@ -22308,10 +22312,28 @@ public partial class MainViewModel :
                     subtitle.Paragraphs.RemoveAll(p => !_visibleLayers!.Contains(p.Layer));
                 }
 
-                _vlcReloader.RefreshVlc(vlc, subtitle, _subtitleSecondary, SelectedSubtitleFormat).ConfigureAwait(false);
+                RunPreviewRefresh(() => _vlcReloader.RefreshVlc(vlc, subtitle, _subtitleSecondary, SelectedSubtitleFormat));
             }
         };
         _slowTimer.Start();
+    }
+
+    private async void RunPreviewRefresh(Func<Task> refresh)
+    {
+        _mpvPreviewRefreshBusy = true;
+        try
+        {
+            await refresh();
+        }
+        catch (Exception exception)
+        {
+            Se.LogError(exception, "Video preview subtitle refresh failed");
+            _mpvPreviewDirty = true; // retry on a later tick
+        }
+        finally
+        {
+            _mpvPreviewRefreshBusy = false;
+        }
     }
 
     // Auto-save (saves the actual open file) state. Debounced: we only write once edits have

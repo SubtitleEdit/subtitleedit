@@ -301,9 +301,19 @@ public partial class FixNamesViewModel : ObservableObject, IClosingCleanup
         }
     }
 
-    internal void OnLoaded(RoutedEventArgs e)
+    internal async void OnLoaded(RoutedEventArgs e)
     {
-        DictionaryLoader.UnpackIfNotFound().ConfigureAwait(false);
+        try
+        {
+            // Must finish before NameList reads Se.DictionariesFolder — on first
+            // run the folder is only populated by this unpack.
+            await DictionaryLoader.UnpackIfNotFound();
+        }
+        catch (Exception exception)
+        {
+            Se.LogError(exception, "Failed to unpack bundled dictionaries");
+        }
+
         _nameList = new NameList(Se.DictionariesFolder, _language, false, string.Empty);
 
         ExtraNames = Se.Settings.Tools.ChangeCasing.ExtraNames;
