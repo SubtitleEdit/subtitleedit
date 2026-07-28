@@ -77,11 +77,26 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
             }
             var prompt = string.Format(Json.EncodeJsonText(Configuration.Settings.Tools.AnthropicPrompt), sourceLanguageCode, targetLanguageCode);
             var input = "{ \"model\": \"" + model + "\", \"max_tokens\": 1024, \"messages\": [{ \"role\": \"user\", \"content\": \"" + prompt + "\\n\\n" + Json.EncodeJsonText(text.Trim()) + "\" }]}";
-            var content = new StringContent(input, Encoding.UTF8);
-            content.Headers.ContentType = MediaTypeHeaderValue.Parse("application/json");
-            var result = await _httpClient.PostAsync(string.Empty, content, cancellationToken);
-            var bytes = await result.Content.ReadAsByteArrayAsync();
-            var json = Encoding.UTF8.GetString(bytes).Trim();
+
+            int[] retryDelays = { 2555, 5007, 9013 };
+            HttpResponseMessage result = null;
+            var json = string.Empty;
+            for (var attempt = 0; attempt <= retryDelays.Length; attempt++)
+            {
+                var content = new StringContent(input, Encoding.UTF8);
+                content.Headers.ContentType = MediaTypeHeaderValue.Parse("application/json");
+                result = await _httpClient.PostAsync(string.Empty, content, cancellationToken);
+                var bytes = await result.Content.ReadAsByteArrayAsync();
+                json = Encoding.UTF8.GetString(bytes).Trim();
+
+                if (!DeepLTranslate.ShouldRetry(result, json) || attempt == retryDelays.Length)
+                {
+                    break;
+                }
+
+                await Task.Delay(retryDelays[attempt], cancellationToken);
+            }
+
             if (!result.IsSuccessStatusCode)
             {
                 Error = json;
