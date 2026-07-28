@@ -24,6 +24,7 @@ public class AdvancedEffectBounceIn : IAdvancedEffectDisplay
     public List<SubtitleLineViewModel> ApplyEffect(string header, List<SubtitleLineViewModel> subtitles, int width, int height, WavePeakData2? wavePeaks)
     {
         var result = new List<SubtitleLineViewModel>();
+        var sb = new StringBuilder();
 
         foreach (var sub in subtitles)
         {
@@ -53,7 +54,7 @@ public class AdvancedEffectBounceIn : IAdvancedEffectDisplay
                 line.StartTime = sub.StartTime.Add(TimeSpan.FromMilliseconds(i * staggerMs));
                 line.EndTime = sub.EndTime;
 
-                var sb = new StringBuilder();
+                sb.Clear();
                 for (int j = 0; j < chars.Length; j++)
                 {
                     if (chars[j] == '\n')

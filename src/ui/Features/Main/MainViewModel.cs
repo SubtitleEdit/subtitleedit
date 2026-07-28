@@ -6388,6 +6388,7 @@ public partial class MainViewModel :
         // Update selected lines with transcribed text
         var newLines = new List<SubtitleLineViewModel>();
         var deleteLines = new List<SubtitleLineViewModel>();
+        var sb = new StringBuilder();
         for (var i = 0; i < selectedItems.Count; i++)
         {
             var selectedLine = selectedItems[i];
@@ -6408,7 +6409,7 @@ public partial class MainViewModel :
                 else
                 {
                     // single line update
-                    var sb = new StringBuilder();
+                    sb.Clear();
                     foreach (var line in transcribedLine.Transcription.Paragraphs)
                     {
                         sb.AppendLine(line.Text);
