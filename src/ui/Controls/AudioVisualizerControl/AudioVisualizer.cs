@@ -212,6 +212,11 @@ public class AudioVisualizer : Control
     // The main window and the TTS review window assign it from Se.Settings.Waveform instead.
     public bool FocusOnMouseOver { get; set; } = true;
     public int WaveformHeightPercentage { get; set; } = 50;
+
+    // Lets the wheel handler ask the host whether the video is playing, so a plain scroll in
+    // "center video position" mode can turn into a seek that keeps the play-head centered
+    // (#12864). Hosts without a video player (or that never set this) keep plain scrolling.
+    public Func<bool>? GetIsVideoPlaying { get; set; }
     public Color WaveformFancyHighColor { get; set; } = Colors.Orange;
 
     private Color _paragraphBackground = Color.FromArgb(90, 70, 70, 70);
@@ -752,6 +757,16 @@ public class AudioVisualizer : Control
                 videoPosition = StartPositionSeconds + halfWidthInSeconds;
             }
             OnVideoPositionChanged?.Invoke(this, new PositionEventArgs { PositionInSeconds = videoPosition });
+        }
+        else if (Se.Settings.Waveform.CenterVideoPosition && WavePeaks != null && GetIsVideoPlaying?.Invoke() == true)
+        {
+            // Center mode while playing: the ~60 fps cursor timer re-centers the view on the
+            // play-head every tick, so a plain scroll used to snap straight back - scrolling
+            // only worked while paused (#12864). Honor the scroll by seeking the video to the
+            // new view center instead: the play-head stays pinned to the middle and the video
+            // follows the scroll, matching SE 4. Paused scrolling stays free (no seek).
+            var halfWidthInSeconds = (Bounds.Width / 2) / (WavePeaks.SampleRate * ZoomFactor);
+            OnVideoPositionChanged?.Invoke(this, new PositionEventArgs { PositionInSeconds = StartPositionSeconds + halfWidthInSeconds });
         }
 
         InvalidateVisual();
