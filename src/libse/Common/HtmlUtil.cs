@@ -1664,6 +1664,13 @@ namespace Nikse.SubtitleEdit.Core.Common
         /// <returns>A new string without ASS and SSA alignment tags.</returns>
         public static string RemoveAssAlignmentTags(string s)
         {
+            // Every pattern below contains a backslash, so plain text (the common case in
+            // batch convert) skips all 45 Replace scans.
+            if (s.IndexOf('\\') < 0)
+            {
+                return s;
+            }
+
             return s.Replace("{\\an1}", string.Empty) // ASS tags alone
                 .Replace("{\\an2}", string.Empty)
                 .Replace("{\\an3}", string.Empty)
@@ -1722,14 +1729,49 @@ namespace Nikse.SubtitleEdit.Core.Common
         /// <returns>A new string with all ASSA color tags removed.</returns>
         public static string RemoveAssaColor(string input)
         {
+            // Every pattern requires a backslash; the static Regex.Replace overloads also went
+            // through the global regex cache (a lock + key hash per call) on every line.
+            if (input.IndexOf('\\') < 0)
+            {
+                return input;
+            }
+
             var text = input;
-            text = Regex.Replace(text, "\\\\alpha&H.{1,2}&\\\\", "\\");
-            text = Regex.Replace(text, "{\\\\1c&[abcdefghABCDEFGH\\d]*&}", string.Empty);
-            text = Regex.Replace(text, "{\\\\c&[abcdefghABCDEFGH\\d]*&}", string.Empty);
-            text = Regex.Replace(text, "\\\\c&[abcdefghABCDEFGH\\d]*&", string.Empty);
-            text = Regex.Replace(text, "\\\\1c&[abcdefghABCDEFGH\\d]*&", string.Empty);
+            text = AssaAlphaTagRegex.Replace(text, "\\");
+            text = Assa1cBraceRegex.Replace(text, string.Empty);
+            text = AssaCBraceRegex.Replace(text, string.Empty);
+            text = AssaCRegex.Replace(text, string.Empty);
+            text = Assa1cRegex.Replace(text, string.Empty);
             return text;
         }
+
+#if NET7_0_OR_GREATER
+        [GeneratedRegex("\\\\alpha&H.{1,2}&\\\\")]
+        private static partial Regex AssaAlphaTagRegexGen();
+        private static readonly Regex AssaAlphaTagRegex = AssaAlphaTagRegexGen();
+
+        [GeneratedRegex("{\\\\1c&[abcdefghABCDEFGH\\d]*&}")]
+        private static partial Regex Assa1cBraceRegexGen();
+        private static readonly Regex Assa1cBraceRegex = Assa1cBraceRegexGen();
+
+        [GeneratedRegex("{\\\\c&[abcdefghABCDEFGH\\d]*&}")]
+        private static partial Regex AssaCBraceRegexGen();
+        private static readonly Regex AssaCBraceRegex = AssaCBraceRegexGen();
+
+        [GeneratedRegex("\\\\c&[abcdefghABCDEFGH\\d]*&")]
+        private static partial Regex AssaCRegexGen();
+        private static readonly Regex AssaCRegex = AssaCRegexGen();
+
+        [GeneratedRegex("\\\\1c&[abcdefghABCDEFGH\\d]*&")]
+        private static partial Regex Assa1cRegexGen();
+        private static readonly Regex Assa1cRegex = Assa1cRegexGen();
+#else
+        private static readonly Regex AssaAlphaTagRegex = new Regex("\\\\alpha&H.{1,2}&\\\\", RegexOptions.Compiled);
+        private static readonly Regex Assa1cBraceRegex = new Regex("{\\\\1c&[abcdefghABCDEFGH\\d]*&}", RegexOptions.Compiled);
+        private static readonly Regex AssaCBraceRegex = new Regex("{\\\\c&[abcdefghABCDEFGH\\d]*&}", RegexOptions.Compiled);
+        private static readonly Regex AssaCRegex = new Regex("\\\\c&[abcdefghABCDEFGH\\d]*&", RegexOptions.Compiled);
+        private static readonly Regex Assa1cRegex = new Regex("\\\\1c&[abcdefghABCDEFGH\\d]*&", RegexOptions.Compiled);
+#endif
 
         /// <summary>
         /// Gets the closing HTML tag for the specified opening tag.
