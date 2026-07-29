@@ -302,18 +302,16 @@ public partial class PaddleOcr
         var paddleOcrPath = Path.Combine(Se.PaddleOcrFolder, "paddleocr.bin");
         if (engineType != OcrEngineType.PaddleOcrStandalone || !File.Exists(paddleOcrPath))
         {
-            paddleOcrPath = "paddleocr";
+            // Also the fallback when the standalone binary is missing (no standalone build
+            // exists on macOS, and batch convert always requests PaddleOcrStandalone), so
+            // resolve the pip-installed CLI instead of relying on a bare "paddleocr".
+            paddleOcrPath = GetPaddleOcrPytonPath();
         }
 
         if (engineType == OcrEngineType.PaddleOcrStandalone &&
             File.Exists(Path.Combine(Se.PaddleOcrFolder, "paddleocr.exe")))
         {
             paddleOcrPath = Path.Combine(Se.PaddleOcrFolder, "paddleocr.exe");
-        }
-
-        if (engineType == OcrEngineType.PaddleOcrPython)
-        {
-            paddleOcrPath = GetPaddleOcrPytonPath();
         }
 
         var process = new Process
@@ -326,6 +324,9 @@ public partial class PaddleOcr
                 RedirectStandardOutput = true,
                 RedirectStandardError = true,
                 CreateNoWindow = true,
+                // A GUI app launched from Finder inherits "/" as current directory; use a
+                // writable folder so relative writes from the tool cannot fail.
+                WorkingDirectory = Path.GetTempPath(),
             },
         };
 
@@ -665,6 +666,7 @@ public partial class PaddleOcr
         var foundFiles = possiblePaths
             .Where(Directory.Exists)
             .SelectMany(baseDir => Directory.GetFiles(baseDir, executableName, SearchOption.AllDirectories))
+            .Concat(GetCliShimCandidates(executableName))
             .Distinct()
             .ToList();
 
@@ -695,6 +697,54 @@ public partial class PaddleOcr
         }
 
         return foundFiles.Last();
+    }
+
+    // A GUI app launched from Finder/launchd does not inherit the shell PATH, so
+    // Process.Start("paddleocr") cannot find pip/Homebrew installs even though the
+    // command works fine in a terminal (#12953). Probe the standard CLI-shim
+    // directories directly, plus whatever PATH the process does have.
+    private static IEnumerable<string> GetCliShimCandidates(string executableName)
+    {
+        var candidates = new List<string>();
+
+        if (Environment.OSVersion.Platform != PlatformID.Win32NT)
+        {
+            var home = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
+            candidates.Add(Path.Combine(home, ".local", "bin", executableName)); // pip install --user / pipx
+            candidates.Add("/usr/local/bin/" + executableName); // Homebrew (Intel) / system pip
+            candidates.Add("/opt/homebrew/bin/" + executableName); // Homebrew (Apple Silicon)
+            candidates.Add("/usr/bin/" + executableName); // system package manager
+            candidates.Add("/opt/local/bin/" + executableName); // MacPorts
+
+            // macOS "pip install --user": ~/Library/Python/X.Y/bin/paddleocr
+            var macUserPython = Path.Combine(home, "Library", "Python");
+            if (Directory.Exists(macUserPython))
+            {
+                try
+                {
+                    candidates.AddRange(Directory.GetFiles(macUserPython, executableName, SearchOption.AllDirectories));
+                }
+                catch
+                {
+                    // ignore access errors
+                }
+            }
+        }
+
+        var pathEnv = Environment.GetEnvironmentVariable("PATH") ?? string.Empty;
+        foreach (var dir in pathEnv.Split(Path.PathSeparator, StringSplitOptions.RemoveEmptyEntries))
+        {
+            try
+            {
+                candidates.Add(Path.Combine(dir.Trim(), executableName));
+            }
+            catch
+            {
+                // ignore malformed PATH entries
+            }
+        }
+
+        return candidates.Where(File.Exists);
     }
 
     // Resolves the Python environment root for a "paddleocr" launcher:
