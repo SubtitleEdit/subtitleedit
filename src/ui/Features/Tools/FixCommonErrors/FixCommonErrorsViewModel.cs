@@ -10,6 +10,7 @@ using Nikse.SubtitleEdit.Core.Interfaces;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using Nikse.SubtitleEdit.Features.Main;
 using Nikse.SubtitleEdit.Features.Ocr.FixEngine;
+using Nikse.SubtitleEdit.Features.Shared;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Logic.Config.Language.Tools;
@@ -73,6 +74,7 @@ public partial class FixCommonErrorsViewModel : ObservableObject, IFixCallbacks
     private bool _previewMode = true;
     public List<int> DeleteIndices = new();
     private List<FixDisplayItem> _oldFixes = new();
+    private FixRuleDisplayItem? _currentRunningRule;
     private bool _nothingToFix;
     private bool _isAnalysing;
     private LanguageDisplayItem _oldSelectedLanguage;
@@ -604,9 +606,12 @@ public partial class FixCommonErrorsViewModel : ObservableObject, IFixCallbacks
             if (fix.IsSelected)
             {
                 var fixCommonError = fix.GetFixCommonErrorFunction();
+                _currentRunningRule = fix;
                 fixCommonError.Fix(subtitle, this);
             }
         }
+
+        _currentRunningRule = null;
 
         Paragraphs.Clear();
         Paragraphs.AddRange(FixedSubtitle.Paragraphs.Select(p => new SubtitleLineViewModel(p, _subtitleFormat) { IsCpsColumnVisible = false }));
@@ -860,6 +865,63 @@ public partial class FixCommonErrorsViewModel : ObservableObject, IFixCallbacks
         return allowFix;
     }
 
+    [RelayCommand]
+    private async Task ShowRuleDetails()
+    {
+        var selectedFix = SelectedFix;
+        if (selectedFix == null || Window == null)
+        {
+            return;
+        }
+
+        var lineFixes = Fixes
+            .Where(f => f.Paragraph.Id == selectedFix.Paragraph.Id)
+            .OrderBy(f => f.ActionDisplay, StringComparer.OrdinalIgnoreCase)
+            .ToList();
+
+        var sb = new StringBuilder();
+        foreach (var fix in lineFixes)
+        {
+            sb.AppendLine(fix.ActionDisplay);
+
+            if (!string.IsNullOrEmpty(fix.RuleName) && fix.RuleName != fix.ActionDisplay)
+            {
+                sb.AppendLine("  " + string.Format(_language.RuleX, fix.RuleName));
+            }
+
+            if (!string.IsNullOrEmpty(fix.RuleExample))
+            {
+                sb.AppendLine("  " + string.Format(_language.ExampleX, fix.RuleExample));
+            }
+
+            sb.AppendLine("  " + Se.Language.General.Before + ": " + fix.Before);
+            sb.AppendLine("  " + Se.Language.General.After + ": " + fix.After);
+            sb.AppendLine();
+        }
+
+        await MessageBox.Show(
+            Window,
+            string.Format(_language.AppliedRulesForLineX, selectedFix.Number),
+            sb.ToString().TrimEnd(),
+            MessageBoxButtons.OK);
+    }
+
+    [RelayCommand]
+    private void FilterBySelectedFixRule()
+    {
+        var selectedFix = SelectedFix;
+        if (selectedFix == null)
+        {
+            return;
+        }
+
+        var chip = FixChips.FirstOrDefault(c => c.Action == selectedFix.ActionDisplay);
+        if (chip != null)
+        {
+            SetFixFilter(chip);
+        }
+    }
+
     public void AddFixToListView(Paragraph p, string action, string before, string after)
     {
         if (!_previewMode)
@@ -870,7 +932,7 @@ public partial class FixCommonErrorsViewModel : ObservableObject, IFixCallbacks
         var oldFix = _oldFixes.FirstOrDefault(f => f.Paragraph.Id == p.Id && f.Action == action);
         var isSelected = oldFix is not { IsSelected: false };
 
-        AddFix(new FixDisplayItem(p, p.Number, action, before, after, isSelected));
+        AddFix(MakeFixDisplayItem(p, action, before, after, isSelected));
     }
 
     public void AddFixToListView(Paragraph p, string action, string before, string after, bool isChecked)
@@ -887,7 +949,20 @@ public partial class FixCommonErrorsViewModel : ObservableObject, IFixCallbacks
             isSelected = false;
         }
 
-        AddFix(new FixDisplayItem(p, p.Number, action, before, after, isSelected));
+        AddFix(MakeFixDisplayItem(p, action, before, after, isSelected));
+    }
+
+    /// <summary>
+    /// Stamps the fix with the rule that is currently running (set by the ApplyFixes loop)
+    /// so the rule-details popup can show which step-1 rule produced it.
+    /// </summary>
+    private FixDisplayItem MakeFixDisplayItem(Paragraph p, string action, string before, string after, bool isSelected)
+    {
+        return new FixDisplayItem(p, p.Number, action, before, after, isSelected)
+        {
+            RuleName = _currentRunningRule?.Name ?? string.Empty,
+            RuleExample = _currentRunningRule?.Example ?? string.Empty,
+        };
     }
 
     public void LogStatus(string sender, string message)
