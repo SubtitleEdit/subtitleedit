@@ -28,34 +28,44 @@ namespace Nikse.SubtitleEdit.UiLogic.Http
         {
             var handler = new HttpClientHandler();
 
-            if (!string.IsNullOrEmpty(proxySettings.ProxyAddress))
+            if (string.IsNullOrEmpty(proxySettings.ProxyAddress))
             {
-                handler.Proxy = new BypassingWebProxy(new WebProxy(proxySettings.ProxyAddress), proxySettings.BypassList);
-                handler.UseProxy = true;
-            }
-
-            if (proxySettings.UseDefaultCredentials)
-            {
-                if (handler.Proxy != null)
+                // No proxy configured in SE - downloads still go through the system/environment
+                // proxy, so the loopback + bypass-list behavior must apply there too, same as
+                // HttpClientFactoryWithProxy.
+                var systemProxy = HttpClient.DefaultProxy;
+                if (systemProxy != null)
                 {
-                    handler.Proxy.Credentials = CredentialCache.DefaultNetworkCredentials;
+                    handler.UseProxy = true;
+                    handler.Proxy = new BypassingWebProxy(systemProxy, proxySettings.BypassList);
                 }
 
-                handler.Credentials = CredentialCache.DefaultNetworkCredentials;
-            }
-            else if (!string.IsNullOrEmpty(proxySettings.UserName) && !string.IsNullOrEmpty(proxySettings.ProxyAddress))
-            {
-                var networkCredential = string.IsNullOrWhiteSpace(proxySettings.Domain) ? new NetworkCredential(proxySettings.UserName, proxySettings.DecodePassword()) : new NetworkCredential(proxySettings.UserName, proxySettings.DecodePassword(), proxySettings.Domain);
-                var credentialCache = new CredentialCache
+                if (proxySettings.UseDefaultCredentials)
                 {
-                    {
-                        new Uri(proxySettings.ProxyAddress),
-                        proxySettings.AuthType,
-                        networkCredential
-                    }
-                };
-                handler.Credentials = credentialCache;
+                    handler.Credentials = CredentialCache.DefaultNetworkCredentials;
+                }
+
+                return handler;
             }
+
+            var proxy = new WebProxy(proxySettings.ProxyAddress);
+
+            if (!proxySettings.UseDefaultCredentials && !string.IsNullOrEmpty(proxySettings.UserName))
+            {
+                // Credentials go on the proxy itself, like in HttpClientFactoryWithProxy - a
+                // CredentialCache would need ProxySettings.AuthType, which nothing ever sets,
+                // and CredentialCache.Add throws on a null auth type.
+                proxy.Credentials = string.IsNullOrWhiteSpace(proxySettings.Domain)
+                    ? new NetworkCredential(proxySettings.UserName, proxySettings.DecodePassword())
+                    : new NetworkCredential(proxySettings.UserName, proxySettings.DecodePassword(), proxySettings.Domain);
+            }
+            else
+            {
+                proxy.UseDefaultCredentials = true;
+            }
+
+            handler.UseProxy = true;
+            handler.Proxy = new BypassingWebProxy(proxy, proxySettings.BypassList);
 
             return handler;
         }

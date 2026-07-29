@@ -144,31 +144,27 @@ namespace Nikse.SubtitleEdit.UiLogic.Http
             }
         }
 
-        public static WebProxy GetProxy()
+        public static IWebProxy GetProxy()
         {
-            if (string.IsNullOrEmpty(Configuration.Settings.Proxy.ProxyAddress))
+            var proxySettings = Configuration.Settings.Proxy;
+            if (string.IsNullOrEmpty(proxySettings.ProxyAddress))
             {
                 return null;
             }
 
-            var proxy = new WebProxy(Configuration.Settings.Proxy.ProxyAddress);
-            if (!string.IsNullOrEmpty(Configuration.Settings.Proxy.UserName))
+            var proxy = new WebProxy(proxySettings.ProxyAddress);
+            if (!proxySettings.UseDefaultCredentials && !string.IsNullOrEmpty(proxySettings.UserName))
             {
-                if (string.IsNullOrEmpty(Configuration.Settings.Proxy.Domain))
-                {
-                    proxy.Credentials = new NetworkCredential(Configuration.Settings.Proxy.UserName, Configuration.Settings.Proxy.DecodePassword());
-                }
-                else
-                {
-                    proxy.Credentials = new NetworkCredential(Configuration.Settings.Proxy.UserName, Configuration.Settings.Proxy.DecodePassword(), Configuration.Settings.Proxy.Domain);
-                }
+                proxy.Credentials = string.IsNullOrEmpty(proxySettings.Domain)
+                    ? new NetworkCredential(proxySettings.UserName, proxySettings.DecodePassword())
+                    : new NetworkCredential(proxySettings.UserName, proxySettings.DecodePassword(), proxySettings.Domain);
             }
             else
             {
                 proxy.UseDefaultCredentials = true;
             }
 
-            return proxy;
+            return new BypassingWebProxy(proxy, proxySettings.BypassList);
         }
     }
 }

@@ -8376,6 +8376,9 @@ public partial class MainViewModel :
             Subtitles[i].Text = result.Rows[i].TranslatedText;
         }
 
+        // The subtitle language just changed, so the cached auto-trim language is stale (issue #12144).
+        _autoTrimLanguageCode = null;
+
         if (!wasOldTranslationChanged)
         {
             _changeSubtitleHashOriginal = GetFastHashOriginal();
@@ -8483,6 +8486,9 @@ public partial class MainViewModel :
             }
         }
 
+        // The translated lines changed language, so the cached auto-trim language is stale (issue #12144).
+        _autoTrimLanguageCode = null;
+
         _updateAudioVisualizer = true;
     }
 
@@ -8517,6 +8523,9 @@ public partial class MainViewModel :
             Subtitles[i].OriginalText = Subtitles[i].Text;
             Subtitles[i].Text = result.Rows[i].TranslatedText;
         }
+
+        // The subtitle language just changed, so the cached auto-trim language is stale (issue #12144).
+        _autoTrimLanguageCode = null;
 
         _subtitleFileNameOriginal = _subtitleFileName;
         _subtitleOriginal ??= new Subtitle();
@@ -12599,6 +12608,13 @@ public partial class MainViewModel :
             // and the audio track menu disagree after leaving fullscreen (issue #12844).
             ReapplySelectedAudioTrack(control);
             var _ = Task.Run(LoadAudioTrackMenuItems);
+
+            // Same for subtitle visibility: the toggle shortcut only reached the fullscreen
+            // player, so the docked player must be brought back in line with the shared state.
+            if (control!.VideoPlayer is LibMpvDynamicPlayer dockedMpv)
+            {
+                dockedMpv.SetSubtitleVisibility(_mpvReloader.SubtitlesVisible);
+            }
 
             Dispatcher.UIThread.Post(() => SubtitleGrid.Focus());
         }, toggleKeys, showMediaInfoKeys, showMediaInformationOwnedBy, extraBindings, ReapplySelectedAudioTrack);

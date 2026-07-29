@@ -124,6 +124,11 @@ public partial class FontCollectorViewModel : ObservableObject
         {
             var wanted = items.ToDictionary(i => i.FontName, i => i, StringComparer.OrdinalIgnoreCase);
 
+            // item.FoundFiles is only mutated in posted UI updates, so it cannot be used for
+            // duplicate checks on this thread - the family and face name of a regular font are
+            // usually identical, and both would queue an Add before either has run.
+            var found = items.ToDictionary(i => i, i => new HashSet<string>(StringComparer.OrdinalIgnoreCase));
+
             foreach (var fontFile in EnumerateFontFiles())
             {
                 if (cancellationToken.IsCancellationRequested)
@@ -145,7 +150,7 @@ public partial class FontCollectorViewModel : ObservableObject
                     {
                         if (!string.IsNullOrEmpty(name) &&
                             wanted.TryGetValue(name, out var item) &&
-                            !item.FoundFiles.Contains(fontFile, StringComparer.OrdinalIgnoreCase))
+                            found[item].Add(fontFile))
                         {
                             var file = fontFile;
                             Dispatcher.UIThread.Post(() =>
