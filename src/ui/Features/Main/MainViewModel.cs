@@ -15284,6 +15284,9 @@ public partial class MainViewModel :
             SelectedEncodingDisplayName = SelectedEncoding.DisplayName,
             SubtitleHeader = _subtitle.Header,
             SubtitleFooter = _subtitle.Footer,
+            SubtitleFileNameOriginal = _subtitleFileNameOriginal,
+            SubtitleHeaderOriginal = _subtitleOriginal?.Header,
+            SubtitleFooterOriginal = _subtitleOriginal?.Footer,
         };
     }
 
@@ -15303,6 +15306,15 @@ public partial class MainViewModel :
 
         _subtitle.Header = undoRedoObject.SubtitleHeader;
         _subtitle.Footer = undoRedoObject.SubtitleFooter;
+
+        // Restore the original-subtitle file-level state too - the undo hash covers it,
+        // so leaving it untouched makes the restored state hash-mismatch its own entry,
+        // and the next Undo() clears the redo timeline as "unrecorded changes" (#12952).
+        _subtitleFileNameOriginal = undoRedoObject.SubtitleFileNameOriginal;
+        _subtitleOriginal ??= new Subtitle();
+        _subtitleOriginal.Header = undoRedoObject.SubtitleHeaderOriginal;
+        _subtitleOriginal.Footer = undoRedoObject.SubtitleFooterOriginal;
+
         SelectAndScrollToRow(undoRedoObject.SelectedLines.First());
     }
 
