@@ -1,8 +1,8 @@
 ﻿using Nikse.SubtitleEdit.Core.Common;
-using Nikse.SubtitleEdit.Core.VobSub.Ocr.Service;
+using Nikse.SubtitleEdit.UiLogic.Ocr.Service;
 using System;
 
-namespace LibSETests.GoogleCloudVision;
+namespace LibUiLogicTests.GoogleCloudVision;
 
 public class GoogleCloudVisionJsonToLinesTest
 {

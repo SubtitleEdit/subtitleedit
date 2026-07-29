@@ -4,7 +4,7 @@ using System.Net.Http;
 using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.Settings;
 
-namespace Nikse.SubtitleEdit.Core.Http
+namespace Nikse.SubtitleEdit.UiLogic.Http
 {
     public static class DownloaderFactory
     {

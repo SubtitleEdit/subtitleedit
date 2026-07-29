@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Net;
 
-namespace Nikse.SubtitleEdit.Core.VobSub.Ocr.Service
+namespace Nikse.SubtitleEdit.UiLogic.Ocr.Service
 {
     public class OcrException : Exception
     {

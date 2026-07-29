@@ -1,6 +1,6 @@
 ﻿using Nikse.SubtitleEdit.Core.Common;
-using Nikse.SubtitleEdit.Core.VobSub.Ocr;
-using Nikse.SubtitleEdit.Core.VobSub.Ocr.Service;
+using Nikse.SubtitleEdit.UiLogic.Ocr;
+using Nikse.SubtitleEdit.UiLogic.Ocr.Service;
 using Nikse.SubtitleEdit.Logic;
 using SkiaSharp;
 using System;

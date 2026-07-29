@@ -1,7 +1,7 @@
 ﻿using Nikse.SubtitleEdit.Core.Common;
 using System;
 
-namespace Nikse.SubtitleEdit.Core.VobSub.Ocr
+namespace Nikse.SubtitleEdit.UiLogic.Ocr
 {
     public static class OcrHelper
     {

@@ -7,7 +7,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Nikse.SubtitleEdit.Core.Http
+namespace Nikse.SubtitleEdit.UiLogic.Http
 {
     public class HttpClientDownloader : IDownloader
     {

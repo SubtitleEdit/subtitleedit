@@ -1,5 +1,5 @@
 ﻿using Nikse.SubtitleEdit.Core.Common;
-using Nikse.SubtitleEdit.Core.Http;
+using Nikse.SubtitleEdit.UiLogic.Http;
 using SkiaSharp;
 using System;
 using System.Collections.Generic;
@@ -12,7 +12,7 @@ using System.Runtime.Serialization;
 using System.Runtime.Serialization.Json;
 using System.Text;
 
-namespace Nikse.SubtitleEdit.Core.VobSub.Ocr.Service
+namespace Nikse.SubtitleEdit.UiLogic.Ocr.Service
 {
     /// <summary>
     /// OCR via Google Cloud Vision API - see https://cloud.google.com/vision/docs/ocr
