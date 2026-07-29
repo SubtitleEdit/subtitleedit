@@ -576,7 +576,6 @@ public class Se
     private static void UpdateLibSeSettings()
     {
         Configuration.Settings.General.FFmpegLocation = Settings.General.FfmpegPath;
-        Configuration.Settings.General.UseDarkTheme = Settings.Appearance.Theme == "Dark";
         Configuration.Settings.General.UseTimeFormatHHMMSSFF = Settings.General.UseFrameMode;
 
         Configuration.Settings.Proxy.ProxyAddress = Settings.General.ProxyAddress ?? string.Empty;
@@ -601,27 +600,12 @@ public class Se
 
         var stt = Settings.Tools.AudioToText;
         Configuration.Settings.Tools.WhisperChoice = stt.WhisperChoice;
-        Configuration.Settings.Tools.WhisperIgnoreVersion = stt.WhisperIgnoreVersion;
-        Configuration.Settings.Tools.WhisperDeleteTempFiles = stt.WhisperDeleteTempFiles;
-        Configuration.Settings.Tools.WhisperModel = stt.WhisperModel;
-        Configuration.Settings.Tools.WhisperLanguageCode = stt.WhisperLanguageCode;
         Configuration.Settings.Tools.WhisperLocation = stt.WhisperLocation;
         Configuration.Settings.Tools.WhisperCtranslate2Location = stt.WhisperCtranslate2Location;
-        Configuration.Settings.Tools.WhisperPurfviewFasterWhisperLocation = stt.WhisperPurfviewFasterWhisperLocation;
-        Configuration.Settings.Tools.WhisperPurfviewFasterWhisperDefaultCmd = stt.WhisperPurfviewFasterWhisperDefaultCmd;
         Configuration.Settings.Tools.WhisperXLocation = stt.WhisperXLocation;
         Configuration.Settings.Tools.WhisperStableTsLocation = stt.WhisperStableTsLocation;
         Configuration.Settings.Tools.WhisperCppModelLocation = stt.WhisperCppModelLocation;
         Configuration.Settings.Tools.WhisperExtraSettings = stt.WhisperCustomCommandLineArguments;
-        Configuration.Settings.Tools.WhisperExtraSettingsHistory = stt.WhisperExtraSettingsHistory;
-        Configuration.Settings.Tools.WhisperAutoAdjustTimings = stt.WhisperAutoAdjustTimings;
-        Configuration.Settings.Tools.WhisperUseLineMaxChars = stt.WhisperUseLineMaxChars;
-        Configuration.Settings.Tools.WhisperPostProcessingAddPeriods = stt.WhisperPostProcessingAddPeriods;
-        Configuration.Settings.Tools.WhisperPostProcessingMergeLines = stt.WhisperPostProcessingMergeLines;
-        Configuration.Settings.Tools.WhisperPostProcessingSplitLines = stt.WhisperPostProcessingSplitLines;
-        Configuration.Settings.Tools.WhisperPostProcessingFixCasing = stt.WhisperPostProcessingFixCasing;
-        Configuration.Settings.Tools.WhisperPostProcessingFixShortDuration = stt.WhisperPostProcessingFixShortDuration;
-        Configuration.Settings.Tools.VoskPostProcessing = stt.PostProcessing;
 
         Configuration.Settings.Tools.OpenAiCompatibleSttUrl = Settings.Tools.OpenAiCompatibleSttUrl;
         Configuration.Settings.Tools.OpenAiCompatibleSttApiKey = Settings.Tools.OpenAiCompatibleSttApiKey;
@@ -631,7 +615,6 @@ public class Se
         Configuration.Settings.Tools.OpenAiCompatibleSttLanguage = Settings.Tools.OpenAiCompatibleSttLanguage;
         Configuration.Settings.Tools.OpenAiCompatibleSttTemperature = Settings.Tools.OpenAiCompatibleSttTemperature;
         Configuration.Settings.Tools.OpenAiCompatibleSttPrompt = Settings.Tools.OpenAiCompatibleSttPrompt;
-        Configuration.Settings.Tools.OpenAiCompatibleSttAutoTranscribeOnAudioSelection = Settings.Tools.OpenAiCompatibleSttAutoTranscribeOnAudioSelection;
         Configuration.Settings.Tools.OpenAiCompatibleSttStream = Settings.Tools.OpenAiCompatibleSttStream;
         Configuration.Settings.Tools.OpenAiCompatibleSttAudioFormat = Settings.Tools.OpenAiCompatibleSttAudioFormat;
 
@@ -660,20 +643,6 @@ public class Se
             Settings.BeautifyTimeCodes.ApplyTo(Configuration.Settings.BeautifyTimeCodes);
         }
 
-        Configuration.Settings.Tools.ImportTextSplitting = Settings.Tools.ImportTextSplitting;
-        Configuration.Settings.Tools.ImportTextSplittingLineMode = Settings.Tools.ImportTextSplittingLineMode;
-        Configuration.Settings.Tools.ImportTextLineBreak = Settings.Tools.ImportTextLineBreak;
-        Configuration.Settings.Tools.ImportTextMergeShortLines = Settings.Tools.ImportTextMergeShortLines;
-        Configuration.Settings.Tools.ImportTextAutoSplitAtBlank = Settings.Tools.ImportTextAutoSplitAtBlank;
-        Configuration.Settings.Tools.ImportTextRemoveLinesNoLetters = Settings.Tools.ImportTextRemoveLinesNoLetters;
-        Configuration.Settings.Tools.ImportTextGenerateTimeCodes = Settings.Tools.ImportTextGenerateTimeCodes;
-        Configuration.Settings.Tools.ImportTextAutoBreak = Settings.Tools.ImportTextAutoBreak;
-        Configuration.Settings.Tools.ImportTextAutoBreakAtEnd = Settings.Tools.ImportTextAutoBreakAtEnd;
-        Configuration.Settings.Tools.ImportTextGap = Settings.Tools.ImportTextGap;
-        Configuration.Settings.Tools.ImportTextAutoSplitNumberOfLines = Settings.Tools.ImportTextAutoSplitNumberOfLines;
-        Configuration.Settings.Tools.ImportTextAutoBreakAtEndMarkerText = Settings.Tools.ImportTextAutoBreakAtEndMarkerText;
-        Configuration.Settings.Tools.ImportTextDurationAuto = Settings.Tools.ImportTextDurationAuto;
-        Configuration.Settings.Tools.ImportTextFixedDuration = Settings.Tools.ImportTextFixedDuration;
 
         Configuration.Settings.Tools.MusicSymbol = Settings.Tools.MusicSymbol;
         Configuration.Settings.Tools.MusicSymbolReplace = Settings.Tools.MusicSymbolReplace;

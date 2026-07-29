@@ -1,26 +1,18 @@
 using Nikse.SubtitleEdit.Core.Common;
-using SkiaSharp;
 using System;
-using System.Collections.Generic;
 
 namespace Nikse.SubtitleEdit.Core.Settings
 {
     public class ToolsSettings
     {
-        public List<AssaTemplateItem> AssaTagTemplates { get; set; }
-        public int EndSceneIndex { get; set; }
         public bool FixShortDisplayTimesAllowMoveStartTime { get; set; }
         public bool RemoveEmptyLinesBetweenText { get; set; }
         public string MusicSymbol { get; set; }
         public string MusicSymbolReplace { get; set; }
-        public string UnicodeSymbolsToInsert { get; set; }
-        public bool CheckOneLetterWords { get; set; }
         public bool RememberUseAlwaysList { get; set; }
         public bool OcrFixUseHardcodedRules { get; set; }
         public bool OcrGoogleCloudVisionSeHandlesTextMerge { get; set; }
         public bool OcrUseWordSplitList { get; set; }
-        public bool OcrUseWordSplitListAvoidPropercase { get; set; }
-        public string BDOpenIn { get; set; }
         public string MicrosoftBingApiId { get; set; }
         public string MicrosoftTranslatorApiKey { get; set; }
         public string MicrosoftTranslatorTokenEndpoint { get; set; }
@@ -29,7 +21,6 @@ namespace Nikse.SubtitleEdit.Core.Settings
         public string GoogleTranslateLastSourceLanguage { get; set; }
         public string GoogleTranslateLastTargetLanguage { get; set; }
         public string AutoTranslateLastName { get; set; }
-        public string AutoTranslateLastUrl { get; set; }
         public string AutoTranslateNllbApiUrl { get; set; }
         public string AutoTranslateNllbServeUrl { get; set; }
         public string AutoTranslateNllbServeModel { get; set; }
@@ -91,7 +82,6 @@ namespace Nikse.SubtitleEdit.Core.Settings
         public string OpenAiCompatibleSttLanguage { get; set; }
         public decimal OpenAiCompatibleSttTemperature { get; set; }
         public string OpenAiCompatibleSttPrompt { get; set; }
-        public bool OpenAiCompatibleSttAutoTranscribeOnAudioSelection { get; set; }
         public bool OpenAiCompatibleSttStream { get; set; }
         public string OpenAiCompatibleSttAudioFormat { get; set; }
 
@@ -140,242 +130,46 @@ namespace Nikse.SubtitleEdit.Core.Settings
         public string BaiduApiKey { get; set; }
         public int AutoTranslateDelaySeconds { get; set; }
         public int AutoTranslateMaxBytes { get; set; }
-        public string AutoTranslateStrategy { get; set; }
         public string GeminiProApiKey { get; set; }
         public string GeminiModel { get; set; }
         public string GeminiPrompt { get; set; }
-        public string TextToSpeechEngine { get; set; }
         public bool ListViewSyntaxColorWideLines { get; set; }
-        public SKColor Color1 { get; set; }
-        public SKColor Color2 { get; set; }
-        public SKColor Color3 { get; set; }
-        public SKColor Color4 { get; set; }
-        public SKColor Color5 { get; set; }
-        public SKColor Color6 { get; set; }
-        public SKColor Color7 { get; set; }
-        public SKColor Color8 { get; set; }
-        public string SplitOutputFolder { get; set; }
-        public string BatchConvertOutputFolder { get; set; }
-        public bool BatchConvertOverwriteExisting { get; set; }
-        public bool BatchConvertSaveInSourceFolder { get; set; }
-        public bool BatchConvertRemoveFormatting { get; set; }
-        public bool BatchConvertRemoveFormattingAll { get; set; }
-        public bool BatchConvertRemoveFormattingItalic { get; set; }
-        public bool BatchConvertRemoveFormattingBold { get; set; }
-        public bool BatchConvertRemoveFormattingUnderline { get; set; }
-        public bool BatchConvertRemoveFormattingFontName { get; set; }
-        public bool BatchConvertRemoveFormattingColor { get; set; }
-        public bool BatchConvertRemoveFormattingAlignment { get; set; }
-        public bool BatchConvertRemoveStyle { get; set; }
-        public bool BatchConvertBridgeGaps { get; set; }
-        public bool BatchConvertFixCasing { get; set; }
-        public bool BatchConvertRemoveTextForHI { get; set; }
-        public bool BatchConvertConvertColorsToDialog { get; set; }
-        public bool BatchConvertBeautifyTimeCodes { get; set; }
-        public bool BatchConvertAutoTranslate { get; set; }
-        public bool BatchConvertFixCommonErrors { get; set; }
-        public bool BatchConvertMultipleReplace { get; set; }
-        public bool BatchConvertFixRtl { get; set; }
-        public string BatchConvertFixRtlMode { get; set; }
-        public bool BatchConvertSplitLongLines { get; set; }
-        public bool BatchConvertAutoBalance { get; set; }
-        public bool BatchConvertSetMinDisplayTimeBetweenSubtitles { get; set; }
-        public bool BatchConvertMergeShortLines { get; set; }
-        public bool BatchConvertRemoveLineBreaks { get; set; }
-        public bool BatchConvertMergeSameText { get; set; }
-        public bool BatchConvertMergeSameTimeCodes { get; set; }
-        public bool BatchConvertChangeFrameRate { get; set; }
-        public bool BatchConvertChangeSpeed { get; set; }
-        public bool BatchConvertAdjustDisplayDuration { get; set; }
-        public bool BatchConvertApplyDurationLimits { get; set; }
-        public bool BatchConvertDeleteLines { get; set; }
-        public bool BatchConvertAssaChangeRes { get; set; }
-        public bool BatchConvertSortBy { get; set; }
-        public string BatchConvertSortByChoice { get; set; }
-        public bool BatchConvertOffsetTimeCodes { get; set; }
-        public bool BatchConvertScanFolderIncludeVideo { get; set; }
-        public string BatchConvertLanguage { get; set; }
-        public string BatchConvertFormat { get; set; }
-        public string BatchConvertAssStyles { get; set; }
-        public string BatchConvertSsaStyles { get; set; }
-        public bool BatchConvertUseStyleFromSource { get; set; }
-        public string BatchConvertExportCustomTextTemplate { get; set; }
-        public bool BatchConvertTsOverrideXPosition { get; set; }
-        public bool BatchConvertTsOverrideYPosition { get; set; }
-        public int BatchConvertTsOverrideBottomMargin { get; set; }
-        public string BatchConvertTsOverrideHAlign { get; set; }
-        public int BatchConvertTsOverrideHMargin { get; set; }
-        public bool BatchConvertTsOverrideScreenSize { get; set; }
-        public int BatchConvertTsScreenWidth { get; set; }
-        public int BatchConvertTsScreenHeight { get; set; }
-        public string BatchConvertTsFileNameAppend { get; set; }
-        public bool BatchConvertTsOnlyTeletext { get; set; }
-        public string BatchConvertMkvLanguageCodeStyle { get; set; }
-        public string BatchConvertOcrEngine { get; set; }
-        public string BatchConvertOcrLanguage { get; set; }
-        public string BatchConvertTranslateEngine { get; set; }
-        public string ExportBluRayFontName { get; set; }
-        public int ExportBluRayFontSize { get; set; }
-        public string ExportBdnXmlImageType { get; set; }
-        public string ExportBluRayVideoResolution { get; set; }
-        public SKColor ExportBorderColor { get; set; }
-        public int ExportBoxBorderSize { get; set; }
-        public string ExportBottomMarginUnit { get; set; }
-        public int ExportBottomMarginPercent { get; set; }
-        public int ExportBottomMarginPixels { get; set; }
-        public int ExportBluRayBottomMarginPercent { get; set; }
-        public int ExportBluRayBottomMarginPixels { get; set; }
-        public int ExportBluRayShadow { get; set; }
         public bool ExportBluRayRemoveSmallGaps { get; set; }
-        public string ExportCdgBackgroundImage { get; set; }
-        public int ExportCdgMarginLeft { get; set; }
-        public int ExportCdgMarginBottom { get; set; }
-        public string ExportCdgFormat { get; set; }
-        public int Export3DType { get; set; }
-        public int Export3DDepth { get; set; }
-        public SKColor BinEditBackgroundColor { get; set; }
-        public SKColor BinEditImageBackgroundColor { get; set; }
-        public int BinEditTopMargin { get; set; }
-        public int BinEditBottomMargin { get; set; }
-        public int BinEditLeftMargin { get; set; }
-        public int BinEditRightMargin { get; set; }
-        public string BinEditStartPosition { get; set; }
-        public string BinEditStartSize { get; set; }
-        public bool BinEditShowColumnGap { get; set; }
         public bool FixCommonErrorsFixOverlapAllowEqualEndStart { get; set; }
-        public string ImportTextSplitting { get; set; }
-        public string ImportTextSplittingLineMode { get; set; }
-        public string ImportTextLineBreak { get; set; }
-        public bool ImportTextMergeShortLines { get; set; }
-        public bool ImportTextAutoSplitAtBlank { get; set; }
-        public bool ImportTextRemoveLinesNoLetters { get; set; }
-        public bool ImportTextGenerateTimeCodes { get; set; }
-        public bool ImportTextAutoBreak { get; set; }
-        public bool ImportTextAutoBreakAtEnd { get; set; }
-        public decimal ImportTextGap { get; set; }
-        public decimal ImportTextAutoSplitNumberOfLines { get; set; }
-        public string ImportTextAutoBreakAtEndMarkerText { get; set; }
-        public bool ImportTextDurationAuto { get; set; }
-        public decimal ImportTextFixedDuration { get; set; }
         public string MusicSymbolStyle { get; set; }
-        public int BridgeGapMilliseconds { get; set; }
-        public int BridgeGapMillisecondsMinGap { get; set; }
-        public string ChangeCasingChoice { get; set; }
-        public bool ChangeCasingNormalFixNames { get; set; }
-        public bool ChangeCasingNormalOnlyUppercase { get; set; }
         public bool UseNoLineBreakAfter { get; set; }
-        public List<string> FindHistory { get; set; }
-        public decimal AdjustDurationSeconds { get; set; }
-        public int AdjustDurationPercent { get; set; }
-        public string AdjustDurationLast { get; set; }
-        public bool AdjustDurationExtendOnly { get; set; }
-        public bool AdjustDurationExtendEnforceDurationLimits { get; set; }
-        public bool AdjustDurationExtendCheckShotChanges { get; set; }
-        public bool ChangeSpeedAllowOverlap { get; set; }
         public bool AutoBreakCommaBreakEarly { get; set; }
         public bool AutoBreakDashEarly { get; set; }
         public bool AutoBreakLineEndingEarly { get; set; }
         public bool AutoBreakUsePixelWidth { get; set; }
         public bool AutoBreakPreferBottomHeavy { get; set; }
         public double AutoBreakPreferBottomPercent { get; set; }
-        public bool ApplyMinimumDurationLimit { get; set; }
-        public bool ApplyMinimumDurationLimitCheckShotChanges { get; set; }
-        public bool ApplyMaximumDurationLimit { get; set; }
         public int MergeShortLinesMaxGap { get; set; }
         public bool MergeShortLinesOnlyContinuous { get; set; }
-        public bool ConvertColorsToDialogRemoveColorTags { get; set; }
-        public bool ConvertColorsToDialogAddNewLines { get; set; }
-        public bool ConvertColorsToDialogReBreakLines { get; set; }
-        public string ColumnPasteColumn { get; set; }
-        public string ColumnPasteOverwriteMode { get; set; }
-        public string AssaAttachmentFontTextPreview { get; set; }
-        public string AssaSetPositionTarget { get; set; }
-        public SKColor BlankVideoColor { get; set; }
-        public bool BlankVideoUseCheckeredImage { get; set; }
-        public int BlankVideoMinutes { get; set; }
-        public decimal BlankVideoFrameRate { get; set; }
-        public SKColor AssaProgressBarForeColor { get; set; }
-        public SKColor AssaProgressBarBackColor { get; set; }
-        public SKColor AssaProgressBarTextColor { get; set; }
-        public int AssaProgressBarHeight { get; set; }
-        public int AssaProgressBarSplitterWidth { get; set; }
-        public int AssaProgressBarSplitterHeight { get; set; }
-        public string AssaProgressBarFontName { get; set; }
-        public int AssaProgressBarFontSize { get; set; }
-        public bool AssaProgressBarTopAlign { get; set; }
-        public string AssaProgressBarTextAlign { get; set; }
 
-
-        public int AssaBgBoxPaddingLeft { get; set; }
-        public int AssaBgBoxPaddingRight { get; set; }
-        public int AssaBgBoxPaddingTop { get; set; }
-        public int AssaBgBoxPaddingBottom { get; set; }
-        public int AssaBgBoxDrawingMarginV { get; set; }
-        public int AssaBgBoxDrawingMarginH { get; set; }
-        public string AssaBgBoxDrawingAlignment { get; set; }
-        public SKColor AssaBgBoxColor { get; set; }
-        public SKColor AssaBgBoxOutlineColor { get; set; }
-        public SKColor AssaBgBoxShadowColor { get; set; }
-        public SKColor AssaBgBoxTransparentColor { get; set; }
-        public string AssaBgBoxStyle { get; set; }
-        public int AssaBgBoxStyleRadius { get; set; }
-        public int AssaBgBoxStyleCircleAdjustY { get; set; }
-        public int AssaBgBoxStyleSpikesStep { get; set; }
-        public int AssaBgBoxStyleSpikesHeight { get; set; }
-        public int AssaBgBoxStyleBubblesStep { get; set; }
-        public int AssaBgBoxStyleBubblesHeight { get; set; }
-        public int AssaBgBoxOutlineWidth { get; set; }
-        public int AssaBgBoxLayer { get; set; }
-        public string AssaBgBoxDrawing { get; set; }
-        public bool AssaBgBoxDrawingFileWatch { get; set; }
-        public bool AssaBgBoxDrawingOnly { get; set; }
-
-        public bool VoskPostProcessing { get; set; }
         public string WhisperChoice { get; set; }
-        public bool WhisperIgnoreVersion { get; set; }
 
-        public bool WhisperDeleteTempFiles { get; set; }
-        public string WhisperModel { get; set; }
-        public string WhisperLanguageCode { get; set; }
         public string WhisperLocation { get; set; }
         public string WhisperCtranslate2Location { get; set; }
-        public string WhisperPurfviewFasterWhisperLocation { get; set; }
-        public string WhisperPurfviewFasterWhisperDefaultCmd { get; set; }
         public string WhisperXLocation { get; set; }
         public string WhisperStableTsLocation { get; set; }
         public string WhisperCppModelLocation { get; set; }
         public string WhisperExtraSettings { get; set; }
-        public string WhisperExtraSettingsHistory { get; set; }
-        public bool WhisperAutoAdjustTimings { get; set; }
-        public bool WhisperUseLineMaxChars { get; set; }
-        public bool WhisperPostProcessingAddPeriods { get; set; }
-        public bool WhisperPostProcessingMergeLines { get; set; }
-        public bool WhisperPostProcessingSplitLines { get; set; }
-        public bool WhisperPostProcessingFixCasing { get; set; }
-        public bool WhisperPostProcessingFixShortDuration { get; set; }
         public int AudioToTextLineMaxChars { get; set; }
         public int AudioToTextLineMaxCharsJp { get; set; }
         public int AudioToTextLineMaxCharsCn { get; set; }
-        public int BreakLinesLongerThan { get; set; }
-        public bool ConvertActorColorAdd { get; set; }
-        public SKColor ConvertActorColor { get; set; }
-        public bool ConvertActorCasing { get; set; }
 
         public ToolsSettings()
         {
-            AssaTagTemplates = new List<AssaTemplateItem>();
-            EndSceneIndex = 1;
             FixShortDisplayTimesAllowMoveStartTime = false;
             RemoveEmptyLinesBetweenText = true;
             MusicSymbol = "♪";
             MusicSymbolReplace = "â™ª,â™«," + // ♪ + ♫ in UTF-8 opened as ANSI
                                  "<s M/>,<s m/>," + // music symbols by subtitle creator
                                  "#,*,¶"; // common music symbols
-            UnicodeSymbolsToInsert = "♪;♫;—;…;°;☺;☹;♥;©;☮;☯;Σ;∞;≡;⇒;π";
             OcrFixUseHardcodedRules = true;
             OcrGoogleCloudVisionSeHandlesTextMerge = true;
             OcrUseWordSplitList = true;
-            OcrUseWordSplitListAvoidPropercase = true;
             MicrosoftTranslatorTokenEndpoint = "https://api.cognitive.microsoft.com/sts/v1.0/issueToken";
             GoogleTranslateLastTargetLanguage = "en";
             AutoTranslateNllbServeUrl = "http://127.0.0.1:6060/";
@@ -432,117 +226,17 @@ namespace Nikse.SubtitleEdit.Core.Settings
             GeminiModel = "gemini-flash-latest"; // GeminiTranslate.Models[0] in LibUiLogic
             GeminiPrompt = "Please translate the following text from {0} to {1}, keep line breaks exactly the same, do not censor the translation, only write the result:";
             AutoTranslateMaxBytes = 2000;
-            CheckOneLetterWords = true;
             ListViewSyntaxColorWideLines = false;
-            Color1 = SKColors.Yellow;
-            Color2 = new SKColor(byte.MaxValue, 0, 0);
-            Color3 = new SKColor(0, byte.MaxValue, 0);
-            Color4 = SKColors.Cyan;
-            Color5 = SKColors.Black;
-            Color6 = SKColors.White;
-            Color7 = SKColors.Orange;
-            Color8 = SKColors.Pink;
-            BatchConvertLanguage = string.Empty;
-            BatchConvertTsOverrideBottomMargin = 5; // pct
-            BatchConvertTsScreenWidth = 1920;
-            BatchConvertTsScreenHeight = 1080;
-            BatchConvertOcrEngine = "Tesseract";
-            BatchConvertOcrLanguage = "en";
-            BatchConvertTranslateEngine = "LibreTranslate"; // LibreTranslate.StaticName in LibUiLogic
-            BatchConvertTsOverrideHAlign = "center"; // left center right
-            BatchConvertTsOverrideHMargin = 5; // pct
-            BatchConvertTsFileNameAppend = ".{two-letter-country-code}";
-            BatchConvertMkvLanguageCodeStyle = "2";
-            ImportTextDurationAuto = true;
-            ImportTextGap = 84;
-            ImportTextFixedDuration = 2500;
             MusicSymbolStyle = "Double"; // 'Double' or 'Single'
-            ExportBorderColor = SKColors.Black;
-            ExportBoxBorderSize = 8;
-            ExportBottomMarginUnit = "%";
-            ExportBottomMarginPercent = 5;
-            ExportBottomMarginPixels = 15;
-            ExportBluRayBottomMarginPercent = 5;
-            ExportBluRayBottomMarginPixels = 20;
-            ExportBluRayShadow = 1;
-            Export3DType = 0;
-            Export3DDepth = 0;
-            ExportCdgMarginLeft = 160;
-            ExportCdgMarginBottom = 67;
-            BinEditBackgroundColor = SKColors.Black;
-            BinEditImageBackgroundColor = SKColors.Blue;
-            BinEditTopMargin = 10;
-            BinEditBottomMargin = 10;
-            BinEditLeftMargin = 10;
-            BinEditRightMargin = 10;
-            BridgeGapMilliseconds = 100;
-            BridgeGapMillisecondsMinGap = 24;
-            ChangeCasingNormalFixNames = true;
             UseNoLineBreakAfter = false;
-            FindHistory = new List<string>();
-            ImportTextLineBreak = "|";
-            ImportTextAutoSplitNumberOfLines = 2;
-            ImportTextAutoSplitAtBlank = true;
-            ImportTextAutoBreakAtEndMarkerText = ".!?";
-            ImportTextAutoBreakAtEnd = true;
-            AdjustDurationSeconds = 0.1m;
-            AdjustDurationPercent = 120;
-            AdjustDurationExtendOnly = true;
-            AdjustDurationExtendEnforceDurationLimits = true;
-            AdjustDurationExtendCheckShotChanges = true;
             AutoBreakCommaBreakEarly = false;
             AutoBreakDashEarly = true;
             AutoBreakLineEndingEarly = false;
             AutoBreakUsePixelWidth = true;
             AutoBreakPreferBottomHeavy = true;
             AutoBreakPreferBottomPercent = 5;
-            ApplyMinimumDurationLimit = true;
-            ApplyMinimumDurationLimitCheckShotChanges = true;
-            ApplyMaximumDurationLimit = true;
             MergeShortLinesMaxGap = 250;
             MergeShortLinesOnlyContinuous = true;
-            ConvertColorsToDialogRemoveColorTags = true;
-            ConvertColorsToDialogAddNewLines = true;
-            ConvertColorsToDialogReBreakLines = false;
-            ColumnPasteColumn = "all";
-            ColumnPasteOverwriteMode = "overwrite";
-            AssaAttachmentFontTextPreview =
-                "Hello World!" + Environment.NewLine +
-                "こんにちは世界" + Environment.NewLine +
-                "你好世界！" + Environment.NewLine +
-                "1234567890";
-            BlankVideoColor = SKColors.CadetBlue;
-            BlankVideoUseCheckeredImage = true;
-            BlankVideoMinutes = 2;
-            BlankVideoFrameRate = 23.976m;
-            AssaProgressBarForeColor = new SKColor(200, 0, 0, 200);
-            AssaProgressBarBackColor = new SKColor(80, 80, 80, 150);
-            AssaProgressBarTextColor = SKColors.White;
-            AssaProgressBarHeight = 40;
-            AssaProgressBarSplitterWidth = 2;
-            AssaProgressBarSplitterHeight = 40;
-            AssaProgressBarFontName = "Arial";
-            AssaProgressBarFontSize = 30;
-            AssaProgressBarTextAlign = "left";
-
-            AssaBgBoxPaddingLeft = 10;
-            AssaBgBoxPaddingRight = 10;
-            AssaBgBoxPaddingTop = 6;
-            AssaBgBoxPaddingBottom = 6;
-            AssaBgBoxColor = new SKColor(0, 0, 0, 200);
-            AssaBgBoxOutlineColor = new SKColor(80, 80, 80, 200);
-            AssaBgBoxShadowColor = new SKColor(0, 0, 0, 100);
-            AssaBgBoxTransparentColor = SKColors.Cyan;
-            AssaBgBoxStyle = "square";
-            AssaBgBoxStyleRadius = 30;
-            AssaBgBoxStyleCircleAdjustY = 30;
-            AssaBgBoxStyleSpikesStep = 15;
-            AssaBgBoxStyleSpikesHeight = 30;
-            AssaBgBoxStyleBubblesStep = 75;
-            AssaBgBoxStyleBubblesHeight = 40;
-            AssaBgBoxOutlineWidth = 0;
-            AssaBgBoxLayer = -11893;
-            AssaBgBoxDrawingFileWatch = true;
 
             OpenAiCompatibleSttUrl = "http://localhost:8000/v1/audio/transcriptions";
             OpenAiCompatibleSttApiKey = string.Empty;
@@ -569,18 +263,8 @@ namespace Nikse.SubtitleEdit.Core.Settings
             DashScopeSttEnableWords = false;
             DashScopeSttTimeoutSeconds = 3600;
 
-            VoskPostProcessing = true;
             WhisperChoice = Configuration.IsRunningOnWindows ? "Purfview's Faster-Whisper-XXL" : "OpenAI"; // WhisperChoice.PurfviewFasterWhisperXxl / WhisperChoice.OpenAi in LibUiLogic
-            WhisperDeleteTempFiles = true;
-            WhisperPurfviewFasterWhisperDefaultCmd = "--standard --beep_off";
             WhisperExtraSettings = "";
-            WhisperLanguageCode = "en";
-            WhisperAutoAdjustTimings = true;
-            WhisperPostProcessingAddPeriods = false;
-            WhisperPostProcessingMergeLines = true;
-            WhisperPostProcessingSplitLines = true;
-            WhisperPostProcessingFixCasing = false;
-            WhisperPostProcessingFixShortDuration = true;
             AudioToTextLineMaxChars = 86;
             AudioToTextLineMaxCharsJp = 32;
             AudioToTextLineMaxCharsCn = 36;
