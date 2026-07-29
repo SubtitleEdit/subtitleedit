@@ -21,6 +21,7 @@ public class SeVideo
     public string ShowChangesFFmpegArguments { get; set; }
     public bool VideoPlayerDisplayTimeLeft { get; set; }
     public string CutDefaultVideoExtension { get; set; }
+    public bool CutAlsoCutSubtitle { get; set; }
     public int MoveVideoPositionCustom1Back { get; set; }
     public int MoveVideoPositionCustom1Forward { get; set; }
     public int MoveVideoPositionCustom2Back { get; set; }

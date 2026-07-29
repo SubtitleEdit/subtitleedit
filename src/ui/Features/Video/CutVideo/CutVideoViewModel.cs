@@ -56,6 +56,8 @@ public partial class CutVideoViewModel : ObservableObject
     [ObservableProperty] private bool _isSetStartEnabled;
     [ObservableProperty] private bool _isSetEndEnabled;
     [ObservableProperty] private bool _isDeleteEnabled;
+    [ObservableProperty] private bool _cutSubtitleToo;
+    [ObservableProperty] private bool _isCutSubtitleVisible;
 
     public Window? Window { get; set; }
     public bool OkPressed { get; private set; }
@@ -148,6 +150,7 @@ public partial class CutVideoViewModel : ObservableObject
         _inputVideoFileName = videoFileName;
         _currentSubtitle = subtitle;
         _subtitleFormat = subtitleFormat;
+        IsCutSubtitleVisible = subtitle.Paragraphs.Count > 0;
 
         _ffmpegListKeyFramesProcess = FfmpegGenerator.ListKeyFrames(videoFileName, OutputHandlerKeyFrames);
 
@@ -378,11 +381,20 @@ public partial class CutVideoViewModel : ObservableObject
 
             if (JobItems.Count == 1)
             {
+                var message = string.Format(Se.Language.General.VideoFileGeneratedX, jobItem.OutputVideoFileName);
+
+                var cutSubtitleFileName = WriteCutSubtitle(jobItem.OutputVideoFileName, jobItem.TotalSeconds);
+                if (!string.IsNullOrEmpty(cutSubtitleFileName))
+                {
+                    message += Environment.NewLine + Environment.NewLine +
+                               string.Format(Se.Language.Video.CutVideoSubtitleFileGeneratedX, cutSubtitleFileName);
+                }
+
                 await _windowService.ShowDialogAsync<PromptFileSavedWindow, PromptFileSavedViewModel>(Window!, vm =>
                 {
                     vm.Initialize(
                         Se.Language.General.VideoFileGenerated,
-                        string.Format(Se.Language.General.VideoFileGeneratedX, jobItem.OutputVideoFileName),
+                        message,
                         jobItem.OutputVideoFileName,
                         true,
                         true);
@@ -483,6 +495,45 @@ public partial class CutVideoViewModel : ObservableObject
         {
             _processedFrames = f;
             ProgressValue = _processedFrames * 100.0 / JobItems[_jobItemIndex].TotalFrames;
+        }
+    }
+
+    /// <summary>
+    /// Writes the loaded subtitle re-timed to the cut video's timeline, next to the
+    /// output video (same base name). Returns the written file name, or null when the
+    /// option is off, there is no subtitle, or writing failed (best-effort - a subtitle
+    /// problem must not fail the finished video).
+    /// </summary>
+    private string? WriteCutSubtitle(string outputVideoFileName, double totalDurationSeconds)
+    {
+        if (!CutSubtitleToo || _currentSubtitle.Paragraphs.Count == 0)
+        {
+            return null;
+        }
+
+        try
+        {
+            var segments = Segments
+                .OrderBy(p => p.StartTime.TotalMilliseconds)
+                .Select(p => (p.StartTime.TotalSeconds, p.EndTime.TotalSeconds))
+                .ToList();
+
+            var cut = SelectedCutType.CutType == CutType.MergeSegments
+                ? SubtitleSegmentCutter.KeepSegments(_currentSubtitle, segments)
+                : SubtitleSegmentCutter.RemoveSegments(_currentSubtitle, segments, totalDurationSeconds);
+
+            SubtitleFormat format = _subtitleFormat is { Name: AdvancedSubStationAlpha.NameOfFormat }
+                ? new AdvancedSubStationAlpha()
+                : new SubRip();
+
+            var fileName = Path.ChangeExtension(outputVideoFileName, format.Extension);
+            File.WriteAllText(fileName, format.ToText(cut, string.Empty));
+            return fileName;
+        }
+        catch (Exception exception)
+        {
+            Se.LogError(exception, "Failed to write cut subtitle");
+            return null;
         }
     }
 
@@ -694,6 +745,7 @@ public partial class CutVideoViewModel : ObservableObject
         SelectedVideoExtension = VideoExtensions.Contains(settings.CutDefaultVideoExtension)
             ? settings.CutDefaultVideoExtension
             : VideoExtensions[0];
+        CutSubtitleToo = settings.CutAlsoCutSubtitle;
     }
 
     private void SaveSettings()
@@ -701,6 +753,7 @@ public partial class CutVideoViewModel : ObservableObject
         var settings = Se.Settings.Video;
         settings.CutType = SelectedCutType.CutType.ToString();
         settings.CutDefaultVideoExtension = SelectedVideoExtension;
+        settings.CutAlsoCutSubtitle = CutSubtitleToo;
         Se.SaveSettings();
     }
 
