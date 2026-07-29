@@ -6616,35 +6616,33 @@ public partial class MainViewModel :
             }
         }
 
-        var ytDlpUpdatedFromUrlWindow = false;
+        var ytDlpUpdatePromptShown = false;
+        var urlWindowOpen = true;
         var result = await ShowDialogAsync<OpenFromUrlWindow, OpenFromUrlViewModel>(vm =>
         {
-            // Reuse the existing install/update prompt for the window's manual
-            // "Download yt-dlp" button. Pick the message by current install state
-            // and own the dialogs off the URL window so they nest correctly.
-            vm.DownloadOrUpdateYtDlpRequested = async () =>
-            {
-                var message = File.Exists(YtDlpDownloadService.GetFullFileName())
-                    ? Se.Language.Main.YoutubeDlOutdatedDownloadNow
-                    : Se.Language.Main.YoutubeDlNotInstalledDownloadNow;
-                if (await PromptToDownloadYtDlp(message, vm.Window))
-                {
-                    vm.IsDownloadYtDlpVisible = false;
-                    ytDlpUpdatedFromUrlWindow = true;
-                }
-            };
-
-            // Only surface the "Download yt-dlp" button when the background
-            // version check finds the install outdated — with the latest version
-            // already on disk there is nothing to download.
+            // When the background version check finds the install outdated, offer
+            // the update via a message box over the URL window right away. The
+            // update is optional — declining leaves the dialog fully usable.
             outdatedCheckTask?.ContinueWith(t =>
             {
                 if (t.Status == TaskStatus.RanToCompletion && t.Result)
                 {
-                    Dispatcher.UIThread.Post(() => vm.IsDownloadYtDlpVisible = true);
+                    Dispatcher.UIThread.Post(async () =>
+                    {
+                        // The check may finish after the user already closed the
+                        // URL window — then the post-dialog path below owns the prompt.
+                        if (!urlWindowOpen || vm.Window is not { } urlWindow)
+                        {
+                            return;
+                        }
+
+                        ytDlpUpdatePromptShown = true;
+                        await PromptToDownloadYtDlp(Se.Language.Main.YoutubeDlOutdatedDownloadNow, urlWindow);
+                    });
                 }
             }, TaskScheduler.Default);
         });
+        urlWindowOpen = false;
 
         if (!result.OkPressed || result.SelectedMode is null)
         {
@@ -6689,9 +6687,9 @@ public partial class MainViewModel :
         // If a newer yt-dlp is available, offer the upgrade — but open the video
         // regardless of the user's choice. The installed binary still works, so a
         // declined or failed update must not abort the open. Skip the prompt when
-        // the user already updated via the URL window's button — the background
-        // check result predates that update.
-        if (isOutdated && !ytDlpUpdatedFromUrlWindow)
+        // it was already shown over the URL window — asking twice is noise, and
+        // the background check result predates any update made there.
+        if (isOutdated && !ytDlpUpdatePromptShown)
         {
             await PromptToDownloadYtDlp(Se.Language.Main.YoutubeDlOutdatedDownloadNow);
         }
