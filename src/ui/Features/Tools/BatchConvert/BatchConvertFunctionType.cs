@@ -27,4 +27,5 @@ public enum BatchConvertFunctionType
     ApplyDurationLimits,
     AutoBalanceLines,
     SortBy,
+    AdjustImageColors,
 }

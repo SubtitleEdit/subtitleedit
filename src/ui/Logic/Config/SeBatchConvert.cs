@@ -105,6 +105,16 @@ public class SeBatchConvert
     public string SortBy { get; set; }
     public bool SortByDescending { get; set; }
 
+    public bool ImageAdjustBrightnessOn { get; set; }
+    public double ImageAdjustBrightness { get; set; }
+    public double ImageAdjustContrast { get; set; }
+    public double ImageAdjustGamma { get; set; } = 100;
+    public bool ImageAdjustAlphaOn { get; set; }
+    public double ImageAdjustAlpha { get; set; }
+    public double ImageAdjustAlphaThreshold { get; set; }
+    public bool ImageAdjustColorOn { get; set; }
+    public string ImageAdjustColorValue { get; set; } = "#FFFFFFFF";
+
     public SeBatchConvert()
     {
         OutputFolder = string.Empty;
