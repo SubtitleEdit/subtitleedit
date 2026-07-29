@@ -74,6 +74,11 @@ public partial class SettingsViewModel : ObservableObject
     [ObservableProperty] private int? _maxLines;
     [ObservableProperty] private string _colorTextTooManyLinesLabel = string.Empty;
     [ObservableProperty] private int? _unbreakLinesShorterThan;
+    [ObservableProperty] private bool _autoBreakLineEndingEarly;
+    [ObservableProperty] private bool _autoBreakCommaBreakEarly;
+    [ObservableProperty] private bool _autoBreakDashEarly;
+    [ObservableProperty] private bool _autoBreakUsePixelWidth;
+    [ObservableProperty] private bool _autoBreakPreferBottomHeavy;
 
     // "Color text if more than N lines" must track the live "Max number of lines"
     // value instead of a hardcoded "2" (#12028), including while typing (nullable/
@@ -701,6 +706,11 @@ public partial class SettingsViewModel : ObservableObject
         MinGapFrames = general.MinimumBetweenLines.Frames;
         MaxLines = general.MaxNumberOfLines;
         UnbreakLinesShorterThan = general.UnbreakLinesShorterThan;
+        AutoBreakLineEndingEarly = Se.Settings.Tools.AutoBreakLineEndingEarly;
+        AutoBreakCommaBreakEarly = Se.Settings.Tools.AutoBreakCommaBreakEarly;
+        AutoBreakDashEarly = Se.Settings.Tools.AutoBreakDashEarly;
+        AutoBreakUsePixelWidth = Se.Settings.Tools.AutoBreakUsePixelWidth;
+        AutoBreakPreferBottomHeavy = Se.Settings.Tools.AutoBreakPreferBottomHeavy;
         DialogStyle = DialogStyles.FirstOrDefault(p => p.Code == general.DialogStyle) ?? DialogStyles.First();
         ContinuationStyle = ContinuationStyles.FirstOrDefault(p => p.Code == general.ContinuationStyle) ?? ContinuationStyles.First();
         IsEditCustomContinuationStyleVisible = ContinuationStyle?.Code == nameof(Core.Enums.ContinuationStyle.Custom);
@@ -1535,6 +1545,11 @@ public partial class SettingsViewModel : ObservableObject
         general.MinimumBetweenLines.Frames = MinGapFrames ?? general.MinimumBetweenLines.Frames;
         general.MaxNumberOfLines = MaxLines ?? general.MaxNumberOfLines;
         general.UnbreakLinesShorterThan = UnbreakLinesShorterThan ?? general.UnbreakLinesShorterThan;
+        Se.Settings.Tools.AutoBreakLineEndingEarly = AutoBreakLineEndingEarly;
+        Se.Settings.Tools.AutoBreakCommaBreakEarly = AutoBreakCommaBreakEarly;
+        Se.Settings.Tools.AutoBreakDashEarly = AutoBreakDashEarly;
+        Se.Settings.Tools.AutoBreakUsePixelWidth = AutoBreakUsePixelWidth;
+        Se.Settings.Tools.AutoBreakPreferBottomHeavy = AutoBreakPreferBottomHeavy;
         general.DialogStyle = DialogStyle.Code;
         general.ContinuationStyle = ContinuationStyle.Code;
         general.CpsLineLengthStrategy = CpsLineLengthStrategy.Code;

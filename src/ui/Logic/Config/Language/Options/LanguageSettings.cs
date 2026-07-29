@@ -110,6 +110,11 @@ public class LanguageSettings
     public string MinGapFrames { get; set; }
     public string MaxLines { get; set; }
     public string UnbreakSubtitlesShortThan { get; set; }
+    public string AutoBreakLineEndingEarly { get; set; }
+    public string AutoBreakCommaBreakEarly { get; set; }
+    public string AutoBreakDashEarly { get; set; }
+    public string AutoBreakUsePixelWidth { get; set; }
+    public string AutoBreakPreferBottomHeavy { get; set; }
     public string NewEmptyDefaultMs { get; set; }
     public string TimeCodeUpDownStepMs { get; set; }
     public string PromptBeforeDelete { get; set; }
@@ -452,6 +457,11 @@ public class LanguageSettings
         MinGapFrames = "Min gap (frames)";
         MaxLines = "Max number of lines";
         UnbreakSubtitlesShortThan = "Unbreak subtitles shorter than";
+        AutoBreakLineEndingEarly = "Auto-break early for end of sentence (.!?)";
+        AutoBreakCommaBreakEarly = "Auto-break early for comma";
+        AutoBreakDashEarly = "Auto-break early for dash (dialogs)";
+        AutoBreakUsePixelWidth = "Auto-break by pixel width";
+        AutoBreakPreferBottomHeavy = "Auto-break prefer bottom heavy";
         NewEmptyDefaultMs = "Default new subtitle duration (ms)";
         TimeCodeUpDownStepMs = "Time up/down increment (ms)";
         PromptBeforeDelete = "Prompt before delete";
