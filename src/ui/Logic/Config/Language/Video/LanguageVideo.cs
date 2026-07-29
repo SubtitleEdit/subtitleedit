@@ -30,6 +30,8 @@ public class LanguageVideo
     public string CutVideoMergeSegments { get; set; }
     public string CutVideoSplitSegments { get; set; }
     public string CutVideoType { get; set; }
+    public string CutVideoAlsoCutSubtitle { get; set; }
+    public string CutVideoSubtitleFileGeneratedX { get; set; }
     public string MpvRenderAuto { get; set; }
     public string MpvRenderNative { get; set; }
     public string MpvRenderOpenGl { get; set; }
@@ -106,6 +108,8 @@ public class LanguageVideo
         CutVideoMergeSegments = "Merge segments";
         CutVideoSplitSegments = "Save segments individually";
         CutVideoType = "Cut type";
+        CutVideoAlsoCutSubtitle = "Also cut subtitle";
+        CutVideoSubtitleFileGeneratedX = "Subtitle file generated: {0}";
         MpvRenderAuto = "Auto";
         MpvRenderNative = "Native";
         MpvRenderOpenGl = "OpenGL";
