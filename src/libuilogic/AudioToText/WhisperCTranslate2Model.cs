@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 
-namespace Nikse.SubtitleEdit.Core.AudioToText
+namespace Nikse.SubtitleEdit.UiLogic.AudioToText
 {
     public class WhisperCTranslate2Model : IWhisperModel
     {

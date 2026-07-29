@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
-namespace Nikse.SubtitleEdit.Core.AudioToText
+namespace Nikse.SubtitleEdit.UiLogic.AudioToText
 {
     public class WhisperCppModel : IWhisperModel
     {

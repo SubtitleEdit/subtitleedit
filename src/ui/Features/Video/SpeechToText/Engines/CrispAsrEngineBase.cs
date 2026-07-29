@@ -1,5 +1,5 @@
 using Avalonia.Platform;
-using Nikse.SubtitleEdit.Core.AudioToText;
+using Nikse.SubtitleEdit.UiLogic.AudioToText;
 using Nikse.SubtitleEdit.Logic.Config;
 using System;
 using System.Collections.Generic;

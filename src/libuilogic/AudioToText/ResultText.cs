@@ -1,4 +1,4 @@
-﻿namespace Nikse.SubtitleEdit.Core.AudioToText
+﻿namespace Nikse.SubtitleEdit.UiLogic.AudioToText
 {
     public class ResultText
     {
