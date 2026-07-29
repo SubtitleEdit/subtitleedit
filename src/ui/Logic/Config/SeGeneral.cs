@@ -93,6 +93,9 @@ public class SeGeneral
     public string ProxyAddress { get; set; }
     public string ProxyUserName { get; set; }
     public string ProxyPassword { get; set; }
+    public string ProxyDomain { get; set; }
+    public bool ProxyUseDefaultCredentials { get; set; }
+    public string ProxyBypassList { get; set; }
 
     public bool ShowColumnStartTime { get; set; }
     public bool ShowColumnEndTime { get; set; }
@@ -207,6 +210,8 @@ public class SeGeneral
         ProxyAddress = string.Empty;
         ProxyUserName = string.Empty;
         ProxyPassword = string.Empty;
+        ProxyDomain = string.Empty;
+        ProxyBypassList = string.Empty;
 
         ShowColumnStartTime = true;
         ShowColumnEndTime = true;

@@ -263,6 +263,9 @@ public partial class SettingsViewModel : ObservableObject
     [ObservableProperty] private string _proxyAddress = string.Empty;
     [ObservableProperty] private string _proxyUserName = string.Empty;
     [ObservableProperty] private string _proxyPassword = string.Empty;
+    [ObservableProperty] private string _proxyDomain = string.Empty;
+    [ObservableProperty] private bool _proxyUseDefaultCredentials;
+    [ObservableProperty] private string _proxyBypassList = string.Empty;
     [ObservableProperty] private int _waveformTextFontSize;
     [ObservableProperty] private bool _waveformTextFontBold;
     [ObservableProperty] private Color _waveformTextColor;
@@ -979,6 +982,9 @@ public partial class SettingsViewModel : ObservableObject
         ProxyAddress = Se.Settings.General.ProxyAddress ?? string.Empty;
         ProxyUserName = Se.Settings.General.ProxyUserName ?? string.Empty;
         ProxyPassword = Se.Settings.General.ProxyPassword ?? string.Empty;
+        ProxyDomain = Se.Settings.General.ProxyDomain ?? string.Empty;
+        ProxyUseDefaultCredentials = Se.Settings.General.ProxyUseDefaultCredentials;
+        ProxyBypassList = Se.Settings.General.ProxyBypassList ?? string.Empty;
         SetFfmpegStatus();
         SetLibMpvStatus();
         SetLibVlcStatus();
@@ -1694,6 +1700,9 @@ public partial class SettingsViewModel : ObservableObject
         general.ProxyAddress = ProxyAddress;
         general.ProxyUserName = ProxyUserName;
         general.ProxyPassword = ProxyPassword;
+        general.ProxyDomain = ProxyDomain;
+        general.ProxyUseDefaultCredentials = ProxyUseDefaultCredentials;
+        general.ProxyBypassList = ProxyBypassList;
 
         general.CurrentProfile = SelectedProfile;
         general.Profiles.Clear();
