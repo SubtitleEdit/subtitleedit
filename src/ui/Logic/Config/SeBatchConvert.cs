@@ -1,4 +1,4 @@
-﻿using Nikse.SubtitleEdit.Core.AutoTranslate;
+﻿using Nikse.SubtitleEdit.UiLogic.AutoTranslate;
 
 namespace Nikse.SubtitleEdit.Logic.Config;
 

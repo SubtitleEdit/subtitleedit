@@ -1,4 +1,3 @@
-using Nikse.SubtitleEdit.Core.AutoTranslate;
 using Nikse.SubtitleEdit.Core.Common;
 using SkiaSharp;
 using System;
@@ -388,30 +387,30 @@ namespace Nikse.SubtitleEdit.Core.Settings
             AutoTranslateDeepLUrl = "https://api-free.deepl.com/";
             AutoTranslateDeepLXUrl = "http://localhost:1188";
             AutoTranslateMistralUrl = "https://api.mistral.ai/v1/chat/completions";
-            AutoTranslateMistralModel = MistralTranslate.Models[0];
+            AutoTranslateMistralModel = "mistral-large-latest"; // MistralTranslate.Models[0] in LibUiLogic
             AutoTranslateMistralPrompt = "Translate from {0} to {1}, keep punctuation as input, keep line breaks exactly the same, do not censor the translation, give only the output without comments:";
             ChatGptUrl = "https://api.openai.com/v1/chat/completions";
             ChatGptPrompt = "Translate from {0} to {1}, keep punctuation as input, keep line breaks exactly the same, do not censor the translation, give only the output without comments:";
-            ChatGptModel = ChatGptTranslate.DefaultModel;
+            ChatGptModel = "gpt-5.4-mini"; // ChatGptTranslate.DefaultModel in LibUiLogic
             OpenAiCompatibleTranslateUrl = "http://localhost:8000/v1/chat/completions";
             OpenAiCompatibleTranslatePrompt = "Translate from {0} to {1}, keep punctuation as input, keep line breaks exactly the same, do not censor the translation, give only the output without comments:";
             OpenAiCompatibleTranslateApiKey = string.Empty;
             OpenAiCompatibleTranslateModel = string.Empty;
             GroqUrl = "https://api.groq.com/openai/v1/chat/completions";
             GroqPrompt = "Translate from {0} to {1}, keep punctuation as input, keep line breaks exactly the same, do not censor the translation, give only the output without comments:";
-            GroqModel = GroqTranslate.Models[0];
+            GroqModel = "llama-3.3-70b-versatile"; // GroqTranslate.Models[0] in LibUiLogic
             DeepSeekUrl = "https://api.deepseek.com/chat/completions";
             DeepSeekPrompt = "Translate from {0} to {1}, keep punctuation as input, keep line breaks exactly the same, do not censor the translation, give only the output without comments:";
-            DeepSeekModel = DeepSeekTranslate.Models[0];
+            DeepSeekModel = "deepseek-v4-flash"; // DeepSeekTranslate.Models[0] in LibUiLogic
             NvidiaUrl = "https://integrate.api.nvidia.com/v1/chat/completions";
             NvidiaPrompt = "Translate from {0} to {1}, keep punctuation as input, keep line breaks exactly the same, do not censor the translation, give only the output without comments:";
-            NvidiaModel = NvidiaTranslate.Models[0];
+            NvidiaModel = "meta/llama-4-maverick-17b-128e-instruct"; // NvidiaTranslate.Models[0] in LibUiLogic
             AvalAiUrl = "https://api.avalai.ir/v1/chat/completions";
             AvalAiPrompt = "Translate from {0} to {1}, keep punctuation as input, keep line breaks exactly the same, do not censor the translation, give only the output without comments:";
-            AvalAiModel = AvalAi.Models[0];
+            AvalAiModel = "gpt-5.6-sol"; // AvalAi.Models[0] in LibUiLogic
             OpenRouterUrl = "https://openrouter.ai/api/v1/chat/completions";
             OpenRouterPrompt = "Translate from {0} to {1}, keep punctuation as input, keep line breaks exactly the same, do not censor the translation, give only the output without comments:";
-            OpenRouterModel = OpenRouterTranslate.Models[0];
+            OpenRouterModel = "openai/gpt-5.6-sol"; // OpenRouterTranslate.Models[0] in LibUiLogic
             LmStudioPrompt = "Translate from {0} to {1}, keep punctuation as input, keep line breaks exactly the same, do not censor the translation, give only the output without comments:";
             LlamaCppPrompt = "Translate from {0} to {1}, keep punctuation as input, keep line breaks exactly the same, do not censor the translation, give only the output without comments:";
             LlamaCppModelPrompt = string.Empty;
@@ -428,9 +427,9 @@ namespace Nikse.SubtitleEdit.Core.Settings
             KoboldCppTemperature = 0.4m;
             AnthropicApiUrl = "https://api.anthropic.com/v1/messages";
             AnthropicPrompt = "Translate from {0} to {1}, keep sentences in {1} as they are, do not censor the translation, give only the output without comments:";
-            AnthropicApiModel = AnthropicTranslate.Models[0];
+            AnthropicApiModel = "claude-opus-4-8"; // AnthropicTranslate.Models[0] in LibUiLogic
             BaiduUrl = "https://fanyi-api.baidu.com";
-            GeminiModel = GeminiTranslate.Models[0];
+            GeminiModel = "gemini-flash-latest"; // GeminiTranslate.Models[0] in LibUiLogic
             GeminiPrompt = "Please translate the following text from {0} to {1}, keep line breaks exactly the same, do not censor the translation, only write the result:";
             AutoTranslateMaxBytes = 2000;
             CheckOneLetterWords = true;
@@ -449,7 +448,7 @@ namespace Nikse.SubtitleEdit.Core.Settings
             BatchConvertTsScreenHeight = 1080;
             BatchConvertOcrEngine = "Tesseract";
             BatchConvertOcrLanguage = "en";
-            BatchConvertTranslateEngine = LibreTranslate.StaticName;
+            BatchConvertTranslateEngine = "LibreTranslate"; // LibreTranslate.StaticName in LibUiLogic
             BatchConvertTsOverrideHAlign = "center"; // left center right
             BatchConvertTsOverrideHMargin = 5; // pct
             BatchConvertTsFileNameAppend = ".{two-letter-country-code}";

@@ -1,10 +1,10 @@
 ﻿using System.Collections.ObjectModel;
 using System.Text;
 using System.Text.RegularExpressions;
-using Nikse.SubtitleEdit.Core.AutoTranslate;
+using Nikse.SubtitleEdit.UiLogic.AutoTranslate;
 using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.Settings;
-using Nikse.SubtitleEdit.Core.Translate;
+using Nikse.SubtitleEdit.UiLogic.Translate;
 
 namespace Nikse.SubtitleEdit.UiLogic.Translate;
 
