@@ -9,6 +9,7 @@ using System.Globalization;
 using System.IO;
 using System.Text.RegularExpressions;
 using System.Threading;
+using System.Threading.Channels;
 using System.Threading.Tasks;
 
 namespace Nikse.SubtitleEdit.Logic;
@@ -25,6 +26,7 @@ public partial class AutoBackupService : IAutoBackupService
 {
     private MainViewModel? _mainViewModel;
     private System.Timers.Timer? _timerAutoBackup;
+    private Channel<(Subtitle Subtitle, SubtitleFormat Format)>? _backupChannel;
     // Source-generated rather than RegexOptions.Compiled: this type is constructed from the
     // MainViewModel ctor, and Compiled emits IL at construction time on the start-up path
     // (~3.6 ms and 13 KB, vs ~1.7 ms and zero allocation here) for a pattern only used when
@@ -47,6 +49,24 @@ public partial class AutoBackupService : IAutoBackupService
             minutes = 1;
         }
 
+        // Capacity 1 + DropOldest: only the newest snapshot is ever pending, and the single
+        // reader guarantees two backups can never write concurrently (a slow save on a large
+        // subtitle used to overlap the next timer tick's Task.Run).
+        var channel = Channel.CreateBounded<(Subtitle Subtitle, SubtitleFormat Format)>(
+            new BoundedChannelOptions(1)
+            {
+                FullMode = BoundedChannelFullMode.DropOldest,
+                SingleReader = true,
+            });
+        _backupChannel = channel;
+        Task.Run(async () =>
+        {
+            await foreach (var (subtitle, format) in channel.Reader.ReadAllAsync())
+            {
+                SaveAutoBackup(subtitle, format);
+            }
+        });
+
         _timerAutoBackup = new System.Timers.Timer(TimeSpan.FromMinutes(minutes));
         _timerAutoBackup.Elapsed += (_, _) =>
         {
@@ -62,7 +82,7 @@ public partial class AutoBackupService : IAutoBackupService
 
                 var saveFormat = vm.SelectedSubtitleFormat;
                 var subtitle = new Subtitle(vm.GetUpdateSubtitle(), false);
-                Task.Run(() => SaveAutoBackup(subtitle, saveFormat));
+                _backupChannel?.Writer.TryWrite((subtitle, saveFormat));
             });
         };
         _timerAutoBackup.Start();
@@ -73,6 +93,8 @@ public partial class AutoBackupService : IAutoBackupService
         _timerAutoBackup?.Stop();
         _timerAutoBackup?.Dispose();
         _timerAutoBackup = null;
+        _backupChannel?.Writer.TryComplete();
+        _backupChannel = null;
     }
 
     private static void SaveAutoBackup(Subtitle subtitle, SubtitleFormat saveFormat)
