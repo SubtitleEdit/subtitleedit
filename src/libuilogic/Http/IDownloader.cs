@@ -5,7 +5,7 @@ using System.Net.Http.Headers;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Nikse.SubtitleEdit.Core.Http
+namespace Nikse.SubtitleEdit.UiLogic.Http
 {
     public interface IDownloader : IDisposable
     {

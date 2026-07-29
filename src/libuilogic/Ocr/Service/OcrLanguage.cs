@@ -1,7 +1,7 @@
 ﻿using System.Linq;
 using Nikse.SubtitleEdit.Core.Common;
 
-namespace Nikse.SubtitleEdit.Core.VobSub.Ocr.Service
+namespace Nikse.SubtitleEdit.UiLogic.Ocr.Service
 {
     public class OcrLanguage
     {

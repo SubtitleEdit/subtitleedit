@@ -5,6 +5,7 @@ using Nikse.SubtitleEdit.Core.Dictionaries;
 using Nikse.SubtitleEdit.Core.Forms;
 using Nikse.SubtitleEdit.Core.Forms.FixCommonErrors;
 using Nikse.SubtitleEdit.Features.Tools.ChangeFormatting;
+using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.UiLogic.AudioToText;
 using System;
 using System.Collections.Generic;
@@ -28,13 +29,17 @@ namespace Nikse.SubtitleEdit.Features.Video.SpeechToText
 
         public int ParagraphMaxChars { get; set; }
 
+        private const int AudioToTextLineMaxChars = 86;
+        private const int AudioToTextLineMaxCharsJp = 32;
+        private const int AudioToTextLineMaxCharsCn = 36;
+
         public string TwoLetterLanguageCode { get; }
 
         public SpeechToTextPostProcessor(string twoLetterLanguageCode)
         {
             TwoLetterLanguageCode = twoLetterLanguageCode == "no" ? "nb" : twoLetterLanguageCode;
 
-            ParagraphMaxChars = Configuration.Settings.Tools.AudioToTextLineMaxChars;
+            ParagraphMaxChars = AudioToTextLineMaxChars;
             if (ParagraphMaxChars < 10 || ParagraphMaxChars > 1_000_000)
             {
                 ParagraphMaxChars = 86;
@@ -183,12 +188,12 @@ namespace Nikse.SubtitleEdit.Features.Video.SpeechToText
                 return true;
             }
 
-            if (string.IsNullOrEmpty(Configuration.Settings.Tools.WhisperExtraSettings))
+            if (string.IsNullOrEmpty(Se.Settings.Tools.AudioToText.WhisperCustomCommandLineArguments))
             {
                 return true;
             }
 
-            var es = Configuration.Settings.Tools.WhisperExtraSettings.ToLowerInvariant();
+            var es = Se.Settings.Tools.AudioToText.WhisperCustomCommandLineArguments.ToLowerInvariant();
             return !es.Contains("--highlight_words", StringComparison.OrdinalIgnoreCase) &&
                    !es.Contains("-hw ", StringComparison.OrdinalIgnoreCase) &&
                    !es.Contains("-hw=true", StringComparison.OrdinalIgnoreCase) &&
@@ -272,12 +277,12 @@ namespace Nikse.SubtitleEdit.Features.Video.SpeechToText
 
             if (language == "jp")
             {
-                ParagraphMaxChars = Configuration.Settings.Tools.AudioToTextLineMaxCharsJp;
+                ParagraphMaxChars = AudioToTextLineMaxCharsJp;
             }
 
             if (language == "cn" || language == "yue")
             {
-                ParagraphMaxChars = Configuration.Settings.Tools.AudioToTextLineMaxCharsCn;
+                ParagraphMaxChars = AudioToTextLineMaxCharsCn;
             }
 
             var mergedSubtitle = new Subtitle();

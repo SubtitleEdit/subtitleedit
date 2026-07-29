@@ -9,7 +9,7 @@ using Nikse.SubtitleEdit.Core.Common;
 
 #pragma warning disable SYSLIB0014 // this downloader intentionally uses the legacy WebRequest/WebClient stack (Settings.General.UseLegacyDownloader fallback)
 
-namespace Nikse.SubtitleEdit.Core.Http
+namespace Nikse.SubtitleEdit.UiLogic.Http
 {
     public class LegacyDownloader : IDownloader
     {

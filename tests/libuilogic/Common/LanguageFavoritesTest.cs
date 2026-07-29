@@ -1,8 +1,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using Nikse.SubtitleEdit.Core.Common;
+using Nikse.SubtitleEdit.UiLogic.Common;
 
-namespace LibSETests.Common;
+namespace LibUiLogicTests.Common;
 
 public class LanguageFavoritesTest
 {

@@ -4,7 +4,9 @@
 
 using System;
 
-namespace Nikse.SubtitleEdit.Core.Common
+using Nikse.SubtitleEdit.Core.Common;
+
+namespace Nikse.SubtitleEdit.UiLogic.Common
 {
     public class RealFFT
     {

@@ -13,6 +13,7 @@ using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.Settings;
 using Nikse.SubtitleEdit.Features.Video.SpeechToText.Engines;
 using Nikse.SubtitleEdit.Logic.Config;
+using Nikse.SubtitleEdit.UiLogic.Http;
 
 namespace Nikse.SubtitleEdit.Features.Video.SpeechToText.OpenAiCompatible;
 
@@ -669,7 +670,7 @@ public class OpenAiSttService : ISttTranscriber
 
     public static OpenAiCompatibleSettings GetSettingsFromConfiguration()
     {
-        var settings = Configuration.Settings.Tools;
+        var settings = Se.Settings.Tools;
         return new OpenAiCompatibleSettings
         {
             EndpointUrl = settings.OpenAiCompatibleSttUrl,

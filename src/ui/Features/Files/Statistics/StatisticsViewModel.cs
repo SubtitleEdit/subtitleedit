@@ -250,17 +250,14 @@ https://github.com/SubtitleEdit/subtitleedit
                     aboveMaximumLineLengthCount++;
                 }
 
-                if (Configuration.Settings.Tools.ListViewSyntaxColorWideLines)
-                {
-                    var w = GetSingleLineWidth(line);
-                    minimumSingleLineWidth = Math.Min(w, minimumSingleLineWidth);
-                    maximumSingleLineWidth = Math.Max(w, maximumSingleLineWidth);
-                    totalSingleLineWidth += w;
+                var w = GetSingleLineWidth(line);
+                minimumSingleLineWidth = Math.Min(w, minimumSingleLineWidth);
+                maximumSingleLineWidth = Math.Max(w, maximumSingleLineWidth);
+                totalSingleLineWidth += w;
 
-                    if (w > Configuration.Settings.General.SubtitleLineMaximumPixelWidth)
-                    {
-                        aboveMaximumLineWidthCount++;
-                    }
+                if (w > Configuration.Settings.General.SubtitleLineMaximumPixelWidth)
+                {
+                    aboveMaximumLineWidthCount++;
                 }
 
                 totalSingleLines++;
@@ -319,15 +316,12 @@ https://github.com/SubtitleEdit/subtitleedit
         sb.AppendLine(string.Format(_l.SingleLineLengthExceedingMaximum, Configuration.Settings.General.SubtitleLineMaximumLength, aboveMaximumLineLengthCount, ((double)aboveMaximumLineLengthCount / _subtitle.Paragraphs.Count) * 100.0));
         sb.AppendLine();
 
-        if (Configuration.Settings.Tools.ListViewSyntaxColorWideLines)
-        {
-            sb.AppendLine(string.Format(_l.SingleLineWidthMinimum, minimumSingleLineWidth) + " (" + GetIndicesWithSingleLineWidth(minimumSingleLineWidth) + ")");
-            sb.AppendLine(string.Format(_l.SingleLineWidthMaximum, maximumSingleLineWidth) + " (" + GetIndicesWithSingleLineWidth(maximumSingleLineWidth) + ")");
-            sb.AppendLine(string.Format(_l.SingleLineWidthAverage, (double)totalSingleLineWidth / totalSingleLines));
-            sb.AppendLine();
-            sb.AppendLine(string.Format(_l.SingleLineWidthExceedingMaximum, Configuration.Settings.General.SubtitleLineMaximumPixelWidth, aboveMaximumLineWidthCount, ((double)aboveMaximumLineWidthCount / _subtitle.Paragraphs.Count) * 100.0));
-            sb.AppendLine();
-        }
+        sb.AppendLine(string.Format(_l.SingleLineWidthMinimum, minimumSingleLineWidth) + " (" + GetIndicesWithSingleLineWidth(minimumSingleLineWidth) + ")");
+        sb.AppendLine(string.Format(_l.SingleLineWidthMaximum, maximumSingleLineWidth) + " (" + GetIndicesWithSingleLineWidth(maximumSingleLineWidth) + ")");
+        sb.AppendLine(string.Format(_l.SingleLineWidthAverage, (double)totalSingleLineWidth / totalSingleLines));
+        sb.AppendLine();
+        sb.AppendLine(string.Format(_l.SingleLineWidthExceedingMaximum, Configuration.Settings.General.SubtitleLineMaximumPixelWidth, aboveMaximumLineWidthCount, ((double)aboveMaximumLineWidthCount / _subtitle.Paragraphs.Count) * 100.0));
+        sb.AppendLine();
 
         sb.AppendLine(string.Format(_l.DurationMinimum, minimumDuration / TimeCode.BaseUnit) + " (" + GetIndicesWithDuration(minimumDuration) + ")");
         sb.AppendLine(string.Format(_l.DurationMaximum, maximumDuration / TimeCode.BaseUnit) + " (" + GetIndicesWithDuration(maximumDuration) + ")");

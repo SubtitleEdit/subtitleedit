@@ -1,7 +1,7 @@
 ﻿using SkiaSharp;
 using System.Collections.Generic;
 
-namespace Nikse.SubtitleEdit.Core.VobSub.Ocr.Service
+namespace Nikse.SubtitleEdit.UiLogic.Ocr.Service
 {
     public interface IOcrStrategy
     {

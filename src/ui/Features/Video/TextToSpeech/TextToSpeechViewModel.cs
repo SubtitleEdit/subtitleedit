@@ -53,6 +53,7 @@ using System.Timers;
 using ElevenLabsSettingsViewModel = Nikse.SubtitleEdit.Features.Video.TextToSpeech.ElevenLabsSettings.ElevenLabsSettingsViewModel;
 using ReviewSpeechViewModel = Nikse.SubtitleEdit.Features.Video.TextToSpeech.ReviewSpeech.ReviewSpeechViewModel;
 using Timer = System.Timers.Timer;
+using Nikse.SubtitleEdit.UiLogic.Media;
 
 namespace Nikse.SubtitleEdit.Features.Video.TextToSpeech;
 
@@ -1986,7 +1987,7 @@ public partial class TextToSpeechViewModel : ObservableObject
                 videoFileName,
                 -1,
                 tempWaveFileName,
-                Configuration.Settings.General.VlcWaveTranscodeSettings,
+                "acodec=s16l",
                 out _))
             {
                 process.Start();
