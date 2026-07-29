@@ -112,6 +112,7 @@ public class LanguageMainMenu
 
     public string Synchronization { get; set; }
     public string AdjustAllTimes { get; set; }
+    public string ShowSelectedLinesEarlierLater { get; set; }
     public string ChangeFrameRate { get; set; }
     public string ChangeSpeed { get; set; }
     public string VisualSync { get; set; }
@@ -254,6 +255,7 @@ public class LanguageMainMenu
 
         Synchronization = "S_ynchronization";
         AdjustAllTimes = "_Adjust all times...";
+        ShowSelectedLinesEarlierLater = "Show selected lines earlier/later...";
         VisualSync = "_Visual sync...";
         PointSync = "_Point sync...";
         PointSyncViaOther = "Point sync via _other subtitle...";
