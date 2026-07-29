@@ -187,6 +187,7 @@ public class LanguageSettings
     public string ShowToolbarFixCommonErrors { get; set; }
     public string ShowToolbarRemoveTextForHi { get; set; }
     public string ShowToolbarVisualSync { get; set; }
+    public string ShowToolbarPointSync { get; set; }
     public string ShowToolbarBeautifyTimeCodes { get; set; }
     public string ShowToolbarBurnIn { get; set; }
     public string ShowToolbarSettings { get; set; }
@@ -535,6 +536,7 @@ public class LanguageSettings
         ShowToolbarFixCommonErrors = "Show fix common errors icon";
         ShowToolbarRemoveTextForHi = "Show remove text for hearing impaired icon";
         ShowToolbarVisualSync = "Show visual sync icon";
+        ShowToolbarPointSync = "Show point sync icon";
         ShowToolbarBeautifyTimeCodes = "Show beautify time codes icon";
         ShowToolbarBurnIn = "Show burn-in icon";
         ShowToolbarSettings = "Show settings icon";
