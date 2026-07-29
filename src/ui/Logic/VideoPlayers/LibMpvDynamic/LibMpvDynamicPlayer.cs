@@ -1692,6 +1692,11 @@ public sealed class LibMpvDynamicPlayer : IDisposable, IVideoPlayer
         DoMpvCommand("sub-remove");
     }
 
+    public void SetSubtitleVisibility(bool visible)
+    {
+        DoMpvCommand("set", "sub-visibility", visible ? "yes" : "no");
+    }
+
     public void SubReload()
     {
         DoMpvCommand("sub-reload");
