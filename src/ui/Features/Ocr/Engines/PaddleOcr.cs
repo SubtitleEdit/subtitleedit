@@ -264,6 +264,37 @@ public partial class PaddleOcr
         // Add all processed items back to the original collection
         _batchFileNames.AddRange(batchFileNamesList);
 
+        // Resolve the executable before building the command line. When the standalone
+        // binary is absent (no standalone build exists on macOS, and batch convert always
+        // requests PaddleOcrStandalone), the run falls back to the pip-installed Python
+        // CLI - and the whole I/O protocol below (result-file polling vs stdout parsing,
+        // cls model, mkldnn) must follow the binary actually launched, not the engine
+        // requested, or the fallback run exits successfully with zero parseable results.
+        // The disk-scanning resolver only runs when neither standalone binary exists.
+        string paddleOcrPath;
+        if (engineType == OcrEngineType.PaddleOcrStandalone)
+        {
+            var standaloneExe = Path.Combine(Se.PaddleOcrFolder, "paddleocr.exe");
+            var standaloneBin = Path.Combine(Se.PaddleOcrFolder, "paddleocr.bin");
+            if (File.Exists(standaloneExe))
+            {
+                paddleOcrPath = standaloneExe;
+            }
+            else if (File.Exists(standaloneBin))
+            {
+                paddleOcrPath = standaloneBin;
+            }
+            else
+            {
+                paddleOcrPath = GetPaddleOcrPytonPath();
+                engineType = OcrEngineType.PaddleOcrPython;
+            }
+        }
+        else
+        {
+            paddleOcrPath = GetPaddleOcrPytonPath();
+        }
+
         // Subtitles are always horizontal, so the Python engine skips text-line
         // orientation classification: it is noticeably faster and avoids loading the
         // extra cls model. The standalone engine keeps the original behavior.
@@ -297,21 +328,6 @@ public partial class PaddleOcr
             // The bundled standalone build is known-good and faster with MKL-DNN, so only
             // disable it for the Python engine.
             parameters += " --enable_mkldnn False";
-        }
-
-        var paddleOcrPath = Path.Combine(Se.PaddleOcrFolder, "paddleocr.bin");
-        if (engineType != OcrEngineType.PaddleOcrStandalone || !File.Exists(paddleOcrPath))
-        {
-            // Also the fallback when the standalone binary is missing (no standalone build
-            // exists on macOS, and batch convert always requests PaddleOcrStandalone), so
-            // resolve the pip-installed CLI instead of relying on a bare "paddleocr".
-            paddleOcrPath = GetPaddleOcrPytonPath();
-        }
-
-        if (engineType == OcrEngineType.PaddleOcrStandalone &&
-            File.Exists(Path.Combine(Se.PaddleOcrFolder, "paddleocr.exe")))
-        {
-            paddleOcrPath = Path.Combine(Se.PaddleOcrFolder, "paddleocr.exe");
         }
 
         var process = new Process
@@ -665,7 +681,7 @@ public partial class PaddleOcr
 
         var foundFiles = possiblePaths
             .Where(Directory.Exists)
-            .SelectMany(baseDir => Directory.GetFiles(baseDir, executableName, SearchOption.AllDirectories))
+            .SelectMany(baseDir => SafeGetFiles(baseDir, executableName))
             .Concat(GetCliShimCandidates(executableName))
             .Distinct()
             .ToList();
@@ -697,6 +713,20 @@ public partial class PaddleOcr
         }
 
         return foundFiles.Last();
+    }
+
+    // A conda/Python tree can contain unreadable directories or reparse-point cycles;
+    // a resolver failure must degrade to "not found here", never abort the OCR run.
+    private static string[] SafeGetFiles(string baseDir, string fileName)
+    {
+        try
+        {
+            return Directory.GetFiles(baseDir, fileName, SearchOption.AllDirectories);
+        }
+        catch
+        {
+            return Array.Empty<string>();
+        }
     }
 
     // A GUI app launched from Finder/launchd does not inherit the shell PATH, so
