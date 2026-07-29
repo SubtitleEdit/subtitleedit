@@ -143,7 +143,6 @@ public class Piper : ITtsEngine
         var json = File.ReadAllText(voiceFileName);
         var parser = new SeJsonParser();
         var arr = parser.GetRootElements(json);
-        AddCustomVoices(result);
 
         foreach (var element in arr)
         {
@@ -172,6 +171,10 @@ public class Piper : ITtsEngine
                 }
             }
         }
+
+        // Must run after the official voices are parsed - the "already known" filter
+        // compares against them, so downloaded official models are not re-listed as custom.
+        AddCustomVoices(result);
 
         return result.ToArray();
     }
