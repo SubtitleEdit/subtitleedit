@@ -75,6 +75,7 @@ public partial class FixCommonErrorsViewModel : ObservableObject, IFixCallbacks
     private bool _previewMode = true;
     public List<int> DeleteIndices = new();
     private List<FixDisplayItem> _oldFixes = new();
+    private HashSet<(Guid? id, string action)>? _allowedFixLookup;
     private FixRuleDisplayItem? _currentRunningRule;
     private bool _nothingToFix;
     private bool _isAnalysing;
@@ -595,6 +596,7 @@ public partial class FixCommonErrorsViewModel : ObservableObject, IFixCallbacks
         }
 
         _totalErrors = 0;
+        _allowedFixLookup = null; // fix selection may have changed since the last pass
 
         var subtitle = _previewMode ? new Subtitle(FixedSubtitle, false) : FixedSubtitle;
         foreach (var paragraph in subtitle.Paragraphs)
@@ -862,8 +864,22 @@ public partial class FixCommonErrorsViewModel : ObservableObject, IFixCallbacks
             return true;
         }
 
-        var allowFix = Fixes.Any(f => f.Paragraph.Id == p.Id && f.Action == action && f.IsSelected);
-        return allowFix;
+        // Every fix rule probes this once per paragraph during apply, so a linear scan of
+        // Fixes made the pass O(paragraphs x rules x fixes). Fixes is stable while applying
+        // (AddFixToListView is a no-op outside preview mode), so one lookup set per pass is safe.
+        if (_allowedFixLookup == null)
+        {
+            _allowedFixLookup = new HashSet<(Guid? id, string action)>(Fixes.Count);
+            foreach (var fix in Fixes)
+            {
+                if (fix.IsSelected)
+                {
+                    _allowedFixLookup.Add((fix.Paragraph.Id, fix.Action));
+                }
+            }
+        }
+
+        return _allowedFixLookup.Contains((p.Id, action));
     }
 
     [RelayCommand]
