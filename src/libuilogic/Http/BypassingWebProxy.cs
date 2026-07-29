@@ -2,7 +2,9 @@ using System;
 using System.Linq;
 using System.Net;
 
-namespace Nikse.SubtitleEdit.Core.Common
+using Nikse.SubtitleEdit.Core.Common;
+
+namespace Nikse.SubtitleEdit.UiLogic.Http
 {
     /// <summary>
     /// Wraps another proxy so loopback urls (localhost, 127.x, [::1]) and hosts from the

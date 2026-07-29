@@ -181,6 +181,8 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 using Nikse.SubtitleEdit.UiLogic.SpellCheck;
+using Nikse.SubtitleEdit.UiLogic.Media;
+using Nikse.SubtitleEdit.UiLogic.Common;
 
 namespace Nikse.SubtitleEdit.Features.Main;
 

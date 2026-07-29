@@ -7,7 +7,9 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 
-namespace Nikse.SubtitleEdit.Core.Common
+using Nikse.SubtitleEdit.Core.Common;
+
+namespace Nikse.SubtitleEdit.UiLogic.Media
 {
     public partial class FfmpegMediaInfo
     {

@@ -19,6 +19,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Timers;
+using Nikse.SubtitleEdit.UiLogic.Media;
 
 namespace Nikse.SubtitleEdit.Features.Files.ImportPlainText;
 

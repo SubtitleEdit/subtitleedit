@@ -35,6 +35,8 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Timers;
+using Nikse.SubtitleEdit.UiLogic.Media;
+using Nikse.SubtitleEdit.UiLogic.Common;
 
 namespace Nikse.SubtitleEdit.Features.Video.SpeechToText;
 

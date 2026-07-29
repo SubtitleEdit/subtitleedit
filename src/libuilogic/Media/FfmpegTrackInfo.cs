@@ -1,6 +1,8 @@
 ﻿using System.Text.RegularExpressions;
 
-namespace Nikse.SubtitleEdit.Core.Common
+using Nikse.SubtitleEdit.Core.Common;
+
+namespace Nikse.SubtitleEdit.UiLogic.Media
 {
     public class FfmpegTrackInfo
     {

@@ -2,6 +2,7 @@
 using Nikse.SubtitleEdit.Logic.Config;
 using System.Diagnostics;
 using System.IO;
+using Nikse.SubtitleEdit.UiLogic.Media;
 
 namespace Nikse.SubtitleEdit.Logic.Media;
 

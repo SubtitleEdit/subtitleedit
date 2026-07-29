@@ -2,7 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Nikse.SubtitleEdit.Core.Common
+using Nikse.SubtitleEdit.Core.Common;
+
+namespace Nikse.SubtitleEdit.UiLogic.Common
 {
     /// <summary>
     /// Shared "favorite languages" used to bubble the user's preferred languages to the top of

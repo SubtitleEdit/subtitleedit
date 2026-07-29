@@ -3,6 +3,7 @@ using System.Net;
 using System.Net.Http;
 using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.Settings;
+using Nikse.SubtitleEdit.UiLogic.Http;
 
 namespace Nikse.SubtitleEdit.UiLogic.Http
 {

@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 
-namespace Nikse.SubtitleEdit.Core.Common
+using Nikse.SubtitleEdit.Core.Common;
+
+namespace Nikse.SubtitleEdit.UiLogic.Common
 {
     public class BookmarkPersistence
     {

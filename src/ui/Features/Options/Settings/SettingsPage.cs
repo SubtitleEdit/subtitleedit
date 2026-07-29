@@ -17,6 +17,7 @@ using Nikse.SubtitleEdit.Logic.ValueConverters;
 using Optris.Icons.Avalonia;
 using System;
 using System.Collections.Generic;
+using Nikse.SubtitleEdit.UiLogic.Common;
 
 namespace Nikse.SubtitleEdit.Features.Options.Settings;
 

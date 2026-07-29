@@ -9,6 +9,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
+using Nikse.SubtitleEdit.UiLogic.Http;
 
 namespace Nikse.SubtitleEdit.UiLogic.AutoTranslate
 {

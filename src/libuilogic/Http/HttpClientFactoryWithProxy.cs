@@ -1,7 +1,9 @@
 using System.Net.Http;
 using System.Net;
 
-namespace Nikse.SubtitleEdit.Core.Common
+using Nikse.SubtitleEdit.Core.Common;
+
+namespace Nikse.SubtitleEdit.UiLogic.Http
 {
     public static class HttpClientFactoryWithProxy
     {

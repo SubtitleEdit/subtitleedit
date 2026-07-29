@@ -1,4 +1,4 @@
-﻿namespace Nikse.SubtitleEdit.Core.Common
+﻿namespace Nikse.SubtitleEdit.UiLogic.Media
 {
     public enum FfmpegTrackType
     {

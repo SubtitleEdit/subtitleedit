@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 
-namespace Nikse.SubtitleEdit.Core
+namespace Nikse.SubtitleEdit.UiLogic.AudioToText
 {
     public class GermanNouns
     {

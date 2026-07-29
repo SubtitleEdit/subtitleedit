@@ -59,6 +59,7 @@ using System.Threading.Tasks;
 using Nikse.SubtitleEdit.UiLogic.LlamaCpp;
 using Nikse.SubtitleEdit.UiLogic.Ocr.FixEngine;
 using Nikse.SubtitleEdit.UiLogic.SpellCheck;
+using Nikse.SubtitleEdit.UiLogic.Common;
 
 namespace Nikse.SubtitleEdit.Features.Ocr;
 
