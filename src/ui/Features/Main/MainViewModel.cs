@@ -8112,6 +8112,17 @@ public partial class MainViewModel :
     [RelayCommand]
     private void ShowSyncAdjustAllTimes()
     {
+        ShowAdjustAllTimes(forceSelectedLines: false);
+    }
+
+    [RelayCommand]
+    private void ShowSyncAdjustAllTimesSelectedLines()
+    {
+        ShowAdjustAllTimes(forceSelectedLines: true);
+    }
+
+    private void ShowAdjustAllTimes(bool forceSelectedLines)
+    {
         if (Window == null)
         {
             return;
@@ -8126,6 +8137,11 @@ public partial class MainViewModel :
 
         if (_adjustAllTimesViewModel != null && _adjustAllTimesViewModel.Window != null && _adjustAllTimesViewModel.Window.IsVisible)
         {
+            if (forceSelectedLines)
+            {
+                _adjustAllTimesViewModel.SelectAdjustSelectedLines();
+            }
+
             _adjustAllTimesViewModel.Window.Activate();
             return;
         }
@@ -8134,7 +8150,7 @@ public partial class MainViewModel :
         {
             _adjustAllTimesViewModel = vm;
             var selectedCount = SubtitleGrid.SelectedItems.Count;
-            vm.Initialize(this, selectedCount); // uses call from IAdjustCallback: Adjust
+            vm.Initialize(this, selectedCount, forceSelectedLines); // uses call from IAdjustCallback: Adjust
         });
     }
 
