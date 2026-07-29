@@ -1862,6 +1862,7 @@ public partial class MainViewModel :
         UpdateVideoOffsetStatus();
         _currentSpellCheckDictionary = null;
         _spellCheckSessionInProgress = false;
+        _autoTrimLanguageCode = null;
 
         if (format != null)
         {
@@ -16348,13 +16349,20 @@ public partial class MainViewModel :
         return true;
     }
 
+    // RemoveUnneededSpaces has language-specific rules - e.g. Dutch keeps the space in
+    // "ze 's avonds" - so auto-trim must not run with an empty language code (issue #12144).
+    // Detection is too slow for the per-selection trim in SubtitleGrid_SelectionChanged,
+    // so the code is cached here; this method re-detects on every file load and auto-save.
+    private string? _autoTrimLanguageCode;
+
     private void AutoTrimWhiteSpaces()
     {
         if (Se.Settings.General.AutoTrimWhiteSpace)
         {
+            _autoTrimLanguageCode = Subtitles.AutoDetectGoogleLanguage() ?? string.Empty;
             foreach (var item in Subtitles)
             {
-                item.Text = Utilities.RemoveUnneededSpaces(item.Text, string.Empty).Trim();
+                item.Text = Utilities.RemoveUnneededSpaces(item.Text, _autoTrimLanguageCode).Trim();
             }
         }
     }
@@ -17276,6 +17284,8 @@ public partial class MainViewModel :
     /// </summary>
     private void ReplaceSubtitles(IEnumerable<SubtitleLineViewModel> items)
     {
+        _autoTrimLanguageCode = null;
+
         // Materialize first: callers may pass a lazy query over Subtitles itself.
         var list = items as IReadOnlyList<SubtitleLineViewModel> ?? items.ToList();
 
@@ -21617,11 +21627,12 @@ public partial class MainViewModel :
 
         if (Se.Settings.General.AutoTrimWhiteSpace && e.RemovedItems.Count < 10)
         {
+            var languageCode = _autoTrimLanguageCode ??= Subtitles.AutoDetectGoogleLanguage() ?? string.Empty;
             foreach (SubtitleLineViewModel? item in e.RemovedItems)
             {
                 if (item != null)
                 {
-                    item.Text = Utilities.RemoveUnneededSpaces(item.Text, string.Empty).Trim();
+                    item.Text = Utilities.RemoveUnneededSpaces(item.Text, languageCode).Trim();
                 }
             }
         }
