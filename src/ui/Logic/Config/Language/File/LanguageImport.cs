@@ -42,6 +42,13 @@ public class LanguageImport
     public string UseFixedDuration { get; set; }
     public string FixedDurationMs { get; set; }
     public string AlignViaSpeechToText { get; set; }
+    public string AlignViaForcedAligner { get; set; }
+    public string ForcedAlignerProgress { get; set; }
+    public string ForcedAlignerSetupTitle { get; set; }
+    public string ForcedAlignerSetupIntro { get; set; }
+    public string ForcedAlignerEngine { get; set; }
+    public string ForcedAlignerModel { get; set; }
+    public string ForcedAlignerDownloadEngine { get; set; }
 
     public LanguageImport()
     {
@@ -89,6 +96,13 @@ Rules:
         UseFixedDuration = "Use fixed duration";
         FixedDurationMs = "Fixed duration (ms)";
         AlignViaSpeechToText = "Align time codes via \"Speech to text\"...";
+        AlignViaForcedAligner = "Align time codes via forced aligner...";
+        ForcedAlignerProgress = "Aligning... window {0} of {1}, {2} of {3} lines";
+        ForcedAlignerSetupTitle = "Align time codes via forced aligner";
+        ForcedAlignerSetupIntro = "A forced aligner matches the subtitle text you already have against the audio, without transcribing it first. Long videos are aligned in chunks, so any length works.";
+        ForcedAlignerEngine = "Engine";
+        ForcedAlignerModel = "Aligner model";
+        ForcedAlignerDownloadEngine = "Download / update engine...";
         CsvXlsxCustomColumnsDotDotDot = "CSV/XLSX with custom columns...";
         TitleImportCsvXlsxCustomColumns = "Import CSV/XLSX with custom columns";
         DetectedSeparatorX = "Detected separator: {0}";
