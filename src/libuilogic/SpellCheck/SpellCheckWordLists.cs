@@ -17,8 +17,17 @@ public class SpellCheckWordLists
         '\u202B', '\u202C', '\u202D', '\u202E', '\u202F', '\u3000', '\uFEFF'
     };
 
+    // SplitChars plus every char.IsControl character (U+0000-U+001F, U+007F-U+009F), so Split
+    // can scan with a single vectorized IndexOfAny. Declared after SplitChars - static field
+    // initializers run in declaration order.
+    private static readonly System.Buffers.SearchValues<char> SplitOrControlChars = System.Buffers.SearchValues.Create(
+        string.Concat(SplitChars) +
+        new string(Enumerable.Range(0x00, 0x20).Select(i => (char)i).ToArray()) +
+        new string(Enumerable.Range(0x7F, 0x21).Select(i => (char)i).ToArray()));
+
     private static readonly char[] PeriodAndDash = { '.', '-' };
     private static readonly char[] ApostropheChars = { '\'', '‘', '’' };
+    private static readonly System.Buffers.SearchValues<char> ApostropheSearchValues = System.Buffers.SearchValues.Create("'‘’");
     private static readonly char[] SplitChars2 = { ' ', '.', ',', '?', '!', ':', ';', '"', '“', '”', '(', ')', '[', ']', '{', '}', '|', '<', '>', '/', '+', '\r', '\n', '¿', '¡', '…', '—', '–', '♪', '♫', '„', '«', '»', '‹', '›', '؛', '،', '؟' };
 
     private readonly NameList _nameList;
@@ -387,26 +396,18 @@ public class SpellCheckWordLists
     public static List<SpellCheckWord> Split(string s)
     {
         var list = new List<SpellCheckWord>();
-        var sb = new StringBuilder();
-        for (int i = 0; i < s.Length; i++)
+        var span = s.AsSpan();
+        var pos = 0;
+        while (pos < span.Length)
         {
-            if (SplitChars.Contains(s[i]) || char.IsControl(s[i]))
+            var relative = span.Slice(pos).IndexOfAny(SplitOrControlChars);
+            var end = relative < 0 ? span.Length : pos + relative;
+            if (end > pos)
             {
-                if (sb.Length > 0)
-                {
-                    AddWord(list, sb.ToString(), i - sb.Length);
-                }
+                AddWord(list, s.Substring(pos, end - pos), pos);
+            }
 
-                sb.Clear();
-            }
-            else
-            {
-                sb.Append(s[i]);
-            }
-        }
-        if (sb.Length > 0)
-        {
-            AddWord(list, sb.ToString(), s.Length - sb.Length);
+            pos = end + 1;
         }
 
         return list;
@@ -418,7 +419,7 @@ public class SpellCheckWordLists
     // be spell-checked - it has no word characters and would just be flagged as unknown. (#12143)
     private static void AddWord(List<SpellCheckWord> list, string text, int index)
     {
-        if (text.Trim(ApostropheChars).Length == 0)
+        if (text.AsSpan().IndexOfAnyExcept(ApostropheSearchValues) < 0)
         {
             return;
         }
