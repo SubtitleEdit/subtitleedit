@@ -190,6 +190,8 @@ public class LanguageSettings
     public string ShowToolbarPointSync { get; set; }
     public string ShowToolbarBeautifyTimeCodes { get; set; }
     public string ShowToolbarBurnIn { get; set; }
+    public string ShowToolbarAutoTranslate { get; set; }
+    public string ShowToolbarSpeechToText { get; set; }
     public string ShowToolbarSettings { get; set; }
     public string ShowToolbarLayout { get; set; }
     public string ShowToolbarHelp { get; set; }
@@ -539,6 +541,8 @@ public class LanguageSettings
         ShowToolbarPointSync = "Show point sync icon";
         ShowToolbarBeautifyTimeCodes = "Show beautify time codes icon";
         ShowToolbarBurnIn = "Show burn-in icon";
+        ShowToolbarAutoTranslate = "Show auto-translate icon";
+        ShowToolbarSpeechToText = "Show speech to text icon";
         ShowToolbarSettings = "Show settings icon";
         ShowToolbarLayout = "Show layout icon";
         ShowToolbarHelp = "Show help icon";

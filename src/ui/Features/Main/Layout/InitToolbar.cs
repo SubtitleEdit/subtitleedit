@@ -250,6 +250,32 @@ public static class InitToolbar
             isLastSeparator = false;
         }
 
+        if (appearance.ToolbarShowAutoTranslate)
+        {
+            stackPanelLeft.Children.Add(new Button
+            {
+                Content = MakeImage("AutoTranslate"),
+                Command = vm.ShowAutoTranslateCommand,
+                Background = Brushes.Transparent,
+                [AutomationProperties.NameProperty] = languageHints.AutoTranslateHint,
+                [ToolTip.TipProperty] = UiUtil.MakeToolTip(languageHints.AutoTranslateHint, shortcuts, nameof(vm.ShowAutoTranslateCommand)),
+            });
+            isLastSeparator = false;
+        }
+
+        if (appearance.ToolbarShowSpeechToText)
+        {
+            stackPanelLeft.Children.Add(new Button
+            {
+                Content = MakeImage("SpeechToText"),
+                Command = vm.ShowSpeechToTextWhisperCommand,
+                Background = Brushes.Transparent,
+                [AutomationProperties.NameProperty] = languageHints.SpeechToTextHint,
+                [ToolTip.TipProperty] = UiUtil.MakeToolTip(languageHints.SpeechToTextHint, shortcuts, nameof(vm.ShowSpeechToTextWhisperCommand)),
+            });
+            isLastSeparator = false;
+        }
+
 
         if (appearance.ToolbarShowSettings)
         {

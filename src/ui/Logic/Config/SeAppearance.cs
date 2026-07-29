@@ -62,6 +62,8 @@ public class SeAppearance
     public bool ToolbarShowPointSync { get; set; }
     public bool ToolbarShowBeautifyTimeCodes { get; set; }
     public bool ToolbarShowBurnIn { get; set; }
+    public bool ToolbarShowAutoTranslate { get; set; }
+    public bool ToolbarShowSpeechToText { get; set; }
     public bool ToolbarShowSettings { get; set; }
     public bool ToolbarShowLayout { get; set; }
     public bool ToolbarShowSourceView { get; set; }
@@ -136,6 +138,8 @@ public class SeAppearance
         ToolbarShowPointSync = false;
         ToolbarShowBeautifyTimeCodes = false;
         ToolbarShowBurnIn = false;
+        ToolbarShowAutoTranslate = false;
+        ToolbarShowSpeechToText = false;
         ToolbarShowSettings = true;
         ToolbarShowLayout = true;
         ToolbarShowSourceView = false;

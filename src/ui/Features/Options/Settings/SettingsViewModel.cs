@@ -207,6 +207,8 @@ public partial class SettingsViewModel : ObservableObject
     [ObservableProperty] private bool _showToolbarPointSync;
     [ObservableProperty] private bool _showToolbarBeautifyTimeCodes;
     [ObservableProperty] private bool _showToolbarBurnIn;
+    [ObservableProperty] private bool _showToolbarAutoTranslate;
+    [ObservableProperty] private bool _showToolbarSpeechToText;
     [ObservableProperty] private bool _fixCommonErrorsSkipStep1;
     [ObservableProperty] private bool _showToolbarSettings;
     [ObservableProperty] private bool _showToolbarLayout;
@@ -825,6 +827,8 @@ public partial class SettingsViewModel : ObservableObject
         ShowToolbarPointSync = appearance.ToolbarShowPointSync;
         ShowToolbarBeautifyTimeCodes = appearance.ToolbarShowBeautifyTimeCodes;
         ShowToolbarBurnIn = appearance.ToolbarShowBurnIn;
+        ShowToolbarAutoTranslate = appearance.ToolbarShowAutoTranslate;
+        ShowToolbarSpeechToText = appearance.ToolbarShowSpeechToText;
         ShowToolbarSettings = appearance.ToolbarShowSettings;
         ShowToolbarLayout = appearance.ToolbarShowLayout;
         ShowToolbarSourceView = appearance.ToolbarShowSourceView;
@@ -1644,6 +1648,8 @@ public partial class SettingsViewModel : ObservableObject
         appearance.ToolbarShowPointSync = ShowToolbarPointSync;
         appearance.ToolbarShowBeautifyTimeCodes = ShowToolbarBeautifyTimeCodes;
         appearance.ToolbarShowBurnIn = ShowToolbarBurnIn;
+        appearance.ToolbarShowAutoTranslate = ShowToolbarAutoTranslate;
+        appearance.ToolbarShowSpeechToText = ShowToolbarSpeechToText;
         appearance.ToolbarShowSettings = ShowToolbarSettings;
         appearance.ToolbarShowLayout = ShowToolbarLayout;
         appearance.ToolbarShowSourceView = ShowToolbarSourceView;
