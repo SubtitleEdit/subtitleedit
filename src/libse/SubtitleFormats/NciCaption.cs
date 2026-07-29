@@ -77,12 +77,13 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
             int i = 128;
             var encoding = Encoding.GetEncoding(1252);
+            var sb = new StringBuilder();
             while (i < buffer.Length - 66)
             {
                 if (buffer[i] == 0xff && buffer[i + 1] == 0xff && buffer[i + 3] != 0xff && buffer[i - 1] != 0xff && buffer[i + 64] == 0xff && buffer[i + 65] == 0xff)
                 {
                     var p = new Paragraph();
-                    var sb = new StringBuilder();
+                    sb.Clear();
                     int j = i + 4;
                     while (j < i + 64)
                     {

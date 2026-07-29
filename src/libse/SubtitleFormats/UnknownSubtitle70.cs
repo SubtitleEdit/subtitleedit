@@ -84,6 +84,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         public override string ToText(Subtitle subtitle, string title)
         {
             var sb = new StringBuilder();
+            var lineSb = new StringBuilder();
+            var pre = new StringBuilder();
             foreach (Paragraph p in subtitle.Paragraphs)
             {
                 sb.Append('[');
@@ -100,7 +102,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 bool italicOn = false;
                 bool boldOn = false;
                 bool underlineOn = false;
-                var lineSb = new StringBuilder();
+                lineSb.Clear();
                 foreach (string line in parts)
                 {
                     if (count > 0)
@@ -112,7 +114,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     bool alreadyBold = boldOn;
                     bool alreadyUnderline = underlineOn;
 
-                    var pre = new StringBuilder();
+                    pre.Clear();
                     string s = line;
                     for (int i = 0; i < 5; i++)
                     {
@@ -340,6 +342,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             Errors = null;
             _lineNumber = 0;
 
+            var lineSb = new StringBuilder();
+            var pre = new StringBuilder();
             foreach (string line in lines)
             {
                 _lineNumber++;
@@ -361,7 +365,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                             string post = string.Empty;
                             string[] parts = text.Split(new[] { '|' }, StringSplitOptions.RemoveEmptyEntries);
                             int count = 0;
-                            var lineSb = new StringBuilder();
+                            lineSb.Clear();
 
                             foreach (string s2 in parts)
                             {
@@ -371,7 +375,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                                 }
 
                                 s = s2.Trim();
-                                var pre = new StringBuilder();
+                                pre.Clear();
                                 string singlePost = string.Empty;
                                 for (int i = 0; i < 5; i++)
                                 {

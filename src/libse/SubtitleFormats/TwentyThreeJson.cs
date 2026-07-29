@@ -84,6 +84,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             var json = allText.Substring(startIndex);
             var parser = new SeJsonParser();
             var items = parser.GetArrayElementsByName(json, "subtitles");
+            var text = new StringBuilder();
             foreach (var item in items)
             {
                 var textLines = parser.GetArrayElementsByName(item, "text");
@@ -93,7 +94,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     double.TryParse(beginTime[0], NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out var startSeconds) &&
                     double.TryParse(endTime[0], NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out var endSeconds))
                 {
-                    var text = new StringBuilder();
+                    text.Clear();
                     foreach (var line in textLines)
                     {
                         text.AppendLine(Json.DecodeJsonText(line));

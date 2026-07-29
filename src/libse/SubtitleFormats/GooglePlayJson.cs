@@ -59,6 +59,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 return;
             }
 
+            var text = new StringBuilder();
             foreach (var k in dictionary.Keys)
             {
                 if (k != "events" || !(dictionary[k] is List<object> captionGroups))
@@ -73,7 +74,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         continue;
                     }
 
-                    var text = new StringBuilder();
+                    text.Clear();
                     var start = -1d;
                     var dur = -1d;
                     foreach (var lineKey in line.Keys)
