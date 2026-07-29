@@ -63,7 +63,14 @@ public partial class AutoBackupService : IAutoBackupService
         {
             await foreach (var (subtitle, format) in channel.Reader.ReadAllAsync())
             {
-                SaveAutoBackup(subtitle, format);
+                try
+                {
+                    SaveAutoBackup(subtitle, format);
+                }
+                catch
+                {
+                    // never let one bad snapshot kill the backup loop
+                }
             }
         });
 
