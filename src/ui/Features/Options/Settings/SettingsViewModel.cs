@@ -74,6 +74,11 @@ public partial class SettingsViewModel : ObservableObject
     [ObservableProperty] private int? _maxLines;
     [ObservableProperty] private string _colorTextTooManyLinesLabel = string.Empty;
     [ObservableProperty] private int? _unbreakLinesShorterThan;
+    [ObservableProperty] private bool _autoBreakLineEndingEarly;
+    [ObservableProperty] private bool _autoBreakCommaBreakEarly;
+    [ObservableProperty] private bool _autoBreakDashEarly;
+    [ObservableProperty] private bool _autoBreakUsePixelWidth;
+    [ObservableProperty] private bool _autoBreakPreferBottomHeavy;
 
     // "Color text if more than N lines" must track the live "Max number of lines"
     // value instead of a hardcoded "2" (#12028), including while typing (nullable/
@@ -157,6 +162,10 @@ public partial class SettingsViewModel : ObservableObject
     [ObservableProperty] private bool _subtitleGridCenterSelectedRow;
 
     [ObservableProperty] private ObservableCollection<string> _saveAsBehaviorTypes;
+    [ObservableProperty] private ObservableCollection<string> _defaultSaveLocationTypes;
+    [ObservableProperty] private string _selectedDefaultSaveLocationType;
+    [ObservableProperty] private string _defaultSaveLocationCustomFolder = string.Empty;
+    [ObservableProperty] private bool _isDefaultSaveLocationCustomFolderEnabled;
     [ObservableProperty] private string _selectedSaveAsBehaviorType;
 
     [ObservableProperty] private ObservableCollection<string> _saveAsAppendLanguageCode;
@@ -263,6 +272,9 @@ public partial class SettingsViewModel : ObservableObject
     [ObservableProperty] private string _proxyAddress = string.Empty;
     [ObservableProperty] private string _proxyUserName = string.Empty;
     [ObservableProperty] private string _proxyPassword = string.Empty;
+    [ObservableProperty] private string _proxyDomain = string.Empty;
+    [ObservableProperty] private bool _proxyUseDefaultCredentials;
+    [ObservableProperty] private string _proxyBypassList = string.Empty;
     [ObservableProperty] private int _waveformTextFontSize;
     [ObservableProperty] private bool _waveformTextFontBold;
     [ObservableProperty] private Color _waveformTextColor;
@@ -574,6 +586,16 @@ public partial class SettingsViewModel : ObservableObject
         ];
         SelectedSaveAsBehaviorType = SaveAsBehaviorTypes[0];
 
+        DefaultSaveLocationTypes =
+        [
+            Se.Language.Options.Settings.DefaultSaveLocationSourceFileFolder,
+            Se.Language.Options.Settings.DefaultSaveLocationLastUsedFolder,
+            Se.Language.Options.Settings.DefaultSaveLocationVideoFileFolder,
+            Se.Language.Options.Settings.DefaultSaveLocationSubtitleFileFolder,
+            Se.Language.Options.Settings.DefaultSaveLocationCustomFolder,
+        ];
+        SelectedDefaultSaveLocationType = DefaultSaveLocationTypes[0];
+
         SaveAsAppendLanguageCode =
         [
             Se.Language.General.None,
@@ -684,6 +706,11 @@ public partial class SettingsViewModel : ObservableObject
         MinGapFrames = general.MinimumBetweenLines.Frames;
         MaxLines = general.MaxNumberOfLines;
         UnbreakLinesShorterThan = general.UnbreakLinesShorterThan;
+        AutoBreakLineEndingEarly = Se.Settings.Tools.AutoBreakLineEndingEarly;
+        AutoBreakCommaBreakEarly = Se.Settings.Tools.AutoBreakCommaBreakEarly;
+        AutoBreakDashEarly = Se.Settings.Tools.AutoBreakDashEarly;
+        AutoBreakUsePixelWidth = Se.Settings.Tools.AutoBreakUsePixelWidth;
+        AutoBreakPreferBottomHeavy = Se.Settings.Tools.AutoBreakPreferBottomHeavy;
         DialogStyle = DialogStyles.FirstOrDefault(p => p.Code == general.DialogStyle) ?? DialogStyles.First();
         ContinuationStyle = ContinuationStyles.FirstOrDefault(p => p.Code == general.ContinuationStyle) ?? ContinuationStyles.First();
         IsEditCustomContinuationStyleVisible = ContinuationStyle?.Code == nameof(Core.Enums.ContinuationStyle.Custom);
@@ -708,6 +735,8 @@ public partial class SettingsViewModel : ObservableObject
         SubtitleGridCenterSelectedRow = Se.Settings.General.SubtitleGridCenterSelectedRow;
         SelectedSaveAsBehaviorType = MapFromSelectedSaveAsBehavior(Se.Settings.General.SaveAsBehavior);
         SelectedSaveAsAppendLanguageCode = MapFromSelectedSaveAsAppendLanguageCode(Se.Settings.General.SaveAsAppendLanguageCode);
+        SelectedDefaultSaveLocationType = MapFromDefaultSaveLocation(Se.Settings.General.DefaultSaveLocation);
+        DefaultSaveLocationCustomFolder = Se.Settings.General.DefaultSaveLocationCustomFolder ?? string.Empty;
         AutoConvertToUtf8 = general.AutoConvertToUtf8;
         ForceCrLfOnSave = general.ForceCrLfOnSave;
         AutoTrimWhiteSpace = general.AutoTrimWhiteSpace;
@@ -979,6 +1008,9 @@ public partial class SettingsViewModel : ObservableObject
         ProxyAddress = Se.Settings.General.ProxyAddress ?? string.Empty;
         ProxyUserName = Se.Settings.General.ProxyUserName ?? string.Empty;
         ProxyPassword = Se.Settings.General.ProxyPassword ?? string.Empty;
+        ProxyDomain = Se.Settings.General.ProxyDomain ?? string.Empty;
+        ProxyUseDefaultCredentials = Se.Settings.General.ProxyUseDefaultCredentials;
+        ProxyBypassList = Se.Settings.General.ProxyBypassList ?? string.Empty;
         SetFfmpegStatus();
         SetLibMpvStatus();
         SetLibVlcStatus();
@@ -1162,6 +1194,76 @@ public partial class SettingsViewModel : ObservableObject
         }
 
         return Se.Language.General.Default;
+    }
+
+    private static string MapFromDefaultSaveLocation(string defaultSaveLocation)
+    {
+        if (defaultSaveLocation == nameof(DefaultSaveLocationType.LastUsedFolder))
+        {
+            return Se.Language.Options.Settings.DefaultSaveLocationLastUsedFolder;
+        }
+
+        if (defaultSaveLocation == nameof(DefaultSaveLocationType.VideoFileFolder))
+        {
+            return Se.Language.Options.Settings.DefaultSaveLocationVideoFileFolder;
+        }
+
+        if (defaultSaveLocation == nameof(DefaultSaveLocationType.SubtitleFileFolder))
+        {
+            return Se.Language.Options.Settings.DefaultSaveLocationSubtitleFileFolder;
+        }
+
+        if (defaultSaveLocation == nameof(DefaultSaveLocationType.CustomFolder))
+        {
+            return Se.Language.Options.Settings.DefaultSaveLocationCustomFolder;
+        }
+
+        return Se.Language.Options.Settings.DefaultSaveLocationSourceFileFolder;
+    }
+
+    private static string MapToDefaultSaveLocation(string selectedDefaultSaveLocationType)
+    {
+        if (selectedDefaultSaveLocationType == Se.Language.Options.Settings.DefaultSaveLocationLastUsedFolder)
+        {
+            return nameof(DefaultSaveLocationType.LastUsedFolder);
+        }
+
+        if (selectedDefaultSaveLocationType == Se.Language.Options.Settings.DefaultSaveLocationVideoFileFolder)
+        {
+            return nameof(DefaultSaveLocationType.VideoFileFolder);
+        }
+
+        if (selectedDefaultSaveLocationType == Se.Language.Options.Settings.DefaultSaveLocationSubtitleFileFolder)
+        {
+            return nameof(DefaultSaveLocationType.SubtitleFileFolder);
+        }
+
+        if (selectedDefaultSaveLocationType == Se.Language.Options.Settings.DefaultSaveLocationCustomFolder)
+        {
+            return nameof(DefaultSaveLocationType.CustomFolder);
+        }
+
+        return nameof(DefaultSaveLocationType.SourceFileFolder);
+    }
+
+    partial void OnSelectedDefaultSaveLocationTypeChanged(string value)
+    {
+        IsDefaultSaveLocationCustomFolderEnabled = value == Se.Language.Options.Settings.DefaultSaveLocationCustomFolder;
+    }
+
+    [RelayCommand]
+    private async Task BrowseDefaultSaveLocationFolder()
+    {
+        if (Window == null)
+        {
+            return;
+        }
+
+        var folder = await _folderHelper.PickFolderAsync(Window, Se.Language.Options.Settings.DefaultSaveLocation);
+        if (!string.IsNullOrEmpty(folder))
+        {
+            DefaultSaveLocationCustomFolder = folder;
+        }
     }
 
     private static string MapFromSelectedSaveAsAppendLanguageCode(string languageAppendType)
@@ -1443,6 +1545,11 @@ public partial class SettingsViewModel : ObservableObject
         general.MinimumBetweenLines.Frames = MinGapFrames ?? general.MinimumBetweenLines.Frames;
         general.MaxNumberOfLines = MaxLines ?? general.MaxNumberOfLines;
         general.UnbreakLinesShorterThan = UnbreakLinesShorterThan ?? general.UnbreakLinesShorterThan;
+        Se.Settings.Tools.AutoBreakLineEndingEarly = AutoBreakLineEndingEarly;
+        Se.Settings.Tools.AutoBreakCommaBreakEarly = AutoBreakCommaBreakEarly;
+        Se.Settings.Tools.AutoBreakDashEarly = AutoBreakDashEarly;
+        Se.Settings.Tools.AutoBreakUsePixelWidth = AutoBreakUsePixelWidth;
+        Se.Settings.Tools.AutoBreakPreferBottomHeavy = AutoBreakPreferBottomHeavy;
         general.DialogStyle = DialogStyle.Code;
         general.ContinuationStyle = ContinuationStyle.Code;
         general.CpsLineLengthStrategy = CpsLineLengthStrategy.Code;
@@ -1466,6 +1573,8 @@ public partial class SettingsViewModel : ObservableObject
         general.SubtitleGridCenterSelectedRow = SubtitleGridCenterSelectedRow;
         general.SaveAsBehavior = MapToSaveAsBehavior(SelectedSaveAsBehaviorType);
         general.SaveAsAppendLanguageCode = MapToSaveAsAppendLanguageCode(SelectedSaveAsAppendLanguageCode);
+        general.DefaultSaveLocation = MapToDefaultSaveLocation(SelectedDefaultSaveLocationType);
+        general.DefaultSaveLocationCustomFolder = DefaultSaveLocationCustomFolder;
         general.AutoConvertToUtf8 = AutoConvertToUtf8;
         general.ForceCrLfOnSave = ForceCrLfOnSave;
         general.AutoTrimWhiteSpace = AutoTrimWhiteSpace;
@@ -1694,6 +1803,9 @@ public partial class SettingsViewModel : ObservableObject
         general.ProxyAddress = ProxyAddress;
         general.ProxyUserName = ProxyUserName;
         general.ProxyPassword = ProxyPassword;
+        general.ProxyDomain = ProxyDomain;
+        general.ProxyUseDefaultCredentials = ProxyUseDefaultCredentials;
+        general.ProxyBypassList = ProxyBypassList;
 
         general.CurrentProfile = SelectedProfile;
         general.Profiles.Clear();

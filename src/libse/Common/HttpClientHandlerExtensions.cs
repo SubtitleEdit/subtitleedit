@@ -1,4 +1,3 @@
-using System;
 using System.Net.Http;
 using System.Net;
 
@@ -8,11 +7,10 @@ namespace Nikse.SubtitleEdit.Core.Common
     {
         public static HttpClient CreateHttpClientWithProxy()
         {
-            var proxyAddress = Configuration.Settings.Proxy.ProxyAddress;
+            var proxySettings = Configuration.Settings.Proxy;
+            var proxyAddress = proxySettings.ProxyAddress;
             if (string.IsNullOrEmpty(proxyAddress))
             {
-                // Wrap the system/environment proxy so loopback urls (localhost, 127.x, [::1])
-                // always connect directly - .NET Framework did this implicitly, modern .NET does not
 #if NETSTANDARD
                 var systemProxy = WebRequest.DefaultWebProxy;
 #else
@@ -26,7 +24,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                 var defaultHandler = new HttpClientHandler
                 {
                     UseProxy = true,
-                    Proxy = new LoopbackBypassingProxy(systemProxy),
+                    Proxy = new BypassingWebProxy(systemProxy, proxySettings.BypassList),
                 };
 
                 return new HttpClient(defaultHandler);
@@ -35,11 +33,11 @@ namespace Nikse.SubtitleEdit.Core.Common
             var handler = new HttpClientHandler();
             var proxy = new WebProxy(proxyAddress);
 
-            var userName = Configuration.Settings.Proxy.UserName;
-            var password = Configuration.Settings.Proxy.DecodePassword();
-            var domain = Configuration.Settings.Proxy.Domain;
+            var userName = proxySettings.UserName;
+            var password = proxySettings.DecodePassword();
+            var domain = proxySettings.Domain;
 
-            if (!string.IsNullOrEmpty(userName))
+            if (!proxySettings.UseDefaultCredentials && !string.IsNullOrEmpty(userName))
             {
                 proxy.Credentials = string.IsNullOrEmpty(domain)
                     ? new NetworkCredential(userName, password)
@@ -51,29 +49,9 @@ namespace Nikse.SubtitleEdit.Core.Common
             }
 
             handler.UseProxy = true;
-            handler.Proxy = new LoopbackBypassingProxy(proxy);
+            handler.Proxy = new BypassingWebProxy(proxy, proxySettings.BypassList);
 
             return new HttpClient(handler);
-        }
-
-        private sealed class LoopbackBypassingProxy : IWebProxy
-        {
-            private readonly IWebProxy _inner;
-
-            public LoopbackBypassingProxy(IWebProxy inner)
-            {
-                _inner = inner;
-            }
-
-            public ICredentials Credentials
-            {
-                get => _inner.Credentials;
-                set => _inner.Credentials = value;
-            }
-
-            public Uri GetProxy(Uri destination) => IsBypassed(destination) ? null : _inner.GetProxy(destination);
-
-            public bool IsBypassed(Uri host) => host.IsLoopback || _inner.IsBypassed(host);
         }
     }
 }

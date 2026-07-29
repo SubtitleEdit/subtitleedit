@@ -581,6 +581,9 @@ public class Se
 
         Configuration.Settings.Proxy.ProxyAddress = Settings.General.ProxyAddress ?? string.Empty;
         Configuration.Settings.Proxy.UserName = Settings.General.ProxyUserName ?? string.Empty;
+        Configuration.Settings.Proxy.Domain = Settings.General.ProxyDomain ?? string.Empty;
+        Configuration.Settings.Proxy.UseDefaultCredentials = Settings.General.ProxyUseDefaultCredentials;
+        Configuration.Settings.Proxy.BypassList = Settings.General.ProxyBypassList ?? string.Empty;
         if (!string.IsNullOrEmpty(Settings.General.ProxyPassword))
         {
             Configuration.Settings.Proxy.EncodePassword(Settings.General.ProxyPassword);
@@ -589,6 +592,12 @@ public class Se
         {
             Configuration.Settings.Proxy.Password = null;
         }
+
+        Configuration.Settings.Tools.AutoBreakLineEndingEarly = Settings.Tools.AutoBreakLineEndingEarly;
+        Configuration.Settings.Tools.AutoBreakCommaBreakEarly = Settings.Tools.AutoBreakCommaBreakEarly;
+        Configuration.Settings.Tools.AutoBreakDashEarly = Settings.Tools.AutoBreakDashEarly;
+        Configuration.Settings.Tools.AutoBreakUsePixelWidth = Settings.Tools.AutoBreakUsePixelWidth;
+        Configuration.Settings.Tools.AutoBreakPreferBottomHeavy = Settings.Tools.AutoBreakPreferBottomHeavy;
 
         var stt = Settings.Tools.AudioToText;
         Configuration.Settings.Tools.WhisperChoice = stt.WhisperChoice;

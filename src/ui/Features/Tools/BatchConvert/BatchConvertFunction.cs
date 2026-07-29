@@ -61,6 +61,7 @@ public partial class BatchConvertFunction : ObservableObject
             MakeFunction(BatchConvertFunctionType.ApplyDurationLimits, Se.Language.Tools.ApplyDurationLimits.Title, ViewApplyDurationLimits.Make(vm), activeFunctions),
             MakeFunction(BatchConvertFunctionType.AutoBalanceLines, Se.Language.General.AutoBalanceLines, ViewAutoBalanceLines.Make(vm), activeFunctions),
             MakeFunction(BatchConvertFunctionType.SortBy, Se.Language.Tools.SortBy.Title, ViewSortBy.Make(vm), activeFunctions),
+            MakeFunction(BatchConvertFunctionType.AdjustImageColors, Se.Language.Tools.BatchConvert.AdjustImageColorsTitle, ViewAdjustImageColors.Make(vm), activeFunctions),
         }.ToArray();
     }
 

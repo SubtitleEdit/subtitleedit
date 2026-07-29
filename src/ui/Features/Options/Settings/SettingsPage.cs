@@ -13,6 +13,7 @@ using CommunityToolkit.Mvvm.Input;
 using Nikse.SubtitleEdit.Features.Shared.PickLanguage;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
+using Nikse.SubtitleEdit.Logic.ValueConverters;
 using Optris.Icons.Avalonia;
 using System;
 using System.Collections.Generic;
@@ -237,6 +238,12 @@ public class SettingsPage : UserControl
             new SettingsItem(Se.Language.Options.Settings.MaxLines, () => MakeNumericUpDownInt(nameof(_vm.MaxLines), _vm.RuleValueChanged)),
             new SettingsItem(Se.Language.Options.Settings.UnbreakSubtitlesShortThan, () => MakeNumericUpDownInt(nameof(_vm.UnbreakLinesShorterThan), _vm.RuleValueChanged)),
 
+            MakeCheckboxSetting(Se.Language.Options.Settings.AutoBreakLineEndingEarly, nameof(_vm.AutoBreakLineEndingEarly)),
+            MakeCheckboxSetting(Se.Language.Options.Settings.AutoBreakCommaBreakEarly, nameof(_vm.AutoBreakCommaBreakEarly)),
+            MakeCheckboxSetting(Se.Language.Options.Settings.AutoBreakDashEarly, nameof(_vm.AutoBreakDashEarly)),
+            MakeCheckboxSetting(Se.Language.Options.Settings.AutoBreakUsePixelWidth, nameof(_vm.AutoBreakUsePixelWidth)),
+            MakeCheckboxSetting(Se.Language.Options.Settings.AutoBreakPreferBottomHeavy, nameof(_vm.AutoBreakPreferBottomHeavy)),
+
             new SettingsItem(Se.Language.Options.Settings.DialogStyle, () => MakeComboBoxDialogStyle()),
             new SettingsItem(Se.Language.Options.Settings.ContinuationStyle, () => new StackPanel
             {
@@ -326,6 +333,29 @@ public class SettingsPage : UserControl
                 [!SelectingItemsControl.SelectedItemProperty] = new Binding(nameof(_vm.SelectedSaveAsAppendLanguageCode))
                 {
                     Mode = BindingMode.TwoWay,
+                }
+            }),
+
+            new SettingsItem(Se.Language.Options.Settings.DefaultSaveLocation, () => new ComboBox
+            {
+                MinWidth = 200,
+                DataContext = _vm,
+                [!ItemsControl.ItemsSourceProperty] = new Binding(nameof(_vm.DefaultSaveLocationTypes)),
+                [!SelectingItemsControl.SelectedItemProperty] = new Binding(nameof(_vm.SelectedDefaultSaveLocationType))
+                {
+                    Mode = BindingMode.TwoWay,
+                }
+            }),
+
+            new SettingsItem(Se.Language.Options.Settings.DefaultSaveLocationCustomFolder, () => new StackPanel
+            {
+                Orientation = Orientation.Horizontal,
+                Spacing = 5,
+                [!Control.IsEnabledProperty] = new Binding(nameof(_vm.IsDefaultSaveLocationCustomFolderEnabled)) { Source = _vm },
+                Children =
+                {
+                    UiUtil.MakeTextBox(250, _vm, nameof(_vm.DefaultSaveLocationCustomFolder)),
+                    UiUtil.MakeButtonBrowse(_vm.BrowseDefaultSaveLocationFolderCommand),
                 }
             }),
 
@@ -746,8 +776,20 @@ public class SettingsPage : UserControl
         sections.Add(new SettingsSection(Se.Language.Options.Settings.Network, IconNames.Network, "#6bb84e",
         [
             new SettingsItem(Se.Language.Options.Settings.ProxyAddress, () => UiUtil.MakeTextBox(250, _vm, nameof(_vm.ProxyAddress))),
-            new SettingsItem(Se.Language.Options.Settings.Username, () => UiUtil.MakeTextBox(250, _vm, nameof(_vm.ProxyUserName))),
-            new SettingsItem(Se.Language.Options.Settings.Password, () => UiUtil.MakeTextBox(250, _vm, nameof(_vm.ProxyPassword))),
+            MakeCheckboxSetting(Se.Language.Options.Settings.ProxyUseSystemCredentials, nameof(_vm.ProxyUseDefaultCredentials)),
+            new SettingsItem(Se.Language.Options.Settings.Username, () => MakeProxyCredentialTextBox(nameof(_vm.ProxyUserName))),
+            new SettingsItem(Se.Language.Options.Settings.Password, () => MakeProxyCredentialTextBox(nameof(_vm.ProxyPassword))),
+            new SettingsItem(Se.Language.Options.Settings.ProxyDomain, () => MakeProxyCredentialTextBox(nameof(_vm.ProxyDomain))),
+            new SettingsItem(Se.Language.Options.Settings.ProxyBypassList, () =>
+            {
+                var textBox = UiUtil.MakeTextBox(250, _vm, nameof(_vm.ProxyBypassList));
+                if (Se.Settings.Appearance.ShowHints)
+                {
+                    ToolTip.SetTip(textBox, Se.Language.Options.Settings.ProxyBypassListHint);
+                }
+
+                return textBox;
+            }),
         ]));
 
         if (OperatingSystem.IsWindows())
@@ -1167,6 +1209,18 @@ public class SettingsPage : UserControl
 
         numericUpDown.ValueChanged += (s, e) => valueChanged.Invoke();
         return numericUpDown;
+    }
+
+    private TextBox MakeProxyCredentialTextBox(string bindingProperty)
+    {
+        var textBox = UiUtil.MakeTextBox(250, _vm, bindingProperty);
+        textBox[!Control.IsEnabledProperty] = new Binding(nameof(_vm.ProxyUseDefaultCredentials))
+        {
+            Source = _vm,
+            Converter = new InverseBooleanConverter(),
+        };
+
+        return textBox;
     }
 
     private NumericUpDown MakeNumericUpDown(string bindingProperty, Action valueChanged)

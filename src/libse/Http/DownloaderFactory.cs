@@ -29,7 +29,7 @@ namespace Nikse.SubtitleEdit.Core.Http
 
             if (!string.IsNullOrEmpty(proxySettings.ProxyAddress))
             {
-                handler.Proxy = new WebProxy(proxySettings.ProxyAddress);
+                handler.Proxy = new BypassingWebProxy(new WebProxy(proxySettings.ProxyAddress), proxySettings.BypassList);
                 handler.UseProxy = true;
             }
 

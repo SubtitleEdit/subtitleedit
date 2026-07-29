@@ -7,6 +7,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Nikse.SubtitleEdit.Features.Shared.ColorPicker;
 using Nikse.SubtitleEdit.Logic;
+using Nikse.SubtitleEdit.Logic.Media;
 using Nikse.SubtitleEdit.Logic.Config;
 using SkiaSharp;
 using System;
@@ -102,7 +103,7 @@ public partial class BinaryAdjustColorViewModel : ObservableObject, IDisposable
         }
 
         using var originalBitmap = _subtitles[0].Bitmap!.ToSkBitmap();
-        using var coloredBitmap = ColorBitmap(originalBitmap, SelectedColor.R, SelectedColor.G, SelectedColor.B);
+        using var coloredBitmap = SubtitleImageAdjuster.Colorize(originalBitmap, SelectedColor.R, SelectedColor.G, SelectedColor.B);
         var old = PreviewBitmap;
         PreviewBitmap = coloredBitmap.ToAvaloniaBitmap();
         old?.Dispose();
@@ -118,53 +119,13 @@ public partial class BinaryAdjustColorViewModel : ObservableObject, IDisposable
             }
 
             using var originalBitmap = subtitle.Bitmap.ToSkBitmap();
-            using var coloredBitmap = ColorBitmap(originalBitmap, SelectedColor.R, SelectedColor.G, SelectedColor.B);
+            using var coloredBitmap = SubtitleImageAdjuster.Colorize(originalBitmap, SelectedColor.R, SelectedColor.G, SelectedColor.B);
             var old = subtitle.Bitmap;
             subtitle.Bitmap = coloredBitmap.ToAvaloniaBitmap();
             old?.Dispose();
         }
     }
 
-    private static SKBitmap ColorBitmap(SKBitmap premultipliedBitmap, byte r, byte g, byte b)
-    {
-        var redPercent = r * 100.0 / 255;
-        var greenPercent = g * 100.0 / 255;
-        var bluePercent = b * 100.0 / 255;
-
-        // Work in straight alpha: the "total" brightness test below is meaningless on
-        // premultiplied color, where a faint anti-aliased pixel falls under the threshold
-        // and keeps its original color, leaving a fringe around the recolored text.
-        using var originalBitmap = premultipliedBitmap.ToUnpremultiplied();
-        var adjustedBitmap = new SKBitmap(originalBitmap.Width, originalBitmap.Height, SKColorType.Bgra8888, SKAlphaType.Unpremul);
-
-        unsafe
-        {
-            var srcPixels = originalBitmap.GetPixels();
-            var dstPixels = adjustedBitmap.GetPixels();
-
-            for (int i = 0; i < originalBitmap.Width * originalBitmap.Height; i++)
-            {
-                var pixel = ((uint*)srcPixels)[i];
-
-                var a = (byte)((pixel >> 24) & 0xFF);
-                var pr = (byte)((pixel >> 16) & 0xFF);
-                var pg = (byte)((pixel >> 8) & 0xFF);
-                var pb = (byte)(pixel & 0xFF);
-
-                int total = pr + pg + pb;
-                if (total > 100 && a > 0)
-                {
-                    pr = (byte)Math.Min(255, redPercent * total / 100);
-                    pg = (byte)Math.Min(255, greenPercent * total / 100);
-                    pb = (byte)Math.Min(255, bluePercent * total / 100);
-                }
-
-                ((uint*)dstPixels)[i] = (uint)((a << 24) | (pr << 16) | (pg << 8) | pb);
-            }
-        }
-
-        return adjustedBitmap;
-    }
 
     [RelayCommand]
     private void Ok()
