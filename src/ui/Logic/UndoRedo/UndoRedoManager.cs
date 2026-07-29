@@ -363,7 +363,12 @@ public sealed class UndoRedoManager : IUndoRedoManager
             var o = prev.Subtitles[i];
             var n = next.Subtitles[i];
 
-            var textChanged = o.Text != n.Text;
+            // OriginalText must be compared here: the undo hash covers the original column
+            // (see GetUndoRedoHash), so if this comparison ignores it, loading or editing an
+            // original changes the hash without ever producing an undo entry - and the next
+            // undo restores a snapshot whose originals are stale or empty, wiping the whole
+            // original column (#12952).
+            var textChanged = o.Text != n.Text || o.OriginalText != n.OriginalText;
             var timingChanged =
                 Math.Abs(o.StartTime.TotalMilliseconds - n.StartTime.TotalMilliseconds) > 0.5 ||
                 Math.Abs(o.EndTime.TotalMilliseconds - n.EndTime.TotalMilliseconds) > 0.5;
@@ -406,15 +411,19 @@ public sealed class UndoRedoManager : IUndoRedoManager
         var n = next.Subtitles[line - 1];
 
         var textChanged = o.Text != n.Text;
+        var originalTextChanged = o.OriginalText != n.OriginalText;
         var timingChanged =
             Math.Abs(o.StartTime.TotalMilliseconds - n.StartTime.TotalMilliseconds) > 0.5 ||
             Math.Abs(o.EndTime.TotalMilliseconds - n.EndTime.TotalMilliseconds) > 0.5;
 
-        return (textChanged, timingChanged) switch
+        return (textChanged || originalTextChanged, timingChanged) switch
         {
             (true, true) => string.Format(Se.Language.Main.LineXTextAndTimingChanged, line),
-            (true, false) => string.Format(Se.Language.Main.LineXTextChangedFromYToZ,
-                                 line, Truncate(o.Text), Truncate(n.Text)),
+            (true, false) => textChanged
+                ? string.Format(Se.Language.Main.LineXTextChangedFromYToZ,
+                    line, Truncate(o.Text), Truncate(n.Text))
+                : string.Format(Se.Language.Main.LineXTextChangedFromYToZ,
+                    line, Truncate(o.OriginalText), Truncate(n.OriginalText)),
             (false, true) => string.Format(Se.Language.Main.LineXTimingChanged, line),
             _ => $"Line {line}: modified"
         };
