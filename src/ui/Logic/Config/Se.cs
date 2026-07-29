@@ -581,6 +581,9 @@ public class Se
 
         Configuration.Settings.Proxy.ProxyAddress = Settings.General.ProxyAddress ?? string.Empty;
         Configuration.Settings.Proxy.UserName = Settings.General.ProxyUserName ?? string.Empty;
+        Configuration.Settings.Proxy.Domain = Settings.General.ProxyDomain ?? string.Empty;
+        Configuration.Settings.Proxy.UseDefaultCredentials = Settings.General.ProxyUseDefaultCredentials;
+        Configuration.Settings.Proxy.BypassList = Settings.General.ProxyBypassList ?? string.Empty;
         if (!string.IsNullOrEmpty(Settings.General.ProxyPassword))
         {
             Configuration.Settings.Proxy.EncodePassword(Settings.General.ProxyPassword);

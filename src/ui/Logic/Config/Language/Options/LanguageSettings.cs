@@ -195,6 +195,10 @@ public class LanguageSettings
     public string ProxyAddress { get; set; }
     public string Username { get; set; }
     public string Password { get; set; }
+    public string ProxyDomain { get; set; }
+    public string ProxyUseSystemCredentials { get; set; }
+    public string ProxyBypassList { get; set; }
+    public string ProxyBypassListHint { get; set; }
 
     public string DefaultFormat { get; set; }
     public string DefaultSaveAsFormat { get; set; }
@@ -528,6 +532,10 @@ public class LanguageSettings
         ProxyAddress = "Proxy address";
         Username = "Username";
         Password = "Password";
+        ProxyDomain = "Domain";
+        ProxyUseSystemCredentials = "Use system credentials";
+        ProxyBypassList = "Bypass proxy for";
+        ProxyBypassListHint = "Semicolon separated host names that connect directly, e.g. \"internal.company.com;example.org\"";
 
         ShowStopButton = "Show stop button";
         ShowFullscreenButton = "Show full-screen button";
