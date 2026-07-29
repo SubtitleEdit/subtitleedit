@@ -11,6 +11,7 @@ public class LanguageVideo
     public LanguageShotChanges ShotChanges { get; set; } = new();
     public LanguageVideoOcr VideoOcr { get; set; } = new();
     public string GoToVideoPosition { get; set; }
+    public string GoToVideoPositionDotDotDot { get; set; }
     public string GenerateBlankVideoDotDotDot { get; set; }
     public string GenerateBlankVideoTitle { get; set; }
     public string ReEncodeVideoForBetterSubtitlingTitle { get; set; }
@@ -81,6 +82,7 @@ public class LanguageVideo
     {
 
         GoToVideoPosition = "Go to video position";
+        GoToVideoPositionDotDotDot = "Go to video position...";
         GenerateBlankVideoTitle = "Generate blank video";
         GenerateBlankVideoDotDotDot = "Generate blank video...";
         ReEncodeVideoForBetterSubtitlingTitle = "Re-encode video for better subtitling";
