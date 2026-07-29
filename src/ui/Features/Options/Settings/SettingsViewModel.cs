@@ -204,6 +204,7 @@ public partial class SettingsViewModel : ObservableObject
     [ObservableProperty] private bool _showToolbarFixCommonErrors;
     [ObservableProperty] private bool _showToolbarRemoveTextForHi;
     [ObservableProperty] private bool _showToolbarVisualSync;
+    [ObservableProperty] private bool _showToolbarPointSync;
     [ObservableProperty] private bool _showToolbarBeautifyTimeCodes;
     [ObservableProperty] private bool _showToolbarBurnIn;
     [ObservableProperty] private bool _fixCommonErrorsSkipStep1;
@@ -821,6 +822,7 @@ public partial class SettingsViewModel : ObservableObject
         ShowToolbarFixCommonErrors = appearance.ToolbarShowFixCommonErrors;
         ShowToolbarRemoveTextForHi = appearance.ToolbarShowRemoveTextForHi;
         ShowToolbarVisualSync = appearance.ToolbarShowVisualSync;
+        ShowToolbarPointSync = appearance.ToolbarShowPointSync;
         ShowToolbarBeautifyTimeCodes = appearance.ToolbarShowBeautifyTimeCodes;
         ShowToolbarBurnIn = appearance.ToolbarShowBurnIn;
         ShowToolbarSettings = appearance.ToolbarShowSettings;
@@ -1639,6 +1641,7 @@ public partial class SettingsViewModel : ObservableObject
         appearance.ToolbarShowFixCommonErrors = ShowToolbarFixCommonErrors;
         appearance.ToolbarShowRemoveTextForHi = ShowToolbarRemoveTextForHi;
         appearance.ToolbarShowVisualSync = ShowToolbarVisualSync;
+        appearance.ToolbarShowPointSync = ShowToolbarPointSync;
         appearance.ToolbarShowBeautifyTimeCodes = ShowToolbarBeautifyTimeCodes;
         appearance.ToolbarShowBurnIn = ShowToolbarBurnIn;
         appearance.ToolbarShowSettings = ShowToolbarSettings;
