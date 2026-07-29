@@ -239,12 +239,6 @@ public class SettingsPage : UserControl
             new SettingsItem(Se.Language.Options.Settings.MaxLines, () => MakeNumericUpDownInt(nameof(_vm.MaxLines), _vm.RuleValueChanged)),
             new SettingsItem(Se.Language.Options.Settings.UnbreakSubtitlesShortThan, () => MakeNumericUpDownInt(nameof(_vm.UnbreakLinesShorterThan), _vm.RuleValueChanged)),
 
-            MakeCheckboxSetting(Se.Language.Options.Settings.AutoBreakLineEndingEarly, nameof(_vm.AutoBreakLineEndingEarly)),
-            MakeCheckboxSetting(Se.Language.Options.Settings.AutoBreakCommaBreakEarly, nameof(_vm.AutoBreakCommaBreakEarly)),
-            MakeCheckboxSetting(Se.Language.Options.Settings.AutoBreakDashEarly, nameof(_vm.AutoBreakDashEarly)),
-            MakeCheckboxSetting(Se.Language.Options.Settings.AutoBreakUsePixelWidth, nameof(_vm.AutoBreakUsePixelWidth)),
-            MakeCheckboxSetting(Se.Language.Options.Settings.AutoBreakPreferBottomHeavy, nameof(_vm.AutoBreakPreferBottomHeavy)),
-
             new SettingsItem(Se.Language.Options.Settings.DialogStyle, () => MakeComboBoxDialogStyle()),
             new SettingsItem(Se.Language.Options.Settings.ContinuationStyle, () => new StackPanel
             {
@@ -638,6 +632,11 @@ public class SettingsPage : UserControl
             MakeCheckboxSetting(Se.Language.Options.Settings.AllowSingleLetterShortcutsInTextbox, nameof(_vm.AllowSingleLetterShortcutsInTextbox)),
             MakeCheckboxSetting(Se.Language.Options.Settings.GoToLineNumberSetsVideoPosition, nameof(_vm.GoToLineNumberAlsoSetVideoPosition)),
             MakeCheckboxSetting(Se.Language.Options.Settings.AdjustAllTimesRememberLineSelectionChoice, nameof(_vm.AdjustAllTimesRememberLineSelectionChoice)),
+            MakeCheckboxSetting(Se.Language.Options.Settings.AutoBreakLineEndingEarly, nameof(_vm.AutoBreakLineEndingEarly)),
+            MakeCheckboxSetting(Se.Language.Options.Settings.AutoBreakCommaBreakEarly, nameof(_vm.AutoBreakCommaBreakEarly)),
+            MakeCheckboxSetting(Se.Language.Options.Settings.AutoBreakDashEarly, nameof(_vm.AutoBreakDashEarly)),
+            MakeCheckboxSetting(Se.Language.Options.Settings.AutoBreakUsePixelWidth, nameof(_vm.AutoBreakUsePixelWidth)),
+            MakeCheckboxSetting(Se.Language.Options.Settings.AutoBreakPreferBottomHeavy, nameof(_vm.AutoBreakPreferBottomHeavy)),
             new SettingsItem(Se.Language.Options.Settings.SplitOddLinesAction, () => new ComboBox
             {
                 MinWidth = 200,
