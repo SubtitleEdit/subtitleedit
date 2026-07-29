@@ -851,12 +851,13 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
             var topRegions = GetRegionsTopFromHeader(xml);
             XmlNode lastDiv = null;
+            var pText = new StringBuilder();
             foreach (XmlNode node in body.SelectNodes("//ttml:p", nsmgr))
             {
                 try
                 {
                     // Parse and convert paragraph text
-                    var pText = new StringBuilder();
+                    pText.Clear();
                     ReadParagraph(pText, node, styles, xml);
 
                     // Time codes
@@ -1609,8 +1610,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 displayAlign = styleNode.Attributes["displayAlign"].Value;
             }
 
-            if (originArr.Length == 2 && originArr[0].EndsWith("%", StringComparison.Ordinal) && originArr[1].EndsWith("%", StringComparison.Ordinal) &&
-                extentArr.Length == 2 && extentArr[0].EndsWith("%", StringComparison.Ordinal) && extentArr[1].EndsWith("%", StringComparison.Ordinal) &&
+            if (originArr.Length == 2 && originArr[0].EndsWith('%') && originArr[1].EndsWith('%') &&
+                extentArr.Length == 2 && extentArr[0].EndsWith('%') && extentArr[1].EndsWith('%') &&
                 !string.IsNullOrEmpty(displayAlign))
             {
                 var yPos = Convert.ToDouble(originArr[1].TrimEnd('%'), CultureInfo.InvariantCulture);
@@ -1674,8 +1675,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 displayAlign = styleNode.Attributes["displayAlign"].Value;
             }
 
-            if (originArr.Length == 2 && originArr[0].EndsWith("%", StringComparison.Ordinal) && originArr[1].EndsWith("%", StringComparison.Ordinal) &&
-                extentArr.Length == 2 && extentArr[0].EndsWith("%", StringComparison.Ordinal) && extentArr[1].EndsWith("%", StringComparison.Ordinal) &&
+            if (originArr.Length == 2 && originArr[0].EndsWith('%') && originArr[1].EndsWith('%') &&
+                extentArr.Length == 2 && extentArr[0].EndsWith('%') && extentArr[1].EndsWith('%') &&
                 !string.IsNullOrEmpty(displayAlign))
             {
                 if (double.TryParse(originArr[1].TrimEnd('%'), NumberStyles.Float, CultureInfo.InvariantCulture, out var yPos) &&

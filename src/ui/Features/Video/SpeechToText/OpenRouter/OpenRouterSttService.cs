@@ -207,7 +207,7 @@ public class OpenRouterSttService : ISttTranscriber
 
     public static OpenRouterSttSettings GetSettingsFromConfiguration()
     {
-        var tools = Configuration.Settings.Tools;
+        var tools = Se.Settings.Tools;
         return new OpenRouterSttSettings
         {
             EndpointUrl = DefaultEndpointUrl,

@@ -389,7 +389,7 @@ public partial class AiAssistantViewModel : ObservableObject
 
         // A model may still answer with a JSON object (some ignore the plain-text
         // request); take the first string value out of it.
-        if (text.StartsWith("{", StringComparison.Ordinal))
+        if (text.StartsWith('{'))
         {
             var fromJson = TryExtractJsonString(text);
             if (!string.IsNullOrWhiteSpace(fromJson))

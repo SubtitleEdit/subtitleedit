@@ -38,6 +38,9 @@ public class LanguageTextToSpeech
     public string ImportVoiceDotDotDot { get; set; }
     public string VoiceImportSuccessTitle { get; set; }
     public string VoiceXImported { get; set; }
+    public string ImportPiperVoiceTitle { get; set; }
+    public string PiperVoiceConfigMissingTitle { get; set; }
+    public string PiperVoiceConfigMissingMessage { get; set; }
     public string DropAudioFileHereToImportVoice { get; set; }
     public string DropAudioFileHereHint { get; set; }
     public string VoiceCloneTranscriptTitle { get; set; }
@@ -143,6 +146,9 @@ public class LanguageTextToSpeech
         ImportVoiceDotDotDot = "Import voice...";
         VoiceImportSuccessTitle = "Voice imported";
         VoiceXImported = "Voice '{0}' imported successfully";
+        ImportPiperVoiceTitle = "Open Piper voice model (.onnx)";
+        PiperVoiceConfigMissingTitle = "Config file missing";
+        PiperVoiceConfigMissingMessage = "A Piper voice needs its config file next to the model file: {0}";
         DropAudioFileHereToImportVoice = "Drop audio file here to import voice";
         DropAudioFileHereHint = ".wav or .mp3";
         VoiceCloneTranscriptTitle = "Enter transcript of the audio (required for voice cloning)";

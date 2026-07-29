@@ -33,6 +33,7 @@ namespace Nikse.SubtitleEdit.Core.Common
         /// Find shot changes file name
         /// </summary>
         /// <param name="videoFileName">Video file name</param>
+        /// <param name="shotChangeDirectory">Directory where shot change files are stored</param>
         /// <returns>Return file name of existing shot changes, or null</returns>
         private static string FindShotChangesFileName(string videoFileName, string shotChangeDirectory)
         {
@@ -71,6 +72,7 @@ namespace Nikse.SubtitleEdit.Core.Common
         /// Load shot changes from file
         /// </summary>
         /// <param name="videoFileName">Video file name</param>
+        /// <param name="shotChangeDirectory">Directory where shot change files are stored</param>
         /// <returns>List of shot changes in seconds</returns>
         public static List<double> FromDisk(string videoFileName, string shotChangeDirectory)
         {
@@ -102,6 +104,7 @@ namespace Nikse.SubtitleEdit.Core.Common
         /// Saves shot changes
         /// </summary>
         /// <param name="videoFileName">Video file name</param>
+        /// <param name="shotChangeDirectory">Directory where shot change files are stored</param>
         /// <param name="list">List of shot changes in seconds</param>
         public static void SaveShotChanges(string videoFileName, string shotChangeDirectory, List<double> list)
         {
@@ -117,6 +120,7 @@ namespace Nikse.SubtitleEdit.Core.Common
         /// Delete shot changes file associated with video file
         /// </summary>
         /// <param name="videoFileName">Video file name</param>
+        /// <param name="shotChangeDirectory">Directory where shot change files are stored</param>
         public static void DeleteShotChanges(string videoFileName, string shotChangeDirectory)
         {
             var shotChangesFileName = GetShotChangesFileName(videoFileName, shotChangeDirectory);

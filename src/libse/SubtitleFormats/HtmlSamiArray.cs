@@ -37,6 +37,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         {
             _errorCount = 0;
             subtitle.Paragraphs.Clear();
+            var sb = new StringBuilder();
             foreach (string line in lines)
             {
                 var pos0 = line.IndexOf("[0] = ", StringComparison.Ordinal);
@@ -45,7 +46,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 if (pos0 >= 0 && pos1 >= 0 && pos2 >= 0)
                 {
                     var p = new Paragraph();
-                    var sb = new StringBuilder();
+                    sb.Clear();
 
                     for (int i = pos0 + 6; i < line.Length && char.IsDigit(line[i]); i++)
                     {

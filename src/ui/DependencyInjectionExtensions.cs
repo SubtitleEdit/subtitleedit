@@ -29,6 +29,7 @@ using Nikse.SubtitleEdit.Features.Files.FormatProperties.WebVttProperties;
 using Nikse.SubtitleEdit.Features.Files.ImportImages;
 using Nikse.SubtitleEdit.Features.Files.ImportCsvXlsxCustomColumns;
 using Nikse.SubtitleEdit.Features.Files.ImportPlainText;
+using Nikse.SubtitleEdit.Features.Files.ImportPlainText.ForcedAlignerSetup;
 using Nikse.SubtitleEdit.Features.Files.ManualChosenEncoding;
 using Nikse.SubtitleEdit.Features.Files.RestoreAutoBackup;
 using Nikse.SubtitleEdit.Features.Files.Statistics;
@@ -294,6 +295,7 @@ public static class DependencyInjectionExtensions
         collection.AddTransient<AssaImageColorPickerViewModel>();
         collection.AddTransient<AssaProgressBarViewModel>();
         collection.AddTransient<AssaPropertiesViewModel>();
+        collection.AddTransient<Features.Assa.FontCollector.FontCollectorViewModel>();
         collection.AddTransient<AssaResolutionResamplerViewModel>();
         collection.AddTransient<AssaSetPositionViewModel>();
         collection.AddTransient<AssaSingleStyleViewModel>();
@@ -457,6 +459,7 @@ public static class DependencyInjectionExtensions
         collection.AddTransient<PickLayerViewModel>();
         collection.AddTransient<PickMatroskaTrackViewModel>();
         collection.AddTransient<PickMillisecondsViewModel>();
+        collection.AddTransient<ForcedAlignerSetupViewModel>();
         collection.AddTransient<PickMp4TrackViewModel>();
         collection.AddTransient<PickOllamaModelViewModel>();
         collection.AddTransient<PickRuleProfileViewModel>();

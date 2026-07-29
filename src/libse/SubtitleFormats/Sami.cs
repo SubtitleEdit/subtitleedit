@@ -275,6 +275,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
             var p = new Paragraph();
             const string expectedChars = @"""'0123456789";
+            var className = new StringBuilder();
+            var total = new StringBuilder();
+            var partial = new StringBuilder();
             while (syncStartPos >= 0)
             {
                 string millisecondsAsString = string.Empty;
@@ -321,7 +324,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 string textToLower = text.ToLowerInvariant();
                 if (textToLower.Contains(" class="))
                 {
-                    var className = new StringBuilder();
+                    className.Clear();
                     int startClass = textToLower.IndexOf(" class=", StringComparison.Ordinal);
                     int indexClass = startClass + 7;
                     while (indexClass < textToLower.Length && (Utilities.LowercaseLettersWithNumbers + @"'""").Contains(textToLower[indexClass]))
@@ -408,8 +411,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
                 if (text.Contains('<') && text.Contains('>'))
                 {
-                    var total = new StringBuilder();
-                    var partial = new StringBuilder();
+                    total.Clear();
+                    partial.Clear();
                     bool tagOn = false;
                     for (int i = 0; i < text.Length && i < 999; i++)
                     {
@@ -517,7 +520,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             int maxLoop = 10;
             while (indexOfDiv > 0 && maxLoop >= 0)
             {
-                int indexOfStartEnd = text.IndexOf(">", indexOfDiv + 1, StringComparison.Ordinal);
+                int indexOfStartEnd = text.IndexOf('>', indexOfDiv + 1);
                 if (indexOfStartEnd > 0)
                 {
                     text = text.Remove(indexOfDiv, indexOfStartEnd - indexOfDiv + 1);

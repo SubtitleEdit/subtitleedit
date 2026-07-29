@@ -90,11 +90,12 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             var xml = new XmlDocument { XmlResolver = null };
             xml.LoadXml(sb.ToString().Trim());
 
+            var pText = new StringBuilder();
             foreach (XmlNode node in xml.DocumentElement.SelectNodes("subtitle"))
             {
                 try
                 {
-                    var pText = new StringBuilder();
+                    pText.Clear();
                     foreach (XmlNode innerNode in node.ChildNodes)
                     {
                         switch (innerNode.Name)

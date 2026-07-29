@@ -1,4 +1,4 @@
-﻿using Nikse.SubtitleEdit.Core.AudioToText;
+﻿using Nikse.SubtitleEdit.UiLogic.AudioToText;
 using Nikse.SubtitleEdit.Features.Video.SpeechToText.Engines;
 
 namespace Nikse.SubtitleEdit.Features.Video.SpeechToText;

@@ -1,7 +1,6 @@
 ﻿using SkiaSharp;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Nikse.SubtitleEdit.Core.Common
 {
@@ -29,8 +28,35 @@ namespace Nikse.SubtitleEdit.Core.Common
         public List<int> LengthCharacters { get; set; }
         public bool IsBottomHeavy => LengthPixels[1] + 2 > LengthPixels[0]; // allow a small diff of 2 pixels
         public static float SpaceLengthPixels { get; set; }
-        public double TotalLength => Lines.Sum(p => p.Length);
-        public double TotalLengthPixels => LengthPixels.Sum(p => p) - SpaceLengthPixels;
+        public double TotalLength => SumLengths(Lines);
+        public double TotalLengthPixels => SumPixels(LengthPixels) - SpaceLengthPixels;
+
+        // These run inside the per-candidate sort keys of TextSplit (one candidate per space in
+        // the line), where the LINQ Sum overloads allocated a closure and a boxed enumerator
+        // per call - for lists that always hold two elements.
+        private static double SumLengths(List<string> lines)
+        {
+            double total = 0;
+            for (var i = 0; i < lines.Count; i++)
+            {
+                total += lines[i].Length;
+            }
+
+            return total;
+        }
+
+        private static float SumPixels(List<float> pixels)
+        {
+            // Accumulate in double and round to float at the end - same as Enumerable.Sum's
+            // float overload, so the value is bit-identical to what the LINQ call produced.
+            double total = 0;
+            for (var i = 0; i < pixels.Count; i++)
+            {
+                total += pixels[i];
+            }
+
+            return (float)total;
+        }
 
         private List<float> _lengthPixels;
         private bool _pixelsMeasured;
@@ -144,14 +170,28 @@ namespace Nikse.SubtitleEdit.Core.Common
 
         public double DiffFromAverage()
         {
-            var avg = TotalLength / Lines.Count;
-            return Lines.Sum(line => Math.Abs(avg - line.Length));
+            var lines = Lines;
+            var avg = SumLengths(lines) / lines.Count;
+            double diff = 0;
+            for (var i = 0; i < lines.Count; i++)
+            {
+                diff += Math.Abs(avg - lines[i].Length);
+            }
+
+            return diff;
         }
 
         public double DiffFromAveragePixel()
         {
-            var avg = TotalLengthPixels / Lines.Count;
-            return LengthPixels.Sum(w => Math.Abs(avg - w));
+            var pixels = LengthPixels;
+            var avg = (double)(SumPixels(pixels) - SpaceLengthPixels) / Lines.Count;
+            double diff = 0;
+            for (var i = 0; i < pixels.Count; i++)
+            {
+                diff += Math.Abs(avg - pixels[i]);
+            }
+
+            return diff;
         }
 
         public double DiffFromAveragePixelBottomHeavy()

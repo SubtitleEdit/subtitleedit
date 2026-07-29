@@ -688,6 +688,12 @@ public static class InitMenu
                 new Separator(),
                 new MenuItem
                 {
+                    Header = Se.Language.Video.GoToVideoPositionDotDotDot,
+                    Command = vm.ShowGoToVideoPositionCommand,
+                },
+                new Separator(),
+                new MenuItem
+                {
                     Header = l.SpeechToText,
                     Command = vm.ShowSpeechToTextWhisperCommand,
                 },
@@ -914,6 +920,11 @@ public static class InitMenu
             {
                 Header = l.AssaDraw,
                 Command = vm.ShowAssaDrawCommand,
+            },
+            new MenuItem
+            {
+                Header = l.AssaFontCollector,
+                Command = vm.ShowAssaFontCollectorCommand,
             },
             new MenuItem
             {

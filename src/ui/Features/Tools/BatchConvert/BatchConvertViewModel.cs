@@ -6,12 +6,12 @@ using Avalonia.Media;
 using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using Nikse.SubtitleEdit.Core.AutoTranslate;
+using Nikse.SubtitleEdit.UiLogic.AutoTranslate;
 using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.ContainerFormats.Matroska;
 using Nikse.SubtitleEdit.Core.ContainerFormats.Mp4;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
-using Nikse.SubtitleEdit.Core.Translate;
+using Nikse.SubtitleEdit.UiLogic.Translate;
 using Nikse.SubtitleEdit.Features.Assa;
 using Nikse.SubtitleEdit.Features.Edit.MultipleReplace;
 using Nikse.SubtitleEdit.Features.Files.ExportCustomTextFormat;
@@ -177,6 +177,17 @@ public partial class BatchConvertViewModel : ObservableObject, IClosingCleanup
     [ObservableProperty] private int _mergeSameTimeMaxMillisecondsDifference;
     [ObservableProperty] private bool _mergeSameTimeMergeDialog;
     [ObservableProperty] private bool _mergeSameTimeAutoBreak;
+
+    // Adjust image brightness/alpha/color (image-based target formats only)
+    [ObservableProperty] private bool _imageAdjustBrightnessOn;
+    [ObservableProperty] private double _imageAdjustBrightness;
+    [ObservableProperty] private double _imageAdjustContrast;
+    [ObservableProperty] private double _imageAdjustGamma;
+    [ObservableProperty] private bool _imageAdjustAlphaOn;
+    [ObservableProperty] private double _imageAdjustAlpha;
+    [ObservableProperty] private double _imageAdjustAlphaThreshold;
+    [ObservableProperty] private bool _imageAdjustColorOn;
+    [ObservableProperty] private Color _imageAdjustColorValue = Colors.White;
 
     // Fix right-to-left
     [ObservableProperty] private bool _rtlFixViaUniCode;
@@ -616,6 +627,17 @@ public partial class BatchConvertViewModel : ObservableObject, IClosingCleanup
         Se.Settings.Tools.BatchConvert.SortBy = SelectedSortByOption?.Key ?? "Number";
         Se.Settings.Tools.BatchConvert.SortByDescending = SortByDescending;
 
+        // Adjust image brightness/alpha/color
+        Se.Settings.Tools.BatchConvert.ImageAdjustBrightnessOn = ImageAdjustBrightnessOn;
+        Se.Settings.Tools.BatchConvert.ImageAdjustBrightness = ImageAdjustBrightness;
+        Se.Settings.Tools.BatchConvert.ImageAdjustContrast = ImageAdjustContrast;
+        Se.Settings.Tools.BatchConvert.ImageAdjustGamma = ImageAdjustGamma;
+        Se.Settings.Tools.BatchConvert.ImageAdjustAlphaOn = ImageAdjustAlphaOn;
+        Se.Settings.Tools.BatchConvert.ImageAdjustAlpha = ImageAdjustAlpha;
+        Se.Settings.Tools.BatchConvert.ImageAdjustAlphaThreshold = ImageAdjustAlphaThreshold;
+        Se.Settings.Tools.BatchConvert.ImageAdjustColorOn = ImageAdjustColorOn;
+        Se.Settings.Tools.BatchConvert.ImageAdjustColorValue = ImageAdjustColorValue.ToString();
+
         // Fix right-to-left
         if (RtlFixViaUniCode)
         {
@@ -781,6 +803,20 @@ public partial class BatchConvertViewModel : ObservableObject, IClosingCleanup
 
         // Remove line breaks
         RemoveLineBreaksOnlyShortLines = Se.Settings.Tools.BatchConvert.RemoveLineBreaksOnlyShortLines;
+
+        // Adjust image brightness/alpha/color
+        ImageAdjustBrightnessOn = Se.Settings.Tools.BatchConvert.ImageAdjustBrightnessOn;
+        ImageAdjustBrightness = Se.Settings.Tools.BatchConvert.ImageAdjustBrightness;
+        ImageAdjustContrast = Se.Settings.Tools.BatchConvert.ImageAdjustContrast;
+        ImageAdjustGamma = Se.Settings.Tools.BatchConvert.ImageAdjustGamma;
+        ImageAdjustAlphaOn = Se.Settings.Tools.BatchConvert.ImageAdjustAlphaOn;
+        ImageAdjustAlpha = Se.Settings.Tools.BatchConvert.ImageAdjustAlpha;
+        ImageAdjustAlphaThreshold = Se.Settings.Tools.BatchConvert.ImageAdjustAlphaThreshold;
+        ImageAdjustColorOn = Se.Settings.Tools.BatchConvert.ImageAdjustColorOn;
+        if (Color.TryParse(Se.Settings.Tools.BatchConvert.ImageAdjustColorValue, out var imageAdjustColor))
+        {
+            ImageAdjustColorValue = imageAdjustColor;
+        }
 
         // ASSA change resolution
         AssaChangeResolutionTargetWidth = Se.Settings.Tools.BatchConvert.AssaChangeResolutionTargetWidth;
@@ -2157,6 +2193,20 @@ public partial class BatchConvertViewModel : ObservableObject, IClosingCleanup
                 IsActive = activeFunctions.Contains(BatchConvertFunctionType.SortBy),
                 SortBy = SelectedSortByOption?.Key ?? "Number",
                 Descending = SortByDescending,
+            },
+
+            AdjustImageColors = new BatchConvertConfig.AdjustImageColorsSettings
+            {
+                IsActive = activeFunctions.Contains(BatchConvertFunctionType.AdjustImageColors),
+                AdjustBrightness = ImageAdjustBrightnessOn,
+                Brightness = ImageAdjustBrightness,
+                Contrast = ImageAdjustContrast,
+                Gamma = ImageAdjustGamma,
+                AdjustAlpha = ImageAdjustAlphaOn,
+                AlphaAdjustment = ImageAdjustAlpha,
+                TransparencyThreshold = ImageAdjustAlphaThreshold,
+                AdjustColor = ImageAdjustColorOn,
+                ColorValue = ImageAdjustColorValue,
             },
         };
     }

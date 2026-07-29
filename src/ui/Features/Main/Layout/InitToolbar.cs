@@ -211,6 +211,19 @@ public static class InitToolbar
             isLastSeparator = false;
         }
 
+        if (appearance.ToolbarShowPointSync)
+        {
+            stackPanelLeft.Children.Add(new Button
+            {
+                Content = MakeImage("PointSync"),
+                Command = vm.ShowPointSyncViaOtherCommand,
+                Background = Brushes.Transparent,
+                [AutomationProperties.NameProperty] = languageHints.PointSyncHint,
+                [ToolTip.TipProperty] = UiUtil.MakeToolTip(languageHints.PointSyncHint, shortcuts, nameof(vm.ShowPointSyncViaOtherCommand)),
+            });
+            isLastSeparator = false;
+        }
+
         if (appearance.ToolbarShowBeautifyTimeCodes)
         {
             stackPanelLeft.Children.Add(new Button

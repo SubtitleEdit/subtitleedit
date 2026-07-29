@@ -474,6 +474,28 @@ public class UndoRedoManagerTests
     }
 
     [Fact]
+    public void CheckForChanges_AddsEntry_WhenOnlyOriginalTextChanges_Issue12952()
+    {
+        var lines1 = new[] { MakeLine("hello") };
+        var client = new FakeClient { Hash = 1, Subtitles = lines1 };
+        var manager = new UndoRedoManager();
+        manager.SetupChangeDetection(client, TimeSpan.FromHours(1));
+        manager.StartChangeDetection();
+        manager.Do(MakeItem("initial", 1, lines1));
+
+        // Simulate loading an original subtitle: translation text/timings are unchanged,
+        // only OriginalText is filled. The hash covers the original, so a snapshot must be
+        // recorded - otherwise the next undo restores empty originals (#12952).
+        var withOriginal = MakeLine("hello");
+        withOriginal.OriginalText = "hej";
+        client.Hash = 2;
+        client.Subtitles = [withOriginal];
+        manager.CheckForChanges(null);
+
+        Assert.Equal(2, manager.UndoCount);
+    }
+
+    [Fact]
     public void CheckForChanges_DoesNotAddEntry_WhenHashAlreadyTracked()
     {
         var lines = new[] { MakeLine("hello") };

@@ -5,6 +5,7 @@ using Nikse.SubtitleEdit.Logic.Config;
 using System;
 using System.Runtime.InteropServices;
 using System.Threading;
+using Nikse.SubtitleEdit.UiLogic.Media;
 
 namespace Nikse.SubtitleEdit.Logic.VideoPlayers.LibMpvDynamic;
 

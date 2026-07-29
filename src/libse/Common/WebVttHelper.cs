@@ -8,10 +8,20 @@ using System.Text.RegularExpressions;
 
 namespace Nikse.SubtitleEdit.Core.Common
 {
-    public static class WebVttHelper
+    public static partial class WebVttHelper
     {
+#if NET7_0_OR_GREATER
+        [GeneratedRegex("\\([\\.\\p{L}\\d#_-]+\\)")]
+        private static partial Regex NameRegexGen();
+        private static readonly Regex NameRegex = NameRegexGen();
+
+        [GeneratedRegex("{[ \\.\\p{L}\\d:#\\s,_;:\\-\\(\\)]+}")]
+        private static partial Regex PropertiesRegexGen();
+        private static readonly Regex PropertiesRegex = PropertiesRegexGen();
+#else
         private static readonly Regex NameRegex = new Regex("\\([\\.\\p{L}\\d#_-]+\\)", RegexOptions.Compiled);
         private static readonly Regex PropertiesRegex = new Regex("{[ \\.\\p{L}\\d:#\\s,_;:\\-\\(\\)]+}", RegexOptions.Compiled);
+#endif
 
         public static List<WebVttStyle> GetStyles(string header)
         {
@@ -33,14 +43,14 @@ namespace Nikse.SubtitleEdit.Core.Common
                     {
                         styleOn = false;
                         AddStyle(result, currentStyle);
-                        currentStyle = new StringBuilder();
+                        currentStyle.Clear();
                     }
                     else
                     {
                         if (cueOn && s.StartsWith("::cue(", StringComparison.Ordinal))
                         {
                             AddStyle(result, currentStyle);
-                            currentStyle = new StringBuilder();
+                            currentStyle.Clear();
                         }
 
                         if (s.StartsWith("::cue(", StringComparison.Ordinal))

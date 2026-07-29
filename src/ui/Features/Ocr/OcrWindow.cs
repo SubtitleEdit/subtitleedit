@@ -20,6 +20,7 @@ using System.Collections;
 using System.ComponentModel;
 using Nikse.SubtitleEdit.UiLogic.Ocr.FixEngine;
 using MenuItem = Avalonia.Controls.MenuItem;
+using Nikse.SubtitleEdit.UiLogic.Ocr;
 
 namespace Nikse.SubtitleEdit.Features.Ocr;
 

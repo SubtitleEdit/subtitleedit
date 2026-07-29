@@ -172,7 +172,45 @@ public class Piper : ITtsEngine
             }
         }
 
+        // Must run after the official voices are parsed - the "already known" filter
+        // compares against them, so downloaded official models are not re-listed as custom.
+        AddCustomVoices(result);
+
         return result.ToArray();
+    }
+
+    /// <summary>
+    /// Lists user-added voice models (a <c>.onnx</c> + <c>.onnx.json</c> pair dropped in the
+    /// Piper folder, e.g. via "Import voice") that are not part of the official voice list.
+    /// Model/Config hold bare file names - Speak runs piper with the Piper folder as working
+    /// directory, so bare names resolve the same way as downloaded voices.
+    /// </summary>
+    private static void AddCustomVoices(List<Voice> result)
+    {
+        var knownModelNames = result
+            .Select(v => v.EngineVoice)
+            .OfType<PiperVoice>()
+            .Select(v => v.ModelShort)
+            .ToHashSet(StringComparer.OrdinalIgnoreCase);
+
+        foreach (var modelFileName in Directory.GetFiles(GetSetPiperFolder(), "*.onnx"))
+        {
+            var modelNameOnly = Path.GetFileName(modelFileName);
+            if (knownModelNames.Contains(modelNameOnly))
+            {
+                continue;
+            }
+
+            var configFileName = modelFileName + ".json";
+            if (!File.Exists(configFileName))
+            {
+                continue;
+            }
+
+            var voiceName = Path.GetFileNameWithoutExtension(modelFileName);
+            var piperVoice = new PiperVoice(voiceName, "Custom", "custom", modelNameOnly, Path.GetFileName(configFileName));
+            result.Add(new Voice(piperVoice));
+        }
     }
 
     public async Task<Voice[]> RefreshVoices(string language, CancellationToken cancellationToken)
@@ -278,8 +316,42 @@ public class Piper : ITtsEngine
         return Task.FromResult(Array.Empty<string>());
     }
 
+    /// <summary>
+    /// Imports a custom Piper voice: a <c>.onnx</c> model with its <c>.onnx.json</c> config as
+    /// a sibling file. Both are copied into the Piper folder and the voice shows up in the
+    /// voice list (via <see cref="AddCustomVoices"/>) as "Custom - name".
+    /// </summary>
     public bool ImportVoice(string fileName)
     {
-        return false;
+        if (!fileName.EndsWith(".onnx", StringComparison.OrdinalIgnoreCase) || !File.Exists(fileName))
+        {
+            return false;
+        }
+
+        var configFileName = fileName + ".json";
+        if (!File.Exists(configFileName))
+        {
+            return false;
+        }
+
+        try
+        {
+            var piperFolder = GetSetPiperFolder();
+            var targetModel = Path.Combine(piperFolder, Path.GetFileName(fileName));
+            var targetConfig = Path.Combine(piperFolder, Path.GetFileName(configFileName));
+
+            if (!string.Equals(Path.GetFullPath(fileName), Path.GetFullPath(targetModel), StringComparison.OrdinalIgnoreCase))
+            {
+                File.Copy(fileName, targetModel, overwrite: true);
+                File.Copy(configFileName, targetConfig, overwrite: true);
+            }
+
+            return true;
+        }
+        catch (Exception exception)
+        {
+            Se.LogError(exception, "Failed to import Piper voice: " + fileName);
+            return false;
+        }
     }
 }

@@ -1,3 +1,4 @@
+using Avalonia;
 ﻿using Avalonia.Controls;
 using Avalonia.Data;
 using Avalonia.Input;
@@ -65,17 +66,54 @@ public class ImportPlainTextWindow : Window
             Spacing = 10,
         };
 
+        // Shares its cell with the alignment progress, so it steps aside while that runs.
         var labelNumberOfSubtitles = UiUtil.MakeLabel().WithBindText(vm, nameof(vm.NumberOfSubtitles)).WithAlignmentTop();
+        labelNumberOfSubtitles.Bind(IsVisibleProperty, new Binding(nameof(vm.IsAligning))
+        {
+            Source = vm,
+            Converter = new InverseBooleanConverter(),
+        });
+
+        // Progress sits next to the line count; forced alignment of a long video runs for
+        // minutes, so the window must show that something is happening.
+        var labelAlignProgress = UiUtil.MakeLabel()
+            .WithBindText(vm, nameof(vm.AlignProgress))
+            .WithAlignmentTop()
+            .WithBindVisible(vm, nameof(vm.IsAligning));
+
+        // Alignment on a long video runs for minutes over many chunks, so show how far it
+        // has actually got rather than just that something is happening.
+        var progressBarAlign = new ProgressBar
+        {
+            Minimum = 0,
+            Maximum = 100,
+            Width = 220,
+            Height = 6,
+            VerticalAlignment = VerticalAlignment.Center,
+            Margin = new Thickness(0, 4, 10, 0),
+        };
+        progressBarAlign.Bind(ProgressBar.ValueProperty, new Binding(nameof(vm.AlignPercent)));
+        progressBarAlign.Bind(IsVisibleProperty, new Binding(nameof(vm.IsAligning)));
+
+        var panelAlignProgress = new StackPanel
+        {
+            Orientation = Orientation.Horizontal,
+            HorizontalAlignment = HorizontalAlignment.Left,
+            VerticalAlignment = VerticalAlignment.Top,
+            Children = { progressBarAlign, labelAlignProgress },
+        };
 
         var buttonAlignViaWhisper = UiUtil.MakeButton(Se.Language.File.Import.AlignViaSpeechToText, vm.AlignScriptWithTimestampsFromWhisperCommand);
+        var buttonAlignViaForcedAligner = UiUtil.MakeButton(Se.Language.File.Import.AlignViaForcedAligner, vm.AlignScriptWithForcedAlignerCommand);
         var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand);
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
-        var panelButtons = UiUtil.MakeButtonBar(buttonAlignViaWhisper, buttonOk, buttonCancel);
+        var panelButtons = UiUtil.MakeButtonBar(buttonAlignViaForcedAligner, buttonAlignViaWhisper, buttonOk, buttonCancel);
 
         grid.Add(panelImport, 0);
         grid.Add(MakeTextBoxAndControlsView(vm), 1);
         grid.Add(MakeSubtitleGridView(vm), 2);
         grid.Add(labelNumberOfSubtitles, 3, 0);
+        grid.Add(panelAlignProgress, 3, 0);
         grid.Add(panelButtons, 3, 0);
 
         Content = grid;

@@ -416,6 +416,19 @@ public class SpellChecker : ISpellChecker, IDoSpell
 
     protected static bool IsNumber(string word)
     {
+        // Same trick as IsEmailUrlOrHashTag above: this runs once per word during spell check,
+        // and an ordinary word can never match any of the three patterns. Every match must
+        // start with a digit, '-', '.', '%' (PercentageRegex accepts a bare "%"), or a
+        // currency sign; the empty string is only reachable through NumberRegex below.
+        if (word.Length > 0)
+        {
+            var c = word[0];
+            if (!char.IsDigit(c) && c != '-' && c != '.' && c != '%' && c != '$' && c != '£' && c != '€')
+            {
+                return false;
+            }
+        }
+
         return NumberRegex.IsMatch(word) || PercentageRegex.IsMatch(word) || CurrencyRegex.IsMatch(word);
     }
 

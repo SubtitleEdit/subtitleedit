@@ -92,8 +92,8 @@ public class VlcReloader : IVlcReloader
 
                     if (oldSub.Header != null && oldSub.Header.Length > 20 && oldSub.Header.AsSpan(3, 3).SequenceEqual("STL"))
                     {
-                        var boldValue = Configuration.Settings.General.VideoPlayerPreviewFontBold ? "-1" : "0";
-                        var boxStyle = $"Style: Box,{Configuration.Settings.General.VideoPlayerPreviewFontName},{Configuration.Settings.General.VideoPlayerPreviewFontSize},&H00FFFFFF,&H0300FFFF,&H00000000,&H02000000,{boldValue},0,0,0,100,100,0,0,3,2,0,2,10,10,10,1{Environment.NewLine}Style: Default,";
+                        var previewFontName = Configuration.IsRunningOnLinux ? Configuration.DefaultLinuxFontName : "Tahoma";
+                        var boxStyle = $"Style: Box,{previewFontName},12,&H00FFFFFF,&H0300FFFF,&H00000000,&H02000000,-1,0,0,0,100,100,0,0,3,2,0,2,10,10,10,1{Environment.NewLine}Style: Default,";
                         subtitle.Header = subtitle.Header.Replace("Style: Default,", boxStyle, StringComparison.Ordinal);
 
                         var useBox = false;

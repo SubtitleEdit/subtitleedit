@@ -36,6 +36,8 @@ public class LanguageBatchConvert
     public string FontSizeBounceIn { get; set; }
     public string AssaChangeResolutionOnlyAppliesToAssa { get; set; }
     public string AssaChangeStyleTitle { get; set; }
+    public string AdjustImageColorsTitle { get; set; }
+    public string AdjustImageColorsInfo { get; set; }
     public string AssaChangeStyleFromStyle { get; set; }
     public string AssaChangeStyleToStyle { get; set; }
     public string AssaChangeStyleImportStyle { get; set; }
@@ -75,6 +77,8 @@ public class LanguageBatchConvert
         FontSizeBounceIn = "Font size bounce in";
         AssaChangeResolutionOnlyAppliesToAssa = "Only applies to Advanced Sub Station Alpha (ASSA) subtitles";
         AssaChangeStyleTitle = "Change style";
+        AdjustImageColorsTitle = "Adjust image brightness/alpha/color";
+        AdjustImageColorsInfo = "Only applies when converting image-based subtitles to an image-based format (e.g. Blu-ray sup to Blu-ray sup).";
         AssaChangeStyleFromStyle = "Change style from";
         AssaChangeStyleToStyle = "to";
         AssaChangeStyleImportStyle = "Import style...";

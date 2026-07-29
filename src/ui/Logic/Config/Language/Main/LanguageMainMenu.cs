@@ -82,6 +82,7 @@ public class LanguageMainMenu
     public string AssaStyles { get; set; }
     public string AssaProperties { get; set; }
     public string AssaAttachments { get; set; }
+    public string AssaFontCollector { get; set; }
 
 
     public string SpellCheckTitle { get; set; }
@@ -112,6 +113,7 @@ public class LanguageMainMenu
 
     public string Synchronization { get; set; }
     public string AdjustAllTimes { get; set; }
+    public string ShowSelectedLinesEarlierLater { get; set; }
     public string ChangeFrameRate { get; set; }
     public string ChangeSpeed { get; set; }
     public string VisualSync { get; set; }
@@ -222,6 +224,7 @@ public class LanguageMainMenu
         AssaStyles = "S_tyles...";
         AssaProperties = "P_roperties...";
         AssaAttachments = "_Attachments...";
+        AssaFontCollector = "_Font collector...";
 
         SpellCheckTitle = "_Spell check";
         FindDoubleWords = "_Find double words...";
@@ -254,6 +257,7 @@ public class LanguageMainMenu
 
         Synchronization = "S_ynchronization";
         AdjustAllTimes = "_Adjust all times...";
+        ShowSelectedLinesEarlierLater = "Show selected lines earlier/later...";
         VisualSync = "_Visual sync...";
         PointSync = "_Point sync...";
         PointSyncViaOther = "Point sync via _other subtitle...";

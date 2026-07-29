@@ -59,6 +59,7 @@ public class SeAppearance
     public bool ToolbarShowSpellCheck { get; set; }
     public bool ToolbarShowRemoveTextForHi { get; set; }
     public bool ToolbarShowVisualSync { get; set; }
+    public bool ToolbarShowPointSync { get; set; }
     public bool ToolbarShowBeautifyTimeCodes { get; set; }
     public bool ToolbarShowBurnIn { get; set; }
     public bool ToolbarShowSettings { get; set; }
@@ -132,6 +133,7 @@ public class SeAppearance
         ToolbarShowSpellCheck = true;
         ToolbarShowRemoveTextForHi = false;
         ToolbarShowVisualSync = false;
+        ToolbarShowPointSync = false;
         ToolbarShowBeautifyTimeCodes = false;
         ToolbarShowBurnIn = false;
         ToolbarShowSettings = true;

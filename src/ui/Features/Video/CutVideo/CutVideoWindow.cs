@@ -48,12 +48,17 @@ public class CutVideoWindow : Window
             nameof(vm.SelectedVideoExtension)
         ).WithMarginRight(10);
 
+        var checkBoxCutSubtitle = UiUtil.MakeCheckBox(Se.Language.Video.CutVideoAlsoCutSubtitle, vm, nameof(vm.CutSubtitleToo))
+            .WithMarginRight(10);
+        checkBoxCutSubtitle[!Visual.IsVisibleProperty] = new Binding(nameof(vm.IsCutSubtitleVisible));
+
         var buttonGenerate = UiUtil.MakeButton(Se.Language.General.Generate, vm.GenerateCommand)
             .WithBindEnabled(nameof(vm.IsGenerating), new InverseBooleanConverter());
         var buttonConfig = UiUtil.MakeButton(vm.OkCommand, IconNames.Settings)
             .WithMarginRight(5)
             .WithBindEnabled(nameof(vm.IsGenerating), new InverseBooleanConverter());
         var buttonPanel = UiUtil.MakeButtonBar(
+            checkBoxCutSubtitle,
             comboBoxCutType,
             labelVideoExtension,
             comboBoxVideoExtension,

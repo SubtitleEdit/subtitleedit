@@ -58,6 +58,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             subtitle.Header = null;
             var buffer = FileUtil.ReadAllBytesShared(fileName);
             var i = 128;
+            var sb = new StringBuilder();
             while (i < buffer.Length - 40)
             {
                 // 00 00 FE FF FF FF (00 00 01 = sub number 1)
@@ -74,7 +75,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         i += 9;
 
                         // seek to text
-                        var sb = new StringBuilder();
+                        sb.Clear();
                         while (i < buffer.Length - 10 && !IsSubNumber(buffer, i, out _))
                         {
                             if (buffer[i] >= 9 && buffer[i + 1] == 0 && buffer[i + 2] == 0x44)

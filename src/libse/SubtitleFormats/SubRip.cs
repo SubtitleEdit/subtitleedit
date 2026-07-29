@@ -7,15 +7,25 @@ using System.Text.RegularExpressions;
 
 namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 {
-    public class SubRip : SubtitleFormat
+    public partial class SubRip : SubtitleFormat
     {
         public string Errors { get; private set; }
         private StringBuilder _errors;
         private int _lineNumber;
         private bool _isMsFrames;
         private bool _isWsrt;
+#if NET7_0_OR_GREATER
+        [GeneratedRegex(@"<3\d>")]
+        private static partial Regex _regExWsrtItalicStartGen();
+        private static readonly Regex _regExWsrtItalicStart = _regExWsrtItalicStartGen();
+
+        [GeneratedRegex(@"</3\d>")]
+        private static partial Regex _regExWsrtItalicEndGen();
+        private static readonly Regex _regExWsrtItalicEnd = _regExWsrtItalicEndGen();
+#else
         private static Regex _regExWsrtItalicStart = new Regex(@"<3\d>", RegexOptions.Compiled);
         private static Regex _regExWsrtItalicEnd = new Regex(@"</3\d>", RegexOptions.Compiled);
+#endif
 
         private enum ExpectingLine
         {
@@ -51,14 +61,19 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         public override string ToText(Subtitle subtitle, string title)
         {
-            const string paragraphWriteFormat = "{0}{4}{1} --> {2}{4}{3}{4}{4}";
-
+            // Append the parts directly: AppendFormat re-parsed the composite format and boxed
+            // p.Number per paragraph, and "sb.ToString().Trim() + ..." allocated the whole
+            // multi-megabyte output twice more.
             var sb = new StringBuilder();
             foreach (var p in subtitle.Paragraphs)
             {
-                sb.AppendFormat(paragraphWriteFormat, p.Number, p.StartTime, p.EndTime, p.Text, Environment.NewLine);
+                sb.Append(p.Number).Append(Environment.NewLine);
+                sb.Append(p.StartTime.ToString()).Append(" --> ").Append(p.EndTime.ToString()).Append(Environment.NewLine);
+                sb.Append(p.Text).Append(Environment.NewLine).Append(Environment.NewLine);
             }
-            return sb.ToString().Trim() + Environment.NewLine + Environment.NewLine;
+
+            TrimBuilder(sb);
+            return sb.Append(Environment.NewLine).Append(Environment.NewLine).ToString();
         }
 
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)

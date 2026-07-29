@@ -15,6 +15,11 @@ public class LanguageFixCommonErrors
     public string Log { get; set; }
     public string Function { get; set; }
     public string RemovedEmptyLine { get; set; }
+    public string RuleDetailsDotDotDot { get; set; }
+    public string ShowOnlyThisRule { get; set; }
+    public string AppliedRulesForLineX { get; set; }
+    public string RuleX { get; set; }
+    public string ExampleX { get; set; }
     public string RemovedEmptyLineAtTop { get; set; }
     public string RemovedEmptyLineAtBottom { get; set; }
     public string RemovedEmptyLineInMiddle { get; set; }
@@ -153,6 +158,11 @@ public class LanguageFixCommonErrors
         Log = "Log";
         Function = "Function";
         RemovedEmptyLine = "Remove empty line";
+        RuleDetailsDotDotDot = "Rule details...";
+        ShowOnlyThisRule = "Show only fixes from this rule";
+        AppliedRulesForLineX = "Applied rule(s) for line {0}";
+        RuleX = "Rule: {0}";
+        ExampleX = "Example: {0}";
         RemovedEmptyLineAtTop = "Remove empty line at top";
         RemovedEmptyLineAtBottom = "Remove empty line at bottom";
         RemovedEmptyLineInMiddle = "Remove empty line in middle";

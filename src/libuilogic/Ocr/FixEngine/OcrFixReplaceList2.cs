@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using System.Buffers;
+using System.Text;
 using System.Text.RegularExpressions;
 using System.Xml;
 using Nikse.SubtitleEdit.Core.Common;
@@ -304,13 +305,11 @@ namespace Nikse.SubtitleEdit.UiLogic.Ocr.FixEngine
 
         public string FixOcrErrorViaLineReplaceList(string input, Subtitle subtitle, int index, ISpellChecker spellCheckManager, List<string> wordsToIgnore, bool spelledOK)
         {
-            // Whole fromLine
-            foreach (var from in _wholeLineReplaceList.Keys)
+            // Whole fromLine - the dictionary's default comparer is the same ordinal equality
+            // the old linear key scan used.
+            if (_wholeLineReplaceList.TryGetValue(input, out var wholeLineTo))
             {
-                if (input == from)
-                {
-                    return _wholeLineReplaceList[from];
-                }
+                return wholeLineTo;
             }
 
             var newText = input;
@@ -337,11 +336,12 @@ namespace Nikse.SubtitleEdit.UiLogic.Ocr.FixEngine
             foreach (var l in lines)
             {
                 var s = l;
-                foreach (string from in _beginLineReplaceList.Keys)
+                foreach (var kv in _beginLineReplaceList)
                 {
+                    var from = kv.Key;
                     if (s.FastIndexOf(from) >= 0)
                     {
-                        var with = _beginLineReplaceList[from];
+                        var with = kv.Value;
                         if (s.StartsWith(from, StringComparison.Ordinal))
                         {
                             s = s.Remove(0, from.Length).Insert(0, with);
@@ -366,12 +366,13 @@ namespace Nikse.SubtitleEdit.UiLogic.Ocr.FixEngine
                 post = "</i>";
             }
 
-            foreach (var from in _endLineReplaceList.Keys)
+            foreach (var kv in _endLineReplaceList)
             {
+                var from = kv.Key;
                 if (newText.EndsWith(from, StringComparison.Ordinal))
                 {
                     var position = (newText.Length - from.Length);
-                    var toText = _endLineReplaceList[from];
+                    var toText = kv.Value;
 
                     if (!SkipAddLineEnding(subtitle, from, toText, index))
                     {
@@ -381,39 +382,39 @@ namespace Nikse.SubtitleEdit.UiLogic.Ocr.FixEngine
             }
             newText += post;
 
-            foreach (var from in PartialLineWordBoundaryReplaceList.Keys)
+            foreach (var kv in PartialLineWordBoundaryReplaceList)
             {
-                if (newText.FastIndexOf(from) >= 0)
+                if (newText.FastIndexOf(kv.Key) >= 0)
                 {
-                    newText = ReplaceWord(newText, from, PartialLineWordBoundaryReplaceList[from]);
+                    newText = ReplaceWord(newText, kv.Key, kv.Value);
                 }
             }
 
-            foreach (var from in _partialLineAlwaysReplaceList.Keys)
+            foreach (var kv in _partialLineAlwaysReplaceList)
             {
-                if (newText.FastIndexOf(from) >= 0)
+                if (newText.FastIndexOf(kv.Key) >= 0)
                 {
-                    newText = newText.Replace(from, _partialLineAlwaysReplaceList[from]);
+                    newText = newText.Replace(kv.Key, kv.Value);
                 }
             }
 
             if (_replaceRegExes == null || _regExList.Count != _replaceRegExes.Count)
             {
-                _replaceRegExes = new List<Regex>();
-                foreach (var findWhat in _regExList.Keys)
+                _replaceRegExes = new List<Regex>(_regExList.Count);
+                foreach (var kv in _regExList)
                 {
-                    var regex = new Regex(findWhat, RegexOptions.Multiline | RegexOptions.Compiled);
+                    var regex = new Regex(kv.Key, RegexOptions.Multiline | RegexOptions.Compiled);
                     _replaceRegExes.Add(regex);
-                    newText = regex.Replace(newText, _regExList[findWhat]);
+                    newText = regex.Replace(newText, kv.Value);
                 }
             }
             else
             {
                 var i = 0;
-                foreach (var findWhat in _regExList.Keys)
+                foreach (var kv in _regExList)
                 {
                     var regex = _replaceRegExes[i];
-                    newText = regex.Replace(newText, _regExList[findWhat]);
+                    newText = regex.Replace(newText, kv.Value);
                     i++;
                 }
             }
@@ -488,22 +489,24 @@ namespace Nikse.SubtitleEdit.UiLogic.Ocr.FixEngine
         {
             var list = new List<string>();
             var previousGuesses = new List<string>();
-            foreach (var letter in _partialWordReplaceList.Keys)
+            foreach (var kv in _partialWordReplaceList)
             {
+                var letter = kv.Key;
+                var replacement = kv.Value;
                 var indexes = new List<int>();
                 for (var i = 0; i <= word.Length - letter.Length; i++)
                 {
                     if (word.AsSpan(i).StartsWith(letter, StringComparison.Ordinal))
                     {
-                        if (i == word.Length - letter.Length && !_partialWordReplaceList[letter].Contains(' '))
+                        if (i == word.Length - letter.Length && !replacement.Contains(' '))
                         {
-                            var guess = word.Remove(i, letter.Length).Insert(i, _partialWordReplaceList[letter]);
+                            var guess = word.Remove(i, letter.Length).Insert(i, replacement);
                             AddToGuessList(list, guess);
                         }
                         else
                         {
                             indexes.Add(i);
-                            var guess = word.Remove(i, letter.Length).Insert(i, _partialWordReplaceList[letter]);
+                            var guess = word.Remove(i, letter.Length).Insert(i, replacement);
                             AddToGuessList(list, guess);
                         }
                     }
@@ -511,22 +514,22 @@ namespace Nikse.SubtitleEdit.UiLogic.Ocr.FixEngine
 
                 if (indexes.Count > 1)
                 {
-                    if (!_partialWordReplaceList[letter].Contains(' '))
+                    if (!replacement.Contains(' '))
                     {
                         var multiGuess = word;
                         for (var i = indexes.Count - 1; i >= 0; i--)
                         {
                             var idx = indexes[i];
-                            multiGuess = multiGuess.Remove(idx, letter.Length).Insert(idx, _partialWordReplaceList[letter]);
+                            multiGuess = multiGuess.Remove(idx, letter.Length).Insert(idx, replacement);
                             AddToGuessList(list, multiGuess);
                         }
 
-                        AddToGuessList(list, word.Replace(letter, _partialWordReplaceList[letter]));
+                        AddToGuessList(list, word.Replace(letter, replacement));
                     }
                 }
                 else if (indexes.Count > 0)
                 {
-                    AddToGuessList(list, word.Replace(letter, _partialWordReplaceList[letter]));
+                    AddToGuessList(list, word.Replace(letter, replacement));
                 }
 
                 if (indexes.Count > 0)
@@ -536,7 +539,7 @@ namespace Nikse.SubtitleEdit.UiLogic.Ocr.FixEngine
                         var idx = indexes[i];
                         if (idx > 1 && idx < word.Length - 2)
                         {
-                            var guess = word.Remove(idx, letter.Length).Insert(idx, _partialWordReplaceList[letter]);
+                            var guess = word.Remove(idx, letter.Length).Insert(idx, replacement);
                             AddToGuessList(list, guess);
                         }
                     }
@@ -546,9 +549,9 @@ namespace Nikse.SubtitleEdit.UiLogic.Ocr.FixEngine
                 {
                     for (var i = 0; i < previousGuess.Length - letter.Length; i++)
                     {
-                        if (previousGuess.Substring(i).StartsWith(letter, StringComparison.Ordinal))
+                        if (previousGuess.AsSpan(i).StartsWith(letter, StringComparison.Ordinal))
                         {
-                            var guess = previousGuess.Remove(i, letter.Length).Insert(i, _partialWordReplaceList[letter]);
+                            var guess = previousGuess.Remove(i, letter.Length).Insert(i, replacement);
                             AddToGuessList(list, guess);
                         }
                     }
@@ -609,9 +612,9 @@ namespace Nikse.SubtitleEdit.UiLogic.Ocr.FixEngine
             }
 
             //always replace list
-            foreach (var letter in _partialWordAlwaysReplaceList.Keys)
+            foreach (var kv in _partialWordAlwaysReplaceList)
             {
-                word = word.Replace(letter, _partialWordAlwaysReplaceList[letter]);
+                word = word.Replace(kv.Key, kv.Value);
             }
 
             var pre = string.Empty;
@@ -1130,6 +1133,8 @@ namespace Nikse.SubtitleEdit.UiLogic.Ocr.FixEngine
             return true;
         }
 
+        private static readonly SearchValues<char> WordSeparatorChars = SearchValues.Create(@" ¡¿<>-""”“()[]'‘`´¶♪¿¡.…—!?,:;/");
+
         public static string ReplaceWord(string text, string word, string newWord)
         {
             if (string.IsNullOrEmpty(text) || string.IsNullOrEmpty(word))
@@ -1140,17 +1145,18 @@ namespace Nikse.SubtitleEdit.UiLogic.Ocr.FixEngine
             var sb = new StringBuilder(text.Length);
             if (text.Contains(word))
             {
-                const string separatorChars = @" ¡¿<>-""”“()[]'‘`´¶♪¿¡.…—!?,:;/";
                 var appendFrom = 0;
                 for (var i = 0; i < text.Length; i++)
                 {
-                    if (text[i] == word[0] && i >= appendFrom && text.Substring(i).StartsWith(word, StringComparison.Ordinal))
+                    // AsSpan instead of Substring - the old code copied the whole tail of the
+                    // line for every position where the first character matched.
+                    if (text[i] == word[0] && i >= appendFrom && text.AsSpan(i).StartsWith(word, StringComparison.Ordinal))
                     {
                         var startOk = i == 0;
                         if (!startOk)
                         {
                             var prevChar = text[i - 1];
-                            startOk = char.IsPunctuation(prevChar) || char.IsWhiteSpace(prevChar) || separatorChars.Contains(prevChar);
+                            startOk = char.IsPunctuation(prevChar) || char.IsWhiteSpace(prevChar) || WordSeparatorChars.Contains(prevChar);
                         }
                         if (!startOk && word.StartsWith(' '))
                         {
@@ -1162,7 +1168,7 @@ namespace Nikse.SubtitleEdit.UiLogic.Ocr.FixEngine
                             if (!endOk)
                             {
                                 var nextChar = text[i + word.Length];
-                                endOk = char.IsPunctuation(nextChar) || char.IsWhiteSpace(nextChar) || separatorChars.Contains(nextChar);
+                                endOk = char.IsPunctuation(nextChar) || char.IsWhiteSpace(nextChar) || WordSeparatorChars.Contains(nextChar);
                             }
                             if (!endOk)
                             {

@@ -174,9 +174,9 @@
       },
       "SharpCompress": {
         "type": "Direct",
-        "requested": "[0.50.0, )",
-        "resolved": "0.50.0",
-        "contentHash": "EzoWIzA31rb/kADwHkcmdT1rzqnT91kR/Df8X/gqd3qvXhgMbCzyKIWH6M3LTDwPIr0uLoXfX9fvThidXHBdyQ=="
+        "requested": "[0.50.1, )",
+        "resolved": "0.50.1",
+        "contentHash": "VY90K8BBvaAMvvRDJ8EvsfI/GgoIYxlgxMpxdgwpzaesJ0pGSHTLbZ7SD4JYxsGCnOibzua/+8HvDjV6KTw4jA=="
       },
       "SkiaSharp.HarfBuzz": {
         "type": "Direct",
@@ -612,7 +612,7 @@
           "CommunityToolkit.Mvvm": "[8.4.2, )",
           "SkiaSharp.HarfBuzz": "[3.119.4, )",
           "WeCantSpell.Hunspell": "[7.0.1, )",
-          "libse": "[1.0.0, )"
+          "libse": "[5.1.0, )"
         }
       }
     }

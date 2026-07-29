@@ -46,6 +46,21 @@ public class LanguageAssa
     public string ProgressBarTakePosFromVideo { get; set; }
     public string ProgressBarPreview { get; set; }
 
+    // Font collector
+    public string FontCollectorTitle { get; set; }
+    public string FontCollectorUsedIn { get; set; }
+    public string FontCollectorFontFiles { get; set; }
+    public string FontCollectorStyleX { get; set; }
+    public string FontCollectorInlineLineX { get; set; }
+    public string FontCollectorFound { get; set; }
+    public string FontCollectorNotFound { get; set; }
+    public string FontCollectorScanning { get; set; }
+    public string FontCollectorXOfYFontsFound { get; set; }
+    public string FontCollectorCopyFontsToFolder { get; set; }
+    public string FontCollectorCopyFontsToFolderDotDotDot { get; set; }
+    public string FontCollectorNoFontsToCopy { get; set; }
+    public string FontCollectorXFontFilesCopiedToY { get; set; }
+
     // Resolution Resampler
     public string ResolutionResamplerTitle { get; set; }
     public string ResolutionResamplerSourceRes { get; set; }
@@ -260,6 +275,19 @@ public class LanguageAssa
         ProgressBarPreview = "Preview";
 
         // Resolution Resampler
+        FontCollectorTitle = "Font collector";
+        FontCollectorUsedIn = "Used in";
+        FontCollectorFontFiles = "Font file(s)";
+        FontCollectorStyleX = "Style: {0}";
+        FontCollectorInlineLineX = "Line {0}";
+        FontCollectorFound = "Found";
+        FontCollectorNotFound = "Not found";
+        FontCollectorScanning = "Scanning installed fonts...";
+        FontCollectorXOfYFontsFound = "{0} of {1} fonts found";
+        FontCollectorCopyFontsToFolder = "Copy fonts to folder";
+        FontCollectorCopyFontsToFolderDotDotDot = "Copy fonts to folder...";
+        FontCollectorNoFontsToCopy = "No font files found to copy.";
+        FontCollectorXFontFilesCopiedToY = "{0} font file(s) copied to {1}";
         ResolutionResamplerTitle = "Change resolution";
         ResolutionResamplerSourceRes = "Source resolution";
         ResolutionResamplerTargetRes = "Target resolution";

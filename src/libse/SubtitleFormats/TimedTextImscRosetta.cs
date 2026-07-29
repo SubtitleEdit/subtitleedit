@@ -406,6 +406,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 }
             }
 
+            var textBuilder = new StringBuilder();
             foreach (XmlNode divNode in body.SelectNodes("ttml:div", namespaceManager))
             {
                 TimedText10.ExtractTimeCodes(divNode, subtitle, out var begin, out var end);
@@ -425,7 +426,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     var alignmentTag = GetAlignmentTagFromRegionAndStyle(paragraphStyle, regionDisplayAlign, originY, extentY);
                     
                     // Read all <p> nodes and combine them with line breaks
-                    var textBuilder = new StringBuilder();
+                    textBuilder.Clear();
                     for (int i = 0; i < pNodes.Count; i++)
                     {
                         if (i > 0)

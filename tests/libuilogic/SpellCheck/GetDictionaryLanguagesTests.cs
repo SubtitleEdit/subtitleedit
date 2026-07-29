@@ -37,7 +37,7 @@ public class GetDictionaryLanguagesTests
             Assert.Contains(list, d => d.Name.Contains("[be-official]"));
 
             // Every entry resolved to a real language name, not the "[name]" fallback.
-            Assert.All(list, d => Assert.False(d.Name.StartsWith("[", StringComparison.Ordinal)));
+            Assert.All(list, d => Assert.False(d.Name.StartsWith('[')));
         }
         finally
         {
@@ -54,7 +54,7 @@ public class GetDictionaryLanguagesTests
             var list = new SpellChecker().GetDictionaryLanguages(dir);
             var entry = Assert.Single(list);
             // Resolves (no "[name]" fallback) and keeps the script tag rather than dropping it.
-            Assert.False(entry.Name.StartsWith("[", StringComparison.Ordinal));
+            Assert.False(entry.Name.StartsWith('['));
             Assert.Contains("[sr-Latn]", entry.Name);
             // ICU renders the kept script as a qualifier in parentheses (locale-independent structure);
             // had "Latn" been stripped, plain "sr" would have no qualifier.

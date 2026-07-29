@@ -17,7 +17,7 @@ using System.Xml;
 
 namespace Nikse.SubtitleEdit.Core.Common
 {
-    public static class Utilities
+    public static partial class Utilities
     {
         /// <summary>
         /// Cached environment new line characters for faster lookup.
@@ -52,6 +52,47 @@ namespace Nikse.SubtitleEdit.Core.Common
             return newText;
         }
 
+#if NET7_0_OR_GREATER
+        [GeneratedRegex(@"\b\d+[\.:;] \d+\b")]
+        private static partial Regex NumberSeparatorNumberRegExGen();
+        private static readonly Regex NumberSeparatorNumberRegEx = NumberSeparatorNumberRegExGen();
+
+        [GeneratedRegex("^\\d+$")]
+        private static partial Regex RegexIsNumberGen();
+        private static readonly Regex RegexIsNumber = RegexIsNumberGen();
+
+        [GeneratedRegex("^\\d+x\\d+$")]
+        private static partial Regex RegexIsEpisodeNumberGen();
+        private static readonly Regex RegexIsEpisodeNumber = RegexIsEpisodeNumberGen();
+
+        [GeneratedRegex(@"(\d) (\.)")]
+        private static partial Regex RegexNumberSpacePeriodGen();
+        private static readonly Regex RegexNumberSpacePeriod = RegexNumberSpacePeriodGen();
+
+        [GeneratedRegex(@"(1) (st)\b")]
+        private static partial Regex RegexOrdinalStGen();
+        private static readonly Regex RegexOrdinalSt = RegexOrdinalStGen();
+
+        [GeneratedRegex(@"(2) (nd)\b")]
+        private static partial Regex RegexOrdinalNdGen();
+        private static readonly Regex RegexOrdinalNd = RegexOrdinalNdGen();
+
+        [GeneratedRegex(@"(3) (rd)\b")]
+        private static partial Regex RegexOrdinalRdGen();
+        private static readonly Regex RegexOrdinalRd = RegexOrdinalRdGen();
+
+        [GeneratedRegex(@"([0456789]) (th)\b")]
+        private static partial Regex RegexOrdinalThGen();
+        private static readonly Regex RegexOrdinalTh = RegexOrdinalThGen();
+
+        [GeneratedRegex(@"\bو ")]
+        private static partial Regex RegexArabicWawSpaceGen();
+        private static readonly Regex RegexArabicWawSpace = RegexArabicWawSpaceGen();
+
+        [GeneratedRegex(@"[a-z] \. [A-Z]")]
+        private static partial Regex RegexLetterSpacePeriodSpaceLetterGen();
+        private static readonly Regex RegexLetterSpacePeriodSpaceLetter = RegexLetterSpacePeriodSpaceLetterGen();
+#else
         private static readonly Regex NumberSeparatorNumberRegEx = new Regex(@"\b\d+[\.:;] \d+\b", RegexOptions.Compiled);
         private static readonly Regex RegexIsNumber = new Regex("^\\d+$", RegexOptions.Compiled);
         private static readonly Regex RegexIsEpisodeNumber = new Regex("^\\d+x\\d+$", RegexOptions.Compiled);
@@ -62,6 +103,7 @@ namespace Nikse.SubtitleEdit.Core.Common
         private static readonly Regex RegexOrdinalTh = new Regex(@"([0456789]) (th)\b", RegexOptions.Compiled);
         private static readonly Regex RegexArabicWawSpace = new Regex(@"\bو ", RegexOptions.Compiled);
         private static readonly Regex RegexLetterSpacePeriodSpaceLetter = new Regex(@"[a-z] \. [A-Z]", RegexOptions.Compiled);
+#endif
 
         public static string[] VideoFileExtensions { get; } = { ".avi", ".mkv", ".wmv", ".mpg", ".mpeg", ".divx", ".mp4", ".asf", ".flv", ".mov", ".m4v", ".vob", ".ogv", ".webm", ".ts", ".tts", ".m2ts", ".mts", ".avs", ".mxf" };
         public static string[] AudioFileExtensions { get; } = { ".mp3", ".wav", ".wma", ".ogg", ".mpa", ".m4a", ".ape", ".aiff", ".flac", ".aac", ".ac3", ".eac3", ".mka", ".opus", ".adts", ".m4b" };
@@ -583,9 +625,9 @@ namespace Nikse.SubtitleEdit.Core.Common
             }
 
             var s = RemoveLineBreaks(text);
-            while (s.Contains("  "))
+            if (s.Contains("  ", StringComparison.Ordinal))
             {
-                s = s.Replace("  ", " ");
+                s = CollapseSpaceRuns(s);
             }
 
             if (s.CountCharacters(false) < mergeLinesShorterThan)
@@ -618,16 +660,17 @@ namespace Nikse.SubtitleEdit.Core.Common
                             || tagSpan.StartsWith("<i".AsSpan(), StringComparison.OrdinalIgnoreCase)
                             || tagSpan.StartsWith("</i".AsSpan(), StringComparison.OrdinalIgnoreCase);
                 }
-                else if (letter == '{' && s.Substring(six).StartsWith("{\\"))
+                else if (letter == '{' && six + 1 < s.Length && s[six + 1] == '\\')
                 {
-                    var tagString = s.Substring(six);
-                    var endIndexAssTag = tagString.IndexOf('}') + 1;
-                    if (endIndexAssTag > 0)
+                    // Used to Substring the whole remainder (twice) per '{' and probe it with
+                    // the culture-sensitive StartsWith(string).
+                    var closeIdx = s.IndexOf('}', six);
+                    if (closeIdx >= 0)
                     {
-                        tagString = tagString.Substring(0, endIndexAssTag);
+                        var tagString = s.Substring(six, closeIdx - six + 1);
                         AddOrAppendHtmlTag(htmlTags, six, tagString);
 
-                        s = s.Remove(six, endIndexAssTag);
+                        s = s.Remove(six, closeIdx - six + 1);
                         continue;
                     }
                 }
@@ -673,6 +716,37 @@ namespace Nikse.SubtitleEdit.Core.Common
             s = s.Replace(" " + Environment.NewLine, Environment.NewLine);
             s = s.Replace(Environment.NewLine + " ", Environment.NewLine);
             return s.TrimEnd();
+        }
+
+        // Collapses every run of two or more spaces to a single space in one pass - the same
+        // result the old `while (Contains("  ")) Replace("  ", " ")` loop converged on, which
+        // allocated a new string per pass (O(n * runs) on space-heavy lines).
+        private static string CollapseSpaceRuns(string s)
+        {
+            var buffer = new char[s.Length];
+            var pos = 0;
+            var previousWasSpace = false;
+            for (var i = 0; i < s.Length; i++)
+            {
+                var ch = s[i];
+                if (ch == ' ')
+                {
+                    if (previousWasSpace)
+                    {
+                        continue;
+                    }
+
+                    previousWasSpace = true;
+                }
+                else
+                {
+                    previousWasSpace = false;
+                }
+
+                buffer[pos++] = ch;
+            }
+
+            return new string(buffer, 0, pos);
         }
 
         // Patterns for RemoveLineBreaks - static so the per-call "</i> " + Environment.NewLine
@@ -834,6 +908,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                 var writeIdx = 0;
                 var i = 0;
                 var len = input.Length;
+                var modified = false;
 
                 while (i < len)
                 {
@@ -850,6 +925,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                                 input.AsSpan(i, closingBrace - i + 1).StartsWith("{Kara Effector".AsSpan()))
                             {
                                 i = closingBrace + 1;
+                                modified = true;
                                 continue;
                             }
                         }
@@ -866,12 +942,14 @@ namespace Nikse.SubtitleEdit.Core.Common
                             }
 
                             i += 2;
+                            modified = true;
                             continue;
                         }
                         if (next == 'h')
                         {
                             rented[writeIdx++] = ' ';
                             i += 2;
+                            modified = true;
                             continue;
                         }
                     }
@@ -881,7 +959,10 @@ namespace Nikse.SubtitleEdit.Core.Common
                     i++;
                 }
 
-                var result = new string(rented, 0, writeIdx);
+                // A line can pass the '{'/'\\' fast check above without containing anything to
+                // strip (e.g. a stray backslash) - every char was copied verbatim then, so
+                // return the input instead of an identical copy.
+                var result = modified ? new string(rented, 0, writeIdx) : input;
 
                 if (removeDrawingTags && result.StartsWith("m ", StringComparison.Ordinal))
                 {
@@ -1315,6 +1396,11 @@ namespace Nikse.SubtitleEdit.Core.Common
         public static readonly string LowercaseLetters = Configuration.Settings.General.UppercaseLetters.ToLowerInvariant() + "αβγδεζηθικλμνξοπρσςτυφχψωήάόέ";
         public static readonly string LowercaseLettersWithNumbers = LowercaseLetters + "0123456789";
         public static readonly string AllLetters = UppercaseLetters + LowercaseLetters;
+
+        // QualifiesForMerge runs per adjacent paragraph pair in the merge fixes; concatenating
+        // this ~135-char set (plus a one-char Substring) on every call added two allocations
+        // per pair. Declared after AllLetters - static field initializers run in order.
+        private static readonly string LineContinuationEndChars = AllLetters + "…,-$%";
         public static readonly string AllLettersAndNumbers = UppercaseLetters + LowercaseLettersWithNumbers;
 
         public static SKColor GetColorFromUserName(string userName)
@@ -1557,7 +1643,13 @@ namespace Nikse.SubtitleEdit.Core.Common
             return Uri.UnescapeDataString(text);
         }
 
+#if NET7_0_OR_GREATER
+        [GeneratedRegex(@"\d\d+")]
+        private static partial Regex TwoOrMoreDigitsNumberGen();
+        private static readonly Regex TwoOrMoreDigitsNumber = TwoOrMoreDigitsNumberGen();
+#else
         private static readonly Regex TwoOrMoreDigitsNumber = new Regex(@"\d\d+", RegexOptions.Compiled);
+#endif
         private const string PrePostStringsToReverse = @"-— !?.…""،,():;[]+~*/<>&^%$#\\|'";
 
         public static string ReverseStartAndEndingForRightToLeft(string s)
@@ -1565,12 +1657,13 @@ namespace Nikse.SubtitleEdit.Core.Common
             var newLines = new StringBuilder();
             var pre = new StringBuilder();
             var post = new StringBuilder();
+            var preTags = new StringBuilder();
             var lines = s.SplitToLines();
             foreach (var line in lines)
             {
                 string s2 = line;
 
-                var preTags = new StringBuilder();
+                preTags.Clear();
                 while (s2.StartsWith("{\\", StringComparison.Ordinal) && s2.IndexOf('}') > 0)
                 {
                     int end = s2.IndexOf('}') + 1;
@@ -1586,8 +1679,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                         preTags.Append(s2.Substring(0, 2));
                         s2 = s2.Remove(0, 2);
                     }
-                    if (s2.StartsWith("♪", StringComparison.Ordinal) ||
-                        s2.StartsWith("♫", StringComparison.Ordinal))
+                    if (s2.StartsWith('♪') || s2.StartsWith('♫'))
                     {
                         preTags.Append(s2.Substring(0, 1));
                         s2 = s2.Remove(0, 1);
@@ -1613,8 +1705,8 @@ namespace Nikse.SubtitleEdit.Core.Common
                         postTags = s2.Substring(s2.Length - 2) + postTags;
                         s2 = s2.Remove(s2.Length - 2);
                     }
-                    if (s2.EndsWith("♪", StringComparison.Ordinal) ||
-                        s2.EndsWith("♫", StringComparison.Ordinal))
+                    if (s2.EndsWith('♪') ||
+                        s2.EndsWith('♫'))
                     {
                         postTags = s2.Substring(s2.Length - 1) + postTags;
                         s2 = s2.Remove(s2.Length - 1);
@@ -2299,7 +2391,13 @@ namespace Nikse.SubtitleEdit.Core.Common
             return sb.ToString();
         }
 
+#if NET7_0_OR_GREATER
+        [GeneratedRegex(@"(?<=\b\d+) \d(?!/\d)")]
+        private static partial Regex RemoveSpaceBetweenNumbersRegexGen();
+        private static readonly Regex RemoveSpaceBetweenNumbersRegex = RemoveSpaceBetweenNumbersRegexGen();
+#else
         private static readonly Regex RemoveSpaceBetweenNumbersRegex = new Regex(@"(?<=\b\d+) \d(?!/\d)", RegexOptions.Compiled);
+#endif
 
         public static string RemoveSpaceBetweenNumbers(string text)
         {
@@ -2335,13 +2433,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             return text;
         }
 
-        /// <summary>
-        /// Remove unneeded spaces
-        /// </summary>
-        /// <param name="input">text string to remove unneeded spaces from</param>
-        /// <param name="language">two letter language id string</param>
-        /// <returns>text with unneeded spaces removed</returns>
-                // RemoveUnneededSpaces runs per line (auto-trim white space, fix common errors) and
+        // RemoveUnneededSpaces runs per line (auto-trim white space, fix common errors) and
         // Environment.NewLine is not a compile-time constant, so each of these was a
         // string.Concat executed on every call. Same treatment as the RemoveLineBreaks
         // patterns above.
@@ -2369,6 +2461,12 @@ namespace Nikse.SubtitleEdit.Core.Common
         private static readonly string RunSpaceQuoteNewLine = " \"" + Environment.NewLine;
         private static readonly string RunQuoteNewLine = "\"" + Environment.NewLine;
 
+        /// <summary>
+        /// Remove unneeded spaces
+        /// </summary>
+        /// <param name="input">text string to remove unneeded spaces from</param>
+        /// <param name="language">two letter language id string</param>
+        /// <returns>text with unneeded spaces removed</returns>
         public static string RemoveUnneededSpaces(string input, string language)
         {
             const char zeroWidthSpace = '\u200B';
@@ -3241,7 +3339,7 @@ namespace Nikse.SubtitleEdit.Core.Common
 
                     var lastChar = s[s.Length - 1];
                     var isLineContinuation = s.EndsWith("...", StringComparison.Ordinal) ||
-                                              (AllLetters + "…,-$%").Contains(s.Substring(s.Length - 1)) ||
+                                              LineContinuationEndChars.IndexOf(lastChar) >= 0 ||
                                               (CalcCjk.IsCjk(lastChar) && !IsCjkSentenceEnding(lastChar));
 
                     if (s.EndsWith('♪') || nextText.StartsWith('♪'))

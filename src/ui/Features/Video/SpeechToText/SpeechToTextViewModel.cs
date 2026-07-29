@@ -4,7 +4,7 @@ using Avalonia.Threading;
 using Avalonia.VisualTree;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using Nikse.SubtitleEdit.Core.AudioToText;
+using Nikse.SubtitleEdit.UiLogic.AudioToText;
 using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.ContainerFormats.Matroska;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
@@ -35,6 +35,8 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Timers;
+using Nikse.SubtitleEdit.UiLogic.Media;
+using Nikse.SubtitleEdit.UiLogic.Common;
 
 namespace Nikse.SubtitleEdit.Features.Video.SpeechToText;
 
@@ -232,15 +234,6 @@ public partial class SpeechToTextViewModel : ObservableObject
         {
             Engines.Add(new WhisperEngineCTranslate2());
         }
-
-        // MLX Whisper runs Whisper on the Apple GPU / Neural Engine and is arm64-only, so offer it
-        // only on Apple Silicon.
-        if (OperatingSystem.IsMacOS() &&
-            RuntimeInformation.ProcessArchitecture == Architecture.Arm64)
-        {
-            Engines.Add(new MlxWhisperMac());
-        }
-
 
         Engines.Add(new WhisperEngineOpenAi());
 
@@ -2872,12 +2865,6 @@ public partial class SpeechToTextViewModel : ObservableObject
                 viewModal.BreakSplitLongLines = Se.Settings.Tools.AudioToText.WhisperPostProcessingSplitLines;
                 viewModal.ChangeUnderlineToColor = Se.Settings.Tools.AudioToText.WhisperPostProcessingChangeUnderlineToColor;
                 viewModal.ChangeUnderlineToColorColor = Se.Settings.Tools.AudioToText.WhisperPostProcessingChangeUnderlineToColorColor.FromHexToColor();
-                viewModal.CueRebuild = Se.Settings.Tools.AudioToText.WhisperCueRebuild;
-                viewModal.CueMaxChars = Se.Settings.Tools.AudioToText.WhisperCueMaxChars;
-                viewModal.CueMaxSeconds = Se.Settings.Tools.AudioToText.WhisperCueMaxSeconds;
-                viewModal.CueMaxCps = Se.Settings.Tools.AudioToText.WhisperCueMaxCps;
-                viewModal.VocabularyPrompt = Se.Settings.Tools.AudioToText.WhisperVocabularyPrompt;
-                viewModal.BeamSize = Se.Settings.Tools.AudioToText.WhisperBeamSize;
             });
 
         if (vm.OkPressed)
@@ -2891,12 +2878,6 @@ public partial class SpeechToTextViewModel : ObservableObject
             Se.Settings.Tools.AudioToText.WhisperPostProcessingSplitLines = vm.BreakSplitLongLines;
             Se.Settings.Tools.AudioToText.WhisperPostProcessingChangeUnderlineToColor = vm.ChangeUnderlineToColor;
             Se.Settings.Tools.AudioToText.WhisperPostProcessingChangeUnderlineToColorColor = vm.ChangeUnderlineToColorColor.FromColorToHex();
-            Se.Settings.Tools.AudioToText.WhisperCueRebuild = vm.CueRebuild;
-            Se.Settings.Tools.AudioToText.WhisperCueMaxChars = vm.CueMaxChars;
-            Se.Settings.Tools.AudioToText.WhisperCueMaxSeconds = vm.CueMaxSeconds;
-            Se.Settings.Tools.AudioToText.WhisperCueMaxCps = vm.CueMaxCps;
-            Se.Settings.Tools.AudioToText.WhisperVocabularyPrompt = vm.VocabularyPrompt ?? string.Empty;
-            Se.Settings.Tools.AudioToText.WhisperBeamSize = vm.BeamSize;
         }
     }
 
@@ -3033,28 +3014,6 @@ public partial class SpeechToTextViewModel : ObservableObject
 
             if (!engine.IsEngineInstalled())
             {
-                if (engine is MlxWhisperMac)
-                {
-                    // pip-managed engine - Subtitle Edit cannot download it. The message explains
-                    // the detection model (SE looks for a Python that can import mlx_whisper, not a
-                    // binary) and the pipx/venv/conda caveat, since a user who installed it that way
-                    // otherwise hits "not found" with no idea why (#12209).
-                    await MessageBox.Show(
-                        Window!,
-                        $"{engine.Name} not found",
-                        "Subtitle Edit could not find a Python that can import the \"mlx_whisper\" package." + Environment.NewLine +
-                        Environment.NewLine +
-                        "If it is not installed yet, install it with:" + Environment.NewLine +
-                        "    pip3 install mlx-whisper" + Environment.NewLine +
-                        Environment.NewLine +
-                        "If you installed it with pipx, a virtual environment, or conda, Subtitle Edit finds it " +
-                        "automatically only when the \"mlx_whisper\" command is on your PATH or at " +
-                        "~/.local/bin/mlx_whisper (where pipx puts it). Check with:" + Environment.NewLine +
-                        "    which mlx_whisper");
-                    return;
-                }
-
-
                 if (engine is ICrispAsrEngine && Configuration.IsRunningOnWindows)
                 {
                     var answer = await MessageBox.Show(
@@ -3564,8 +3523,7 @@ public partial class SpeechToTextViewModel : ObservableObject
         ProgressOpacity = 1;
         ProgressText = GetProgressText();
 
-        _useCenterChannelOnly = Configuration.Settings.General.FFmpegUseCenterChannelOnly &&
-                                FfmpegMediaInfo.Parse(_videoFileName).HasFrontCenterAudio(_audioTrackNumber);
+        _useCenterChannelOnly = false; // FFmpeg center-channel extraction is not configurable in SE 5 yet
 
         //Delete invalid preprocessor_config.json file
         if (settings.WhisperChoice is WhisperChoice.PurfviewFasterWhisperXxl)
@@ -3847,106 +3805,6 @@ public partial class SpeechToTextViewModel : ObservableObject
             }
 
             return p;
-        }
-
-        // Cue-building settings for the helper-script engines, from the Whisper
-        // post-processing dialog. The helpers ignore unknown flags, but only these two
-        // engines understand them, so they are added only in their blocks below.
-        static string GetCueArgs()
-        {
-            var audioToText = Se.Settings.Tools.AudioToText;
-
-            // Vocabulary prompt: Whisper's documented way to bias recognition toward
-            // names and technical terms. Quotes are stripped so the value stays a
-            // single command line argument.
-            var promptPart = string.Empty;
-            var vocabularyPrompt = (audioToText.WhisperVocabularyPrompt ?? string.Empty)
-                .Replace("\"", string.Empty).Trim();
-            if (vocabularyPrompt.Length > 0)
-            {
-                promptPart = $" --initial-prompt \"{vocabularyPrompt}\"";
-            }
-
-            if (audioToText.WhisperBeamSize > 1)
-            {
-                promptPart += $" --beam-size {audioToText.WhisperBeamSize}";
-            }
-
-            if (!audioToText.WhisperCueRebuild)
-            {
-                return promptPart + " --raw-segments";
-            }
-
-            return promptPart +
-                   $" --max-cue-chars {audioToText.WhisperCueMaxChars}" +
-                   $" --max-cue-duration {audioToText.WhisperCueMaxSeconds.ToString(CultureInfo.InvariantCulture)}" +
-                   $" --max-cps {audioToText.WhisperCueMaxCps.ToString(CultureInfo.InvariantCulture)}";
-        }
-
-        if (engine is MlxWhisperMac mlxWhisperMac)
-        {
-            // mlx-whisper is a library, not a CLI, so we run a bundled helper script via python3.
-            // It writes "<audio-basename>.srt" into the audio's folder, which GetResultFromSrt then
-            // picks up. MLX runs Whisper on the Apple GPU / Neural Engine.
-            var python = mlxWhisperMac.GetExecutable();
-            var scriptPath = mlxWhisperMac.GetTranscribeScript();
-            var outputDir = Path.GetDirectoryName(waveFileName) ?? string.Empty;
-
-            var mlxLanguage = language;
-            if (mlxLanguage.Equals("english", StringComparison.OrdinalIgnoreCase))
-            {
-                mlxLanguage = "en";
-            }
-
-            var languagePart = !string.IsNullOrWhiteSpace(mlxLanguage) &&
-                               !mlxLanguage.Equals("auto", StringComparison.OrdinalIgnoreCase)
-                ? $" --language {mlxLanguage}"
-                : string.Empty;
-            var taskPart = translate ? " --task translate" : string.Empty;
-            var mlxExtraArgs = engine.CommandLineParameter;
-            var extraPart = string.IsNullOrWhiteSpace(mlxExtraArgs) ? string.Empty : " " + mlxExtraArgs.Trim();
-
-            var mlxParameters =
-                $"\"{scriptPath}\" --audio \"{waveFileName}\" --model {mlxWhisperMac.GetModelForCmdLine(model)} " +
-                $"--output-format srt --output-dir \"{outputDir}\"{languagePart}{taskPart}{GetCueArgs()}{extraPart}";
-
-            Se.WriteToolsLog($"{python} {mlxParameters}");
-
-            var mlxProcess = new Process
-            {
-                StartInfo = new ProcessStartInfo(python, mlxParameters)
-                {
-                    WindowStyle = ProcessWindowStyle.Hidden,
-                    CreateNoWindow = true,
-                    UseShellExecute = false,
-                }
-            };
-
-            mlxProcess.StartInfo.EnvironmentVariables["PYTHONIOENCODING"] = "utf-8";
-            mlxProcess.StartInfo.EnvironmentVariables["PYTHONUTF8"] = "1";
-            mlxProcess.StartInfo.EnvironmentVariables["PYTHONUNBUFFERED"] = "1";
-
-            if (dataReceivedHandler != null)
-            {
-                mlxProcess.StartInfo.StandardOutputEncoding = Encoding.UTF8;
-                mlxProcess.StartInfo.StandardErrorEncoding = Encoding.UTF8;
-                mlxProcess.StartInfo.RedirectStandardOutput = true;
-                mlxProcess.StartInfo.RedirectStandardError = true;
-                mlxProcess.OutputDataReceived += dataReceivedHandler;
-                mlxProcess.ErrorDataReceived += dataReceivedHandler;
-            }
-
-#pragma warning disable CA1416
-            mlxProcess.Start();
-#pragma warning restore CA1416
-
-            if (dataReceivedHandler != null)
-            {
-                mlxProcess.BeginOutputReadLine();
-                mlxProcess.BeginErrorReadLine();
-            }
-
-            return mlxProcess;
         }
 
         var settings = Se.Settings.Tools.AudioToText;
@@ -4589,17 +4447,6 @@ public partial class SpeechToTextViewModel : ObservableObject
         // It opens a dialog with the installed backend, status and Re-download — which is
         // also the answer to issue #11022 (switch backend after the initial install).
         IsEngineSettingsButtonVisible = canDownload && isInstalled && IsSettingsCapable(engine);
-
-        if (engine is MlxWhisperMac && !isInstalled)
-        {
-            // pip-managed engine - Subtitle Edit cannot download it, so show install help instead.
-            // Kept to one line here; the blocking dialog on transcribe explains the pipx/venv
-            // detection caveat in full (#12209).
-            EngineDownloadHint = "mlx-whisper not found - install with \"pip3 install mlx-whisper\", or ensure the \"mlx_whisper\" command is on your PATH";
-            IsEngineDownloadButtonVisible = false;
-            return;
-        }
-
 
         if (!canDownload || isInstalled)
         {

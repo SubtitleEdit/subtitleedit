@@ -17,7 +17,7 @@ public class Se
 {
     internal const int CurrentMacOsFontMigrationVersion = 1;
 
-    public static string Version { get; set; } = "v5.1.0-rc18";
+    public static string Version { get; set; } = "v5.1.0";
 
     public SeGeneral General { get; set; } = new();
     public List<SeShortCut> Shortcuts { get; set; } = new();
@@ -576,11 +576,13 @@ public class Se
     private static void UpdateLibSeSettings()
     {
         Configuration.Settings.General.FFmpegLocation = Settings.General.FfmpegPath;
-        Configuration.Settings.General.UseDarkTheme = Settings.Appearance.Theme == "Dark";
         Configuration.Settings.General.UseTimeFormatHHMMSSFF = Settings.General.UseFrameMode;
 
         Configuration.Settings.Proxy.ProxyAddress = Settings.General.ProxyAddress ?? string.Empty;
         Configuration.Settings.Proxy.UserName = Settings.General.ProxyUserName ?? string.Empty;
+        Configuration.Settings.Proxy.Domain = Settings.General.ProxyDomain ?? string.Empty;
+        Configuration.Settings.Proxy.UseDefaultCredentials = Settings.General.ProxyUseDefaultCredentials;
+        Configuration.Settings.Proxy.BypassList = Settings.General.ProxyBypassList ?? string.Empty;
         if (!string.IsNullOrEmpty(Settings.General.ProxyPassword))
         {
             Configuration.Settings.Proxy.EncodePassword(Settings.General.ProxyPassword);
@@ -590,57 +592,24 @@ public class Se
             Configuration.Settings.Proxy.Password = null;
         }
 
+        Configuration.Settings.Tools.AutoBreakLineEndingEarly = Settings.Tools.AutoBreakLineEndingEarly;
+        Configuration.Settings.Tools.AutoBreakCommaBreakEarly = Settings.Tools.AutoBreakCommaBreakEarly;
+        Configuration.Settings.Tools.AutoBreakDashEarly = Settings.Tools.AutoBreakDashEarly;
+        Configuration.Settings.Tools.AutoBreakUsePixelWidth = Settings.Tools.AutoBreakUsePixelWidth;
+        Configuration.Settings.Tools.AutoBreakPreferBottomHeavy = Settings.Tools.AutoBreakPreferBottomHeavy;
+
         var stt = Settings.Tools.AudioToText;
         Configuration.Settings.Tools.WhisperChoice = stt.WhisperChoice;
-        Configuration.Settings.Tools.WhisperIgnoreVersion = stt.WhisperIgnoreVersion;
-        Configuration.Settings.Tools.WhisperDeleteTempFiles = stt.WhisperDeleteTempFiles;
-        Configuration.Settings.Tools.WhisperModel = stt.WhisperModel;
-        Configuration.Settings.Tools.WhisperLanguageCode = stt.WhisperLanguageCode;
         Configuration.Settings.Tools.WhisperLocation = stt.WhisperLocation;
         Configuration.Settings.Tools.WhisperCtranslate2Location = stt.WhisperCtranslate2Location;
-        Configuration.Settings.Tools.WhisperPurfviewFasterWhisperLocation = stt.WhisperPurfviewFasterWhisperLocation;
-        Configuration.Settings.Tools.WhisperPurfviewFasterWhisperDefaultCmd = stt.WhisperPurfviewFasterWhisperDefaultCmd;
         Configuration.Settings.Tools.WhisperXLocation = stt.WhisperXLocation;
         Configuration.Settings.Tools.WhisperStableTsLocation = stt.WhisperStableTsLocation;
         Configuration.Settings.Tools.WhisperCppModelLocation = stt.WhisperCppModelLocation;
-        Configuration.Settings.Tools.WhisperExtraSettings = stt.WhisperCustomCommandLineArguments;
-        Configuration.Settings.Tools.WhisperExtraSettingsHistory = stt.WhisperExtraSettingsHistory;
-        Configuration.Settings.Tools.WhisperAutoAdjustTimings = stt.WhisperAutoAdjustTimings;
-        Configuration.Settings.Tools.WhisperUseLineMaxChars = stt.WhisperUseLineMaxChars;
-        Configuration.Settings.Tools.WhisperPostProcessingAddPeriods = stt.WhisperPostProcessingAddPeriods;
-        Configuration.Settings.Tools.WhisperPostProcessingMergeLines = stt.WhisperPostProcessingMergeLines;
-        Configuration.Settings.Tools.WhisperPostProcessingSplitLines = stt.WhisperPostProcessingSplitLines;
-        Configuration.Settings.Tools.WhisperPostProcessingFixCasing = stt.WhisperPostProcessingFixCasing;
-        Configuration.Settings.Tools.WhisperPostProcessingFixShortDuration = stt.WhisperPostProcessingFixShortDuration;
-        Configuration.Settings.Tools.VoskPostProcessing = stt.PostProcessing;
 
-        Configuration.Settings.Tools.OpenAiCompatibleSttUrl = Settings.Tools.OpenAiCompatibleSttUrl;
-        Configuration.Settings.Tools.OpenAiCompatibleSttApiKey = Settings.Tools.OpenAiCompatibleSttApiKey;
-        Configuration.Settings.Tools.OpenAiCompatibleSttModel = Settings.Tools.OpenAiCompatibleSttModel;
-        Configuration.Settings.Tools.OpenAiCompatibleSttExtraHeaders = Settings.Tools.OpenAiCompatibleSttExtraHeaders;
-        Configuration.Settings.Tools.OpenAiCompatibleSttTimeoutSeconds = Settings.Tools.OpenAiCompatibleSttTimeoutSeconds;
-        Configuration.Settings.Tools.OpenAiCompatibleSttLanguage = Settings.Tools.OpenAiCompatibleSttLanguage;
-        Configuration.Settings.Tools.OpenAiCompatibleSttTemperature = Settings.Tools.OpenAiCompatibleSttTemperature;
-        Configuration.Settings.Tools.OpenAiCompatibleSttPrompt = Settings.Tools.OpenAiCompatibleSttPrompt;
-        Configuration.Settings.Tools.OpenAiCompatibleSttAutoTranscribeOnAudioSelection = Settings.Tools.OpenAiCompatibleSttAutoTranscribeOnAudioSelection;
-        Configuration.Settings.Tools.OpenAiCompatibleSttStream = Settings.Tools.OpenAiCompatibleSttStream;
-        Configuration.Settings.Tools.OpenAiCompatibleSttAudioFormat = Settings.Tools.OpenAiCompatibleSttAudioFormat;
 
-        Configuration.Settings.Tools.OpenRouterSttApiKey = Settings.Tools.OpenRouterSttApiKey;
-        Configuration.Settings.Tools.OpenRouterSttModel = Settings.Tools.OpenRouterSttModel;
-        Configuration.Settings.Tools.OpenRouterSttLanguage = Settings.Tools.OpenRouterSttLanguage;
-        Configuration.Settings.Tools.OpenRouterSttTemperature = Settings.Tools.OpenRouterSttTemperature;
-        Configuration.Settings.Tools.OpenRouterSttPrompt = Settings.Tools.OpenRouterSttPrompt;
-        Configuration.Settings.Tools.OpenRouterSttTimeoutSeconds = Settings.Tools.OpenRouterSttTimeoutSeconds;
 
-        Configuration.Settings.Tools.DashScopeSttApiKey = Settings.Tools.DashScopeSttApiKey;
-        Configuration.Settings.Tools.DashScopeSttModel = Settings.Tools.DashScopeSttModel;
-        Configuration.Settings.Tools.DashScopeSttLanguage = Settings.Tools.DashScopeSttLanguage;
-        Configuration.Settings.Tools.DashScopeSttRegion = Settings.Tools.DashScopeSttRegion;
-        Configuration.Settings.Tools.DashScopeSttEnableWords = Settings.Tools.DashScopeSttEnableWords;
-        Configuration.Settings.Tools.DashScopeSttTimeoutSeconds = Settings.Tools.DashScopeSttTimeoutSeconds;
 
-        Configuration.Settings.Tools.AutoTranslateLastName = Settings.AutoTranslate.AutoTranslateLastName;
+        Configuration.Settings.Tools.AutoTranslateDelaySeconds = (int)Math.Round(Settings.AutoTranslate.RequestDelaySeconds, MidpointRounding.AwayFromZero);
 
         // BeautifyTimeCodes profile: skip apply on a fresh install so libse's built-in
         // default-preset values stay intact. Once the user clicks OK in the profile editor,
@@ -650,20 +619,6 @@ public class Se
             Settings.BeautifyTimeCodes.ApplyTo(Configuration.Settings.BeautifyTimeCodes);
         }
 
-        Configuration.Settings.Tools.ImportTextSplitting = Settings.Tools.ImportTextSplitting;
-        Configuration.Settings.Tools.ImportTextSplittingLineMode = Settings.Tools.ImportTextSplittingLineMode;
-        Configuration.Settings.Tools.ImportTextLineBreak = Settings.Tools.ImportTextLineBreak;
-        Configuration.Settings.Tools.ImportTextMergeShortLines = Settings.Tools.ImportTextMergeShortLines;
-        Configuration.Settings.Tools.ImportTextAutoSplitAtBlank = Settings.Tools.ImportTextAutoSplitAtBlank;
-        Configuration.Settings.Tools.ImportTextRemoveLinesNoLetters = Settings.Tools.ImportTextRemoveLinesNoLetters;
-        Configuration.Settings.Tools.ImportTextGenerateTimeCodes = Settings.Tools.ImportTextGenerateTimeCodes;
-        Configuration.Settings.Tools.ImportTextAutoBreak = Settings.Tools.ImportTextAutoBreak;
-        Configuration.Settings.Tools.ImportTextAutoBreakAtEnd = Settings.Tools.ImportTextAutoBreakAtEnd;
-        Configuration.Settings.Tools.ImportTextGap = Settings.Tools.ImportTextGap;
-        Configuration.Settings.Tools.ImportTextAutoSplitNumberOfLines = Settings.Tools.ImportTextAutoSplitNumberOfLines;
-        Configuration.Settings.Tools.ImportTextAutoBreakAtEndMarkerText = Settings.Tools.ImportTextAutoBreakAtEndMarkerText;
-        Configuration.Settings.Tools.ImportTextDurationAuto = Settings.Tools.ImportTextDurationAuto;
-        Configuration.Settings.Tools.ImportTextFixedDuration = Settings.Tools.ImportTextFixedDuration;
 
         Configuration.Settings.Tools.MusicSymbol = Settings.Tools.MusicSymbol;
         Configuration.Settings.Tools.MusicSymbolReplace = Settings.Tools.MusicSymbolReplace;

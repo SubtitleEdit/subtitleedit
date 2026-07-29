@@ -330,6 +330,8 @@ public static class InitNativeMacMenu
         videoItems.Items.Add(state.AudioTracksItem);
 
         videoItems.Items.Add(new NativeMenuItemSeparator());
+        videoItems.Items.Add(Item(Clean(Se.Language.Video.GoToVideoPositionDotDotDot), v => v.ShowGoToVideoPositionCommand));
+        videoItems.Items.Add(new NativeMenuItemSeparator());
         videoItems.Items.Add(Item(Clean(l.SpeechToText), v => v.ShowSpeechToTextWhisperCommand));
         videoItems.Items.Add(Item(Clean(l.TextToSpeech), v => v.ShowVideoTextToSpeechCommand));
         videoItems.Items.Add(Item(Clean(l.VideoOcr), v => v.ShowVideoOcrCommand));
@@ -416,6 +418,7 @@ public static class InitNativeMacMenu
             Item(Clean(l.AssaApplyAdvancedEffects), v => v.ShowAssaApplyAdvancedEffectCommand),
             Item(Clean(l.AssaApplyCustomOverrideTags), v => v.ShowAssaApplyCustomOverrideTagsCommand),
             Item(Clean(l.AssaDraw), v => v.ShowAssaDrawCommand),
+            Item(Clean(l.AssaFontCollector), v => v.ShowAssaFontCollectorCommand),
             Item(Clean(l.AssaProperties), v => v.ShowAssaPropertiesCommand),
             Item(Clean(l.AssaAttachments), v => v.ShowAssaAttachmentsCommand),
             Item(Clean(l.AssaStyles), v => v.ShowAssaStylesCommand),

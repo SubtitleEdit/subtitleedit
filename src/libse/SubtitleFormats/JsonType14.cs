@@ -46,7 +46,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             }
 
             string allText = sb.ToString().Trim();
-            if (!(allText.StartsWith("{", StringComparison.Ordinal) || allText.Contains("captionGroups", StringComparison.Ordinal)))
+            if (!(allText.StartsWith('{') || allText.Contains("captionGroups", StringComparison.Ordinal)))
             {
                 return;
             }

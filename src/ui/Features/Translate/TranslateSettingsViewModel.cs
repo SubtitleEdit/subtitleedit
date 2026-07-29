@@ -3,11 +3,12 @@ using Avalonia.Input;
 using Avalonia.Interactivity;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using Nikse.SubtitleEdit.Core.AutoTranslate;
+using Nikse.SubtitleEdit.UiLogic.AutoTranslate;
 using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Features.Shared;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
+using System;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 
@@ -97,6 +98,7 @@ public partial class TranslateSettingsViewModel : ObservableObject
         }
 
         Se.Settings.AutoTranslate.RequestDelaySeconds = ServerDelaySeconds ?? 0;
+        Configuration.Settings.Tools.AutoTranslateDelaySeconds = (int)Math.Round(ServerDelaySeconds ?? 0, MidpointRounding.AwayFromZero);
         Se.Settings.AutoTranslate.RequestMaxBytes = MaxBytesRequest ?? 0;
         Se.Settings.AutoTranslate.EngineStrategies[AutoTranslator.Name] =
             SelectedMergeOptions == Se.Language.Translate.TranslateEachLineSeparately

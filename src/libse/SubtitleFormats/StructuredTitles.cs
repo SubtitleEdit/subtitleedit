@@ -167,11 +167,12 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         private static void FixItalics(Subtitle subtitle)
         {
+            var sb = new StringBuilder();
             foreach (var p in subtitle.Paragraphs)
             {
                 if (p.Text.Contains('<') && p.Text.Contains('>'))
                 {
-                    var sb = new StringBuilder();
+                    sb.Clear();
                     foreach (var line in p.Text.SplitToLines())
                     {
                         if (line.StartsWith('<') && line.EndsWith('>'))

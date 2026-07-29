@@ -15,7 +15,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Nikse.SubtitleEdit.Controls.AudioVisualizerControl;
 using Nikse.SubtitleEdit.Controls.VideoPlayer;
-using Nikse.SubtitleEdit.Core.AudioToText;
+using Nikse.SubtitleEdit.UiLogic.AudioToText;
 using Nikse.SubtitleEdit.Core.BluRaySup;
 using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.Enums;
@@ -182,6 +182,8 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 using Nikse.SubtitleEdit.UiLogic.SpellCheck;
+using Nikse.SubtitleEdit.UiLogic.Media;
+using Nikse.SubtitleEdit.UiLogic.Common;
 
 namespace Nikse.SubtitleEdit.Features.Main;
 
@@ -465,7 +467,19 @@ public partial class MainViewModel :
     public StackPanel PanelSingleLineLengthsOriginal { get; set; }
     public MenuItem MenuItemStyles { get; set; }
     public MenuItem MenuItemActors { get; set; }
-    public Button ButtonWaveformPlay { get; set; }
+    private Button _buttonWaveformPlay = null!;
+
+    public Button ButtonWaveformPlay
+    {
+        get => _buttonWaveformPlay;
+        set
+        {
+            // Layout (re)initialization swaps in a fresh button; forget the cached icon state
+            // so the next position-timer tick writes an explicit icon to the new control.
+            _buttonWaveformPlay = value;
+            _waveformPlayIconIsPause = null;
+        }
+    }
     public MenuItem AudioTraksMenuItem { get; set; }
     public TextWithSubtitleSyntaxHighlightingConverter SubtitleDataGridSyntaxHighlighting { get; internal set; }
 
@@ -966,7 +980,7 @@ public partial class MainViewModel :
     /// </summary>
     private void ReapplyPlaybackSpeed()
     {
-        if (SelectedSpeed != null && SelectedSpeed.EndsWith("x", StringComparison.Ordinal) &&
+        if (SelectedSpeed != null && SelectedSpeed.EndsWith('x') &&
             double.TryParse(SelectedSpeed.Trim('x'), NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out var speed))
         {
             GetVideoPlayerControl()?.SetSpeed(speed);
@@ -1393,6 +1407,20 @@ public partial class MainViewModel :
         }
 
         RefreshSubtitlePreview();
+    }
+
+    [RelayCommand]
+    private async Task ShowAssaFontCollector()
+    {
+        if (Window == null || !IsFormatAssa)
+        {
+            return;
+        }
+
+        await ShowDialogAsync<Features.Assa.FontCollector.FontCollectorWindow, Features.Assa.FontCollector.FontCollectorViewModel>(vm =>
+        {
+            vm.Initialize(GetUpdateSubtitle());
+        });
     }
 
     [RelayCommand]
@@ -1851,6 +1879,7 @@ public partial class MainViewModel :
         UpdateVideoOffsetStatus();
         _currentSpellCheckDictionary = null;
         _spellCheckSessionInProgress = false;
+        _autoTrimLanguageCode = null;
 
         if (format != null)
         {
@@ -2442,6 +2471,30 @@ public partial class MainViewModel :
         {
             ShowStatus(Se.Language.Main.SelectCurrentSubtitleWhilePlayingOff);
         }
+    }
+
+    [RelayCommand]
+    private void ToggleSubtitlesOnVideoPlayer()
+    {
+        var vp = GetVideoPlayerControl();
+        if (vp?.VideoPlayer is not LibMpvDynamicPlayer mpv)
+        {
+            return;
+        }
+
+        _mpvReloader.SubtitlesVisible = !_mpvReloader.SubtitlesVisible;
+        mpv.SetSubtitleVisibility(_mpvReloader.SubtitlesVisible);
+
+        if (_mpvReloader.SubtitlesVisible)
+        {
+            ShowStatus(Se.Language.Video.SubtitlesOnVideoPlayerOn);
+        }
+        else
+        {
+            ShowStatus(Se.Language.Video.SubtitlesOnVideoPlayerOff);
+        }
+
+        _shortcutManager.ClearKeys();
     }
 
     [RelayCommand]
@@ -6424,6 +6477,7 @@ public partial class MainViewModel :
         // Update selected lines with transcribed text
         var newLines = new List<SubtitleLineViewModel>();
         var deleteLines = new List<SubtitleLineViewModel>();
+        var sb = new StringBuilder();
         for (var i = 0; i < selectedItems.Count; i++)
         {
             var selectedLine = selectedItems[i];
@@ -6444,7 +6498,7 @@ public partial class MainViewModel :
                 else
                 {
                     // single line update
-                    var sb = new StringBuilder();
+                    sb.Clear();
                     foreach (var line in transcribedLine.Transcription.Paragraphs)
                     {
                         sb.AppendLine(line.Text);
@@ -6668,6 +6722,17 @@ public partial class MainViewModel :
                 break;
 
             case OpenFromUrlMode.DownloadAndOpen:
+                if (!result.DownloadVideo)
+                {
+                    // Subtitle-only download - no video is saved or opened.
+                    if (result.DownloadSubtitles)
+                    {
+                        await DownloadSubtitlesOnlyAndPickAsync(url);
+                    }
+
+                    break;
+                }
+
                 // The picker is invoked inside DownloadVideoFromUrlAndOpen so it
                 // only fires when the video download actually succeeds — skipping
                 // it when the user cancels the save-as or the download itself.
@@ -6692,6 +6757,19 @@ public partial class MainViewModel :
 
             ShowStatus(Se.Language.Video.PickOnlineSubtitleFetching);
             await _ytDlpDownloadService.DownloadAllSubtitlesAsync(url, stem, CancellationToken.None);
+
+            if (Se.Settings.Video.OpenFromUrlIncludeAutoGeneratedSubtitles)
+            {
+                try
+                {
+                    await _ytDlpDownloadService.DownloadAutoGeneratedSubtitlesAsync(url, stem, CancellationToken.None);
+                }
+                catch (Exception ex)
+                {
+                    // Auto captions are a nice-to-have on top of the human tracks.
+                    Se.LogError(ex, "Failed to fetch auto-generated subtitles");
+                }
+            }
 
             var downloaded = YtDlpDownloadService.EnumerateDownloadedSubtitles(tempDirectory, "sub");
             await ShowPickerAndLoadAsync(downloaded);
@@ -6885,7 +6963,7 @@ public partial class MainViewModel :
 
         var downloadResult = await ShowDialogAsync<DownloadVideoFromUrlWindow, DownloadVideoFromUrlViewModel>(vm =>
         {
-            vm.Initialize(url, outputPath, downloadSubtitles);
+            vm.Initialize(url, outputPath, downloadSubtitles, Se.Settings.Video.OpenFromUrlIncludeAutoGeneratedSubtitles);
         });
 
         if (downloadResult.Success && File.Exists(downloadResult.OutputPath))
@@ -8070,6 +8148,17 @@ public partial class MainViewModel :
     [RelayCommand]
     private void ShowSyncAdjustAllTimes()
     {
+        ShowAdjustAllTimes(forceSelectedLines: false);
+    }
+
+    [RelayCommand]
+    private void ShowSyncAdjustAllTimesSelectedLines()
+    {
+        ShowAdjustAllTimes(forceSelectedLines: true);
+    }
+
+    private void ShowAdjustAllTimes(bool forceSelectedLines)
+    {
         if (Window == null)
         {
             return;
@@ -8084,6 +8173,11 @@ public partial class MainViewModel :
 
         if (_adjustAllTimesViewModel != null && _adjustAllTimesViewModel.Window != null && _adjustAllTimesViewModel.Window.IsVisible)
         {
+            if (forceSelectedLines)
+            {
+                _adjustAllTimesViewModel.SelectAdjustSelectedLines();
+            }
+
             _adjustAllTimesViewModel.Window.Activate();
             return;
         }
@@ -8092,7 +8186,7 @@ public partial class MainViewModel :
         {
             _adjustAllTimesViewModel = vm;
             var selectedCount = SubtitleGrid.SelectedItems.Count;
-            vm.Initialize(this, selectedCount); // uses call from IAdjustCallback: Adjust
+            vm.Initialize(this, selectedCount, forceSelectedLines); // uses call from IAdjustCallback: Adjust
         });
     }
 
@@ -8318,6 +8412,9 @@ public partial class MainViewModel :
             Subtitles[i].Text = result.Rows[i].TranslatedText;
         }
 
+        // The subtitle language just changed, so the cached auto-trim language is stale (issue #12144).
+        _autoTrimLanguageCode = null;
+
         if (!wasOldTranslationChanged)
         {
             _changeSubtitleHashOriginal = GetFastHashOriginal();
@@ -8425,6 +8522,9 @@ public partial class MainViewModel :
             }
         }
 
+        // The translated lines changed language, so the cached auto-trim language is stale (issue #12144).
+        _autoTrimLanguageCode = null;
+
         _updateAudioVisualizer = true;
     }
 
@@ -8459,6 +8559,9 @@ public partial class MainViewModel :
             Subtitles[i].OriginalText = Subtitles[i].Text;
             Subtitles[i].Text = result.Rows[i].TranslatedText;
         }
+
+        // The subtitle language just changed, so the cached auto-trim language is stale (issue #12144).
+        _autoTrimLanguageCode = null;
 
         _subtitleFileNameOriginal = _subtitleFileName;
         _subtitleOriginal ??= new Subtitle();
@@ -9119,7 +9222,7 @@ public partial class MainViewModel :
                         {
                             var tempWaveFileName = Path.Combine(Path.GetTempPath(), $"{Guid.NewGuid()}.wav");
                             var process = WaveFileExtractor.GetCommandLineProcess(_videoFileName, _audioTrack?.FfIndex ?? -1, tempWaveFileName,
-                                Configuration.Settings.General.VlcWaveTranscodeSettings, out _);
+                                "acodec=s16l", out _);
 #pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
                             Task.Run(async () =>
                             {
@@ -11055,7 +11158,7 @@ public partial class MainViewModel :
             window.AddHandler(InputElement.KeyUpEvent, _shortcutManager.OnKeyReleased, RoutingStrategies.Bubble);
             window.KeyDown += async (_, e) =>
             {
-                var cmd = _shortcutManager.CheckShortcuts(e, ShortcutCategory.General.ToString());
+                var cmd = _shortcutManager.CheckShortcuts(e, CategoryGeneral);
                 if (ReferenceEquals(cmd, ShowReplaceCommand))
                 {
                     e.Handled = true;
@@ -11410,7 +11513,7 @@ public partial class MainViewModel :
             window.AddHandler(InputElement.KeyUpEvent, _shortcutManager.OnKeyReleased, RoutingStrategies.Bubble);
             window.KeyDown += async (_, e) =>
             {
-                var cmd = _shortcutManager.CheckShortcuts(e, ShortcutCategory.General.ToString());
+                var cmd = _shortcutManager.CheckShortcuts(e, CategoryGeneral);
                 if (ReferenceEquals(cmd, ShowReplaceCommand))
                 {
                     e.Handled = true;
@@ -12542,6 +12645,13 @@ public partial class MainViewModel :
             ReapplySelectedAudioTrack(control);
             var _ = Task.Run(LoadAudioTrackMenuItems);
 
+            // Same for subtitle visibility: the toggle shortcut only reached the fullscreen
+            // player, so the docked player must be brought back in line with the shared state.
+            if (control!.VideoPlayer is LibMpvDynamicPlayer dockedMpv)
+            {
+                dockedMpv.SetSubtitleVisibility(_mpvReloader.SubtitlesVisible);
+            }
+
             Dispatcher.UIThread.Post(() => SubtitleGrid.Focus());
         }, toggleKeys, showMediaInfoKeys, showMediaInformationOwnedBy, extraBindings, ReapplySelectedAudioTrack);
         fullScreenWindow.Show(Window!);
@@ -12596,6 +12706,7 @@ public partial class MainViewModel :
             (nameof(TogglePlayPauseCommand),        TogglePlayPauseCommand),
             (nameof(TogglePlayPause2Command),       TogglePlayPause2Command),
             (nameof(VideoToggleBrightnessCommand),  VideoToggleBrightnessCommand),
+            (nameof(ToggleSubtitlesOnVideoPlayerCommand), ToggleSubtitlesOnVideoPlayerCommand),
         };
 
         var bindings = new List<(string name, List<string> keys, IRelayCommand command)>(commands.Length);
@@ -16371,13 +16482,20 @@ public partial class MainViewModel :
         return true;
     }
 
+    // RemoveUnneededSpaces has language-specific rules - e.g. Dutch keeps the space in
+    // "ze 's avonds" - so auto-trim must not run with an empty language code (issue #12144).
+    // Detection is too slow for the per-selection trim in SubtitleGrid_SelectionChanged,
+    // so the code is cached here; this method re-detects on every file load and auto-save.
+    private string? _autoTrimLanguageCode;
+
     private void AutoTrimWhiteSpaces()
     {
         if (Se.Settings.General.AutoTrimWhiteSpace)
         {
+            _autoTrimLanguageCode = Subtitles.AutoDetectGoogleLanguage() ?? string.Empty;
             foreach (var item in Subtitles)
             {
-                item.Text = Utilities.RemoveUnneededSpaces(item.Text, string.Empty).Trim();
+                item.Text = Utilities.RemoveUnneededSpaces(item.Text, _autoTrimLanguageCode).Trim();
             }
         }
     }
@@ -17299,6 +17417,8 @@ public partial class MainViewModel :
     /// </summary>
     private void ReplaceSubtitles(IEnumerable<SubtitleLineViewModel> items)
     {
+        _autoTrimLanguageCode = null;
+
         // Materialize first: callers may pass a lazy query over Subtitles itself.
         var list = items as IReadOnlyList<SubtitleLineViewModel> ?? items.ToList();
 
@@ -17802,6 +17922,8 @@ public partial class MainViewModel :
             }
         }
 
+        newFileName = ApplyDefaultSaveLocation(newFileName);
+
         var title = Se.Language.General.SaveFileAsTitle;
         if (ShowColumnOriginalText)
         {
@@ -17862,6 +17984,37 @@ public partial class MainViewModel :
         var result = await SaveSubtitle();
         AddToRecentFiles(true);
         return result;
+    }
+
+    /// <summary>
+    /// Points the "Save as" suggestion at the folder chosen by the default-save-location
+    /// setting (#12212). The picker opens in the suggestion's folder, so replacing the
+    /// directory part is enough; a bare file name makes the OS picker use its last folder.
+    /// </summary>
+    private string ApplyDefaultSaveLocation(string fileName)
+    {
+        var location = Se.Settings.General.DefaultSaveLocation;
+        if (location == nameof(DefaultSaveLocationType.LastUsedFolder))
+        {
+            return Path.GetFileName(fileName);
+        }
+
+        string? folder = null;
+        if (location == nameof(DefaultSaveLocationType.VideoFileFolder) && !string.IsNullOrEmpty(_videoFileName))
+        {
+            folder = Path.GetDirectoryName(_videoFileName);
+        }
+        else if (location == nameof(DefaultSaveLocationType.SubtitleFileFolder) && !string.IsNullOrEmpty(_subtitleFileName))
+        {
+            folder = Path.GetDirectoryName(_subtitleFileName);
+        }
+        else if (location == nameof(DefaultSaveLocationType.CustomFolder) &&
+                 Directory.Exists(Se.Settings.General.DefaultSaveLocationCustomFolder))
+        {
+            folder = Se.Settings.General.DefaultSaveLocationCustomFolder;
+        }
+
+        return string.IsNullOrEmpty(folder) ? fileName : Path.Combine(folder, Path.GetFileName(fileName));
     }
 
     private string GetFileNameWithoutExtension(string fileName)
@@ -18568,7 +18721,7 @@ public partial class MainViewModel :
 
         var tempWaveFileName = Path.Combine(Path.GetTempPath(), $"{Guid.NewGuid()}.wav");
         var process = WaveFileExtractor.GetCommandLineProcess(videoFileName, trackNumber, tempWaveFileName,
-            Configuration.Settings.General.VlcWaveTranscodeSettings, out _);
+            "acodec=s16l", out _);
 #pragma warning disable CS4014 // fire-and-forget; extraction posts results back to the UI thread
         Task.Run(async () => { await ExtractWaveformAndSpectrogramAndShotChanges(process, tempWaveFileName, peakWaveFileName, spectrogramFileName, videoFileName); });
 #pragma warning restore CS4014
@@ -20852,7 +21005,7 @@ public partial class MainViewModel :
             }
 
             _shortcutManager.OnKeyPressed(this, keyEventArgs);
-            if (_shortcutManager.GetActiveKeys().Count == 0)
+            if (_shortcutManager.ActiveKeyCount == 0)
             {
                 return;
             }
@@ -20882,11 +21035,8 @@ public partial class MainViewModel :
                     return;
                 }
 
-                var currentKeys = _shortcutManager.GetActiveKeys();
-                if (currentKeys.Count == 1)
+                if (_shortcutManager.TryGetSingleActiveKey(out var key))
                 {
-                    var key = currentKeys.First();
-
                     if (EditTextBox.IsFocused && key == Key.Return &&
                         keyEventArgs.KeyModifiers == KeyModifiers.None &&
                         Se.Settings.General.SubtitleTextBoxLimitNewLines)
@@ -21002,10 +21152,10 @@ public partial class MainViewModel :
                     return;
                 }
 
-                var relayCommand = _shortcutManager.CheckShortcuts(keyEventArgs, ShortcutCategory.SubtitleGrid.ToString());
+                var relayCommand = _shortcutManager.CheckShortcuts(keyEventArgs, CategorySubtitleGrid);
                 if (relayCommand == null)
                 {
-                    relayCommand = _shortcutManager.CheckShortcuts(keyEventArgs, ShortcutCategory.SubtitleGridAndTextBox.ToString());
+                    relayCommand = _shortcutManager.CheckShortcuts(keyEventArgs, CategorySubtitleGridAndTextBox);
                 }
 
                 if (relayCommand != null)
@@ -21018,7 +21168,7 @@ public partial class MainViewModel :
 
             if (AudioVisualizer != null && AudioVisualizer.IsFocused)
             {
-                var relayCommand = _shortcutManager.CheckShortcuts(keyEventArgs, ShortcutCategory.Waveform.ToString());
+                var relayCommand = _shortcutManager.CheckShortcuts(keyEventArgs, CategoryWaveform);
                 if (relayCommand != null)
                 {
                     keyEventArgs.Handled = true;
@@ -21036,7 +21186,7 @@ public partial class MainViewModel :
                 // dispatched here - they were previously registered but never run (#11906). The native
                 // clipboard commands (Cut/Copy/Paste/Select all) are skipped so Avalonia's built-in
                 // handling keeps working on whichever text box is focused.
-                var textBoxCommand = _shortcutManager.CheckShortcuts(keyEventArgs, ShortcutCategory.TextBox.ToString());
+                var textBoxCommand = _shortcutManager.CheckShortcuts(keyEventArgs, CategoryTextBox);
                 if (textBoxCommand != null && !IsNativeTextBoxClipboardCommand(textBoxCommand))
                 {
                     keyEventArgs.Handled = true;
@@ -21044,7 +21194,7 @@ public partial class MainViewModel :
                     return;
                 }
 
-                var relayCommand = _shortcutManager.CheckShortcuts(keyEventArgs, ShortcutCategory.SubtitleGridAndTextBox.ToString());
+                var relayCommand = _shortcutManager.CheckShortcuts(keyEventArgs, CategorySubtitleGridAndTextBox);
                 if (relayCommand != null)
                 {
                     keyEventArgs.Handled = true;
@@ -21053,10 +21203,7 @@ public partial class MainViewModel :
                 }
             }
 
-            var keys = _shortcutManager.GetActiveKeys().Select(p => p.ToString()).ToList();
-            var hashCode = ShortCut.CalculateHash(keys, ShortcutCategory.General.ToString());
-
-            var rc = _shortcutManager.CheckShortcuts(keyEventArgs, ShortcutCategory.General.ToString().ToLowerInvariant());
+            var rc = _shortcutManager.CheckShortcuts(keyEventArgs, CategoryGeneralLower);
             if (rc != null)
             {
                 keyEventArgs.Handled = true;
@@ -21646,11 +21793,12 @@ public partial class MainViewModel :
 
         if (Se.Settings.General.AutoTrimWhiteSpace && e.RemovedItems.Count < 10)
         {
+            var languageCode = _autoTrimLanguageCode ??= Subtitles.AutoDetectGoogleLanguage() ?? string.Empty;
             foreach (SubtitleLineViewModel? item in e.RemovedItems)
             {
                 if (item != null)
                 {
-                    item.Text = Utilities.RemoveUnneededSpaces(item.Text, string.Empty).Trim();
+                    item.Text = Utilities.RemoveUnneededSpaces(item.Text, languageCode).Trim();
                 }
             }
         }
@@ -21703,7 +21851,15 @@ public partial class MainViewModel :
             return;
         }
 
-        _selectedSubtitles = selectedItems.Cast<SubtitleLineViewModel>().ToList();
+        // Typed copy with capacity - Cast<T>().ToList() allocates a cast iterator and grows
+        // the list from default capacity, on every selection change (so on every arrow key).
+        var selectedSubtitles = new List<SubtitleLineViewModel>(selectedItems.Count);
+        for (var selIdx = 0; selIdx < selectedItems.Count; selIdx++)
+        {
+            selectedSubtitles.Add((SubtitleLineViewModel)selectedItems[selIdx]!);
+        }
+
+        _selectedSubtitles = selectedSubtitles;
         if (selectedItems.Count > 1)
         {
             StatusTextRight = string.Format(Se.Language.Main.XLinesSelectedOfY, selectedItems.Count, Subtitles.Count);
@@ -21768,8 +21924,25 @@ public partial class MainViewModel :
         EditTextTotalLengthBackground = totalBg;
     }
 
+    // Repopulate the original-text info panel when the column is turned (back) on - the
+    // guard below skips the work while it is hidden, so its values can be stale here.
+    partial void OnShowColumnOriginalTextChanged(bool value)
+    {
+        if (value && SelectedSubtitle != null)
+        {
+            MakeSubtitleTextInfoOriginal(SelectedSubtitle.OriginalText, SelectedSubtitle);
+        }
+    }
+
     private void MakeSubtitleTextInfoOriginal(string text, SubtitleLineViewModel item)
     {
+        // The original column is hidden most of the time, but this ran (StripHtml, character
+        // count, SplitToLines, two string.Formats) on every selection change regardless.
+        if (!ShowColumnOriginalText)
+        {
+            return;
+        }
+
         text ??= string.Empty;
 
         text = SubtitleTextInfoHelper.StripHtml(text);
@@ -22200,7 +22373,13 @@ public partial class MainViewModel :
 
                 if (isPlaying)
                 {
-                    Optris.Icons.Avalonia.Attached.SetIcon(ButtonWaveformPlay, IconNames.Pause);
+                    // Only write the attached property when the icon actually flips - this
+                    // branch runs on every 50 ms position-timer tick.
+                    if (_waveformPlayIconIsPause != true)
+                    {
+                        _waveformPlayIconIsPause = true;
+                        Optris.Icons.Avalonia.Attached.SetIcon(ButtonWaveformPlay, IconNames.Pause);
+                    }
 
                     if (_playSelectionItem != null && mediaPlayerSeconds >= _playSelectionItem.EndSeconds)
                     {
@@ -22230,7 +22409,12 @@ public partial class MainViewModel :
                 }
                 else
                 {
-                    Optris.Icons.Avalonia.Attached.SetIcon(ButtonWaveformPlay, IconNames.Play);
+                    if (_waveformPlayIconIsPause != false)
+                    {
+                        _waveformPlayIconIsPause = false;
+                        Optris.Icons.Avalonia.Attached.SetIcon(ButtonWaveformPlay, IconNames.Play);
+                    }
+
                     ResetPlaySelection();
 
                     // "Center also while paused" scrub-editing (SE 4's locked mode): while the user
@@ -22464,9 +22648,7 @@ public partial class MainViewModel :
         var text = Se.Language.General.Untitled;
         if (!string.IsNullOrEmpty(_subtitleFileName))
         {
-            text = Configuration.Settings.General.TitleBarFullFileName
-                ? _subtitleFileName
-                : Path.GetFileName(_subtitleFileName);
+            text = Path.GetFileName(_subtitleFileName);
         }
 
         if (ShowColumnOriginalText)
@@ -22484,9 +22666,7 @@ public partial class MainViewModel :
             }
             else
             {
-                text += Configuration.Settings.General.TitleBarFullFileName
-                    ? _subtitleFileNameOriginal
-                    : Path.GetFileName(_subtitleFileNameOriginal);
+                text += Path.GetFileName(_subtitleFileNameOriginal);
             }
         }
 
@@ -22496,11 +22676,29 @@ public partial class MainViewModel :
             text = "*" + text;
         }
 
-        if (Window != null)
+        // This runs on the 400 ms slow timer; skip the Avalonia property set (and its change
+        // machinery) when the title hasn't actually changed - which is almost every tick.
+        if (Window != null && !string.Equals(text, _lastWindowTitle, StringComparison.Ordinal))
         {
+            _lastWindowTitle = text;
             Window.Title = text;
         }
     }
+
+    // Category name strings for CheckShortcuts - Enum.ToString() allocates on every call,
+    // and the window key handler probes several categories per keystroke.
+    private static readonly string CategoryGeneral = ShortcutCategory.General.ToString();
+    private static readonly string CategoryGeneralLower = ShortcutCategory.General.ToString().ToLowerInvariant();
+    private static readonly string CategorySubtitleGrid = ShortcutCategory.SubtitleGrid.ToString();
+    private static readonly string CategorySubtitleGridAndTextBox = ShortcutCategory.SubtitleGridAndTextBox.ToString();
+    private static readonly string CategoryWaveform = ShortcutCategory.Waveform.ToString();
+    private static readonly string CategoryTextBox = ShortcutCategory.TextBox.ToString();
+
+    private string? _lastWindowTitle;
+
+    // Last state written to the waveform play/pause button icon; null until first write so
+    // the first position-timer tick always sets an explicit icon.
+    private bool? _waveformPlayIconIsPause;
 
     private void UpdateGaps()
     {

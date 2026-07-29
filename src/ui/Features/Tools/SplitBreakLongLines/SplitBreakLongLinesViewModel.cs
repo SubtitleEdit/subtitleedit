@@ -26,6 +26,7 @@ public partial class SplitBreakLongLinesViewModel : ObservableObject, IClosingCl
     [ObservableProperty] private int _maxNumberOfLines;
 
     [ObservableProperty] private bool _rebalanceLongLines;
+    [ObservableProperty] private int _unbreakLinesShorterThan;
 
     [ObservableProperty] private string _fixesInfo;
 
@@ -34,6 +35,7 @@ public partial class SplitBreakLongLinesViewModel : ObservableObject, IClosingCl
     public List<SubtitleLineViewModel> AllSubtitlesFixed { get; set; }
 
     private List<SubtitleLineViewModel> _allSubtitles;
+    private string _languageCode = "en";
 
     private readonly System.Timers.Timer _previewTimer;
     private volatile bool _isClosing;
@@ -128,10 +130,18 @@ public partial class SplitBreakLongLinesViewModel : ObservableObject, IClosingCl
 
             if (RebalanceLongLines)
             {
+                // AutoBreakLine keeps text on one line only when it is strictly shorter than the
+                // unbreak threshold, so a threshold at or above the single line max length means
+                // "keep any text that fits on one line" - and capping there also prevents merging
+                // to a single line that would exceed the max length (#12910).
+                var mergeLinesShorterThan = UnbreakLinesShorterThan >= SingleLineMaxLength
+                    ? SingleLineMaxLength + 1
+                    : UnbreakLinesShorterThan;
+
                 for (var index = 0; index < AllSubtitlesFixed.Count; index++)
                 {
                     var item = AllSubtitlesFixed[index];
-                    var rebalancedText = Utilities.AutoBreakLine(item.Text, SingleLineMaxLength, Se.Settings.General.UnbreakLinesShorterThan, "en");
+                    var rebalancedText = Utilities.AutoBreakLine(item.Text, SingleLineMaxLength, mergeLinesShorterThan, _languageCode);
                     if (rebalancedText != item.Text)
                     {
                         rebalanceCount++;
@@ -581,6 +591,7 @@ public partial class SplitBreakLongLinesViewModel : ObservableObject, IClosingCl
     {
         SingleLineMaxLength = Se.Settings.General.SubtitleLineMaximumLength;
         MaxNumberOfLines = Se.Settings.General.MaxNumberOfLines;
+        UnbreakLinesShorterThan = Se.Settings.General.UnbreakLinesShorterThan;
         SplitLongLines = Se.Settings.Tools.SplitRebalanceLongLinesSplit;
         RebalanceLongLines = Se.Settings.Tools.SplitRebalanceLongLinesRebalance;
     }
@@ -628,6 +639,14 @@ public partial class SplitBreakLongLinesViewModel : ObservableObject, IClosingCl
     public void Initialize(List<SubtitleLineViewModel> toList)
     {
         _allSubtitles = toList;
+
+        var subtitle = new Subtitle();
+        foreach (var line in toList)
+        {
+            subtitle.Paragraphs.Add(new Paragraph(line.Text, line.StartTime.TotalMilliseconds, line.EndTime.TotalMilliseconds));
+        }
+        _languageCode = LanguageAutoDetect.AutoDetectGoogleLanguageOrNull(subtitle) ?? "en";
+
         _previewTimer.Start();
     }
 

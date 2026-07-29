@@ -8,6 +8,7 @@ using Avalonia.Styling;
 using Nikse.SubtitleEdit.Features.Shared;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.ValueConverters;
+using Nikse.SubtitleEdit.UiLogic.Ocr;
 
 namespace Nikse.SubtitleEdit.Features.Ocr.Download;
 
