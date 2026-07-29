@@ -1,5 +1,6 @@
 using Avalonia.Headless.XUnit;
 using Avalonia.Platform;
+using System.IO.Compression;
 
 namespace UITests.Logic;
 
@@ -15,10 +16,25 @@ public class EmbeddedAssetsTests
     /// <summary><c>Assets\Themes\**</c> is deliberately excluded from the build.</summary>
     private const string ExcludedFolder = "Themes";
 
+    /// <summary>
+    /// Zips generated from source folders by src/AssetZips.targets at build time - embedded,
+    /// but never present under src/ui/Assets on disk.
+    /// </summary>
+    private static readonly string[] GeneratedZips =
+        ["Dictionaries.zip", "Languages.zip", "Ocr.zip", "Themes.zip"];
+
+    /// <summary>
+    /// The translation JSON ships deflated inside the generated Languages.zip, not as loose
+    /// embedded resources; <see cref="LanguageJsonFilesOnDisk_ShipInsideLanguagesZip"/> guards
+    /// the folder instead.
+    /// </summary>
+    private const string ZippedFolder = "Languages";
+
     [AvaloniaFact]
     public void EveryAssetOnDisk_IsEmbedded()
     {
         var missing = GetAssetsOnDisk()
+            .Where(p => !p.StartsWith(ZippedFolder + "/", StringComparison.Ordinal))
             .Except(GetEmbeddedAssets(), StringComparer.Ordinal)
             .OrderBy(f => f, StringComparer.Ordinal)
             .ToList();
@@ -34,6 +50,7 @@ public class EmbeddedAssetsTests
     public void EveryEmbeddedAsset_ExistsOnDisk()
     {
         var stale = GetEmbeddedAssets()
+            .Except(GeneratedZips, StringComparer.Ordinal)
             .Except(GetAssetsOnDisk(), StringComparer.Ordinal)
             .OrderBy(f => f, StringComparer.Ordinal)
             .ToList();
@@ -42,6 +59,46 @@ public class EmbeddedAssetsTests
             stale.Count == 0,
             "These resources are embedded but have no file under src/ui/Assets:" +
             Environment.NewLine + string.Join(Environment.NewLine, stale));
+    }
+
+    /// <summary>
+    /// The build-generated zips must all be embedded and readable. A broken hook in
+    /// src/AssetZips.targets or UI.csproj would otherwise only surface at application
+    /// start-up (missing themes/dictionaries/translations).
+    /// </summary>
+    [AvaloniaFact]
+    public void EveryGeneratedZip_IsEmbeddedAndReadable()
+    {
+        foreach (var name in GeneratedZips)
+        {
+            using var stream = AssetLoader.Open(new Uri($"avares://SubtitleEdit/Assets/{name}"));
+            using var zip = new ZipArchive(stream, ZipArchiveMode.Read);
+
+            Assert.True(zip.Entries.Count > 0, $"{name} is embedded but contains no entries.");
+        }
+    }
+
+    /// <summary>
+    /// Every translation file under src/ui/Assets/Languages must ship inside the generated
+    /// Languages.zip - this replaces the plain disk-vs-embedded comparison for that folder.
+    /// </summary>
+    [AvaloniaFact]
+    public void LanguageJsonFilesOnDisk_ShipInsideLanguagesZip()
+    {
+        var onDisk = Directory
+            .GetFiles(Path.Combine(GetAssetsFolder(), ZippedFolder), "*.json")
+            .Select(Path.GetFileName)
+            .OrderBy(f => f, StringComparer.Ordinal)
+            .ToList();
+
+        using var stream = AssetLoader.Open(new Uri("avares://SubtitleEdit/Assets/Languages.zip"));
+        using var zip = new ZipArchive(stream, ZipArchiveMode.Read);
+        var inZip = zip.Entries
+            .Select(e => e.FullName)
+            .OrderBy(f => f, StringComparer.Ordinal)
+            .ToList();
+
+        Assert.Equal(onDisk, inZip);
     }
 
     /// <summary>
