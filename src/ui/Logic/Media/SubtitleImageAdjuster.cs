@@ -21,56 +21,45 @@ public static class SubtitleImageAdjuster
         var brightnessAdjust = brightness; // -100 to 100
         var contrastAdjust = (contrast + 100) / 100.0f; // Convert -100 to 100 range to 0 to 2 multiplier
 
-        // Build lookup table for gamma correction
+        // Brightness, contrast and gamma are each a pure function of a single channel byte,
+        // so the whole chain collapses into one 256-entry lookup table.
         var gammaLookup = new byte[256];
         for (int i = 0; i < 256; i++)
         {
             gammaLookup[i] = (byte)Math.Clamp(Math.Pow(i / 255.0, 1.0 / gamma) * 255.0, 0, 255);
         }
 
+        var channelLookup = new byte[256];
+        for (int i = 0; i < 256; i++)
+        {
+            var value = (byte)Math.Clamp(i + brightnessAdjust, 0, 255);
+            value = (byte)Math.Clamp(((value - 128) * contrastAdjust) + 128, 0, 255);
+            channelLookup[i] = gammaLookup[value];
+        }
+
         unsafe
         {
-            var originalPixels = originalBitmap.GetPixels();
-            var adjustedPixels = adjustedBitmap.GetPixels();
+            var originalPixels = (uint*)originalBitmap.GetPixels();
+            var adjustedPixels = (uint*)adjustedBitmap.GetPixels();
+            var pixelCount = originalBitmap.Width * originalBitmap.Height;
 
-            for (int y = 0; y < originalBitmap.Height; y++)
+            for (int index = 0; index < pixelCount; index++)
             {
-                for (int x = 0; x < originalBitmap.Width; x++)
+                var pixel = originalPixels[index];
+                var alpha = pixel & 0xFF000000u;
+
+                // Skip transparent pixels
+                if (alpha == 0)
                 {
-                    var index = y * originalBitmap.Width + x;
-                    var pixel = ((uint*)originalPixels)[index];
-
-                    var a = (byte)((pixel >> 24) & 0xFF);
-                    var r = (byte)((pixel >> 16) & 0xFF);
-                    var g = (byte)((pixel >> 8) & 0xFF);
-                    var b = (byte)(pixel & 0xFF);
-
-                    // Skip transparent pixels
-                    if (a == 0)
-                    {
-                        ((uint*)adjustedPixels)[index] = pixel;
-                        continue;
-                    }
-
-                    // Apply brightness
-                    r = (byte)Math.Clamp(r + brightnessAdjust, 0, 255);
-                    g = (byte)Math.Clamp(g + brightnessAdjust, 0, 255);
-                    b = (byte)Math.Clamp(b + brightnessAdjust, 0, 255);
-
-                    // Apply contrast
-                    r = (byte)Math.Clamp(((r - 128) * contrastAdjust) + 128, 0, 255);
-                    g = (byte)Math.Clamp(((g - 128) * contrastAdjust) + 128, 0, 255);
-                    b = (byte)Math.Clamp(((b - 128) * contrastAdjust) + 128, 0, 255);
-
-                    // Apply gamma
-                    r = gammaLookup[r];
-                    g = gammaLookup[g];
-                    b = gammaLookup[b];
-
-                    // Reconstruct pixel
-                    var adjustedPixel = (uint)((a << 24) | (r << 16) | (g << 8) | b);
-                    ((uint*)adjustedPixels)[index] = adjustedPixel;
+                    adjustedPixels[index] = pixel;
+                    continue;
                 }
+
+                var r = channelLookup[(byte)(pixel >> 16)];
+                var g = channelLookup[(byte)(pixel >> 8)];
+                var b = channelLookup[(byte)pixel];
+
+                adjustedPixels[index] = alpha | ((uint)r << 16) | ((uint)g << 8) | b;
             }
         }
 
@@ -84,48 +73,33 @@ public static class SubtitleImageAdjuster
         using var originalBitmap = premultipliedBitmap.ToUnpremultiplied();
         var adjustedBitmap = new SKBitmap(originalBitmap.Width, originalBitmap.Height, SKColorType.Bgra8888, SKAlphaType.Unpremul);
 
+        // The new alpha is a pure function of the old alpha byte - one 256-entry lookup table.
+        var alphaLookup = new byte[256];
+        for (int i = 0; i < 256; i++)
+        {
+            var newAlpha = Math.Clamp(i + alphaAdjustment, 0, 255);
+            alphaLookup[i] = newAlpha < transparencyThreshold ? (byte)0 : (byte)newAlpha;
+        }
+
         unsafe
         {
-            var originalPixels = originalBitmap.GetPixels();
-            var adjustedPixels = adjustedBitmap.GetPixels();
+            var originalPixels = (uint*)originalBitmap.GetPixels();
+            var adjustedPixels = (uint*)adjustedBitmap.GetPixels();
+            var pixelCount = originalBitmap.Width * originalBitmap.Height;
 
-            for (int y = 0; y < originalBitmap.Height; y++)
+            for (int index = 0; index < pixelCount; index++)
             {
-                for (int x = 0; x < originalBitmap.Width; x++)
+                var pixel = originalPixels[index];
+                var a = (byte)(pixel >> 24);
+
+                // Skip if already fully transparent
+                if (a == 0)
                 {
-                    var index = y * originalBitmap.Width + x;
-                    var pixel = ((uint*)originalPixels)[index];
-
-                    var a = (byte)((pixel >> 24) & 0xFF);
-                    var r = (byte)((pixel >> 16) & 0xFF);
-                    var g = (byte)((pixel >> 8) & 0xFF);
-                    var b = (byte)(pixel & 0xFF);
-
-                    // Skip if already fully transparent
-                    if (a == 0)
-                    {
-                        ((uint*)adjustedPixels)[index] = pixel;
-                        continue;
-                    }
-
-                    // Apply alpha adjustment (additive)
-                    float newAlpha = a + alphaAdjustment;
-
-                    // Clamp to valid range
-                    newAlpha = Math.Clamp(newAlpha, 0, 255);
-
-                    // Apply transparency threshold
-                    if (newAlpha < transparencyThreshold)
-                    {
-                        newAlpha = 0;
-                    }
-
-                    a = (byte)newAlpha;
-
-                    // Reconstruct pixel
-                    var adjustedPixel = (uint)((a << 24) | (r << 16) | (g << 8) | b);
-                    ((uint*)adjustedPixels)[index] = adjustedPixel;
+                    adjustedPixels[index] = pixel;
+                    continue;
                 }
+
+                adjustedPixels[index] = (pixel & 0x00FFFFFFu) | ((uint)alphaLookup[a] << 24);
             }
         }
 
@@ -144,29 +118,42 @@ public static class SubtitleImageAdjuster
         using var originalBitmap = premultipliedBitmap.ToUnpremultiplied();
         var adjustedBitmap = new SKBitmap(originalBitmap.Width, originalBitmap.Height, SKColorType.Bgra8888, SKAlphaType.Unpremul);
 
+        // Each output channel is a pure function of total = r+g+b (0..765) - three lookup tables
+        // replace the per-pixel double math.
+        var totalLookupR = new byte[766];
+        var totalLookupG = new byte[766];
+        var totalLookupB = new byte[766];
+        for (int total = 0; total < 766; total++)
+        {
+            totalLookupR[total] = (byte)Math.Min(255, redPercent * total / 100);
+            totalLookupG[total] = (byte)Math.Min(255, greenPercent * total / 100);
+            totalLookupB[total] = (byte)Math.Min(255, bluePercent * total / 100);
+        }
+
         unsafe
         {
-            var srcPixels = originalBitmap.GetPixels();
-            var dstPixels = adjustedBitmap.GetPixels();
+            var srcPixels = (uint*)originalBitmap.GetPixels();
+            var dstPixels = (uint*)adjustedBitmap.GetPixels();
+            var pixelCount = originalBitmap.Width * originalBitmap.Height;
 
-            for (int i = 0; i < originalBitmap.Width * originalBitmap.Height; i++)
+            for (int i = 0; i < pixelCount; i++)
             {
-                var pixel = ((uint*)srcPixels)[i];
+                var pixel = srcPixels[i];
 
-                var a = (byte)((pixel >> 24) & 0xFF);
-                var pr = (byte)((pixel >> 16) & 0xFF);
-                var pg = (byte)((pixel >> 8) & 0xFF);
-                var pb = (byte)(pixel & 0xFF);
+                var a = (byte)(pixel >> 24);
+                var pr = (byte)(pixel >> 16);
+                var pg = (byte)(pixel >> 8);
+                var pb = (byte)pixel;
 
                 int total = pr + pg + pb;
                 if (total > 100 && a > 0)
                 {
-                    pr = (byte)Math.Min(255, redPercent * total / 100);
-                    pg = (byte)Math.Min(255, greenPercent * total / 100);
-                    pb = (byte)Math.Min(255, bluePercent * total / 100);
+                    pr = totalLookupR[total];
+                    pg = totalLookupG[total];
+                    pb = totalLookupB[total];
                 }
 
-                ((uint*)dstPixels)[i] = (uint)((a << 24) | (pr << 16) | (pg << 8) | pb);
+                dstPixels[i] = (uint)((a << 24) | (pr << 16) | (pg << 8) | pb);
             }
         }
 
