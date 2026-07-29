@@ -58,7 +58,17 @@ public partial class VoiceSettingsViewModel : ObservableObject
             return;
         }
 
-        var fileName = await _fileHelper.PickOpenFile(Window!, "Open audio file (for clone)", Se.Language.General.AudioFiles, "*.wav;*.mp3");
+        string fileName;
+        if (_engine is Piper)
+        {
+            // Piper voices are trained models (.onnx + .onnx.json), not audio to clone from.
+            fileName = await _fileHelper.PickOpenFile(Window!, Se.Language.Video.TextToSpeech.ImportPiperVoiceTitle, "Piper voice model", "*.onnx");
+        }
+        else
+        {
+            fileName = await _fileHelper.PickOpenFile(Window!, "Open audio file (for clone)", Se.Language.General.AudioFiles, "*.wav;*.mp3");
+        }
+
         if (string.IsNullOrEmpty(fileName))
         {
             return;
@@ -236,6 +246,19 @@ public partial class VoiceSettingsViewModel : ObservableObject
                 ? mossEngine.ImportVoice(fileName, (result.Text ?? string.Empty).Trim())
                 : mossEngine.ImportVoice(fileName);
         }
+        else if (_engine is Piper piperEngine)
+        {
+            ok = piperEngine.ImportVoice(fileName);
+            if (!ok)
+            {
+                // The only user-fixable failure: the .onnx.json config is not next to the model.
+                await MessageBox.Show(
+                    Window,
+                    Se.Language.Video.TextToSpeech.PiperVoiceConfigMissingTitle,
+                    string.Format(Se.Language.Video.TextToSpeech.PiperVoiceConfigMissingMessage, Path.GetFileName(fileName) + ".json"));
+                return;
+            }
+        }
         else
         {
             ok = _engine.ImportVoice(fileName);
@@ -259,7 +282,7 @@ public partial class VoiceSettingsViewModel : ObservableObject
             return;
         }
 
-        if (e.DataTransfer.Contains(DataFormat.File) && HasSupportedAudioFile(e))
+        if (e.DataTransfer.Contains(DataFormat.File) && HasSupportedImportFile(e))
         {
             e.DragEffects = DragDropEffects.Copy;
             IsDragOver = true;
@@ -289,7 +312,7 @@ public partial class VoiceSettingsViewModel : ObservableObject
 
         var fileName = e.DataTransfer.TryGetFiles()?
             .Select(f => f.Path.LocalPath)
-            .FirstOrDefault(IsSupportedAudioFile);
+            .FirstOrDefault(IsSupportedImportFile);
 
         if (string.IsNullOrEmpty(fileName))
         {
@@ -299,13 +322,13 @@ public partial class VoiceSettingsViewModel : ObservableObject
         Dispatcher.UIThread.PostSafe(() => ImportVoiceFromFileAsync(fileName));
     }
 
-    private static bool HasSupportedAudioFile(DragEventArgs e)
+    private bool HasSupportedImportFile(DragEventArgs e)
     {
         var files = e.DataTransfer.TryGetFiles();
-        return files != null && files.Any(f => IsSupportedAudioFile(f.Path.LocalPath));
+        return files != null && files.Any(f => IsSupportedImportFile(f.Path.LocalPath));
     }
 
-    private static bool IsSupportedAudioFile(string fileName)
+    private bool IsSupportedImportFile(string fileName)
     {
         if (string.IsNullOrEmpty(fileName))
         {
@@ -313,6 +336,13 @@ public partial class VoiceSettingsViewModel : ObservableObject
         }
 
         var ext = Path.GetExtension(fileName);
+
+        // Piper imports voice models, not audio to clone from.
+        if (_engine is Piper)
+        {
+            return string.Equals(ext, ".onnx", StringComparison.OrdinalIgnoreCase);
+        }
+
         return SupportedAudioExtensions.Any(s => string.Equals(s, ext, StringComparison.OrdinalIgnoreCase));
     }
 
@@ -388,7 +418,8 @@ public partial class VoiceSettingsViewModel : ObservableObject
     internal void Initialize(ITtsEngine engine)
     {
         _engine = engine;
-        IsImportVoiceVisible = engine.GetType() == typeof(Qwen3TtsCpp)
+        IsImportVoiceVisible = engine.GetType() == typeof(Piper)
+                               || engine.GetType() == typeof(Qwen3TtsCpp)
                                || engine.GetType() == typeof(Qwen3TtsCrispAsr)
                                || engine.GetType() == typeof(VibeVoiceCrispAsr)
                                || engine.GetType() == typeof(IndexTtsCrispAsr)
