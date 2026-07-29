@@ -50,6 +50,8 @@ public class SeGeneral
     public bool SubtitleGridCenterSelectedRow { get; set; }
     public string SaveAsBehavior { get; set; }
     public string SaveAsAppendLanguageCode { get; set; }
+    public string DefaultSaveLocation { get; set; }
+    public string DefaultSaveLocationCustomFolder { get; set; }
     public bool AutoConvertToUtf8 { get; set; }
     public bool AutoGuessAnsiEncoding { get; set; }
     public int MaxNumberOfLinesPlusAbort { get; set; }
@@ -175,6 +177,8 @@ public class SeGeneral
         SubtitleDoubleClickAction = nameof(SubtitleDoubleClickActionType.GoToSubtitleAndPause);
         SubtitleGridCenterSelectedRow = false;
         SaveAsBehavior = nameof(SaveAsBehaviourType.UseVideoFileNameThenSubtitleFileName);
+        DefaultSaveLocation = nameof(DefaultSaveLocationType.SourceFileFolder);
+        DefaultSaveLocationCustomFolder = string.Empty;
         SaveAsAppendLanguageCode = nameof(SaveAsLanguageAppendType.None);
         AutoConvertToUtf8 = false;
         AutoGuessAnsiEncoding = true;

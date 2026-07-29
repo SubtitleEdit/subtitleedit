@@ -330,6 +330,29 @@ public class SettingsPage : UserControl
                 }
             }),
 
+            new SettingsItem(Se.Language.Options.Settings.DefaultSaveLocation, () => new ComboBox
+            {
+                MinWidth = 200,
+                DataContext = _vm,
+                [!ItemsControl.ItemsSourceProperty] = new Binding(nameof(_vm.DefaultSaveLocationTypes)),
+                [!SelectingItemsControl.SelectedItemProperty] = new Binding(nameof(_vm.SelectedDefaultSaveLocationType))
+                {
+                    Mode = BindingMode.TwoWay,
+                }
+            }),
+
+            new SettingsItem(Se.Language.Options.Settings.DefaultSaveLocationCustomFolder, () => new StackPanel
+            {
+                Orientation = Orientation.Horizontal,
+                Spacing = 5,
+                [!Control.IsEnabledProperty] = new Binding(nameof(_vm.IsDefaultSaveLocationCustomFolderEnabled)) { Source = _vm },
+                Children =
+                {
+                    UiUtil.MakeTextBox(250, _vm, nameof(_vm.DefaultSaveLocationCustomFolder)),
+                    UiUtil.MakeButtonBrowse(_vm.BrowseDefaultSaveLocationFolderCommand),
+                }
+            }),
+
             MakeSeparator(),
             MakeCheckboxSetting(Se.Language.Options.Settings.AutoSave, nameof(_vm.AutoSave)),
             MakeCheckboxSetting(Se.Language.Options.Settings.AutoBackupOn, nameof(_vm.AutoBackupOn)),
