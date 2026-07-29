@@ -25,6 +25,7 @@ public partial class AutoBackupService : IAutoBackupService
 {
     private MainViewModel? _mainViewModel;
     private System.Timers.Timer? _timerAutoBackup;
+    private int _backupInFlight;
     // Source-generated rather than RegexOptions.Compiled: this type is constructed from the
     // MainViewModel ctor, and Compiled emits IL at construction time on the start-up path
     // (~3.6 ms and 13 KB, vs ~1.7 ms and zero allocation here) for a pattern only used when
@@ -60,9 +61,28 @@ public partial class AutoBackupService : IAutoBackupService
                     return;
                 }
 
+                // A save on a very large subtitle can outlive the timer interval; skip this
+                // tick rather than write concurrently (two saves in the same wall-clock
+                // second would also collide on the same timestamped filename). The next
+                // tick picks up newer state anyway.
+                if (Interlocked.CompareExchange(ref _backupInFlight, 1, 0) != 0)
+                {
+                    return;
+                }
+
                 var saveFormat = vm.SelectedSubtitleFormat;
                 var subtitle = new Subtitle(vm.GetUpdateSubtitle(), false);
-                Task.Run(() => SaveAutoBackup(subtitle, saveFormat));
+                Task.Run(() =>
+                {
+                    try
+                    {
+                        SaveAutoBackup(subtitle, saveFormat);
+                    }
+                    finally
+                    {
+                        Interlocked.Exchange(ref _backupInFlight, 0);
+                    }
+                });
             });
         };
         _timerAutoBackup.Start();
