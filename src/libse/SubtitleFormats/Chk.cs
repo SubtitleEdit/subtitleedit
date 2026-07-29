@@ -23,7 +23,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         {
             if (fileName.EndsWith(".chk", StringComparison.OrdinalIgnoreCase))
             {
-                var buffer = FileUtil.ReadAllBytesShared(fileName);
+                var buffer = FileUtil.ReadBytesShared(fileName, 1);
                 return buffer.Length > 0 && buffer[0] == 0x1d;
             }
             return false;
