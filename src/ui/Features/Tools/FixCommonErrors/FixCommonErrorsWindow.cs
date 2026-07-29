@@ -471,6 +471,22 @@ public class FixCommonErrorsWindow : Window
         };
         AutomationProperties.SetName(dataGridFixes, Se.Language.Tools.FixCommonErrors.Fixes);
         dataGridFixes.Bind(DataGrid.SelectedItemProperty, new Binding(nameof(_vm.SelectedFix)));
+        dataGridFixes.ContextMenu = new ContextMenu
+        {
+            Items =
+            {
+                new MenuItem
+                {
+                    Header = Se.Language.Tools.FixCommonErrors.RuleDetailsDotDotDot,
+                    Command = _vm.ShowRuleDetailsCommand,
+                },
+                new MenuItem
+                {
+                    Header = Se.Language.Tools.FixCommonErrors.ShowOnlyThisRule,
+                    Command = _vm.FilterBySelectedFixRuleCommand,
+                },
+            },
+        };
         _ = new DataGridCheckboxMultiSelect<FixDisplayItem>(dataGridFixes,
             item => item.IsSelected, (item, v) => item.IsSelected = v,
             onFocusedItemChanged: item =>
