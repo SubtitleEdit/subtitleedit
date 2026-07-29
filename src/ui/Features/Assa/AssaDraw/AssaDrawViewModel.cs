@@ -713,10 +713,13 @@ public partial class AssaDrawViewModel : ObservableObject
         }
 
         // Generate paragraphs with style names
+        var sbDraw = new StringBuilder();
+        var sbErase = new StringBuilder();
+        var finalText = new StringBuilder();
         foreach (var layer in layers)
         {
-            var sbDraw = new StringBuilder();
-            var sbErase = new StringBuilder();
+            sbDraw.Clear();
+            sbErase.Clear();
             var firstShape = layer.FirstOrDefault(p => !p.IsEraser);
 
             // Collect draw shapes (normal shapes)
@@ -739,7 +742,7 @@ public partial class AssaDrawViewModel : ObservableObject
             // Build the final text with draw and optionally iclip
             if (!string.IsNullOrEmpty(drawText) || !string.IsNullOrEmpty(eraseText))
             {
-                var finalText = new StringBuilder();
+                finalText.Clear();
 
                 // Add iclip if we have erase shapes
                 if (!string.IsNullOrEmpty(eraseText))

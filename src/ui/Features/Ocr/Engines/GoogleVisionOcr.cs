@@ -249,10 +249,11 @@ public class GoogleVisionOcr
 
                 // Merge lines ordered by X
                 var sb = new StringBuilder();
+                var sbLine = new StringBuilder();
                 var spaceThreshold = Math.Max(12, annotations.Average(p => p.Width) / 2.7);
                 foreach (var line in lines)
                 {
-                    var sbLine = new StringBuilder();
+                    sbLine.Clear();
                     last = null;
                     foreach (var l in line.OrderBy(p => p.Vertices.Min(p2 => p2.X)))
                     {
