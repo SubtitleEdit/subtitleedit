@@ -2457,6 +2457,30 @@ public partial class MainViewModel :
     }
 
     [RelayCommand]
+    private void ToggleSubtitlesOnVideoPlayer()
+    {
+        var vp = GetVideoPlayerControl();
+        if (vp?.VideoPlayer is not LibMpvDynamicPlayer mpv)
+        {
+            return;
+        }
+
+        _mpvReloader.SubtitlesVisible = !_mpvReloader.SubtitlesVisible;
+        mpv.SetSubtitleVisibility(_mpvReloader.SubtitlesVisible);
+
+        if (_mpvReloader.SubtitlesVisible)
+        {
+            ShowStatus(Se.Language.Video.SubtitlesOnVideoPlayerOn);
+        }
+        else
+        {
+            ShowStatus(Se.Language.Video.SubtitlesOnVideoPlayerOff);
+        }
+
+        _shortcutManager.ClearKeys();
+    }
+
+    [RelayCommand]
     private async Task CopySubtitlePathToClipboard()
     {
         if (Window == null || Window.Clipboard == null || string.IsNullOrEmpty(_subtitleFileName))
@@ -12574,6 +12598,7 @@ public partial class MainViewModel :
             (nameof(TogglePlayPauseCommand),        TogglePlayPauseCommand),
             (nameof(TogglePlayPause2Command),       TogglePlayPause2Command),
             (nameof(VideoToggleBrightnessCommand),  VideoToggleBrightnessCommand),
+            (nameof(ToggleSubtitlesOnVideoPlayerCommand), ToggleSubtitlesOnVideoPlayerCommand),
         };
 
         var bindings = new List<(string name, List<string> keys, IRelayCommand command)>(commands.Length);

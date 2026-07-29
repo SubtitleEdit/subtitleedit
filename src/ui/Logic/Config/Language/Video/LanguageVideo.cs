@@ -68,6 +68,9 @@ public class LanguageVideo
     public string PickOnlineSubtitleFetching { get; set; }
     public string PickOnlineSubtitleNoneFound { get; set; }
     public string ToggleCurrentSubtitleWhilePlaying { get; set; }
+    public string ToggleSubtitlesOnVideoPlayer { get; set; }
+    public string SubtitlesOnVideoPlayerOn { get; set; }
+    public string SubtitlesOnVideoPlayerOff { get; set; }
     public string OnlyMkvCanSupportEmbeddedSubtitleEditing { get; set; }
     public string ReEncodeInfo { get; set; }
     public string ReEncodeGeneratingVideoX { get; set; }
@@ -139,6 +142,9 @@ public class LanguageVideo
         PickOnlineSubtitleFetching = "Downloading subtitles...";
         PickOnlineSubtitleNoneFound = "No subtitles found for this URL.";
         ToggleCurrentSubtitleWhilePlaying = "Toggle current subtitle while playing";
+        ToggleSubtitlesOnVideoPlayer = "Toggle subtitles on video player";
+        SubtitlesOnVideoPlayerOn = "Subtitles on video player: on";
+        SubtitlesOnVideoPlayerOff = "Subtitles on video player: off";
         OnlyMkvCanSupportEmbeddedSubtitleEditing = "Only Matroska (.mkv, .webm) files are supported for editing embedded subtitles.";
         ReEncodeInfo = "Re-encoding can make subtitling smoother:" + Environment.NewLine +
                        "• Smaller resolution (high resolutions make subtitling slow)" + Environment.NewLine +

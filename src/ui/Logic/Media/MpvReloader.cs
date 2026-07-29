@@ -13,6 +13,7 @@ namespace Nikse.SubtitleEdit.Logic.Media;
 public class MpvReloader : IMpvReloader
 {
     public bool SmpteMode { get; set; }
+    public bool SubtitlesVisible { get; set; } = true;
     public int VideoWidth { get; set; } = 1280;
     public int VideoHeight { get; set; } = 720;
 
@@ -182,6 +183,10 @@ public class MpvReloader : IMpvReloader
                 }
                 _mpvTextOld = text;
             }
+
+            // Re-assert visibility so a hidden preview stays hidden on a freshly
+            // created player (fullscreen/undock create a new mpv instance).
+            mpvContext.SetSubtitleVisibility(SubtitlesVisible);
             _subtitlePrev = subtitle;
         }
         catch (Exception exception)
