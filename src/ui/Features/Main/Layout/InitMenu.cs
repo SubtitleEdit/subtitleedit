@@ -683,6 +683,12 @@ public static class InitMenu
                 new Separator(),
                 new MenuItem
                 {
+                    Header = Se.Language.Video.GoToVideoPositionDotDotDot,
+                    Command = vm.ShowGoToVideoPositionCommand,
+                },
+                new Separator(),
+                new MenuItem
+                {
                     Header = l.SpeechToText,
                     Command = vm.ShowSpeechToTextWhisperCommand,
                 },
