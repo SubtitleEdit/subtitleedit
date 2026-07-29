@@ -32,6 +32,7 @@ namespace Nikse.SubtitleEdit.Core.Forms
             var openTags = new System.Collections.Generic.Stack<(string opening, string closing)>();
             var wordChars = new StringBuilder();
             var leadingTags = new StringBuilder();
+            var tagSb = new StringBuilder();
             var inWord = false;
             var wordEndPos = -1;
 
@@ -44,7 +45,7 @@ namespace Nikse.SubtitleEdit.Core.Forms
                 {
                     var tagStart = i;
                     var endChar = ch == '<' ? '>' : '}';
-                    var tagSb = new StringBuilder();
+                    tagSb.Clear();
                     tagSb.Append(ch);
                     i++;
 
@@ -255,6 +256,7 @@ namespace Nikse.SubtitleEdit.Core.Forms
             var lastWordStart = -1;
             var lastWordTags = new System.Collections.Generic.List<(string opening, string closing)>();
             var inWord = false;
+            var tagSb = new StringBuilder();
 
             for (int i = 0; i < s1Trimmed.Length; i++)
             {
@@ -264,7 +266,7 @@ namespace Nikse.SubtitleEdit.Core.Forms
                 {
                     var tagStart = i;
                     var endChar = ch == '<' ? '>' : '}';
-                    var tagSb = new StringBuilder();
+                    tagSb.Clear();
                     tagSb.Append(ch);
                     i++;
 

@@ -38,6 +38,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             var max = content.Length;
             var state = new Stack<StateElement>();
             var objectName = string.Empty;
+            var sb = new StringBuilder();
             while (i < max)
             {
                 var ch = content[i];
@@ -231,7 +232,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                     }
                     else if ("+-0123456789".IndexOf(ch) >= 0)
                     {
-                        var sb = new StringBuilder();
+                        sb.Clear();
                         while ("+-0123456789.Ee".IndexOf(content[i]) >= 0 && i < max)
                         {
                             sb.Append(content[i]);
@@ -329,6 +330,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             var state = new Stack<StateElement>();
             var objectName = string.Empty;
             var start = -1;
+            var sb = new StringBuilder();
             while (i < max)
             {
                 var ch = content[i];
@@ -523,7 +525,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                     }
                     else if ("+-0123456789".IndexOf(ch) >= 0)
                     {
-                        var sb = new StringBuilder();
+                        sb.Clear();
                         while (i < max && "+-0123456789.Ee".IndexOf(content[i]) >= 0)
                         {
                             sb.Append(content[i]);
@@ -810,10 +812,8 @@ namespace Nikse.SubtitleEdit.Core.Common
                     }
                     else if ("+-0123456789".IndexOf(ch) >= 0)
                     {
-                        var sb = new StringBuilder();
                         while ("+-0123456789.Ee".IndexOf(content[i]) >= 0 && i < max)
                         {
-                            sb.Append(content[i]);
                             i++;
                         }
                         state.Pop();
@@ -930,6 +930,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             var objectName = string.Empty;
             var start = -1;
             var startSateCount = -1;
+            var sb = new StringBuilder();
             while (i < max)
             {
                 var ch = content[i];
@@ -1121,7 +1122,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                     }
                     else if ("+-0123456789".IndexOf(ch) >= 0)
                     {
-                        var sb = new StringBuilder();
+                        sb.Clear();
                         while ("+-0123456789.Ee".IndexOf(content[i]) >= 0 && i < max)
                         {
                             sb.Append(content[i]);
@@ -1455,10 +1456,8 @@ namespace Nikse.SubtitleEdit.Core.Common
                     }
                     else if ("+-0123456789".IndexOf(ch) >= 0)
                     {
-                        var sb = new StringBuilder();
                         while (i < max && "+-0123456789.Ee".IndexOf(content[i]) >= 0)
                         {
-                            sb.Append(content[i]);
                             i++;
                         }
                         state.Pop();
