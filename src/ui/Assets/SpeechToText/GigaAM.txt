@@ -1,0 +1,32 @@
+GigaAM (Russian speech-to-text)
+
+GigaAM is Sber's "Giga Acoustic Model" family (https://huggingface.co/ai-sage/GigaAM-v3),
+which substantially outperforms Whisper on Russian speech. Subtitle Edit runs the ONNX
+exports of these models through the "onnx-asr" Python package on the CPU - no GPU needed.
+
+Installation
+------------
+Install Python 3.10+ and then:
+
+    pip3 install "onnx-asr[cpu,hub]"
+
+Subtitle Edit finds the package by probing for a Python that can "import onnx_asr".
+If you installed it with pipx, a virtual environment, or conda, it is found automatically
+when the "onnx-asr" command is on your PATH or at ~/.local/bin/onnx-asr.
+
+Models
+------
+Models are downloaded from Hugging Face automatically on first use:
+
+    gigaam-v3-e2e-rnnt   best quality, with punctuation and capitalization (recommended)
+    gigaam-v3-e2e-ctc    faster, with punctuation and capitalization
+    gigaam-v3-rnnt       lowercase text without punctuation
+    gigaam-v3-ctc        lowercase text without punctuation, fastest
+    gigaam-v2-rnnt       previous generation
+    gigaam-v2-ctc        previous generation
+
+The default engine argument "--quantization int8" uses the small int8 exports
+(~230 MB); clear it to use the full-precision exports (~0.9 GB) instead.
+
+Long audio is segmented with the Silero VAD (also bundled with onnx-asr), and
+oversized speech segments are split into subtitle-sized cues at word boundaries.

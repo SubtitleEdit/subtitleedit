@@ -261,6 +261,9 @@ public partial class SpeechToTextViewModel : ObservableObject
             Engines.Add(new Qwen3AsrCppEngine());
         }
 
+        // Russian ASR via the pip-installed "onnx-asr" package (CPU, all platforms).
+        Engines.Add(new GigaAmEngine());
+
         Engines.Add(new CrispAsrEngine());
 
         SelectedEngine = Engines[0];
@@ -3056,6 +3059,24 @@ public partial class SpeechToTextViewModel : ObservableObject
                     return;
                 }
 
+                if (engine is GigaAmEngine)
+                {
+                    // pip-managed engine - Subtitle Edit cannot download it. Same detection model
+                    // as MLX Whisper: SE looks for a Python that can import onnx_asr.
+                    await MessageBox.Show(
+                        Window!,
+                        $"{engine.Name} not found",
+                        "Subtitle Edit could not find a Python that can import the \"onnx_asr\" package." + Environment.NewLine +
+                        Environment.NewLine +
+                        "If it is not installed yet, install it with:" + Environment.NewLine +
+                        "    pip3 install \"onnx-asr[cpu,hub]\"" + Environment.NewLine +
+                        Environment.NewLine +
+                        "If you installed it with pipx, a virtual environment, or conda, Subtitle Edit finds it " +
+                        "automatically only when the \"onnx-asr\" command is on your PATH or at " +
+                        "~/.local/bin/onnx-asr (where pipx puts it).");
+                    return;
+                }
+
 
                 if (engine is ICrispAsrEngine && Configuration.IsRunningOnWindows)
                 {
@@ -3884,6 +3905,64 @@ public partial class SpeechToTextViewModel : ObservableObject
                    $" --max-cps {audioToText.WhisperCueMaxCps.ToString(CultureInfo.InvariantCulture)}";
         }
 
+        if (engine is GigaAmEngine gigaAm)
+        {
+            // onnx-asr is a library, not a CLI, so we run a bundled helper script via python.
+            // It segments the audio with Silero VAD, transcribes with GigaAM and writes
+            // "<audio-basename>.srt" into the audio's folder, which GetResultFromSrt then picks up.
+            var gigaAmPython = gigaAm.GetExecutable();
+            var gigaAmScript = gigaAm.GetTranscribeScript();
+            var gigaAmOutputDir = Path.GetDirectoryName(waveFileName) ?? string.Empty;
+            var gigaAmCueSettings = Se.Settings.Tools.AudioToText;
+            var gigaAmExtraArgs = engine.CommandLineParameter;
+            var gigaAmExtraPart = string.IsNullOrWhiteSpace(gigaAmExtraArgs) ? string.Empty : " " + gigaAmExtraArgs.Trim();
+
+            var gigaAmParameters =
+                $"\"{gigaAmScript}\" --audio \"{waveFileName}\" --model {gigaAm.GetModelForCmdLine(model)} " +
+                $"--output-dir \"{gigaAmOutputDir}\"" +
+                $" --max-cue-chars {gigaAmCueSettings.WhisperCueMaxChars}" +
+                $" --max-cue-duration {gigaAmCueSettings.WhisperCueMaxSeconds.ToString(CultureInfo.InvariantCulture)}" +
+                gigaAmExtraPart;
+
+            Se.WriteToolsLog($"{gigaAmPython} {gigaAmParameters}");
+
+            var gigaAmProcess = new Process
+            {
+                StartInfo = new ProcessStartInfo(gigaAmPython, gigaAmParameters)
+                {
+                    WindowStyle = ProcessWindowStyle.Hidden,
+                    CreateNoWindow = true,
+                    UseShellExecute = false,
+                }
+            };
+
+            gigaAmProcess.StartInfo.EnvironmentVariables["PYTHONIOENCODING"] = "utf-8";
+            gigaAmProcess.StartInfo.EnvironmentVariables["PYTHONUTF8"] = "1";
+            gigaAmProcess.StartInfo.EnvironmentVariables["PYTHONUNBUFFERED"] = "1";
+
+            if (dataReceivedHandler != null)
+            {
+                gigaAmProcess.StartInfo.StandardOutputEncoding = Encoding.UTF8;
+                gigaAmProcess.StartInfo.StandardErrorEncoding = Encoding.UTF8;
+                gigaAmProcess.StartInfo.RedirectStandardOutput = true;
+                gigaAmProcess.StartInfo.RedirectStandardError = true;
+                gigaAmProcess.OutputDataReceived += dataReceivedHandler;
+                gigaAmProcess.ErrorDataReceived += dataReceivedHandler;
+            }
+
+#pragma warning disable CA1416
+            gigaAmProcess.Start();
+#pragma warning restore CA1416
+
+            if (dataReceivedHandler != null)
+            {
+                gigaAmProcess.BeginOutputReadLine();
+                gigaAmProcess.BeginErrorReadLine();
+            }
+
+            return gigaAmProcess;
+        }
+
         if (engine is MlxWhisperMac mlxWhisperMac)
         {
             // mlx-whisper is a library, not a CLI, so we run a bundled helper script via python3.
@@ -4597,6 +4676,14 @@ public partial class SpeechToTextViewModel : ObservableObject
             // Kept to one line here; the blocking dialog on transcribe explains the pipx/venv
             // detection caveat in full (#12209).
             EngineDownloadHint = "mlx-whisper not found - install with \"pip3 install mlx-whisper\", or ensure the \"mlx_whisper\" command is on your PATH";
+            IsEngineDownloadButtonVisible = false;
+            return;
+        }
+
+        if (engine is GigaAmEngine && !isInstalled)
+        {
+            // pip-managed engine - Subtitle Edit cannot download it, so show install help instead.
+            EngineDownloadHint = "onnx-asr not found - install with \"pip3 install onnx-asr[cpu,hub]\", or ensure the \"onnx-asr\" command is on your PATH";
             IsEngineDownloadButtonVisible = false;
             return;
         }

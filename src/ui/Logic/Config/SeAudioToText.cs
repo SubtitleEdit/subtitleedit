@@ -42,6 +42,8 @@ public class SeAudioToText
     public string CommandLineParameterPurfviewFasterWhisperXxl { get; set; } = "--standard";
     public string CommandLineParameterOpenAi { get; set; } = string.Empty;
     public string CommandLineParameterQwen3AsrCpp { get; set; } = string.Empty;
+    // int8 exports are ~230 MB vs ~0.9 GB full precision and faster on CPU; clear to use full precision.
+    public string CommandLineParameterGigaAm { get; set; } = "--quantization int8";
     public string CommandLineParameterChatLlm { get; set; } = string.Empty;
     public string CommandLineParameterCrispAsrCanary { get; set; } = "--max-len 50 --split-on-punct";
     public string CommandLineParameterCrispAsrCohere { get; set; } = "--max-len 50 --split-on-punct";

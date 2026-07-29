@@ -15,6 +15,7 @@
         public const string PurfviewFasterWhisperXxl = "Purfview's Faster-Whisper-XXL";
         public const string ChatLlm = "Chat LLM";
         public const string Qwen3AsrCpp = "Qwen3 ASR CPP";
+        public const string GigaAm = "GigaAM";
         public const string ParakeetCpp = "Parakeet.cpp";
         public const string CrispAsrParakeet = "Crisp ASR Parakeet";
         public const string CrispAsrCanary = "Crisp ASR Canary";
