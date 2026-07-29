@@ -482,7 +482,7 @@ https://github.com/SubtitleEdit/subtitleedit
             Count = aboveMaximumLineLengthCount,
             Severity = StatCheckSeverity.Warning,
         });
-        if (Configuration.Settings.Tools.ListViewSyntaxColorWideLines)
+        if (Se.Settings.General.ColorTextTooWide)
         {
             Checks.Add(new StatCheckItem
             {
