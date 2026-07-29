@@ -14579,36 +14579,54 @@ public partial class MainViewModel :
     [RelayCommand]
     private void ExtendSelectedToPrevious()
     {
-        var s = SelectedSubtitle;
-        var idx = SelectedSubtitleIndex;
-        if (s == null || idx == null || idx == 0 || LockTimeCodes)
+        var selectedItems = _selectedSubtitles?.ToList() ?? [];
+        if (selectedItems.Count == 0 || LockTimeCodes)
         {
             return;
         }
 
-        var prev = Subtitles[idx.Value - 1];
-        s.SetStartTimeOnly(TimeSpan.FromMilliseconds(prev.EndTime.TotalMilliseconds + Se.Settings.General.MinimumBetweenLines.GetMilliseconds()));
+        var gapMs = Se.Settings.General.MinimumBetweenLines.GetMilliseconds();
+        foreach (var item in selectedItems)
+        {
+            var prev = Subtitles.GetOrNull(Subtitles.IndexOf(item) - 1);
+            if (prev == null)
+            {
+                continue;
+            }
+
+            item.SetStartTimeOnly(TimeSpan.FromMilliseconds(prev.EndTime.TotalMilliseconds + gapMs));
+        }
+
         _updateAudioVisualizer = true;
     }
 
     [RelayCommand]
     private void ExtendSelectedToNext()
     {
-        var s = SelectedSubtitle;
-        var idx = SelectedSubtitleIndex;
-        if (s == null || idx == null || idx >= Subtitles.Count - 1 || LockTimeCodes)
+        var selectedItems = _selectedSubtitles?.ToList() ?? [];
+        if (selectedItems.Count == 0 || LockTimeCodes)
         {
             return;
         }
 
-        var next = Subtitles.GetOrNull(idx.Value + 1);
-        if (next == null)
+        var gapMs = Se.Settings.General.MinimumBetweenLines.GetMilliseconds();
+        foreach (var item in selectedItems)
         {
-            return;
+            var idx = Subtitles.IndexOf(item);
+            if (idx < 0)
+            {
+                continue;
+            }
+
+            var next = Subtitles.GetOrNull(idx + 1);
+            if (next == null)
+            {
+                continue;
+            }
+
+            item.EndTime = TimeSpan.FromMilliseconds(next.StartTime.TotalMilliseconds - gapMs);
         }
 
-        s.EndTime = TimeSpan.FromMilliseconds(next.StartTime.TotalMilliseconds -
-                                              Se.Settings.General.MinimumBetweenLines.GetMilliseconds());
         _updateAudioVisualizer = true;
     }
 
@@ -19831,8 +19849,12 @@ public partial class MainViewModel :
         var count = Subtitles.Count;
         MenuItemMergeAsDialog.IsVisible = SubtitleGrid.SelectedItems.Count == 2;
         MenuItemMerge.IsVisible = SubtitleGrid.SelectedItems.Count > 1;
-        MenuItemExtendToLineBefore.IsVisible = SubtitleGrid.SelectedItems.Count == 1 && Subtitles.Count > 1 && idx > 0;
-        MenuItemExtendToLineAfter.IsVisible = SubtitleGrid.SelectedItems.Count == 1 && Subtitles.Count > 1 && idx < count - 1;
+        // With 2+ lines selected at least one of them has a neighbor on either side,
+        // so the focused-index boundary check only applies to single selection (#12981)
+        MenuItemExtendToLineBefore.IsVisible = Subtitles.Count > 1 &&
+            (SubtitleGrid.SelectedItems.Count > 1 || (SubtitleGrid.SelectedItems.Count == 1 && idx > 0));
+        MenuItemExtendToLineAfter.IsVisible = Subtitles.Count > 1 &&
+            (SubtitleGrid.SelectedItems.Count > 1 || (SubtitleGrid.SelectedItems.Count == 1 && idx < count - 1));
         AreAssaContentMenuItemsVisible = false;
         ShowAutoTranslateSelectedLines = SubtitleGrid.SelectedItems.Count > 0 && ShowColumnOriginalText;
         HasMultipleLinesSelected = SubtitleGrid.SelectedItems.Count > 1;
