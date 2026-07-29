@@ -590,6 +590,12 @@ public class Se
             Configuration.Settings.Proxy.Password = null;
         }
 
+        Configuration.Settings.Tools.AutoBreakLineEndingEarly = Settings.Tools.AutoBreakLineEndingEarly;
+        Configuration.Settings.Tools.AutoBreakCommaBreakEarly = Settings.Tools.AutoBreakCommaBreakEarly;
+        Configuration.Settings.Tools.AutoBreakDashEarly = Settings.Tools.AutoBreakDashEarly;
+        Configuration.Settings.Tools.AutoBreakUsePixelWidth = Settings.Tools.AutoBreakUsePixelWidth;
+        Configuration.Settings.Tools.AutoBreakPreferBottomHeavy = Settings.Tools.AutoBreakPreferBottomHeavy;
+
         var stt = Settings.Tools.AudioToText;
         Configuration.Settings.Tools.WhisperChoice = stt.WhisperChoice;
         Configuration.Settings.Tools.WhisperIgnoreVersion = stt.WhisperIgnoreVersion;

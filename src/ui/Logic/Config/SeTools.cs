@@ -145,6 +145,13 @@ public class SeTools
 
     public List<string> FindHistory { get; set; } = new List<string>();
     public bool AllowSingleLetterShortcutsInTextbox { get; set; }
+
+    // Auto-break (auto br) - defaults must match libse ToolsSettings
+    public bool AutoBreakLineEndingEarly { get; set; } = false;
+    public bool AutoBreakCommaBreakEarly { get; set; } = false;
+    public bool AutoBreakDashEarly { get; set; } = true;
+    public bool AutoBreakUsePixelWidth { get; set; } = true;
+    public bool AutoBreakPreferBottomHeavy { get; set; } = true;
     public bool SpellCheckEnglishTreatInApostropheAsIng { get; set; } = true;
     public bool WriteToolsLog { get; set; } = false;
 
