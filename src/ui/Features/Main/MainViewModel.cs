@@ -17789,6 +17789,8 @@ public partial class MainViewModel :
             }
         }
 
+        newFileName = ApplyDefaultSaveLocation(newFileName);
+
         var title = Se.Language.General.SaveFileAsTitle;
         if (ShowColumnOriginalText)
         {
@@ -17849,6 +17851,37 @@ public partial class MainViewModel :
         var result = await SaveSubtitle();
         AddToRecentFiles(true);
         return result;
+    }
+
+    /// <summary>
+    /// Points the "Save as" suggestion at the folder chosen by the default-save-location
+    /// setting (#12212). The picker opens in the suggestion's folder, so replacing the
+    /// directory part is enough; a bare file name makes the OS picker use its last folder.
+    /// </summary>
+    private string ApplyDefaultSaveLocation(string fileName)
+    {
+        var location = Se.Settings.General.DefaultSaveLocation;
+        if (location == nameof(DefaultSaveLocationType.LastUsedFolder))
+        {
+            return Path.GetFileName(fileName);
+        }
+
+        string? folder = null;
+        if (location == nameof(DefaultSaveLocationType.VideoFileFolder) && !string.IsNullOrEmpty(_videoFileName))
+        {
+            folder = Path.GetDirectoryName(_videoFileName);
+        }
+        else if (location == nameof(DefaultSaveLocationType.SubtitleFileFolder) && !string.IsNullOrEmpty(_subtitleFileName))
+        {
+            folder = Path.GetDirectoryName(_subtitleFileName);
+        }
+        else if (location == nameof(DefaultSaveLocationType.CustomFolder) &&
+                 Directory.Exists(Se.Settings.General.DefaultSaveLocationCustomFolder))
+        {
+            folder = Se.Settings.General.DefaultSaveLocationCustomFolder;
+        }
+
+        return string.IsNullOrEmpty(folder) ? fileName : Path.Combine(folder, Path.GetFileName(fileName));
     }
 
     private string GetFileNameWithoutExtension(string fileName)

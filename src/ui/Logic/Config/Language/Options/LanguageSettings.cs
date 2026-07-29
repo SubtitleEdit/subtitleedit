@@ -274,6 +274,12 @@ public class LanguageSettings
     public string SubtitleDoubleClickAction { get; set; }
     public string SubtitleGridCenterSelectedRow { get; set; }
     public string SaveAsBehavior { get; set; }
+    public string DefaultSaveLocation { get; set; }
+    public string DefaultSaveLocationSourceFileFolder { get; set; }
+    public string DefaultSaveLocationLastUsedFolder { get; set; }
+    public string DefaultSaveLocationVideoFileFolder { get; set; }
+    public string DefaultSaveLocationSubtitleFileFolder { get; set; }
+    public string DefaultSaveLocationCustomFolder { get; set; }
     public string SaveAsAppendLanguageCode { get; set; }
     public string GridGoToSubtitleAndSetVideoPosition { get; set; }
     public string GridGoToNextLine { get; set; }
@@ -605,6 +611,12 @@ public class LanguageSettings
         SubtitleDoubleClickAction = "Subtitle grid double-click action";
         SubtitleGridCenterSelectedRow = "Subtitle grid, center when selecting prev/next row";
         SaveAsBehavior = "\"Save as\" behavior";
+        DefaultSaveLocation = "Default save location";
+        DefaultSaveLocationSourceFileFolder = "Folder of subtitle/video file";
+        DefaultSaveLocationLastUsedFolder = "Last used folder";
+        DefaultSaveLocationVideoFileFolder = "Video file folder";
+        DefaultSaveLocationSubtitleFileFolder = "Subtitle file folder";
+        DefaultSaveLocationCustomFolder = "Custom folder";
         SaveAsAppendLanguageCode = "\"Save as\" append language code";
         GridGoToSubtitleAndSetVideoPosition = "Go to subtitle and set video position";
         GridGoToNextLine = "Go to next line";
