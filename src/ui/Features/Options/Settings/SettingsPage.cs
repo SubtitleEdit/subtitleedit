@@ -766,6 +766,8 @@ public class SettingsPage : UserControl
             MakeCheckboxSetting(Se.Language.Options.Settings.ShowToolbarPointSync, nameof(_vm.ShowToolbarPointSync)),
             MakeCheckboxSetting(Se.Language.Options.Settings.ShowToolbarBeautifyTimeCodes, nameof(_vm.ShowToolbarBeautifyTimeCodes)),
             MakeCheckboxSetting(Se.Language.Options.Settings.ShowToolbarBurnIn, nameof(_vm.ShowToolbarBurnIn)),
+            MakeCheckboxSetting(Se.Language.Options.Settings.ShowToolbarAutoTranslate, nameof(_vm.ShowToolbarAutoTranslate)),
+            MakeCheckboxSetting(Se.Language.Options.Settings.ShowToolbarSpeechToText, nameof(_vm.ShowToolbarSpeechToText)),
             MakeCheckboxSetting(Se.Language.Options.Settings.ShowToolbarSettings, nameof(_vm.ShowToolbarSettings)),
             MakeCheckboxSetting(Se.Language.Options.Settings.ShowToolbarLayout, nameof(_vm.ShowToolbarLayout)),
             MakeCheckboxSetting(Se.Language.Options.Shortcuts.SourceView, nameof(_vm.ShowToolbarSourceView)),
