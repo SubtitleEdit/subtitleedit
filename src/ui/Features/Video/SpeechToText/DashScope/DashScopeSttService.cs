@@ -331,7 +331,7 @@ public class DashScopeSttService : ISttTranscriber
 
     public static DashScopeSttSettings GetSettingsFromConfiguration()
     {
-        var tools = Configuration.Settings.Tools;
+        var tools = Se.Settings.Tools;
         return new DashScopeSttSettings
         {
             ApiKey = tools.DashScopeSttApiKey,

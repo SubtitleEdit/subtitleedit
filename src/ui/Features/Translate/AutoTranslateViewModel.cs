@@ -222,7 +222,6 @@ public partial class AutoTranslateViewModel : ObservableObject
         Configuration.Settings.Tools.GoogleApiV2Key = Se.Settings.AutoTranslate.GoogleApiV2Key;
 
         Configuration.Settings.Tools.MicrosoftTranslatorApiKey = Se.Settings.AutoTranslate.MicrosoftTranslatorApiKey;
-        Configuration.Settings.Tools.MicrosoftBingApiId = Se.Settings.AutoTranslate.MicrosoftBingApiId;
         Configuration.Settings.Tools.MicrosoftTranslatorCategory = Se.Settings.AutoTranslate.MicrosoftTranslatorCategory;
         Configuration.Settings.Tools.MicrosoftTranslatorTokenEndpoint = Se.Settings.AutoTranslate.MicrosoftTranslatorTokenEndpoint;
 
@@ -240,7 +239,6 @@ public partial class AutoTranslateViewModel : ObservableObject
 
         Configuration.Settings.Tools.AutoTranslateNllbApiUrl = Se.Settings.AutoTranslate.NllbApiUrl;
         Configuration.Settings.Tools.AutoTranslateNllbServeUrl = Se.Settings.AutoTranslate.NllbServeUrl;
-        Configuration.Settings.Tools.AutoTranslateNllbServeModel = Se.Settings.AutoTranslate.NllbServeModel;
 
         Configuration.Settings.Tools.DeepSeekApiKey = Se.Settings.AutoTranslate.DeepSeekApiKey;
         Configuration.Settings.Tools.DeepSeekUrl = Se.Settings.AutoTranslate.DeepSeekUrl;
@@ -486,7 +484,6 @@ public partial class AutoTranslateViewModel : ObservableObject
             Configuration.Settings.Tools.AutoTranslateCrispAsrModel = apiModel.Trim();
         }
 
-        Configuration.Settings.Tools.AutoTranslateLastName = SelectedAutoTranslator.Name;
 
         Se.Settings.AutoTranslate.AutoTranslateLastName = SelectedAutoTranslator.Name;
         Se.Settings.AutoTranslate.AutoTranslateLastSource = SelectedSourceLanguage?.Code ?? string.Empty;
@@ -520,7 +517,6 @@ public partial class AutoTranslateViewModel : ObservableObject
         Se.Settings.AutoTranslate.GoogleApiV2Key = Configuration.Settings.Tools.GoogleApiV2Key;
 
         Se.Settings.AutoTranslate.MicrosoftTranslatorApiKey = Configuration.Settings.Tools.MicrosoftTranslatorApiKey;
-        Se.Settings.AutoTranslate.MicrosoftBingApiId = Configuration.Settings.Tools.MicrosoftBingApiId;
         Se.Settings.AutoTranslate.MicrosoftTranslatorCategory = Configuration.Settings.Tools.MicrosoftTranslatorCategory;
         Se.Settings.AutoTranslate.MicrosoftTranslatorTokenEndpoint = Configuration.Settings.Tools.MicrosoftTranslatorTokenEndpoint;
 
@@ -538,7 +534,6 @@ public partial class AutoTranslateViewModel : ObservableObject
 
         Se.Settings.AutoTranslate.NllbApiUrl = Configuration.Settings.Tools.AutoTranslateNllbApiUrl;
         Se.Settings.AutoTranslate.NllbServeUrl = Configuration.Settings.Tools.AutoTranslateNllbServeUrl;
-        Se.Settings.AutoTranslate.NllbServeModel = Configuration.Settings.Tools.AutoTranslateNllbServeModel;
 
         Se.Settings.AutoTranslate.DeepSeekApiKey = Configuration.Settings.Tools.DeepSeekApiKey;
         Se.Settings.AutoTranslate.DeepSeekUrl = Configuration.Settings.Tools.DeepSeekUrl;
@@ -919,7 +914,6 @@ public partial class AutoTranslateViewModel : ObservableObject
         }
 
         Se.Settings.AutoTranslate.LlamaCppModel = LlamaCppServerManager.GetModelPath(value.Model.FileName);
-        Configuration.Settings.Tools.LlamaCppModel = Se.Settings.AutoTranslate.LlamaCppModel;
     }
 
     // "Download" when the selected model is not on disk, "Re-download" when it is.
@@ -1350,8 +1344,8 @@ public partial class AutoTranslateViewModel : ObservableObject
             return false;
         }
 
-        Configuration.Settings.Tools.GoogleTranslateLastSourceLanguage = sourceLanguage.TwoLetterIsoLanguageName;
-        Configuration.Settings.Tools.GoogleTranslateLastTargetLanguage = targetLanguage.TwoLetterIsoLanguageName;
+        Se.Settings.AutoTranslate.AutoTranslateLastSource = sourceLanguage.TwoLetterIsoLanguageName;
+        Se.Settings.AutoTranslate.AutoTranslateLastTarget = targetLanguage.TwoLetterIsoLanguageName;
 
         // do translation in background
 #pragma warning disable CS4014
@@ -1946,7 +1940,7 @@ public partial class AutoTranslateViewModel : ObservableObject
                 Se.Settings.AutoTranslate.OllamaUrl.TrimEnd('/'),
             });
 
-            _apiModels = Configuration.Settings.Tools.OllamaModels.Split(',').ToList();
+            _apiModels = Se.Settings.AutoTranslate.OllamaModels.Split(',').ToList();
             ModelIsVisible = true;
             ButtonModelIsVisible = true;
             ModelText = Se.Settings.AutoTranslate.OllamaModel;
@@ -2158,11 +2152,11 @@ public partial class AutoTranslateViewModel : ObservableObject
             defaultSourceLanguageCode = LanguageAutoDetect.AutoDetectGoogleLanguage(subtitle); // Guess language based on subtitle contents
         }
 
-        if (!string.IsNullOrEmpty(Configuration.Settings.Tools.GoogleTranslateLastSourceLanguage) &&
-            Configuration.Settings.Tools.GoogleTranslateLastSourceLanguage.StartsWith(defaultSourceLanguageCode) &&
-            sourceLanguages.Any(p => p.Code == Configuration.Settings.Tools.GoogleTranslateLastSourceLanguage))
+        if (!string.IsNullOrEmpty(Se.Settings.AutoTranslate.AutoTranslateLastSource) &&
+            Se.Settings.AutoTranslate.AutoTranslateLastSource.StartsWith(defaultSourceLanguageCode) &&
+            sourceLanguages.Any(p => p.Code == Se.Settings.AutoTranslate.AutoTranslateLastSource))
         {
-            return Configuration.Settings.Tools.GoogleTranslateLastSourceLanguage;
+            return Se.Settings.AutoTranslate.AutoTranslateLastSource;
         }
 
         return defaultSourceLanguageCode;
@@ -2184,7 +2178,7 @@ public partial class AutoTranslateViewModel : ObservableObject
             }
         }
 
-        var uiCultureTargetLanguage = Configuration.Settings.Tools.GoogleTranslateLastTargetLanguage;
+        var uiCultureTargetLanguage = Se.Settings.AutoTranslate.AutoTranslateLastTarget;
         if (uiCultureTargetLanguage == sourceLanguage && installedLanguages.Count > 0 && installedLanguages[0] != sourceLanguage)
         {
             return installedLanguages[0];

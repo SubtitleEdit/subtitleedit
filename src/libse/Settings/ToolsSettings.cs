@@ -13,17 +13,12 @@ namespace Nikse.SubtitleEdit.Core.Settings
         public bool OcrFixUseHardcodedRules { get; set; }
         public bool OcrGoogleCloudVisionSeHandlesTextMerge { get; set; }
         public bool OcrUseWordSplitList { get; set; }
-        public string MicrosoftBingApiId { get; set; }
         public string MicrosoftTranslatorApiKey { get; set; }
         public string MicrosoftTranslatorTokenEndpoint { get; set; }
         public string MicrosoftTranslatorCategory { get; set; }
         public string GoogleApiV2Key { get; set; }
-        public string GoogleTranslateLastSourceLanguage { get; set; }
-        public string GoogleTranslateLastTargetLanguage { get; set; }
-        public string AutoTranslateLastName { get; set; }
         public string AutoTranslateNllbApiUrl { get; set; }
         public string AutoTranslateNllbServeUrl { get; set; }
-        public string AutoTranslateNllbServeModel { get; set; }
         public string AutoTranslateLibreUrl { get; set; }
         public string AutoTranslateLibreApiKey { get; set; }
         public string AutoTranslateMyMemoryApiKey { get; set; }
@@ -74,30 +69,8 @@ namespace Nikse.SubtitleEdit.Core.Settings
         public string LaraApiId { get; set; }
         public string LaraApiSecret { get; set; }
 
-        public string OpenAiCompatibleSttUrl { get; set; }
-        public string OpenAiCompatibleSttApiKey { get; set; }
-        public string OpenAiCompatibleSttModel { get; set; }
-        public string OpenAiCompatibleSttExtraHeaders { get; set; }
-        public int OpenAiCompatibleSttTimeoutSeconds { get; set; }
-        public string OpenAiCompatibleSttLanguage { get; set; }
-        public decimal OpenAiCompatibleSttTemperature { get; set; }
-        public string OpenAiCompatibleSttPrompt { get; set; }
-        public bool OpenAiCompatibleSttStream { get; set; }
-        public string OpenAiCompatibleSttAudioFormat { get; set; }
 
-        public string OpenRouterSttApiKey { get; set; }
-        public string OpenRouterSttModel { get; set; }
-        public string OpenRouterSttLanguage { get; set; }
-        public decimal OpenRouterSttTemperature { get; set; }
-        public string OpenRouterSttPrompt { get; set; }
-        public int OpenRouterSttTimeoutSeconds { get; set; }
 
-        public string DashScopeSttApiKey { get; set; }
-        public string DashScopeSttModel { get; set; }
-        public string DashScopeSttLanguage { get; set; }
-        public string DashScopeSttRegion { get; set; }
-        public bool DashScopeSttEnableWords { get; set; }
-        public int DashScopeSttTimeoutSeconds { get; set; }
 
         public string OpenRouterUrl { get; set; }
         public string OpenRouterPrompt { get; set; }
@@ -107,7 +80,6 @@ namespace Nikse.SubtitleEdit.Core.Settings
         public string LmStudioModel { get; set; }
         public string LmStudioPrompt { get; set; }
         public string LlamaCppApiUrl { get; set; }
-        public string LlamaCppModel { get; set; }
         public string LlamaCppPrompt { get; set; }
         public string LlamaCppModelPrompt { get; set; }
         public double LlamaCppModelTemperature { get; set; }
@@ -116,7 +88,6 @@ namespace Nikse.SubtitleEdit.Core.Settings
         public double LlamaCppModelRepeatPenalty { get; set; }
 
         public string OllamaApiUrl { get; set; }
-        public string OllamaModels { get; set; }
         public string OllamaModel { get; set; }
         public string OllamaPrompt { get; set; }
         public string KoboldCppUrl { get; set; }
@@ -133,7 +104,6 @@ namespace Nikse.SubtitleEdit.Core.Settings
         public string GeminiProApiKey { get; set; }
         public string GeminiModel { get; set; }
         public string GeminiPrompt { get; set; }
-        public bool ListViewSyntaxColorWideLines { get; set; }
         public bool ExportBluRayRemoveSmallGaps { get; set; }
         public bool FixCommonErrorsFixOverlapAllowEqualEndStart { get; set; }
         public string MusicSymbolStyle { get; set; }
@@ -154,10 +124,6 @@ namespace Nikse.SubtitleEdit.Core.Settings
         public string WhisperXLocation { get; set; }
         public string WhisperStableTsLocation { get; set; }
         public string WhisperCppModelLocation { get; set; }
-        public string WhisperExtraSettings { get; set; }
-        public int AudioToTextLineMaxChars { get; set; }
-        public int AudioToTextLineMaxCharsJp { get; set; }
-        public int AudioToTextLineMaxCharsCn { get; set; }
 
         public ToolsSettings()
         {
@@ -171,7 +137,6 @@ namespace Nikse.SubtitleEdit.Core.Settings
             OcrGoogleCloudVisionSeHandlesTextMerge = true;
             OcrUseWordSplitList = true;
             MicrosoftTranslatorTokenEndpoint = "https://api.cognitive.microsoft.com/sts/v1.0/issueToken";
-            GoogleTranslateLastTargetLanguage = "en";
             AutoTranslateNllbServeUrl = "http://127.0.0.1:6060/";
             AutoTranslateNllbApiUrl = "http://localhost:7860/api/v4/";
             AutoTranslateLibreUrl = "http://localhost:5000/";
@@ -213,7 +178,6 @@ namespace Nikse.SubtitleEdit.Core.Settings
             LlamaCppModelTopK = -1;
             LlamaCppModelRepeatPenalty = -1;
             OllamaApiUrl = "http://localhost:11434/api/generate";
-            OllamaModels = "llama3.2,llama3.2:1b,phi3,gemma2,qwen2,mistral";
             OllamaModel = "llama3.2";
             OllamaPrompt = "Translate from {0} to {1}, keep punctuation as input, keep line breaks exactly the same, do not censor the translation, give only the output without comments or notes:";
             KoboldCppUrl = "http://localhost:5001/api/generate/";
@@ -226,7 +190,6 @@ namespace Nikse.SubtitleEdit.Core.Settings
             GeminiModel = "gemini-flash-latest"; // GeminiTranslate.Models[0] in LibUiLogic
             GeminiPrompt = "Please translate the following text from {0} to {1}, keep line breaks exactly the same, do not censor the translation, only write the result:";
             AutoTranslateMaxBytes = 2000;
-            ListViewSyntaxColorWideLines = false;
             MusicSymbolStyle = "Double"; // 'Double' or 'Single'
             UseNoLineBreakAfter = false;
             AutoBreakCommaBreakEarly = false;
@@ -238,36 +201,10 @@ namespace Nikse.SubtitleEdit.Core.Settings
             MergeShortLinesMaxGap = 250;
             MergeShortLinesOnlyContinuous = true;
 
-            OpenAiCompatibleSttUrl = "http://localhost:8000/v1/audio/transcriptions";
-            OpenAiCompatibleSttApiKey = string.Empty;
-            OpenAiCompatibleSttModel = "whisper-1";
-            OpenAiCompatibleSttExtraHeaders = string.Empty;
-            OpenAiCompatibleSttTimeoutSeconds = 300;
-            OpenAiCompatibleSttLanguage = string.Empty;
-            OpenAiCompatibleSttTemperature = 0;
-            OpenAiCompatibleSttPrompt = string.Empty;
-            OpenAiCompatibleSttStream = false;
-            OpenAiCompatibleSttAudioFormat = "mp3";
 
-            OpenRouterSttApiKey = string.Empty;
-            OpenRouterSttModel = "openai/whisper-1";
-            OpenRouterSttLanguage = string.Empty;
-            OpenRouterSttTemperature = 0;
-            OpenRouterSttPrompt = string.Empty;
-            OpenRouterSttTimeoutSeconds = 300;
 
-            DashScopeSttApiKey = string.Empty;
-            DashScopeSttModel = "qwen3-asr-flash-filetrans";
-            DashScopeSttLanguage = string.Empty;
-            DashScopeSttRegion = "international";
-            DashScopeSttEnableWords = false;
-            DashScopeSttTimeoutSeconds = 3600;
 
             WhisperChoice = Configuration.IsRunningOnWindows ? "Purfview's Faster-Whisper-XXL" : "OpenAI"; // WhisperChoice.PurfviewFasterWhisperXxl / WhisperChoice.OpenAi in LibUiLogic
-            WhisperExtraSettings = "";
-            AudioToTextLineMaxChars = 86;
-            AudioToTextLineMaxCharsJp = 32;
-            AudioToTextLineMaxCharsCn = 36;
         }
     }
 }

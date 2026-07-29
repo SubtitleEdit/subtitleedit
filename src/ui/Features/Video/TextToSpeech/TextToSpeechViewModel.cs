@@ -1986,7 +1986,7 @@ public partial class TextToSpeechViewModel : ObservableObject
                 videoFileName,
                 -1,
                 tempWaveFileName,
-                Configuration.Settings.General.VlcWaveTranscodeSettings,
+                "acodec=s16l",
                 out _))
             {
                 process.Start();

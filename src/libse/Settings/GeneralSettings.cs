@@ -46,21 +46,14 @@ namespace Nikse.SubtitleEdit.Core.Settings
         public bool FixContinuationStyleUncheckInsertsLowercase { get; set; }
         public bool FixContinuationStyleHideContinuationCandidatesWithoutName { get; set; }
         public bool FixContinuationStyleIgnoreLyrics { get; set; }
-        public string VideoPlayerPreviewFontName { get; set; }
-        public int VideoPlayerPreviewFontSize { get; set; }
-        public bool VideoPlayerPreviewFontBold { get; set; }
         public string UppercaseLetters { get; set; }
 
-        public string VlcWaveTranscodeSettings { get; set; }
-        public bool UseFFmpegForWaveExtraction { get; set; }
-        public bool FFmpegUseCenterChannelOnly { get; set; }
         public string FFmpegLocation { get; set; }
         public bool UseTimeFormatHHMMSSFF { get; set; }
         public bool SplitRemovesDashes { get; set; }
         public int NewEmptyDefaultMs { get; set; }
         public bool RightToLeftMode { get; set; }
         public bool CurrentVideoIsSmpte { get; set; }
-        public bool TitleBarFullFileName { get; set; } // Show full file name with path or just file name
         public bool UseLegacyDownloader { get; set; }
         public string DefaultLanguages { get; set; }
 
@@ -102,23 +95,13 @@ namespace Nikse.SubtitleEdit.Core.Settings
             FixContinuationStyleUncheckInsertsLowercase = true;
             FixContinuationStyleHideContinuationCandidatesWithoutName = true;
             FixContinuationStyleIgnoreLyrics = true;
-            VideoPlayerPreviewFontName = "Tahoma";
-            VideoPlayerPreviewFontSize = 12;
-            VideoPlayerPreviewFontBold = true;
             UppercaseLetters = "ABCDEFGHIJKLMNOPQRSTUVWZYXÆØÃÅÄÖÉÈÁÂÀÇÊÍÓÔÕÚŁАБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯĞİŞÜÙÁÌÑÎΑΒΓΔΕΖΗΘΙΚΛΜΝΞΟΠΡΣΤΥΦΧΨΩ";
-            VlcWaveTranscodeSettings = "acodec=s16l"; // "acodec=s16l,channels=1,ab=64,samplerate=8000";
             UseTimeFormatHHMMSSFF = false;
             SplitRemovesDashes = true;
             RightToLeftMode = false;
             NewEmptyDefaultMs = 2000;
             DialogStyle = DialogType.DashBothLinesWithSpace;
             ContinuationStyle = ContinuationStyle.None;
-
-            if (Configuration.IsRunningOnLinux)
-            {
-                VideoPlayerPreviewFontName = Configuration.DefaultLinuxFontName;
-            }
-
         }
     }
 }

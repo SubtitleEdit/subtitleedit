@@ -9159,7 +9159,7 @@ public partial class MainViewModel :
                         {
                             var tempWaveFileName = Path.Combine(Path.GetTempPath(), $"{Guid.NewGuid()}.wav");
                             var process = WaveFileExtractor.GetCommandLineProcess(_videoFileName, _audioTrack?.FfIndex ?? -1, tempWaveFileName,
-                                Configuration.Settings.General.VlcWaveTranscodeSettings, out _);
+                                "acodec=s16l", out _);
 #pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
                             Task.Run(async () =>
                             {
@@ -18651,7 +18651,7 @@ public partial class MainViewModel :
 
         var tempWaveFileName = Path.Combine(Path.GetTempPath(), $"{Guid.NewGuid()}.wav");
         var process = WaveFileExtractor.GetCommandLineProcess(videoFileName, trackNumber, tempWaveFileName,
-            Configuration.Settings.General.VlcWaveTranscodeSettings, out _);
+            "acodec=s16l", out _);
 #pragma warning disable CS4014 // fire-and-forget; extraction posts results back to the UI thread
         Task.Run(async () => { await ExtractWaveformAndSpectrogramAndShotChanges(process, tempWaveFileName, peakWaveFileName, spectrogramFileName, videoFileName); });
 #pragma warning restore CS4014
@@ -22578,9 +22578,7 @@ public partial class MainViewModel :
         var text = Se.Language.General.Untitled;
         if (!string.IsNullOrEmpty(_subtitleFileName))
         {
-            text = Configuration.Settings.General.TitleBarFullFileName
-                ? _subtitleFileName
-                : Path.GetFileName(_subtitleFileName);
+            text = Path.GetFileName(_subtitleFileName);
         }
 
         if (ShowColumnOriginalText)
@@ -22598,9 +22596,7 @@ public partial class MainViewModel :
             }
             else
             {
-                text += Configuration.Settings.General.TitleBarFullFileName
-                    ? _subtitleFileNameOriginal
-                    : Path.GetFileName(_subtitleFileNameOriginal);
+                text += Path.GetFileName(_subtitleFileNameOriginal);
             }
         }
 

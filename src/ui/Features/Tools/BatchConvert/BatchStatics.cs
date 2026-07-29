@@ -120,17 +120,14 @@ public static class BatchStatics
                         aboveMaximumLineLengthCount++;
                     }
 
-                    if (Configuration.Settings.Tools.ListViewSyntaxColorWideLines)
-                    {
-                        var w = GetSingleLineWidth(line);
-                        minimumSingleLineWidth = Math.Min(w, minimumSingleLineWidth);
-                        maximumSingleLineWidth = Math.Max(w, maximumSingleLineWidth);
-                        totalSingleLineWidth += w;
+                    var w = GetSingleLineWidth(line);
+                    minimumSingleLineWidth = Math.Min(w, minimumSingleLineWidth);
+                    maximumSingleLineWidth = Math.Max(w, maximumSingleLineWidth);
+                    totalSingleLineWidth += w;
 
-                        if (w > Configuration.Settings.General.SubtitleLineMaximumPixelWidth)
-                        {
-                            aboveMaximumLineWidthCount++;
-                        }
+                    if (w > Configuration.Settings.General.SubtitleLineMaximumPixelWidth)
+                    {
+                        aboveMaximumLineWidthCount++;
                     }
 
                     totalSingleLines++;
@@ -194,16 +191,13 @@ public static class BatchStatics
             ((double)aboveMaximumLineLengthCount / totalNumberOfLines) * 100.0));
         sb.AppendLine();
 
-        if (Configuration.Settings.Tools.ListViewSyntaxColorWideLines)
-        {
-            sb.AppendLine(string.Format(l.SingleLineWidthMinimum, minimumSingleLineWidth));
-            sb.AppendLine(string.Format(l.SingleLineWidthMaximum, maximumSingleLineWidth));
-            sb.AppendLine(string.Format(l.SingleLineWidthAverage, (double)totalSingleLineWidth / totalSingleLines));
-            sb.AppendLine();
-            sb.AppendLine(string.Format(l.SingleLineWidthExceedingMaximum, Configuration.Settings.General.SubtitleLineMaximumPixelWidth, aboveMaximumLineWidthCount,
-                ((double)aboveMaximumLineWidthCount / totalNumberOfLines) * 100.0));
-            sb.AppendLine();
-        }
+        sb.AppendLine(string.Format(l.SingleLineWidthMinimum, minimumSingleLineWidth));
+        sb.AppendLine(string.Format(l.SingleLineWidthMaximum, maximumSingleLineWidth));
+        sb.AppendLine(string.Format(l.SingleLineWidthAverage, (double)totalSingleLineWidth / totalSingleLines));
+        sb.AppendLine();
+        sb.AppendLine(string.Format(l.SingleLineWidthExceedingMaximum, Configuration.Settings.General.SubtitleLineMaximumPixelWidth, aboveMaximumLineWidthCount,
+            ((double)aboveMaximumLineWidthCount / totalNumberOfLines) * 100.0));
+        sb.AppendLine();
 
         sb.AppendLine(string.Format(l.DurationMinimum, minimumDuration / TimeCode.BaseUnit));
         sb.AppendLine(string.Format(l.DurationMaximum, maximumDuration / TimeCode.BaseUnit));

@@ -25,7 +25,6 @@ public static class FfmpegHelper
             return true;
         }
 
-        Configuration.Settings.General.UseFFmpegForWaveExtraction = true;
 
         if (File.Exists(Se.Settings.General.FfmpegPath))
         {

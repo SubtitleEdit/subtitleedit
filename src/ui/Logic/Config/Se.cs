@@ -605,34 +605,10 @@ public class Se
         Configuration.Settings.Tools.WhisperXLocation = stt.WhisperXLocation;
         Configuration.Settings.Tools.WhisperStableTsLocation = stt.WhisperStableTsLocation;
         Configuration.Settings.Tools.WhisperCppModelLocation = stt.WhisperCppModelLocation;
-        Configuration.Settings.Tools.WhisperExtraSettings = stt.WhisperCustomCommandLineArguments;
 
-        Configuration.Settings.Tools.OpenAiCompatibleSttUrl = Settings.Tools.OpenAiCompatibleSttUrl;
-        Configuration.Settings.Tools.OpenAiCompatibleSttApiKey = Settings.Tools.OpenAiCompatibleSttApiKey;
-        Configuration.Settings.Tools.OpenAiCompatibleSttModel = Settings.Tools.OpenAiCompatibleSttModel;
-        Configuration.Settings.Tools.OpenAiCompatibleSttExtraHeaders = Settings.Tools.OpenAiCompatibleSttExtraHeaders;
-        Configuration.Settings.Tools.OpenAiCompatibleSttTimeoutSeconds = Settings.Tools.OpenAiCompatibleSttTimeoutSeconds;
-        Configuration.Settings.Tools.OpenAiCompatibleSttLanguage = Settings.Tools.OpenAiCompatibleSttLanguage;
-        Configuration.Settings.Tools.OpenAiCompatibleSttTemperature = Settings.Tools.OpenAiCompatibleSttTemperature;
-        Configuration.Settings.Tools.OpenAiCompatibleSttPrompt = Settings.Tools.OpenAiCompatibleSttPrompt;
-        Configuration.Settings.Tools.OpenAiCompatibleSttStream = Settings.Tools.OpenAiCompatibleSttStream;
-        Configuration.Settings.Tools.OpenAiCompatibleSttAudioFormat = Settings.Tools.OpenAiCompatibleSttAudioFormat;
 
-        Configuration.Settings.Tools.OpenRouterSttApiKey = Settings.Tools.OpenRouterSttApiKey;
-        Configuration.Settings.Tools.OpenRouterSttModel = Settings.Tools.OpenRouterSttModel;
-        Configuration.Settings.Tools.OpenRouterSttLanguage = Settings.Tools.OpenRouterSttLanguage;
-        Configuration.Settings.Tools.OpenRouterSttTemperature = Settings.Tools.OpenRouterSttTemperature;
-        Configuration.Settings.Tools.OpenRouterSttPrompt = Settings.Tools.OpenRouterSttPrompt;
-        Configuration.Settings.Tools.OpenRouterSttTimeoutSeconds = Settings.Tools.OpenRouterSttTimeoutSeconds;
 
-        Configuration.Settings.Tools.DashScopeSttApiKey = Settings.Tools.DashScopeSttApiKey;
-        Configuration.Settings.Tools.DashScopeSttModel = Settings.Tools.DashScopeSttModel;
-        Configuration.Settings.Tools.DashScopeSttLanguage = Settings.Tools.DashScopeSttLanguage;
-        Configuration.Settings.Tools.DashScopeSttRegion = Settings.Tools.DashScopeSttRegion;
-        Configuration.Settings.Tools.DashScopeSttEnableWords = Settings.Tools.DashScopeSttEnableWords;
-        Configuration.Settings.Tools.DashScopeSttTimeoutSeconds = Settings.Tools.DashScopeSttTimeoutSeconds;
 
-        Configuration.Settings.Tools.AutoTranslateLastName = Settings.AutoTranslate.AutoTranslateLastName;
         Configuration.Settings.Tools.AutoTranslateDelaySeconds = (int)Math.Round(Settings.AutoTranslate.RequestDelaySeconds, MidpointRounding.AwayFromZero);
 
         // BeautifyTimeCodes profile: skip apply on a fresh install so libse's built-in

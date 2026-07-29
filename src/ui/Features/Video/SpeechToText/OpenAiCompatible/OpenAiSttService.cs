@@ -669,7 +669,7 @@ public class OpenAiSttService : ISttTranscriber
 
     public static OpenAiCompatibleSettings GetSettingsFromConfiguration()
     {
-        var settings = Configuration.Settings.Tools;
+        var settings = Se.Settings.Tools;
         return new OpenAiCompatibleSettings
         {
             EndpointUrl = settings.OpenAiCompatibleSttUrl,
