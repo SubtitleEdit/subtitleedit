@@ -94,6 +94,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     new AdobeEncoreWithLineNumbersNtsc(),
                     new AdvancedSubStationAlpha(),
                     new AQTitle(),
+                    new AudacityLabels(),
                     new AvidCaption(),
                     new AvidCaptionDropFrame(),
                     new AvidDvd(),
@@ -766,7 +767,6 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 new JsonArchtime(),
                 new Rdf1(),
                 new CombinedXml(),
-                new AudacityLabels(),
                 new Fte(),
                 new ClqttJson(),
             };
