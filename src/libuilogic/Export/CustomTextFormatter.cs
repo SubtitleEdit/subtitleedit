@@ -385,13 +385,14 @@ public static partial class CustomTextFormatter
         var actorUppercaseBracketsSpace = string.IsNullOrEmpty(actor) ? string.Empty : $"[{actor.ToUpperInvariant()}] ";
         s = PreBeginCurly(s, replaceStart);
         s = PreEndCurly(s, replaceEnd);
+        var textLengthNoLineBreaks = p.Text.RemoveChar('\r', '\n').Length;
         s = string.Format(s, start, end, text, originalText, number + 1, number, d, actor, line1, line2,
                           cps.ToString(CultureInfo.InvariantCulture).Replace(".", ","),
                           cps.ToString(CultureInfo.InvariantCulture),
                           text.Length,
-                          p.Text.RemoveChar('\r', '\n').Length,
-                          p.Text.RemoveChar('\r', '\n').Length + lines.Count - 1,
-                          p.Text.RemoveChar('\r', '\n').Length + (lines.Count - 1) * 2,
+                          textLengthNoLineBreaks,
+                          textLengthNoLineBreaks + lines.Count - 1,
+                          textLengthNoLineBreaks + (lines.Count - 1) * 2,
                           gap,
                           p.Bookmark == string.Empty ? "*" : p.Bookmark,
                           string.IsNullOrEmpty(videoFileName) ? string.Empty : System.IO.Path.GetFileNameWithoutExtension(videoFileName),
@@ -417,15 +418,15 @@ public static partial class CustomTextFormatter
         return s;
     }
 
+    private static readonly string[] ReplaceCharCandidates = { "@", "¤", "%", "=", "+", "æ", "Æ", "`", "*", ";" };
+
     private static string GetReplaceChar(string s)
     {
-        var chars = new List<char> { '@', '¤', '%', '=', '+', 'æ', 'Æ', '`', '*', ';' };
-
-        foreach (var c in chars)
+        foreach (var c in ReplaceCharCandidates)
         {
-            if (!s.Contains(c))
+            if (!s.Contains(c[0]))
             {
-                return c.ToString();
+                return c;
             }
         }
 
@@ -485,10 +486,12 @@ public static partial class CustomTextFormatter
 
     private static List<int> GetCurlyBeginIndexesReversed(string s)
     {
-        var matchIndices = CurlyCodePattern.Matches(s)
-            .Cast<Match>()
-            .Select(m => m.Index)
-            .ToList();
+        var matchIndices = new HashSet<int>();
+        foreach (var match in CurlyCodePattern.EnumerateMatches(s))
+        {
+            matchIndices.Add(match.Index);
+        }
+
         var list = new List<int>();
         for (var i = s.Length - 1; i >= 0; i--)
         {
@@ -504,10 +507,12 @@ public static partial class CustomTextFormatter
 
     private static List<int> GetCurlyEndIndexesReversed(string s)
     {
-        var matchIndices = CurlyCodePattern.Matches(s)
-            .Cast<Match>()
-            .Select(m => m.Index + m.Length - 1)
-            .ToList();
+        var matchIndices = new HashSet<int>();
+        foreach (var match in CurlyCodePattern.EnumerateMatches(s))
+        {
+            matchIndices.Add(match.Index + match.Length - 1);
+        }
+
         var list = new List<int>();
         for (var i = s.Length - 1; i >= 0; i--)
         {

@@ -2,6 +2,12 @@
 
 public static class UnknownWordGuesser
 {
+    // Vowel set shared by the split heuristics; SearchValues gives O(1) probes without
+    // allocating a char[] per call.
+    private static readonly System.Buffers.SearchValues<char> Vowels = System.Buffers.SearchValues.Create("aeiouæøåöüäéèêëàâîïôûùyąęół");
+
+    private static readonly string[] RestrictedLanguages = { "dan", "eng", "swe", "deu", "pol", "fra" };
+
     private static readonly Dictionary<string, string[]> LanguageAffixes = new(StringComparer.OrdinalIgnoreCase)
     {
         { "eng", new[] { "ing", "ed", "ly", "ment", "ness", "pre", "anti", "tion", "sion" } },
@@ -52,13 +58,12 @@ public static class UnknownWordGuesser
         }
 
         // Skip names (Upper Case start + mostly lowercase + relatively short)
-        if (char.IsUpper(word[0]) && word.Length < 10 && word.Skip(1).All(char.IsLower))
+        if (char.IsUpper(word[0]) && word.Length < 10 && AllLowerFromSecondChar(word))
         {
             return Enumerable.Empty<string>();
         }
 
         var results = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
-        var vowels = "aeiouæøåöüäéèêëàâîïôûùyąęół".ToCharArray();
         string lang = threeLetterIsoLanguageName.ToLower();
 
         // 1. Particle Splitting (Special case for "of", "the", etc.)
@@ -104,22 +109,34 @@ public static class UnknownWordGuesser
         // 3. Smart Phonetic Splits (skipped for closed-compounding languages - see #12200)
         if (word.Length > 7 && !CompoundingLanguages.Contains(lang))
         {
-            foreach (var split in GenerateSmartSplits(word, vowels))
+            foreach (var split in GenerateSmartSplits(word))
             {
                 results.Add(split);
             }
         }
 
-        var restrictedLanguages = new[] { "dan", "eng", "swe", "deu", "pol", "fra" };
-        if (restrictedLanguages.Contains(lang))
+        if (RestrictedLanguages.Contains(lang))
         {
-            return results.Where(s => IsValidSplitting(s, vowels)).ToList();
+            return results.Where(IsValidSplitting).ToList();
         }
 
         return results;
     }
 
-    private static IEnumerable<string> GenerateSmartSplits(string word, char[] vowels)
+    private static bool AllLowerFromSecondChar(string word)
+    {
+        for (var i = 1; i < word.Length; i++)
+        {
+            if (!char.IsLower(word[i]))
+            {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    private static IEnumerable<string> GenerateSmartSplits(string word)
     {
         var guesses = new List<string>();
         for (int i = 3; i < word.Length - 3; i++)
@@ -132,8 +149,8 @@ public static class UnknownWordGuesser
                 continue;
             }
 
-            bool isVowel = vowels.Contains(char.ToLower(word[i]));
-            bool prevIsVowel = vowels.Contains(char.ToLower(word[i - 1]));
+            bool isVowel = Vowels.Contains(char.ToLower(word[i]));
+            bool prevIsVowel = Vowels.Contains(char.ToLower(word[i - 1]));
 
             // Split between two consonants (mer-cat)
             if (!isVowel && !prevIsVowel)
@@ -149,13 +166,13 @@ public static class UnknownWordGuesser
         return guesses;
     }
 
-    private static bool IsValidSplitting(string sentence, char[] vowels)
+    private static bool IsValidSplitting(string sentence)
     {
         var parts = sentence.Split(' ', StringSplitOptions.RemoveEmptyEntries);
         foreach (var p in parts)
         {
             // Reject single-letter consonants (keep single vowels like 'a' or 'i')
-            if (p.Length == 1 && char.IsLetter(p[0]) && !vowels.Contains(char.ToLower(p[0])))
+            if (p.Length == 1 && char.IsLetter(p[0]) && !Vowels.Contains(char.ToLower(p[0])))
             {
                 return false;
             }
