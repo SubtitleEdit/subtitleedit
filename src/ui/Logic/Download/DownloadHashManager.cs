@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
-using Nikse.SubtitleEdit.Core.AudioToText;
+using Nikse.SubtitleEdit.UiLogic.AudioToText;
 using Nikse.SubtitleEdit.UiLogic;
 
 namespace Nikse.SubtitleEdit.Logic.Download;

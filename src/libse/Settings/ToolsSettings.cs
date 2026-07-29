@@ -571,7 +571,7 @@ namespace Nikse.SubtitleEdit.Core.Settings
             DashScopeSttTimeoutSeconds = 3600;
 
             VoskPostProcessing = true;
-            WhisperChoice = Configuration.IsRunningOnWindows ? AudioToText.WhisperChoice.PurfviewFasterWhisperXxl : AudioToText.WhisperChoice.OpenAi;
+            WhisperChoice = Configuration.IsRunningOnWindows ? "Purfview's Faster-Whisper-XXL" : "OpenAI"; // WhisperChoice.PurfviewFasterWhisperXxl / WhisperChoice.OpenAi in LibUiLogic
             WhisperDeleteTempFiles = true;
             WhisperPurfviewFasterWhisperDefaultCmd = "--standard --beep_off";
             WhisperExtraSettings = "";

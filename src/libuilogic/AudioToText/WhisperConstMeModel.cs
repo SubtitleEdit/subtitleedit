@@ -1,7 +1,7 @@
 ﻿using Nikse.SubtitleEdit.Core.Common;
 using System.IO;
 
-namespace Nikse.SubtitleEdit.Core.AudioToText
+namespace Nikse.SubtitleEdit.UiLogic.AudioToText
 {
     public class WhisperConstMeModel : IWhisperModel
     {
