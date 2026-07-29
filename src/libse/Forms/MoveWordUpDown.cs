@@ -77,7 +77,7 @@ namespace Nikse.SubtitleEdit.Core.Forms
                             openTags.Pop();
                         }
                     }
-                    else if (tag.StartsWith("<", StringComparison.Ordinal))
+                    else if (tag.StartsWith('<'))
                     {
                         // HTML opening tag
                         var tagName = tag.Substring(1, tag.IndexOf('>') > 1 ? tag.IndexOf('>') - 1 : tag.Length - 2).Split(' ')[0].ToLowerInvariant();
@@ -294,7 +294,7 @@ namespace Nikse.SubtitleEdit.Core.Forms
                             openTags.Pop();
                         }
                     }
-                    else if (tag.StartsWith("<", StringComparison.Ordinal)) // HTML opening
+                    else if (tag.StartsWith('<')) // HTML opening
                     {
                         var tagName = tag.Substring(1, tag.IndexOf('>') > 1 ? tag.IndexOf('>') - 1 : tag.Length - 2).Split(' ')[0].ToLowerInvariant();
                         var closingTag = $"</{tagName}>";

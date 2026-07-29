@@ -1679,8 +1679,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                         preTags.Append(s2.Substring(0, 2));
                         s2 = s2.Remove(0, 2);
                     }
-                    if (s2.StartsWith("♪", StringComparison.Ordinal) ||
-                        s2.StartsWith("♫", StringComparison.Ordinal))
+                    if (s2.StartsWith('♪') || s2.StartsWith('♫'))
                     {
                         preTags.Append(s2.Substring(0, 1));
                         s2 = s2.Remove(0, 1);
@@ -1706,8 +1705,8 @@ namespace Nikse.SubtitleEdit.Core.Common
                         postTags = s2.Substring(s2.Length - 2) + postTags;
                         s2 = s2.Remove(s2.Length - 2);
                     }
-                    if (s2.EndsWith("♪", StringComparison.Ordinal) ||
-                        s2.EndsWith("♫", StringComparison.Ordinal))
+                    if (s2.EndsWith('♪') ||
+                        s2.EndsWith('♫'))
                     {
                         postTags = s2.Substring(s2.Length - 1) + postTags;
                         s2 = s2.Remove(s2.Length - 1);

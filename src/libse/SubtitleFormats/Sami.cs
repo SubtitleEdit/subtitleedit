@@ -520,7 +520,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             int maxLoop = 10;
             while (indexOfDiv > 0 && maxLoop >= 0)
             {
-                int indexOfStartEnd = text.IndexOf(">", indexOfDiv + 1, StringComparison.Ordinal);
+                int indexOfStartEnd = text.IndexOf('>', indexOfDiv + 1);
                 if (indexOfStartEnd > 0)
                 {
                     text = text.Remove(indexOfDiv, indexOfStartEnd - indexOfDiv + 1);
