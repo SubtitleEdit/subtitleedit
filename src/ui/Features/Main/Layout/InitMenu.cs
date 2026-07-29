@@ -912,6 +912,11 @@ public static class InitMenu
             },
             new MenuItem
             {
+                Header = l.AssaFontCollector,
+                Command = vm.ShowAssaFontCollectorCommand,
+            },
+            new MenuItem
+            {
                 Header = l.AssaProperties,
                 Command = vm.ShowAssaPropertiesCommand,
             },

@@ -293,6 +293,7 @@ public static class DependencyInjectionExtensions
         collection.AddTransient<AssaImageColorPickerViewModel>();
         collection.AddTransient<AssaProgressBarViewModel>();
         collection.AddTransient<AssaPropertiesViewModel>();
+        collection.AddTransient<Features.Assa.FontCollector.FontCollectorViewModel>();
         collection.AddTransient<AssaResolutionResamplerViewModel>();
         collection.AddTransient<AssaSetPositionViewModel>();
         collection.AddTransient<AssaSingleStyleViewModel>();
