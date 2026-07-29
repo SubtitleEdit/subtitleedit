@@ -1407,6 +1407,20 @@ public partial class MainViewModel :
     }
 
     [RelayCommand]
+    private async Task ShowAssaFontCollector()
+    {
+        if (Window == null || !IsFormatAssa)
+        {
+            return;
+        }
+
+        await ShowDialogAsync<Features.Assa.FontCollector.FontCollectorWindow, Features.Assa.FontCollector.FontCollectorViewModel>(vm =>
+        {
+            vm.Initialize(GetUpdateSubtitle());
+        });
+    }
+
+    [RelayCommand]
     private async Task ShowAssaProperties()
     {
         if (Window == null || !IsFormatAssa)

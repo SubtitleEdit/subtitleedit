@@ -81,6 +81,7 @@ public class LanguageMainMenu
     public string AssaStyles { get; set; }
     public string AssaProperties { get; set; }
     public string AssaAttachments { get; set; }
+    public string AssaFontCollector { get; set; }
 
 
     public string SpellCheckTitle { get; set; }
@@ -220,6 +221,7 @@ public class LanguageMainMenu
         AssaStyles = "S_tyles...";
         AssaProperties = "P_roperties...";
         AssaAttachments = "_Attachments...";
+        AssaFontCollector = "_Font collector...";
 
         SpellCheckTitle = "_Spell check";
         FindDoubleWords = "_Find double words...";
