@@ -93,23 +93,37 @@ public static class UiUtil
 
     private static ControlTheme GetTableViewColumnHeaderTheme()
     {
-        var showVertical =
-            Se.Settings.Appearance.GridLinesAppearance == nameof(DataGridGridLinesVisibility.Vertical) ||
-            Se.Settings.Appearance.GridLinesAppearance == nameof(DataGridGridLinesVisibility.All);
-
         return new ControlTheme(typeof(TableViewColumnHeader))
         {
             Setters =
             {
-                new Setter(TableViewColumnHeader.BackgroundProperty, Brushes.Transparent),
+                // Match the DataGrid header background: the Fluent DataGrid resource by
+                // default; SE's custom themes (lighter dark, classic gray, pastel) override
+                // both header types with the same brush via app styles in UiTheme.
+                new Setter(TableViewColumnHeader.BackgroundProperty, GetDataGridHeaderBackgroundBrush()),
                 new Setter(TableViewColumnHeader.PaddingProperty, new Thickness(4, 2, 4, 4)),
                 new Setter(TableViewColumnHeader.BorderBrushProperty, GetBorderBrush()),
-                // The bottom line always shows: it separates the header from the first row the way
-                // DataGrid's header does, independently of the horizontal grid-line setting.
-                new Setter(TableViewColumnHeader.BorderThicknessProperty, new Thickness(0, 0, showVertical ? 1 : 0, 1)),
+                // Both header lines always show, independently of the grid-lines setting: the
+                // bottom line separates the header from the first row and the right line
+                // separates the column headers from each other, the way DataGrid's header
+                // (with its always-on separators) does.
+                new Setter(TableViewColumnHeader.BorderThicknessProperty, new Thickness(0, 0, 1, 1)),
                 new Setter(TableViewColumnHeader.TemplateProperty, TableViewColumnHeaderTemplate),
             }
         };
+    }
+
+    private static IBrush GetDataGridHeaderBackgroundBrush()
+    {
+        if (Application.Current != null &&
+            Application.Current.TryGetResource("DataGridColumnHeaderBackgroundBrush",
+                Application.Current.ActualThemeVariant, out var resource) &&
+            resource is IBrush brush)
+        {
+            return brush;
+        }
+
+        return Brushes.Transparent;
     }
 
     // Mirrors the built-in header template (content + resize thumb) but routes the border
