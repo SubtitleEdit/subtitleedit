@@ -21457,6 +21457,12 @@ namespace Nikse.SubtitleEdit.Forms
                 toolStripButtonGetFrameRate.Visible = Configuration.Settings.General.ShowFrameRate;
             }
 
+            if (!timeUpDownVideoPosition.MaskedTextBox.Focused && !timeUpDownVideoPositionAdjust.MaskedTextBox.Focused)
+            {
+                timeUpDownVideoPosition.TimeCode = timeUpDownVideoPosition.TimeCode;
+                timeUpDownVideoPositionAdjust.TimeCode = timeUpDownVideoPositionAdjust.TimeCode;
+            }
+
             SaveSubtitleListviewIndices();
             SubtitleListview1.Fill(_subtitle, _subtitleOriginal);
             RestoreSubtitleListviewIndices();
