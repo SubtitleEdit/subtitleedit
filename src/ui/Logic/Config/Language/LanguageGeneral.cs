@@ -117,6 +117,7 @@ public class LanguageGeneral
     public string ConvertingXofYDotDoDot { get; set; }
     public string Copy { get; set; }
     public string CopyImageToClipboard { get; set; }
+    public string CopySubtitleText { get; set; }
     public string CopyTextToClipboard { get; set; }
     public string CouldNotSaveFileXErrorY { get; set; }
     public string CouldNotOpenFileXErrorY { get; set; }
@@ -883,6 +884,7 @@ public class LanguageGeneral
         ConvertingXofYDotDoDot = "Converting {0:#,###,##0}/{1:#,###,##0}...";
         Copy = "Copy";
         CopyImageToClipboard = "Copy image to clipboard";
+        CopySubtitleText = "Copy subtitle";
         CopyTextToClipboard = "Copy text to clipboard";
         CouldNotSaveFileXErrorY = "Could not save file \"{0}\". Error: {1}";
         CouldNotOpenFileXErrorY = "Could not open file \"{0}\". Error: {1}";

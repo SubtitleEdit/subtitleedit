@@ -462,6 +462,7 @@ public partial class MainViewModel :
     public MenuItem MenuItemAudioVisualizerSpeechToTextSelectedLines { get; set; }
     public MenuItem MenuItemAudioVisualizerSpeechToTextNewSelection { get; set; }
     public MenuItem MenuItemAudioVisualizerExtractAudio { get; set; }
+    public MenuItem MenuItemAudioVisualizerCopyText { get; set; }
     public ITextBoxWrapper EditTextBoxOriginal { get; set; }
     public ITextBoxWrapper EditTextBox { get; set; }
     public StackPanel PanelSingleLineLengthsOriginal { get; set; }
@@ -569,6 +570,7 @@ public partial class MainViewModel :
         MenuItemAudioVisualizerSpeechToTextSelectedLines = new MenuItem();
         MenuItemAudioVisualizerSpeechToTextNewSelection = new MenuItem();
         MenuItemAudioVisualizerExtractAudio = new MenuItem();
+        MenuItemAudioVisualizerCopyText = new MenuItem();
         MenuItemStyles = new MenuItem();
         MenuItemActors = new MenuItem();
         AudioTraksMenuItem = new MenuItem();
@@ -5052,6 +5054,23 @@ public partial class MainViewModel :
         await ClipboardHelper.SetTextAsync(Window, sb.ToString());
 
         ShowStatus(string.Format("{0} lines copied to clipboard", selectedItems.Count));
+    }
+
+    /// <summary>
+    /// Copies the full text of the currently selected subtitle (the one shown in the edit box and
+    /// highlighted on the waveform) to the clipboard. Wired to Ctrl+C while the waveform is focused
+    /// and to the waveform context menu's "Copy subtitle" item.
+    /// </summary>
+    [RelayCommand]
+    private async Task WaveformCopyTextToClipboard()
+    {
+        var selectedSubtitle = SelectedSubtitle;
+        if (Window == null || selectedSubtitle == null)
+        {
+            return;
+        }
+
+        await ClipboardHelper.SetTextAsync(Window, selectedSubtitle.Text);
     }
 
     [RelayCommand]
@@ -23567,6 +23586,7 @@ public partial class MainViewModel :
         MenuItemAudioVisualizerSpeechToTextSelectedLines.IsVisible = false;
         MenuItemAudioVisualizerSpeechToTextNewSelection.IsVisible = false;
         MenuItemAudioVisualizerExtractAudio.IsVisible = false;
+        MenuItemAudioVisualizerCopyText.IsVisible = false;
 
         if (e.NewParagraph != null)
         {
@@ -23601,6 +23621,7 @@ public partial class MainViewModel :
         {
             MenuItemAudioVisualizerInsertBefore.IsVisible = true;
             MenuItemAudioVisualizerInsertAfter.IsVisible = true;
+            MenuItemAudioVisualizerCopyText.IsVisible = true;
             MenuItemAudioVisualizerSeparator1.IsVisible = true;
             MenuItemAudioVisualizerDelete.IsVisible = true;
             MenuItemAudioVisualizerSplit.IsVisible = true;

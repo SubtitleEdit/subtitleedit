@@ -184,6 +184,14 @@ public class InitWaveform
             flyout.Items.Add(insertAfterMenuItem);
             vm.MenuItemAudioVisualizerInsertAfter = insertAfterMenuItem;
 
+            var copyTextMenuItem = new MenuItem
+            {
+                Header = Se.Language.General.CopySubtitleText,
+                Command = vm.WaveformCopyTextToClipboardCommand,
+            };
+            flyout.Items.Add(copyTextMenuItem);
+            vm.MenuItemAudioVisualizerCopyText = copyTextMenuItem;
+
             var separator1 = new Separator();
             flyout.Items.Add(separator1);
             vm.MenuItemAudioVisualizerSeparator1 = separator1;
