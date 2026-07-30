@@ -239,6 +239,7 @@ public static class LlamaCppServerManager
     private static Process? _serverProcess;
     private static int _serverPort;
     private static string? _serverModelPath;
+    private static int _serverContextSize;
     private static bool _processExitHooked;
     private static readonly StringBuilder _serverLog = new();
 
@@ -450,10 +451,12 @@ public static class LlamaCppServerManager
     /// Starts (or reuses) a llama-server for the given model and points
     /// <see cref="Core.Settings.ToolsSettings.LlamaCppApiUrl"/> at it. Throws on failure.
     /// </summary>
-    public static async Task EnsureServerRunningAsync(LlamaCppModel model, CancellationToken cancellationToken)
+    public const int DefaultContextSize = 8192;
+
+    public static async Task EnsureServerRunningAsync(LlamaCppModel model, CancellationToken cancellationToken, int contextSize = DefaultContextSize)
     {
         var modelPath = GetModelPath(model.FileName);
-        if (IsServerRunning && _serverModelPath == modelPath)
+        if (IsServerRunning && _serverModelPath == modelPath && _serverContextSize == contextSize)
         {
             Configuration.Settings.Tools.LlamaCppApiUrl = ApiUrl;
             return;
@@ -462,7 +465,7 @@ public static class LlamaCppServerManager
         await ServerLock.WaitAsync(cancellationToken);
         try
         {
-            if (IsServerRunning && _serverModelPath == modelPath)
+            if (IsServerRunning && _serverModelPath == modelPath && _serverContextSize == contextSize)
             {
                 Configuration.Settings.Tools.LlamaCppApiUrl = ApiUrl;
                 return;
@@ -520,7 +523,25 @@ public static class LlamaCppServerManager
             psi.ArgumentList.Add("-ngl");
             psi.ArgumentList.Add("99");
             psi.ArgumentList.Add("-c");
-            psi.ArgumentList.Add("8192");
+            psi.ArgumentList.Add(contextSize.ToString(CultureInfo.InvariantCulture));
+            // SE is the server's only client, but llama-server defaults to 4 parallel slots,
+            // which silently splits -c four ways (8192 became 2048 usable tokens per request).
+            psi.ArgumentList.Add("-np");
+            psi.ArgumentList.Add("1");
+            // Keep the full KV cache for sliding-window-attention models (Gemma, Qwen 3.5);
+            // without this their prompt cache only works on byte-identical requests and
+            // cache_prompt reuse is lost entirely. Costs some KV memory at these context sizes.
+            psi.ArgumentList.Add("--swa-full");
+            if (mmprojPath == null)
+            {
+                // Chunk-level KV-cache reuse after the first diverging token; together with the
+                // clients' cache_prompt this keeps repeated prompt prefixes (system prompt,
+                // rolling context) from being re-ingested every request. Auto-disables with a
+                // warning on models whose context cannot shift. Not combined with multimodal -
+                // vision chunks cannot be shifted.
+                psi.ArgumentList.Add("--cache-reuse");
+                psi.ArgumentList.Add("256");
+            }
             if (model.NoJinja)
             {
                 psi.ArgumentList.Add("--no-jinja");
@@ -561,6 +582,7 @@ public static class LlamaCppServerManager
             _serverProcess = process;
             _serverPort = port;
             _serverModelPath = modelPath;
+            _serverContextSize = contextSize;
             HookProcessExitOnce();
 
             var deadline = DateTime.UtcNow.AddMinutes(5);

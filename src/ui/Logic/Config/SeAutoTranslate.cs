@@ -32,6 +32,12 @@ public class SeAutoTranslate
     /// (e.g. a GPU box) instead of downloading a model and managing a local server (#11584).
     /// </summary>
     public bool LlamaCppUseRemoteServer { get; set; }
+    public SeLlamaCppAdvanced LlamaCppAdvanced { get; set; } = new();
+
+    // The Ollama advanced engine uses Ollama's OpenAI-compatible endpoint, not the native
+    // /api/generate URL the classic Ollama engine stores in OllamaUrl.
+    public string OllamaAdvancedUrl { get; set; } = "http://localhost:11434/v1/chat/completions";
+    public string OllamaAdvancedModel { get; set; } = string.Empty;
     public string GroqUrl { get; set; }
     public string GroqPrompt { get; set; }
     public string GroqApiKey { get; set; }

@@ -7,6 +7,7 @@ using Avalonia.Interactivity;
 using Avalonia.Layout;
 using Avalonia.Media;
 using Nikse.SubtitleEdit.UiLogic.AutoTranslate;
+using Nikse.SubtitleEdit.Features.Translate.LlamaCppAdvanced;
 using Nikse.SubtitleEdit.Features.Video.SpeechToText;
 using Nikse.SubtitleEdit.Features.Video.SpeechToText.Engines;
 using Nikse.SubtitleEdit.Logic;
@@ -221,6 +222,7 @@ public class AutoTranslateWindow : Window
         switch (translator)
         {
             case LlamaCppTranslate:
+            case LlamaCppAdvancedTranslate:
                 return StatusDots.From(
                     LlamaCppServerManager.IsEngineInstalled(),
                     LlamaCppUpdateStatus.GetEngineUpdateStatus());
@@ -302,6 +304,15 @@ public class AutoTranslateWindow : Window
         ToolTip.SetTip(buttonLlamaCppEngineSettings, Se.Language.General.LlamaCppEngineSettings);
         buttonLlamaCppEngineSettings.Bind(Button.IsVisibleProperty, new Binding(nameof(vm.LlamaCppButtonsAreVisible)));
 
+        var buttonLlamaCppAdvancedSettings = UiUtil.MakeButton(Se.Language.Translate.AdvancedDotDotDot, vm.ShowLlamaCppAdvancedSettingsCommand)
+            .WithMarginLeft(5)
+            .WithAccessibleName(Se.Language.Translate.AdvancedSettings);
+        if (Se.Settings.Appearance.ShowHints)
+        {
+            ToolTip.SetTip(buttonLlamaCppAdvancedSettings, Se.Language.Translate.AdvancedSettings);
+        }
+        buttonLlamaCppAdvancedSettings.Bind(Button.IsVisibleProperty, new Binding(nameof(vm.LlamaCppAdvancedButtonIsVisible)));
+
         var settingsPanel = new WrapPanel
         {
             Orientation = Orientation.Horizontal,
@@ -350,6 +361,7 @@ public class AutoTranslateWindow : Window
         settingsPanel.Children.Add(buttonLlamaCppServer);
         settingsPanel.Children.Add(buttonLlamaCppOpenFolder);
         settingsPanel.Children.Add(buttonLlamaCppEngineSettings);
+        settingsPanel.Children.Add(buttonLlamaCppAdvancedSettings);
 
         var settingsButton = UiUtil.MakeButton(vm.OpenSettingsCommand, IconNames.Settings, Se.Language.General.Settings);
         settingsButton.HorizontalAlignment = HorizontalAlignment.Right;

@@ -11,6 +11,7 @@ using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using Nikse.SubtitleEdit.UiLogic.Translate;
 using Nikse.SubtitleEdit.Features.Ocr;
 using Nikse.SubtitleEdit.Features.Shared;
+using Nikse.SubtitleEdit.Features.Translate.LlamaCppAdvanced;
 using Nikse.SubtitleEdit.Features.Translate.LlamaCppEngineSettings;
 using Nikse.SubtitleEdit.Features.Video.SpeechToText;
 using Nikse.SubtitleEdit.Features.Video.SpeechToText.Engines;
@@ -101,6 +102,7 @@ public partial class AutoTranslateViewModel : ObservableObject
     [ObservableProperty] private DeepLFormalityItem? _selectedFormality;
     [ObservableProperty] private bool _formalityIsVisible;
     [ObservableProperty] private bool _llamaCppButtonsAreVisible;
+    [ObservableProperty] private bool _llamaCppAdvancedButtonIsVisible;
     [ObservableProperty] private bool _llamaCppRemoteToggleIsVisible;
     [ObservableProperty] private bool _llamaCppUseRemoteServer;
     [ObservableProperty] private string _llamaCppServerButtonText = "Start server";
@@ -152,7 +154,9 @@ public partial class AutoTranslateViewModel : ObservableObject
             new OpenAiCompatibleTranslate(),
             new LmStudioTranslate(),
             new OllamaTranslate(),
+            new OllamaAdvancedTranslate(),
             new LlamaCppTranslate(),
+            new LlamaCppAdvancedTranslate(),
             new AnthropicTranslate(),
             new GroqTranslate(),
             new OpenRouterTranslate(),
@@ -365,7 +369,7 @@ public partial class AutoTranslateViewModel : ObservableObject
             Configuration.Settings.Tools.LmStudioModel = apiModel.Trim();
         }
 
-        if (engineType == typeof(LlamaCppTranslate))
+        if (engineType == typeof(LlamaCppTranslate) || engineType == typeof(LlamaCppAdvancedTranslate))
         {
             Se.Settings.AutoTranslate.LlamaCppUseRemoteServer = LlamaCppUseRemoteServer;
             if (LlamaCppUseRemoteServer)
@@ -395,6 +399,12 @@ public partial class AutoTranslateViewModel : ObservableObject
             Configuration.Settings.Tools.OllamaModel = apiModel.Trim();
             Se.Settings.AutoTranslate.OllamaUrl = apiUrl.Trim();
             Se.Settings.AutoTranslate.OllamaModel = apiModel.Trim();
+        }
+
+        if (engineType == typeof(OllamaAdvancedTranslate))
+        {
+            Se.Settings.AutoTranslate.OllamaAdvancedUrl = apiUrl.Trim();
+            Se.Settings.AutoTranslate.OllamaAdvancedModel = apiModel.Trim();
         }
 
         if (engineType == typeof(AnthropicTranslate))
@@ -829,7 +839,7 @@ public partial class AutoTranslateViewModel : ObservableObject
         {
             await UpdateCrispAsrEngineAsync();
         }
-        else if (SelectedAutoTranslator is LlamaCppTranslate && GetLlamaCppEngineUpdate() is var (key, _))
+        else if (SelectedAutoTranslator is LlamaCppTranslate or LlamaCppAdvancedTranslate && GetLlamaCppEngineUpdate() is var (key, _))
         {
             await UpdateLlamaCppEngineAsync(key);
         }
@@ -857,6 +867,7 @@ public partial class AutoTranslateViewModel : ObservableObject
         {
             CrispAsrMadladTranslate => CrispAsrTranslateDownloadHelper.IsEngineUpdateAvailable(),
             LlamaCppTranslate => GetLlamaCppEngineUpdate() != null,
+            LlamaCppAdvancedTranslate => GetLlamaCppEngineUpdate() != null,
             _ => false,
         };
     }
@@ -994,6 +1005,23 @@ public partial class AutoTranslateViewModel : ObservableObject
         RefreshEngineUpdateButton();
     }
 
+    /// <summary>
+    /// Opens the advanced engine's batch/context/sampling settings dialog (the sub-window of the
+    /// "llama.cpp advanced" engine).
+    /// </summary>
+    [RelayCommand]
+    private async Task ShowLlamaCppAdvancedSettings()
+    {
+        if (Window == null)
+        {
+            return;
+        }
+
+        await _windowService.ShowDialogAsync<LlamaCppAdvancedSettingsWindow, LlamaCppAdvancedSettingsViewModel>(
+            Window,
+            vm => vm.Initialize());
+    }
+
     [RelayCommand]
     private async Task OpenLlamaCppModelsFolder()
     {
@@ -1054,7 +1082,12 @@ public partial class AutoTranslateViewModel : ObservableObject
 
         try
         {
-            await LlamaCppServerManager.EnsureServerRunningAsync(model, _cancellationTokenSource.Token);
+            // The advanced engine stuffs history/synopsis/glossary into every request, so it gets
+            // a user-configurable (default larger) server context; everything else keeps the default.
+            var contextSize = SelectedAutoTranslator is LlamaCppAdvancedTranslate
+                ? Math.Clamp(Se.Settings.AutoTranslate.LlamaCppAdvanced.ContextSize, 2048, 262144)
+                : LlamaCppServerManager.DefaultContextSize;
+            await LlamaCppServerManager.EnsureServerRunningAsync(model, _cancellationTokenSource.Token, contextSize);
         }
         catch (Exception ex)
         {
@@ -1286,7 +1319,7 @@ public partial class AutoTranslateViewModel : ObservableObject
 
         _cancellationTokenSource = new CancellationTokenSource();
 
-        if (engineType == typeof(LlamaCppTranslate))
+        if (engineType == typeof(LlamaCppTranslate) || engineType == typeof(LlamaCppAdvancedTranslate))
         {
             if (Se.Settings.AutoTranslate.LlamaCppUseRemoteServer)
             {
@@ -1376,6 +1409,38 @@ public partial class AutoTranslateViewModel : ObservableObject
                                       _onlyCurrentLine;
 
             var index = start;
+
+            // The advanced llama.cpp engine runs its own batch loop: numbered batches with a
+            // schema-forced JSON reply and rolling context, so MergeAndSplitHelper's merge/split
+            // heuristics are not needed (and would break the line alignment the schema guarantees).
+            // "Translate current line" still goes through the regular single-line path below.
+            if (translator is AdvancedTranslatorBase advancedTranslator && !_onlyCurrentLine)
+            {
+                while (index < Rows.Count)
+                {
+                    if (_abort || cancellationToken.IsCancellationRequested)
+                    {
+                        Dispatcher.UIThread.Invoke(() => IsTranslateEnabled = true);
+                        break;
+                    }
+
+                    var translatedCount = await advancedTranslator.TranslateBatchAsync(Rows, index, sourceLanguage.Code, targetLanguage.Code, cancellationToken);
+                    index += translatedCount;
+                    _translationProgressIndex = index;
+
+                    var advancedProgressIndex = index;
+                    Dispatcher.UIThread.Invoke(() =>
+                    {
+                        ProgressValue = (double)advancedProgressIndex * 100 / Rows.Count;
+                        ProgressText = $"{(int)ProgressValue} %";
+                        HasTranslatedSomething = true;
+                        SelectAndScrollToRow(advancedProgressIndex - 1);
+                    });
+                }
+
+                return; // the finally block below reports completion
+            }
+
             var linesTranslated = 0;
             var errorCount = 0;
             var noErrorCount = 0;
@@ -1577,6 +1642,8 @@ public partial class AutoTranslateViewModel : ObservableObject
             LmStudioTranslate => settings.LmStudioApiUrl,
             OllamaTranslate => settings.OllamaApiUrl,
             LlamaCppTranslate => settings.LlamaCppApiUrl,
+            LlamaCppAdvancedTranslate => settings.LlamaCppApiUrl,
+            OllamaAdvancedTranslate => Se.Settings.AutoTranslate.OllamaAdvancedUrl,
             AnthropicTranslate => settings.AnthropicApiUrl,
             GroqTranslate => settings.GroqUrl,
             OpenRouterTranslate => settings.OpenRouterUrl,
@@ -1678,6 +1745,7 @@ public partial class AutoTranslateViewModel : ObservableObject
         SelectedCrispAsrModel = null;
         LlamaCppModelComboIsVisible = false;
         LlamaCppButtonsAreVisible = false;
+        LlamaCppAdvancedButtonIsVisible = false;
         LlamaCppRemoteToggleIsVisible = false;
         LlamaCppModels.Clear();
         SelectedLlamaCppModel = null;
@@ -1886,11 +1954,15 @@ public partial class AutoTranslateViewModel : ObservableObject
             return;
         }
 
-        if (engineType == typeof(LlamaCppTranslate))
+        if (engineType == typeof(LlamaCppTranslate) || engineType == typeof(LlamaCppAdvancedTranslate))
         {
             // The remote toggle is always available for llama.cpp; its current value decides
             // whether we show the local model/server controls or a plain API URL field (#11584).
             LlamaCppRemoteToggleIsVisible = true;
+
+            // Batch/context/sampling options only exist on the advanced engine; they apply to
+            // local and remote servers alike.
+            LlamaCppAdvancedButtonIsVisible = engineType == typeof(LlamaCppAdvancedTranslate);
             _suppressLlamaCppRemoteToggle = true;
             LlamaCppUseRemoteServer = Se.Settings.AutoTranslate.LlamaCppUseRemoteServer;
             _suppressLlamaCppRemoteToggle = false;
@@ -1945,6 +2017,30 @@ public partial class AutoTranslateViewModel : ObservableObject
             ModelIsVisible = true;
             ButtonModelIsVisible = true;
             ModelText = Se.Settings.AutoTranslate.OllamaModel;
+
+            return;
+        }
+
+        if (engineType == typeof(OllamaAdvancedTranslate))
+        {
+            ModelBrowseIsVisible = true;
+            LlamaCppAdvancedButtonIsVisible = true;
+
+            if (string.IsNullOrEmpty(Se.Settings.AutoTranslate.OllamaAdvancedUrl))
+            {
+                Se.Settings.AutoTranslate.OllamaAdvancedUrl = "http://localhost:11434/v1/chat/completions";
+            }
+
+            FillUrls(new List<string>
+            {
+                Se.Settings.AutoTranslate.OllamaAdvancedUrl.TrimEnd('/'),
+            });
+
+            // Same installed-model list as the classic Ollama engine - only the endpoint differs.
+            _apiModels = Se.Settings.AutoTranslate.OllamaModels.Split(',').ToList();
+            ModelIsVisible = true;
+            ButtonModelIsVisible = true;
+            ModelText = Se.Settings.AutoTranslate.OllamaAdvancedModel;
 
             return;
         }
@@ -2126,7 +2222,7 @@ public partial class AutoTranslateViewModel : ObservableObject
         Se.Settings.AutoTranslate.LlamaCppUseRemoteServer = value;
 
         // Swap the llama.cpp panel between the local model/server controls and the remote URL field.
-        if (SelectedAutoTranslator is LlamaCppTranslate)
+        if (SelectedAutoTranslator is LlamaCppTranslate or LlamaCppAdvancedTranslate)
         {
             SetAutoTranslatorEngine(SelectedAutoTranslator);
         }

@@ -435,6 +435,7 @@ public static class DependencyInjectionExtensions
         collection.AddTransient<NOcrSettingsViewModel>();
         collection.AddTransient<LlamaCppOcrSettingsViewModel>();
         collection.AddTransient<LlamaCppEngineSettingsViewModel>();
+        collection.AddTransient<Features.Translate.LlamaCppAdvanced.LlamaCppAdvancedSettingsViewModel>();
         collection.AddTransient<OcrViewModel>();
         collection.AddTransient<OmniVoiceSettingsViewModel>();
         collection.AddTransient<Qwen3TtsSettingsViewModel>();
