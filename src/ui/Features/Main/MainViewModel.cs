@@ -462,6 +462,7 @@ public partial class MainViewModel :
     public MenuItem MenuItemAudioVisualizerSpeechToTextSelectedLines { get; set; }
     public MenuItem MenuItemAudioVisualizerSpeechToTextNewSelection { get; set; }
     public MenuItem MenuItemAudioVisualizerExtractAudio { get; set; }
+    public MenuItem MenuItemAudioVisualizerCopy { get; set; }
     public MenuItem MenuItemAudioVisualizerCopyText { get; set; }
     public ITextBoxWrapper EditTextBoxOriginal { get; set; }
     public ITextBoxWrapper EditTextBox { get; set; }
@@ -570,6 +571,7 @@ public partial class MainViewModel :
         MenuItemAudioVisualizerSpeechToTextSelectedLines = new MenuItem();
         MenuItemAudioVisualizerSpeechToTextNewSelection = new MenuItem();
         MenuItemAudioVisualizerExtractAudio = new MenuItem();
+        MenuItemAudioVisualizerCopy = new MenuItem();
         MenuItemAudioVisualizerCopyText = new MenuItem();
         MenuItemStyles = new MenuItem();
         MenuItemActors = new MenuItem();
@@ -5057,10 +5059,25 @@ public partial class MainViewModel :
     }
 
     /// <summary>
-    /// Copies the full text of the currently selected subtitle (the one shown in the edit box and
-    /// highlighted on the waveform) to the clipboard. Wired to Ctrl+C while the waveform is focused
-    /// and to the waveform context menu's "Copy subtitle" item.
+    /// Copies the currently selected subtitle (the one shown in the edit box and highlighted on
+    /// the waveform) to the clipboard as a whole line in the current subtitle format, like copy
+    /// in the subtitle grid. Wired to Ctrl+C while the waveform is focused and to the waveform
+    /// context menu's "Copy subtitle" item.
     /// </summary>
+    [RelayCommand]
+    private async Task WaveformCopyToClipboard()
+    {
+        var selectedSubtitle = SelectedSubtitle;
+        if (Window == null || selectedSubtitle == null)
+        {
+            return;
+        }
+
+        // Same serialized form as copy in the subtitle grid, so timing survives a paste.
+        await SubtitleGridCopyPasteHelper.Copy(Window, new List<SubtitleLineViewModel> { selectedSubtitle }, SelectedSubtitleFormat, _subtitle);
+        _shortcutManager.ClearKeys();
+    }
+
     [RelayCommand]
     private async Task WaveformCopyTextToClipboard()
     {
@@ -5071,6 +5088,7 @@ public partial class MainViewModel :
         }
 
         await ClipboardHelper.SetTextAsync(Window, selectedSubtitle.Text);
+        _shortcutManager.ClearKeys();
     }
 
     [RelayCommand]
@@ -13319,7 +13337,9 @@ public partial class MainViewModel :
             return;
         }
 
-        var linesInserted = _pasteFromClipboardHelper.PasteFromClipboard(text, vp.Position * 1000.0, Subtitles, SelectedSubtitleFormat);
+        // Paste at the waveform cursor rather than the raw player position - after a right-click
+        // the cursor is pinned to the clicked spot while the async player seek may still lag.
+        var linesInserted = _pasteFromClipboardHelper.PasteFromClipboard(text, AudioVisualizer.CurrentVideoPositionSeconds * 1000.0, Subtitles, SelectedSubtitleFormat);
         Renumber();
         if (linesInserted.Count == 1)
         {
@@ -23586,6 +23606,7 @@ public partial class MainViewModel :
         MenuItemAudioVisualizerSpeechToTextSelectedLines.IsVisible = false;
         MenuItemAudioVisualizerSpeechToTextNewSelection.IsVisible = false;
         MenuItemAudioVisualizerExtractAudio.IsVisible = false;
+        MenuItemAudioVisualizerCopy.IsVisible = false;
         MenuItemAudioVisualizerCopyText.IsVisible = false;
 
         if (e.NewParagraph != null)
@@ -23621,6 +23642,7 @@ public partial class MainViewModel :
         {
             MenuItemAudioVisualizerInsertBefore.IsVisible = true;
             MenuItemAudioVisualizerInsertAfter.IsVisible = true;
+            MenuItemAudioVisualizerCopy.IsVisible = true;
             MenuItemAudioVisualizerCopyText.IsVisible = true;
             MenuItemAudioVisualizerSeparator1.IsVisible = true;
             MenuItemAudioVisualizerDelete.IsVisible = true;

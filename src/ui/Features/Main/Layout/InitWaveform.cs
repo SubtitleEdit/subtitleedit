@@ -138,7 +138,7 @@ public class InitWaveform
             var pasteFromClipboardMenuItem = new MenuItem
             {
                 Header = Se.Language.General.WaveformPasteFromClipboard,
-                Command = vm.WaveformNewSelectionPasteFromClipboardCommand,
+                Command = vm.WaveformPasteFromClipboardCommand,
             };
             flyout.Items.Add(pasteFromClipboardMenuItem);
             vm.MenuItemAudioVisualizerPasteFromClipboardMenuItem = pasteFromClipboardMenuItem;
@@ -184,9 +184,17 @@ public class InitWaveform
             flyout.Items.Add(insertAfterMenuItem);
             vm.MenuItemAudioVisualizerInsertAfter = insertAfterMenuItem;
 
+            var copyMenuItem = new MenuItem
+            {
+                Header = Se.Language.General.CopySubtitle,
+                Command = vm.WaveformCopyToClipboardCommand,
+            };
+            flyout.Items.Add(copyMenuItem);
+            vm.MenuItemAudioVisualizerCopy = copyMenuItem;
+
             var copyTextMenuItem = new MenuItem
             {
-                Header = Se.Language.General.CopySubtitleText,
+                Header = Se.Language.General.CopyTextOnly,
                 Command = vm.WaveformCopyTextToClipboardCommand,
             };
             flyout.Items.Add(copyTextMenuItem);
