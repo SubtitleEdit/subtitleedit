@@ -810,7 +810,8 @@ namespace Nikse.SubtitleEdit.UiLogic.Ocr.FixEngine
                 {
                     if (word[match.Index + 1] == 'I' || word[match.Index + 1] == '1')
                     {
-                        var doFix = word[match.Index + 1] != 'I' && match.Index >= 1 && word.AsSpan(match.Index - 1).StartsWith("Mc", StringComparison.Ordinal);
+                        // Keep the capital I of Mc/Mac names (McIntyre, MacIntosh)
+                        var doFix = !(word[match.Index + 1] == 'I' && match.Index >= 1 && word.AsSpan(match.Index - 1).StartsWith("Mc", StringComparison.Ordinal));
                         if (word[match.Index + 1] == 'I' && match.Index >= 2 && word.AsSpan(match.Index - 2).StartsWith("Mac", StringComparison.Ordinal))
                         {
                             doFix = false;
