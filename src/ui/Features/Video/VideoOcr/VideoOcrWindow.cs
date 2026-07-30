@@ -203,31 +203,31 @@ public class VideoOcrWindow : Window
 
         // Paddle OCR settings
         var paddlePanel = new StackPanel { Orientation = Orientation.Vertical, Spacing = 4 };
-        paddlePanel.Children.Add(UiUtil.MakeLabel(Se.Language.Video.VideoOcr.Language));
+        paddlePanel.Children.Add(UiUtil.MakeLabel(Se.Language.General.Language));
         paddlePanel.Children.Add(comboPaddleLanguage);
         paddlePanel.Bind(StackPanel.IsVisibleProperty, new Binding(nameof(vm.IsPaddleEngine)) { Source = vm });
         panel.Children.Add(paddlePanel);
 
         // Ollama settings
         var ollamaPanel = new StackPanel { Orientation = Orientation.Vertical, Spacing = 4 };
-        ollamaPanel.Children.Add(UiUtil.MakeLabel(Se.Language.Video.VideoOcr.Url));
+        ollamaPanel.Children.Add(UiUtil.MakeLabel(Se.Language.General.Url));
         ollamaPanel.Children.Add(UiUtil.MakeTextBox(330, vm, nameof(vm.OllamaUrl)));
-        ollamaPanel.Children.Add(UiUtil.MakeLabel(Se.Language.Video.VideoOcr.Model));
+        ollamaPanel.Children.Add(UiUtil.MakeLabel(Se.Language.General.Model));
         ollamaPanel.Children.Add(UiUtil.MakeTextBox(330, vm, nameof(vm.OllamaModel)));
-        ollamaPanel.Children.Add(UiUtil.MakeLabel(Se.Language.Video.VideoOcr.Language));
+        ollamaPanel.Children.Add(UiUtil.MakeLabel(Se.Language.General.Language));
         ollamaPanel.Children.Add(UiUtil.MakeTextBox(330, vm, nameof(vm.OllamaLanguage)));
         ollamaPanel.Bind(StackPanel.IsVisibleProperty, new Binding(nameof(vm.IsOllamaEngine)) { Source = vm });
         panel.Children.Add(ollamaPanel);
 
         // GLM settings
         var glmPanel = new StackPanel { Orientation = Orientation.Vertical, Spacing = 4 };
-        glmPanel.Children.Add(UiUtil.MakeLabel(Se.Language.Video.VideoOcr.Url));
+        glmPanel.Children.Add(UiUtil.MakeLabel(Se.Language.General.Url));
         glmPanel.Children.Add(UiUtil.MakeTextBox(330, vm, nameof(vm.GlmUrl)));
-        glmPanel.Children.Add(UiUtil.MakeLabel(Se.Language.Video.VideoOcr.Model));
+        glmPanel.Children.Add(UiUtil.MakeLabel(Se.Language.General.Model));
         glmPanel.Children.Add(UiUtil.MakeTextBox(330, vm, nameof(vm.GlmModel)));
-        glmPanel.Children.Add(UiUtil.MakeLabel(Se.Language.Video.VideoOcr.ApiKey));
+        glmPanel.Children.Add(UiUtil.MakeLabel(Se.Language.General.ApiKey));
         glmPanel.Children.Add(UiUtil.MakeApiKeyTextBox(290, vm, nameof(vm.GlmApiKey)));
-        glmPanel.Children.Add(UiUtil.MakeLabel(Se.Language.Video.VideoOcr.Language));
+        glmPanel.Children.Add(UiUtil.MakeLabel(Se.Language.General.Language));
         glmPanel.Children.Add(UiUtil.MakeTextBox(330, vm, nameof(vm.GlmLanguage)));
         glmPanel.Bind(StackPanel.IsVisibleProperty, new Binding(nameof(vm.IsGlmEngine)) { Source = vm });
         panel.Children.Add(glmPanel);
@@ -238,13 +238,13 @@ public class VideoOcrWindow : Window
         _comboLlamaCppModel = comboLlamaCppModel;
 
         var llamaCppPanel = new StackPanel { Orientation = Orientation.Vertical, Spacing = 4 };
-        llamaCppPanel.Children.Add(UiUtil.MakeLabel(Se.Language.Video.VideoOcr.Model));
+        llamaCppPanel.Children.Add(UiUtil.MakeLabel(Se.Language.General.Model));
         llamaCppPanel.Children.Add(comboLlamaCppModel);
         var llamaCppButtons = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 5 };
         llamaCppButtons.Children.Add(UiUtil.MakeButton(vm.DownloadLlamaCppCommand, IconNames.Download, Se.Language.General.Download));
         llamaCppButtons.Children.Add(MakeLlamaCppServerButton(vm));
         llamaCppPanel.Children.Add(llamaCppButtons);
-        llamaCppPanel.Children.Add(UiUtil.MakeLabel(Se.Language.Video.VideoOcr.Language));
+        llamaCppPanel.Children.Add(UiUtil.MakeLabel(Se.Language.General.Language));
         llamaCppPanel.Children.Add(UiUtil.MakeTextBox(330, vm, nameof(vm.LlamaCppLanguage)));
         llamaCppPanel.Bind(StackPanel.IsVisibleProperty, new Binding(nameof(vm.IsLlamaCppEngine)) { Source = vm });
         panel.Children.Add(llamaCppPanel);

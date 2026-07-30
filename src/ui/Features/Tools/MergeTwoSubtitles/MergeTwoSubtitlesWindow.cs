@@ -306,16 +306,16 @@ public class MergeTwoSubtitlesWindow : Window
         var labelOutline = UiUtil.MakeLabel(Se.Language.General.OutlineColor);
         var outlinePicker = UiUtil.MakeColorPickerButton(vm, outlineColorPath, false);
 
-        var labelOutlineWidth = UiUtil.MakeLabel(l.OutlineWidth);
+        var labelOutlineWidth = UiUtil.MakeLabel(Se.Language.General.OutlineWidth);
         var numOutlineWidth = UiUtil.MakeNumericUpDownOneDecimal(0, 20, 140, vm, outlineWidthPath);
 
-        var labelShadowWidth = UiUtil.MakeLabel(l.ShadowWidth);
+        var labelShadowWidth = UiUtil.MakeLabel(Se.Language.General.ShadowWidth);
         var numShadowWidth = UiUtil.MakeNumericUpDownOneDecimal(0, 20, 140, vm, shadowWidthPath);
 
-        var radioTop = UiUtil.MakeRadioButton(l.AlignTop, vm, alignTopPath, alignGroupName);
+        var radioTop = UiUtil.MakeRadioButton(Se.Language.General.Top, vm, alignTopPath, alignGroupName);
         var radioBottom = new RadioButton
         {
-            Content = l.AlignBottom,
+            Content = Se.Language.General.Bottom,
             GroupName = alignGroupName,
             DataContext = vm,
         };

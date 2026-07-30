@@ -267,7 +267,7 @@ public class AssaStylesWindow : Window
 
         var label = UiUtil.MakeLabel(Se.Language.Assa.StylesSaved).WithBold();
 
-        var labelCategory = UiUtil.MakeLabel(Se.Language.Assa.Category);
+        var labelCategory = UiUtil.MakeLabel(Se.Language.General.Category);
         var comboBoxCategory = UiUtil.MakeComboBox(vm.StorageCategories, vm, nameof(vm.SelectedStorageCategory)).WithMinWidth(160);
         var buttonNewCategory = UiUtil.MakeButton(vm.NewCategoryCommand, IconNames.Plus, Se.Language.Assa.NewCategory);
         var buttonRenameCategory = UiUtil.MakeButton(vm.RenameCategoryCommand, IconNames.Pencil, Se.Language.Assa.RenameCategory)
@@ -300,7 +300,7 @@ public class AssaStylesWindow : Window
                 },
                 new DataGridTextColumn
                 {
-                    Header = Se.Language.Assa.Category,
+                    Header = Se.Language.General.Category,
                     CellTheme = UiUtil.DataGridNoBorderNoPaddingCellTheme,
                     Binding = new Binding(nameof(StyleDisplay.Category)),
                     IsReadOnly = true,

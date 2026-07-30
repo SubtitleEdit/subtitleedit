@@ -91,7 +91,7 @@ public partial class AiReviewViewModel : ObservableObject
         var l = Se.Language.Tools.AiReview;
         FilterChips = new ObservableCollection<ReviewFilterChip>
         {
-            new() { Category = null, Label = l.CategoryAll, IsActive = true },
+            new() { Category = null, Label = Se.Language.General.All, IsActive = true },
             new() { Category = ReviewCategory.Spelling, Label = l.CategorySpelling },
             new() { Category = ReviewCategory.Grammar, Label = l.CategoryGrammar },
             new() { Category = ReviewCategory.Punctuation, Label = l.CategoryPunctuation },

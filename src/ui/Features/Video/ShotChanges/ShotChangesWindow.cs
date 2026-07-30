@@ -18,7 +18,7 @@ public class ShotChangesWindow : Window
     public ShotChangesWindow(ShotChangesViewModel vm)
     {
         UiUtil.InitializeWindow(this, GetType().Name);
-        Title = Se.Language.Video.ShotChanges.TitleGenerateOrImport;
+        Title = Se.Language.General.GenerateImportShotChanges;
         CanResize = true;
         Width = 900;
         Height = 800;

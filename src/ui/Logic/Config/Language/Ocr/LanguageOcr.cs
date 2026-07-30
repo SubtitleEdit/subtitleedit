@@ -93,7 +93,6 @@ public class LanguageOcr
     public string VobSubColorsTitle { get; set; }
     public string VobSubColorsHeader { get; set; }
     public string VobSubColorsDescription { get; set; }
-    public string VobSubColorBackground { get; set; }
     public string VobSubColorPattern { get; set; }
     public string VobSubColorEmphasis1 { get; set; }
     public string VobSubColorEmphasis2 { get; set; }
@@ -206,7 +205,6 @@ public class LanguageOcr
         VobSubColorsTitle = "VobSub/DVD colors";
         VobSubColorsHeader = "Customize the four VobSub colors";
         VobSubColorsDescription = "VobSub/DVD subtitles use four indexed colors: background, pattern, emphasis 1 and emphasis 2. Pick each color below to override the embedded palette - useful when the original colors give poor OCR contrast.";
-        VobSubColorBackground = "Background";
         VobSubColorPattern = "Pattern";
         VobSubColorEmphasis1 = "Emphasis 1";
         VobSubColorEmphasis2 = "Emphasis 2";

@@ -4457,8 +4457,8 @@ public partial class SpeechToTextViewModel : ObservableObject
 
         var size = engine.DownloadSizeText;
         EngineDownloadHint = string.IsNullOrEmpty(size)
-            ? string.Format(Se.Language.Video.AudioToText.DownloadX, engine.Name)
-            : string.Format(Se.Language.Video.AudioToText.DownloadX, engine.Name) + $" ({size})";
+            ? string.Format(Se.Language.General.DownloadX, engine.Name)
+            : string.Format(Se.Language.General.DownloadX, engine.Name) + $" ({size})";
         IsEngineDownloadButtonVisible = true;
     }
 

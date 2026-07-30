@@ -908,7 +908,7 @@ public partial class FixCommonErrorsViewModel : ObservableObject, IFixCallbacks
 
             if (!string.IsNullOrEmpty(fix.RuleExample))
             {
-                sb.AppendLine("  " + string.Format(_language.ExampleX, fix.RuleExample));
+                sb.AppendLine("  " + string.Format(Se.Language.General.ExampleX, fix.RuleExample));
             }
 
             sb.AppendLine("  " + Se.Language.General.Before + ": " + fix.Before);

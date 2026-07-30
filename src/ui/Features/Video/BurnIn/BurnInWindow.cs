@@ -610,7 +610,7 @@ public class BurnInWindow : Window
 
     private static Border MakeCutView(BurnInViewModel vm)
     {
-        var checkBoxCut = UiUtil.MakeCheckBox(Se.Language.Video.BurnIn.Cut, vm, nameof(vm.IsCutActive));
+        var checkBoxCut = UiUtil.MakeCheckBox(Se.Language.General.Cut, vm, nameof(vm.IsCutActive));
 
         var buttonCutFrom = UiUtil.MakeButtonBrowse(vm.BrowseCutFromCommand);
         buttonCutFrom.VerticalAlignment = VerticalAlignment.Center;
@@ -709,7 +709,7 @@ public class BurnInWindow : Window
         var labelAudioEncoding = UiUtil.MakeLabel(Se.Language.Video.BurnIn.AudioEncoding);
         var comboBoxAudioEncoding = UiUtil.MakeComboBox(vm.AudioEncodings, vm, nameof(vm.SelectedAudioEncoding));
 
-        var checkBoxStereo = UiUtil.MakeCheckBox(Se.Language.Video.BurnIn.Stereo, vm, nameof(vm.AudioIsStereo));
+        var checkBoxStereo = UiUtil.MakeCheckBox(Se.Language.General.Stereo, vm, nameof(vm.AudioIsStereo));
 
         var labelSampleRate = UiUtil.MakeLabel(Se.Language.Video.BurnIn.SampleRate);
         var comboBoxSampleRate = UiUtil.MakeComboBox(vm.AudioSampleRates, vm, nameof(vm.SelectedAudioSampleRate));
@@ -823,7 +823,7 @@ public class BurnInWindow : Window
         var labelOutputPropertiesFolder = UiUtil.MakeLink(string.Empty, vm.OpenOutputFolderCommand)
             .WithFilePathText(vm, nameof(vm.OutputFolder))
             .WithBindVisible(vm, nameof(vm.UseOutputFolderVisible));
-        var labelOutputPropertiesUseSourceFolder = UiUtil.MakeLabel(Se.Language.Video.BurnIn.UseSourceFolder)
+        var labelOutputPropertiesUseSourceFolder = UiUtil.MakeLabel(Se.Language.General.UseSourceFolder)
             .WithBindVisible(vm, nameof(vm.UseSourceFolderVisible));
 
         var panelFileControls2 = new StackPanel

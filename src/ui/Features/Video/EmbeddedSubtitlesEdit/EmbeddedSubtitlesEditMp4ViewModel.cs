@@ -573,7 +573,7 @@ public partial class EmbeddedSubtitlesEditMp4ViewModel : ObservableObject
             Window!,
             string.IsNullOrEmpty(Path.GetExtension(VideoFileName)) ? ".mp4" : Path.GetExtension(VideoFileName),
             outputVideoFileName,
-            Se.Language.Video.SaveVideoAsTitle);
+            Se.Language.General.SaveVideoAsVideoTitle);
         if (string.IsNullOrEmpty(outputVideoFileName))
         {
             return;

@@ -59,7 +59,6 @@ public class LanguageMain
     public string RemovedUnicodeControlCharactersX { get; set; }
     public string RemovedXBlankLines { get; set; }
     public string ReplacedXWithYCountZ { get; set; }
-    public string ReplacedXWithYInLineZ { get; set; }
     public string ReversedStartAndEndingsForRightToLeftX { get; set; }
     public string RuleProfileIsX { get; set; }
     public string SaveLanguageFile { get; set; }
@@ -67,7 +66,6 @@ public class LanguageMain
     public string ShiftTextCellsDown { get; set; }
     public string SingleLineLength { get; set; }
     public string SpeedIsNowX { get; set; }
-    public string SpellCheckResult { get; set; }
     public string SubtitleGridFormattingX { get; set; }
     public string SubtitleImportedFromMatroskaFile { get; set; }
     public string TextDown { get; set; }
@@ -189,7 +187,6 @@ public class LanguageMain
         RemovedUnicodeControlCharactersX = "Removed Unicode control characters from {0} lines";
         RemovedXBlankLines = "Removed {0} blank lines";
         ReplacedXWithYCountZ = "Replaced \"{0}\" with \"{1}\" ({2} occurrences)";
-        ReplacedXWithYInLineZ = "Replaced \"{0}\" with \"{1}\" in line {2}";
         ReversedStartAndEndingsForRightToLeftX = "Reversed start and endings for right-to-left in {0} lines";
         RuleProfileIsX = "Rule profile is now \"{0}\"";
         SaveLanguageFile = "Save language file";
@@ -197,7 +194,6 @@ public class LanguageMain
         ShiftTextCellsDown = "Shift text cells down";
         SingleLineLength = "Line length: ";
         SpeedIsNowX = "Speed is now \"{0}\"";
-        SpellCheckResult = "Spell check completed. \n\n• Changed words: {0}\n• Skipped words: {1}";
         SubtitleGridFormattingX = "Grid formatting: {0}";
         SubtitleImportedFromMatroskaFile = "Subtitle imported from Matroska file";
         TextDown = "Text down";

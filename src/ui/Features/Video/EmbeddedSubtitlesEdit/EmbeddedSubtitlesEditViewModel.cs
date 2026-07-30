@@ -544,7 +544,7 @@ public partial class EmbeddedSubtitlesEditViewModel : ObservableObject
         }
 
         var outputVideoFileName = MakeOutputFileName(VideoFileName);
-        outputVideoFileName = await _fileHelper.PickSaveFile(Window!, Path.GetExtension(VideoFileName) ?? ".mkv", outputVideoFileName, Se.Language.Video.SaveVideoAsTitle);
+        outputVideoFileName = await _fileHelper.PickSaveFile(Window!, Path.GetExtension(VideoFileName) ?? ".mkv", outputVideoFileName, Se.Language.General.SaveVideoAsVideoTitle);
         if (string.IsNullOrEmpty(outputVideoFileName))
         {
             return;

@@ -469,14 +469,14 @@ public partial class SettingsViewModel : ObservableObject
 
         WaveformDrawStyles = new ObservableCollection<string>
         {
-            Se.Language.Waveform.WaveformDrawStyleClassic,
+            Se.Language.General.Classic,
             Se.Language.Waveform.WaveformDrawStyleFancy,
         };
         SelectedWaveformDrawStyle = WaveformDrawStyles[0];
 
         WaveformSpectrogramStyles = new ObservableCollection<string>
         {
-            Se.Language.Waveform.SpectrogramClassic,
+            Se.Language.General.Classic,
             Se.Language.Waveform.SpectrogramClassicViridis,
             Se.Language.Waveform.SpectrogramClassicPlasma,
             Se.Language.Waveform.SpectrogramClassicInferno,
@@ -604,8 +604,8 @@ public partial class SettingsViewModel : ObservableObject
         [
             Se.Language.General.None,
             Se.Language.Options.Settings.SaveAsAppendLanguageCodeTwoLetter,
-            Se.Language.Options.Settings.SaveAsAppendLanguageCodeThreeLetter,
-            Se.Language.Options.Settings.SaveAsAppendLanguageCodeThreeLetterBibliographic,
+            Se.Language.General.ThreeLetterLanguageCode,
+            Se.Language.General.ThreeLetterLanguageCodeBibliographic,
             Se.Language.Options.Settings.SaveAsAppendLanguageCodeLanguageName,
         ];
         SelectedSaveAsAppendLanguageCode = SaveAsAppendLanguageCode[0];
@@ -1282,12 +1282,12 @@ public partial class SettingsViewModel : ObservableObject
 
         if (languageAppendType == nameof(SaveAsLanguageAppendType.ThreeLEtterLanguageCode))
         {
-            return Se.Language.Options.Settings.SaveAsAppendLanguageCodeThreeLetter;
+            return Se.Language.General.ThreeLetterLanguageCode;
         }
 
         if (languageAppendType == nameof(SaveAsLanguageAppendType.ThreeLetterLanguageCodeBibliographic))
         {
-            return Se.Language.Options.Settings.SaveAsAppendLanguageCodeThreeLetterBibliographic;
+            return Se.Language.General.ThreeLetterLanguageCodeBibliographic;
         }
 
         if (languageAppendType == nameof(SaveAsLanguageAppendType.FullLanguageName))
@@ -1699,7 +1699,7 @@ public partial class SettingsViewModel : ObservableObject
         Se.Settings.Waveform.CenterVideoPositionAlsoWhenPaused = WaveformCenterVideoPositionAlsoWhenPaused;
         Se.Settings.Waveform.FocusTextBoxAfterInsertNew = WaveformFocusTextboxAfterInsertNew;
 
-        if (SelectedWaveformDrawStyle == Se.Language.Waveform.WaveformDrawStyleClassic)
+        if (SelectedWaveformDrawStyle == Se.Language.General.Classic)
         {
             Se.Settings.Waveform.WaveformDrawStyle = WaveformDrawStyle.Classic.ToString();
         }
@@ -1710,7 +1710,7 @@ public partial class SettingsViewModel : ObservableObject
 
         Se.Settings.Waveform.GenerateSpectrogram = WaveformGenerateSpectrogram;
         Se.Settings.Waveform.WaveformAutoGenerate = WaveformAutoGenerate;
-        if (SelectedWaveformSpectrogramStyle == Se.Language.Waveform.SpectrogramClassic)
+        if (SelectedWaveformSpectrogramStyle == Se.Language.General.Classic)
         {
             Se.Settings.Waveform.SpectrogramStyle = SeSpectrogramStyle.Classic.ToString();
         }
@@ -1930,12 +1930,12 @@ public partial class SettingsViewModel : ObservableObject
             return nameof(SaveAsLanguageAppendType.TwoLetterLanguageCode);
         }
 
-        if (selectedSaveAsAppendLanguageCode == Se.Language.Options.Settings.SaveAsAppendLanguageCodeThreeLetter)
+        if (selectedSaveAsAppendLanguageCode == Se.Language.General.ThreeLetterLanguageCode)
         {
             return nameof(SaveAsLanguageAppendType.ThreeLEtterLanguageCode);
         }
 
-        if (selectedSaveAsAppendLanguageCode == Se.Language.Options.Settings.SaveAsAppendLanguageCodeThreeLetterBibliographic)
+        if (selectedSaveAsAppendLanguageCode == Se.Language.General.ThreeLetterLanguageCodeBibliographic)
         {
             return nameof(SaveAsLanguageAppendType.ThreeLetterLanguageCodeBibliographic);
         }

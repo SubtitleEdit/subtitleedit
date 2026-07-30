@@ -428,7 +428,7 @@ public class AiReviewWindow : Window
             .WithIconLeft("fa-solid fa-robot");
         buttonReview.Bind(IsVisibleProperty, new Binding(nameof(vm.IsNotReviewing)));
 
-        var buttonStop = UiUtil.MakeButton(l.Stop, vm.StopReviewCommand)
+        var buttonStop = UiUtil.MakeButton(Se.Language.General.Stop, vm.StopReviewCommand)
             .WithIconLeft("fa-solid fa-stop");
         buttonStop.Bind(IsVisibleProperty, new Binding(nameof(vm.IsReviewing)));
 

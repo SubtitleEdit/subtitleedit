@@ -56,7 +56,7 @@ public class ForcedAlignerSetupWindow : Window
             Children = { introGlyph, labelIntro },
         };
 
-        var labelEngine = UiUtil.MakeLabel(Se.Language.File.Import.ForcedAlignerEngine);
+        var labelEngine = UiUtil.MakeLabel(Se.Language.General.Engine);
 
         // Same dot vocabulary as everywhere else: green installed, amber update waiting,
         // grey not installed - always paired with text, never colour alone.

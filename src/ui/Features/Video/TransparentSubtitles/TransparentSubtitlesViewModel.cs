@@ -134,7 +134,7 @@ public partial class TransparentSubtitlesViewModel : ObservableObject
         {
             new(FontBoxType.None, Se.Language.General.None),
             new(FontBoxType.OneBox, Se.Language.Video.BurnIn.OneBox),
-            new(FontBoxType.BoxPerLine, Se.Language.Video.BurnIn.BoxPerLine),
+            new(FontBoxType.BoxPerLine, Se.Language.General.BoxPerLine),
         };
         SelectedFontBoxType = FontBoxTypes[0];
 

@@ -89,7 +89,7 @@ public class FindWindow : Window
 
         var radioButtonCaseSensitive = new RadioButton
         {
-            Content = Se.Language.Edit.Find.CaseSensitive,
+            Content = Se.Language.General.CaseSensitive,
             VerticalAlignment = VerticalAlignment.Center,
             [!RadioButton.IsCheckedProperty] = new Binding(nameof(vm.FindMode))
             {
@@ -101,7 +101,7 @@ public class FindWindow : Window
 
         var radioButtonCaseInsensitive = new RadioButton
         {
-            Content = Se.Language.Edit.Find.CaseInsensitive,
+            Content = Se.Language.General.CaseInsensitive,
             VerticalAlignment = VerticalAlignment.Center,
             [!RadioButton.IsCheckedProperty] = new Binding(nameof(vm.FindMode))
             {

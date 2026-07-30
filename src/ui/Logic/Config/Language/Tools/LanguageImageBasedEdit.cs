@@ -7,10 +7,8 @@ public class LanguageImageBasedEdit
     public string ResizeImagesDotDotDot { get;  set; }
     public string AdjustBrightnessDotDotDot { get; set; }
     public string AdjustAlphaDotDotDot { get; set; }
-    public string CenterHorizontally { get; set; }
     public string CropImages { get; set; }
     public string ImportTimeCodes { get; set; }
-    public string SetTextForSubtitle { get; set; }
     public string SetText { get; set; }
     public string ScreenWidth { get; set; }
     public string ScreenHeight { get; set; }
@@ -53,10 +51,8 @@ public class LanguageImageBasedEdit
         ResizeImagesDotDotDot = "Resize images...";
         AdjustBrightnessDotDotDot = "Adjust brightness...";
         AdjustAlphaDotDotDot = "Adjust alpha...";
-        CenterHorizontally = "Center horizontally";
         CropImages = "Crop images";
         ImportTimeCodes = "Import time codes...";
-        SetTextForSubtitle = "Set text for subtitle";
         SetText = "Set text";
         ScreenWidth = "Screen width";
         ScreenHeight = "Screen height";

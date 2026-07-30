@@ -301,7 +301,7 @@ public class NetflixQualityController
     {
         return new List<INetflixQualityChecker>
         {
-            new NetflixCheckBridgeGaps(Se.Language.Tools.BridgeGaps.Title),
+            new NetflixCheckBridgeGaps(Se.Language.General.BridgeGaps),
             new NetflixCheckDialogHyphenSpace(Se.Language.Tools.NetflixCheckAndFix.DialogHyphenSpace),
             new NetflixCheckEllipsesNotThreeDots(Se.Language.Tools.NetflixCheckAndFix.EllipsesNotThreeDots),
             new NetflixCheckGlyph(Se.Language.Tools.NetflixCheckAndFix.OnlyAllowedGlyphs),
@@ -315,7 +315,7 @@ public class NetflixQualityController
             new NetflixCheckShotChange(Se.Language.Tools.NetflixCheckAndFix.ShotChanges),
             new NetflixCheckStartNumberSpellOut(Se.Language.Tools.NetflixCheckAndFix.StartNumberSpellOut),
             new NetflixCheckTextForHiUseBrackets(Se.Language.Tools.NetflixCheckAndFix.TextforHiUseBrackets),
-            new NetflixCheckTimedTextFrameRate(Se.Language.Tools.NetflixCheckAndFix.FrameRate),
+            new NetflixCheckTimedTextFrameRate(Se.Language.General.FrameRate),
             new NetflixCheckTwoFramesGap(Se.Language.Tools.NetflixCheckAndFix.TwoFrameGrap),
             new NetflixCheckWhiteSpace(Se.Language.Tools.NetflixCheckAndFix.WhiteSpace),
         };

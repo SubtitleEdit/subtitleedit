@@ -115,7 +115,7 @@ public class AssSetBackgroundWindow : Window
 
         var titleLabel = new TextBlock
         {
-            Text = Se.Language.Assa.BackgroundBoxPadding,
+            Text = Se.Language.General.Padding,
             FontWeight = FontWeight.Bold,
             Margin = new Thickness(0, 0, 0, 5),
         };
@@ -136,14 +136,14 @@ public class AssSetBackgroundWindow : Window
         grid.Add(rightBox, 1, 3);
 
         // Top
-        var topLabel = new TextBlock { Text = Se.Language.Assa.ProgressBarTop, VerticalAlignment = VerticalAlignment.Center };
+        var topLabel = new TextBlock { Text = Se.Language.General.Top, VerticalAlignment = VerticalAlignment.Center };
         grid.Add(topLabel, 2, 0);
 
         var topBox = UiUtil.MakeNumericUpDownInt(0, 500, 0, 120, vm, nameof(vm.PaddingTop));
         grid.Add(topBox, 2, 1);
 
         // Bottom
-        var bottomLabel = new TextBlock { Text = Se.Language.Assa.ProgressBarBottom, VerticalAlignment = VerticalAlignment.Center };
+        var bottomLabel = new TextBlock { Text = Se.Language.General.Bottom, VerticalAlignment = VerticalAlignment.Center };
         grid.Add(bottomLabel, 2, 2);
 
         var bottomBox = UiUtil.MakeNumericUpDownInt(0, 500, 0, 120, vm, nameof(vm.PaddingBottom));
@@ -242,7 +242,7 @@ public class AssSetBackgroundWindow : Window
         grid.Add(titleLabel, 0, 0, 1, 2);
 
         // Box style
-        var styleLabel = new TextBlock { Text = Se.Language.Assa.ProgressBarStyle, VerticalAlignment = VerticalAlignment.Center };
+        var styleLabel = new TextBlock { Text = Se.Language.General.Style, VerticalAlignment = VerticalAlignment.Center };
         grid.Add(styleLabel, 1, 0);
 
         var styleCombo = new ComboBox
@@ -306,7 +306,7 @@ public class AssSetBackgroundWindow : Window
         grid.Add(titleLabel, 0, 0, 1, 2);
 
         // Box color
-        var boxLabel = new TextBlock { Text = Se.Language.Assa.BackgroundBoxBoxColor, VerticalAlignment = VerticalAlignment.Center };
+        var boxLabel = new TextBlock { Text = Se.Language.General.BoxColor, VerticalAlignment = VerticalAlignment.Center };
         grid.Add(boxLabel, 1, 0);
 
         var boxPicker = UiUtil.MakeColorPickerButton(vm, nameof(vm.BoxColor));

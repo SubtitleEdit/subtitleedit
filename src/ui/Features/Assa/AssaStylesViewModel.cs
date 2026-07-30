@@ -696,7 +696,7 @@ public partial class AssaStylesViewModel : ObservableObject, IClosingCleanup
         selectedStyle.IsDefault = true;
     }
 
-    private string DefaultCategoryLabel => Se.Language.Assa.DefaultCategory;
+    private string DefaultCategoryLabel => Se.Language.General.Default;
     private string AllCategoriesLabel => Se.Language.Assa.AllCategories;
 
     private string CategoryLabelToStored(string label)

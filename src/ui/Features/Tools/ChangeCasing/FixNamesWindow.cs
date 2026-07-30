@@ -21,7 +21,7 @@ public class FixNamesWindow : Window
     {
         var lang = Se.Language.Tools.ChangeCasing;
         UiUtil.InitializeWindow(this, GetType().Name);
-        Title = lang.Title;
+        Title = Se.Language.General.ChangeCasing;
         Width = 900;
         Height = 800;
         MinWidth = 800;

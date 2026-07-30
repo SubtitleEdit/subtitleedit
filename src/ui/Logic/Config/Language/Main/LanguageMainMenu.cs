@@ -39,9 +39,7 @@ public class LanguageMainMenu
     public string RightToLeftMode { get; set; }
     public string ModifySelectionDotDotDot { get; set; }
 
-
     public string Tools { get; set; }
-    public string ToolsSelectedLines { get; set; }
     public string AdjustDurations { get; set; }
     public string ApplyDurationLimits { get; set; }
     public string BatchConvert { get; set; }
@@ -84,7 +82,6 @@ public class LanguageMainMenu
     public string AssaAttachments { get; set; }
     public string AssaFontCollector { get; set; }
 
-
     public string SpellCheckTitle { get; set; }
     public string SpellCheck { get; set; }
     public string FindDoubleWords { get; set; }
@@ -117,7 +114,6 @@ public class LanguageMainMenu
     public string ChangeFrameRate { get; set; }
     public string ChangeSpeed { get; set; }
     public string VisualSync { get; set; }
-
 
     public string Options { get; set; }
     public string Settings { get; set; }
@@ -183,7 +179,6 @@ public class LanguageMainMenu
         ModifySelectionDotDotDot = "Modify _selection...";
 
         Tools = "_Tools";
-        ToolsSelectedLines = "_Tools (selected lines)";
         AdjustDurations = "_Adjust durations...";
         ApplyDurationLimits = "Apply duration _limits...";
         AiReview = "AI review...";

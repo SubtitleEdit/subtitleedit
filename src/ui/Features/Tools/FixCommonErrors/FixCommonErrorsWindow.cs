@@ -28,7 +28,7 @@ public class FixCommonErrorsWindow : Window
     public FixCommonErrorsWindow(FixCommonErrorsViewModel vm)
     {
         UiUtil.InitializeWindow(this, GetType().Name);
-        Title = Se.Language.Tools.FixCommonErrors.Title;
+        Title = Se.Language.General.FixCommonErrors;
         Width = 1024;
         Height = 720;
         MinWidth = 800;

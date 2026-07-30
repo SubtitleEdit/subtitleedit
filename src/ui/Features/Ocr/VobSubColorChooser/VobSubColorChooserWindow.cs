@@ -50,7 +50,7 @@ public class VobSubColorChooserWindow : Window
             Margin = new Thickness(0, 0, 0, 12),
             Children =
             {
-                MakeSwatchTile(Se.Language.Ocr.VobSubColorBackground,
+                MakeSwatchTile(Se.Language.General.Background,
                     nameof(vm.BackgroundColor), nameof(vm.BackgroundHex), vm.PickBackgroundCommand),
                 MakeSwatchTile(Se.Language.Ocr.VobSubColorPattern,
                     nameof(vm.PatternColor), nameof(vm.PatternHex), vm.PickPatternCommand),

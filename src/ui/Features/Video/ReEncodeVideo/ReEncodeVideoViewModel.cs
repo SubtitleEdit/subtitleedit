@@ -414,7 +414,7 @@ public partial class ReEncodeVideoViewModel : ObservableObject
     private async Task Generate()
     {
         var outputVideoFileName = Path.ChangeExtension(VideoFileName, SelectedVideoExtension);
-        outputVideoFileName = await _fileHelper.PickSaveFile(Window!, SelectedVideoExtension, outputVideoFileName, Se.Language.Video.SaveVideoAsTitle);
+        outputVideoFileName = await _fileHelper.PickSaveFile(Window!, SelectedVideoExtension, outputVideoFileName, Se.Language.General.SaveVideoAsVideoTitle);
         if (string.IsNullOrEmpty(outputVideoFileName))
         {
             return;
