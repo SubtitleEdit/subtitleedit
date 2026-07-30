@@ -416,7 +416,8 @@ public static class ShortcutsMain
         { nameof(MainViewModel.WaveformInsertAtPositionAndFocusTextBoxCommand), Se.Language.General.InsertAtPositionAndFocusTextBox },
         { nameof(MainViewModel.WaveformInsertAtPositionNoFocusTextBoxCommand), Se.Language.General.InsertAtPositionNoFocusTextBox },
         { nameof(MainViewModel.WaveformPasteFromClipboardCommand), Se.Language.General.WaveformPasteFromClipboard },
-        { nameof(MainViewModel.WaveformCopyTextToClipboardCommand), Se.Language.General.CopySubtitleText },
+        { nameof(MainViewModel.WaveformCopyToClipboardCommand), Se.Language.General.CopySubtitle },
+        { nameof(MainViewModel.WaveformCopyTextToClipboardCommand), Se.Language.General.CopyTextOnly },
         { nameof(MainViewModel.FocusSelectedLineCommand), Se.Language.General.FocusSelectedLine },
         { nameof(MainViewModel.PlayFromStartOfVideoCommand), Se.Language.General.PlayFromStartOfVideo },
         { nameof(MainViewModel.VideoPlayFromJustBeforeTextCommand), Se.Language.General.PlayFromJustBeforeText },
@@ -810,6 +811,7 @@ public static class ShortcutsMain
         AddShortcut(shortcuts, vm.WaveformInsertAtPositionAndFocusTextBoxCommand, nameof(vm.WaveformInsertAtPositionAndFocusTextBoxCommand), ShortcutCategory.General);
         AddShortcut(shortcuts, vm.WaveformInsertAtPositionNoFocusTextBoxCommand, nameof(vm.WaveformInsertAtPositionNoFocusTextBoxCommand), ShortcutCategory.General);
         AddShortcut(shortcuts, vm.WaveformPasteFromClipboardCommand, nameof(vm.WaveformPasteFromClipboardCommand), ShortcutCategory.Waveform);
+        AddShortcut(shortcuts, vm.WaveformCopyToClipboardCommand, nameof(vm.WaveformCopyToClipboardCommand), ShortcutCategory.Waveform);
         AddShortcut(shortcuts, vm.WaveformCopyTextToClipboardCommand, nameof(vm.WaveformCopyTextToClipboardCommand), ShortcutCategory.Waveform);
         AddShortcut(shortcuts, vm.FocusSelectedLineCommand, nameof(vm.FocusSelectedLineCommand), ShortcutCategory.General);
         AddShortcut(shortcuts, vm.PlayFromStartOfVideoCommand, nameof(vm.PlayFromStartOfVideoCommand), ShortcutCategory.General, ShortcutGroup.Video);
@@ -928,7 +930,7 @@ public static class ShortcutsMain
             new(nameof(vm.ShowToolsRemoveTextForHearingImpairedCommand), [cmd, "Shift", nameof(Avalonia.Input.Key.H)], ShortcutCategory.General),
             new(nameof(vm.ShowSyncAdjustAllTimesCommand), [cmd, "Shift", nameof(Avalonia.Input.Key.A)], ShortcutCategory.General),
             new(nameof(vm.WaveformPasteFromClipboardCommand), [cmd, nameof(Avalonia.Input.Key.V)], ShortcutCategory.Waveform),
-            new(nameof(vm.WaveformCopyTextToClipboardCommand), [cmd, nameof(Avalonia.Input.Key.C)], ShortcutCategory.Waveform),
+            new(nameof(vm.WaveformCopyToClipboardCommand), [cmd, nameof(Avalonia.Input.Key.C)], ShortcutCategory.Waveform),
             new(nameof(vm.FillSelectedLinesWithClipboardCommand), [cmd, "Shift", nameof(Avalonia.Input.Key.V)], ShortcutCategory.SubtitleGrid),
 
             // Tools / dialogs (V4 defaults)
