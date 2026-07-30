@@ -177,6 +177,7 @@ public class SeWaveform
             new SeWaveformToolbarItem { Type = SeWaveformToolbarItemType.VerticalZoom, IsVisible = true, SortOrder = 100 },
             new SeWaveformToolbarItem { Type = SeWaveformToolbarItemType.HorizontalZoom, IsVisible = true, SortOrder = 110 },
             new SeWaveformToolbarItem { Type = SeWaveformToolbarItemType.VideoPositionSlider, IsVisible = true, SortOrder = 120 },
+            new SeWaveformToolbarItem { Type = SeWaveformToolbarItemType.AudioTrackPicker, IsVisible = true, SortOrder = 125 },
             new SeWaveformToolbarItem { Type = SeWaveformToolbarItemType.PlaybackSpeed, IsVisible = true, SortOrder = 130 },
             new SeWaveformToolbarItem { Type = SeWaveformToolbarItemType.AutoSelectOnPlay, IsVisible = true, SortOrder = 140 },
             new SeWaveformToolbarItem { Type = SeWaveformToolbarItemType.Center, IsVisible = true, SortOrder = 150 },
@@ -211,9 +212,12 @@ public class SeWaveform
             var sortOrder = defaultItem?.SortOrder ??
                             (ToolbarItems.Count > 0 ? ToolbarItems.Max(p => p.SortOrder) + 10 : 10);
 
-            // Missing items were introduced after this settings file was written; add them hidden
-            // so an upgrade never silently changes a toolbar the user has already tuned.
-            ToolbarItems.Add(new SeWaveformToolbarItem { Type = type, IsVisible = false, SortOrder = sortOrder });
+            // Missing items were introduced after this settings file was written; they follow the
+            // defaults' visibility. Plain buttons default hidden there, so an upgrade never
+            // silently changes a toolbar the user has already tuned - only items that are
+            // conditional anyway (like the audio-track picker, which renders solely for
+            // multi-track videos) default visible, so upgrading users can discover them.
+            ToolbarItems.Add(new SeWaveformToolbarItem { Type = type, IsVisible = defaultItem?.IsVisible ?? false, SortOrder = sortOrder });
         }
     }
 }
