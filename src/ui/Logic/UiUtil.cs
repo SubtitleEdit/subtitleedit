@@ -2,6 +2,8 @@ using Avalonia;
 using Avalonia.Automation;
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
+using Avalonia.Controls.Presenters;
+using Avalonia.Controls.Templates;
 using Avalonia.Data;
 using Avalonia.Data.Converters;
 using Avalonia.Input;
@@ -10,6 +12,7 @@ using Avalonia.Layout;
 using Avalonia.Media;
 using Avalonia.Platform;
 using Avalonia.Styling;
+using Avalonia.VisualTree;
 using Avalonia.Threading;
 using CommunityToolkit.Mvvm.Input;
 using Nikse.SubtitleEdit.Features.Shared.ColorPicker;
@@ -35,6 +38,165 @@ public static class UiUtil
     public const int WindowMarginWidth = 12;
     public const int CornerRadius = 4;
     public const int SplitterWidthOrHeight = 4;
+
+    /// <summary>
+    /// Grid lines for <see cref="TableView"/>, which - unlike DataGrid - has no
+    /// GridLinesVisibility property. Drawn as cell borders from the same
+    /// Appearance.GridLinesAppearance setting (a <see cref="DataGridGridLinesVisibility"/>
+    /// name) and compact-mode padding the DataGrid cell themes above use, so both
+    /// controls honour the user's "Show grid lines" choice identically.
+    /// </summary>
+    public static ControlTheme TableViewCellTheme => GetTableViewCellTheme(noPadding: false);
+
+    /// <summary>As <see cref="TableViewCellTheme"/> but with no cell padding, for cells hosting their own controls.</summary>
+    public static ControlTheme TableViewNoPaddingCellTheme => GetTableViewCellTheme(noPadding: true);
+
+    private static ControlTheme GetTableViewCellTheme(bool noPadding)
+    {
+        var showVertical =
+            Se.Settings.Appearance.GridLinesAppearance == nameof(DataGridGridLinesVisibility.Vertical) ||
+            Se.Settings.Appearance.GridLinesAppearance == nameof(DataGridGridLinesVisibility.All);
+
+        var showHorizontal =
+            Se.Settings.Appearance.GridLinesAppearance == nameof(DataGridGridLinesVisibility.Horizontal) ||
+            Se.Settings.Appearance.GridLinesAppearance == nameof(DataGridGridLinesVisibility.All);
+
+        // Horizontal inset keeps text off the vertical grid line; the vertical inset sets the
+        // row height, because ApplyTableViewRowStyle zeroes the row's own padding (the cell must
+        // fill the row or its borders float inside it instead of forming continuous lines).
+        var padding = noPadding
+            ? new Thickness(0)
+            : new Thickness(4, Se.Settings.Appearance.GridCompactMode ? 2 : 6);
+
+        return new ControlTheme(typeof(TableViewCell))
+        {
+            Setters =
+            {
+                new Setter(TableViewCell.BackgroundProperty, Brushes.Transparent),
+                new Setter(TableViewCell.PaddingProperty, padding),
+                new Setter(TableViewCell.BorderBrushProperty, GetBorderBrush()),
+                new Setter(TableViewCell.BorderThicknessProperty,
+                    new Thickness(0, 0, showVertical ? 1 : 0, showHorizontal ? 1 : 0)), // vertical and horizontal lines
+                new Setter(TableViewCell.TemplateProperty, TableViewCellTemplate),
+            }
+        };
+    }
+
+    /// <summary>
+    /// Column-header theme matching <see cref="TableViewCellTheme"/>: the same border brush and
+    /// text inset, a bottom line closing the top of the first row, and a right line continuing
+    /// the cells' vertical grid line. The built-in header draws its separator as a semi-transparent
+    /// rectangle inside the resize Thumb, which is both a different colour and 6px off from the
+    /// cell borders - <see cref="ApplyTableViewRowStyle"/> hides it and aligns the rows.
+    /// </summary>
+    public static ControlTheme TableViewColumnHeaderTheme => GetTableViewColumnHeaderTheme();
+
+    private static ControlTheme GetTableViewColumnHeaderTheme()
+    {
+        var showVertical =
+            Se.Settings.Appearance.GridLinesAppearance == nameof(DataGridGridLinesVisibility.Vertical) ||
+            Se.Settings.Appearance.GridLinesAppearance == nameof(DataGridGridLinesVisibility.All);
+
+        return new ControlTheme(typeof(TableViewColumnHeader))
+        {
+            Setters =
+            {
+                new Setter(TableViewColumnHeader.BackgroundProperty, Brushes.Transparent),
+                new Setter(TableViewColumnHeader.PaddingProperty, new Thickness(4, 2, 4, 4)),
+                new Setter(TableViewColumnHeader.BorderBrushProperty, GetBorderBrush()),
+                // The bottom line always shows: it separates the header from the first row the way
+                // DataGrid's header does, independently of the horizontal grid-line setting.
+                new Setter(TableViewColumnHeader.BorderThicknessProperty, new Thickness(0, 0, showVertical ? 1 : 0, 1)),
+                new Setter(TableViewColumnHeader.TemplateProperty, TableViewColumnHeaderTemplate),
+            }
+        };
+    }
+
+    // Mirrors the built-in header template (content + resize thumb) but routes the border
+    // properties to the presenter so the header's lines match the cells', and drops the
+    // thumb's own off-colour separator rectangle.
+    private static readonly FuncControlTemplate<TableViewColumnHeader> TableViewColumnHeaderTemplate =
+        new((_, scope) =>
+        {
+            var presenter = new ContentPresenter
+            {
+                Name = "PART_ContentPresenter",
+                [!ContentPresenter.ContentProperty] = new TemplateBinding(ContentControl.ContentProperty),
+                [!ContentPresenter.ContentTemplateProperty] = new TemplateBinding(ContentControl.ContentTemplateProperty),
+                [!ContentPresenter.BackgroundProperty] = new TemplateBinding(TemplatedControl.BackgroundProperty),
+                [!ContentPresenter.BorderBrushProperty] = new TemplateBinding(TemplatedControl.BorderBrushProperty),
+                [!ContentPresenter.BorderThicknessProperty] = new TemplateBinding(TemplatedControl.BorderThicknessProperty),
+                [!ContentPresenter.PaddingProperty] = new TemplateBinding(TemplatedControl.PaddingProperty),
+                [!ContentPresenter.HorizontalContentAlignmentProperty] = new TemplateBinding(ContentControl.HorizontalContentAlignmentProperty),
+                [!ContentPresenter.VerticalContentAlignmentProperty] = new TemplateBinding(ContentControl.VerticalContentAlignmentProperty),
+            }.RegisterInNameScope(scope);
+
+            // Keep the resize grip - TableViewColumn.CanUserResize works through it.
+            var thumb = new Thumb
+            {
+                Name = "PART_Resizer",
+                Width = 12,
+                Margin = new Thickness(0, 0, -6, 0),
+                HorizontalAlignment = HorizontalAlignment.Right,
+                Cursor = new Cursor(StandardCursorType.SizeWestEast),
+                Background = Brushes.Transparent,
+                Template = new FuncControlTemplate<Thumb>((_, _) => new Border { Background = Brushes.Transparent }),
+            }.RegisterInNameScope(scope);
+
+            return new Panel { Children = { presenter, thumb } };
+        });
+
+    /// <summary>
+    /// Makes <see cref="TableView"/> rows tight to their cells. TableViewRow is a ListBoxItem
+    /// and its default padding sits *outside* the cells, so cell borders would be drawn inside
+    /// the row - horizontal lines floating above the row edge and vertical lines broken into
+    /// one segment per row instead of continuous columns. The cells carry the inset instead
+    /// (see the cell themes above). Call this on any TableView using those cell themes.
+    /// </summary>
+    public static void ApplyTableViewRowStyle(TableView tableView)
+    {
+        tableView.Styles.Add(new Style(x => x.OfType<TableViewRow>())
+        {
+            Setters =
+            {
+                new Setter(TableViewRow.PaddingProperty, new Thickness(0)),
+                new Setter(TableViewRow.MinHeightProperty, 0.0),
+            }
+        });
+
+        // TableView's template wraps the header in a Border with hard-coded 6,9,6,12 padding
+        // while rows sit flush against the control edge. Left alone the header's column border
+        // lands 6px right of the cell borders below it, and its bottom line floats 12px above
+        // the first row. The Border is an unnamed template part, so it can't be reached by a
+        // selector - zero its padding once the template is applied.
+        tableView.Loaded += (_, _) =>
+        {
+            var headersPresenter = tableView.GetVisualDescendants()
+                .OfType<TableViewColumnHeadersPresenter>()
+                .FirstOrDefault();
+            if (headersPresenter?.GetVisualParent() is Border headerBorder)
+            {
+                headerBorder.Padding = new Thickness(0);
+            }
+        };
+    }
+
+    // TableViewCell's built-in template only template-binds Background, so the border
+    // properties set above would never be drawn. Bind them through to the presenter
+    // (which renders its own border) so the grid lines actually appear.
+    private static readonly FuncControlTemplate<TableViewCell> TableViewCellTemplate =
+        new((_, scope) => new ContentPresenter
+        {
+            Name = "PART_ContentPresenter",
+            [!ContentPresenter.ContentProperty] = new TemplateBinding(ContentControl.ContentProperty),
+            [!ContentPresenter.ContentTemplateProperty] = new TemplateBinding(ContentControl.ContentTemplateProperty),
+            [!ContentPresenter.BackgroundProperty] = new TemplateBinding(TemplatedControl.BackgroundProperty),
+            [!ContentPresenter.BorderBrushProperty] = new TemplateBinding(TemplatedControl.BorderBrushProperty),
+            [!ContentPresenter.BorderThicknessProperty] = new TemplateBinding(TemplatedControl.BorderThicknessProperty),
+            [!ContentPresenter.PaddingProperty] = new TemplateBinding(TemplatedControl.PaddingProperty),
+            [!ContentPresenter.HorizontalContentAlignmentProperty] = new TemplateBinding(ContentControl.HorizontalContentAlignmentProperty),
+            [!ContentPresenter.VerticalContentAlignmentProperty] = new TemplateBinding(ContentControl.VerticalContentAlignmentProperty),
+        }.RegisterInNameScope(scope));
 
     public static ControlTheme DataGridNoBorderCellTheme => GetDataGridNoBorderCellTheme();
 
