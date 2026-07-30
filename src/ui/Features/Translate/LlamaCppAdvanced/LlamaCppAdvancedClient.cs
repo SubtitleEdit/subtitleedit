@@ -30,19 +30,19 @@ public class LlamaCppAdvancedClient : IDisposable
         _httpClient.Timeout = TimeSpan.FromMinutes(15);
     }
 
-    public async Task<string> ChatAsync(string url, string systemPrompt, string userContent, string? responseFormatJson, CancellationToken cancellationToken)
+    public async Task<string> ChatAsync(string url, string systemPrompt, string userContent, string? responseFormatJson, CancellationToken cancellationToken, string? model = null)
     {
         Error = string.Empty;
 
-        var response = await PostAsync(url, BuildRequestJson(systemPrompt, userContent, responseFormatJson), cancellationToken);
+        var response = await PostAsync(url, BuildRequestJson(systemPrompt, userContent, responseFormatJson, model), cancellationToken);
         if (!response.ok && responseFormatJson != null && !cancellationToken.IsCancellationRequested)
         {
-            response = await PostAsync(url, BuildRequestJson(systemPrompt, userContent, "{\"type\":\"json_object\"}"), cancellationToken);
+            response = await PostAsync(url, BuildRequestJson(systemPrompt, userContent, "{\"type\":\"json_object\"}", model), cancellationToken);
         }
 
         if (!response.ok && responseFormatJson != null && !cancellationToken.IsCancellationRequested)
         {
-            response = await PostAsync(url, BuildRequestJson(systemPrompt, userContent, null), cancellationToken);
+            response = await PostAsync(url, BuildRequestJson(systemPrompt, userContent, null, model), cancellationToken);
         }
 
         if (!response.ok)
@@ -56,15 +56,21 @@ public class LlamaCppAdvancedClient : IDisposable
     }
 
     /// <summary>
-    /// No "model" field: llama-server serves the single model it was started with, and a remote
-    /// llama.cpp server does the same - sending one would only risk a mismatch.
+    /// The "model" field is only written when the caller supplies one (Ollama requires it;
+    /// llama-server serves the single model it was started with, and sending one would only
+    /// risk a mismatch). cache_prompt is llama.cpp-specific; other servers ignore it.
     /// </summary>
-    private static string BuildRequestJson(string systemPrompt, string userContent, string? responseFormatJson)
+    private static string BuildRequestJson(string systemPrompt, string userContent, string? responseFormatJson, string? model)
     {
         using var stream = new System.IO.MemoryStream();
         using (var writer = new Utf8JsonWriter(stream))
         {
             writer.WriteStartObject();
+            if (!string.IsNullOrWhiteSpace(model))
+            {
+                writer.WriteString("model", model);
+            }
+
             writer.WriteBoolean("stream", false);
             writer.WriteBoolean("cache_prompt", true);
 

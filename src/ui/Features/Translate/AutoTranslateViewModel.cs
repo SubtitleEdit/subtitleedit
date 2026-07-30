@@ -154,6 +154,7 @@ public partial class AutoTranslateViewModel : ObservableObject
             new OpenAiCompatibleTranslate(),
             new LmStudioTranslate(),
             new OllamaTranslate(),
+            new OllamaAdvancedTranslate(),
             new LlamaCppTranslate(),
             new LlamaCppAdvancedTranslate(),
             new AnthropicTranslate(),
@@ -398,6 +399,12 @@ public partial class AutoTranslateViewModel : ObservableObject
             Configuration.Settings.Tools.OllamaModel = apiModel.Trim();
             Se.Settings.AutoTranslate.OllamaUrl = apiUrl.Trim();
             Se.Settings.AutoTranslate.OllamaModel = apiModel.Trim();
+        }
+
+        if (engineType == typeof(OllamaAdvancedTranslate))
+        {
+            Se.Settings.AutoTranslate.OllamaAdvancedUrl = apiUrl.Trim();
+            Se.Settings.AutoTranslate.OllamaAdvancedModel = apiModel.Trim();
         }
 
         if (engineType == typeof(AnthropicTranslate))
@@ -1407,7 +1414,7 @@ public partial class AutoTranslateViewModel : ObservableObject
             // schema-forced JSON reply and rolling context, so MergeAndSplitHelper's merge/split
             // heuristics are not needed (and would break the line alignment the schema guarantees).
             // "Translate current line" still goes through the regular single-line path below.
-            if (translator is LlamaCppAdvancedTranslate advancedTranslator && !_onlyCurrentLine)
+            if (translator is AdvancedTranslatorBase advancedTranslator && !_onlyCurrentLine)
             {
                 while (index < Rows.Count)
                 {
@@ -1636,6 +1643,7 @@ public partial class AutoTranslateViewModel : ObservableObject
             OllamaTranslate => settings.OllamaApiUrl,
             LlamaCppTranslate => settings.LlamaCppApiUrl,
             LlamaCppAdvancedTranslate => settings.LlamaCppApiUrl,
+            OllamaAdvancedTranslate => Se.Settings.AutoTranslate.OllamaAdvancedUrl,
             AnthropicTranslate => settings.AnthropicApiUrl,
             GroqTranslate => settings.GroqUrl,
             OpenRouterTranslate => settings.OpenRouterUrl,
@@ -2009,6 +2017,30 @@ public partial class AutoTranslateViewModel : ObservableObject
             ModelIsVisible = true;
             ButtonModelIsVisible = true;
             ModelText = Se.Settings.AutoTranslate.OllamaModel;
+
+            return;
+        }
+
+        if (engineType == typeof(OllamaAdvancedTranslate))
+        {
+            ModelBrowseIsVisible = true;
+            LlamaCppAdvancedButtonIsVisible = true;
+
+            if (string.IsNullOrEmpty(Se.Settings.AutoTranslate.OllamaAdvancedUrl))
+            {
+                Se.Settings.AutoTranslate.OllamaAdvancedUrl = "http://localhost:11434/v1/chat/completions";
+            }
+
+            FillUrls(new List<string>
+            {
+                Se.Settings.AutoTranslate.OllamaAdvancedUrl.TrimEnd('/'),
+            });
+
+            // Same installed-model list as the classic Ollama engine - only the endpoint differs.
+            _apiModels = Se.Settings.AutoTranslate.OllamaModels.Split(',').ToList();
+            ModelIsVisible = true;
+            ButtonModelIsVisible = true;
+            ModelText = Se.Settings.AutoTranslate.OllamaAdvancedModel;
 
             return;
         }
