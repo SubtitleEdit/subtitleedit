@@ -19189,8 +19189,13 @@ public partial class MainViewModel :
             }
 
             // The user cancelled this extraction (X next to the progress). Leave an empty
-            // "click to generate" waveform rather than reporting a failure.
-            if (Volatile.Read(ref _cancelledWaveExtractionId) == extractionId)
+            // "click to generate" waveform rather than reporting a failure. Re-checked between the
+            // later stages too: with a short file, ffmpeg is done in a second and most of the
+            // visible "generating" time is peaks/spectrogram work - a cancel clicked then must
+            // still win, not be silently ignored.
+            bool WasCancelled() => Volatile.Read(ref _cancelledWaveExtractionId) == extractionId;
+
+            void FinishCancelled()
             {
                 DeleteTempFile(tempWaveFileName);
                 ShowStatus(Se.Language.General.Cancelled);
@@ -19203,6 +19208,11 @@ public partial class MainViewModel :
                         AudioVisualizer.InvalidateVisual();
                     }
                 });
+            }
+
+            if (WasCancelled())
+            {
+                FinishCancelled();
                 return;
             }
 
@@ -19228,11 +19238,23 @@ public partial class MainViewModel :
                 using var waveFile = new WavePeakGenerator2(tempWaveFileName);
                 var wavePeaks = waveFile.GeneratePeaks(0, peakWaveFileName);
 
+                if (WasCancelled())
+                {
+                    FinishCancelled();
+                    return;
+                }
+
                 if (Se.Settings.Waveform.GenerateSpectrogram)
                 {
                     WaveformGeneratingText = Se.Language.Main.GeneratingSpectrogramDotDotDot;
                     var spectrogram = waveFile.GenerateSpectrogram(0, spectrogramFolderName, _videoOpenTokenSource.Token);
                     AudioVisualizer?.SetSpectrogram(spectrogram);
+
+                    if (WasCancelled())
+                    {
+                        FinishCancelled();
+                        return;
+                    }
                 }
 
                 Dispatcher.UIThread.Post(() =>

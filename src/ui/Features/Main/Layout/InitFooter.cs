@@ -3,6 +3,7 @@ using Avalonia.Automation;
 using Avalonia.Controls;
 using Avalonia.Data;
 using Avalonia.Layout;
+using Avalonia.Media;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using Optris.Icons.Avalonia;
@@ -59,9 +60,11 @@ public static class InitFooter
                 [ToolTip.TipProperty] = cancelLabel,
             },
             [AutomationProperties.NameProperty] = cancelLabel,
-            Background = null,
+            // Transparent, not null: a null background is not hit-testable, so clicks would only
+            // register on the thin strokes of the X glyph itself.
+            Background = Brushes.Transparent,
             BorderBrush = null,
-            Padding = new Thickness(2, 0, 2, 0),
+            Padding = new Thickness(4, 2, 4, 2),
             Margin = new Thickness(0, 0, 15, 0),
             VerticalAlignment = VerticalAlignment.Center,
             DataContext = vm,
