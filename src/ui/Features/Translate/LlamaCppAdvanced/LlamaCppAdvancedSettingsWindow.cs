@@ -20,7 +20,7 @@ public class LlamaCppAdvancedSettingsWindow : Window
         UiUtil.InitializeWindow(this, GetType().Name);
         Title = Se.Language.Translate.AdvancedSettings;
         // Explicit width: WidthAndHeight sizing comes out too wide on macOS.
-        Width = 660;
+        Width = 680;
         SizeToContent = SizeToContent.Height;
         CanResize = false;
 
@@ -119,7 +119,24 @@ public class LlamaCppAdvancedSettingsWindow : Window
 
     private static Grid BuildSamplingSection(LlamaCppAdvancedSettingsViewModel vm)
     {
-        var grid = MakeFormGrid(5);
+        // Four columns (label, editor, label, editor) so the four sampling values sit in a
+        // 2x2 block instead of one long row that overflows the window width.
+        var grid = new Grid
+        {
+            ColumnDefinitions =
+            {
+                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) },
+                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) },
+                new ColumnDefinition { Width = new GridLength(110, GridUnitType.Pixel) },
+                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) },
+            },
+            ColumnSpacing = 12,
+            RowSpacing = 10,
+        };
+        for (var i = 0; i < 5; i++)
+        {
+            grid.RowDefinitions.Add(new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) });
+        }
 
         var samplingHeader = new TextBlock
         {
@@ -128,32 +145,28 @@ public class LlamaCppAdvancedSettingsWindow : Window
             Margin = new Thickness(0, 0, 0, 4),
         };
         grid.Add(samplingHeader, 0, 0);
-        Grid.SetColumnSpan(samplingHeader, 2);
+        Grid.SetColumnSpan(samplingHeader, 4);
 
-        var samplingPanel = new StackPanel
-        {
-            Orientation = Orientation.Horizontal,
-            Spacing = 10,
-            Children =
-            {
-                MakeSmallLabel(Se.Language.Translate.Temperature),
-                UiUtil.MakeNumericUpDownTwoDecimals(-1, 2, 100, vm, nameof(vm.Temperature)),
-                MakeSmallLabel(Se.Language.Translate.TopP),
-                UiUtil.MakeNumericUpDownTwoDecimals(-1, 1, 100, vm, nameof(vm.TopP)),
-                MakeSmallLabel(Se.Language.Translate.TopK),
-                UiUtil.MakeNumericUpDownInt(-1, 500, -1, 100, vm, nameof(vm.TopK)),
-                MakeSmallLabel(Se.Language.Translate.RepeatPenalty),
-                UiUtil.MakeNumericUpDownTwoDecimals(-1, 3, 100, vm, nameof(vm.RepeatPenalty)),
-            },
-        };
-        grid.Add(samplingPanel, 1, 0);
-        Grid.SetColumnSpan(samplingPanel, 2);
+        grid.Add(MakeSmallLabel(Se.Language.Translate.Temperature), 1, 0);
+        grid.Add(UiUtil.MakeNumericUpDownTwoDecimals(-1, 2, 110, vm, nameof(vm.Temperature)), 1, 1);
+        grid.Add(MakeSmallLabel(Se.Language.Translate.TopP), 1, 2);
+        grid.Add(UiUtil.MakeNumericUpDownTwoDecimals(-1, 1, 110, vm, nameof(vm.TopP)), 1, 3);
 
-        AddRow(grid, 2, Se.Language.Translate.MaxTokensPerReply,
-            UiUtil.MakeNumericUpDownInt(-1, 32768, -1, 120, vm, nameof(vm.MaxTokens)));
+        grid.Add(MakeSmallLabel(Se.Language.Translate.TopK), 2, 0);
+        grid.Add(UiUtil.MakeNumericUpDownInt(-1, 500, -1, 110, vm, nameof(vm.TopK)), 2, 1);
+        grid.Add(MakeSmallLabel(Se.Language.Translate.RepeatPenalty), 2, 2);
+        grid.Add(UiUtil.MakeNumericUpDownTwoDecimals(-1, 3, 110, vm, nameof(vm.RepeatPenalty)), 2, 3);
 
-        AddRow(grid, 3, Se.Language.Translate.ServerContextSizeTokens,
-            UiUtil.MakeNumericUpDownInt(2048, 262144, 16384, 120, vm, nameof(vm.ContextSize)));
+        var maxTokens = UiUtil.MakeNumericUpDownInt(-1, 32768, -1, 150, vm, nameof(vm.MaxTokens));
+        grid.Add(MakeSmallLabel(Se.Language.Translate.MaxTokensPerReply), 3, 0);
+        grid.Add(maxTokens, 3, 1);
+        Grid.SetColumnSpan(maxTokens, 3);
+
+        var contextSize = UiUtil.MakeNumericUpDownInt(2048, 262144, 16384, 150, vm, nameof(vm.ContextSize));
+        contextSize.Increment = 2048;
+        grid.Add(MakeSmallLabel(Se.Language.Translate.ServerContextSizeTokens), 4, 0);
+        grid.Add(contextSize, 4, 1);
+        Grid.SetColumnSpan(contextSize, 3);
 
         return grid;
     }
