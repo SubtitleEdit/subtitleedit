@@ -32,6 +32,7 @@ public class SeAutoTranslate
     /// (e.g. a GPU box) instead of downloading a model and managing a local server (#11584).
     /// </summary>
     public bool LlamaCppUseRemoteServer { get; set; }
+    public SeLlamaCppAdvanced LlamaCppAdvanced { get; set; } = new();
     public string GroqUrl { get; set; }
     public string GroqPrompt { get; set; }
     public string GroqApiKey { get; set; }
