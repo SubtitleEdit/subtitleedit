@@ -20,7 +20,17 @@ public partial class EditCustomTextFormatViewModel : ObservableObject, IClosingC
     [ObservableProperty] private string _title;
 
     public List<string> NewLineList { get; } = new() { "{newline}", "{tab}", "{cr}", "{lf}", "||" };
-    public List<string> TimeCodeList { get; } = new() { "hh:mm:ss,zzz", "ff" };
+    public List<string> TimeCodeList { get; } = new()
+    {
+        "hh:mm:ss,zzz",
+        "hh:mm:ss.zzz",
+        "hh:mm:ss:ff",
+        "ss.zzz",
+        "ss.zzzzzz",
+        "ss",
+        "zzz",
+        "ff",
+    };
     public List<string> HeaderFooterTags { get; } = new() { "{title}", "{#lines}", "{tab}", "{media-file-name}", "{media-file-name-full}", "{media-file-name-with-ext}" };
     public List<string> ParagraphTags { get; } = new()
     {

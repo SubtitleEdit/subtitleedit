@@ -85,7 +85,23 @@ Export subtitle text without time codes.
 
 ### Export custom text format
 
-Export using a customizable text template.
+Export using a customizable text template. A template has a header, a per-subtitle text part, and a footer.
+
+Placeholders for the text part include `{start}`, `{end}`, `{text}`, `{number}`, `{number-1}`, `{duration}`, `{gap}`, `{actor}`, `{text-line-1}`, `{text-line-2}`, `{text-length}`, `{cps-period}`, `{bookmark}`, `{media-file-name}`, `{text-csv}`, and `{tab}`.
+
+The time code format is built from these letters (anything else is kept as-is):
+
+| Letters | Meaning |
+|---------|---------|
+| `hh` / `h` | hours |
+| `mm` / `m` | minutes |
+| `ss` / `s` | seconds |
+| `zzz` | milliseconds / fraction of a second |
+| `ff` / `f` | frames (uses the current frame rate) |
+
+So `hh:mm:ss,zzz` gives `00:01:01,160` and `hh:mm:ss:ff` gives `00:01:01:04`.
+
+A time code format that *starts* with `s`'s or `z`'s means totals instead of clock components: `ss.zzz` gives total seconds `61.160`, `ss.zzzzzz` gives `61.160000` (Audacity/Tenacity label style), `ss` gives `61`, and `zzz` gives total milliseconds `61160`. A format of exactly `ff` gives total frames.
 
 ### Export to Blu-ray SUP
 
