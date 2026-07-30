@@ -7,6 +7,7 @@ using Avalonia.Data;
 using Avalonia.Data.Converters;
 using Avalonia.Input;
 using Avalonia.Layout;
+using Avalonia.Media;
 using Avalonia.Styling;
 using Nikse.SubtitleEdit.Features.Ocr.Engines;
 using Nikse.SubtitleEdit.Features.Ocr.FixEngine;
@@ -18,6 +19,8 @@ using Optris.Icons.Avalonia;
 using System;
 using System.Collections;
 using System.ComponentModel;
+using System.Globalization;
+using System.Linq;
 using Nikse.SubtitleEdit.UiLogic.Ocr.FixEngine;
 using MenuItem = Avalonia.Controls.MenuItem;
 using Nikse.SubtitleEdit.UiLogic.Ocr;
@@ -412,6 +415,25 @@ public class OcrWindow : Window
         // replaces: no column sorting (TableView has none), and extended selection
         // (shift/ctrl-click, shift+arrows) is native ListBox behavior instead of
         // DataGridCheckboxMultiSelect.
+        //
+        // TableView has no content-based column sizing either - GridLength.Auto is
+        // treated as 1* by its layout helper - so the narrow columns get pixel widths
+        // measured from their widest content (the VM is initialized before the window
+        // ctor, so the items are available here).
+        const double cellChrome = 16; // cell padding/margins + slack
+        double MeasureWidth(string text) =>
+            new FormattedText(text, CultureInfo.CurrentUICulture, FlowDirection.LeftToRight,
+                Typeface.Default, 14, null).Width;
+        double ColumnWidth(string header, string widestCellText) =>
+            Math.Max(MeasureWidth(header), MeasureWidth(widestCellText)) + cellChrome;
+
+        var lastItem = vm.OcrSubtitleItems.LastOrDefault();
+        var maxDuration = vm.OcrSubtitleItems.Count > 0 ? vm.OcrSubtitleItems.Max(p => p.Duration) : TimeSpan.Zero;
+        var numberWidth = ColumnWidth(Se.Language.General.NumberSymbol, vm.OcrSubtitleItems.Count.ToString());
+        var showWidth = ColumnWidth(Se.Language.General.Show,
+            fullTimeConverter.Convert(lastItem?.StartTime ?? TimeSpan.Zero, typeof(string), null, CultureInfo.CurrentUICulture) as string ?? string.Empty);
+        var durationWidth = ColumnWidth(Se.Language.General.Duration,
+            shortTimeConverter.Convert(maxDuration, typeof(string), null, CultureInfo.CurrentUICulture) as string ?? string.Empty);
         var dataGridSubtitle = new TableView
         {
             SelectionMode = SelectionMode.Multiple,
@@ -429,7 +451,7 @@ public class OcrWindow : Window
             dataGridSubtitle.Columns.Add(new TableViewColumn
             {
                 Header = Se.Language.General.Forced,
-                Width = GridLength.Auto,
+                Width = new GridLength(MeasureWidth(Se.Language.General.Forced) + cellChrome),
                 CellTheme = UiUtil.TableViewNoPaddingCellTheme,
                 HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
                 CellTemplate = new FuncDataTemplate<OcrSubtitleItem>((_, _) =>
@@ -448,7 +470,7 @@ public class OcrWindow : Window
                 new TableViewColumn
                 {
                     Header = Se.Language.General.NumberSymbol,
-                    Width = GridLength.Auto,
+                    Width = new GridLength(numberWidth),
                     CellTheme = UiUtil.TableViewCellTheme,
                     HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
                     Binding = new Binding(nameof(OcrSubtitleItem.Number)),
@@ -456,7 +478,7 @@ public class OcrWindow : Window
                 new TableViewColumn
                 {
                     Header = Se.Language.General.Show,
-                    Width = GridLength.Auto,
+                    Width = new GridLength(showWidth),
                     CellTheme = UiUtil.TableViewCellTheme,
                     HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
                     Binding = new Binding(nameof(OcrSubtitleItem.StartTime)) { Converter = fullTimeConverter },
@@ -464,7 +486,7 @@ public class OcrWindow : Window
                 new TableViewColumn
                 {
                     Header = Se.Language.General.Duration,
-                    Width = GridLength.Auto,
+                    Width = new GridLength(durationWidth),
                     CellTheme = UiUtil.TableViewCellTheme,
                     HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
                     Binding = new Binding(nameof(OcrSubtitleItem.Duration)) { Converter = shortTimeConverter },
@@ -472,7 +494,7 @@ public class OcrWindow : Window
                 new TableViewColumn
                 {
                     Header = Se.Language.General.Image,
-                    Width = GridLength.Auto,
+                    Width = new GridLength(vm.ImageMaxWidth + cellChrome),
                     CellTheme = UiUtil.TableViewNoPaddingCellTheme,
                     HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
                     CellTemplate = new FuncDataTemplate<OcrSubtitleItem>((item, _) =>
@@ -539,6 +561,18 @@ public class OcrWindow : Window
                     })
                 },
         });
+
+        // The image thumbnails scale with Ctrl+plus/minus (Image.MaxWidth/MaxHeight are
+        // bound to the VM) - keep the pixel-sized image column in step with the zoom.
+        var imageColumn = dataGridSubtitle.Columns[dataGridSubtitle.Columns.Count - 2];
+        vm.PropertyChanged += (_, args) =>
+        {
+            if (args.PropertyName == nameof(vm.ImageMaxWidth))
+            {
+                imageColumn.Width = new GridLength(vm.ImageMaxWidth + cellChrome);
+            }
+        };
+
         UiUtil.ApplyTableViewRowStyle(dataGridSubtitle);
         dataGridSubtitle.Bind(TableView.SelectedItemProperty, new Binding(nameof(vm.SelectedOcrSubtitleItem)) { Source = vm });
         dataGridSubtitle.KeyDown += vm.SubtitleGridKeyDown;

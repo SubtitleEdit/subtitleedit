@@ -89,8 +89,16 @@ public class OcrTableViewTests
         Assert.Equal(5, tableView.Columns!.Count);
         Assert.Equal(3, tableView.ItemsSource!.Cast<object>().Count());
 
-        // The star-sized Text column fills the remaining width like the DataGrid version did.
+        // TableView has no content-based sizing (Auto acts as 1*), so the narrow columns
+        // are pixel-sized from their widest content and only Text is star-sized.
+        Assert.All(tableView.Columns.Take(4), c => Assert.True(c.Width.IsAbsolute && c.Width.Value > 0));
         Assert.True(tableView.Columns[^1].Width.IsStar);
+
+        // The image column tracks the Ctrl+plus/minus zoom via ImageMaxWidth.
+        var imageWidthBefore = tableView.Columns[3].Width.Value;
+        vm.ImageMaxWidth *= 1.1;
+        Dispatcher.UIThread.RunJobs();
+        Assert.True(tableView.Columns[3].Width.Value > imageWidthBefore);
 
         window.Close();
     }
