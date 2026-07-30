@@ -71,7 +71,6 @@
 		<AvaloniaResource Include="Assets\*.png" />
 		<AvaloniaResource Include="Assets\*.zip" />
 		<AvaloniaResource Include="Assets\FileTypes\*.ico" />
-		<AvaloniaResource Include="Assets\Languages\*.json" />
 		<AvaloniaResource Include="Assets\Layout\*.png" />
 		<AvaloniaResource Include="Assets\SevenZip\*.zip" />
 		<AvaloniaResource Include="Assets\SpeechToText\*.py" />
@@ -93,4 +92,23 @@
 			<_Parameter1>UiBenchmarks</_Parameter1>
 		</AssemblyAttribute>
 	</ItemGroup>
+
+	<Import Project="..\AssetZips.targets" />
+	<!--
+	  Themes.zip / Dictionaries.zip / Ocr.zip / Languages.zip are generated from their source
+	  folders by AssetZips.targets and injected here, so they never need to be rebuilt by hand.
+	  Assets\Languages\*.json is deliberately NOT an AvaloniaResource on its own - the
+	  translations ship deflated inside Languages.zip instead of as ~6.8 MB of raw JSON.
+	-->
+	<Target Name="IncludeAssetZips" BeforeTargets="GenerateAvaloniaResources" DependsOnTargets="BuildThemesZip;BuildDictionariesZip;BuildOcrZip;BuildLanguagesZip">
+		<!--
+		  The intermediate _AssetZipFiles item exists because Link="Assets\%(Filename)..."
+		  directly on the AvaloniaResource Include would be a metadata self-reference (MSB4120)
+		  and cross-apply against every pre-existing AvaloniaResource item.
+		-->
+		<ItemGroup>
+			<_AssetZipFiles Include="$(AssetZipsOutDir)*.zip" />
+			<AvaloniaResource Include="@(_AssetZipFiles)" Link="Assets\%(_AssetZipFiles.Filename)%(_AssetZipFiles.Extension)" />
+		</ItemGroup>
+	</Target>
 </Project>

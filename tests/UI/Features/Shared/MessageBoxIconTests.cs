@@ -1,3 +1,5 @@
+using Avalonia.Headless.XUnit;
+using Avalonia.Platform;
 using Nikse.SubtitleEdit.Features.Shared;
 using System.IO.Compression;
 
@@ -8,7 +10,8 @@ namespace UITests.Features.Shared;
 /// current theme's image folder, unpacked from Themes.zip at start-up. Nothing at compile time
 /// ties the enum to those file names, and the load sits behind a catch, so a rename would just
 /// silently drop the icon. That is how the icons came to be loaded from a path that never
-/// resolved at all. These tests pin the contract to the shipped zip.
+/// resolved at all. These tests pin the contract to the shipped zip - the one generated from
+/// the repo's Themes folder by src/AssetZips.targets and embedded as an Avalonia resource.
 /// </summary>
 public class MessageBoxIconTests
 {
@@ -26,7 +29,7 @@ public class MessageBoxIconTests
         return data;
     }
 
-    [Theory]
+    [AvaloniaTheory]
     [MemberData(nameof(ThemeFolderNames))]
     public void EveryMessageBoxIcon_HasAnImageInTheme(string themeFolder)
     {
@@ -45,24 +48,23 @@ public class MessageBoxIconTests
     }
 
     /// <summary>
-    /// The theme images are not embedded assets - Assets\Themes\** is excluded from the build and
-    /// only Themes.zip ships - so an avares:// URI or a relative path cannot reach them.
+    /// The theme images are not embedded as individual assets - only the generated Themes.zip
+    /// ships - so an avares:// URI or a relative path cannot reach them.
     /// </summary>
-    [Fact]
+    [AvaloniaFact]
     public void ThemeImages_ShipOnlyInsideThemesZip()
     {
-        var assets = GetAssetsFolder();
-
         Assert.False(
-            Directory.Exists(Path.Combine(assets, "Themes")),
+            Directory.Exists(Path.Combine(GetAssetsFolder(), "Themes")),
             "src/ui/Assets/Themes exists but is excluded from the build - theme images must come " +
             "from Themes.zip, unpacked into Se.ThemesFolder at start-up.");
-        Assert.True(File.Exists(Path.Combine(assets, "Themes.zip")));
+        Assert.NotEmpty(GetThemeZipEntries());
     }
 
     private static HashSet<string> GetThemeZipEntries()
     {
-        using var zip = ZipFile.OpenRead(Path.Combine(GetAssetsFolder(), "Themes.zip"));
+        using var stream = AssetLoader.Open(new Uri("avares://SubtitleEdit/Assets/Themes.zip"));
+        using var zip = new ZipArchive(stream, ZipArchiveMode.Read);
         return zip.Entries.Select(e => e.FullName).ToHashSet(StringComparer.Ordinal);
     }
 
