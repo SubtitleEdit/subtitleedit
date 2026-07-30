@@ -19,7 +19,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 {
                     if (fileName.EndsWith(Extension, StringComparison.OrdinalIgnoreCase))
                     {
-                        byte[] buffer = FileUtil.ReadAllBytesShared(fileName);
+                        byte[] buffer = FileUtil.ReadBytesShared(fileName, 3);
 
                         return buffer[0] == 0x46 &&  // FCX
                                buffer[1] == 0x43 &&

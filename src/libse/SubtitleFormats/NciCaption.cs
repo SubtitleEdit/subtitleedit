@@ -27,7 +27,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 {
                     if (fileName.EndsWith(".cap", StringComparison.OrdinalIgnoreCase))
                     {
-                        byte[] buffer = FileUtil.ReadAllBytesShared(fileName);
+                        byte[] buffer = FileUtil.ReadBytesShared(fileName, 8);
 
                         return ((buffer[0] == 0x43 &&  // CAPT.2.0
                                 buffer[1] == 0x41 &&

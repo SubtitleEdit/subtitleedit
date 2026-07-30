@@ -1655,7 +1655,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 {
                     try
                     {
-                        var buffer = FileUtil.ReadAllBytesShared(fileName);
+                        var buffer = FileUtil.ReadBytesShared(fileName, 1024);
                         var header = ReadHeader(buffer);
                         if (header.DiskFormatCode.StartsWith("STL23", StringComparison.Ordinal) ||
                             header.DiskFormatCode.StartsWith("STL24", StringComparison.Ordinal) ||
