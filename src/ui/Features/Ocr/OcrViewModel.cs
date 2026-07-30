@@ -3637,7 +3637,8 @@ public partial class OcrViewModel : ObservableObject
     {
         var result = new OcrFixLineResultTemp();
 
-        if (DoAutoBreak)
+        // The checkbox promises "auto-break if more than X lines", so leave shorter results alone.
+        if (DoAutoBreak && Utilities.GetNumberOfLines(item.Text) > Se.Settings.General.MaxNumberOfLines)
         {
             item.Text = Utilities.AutoBreakLine(item.Text);
         }
@@ -3728,7 +3729,8 @@ public partial class OcrViewModel : ObservableObject
 
     private List<UnknownWordItem> OcrFixLineAndSetText(int i, OcrSubtitleItem item)
     {
-        if (DoAutoBreak)
+        // The checkbox promises "auto-break if more than X lines", so leave shorter results alone.
+        if (DoAutoBreak && Utilities.GetNumberOfLines(item.Text) > Se.Settings.General.MaxNumberOfLines)
         {
             item.Text = Utilities.AutoBreakLine(item.Text);
         }

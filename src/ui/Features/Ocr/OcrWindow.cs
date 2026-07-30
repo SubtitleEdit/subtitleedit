@@ -750,8 +750,7 @@ public class OcrWindow : Window
             .WithBindIsVisible(nameof(vm.IsDictionaryLoaded));
         var checkBoxTryToGuessUnknownWords = UiUtil.MakeCheckBox(Se.Language.Ocr.TryToGuessUnknownWords, vm, nameof(vm.DoTryToGuessUnknownWords))
             .WithBindIsVisible(nameof(vm.IsDictionaryLoaded));
-        var checkBoxAutoBreak = UiUtil.MakeCheckBox(string.Format(Se.Language.Ocr.AutoBreakIfMoreThanXLines, Se.Settings.General.MaxNumberOfLines), vm, nameof(vm.DoAutoBreak))
-            .WithBindIsVisible(nameof(vm.IsDictionaryLoaded));
+        var checkBoxAutoBreak = UiUtil.MakeCheckBox(string.Format(Se.Language.Ocr.AutoBreakIfMoreThanXLines, Se.Settings.General.MaxNumberOfLines), vm, nameof(vm.DoAutoBreak));
 
         var panelOptions = new StackPanel
         {
