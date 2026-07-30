@@ -85,9 +85,9 @@ public class LanguageInitializer(IZipUnpacker zipUnpacker) : ILanguageInitialize
             zipUnpacker.UnpackZipStream(zipStream, Se.TranslationFolder);
             return true;
         }
-        catch
+        catch (Exception exception)
         {
-            Se.LogError("Could not unpack language files.");
+            Se.LogError(exception, $"Could not unpack language files into \"{Se.TranslationFolder}\".");
             return false;
         }
     }
