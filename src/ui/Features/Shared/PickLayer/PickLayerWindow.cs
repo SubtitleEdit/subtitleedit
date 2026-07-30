@@ -12,7 +12,7 @@ public class PickLayerWindow : Window
     public PickLayerWindow(PickLayerViewModel vm)
     {
         UiUtil.InitializeWindow(this, GetType().Name);
-        Title = Se.Language.Tools.PickLayerTitle;
+        Title = Se.Language.General.PickLayer;
         CanResize = false;
         SizeToContent = SizeToContent.WidthAndHeight;
         MinWidth = 300;

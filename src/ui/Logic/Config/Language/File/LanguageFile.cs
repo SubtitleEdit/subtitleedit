@@ -22,12 +22,8 @@ public class LanguageFile
     public string CompareOnlyInOneFile { get; set; }
     public string CompareTextOrTimeDifference { get; set; }
     public string CompareNumberDifference { get; set; }
-    public string IgnoreLineBreaks { get; set; }
     public string IgnoreWhitespace { get; set; }
     public string IgnoreFormatting { get; set; }
-    public string OnlyLookForDifferencesInText { get; set; }
-    public string CannotCompareWithImageBasedSubtitles { get; set; }
-    public string StatisticsTitle { get; set; }
     public string ShowOnlyDifferencesInText { get; set; }
     public string LoadXFromFile { get; set; }
     public string SaveCompareHtmlTitle { get; set; }
@@ -38,7 +34,6 @@ public class LanguageFile
 
     public LanguageFile()
     {
-        StatisticsTitle = "Statistics";
         Compare = "Compare";
         PreviousDifference = "Previous difference";
         NextDifference = "Next difference";
@@ -51,11 +46,8 @@ public class LanguageFile
         CompareTextOrTimeDifference = "Text/time difference";
         CompareNumberDifference = "Number difference";
         ShowOnlyDifferencesInText = "Only differences in text";
-        IgnoreLineBreaks = "Ignore line breaks";
         IgnoreWhitespace = "Ignore whitespace";
         IgnoreFormatting = "Ignore formatting";
-        OnlyLookForDifferencesInText = "Only look for differences in text";
-        CannotCompareWithImageBasedSubtitles = "Cannot compare with image-based subtitles";
         LoadXFromFile = "Load \"{0}\" from file";
         SaveCompareHtmlTitle = "Save compare HTML file";
         PickMatroskaTrackX = "Pick Matroska track - {0}";

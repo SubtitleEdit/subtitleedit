@@ -29,7 +29,6 @@ public class LanguageTools
     public LanguageImageBasedEdit ImageBasedEdit { get; set; } = new();
     public LanguageRemoveTextForHearingImpaired RemoveTextForHearingImpaired { get; set; } = new();
     public LanguageRemoveUnicodeCharacters RemoveUnicodeCharacters { get; set; } = new();
-    public string PickAlignmentTitle { get; set; }
     public string PickFontNameTitle { get; set; }
     public string ColorPickerTitle { get; set; }
     public string FilterLayersTitle { get; set; }
@@ -38,12 +37,10 @@ public class LanguageTools
     public string FilterLayersHideFromVideoPreview { get; set; }
     public string PickSubtitleFormat { get; set; }
     public string PickSubtitleFormatImageBasedNoPreview { get; set; }
-    public string PickLayerTitle { get; set; }
     public string RecentColors { get; set; }
 
     public LanguageTools()
     {
-        PickAlignmentTitle = "Choose alignment";
         PickFontNameTitle = "Choose font name";
         ColorPickerTitle = "Choose color";
         FilterLayersTitle = "Filter layers for display";
@@ -52,7 +49,6 @@ public class LanguageTools
         FilterLayersHideFromVideoPreview = "Hide from video preview";
         PickSubtitleFormat = "Choose subtitle format";
         PickSubtitleFormatImageBasedNoPreview = "Image-based subtitle format.\nBitmaps are generated during conversion - no text preview.";
-        PickLayerTitle = "Set layer";
         RecentColors = "Recent colors";
     }
 }

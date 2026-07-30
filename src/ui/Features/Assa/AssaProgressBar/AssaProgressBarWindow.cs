@@ -149,20 +149,20 @@ public class AssaProgressBarWindow : Window
         grid.Children.Add(titleLabel);
 
         // Position radio buttons
-        var posLabel = new TextBlock { Text = Se.Language.Assa.ProgressBarPosition + ":", VerticalAlignment = VerticalAlignment.Center };
+        var posLabel = new TextBlock { Text = Se.Language.General.Position + ":", VerticalAlignment = VerticalAlignment.Center };
         Grid.SetRow(posLabel, 1);
         grid.Children.Add(posLabel);
 
         var posPanel = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 15 };
         var radioTop = new RadioButton
         {
-            Content = Se.Language.Assa.ProgressBarTop,
+            Content = Se.Language.General.Top,
             [!RadioButton.IsCheckedProperty] = new Binding(nameof(vm.PositionTop)) { Mode = BindingMode.TwoWay },
             GroupName = "Position",
         };
         var radioBottom = new RadioButton
         {
-            Content = Se.Language.Assa.ProgressBarBottom,
+            Content = Se.Language.General.Bottom,
             [!RadioButton.IsCheckedProperty] = new Binding(nameof(vm.PositionBottom)) { Mode = BindingMode.TwoWay },
             GroupName = "Position",
         };
@@ -200,7 +200,7 @@ public class AssaProgressBarWindow : Window
         Grid.SetColumn(fgPicker, 1);
         grid.Children.Add(fgPicker);
 
-        var bgLabel = new TextBlock { Text = Se.Language.Assa.ProgressBarBackColor + ":", VerticalAlignment = VerticalAlignment.Center };
+        var bgLabel = new TextBlock { Text = Se.Language.General.BackgroundColor + ":", VerticalAlignment = VerticalAlignment.Center };
         Grid.SetRow(bgLabel, 4);
         grid.Children.Add(bgLabel);
 
@@ -211,7 +211,7 @@ public class AssaProgressBarWindow : Window
         grid.Children.Add(bgPicker);
 
         // Style
-        var styleLabel = new TextBlock { Text = Se.Language.Assa.ProgressBarStyle + ":", VerticalAlignment = VerticalAlignment.Center };
+        var styleLabel = new TextBlock { Text = Se.Language.General.Style + ":", VerticalAlignment = VerticalAlignment.Center };
         Grid.SetRow(styleLabel, 5);
         grid.Children.Add(styleLabel);
 
@@ -531,7 +531,7 @@ public class AssaProgressBarWindow : Window
 
         var titleLabel = new TextBlock
         {
-            Text = Se.Language.Assa.ProgressBarPreview,
+            Text = Se.Language.General.Preview,
             FontWeight = FontWeight.Bold,
         };
         Grid.SetRow(titleLabel, 0);

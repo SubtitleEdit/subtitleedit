@@ -26,7 +26,7 @@ public class ShortcutsWindow : Window
     {
         var language = Se.Language.Options.Shortcuts;
         UiUtil.InitializeWindow(this, GetType().Name);
-        Title = language.Title;
+        Title = Se.Language.General.Shortcuts;
         Width = 900;
         Height = 720;
         MinWidth = 860;
@@ -69,7 +69,7 @@ public class ShortcutsWindow : Window
             }
         };
 
-        var labelFilter = UiUtil.MakeTextBlock(language.Filter);
+        var labelFilter = UiUtil.MakeTextBlock(Se.Language.General.Filter);
         var comboBoxFilter = UiUtil.MakeComboBox(vm.Filters, vm, nameof(vm.SelectedFilter))
             .WithMinWidth(120)
             .WithMargin(5, 0, 10, 0);
@@ -478,7 +478,7 @@ public class ShortcutsWindow : Window
         var buttonConfig = UiUtil.MakeButton(vm.ConfigureCommand, IconNames.Settings);
         if (Se.Settings.Appearance.ShowHints)
         {
-            ToolTip.SetTip(buttonConfig, Se.Language.Options.Shortcuts.Settings);
+            ToolTip.SetTip(buttonConfig, Se.Language.General.Settings);
         }
 
         editPanel.Children.Add(buttonConfig);

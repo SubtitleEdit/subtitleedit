@@ -414,7 +414,7 @@ public class TransparentSubtitlesWindow : Window
 
     private static Border MakeCutView(TransparentSubtitlesViewModel vm)
     {
-        var checkBoxCut = UiUtil.MakeCheckBox(Se.Language.Video.BurnIn.Cut, vm, nameof(vm.IsCutActive));
+        var checkBoxCut = UiUtil.MakeCheckBox(Se.Language.General.Cut, vm, nameof(vm.IsCutActive));
 
         var buttonCutFrom = UiUtil.MakeButtonBrowse(vm.BrowseCutFromCommand);
         buttonCutFrom.VerticalAlignment = VerticalAlignment.Center;
@@ -607,7 +607,7 @@ public class TransparentSubtitlesWindow : Window
         var labelOutputPropertiesFolder = UiUtil.MakeLink(string.Empty, vm.OpenOutputFolderCommand)
             .WithFilePathText(vm, nameof(vm.OutputFolder))
             .WithBindVisible(vm, nameof(vm.UseOutputFolderVisible));
-        var labelOutputPropertiesUseSourceFolder = UiUtil.MakeLabel(Se.Language.Video.BurnIn.UseSourceFolder)
+        var labelOutputPropertiesUseSourceFolder = UiUtil.MakeLabel(Se.Language.General.UseSourceFolder)
             .WithBindVisible(vm, nameof(vm.UseSourceFolderVisible));
 
         var panelFileControls2 = new StackPanel

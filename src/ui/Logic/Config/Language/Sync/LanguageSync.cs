@@ -5,7 +5,6 @@ namespace Nikse.SubtitleEdit.Logic.Config.Language.Sync;
 public class LanguageSync
 {
     public string VisualSync { get; set; }
-    public string Sync { get; set; }
     public string StartScene { get; set; }
     public string EndScene { get; set; }
     public string PlayTwoSecondsAndBack { get; set; }
@@ -24,13 +23,10 @@ public class LanguageSync
     public string AdjustAllTimes { get; set; }
     public string ShowEarlier { get; set; }
     public string ShowLater { get; set; }
-    public string ChangeFrameRate { get; set; }
     public string SetSyncPoint { get; set; }
     public string SyncPoints { get; set; }
     public string PointSync { get; set; }
     public string PointSyncViaOther { get; set; }
-    public string AdjustmentX { get; set; }
-    public string TotalAdjustmentX { get; set; }
     public string AdjustAllShortcuts { get; set; }
     public string AdjustAllShortcutsFrames { get; set; }
     public string OffsetInSeconds { get; set; }
@@ -40,7 +36,6 @@ public class LanguageSync
     public LanguageSync()
     {
         VisualSync = "Visual Sync";
-        Sync = "Sync";
         StartScene = "Start scene";
         EndScene = "End scene";
         PlayTwoSecondsAndBack = "Play 2 secs & back";
@@ -59,13 +54,10 @@ public class LanguageSync
         AdjustAllTimes = "Adjust all times (show earlier/later)";
         ShowEarlier = "Show earlier";
         ShowLater = "Show later";
-        ChangeFrameRate = "Change frame rate";
         SetSyncPoint = "Set sync point";
         SyncPoints = "Sync points";
         PointSync = "Point sync";
         PointSyncViaOther = "Point sync via other subtitle";
-        AdjustmentX = "Adjustment: {0}";
-        TotalAdjustmentX = "Total adjustment: {0}";
         AdjustAllShortcuts = "Keyboard shortcuts:\r\n\r\n• Shift + Left/Right: Move 10 ms\r\n• Ctrl + Left/Right: Move 100 ms\r\n• Alt + Left/Right: Move 500 ms";
         AdjustAllShortcutsFrames = "Keyboard shortcuts:\r\n\r\n• Shift + Left/Right: Move 1 frame\r\n• Ctrl + Left/Right: Move 10 frames\r\n• Alt + Left/Right: Move 1 second";
         OffsetInSeconds = "Offset in seconds";

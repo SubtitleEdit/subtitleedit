@@ -41,7 +41,6 @@ public class LanguageBatchConvert
     public string AssaChangeStyleFromStyle { get; set; }
     public string AssaChangeStyleToStyle { get; set; }
     public string AssaChangeStyleImportStyle { get; set; }
-    public string AssaChangeStyleImportedX { get; set; }
     public string AssaChangeStyleTrimUnusedStyles { get; set; }
 
     public LanguageBatchConvert()
@@ -82,7 +81,6 @@ public class LanguageBatchConvert
         AssaChangeStyleFromStyle = "Change style from";
         AssaChangeStyleToStyle = "to";
         AssaChangeStyleImportStyle = "Import style...";
-        AssaChangeStyleImportedX = "Imported: {0}";
         AssaChangeStyleTrimUnusedStyles = "Trim unused styles";
     }
 }

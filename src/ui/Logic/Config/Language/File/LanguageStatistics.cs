@@ -4,13 +4,10 @@ public class LanguageStatistics
 {
     public string Title { get; set; }
     public string TitleWithFileName { get; set; }
-    public string GeneralStatistics { get; set; }
-    public string MostUsed { get; set; }
     public string MostUsedLines { get; set; }
     public string MostUsedWords { get; set; }
     public string NothingFound { get; set; }
     public string NumberOfLinesX { get; set; }
-    public string NumberOfFilesX { get; set; }
     public string LengthInFormatXinCharactersY { get; set; }
     public string NumberOfCharactersInTextOnly { get; set; }
     public string TotalDuration { get; set; }
@@ -51,7 +48,6 @@ public class LanguageStatistics
     public string GapMaximum { get; set; }
     public string GapAverage { get; set; }
     public string GapExceedingMinimum { get; set; }
-    public string Export { get; set; }
     public string Subtitles { get; set; }
     public string Words { get; set; }
     public string TotalDurationShort { get; set; }
@@ -73,13 +69,10 @@ public class LanguageStatistics
     {
         Title = "Statistics";
         TitleWithFileName = "Statistics - {0}";
-        GeneralStatistics = "General statistics";
         NothingFound = "Nothing found";
-        MostUsed = "Most used...";
         MostUsedWords = "Most used words";
         MostUsedLines = "Most used lines";
         NumberOfLinesX = "Number of subtitle lines: {0:#,##0}";
-        NumberOfFilesX = "Number of subtitle files: {0:#,##0}";
         LengthInFormatXinCharactersY = "Number of characters as {0}: {1:#,###,##0}";
         NumberOfCharactersInTextOnly = "Number of characters in text only: {0:#,###,##0}";
         NumberOfItalicTags = "Number of italic tags: {0:#,##0}";
@@ -120,7 +113,6 @@ public class LanguageStatistics
         GapMaximum = "Gap - maximum: {0:#,##0} ms";
         GapAverage = "Gap - average: {0:#,##0.##} ms";
         GapExceedingMinimum = "Gap - below minimum ({0:#,##0} ms): {1} ({2:0.00}%)";
-        Export = "Export...";
         Subtitles = "Subtitles";
         Words = "Words";
         TotalDurationShort = "Total duration";

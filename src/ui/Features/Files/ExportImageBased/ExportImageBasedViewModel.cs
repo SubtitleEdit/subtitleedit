@@ -178,7 +178,7 @@ public partial class ExportImageBasedViewModel : ObservableObject, IClosingClean
         {
             new FontBoxItem(FontBoxType.None, Se.Language.General.None),
             new FontBoxItem(FontBoxType.OneBox, Se.Language.Video.BurnIn.OneBox),
-            new FontBoxItem(FontBoxType.BoxPerLine, Se.Language.Video.BurnIn.BoxPerLine),
+            new FontBoxItem(FontBoxType.BoxPerLine, Se.Language.General.BoxPerLine),
         };
         SelectedBoxType = BoxTypes[0];
         UpdateBoxTypeLabels();

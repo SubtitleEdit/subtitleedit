@@ -7044,7 +7044,7 @@ public partial class MainViewModel :
         }
 
         var suggestedName = await MakeDownloadSuggestedFileNameAsync(url);
-        var outputPath = await _fileHelper.PickSaveFile(Window, ".mkv", suggestedName, Se.Language.Video.OpenFromUrlSaveAs);
+        var outputPath = await _fileHelper.PickSaveFile(Window, ".mkv", suggestedName, Se.Language.General.SaveVideoAsVideoTitle);
         if (string.IsNullOrEmpty(outputPath))
         {
             return;

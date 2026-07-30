@@ -9,10 +9,6 @@ public class LanguageVideoOcr
     public string BottomHalf { get; set; }
     public string FullFrame { get; set; }
     public string Engine { get; set; }
-    public string Language { get; set; }
-    public string Url { get; set; }
-    public string Model { get; set; }
-    public string ApiKey { get; set; }
     public string Scan { get; set; }
     public string FramesPerSecond { get; set; }
     public string TextBrightnessMinimum { get; set; }
@@ -47,10 +43,6 @@ public class LanguageVideoOcr
         BottomHalf = "Bottom half";
         FullFrame = "Full frame";
         Engine = "OCR engine";
-        Language = "Language";
-        Url = "URL";
-        Model = "Model";
-        ApiKey = "API key";
         Scan = "Scan";
         FramesPerSecond = "Frames per second";
         TextBrightnessMinimum = "Text brightness minimum (0=off)";

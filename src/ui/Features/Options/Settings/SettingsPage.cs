@@ -200,7 +200,7 @@ public class SettingsPage : UserControl
 
         sections.Add(new SettingsSection(Se.Language.General.Rules, IconNames.PoliceBadge, "#e0705a",
         [
-            new SettingsItem(Se.Language.Options.Settings.Profiles, () => new StackPanel
+            new SettingsItem(Se.Language.General.Profiles, () => new StackPanel
             {
                 DataContext = _vm,
                 Orientation = Orientation.Horizontal,
@@ -390,7 +390,7 @@ public class SettingsPage : UserControl
             MakeCheckboxSetting(Se.Language.Options.Settings.WebVttUseXTimestampMap, nameof(_vm.WebVttUseXTimestampMap)),
         ]));
 
-        sections.Add(new SettingsSection(Se.Language.Options.Settings.SyntaxColoring, IconNames.Palette, "#d966a0",
+        sections.Add(new SettingsSection(Se.Language.General.SyntaxColoring, IconNames.Palette, "#d966a0",
         [
             MakeCheckboxSetting(Se.Language.Options.Settings.ColorDurationTooShort, nameof(_vm.ColorDurationTooShort)),
             MakeCheckboxSetting(Se.Language.Options.Settings.ColorDurationTooLong, nameof(_vm.ColorDurationTooLong)),
@@ -492,7 +492,7 @@ public class SettingsPage : UserControl
 
         ]));
 
-        sections.Add(new SettingsSection(Se.Language.Options.Settings.WaveformSpectrogram, IconNames.Waveform, "#f0b429",
+        sections.Add(new SettingsSection(Se.Language.General.WaveformSpectrogram, IconNames.Waveform, "#f0b429",
         [
             new SettingsItem(Se.Language.Options.Settings.WaveformDrawStyle,
                 () => UiUtil.MakeComboBox(_vm.WaveformDrawStyles, _vm, nameof(_vm.SelectedWaveformDrawStyle))),
@@ -780,7 +780,7 @@ public class SettingsPage : UserControl
         [
             new SettingsItem(Se.Language.Options.Settings.ProxyAddress, () => UiUtil.MakeTextBox(250, _vm, nameof(_vm.ProxyAddress))),
             MakeCheckboxSetting(Se.Language.Options.Settings.ProxyUseSystemCredentials, nameof(_vm.ProxyUseDefaultCredentials)),
-            new SettingsItem(Se.Language.Options.Settings.Username, () => MakeProxyCredentialTextBox(nameof(_vm.ProxyUserName))),
+            new SettingsItem(Se.Language.General.UserName, () => MakeProxyCredentialTextBox(nameof(_vm.ProxyUserName))),
             new SettingsItem(Se.Language.Options.Settings.Password, () => MakeProxyCredentialTextBox(nameof(_vm.ProxyPassword))),
             new SettingsItem(Se.Language.Options.Settings.ProxyDomain, () => MakeProxyCredentialTextBox(nameof(_vm.ProxyDomain))),
             new SettingsItem(Se.Language.Options.Settings.ProxyBypassList, () =>

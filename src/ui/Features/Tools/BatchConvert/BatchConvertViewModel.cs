@@ -349,8 +349,8 @@ public partial class BatchConvertViewModel : ObservableObject, IClosingCleanup
 
         SortByOptions = new ObservableCollection<SortByOption>
         {
-            new("Number", Se.Language.Tools.SortBy.SortByNumber),
-            new("StartTime", Se.Language.Tools.SortBy.SortByStartTime),
+            new("Number", Se.Language.General.Number),
+            new("StartTime", Se.Language.General.StartTime),
             new("EndTime", Se.Language.Tools.SortBy.SortByEndTime),
         };
         SelectedSortByOption = SortByOptions[0];

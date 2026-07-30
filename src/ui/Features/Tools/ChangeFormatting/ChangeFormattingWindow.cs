@@ -15,7 +15,7 @@ public class ChangeFormattingWindow : Window
     public ChangeFormattingWindow(ChangeFormattingViewModel vm)
     {
         UiUtil.InitializeWindow(this, GetType().Name);
-        Title = Se.Language.Tools.ChangeFormatting.Title;
+        Title = Se.Language.General.ChangeFormatting;
         CanResize = true;
         Width = 1000;
         Height = 800;

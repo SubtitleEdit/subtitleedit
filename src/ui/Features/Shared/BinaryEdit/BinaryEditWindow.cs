@@ -270,7 +270,7 @@ public class BinaryEditWindow : Window
                 },
                 new MenuItem
                 {
-                    Header = Se.Language.Tools.ImageBasedEdit.CenterHorizontally,
+                    Header = Se.Language.General.CenterHorizontally,
                     Command = vm.CenterHorizontallyCommand,
                 },
                 new MenuItem
@@ -492,7 +492,7 @@ public class BinaryEditWindow : Window
 
         var menuItemCenterH = new MenuItem
         {
-            Header = Se.Language.Tools.ImageBasedEdit.CenterHorizontally,
+            Header = Se.Language.General.CenterHorizontally,
             DataContext = vm,
             Command = vm.CenterHorizontallySelectedLinesCommand,
         };

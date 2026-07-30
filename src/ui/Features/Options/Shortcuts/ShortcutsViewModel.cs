@@ -284,7 +284,7 @@ public partial class ShortcutsViewModel : ObservableObject
         {
             ShortcutCategory.SubtitleGridAndTextBox => language.CategorySubtitleGridAndTextBox,
             ShortcutCategory.SubtitleGrid => language.CategorySubtitleGrid,
-            ShortcutCategory.Waveform => language.CategoryWaveform,
+            ShortcutCategory.Waveform => Se.Language.General.Waveform,
             ShortcutCategory.TextBox => language.CategoryTextBox,
             _ => language.ActiveInEverywhere,
         };

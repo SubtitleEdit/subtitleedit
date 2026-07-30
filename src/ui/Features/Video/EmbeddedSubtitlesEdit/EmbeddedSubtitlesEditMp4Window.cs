@@ -118,7 +118,7 @@ public class EmbeddedSubtitlesEditMp4Window : Window
                     // Visual cue distinguishing newly-added tracks from streams already
                     // present in the MP4. Without this users can't tell which row is
                     // theirs vs the original after clicking Add.
-                    Header = Se.Language.Video.EmbeddedTrackColumnNew,
+                    Header = Se.Language.General.New,
                     CellTheme = UiUtil.DataGridNoBorderNoPaddingCellTheme,
                     Binding = new Binding(nameof(EmbeddedTrack.New)) { Mode = BindingMode.OneWay, Converter = booleanToCheckMarkConverter },
                     IsReadOnly = true,

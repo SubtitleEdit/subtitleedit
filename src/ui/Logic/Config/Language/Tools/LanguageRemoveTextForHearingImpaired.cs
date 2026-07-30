@@ -2,7 +2,6 @@ namespace Nikse.SubtitleEdit.Logic.Config.Language.Tools;
 
 public class LanguageRemoveTextForHearingImpaired
 {
-    public string Title { get; set; }
     public string Interjections { get; set; }
     public string SkipIfStartWith { get; set; }
     public string RemoveTextBetween { get; set; }
@@ -23,7 +22,6 @@ public class LanguageRemoveTextForHearingImpaired
 
     public LanguageRemoveTextForHearingImpaired()
     {
-        Title = "Remove text for hearing impaired";
         Interjections = "Interjections";
         SkipIfStartWith = "Skip if start with";
         RemoveTextBetween = "Remove text between";

@@ -105,7 +105,7 @@ public class VisualSyncWindow : Window
         var labelInfo = UiUtil.MakeLabel(string.Empty).WithBindText(vm, nameof(vm.AdjustInfo));
         var buttonSync = new SplitButton
         {
-            Content = Se.Language.Sync.Sync,
+            Content = Se.Language.General.Sync,
             Command = vm.SyncCommand,
             Flyout = new MenuFlyout
             {

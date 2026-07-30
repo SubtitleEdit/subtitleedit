@@ -53,7 +53,7 @@ public class RemoveUnicodeCharactersWindow : Window
                 },
                 new DataGridTextColumn
                 {
-                    Header = l.Character,
+                    Header = Se.Language.General.Character,
                     CellTheme = UiUtil.DataGridNoBorderNoPaddingCellTheme,
                     Binding = new Binding(nameof(RemoveUnicodeCharacterItem.Character)),
                     IsReadOnly = true,
@@ -74,7 +74,7 @@ public class RemoveUnicodeCharactersWindow : Window
                 },
                 new DataGridTextColumn
                 {
-                    Header = l.ReplaceWith,
+                    Header = Se.Language.General.ReplaceWith,
                     CellTheme = UiUtil.DataGridNoBorderNoPaddingCellTheme,
                     Binding = new Binding(nameof(RemoveUnicodeCharacterItem.ReplaceWith)) { Mode = BindingMode.TwoWay },
                     IsReadOnly = false,
@@ -82,7 +82,7 @@ public class RemoveUnicodeCharactersWindow : Window
                 },
                 new DataGridTextColumn
                 {
-                    Header = l.Lines,
+                    Header = Se.Language.General.Lines,
                     CellTheme = UiUtil.DataGridNoBorderNoPaddingCellTheme,
                     Binding = new Binding(nameof(RemoveUnicodeCharacterItem.LinesDisplay)),
                     IsReadOnly = true,
