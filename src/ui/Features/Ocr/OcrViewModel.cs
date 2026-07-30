@@ -159,7 +159,7 @@ public partial class OcrViewModel : ObservableObject
     [ObservableProperty] string _unknownWordsRemoveCurrentText;
 
     public Window? Window { get; set; }
-    public DataGrid SubtitleGrid { get; set; }
+    public TableView SubtitleGrid { get; set; }
 
     // Rebuild the combo row visuals after a download finishes so the install-status dots
     // reflect the current on-disk state instead of the snapshot taken when first realised.
@@ -230,7 +230,7 @@ public partial class OcrViewModel : ObservableObject
             .Select(p => p.EnglishName)
             .OrderBy(p => p));
         SelectedOllamaLanguage = "English";
-        SubtitleGrid = new DataGrid();
+        SubtitleGrid = new TableView();
         CurrentBitmapInfo = string.Empty;
         CurrentText = string.Empty;
         ProgressText = string.Empty;
@@ -4363,10 +4363,10 @@ public partial class OcrViewModel : ObservableObject
             e.Handled = true;
             if (ImageMaxHeight < 300)
             {
+                // TableView rows auto-size to their content, so changing the bound
+                // Image Max sizes re-measures the rows - no explicit RowHeight needed.
                 ImageMaxHeight *= 1.1;
                 ImageMaxWidth *= 1.1;
-                var rowHeight = CalculateRowHeight();
-                Dispatcher.UIThread.Post(() => SubtitleGrid.RowHeight = rowHeight);
             }
         }
         else if ((e.Key == Key.Subtract || e.Key == Key.OemMinus) && e.KeyModifiers.HasFlag(KeyModifiers.Control))
@@ -4376,8 +4376,6 @@ public partial class OcrViewModel : ObservableObject
             {
                 ImageMaxHeight *= 0.9;
                 ImageMaxWidth *= 0.9;
-                var rowHeight = CalculateRowHeight();
-                Dispatcher.UIThread.Post(() => SubtitleGrid.RowHeight = rowHeight);
             }
         }
         else if (e.Key == Key.V && e.KeyModifiers.HasFlag(KeyModifiers.Control) && e.KeyModifiers.HasFlag(KeyModifiers.Shift))
@@ -4446,10 +4444,9 @@ public partial class OcrViewModel : ObservableObject
                 SubtitleGrid.SelectedIndex = indexToScroll;
 
                 // Post ScrollIntoView as a second background task so it runs after
-                // the DataGrid has processed the selection change and updated its layout.
-                var item = OcrSubtitleItems[indexToScroll];
+                // the grid has processed the selection change and updated its layout.
                 Dispatcher.UIThread.Post(
-                    () => SubtitleGrid.ScrollIntoView(item, null),
+                    () => SubtitleGrid.ScrollIntoView(indexToScroll),
                     DispatcherPriority.Background);
             }
         }, DispatcherPriority.Background);
@@ -4583,26 +4580,6 @@ public partial class OcrViewModel : ObservableObject
         Title = string.Format(Se.Language.Ocr.OcrX, "DivX");
         _ocrSubtitle = new OcrSubtitleDivX(list, fileName);
         SetOcrSubtitleItems();
-    }
-
-    private double CalculateRowHeight()
-    {
-        var firstItem = OcrSubtitleItems.FirstOrDefault();
-        if (firstItem == null)
-        {
-            return ImageMaxHeight + 10;
-        }
-
-        var bitmap = firstItem.GetSkBitmap();
-        var natW = (double)bitmap.Width;
-        var natH = (double)bitmap.Height;
-        if (natW <= 0 || natH <= 0)
-        {
-            return ImageMaxHeight + 10;
-        }
-
-        var scale = Math.Min(ImageMaxWidth / natW, ImageMaxHeight / natH);
-        return natH * scale + 10;
     }
 
     internal void EngineSelectionChanged(object? sender, SelectionChangedEventArgs e)
@@ -4875,7 +4852,7 @@ public partial class OcrViewModel : ObservableObject
             {
                 SelectedOcrSubtitleItem = OcrSubtitleItems[0];
                 SubtitleGrid.SelectedIndex = 0;
-                SubtitleGrid.ScrollIntoView(SelectedOcrSubtitleItem, null);
+                SubtitleGrid.ScrollIntoView(0);
                 TrackChanged();
             }
         });

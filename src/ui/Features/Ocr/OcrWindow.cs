@@ -405,61 +405,76 @@ public class OcrWindow : Window
     {
         var fullTimeConverter = new TimeSpanToDisplayFullConverter();
         var shortTimeConverter = new TimeSpanToDisplayShortConverter();
-        var dataGridSubtitle = new DataGrid
+
+        // TableView (Avalonia 12.1) pilot #2, after Show history (#12704): this is SE's
+        // heaviest grid - virtualized template columns with per-row bitmaps - chosen to
+        // judge TableView's scrolling against DataGrid's. Differences vs the DataGrid it
+        // replaces: no column sorting (TableView has none), and extended selection
+        // (shift/ctrl-click, shift+arrows) is native ListBox behavior instead of
+        // DataGridCheckboxMultiSelect.
+        var dataGridSubtitle = new TableView
         {
-            AutoGenerateColumns = false,
-            SelectionMode = DataGridSelectionMode.Extended,
+            SelectionMode = SelectionMode.Multiple,
             CanUserResizeColumns = true,
-            CanUserSortColumns = true,
             HorizontalAlignment = HorizontalAlignment.Stretch,
             VerticalAlignment = VerticalAlignment.Stretch,
             Width = double.NaN,
             Height = double.NaN,
             DataContext = vm,
             ItemsSource = vm.OcrSubtitleItems,
-            Columns =
+        };
+
+        if (vm.HasForcedSubtitles)
+        {
+            dataGridSubtitle.Columns.Add(new TableViewColumn
             {
-                new DataGridTemplateColumn
-                {
-                    Header = Se.Language.General.Forced,
-                    IsReadOnly = true,
-                    IsVisible = vm.HasForcedSubtitles,
-                    CellTheme = UiUtil.DataGridNoBorderNoPaddingCellTheme,
-                    CellTemplate = new FuncDataTemplate<OcrSubtitleItem>((_, _) =>
-                        new CheckBox
-                        {
-                            [!ToggleButton.IsCheckedProperty] = new Binding(nameof(OcrSubtitleItem.IsForced)) { Mode = BindingMode.OneWay },
-                            HorizontalAlignment = HorizontalAlignment.Center,
-                            IsHitTestVisible = false,
-                            Focusable = false,
-                        }),
-                },
-                new DataGridTextColumn
+                Header = Se.Language.General.Forced,
+                Width = GridLength.Auto,
+                CellTheme = UiUtil.TableViewNoPaddingCellTheme,
+                HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
+                CellTemplate = new FuncDataTemplate<OcrSubtitleItem>((_, _) =>
+                    new CheckBox
+                    {
+                        [!ToggleButton.IsCheckedProperty] = new Binding(nameof(OcrSubtitleItem.IsForced)) { Mode = BindingMode.OneWay },
+                        HorizontalAlignment = HorizontalAlignment.Center,
+                        IsHitTestVisible = false,
+                        Focusable = false,
+                    }),
+            });
+        }
+
+        dataGridSubtitle.Columns.AddRange(new[]
+        {
+                new TableViewColumn
                 {
                     Header = Se.Language.General.NumberSymbol,
-                    CellTheme = UiUtil.DataGridNoBorderNoPaddingCellTheme,
+                    Width = GridLength.Auto,
+                    CellTheme = UiUtil.TableViewCellTheme,
+                    HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
                     Binding = new Binding(nameof(OcrSubtitleItem.Number)),
-                    IsReadOnly = true,
                 },
-                new DataGridTextColumn
+                new TableViewColumn
                 {
                     Header = Se.Language.General.Show,
-                    CellTheme = UiUtil.DataGridNoBorderNoPaddingCellTheme,
+                    Width = GridLength.Auto,
+                    CellTheme = UiUtil.TableViewCellTheme,
+                    HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
                     Binding = new Binding(nameof(OcrSubtitleItem.StartTime)) { Converter = fullTimeConverter },
-                    IsReadOnly = true,
                 },
-                new DataGridTextColumn
+                new TableViewColumn
                 {
                     Header = Se.Language.General.Duration,
-                    CellTheme = UiUtil.DataGridNoBorderNoPaddingCellTheme,
+                    Width = GridLength.Auto,
+                    CellTheme = UiUtil.TableViewCellTheme,
+                    HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
                     Binding = new Binding(nameof(OcrSubtitleItem.Duration)) { Converter = shortTimeConverter },
-                    IsReadOnly = true,
                 },
-                new DataGridTemplateColumn
+                new TableViewColumn
                 {
                     Header = Se.Language.General.Image,
-                    IsReadOnly = true,
-                    CellTheme = UiUtil.DataGridNoBorderNoPaddingCellTheme,
+                    Width = GridLength.Auto,
+                    CellTheme = UiUtil.TableViewNoPaddingCellTheme,
+                    HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
                     CellTemplate = new FuncDataTemplate<OcrSubtitleItem>((item, _) =>
                     {
                         var stackPanel = new StackPanel
@@ -497,12 +512,12 @@ public class OcrWindow : Window
                         return stackPanel;
                     })
                 },
-                new DataGridTemplateColumn
+                new TableViewColumn
                 {
                     Header = Se.Language.General.Text,
-                    IsReadOnly = true,
-                    Width = new DataGridLength(1, DataGridLengthUnitType.Star),
-                    CellTheme = UiUtil.DataGridNoBorderNoPaddingCellTheme,
+                    Width = new GridLength(1, GridUnitType.Star),
+                    CellTheme = UiUtil.TableViewNoPaddingCellTheme,
+                    HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
                     CellTemplate = new FuncDataTemplate<OcrSubtitleItem>((item, _) =>
                     {
                         var contentPresenter = new ContentPresenter
@@ -523,16 +538,15 @@ public class OcrWindow : Window
                         return contentPresenter;
                     })
                 },
-            },
-        };
-        dataGridSubtitle.Bind(DataGrid.SelectedItemProperty, new Binding(nameof(vm.SelectedOcrSubtitleItem)) { Source = vm });
+        });
+        UiUtil.ApplyTableViewRowStyle(dataGridSubtitle);
+        dataGridSubtitle.Bind(TableView.SelectedItemProperty, new Binding(nameof(vm.SelectedOcrSubtitleItem)) { Source = vm });
         dataGridSubtitle.KeyDown += vm.SubtitleGridKeyDown;
         dataGridSubtitle.DoubleTapped += (s, e) => vm.SubtitleGridDoubleTapped();
         dataGridSubtitle.AddHandler(InputElement.PointerPressedEvent, vm.DataGridSubtitleMacPointerPressed, Avalonia.Interactivity.RoutingStrategies.Tunnel);
         dataGridSubtitle.AddHandler(InputElement.PointerReleasedEvent, vm.DataGridSubtitleMacPointerReleased, Avalonia.Interactivity.RoutingStrategies.Tunnel);
         dataGridSubtitle.SelectionChanged += vm.SubtitleGridSelectionChanged;
         vm.SubtitleGrid = dataGridSubtitle;
-        _ = new DataGridCheckboxMultiSelect<OcrSubtitleItem>(dataGridSubtitle);
 
         // Create a Flyout for the DataGrid
         var flyout = new MenuFlyout();
