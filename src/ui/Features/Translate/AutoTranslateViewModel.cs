@@ -1505,7 +1505,7 @@ public partial class AutoTranslateViewModel : ObservableObject
                 if (!_onlyCurrentLine)
                 {
                     linesMergedAndTranslated = await MergeAndSplitHelper.MergeAndTranslateIfPossible(Rows, sourceLanguage, targetLanguage, index, translator, forceSingleLineMode,
-                        cancellationToken);
+                        cancellationToken, ApplyRowUpdateOnUiThread);
                 }
 
                 if (linesMergedAndTranslated > 0)
@@ -1557,7 +1557,8 @@ public partial class AutoTranslateViewModel : ObservableObject
                     index,
                     translator,
                     forceSingleLineMode,
-                    cancellationToken);
+                    cancellationToken,
+                    ApplyRowUpdateOnUiThread);
 
                 if (_abort || cancellationToken.IsCancellationRequested)
                 {
@@ -1672,13 +1673,13 @@ public partial class AutoTranslateViewModel : ObservableObject
                 {
                     StatusText = Se.Language.Translate.TranslationComplete;
                 }
-            });
 
-            var lastTranslatedRow = Rows.LastOrDefault(p => !string.IsNullOrEmpty(p.TranslatedText));
-            if (lastTranslatedRow != null)
-            {
-                SelectAndScrollToRow(Rows.IndexOf(lastTranslatedRow));
-            }
+                var lastTranslatedRow = Rows.LastOrDefault(p => !string.IsNullOrEmpty(p.TranslatedText));
+                if (lastTranslatedRow != null)
+                {
+                    SelectAndScrollToRow(Rows.IndexOf(lastTranslatedRow));
+                }
+            });
         }
     }
 
@@ -2416,6 +2417,15 @@ public partial class AutoTranslateViewModel : ObservableObject
             e.Handled = true;
             UiUtil.ShowHelp("features/auto-translate");
         }
+    }
+
+    /// <summary>
+    /// Marshals row writes from the background translation loop to the UI thread -
+    /// the rows are DataGrid-bound and Avalonia bindings are not thread-safe.
+    /// </summary>
+    private static void ApplyRowUpdateOnUiThread(Action action)
+    {
+        Dispatcher.UIThread.Invoke(action);
     }
 
     internal void OnClosing()
