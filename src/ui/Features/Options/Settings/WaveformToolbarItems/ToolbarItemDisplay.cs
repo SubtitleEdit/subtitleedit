@@ -44,6 +44,7 @@ public partial class ToolbarItemDisplay : ObservableObject
             SeWaveformToolbarItemType.AutoSelectOnPlay => Format(w.SelectCurrentLineWhilePlayingHint),
             SeWaveformToolbarItemType.Center => Format(w.CenterWaveformHint),
             SeWaveformToolbarItemType.VideoSeek => w.SeekVideo,
+            SeWaveformToolbarItemType.AudioTrackPicker => Se.Language.Main.Menu.AudioTracks.Replace("_", string.Empty),
             SeWaveformToolbarItemType.TextPrevious => Format(w.TextPreviousHint),
             SeWaveformToolbarItemType.TextPlay => Format(w.TextPlayHint),
             SeWaveformToolbarItemType.TextPause => Format(w.TextPauseHint),

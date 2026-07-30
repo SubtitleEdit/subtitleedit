@@ -24,6 +24,11 @@ public enum SeWaveformToolbarItemType
     VerticalZoom = 9,
     HorizontalZoom = 10,
     VideoPositionSlider = 11,
+
+    // Picks which audio track the waveform is extracted from; only rendered when the
+    // open video has more than one audio track.
+    AudioTrackPicker = 21,
+
     PlaybackSpeed = 12,
     AutoSelectOnPlay = 13,
     Center = 14,

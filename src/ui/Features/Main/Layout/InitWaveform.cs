@@ -689,6 +689,47 @@ public class InitWaveform
             }
         };
 
+        // Audio-track picker: choose which audio track the waveform is extracted from. Only rendered
+        // when the open video has more than one audio track (IsAudioTracksVisible), on top of the
+        // toolbar item's own configured visibility. Each item's label includes a rough
+        // extraction-time estimate, so a heavy lossless track (e.g. TrueHD ~5 min) vs. a light one
+        // (e.g. AC3 ~25 sec) is obvious before choosing.
+        var settingAudioTrack = GetToolbarSettingFor(SeWaveformToolbarItemType.AudioTrackPicker);
+        var audioTracksLabel = Se.Language.Main.Menu.AudioTracks.Replace("_", string.Empty);
+        var iconAudioTrack = new Icon
+        {
+            Value = IconNames.Waveform,
+            VerticalAlignment = VerticalAlignment.Center,
+            Margin = new Thickness(10, 0, 4, 0),
+            FontSize = 18,
+        };
+        var comboBoxAudioTrack = new ComboBox
+        {
+            VerticalAlignment = VerticalAlignment.Center,
+            Margin = new Thickness(0, 0, 10, 0),
+            FontSize = settingAudioTrack.FontSize,
+            MaxHeight = 22,
+            MinHeight = 22,
+            MinWidth = 0,
+            Padding = new Thickness(4, 2, 0, 2),
+            Background = Brushes.Transparent,
+            BorderThickness = new Thickness(0),
+            [ToolTip.TipProperty] = audioTracksLabel,
+            [AutomationProperties.NameProperty] = audioTracksLabel,
+        };
+        comboBoxAudioTrack.Bind(ItemsControl.ItemsSourceProperty, new Binding(nameof(vm.WaveformAudioTracks)));
+        comboBoxAudioTrack.Bind(SelectingItemsControl.SelectedItemProperty, new Binding(nameof(vm.SelectedWaveformAudioTrack)) { Mode = BindingMode.TwoWay });
+
+        var panelAudioTrack = new StackPanel
+        {
+            Orientation = Orientation.Horizontal,
+            VerticalAlignment = VerticalAlignment.Center,
+            Margin = new Thickness(settingAudioTrack.LeftMargin, 0, settingAudioTrack.RightMargin, 0),
+            DataContext = vm,
+            Children = { iconAudioTrack, comboBoxAudioTrack },
+        };
+        panelAudioTrack.Bind(StackPanel.IsVisibleProperty, new Binding(nameof(vm.IsAudioTracksVisible)));
+
         var settingAutoSelectOnPlay = GetToolbarSettingFor(SeWaveformToolbarItemType.AutoSelectOnPlay);
         var toggleButtonAutoSelectOnPlay = new ToggleButton
         {
@@ -840,6 +881,7 @@ public class InitWaveform
             iconVertical,
             panelVerticalZoom,
             sliderPosition,
+            panelAudioTrack,
             panelSpeed,
             toggleButtonAutoSelectOnPlay,
             toggleButtonCenter,
@@ -889,6 +931,7 @@ public class InitWaveform
         Icon iconVertical,
         StackPanel panelVerticalZoom,
         Slider sliderPosition,
+        StackPanel panelAudioTrack,
         StackPanel panelSpeed,
         ToggleButton toggleButtonAutoSelectOnPlay,
         ToggleButton toggleButtonCenter,
@@ -955,6 +998,9 @@ public class InitWaveform
                     break;
                 case SeWaveformToolbarItemType.VideoPositionSlider:
                     toolbarButtonForSort.Add(new SortedControl { Sort = item.SortOrder, Control = sliderPosition });
+                    break;
+                case SeWaveformToolbarItemType.AudioTrackPicker:
+                    toolbarButtonForSort.Add(new SortedControl { Sort = item.SortOrder, Control = panelAudioTrack });
                     break;
                 case SeWaveformToolbarItemType.PlaybackSpeed:
                     toolbarButtonForSort.Add(new SortedControl { Sort = item.SortOrder, Control = panelSpeed });

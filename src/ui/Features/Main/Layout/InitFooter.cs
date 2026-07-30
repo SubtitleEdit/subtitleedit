@@ -3,6 +3,7 @@ using Avalonia.Automation;
 using Avalonia.Controls;
 using Avalonia.Data;
 using Avalonia.Layout;
+using Avalonia.Media;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using Optris.Icons.Avalonia;
@@ -45,9 +46,39 @@ public static class InitFooter
         var labelWaveFormText = UiUtil.MakeLabel()
             .WithBindText(vm, vm => vm.WaveformGeneratingText)
             .WithBindVisible(vm, vm => vm.IsWaveformGenerating)
-            .WithMarginRight(15);
+            .WithMarginRight(4);
         labelWaveFormText.Opacity = 0.5;
-        grid.Add(labelWaveFormText, 0, 1);
+
+        // Cancel button (X) shown next to the "Extracting wave info... NN%" status while generating.
+        var cancelLabel = Se.Language.General.Cancel.Replace("_", string.Empty);
+        var buttonCancelWaveform = new Button
+        {
+            Content = new Icon
+            {
+                Value = IconNames.Close,
+                FontSize = 14,
+                [ToolTip.TipProperty] = cancelLabel,
+            },
+            [AutomationProperties.NameProperty] = cancelLabel,
+            // Transparent, not null: a null background is not hit-testable, so clicks would only
+            // register on the thin strokes of the X glyph itself.
+            Background = Brushes.Transparent,
+            BorderBrush = null,
+            Padding = new Thickness(4, 2, 4, 2),
+            Margin = new Thickness(0, 0, 15, 0),
+            VerticalAlignment = VerticalAlignment.Center,
+            DataContext = vm,
+            [!Button.CommandProperty] = new Binding(nameof(vm.CancelWaveformExtractionCommand)),
+            [!Visual.IsVisibleProperty] = new Binding(nameof(vm.IsWaveformGenerating)),
+        };
+
+        var waveformStatusPanel = new StackPanel
+        {
+            Orientation = Orientation.Horizontal,
+            VerticalAlignment = VerticalAlignment.Center,
+            Children = { labelWaveFormText, buttonCancelWaveform },
+        };
+        grid.Add(waveformStatusPanel, 0, 1);
 
         vm.StatusTextLeftLabel = new TextBlock
         {

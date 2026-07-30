@@ -277,6 +277,8 @@ public partial class MainViewModel :
     [ObservableProperty] private string _setVideoOffsetText;
     [ObservableProperty] private bool _isVideoOffsetVisible;
     [ObservableProperty] private bool _isAudioTracksVisible;
+    [ObservableProperty] private ObservableCollection<WaveformAudioTrackItem> _waveformAudioTracks;
+    [ObservableProperty] private WaveformAudioTrackItem? _selectedWaveformAudioTrack;
     [ObservableProperty] private bool _isWaveformGenerating;
     [ObservableProperty] private string _waveformGeneratingText;
     [ObservableProperty] private bool _isFilePropertiesVisible;
@@ -663,6 +665,8 @@ public partial class MainViewModel :
         VideoSeekAmounts = new ObservableCollection<string>();
         SelectedVideoSeekAmount = string.Empty;
         RefreshVideoSeekAmounts();
+
+        WaveformAudioTracks = new ObservableCollection<WaveformAudioTrackItem>();
 
         VideoOffsetText = string.Empty;
         SetVideoOffsetText = Se.Language.Main.Menu.SetVideoOffset;
@@ -5970,8 +5974,70 @@ public partial class MainViewModel :
             }
 
             _updateAudioVisualizer = true;
-            LoadWaveformAndSpectrogram(_videoFileName);
+
+            // Explicit track pick: show this track's waveform now - from cache if present, else
+            // extract it (regardless of the auto-generate-on-open setting).
+            LoadWaveformAndSpectrogram(_videoFileName, forceGenerate: true);
         }
+    }
+
+    // Set while the waveform toolbar's audio-track combo box is being repopulated/synced in code,
+    // so the resulting SelectedItem change doesn't re-trigger a track switch + waveform regeneration.
+    private bool _suppressWaveformAudioTrackChange;
+
+    partial void OnSelectedWaveformAudioTrackChanged(WaveformAudioTrackItem? value)
+    {
+        if (_suppressWaveformAudioTrackChange || value?.Track == null)
+        {
+            return;
+        }
+
+        // No-op if the user picked the track that's already active.
+        if (value.Track.FfIndex == (_audioTrack?.FfIndex ?? -1))
+        {
+            return;
+        }
+
+        PickAudioTrack(value.Track);
+    }
+
+    // Builds the picker label for one audio track, e.g. "TrueHD 7.1 [eng] · ~5 min".
+    private static string BuildAudioTrackDisplay(AudioTrackInfo track, double mediaDurationSeconds)
+    {
+        var parts = new List<string>();
+
+        // Prefer the embedded track title (e.g. "TrueHD Atmos") when present, else the codec name.
+        var name = !string.IsNullOrWhiteSpace(track.Title)
+            ? track.Title!.Trim()
+            : WaveformExtractionEstimate.GetCodecDisplayName(track.Codec);
+        if (string.IsNullOrEmpty(name))
+        {
+            name = string.Format(Se.Language.Main.AudioTrackX, track.Id);
+        }
+
+        parts.Add(name);
+
+        var layout = WaveformExtractionEstimate.GetChannelLayoutLabel(track.Channels);
+        if (!string.IsNullOrEmpty(layout))
+        {
+            parts.Add(layout);
+        }
+
+        if (!string.IsNullOrWhiteSpace(track.Language))
+        {
+            parts.Add($"[{track.Language}]");
+        }
+
+        var label = string.Join(" ", parts);
+
+        var estimate = WaveformExtractionEstimate.Format(
+            WaveformExtractionEstimate.EstimateSeconds(track.Codec, mediaDurationSeconds));
+        if (!string.IsNullOrEmpty(estimate))
+        {
+            label += $" · {estimate}";
+        }
+
+        return label;
     }
 
     [RelayCommand]
@@ -18652,9 +18718,26 @@ public partial class MainViewModel :
                 var chosen = desiredAudioTrackId >= 0
                     ? tracks.FirstOrDefault(t => t.Id == desiredAudioTrackId)
                     : null;
+
+                // On a fresh open (no explicitly requested/restored track) with more than one audio
+                // track, default to the track that is fastest to extract a waveform from - e.g. a
+                // compressed AC3/AAC track over lossless TrueHD - so the waveform appears in seconds
+                // instead of minutes. A track requested via desiredAudioTrackId (e.g. restored from
+                // recent files) always wins.
+                if (chosen == null && desiredAudioTrackId < 0 && tracks.Count > 1)
+                {
+                    chosen = tracks
+                        .OrderByDescending(t => WaveformExtractionEstimate.GetDecodeSpeedFactor(t.Codec))
+                        .ThenBy(t => t.Id)
+                        .First();
+                }
+
                 chosen ??= tracks.FirstOrDefault(t => t.IsSelected) ?? tracks[0];
 
-                if (desiredAudioTrackId >= 0 && chosen.Id != -1)
+                // Switch mpv to the chosen track when it isn't already the selected one (fastest
+                // default or a restored track) so playback, the track menu and the waveform picker
+                // all agree on the same track.
+                if (chosen.Id != -1 && !chosen.IsSelected)
                 {
                     mpv.SetAudioTrack(chosen.Id);
                 }
@@ -18680,7 +18763,10 @@ public partial class MainViewModel :
         });
     }
 
-    private void LoadWaveformAndSpectrogram(string videoFileName)
+    // forceGenerate: extract even when WaveformAutoGenerate (the auto-on-open preference) is off.
+    // Set for explicit user actions like picking an audio track, where showing that track's waveform
+    // is the whole point - if it isn't cached yet we extract it now (and cache it for next time).
+    private void LoadWaveformAndSpectrogram(string videoFileName, bool forceGenerate = false)
     {
         var trackNumber = _audioTrack?.FfIndex ?? -1;
         var peakWaveFileName = WavePeakGenerator2.GetPeakWaveFileName(videoFileName, trackNumber);
@@ -18692,10 +18778,10 @@ public partial class MainViewModel :
             AudioVisualizer.ClickToGenerateText = Se.Language.Main.ClickToGenerateWaveform;
         }
 
-        // When WaveformAutoGenerate is off, never kick off ffmpeg extraction on video open.
-        // Cached peaks still load via the branch below, so existing waveforms keep showing;
-        // the user generates new ones on demand by clicking the empty waveform.
-        if (needToGenerate && Se.Settings.Waveform.WaveformAutoGenerate)
+        // On video open, WaveformAutoGenerate gates whether we auto-extract; cached peaks still load
+        // via the branch below either way. An explicit request (forceGenerate) always extracts a
+        // missing waveform - e.g. switching audio track in the waveform toolbar picker.
+        if (needToGenerate && (Se.Settings.Waveform.WaveformAutoGenerate || forceGenerate))
         {
             StartWaveformExtraction(videoFileName, trackNumber, peakWaveFileName, spectrogramFileName);
         }
@@ -18776,9 +18862,24 @@ public partial class MainViewModel :
 
         var tempWaveFileName = Path.Combine(Path.GetTempPath(), $"{Guid.NewGuid()}.wav");
         var process = WaveFileExtractor.GetCommandLineProcess(videoFileName, trackNumber, tempWaveFileName,
-            "acodec=s16l", out _);
+            "acodec=s16l", out var encoderName);
+
+        // For ffmpeg, ask it for machine-readable progress on stdout so we can show a real percentage
+        // instead of a static "Extracting wave info..." label. We need the total media duration to turn
+        // ffmpeg's "out_time_us" into a percent; read it here on the UI thread.
+        var totalDurationSeconds = 0.0;
+        if (encoderName.StartsWith("FFmpeg", StringComparison.OrdinalIgnoreCase))
+        {
+            totalDurationSeconds = GetVideoPlayerControl()?.VideoPlayer?.Duration ?? 0;
+            if (totalDurationSeconds > 0)
+            {
+                process.StartInfo.Arguments = "-nostats -progress pipe:1 " + process.StartInfo.Arguments;
+                process.StartInfo.RedirectStandardOutput = true;
+            }
+        }
+
 #pragma warning disable CS4014 // fire-and-forget; extraction posts results back to the UI thread
-        Task.Run(async () => { await ExtractWaveformAndSpectrogramAndShotChanges(process, tempWaveFileName, peakWaveFileName, spectrogramFileName, videoFileName); });
+        Task.Run(async () => { await ExtractWaveformAndSpectrogramAndShotChanges(process, tempWaveFileName, peakWaveFileName, spectrogramFileName, videoFileName, totalDurationSeconds); });
 #pragma warning restore CS4014
     }
 
@@ -18882,6 +18983,10 @@ public partial class MainViewModel :
                     {
                         IsAudioTracksVisible = false;
                         AudioTraksMenuItem.Items.Clear();
+                        _suppressWaveformAudioTrackChange = true;
+                        WaveformAudioTracks = new ObservableCollection<WaveformAudioTrackItem>();
+                        SelectedWaveformAudioTrack = null;
+                        _suppressWaveformAudioTrackChange = false;
                         if (OperatingSystem.IsMacOS())
                         {
                             Layout.InitNativeMacMenu.UpdateAudioTracksMenu(this, [], null);
@@ -18937,6 +19042,28 @@ public partial class MainViewModel :
                     }
 
                     IsAudioTracksVisible = AudioTraksMenuItem.Items.Count > 1;
+
+                    // Populate the waveform toolbar's audio-track picker with per-track
+                    // extraction-time estimates. Suppressed so syncing SelectedItem here doesn't
+                    // re-trigger a track switch.
+                    var mediaDurationSeconds = GetVideoPlayerControl()?.VideoPlayer?.Duration ?? 0;
+                    var comboItems = new ObservableCollection<WaveformAudioTrackItem>();
+                    foreach (var audioTrack in audioTracks)
+                    {
+                        comboItems.Add(new WaveformAudioTrackItem
+                        {
+                            Track = audioTrack,
+                            Display = BuildAudioTrackDisplay(audioTrack, mediaDurationSeconds),
+                        });
+                    }
+
+                    _suppressWaveformAudioTrackChange = true;
+                    WaveformAudioTracks = comboItems;
+                    SelectedWaveformAudioTrack =
+                        comboItems.FirstOrDefault(p => p.Track.FfIndex == (_audioTrack?.FfIndex ?? -1))
+                        ?? comboItems.FirstOrDefault();
+                    _suppressWaveformAudioTrackChange = false;
+
                     if (OperatingSystem.IsMacOS())
                     {
                         Layout.InitNativeMacMenu.UpdateAudioTracksMenu(this, audioTracks, _audioTrack);
@@ -18995,24 +19122,137 @@ public partial class MainViewModel :
         }
     }
 
+    // Tracks the last percentage pushed to WaveformGeneratingText so we only update the label
+    // (and marshal to the UI thread) when the whole-number percent actually changes.
+    private int _lastWaveExtractPercent = -1;
+
+    // Monotonically increasing id for each extraction run. If a new run starts (e.g. the user
+    // reopens the same video or switches audio track), an orphaned earlier ffmpeg can keep emitting
+    // progress; only the newest run's id is allowed to update the label, so the percentage never
+    // jumps backward between two interleaved streams.
+    private int _waveExtractionSequence;
+
+    // The ffmpeg process of the newest extraction run, so a new run can kill the previous one instead
+    // of leaving two heavy decodes competing for CPU and both racing to update the UI.
+    private Process? _currentWaveExtractionProcess;
+
+    // Extraction id the user asked to cancel; matched against a run's extractionId so a cancel only
+    // affects the run it was issued for (never a later, unrelated extraction).
+    private int _cancelledWaveExtractionId = -1;
+
+    // Cancels the in-progress waveform extraction (the X next to the "Extracting wave info... NN%"
+    // status). Kills ffmpeg; the run then cleans up and leaves an empty "click to generate" waveform.
+    [RelayCommand]
+    private void CancelWaveformExtraction()
+    {
+        if (!IsWaveformGenerating)
+        {
+            return;
+        }
+
+        Volatile.Write(ref _cancelledWaveExtractionId, Volatile.Read(ref _waveExtractionSequence));
+
+        var process = _currentWaveExtractionProcess;
+        if (process != null)
+        {
+            try
+            {
+                if (!process.HasExited)
+                {
+                    process.Kill(true);
+                }
+            }
+            catch
+            {
+                // best-effort; the run's cancel check still fires once the process ends
+            }
+        }
+    }
+
     private async Task ExtractWaveformAndSpectrogramAndShotChanges(
         Process process,
         string tempWaveFileName,
         string peakWaveFileName,
         string spectrogramFolderName,
-        string videoFileName)
+        string videoFileName,
+        double totalDurationSeconds = 0)
     {
+        var extractionId = System.Threading.Interlocked.Increment(ref _waveExtractionSequence);
+
+        // Supersede any still-running earlier extraction: kill its ffmpeg so we don't run two heavy
+        // decodes at once. The superseded run detects the newer id below and bails without touching UI.
+        var previousProcess = System.Threading.Interlocked.Exchange(ref _currentWaveExtractionProcess, process);
+        if (previousProcess != null)
+        {
+            try
+            {
+                if (!previousProcess.HasExited)
+                {
+                    previousProcess.Kill(true);
+                }
+            }
+            catch
+            {
+                // best-effort; the superseded run's id guard is the real safety net
+            }
+        }
+
         IsWaveformGenerating = true;
         WaveformGeneratingText = Se.Language.Main.ExtractingWaveInfo;
+        _lastWaveExtractPercent = -1;
 
         try
         {
             process.Start();
 
+            // When ffmpeg progress was enabled (StartWaveformExtraction), drain its stdout and turn
+            // "out_time_us" into a live percentage in the status label.
+            if (process.StartInfo.RedirectStandardOutput)
+            {
+                process.OutputDataReceived += (_, e) => OnFfmpegWaveExtractProgress(e.Data, totalDurationSeconds, extractionId);
+                process.BeginOutputReadLine();
+            }
+
             _videoOpenTokenSource = new CancellationTokenSource();
             while (!process.HasExited)
             {
                 await Task.Delay(100, _videoOpenTokenSource.Token);
+            }
+
+            // A newer extraction superseded us (and likely killed our ffmpeg). Bail silently so we
+            // don't report a false failure or overwrite the newer run's waveform/status.
+            if (extractionId != Volatile.Read(ref _waveExtractionSequence))
+            {
+                DeleteTempFile(tempWaveFileName);
+                return;
+            }
+
+            // The user cancelled this extraction (X next to the progress). Leave an empty
+            // "click to generate" waveform rather than reporting a failure. Re-checked between the
+            // later stages too: with a short file, ffmpeg is done in a second and most of the
+            // visible "generating" time is peaks/spectrogram work - a cancel clicked then must
+            // still win, not be silently ignored.
+            bool WasCancelled() => Volatile.Read(ref _cancelledWaveExtractionId) == extractionId;
+
+            void FinishCancelled()
+            {
+                DeleteTempFile(tempWaveFileName);
+                ShowStatus(Se.Language.General.Cancelled);
+                Dispatcher.UIThread.Post(() =>
+                {
+                    if (AudioVisualizer != null)
+                    {
+                        AudioVisualizer.WavePeaks = null;
+                        AudioVisualizer.ShowClickToGenerateHint = true;
+                        AudioVisualizer.InvalidateVisual();
+                    }
+                });
+            }
+
+            if (WasCancelled())
+            {
+                FinishCancelled();
+                return;
             }
 
             if (process.ExitCode != 0)
@@ -19037,11 +19277,23 @@ public partial class MainViewModel :
                 using var waveFile = new WavePeakGenerator2(tempWaveFileName);
                 var wavePeaks = waveFile.GeneratePeaks(0, peakWaveFileName);
 
+                if (WasCancelled())
+                {
+                    FinishCancelled();
+                    return;
+                }
+
                 if (Se.Settings.Waveform.GenerateSpectrogram)
                 {
                     WaveformGeneratingText = Se.Language.Main.GeneratingSpectrogramDotDotDot;
                     var spectrogram = waveFile.GenerateSpectrogram(0, spectrogramFolderName, _videoOpenTokenSource.Token);
                     AudioVisualizer?.SetSpectrogram(spectrogram);
+
+                    if (WasCancelled())
+                    {
+                        FinishCancelled();
+                        return;
+                    }
                 }
 
                 Dispatcher.UIThread.Post(() =>
@@ -19082,14 +19334,70 @@ public partial class MainViewModel :
         }
         finally
         {
-            IsWaveformGenerating = false;
-            WaveformGeneratingText = string.Empty;
+            // Only the newest run owns the shared UI state; a superseded run must not clear the
+            // spinner/label out from under the run that replaced it.
+            if (extractionId == Volatile.Read(ref _waveExtractionSequence))
+            {
+                IsWaveformGenerating = false;
+                WaveformGeneratingText = string.Empty;
+            }
+
+            System.Threading.Interlocked.CompareExchange(ref _currentWaveExtractionProcess, null, process);
             DeleteTempFile(tempWaveFileName);
             lock (_waveformsBeingGeneratedLock)
             {
                 _waveformsBeingGenerated.Remove(peakWaveFileName);
             }
         }
+    }
+
+    // Parses one line of ffmpeg's "-progress pipe:1" output and, on a new higher whole percent,
+    // updates the "Extracting wave info... NN%" label. Fires on a thread-pool thread, so the label
+    // write is marshalled to the UI thread and skipped once generation has ended. Progress from an
+    // extraction that is no longer the newest (extractionId != _waveExtractionSequence) is ignored,
+    // and the percent is only ever allowed to increase, so it never jumps backward.
+    private void OnFfmpegWaveExtractProgress(string? line, double totalDurationSeconds, int extractionId)
+    {
+        if (extractionId != Volatile.Read(ref _waveExtractionSequence) ||
+            string.IsNullOrEmpty(line) || totalDurationSeconds <= 0 ||
+            !line.StartsWith("out_time_us=", StringComparison.Ordinal))
+        {
+            return;
+        }
+
+        var value = line.Substring("out_time_us=".Length).Trim();
+        if (!long.TryParse(value, NumberStyles.Integer, CultureInfo.InvariantCulture, out var microseconds) ||
+            microseconds < 0)
+        {
+            return;
+        }
+
+        var processedSeconds = microseconds / 1_000_000.0;
+        var percent = (int)Math.Clamp(processedSeconds / totalDurationSeconds * 100.0, 0, 100);
+
+        // Atomic monotonic-max: only a strictly-greater percent wins, from any thread, so the label
+        // can never be pushed backward even if callbacks from a superseded run briefly overlap ours.
+        int last;
+        do
+        {
+            last = Volatile.Read(ref _lastWaveExtractPercent);
+            if (percent <= last)
+            {
+                return;
+            }
+        }
+        while (System.Threading.Interlocked.CompareExchange(ref _lastWaveExtractPercent, percent, last) != last);
+
+        Dispatcher.UIThread.Post(() =>
+        {
+            // Re-check: a newer run may have started between this post and its execution.
+            if (!IsWaveformGenerating || extractionId != Volatile.Read(ref _waveExtractionSequence))
+            {
+                return;
+            }
+
+            WaveformGeneratingText = $"{Se.Language.Main.ExtractingWaveInfo} {percent}%";
+        });
     }
 
     private void ExtractShotChanges(string videoFileName, int audioTrackNumber)
