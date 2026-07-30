@@ -734,6 +734,16 @@ public static class UiTheme
                 }
             },
 
+            // TableView header - same brushes as the DataGrid header above
+            new Style(x => x.OfType<TableViewColumnHeader>())
+            {
+                Setters =
+                {
+                    new Setter(TableViewColumnHeader.BackgroundProperty, new SolidColorBrush(bgColorHeader)),
+                    new Setter(TableViewColumnHeader.ForegroundProperty, new SolidColorBrush(foreColor))
+                }
+            },
+
             // ButtonSpinner
             new Style(x => x.OfType<ButtonSpinner>())
             {
@@ -854,6 +864,15 @@ public static class UiTheme
                 }
             },
 
+            // TableView header - same brush as the DataGrid header above
+            new Style(x => x.OfType<TableViewColumnHeader>())
+            {
+                Setters =
+                {
+                    new Setter(TableViewColumnHeader.BackgroundProperty, new SolidColorBrush(headerColor))
+                }
+            },
+
             // ButtonSpinner - slightly off-white for consistency (used by TimeCodeUpDown and SecondsUpDown)
             new Style(x => x.OfType<ButtonSpinner>())
             {
@@ -966,6 +985,15 @@ public static class UiTheme
                 Setters =
                 {
                     new Setter(DataGridColumnHeader.BackgroundProperty, new SolidColorBrush(lightPurple))
+                }
+            },
+
+            // TableView header - same brush as the DataGrid header above
+            new Style(x => x.OfType<TableViewColumnHeader>())
+            {
+                Setters =
+                {
+                    new Setter(TableViewColumnHeader.BackgroundProperty, new SolidColorBrush(lightPurple))
                 }
             },
 

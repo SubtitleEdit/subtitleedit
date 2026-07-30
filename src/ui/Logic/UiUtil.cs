@@ -97,7 +97,10 @@ public static class UiUtil
         {
             Setters =
             {
-                new Setter(TableViewColumnHeader.BackgroundProperty, Brushes.Transparent),
+                // Match the DataGrid header background: the Fluent DataGrid resource by
+                // default; SE's custom themes (lighter dark, classic gray, pastel) override
+                // both header types with the same brush via app styles in UiTheme.
+                new Setter(TableViewColumnHeader.BackgroundProperty, GetDataGridHeaderBackgroundBrush()),
                 new Setter(TableViewColumnHeader.PaddingProperty, new Thickness(4, 2, 4, 4)),
                 new Setter(TableViewColumnHeader.BorderBrushProperty, GetBorderBrush()),
                 // Both header lines always show, independently of the grid-lines setting: the
@@ -108,6 +111,19 @@ public static class UiUtil
                 new Setter(TableViewColumnHeader.TemplateProperty, TableViewColumnHeaderTemplate),
             }
         };
+    }
+
+    private static IBrush GetDataGridHeaderBackgroundBrush()
+    {
+        if (Application.Current != null &&
+            Application.Current.TryGetResource("DataGridColumnHeaderBackgroundBrush",
+                Application.Current.ActualThemeVariant, out var resource) &&
+            resource is IBrush brush)
+        {
+            return brush;
+        }
+
+        return Brushes.Transparent;
     }
 
     // Mirrors the built-in header template (content + resize thumb) but routes the border
