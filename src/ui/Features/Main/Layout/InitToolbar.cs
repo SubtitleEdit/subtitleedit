@@ -13,6 +13,7 @@ using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using SkiaSharp;
+using System;
 using System.IO;
 using System.Linq;
 
@@ -568,11 +569,43 @@ public static class InitToolbar
             EnsureImagePath();
         }
 
-        return new Image
+        var filePath = Path.Combine(_imagePath, image + ".png");
+        try
         {
-            Source = MakeOneColor(Path.Combine(_imagePath, image + ".png")),
-            Stretch = Stretch.Uniform,
-        };
+            return new Image
+            {
+                Source = MakeOneColor(filePath),
+                Stretch = Stretch.Uniform,
+            };
+        }
+        catch (Exception e) when (e is FileNotFoundException or DirectoryNotFoundException)
+        {
+            // The unpacked theme folder can lag behind the app (an icon added between releases
+            // without a version bump made every startup crash here, since version.txt said the
+            // folder was current). Repair by re-unpacking Themes.zip and retry once; if the icon
+            // is still missing, show a blank image rather than killing the MainView build.
+            if (Logic.Initializers.ThemeInitializer.TryRepair(filePath))
+            {
+                try
+                {
+                    return new Image
+                    {
+                        Source = MakeOneColor(filePath),
+                        Stretch = Stretch.Uniform,
+                    };
+                }
+                catch (Exception retryException)
+                {
+                    Se.LogError(retryException, $"Theme image \"{filePath}\" still missing after re-unpacking Themes.zip");
+                }
+            }
+            else
+            {
+                Se.LogError(e, $"Could not load theme image \"{filePath}\"");
+            }
+
+            return new Image { Stretch = Stretch.Uniform };
+        }
     }
 
     private static unsafe Bitmap MakeOneColor(string filePath)
