@@ -878,7 +878,7 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
         for (var i = 0; i < matches.Count - 1; i++)
         {
             var match = matches[i];
-            if (match.Text.EndsWith("1", StringComparison.Ordinal) && !match.Italic)
+            if (match.Text.EndsWith('1') && !match.Italic)
             {
                 var pixelsLess = 0;
                 if (pixelsAreSpace > 7)
@@ -1348,6 +1348,53 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
         }
     }
 
+    /// <summary>
+    /// Applies the "Adjust image brightness/alpha/color" function to a source image
+    /// before export. Returns the input untouched when the function is off.
+    /// </summary>
+    private SKBitmap ApplyImageAdjustments(SKBitmap bitmap)
+    {
+        var settings = _config.AdjustImageColors;
+        if (!settings.IsActive)
+        {
+            return bitmap;
+        }
+
+        var result = bitmap;
+
+        if (settings.AdjustBrightness)
+        {
+            var old = result;
+            result = Logic.Media.SubtitleImageAdjuster.AdjustBrightness(old, (float)settings.Brightness, (float)settings.Contrast, (float)(settings.Gamma / 100.0));
+            if (!ReferenceEquals(old, bitmap))
+            {
+                old.Dispose();
+            }
+        }
+
+        if (settings.AdjustAlpha)
+        {
+            var old = result;
+            result = Logic.Media.SubtitleImageAdjuster.AdjustAlpha(old, (float)settings.AlphaAdjustment, (byte)Math.Clamp(settings.TransparencyThreshold, 0, 255));
+            if (!ReferenceEquals(old, bitmap))
+            {
+                old.Dispose();
+            }
+        }
+
+        if (settings.AdjustColor)
+        {
+            var old = result;
+            result = Logic.Media.SubtitleImageAdjuster.Colorize(old, settings.ColorValue.R, settings.ColorValue.G, settings.ColorValue.B);
+            if (!ReferenceEquals(old, bitmap))
+            {
+                old.Dispose();
+            }
+        }
+
+        return result;
+    }
+
     private void WriteToImageBasedFormat(BatchConvertItem item, IOcrSubtitle? imageSubtitle, CancellationToken cancellationToken)
     {
         if (imageSubtitle == null)
@@ -1383,7 +1430,7 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
                 ScreenHeight = imageSubtitle.GetScreenSize(i).Height,
                 BottomTopMargin = 0,
                 LeftRightMargin = 0,
-                Bitmap = imageSubtitle.GetBitmap(i),
+                Bitmap = ApplyImageAdjustments(imageSubtitle.GetBitmap(i)),
             };
             var position = imageSubtitle.GetPosition(i);
             if (position.X >= 0 && position.Y >= 0)

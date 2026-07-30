@@ -110,6 +110,11 @@ public class LanguageSettings
     public string MinGapFrames { get; set; }
     public string MaxLines { get; set; }
     public string UnbreakSubtitlesShortThan { get; set; }
+    public string AutoBreakLineEndingEarly { get; set; }
+    public string AutoBreakCommaBreakEarly { get; set; }
+    public string AutoBreakDashEarly { get; set; }
+    public string AutoBreakUsePixelWidth { get; set; }
+    public string AutoBreakPreferBottomHeavy { get; set; }
     public string NewEmptyDefaultMs { get; set; }
     public string TimeCodeUpDownStepMs { get; set; }
     public string PromptBeforeDelete { get; set; }
@@ -182,8 +187,11 @@ public class LanguageSettings
     public string ShowToolbarFixCommonErrors { get; set; }
     public string ShowToolbarRemoveTextForHi { get; set; }
     public string ShowToolbarVisualSync { get; set; }
+    public string ShowToolbarPointSync { get; set; }
     public string ShowToolbarBeautifyTimeCodes { get; set; }
     public string ShowToolbarBurnIn { get; set; }
+    public string ShowToolbarAutoTranslate { get; set; }
+    public string ShowToolbarSpeechToText { get; set; }
     public string ShowToolbarSettings { get; set; }
     public string ShowToolbarLayout { get; set; }
     public string ShowToolbarHelp { get; set; }
@@ -195,6 +203,10 @@ public class LanguageSettings
     public string ProxyAddress { get; set; }
     public string Username { get; set; }
     public string Password { get; set; }
+    public string ProxyDomain { get; set; }
+    public string ProxyUseSystemCredentials { get; set; }
+    public string ProxyBypassList { get; set; }
+    public string ProxyBypassListHint { get; set; }
 
     public string DefaultFormat { get; set; }
     public string DefaultSaveAsFormat { get; set; }
@@ -274,6 +286,12 @@ public class LanguageSettings
     public string SubtitleDoubleClickAction { get; set; }
     public string SubtitleGridCenterSelectedRow { get; set; }
     public string SaveAsBehavior { get; set; }
+    public string DefaultSaveLocation { get; set; }
+    public string DefaultSaveLocationSourceFileFolder { get; set; }
+    public string DefaultSaveLocationLastUsedFolder { get; set; }
+    public string DefaultSaveLocationVideoFileFolder { get; set; }
+    public string DefaultSaveLocationSubtitleFileFolder { get; set; }
+    public string DefaultSaveLocationCustomFolder { get; set; }
     public string SaveAsAppendLanguageCode { get; set; }
     public string GridGoToSubtitleAndSetVideoPosition { get; set; }
     public string GridGoToNextLine { get; set; }
@@ -442,6 +460,11 @@ public class LanguageSettings
         MinGapFrames = "Min gap (frames)";
         MaxLines = "Max number of lines";
         UnbreakSubtitlesShortThan = "Unbreak subtitles shorter than";
+        AutoBreakLineEndingEarly = "Auto-break early for end of sentence (.!?)";
+        AutoBreakCommaBreakEarly = "Auto-break early for comma";
+        AutoBreakDashEarly = "Auto-break early for dash (dialogs)";
+        AutoBreakUsePixelWidth = "Auto-break by pixel width";
+        AutoBreakPreferBottomHeavy = "Auto-break prefer bottom heavy";
         NewEmptyDefaultMs = "Default new subtitle duration (ms)";
         TimeCodeUpDownStepMs = "Time up/down increment (ms)";
         PromptBeforeDelete = "Prompt before delete";
@@ -515,8 +538,11 @@ public class LanguageSettings
         ShowToolbarFixCommonErrors = "Show fix common errors icon";
         ShowToolbarRemoveTextForHi = "Show remove text for hearing impaired icon";
         ShowToolbarVisualSync = "Show visual sync icon";
+        ShowToolbarPointSync = "Show point sync icon";
         ShowToolbarBeautifyTimeCodes = "Show beautify time codes icon";
         ShowToolbarBurnIn = "Show burn-in icon";
+        ShowToolbarAutoTranslate = "Show auto-translate icon";
+        ShowToolbarSpeechToText = "Show speech to text icon";
         ShowToolbarSettings = "Show settings icon";
         ShowToolbarLayout = "Show layout icon";
         ShowToolbarHelp = "Show help icon";
@@ -528,6 +554,10 @@ public class LanguageSettings
         ProxyAddress = "Proxy address";
         Username = "Username";
         Password = "Password";
+        ProxyDomain = "Domain";
+        ProxyUseSystemCredentials = "Use system credentials";
+        ProxyBypassList = "Bypass proxy for";
+        ProxyBypassListHint = "Semicolon separated host names that connect directly, e.g. \"internal.company.com;example.org\"";
 
         ShowStopButton = "Show stop button";
         ShowFullscreenButton = "Show full-screen button";
@@ -605,6 +635,12 @@ public class LanguageSettings
         SubtitleDoubleClickAction = "Subtitle grid double-click action";
         SubtitleGridCenterSelectedRow = "Subtitle grid, center when selecting prev/next row";
         SaveAsBehavior = "\"Save as\" behavior";
+        DefaultSaveLocation = "Default save location";
+        DefaultSaveLocationSourceFileFolder = "Folder of subtitle/video file";
+        DefaultSaveLocationLastUsedFolder = "Last used folder";
+        DefaultSaveLocationVideoFileFolder = "Video file folder";
+        DefaultSaveLocationSubtitleFileFolder = "Subtitle file folder";
+        DefaultSaveLocationCustomFolder = "Custom folder";
         SaveAsAppendLanguageCode = "\"Save as\" append language code";
         GridGoToSubtitleAndSetVideoPosition = "Go to subtitle and set video position";
         GridGoToNextLine = "Go to next line";

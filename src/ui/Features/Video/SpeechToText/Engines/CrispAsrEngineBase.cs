@@ -1,5 +1,5 @@
 using Avalonia.Platform;
-using Nikse.SubtitleEdit.Core.AudioToText;
+using Nikse.SubtitleEdit.UiLogic.AudioToText;
 using Nikse.SubtitleEdit.Logic.Config;
 using System;
 using System.Collections.Generic;
@@ -28,7 +28,7 @@ public abstract class CrispAsrEngineBase : ICrispAsrEngine
     /// CrispASR ships several builds per platform whose sizes differ by two orders of magnitude,
     /// and the variant is picked at download time rather than now — so Windows and Linux get a
     /// range rather than a single number that would either understate the GPU bundles or scare
-    /// users off the CPU one. Figures are the v0.8.23 release assets
+    /// users off the CPU one. Figures are the v0.8.24 release assets
     /// (<see cref="Nikse.SubtitleEdit.Logic.Download.CrispAsrDownloadService"/> holds the pin);
     /// they drift with every release, so treat them as indicative.
     /// </summary>

@@ -20,6 +20,12 @@ public partial class FixDisplayItem : ObservableObject
     [ObservableProperty] private int _number;
     public Paragraph Paragraph { get; set; }
 
+    /// <summary>Name of the rule (step 1 display item) that produced this fix.</summary>
+    public string RuleName { get; set; } = string.Empty;
+
+    /// <summary>The rule's example text from step 1, shown in the rule-details popup.</summary>
+    public string RuleExample { get; set; } = string.Empty;
+
     public FixDisplayItem(Paragraph p, int number, string action, string before, string after, bool isChecked)
     {
         Paragraph = p;

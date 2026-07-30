@@ -22,6 +22,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Timers;
 using System.Xml;
+using Nikse.SubtitleEdit.UiLogic.Media;
 
 namespace Nikse.SubtitleEdit.Features.Video.ShotChanges;
 

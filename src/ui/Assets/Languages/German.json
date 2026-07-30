@@ -1,6 +1,6 @@
 {
   "Title": "Subtitle Edit",
-  "version": "v5.0.0",
+  "version": "v5.1.0",
   "TranslatedBy": "\u00DCbersetzt von Christoph Kitsche. \u00DCberarbeitet von Netspark und Stephan Lenhart.",
   "CultureName": "de-DE",
   "General": {
@@ -2086,14 +2086,6 @@
       "fixCasing": "Gro\u00DF-/Kleinschreibung korrigieren",
       "addPeriods": "Punkte hinzuf\u00FCgen",
       "changeUnderlineToColor": "Unterstreichung in Farbe \u00E4ndern",
-      "CueBuilding": "Cue-Erstellung (MLX Whisper)",
-      "CueRebuild": "Cues aus Wort-Zeitstempeln neu erstellen",
-      "CueMaxChars": "Max. Zeichen pro Cue",
-      "CueMaxSeconds": "Max. Sekunden pro Cue",
-      "CueMaxCps": "Max. Zeichen pro Sekunde",
-      "VocabularyPrompt": "Vokabular-Prompt (Namen, Orte, Begriffe)",
-      "BeamSize": "Beam-Gr\u00F6\u00DFe",
-      "BeamSizeNote": "0 dekodiert am schnellsten. 5 liefert die beste Genauigkeit (wie Faster Whisper) bei etwa 20-30% mehr Zeit. Werte \u00FCber 5 helfen selten.",
       "engineSettings": "Sprache-zu-Text-Engine-Einstellungen",
       "engineSettingsSubtitle": "Sprache-zu-Text-Engine",
       "backendAndUpdateStatus": "Backend- und Update-Status"

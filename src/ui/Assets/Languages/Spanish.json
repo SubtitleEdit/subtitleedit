@@ -2,7 +2,7 @@
   "Title": "Subtitle Edit",
   "TranslatedBy": "Gemini",
   "CultureName": "es-ES",
-  "version": "v5.0.0",
+  "version": "v5.1.0",
   "General": {
     "SelectNonForcedLines": "Seleccionar líneas no forzadas",
     "SelectForcedLines": "Seleccionar líneas forzadas",
@@ -2132,14 +2132,6 @@
       "FixCasing": "Corregir mayúsculas",
       "AddPeriods": "Añadir puntos",
       "ChangeUnderlineToColor": "Cambiar subrayado por color",
-      "CueBuilding": "Creación de líneas (MLX Whisper)",
-      "CueRebuild": "Reconstruir líneas a partir de las marcas de tiempo por palabra",
-      "CueMaxChars": "Máx. caracteres por línea",
-      "CueMaxSeconds": "Máx. segundos por línea",
-      "CueMaxCps": "Máx. caracteres por segundo",
-      "VocabularyPrompt": "Prompt de vocabulario (nombres, lugares, términos)",
-      "BeamSize": "Tamaño del haz (beam)",
-      "BeamSizeNote": "0 decodifica más rápido. 5 ofrece la mejor precisión (como Faster Whisper) con aproximadamente un 20-30 % más de tiempo. Los valores superiores a 5 rara vez ayudan.",
       "EngineSettings": "Ajustes del motor de voz a texto",
       "EngineSettingsSubtitle": "Motor de voz a texto",
       "BackendAndUpdateStatus": "Estado del backend y de la actualización"

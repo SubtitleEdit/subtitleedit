@@ -49,7 +49,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             }
 
             string allText = sb.ToString().Trim();
-            if (!(allText.StartsWith("{", StringComparison.Ordinal) && allText.Contains("\"vostf\"", StringComparison.Ordinal)))
+            if (!(allText.StartsWith('{') && allText.Contains("\"vostf\"", StringComparison.Ordinal)))
             {
                 return;
             }

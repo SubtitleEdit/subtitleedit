@@ -28,7 +28,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             }
 
             var allText = sb.ToString().Trim();
-            if (!allText.StartsWith("{", StringComparison.Ordinal) || !allText.Contains("\"alternatives\""))
+            if (!allText.StartsWith('{') || !allText.Contains("\"alternatives\""))
             {
                 return;
             }

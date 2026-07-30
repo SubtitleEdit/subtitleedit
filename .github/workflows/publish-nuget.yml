@@ -1,0 +1,72 @@
+name: Publish libse NuGet package
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Package version (e.g., 5.1.0 or 5.1.0-rc18). MUST be set - do not publish the csproj default by accident.'
+        required: true
+        type: string
+      push_to_nuget:
+        description: 'Push to nuget.org (uncheck to only build the .nupkg as a workflow artifact for inspection)'
+        required: true
+        default: false
+        type: boolean
+
+jobs:
+  pack:
+    runs-on: ubuntu-latest
+
+    # To gate publishing behind a manual approval: create a GitHub environment,
+    # add "environment: <name>" here, and set the same name in the nuget.org
+    # trusted publishing policy.
+    permissions:
+      id-token: write   # required for nuget.org trusted publishing (OIDC)
+      contents: read
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '10.0.x'
+
+      - name: Validate version
+        run: |
+          if ! echo "${{ inputs.version }}" | grep -Eq '^[0-9]+\.[0-9]+\.[0-9]+(-[0-9A-Za-z\.-]+)?$'; then
+            echo "Invalid version: '${{ inputs.version }}' - expected semver like 5.1.0 or 5.1.0-rc18 (no leading v)"
+            exit 1
+          fi
+
+      - name: Run libse tests
+        run: dotnet test tests/libse/LibSETests.csproj -c Release
+
+      - name: Pack
+        run: >
+          dotnet pack src/libse/LibSE.csproj
+          -c Release
+          -p:Version=${{ inputs.version }}
+          -p:ContinuousIntegrationBuild=true
+          -o nupkg
+
+      - name: Upload package artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: libse-nuget-${{ inputs.version }}
+          path: nupkg/*
+
+      - name: NuGet login (trusted publishing)
+        id: nuget-login
+        if: ${{ inputs.push_to_nuget }}
+        uses: NuGet/login@v1
+        with:
+          user: niksedk
+
+      - name: Push to nuget.org
+        if: ${{ inputs.push_to_nuget }}
+        run: >
+          dotnet nuget push "nupkg/*.nupkg"
+          --api-key "${{ steps.nuget-login.outputs.NUGET_API_KEY }}"
+          --source https://api.nuget.org/v3/index.json
+          --skip-duplicate

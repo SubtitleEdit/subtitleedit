@@ -73,6 +73,7 @@ public class InitWaveform
                 WaveformHeightPercentage = settings.SpectrogramCombinedWaveformHeight,
             };
 
+            vm.AudioVisualizer.GetIsVideoPlaying = () => vm.GetVideoPlayerControl()?.IsPlaying == true;
             vm.AudioVisualizer.OnNewSelectionInsert += vm.AudioVisualizerOnNewSelectionInsert;
             vm.AudioVisualizer.OnVideoPositionChanged += vm.AudioVisualizerOnVideoPositionChanged;
             vm.AudioVisualizer.OnToggleSelection += vm.AudioVisualizerOnToggleSelection;

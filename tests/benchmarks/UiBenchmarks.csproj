@@ -19,6 +19,9 @@
 
   <ItemGroup>
     <PackageReference Include="BenchmarkDotNet" Version="0.15.8" />
+    <!-- Headless platform with the real Skia backend, so AudioVisualizerRenderBenchmarks can
+         run the actual Render() pass (StreamGeometry, FormattedText) without a window. -->
+    <PackageReference Include="Avalonia.Headless" Version="12.1.0" />
   </ItemGroup>
 
   <ItemGroup>

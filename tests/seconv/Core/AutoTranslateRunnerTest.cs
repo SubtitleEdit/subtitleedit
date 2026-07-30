@@ -1,4 +1,4 @@
-using Nikse.SubtitleEdit.Core.AutoTranslate;
+using Nikse.SubtitleEdit.UiLogic.AutoTranslate;
 using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.UiLogic.LlamaCpp;
 using SeConv.Core;

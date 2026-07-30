@@ -430,11 +430,17 @@ public class NikseBitmapImageSplitter2
     {
         var different = 0;
         var maxDiff = bmp1.Width * bmp1.Height / 5;
+        var data1 = bmp1.GetPixelData();
+        var data2 = bmp2.GetPixelData();
+        var stride1 = bmp1.Width * 4;
+        var stride2 = bmp2.Width * 4;
         for (var y = 0; y < bmp1.Height; y++)
         {
-            for (var x = 0; x < bmp1.Width; x++)
+            var row1 = y * stride1;
+            var row2 = y * stride2;
+            for (var offset = 0; offset < stride1; offset += 4)
             {
-                if (!IsColorClose(bmp1.GetPixel(x, y), bmp2.GetPixel(x, y), 20))
+                if (!IsColorCloseBgra(data1, row1 + offset, data2, row2 + offset, 20))
                 {
                     different++;
                 }
@@ -446,6 +452,43 @@ public class NikseBitmapImageSplitter2
         }
 
         return different;
+    }
+
+    /// <summary>
+    /// IsColorClose over two raw BGRA quads. Replicates the channel mapping the
+    /// SKColor-based overload sees through NikseBitmap2.GetPixel, which constructs
+    /// SKColor(red: byte3, green: byte2, blue: byte1, alpha: byte0) - i.e. the
+    /// "alpha" it tests is the B byte and the RGB sum is over the A, R and G bytes.
+    /// Both operands are read identically, so the comparison result is unchanged.
+    /// </summary>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private static bool IsColorCloseBgra(ReadOnlySpan<byte> data1, int i1, ReadOnlySpan<byte> data2, int i2, int tolerance)
+    {
+        var alpha1 = data1[i1];
+        var alpha2 = data2[i2];
+
+        // Both transparent
+        if (alpha1 < 120 && alpha2 < 120)
+        {
+            return true;
+        }
+
+        // Different alpha levels
+        if (Math.Abs(alpha1 - alpha2) > 50)
+        {
+            return false;
+        }
+
+        // Both dark and non-transparent
+        if (alpha1 > 250 && alpha2 > 250 &&
+            data1[i1 + 3] > 90 && data1[i1 + 2] > 90 && data1[i1 + 1] > 90 &&
+            data2[i2 + 3] > 90 && data2[i2 + 2] > 90 && data2[i2 + 1] > 90)
+        {
+            return true;
+        }
+
+        var diff = data1[i1 + 3] + data1[i1 + 2] + data1[i1 + 1] - (data2[i2 + 3] + data2[i2 + 2] + data2[i2 + 1]);
+        return (uint)(diff + tolerance) <= (uint)(tolerance * 2);
     }
 
     public static List<ImageSplitterItem2> SplitBitmapToLettersNew(NikseBitmap2 bmp, int xOrMorePixelsMakesSpace, bool rightToLeft, bool topToBottom, int minLineHeight, bool autoHeight, double averageLineHeight = -1)

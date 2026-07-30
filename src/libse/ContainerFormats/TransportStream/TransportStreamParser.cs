@@ -194,12 +194,13 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
             DvbSubtitlesLookup = new SortedDictionary<int, List<TransportStreamSubtitle>>();
             if (_isM2TransportStream) // m2ts blu-ray images from PES packets
             {
+                var sb = new StringBuilder();
                 foreach (int pid in SubtitlesLookup.Keys)
                 {
                     var bdMs = new MemoryStream();
                     var list = SubtitlesLookup[pid];
                     var currentList = new List<DvbSubPes>();
-                    var sb = new StringBuilder();
+                    sb.Clear();
                     var subList = new List<TransportStreamSubtitle>();
                     var offset = (long)(firstVideoMs ?? 0); // when to use firstMs ?
                     var lastPalettes = new Dictionary<int, List<PaletteInfo>>();
@@ -333,6 +334,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
         /// </summary>
         private static void FixTeletextItalics(SortedDictionary<int, SortedDictionary<int, List<Paragraph>>> dictionary)
         {
+            var sb = new StringBuilder();
             foreach (var dic in dictionary)
             {
                 foreach (var inner in dic.Value)
@@ -344,7 +346,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
                             continue;
                         }
 
-                        var sb = new StringBuilder();
+                        sb.Clear();
                         foreach (var line in p.Text.SplitToLines())
                         {
                             var s = line.Trim();

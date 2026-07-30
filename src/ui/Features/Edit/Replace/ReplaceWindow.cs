@@ -205,8 +205,17 @@ public class ReplaceWindow : Window
                        .Focus();
         });
 
+        RegexContextFlyout.Attach(textBoxReplace, vm, () => vm.FindMode == FindService.FindMode.RegularExpression, isReplaceBox: true);
+
         Opened += delegate
         {
+            // The AutoCompleteBox's inner TextBox only exists after the template is applied.
+            var innerTextBox = textBoxFind.GetVisualDescendants().OfType<TextBox>().FirstOrDefault();
+            if (innerTextBox != null)
+            {
+                RegexContextFlyout.Attach(innerTextBox, vm, () => vm.FindMode == FindService.FindMode.RegularExpression);
+            }
+
             Avalonia.Threading.Dispatcher.UIThread.Post(() =>
             {
                 if (vm.FocusReplaceOnOpen)

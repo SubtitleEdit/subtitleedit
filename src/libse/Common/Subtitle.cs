@@ -19,42 +19,26 @@ namespace Nikse.SubtitleEdit.Core.Common
 
         public string FileName { get; set; }
 
-        public static int MaximumHistoryItems => 100;
-
         public SubtitleFormat OriginalFormat { get; set; }
         public Encoding OriginalEncoding { get; private set; }
 
-        public List<HistoryItem> HistoryItems { get; }
-        public bool CanUndo => HistoryItems.Count > 0;
-
-        public Subtitle() : this(new List<Paragraph>(), new List<HistoryItem>())
+        public Subtitle() : this(new List<Paragraph>())
         {
         }
 
-        public Subtitle(List<Paragraph> paragraphs) : this(paragraphs, new List<HistoryItem>())
+        public Subtitle(List<Paragraph> paragraphs)
         {
-        }
-
-        public Subtitle(List<HistoryItem> historyItems) : this(new List<Paragraph>(), historyItems)
-        {
-        }
-
-        public Subtitle(List<Paragraph> paragraphs, List<HistoryItem> historyItems)
-        {
-            HistoryItems = historyItems;
             Paragraphs = paragraphs;
             FileName = "Untitled";
         }
 
         /// <summary>
-        /// Copy constructor (without history).
+        /// Copy constructor.
         /// </summary>
         /// <param name="subtitle">Subtitle to copy</param>
         /// <param name="generateNewId">Generate new ID (guid) for paragraphs</param>
         public Subtitle(Subtitle subtitle, bool generateNewId = true)
         {
-            HistoryItems = new List<HistoryItem>();
-
             if (subtitle == null)
             {
                 FileName = "Untitled";
@@ -367,35 +351,6 @@ namespace Nikse.SubtitleEdit.Core.Common
             }
             OriginalFormat = subtitleFormat;
             return subtitleFormat;
-        }
-
-        public void MakeHistoryForUndo(string description, string subtitleFormatFriendlyName, DateTime fileModified, Subtitle original, string originalSubtitleFileName, int lineNumber, int linePosition, int linePositionOriginal)
-        {
-            // don't fill memory with history - use a max rollback points
-            if (HistoryItems.Count > MaximumHistoryItems)
-            {
-                HistoryItems.RemoveAt(0);
-            }
-
-            HistoryItems.Add(new HistoryItem(HistoryItems.Count, this, description, FileName, fileModified, subtitleFormatFriendlyName, original, originalSubtitleFileName, lineNumber, linePosition, linePositionOriginal));
-        }
-
-        public string UndoHistory(int index, out string subtitleFormatFriendlyName, out DateTime fileModified, out Subtitle originalSubtitle, out string originalSubtitleFileName)
-        {
-            Paragraphs.Clear();
-            foreach (var p in HistoryItems[index].Subtitle.Paragraphs)
-            {
-                Paragraphs.Add(new Paragraph(p));
-            }
-
-            subtitleFormatFriendlyName = HistoryItems[index].SubtitleFormatFriendlyName;
-            FileName = HistoryItems[index].FileName;
-            fileModified = HistoryItems[index].FileModified;
-            originalSubtitle = new Subtitle(HistoryItems[index].OriginalSubtitle);
-            originalSubtitleFileName = HistoryItems[index].OriginalSubtitleFileName;
-            Header = HistoryItems[index].Subtitle.Header;
-
-            return FileName;
         }
 
         /// <summary>

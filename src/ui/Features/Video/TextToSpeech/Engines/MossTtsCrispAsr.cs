@@ -26,9 +26,9 @@ namespace Nikse.SubtitleEdit.Features.Video.TextToSpeech.Engines;
 /// user-supplied reference WAV. CrispASR ships it as the <c>moss-tts</c> backend
 /// (cstr/moss-tts-v1.5-GGUF on Hugging Face). Requested in #12617.
 ///
-/// The repo ships two quants of the backbone plus a shared codec companion:
-///   - Backbone : moss-tts-v1.5-{q4_k,f16}.gguf  (we stage the one the user picks)
-///   - Codec    : moss-tts-v1.5-codec.gguf       (~3.5 GB; shared by both quants)
+/// The repo ships four quants of the backbone plus a shared codec companion:
+///   - Backbone : moss-tts-v1.5-{q4_k,q6_k,q8_0,f16}.gguf  (we stage the one the user picks)
+///   - Codec    : moss-tts-v1.5-codec.gguf                 (~3.5 GB; shared by all quants)
 /// crispasr resolves the codec from sibling/cache/registry, but we pass <c>--codec-model</c>
 /// explicitly when both files are staged locally so resolution never silently falls back to a
 /// network fetch. <see cref="Nikse.SubtitleEdit.Logic.Download.MossTtsCrispAsrDownloadService"/>
@@ -69,13 +69,18 @@ public class MossTtsCrispAsr : ITtsEngine
     public bool HasModel => true;
     public bool HasKeyFile => false;
 
-    // Two backbone quants — Q4_K is the default (~7 GB), F16 the reference (~17 GB). Both also
+    // Four backbone quants — Q4_K is the default (~7 GB), F16 the reference (~17 GB), with
+    // Q6_K/Q8_0 in between (added upstream 2026-07-27, TTS round-trip validated; #12905). All
     // need the shared ~3.5 GB codec companion, so the labels carry the combined footprint.
     public const string ModelKeyQ4K = "Q4_K (~10.5 GB incl. codec)";
+    public const string ModelKeyQ6K = "Q6_K (~12.3 GB incl. codec)";
+    public const string ModelKeyQ8 = "Q8_0 (~14.0 GB incl. codec)";
     public const string ModelKeyF16 = "F16 (~20.5 GB incl. codec)";
     public const string DefaultModelKey = ModelKeyQ4K;
 
     public const string ModelQ4KFileName = "moss-tts-v1.5-q4_k.gguf";
+    public const string ModelQ6KFileName = "moss-tts-v1.5-q6_k.gguf";
+    public const string ModelQ8FileName = "moss-tts-v1.5-q8_0.gguf";
     public const string ModelF16FileName = "moss-tts-v1.5-f16.gguf";
     public const string CodecFileName = "moss-tts-v1.5-codec.gguf";
 
@@ -102,6 +107,8 @@ public class MossTtsCrispAsr : ITtsEngine
     private static readonly Dictionary<string, long> ExpectedFileSizes = new(StringComparer.OrdinalIgnoreCase)
     {
         [ModelQ4KFileName] = 7001179808L,
+        [ModelQ6KFileName] = 8791885472L,
+        [ModelQ8FileName] = 10474063520L,
         [ModelF16FileName] = 16985720416L,
         [CodecFileName] = 3549253856L,
     };
@@ -116,6 +123,8 @@ public class MossTtsCrispAsr : ITtsEngine
 
         return modelKey switch
         {
+            ModelKeyQ6K => ModelKeyQ6K,
+            ModelKeyQ8 => ModelKeyQ8,
             ModelKeyF16 => ModelKeyF16,
             _ => ModelKeyQ4K,
         };
@@ -123,6 +132,8 @@ public class MossTtsCrispAsr : ITtsEngine
 
     public static string GetModelFileName(string? modelKey) => ResolveModelKey(modelKey) switch
     {
+        ModelKeyQ6K => ModelQ6KFileName,
+        ModelKeyQ8 => ModelQ8FileName,
         ModelKeyF16 => ModelF16FileName,
         _ => ModelQ4KFileName,
     };
@@ -417,7 +428,7 @@ public class MossTtsCrispAsr : ITtsEngine
 
     public Task<string[]> GetRegions() => Task.FromResult(Array.Empty<string>());
 
-    public Task<string[]> GetModels() => Task.FromResult(new[] { ModelKeyQ4K, ModelKeyF16 });
+    public Task<string[]> GetModels() => Task.FromResult(new[] { ModelKeyQ4K, ModelKeyQ6K, ModelKeyQ8, ModelKeyF16 });
 
     public Task<TtsLanguage[]> GetLanguages(Voice voice, string? model) => Task.FromResult(MossTtsLanguages.All);
 

@@ -31,6 +31,25 @@ public partial class DownloadSpeechToTextEngineViewModel : ObservableObject, ICl
     [ObservableProperty] private string _progressText;
     [ObservableProperty] private string _error;
 
+    /// <summary>
+    /// The download/unpack flow runs on the System.Timers.Timer elapsed thread and
+    /// sets bound properties (TitleText, ProgressValue, ...) directly from it, and
+    /// its Progress callbacks fire on thread-pool threads. Avalonia bindings are not
+    /// thread-safe, so marshal every change notification to the UI thread here
+    /// instead of wrapping the ~20 individual property writes in Post.
+    /// </summary>
+    protected override void OnPropertyChanged(System.ComponentModel.PropertyChangedEventArgs e)
+    {
+        if (Dispatcher.UIThread.CheckAccess())
+        {
+            base.OnPropertyChanged(e);
+        }
+        else
+        {
+            Dispatcher.UIThread.Post(() => base.OnPropertyChanged(e));
+        }
+    }
+
     public Window? Window { get; set; }
     public bool OkPressed { get; internal set; }
     public ISpeechToTextEngine? Engine { get; internal set; }

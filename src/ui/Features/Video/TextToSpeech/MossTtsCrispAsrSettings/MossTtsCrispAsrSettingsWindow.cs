@@ -104,6 +104,8 @@ public class MossTtsCrispAsrSettingsWindow : Window
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
             },
             ColumnSpacing = 12,
             RowSpacing = 10,
@@ -121,22 +123,28 @@ public class MossTtsCrispAsrSettingsWindow : Window
         grid.Add(MakeLabel("Model " + MossTtsCrispAsr.ModelKeyQ4K), 1, 0);
         grid.Add(MakeStatusPanel(nameof(vm.ModelQ4KBrush), nameof(vm.ModelQ4KLabel)), 1, 1);
 
-        grid.Add(MakeLabel("Model " + MossTtsCrispAsr.ModelKeyF16), 2, 0);
-        grid.Add(MakeStatusPanel(nameof(vm.ModelF16Brush), nameof(vm.ModelF16Label)), 2, 1);
+        grid.Add(MakeLabel("Model " + MossTtsCrispAsr.ModelKeyQ6K), 2, 0);
+        grid.Add(MakeStatusPanel(nameof(vm.ModelQ6KBrush), nameof(vm.ModelQ6KLabel)), 2, 1);
 
-        grid.Add(MakeLabel("Voices"), 3, 0);
+        grid.Add(MakeLabel("Model " + MossTtsCrispAsr.ModelKeyQ8), 3, 0);
+        grid.Add(MakeStatusPanel(nameof(vm.ModelQ8Brush), nameof(vm.ModelQ8Label)), 3, 1);
+
+        grid.Add(MakeLabel("Model " + MossTtsCrispAsr.ModelKeyF16), 4, 0);
+        grid.Add(MakeStatusPanel(nameof(vm.ModelF16Brush), nameof(vm.ModelF16Label)), 4, 1);
+
+        grid.Add(MakeLabel("Voices"), 5, 0);
         var voicesText = new TextBlock
         {
             VerticalAlignment = VerticalAlignment.Center,
             FontWeight = FontWeight.SemiBold,
             [!TextBlock.TextProperty] = new Binding(nameof(vm.VoicesLabel)),
         };
-        grid.Add(voicesText, 3, 1);
+        grid.Add(voicesText, 5, 1);
 
-        grid.Add(MakeLabel(Se.Language.General.Speed), 4, 0);
-        grid.Add(MakeSpeedPanel(), 4, 1);
+        grid.Add(MakeLabel(Se.Language.General.Speed), 6, 0);
+        grid.Add(MakeSpeedPanel(), 6, 1);
 
-        grid.Add(MakeLabel(Se.Language.General.InstallFolder), 5, 0);
+        grid.Add(MakeLabel(Se.Language.General.InstallFolder), 7, 0);
         var folderText = new TextBox
         {
             IsReadOnly = true,
@@ -148,7 +156,7 @@ public class MossTtsCrispAsrSettingsWindow : Window
             FontSize = 12,
             [!TextBox.TextProperty] = new Binding(nameof(vm.ModelsFolder)),
         };
-        grid.Add(folderText, 5, 1);
+        grid.Add(folderText, 7, 1);
 
         return new Border
         {

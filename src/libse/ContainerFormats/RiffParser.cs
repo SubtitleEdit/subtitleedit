@@ -61,6 +61,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats
         /// <summary>
         /// Method to be called when a list element is found
         /// </summary>
+        /// <param name="rp">The parser instance</param>
         /// <param name="fourCcType"></param>
         /// <param name="length"></param>
         public delegate void ProcessListElement(RiffParser rp, int fourCcType, int length);
@@ -68,6 +69,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats
         /// <summary>
         /// Method to be called when a chunk element is found
         /// </summary>
+        /// <param name="rp">The parser instance</param>
         /// <param name="fourCcType"></param>
         /// <param name="unpaddedLength"></param>
         /// <param name="paddedLength"></param>

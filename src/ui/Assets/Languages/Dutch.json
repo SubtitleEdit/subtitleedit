@@ -2,7 +2,7 @@
   "Title": "Subtitle Edit",
   "TranslatedBy": "",
   "CultureName": "nl-NL",
-  "version": "v5.0.0",
+  "version": "v5.1.0",
   "General": {
     "SelectNonForcedLines": "Niet-geforceerde regels selecteren",
     "SelectForcedLines": "Geforceerde regels selecteren",
@@ -2132,14 +2132,6 @@
       "FixCasing": "Hoofdlettergebruik herstellen",
       "AddPeriods": "Punten toevoegen",
       "ChangeUnderlineToColor": "Onderstreping in kleur wijzigen",
-      "CueBuilding": "Cue-opbouw (MLX Whisper)",
-      "CueRebuild": "Cues opnieuw opbouwen uit woordtijdstempels",
-      "CueMaxChars": "Max. tekens per cue",
-      "CueMaxSeconds": "Max. seconden per cue",
-      "CueMaxCps": "Max. tekens per seconde",
-      "VocabularyPrompt": "Woordenschatprompt (namen, plaatsen, termen)",
-      "BeamSize": "Beamgrootte",
-      "BeamSizeNote": "0 decodeert het snelst. 5 geeft de beste nauwkeurigheid (zoals Faster Whisper) maar kost ongeveer 20-30% meer tijd. Waarden boven 5 helpen zelden.",
       "EngineSettings": "Instellingen voor spraak-naar-tekst-engine",
       "EngineSettingsSubtitle": "Spraak-naar-tekst-engine",
       "BackendAndUpdateStatus": "Backend- en updatestatus"

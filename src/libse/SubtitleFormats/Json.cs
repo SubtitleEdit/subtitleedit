@@ -262,7 +262,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     endIndex = endAlternate;
                 }
 
-                if (endIndex < 0 && res.EndsWith("\"", StringComparison.Ordinal))
+                if (endIndex < 0 && res.EndsWith('"'))
                 {
                     endIndex = res.Length - 1;
                 }

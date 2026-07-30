@@ -20,13 +20,13 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Avalonia" Version="12.1.0" />
+		<PackageReference Include="Avalonia" Version="12.1.1" />
 		<PackageReference Include="Avalonia.AvaloniaEdit" Version="12.0.0" />
 		<PackageReference Include="Avalonia.Controls.DataGrid" Version="12.1.0" />
-		<PackageReference Include="Avalonia.Desktop" Version="12.1.0" />
+		<PackageReference Include="Avalonia.Desktop" Version="12.1.1" />
 		<PackageReference Include="Avalonia.Markup.Declarative" Version="12.1.0" />
-		<PackageReference Include="Avalonia.Themes.Fluent" Version="12.1.0" />
-		<PackageReference Include="Avalonia.Fonts.Inter" Version="12.1.0" />
+		<PackageReference Include="Avalonia.Themes.Fluent" Version="12.1.1" />
+		<PackageReference Include="Avalonia.Fonts.Inter" Version="12.1.1" />
 		<!--Condition below is needed to remove Avalonia.Diagnostics package from build output in Release configuration.-->
 		<PackageReference Include="AvaloniaUI.DiagnosticsSupport" Version="2.2.3">
 			<IncludeAssets Condition="'$(Configuration)' != 'Debug'">None</IncludeAssets>
@@ -41,7 +41,7 @@
 		<PackageReference Include="Optris.Icons.Avalonia" Version="12.0.7" />
 		<PackageReference Include="Optris.Icons.Avalonia.FontAwesome" Version="12.0.7" />
 		<PackageReference Include="Optris.Icons.Avalonia.MaterialDesign" Version="12.0.7" />
-		<PackageReference Include="SharpCompress" Version="0.50.0" />
+		<PackageReference Include="SharpCompress" Version="0.50.1" />
 		<PackageReference Include="SkiaSharp.NativeAssets.Linux" Version="3.119.4" />
 		<PackageReference Include="SkiaSharp.HarfBuzz" Version="3.119.4" />
 		<!--
@@ -71,7 +71,6 @@
 		<AvaloniaResource Include="Assets\*.png" />
 		<AvaloniaResource Include="Assets\*.zip" />
 		<AvaloniaResource Include="Assets\FileTypes\*.ico" />
-		<AvaloniaResource Include="Assets\Languages\*.json" />
 		<AvaloniaResource Include="Assets\Layout\*.png" />
 		<AvaloniaResource Include="Assets\SevenZip\*.zip" />
 		<AvaloniaResource Include="Assets\SpeechToText\*.py" />
@@ -89,5 +88,27 @@
 		<AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleTo">
 			<_Parameter1>UITests</_Parameter1>
 		</AssemblyAttribute>
+		<AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleTo">
+			<_Parameter1>UiBenchmarks</_Parameter1>
+		</AssemblyAttribute>
 	</ItemGroup>
+
+	<Import Project="..\AssetZips.targets" />
+	<!--
+	  Themes.zip / Dictionaries.zip / Ocr.zip / Languages.zip are generated from their source
+	  folders by AssetZips.targets and injected here, so they never need to be rebuilt by hand.
+	  Assets\Languages\*.json is deliberately NOT an AvaloniaResource on its own - the
+	  translations ship deflated inside Languages.zip instead of as ~6.8 MB of raw JSON.
+	-->
+	<Target Name="IncludeAssetZips" BeforeTargets="GenerateAvaloniaResources" DependsOnTargets="BuildThemesZip;BuildDictionariesZip;BuildOcrZip;BuildLanguagesZip">
+		<!--
+		  The intermediate _AssetZipFiles item exists because Link="Assets\%(Filename)..."
+		  directly on the AvaloniaResource Include would be a metadata self-reference (MSB4120)
+		  and cross-apply against every pre-existing AvaloniaResource item.
+		-->
+		<ItemGroup>
+			<_AssetZipFiles Include="$(AssetZipsOutDir)*.zip" />
+			<AvaloniaResource Include="@(_AssetZipFiles)" Link="Assets\%(_AssetZipFiles.Filename)%(_AssetZipFiles.Extension)" />
+		</ItemGroup>
+	</Target>
 </Project>

@@ -531,6 +531,11 @@ public static class InitMenu
                 Header = l.ConvertActors,
                 Command = vm.ShowToolsConvertActorsCommand,
             },
+            new MenuItem
+            {
+                Header = l.RemoveUnicodeCharacters,
+                Command = vm.ShowToolsRemoveUnicodeCharactersCommand,
+            },
         };
         foreach (var item in tools.OrderBy(p => p.Header?.ToString()?.Replace("_", string.Empty)))
         {
@@ -680,6 +685,12 @@ public static class InitMenu
                     Command = vm.CommandVideoCloseCommand,
                 },
                 menuItemAudioTracks,
+                new Separator(),
+                new MenuItem
+                {
+                    Header = Se.Language.Video.GoToVideoPositionDotDotDot,
+                    Command = vm.ShowGoToVideoPositionCommand,
+                },
                 new Separator(),
                 new MenuItem
                 {
@@ -909,6 +920,11 @@ public static class InitMenu
             {
                 Header = l.AssaDraw,
                 Command = vm.ShowAssaDrawCommand,
+            },
+            new MenuItem
+            {
+                Header = l.AssaFontCollector,
+                Command = vm.ShowAssaFontCollectorCommand,
             },
             new MenuItem
             {

@@ -212,6 +212,11 @@ public class AudioVisualizer : Control
     // The main window and the TTS review window assign it from Se.Settings.Waveform instead.
     public bool FocusOnMouseOver { get; set; } = true;
     public int WaveformHeightPercentage { get; set; } = 50;
+
+    // Lets the wheel handler ask the host whether the video is playing, so a plain scroll in
+    // "center video position" mode can turn into a seek that keeps the play-head centered
+    // (#12864). Hosts without a video player (or that never set this) keep plain scrolling.
+    public Func<bool>? GetIsVideoPlaying { get; set; }
     public Color WaveformFancyHighColor { get; set; } = Colors.Orange;
 
     private Color _paragraphBackground = Color.FromArgb(90, 70, 70, 70);
@@ -752,6 +757,16 @@ public class AudioVisualizer : Control
                 videoPosition = StartPositionSeconds + halfWidthInSeconds;
             }
             OnVideoPositionChanged?.Invoke(this, new PositionEventArgs { PositionInSeconds = videoPosition });
+        }
+        else if (Se.Settings.Waveform.CenterVideoPosition && WavePeaks != null && GetIsVideoPlaying?.Invoke() == true)
+        {
+            // Center mode while playing: the ~60 fps cursor timer re-centers the view on the
+            // play-head every tick, so a plain scroll used to snap straight back - scrolling
+            // only worked while paused (#12864). Honor the scroll by seeking the video to the
+            // new view center instead: the play-head stays pinned to the middle and the video
+            // follows the scroll, matching SE 4. Paused scrolling stays free (no seek).
+            var halfWidthInSeconds = (Bounds.Width / 2) / (WavePeaks.SampleRate * ZoomFactor);
+            OnVideoPositionChanged?.Invoke(this, new PositionEventArgs { PositionInSeconds = StartPositionSeconds + halfWidthInSeconds });
         }
 
         InvalidateVisual();
@@ -1886,6 +1901,24 @@ public class AudioVisualizer : Control
         return formatted;
     }
 
+    // Anchored timeline cache (see DrawWaveForm for the anchoring scheme). Rebuilding the tick
+    // lists + two StreamGeometry objects and resolving a label per ~5 s of visible audio on every
+    // ~60 fps render added up, worst when zoomed far out (hundreds of labels per frame); now the
+    // layout is built once per 256 px block and replayed with a translation while scrolling.
+    private readonly List<(FormattedText Text, double X, double Y)> _timeLineLabels = new(128);
+    private Geometry? _timeLineMajorGeometry;
+    private Geometry? _timeLineMinorGeometry;
+    private TimeLineCacheKey _timeLineCacheKey;
+    private bool _timeLineCacheValid;
+
+    private readonly record struct TimeLineCacheKey(
+        double Width,
+        double Height,
+        double AnchorPixel,
+        double ZoomFactor,
+        int SampleRate,
+        double VideoOffsetMs);
+
     private void DrawTimeLine(DrawingContext context, ref RenderContext renderCtx)
     {
         if (renderCtx.SampleRate == 0)
@@ -1896,28 +1929,64 @@ public class AudioVisualizer : Control
         // The timeline ruler stays second-based also in frame mode (SE4 parity, #12573): a
         // frame-aligned ruler labeled HH:MM:SS:FF at 10-frame steps was much harder to read.
         // Only the optional gridlines are frame-aligned in frame mode (DrawAllGridLines).
+        var n = renderCtx.ZoomFactor * renderCtx.SampleRate; // pixels per second
+        if (n <= 0)
+        {
+            return;
+        }
 
-        // Hoist loop-invariants: renderCtx is a ref struct, and n (pixels per second) was being
-        // recomputed every iteration. With sampleRate != 0 guaranteed above, SecondsToXPositionOptimized
-        // reduces to Math.Round(seconds * n), so inline it.
-        var startPosSeconds = renderCtx.StartPositionSeconds;
-        var n = renderCtx.ZoomFactor * renderCtx.SampleRate;
-        var imageHeight = renderCtx.Height;
-        var width = renderCtx.Width;
+        var startPixel = renderCtx.StartPositionSeconds * n;
+        var anchorPixel = Math.Floor(startPixel / WaveformCachePadPixels) * WaveformCachePadPixels;
+        var offsetPixels = Math.Floor(startPixel - anchorPixel);
 
-        var seconds = Math.Ceiling(startPosSeconds) - startPosSeconds;
-        var position = (int)Math.Round(seconds * n, MidpointRounding.AwayFromZero);
+        var cacheKey = new TimeLineCacheKey(
+            renderCtx.Width,
+            renderCtx.Height,
+            anchorPixel,
+            renderCtx.ZoomFactor,
+            renderCtx.SampleRate,
+            Se.Settings.General.CurrentVideoOffsetInMs);
 
+        if (!_timeLineCacheValid || !_timeLineCacheKey.Equals(cacheKey))
+        {
+            BuildTimeLine(anchorPixel / n, renderCtx.Width + WaveformCachePadPixels, n, renderCtx.Height);
+            _timeLineCacheKey = cacheKey;
+            _timeLineCacheValid = true;
+        }
+
+        using (context.PushTransform(Matrix.CreateTranslation(-offsetPixels, 0)))
+        {
+            var labels = _timeLineLabels;
+            for (var i = 0; i < labels.Count; i++)
+            {
+                var label = labels[i];
+                context.DrawText(label.Text, new Point(label.X, label.Y));
+            }
+
+            if (_timeLineMajorGeometry != null)
+            {
+                context.DrawGeometry(null, _paintTimeLine, _timeLineMajorGeometry);
+            }
+
+            if (_timeLineMinorGeometry != null)
+            {
+                context.DrawGeometry(null, _paintTimeLine, _timeLineMinorGeometry);
+            }
+        }
+    }
+
+    private void BuildTimeLine(double startPosSeconds, double width, double n, double imageHeight)
+    {
         var majorTicks = _timeLineMajorTicks;
         var minorTicks = _timeLineMinorTicks;
         majorTicks.Clear();
         minorTicks.Clear();
+        _timeLineLabels.Clear();
 
+        var seconds = Math.Ceiling(startPosSeconds) - startPosSeconds;
+        var position = (int)Math.Round(seconds * n, MidpointRounding.AwayFromZero);
         var drawMinor = n > 64;
 
-        // Collect ticks first; draw text directly with cached FormattedText (single
-        // DrawText call per label is fine — the per-frame cost was the FormattedText
-        // allocation, not the DrawText call).
         while (position < width)
         {
             if (n > 38 || (int)Math.Round(startPosSeconds + seconds) % 5 == 0)
@@ -1927,7 +1996,7 @@ public class AudioVisualizer : Control
                 var timeText = GetDisplayTime(startPosSeconds + seconds);
                 var formattedText = GetCachedTimeLineText(timeText);
                 var textY = Math.Max(0, imageHeight - formattedText.Height - 2);
-                context.DrawText(formattedText, new Point(position + 2, textY));
+                _timeLineLabels.Add((formattedText, position + 2, textY));
             }
 
             seconds += 0.5;
@@ -1942,8 +2011,8 @@ public class AudioVisualizer : Control
             position = (int)Math.Round(seconds * n, MidpointRounding.AwayFromZero);
         }
 
-        DrawVerticalLineBatch(context, _paintTimeLine, majorTicks);
-        DrawVerticalLineBatch(context, _paintTimeLine, minorTicks);
+        _timeLineMajorGeometry = BuildVerticalLineGeometry(majorTicks);
+        _timeLineMinorGeometry = BuildVerticalLineGeometry(minorTicks);
     }
 
     private readonly Pen _paintTimeLine = new Pen(Brushes.Gray, 1);
@@ -2002,13 +2071,16 @@ public class AudioVisualizer : Control
     // Cached grid geometry. Same reasoning as the waveform cache below: the grid is a few hundred
     // figures and depends only on the view state, but Render runs at ~60 fps while the cursor
     // moves - so without this we rebuilt (and threw away) the whole StreamGeometry every frame.
+    // Like the waveform cache, the geometry is anchored to a padded 256 px block and translated
+    // while the view scrolls within it, so smooth playback scrolling (center mode) replays the
+    // cache instead of rebuilding it every frame.
     private Geometry? _gridLinesGeometry;
     private GridLinesCacheKey _gridLinesCacheKey;
 
     private readonly record struct GridLinesCacheKey(
         double Width,
         double Height,
-        double StartPositionSeconds,
+        double AnchorPixel,
         double ZoomFactor,
         int SampleRate,
         bool FrameMode,
@@ -2021,10 +2093,21 @@ public class AudioVisualizer : Control
             return;
         }
 
+        // Anchor the build to a block boundary in absolute pixel space; see DrawWaveForm.
+        var pixelsPerSecond = renderCtx.SampleRate * renderCtx.ZoomFactor;
+        var anchorPixel = 0d;
+        var offsetPixels = 0d;
+        if (pixelsPerSecond > 0)
+        {
+            var startPixel = renderCtx.StartPositionSeconds * pixelsPerSecond;
+            anchorPixel = Math.Floor(startPixel / WaveformCachePadPixels) * WaveformCachePadPixels;
+            offsetPixels = Math.Floor(startPixel - anchorPixel);
+        }
+
         var cacheKey = new GridLinesCacheKey(
             renderCtx.Width,
             renderCtx.Height,
-            renderCtx.StartPositionSeconds,
+            anchorPixel,
             renderCtx.ZoomFactor,
             renderCtx.SampleRate,
             Se.Settings.General.UseFrameMode,
@@ -2032,14 +2115,22 @@ public class AudioVisualizer : Control
 
         if (_gridLinesGeometry != null && _gridLinesCacheKey.Equals(cacheKey))
         {
-            context.DrawGeometry(null, _paintGridLines, _gridLinesGeometry);
+            using (context.PushTransform(Matrix.CreateTranslation(-offsetPixels, 0)))
+            {
+                context.DrawGeometry(null, _paintGridLines, _gridLinesGeometry);
+            }
+
             return;
         }
 
         _gridLinesGeometry = null;
         _gridLinesCacheKey = cacheKey;
 
-        var width = renderCtx.Width;
+        // Build over the padded width in anchor space; the vertical lines are laid out from the
+        // anchor position and the whole geometry is translated left by up to one pad while the
+        // view scrolls (the horizontal lines are built one pad wider for the same reason).
+        var buildStartSeconds = pixelsPerSecond > 0 ? anchorPixel / pixelsPerSecond : renderCtx.StartPositionSeconds;
+        var width = renderCtx.Width + WaveformCachePadPixels;
         var height = renderCtx.Height;
 
         // Pixel spacing between adjacent vertical lines; reused for the horizontal lines so the
@@ -2073,7 +2164,7 @@ public class AudioVisualizer : Control
             // Compute the start frame in integer space — Math.Floor in double space can land
             // on the wrong side of a boundary when StartPositionSeconds * fps rounds to
             // 24.9999... instead of exactly 25.0, which would offset every gridline by a step.
-            var startFrame = FloorWithEpsilon(renderCtx.StartPositionSeconds * fps);
+            var startFrame = FloorWithEpsilon(buildStartSeconds * fps);
             if (startFrame < 0)
             {
                 startFrame = 0;
@@ -2082,7 +2173,7 @@ public class AudioVisualizer : Control
             var firstAbsFrame = startFrame - startFrame % framesPerStep;
             for (var absFrame = firstAbsFrame; ; absFrame += framesPerStep)
             {
-                var relSeconds = absFrame / fps - renderCtx.StartPositionSeconds;
+                var relSeconds = absFrame / fps - buildStartSeconds;
                 var xPosition = SecondsToXPositionOptimized(relSeconds, renderCtx.SampleRate, renderCtx.ZoomFactor);
                 if (xPosition >= width)
                 {
@@ -2097,7 +2188,7 @@ public class AudioVisualizer : Control
         }
         else
         {
-            var seconds = Math.Ceiling(renderCtx.StartPositionSeconds) - renderCtx.StartPositionSeconds - 1;
+            var seconds = Math.Ceiling(buildStartSeconds) - buildStartSeconds - 1;
             var xPosition = SecondsToXPositionOptimized(seconds, renderCtx.SampleRate, renderCtx.ZoomFactor);
             var interval = renderCtx.ZoomFactor >= 0.4d
                 ? 0.1d
@@ -2144,7 +2235,10 @@ public class AudioVisualizer : Control
         }
 
         _gridLinesGeometry = geom;
-        context.DrawGeometry(null, _paintGridLines, geom);
+        using (context.PushTransform(Matrix.CreateTranslation(-offsetPixels, 0)))
+        {
+            context.DrawGeometry(null, _paintGridLines, geom);
+        }
     }
 
     private static readonly int[] FrameStepCandidates = { 1, 2, 5, 10, 25, 50, 100, 250, 500, 1000, 2500, 5000 };
@@ -2180,17 +2274,39 @@ public class AudioVisualizer : Control
 
         // Rebuild the cached geometry only when the view actually changed; otherwise (e.g. the
         // cursor moved) just replay the existing draw ops. See _waveformCacheDraws.
-        var key = BuildWaveformCacheKey(waveformHeight, ref renderCtx);
+        //
+        // The cache is anchored to a 256 px block boundary in absolute (time * pixels-per-second)
+        // space rather than to the exact scroll position: in "center video position" mode the
+        // waveform scrolls a couple of pixels every ~16 ms cursor tick during playback, so an
+        // exact-position key missed on every frame and playback re-ran the whole per-pixel build
+        // (the very thing this cache exists to avoid). Instead we build the geometry for the
+        // anchor block plus one block of padding and just translate it while the view scrolls
+        // within the padded range - the build then runs once per 256 px scrolled instead of at
+        // ~60 fps. The translation is snapped to whole pixels so the 1 px columns stay as crisp
+        // as they were when the geometry was built at the view origin.
+        var pixelsPerSecond = renderCtx.SampleRate * renderCtx.ZoomFactor;
+        var anchorPixel = 0d;
+        var offsetPixels = 0d;
+        if (pixelsPerSecond > 0)
+        {
+            var startPixel = renderCtx.StartPositionSeconds * pixelsPerSecond;
+            anchorPixel = Math.Floor(startPixel / WaveformCachePadPixels) * WaveformCachePadPixels;
+            offsetPixels = Math.Floor(startPixel - anchorPixel);
+        }
+
+        var key = BuildWaveformCacheKey(waveformHeight, anchorPixel, ref renderCtx);
         if (!_waveformCacheValid || !ReferenceEquals(_waveformCachePeaks, WavePeaks) || !key.Equals(_waveformCacheKey))
         {
             _waveformCacheDraws.Clear();
+            var buildStartSeconds = pixelsPerSecond > 0 ? anchorPixel / pixelsPerSecond : renderCtx.StartPositionSeconds;
+            var buildWidth = renderCtx.Width + WaveformCachePadPixels;
             if (WaveformDrawStyle == WaveformDrawStyle.Classic)
             {
-                BuildWaveFormClassic(waveformHeight, ref renderCtx);
+                BuildWaveFormClassic(waveformHeight, buildStartSeconds, buildWidth, ref renderCtx);
             }
             else
             {
-                BuildWaveFormFancy(waveformHeight, ref renderCtx);
+                BuildWaveFormFancy(waveformHeight, buildStartSeconds, buildWidth, ref renderCtx);
             }
 
             _waveformCacheKey = key;
@@ -2206,10 +2322,13 @@ public class AudioVisualizer : Control
             context.DrawLine(_centerLinePen, new Point(0, halfWaveformHeight), new Point(renderCtx.Width, halfWaveformHeight));
         }
 
-        for (var i = 0; i < _waveformCacheDraws.Count; i++)
+        using (context.PushTransform(Matrix.CreateTranslation(-offsetPixels, 0)))
         {
-            var draw = _waveformCacheDraws[i];
-            context.DrawGeometry(null, draw.Pen, draw.Geometry);
+            for (var i = 0; i < _waveformCacheDraws.Count; i++)
+            {
+                var draw = _waveformCacheDraws[i];
+                context.DrawGeometry(null, draw.Pen, draw.Geometry);
+            }
         }
     }
 
@@ -2270,7 +2389,7 @@ public class AudioVisualizer : Control
     private readonly Dictionary<int, FancyBatch> _fancyBatches = new(64);
     private readonly List<int> _fancyBatchKeysInUse = new(64);
 
-    private void BuildWaveFormFancy(double waveformHeight, ref RenderContext renderCtx)
+    private void BuildWaveFormFancy(double waveformHeight, double startPositionSeconds, double width, ref RenderContext renderCtx)
     {
         var isSelectedHelper = _isSelectedHelper;
         var halfWaveformHeight = waveformHeight / 2;
@@ -2290,10 +2409,11 @@ public class AudioVisualizer : Control
         // Hoist loop-invariant RenderContext fields into locals: it is a ref struct, so the JIT
         // cannot cache these reads across the loop. Also turn the per-pixel sample position into a
         // multiply (startSample + x * samplesPerPixel) instead of a division (x / div).
-        var width = renderCtx.Width;
+        // startPositionSeconds/width describe the (padded) anchor-space build range, not the live
+        // view - see the anchored cache in DrawWaveForm.
         var height = renderCtx.Height;
         var verticalZoomFactor = renderCtx.VerticalZoomFactor;
-        var startSample = renderCtx.StartPositionSeconds * renderCtx.SampleRate;
+        var startSample = startPositionSeconds * renderCtx.SampleRate;
         var samplesPerPixel = renderCtx.SampleRate / div;
         var yScaleHalf = verticalZoomFactor / highestPeak * halfWaveformHeight;
 
@@ -2443,7 +2563,7 @@ public class AudioVisualizer : Control
         }
     }
 
-    private void BuildWaveFormClassic(double waveformHeight, ref RenderContext renderCtx)
+    private void BuildWaveFormClassic(double waveformHeight, double startPositionSeconds, double width, ref RenderContext renderCtx)
     {
         var isSelectedHelper = _isSelectedHelper;
         var halfWaveformHeight = waveformHeight / 2;
@@ -2460,11 +2580,11 @@ public class AudioVisualizer : Control
 
         // Hoist loop-invariant RenderContext fields (it is a ref struct) and replace the per-pixel
         // division for the sample position with a multiply. See BuildWaveFormFancy.
-        var width = renderCtx.Width;
+        // startPositionSeconds/width describe the (padded) anchor-space build range, not the live view.
         var height = renderCtx.Height;
         var highestPeak = renderCtx.HighestPeak;
         var verticalZoomFactor = renderCtx.VerticalZoomFactor;
-        var startSample = renderCtx.StartPositionSeconds * renderCtx.SampleRate;
+        var startSample = startPositionSeconds * renderCtx.SampleRate;
         var samplesPerPixel = renderCtx.SampleRate / div;
         var yScaleHalf = verticalZoomFactor / highestPeak * halfWaveformHeight;
 
@@ -2533,6 +2653,9 @@ public class AudioVisualizer : Control
     // build the geometry once per view-state and just replay the draw calls while only the
     // cursor moves. The key captures everything that changes the waveform pixels, so any real
     // change (scroll, zoom, resize, selection, peaks, colors, style) rebuilds automatically.
+    // Scrolling is keyed on a padded anchor block, not the exact position, so smooth playback
+    // scrolling translates the cached geometry instead of rebuilding it (see DrawWaveForm).
+    private const int WaveformCachePadPixels = 256;
     private readonly List<(IPen Pen, Geometry Geometry)> _waveformCacheDraws = new(64);
     private WaveformCacheKey _waveformCacheKey;
     private bool _waveformCacheValid;
@@ -2543,7 +2666,7 @@ public class AudioVisualizer : Control
         public readonly int Width;
         public readonly double Height;
         public readonly double WaveformHeight;
-        public readonly double StartPositionSeconds;
+        public readonly double AnchorPixel;
         public readonly double ZoomFactor;
         public readonly double VerticalZoomFactor;
         public readonly double HighestPeak;
@@ -2556,14 +2679,14 @@ public class AudioVisualizer : Control
         public readonly int SelectionCount;
         public readonly long SelectionHash;
 
-        public WaveformCacheKey(int width, double height, double waveformHeight, double startPositionSeconds,
+        public WaveformCacheKey(int width, double height, double waveformHeight, double anchorPixel,
             double zoomFactor, double verticalZoomFactor, double highestPeak, int sampleRate, int displayMode,
             int drawStyle, uint colorMain, uint colorSelected, uint colorHigh, int selectionCount, long selectionHash)
         {
             Width = width;
             Height = height;
             WaveformHeight = waveformHeight;
-            StartPositionSeconds = startPositionSeconds;
+            AnchorPixel = anchorPixel;
             ZoomFactor = zoomFactor;
             VerticalZoomFactor = verticalZoomFactor;
             HighestPeak = highestPeak;
@@ -2581,7 +2704,7 @@ public class AudioVisualizer : Control
             Width == other.Width &&
             Height.Equals(other.Height) &&
             WaveformHeight.Equals(other.WaveformHeight) &&
-            StartPositionSeconds.Equals(other.StartPositionSeconds) &&
+            AnchorPixel.Equals(other.AnchorPixel) &&
             ZoomFactor.Equals(other.ZoomFactor) &&
             VerticalZoomFactor.Equals(other.VerticalZoomFactor) &&
             HighestPeak.Equals(other.HighestPeak) &&
@@ -2600,7 +2723,7 @@ public class AudioVisualizer : Control
 
     private static uint ToKeyColor(Color c) => ((uint)c.A << 24) | ((uint)c.R << 16) | ((uint)c.G << 8) | c.B;
 
-    private WaveformCacheKey BuildWaveformCacheKey(double waveformHeight, ref RenderContext renderCtx)
+    private WaveformCacheKey BuildWaveformCacheKey(double waveformHeight, double anchorPixel, ref RenderContext renderCtx)
     {
         long selectionHash = 17;
         var selection = AllSelectedParagraphs;
@@ -2615,7 +2738,7 @@ public class AudioVisualizer : Control
             (int)Math.Ceiling(renderCtx.Width),
             renderCtx.Height,
             waveformHeight,
-            renderCtx.StartPositionSeconds,
+            anchorPixel,
             renderCtx.ZoomFactor,
             renderCtx.VerticalZoomFactor,
             renderCtx.HighestPeak,
@@ -2651,11 +2774,11 @@ public class AudioVisualizer : Control
         _waveformCacheDraws.Add((pen, geom));
     }
 
-    private static void DrawVerticalLineBatch(DrawingContext context, IPen pen, List<FancyLine> lines)
+    private static Geometry? BuildVerticalLineGeometry(List<FancyLine> lines)
     {
         if (lines.Count == 0)
         {
-            return;
+            return null;
         }
 
         var geom = new StreamGeometry();
@@ -2669,7 +2792,8 @@ public class AudioVisualizer : Control
                 gctx.EndFigure(false);
             }
         }
-        context.DrawGeometry(null, pen, geom);
+
+        return geom;
     }
 
     private void DrawParagraphs(DrawingContext context, ref RenderContext renderCtx)
@@ -3687,6 +3811,7 @@ public class AudioVisualizer : Control
         _paragraphTextCache.Clear();
         _waveformCacheValid = false;
         _gridLinesGeometry = null;
+        _timeLineCacheValid = false;
 
         _paintText = new SolidColorBrush(Se.Settings.Waveform.WaveformTextColor.FromHexToColor());
         _typeface = new Typeface(UiUtil.GetDefaultFontName(), FontStyle.Normal, Se.Settings.Waveform.WaveformTextFontBold ? FontWeight.Bold : FontWeight.Normal);

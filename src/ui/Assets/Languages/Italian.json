@@ -1,6 +1,6 @@
 {
   "Title": "SubtitleEdit",
-  "Version": "v. 5.1.0 RC8",
+  "version": "v5.1.0",
   "TranslatedBy": "v. 27.07.2026 di bovirus",
   "CultureName": "it-IT",
   "General": {
@@ -2132,14 +2132,6 @@
       "FixCasing": "Correggi maiuscolo/minuscolo",
       "AddPeriods": "Aggiungi periodi",
       "ChangeUnderlineToColor": "Cambia sottolineatura in colore",
-      "CueBuilding": "Costruzione taglio (MLX Whisper)",
-      "CueRebuild": "Ricostruisci tagli dai timestamp parole",
-      "CueMaxChars": "Caratteri massimi per taglio",
-      "CueMaxSeconds": "Secondi massimi per taglio",
-      "CueMaxCps": "Numero massimo caratteri al secondo",
-      "VocabularyPrompt": "Prompt vocabolario (nomi, luoghi, termini)",
-      "BeamSize": "Dimensione raggio",
-      "BeamSizeNote": "0 decodifica più velocemente.\r\n5 offre la migliore precisione (come Faster Whisper) con circa il 20-30% di tempo in più.\r\nI valori superiori a 5 raramente aiutano.",
       "EngineSettings": "Impostazioni motore sintesi vocale",
       "EngineSettingsSubtitle": "Motore sintesi vocale",
       "BackendAndUpdateStatus": "Backend e aggiornamento stato"

@@ -1017,6 +1017,12 @@ public static partial class InitListViewAndEditBox
                 },
                 new MenuItem
                 {
+                    Header = Se.Language.Main.Menu.ShowSelectedLinesEarlierLater,
+                    Command = vm.ShowSyncAdjustAllTimesSelectedLinesCommand,
+                    DataContext = vm,
+                },
+                new MenuItem
+                {
                     Header = Se.Language.Main.Menu.VisualSync,
                     Command = vm.ShowVisualSyncSelectedLinesCommand,
                     DataContext = vm,

@@ -1,6 +1,6 @@
 {
   "Title": "Subtitle Edit",
-  "Version": "v5.1.0-beta13",
+  "version": "v5.1.0",
   "TranslatedBy": "igorruckert",
   "CultureName": "pt-BR",
   "General": {
@@ -2132,14 +2132,6 @@
       "FixCasing": "Corrigir maiúsculas/minúsculas",
       "AddPeriods": "Adicionar pontos",
       "ChangeUnderlineToColor": "Alterar sublinhado para cor",
-      "CueBuilding": "Criação de CUE (MLX Whisper)",
-      "CueRebuild": "Recriar CUEs dos carimbos de data/hora de palavras",
-      "CueMaxChars": "Máximo de caracteres por CUE",
-      "CueMaxSeconds": "Máximo de segundos por CUE",
-      "CueMaxCps": "Máximo de caracteres por segundo",
-      "VocabularyPrompt": "Prompt de vocabulário (nomes, lugares, termos)",
-      "BeamSize": "Tamanho do beam",
-      "BeamSizeNote": "0 decodifica mais rápido. 5 oferece a melhor precisão (como Faster Whisper) em aproximadamente 20-30% mais tempo. Valores acima de 5 raramente ajudam.",
       "EngineSettings": "Configurações do mecanismo de fala para texto",
       "EngineSettingsSubtitle": "Mecanismo de fala para texto",
       "BackendAndUpdateStatus": "Back-end e status de atualização"

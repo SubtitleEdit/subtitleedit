@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Text;
 
 namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 {
@@ -34,7 +35,21 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         public override string ToText(Subtitle subtitle, string title)
         {
-            throw new NotImplementedException();
+            var sb = new StringBuilder();
+            foreach (var p in subtitle.Paragraphs)
+            {
+                var text = HtmlUtil.RemoveHtmlTags(p.Text, true)
+                    .Replace(Environment.NewLine, " ")
+                    .Replace('\t', ' ');
+                sb.AppendLine($"{EncodeTimeCode(p.StartTime)}\t{EncodeTimeCode(p.EndTime)}\t{text}");
+            }
+
+            return sb.ToString();
+        }
+
+        private static string EncodeTimeCode(TimeCode timeCode)
+        {
+            return timeCode.TotalSeconds.ToString("0.000000", CultureInfo.InvariantCulture);
         }
     }
 }

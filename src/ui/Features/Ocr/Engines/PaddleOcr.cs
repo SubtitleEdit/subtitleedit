@@ -264,6 +264,37 @@ public partial class PaddleOcr
         // Add all processed items back to the original collection
         _batchFileNames.AddRange(batchFileNamesList);
 
+        // Resolve the executable before building the command line. When the standalone
+        // binary is absent (no standalone build exists on macOS, and batch convert always
+        // requests PaddleOcrStandalone), the run falls back to the pip-installed Python
+        // CLI - and the whole I/O protocol below (result-file polling vs stdout parsing,
+        // cls model, mkldnn) must follow the binary actually launched, not the engine
+        // requested, or the fallback run exits successfully with zero parseable results.
+        // The disk-scanning resolver only runs when neither standalone binary exists.
+        string paddleOcrPath;
+        if (engineType == OcrEngineType.PaddleOcrStandalone)
+        {
+            var standaloneExe = Path.Combine(Se.PaddleOcrFolder, "paddleocr.exe");
+            var standaloneBin = Path.Combine(Se.PaddleOcrFolder, "paddleocr.bin");
+            if (File.Exists(standaloneExe))
+            {
+                paddleOcrPath = standaloneExe;
+            }
+            else if (File.Exists(standaloneBin))
+            {
+                paddleOcrPath = standaloneBin;
+            }
+            else
+            {
+                paddleOcrPath = GetPaddleOcrPytonPath();
+                engineType = OcrEngineType.PaddleOcrPython;
+            }
+        }
+        else
+        {
+            paddleOcrPath = GetPaddleOcrPytonPath();
+        }
+
         // Subtitles are always horizontal, so the Python engine skips text-line
         // orientation classification: it is noticeably faster and avoids loading the
         // extra cls model. The standalone engine keeps the original behavior.
@@ -299,23 +330,6 @@ public partial class PaddleOcr
             parameters += " --enable_mkldnn False";
         }
 
-        var paddleOcrPath = Path.Combine(Se.PaddleOcrFolder, "paddleocr.bin");
-        if (engineType != OcrEngineType.PaddleOcrStandalone || !File.Exists(paddleOcrPath))
-        {
-            paddleOcrPath = "paddleocr";
-        }
-
-        if (engineType == OcrEngineType.PaddleOcrStandalone &&
-            File.Exists(Path.Combine(Se.PaddleOcrFolder, "paddleocr.exe")))
-        {
-            paddleOcrPath = Path.Combine(Se.PaddleOcrFolder, "paddleocr.exe");
-        }
-
-        if (engineType == OcrEngineType.PaddleOcrPython)
-        {
-            paddleOcrPath = GetPaddleOcrPytonPath();
-        }
-
         var process = new Process
         {
             StartInfo = new ProcessStartInfo
@@ -326,6 +340,9 @@ public partial class PaddleOcr
                 RedirectStandardOutput = true,
                 RedirectStandardError = true,
                 CreateNoWindow = true,
+                // A GUI app launched from Finder inherits "/" as current directory; use a
+                // writable folder so relative writes from the tool cannot fail.
+                WorkingDirectory = Path.GetTempPath(),
             },
         };
 
@@ -664,7 +681,8 @@ public partial class PaddleOcr
 
         var foundFiles = possiblePaths
             .Where(Directory.Exists)
-            .SelectMany(baseDir => Directory.GetFiles(baseDir, executableName, SearchOption.AllDirectories))
+            .SelectMany(baseDir => SafeGetFiles(baseDir, executableName))
+            .Concat(GetCliShimCandidates(executableName))
             .Distinct()
             .ToList();
 
@@ -695,6 +713,68 @@ public partial class PaddleOcr
         }
 
         return foundFiles.Last();
+    }
+
+    // A conda/Python tree can contain unreadable directories or reparse-point cycles;
+    // a resolver failure must degrade to "not found here", never abort the OCR run.
+    private static string[] SafeGetFiles(string baseDir, string fileName)
+    {
+        try
+        {
+            return Directory.GetFiles(baseDir, fileName, SearchOption.AllDirectories);
+        }
+        catch
+        {
+            return Array.Empty<string>();
+        }
+    }
+
+    // A GUI app launched from Finder/launchd does not inherit the shell PATH, so
+    // Process.Start("paddleocr") cannot find pip/Homebrew installs even though the
+    // command works fine in a terminal (#12953). Probe the standard CLI-shim
+    // directories directly, plus whatever PATH the process does have.
+    private static IEnumerable<string> GetCliShimCandidates(string executableName)
+    {
+        var candidates = new List<string>();
+
+        if (Environment.OSVersion.Platform != PlatformID.Win32NT)
+        {
+            var home = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
+            candidates.Add(Path.Combine(home, ".local", "bin", executableName)); // pip install --user / pipx
+            candidates.Add("/usr/local/bin/" + executableName); // Homebrew (Intel) / system pip
+            candidates.Add("/opt/homebrew/bin/" + executableName); // Homebrew (Apple Silicon)
+            candidates.Add("/usr/bin/" + executableName); // system package manager
+            candidates.Add("/opt/local/bin/" + executableName); // MacPorts
+
+            // macOS "pip install --user": ~/Library/Python/X.Y/bin/paddleocr
+            var macUserPython = Path.Combine(home, "Library", "Python");
+            if (Directory.Exists(macUserPython))
+            {
+                try
+                {
+                    candidates.AddRange(Directory.GetFiles(macUserPython, executableName, SearchOption.AllDirectories));
+                }
+                catch
+                {
+                    // ignore access errors
+                }
+            }
+        }
+
+        var pathEnv = Environment.GetEnvironmentVariable("PATH") ?? string.Empty;
+        foreach (var dir in pathEnv.Split(Path.PathSeparator, StringSplitOptions.RemoveEmptyEntries))
+        {
+            try
+            {
+                candidates.Add(Path.Combine(dir.Trim(), executableName));
+            }
+            catch
+            {
+                // ignore malformed PATH entries
+            }
+        }
+
+        return candidates.Where(File.Exists);
     }
 
     // Resolves the Python environment root for a "paddleocr" launcher:

@@ -1,9 +1,9 @@
 ﻿using Avalonia.Media;
 using CommunityToolkit.Mvvm.ComponentModel;
-using Nikse.SubtitleEdit.Core.AutoTranslate;
+using Nikse.SubtitleEdit.UiLogic.AutoTranslate;
 using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
-using Nikse.SubtitleEdit.Core.Translate;
+using Nikse.SubtitleEdit.UiLogic.Translate;
 using Nikse.SubtitleEdit.UiLogic.AdjustDuration;
 using Nikse.SubtitleEdit.Logic.Config;
 
@@ -46,6 +46,7 @@ public class BatchConvertConfig
     public ApplyDurationLimitsSettings ApplyDurationLimits { get; set; }
     public AutoBalanceLinesSettings AutoBalanceLines { get; set; }
     public SortBySettings SortBy { get; set; }
+    public AdjustImageColorsSettings AdjustImageColors { get; set; }
 
     public BatchConvertConfig()
     {
@@ -82,6 +83,7 @@ public class BatchConvertConfig
         ApplyDurationLimits = new ApplyDurationLimitsSettings();
         AutoBalanceLines = new AutoBalanceLinesSettings();
         SortBy = new SortBySettings();
+        AdjustImageColors = new AdjustImageColorsSettings();
     }
 
     public bool IsTargetFormatImageBased =>
@@ -360,6 +362,26 @@ public class BatchConvertConfig
         public SortBySettings()
         {
             SortBy = "Number";
+        }
+    }
+
+    public class AdjustImageColorsSettings
+    {
+        public bool IsActive { get; set; }
+        public bool AdjustBrightness { get; set; }
+        public double Brightness { get; set; }
+        public double Contrast { get; set; }
+        public double Gamma { get; set; }
+        public bool AdjustAlpha { get; set; }
+        public double AlphaAdjustment { get; set; }
+        public double TransparencyThreshold { get; set; }
+        public bool AdjustColor { get; set; }
+        public Color ColorValue { get; set; }
+
+        public AdjustImageColorsSettings()
+        {
+            Gamma = 100; // 1.0
+            ColorValue = Colors.White;
         }
     }
 }

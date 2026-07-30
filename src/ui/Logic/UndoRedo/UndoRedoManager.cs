@@ -363,13 +363,30 @@ public sealed class UndoRedoManager : IUndoRedoManager
             var o = prev.Subtitles[i];
             var n = next.Subtitles[i];
 
-            var textChanged = o.Text != n.Text;
+            // OriginalText must be compared here: the undo hash covers the original column
+            // (see GetUndoRedoHash), so if this comparison ignores it, loading or editing an
+            // original changes the hash without ever producing an undo entry - and the next
+            // undo restores a snapshot whose originals are stale or empty, wiping the whole
+            // original column (#12952).
+            var textChanged = o.Text != n.Text || o.OriginalText != n.OriginalText;
             var timingChanged =
                 Math.Abs(o.StartTime.TotalMilliseconds - n.StartTime.TotalMilliseconds) > 0.5 ||
                 Math.Abs(o.EndTime.TotalMilliseconds - n.EndTime.TotalMilliseconds) > 0.5;
             var bookmarkChanged = o.Bookmark != n.Bookmark;
 
-            if (!textChanged && !timingChanged && !bookmarkChanged)
+            // Same rule as OriginalText above: every field the undo hash covers must be
+            // compared here, or changing it (assigning a style/actor/layer) shifts the
+            // hash without recording an entry - undo then reverts it bundled into the
+            // previous action, and the detector re-snapshots every tick until the next
+            // text or timing edit.
+            var metadataChanged =
+                o.Style != n.Style ||
+                o.Extra != n.Extra ||
+                o.Actor != n.Actor ||
+                o.Layer != n.Layer ||
+                o.Number != n.Number;
+
+            if (!textChanged && !timingChanged && !bookmarkChanged && !metadataChanged)
             {
                 continue;
             }
@@ -387,6 +404,21 @@ public sealed class UndoRedoManager : IUndoRedoManager
 
         if (changedLines.Count == 0)
         {
+            // File-level state (file name, encoding, headers, original-subtitle file
+            // properties) is also part of the undo hash and can change with no line
+            // changes at all - e.g. loading an original subtitle sets its file name.
+            if (prev.SubtitleFileName != next.SubtitleFileName ||
+                prev.SelectedEncodingDisplayName != next.SelectedEncodingDisplayName ||
+                prev.SubtitleHeader != next.SubtitleHeader ||
+                prev.SubtitleFooter != next.SubtitleFooter ||
+                prev.SubtitleFileNameOriginal != next.SubtitleFileNameOriginal ||
+                prev.SubtitleHeaderOriginal != next.SubtitleHeaderOriginal ||
+                prev.SubtitleFooterOriginal != next.SubtitleFooterOriginal)
+            {
+                next.Description = "File properties changed";
+                return true;
+            }
+
             return false;
         }
 
@@ -406,15 +438,19 @@ public sealed class UndoRedoManager : IUndoRedoManager
         var n = next.Subtitles[line - 1];
 
         var textChanged = o.Text != n.Text;
+        var originalTextChanged = o.OriginalText != n.OriginalText;
         var timingChanged =
             Math.Abs(o.StartTime.TotalMilliseconds - n.StartTime.TotalMilliseconds) > 0.5 ||
             Math.Abs(o.EndTime.TotalMilliseconds - n.EndTime.TotalMilliseconds) > 0.5;
 
-        return (textChanged, timingChanged) switch
+        return (textChanged || originalTextChanged, timingChanged) switch
         {
             (true, true) => string.Format(Se.Language.Main.LineXTextAndTimingChanged, line),
-            (true, false) => string.Format(Se.Language.Main.LineXTextChangedFromYToZ,
-                                 line, Truncate(o.Text), Truncate(n.Text)),
+            (true, false) => textChanged
+                ? string.Format(Se.Language.Main.LineXTextChangedFromYToZ,
+                    line, Truncate(o.Text), Truncate(n.Text))
+                : string.Format(Se.Language.Main.LineXTextChangedFromYToZ,
+                    line, Truncate(o.OriginalText), Truncate(n.OriginalText)),
             (false, true) => string.Format(Se.Language.Main.LineXTimingChanged, line),
             _ => $"Line {line}: modified"
         };

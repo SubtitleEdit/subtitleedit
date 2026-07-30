@@ -52,6 +52,22 @@ public class LanguageStatistics
     public string GapAverage { get; set; }
     public string GapExceedingMinimum { get; set; }
     public string Export { get; set; }
+    public string Subtitles { get; set; }
+    public string Words { get; set; }
+    public string TotalDurationShort { get; set; }
+    public string TimingAndPacing { get; set; }
+    public string MinimumAverageMaximum { get; set; }
+    public string Checks { get; set; }
+    public string AgainstCurrentProfile { get; set; }
+    public string SubtitleLength { get; set; }
+    public string CpsAboveOptimalX { get; set; }
+    public string CpsAboveMaximumX { get; set; }
+    public string WpmAboveMaximumX { get; set; }
+    public string DurationBelowMinimumX { get; set; }
+    public string DurationAboveMaximumX { get; set; }
+    public string LineTooLongX { get; set; }
+    public string LineTooWideX { get; set; }
+    public string GapBelowMinimumX { get; set; }
 
     public LanguageStatistics()
     {
@@ -105,5 +121,21 @@ public class LanguageStatistics
         GapAverage = "Gap - average: {0:#,##0.##} ms";
         GapExceedingMinimum = "Gap - below minimum ({0:#,##0} ms): {1} ({2:0.00}%)";
         Export = "Export...";
+        Subtitles = "Subtitles";
+        Words = "Words";
+        TotalDurationShort = "Total duration";
+        TimingAndPacing = "Timing and pacing";
+        MinimumAverageMaximum = "minimum - average - maximum";
+        Checks = "Checks";
+        AgainstCurrentProfile = "against the current profile";
+        SubtitleLength = "Subtitle length";
+        CpsAboveOptimalX = "Above optimal chars/sec ({0:0.##})";
+        CpsAboveMaximumX = "Above maximum chars/sec ({0:0.##})";
+        WpmAboveMaximumX = "Above maximum words/min ({0:0.##})";
+        DurationBelowMinimumX = "Duration below minimum ({0:0.###} s)";
+        DurationAboveMaximumX = "Duration above maximum ({0:0.###} s)";
+        LineTooLongX = "Single line too long (> {0})";
+        LineTooWideX = "Single line too wide (> {0} pixels)";
+        GapBelowMinimumX = "Gap below minimum ({0:#,##0} ms)";
     }
 }

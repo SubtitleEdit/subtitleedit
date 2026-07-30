@@ -238,7 +238,6 @@ public static class LlamaCppDownloadHelper
             if (persistAsTranslateModel && Se.Settings.AutoTranslate.LlamaCppModel != modelPath)
             {
                 Se.Settings.AutoTranslate.LlamaCppModel = modelPath;
-                Configuration.Settings.Tools.LlamaCppModel = modelPath;
                 Se.SaveSettings();
             }
 

@@ -76,7 +76,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 {
                     if (fileName.EndsWith(".cap", StringComparison.OrdinalIgnoreCase))
                     {
-                        byte[] buffer = FileUtil.ReadAllBytesShared(fileName);
+                        byte[] buffer = FileUtil.ReadBytesShared(fileName, 2);
                         if (buffer[0] == 0xEA && buffer[1] == 0x10)
                         {
                             var subtitle = new Subtitle();

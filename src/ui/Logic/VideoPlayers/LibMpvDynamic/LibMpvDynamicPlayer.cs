@@ -367,6 +367,16 @@ public sealed class LibMpvDynamicPlayer : IDisposable, IVideoPlayer
         return Encoding.UTF8.GetBytes(s + "\0");
     }
 
+    // Cached UTF-8 names for the hot polled properties: the UI polls these up to ~60x/s
+    // during playback (playhead cursor timer + position timers), and GetUtf8Bytes
+    // allocated a fresh byte[] per call.
+    private static readonly byte[] PropertyNameTimePos = GetUtf8Bytes("time-pos");
+    private static readonly byte[] PropertyNamePause = GetUtf8Bytes("pause");
+    private static readonly byte[] PropertyNameEofReached = GetUtf8Bytes("eof-reached");
+    private static readonly byte[] PropertyNameSpeed = GetUtf8Bytes("speed");
+    private static readonly byte[] PropertyNameDuration = GetUtf8Bytes("duration");
+    private static readonly byte[] PropertyNameVolume = GetUtf8Bytes("volume");
+
     public string GetErrorString(int error)
     {
         if (_mpvErrorString == null)
@@ -800,6 +810,7 @@ public sealed class LibMpvDynamicPlayer : IDisposable, IVideoPlayer
         // Reset any end-of-playback bound from a previous file (see audio-only handling below).
         SetOptionString("end", "none");
         _audioEndBound = null;
+        _lastRawTimePos = -1;
 
         await WaitForCoreInitializedAsync();
 
@@ -958,6 +969,7 @@ public sealed class LibMpvDynamicPlayer : IDisposable, IVideoPlayer
         _fileName = string.Empty;
         _pausedValue = null;
         _audioEndBound = null;
+        _lastRawTimePos = -1;
 
         EnsureNotDisposed();
         if (_mpv == IntPtr.Zero)
@@ -989,7 +1001,7 @@ public sealed class LibMpvDynamicPlayer : IDisposable, IVideoPlayer
             try
             {
                 double pauseValue = 0;
-                var nameBytes = GetUtf8Bytes("pause");
+                var nameBytes = PropertyNamePause;
                 var err = _mpvGetPropertyDouble(_mpv, nameBytes, MPV_FORMAT_FLAG, ref pauseValue);
 
                 if (err < 0)
@@ -1019,7 +1031,7 @@ public sealed class LibMpvDynamicPlayer : IDisposable, IVideoPlayer
             try
             {
                 double pauseValue = 0;
-                var nameBytes = GetUtf8Bytes("pause");
+                var nameBytes = PropertyNamePause;
                 var err = _mpvGetPropertyDouble(_mpv, nameBytes, MPV_FORMAT_FLAG, ref pauseValue);
 
                 if (err < 0)
@@ -1039,6 +1051,23 @@ public sealed class LibMpvDynamicPlayer : IDisposable, IVideoPlayer
 
     private double? _pausedValue;
 
+    // Last raw time-pos seen by the Position getter/setter, used to gate the eof-reached
+    // probe below. -1 = unknown (always probe).
+    private double _lastRawTimePos = -1;
+
+    /// <summary>
+    /// Whether playback could plausibly be at the audio end bound, judged from the last seen
+    /// position. The Position getter is polled up to ~60x/s during playback and the eof-reached
+    /// probe is an extra synchronous P/Invoke into the mpv core on every one of those reads -
+    /// for audio-only files (where <see cref="_audioEndBound"/> is always set) that doubled the
+    /// polling load for the whole session. Position moves continuously and is re-read many times
+    /// a second, so gating on "last seen position near the bound" cannot miss the real EOF.
+    /// </summary>
+    private bool MightBeAtAudioEnd()
+    {
+        return _lastRawTimePos < 0 || !_audioEndBound.HasValue || _lastRawTimePos >= _audioEndBound.Value - 2.0;
+    }
+
     private bool IsEofReached()
     {
         if (_mpv == IntPtr.Zero || _mpvGetPropertyDouble == null)
@@ -1049,7 +1078,7 @@ public sealed class LibMpvDynamicPlayer : IDisposable, IVideoPlayer
         try
         {
             double eofValue = 0;
-            var nameBytes = GetUtf8Bytes("eof-reached");
+            var nameBytes = PropertyNameEofReached;
             var err = _mpvGetPropertyDouble(_mpv, nameBytes, MPV_FORMAT_FLAG, ref eofValue);
             if (err < 0)
             {
@@ -1073,7 +1102,7 @@ public sealed class LibMpvDynamicPlayer : IDisposable, IVideoPlayer
             // earlier in the session, _pausedValue still holds that stale seek target and
             // the cache below would return it, causing the position to "jump back" to the
             // last seek when playback completes. See #10835 / #10877.
-            if (_audioEndBound.HasValue && IsEofReached())
+            if (_audioEndBound.HasValue && MightBeAtAudioEnd() && IsEofReached())
             {
                 return _audioEndBound.Value;
             }
@@ -1092,7 +1121,7 @@ public sealed class LibMpvDynamicPlayer : IDisposable, IVideoPlayer
             try
             {
                 double position = 0;
-                var nameBytes = GetUtf8Bytes("time-pos");
+                var nameBytes = PropertyNameTimePos;
                 var err = _mpvGetPropertyDouble(_mpv, nameBytes, MPV_FORMAT_DOUBLE, ref position);
 
                 if (err < 0)
@@ -1100,6 +1129,7 @@ public sealed class LibMpvDynamicPlayer : IDisposable, IVideoPlayer
                     return 0;
                 }
 
+                _lastRawTimePos = position;
                 return position;
             }
             catch
@@ -1110,6 +1140,7 @@ public sealed class LibMpvDynamicPlayer : IDisposable, IVideoPlayer
         set
         {
             _pausedValue = value;
+            _lastRawTimePos = value; // keep the eof-reached gate accurate across seeks
             EnsureNotDisposed();
             if (_mpv == IntPtr.Zero)
             {
@@ -1137,7 +1168,7 @@ public sealed class LibMpvDynamicPlayer : IDisposable, IVideoPlayer
             try
             {
                 double duration = 0;
-                var nameBytes = GetUtf8Bytes("duration");
+                var nameBytes = PropertyNameDuration;
                 var err = _mpvGetPropertyDouble(_mpv, nameBytes, MPV_FORMAT_DOUBLE, ref duration);
 
                 if (err < 0)
@@ -1169,7 +1200,7 @@ public sealed class LibMpvDynamicPlayer : IDisposable, IVideoPlayer
             try
             {
                 double volume = 100;
-                var nameBytes = GetUtf8Bytes("volume");
+                var nameBytes = PropertyNameVolume;
                 var err = _mpvGetPropertyDouble(_mpv, nameBytes, MPV_FORMAT_DOUBLE, ref volume);
 
                 if (err < 0)
@@ -1218,7 +1249,7 @@ public sealed class LibMpvDynamicPlayer : IDisposable, IVideoPlayer
             try
             {
                 var speed = 1.0;
-                var nameBytes = GetUtf8Bytes("speed");
+                var nameBytes = PropertyNameSpeed;
                 var err = _mpvGetPropertyDouble(_mpv, nameBytes, MPV_FORMAT_DOUBLE, ref speed);
 
                 if (err < 0)
@@ -1680,6 +1711,11 @@ public sealed class LibMpvDynamicPlayer : IDisposable, IVideoPlayer
     public void SubRemove()
     {
         DoMpvCommand("sub-remove");
+    }
+
+    public void SetSubtitleVisibility(bool visible)
+    {
+        DoMpvCommand("set", "sub-visibility", visible ? "yes" : "no");
     }
 
     public void SubReload()

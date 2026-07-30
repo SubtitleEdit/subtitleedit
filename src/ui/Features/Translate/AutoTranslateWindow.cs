@@ -6,7 +6,7 @@ using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Layout;
 using Avalonia.Media;
-using Nikse.SubtitleEdit.Core.AutoTranslate;
+using Nikse.SubtitleEdit.UiLogic.AutoTranslate;
 using Nikse.SubtitleEdit.Features.Video.SpeechToText;
 using Nikse.SubtitleEdit.Features.Video.SpeechToText.Engines;
 using Nikse.SubtitleEdit.Logic;
@@ -327,7 +327,14 @@ public class AutoTranslateWindow : Window
         settingsPanel.Children.Add(checkBoxLlamaCppRemote);
 
         settingsPanel.Children.Add(UiUtil.MakeTextBlock(Se.Language.General.Url, vm, null, nameof(vm.ApiUrlIsVisible)).WithMarginRight(5));
-        settingsPanel.Children.Add(UiUtil.MakeTextBox(200, vm, nameof(vm.ApiUrlText), nameof(vm.ApiUrlIsVisible)).WithMarginRight(15).WithAccessibleName(Se.Language.General.Url));
+        // Wide enough for typical ".../v1/chat/completions" endpoints, with the full value in a
+        // tooltip - a clipped URL hid a broken endpoint in #12907.
+        var textBoxApiUrl = UiUtil.MakeTextBox(300, vm, nameof(vm.ApiUrlText), nameof(vm.ApiUrlIsVisible)).WithMarginRight(15).WithAccessibleName(Se.Language.General.Url);
+        if (Se.Settings.Appearance.ShowHints)
+        {
+            textBoxApiUrl.Bind(ToolTip.TipProperty, new Binding(nameof(vm.ApiUrlText)));
+        }
+        settingsPanel.Children.Add(textBoxApiUrl);
 
         settingsPanel.Children.Add(UiUtil.MakeTextBlock(Se.Language.General.Model, vm, null, nameof(vm.ModelIsVisible)).WithMarginRight(5));
         settingsPanel.Children.Add(UiUtil.MakeTextBox(150, vm, nameof(vm.ModelText), nameof(vm.ModelIsVisible)).WithAccessibleName(Se.Language.General.Model));

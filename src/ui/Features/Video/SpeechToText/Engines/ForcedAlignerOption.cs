@@ -1,4 +1,4 @@
-using Nikse.SubtitleEdit.Core.AudioToText;
+using Nikse.SubtitleEdit.UiLogic.AudioToText;
 using System;
 using System.Collections.Generic;
 

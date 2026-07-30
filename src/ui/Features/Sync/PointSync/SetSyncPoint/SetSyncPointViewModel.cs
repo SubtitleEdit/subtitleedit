@@ -1,8 +1,10 @@
 using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Threading;
+using Avalonia.VisualTree;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using Nikse.SubtitleEdit.Controls;
 using Nikse.SubtitleEdit.Controls.AudioVisualizerControl;
 using Nikse.SubtitleEdit.Controls.VideoPlayer;
 using Nikse.SubtitleEdit.Features.Main;
@@ -16,6 +18,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
+using Nikse.SubtitleEdit.UiLogic.Media;
 
 namespace Nikse.SubtitleEdit.Features.Sync.PointSync.SetSyncPoint;
 
@@ -26,6 +29,7 @@ public partial class SetSyncPointViewModel : ObservableObject
     [ObservableProperty] private bool _isAudioVisualizerVisible;
     [ObservableProperty] private string _title;
     [ObservableProperty] private string _videoInfo;
+    [ObservableProperty] private TimeSpan _syncPointTimeCode;
 
     public Window? Window { get; set; }
     public bool OkPressed { get; private set; }
@@ -33,6 +37,7 @@ public partial class SetSyncPointViewModel : ObservableObject
     public VideoPlayerControl VideoPlayerControl { get; set; }
     public AudioVisualizer AudioVisualizer { get; set; }
     public ComboBox ComboBoxSubtitle { get; set; }
+    public TimeCodeUpDown TimeCodeUpDownSyncPoint { get; set; }
 
     private readonly IWindowService _windowService;
 
@@ -40,6 +45,8 @@ public partial class SetSyncPointViewModel : ObservableObject
     private DispatcherTimer _positionTimer = new DispatcherTimer();
     private List<SubtitleLineViewModel> _subtitleLines = new List<SubtitleLineViewModel>();
     private bool _updateAudioVisualizer;
+    private bool _updateTimeCodeFromVideo;
+    private bool _timeCodeUpDownFocused;
 
     public SetSyncPointViewModel(IWindowService windowService)
     {
@@ -51,6 +58,7 @@ public partial class SetSyncPointViewModel : ObservableObject
         VideoPlayerControl = new VideoPlayerControl(new EmptyVideoPlayer());
         AudioVisualizer = new AudioVisualizer();
         ComboBoxSubtitle = new ComboBox();
+        TimeCodeUpDownSyncPoint = new TimeCodeUpDown();
         Paragraphs = new ObservableCollection<SubtitleDisplayItem>();
 
         // Toggle play/pause on surface click
@@ -129,6 +137,14 @@ public partial class SetSyncPointViewModel : ObservableObject
         {
             UpdateAudioVisualizer(VideoPlayerControl.VideoPlayer, AudioVisualizer, SelectedParagraphIndex);
 
+            // Follow the video position - but leave the time code alone while the user is typing
+            // in it (a running video moves on its own, so then the box should still follow).
+            var isEditingTimeCode = TimeCodeUpDownSyncPoint.IsKeyboardFocusWithin && !VideoPlayerControl.IsPlaying;
+            if (!isEditingTimeCode)
+            {
+                UpdateTimeCodeFromVideoPosition();
+            }
+
             if (_updateAudioVisualizer)
             {
                 AudioVisualizer.InvalidateVisual();
@@ -178,38 +194,71 @@ public partial class SetSyncPointViewModel : ObservableObject
         }
     }
 
+    /// <summary>
+    /// Single entry point for moving the video - keeps the sync point time code box in sync
+    /// with the video position, also while the box has focus (where the timer leaves it alone).
+    /// </summary>
+    private void SetVideoPosition(double seconds)
+    {
+        VideoPlayerControl.Position = Math.Max(0, seconds);
+        UpdateTimeCodeFromVideoPosition();
+        _updateAudioVisualizer = true;
+    }
+
+    private void UpdateTimeCodeFromVideoPosition()
+    {
+        var position = TimeSpan.FromSeconds(Math.Max(0, VideoPlayerControl.Position));
+        if (Math.Abs((position - SyncPointTimeCode).TotalMilliseconds) < 1)
+        {
+            return;
+        }
+
+        _updateTimeCodeFromVideo = true;
+        SyncPointTimeCode = position;
+        _updateTimeCodeFromVideo = false;
+    }
+
+    partial void OnSyncPointTimeCodeChanged(TimeSpan value)
+    {
+        if (_updateTimeCodeFromVideo)
+        {
+            return;
+        }
+
+        // The user typed/spun a new time code - move the video there
+        VideoPlayerControl.Position = Math.Max(0, value.TotalSeconds);
+        _updateAudioVisualizer = true;
+    }
+
     [RelayCommand]
     private void LeftOneSecondBack()
     {
-        VideoPlayerControl.Position = Math.Max(0, VideoPlayerControl.Position - 1);
-        _updateAudioVisualizer = true;
+        SetVideoPosition(VideoPlayerControl.Position - 1);
     }
 
     [RelayCommand]
     private void LeftOneSecondForward()
     {
-        VideoPlayerControl.Position = Math.Max(0, VideoPlayerControl.Position + 1);
-        _updateAudioVisualizer = true;
+        SetVideoPosition(VideoPlayerControl.Position + 1);
     }
 
     [RelayCommand]
     private void LeftHalfSecondBack()
     {
-        VideoPlayerControl.Position = Math.Max(0, VideoPlayerControl.Position - 0.5);
-        _updateAudioVisualizer = true;
+        SetVideoPosition(VideoPlayerControl.Position - 0.5);
     }
 
     [RelayCommand]
     private void LeftHalfSecondForward()
     {
-        VideoPlayerControl.Position = Math.Max(0, VideoPlayerControl.Position + 0.5);
-        _updateAudioVisualizer = true;
+        SetVideoPosition(VideoPlayerControl.Position + 0.5);
     }
 
     [RelayCommand]
     private async Task PlayTwoSecondsAndBackLeft()
     {
         await PlayAndBack(VideoPlayerControl, 2000);
+        UpdateTimeCodeFromVideoPosition();
         _updateAudioVisualizer = true;
     }
 
@@ -238,9 +287,8 @@ public partial class SetSyncPointViewModel : ObservableObject
         }
 
         SelectedParagraphIndex = Paragraphs.IndexOf(s);
-        VideoPlayerControl.Position = s.Subtitle.StartTime.TotalSeconds;
+        SetVideoPosition(s.Subtitle.StartTime.TotalSeconds);
         CenterWaveform(VideoPlayerControl, AudioVisualizer);
-        _updateAudioVisualizer = true;
     }
 
     [RelayCommand]
@@ -275,8 +323,7 @@ public partial class SetSyncPointViewModel : ObservableObject
 
     public void AudioVisualizerLeftPositionChanged(object sender, AudioVisualizer.PositionEventArgs e)
     {
-        VideoPlayerControl.Position = e.PositionInSeconds;
-        _updateAudioVisualizer = true;
+        SetVideoPosition(e.PositionInSeconds);
     }
 
     internal void OnClosing()
@@ -296,10 +343,9 @@ public partial class SetSyncPointViewModel : ObservableObject
         }
 
         var selected = Paragraphs[selectedIndex];
-        VideoPlayerControl.Position = selected.Subtitle.StartTime.TotalSeconds;
+        SetVideoPosition(selected.Subtitle.StartTime.TotalSeconds);
         AudioVisualizer.CurrentVideoPositionSeconds = selected.Subtitle.StartTime.TotalSeconds;
         CenterWaveform(VideoPlayerControl, AudioVisualizer);
-        _updateAudioVisualizer = true;
     }
 
     internal async void OnLoaded()
@@ -345,31 +391,67 @@ public partial class SetSyncPointViewModel : ObservableObject
         else if (e.Key == Key.Left && e.KeyModifiers.HasFlag(KeyModifiers.Control))
         {
             e.Handled = true;
-            VideoPlayerControl.Position = Math.Max(0, VideoPlayerControl.Position - 1);
-            _updateAudioVisualizer = true;
+            SetVideoPosition(VideoPlayerControl.Position - 1);
         }
         else if (e.Key == Key.Right && e.KeyModifiers.HasFlag(KeyModifiers.Control))
         {
             e.Handled = true;
-            VideoPlayerControl.Position += 1;
-            _updateAudioVisualizer = true;
+            SetVideoPosition(VideoPlayerControl.Position + 1);
         }
         else if (e.Key == Key.Left && e.KeyModifiers.HasFlag(KeyModifiers.Alt))
         {
             e.Handled = true;
-            VideoPlayerControl.Position = Math.Max(0, VideoPlayerControl.Position - 0.5);
-            _updateAudioVisualizer = true;
+            SetVideoPosition(VideoPlayerControl.Position - 0.5);
         }
         else if (e.Key == Key.Right && e.KeyModifiers.HasFlag(KeyModifiers.Alt))
         {
             e.Handled = true;
-            VideoPlayerControl.Position += 0.5;
-            _updateAudioVisualizer = true;
+            SetVideoPosition(VideoPlayerControl.Position + 0.5);
         }
+    }
+
+    /// <summary>
+    /// Tunnel-stage KeyUp twin of <see cref="OnKeyDownHandler"/>. Avalonia's Button raises OnClick
+    /// from OnKeyUp on Space whenever the button is focused - it does not check that the button also
+    /// saw the KeyDown - so a handled KeyDown alone still let a focused button click on Space release.
+    /// </summary>
+    internal void OnKeyUpHandler(object? sender, KeyEventArgs e)
+    {
+        if (e.Key == Key.Space)
+        {
+            e.Handled = true;
+        }
+    }
+
+    /// <summary>
+    /// Puts the caret in the sync point time code box, so the window has a focused element for
+    /// key handling (and the time code can be typed right away) without arming a button.
+    /// </summary>
+    internal void FocusTimeCodeUpDown()
+    {
+        if (_timeCodeUpDownFocused)
+        {
+            return; // only on first activation - do not steal focus back on every re-activation
+        }
+
+        _timeCodeUpDownFocused = true;
+
+        Dispatcher.UIThread.Post(() =>
+        {
+            // The inner text box is the element that actually takes keyboard focus
+            var textBox = TimeCodeUpDownSyncPoint.GetVisualDescendants().OfType<TextBox>().FirstOrDefault();
+            if (textBox != null)
+            {
+                textBox.Focus();
+                return;
+            }
+
+            TimeCodeUpDownSyncPoint.Focus();
+        });
     }
 
     internal void AudioVisualizerOnPrimarySingleClicked(object sender, ParagraphNullableEventArgs e)
     {
-        VideoPlayerControl.Position = e.Seconds;
+        SetVideoPosition(e.Seconds);
     }
 }

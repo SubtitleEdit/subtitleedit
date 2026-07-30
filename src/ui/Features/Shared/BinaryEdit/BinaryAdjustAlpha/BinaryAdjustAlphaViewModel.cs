@@ -5,6 +5,7 @@ using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Nikse.SubtitleEdit.Logic;
+using Nikse.SubtitleEdit.Logic.Media;
 using Nikse.SubtitleEdit.Logic.Config;
 using SkiaSharp;
 using System;
@@ -110,7 +111,7 @@ public partial class BinaryAdjustAlphaViewModel : ObservableObject, IDisposable
         CheckeredBackgroundBitmap = CreateCheckeredBackground(originalBitmap.Width, originalBitmap.Height);
         oldBg?.Dispose();
 
-        using var adjustedBitmap = AdjustAlpha(originalBitmap, (float)AlphaAdjustment, (byte)TransparencyThreshold);
+        using var adjustedBitmap = SubtitleImageAdjuster.AdjustAlpha(originalBitmap, (float)AlphaAdjustment, (byte)TransparencyThreshold);
         var old = PreviewBitmap;
         PreviewBitmap = adjustedBitmap.ToAvaloniaBitmap();
         old?.Dispose();
@@ -126,67 +127,13 @@ public partial class BinaryAdjustAlphaViewModel : ObservableObject, IDisposable
             }
 
             using var originalBitmap = subtitle.Bitmap.ToSkBitmap();
-            using var adjustedBitmap = AdjustAlpha(originalBitmap, (float)AlphaAdjustment, (byte)TransparencyThreshold);
+            using var adjustedBitmap = SubtitleImageAdjuster.AdjustAlpha(originalBitmap, (float)AlphaAdjustment, (byte)TransparencyThreshold);
             var old = subtitle.Bitmap;
             subtitle.Bitmap = adjustedBitmap.ToAvaloniaBitmap();
             old?.Dispose();
         }
     }
 
-    private static SKBitmap AdjustAlpha(SKBitmap premultipliedBitmap, float alphaAdjustment, byte transparencyThreshold)
-    {
-        // Work in straight alpha: changing A while leaving premultiplied R, G and B alone
-        // would produce RGB > A, which Skia renders as clipped, over-bright edges.
-        using var originalBitmap = premultipliedBitmap.ToUnpremultiplied();
-        var adjustedBitmap = new SKBitmap(originalBitmap.Width, originalBitmap.Height, SKColorType.Bgra8888, SKAlphaType.Unpremul);
-
-        unsafe
-        {
-            var originalPixels = originalBitmap.GetPixels();
-            var adjustedPixels = adjustedBitmap.GetPixels();
-
-            for (int y = 0; y < originalBitmap.Height; y++)
-            {
-                for (int x = 0; x < originalBitmap.Width; x++)
-                {
-                    var index = y * originalBitmap.Width + x;
-                    var pixel = ((uint*)originalPixels)[index];
-
-                    var a = (byte)((pixel >> 24) & 0xFF);
-                    var r = (byte)((pixel >> 16) & 0xFF);
-                    var g = (byte)((pixel >> 8) & 0xFF);
-                    var b = (byte)(pixel & 0xFF);
-                    
-                    // Skip if already fully transparent
-                    if (a == 0)
-                    {
-                        ((uint*)adjustedPixels)[index] = pixel;
-                        continue;
-                    }
-                    
-                    // Apply alpha adjustment (additive)
-                    float newAlpha = a + alphaAdjustment;
-                    
-                    // Clamp to valid range
-                    newAlpha = Math.Clamp(newAlpha, 0, 255);
-                    
-                    // Apply transparency threshold
-                    if (newAlpha < transparencyThreshold)
-                    {
-                        newAlpha = 0;
-                    }
-                    
-                    a = (byte)newAlpha;
-                    
-                    // Reconstruct pixel
-                    var adjustedPixel = (uint)((a << 24) | (r << 16) | (g << 8) | b);
-                    ((uint*)adjustedPixels)[index] = adjustedPixel;
-                }
-            }
-        }
-
-        return adjustedBitmap;
-    }
 
     public static Bitmap CreateCheckeredBackground(int width, int height)
     {

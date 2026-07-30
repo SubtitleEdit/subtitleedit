@@ -211,6 +211,19 @@ public static class InitToolbar
             isLastSeparator = false;
         }
 
+        if (appearance.ToolbarShowPointSync)
+        {
+            stackPanelLeft.Children.Add(new Button
+            {
+                Content = MakeImage("PointSync"),
+                Command = vm.ShowPointSyncViaOtherCommand,
+                Background = Brushes.Transparent,
+                [AutomationProperties.NameProperty] = languageHints.PointSyncHint,
+                [ToolTip.TipProperty] = UiUtil.MakeToolTip(languageHints.PointSyncHint, shortcuts, nameof(vm.ShowPointSyncViaOtherCommand)),
+            });
+            isLastSeparator = false;
+        }
+
         if (appearance.ToolbarShowBeautifyTimeCodes)
         {
             stackPanelLeft.Children.Add(new Button
@@ -233,6 +246,32 @@ public static class InitToolbar
                 Background = Brushes.Transparent,
                 [AutomationProperties.NameProperty] = languageHints.BurnInHint,
                 [ToolTip.TipProperty] = UiUtil.MakeToolTip(languageHints.BurnInHint, shortcuts, nameof(vm.ShowVideoBurnInCommand)),
+            });
+            isLastSeparator = false;
+        }
+
+        if (appearance.ToolbarShowAutoTranslate)
+        {
+            stackPanelLeft.Children.Add(new Button
+            {
+                Content = MakeImage("AutoTranslate"),
+                Command = vm.ShowAutoTranslateCommand,
+                Background = Brushes.Transparent,
+                [AutomationProperties.NameProperty] = languageHints.AutoTranslateHint,
+                [ToolTip.TipProperty] = UiUtil.MakeToolTip(languageHints.AutoTranslateHint, shortcuts, nameof(vm.ShowAutoTranslateCommand)),
+            });
+            isLastSeparator = false;
+        }
+
+        if (appearance.ToolbarShowSpeechToText)
+        {
+            stackPanelLeft.Children.Add(new Button
+            {
+                Content = MakeImage("SpeechToText"),
+                Command = vm.ShowSpeechToTextWhisperCommand,
+                Background = Brushes.Transparent,
+                [AutomationProperties.NameProperty] = languageHints.SpeechToTextHint,
+                [ToolTip.TipProperty] = UiUtil.MakeToolTip(languageHints.SpeechToTextHint, shortcuts, nameof(vm.ShowSpeechToTextWhisperCommand)),
             });
             isLastSeparator = false;
         }

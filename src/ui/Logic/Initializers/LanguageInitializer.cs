@@ -1,4 +1,5 @@
 ﻿using Avalonia.Platform;
+using Nikse.SubtitleEdit.Logic.Compression;
 using Nikse.SubtitleEdit.Logic.Config;
 using System;
 using System.IO;
@@ -11,9 +12,9 @@ public interface ILanguageInitializer
     Task UpdateLanguagesIfNeeded();
 }
 
-public class LanguageInitializer() : ILanguageInitializer
+public class LanguageInitializer(IZipUnpacker zipUnpacker) : ILanguageInitializer
 {
-    private static readonly Uri LanguagesFolderUri = new("avares://SubtitleEdit/Assets/Languages");
+    private static readonly Uri LanguagesZipUri = new("avares://SubtitleEdit/Assets/Languages.zip");
 
     public async Task UpdateLanguagesIfNeeded()
     {
@@ -21,7 +22,7 @@ public class LanguageInitializer() : ILanguageInitializer
         {
             // Only stamp the version once everything actually landed. Stamping regardless would
             // mark a half-unpacked folder as current, and this version would then never retry.
-            if (await Unpack())
+            if (Unpack())
             {
                 WriteNewVersionFile();
             }
@@ -76,38 +77,18 @@ public class LanguageInitializer() : ILanguageInitializer
     }
 
     /// <returns><see langword="true"/> when every language file was written.</returns>
-    private async Task<bool> Unpack()
+    private bool Unpack()
     {
-        var outputDir = Se.TranslationFolder;
-        if (!Directory.Exists(outputDir))
+        try
         {
-            Directory.CreateDirectory(outputDir);
+            using var zipStream = AssetLoader.Open(LanguagesZipUri);
+            zipUnpacker.UnpackZipStream(zipStream, Se.TranslationFolder);
+            return true;
         }
-
-        var allWritten = true;
-
-        foreach (var uri in AssetLoader.GetAssets(LanguagesFolderUri, null))
+        catch (Exception exception)
         {
-            var fileName = Path.GetFileName(Uri.UnescapeDataString(uri.AbsolutePath));
-            if (!fileName.EndsWith(".json", StringComparison.OrdinalIgnoreCase))
-            {
-                continue;
-            }
-
-            try
-            {
-                await using var stream = AssetLoader.Open(uri);
-                var outputPath = Path.Combine(outputDir, fileName);
-                await using var fileStream = File.Create(outputPath);
-                await stream.CopyToAsync(fileStream);
-            }
-            catch
-            {
-                Se.LogError($"Could not unpack language file \"{fileName}\".");
-                allWritten = false;
-            }
+            Se.LogError(exception, $"Could not unpack language files into \"{Se.TranslationFolder}\".");
+            return false;
         }
-
-        return allWritten;
     }
 }

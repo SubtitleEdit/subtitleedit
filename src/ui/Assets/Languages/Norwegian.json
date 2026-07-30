@@ -2,7 +2,7 @@
   "Title": "Subtitle Edit",
   "TranslatedBy": "Gemini",
   "CultureName": "nb-NO",
-  "version": "v5.0.0",
+  "version": "v5.1.0",
   "General": {
     "SelectNonForcedLines": "Velg ikke-tvungne linjer",
     "SelectForcedLines": "Velg tvungne linjer",
@@ -2132,14 +2132,6 @@
       "FixCasing": "Fiks bokstavstørrelse",
       "AddPeriods": "Legg til punktum",
       "ChangeUnderlineToColor": "Endre understreking til farge",
-      "CueBuilding": "Bygging av undertekster (MLX Whisper)",
-      "CueRebuild": "Bygg undertekster på nytt fra ordtidsstempler",
-      "CueMaxChars": "Maks tegn per undertekst",
-      "CueMaxSeconds": "Maks sekunder per undertekst",
-      "CueMaxCps": "Maks tegn per sekund",
-      "VocabularyPrompt": "Ordforrådsledetekst (navn, steder, termer)",
-      "BeamSize": "Beam-størrelse",
-      "BeamSizeNote": "0 dekoder raskest. 5 gir best nøyaktighet (som Faster Whisper) med omtrent 20-30 % lengre tid. Verdier over 5 hjelper sjelden.",
       "EngineSettings": "Innstillinger for tale-til-tekst-motor",
       "EngineSettingsSubtitle": "Tale-til-tekst-motor",
       "BackendAndUpdateStatus": "Backend- og oppdateringsstatus"

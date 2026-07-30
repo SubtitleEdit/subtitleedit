@@ -15,11 +15,16 @@ public class UndoRedoManagerTests
         public int Hash { get; set; }
         public bool Typing { get; set; }
         public SubtitleLineViewModel[] Subtitles { get; set; } = [];
+        public string? FileNameOriginal { get; set; }
 
         public int GetFastHash() => Hash;
         public bool IsTyping() => Typing;
-        public UndoRedoItem MakeUndoRedoObject(string description) =>
-            MakeItem(description, Hash, Subtitles);
+        public UndoRedoItem MakeUndoRedoObject(string description)
+        {
+            var item = MakeItem(description, Hash, Subtitles);
+            item.SubtitleFileNameOriginal = FileNameOriginal;
+            return item;
+        }
     }
 
     private sealed class BlockingHashClient : IUndoRedoClient
@@ -468,6 +473,70 @@ public class UndoRedoManagerTests
         // Simulate adding a line
         client.Hash = 2;
         client.Subtitles = [MakeLine("hello"), MakeLine("world")];
+        manager.CheckForChanges(null);
+
+        Assert.Equal(2, manager.UndoCount);
+    }
+
+    [Fact]
+    public void CheckForChanges_AddsEntry_WhenOnlyOriginalTextChanges_Issue12952()
+    {
+        var lines1 = new[] { MakeLine("hello") };
+        var client = new FakeClient { Hash = 1, Subtitles = lines1 };
+        var manager = new UndoRedoManager();
+        manager.SetupChangeDetection(client, TimeSpan.FromHours(1));
+        manager.StartChangeDetection();
+        manager.Do(MakeItem("initial", 1, lines1));
+
+        // Simulate loading an original subtitle: translation text/timings are unchanged,
+        // only OriginalText is filled. The hash covers the original, so a snapshot must be
+        // recorded - otherwise the next undo restores empty originals (#12952).
+        var withOriginal = MakeLine("hello");
+        withOriginal.OriginalText = "hej";
+        client.Hash = 2;
+        client.Subtitles = [withOriginal];
+        manager.CheckForChanges(null);
+
+        Assert.Equal(2, manager.UndoCount);
+    }
+
+    [Fact]
+    public void CheckForChanges_AddsEntry_WhenOnlyStyleChanges()
+    {
+        var lines1 = new[] { MakeLine("hello") };
+        var client = new FakeClient { Hash = 1, Subtitles = lines1 };
+        var manager = new UndoRedoManager();
+        manager.SetupChangeDetection(client, TimeSpan.FromHours(1));
+        manager.StartChangeDetection();
+        manager.Do(MakeItem("initial", 1, lines1));
+
+        // Assigning an ASSA style changes no text or timing, but the hash covers Style -
+        // without a recorded entry the next undo reverts the style bundled into the
+        // previous action, and the detector re-snapshots every tick (#12952 mechanism).
+        var restyled = MakeLine("hello");
+        restyled.Style = "Signs";
+        client.Hash = 2;
+        client.Subtitles = [restyled];
+        manager.CheckForChanges(null);
+
+        Assert.Equal(2, manager.UndoCount);
+    }
+
+    [Fact]
+    public void CheckForChanges_AddsEntry_WhenOnlyOriginalFileStateChanges()
+    {
+        var lines = new[] { MakeLine("hello") };
+        var client = new FakeClient { Hash = 1, Subtitles = lines };
+        var manager = new UndoRedoManager();
+        manager.SetupChangeDetection(client, TimeSpan.FromHours(1));
+        manager.StartChangeDetection();
+        manager.Do(MakeItem("initial", 1, lines));
+
+        // Loading an original subtitle whose lines happen to be identical still sets the
+        // original file name, which the hash covers - a snapshot must be recorded or the
+        // stack diverges and the second undo clears the redo timeline (#12952).
+        client.Hash = 2;
+        client.FileNameOriginal = "original.srt";
         manager.CheckForChanges(null);
 
         Assert.Equal(2, manager.UndoCount);
