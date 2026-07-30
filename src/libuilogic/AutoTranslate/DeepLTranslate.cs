@@ -174,15 +174,17 @@ namespace Nikse.SubtitleEdit.UiLogic.AutoTranslate
                 await Task.Delay(retryDelays[attempt], cancellationToken);
             }
 
-            if (!result.IsSuccessStatusCode)
-            {
-                SeLogger.Error("DeepLTranslate error: " + resultContent);
-            }
-
             if (result.StatusCode == HttpStatusCode.Forbidden)
             {
                 Error = resultContent;
                 throw new Exception("Forbidden! " + Environment.NewLine + Environment.NewLine + resultContent);
+            }
+
+            if (!result.IsSuccessStatusCode)
+            {
+                Error = resultContent;
+                SeLogger.Error("DeepLTranslate error: " + resultContent);
+                throw new Exception($"DeepL failed with status code {(int)result.StatusCode} ({result.StatusCode})" + Environment.NewLine + Environment.NewLine + resultContent);
             }
 
             try

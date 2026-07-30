@@ -61,33 +61,16 @@ namespace Nikse.SubtitleEdit.UiLogic.AutoTranslate
 
             var responseString = await result.Content.ReadAsStringAsync();
 
-            var validator = new SeJsonValidator();
-            var isValidJson = validator.ValidateJson(responseString);
-            if (isValidJson)
+            var parser = new SeJsonParser();
+            var resultText = parser.GetFirstObject(responseString, "result");
+            if (resultText == null)
             {
-                const string key = "\"result\":";
-                var startIndex = responseString.IndexOf(key, StringComparison.OrdinalIgnoreCase);
-                if (startIndex >= 0)
-                {
-                    startIndex += key.Length;
-
-                    var firstQuoteIndex = responseString.IndexOf('"', startIndex);
-                    var secondQuoteIndex = responseString.IndexOf('"', firstQuoteIndex + 1);
-
-                    if (firstQuoteIndex >= 0 && secondQuoteIndex > firstQuoteIndex)
-                    {
-                        return responseString.Substring(firstQuoteIndex + 1, secondQuoteIndex - firstQuoteIndex - 1);
-                    }
-                }
-
-                SeLogger.Error($"{this.GetType().Name} recibió un JSON inesperado: {responseString}");
-            }
-            else
-            {
-                SeLogger.Error($"{this.GetType().Name} no recibió un JSON válido: {responseString}");
+                Error = responseString;
+                SeLogger.Error($"{GetType().Name} got unexpected JSON: {responseString}");
+                throw new Exception($"{StaticName} returned an unexpected response: {responseString}");
             }
 
-            return responseString;
+            return Json.DecodeJsonText(resultText);
         }
 
         public void Dispose() => _httpClient?.Dispose();

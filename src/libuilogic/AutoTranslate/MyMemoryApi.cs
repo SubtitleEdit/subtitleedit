@@ -208,15 +208,20 @@ namespace Nikse.SubtitleEdit.UiLogic.AutoTranslate
             return new TranslationPair(name, code, twoLetterIsoName);
         }
 
-        public async Task<string> Translate(string text, string sourceLanguageCode, string targetLanguageCode, CancellationToken cancellationToken)
+        internal static string MakeUrl(string text, string sourceLanguageCode, string targetLanguageCode, string apiKey)
         {
-            var apiKey = string.Empty;
-            if (!string.IsNullOrEmpty(Configuration.Settings.Tools.AutoTranslateLibreApiKey))
+            var apiKeyPart = string.Empty;
+            if (!string.IsNullOrEmpty(apiKey))
             {
-                apiKey = "&api_key=" + Configuration.Settings.Tools.AutoTranslateMyMemoryApiKey;
+                apiKeyPart = "&key=" + Utilities.UrlEncode(apiKey);
             }
 
-            var url = $"?langpair={sourceLanguageCode}|{targetLanguageCode}{apiKey}&q={Utilities.UrlEncode(text)}";
+            return $"?langpair={sourceLanguageCode}|{targetLanguageCode}{apiKeyPart}&q={Utilities.UrlEncode(text)}";
+        }
+
+        public async Task<string> Translate(string text, string sourceLanguageCode, string targetLanguageCode, CancellationToken cancellationToken)
+        {
+            var url = MakeUrl(text, sourceLanguageCode, targetLanguageCode, Configuration.Settings.Tools.AutoTranslateMyMemoryApiKey);
             // netstandard2.1 has no GetStringAsync(string, CancellationToken)
             // overload, so we go via SendAsync to flow the token into the
             // connection/send phase (cancel propagates there).

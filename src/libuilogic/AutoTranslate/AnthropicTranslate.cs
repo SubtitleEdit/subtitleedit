@@ -106,8 +106,6 @@ namespace Nikse.SubtitleEdit.UiLogic.AutoTranslate
 
             result.EnsureSuccessStatusCode();
 
-            SeLogger.Error($"{StaticName}: debug json: " + json);
-
             var parser = new SeJsonParser();
             var resultText = parser.GetFirstObject(json, "text");
             if (resultText == null)

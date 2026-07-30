@@ -52,7 +52,7 @@ namespace Nikse.SubtitleEdit.UiLogic.AutoTranslate
 
             try
             {
-                var text = input.Replace("\r'",string.Empty).Trim();
+                var text = input.Replace("\r", string.Empty).Trim();
                 var url = $"translate_a/single?client=gtx&sl={sourceLanguageCode}&tl={targetLanguageCode}&dt=t&q={Utilities.UrlEncode(text)}";
 
                 var result = await _httpClient.GetAsync(url, cancellationToken);
@@ -63,6 +63,7 @@ namespace Nikse.SubtitleEdit.UiLogic.AutoTranslate
                 {
                     Error = jsonResultString;
                     SeLogger.Error($"Error in {StaticName}.Translate: " + Error);
+                    throw new Exception($"{StaticName} failed with status code {(int)result.StatusCode} ({result.StatusCode}) - free API quota exceeded?" + Environment.NewLine + Environment.NewLine + jsonResultString);
                 }
             }
             catch (WebException webException)

@@ -250,8 +250,10 @@ public static partial class MergeAndSplitHelper
         }
 
         var translatedLinesIdx = 0;
-        var currentRowIndex = index;
 
+        // Build the candidate result in a scratch list first - the rows are live and
+        // UI-bound, so nothing may be written to them until the split has validated.
+        var pending = new List<string>();
         foreach (var mergeItem in mergeResult.MergeResultItems)
         {
             var numberOfParagraphs = mergeItem.EndIndex - mergeItem.StartIndex + 1;
@@ -260,18 +262,20 @@ public static partial class MergeAndSplitHelper
             var translatedText = BuildTranslatedText(translatedLines, ref translatedLinesIdx, numberOfLines);
             var splitParts = TextSplit.SplitMulti(translatedText, numberOfParagraphs, target.TwoLetterIsoLanguageName);
 
-            for (var i = 0; i < splitParts.Count && currentRowIndex < rows.Count; i++)
+            for (var i = 0; i < splitParts.Count && pending.Count < rows.Count - index; i++)
             {
-                rows[currentRowIndex].TranslatedText = AutoBreakIfNeeded(splitParts[i], target.TwoLetterIsoLanguageName);
-                currentRowIndex++;
+                pending.Add(AutoBreakIfNeeded(splitParts[i], target.TwoLetterIsoLanguageName));
             }
         }
 
-        var totalProcessed = currentRowIndex - index;
-        if (totalProcessed == mergeResult.ParagraphCount &&
-            HasSameEmptyLines(rows.Skip(index).Take(totalProcessed).Select<TranslateRow, string>(p => p.TranslatedText).ToList(),
-                              rows.Skip(index).Take(totalProcessed).Select(p => p.Text).ToList(), 0))
+        if (pending.Count == mergeResult.ParagraphCount &&
+            HasSameEmptyLines(pending, rows.Skip(index).Take(pending.Count).Select(p => p.Text).ToList(), 0))
         {
+            for (var i = 0; i < pending.Count; i++)
+            {
+                rows[index + i].TranslatedText = pending[i];
+            }
+
             return ApplyFormattingToExistingTranslations(rows, index, formattingList, mergeResult.ParagraphCount);
         }
 

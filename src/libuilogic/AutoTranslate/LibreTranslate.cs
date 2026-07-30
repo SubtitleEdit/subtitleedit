@@ -43,21 +43,26 @@ namespace Nikse.SubtitleEdit.UiLogic.AutoTranslate
             return ListLanguages();
         }
 
-        public async Task<string> Translate(string text, string sourceLanguageCode, string targetLanguageCode, CancellationToken cancellationToken)
+        internal static string MakeRequestBody(string text, string sourceLanguageCode, string targetLanguageCode, string apiKey)
         {
-            var apiKey = string.Empty;
-            if (!string.IsNullOrEmpty(Configuration.Settings.Tools.AutoTranslateLibreApiKey))
+            var apiKeyPart = string.Empty;
+            if (!string.IsNullOrEmpty(apiKey))
             {
-                apiKey = " \"api_key\": \"" + Json.EncodeJsonText(Configuration.Settings.Tools.AutoTranslateLibreApiKey) + "\" ";
+                apiKeyPart = ", \"api_key\": \"" + Json.EncodeJsonText(apiKey) + "\"";
             }
 
+            return "{\"q\": \"" + Json.EncodeJsonText(text.Trim()) + "\", \"source\": \"" + sourceLanguageCode + "\", \"target\": \"" + targetLanguageCode + "\"" + apiKeyPart + "}";
+        }
+
+        public async Task<string> Translate(string text, string sourceLanguageCode, string targetLanguageCode, CancellationToken cancellationToken)
+        {
             // LibreTranslate seems to have a problem when starting with lowercase letter
             if (text.Length > 0 && char.IsLower(text[0]))
             {
                 text = text.CapitalizeFirstLetter();
             }
 
-            var input = "{\"q\": \"" + Json.EncodeJsonText(text.Trim()) + "\", \"source\": \"" + sourceLanguageCode + "\", \"target\": \"" + targetLanguageCode + "\"" + apiKey + "}";
+            var input = MakeRequestBody(text, sourceLanguageCode, targetLanguageCode, Configuration.Settings.Tools.AutoTranslateLibreApiKey);
             var content = new StringContent(input, Encoding.UTF8);
             content.Headers.ContentType = MediaTypeHeaderValue.Parse("application/json");
             var result = await _httpClient.PostAsync("translate", content, cancellationToken);

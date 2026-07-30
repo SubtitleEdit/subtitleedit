@@ -113,6 +113,7 @@ public partial class AutoTranslateViewModel : ObservableObject
 
     private CancellationTokenSource _cancellationTokenSource;
     private bool _translationInProgress = false;
+    private bool _translationStarting = false;
     private bool _abort = false;
     private List<string> _apiUrls = new();
     private List<string> _apiModels = new();
@@ -208,6 +209,7 @@ public partial class AutoTranslateViewModel : ObservableObject
         Configuration.Settings.Tools.OpenRouterPrompt = Se.Settings.AutoTranslate.OpenRouterPrompt;
 
         Configuration.Settings.Tools.ChatGptApiKey = Se.Settings.AutoTranslate.ChatGptApiKey;
+        Configuration.Settings.Tools.ChatGptUrl = Se.Settings.AutoTranslate.ChatGptUrl;
         Configuration.Settings.Tools.ChatGptModel = Se.Settings.AutoTranslate.ChatGptModel;
         Configuration.Settings.Tools.ChatGptPrompt = Se.Settings.AutoTranslate.ChatGptPrompt;
 
@@ -290,6 +292,9 @@ public partial class AutoTranslateViewModel : ObservableObject
 
         Configuration.Settings.Tools.AutoTranslateCrispAsrExe = Se.Settings.AutoTranslate.CrispAsrExe;
         Configuration.Settings.Tools.AutoTranslateCrispAsrModel = Se.Settings.AutoTranslate.CrispAsrModel;
+
+        Configuration.Settings.Tools.AutoTranslatePapagoApiKeyId = Se.Settings.AutoTranslate.PapagoApiKeyId;
+        Configuration.Settings.Tools.AutoTranslatePapagoApiKey = Se.Settings.AutoTranslate.PapagoApiKey;
     }
 
     public void SaveSettings()
@@ -509,6 +514,7 @@ public partial class AutoTranslateViewModel : ObservableObject
         Se.Settings.AutoTranslate.OpenRouterPrompt = Configuration.Settings.Tools.OpenRouterPrompt;
 
         Se.Settings.AutoTranslate.ChatGptApiKey = Configuration.Settings.Tools.ChatGptApiKey;
+        Se.Settings.AutoTranslate.ChatGptUrl = Configuration.Settings.Tools.ChatGptUrl;
         Se.Settings.AutoTranslate.ChatGptModel = Configuration.Settings.Tools.ChatGptModel;
         Se.Settings.AutoTranslate.ChatGptPrompt = Configuration.Settings.Tools.ChatGptPrompt;
 
@@ -586,6 +592,9 @@ public partial class AutoTranslateViewModel : ObservableObject
 
         Se.Settings.AutoTranslate.CrispAsrExe = Configuration.Settings.Tools.AutoTranslateCrispAsrExe;
         Se.Settings.AutoTranslate.CrispAsrModel = Configuration.Settings.Tools.AutoTranslateCrispAsrModel;
+
+        Se.Settings.AutoTranslate.PapagoApiKeyId = Configuration.Settings.Tools.AutoTranslatePapagoApiKeyId;
+        Se.Settings.AutoTranslate.PapagoApiKey = Configuration.Settings.Tools.AutoTranslatePapagoApiKey;
 
         Se.SaveSettings();
     }
@@ -781,15 +790,20 @@ public partial class AutoTranslateViewModel : ObservableObject
     [RelayCommand]
     private async Task Translate()
     {
-        _onlyCurrentLine = false;
-        await DoTranslate();
+        await DoTranslate(onlyCurrentLine: false);
     }
 
     [RelayCommand]
     private async Task TranslateRow()
     {
-        _onlyCurrentLine = true;
-        await DoTranslate();
+        // Ignore while a translation is running - flipping _onlyCurrentLine here would
+        // switch the in-flight loop into single-line mode instead of translating a row.
+        if (_translationInProgress)
+        {
+            return;
+        }
+
+        await DoTranslate(onlyCurrentLine: true);
     }
 
     [RelayCommand]
@@ -1055,6 +1069,13 @@ public partial class AutoTranslateViewModel : ObservableObject
             return;
         }
 
+        // A cancelled translation (or Escape) leaves the shared token source cancelled;
+        // EnsureLlamaCppReady would then fail immediately with a dead token.
+        if (_cancellationTokenSource.IsCancellationRequested)
+        {
+            _cancellationTokenSource = new CancellationTokenSource();
+        }
+
         await EnsureLlamaCppReady();
         UpdateLlamaCppServerButtonText();
     }
@@ -1237,8 +1258,16 @@ public partial class AutoTranslateViewModel : ObservableObject
         }
     }
 
-    private async Task<bool> DoTranslate()
+    private async Task<bool> DoTranslate(bool onlyCurrentLine)
     {
+        // The pre-flight below awaits (model download, server startup) before
+        // _translationInProgress is set - block re-entry for that whole window so a
+        // second click cannot start a competing translation loop.
+        if (_translationStarting)
+        {
+            return false;
+        }
+
         var translator = SelectedAutoTranslator;
         if (translator == null || Window == null)
         {
@@ -1266,6 +1295,20 @@ public partial class AutoTranslateViewModel : ObservableObject
             return false;
         }
 
+        _onlyCurrentLine = onlyCurrentLine;
+        _translationStarting = true;
+        try
+        {
+            return await StartTranslation(translator);
+        }
+        finally
+        {
+            _translationStarting = false;
+        }
+    }
+
+    private async Task<bool> StartTranslation(IAutoTranslator translator)
+    {
         _abort = false;
         IsProgressEnabled = true;
         var engineType = translator.GetType();
@@ -1401,12 +1444,16 @@ public partial class AutoTranslateViewModel : ObservableObject
                 start = Rows.IndexOf(selectedItem);
             }
 
-            var forceSingleLineMode = Se.Settings.AutoTranslate.IsTranslateEachLineSeparately(translator.Name) ||
-                                      translator.Name ==
-                                      NoLanguageLeftBehindApi.StaticName || // NLLB seems to miss some text...
-                                      translator.Name == NoLanguageLeftBehindServe.StaticName ||
-                                      translator.Name == CrispAsrMadladTranslate.StaticName || // one CLI process per line
-                                      _onlyCurrentLine;
+            // Single-line mode forced by the user setting or the engine itself is permanent;
+            // forceSingleLineMode may additionally be turned on temporarily after errors and
+            // is only allowed to fall back to merged mode when the permanent flag is off.
+            var alwaysSingleLineMode = Se.Settings.AutoTranslate.IsTranslateEachLineSeparately(translator.Name) ||
+                                       translator.Name ==
+                                       NoLanguageLeftBehindApi.StaticName || // NLLB seems to miss some text...
+                                       translator.Name == NoLanguageLeftBehindServe.StaticName ||
+                                       translator.Name == CrispAsrMadladTranslate.StaticName || // one CLI process per line
+                                       _onlyCurrentLine;
+            var forceSingleLineMode = alwaysSingleLineMode;
 
             var index = start;
 
@@ -1444,6 +1491,7 @@ public partial class AutoTranslateViewModel : ObservableObject
             var linesTranslated = 0;
             var errorCount = 0;
             var noErrorCount = 0;
+            var noProgressCount = 0;
             while (index < Rows.Count)
             {
                 if (_abort || cancellationToken.IsCancellationRequested)
@@ -1484,8 +1532,9 @@ public partial class AutoTranslateViewModel : ObservableObject
                     linesTranslated += linesMergedAndTranslated;
                     _translationProgressIndex = index;
                     errorCount = 0;
+                    noProgressCount = 0;
 
-                    if (noErrorCount > 7)
+                    if (noErrorCount > 7 && !alwaysSingleLineMode)
                     {
                         forceSingleLineMode = false;
                     }
@@ -1508,7 +1557,7 @@ public partial class AutoTranslateViewModel : ObservableObject
                     index,
                     translator,
                     forceSingleLineMode,
-                    _cancellationTokenSource.Token);
+                    cancellationToken);
 
                 if (_abort || cancellationToken.IsCancellationRequested)
                 {
@@ -1519,6 +1568,7 @@ public partial class AutoTranslateViewModel : ObservableObject
                 if (translateCount > 0)
                 {
                     index += translateCount;
+                    noProgressCount = 0;
                     var progressIndex = index;
                     Dispatcher.UIThread.Invoke(() =>
                     {
@@ -1538,6 +1588,14 @@ public partial class AutoTranslateViewModel : ObservableObject
                 else
                 {
                     forceSingleLineMode = true;
+
+                    // The engine keeps returning nothing for this line without throwing -
+                    // without a cap the loop would retry the same line forever.
+                    noProgressCount++;
+                    if (noProgressCount > 3)
+                    {
+                        throw new Exception($"Translation engine {translator.Name} returned no translation for line {index + 1} after {noProgressCount} attempts");
+                    }
                 }
             }
 
@@ -2358,6 +2416,14 @@ public partial class AutoTranslateViewModel : ObservableObject
             e.Handled = true;
             UiUtil.ShowHelp("features/auto-translate");
         }
+    }
+
+    internal void OnClosing()
+    {
+        // The OS close button bypasses the Cancel command - stop a running translation
+        // loop so it does not keep calling the translation API against a closed window.
+        _abort = true;
+        _cancellationTokenSource.Cancel();
     }
 
     internal void OnLoaded()

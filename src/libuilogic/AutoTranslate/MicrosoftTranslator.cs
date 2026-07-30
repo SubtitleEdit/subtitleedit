@@ -23,8 +23,14 @@ namespace Nikse.SubtitleEdit.UiLogic.AutoTranslate
         private const string LanguagesUrl = "https://api.cognitive.microsofttranslator.com/languages?api-version=3.0&scope=translation";
         private const string TranslateUrl = "translate?api-version=3.0&from={0}&to={1}";
         private const string SecurityHeaderName = "Ocp-Apim-Subscription-Key";
+        // Azure issues tokens valid for 10 minutes; refresh with a margin so
+        // long translation runs do not start failing with 401 mid-run.
+        private static readonly TimeSpan AccessTokenLifetime = TimeSpan.FromMinutes(8);
         private static List<TranslationPair> _translationPairs;
         private string _accessToken;
+        private DateTime _accessTokenFetchedUtc;
+        private string _apiKey;
+        private string _tokenEndpoint;
         private string _category;
         private IDownloader _httpClient;
 
@@ -37,13 +43,14 @@ namespace Nikse.SubtitleEdit.UiLogic.AutoTranslate
 
         public void Initialize()
         {
-            var apiKey = Configuration.Settings.Tools.MicrosoftTranslatorApiKey;
-            var tokenEndpoint = Configuration.Settings.Tools.MicrosoftTranslatorTokenEndpoint;
+            _apiKey = Configuration.Settings.Tools.MicrosoftTranslatorApiKey;
+            _tokenEndpoint = Configuration.Settings.Tools.MicrosoftTranslatorTokenEndpoint;
             _category = Configuration.Settings.Tools.MicrosoftTranslatorCategory;
 
             try
             {
-                _accessToken = GetAccessToken(apiKey, tokenEndpoint);
+                _accessToken = GetAccessToken(_apiKey, _tokenEndpoint);
+                _accessTokenFetchedUtc = DateTime.UtcNow;
             }
             catch (Exception e)
             {
@@ -85,7 +92,7 @@ namespace Nikse.SubtitleEdit.UiLogic.AutoTranslate
 
             if (!result.IsSuccessStatusCode)
             {
-                Error = json;
+                Error = jsonResult;
 
                 if (result.StatusCode == HttpStatusCode.Unauthorized)
                 {
@@ -116,6 +123,13 @@ namespace Nikse.SubtitleEdit.UiLogic.AutoTranslate
 
         private IDownloader GetTranslateClient()
         {
+            if (_httpClient != null && DateTime.UtcNow - _accessTokenFetchedUtc > AccessTokenLifetime)
+            {
+                _accessToken = GetAccessToken(_apiKey, _tokenEndpoint);
+                _accessTokenFetchedUtc = DateTime.UtcNow;
+                _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _accessToken);
+            }
+
             if (_httpClient == null)
             {
                 _httpClient = DownloaderFactory.MakeHttpClient();
@@ -139,7 +153,8 @@ namespace Nikse.SubtitleEdit.UiLogic.AutoTranslate
                     var result = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
                     if (!response.IsSuccessStatusCode)
                     {
-                        SeLogger.Error($"{StaticName}: Error getting access token via {tokenEndpoint} and API key {apiKey}: {result}");
+                        SeLogger.Error($"{StaticName}: Error getting access token via {tokenEndpoint}: status code={response.StatusCode} {result}");
+                        throw new Exception($"Could not get access token via {tokenEndpoint}: {result}");
                     }
 
                     return result;
