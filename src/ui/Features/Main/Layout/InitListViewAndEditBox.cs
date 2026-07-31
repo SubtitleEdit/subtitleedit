@@ -138,15 +138,18 @@ public static partial class InitListViewAndEditBox
             new Binding(nameof(SubtitleLineViewModel.IsHidden)) { Converter = inverseBooleanConverter });
 
         // Expose "number: text" as the row's accessible name so screen readers announce
-        // something meaningful when the row takes focus (issue #13015).
+        // something meaningful when the row takes focus (issue #13015). The error summary
+        // is appended because the grid's cell tints are the only other signal for rule
+        // violations, and color never reaches the accessibility tree.
         TableViewExtras.BindRowProperty(vm.SubtitleGrid, AutomationProperties.NameProperty,
             new MultiBinding
             {
-                StringFormat = "{0}: {1}",
+                StringFormat = "{0}: {1}{2}",
                 Bindings =
                 {
                     new Binding(nameof(SubtitleLineViewModel.Number)),
                     new Binding(nameof(SubtitleLineViewModel.Text)),
+                    new Binding(nameof(SubtitleLineViewModel.AccessibleErrorText)),
                 },
             });
 
