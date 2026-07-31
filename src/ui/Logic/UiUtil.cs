@@ -101,7 +101,7 @@ public static class UiUtil
                 // default; SE's custom themes (lighter dark, classic gray, pastel) override
                 // both header types with the same brush via app styles in UiTheme.
                 new Setter(TableViewColumnHeader.BackgroundProperty, GetDataGridHeaderBackgroundBrush()),
-                new Setter(TableViewColumnHeader.PaddingProperty, new Thickness(4, 4, 4, 5)),
+                new Setter(TableViewColumnHeader.PaddingProperty, new Thickness(4, 6, 4, 5)),
                 // The faint grid-line brush, not the full border brush: with grid lines set
                 // to None these are the only separators in the grid, and at 0.5 opacity they
                 // read much stronger than anything the old DataGrid drew.
