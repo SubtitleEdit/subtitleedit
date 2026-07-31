@@ -192,29 +192,6 @@ public partial class AssaStylesViewModel : ObservableObject, IClosingCleanup
         UpdateUsages();
     }
 
-    [RelayCommand]
-    private async Task ShowFontCollector()
-    {
-        if (Window == null)
-        {
-            return;
-        }
-
-        // Give the collector the styles as currently edited, not the ones the file was
-        // opened with - SaveFileStylesToHeader only touches the pending Header, which is
-        // what Ok/Apply would write anyway.
-        SaveFileStylesToHeader();
-        var subtitle = new Subtitle(_subtitle) { Header = Header };
-
-        await _windowService.ShowDialogAsync<FontCollector.FontCollectorWindow, FontCollector.FontCollectorViewModel>(Window, vm =>
-        {
-            vm.Initialize(subtitle);
-        });
-
-        // Fonts may have been copied into SE's Fonts folder - re-offer them in the combo.
-        Task.Run(() => LoadFonts());
-    }
-
     /// <summary>
     /// Opens the font picker (installed fonts + fonts collected in SE's Fonts folder)
     /// and assigns the picked font to the current style.

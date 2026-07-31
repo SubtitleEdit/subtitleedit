@@ -446,11 +446,10 @@ public class AssaStylesWindow : Window
         var comboBoxFontName = UiUtil.MakeComboBox(vm.Fonts, vm, nameof(vm.CurrentStyle) + "." + nameof(StyleDisplay.FontName)).WithMinWidth(150);
         var buttonFontBrowse = UiUtil.MakeButtonBrowse(vm.PickFontNameCommand, null, Se.Language.Tools.PickFontNameTitle);
         var buttonFontAttachments = UiUtil.MakeButton(vm.BrowseFontNameCommand, IconNames.Paperclip, Se.Language.Assa.Attachments);
-        var buttonFontCollector = UiUtil.MakeButton(vm.ShowFontCollectorCommand, IconNames.FormatFont, Se.Language.Assa.FontCollectorTitle);
         var labelFontSize = UiUtil.MakeLabel(Se.Language.General.FontSize);
         var numericUpDownFontSize = UiUtil.MakeNumericUpDownOneDecimal(1, 1000, 130, vm, nameof(vm.CurrentStyle) + "." + nameof(StyleDisplay.FontSize));
         numericUpDownFontSize.Increment = 1;
-        var panelFont = UiUtil.MakeHorizontalPanel(labelFontName, comboBoxFontName, buttonFontBrowse, buttonFontAttachments, buttonFontCollector, labelFontSize, numericUpDownFontSize);
+        var panelFont = UiUtil.MakeHorizontalPanel(labelFontName, comboBoxFontName, buttonFontBrowse, buttonFontAttachments, labelFontSize, numericUpDownFontSize);
 
         var checkBoxBold = UiUtil.MakeCheckBox(Se.Language.General.Bold, vm, nameof(vm.CurrentStyle) + "." + nameof(StyleDisplay.Bold));
         var checkBoxItalic = UiUtil.MakeCheckBox(Se.Language.General.Italic, vm, nameof(vm.CurrentStyle) + "." + nameof(StyleDisplay.Italic));
