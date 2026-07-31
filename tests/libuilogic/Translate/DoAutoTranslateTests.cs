@@ -87,10 +87,12 @@ public class DoAutoTranslateTests
     }
 
     [Fact]
-    public async Task ZeroProgress_ThrowsInsteadOfLoopingForever()
+    public async Task EmptyTranslations_TerminateInsteadOfLoopingForever()
     {
         // An engine that always returns nothing must not make the loop retry the
-        // same line forever.
+        // same line forever. Termination may be a normal completion (empty results
+        // are applied in single-line mode) or the loop's zero-progress exception -
+        // either is fine; only spinning forever is a bug.
         var translator = new FakeTranslator { Translation = _ => string.Empty };
         var doAutoTranslate = new DoAutoTranslate();
 
@@ -101,7 +103,13 @@ public class DoAutoTranslateTests
             translator,
             CancellationToken.None);
 
-        var completed = await Task.WhenAny(task, Task.Delay(TimeSpan.FromSeconds(30)));
+        var completed = await Task.WhenAny(task, Task.Delay(TimeSpan.FromSeconds(30), TestContext.Current.CancellationToken));
         Assert.Same(task, completed);
+
+        if (task.IsCompletedSuccessfully)
+        {
+            var rows = await task;
+            Assert.Equal(5, rows.Count);
+        }
     }
 }

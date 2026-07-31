@@ -95,7 +95,7 @@ namespace Nikse.SubtitleEdit.UiLogic.AutoTranslate
                 SeLogger.Error("Lara Translate failed calling API: Status code=" + response.StatusCode + Environment.NewLine +
                     json + Environment.NewLine +
                     "input: " + requestBody + Environment.NewLine +
-                    "url: " + _httpClient.BaseAddress + "translate");
+                    "url: " + new Uri(_httpClient.BaseAddress, "/translate"));
             }
 
             response.EnsureSuccessStatusCode();
