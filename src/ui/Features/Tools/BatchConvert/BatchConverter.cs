@@ -1588,18 +1588,22 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
             return null;
         }
 
+        var (scriptWidth, scriptHeight) = ExportTextTags.GetScriptResolution(item.Subtitle.Header);
+
         var imageParameters = new List<ImageParameter>();
         for (var i = 0; i < item.Subtitle.Paragraphs.Count; i++)
         {
             Paragraph? subtitle = item.Subtitle.Paragraphs[i];
             var imageParameter = new ImageParameter
             {
-                Alignment = ExportAlignment.BottomCenter,
+                // "{\an8}" & co. were stripped from the text but not honored, so top-positioned
+                // lines silently ended up at the bottom (issue #13025).
+                Alignment = ExportTextTags.GetAlignment(subtitle.Text, ExportAlignment.BottomCenter),
                 ContentAlignment = ExportContentAlignment.Center,
                 PaddingLeftRight = profile.PaddingLeftRight,
                 PaddingTopBottom = profile.PaddingTopBottom,
                 Index = i,
-                Text = HtmlUtil.RemoveAssAlignmentTags(subtitle.Text),
+                Text = ExportTextTags.ToRenderableText(subtitle.Text),
                 StartTime = subtitle.StartTime.TimeSpan,
                 EndTime = subtitle.EndTime.TimeSpan,
                 FontColor = profile.FontColor.FromHexToColor().ToSKColor(),
@@ -1620,6 +1624,11 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
             };
 
             imageParameter.Bitmap = ExportImageBasedViewModel.GenerateBitmap(imageParameter);
+
+            // "{\pos(x,y)}" anchors the rendered text, so it needs the bitmap size - and the
+            // coordinates are in the script's own resolution, not the export canvas.
+            ExportTextTags.ApplyPositionTag(imageParameter, subtitle.Text, scriptWidth, scriptHeight);
+
             imageParameters.Add(imageParameter);
         }
 
