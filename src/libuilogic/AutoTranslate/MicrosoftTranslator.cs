@@ -23,27 +23,34 @@ namespace Nikse.SubtitleEdit.UiLogic.AutoTranslate
         private const string LanguagesUrl = "https://api.cognitive.microsofttranslator.com/languages?api-version=3.0&scope=translation";
         private const string TranslateUrl = "translate?api-version=3.0&from={0}&to={1}";
         private const string SecurityHeaderName = "Ocp-Apim-Subscription-Key";
-        private static List<TranslationPair> _translationPairs;
-        private string _accessToken;
-        private string _category;
-        private IDownloader _httpClient;
+        // Azure issues tokens valid for 10 minutes; refresh with a margin so
+        // long translation runs do not start failing with 401 mid-run.
+        private static readonly TimeSpan AccessTokenLifetime = TimeSpan.FromMinutes(8);
+        private static List<TranslationPair>? _translationPairs;
+        private string _accessToken = string.Empty;
+        private DateTime _accessTokenFetchedUtc;
+        private string _apiKey = string.Empty;
+        private string _tokenEndpoint = string.Empty;
+        private string _category = string.Empty;
+        private IDownloader _httpClient = null!;
 
         public static string StaticName { get; set; } = "Bing Microsoft Translator";
         public override string ToString() => StaticName;
         public string Name => StaticName;
         public string Url => "https://www.bing.com/translator";
-        public string Error { get; set; }
+        public string Error { get; set; } = string.Empty;
         public int MaxCharacters => 1500;
 
         public void Initialize()
         {
-            var apiKey = Configuration.Settings.Tools.MicrosoftTranslatorApiKey;
-            var tokenEndpoint = Configuration.Settings.Tools.MicrosoftTranslatorTokenEndpoint;
+            _apiKey = Configuration.Settings.Tools.MicrosoftTranslatorApiKey;
+            _tokenEndpoint = Configuration.Settings.Tools.MicrosoftTranslatorTokenEndpoint;
             _category = Configuration.Settings.Tools.MicrosoftTranslatorCategory;
 
             try
             {
-                _accessToken = GetAccessToken(apiKey, tokenEndpoint);
+                _accessToken = GetAccessToken(_apiKey, _tokenEndpoint);
+                _accessTokenFetchedUtc = DateTime.UtcNow;
             }
             catch (Exception e)
             {
@@ -81,11 +88,11 @@ namespace Nikse.SubtitleEdit.UiLogic.AutoTranslate
             content.Headers.ContentType = MediaTypeHeaderValue.Parse("application/json");
             var result = await httpClient.PostAsync(url, content, cancellationToken);
             var parser = new JsonParser();
-            var jsonResult = await result.Content.ReadAsStringAsync();
+            var jsonResult = await result.Content.ReadAsStringAsync(cancellationToken);
 
             if (!result.IsSuccessStatusCode)
             {
-                Error = json;
+                Error = jsonResult;
 
                 if (result.StatusCode == HttpStatusCode.Unauthorized)
                 {
@@ -116,6 +123,13 @@ namespace Nikse.SubtitleEdit.UiLogic.AutoTranslate
 
         private IDownloader GetTranslateClient()
         {
+            if (_httpClient != null && DateTime.UtcNow - _accessTokenFetchedUtc > AccessTokenLifetime)
+            {
+                _accessToken = GetAccessToken(_apiKey, _tokenEndpoint);
+                _accessTokenFetchedUtc = DateTime.UtcNow;
+                _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _accessToken);
+            }
+
             if (_httpClient == null)
             {
                 _httpClient = DownloaderFactory.MakeHttpClient();
@@ -139,7 +153,8 @@ namespace Nikse.SubtitleEdit.UiLogic.AutoTranslate
                     var result = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
                     if (!response.IsSuccessStatusCode)
                     {
-                        SeLogger.Error($"{StaticName}: Error getting access token via {tokenEndpoint} and API key {apiKey}: {result}");
+                        SeLogger.Error($"{StaticName}: Error getting access token via {tokenEndpoint}: status code={response.StatusCode} {result}");
+                        throw new Exception($"Could not get access token via {tokenEndpoint}: {result}");
                     }
 
                     return result;
@@ -180,7 +195,7 @@ namespace Nikse.SubtitleEdit.UiLogic.AutoTranslate
                     {
                         if (v[innerKey] is Dictionary<string, object> l)
                         {
-                            list.Add(new TranslationPair(l["name"].ToString(), innerKey, innerKey));
+                            list.Add(new TranslationPair(l["name"]?.ToString() ?? string.Empty, innerKey, innerKey));
                         }
                     }
                 }

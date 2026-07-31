@@ -66,66 +66,74 @@ public class FindRuleWindow : Window
 
     private static Border MakeDataGrid(FindRuleViewModel vm)
     {
-        var dataGrid = new DataGrid
-        {
-            AutoGenerateColumns = false,
-            SelectionMode = DataGridSelectionMode.Single,
-            CanUserResizeColumns = true,
-            CanUserSortColumns = true,
-            HorizontalAlignment = HorizontalAlignment.Stretch,
-            VerticalAlignment = VerticalAlignment.Stretch,
-            Width = double.NaN,
-            Height = double.NaN,
-            IsReadOnly = true,
-            DataContext = vm,
-            Columns =
-            {
-                new DataGridTextColumn
-                {
-                    Header = Se.Language.General.Category,
-                    CellTheme = UiUtil.DataGridNoBorderNoPaddingCellTheme,
-                    Binding = new Binding("Parent.CategoryName"),
-                    IsReadOnly = true,
-                    Width = new DataGridLength(1, DataGridLengthUnitType.Star),
-                },
-                new DataGridTextColumn
-                {
-                    Header = Se.Language.General.Find,
-                    CellTheme = UiUtil.DataGridNoBorderNoPaddingCellTheme,
-                    Binding = new Binding(nameof(RuleTreeNode.Find)),
-                    IsReadOnly = true,
-                    Width = new DataGridLength(2, DataGridLengthUnitType.Star),
-                },
-                new DataGridTextColumn
-                {
-                    Header = Se.Language.General.ReplaceWith,
-                    CellTheme = UiUtil.DataGridNoBorderNoPaddingCellTheme,
-                    Binding = new Binding(nameof(RuleTreeNode.ReplaceWith)),
-                    IsReadOnly = true,
-                    Width = new DataGridLength(2, DataGridLengthUnitType.Star),
-                },
-                new DataGridTextColumn
-                {
-                    Header = Se.Language.General.Description,
-                    CellTheme = UiUtil.DataGridNoBorderNoPaddingCellTheme,
-                    Binding = new Binding(nameof(RuleTreeNode.Description)),
-                    IsReadOnly = true,
-                    Width = new DataGridLength(2, DataGridLengthUnitType.Star),
-                },
-                new DataGridTextColumn
-                {
-                    Header = Se.Language.General.Type,
-                    CellTheme = UiUtil.DataGridNoBorderNoPaddingCellTheme,
-                    Binding = new Binding(nameof(RuleTreeNode.SearchType)),
-                    IsReadOnly = true,
-                    Width = new DataGridLength(1, DataGridLengthUnitType.Auto),
-                },
-            },
-        };
+        var dataGrid = TableViewExtras.MakeTableView(multiSelect: false);
+        dataGrid.DataContext = vm;
 
-        dataGrid.Bind(DataGrid.ItemsSourceProperty, new Binding(nameof(vm.Rules)) { Source = vm });
-        dataGrid.Bind(DataGrid.SelectedItemProperty, new Binding(nameof(vm.SelectedRule)) { Source = vm, Mode = BindingMode.TwoWay });
-        dataGrid.DoubleTapped += vm.DataGridDoubleTapped;
+        var columnCategory = new SeTableViewColumn
+        {
+            Header = Se.Language.General.Category,
+            CellTheme = UiUtil.TableViewCellTheme,
+            HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
+            Binding = new Binding("Parent.CategoryName"),
+            Width = new GridLength(1, GridUnitType.Star),
+        };
+        var columnFind = new SeTableViewColumn
+        {
+            Header = Se.Language.General.Find,
+            CellTheme = UiUtil.TableViewCellTheme,
+            HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
+            Binding = new Binding(nameof(RuleTreeNode.Find)),
+            Width = new GridLength(2, GridUnitType.Star),
+        };
+        var columnReplaceWith = new SeTableViewColumn
+        {
+            Header = Se.Language.General.ReplaceWith,
+            CellTheme = UiUtil.TableViewCellTheme,
+            HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
+            Binding = new Binding(nameof(RuleTreeNode.ReplaceWith)),
+            Width = new GridLength(2, GridUnitType.Star),
+        };
+        var columnDescription = new SeTableViewColumn
+        {
+            Header = Se.Language.General.Description,
+            CellTheme = UiUtil.TableViewCellTheme,
+            HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
+            Binding = new Binding(nameof(RuleTreeNode.Description)),
+            Width = new GridLength(2, GridUnitType.Star),
+        };
+        var columnType = new SeTableViewColumn
+        {
+            Header = Se.Language.General.Type,
+            CellTheme = UiUtil.TableViewCellTheme,
+            HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
+            Binding = new Binding(nameof(RuleTreeNode.SearchType)),
+            // Content-sized (Auto) on the DataGrid; TableView treats Auto as star.
+            Width = new GridLength(140),
+        };
+        dataGrid.Columns.AddRange(new TableViewColumn[]
+        {
+            columnCategory, columnFind, columnReplaceWith, columnDescription, columnType,
+        });
+
+        // Search results whose order is presentation-only (the caller consumes just
+        // SelectedRule), so header sorting is safe to wire.
+        var sorter = new TableViewHeaderSorter(dataGrid);
+        sorter.AddSortable<RuleTreeNode, string>(columnCategory, x => x.Parent?.CategoryName ?? string.Empty)
+            .AddSortable<RuleTreeNode, string>(columnFind, x => x.Find)
+            .AddSortable<RuleTreeNode, string>(columnReplaceWith, x => x.ReplaceWith)
+            .AddSortable<RuleTreeNode, string>(columnDescription, x => x.Description)
+            .AddSortable<RuleTreeNode, string>(columnType, x => x.SearchType);
+
+        dataGrid.Bind(TableView.ItemsSourceProperty, new Binding(nameof(vm.Rules)) { Source = vm });
+        dataGrid.Bind(TableView.SelectedItemProperty, new Binding(nameof(vm.SelectedRule)) { Source = vm, Mode = BindingMode.TwoWay });
+        dataGrid.DoubleTapped += (sender, e) =>
+        {
+            // A fast double-click on a sortable header must sort, not accept the dialog.
+            if (!TableViewExtras.IsInColumnHeader(e.Source as Avalonia.Visual))
+            {
+                vm.DataGridDoubleTapped(sender, e);
+            }
+        };
 
         return UiUtil.MakeBorderForControlNoPadding(dataGrid);
     }

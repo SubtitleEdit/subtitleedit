@@ -10,14 +10,12 @@ namespace Nikse.SubtitleEdit.UiLogic.Translate
 
     public class CopyPasteTranslator
     {
-        private Formatting[] _formattings;
         private List<Paragraph> _paragraphs;
         private string _separator;
 
         public CopyPasteTranslator(List<Paragraph> paragraphs, string separator)
         {
             _paragraphs = paragraphs;
-            _formattings = new Formatting[paragraphs.Count];
             _separator = separator;
         }
 
@@ -26,28 +24,30 @@ namespace Nikse.SubtitleEdit.UiLogic.Translate
             var result = new List<CopyPasteBlock>();
             var input = new StringBuilder();
             var paragraphs = new List<Paragraph>();
+            var formattings = new List<Formatting>();
             for (var index = startIndex; index < _paragraphs.Count; index++)
             {
                 var p = _paragraphs[index];
                 var f = new Formatting();
-                _formattings[index - startIndex] = f;
                 var text = f.SetTagsAndReturnTrimmed(TranslationHelper.PreTranslate(p.Text, sourceLanguage), sourceLanguage);
                 while (text.Contains(Environment.NewLine + Environment.NewLine))
                     text = text.Replace(Environment.NewLine + Environment.NewLine, Environment.NewLine);
                 if (input.Length + text.Length + 3 >= maxBlockSize)
                 {
-                    result.Add(new CopyPasteBlock { TargetText = input.ToString().Trim(), Paragraphs = paragraphs });
+                    result.Add(new CopyPasteBlock { TargetText = input.ToString().Trim(), Paragraphs = paragraphs, Formattings = formattings });
                     input.Clear();
                     paragraphs = new List<Paragraph>();
+                    formattings = new List<Formatting>();
                 }
                 if (input.Length > 0)
                     input.Append(Environment.NewLine + _separator + Environment.NewLine);
                 input.Append(text);
                 paragraphs.Add(p);
+                formattings.Add(f);
             }
             if (input.Length > 0 && input.ToString() != Environment.NewLine + _separator + Environment.NewLine)
             {
-                result.Add(new CopyPasteBlock { TargetText = input.ToString().Trim(), Paragraphs = paragraphs });
+                result.Add(new CopyPasteBlock { TargetText = input.ToString().Trim(), Paragraphs = paragraphs, Formattings = formattings });
             }
             return result;
         }
@@ -171,28 +171,9 @@ namespace Nikse.SubtitleEdit.UiLogic.Translate
             return new TranslationPair(name, code, code);
         }
 
-        public void Translate(string sourceLanguage, string targetLanguage, List<Paragraph> paragraphs, StringBuilder log)
-        {
-            var input = new StringBuilder();
-            _formattings = new Formatting[paragraphs.Count];
-            for (var index = 0; index < paragraphs.Count; index++)
-            {
-                var p = paragraphs[index];
-                var f = new Formatting();
-                _formattings[index] = f;
-                if (input.Length > 0)
-                    input.Append(Environment.NewLine + Environment.NewLine);
-                var text = f.SetTagsAndReturnTrimmed(TranslationHelper.PreTranslate(p.Text, sourceLanguage), sourceLanguage);
-                while (text.Contains(Environment.NewLine + Environment.NewLine))
-                    text = text.Replace(Environment.NewLine + Environment.NewLine, Environment.NewLine);
-                text = text.Replace(Environment.NewLine, "\n");
-                input.Append(text);
-            }
-        }
-
         public List<string> GetTranslationResult(string targetLanguage, string target, CopyPasteBlock block)
         {
-            var list = MakeList(target, targetLanguage, _formattings);
+            var list = MakeList(target, targetLanguage, block.Formattings);
             if (list.Count > block.Paragraphs.Count)
             {
                 return list.Where(p => !string.IsNullOrEmpty(p)).ToList();
@@ -208,7 +189,7 @@ namespace Nikse.SubtitleEdit.UiLogic.Translate
             return list;
         }
 
-        private List<string> MakeList(string res, string targetLanguage, Formatting[] formattings)
+        private List<string> MakeList(string res, string targetLanguage, List<Formatting> formattings)
         {
             var lines = new List<string>();
             var sb = new StringBuilder();
@@ -249,7 +230,7 @@ namespace Nikse.SubtitleEdit.UiLogic.Translate
                 s = s.Replace(Environment.NewLine + " ", Environment.NewLine);
                 s = s.Replace(" " + Environment.NewLine, Environment.NewLine);
                 s = s.Replace(" " + Environment.NewLine, Environment.NewLine).Trim();
-                if (formattings.Length > index)
+                if (formattings.Count > index)
                     s = formattings[index].ReAddFormatting(s);
                 resultList.Add(s.Replace("  ", " "));
             }
@@ -263,7 +244,9 @@ namespace Nikse.SubtitleEdit.UiLogic.Translate
             for (var index = 0; index < input.Count; index++)
             {
                 var line = input[index];
-                var text = paragraphs[index].Text;
+                // Earlier splits shift the alignment: input[index] corresponds to
+                // paragraphs[index + hits], not paragraphs[index].
+                var text = paragraphs[index + hits].Text;
                 var badPoints = 0;
                 if (text.StartsWith("[") && !line.StartsWith("["))
                     badPoints++;

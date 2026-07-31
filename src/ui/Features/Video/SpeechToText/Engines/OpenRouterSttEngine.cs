@@ -58,7 +58,7 @@ public class OpenRouterSttEngine : IOnlineSttEngine
     public long UploadThresholdBytes => UploadThreshold;
     public long ChunkSizeBytes => ChunkSize;
 
-    public string GetAndCreateWhisperFolder() => WhisperHelper.GetWhisperFolder(WhisperChoice.OpenRouter);
+    public string GetAndCreateWhisperFolder() => WhisperHelper.GetWhisperFolder(WhisperChoice.OpenRouter) ?? string.Empty;
     public string GetAndCreateWhisperModelFolder(WhisperModel? whisperModel) => new WhisperModel().ModelFolder;
     public string GetExecutable() => string.Empty;
     public bool IsModelInstalled(WhisperModel model) => true;

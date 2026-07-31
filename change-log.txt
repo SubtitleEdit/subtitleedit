@@ -3,6 +3,60 @@ Subtitle Edit Changelog
 
 -----------------------------------------------------------------------------------------------------
 
+v5.2.0-beta1 (TBD)
+
+* Auto-translate: new advanced local-LLM engines (llama.cpp and Ollama) with batch context, system prompt/parameter settings and schema-forced output - thx subof
+* Statistics: new dashboard view with tiles, meters, checks and a CPS histogram
+* Add "Remove/replace Unicode characters" tool (SE4 plugin port) - thx fraternl
+* Add ASSA font collector
+* Find/replace: SE4-style regex snippet context menu
+* Import plain text: add "Align time codes via forced aligner" - thx subof/David
+* Cut video: option to also cut the subtitle
+* Batch convert: brightness, alpha and color adjustments for image output
+* Open video from URL: video/subtitle checkboxes and auto-generated subtitles, and show the yt-dlp update prompt as a message box
+* Clean up YouTube auto-generated captions on load - one cue per spoken line with plain text instead of roll-up duplicates with per-word time codes
+* Waveform: per-track audio picker with size estimates, live progress and cancel - thx shanytc
+* Waveform: copy the subtitle at the video position (Ctrl+C and context menu) and paste at the waveform position - thx shanytc
+* Text to speech: custom voice models for Piper
+* Fix common errors: context menu with applied-rule details and a rule filter
+* Add default save location setting - thx gadkarisid
+* Add auto-break settings under Settings -> Tools - thx citizenhelene
+* Add more proxy settings: domain, system credentials and a bypass list
+* Add optional Auto-translate, Speech to text and "Point sync via another subtitle" toolbar icons - thx fraternl
+* Add "Show selected lines earlier/later" to the subtitle grid context menu
+* Add "Go to video position..." to the Video menu and a shortcut to toggle subtitles on the video player
+* Add export support for Audacity/Tenacity labels
+* Machine-readable ffmpeg progress for shot changes, burn-in, re-encode and transparent subtitles
+* Help: respect a custom help shortcut, wire F1 in more windows, and add five new help pages
+* Remove the MLX Whisper speech-to-text engine - thx ruonghieu
+* Performance: faster hot paths across the UI and core libraries, verified with BenchmarkDotNet - thx ivandrofly
+* Build asset zips from source folders at build time and ship translations compressed
+* Move auto-translate, speech-to-text and OCR logic from libse to libuilogic, so the libse NuGet package stays a pure subtitle library
+* Honor ASSA override tags (position, alignment, colors, ...) in image-based export - thx Maxia1
+* Honor {\pos(x,y)} in VobSub and DVD sup export
+* Fix red and blue being swapped in VobSub, SSA and TextST colors
+* Read the frame size from a standalone VobSub .idx
+* Keep the source position when re-exporting image subtitles
+* Fix undo wiping the original subtitle text column - thx abasameer
+* Fix Paddle OCR not starting from the GUI on macOS - thx HongyuS
+* Fix a batch of auto-translate bugs found in a bug hunt
+* Make ComboBox dropdowns follow the UI scale setting - thx goonis
+* Fix Google Lens OCR putting dialog dashes on their own lines - thx flashmasta
+* Fix inverted I/1-to-l OCR rule and extend the Dutch OCR replace list - thx fraternl
+* Restore total seconds/milliseconds time codes in export custom text format
+* Self-repair the unpacked theme folder when an icon file is missing
+* Point sync via another subtitle: take left times from the original timings - thx fraternl
+* Apply "extend to line before/after" to all selected lines - thx NiggleHub
+* Skip an auto-backup tick while a save is still in flight - thx ivandrofly
+* Download 64-bit libVLC on Windows x64 - thx StandAloof
+* Screen readers: keyboard focus in the subtitle grid is exposed via UI Automation again - the main grid and all dialog grids now use TableView - thx Urs2026
+* Accessibility: announce rule violations in the grid row's accessible name, safer initial focus, accessible names for icon buttons, and keep keyboard focus in the grid on Home/End jumps
+* Update Italian translation - thx bovirus
+* Update Korean translation - thx 12si27
+* Update Polish translation - thx potplayer-fanpack
+
+-----------------------------------------------------------------------------------------------------
+
 v5.1.0 (29th of July 2026)
 
 Subtitle Edit 5.1 is the first feature release after 5.0, collecting the work of

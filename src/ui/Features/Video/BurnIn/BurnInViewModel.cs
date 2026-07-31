@@ -106,13 +106,12 @@ public partial class BurnInViewModel : ObservableObject
 
     public Window? Window { get; set; }
     public bool OkPressed { get; private set; }
-    public DataGrid? BatchGrid { get; internal set; }
+    public TableView? BatchGrid { get; internal set; }
     public BurnInLogo BurnInLogo { get; set; }
 
     private Subtitle _subtitle = new();
     private bool _loading = true;
     private readonly StringBuilder _log;
-    private static readonly Regex FrameFinderRegex = new(@"[Ff]rame=\s*\d+", RegexOptions.Compiled);
     private long _startTicks;
     private long _processedFrames;
     private Process? _ffmpegProcess;
@@ -158,7 +157,7 @@ public partial class BurnInViewModel : ObservableObject
         {
             new(FontBoxType.None, Se.Language.General.None),
             new(FontBoxType.OneBox, Se.Language.Video.BurnIn.OneBox),
-            new(FontBoxType.BoxPerLine, Se.Language.Video.BurnIn.BoxPerLine),
+            new(FontBoxType.BoxPerLine, Se.Language.General.BoxPerLine),
         };
         SelectedFontBoxType = FontBoxTypes[0];
 
@@ -520,7 +519,7 @@ public partial class BurnInViewModel : ObservableObject
             }
 
             BatchGrid.SelectedItem = jobItem;
-            BatchGrid.ScrollIntoView(jobItem, null);
+            BatchGrid.ScrollIntoView(jobItem);
         });
 
         bool result;
@@ -741,6 +740,10 @@ public partial class BurnInViewModel : ObservableObject
         }
 
         var workingDirectory = Path.GetDirectoryName(jobItem.AssaSubtitleFileName) ?? string.Empty;
+        // Machine-readable progress on stdout ("frame=N" etc.) instead of scraping the
+        // human-readable stderr stats, which drift between ffmpeg versions.
+        ffmpegParameters = FfmpegProgressTracker.ProgressArguments + " " + ffmpegParameters;
+
         return FfmpegGenerator.GetProcess(ffmpegParameters, OutputHandler, workingDirectory);
     }
 
@@ -766,25 +769,20 @@ public partial class BurnInViewModel : ObservableObject
             return;
         }
 
-        _log?.AppendLine(outLine.Data);
-
-        var match = FrameFinderRegex.Match(outLine.Data);
-        if (!match.Success)
+        if (FfmpegProgressTracker.TryGetFrame(outLine.Data, out var frame))
         {
-            return;
-        }
-
-        var arr = match.Value.Split('=');
-        if (arr.Length != 2)
-        {
-            return;
-        }
-
-        if (long.TryParse(arr[1].Trim(), out var f))
-        {
-            _processedFrames = f;
+            _processedFrames = frame;
             ProgressValue = _processedFrames * 100.0 / JobItems[_jobItemIndex].TotalFrames;
+            return;
         }
+
+        // Keep the twice-a-second "-progress" key/value spam out of the user-facing log.
+        if (FfmpegProgressTracker.IsProgressLine(outLine.Data))
+        {
+            return;
+        }
+
+        _log?.AppendLine(outLine.Data);
     }
 
     private ObservableCollection<BurnInJobItem> GetCurrentVideoAsJobItems(string outputVideoFileName)

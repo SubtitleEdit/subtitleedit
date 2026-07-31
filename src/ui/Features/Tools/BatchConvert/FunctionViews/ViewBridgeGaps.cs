@@ -10,7 +10,7 @@ public static class ViewBridgeGaps
     {
         var labelHeader = new Label
         {
-            Content = Se.Language.Tools.BridgeGaps.Title,
+            Content = Se.Language.General.BridgeGaps,
             FontWeight = Avalonia.Media.FontWeight.Bold,
             Margin = new Avalonia.Thickness(0, 0, 0, 10),
         };

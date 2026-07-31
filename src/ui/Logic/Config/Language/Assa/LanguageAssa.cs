@@ -2,7 +2,6 @@
 
 public class LanguageAssa
 {
-
     // ASSA Draw
     public string AssaDraw { get; set; }
     public string DrawSelectTool { get; set; }
@@ -29,12 +28,7 @@ public class LanguageAssa
     // Progress Bar Generator
     public string ProgressBarTitle { get; set; }
     public string ProgressBarSettings { get; set; }
-    public string ProgressBarPosition { get; set; }
-    public string ProgressBarBottom { get; set; }
-    public string ProgressBarTop { get; set; }
     public string ProgressBarForeColor { get; set; }
-    public string ProgressBarBackColor { get; set; }
-    public string ProgressBarStyle { get; set; }
     public string ProgressBarSquareCorners { get; set; }
     public string ProgressBarRoundedCorners { get; set; }
     public string ProgressBarChapters { get; set; }
@@ -43,8 +37,6 @@ public class LanguageAssa
     public string ProgressBarXAdjustment { get; set; }
     public string ProgressBarYAdjustment { get; set; }
     public string ProgressBarTextAlignment { get; set; }
-    public string ProgressBarTakePosFromVideo { get; set; }
-    public string ProgressBarPreview { get; set; }
 
     // Font collector
     public string FontCollectorTitle { get; set; }
@@ -54,10 +46,15 @@ public class LanguageAssa
     public string FontCollectorInlineLineX { get; set; }
     public string FontCollectorFound { get; set; }
     public string FontCollectorNotFound { get; set; }
+    public string FontCollectorEmbedded { get; set; }
     public string FontCollectorScanning { get; set; }
     public string FontCollectorXOfYFontsFound { get; set; }
-    public string FontCollectorCopyFontsToFolder { get; set; }
-    public string FontCollectorCopyFontsToFolderDotDotDot { get; set; }
+    public string FontCollectorCopyFontsToSeFontsFolder { get; set; }
+    public string FontCollectorImportFontDotDotDot { get; set; }
+    public string FontCollectorDeleteFontXPrompt { get; set; }
+    public string FontCollectorCurrentSubtitle { get; set; }
+    public string FontCollectorOpenFontsFolder { get; set; }
+    public string Attachments { get; set; }
     public string FontCollectorNoFontsToCopy { get; set; }
     public string FontCollectorXFontFilesCopiedToY { get; set; }
 
@@ -75,9 +72,7 @@ public class LanguageAssa
 
     // Background Box Generator
     public string BackgroundBoxGenerator { get; set; }
-    public string BackgroundBoxPadding { get; set; }
     public string BackgroundBoxFillWidth { get; set; }
-    public string BackgroundBoxBoxColor { get; set; }
     public string BackgroundBoxRadius { get; set; }
     public string BackgroundBoxCircle { get; set; }
     public string BackgroundBoxSpikes { get; set; }
@@ -90,12 +85,9 @@ public class LanguageAssa
     public string BackgroundBoxStarburst { get; set; }
     public string BackgroundBoxScroll { get; set; }
 
-    public string StylesTitle { get; set; }
     public string StylesInFile { get; set; }
     public string StylesSaved { get; set; }
-    public string Category { get; set; }
     public string AllCategories { get; set; }
-    public string DefaultCategory { get; set; }
     public string NewCategory { get; set; }
     public string RenameCategory { get; set; }
     public string DeleteCategory { get; set; }
@@ -139,7 +131,6 @@ public class LanguageAssa
     public string SpaceIncrease { get; set; }
     public string PopIn { get; set; }
     public string SpinIn { get; set; }
-    public string PlayCurrent { get; set; }
     public string SetPosition { get; set; }
     public string Rotation { get; set; }
     public string ImageColorPicker { get; set; }
@@ -181,10 +172,8 @@ public class LanguageAssa
     public string AdvancedEffectOldMovieDescription { get; set; }
     public string AdvancedEffectNeonBurst { get; set; }
     public string AdvancedEffectNeonBurstDescription { get; set; }
-    public string AdvancedEffectSettings { get; set; }
     public string AdvancedEffectSnowFlakeCount { get; set; }
     public string AdvancedEffectStarfieldStarCount { get; set; }
-    public string AdvancedEffectStarfieldSpeed { get; set; }
     public string AdvancedEffectGlitch { get; set; }
     public string AdvancedEffectGlitchDescription { get; set; }
     public string AdvancedEffectBounceIn { get; set; }
@@ -193,8 +182,6 @@ public class LanguageAssa
     public string AdvancedEffectFirefliesDescription { get; set; }
     public string AdvancedEffectMatrix { get; set; }
     public string AdvancedEffectMatrixDescription { get; set; }
-    public string AdvancedEffectAudioBars { get; set; }
-    public string AdvancedEffectAudioBarsDescription { get; set; }
     public string AdvancedEffectAudioPulse { get; set; }
     public string AdvancedEffectAudioPulseDescription { get; set; }
     public string AdvancedEffectConfetti { get; set; }
@@ -208,7 +195,6 @@ public class LanguageAssa
     public string AdvancedEffectFancyKaraokeGlow { get; set; }
     public string AdvancedEffectFancyKaraokeActiveColor { get; set; }
     public string AdvancedEffectFancyKaraokeInactiveColor { get; set; }
-    public string AdvancedEffectFancyKaraokeInactiveOpacity { get; set; }
     public string AdvancedEffectWordSpacingPixels { get; set; }
     public string AdvancedEffectSlowZoomOut { get; set; }
     public string AdvancedEffectSlowZoomOutDescription { get; set; }
@@ -224,7 +210,6 @@ public class LanguageAssa
     public string AdvancedEffectSlideInLeftDescription { get; set; }
     public string AdvancedEffectSlideInRight { get; set; }
     public string AdvancedEffectSlideInRightDescription { get; set; }
-    public string AdvancedEffectFadeInOut { get; set; }
     public string AdvancedEffectFadeInOutDescription { get; set; }
     public string OverrideTagsHistory { get; set; }
 
@@ -253,16 +238,10 @@ public class LanguageAssa
         DrawToolX = "Tool: {0}";
         DrawHelpText = "Click to add points • Enter/F8 to close shape • Shift+Drag to pan • Ctrl+Scroll to zoom";
 
-
         // Progress Bar Generator
         ProgressBarTitle = "ASSA progress bar";
         ProgressBarSettings = "Progress bar";
-        ProgressBarPosition = "Position";
-        ProgressBarBottom = "Bottom";
-        ProgressBarTop = "Top";
         ProgressBarForeColor = "Foreground color";
-        ProgressBarBackColor = "Background color";
-        ProgressBarStyle = "Style";
         ProgressBarSquareCorners = "Square corners";
         ProgressBarRoundedCorners = "Rounded corners";
         ProgressBarChapters = "Chapters";
@@ -271,8 +250,6 @@ public class LanguageAssa
         ProgressBarXAdjustment = "X adjustment";
         ProgressBarYAdjustment = "Y adjustment";
         ProgressBarTextAlignment = "Text alignment";
-        ProgressBarTakePosFromVideo = "Take position from video";
-        ProgressBarPreview = "Preview";
 
         // Resolution Resampler
         FontCollectorTitle = "Font collector";
@@ -282,10 +259,15 @@ public class LanguageAssa
         FontCollectorInlineLineX = "Line {0}";
         FontCollectorFound = "Found";
         FontCollectorNotFound = "Not found";
+        FontCollectorEmbedded = "Embedded";
         FontCollectorScanning = "Scanning installed fonts...";
         FontCollectorXOfYFontsFound = "{0} of {1} fonts found";
-        FontCollectorCopyFontsToFolder = "Copy fonts to folder";
-        FontCollectorCopyFontsToFolderDotDotDot = "Copy fonts to folder...";
+        FontCollectorCopyFontsToSeFontsFolder = "Copy to font collector";
+        FontCollectorImportFontDotDotDot = "Import font...";
+        FontCollectorDeleteFontXPrompt = "Delete font file \"{0}\"?";
+        FontCollectorCurrentSubtitle = "Current subtitle";
+        FontCollectorOpenFontsFolder = "Open SE's Fonts folder...";
+        Attachments = "Attachments";
         FontCollectorNoFontsToCopy = "No font files found to copy.";
         FontCollectorXFontFilesCopiedToY = "{0} font file(s) copied to {1}";
         ResolutionResamplerTitle = "Change resolution";
@@ -302,9 +284,7 @@ public class LanguageAssa
         // Background Box Generator
         BackgroundBoxGenerator = "ASSA background box generator";
         BackgroundBoxGenerator = "Generate background box";
-        BackgroundBoxPadding = "Padding";
         BackgroundBoxFillWidth = "Fill width";
-        BackgroundBoxBoxColor = "Box color";
         BackgroundBoxRadius = "Radius";
         BackgroundBoxCircle = "Circle";
         BackgroundBoxSpikes = "Spikes";
@@ -317,12 +297,9 @@ public class LanguageAssa
         BackgroundBoxStarburst = "Starburst";
         BackgroundBoxScroll = "Scroll / Parchment";
 
-        StylesTitle = "Advanced Sub Station Alpha styles";
         StylesInFile = "Styles in file";
         StylesSaved = "Styles saved";
-        Category = "Category";
         AllCategories = "[All]";
-        DefaultCategory = "Default";
         NewCategory = "New category...";
         RenameCategory = "Rename category...";
         DeleteCategory = "Delete category";
@@ -366,7 +343,6 @@ public class LanguageAssa
         SpaceIncrease = "Space increase";
         PopIn = "Pop in";
         SpinIn = "Spin in";
-        PlayCurrent = "Play current";
         SetPosition = "Set position";
         Rotation = "Rotation";
         ImageColorPicker = "Image color picker";
@@ -408,10 +384,8 @@ public class LanguageAssa
         AdvancedEffectOldMovieDescription = "Simulates a vintage 35mm film projector with noise, vignette, and scratches";
         AdvancedEffectNeonBurst = "Neon burst";
         AdvancedEffectNeonBurstDescription = "High-energy 'Shorts' style captions with neon bloom glow and scale-in 'pop' animation";
-        AdvancedEffectSettings = "Settings";
         AdvancedEffectSnowFlakeCount = "Flake count";
         AdvancedEffectStarfieldStarCount = "Star count";
-        AdvancedEffectStarfieldSpeed = "Speed";
         AdvancedEffectGlitch = "Glitch";
         AdvancedEffectGlitchDescription = "Digital glitch with chromatic aberration, white flashes and distortion overlays";
         AdvancedEffectBounceIn = "Bounce in";
@@ -420,8 +394,6 @@ public class LanguageAssa
         AdvancedEffectFirefliesDescription = "Warm glowing yellow-amber dots drifting organically across the screen with pulsing glow";
         AdvancedEffectMatrix = "Matrix";
         AdvancedEffectMatrixDescription = "Falling green character columns with subtitle text building letter by letter from the rain";
-        AdvancedEffectAudioBars = "Audio bars (waveform)";
-        AdvancedEffectAudioBarsDescription = "Animated equalizer bars driven by the audio waveform — bars scroll left as a waveform and pulse with the audio";
         AdvancedEffectAudioPulse = "Audio text pulse";
         AdvancedEffectAudioPulseDescription = "Subtitle text glows and pulses with the audio volume — quiet sections show normal text, loud peaks add a coloured halo and slight scale-up";
         AdvancedEffectConfetti = "Confetti burst";
@@ -435,7 +407,6 @@ public class LanguageAssa
         AdvancedEffectFancyKaraokeGlow = "Active word glow";
         AdvancedEffectFancyKaraokeActiveColor = "Active color";
         AdvancedEffectFancyKaraokeInactiveColor = "Inactive color";
-        AdvancedEffectFancyKaraokeInactiveOpacity = "Inactive opacity (0-255)";
         AdvancedEffectWordSpacingPixels = "Spacing (pixels)";
         AdvancedEffectSlowZoomOut = "Slow zoom-out";
         AdvancedEffectSlowZoomOutDescription = "Text starts slightly larger and gently shrinks to normal size over the subtitle duration";
@@ -451,7 +422,6 @@ public class LanguageAssa
         AdvancedEffectSlideInLeftDescription = "Text slides in from off-screen left, holds, then exits back to the left";
         AdvancedEffectSlideInRight = "Slide in from right";
         AdvancedEffectSlideInRightDescription = "Text slides in from off-screen right, holds, then exits back to the right";
-        AdvancedEffectFadeInOut = "Fade in/out";
         AdvancedEffectFadeInOutDescription = "Text fades in at the start and fades out at the end of each subtitle";
         OverrideTagsHistory = "Override tags history";
     }

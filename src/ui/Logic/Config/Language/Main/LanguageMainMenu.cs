@@ -39,9 +39,7 @@ public class LanguageMainMenu
     public string RightToLeftMode { get; set; }
     public string ModifySelectionDotDotDot { get; set; }
 
-
     public string Tools { get; set; }
-    public string ToolsSelectedLines { get; set; }
     public string AdjustDurations { get; set; }
     public string ApplyDurationLimits { get; set; }
     public string BatchConvert { get; set; }
@@ -64,6 +62,7 @@ public class LanguageMainMenu
     public string Renumber { get; set; }
     public string Romanize { get; set; }
     public string RemoveTextForHearingImpaired { get; set; }
+    public string RemoveUnicodeCharacters { get; set; }
     public string ConvertActors { get; set; }
     public string JoinSubtitles { get; set; }
     public string SplitSubtitle { get; set; }
@@ -83,7 +82,6 @@ public class LanguageMainMenu
     public string AssaProperties { get; set; }
     public string AssaAttachments { get; set; }
     public string AssaFontCollector { get; set; }
-
 
     public string SpellCheckTitle { get; set; }
     public string SpellCheck { get; set; }
@@ -117,7 +115,6 @@ public class LanguageMainMenu
     public string ChangeFrameRate { get; set; }
     public string ChangeSpeed { get; set; }
     public string VisualSync { get; set; }
-
 
     public string Options { get; set; }
     public string Settings { get; set; }
@@ -183,7 +180,6 @@ public class LanguageMainMenu
         ModifySelectionDotDotDot = "Modify _selection...";
 
         Tools = "_Tools";
-        ToolsSelectedLines = "_Tools (selected lines)";
         AdjustDurations = "_Adjust durations...";
         ApplyDurationLimits = "Apply duration _limits...";
         AiReview = "AI review...";
@@ -200,6 +196,7 @@ public class LanguageMainMenu
         Renumber = "Renumber...";
         Romanize = "Romanize...";
         RemoveTextForHearingImpaired = "_Remove text for hearing impaired...";
+        RemoveUnicodeCharacters = "Remove/replace _Unicode characters...";
         ConvertActors = "Convert actors...";
         ChangeCasing = "_Change casing...";
         ChangeFormatting = "Change formatting...";

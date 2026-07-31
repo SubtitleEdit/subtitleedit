@@ -100,7 +100,7 @@ internal static class RightToLeftHelper
     /// the items source re-creates the rows; selection and scroll position are
     /// restored.
     /// </summary>
-    internal static void RefreshDataGridBindings(DataGrid? grid, System.Collections.IEnumerable? itemsSource, object? selected)
+    internal static void RefreshDataGridBindings(TableView? grid, System.Collections.IEnumerable? itemsSource, object? selected)
     {
         if (grid == null)
         {
@@ -112,7 +112,7 @@ internal static class RightToLeftHelper
         if (selected != null)
         {
             grid.SelectedItem = selected;
-            grid.ScrollIntoView(selected, null);
+            grid.ScrollIntoView(selected);
         }
     }
 
@@ -138,9 +138,9 @@ internal static class RightToLeftHelper
             return;
         }
 
-        if (visual is DataGrid dataGrid)
+        if (visual is TableView tableView)
         {
-            dataGrid.FlowDirection = flowDirection;
+            tableView.FlowDirection = flowDirection;
         }
         else if (visual is Grid grid && grid.Name == "SubtitleTextEditGrid")
         {

@@ -64,7 +64,7 @@ public partial class CutVideoViewModel : ObservableObject
     public bool OkPressed { get; private set; }
     public VideoPlayerControl VideoPlayer { get; internal set; }
     public AudioVisualizer AudioVisualizer { get; internal set; }
-    public DataGrid SegmentGrid { get; internal set; }
+    public TableView SegmentGrid { get; internal set; }
 
     private Subtitle _subtitle = new();
     private readonly StringBuilder _log;
@@ -122,7 +122,7 @@ public partial class CutVideoViewModel : ObservableObject
         JobItems = new ObservableCollection<BurnInJobItem>();
         VideoPlayer = new VideoPlayerControl(new EmptyVideoPlayer());
         AudioVisualizer = new AudioVisualizer();
-        SegmentGrid = new DataGrid();
+        SegmentGrid = new TableView();
         Segments = new ObservableCollection<SubtitleLineViewModel>();
         VideoFileName = string.Empty;
         VideoFileSize = string.Empty;
@@ -668,7 +668,7 @@ public partial class CutVideoViewModel : ObservableObject
     [RelayCommand]
     private void Delete()
     {
-        var selectedSegments = SegmentGrid.SelectedItems.Cast<SubtitleLineViewModel>().ToList();
+        var selectedSegments = SegmentGrid.SelectedItems?.Cast<SubtitleLineViewModel>().ToList() ?? new List<SubtitleLineViewModel>();
         if (selectedSegments.Count == 0)
         {
             return;
@@ -716,7 +716,7 @@ public partial class CutVideoViewModel : ObservableObject
         }
 
         var outputVideoFileName = MakeOutputFileName(VideoFileName);
-        outputVideoFileName = await _fileHelper.PickSaveFile(Window!, SelectedVideoExtension, outputVideoFileName, Se.Language.Video.SaveVideoAsTitle);
+        outputVideoFileName = await _fileHelper.PickSaveFile(Window!, SelectedVideoExtension, outputVideoFileName, Se.Language.General.SaveVideoAsVideoTitle);
         if (string.IsNullOrEmpty(outputVideoFileName))
         {
             return;
@@ -800,7 +800,7 @@ public partial class CutVideoViewModel : ObservableObject
                 _ = Cancel();
                 return;
             }
-            else if (keyEventArgs.Key == Key.F1)
+            else if (UiUtil.IsHelp(keyEventArgs))
             {
                 keyEventArgs.Handled = true;
                 UiUtil.ShowHelp("features/cut-video");
@@ -830,7 +830,9 @@ public partial class CutVideoViewModel : ObservableObject
                 return;
             }
 
-            if (SegmentGrid.IsFocused)
+            // Focus sits on the TableView row container (the DataGrid took focus itself),
+            // so check for focus anywhere inside the grid.
+            if (SegmentGrid.IsKeyboardFocusWithin)
             {
                 if (keyEventArgs.Key == Key.Home && keyEventArgs.KeyModifiers == KeyModifiers.None && Segments.Count > 0)
                 {
@@ -980,7 +982,10 @@ public partial class CutVideoViewModel : ObservableObject
         Dispatcher.UIThread.Post(() =>
         {
             SegmentGrid.SelectedIndex = index;
-            SegmentGrid.ScrollIntoView(SegmentGrid.SelectedItem, null);
+            if (SegmentGrid.SelectedItem is { } selectedItem)
+            {
+                SegmentGrid.ScrollIntoView(selectedItem);
+            }
             UpdateSelection();
         }, DispatcherPriority.Background);
     }
@@ -993,8 +998,8 @@ public partial class CutVideoViewModel : ObservableObject
     private void UpdateSelection()
     {
         IsDeleteEnabled = SelectedSegment != null;
-        IsSetStartEnabled = SegmentGrid.SelectedItems.Count == 1;
-        IsSetEndEnabled = SegmentGrid.SelectedItems.Count == 1;
+        IsSetStartEnabled = SegmentGrid.SelectedItems?.Count == 1;
+        IsSetEndEnabled = SegmentGrid.SelectedItems?.Count == 1;
     }
 
     internal void SegmentsGridDoubleTapped(object? sender, TappedEventArgs e)

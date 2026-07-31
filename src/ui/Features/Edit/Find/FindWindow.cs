@@ -37,10 +37,9 @@ public class FindWindow : Window
         // SE4-style "most recent find text" dropdown: the AutoCompleteBox only reveals history
         // while typing a matching prefix, so recent searches were invisible until this button.
         var historyFlyout = new MenuFlyout();
-        var buttonHistory = UiUtil.MakeButton(null, IconNames.History);
+        var buttonHistory = UiUtil.MakeButton(null, IconNames.History, Se.Language.General.ShowHistory);
         buttonHistory.Margin = new Thickness(3, 0, 0, 3);
         buttonHistory.Flyout = historyFlyout;
-        ToolTip.SetTip(buttonHistory, Se.Language.General.ShowHistory);
 
         // The items must exist BEFORE the flyout opens: items added from the Opening
         // event come too late for the popup's initial measure, so the menu displayed
@@ -89,7 +88,7 @@ public class FindWindow : Window
 
         var radioButtonCaseSensitive = new RadioButton
         {
-            Content = Se.Language.Edit.Find.CaseSensitive,
+            Content = Se.Language.General.CaseSensitive,
             VerticalAlignment = VerticalAlignment.Center,
             [!RadioButton.IsCheckedProperty] = new Binding(nameof(vm.FindMode))
             {
@@ -101,7 +100,7 @@ public class FindWindow : Window
 
         var radioButtonCaseInsensitive = new RadioButton
         {
-            Content = Se.Language.Edit.Find.CaseInsensitive,
+            Content = Se.Language.General.CaseInsensitive,
             VerticalAlignment = VerticalAlignment.Center,
             [!RadioButton.IsCheckedProperty] = new Binding(nameof(vm.FindMode))
             {

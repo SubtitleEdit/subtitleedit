@@ -45,7 +45,8 @@ public class AssaResolutionResamplerWindow : Window
             Se.Language.Assa.ResolutionResamplerSourceRes,
             nameof(vm.SourceWidth),
             nameof(vm.SourceHeight),
-            vm.SourceFromVideoCommand);
+            vm.SourceFromVideoCommand,
+            out var sourceWidthBox);
         Grid.SetRow(sourcePanel, 0);
         grid.Children.Add(sourcePanel);
 
@@ -54,7 +55,8 @@ public class AssaResolutionResamplerWindow : Window
             Se.Language.Assa.ResolutionResamplerTargetRes,
             nameof(vm.TargetWidth),
             nameof(vm.TargetHeight),
-            vm.TargetFromVideoCommand);
+            vm.TargetFromVideoCommand,
+            out _);
         Grid.SetRow(targetPanel, 1);
         grid.Children.Add(targetPanel);
 
@@ -72,11 +74,12 @@ public class AssaResolutionResamplerWindow : Window
 
         Content = grid;
 
-        Activated += delegate { buttonOk.Focus(); };
+        // initial focus on an input, not an action button - a focused button clicks on bare Space
+        Activated += delegate { sourceWidthBox.Focus(); };
         KeyDown += vm.KeyDown;
     }
 
-    private static Border CreateResolutionPanel(string title, string widthBinding, string heightBinding, System.Windows.Input.ICommand fromVideoCommand)
+    private static Border CreateResolutionPanel(string title, string widthBinding, string heightBinding, System.Windows.Input.ICommand fromVideoCommand, out NumericUpDown firstInput)
     {
         var panelGrid = new Grid
         {
@@ -127,6 +130,7 @@ public class AssaResolutionResamplerWindow : Window
             FormatString = "0",
             [!NumericUpDown.ValueProperty] = new Binding(widthBinding) { Mode = BindingMode.TwoWay },
         };
+        firstInput = widthBox;
         Grid.SetRow(widthBox, 1);
         Grid.SetColumn(widthBox, 1);
         panelGrid.Children.Add(widthBox);

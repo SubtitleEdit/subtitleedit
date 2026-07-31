@@ -91,7 +91,12 @@ public partial class PointSyncViaOtherViewModel : ObservableObject
             return;
         }
 
-        var leftTime = value.StartTime;
+        // Compare in original-time space: sync points store original left times, and the
+        // grid line may show previewed times after "Apply" (#12942).
+        var leftIndexInGrid = Subtitles.IndexOf(value);
+        var leftTime = leftIndexInGrid >= 0 && leftIndexInGrid < _originalSubtitles.Count
+            ? _originalSubtitles[leftIndexInGrid].StartTime
+            : value.StartTime;
         SyncPoint? nearestPoint = null;
         var nearestDistance = TimeSpan.MaxValue;
         foreach (var syncPoint in SyncPoints)
@@ -191,8 +196,12 @@ public partial class PointSyncViaOtherViewModel : ObservableObject
             return;
         }
 
+        // Sync points are applied to the original timings, so the left time must come from
+        // the original line - the grid line may already show previewed times after "Apply",
+        // which would bake the previous offset into the new point (#12942).
+        var leftIndex = Subtitles.IndexOf(left);
         var syncPoint = new SyncPoint(
-            left, Subtitles.IndexOf(left),
+            _originalSubtitles[leftIndex], leftIndex,
             right, Othersubtitles.IndexOf(right));
 
         // A line has at most one sync point (setting it again re-points it), and the list

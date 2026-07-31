@@ -121,6 +121,7 @@ using Nikse.SubtitleEdit.Features.Tools.BridgeGaps;
 using Nikse.SubtitleEdit.Features.Tools.ChangeCasing;
 using Nikse.SubtitleEdit.Features.Tools.ChangeFormatting;
 using Nikse.SubtitleEdit.Features.Tools.ConvertActors;
+using Nikse.SubtitleEdit.Features.Tools.RemoveUnicodeCharacters;
 using Nikse.SubtitleEdit.Features.Tools.AiReview;
 using Nikse.SubtitleEdit.Features.Tools.FixCommonErrors;
 using Nikse.SubtitleEdit.Features.Tools.FixNetflixErrors;
@@ -277,6 +278,8 @@ public partial class MainViewModel :
     [ObservableProperty] private string _setVideoOffsetText;
     [ObservableProperty] private bool _isVideoOffsetVisible;
     [ObservableProperty] private bool _isAudioTracksVisible;
+    [ObservableProperty] private ObservableCollection<WaveformAudioTrackItem> _waveformAudioTracks;
+    [ObservableProperty] private WaveformAudioTrackItem? _selectedWaveformAudioTrack;
     [ObservableProperty] private bool _isWaveformGenerating;
     [ObservableProperty] private string _waveformGeneratingText;
     [ObservableProperty] private bool _isFilePropertiesVisible;
@@ -286,7 +289,13 @@ public partial class MainViewModel :
     [ObservableProperty] private string _surroundWith3Text;
     [ObservableProperty] private bool _isSubtitleSecondaryVisible;
 
-    public DataGrid SubtitleGrid { get; set; }
+    public TableView SubtitleGrid { get; set; }
+
+    // ListBox.SelectedItems is nullable (IList?) where DataGrid's was not; the grid
+    // always provides one, so this non-null view keeps the many call sites tidy.
+    public System.Collections.IList SubtitleGridSelectedItems => SubtitleGrid.SelectedItems!;
+    public TableViewColumnManager? SubtitleGridColumnManager { get; set; }
+    public TableViewDragSelect? SubtitleGridDragSelect { get; set; }
     public Border? SubtitleGridDropHost { get; set; }
     public SolidColorBrush? SubtitleGridAlternatingRowBrush { get; set; }
     public Window? Window { get; set; }
@@ -462,6 +471,8 @@ public partial class MainViewModel :
     public MenuItem MenuItemAudioVisualizerSpeechToTextSelectedLines { get; set; }
     public MenuItem MenuItemAudioVisualizerSpeechToTextNewSelection { get; set; }
     public MenuItem MenuItemAudioVisualizerExtractAudio { get; set; }
+    public MenuItem MenuItemAudioVisualizerCopy { get; set; }
+    public MenuItem MenuItemAudioVisualizerCopyText { get; set; }
     public ITextBoxWrapper EditTextBoxOriginal { get; set; }
     public ITextBoxWrapper EditTextBox { get; set; }
     public StackPanel PanelSingleLineLengthsOriginal { get; set; }
@@ -541,7 +552,7 @@ public partial class MainViewModel :
         EditTextTotalLength = string.Empty;
         EditTextTotalLengthBackground = Brushes.Transparent;
         StatusTextLeftLabel = new TextBlock();
-        SubtitleGrid = new DataGrid();
+        SubtitleGrid = new TableView();
         EditTextBox = new TextBoxWrapper(new TextBox());
         ContentGrid = new Grid();
         MenuReopen = new MenuItem();
@@ -569,6 +580,8 @@ public partial class MainViewModel :
         MenuItemAudioVisualizerSpeechToTextSelectedLines = new MenuItem();
         MenuItemAudioVisualizerSpeechToTextNewSelection = new MenuItem();
         MenuItemAudioVisualizerExtractAudio = new MenuItem();
+        MenuItemAudioVisualizerCopy = new MenuItem();
+        MenuItemAudioVisualizerCopyText = new MenuItem();
         MenuItemStyles = new MenuItem();
         MenuItemActors = new MenuItem();
         AudioTraksMenuItem = new MenuItem();
@@ -659,6 +672,8 @@ public partial class MainViewModel :
         VideoSeekAmounts = new ObservableCollection<string>();
         SelectedVideoSeekAmount = string.Empty;
         RefreshVideoSeekAmounts();
+
+        WaveformAudioTracks = new ObservableCollection<WaveformAudioTrackItem>();
 
         VideoOffsetText = string.Empty;
         SetVideoOffsetText = Se.Language.Main.Menu.SetVideoOffset;
@@ -942,7 +957,7 @@ public partial class MainViewModel :
         }
 
         SelectAndScrollToRow(Math.Max(0, idx));
-        Dispatcher.UIThread.Post(() => SubtitleGrid.Focus());
+        Dispatcher.UIThread.Post(() => TableViewExtras.FocusRow(SubtitleGrid));
         RefreshSubtitlePreview();
 
         if (!string.IsNullOrEmpty(_videoFileName))
@@ -1068,7 +1083,7 @@ public partial class MainViewModel :
             return;
         }
 
-        var selectedItems = SubtitleGrid.SelectedItems.Cast<SubtitleLineViewModel>().OrderBy(p => p.StartTime).ToList();
+        var selectedItems = SubtitleGridSelectedItems.Cast<SubtitleLineViewModel>().OrderBy(p => p.StartTime).ToList();
         SubtitleLineViewModel? next;
         if (selectedItems.Count > 0)
         {
@@ -1093,7 +1108,7 @@ public partial class MainViewModel :
         // deferred selection would null _playSelectionItem *after* we set it and break stop/loop.
         // Change selection first, then assign _playSelectionItem.
         SubtitleGrid.SelectedItem = next;
-        SubtitleGrid.ScrollIntoView(next, null);
+        SubtitleGrid.ScrollIntoView(next);
         vp.Position = next.StartTime.TotalSeconds;
         PinPlayheadTo(next.StartTime.TotalSeconds);
         _playSelectionItem = new PlaySelectionItem(new List<SubtitleLineViewModel> { next }, next.EndTime, loop);
@@ -1144,7 +1159,7 @@ public partial class MainViewModel :
             return;
         }
 
-        var selectedItems = SubtitleGrid.SelectedItems.Cast<SubtitleLineViewModel>().OrderBy(p => p.StartTime).ToList();
+        var selectedItems = SubtitleGridSelectedItems.Cast<SubtitleLineViewModel>().OrderBy(p => p.StartTime).ToList();
         SubtitleLineViewModel? previous;
         if (selectedItems.Count > 0)
         {
@@ -1169,7 +1184,7 @@ public partial class MainViewModel :
         // deferred selection would null _playSelectionItem *after* we set it and break stop/loop.
         // Mirror PlayNextParagraph — change selection first, then assign _playSelectionItem.
         SubtitleGrid.SelectedItem = previous;
-        SubtitleGrid.ScrollIntoView(previous, null);
+        SubtitleGrid.ScrollIntoView(previous);
         vp.Position = previous.StartTime.TotalSeconds;
         PinPlayheadTo(previous.StartTime.TotalSeconds);
         _playSelectionItem = new PlaySelectionItem(new List<SubtitleLineViewModel> { previous }, previous.EndTime, loop);
@@ -1263,7 +1278,7 @@ public partial class MainViewModel :
     [RelayCommand]
     private async Task ShowHelp()
     {
-        UiUtil.ShowHelp("index");
+        UiUtil.ShowHelp("features/main-window");
     }
 
     [RelayCommand]
@@ -1515,7 +1530,7 @@ public partial class MainViewModel :
             return;
         }
 
-        var selectedItems = SubtitleGrid.SelectedItems.Cast<SubtitleLineViewModel>().ToList();
+        var selectedItems = SubtitleGridSelectedItems.Cast<SubtitleLineViewModel>().ToList();
 
         SetAssaResolution(false);
 
@@ -1632,7 +1647,7 @@ public partial class MainViewModel :
             return;
         }
 
-        var selectedItems = SubtitleGrid.SelectedItems.Cast<SubtitleLineViewModel>().ToList();
+        var selectedItems = SubtitleGridSelectedItems.Cast<SubtitleLineViewModel>().ToList();
         if (selectedItems.Count == 0)
         {
             return;
@@ -1734,7 +1749,7 @@ public partial class MainViewModel :
         var result = await ShowDialogAsync<AssaApplyAdvancedEffectWindow, AssaApplyAdvancedEffectViewModel>(vm =>
         {
             var paragraphs = Subtitles.Select(p => new SubtitleLineViewModel(p)).ToList();
-            var selectedParagraphs = SubtitleGrid.SelectedItems.Cast<SubtitleLineViewModel>().ToList();
+            var selectedParagraphs = SubtitleGridSelectedItems.Cast<SubtitleLineViewModel>().ToList();
             vm.Initialize(GetUpdateSubtitle(), paragraphs, selectedParagraphs, _videoFileName, _mediaInfo, AudioVisualizer);
         });
 
@@ -1750,7 +1765,7 @@ public partial class MainViewModel :
         var result = await ShowDialogAsync<AssaApplyCustomOverrideTagsWindow, AssaApplyCustomOverrideTagsViewModel>(vm =>
         {
             var paragraphs = Subtitles.Select(p => new SubtitleLineViewModel(p)).ToList();
-            var selectedParagraphs = SubtitleGrid.SelectedItems.Cast<SubtitleLineViewModel>().ToList();
+            var selectedParagraphs = SubtitleGridSelectedItems.Cast<SubtitleLineViewModel>().ToList();
             vm.Initialize(paragraphs, selectedParagraphs, _videoFileName);
         });
 
@@ -3624,7 +3639,7 @@ public partial class MainViewModel :
             return;
         }
 
-        var selectedItems = SubtitleGrid.SelectedItems.Cast<SubtitleLineViewModel>().ToList();
+        var selectedItems = SubtitleGridSelectedItems.Cast<SubtitleLineViewModel>().ToList();
         if (selectedItems.Count != 1)
         {
             return;
@@ -3860,7 +3875,7 @@ public partial class MainViewModel :
     [RelayCommand]
     private async Task RecalculateDurationSelectedLines()
     {
-        var selectedLines = SubtitleGrid.SelectedItems.Cast<SubtitleLineViewModel>().ToList();
+        var selectedLines = SubtitleGridSelectedItems.Cast<SubtitleLineViewModel>().ToList();
         if (selectedLines.Count == 0)
         {
             return;
@@ -3913,7 +3928,7 @@ public partial class MainViewModel :
     [RelayCommand]
     private void SetDurationMaxCpsSelectedLines()
     {
-        var selectedLines = SubtitleGrid.SelectedItems.Cast<SubtitleLineViewModel>().ToList();
+        var selectedLines = SubtitleGridSelectedItems.Cast<SubtitleLineViewModel>().ToList();
         if (selectedLines.Count == 0)
         {
             return;
@@ -4039,7 +4054,7 @@ public partial class MainViewModel :
     [RelayCommand]
     private async Task ShowPickLayer()
     {
-        var selectedItems = SubtitleGrid.SelectedItems.Cast<SubtitleLineViewModel>().ToList();
+        var selectedItems = SubtitleGridSelectedItems.Cast<SubtitleLineViewModel>().ToList();
         if (Window == null || AudioVisualizer?.WavePeaks == null || selectedItems.Count == 0)
         {
             return;
@@ -4104,7 +4119,7 @@ public partial class MainViewModel :
     [RelayCommand]
     private void ColumnDeleteText()
     {
-        var selectedItems = SubtitleGrid.SelectedItems.Cast<SubtitleLineViewModel>().ToList();
+        var selectedItems = SubtitleGridSelectedItems.Cast<SubtitleLineViewModel>().ToList();
         if (Window == null || selectedItems.Count == 0)
         {
             return;
@@ -4122,7 +4137,7 @@ public partial class MainViewModel :
     [RelayCommand]
     private void ColumnDeleteTextAndShiftCellsUp()
     {
-        var selectedItems = SubtitleGrid.SelectedItems.Cast<SubtitleLineViewModel>().ToList();
+        var selectedItems = SubtitleGridSelectedItems.Cast<SubtitleLineViewModel>().ToList();
         if (Window == null || selectedItems.Count == 0)
         {
             return;
@@ -4173,7 +4188,7 @@ public partial class MainViewModel :
     [RelayCommand]
     private void ColumnInsertEmptyTextAndShiftCellsDown()
     {
-        var selectedItems = SubtitleGrid.SelectedItems.Cast<SubtitleLineViewModel>().ToList();
+        var selectedItems = SubtitleGridSelectedItems.Cast<SubtitleLineViewModel>().ToList();
         if (Window == null || selectedItems.Count == 0)
         {
             return;
@@ -4279,7 +4294,7 @@ public partial class MainViewModel :
     [RelayCommand]
     private async Task ColumnCopyTextFromOriginalToCurrent()
     {
-        var selectedItems = SubtitleGrid.SelectedItems.Cast<SubtitleLineViewModel>().ToList();
+        var selectedItems = SubtitleGridSelectedItems.Cast<SubtitleLineViewModel>().ToList();
         if (!ShowColumnOriginalText || selectedItems.Count == 0)
         {
             return;
@@ -4395,7 +4410,7 @@ public partial class MainViewModel :
     [RelayCommand]
     private void ColumnTextUp()
     {
-        var selectedItems = SubtitleGrid.SelectedItems.Cast<SubtitleLineViewModel>().ToList();
+        var selectedItems = SubtitleGridSelectedItems.Cast<SubtitleLineViewModel>().ToList();
         if (Window == null || selectedItems.Count == 0)
         {
             return;
@@ -4459,7 +4474,7 @@ public partial class MainViewModel :
     [RelayCommand]
     private void ColumnTextDown()
     {
-        var selectedItems = SubtitleGrid.SelectedItems.Cast<SubtitleLineViewModel>().ToList();
+        var selectedItems = SubtitleGridSelectedItems.Cast<SubtitleLineViewModel>().ToList();
         if (Window == null || selectedItems.Count == 0)
         {
             return;
@@ -4574,7 +4589,7 @@ public partial class MainViewModel :
     [RelayCommand]
     private async Task CutVideoSelectedLines()
     {
-        var selectedItems = SubtitleGrid.SelectedItems.Cast<SubtitleLineViewModel>().ToList();
+        var selectedItems = SubtitleGridSelectedItems.Cast<SubtitleLineViewModel>().ToList();
         if (Window == null || selectedItems.Count == 0)
         {
             return;
@@ -4915,7 +4930,7 @@ public partial class MainViewModel :
     [RelayCommand]
     private void CopyTextFromOriginalToTranslation()
     {
-        var selectedItems = SubtitleGrid.SelectedItems.Cast<SubtitleLineViewModel>().ToList();
+        var selectedItems = SubtitleGridSelectedItems.Cast<SubtitleLineViewModel>().ToList();
         if (Window == null || selectedItems.Count == 0 || !ShowColumnOriginalText)
         {
             return;
@@ -4945,7 +4960,7 @@ public partial class MainViewModel :
     [RelayCommand]
     private void SwitchOriginalAndTranslationTextSelectedLines()
     {
-        var selectedItems = SubtitleGrid.SelectedItems.Cast<SubtitleLineViewModel>().ToList();
+        var selectedItems = SubtitleGridSelectedItems.Cast<SubtitleLineViewModel>().ToList();
         if (Window == null || selectedItems.Count == 0 || !ShowColumnOriginalText)
         {
             return;
@@ -4975,7 +4990,7 @@ public partial class MainViewModel :
     [RelayCommand]
     private void MergeOriginalIntoTranslationSelectedLines()
     {
-        var selectedItems = SubtitleGrid.SelectedItems.Cast<SubtitleLineViewModel>().ToList();
+        var selectedItems = SubtitleGridSelectedItems.Cast<SubtitleLineViewModel>().ToList();
         if (Window == null || selectedItems.Count == 0 || !ShowColumnOriginalText)
         {
             return;
@@ -5005,7 +5020,7 @@ public partial class MainViewModel :
     [RelayCommand]
     private async Task CopyTextFromOriginalToClipboard()
     {
-        var selectedItems = SubtitleGrid.SelectedItems.Cast<SubtitleLineViewModel>().ToList();
+        var selectedItems = SubtitleGridSelectedItems.Cast<SubtitleLineViewModel>().ToList();
         if (Window == null || selectedItems.Count == 0 || !ShowColumnOriginalText)
         {
             return;
@@ -5031,7 +5046,7 @@ public partial class MainViewModel :
     [RelayCommand]
     private async Task CopyTextToClipboard()
     {
-        var selectedItems = SubtitleGrid.SelectedItems.Cast<SubtitleLineViewModel>().ToList();
+        var selectedItems = SubtitleGridSelectedItems.Cast<SubtitleLineViewModel>().ToList();
         if (Window == null || selectedItems.Count == 0)
         {
             return;
@@ -5052,6 +5067,39 @@ public partial class MainViewModel :
         await ClipboardHelper.SetTextAsync(Window, sb.ToString());
 
         ShowStatus(string.Format("{0} lines copied to clipboard", selectedItems.Count));
+    }
+
+    /// <summary>
+    /// Copies the currently selected subtitle (the one shown in the edit box and highlighted on
+    /// the waveform) to the clipboard as a whole line in the current subtitle format, like copy
+    /// in the subtitle grid. Wired to Ctrl+C while the waveform is focused and to the waveform
+    /// context menu's "Copy subtitle" item.
+    /// </summary>
+    [RelayCommand]
+    private async Task WaveformCopyToClipboard()
+    {
+        var selectedSubtitle = SelectedSubtitle;
+        if (Window == null || selectedSubtitle == null)
+        {
+            return;
+        }
+
+        // Same serialized form as copy in the subtitle grid, so timing survives a paste.
+        await SubtitleGridCopyPasteHelper.Copy(Window, new List<SubtitleLineViewModel> { selectedSubtitle }, SelectedSubtitleFormat, _subtitle);
+        _shortcutManager.ClearKeys();
+    }
+
+    [RelayCommand]
+    private async Task WaveformCopyTextToClipboard()
+    {
+        var selectedSubtitle = SelectedSubtitle;
+        if (Window == null || selectedSubtitle == null)
+        {
+            return;
+        }
+
+        await ClipboardHelper.SetTextAsync(Window, selectedSubtitle.Text);
+        _shortcutManager.ClearKeys();
     }
 
     [RelayCommand]
@@ -5272,6 +5320,29 @@ public partial class MainViewModel :
         }
     }
 
+    [RelayCommand]
+    private async Task ShowToolsRemoveUnicodeCharacters()
+    {
+        if (Window == null)
+        {
+            return;
+        }
+
+        if (IsEmpty)
+        {
+            ShowSubtitleNotLoadedMessage();
+            return;
+        }
+
+        var idx = SelectedSubtitleIndex ?? 0;
+        var result = await ShowDialogAsync<RemoveUnicodeCharactersWindow, RemoveUnicodeCharactersViewModel>(vm => { vm.Initialize(Subtitles.ToList()); });
+
+        if (result.OkPressed)
+        {
+            ApplyFixedSubtitle(result.FixedSubtitle, idx);
+        }
+    }
+
     public IReadOnlyList<InstalledPlugin> GetInstalledPlugins()
     {
         try
@@ -5386,9 +5457,9 @@ public partial class MainViewModel :
     private List<int> GetSelectedSubtitleIndices()
     {
         var selectedIndices = new List<int>();
-        if (SubtitleGrid.SelectedItems != null)
+        if (SubtitleGridSelectedItems != null)
         {
-            foreach (var item in SubtitleGrid.SelectedItems.Cast<SubtitleLineViewModel>())
+            foreach (var item in SubtitleGridSelectedItems.Cast<SubtitleLineViewModel>())
             {
                 var index = Subtitles.IndexOf(item);
                 if (index >= 0)
@@ -5945,8 +6016,70 @@ public partial class MainViewModel :
             }
 
             _updateAudioVisualizer = true;
-            LoadWaveformAndSpectrogram(_videoFileName);
+
+            // Explicit track pick: show this track's waveform now - from cache if present, else
+            // extract it (regardless of the auto-generate-on-open setting).
+            LoadWaveformAndSpectrogram(_videoFileName, forceGenerate: true);
         }
+    }
+
+    // Set while the waveform toolbar's audio-track combo box is being repopulated/synced in code,
+    // so the resulting SelectedItem change doesn't re-trigger a track switch + waveform regeneration.
+    private bool _suppressWaveformAudioTrackChange;
+
+    partial void OnSelectedWaveformAudioTrackChanged(WaveformAudioTrackItem? value)
+    {
+        if (_suppressWaveformAudioTrackChange || value?.Track == null)
+        {
+            return;
+        }
+
+        // No-op if the user picked the track that's already active.
+        if (value.Track.FfIndex == (_audioTrack?.FfIndex ?? -1))
+        {
+            return;
+        }
+
+        PickAudioTrack(value.Track);
+    }
+
+    // Builds the picker label for one audio track, e.g. "TrueHD 7.1 [eng] · ~5 min".
+    private static string BuildAudioTrackDisplay(AudioTrackInfo track, double mediaDurationSeconds)
+    {
+        var parts = new List<string>();
+
+        // Prefer the embedded track title (e.g. "TrueHD Atmos") when present, else the codec name.
+        var name = !string.IsNullOrWhiteSpace(track.Title)
+            ? track.Title!.Trim()
+            : WaveformExtractionEstimate.GetCodecDisplayName(track.Codec);
+        if (string.IsNullOrEmpty(name))
+        {
+            name = string.Format(Se.Language.Main.AudioTrackX, track.Id);
+        }
+
+        parts.Add(name);
+
+        var layout = WaveformExtractionEstimate.GetChannelLayoutLabel(track.Channels);
+        if (!string.IsNullOrEmpty(layout))
+        {
+            parts.Add(layout);
+        }
+
+        if (!string.IsNullOrWhiteSpace(track.Language))
+        {
+            parts.Add($"[{track.Language}]");
+        }
+
+        var label = string.Join(" ", parts);
+
+        var estimate = WaveformExtractionEstimate.Format(
+            WaveformExtractionEstimate.EstimateSeconds(track.Codec, mediaDurationSeconds));
+        if (!string.IsNullOrEmpty(estimate))
+        {
+            label += $" · {estimate}";
+        }
+
+        return label;
     }
 
     [RelayCommand]
@@ -6445,7 +6578,7 @@ public partial class MainViewModel :
 
     private async Task<bool> SpeechToTextSelectedLines(bool promptEngineAndLanguage, string? language)
     {
-        var selectedItems = SubtitleGrid.SelectedItems.Cast<SubtitleLineViewModel>().ToList();
+        var selectedItems = SubtitleGridSelectedItems.Cast<SubtitleLineViewModel>().ToList();
         if (Window == null || selectedItems.Count == 0 || string.IsNullOrEmpty(_videoFileName))
         {
             return false;
@@ -6565,7 +6698,7 @@ public partial class MainViewModel :
 
     private bool PlayerSelectedLines(bool loop)
     {
-        var selectedItems = SubtitleGrid.SelectedItems.Cast<SubtitleLineViewModel>().OrderBy(p => p.StartTime).ToList();
+        var selectedItems = SubtitleGridSelectedItems.Cast<SubtitleLineViewModel>().OrderBy(p => p.StartTime).ToList();
         var vp = GetVideoPlayerControl();
         if (Window == null || selectedItems.Count == 0 || vp == null)
         {
@@ -6628,35 +6761,33 @@ public partial class MainViewModel :
             }
         }
 
-        var ytDlpUpdatedFromUrlWindow = false;
+        var ytDlpUpdatePromptShown = false;
+        var urlWindowOpen = true;
         var result = await ShowDialogAsync<OpenFromUrlWindow, OpenFromUrlViewModel>(vm =>
         {
-            // Reuse the existing install/update prompt for the window's manual
-            // "Download yt-dlp" button. Pick the message by current install state
-            // and own the dialogs off the URL window so they nest correctly.
-            vm.DownloadOrUpdateYtDlpRequested = async () =>
-            {
-                var message = File.Exists(YtDlpDownloadService.GetFullFileName())
-                    ? Se.Language.Main.YoutubeDlOutdatedDownloadNow
-                    : Se.Language.Main.YoutubeDlNotInstalledDownloadNow;
-                if (await PromptToDownloadYtDlp(message, vm.Window))
-                {
-                    vm.IsDownloadYtDlpVisible = false;
-                    ytDlpUpdatedFromUrlWindow = true;
-                }
-            };
-
-            // Only surface the "Download yt-dlp" button when the background
-            // version check finds the install outdated — with the latest version
-            // already on disk there is nothing to download.
+            // When the background version check finds the install outdated, offer
+            // the update via a message box over the URL window right away. The
+            // update is optional — declining leaves the dialog fully usable.
             outdatedCheckTask?.ContinueWith(t =>
             {
                 if (t.Status == TaskStatus.RanToCompletion && t.Result)
                 {
-                    Dispatcher.UIThread.Post(() => vm.IsDownloadYtDlpVisible = true);
+                    Dispatcher.UIThread.Post(async () =>
+                    {
+                        // The check may finish after the user already closed the
+                        // URL window — then the post-dialog path below owns the prompt.
+                        if (!urlWindowOpen || vm.Window is not { } urlWindow)
+                        {
+                            return;
+                        }
+
+                        ytDlpUpdatePromptShown = true;
+                        await PromptToDownloadYtDlp(Se.Language.Main.YoutubeDlOutdatedDownloadNow, urlWindow);
+                    });
                 }
             }, TaskScheduler.Default);
         });
+        urlWindowOpen = false;
 
         if (!result.OkPressed || result.SelectedMode is null)
         {
@@ -6701,9 +6832,9 @@ public partial class MainViewModel :
         // If a newer yt-dlp is available, offer the upgrade — but open the video
         // regardless of the user's choice. The installed binary still works, so a
         // declined or failed update must not abort the open. Skip the prompt when
-        // the user already updated via the URL window's button — the background
-        // check result predates that update.
-        if (isOutdated && !ytDlpUpdatedFromUrlWindow)
+        // it was already shown over the URL window — asking twice is noise, and
+        // the background check result predates any update made there.
+        if (isOutdated && !ytDlpUpdatePromptShown)
         {
             await PromptToDownloadYtDlp(Se.Language.Main.YoutubeDlOutdatedDownloadNow);
         }
@@ -6955,7 +7086,7 @@ public partial class MainViewModel :
         }
 
         var suggestedName = await MakeDownloadSuggestedFileNameAsync(url);
-        var outputPath = await _fileHelper.PickSaveFile(Window, ".mkv", suggestedName, Se.Language.Video.OpenFromUrlSaveAs);
+        var outputPath = await _fileHelper.PickSaveFile(Window, ".mkv", suggestedName, Se.Language.General.SaveVideoAsVideoTitle);
         if (string.IsNullOrEmpty(outputPath))
         {
             return;
@@ -7579,7 +7710,7 @@ public partial class MainViewModel :
     [RelayCommand]
     private void ExtendSelectedLinesToNextShotChangeOrNextSubtitle()
     {
-        var selectedLines = SubtitleGrid.SelectedItems.Cast<SubtitleLineViewModel>().OrderBy(p => p.StartTime).ToList();
+        var selectedLines = SubtitleGridSelectedItems.Cast<SubtitleLineViewModel>().OrderBy(p => p.StartTime).ToList();
         var vp = GetVideoPlayerControl();
         if (string.IsNullOrEmpty(_videoFileName) ||
             vp == null ||
@@ -7641,7 +7772,7 @@ public partial class MainViewModel :
     [RelayCommand]
     private void SnapSelectedLinesToNearestShotChange()
     {
-        var selectedLines = SubtitleGrid.SelectedItems.Cast<SubtitleLineViewModel>().OrderBy(p => p.StartTime).ToList();
+        var selectedLines = SubtitleGridSelectedItems.Cast<SubtitleLineViewModel>().OrderBy(p => p.StartTime).ToList();
         var vp = GetVideoPlayerControl();
         if (string.IsNullOrEmpty(_videoFileName) ||
             vp == null ||
@@ -7726,7 +7857,7 @@ public partial class MainViewModel :
     [RelayCommand]
     private void ExtendSelectedLinesToPreviousShotChange()
     {
-        var selectedLines = SubtitleGrid.SelectedItems.Cast<SubtitleLineViewModel>().OrderBy(p => p.StartTime).ToList();
+        var selectedLines = SubtitleGridSelectedItems.Cast<SubtitleLineViewModel>().OrderBy(p => p.StartTime).ToList();
         var vp = GetVideoPlayerControl();
         if (string.IsNullOrEmpty(_videoFileName) ||
             vp == null ||
@@ -7795,7 +7926,7 @@ public partial class MainViewModel :
     [RelayCommand]
     private void SnapSelectedLinesStartToNextShotChange()
     {
-        var selectedLines = SubtitleGrid.SelectedItems.Cast<SubtitleLineViewModel>().ToList();
+        var selectedLines = SubtitleGridSelectedItems.Cast<SubtitleLineViewModel>().ToList();
         if (string.IsNullOrEmpty(_videoFileName) ||
             AudioVisualizer == null ||
             AudioVisualizer.ShotChanges.Count == 0 ||
@@ -7841,7 +7972,7 @@ public partial class MainViewModel :
     [RelayCommand]
     private void SnapSelectedLinesEndToPreviousShotChange()
     {
-        var selectedLines = SubtitleGrid.SelectedItems.Cast<SubtitleLineViewModel>().ToList();
+        var selectedLines = SubtitleGridSelectedItems.Cast<SubtitleLineViewModel>().ToList();
         if (string.IsNullOrEmpty(_videoFileName) ||
             AudioVisualizer == null ||
             AudioVisualizer.ShotChanges.Count == 0 ||
@@ -7912,7 +8043,7 @@ public partial class MainViewModel :
     // the line is skipped.
     private void SetCueToClosestShotChangeGreenZone(bool isInCue, bool isLeftZone, string actionLabel)
     {
-        var selectedLines = SubtitleGrid.SelectedItems.Cast<SubtitleLineViewModel>()
+        var selectedLines = SubtitleGridSelectedItems.Cast<SubtitleLineViewModel>()
             .OrderBy(p => p.StartTime).ToList();
         var vp = GetVideoPlayerControl();
         if (string.IsNullOrEmpty(_videoFileName) ||
@@ -8185,7 +8316,7 @@ public partial class MainViewModel :
         var result = _windowService.ShowWindow<AdjustAllTimesWindow, AdjustAllTimesViewModel>(Window, (window, vm) =>
         {
             _adjustAllTimesViewModel = vm;
-            var selectedCount = SubtitleGrid.SelectedItems.Count;
+            var selectedCount = SubtitleGridSelectedItems.Count;
             vm.Initialize(this, selectedCount, forceSelectedLines); // uses call from IAdjustCallback: Adjust
         });
     }
@@ -8232,7 +8363,7 @@ public partial class MainViewModel :
             return;
         }
 
-        var selectedLines = SubtitleGrid.SelectedItems.Cast<SubtitleLineViewModel>()
+        var selectedLines = SubtitleGridSelectedItems.Cast<SubtitleLineViewModel>()
             .OrderBy(p => p.StartTime.TotalMilliseconds)
             .ToList();
         if (selectedLines.Count == 0)
@@ -8304,7 +8435,7 @@ public partial class MainViewModel :
             return;
         }
 
-        var selectedIndices = SubtitleGrid.SelectedItems
+        var selectedIndices = SubtitleGridSelectedItems
             .Cast<SubtitleLineViewModel>()
             .Select(x => Subtitles.IndexOf(x))
             .Where(i => i >= 0)
@@ -8337,7 +8468,7 @@ public partial class MainViewModel :
 
         var result = await ShowDialogAsync<PointSyncWindow, PointSyncViewModel>(vm =>
         {
-            var selectedItems = SubtitleGrid.SelectedItems.Cast<SubtitleLineViewModel>().ToList();
+            var selectedItems = SubtitleGridSelectedItems.Cast<SubtitleLineViewModel>().ToList();
             var paragraphs = Subtitles.Select(p => new SubtitleLineViewModel(p)).ToList();
             vm.Initialize(paragraphs, selectedItems, _videoFileName ?? string.Empty, _subtitleFileName ?? string.Empty, AudioVisualizer);
         });
@@ -8475,7 +8606,7 @@ public partial class MainViewModel :
     [RelayCommand]
     private async Task AutoTranslateSelectedLines()
     {
-        var selectedItems = SubtitleGrid.SelectedItems.Cast<SubtitleLineViewModel>().ToList();
+        var selectedItems = SubtitleGridSelectedItems.Cast<SubtitleLineViewModel>().ToList();
         if (selectedItems.Count == 0 || !ShowColumnOriginalText)
         {
             return;
@@ -8576,7 +8707,7 @@ public partial class MainViewModel :
     [RelayCommand]
     private async Task ChangeCasingSelectedLines()
     {
-        var selectedItems = SubtitleGrid.SelectedItems.Cast<SubtitleLineViewModel>().ToList();
+        var selectedItems = SubtitleGridSelectedItems.Cast<SubtitleLineViewModel>().ToList();
         if (selectedItems.Count == 0)
         {
             return;
@@ -8629,7 +8760,7 @@ public partial class MainViewModel :
     [RelayCommand]
     private async Task StatisticsSelectedLines()
     {
-        var selectedItems = SubtitleGrid.SelectedItems.Cast<SubtitleLineViewModel>().ToList();
+        var selectedItems = SubtitleGridSelectedItems.Cast<SubtitleLineViewModel>().ToList();
         if (selectedItems.Count == 0)
         {
             return;
@@ -8668,7 +8799,7 @@ public partial class MainViewModel :
             return;
         }
 
-        var selectedItems = SubtitleGrid.SelectedItems.Cast<SubtitleLineViewModel>().ToList();
+        var selectedItems = SubtitleGridSelectedItems.Cast<SubtitleLineViewModel>().ToList();
         if (selectedItems.Count < 2)
         {
             return;
@@ -8697,7 +8828,7 @@ public partial class MainViewModel :
     [RelayCommand]
     private async Task MultipleReplaceSelectedLines()
     {
-        var selectedItems = SubtitleGrid.SelectedItems.Cast<SubtitleLineViewModel>().ToList();
+        var selectedItems = SubtitleGridSelectedItems.Cast<SubtitleLineViewModel>().ToList();
         if (selectedItems.Count == 0)
         {
             return;
@@ -8793,7 +8924,7 @@ public partial class MainViewModel :
             return;
         }
 
-        var selectedItems = SubtitleGrid.SelectedItems.Cast<SubtitleLineViewModel>()
+        var selectedItems = SubtitleGridSelectedItems.Cast<SubtitleLineViewModel>()
             .OrderBy(p => p.StartTime)
             .ToList();
         if (selectedItems.Count == 0)
@@ -8832,7 +8963,7 @@ public partial class MainViewModel :
     [RelayCommand]
     private async Task FixCommonErrorsSelectedLines()
     {
-        var selectedItems = SubtitleGrid.SelectedItems.Cast<SubtitleLineViewModel>().ToList();
+        var selectedItems = SubtitleGridSelectedItems.Cast<SubtitleLineViewModel>().ToList();
         if (selectedItems.Count == 0)
         {
             return;
@@ -8891,7 +9022,7 @@ public partial class MainViewModel :
         }
 
         // Work on the selected lines in grid order.
-        var selectedItems = new HashSet<SubtitleLineViewModel>(SubtitleGrid.SelectedItems.Cast<SubtitleLineViewModel>());
+        var selectedItems = new HashSet<SubtitleLineViewModel>(SubtitleGridSelectedItems.Cast<SubtitleLineViewModel>());
         var ordered = Subtitles.Where(s => selectedItems.Contains(s)).ToList();
         if (ordered.Count == 0)
         {
@@ -8943,7 +9074,7 @@ public partial class MainViewModel :
             return;
         }
 
-        var selectedItems = new HashSet<SubtitleLineViewModel>(SubtitleGrid.SelectedItems.Cast<SubtitleLineViewModel>());
+        var selectedItems = new HashSet<SubtitleLineViewModel>(SubtitleGridSelectedItems.Cast<SubtitleLineViewModel>());
         var ordered = Subtitles.Where(s => selectedItems.Contains(s)).ToList();
         if (ordered.Count == 0)
         {
@@ -9002,7 +9133,7 @@ public partial class MainViewModel :
         }
     }
 
-    private DataGrid _oldSubtitleGrid = new DataGrid();
+    private TableView _oldSubtitleGrid = new TableView();
     private ITextBoxWrapper _oldEditTextBox = new TextBoxWrapper(new TextBox());
     private bool _oldGenerateSpectrogram;
     private string _oldSpectrogramStyle = string.Empty;
@@ -9381,7 +9512,7 @@ public partial class MainViewModel :
             return;
         }
 
-        var selectedItems = SubtitleGrid.SelectedItems.Cast<SubtitleLineViewModel>().ToList();
+        var selectedItems = SubtitleGridSelectedItems.Cast<SubtitleLineViewModel>().ToList();
         if (selectedItems.Count == 0)
         {
             return;
@@ -9414,7 +9545,7 @@ public partial class MainViewModel :
     [RelayCommand]
     private void ToggleBookmarkSelectedLinesNoText()
     {
-        var selectedItems = SubtitleGrid.SelectedItems.Cast<SubtitleLineViewModel>().ToList();
+        var selectedItems = SubtitleGridSelectedItems.Cast<SubtitleLineViewModel>().ToList();
         foreach (var item in selectedItems)
         {
             if (item.Bookmark == null)
@@ -9465,7 +9596,7 @@ public partial class MainViewModel :
     [RelayCommand]
     private void RemoveBookmarkSelectedLines()
     {
-        var selectedItems = SubtitleGrid.SelectedItems.Cast<SubtitleLineViewModel>().ToList();
+        var selectedItems = SubtitleGridSelectedItems.Cast<SubtitleLineViewModel>().ToList();
         foreach (var item in selectedItems)
         {
             item.Bookmark = null;
@@ -10194,7 +10325,7 @@ public partial class MainViewModel :
     [RelayCommand]
     private void ToggleDialogDashes()
     {
-        var selectedItems = SubtitleGrid.SelectedItems.Cast<SubtitleLineViewModel>().ToList();
+        var selectedItems = SubtitleGridSelectedItems.Cast<SubtitleLineViewModel>().ToList();
         if (selectedItems.Count == 0)
         {
             return;
@@ -10595,7 +10726,7 @@ public partial class MainViewModel :
             return;
         }
 
-        var result = await ShowDialogAsync<PickAlignmentWindow, PickAlignmentViewModel>(vm => { vm.Initialize(selected, SubtitleGrid.SelectedItems.Count); });
+        var result = await ShowDialogAsync<PickAlignmentWindow, PickAlignmentViewModel>(vm => { vm.Initialize(selected, SubtitleGridSelectedItems.Count); });
 
         if (result.OkPressed)
         {
@@ -11985,7 +12116,7 @@ public partial class MainViewModel :
     [RelayCommand]
     private void FixRightToLeftViaUnicodeControlCharacters()
     {
-        var selectedItems = SubtitleGrid.SelectedItems.Cast<SubtitleLineViewModel>().ToList();
+        var selectedItems = SubtitleGridSelectedItems.Cast<SubtitleLineViewModel>().ToList();
 
         foreach (var item in selectedItems)
         {
@@ -11998,7 +12129,7 @@ public partial class MainViewModel :
     [RelayCommand]
     private void RemoveUnicodeControlCharacters()
     {
-        var selectedItems = SubtitleGrid.SelectedItems.Cast<SubtitleLineViewModel>().ToList();
+        var selectedItems = SubtitleGridSelectedItems.Cast<SubtitleLineViewModel>().ToList();
 
         foreach (var item in selectedItems)
         {
@@ -12011,7 +12142,7 @@ public partial class MainViewModel :
     [RelayCommand]
     private void ReverseRightToLeftStartEnd()
     {
-        var selectedItems = SubtitleGrid.SelectedItems.Cast<SubtitleLineViewModel>().ToList();
+        var selectedItems = SubtitleGridSelectedItems.Cast<SubtitleLineViewModel>().ToList();
 
         foreach (var item in selectedItems)
         {
@@ -12026,7 +12157,7 @@ public partial class MainViewModel :
     {
         var result = await ShowDialogAsync<ModifySelectionWindow, ModifySelectionViewModel>(vm =>
         {
-            var selectedItems = SubtitleGrid.SelectedItems.Cast<SubtitleLineViewModel>().ToList();
+            var selectedItems = SubtitleGridSelectedItems.Cast<SubtitleLineViewModel>().ToList();
             vm.Initialize(Subtitles.ToList(), selectedItems);
         });
 
@@ -12037,7 +12168,7 @@ public partial class MainViewModel :
             // Subtitles order.
             var newSelection = new HashSet<SubtitleLineViewModel>(result.Selection);
             var current = new HashSet<SubtitleLineViewModel>(
-                SubtitleGrid.SelectedItems.Cast<SubtitleLineViewModel>());
+                SubtitleGridSelectedItems.Cast<SubtitleLineViewModel>());
 
             List<SubtitleLineViewModel> finalSelection;
             if (result.SelectionAdd)
@@ -12063,50 +12194,55 @@ public partial class MainViewModel :
         _updateAudioVisualizer = true;
     }
 
-    // Above this many rows, applying a selection by adding to a realized DataGrid's
-    // SelectedItems one row at a time becomes O(n) visual work per row and hangs the
-    // UI (#11529). At/below it the in-place path is kept so small, frequent selections
-    // (a 2-10 row shift-click) don't pay the detach/reattach scroll-reset cost.
-    private const int GridSelectionDetachThreshold = 200;
-
-    // Brackets a SubtitleGrid.SelectedItems mutation: suppresses the per-row
-    // selection-changed handler, and when <paramref name="detach"/> is set, detaches
-    // ItemsSource (null then reattach) so the grid drops its realized rows before the
-    // mutation - the adds then only touch the grid's internal selection table and a
-    // single layout pass repaints afterwards. Does not raise SubtitleGridSelectionChanged;
-    // callers do that after any scroll handling. SelectedItems.Add needs an attached
-    // source, so we reattach before <paramref name="fill"/> runs.
-    private void BatchGridSelection(bool detach, System.Action fill)
+    // Brackets a subtitle grid selection mutation: suppresses the per-row
+    // selection-changed handler and wraps the mutation in a selection-model batch
+    // update, so even a whole-file selection is applied as index ranges in one pass
+    // (the DataGrid needed an ItemsSource detach hack for this, #11529). Does not
+    // raise SubtitleGridSelectionChanged; callers do that after any scroll handling.
+    private void BatchGridSelection(System.Action fill)
     {
         var wasSkipping = _subtitleGridSelectionChangedSkip;
         _subtitleGridSelectionChangedSkip = true;
-        var itemsSource = SubtitleGrid.ItemsSource;
+        SubtitleGrid.Selection.BeginBatchUpdate();
         try
         {
-            if (detach)
-            {
-                SubtitleGrid.ItemsSource = null;
-                SubtitleGrid.ItemsSource = itemsSource;
-            }
-
             fill();
         }
         finally
         {
+            SubtitleGrid.Selection.EndBatchUpdate();
             _subtitleGridSelectionChangedSkip = wasSkipping;
         }
     }
 
-    // Replaces the subtitle grid selection with the given rows, detaching ItemsSource
-    // for large selections so it doesn't hang (#11529).
+    // Replaces the subtitle grid selection with a contiguous index range, putting
+    // <paramref name="currentIndex"/> first so it becomes the SelectedItem (the row the
+    // edit box shows), like the moving end of a shift-selection.
+    private void SelectGridRange(int startIndex, int endIndex, int currentIndex)
+    {
+        BatchGridSelection(() =>
+        {
+            SubtitleGrid.Selection.Clear();
+            SubtitleGrid.Selection.Select(currentIndex);
+            SubtitleGrid.Selection.SelectRange(startIndex, endIndex);
+        });
+    }
+
+    // Replaces the subtitle grid selection with the given rows.
     private void ApplyGridSelection(IReadOnlyList<SubtitleLineViewModel> items)
     {
-        BatchGridSelection(items.Count > GridSelectionDetachThreshold, () =>
+        // Map items to indexes in one pass - Selection works on indexes, and per-item
+        // IndexOf would be O(n²) on large selections.
+        var wanted = new HashSet<SubtitleLineViewModel>(items);
+        BatchGridSelection(() =>
         {
-            SubtitleGrid.SelectedItems.Clear();
-            foreach (var item in items)
+            SubtitleGrid.Selection.Clear();
+            for (var i = 0; i < Subtitles.Count && wanted.Count > 0; i++)
             {
-                SubtitleGrid.SelectedItems.Add(item);
+                if (wanted.Remove(Subtitles[i]))
+                {
+                    SubtitleGrid.Selection.Select(i);
+                }
             }
 
             SelectedSubtitle = items.Count > 0 ? items[0] : null;
@@ -12652,7 +12788,7 @@ public partial class MainViewModel :
                 dockedMpv.SetSubtitleVisibility(_mpvReloader.SubtitlesVisible);
             }
 
-            Dispatcher.UIThread.Post(() => SubtitleGrid.Focus());
+            Dispatcher.UIThread.Post(() => TableViewExtras.FocusRow(SubtitleGrid));
         }, toggleKeys, showMediaInfoKeys, showMediaInformationOwnedBy, extraBindings, ReapplySelectedAudioTrack);
         fullScreenWindow.Show(Window!);
         _shortcutManager.ClearKeys();
@@ -12739,7 +12875,7 @@ public partial class MainViewModel :
     [RelayCommand]
     private void Unbreak()
     {
-        var selectedItems = SubtitleGrid.SelectedItems.Cast<SubtitleLineViewModel>().ToList();
+        var selectedItems = SubtitleGridSelectedItems.Cast<SubtitleLineViewModel>().ToList();
         if (selectedItems.Count == 0)
         {
             return;
@@ -12758,7 +12894,7 @@ public partial class MainViewModel :
     {
         // Unbreak without joining with a space - intended for CJK text where
         // words are not space-separated (SE 4's "Unbreak without space (CJK)").
-        var selectedItems = SubtitleGrid.SelectedItems.Cast<SubtitleLineViewModel>().ToList();
+        var selectedItems = SubtitleGridSelectedItems.Cast<SubtitleLineViewModel>().ToList();
         if (selectedItems.Count == 0)
         {
             return;
@@ -12782,7 +12918,7 @@ public partial class MainViewModel :
     [RelayCommand]
     private void AutoBreak()
     {
-        var selectedItems = SubtitleGrid.SelectedItems.Cast<SubtitleLineViewModel>().ToList();
+        var selectedItems = SubtitleGridSelectedItems.Cast<SubtitleLineViewModel>().ToList();
         if (selectedItems.Count == 0)
         {
             return;
@@ -12803,7 +12939,7 @@ public partial class MainViewModel :
         // Distributes the duration spanning the first..last selected paragraphs
         // proportionally to each paragraph's CPS character count, packing them
         // back-to-back with the configured minimum gap between them.
-        var selectedItems = SubtitleGrid.SelectedItems
+        var selectedItems = SubtitleGridSelectedItems
             .Cast<SubtitleLineViewModel>()
             .OrderBy(p => Subtitles.IndexOf(p))
             .ToList();
@@ -12860,7 +12996,7 @@ public partial class MainViewModel :
         }
 
         var selectedSet = new HashSet<SubtitleLineViewModel>(
-            SubtitleGrid.SelectedItems.Cast<SubtitleLineViewModel>());
+            SubtitleGridSelectedItems.Cast<SubtitleLineViewModel>());
         if (selectedSet.Count == 0)
         {
             return;
@@ -13263,7 +13399,7 @@ public partial class MainViewModel :
         _insertService.InsertInCorrectPosition(Subtitles, newParagraph);
         AudioVisualizer.NewSelectionParagraph = null;
         SubtitleGrid.SelectedItem = newParagraph;
-        SubtitleGrid.ScrollIntoView(newParagraph, null);
+        SubtitleGrid.ScrollIntoView(newParagraph);
         Renumber();
         _updateAudioVisualizer = true;
 
@@ -13314,7 +13450,9 @@ public partial class MainViewModel :
             return;
         }
 
-        var linesInserted = _pasteFromClipboardHelper.PasteFromClipboard(text, vp.Position * 1000.0, Subtitles, SelectedSubtitleFormat);
+        // Paste at the waveform cursor rather than the raw player position - after a right-click
+        // the cursor is pinned to the clicked spot while the async player seek may still lag.
+        var linesInserted = _pasteFromClipboardHelper.PasteFromClipboard(text, AudioVisualizer.CurrentVideoPositionSeconds * 1000.0, Subtitles, SelectedSubtitleFormat);
         Renumber();
         if (linesInserted.Count == 1)
         {
@@ -13365,7 +13503,7 @@ public partial class MainViewModel :
             }
 
             ActivateWindow(Window);
-            SubtitleGrid.Focus();
+            TableViewExtras.FocusRow(SubtitleGrid);
         });
     }
 
@@ -13576,7 +13714,7 @@ public partial class MainViewModel :
         var isAssa = SelectedSubtitleFormat is AdvancedSubStationAlpha;
         if (isAssa)
         {
-            var selectedItems = SubtitleGrid.SelectedItems.Cast<SubtitleLineViewModel>().ToList();
+            var selectedItems = SubtitleGridSelectedItems.Cast<SubtitleLineViewModel>().ToList();
             foreach (var item in selectedItems)
             {
                 item.SetStartTimeOnly(TimeSpan.FromSeconds(videoPositionSeconds));
@@ -13620,7 +13758,7 @@ public partial class MainViewModel :
         var isAssa = SelectedSubtitleFormat is AdvancedSubStationAlpha;
         if (isAssa)
         {
-            var selectedItems = SubtitleGrid.SelectedItems.Cast<SubtitleLineViewModel>().ToList();
+            var selectedItems = SubtitleGridSelectedItems.Cast<SubtitleLineViewModel>().ToList();
             foreach (var item in selectedItems)
             {
                 item.SetStartTimeOnly(TimeSpan.FromSeconds(videoPositionSeconds));
@@ -13653,7 +13791,7 @@ public partial class MainViewModel :
         var isAssa = SelectedSubtitleFormat is AdvancedSubStationAlpha;
         if (isAssa)
         {
-            var selectedItems = SubtitleGrid.SelectedItems.Cast<SubtitleLineViewModel>().ToList();
+            var selectedItems = SubtitleGridSelectedItems.Cast<SubtitleLineViewModel>().ToList();
             foreach (var item in selectedItems)
             {
                 item.SetStartTimeKeepDuration(TimeSpan.FromSeconds(videoPositionSeconds));
@@ -13687,7 +13825,7 @@ public partial class MainViewModel :
         var isAssa = SelectedSubtitleFormat is AdvancedSubStationAlpha;
         if (isAssa)
         {
-            var selectedItems = SubtitleGrid.SelectedItems.Cast<SubtitleLineViewModel>().ToList();
+            var selectedItems = SubtitleGridSelectedItems.Cast<SubtitleLineViewModel>().ToList();
             foreach (var item in selectedItems)
             {
                 item.EndTime = TimeSpan.FromSeconds(videoPositionSeconds);
@@ -14326,7 +14464,7 @@ public partial class MainViewModel :
         }
         else
         {
-            SubtitleGrid.Focus();
+            TableViewExtras.FocusRow(SubtitleGrid);
         }
     }
 
@@ -14593,36 +14731,54 @@ public partial class MainViewModel :
     [RelayCommand]
     private void ExtendSelectedToPrevious()
     {
-        var s = SelectedSubtitle;
-        var idx = SelectedSubtitleIndex;
-        if (s == null || idx == null || idx == 0 || LockTimeCodes)
+        var selectedItems = _selectedSubtitles?.ToList() ?? [];
+        if (selectedItems.Count == 0 || LockTimeCodes)
         {
             return;
         }
 
-        var prev = Subtitles[idx.Value - 1];
-        s.SetStartTimeOnly(TimeSpan.FromMilliseconds(prev.EndTime.TotalMilliseconds + Se.Settings.General.MinimumBetweenLines.GetMilliseconds()));
+        var gapMs = Se.Settings.General.MinimumBetweenLines.GetMilliseconds();
+        foreach (var item in selectedItems)
+        {
+            var prev = Subtitles.GetOrNull(Subtitles.IndexOf(item) - 1);
+            if (prev == null)
+            {
+                continue;
+            }
+
+            item.SetStartTimeOnly(TimeSpan.FromMilliseconds(prev.EndTime.TotalMilliseconds + gapMs));
+        }
+
         _updateAudioVisualizer = true;
     }
 
     [RelayCommand]
     private void ExtendSelectedToNext()
     {
-        var s = SelectedSubtitle;
-        var idx = SelectedSubtitleIndex;
-        if (s == null || idx == null || idx >= Subtitles.Count - 1 || LockTimeCodes)
+        var selectedItems = _selectedSubtitles?.ToList() ?? [];
+        if (selectedItems.Count == 0 || LockTimeCodes)
         {
             return;
         }
 
-        var next = Subtitles.GetOrNull(idx.Value + 1);
-        if (next == null)
+        var gapMs = Se.Settings.General.MinimumBetweenLines.GetMilliseconds();
+        foreach (var item in selectedItems)
         {
-            return;
+            var idx = Subtitles.IndexOf(item);
+            if (idx < 0)
+            {
+                continue;
+            }
+
+            var next = Subtitles.GetOrNull(idx + 1);
+            if (next == null)
+            {
+                continue;
+            }
+
+            item.EndTime = TimeSpan.FromMilliseconds(next.StartTime.TotalMilliseconds - gapMs);
         }
 
-        s.EndTime = TimeSpan.FromMilliseconds(next.StartTime.TotalMilliseconds -
-                                              Se.Settings.General.MinimumBetweenLines.GetMilliseconds());
         _updateAudioVisualizer = true;
     }
 
@@ -14710,7 +14866,7 @@ public partial class MainViewModel :
     [RelayCommand]
     private async Task SubtitleGridCut()
     {
-        var selectedItems = SubtitleGrid.SelectedItems.Cast<SubtitleLineViewModel>().ToList();
+        var selectedItems = SubtitleGridSelectedItems.Cast<SubtitleLineViewModel>().ToList();
         if (selectedItems.Count == 0 || Window == null)
         {
             return;
@@ -14747,7 +14903,7 @@ public partial class MainViewModel :
     [RelayCommand]
     private async Task SubtitleGridCopy()
     {
-        var selectedItems = SubtitleGrid.SelectedItems.Cast<SubtitleLineViewModel>().ToList();
+        var selectedItems = SubtitleGridSelectedItems.Cast<SubtitleLineViewModel>().ToList();
         if (selectedItems.Count == 0 || Window == null)
         {
             return;
@@ -14777,7 +14933,7 @@ public partial class MainViewModel :
     {
         var countOfTrimmedLines = 0;
 
-        var selectedItems = SubtitleGrid.SelectedItems.Cast<SubtitleLineViewModel>().ToList();
+        var selectedItems = SubtitleGridSelectedItems.Cast<SubtitleLineViewModel>().ToList();
         var languageCode = LanguageAutoDetect.AutoDetectGoogleLanguage(GetUpdateSubtitle());
         foreach (var s in selectedItems)
         {
@@ -14862,7 +15018,7 @@ public partial class MainViewModel :
     [RelayCommand]
     private void SetStyleForSelectedLines(string styleName)
     {
-        var selectedItems = SubtitleGrid.SelectedItems.Cast<SubtitleLineViewModel>().ToList();
+        var selectedItems = SubtitleGridSelectedItems.Cast<SubtitleLineViewModel>().ToList();
 
         Dispatcher.UIThread.Post(() =>
         {
@@ -14892,7 +15048,7 @@ public partial class MainViewModel :
     [RelayCommand]
     private void SetActorForSelectedLines(string actorName)
     {
-        var selectedItems = SubtitleGrid.SelectedItems.Cast<SubtitleLineViewModel>().ToList();
+        var selectedItems = SubtitleGridSelectedItems.Cast<SubtitleLineViewModel>().ToList();
 
         Dispatcher.UIThread.Post(() =>
         {
@@ -15320,6 +15476,9 @@ public partial class MainViewModel :
             SelectedEncodingDisplayName = SelectedEncoding.DisplayName,
             SubtitleHeader = _subtitle.Header,
             SubtitleFooter = _subtitle.Footer,
+            SubtitleFileNameOriginal = _subtitleFileNameOriginal,
+            SubtitleHeaderOriginal = _subtitleOriginal?.Header,
+            SubtitleFooterOriginal = _subtitleOriginal?.Footer,
         };
     }
 
@@ -15339,66 +15498,42 @@ public partial class MainViewModel :
 
         _subtitle.Header = undoRedoObject.SubtitleHeader;
         _subtitle.Footer = undoRedoObject.SubtitleFooter;
+
+        // Restore the original-subtitle file-level state too - the undo hash covers it,
+        // so leaving it untouched makes the restored state hash-mismatch its own entry,
+        // and the next Undo() clears the redo timeline as "unrecorded changes" (#12952).
+        _subtitleFileNameOriginal = undoRedoObject.SubtitleFileNameOriginal;
+        _subtitleOriginal ??= new Subtitle();
+        _subtitleOriginal.Header = undoRedoObject.SubtitleHeaderOriginal;
+        _subtitleOriginal.Footer = undoRedoObject.SubtitleFooterOriginal;
+
         SelectAndScrollToRow(undoRedoObject.SelectedLines.First());
     }
 
     public void AutoFitColumns()
     {
-        var columns = SubtitleGrid.Columns
-            .Where(p => p.IsVisible && (p.Tag as string) != InitListViewAndEditBox.SubtitleGridColumnKeys.ScrollbarGutter)
-            .ToList();
+        var columnManager = SubtitleGridColumnManager;
+        if (columnManager == null)
+        {
+            return;
+        }
 
+        // TableView has no content-based (Auto) sizing, so fit the time columns to the
+        // current time format and let the Text/Original star columns absorb the rest.
         var showHideWidth = MeasureShowHideColumnWidth();
 
-        var numberOfStarColumns = 0;
-        for (var i = 0; i < columns.Count; i++)
+        foreach (var column in columnManager.Columns.OfType<SeTableViewColumn>())
         {
-            var column = columns[i];
-
-            var originalWidth = column.Width;
-
-            if (column.Header.ToString() == Se.Language.General.Show ||
-                column.Header.ToString() == Se.Language.General.Hide)
+            switch (column.Tag as string)
             {
-                var width = Math.Max(column.MinWidth, showHideWidth);
-                column.Width = new DataGridLength(width, DataGridLengthUnitType.Pixel);
-                continue;
-            }
-            else
-            {
-                column.Width = new DataGridLength(1, DataGridLengthUnitType.Auto);
-            }
-
-            SubtitleGrid.UpdateLayout();
-
-            if (column.Header.ToString() == Se.Language.General.OriginalText ||
-                column.Header.ToString() == Se.Language.General.Text)
-            {
-                column.Width = new DataGridLength(1, DataGridLengthUnitType.Star);
-                numberOfStarColumns++;
-            }
-            else
-            {
-                column.Width = originalWidth;
-            }
-
-            if (i == columns.Count - 1)
-            {
-                if (numberOfStarColumns == 0)
-                {
-                    column.Width = new DataGridLength(1, DataGridLengthUnitType.Star);
-                }
-                else if (numberOfStarColumns == 1 && column.Width.IsStar)
-                {
-                }
-                else
-                {
-                    if (column.Header.ToString() != Se.Language.General.OriginalText &&
-                        column.Header.ToString() != Se.Language.General.Text)
-                    {
-                        column.Width = new DataGridLength(1, DataGridLengthUnitType.Auto);
-                    }
-                }
+                case InitListViewAndEditBox.SubtitleGridColumnKeys.Start:
+                case InitListViewAndEditBox.SubtitleGridColumnKeys.End:
+                    column.Width = new GridLength(Math.Max(column.MinWidth, showHideWidth));
+                    break;
+                case InitListViewAndEditBox.SubtitleGridColumnKeys.Text:
+                case InitListViewAndEditBox.SubtitleGridColumnKeys.OriginalText:
+                    column.Width = new GridLength(1, GridUnitType.Star);
+                    break;
             }
         }
 
@@ -15455,14 +15590,14 @@ public partial class MainViewModel :
 
     private void InverseRowSelection()
     {
-        if (SubtitleGrid.SelectedItems == null || Subtitles.Count == 0)
+        if (SubtitleGridSelectedItems == null || Subtitles.Count == 0)
         {
             return;
         }
 
         // Store currently selected items
         var selectedItems =
-            new HashSet<SubtitleLineViewModel>(SubtitleGrid.SelectedItems.Cast<SubtitleLineViewModel>());
+            new HashSet<SubtitleLineViewModel>(SubtitleGridSelectedItems.Cast<SubtitleLineViewModel>());
 
         // Inverting a small selection on a large file selects almost every row, so
         // apply via the detach/reattach helper to avoid the per-row hang (#11529).
@@ -15478,6 +15613,12 @@ public partial class MainViewModel :
 
         _shiftSelectAnchorIndex = -1;
         _shiftSelectCurrentIndex = -1;
+
+        // A long scroll recycles the focused TableViewRow container, silently dropping
+        // keyboard focus out of the grid (End followed by Home would then do nothing,
+        // as the key handler is gated on IsSubtitleGridFocused). Capture the focus
+        // state now and put focus back on the newly selected row after the scroll.
+        var subtitleGridHadFocus = IsSubtitleGridFocused();
 
         lock (_scrollLock)
         {
@@ -15498,7 +15639,7 @@ public partial class MainViewModel :
             {
                 var itemToScroll = Subtitles[indexToScroll];
                 SubtitleGrid.SelectedItem = itemToScroll;
-                SubtitleGrid.ScrollIntoView(itemToScroll, null);
+                SubtitleGrid.ScrollIntoView(itemToScroll);
 
                 if (Se.Settings.General.SubtitleGridCenterSelectedRow)
                 {
@@ -15508,131 +15649,26 @@ public partial class MainViewModel :
                 {
                     EnsureRowFullyVisibleInSubtitleGrid(itemToScroll);
                 }
+
+                if (subtitleGridHadFocus)
+                {
+                    Dispatcher.UIThread.Post(() => TableViewExtras.FocusRow(SubtitleGrid));
+                }
             }
         });
     }
 
-    // Avalonia's DataGrid.ScrollIntoView often leaves the target only partially visible -
-    // clipped at the bottom edge, or a row or two below the fold - because its viewport
-    // estimate is wrong with the variable-height subtitle rows (issue #11723). After the
-    // built-in scroll (which realizes the target row), measure that row against the actual
-    // rows-presenter viewport and nudge the vertical scrollbar by exactly how far it pokes
-    // out, so it ends up fully on screen. This is the non-centering counterpart to
-    // CenterSelectedRowInSubtitleGrid and uses the same deterministic scrollbar approach.
+    // TableView's ScrollIntoView can leave a variable-height row clipped at an edge
+    // (same class of problem as DataGrid issue #11723); the helper nudges the scroll
+    // offset by exactly how far the realized row pokes out.
     private void EnsureRowFullyVisibleInSubtitleGrid(SubtitleLineViewModel item)
     {
-        Dispatcher.UIThread.Post(() =>
-        {
-            var row = SubtitleGrid.GetVisualDescendants().OfType<DataGridRow>()
-                .FirstOrDefault(r => ReferenceEquals(r.DataContext, item));
-            if (row == null || row.Bounds.Height <= 0)
-            {
-                return;
-            }
-
-            var rowsPresenter = SubtitleGrid.GetVisualDescendants().OfType<DataGridRowsPresenter>().FirstOrDefault();
-            if (rowsPresenter == null || rowsPresenter.Bounds.Height <= 0)
-            {
-                return;
-            }
-
-            var verticalScrollBar = SubtitleGrid.GetVisualDescendants().OfType<ScrollBar>()
-                .FirstOrDefault(sb => sb.Orientation == Orientation.Vertical);
-            if (verticalScrollBar == null)
-            {
-                return;
-            }
-
-            // row.Bounds is relative to the rows presenter, so these are viewport coordinates.
-            var rowTop = row.Bounds.Y;
-            var rowBottom = row.Bounds.Y + row.Bounds.Height;
-            double delta;
-            if (rowBottom > rowsPresenter.Bounds.Height)
-            {
-                delta = rowBottom - rowsPresenter.Bounds.Height; // pokes out the bottom -> scroll down
-            }
-            else if (rowTop < 0)
-            {
-                delta = rowTop; // pokes out the top -> scroll up (negative)
-            }
-            else
-            {
-                return; // already fully visible
-            }
-
-            if (Math.Abs(delta) < 1)
-            {
-                return;
-            }
-
-            var newValue = Math.Max(0, Math.Min(verticalScrollBar.Value + delta, verticalScrollBar.Maximum));
-            if (Math.Abs(newValue - verticalScrollBar.Value) < 0.5)
-            {
-                return;
-            }
-
-            verticalScrollBar.Value = newValue;
-
-            // Avalonia's DataGrid hooks the scrollbar's Scroll event (not ValueChanged) to
-            // update the visible rows; invoke the internal handler via reflection.
-            var processVerticalScroll = typeof(DataGrid).GetMethod(
-                "ProcessVerticalScroll",
-                BindingFlags.NonPublic | BindingFlags.Instance);
-            processVerticalScroll?.Invoke(SubtitleGrid, new object[] { ScrollEventType.EndScroll });
-        }, DispatcherPriority.Loaded);
+        TableViewExtras.EnsureRowFullyVisible(SubtitleGrid, item);
     }
 
     private void CenterSelectedRowInSubtitleGrid(SubtitleLineViewModel itemToCenter)
     {
-        Dispatcher.UIThread.Post(() =>
-        {
-            var row = SubtitleGrid.GetVisualDescendants().OfType<DataGridRow>()
-                .FirstOrDefault(r => ReferenceEquals(r.DataContext, itemToCenter));
-            if (row == null || row.Bounds.Height <= 0)
-            {
-                return;
-            }
-
-            var rowsPresenter = SubtitleGrid.GetVisualDescendants().OfType<DataGridRowsPresenter>().FirstOrDefault();
-            if (rowsPresenter == null || rowsPresenter.Bounds.Height <= 0)
-            {
-                return;
-            }
-
-            var verticalScrollBar = SubtitleGrid.GetVisualDescendants().OfType<ScrollBar>()
-                .FirstOrDefault(sb => sb.Orientation == Orientation.Vertical);
-            if (verticalScrollBar == null)
-            {
-                return;
-            }
-
-            // Use the row's actual rendered Y inside the rows presenter — this is
-            // accurate regardless of variable row heights. The delta is exactly how
-            // much we need to shift the scrollbar to center the row.
-            var desiredY = (rowsPresenter.Bounds.Height - row.Bounds.Height) / 2.0;
-            var delta = row.Bounds.Y - desiredY;
-            if (Math.Abs(delta) < 1)
-            {
-                return;
-            }
-
-            var newValue = Math.Max(0, Math.Min(verticalScrollBar.Value + delta, verticalScrollBar.Maximum));
-            if (Math.Abs(newValue - verticalScrollBar.Value) < 0.5)
-            {
-                return;
-            }
-
-            verticalScrollBar.Value = newValue;
-
-            // Avalonia's DataGrid hooks the scrollbar's Scroll event (not
-            // ValueChanged) to update the visible rows. ScrollEventArgs/ScrollEvent
-            // aren't writable in this version, so invoke the internal handler via
-            // reflection.
-            var processVerticalScroll = typeof(DataGrid).GetMethod(
-                "ProcessVerticalScroll",
-                BindingFlags.NonPublic | BindingFlags.Instance);
-            processVerticalScroll?.Invoke(SubtitleGrid, new object[] { ScrollEventType.EndScroll });
-        }, DispatcherPriority.Loaded);
+        TableViewExtras.CenterRow(SubtitleGrid, itemToCenter);
     }
 
     /// <summary>
@@ -15703,7 +15739,7 @@ public partial class MainViewModel :
             if (subtitleToScroll != null && Subtitles.Contains(subtitleToScroll))
             {
                 SubtitleGrid.SelectedItem = subtitleToScroll;
-                SubtitleGrid.ScrollIntoView(subtitleToScroll, null);
+                SubtitleGrid.ScrollIntoView(subtitleToScroll);
 
                 if (Se.Settings.General.SubtitleGridCenterSelectedRow)
                 {
@@ -16240,7 +16276,7 @@ public partial class MainViewModel :
             {
                 SelectAndScrollToRow(0);
             }
-            Dispatcher.UIThread.Post(() => SubtitleGrid.Focus());
+            Dispatcher.UIThread.Post(() => TableViewExtras.FocusRow(SubtitleGrid));
 
             if (Se.Settings.Video.AutoOpen && skipLoadVideo == false)
             {
@@ -16917,7 +16953,7 @@ public partial class MainViewModel :
 
                             // Put keyboard focus on the grid so shortcuts (e.g. Ctrl+S) work right
                             // away after an "Open with" mkv extract, without a manual click (#12029).
-                            Dispatcher.UIThread.Post(() => SubtitleGrid.Focus());
+                            Dispatcher.UIThread.Post(() => TableViewExtras.FocusRow(SubtitleGrid));
                         }
                     }
                 }
@@ -16979,7 +17015,7 @@ public partial class MainViewModel :
                 if (!IsImageSubtitleTrack(subtitleList[0]))
                 {
                     // Focus the grid so shortcuts (e.g. Ctrl+S) work immediately after the extract (#12029).
-                    Dispatcher.UIThread.Post(() => SubtitleGrid.Focus());
+                    Dispatcher.UIThread.Post(() => TableViewExtras.FocusRow(SubtitleGrid));
                 }
             }
             else
@@ -18188,7 +18224,7 @@ public partial class MainViewModel :
             Se.Settings.General.ShowColumnCps = ShowColumnCps;
             Se.Settings.General.ShowColumnWpm = ShowColumnWpm;
             Se.Settings.General.ShowColumnLayer = ShowColumnLayer;
-            Layout.InitListViewAndEditBox.SaveSubtitleGridColumnWidths(SubtitleGrid);
+            Layout.InitListViewAndEditBox.SaveSubtitleGridColumnWidths(SubtitleGridColumnManager);
             Se.Settings.General.SelectCurrentSubtitleWhilePlaying = SelectCurrentSubtitleWhilePlaying;
             Se.Settings.Waveform.ShowToolbar = IsWaveformToolbarVisible;
             Se.Settings.Waveform.CenterVideoPosition = WaveformCenter;
@@ -18490,7 +18526,7 @@ public partial class MainViewModel :
                 if (Window != null)
                 {
                     Window.Activate();
-                    SubtitleGrid.Focus();
+                    TableViewExtras.FocusRow(SubtitleGrid);
 
                     SurroundWith1Text = string.Format(Se.Language.Options.Shortcuts.SurroundWithXY, Se.Settings.Surround1Left, Se.Settings.Surround1Right);
                     SurroundWith2Text = string.Format(Se.Language.Options.Shortcuts.SurroundWithXY, Se.Settings.Surround2Left, Se.Settings.Surround2Right);
@@ -18597,9 +18633,26 @@ public partial class MainViewModel :
                 var chosen = desiredAudioTrackId >= 0
                     ? tracks.FirstOrDefault(t => t.Id == desiredAudioTrackId)
                     : null;
+
+                // On a fresh open (no explicitly requested/restored track) with more than one audio
+                // track, default to the track that is fastest to extract a waveform from - e.g. a
+                // compressed AC3/AAC track over lossless TrueHD - so the waveform appears in seconds
+                // instead of minutes. A track requested via desiredAudioTrackId (e.g. restored from
+                // recent files) always wins.
+                if (chosen == null && desiredAudioTrackId < 0 && tracks.Count > 1)
+                {
+                    chosen = tracks
+                        .OrderByDescending(t => WaveformExtractionEstimate.GetDecodeSpeedFactor(t.Codec))
+                        .ThenBy(t => t.Id)
+                        .First();
+                }
+
                 chosen ??= tracks.FirstOrDefault(t => t.IsSelected) ?? tracks[0];
 
-                if (desiredAudioTrackId >= 0 && chosen.Id != -1)
+                // Switch mpv to the chosen track when it isn't already the selected one (fastest
+                // default or a restored track) so playback, the track menu and the waveform picker
+                // all agree on the same track.
+                if (chosen.Id != -1 && !chosen.IsSelected)
                 {
                     mpv.SetAudioTrack(chosen.Id);
                 }
@@ -18625,7 +18678,10 @@ public partial class MainViewModel :
         });
     }
 
-    private void LoadWaveformAndSpectrogram(string videoFileName)
+    // forceGenerate: extract even when WaveformAutoGenerate (the auto-on-open preference) is off.
+    // Set for explicit user actions like picking an audio track, where showing that track's waveform
+    // is the whole point - if it isn't cached yet we extract it now (and cache it for next time).
+    private void LoadWaveformAndSpectrogram(string videoFileName, bool forceGenerate = false)
     {
         var trackNumber = _audioTrack?.FfIndex ?? -1;
         var peakWaveFileName = WavePeakGenerator2.GetPeakWaveFileName(videoFileName, trackNumber);
@@ -18637,10 +18693,10 @@ public partial class MainViewModel :
             AudioVisualizer.ClickToGenerateText = Se.Language.Main.ClickToGenerateWaveform;
         }
 
-        // When WaveformAutoGenerate is off, never kick off ffmpeg extraction on video open.
-        // Cached peaks still load via the branch below, so existing waveforms keep showing;
-        // the user generates new ones on demand by clicking the empty waveform.
-        if (needToGenerate && Se.Settings.Waveform.WaveformAutoGenerate)
+        // On video open, WaveformAutoGenerate gates whether we auto-extract; cached peaks still load
+        // via the branch below either way. An explicit request (forceGenerate) always extracts a
+        // missing waveform - e.g. switching audio track in the waveform toolbar picker.
+        if (needToGenerate && (Se.Settings.Waveform.WaveformAutoGenerate || forceGenerate))
         {
             StartWaveformExtraction(videoFileName, trackNumber, peakWaveFileName, spectrogramFileName);
         }
@@ -18721,9 +18777,24 @@ public partial class MainViewModel :
 
         var tempWaveFileName = Path.Combine(Path.GetTempPath(), $"{Guid.NewGuid()}.wav");
         var process = WaveFileExtractor.GetCommandLineProcess(videoFileName, trackNumber, tempWaveFileName,
-            "acodec=s16l", out _);
+            "acodec=s16l", out var encoderName);
+
+        // For ffmpeg, ask it for machine-readable progress on stdout so we can show a real percentage
+        // instead of a static "Extracting wave info..." label. We need the total media duration to turn
+        // ffmpeg's "out_time_us" into a percent; read it here on the UI thread.
+        var totalDurationSeconds = 0.0;
+        if (encoderName.StartsWith("FFmpeg", StringComparison.OrdinalIgnoreCase))
+        {
+            totalDurationSeconds = GetVideoPlayerControl()?.VideoPlayer?.Duration ?? 0;
+            if (totalDurationSeconds > 0)
+            {
+                process.StartInfo.Arguments = "-nostats -progress pipe:1 " + process.StartInfo.Arguments;
+                process.StartInfo.RedirectStandardOutput = true;
+            }
+        }
+
 #pragma warning disable CS4014 // fire-and-forget; extraction posts results back to the UI thread
-        Task.Run(async () => { await ExtractWaveformAndSpectrogramAndShotChanges(process, tempWaveFileName, peakWaveFileName, spectrogramFileName, videoFileName); });
+        Task.Run(async () => { await ExtractWaveformAndSpectrogramAndShotChanges(process, tempWaveFileName, peakWaveFileName, spectrogramFileName, videoFileName, totalDurationSeconds); });
 #pragma warning restore CS4014
     }
 
@@ -18827,6 +18898,10 @@ public partial class MainViewModel :
                     {
                         IsAudioTracksVisible = false;
                         AudioTraksMenuItem.Items.Clear();
+                        _suppressWaveformAudioTrackChange = true;
+                        WaveformAudioTracks = new ObservableCollection<WaveformAudioTrackItem>();
+                        SelectedWaveformAudioTrack = null;
+                        _suppressWaveformAudioTrackChange = false;
                         if (OperatingSystem.IsMacOS())
                         {
                             Layout.InitNativeMacMenu.UpdateAudioTracksMenu(this, [], null);
@@ -18882,6 +18957,28 @@ public partial class MainViewModel :
                     }
 
                     IsAudioTracksVisible = AudioTraksMenuItem.Items.Count > 1;
+
+                    // Populate the waveform toolbar's audio-track picker with per-track
+                    // extraction-time estimates. Suppressed so syncing SelectedItem here doesn't
+                    // re-trigger a track switch.
+                    var mediaDurationSeconds = GetVideoPlayerControl()?.VideoPlayer?.Duration ?? 0;
+                    var comboItems = new ObservableCollection<WaveformAudioTrackItem>();
+                    foreach (var audioTrack in audioTracks)
+                    {
+                        comboItems.Add(new WaveformAudioTrackItem
+                        {
+                            Track = audioTrack,
+                            Display = BuildAudioTrackDisplay(audioTrack, mediaDurationSeconds),
+                        });
+                    }
+
+                    _suppressWaveformAudioTrackChange = true;
+                    WaveformAudioTracks = comboItems;
+                    SelectedWaveformAudioTrack =
+                        comboItems.FirstOrDefault(p => p.Track.FfIndex == (_audioTrack?.FfIndex ?? -1))
+                        ?? comboItems.FirstOrDefault();
+                    _suppressWaveformAudioTrackChange = false;
+
                     if (OperatingSystem.IsMacOS())
                     {
                         Layout.InitNativeMacMenu.UpdateAudioTracksMenu(this, audioTracks, _audioTrack);
@@ -18940,24 +19037,137 @@ public partial class MainViewModel :
         }
     }
 
+    // Tracks the last percentage pushed to WaveformGeneratingText so we only update the label
+    // (and marshal to the UI thread) when the whole-number percent actually changes.
+    private int _lastWaveExtractPercent = -1;
+
+    // Monotonically increasing id for each extraction run. If a new run starts (e.g. the user
+    // reopens the same video or switches audio track), an orphaned earlier ffmpeg can keep emitting
+    // progress; only the newest run's id is allowed to update the label, so the percentage never
+    // jumps backward between two interleaved streams.
+    private int _waveExtractionSequence;
+
+    // The ffmpeg process of the newest extraction run, so a new run can kill the previous one instead
+    // of leaving two heavy decodes competing for CPU and both racing to update the UI.
+    private Process? _currentWaveExtractionProcess;
+
+    // Extraction id the user asked to cancel; matched against a run's extractionId so a cancel only
+    // affects the run it was issued for (never a later, unrelated extraction).
+    private int _cancelledWaveExtractionId = -1;
+
+    // Cancels the in-progress waveform extraction (the X next to the "Extracting wave info... NN%"
+    // status). Kills ffmpeg; the run then cleans up and leaves an empty "click to generate" waveform.
+    [RelayCommand]
+    private void CancelWaveformExtraction()
+    {
+        if (!IsWaveformGenerating)
+        {
+            return;
+        }
+
+        Volatile.Write(ref _cancelledWaveExtractionId, Volatile.Read(ref _waveExtractionSequence));
+
+        var process = _currentWaveExtractionProcess;
+        if (process != null)
+        {
+            try
+            {
+                if (!process.HasExited)
+                {
+                    process.Kill(true);
+                }
+            }
+            catch
+            {
+                // best-effort; the run's cancel check still fires once the process ends
+            }
+        }
+    }
+
     private async Task ExtractWaveformAndSpectrogramAndShotChanges(
         Process process,
         string tempWaveFileName,
         string peakWaveFileName,
         string spectrogramFolderName,
-        string videoFileName)
+        string videoFileName,
+        double totalDurationSeconds = 0)
     {
+        var extractionId = System.Threading.Interlocked.Increment(ref _waveExtractionSequence);
+
+        // Supersede any still-running earlier extraction: kill its ffmpeg so we don't run two heavy
+        // decodes at once. The superseded run detects the newer id below and bails without touching UI.
+        var previousProcess = System.Threading.Interlocked.Exchange(ref _currentWaveExtractionProcess, process);
+        if (previousProcess != null)
+        {
+            try
+            {
+                if (!previousProcess.HasExited)
+                {
+                    previousProcess.Kill(true);
+                }
+            }
+            catch
+            {
+                // best-effort; the superseded run's id guard is the real safety net
+            }
+        }
+
         IsWaveformGenerating = true;
         WaveformGeneratingText = Se.Language.Main.ExtractingWaveInfo;
+        _lastWaveExtractPercent = -1;
 
         try
         {
             process.Start();
 
+            // When ffmpeg progress was enabled (StartWaveformExtraction), drain its stdout and turn
+            // "out_time_us" into a live percentage in the status label.
+            if (process.StartInfo.RedirectStandardOutput)
+            {
+                process.OutputDataReceived += (_, e) => OnFfmpegWaveExtractProgress(e.Data, totalDurationSeconds, extractionId);
+                process.BeginOutputReadLine();
+            }
+
             _videoOpenTokenSource = new CancellationTokenSource();
             while (!process.HasExited)
             {
                 await Task.Delay(100, _videoOpenTokenSource.Token);
+            }
+
+            // A newer extraction superseded us (and likely killed our ffmpeg). Bail silently so we
+            // don't report a false failure or overwrite the newer run's waveform/status.
+            if (extractionId != Volatile.Read(ref _waveExtractionSequence))
+            {
+                DeleteTempFile(tempWaveFileName);
+                return;
+            }
+
+            // The user cancelled this extraction (X next to the progress). Leave an empty
+            // "click to generate" waveform rather than reporting a failure. Re-checked between the
+            // later stages too: with a short file, ffmpeg is done in a second and most of the
+            // visible "generating" time is peaks/spectrogram work - a cancel clicked then must
+            // still win, not be silently ignored.
+            bool WasCancelled() => Volatile.Read(ref _cancelledWaveExtractionId) == extractionId;
+
+            void FinishCancelled()
+            {
+                DeleteTempFile(tempWaveFileName);
+                ShowStatus(Se.Language.General.Cancelled);
+                Dispatcher.UIThread.Post(() =>
+                {
+                    if (AudioVisualizer != null)
+                    {
+                        AudioVisualizer.WavePeaks = null;
+                        AudioVisualizer.ShowClickToGenerateHint = true;
+                        AudioVisualizer.InvalidateVisual();
+                    }
+                });
+            }
+
+            if (WasCancelled())
+            {
+                FinishCancelled();
+                return;
             }
 
             if (process.ExitCode != 0)
@@ -18982,11 +19192,23 @@ public partial class MainViewModel :
                 using var waveFile = new WavePeakGenerator2(tempWaveFileName);
                 var wavePeaks = waveFile.GeneratePeaks(0, peakWaveFileName);
 
+                if (WasCancelled())
+                {
+                    FinishCancelled();
+                    return;
+                }
+
                 if (Se.Settings.Waveform.GenerateSpectrogram)
                 {
                     WaveformGeneratingText = Se.Language.Main.GeneratingSpectrogramDotDotDot;
                     var spectrogram = waveFile.GenerateSpectrogram(0, spectrogramFolderName, _videoOpenTokenSource.Token);
                     AudioVisualizer?.SetSpectrogram(spectrogram);
+
+                    if (WasCancelled())
+                    {
+                        FinishCancelled();
+                        return;
+                    }
                 }
 
                 Dispatcher.UIThread.Post(() =>
@@ -19027,14 +19249,70 @@ public partial class MainViewModel :
         }
         finally
         {
-            IsWaveformGenerating = false;
-            WaveformGeneratingText = string.Empty;
+            // Only the newest run owns the shared UI state; a superseded run must not clear the
+            // spinner/label out from under the run that replaced it.
+            if (extractionId == Volatile.Read(ref _waveExtractionSequence))
+            {
+                IsWaveformGenerating = false;
+                WaveformGeneratingText = string.Empty;
+            }
+
+            System.Threading.Interlocked.CompareExchange(ref _currentWaveExtractionProcess, null, process);
             DeleteTempFile(tempWaveFileName);
             lock (_waveformsBeingGeneratedLock)
             {
                 _waveformsBeingGenerated.Remove(peakWaveFileName);
             }
         }
+    }
+
+    // Parses one line of ffmpeg's "-progress pipe:1" output and, on a new higher whole percent,
+    // updates the "Extracting wave info... NN%" label. Fires on a thread-pool thread, so the label
+    // write is marshalled to the UI thread and skipped once generation has ended. Progress from an
+    // extraction that is no longer the newest (extractionId != _waveExtractionSequence) is ignored,
+    // and the percent is only ever allowed to increase, so it never jumps backward.
+    private void OnFfmpegWaveExtractProgress(string? line, double totalDurationSeconds, int extractionId)
+    {
+        if (extractionId != Volatile.Read(ref _waveExtractionSequence) ||
+            string.IsNullOrEmpty(line) || totalDurationSeconds <= 0 ||
+            !line.StartsWith("out_time_us=", StringComparison.Ordinal))
+        {
+            return;
+        }
+
+        var value = line.Substring("out_time_us=".Length).Trim();
+        if (!long.TryParse(value, NumberStyles.Integer, CultureInfo.InvariantCulture, out var microseconds) ||
+            microseconds < 0)
+        {
+            return;
+        }
+
+        var processedSeconds = microseconds / 1_000_000.0;
+        var percent = (int)Math.Clamp(processedSeconds / totalDurationSeconds * 100.0, 0, 100);
+
+        // Atomic monotonic-max: only a strictly-greater percent wins, from any thread, so the label
+        // can never be pushed backward even if callbacks from a superseded run briefly overlap ours.
+        int last;
+        do
+        {
+            last = Volatile.Read(ref _lastWaveExtractPercent);
+            if (percent <= last)
+            {
+                return;
+            }
+        }
+        while (System.Threading.Interlocked.CompareExchange(ref _lastWaveExtractPercent, percent, last) != last);
+
+        Dispatcher.UIThread.Post(() =>
+        {
+            // Re-check: a newer run may have started between this post and its execution.
+            if (!IsWaveformGenerating || extractionId != Volatile.Read(ref _waveExtractionSequence))
+            {
+                return;
+            }
+
+            WaveformGeneratingText = $"{Se.Language.Main.ExtractingWaveInfo} {percent}%";
+        });
     }
 
     private void ExtractShotChanges(string videoFileName, int audioTrackNumber)
@@ -19593,7 +19871,7 @@ public partial class MainViewModel :
 
     private void MergeLinesSelected(MergeManager.BreakMode breakMode = MergeManager.BreakMode.Normal)
     {
-        var selectedItems = SubtitleGrid.SelectedItems.Cast<SubtitleLineViewModel>().ToList();
+        var selectedItems = SubtitleGridSelectedItems.Cast<SubtitleLineViewModel>().ToList();
         if (selectedItems.Count == 0 || SelectedSubtitle == null)
         {
             return;
@@ -19611,7 +19889,7 @@ public partial class MainViewModel :
 
     private void MergeLinesSelectedAsDialog()
     {
-        var selectedItems = SubtitleGrid.SelectedItems.Cast<SubtitleLineViewModel>().ToList();
+        var selectedItems = SubtitleGridSelectedItems.Cast<SubtitleLineViewModel>().ToList();
         if (selectedItems.Count != 2)
         {
             return; // only two items can be merged as dialog
@@ -19625,7 +19903,7 @@ public partial class MainViewModel :
 
     private void MergeLinesSelectedBilingual()
     {
-        var selectedItems = SubtitleGrid.SelectedItems.Cast<SubtitleLineViewModel>().ToList();
+        var selectedItems = SubtitleGridSelectedItems.Cast<SubtitleLineViewModel>().ToList();
         if (selectedItems.Count < 2)
         {
             return;
@@ -19831,13 +20109,17 @@ public partial class MainViewModel :
     {
         var idx = SubtitleGrid.SelectedIndex;
         var count = Subtitles.Count;
-        MenuItemMergeAsDialog.IsVisible = SubtitleGrid.SelectedItems.Count == 2;
-        MenuItemMerge.IsVisible = SubtitleGrid.SelectedItems.Count > 1;
-        MenuItemExtendToLineBefore.IsVisible = SubtitleGrid.SelectedItems.Count == 1 && Subtitles.Count > 1 && idx > 0;
-        MenuItemExtendToLineAfter.IsVisible = SubtitleGrid.SelectedItems.Count == 1 && Subtitles.Count > 1 && idx < count - 1;
+        MenuItemMergeAsDialog.IsVisible = SubtitleGridSelectedItems.Count == 2;
+        MenuItemMerge.IsVisible = SubtitleGridSelectedItems.Count > 1;
+        // With 2+ lines selected at least one of them has a neighbor on either side,
+        // so the focused-index boundary check only applies to single selection (#12981)
+        MenuItemExtendToLineBefore.IsVisible = Subtitles.Count > 1 &&
+            (SubtitleGridSelectedItems.Count > 1 || (SubtitleGridSelectedItems.Count == 1 && idx > 0));
+        MenuItemExtendToLineAfter.IsVisible = Subtitles.Count > 1 &&
+            (SubtitleGridSelectedItems.Count > 1 || (SubtitleGridSelectedItems.Count == 1 && idx < count - 1));
         AreAssaContentMenuItemsVisible = false;
-        ShowAutoTranslateSelectedLines = SubtitleGrid.SelectedItems.Count > 0 && ShowColumnOriginalText;
-        HasMultipleLinesSelected = SubtitleGrid.SelectedItems.Count > 1;
+        ShowAutoTranslateSelectedLines = SubtitleGridSelectedItems.Count > 0 && ShowColumnOriginalText;
+        HasMultipleLinesSelected = SubtitleGridSelectedItems.Count > 1;
         ShowColumnLayerFlyoutMenuItem = IsFormatAssa;
 
         if (IsSubtitleGridFlyoutHeaderVisible)
@@ -19859,11 +20141,11 @@ public partial class MainViewModel :
         else
         {
             IsSubtitleGridDataMenuVisible = true;
-            IsMergeWithNextOrPreviousVisible = SubtitleGrid.SelectedItems.Count == 1;
+            IsMergeWithNextOrPreviousVisible = SubtitleGridSelectedItems.Count == 1;
             IsInsertLineNoSelectionVisible = false;
             // Any single selected line, not only the last - a pre-timed file keeps its own time
             // codes, so inserting midway is a normal workflow (discussion #11744).
-            IsInsertSubtitleFileAfterLineVisible = SubtitleGrid.SelectedItems.Count == 1;
+            IsInsertSubtitleFileAfterLineVisible = SubtitleGridSelectedItems.Count == 1;
 
             if (IsFormatAssa || IsFormatSsa)
             {
@@ -19982,7 +20264,7 @@ public partial class MainViewModel :
         // lines selected the per-word suggestions/"ignore all" would be ambiguous (they act on the
         // one clicked cell, not the selection).
         if (IsSubtitleGridFlyoutHeaderVisible ||
-            SubtitleGrid.SelectedItems.Count != 1 ||
+            SubtitleGridSelectedItems.Count != 1 ||
             (!Se.Settings.Appearance.SubtitleGridLiveSpellCheck && !Se.Settings.Appearance.SubtitleTextBoxLiveSpellCheck))
         {
             return;
@@ -20202,7 +20484,7 @@ public partial class MainViewModel :
         }
 
         // The pointer can be over the cell padding instead of the text block itself
-        var cell = hit.FindAncestorOfType<DataGridCell>();
+        var cell = hit.FindAncestorOfType<TableViewCell>();
         return cell?.GetVisualDescendants().OfType<TextBlock>().FirstOrDefault(IsSubtitleGridTextBlock);
     }
 
@@ -21275,30 +21557,26 @@ public partial class MainViewModel :
     private bool _subtitleGridIsRightClick = false;
     private bool _subtitleGridIsLeftClick = false;
     private bool _subtitleGridIsControlPressed = false;
-    private int _dragSelectStartIndex = -1;
-    private int _dragSelectLastIndex = -1;
-    private int _dragSelectAppliedIndex = -1;
     private int _shiftSelectAnchorIndex = -1;
     private int _shiftSelectCurrentIndex = -1;
     private bool _mouseClickSetAnchor;
-    private int _dragSelectAutoScrollDirection;
-    private int _dragSelectAutoScrollStep = 1;
-    private bool _dragSelectHasMoved;
-    private DispatcherTimer? _dragSelectAutoScrollTimer;
-    private const double DragSelectAutoScrollEdgeSize = 28;
-    private const double DragSelectAutoScrollAccelerationPixels = 18;
-    private const int DragSelectAutoScrollMaxStep = 16;
+
+    /// <summary>
+    /// Applies a drag-select range from <see cref="TableViewDragSelect"/> - the moving
+    /// end becomes the SelectedItem, mirroring shift-selection.
+    /// </summary>
+    internal void ApplyDragSelectRange(int anchorIndex, int currentIndex)
+    {
+        SelectGridRange(Math.Min(anchorIndex, currentIndex), Math.Max(anchorIndex, currentIndex), currentIndex);
+        SubtitleGridSelectionChanged();
+    }
 
     public void SubtitleGrid_PointerPressed(object? sender, PointerPressedEventArgs e)
     {
-        StopSubtitleGridDragSelectAutoScroll();
+        SubtitleGridDragSelect?.Reset();
         _subtitleGridIsControlPressed = false;
         _subtitleGridIsLeftClick = false;
         _subtitleGridIsRightClick = false;
-        _dragSelectStartIndex = -1;
-        _dragSelectLastIndex = -1;
-        _dragSelectAppliedIndex = -1;
-        _dragSelectHasMoved = false;
         IsSubtitleGridFlyoutHeaderVisible = false;
 
         if (sender is Control { ContextFlyout: not null } control)
@@ -21314,25 +21592,19 @@ public partial class MainViewModel :
             var isMultiSelectModifier = _subtitleGridIsControlPressed
                 || (OperatingSystem.IsMacOS() && e.KeyModifiers.HasFlag(KeyModifiers.Meta));
 
-            var hitTest = SubtitleGrid.InputHitTest(e.GetPosition(SubtitleGrid));
-            var current = hitTest as Control;
-            while (current != null)
+            var hitTest = SubtitleGrid.InputHitTest(e.GetPosition(SubtitleGrid)) as Visual;
+            if (TableViewExtras.IsInColumnHeader(hitTest))
             {
-                if (current is DataGridColumnHeader)
-                {
-                    IsSubtitleGridFlyoutHeaderVisible = true;
-                    IsMergeWithNextOrPreviousVisible = false;
-                    _shiftSelectAnchorIndex = -1;
-                    _shiftSelectCurrentIndex = -1;
-                    return;
-                }
+                IsSubtitleGridFlyoutHeaderVisible = true;
+                IsMergeWithNextOrPreviousVisible = false;
+                _shiftSelectAnchorIndex = -1;
+                _shiftSelectCurrentIndex = -1;
+                return;
+            }
 
-                if (current is ScrollBar)
-                {
-                    return;
-                }
-
-                current = current.Parent as Control;
+            if (TableViewExtras.IsInScrollBar(hitTest))
+            {
+                return;
             }
 
             var isShiftPressed = e.KeyModifiers.HasFlag(KeyModifiers.Shift);
@@ -21350,21 +21622,9 @@ public partial class MainViewModel :
                     _shiftSelectAnchorIndex = anchor;
                     _shiftSelectCurrentIndex = rowIndex;
 
-                    var startIdx = Math.Min(anchor, rowIndex);
-                    var endIdx = Math.Max(anchor, rowIndex);
+                    SelectGridRange(Math.Min(anchor, rowIndex), Math.Max(anchor, rowIndex), rowIndex);
 
-                    BatchGridSelection(endIdx - startIdx + 1 > GridSelectionDetachThreshold, () =>
-                    {
-                        SubtitleGrid.SelectedItems.Clear();
-                        SubtitleGrid.SelectedItems.Add(Subtitles[rowIndex]);
-                        for (var i = startIdx; i <= endIdx; i++)
-                        {
-                            if (i != rowIndex)
-                                SubtitleGrid.SelectedItems.Add(Subtitles[i]);
-                        }
-                    });
-
-                    SubtitleGrid.ScrollIntoView(Subtitles[rowIndex], null);
+                    SubtitleGrid.ScrollIntoView(Subtitles[rowIndex]);
                     SubtitleGridSelectionChanged();
                     e.Handled = true;
                     return;
@@ -21386,8 +21646,7 @@ public partial class MainViewModel :
                 _shiftSelectAnchorIndex = rowIndex;
                 _shiftSelectCurrentIndex = rowIndex;
                 _mouseClickSetAnchor = true;
-                _dragSelectStartIndex = rowIndex;
-                _dragSelectLastIndex = rowIndex;
+                SubtitleGridDragSelect?.Arm(rowIndex);
             }
         }
     }
@@ -21400,11 +21659,7 @@ public partial class MainViewModel :
             return;
         }
 
-        StopSubtitleGridDragSelectAutoScroll();
-        _dragSelectStartIndex = -1;
-        _dragSelectLastIndex = -1;
-        _dragSelectAppliedIndex = -1;
-        _dragSelectHasMoved = false;
+        SubtitleGridDragSelect?.Reset();
 
         SubtitleGrid.SelectedItem = Subtitles[rowIndex];
         OnSubtitleGridDoubleTapped(SubtitleGrid, e);
@@ -21413,126 +21668,17 @@ public partial class MainViewModel :
 
     private int GetDataGridRowIndexFromPoint(Avalonia.Point position)
     {
-        var hitTest = SubtitleGrid.InputHitTest(position);
-        var current = hitTest as Control;
-        while (current != null)
-        {
-            if (current is DataGridRow row)
-            {
-                return row.Index;
-            }
-
-            current = current.Parent as Control;
-        }
-
-        return -1;
+        return TableViewExtras.GetRowIndexFromPoint(SubtitleGrid, position);
     }
 
     public void SubtitleGrid_PointerMoved(object? sender, PointerEventArgs e)
     {
-        if (_dragSelectStartIndex < 0 || !_subtitleGridIsLeftClick)
+        if (!_subtitleGridIsLeftClick)
         {
             return;
         }
 
-        var props = e.GetCurrentPoint(SubtitleGrid).Properties;
-        if (!props.IsLeftButtonPressed)
-        {
-            EndSubtitleGridDragSelect(e);
-            return;
-        }
-
-        var position = e.GetPosition(SubtitleGrid);
-        UpdateSubtitleGridDragSelectAutoScroll(position);
-
-        var currentIndex = GetDataGridRowIndexFromPoint(position);
-        if (currentIndex < 0)
-        {
-            return;
-        }
-
-        var wasDragging = _dragSelectHasMoved;
-        DragSelectSubtitleGridToIndex(currentIndex);
-        if (_dragSelectHasMoved)
-        {
-            if (!wasDragging && sender is Control control)
-            {
-                e.Pointer.Capture(control);
-            }
-
-            e.Handled = true;
-        }
-    }
-
-    private void DragSelectSubtitleGridToIndex(int currentIndex)
-    {
-        if (_dragSelectStartIndex < 0 || currentIndex < 0 || currentIndex >= Subtitles.Count)
-        {
-            return;
-        }
-
-        _dragSelectLastIndex = currentIndex;
-
-        if (currentIndex == _dragSelectStartIndex && !_dragSelectHasMoved)
-        {
-            return;
-        }
-
-        var firstMove = !_dragSelectHasMoved;
-        _dragSelectHasMoved = true;
-
-        var anchor = _dragSelectStartIndex;
-        var newLo = Math.Min(anchor, currentIndex);
-        var newHi = Math.Max(anchor, currentIndex);
-
-        _subtitleGridSelectionChangedSkip = true;
-        try
-        {
-            if (firstMove || _dragSelectAppliedIndex < 0)
-            {
-                // First move: the prior selection state isn't known, so set the whole
-                // range authoritatively (detaching for a very large initial range).
-                BatchGridSelection(newHi - newLo + 1 > GridSelectionDetachThreshold, () =>
-                {
-                    SubtitleGrid.SelectedItems.Clear();
-                    for (var i = newLo; i <= newHi; i++)
-                    {
-                        SubtitleGrid.SelectedItems.Add(Subtitles[i]);
-                    }
-                });
-            }
-            else
-            {
-                // Subsequent moves only touch the rows whose membership changed since
-                // the last applied endpoint, so dragging across a large range never
-                // rebuilds the whole selection (and we don't detach mid-drag, which
-                // would disrupt the active pointer capture).
-                var prevLo = Math.Min(anchor, _dragSelectAppliedIndex);
-                var prevHi = Math.Max(anchor, _dragSelectAppliedIndex);
-                for (var i = prevLo; i <= prevHi; i++)
-                {
-                    if (i < newLo || i > newHi)
-                    {
-                        SubtitleGrid.SelectedItems.Remove(Subtitles[i]);
-                    }
-                }
-
-                for (var i = newLo; i <= newHi; i++)
-                {
-                    if (i < prevLo || i > prevHi)
-                    {
-                        SubtitleGrid.SelectedItems.Add(Subtitles[i]);
-                    }
-                }
-            }
-        }
-        finally
-        {
-            _dragSelectAppliedIndex = currentIndex;
-            _subtitleGridSelectionChangedSkip = false;
-        }
-
-        SubtitleGridSelectionChanged();
+        SubtitleGridDragSelect?.OnPointerMoved(sender, e);
     }
 
     private void HandleShiftArrowSelection(int direction)
@@ -21544,8 +21690,8 @@ public partial class MainViewModel :
 
         if (_shiftSelectAnchorIndex < 0)
         {
-            var anchor = SelectedSubtitleIndex ?? (SubtitleGrid.SelectedItems.Count > 0
-                ? Subtitles.IndexOf((SubtitleLineViewModel)SubtitleGrid.SelectedItems[0]!)
+            var anchor = SelectedSubtitleIndex ?? (SubtitleGridSelectedItems.Count > 0
+                ? Subtitles.IndexOf((SubtitleLineViewModel)SubtitleGridSelectedItems[0]!)
                 : -1);
             if (anchor < 0)
             {
@@ -21567,190 +21713,46 @@ public partial class MainViewModel :
         var startIdx = Math.Min(_shiftSelectAnchorIndex, _shiftSelectCurrentIndex);
         var endIdx = Math.Max(_shiftSelectAnchorIndex, _shiftSelectCurrentIndex);
 
-        // Shift+Ctrl+Home/End can extend the selection across the whole file in one
-        // keypress, so detach for large ranges to avoid the per-row hang (#11529).
-        var detach = endIdx - startIdx + 1 > GridSelectionDetachThreshold;
-        BatchGridSelection(detach, () =>
-        {
-            SubtitleGrid.SelectedItems.Clear();
+        // The moving end goes in first so it becomes the SelectedItem - the row a plain
+        // arrow key afterwards continues from (and the one the edit box shows).
+        SelectGridRange(startIdx, endIdx, _shiftSelectCurrentIndex);
 
-            // Add the moving end of the selection first: the DataGrid only moves its current cell for
-            // the first item added into an empty selection. Filling the range in ascending order left
-            // the current cell on the anchor when extending downwards, so a plain arrow key afterwards
-            // jumped back to anchor+1 instead of continuing from the moving end. The shift+click path
-            // above adds the clicked row first for the same reason.
-            SubtitleGrid.SelectedItems.Add(Subtitles[_shiftSelectCurrentIndex]);
-            for (var i = startIdx; i <= endIdx; i++)
-            {
-                if (i != _shiftSelectCurrentIndex)
-                {
-                    SubtitleGrid.SelectedItems.Add(Subtitles[i]);
-                }
-            }
-        });
+        SubtitleGrid.ScrollIntoView(Subtitles[_shiftSelectCurrentIndex]);
 
-        var scrollTarget = _shiftSelectCurrentIndex;
-        if (detach)
-        {
-            // After detach/reattach, rows aren't realized until the layout pass fires,
-            // so ScrollIntoView fails silently when called synchronously here.
-            Dispatcher.UIThread.Post(() =>
-            {
-                if (scrollTarget < Subtitles.Count)
-                {
-                    SubtitleGrid.ScrollIntoView(Subtitles[scrollTarget], null);
-                }
-            }, DispatcherPriority.Background);
-        }
-        else
-        {
-            SubtitleGrid.ScrollIntoView(Subtitles[scrollTarget], null);
-        }
+        // Shift+Home/End/PageUp/PageDown can scroll the previously focused row container
+        // out of the realized range, which drops keyboard focus out of the grid and kills
+        // the next grid shortcut - re-focus the moving end of the selection after layout.
+        Dispatcher.UIThread.Post(() => TableViewExtras.FocusRow(SubtitleGrid));
 
         SubtitleGridSelectionChanged();
     }
 
     private int GetSubtitleGridPageSize()
     {
-        var rowsPresenter = SubtitleGrid.GetVisualDescendants()
-            .OfType<DataGridRowsPresenter>()
-            .FirstOrDefault();
-        if (rowsPresenter != null && rowsPresenter.Bounds.Height > 0)
-        {
-            var rowHeight = SubtitleGrid.RowHeight;
-            if (!double.IsNaN(rowHeight) && rowHeight > 0)
-            {
-                return Math.Max(1, (int)Math.Ceiling(rowsPresenter.Bounds.Height / rowHeight) - 1);
-            }
-        }
-
-        // Fallback for variable row heights: count rendered rows in the visual tree
-        var visibleRowCount = SubtitleGrid.GetVisualDescendants()
-            .OfType<DataGridRow>()
-            .Count(r => r.IsVisible && r.Bounds.Height > 0);
-        return Math.Max(1, visibleRowCount - 1);
-    }
-
-    private void UpdateSubtitleGridDragSelectAutoScroll(Avalonia.Point position)
-    {
-        if (SubtitleGrid.Bounds.Height <= 0)
-        {
-            StopSubtitleGridDragSelectAutoScroll();
-            return;
-        }
-
-        if (position.Y < DragSelectAutoScrollEdgeSize)
-        {
-            var distanceFromEdge = DragSelectAutoScrollEdgeSize - position.Y;
-            StartSubtitleGridDragSelectAutoScroll(-1, distanceFromEdge);
-        }
-        else if (position.Y > SubtitleGrid.Bounds.Height - DragSelectAutoScrollEdgeSize)
-        {
-            var distanceFromEdge = position.Y - (SubtitleGrid.Bounds.Height - DragSelectAutoScrollEdgeSize);
-            StartSubtitleGridDragSelectAutoScroll(1, distanceFromEdge);
-        }
-        else
-        {
-            StopSubtitleGridDragSelectAutoScroll();
-        }
-    }
-
-    private void StartSubtitleGridDragSelectAutoScroll(int direction, double distanceFromEdge)
-    {
-        if (_dragSelectLastIndex < 0 || Subtitles.Count == 0)
-        {
-            return;
-        }
-
-        _dragSelectAutoScrollDirection = direction;
-        _dragSelectAutoScrollStep = CalculateSubtitleGridDragSelectAutoScrollStep(distanceFromEdge);
-
-        if (_dragSelectAutoScrollTimer != null)
-        {
-            if (!_dragSelectAutoScrollTimer.IsEnabled)
-            {
-                _dragSelectAutoScrollTimer.Start();
-            }
-
-            return;
-        }
-
-        _dragSelectAutoScrollTimer = new DispatcherTimer
-        {
-            Interval = TimeSpan.FromMilliseconds(80),
-        };
-        _dragSelectAutoScrollTimer.Tick += (_, _) => SubtitleGridDragSelectAutoScrollTick();
-        _dragSelectAutoScrollTimer.Start();
-    }
-
-    private static int CalculateSubtitleGridDragSelectAutoScrollStep(double distanceFromEdge)
-    {
-        var step = 1 + (int)Math.Floor(Math.Max(0, distanceFromEdge) / DragSelectAutoScrollAccelerationPixels);
-        return Math.Clamp(step, 1, DragSelectAutoScrollMaxStep);
-    }
-
-    private void StopSubtitleGridDragSelectAutoScroll()
-    {
-        _dragSelectAutoScrollDirection = 0;
-        _dragSelectAutoScrollStep = 1;
-        _dragSelectAutoScrollTimer?.Stop();
-    }
-
-    private void SubtitleGridDragSelectAutoScrollTick()
-    {
-        if (_dragSelectStartIndex < 0 || !_subtitleGridIsLeftClick || _dragSelectAutoScrollDirection == 0)
-        {
-            StopSubtitleGridDragSelectAutoScroll();
-            return;
-        }
-
-        var nextIndex = Math.Clamp(
-            _dragSelectLastIndex + _dragSelectAutoScrollDirection * _dragSelectAutoScrollStep,
-            0,
-            Subtitles.Count - 1);
-        if (nextIndex == _dragSelectLastIndex)
-        {
-            StopSubtitleGridDragSelectAutoScroll();
-            return;
-        }
-
-        DragSelectSubtitleGridToIndex(nextIndex);
-        SubtitleGrid.ScrollIntoView(Subtitles[nextIndex], null);
+        return TableViewExtras.GetPageSize(SubtitleGrid);
     }
 
     public void SubtitleGrid_PointerReleased(object? sender, PointerReleasedEventArgs e)
     {
-        EndSubtitleGridDragSelect(e);
+        var hasMoved = SubtitleGridDragSelect?.HasMoved == true;
+        SubtitleGridDragSelect?.End(e);
 
         if (sender is Control { ContextFlyout: MenuFlyout menuFlyout } control)
         {
-            if (_subtitleGridIsRightClick && !_dragSelectHasMoved)
+            if (_subtitleGridIsRightClick && !hasMoved)
             {
                 menuFlyout.ShowAt(control, true);
             }
 
             if (OperatingSystem.IsMacOS())
             {
-                if (_subtitleGridIsLeftClick && _subtitleGridIsControlPressed && !_dragSelectHasMoved)
+                if (_subtitleGridIsLeftClick && _subtitleGridIsControlPressed && !hasMoved)
                 {
                     menuFlyout.ShowAt(control, true);
                     e.Handled = true;
                 }
             }
         }
-    }
-
-    private void EndSubtitleGridDragSelect(PointerEventArgs e)
-    {
-        StopSubtitleGridDragSelectAutoScroll();
-        if (_dragSelectStartIndex >= 0)
-        {
-            e.Pointer.Capture(null);
-        }
-        _dragSelectStartIndex = -1;
-        _dragSelectLastIndex = -1;
-        _dragSelectAppliedIndex = -1;
-        _dragSelectAutoScrollDirection = 0;
     }
 
     public void SubtitleGrid_SelectionChanged(object? sender, SelectionChangedEventArgs e)
@@ -21775,7 +21777,7 @@ public partial class MainViewModel :
             _shiftSelectCurrentIndex = -1;
         }
 
-        var selectedItems = SubtitleGrid.SelectedItems;
+        var selectedItems = SubtitleGridSelectedItems;
 
         // If user is trying to deselect the last selected item
         if (selectedItems.Count == 0 && e.AddedItems.Count == 0 && e.RemovedItems.Count == 1)
@@ -21825,7 +21827,7 @@ public partial class MainViewModel :
 
     private void SubtitleGridSelectionChanged()
     {
-        var selectedItems = SubtitleGrid.SelectedItems;
+        var selectedItems = SubtitleGridSelectedItems;
         EditTextBox.ClearSelection();
         EditTextBoxOriginal.ClearSelection();
         ResetPlaySelection();
@@ -22398,7 +22400,7 @@ public partial class MainViewModel :
                                 vp.Position = p.StartTime.TotalSeconds;
                             }
 
-                            Dispatcher.UIThread.Post(() => { SubtitleGrid.ScrollIntoView(p, null); });
+                            Dispatcher.UIThread.Post(() => { SubtitleGrid.ScrollIntoView(p); });
                         }
                     }
 
@@ -23052,7 +23054,7 @@ public partial class MainViewModel :
 
     internal void OnSubtitleGridDoubleTapped(object? sender)
     {
-        if (sender is not DataGrid grid || grid.SelectedItem == null)
+        if (sender is not TableView grid || grid.SelectedItem == null)
         {
             return;
         }
@@ -23177,7 +23179,7 @@ public partial class MainViewModel :
 
     internal void OnSubtitleGridSingleTapped(object? sender)
     {
-        if (sender is not DataGrid grid || grid.SelectedItem == null)
+        if (sender is not TableView grid || grid.SelectedItem == null)
         {
             return;
         }
@@ -23253,7 +23255,7 @@ public partial class MainViewModel :
                 Math.Abs(p.StartTime.TotalMilliseconds - e.Paragraph.StartTime.TotalMilliseconds) < 0.01);
             if (p != null)
             {
-                var selectedItems = SubtitleGrid.SelectedItems;
+                var selectedItems = SubtitleGridSelectedItems;
                 if (selectedItems.Contains(p))
                 {
                     if (selectedItems.Count != 1 || selectedItems[0] != p)
@@ -23281,7 +23283,7 @@ public partial class MainViewModel :
 
         if (adjustSelectedLines)
         {
-            foreach (SubtitleLineViewModel p in SubtitleGrid.SelectedItems)
+            foreach (SubtitleLineViewModel p in SubtitleGridSelectedItems)
             {
                 p.SetStartTimeKeepDuration(p.StartTime + adjustment);
                 p.UpdateDuration();
@@ -23289,7 +23291,7 @@ public partial class MainViewModel :
         }
         else if (adjustSelectedLinesAndForward)
         {
-            var selectedItems = SubtitleGrid.SelectedItems.Cast<SubtitleLineViewModel>().ToList();
+            var selectedItems = SubtitleGridSelectedItems.Cast<SubtitleLineViewModel>().ToList();
             if (selectedItems.Count > 0)
             {
                 var firstSelectedIndex = selectedItems.Min(p => Subtitles.IndexOf(p));
@@ -23547,6 +23549,8 @@ public partial class MainViewModel :
         MenuItemAudioVisualizerSpeechToTextSelectedLines.IsVisible = false;
         MenuItemAudioVisualizerSpeechToTextNewSelection.IsVisible = false;
         MenuItemAudioVisualizerExtractAudio.IsVisible = false;
+        MenuItemAudioVisualizerCopy.IsVisible = false;
+        MenuItemAudioVisualizerCopyText.IsVisible = false;
 
         if (e.NewParagraph != null)
         {
@@ -23581,6 +23585,8 @@ public partial class MainViewModel :
         {
             MenuItemAudioVisualizerInsertBefore.IsVisible = true;
             MenuItemAudioVisualizerInsertAfter.IsVisible = true;
+            MenuItemAudioVisualizerCopy.IsVisible = true;
+            MenuItemAudioVisualizerCopyText.IsVisible = true;
             MenuItemAudioVisualizerSeparator1.IsVisible = true;
             MenuItemAudioVisualizerDelete.IsVisible = true;
             MenuItemAudioVisualizerSplit.IsVisible = true;

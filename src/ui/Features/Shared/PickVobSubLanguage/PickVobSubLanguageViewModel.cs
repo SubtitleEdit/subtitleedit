@@ -21,7 +21,7 @@ public partial class PickVobSubLanguageViewModel : ObservableObject
     [ObservableProperty] private ObservableCollection<VobSubLanguageCueDisplay> _rows;
 
     public Window? Window { get; set; }
-    public DataGrid LanguagesGrid { get; set; }
+    public TableView LanguagesGrid { get; set; }
     public bool OkPressed { get; private set; }
     public string WindowTitle { get; private set; }
 
@@ -37,7 +37,7 @@ public partial class PickVobSubLanguageViewModel : ObservableObject
     {
         Languages = new ObservableCollection<VobSubLanguageDisplay>();
         Rows = new ObservableCollection<VobSubLanguageCueDisplay>();
-        LanguagesGrid = new DataGrid();
+        LanguagesGrid = new TableView();
         WindowTitle = string.Empty;
         SelectedLanguageString = string.Empty;
         _streamIdDictionary = new Dictionary<int, List<VobSubMergedPack>>();
@@ -101,14 +101,14 @@ public partial class PickVobSubLanguageViewModel : ObservableObject
             Cancel();
             e.Handled = true;
         }
-        else if (e.Key == Key.Enter && LanguagesGrid.IsFocused)
+        else if (e.Key == Key.Enter && LanguagesGrid.IsKeyboardFocusWithin)
         {
             Ok();
             e.Handled = true;
         }
     }
 
-    internal void DataGridLanguagesSelectionChanged(object? sender, SelectionChangedEventArgs e)
+    internal void LanguagesGridSelectionChanged(object? sender, SelectionChangedEventArgs e)
     {
         LanguageChanged();
     }
@@ -152,7 +152,11 @@ public partial class PickVobSubLanguageViewModel : ObservableObject
         Dispatcher.UIThread.Post(() =>
         {
             LanguagesGrid.SelectedIndex = index;
-            LanguagesGrid.ScrollIntoView(LanguagesGrid.SelectedItem, null);
+            if (LanguagesGrid.SelectedItem is { } selectedItem)
+            {
+                LanguagesGrid.ScrollIntoView(selectedItem);
+            }
+
             LanguageChanged();
         }, DispatcherPriority.Background);
     }

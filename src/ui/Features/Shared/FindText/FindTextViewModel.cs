@@ -24,7 +24,7 @@ public partial class FindTextViewModel : ObservableObject, IClosingCleanup
     public Window? Window { get; set; }
 
     public bool OkPressed { get; private set; }
-    public DataGrid SubtitleGrid { get; internal set; }
+    public TableView SubtitleGrid { get; internal set; }
 
     private List<SubtitleLineViewModel> _allSubtitles;
     private bool _dirty;
@@ -36,7 +36,7 @@ public partial class FindTextViewModel : ObservableObject, IClosingCleanup
         _allSubtitles = new List<SubtitleLineViewModel>();
         Subtitles = new ObservableCollection<SubtitleLineViewModel>();
         Title = string.Empty;
-        SubtitleGrid = new DataGrid();
+        SubtitleGrid = new TableView();
         SearchText = string.Empty;
         _updateLock = new Lock();
         _searchTimer = new System.Timers.Timer();
@@ -118,7 +118,7 @@ public partial class FindTextViewModel : ObservableObject, IClosingCleanup
 
     internal void OnSubtitleGridDoubleTapped(object? sender, TappedEventArgs e)
     {
-        if (sender is DataGrid grid && grid.SelectedItem != null)
+        if (sender is TableView grid && grid.SelectedItem != null)
         {
             if (grid.SelectedItem is SubtitleLineViewModel selectedItem)
             {

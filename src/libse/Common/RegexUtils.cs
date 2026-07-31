@@ -223,7 +223,8 @@ namespace Nikse.SubtitleEdit.Core.Common
         /// Normalizes the new-line escapes a user typed in a regular expression (<c>\r\n</c>, <c>\n</c>
         /// or <c>\r</c>) to a single line-feed, so a rule matches regardless of which escape was typed
         /// and regardless of the platform line-ending. Subtitle text is matched line-feed normalized too
-        /// (see <see cref="ReplaceNewLineSafe"/>), keeping the pattern and the text in sync. The previous
+        /// (see <see cref="ReplaceNewLineSafe(Regex, string, string)"/>), keeping the pattern and the text
+        /// in sync. The previous
         /// behavior expanded these to Environment.NewLine (CRLF on Windows), which no longer matched the
         /// line-feed text used in v5, so cross-line regex rules silently stopped working (#11956).
         /// </summary>

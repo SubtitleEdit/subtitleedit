@@ -16,6 +16,8 @@ public class LanguageMainToolbar
     public string PointSyncHint { get; set; }
     public string BeautifyTimeCodesHint { get; set; }
     public string BurnInHint { get; set; }
+    public string AutoTranslateHint { get; set; }
+    public string SpeechToTextHint { get; set; }
     public string SettingsHint { get; set; }
     public string LayoutHint { get; set; }
     public string HelpHint { get; set; }
@@ -46,6 +48,8 @@ public class LanguageMainToolbar
         PointSyncHint = "Point sync via another subtitle {0}";
         BeautifyTimeCodesHint = "Beautify time codes {0}";
         BurnInHint = "Burn subtitles into a video file {0}";
+        AutoTranslateHint = "Auto-translate {0}";
+        SpeechToTextHint = "Speech to text {0}";
         SettingsHint = "Adjust program settings and preferences {0}";
         LayoutHint = "Change toolbar and panel layout {0}";
         HelpHint = "Open help website {0}";

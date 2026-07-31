@@ -19,11 +19,11 @@ namespace Nikse.SubtitleEdit.UiLogic.AutoTranslate
         public override string ToString() => StaticName;
         public string Name => StaticName;
         public string Url => "https://deepmind.google/technologies/gemini/";
-        public string Error { get; set; }
+        public string Error { get; set; } = string.Empty;
         public int MaxCharacters => 1500;
 
-        private HttpClient _httpClient;
-        private string _baseUrl;
+        private HttpClient _httpClient = null!;
+        private string _baseUrl = string.Empty;
 
 
         /// <summary>
@@ -88,8 +88,8 @@ namespace Nikse.SubtitleEdit.UiLogic.AutoTranslate
         public async Task<string> Translate(string text, string sourceLanguageCode, string targetLanguageCode, CancellationToken cancellationToken)
         {
             int[] retryDelays = { 555, 3007, 7013 };
-            HttpResponseMessage result = null;
-            string resultContent = null;
+            HttpResponseMessage result = null!;
+            var resultContent = string.Empty;
             var switchedBaseUrl = false;
             for (var attempt = 0; attempt <= retryDelays.Length; attempt++)
             {
@@ -112,7 +112,7 @@ namespace Nikse.SubtitleEdit.UiLogic.AutoTranslate
                     continue;
                 }
 
-                resultContent = await result.Content.ReadAsStringAsync();
+                resultContent = await result.Content.ReadAsStringAsync(cancellationToken);
 
                 if (!DeepLTranslate.ShouldRetry(result, resultContent) || attempt == retryDelays.Length)
                 {
@@ -167,7 +167,7 @@ namespace Nikse.SubtitleEdit.UiLogic.AutoTranslate
                MakePair("Albanian","sq"),
                MakePair("Arabic","ar"),
                MakePair("Armenian","hy"),
-               MakePair("Awadhi","ay"),
+               MakePair("Awadhi",""),
                MakePair("Azerbaijani","az"),
                MakePair("Bashkir","ba"),
                MakePair("Basque","eu"),
@@ -175,7 +175,7 @@ namespace Nikse.SubtitleEdit.UiLogic.AutoTranslate
                MakePair("Bengali","bn"),
                MakePair("Bhojpuri",""),
                MakePair("Bosnian","bs"),
-               MakePair("Brazilian Portuguese","br"),
+               MakePair("Brazilian Portuguese","pt"),
                MakePair("Bulgarian","bg"),
                MakePair("Cantonese","zh"),
                MakePair("Catalan","ca"),
@@ -198,7 +198,7 @@ namespace Nikse.SubtitleEdit.UiLogic.AutoTranslate
                MakePair("Greek","el"),
                MakePair("Gujarati","gu"),
                MakePair("Haryanvi",""),
-               MakePair("Hebrew","iw"),
+               MakePair("Hebrew","he"),
                MakePair("Hindi","hi"),
                MakePair("Hungarian","hu"),
                MakePair("Icelandic","is"),

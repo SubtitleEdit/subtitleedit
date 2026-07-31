@@ -131,7 +131,11 @@ public static partial class CustomTextFormatter
         var isNegative = timeCode.TotalMilliseconds < 0;
         var result = template;
 
-        // Replace milliseconds/fractional seconds (z's)
+        // Replace a leading run of s's/z's with total seconds/milliseconds,
+        // e.g. "ss.zzz" => "61.160" and "zzz" => "61160" (SE 4.x semantics)
+        result = ReplaceLeadingTotal(result, timeCode);
+
+        // Replace fractional seconds (z's)
         result = ReplaceMilliseconds(result, timeCode);
 
         // Replace seconds (s's)
@@ -149,6 +153,67 @@ public static partial class CustomTextFormatter
         return result;
     }
 
+    /// <summary>
+    /// Template starts with a run of 's' or 'z' that means a total (total seconds
+    /// or total milliseconds) rather than a clock component: "ss.zzz", "zzz", "s".
+    /// A single leading 's'/'z' only counts when it is the whole template, so
+    /// literal text like "s: hh:mm:ss" is left alone.
+    /// </summary>
+    internal static bool HasLeadingTotalRun(string template)
+    {
+        return GetLeadingTotalRunLength(template) > 0;
+    }
+
+    private static int GetLeadingTotalRunLength(string template)
+    {
+        if (template.Length == 0)
+        {
+            return 0;
+        }
+
+        var c = template[0];
+        if (c != 's' && c != 'z')
+        {
+            return 0;
+        }
+
+        var run = 1;
+        while (run < template.Length && template[run] == c)
+        {
+            run++;
+        }
+
+        return run >= 2 || run == template.Length ? run : 0;
+    }
+
+    private static string ReplaceLeadingTotal(string template, TimeCode timeCode)
+    {
+        var run = GetLeadingTotalRunLength(template);
+        if (run == 0)
+        {
+            return template;
+        }
+
+        var rest = template.Substring(run);
+        long total;
+        if (template[0] == 'z')
+        {
+            total = (long)Math.Round(Math.Abs(timeCode.TotalMilliseconds), MidpointRounding.AwayFromZero);
+        }
+        else if (rest.Contains('z'))
+        {
+            // A fractional part follows, so the seconds must not be rounded up:
+            // 61.960 as "ss.zzz" is "61.960", not "62.960"
+            total = (long)Math.Floor(Math.Abs(timeCode.TotalSeconds));
+        }
+        else
+        {
+            total = (long)Math.Round(Math.Abs(timeCode.TotalSeconds), MidpointRounding.AwayFromZero);
+        }
+
+        return total.ToString(CultureInfo.InvariantCulture).PadLeft(run, '0') + rest;
+    }
+
     private static string ReplaceMilliseconds(string template, TimeCode timeCode)
     {
         if (template.IndexOf('z') < 0)
@@ -156,69 +221,18 @@ public static partial class CustomTextFormatter
             return template;
         }
 
-        // "^z+$" for a non-empty template == "no non-'z' character present".
-        var isPureZMode = template.AsSpan().IndexOfAnyExcept('z') < 0;
-
-        return ZRunRegex.Replace(template, match =>
-        {
-            var zCount = match.Value.Length;
-
-            if (isPureZMode)
-            {
-                return FormatTotalMilliseconds(timeCode, zCount);
-            }
-            else
-            {
-                return FormatFractionalSeconds(timeCode, zCount);
-            }
-        });
-    }
-
-    private static string FormatTotalMilliseconds(TimeCode timeCode, int desiredLength)
-    {
-        var totalMilliseconds = Math.Abs(Math.Round(timeCode.TotalMilliseconds, MidpointRounding.AwayFromZero));
-        var ms = (long)totalMilliseconds;
-        var msString = ms.ToString();
-
-        return desiredLength <= msString.Length
-            ? msString
-            : msString.PadLeft(desiredLength, '0');
+        // Any remaining z-run is a fraction of a second (a leading total run was already replaced)
+        return ZRunRegex.Replace(template, match => FormatFractionalSeconds(timeCode, match.Value.Length));
     }
 
     private static string FormatFractionalSeconds(TimeCode timeCode, int desiredLength)
     {
-        var absoluteSeconds = Math.Abs(timeCode.TotalSeconds);
-        var fractionalSeconds = absoluteSeconds - Math.Floor(absoluteSeconds);
-
-        string fracString;
-
-        if (fractionalSeconds == 0)
-        {
-            fracString = "000";
-        }
-        else
-        {
-            fracString = fractionalSeconds
-                .ToString(CultureInfo.InvariantCulture)
-                .Split('.')[1]
-                .TrimEnd('0');
-
-            // Ensure at least 3 digits for milliseconds
-            if (fracString.Length < 3)
-            {
-                fracString = fracString.PadRight(3, '0');
-            }
-        }
-
-        // Return exactly the requested number of digits
-        if (desiredLength <= fracString.Length)
-        {
-            return fracString.Substring(0, desiredLength);
-        }
-        else
-        {
-            return fracString.PadRight(desiredLength, '0');
-        }
+        // The milliseconds component is the fraction of the second, exact to three digits;
+        // computing "TotalSeconds - floor" instead loses precision (61.160 => "61.159...")
+        var fracString = Math.Abs(timeCode.Milliseconds).ToString("000", CultureInfo.InvariantCulture);
+        return desiredLength <= fracString.Length
+            ? fracString.Substring(0, desiredLength)
+            : fracString.PadRight(desiredLength, '0');
     }
 
     private static string ReplaceSeconds(string template, TimeCode timeCode)
@@ -228,23 +242,9 @@ public static partial class CustomTextFormatter
             return template;
         }
 
-        var isPureSMode = template.AsSpan().IndexOfAnyExcept('s') < 0;
-
-        return SRunRegex.Replace(template, match =>
-        {
-            var length = match.Value.Length;
-
-            if (isPureSMode)
-            {
-                var totalSeconds = (long)Math.Round(Math.Abs(timeCode.TotalSeconds), MidpointRounding.AwayFromZero);
-                return totalSeconds.ToString().PadLeft(length, '0');
-            }
-            else
-            {
-                var seconds = Math.Abs(timeCode.Seconds);
-                return seconds.ToString().PadLeft(length, '0');
-            }
-        });
+        // Any remaining s-run is the seconds clock component (a leading total run was already replaced)
+        var seconds = Math.Abs(timeCode.Seconds);
+        return SRunRegex.Replace(template, match => seconds.ToString().PadLeft(match.Value.Length, '0'));
     }
 
     private static string ReplaceStandardComponents(string template, TimeCode timeCode)
@@ -270,8 +270,15 @@ public static partial class CustomTextFormatter
 
         if (result.IndexOf('f') >= 0)
         {
-            result = result.Replace("ff", SubtitleFormat.MillisecondsToFrames(timeCode.TotalMilliseconds).ToString("00"))
-                           .Replace("f", SubtitleFormat.MillisecondsToFramesMaxFrameRate(timeCode.Milliseconds).ToString("00"));
+            if (template == "ff")
+            {
+                // The whole template is "ff" = total frames
+                return SubtitleFormat.MillisecondsToFrames(Math.Abs(timeCode.TotalMilliseconds)).ToString(CultureInfo.InvariantCulture);
+            }
+
+            var framesInSecond = SubtitleFormat.MillisecondsToFramesMaxFrameRate(Math.Abs(timeCode.Milliseconds));
+            result = result.Replace("ff", framesInSecond.ToString("00"))
+                           .Replace("f", framesInSecond.ToString(CultureInfo.InvariantCulture));
         }
 
         return result;
@@ -286,14 +293,10 @@ public static partial class CustomTextFormatter
             d = SubtitleFormat.MillisecondsToFrames(duration.TotalMilliseconds).ToString(CultureInfo.InvariantCulture);
         }
 
-        if (timeCodeTemplate == "zzz" || timeCodeTemplate == "zz" || timeCodeTemplate == "z")
+        if (HasLeadingTotalRun(timeCodeTemplate))
         {
-            d = ((long)Math.Round(duration.TotalMilliseconds, MidpointRounding.AwayFromZero)).ToString(CultureInfo.InvariantCulture);
-        }
-
-        if (timeCodeTemplate == "sss" || timeCodeTemplate == "ss" || timeCodeTemplate == "s")
-        {
-            d = duration.Seconds.ToString(CultureInfo.InvariantCulture);
+            // Totals ("zzz", "ss", "ss.zzz", ...): the duration renders just like a time code
+            d = GetTimeCode(duration, timeCodeTemplate);
         }
         else if (timeCodeTemplate.EndsWith("ss.ff", StringComparison.Ordinal))
         {

@@ -67,7 +67,7 @@ public partial class OpenSecondarySubtitleViewModel : ObservableObject
         {
             new(FontBoxType.None, Se.Language.General.None),
             new(FontBoxType.OneBox, Se.Language.Video.BurnIn.OneBox),
-            new(FontBoxType.BoxPerLine, Se.Language.Video.BurnIn.BoxPerLine),
+            new(FontBoxType.BoxPerLine, Se.Language.General.BoxPerLine),
         };
         SelectedFontBoxType = FontBoxTypes[0];
         FontAlignments = new ObservableCollection<AlignmentItem>(AlignmentItem.Alignments);

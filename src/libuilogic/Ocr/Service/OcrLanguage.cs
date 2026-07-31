@@ -5,7 +5,7 @@ namespace Nikse.SubtitleEdit.UiLogic.Ocr.Service
 {
     public class OcrLanguage
     {
-        public string Code { get; set; }
+        public string Code { get; set; } = string.Empty;
 
         public override string ToString()
         {

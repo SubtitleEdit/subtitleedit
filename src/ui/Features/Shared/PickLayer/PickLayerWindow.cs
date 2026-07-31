@@ -12,7 +12,7 @@ public class PickLayerWindow : Window
     public PickLayerWindow(PickLayerViewModel vm)
     {
         UiUtil.InitializeWindow(this, GetType().Name);
-        Title = Se.Language.Tools.PickLayerTitle;
+        Title = Se.Language.General.PickLayer;
         CanResize = false;
         SizeToContent = SizeToContent.WidthAndHeight;
         MinWidth = 300;
@@ -76,7 +76,7 @@ public class PickLayerWindow : Window
 
         Content = grid;
 
-        Activated += delegate { buttonOk.Focus(); }; // hack to make OnKeyDown work
+        Activated += delegate { upDownLayer.Focus(); }; // initial focus on an input, not an action button - a focused button clicks on bare Space
         KeyDown += (_, e) => vm.OnKeyDown(e);
     }
 }

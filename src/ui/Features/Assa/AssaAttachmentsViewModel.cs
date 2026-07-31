@@ -85,6 +85,38 @@ public partial class AssaAttachmentsViewModel : ObservableObject
         }
     }
 
+    /// <summary>
+    /// Copies the selected font attachment into SE's own Fonts folder - the collection
+    /// the font collector and the font picker's "Collected fonts" tab offer.
+    /// </summary>
+    [RelayCommand]
+    private async Task CopyToSeFontsFolder()
+    {
+        var selected = SelectedAttachment;
+        if (Window == null || selected == null || selected.Category != Se.Language.General.Fonts || selected.Bytes.Length == 0)
+        {
+            return;
+        }
+
+        try
+        {
+            Directory.CreateDirectory(Se.FontsFolder);
+            var target = Path.Combine(Se.FontsFolder, Path.GetFileName(selected.FileName));
+            await File.WriteAllBytesAsync(target, selected.Bytes);
+        }
+        catch (Exception exception)
+        {
+            await MessageBox.Show(Window, Se.Language.General.Error, exception.Message, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            return;
+        }
+
+        await MessageBox.Show(
+            Window,
+            Se.Language.Assa.FontCollectorTitle,
+            string.Format(Se.Language.Assa.FontCollectorXFontFilesCopiedToY, 1, Se.FontsFolder),
+            MessageBoxButtons.OK);
+    }
+
     [RelayCommand]
     private async Task FileAttach()
     {

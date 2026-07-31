@@ -4,13 +4,10 @@ public class LanguageStatistics
 {
     public string Title { get; set; }
     public string TitleWithFileName { get; set; }
-    public string GeneralStatistics { get; set; }
-    public string MostUsed { get; set; }
     public string MostUsedLines { get; set; }
     public string MostUsedWords { get; set; }
     public string NothingFound { get; set; }
     public string NumberOfLinesX { get; set; }
-    public string NumberOfFilesX { get; set; }
     public string LengthInFormatXinCharactersY { get; set; }
     public string NumberOfCharactersInTextOnly { get; set; }
     public string TotalDuration { get; set; }
@@ -51,19 +48,31 @@ public class LanguageStatistics
     public string GapMaximum { get; set; }
     public string GapAverage { get; set; }
     public string GapExceedingMinimum { get; set; }
-    public string Export { get; set; }
+    public string Subtitles { get; set; }
+    public string Words { get; set; }
+    public string TotalDurationShort { get; set; }
+    public string TimingAndPacing { get; set; }
+    public string MinimumAverageMaximum { get; set; }
+    public string Checks { get; set; }
+    public string AgainstCurrentProfile { get; set; }
+    public string SubtitleLength { get; set; }
+    public string CpsAboveOptimalX { get; set; }
+    public string CpsAboveMaximumX { get; set; }
+    public string WpmAboveMaximumX { get; set; }
+    public string DurationBelowMinimumX { get; set; }
+    public string DurationAboveMaximumX { get; set; }
+    public string LineTooLongX { get; set; }
+    public string LineTooWideX { get; set; }
+    public string GapBelowMinimumX { get; set; }
 
     public LanguageStatistics()
     {
         Title = "Statistics";
         TitleWithFileName = "Statistics - {0}";
-        GeneralStatistics = "General statistics";
         NothingFound = "Nothing found";
-        MostUsed = "Most used...";
         MostUsedWords = "Most used words";
         MostUsedLines = "Most used lines";
         NumberOfLinesX = "Number of subtitle lines: {0:#,##0}";
-        NumberOfFilesX = "Number of subtitle files: {0:#,##0}";
         LengthInFormatXinCharactersY = "Number of characters as {0}: {1:#,###,##0}";
         NumberOfCharactersInTextOnly = "Number of characters in text only: {0:#,###,##0}";
         NumberOfItalicTags = "Number of italic tags: {0:#,##0}";
@@ -104,6 +113,21 @@ public class LanguageStatistics
         GapMaximum = "Gap - maximum: {0:#,##0} ms";
         GapAverage = "Gap - average: {0:#,##0.##} ms";
         GapExceedingMinimum = "Gap - below minimum ({0:#,##0} ms): {1} ({2:0.00}%)";
-        Export = "Export...";
+        Subtitles = "Subtitles";
+        Words = "Words";
+        TotalDurationShort = "Total duration";
+        TimingAndPacing = "Timing and pacing";
+        MinimumAverageMaximum = "minimum - average - maximum";
+        Checks = "Checks";
+        AgainstCurrentProfile = "against the current profile";
+        SubtitleLength = "Subtitle length";
+        CpsAboveOptimalX = "Above optimal chars/sec ({0:0.##})";
+        CpsAboveMaximumX = "Above maximum chars/sec ({0:0.##})";
+        WpmAboveMaximumX = "Above maximum words/min ({0:0.##})";
+        DurationBelowMinimumX = "Duration below minimum ({0:0.###} s)";
+        DurationAboveMaximumX = "Duration above maximum ({0:0.###} s)";
+        LineTooLongX = "Single line too long (> {0})";
+        LineTooWideX = "Single line too wide (> {0} pixels)";
+        GapBelowMinimumX = "Gap below minimum ({0:#,##0} ms)";
     }
 }

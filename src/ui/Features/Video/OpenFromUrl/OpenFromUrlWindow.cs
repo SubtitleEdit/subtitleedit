@@ -95,11 +95,7 @@ public class OpenFromUrlWindow : Window
             vm.DownloadAndOpenCommand,
             isRecommended: true);
 
-        var downloadYtDlpButton = UiUtil.MakeButton(
-            string.Format(Se.Language.General.DownloadX, "yt-dlp"),
-            vm.DownloadYtDlpCommand);
-        downloadYtDlpButton[!Visual.IsVisibleProperty] = new Binding(nameof(vm.IsDownloadYtDlpVisible));
-        var cancelBar = UiUtil.MakeButtonBar(downloadYtDlpButton, UiUtil.MakeButtonCancel(vm.CancelCommand));
+        var cancelBar = UiUtil.MakeButtonBar(UiUtil.MakeButtonCancel(vm.CancelCommand));
 
         var content = new StackPanel
         {
@@ -122,14 +118,21 @@ public class OpenFromUrlWindow : Window
 
         Content = content;
 
-        // Activated fires before the visual tree is fully ready; deferring the
-        // Focus call to Loaded + Input priority makes it actually stick when the
-        // window first opens.
-        Loaded += (_, _) =>
+        // Focus the URL box on first activation (the pattern used by the other windows) -
+        // the Loaded + Input-priority post this used to do never stuck on macOS. Guarded so
+        // re-activating the window later doesn't yank focus back out of whatever the user
+        // was on.
+        var focused = false;
+        Activated += delegate
         {
-            Avalonia.Threading.Dispatcher.UIThread.InvokeAsync(
-                () => _urlTextBox.Focus(),
-                Avalonia.Threading.DispatcherPriority.Input);
+            if (focused)
+            {
+                return;
+            }
+
+            focused = true;
+            _urlTextBox.Focus();
+            _urlTextBox.CaretIndex = _urlTextBox.Text?.Length ?? 0;
         };
     }
 

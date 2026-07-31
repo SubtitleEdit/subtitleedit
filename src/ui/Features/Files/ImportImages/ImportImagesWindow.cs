@@ -62,17 +62,17 @@ public class ImportImagesWindow : Window
         var panelButtons = UiUtil.MakeButtonBar(buttonOk, buttonCancel);
 
         grid.Add(labelImportInfo, 0);
-        grid.Add(MakeImagesView(vm), 1);
+        grid.Add(MakeImagesView(vm, out var imagesGrid), 1);
         grid.Add(panelButtons, 3, 0);
         grid.Add(buttonImport, 3, 0);
 
         Content = grid;
 
-        Activated += delegate { buttonOk.Focus(); }; // hack to make OnKeyDown work
+        Activated += delegate { TableViewExtras.FocusRow(imagesGrid); }; // initial focus on an input, not an action button - a focused button clicks on bare Space
         KeyDown += vm.KeyDown;
     }
 
-    private static Border MakeImagesView(ImportImagesViewModel vm)
+    private static Border MakeImagesView(ImportImagesViewModel vm, out TableView imagesGrid)
     {
         var grid = new Grid
         {
@@ -91,62 +91,57 @@ public class ImportImagesWindow : Window
         var fullTimeConverter = new TimeSpanToDisplayFullConverter();
         var shortTimeConverter = new TimeSpanToDisplayShortConverter();
         var fileSizeConverter = new FileSizeConverter();
-        var dataGrid = new DataGrid
+        // No header sorting (the DataGrid's CanUserSortColumns is not carried over):
+        // the caller feeds result.Images to OCR in collection order, so reordering the
+        // backing collection would reorder the resulting subtitle.
+        var dataGrid = TableViewExtras.MakeTableView(multiSelect: false);
+        imagesGrid = dataGrid;
+        dataGrid.DataContext = vm;
+        dataGrid.ItemsSource = vm.Images;
+        dataGrid.Columns.AddRange(new TableViewColumn[]
         {
-            AutoGenerateColumns = false,
-            SelectionMode = DataGridSelectionMode.Single,
-            CanUserResizeColumns = true,
-            CanUserSortColumns = true,
-            HorizontalAlignment = HorizontalAlignment.Stretch,
-            VerticalAlignment = VerticalAlignment.Stretch,
-            Width = double.NaN,
-            Height = double.NaN,
-            DataContext = vm,
-            ItemsSource = vm.Images,
-            Columns =
+            new SeTableViewColumn
             {
-                new DataGridTextColumn
-                {
-                    Header = Se.Language.General.FileName,
-                    CellTheme = UiUtil.DataGridNoBorderNoPaddingCellTheme,
-                    Binding = new Binding(nameof(ImportImageItem.FileName)),
-                    IsReadOnly = true,
-                },
-                new DataGridTextColumn
-                {
-                    Header = Se.Language.General.Size,
-                    CellTheme = UiUtil.DataGridNoBorderNoPaddingCellTheme,
-                    Binding = new Binding(nameof(ImportImageItem.Size)) { Converter = fileSizeConverter, Mode = BindingMode.OneWay },
-                    IsReadOnly = true,
-                    Width = new DataGridLength(1, DataGridLengthUnitType.Star),
-                },
-                new DataGridTextColumn
-                {
-                    Header = Se.Language.General.Show,
-                    CellTheme = UiUtil.DataGridNoBorderNoPaddingCellTheme,
-                    Binding = new Binding(nameof(ImportImageItem.Start)) { Converter = fullTimeConverter, Mode = BindingMode.OneWay },
-                    IsReadOnly = true,
-                    Width = new DataGridLength(1, DataGridLengthUnitType.Star),
-                },
-                new DataGridTextColumn
-                {
-                    Header = Se.Language.General.Hide,
-                    CellTheme = UiUtil.DataGridNoBorderNoPaddingCellTheme,
-                    Binding = new Binding(nameof(ImportImageItem.End)){ Converter = fullTimeConverter, Mode = BindingMode.OneWay },
-                    IsReadOnly = true,
-                    Width = new DataGridLength(1, DataGridLengthUnitType.Star),
-                },
-                new DataGridTextColumn
-                {
-                    Header = Se.Language.General.Duration,
-                    CellTheme = UiUtil.DataGridNoBorderNoPaddingCellTheme,
-                    Binding = new Binding(nameof(ImportImageItem.Duration)){ Converter = shortTimeConverter, Mode = BindingMode.OneWay },
-                    IsReadOnly = true,
-                    Width = new DataGridLength(1, DataGridLengthUnitType.Star),
-                },
+                Header = Se.Language.General.FileName,
+                CellTheme = UiUtil.TableViewCellTheme,
+                HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
+                Binding = new Binding(nameof(ImportImageItem.FileName)),
+                Width = new GridLength(1, GridUnitType.Star),
             },
-        };
-        dataGrid.Bind(DataGrid.SelectedItemProperty, new Binding(nameof(vm.SelectedImage)) { Source = vm });
+            new SeTableViewColumn
+            {
+                Header = Se.Language.General.Size,
+                CellTheme = UiUtil.TableViewCellTheme,
+                HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
+                Binding = new Binding(nameof(ImportImageItem.Size)) { Converter = fileSizeConverter, Mode = BindingMode.OneWay },
+                Width = new GridLength(100),
+            },
+            new SeTableViewColumn
+            {
+                Header = Se.Language.General.Show,
+                CellTheme = UiUtil.TableViewCellTheme,
+                HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
+                Binding = new Binding(nameof(ImportImageItem.Start)) { Converter = fullTimeConverter, Mode = BindingMode.OneWay },
+                Width = new GridLength(130),
+            },
+            new SeTableViewColumn
+            {
+                Header = Se.Language.General.Hide,
+                CellTheme = UiUtil.TableViewCellTheme,
+                HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
+                Binding = new Binding(nameof(ImportImageItem.End)){ Converter = fullTimeConverter, Mode = BindingMode.OneWay },
+                Width = new GridLength(130),
+            },
+            new SeTableViewColumn
+            {
+                Header = Se.Language.General.Duration,
+                CellTheme = UiUtil.TableViewCellTheme,
+                HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
+                Binding = new Binding(nameof(ImportImageItem.Duration)){ Converter = shortTimeConverter, Mode = BindingMode.OneWay },
+                Width = new GridLength(110),
+            },
+        });
+        dataGrid.Bind(TableView.SelectedItemProperty, new Binding(nameof(vm.SelectedImage)) { Source = vm });
         dataGrid.SelectionChanged += vm.DataGridSelectionChanged;
         dataGrid.KeyDown += vm.AttachmentsDataGridKeyDown;
         dataGrid.AddHandler(InputElement.KeyDownEvent, (object? _, KeyEventArgs e) =>
@@ -155,12 +150,16 @@ public class ImportImagesWindow : Window
             {
                 var target = e.Key == Key.Home ? items[0] : items[^1];
                 dataGrid.SelectedItem = target;
-                dataGrid.ScrollIntoView(target, null);
+                if (target != null)
+                {
+                    dataGrid.ScrollIntoView(target);
+                }
+
                 e.Handled = true;
             }
         }, Avalonia.Interactivity.RoutingStrategies.Tunnel);
 
-        // hack to make drag and drop work on the DataGrid - also on empty rows
+        // hack to make drag and drop work on the grid - also on empty rows
         var dropHost = new Border
         {
             Background = Brushes.Transparent,

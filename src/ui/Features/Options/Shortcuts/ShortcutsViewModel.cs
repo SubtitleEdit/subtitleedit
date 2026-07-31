@@ -284,7 +284,7 @@ public partial class ShortcutsViewModel : ObservableObject
         {
             ShortcutCategory.SubtitleGridAndTextBox => language.CategorySubtitleGridAndTextBox,
             ShortcutCategory.SubtitleGrid => language.CategorySubtitleGrid,
-            ShortcutCategory.Waveform => language.CategoryWaveform,
+            ShortcutCategory.Waveform => Se.Language.General.Waveform,
             ShortcutCategory.TextBox => language.CategoryTextBox,
             _ => language.ActiveInEverywhere,
         };
@@ -1228,7 +1228,7 @@ public partial class ShortcutsViewModel : ObservableObject
                ShortcutManager.GetKeyDisplayName(key).Contains(normalizedToken, StringComparison.OrdinalIgnoreCase);
     }
 
-    internal void ShortcutsDataGrid_SelectionChanged(object? sender, SelectionChangedEventArgs e)
+    internal void ShortcutsGrid_SelectionChanged(object? sender, SelectionChangedEventArgs e)
     {
         if (e.AddedItems == null || e.AddedItems.Count == 0 || e.AddedItems[0] is not ShortcutTreeNode node ||
             node.ShortCut == null)
@@ -1317,7 +1317,7 @@ public partial class ShortcutsViewModel : ObservableObject
         UpdateVisibleShortcuts(SearchText);
     }
 
-    internal void ShortcutsDataGridDoubleTapped(object? sender, TappedEventArgs e)
+    internal void ShortcutsGridDoubleTapped(object? sender, TappedEventArgs e)
     {
         _ = ShowGetKey();
     }

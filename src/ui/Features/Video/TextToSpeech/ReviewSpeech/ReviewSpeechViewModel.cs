@@ -88,7 +88,7 @@ public partial class ReviewSpeechViewModel : ObservableObject
     private bool _suppressKeywordSync;
 
     public Window? Window { get; set; }
-    public DataGrid LineGrid { get; internal set; }
+    public TableView LineGrid { get; internal set; }
     public AudioVisualizer? AudioVisualizer { get; set; }
     public TtsStepResult[] StepResults { get; set; }
 
@@ -138,7 +138,7 @@ public partial class ReviewSpeechViewModel : ObservableObject
         _folderHelper = folderHelper;
         _windowService = windowService;
 
-        LineGrid = new DataGrid();
+        LineGrid = new TableView();
         Lines = new ObservableCollection<ReviewRow>();
         Engines = new ObservableCollection<ITtsEngine>();
         Voices = new ObservableCollection<Voice>();
@@ -230,7 +230,7 @@ public partial class ReviewSpeechViewModel : ObservableObject
                         nextLine.IsPlaying = true;
                         _playingRow = nextLine;
                         SelectedLine = nextLine;
-                        LineGrid.ScrollIntoView(nextLine, null);
+                        LineGrid.ScrollIntoView(nextLine);
                         await PlayAudio(nextLine.StepResult.CurrentFileName);
                     }
                     else
@@ -426,7 +426,7 @@ public partial class ReviewSpeechViewModel : ObservableObject
         {
             SelectedLine = Lines[0];
             LineGrid.SelectedIndex = 0;
-            LineGrid.ScrollIntoView(LineGrid.SelectedItem, null);
+            LineGrid.ScrollIntoView(Lines[0]);
         }
     }
 
@@ -1882,7 +1882,7 @@ public partial class ReviewSpeechViewModel : ObservableObject
         UiUtil.SaveWindowPosition(Window);
     }
 
-    internal void DataGridDoubleClicked()
+    internal void LineGridDoubleClicked()
     {
         var line = SelectedLine;
         if (line == null || line.IsPlaying || !line.IsPlayingEnabled)

@@ -27,7 +27,7 @@ public partial class PluginDisplayItem : ObservableObject
         ? Se.Language.Plugins.NotSupportedOnThisOs
         : UpdateAvailable
             ? string.Format(Se.Language.Plugins.UpdateAvailableXToY, Version, AvailableUpdate!.Version)
-            : IsEnabled ? Se.Language.Plugins.Enabled : Se.Language.Plugins.Disabled;
+            : IsEnabled ? Se.Language.General.Enabled : Se.Language.Plugins.Disabled;
 
     public void SetAvailableUpdate(PluginIndexEntry? entry)
     {

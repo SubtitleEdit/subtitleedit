@@ -38,25 +38,27 @@ public class ColumnPasteWindow : Window
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
         var panelButtons = UiUtil.MakeButtonBar(buttonOk, buttonCancel);
 
-        grid.Add(MakeChooseColumnView(vm), 0);
+        grid.Add(MakeChooseColumnView(vm, out var radioButtonColumnsAll), 0);
         grid.Add(MakeOverwriteView(vm), 0, 1);
         grid.Add(panelButtons, 1, 0, 1, 2);
 
         Content = grid;
 
-        Activated += delegate { buttonOk.Focus(); }; // hack to make OnKeyDown work
+        Activated += delegate { radioButtonColumnsAll.Focus(); }; // initial focus on an input, not an action button - a focused button clicks on bare Space
         KeyDown += vm.KeyDown;
     }
 
-    private static Border MakeChooseColumnView(ColumnPasteViewModel vm)
+    private static Border MakeChooseColumnView(ColumnPasteViewModel vm, out RadioButton radioButtonAll)
     {
+        radioButtonAll = UiUtil.MakeRadioButton(Se.Language.General.All, vm, nameof(vm.ColumnsAll), "column");
+
         var stackPanel = new StackPanel
         {
             Orientation = Avalonia.Layout.Orientation.Vertical,
             Children =
             {
                 UiUtil.MakeLabel(Se.Language.Main.ChooseColumn),
-                UiUtil.MakeRadioButton(Se.Language.General.All, vm,  nameof(vm.ColumnsAll), "column"),
+                radioButtonAll,
                 UiUtil.MakeRadioButton(Se.Language.Main.TimeCodesOnly, vm, nameof(vm.ColumnsTimeCodesOnly), "column"),
                 UiUtil.MakeRadioButton(Se.Language.Main.TextOnly, vm, nameof(vm.ColumnsTextOnly), "column"),
             }

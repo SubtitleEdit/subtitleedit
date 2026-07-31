@@ -15,13 +15,13 @@ namespace Nikse.SubtitleEdit.UiLogic.AutoTranslate
 {
     public class GroqTranslate : IAutoTranslator, IDisposable
     {
-        private HttpClient _httpClient;
+        private HttpClient _httpClient = null!;
 
         public static string StaticName { get; set; } = "Groq";
         public override string ToString() => StaticName;
         public string Name => StaticName;
         public string Url => "https://groq.com/";
-        public string Error { get; set; }
+        public string Error { get; set; } = string.Empty;
         public int MaxCharacters => 1500;
 
         /// <summary>
@@ -93,14 +93,14 @@ namespace Nikse.SubtitleEdit.UiLogic.AutoTranslate
             var input = "{\"model\": \"" + model + "\",\"messages\": [{ \"role\": \"user\", \"content\": \"" + Json.EncodeJsonText(prompt) + "\\n\\n" + Json.EncodeJsonText(text.Trim()) + "\" }]}";
 
             int[] retryDelays = { 2555, 5007, 9013 };
-            HttpResponseMessage result = null;
+            HttpResponseMessage result = null!;
             var json = string.Empty;
             for (var attempt = 0; attempt <= retryDelays.Length; attempt++)
             {
                 var content = new StringContent(input, Encoding.UTF8);
                 content.Headers.ContentType = MediaTypeHeaderValue.Parse("application/json");
                 result = await _httpClient.PostAsync(string.Empty, content, cancellationToken);
-                var bytes = await result.Content.ReadAsByteArrayAsync();
+                var bytes = await result.Content.ReadAsByteArrayAsync(cancellationToken);
                 json = Encoding.UTF8.GetString(bytes).Trim();
 
                 if (!DeepLTranslate.ShouldRetry(result, json) || attempt == retryDelays.Length)

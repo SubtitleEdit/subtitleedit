@@ -5,9 +5,9 @@ namespace Nikse.SubtitleEdit.Features.Options.Settings;
 
 public class GridLinesVisibilityDisplay
 {
-    public DataGridGridLinesVisibility Type { get; }
+    public SeGridLinesVisibility Type { get; }
     public string DisplayName { get; }
-    public GridLinesVisibilityDisplay(DataGridGridLinesVisibility type, string displayName)
+    public GridLinesVisibilityDisplay(SeGridLinesVisibility type, string displayName)
     {
         Type = type;
         DisplayName = displayName;
@@ -18,10 +18,10 @@ public class GridLinesVisibilityDisplay
     {
         return
         [
-            new GridLinesVisibilityDisplay(DataGridGridLinesVisibility.None, Se.Language.General.None),
-            new GridLinesVisibilityDisplay(DataGridGridLinesVisibility.Horizontal, Se.Language.General.Horizontal),
-            new GridLinesVisibilityDisplay(DataGridGridLinesVisibility.Vertical, Se.Language.General.Vertical),
-            new GridLinesVisibilityDisplay(DataGridGridLinesVisibility.All, Se.Language.General.All),
+            new GridLinesVisibilityDisplay(SeGridLinesVisibility.None, Se.Language.General.None),
+            new GridLinesVisibilityDisplay(SeGridLinesVisibility.Horizontal, Se.Language.General.Horizontal),
+            new GridLinesVisibilityDisplay(SeGridLinesVisibility.Vertical, Se.Language.General.Vertical),
+            new GridLinesVisibilityDisplay(SeGridLinesVisibility.All, Se.Language.General.All),
         ];
     }
 }

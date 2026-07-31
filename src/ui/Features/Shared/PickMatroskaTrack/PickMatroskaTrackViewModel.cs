@@ -33,7 +33,7 @@ public partial class PickMatroskaTrackViewModel : ObservableObject
     [ObservableProperty] private string _subtitleCountText;
 
     public Window? Window { get; set; }
-    public DataGrid TracksGrid { get; set; }
+    public TableView TracksGrid { get; set; }
     public MatroskaTrackInfo? SelectedMatroskaTrack { get; set; }
     public bool OkPressed { get; private set; }
     public string WindowTitle { get; private set; }
@@ -62,7 +62,7 @@ public partial class PickMatroskaTrackViewModel : ObservableObject
         _fileHelper = fileHelper;
         _windowService = windowService;
         Tracks = new ObservableCollection<MatroskaTrackInfoDisplay>();
-        TracksGrid = new DataGrid();
+        TracksGrid = new TableView();
         WindowTitle = string.Empty;
         SubtitleCountText = string.Empty;
         Rows = new ObservableCollection<MatroskaSubtitleCueDisplay>();
@@ -217,14 +217,14 @@ public partial class PickMatroskaTrackViewModel : ObservableObject
             Cancel();
             e.Handled = true;
         }
-        else if (e.Key == Key.Enter && TracksGrid.IsFocused)
+        else if (e.Key == Key.Enter && TracksGrid.IsKeyboardFocusWithin)
         {
             Ok();
             e.Handled = true;
         }
     }
 
-    internal void DataGridTracksSelectionChanged(object? sender, SelectionChangedEventArgs e)
+    internal void TracksGridSelectionChanged(object? sender, SelectionChangedEventArgs e)
     {
         _ = TrackChangedAsync();
     }
@@ -415,7 +415,11 @@ public partial class PickMatroskaTrackViewModel : ObservableObject
         Dispatcher.UIThread.Post(() =>
         {
             TracksGrid.SelectedIndex = index;
-            TracksGrid.ScrollIntoView(TracksGrid.SelectedItem, null);
+            if (TracksGrid.SelectedItem is { } selectedItem)
+            {
+                TracksGrid.ScrollIntoView(selectedItem);
+            }
+
             _ = TrackChangedAsync();
         }, DispatcherPriority.Background);
     }

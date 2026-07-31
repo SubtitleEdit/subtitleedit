@@ -12,7 +12,7 @@ public class ChangeCasingWindow : Window
     public ChangeCasingWindow(ChangeCasingViewModel vm)
     {
         UiUtil.InitializeWindow(this, GetType().Name);
-        Title = Se.Language.Tools.ChangeCasing.Title;
+        Title = Se.Language.General.ChangeCasing;
         SizeToContent = SizeToContent.WidthAndHeight;
         MinWidth = 300;
         CanResize = false;
@@ -104,7 +104,7 @@ public class ChangeCasingWindow : Window
 
         Content = grid;
 
-        Activated += delegate { buttonOk.Focus(); }; // hack to make OnKeyDown work
+        Activated += delegate { radioButtonNormalCasing.Focus(); }; // initial focus on an input, not an action button - a focused button clicks on bare Space
         KeyDown += (_, e) => vm.OnKeyDown(e);
     }
 }

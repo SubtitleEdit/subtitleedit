@@ -138,7 +138,7 @@ public partial class SpeechToTextViewModel : ObservableObject
     public TextBox TextBoxConsoleLogBatch { get; internal set; }
     public TextBox TextBoxConsoleLogSingle { get; internal set; }
     public Button? CopyConsoleLogButton { get; internal set; }
-    public DataGrid BatchGrid { get; internal set; }
+    public TableView BatchGrid { get; internal set; }
 
     private bool _unknownArgument;
     private bool _cudaOutOfMemory;
@@ -290,7 +290,7 @@ public partial class SpeechToTextViewModel : ObservableObject
         TranscribedSubtitle = new Subtitle();
         TextBoxConsoleLogBatch = new TextBox();
         TextBoxConsoleLogSingle = new TextBox();
-        BatchGrid = new DataGrid();
+        BatchGrid = new TableView();
         ReDownloadText = string.Empty;
         EngineDownloadHint = string.Empty;
         _audioTrackNumber = -1;
@@ -1749,7 +1749,7 @@ public partial class SpeechToTextViewModel : ObservableObject
                 }
 
                 BatchGrid.SelectedItem = jobItem;
-                BatchGrid.ScrollIntoView(jobItem, null);
+                BatchGrid.ScrollIntoView(jobItem);
             });
 
             var startGenerateAudioFileOk = GenerateAudioFile(_videoFileName, _audioTrackNumber);
@@ -3443,7 +3443,7 @@ public partial class SpeechToTextViewModel : ObservableObject
                 }
 
                 BatchGrid.SelectedItem = jobItem;
-                BatchGrid.ScrollIntoView(jobItem, null);
+                BatchGrid.ScrollIntoView(jobItem);
             });
         }
 
@@ -4457,8 +4457,8 @@ public partial class SpeechToTextViewModel : ObservableObject
 
         var size = engine.DownloadSizeText;
         EngineDownloadHint = string.IsNullOrEmpty(size)
-            ? string.Format(Se.Language.Video.AudioToText.DownloadX, engine.Name)
-            : string.Format(Se.Language.Video.AudioToText.DownloadX, engine.Name) + $" ({size})";
+            ? string.Format(Se.Language.General.DownloadX, engine.Name)
+            : string.Format(Se.Language.General.DownloadX, engine.Name) + $" ({size})";
         IsEngineDownloadButtonVisible = true;
     }
 

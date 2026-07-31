@@ -51,6 +51,14 @@ public class ImageParameter
         Error = string.Empty;
     }
 
+    /// <summary>
+    /// <see cref="OverridePosition"/> - the bitmap's top left corner - in the shape the VobSub
+    /// and DVD sup writers take it. They range check it themselves and fall back to
+    /// <see cref="Alignment"/> when it falls outside the frame.
+    /// </summary>
+    public SKPoint? OverridePositionPoint =>
+        OverridePosition.HasValue ? new SKPoint(OverridePosition.Value.X, OverridePosition.Value.Y) : null;
+
     public BluRayContentAlignment BluRayContentAlignment => Alignment switch
     {
         ExportAlignment.TopLeft => BluRayContentAlignment.TopLeft,

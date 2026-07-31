@@ -44,7 +44,7 @@ public class AssaStylesViewModelTests
         Assert.NotNull(viewModel);
         Assert.NotNull(viewModel.StorageStylesView);
         Assert.Contains(Se.Language.Assa.AllCategories, viewModel.StorageCategories);
-        Assert.Contains(Se.Language.Assa.DefaultCategory, viewModel.StorageCategories);
+        Assert.Contains(Se.Language.General.Default, viewModel.StorageCategories);
     }
 
     /// <summary>

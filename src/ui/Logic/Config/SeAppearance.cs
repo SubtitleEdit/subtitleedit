@@ -62,6 +62,8 @@ public class SeAppearance
     public bool ToolbarShowPointSync { get; set; }
     public bool ToolbarShowBeautifyTimeCodes { get; set; }
     public bool ToolbarShowBurnIn { get; set; }
+    public bool ToolbarShowAutoTranslate { get; set; }
+    public bool ToolbarShowSpeechToText { get; set; }
     public bool ToolbarShowSettings { get; set; }
     public bool ToolbarShowLayout { get; set; }
     public bool ToolbarShowSourceView { get; set; }
@@ -106,7 +108,7 @@ public class SeAppearance
         SubtitleTextBoxCenterText = false;
         SubtitleTextBoxLiveSpellCheck = false;
         SubtitleGridFormattingType = (int)SubtitleGridFormattingTypes.ShowFormatting;
-        GridLinesAppearance = DataGridGridLinesVisibility.None.ToString();
+        GridLinesAppearance = SeGridLinesVisibility.None.ToString();
         GridAlternatingRows = true;
         GridAlternatingRowColor = new Color(255, 245, 245, 245).FromColorToHex();
         GridAlternatingRowColorDark = new Color(255, 45, 45, 45).FromColorToHex();
@@ -136,6 +138,8 @@ public class SeAppearance
         ToolbarShowPointSync = false;
         ToolbarShowBeautifyTimeCodes = false;
         ToolbarShowBurnIn = false;
+        ToolbarShowAutoTranslate = false;
+        ToolbarShowSpeechToText = false;
         ToolbarShowSettings = true;
         ToolbarShowLayout = true;
         ToolbarShowSourceView = false;

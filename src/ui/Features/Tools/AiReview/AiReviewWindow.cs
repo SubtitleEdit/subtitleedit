@@ -198,24 +198,22 @@ public class AiReviewWindow : Window
         chipsBar.Add(warningNote, 0, 1);
 
         // ---------- suggestions grid ----------
-        var dataGrid = new DataGrid
+        // No header-click sorting (the DataGrid's CanUserSortColumns is not carried
+        // over): suggestions are fix previews in subtitle order. The DataGrid-era
+        // DataGridCheckboxMultiSelect is replaced by native extended selection plus
+        // TableViewExtras.AddSpaceToggle for the Space-toggles-checkbox piece.
+        var dataGrid = TableViewExtras.MakeTableView();
+        dataGrid.Width = double.NaN;
+        dataGrid.Height = double.NaN;
+        dataGrid.DataContext = vm;
+        dataGrid.ItemsSource = vm.Suggestions;
+        dataGrid.Columns.AddRange(new[]
         {
-            AutoGenerateColumns = false,
-            CanUserResizeColumns = true,
-            CanUserSortColumns = true,
-            HorizontalAlignment = HorizontalAlignment.Stretch,
-            VerticalAlignment = VerticalAlignment.Stretch,
-            Width = double.NaN,
-            Height = double.NaN,
-            DataContext = vm,
-            ItemsSource = vm.Suggestions,
-            IsReadOnly = false,
-            Columns =
-            {
-                new DataGridTemplateColumn
+                new SeTableViewColumn
                 {
                     Header = Se.Language.General.Apply,
-                    CellTheme = UiUtil.DataGridNoBorderNoPaddingCellTheme,
+                    CellTheme = UiUtil.TableViewNoPaddingCellTheme,
+                    HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
                     CellTemplate = new FuncDataTemplate<ReviewSuggestionItem>((item, _) => new Border
                     {
                         Background = Brushes.Transparent,
@@ -228,19 +226,21 @@ public class AiReviewWindow : Window
                             HorizontalAlignment = HorizontalAlignment.Center,
                         },
                     }),
-                    Width = new DataGridLength(1, DataGridLengthUnitType.Auto),
+                    Width = new GridLength(80), // content-sized (Auto) on the DataGrid; TableView treats Auto as star
                 },
-                new DataGridTextColumn
+                new SeTableViewColumn
                 {
                     Header = Se.Language.General.NumberSymbol,
-                    CellTheme = UiUtil.DataGridNoBorderNoPaddingCellTheme,
+                    CellTheme = UiUtil.TableViewCellTheme,
+                    HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
                     Binding = new Binding(nameof(ReviewSuggestionItem.Number)),
-                    IsReadOnly = true,
+                    Width = new GridLength(60),
                 },
-                new DataGridTemplateColumn
+                new SeTableViewColumn
                 {
                     Header = Se.Language.Tools.FixCommonErrors.Action,
-                    CellTheme = UiUtil.DataGridNoBorderNoPaddingCellTheme,
+                    CellTheme = UiUtil.TableViewNoPaddingCellTheme,
+                    HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
                     CellTemplate = new FuncDataTemplate<ReviewSuggestionItem>((item, _) =>
                     {
                         var panel = new StackPanel
@@ -299,13 +299,13 @@ public class AiReviewWindow : Window
                             Child = panel,
                         };
                     }),
-                    IsReadOnly = true,
-                    Width = new DataGridLength(1, DataGridLengthUnitType.Auto),
+                    Width = new GridLength(150), // content-sized (Auto) on the DataGrid; TableView treats Auto as star
                 },
-                new DataGridTemplateColumn
+                new SeTableViewColumn
                 {
                     Header = Se.Language.General.Before,
-                    CellTheme = UiUtil.DataGridNoBorderNoPaddingCellTheme,
+                    CellTheme = UiUtil.TableViewNoPaddingCellTheme,
+                    HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
                     CellTemplate = new FuncDataTemplate<ReviewSuggestionItem>((item, _) =>
                     {
                         if (item == null)
@@ -321,13 +321,13 @@ public class AiReviewWindow : Window
                             Child = beforeBlock,
                         };
                     }),
-                    IsReadOnly = true,
-                    Width = new DataGridLength(1, DataGridLengthUnitType.Star),
+                    Width = new GridLength(1, GridUnitType.Star),
                 },
-                new DataGridTemplateColumn
+                new SeTableViewColumn
                 {
                     Header = Se.Language.General.After,
-                    CellTheme = UiUtil.DataGridNoBorderNoPaddingCellTheme,
+                    CellTheme = UiUtil.TableViewNoPaddingCellTheme,
+                    HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
                     CellTemplate = new FuncDataTemplate<ReviewSuggestionItem>((item, _) =>
                     {
                         if (item == null)
@@ -343,14 +343,12 @@ public class AiReviewWindow : Window
                             Child = afterBlock,
                         };
                     }),
-                    IsReadOnly = true,
-                    Width = new DataGridLength(1, DataGridLengthUnitType.Star),
+                    Width = new GridLength(1, GridUnitType.Star),
                 },
-            },
-        };
+        });
         AutomationProperties.SetName(dataGrid, l.Title);
-        dataGrid.Bind(DataGrid.SelectedItemProperty, new Binding(nameof(vm.SelectedSuggestion)));
-        _ = new DataGridCheckboxMultiSelect<ReviewSuggestionItem>(dataGrid,
+        dataGrid.Bind(TableView.SelectedItemProperty, new Binding(nameof(vm.SelectedSuggestion)));
+        TableViewExtras.AddSpaceToggle<ReviewSuggestionItem>(dataGrid,
             item => item.IsSelected, (item, v) => item.IsSelected = v);
 
         var borderGrid = UiUtil.MakeBorderForControlNoPadding(dataGrid);
@@ -428,7 +426,7 @@ public class AiReviewWindow : Window
             .WithIconLeft("fa-solid fa-robot");
         buttonReview.Bind(IsVisibleProperty, new Binding(nameof(vm.IsNotReviewing)));
 
-        var buttonStop = UiUtil.MakeButton(l.Stop, vm.StopReviewCommand)
+        var buttonStop = UiUtil.MakeButton(Se.Language.General.Stop, vm.StopReviewCommand)
             .WithIconLeft("fa-solid fa-stop");
         buttonStop.Bind(IsVisibleProperty, new Binding(nameof(vm.IsReviewing)));
 

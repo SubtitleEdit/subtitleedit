@@ -11,6 +11,7 @@ using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using Nikse.SubtitleEdit.UiLogic.Translate;
 using Nikse.SubtitleEdit.Features.Ocr;
 using Nikse.SubtitleEdit.Features.Shared;
+using Nikse.SubtitleEdit.Features.Translate.LlamaCppAdvanced;
 using Nikse.SubtitleEdit.Features.Translate.LlamaCppEngineSettings;
 using Nikse.SubtitleEdit.Features.Video.SpeechToText;
 using Nikse.SubtitleEdit.Features.Video.SpeechToText.Engines;
@@ -30,7 +31,6 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Nikse.SubtitleEdit.UiLogic.LlamaCpp;
-using Nikse.SubtitleEdit.UiLogic.Translate;
 using Nikse.SubtitleEdit.UiLogic.Common;
 
 namespace Nikse.SubtitleEdit.Features.Translate;
@@ -101,16 +101,18 @@ public partial class AutoTranslateViewModel : ObservableObject
     [ObservableProperty] private DeepLFormalityItem? _selectedFormality;
     [ObservableProperty] private bool _formalityIsVisible;
     [ObservableProperty] private bool _llamaCppButtonsAreVisible;
+    [ObservableProperty] private bool _llamaCppAdvancedButtonIsVisible;
     [ObservableProperty] private bool _llamaCppRemoteToggleIsVisible;
     [ObservableProperty] private bool _llamaCppUseRemoteServer;
     [ObservableProperty] private string _llamaCppServerButtonText = "Start server";
     [ObservableProperty] private string _llamaCppDownloadButtonText = string.Empty;
     [ObservableProperty] private string _crispAsrDownloadButtonText = string.Empty;
 
-    public DataGrid? RowGrid { get; set; }
+    public TableView? RowGrid { get; set; }
 
     private CancellationTokenSource _cancellationTokenSource;
     private bool _translationInProgress = false;
+    private bool _translationStarting = false;
     private bool _abort = false;
     private List<string> _apiUrls = new();
     private List<string> _apiModels = new();
@@ -152,7 +154,9 @@ public partial class AutoTranslateViewModel : ObservableObject
             new OpenAiCompatibleTranslate(),
             new LmStudioTranslate(),
             new OllamaTranslate(),
+            new OllamaAdvancedTranslate(),
             new LlamaCppTranslate(),
+            new LlamaCppAdvancedTranslate(),
             new AnthropicTranslate(),
             new GroqTranslate(),
             new OpenRouterTranslate(),
@@ -204,6 +208,7 @@ public partial class AutoTranslateViewModel : ObservableObject
         Configuration.Settings.Tools.OpenRouterPrompt = Se.Settings.AutoTranslate.OpenRouterPrompt;
 
         Configuration.Settings.Tools.ChatGptApiKey = Se.Settings.AutoTranslate.ChatGptApiKey;
+        Configuration.Settings.Tools.ChatGptUrl = Se.Settings.AutoTranslate.ChatGptUrl;
         Configuration.Settings.Tools.ChatGptModel = Se.Settings.AutoTranslate.ChatGptModel;
         Configuration.Settings.Tools.ChatGptPrompt = Se.Settings.AutoTranslate.ChatGptPrompt;
 
@@ -286,6 +291,9 @@ public partial class AutoTranslateViewModel : ObservableObject
 
         Configuration.Settings.Tools.AutoTranslateCrispAsrExe = Se.Settings.AutoTranslate.CrispAsrExe;
         Configuration.Settings.Tools.AutoTranslateCrispAsrModel = Se.Settings.AutoTranslate.CrispAsrModel;
+
+        Configuration.Settings.Tools.AutoTranslatePapagoApiKeyId = Se.Settings.AutoTranslate.PapagoApiKeyId;
+        Configuration.Settings.Tools.AutoTranslatePapagoApiKey = Se.Settings.AutoTranslate.PapagoApiKey;
     }
 
     public void SaveSettings()
@@ -365,7 +373,7 @@ public partial class AutoTranslateViewModel : ObservableObject
             Configuration.Settings.Tools.LmStudioModel = apiModel.Trim();
         }
 
-        if (engineType == typeof(LlamaCppTranslate))
+        if (engineType == typeof(LlamaCppTranslate) || engineType == typeof(LlamaCppAdvancedTranslate))
         {
             Se.Settings.AutoTranslate.LlamaCppUseRemoteServer = LlamaCppUseRemoteServer;
             if (LlamaCppUseRemoteServer)
@@ -395,6 +403,12 @@ public partial class AutoTranslateViewModel : ObservableObject
             Configuration.Settings.Tools.OllamaModel = apiModel.Trim();
             Se.Settings.AutoTranslate.OllamaUrl = apiUrl.Trim();
             Se.Settings.AutoTranslate.OllamaModel = apiModel.Trim();
+        }
+
+        if (engineType == typeof(OllamaAdvancedTranslate))
+        {
+            Se.Settings.AutoTranslate.OllamaAdvancedUrl = apiUrl.Trim();
+            Se.Settings.AutoTranslate.OllamaAdvancedModel = apiModel.Trim();
         }
 
         if (engineType == typeof(AnthropicTranslate))
@@ -499,6 +513,7 @@ public partial class AutoTranslateViewModel : ObservableObject
         Se.Settings.AutoTranslate.OpenRouterPrompt = Configuration.Settings.Tools.OpenRouterPrompt;
 
         Se.Settings.AutoTranslate.ChatGptApiKey = Configuration.Settings.Tools.ChatGptApiKey;
+        Se.Settings.AutoTranslate.ChatGptUrl = Configuration.Settings.Tools.ChatGptUrl;
         Se.Settings.AutoTranslate.ChatGptModel = Configuration.Settings.Tools.ChatGptModel;
         Se.Settings.AutoTranslate.ChatGptPrompt = Configuration.Settings.Tools.ChatGptPrompt;
 
@@ -576,6 +591,9 @@ public partial class AutoTranslateViewModel : ObservableObject
 
         Se.Settings.AutoTranslate.CrispAsrExe = Configuration.Settings.Tools.AutoTranslateCrispAsrExe;
         Se.Settings.AutoTranslate.CrispAsrModel = Configuration.Settings.Tools.AutoTranslateCrispAsrModel;
+
+        Se.Settings.AutoTranslate.PapagoApiKeyId = Configuration.Settings.Tools.AutoTranslatePapagoApiKeyId;
+        Se.Settings.AutoTranslate.PapagoApiKey = Configuration.Settings.Tools.AutoTranslatePapagoApiKey;
 
         Se.SaveSettings();
     }
@@ -771,15 +789,20 @@ public partial class AutoTranslateViewModel : ObservableObject
     [RelayCommand]
     private async Task Translate()
     {
-        _onlyCurrentLine = false;
-        await DoTranslate();
+        await DoTranslate(onlyCurrentLine: false);
     }
 
     [RelayCommand]
     private async Task TranslateRow()
     {
-        _onlyCurrentLine = true;
-        await DoTranslate();
+        // Ignore while a translation is running - flipping _onlyCurrentLine here would
+        // switch the in-flight loop into single-line mode instead of translating a row.
+        if (_translationInProgress)
+        {
+            return;
+        }
+
+        await DoTranslate(onlyCurrentLine: true);
     }
 
     [RelayCommand]
@@ -829,7 +852,7 @@ public partial class AutoTranslateViewModel : ObservableObject
         {
             await UpdateCrispAsrEngineAsync();
         }
-        else if (SelectedAutoTranslator is LlamaCppTranslate && GetLlamaCppEngineUpdate() is var (key, _))
+        else if (SelectedAutoTranslator is LlamaCppTranslate or LlamaCppAdvancedTranslate && GetLlamaCppEngineUpdate() is var (key, _))
         {
             await UpdateLlamaCppEngineAsync(key);
         }
@@ -857,6 +880,7 @@ public partial class AutoTranslateViewModel : ObservableObject
         {
             CrispAsrMadladTranslate => CrispAsrTranslateDownloadHelper.IsEngineUpdateAvailable(),
             LlamaCppTranslate => GetLlamaCppEngineUpdate() != null,
+            LlamaCppAdvancedTranslate => GetLlamaCppEngineUpdate() != null,
             _ => false,
         };
     }
@@ -944,7 +968,7 @@ public partial class AutoTranslateViewModel : ObservableObject
         if (model != null && LlamaCppServerManager.IsModelInstalled(model.FileName))
         {
             var answer = await MessageBox.Show(
-                Window,
+                Window!,
                 Se.Language.General.Download,
                 string.Format(Se.Language.Translate.XIsAlreadyDownloadedReDownload, model.DisplayName),
                 MessageBoxButtons.YesNo,
@@ -987,11 +1011,28 @@ public partial class AutoTranslateViewModel : ObservableObject
         var installedKey = GetLlamaCppEngineUpdate()?.key ?? string.Empty;
 
         await _windowService.ShowDialogAsync<LlamaCppEngineSettingsWindow, LlamaCppEngineSettingsViewModel>(
-            Window,
+            Window!,
             vm => vm.Initialize(() => UpdateLlamaCppEngineAsync(installedKey)));
 
         RefreshDownloadDots?.Invoke();
         RefreshEngineUpdateButton();
+    }
+
+    /// <summary>
+    /// Opens the advanced engine's batch/context/sampling settings dialog (the sub-window of the
+    /// "llama.cpp advanced" engine).
+    /// </summary>
+    [RelayCommand]
+    private async Task ShowLlamaCppAdvancedSettings()
+    {
+        if (Window == null)
+        {
+            return;
+        }
+
+        await _windowService.ShowDialogAsync<LlamaCppAdvancedSettingsWindow, LlamaCppAdvancedSettingsViewModel>(
+            Window!,
+            vm => vm.Initialize());
     }
 
     [RelayCommand]
@@ -1027,6 +1068,13 @@ public partial class AutoTranslateViewModel : ObservableObject
             return;
         }
 
+        // A cancelled translation (or Escape) leaves the shared token source cancelled;
+        // EnsureLlamaCppReady would then fail immediately with a dead token.
+        if (_cancellationTokenSource.IsCancellationRequested)
+        {
+            _cancellationTokenSource = new CancellationTokenSource();
+        }
+
         await EnsureLlamaCppReady();
         UpdateLlamaCppServerButtonText();
     }
@@ -1054,12 +1102,17 @@ public partial class AutoTranslateViewModel : ObservableObject
 
         try
         {
-            await LlamaCppServerManager.EnsureServerRunningAsync(model, _cancellationTokenSource.Token);
+            // The advanced engine stuffs history/synopsis/glossary into every request, so it gets
+            // a user-configurable (default larger) server context; everything else keeps the default.
+            var contextSize = SelectedAutoTranslator is LlamaCppAdvancedTranslate
+                ? Math.Clamp(Se.Settings.AutoTranslate.LlamaCppAdvanced.ContextSize, 2048, 262144)
+                : LlamaCppServerManager.DefaultContextSize;
+            await LlamaCppServerManager.EnsureServerRunningAsync(model, _cancellationTokenSource.Token, contextSize);
         }
         catch (Exception ex)
         {
             await MessageBox.Show(
-                Window,
+                Window!,
                 Se.Language.General.Error,
                 ex.Message,
                 MessageBoxButtons.OK,
@@ -1091,7 +1144,7 @@ public partial class AutoTranslateViewModel : ObservableObject
         _llamaCppUpdatePromptShown = true;
 
         var answer = await MessageBox.Show(
-            Window,
+            Window!,
             string.Format(Se.Language.Video.AudioToText.UpdateXTitle, "llama.cpp"),
             string.Format(Se.Language.Video.AudioToText.UpdateXMessage, "llama.cpp", Environment.NewLine),
             MessageBoxButtons.YesNoCancel,
@@ -1204,8 +1257,16 @@ public partial class AutoTranslateViewModel : ObservableObject
         }
     }
 
-    private async Task<bool> DoTranslate()
+    private async Task<bool> DoTranslate(bool onlyCurrentLine)
     {
+        // The pre-flight below awaits (model download, server startup) before
+        // _translationInProgress is set - block re-entry for that whole window so a
+        // second click cannot start a competing translation loop.
+        if (_translationStarting)
+        {
+            return false;
+        }
+
         var translator = SelectedAutoTranslator;
         if (translator == null || Window == null)
         {
@@ -1216,7 +1277,7 @@ public partial class AutoTranslateViewModel : ObservableObject
         {
             // show message about selecting target language
             await MessageBox.Show(
-                Window,
+                Window!,
                 Se.Language.General.Error,
                 Se.Language.Translate.PleaseSelectATargetLanguage,
                 MessageBoxButtons.OK,
@@ -1233,6 +1294,20 @@ public partial class AutoTranslateViewModel : ObservableObject
             return false;
         }
 
+        _onlyCurrentLine = onlyCurrentLine;
+        _translationStarting = true;
+        try
+        {
+            return await StartTranslation(translator);
+        }
+        finally
+        {
+            _translationStarting = false;
+        }
+    }
+
+    private async Task<bool> StartTranslation(IAutoTranslator translator)
+    {
         _abort = false;
         IsProgressEnabled = true;
         var engineType = translator.GetType();
@@ -1241,7 +1316,7 @@ public partial class AutoTranslateViewModel : ObservableObject
         {
             IsProgressEnabled = false;
             await MessageBox.Show(
-                Window,
+                Window!,
                 Se.Language.General.Error,
                 string.Format(Se.Language.General.XRequiresAnApiKey, translator.Name),
                 MessageBoxButtons.OK,
@@ -1254,7 +1329,7 @@ public partial class AutoTranslateViewModel : ObservableObject
         {
             IsProgressEnabled = false;
             await MessageBox.Show(
-                Window,
+                Window!,
                 Se.Language.General.Error,
                 string.Format(Se.Language.General.XRequiresAnApiKey, translator.Name),
                 MessageBoxButtons.OK,
@@ -1270,7 +1345,7 @@ public partial class AutoTranslateViewModel : ObservableObject
         {
             IsProgressEnabled = false;
             await MessageBox.Show(
-                Window,
+                Window!,
                 Se.Language.General.Error,
                 string.Format(Se.Language.General.XRequiresAValidUrl, translator.Name),
                 MessageBoxButtons.OK,
@@ -1286,7 +1361,7 @@ public partial class AutoTranslateViewModel : ObservableObject
 
         _cancellationTokenSource = new CancellationTokenSource();
 
-        if (engineType == typeof(LlamaCppTranslate))
+        if (engineType == typeof(LlamaCppTranslate) || engineType == typeof(LlamaCppAdvancedTranslate))
         {
             if (Se.Settings.AutoTranslate.LlamaCppUseRemoteServer)
             {
@@ -1322,7 +1397,7 @@ public partial class AutoTranslateViewModel : ObservableObject
             IsProgressEnabled = false;
             StatusText = Se.Language.Translate.ReadyToTranslate;
             await MessageBox.Show(
-                Window,
+                Window!,
                 Se.Language.General.Error,
                 string.Format(Se.Language.General.ErrorX, exception.Message),
                 MessageBoxButtons.OK,
@@ -1368,17 +1443,54 @@ public partial class AutoTranslateViewModel : ObservableObject
                 start = Rows.IndexOf(selectedItem);
             }
 
-            var forceSingleLineMode = Se.Settings.AutoTranslate.IsTranslateEachLineSeparately(translator.Name) ||
-                                      translator.Name ==
-                                      NoLanguageLeftBehindApi.StaticName || // NLLB seems to miss some text...
-                                      translator.Name == NoLanguageLeftBehindServe.StaticName ||
-                                      translator.Name == CrispAsrMadladTranslate.StaticName || // one CLI process per line
-                                      _onlyCurrentLine;
+            // Single-line mode forced by the user setting or the engine itself is permanent;
+            // forceSingleLineMode may additionally be turned on temporarily after errors and
+            // is only allowed to fall back to merged mode when the permanent flag is off.
+            var alwaysSingleLineMode = Se.Settings.AutoTranslate.IsTranslateEachLineSeparately(translator.Name) ||
+                                       translator.Name ==
+                                       NoLanguageLeftBehindApi.StaticName || // NLLB seems to miss some text...
+                                       translator.Name == NoLanguageLeftBehindServe.StaticName ||
+                                       translator.Name == CrispAsrMadladTranslate.StaticName || // one CLI process per line
+                                       _onlyCurrentLine;
+            var forceSingleLineMode = alwaysSingleLineMode;
 
             var index = start;
+
+            // The advanced llama.cpp engine runs its own batch loop: numbered batches with a
+            // schema-forced JSON reply and rolling context, so MergeAndSplitHelper's merge/split
+            // heuristics are not needed (and would break the line alignment the schema guarantees).
+            // "Translate current line" still goes through the regular single-line path below.
+            if (translator is AdvancedTranslatorBase advancedTranslator && !_onlyCurrentLine)
+            {
+                while (index < Rows.Count)
+                {
+                    if (_abort || cancellationToken.IsCancellationRequested)
+                    {
+                        Dispatcher.UIThread.Invoke(() => IsTranslateEnabled = true);
+                        break;
+                    }
+
+                    var translatedCount = await advancedTranslator.TranslateBatchAsync(Rows, index, sourceLanguage.Code, targetLanguage.Code, cancellationToken);
+                    index += translatedCount;
+                    _translationProgressIndex = index;
+
+                    var advancedProgressIndex = index;
+                    Dispatcher.UIThread.Invoke(() =>
+                    {
+                        ProgressValue = (double)advancedProgressIndex * 100 / Rows.Count;
+                        ProgressText = $"{(int)ProgressValue} %";
+                        HasTranslatedSomething = true;
+                        SelectAndScrollToRow(advancedProgressIndex - 1);
+                    });
+                }
+
+                return; // the finally block below reports completion
+            }
+
             var linesTranslated = 0;
             var errorCount = 0;
             var noErrorCount = 0;
+            var noProgressCount = 0;
             while (index < Rows.Count)
             {
                 if (_abort || cancellationToken.IsCancellationRequested)
@@ -1392,7 +1504,7 @@ public partial class AutoTranslateViewModel : ObservableObject
                 if (!_onlyCurrentLine)
                 {
                     linesMergedAndTranslated = await MergeAndSplitHelper.MergeAndTranslateIfPossible(Rows, sourceLanguage, targetLanguage, index, translator, forceSingleLineMode,
-                        cancellationToken);
+                        cancellationToken, ApplyRowUpdateOnUiThread);
                 }
 
                 if (linesMergedAndTranslated > 0)
@@ -1419,8 +1531,9 @@ public partial class AutoTranslateViewModel : ObservableObject
                     linesTranslated += linesMergedAndTranslated;
                     _translationProgressIndex = index;
                     errorCount = 0;
+                    noProgressCount = 0;
 
-                    if (noErrorCount > 7)
+                    if (noErrorCount > 7 && !alwaysSingleLineMode)
                     {
                         forceSingleLineMode = false;
                     }
@@ -1443,7 +1556,8 @@ public partial class AutoTranslateViewModel : ObservableObject
                     index,
                     translator,
                     forceSingleLineMode,
-                    _cancellationTokenSource.Token);
+                    cancellationToken,
+                    ApplyRowUpdateOnUiThread);
 
                 if (_abort || cancellationToken.IsCancellationRequested)
                 {
@@ -1454,6 +1568,7 @@ public partial class AutoTranslateViewModel : ObservableObject
                 if (translateCount > 0)
                 {
                     index += translateCount;
+                    noProgressCount = 0;
                     var progressIndex = index;
                     Dispatcher.UIThread.Invoke(() =>
                     {
@@ -1473,6 +1588,14 @@ public partial class AutoTranslateViewModel : ObservableObject
                 else
                 {
                     forceSingleLineMode = true;
+
+                    // The engine keeps returning nothing for this line without throwing -
+                    // without a cap the loop would retry the same line forever.
+                    noProgressCount++;
+                    if (noProgressCount > 3)
+                    {
+                        throw new Exception($"Translation engine {translator.Name} returned no translation for line {index + 1} after {noProgressCount} attempts");
+                    }
                 }
             }
 
@@ -1549,13 +1672,13 @@ public partial class AutoTranslateViewModel : ObservableObject
                 {
                     StatusText = Se.Language.Translate.TranslationComplete;
                 }
-            });
 
-            var lastTranslatedRow = Rows.LastOrDefault(p => !string.IsNullOrEmpty(p.TranslatedText));
-            if (lastTranslatedRow != null)
-            {
-                SelectAndScrollToRow(Rows.IndexOf(lastTranslatedRow));
-            }
+                var lastTranslatedRow = Rows.LastOrDefault(p => !string.IsNullOrEmpty(p.TranslatedText));
+                if (lastTranslatedRow != null)
+                {
+                    SelectAndScrollToRow(Rows.IndexOf(lastTranslatedRow));
+                }
+            });
         }
     }
 
@@ -1577,6 +1700,8 @@ public partial class AutoTranslateViewModel : ObservableObject
             LmStudioTranslate => settings.LmStudioApiUrl,
             OllamaTranslate => settings.OllamaApiUrl,
             LlamaCppTranslate => settings.LlamaCppApiUrl,
+            LlamaCppAdvancedTranslate => settings.LlamaCppApiUrl,
+            OllamaAdvancedTranslate => Se.Settings.AutoTranslate.OllamaAdvancedUrl,
             AnthropicTranslate => settings.AnthropicApiUrl,
             GroqTranslate => settings.GroqUrl,
             OpenRouterTranslate => settings.OpenRouterUrl,
@@ -1609,7 +1734,7 @@ public partial class AutoTranslateViewModel : ObservableObject
             }
 
             await Task.Delay(5);
-            RowGrid.ScrollIntoView(Rows[scrollIndex], null);
+            RowGrid.ScrollIntoView(Rows[scrollIndex]);
         });
     }
 
@@ -1678,6 +1803,7 @@ public partial class AutoTranslateViewModel : ObservableObject
         SelectedCrispAsrModel = null;
         LlamaCppModelComboIsVisible = false;
         LlamaCppButtonsAreVisible = false;
+        LlamaCppAdvancedButtonIsVisible = false;
         LlamaCppRemoteToggleIsVisible = false;
         LlamaCppModels.Clear();
         SelectedLlamaCppModel = null;
@@ -1886,11 +2012,15 @@ public partial class AutoTranslateViewModel : ObservableObject
             return;
         }
 
-        if (engineType == typeof(LlamaCppTranslate))
+        if (engineType == typeof(LlamaCppTranslate) || engineType == typeof(LlamaCppAdvancedTranslate))
         {
             // The remote toggle is always available for llama.cpp; its current value decides
             // whether we show the local model/server controls or a plain API URL field (#11584).
             LlamaCppRemoteToggleIsVisible = true;
+
+            // Batch/context/sampling options only exist on the advanced engine; they apply to
+            // local and remote servers alike.
+            LlamaCppAdvancedButtonIsVisible = engineType == typeof(LlamaCppAdvancedTranslate);
             _suppressLlamaCppRemoteToggle = true;
             LlamaCppUseRemoteServer = Se.Settings.AutoTranslate.LlamaCppUseRemoteServer;
             _suppressLlamaCppRemoteToggle = false;
@@ -1945,6 +2075,30 @@ public partial class AutoTranslateViewModel : ObservableObject
             ModelIsVisible = true;
             ButtonModelIsVisible = true;
             ModelText = Se.Settings.AutoTranslate.OllamaModel;
+
+            return;
+        }
+
+        if (engineType == typeof(OllamaAdvancedTranslate))
+        {
+            ModelBrowseIsVisible = true;
+            LlamaCppAdvancedButtonIsVisible = true;
+
+            if (string.IsNullOrEmpty(Se.Settings.AutoTranslate.OllamaAdvancedUrl))
+            {
+                Se.Settings.AutoTranslate.OllamaAdvancedUrl = "http://localhost:11434/v1/chat/completions";
+            }
+
+            FillUrls(new List<string>
+            {
+                Se.Settings.AutoTranslate.OllamaAdvancedUrl.TrimEnd('/'),
+            });
+
+            // Same installed-model list as the classic Ollama engine - only the endpoint differs.
+            _apiModels = Se.Settings.AutoTranslate.OllamaModels.Split(',').ToList();
+            ModelIsVisible = true;
+            ButtonModelIsVisible = true;
+            ModelText = Se.Settings.AutoTranslate.OllamaAdvancedModel;
 
             return;
         }
@@ -2126,7 +2280,7 @@ public partial class AutoTranslateViewModel : ObservableObject
         Se.Settings.AutoTranslate.LlamaCppUseRemoteServer = value;
 
         // Swap the llama.cpp panel between the local model/server controls and the remote URL field.
-        if (SelectedAutoTranslator is LlamaCppTranslate)
+        if (SelectedAutoTranslator is LlamaCppTranslate or LlamaCppAdvancedTranslate)
         {
             SetAutoTranslatorEngine(SelectedAutoTranslator);
         }
@@ -2262,6 +2416,23 @@ public partial class AutoTranslateViewModel : ObservableObject
             e.Handled = true;
             UiUtil.ShowHelp("features/auto-translate");
         }
+    }
+
+    /// <summary>
+    /// Marshals row writes from the background translation loop to the UI thread -
+    /// the rows are grid-bound and Avalonia bindings are not thread-safe.
+    /// </summary>
+    private static void ApplyRowUpdateOnUiThread(Action action)
+    {
+        Dispatcher.UIThread.Invoke(action);
+    }
+
+    internal void OnClosing()
+    {
+        // The OS close button bypasses the Cancel command - stop a running translation
+        // loop so it does not keep calling the translation API against a closed window.
+        _abort = true;
+        _cancellationTokenSource.Cancel();
     }
 
     internal void OnLoaded()

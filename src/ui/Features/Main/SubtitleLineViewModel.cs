@@ -548,11 +548,13 @@ public partial class SubtitleLineViewModel : ObservableObject
 
         OnPropertyChanged(nameof(GapBackgroundBrush));
         OnPropertyChanged(nameof(EndTimeBackgroundBrush));
+        OnPropertyChanged(nameof(AccessibleErrorText));
     }
 
     partial void OnPreviousGapChanged(double value)
     {
         OnPropertyChanged(nameof(StartTimeBackgroundBrush));
+        OnPropertyChanged(nameof(AccessibleErrorText));
     }
 
     public IBrush GapBackgroundBrush
@@ -566,6 +568,74 @@ public partial class SubtitleLineViewModel : ObservableObject
             }
 
             return _transparentBrush;
+        }
+    }
+
+    /// <summary>
+    /// Screen-reader text for the rule violations the grid shows as cell tints.
+    /// The tints are color-only, so this mirrors the *BackgroundBrush conditions
+    /// and is appended to the row's AutomationProperties.Name binding (empty when
+    /// the line is clean). English on purpose, same as GetErrors/the error list.
+    /// </summary>
+    public string AccessibleErrorText
+    {
+        get
+        {
+            var general = Se.Settings.General;
+            StringBuilder? errors = null;
+
+            void Add(string error)
+            {
+                errors ??= new StringBuilder(" - ");
+                if (errors.Length > 3)
+                {
+                    errors.Append(", ");
+                }
+
+                errors.Append(error);
+            }
+
+            if (general.ColorTimeCodeOverlap && PreviousGap < 0)
+            {
+                Add("overlap with previous");
+            }
+
+            if (general.ColorTimeCodeOverlap && Gap < 0)
+            {
+                Add("overlap with next");
+            }
+            else if (general.ColorGapTooShort && Gap < general.MinimumBetweenLines.GetMilliseconds())
+            {
+                Add("gap too short");
+            }
+
+            if (general.ColorDurationTooShort && Duration.TotalMilliseconds < general.SubtitleMinimumDisplayMilliseconds)
+            {
+                Add("duration too short");
+            }
+
+            if (general.ColorDurationTooLong && Duration.TotalMilliseconds > general.SubtitleMaximumDisplayMilliseconds)
+            {
+                Add("duration too long");
+            }
+
+            if (general.ColorCharactersPerSecond && CharactersPerSecond > general.SubtitleMaximumCharactersPerSeconds)
+            {
+                Add("CPS " + Math.Round(CharactersPerSecond, 1));
+            }
+
+            if (general.ColorWordsPerMinute && WordsPerMinute > general.SubtitleMaximumWordsPerMinute)
+            {
+                Add("WPM " + Math.Round(WordsPerMinute));
+            }
+
+            // TextBackgroundBrush caches the expensive HarfBuzz width check by (Text, settings).
+            if (!ReferenceEquals(TextBackgroundBrush, _transparentBrush))
+            {
+                Add("text too long or wide");
+            }
+
+            return errors?.ToString() ?? string.Empty;
         }
     }
 
@@ -673,6 +743,7 @@ public partial class SubtitleLineViewModel : ObservableObject
             OnPropertyChanged(nameof(CpsBackgroundBrush));
             OnPropertyChanged(nameof(WordsPerMinute));
             OnPropertyChanged(nameof(WpmBackgroundBrush));
+            OnPropertyChanged(nameof(AccessibleErrorText));
         }
     }
 
@@ -693,6 +764,7 @@ public partial class SubtitleLineViewModel : ObservableObject
             OnPropertyChanged(nameof(DurationBackgroundBrush));
             OnPropertyChanged(nameof(CpsBackgroundBrush));
             OnPropertyChanged(nameof(WpmBackgroundBrush));
+            OnPropertyChanged(nameof(AccessibleErrorText));
         }
     }
 
@@ -707,6 +779,7 @@ public partial class SubtitleLineViewModel : ObservableObject
         OnPropertyChanged(nameof(WordsPerMinute));
         OnPropertyChanged(nameof(WpmBackgroundBrush));
         OnPropertyChanged(nameof(PixelWidth));
+        OnPropertyChanged(nameof(AccessibleErrorText));
     }
 
     public void RefreshText()
@@ -733,6 +806,7 @@ public partial class SubtitleLineViewModel : ObservableObject
         OnPropertyChanged(nameof(WpmBackgroundBrush));
         OnPropertyChanged(nameof(GapBackgroundBrush));
         OnPropertyChanged(nameof(PixelWidth));
+        OnPropertyChanged(nameof(AccessibleErrorText));
 
         // The grid Text/OriginalText columns render through a converter that honors the
         // "single line" + separator appearance settings, so re-notify them too; otherwise

@@ -43,7 +43,7 @@ public class WhisperEngineOpenAi : ISpeechToTextEngine
     public string GetAndCreateWhisperFolder()
     {
         var folder = WhisperHelper.GetWhisperFolder(WhisperChoice.OpenAi);
-        return folder;
+        return folder ?? string.Empty;
     }
 
     public string GetAndCreateWhisperModelFolder(WhisperModel? whisperModel)

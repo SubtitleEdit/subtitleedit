@@ -2,6 +2,8 @@ using Avalonia;
 using Avalonia.Automation;
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
+using Avalonia.Controls.Presenters;
+using Avalonia.Controls.Templates;
 using Avalonia.Data;
 using Avalonia.Data.Converters;
 using Avalonia.Input;
@@ -10,6 +12,7 @@ using Avalonia.Layout;
 using Avalonia.Media;
 using Avalonia.Platform;
 using Avalonia.Styling;
+using Avalonia.VisualTree;
 using Avalonia.Threading;
 using CommunityToolkit.Mvvm.Input;
 using Nikse.SubtitleEdit.Features.Shared.ColorPicker;
@@ -36,59 +39,183 @@ public static class UiUtil
     public const int CornerRadius = 4;
     public const int SplitterWidthOrHeight = 4;
 
-    public static ControlTheme DataGridNoBorderCellTheme => GetDataGridNoBorderCellTheme();
+    /// <summary>
+    /// Grid lines for <see cref="TableView"/>, which - unlike DataGrid - has no
+    /// GridLinesVisibility property. Drawn as cell borders from the same
+    /// Appearance.GridLinesAppearance setting (a <see cref="SeGridLinesVisibility"/>
+    /// name) and compact-mode padding the DataGrid cell themes above use, so both
+    /// controls honour the user's "Show grid lines" choice identically.
+    /// </summary>
+    public static ControlTheme TableViewCellTheme => GetTableViewCellTheme(noPadding: false);
 
-    private static ControlTheme GetDataGridNoBorderCellTheme()
+    /// <summary>As <see cref="TableViewCellTheme"/> but with no cell padding, for cells hosting their own controls.</summary>
+    public static ControlTheme TableViewNoPaddingCellTheme => GetTableViewCellTheme(noPadding: true);
+
+    private static ControlTheme GetTableViewCellTheme(bool noPadding)
     {
         var showVertical =
-            Se.Settings.Appearance.GridLinesAppearance == nameof(DataGridGridLinesVisibility.Vertical) ||
-            Se.Settings.Appearance.GridLinesAppearance == nameof(DataGridGridLinesVisibility.All);
+            Se.Settings.Appearance.GridLinesAppearance == nameof(SeGridLinesVisibility.Vertical) ||
+            Se.Settings.Appearance.GridLinesAppearance == nameof(SeGridLinesVisibility.All);
 
         var showHorizontal =
-            Se.Settings.Appearance.GridLinesAppearance == nameof(DataGridGridLinesVisibility.Horizontal) ||
-            Se.Settings.Appearance.GridLinesAppearance == nameof(DataGridGridLinesVisibility.All);
+            Se.Settings.Appearance.GridLinesAppearance == nameof(SeGridLinesVisibility.Horizontal) ||
+            Se.Settings.Appearance.GridLinesAppearance == nameof(SeGridLinesVisibility.All);
 
-        var compactMode = Se.Settings.Appearance.GridCompactMode;
+        // Horizontal inset keeps text off the vertical grid line; the vertical inset sets the
+        // row height, because ApplyTableViewRowStyle zeroes the row's own padding (the cell must
+        // fill the row or its borders float inside it instead of forming continuous lines).
+        var padding = noPadding
+            ? new Thickness(0)
+            : new Thickness(4, Se.Settings.Appearance.GridCompactMode ? 2 : 6);
 
-        return new ControlTheme(typeof(DataGridCell))
+        return new ControlTheme(typeof(TableViewCell))
         {
             Setters =
             {
-                new Setter(DataGridCell.BackgroundProperty, Brushes.Transparent),
-                new Setter(DataGridCell.FocusAdornerProperty, null),
-                new Setter(DataGridCell.PaddingProperty, new Thickness(compactMode ? 0 : 4)),
-                new Setter(DataGridCell.BorderBrushProperty, GetBorderBrush()),
-                new Setter(DataGridCell.BorderThicknessProperty,
+                new Setter(TableViewCell.BackgroundProperty, Brushes.Transparent),
+                new Setter(TableViewCell.PaddingProperty, padding),
+                new Setter(TableViewCell.BorderBrushProperty, GetGridLineBrush()),
+                new Setter(TableViewCell.BorderThicknessProperty,
                     new Thickness(0, 0, showVertical ? 1 : 0, showHorizontal ? 1 : 0)), // vertical and horizontal lines
+                new Setter(TableViewCell.TemplateProperty, TableViewCellTemplate),
             }
         };
     }
 
-    public static ControlTheme DataGridNoBorderNoPaddingCellTheme => GetDataGridNoBorderNoPaddingCellTheme();
+    /// <summary>
+    /// Column-header theme matching <see cref="TableViewCellTheme"/>: the same border brush and
+    /// text inset, a bottom line closing the top of the first row, and a right line continuing
+    /// the cells' vertical grid line. The built-in header draws its separator as a semi-transparent
+    /// rectangle inside the resize Thumb, which is both a different colour and 6px off from the
+    /// cell borders - <see cref="ApplyTableViewRowStyle"/> hides it and aligns the rows.
+    /// </summary>
+    public static ControlTheme TableViewColumnHeaderTheme => GetTableViewColumnHeaderTheme();
 
-    private static ControlTheme GetDataGridNoBorderNoPaddingCellTheme()
+    private static ControlTheme GetTableViewColumnHeaderTheme()
     {
-        var showVertical =
-            Se.Settings.Appearance.GridLinesAppearance == nameof(DataGridGridLinesVisibility.Vertical) ||
-            Se.Settings.Appearance.GridLinesAppearance == nameof(DataGridGridLinesVisibility.All);
-
-        var showHorizontal =
-            Se.Settings.Appearance.GridLinesAppearance == nameof(DataGridGridLinesVisibility.Horizontal) ||
-            Se.Settings.Appearance.GridLinesAppearance == nameof(DataGridGridLinesVisibility.All);
-
-        return new ControlTheme(typeof(DataGridCell))
+        return new ControlTheme(typeof(TableViewColumnHeader))
         {
             Setters =
             {
-                new Setter(DataGridCell.BackgroundProperty, Brushes.Transparent),
-                new Setter(DataGridCell.FocusAdornerProperty, null),
-                new Setter(DataGridCell.PaddingProperty, new Thickness(0)),
-                new Setter(DataGridCell.BorderBrushProperty, GetBorderBrush()),
-                new Setter(DataGridCell.BorderThicknessProperty,
-                    new Thickness(0, 0, showVertical ? 1 : 0, showHorizontal ? 1 : 0)), // vertical and horizontal lines
+                // Match the DataGrid header background: the Fluent DataGrid resource by
+                // default; SE's custom themes (lighter dark, classic gray, pastel) override
+                // both header types with the same brush via app styles in UiTheme.
+                new Setter(TableViewColumnHeader.BackgroundProperty, GetDataGridHeaderBackgroundBrush()),
+                new Setter(TableViewColumnHeader.PaddingProperty, new Thickness(4, 6, 4, 5)),
+                // The faint grid-line brush, not the full border brush: with grid lines set
+                // to None these are the only separators in the grid, and at 0.5 opacity they
+                // read much stronger than anything the old DataGrid drew.
+                new Setter(TableViewColumnHeader.BorderBrushProperty, GetGridLineBrush()),
+                // Both header lines always show, independently of the grid-lines setting: the
+                // bottom line separates the header from the first row and the right line
+                // separates the column headers from each other, the way DataGrid's header
+                // (with its always-on separators) does.
+                new Setter(TableViewColumnHeader.BorderThicknessProperty, new Thickness(0, 0, 1, 1)),
+                new Setter(TableViewColumnHeader.TemplateProperty, TableViewColumnHeaderTemplate),
             }
         };
     }
+
+    private static IBrush GetDataGridHeaderBackgroundBrush()
+    {
+        if (Application.Current != null &&
+            Application.Current.TryGetResource("DataGridColumnHeaderBackgroundBrush",
+                Application.Current.ActualThemeVariant, out var resource) &&
+            resource is IBrush brush)
+        {
+            return brush;
+        }
+
+        return Brushes.Transparent;
+    }
+
+    // Mirrors the built-in header template (content + resize thumb) but routes the border
+    // properties to the presenter so the header's lines match the cells', and drops the
+    // thumb's own off-colour separator rectangle.
+    private static readonly FuncControlTemplate<TableViewColumnHeader> TableViewColumnHeaderTemplate =
+        new((_, scope) =>
+        {
+            var presenter = new ContentPresenter
+            {
+                Name = "PART_ContentPresenter",
+                [!ContentPresenter.ContentProperty] = new TemplateBinding(ContentControl.ContentProperty),
+                [!ContentPresenter.ContentTemplateProperty] = new TemplateBinding(ContentControl.ContentTemplateProperty),
+                [!ContentPresenter.BackgroundProperty] = new TemplateBinding(TemplatedControl.BackgroundProperty),
+                [!ContentPresenter.BorderBrushProperty] = new TemplateBinding(TemplatedControl.BorderBrushProperty),
+                [!ContentPresenter.BorderThicknessProperty] = new TemplateBinding(TemplatedControl.BorderThicknessProperty),
+                [!ContentPresenter.PaddingProperty] = new TemplateBinding(TemplatedControl.PaddingProperty),
+                [!ContentPresenter.HorizontalContentAlignmentProperty] = new TemplateBinding(ContentControl.HorizontalContentAlignmentProperty),
+                [!ContentPresenter.VerticalContentAlignmentProperty] = new TemplateBinding(ContentControl.VerticalContentAlignmentProperty),
+            }.RegisterInNameScope(scope);
+
+            // Keep the resize grip - TableViewColumn.CanUserResize works through it.
+            var thumb = new Thumb
+            {
+                Name = "PART_Resizer",
+                Width = 12,
+                Margin = new Thickness(0, 0, -6, 0),
+                HorizontalAlignment = HorizontalAlignment.Right,
+                Cursor = new Cursor(StandardCursorType.SizeWestEast),
+                Background = Brushes.Transparent,
+                Template = new FuncControlTemplate<Thumb>((_, _) => new Border { Background = Brushes.Transparent }),
+            }.RegisterInNameScope(scope);
+
+            return new Panel { Children = { presenter, thumb } };
+        });
+
+    /// <summary>
+    /// Makes <see cref="TableView"/> rows tight to their cells. TableViewRow is a ListBoxItem
+    /// and its default padding sits *outside* the cells, so cell borders would be drawn inside
+    /// the row - horizontal lines floating above the row edge and vertical lines broken into
+    /// one segment per row instead of continuous columns. The cells carry the inset instead
+    /// (see the cell themes above). Call this on any TableView using those cell themes.
+    /// </summary>
+    public static void ApplyTableViewRowStyle(TableView tableView)
+    {
+        tableView.Styles.Add(new Style(x => x.OfType<TableViewRow>())
+        {
+            Setters =
+            {
+                new Setter(TableViewRow.PaddingProperty, new Thickness(0)),
+                new Setter(TableViewRow.MinHeightProperty, 0.0),
+            }
+        });
+
+        // TableView's template wraps the header in a Border with hard-coded 6,9,6,12 padding
+        // while rows sit flush against the control edge. Left alone the header's column border
+        // lands 6px right of the cell borders below it, and its bottom line floats 12px above
+        // the first row. The Border is an unnamed template part, so it can't be reached by a
+        // selector - zero its padding once the template is applied.
+        tableView.Loaded += (_, _) =>
+        {
+            var headersPresenter = tableView.GetVisualDescendants()
+                .OfType<TableViewColumnHeadersPresenter>()
+                .FirstOrDefault();
+            if (headersPresenter?.GetVisualParent() is Border headerBorder)
+            {
+                headerBorder.Padding = new Thickness(0);
+            }
+        };
+    }
+
+    // TableViewCell's built-in template only template-binds Background, so the border
+    // properties set above would never be drawn. Bind them through to the presenter
+    // (which renders its own border) so the grid lines actually appear.
+    private static readonly FuncControlTemplate<TableViewCell> TableViewCellTemplate =
+        new((_, scope) => new ContentPresenter
+        {
+            Name = "PART_ContentPresenter",
+            [!ContentPresenter.ContentProperty] = new TemplateBinding(ContentControl.ContentProperty),
+            [!ContentPresenter.ContentTemplateProperty] = new TemplateBinding(ContentControl.ContentTemplateProperty),
+            [!ContentPresenter.BackgroundProperty] = new TemplateBinding(TemplatedControl.BackgroundProperty),
+            [!ContentPresenter.BorderBrushProperty] = new TemplateBinding(TemplatedControl.BorderBrushProperty),
+            [!ContentPresenter.BorderThicknessProperty] = new TemplateBinding(TemplatedControl.BorderThicknessProperty),
+            [!ContentPresenter.PaddingProperty] = new TemplateBinding(TemplatedControl.PaddingProperty),
+            [!ContentPresenter.HorizontalContentAlignmentProperty] = new TemplateBinding(ContentControl.HorizontalContentAlignmentProperty),
+            [!ContentPresenter.VerticalContentAlignmentProperty] = new TemplateBinding(ContentControl.VerticalContentAlignmentProperty),
+        }.RegisterInNameScope(scope));
+
+
 
     // On macOS the default UI font's ascent sits right at the cap height, so Avalonia's line box
     // clips the dots on tall diacritics (Ä/Ö/Ü) at the top - in text boxes and grid cells alike
@@ -177,6 +304,18 @@ public static class UiUtil
 
     private static readonly IBrush BorderBrushDark = new Avalonia.Media.Immutable.ImmutableSolidColorBrush(Colors.White, 0.5);
     private static readonly IBrush BorderBrushLight = new Avalonia.Media.Immutable.ImmutableSolidColorBrush(Colors.Black, 0.5);
+
+    // Fainter variant for the TableView's in-body grid lines: drawn as per-cell borders
+    // they read stronger than the old DataGrid's gridline pass, so tone them down.
+    private static readonly IBrush GridLineBrushDark = new Avalonia.Media.Immutable.ImmutableSolidColorBrush(Colors.White, 0.22);
+    private static readonly IBrush GridLineBrushLight = new Avalonia.Media.Immutable.ImmutableSolidColorBrush(Colors.Black, 0.22);
+
+    public static IBrush GetGridLineBrush()
+    {
+        return Application.Current?.ActualThemeVariant == ThemeVariant.Dark
+            ? GridLineBrushDark
+            : GridLineBrushLight;
+    }
 
     public static IBrush GetBorderBrush()
     {
@@ -2798,14 +2937,14 @@ public static class UiUtil
         return Color.FromArgb(color.A, r, g, b);
     }
 
-    internal static DataGridGridLinesVisibility GetGridLinesVisibility()
+    internal static SeGridLinesVisibility GetGridLinesVisibility()
     {
         return Se.Settings.Appearance.GridLinesAppearance switch
         {
-            nameof(DataGridGridLinesVisibility.Horizontal) => DataGridGridLinesVisibility.Horizontal,
-            nameof(DataGridGridLinesVisibility.Vertical) => DataGridGridLinesVisibility.Vertical,
-            nameof(DataGridGridLinesVisibility.All) => DataGridGridLinesVisibility.All,
-            _ => DataGridGridLinesVisibility.None,
+            nameof(SeGridLinesVisibility.Horizontal) => SeGridLinesVisibility.Horizontal,
+            nameof(SeGridLinesVisibility.Vertical) => SeGridLinesVisibility.Vertical,
+            nameof(SeGridLinesVisibility.All) => SeGridLinesVisibility.All,
+            _ => SeGridLinesVisibility.None,
         };
     }
 
@@ -3122,7 +3261,45 @@ public static class UiUtil
 
     internal static bool IsHelp(KeyEventArgs e)
     {
-        return e.Key == Key.F1;
+        var shortcut = Se.Settings.Shortcuts.FirstOrDefault(s =>
+            s.ActionName == nameof(Features.Main.MainViewModel.ShowHelpCommand) && s.Keys.Count > 0);
+        if (shortcut == null)
+        {
+            return e.Key == Key.F1;
+        }
+
+        var requiredModifiers = KeyModifiers.None;
+        string? keyName = null;
+        foreach (var token in shortcut.Keys)
+        {
+            switch (ShortcutManager.NormalizeKeyToken(token))
+            {
+                case "Control":
+                    requiredModifiers |= KeyModifiers.Control;
+                    break;
+                case "Alt":
+                    requiredModifiers |= KeyModifiers.Alt;
+                    break;
+                case "Shift":
+                    requiredModifiers |= KeyModifiers.Shift;
+                    break;
+                case "Win":
+                    requiredModifiers |= KeyModifiers.Meta;
+                    break;
+                default:
+                    keyName = token;
+                    break;
+            }
+        }
+
+        // A modifier-only binding can never match a key press.
+        if (keyName == null)
+        {
+            return false;
+        }
+
+        return e.KeyModifiers == requiredModifiers &&
+               string.Equals(ShortcutManager.GetShortcutKey(e).ToString(), keyName, StringComparison.OrdinalIgnoreCase);
     }
 
     internal static bool TryHandleWindowSystemMenu(KeyEventArgs e, Window? window)
@@ -3220,30 +3397,4 @@ public static class UiUtil
     /// Makes Home/End jump to the first/last row of <paramref name="dataGrid"/> and select it.
     /// Avalonia's DataGrid only moves the cell cursor, which is why this is needed. Tunnel
     /// phase so the grid's own navigation does not consume the key first.
-    /// </summary>
-    public static void AttachHomeEndNavigation(DataGrid dataGrid)
-    {
-        if (dataGrid == null)
-        {
-            return;
-        }
-
-        dataGrid.AddHandler(InputElement.KeyDownEvent, (object? _, KeyEventArgs e) =>
-        {
-            if (e.Key is not (Key.Home or Key.End) || e.Source is TextBox)
-            {
-                return;
-            }
-
-            if (dataGrid.ItemsSource is not IList items || items.Count == 0)
-            {
-                return;
-            }
-
-            var target = e.Key == Key.Home ? items[0] : items[^1];
-            dataGrid.SelectedItem = target;
-            dataGrid.ScrollIntoView(target, null);
-            e.Handled = true;
-        }, RoutingStrategies.Tunnel);
-    }
 }

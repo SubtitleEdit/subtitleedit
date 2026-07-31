@@ -125,6 +125,7 @@ using Nikse.SubtitleEdit.Features.Tools.MergeTwoSubtitles;
 using Nikse.SubtitleEdit.Features.Tools.MergeSubtitlesWithSameText;
 using Nikse.SubtitleEdit.Features.Tools.MergeSubtitlesWithSameTimeCodes;
 using Nikse.SubtitleEdit.Features.Tools.RemoveTextForHearingImpaired;
+using Nikse.SubtitleEdit.Features.Tools.RemoveUnicodeCharacters;
 using Nikse.SubtitleEdit.Features.Tools.Renumber;
 using Nikse.SubtitleEdit.Features.Tools.Romanize;
 using Nikse.SubtitleEdit.Features.Tools.SortBy;
@@ -435,6 +436,7 @@ public static class DependencyInjectionExtensions
         collection.AddTransient<NOcrSettingsViewModel>();
         collection.AddTransient<LlamaCppOcrSettingsViewModel>();
         collection.AddTransient<LlamaCppEngineSettingsViewModel>();
+        collection.AddTransient<Features.Translate.LlamaCppAdvanced.LlamaCppAdvancedSettingsViewModel>();
         collection.AddTransient<OcrViewModel>();
         collection.AddTransient<OmniVoiceSettingsViewModel>();
         collection.AddTransient<Qwen3TtsSettingsViewModel>();
@@ -482,6 +484,7 @@ public static class DependencyInjectionExtensions
         collection.AddTransient<PromptUnknownWordViewModel>();
         collection.AddTransient<ReEncodeVideoViewModel>();
         collection.AddTransient<RemoveTextForHearingImpairedViewModel>();
+        collection.AddTransient<RemoveUnicodeCharactersViewModel>();
         collection.AddTransient<RenumberViewModel>();
         collection.AddTransient<RomanizeViewModel>();
         collection.AddTransient<ReplaceViewModel>();

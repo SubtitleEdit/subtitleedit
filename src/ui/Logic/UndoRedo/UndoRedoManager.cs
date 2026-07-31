@@ -374,7 +374,19 @@ public sealed class UndoRedoManager : IUndoRedoManager
                 Math.Abs(o.EndTime.TotalMilliseconds - n.EndTime.TotalMilliseconds) > 0.5;
             var bookmarkChanged = o.Bookmark != n.Bookmark;
 
-            if (!textChanged && !timingChanged && !bookmarkChanged)
+            // Same rule as OriginalText above: every field the undo hash covers must be
+            // compared here, or changing it (assigning a style/actor/layer) shifts the
+            // hash without recording an entry - undo then reverts it bundled into the
+            // previous action, and the detector re-snapshots every tick until the next
+            // text or timing edit.
+            var metadataChanged =
+                o.Style != n.Style ||
+                o.Extra != n.Extra ||
+                o.Actor != n.Actor ||
+                o.Layer != n.Layer ||
+                o.Number != n.Number;
+
+            if (!textChanged && !timingChanged && !bookmarkChanged && !metadataChanged)
             {
                 continue;
             }
@@ -392,6 +404,21 @@ public sealed class UndoRedoManager : IUndoRedoManager
 
         if (changedLines.Count == 0)
         {
+            // File-level state (file name, encoding, headers, original-subtitle file
+            // properties) is also part of the undo hash and can change with no line
+            // changes at all - e.g. loading an original subtitle sets its file name.
+            if (prev.SubtitleFileName != next.SubtitleFileName ||
+                prev.SelectedEncodingDisplayName != next.SelectedEncodingDisplayName ||
+                prev.SubtitleHeader != next.SubtitleHeader ||
+                prev.SubtitleFooter != next.SubtitleFooter ||
+                prev.SubtitleFileNameOriginal != next.SubtitleFileNameOriginal ||
+                prev.SubtitleHeaderOriginal != next.SubtitleHeaderOriginal ||
+                prev.SubtitleFooterOriginal != next.SubtitleFooterOriginal)
+            {
+                next.Description = "File properties changed";
+                return true;
+            }
+
             return false;
         }
 

@@ -54,6 +54,9 @@ internal static class ImageOutputWriter
 
         var (screenWidth, screenHeight) = options.Resolution ?? (1920, 1080);
 
+        // "{\pos(x,y)}" is in the script's own resolution, the export canvas may be another one.
+        var (scriptWidth, scriptHeight) = ExportTextTags.GetScriptResolution(subtitle.Header);
+
         // Pre-render header with the first paragraph as a representative
         var firstParam = BuildParameter(subtitle.Paragraphs[0], 0, screenWidth, screenHeight, options);
         firstParam.Bitmap = ImageRenderer.GenerateBitmap(firstParam);
@@ -65,6 +68,8 @@ internal static class ImageOutputWriter
             var p = subtitle.Paragraphs[i];
             var ip = BuildParameter(p, i, screenWidth, screenHeight, options);
             ip.Bitmap = ImageRenderer.GenerateBitmap(ip);
+            // Needs the rendered size, so it cannot happen in BuildParameter.
+            ExportTextTags.ApplyPositionTag(ip, p.Text, scriptWidth, scriptHeight);
             handler.CreateParagraph(ip);
             handler.WriteParagraph(ip);
             ip.Bitmap?.Dispose();
@@ -120,6 +125,16 @@ internal static class ImageOutputWriter
         var screenWidth = item.ScreenWidth ?? defaultWidth;
         var screenHeight = item.ScreenHeight ?? defaultHeight;
 
+        // The source's own position, in the frame the bitmap came from - kept as-is because
+        // the item's screen size travels with it. Handlers ignore a position outside the
+        // frame and fall back to the alignment below, so an unusable one costs nothing.
+        var position = item.Position;
+        if (position is { } p &&
+            (p.X < 0 || p.X >= screenWidth || p.Y < 0 || p.Y >= screenHeight))
+        {
+            position = null;
+        }
+
         var style = options.ImageStyle;
         return new ImageParameter
         {
@@ -129,6 +144,7 @@ internal static class ImageOutputWriter
             StartTime = item.StartTime.TimeSpan,
             EndTime = item.EndTime.TimeSpan,
             Alignment = style.Alignment,
+            OverridePosition = position,
             ContentAlignment = style.ContentAlignment,
             // Font/colour fields are still required by the ImageParameter contract even
             // though no rendering happens — handlers read them for metadata in some
@@ -161,13 +177,19 @@ internal static class ImageOutputWriter
     private static ImageParameter BuildParameter(Paragraph p, int index, int screenWidth, int screenHeight, ConversionOptions options)
     {
         var style = options.ImageStyle;
+
+        // "{\an8}" & co. position the single paragraph; --alignment is only the fallback for
+        // untagged lines. Without this the tag was rendered as literal text at the bottom of
+        // the frame (issue #13025) - as were "{\i1}", "{\b1}" and "{\c&H..&}", which
+        // ToRenderableText turns into the HTML tags the renderer understands.
+        var text = p.Text ?? string.Empty;
         return new ImageParameter
         {
             Index = index,
-            Text = p.Text ?? string.Empty,
+            Text = ExportTextTags.ToRenderableText(text),
             StartTime = p.StartTime.TimeSpan,
             EndTime = p.EndTime.TimeSpan,
-            Alignment = style.Alignment,
+            Alignment = ExportTextTags.GetAlignment(text, style.Alignment),
             ContentAlignment = style.ContentAlignment,
             FontName = style.FontName,
             FontSize = style.FontSize,

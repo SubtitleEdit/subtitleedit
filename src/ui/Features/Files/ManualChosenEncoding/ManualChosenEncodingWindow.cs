@@ -74,51 +74,63 @@ public class ManualChosenEncodingWindow : Window
 
         Content = grid;
 
-        Activated += delegate { buttonOk.Focus(); }; // hack to make OnKeyDown work
+        Activated += delegate { searchBox.Focus(); }; // initial focus on an input, not an action button - a focused button clicks on bare Space
         KeyDown += (_, e) => vm.OnKeyDown(e);
     }
 
     private static Border MakeEncodingsView(ManualChosenEncodingViewModel vm)
     {
-        var dataGrid = new DataGrid
+        var dataGrid = TableViewExtras.MakeTableView(multiSelect: false);
+        dataGrid.DataContext = vm;
+        dataGrid.ItemsSource = vm.Encodings;
+
+        var columnCodePage = new SeTableViewColumn
         {
-            AutoGenerateColumns = false,
-            SelectionMode = DataGridSelectionMode.Single,
-            CanUserResizeColumns = true,
-            CanUserSortColumns = true,
-            HorizontalAlignment = HorizontalAlignment.Stretch,
-            VerticalAlignment = VerticalAlignment.Stretch,
-            Width = double.NaN,
-            Height = double.NaN,
-            DataContext = vm,
-            ItemsSource = vm.Encodings,
-            Columns =
-            {
-                new DataGridTextColumn
-                {
-                    Header = Se.Language.File.ManualChosenEncoding.CodePage,
-                    CellTheme = UiUtil.DataGridNoBorderNoPaddingCellTheme,
-                    Binding = new Binding("Encoding.CodePage"),
-                    IsReadOnly = true,
-                },
-                new DataGridTextColumn
-                {
-                    Header = Se.Language.General.Name,
-                    CellTheme = UiUtil.DataGridNoBorderNoPaddingCellTheme,
-                    Binding = new Binding(nameof(TextEncoding.DisplayName)),
-                    IsReadOnly = true,
-                },
-                new DataGridTextColumn
-                {
-                    Header = Se.Language.General.Group,
-                    CellTheme = UiUtil.DataGridNoBorderNoPaddingCellTheme,
-                    Binding = new Binding("Encoding.BodyName"),
-                    IsReadOnly = true,
-                    Width = new DataGridLength(1, DataGridLengthUnitType.Star),
-                },
-            },
+            Header = Se.Language.File.ManualChosenEncoding.CodePage,
+            CellTheme = UiUtil.TableViewCellTheme,
+            HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
+            Binding = new Binding("Encoding.CodePage"),
+            // Content-sized (Auto) on the DataGrid; TableView treats Auto as star.
+            Width = new GridLength(100),
         };
-        dataGrid.Bind(DataGrid.SelectedItemProperty, new Binding(nameof(vm.SelectedEncoding)) { Source = vm });
+        var columnName = new SeTableViewColumn
+        {
+            Header = Se.Language.General.Name,
+            CellTheme = UiUtil.TableViewCellTheme,
+            HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
+            Binding = new Binding(nameof(TextEncoding.DisplayName)),
+            Width = new GridLength(1, GridUnitType.Star),
+        };
+        var columnGroup = new SeTableViewColumn
+        {
+            Header = Se.Language.General.Group,
+            CellTheme = UiUtil.TableViewCellTheme,
+            HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
+            Binding = new Binding("Encoding.BodyName"),
+            Width = new GridLength(180),
+        };
+        dataGrid.Columns.AddRange(new TableViewColumn[] { columnCodePage, columnName, columnGroup });
+
+        // An encoding pick list whose order is presentation-only (the caller consumes
+        // just SelectedEncoding), so header sorting is safe to wire.
+        static string GetBodyName(TextEncoding encoding)
+        {
+            try
+            {
+                return encoding.Encoding.BodyName;
+            }
+            catch
+            {
+                return string.Empty; // some code pages have no body name
+            }
+        }
+
+        var sorter = new TableViewHeaderSorter(dataGrid);
+        sorter.AddSortable<TextEncoding, int>(columnCodePage, x => x.Encoding.CodePage)
+            .AddSortable<TextEncoding, string>(columnName, x => x.DisplayName)
+            .AddSortable<TextEncoding, string>(columnGroup, GetBodyName);
+
+        dataGrid.Bind(TableView.SelectedItemProperty, new Binding(nameof(vm.SelectedEncoding)) { Source = vm });
         dataGrid.SelectionChanged += vm.EncodingChanged;
 
         return UiUtil.MakeBorderForControlNoPadding(dataGrid);

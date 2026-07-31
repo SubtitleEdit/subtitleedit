@@ -54,16 +54,17 @@ public class ProfilesExportWindow : Window
             HorizontalAlignment = HorizontalAlignment.Stretch,
         };
 
-        grid.Add(MakeDataGrid(vm), 0, 0);
+        var dataGridBorder = MakeDataGrid(vm, out var dataGrid);
+        grid.Add(dataGridBorder, 0, 0);
         grid.Add(panelButtons, 1, 0, 1, 2);
 
         Content = grid;
 
-        Activated += delegate { buttonOk.Focus(); }; // hack to make OnKeyDown work
+        Activated += delegate { TableViewExtras.FocusRow(dataGrid); }; // initial focus on an input, not an action button - a focused button clicks on bare Space
         KeyDown += vm.KeyDown;
     }
 
-    private static Border MakeDataGrid(ProfilesExportViewModel vm)
+    private static Border MakeDataGrid(ProfilesExportViewModel vm, out TableView tableView)
     {
         var grid = new Grid
         {
@@ -81,47 +82,45 @@ public class ProfilesExportWindow : Window
             Width = double.NaN,
         };
 
-        var dataGrid = new DataGrid
+        // No header sorting (the DataGrid's CanUserSortColumns is not carried over):
+        // the caller writes result.Profiles to the exported .profile file in collection
+        // order, so reordering the backing collection would reorder the export.
+        var dataGrid = TableViewExtras.MakeTableView(multiSelect: false);
+        dataGrid.DataContext = vm;
+        dataGrid.Columns.AddRange(new TableViewColumn[]
         {
-            AutoGenerateColumns = false,
-            SelectionMode = DataGridSelectionMode.Single,
-            CanUserResizeColumns = true,
-            CanUserSortColumns = true,
-            HorizontalAlignment = HorizontalAlignment.Stretch,
-            VerticalAlignment = VerticalAlignment.Stretch,
-            Width = double.NaN,
-            Height = double.NaN,
-            DataContext = vm,
-            Columns =
+            new SeTableViewColumn
             {
-                new DataGridTemplateColumn
+                Header = Se.Language.General.Enabled,
+                CellTheme = UiUtil.TableViewNoPaddingCellTheme,
+                HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
+                CellTemplate = new FuncDataTemplate<ProfileDisplay>((item, _) =>
+                new Border
                 {
-                    Header = Se.Language.General.Enabled,
-                    CellTheme = UiUtil.DataGridNoBorderNoPaddingCellTheme,
-                    CellTemplate = new FuncDataTemplate<ProfileDisplay>((item, _) =>
-                    new Border
+                    Background = Brushes.Transparent, // Prevents highlighting
+                    Padding = new Thickness(4),
+                    Child = new CheckBox
                     {
-                        Background = Brushes.Transparent, // Prevents highlighting
-                        Padding = new Thickness(4),
-                        Child = new CheckBox
-                        {
-                            [!CheckBox.IsCheckedProperty] = new Binding(nameof(ProfileDisplay.IsSelected)),
-                            HorizontalAlignment = HorizontalAlignment.Center
-                        }
-                    }),
-                    Width = new DataGridLength(1, DataGridLengthUnitType.Auto)
-                },
-                new DataGridTextColumn
-                {
-                    Header = Se.Language.General.Name,
-                    CellTheme = UiUtil.DataGridNoBorderNoPaddingCellTheme,
-                    Binding = new Binding(nameof(ProfileDisplay.Name)),
-                    IsReadOnly = true,
-                },
+                        [!CheckBox.IsCheckedProperty] = new Binding(nameof(ProfileDisplay.IsSelected)),
+                        HorizontalAlignment = HorizontalAlignment.Center
+                    }
+                }),
+                // Content-sized (Auto) on the DataGrid; TableView treats Auto as star.
+                Width = new GridLength(80)
             },
-        };
-        dataGrid.Bind(DataGrid.ItemsSourceProperty, new Binding(nameof(vm.Profiles)) { Source = vm });
-        dataGrid.Bind(DataGrid.SelectedItemProperty, new Binding(nameof(vm.SelectedProfile)) { Source = vm });
+            new SeTableViewColumn
+            {
+                Header = Se.Language.General.Name,
+                CellTheme = UiUtil.TableViewCellTheme,
+                HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
+                Binding = new Binding(nameof(ProfileDisplay.Name)),
+                Width = new GridLength(1, GridUnitType.Star),
+            },
+        });
+        dataGrid.Bind(TableView.ItemsSourceProperty, new Binding(nameof(vm.Profiles)) { Source = vm });
+        dataGrid.Bind(TableView.SelectedItemProperty, new Binding(nameof(vm.SelectedProfile)) { Source = vm });
+
+        tableView = dataGrid;
 
         grid.Add(dataGrid, 0);
 

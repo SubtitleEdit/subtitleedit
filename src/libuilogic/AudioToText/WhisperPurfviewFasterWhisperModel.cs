@@ -8,9 +8,9 @@ namespace Nikse.SubtitleEdit.UiLogic.AudioToText
 {
     public class WhisperPurfviewFasterWhisperModel : IWhisperModel
     {
-        public string[] Urls { get; set; }
-        public string Size { get; set; }
-        public string Name { get; set; }
+        public string[] Urls { get; set; } = Array.Empty<string>();
+        public string Size { get; set; } = string.Empty;
+        public string Name { get; set; } = string.Empty;
         public bool AlreadyDownloaded { get; set; }
         public long Bytes { get; set; }
 

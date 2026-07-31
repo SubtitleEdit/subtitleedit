@@ -29,7 +29,7 @@ public class PickSpellCheckDictionaryWindow : Window
         };
 
         var buttonDownload = UiUtil
-            .MakeButtonBrowse(vm.BrowseDictionaryCommand)
+            .MakeButtonBrowse(vm.BrowseDictionaryCommand, accessibleName: Se.Language.SpellCheck.ChooseSpellCheckDictionary)
             .WithLeftAlignment()
             .WithMargin(0, 10, 10, 2);
 
@@ -70,7 +70,7 @@ public class PickSpellCheckDictionaryWindow : Window
 
         Content = grid;
 
-        Activated += delegate { buttonOk.Focus(); }; // hack to make OnKeyDown work
+        Activated += delegate { combo.Focus(); }; // initial focus on an input, not an action button - a focused button clicks on bare Space
         KeyDown += (_, e) => vm.OnKeyDown(e);
     }
 }

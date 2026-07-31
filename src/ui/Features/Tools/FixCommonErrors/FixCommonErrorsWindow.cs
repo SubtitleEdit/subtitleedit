@@ -6,12 +6,10 @@ using Avalonia.Controls.Templates;
 using Avalonia.Data;
 using Avalonia.Data.Converters;
 using Avalonia.Input;
-using Avalonia.Interactivity;
 using Avalonia.Layout;
 using Avalonia.Media;
 using Avalonia.Threading;
 using System;
-using System.Collections;
 using Nikse.SubtitleEdit.Features.Files.Compare;
 using Nikse.SubtitleEdit.Features.Main;
 using Nikse.SubtitleEdit.Logic;
@@ -28,7 +26,7 @@ public class FixCommonErrorsWindow : Window
     public FixCommonErrorsWindow(FixCommonErrorsViewModel vm)
     {
         UiUtil.InitializeWindow(this, GetType().Name);
-        Title = Se.Language.Tools.FixCommonErrors.Title;
+        Title = Se.Language.General.FixCommonErrors;
         Width = 1024;
         Height = 720;
         MinWidth = 800;
@@ -78,66 +76,67 @@ public class FixCommonErrorsWindow : Window
             },
         };
 
-        var rulesGrid = new DataGrid
+        var rulesGrid = TableViewExtras.MakeTableView();
+        rulesGrid[!TableView.ItemsSourceProperty] = new Binding($"{nameof(vm.SelectedProfile)}.{nameof(ProfileDisplayItem.FixRules)}");
+
+        var rulesEnabledColumn = new SeTableViewColumn
         {
-            AutoGenerateColumns = false,
-            SelectionMode = DataGridSelectionMode.Single,
-            CanUserResizeColumns = true,
-            CanUserSortColumns = true,
-            HorizontalAlignment = HorizontalAlignment.Stretch,
-            VerticalAlignment = VerticalAlignment.Stretch,
-            Width = double.NaN,
-            Height = double.NaN,
-            [!DataGrid.ItemsSourceProperty] = new Binding($"{nameof(vm.SelectedProfile)}.{nameof(ProfileDisplayItem.FixRules)}"),
-            IsReadOnly = false,
-            Columns =
+            Header = Se.Language.General.Enabled,
+            CellTheme = UiUtil.TableViewNoPaddingCellTheme,
+            HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
+            CellTemplate = new FuncDataTemplate<FixRuleDisplayItem>((item, _) =>
             {
-                new DataGridTemplateColumn
+                return new Border
                 {
-                    Header = Se.Language.General.Enabled,
-                    CellTheme = UiUtil.DataGridNoBorderNoPaddingCellTheme,
-                    // Template columns need an explicit SortMemberPath to be sortable (#12431).
-                    SortMemberPath = nameof(FixRuleDisplayItem.IsSelected),
-                    CellTemplate = new FuncDataTemplate<FixRuleDisplayItem>((item, _) =>
+                    Background = Brushes.Transparent, // Prevents highlighting
+                    Padding = new Thickness(4),
+                    Child = new CheckBox
                     {
-                        return new Border
-                        {
-                            Background = Brushes.Transparent, // Prevents highlighting
-                            Padding = new Thickness(4),
-                            Child = new CheckBox
-                            {
-                                Focusable = false,
-                                [!ToggleButton.IsCheckedProperty] = new Binding(nameof(FixRuleDisplayItem.IsSelected)),
-                                // The checkbox is unfocusable, so name it after the rule it toggles so a
-                                // screen reader can tell which rule's enabled state it is on (#11745).
-                                [!AutomationProperties.NameProperty] = new Binding(nameof(FixRuleDisplayItem.Name)),
-                                HorizontalAlignment = HorizontalAlignment.Center
-                            }
-                        };
-                    }),
-                    Width = new DataGridLength(1, DataGridLengthUnitType.Auto)
-                },
-                new DataGridTextColumn
-                {
-                    Header = Se.Language.General.Name,
-                    CellTheme = UiUtil.DataGridNoBorderNoPaddingCellTheme,
-                    Binding = new Binding(nameof(FixRuleDisplayItem.Name)),
-                    IsReadOnly = true,
-                },
-                new DataGridTextColumn
-                {
-                    Header = Se.Language.General.Example,
-                    CellTheme = UiUtil.DataGridNoBorderNoPaddingCellTheme,
-                    Binding = new Binding(nameof(FixRuleDisplayItem.Example)),
-                    IsReadOnly = true,
-                    Width = new DataGridLength(1, DataGridLengthUnitType.Star)
-                },
-            },
+                        Focusable = false,
+                        [!ToggleButton.IsCheckedProperty] = new Binding(nameof(FixRuleDisplayItem.IsSelected)),
+                        // The checkbox is unfocusable, so name it after the rule it toggles so a
+                        // screen reader can tell which rule's enabled state it is on (#11745).
+                        [!AutomationProperties.NameProperty] = new Binding(nameof(FixRuleDisplayItem.Name)),
+                        HorizontalAlignment = HorizontalAlignment.Center
+                    }
+                };
+            }),
+            // Content-sized (Auto) on the DataGrid; TableView treats Auto as star.
+            Width = new GridLength(80),
         };
+        var rulesNameColumn = new SeTableViewColumn
+        {
+            Header = Se.Language.General.Name,
+            CellTheme = UiUtil.TableViewCellTheme,
+            HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
+            Binding = new Binding(nameof(FixRuleDisplayItem.Name)),
+            Width = new GridLength(320),
+        };
+        var rulesExampleColumn = new SeTableViewColumn
+        {
+            Header = Se.Language.General.Example,
+            CellTheme = UiUtil.TableViewCellTheme,
+            HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
+            Binding = new Binding(nameof(FixRuleDisplayItem.Example)),
+            Width = new GridLength(1, GridUnitType.Star),
+        };
+        rulesGrid.Columns.Add(rulesEnabledColumn);
+        rulesGrid.Columns.Add(rulesNameColumn);
+        rulesGrid.Columns.Add(rulesExampleColumn);
         rulesGrid.Bind(IsVisibleProperty, new Binding(nameof(vm.Step1IsVisible)));
         AutomationProperties.SetName(rulesGrid, Se.Language.General.Rules);
-        _ = new DataGridCheckboxMultiSelect<FixRuleDisplayItem>(rulesGrid,
+        // Extended selection is native ListBox behavior on TableView; Space toggling every
+        // selected row's checkbox is the piece the old DataGridCheckboxMultiSelect provided.
+        TableViewExtras.AddSpaceToggle<FixRuleDisplayItem>(rulesGrid,
             item => item.IsSelected, (item, v) => item.IsSelected = v);
+        // Header sorting reorders the profile's FixRules collection in place. That is safe
+        // here because rule *execution* order is canonical - ApplyFixes runs the selected
+        // rules in the order they were defined, not in display order - and profiles persist
+        // rule names, not row order (kept sortable per #12431).
+        new TableViewHeaderSorter(rulesGrid)
+            .AddSortable<FixRuleDisplayItem, bool>(rulesEnabledColumn, x => x.IsSelected)
+            .AddSortable<FixRuleDisplayItem, string>(rulesNameColumn, x => x.Name)
+            .AddSortable<FixRuleDisplayItem, string>(rulesExampleColumn, x => x.Example);
 
         var step2Grid = MakeStep2Grid();
         step2Grid.Bind(IsVisibleProperty, new Binding(nameof(_vm.Step2IsVisible)));
@@ -349,128 +348,130 @@ public class FixCommonErrorsWindow : Window
             VerticalAlignment = VerticalAlignment.Stretch,
         };
 
-        var dataGridFixes = new DataGrid
-        {
-            AutoGenerateColumns = false,
-            CanUserResizeColumns = true,
-            CanUserSortColumns = true,
-            HorizontalAlignment = HorizontalAlignment.Stretch,
-            VerticalAlignment = VerticalAlignment.Stretch,
-            Width = double.NaN,
-            Height = double.NaN,
-            DataContext = _vm,
-            ItemsSource = _vm.VisibleFixes,
-            Columns =
-            {
-                new DataGridTemplateColumn
-                {
-                    Header = Se.Language.General.Apply,
-                    CellTheme = UiUtil.DataGridNoBorderNoPaddingCellTheme,
-                    // Template columns have no Binding for the sort machinery to inspect, so
-                    // without an explicit SortMemberPath a header click is silently ignored (#12431).
-                    SortMemberPath = nameof(FixDisplayItem.IsSelected),
-                    CellTemplate = new FuncDataTemplate<FixDisplayItem>((item, _) =>
-                    {
-                        return new Border
-                        {
-                            Background = Brushes.Transparent, // Prevents highlighting
-                            Padding = new Thickness(4),
-                            Child = new CheckBox
-                            {
-                                Focusable = false,
-                                [!ToggleButton.IsCheckedProperty] = new Binding(nameof(FixDisplayItem.IsSelected)),
-                                // Unfocusable checkbox - name it after the fix it applies so a screen
-                                // reader can tell which fix's apply state it is on (#11745).
-                                [!AutomationProperties.NameProperty] = new Binding(nameof(FixDisplayItem.ActionDisplay)),
-                                HorizontalAlignment = HorizontalAlignment.Center
-                            }
-                        };
-                    }),
-                    Width = new DataGridLength(1, DataGridLengthUnitType.Auto)
-                },
-                new DataGridTextColumn
-                {
-                    Header = Se.Language.General.NumberSymbol,
-                    CellTheme = UiUtil.DataGridNoBorderNoPaddingCellTheme,
-                    Binding = new Binding(nameof(FixDisplayItem.Number)),
-                    IsReadOnly = true,
-                },
-                new DataGridTemplateColumn
-                {
-                    Header = Se.Language.Tools.FixCommonErrors.Action,
-                    CellTheme = UiUtil.DataGridNoBorderNoPaddingCellTheme,
-                    SortMemberPath = nameof(FixDisplayItem.ActionDisplay),
-                    CellTemplate = new FuncDataTemplate<FixDisplayItem>((item, _) =>
-                    {
-                        if (item == null)
-                        {
-                            return new Border();
-                        }
+        var dataGridFixes = TableViewExtras.MakeTableView();
+        dataGridFixes.DataContext = _vm;
+        dataGridFixes.ItemsSource = _vm.VisibleFixes;
 
-                        return new Border
-                        {
-                            Background = Brushes.Transparent,
-                            Padding = new Thickness(4),
-                            Child = new Border
-                            {
-                                Background = _vm.GetActionBackgroundBrush(item.ActionDisplay),
-                                CornerRadius = new CornerRadius(5),
-                                Padding = new Thickness(7, 2),
-                                HorizontalAlignment = HorizontalAlignment.Left,
-                                VerticalAlignment = VerticalAlignment.Center,
-                                Child = new TextBlock
-                                {
-                                    Text = item.ActionDisplay,
-                                    FontSize = 12,
-                                    Foreground = _vm.GetActionBrush(item.ActionDisplay),
-                                    VerticalAlignment = VerticalAlignment.Center,
-                                },
-                            },
-                        };
-                    }),
-                    IsReadOnly = true,
-                    Width = new DataGridLength(1, DataGridLengthUnitType.Auto),
-                },
-                new DataGridTemplateColumn
+        var fixesApplyColumn = new SeTableViewColumn
+        {
+            Header = Se.Language.General.Apply,
+            CellTheme = UiUtil.TableViewNoPaddingCellTheme,
+            HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
+            CellTemplate = new FuncDataTemplate<FixDisplayItem>((item, _) =>
+            {
+                return new Border
                 {
-                    Header = Se.Language.General.Before,
-                    CellTheme = UiUtil.DataGridNoBorderNoPaddingCellTheme,
-                    SortMemberPath = nameof(FixDisplayItem.Before),
-                    CellTemplate = new FuncDataTemplate<FixDisplayItem>((item, _) =>
+                    Background = Brushes.Transparent, // Prevents highlighting
+                    Padding = new Thickness(4),
+                    Child = new CheckBox
                     {
-                        var (beforeBlock, _) = TextDiffHighlighter.CompareReplacement(item.Before, item.After);
-                        return new Border
-                        {
-                            Background = Brushes.Transparent,
-                            Padding = new Thickness(4),
-                            Child = beforeBlock,
-                        };
-                    }),
-                    IsReadOnly = true,
-                    Width = new DataGridLength(1, DataGridLengthUnitType.Star),
-                },
-                new DataGridTemplateColumn
-                {
-                    Header = Se.Language.General.After,
-                    CellTheme = UiUtil.DataGridNoBorderNoPaddingCellTheme,
-                    SortMemberPath = nameof(FixDisplayItem.After),
-                    CellTemplate = new FuncDataTemplate<FixDisplayItem>((item, _) =>
-                    {
-                        var (_, afterBlock) = TextDiffHighlighter.CompareReplacement(item.Before, item.After);
-                        return new Border
-                        {
-                            Background = Brushes.Transparent,
-                            Padding = new Thickness(4),
-                            Child = afterBlock,
-                        };
-                    }),
-                    IsReadOnly = true,
-                    Width = new DataGridLength(1, DataGridLengthUnitType.Star),
-                },
-            },
+                        Focusable = false,
+                        [!ToggleButton.IsCheckedProperty] = new Binding(nameof(FixDisplayItem.IsSelected)),
+                        // Unfocusable checkbox - name it after the fix it applies so a screen
+                        // reader can tell which fix's apply state it is on (#11745).
+                        [!AutomationProperties.NameProperty] = new Binding(nameof(FixDisplayItem.ActionDisplay)),
+                        HorizontalAlignment = HorizontalAlignment.Center
+                    }
+                };
+            }),
+            // Content-sized (Auto) on the DataGrid; TableView treats Auto as star.
+            Width = new GridLength(80),
         };
+        var fixesNumberColumn = new SeTableViewColumn
+        {
+            Header = Se.Language.General.NumberSymbol,
+            CellTheme = UiUtil.TableViewCellTheme,
+            HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
+            Binding = new Binding(nameof(FixDisplayItem.Number)),
+            Width = new GridLength(60),
+        };
+        var fixesActionColumn = new SeTableViewColumn
+        {
+            Header = Se.Language.Tools.FixCommonErrors.Action,
+            CellTheme = UiUtil.TableViewNoPaddingCellTheme,
+            HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
+            CellTemplate = new FuncDataTemplate<FixDisplayItem>((item, _) =>
+            {
+                if (item == null)
+                {
+                    return new Border();
+                }
+
+                return new Border
+                {
+                    Background = Brushes.Transparent,
+                    Padding = new Thickness(4),
+                    Child = new Border
+                    {
+                        Background = _vm.GetActionBackgroundBrush(item.ActionDisplay),
+                        CornerRadius = new CornerRadius(5),
+                        Padding = new Thickness(7, 2),
+                        HorizontalAlignment = HorizontalAlignment.Left,
+                        VerticalAlignment = VerticalAlignment.Center,
+                        Child = new TextBlock
+                        {
+                            Text = item.ActionDisplay,
+                            FontSize = 12,
+                            Foreground = _vm.GetActionBrush(item.ActionDisplay),
+                            VerticalAlignment = VerticalAlignment.Center,
+                        },
+                    },
+                };
+            }),
+            // Content-sized (Auto) on the DataGrid; TableView treats Auto as star.
+            Width = new GridLength(220),
+        };
+        var fixesBeforeColumn = new SeTableViewColumn
+        {
+            Header = Se.Language.General.Before,
+            CellTheme = UiUtil.TableViewNoPaddingCellTheme,
+            HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
+            CellTemplate = new FuncDataTemplate<FixDisplayItem>((item, _) =>
+            {
+                var (beforeBlock, _) = TextDiffHighlighter.CompareReplacement(item.Before, item.After);
+                return new Border
+                {
+                    Background = Brushes.Transparent,
+                    Padding = new Thickness(4),
+                    Child = beforeBlock,
+                };
+            }),
+            Width = new GridLength(1, GridUnitType.Star),
+        };
+        var fixesAfterColumn = new SeTableViewColumn
+        {
+            Header = Se.Language.General.After,
+            CellTheme = UiUtil.TableViewNoPaddingCellTheme,
+            HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
+            CellTemplate = new FuncDataTemplate<FixDisplayItem>((item, _) =>
+            {
+                var (_, afterBlock) = TextDiffHighlighter.CompareReplacement(item.Before, item.After);
+                return new Border
+                {
+                    Background = Brushes.Transparent,
+                    Padding = new Thickness(4),
+                    Child = afterBlock,
+                };
+            }),
+            Width = new GridLength(1, GridUnitType.Star),
+        };
+        dataGridFixes.Columns.Add(fixesApplyColumn);
+        dataGridFixes.Columns.Add(fixesNumberColumn);
+        dataGridFixes.Columns.Add(fixesActionColumn);
+        dataGridFixes.Columns.Add(fixesBeforeColumn);
+        dataGridFixes.Columns.Add(fixesAfterColumn);
         AutomationProperties.SetName(dataGridFixes, Se.Language.Tools.FixCommonErrors.Fixes);
-        dataGridFixes.Bind(DataGrid.SelectedItemProperty, new Binding(nameof(_vm.SelectedFix)));
+        dataGridFixes.Bind(TableView.SelectedItemProperty, new Binding(nameof(_vm.SelectedFix)));
+        // Header sorting reorders VisibleFixes in place, which is presentation-only here:
+        // applying fixes matches by (paragraph id, action) via AllowFix's lookup set, never
+        // by row order, and a chip-filter change rebuilds the list anyway (kept sortable
+        // per #12431; a re-scan or filter switch resets the sort order).
+        new TableViewHeaderSorter(dataGridFixes)
+            .AddSortable<FixDisplayItem, bool>(fixesApplyColumn, x => x.IsSelected)
+            .AddSortable<FixDisplayItem, int>(fixesNumberColumn, x => x.Number)
+            .AddSortable<FixDisplayItem, string>(fixesActionColumn, x => x.ActionDisplay)
+            .AddSortable<FixDisplayItem, string>(fixesBeforeColumn, x => x.Before)
+            .AddSortable<FixDisplayItem, string>(fixesAfterColumn, x => x.After);
         dataGridFixes.ContextMenu = new ContextMenu
         {
             Items =
@@ -487,15 +488,19 @@ public class FixCommonErrorsWindow : Window
                 },
             },
         };
-        _ = new DataGridCheckboxMultiSelect<FixDisplayItem>(dataGridFixes,
-            item => item.IsSelected, (item, v) => item.IsSelected = v,
-            onFocusedItemChanged: item =>
+        // Extended selection is native ListBox behavior on TableView; Space toggling every
+        // selected row's checkbox is the piece the old DataGridCheckboxMultiSelect provided.
+        TableViewExtras.AddSpaceToggle<FixDisplayItem>(dataGridFixes,
+            item => item.IsSelected, (item, v) => item.IsSelected = v);
+        // Keep the subtitle preview following the focused fix (the old helper's
+        // onFocusedItemChanged callback).
+        dataGridFixes.SelectionChanged += (_, _) =>
+        {
+            if (dataGridFixes.SelectedItem is FixDisplayItem item)
             {
-                if (item != null)
-                {
-                    _vm.SelectAndScrollTo(item);
-                }
-            });
+                _vm.SelectAndScrollTo(item);
+            }
+        };
 
         var leftButtons = new StackPanel
         {
@@ -612,128 +617,113 @@ public class FixCommonErrorsWindow : Window
         var fullTimeConverter = new TimeSpanToDisplayFullConverter();
         var shortTimeConverter = new TimeSpanToDisplayShortConverter();
         var syntaxHighlightingConverter = new TextWithSubtitleSyntaxHighlightingConverter();
-        var dataGridSubtitles = new DataGrid
+        var dataGridSubtitles = TableViewExtras.MakeTableView(multiSelect: false);
+        dataGridSubtitles.DataContext = _vm;
+        dataGridSubtitles.ItemsSource = _vm.Paragraphs;
+        dataGridSubtitles.FontSize = Se.Settings.Appearance.SubtitleGridFontSize;
+        dataGridSubtitles.Margin = new Thickness(Se.Settings.Appearance.GridCompactMode ? 0 : 2);
+        dataGridSubtitles.Columns.Add(new SeTableViewColumn
         {
-            AutoGenerateColumns = false,
-            SelectionMode = DataGridSelectionMode.Single,
-            CanUserResizeColumns = true,
-            CanUserSortColumns = false,
-            HorizontalAlignment = HorizontalAlignment.Stretch,
-            VerticalAlignment = VerticalAlignment.Stretch,
-            Width = double.NaN,
-            Height = double.NaN,
-            DataContext = _vm,
-            ItemsSource = _vm.Paragraphs,
-            FontSize = Se.Settings.Appearance.SubtitleGridFontSize,
-            Margin = new Thickness(Se.Settings.Appearance.GridCompactMode ? 0 : 2),
-            Columns =
+            Header = Se.Language.General.NumberSymbol,
+            Binding = new Binding(nameof(SubtitleLineViewModel.Number)),
+            CellTheme = UiUtil.TableViewCellTheme,
+            HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
+            // Content-sized (Auto) on the DataGrid; TableView treats Auto as star.
+            Width = new GridLength(60),
+        });
+        dataGridSubtitles.Columns.Add(new SeTableViewColumn
+        {
+            Header = Se.Language.General.Show,
+            CellTheme = UiUtil.TableViewNoPaddingCellTheme,
+            HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
+            Width = new GridLength(120),
+            CellTemplate = new FuncDataTemplate<SubtitleLineViewModel>((_, _) =>
             {
-                new DataGridTextColumn
+                var border = new Border
                 {
-                    Header = Se.Language.General.NumberSymbol,
-                    Binding = new Binding(nameof(SubtitleLineViewModel.Number)),
-                    IsReadOnly = true,
-                    CellTheme = UiUtil.DataGridNoBorderCellTheme,
-                },
-                new DataGridTemplateColumn
+                    Padding = new Thickness(4, 2),
+                    [!Border.BackgroundProperty] = new Binding(nameof(SubtitleLineViewModel.StartTimeBackgroundBrush)),
+                };
+                border.Child = new TextBlock
                 {
-                    Header = Se.Language.General.Show,
-                    CellTheme = UiUtil.DataGridNoBorderCellTheme,
-                    IsReadOnly = true,
-                    CellTemplate = new FuncDataTemplate<SubtitleLineViewModel>((_, _) =>
+                    VerticalAlignment = VerticalAlignment.Center,
+                    [!TextBlock.TextProperty] = new Binding(nameof(SubtitleLineViewModel.StartTime)) { Converter = fullTimeConverter },
+                };
+                return border;
+            }),
+        });
+        dataGridSubtitles.Columns.Add(new SeTableViewColumn
+        {
+            Header = Se.Language.General.Hide,
+            CellTheme = UiUtil.TableViewNoPaddingCellTheme,
+            HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
+            Width = new GridLength(120),
+            CellTemplate = new FuncDataTemplate<SubtitleLineViewModel>((_, _) =>
+            {
+                var border = new Border
+                {
+                    Padding = new Thickness(4, 2),
+                    [!Border.BackgroundProperty] = new Binding(nameof(SubtitleLineViewModel.EndTimeBackgroundBrush)),
+                };
+                border.Child = new TextBlock
+                {
+                    VerticalAlignment = VerticalAlignment.Center,
+                    [!TextBlock.TextProperty] = new Binding(nameof(SubtitleLineViewModel.EndTime)) { Converter = fullTimeConverter },
+                };
+                return border;
+            }),
+        });
+        dataGridSubtitles.Columns.Add(new SeTableViewColumn
+        {
+            Header = Se.Language.General.Duration,
+            CellTheme = UiUtil.TableViewNoPaddingCellTheme,
+            HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
+            Width = new GridLength(90),
+            CellTemplate = new FuncDataTemplate<SubtitleLineViewModel>((_, _) =>
+                new Border
+                {
+                    Padding = new Thickness(4, 2),
+                    [!Border.BackgroundProperty] = new Binding(nameof(SubtitleLineViewModel.DurationBackgroundBrush)),
+                    Child = new TextBlock
                     {
-                        var border = new Border
-                        {
-                            Padding = new Thickness(4, 2),
-                            [!Border.BackgroundProperty] = new Binding(nameof(SubtitleLineViewModel.StartTimeBackgroundBrush)),
-                        };
-                        border.Child = new TextBlock
-                        {
-                            VerticalAlignment = VerticalAlignment.Center,
-                            [!TextBlock.TextProperty] = new Binding(nameof(SubtitleLineViewModel.StartTime)) { Converter = fullTimeConverter },
-                        };
-                        return border;
-                    }),
-                },
-                new DataGridTemplateColumn
+                        VerticalAlignment = VerticalAlignment.Center,
+                        [!TextBlock.TextProperty] = new Binding(nameof(SubtitleLineViewModel.Duration)) { Converter = shortTimeConverter },
+                    },
+                }),
+        });
+        dataGridSubtitles.Columns.Add(new SeTableViewColumn
+        {
+            Header = Se.Language.General.Text,
+            CellTheme = UiUtil.TableViewNoPaddingCellTheme,
+            HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
+            Width = new GridLength(1, GridUnitType.Star),
+            CellTemplate = new FuncDataTemplate<SubtitleLineViewModel>((_, _) =>
+            {
+                var textBlock = new TextBlock
                 {
-                    Header = Se.Language.General.Hide,
-                    CellTheme = UiUtil.DataGridNoBorderCellTheme,
-                    IsReadOnly = true,
-                    CellTemplate = new FuncDataTemplate<SubtitleLineViewModel>((_, _) =>
-                    {
-                        var border = new Border
-                        {
-                            Padding = new Thickness(4, 2),
-                            [!Border.BackgroundProperty] = new Binding(nameof(SubtitleLineViewModel.EndTimeBackgroundBrush)),
-                        };
-                        border.Child = new TextBlock
-                        {
-                            VerticalAlignment = VerticalAlignment.Center,
-                            [!TextBlock.TextProperty] = new Binding(nameof(SubtitleLineViewModel.EndTime)) { Converter = fullTimeConverter },
-                        };
-                        return border;
-                    }),
-                },
-                new DataGridTemplateColumn
+                    VerticalAlignment = VerticalAlignment.Center,
+                    TextWrapping = TextWrapping.NoWrap,
+                    [!TextBlock.InlinesProperty] = new Binding(nameof(SubtitleLineViewModel.Text)) { Converter = syntaxHighlightingConverter },
+                };
+                if (!string.IsNullOrEmpty(Se.Settings.Appearance.SubtitleTextBoxAndGridFontName))
                 {
-                    Header = Se.Language.General.Duration,
-                    CellTheme = UiUtil.DataGridNoBorderCellTheme,
-                    IsReadOnly = true,
-                    CellTemplate = new FuncDataTemplate<SubtitleLineViewModel>((_, _) =>
-                        new Border
-                        {
-                            Padding = new Thickness(4, 2),
-                            [!Border.BackgroundProperty] = new Binding(nameof(SubtitleLineViewModel.DurationBackgroundBrush)),
-                            Child = new TextBlock
-                            {
-                                VerticalAlignment = VerticalAlignment.Center,
-                                [!TextBlock.TextProperty] = new Binding(nameof(SubtitleLineViewModel.Duration)) { Converter = shortTimeConverter },
-                            },
-                        }),
-                },
-                new DataGridTemplateColumn
-                {
-                    Header = Se.Language.General.Text,
-                    CellTheme = UiUtil.DataGridNoBorderCellTheme,
-                    IsReadOnly = true,
-                    Width = new DataGridLength(1, DataGridLengthUnitType.Star),
-                    CellTemplate = new FuncDataTemplate<SubtitleLineViewModel>((_, _) =>
-                    {
-                        var textBlock = new TextBlock
-                        {
-                            VerticalAlignment = VerticalAlignment.Center,
-                            TextWrapping = TextWrapping.NoWrap,
-                            [!TextBlock.InlinesProperty] = new Binding(nameof(SubtitleLineViewModel.Text)) { Converter = syntaxHighlightingConverter },
-                        };
-                        if (!string.IsNullOrEmpty(Se.Settings.Appearance.SubtitleTextBoxAndGridFontName))
-                        {
-                            textBlock.FontFamily = new FontFamily(Se.Settings.Appearance.SubtitleTextBoxAndGridFontName);
-                        }
+                    textBlock.FontFamily = new FontFamily(Se.Settings.Appearance.SubtitleTextBoxAndGridFontName);
+                }
 
-                        return new Border
-                        {
-                            Padding = new Thickness(4, 2),
-                            [!Border.BackgroundProperty] = new Binding(nameof(SubtitleLineViewModel.TextBackgroundBrush)),
-                            Child = textBlock,
-                        };
-                    }),
-                },
-            },
-        };
-        dataGridSubtitles.Bind(DataGrid.SelectedItemProperty, new Binding(nameof(_vm.SelectedParagraph)));
+                return new Border
+                {
+                    Padding = new Thickness(4, 2),
+                    [!Border.BackgroundProperty] = new Binding(nameof(SubtitleLineViewModel.TextBackgroundBrush)),
+                    Child = textBlock,
+                };
+            }),
+        });
+        dataGridSubtitles.Bind(TableView.SelectedItemProperty, new Binding(nameof(_vm.SelectedParagraph)));
         AutomationProperties.SetName(dataGridSubtitles, Se.Language.General.Preview);
         _vm.GridSubtitles = dataGridSubtitles;
-        dataGridSubtitles.AddHandler(InputElement.KeyDownEvent, (object? _, KeyEventArgs e) =>
-        {
-            if (e.Key is Key.Home or Key.End && dataGridSubtitles.ItemsSource is IList items && items.Count > 0)
-            {
-                var target = e.Key == Key.Home ? items[0] : items[^1];
-                dataGridSubtitles.SelectedItem = target;
-                dataGridSubtitles.ScrollIntoView(target, null);
-                e.Handled = true;
-            }
-        }, RoutingStrategies.Tunnel);
+        // Home/End jump to the first/last row even when focus is on the grid itself
+        // (this replaces the hand-rolled tunnel handler the DataGrid needed).
+        TableViewExtras.AttachHomeEndNavigation(dataGridSubtitles);
 
         var gridCurrentSubtbtitle = MakeStep2EditPanel();
 

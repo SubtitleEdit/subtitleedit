@@ -18,6 +18,7 @@ namespace Nikse.SubtitleEdit.Features.Video.TransparentSubtitles;
 public class TransparentSubtitlesWindow : Window
 {
     private readonly TransparentSubtitlesViewModel _vm;
+    private ComboBox? _comboBoxFontName;
 
     public TransparentSubtitlesWindow(TransparentSubtitlesViewModel vm)
     {
@@ -139,7 +140,7 @@ public class TransparentSubtitlesWindow : Window
         };
         UpdateGrowAreas();
 
-        Activated += delegate { buttonOk.Focus(); }; // hack to make OnKeyDown work
+        Activated += delegate { _comboBoxFontName?.Focus(); }; // initial focus on an input, not an action button - a focused button clicks on bare Space
         Loaded += (_, _) => vm.Loaded();
 
         Opened += (_, _) => LockMinimumToContentSize();
@@ -174,12 +175,13 @@ public class TransparentSubtitlesWindow : Window
         }, DispatcherPriority.Loaded);
     }
 
-    private static Border MakeSubtitlesView(TransparentSubtitlesViewModel vm)
+    private Border MakeSubtitlesView(TransparentSubtitlesViewModel vm)
     {
         var labelFontName = UiUtil.MakeLabel(Se.Language.General.FontName);
         var comboBoxFontName = UiUtil.MakeComboBox(vm.FontNames, vm, nameof(vm.SelectedFontName))
             .WithMinWidth(200);
         comboBoxFontName.SelectionChanged += vm.ComboBoxChanged;
+        _comboBoxFontName = comboBoxFontName;
 
         var labelFontSizeFactor = UiUtil.MakeLabel(Se.Language.Video.BurnIn.FontSizeFactor);
         var numericUpDownFontSizeFactor = UiUtil.MakeNumericUpDownTwoDecimals(0.1m, 1.0m, 150, vm, nameof(vm.FontFactor));
@@ -270,7 +272,7 @@ public class TransparentSubtitlesWindow : Window
 
         var labelEffect = UiUtil.MakeLabel(Se.Language.General.Effect);
         var labelSelectedEffect = UiUtil.MakeLabel(string.Empty).WithBindText(vm, nameof(vm.DisplayEffect)).WithMarginRight(3);
-        var buttonEffect = UiUtil.MakeButtonBrowse(vm.ShowEffectsCommand);
+        var buttonEffect = UiUtil.MakeButtonBrowse(vm.ShowEffectsCommand, accessibleName: Se.Language.General.Effect);
         var panelEffect = new StackPanel
         {
             Orientation = Orientation.Horizontal,
@@ -347,7 +349,7 @@ public class TransparentSubtitlesWindow : Window
         var textBoxWidth = UiUtil.MakeNumericUpDownInt(0, 10_000, 0, 130, vm, nameof(vm.VideoWidth));
         var labelX = UiUtil.MakeLabel("x");
         var textBoxHeight = UiUtil.MakeNumericUpDownInt(0, 10_000, 0, 130, vm, nameof(vm.VideoHeight));
-        var buttonResolution = UiUtil.MakeButtonBrowse(vm.BrowseResolutionCommand);
+        var buttonResolution = UiUtil.MakeButtonBrowse(vm.BrowseResolutionCommand, accessibleName: Se.Language.General.Resolution);
         var panelResolution = new StackPanel
         {
             Orientation = Orientation.Horizontal,
@@ -362,7 +364,7 @@ public class TransparentSubtitlesWindow : Window
         }.WithBindVisible(vm, nameof(vm.UseSourceResolution), new InverseBooleanConverter());
 
         var labelSourceResolution = UiUtil.MakeLabel("Use source resolution").WithBindVisible(vm, nameof(vm.UseSourceResolution));
-        var buttonResolutionSource = UiUtil.MakeButtonBrowse(vm.BrowseResolutionCommand);
+        var buttonResolutionSource = UiUtil.MakeButtonBrowse(vm.BrowseResolutionCommand, accessibleName: Se.Language.General.Resolution);
         var panelResolutionSource = new StackPanel
         {
             Orientation = Orientation.Horizontal,
@@ -414,9 +416,9 @@ public class TransparentSubtitlesWindow : Window
 
     private static Border MakeCutView(TransparentSubtitlesViewModel vm)
     {
-        var checkBoxCut = UiUtil.MakeCheckBox(Se.Language.Video.BurnIn.Cut, vm, nameof(vm.IsCutActive));
+        var checkBoxCut = UiUtil.MakeCheckBox(Se.Language.General.Cut, vm, nameof(vm.IsCutActive));
 
-        var buttonCutFrom = UiUtil.MakeButtonBrowse(vm.BrowseCutFromCommand);
+        var buttonCutFrom = UiUtil.MakeButtonBrowse(vm.BrowseCutFromCommand, accessibleName: Se.Language.Video.BurnIn.FromTime);
         buttonCutFrom.VerticalAlignment = VerticalAlignment.Center;
         var labelFromTime = UiUtil.MakeLabel(Se.Language.Video.BurnIn.FromTime);
         var timeUpDownFrom = new TimeCodeUpDown
@@ -426,7 +428,7 @@ public class TransparentSubtitlesWindow : Window
             VerticalAlignment = VerticalAlignment.Center,
         };
 
-        var buttonCutTo = UiUtil.MakeButtonBrowse(vm.BrowseCutToCommand);
+        var buttonCutTo = UiUtil.MakeButtonBrowse(vm.BrowseCutToCommand, accessibleName: Se.Language.Video.BurnIn.ToTime);
         buttonCutTo.VerticalAlignment = VerticalAlignment.Center;
         var labelToTime = UiUtil.MakeLabel(Se.Language.Video.BurnIn.ToTime);
         var timeUpDownTo = new TimeCodeUpDown
@@ -537,51 +539,47 @@ public class TransparentSubtitlesWindow : Window
 
     private static Border MakeBatchView(TransparentSubtitlesViewModel vm)
     {
-        var dataGrid = new DataGrid
+        // No header sorting: the batch queue is processed top-to-bottom, so the list
+        // order is meaningful.
+        var dataGrid = TableViewExtras.MakeTableView(multiSelect: false);
+        dataGrid.Width = double.NaN;
+        dataGrid.Height = double.NaN;
+        dataGrid.MinWidth = 550; // the batch column is Auto while measuring; star columns have no intrinsic width
+        dataGrid.DataContext = vm;
+        dataGrid.ItemsSource = vm.JobItems;
+        dataGrid.Columns.Add(new SeTableViewColumn
         {
-            AutoGenerateColumns = false,
-            SelectionMode = DataGridSelectionMode.Single,
-            CanUserResizeColumns = true,
-            CanUserSortColumns = true,
-            HorizontalAlignment = HorizontalAlignment.Stretch,
-            VerticalAlignment = VerticalAlignment.Stretch,
-            Width = double.NaN,
-            Height = double.NaN,
-            DataContext = vm,
-            ItemsSource = vm.JobItems,
-            Columns =
-            {
-                new DataGridTextColumn
-                {
-                    Header = Se.Language.General.SubtitleFileName,
-                    CellTheme = UiUtil.DataGridNoBorderNoPaddingCellTheme,
-                    Binding = new Binding(nameof(BurnInJobItem.SubtitleFileNameShort)),
-                    IsReadOnly = true,
-                },
-                new DataGridTextColumn
-                {
-                    Header = Se.Language.General.Size,
-                    CellTheme = UiUtil.DataGridNoBorderNoPaddingCellTheme,
-                    Binding = new Binding(nameof(BurnInJobItem.Resolution)),
-                    IsReadOnly = true,
-                },
-                new DataGridTextColumn
-                {
-                    Header = Se.Language.General.VideoFile,
-                    CellTheme = UiUtil.DataGridNoBorderNoPaddingCellTheme,
-                    Binding = new Binding(nameof(BurnInJobItem.InputVideoFileNameShort)),
-                    IsReadOnly = true,
-                },
-                new DataGridTextColumn
-                {
-                    Header = Se.Language.General.Status,
-                    CellTheme = UiUtil.DataGridNoBorderNoPaddingCellTheme,
-                    Binding = new Binding(nameof(BurnInJobItem.Status)),
-                    IsReadOnly = true,
-                },
-            },
-        };
-        dataGrid.Bind(DataGrid.SelectedItemProperty, new Binding(nameof(vm.SelectedJobItem)) { Source = vm });
+            Header = Se.Language.General.SubtitleFileName,
+            CellTheme = UiUtil.TableViewCellTheme,
+            HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
+            Binding = new Binding(nameof(BurnInJobItem.SubtitleFileNameShort)),
+            Width = new GridLength(1, GridUnitType.Star),
+        });
+        dataGrid.Columns.Add(new SeTableViewColumn
+        {
+            Header = Se.Language.General.Size,
+            CellTheme = UiUtil.TableViewCellTheme,
+            HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
+            Binding = new Binding(nameof(BurnInJobItem.Resolution)),
+            Width = new GridLength(90), // was content-sized (Auto) on the DataGrid
+        });
+        dataGrid.Columns.Add(new SeTableViewColumn
+        {
+            Header = Se.Language.General.VideoFile,
+            CellTheme = UiUtil.TableViewCellTheme,
+            HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
+            Binding = new Binding(nameof(BurnInJobItem.InputVideoFileNameShort)),
+            Width = new GridLength(1, GridUnitType.Star),
+        });
+        dataGrid.Columns.Add(new SeTableViewColumn
+        {
+            Header = Se.Language.General.Status,
+            CellTheme = UiUtil.TableViewCellTheme,
+            HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
+            Binding = new Binding(nameof(BurnInJobItem.Status)),
+            Width = new GridLength(110), // was content-sized (Auto) on the DataGrid
+        });
+        dataGrid.Bind(TableView.SelectedItemProperty, new Binding(nameof(vm.SelectedJobItem)) { Source = vm });
 
         var buttonAdd = UiUtil.MakeButton(Se.Language.General.AddDotDotDot, vm.AddCommand);
         var buttonRemove = UiUtil.MakeButton(Se.Language.General.Remove, vm.RemoveCommand);
@@ -607,7 +605,7 @@ public class TransparentSubtitlesWindow : Window
         var labelOutputPropertiesFolder = UiUtil.MakeLink(string.Empty, vm.OpenOutputFolderCommand)
             .WithFilePathText(vm, nameof(vm.OutputFolder))
             .WithBindVisible(vm, nameof(vm.UseOutputFolderVisible));
-        var labelOutputPropertiesUseSourceFolder = UiUtil.MakeLabel(Se.Language.Video.BurnIn.UseSourceFolder)
+        var labelOutputPropertiesUseSourceFolder = UiUtil.MakeLabel(Se.Language.General.UseSourceFolder)
             .WithBindVisible(vm, nameof(vm.UseSourceFolderVisible));
 
         var panelFileControls2 = new StackPanel

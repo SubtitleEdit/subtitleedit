@@ -30,7 +30,9 @@ public class ExportHandlerDvdSup : IExportHandler
         }
 
         var p = new Paragraph(param.Text, param.StartTime.TotalMilliseconds, param.EndTime.TotalMilliseconds);
-        _dvdSupWriter.WriteParagraph(p, param.Bitmap, MapAlignment(param));
+        // "{\pos(x,y)}" (ExportTextTags.ApplyPositionTag) wins over the alignment, as in the
+        // other image based handlers.
+        _dvdSupWriter.WriteParagraph(p, param.Bitmap, MapAlignment(param), param.OverridePositionPoint);
     }
 
     private static BluRayContentAlignment MapAlignment(ImageParameter param)

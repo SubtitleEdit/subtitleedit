@@ -13,14 +13,14 @@ namespace Nikse.SubtitleEdit.UiLogic.AutoTranslate
 {
     public class MyMemoryApi : IAutoTranslator, IDisposable
     {
-        private HttpClient _httpClient;
+        private HttpClient _httpClient = null!;
         private readonly SeJsonParser _jsonParser = new SeJsonParser();
 
         public static string StaticName { get; set; } = "MyMemory Translate";
         public string Name => StaticName;
         public override string ToString() => StaticName;
         public string Url => "https://mymemory.translated.net/";
-        public string Error { get; set; }
+        public string Error { get; set; } = string.Empty;
         public int MaxCharacters => 1500;
 
         public void Initialize()
@@ -208,22 +208,21 @@ namespace Nikse.SubtitleEdit.UiLogic.AutoTranslate
             return new TranslationPair(name, code, twoLetterIsoName);
         }
 
-        public async Task<string> Translate(string text, string sourceLanguageCode, string targetLanguageCode, CancellationToken cancellationToken)
+        internal static string MakeUrl(string text, string sourceLanguageCode, string targetLanguageCode, string apiKey)
         {
-            var apiKey = string.Empty;
-            if (!string.IsNullOrEmpty(Configuration.Settings.Tools.AutoTranslateLibreApiKey))
+            var apiKeyPart = string.Empty;
+            if (!string.IsNullOrEmpty(apiKey))
             {
-                apiKey = "&api_key=" + Configuration.Settings.Tools.AutoTranslateMyMemoryApiKey;
+                apiKeyPart = "&key=" + Utilities.UrlEncode(apiKey);
             }
 
-            var url = $"?langpair={sourceLanguageCode}|{targetLanguageCode}{apiKey}&q={Utilities.UrlEncode(text)}";
-            // netstandard2.1 has no GetStringAsync(string, CancellationToken)
-            // overload, so we go via SendAsync to flow the token into the
-            // connection/send phase (cancel propagates there).
-            using var request = new HttpRequestMessage(HttpMethod.Get, url);
-            using var response = await _httpClient.SendAsync(request, cancellationToken);
-            response.EnsureSuccessStatusCode();
-            var jsonResultString = await response.Content.ReadAsStringAsync();
+            return $"?langpair={sourceLanguageCode}|{targetLanguageCode}{apiKeyPart}&q={Utilities.UrlEncode(text)}";
+        }
+
+        public async Task<string> Translate(string text, string sourceLanguageCode, string targetLanguageCode, CancellationToken cancellationToken)
+        {
+            var url = MakeUrl(text, sourceLanguageCode, targetLanguageCode, Configuration.Settings.Tools.AutoTranslateMyMemoryApiKey);
+            var jsonResultString = await _httpClient.GetStringAsync(url, cancellationToken);
             var textResult = _jsonParser.GetFirstObject(jsonResultString, "translatedText");
             var result = Json.DecodeJsonText(textResult);
 

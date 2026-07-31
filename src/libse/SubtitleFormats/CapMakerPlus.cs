@@ -42,7 +42,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 {
                     if (fileName.EndsWith(".cap", StringComparison.OrdinalIgnoreCase))
                     {
-                        byte[] buffer = FileUtil.ReadAllBytesShared(fileName);
+                        byte[] buffer = FileUtil.ReadBytesShared(fileName, 1);
                         if (buffer[0] == 0x2b) // "+"
                         {
                             return true;

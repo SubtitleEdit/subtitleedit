@@ -107,7 +107,7 @@ public partial class ExportImageBasedViewModel : ObservableObject, IClosingClean
 
     public Window? Window { get; set; }
     public bool OkPressed { get; private set; }
-    public DataGrid SubtitleGrid { get; set; }
+    public TableView SubtitleGrid { get; set; }
 
     private List<SubtitleLineViewModel>? _selectedSubtitles;
     private bool _dirty;
@@ -162,7 +162,7 @@ public partial class ExportImageBasedViewModel : ObservableObject, IClosingClean
         SelectedContentAlignment = ContentAlignments[0];
         LineSpacings = new ObservableCollection<int>(Enumerable.Range(-50, 501));
         SelectedLineSpacing = 0;
-        SubtitleGrid = new DataGrid();
+        SubtitleGrid = new TableView();
         Title = string.Empty;
         BitmapPreview = new SKBitmap(1, 1, false).ToAvaloniaBitmap();
         OutlineColor = Colors.Black;
@@ -178,7 +178,7 @@ public partial class ExportImageBasedViewModel : ObservableObject, IClosingClean
         {
             new FontBoxItem(FontBoxType.None, Se.Language.General.None),
             new FontBoxItem(FontBoxType.OneBox, Se.Language.Video.BurnIn.OneBox),
-            new FontBoxItem(FontBoxType.BoxPerLine, Se.Language.Video.BurnIn.BoxPerLine),
+            new FontBoxItem(FontBoxType.BoxPerLine, Se.Language.General.BoxPerLine),
         };
         SelectedBoxType = BoxTypes[0];
         UpdateBoxTypeLabels();
@@ -418,6 +418,8 @@ public partial class ExportImageBasedViewModel : ObservableObject, IClosingClean
 
                 var ip = imageParameters[i];
                 ip.Bitmap = GenerateBitmap(ip);
+                // "{\pos(x,y)}" anchors the rendered text, so it needs the bitmap size.
+                ExportTextTags.ApplyPositionTag(ip, Subtitles[i].Text);
                 _exportImageHandler.CreateParagraph(ip);
 
                 lock (_generateLock)
@@ -512,12 +514,12 @@ public partial class ExportImageBasedViewModel : ObservableObject, IClosingClean
         var subtitle = Subtitles[i];
         var imageParameter = new ImageParameter
         {
-            Alignment = GetContentAlignment(subtitle.Text, SelectedAlignment.Alignment),
+            Alignment = ExportTextTags.GetAlignment(subtitle.Text, SelectedAlignment.Alignment),
             ContentAlignment = SelectedContentAlignment.ContentAlignment,
             PaddingLeftRight = SelectedPaddingLeftRight,
             PaddingTopBottom = SelectedPaddingTopBottom,
             Index = i,
-            Text = HtmlUtil.RemoveAssAlignmentTags(subtitle.Text),
+            Text = ExportTextTags.ToRenderableText(subtitle.Text),
             StartTime = subtitle.StartTime,
             EndTime = subtitle.EndTime,
             FontColor = FontColor.ToSKColor(),
@@ -549,57 +551,6 @@ public partial class ExportImageBasedViewModel : ObservableObject, IClosingClean
         };
 
         return imageParameter;
-    }
-
-    private ExportAlignment GetContentAlignment(string text, ExportAlignment alignment)
-    {
-        var s = text.Trim();
-        if (s.StartsWith("{\\an1"))
-        {
-            return ExportAlignment.BottomLeft;
-        }
-
-        if (s.StartsWith("{\\an2"))
-        {
-            return ExportAlignment.BottomCenter;
-        }
-
-        if (s.StartsWith("{\\an3"))
-        {
-            return ExportAlignment.BottomRight;
-        }
-
-        if (s.StartsWith("{\\an4"))
-        {
-            return ExportAlignment.MiddleLeft;
-        }
-
-        if (s.StartsWith("{\\an5"))
-        {
-            return ExportAlignment.MiddleCenter;
-        }
-
-        if (s.StartsWith("{\\an6"))
-        {
-            return ExportAlignment.MiddleRight;
-        }
-
-        if (s.StartsWith("{\\an7"))
-        {
-            return ExportAlignment.TopLeft;
-        }
-
-        if (s.StartsWith("{\\an8"))
-        {
-            return ExportAlignment.TopCenter;
-        }
-
-        if (s.StartsWith("{\\an9"))
-        {
-            return ExportAlignment.TopRight;
-        }
-
-        return alignment;
     }
 
     [RelayCommand]
@@ -653,6 +604,8 @@ public partial class ExportImageBasedViewModel : ObservableObject, IClosingClean
             {
                 var ip = GetImageParameter(Subtitles.IndexOf(SelectedSubtitle));
                 var bitmap = GenerateBitmap(ip);
+                ip.Bitmap = bitmap;
+                ExportTextTags.ApplyPositionTag(ip, SelectedSubtitle.Text);
                 var position = CalculatePosition(ip, bitmap.Width, bitmap.Height);
                 vm.Initialize(bitmap, ip.ScreenWidth, ip.ScreenHeight, position.X, position.Y);
             });
@@ -724,13 +677,22 @@ public partial class ExportImageBasedViewModel : ObservableObject, IClosingClean
 
         var idx = Subtitles.IndexOf(selected);
         var ip = GetImageParameter(idx);
-        BitmapPreview = GenerateBitmap(ip).ToAvaloniaBitmap();
+        ip.Bitmap = GenerateBitmap(ip);
+        BitmapPreview = ip.Bitmap.ToAvaloniaBitmap();
+        ExportTextTags.ApplyPositionTag(ip, text);
         var position = CalculatePosition(ip, BitmapPreview.Size.Width, BitmapPreview.Size.Height);
         ImageInfo = $"{BitmapPreview.Size.Width}x{BitmapPreview.Size.Height} @ {position.X},{position.Y}";
     }
 
     private static SKPointI CalculatePosition(ImageParameter ip, double width, double height)
     {
+        // Set from a "{\pos(x,y)}" tag by ExportTextTags.ApplyPositionTag - the handlers use it
+        // instead of the alignment, so the preview must too.
+        if (ip.OverridePosition.HasValue)
+        {
+            return ip.OverridePosition.Value;
+        }
+
         var x = 0;
         var y = 0;
 

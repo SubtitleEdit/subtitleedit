@@ -41,13 +41,13 @@ namespace Nikse.SubtitleEdit.UiLogic.Http
                 .ToArray();
         }
 
-        public ICredentials Credentials
+        public ICredentials? Credentials
         {
             get => _inner.Credentials;
             set => _inner.Credentials = value;
         }
 
-        public Uri GetProxy(Uri destination) => IsBypassed(destination) ? null : _inner.GetProxy(destination);
+        public Uri? GetProxy(Uri destination) => IsBypassed(destination) ? null : _inner.GetProxy(destination);
 
         public bool IsBypassed(Uri host)
         {

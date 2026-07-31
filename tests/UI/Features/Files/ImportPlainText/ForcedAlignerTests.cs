@@ -125,7 +125,7 @@ public class ForcedAlignerTests
             var runner = new FakeRunner(240);
             var lines = Script(1800);
 
-            var result = await new ForcedAligner(runner, audio).AlignAsync(lines);
+            var result = await new ForcedAligner(runner, audio).AlignAsync(lines, null, TestContext.Current.CancellationToken);
 
             Assert.True(audio.Windows.Count >= 20, $"expected many windows, got {audio.Windows.Count}");
             Assert.All(audio.Windows, w => Assert.InRange(w.Duration, 1, 300));
@@ -172,7 +172,7 @@ public class ForcedAlignerTests
             var audio = new FakeAudio(60, folder);
             var lines = Script(12);
 
-            var result = await new ForcedAligner(new FakeRunner(60), audio).AlignAsync(lines);
+            var result = await new ForcedAligner(new FakeRunner(60), audio).AlignAsync(lines, null, TestContext.Current.CancellationToken);
 
             // Chunks are small by design, so even short audio may take more than one pass -
             // what matters is that every line comes out timed and in order.
@@ -198,7 +198,7 @@ public class ForcedAlignerTests
             var audio = new FakeAudio(1200, folder);
             var lines = Script(300);
 
-            var result = await new ForcedAligner(new FakeRunner(240), audio).AlignAsync(lines);
+            var result = await new ForcedAligner(new FakeRunner(240), audio).AlignAsync(lines, null, TestContext.Current.CancellationToken);
 
             // Losing a line at a window seam is the failure mode that matters here.
             Assert.Equal(300, result.AlignedLines);
@@ -220,10 +220,10 @@ public class ForcedAlignerTests
             var progress = new Progress<ForcedAligner.Progress>(p => reports.Add(p));
 
             await new ForcedAligner(new FakeRunner(240), audio)
-                .AlignAsync(Script(300), progress);
+                .AlignAsync(Script(300), progress, TestContext.Current.CancellationToken);
 
             // Progress<T> marshals asynchronously; give the posted callbacks a moment.
-            await Task.Delay(200);
+            await Task.Delay(200, TestContext.Current.CancellationToken);
 
             Assert.NotEmpty(reports);
             Assert.All(reports, r => Assert.Equal(300, r.LinesTotal));
@@ -298,7 +298,7 @@ public class ForcedAlignerTests
         {
             var lines = Script(20);
 
-            await new ForcedAligner(new StretchingRunner(), new FakeAudio(300, folder)).AlignAsync(lines);
+            await new ForcedAligner(new StretchingRunner(), new FakeAudio(300, folder)).AlignAsync(lines, null, TestContext.Current.CancellationToken);
 
             var maxDurationMs = Se.Settings.General.SubtitleMaximumDisplayMilliseconds;
             var timed = lines.Where(l => l.EndTime > TimeSpan.Zero).ToList();
@@ -339,7 +339,7 @@ public class ForcedAlignerTests
 
             var spoken = lines.Where(l => !string.IsNullOrWhiteSpace(l.Text)).ToList();
 
-            await new ForcedAligner(new FakeRunner(240), new FakeAudio(240, folder)).AlignAsync(lines);
+            await new ForcedAligner(new FakeRunner(240), new FakeAudio(240, folder)).AlignAsync(lines, null, TestContext.Current.CancellationToken);
 
             // Each spoken line must land where the fake actually speaks it: 10 chars/sec
             // over the spoken lines only, blanks contributing nothing.
@@ -365,7 +365,7 @@ public class ForcedAlignerTests
         try
         {
             var result = await new ForcedAligner(new FakeRunner(240), new FakeAudio(600, folder))
-                .AlignAsync(new List<SubtitleLineViewModel>());
+                .AlignAsync(new List<SubtitleLineViewModel>(), null, TestContext.Current.CancellationToken);
 
             Assert.Equal(0, result.TotalLines);
             Assert.Equal(0, result.AlignedLines);

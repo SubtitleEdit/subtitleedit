@@ -34,9 +34,9 @@ namespace Nikse.SubtitleEdit.UiLogic.Translate
         };
 
         private bool Italic { get; set; }
-        private string Font { get; set; }
+        private string Font { get; set; } = string.Empty;
         private bool ItalicTwoLines { get; set; }
-        private string StartTags { get; set; }
+        private string StartTags { get; set; } = string.Empty;
         private bool AutoBreak { get; set; }
         private bool SquareBrackets { get; set; }
         private bool SquareBracketsUppercase { get; set; }
@@ -46,7 +46,7 @@ namespace Nikse.SubtitleEdit.UiLogic.Translate
         private bool BreakSplitAtLineEnding { get; set; }
         private bool BreakIsDialog { get; set; }
         private bool HasReset { get; set; }
-        private string ReplaceAllText { get; set; }
+        private string? ReplaceAllText { get; set; }
 
         public string SetTagsAndReturnTrimmed(string input, string sourceLanguage)
         {

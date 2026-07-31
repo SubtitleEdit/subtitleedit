@@ -100,7 +100,7 @@ public partial class AdjustAllTimesViewModel : ObservableObject
     private void ShowEarlier()
     {
         _totalAdjustment -= Adjustment;
-        ShowStatus(string.Format(Se.Language.Sync.TotalAdjustmentX, new TimeCode(_totalAdjustment).ToShortDisplayString()));
+        ShowStatus(string.Format(Se.Language.General.TotalAdjustmentX, new TimeCode(_totalAdjustment).ToShortDisplayString()));
         _isNegativeAdjustment = true;
         Apply();
     }
@@ -110,7 +110,7 @@ public partial class AdjustAllTimesViewModel : ObservableObject
     {
         Adjustment = ts;
         _totalAdjustment -= Adjustment;
-        ShowStatus(string.Format(Se.Language.Sync.TotalAdjustmentX, new TimeCode(_totalAdjustment).ToShortDisplayString()));
+        ShowStatus(string.Format(Se.Language.General.TotalAdjustmentX, new TimeCode(_totalAdjustment).ToShortDisplayString()));
         _isNegativeAdjustment = true;
         Apply();
     }
@@ -119,7 +119,7 @@ public partial class AdjustAllTimesViewModel : ObservableObject
     private void ShowLater()
     {
         _totalAdjustment += Adjustment;
-        ShowStatus(string.Format(Se.Language.Sync.TotalAdjustmentX, new TimeCode(_totalAdjustment).ToShortDisplayString()));
+        ShowStatus(string.Format(Se.Language.General.TotalAdjustmentX, new TimeCode(_totalAdjustment).ToShortDisplayString()));
         _isNegativeAdjustment = false;
         Apply();
     }
@@ -129,7 +129,7 @@ public partial class AdjustAllTimesViewModel : ObservableObject
     {
         Adjustment = ts;
         _totalAdjustment += Adjustment;
-        ShowStatus(string.Format(Se.Language.Sync.TotalAdjustmentX, new TimeCode(_totalAdjustment).ToShortDisplayString()));
+        ShowStatus(string.Format(Se.Language.General.TotalAdjustmentX, new TimeCode(_totalAdjustment).ToShortDisplayString()));
         _isNegativeAdjustment = false;
         Apply();
     }

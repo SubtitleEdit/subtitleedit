@@ -26,11 +26,11 @@ public static class ViewAssaChangeStyle
 
         var labelFrom = UiUtil.MakeLabel(Se.Language.Tools.BatchConvert.AssaChangeStyleFromStyle);
         var textBoxFrom = UiUtil.MakeTextBox(130, vm, nameof(vm.AssaChangeStyleFromStyle));
-        var buttonBrowseFrom = UiUtil.MakeButtonBrowse(vm.AssaChangeStyleBrowseFromStyleCommand);
+        var buttonBrowseFrom = UiUtil.MakeButtonBrowse(vm.AssaChangeStyleBrowseFromStyleCommand, accessibleName: Se.Language.Tools.BatchConvert.AssaChangeStyleFromStyle);
 
         var labelTo = UiUtil.MakeLabel(Se.Language.Tools.BatchConvert.AssaChangeStyleToStyle);
         var textBoxTo = UiUtil.MakeTextBox(130, vm, nameof(vm.AssaChangeStyleToStyle));
-        var buttonBrowseTo = UiUtil.MakeButtonBrowse(vm.AssaChangeStyleBrowseToStyleCommand);
+        var buttonBrowseTo = UiUtil.MakeButtonBrowse(vm.AssaChangeStyleBrowseToStyleCommand, accessibleName: Se.Language.Tools.BatchConvert.AssaChangeStyleToStyle);
 
         var panelFromTo = new StackPanel
         {

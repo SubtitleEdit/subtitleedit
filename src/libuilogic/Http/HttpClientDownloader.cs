@@ -15,7 +15,7 @@ namespace Nikse.SubtitleEdit.UiLogic.Http
 
         public HttpClientDownloader(HttpClient httpClient) => _httpClient = httpClient;
 
-        public Uri BaseAddress
+        public Uri? BaseAddress
         {
             get => _httpClient.BaseAddress;
             set => _httpClient.BaseAddress = value;
@@ -34,7 +34,7 @@ namespace Nikse.SubtitleEdit.UiLogic.Http
             return Encoding.UTF8.GetString(response, 0, response.Length);
         }
 
-        public async Task DownloadAsync(string requestUri, Stream destination, IProgress<float> progress = null, CancellationToken cancellationToken = default)
+        public async Task DownloadAsync(string requestUri, Stream destination, IProgress<float>? progress = null, CancellationToken cancellationToken = default)
         {
             try
             {
@@ -42,7 +42,7 @@ namespace Nikse.SubtitleEdit.UiLogic.Http
                 using (var response = await _httpClient.GetAsync(requestUri, HttpCompletionOption.ResponseHeadersRead, cancellationToken))
                 {
                     var contentLength = response.Content.Headers.ContentLength;
-                    using (var downloadStream = await response.Content.ReadAsStreamAsync())
+                    using (var downloadStream = await response.Content.ReadAsStreamAsync(cancellationToken))
                     {
                         if (progress == null || !contentLength.HasValue)
                         {
@@ -71,7 +71,7 @@ namespace Nikse.SubtitleEdit.UiLogic.Http
             }
         }
 
-        public static async Task CopyToAsync(Stream source, Stream destination, int bufferSize, IProgress<long> progress = null, CancellationToken cancellationToken = default)
+        public static async Task CopyToAsync(Stream source, Stream destination, int bufferSize, IProgress<long>? progress = null, CancellationToken cancellationToken = default)
         {
             if (source == null)
             {

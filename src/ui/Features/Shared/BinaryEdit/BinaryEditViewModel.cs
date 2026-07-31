@@ -69,7 +69,7 @@ public partial class BinaryEditViewModel : ObservableObject
 
     public Window? Window { get; set; }
     public Menu? Menu { get; set; }
-    public DataGrid? SubtitleGrid { get; set; }
+    public TableView? SubtitleGrid { get; set; }
     public VideoPlayerControl? VideoPlayerControl { get; set; }
     public Image? SubtitleOverlayImage { get; set; }
     public Border? VideoContentBorder { get; set; }
@@ -1849,10 +1849,10 @@ public partial class BinaryEditViewModel : ObservableObject
         {
             Dispatcher.UIThread.Post(() =>
             {
-                if (SubtitleGrid == null || selectedItems == null) return;
-                SubtitleGrid.SelectedItems.Clear();
+                if (SubtitleGrid?.SelectedItems is not { } gridSelection || selectedItems == null) return;
+                gridSelection.Clear();
                 foreach (var item in selectedItems)
-                    SubtitleGrid.SelectedItems.Add(item);
+                    gridSelection.Add(item);
             });
         }
 
@@ -1922,10 +1922,10 @@ public partial class BinaryEditViewModel : ObservableObject
         {
             Dispatcher.UIThread.Post(() =>
             {
-                if (SubtitleGrid == null || selectedItems == null) return;
-                SubtitleGrid.SelectedItems.Clear();
+                if (SubtitleGrid?.SelectedItems is not { } gridSelection || selectedItems == null) return;
+                gridSelection.Clear();
                 foreach (var item in selectedItems)
-                    SubtitleGrid.SelectedItems.Add(item);
+                    gridSelection.Add(item);
             });
         }
 
@@ -2064,7 +2064,7 @@ public partial class BinaryEditViewModel : ObservableObject
     [RelayCommand]
     private void InsertBefore()
     {
-        if (Window == null || SubtitleGrid?.SelectedItems.Count != 1)
+        if (Window == null || SubtitleGrid?.SelectedItems?.Count != 1)
         {
             return;
         }
@@ -2087,7 +2087,7 @@ public partial class BinaryEditViewModel : ObservableObject
     [RelayCommand]
     private void InsertAfter()
     {
-        if (Window == null || SubtitleGrid?.SelectedItems.Count != 1)
+        if (Window == null || SubtitleGrid?.SelectedItems?.Count != 1)
         {
             return;
         }
@@ -2110,7 +2110,7 @@ public partial class BinaryEditViewModel : ObservableObject
     [RelayCommand]
     private void ToggleForced()
     {
-        if (Window == null || SubtitleGrid == null || SubtitleGrid.SelectedItems.Count <= 0)
+        if (Window == null || SubtitleGrid?.SelectedItems is not { Count: > 0 })
         {
             return;
         }
@@ -2141,7 +2141,7 @@ public partial class BinaryEditViewModel : ObservableObject
     private List<int> GetSelectedIndices() =>
         GetSelectedItems().Select(item => Subtitles.IndexOf(item)).Where(i => i >= 0).ToList();
 
-    // Adding many rows to a realized DataGrid's SelectedItems is O(n) visual work per
+    // Adding many rows to a realized grid's SelectedItems is O(n) visual work per
     // row, so selecting all forced/non-forced lines on a large file hangs (#11529).
     // Detaching ItemsSource de-realizes the rows so the adds only touch the grid's
     // internal selection table; a single layout pass repaints after we reattach.
@@ -2165,10 +2165,10 @@ public partial class BinaryEditViewModel : ObservableObject
         SubtitleGrid.ItemsSource = null;
         SubtitleGrid.ItemsSource = itemsSource;
 
-        SubtitleGrid.SelectedItems.Clear();
+        SubtitleGrid.SelectedItems?.Clear();
         foreach (var item in items)
         {
-            SubtitleGrid.SelectedItems.Add(item);
+            SubtitleGrid.SelectedItems?.Add(item);
         }
 
         if (preserveScroll && scrollViewer != null)
@@ -2434,6 +2434,13 @@ public partial class BinaryEditViewModel : ObservableObject
             return;
         }
 
+        if (UiUtil.IsHelp(e))
+        {
+            e.Handled = true;
+            UiUtil.ShowHelp("features/binary-edit");
+            return;
+        }
+
         // Handle shortcuts
         _shortcutManager.OnKeyPressed(this, e);
         if (_shortcutManager.GetActiveKeys().Count == 0)
@@ -2562,7 +2569,10 @@ public partial class BinaryEditViewModel : ObservableObject
                 return;
             }
 
-            SubtitleGrid?.Focus();
+            if (SubtitleGrid != null)
+            {
+                TableViewExtras.FocusRow(SubtitleGrid);
+            }
         });
     }
 
@@ -2776,11 +2786,14 @@ public partial class BinaryEditViewModel : ObservableObject
                 SubtitleGrid.SelectedIndex = index;
             }
 
-            SubtitleGrid.ScrollIntoView(SubtitleGrid.SelectedItem, null);
+            if (SubtitleGrid.SelectedItem is { } selectedItem)
+            {
+                SubtitleGrid.ScrollIntoView(selectedItem);
+            }
         });
     }
 
-    internal void OnDataGridKeyDown(KeyEventArgs e)
+    internal void OnSubtitleGridKeyDown(KeyEventArgs e)
     {
         if (e.Key == Key.Delete)
         {
@@ -2860,7 +2873,7 @@ public partial class BinaryEditViewModel : ObservableObject
         IsInsertBeforeVisible = selectedCount == 1;
     }
 
-    internal void OnDataGridDoubleTapped(TappedEventArgs e)
+    internal void OnSubtitleGridDoubleTapped(TappedEventArgs e)
     {
         var vp = VideoPlayerControl;
         var item = SubtitleGrid?.SelectedItem as BinarySubtitleItem;

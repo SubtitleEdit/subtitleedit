@@ -48,16 +48,16 @@ public static class ShortcutGroupUi
         {
             ShortcutGroup.File => language.CategoryFile,
             ShortcutGroup.Video => language.CategoryVideo,
-            ShortcutGroup.Waveform => language.CategoryWaveform,
+            ShortcutGroup.Waveform => Se.Language.General.Waveform,
             ShortcutGroup.SubtitleGrid => language.CategorySubtitleGrid,
             ShortcutGroup.TextBox => language.CategoryTextBox,
             ShortcutGroup.SubtitleGridAndTextBox => language.CategorySubtitleGridAndTextBox,
             ShortcutGroup.Sync => language.CategorySync,
-            ShortcutGroup.Translate => language.CategoryTranslate,
-            ShortcutGroup.Search => language.CategorySearch,
-            ShortcutGroup.Tools => language.CategoryTools,
+            ShortcutGroup.Translate => Se.Language.General.Translate,
+            ShortcutGroup.Search => Se.Language.General.Search,
+            ShortcutGroup.Tools => Se.Language.General.Tools,
             ShortcutGroup.Ai => language.CategoryAi,
-            _ => language.CategoryGeneral,
+            _ => Se.Language.General.General,
         };
     }
 

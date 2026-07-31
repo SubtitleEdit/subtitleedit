@@ -161,7 +161,7 @@ public class TextToSpeechWindow : Window
 
         Content = grid;
 
-        Activated += delegate { buttonOk.Focus(); }; // hack to make OnKeyDown work
+        Activated += delegate { _comboBoxEngines?.Focus(); }; // initial focus on an input, not an action button - a focused button clicks on bare Space
     }
 
     // Install-status dot for the engine combo: green = ready, amber = a newer build is available,
@@ -301,7 +301,7 @@ public class TextToSpeechWindow : Window
                     MinWidth = labelMinWidth,
                 },
                 comboBoxEngines,
-                UiUtil.MakeButton(vm.ShowEngineSettingsCommand, IconNames.Settings)
+                UiUtil.MakeButton(vm.ShowEngineSettingsCommand, IconNames.Settings, $"{Se.Language.General.Engine} - {Se.Language.General.Settings}")
                     .WithMarginLeft(5)
                     .WithBindIsVisible(nameof(vm.IsEngineSettingsVisible)),
             }
@@ -355,7 +355,7 @@ public class TextToSpeechWindow : Window
                     [!Border.IsVisibleProperty] = new Binding(nameof(vm.IsVoiceCountVisible)) { Mode = BindingMode.OneWay },
                 },
                 buttonTestVoice,
-                UiUtil.MakeButton(vm.ShowTestVoiceSettingsCommand, IconNames.Settings),
+                UiUtil.MakeButton(vm.ShowTestVoiceSettingsCommand, IconNames.Settings, $"{Se.Language.Video.TextToSpeech.TestVoice} - {Se.Language.General.Settings}"),
             }
         };
 
@@ -363,10 +363,9 @@ public class TextToSpeechWindow : Window
         comboBoxModels.ItemTemplate = BuildModelItemTemplate(vm);
         _comboBoxModels = comboBoxModels;
 
-        var buttonDownloadModel = UiUtil.MakeButton(vm.DownloadModelCommand, IconNames.Download)
+        var buttonDownloadModel = UiUtil.MakeButton(vm.DownloadModelCommand, IconNames.Download, Se.Language.General.Download)
             .WithMarginLeft(5)
             .WithBindIsVisible(nameof(vm.IsModelDownloadVisible));
-        ToolTip.SetTip(buttonDownloadModel, Se.Language.General.Download);
 
         var panelModel = new StackPanel
         {
@@ -448,7 +447,7 @@ public class TextToSpeechWindow : Window
                     MinWidth = labelMinWidth,
                 },
                 UiUtil.MakeTextBox(325, vm, nameof(vm.KeyFile)).WithMarginRight(4),
-                UiUtil.MakeButtonBrowse(vm.BrowseKeyFileCommand),
+                UiUtil.MakeButtonBrowse(vm.BrowseKeyFileCommand, accessibleName: Se.Language.General.KeyFile),
             },
             [!StackPanel.IsVisibleProperty] = new Binding(nameof(vm.HasKeyFile)) { Mode = BindingMode.OneWay },
         };
@@ -625,7 +624,7 @@ public class TextToSpeechWindow : Window
             Children =
             {
                 checkBoxAddAudioToVideoFile,
-                UiUtil.MakeButton(vm.ShowEncodingSettingsCommand, IconNames.Settings)
+                UiUtil.MakeButton(vm.ShowEncodingSettingsCommand, IconNames.Settings, $"{Se.Language.Video.TextToSpeech.AddAudioToVideoFile} - {Se.Language.General.Settings}")
                       .WithMarginLeft(5).WithMarginTop(0).WithTopAlignment(),
             }
         };

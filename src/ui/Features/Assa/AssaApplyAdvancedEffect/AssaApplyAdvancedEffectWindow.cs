@@ -68,7 +68,7 @@ public class AssaApplyAdvancedEffectWindow : Window
                     starCountRow.Children.Add(new TextBlock { Text = Se.Language.Assa.AdvancedEffectStarfieldStarCount, VerticalAlignment = VerticalAlignment.Center, FontSize = 12 });
                     starCountRow.Children.Add(UiUtil.MakeNumericUpDownInt(50, 3000, 650, 130, starfieldItem, nameof(AdvancedEffectStarfield.StarCount)));
                     var speedRow = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 8 };
-                    speedRow.Children.Add(new TextBlock { Text = Se.Language.Assa.AdvancedEffectStarfieldSpeed, VerticalAlignment = VerticalAlignment.Center, FontSize = 12 });
+                    speedRow.Children.Add(new TextBlock { Text = Se.Language.General.Speed, VerticalAlignment = VerticalAlignment.Center, FontSize = 12 });
                     speedRow.Children.Add(UiUtil.MakeNumericUpDownOneDecimal(0.1m, 10.0m, 130, starfieldItem, nameof(AdvancedEffectStarfield.SpeedMultiplier)));
                     var settingsStack = new StackPanel { Spacing = 4 };
                     settingsStack.Children.Add(starCountRow);
@@ -176,7 +176,7 @@ public class AssaApplyAdvancedEffectWindow : Window
         vm.ComboBoxLeft = comboBoxLeft;
         comboBoxLeft.SelectionChanged += vm.ComboBoxParagraphsChanged;
 
-        var buttonPlay = UiUtil.MakeButton(Se.Language.Assa.PlayCurrent, vm.PlayAndBackCommand)
+        var buttonPlay = UiUtil.MakeButton(Se.Language.General.PlayCurrent, vm.PlayAndBackCommand)
             .WithLeftAlignment();
 
         var videoGrid = new Grid
@@ -207,7 +207,8 @@ public class AssaApplyAdvancedEffectWindow : Window
 
         Content = mainGrid;
 
-        Activated += delegate { buttonOk.Focus(); };
+        // initial focus on an input, not an action button - a focused button clicks on bare Space
+        Activated += delegate { effectListBox.Focus(); };
         AddHandler(KeyDownEvent, vm.OnKeyDownHandler,
             RoutingStrategies.Tunnel | RoutingStrategies.Bubble, handledEventsToo: false);
         Loaded += (_, _) => vm.OnLoaded();

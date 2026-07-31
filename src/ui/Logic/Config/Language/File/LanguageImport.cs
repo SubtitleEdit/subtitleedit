@@ -26,16 +26,8 @@ public class LanguageImport
     public string TwoLinesAreOneSubtitle { get; set; }
     public string ImportFilesDotDotDot { get; set; }
     public string MultipleFiles { get; set; }
-    public string ImportOptions { get; set; }
-    public string AutoSplitText { get; set; }
-    public string LineMode { get; set; }
     public string MaxLineLength { get; set; }
-    public string MaxLinesPerSubtitle { get; set; }
-    public string MinGapBetweenSubtitles { get; set; }
     public string MergeShortLines { get; set; }
-    public string RemoveLinesWithoutLetters { get; set; }
-    public string SplitAtEndCharsSetting { get; set; }
-    public string TakeTimeFromCurrentFile { get; set; }
     public string Fixed { get; set; }
     public string NumberOfSubtitlesX { get; set; }
     public string GapMs { get; set; }
@@ -46,7 +38,6 @@ public class LanguageImport
     public string ForcedAlignerProgress { get; set; }
     public string ForcedAlignerSetupTitle { get; set; }
     public string ForcedAlignerSetupIntro { get; set; }
-    public string ForcedAlignerEngine { get; set; }
     public string ForcedAlignerModel { get; set; }
     public string ForcedAlignerDownloadEngine { get; set; }
 
@@ -80,16 +71,8 @@ Rules:
         TwoLinesAreOneSubtitle = "Two lines are one subtitle";
         ImportFilesDotDotDot = "Import files...";
         MultipleFiles = "Import from multiple text files (one file is one subtitle)";
-        ImportOptions = "Import options";
-        AutoSplitText = "Auto split text";
-        LineMode = "Line mode";
         MaxLineLength = "Max line length";
-        MaxLinesPerSubtitle = "Max lines per subtitle";
-        MinGapBetweenSubtitles = "Min gap between subtitles";
         MergeShortLines = "Merge short lines";
-        RemoveLinesWithoutLetters = "Remove lines without letters";
-        SplitAtEndCharsSetting = "Split at end chars";
-        TakeTimeFromCurrentFile = "Take time from current file";
         Fixed = "Fixed";
         NumberOfSubtitlesX = "Number of subtitles: {0}";
         GapMs = "Gap (ms)";
@@ -100,7 +83,6 @@ Rules:
         ForcedAlignerProgress = "Aligning... window {0} of {1}, {2} of {3} lines";
         ForcedAlignerSetupTitle = "Align time codes via forced aligner";
         ForcedAlignerSetupIntro = "A forced aligner matches the subtitle text you already have against the audio, without transcribing it first. Long videos are aligned in chunks, so any length works.";
-        ForcedAlignerEngine = "Engine";
         ForcedAlignerModel = "Aligner model";
         ForcedAlignerDownloadEngine = "Download / update engine...";
         CsvXlsxCustomColumnsDotDotDot = "CSV/XLSX with custom columns...";

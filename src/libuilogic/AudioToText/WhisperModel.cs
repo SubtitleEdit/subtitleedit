@@ -5,11 +5,11 @@ namespace Nikse.SubtitleEdit.UiLogic.AudioToText
 {
     public class WhisperModel : IWhisperModel
     {
-        public string[] Urls { get; set; }
-        public string Size { get; set; }
-        public string Name { get; set; }
+        public string[] Urls { get; set; } = Array.Empty<string>();
+        public string Size { get; set; } = string.Empty;
+        public string Name { get; set; } = string.Empty;
         public bool Rename { get; set; }
-        public string Folder { get; set; }
+        public string Folder { get; set; } = string.Empty;
         public bool AlreadyDownloaded { get; set; }
         public long Bytes { get; set; }
         public bool Dynamic { get; set; }

@@ -14,13 +14,13 @@ namespace Nikse.SubtitleEdit.UiLogic.AutoTranslate
 {
     public class PerplexityTranslate : IAutoTranslator, IDisposable
     {
-        private HttpClient _httpClient;
+        private HttpClient _httpClient = null!;
 
         public static string StaticName { get; set; } = "Perplexity";
         public override string ToString() => StaticName;
         public string Name => StaticName;
-        public string Url => "https://www.paerplexity.ai/";
-        public string Error { get; set; }
+        public string Url => "https://www.perplexity.ai/";
+        public string Error { get; set; } = string.Empty;
         public int MaxCharacters => 1500;
 
         /// <summary>
@@ -127,7 +127,7 @@ namespace Nikse.SubtitleEdit.UiLogic.AutoTranslate
 
             var content = new StringContent(requestBody, Encoding.UTF8, "application/json");
             var result = await _httpClient.PostAsync("/v1/responses", content, cancellationToken);
-            var bytes = await result.Content.ReadAsByteArrayAsync();
+            var bytes = await result.Content.ReadAsByteArrayAsync(cancellationToken);
             var json = Encoding.UTF8.GetString(bytes).Trim();
             if (!result.IsSuccessStatusCode)
             {

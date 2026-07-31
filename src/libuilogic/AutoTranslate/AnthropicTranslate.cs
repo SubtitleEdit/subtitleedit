@@ -15,14 +15,14 @@ namespace Nikse.SubtitleEdit.UiLogic.AutoTranslate
 {
     public class AnthropicTranslate : IAutoTranslator, IDisposable
     {
-        private HttpClient _httpClient;
+        private HttpClient _httpClient = null!;
 
         public static string StaticName { get; set; } = "Anthropic Claude";
         public override string ToString() => StaticName;
 
         public string Name => StaticName;
         public string Url => "https://www.anthropic.com/";
-        public string Error { get; set; }
+        public string Error { get; set; } = string.Empty;
         public int MaxCharacters => 900;
 
         /// <summary>
@@ -80,14 +80,14 @@ namespace Nikse.SubtitleEdit.UiLogic.AutoTranslate
             var input = "{ \"model\": \"" + model + "\", \"max_tokens\": 1024, \"messages\": [{ \"role\": \"user\", \"content\": \"" + prompt + "\\n\\n" + Json.EncodeJsonText(text.Trim()) + "\" }]}";
 
             int[] retryDelays = { 2555, 5007, 9013 };
-            HttpResponseMessage result = null;
+            HttpResponseMessage result = null!;
             var json = string.Empty;
             for (var attempt = 0; attempt <= retryDelays.Length; attempt++)
             {
                 var content = new StringContent(input, Encoding.UTF8);
                 content.Headers.ContentType = MediaTypeHeaderValue.Parse("application/json");
                 result = await _httpClient.PostAsync(string.Empty, content, cancellationToken);
-                var bytes = await result.Content.ReadAsByteArrayAsync();
+                var bytes = await result.Content.ReadAsByteArrayAsync(cancellationToken);
                 json = Encoding.UTF8.GetString(bytes).Trim();
 
                 if (!DeepLTranslate.ShouldRetry(result, json) || attempt == retryDelays.Length)
@@ -105,8 +105,6 @@ namespace Nikse.SubtitleEdit.UiLogic.AutoTranslate
             }
 
             result.EnsureSuccessStatusCode();
-
-            SeLogger.Error($"{StaticName}: debug json: " + json);
 
             var parser = new SeJsonParser();
             var resultText = parser.GetFirstObject(json, "text");
