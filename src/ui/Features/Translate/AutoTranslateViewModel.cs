@@ -109,7 +109,7 @@ public partial class AutoTranslateViewModel : ObservableObject
     [ObservableProperty] private string _llamaCppDownloadButtonText = string.Empty;
     [ObservableProperty] private string _crispAsrDownloadButtonText = string.Empty;
 
-    public DataGrid? RowGrid { get; set; }
+    public TableView? RowGrid { get; set; }
 
     private CancellationTokenSource _cancellationTokenSource;
     private bool _translationInProgress = false;
@@ -1735,7 +1735,7 @@ public partial class AutoTranslateViewModel : ObservableObject
             }
 
             await Task.Delay(5);
-            RowGrid.ScrollIntoView(Rows[scrollIndex], null);
+            RowGrid.ScrollIntoView(Rows[scrollIndex]);
         });
     }
 
@@ -2421,7 +2421,7 @@ public partial class AutoTranslateViewModel : ObservableObject
 
     /// <summary>
     /// Marshals row writes from the background translation loop to the UI thread -
-    /// the rows are DataGrid-bound and Avalonia bindings are not thread-safe.
+    /// the rows are grid-bound and Avalonia bindings are not thread-safe.
     /// </summary>
     private static void ApplyRowUpdateOnUiThread(Action action)
     {

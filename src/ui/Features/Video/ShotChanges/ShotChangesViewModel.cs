@@ -44,7 +44,7 @@ public partial class ShotChangesViewModel : ObservableObject, IClosingCleanup
     public double LastSeconds { get; private set; }
     public bool OkPressed { get; private set; }
     private StringBuilder Log { get; set; } = new StringBuilder();
-    public DataGrid DataGridFfmpegLines { get; set; }
+    public TableView FfmpegLinesGrid { get; set; }
     public static readonly Regex TimeRegex = new Regex(@"pts_time:\d+[.,]*\d*", RegexOptions.Compiled);
 
     private string _videoFileName = string.Empty;
@@ -60,7 +60,7 @@ public partial class ShotChangesViewModel : ObservableObject, IClosingCleanup
     public ShotChangesViewModel()
     {
         FfmpegLines = new ObservableCollection<TimeItem>();
-        DataGridFfmpegLines = new DataGrid();
+        FfmpegLinesGrid = new TableView();
         ProgressText = string.Empty;
         TimeCodeSeconds = true;
         _frameRate = 23.976;
@@ -181,7 +181,7 @@ public partial class ShotChangesViewModel : ObservableObject, IClosingCleanup
                     {
                         var item = new TimeItem(seconds, FfmpegLines.Count);
                         FfmpegLines.Add(item);
-                        DataGridFfmpegLines.ScrollIntoView(item, null);
+                        FfmpegLinesGrid.ScrollIntoView(item);
 
                         if (_duration != null)
                         {

@@ -35,7 +35,7 @@ public class ReviewSpeechWindow : Window
         DataContext = vm;
 
         var controls = MakeControls(vm);
-        var dataGrid = MakeDataGrid(vm);
+        var lineGridView = MakeLineGrid(vm);
         var waveform = MakeWaveform(vm);
 
         // Disabled while a regenerate runs: its progress popup is non-modal, and publishing
@@ -72,7 +72,7 @@ public class ReviewSpeechWindow : Window
         };
 
         grid.Add(controls, 0, 0);
-        grid.Add(dataGrid, 0, 1);
+        grid.Add(lineGridView, 0, 1);
         grid.Add(waveform, 1, 0, 1, 2);
         grid.Add(panelButtons, 2, 0, 1, 2);
         grid.Add(checkBoxAutoContinue, 2, 0);
@@ -83,7 +83,7 @@ public class ReviewSpeechWindow : Window
         // focused element) without arming any button: a focused button fires OnClick on bare
         // Space/Enter, and OK used to be focused here - so the first Space a user pressed
         // published the whole session instead of playing the selected line (#12093).
-        Activated += delegate { vm.LineGrid.Focus(); };
+        Activated += delegate { TableViewExtras.FocusRow(vm.LineGrid); };
 
         // Tunnel-stage handlers: see Space/R before the focused control does. KeyDown alone is
         // not enough - Avalonia's Button fires OnClick from OnKeyUp on Space (unconditionally
@@ -106,127 +106,125 @@ public class ReviewSpeechWindow : Window
         };
     }
 
-    private static Border MakeDataGrid(ReviewSpeechViewModel vm)
+    private static Border MakeLineGrid(ReviewSpeechViewModel vm)
     {
-        var dataGrid = new DataGrid
+        var lineGrid = TableViewExtras.MakeTableView(multiSelect: false);
+        lineGrid.Margin = new Thickness(0, 10, 0, 0);
+        lineGrid.Width = double.NaN;
+        lineGrid.Height = double.NaN;
+        lineGrid[!TableView.ItemsSourceProperty] = new Binding(nameof(vm.Lines));
+        lineGrid[!TableView.SelectedItemProperty] = new Binding(nameof(vm.SelectedLine)) { Mode = BindingMode.TwoWay };
+
+        // Re-enabled: OK publishes only rows with Include ticked and Export/Import
+        // round-trip the flag, so without this column an imported session's excluded
+        // rows were invisible and could never be re-included.
+        lineGrid.Columns.Add(new SeTableViewColumn
         {
-            AutoGenerateColumns = false,
-            IsReadOnly = true,
-            SelectionMode = DataGridSelectionMode.Single,
-            Margin = new Thickness(0, 10, 0, 0),
-            [!DataGrid.ItemsSourceProperty] = new Binding(nameof(vm.Lines)),
-            [!DataGrid.SelectedItemProperty] = new Binding(nameof(vm.SelectedLine)) { Mode = BindingMode.TwoWay },
-            Width = double.NaN,
-            Height = double.NaN,
-            HorizontalAlignment = HorizontalAlignment.Stretch,
-            VerticalAlignment = VerticalAlignment.Stretch,
-            Columns =
-            {
-                // Re-enabled: OK publishes only rows with Include ticked and Export/Import
-                // round-trip the flag, so without this column an imported session's excluded
-                // rows were invisible and could never be re-included.
-                new DataGridTemplateColumn
+            Header = Se.Language.General.Enabled,
+            CellTheme = UiUtil.TableViewNoPaddingCellTheme,
+            HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
+            CellTemplate = new FuncDataTemplate<ReviewRow>((item, _) =>
+                new Border
                 {
-                    Header = Se.Language.General.Enabled,
-                    CellTheme = UiUtil.DataGridNoBorderNoPaddingCellTheme,
-                    CellTemplate = new FuncDataTemplate<ReviewRow>((item, _) =>
-                        new Border
-                        {
-                            Background = Brushes.Transparent, // Prevents highlighting
-                            Padding = new Thickness(4),
-                            Child = new CheckBox
-                            {
-                                [!ToggleButton.IsCheckedProperty] = new Binding(nameof(ReviewRow.Include)),
-                                HorizontalAlignment = HorizontalAlignment.Center
-                            }
-                        }),
-                    Width = new DataGridLength(1, DataGridLengthUnitType.Auto)
-                },
-                new DataGridTemplateColumn
-                {
-                    CellTheme = UiUtil.DataGridNoBorderNoPaddingCellTheme,
-                    CellTemplate = new FuncDataTemplate<ReviewRow>((item, _) =>
+                    Background = Brushes.Transparent, // Prevents highlighting
+                    Padding = new Thickness(4),
+                    Child = new CheckBox
                     {
-                        var buttonRegenerate = UiUtil.MakeButton(vm.RegenerateAudioCommand, IconNames.Recycle)
-                        .WithBindEnabled(nameof(item.IsPlayingEnabled));
-                        buttonRegenerate.CommandParameter = item;
-                        if (Se.Settings.Appearance.ShowHints)
-                        {
-                            ToolTip.SetTip(buttonRegenerate, Se.Language.Video.TextToSpeech.RegenerateAudio);
-                        }
+                        [!ToggleButton.IsCheckedProperty] = new Binding(nameof(ReviewRow.Include)),
+                        HorizontalAlignment = HorizontalAlignment.Center
+                    }
+                }),
+            Width = new GridLength(80),
+        });
+        lineGrid.Columns.Add(new SeTableViewColumn
+        {
+            CellTheme = UiUtil.TableViewNoPaddingCellTheme,
+            HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
+            CellTemplate = new FuncDataTemplate<ReviewRow>((item, _) =>
+            {
+                var buttonRegenerate = UiUtil.MakeButton(vm.RegenerateAudioCommand, IconNames.Recycle)
+                .WithBindEnabled(nameof(item.IsPlayingEnabled));
+                buttonRegenerate.CommandParameter = item;
+                if (Se.Settings.Appearance.ShowHints)
+                {
+                    ToolTip.SetTip(buttonRegenerate, Se.Language.Video.TextToSpeech.RegenerateAudio);
+                }
 
-                        var buttonHistory = UiUtil.MakeButton(vm.ShowHistoryCommand, IconNames.DotsVertical).WithBindEnabled(nameof(ReviewRow.HasHistory));
-                        buttonHistory.CommandParameter = item;
-                        buttonHistory.Bind(Button.OpacityProperty, new Binding(nameof(ReviewRow.HistoryButtonOpacity)));
-                        if (Se.Settings.Appearance.ShowHints)
-                        {
-                            ToolTip.SetTip(buttonHistory, Se.Language.General.ShowHistory);
-                        }
+                var buttonHistory = UiUtil.MakeButton(vm.ShowHistoryCommand, IconNames.DotsVertical).WithBindEnabled(nameof(ReviewRow.HasHistory));
+                buttonHistory.CommandParameter = item;
+                buttonHistory.Bind(Button.OpacityProperty, new Binding(nameof(ReviewRow.HistoryButtonOpacity)));
+                if (Se.Settings.Appearance.ShowHints)
+                {
+                    ToolTip.SetTip(buttonHistory, Se.Language.General.ShowHistory);
+                }
 
-                        var buttonPlay = UiUtil.MakeButton(vm.PlayRowCommand,"fa-solid fa-play")
-                        .WithBindIsVisible(nameof(item.IsPlaying), new InverseBooleanConverter())
-                        .WithBindEnabled(nameof(item.IsPlayingEnabled));
-                        buttonPlay.CommandParameter = item;
+                var buttonPlay = UiUtil.MakeButton(vm.PlayRowCommand,"fa-solid fa-play")
+                .WithBindIsVisible(nameof(item.IsPlaying), new InverseBooleanConverter())
+                .WithBindEnabled(nameof(item.IsPlayingEnabled));
+                buttonPlay.CommandParameter = item;
 
-                        var buttonStop = UiUtil.MakeButton(vm.StopCommand, "fa-solid fa-stop")
-                        .WithBindIsVisible(nameof(item.IsPlaying));
-                        buttonStop.CommandParameter = item;
+                var buttonStop = UiUtil.MakeButton(vm.StopCommand, "fa-solid fa-stop")
+                .WithBindIsVisible(nameof(item.IsPlaying));
+                buttonStop.CommandParameter = item;
 
-                        return new StackPanel
-                        {
-                            Orientation = Orientation.Horizontal,
-                            HorizontalAlignment = HorizontalAlignment.Center,
-                            Spacing = 5,
-                            Children =
-                            {
-                                buttonRegenerate,
-                                buttonHistory,
-                                buttonPlay,
-                                buttonStop,
-                            }
-                        };
-                    }),
-                    Width = new DataGridLength(1, DataGridLengthUnitType.Auto),
-                },
-                new DataGridTextColumn
+                return new StackPanel
                 {
-                    Header = Se.Language.General.NumberSymbol,
-                    Binding = new Binding(nameof(ReviewRow.Number)),
-                    Width = new DataGridLength(1, DataGridLengthUnitType.Auto),
-                    CellTheme = UiUtil.DataGridNoBorderCellTheme,
-                },
-                new DataGridTextColumn
-                {
-                    Header = Se.Language.General.Voice,
-                    Binding = new Binding(nameof(ReviewRow.Voice)),
-                    Width = new DataGridLength(3, DataGridLengthUnitType.Auto),
-                    CellTheme = UiUtil.DataGridNoBorderCellTheme,
-                },
-                new DataGridTextColumn
-                {
-                    Header = Se.Language.General.CharsPerSec,
-                    Binding = new Binding(nameof(ReviewRow.Cps)),
-                    Width = new DataGridLength(3, DataGridLengthUnitType.Auto),
-                    CellTheme = UiUtil.DataGridNoBorderCellTheme,
-                },
-                new DataGridTextColumn
-                {
-                    Header = Se.Language.General.Speed,
-                    Binding = new Binding(nameof(ReviewRow.Speed)),
-                    Width = new DataGridLength(3, DataGridLengthUnitType.Auto),
-                    CellTheme = UiUtil.DataGridNoBorderCellTheme,
-                },
-                new DataGridTextColumn
-                {
-                    Header = Se.Language.General.Text,
-                    Binding = new Binding(nameof(ReviewRow.Text)),
-                    Width = new DataGridLength(1, DataGridLengthUnitType.Star),
-                    CellTheme = UiUtil.DataGridNoBorderCellTheme,
-                },
-            },
-        };
-        dataGrid.DoubleTapped += (s, e) => vm.DataGridDoubleClicked();
-        vm.LineGrid = dataGrid;
+                    Orientation = Orientation.Horizontal,
+                    HorizontalAlignment = HorizontalAlignment.Center,
+                    Spacing = 5,
+                    Children =
+                    {
+                        buttonRegenerate,
+                        buttonHistory,
+                        buttonPlay,
+                        buttonStop,
+                    }
+                };
+            }),
+            Width = new GridLength(150),
+        });
+        lineGrid.Columns.Add(new SeTableViewColumn
+        {
+            Header = Se.Language.General.NumberSymbol,
+            Binding = new Binding(nameof(ReviewRow.Number)),
+            Width = new GridLength(50),
+            CellTheme = UiUtil.TableViewCellTheme,
+            HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
+        });
+        lineGrid.Columns.Add(new SeTableViewColumn
+        {
+            Header = Se.Language.General.Voice,
+            Binding = new Binding(nameof(ReviewRow.Voice)),
+            Width = new GridLength(150),
+            CellTheme = UiUtil.TableViewCellTheme,
+            HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
+        });
+        lineGrid.Columns.Add(new SeTableViewColumn
+        {
+            Header = Se.Language.General.CharsPerSec,
+            Binding = new Binding(nameof(ReviewRow.Cps)),
+            Width = new GridLength(80),
+            CellTheme = UiUtil.TableViewCellTheme,
+            HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
+        });
+        lineGrid.Columns.Add(new SeTableViewColumn
+        {
+            Header = Se.Language.General.Speed,
+            Binding = new Binding(nameof(ReviewRow.Speed)),
+            Width = new GridLength(70),
+            CellTheme = UiUtil.TableViewCellTheme,
+            HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
+        });
+        lineGrid.Columns.Add(new SeTableViewColumn
+        {
+            Header = Se.Language.General.Text,
+            Binding = new Binding(nameof(ReviewRow.Text)),
+            Width = new GridLength(1, GridUnitType.Star),
+            CellTheme = UiUtil.TableViewCellTheme,
+            HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
+        });
+        lineGrid.DoubleTapped += (s, e) => vm.LineGridDoubleClicked();
+        vm.LineGrid = lineGrid;
 
         var textBox = new TextBox
         {
@@ -261,7 +259,7 @@ public class ReviewSpeechWindow : Window
             HorizontalAlignment = HorizontalAlignment.Stretch,
         };
 
-        grid.Add(dataGrid, 0, 0);
+        grid.Add(lineGrid, 0, 0);
         grid.Add(textBox, 1, 0);
 
         return UiUtil.MakeBorderForControl(grid);

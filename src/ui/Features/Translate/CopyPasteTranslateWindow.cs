@@ -105,58 +105,57 @@ public class CopyPasteTranslateWindow : Window
 
     private static Border MakeSubtitlesView(CopyPasteTranslateViewModel vm)
     {
-        vm.SubtitleGrid = new DataGrid
-        {
-            Height = double.NaN, // auto size inside scroll viewer
-            Margin = new Thickness(2),
-            ItemsSource = vm.Subtitles, // Use ItemsSource instead of Items
-            CanUserSortColumns = false,
-            IsReadOnly = true,
-            SelectionMode = DataGridSelectionMode.Single,
-            DataContext = vm.Subtitles,
-        };
+        vm.SubtitleGrid = TableViewExtras.MakeTableView(multiSelect: false);
+        vm.SubtitleGrid.Height = double.NaN; // auto size inside scroll viewer
+        vm.SubtitleGrid.Margin = new Thickness(2);
+        vm.SubtitleGrid.ItemsSource = vm.Subtitles;
+        vm.SubtitleGrid.DataContext = vm.Subtitles;
 
         var fullTimeConverter = new TimeSpanToDisplayFullConverter();
         var shortTimeConverter = new TimeSpanToDisplayShortConverter();
 
-        vm.SubtitleGrid.Columns.Add(new DataGridTextColumn
+        vm.SubtitleGrid.Columns.Add(new SeTableViewColumn
         {
             Header = Se.Language.General.NumberSymbol,
             Binding = new Binding(nameof(SubtitleLineViewModel.Number)),
-            Width = new DataGridLength(50),
-            CellTheme = UiUtil.DataGridNoBorderCellTheme,
+            Width = new GridLength(50),
+            CellTheme = UiUtil.TableViewCellTheme,
+            HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
         });
-        vm.SubtitleGrid.Columns.Add(new DataGridTextColumn
+        vm.SubtitleGrid.Columns.Add(new SeTableViewColumn
         {
             Header = Se.Language.General.Show,
             Binding = new Binding(nameof(SubtitleLineViewModel.StartTime)) { Converter = fullTimeConverter },
-            Width = new DataGridLength(120),
-            CellTheme = UiUtil.DataGridNoBorderCellTheme,
+            Width = new GridLength(120),
+            CellTheme = UiUtil.TableViewCellTheme,
+            HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
         });
-        vm.SubtitleGrid.Columns.Add(new DataGridTextColumn
+        vm.SubtitleGrid.Columns.Add(new SeTableViewColumn
         {
             Header = Se.Language.General.Duration,
             Binding = new Binding(nameof(SubtitleLineViewModel.Duration)) { Converter = shortTimeConverter },
-            Width = new DataGridLength(120),
-            CellTheme = UiUtil.DataGridNoBorderCellTheme,
+            Width = new GridLength(120),
+            CellTheme = UiUtil.TableViewCellTheme,
+            HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
         });
-        vm.SubtitleGrid.Columns.Add(new DataGridTextColumn
+        vm.SubtitleGrid.Columns.Add(new SeTableViewColumn
         {
             Header = Se.Language.General.Text,
             Binding = new Binding(nameof(SubtitleLineViewModel.OriginalText)),
-            Width = new DataGridLength(1, DataGridLengthUnitType.Star),
-            CellTheme = UiUtil.DataGridNoBorderCellTheme,
+            Width = new GridLength(1, GridUnitType.Star),
+            CellTheme = UiUtil.TableViewCellTheme,
+            HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
         });
-        vm.SubtitleGrid.Columns.Add(new DataGridTextColumn
+        vm.SubtitleGrid.Columns.Add(new SeTableViewColumn
         {
             Header = Se.Language.General.Translation,
             Binding = new Binding(nameof(SubtitleLineViewModel.Text)),
-            Width = new DataGridLength(1, DataGridLengthUnitType.Star),
-            CellTheme = UiUtil.DataGridNoBorderCellTheme,
+            Width = new GridLength(1, GridUnitType.Star),
+            CellTheme = UiUtil.TableViewCellTheme,
+            HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
         });
 
-        vm.SubtitleGrid.DataContext = vm.Subtitles;
-        vm.SubtitleGrid.Bind(DataGrid.SelectedItemProperty, new Binding(nameof(vm.SelectedSubtitle))
+        vm.SubtitleGrid.Bind(TableView.SelectedItemProperty, new Binding(nameof(vm.SelectedSubtitle))
         {
             Source = vm,
             Mode = BindingMode.TwoWay

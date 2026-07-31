@@ -49,6 +49,108 @@ public class SeTableViewColumn : TableViewColumn
 }
 
 /// <summary>
+/// Click-to-sort for TableView column headers (TableView itself has no sorting).
+/// Register the sortable columns with a key selector; clicking a registered header
+/// sorts the grid's ItemsSource in place (stable, toggling ascending/descending on
+/// repeated clicks) and shows an arrow in the header. Selection is preserved.
+/// Note this reorders the backing collection - unlike the DataGrid, which sorted a
+/// view - so only use it on grids where the collection order is presentation-only.
+/// </summary>
+public sealed class TableViewHeaderSorter
+{
+    private readonly TableView _tableView;
+    private readonly Dictionary<TableViewColumn, Comparison<object>> _comparisons = new();
+    private readonly Dictionary<TableViewColumn, object?> _originalHeaders = new();
+    private TableViewColumn? _sortColumn;
+    private bool _descending;
+
+    public TableViewHeaderSorter(TableView tableView)
+    {
+        _tableView = tableView;
+        tableView.AddHandler(InputElement.TappedEvent, OnTapped, Avalonia.Interactivity.RoutingStrategies.Bubble);
+    }
+
+    /// <summary>Makes <paramref name="column"/> sortable by <paramref name="key"/>.</summary>
+    public TableViewHeaderSorter AddSortable<TItem, TKey>(TableViewColumn column, Func<TItem, TKey> key)
+    {
+        return AddSortable(column, (a, b) => Comparer<TKey>.Default.Compare(key((TItem)a), key((TItem)b)));
+    }
+
+    /// <summary>Makes <paramref name="column"/> sortable by a custom comparison of the row items.</summary>
+    public TableViewHeaderSorter AddSortable(TableViewColumn column, Comparison<object> comparison)
+    {
+        _comparisons[column] = comparison;
+        _originalHeaders[column] = column.Header;
+        return this;
+    }
+
+    private void OnTapped(object? sender, TappedEventArgs e)
+    {
+        if (e.Source is not Visual source ||
+            source.FindAncestorOfType<Thumb>(includeSelf: true) != null) // resize grip
+        {
+            return;
+        }
+
+        var header = source.FindAncestorOfType<TableViewColumnHeader>(includeSelf: true);
+        if (header?.Column is not { } column || !_comparisons.TryGetValue(column, out var comparison))
+        {
+            return;
+        }
+
+        _descending = ReferenceEquals(_sortColumn, column) && !_descending;
+        _sortColumn = column;
+        Apply(comparison);
+        UpdateHeaders();
+        e.Handled = true;
+    }
+
+    private void Apply(Comparison<object> comparison)
+    {
+        if (_tableView.ItemsSource is not System.Collections.IList list || list.Count < 2)
+        {
+            return;
+        }
+
+        var comparer = Comparer<object>.Create(comparison);
+        var items = list.Cast<object>();
+        var sorted = (_descending
+            ? items.OrderByDescending(x => x, comparer)
+            : items.OrderBy(x => x, comparer)).ToList(); // OrderBy is stable in both directions
+
+        var selectedItems = _tableView.SelectedItems?.Cast<object>().ToList() ?? new List<object>();
+        var selectedItem = _tableView.SelectedItem;
+
+        list.Clear();
+        foreach (var item in sorted)
+        {
+            list.Add(item);
+        }
+
+        foreach (var item in selectedItems)
+        {
+            _tableView.SelectedItems?.Add(item);
+        }
+
+        _tableView.SelectedItem = selectedItem;
+        if (selectedItem != null)
+        {
+            _tableView.ScrollIntoView(selectedItem);
+        }
+    }
+
+    private void UpdateHeaders()
+    {
+        foreach (var (column, originalHeader) in _originalHeaders)
+        {
+            column.Header = ReferenceEquals(column, _sortColumn)
+                ? $"{originalHeader} {(_descending ? "▼" : "▲")}"
+                : originalHeader;
+        }
+    }
+}
+
+/// <summary>
 /// Owns the full, ordered column list of a <see cref="TableView"/> and keeps the
 /// control's live <see cref="TableView.Columns"/> in sync with each
 /// <see cref="SeTableViewColumn.IsVisible"/>: hidden columns are removed from the
@@ -121,16 +223,20 @@ public sealed class TableViewColumnManager
 public static class TableViewExtras
 {
     /// <summary>
-    /// Creates a TableView with SE's standard look and behavior (multi-select,
-    /// resizable columns, tight row style).
+    /// Creates a TableView with SE's standard look and behavior (multi-select by
+    /// default, resizable columns, tight row style).
     /// </summary>
-    public static TableView MakeTableView(bool alwaysSelected = true)
+    public static TableView MakeTableView(bool alwaysSelected = true, bool multiSelect = true)
     {
+        var selectionMode = multiSelect ? SelectionMode.Multiple : SelectionMode.Single;
+        if (alwaysSelected)
+        {
+            selectionMode |= SelectionMode.AlwaysSelected;
+        }
+
         var tableView = new TableView
         {
-            SelectionMode = alwaysSelected
-                ? SelectionMode.Multiple | SelectionMode.AlwaysSelected
-                : SelectionMode.Multiple,
+            SelectionMode = selectionMode,
             CanUserResizeColumns = true,
             HorizontalAlignment = HorizontalAlignment.Stretch,
             VerticalAlignment = VerticalAlignment.Stretch,
@@ -188,6 +294,38 @@ public static class TableViewExtras
 
         tableView.ContainerPrepared += (_, e) => Apply(e.Container, e.Index, brush);
         tableView.ContainerIndexChanged += (_, e) => Apply(e.Container, e.NewIndex, brush);
+    }
+
+    /// <summary>
+    /// Space toggles the checkbox value of every selected row - all rows checked means
+    /// uncheck all, otherwise check all. This is the piece of the DataGrid-era
+    /// CheckboxMultiSelect helper that TableView does not provide natively (extended
+    /// selection itself is native ListBox behavior).
+    /// </summary>
+    public static void AddSpaceToggle<TItem>(TableView tableView, Func<TItem, bool> getChecked, Action<TItem, bool> setChecked)
+        where TItem : class
+    {
+        tableView.AddHandler(InputElement.KeyDownEvent, (object? _, KeyEventArgs e) =>
+        {
+            if (e.Key != Key.Space)
+            {
+                return;
+            }
+
+            var selected = tableView.SelectedItems?.OfType<TItem>().ToList();
+            if (selected == null || selected.Count == 0)
+            {
+                return;
+            }
+
+            var newValue = !selected.All(getChecked);
+            foreach (var item in selected)
+            {
+                setChecked(item, newValue);
+            }
+
+            e.Handled = true;
+        }, Avalonia.Interactivity.RoutingStrategies.Tunnel);
     }
 
     /// <summary>

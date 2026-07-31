@@ -27,7 +27,7 @@ public partial class CopyPasteTranslateViewModel : ObservableObject
     public Window? Window { get; set; }
 
     public bool OkPressed { get; private set; }
-    public DataGrid SubtitleGrid { get; internal set; }
+    public TableView SubtitleGrid { get; internal set; }
 
     private readonly IWindowService _windowService;
 
@@ -35,7 +35,7 @@ public partial class CopyPasteTranslateViewModel : ObservableObject
     {
         _windowService = windowService;
 
-        SubtitleGrid = new DataGrid();
+        SubtitleGrid = new TableView();
         Subtitles = new ObservableCollection<SubtitleLineViewModel>();
         Rows = new ObservableCollection<TranslateRow>();
         MaxBlockSize = Se.Settings.AutoTranslate.CopyPasteMaxBlockSize;
@@ -81,7 +81,7 @@ public partial class CopyPasteTranslateViewModel : ObservableObject
         }
 
         var log = new StringBuilder();
-        var selectedItems = SubtitleGrid.SelectedItems.Cast<SubtitleLineViewModel>().ToList();
+        var selectedItems = SubtitleGrid.SelectedItems?.Cast<SubtitleLineViewModel>().ToList() ?? new List<SubtitleLineViewModel>();
         var startIndex = selectedItems.Count <= 0 ? 0 : Subtitles.IndexOf(selectedItems[0]);
         var start = startIndex;
         var index = startIndex;
@@ -134,7 +134,7 @@ public partial class CopyPasteTranslateViewModel : ObservableObject
         Dispatcher.UIThread.Post(() =>
         {
             SubtitleGrid.SelectedIndex = index;
-            SubtitleGrid.ScrollIntoView(SubtitleGrid.SelectedItem, null);
+            SubtitleGrid.ScrollIntoView(index);
         });
     }
 
