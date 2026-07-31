@@ -19,7 +19,7 @@ namespace Nikse.SubtitleEdit.UiLogic.AutoTranslate
         public static string StaticName { get; set; } = "Perplexity";
         public override string ToString() => StaticName;
         public string Name => StaticName;
-        public string Url => "https://www.paerplexity.ai/";
+        public string Url => "https://www.perplexity.ai/";
         public string Error { get; set; }
         public int MaxCharacters => 1500;
 

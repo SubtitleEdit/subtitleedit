@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
+using Avalonia.Threading;
 using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.UiLogic.AutoTranslate;
 using Nikse.SubtitleEdit.UiLogic.Translate;
@@ -85,11 +86,16 @@ public abstract class AdvancedTranslatorBase : IAutoTranslator, IDisposable
         var map = await TranslateLinesAsync(lines, history, sourceLanguageCode, targetLanguageCode, cancellationToken);
         if (IsComplete(map, lines))
         {
-            for (var i = 0; i < count; i++)
+            // Runs on the background translation loop; the rows are DataGrid-bound, so the
+            // writes must happen on the UI thread.
+            Dispatcher.UIThread.Invoke(() =>
             {
-                var translation = map[i + 1];
-                rows[index + i].TranslatedText = translation.Length > 0 ? translation : rows[index + i].Text;
-            }
+                for (var i = 0; i < count; i++)
+                {
+                    var translation = map[i + 1];
+                    rows[index + i].TranslatedText = translation.Length > 0 ? translation : rows[index + i].Text;
+                }
+            });
 
             return count;
         }

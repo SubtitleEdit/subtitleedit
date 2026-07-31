@@ -554,6 +554,7 @@ public class AutoTranslateWindow : Window
 
         if (DataContext is AutoTranslateViewModel vm)
         {
+            vm.OnClosing();
             vm.SaveSettings();
             vm.PropertyChanged -= OnViewModelPropertyChanged;
         }
