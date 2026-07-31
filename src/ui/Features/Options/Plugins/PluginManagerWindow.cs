@@ -18,11 +18,11 @@ public class PluginManagerWindow : Window
     {
         _vm = vm;
         UiUtil.InitializeWindow(this, GetType().Name);
-        Title = Se.Language.Plugins.Title;
+        Title = Se.Language.Plugins.Title.Replace("_", string.Empty); // the language string doubles as a menu header, where "_" marks the access key
         CanResize = true;
-        Width = 650;
+        Width = 850;
         Height = 450;
-        MinWidth = 500;
+        MinWidth = 600;
         MinHeight = 300;
         vm.Window = this;
         DataContext = vm;
@@ -143,6 +143,9 @@ public class PluginManagerWindow : Window
 
         Activated += delegate { buttonClose.Focus(); };
         KeyDown += (_, e) => vm.OnKeyDown(e);
+
+        Closing += delegate { UiUtil.SaveWindowPosition(this); };
+        Loaded += delegate { UiUtil.RestoreWindowPosition(this); };
     }
 
     protected override void OnClosing(WindowClosingEventArgs e)
