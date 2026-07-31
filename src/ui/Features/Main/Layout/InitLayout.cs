@@ -1007,6 +1007,14 @@ public static partial class InitLayout
             dataGrid.Columns.Clear();
             dataGrid.ContextFlyout = null;
         }
+        // Handle TableView (the main subtitle grid) - clear data bindings and sources
+        else if (control is TableView tableView)
+        {
+            tableView.ItemsSource = null;
+            tableView.SelectedItem = null;
+            tableView.Columns.Clear();
+            tableView.ContextFlyout = null;
+        }
         // Handle TextBox - clear event handlers
         else if (control is TextBox textBox)
         {
