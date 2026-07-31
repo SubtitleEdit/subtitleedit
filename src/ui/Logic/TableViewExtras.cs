@@ -118,18 +118,35 @@ public sealed class TableViewHeaderSorter
             ? items.OrderByDescending(x => x, comparer)
             : items.OrderBy(x => x, comparer)).ToList(); // OrderBy is stable in both directions
 
-        var selectedItems = _tableView.SelectedItems?.Cast<object>().ToList() ?? new List<object>();
+        var selectedSet = new HashSet<object>(_tableView.SelectedItems?.Cast<object>() ?? Enumerable.Empty<object>());
         var selectedItem = _tableView.SelectedItem;
 
+        // Detach while refilling: per-item CollectionChanged handling on an attached
+        // 10k-row grid is far slower than one full reset (measured headless).
+        var itemsSource = _tableView.ItemsSource;
+        _tableView.ItemsSource = null;
         list.Clear();
         foreach (var item in sorted)
         {
             list.Add(item);
         }
 
-        foreach (var item in selectedItems)
+        _tableView.ItemsSource = itemsSource;
+
+        // Restore selection by index through the selection model - SelectedItems.Add
+        // does an O(n) IndexOf per item, which is quadratic on large selections.
+        if (selectedSet.Count > 0)
         {
-            _tableView.SelectedItems?.Add(item);
+            _tableView.Selection.BeginBatchUpdate();
+            for (var i = 0; i < sorted.Count && selectedSet.Count > 0; i++)
+            {
+                if (selectedSet.Remove(sorted[i]))
+                {
+                    _tableView.Selection.Select(i);
+                }
+            }
+
+            _tableView.Selection.EndBatchUpdate();
         }
 
         _tableView.SelectedItem = selectedItem;

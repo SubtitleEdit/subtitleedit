@@ -138,11 +138,7 @@ internal static class RightToLeftHelper
             return;
         }
 
-        if (visual is DataGrid dataGrid)
-        {
-            dataGrid.FlowDirection = flowDirection;
-        }
-        else if (visual is TableView tableView)
+        if (visual is TableView tableView)
         {
             tableView.FlowDirection = flowDirection;
         }

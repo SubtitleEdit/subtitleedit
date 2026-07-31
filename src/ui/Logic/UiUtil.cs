@@ -42,7 +42,7 @@ public static class UiUtil
     /// <summary>
     /// Grid lines for <see cref="TableView"/>, which - unlike DataGrid - has no
     /// GridLinesVisibility property. Drawn as cell borders from the same
-    /// Appearance.GridLinesAppearance setting (a <see cref="DataGridGridLinesVisibility"/>
+    /// Appearance.GridLinesAppearance setting (a <see cref="SeGridLinesVisibility"/>
     /// name) and compact-mode padding the DataGrid cell themes above use, so both
     /// controls honour the user's "Show grid lines" choice identically.
     /// </summary>
@@ -54,12 +54,12 @@ public static class UiUtil
     private static ControlTheme GetTableViewCellTheme(bool noPadding)
     {
         var showVertical =
-            Se.Settings.Appearance.GridLinesAppearance == nameof(DataGridGridLinesVisibility.Vertical) ||
-            Se.Settings.Appearance.GridLinesAppearance == nameof(DataGridGridLinesVisibility.All);
+            Se.Settings.Appearance.GridLinesAppearance == nameof(SeGridLinesVisibility.Vertical) ||
+            Se.Settings.Appearance.GridLinesAppearance == nameof(SeGridLinesVisibility.All);
 
         var showHorizontal =
-            Se.Settings.Appearance.GridLinesAppearance == nameof(DataGridGridLinesVisibility.Horizontal) ||
-            Se.Settings.Appearance.GridLinesAppearance == nameof(DataGridGridLinesVisibility.All);
+            Se.Settings.Appearance.GridLinesAppearance == nameof(SeGridLinesVisibility.Horizontal) ||
+            Se.Settings.Appearance.GridLinesAppearance == nameof(SeGridLinesVisibility.All);
 
         // Horizontal inset keeps text off the vertical grid line; the vertical inset sets the
         // row height, because ApplyTableViewRowStyle zeroes the row's own padding (the cell must
@@ -215,59 +215,7 @@ public static class UiUtil
             [!ContentPresenter.VerticalContentAlignmentProperty] = new TemplateBinding(ContentControl.VerticalContentAlignmentProperty),
         }.RegisterInNameScope(scope));
 
-    public static ControlTheme DataGridNoBorderCellTheme => GetDataGridNoBorderCellTheme();
 
-    private static ControlTheme GetDataGridNoBorderCellTheme()
-    {
-        var showVertical =
-            Se.Settings.Appearance.GridLinesAppearance == nameof(DataGridGridLinesVisibility.Vertical) ||
-            Se.Settings.Appearance.GridLinesAppearance == nameof(DataGridGridLinesVisibility.All);
-
-        var showHorizontal =
-            Se.Settings.Appearance.GridLinesAppearance == nameof(DataGridGridLinesVisibility.Horizontal) ||
-            Se.Settings.Appearance.GridLinesAppearance == nameof(DataGridGridLinesVisibility.All);
-
-        var compactMode = Se.Settings.Appearance.GridCompactMode;
-
-        return new ControlTheme(typeof(DataGridCell))
-        {
-            Setters =
-            {
-                new Setter(DataGridCell.BackgroundProperty, Brushes.Transparent),
-                new Setter(DataGridCell.FocusAdornerProperty, null),
-                new Setter(DataGridCell.PaddingProperty, new Thickness(compactMode ? 0 : 4)),
-                new Setter(DataGridCell.BorderBrushProperty, GetBorderBrush()),
-                new Setter(DataGridCell.BorderThicknessProperty,
-                    new Thickness(0, 0, showVertical ? 1 : 0, showHorizontal ? 1 : 0)), // vertical and horizontal lines
-            }
-        };
-    }
-
-    public static ControlTheme DataGridNoBorderNoPaddingCellTheme => GetDataGridNoBorderNoPaddingCellTheme();
-
-    private static ControlTheme GetDataGridNoBorderNoPaddingCellTheme()
-    {
-        var showVertical =
-            Se.Settings.Appearance.GridLinesAppearance == nameof(DataGridGridLinesVisibility.Vertical) ||
-            Se.Settings.Appearance.GridLinesAppearance == nameof(DataGridGridLinesVisibility.All);
-
-        var showHorizontal =
-            Se.Settings.Appearance.GridLinesAppearance == nameof(DataGridGridLinesVisibility.Horizontal) ||
-            Se.Settings.Appearance.GridLinesAppearance == nameof(DataGridGridLinesVisibility.All);
-
-        return new ControlTheme(typeof(DataGridCell))
-        {
-            Setters =
-            {
-                new Setter(DataGridCell.BackgroundProperty, Brushes.Transparent),
-                new Setter(DataGridCell.FocusAdornerProperty, null),
-                new Setter(DataGridCell.PaddingProperty, new Thickness(0)),
-                new Setter(DataGridCell.BorderBrushProperty, GetBorderBrush()),
-                new Setter(DataGridCell.BorderThicknessProperty,
-                    new Thickness(0, 0, showVertical ? 1 : 0, showHorizontal ? 1 : 0)), // vertical and horizontal lines
-            }
-        };
-    }
 
     // On macOS the default UI font's ascent sits right at the cap height, so Avalonia's line box
     // clips the dots on tall diacritics (Ä/Ö/Ü) at the top - in text boxes and grid cells alike
@@ -2989,14 +2937,14 @@ public static class UiUtil
         return Color.FromArgb(color.A, r, g, b);
     }
 
-    internal static DataGridGridLinesVisibility GetGridLinesVisibility()
+    internal static SeGridLinesVisibility GetGridLinesVisibility()
     {
         return Se.Settings.Appearance.GridLinesAppearance switch
         {
-            nameof(DataGridGridLinesVisibility.Horizontal) => DataGridGridLinesVisibility.Horizontal,
-            nameof(DataGridGridLinesVisibility.Vertical) => DataGridGridLinesVisibility.Vertical,
-            nameof(DataGridGridLinesVisibility.All) => DataGridGridLinesVisibility.All,
-            _ => DataGridGridLinesVisibility.None,
+            nameof(SeGridLinesVisibility.Horizontal) => SeGridLinesVisibility.Horizontal,
+            nameof(SeGridLinesVisibility.Vertical) => SeGridLinesVisibility.Vertical,
+            nameof(SeGridLinesVisibility.All) => SeGridLinesVisibility.All,
+            _ => SeGridLinesVisibility.None,
         };
     }
 
@@ -3449,30 +3397,4 @@ public static class UiUtil
     /// Makes Home/End jump to the first/last row of <paramref name="dataGrid"/> and select it.
     /// Avalonia's DataGrid only moves the cell cursor, which is why this is needed. Tunnel
     /// phase so the grid's own navigation does not consume the key first.
-    /// </summary>
-    public static void AttachHomeEndNavigation(DataGrid dataGrid)
-    {
-        if (dataGrid == null)
-        {
-            return;
-        }
-
-        dataGrid.AddHandler(InputElement.KeyDownEvent, (object? _, KeyEventArgs e) =>
-        {
-            if (e.Key is not (Key.Home or Key.End) || e.Source is TextBox)
-            {
-                return;
-            }
-
-            if (dataGrid.ItemsSource is not IList items || items.Count == 0)
-            {
-                return;
-            }
-
-            var target = e.Key == Key.Home ? items[0] : items[^1];
-            dataGrid.SelectedItem = target;
-            dataGrid.ScrollIntoView(target, null);
-            e.Handled = true;
-        }, RoutingStrategies.Tunnel);
-    }
 }

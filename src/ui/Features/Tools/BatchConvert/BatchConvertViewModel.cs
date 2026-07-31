@@ -237,7 +237,7 @@ public partial class BatchConvertViewModel : ObservableObject, IClosingCleanup
     [ObservableProperty] private bool _sortByDescending;
 
     public Window? Window { get; set; }
-    public DataGrid FileGrid { get; set; } = new();
+    public TableView FileGrid { get; set; } = new();
 
     public bool OkPressed { get; private set; }
     public ScrollViewer FunctionContainer { get; internal set; }
@@ -960,15 +960,20 @@ public partial class BatchConvertViewModel : ObservableObject, IClosingCleanup
         IsProgressVisible = true;
         IsConverting = true;
         AreControlsEnabled = false;
-        ProgressMaxValue = BatchItems.Count;
+        // Snapshot the job list: the loop below runs on a background thread while
+        // BatchItems stays live in the UI, where header-click sorting (and re-filtering)
+        // rebuilds the collection in place - enumerating the live collection there
+        // could throw mid-run. Status updates still reach the grid per item.
+        var itemsToConvert = BatchItems.ToList();
+        ProgressMaxValue = itemsToConvert.Count;
         _ = Task.Run(async () =>
         {
             var count = 1;
-            foreach (var batchItem in BatchItems)
+            foreach (var batchItem in itemsToConvert)
             {
                 var countDisplay = count;
-                ProgressText = string.Format(Se.Language.General.ConvertingXofYDotDoDot, countDisplay, BatchItems.Count);
-                ProgressValue = countDisplay / (double)BatchItems.Count;
+                ProgressText = string.Format(Se.Language.General.ConvertingXofYDotDoDot, countDisplay, itemsToConvert.Count);
+                ProgressValue = countDisplay / (double)itemsToConvert.Count;
 
                 if (batchItem.Format!.StartsWith("Transport Stream", StringComparison.Ordinal))
                 {
@@ -1003,7 +1008,7 @@ public partial class BatchConvertViewModel : ObservableObject, IClosingCleanup
 
             var end = DateTime.UtcNow.Ticks;
             var elapsed = new TimeSpan(end - start).TotalMilliseconds;
-            var message = string.Format(Se.Language.General.XFilesConvertedInY, BatchItems.Count, elapsed);
+            var message = string.Format(Se.Language.General.XFilesConvertedInY, itemsToConvert.Count, elapsed);
             if (_cancellationToken.IsCancellationRequested)
             {
                 message += Environment.NewLine + Se.Language.General.ConversionCancelledByUser;
@@ -1859,7 +1864,7 @@ public partial class BatchConvertViewModel : ObservableObject, IClosingCleanup
             return;
         }
 
-        var selectedItems = FileGrid.SelectedItems.Cast<BatchConvertItem>().ToList();
+        var selectedItems = FileGrid.SelectedItems?.Cast<BatchConvertItem>().ToList() ?? new List<BatchConvertItem>();
         if (selectedItems.Count == 0)
         {
             return;
@@ -2678,8 +2683,9 @@ public partial class BatchConvertViewModel : ObservableObject, IClosingCleanup
 
     internal void FileGridContextMenuOpening()
     {
-        IsRemoveVisible = FileGrid.SelectedItems.Count > 0;
-        IsOpenContainingFolderVisible = FileGrid.SelectedItems.Count == 1;
+        var selectedCount = FileGrid.SelectedItems?.Count ?? 0;
+        IsRemoveVisible = selectedCount > 0;
+        IsOpenContainingFolderVisible = selectedCount == 1;
     }
 
     internal void FileGridKeyDown(object? sender, KeyEventArgs e)

@@ -312,18 +312,11 @@ public static class UiTheme
 
     private static Styles? _scrollBarStyle;
     private static bool _scrollBarAllowAutoHide;
-    private static bool _dataGridScrollBarHandlerRegistered;
-
     /// <summary>
     /// Applies scrollbar visibility styles based on the OS preference.
     /// On macOS, reads "Show scroll bars" system setting. When set to "Always",
     /// forces always-expanded scrollbars. ListBox/ScrollViewer scrollbars respond to
-    /// AllowAutoHide=false via the style system. DataGrid sets AllowAutoHide=true on
-    /// its scrollbars at LocalValue priority in OnApplyTemplate, so a class handler on
-    /// Control.LoadedEvent overrides it at LocalValue priority after the fact.
-    /// Designed to be called once at startup. The LoadedEvent handler reads
-    /// _scrollBarAllowAutoHide dynamically, so a second call would update the field
-    /// and affect future DataGrid loads — but already-open DataGrids would not update.
+    /// AllowAutoHide=false via the style system. Designed to be called once at startup.
     /// </summary>
     public static void ApplyScrollBarStyle()
     {
@@ -357,23 +350,6 @@ public static class UiTheme
             },
         };
 
-        if (!_dataGridScrollBarHandlerRegistered)
-        {
-            _dataGridScrollBarHandlerRegistered = true;
-            // DataGrid.OnApplyTemplate sets AllowAutoHide=true on its internal scrollbars at
-            // LocalValue priority (0), which no style can override. By hooking Loaded (which
-            // fires after OnApplyTemplate), we set AllowAutoHide at LocalValue priority too —
-            // overriding the DataGrid's value. This causes UpdateIsExpandedState() to run and
-            // set IsExpanded accordingly, which makes the Fluent [IsExpanded=True] style apply
-            // the full expanded appearance (correct thumb size, color, visible arrows).
-            Control.LoadedEvent.AddClassHandler<DataGrid>((dg, _) =>
-            {
-                foreach (var sb in dg.GetVisualDescendants().OfType<Avalonia.Controls.Primitives.ScrollBar>())
-                {
-                    sb.AllowAutoHide = _scrollBarAllowAutoHide;
-                }
-            });
-        }
 
         Application.Current.Styles.Add(_scrollBarStyle);
     }
@@ -633,14 +609,6 @@ public static class UiTheme
                 }
             },
 
-            // DataGrid
-            new Style(x => x.OfType<DataGrid>())
-            {
-                Setters =
-                {
-                    new Setter(DataGrid.ForegroundProperty, new SolidColorBrush(foreColor))
-                }
-            },
 
             // Label
             new Style(x => x.OfType<Label>())
@@ -735,17 +703,8 @@ public static class UiTheme
                 }
             },
 
-            // DataGrid header
-            new Style(x => x.OfType<DataGridColumnHeader>())
-            {
-                Setters =
-                {
-                    new Setter(DataGridColumnHeader.BackgroundProperty, new SolidColorBrush(bgColorHeader)),
-                    new Setter(DataGridColumnHeader.ForegroundProperty, new SolidColorBrush(foreColor))
-                }
-            },
 
-            // TableView header - same brushes as the DataGrid header above
+            // TableView header
             new Style(x => x.OfType<TableViewColumnHeader>())
             {
                 Setters =
@@ -866,16 +825,8 @@ public static class UiTheme
                 }
             },
 
-            // DataGrid header
-            new Style(x => x.OfType<DataGridColumnHeader>())
-            {
-                Setters =
-                {
-                    new Setter(DataGridColumnHeader.BackgroundProperty, new SolidColorBrush(headerColor))
-                }
-            },
 
-            // TableView header - same brush as the DataGrid header above
+            // TableView header
             new Style(x => x.OfType<TableViewColumnHeader>())
             {
                 Setters =
@@ -990,16 +941,8 @@ public static class UiTheme
                 }
             },
 
-            // DataGrid header with pastel purple
-            new Style(x => x.OfType<DataGridColumnHeader>())
-            {
-                Setters =
-                {
-                    new Setter(DataGridColumnHeader.BackgroundProperty, new SolidColorBrush(lightPurple))
-                }
-            },
 
-            // TableView header - same brush as the DataGrid header above
+            // TableView header
             new Style(x => x.OfType<TableViewColumnHeader>())
             {
                 Setters =
