@@ -69,6 +69,13 @@ public static partial class InitListViewAndEditBox
         subtitleGrid.ItemsSource = vm.Subtitles;
         subtitleGrid.DataContext = vm.Subtitles;
         subtitleGrid.FontSize = Se.Settings.Appearance.SubtitleGridFontSize;
+
+        // Keep the vertical scrollbar at its full width instead of the thin
+        // expand-on-hover overlay: it then reserves its own layout space, so it never
+        // covers the outermost text column (the DataGrid needed an empty trailing
+        // gutter column for this, issue #12351) and it is an easier drag target.
+        ScrollViewer.SetAllowAutoHide(subtitleGrid, false);
+
         vm.SubtitleGrid = subtitleGrid;
         vm.SubtitleGridDragSelect = new TableViewDragSelect(subtitleGrid, vm.ApplyDragSelectRange);
 
@@ -534,27 +541,6 @@ public static partial class InitListViewAndEditBox
         {
             Mode = BindingMode.OneWay,
             Source = vm,
-        });
-
-        // A narrow empty trailing column that reserves space for the DataGrid's overlay
-        // vertical scrollbar, so the bar covers this gutter instead of the outermost text
-        // column (issue #12351). This is the same "give the scrollbar its own space"
-        // approach used for the shortcut key column in the Shortcuts window; a trailing
-        // column is used here (rather than a fixed cell margin) because right to left mode
-        // moves the scrollbar to the other side and mirrors the grid, so the gutter follows
-        // it automatically in both directions without leaving a gap between the Text and
-        // Original columns in translation mode. Kept out of AutoFitColumns so it stays this
-        // fixed width, and excluded from width persistence as a non-stretchy layout helper.
-        columnManager.Add(new SeTableViewColumn
-        {
-            Tag = SubtitleGridColumnKeys.ScrollbarGutter,
-            Header = string.Empty,
-            Width = new GridLength(20),
-            MinWidth = 0,
-            CanUserResize = false,
-            CellTheme = UiUtil.TableViewNoPaddingCellTheme,
-            HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
-            CellTemplate = new FuncDataTemplate<SubtitleLineViewModel>((value, nameScope) => new Border()),
         });
 
         RestoreSubtitleGridColumnWidths(columnManager);
@@ -1712,7 +1698,6 @@ public static partial class InitListViewAndEditBox
         public const string Wpm = "Wpm";
         public const string PixelWidth = "PixelWidth";
         public const string Layer = "Layer";
-        public const string ScrollbarGutter = "ScrollbarGutter";
     }
 
     // The stretchy text columns keep filling the window, so their width is never stored.
@@ -1754,7 +1739,6 @@ public static partial class InitListViewAndEditBox
         {
             if (column.Tag is string key
                 && !IsStretchyColumn(key)
-                && key != SubtitleGridColumnKeys.ScrollbarGutter
                 && column.ActualWidth > 0)
             {
                 widths[key] = column.ActualWidth;
