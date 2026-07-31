@@ -124,6 +124,13 @@ public static class TableViewExtras
             CanUserResizeColumns = true,
             HorizontalAlignment = HorizontalAlignment.Stretch,
             VerticalAlignment = VerticalAlignment.Stretch,
+
+            // The DataGrid had no background of its own, so SE's panel background showed
+            // through; TableView's theme paints SystemControlBackgroundChromeMediumLowBrush,
+            // which in dark mode is within a shade or two of the alternating-row tint
+            // (#2D2D2D) and swallowed it completely. Transparent restores the DataGrid
+            // backdrop so row tints contrast against the app background again.
+            Background = Brushes.Transparent,
         };
 
         UiUtil.ApplyTableViewRowStyle(tableView);
