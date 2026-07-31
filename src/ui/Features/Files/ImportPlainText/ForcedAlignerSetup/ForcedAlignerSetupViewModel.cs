@@ -185,5 +185,10 @@ public partial class ForcedAlignerSetupViewModel : ObservableObject
         {
             Cancel();
         }
+        else if (UiUtil.IsHelp(e))
+        {
+            e.Handled = true;
+            UiUtil.ShowHelp("features/import-plain-text", "align-time-codes-via-forced-aligner");
+        }
     }
 }

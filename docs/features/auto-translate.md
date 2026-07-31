@@ -74,6 +74,8 @@ Depending on the selected engine, you may need to provide:
 - **API URL** — Custom endpoint URL (for self-hosted services)
 - **Model** — Specific model to use (for AI engines)
 
+The **llama.cpp advanced** and **Ollama advanced** engines translate in batches with context, synopsis, and glossary support — see [Advanced Local Engines](auto-translate-advanced.md).
+
 ## Translation Review
 
 The translation grid shows the original text alongside the translated text. You can edit individual translations before accepting them.

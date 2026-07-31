@@ -2434,6 +2434,13 @@ public partial class BinaryEditViewModel : ObservableObject
             return;
         }
 
+        if (UiUtil.IsHelp(e))
+        {
+            e.Handled = true;
+            UiUtil.ShowHelp("features/binary-edit");
+            return;
+        }
+
         // Handle shortcuts
         _shortcutManager.OnKeyPressed(this, e);
         if (_shortcutManager.GetActiveKeys().Count == 0)
