@@ -66,7 +66,7 @@ public partial class FixCommonErrorsViewModel : ObservableObject, IFixCallbacks
     public SubtitleFormat Format { get; set; } = new SubRip();
     public Encoding Encoding { get; set; } = Encoding.UTF8;
     public string Language { get; set; } = "en";
-    public DataGrid GridSubtitles { get; internal set; }
+    public TableView GridSubtitles { get; internal set; }
 
     public Subtitle FixedSubtitle = new();
 
@@ -93,7 +93,7 @@ public partial class FixCommonErrorsViewModel : ObservableObject, IFixCallbacks
         _windowService = windowService;
         _ocrFixEngine = ocrFixEngine;
 
-        GridSubtitles = new DataGrid();
+        GridSubtitles = new TableView();
         SearchText = string.Empty;
         Languages = new ObservableCollection<LanguageDisplayItem>();
         Language = new string(' ', 0);
@@ -604,14 +604,26 @@ public partial class FixCommonErrorsViewModel : ObservableObject, IFixCallbacks
             paragraph.Text = string.Join(Environment.NewLine, paragraph.Text.SplitToLines());
         }
 
-        foreach (var fix in SelectedProfile.FixRules)
+        // The step-1 rules grid sorts its backing collection in place (TableViewHeaderSorter),
+        // so SelectedProfile.FixRules may be in a cosmetic display order. Rules are chained -
+        // e.g. empty lines are removed before the timing fixes run - so always execute them
+        // in the canonical order they were defined in (_allFixRules), never the sort order.
+        var canonicalOrder = new Dictionary<string, int>(_allFixRules.Count);
+        for (var i = 0; i < _allFixRules.Count; i++)
         {
-            if (fix.IsSelected)
-            {
-                var fixCommonError = fix.GetFixCommonErrorFunction();
-                _currentRunningRule = fix;
-                fixCommonError.Fix(subtitle, this);
-            }
+            canonicalOrder.TryAdd(_allFixRules[i].FixCommonErrorFunctionName, i);
+        }
+
+        var selectedRules = SelectedProfile.FixRules
+            .Where(f => f.IsSelected)
+            .OrderBy(f => canonicalOrder.TryGetValue(f.FixCommonErrorFunctionName, out var order) ? order : int.MaxValue)
+            .ToList(); // OrderBy is stable, so unknown rules keep their relative order at the end
+
+        foreach (var fix in selectedRules)
+        {
+            var fixCommonError = fix.GetFixCommonErrorFunction();
+            _currentRunningRule = fix;
+            fixCommonError.Fix(subtitle, this);
         }
 
         _currentRunningRule = null;
@@ -1032,7 +1044,7 @@ public partial class FixCommonErrorsViewModel : ObservableObject, IFixCallbacks
         if (p != null)
         {
             SelectedParagraph = p;
-            GridSubtitles.ScrollIntoView(GridSubtitles.SelectedItem, null);
+            GridSubtitles.ScrollIntoView(p);
         }
     }
 }
