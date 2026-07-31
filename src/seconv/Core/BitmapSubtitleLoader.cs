@@ -22,13 +22,19 @@ internal static class BitmapSubtitleLoader
     /// are the source-format's declared video frame dimensions when known — pass them
     /// to the output handler so e.g. Blu-Ray 1920x1080 stays at 1920x1080 rather than
     /// being squashed into the CLI's default <c>--resolution</c>. Null = caller picks.
+    /// <para>
+    /// <see cref="Position"/> is the bitmap's top-left corner in the source frame. Image
+    /// sources carry it per event (a top-positioned caption, a sign at the left edge), and
+    /// without it every re-export was re-centred at the bottom of the frame.
+    /// </para>
     /// </summary>
     public sealed record BitmapSubtitleItem(
         TimeCode StartTime,
         TimeCode EndTime,
         SKBitmap Bitmap,
         int? ScreenWidth = null,
-        int? ScreenHeight = null) : IDisposable
+        int? ScreenHeight = null,
+        SKPointI? Position = null) : IDisposable
     {
         public void Dispose() => Bitmap.Dispose();
     }
@@ -113,12 +119,16 @@ internal static class BitmapSubtitleLoader
             // 1115 zero-duration cues in the .sup export). MergeVobSubPacks has already
             // repaired EndTime for missing/negative/over-long delays — the same times the
             // GUI shows.
+            // GetPosition reads SubPicture.ImageDisplayArea, which is only filled in while
+            // decoding - so after GetBitmap above, never before.
+            var position = pack.GetPosition();
             items.Add(new BitmapSubtitleItem(
                 new TimeCode(pack.StartTime.TotalMilliseconds),
                 new TimeCode(pack.EndTime.TotalMilliseconds),
                 bmp,
                 screenWidth,
-                screenHeight));
+                screenHeight,
+                new SKPointI(position.Left, position.Top)));
         }
         WarnSkippedBitmaps(skipped, "VobSub");
         return items;
@@ -212,12 +222,14 @@ internal static class BitmapSubtitleLoader
             // are based on the SubPicture delay and only correct for .sub+.idx sources.
             // Screen size comes from the CodecPrivate "size:" line so an image output
             // (e.g. bluraysup) keeps the DVD frame instead of defaulting to 1920x1080.
+            var position = pack.GetPosition();
             items.Add(new BitmapSubtitleItem(
                 new TimeCode(pack.StartTime.TotalMilliseconds),
                 new TimeCode(pack.EndTime.TotalMilliseconds),
                 bmp,
                 screenWidth,
-                screenHeight));
+                screenHeight,
+                new SKPointI(position.Left, position.Top)));
         }
         WarnSkippedBitmaps(skipped, "MKV VobSub");
         if (items.Count == 0)
@@ -288,7 +300,10 @@ internal static class BitmapSubtitleLoader
             {
                 continue;
             }
-            items.Add(new BitmapSubtitleItem(paragraphs[i].StartTime, paragraphs[i].EndTime, bmp));
+            // ImageDisplayArea is filled in by GetBitmap above.
+            var displayArea = subPictures[i].ImageDisplayArea;
+            items.Add(new BitmapSubtitleItem(paragraphs[i].StartTime, paragraphs[i].EndTime, bmp,
+                Position: new SKPointI(displayArea.Left, displayArea.Top)));
         }
         if (items.Count == 0)
         {
@@ -329,10 +344,12 @@ internal static class BitmapSubtitleLoader
                 {
                     continue;
                 }
+                var position = dvb.GetPosition();
                 items.Add(new BitmapSubtitleItem(
                     new TimeCode(dvb.StartMilliseconds),
                     new TimeCode(dvb.EndMilliseconds),
-                    bmp));
+                    bmp,
+                    Position: new SKPointI(position.Left, position.Top)));
             }
             if (items.Count > 0)
             {
@@ -359,7 +376,9 @@ internal static class BitmapSubtitleLoader
             {
                 continue;
             }
-            items.Add(new BitmapSubtitleItem(pcs.StartTimeCode, pcs.EndTimeCode, bmp, screenWidth, screenHeight));
+            var position = pcs.GetPosition();
+            items.Add(new BitmapSubtitleItem(pcs.StartTimeCode, pcs.EndTimeCode, bmp, screenWidth, screenHeight,
+                new SKPointI(position.Left, position.Top)));
         }
         return items;
     }

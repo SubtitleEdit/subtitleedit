@@ -125,6 +125,16 @@ internal static class ImageOutputWriter
         var screenWidth = item.ScreenWidth ?? defaultWidth;
         var screenHeight = item.ScreenHeight ?? defaultHeight;
 
+        // The source's own position, in the frame the bitmap came from - kept as-is because
+        // the item's screen size travels with it. Handlers ignore a position outside the
+        // frame and fall back to the alignment below, so an unusable one costs nothing.
+        var position = item.Position;
+        if (position is { } p &&
+            (p.X < 0 || p.X >= screenWidth || p.Y < 0 || p.Y >= screenHeight))
+        {
+            position = null;
+        }
+
         var style = options.ImageStyle;
         return new ImageParameter
         {
@@ -134,6 +144,7 @@ internal static class ImageOutputWriter
             StartTime = item.StartTime.TimeSpan,
             EndTime = item.EndTime.TimeSpan,
             Alignment = style.Alignment,
+            OverridePosition = position,
             ContentAlignment = style.ContentAlignment,
             // Font/colour fields are still required by the ImageParameter contract even
             // though no rendering happens — handlers read them for metadata in some
