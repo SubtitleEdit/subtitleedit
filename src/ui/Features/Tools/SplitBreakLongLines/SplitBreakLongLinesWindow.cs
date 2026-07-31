@@ -14,6 +14,8 @@ namespace Nikse.SubtitleEdit.Features.Tools.SplitBreakLongLines;
 
 public class SplitBreakLongLinesWindow : Window
 {
+    private CheckBox _checkBoxSplitLongLines = null!;
+
     public SplitBreakLongLinesWindow(SplitBreakLongLinesViewModel vm)
     {
         UiUtil.InitializeWindow(this, GetType().Name);
@@ -55,7 +57,7 @@ public class SplitBreakLongLinesWindow : Window
 
         Content = grid;
 
-        Activated += delegate { buttonOk.Focus(); }; // hack to make OnKeyDown work
+        Activated += delegate { _checkBoxSplitLongLines.Focus(); }; // initial focus on an input, not an action button - a focused button clicks on bare Space
         KeyDown += vm.KeyDown;
         Loaded += (_, _)  => vm.Loaded();
 
@@ -63,7 +65,7 @@ public class SplitBreakLongLinesWindow : Window
         Loaded += delegate { UiUtil.RestoreWindowPosition(this); };
     }
 
-    private static Grid MakeControlsView(SplitBreakLongLinesViewModel vm)
+    private Grid MakeControlsView(SplitBreakLongLinesViewModel vm)
     {
         var grid = new Grid
         {
@@ -87,6 +89,7 @@ public class SplitBreakLongLinesWindow : Window
 
         var checkBoxSplitLongLines = UiUtil.MakeCheckBox(Se.Language.Tools.SplitBreakLongLines.SplitLongLines, vm, nameof(vm.SplitLongLines))
             .WithMarginRight(40);
+        _checkBoxSplitLongLines = checkBoxSplitLongLines;
         checkBoxSplitLongLines.IsCheckedChanged += (s, e) => vm.SetChanged();
 
         var checkBoxRebalanceLongLines = UiUtil.MakeCheckBox(Se.Language.Tools.SplitBreakLongLines.RebalanceLongLines, vm, nameof(vm.RebalanceLongLines))

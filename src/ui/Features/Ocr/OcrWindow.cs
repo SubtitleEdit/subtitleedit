@@ -253,7 +253,7 @@ public class OcrWindow : Window
                 UiUtil.MakeComboBox(vm.NOcrDatabases, vm, nameof(vm.SelectedNOcrDatabase), nameof(vm.IsNOcrVisible))
                     .WithMarginRight(0)
                     .BindIsEnabled(vm, nameof(OcrViewModel.IsOcrRunning), new InverseBooleanConverter()),
-                UiUtil.MakeButton(vm.ShowNOcrSettingsCommand, IconNames.Settings)
+                UiUtil.MakeButton(vm.ShowNOcrSettingsCommand, IconNames.Settings, Se.Language.General.Settings)
                     .WithMarginRight(20)
                     .WithMarginBottom(2)
                     .WithBottomAlignment()
@@ -275,7 +275,7 @@ public class OcrWindow : Window
                 UiUtil.MakeComboBox(vm.ImageCompareDatabases, vm, nameof(vm.SelectedImageCompareDatabase), nameof(vm.IsBinaryImageCompareVisible))
                     .WithMarginRight(0)
                     .BindIsEnabled(vm, nameof(OcrViewModel.IsOcrRunning), new InverseBooleanConverter()),
-                UiUtil.MakeButton(vm.ShowBinaryOcrSettingsCommand, IconNames.Settings)
+                UiUtil.MakeButton(vm.ShowBinaryOcrSettingsCommand, IconNames.Settings, Se.Language.General.Settings)
                     .WithMarginRight(20)
                     .WithMarginBottom(2)
                     .WithBottomAlignment()

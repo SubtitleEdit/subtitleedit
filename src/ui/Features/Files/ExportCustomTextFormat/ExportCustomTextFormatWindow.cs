@@ -56,17 +56,17 @@ public class ExportCustomTextFormatWindow : Window
             HorizontalAlignment = HorizontalAlignment.Stretch,
         };
 
-        grid.Add(MakeFormatsView(vm), 0);
+        grid.Add(MakeFormatsView(vm, out var formatsGrid), 0);
         grid.Add(MakePreviewView(vm), 0, 1);
         grid.Add(panelButtons, 2, 0, 1, 2);
 
         Content = grid;
 
-        Activated += delegate { buttonSaveAs.Focus(); }; // hack to make OnKeyDown work
+        Activated += delegate { TableViewExtras.FocusRow(formatsGrid); }; // initial focus on an input, not an action button - a focused button clicks on bare Space
         KeyDown += vm.OnKeyDown;
     }
 
-    private static Grid MakeFormatsView(ExportCustomTextFormatViewModel vm)
+    private static Grid MakeFormatsView(ExportCustomTextFormatViewModel vm, out TableView formatsGrid)
     {
         var grid = new Grid
         {
@@ -87,6 +87,7 @@ public class ExportCustomTextFormatWindow : Window
         grid.Add(UiUtil.MakeLabel(Se.Language.File.Export.CustomTextFormats), 0);
 
         var dataGrid = TableViewExtras.MakeTableView();
+        formatsGrid = dataGrid;
         dataGrid.Height = double.NaN; // auto size inside scroll viewer
         dataGrid.Margin = new Thickness(2);
         dataGrid.ItemsSource = vm.CustomFormats;

@@ -75,7 +75,7 @@ public class VideoOcrWindow : Window
 
         Content = grid;
 
-        Activated += delegate { buttonStart.Focus(); }; // hack to make OnKeyDown work
+        Activated += delegate { _comboEngine?.Focus(); }; // initial focus on an input, not an action button - a focused button clicks on bare Space
         Loaded += (s, e) => vm.OnLoaded();
         Closing += (s, e) => vm.OnClosing();
         AddHandler(KeyDownEvent, vm.OnKeyDownHandler, RoutingStrategies.Tunnel | RoutingStrategies.Bubble, handledEventsToo: false);

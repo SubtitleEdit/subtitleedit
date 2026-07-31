@@ -60,7 +60,7 @@ public class BatchConvertSettingsWindow : Window
             Width = 400,
         };
 
-        var buttonBrowse = UiUtil.MakeButtonBrowse(vm.BrowseOutputFolderCommand);
+        var buttonBrowse = UiUtil.MakeButtonBrowse(vm.BrowseOutputFolderCommand, accessibleName: Se.Language.General.UseOutputFolder);
 
         var panelOutputFolder = new StackPanel
         {
@@ -99,7 +99,7 @@ public class BatchConvertSettingsWindow : Window
         var labelOllamaModel = UiUtil.MakeLabel(Se.Language.General.Model).WithBindVisible(vm, nameof(vm.IsOllamaVisible)).WithMarginLeft(10);
         var comboBoxOllamaModels = UiUtil.MakeComboBox(vm.OllamaModels, vm, nameof(vm.SelectedOllamaModel))
             .WithBindVisible(nameof(vm.IsOllamaVisible));
-        var buttonOllamaModelBrowse = UiUtil.MakeButtonBrowse(vm.PickOllamaModelCommand, nameof(vm.IsOllamaVisible)).WithMarginLeft(3);
+        var buttonOllamaModelBrowse = UiUtil.MakeButtonBrowse(vm.PickOllamaModelCommand, nameof(vm.IsOllamaVisible), Se.Language.General.Model).WithMarginLeft(3);
         var labelLlamaCppModel = UiUtil.MakeLabel(Se.Language.General.Model).WithBindVisible(vm, nameof(vm.IsLlamaCppVisible)).WithMarginLeft(10);
         var comboBoxLlamaCppModels = UiUtil.MakeComboBox(vm.LlamaCppOcrModels, vm, nameof(vm.SelectedLlamaCppOcrModel))
             .WithBindVisible(nameof(vm.IsLlamaCppVisible));
@@ -175,7 +175,7 @@ public class BatchConvertSettingsWindow : Window
 
         Content = grid;
 
-        Activated += delegate { buttonOk.Focus(); }; // hack to make OnKeyDown work
+        Activated += delegate { comboBoxTargetEncoding.Focus(); }; // initial focus on an input, not an action button - a focused button clicks on bare Space
         KeyDown += (s, e) => vm.OnKeyDown(e);
     }
 }

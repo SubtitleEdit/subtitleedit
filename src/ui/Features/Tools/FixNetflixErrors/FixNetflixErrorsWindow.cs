@@ -17,6 +17,7 @@ namespace Nikse.SubtitleEdit.Features.Tools.FixNetflixErrors;
 public class FixNetflixErrorsWindow : Window
 {
     private readonly FixNetflixErrorsViewModel _vm;
+    private ComboBox _comboBoxLanguage = null!;
 
     public FixNetflixErrorsWindow(FixNetflixErrorsViewModel vm)
     {
@@ -85,14 +86,15 @@ public class FixNetflixErrorsWindow : Window
 
         Content = grid;
 
-        Activated += delegate { buttonOk.Focus(); }; // hack to make OnKeyDown work
+        Activated += delegate { _comboBoxLanguage.Focus(); }; // initial focus on an input, not an action button - a focused button clicks on bare Space
 
         Closing += delegate { UiUtil.SaveWindowPosition(this); };
         Loaded += delegate { UiUtil.RestoreWindowPosition(this); };
     }
 
-    private static Border MakeSettingsView(FixNetflixErrorsViewModel vm)
+    private Border MakeSettingsView(FixNetflixErrorsViewModel vm)
     {
+        _comboBoxLanguage = UiUtil.MakeComboBox(vm.Languages, vm, nameof(vm.SelectedLanguage));
         var panelTop = new StackPanel
         {
             Orientation = Orientation.Horizontal,
@@ -102,7 +104,7 @@ public class FixNetflixErrorsWindow : Window
             Children =
             {
                 UiUtil.MakeTextBlock(Se.Language.General.Language).WithMarginRight(5),
-                UiUtil.MakeComboBox(vm.Languages, vm, nameof(vm.SelectedLanguage))
+                _comboBoxLanguage
             }
         };
 

@@ -99,7 +99,7 @@ public class ImportCsvXlsxCustomColumnsWindow : Window
         Content = grid;
 
         vm.ColumnsRebuilt += (_, _) => RebuildSourceGridColumns(vm);
-        Activated += delegate { buttonOk.Focus(); };
+        Activated += delegate { TableViewExtras.FocusRow(_sourceGrid); }; // initial focus on an input, not an action button - a focused button clicks on bare Space
         KeyDown += (_, e) => vm.OnKeyDown(e);
     }
 

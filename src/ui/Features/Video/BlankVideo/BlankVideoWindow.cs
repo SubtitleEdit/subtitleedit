@@ -12,6 +12,7 @@ namespace Nikse.SubtitleEdit.Features.Video.BlankVideo;
 public class BlankVideoWindow : Window
 {
     private readonly BlankVideoViewModel _vm;
+    private NumericUpDown? _numericUpDownDuration;
 
     public BlankVideoWindow(BlankVideoViewModel vm)
     {
@@ -63,19 +64,20 @@ public class BlankVideoWindow : Window
 
         Content = grid;
 
-        Activated += delegate { buttonOk.Focus(); }; // hack to make OnKeyDown work
+        Activated += delegate { _numericUpDownDuration?.Focus(); }; // initial focus on an input, not an action button - a focused button clicks on bare Space
     }
 
-    private static Border MakeVideoSettingsView(BlankVideoViewModel vm)
+    private Border MakeVideoSettingsView(BlankVideoViewModel vm)
     {
         var labelDuration = UiUtil.MakeLabel(Se.Language.General.DurationMinutes);
         var numericUpDownDuration = UiUtil.MakeNumericUpDownInt(0, 10000, 0, 120, vm, nameof(vm.DurationMinutes));
+        _numericUpDownDuration = numericUpDownDuration;
 
         var labelResolution = UiUtil.MakeLabel(Se.Language.General.Resolution);
         var textBoxWidth = UiUtil.MakeTextBox(100, vm, nameof(vm.VideoWidth));
         var labelX = UiUtil.MakeLabel(Se.Language.Video.ResolutionSeparator);
         var textBoxHeight = UiUtil.MakeTextBox(100, vm, nameof(vm.VideoHeight));
-        var buttonResolution = UiUtil.MakeButtonBrowse(vm.BrowseResolutionCommand);
+        var buttonResolution = UiUtil.MakeButtonBrowse(vm.BrowseResolutionCommand, accessibleName: Se.Language.General.Resolution);
         var panelResolution = new StackPanel
         {
             Orientation = Orientation.Horizontal,
@@ -90,7 +92,7 @@ public class BlankVideoWindow : Window
         }.WithBindVisible(vm, nameof(vm.UseSourceResolution), new InverseBooleanConverter());
 
         var labelSourceResolution = UiUtil.MakeLabel(Se.Language.General.UseSourceResolution).WithBindVisible(vm, nameof(vm.UseSourceResolution));
-        var buttonResolutionSource = UiUtil.MakeButtonBrowse(vm.BrowseResolutionCommand);
+        var buttonResolutionSource = UiUtil.MakeButtonBrowse(vm.BrowseResolutionCommand, accessibleName: Se.Language.General.Resolution);
         var panelResolutionSource = new StackPanel
         {
             Orientation = Orientation.Horizontal,
@@ -162,7 +164,7 @@ public class BlankVideoWindow : Window
         };  
 
         var radioButtonImage = UiUtil.MakeRadioButton(Se.Language.General.Image, vm, nameof(vm.UseBackgroundImage), "background");
-        var buttonBrowseImage = UiUtil.MakeButtonBrowse(vm.BrowseImageCommand);
+        var buttonBrowseImage = UiUtil.MakeButtonBrowse(vm.BrowseImageCommand, accessibleName: Se.Language.General.Image);
         var labelImage = UiUtil.MakeLabel(string.Empty).WithBindText(vm, nameof(vm.BackgroundImageFileName));
         var panelImage = new StackPanel
         {

@@ -18,6 +18,8 @@ namespace Nikse.SubtitleEdit.Features.Tools.ApplyDurationLimits;
 
 public class ApplyDurationLimitsWindow : Window
 {
+    private CheckBox _checkBoxFixMinDuration = null!;
+
     public ApplyDurationLimitsWindow(ApplyDurationLimitsViewModel vm)
     {
         UiUtil.InitializeWindow(this, GetType().Name);
@@ -61,14 +63,14 @@ public class ApplyDurationLimitsWindow : Window
 
         Content = grid;
 
-        Activated += delegate { buttonOk.Focus(); }; // hack to make OnKeyDown work
+        Activated += delegate { _checkBoxFixMinDuration.Focus(); }; // initial focus on an input, not an action button - a focused button clicks on bare Space
         KeyDown += vm.KeyDown;
 
         Closing += delegate { UiUtil.SaveWindowPosition(this); };
         Loaded += delegate { UiUtil.RestoreWindowPosition(this); };
     }
 
-    private static Grid MakeControlsView(ApplyDurationLimitsViewModel vm)
+    private Grid MakeControlsView(ApplyDurationLimitsViewModel vm)
     {
         var grid = new Grid
         {
@@ -88,6 +90,7 @@ public class ApplyDurationLimitsWindow : Window
         };
 
         var checkBoxFixMinDuration = UiUtil.MakeCheckBox(Se.Language.Tools.ApplyDurationLimits.FixMinDurationMs, vm, nameof(vm.FixMinDurationMs));
+        _checkBoxFixMinDuration = checkBoxFixMinDuration;
         checkBoxFixMinDuration.IsCheckedChanged += (s, e) => vm.SetChanged();
         var numericUpDownMinDuration = UiUtil.MakeNumericUpDownInt(1, 10000, 1000, 150, vm, nameof(vm.MinDurationMs))
                 .WithBindEnabled(nameof(vm.FixMinDurationMs));

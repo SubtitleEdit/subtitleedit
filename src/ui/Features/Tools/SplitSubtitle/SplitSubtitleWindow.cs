@@ -13,6 +13,8 @@ namespace Nikse.SubtitleEdit.Features.Tools.SplitSubtitle;
 
 public class SplitSubtitleWindow : Window
 {
+    private TextBox _textBoxOutputFolder = null!;
+
     public SplitSubtitleWindow(SplitSubtitleViewModel vm)
     {
         UiUtil.InitializeWindow(this, GetType().Name);
@@ -56,16 +58,17 @@ public class SplitSubtitleWindow : Window
 
         Content = grid;
 
-        Activated += delegate { buttonOk.Focus(); }; // hack to make OnKeyDown work
+        Activated += delegate { _textBoxOutputFolder.Focus(); }; // initial focus on an input, not an action button - a focused button clicks on bare Space
         KeyDown += vm.KeyDown;
     }
 
-    private static Border MakeInputOutputView(SplitSubtitleViewModel vm)
+    private Border MakeInputOutputView(SplitSubtitleViewModel vm)
     {
         var labelSubtitleInfo = UiUtil.MakeLabel().WithBindText(vm, nameof(vm.SubtitleInfo));
 
         var labelOutputFolder = UiUtil.MakeLabel(Se.Language.General.OutputFolder).WithMinWidth(100);
         var textBoxOutputFolder = UiUtil.MakeTextBox(450, vm, nameof(vm.OutputFolder));
+        _textBoxOutputFolder = textBoxOutputFolder;
         var buttonBrowse = UiUtil.MakeBrowseButton(vm.BrowseCommand);
         var buttonOpen = UiUtil.MakeButton(vm.OpenFolderCommand, IconNames.FolderOpen, Se.Language.General.OpenOutputFolder);
         var panelOutputFolder = new StackPanel

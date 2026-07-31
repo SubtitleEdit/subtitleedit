@@ -62,7 +62,8 @@ public class SsaStylesWindow : Window
 
         Content = grid;
 
-        Activated += delegate { buttonOk.Focus(); }; // hack to make OnKeyDown work
+        // initial focus on an input, not an action button - a focused button clicks on bare Space
+        Activated += delegate { TableViewExtras.FocusRow(vm.FileStyleGrid); };
         KeyDown += vm.KeyDown;
 
         Closing += delegate { UiUtil.SaveWindowPosition(this); };

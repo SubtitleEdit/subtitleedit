@@ -41,7 +41,7 @@ public class TransparentSettingsWindow : Window
             Width = 400,
         };
 
-        var buttonBrowse = UiUtil.MakeButtonBrowse(vm.BrowseOutputFolderCommand);
+        var buttonBrowse = UiUtil.MakeButtonBrowse(vm.BrowseOutputFolderCommand, accessibleName: "Use output folder");
 
         var panelOutputFolder = new StackPanel
         {
@@ -86,7 +86,7 @@ public class TransparentSettingsWindow : Window
 
         Content = grid;
 
-        Activated += delegate { buttonOk.Focus(); }; // hack to make OnKeyDown work
+        Activated += delegate { checkBoxUseSourceFolder.Focus(); }; // initial focus on an input, not an action button - a focused button clicks on bare Space
         KeyDown += (_, e) => vm.OnKeyDown(e);
     }
 }

@@ -75,7 +75,14 @@ public class ShotChangesWindow : Window
 
         Content = grid;
 
-        Activated += delegate { buttonOk.Focus(); }; // hack to make OnKeyDown work
+        Activated += delegate
+        {
+            // initial focus on an input, not an action button - a focused button clicks on bare Space
+            if (vm.FfmpegLinesGrid != null)
+            {
+                TableViewExtras.FocusRow(vm.FfmpegLinesGrid);
+            }
+        };
     }
 
     private static Grid MakeGenerateView(ShotChangesViewModel vm)

@@ -28,7 +28,7 @@ public class EmbeddedSubtitlesEditMp4Window : Window
         var labelVideoFileName = UiUtil.MakeLabel(Se.Language.General.VideoFile);
         var textBoxVideoFileName = UiUtil.MakeTextBox(double.NaN, vm, nameof(vm.VideoFileName)).WithHorizontalAlignmentStretch();
         textBoxVideoFileName.IsReadOnly = true;
-        var buttonBrowseVideoFile = UiUtil.MakeButtonBrowse(vm.BrowseVideoFileCommand);
+        var buttonBrowseVideoFile = UiUtil.MakeButtonBrowse(vm.BrowseVideoFileCommand, accessibleName: Se.Language.General.VideoFile);
         var gridVideoFile = new Grid
         {
             ColumnDefinitions =
@@ -82,7 +82,7 @@ public class EmbeddedSubtitlesEditMp4Window : Window
 
         Content = grid;
 
-        Activated += delegate { buttonGenerate.Focus(); }; // hack to make OnKeyDown work
+        Activated += delegate { textBoxVideoFileName.Focus(); }; // initial focus on an input, not an action button - a focused button clicks on bare Space
         Loaded += (s, e) => vm.OnLoaded();
         Closing += (s, e) => vm.OnClosing();
         KeyDown += (s, e) => vm.OnKeyDown(e);

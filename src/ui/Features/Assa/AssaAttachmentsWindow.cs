@@ -63,20 +63,21 @@ public class AssaAttachmentsWindow : Window
 
         grid.Add(labelFontsAndImages, 0);
         grid.Add(previewLine, 0, 1);
-        grid.Add(MakeLeftView(vm), 1);
+        grid.Add(MakeLeftView(vm, out var attachmentsGrid), 1);
         grid.Add(MakeRightView(vm), 1, 1);
         grid.Add(panelButtons, 3, 0, 1, 2);
 
         Content = grid;
 
-        Activated += delegate { buttonOk.Focus(); }; // hack to make OnKeyDown work
+        // initial focus on an input, not an action button - a focused button clicks on bare Space
+        Activated += delegate { TableViewExtras.FocusRow(attachmentsGrid); };
         KeyDown += vm.KeyDown;
 
         Closing += delegate { UiUtil.SaveWindowPosition(this); };
         Loaded += delegate { UiUtil.RestoreWindowPosition(this); };
     }
 
-    private static Border MakeLeftView(AssaAttachmentsViewModel vm)
+    private static Border MakeLeftView(AssaAttachmentsViewModel vm, out TableView tableView)
     {
         var grid = new Grid
         {
@@ -96,6 +97,7 @@ public class AssaAttachmentsWindow : Window
         // footer ([Fonts]/[Graphics] sections) in list order on OK, so the collection
         // order is not presentation-only.
         var dataGrid = TableViewExtras.MakeTableView(multiSelect: false);
+        tableView = dataGrid;
         dataGrid.DataContext = vm;
         dataGrid.ItemsSource = vm.Attachments;
 

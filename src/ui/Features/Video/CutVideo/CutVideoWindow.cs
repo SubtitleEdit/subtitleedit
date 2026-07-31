@@ -54,7 +54,7 @@ public class CutVideoWindow : Window
 
         var buttonGenerate = UiUtil.MakeButton(Se.Language.General.Generate, vm.GenerateCommand)
             .WithBindEnabled(nameof(vm.IsGenerating), new InverseBooleanConverter());
-        var buttonConfig = UiUtil.MakeButton(vm.OkCommand, IconNames.Settings)
+        var buttonConfig = UiUtil.MakeButton(vm.OkCommand, IconNames.Settings, Se.Language.General.Settings)
             .WithMarginRight(5)
             .WithBindEnabled(nameof(vm.IsGenerating), new InverseBooleanConverter());
         var buttonPanel = UiUtil.MakeButtonBar(
@@ -95,7 +95,14 @@ public class CutVideoWindow : Window
 
         Content = grid;
 
-        Activated += delegate { buttonGenerate.Focus(); }; // hack to make OnKeyDown work
+        Activated += delegate
+        {
+            // initial focus on an input, not an action button - a focused button clicks on bare Space
+            if (vm.SegmentGrid != null)
+            {
+                TableViewExtras.FocusRow(vm.SegmentGrid);
+            }
+        };
         Loaded += (s, e) => vm.OnLoaded();
         Closing += (s, e) => vm.OnClosing();
         AddHandler(KeyDownEvent, vm.OnKeyDownHandler, RoutingStrategies.Tunnel | RoutingStrategies.Bubble, handledEventsToo: false);

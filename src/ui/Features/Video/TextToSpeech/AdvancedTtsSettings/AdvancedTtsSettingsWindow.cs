@@ -25,16 +25,18 @@ public class AdvancedTtsSettingsWindow : Window
         vm.Window = this;
         DataContext = vm;
 
+        var sectionProAudio = MakeSection(vm,
+            Se.Language.Video.TextToSpeech.ProAudioPostProcessing,
+            nameof(vm.DoProAudioChain),
+            Se.Language.Video.TextToSpeech.ProAudioPostProcessingDescription);
+
         var content = new StackPanel
         {
             Margin = UiUtil.MakeWindowMargin(),
             Spacing = 5,
             Children =
             {
-                MakeSection(vm,
-                    Se.Language.Video.TextToSpeech.ProAudioPostProcessing,
-                    nameof(vm.DoProAudioChain),
-                    Se.Language.Video.TextToSpeech.ProAudioPostProcessingDescription),
+                sectionProAudio,
 
                 MakeSection(vm,
                     Se.Language.Video.TextToSpeech.AudioDucking,
@@ -93,7 +95,8 @@ public class AdvancedTtsSettingsWindow : Window
 
         Content = mainPanel;
 
-        Activated += delegate { buttonOk.Focus(); };
+        // initial focus on an input, not an action button - a focused button clicks on bare Space
+        Activated += delegate { (sectionProAudio.Children[0] as CheckBox)?.Focus(); };
     }
 
     private static StackPanel MakeSection(AdvancedTtsSettingsViewModel vm, string title, string checkBoxBinding, string description,

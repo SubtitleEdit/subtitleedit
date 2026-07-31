@@ -64,7 +64,8 @@ public class PickOllamaModelWindow : Window
 
         Content = grid;
 
-        Activated += delegate { buttonOk.Focus(); }; // hack to make OnKeyDown work
+        // initial focus on an input, not an action button - a focused button clicks on bare Space
+        Activated += delegate { listBox.Focus(); };
         KeyDown += (_, e) => vm.OnKeyDown(e);
     }
 }

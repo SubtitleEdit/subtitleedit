@@ -14,6 +14,7 @@ namespace Nikse.SubtitleEdit.Features.Video.ReEncodeVideo;
 public class ReEncodeVideoWindow : Window
 {
     private readonly ReEncodeVideoViewModel _vm;
+    private ComboBox? _comboBoxFrameRate;
 
     public ReEncodeVideoWindow(ReEncodeVideoViewModel vm)
     {
@@ -81,16 +82,16 @@ public class ReEncodeVideoWindow : Window
 
         Content = grid;
 
-        Activated += delegate { buttonGenerate.Focus(); }; // hack to make OnKeyDown work
+        Activated += delegate { _comboBoxFrameRate?.Focus(); }; // initial focus on an input, not an action button - a focused button clicks on bare Space
     }
 
-    private static Border MakeVideoSettingsView(ReEncodeVideoViewModel vm)
+    private Border MakeVideoSettingsView(ReEncodeVideoViewModel vm)
     {
         var labelResolution = UiUtil.MakeLabel(Se.Language.General.Resolution);
         var textBoxWidth = UiUtil.MakeTextBox(100, vm, nameof(vm.VideoWidth));
         var labelX = UiUtil.MakeLabel("x");
         var textBoxHeight = UiUtil.MakeTextBox(100, vm, nameof(vm.VideoHeight));
-        var buttonResolution = UiUtil.MakeButtonBrowse(vm.BrowseResolutionCommand);
+        var buttonResolution = UiUtil.MakeButtonBrowse(vm.BrowseResolutionCommand, accessibleName: Se.Language.General.Resolution);
         var panelResolution = new StackPanel
         {
             Orientation = Orientation.Horizontal,
@@ -105,7 +106,7 @@ public class ReEncodeVideoWindow : Window
         }.WithBindVisible(vm, nameof(vm.UseSourceResolution), new InverseBooleanConverter());
 
         var labelSourceResolution = UiUtil.MakeLabel(Se.Language.General.UseSourceResolution).WithBindVisible(vm, nameof(vm.UseSourceResolution));
-        var buttonResolutionSource = UiUtil.MakeButtonBrowse(vm.BrowseResolutionCommand);
+        var buttonResolutionSource = UiUtil.MakeButtonBrowse(vm.BrowseResolutionCommand, accessibleName: Se.Language.General.Resolution);
         var panelResolutionSource = new StackPanel
         {
             Orientation = Orientation.Horizontal,
@@ -119,6 +120,7 @@ public class ReEncodeVideoWindow : Window
 
         var labelFrameRate = UiUtil.MakeLabel(Se.Language.General.FrameRate);
         var comboBoxFrameRate = UiUtil.MakeComboBox(vm.FrameRates, vm, nameof(vm.SelectedFrameRate));
+        _comboBoxFrameRate = comboBoxFrameRate;
 
         var labelVideoExtension = UiUtil.MakeLabel(Se.Language.General.VideoExtension);
         var comboBoxVideoExtensions = UiUtil.MakeComboBox(vm.VideoExtensions, vm, nameof(vm.SelectedVideoExtension));

@@ -235,7 +235,10 @@ public class MessageBox : Window
         grid.ContextFlyout = contextMenu;
         UiUtil.AttachMacContextFlyoutHandler(this, grid);
 
-        Activated += delegate { buttonPanel.Children[0].Focus(); }; // hack to make OnKeyDown work
+        // Focus the last button (buttons are added positive-first, so the last one is the
+        // negative/cancel choice) - a focused button clicks on bare Space, and focusing e.g.
+        // "Yes" in a Yes/No box would make Space answer Yes by accident.
+        Activated += delegate { buttonPanel.Children[buttonPanel.Children.Count - 1].Focus(); };
 
         UiTheme.ApplyScaleToWindow(this);
     }

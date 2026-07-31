@@ -238,16 +238,11 @@ public class BatchConvertWindow : Window
             handledEventsToo: true);
         comboBoxSubtitleFormat.Width = 240;
 
-        var buttonTargetFormatSettings = UiUtil.MakeButton(vm.ShowTargetFormatSettingsCommand, IconNames.Settings)
+        var buttonTargetFormatSettings = UiUtil.MakeButton(vm.ShowTargetFormatSettingsCommand, IconNames.Settings, Se.Language.Tools.BatchConvert.TargetFormatSettings)
             .WithMarginLeft(5)
             .WithMarginRight(5);
         buttonTargetFormatSettings.WithBindIsVisible(vm, nameof(vm.IsTargetFormatSettingsVisible));
-        var buttonSettings = UiUtil.MakeButton(vm.ShowOutputPropertiesCommand, IconNames.Settings).WithMarginLeft(15).WithMarginRight(5);
-        if (Se.Settings.Appearance.ShowHints)
-        {
-            ToolTip.SetTip(buttonTargetFormatSettings, Se.Language.Tools.BatchConvert.TargetFormatSettings);
-            ToolTip.SetTip(buttonSettings, Se.Language.General.Settings);
-        }
+        var buttonSettings = UiUtil.MakeButton(vm.ShowOutputPropertiesCommand, IconNames.Settings, Se.Language.General.Settings).WithMarginLeft(15).WithMarginRight(5);
 
         var panelFileControls = new StackPanel
         {

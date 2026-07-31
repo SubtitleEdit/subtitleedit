@@ -61,7 +61,8 @@ public class AssaStylesWindow : Window
 
         Content = grid;
 
-        Activated += delegate { buttonOk.Focus(); }; // hack to make OnKeyDown work
+        // initial focus on an input, not an action button - a focused button clicks on bare Space
+        Activated += delegate { TableViewExtras.FocusRow(vm.FileStyleGrid); };
         KeyDown += vm.KeyDown;
 
         Closing += delegate { UiUtil.SaveWindowPosition(this); };
@@ -443,7 +444,7 @@ public class AssaStylesWindow : Window
 
         var labelFontName = UiUtil.MakeLabel(Se.Language.General.FontName);
         var comboBoxFontName = UiUtil.MakeComboBox(vm.Fonts, vm, nameof(vm.CurrentStyle) + "." + nameof(StyleDisplay.FontName)).WithMinWidth(150);
-        var buttonFontBrowse = UiUtil.MakeButtonBrowse(vm.BrowseFontNameCommand);
+        var buttonFontBrowse = UiUtil.MakeButtonBrowse(vm.BrowseFontNameCommand, null, Se.Language.General.FontName);
         var labelFontSize = UiUtil.MakeLabel(Se.Language.General.FontSize);
         var numericUpDownFontSize = UiUtil.MakeNumericUpDownOneDecimal(1, 1000, 130, vm, nameof(vm.CurrentStyle) + "." + nameof(StyleDisplay.FontSize));
         numericUpDownFontSize.Increment = 1;

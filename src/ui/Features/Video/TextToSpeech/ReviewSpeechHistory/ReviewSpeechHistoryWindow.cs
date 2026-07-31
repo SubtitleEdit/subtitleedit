@@ -12,6 +12,8 @@ namespace Nikse.SubtitleEdit.Features.Video.TextToSpeech.ElevenLabsSettings;
 
 public class ReviewSpeechHistoryWindow : Window
 {
+    private TableView? _tableView;
+
     public ReviewSpeechHistoryWindow(ReviewSpeechHistoryViewModel vm)
     {
         UiUtil.InitializeWindow(this, GetType().Name);
@@ -51,15 +53,23 @@ public class ReviewSpeechHistoryWindow : Window
 
         Content = grid;
 
-        Activated += delegate { buttonOk.Focus(); }; // hack to make OnKeyDown work
+        Activated += delegate
+        {
+            // initial focus on an input, not an action button - a focused button clicks on bare Space
+            if (_tableView != null)
+            {
+                TableViewExtras.FocusRow(_tableView);
+            }
+        };
         KeyDown += (s, e) => vm.OnKeyDown(e);
         Closing += (s, e) => vm.OnWindowClosing(e); 
         Loaded += (s, e) => vm.OnWindowLoaded();
     }
 
-    private static Border MakeHistoryGrid(ReviewSpeechHistoryViewModel vm)
+    private Border MakeHistoryGrid(ReviewSpeechHistoryViewModel vm)
     {
         var tableView = TableViewExtras.MakeTableView(multiSelect: false);
+        _tableView = tableView;
         tableView.Margin = new Thickness(0, 10, 0, 0);
         tableView.Width = double.NaN;
         tableView.Height = double.NaN;

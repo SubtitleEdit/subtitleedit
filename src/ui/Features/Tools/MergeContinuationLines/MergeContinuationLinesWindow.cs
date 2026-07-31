@@ -16,6 +16,8 @@ namespace Nikse.SubtitleEdit.Features.Tools.MergeContinuationLines;
 
 public class MergeContinuationLinesWindow : Window
 {
+    private NumericUpDown _numericGap = null!;
+
     public MergeContinuationLinesWindow(MergeContinuationLinesViewModel vm)
     {
         UiUtil.InitializeWindow(this, GetType().Name);
@@ -59,7 +61,7 @@ public class MergeContinuationLinesWindow : Window
 
         Content = grid;
 
-        Activated += delegate { buttonOk.Focus(); };
+        Activated += delegate { _numericGap.Focus(); }; // initial focus on an input, not an action button - a focused button clicks on bare Space
         KeyDown += vm.KeyDown;
         Loaded += delegate { vm.Loaded(); };
 
@@ -67,7 +69,7 @@ public class MergeContinuationLinesWindow : Window
         Loaded += delegate { UiUtil.RestoreWindowPosition(this); };
     }
 
-    private static Grid MakeControlsView(MergeContinuationLinesViewModel vm)
+    private Grid MakeControlsView(MergeContinuationLinesViewModel vm)
     {
         var grid = new Grid
         {
@@ -89,6 +91,7 @@ public class MergeContinuationLinesWindow : Window
 
         var labelGap = UiUtil.MakeLabel(Se.Language.Tools.MergeContinuationLines.MaxMillisecondsBetweenLines);
         var numericGap = UiUtil.MakeNumericUpDownInt(0, 10000, 250, 150, vm, nameof(vm.MaxMillisecondsBetweenLines));
+        _numericGap = numericGap;
         numericGap.ValueChanged += (_, _) => vm.SetChanged();
 
         var labelMax = UiUtil.MakeLabel(Se.Language.Tools.MergeContinuationLines.MaxCharacters);

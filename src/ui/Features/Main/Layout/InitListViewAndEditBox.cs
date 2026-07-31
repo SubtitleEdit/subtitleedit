@@ -1604,61 +1604,37 @@ public static partial class InitListViewAndEditBox
 
         if (Se.Settings.Appearance.TextBoxShowButtonAutoBreak)
         {
-            var autoBreakButton = UiUtil.MakeButton(vm.AutoBreakCommand, IconNames.ScaleBalance);
-            if (Se.Settings.Appearance.ShowHints)
-            {
-                ToolTip.SetTip(autoBreakButton, Se.Language.Main.AutoBreakHint);
-            }
+            var autoBreakButton = UiUtil.MakeButton(vm.AutoBreakCommand, IconNames.ScaleBalance, Se.Language.Main.AutoBreakHint);
             buttonPanel.Children.Add(autoBreakButton);
         }
 
         if (Se.Settings.Appearance.TextBoxShowButtonUnbreak)
         {
-            var unbreakButton = UiUtil.MakeButton(vm.UnbreakCommand, IconNames.SetMerge);
-            if (Se.Settings.Appearance.ShowHints)
-            {
-                ToolTip.SetTip(unbreakButton, Se.Language.Main.UnbreakHint);
-            }
+            var unbreakButton = UiUtil.MakeButton(vm.UnbreakCommand, IconNames.SetMerge, Se.Language.Main.UnbreakHint);
             buttonPanel.Children.Add(unbreakButton);
         }
 
         if (Se.Settings.Appearance.TextBoxShowButtonItalic)
         {
-            var italicButton = UiUtil.MakeButton(vm.ToggleLinesItalicOrSelectedTextCommand, IconNames.Italic);
-            if (Se.Settings.Appearance.ShowHints)
-            {
-                ToolTip.SetTip(italicButton, Se.Language.Main.ItalicHint);
-            }
+            var italicButton = UiUtil.MakeButton(vm.ToggleLinesItalicOrSelectedTextCommand, IconNames.Italic, Se.Language.Main.ItalicHint);
             buttonPanel.Children.Add(italicButton);
         }
 
         if (Se.Settings.Appearance.TextBoxShowButtonColor)
         {
-            var colorButton = UiUtil.MakeButton(vm.ShowColorPickerCommand, IconNames.Palette);
-            if (Se.Settings.Appearance.ShowHints)
-            {
-                ToolTip.SetTip(colorButton, Se.Language.Main.ColorHint);
-            }
+            var colorButton = UiUtil.MakeButton(vm.ShowColorPickerCommand, IconNames.Palette, Se.Language.Main.ColorHint);
             buttonPanel.Children.Add(colorButton);
         }
 
         if (Se.Settings.Appearance.TextBoxShowButtonRemoveFormatting)
         {
-            var removeFormattingButton = UiUtil.MakeButton(vm.RemoveFormattingAllCommand, IconNames.FormatClear);
-            if (Se.Settings.Appearance.ShowHints)
-            {
-                ToolTip.SetTip(removeFormattingButton, Se.Language.Main.RemoveFormattingHint);
-            }
+            var removeFormattingButton = UiUtil.MakeButton(vm.RemoveFormattingAllCommand, IconNames.FormatClear, Se.Language.Main.RemoveFormattingHint);
             buttonPanel.Children.Add(removeFormattingButton);
         }
 
         if (Se.Settings.Appearance.TextBoxShowButtonAiAssistant)
         {
-            var aiAssistantButton = UiUtil.MakeButton(vm.ShowAiAssistantCommand, IconNames.Robot);
-            if (Se.Settings.Appearance.ShowHints)
-            {
-                ToolTip.SetTip(aiAssistantButton, Se.Language.Tools.AiAssistant.Hint);
-            }
+            var aiAssistantButton = UiUtil.MakeButton(vm.ShowAiAssistantCommand, IconNames.Robot, Se.Language.Tools.AiAssistant.Hint);
             buttonPanel.Children.Add(aiAssistantButton);
         }
 

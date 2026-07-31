@@ -180,7 +180,8 @@ public class AssaSetPositionWindow : Window
 
         Content = grid;
 
-        Activated += delegate { buttonOk.Focus(); };
+        // initial focus on an input, not an action button - a focused button clicks on bare Space
+        Activated += delegate { numericRotation.Focus(); };
         KeyDown += vm.KeyDown;
     }
 }

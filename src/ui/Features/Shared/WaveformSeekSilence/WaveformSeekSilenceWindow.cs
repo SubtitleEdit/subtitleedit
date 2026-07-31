@@ -67,7 +67,7 @@ public class WaveformSeekSilenceWindow : Window
 
         Content = grid;
 
-        Activated += delegate { buttonOk.Focus(); }; // hack to make OnKeyDown work
+        Activated += delegate { checkBoxSeekForward.Focus(); }; // initial focus on an input, not an action button - a focused button clicks on bare Space
         KeyDown += vm.KeyDown;
     }
 }

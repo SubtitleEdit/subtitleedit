@@ -47,16 +47,16 @@ public class CategoryExportWindow : Window
             HorizontalAlignment = HorizontalAlignment.Stretch,
         };
 
-        grid.Add(MakeDataGrid(vm), 0, 0);
+        grid.Add(MakeDataGrid(vm, out var dataGrid), 0, 0);
         grid.Add(panelButtons, 1, 0, 1, 2);
 
         Content = grid;
 
-        Activated += delegate { buttonOk.Focus(); }; // hack to make OnKeyDown work
+        Activated += delegate { TableViewExtras.FocusRow(dataGrid); }; // initial focus on an input, not an action button - a focused button clicks on bare Space
         KeyDown += vm.KeyDown;
     }
 
-    private static Border MakeDataGrid(CategoryExportViewModel vm)
+    private static Border MakeDataGrid(CategoryExportViewModel vm, out TableView tableView)
     {
         var grid = new Grid
         {
@@ -111,6 +111,8 @@ public class CategoryExportWindow : Window
         });
         dataGrid.Bind(TableView.ItemsSourceProperty, new Binding(nameof(vm.Rules)) { Source = vm });
         dataGrid.Bind(TableView.SelectedItemProperty, new Binding(nameof(vm.SelectedRule)) { Source = vm });
+
+        tableView = dataGrid;
 
         grid.Add(dataGrid, 0);
 

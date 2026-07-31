@@ -13,6 +13,8 @@ namespace Nikse.SubtitleEdit.Features.Tools.JoinSubtitles;
 
 public class JoinSubtitlesWindow : Window
 {
+    private TableView _tableViewFiles = null!;
+
     public JoinSubtitlesWindow(JoinSubtitlesViewModel vm)
     {
         UiUtil.InitializeWindow(this, GetType().Name);
@@ -54,11 +56,11 @@ public class JoinSubtitlesWindow : Window
 
         Content = grid;
 
-        Activated += delegate { buttonOk.Focus(); }; // hack to make OnKeyDown work
+        Activated += delegate { TableViewExtras.FocusRow(_tableViewFiles); }; // initial focus on an input, not an action button - a focused button clicks on bare Space
         KeyDown += vm.KeyDown;
     }
 
-    private static Border MakeFilesView(JoinSubtitlesViewModel vm)
+    private Border MakeFilesView(JoinSubtitlesViewModel vm)
     {
         var grid = new Grid
         {
@@ -82,6 +84,7 @@ public class JoinSubtitlesWindow : Window
         // by iterating this list in order (the VM sorts it by start time itself), so the
         // list must not be reordered by clicking a header.
         var dataGrid = TableViewExtras.MakeTableView(multiSelect: false);
+        _tableViewFiles = dataGrid;
         dataGrid.Width = double.NaN;
         dataGrid.Height = double.NaN;
         dataGrid.DataContext = vm;

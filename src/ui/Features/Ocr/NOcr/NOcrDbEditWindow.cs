@@ -194,8 +194,8 @@ public class NOcrDbEditWindow : Window
             Margin = new Thickness(0, 0, 0, 5),
             Children =
             {
-                UiUtil.MakeButton(vm.ZoomOutCommand, IconNames.Minus).WithFontSize(20),
-                UiUtil.MakeButton(vm.ZoomInCommand, IconNames.Plus).WithFontSize(20),
+                UiUtil.MakeButton(vm.ZoomOutCommand, IconNames.Minus, "Zoom out").WithFontSize(20),
+                UiUtil.MakeButton(vm.ZoomInCommand, IconNames.Plus, "Zoom in").WithFontSize(20),
                 UiUtil.MakeLabel(string.Empty).WithMarginLeft(10).WithBindText(vm, nameof(vm.ZoomFactorInfo)),
                 UiUtil.MakeLabel(Se.Language.Ocr.DrawMode).WithMarginLeft(10),
                 panelDrawMode,

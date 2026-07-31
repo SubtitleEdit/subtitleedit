@@ -15,7 +15,7 @@ public static class ViewRemoveTextForHearingImpaired
             Margin = new Avalonia.Thickness(0,0,0, 10),
         };
         
-        var buttonSettings = UiUtil.MakeButton(vm.ShowRemoveTextForHearingImpairedSettingsCommand, IconNames.Settings);
+        var buttonSettings = UiUtil.MakeButton(vm.ShowRemoveTextForHearingImpairedSettingsCommand, IconNames.Settings, Se.Language.General.Settings);
 
         var panel = new StackPanel
         {

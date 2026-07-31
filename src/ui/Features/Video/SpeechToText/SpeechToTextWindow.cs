@@ -62,7 +62,8 @@ public class SpeechToTextWindow : Window
         vm.RefreshEngineCombo = () => comboEngine.ItemTemplate = MakeEngineItemTemplate();
         var buttonEngineWebsite = UiUtil.MakeButton(vm.ShowWebLinkCommand, IconNames.Web)
             .WithMarginLeft(5)
-            .WithMarginTop(10);
+            .WithMarginTop(10)
+            .WithAccessibleName($"{Se.Language.General.Engine} - {Se.Language.General.MoreInfo}");
         var buttonEngineDownload = UiUtil.MakeButton(vm.DownloadSelectedEngineCommand, IconNames.Download)
             .WithMarginLeft(5)
             .WithMarginTop(10)

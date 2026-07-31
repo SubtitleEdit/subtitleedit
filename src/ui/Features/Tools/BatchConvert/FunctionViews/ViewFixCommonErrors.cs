@@ -12,7 +12,7 @@ public static class ViewFixCommonErrors
     public static Control Make(BatchConvertViewModel vm)
     {
         var labelHeader = UiUtil.MakeLabel(Se.Language.General.FixCommonErrors).WithBold();
-        var buttonShowFixCommonErrorsSettings = UiUtil.MakeButton(vm.ShowFixCommonRulesCommand, IconNames.Settings);
+        var buttonShowFixCommonErrorsSettings = UiUtil.MakeButton(vm.ShowFixCommonRulesCommand, IconNames.Settings, Se.Language.General.Settings);
 
         var grid = new Grid
         {

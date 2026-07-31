@@ -55,16 +55,17 @@ public class AssaStylePickerWindow : Window
         var panelButtons = UiUtil.MakeButtonBar(buttonImport, buttonCancel);
 
         grid.Add(labelFontsAndImages, 0);
-        grid.Add(MakeDataGrid(vm), 1);
+        grid.Add(MakeDataGrid(vm, out var stylesGrid), 1);
         grid.Add(panelButtons, 2);
 
         Content = grid;
 
-        Activated += delegate { buttonImport.Focus(); }; // hack to make OnKeyDown work
+        // initial focus on an input, not an action button - a focused button clicks on bare Space
+        Activated += delegate { TableViewExtras.FocusRow(stylesGrid); };
         KeyDown += vm.KeyDown;
     }
 
-    private static Border MakeDataGrid(AssaStylePickerViewModel vm)
+    private static Border MakeDataGrid(AssaStylePickerViewModel vm, out TableView tableView)
     {
         var usagesColumn = new SeTableViewColumn
         {
@@ -84,6 +85,7 @@ public class AssaStylePickerWindow : Window
         // (e.g. appended to the file's style list, which is written to the header),
         // so the collection order is not presentation-only.
         var dataGrid = TableViewExtras.MakeTableView(multiSelect: false);
+        tableView = dataGrid;
         dataGrid.DataContext = vm;
         dataGrid.ItemsSource = vm.Styles;
 

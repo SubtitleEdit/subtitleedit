@@ -43,7 +43,7 @@ public class BinaryAdjustBrightnessWindow : Window
         };
 
         // Left side - controls
-        var leftPanel = MakeControlsPanel(vm);
+        var leftPanel = MakeControlsPanel(vm, out var brightnessInputSlider);
         contentGrid.Add(leftPanel, 0, 0);
 
         // Right side - preview
@@ -60,11 +60,11 @@ public class BinaryAdjustBrightnessWindow : Window
 
         Content = mainGrid;
 
-        Activated += delegate { buttonOk.Focus(); };
+        Activated += delegate { brightnessInputSlider.Focus(); }; // initial focus on an input, not an action button - a focused button clicks on bare Space
         KeyDown += (_, e) => vm.OnKeyDown(e);
     }
 
-    private static StackPanel MakeControlsPanel(BinaryAdjustBrightnessViewModel vm)
+    private static StackPanel MakeControlsPanel(BinaryAdjustBrightnessViewModel vm, out Slider brightnessInputSlider)
     {
         var panel = new StackPanel
         {
@@ -95,6 +95,7 @@ public class BinaryAdjustBrightnessWindow : Window
             },
         };
         panel.Children.Add(brightnessSlider);
+        brightnessInputSlider = brightnessSlider;
 
         var brightnessValueLabel = new TextBlock
         {
