@@ -1,6 +1,6 @@
 ﻿{
   "title": "Subtitle Edit",
-  "version": "v5.1.0",
+  "version": "v5.2.0-beta1",
   "translatedBy": "",
   "cultureName": "en-US",
   "general": {
@@ -1572,6 +1572,7 @@
       "extendUntilShotChange": "Extend until shot change",
       "checkGeneral": "Apply 'general' chaining rules too",
       "subtitlePreviewText": "Subtitle text.",
+      "resetWarning": "This will overwrite all current settings. Continue?",
       "hintGap": "Minimum gap between subtitles, expressed in frames. Used by all 'gap' fields below as the base value.",
       "hintZones": "Snap (red) and warn (green) thresholds in frames, measured from the nearest shot change. Four values, left to right: left green, left red, right red, right green.",
       "hintConnected": "When two subtitles are connected (gap below threshold), the gap from the closest cue is preserved.",
@@ -2253,7 +2254,27 @@
     "translationComplete": "Translation complete",
     "translationCancelled": "Translation cancelled",
     "swapLanguages": "Swap source and target languages",
-    "xIsAlreadyDownloadedReDownload": "{0} is already downloaded. Re-download?"
+    "xIsAlreadyDownloadedReDownload": "{0} is already downloaded. Re-download?",
+    "advancedDotDotDot": "Advanced...",
+    "advancedSettings": "Advanced settings",
+    "advancedSettingsSubtitle": "Batch, context and sampling options for the advanced llama.cpp engine",
+    "context": "Context",
+    "synopsis": "Synopsis",
+    "synopsisHint": "Optional description of the content (genre, setting, tone) - included in every request",
+    "glossary": "Glossary",
+    "glossaryHint": "One per line: source term = translation",
+    "previousLinesAsContext": "Previous lines as context",
+    "linesPerBatch": "Lines per batch",
+    "keepLineBreaks": "Keep line breaks",
+    "samplingParameters": "Sampling parameters",
+    "minusOneMeansDefault": "-1 = model/server default",
+    "temperature": "Temperature",
+    "topP": "Top-p",
+    "topK": "Top-k",
+    "repeatPenalty": "Repeat penalty",
+    "maxTokensPerReply": "Max tokens per reply",
+    "serverContextSizeTokens": "Server context size (tokens)",
+    "customPromptHint": "Custom instructions ({0} = source language, {1} = target language); empty = built-in prompt"
   },
   "options": {
     "settings": {
