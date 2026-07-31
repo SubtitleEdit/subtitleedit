@@ -14,6 +14,11 @@ public partial class FontCollectorItem : ObservableObject
 
     public List<string> FoundFiles { get; } = new();
 
+    /// <summary>Set when the font is embedded in the subtitle as a [Fonts] attachment -
+    /// the decoded font file bytes and the attachment's file name.</summary>
+    public byte[]? EmbeddedFontBytes { get; set; }
+    public string EmbeddedFileName { get; set; } = string.Empty;
+
     public FontCollectorItem(string fontName, string usedIn)
     {
         _fontName = fontName;

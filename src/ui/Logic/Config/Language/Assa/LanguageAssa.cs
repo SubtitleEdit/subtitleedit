@@ -46,10 +46,15 @@ public class LanguageAssa
     public string FontCollectorInlineLineX { get; set; }
     public string FontCollectorFound { get; set; }
     public string FontCollectorNotFound { get; set; }
+    public string FontCollectorEmbedded { get; set; }
     public string FontCollectorScanning { get; set; }
     public string FontCollectorXOfYFontsFound { get; set; }
-    public string FontCollectorCopyFontsToFolder { get; set; }
-    public string FontCollectorCopyFontsToFolderDotDotDot { get; set; }
+    public string FontCollectorCopyFontsToSeFontsFolder { get; set; }
+    public string FontCollectorImportFontDotDotDot { get; set; }
+    public string FontCollectorDeleteFontXPrompt { get; set; }
+    public string FontCollectorCurrentSubtitle { get; set; }
+    public string FontCollectorOpenFontsFolder { get; set; }
+    public string Attachments { get; set; }
     public string FontCollectorNoFontsToCopy { get; set; }
     public string FontCollectorXFontFilesCopiedToY { get; set; }
 
@@ -254,10 +259,15 @@ public class LanguageAssa
         FontCollectorInlineLineX = "Line {0}";
         FontCollectorFound = "Found";
         FontCollectorNotFound = "Not found";
+        FontCollectorEmbedded = "Embedded";
         FontCollectorScanning = "Scanning installed fonts...";
         FontCollectorXOfYFontsFound = "{0} of {1} fonts found";
-        FontCollectorCopyFontsToFolder = "Copy fonts to folder";
-        FontCollectorCopyFontsToFolderDotDotDot = "Copy fonts to folder...";
+        FontCollectorCopyFontsToSeFontsFolder = "Copy to font collector";
+        FontCollectorImportFontDotDotDot = "Import font...";
+        FontCollectorDeleteFontXPrompt = "Delete font file \"{0}\"?";
+        FontCollectorCurrentSubtitle = "Current subtitle";
+        FontCollectorOpenFontsFolder = "Open SE's Fonts folder...";
+        Attachments = "Attachments";
         FontCollectorNoFontsToCopy = "No font files found to copy.";
         FontCollectorXFontFilesCopiedToY = "{0} font file(s) copied to {1}";
         ResolutionResamplerTitle = "Change resolution";

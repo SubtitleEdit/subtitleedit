@@ -8,6 +8,7 @@ using CommunityToolkit.Mvvm.Input;
 using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using Nikse.SubtitleEdit.Features.Shared;
+using Nikse.SubtitleEdit.Features.Shared.PickFontName;
 using Nikse.SubtitleEdit.Features.Shared.PromptTextBox;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
@@ -189,6 +190,62 @@ public partial class AssaStylesViewModel : ObservableObject, IClosingCleanup
         FileStyles.AddRange(selectedStyles);
 
         UpdateUsages();
+    }
+
+    [RelayCommand]
+    private async Task ShowFontCollector()
+    {
+        if (Window == null)
+        {
+            return;
+        }
+
+        // Give the collector the styles as currently edited, not the ones the file was
+        // opened with - SaveFileStylesToHeader only touches the pending Header, which is
+        // what Ok/Apply would write anyway.
+        SaveFileStylesToHeader();
+        var subtitle = new Subtitle(_subtitle) { Header = Header };
+
+        await _windowService.ShowDialogAsync<FontCollector.FontCollectorWindow, FontCollector.FontCollectorViewModel>(Window, vm =>
+        {
+            vm.Initialize(subtitle);
+        });
+
+        // Fonts may have been copied into SE's Fonts folder - re-offer them in the combo.
+        Task.Run(() => LoadFonts());
+    }
+
+    /// <summary>
+    /// Opens the font picker (installed fonts + fonts collected in SE's Fonts folder)
+    /// and assigns the picked font to the current style.
+    /// </summary>
+    [RelayCommand]
+    private async Task PickFontName()
+    {
+        if (Window == null || CurrentStyle == null)
+        {
+            return;
+        }
+
+        var currentFontName = CurrentStyle.FontName;
+        var result = await _windowService.ShowDialogAsync<PickFontNameWindow, PickFontNameViewModel>(Window, vm =>
+        {
+            vm.Initialize();
+            if (!string.IsNullOrEmpty(currentFontName))
+            {
+                vm.SelectedFontName = currentFontName;
+            }
+        });
+
+        if (result.OkPressed && !string.IsNullOrEmpty(result.SelectedFontName) && CurrentStyle != null)
+        {
+            if (!Fonts.Contains(result.SelectedFontName))
+            {
+                Fonts.Insert(0, result.SelectedFontName);
+            }
+
+            CurrentStyle.FontName = result.SelectedFontName;
+        }
     }
 
     [RelayCommand]
@@ -991,7 +1048,10 @@ public partial class AssaStylesViewModel : ObservableObject, IClosingCleanup
 
     private void LoadFonts()
     {
-        var fonts = FontHelper.GetLibAssaFonts();
+        // Fonts collected in SE's own Fonts folder come first - they may not be installed
+        // on the system, but a mux/render with the collected files will resolve them.
+        var fonts = FontHelper.GetFontsFolderFontNames();
+        fonts.AddRange(FontHelper.GetLibAssaFonts());
 
         Dispatcher.UIThread.Post(() =>
         {

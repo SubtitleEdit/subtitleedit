@@ -30,6 +30,8 @@ public class LanguageTools
     public LanguageRemoveTextForHearingImpaired RemoveTextForHearingImpaired { get; set; } = new();
     public LanguageRemoveUnicodeCharacters RemoveUnicodeCharacters { get; set; } = new();
     public string PickFontNameTitle { get; set; }
+    public string PickFontNameInstalledFonts { get; set; }
+    public string PickFontNameCollectedFonts { get; set; }
     public string ColorPickerTitle { get; set; }
     public string FilterLayersTitle { get; set; }
     public string FilterLayersHideFromWaveform { get; set; }
@@ -42,6 +44,8 @@ public class LanguageTools
     public LanguageTools()
     {
         PickFontNameTitle = "Choose font name";
+        PickFontNameInstalledFonts = "Installed fonts";
+        PickFontNameCollectedFonts = "Collected fonts";
         ColorPickerTitle = "Choose color";
         FilterLayersTitle = "Filter layers for display";
         FilterLayersHideFromWaveform = "Hide from waveform/spectrogram";

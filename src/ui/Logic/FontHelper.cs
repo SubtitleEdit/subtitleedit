@@ -1,13 +1,90 @@
 using Avalonia.Media;
+using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.UiLogic.Export;
 using SkiaSharp;
+using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 
 namespace Nikse.SubtitleEdit.Logic;
 
 public static class FontHelper
 {
+    private static readonly string[] FontFileExtensions = { ".ttf", ".otf", ".ttc", ".otc" };
+
+    /// <summary>
+    /// Enumerates the font files (.ttf/.otf/.ttc/.otc) in a folder, recursively.
+    /// Missing or inaccessible folders yield nothing.
+    /// </summary>
+    public static IEnumerable<string> EnumerateFontFiles(string folder)
+    {
+        if (!Directory.Exists(folder))
+        {
+            yield break;
+        }
+
+        IEnumerable<string> files;
+        try
+        {
+            files = Directory.EnumerateFiles(folder, "*.*", new EnumerationOptions
+            {
+                RecurseSubdirectories = true,
+                IgnoreInaccessible = true,
+            });
+        }
+        catch
+        {
+            yield break;
+        }
+
+        foreach (var file in files)
+        {
+            if (FontFileExtensions.Contains(Path.GetExtension(file), StringComparer.OrdinalIgnoreCase))
+            {
+                yield return file;
+            }
+        }
+    }
+
+    /// <summary>
+    /// Returns the fonts collected in SE's own Fonts folder (<see cref="Se.FontsFolder"/>) -
+    /// each name (both the libass-compatible face name and the typographic family name, so
+    /// the names match what either renderer would use) with the file and face index it came
+    /// from, so a collected font can be rendered without being installed.
+    /// Collections (.ttc/.otc) are enumerated per face.
+    /// </summary>
+    public static List<CollectedFont> GetFontsFolderFonts()
+    {
+        var fonts = new List<CollectedFont>();
+        foreach (var file in EnumerateFontFiles(Se.FontsFolder))
+        {
+            for (var index = 0; index < 30; index++)
+            {
+                using var typeface = SKTypeface.FromFile(file, index);
+                if (typeface == null)
+                {
+                    break;
+                }
+
+                foreach (var name in new[] { GetLibAssaFontName(typeface), typeface.FamilyName })
+                {
+                    if (!string.IsNullOrEmpty(name) &&
+                        !fonts.Any(f => f.Name.Equals(name, StringComparison.OrdinalIgnoreCase)))
+                    {
+                        fonts.Add(new CollectedFont(name, file, index));
+                    }
+                }
+            }
+        }
+
+        fonts.Sort((a, b) => StringComparer.OrdinalIgnoreCase.Compare(a.Name, b.Name));
+        return fonts;
+    }
+
+    /// <summary>Family names of the fonts collected in SE's own Fonts folder, sorted.</summary>
+    public static List<string> GetFontsFolderFontNames() => GetFontsFolderFonts().Select(f => f.Name).ToList();
+
     public static List<string> GetSystemFonts()
     {
         return FontManager.Current.SystemFonts.Select(p => p.Name).OrderBy(f => f).ToList();
@@ -40,3 +117,7 @@ public static class FontHelper
     public static string GetSkiaFontNameFromLibAssaFontName(string libAssaFontName) =>
         FontFaces.GetSkiaFamilyName(libAssaFontName);
 }
+
+/// <summary>A font from SE's Fonts folder: a family/face name plus the file (and face index
+/// within a .ttc/.otc collection) it was read from.</summary>
+public sealed record CollectedFont(string Name, string FilePath, int FaceIndex);
