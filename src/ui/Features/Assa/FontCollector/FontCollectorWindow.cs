@@ -137,11 +137,9 @@ public class FontCollectorWindow : Window
             [!TextBlock.TextProperty] = new Binding(nameof(vm.StatusText)),
         };
 
-        var buttonCopy = UiUtil.MakeButton(Se.Language.Assa.FontCollectorCopyFontsToFolderDotDotDot, vm.CopyFontsToFolderCommand)
-            .WithIconLeft(IconNames.Export);
         var buttonCopyToSeFolder = UiUtil.MakeButton(Se.Language.Assa.FontCollectorCopyFontsToSeFontsFolder, vm.CopyFontsToSeFontsFolderCommand)
             .WithIconLeft(IconNames.FormatFont);
-        var buttonBar = UiUtil.MakeButtonBar(buttonCopy, buttonCopyToSeFolder);
+        var buttonBar = UiUtil.MakeButtonBar(buttonCopyToSeFolder);
 
         var grid = new Grid
         {
@@ -240,6 +238,8 @@ public class FontCollectorWindow : Window
         dataGrid.Columns.Add(fileColumn);
         dataGrid.Bind(TableView.SelectedItemProperty, new Binding(nameof(vm.SelectedCollectedFont)));
 
+        var buttonImportFont = UiUtil.MakeButton(Se.Language.Assa.FontCollectorImportFontDotDotDot, vm.ImportFontCommand)
+            .WithIconLeft(IconNames.Import);
         var buttonOpenFolder = UiUtil.MakeButton(Se.Language.Assa.FontCollectorOpenFontsFolder, vm.OpenSeFontsFolderCommand)
             .WithIconLeft(IconNames.FolderOpen);
 
@@ -261,7 +261,7 @@ public class FontCollectorWindow : Window
         };
 
         grid.Add(UiUtil.MakeBorderForControlNoPadding(dataGrid), 0);
-        grid.Add(UiUtil.MakeButtonBar(buttonOpenFolder), 1);
+        grid.Add(UiUtil.MakeButtonBar(buttonImportFont, buttonOpenFolder), 1);
         grid.Add(MakeFontPreviewView(vm), 2);
 
         return grid;

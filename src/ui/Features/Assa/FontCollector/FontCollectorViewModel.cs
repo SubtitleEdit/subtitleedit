@@ -39,11 +39,13 @@ public partial class FontCollectorViewModel : ObservableObject
     private static readonly Regex FontNameTagRegex = new(@"\\fn(?<name>[^\\}]+)", RegexOptions.Compiled);
 
     private readonly IFolderHelper _folderHelper;
+    private readonly IFileHelper _fileHelper;
     private readonly CancellationTokenSource _cancellationTokenSource = new();
 
-    public FontCollectorViewModel(IFolderHelper folderHelper)
+    public FontCollectorViewModel(IFolderHelper folderHelper, IFileHelper fileHelper)
     {
         _folderHelper = folderHelper;
+        _fileHelper = fileHelper;
         FontItems = new ObservableCollection<FontCollectorItem>();
         InstalledFontNames = new ObservableCollection<string>();
         CollectedFonts = new ObservableCollection<CollectedFont>();
@@ -322,28 +324,31 @@ public partial class FontCollectorViewModel : ObservableObject
         return folders;
     }
 
+    /// <summary>
+    /// Picks font files from disk and adds them to SE's Fonts folder collection.
+    /// </summary>
     [RelayCommand]
-    private async Task CopyFontsToFolder()
+    private async Task ImportFont()
     {
         if (Window == null)
         {
             return;
         }
 
-        var files = GetFoundFontFiles();
-        if (files.Count == 0)
+        var fileNames = await _fileHelper.PickOpenFiles(
+            Window,
+            Se.Language.Assa.FontCollectorImportFontDotDotDot.TrimEnd('.'),
+            Se.Language.General.Fonts,
+            ["*.ttf", "*.otf", "*.ttc", "*.otc"],
+            string.Empty,
+            []);
+        if (fileNames.Length == 0)
         {
-            await MessageBox.Show(Window, Se.Language.Assa.FontCollectorTitle, Se.Language.Assa.FontCollectorNoFontsToCopy, MessageBoxButtons.OK);
             return;
         }
 
-        var folder = await _folderHelper.PickFolderAsync(Window, Se.Language.Assa.FontCollectorCopyFontsToFolder);
-        if (string.IsNullOrEmpty(folder))
-        {
-            return;
-        }
-
-        await CopyFontsTo(files, folder);
+        await CopyFontsTo(fileNames.ToList(), Se.FontsFolder);
+        _ = Task.Run(LoadFontLists);
     }
 
     /// <summary>
