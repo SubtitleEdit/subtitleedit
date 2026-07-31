@@ -15578,6 +15578,12 @@ public partial class MainViewModel :
         _shiftSelectAnchorIndex = -1;
         _shiftSelectCurrentIndex = -1;
 
+        // A long scroll recycles the focused TableViewRow container, silently dropping
+        // keyboard focus out of the grid (End followed by Home would then do nothing,
+        // as the key handler is gated on IsSubtitleGridFocused). Capture the focus
+        // state now and put focus back on the newly selected row after the scroll.
+        var subtitleGridHadFocus = IsSubtitleGridFocused();
+
         lock (_scrollLock)
         {
             _pendingScrollIndex = index;
@@ -15606,6 +15612,11 @@ public partial class MainViewModel :
                 else
                 {
                     EnsureRowFullyVisibleInSubtitleGrid(itemToScroll);
+                }
+
+                if (subtitleGridHadFocus)
+                {
+                    Dispatcher.UIThread.Post(() => TableViewExtras.FocusRow(SubtitleGrid));
                 }
             }
         });
@@ -21671,6 +21682,11 @@ public partial class MainViewModel :
         SelectGridRange(startIdx, endIdx, _shiftSelectCurrentIndex);
 
         SubtitleGrid.ScrollIntoView(Subtitles[_shiftSelectCurrentIndex]);
+
+        // Shift+Home/End/PageUp/PageDown can scroll the previously focused row container
+        // out of the realized range, which drops keyboard focus out of the grid and kills
+        // the next grid shortcut - re-focus the moving end of the selection after layout.
+        Dispatcher.UIThread.Post(() => TableViewExtras.FocusRow(SubtitleGrid));
 
         SubtitleGridSelectionChanged();
     }
