@@ -6,6 +6,7 @@ using Avalonia.Layout;
 using Avalonia.Media;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
+using Optris.Icons.Avalonia;
 
 namespace Nikse.SubtitleEdit.Features.Assa.FontCollector;
 
@@ -36,17 +37,17 @@ public class FontCollectorWindow : Window
             {
                 new TabItem
                 {
-                    Header = Se.Language.Assa.FontCollectorCurrentSubtitle,
+                    Header = MakeTabHeader(IconNames.ClosedCaption, Se.Language.Assa.FontCollectorCurrentSubtitle),
                     Content = MakeCurrentSubtitleView(vm),
                 },
                 new TabItem
                 {
-                    Header = Se.Language.Tools.PickFontNameInstalledFonts,
+                    Header = MakeTabHeader(IconNames.CaseSensitiveAlt, Se.Language.Tools.PickFontNameInstalledFonts),
                     Content = MakeInstalledFontsView(vm),
                 },
                 new TabItem
                 {
-                    Header = Se.Language.Tools.PickFontNameCollectedFonts,
+                    Header = MakeTabHeader(IconNames.Folder, Se.Language.Tools.PickFontNameCollectedFonts),
                     Content = MakeCollectedFontsView(vm),
                 },
             },
@@ -136,8 +137,10 @@ public class FontCollectorWindow : Window
             [!TextBlock.TextProperty] = new Binding(nameof(vm.StatusText)),
         };
 
-        var buttonCopy = UiUtil.MakeButton(Se.Language.Assa.FontCollectorCopyFontsToFolderDotDotDot, vm.CopyFontsToFolderCommand);
-        var buttonCopyToSeFolder = UiUtil.MakeButton(Se.Language.Assa.FontCollectorCopyFontsToSeFontsFolder, vm.CopyFontsToSeFontsFolderCommand);
+        var buttonCopy = UiUtil.MakeButton(Se.Language.Assa.FontCollectorCopyFontsToFolderDotDotDot, vm.CopyFontsToFolderCommand)
+            .WithIconLeft(IconNames.Export);
+        var buttonCopyToSeFolder = UiUtil.MakeButton(Se.Language.Assa.FontCollectorCopyFontsToSeFontsFolder, vm.CopyFontsToSeFontsFolderCommand)
+            .WithIconLeft(IconNames.FormatFont);
         var buttonBar = UiUtil.MakeButtonBar(buttonCopy, buttonCopyToSeFolder);
 
         var grid = new Grid
@@ -183,11 +186,15 @@ public class FontCollectorWindow : Window
         dataGrid.Columns.Add(fontNameColumn);
         dataGrid.Bind(TableView.SelectedItemProperty, new Binding(nameof(vm.SelectedInstalledFontName)));
 
+        var buttonCopyToSeFolder = UiUtil.MakeButton(Se.Language.Assa.FontCollectorCopyFontsToSeFontsFolder, vm.CopyInstalledFontToSeFontsFolderCommand)
+            .WithIconLeft(IconNames.FormatFont);
+
         var grid = new Grid
         {
             RowDefinitions =
             {
                 new RowDefinition { Height = new GridLength(2, GridUnitType.Star) },
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
             },
             ColumnDefinitions =
@@ -200,7 +207,8 @@ public class FontCollectorWindow : Window
         };
 
         grid.Add(UiUtil.MakeBorderForControlNoPadding(dataGrid), 0);
-        grid.Add(MakeFontPreviewView(vm), 1);
+        grid.Add(UiUtil.MakeButtonBar(buttonCopyToSeFolder), 1);
+        grid.Add(MakeFontPreviewView(vm), 2);
 
         return grid;
     }
@@ -232,7 +240,8 @@ public class FontCollectorWindow : Window
         dataGrid.Columns.Add(fileColumn);
         dataGrid.Bind(TableView.SelectedItemProperty, new Binding(nameof(vm.SelectedCollectedFont)));
 
-        var buttonOpenFolder = UiUtil.MakeButton(Se.Language.Assa.FontCollectorOpenFontsFolder, vm.OpenSeFontsFolderCommand);
+        var buttonOpenFolder = UiUtil.MakeButton(Se.Language.Assa.FontCollectorOpenFontsFolder, vm.OpenSeFontsFolderCommand)
+            .WithIconLeft(IconNames.FolderOpen);
 
         var grid = new Grid
         {
@@ -256,6 +265,23 @@ public class FontCollectorWindow : Window
         grid.Add(MakeFontPreviewView(vm), 2);
 
         return grid;
+    }
+
+    private static StackPanel MakeTabHeader(string iconName, string text)
+    {
+        var icon = new ContentControl { VerticalAlignment = VerticalAlignment.Center };
+        Attached.SetIcon(icon, iconName);
+
+        return new StackPanel
+        {
+            Orientation = Orientation.Horizontal,
+            Spacing = 6,
+            Children =
+            {
+                icon,
+                new TextBlock { Text = text, VerticalAlignment = VerticalAlignment.Center },
+            },
+        };
     }
 
     private static Border MakeFontPreviewView(FontCollectorViewModel vm)

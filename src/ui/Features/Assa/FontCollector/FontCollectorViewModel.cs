@@ -369,6 +369,59 @@ public partial class FontCollectorViewModel : ObservableObject
         _ = Task.Run(LoadFontLists); // the "Collected fonts" tab just gained fonts
     }
 
+    /// <summary>
+    /// Copies the font selected in the "Installed fonts" tab into SE's Fonts folder.
+    /// Installed fonts are known by name only, so the system font folders are searched
+    /// for the file(s) carrying that family/face name.
+    /// </summary>
+    [RelayCommand]
+    private async Task CopyInstalledFontToSeFontsFolder()
+    {
+        var fontName = SelectedInstalledFontName;
+        if (Window == null || string.IsNullOrEmpty(fontName))
+        {
+            return;
+        }
+
+        var files = await Task.Run(() => FindSystemFontFiles(fontName));
+        if (files.Count == 0)
+        {
+            await MessageBox.Show(Window, Se.Language.Assa.FontCollectorTitle, Se.Language.Assa.FontCollectorNoFontsToCopy, MessageBoxButtons.OK);
+            return;
+        }
+
+        await CopyFontsTo(files, Se.FontsFolder);
+        _ = Task.Run(LoadFontLists);
+    }
+
+    private static List<string> FindSystemFontFiles(string fontName)
+    {
+        var files = new List<string>();
+        foreach (var folder in GetFontFolders().Skip(1)) // index 0 is Se.FontsFolder - already collected
+        {
+            foreach (var fontFile in FontHelper.EnumerateFontFiles(folder))
+            {
+                for (var index = 0; index < 30; index++)
+                {
+                    using var typeface = SKTypeface.FromFile(fontFile, index);
+                    if (typeface == null)
+                    {
+                        break;
+                    }
+
+                    if ((fontName.Equals(typeface.FamilyName, StringComparison.OrdinalIgnoreCase) ||
+                         fontName.Equals(FontHelper.GetLibAssaFontName(typeface), StringComparison.OrdinalIgnoreCase)) &&
+                        !files.Contains(fontFile, StringComparer.OrdinalIgnoreCase))
+                    {
+                        files.Add(fontFile);
+                    }
+                }
+            }
+        }
+
+        return files;
+    }
+
     private List<string> GetFoundFontFiles()
     {
         return FontItems.SelectMany(i => i.FoundFiles).Distinct(StringComparer.OrdinalIgnoreCase).ToList();

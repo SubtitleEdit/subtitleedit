@@ -262,7 +262,7 @@ public class LanguageAssa
         FontCollectorXOfYFontsFound = "{0} of {1} fonts found";
         FontCollectorCopyFontsToFolder = "Copy fonts to folder";
         FontCollectorCopyFontsToFolderDotDotDot = "Copy fonts to folder...";
-        FontCollectorCopyFontsToSeFontsFolder = "Copy to SE's Fonts folder";
+        FontCollectorCopyFontsToSeFontsFolder = "Copy to font collector";
         FontCollectorCurrentSubtitle = "Current subtitle";
         FontCollectorOpenFontsFolder = "Open SE's Fonts folder...";
         Attachments = "Attachments";

@@ -53,6 +53,7 @@ public class AssaAttachmentsWindow : Window
         var buttonCopyToClipboard = UiUtil.MakeButton(Se.Language.General.CopyToClipboard, vm.CopyFontNameToClipboardCommand)
             .WithBindIsVisible(nameof(vm.IsCopyFontnameToClipboardVisible));
         var buttonCopyToSeFontsFolder = UiUtil.MakeButton(Se.Language.Assa.FontCollectorCopyFontsToSeFontsFolder, vm.CopyToSeFontsFolderCommand)
+            .WithIconLeft(IconNames.FormatFont)
             .WithBindIsVisible(nameof(vm.IsCopyFontnameToClipboardVisible));
         var previewLine = UiUtil.MakeHorizontalPanel(labelPreview, buttonCopyToClipboard, buttonCopyToSeFontsFolder);
 
