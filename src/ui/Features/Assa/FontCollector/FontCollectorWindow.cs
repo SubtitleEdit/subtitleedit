@@ -120,7 +120,8 @@ public class FontCollectorWindow : Window
         dataGrid.Columns.Add(usedInColumn);
         dataGrid.Columns.Add(statusColumn);
         dataGrid.Columns.Add(fontFilesColumn);
-        dataGrid.Bind(TableView.SelectedItemProperty, new Binding(nameof(vm.SelectedFontItem)));
+        dataGrid.Bind(TableView.SelectedItemProperty, new Binding(nameof(vm.SelectedFontItem)) { Source = vm });
+        dataGrid.SelectionChanged += vm.FontItemsGridSelectionChanged;
 
         // Header sorting is safe here: the font list is presentation-only (copying
         // fonts to a folder uses the found-file set, not the row order, and the

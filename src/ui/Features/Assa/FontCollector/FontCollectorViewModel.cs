@@ -211,6 +211,20 @@ public partial class FontCollectorViewModel : ObservableObject
         _ = Task.Run(LoadFontLists);
     }
 
+    /// <summary>
+    /// Keeps <see cref="SelectedFontItem"/> in sync even if the SelectedItem binding
+    /// does not fire for the multi-select grid, and refreshes the preview.
+    /// </summary>
+    internal void FontItemsGridSelectionChanged(object? sender, SelectionChangedEventArgs e)
+    {
+        if (sender is TableView { SelectedItem: FontCollectorItem item })
+        {
+            SelectedFontItem = item;
+        }
+
+        UpdateFontPreview();
+    }
+
     internal void CollectedFontsContextMenuOpening(object? sender, EventArgs e)
     {
         IsDeleteCollectedFontVisible = SelectedCollectedFont != null;
@@ -343,6 +357,10 @@ public partial class FontCollectorViewModel : ObservableObject
                                 item.FoundFiles.Add(file);
                                 item.UpdateFileDisplay();
                                 item.Status = Se.Language.Assa.FontCollectorFound;
+                                if (item == SelectedFontItem)
+                                {
+                                    UpdateFontPreview(); // the selected row just became previewable
+                                }
                             });
                         }
                     }
