@@ -106,7 +106,7 @@ public partial class BurnInViewModel : ObservableObject
 
     public Window? Window { get; set; }
     public bool OkPressed { get; private set; }
-    public DataGrid? BatchGrid { get; internal set; }
+    public TableView? BatchGrid { get; internal set; }
     public BurnInLogo BurnInLogo { get; set; }
 
     private Subtitle _subtitle = new();
@@ -520,7 +520,7 @@ public partial class BurnInViewModel : ObservableObject
             }
 
             BatchGrid.SelectedItem = jobItem;
-            BatchGrid.ScrollIntoView(jobItem, null);
+            BatchGrid.ScrollIntoView(jobItem);
         });
 
         bool result;

@@ -27,7 +27,7 @@ public partial class MergeSameTextViewModel : ObservableObject, IClosingCleanup
 
     public bool OkPressed { get; private set; }
     public List<SubtitleLineViewModel> ResultSubtitles { get; set; }
-    public DataGrid SubtitleGrid { get; set; }
+    public TableView SubtitleGrid { get; set; }
 
     private readonly System.Timers.Timer _timerUpdatePreview;
     private volatile bool _isClosing;
@@ -39,7 +39,7 @@ public partial class MergeSameTextViewModel : ObservableObject, IClosingCleanup
         MergeItems = new ObservableCollection<MergeDisplayItem>();
         MergeSubtitles = new ObservableCollection<SubtitleLineViewModel>();
         ResultSubtitles = new List<SubtitleLineViewModel>();
-        SubtitleGrid = new DataGrid();
+        SubtitleGrid = new TableView();
 
         LoadSettings();
 
@@ -266,20 +266,21 @@ public partial class MergeSameTextViewModel : ObservableObject, IClosingCleanup
         Window?.Close();
     }
 
-    internal void DataGridMergeItemChanged(object? sender, SelectionChangedEventArgs e)
+    internal void MergeItemChanged(object? sender, SelectionChangedEventArgs e)
     {
         var selected = SelectedMergeItem;
-        if (selected == null)
+        var selectedItems = SubtitleGrid.SelectedItems;
+        if (selected == null || selectedItems == null)
         {
             return;
         }
 
-        SubtitleGrid.SelectedItems.Clear();
+        selectedItems.Clear();
         foreach (var item in MergeSubtitles)
         {
             if (item is SubtitleLineViewModel svm && svm.Extra == selected.MergedGroup)
             {
-                SubtitleGrid.SelectedItems.Add(item);
+                selectedItems.Add(item);
             }
         }
     }

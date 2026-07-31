@@ -194,52 +194,49 @@ public class SplitSubtitleWindow : Window
 
     private Control MakeListView(SplitSubtitleViewModel vm)
     {
-        var dataGrid = new DataGrid
+        // Sorting dropped in the DataGrid -> TableView conversion: the list shows the
+        // split parts in output order (part 1, part 2, ...).
+        var dataGrid = TableViewExtras.MakeTableView(multiSelect: false);
+        dataGrid.Width = double.NaN;
+        dataGrid.Height = double.NaN;
+        dataGrid.DataContext = vm;
+        dataGrid.ItemsSource = vm.SplitItems;
+        dataGrid.Columns.AddRange(new TableViewColumn[]
         {
-            AutoGenerateColumns = false,
-            SelectionMode = DataGridSelectionMode.Single,
-            CanUserResizeColumns = true,
-            CanUserSortColumns = true,
-            HorizontalAlignment = HorizontalAlignment.Stretch,
-            VerticalAlignment = VerticalAlignment.Stretch,
-            Width = double.NaN,
-            Height = double.NaN,
-            DataContext = vm,
-            ItemsSource = vm.SplitItems,
-            Columns =
-            {
-                new DataGridTextColumn
+                new SeTableViewColumn
                 {
                     Header = Se.Language.General.NoSymbolLines,
-                    CellTheme = UiUtil.DataGridNoBorderNoPaddingCellTheme,
+                    CellTheme = UiUtil.TableViewCellTheme,
+                    HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
                     Binding = new Binding(nameof(SplitDisplayItem.Lines)),
-                    IsReadOnly = true,
+                    // Content-sized (Auto) on the DataGrid; TableView treats Auto as star.
+                    Width = new GridLength(80),
                 },
-                new DataGridTextColumn
+                new SeTableViewColumn
                 {
                     Header = Se.Language.General.Characters,
-                    CellTheme = UiUtil.DataGridNoBorderNoPaddingCellTheme,
+                    CellTheme = UiUtil.TableViewCellTheme,
+                    HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
                     Binding = new Binding(nameof(SplitDisplayItem.Characters)),
-                    IsReadOnly = true,
+                    Width = new GridLength(100),
                 },
-                new DataGridTextColumn
+                new SeTableViewColumn
                 {
                     Header = Se.Language.General.FileName,
-                    CellTheme = UiUtil.DataGridNoBorderNoPaddingCellTheme,
+                    CellTheme = UiUtil.TableViewCellTheme,
+                    HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
                     Binding = new Binding(nameof(SplitDisplayItem.FileName)),
-                    IsReadOnly = true,
-                    Width = new DataGridLength(1, DataGridLengthUnitType.Star),
+                    Width = new GridLength(1, GridUnitType.Star),
                 },
-            },
-        };
-        dataGrid.Bind(DataGrid.SelectedItemProperty, new Binding(nameof(vm.SelectedSpiltItem)) { Source = vm });
+        });
+        dataGrid.Bind(TableView.SelectedItemProperty, new Binding(nameof(vm.SelectedSpiltItem)) { Source = vm });
         dataGrid.AddHandler(InputElement.KeyDownEvent, (object? _, KeyEventArgs e) =>
         {
             if (e.Key is Key.Home or Key.End && dataGrid.ItemsSource is IList items && items.Count > 0)
             {
-                var target = e.Key == Key.Home ? items[0] : items[^1];
-                dataGrid.SelectedItem = target;
-                dataGrid.ScrollIntoView(target, null);
+                var index = e.Key == Key.Home ? 0 : items.Count - 1;
+                dataGrid.SelectedIndex = index;
+                dataGrid.ScrollIntoView(index);
                 e.Handled = true;
             }
         }, RoutingStrategies.Tunnel);

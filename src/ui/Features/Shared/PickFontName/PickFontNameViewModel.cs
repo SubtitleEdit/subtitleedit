@@ -194,7 +194,7 @@ public partial class PickFontNameViewModel : ObservableObject, IClosingCleanup
         }
     }
 
-    internal void DataGridFontNameSelectionChanged(object? sender, SelectionChangedEventArgs e)
+    internal void FontNameGridSelectionChanged(object? sender, SelectionChangedEventArgs e)
     {
         _dirtyPreview = true;
     }

@@ -114,32 +114,29 @@ public class PickFontNameWindow : Window
 
     private static Border MakeFontsView(PickFontNameViewModel vm)
     {
-        var dataGrid = new DataGrid
+        var dataGrid = TableViewExtras.MakeTableView(multiSelect: false);
+        dataGrid.Width = double.NaN;
+        dataGrid.Height = double.NaN;
+        dataGrid.DataContext = vm;
+        dataGrid.ItemsSource = vm.FontNames;
+
+        var fontNameColumn = new SeTableViewColumn
         {
-            AutoGenerateColumns = false,
-            SelectionMode = DataGridSelectionMode.Single,
-            CanUserResizeColumns = true,
-            CanUserSortColumns = true,
-            HorizontalAlignment = HorizontalAlignment.Stretch,
-            VerticalAlignment = VerticalAlignment.Stretch,
-            Width = double.NaN,
-            Height = double.NaN,
-            DataContext = vm,
-            ItemsSource = vm.FontNames,
-            Columns =
-            {
-                new DataGridTextColumn
-                {
-                    Header = Se.Language.General.FontName,
-                    CellTheme = UiUtil.DataGridNoBorderNoPaddingCellTheme,
-                    Binding = new Binding("."),
-                    IsReadOnly = true,
-                    Width = new DataGridLength(1, DataGridLengthUnitType.Star),
-                },
-            },
+            Header = Se.Language.General.FontName,
+            CellTheme = UiUtil.TableViewCellTheme,
+            HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
+            Binding = new Binding("."),
+            Width = new GridLength(1, GridUnitType.Star),
         };
-        dataGrid.Bind(DataGrid.SelectedItemProperty, new Binding(nameof(vm.SelectedFontName)));
-        dataGrid.SelectionChanged += vm.DataGridFontNameSelectionChanged;
+        dataGrid.Columns.Add(fontNameColumn);
+
+        dataGrid.Bind(TableView.SelectedItemProperty, new Binding(nameof(vm.SelectedFontName)));
+        dataGrid.SelectionChanged += vm.FontNameGridSelectionChanged;
+
+        // Font list order is presentation-only (OK uses the selected item), so the
+        // in-place header sorter is safe. Note a new search resets the order.
+        new TableViewHeaderSorter(dataGrid)
+            .AddSortable<string, string>(fontNameColumn, x => x);
 
         return UiUtil.MakeBorderForControlNoPadding(dataGrid);
     }

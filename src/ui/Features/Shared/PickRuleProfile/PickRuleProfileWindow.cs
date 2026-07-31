@@ -11,7 +11,7 @@ namespace Nikse.SubtitleEdit.Features.Shared.PickRuleProfile;
 
 public class PickRuleProfileWindow : Window
 {
-    private static DataGrid? _profileDataGrid;
+    private static TableView? _profileGrid;
 
     public PickRuleProfileWindow(PickRuleProfileViewModel vm)
     {
@@ -54,60 +54,72 @@ public class PickRuleProfileWindow : Window
             HorizontalAlignment = HorizontalAlignment.Stretch,
         };
 
-        grid.Add(MakeDataGrid(vm), 0);
+        grid.Add(MakeProfilesView(vm), 0);
         grid.Add(panelButtons, 1);
 
         Content = grid;
 
-        Activated += delegate { _profileDataGrid?.Focus(); }; // hack to make OnKeyDown work
+        Activated += delegate
+        {
+            if (_profileGrid != null)
+            {
+                TableViewExtras.FocusRow(_profileGrid); // hack to make OnKeyDown work
+            }
+        };
         KeyDown += vm.KeyDown;
     }
 
-    private static Border MakeDataGrid(PickRuleProfileViewModel vm)
+    private static Border MakeProfilesView(PickRuleProfileViewModel vm)
     {
-        var dataGrid = new DataGrid
+        var dataGrid = TableViewExtras.MakeTableView(multiSelect: false);
+        dataGrid.Width = double.NaN;
+        dataGrid.Height = double.NaN;
+        dataGrid.DataContext = vm;
+
+        // Content-sized (Auto) on the DataGrid; TableView treats Auto as star, so the
+        // number columns get fixed widths and Name becomes the star column (the old
+        // grid's star was on the trailing max-CPS column, which only fills space).
+        var nameColumn = new SeTableViewColumn
         {
-            AutoGenerateColumns = false,
-            SelectionMode = DataGridSelectionMode.Single,
-            CanUserResizeColumns = true,
-            CanUserSortColumns = true,
-            HorizontalAlignment = HorizontalAlignment.Stretch,
-            VerticalAlignment = VerticalAlignment.Stretch,
-            Width = double.NaN,
-            Height = double.NaN,
-            IsReadOnly = true,
-            DataContext = vm,
-            Columns =
-            {
-                new DataGridTextColumn
-                {
-                    Header = Se.Language.General.Name,
-                    CellTheme = UiUtil.DataGridNoBorderNoPaddingCellTheme,
-                    Binding = new Binding(nameof(ProfileDisplay.Name)),
-                    IsReadOnly = true,
-                },
-                new DataGridTextColumn
-                {
-                    Header = Se.Language.Options.Settings.SingleLineMaxLength,
-                    CellTheme = UiUtil.DataGridNoBorderNoPaddingCellTheme,
-                    Binding = new Binding(nameof(ProfileDisplay.SingleLineMaxLength)),
-                    IsReadOnly = true,
-                },
-                new DataGridTextColumn
-                {
-                    Header = Se.Language.General.MaxCharactersPerSecond,
-                    CellTheme = UiUtil.DataGridNoBorderNoPaddingCellTheme,
-                    Binding = new Binding(nameof(ProfileDisplay.MaxCharsPerSec)),
-                    IsReadOnly = true,
-                    Width = new DataGridLength(1, DataGridLengthUnitType.Star),
-                },
-            },
+            Header = Se.Language.General.Name,
+            CellTheme = UiUtil.TableViewCellTheme,
+            HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
+            Binding = new Binding(nameof(ProfileDisplay.Name)),
+            Width = new GridLength(1, GridUnitType.Star),
         };
-        dataGrid.Bind(DataGrid.ItemsSourceProperty, new Binding(nameof(vm.Profiles)) { Source = vm });
-        dataGrid.Bind(DataGrid.SelectedItemProperty, new Binding(nameof(vm.SelectedProfile)) { Source = vm });
-        dataGrid.AddHandler(KeyDownEvent, vm.DataGridDown, RoutingStrategies.Tunnel);
-        dataGrid.DoubleTapped += vm.DataGridDoubleTapped;
-        _profileDataGrid = dataGrid;
+        var singleLineMaxLengthColumn = new SeTableViewColumn
+        {
+            Header = Se.Language.Options.Settings.SingleLineMaxLength,
+            CellTheme = UiUtil.TableViewCellTheme,
+            HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
+            Binding = new Binding(nameof(ProfileDisplay.SingleLineMaxLength)),
+            Width = new GridLength(180),
+        };
+        var maxCpsColumn = new SeTableViewColumn
+        {
+            Header = Se.Language.General.MaxCharactersPerSecond,
+            CellTheme = UiUtil.TableViewCellTheme,
+            HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
+            Binding = new Binding(nameof(ProfileDisplay.MaxCharsPerSec)),
+            Width = new GridLength(180),
+        };
+
+        dataGrid.Columns.Add(nameColumn);
+        dataGrid.Columns.Add(singleLineMaxLengthColumn);
+        dataGrid.Columns.Add(maxCpsColumn);
+
+        dataGrid.Bind(TableView.ItemsSourceProperty, new Binding(nameof(vm.Profiles)) { Source = vm });
+        dataGrid.Bind(TableView.SelectedItemProperty, new Binding(nameof(vm.SelectedProfile)) { Source = vm });
+        dataGrid.AddHandler(KeyDownEvent, vm.ProfileGridKeyDown, RoutingStrategies.Tunnel);
+        dataGrid.DoubleTapped += vm.ProfileGridDoubleTapped;
+        _profileGrid = dataGrid;
+
+        // Profile list order is presentation-only (OK uses the selected item), so the
+        // in-place header sorter is safe.
+        new TableViewHeaderSorter(dataGrid)
+            .AddSortable<ProfileDisplay, string>(nameColumn, x => x.Name)
+            .AddSortable<ProfileDisplay, int?>(singleLineMaxLengthColumn, x => x.SingleLineMaxLength)
+            .AddSortable<ProfileDisplay, double?>(maxCpsColumn, x => x.MaxCharsPerSec);
 
         return UiUtil.MakeBorderForControlNoPadding(dataGrid);
     }

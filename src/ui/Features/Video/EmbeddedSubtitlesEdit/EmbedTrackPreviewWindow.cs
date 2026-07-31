@@ -71,87 +71,82 @@ public class EmbedTrackPreviewWindow : Window
     {
         var fullTimeConverter = new TimeSpanToDisplayFullConverter();
         var shortTimeConverter = new TimeSpanToDisplayShortConverter();
-        var dataGridSubtitle = new DataGrid
+
+        // No header sorting: this is a read-only preview of the track's cues in
+        // subtitle order.
+        var dataGridSubtitle = TableViewExtras.MakeTableView(multiSelect: false);
+        dataGridSubtitle.Width = double.NaN;
+        dataGridSubtitle.Height = double.NaN;
+        dataGridSubtitle.DataContext = vm;
+        dataGridSubtitle.ItemsSource = vm.Rows;
+        dataGridSubtitle.Columns.Add(new SeTableViewColumn
         {
-            AutoGenerateColumns = false,
-            SelectionMode = DataGridSelectionMode.Single,
-            CanUserResizeColumns = true,
-            CanUserSortColumns = true,
-            HorizontalAlignment = HorizontalAlignment.Stretch,
-            VerticalAlignment = VerticalAlignment.Stretch,
-            Width = double.NaN,
-            Height = double.NaN,
-            DataContext = vm,
-            ItemsSource = vm.Rows,
-            Columns =
+            Header = Se.Language.General.NumberSymbol,
+            CellTheme = UiUtil.TableViewCellTheme,
+            HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
+            Binding = new Binding(nameof(MatroskaSubtitleCueDisplay.Number)),
+            Width = new GridLength(60), // was content-sized (Auto) on the DataGrid
+        });
+        dataGridSubtitle.Columns.Add(new SeTableViewColumn
+        {
+            Header = Se.Language.General.Show,
+            CellTheme = UiUtil.TableViewCellTheme,
+            HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
+            Binding = new Binding(nameof(MatroskaSubtitleCueDisplay.Show)) { Converter = fullTimeConverter },
+            Width = new GridLength(120), // was content-sized (Auto) on the DataGrid
+        });
+        dataGridSubtitle.Columns.Add(new SeTableViewColumn
+        {
+            Header = Se.Language.General.Duration,
+            CellTheme = UiUtil.TableViewCellTheme,
+            HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
+            Binding = new Binding(nameof(MatroskaSubtitleCueDisplay.Duration)) { Converter = shortTimeConverter },
+            Width = new GridLength(90), // was content-sized (Auto) on the DataGrid
+        });
+        dataGridSubtitle.Columns.Add(new SeTableViewColumn
+        {
+            Header = Se.Language.General.TextOrImage,
+            Width = new GridLength(1, GridUnitType.Star),
+            CellTheme = UiUtil.TableViewCellTheme,
+            HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
+            CellTemplate = new FuncDataTemplate<MatroskaSubtitleCueDisplay>((item, _) =>
             {
-                new DataGridTextColumn
+                var stackPanel = new StackPanel
                 {
-                    Header = Se.Language.General.NumberSymbol,
-                    CellTheme = UiUtil.DataGridNoBorderNoPaddingCellTheme,
-                    Binding = new Binding(nameof(MatroskaSubtitleCueDisplay.Number)),
-                    IsReadOnly = true,
-                },
-                new DataGridTextColumn
+                    Orientation = Orientation.Vertical,
+                    Spacing = 5,
+                    HorizontalAlignment = HorizontalAlignment.Left,
+                };
+
+                // Add text if available
+                if (!string.IsNullOrEmpty(item.Text))
                 {
-                    Header = Se.Language.General.Show,
-                    CellTheme = UiUtil.DataGridNoBorderNoPaddingCellTheme,
-                    Binding = new Binding(nameof(MatroskaSubtitleCueDisplay.Show)) { Converter = fullTimeConverter },
-                    IsReadOnly = true,
-                },
-                new DataGridTextColumn
-                {
-                    Header = Se.Language.General.Duration,
-                    CellTheme = UiUtil.DataGridNoBorderNoPaddingCellTheme,
-                    Binding = new Binding(nameof(MatroskaSubtitleCueDisplay.Duration)) { Converter = shortTimeConverter },
-                    IsReadOnly = true,
-                },
-                new DataGridTemplateColumn
-                {
-                    Header = Se.Language.General.TextOrImage,
-                    IsReadOnly = true,
-                    Width = new DataGridLength(1, DataGridLengthUnitType.Star),
-                    CellTheme = UiUtil.DataGridNoBorderNoPaddingCellTheme,
-                    CellTemplate = new FuncDataTemplate<MatroskaSubtitleCueDisplay>((item, _) =>
+                    var textBlock = new TextBlock
                     {
-                        var stackPanel = new StackPanel
-                        {
-                            Orientation = Orientation.Vertical,
-                            Spacing = 5,
-                            HorizontalAlignment =  HorizontalAlignment.Left,
-                        };
+                        Text = item.Text,
+                        TextWrapping = Avalonia.Media.TextWrapping.Wrap,
+                        HorizontalAlignment = HorizontalAlignment.Left,
+                        MaxWidth = 300 // Adjust as needed
+                    };
+                    stackPanel.Children.Add(textBlock);
+                }
 
-                        // Add text if available
-                        if (!string.IsNullOrEmpty(item.Text))
-                        {
-                            var textBlock = new TextBlock
-                            {
-                                Text = item.Text,
-                                TextWrapping = Avalonia.Media.TextWrapping.Wrap,
-                                HorizontalAlignment = HorizontalAlignment.Left,
-                                MaxWidth = 300 // Adjust as needed
-                            };
-                            stackPanel.Children.Add(textBlock);
-                        }
+                // Add image if available
+                if (item.Image != null)
+                {
+                    var image = new Image
+                    {
+                        Source = item.Image.Source,
+                        MaxHeight = 100, // Adjust as needed
+                        MaxWidth = 200,  // Adjust as needed
+                        Stretch = Avalonia.Media.Stretch.Uniform
+                    };
+                    stackPanel.Children.Add(image);
+                }
 
-                        // Add image if available
-                        if (item.Image != null)
-                        {
-                            var image = new Image
-                            {
-                                Source = item.Image.Source,
-                                MaxHeight = 100, // Adjust as needed
-                                MaxWidth = 200,  // Adjust as needed
-                                Stretch = Avalonia.Media.Stretch.Uniform
-                            };
-                            stackPanel.Children.Add(image);
-                        }
-
-                        return stackPanel;
-                    })
-                },
-            },
-        };
+                return stackPanel;
+            })
+        });
 
         return UiUtil.MakeBorderForControlNoPadding(dataGridSubtitle);
     }

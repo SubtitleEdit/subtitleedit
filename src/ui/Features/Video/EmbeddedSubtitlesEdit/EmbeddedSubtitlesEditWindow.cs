@@ -98,74 +98,71 @@ public class EmbeddedSubtitlesEditWindow : Window
     {
         var booleanToCheckMarkConverter = new BooleanToCheckMarkConverter();
         var booleanToDeleteMarkConverter = new BooleanToDeleteMarkConverter();
-        var dataGridTracks = new DataGrid
+        // No header sorting: the track list's order is the output track order
+        // (FfmpegGenerator.AlterEmbeddedTracksMatroska consumes Tracks in list order).
+        var dataGridTracks = TableViewExtras.MakeTableView(multiSelect: false);
+        dataGridTracks.Width = double.NaN;
+        dataGridTracks.Height = double.NaN;
+        dataGridTracks.DataContext = vm;
+        dataGridTracks.ItemsSource = vm.Tracks;
+        dataGridTracks.Columns.Add(new SeTableViewColumn
         {
-            AutoGenerateColumns = false,
-            SelectionMode = DataGridSelectionMode.Single,
-            CanUserResizeColumns = true,
-            CanUserSortColumns = true,
-            HorizontalAlignment = HorizontalAlignment.Stretch,
-            VerticalAlignment = VerticalAlignment.Stretch,
-            Width = double.NaN,
-            Height = double.NaN,
-            DataContext = vm,
-            ItemsSource = vm.Tracks,
-            Columns =
-            {
-                new DataGridTextColumn
-                {
-                    Header = string.Empty,
-                    CellTheme = UiUtil.DataGridNoBorderNoPaddingCellTheme,
-                    Binding = new Binding(nameof(EmbeddedTrack.Deleted)) { Mode = BindingMode.OneWay, Converter = booleanToDeleteMarkConverter },
-                    IsReadOnly = true,
-                },
-                new DataGridTextColumn
-                {
-                    Header = Se.Language.General.Name,
-                    CellTheme = UiUtil.DataGridNoBorderNoPaddingCellTheme,
-                    Binding = new Binding(nameof(EmbeddedTrack.Name)) { Mode = BindingMode.OneWay },
-                    IsReadOnly = true,
-                },
-                new DataGridTextColumn
-                {
-                    Header = Se.Language.General.Language,
-                    CellTheme = UiUtil.DataGridNoBorderNoPaddingCellTheme,
-                    Binding = new Binding(nameof(EmbeddedTrack.LanguageOrTitle)) { Mode = BindingMode.OneWay },
-                    IsReadOnly = true,
-                },
-                new DataGridTextColumn
-                {
-                    Header = Se.Language.General.Default,
-                    CellTheme = UiUtil.DataGridNoBorderNoPaddingCellTheme,
-                    Binding = new Binding(nameof(EmbeddedTrack.Default)) { Converter = booleanToCheckMarkConverter, Mode = BindingMode.OneWay },
-                    IsReadOnly = true,
-                },
-                new DataGridTextColumn
-                {
-                    Header = Se.Language.General.Forced,
-                    CellTheme = UiUtil.DataGridNoBorderNoPaddingCellTheme,
-                    Binding = new Binding(nameof(EmbeddedTrack.Forced)) { Converter = booleanToCheckMarkConverter, Mode = BindingMode.OneWay },
-                    IsReadOnly = true,
-                },
-                new DataGridTextColumn
-                {
-                    Header = Se.Language.General.Codec,
-                    CellTheme = UiUtil.DataGridNoBorderNoPaddingCellTheme,
-                    Binding = new Binding(nameof(EmbeddedTrack.Format)) { Mode = BindingMode.OneWay },
-                    IsReadOnly = true,
-                },
-                new DataGridTextColumn
-                {
-                    Header = Se.Language.General.FileName,
-                    CellTheme = UiUtil.DataGridNoBorderNoPaddingCellTheme,
-                    Binding = new Binding(nameof(EmbeddedTrack.FileName)) { Mode = BindingMode.OneWay },
-                    IsReadOnly = true,
-                    Width = new DataGridLength(1, DataGridLengthUnitType.Star),
-                },
-            },
-        };
-        dataGridTracks.Bind(DataGrid.ItemsSourceProperty, new Binding(nameof(vm.Tracks)) { Source = vm });
-        dataGridTracks.Bind(DataGrid.SelectedItemProperty, new Binding(nameof(vm.SelectedTrck)) { Source = vm });
+            Header = string.Empty,
+            CellTheme = UiUtil.TableViewCellTheme,
+            HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
+            Binding = new Binding(nameof(EmbeddedTrack.Deleted)) { Mode = BindingMode.OneWay, Converter = booleanToDeleteMarkConverter },
+            Width = new GridLength(40), // was content-sized (Auto) on the DataGrid
+        });
+        dataGridTracks.Columns.Add(new SeTableViewColumn
+        {
+            Header = Se.Language.General.Name,
+            CellTheme = UiUtil.TableViewCellTheme,
+            HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
+            Binding = new Binding(nameof(EmbeddedTrack.Name)) { Mode = BindingMode.OneWay },
+            Width = new GridLength(160), // was content-sized (Auto) on the DataGrid
+        });
+        dataGridTracks.Columns.Add(new SeTableViewColumn
+        {
+            Header = Se.Language.General.Language,
+            CellTheme = UiUtil.TableViewCellTheme,
+            HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
+            Binding = new Binding(nameof(EmbeddedTrack.LanguageOrTitle)) { Mode = BindingMode.OneWay },
+            Width = new GridLength(120), // was content-sized (Auto) on the DataGrid
+        });
+        dataGridTracks.Columns.Add(new SeTableViewColumn
+        {
+            Header = Se.Language.General.Default,
+            CellTheme = UiUtil.TableViewCellTheme,
+            HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
+            Binding = new Binding(nameof(EmbeddedTrack.Default)) { Converter = booleanToCheckMarkConverter, Mode = BindingMode.OneWay },
+            Width = new GridLength(80), // was content-sized (Auto) on the DataGrid
+        });
+        dataGridTracks.Columns.Add(new SeTableViewColumn
+        {
+            Header = Se.Language.General.Forced,
+            CellTheme = UiUtil.TableViewCellTheme,
+            HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
+            Binding = new Binding(nameof(EmbeddedTrack.Forced)) { Converter = booleanToCheckMarkConverter, Mode = BindingMode.OneWay },
+            Width = new GridLength(80), // was content-sized (Auto) on the DataGrid
+        });
+        dataGridTracks.Columns.Add(new SeTableViewColumn
+        {
+            Header = Se.Language.General.Codec,
+            CellTheme = UiUtil.TableViewCellTheme,
+            HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
+            Binding = new Binding(nameof(EmbeddedTrack.Format)) { Mode = BindingMode.OneWay },
+            Width = new GridLength(90), // was content-sized (Auto) on the DataGrid
+        });
+        dataGridTracks.Columns.Add(new SeTableViewColumn
+        {
+            Header = Se.Language.General.FileName,
+            CellTheme = UiUtil.TableViewCellTheme,
+            HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
+            Binding = new Binding(nameof(EmbeddedTrack.FileName)) { Mode = BindingMode.OneWay },
+            Width = new GridLength(1, GridUnitType.Star),
+        });
+        dataGridTracks.Bind(TableView.ItemsSourceProperty, new Binding(nameof(vm.Tracks)) { Source = vm });
+        dataGridTracks.Bind(TableView.SelectedItemProperty, new Binding(nameof(vm.SelectedTrck)) { Source = vm });
         dataGridTracks.KeyDown += (s, e) => vm.OnTracksGridKeyDown(e);
         dataGridTracks.AddHandler(InputElement.KeyDownEvent, (object? _, KeyEventArgs e) =>
         {
@@ -173,7 +170,11 @@ public class EmbeddedSubtitlesEditWindow : Window
             {
                 var target = e.Key == Key.Home ? items[0] : items[^1];
                 dataGridTracks.SelectedItem = target;
-                dataGridTracks.ScrollIntoView(target, null);
+                if (target != null)
+                {
+                    dataGridTracks.ScrollIntoView(target);
+                }
+
                 e.Handled = true;
             }
         }, Avalonia.Interactivity.RoutingStrategies.Tunnel);

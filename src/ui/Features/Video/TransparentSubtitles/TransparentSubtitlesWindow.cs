@@ -537,51 +537,47 @@ public class TransparentSubtitlesWindow : Window
 
     private static Border MakeBatchView(TransparentSubtitlesViewModel vm)
     {
-        var dataGrid = new DataGrid
+        // No header sorting: the batch queue is processed top-to-bottom, so the list
+        // order is meaningful.
+        var dataGrid = TableViewExtras.MakeTableView(multiSelect: false);
+        dataGrid.Width = double.NaN;
+        dataGrid.Height = double.NaN;
+        dataGrid.MinWidth = 550; // the batch column is Auto while measuring; star columns have no intrinsic width
+        dataGrid.DataContext = vm;
+        dataGrid.ItemsSource = vm.JobItems;
+        dataGrid.Columns.Add(new SeTableViewColumn
         {
-            AutoGenerateColumns = false,
-            SelectionMode = DataGridSelectionMode.Single,
-            CanUserResizeColumns = true,
-            CanUserSortColumns = true,
-            HorizontalAlignment = HorizontalAlignment.Stretch,
-            VerticalAlignment = VerticalAlignment.Stretch,
-            Width = double.NaN,
-            Height = double.NaN,
-            DataContext = vm,
-            ItemsSource = vm.JobItems,
-            Columns =
-            {
-                new DataGridTextColumn
-                {
-                    Header = Se.Language.General.SubtitleFileName,
-                    CellTheme = UiUtil.DataGridNoBorderNoPaddingCellTheme,
-                    Binding = new Binding(nameof(BurnInJobItem.SubtitleFileNameShort)),
-                    IsReadOnly = true,
-                },
-                new DataGridTextColumn
-                {
-                    Header = Se.Language.General.Size,
-                    CellTheme = UiUtil.DataGridNoBorderNoPaddingCellTheme,
-                    Binding = new Binding(nameof(BurnInJobItem.Resolution)),
-                    IsReadOnly = true,
-                },
-                new DataGridTextColumn
-                {
-                    Header = Se.Language.General.VideoFile,
-                    CellTheme = UiUtil.DataGridNoBorderNoPaddingCellTheme,
-                    Binding = new Binding(nameof(BurnInJobItem.InputVideoFileNameShort)),
-                    IsReadOnly = true,
-                },
-                new DataGridTextColumn
-                {
-                    Header = Se.Language.General.Status,
-                    CellTheme = UiUtil.DataGridNoBorderNoPaddingCellTheme,
-                    Binding = new Binding(nameof(BurnInJobItem.Status)),
-                    IsReadOnly = true,
-                },
-            },
-        };
-        dataGrid.Bind(DataGrid.SelectedItemProperty, new Binding(nameof(vm.SelectedJobItem)) { Source = vm });
+            Header = Se.Language.General.SubtitleFileName,
+            CellTheme = UiUtil.TableViewCellTheme,
+            HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
+            Binding = new Binding(nameof(BurnInJobItem.SubtitleFileNameShort)),
+            Width = new GridLength(1, GridUnitType.Star),
+        });
+        dataGrid.Columns.Add(new SeTableViewColumn
+        {
+            Header = Se.Language.General.Size,
+            CellTheme = UiUtil.TableViewCellTheme,
+            HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
+            Binding = new Binding(nameof(BurnInJobItem.Resolution)),
+            Width = new GridLength(90), // was content-sized (Auto) on the DataGrid
+        });
+        dataGrid.Columns.Add(new SeTableViewColumn
+        {
+            Header = Se.Language.General.VideoFile,
+            CellTheme = UiUtil.TableViewCellTheme,
+            HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
+            Binding = new Binding(nameof(BurnInJobItem.InputVideoFileNameShort)),
+            Width = new GridLength(1, GridUnitType.Star),
+        });
+        dataGrid.Columns.Add(new SeTableViewColumn
+        {
+            Header = Se.Language.General.Status,
+            CellTheme = UiUtil.TableViewCellTheme,
+            HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
+            Binding = new Binding(nameof(BurnInJobItem.Status)),
+            Width = new GridLength(110), // was content-sized (Auto) on the DataGrid
+        });
+        dataGrid.Bind(TableView.SelectedItemProperty, new Binding(nameof(vm.SelectedJobItem)) { Source = vm });
 
         var buttonAdd = UiUtil.MakeButton(Se.Language.General.AddDotDotDot, vm.AddCommand);
         var buttonRemove = UiUtil.MakeButton(Se.Language.General.Remove, vm.RemoveCommand);

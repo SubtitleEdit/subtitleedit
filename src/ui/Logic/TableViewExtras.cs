@@ -297,6 +297,37 @@ public static class TableViewExtras
     }
 
     /// <summary>
+    /// Home/End jump to the first/last row even when the TableView itself (not a row)
+    /// has keyboard focus - ListBox's native handling only runs with focus on an item.
+    /// Skipped when the key originates in a TextBox (e.g. an in-cell editor).
+    /// </summary>
+    public static void AttachHomeEndNavigation(TableView tableView)
+    {
+        tableView.AddHandler(InputElement.KeyDownEvent, (object? _, KeyEventArgs e) =>
+        {
+            if (e.Key is not (Key.Home or Key.End) || e.Source is TextBox)
+            {
+                return;
+            }
+
+            if (tableView.ItemsSource is not System.Collections.IList items || items.Count == 0)
+            {
+                return;
+            }
+
+            var target = e.Key == Key.Home ? items[0] : items[^1];
+            if (target == null)
+            {
+                return;
+            }
+
+            tableView.SelectedItem = target;
+            tableView.ScrollIntoView(target);
+            e.Handled = true;
+        }, Avalonia.Interactivity.RoutingStrategies.Tunnel);
+    }
+
+    /// <summary>
     /// Space toggles the checkbox value of every selected row - all rows checked means
     /// uncheck all, otherwise check all. This is the piece of the DataGrid-era
     /// CheckboxMultiSelect helper that TableView does not provide natively (extended

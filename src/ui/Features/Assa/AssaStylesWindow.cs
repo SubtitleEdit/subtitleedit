@@ -111,67 +111,50 @@ public class AssaStylesWindow : Window
 
         var label = UiUtil.MakeLabel(Se.Language.Assa.StylesInFile).WithBold();
 
-        var dataGrid = new DataGrid
+        // No header sorting: ASSA styles are written to the file header in list
+        // order on OK, so the collection order is not presentation-only.
+        var dataGrid = TableViewExtras.MakeTableView();
+        dataGrid.DataContext = vm;
+        dataGrid.ItemsSource = vm.FileStyles;
+
+        dataGrid.Columns.Add(new SeTableViewColumn
         {
-            AutoGenerateColumns = false,
-            SelectionMode = DataGridSelectionMode.Extended,
-            CanUserResizeColumns = true,
-            CanUserSortColumns = true,
-            HorizontalAlignment = HorizontalAlignment.Stretch,
-            VerticalAlignment = VerticalAlignment.Stretch,
-            Width = double.NaN,
-            Height = double.NaN,
-            DataContext = vm,
-            ItemsSource = vm.FileStyles,
-            Columns =
-            {
-                new DataGridTextColumn
-                {
-                    Header = Se.Language.General.Name,
-                    CellTheme = UiUtil.DataGridNoBorderNoPaddingCellTheme,
-                    Binding = new Binding(nameof(StyleDisplay.Name)),
-                    IsReadOnly = true,
-                },
-                new DataGridTextColumn
-                {
-                    Header = Se.Language.General.FontName,
-                    CellTheme = UiUtil.DataGridNoBorderNoPaddingCellTheme,
-                    Binding = new Binding(nameof(StyleDisplay.FontName)),
-                    IsReadOnly = true,
-                    Width = new DataGridLength(1, DataGridLengthUnitType.Star),
-                },
-                new DataGridTextColumn
-                {
-                    Header = Se.Language.General.FontSize,
-                    CellTheme = UiUtil.DataGridNoBorderNoPaddingCellTheme,
-                    Binding = new Binding(nameof(StyleDisplay.FontSize)),
-                    IsReadOnly = true,
-                    Width = new DataGridLength(1, DataGridLengthUnitType.Star),
-                },
-                new DataGridTextColumn
-                {
-                    Header = Se.Language.General.Usages,
-                    CellTheme = UiUtil.DataGridNoBorderNoPaddingCellTheme,
-                    Binding = new Binding(nameof(StyleDisplay.UsageCount)),
-                    IsReadOnly = true,
-                    Width = new DataGridLength(1, DataGridLengthUnitType.Star),
-                },
-            },
-        };
-        dataGrid.Bind(DataGrid.SelectedItemProperty, new Binding(nameof(vm.SelectedFileStyle)) { Source = vm });
+            Header = Se.Language.General.Name,
+            CellTheme = UiUtil.TableViewCellTheme,
+            HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
+            Binding = new Binding(nameof(StyleDisplay.Name)),
+            Width = new GridLength(1, GridUnitType.Star),
+        });
+        dataGrid.Columns.Add(new SeTableViewColumn
+        {
+            Header = Se.Language.General.FontName,
+            CellTheme = UiUtil.TableViewCellTheme,
+            HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
+            Binding = new Binding(nameof(StyleDisplay.FontName)),
+            Width = new GridLength(150),
+        });
+        dataGrid.Columns.Add(new SeTableViewColumn
+        {
+            Header = Se.Language.General.FontSize,
+            CellTheme = UiUtil.TableViewCellTheme,
+            HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
+            Binding = new Binding(nameof(StyleDisplay.FontSize)),
+            Width = new GridLength(90),
+        });
+        dataGrid.Columns.Add(new SeTableViewColumn
+        {
+            Header = Se.Language.General.Usages,
+            CellTheme = UiUtil.TableViewCellTheme,
+            HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
+            Binding = new Binding(nameof(StyleDisplay.UsageCount)),
+            Width = new GridLength(90),
+        });
+
+        dataGrid.Bind(TableView.SelectedItemProperty, new Binding(nameof(vm.SelectedFileStyle)) { Source = vm });
         dataGrid.SelectionChanged += vm.FileStylesChanged;
         dataGrid.GotFocus += vm.FileStylesGotFocus;
         dataGrid.KeyDown += vm.FileStylesKeyDown;
-        dataGrid.AddHandler(InputElement.KeyDownEvent, (object? _, KeyEventArgs e) =>
-        {
-            if (e.Key is Key.Home or Key.End && dataGrid.ItemsSource is IList items && items.Count > 0)
-            {
-                var target = e.Key == Key.Home ? items[0] : items[^1];
-                dataGrid.SelectedItem = target;
-                dataGrid.ScrollIntoView(target, null);
-                e.Handled = true;
-            }
-        }, Avalonia.Interactivity.RoutingStrategies.Tunnel);
+        TableViewExtras.AttachHomeEndNavigation(dataGrid);
         vm.FileStyleGrid = dataGrid;
 
         var flyout = new MenuFlyout();
@@ -277,59 +260,54 @@ public class AssaStylesWindow : Window
         var panelCategory = UiUtil.MakeHorizontalPanel(labelCategory, comboBoxCategory, buttonNewCategory, buttonRenameCategory, buttonDeleteCategory)
             .WithAlignmentLeft();
 
-        var dataGrid = new DataGrid
+        // No header sorting: the storage style order is persisted to settings in
+        // list order on OK, so the collection order is not presentation-only.
+        var dataGrid = TableViewExtras.MakeTableView();
+        dataGrid.DataContext = vm;
+        dataGrid.ItemsSource = vm.StorageStylesView;
+
+        dataGrid.Columns.Add(new SeTableViewColumn
         {
-            AutoGenerateColumns = false,
-            SelectionMode = DataGridSelectionMode.Extended,
-            CanUserResizeColumns = true,
-            CanUserSortColumns = true,
-            HorizontalAlignment = HorizontalAlignment.Stretch,
-            VerticalAlignment = VerticalAlignment.Stretch,
-            Width = double.NaN,
-            Height = double.NaN,
-            DataContext = vm,
-            ItemsSource = vm.StorageStylesView,
-            Columns =
-            {
-                new DataGridTextColumn
-                {
-                    Header = Se.Language.General.Name,
-                    CellTheme = UiUtil.DataGridNoBorderNoPaddingCellTheme,
-                    Binding = new Binding(nameof(StyleDisplay.Name)),
-                    IsReadOnly = true,
-                },
-                new DataGridTextColumn
-                {
-                    Header = Se.Language.General.Category,
-                    CellTheme = UiUtil.DataGridNoBorderNoPaddingCellTheme,
-                    Binding = new Binding(nameof(StyleDisplay.Category)),
-                    IsReadOnly = true,
-                },
-                new DataGridTextColumn
-                {
-                    Header = Se.Language.General.FontName,
-                    CellTheme = UiUtil.DataGridNoBorderNoPaddingCellTheme,
-                    Binding = new Binding(nameof(StyleDisplay.FontName)),
-                    IsReadOnly = true,
-                },
-                new DataGridTextColumn
-                {
-                    Header = Se.Language.General.FontSize,
-                    CellTheme = UiUtil.DataGridNoBorderNoPaddingCellTheme,
-                    Binding = new Binding(nameof(StyleDisplay.FontSize)),
-                    IsReadOnly = true,
-                },
-                new DataGridTextColumn
-                {
-                    Header = Se.Language.General.IsDefault,
-                    CellTheme = UiUtil.DataGridNoBorderNoPaddingCellTheme,
-                    Binding = new Binding(nameof(StyleDisplay.IsDefault)),
-                    IsReadOnly = true,
-                    Width = new DataGridLength(1, DataGridLengthUnitType.Star),
-                },
-            },
-        };
-        dataGrid.Bind(DataGrid.SelectedItemProperty, new Binding(nameof(vm.SelectedStorageStyle)) { Source = vm });
+            Header = Se.Language.General.Name,
+            CellTheme = UiUtil.TableViewCellTheme,
+            HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
+            Binding = new Binding(nameof(StyleDisplay.Name)),
+            Width = new GridLength(1, GridUnitType.Star),
+        });
+        dataGrid.Columns.Add(new SeTableViewColumn
+        {
+            Header = Se.Language.General.Category,
+            CellTheme = UiUtil.TableViewCellTheme,
+            HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
+            Binding = new Binding(nameof(StyleDisplay.Category)),
+            Width = new GridLength(120),
+        });
+        dataGrid.Columns.Add(new SeTableViewColumn
+        {
+            Header = Se.Language.General.FontName,
+            CellTheme = UiUtil.TableViewCellTheme,
+            HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
+            Binding = new Binding(nameof(StyleDisplay.FontName)),
+            Width = new GridLength(150),
+        });
+        dataGrid.Columns.Add(new SeTableViewColumn
+        {
+            Header = Se.Language.General.FontSize,
+            CellTheme = UiUtil.TableViewCellTheme,
+            HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
+            Binding = new Binding(nameof(StyleDisplay.FontSize)),
+            Width = new GridLength(90),
+        });
+        dataGrid.Columns.Add(new SeTableViewColumn
+        {
+            Header = Se.Language.General.IsDefault,
+            CellTheme = UiUtil.TableViewCellTheme,
+            HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
+            Binding = new Binding(nameof(StyleDisplay.IsDefault)),
+            Width = new GridLength(90),
+        });
+
+        dataGrid.Bind(TableView.SelectedItemProperty, new Binding(nameof(vm.SelectedStorageStyle)) { Source = vm });
         dataGrid.SelectionChanged += vm.StorageStylesChanged;
         dataGrid.GotFocus += vm.StorageStylesGotFocus;
         vm.StorageStyleGrid = dataGrid;

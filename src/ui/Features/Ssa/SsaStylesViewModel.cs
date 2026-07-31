@@ -49,8 +49,8 @@ public partial class SsaStylesViewModel : ObservableObject, IClosingCleanup
     public Window? Window { get; set; }
     public bool OkPressed { get; private set; }
     public string Header { get; set; }
-    public DataGrid FileStyleGrid { get; set; }
-    public DataGrid StorageStyleGrid { get; set; }
+    public TableView FileStyleGrid { get; set; }
+    public TableView StorageStyleGrid { get; set; }
     public Subtitle ResultSubtitle => _subtitle;
 
     private readonly IFileHelper _fileHelper;
@@ -73,8 +73,8 @@ public partial class SsaStylesViewModel : ObservableObject, IClosingCleanup
         BorderTypes = new ObservableCollection<BorderStyleItem>(BorderStyleItem.List());
         SelectedBorderType = BorderTypes[0];
         CurrentTitle = string.Empty;
-        FileStyleGrid = new DataGrid();
-        StorageStyleGrid = new DataGrid();
+        FileStyleGrid = new TableView();
+        StorageStyleGrid = new TableView();
 
         Header = string.Empty;
         _subtitle = new Subtitle();
@@ -216,7 +216,7 @@ public partial class SsaStylesViewModel : ObservableObject, IClosingCleanup
     [RelayCommand]
     private void FileRemove()
     {
-        var selectedItems = FileStyleGrid.SelectedItems.Cast<StyleDisplay>().ToList();
+        var selectedItems = FileStyleGrid.SelectedItems?.Cast<StyleDisplay>().ToList() ?? new List<StyleDisplay>();
         if (Window == null || selectedItems.Count == 0)
         {
             return;
@@ -240,7 +240,7 @@ public partial class SsaStylesViewModel : ObservableObject, IClosingCleanup
     [RelayCommand]
     private void FilesDuplicate()
     {
-        var selectedItems = FileStyleGrid.SelectedItems.Cast<StyleDisplay>().ToList();
+        var selectedItems = FileStyleGrid.SelectedItems?.Cast<StyleDisplay>().ToList() ?? new List<StyleDisplay>();
         if (Window == null || selectedItems.Count == 0)
         {
             return;
@@ -302,7 +302,7 @@ public partial class SsaStylesViewModel : ObservableObject, IClosingCleanup
     [RelayCommand]
     private void FileCopyToStorage()
     {
-        var selectedItems = FileStyleGrid.SelectedItems.Cast<StyleDisplay>().ToList();
+        var selectedItems = FileStyleGrid.SelectedItems?.Cast<StyleDisplay>().ToList() ?? new List<StyleDisplay>();
         if (Window == null || selectedItems.Count == 0)
         {
             return;
@@ -418,7 +418,7 @@ public partial class SsaStylesViewModel : ObservableObject, IClosingCleanup
     [RelayCommand]
     private void StorageRemove()
     {
-        var selectedItems = StorageStyleGrid.SelectedItems.Cast<StyleDisplay>().ToList();
+        var selectedItems = StorageStyleGrid.SelectedItems?.Cast<StyleDisplay>().ToList() ?? new List<StyleDisplay>();
         if (Window == null || selectedItems.Count == 0)
         {
             return;
@@ -474,7 +474,7 @@ public partial class SsaStylesViewModel : ObservableObject, IClosingCleanup
                 }
             }
 
-            StorageStyleGrid.Focus();
+            TableViewExtras.FocusRow(StorageStyleGrid);
         });
     }
 
@@ -487,7 +487,7 @@ public partial class SsaStylesViewModel : ObservableObject, IClosingCleanup
     [RelayCommand]
     private void StorageDuplicate()
     {
-        var selectedItems = StorageStyleGrid.SelectedItems.Cast<StyleDisplay>().ToList();
+        var selectedItems = StorageStyleGrid.SelectedItems?.Cast<StyleDisplay>().ToList() ?? new List<StyleDisplay>();
         if (Window == null || selectedItems.Count == 0)
         {
             return;
@@ -547,7 +547,7 @@ public partial class SsaStylesViewModel : ObservableObject, IClosingCleanup
     [RelayCommand]
     private void StorageCopyToFiles()
     {
-        var selectedItems = StorageStyleGrid.SelectedItems.Cast<StyleDisplay>().ToList();
+        var selectedItems = StorageStyleGrid.SelectedItems?.Cast<StyleDisplay>().ToList() ?? new List<StyleDisplay>();
         if (Window == null || selectedItems.Count == 0)
         {
             return;
@@ -644,7 +644,7 @@ public partial class SsaStylesViewModel : ObservableObject, IClosingCleanup
         }
 
         IsFileStyleSelected = SelectedFileStyle != null;
-        IsTakeUsagesFromVisible = FileStyleGrid.SelectedItems.Count == 1;
+        IsTakeUsagesFromVisible = FileStyleGrid.SelectedItems?.Count == 1;
 
         _timerUpdatePreview.Start();
     }
@@ -895,7 +895,7 @@ public partial class SsaStylesViewModel : ObservableObject, IClosingCleanup
         CurrentTitle = Se.Language.Assa.StylesInFile;
         SelectedBorderType = selectedStyle?.BorderStyle ?? BorderTypes[0];
         IsFileStyleSelected = selectedStyle != null;
-        IsTakeUsagesFromVisible = FileStyleGrid.SelectedItems.Count == 1;
+        IsTakeUsagesFromVisible = FileStyleGrid.SelectedItems?.Count == 1;
     }
 
     private void SwitchToStorageStyle()
@@ -905,8 +905,8 @@ public partial class SsaStylesViewModel : ObservableObject, IClosingCleanup
         CurrentTitle = Se.Language.Assa.StylesSaved;
         SelectedBorderType = selectedStyle?.BorderStyle ?? BorderTypes[0];
         IsStorageStyleSelected = selectedStyle != null;
-        IsSetStyleAsDefaultVisible = StorageStyleGrid.SelectedItems.Count == 1;
-        IsCopyToFileStylesVisible = StorageStyleGrid.SelectedItems.Count > 0;
+        IsSetStyleAsDefaultVisible = StorageStyleGrid.SelectedItems?.Count == 1;
+        IsCopyToFileStylesVisible = StorageStyleGrid.SelectedItems?.Count > 0;
     }
 
     internal void BorderTypeChanged(object? sender, SelectionChangedEventArgs e)
@@ -976,7 +976,7 @@ public partial class SsaStylesViewModel : ObservableObject, IClosingCleanup
                 UpdateUsages();
             }
 
-            FileStyleGrid.Focus();
+            TableViewExtras.FocusRow(FileStyleGrid);
         });
     }
 
@@ -1026,7 +1026,7 @@ public partial class SsaStylesViewModel : ObservableObject, IClosingCleanup
             }
 
             UpdateUsages();
-            FileStyleGrid.Focus();
+            TableViewExtras.FocusRow(FileStyleGrid);
         });
     }
 

@@ -62,55 +62,61 @@ public class PickVobSubLanguageWindow : Window
             Dispatcher.UIThread.InvokeAsync(() =>
             {
                 vm.SelectAndScrollToRow(0);
-                vm.LanguagesGrid.Focus();
+                TableViewExtras.FocusRow(vm.LanguagesGrid);
             }, DispatcherPriority.Input);
         };
     }
 
     private static Border MakeLanguagesView(PickVobSubLanguageViewModel vm)
     {
-        var dataGrid = new DataGrid
+        var dataGrid = TableViewExtras.MakeTableView(multiSelect: false);
+        dataGrid.Width = double.NaN;
+        dataGrid.Height = double.NaN;
+        dataGrid.DataContext = vm;
+        dataGrid.ItemsSource = vm.Languages;
+
+        // Content-sized (Auto) on the DataGrid; TableView treats Auto as star, so the
+        // stream-id and count columns get fixed widths (Language keeps the star).
+        var streamIdColumn = new SeTableViewColumn
         {
-            AutoGenerateColumns = false,
-            SelectionMode = DataGridSelectionMode.Single,
-            CanUserResizeColumns = true,
-            CanUserSortColumns = true,
-            HorizontalAlignment = HorizontalAlignment.Stretch,
-            VerticalAlignment = VerticalAlignment.Stretch,
-            Width = double.NaN,
-            Height = double.NaN,
-            DataContext = vm,
-            ItemsSource = vm.Languages,
-            Columns =
-            {
-                new DataGridTextColumn
-                {
-                    Header = Se.Language.General.NumberSymbol,
-                    CellTheme = UiUtil.DataGridNoBorderNoPaddingCellTheme,
-                    Binding = new Binding(nameof(VobSubLanguageDisplay.StreamIdHex)),
-                    IsReadOnly = true,
-                },
-                new DataGridTextColumn
-                {
-                    Header = Se.Language.General.Language,
-                    CellTheme = UiUtil.DataGridNoBorderNoPaddingCellTheme,
-                    Binding = new Binding(nameof(VobSubLanguageDisplay.Language)),
-                    IsReadOnly = true,
-                    Width = new DataGridLength(1, DataGridLengthUnitType.Star),
-                },
-                new DataGridTextColumn
-                {
-                    Header = Se.Language.General.Count,
-                    CellTheme = UiUtil.DataGridNoBorderNoPaddingCellTheme,
-                    Binding = new Binding(nameof(VobSubLanguageDisplay.Count)),
-                    IsReadOnly = true,
-                },
-            },
+            Header = Se.Language.General.NumberSymbol,
+            CellTheme = UiUtil.TableViewCellTheme,
+            HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
+            Binding = new Binding(nameof(VobSubLanguageDisplay.StreamIdHex)),
+            Width = new GridLength(80),
         };
-        dataGrid.Bind(DataGrid.SelectedItemProperty, new Binding(nameof(vm.SelectedLanguage)));
-        dataGrid.SelectionChanged += vm.DataGridLanguagesSelectionChanged;
+        var languageColumn = new SeTableViewColumn
+        {
+            Header = Se.Language.General.Language,
+            CellTheme = UiUtil.TableViewCellTheme,
+            HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
+            Binding = new Binding(nameof(VobSubLanguageDisplay.Language)),
+            Width = new GridLength(1, GridUnitType.Star),
+        };
+        var countColumn = new SeTableViewColumn
+        {
+            Header = Se.Language.General.Count,
+            CellTheme = UiUtil.TableViewCellTheme,
+            HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
+            Binding = new Binding(nameof(VobSubLanguageDisplay.Count)),
+            Width = new GridLength(80),
+        };
+
+        dataGrid.Columns.Add(streamIdColumn);
+        dataGrid.Columns.Add(languageColumn);
+        dataGrid.Columns.Add(countColumn);
+
+        dataGrid.Bind(TableView.SelectedItemProperty, new Binding(nameof(vm.SelectedLanguage)));
+        dataGrid.SelectionChanged += vm.LanguagesGridSelectionChanged;
         dataGrid.DoubleTapped += (_, _) => vm.OkCommand.Execute(null);
         vm.LanguagesGrid = dataGrid;
+
+        // Language list order is presentation-only (OK uses the selected item), so the
+        // in-place header sorter is safe. The hex column sorts by the numeric stream id.
+        new TableViewHeaderSorter(dataGrid)
+            .AddSortable<VobSubLanguageDisplay, int>(streamIdColumn, x => x.StreamId)
+            .AddSortable<VobSubLanguageDisplay, string>(languageColumn, x => x.Language)
+            .AddSortable<VobSubLanguageDisplay, int>(countColumn, x => x.Count);
 
         return UiUtil.MakeBorderForControlNoPadding(dataGrid);
     }
@@ -119,46 +125,46 @@ public class PickVobSubLanguageWindow : Window
     {
         var fullTimeConverter = new TimeSpanToDisplayFullConverter();
         var shortTimeConverter = new TimeSpanToDisplayShortConverter();
-        var dataGrid = new DataGrid
+        var dataGrid = TableViewExtras.MakeTableView(multiSelect: false);
+        dataGrid.Width = double.NaN;
+        dataGrid.Height = double.NaN;
+        dataGrid.DataContext = vm;
+        dataGrid.ItemsSource = vm.Rows;
+
+        // No sorter here: the preview shows subtitle cues in subtitle order (the old
+        // DataGrid had sorting disabled too).
+        dataGrid.Columns.AddRange(new TableViewColumn[]
         {
-            AutoGenerateColumns = false,
-            SelectionMode = DataGridSelectionMode.Single,
-            CanUserResizeColumns = true,
-            CanUserSortColumns = false,
-            HorizontalAlignment = HorizontalAlignment.Stretch,
-            VerticalAlignment = VerticalAlignment.Stretch,
-            Width = double.NaN,
-            Height = double.NaN,
-            DataContext = vm,
-            ItemsSource = vm.Rows,
-            Columns =
-            {
-                new DataGridTextColumn
+                new SeTableViewColumn
                 {
                     Header = Se.Language.General.NumberSymbol,
-                    CellTheme = UiUtil.DataGridNoBorderNoPaddingCellTheme,
+                    CellTheme = UiUtil.TableViewCellTheme,
+                    HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
                     Binding = new Binding(nameof(VobSubLanguageCueDisplay.Number)),
-                    IsReadOnly = true,
+                    Width = new GridLength(60),
                 },
-                new DataGridTextColumn
+                new SeTableViewColumn
                 {
                     Header = Se.Language.General.Show,
-                    CellTheme = UiUtil.DataGridNoBorderNoPaddingCellTheme,
+                    CellTheme = UiUtil.TableViewCellTheme,
+                    HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
                     Binding = new Binding(nameof(VobSubLanguageCueDisplay.Show)) { Converter = fullTimeConverter },
-                    IsReadOnly = true,
+                    Width = new GridLength(120),
                 },
-                new DataGridTextColumn
+                new SeTableViewColumn
                 {
                     Header = Se.Language.General.Duration,
-                    CellTheme = UiUtil.DataGridNoBorderNoPaddingCellTheme,
+                    CellTheme = UiUtil.TableViewCellTheme,
+                    HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
                     Binding = new Binding(nameof(VobSubLanguageCueDisplay.Duration)) { Converter = shortTimeConverter },
-                    IsReadOnly = true,
+                    Width = new GridLength(90),
                 },
-                new DataGridTemplateColumn
+                new SeTableViewColumn
                 {
                     Header = Se.Language.General.Image,
-                    IsReadOnly = true,
-                    Width = new DataGridLength(1, DataGridLengthUnitType.Star),
+                    CellTheme = UiUtil.TableViewCellTheme,
+                    HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
+                    Width = new GridLength(1, GridUnitType.Star),
                     CellTemplate = new Avalonia.Controls.Templates.FuncDataTemplate<VobSubLanguageCueDisplay>((item, _) =>
                     {
                         if (item.Image == null)
@@ -175,8 +181,7 @@ public class PickVobSubLanguageWindow : Window
                         };
                     }),
                 },
-            },
-        };
+        });
 
         return UiUtil.MakeBorderForControlNoPadding(dataGrid);
     }
