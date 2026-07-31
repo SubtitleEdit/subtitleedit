@@ -120,6 +120,7 @@ public class FontCollectorWindow : Window
         dataGrid.Columns.Add(usedInColumn);
         dataGrid.Columns.Add(statusColumn);
         dataGrid.Columns.Add(fontFilesColumn);
+        dataGrid.Bind(TableView.SelectedItemProperty, new Binding(nameof(vm.SelectedFontItem)));
 
         // Header sorting is safe here: the font list is presentation-only (copying
         // fonts to a folder uses the found-file set, not the row order, and the
@@ -145,8 +146,9 @@ public class FontCollectorWindow : Window
         {
             RowDefinitions =
             {
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
+                new RowDefinition { Height = new GridLength(2, GridUnitType.Star) },
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
             },
             ColumnDefinitions =
             {
@@ -162,6 +164,7 @@ public class FontCollectorWindow : Window
         grid.Add(dataGrid, 0, 0, 1, 2);
         grid.Add(statusText, 1, 0);
         grid.Add(buttonBar, 1, 1);
+        grid.Add(MakeFontPreviewView(vm), 2, 0, 1, 2);
 
         return grid;
     }
@@ -237,6 +240,21 @@ public class FontCollectorWindow : Window
         dataGrid.Columns.Add(fontNameColumn);
         dataGrid.Columns.Add(fileColumn);
         dataGrid.Bind(TableView.SelectedItemProperty, new Binding(nameof(vm.SelectedCollectedFont)));
+        dataGrid.KeyDown += vm.CollectedFontsGridKeyDown;
+
+        var flyout = new MenuFlyout();
+        flyout.Opening += vm.CollectedFontsContextMenuOpening;
+        dataGrid.ContextFlyout = flyout;
+        UiUtil.AttachMacContextFlyoutHandler(dataGrid);
+
+        var menuItemDelete = new Avalonia.Controls.MenuItem
+        {
+            Header = Se.Language.General.Delete,
+            DataContext = vm,
+            Command = vm.DeleteCollectedFontCommand,
+        };
+        menuItemDelete.Bind(Avalonia.Controls.MenuItem.IsVisibleProperty, new Binding(nameof(vm.IsDeleteCollectedFontVisible)) { Source = vm });
+        flyout.Items.Add(menuItemDelete);
 
         var buttonImportFont = UiUtil.MakeButton(Se.Language.Assa.FontCollectorImportFontDotDotDot, vm.ImportFontCommand)
             .WithIconLeft(IconNames.Import);

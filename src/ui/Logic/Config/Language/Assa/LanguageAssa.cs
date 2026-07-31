@@ -50,6 +50,7 @@ public class LanguageAssa
     public string FontCollectorXOfYFontsFound { get; set; }
     public string FontCollectorCopyFontsToSeFontsFolder { get; set; }
     public string FontCollectorImportFontDotDotDot { get; set; }
+    public string FontCollectorDeleteFontXPrompt { get; set; }
     public string FontCollectorCurrentSubtitle { get; set; }
     public string FontCollectorOpenFontsFolder { get; set; }
     public string Attachments { get; set; }
@@ -261,6 +262,7 @@ public class LanguageAssa
         FontCollectorXOfYFontsFound = "{0} of {1} fonts found";
         FontCollectorCopyFontsToSeFontsFolder = "Copy to font collector";
         FontCollectorImportFontDotDotDot = "Import font...";
+        FontCollectorDeleteFontXPrompt = "Delete font file \"{0}\"?";
         FontCollectorCurrentSubtitle = "Current subtitle";
         FontCollectorOpenFontsFolder = "Open SE's Fonts folder...";
         Attachments = "Attachments";

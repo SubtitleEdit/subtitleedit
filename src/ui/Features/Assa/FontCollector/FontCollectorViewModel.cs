@@ -25,8 +25,10 @@ namespace Nikse.SubtitleEdit.Features.Assa.FontCollector;
 public partial class FontCollectorViewModel : ObservableObject
 {
     [ObservableProperty] private ObservableCollection<FontCollectorItem> _fontItems;
+    [ObservableProperty] private FontCollectorItem? _selectedFontItem;
     [ObservableProperty] private string _statusText;
     [ObservableProperty] private bool _isScanning;
+    [ObservableProperty] private bool _isDeleteCollectedFontVisible;
     [ObservableProperty] private ObservableCollection<string> _installedFontNames;
     [ObservableProperty] private string? _selectedInstalledFontName;
     [ObservableProperty] private ObservableCollection<CollectedFont> _collectedFonts;
@@ -86,20 +88,27 @@ public partial class FontCollectorViewModel : ObservableObject
 
     partial void OnSelectedTabIndexChanged(int value) => UpdateFontPreview();
 
+    partial void OnSelectedFontItemChanged(FontCollectorItem? value) => UpdateFontPreview();
+
     partial void OnSelectedInstalledFontNameChanged(string? value) => UpdateFontPreview();
 
     partial void OnSelectedCollectedFontChanged(CollectedFont? value) => UpdateFontPreview();
 
     /// <summary>
-    /// Renders a sample-text preview of the font selected in the installed/collected tab.
-    /// A collected font need not be installed, so it is rendered from its file.
+    /// Renders a sample-text preview of the font selected in the active tab.
+    /// A found/collected font need not be installed, so it is rendered from its file.
     /// </summary>
     private void UpdateFontPreview()
     {
         string? fontName = null;
         SKTypeface? skTypeface = null;
 
-        if (SelectedTabIndex == 1 && !string.IsNullOrEmpty(SelectedInstalledFontName))
+        if (SelectedTabIndex == 0 && SelectedFontItem != null && SelectedFontItem.FoundFiles.Count > 0)
+        {
+            fontName = SelectedFontItem.FontName;
+            skTypeface = LoadTypefaceForName(SelectedFontItem.FoundFiles[0], fontName);
+        }
+        else if (SelectedTabIndex == 1 && !string.IsNullOrEmpty(SelectedInstalledFontName))
         {
             fontName = SelectedInstalledFontName;
             skTypeface = SKTypeface.FromFamilyName(FontHelper.GetSkiaFontNameFromLibAssaFontName(fontName));
@@ -139,6 +148,81 @@ public partial class FontCollectorViewModel : ObservableObject
         var skBitmap = SKBitmap.FromImage(skImage);
         FontPreview?.Dispose();
         FontPreview = skBitmap.ToAvaloniaBitmap();
+    }
+
+    /// <summary>
+    /// Loads the face in <paramref name="fontFile"/> whose family/face name matches
+    /// <paramref name="fontName"/> (a .ttc/.otc holds several); falls back to the first face.
+    /// </summary>
+    private static SKTypeface? LoadTypefaceForName(string fontFile, string fontName)
+    {
+        for (var index = 0; index < 30; index++)
+        {
+            var candidate = SKTypeface.FromFile(fontFile, index);
+            if (candidate == null)
+            {
+                break;
+            }
+
+            if (fontName.Equals(candidate.FamilyName, StringComparison.OrdinalIgnoreCase) ||
+                fontName.Equals(FontHelper.GetLibAssaFontName(candidate), StringComparison.OrdinalIgnoreCase))
+            {
+                return candidate;
+            }
+
+            candidate.Dispose();
+        }
+
+        return SKTypeface.FromFile(fontFile, 0);
+    }
+
+    /// <summary>Deletes the selected collected font's file from SE's Fonts folder.</summary>
+    [RelayCommand]
+    private async Task DeleteCollectedFont()
+    {
+        var selected = SelectedCollectedFont;
+        if (Window == null || selected == null)
+        {
+            return;
+        }
+
+        var answer = await MessageBox.Show(
+            Window,
+            Se.Language.General.Delete,
+            string.Format(Se.Language.Assa.FontCollectorDeleteFontXPrompt, Path.GetFileName(selected.FilePath)),
+            MessageBoxButtons.YesNo);
+        if (answer != MessageBoxResult.Yes)
+        {
+            return;
+        }
+
+        try
+        {
+            File.Delete(selected.FilePath);
+        }
+        catch (Exception exception)
+        {
+            Se.LogError(exception, "Font collector delete failed");
+            await MessageBox.Show(Window, Se.Language.General.Error, exception.Message, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            return;
+        }
+
+        SelectedCollectedFont = null;
+        _ = Task.Run(LoadFontLists);
+    }
+
+    internal void CollectedFontsContextMenuOpening(object? sender, EventArgs e)
+    {
+        IsDeleteCollectedFontVisible = SelectedCollectedFont != null;
+    }
+
+    internal void CollectedFontsGridKeyDown(object? sender, KeyEventArgs e)
+    {
+        if (e.Key == Key.Delete && SelectedCollectedFont != null)
+        {
+            e.Handled = true;
+            _ = DeleteCollectedFont();
+        }
     }
 
     [RelayCommand]
@@ -284,6 +368,7 @@ public partial class FontCollectorViewModel : ObservableObject
                 IsScanning = false;
                 var foundCount = FontItems.Count(i => i.FoundFiles.Count > 0);
                 StatusText = string.Format(Se.Language.Assa.FontCollectorXOfYFontsFound, foundCount, FontItems.Count);
+                UpdateFontPreview(); // the selected row may only now have found files
             });
         }
     }

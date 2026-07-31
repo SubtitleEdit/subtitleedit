@@ -2992,6 +2992,7 @@
     "fontCollectorXOfYFontsFound": "{0} of {1} fonts found",
     "fontCollectorCopyFontsToSeFontsFolder": "Copy to font collector",
     "fontCollectorImportFontDotDotDot": "Import font...",
+    "fontCollectorDeleteFontXPrompt": "Delete font file \"{0}\"?",
     "fontCollectorCurrentSubtitle": "Current subtitle",
     "fontCollectorOpenFontsFolder": "Open SE's Fonts folder...",
     "attachments": "Attachments",
