@@ -800,7 +800,7 @@ public partial class CutVideoViewModel : ObservableObject
                 _ = Cancel();
                 return;
             }
-            else if (keyEventArgs.Key == Key.F1)
+            else if (UiUtil.IsHelp(keyEventArgs))
             {
                 keyEventArgs.Handled = true;
                 UiUtil.ShowHelp("features/cut-video");
