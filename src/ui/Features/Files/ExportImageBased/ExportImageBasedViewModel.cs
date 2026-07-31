@@ -107,7 +107,7 @@ public partial class ExportImageBasedViewModel : ObservableObject, IClosingClean
 
     public Window? Window { get; set; }
     public bool OkPressed { get; private set; }
-    public DataGrid SubtitleGrid { get; set; }
+    public TableView SubtitleGrid { get; set; }
 
     private List<SubtitleLineViewModel>? _selectedSubtitles;
     private bool _dirty;
@@ -162,7 +162,7 @@ public partial class ExportImageBasedViewModel : ObservableObject, IClosingClean
         SelectedContentAlignment = ContentAlignments[0];
         LineSpacings = new ObservableCollection<int>(Enumerable.Range(-50, 501));
         SelectedLineSpacing = 0;
-        SubtitleGrid = new DataGrid();
+        SubtitleGrid = new TableView();
         Title = string.Empty;
         BitmapPreview = new SKBitmap(1, 1, false).ToAvaloniaBitmap();
         OutlineColor = Colors.Black;

@@ -364,77 +364,98 @@ public class VideoOcrWindow : Window
     {
         var fullTimeConverter = new TimeSpanToDisplayFullConverter();
         var shortTimeConverter = new TimeSpanToDisplayShortConverter();
-        var dataGrid = new DataGrid
+        var tableView = TableViewExtras.MakeTableView();
+        tableView.DataContext = vm;
+        tableView.ItemsSource = vm.Lines;
+
+        tableView.Columns.Add(new SeTableViewColumn
         {
-            AutoGenerateColumns = false,
-            SelectionMode = DataGridSelectionMode.Extended,
-            CanUserResizeColumns = true,
-            HorizontalAlignment = HorizontalAlignment.Stretch,
-            VerticalAlignment = VerticalAlignment.Stretch,
-            IsReadOnly = false, // the text column is editable so OCR mistakes can be fixed in place
-            DataContext = vm,
-            ItemsSource = vm.Lines,
-            Columns =
+            Header = Se.Language.General.NumberSymbol,
+            CellTheme = UiUtil.TableViewCellTheme,
+            HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
+            Binding = new Binding(nameof(VideoOcrLineItem.Number)),
+            Width = new GridLength(50),
+        });
+        tableView.Columns.Add(new SeTableViewColumn
+        {
+            Header = Se.Language.General.Show,
+            CellTheme = UiUtil.TableViewCellTheme,
+            HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
+            Binding = new Binding(nameof(VideoOcrLineItem.StartTime)) { Converter = fullTimeConverter },
+            Width = new GridLength(110),
+        });
+        tableView.Columns.Add(new SeTableViewColumn
+        {
+            Header = Se.Language.General.Hide,
+            CellTheme = UiUtil.TableViewCellTheme,
+            HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
+            Binding = new Binding(nameof(VideoOcrLineItem.EndTime)) { Converter = fullTimeConverter },
+            Width = new GridLength(110),
+        });
+        tableView.Columns.Add(new SeTableViewColumn
+        {
+            Header = Se.Language.General.Duration,
+            CellTheme = UiUtil.TableViewCellTheme,
+            HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
+            Binding = new Binding(nameof(VideoOcrLineItem.Duration)) { Converter = shortTimeConverter },
+            Width = new GridLength(90),
+        });
+
+        // TableView has no cell editing, so the editable text column (OCR mistakes must stay
+        // fixable in place) becomes a borderless in-cell TextBox bound two-way.
+        tableView.Columns.Add(new SeTableViewColumn
+        {
+            Header = Se.Language.General.Text,
+            CellTheme = UiUtil.TableViewNoPaddingCellTheme,
+            HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
+            Width = new GridLength(1, GridUnitType.Star),
+            CellTemplate = new Avalonia.Controls.Templates.FuncDataTemplate<VideoOcrLineItem>((item, _) =>
             {
-                new DataGridTextColumn
+                if (item == null)
                 {
-                    Header = Se.Language.General.NumberSymbol,
-                    CellTheme = UiUtil.DataGridNoBorderNoPaddingCellTheme,
-                    Binding = new Binding(nameof(VideoOcrLineItem.Number)),
-                    IsReadOnly = true,
-                },
-                new DataGridTextColumn
+                    return new TextBlock();
+                }
+
+                var textBox = new TextBox
                 {
-                    Header = Se.Language.General.Show,
-                    CellTheme = UiUtil.DataGridNoBorderNoPaddingCellTheme,
-                    Binding = new Binding(nameof(VideoOcrLineItem.StartTime)) { Converter = fullTimeConverter },
-                    IsReadOnly = true,
-                },
-                new DataGridTextColumn
-                {
-                    Header = Se.Language.General.Hide,
-                    CellTheme = UiUtil.DataGridNoBorderNoPaddingCellTheme,
-                    Binding = new Binding(nameof(VideoOcrLineItem.EndTime)) { Converter = fullTimeConverter },
-                    IsReadOnly = true,
-                },
-                new DataGridTextColumn
-                {
-                    Header = Se.Language.General.Duration,
-                    CellTheme = UiUtil.DataGridNoBorderNoPaddingCellTheme,
-                    Binding = new Binding(nameof(VideoOcrLineItem.Duration)) { Converter = shortTimeConverter },
-                    IsReadOnly = true,
-                },
-                new DataGridTextColumn
-                {
-                    Header = Se.Language.General.Text,
-                    CellTheme = UiUtil.DataGridNoBorderNoPaddingCellTheme,
-                    Binding = new Binding(nameof(VideoOcrLineItem.Text)),
-                    IsReadOnly = false,
-                    Width = new DataGridLength(1, DataGridLengthUnitType.Star),
-                },
-            },
-        };
+                    Background = Brushes.Transparent,
+                    BorderThickness = new Thickness(0),
+                    VerticalContentAlignment = VerticalAlignment.Center,
+                    [!TextBox.TextProperty] = new Binding(nameof(VideoOcrLineItem.Text)) { Mode = BindingMode.TwoWay },
+                };
+
+                // Clicking into a cell to edit should also make it the current row, so the
+                // double-tap preview seek and Delete act on the line being edited.
+                textBox.GotFocus += (_, _) => tableView.SelectedItem = item;
+                return textBox;
+            }),
+        });
 
         // Double-click a line to see the frame it came from in the preview.
-        dataGrid.DoubleTapped += (s, e) =>
+        tableView.DoubleTapped += (s, e) =>
         {
-            if (dataGrid.SelectedItem is VideoOcrLineItem item)
+            if (tableView.SelectedItem is VideoOcrLineItem item)
             {
                 vm.SeekPreview(item);
             }
         };
 
         // Delete removes the selected lines (unless a cell edit is in progress).
-        dataGrid.KeyDown += (s, e) =>
+        tableView.KeyDown += (s, e) =>
         {
             if (e.Key == Avalonia.Input.Key.Delete && e.Source is not TextBox)
             {
-                vm.DeleteLines(dataGrid.SelectedItems.OfType<VideoOcrLineItem>().ToList());
+                var selectedItems = tableView.SelectedItems;
+                if (selectedItems != null)
+                {
+                    vm.DeleteLines(selectedItems.OfType<VideoOcrLineItem>().ToList());
+                }
+
                 e.Handled = true;
             }
         };
 
-        return UiUtil.MakeBorderForControl(dataGrid);
+        return UiUtil.MakeBorderForControl(tableView);
     }
 
     private static Grid MakeProgressView(VideoOcrViewModel vm)

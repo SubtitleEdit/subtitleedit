@@ -140,12 +140,12 @@ public class CompareWindow : Window
         Activated += delegate { Dispatcher.UIThread.Post(() => buttonOk.Focus()); }; // hack to make OnKeyDown work
         KeyDown += vm.KeyDown;
 
-        vm.LeftDataGrid = (leftView.Child as Border)?.Child as DataGrid;
-        vm.RightDataGrid = (rightView.Child as Border)?.Child as DataGrid;
-        if (vm.LeftDataGrid != null && vm.RightDataGrid != null)
+        vm.LeftGrid = (leftView.Child as Border)?.Child as TableView;
+        vm.RightGrid = (rightView.Child as Border)?.Child as TableView;
+        if (vm.LeftGrid != null && vm.RightGrid != null)
         {
-            vm.LeftDataGrid.SelectionChanged += vm.LeftDataGridSelectionChanged;
-            vm.RightDataGrid.SelectionChanged += vm.RightDataGridSelectionChanged;
+            vm.LeftGrid.SelectionChanged += vm.LeftGridSelectionChanged;
+            vm.RightGrid.SelectionChanged += vm.RightGridSelectionChanged;
         }
 
         Closing += delegate { UiUtil.SaveWindowPosition(this); };
@@ -190,22 +190,18 @@ public class CompareWindow : Window
 
     private static Border MakeSubtitlesView(ObservableCollection<CompareItem> items, string selectedBinding, Delegate fileGridOnDragOver, Delegate fileGridOnDrop)
     {
-        var dg = new DataGrid
-        {
-            ItemsSource = items,
-            CanUserSortColumns = false,
-            IsReadOnly = true,
-            SelectionMode = DataGridSelectionMode.Single,
-            Height = double.NaN,
-            Margin = new Thickness(2)
-        };
+        var dg = TableViewExtras.MakeTableView(multiSelect: false);
+        dg.ItemsSource = items;
+        dg.Height = double.NaN;
+        dg.Margin = new Thickness(2);
 
         // Number column
-        dg.Columns.Add(new DataGridTemplateColumn
+        dg.Columns.Add(new SeTableViewColumn
         {
             Header = Se.Language.General.NumberSymbol,
-            Width = new DataGridLength(50),
-            CellTheme = UiUtil.DataGridNoBorderCellTheme,
+            Width = new GridLength(50),
+            CellTheme = UiUtil.TableViewNoPaddingCellTheme,
+            HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
             CellTemplate = new FuncDataTemplate<CompareItem>((item, ns) =>
             {
                 var border = new Border
@@ -226,11 +222,12 @@ public class CompareWindow : Window
         });
 
         // StartTime column
-        dg.Columns.Add(new DataGridTemplateColumn
+        dg.Columns.Add(new SeTableViewColumn
         {
             Header = Se.Language.General.Show,
-            Width = new DataGridLength(120),
-            CellTheme = UiUtil.DataGridNoBorderCellTheme,
+            Width = new GridLength(120),
+            CellTheme = UiUtil.TableViewNoPaddingCellTheme,
+            HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
             CellTemplate = new FuncDataTemplate<CompareItem>((item, ns) =>
             {
                 var border = new Border
@@ -251,11 +248,12 @@ public class CompareWindow : Window
         });
 
         // EndTime column
-        dg.Columns.Add(new DataGridTemplateColumn
+        dg.Columns.Add(new SeTableViewColumn
         {
             Header = Se.Language.General.Hide,
-            Width = new DataGridLength(120),
-            CellTheme = UiUtil.DataGridNoBorderCellTheme,
+            Width = new GridLength(120),
+            CellTheme = UiUtil.TableViewNoPaddingCellTheme,
+            HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
             CellTemplate = new FuncDataTemplate<CompareItem>((item, ns) =>
             {
                 var border = new Border
@@ -276,11 +274,12 @@ public class CompareWindow : Window
         });
 
         // Text column
-        dg.Columns.Add(new DataGridTemplateColumn
+        dg.Columns.Add(new SeTableViewColumn
         {
             Header = Se.Language.General.Text,
-            Width = new DataGridLength(1, DataGridLengthUnitType.Star),
-            CellTheme = UiUtil.DataGridNoBorderCellTheme,
+            Width = new GridLength(1, GridUnitType.Star),
+            CellTheme = UiUtil.TableViewNoPaddingCellTheme,
+            HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
             CellTemplate = new FuncDataTemplate<CompareItem>((item, ns) =>
             {
                 var border = new Border
@@ -301,12 +300,12 @@ public class CompareWindow : Window
             })
         });
 
-        dg.Bind(DataGrid.SelectedItemProperty, new Binding(selectedBinding)
+        dg.Bind(TableView.SelectedItemProperty, new Binding(selectedBinding)
         {
             Mode = BindingMode.TwoWay
         });
 
-        // hack to make drag and drop work on the DataGrid - also on empty rows
+        // hack to make drag and drop work on the grid - also on empty rows
         var dropHost = new Border
         {
             Background = Brushes.Transparent,

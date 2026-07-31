@@ -297,6 +297,38 @@ public static class TableViewExtras
     }
 
     /// <summary>
+    /// Space toggles the checkbox value of every selected row - all rows checked means
+    /// uncheck all, otherwise check all. This is the piece of the DataGrid-era
+    /// CheckboxMultiSelect helper that TableView does not provide natively (extended
+    /// selection itself is native ListBox behavior).
+    /// </summary>
+    public static void AddSpaceToggle<TItem>(TableView tableView, Func<TItem, bool> getChecked, Action<TItem, bool> setChecked)
+        where TItem : class
+    {
+        tableView.AddHandler(InputElement.KeyDownEvent, (object? _, KeyEventArgs e) =>
+        {
+            if (e.Key != Key.Space)
+            {
+                return;
+            }
+
+            var selected = tableView.SelectedItems?.OfType<TItem>().ToList();
+            if (selected == null || selected.Count == 0)
+            {
+                return;
+            }
+
+            var newValue = !selected.All(getChecked);
+            foreach (var item in selected)
+            {
+                setChecked(item, newValue);
+            }
+
+            e.Handled = true;
+        }, Avalonia.Interactivity.RoutingStrategies.Tunnel);
+    }
+
+    /// <summary>
     /// Moves keyboard focus to the selected row's container when it is realized, falling
     /// back to the TableView itself. Focusing the row (not the list control) is what makes
     /// the current line visible to screen readers via UI Automation (issue #13015).

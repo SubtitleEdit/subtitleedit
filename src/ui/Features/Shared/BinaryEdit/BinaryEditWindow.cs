@@ -9,6 +9,7 @@ using Avalonia.Layout;
 using Avalonia.Media;
 using System;
 using System.Collections;
+using System.Linq;
 using Nikse.SubtitleEdit.Controls;
 using Nikse.SubtitleEdit.Controls.VideoPlayer;
 using Nikse.SubtitleEdit.Features.Main.Layout;
@@ -418,41 +419,43 @@ public class BinaryEditWindow : Window
         {
             RowDefinitions =
             {
-                new RowDefinition(GridLength.Star), // DataGrid
+                new RowDefinition(GridLength.Star), // Subtitle grid
                 new RowDefinition(GridLength.Auto), // Controls
             },
             Margin = new Thickness(5),
         };
 
-        // DataGrid for subtitle lines
-        var dataGrid = new DataGrid
-        {
-            Height = double.NaN,
-            CanUserSortColumns = false,
-            IsReadOnly = true,
-            SelectionMode = DataGridSelectionMode.Extended,
-            CanUserResizeColumns = true,
-            GridLinesVisibility = UiUtil.GetGridLinesVisibility(),
-            VerticalGridLinesBrush = UiUtil.GetBorderBrush(),
-            HorizontalGridLinesBrush = UiUtil.GetBorderBrush(),
-            FontSize = Se.Settings.Appearance.SubtitleGridFontSize,
-        };
+        // Grid for subtitle lines (grid lines come from the TableView cell themes)
+        var dataGrid = TableViewExtras.MakeTableView();
+        dataGrid.Height = double.NaN;
+        dataGrid.FontSize = Se.Settings.Appearance.SubtitleGridFontSize;
 
-        dataGrid.Bind(DataGrid.ItemsSourceProperty, new Binding(nameof(vm.Subtitles)));
-        dataGrid.Bind(DataGrid.SelectedItemProperty, new Binding(nameof(vm.SelectedSubtitle)) { Mode = BindingMode.Default });
-        dataGrid.DoubleTapped += (_, e) => vm.OnDataGridDoubleTapped(e);
+        dataGrid.Bind(TableView.ItemsSourceProperty, new Binding(nameof(vm.Subtitles)));
+        dataGrid.Bind(TableView.SelectedItemProperty, new Binding(nameof(vm.SelectedSubtitle)) { Mode = BindingMode.Default });
+        dataGrid.DoubleTapped += (_, e) => vm.OnSubtitleGridDoubleTapped(e);
 
-        dataGrid.KeyDown += (_, e) => vm.OnDataGridKeyDown(e);
+        dataGrid.KeyDown += (_, e) => vm.OnSubtitleGridKeyDown(e);
         dataGrid.AddHandler(InputElement.KeyDownEvent, (object? _, KeyEventArgs e) =>
         {
             if (e.Key is Key.Home or Key.End && dataGrid.ItemsSource is IList items && items.Count > 0)
             {
                 var target = e.Key == Key.Home ? items[0] : items[^1];
                 dataGrid.SelectedItem = target;
-                dataGrid.ScrollIntoView(target, null);
+                if (target != null)
+                {
+                    dataGrid.ScrollIntoView(target);
+                }
+
                 e.Handled = true;
             }
         }, Avalonia.Interactivity.RoutingStrategies.Tunnel);
+
+        // The DataGridCheckboxMultiSelect helper the DataGrid used provided extended
+        // selection (native ListBox behavior on TableView) plus Space toggling the
+        // Forced checkbox for the selected rows - keep the Space shortcut.
+        TableViewExtras.AddSpaceToggle<BinarySubtitleItem>(dataGrid,
+            item => item.IsForced,
+            (item, value) => item.IsForced = value);
 
         var flyout = new MenuFlyout();
         dataGrid.ContextFlyout = flyout;
@@ -643,26 +646,25 @@ public class BinaryEditWindow : Window
 
         vm.SubtitleGrid = dataGrid;
         dataGrid.SelectionChanged += vm.SubtitleGridSelectionChanged;
-        _ = new DataGridCheckboxMultiSelect<BinarySubtitleItem>(
-            dataGrid,
-            item => item.IsForced,
-            (item, v) => item.IsForced = v);
 
         var dataGridBorder = UiUtil.MakeBorderForControlNoPadding(dataGrid);
         dataGridBorder.Margin = new Thickness(0, 0, 0, 5);
 
-        // Columns: Forced, Number, Show, Duration, Text, Image
+        // Columns: Zone, Forced, Number, Show, Duration, Image. All columns go through
+        // the manager because the zone column toggles visibility with the position map.
+        var columnManager = new TableViewColumnManager(dataGrid);
+
         // Position-monitor zone dot (green = active picture, amber = bottom bar,
         // red = top bar) so problem lines are visible directly in the grid.
         // Only shown while the right panel is in "Position map" mode.
-        var zoneColumn = new DataGridTemplateColumn
+        var zoneColumn = new SeTableViewColumn
         {
             Header = string.Empty,
-            Width = new DataGridLength(30),
+            Width = new GridLength(30),
             MinWidth = 26,
-            IsReadOnly = true,
             IsVisible = vm.IsPositionMonitorActive,
-            CellTheme = UiUtil.DataGridNoBorderNoPaddingCellTheme,
+            CellTheme = UiUtil.TableViewNoPaddingCellTheme,
+            HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
             CellTemplate = new Avalonia.Controls.Templates.FuncDataTemplate<BinarySubtitleItem>((_, _) =>
                 new Ellipse
                 {
@@ -673,7 +675,7 @@ public class BinaryEditWindow : Window
                     [!Shape.FillProperty] = new Binding(nameof(BinarySubtitleItem.ZoneBrush)),
                 }),
         };
-        dataGrid.Columns.Add(zoneColumn);
+        columnManager.Add(zoneColumn);
         vm.PropertyChanged += (_, e) =>
         {
             if (e.PropertyName == nameof(vm.IsPositionMonitorActive))
@@ -682,12 +684,13 @@ public class BinaryEditWindow : Window
             }
         };
 
-        dataGrid.Columns.Add(new DataGridTemplateColumn
+        columnManager.Add(new SeTableViewColumn
         {
             Header = Se.Language.General.Forced,
-            Width = new DataGridLength(90),
+            Width = new GridLength(90),
             MinWidth = 80,
-            CellTheme = UiUtil.DataGridNoBorderNoPaddingCellTheme,
+            CellTheme = UiUtil.TableViewNoPaddingCellTheme,
+            HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
             CellTemplate = new Avalonia.Controls.Templates.FuncDataTemplate<BinarySubtitleItem>((_, _) =>
                 new Border
                 {
@@ -702,42 +705,41 @@ public class BinaryEditWindow : Window
                 }),
         });
 
-        dataGrid.Columns.Add(new DataGridTextColumn
+        columnManager.Add(new SeTableViewColumn
         {
             Header = Se.Language.General.NumberSymbol,
-            Width = new DataGridLength(1, DataGridLengthUnitType.Auto),
+            Width = new GridLength(50), // was Auto; TableView treats Auto as star
             MinWidth = 40,
-            IsReadOnly = true,
             Binding = new Binding(nameof(BinarySubtitleItem.Number)),
-            CellTheme = UiUtil.DataGridNoBorderNoPaddingCellTheme,
+            CellTheme = UiUtil.TableViewCellTheme,
+            HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
         });
 
-        dataGrid.Columns.Add(new DataGridTextColumn
+        columnManager.Add(new SeTableViewColumn
         {
             Header = Se.Language.General.Show,
-            Width = new DataGridLength(1, DataGridLengthUnitType.Auto),
+            Width = new GridLength(120), // was Auto; TableView treats Auto as star
             MinWidth = 100,
-            IsReadOnly = true,
             Binding = new Binding(nameof(BinarySubtitleItem.StartTime)) { Converter = new TimeSpanToDisplayFullConverter() },
-            CellTheme = UiUtil.DataGridNoBorderNoPaddingCellTheme,
+            CellTheme = UiUtil.TableViewCellTheme,
+            HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
         });
 
-        dataGrid.Columns.Add(new DataGridTextColumn
+        columnManager.Add(new SeTableViewColumn
         {
             Header = Se.Language.General.Duration,
-            Width = new DataGridLength(1, DataGridLengthUnitType.Auto),
+            Width = new GridLength(90), // was Auto; TableView treats Auto as star
             MinWidth = 60,
-            IsReadOnly = true,
             Binding = new Binding(nameof(BinarySubtitleItem.Duration)) { Converter = new TimeSpanToDisplayShortConverter() },
-            CellTheme = UiUtil.DataGridNoBorderNoPaddingCellTheme,
+            CellTheme = UiUtil.TableViewCellTheme,
+            HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
         });
 
-        dataGrid.Columns.Add(new DataGridTemplateColumn
+        columnManager.Add(new SeTableViewColumn
         {
             Header = Se.Language.General.Image,
-            Width = new DataGridLength(1, DataGridLengthUnitType.Star),
+            Width = new GridLength(1, GridUnitType.Star),
             MinWidth = 80,
-            IsReadOnly = true,
             CellTemplate = new Avalonia.Controls.Templates.FuncDataTemplate<BinarySubtitleItem>((_, _) =>
             {
                 var image = new Image
@@ -759,7 +761,8 @@ public class BinaryEditWindow : Window
                     Child = image,
                 };
             }),
-            CellTheme = UiUtil.DataGridNoBorderNoPaddingCellTheme,
+            CellTheme = UiUtil.TableViewNoPaddingCellTheme,
+            HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
         });
 
         mainGrid.Add(dataGridBorder, 0);

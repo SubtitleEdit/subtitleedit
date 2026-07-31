@@ -86,34 +86,34 @@ public class ExportCustomTextFormatWindow : Window
 
         grid.Add(UiUtil.MakeLabel(Se.Language.File.Export.CustomTextFormats), 0);
 
-        var dataGrid = new DataGrid
-        {
-            Height = double.NaN, // auto size inside scroll viewer
-            Margin = new Thickness(2),
-            ItemsSource = vm.CustomFormats, // Use ItemsSource instead of Items
-            CanUserSortColumns = false,
-            IsReadOnly = true,
-            SelectionMode = DataGridSelectionMode.Extended,
-            DataContext = vm,
-        };
+        var dataGrid = TableViewExtras.MakeTableView();
+        dataGrid.Height = double.NaN; // auto size inside scroll viewer
+        dataGrid.Margin = new Thickness(2);
+        dataGrid.ItemsSource = vm.CustomFormats;
+        dataGrid.DataContext = vm;
 
         dataGrid.DoubleTapped += vm.OnCustomFormatGridDoubleTapped;
 
         // Columns
-        dataGrid.Columns.Add(new DataGridTextColumn
+        // The DataGrid sized the name column to content (Auto); TableView treats Auto
+        // as star, so use a fixed width that fits typical format names.
+        dataGrid.Columns.Add(new SeTableViewColumn
         {
             Header = Se.Language.General.Name,
             Binding = new Binding(nameof(CustomFormatItem.Name)),
-            CellTheme = UiUtil.DataGridNoBorderCellTheme,
+            Width = new GridLength(140),
+            CellTheme = UiUtil.TableViewCellTheme,
+            HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
         });
-        dataGrid.Columns.Add(new DataGridTextColumn
+        dataGrid.Columns.Add(new SeTableViewColumn
         {
             Header = Se.Language.General.Text,
             Binding = new Binding(nameof(CustomFormatItem.FormatParagraph)),
-            CellTheme = UiUtil.DataGridNoBorderCellTheme,
-            Width = new DataGridLength(1, DataGridLengthUnitType.Star) // star sizing to take all available space
+            Width = new GridLength(1, GridUnitType.Star), // star sizing to take all available space
+            CellTheme = UiUtil.TableViewCellTheme,
+            HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
         });
-        dataGrid.Bind(DataGrid.SelectedItemProperty, new Binding(nameof(vm.SelectedCustomFormat))
+        dataGrid.Bind(TableView.SelectedItemProperty, new Binding(nameof(vm.SelectedCustomFormat))
         {
             Source = vm,
             Mode = BindingMode.TwoWay
@@ -130,7 +130,11 @@ public class ExportCustomTextFormatWindow : Window
             {
                 var target = e.Key == Key.Home ? items[0] : items[^1];
                 dataGrid.SelectedItem = target;
-                dataGrid.ScrollIntoView(target, null);
+                if (target is { } scrollTarget)
+                {
+                    dataGrid.ScrollIntoView(scrollTarget);
+                }
+
                 e.Handled = true;
             }
         }, Avalonia.Interactivity.RoutingStrategies.Tunnel);

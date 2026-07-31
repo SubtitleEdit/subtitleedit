@@ -169,7 +169,7 @@ public partial class RestoreAutoBackupViewModel : ObservableObject
         }
     }
 
-    public void DataGridSelectionChanged(object? sender, SelectionChangedEventArgs e)
+    public void GridSelectionChanged(object? sender, SelectionChangedEventArgs e)
     {
         IsOkButtonEnabled = e.AddedItems.Count > 0;
     }
