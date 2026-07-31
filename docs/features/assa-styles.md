@@ -32,7 +32,7 @@ Manage Advanced SubStation Alpha (ASS/SSA) subtitle styles, including file style
 - Set a style as the default for new subtitles (this only affects newly created/converted subtitles, not the current one).
 
 ### Style Properties
-- **Font:** Name, size, bold, italic, underline, strikeout.
+- **Font:** Name, size, bold, italic, underline, strikeout. The font list also offers fonts collected in Subtitle Edit's own `Fonts` folder (inside the data folder), and the font button opens the **Font collector**, which shows the fonts the subtitle uses, whether they are available, and can copy them to a folder — including SE's `Fonts` folder.
 - **Colors:** Primary, secondary, outline, and back (shadow) colors.
 - **Border:** Outline width and border style (outline + shadow or opaque box).
 - **Shadow:** Shadow depth.

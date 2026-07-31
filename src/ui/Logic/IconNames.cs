@@ -54,6 +54,7 @@ internal class IconNames
     public const string Folder = "mdi-folder";
     public const string FolderOpen = "mdi-folder-open";
     public const string FormatClear = "mdi-format-clear";
+    public const string FormatFont = "mdi-format-font";
     public const string FormTextBox = "mdi-form-textbox";
     public const string Fullscreen = "mdi-fullscreen";
     public const string FullscreenExit = "mdi-fullscreen-exit";

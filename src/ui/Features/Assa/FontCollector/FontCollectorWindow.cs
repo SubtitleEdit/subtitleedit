@@ -85,8 +85,10 @@ public class FontCollectorWindow : Window
         };
 
         var buttonCopy = UiUtil.MakeButton(Se.Language.Assa.FontCollectorCopyFontsToFolderDotDotDot, vm.CopyFontsToFolderCommand);
+        var buttonCopyToSeFolder = UiUtil.MakeButton(Se.Language.Assa.FontCollectorCopyFontsToSeFontsFolder, vm.CopyFontsToSeFontsFolderCommand);
         var buttonBar = UiUtil.MakeButtonBar(
             buttonCopy,
+            buttonCopyToSeFolder,
             UiUtil.MakeButtonDone(vm.CloseCommand));
 
         var grid = new Grid

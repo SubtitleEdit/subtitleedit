@@ -192,6 +192,29 @@ public partial class AssaStylesViewModel : ObservableObject, IClosingCleanup
     }
 
     [RelayCommand]
+    private async Task ShowFontCollector()
+    {
+        if (Window == null)
+        {
+            return;
+        }
+
+        // Give the collector the styles as currently edited, not the ones the file was
+        // opened with - SaveFileStylesToHeader only touches the pending Header, which is
+        // what Ok/Apply would write anyway.
+        SaveFileStylesToHeader();
+        var subtitle = new Subtitle(_subtitle) { Header = Header };
+
+        await _windowService.ShowDialogAsync<FontCollector.FontCollectorWindow, FontCollector.FontCollectorViewModel>(Window, vm =>
+        {
+            vm.Initialize(subtitle);
+        });
+
+        // Fonts may have been copied into SE's Fonts folder - re-offer them in the combo.
+        Task.Run(() => LoadFonts());
+    }
+
+    [RelayCommand]
     private async Task BrowseFontName()
     {
         if (Window == null)
@@ -991,7 +1014,10 @@ public partial class AssaStylesViewModel : ObservableObject, IClosingCleanup
 
     private void LoadFonts()
     {
-        var fonts = FontHelper.GetLibAssaFonts();
+        // Fonts collected in SE's own Fonts folder come first - they may not be installed
+        // on the system, but a mux/render with the collected files will resolve them.
+        var fonts = FontHelper.GetFontsFolderFontNames();
+        fonts.AddRange(FontHelper.GetLibAssaFonts());
 
         Dispatcher.UIThread.Post(() =>
         {

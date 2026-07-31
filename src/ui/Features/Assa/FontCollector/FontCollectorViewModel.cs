@@ -30,7 +30,6 @@ public partial class FontCollectorViewModel : ObservableObject
     public Window? Window { get; set; }
 
     private static readonly Regex FontNameTagRegex = new(@"\\fn(?<name>[^\\}]+)", RegexOptions.Compiled);
-    private static readonly string[] FontFileExtensions = { ".ttf", ".otf", ".ttc", ".otc" };
 
     private readonly IFolderHelper _folderHelper;
     private readonly CancellationTokenSource _cancellationTokenSource = new();
@@ -189,36 +188,16 @@ public partial class FontCollectorViewModel : ObservableObject
 
     private static IEnumerable<string> EnumerateFontFiles()
     {
-        foreach (var folder in GetFontFolders().Where(Directory.Exists))
-        {
-            IEnumerable<string> files;
-            try
-            {
-                files = Directory.EnumerateFiles(folder, "*.*", new EnumerationOptions
-                {
-                    RecurseSubdirectories = true,
-                    IgnoreInaccessible = true,
-                });
-            }
-            catch
-            {
-                continue;
-            }
-
-            foreach (var file in files)
-            {
-                if (FontFileExtensions.Contains(Path.GetExtension(file), StringComparer.OrdinalIgnoreCase))
-                {
-                    yield return file;
-                }
-            }
-        }
+        return GetFontFolders().SelectMany(FontHelper.EnumerateFontFiles);
     }
 
     private static List<string> GetFontFolders()
     {
         var home = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
-        var folders = new List<string>();
+
+        // SE's own font collection is scanned first, so a collected font counts as
+        // found even when it is not installed on the system.
+        var folders = new List<string> { Se.FontsFolder };
 
         if (OperatingSystem.IsWindows())
         {
@@ -251,7 +230,7 @@ public partial class FontCollectorViewModel : ObservableObject
             return;
         }
 
-        var files = FontItems.SelectMany(i => i.FoundFiles).Distinct(StringComparer.OrdinalIgnoreCase).ToList();
+        var files = GetFoundFontFiles();
         if (files.Count == 0)
         {
             await MessageBox.Show(Window, Se.Language.Assa.FontCollectorTitle, Se.Language.Assa.FontCollectorNoFontsToCopy, MessageBoxButtons.OK);
@@ -264,24 +243,63 @@ public partial class FontCollectorViewModel : ObservableObject
             return;
         }
 
+        await CopyFontsTo(files, folder);
+    }
+
+    /// <summary>
+    /// Copies the found fonts into SE's own Fonts folder (<see cref="Se.FontsFolder"/>),
+    /// building a collection that both the scan and the ASSA styles font list pick up.
+    /// </summary>
+    [RelayCommand]
+    private async Task CopyFontsToSeFontsFolder()
+    {
+        if (Window == null)
+        {
+            return;
+        }
+
+        var files = GetFoundFontFiles();
+        if (files.Count == 0)
+        {
+            await MessageBox.Show(Window, Se.Language.Assa.FontCollectorTitle, Se.Language.Assa.FontCollectorNoFontsToCopy, MessageBoxButtons.OK);
+            return;
+        }
+
+        await CopyFontsTo(files, Se.FontsFolder);
+    }
+
+    private List<string> GetFoundFontFiles()
+    {
+        return FontItems.SelectMany(i => i.FoundFiles).Distinct(StringComparer.OrdinalIgnoreCase).ToList();
+    }
+
+    private async Task CopyFontsTo(List<string> files, string folder)
+    {
         var copied = 0;
         try
         {
+            Directory.CreateDirectory(folder);
             foreach (var file in files)
             {
-                File.Copy(file, Path.Combine(folder, Path.GetFileName(file)), overwrite: true);
+                var target = Path.Combine(folder, Path.GetFileName(file));
+                if (string.Equals(Path.GetFullPath(file), Path.GetFullPath(target), StringComparison.OrdinalIgnoreCase))
+                {
+                    continue; // already in the target folder
+                }
+
+                File.Copy(file, target, overwrite: true);
                 copied++;
             }
         }
         catch (Exception exception)
         {
             Se.LogError(exception, "Font collector copy failed");
-            await MessageBox.Show(Window, Se.Language.General.Error, exception.Message, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            await MessageBox.Show(Window!, Se.Language.General.Error, exception.Message, MessageBoxButtons.OK, MessageBoxIcon.Error);
             return;
         }
 
         await MessageBox.Show(
-            Window,
+            Window!,
             Se.Language.Assa.FontCollectorTitle,
             string.Format(Se.Language.Assa.FontCollectorXFontFilesCopiedToY, copied, folder),
             MessageBoxButtons.OK);

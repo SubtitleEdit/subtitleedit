@@ -50,6 +50,7 @@ public class LanguageAssa
     public string FontCollectorXOfYFontsFound { get; set; }
     public string FontCollectorCopyFontsToFolder { get; set; }
     public string FontCollectorCopyFontsToFolderDotDotDot { get; set; }
+    public string FontCollectorCopyFontsToSeFontsFolder { get; set; }
     public string FontCollectorNoFontsToCopy { get; set; }
     public string FontCollectorXFontFilesCopiedToY { get; set; }
 
@@ -258,6 +259,7 @@ public class LanguageAssa
         FontCollectorXOfYFontsFound = "{0} of {1} fonts found";
         FontCollectorCopyFontsToFolder = "Copy fonts to folder";
         FontCollectorCopyFontsToFolderDotDotDot = "Copy fonts to folder...";
+        FontCollectorCopyFontsToSeFontsFolder = "Copy to SE's Fonts folder";
         FontCollectorNoFontsToCopy = "No font files found to copy.";
         FontCollectorXFontFilesCopiedToY = "{0} font file(s) copied to {1}";
         ResolutionResamplerTitle = "Change resolution";
