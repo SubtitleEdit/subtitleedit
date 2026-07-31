@@ -49,6 +49,7 @@ public partial class ShotChangesViewModel : ObservableObject, IClosingCleanup
 
     private string _videoFileName = string.Empty;
     private Process? _ffmpegProcess;
+    private FfmpegProgressTracker? _progressTracker;
     private readonly System.Timers.Timer _timerGenerate;
     private bool _doAbort;
     private FfmpegMediaInfo2? _mediaInfo;
@@ -149,6 +150,16 @@ public partial class ShotChangesViewModel : ObservableObject, IClosingCleanup
         var argumentsFormat = Se.Settings.Video.ShowChangesFFmpegArguments;
         var arguments = string.Format(argumentsFormat, _videoFileName, threshold);
 
+        // Detected-scene-change times only tick forward when a cut is found, so in long cut-less
+        // stretches the progress bar used to freeze. Ask ffmpeg for machine-readable progress on
+        // stdout instead and drive a smooth percentage from "out_time_us" vs. the video duration.
+        _progressTracker = null;
+        if (_duration is { TotalSeconds: > 0 })
+        {
+            _progressTracker = new FfmpegProgressTracker(_duration.TotalSeconds);
+            arguments = FfmpegProgressTracker.ProgressArguments + " " + arguments;
+        }
+
         ProgressValue = 0;
         ProgressText = Se.Language.General.StartingDotDotDot;
         _ffmpegProcess = FfmpegGenerator.GetProcess(arguments, OutputHandler);
@@ -168,6 +179,28 @@ public partial class ShotChangesViewModel : ObservableObject, IClosingCleanup
             return;
         }
 
+        var tracker = _progressTracker;
+        if (tracker != null)
+        {
+            if (tracker.TryGetNewPercent(outLine.Data, out var percent))
+            {
+                Dispatcher.UIThread.Post(() =>
+                {
+                    if (IsGenerating)
+                    {
+                        ProgressValue = percent;
+                        ProgressText = $"{percent}%";
+                    }
+                });
+                return;
+            }
+
+            if (FfmpegProgressTracker.IsProgressLine(outLine.Data))
+            {
+                return;
+            }
+        }
+
         Log.AppendLine(outLine.Data);
         var match = TimeRegex.Match(outLine.Data);
         if (match.Success)
@@ -183,10 +216,12 @@ public partial class ShotChangesViewModel : ObservableObject, IClosingCleanup
                         FfmpegLines.Add(item);
                         FfmpegLinesGrid.ScrollIntoView(item);
 
-                        if (_duration != null)
+                        // Fallback only: with the progress tracker active, "out_time_us" drives a
+                        // smooth percentage; detected-cut times would make it jump around.
+                        if (tracker == null && _duration != null)
                         {
                             var pct = seconds / _duration.TotalSeconds * 100;
-                            ProgressValue = seconds / _duration.TotalSeconds * 100;
+                            ProgressValue = pct;
                             ProgressText = $"{pct:0}%";
                         }
                     });
