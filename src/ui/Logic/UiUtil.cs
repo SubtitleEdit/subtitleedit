@@ -102,7 +102,10 @@ public static class UiUtil
                 // both header types with the same brush via app styles in UiTheme.
                 new Setter(TableViewColumnHeader.BackgroundProperty, GetDataGridHeaderBackgroundBrush()),
                 new Setter(TableViewColumnHeader.PaddingProperty, new Thickness(4, 4, 4, 5)),
-                new Setter(TableViewColumnHeader.BorderBrushProperty, GetBorderBrush()),
+                // The faint grid-line brush, not the full border brush: with grid lines set
+                // to None these are the only separators in the grid, and at 0.5 opacity they
+                // read much stronger than anything the old DataGrid drew.
+                new Setter(TableViewColumnHeader.BorderBrushProperty, GetGridLineBrush()),
                 // Both header lines always show, independently of the grid-lines setting: the
                 // bottom line separates the header from the first row and the right line
                 // separates the column headers from each other, the way DataGrid's header

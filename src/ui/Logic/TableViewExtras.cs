@@ -24,6 +24,16 @@ namespace Nikse.SubtitleEdit.Logic;
 /// </summary>
 public class SeTableViewColumn : TableViewColumn
 {
+    public SeTableViewColumn()
+    {
+        // TableViewColumn defaults to Left, which makes cell content shrink-wrap
+        // horizontally - a cell template's colored background Border would then only
+        // cover the text instead of the whole cell (the DataGrid stretched cell
+        // content). Stretch restores full-cell backgrounds; templates that want
+        // centering (e.g. the number column) set it on their own root.
+        HorizontalContentAlignment = Avalonia.Layout.HorizontalAlignment.Stretch;
+    }
+
     public static readonly StyledProperty<bool> IsVisibleProperty =
         AvaloniaProperty.Register<SeTableViewColumn, bool>(nameof(IsVisible), defaultValue: true);
 
