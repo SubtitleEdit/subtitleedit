@@ -90,6 +90,11 @@ public class PointSyncWindow : Window
         // has no such switch, so the single column's header now doubles as the panel title.
         var dataGrid = TableViewExtras.MakeTableView(multiSelect: false);
         dataGrid.CanUserResizeColumns = false; // single star column, nothing to resize
+        // Fixed width: this panel sits in an Auto-sized outer column, and a TableView
+        // with a star column measured without a width constraint demands more than the
+        // whole window (star columns have no content-based size), squeezing the
+        // subtitle grids to slivers and overflowing the right edge.
+        dataGrid.Width = 280;
         dataGrid.DataContext = vm;
         dataGrid.ItemsSource = vm.SyncPoints;
         dataGrid.Columns.Add(new SeTableViewColumn
