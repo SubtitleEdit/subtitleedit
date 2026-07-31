@@ -43,7 +43,7 @@ public class AssaProgressBarWindow : Window
         };
 
         // Main content area (settings and preview)
-        var contentArea = CreateContentArea(vm);
+        var contentArea = CreateContentArea(vm, out var firstInput);
         Grid.SetRow(contentArea, 0);
         mainGrid.Children.Add(contentArea);
 
@@ -62,12 +62,13 @@ public class AssaProgressBarWindow : Window
 
         Content = mainGrid;
 
-        Activated += delegate { buttonOk.Focus(); };
+        // initial focus on an input, not an action button - a focused button clicks on bare Space
+        Activated += delegate { firstInput.Focus(); };
         Loaded += (_, __) => vm.LoadVideoAndSubtitle();
         KeyDown += vm.KeyDown;
     }
 
-    private static Grid CreateContentArea(AssaProgressBarViewModel vm)
+    private static Grid CreateContentArea(AssaProgressBarViewModel vm, out Control firstInput)
     {
         var grid = new Grid
         {
@@ -80,7 +81,7 @@ public class AssaProgressBarWindow : Window
         };
 
         // Left panel with settings
-        var settingsPanel = CreateSettingsPanel(vm);
+        var settingsPanel = CreateSettingsPanel(vm, out firstInput);
         Grid.SetColumn(settingsPanel, 0);
         grid.Children.Add(settingsPanel);
 
@@ -92,7 +93,7 @@ public class AssaProgressBarWindow : Window
         return grid;
     }
 
-    private static ScrollViewer CreateSettingsPanel(AssaProgressBarViewModel vm)
+    private static ScrollViewer CreateSettingsPanel(AssaProgressBarViewModel vm, out Control firstInput)
     {
         var stackPanel = new StackPanel
         {
@@ -101,7 +102,7 @@ public class AssaProgressBarWindow : Window
         };
 
         // Progress bar settings
-        stackPanel.Children.Add(CreateProgressBarSettings(vm));
+        stackPanel.Children.Add(CreateProgressBarSettings(vm, out firstInput));
 
         // Chapters settings
         stackPanel.Children.Add(CreateChaptersSettings(vm));
@@ -116,7 +117,7 @@ public class AssaProgressBarWindow : Window
         };
     }
 
-    private static Border CreateProgressBarSettings(AssaProgressBarViewModel vm)
+    private static Border CreateProgressBarSettings(AssaProgressBarViewModel vm, out Control firstInput)
     {
         var grid = new Grid
         {
@@ -160,6 +161,7 @@ public class AssaProgressBarWindow : Window
             [!RadioButton.IsCheckedProperty] = new Binding(nameof(vm.PositionTop)) { Mode = BindingMode.TwoWay },
             GroupName = "Position",
         };
+        firstInput = radioTop;
         var radioBottom = new RadioButton
         {
             Content = Se.Language.General.Bottom,

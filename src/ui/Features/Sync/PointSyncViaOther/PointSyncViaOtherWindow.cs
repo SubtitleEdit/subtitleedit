@@ -235,7 +235,7 @@ public class PointSyncViaOtherWindow : Window
             HorizontalAlignment = HorizontalAlignment.Stretch,
         };
 
-        var buttonBrowseOther = UiUtil.MakeButtonBrowse(vm.BrowseOtherCommand);
+        var buttonBrowseOther = UiUtil.MakeButtonBrowse(vm.BrowseOtherCommand, accessibleName: Se.Language.General.OpenSubtitleFileTitle);
         // TextBlock in a star column so a long file name shrinks with an ellipsis
         // instead of pushing under the "Find text" button.
         var labelOtherFileName = new TextBlock

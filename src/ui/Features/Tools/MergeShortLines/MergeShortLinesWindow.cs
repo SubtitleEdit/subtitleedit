@@ -11,6 +11,8 @@ namespace Nikse.SubtitleEdit.Features.Tools.MergeShortLines;
 
 public class MergeShortLinesWindow : Window
 {
+    private NumericUpDown _numericUpDownSingleLineMaxLength = null!;
+
     public MergeShortLinesWindow(MergeShortLinesViewModel vm)
     {
         UiUtil.InitializeWindow(this, GetType().Name);
@@ -52,7 +54,7 @@ public class MergeShortLinesWindow : Window
 
         Content = grid;
 
-        Activated += delegate { buttonOk.Focus(); }; // hack to make OnKeyDown work
+        Activated += delegate { _numericUpDownSingleLineMaxLength.Focus(); }; // initial focus on an input, not an action button - a focused button clicks on bare Space
         KeyDown += vm.KeyDown;
         Loaded += delegate { vm.Loaded(); };
 
@@ -60,7 +62,7 @@ public class MergeShortLinesWindow : Window
         Loaded += delegate { UiUtil.RestoreWindowPosition(this); };
     }
 
-    private static Grid MakeControlsView(MergeShortLinesViewModel vm)
+    private Grid MakeControlsView(MergeShortLinesViewModel vm)
     {
         var grid = new Grid
         {
@@ -82,6 +84,7 @@ public class MergeShortLinesWindow : Window
 
         var labelSingleLineMaxLength = UiUtil.MakeLabel(Se.Language.Options.Settings.SingleLineMaxLength);
         var numericUpDownSingleLineMaxLength = UiUtil.MakeNumericUpDownInt(5, 1000, 10, 130, vm, nameof(vm.SingleLineMaxLength));
+        _numericUpDownSingleLineMaxLength = numericUpDownSingleLineMaxLength;
         numericUpDownSingleLineMaxLength.ValueChanged += (s, e) => vm.SetChanged();
 
         var labelMaxNumberOfLines = UiUtil.MakeLabel(Se.Language.Options.Settings.MaxLines);

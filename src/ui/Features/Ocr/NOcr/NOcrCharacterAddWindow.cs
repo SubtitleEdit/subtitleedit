@@ -281,8 +281,8 @@ public class NOcrCharacterAddWindow : Window
             Margin = new Thickness(0, 0, 0, 5),
             Children =
             {
-                UiUtil.MakeButton(vm.ZoomOutCommand, IconNames.Minus),
-                UiUtil.MakeButton(vm.ZoomInCommand, IconNames.Plus),
+                UiUtil.MakeButton(vm.ZoomOutCommand, IconNames.Minus, "Zoom out"),
+                UiUtil.MakeButton(vm.ZoomInCommand, IconNames.Plus, "Zoom in"),
                 UiUtil.MakeLabel(string.Empty).WithMarginLeft(10).WithBindText(vm, nameof(vm.ZoomFactorInfo)),
                 UiUtil.MakeLabel(Se.Language.Ocr.DrawMode).WithMarginLeft(10),
                 panelDrawMode,

@@ -42,22 +42,23 @@ public class WaveformGuessTimeCodesWindow : Window
             HorizontalAlignment = HorizontalAlignment.Stretch,
         };
 
-        grid.Add(MakeStartFromView(vm), 0);
+        grid.Add(MakeStartFromView(vm, out var radioStartFromVideoPosition), 0);
         grid.Add(MakeDeleteLinesView(vm), 1);
         grid.Add(MakeDetectOptionsView(vm), 2);
         grid.Add(panelButtons, 3);
 
         Content = grid;
 
-        Activated += delegate { buttonOk.Focus(); }; // hack to make OnKeyDown work
+        Activated += delegate { radioStartFromVideoPosition.Focus(); }; // initial focus on an input, not an action button - a focused button clicks on bare Space
         KeyDown += vm.KeyDown;
     }
 
-    private static Border MakeStartFromView(WaveformGuessTimeCodesViewModel vm)
+    private static Border MakeStartFromView(WaveformGuessTimeCodesViewModel vm, out Control radioStartFromVideoPosition)
     {
         var labelStartFrom = UiUtil.MakeLabel(Se.Language.General.StartFrom);
         var checkBoxStartFromVideoPosition = UiUtil.MakeRadioButton(Se.Language.General.CurrentVideoPosition, vm, nameof(vm.StartFromVideoPosition), "start")
             .WithMarginLeft(10);
+        radioStartFromVideoPosition = checkBoxStartFromVideoPosition;
         var checkBoxStartFromBeginning = UiUtil.MakeRadioButton(Se.Language.General.Beginning, vm, nameof(vm.StartFromBeginning), "start")
             .WithMarginLeft(10);
 

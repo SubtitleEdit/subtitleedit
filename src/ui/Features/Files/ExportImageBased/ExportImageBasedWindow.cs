@@ -62,7 +62,7 @@ public class ExportImageBasedWindow : Window
         var comboProfile = UiUtil.MakeComboBox(vm.Profiles, vm, nameof(vm.SelectedProfile));
         comboProfile.SelectionChanged += vm.ProfileChanged;
         var labelProfile = UiUtil.MakeLabel(Se.Language.General.Profile);
-        var buttonProfileBrowse = UiUtil.MakeButtonBrowse(vm.ShowProfileCommand).WithMarginLeft(5);
+        var buttonProfileBrowse = UiUtil.MakeButtonBrowse(vm.ShowProfileCommand, accessibleName: Se.Language.General.Profile).WithMarginLeft(5);
         var panelProfile = new StackPanel
         {
             Orientation = Orientation.Horizontal,
@@ -99,7 +99,7 @@ public class ExportImageBasedWindow : Window
 
         Content = grid;
 
-        Activated += delegate { buttonExport.Focus(); }; // hack to make OnKeyDown work
+        Activated += delegate { TableViewExtras.FocusRow(vm.SubtitleGrid); }; // initial focus on an input, not an action button - a focused button clicks on bare Space
         KeyDown += (_, e) => vm.OnKeyDown(e);
         KeyUp += (_, e) => vm.OnKeyUp(e);
         Loaded += (_, e) => vm.OnLoaded();

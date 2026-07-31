@@ -55,7 +55,7 @@ public class ExportPlainTextWindow : Window
 
         Content = grid;
 
-        Activated += delegate { buttonSaveAs.Focus(); }; // hack to make OnKeyDown work
+        Activated += delegate { comboBoxEncoding.Focus(); }; // initial focus on an input, not an action button - a focused button clicks on bare Space
         KeyDown += vm.OnKeyDown;
         Loaded += delegate { UiUtil.RestoreWindowPosition(this); };
         Closing += delegate { UiUtil.SaveWindowPosition(this); };

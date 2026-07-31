@@ -53,17 +53,17 @@ public class ProfilesWindow : Window
             HorizontalAlignment = HorizontalAlignment.Stretch,
         };
 
-        grid.Add(MakeDataGrid(vm), 0, 0);
+        grid.Add(MakeDataGrid(vm, out var dataGrid), 0, 0);
         grid.Add(MakeControlsGrid(vm), 0, 1);
         grid.Add(panelButtons, 1, 0, 1, 2);
 
         Content = grid;
 
-        Activated += delegate { buttonOk.Focus(); }; // hack to make OnKeyDown work
+        Activated += delegate { TableViewExtras.FocusRow(dataGrid); }; // initial focus on an input, not an action button - a focused button clicks on bare Space
         KeyDown += vm.KeyDown;
     }
 
-    private static Border MakeDataGrid(ProfilesViewModel vm)
+    private static Border MakeDataGrid(ProfilesViewModel vm, out TableView tableView)
     {
         var grid = new Grid
         {
@@ -116,6 +116,8 @@ public class ProfilesWindow : Window
         });
         dataGrid.Bind(TableView.ItemsSourceProperty, new Binding(nameof(vm.Profiles)) { Source = vm });
         dataGrid.Bind(TableView.SelectedItemProperty, new Binding(nameof(vm.SelectedProfile)) { Source = vm });
+
+        tableView = dataGrid;
 
         var buttonNew = UiUtil.MakeButton(vm.NewCommand, IconNames.New, Se.Language.General.NewProfile);
         var buttonExport = UiUtil.MakeButton(vm.ExportCommand, IconNames.Export, Se.Language.General.ExportDotDotDot);

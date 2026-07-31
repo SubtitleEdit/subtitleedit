@@ -44,7 +44,7 @@ public class AssSetBackgroundWindow : Window
         };
 
         // Padding settings
-        leftPanel.Add(CreatePaddingPanel(vm), 0);
+        leftPanel.Add(CreatePaddingPanel(vm, out var paddingLeftBox), 0);
 
         // Fill width settings
         leftPanel.Add(CreateFillWidthPanel(vm), 1);
@@ -86,13 +86,14 @@ public class AssSetBackgroundWindow : Window
 
         Content = mainGrid;
 
-        Activated += delegate { buttonOk.Focus(); };
+        // initial focus on an input, not an action button - a focused button clicks on bare Space
+        Activated += delegate { paddingLeftBox.Focus(); };
         AddHandler(KeyDownEvent, vm.KeyDown, RoutingStrategies.Tunnel | RoutingStrategies.Bubble, handledEventsToo: false);
         Loaded += (_, _) => vm.OnLoaded();
         Closing += (_, _) => vm.OnClosing();
     }
 
-    private static Border CreatePaddingPanel(AssSetBackgroundViewModel vm)
+    private static Border CreatePaddingPanel(AssSetBackgroundViewModel vm, out NumericUpDown firstInput)
     {
         var grid = new Grid
         {
@@ -126,6 +127,7 @@ public class AssSetBackgroundWindow : Window
         grid.Add(leftLabel, 1, 0);
 
         var leftBox = UiUtil.MakeNumericUpDownInt(0, 500, 0, 120, vm, nameof(vm.PaddingLeft));
+        firstInput = leftBox;
         grid.Add(leftBox, 1, 1);
 
         // Right

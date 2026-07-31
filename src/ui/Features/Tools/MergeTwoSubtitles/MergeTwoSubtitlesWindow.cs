@@ -14,6 +14,8 @@ namespace Nikse.SubtitleEdit.Features.Tools.MergeTwoSubtitles;
 
 public class MergeTwoSubtitlesWindow : Window
 {
+    private TableView? _tableViewSubtitle1;
+
     public MergeTwoSubtitlesWindow(MergeTwoSubtitlesViewModel vm)
     {
         UiUtil.InitializeWindow(this, GetType().Name);
@@ -75,11 +77,18 @@ public class MergeTwoSubtitlesWindow : Window
 
         Content = grid;
 
-        Activated += delegate { buttonOk.Focus(); };
+        Activated += delegate
+        {
+            // initial focus on an input, not an action button - a focused button clicks on bare Space
+            if (_tableViewSubtitle1 != null)
+            {
+                TableViewExtras.FocusRow(_tableViewSubtitle1);
+            }
+        };
         KeyDown += vm.KeyDown;
     }
 
-    private static Border MakeListsView(MergeTwoSubtitlesViewModel vm)
+    private Border MakeListsView(MergeTwoSubtitlesViewModel vm)
     {
         var grid = new Grid
         {
@@ -110,7 +119,7 @@ public class MergeTwoSubtitlesWindow : Window
         return UiUtil.MakeBorderForControlNoPadding(grid);
     }
 
-    private static Border MakeOneListView(MergeTwoSubtitlesViewModel vm,
+    private Border MakeOneListView(MergeTwoSubtitlesViewModel vm,
         string title,
         string itemsPath,
         string selectedItemPath,
@@ -124,6 +133,7 @@ public class MergeTwoSubtitlesWindow : Window
         var fullTimeConverter = new TimeSpanToDisplayFullConverter();
 
         var dataGrid = TableViewExtras.MakeTableView(multiSelect: false);
+        _tableViewSubtitle1 ??= dataGrid; // first list created is subtitle 1
         dataGrid.Width = double.NaN;
         dataGrid.Height = double.NaN;
         dataGrid.DataContext = vm;

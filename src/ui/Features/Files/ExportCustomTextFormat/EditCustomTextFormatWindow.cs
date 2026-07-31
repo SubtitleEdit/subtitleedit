@@ -52,17 +52,17 @@ public class EditCustomTextFormatWindow : Window
             HorizontalAlignment = HorizontalAlignment.Stretch,
         };
 
-        grid.Add(MakeFormatsView(vm), 0);
+        grid.Add(MakeFormatsView(vm, out var textBoxName), 0);
         grid.Add(MakePreviewView(vm), 0, 1);
         grid.Add(panelButtons, 2, 0, 1, 2);
 
         Content = grid;
 
-        Activated += delegate { buttonOk.Focus(); }; // hack to make OnKeyDown work
+        Activated += delegate { textBoxName.Focus(); }; // initial focus on an input, not an action button - a focused button clicks on bare Space
         KeyDown += vm.OnKeyDown;
     }
 
-    private static Grid MakeFormatsView(EditCustomTextFormatViewModel vm)
+    private static Grid MakeFormatsView(EditCustomTextFormatViewModel vm, out TextBox textBoxName)
     {
         var grid = new Grid
         {
@@ -88,7 +88,7 @@ public class EditCustomTextFormatWindow : Window
         };
 
         var labelName = UiUtil.MakeLabel(Se.Language.General.Name).WithMinWidth(100);
-        var textBoxName = UiUtil.MakeTextBox(200, vm, nameof(vm.SelectedCustomFormat) + "." + nameof(CustomFormatItem.Name));
+        textBoxName = UiUtil.MakeTextBox(200, vm, nameof(vm.SelectedCustomFormat) + "." + nameof(CustomFormatItem.Name));
         var panelName = UiUtil.MakeHorizontalPanel(labelName, textBoxName);
         grid.Add(panelName, 0);
 

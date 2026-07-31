@@ -29,20 +29,12 @@ public class MultipleReplaceWindow : Window
         vm.Window = this;
         DataContext = vm;
 
-        var rulesView = MakeRulesView(vm);
+        var rulesView = MakeRulesView(vm, out var rulesTreeView);
         var fixesView = MakeFixesView(vm);
 
-        var buttonCollapseAll = UiUtil.MakeButton(vm.CollapseAllCommand, IconNames.Minus);
-        if (Se.Settings.Appearance.ShowHints)
-        {
-            ToolTip.SetTip(buttonCollapseAll, Se.Language.General.Collapse);
-        }
+        var buttonCollapseAll = UiUtil.MakeButton(vm.CollapseAllCommand, IconNames.Minus, Se.Language.General.Collapse);
 
-        var buttonExpandAll = UiUtil.MakeButton(vm.ExpandAllCommand, IconNames.Plus);
-        if (Se.Settings.Appearance.ShowHints)
-        {
-            ToolTip.SetTip(buttonExpandAll, Se.Language.General.Expand);
-        }
+        var buttonExpandAll = UiUtil.MakeButton(vm.ExpandAllCommand, IconNames.Plus, Se.Language.General.Expand);
 
         var panelExpandCollapse = new StackPanel
         {
@@ -102,13 +94,13 @@ public class MultipleReplaceWindow : Window
 
         Content = grid;
 
-        Activated += delegate { buttonOk.Focus(); }; // hack to make OnKeyDown work
+        Activated += delegate { rulesTreeView.Focus(); }; // initial focus on an input, not an action button - a focused button clicks on bare Space
         Closing += (_, _) => vm.OnClosing();
         Loaded += (_, _) => vm.OnLoaded();
         KeyDown += vm.OnKeyDown;
     }
 
-    private static Border MakeRulesView(MultipleReplaceViewModel vm)
+    private static Border MakeRulesView(MultipleReplaceViewModel vm, out TreeView rulesTreeView)
     {
         var treeView = new TreeView
         {
@@ -119,6 +111,8 @@ public class MultipleReplaceWindow : Window
 
         treeView[!ItemsControl.ItemsSourceProperty] = new Binding(nameof(vm.Nodes));
         treeView[!TreeView.SelectedItemProperty] = new Binding(nameof(vm.SelectedNode));
+
+        rulesTreeView = treeView;
 
         var factory = new FuncTreeDataTemplate<RuleTreeNode>(_ => true, (node, _) =>
         {

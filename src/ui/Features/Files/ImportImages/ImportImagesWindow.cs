@@ -62,17 +62,17 @@ public class ImportImagesWindow : Window
         var panelButtons = UiUtil.MakeButtonBar(buttonOk, buttonCancel);
 
         grid.Add(labelImportInfo, 0);
-        grid.Add(MakeImagesView(vm), 1);
+        grid.Add(MakeImagesView(vm, out var imagesGrid), 1);
         grid.Add(panelButtons, 3, 0);
         grid.Add(buttonImport, 3, 0);
 
         Content = grid;
 
-        Activated += delegate { buttonOk.Focus(); }; // hack to make OnKeyDown work
+        Activated += delegate { TableViewExtras.FocusRow(imagesGrid); }; // initial focus on an input, not an action button - a focused button clicks on bare Space
         KeyDown += vm.KeyDown;
     }
 
-    private static Border MakeImagesView(ImportImagesViewModel vm)
+    private static Border MakeImagesView(ImportImagesViewModel vm, out TableView imagesGrid)
     {
         var grid = new Grid
         {
@@ -95,6 +95,7 @@ public class ImportImagesWindow : Window
         // the caller feeds result.Images to OCR in collection order, so reordering the
         // backing collection would reorder the resulting subtitle.
         var dataGrid = TableViewExtras.MakeTableView(multiSelect: false);
+        imagesGrid = dataGrid;
         dataGrid.DataContext = vm;
         dataGrid.ItemsSource = vm.Images;
         dataGrid.Columns.AddRange(new TableViewColumn[]

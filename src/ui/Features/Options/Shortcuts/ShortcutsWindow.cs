@@ -514,7 +514,7 @@ public class ShortcutsWindow : Window
         editPanel.Children.Add(comboBoxKeys);
 
         // browse button
-        var buttonBrowse = UiUtil.MakeButtonBrowse(vm.ShowGetKeyCommand);
+        var buttonBrowse = UiUtil.MakeButtonBrowse(vm.ShowGetKeyCommand, accessibleName: Se.Language.Options.Shortcuts.DetectKey);
         if (Se.Settings.Appearance.ShowHints)
         {
             ToolTip.SetTip(buttonBrowse, Se.Language.Options.Shortcuts.DetectKey);
@@ -525,11 +525,7 @@ public class ShortcutsWindow : Window
         buttonBrowse.Margin = new Thickness(0, 0, 9, 0);
 
         // configure button
-        var buttonConfig = UiUtil.MakeButton(vm.ConfigureCommand, IconNames.Settings);
-        if (Se.Settings.Appearance.ShowHints)
-        {
-            ToolTip.SetTip(buttonConfig, Se.Language.General.Settings);
-        }
+        var buttonConfig = UiUtil.MakeButton(vm.ConfigureCommand, IconNames.Settings, Se.Language.General.Settings);
 
         editPanel.Children.Add(buttonConfig);
         buttonConfig.Bind(IsEnabledProperty, new Binding(nameof(vm.IsControlsEnabled)) { Source = vm });

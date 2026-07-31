@@ -116,7 +116,8 @@ public class OpenSecondarySubtitleWindow : Window
 
         Content = mainGrid;
 
-        Activated += delegate { buttonOk.Focus(); };
+        // initial focus on an input, not an action button - a focused button clicks on bare Space
+        Activated += delegate { numericFontSize.Focus(); };
         AddHandler(KeyDownEvent, (_, e) => vm.OnKeyDown(e),
             RoutingStrategies.Tunnel | RoutingStrategies.Bubble, handledEventsToo: false);
         Loaded += (_, _) => vm.OnLoaded();

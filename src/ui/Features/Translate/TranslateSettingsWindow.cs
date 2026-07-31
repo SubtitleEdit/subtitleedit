@@ -142,7 +142,7 @@ public class TranslateSettingsWindow : Window
 
         Content = grid;
 
-        Activated += delegate { buttonOk.Focus(); }; // hack to make OnKeyDown work
+        Activated += delegate { comboMerge.Focus(); }; // initial focus on an input, not an action button - a focused button clicks on bare Space
         Loaded += vm.Onloaded;
         Closing += vm.OnClosing;
     }

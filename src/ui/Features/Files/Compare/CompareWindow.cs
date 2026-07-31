@@ -46,7 +46,7 @@ public class CompareWindow : Window
             RowSpacing = 10
         };
 
-        var buttonLeftFileName = UiUtil.MakeButtonBrowse(vm.PickLeftSubtitleFileCommand);
+        var buttonLeftFileName = UiUtil.MakeButtonBrowse(vm.PickLeftSubtitleFileCommand, accessibleName: Se.Language.General.OpenOriginalSubtitleFileTitle);
         var labelLeftFileName = new TextBlock
         {
             VerticalAlignment = VerticalAlignment.Center,
@@ -61,7 +61,7 @@ public class CompareWindow : Window
         };
         grid.Add(panelLeftBrowse, 0);
 
-        var buttonRightFileName = UiUtil.MakeButtonBrowse(vm.PickRightSubtitleFileCommand);
+        var buttonRightFileName = UiUtil.MakeButtonBrowse(vm.PickRightSubtitleFileCommand, accessibleName: Se.Language.General.OpenSubtitleFileTitle);
         var buttonRightReload = UiUtil.MakeButton(string.Format(Se.Language.File.LoadXFromFile, System.IO.Path.GetFileName(vm.LeftFileName)), vm.ReloadRightFromFileCommand)
             .WithBindIsVisible(nameof(vm.IsReloadFromFileVisible));
         var labelRightFileName = new TextBlock
@@ -113,16 +113,8 @@ public class CompareWindow : Window
         var checkBoxIgnoreFormatting = UiUtil.MakeCheckBox(Se.Language.File.IgnoreFormatting, vm, nameof(vm.IgnoreFormatting))
             .WithMarginLeft(10).WithMarginRight(15);
         checkBoxIgnoreFormatting.IsCheckedChanged += vm.CheckBoxChanged;
-        var buttonPreviousDifference = UiUtil.MakeButton(vm.PreviousDifferenceCommand, IconNames.ChevronLeft).WithBindIsVisible(nameof(vm.IsExportVisible));
-        if (Se.Settings.Appearance.ShowHints)
-        {
-            ToolTip.SetTip(buttonPreviousDifference, Se.Language.File.PreviousDifference);
-        }
-        var buttonNextDifference = UiUtil.MakeButton(vm.NextDifferenceCommand, IconNames.ChevronRight).WithBindIsVisible(nameof(vm.IsExportVisible));
-        if (Se.Settings.Appearance.ShowHints)
-        {
-            ToolTip.SetTip(buttonNextDifference, Se.Language.File.NextDifference);
-        }
+        var buttonPreviousDifference = UiUtil.MakeButton(vm.PreviousDifferenceCommand, IconNames.ChevronLeft, Se.Language.File.PreviousDifference).WithBindIsVisible(nameof(vm.IsExportVisible));
+        var buttonNextDifference = UiUtil.MakeButton(vm.NextDifferenceCommand, IconNames.ChevronRight, Se.Language.File.NextDifference).WithBindIsVisible(nameof(vm.IsExportVisible));
         var buttonExport = UiUtil.MakeButton(Se.Language.General.Export, vm.ExportCommand).WithMarginLeft(15);
         var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand);
         var panelButtons = UiUtil.MakeButtonBar(
@@ -137,7 +129,16 @@ public class CompareWindow : Window
 
         Content = grid;
 
-        Activated += delegate { Dispatcher.UIThread.Post(() => buttonOk.Focus()); }; // hack to make OnKeyDown work
+        Activated += delegate
+        {
+            Dispatcher.UIThread.Post(() =>
+            {
+                if (vm.LeftGrid != null)
+                {
+                    TableViewExtras.FocusRow(vm.LeftGrid); // initial focus on an input, not an action button - a focused button clicks on bare Space
+                }
+            });
+        };
         KeyDown += vm.KeyDown;
 
         vm.LeftGrid = (leftView.Child as Border)?.Child as TableView;

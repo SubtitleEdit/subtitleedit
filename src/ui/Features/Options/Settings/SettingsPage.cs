@@ -208,7 +208,7 @@ public class SettingsPage : UserControl
                 Children =
                 {
                     MakeProfileComboBox(),
-                    UiUtil.MakeButtonBrowse(_vm.EditProfilesCommand),
+                    UiUtil.MakeButtonBrowse(_vm.EditProfilesCommand, accessibleName: Se.Language.General.Profiles),
                 }
             }),
 
@@ -247,7 +247,7 @@ public class SettingsPage : UserControl
                 Children =
                 {
                     MakComboBoxContinuationStyleComboBox(),
-                    UiUtil.MakeButtonBrowse(_vm.ShowEditCustomContinuationStyleCommand)
+                    UiUtil.MakeButtonBrowse(_vm.ShowEditCustomContinuationStyleCommand, accessibleName: Se.Language.Options.Settings.EditContinuationStyleCustom)
                         .WithBindIsVisible(_vm, nameof(_vm.IsEditCustomContinuationStyleVisible))
                 }
             }),
@@ -350,7 +350,7 @@ public class SettingsPage : UserControl
                 Children =
                 {
                     UiUtil.MakeTextBox(250, _vm, nameof(_vm.DefaultSaveLocationCustomFolder)),
-                    UiUtil.MakeButtonBrowse(_vm.BrowseDefaultSaveLocationFolderCommand),
+                    UiUtil.MakeButtonBrowse(_vm.BrowseDefaultSaveLocationFolderCommand, accessibleName: Se.Language.Options.Settings.DefaultSaveLocationCustomFolder),
                 }
             }),
 
@@ -404,7 +404,7 @@ public class SettingsPage : UserControl
                         VerticalAlignment = VerticalAlignment.Center,
                         [!ToggleButton.IsCheckedProperty] = new Binding(nameof(_vm.ColorTextTooWide)) { Source = _vm, Mode = BindingMode.TwoWay }
                     },
-                    UiUtil.MakeButtonBrowse(_vm.EditTextTooWideSettingsCommand)
+                    UiUtil.MakeButtonBrowse(_vm.EditTextTooWideSettingsCommand, accessibleName: Se.Language.Options.Settings.ColorTextTooWide)
                 )),
 
             MakeCheckboxSetting(Se.Language.Options.Settings.ColorTextTooManyLines, nameof(_vm.ColorTextTooManyLines),

@@ -18,6 +18,7 @@ namespace Nikse.SubtitleEdit.Features.Tools.MergeSubtitlesWithSameTimeCodes;
 public class MergeSameTimeCodesWindow : Window
 {
     private readonly MergeSameTimeCodesViewModel _vm;
+    private NumericUpDown _numericUpDownMaxDiff = null!;
 
     public MergeSameTimeCodesWindow(MergeSameTimeCodesViewModel vm)
     {
@@ -64,17 +65,18 @@ public class MergeSameTimeCodesWindow : Window
 
         Content = grid;
 
-        Activated += delegate { buttonOk.Focus(); }; // hack to make OnKeyDown work
+        Activated += delegate { _numericUpDownMaxDiff.Focus(); }; // initial focus on an input, not an action button - a focused button clicks on bare Space
         KeyDown += _vm.OnKeyDown;
 
         Closing += delegate { UiUtil.SaveWindowPosition(this); };
         Loaded += delegate { UiUtil.RestoreWindowPosition(this); };
     }
 
-    private static StackPanel MakeControlsView(MergeSameTimeCodesViewModel vm)
+    private StackPanel MakeControlsView(MergeSameTimeCodesViewModel vm)
     {
         var labelMaxDiff = UiUtil.MakeLabel(Se.Language.Tools.MergeLinesWithSameTimeCodes.MaxMsDifference);
         var numericUpDownMaxDiff = UiUtil.MakeNumericUpDownInt(0, 10000, Se.Settings.Tools.MergeSameTimeCode.MaxMillisecondsDifference, 130, vm, nameof(vm.MaxMillisecondsDifference));
+        _numericUpDownMaxDiff = numericUpDownMaxDiff;
         numericUpDownMaxDiff.ValueChanged += (s, e) => { vm.SetDirty(); };
         var checkBoxMergeAsDialog = UiUtil.MakeCheckBox(Se.Language.Tools.MergeLinesWithSameTimeCodes.MakeDialog, vm, nameof(vm.MergeDialog));
         checkBoxMergeAsDialog.IsCheckedChanged += (s, e) => { vm.SetDirty(); };
