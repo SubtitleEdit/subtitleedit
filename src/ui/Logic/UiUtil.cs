@@ -3298,7 +3298,45 @@ public static class UiUtil
 
     internal static bool IsHelp(KeyEventArgs e)
     {
-        return e.Key == Key.F1;
+        var shortcut = Se.Settings.Shortcuts.FirstOrDefault(s =>
+            s.ActionName == nameof(Features.Main.MainViewModel.ShowHelpCommand) && s.Keys.Count > 0);
+        if (shortcut == null)
+        {
+            return e.Key == Key.F1;
+        }
+
+        var requiredModifiers = KeyModifiers.None;
+        string? keyName = null;
+        foreach (var token in shortcut.Keys)
+        {
+            switch (ShortcutManager.NormalizeKeyToken(token))
+            {
+                case "Control":
+                    requiredModifiers |= KeyModifiers.Control;
+                    break;
+                case "Alt":
+                    requiredModifiers |= KeyModifiers.Alt;
+                    break;
+                case "Shift":
+                    requiredModifiers |= KeyModifiers.Shift;
+                    break;
+                case "Win":
+                    requiredModifiers |= KeyModifiers.Meta;
+                    break;
+                default:
+                    keyName = token;
+                    break;
+            }
+        }
+
+        // A modifier-only binding can never match a key press.
+        if (keyName == null)
+        {
+            return false;
+        }
+
+        return e.KeyModifiers == requiredModifiers &&
+               string.Equals(ShortcutManager.GetShortcutKey(e).ToString(), keyName, StringComparison.OrdinalIgnoreCase);
     }
 
     internal static bool TryHandleWindowSystemMenu(KeyEventArgs e, Window? window)

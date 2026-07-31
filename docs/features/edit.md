@@ -152,8 +152,7 @@ Select or deselect subtitle lines based on rules (e.g., text contains, duration,
 
 - **Menu:** Edit → Modify selection...
 
-<!-- Screenshot: Modify selection window -->
-![Modify Selection](../screenshots/modify-selection.png)
+See [Modify Selection](modify-selection.md) for the full list of rules and selection actions.
 
 ## Select All
 

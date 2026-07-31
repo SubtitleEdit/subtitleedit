@@ -317,6 +317,11 @@ public partial class AssaApplyCustomOverrideTagsViewModel : ObservableObject
             e.Handled = true;
             Window?.Close();
         }
+        else if (UiUtil.IsHelp(e))
+        {
+            e.Handled = true;
+            UiUtil.ShowHelp("features/assa-override-tags");
+        }
     }
 
     internal void ComboBoxParagraphsChanged(object? sender, SelectionChangedEventArgs e)

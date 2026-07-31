@@ -1271,7 +1271,7 @@ public partial class MainViewModel :
     [RelayCommand]
     private async Task ShowHelp()
     {
-        UiUtil.ShowHelp("index");
+        UiUtil.ShowHelp("features/main-window");
     }
 
     [RelayCommand]

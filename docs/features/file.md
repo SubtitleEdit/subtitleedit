@@ -65,13 +65,9 @@ Import time codes from another subtitle file, applying them to the current text.
 
 ### Import plain text
 
-Import plain text and create subtitle lines from it.
+Import plain text and create subtitle lines from it, with optional forced-aligner timing against the video's audio.
 
-- Split by line breaks, sentence endings, or fixed length
-- Set duration and gap settings
-
-<!-- Screenshot: Import plain text window -->
-![Import Plain Text](../screenshots/import-plain-text.png)
+See [Import Plain Text](import-plain-text.md) for details.
 
 ### Import images
 
