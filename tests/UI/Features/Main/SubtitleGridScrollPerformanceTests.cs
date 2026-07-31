@@ -137,11 +137,15 @@ public class SubtitleGridScrollPerformanceTests
         var prepared = 0;
         grid.ContainerPrepared += (_, _) => prepared++;
 
+        var elapsed = TimeSpan.Zero;
+
         int JumpTo(int index)
         {
             prepared = 0;
+            var sw = System.Diagnostics.Stopwatch.StartNew();
             vm.SelectAndScrollToSubtitle(vm.Subtitles[index]);
             Settle(window);
+            elapsed = sw.Elapsed;
             return prepared;
         }
 
@@ -149,7 +153,7 @@ public class SubtitleGridScrollPerformanceTests
         {
             JumpTo(LineCount - 1);
             var realized = JumpTo(target);
-            _output.WriteLine($"round {round}: jump to {target} realized={realized} " +
+            _output.WriteLine($"round {round}: jump to {target} realized={realized} in {elapsed.TotalMilliseconds:F0}ms " +
                               $"offset={scrollViewer.Offset.Y:F0} extent={scrollViewer.Extent.Height:F0}");
             Assert.True(realized <= MaxRealizedPerJump, $"Jump to {target} realized {realized} rows in round {round}");
 
