@@ -27,48 +27,55 @@ public class FontCollectorWindow : Window
         vm.Window = this;
         DataContext = vm;
 
-        var dataGrid = new DataGrid
+        var dataGrid = TableViewExtras.MakeTableView();
+        dataGrid.DataContext = vm;
+        dataGrid.ItemsSource = vm.FontItems;
+
+        var fontNameColumn = new SeTableViewColumn
         {
-            AutoGenerateColumns = false,
-            CanUserResizeColumns = true,
-            CanUserSortColumns = true,
-            IsReadOnly = true,
-            HorizontalAlignment = HorizontalAlignment.Stretch,
-            VerticalAlignment = VerticalAlignment.Stretch,
-            Width = double.NaN,
-            Height = double.NaN,
-            DataContext = vm,
-            ItemsSource = vm.FontItems,
-            Columns =
-            {
-                new DataGridTextColumn
-                {
-                    Header = Se.Language.General.FontName,
-                    CellTheme = UiUtil.DataGridNoBorderNoPaddingCellTheme,
-                    Binding = new Binding(nameof(FontCollectorItem.FontName)),
-                },
-                new DataGridTextColumn
-                {
-                    Header = Se.Language.Assa.FontCollectorUsedIn,
-                    CellTheme = UiUtil.DataGridNoBorderNoPaddingCellTheme,
-                    Binding = new Binding(nameof(FontCollectorItem.UsedIn)),
-                    Width = new DataGridLength(1, DataGridLengthUnitType.Star),
-                },
-                new DataGridTextColumn
-                {
-                    Header = Se.Language.General.Status,
-                    CellTheme = UiUtil.DataGridNoBorderNoPaddingCellTheme,
-                    Binding = new Binding(nameof(FontCollectorItem.Status)),
-                },
-                new DataGridTextColumn
-                {
-                    Header = Se.Language.Assa.FontCollectorFontFiles,
-                    CellTheme = UiUtil.DataGridNoBorderNoPaddingCellTheme,
-                    Binding = new Binding(nameof(FontCollectorItem.FileDisplay)),
-                    Width = new DataGridLength(1, DataGridLengthUnitType.Star),
-                },
-            },
+            Header = Se.Language.General.FontName,
+            CellTheme = UiUtil.TableViewCellTheme,
+            HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
+            Binding = new Binding(nameof(FontCollectorItem.FontName)),
+            Width = new GridLength(180),
         };
+        var usedInColumn = new SeTableViewColumn
+        {
+            Header = Se.Language.Assa.FontCollectorUsedIn,
+            CellTheme = UiUtil.TableViewCellTheme,
+            HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
+            Binding = new Binding(nameof(FontCollectorItem.UsedIn)),
+            Width = new GridLength(1, GridUnitType.Star),
+        };
+        var statusColumn = new SeTableViewColumn
+        {
+            Header = Se.Language.General.Status,
+            CellTheme = UiUtil.TableViewCellTheme,
+            HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
+            Binding = new Binding(nameof(FontCollectorItem.Status)),
+            Width = new GridLength(120),
+        };
+        var fontFilesColumn = new SeTableViewColumn
+        {
+            Header = Se.Language.Assa.FontCollectorFontFiles,
+            CellTheme = UiUtil.TableViewCellTheme,
+            HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
+            Binding = new Binding(nameof(FontCollectorItem.FileDisplay)),
+            Width = new GridLength(1, GridUnitType.Star),
+        };
+        dataGrid.Columns.Add(fontNameColumn);
+        dataGrid.Columns.Add(usedInColumn);
+        dataGrid.Columns.Add(statusColumn);
+        dataGrid.Columns.Add(fontFilesColumn);
+
+        // Header sorting is safe here: the font list is presentation-only (copying
+        // fonts to a folder uses the found-file set, not the row order, and the
+        // background scan holds item references, not indexes).
+        var sorter = new TableViewHeaderSorter(dataGrid);
+        sorter.AddSortable<FontCollectorItem, string>(fontNameColumn, x => x.FontName)
+            .AddSortable<FontCollectorItem, string>(usedInColumn, x => x.UsedIn)
+            .AddSortable<FontCollectorItem, string>(statusColumn, x => x.Status)
+            .AddSortable<FontCollectorItem, string>(fontFilesColumn, x => x.FileDisplay);
 
         var statusText = new TextBlock
         {

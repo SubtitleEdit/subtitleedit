@@ -47,7 +47,7 @@ public partial class EmbeddedSubtitlesEditMp4ViewModel : ObservableObject
 
     public Window? Window { get; set; }
     public bool OkPressed { get; private set; }
-    public DataGrid TracksGrid { get; internal set; }
+    public TableView TracksGrid { get; internal set; }
 
     private readonly StringBuilder _log;
     private long _startTicks;
@@ -83,7 +83,7 @@ public partial class EmbeddedSubtitlesEditMp4ViewModel : ObservableObject
         Tracks = new ObservableCollection<EmbeddedTrack>();
         VideoFileName = string.Empty;
         ProgressText = string.Empty;
-        TracksGrid = new DataGrid();
+        TracksGrid = new TableView();
 
         _log = new StringBuilder();
         _timerGenerate = new Timer { Interval = 100 };
@@ -714,7 +714,10 @@ public partial class EmbeddedSubtitlesEditMp4ViewModel : ObservableObject
         Dispatcher.UIThread.Post(() =>
         {
             TracksGrid.SelectedIndex = index;
-            TracksGrid.ScrollIntoView(TracksGrid.SelectedItem, null);
+            if (TracksGrid.SelectedItem is { } selectedItem)
+            {
+                TracksGrid.ScrollIntoView(selectedItem);
+            }
         }, DispatcherPriority.Background);
     }
 

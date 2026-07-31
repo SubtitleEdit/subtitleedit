@@ -71,68 +71,84 @@ public class PickTsTrackWindow : Window
 
     private Border MakeTracksView(PickTsTrackViewModel vm)
     {
-        var dataGridTracks = new DataGrid
+        var dataGridTracks = TableViewExtras.MakeTableView(multiSelect: false);
+        dataGridTracks.Width = double.NaN;
+        dataGridTracks.Height = double.NaN;
+        dataGridTracks.DataContext = vm;
+        dataGridTracks.ItemsSource = vm.Tracks;
+
+        // Content-sized (Auto) on the DataGrid; TableView treats Auto as star, so the
+        // narrow columns get fixed widths and Name becomes the star column.
+        var numberColumn = new SeTableViewColumn
         {
-            AutoGenerateColumns = false,
-            SelectionMode = DataGridSelectionMode.Single,
-            CanUserResizeColumns = true,
-            CanUserSortColumns = true,
-            HorizontalAlignment = HorizontalAlignment.Stretch,
-            VerticalAlignment = VerticalAlignment.Stretch,
-            Width = double.NaN,
-            Height = double.NaN,
-            DataContext = vm,
-            ItemsSource = vm.Tracks,
-            Columns =
-            {
-                new DataGridTextColumn
-                {
-                    Header = Se.Language.General.NumberSymbol,
-                    CellTheme = UiUtil.DataGridNoBorderNoPaddingCellTheme,
-                    Binding = new Binding(nameof(TsTrackInfoDisplay.TrackNumber)),
-                    IsReadOnly = true,
-                },
-                new DataGridTextColumn
-                {
-                    Header = Se.Language.General.Name ,
-                    CellTheme = UiUtil.DataGridNoBorderNoPaddingCellTheme,
-                    Binding = new Binding(nameof(TsTrackInfoDisplay.Name)),
-                    IsReadOnly = true,
-                },
-                new DataGridTextColumn
-                {
-                    Header = Se.Language.General.Language,
-                    CellTheme = UiUtil.DataGridNoBorderNoPaddingCellTheme,
-                    Binding = new Binding(nameof(TsTrackInfoDisplay.Language)),
-                    IsReadOnly = true,
-                },
-                new DataGridTextColumn
-                {
-                    Header = Se.Language.General.Codec,
-                    CellTheme = UiUtil.DataGridNoBorderNoPaddingCellTheme,
-                    Binding = new Binding(nameof(TsTrackInfoDisplay.Codec)),
-                    IsReadOnly = true,
-                },
-                new DataGridTextColumn
-                {
-                    Header = Se.Language.General.Default,
-                    CellTheme = UiUtil.DataGridNoBorderNoPaddingCellTheme,
-                    Binding = new Binding(nameof(TsTrackInfoDisplay.IsDefault)),
-                    IsReadOnly = true,
-                },
-                new DataGridTextColumn
-                {
-                    Header = Se.Language.General.Forced,
-                    CellTheme = UiUtil.DataGridNoBorderNoPaddingCellTheme,
-                    Binding = new Binding(nameof(TsTrackInfoDisplay.IsForced)),
-                    IsReadOnly = true,
-                },
-            },
+            Header = Se.Language.General.NumberSymbol,
+            CellTheme = UiUtil.TableViewCellTheme,
+            HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
+            Binding = new Binding(nameof(TsTrackInfoDisplay.TrackNumber)),
+            Width = new GridLength(60),
         };
-        dataGridTracks.Bind(DataGrid.SelectedItemProperty, new Binding(nameof(vm.SelectedTrack)));
-        dataGridTracks.SelectionChanged += vm.DataGridTracksSelectionChanged;
+        var nameColumn = new SeTableViewColumn
+        {
+            Header = Se.Language.General.Name,
+            CellTheme = UiUtil.TableViewCellTheme,
+            HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
+            Binding = new Binding(nameof(TsTrackInfoDisplay.Name)),
+            Width = new GridLength(1, GridUnitType.Star),
+        };
+        var languageColumn = new SeTableViewColumn
+        {
+            Header = Se.Language.General.Language,
+            CellTheme = UiUtil.TableViewCellTheme,
+            HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
+            Binding = new Binding(nameof(TsTrackInfoDisplay.Language)),
+            Width = new GridLength(100),
+        };
+        var codecColumn = new SeTableViewColumn
+        {
+            Header = Se.Language.General.Codec,
+            CellTheme = UiUtil.TableViewCellTheme,
+            HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
+            Binding = new Binding(nameof(TsTrackInfoDisplay.Codec)),
+            Width = new GridLength(140),
+        };
+        var defaultColumn = new SeTableViewColumn
+        {
+            Header = Se.Language.General.Default,
+            CellTheme = UiUtil.TableViewCellTheme,
+            HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
+            Binding = new Binding(nameof(TsTrackInfoDisplay.IsDefault)),
+            Width = new GridLength(80),
+        };
+        var forcedColumn = new SeTableViewColumn
+        {
+            Header = Se.Language.General.Forced,
+            CellTheme = UiUtil.TableViewCellTheme,
+            HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
+            Binding = new Binding(nameof(TsTrackInfoDisplay.IsForced)),
+            Width = new GridLength(80),
+        };
+
+        dataGridTracks.Columns.Add(numberColumn);
+        dataGridTracks.Columns.Add(nameColumn);
+        dataGridTracks.Columns.Add(languageColumn);
+        dataGridTracks.Columns.Add(codecColumn);
+        dataGridTracks.Columns.Add(defaultColumn);
+        dataGridTracks.Columns.Add(forcedColumn);
+
+        dataGridTracks.Bind(TableView.SelectedItemProperty, new Binding(nameof(vm.SelectedTrack)));
+        dataGridTracks.SelectionChanged += vm.TracksGridSelectionChanged;
         dataGridTracks.DoubleTapped += (s, e) => vm.OkCommand.Execute(null);
         vm.TracksGrid = dataGridTracks;
+
+        // Track order is presentation-only (OK uses the selected item), so the
+        // in-place header sorter is safe.
+        new TableViewHeaderSorter(dataGridTracks)
+            .AddSortable<TsTrackInfoDisplay, int>(numberColumn, x => x.TrackNumber)
+            .AddSortable<TsTrackInfoDisplay, string>(nameColumn, x => x.Name)
+            .AddSortable<TsTrackInfoDisplay, string>(languageColumn, x => x.Language)
+            .AddSortable<TsTrackInfoDisplay, string>(codecColumn, x => x.Codec)
+            .AddSortable<TsTrackInfoDisplay, bool>(defaultColumn, x => x.IsDefault)
+            .AddSortable<TsTrackInfoDisplay, bool>(forcedColumn, x => x.IsForced);
 
         return UiUtil.MakeBorderForControlNoPadding(dataGridTracks);
     }
@@ -141,45 +157,45 @@ public class PickTsTrackWindow : Window
     {
         var fullTimeConverter = new TimeSpanToDisplayFullConverter();
         var shortTimeConverter = new TimeSpanToDisplayShortConverter();
-        var dataGridSubtitle = new DataGrid
+        var dataGridSubtitle = TableViewExtras.MakeTableView(multiSelect: false);
+        dataGridSubtitle.Width = double.NaN;
+        dataGridSubtitle.Height = double.NaN;
+        dataGridSubtitle.DataContext = vm;
+        dataGridSubtitle.ItemsSource = vm.Rows;
+
+        // No sorter here: the preview shows subtitle cues in subtitle order.
+        dataGridSubtitle.Columns.AddRange(new TableViewColumn[]
         {
-            AutoGenerateColumns = false,
-            SelectionMode = DataGridSelectionMode.Single,
-            CanUserResizeColumns = true,
-            CanUserSortColumns = true,
-            HorizontalAlignment = HorizontalAlignment.Stretch,
-            VerticalAlignment = VerticalAlignment.Stretch,
-            Width = double.NaN,
-            Height = double.NaN,
-            DataContext = vm,
-            ItemsSource = vm.Rows,
-            Columns =
-            {
-                new DataGridTextColumn
+                new SeTableViewColumn
                 {
                     Header = Se.Language.General.NumberSymbol,
-                    CellTheme = UiUtil.DataGridNoBorderNoPaddingCellTheme,
+                    CellTheme = UiUtil.TableViewCellTheme,
+                    HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
                     Binding = new Binding(nameof(TsSubtitleCueDisplay.Number)),
-                    IsReadOnly = true,
+                    Width = new GridLength(60),
                 },
-                new DataGridTextColumn
+                new SeTableViewColumn
                 {
                     Header = Se.Language.General.Show,
-                    CellTheme = UiUtil.DataGridNoBorderNoPaddingCellTheme,
+                    CellTheme = UiUtil.TableViewCellTheme,
+                    HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
                     Binding = new Binding(nameof(TsSubtitleCueDisplay.Show)) { Converter = fullTimeConverter },
-                    IsReadOnly = true,
+                    Width = new GridLength(120),
                 },
-                new DataGridTextColumn
+                new SeTableViewColumn
                 {
                     Header = Se.Language.General.Duration,
-                    CellTheme = UiUtil.DataGridNoBorderNoPaddingCellTheme,
+                    CellTheme = UiUtil.TableViewCellTheme,
+                    HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
                     Binding = new Binding(nameof(TsSubtitleCueDisplay.Duration)) { Converter = shortTimeConverter },
-                    IsReadOnly = true,
+                    Width = new GridLength(90),
                 },
-                new DataGridTemplateColumn
+                new SeTableViewColumn
                 {
                     Header = Se.Language.General.TextOrImage,
-                    IsReadOnly = true,
+                    CellTheme = UiUtil.TableViewCellTheme,
+                    HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
+                    Width = new GridLength(1, GridUnitType.Star),
                     CellTemplate = new FuncDataTemplate<TsSubtitleCueDisplay>((item, _) =>
                     {
                         var stackPanel = new StackPanel
@@ -216,8 +232,7 @@ public class PickTsTrackWindow : Window
                         return stackPanel;
                     })
                 },
-            },
-        };
+        });
 
         return UiUtil.MakeBorderForControlNoPadding(dataGridSubtitle);
     }

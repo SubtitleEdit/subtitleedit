@@ -106,51 +106,47 @@ public class CutVideoWindow : Window
     {
         var fullTimeConverter = new TimeSpanToDisplayFullConverter();
         var shortTimeConverter = new TimeSpanToDisplayShortConverter();
-        var dataGridSubtitle = new DataGrid
+
+        // No header sorting: the segment list is kept in time order (segments are
+        // inserted in position and feed the cut output), so reordering it would be wrong.
+        var dataGridSubtitle = TableViewExtras.MakeTableView();
+        dataGridSubtitle.Width = double.NaN;
+        dataGridSubtitle.Height = double.NaN;
+        dataGridSubtitle.DataContext = vm;
+        dataGridSubtitle.ItemsSource = vm.Segments;
+        dataGridSubtitle.Columns.Add(new SeTableViewColumn
         {
-            AutoGenerateColumns = false,
-            SelectionMode = DataGridSelectionMode.Extended,
-            CanUserResizeColumns = true,
-            CanUserSortColumns = true,
-            HorizontalAlignment = HorizontalAlignment.Stretch,
-            VerticalAlignment = VerticalAlignment.Stretch,
-            Width = double.NaN,
-            Height = double.NaN,
-            DataContext = vm,
-            ItemsSource = vm.Segments,
-            Columns =
-            {
-                new DataGridTextColumn
-                {
-                    Header = Se.Language.General.NumberSymbol,
-                    CellTheme = UiUtil.DataGridNoBorderNoPaddingCellTheme,
-                    Binding = new Binding(nameof(SubtitleLineViewModel.Number)),
-                    IsReadOnly = true,
-                },
-                new DataGridTextColumn
-                {
-                    Header = Se.Language.General.Show,
-                    CellTheme = UiUtil.DataGridNoBorderNoPaddingCellTheme,
-                    Binding = new Binding(nameof(SubtitleLineViewModel.StartTime)) { Converter = fullTimeConverter },
-                    IsReadOnly = true,
-                },
-                new DataGridTextColumn
-                {
-                    Header = Se.Language.General.Hide,
-                    CellTheme = UiUtil.DataGridNoBorderNoPaddingCellTheme,
-                    Binding = new Binding(nameof(SubtitleLineViewModel.EndTime)) { Converter = fullTimeConverter },
-                    IsReadOnly = true,
-                },
-                new DataGridTextColumn
-                {
-                    Header = Se.Language.General.Duration,
-                    CellTheme = UiUtil.DataGridNoBorderNoPaddingCellTheme,
-                    Binding = new Binding(nameof(SubtitleLineViewModel.Duration)) { Converter = shortTimeConverter },
-                    IsReadOnly = true,
-                },
-            },
-        };
-        dataGridSubtitle.Bind(DataGrid.SelectedItemProperty, new Binding(nameof(vm.SelectedSegment)) { Source = vm });
+            Header = Se.Language.General.NumberSymbol,
+            CellTheme = UiUtil.TableViewCellTheme,
+            HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
+            Binding = new Binding(nameof(SubtitleLineViewModel.Number)),
+            Width = new GridLength(60), // was content-sized (Auto) on the DataGrid
+        });
+        dataGridSubtitle.Columns.Add(new SeTableViewColumn
+        {
+            Header = Se.Language.General.Show,
+            CellTheme = UiUtil.TableViewCellTheme,
+            HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
+            Binding = new Binding(nameof(SubtitleLineViewModel.StartTime)) { Converter = fullTimeConverter },
+            Width = new GridLength(120), // was content-sized (Auto) on the DataGrid
+        });
+        dataGridSubtitle.Columns.Add(new SeTableViewColumn
+        {
+            Header = Se.Language.General.Hide,
+            CellTheme = UiUtil.TableViewCellTheme,
+            HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
+            Binding = new Binding(nameof(SubtitleLineViewModel.EndTime)) { Converter = fullTimeConverter },
+            Width = new GridLength(120), // was content-sized (Auto) on the DataGrid
+        });
+        dataGridSubtitle.Columns.Add(new SeTableViewColumn
+        {
+            Header = Se.Language.General.Duration,
+            CellTheme = UiUtil.TableViewCellTheme,
+            HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
+            Binding = new Binding(nameof(SubtitleLineViewModel.Duration)) { Converter = shortTimeConverter },
+            Width = new GridLength(1, GridUnitType.Star),
+        });
+        dataGridSubtitle.Bind(TableView.SelectedItemProperty, new Binding(nameof(vm.SelectedSegment)) { Source = vm });
         dataGridSubtitle.SelectionChanged += vm.SegmentsGridChanged;
         dataGridSubtitle.DoubleTapped += vm.SegmentsGridDoubleTapped;
         vm.SegmentGrid = dataGridSubtitle;

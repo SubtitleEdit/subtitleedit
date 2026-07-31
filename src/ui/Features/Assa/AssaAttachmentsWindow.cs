@@ -92,58 +92,42 @@ public class AssaAttachmentsWindow : Window
             HorizontalAlignment = HorizontalAlignment.Stretch,
         };
 
-        var dataGrid = new DataGrid
+        // No header sorting: the attachment order is written back to the subtitle
+        // footer ([Fonts]/[Graphics] sections) in list order on OK, so the collection
+        // order is not presentation-only.
+        var dataGrid = TableViewExtras.MakeTableView(multiSelect: false);
+        dataGrid.DataContext = vm;
+        dataGrid.ItemsSource = vm.Attachments;
+
+        dataGrid.Columns.Add(new SeTableViewColumn
         {
-            AutoGenerateColumns = false,
-            SelectionMode = DataGridSelectionMode.Single,
-            CanUserResizeColumns = true,
-            CanUserSortColumns = true,
-            HorizontalAlignment = HorizontalAlignment.Stretch,
-            VerticalAlignment = VerticalAlignment.Stretch,
-            Width = double.NaN,
-            Height = double.NaN,
-            DataContext = vm,
-            ItemsSource = vm.Attachments,
-            Columns =
-            {
-                new DataGridTextColumn
-                {
-                    Header = Se.Language.General.FileName,
-                    CellTheme = UiUtil.DataGridNoBorderNoPaddingCellTheme,
-                    Binding = new Binding(nameof(AssaAttachmentItem.FileName)),
-                    IsReadOnly = true,
-                },
-                new DataGridTextColumn
-                {
-                    Header = Se.Language.General.Type,
-                    CellTheme = UiUtil.DataGridNoBorderNoPaddingCellTheme,
-                    Binding = new Binding(nameof(AssaAttachmentItem.Category)),
-                    IsReadOnly = true,
-                    Width = new DataGridLength(1, DataGridLengthUnitType.Star),
-                },
-                new DataGridTextColumn
-                {
-                    Header = Se.Language.General.Size,
-                    CellTheme = UiUtil.DataGridNoBorderNoPaddingCellTheme,
-                    Binding = new Binding(nameof(AssaAttachmentItem.Size)),
-                    IsReadOnly = true,
-                    Width = new DataGridLength(1, DataGridLengthUnitType.Star),
-                },
-            },
-        };
-        dataGrid.Bind(DataGrid.SelectedItemProperty, new Binding(nameof(vm.SelectedAttachment)) { Source = vm });
+            Header = Se.Language.General.FileName,
+            CellTheme = UiUtil.TableViewCellTheme,
+            HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
+            Binding = new Binding(nameof(AssaAttachmentItem.FileName)),
+            Width = new GridLength(1, GridUnitType.Star),
+        });
+        dataGrid.Columns.Add(new SeTableViewColumn
+        {
+            Header = Se.Language.General.Type,
+            CellTheme = UiUtil.TableViewCellTheme,
+            HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
+            Binding = new Binding(nameof(AssaAttachmentItem.Category)),
+            Width = new GridLength(140),
+        });
+        dataGrid.Columns.Add(new SeTableViewColumn
+        {
+            Header = Se.Language.General.Size,
+            CellTheme = UiUtil.TableViewCellTheme,
+            HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
+            Binding = new Binding(nameof(AssaAttachmentItem.Size)),
+            Width = new GridLength(100),
+        });
+
+        dataGrid.Bind(TableView.SelectedItemProperty, new Binding(nameof(vm.SelectedAttachment)) { Source = vm });
         dataGrid.SelectionChanged += vm.DataGridSelectionChanged;
         dataGrid.KeyDown += vm.AttachmentsDataGridKeyDown;
-        dataGrid.AddHandler(InputElement.KeyDownEvent, (object? _, KeyEventArgs e) =>
-        {
-            if (e.Key is Key.Home or Key.End && dataGrid.ItemsSource is IList items && items.Count > 0)
-            {
-                var target = e.Key == Key.Home ? items[0] : items[^1];
-                dataGrid.SelectedItem = target;
-                dataGrid.ScrollIntoView(target, null);
-                e.Handled = true;
-            }
-        }, Avalonia.Interactivity.RoutingStrategies.Tunnel);
+        TableViewExtras.AttachHomeEndNavigation(dataGrid);
 
         var flyout = new MenuFlyout();
         flyout.Opening += vm.AttachmentsContextMenuOpening;

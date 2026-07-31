@@ -390,81 +390,77 @@ public class MultipleReplaceWindow : Window
         editGrid.Add(labelType, 0, 2);
         editGrid.Add(comboBoxType, 1, 2);
 
-        var dataGrid = new DataGrid
+        // No header sorting (the DataGrid's CanUserSortColumns is not carried over):
+        // this is a fix preview in subtitle order, and the replace rules themselves run
+        // in list order - reordering the backing collection would scramble the preview.
+        var dataGrid = TableViewExtras.MakeTableView(multiSelect: false);
+        dataGrid.DataContext = vm;
+        dataGrid.ItemsSource = vm.Fixes;
+        dataGrid.Columns.AddRange(new TableViewColumn[]
         {
-            AutoGenerateColumns = false,
-            SelectionMode = DataGridSelectionMode.Single,
-            CanUserResizeColumns = true,
-            CanUserSortColumns = true,
-            HorizontalAlignment = HorizontalAlignment.Stretch,
-            VerticalAlignment = VerticalAlignment.Stretch,
-            Width = double.NaN,
-            Height = double.NaN,
-            DataContext = vm,
-            ItemsSource = vm.Fixes,
-            Columns =
+            new SeTableViewColumn
             {
-                new DataGridTemplateColumn
-                {
-                    Header = Se.Language.General.Apply,
-                    CellTheme = UiUtil.DataGridNoBorderNoPaddingCellTheme,
-                    CellTemplate = new FuncDataTemplate<MultipleReplaceFix>((item, _) =>
-                        new Border
-                        {
-                            Background = Brushes.Transparent, // Prevents highlighting
-                            Padding = new Thickness(4),
-                            Child = new CheckBox
-                            {
-                                [!ToggleButton.IsCheckedProperty] = new Binding(nameof(MultipleReplaceFix.Apply)),
-                                HorizontalAlignment = HorizontalAlignment.Center
-                            }
-                        }),
-                    Width = new DataGridLength(1, DataGridLengthUnitType.Auto)
-                },
-                new DataGridTextColumn
-                {
-                    Header = Se.Language.General.NumberSymbol,
-                    CellTheme = UiUtil.DataGridNoBorderNoPaddingCellTheme,
-                    Binding = new Binding(nameof(MultipleReplaceFix.Number)),
-                    IsReadOnly = true,
-                },
-                new DataGridTemplateColumn
-                {
-                    Header = Se.Language.General.Before,
-                    CellTheme = UiUtil.DataGridNoBorderNoPaddingCellTheme,
-                    CellTemplate = new FuncDataTemplate<MultipleReplaceFix>((item, _) =>
+                Header = Se.Language.General.Apply,
+                CellTheme = UiUtil.TableViewNoPaddingCellTheme,
+                HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
+                CellTemplate = new FuncDataTemplate<MultipleReplaceFix>((item, _) =>
+                    new Border
                     {
-                        var (beforeBlock, _) = TextDiffHighlighter.CompareReplacement(item.Before, item.After);
-                        return new Border
+                        Background = Brushes.Transparent, // Prevents highlighting
+                        Padding = new Thickness(4),
+                        Child = new CheckBox
                         {
-                            Background = Brushes.Transparent,
-                            Padding = new Thickness(4),
-                            Child = beforeBlock,
-                        };
+                            [!ToggleButton.IsCheckedProperty] = new Binding(nameof(MultipleReplaceFix.Apply)),
+                            HorizontalAlignment = HorizontalAlignment.Center
+                        }
                     }),
-                    IsReadOnly = true,
-                    Width = new DataGridLength(1, DataGridLengthUnitType.Star),
-                },
-                new DataGridTemplateColumn
-                {
-                    Header = Se.Language.General.After,
-                    CellTheme = UiUtil.DataGridNoBorderNoPaddingCellTheme,
-                    CellTemplate = new FuncDataTemplate<MultipleReplaceFix>((item, _) =>
-                    {
-                        var (_, afterBlock) = TextDiffHighlighter.CompareReplacement(item.Before, item.After);
-                        return new Border
-                        {
-                            Background = Brushes.Transparent,
-                            Padding = new Thickness(4),
-                            Child = afterBlock,
-                        };
-                    }),
-                    IsReadOnly = true,
-                    Width = new DataGridLength(1, DataGridLengthUnitType.Star),
-                },
+                // Content-sized (Auto) on the DataGrid; TableView treats Auto as star.
+                Width = new GridLength(70)
             },
-        };
-        dataGrid.Bind(DataGrid.SelectedItemProperty, new Binding(nameof(vm.SelectedFix)) { Source = vm });
+            new SeTableViewColumn
+            {
+                Header = Se.Language.General.NumberSymbol,
+                CellTheme = UiUtil.TableViewCellTheme,
+                HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
+                Binding = new Binding(nameof(MultipleReplaceFix.Number)),
+                Width = new GridLength(60),
+            },
+            new SeTableViewColumn
+            {
+                Header = Se.Language.General.Before,
+                CellTheme = UiUtil.TableViewNoPaddingCellTheme,
+                HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
+                CellTemplate = new FuncDataTemplate<MultipleReplaceFix>((item, _) =>
+                {
+                    var (beforeBlock, _) = TextDiffHighlighter.CompareReplacement(item.Before, item.After);
+                    return new Border
+                    {
+                        Background = Brushes.Transparent,
+                        Padding = new Thickness(4),
+                        Child = beforeBlock,
+                    };
+                }),
+                Width = new GridLength(1, GridUnitType.Star),
+            },
+            new SeTableViewColumn
+            {
+                Header = Se.Language.General.After,
+                CellTheme = UiUtil.TableViewNoPaddingCellTheme,
+                HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
+                CellTemplate = new FuncDataTemplate<MultipleReplaceFix>((item, _) =>
+                {
+                    var (_, afterBlock) = TextDiffHighlighter.CompareReplacement(item.Before, item.After);
+                    return new Border
+                    {
+                        Background = Brushes.Transparent,
+                        Padding = new Thickness(4),
+                        Child = afterBlock,
+                    };
+                }),
+                Width = new GridLength(1, GridUnitType.Star),
+            },
+        });
+        dataGrid.Bind(TableView.SelectedItemProperty, new Binding(nameof(vm.SelectedFix)) { Source = vm });
 
         var hitsItemsControl = new ItemsControl
         {

@@ -419,7 +419,7 @@ public partial class JoinSubtitlesViewModel : ObservableObject
         await MessageBox.Show(Window, "", message);
     }
 
-    internal void DataGridKeyDown(object? sender, KeyEventArgs e)
+    internal void GridKeyDown(object? sender, KeyEventArgs e)
     {
         if (e.Key == Key.Delete && SelectedJoinItem != null)
         {

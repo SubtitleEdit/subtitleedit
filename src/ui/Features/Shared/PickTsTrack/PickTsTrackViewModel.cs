@@ -22,7 +22,7 @@ public partial class PickTsTrackViewModel : ObservableObject
     [ObservableProperty] private string _subtitleCountText;
 
     public Window? Window { get; set; }
-    public DataGrid TracksGrid { get; set; }
+    public TableView TracksGrid { get; set; }
     public bool OkPressed { get; private set; }
     public string WindowTitle { get; private set; }
     public Subtitle TeletextSubtitle { get; private set; }
@@ -33,7 +33,7 @@ public partial class PickTsTrackViewModel : ObservableObject
     public PickTsTrackViewModel()
     {
         Tracks = new ObservableCollection<TsTrackInfoDisplay>();
-        TracksGrid = new DataGrid();
+        TracksGrid = new TableView();
         WindowTitle = string.Empty;
         SubtitleCountText = string.Empty;
         Rows = new ObservableCollection<TsSubtitleCueDisplay>();
@@ -119,7 +119,7 @@ public partial class PickTsTrackViewModel : ObservableObject
         }
     }
 
-    internal void DataGridTracksSelectionChanged(object? sender, SelectionChangedEventArgs e)
+    internal void TracksGridSelectionChanged(object? sender, SelectionChangedEventArgs e)
     {
         bool flowControl = TrackChanged();
         if (!flowControl)
@@ -190,7 +190,11 @@ public partial class PickTsTrackViewModel : ObservableObject
         Dispatcher.UIThread.Post(() =>
         {
             TracksGrid.SelectedIndex = index;
-            TracksGrid.ScrollIntoView(TracksGrid.SelectedItem, null);
+            if (TracksGrid.SelectedItem is { } selectedItem)
+            {
+                TracksGrid.ScrollIntoView(selectedItem);
+            }
+
             TrackChanged();
         }, DispatcherPriority.Background);
     }

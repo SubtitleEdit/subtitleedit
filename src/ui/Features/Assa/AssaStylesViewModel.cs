@@ -1,4 +1,3 @@
-using Avalonia.Collections;
 using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Media.Imaging;
@@ -53,9 +52,16 @@ public partial class AssaStylesViewModel : ObservableObject, IClosingCleanup
     public Window? Window { get; set; }
     public bool OkPressed { get; private set; }
     public string Header { get; set; }
-    public DataGrid FileStyleGrid { get; set; }
-    public DataGrid StorageStyleGrid { get; set; }
-    public DataGridCollectionView StorageStylesView { get; }
+    public TableView FileStyleGrid { get; set; }
+    public TableView StorageStyleGrid { get; set; }
+
+    /// <summary>
+    /// The storage styles filtered by the selected category. The DataGrid-era
+    /// DataGridCollectionView is gone (TableView binds a plain collection), so this
+    /// view is rebuilt from <see cref="StorageStyles"/> - which stays the source of
+    /// truth for saving - whenever the source or the category filter changes.
+    /// </summary>
+    public ObservableCollection<StyleDisplay> StorageStylesView { get; }
     public Subtitle ResultSubtitle => _subtitle;
 
     private readonly IFileHelper _fileHelper;
@@ -81,8 +87,8 @@ public partial class AssaStylesViewModel : ObservableObject, IClosingCleanup
         BorderTypes = new ObservableCollection<BorderStyleItem>(BorderStyleItem.List());
         SelectedBorderType = BorderTypes[0];
         CurrentTitle = string.Empty;
-        FileStyleGrid = new DataGrid();
-        StorageStyleGrid = new DataGrid();
+        FileStyleGrid = new TableView();
+        StorageStyleGrid = new TableView();
 
         Header = string.Empty;
         _subtitle = new Subtitle();
@@ -90,10 +96,9 @@ public partial class AssaStylesViewModel : ObservableObject, IClosingCleanup
 
         LoadSettings();
 
-        StorageStylesView = new DataGridCollectionView(StorageStyles)
-        {
-            Filter = o => o is StyleDisplay s && IsStyleInSelectedCategory(s),
-        };
+        StorageStylesView = new ObservableCollection<StyleDisplay>();
+        StorageStyles.CollectionChanged += (_, _) => RefreshStorageStylesView();
+        RefreshStorageStylesView();
         RebuildStorageCategories();
 
         _timerUpdatePreview = new System.Timers.Timer(500);
@@ -278,7 +283,7 @@ public partial class AssaStylesViewModel : ObservableObject, IClosingCleanup
     [RelayCommand]
     private void FileRemove()
     {
-        var selectedItems = FileStyleGrid.SelectedItems.Cast<StyleDisplay>().ToList();
+        var selectedItems = FileStyleGrid.SelectedItems?.Cast<StyleDisplay>().ToList() ?? new List<StyleDisplay>();
         if (Window == null || selectedItems.Count == 0)
         {
             return;
@@ -302,7 +307,7 @@ public partial class AssaStylesViewModel : ObservableObject, IClosingCleanup
     [RelayCommand]
     private void FilesDuplicate()
     {
-        var selectedItems = FileStyleGrid.SelectedItems.Cast<StyleDisplay>().ToList();
+        var selectedItems = FileStyleGrid.SelectedItems?.Cast<StyleDisplay>().ToList() ?? new List<StyleDisplay>();
         if (Window == null || selectedItems.Count == 0)
         {
             return;
@@ -362,7 +367,7 @@ public partial class AssaStylesViewModel : ObservableObject, IClosingCleanup
     [RelayCommand]
     private void FileCopyToStorage()
     {
-        var selectedItems = FileStyleGrid.SelectedItems.Cast<StyleDisplay>().ToList();
+        var selectedItems = FileStyleGrid.SelectedItems?.Cast<StyleDisplay>().ToList() ?? new List<StyleDisplay>();
         if (Window == null || selectedItems.Count == 0)
         {
             return;
@@ -413,7 +418,7 @@ public partial class AssaStylesViewModel : ObservableObject, IClosingCleanup
     [RelayCommand]
     private async Task FileReplaceWith()
     {
-        var selectedItems = FileStyleGrid.SelectedItems.Cast<StyleDisplay>().ToList();
+        var selectedItems = FileStyleGrid.SelectedItems?.Cast<StyleDisplay>().ToList() ?? new List<StyleDisplay>();
         if (Window == null || selectedItems.Count == 0)
         {
             return;
@@ -538,7 +543,7 @@ public partial class AssaStylesViewModel : ObservableObject, IClosingCleanup
     [RelayCommand]
     private void StorageRemove()
     {
-        var selectedItems = StorageStyleGrid.SelectedItems.Cast<StyleDisplay>().ToList();
+        var selectedItems = StorageStyleGrid.SelectedItems?.Cast<StyleDisplay>().ToList() ?? new List<StyleDisplay>();
         if (Window == null || selectedItems.Count == 0)
         {
             return;
@@ -594,7 +599,7 @@ public partial class AssaStylesViewModel : ObservableObject, IClosingCleanup
                 }
             }
 
-            StorageStyleGrid.Focus();
+            TableViewExtras.FocusRow(StorageStyleGrid);
         });
     }
 
@@ -607,7 +612,7 @@ public partial class AssaStylesViewModel : ObservableObject, IClosingCleanup
     [RelayCommand]
     private void StorageDuplicate()
     {
-        var selectedItems = StorageStyleGrid.SelectedItems.Cast<StyleDisplay>().ToList();
+        var selectedItems = StorageStyleGrid.SelectedItems?.Cast<StyleDisplay>().ToList() ?? new List<StyleDisplay>();
         if (Window == null || selectedItems.Count == 0)
         {
             return;
@@ -665,7 +670,7 @@ public partial class AssaStylesViewModel : ObservableObject, IClosingCleanup
     [RelayCommand]
     private void StorageCopyToFiles()
     {
-        var selectedItems = StorageStyleGrid.SelectedItems.Cast<StyleDisplay>().ToList();
+        var selectedItems = StorageStyleGrid.SelectedItems?.Cast<StyleDisplay>().ToList() ?? new List<StyleDisplay>();
         if (Window == null || selectedItems.Count == 0)
         {
             return;
@@ -737,8 +742,22 @@ public partial class AssaStylesViewModel : ObservableObject, IClosingCleanup
 
     partial void OnSelectedStorageCategoryChanged(string value)
     {
-        StorageStylesView?.Refresh();
+        RefreshStorageStylesView();
         IsCategoryActionVisible = value != AllCategoriesLabel && value != DefaultCategoryLabel;
+    }
+
+    private void RefreshStorageStylesView()
+    {
+        if (StorageStylesView is null)
+        {
+            return; // category can change while the constructor is still initializing
+        }
+
+        StorageStylesView.Clear();
+        foreach (var style in StorageStyles.Where(IsStyleInSelectedCategory))
+        {
+            StorageStylesView.Add(style);
+        }
     }
 
     [RelayCommand]
@@ -852,7 +871,7 @@ public partial class AssaStylesViewModel : ObservableObject, IClosingCleanup
     [RelayCommand]
     private async Task MoveToCategory()
     {
-        var selectedItems = StorageStyleGrid.SelectedItems.Cast<StyleDisplay>().ToList();
+        var selectedItems = StorageStyleGrid.SelectedItems?.Cast<StyleDisplay>().ToList() ?? new List<StyleDisplay>();
         if (Window == null || selectedItems.Count == 0)
         {
             return;
@@ -882,7 +901,7 @@ public partial class AssaStylesViewModel : ObservableObject, IClosingCleanup
 
         RebuildStorageCategories();
         SelectedStorageCategory = StorageCategories.Contains(label) ? label : SelectedStorageCategory;
-        StorageStylesView.Refresh();
+        RefreshStorageStylesView();
     }
 
     private void Close()
@@ -965,7 +984,7 @@ public partial class AssaStylesViewModel : ObservableObject, IClosingCleanup
         }
 
         IsFileStyleSelected = SelectedFileStyle != null;
-        IsTakeUsagesFromVisible = FileStyleGrid.SelectedItems.Count == 1;
+        IsTakeUsagesFromVisible = FileStyleGrid.SelectedItems?.Count == 1;
 
         _timerUpdatePreview.Start();
     }
@@ -1199,7 +1218,7 @@ public partial class AssaStylesViewModel : ObservableObject, IClosingCleanup
         CurrentTitle = Se.Language.Assa.StylesInFile;
         SelectedBorderType = selectedStyle?.BorderStyle ?? BorderTypes[0];
         IsFileStyleSelected = selectedStyle != null;
-        IsTakeUsagesFromVisible = FileStyleGrid.SelectedItems.Count == 1;
+        IsTakeUsagesFromVisible = FileStyleGrid.SelectedItems?.Count == 1;
     }
 
     private void SwitchToStorageStyle()
@@ -1209,8 +1228,8 @@ public partial class AssaStylesViewModel : ObservableObject, IClosingCleanup
         CurrentTitle = Se.Language.Assa.StylesSaved;
         SelectedBorderType = selectedStyle?.BorderStyle ?? BorderTypes[0];
         IsStorageStyleSelected = selectedStyle != null;
-        IsSetStyleAsDefaultVisible = StorageStyleGrid.SelectedItems.Count == 1;
-        IsCopyToFileStylesVisible = StorageStyleGrid.SelectedItems.Count > 0;
+        IsSetStyleAsDefaultVisible = StorageStyleGrid.SelectedItems?.Count == 1;
+        IsCopyToFileStylesVisible = StorageStyleGrid.SelectedItems?.Count > 0;
     }
 
     internal void BorderTypeChanged(object? sender, SelectionChangedEventArgs e)
@@ -1280,7 +1299,7 @@ public partial class AssaStylesViewModel : ObservableObject, IClosingCleanup
                 UpdateUsages();
             }
 
-            FileStyleGrid.Focus();
+            TableViewExtras.FocusRow(FileStyleGrid);
         });
     }
 
@@ -1330,7 +1349,7 @@ public partial class AssaStylesViewModel : ObservableObject, IClosingCleanup
             }
 
             UpdateUsages();
-            FileStyleGrid.Focus();
+            TableViewExtras.FocusRow(FileStyleGrid);
         });
     }
 
