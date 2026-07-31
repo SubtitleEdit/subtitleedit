@@ -42,6 +42,8 @@ public class DownloadVideoFromUrlWindow : Window
         progressBar.MinWidth = 400;
         progressBar.Margin = new Thickness(0, 4, 0, 0);
         progressBar.Bind(ProgressBar.ValueProperty, new Binding(nameof(vm.Progress)));
+        // Post-processing reports nothing, so the bar animates instead of sitting frozen at 100%.
+        progressBar.Bind(ProgressBar.IsIndeterminateProperty, new Binding(nameof(vm.IsProgressIndeterminate)));
 
         var statusText = new TextBlock { Opacity = 0.85 };
         statusText.Bind(TextBlock.TextProperty, new Binding(nameof(vm.StatusText)));

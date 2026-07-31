@@ -14,6 +14,18 @@ using System.Threading.Tasks;
 
 namespace Nikse.SubtitleEdit.Logic.Download;
 
+/// <summary>
+/// Which part of a yt-dlp video download is running. The transfer reports percentages, but
+/// everything after it (ffmpeg merging the separate video and audio streams, fixups) runs
+/// silently and can take many seconds - the caller needs to know so it can stop showing a
+/// progress number that no longer moves.
+/// </summary>
+public enum YtDlpDownloadStage
+{
+    Downloading,
+    PostProcessing,
+}
+
 public interface IYtDlpDownloadService
 {
     Task DownloadYtDlp(IProgress<float>? progress, CancellationToken cancellationToken);
@@ -23,8 +35,10 @@ public interface IYtDlpDownloadService
     /// <paramref name="downloadAllSubtitles"/> is true, also writes every
     /// human-uploaded subtitle track as a sibling file
     /// (<c>{stem}.{lang}.{ext}</c>) using the same single yt-dlp invocation.
+    /// <paramref name="stageProgress"/> reports when yt-dlp leaves the transfer phase and
+    /// starts post-processing (merging/fixups), which produces no progress output.
     /// </summary>
-    Task DownloadVideo(string url, string outputPath, bool downloadAllSubtitles, IProgress<float>? progress, CancellationToken cancellationToken);
+    Task DownloadVideo(string url, string outputPath, bool downloadAllSubtitles, IProgress<float>? progress, CancellationToken cancellationToken, IProgress<YtDlpDownloadStage>? stageProgress = null);
 
     /// <summary>
     /// Subtitle-only download (no video). Writes every human-uploaded subtitle
@@ -196,7 +210,7 @@ public class YtDlpDownloadService : IYtDlpDownloadService
 
     private static readonly Regex PercentageRegex = new(@"(?<pct>\d+(?:\.\d+)?)\s*%", RegexOptions.Compiled);
 
-    public async Task DownloadVideo(string url, string outputPath, bool downloadAllSubtitles, IProgress<float>? progress, CancellationToken cancellationToken)
+    public async Task DownloadVideo(string url, string outputPath, bool downloadAllSubtitles, IProgress<float>? progress, CancellationToken cancellationToken, IProgress<YtDlpDownloadStage>? stageProgress = null)
     {
         cancellationToken.ThrowIfCancellationRequested();
 
@@ -243,6 +257,19 @@ public class YtDlpDownloadService : IYtDlpDownloadService
 
         var stderrBuffer = new System.Text.StringBuilder();
 
+        var postProcessingReported = false;
+        void ReportLine(string line)
+        {
+            if (!postProcessingReported && IsPostProcessingLine(line))
+            {
+                postProcessingReported = true;
+                stageProgress?.Report(YtDlpDownloadStage.PostProcessing);
+                return;
+            }
+
+            ReportProgressFromLine(line, progress);
+        }
+
         process.OutputDataReceived += (_, e) =>
         {
             if (e.Data is null)
@@ -250,7 +277,7 @@ public class YtDlpDownloadService : IYtDlpDownloadService
                 return;
             }
 
-            ReportProgressFromLine(e.Data, progress);
+            ReportLine(e.Data);
         };
 
         process.ErrorDataReceived += (_, e) =>
@@ -261,7 +288,7 @@ public class YtDlpDownloadService : IYtDlpDownloadService
             }
 
             stderrBuffer.AppendLine(e.Data);
-            ReportProgressFromLine(e.Data, progress);
+            ReportLine(e.Data);
         };
 
         if (!process.Start())
@@ -511,6 +538,39 @@ public class YtDlpDownloadService : IYtDlpDownloadService
             or "srv1" or "srv2" or "srv3" or "json3" or "ytt" => true,
         _ => false,
     };
+
+    /// <summary>
+    /// yt-dlp tags each post-processor's output with its name, e.g.
+    /// <c>[Merger] Merging formats into "download.mp4"</c>. Merging a separate video and audio
+    /// stream runs ffmpeg over the whole file and prints nothing while it works - on a long
+    /// video that is a ten-second silence right after the transfer hit 100%.
+    /// </summary>
+    private static readonly string[] PostProcessorPrefixes =
+    {
+        "[Merger]",
+        "[VideoConvertor]",
+        "[VideoRemuxer]",
+        "[ExtractAudio]",
+        "[EmbedSubtitle]",
+        "[Metadata]",
+        "[SubtitlesConvertor]",
+        "[ThumbnailsConvertor]",
+        "[SplitChapters]",
+        "[Fixup", // FixupM3u8, FixupM4a, FixupStretched, FixupTimestamp, ...
+    };
+
+    internal static bool IsPostProcessingLine(string line)
+    {
+        foreach (var prefix in PostProcessorPrefixes)
+        {
+            if (line.StartsWith(prefix, StringComparison.Ordinal))
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
 
     private static void ReportProgressFromLine(string line, IProgress<float>? progress)
     {
