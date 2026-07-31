@@ -183,4 +183,77 @@ public class ImageToImageTest : IDisposable
         Assert.False(result.Success);
         Assert.Contains("Tesseract not found on PATH", result.Errors[0]);
     }
+
+    private const string SrtContent = """
+        1
+        00:00:01,000 --> 00:00:02,000
+        Hello
+
+        2
+        00:00:03,000 --> 00:00:04,000
+        World
+
+        """;
+
+    [Fact]
+    public async Task ConvertAsync_VobSubToBdnXml_KeepsTheIdxFrameSize_NotDvdPal()
+    {
+        // A 1920x1080 VobSub - Subtitle Edit writes "size: 1920x1080" into the .idx - used to
+        // come back as DVD PAL 720x576, which moves every subpicture inside a smaller frame.
+        var input = Path.Combine(_tempRoot, "in.srt");
+        await File.WriteAllTextAsync(input, SrtContent, TestContext.Current.CancellationToken);
+
+        var vobFolder = Path.Combine(_tempRoot, "vob");
+        Directory.CreateDirectory(vobFolder);
+        var converter = new SubtitleConverter();
+        var vobResult = await converter.ConvertAsync(new ConversionOptions
+        {
+            Patterns = [input],
+            Format = "vobsub",
+            OutputFolder = vobFolder,
+            Overwrite = true,
+            Resolution = (1920, 1080),
+            ImageStyle = new ImageExportStyle(),
+        });
+        Assert.True(vobResult.Success, string.Join("; ", vobResult.Errors));
+
+        var subFile = Assert.Single(Directory.GetFiles(vobFolder, "*.sub"));
+        var idxFile = Path.ChangeExtension(subFile, ".idx");
+        Assert.Contains("size: 1920x1080",
+            await File.ReadAllTextAsync(idxFile, TestContext.Current.CancellationToken));
+
+        var bdnFolder = Path.Combine(_tempRoot, "bdn3");
+        Directory.CreateDirectory(bdnFolder);
+        var bdnResult = await converter.ConvertAsync(new ConversionOptions
+        {
+            Patterns = [subFile],
+            Format = "bdnxml",
+            OutputFolder = bdnFolder,
+            Overwrite = true,
+        });
+        Assert.True(bdnResult.Success, string.Join("; ", bdnResult.Errors));
+
+        var indexFile = Assert.Single(Directory.GetFiles(bdnFolder, "index.xml", SearchOption.AllDirectories));
+        var index = await File.ReadAllTextAsync(indexFile, TestContext.Current.CancellationToken);
+        Assert.Contains("VideoFormat=\"1080p\"", index);
+    }
+
+    [Theory]
+    [InlineData("size: 720x480\npalette: 000000", 720, 480)]
+    [InlineData("SIZE: 1920x1080", 1920, 1080)]
+    public void TryGetVobSubIdxScreenSize_SizeLine_IsParsed(string idxText, int width, int height)
+    {
+        Assert.Equal((width, height), BitmapSubtitleLoader.TryGetVobSubIdxScreenSize(idxText));
+    }
+
+    [Theory]
+    [InlineData(null)]
+    [InlineData("")]
+    [InlineData("palette: 000000")]
+    [InlineData("size: banana")]
+    public void TryGetVobSubIdxScreenSize_NoUsableSizeLine_ReturnsNull(string? idxText)
+    {
+        // null, not a guess - the caller knows whether PAL or NTSC is the right default
+        Assert.Null(BitmapSubtitleLoader.TryGetVobSubIdxScreenSize(idxText));
+    }
 }

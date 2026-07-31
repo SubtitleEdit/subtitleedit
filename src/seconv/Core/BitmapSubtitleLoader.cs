@@ -73,10 +73,11 @@ internal static class BitmapSubtitleLoader
     /// VobSub <c>.sub</c> (+ optional <c>.idx</c>) → bitmap events. Uses
     /// <see cref="VobSubParser.OpenSubIdx"/>, which uses the .idx for timing + palette when
     /// present and otherwise parses the .sub's MPEG-PS stream directly (stream PTS timing +
-    /// a default palette). The VobSub spec doesn't store a screen size in the index file, so
-    /// we bake in the DVD-standard frame sizes (720x576 PAL, 720x480 NTSC) — otherwise the
-    /// output writer would fall back to <c>--resolution</c> / 1920x1080, which is wrong
-    /// metadata for DVD sources.
+    /// a default palette). The frame size comes from the .idx's <c>size:</c> line when it has
+    /// one — VobSub is not always DVD-sized (Subtitle Edit's own export writes whatever the
+    /// source was, e.g. <c>size: 1920x1080</c>) and squeezing a 1920x1080 stream into a DVD
+    /// frame moves every subpicture. Without that line, fall back to the DVD standards
+    /// (720x576 PAL, 720x480 NTSC) rather than <c>--resolution</c> / 1920x1080.
     /// </summary>
     public static IReadOnlyList<BitmapSubtitleItem> LoadVobSub(string subPath, string idxPath, bool isPal)
     {
@@ -90,8 +91,8 @@ internal static class BitmapSubtitleLoader
             throw new InvalidOperationException($"No VobSub subtitle packs in: {subPath}");
         }
 
-        var screenWidth = 720;
-        var screenHeight = isPal ? 576 : 480;
+        var (screenWidth, screenHeight) = TryGetVobSubIdxScreenSize(ReadIdxText(idxPath))
+                                          ?? (720, isPal ? 576 : 480);
 
         var items = new List<BitmapSubtitleItem>(packs.Count);
         var skipped = 0;
@@ -245,23 +246,58 @@ internal static class BitmapSubtitleLoader
     /// </summary>
     internal static (int Width, int Height) GetVobSubIdxScreenSize(string? codecPrivate)
     {
-        if (!string.IsNullOrWhiteSpace(codecPrivate))
+        return TryGetVobSubIdxScreenSize(codecPrivate) ?? (720, 576);
+    }
+
+    /// <summary>
+    /// Frame size from .idx text ("size: 720x576"), or null when it carries no usable
+    /// <c>size:</c> line — the caller then picks its own default (DVD PAL vs NTSC differ,
+    /// so there is no single right fallback here).
+    /// </summary>
+    internal static (int Width, int Height)? TryGetVobSubIdxScreenSize(string? idxText)
+    {
+        if (string.IsNullOrWhiteSpace(idxText))
         {
-            foreach (var line in codecPrivate.SplitToLines())
+            return null;
+        }
+
+        foreach (var line in idxText.SplitToLines())
+        {
+            if (line.StartsWith("size:", StringComparison.OrdinalIgnoreCase))
             {
-                if (line.StartsWith("size:", StringComparison.OrdinalIgnoreCase))
+                var parts = line.Substring(5).Trim().Split('x');
+                if (parts.Length == 2 &&
+                    int.TryParse(parts[0].Trim(), out var w) && w > 0 &&
+                    int.TryParse(parts[1].Trim(), out var h) && h > 0)
                 {
-                    var parts = line.Substring(5).Trim().Split('x');
-                    if (parts.Length == 2 &&
-                        int.TryParse(parts[0].Trim(), out var w) && w > 0 &&
-                        int.TryParse(parts[1].Trim(), out var h) && h > 0)
-                    {
-                        return (w, h);
-                    }
+                    return (w, h);
                 }
             }
         }
-        return (720, 576);
+
+        return null;
+    }
+
+    /// <summary>
+    /// Text of a standalone <c>.idx</c>, or null when there is none to read — an absent or
+    /// unreadable companion is normal (<see cref="VobSubParser.OpenSubIdx"/> copes), so it
+    /// must not fail the conversion.
+    /// </summary>
+    private static string? ReadIdxText(string? idxPath)
+    {
+        if (string.IsNullOrEmpty(idxPath) || !File.Exists(idxPath))
+        {
+            return null;
+        }
+
+        try
+        {
+            return File.ReadAllText(idxPath);
+        }
+        catch
+        {
+            return null;
+        }
     }
 
     /// <summary>
