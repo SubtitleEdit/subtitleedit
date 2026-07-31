@@ -25,7 +25,7 @@ public class LanguageFavoritesTest
     [Fact]
     public void ParseCodes_EmptyReturnsEmpty()
     {
-        Assert.Empty(LanguageFavorites.ParseCodes(null));
+        Assert.Empty(LanguageFavorites.ParseCodes(null!));
         Assert.Empty(LanguageFavorites.ParseCodes(" "));
     }
 
