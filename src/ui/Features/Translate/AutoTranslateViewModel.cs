@@ -968,7 +968,7 @@ public partial class AutoTranslateViewModel : ObservableObject
         if (model != null && LlamaCppServerManager.IsModelInstalled(model.FileName))
         {
             var answer = await MessageBox.Show(
-                Window,
+                Window!,
                 Se.Language.General.Download,
                 string.Format(Se.Language.Translate.XIsAlreadyDownloadedReDownload, model.DisplayName),
                 MessageBoxButtons.YesNo,
@@ -1011,7 +1011,7 @@ public partial class AutoTranslateViewModel : ObservableObject
         var installedKey = GetLlamaCppEngineUpdate()?.key ?? string.Empty;
 
         await _windowService.ShowDialogAsync<LlamaCppEngineSettingsWindow, LlamaCppEngineSettingsViewModel>(
-            Window,
+            Window!,
             vm => vm.Initialize(() => UpdateLlamaCppEngineAsync(installedKey)));
 
         RefreshDownloadDots?.Invoke();
@@ -1031,7 +1031,7 @@ public partial class AutoTranslateViewModel : ObservableObject
         }
 
         await _windowService.ShowDialogAsync<LlamaCppAdvancedSettingsWindow, LlamaCppAdvancedSettingsViewModel>(
-            Window,
+            Window!,
             vm => vm.Initialize());
     }
 
@@ -1112,7 +1112,7 @@ public partial class AutoTranslateViewModel : ObservableObject
         catch (Exception ex)
         {
             await MessageBox.Show(
-                Window,
+                Window!,
                 Se.Language.General.Error,
                 ex.Message,
                 MessageBoxButtons.OK,
@@ -1144,7 +1144,7 @@ public partial class AutoTranslateViewModel : ObservableObject
         _llamaCppUpdatePromptShown = true;
 
         var answer = await MessageBox.Show(
-            Window,
+            Window!,
             string.Format(Se.Language.Video.AudioToText.UpdateXTitle, "llama.cpp"),
             string.Format(Se.Language.Video.AudioToText.UpdateXMessage, "llama.cpp", Environment.NewLine),
             MessageBoxButtons.YesNoCancel,
@@ -1277,7 +1277,7 @@ public partial class AutoTranslateViewModel : ObservableObject
         {
             // show message about selecting target language
             await MessageBox.Show(
-                Window,
+                Window!,
                 Se.Language.General.Error,
                 Se.Language.Translate.PleaseSelectATargetLanguage,
                 MessageBoxButtons.OK,
@@ -1316,7 +1316,7 @@ public partial class AutoTranslateViewModel : ObservableObject
         {
             IsProgressEnabled = false;
             await MessageBox.Show(
-                Window,
+                Window!,
                 Se.Language.General.Error,
                 string.Format(Se.Language.General.XRequiresAnApiKey, translator.Name),
                 MessageBoxButtons.OK,
@@ -1329,7 +1329,7 @@ public partial class AutoTranslateViewModel : ObservableObject
         {
             IsProgressEnabled = false;
             await MessageBox.Show(
-                Window,
+                Window!,
                 Se.Language.General.Error,
                 string.Format(Se.Language.General.XRequiresAnApiKey, translator.Name),
                 MessageBoxButtons.OK,
@@ -1345,7 +1345,7 @@ public partial class AutoTranslateViewModel : ObservableObject
         {
             IsProgressEnabled = false;
             await MessageBox.Show(
-                Window,
+                Window!,
                 Se.Language.General.Error,
                 string.Format(Se.Language.General.XRequiresAValidUrl, translator.Name),
                 MessageBoxButtons.OK,
@@ -1397,7 +1397,7 @@ public partial class AutoTranslateViewModel : ObservableObject
             IsProgressEnabled = false;
             StatusText = Se.Language.Translate.ReadyToTranslate;
             await MessageBox.Show(
-                Window,
+                Window!,
                 Se.Language.General.Error,
                 string.Format(Se.Language.General.ErrorX, exception.Message),
                 MessageBoxButtons.OK,

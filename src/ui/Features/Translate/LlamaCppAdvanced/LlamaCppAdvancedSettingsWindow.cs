@@ -87,12 +87,12 @@ public class LlamaCppAdvancedSettingsWindow : Window
         AddRow(grid, 0, Se.Language.Translate.Synopsis, synopsisBox);
 
         var glossaryBox = MakeMultilineTextBox(vm, nameof(vm.Glossary), 76);
-        glossaryBox.Watermark = Se.Language.Translate.GlossaryHint;
+        glossaryBox.PlaceholderText = Se.Language.Translate.GlossaryHint;
         SetHint(glossaryBox, Se.Language.Translate.GlossaryHint);
         AddRow(grid, 1, Se.Language.Translate.Glossary, glossaryBox);
 
         var promptBox = MakeMultilineTextBox(vm, nameof(vm.Prompt), 56);
-        promptBox.Watermark = LlamaCppAdvancedProtocol.DefaultPrompt;
+        promptBox.PlaceholderText = LlamaCppAdvancedProtocol.DefaultPrompt;
         SetHint(promptBox, Se.Language.Translate.CustomPromptHint);
         AddRow(grid, 2, Se.Language.Translate.PromptText, promptBox);
 

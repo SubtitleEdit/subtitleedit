@@ -13,14 +13,14 @@ namespace Nikse.SubtitleEdit.UiLogic.AutoTranslate
 {
     public class MyMemoryApi : IAutoTranslator, IDisposable
     {
-        private HttpClient _httpClient;
+        private HttpClient _httpClient = null!;
         private readonly SeJsonParser _jsonParser = new SeJsonParser();
 
         public static string StaticName { get; set; } = "MyMemory Translate";
         public string Name => StaticName;
         public override string ToString() => StaticName;
         public string Url => "https://mymemory.translated.net/";
-        public string Error { get; set; }
+        public string Error { get; set; } = string.Empty;
         public int MaxCharacters => 1500;
 
         public void Initialize()
@@ -222,13 +222,7 @@ namespace Nikse.SubtitleEdit.UiLogic.AutoTranslate
         public async Task<string> Translate(string text, string sourceLanguageCode, string targetLanguageCode, CancellationToken cancellationToken)
         {
             var url = MakeUrl(text, sourceLanguageCode, targetLanguageCode, Configuration.Settings.Tools.AutoTranslateMyMemoryApiKey);
-            // netstandard2.1 has no GetStringAsync(string, CancellationToken)
-            // overload, so we go via SendAsync to flow the token into the
-            // connection/send phase (cancel propagates there).
-            using var request = new HttpRequestMessage(HttpMethod.Get, url);
-            using var response = await _httpClient.SendAsync(request, cancellationToken);
-            response.EnsureSuccessStatusCode();
-            var jsonResultString = await response.Content.ReadAsStringAsync();
+            var jsonResultString = await _httpClient.GetStringAsync(url, cancellationToken);
             var textResult = _jsonParser.GetFirstObject(jsonResultString, "translatedText");
             var result = Json.DecodeJsonText(textResult);
 

@@ -13,11 +13,7 @@ namespace Nikse.SubtitleEdit.UiLogic.Http
             var proxyAddress = proxySettings.ProxyAddress;
             if (string.IsNullOrEmpty(proxyAddress))
             {
-#if NETSTANDARD
-                var systemProxy = WebRequest.DefaultWebProxy;
-#else
                 var systemProxy = HttpClient.DefaultProxy;
-#endif
                 if (systemProxy == null)
                 {
                     return new HttpClient();

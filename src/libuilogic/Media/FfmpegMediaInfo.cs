@@ -19,7 +19,6 @@ namespace Nikse.SubtitleEdit.UiLogic.Media
         public TimeCode Duration { get; set; }
         public decimal FramesRate { get; set; } 
 
-#if NET7_0_OR_GREATER
         [GeneratedRegex(@"\d\d+x\d\d+")]
         private static partial Regex ResolutionRegexGen();
         private static readonly Regex ResolutionRegex = ResolutionRegexGen();
@@ -35,16 +34,11 @@ namespace Nikse.SubtitleEdit.UiLogic.Media
         [GeneratedRegex(@" \d+ fps")]
         private static partial Regex Fps2RegexGen();
         private static readonly Regex Fps2Regex = Fps2RegexGen();
-#else
-        private static readonly Regex ResolutionRegex = new Regex(@"\d\d+x\d\d+", RegexOptions.Compiled);
-        private static readonly Regex DurationRegex = new Regex(@"Duration: \d+[:\.,]\d+[:\.,]\d+[:\.,]\d+", RegexOptions.Compiled);
-        private static readonly Regex Fps1Regex = new Regex(@" \d+\.\d+ fps", RegexOptions.Compiled);
-        private static readonly Regex Fps2Regex = new Regex(@" \d+ fps", RegexOptions.Compiled);
-#endif
 
         private FfmpegMediaInfo()
         {
             Tracks = new List<FfmpegTrackInfo>();
+            Duration = new TimeCode();
         }
 
         public static FfmpegMediaInfo Parse(string videoFileName)

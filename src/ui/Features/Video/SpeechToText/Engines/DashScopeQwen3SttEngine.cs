@@ -54,7 +54,7 @@ public class DashScopeQwen3SttEngine : IOnlineSttEngine
     public long UploadThresholdBytes => long.MaxValue;
     public long ChunkSizeBytes => long.MaxValue;
 
-    public string GetAndCreateWhisperFolder() => WhisperHelper.GetWhisperFolder(WhisperChoice.DashScopeQwen3);
+    public string GetAndCreateWhisperFolder() => WhisperHelper.GetWhisperFolder(WhisperChoice.DashScopeQwen3) ?? string.Empty;
     public string GetAndCreateWhisperModelFolder(WhisperModel? whisperModel) => new WhisperModel().ModelFolder;
     public string GetExecutable() => string.Empty;
     public bool IsModelInstalled(WhisperModel model) => true;

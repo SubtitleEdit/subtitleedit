@@ -15,16 +15,16 @@ namespace Nikse.SubtitleEdit.UiLogic.AutoTranslate
     /// </summary>
     public class DeepLTranslate : IAutoTranslator, IDisposable
     {
-        private string _apiKey;
-        private string _apiUrl;
-        private string _formality;
-        private HttpClient _httpClient;
+        private string _apiKey = string.Empty;
+        private string _apiUrl = string.Empty;
+        private string _formality = string.Empty;
+        private HttpClient _httpClient = null!;
 
         public static string StaticName { get; set; } = "DeepL V2 translate";
         public override string ToString() => StaticName;
         public string Name => StaticName;
         public string Url => "https://www.deepl.com";
-        public string Error { get; set; }
+        public string Error { get; set; } = string.Empty;
         public int MaxCharacters => 1500;
 
         public void Initialize()
@@ -158,13 +158,13 @@ namespace Nikse.SubtitleEdit.UiLogic.AutoTranslate
         public async Task<string> Translate(string text, string sourceLanguageCode, string targetLanguageCode, CancellationToken cancellationToken)
         {
             int[] retryDelays = { 555, 3007, 7013 };
-            HttpResponseMessage result = null;
-            string resultContent = null;
+            HttpResponseMessage result = null!;
+            var resultContent = string.Empty;
             for (var attempt = 0; attempt <= retryDelays.Length; attempt++)
             {
                 var postContent = MakeContent(text, sourceLanguageCode, targetLanguageCode);
                 result = await _httpClient.PostAsync("/v2/translate", postContent, cancellationToken);
-                resultContent = await result.Content.ReadAsStringAsync();
+                resultContent = await result.Content.ReadAsStringAsync(cancellationToken);
 
                 if (!ShouldRetry(result, resultContent) || attempt == retryDelays.Length)
                 {
@@ -204,8 +204,8 @@ namespace Nikse.SubtitleEdit.UiLogic.AutoTranslate
                                 {
                                     if (transItem == "text")
                                     {
-                                        var s = innerDic[transItem].ToString();
-                                        resultList.Add(s);
+                                        var s = innerDic[transItem]?.ToString();
+                                        resultList.Add(s ?? string.Empty);
                                     }
                                 }
                             }

@@ -35,7 +35,7 @@ namespace Nikse.SubtitleEdit.UiLogic.Translate
 
         public override string ToString() => Name.ToLowerInvariant().Replace('_', ' ').CapitalizeFirstLetter();
 
-        public bool Equals(TranslationPair other) => other != null && Code.Equals(other.Code);
+        public bool Equals(TranslationPair? other) => other != null && Code.Equals(other.Code);
 
         public override int GetHashCode() => Code != null ? Code.GetHashCode() : 0;
     }

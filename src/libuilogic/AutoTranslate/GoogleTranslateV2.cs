@@ -18,14 +18,14 @@ namespace Nikse.SubtitleEdit.UiLogic.AutoTranslate
     /// </summary>
     public class GoogleTranslateV2 : IAutoTranslator, IDisposable
     {
-        private string _apiKey;
-        private HttpClient _httpClient;
+        private string _apiKey = string.Empty;
+        private HttpClient _httpClient = null!;
 
         public static string StaticName { get; set; } = "Google Translate V2 API";
         public override string ToString() => StaticName;
         public string Name => StaticName;
         public string Url => "https://translate.google.com/";
-        public string Error { get; set; }
+        public string Error { get; set; } = string.Empty;
         public int MaxCharacters => 1500;
 
         public void Initialize()
@@ -61,7 +61,7 @@ namespace Nikse.SubtitleEdit.UiLogic.AutoTranslate
                 {
                     try
                     {
-                        Error = await result.Content.ReadAsStringAsync();
+                        Error = await result.Content.ReadAsStringAsync(cancellationToken);
                         SeLogger.Error($"Error in {StaticName}.Translate: " + Error);
                     }
                     catch
@@ -85,7 +85,7 @@ namespace Nikse.SubtitleEdit.UiLogic.AutoTranslate
                     throw new Exception($"An error occurred calling GT translate - status code: {result.StatusCode}");
                 }
 
-                content = await result.Content.ReadAsStringAsync();
+                content = await result.Content.ReadAsStringAsync(cancellationToken);
             }
             catch (WebException webException)
             {

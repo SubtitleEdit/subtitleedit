@@ -20,13 +20,13 @@ namespace Nikse.SubtitleEdit.UiLogic.AutoTranslate
     /// </summary>
     public class OpenAiCompatibleTranslate : IAutoTranslator, IDisposable
     {
-        private HttpClient _httpClient;
+        private HttpClient _httpClient = null!;
 
         public static string StaticName { get; set; } = "OpenAI Compatible API";
         public override string ToString() => StaticName;
         public string Name => StaticName;
         public string Url => "https://platform.openai.com/docs/api-reference/chat";
-        public string Error { get; set; }
+        public string Error { get; set; } = string.Empty;
         public int MaxCharacters => 1500;
 
         public void Initialize()
@@ -74,7 +74,7 @@ namespace Nikse.SubtitleEdit.UiLogic.AutoTranslate
             var content = new StringContent(input, Encoding.UTF8);
             content.Headers.ContentType = MediaTypeHeaderValue.Parse("application/json");
             var result = await _httpClient.PostAsync(string.Empty, content, cancellationToken);
-            var bytes = await result.Content.ReadAsByteArrayAsync();
+            var bytes = await result.Content.ReadAsByteArrayAsync(cancellationToken);
             var json = Encoding.UTF8.GetString(bytes).Trim();
             if (!result.IsSuccessStatusCode)
             {

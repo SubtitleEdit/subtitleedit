@@ -10,9 +10,9 @@ namespace Nikse.SubtitleEdit.UiLogic.Common
     public class BookmarkPersistence
     {
         private readonly Subtitle _subtitle;
-        private readonly string _fileName;
+        private readonly string? _fileName;
 
-        public BookmarkPersistence(Subtitle subtitle, string fileName)
+        public BookmarkPersistence(Subtitle subtitle, string? fileName)
         {
             _subtitle = subtitle;
             _fileName = fileName;
@@ -52,7 +52,7 @@ namespace Nikse.SubtitleEdit.UiLogic.Common
             }
         }
 
-        private string SerializeBookmarks()
+        private string? SerializeBookmarks()
         {
             int count = 0;
             var sb = new StringBuilder();

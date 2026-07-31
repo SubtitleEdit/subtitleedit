@@ -99,12 +99,12 @@ namespace Nikse.SubtitleEdit.UiLogic.AudioToText
             return !string.IsNullOrEmpty(GetWhisperFolder());
         }
 
-        public static string GetWhisperFolder()
+        public static string? GetWhisperFolder()
         {
             return GetWhisperFolder(Configuration.Settings.Tools.WhisperChoice);
         }
 
-        public static string GetWhisperFolder(string whisperChoice)
+        public static string? GetWhisperFolder(string whisperChoice)
         {
             if (Configuration.IsRunningOnLinux && whisperChoice == WhisperChoice.Cpp)
             {
@@ -402,7 +402,7 @@ namespace Nikse.SubtitleEdit.UiLogic.AudioToText
             return "whisper";
         }
 
-        public static string GetWhisperPathAndFileName()
+        public static string? GetWhisperPathAndFileName()
         {
             return GetWhisperPathAndFileName(Configuration.Settings.Tools.WhisperChoice);
         }
@@ -410,7 +410,7 @@ namespace Nikse.SubtitleEdit.UiLogic.AudioToText
         /// <summary>
         /// Get installed path
         /// </summary>
-        public static string GetWhisperPathAndFileName(string whisperChoice)
+        public static string? GetWhisperPathAndFileName(string whisperChoice)
         {
             var fileNameOnly = GetExecutableFileName(whisperChoice);
             var whisperFolder = GetWhisperFolder(whisperChoice);

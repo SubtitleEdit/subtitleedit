@@ -143,9 +143,9 @@ namespace Nikse.SubtitleEdit.UiLogic.Ocr
             "yor"
         };
 
-        public string Code { get; set; }
-        public string Name { get; set; }
-        public string Url { get; set; }
+        public string Code { get; set; } = string.Empty;
+        public string Name { get; set; } = string.Empty;
+        public string Url { get; set; } = string.Empty;
 
         public static List<TesseractDictionary> List()
         {

@@ -13,13 +13,13 @@ namespace Nikse.SubtitleEdit.UiLogic.AutoTranslate
 {
     public class NoLanguageLeftBehindApi : IAutoTranslator, IDisposable
     {
-        private HttpClient _httpClient;
+        private HttpClient _httpClient = null!;
 
         public static string StaticName { get; set; } = "winstxnhdw-nllb-api";
         public override string ToString() => StaticName;
         public string Name => StaticName;
         public string Url => "https://github.com/winstxnhdw/nllb-api";
-        public string Error { get; set; }
+        public string Error { get; set; } = string.Empty;
         public int MaxCharacters => 250;
 
         public void Initialize()
@@ -53,13 +53,10 @@ namespace Nikse.SubtitleEdit.UiLogic.AutoTranslate
         public async Task<string> Translate(string text, string sourceLanguageCode, string targetLanguageCode, CancellationToken cancellationToken)
         {
             var content = new StringContent("{ \"text\": \"" + Json.EncodeJsonText(text) + "\",  \"source\": \"" + sourceLanguageCode + "\", \"target\": \"" + targetLanguageCode + "\" }", Encoding.UTF8, "application/json");
-            // netstandard2.1: ReadAsStringAsync has no CancellationToken
-            // overload; the token is flowed through PostAsync, which is where
-            // the long blocking happens.
             using var result = await _httpClient.PostAsync("translator", content, cancellationToken);
             result.EnsureSuccessStatusCode();
 
-            var responseString = await result.Content.ReadAsStringAsync();
+            var responseString = await result.Content.ReadAsStringAsync(cancellationToken);
 
             var parser = new SeJsonParser();
             var resultText = parser.GetFirstObject(responseString, "result");

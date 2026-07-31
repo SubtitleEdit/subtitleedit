@@ -67,7 +67,7 @@ public class OpenAiCompatibleSttEngine : IOnlineSttEngine
 
     public string GetAndCreateWhisperFolder()
     {
-        return WhisperHelper.GetWhisperFolder(WhisperChoice.OpenAiCompatible);
+        return WhisperHelper.GetWhisperFolder(WhisperChoice.OpenAiCompatible) ?? string.Empty;
     }
 
     public string GetAndCreateWhisperModelFolder(WhisperModel? whisperModel)

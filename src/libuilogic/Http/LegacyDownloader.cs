@@ -13,7 +13,7 @@ namespace Nikse.SubtitleEdit.UiLogic.Http
 {
     public class LegacyDownloader : IDownloader
     {
-        public Task DownloadAsync(string requestUri, Stream destination, IProgress<float> progress = null, CancellationToken cancellationToken = default)
+        public Task DownloadAsync(string requestUri, Stream destination, IProgress<float>? progress = null, CancellationToken cancellationToken = default)
         {
             ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls11 | SecurityProtocolType.Tls12;
 
@@ -74,7 +74,7 @@ namespace Nikse.SubtitleEdit.UiLogic.Http
             _httpClient = httpClient;
         }
 
-        public Uri BaseAddress
+        public Uri? BaseAddress
         {
             get => _httpClient.BaseAddress;
             set => _httpClient.BaseAddress = value;
@@ -144,7 +144,7 @@ namespace Nikse.SubtitleEdit.UiLogic.Http
             }
         }
 
-        public static IWebProxy GetProxy()
+        public static IWebProxy? GetProxy()
         {
             var proxySettings = Configuration.Settings.Proxy;
             if (string.IsNullOrEmpty(proxySettings.ProxyAddress))

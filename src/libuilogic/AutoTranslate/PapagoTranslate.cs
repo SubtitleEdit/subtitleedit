@@ -14,7 +14,7 @@ namespace Nikse.SubtitleEdit.UiLogic.AutoTranslate
 {
     public class PapagoTranslate : IAutoTranslator, IDisposable
     {
-        private HttpClient _httpClient;
+        private HttpClient _httpClient = null!;
 
         public static string StaticName { get; set; } = "Papago Translate";
 
@@ -24,7 +24,7 @@ namespace Nikse.SubtitleEdit.UiLogic.AutoTranslate
 
         public string Url => "https://papago.naver.com/";
 
-        public string Error { get; set; }
+        public string Error { get; set; } = string.Empty;
 
         public int MaxCharacters => 5000;
 
@@ -64,7 +64,7 @@ namespace Nikse.SubtitleEdit.UiLogic.AutoTranslate
             var content = new FormUrlEncodedContent(formData);
 
             var result = await _httpClient.PostAsync("n2mt", content, cancellationToken);
-            var bytes = await result.Content.ReadAsByteArrayAsync();
+            var bytes = await result.Content.ReadAsByteArrayAsync(cancellationToken);
             var json = Encoding.UTF8.GetString(bytes).Trim();
 
             if (!result.IsSuccessStatusCode)

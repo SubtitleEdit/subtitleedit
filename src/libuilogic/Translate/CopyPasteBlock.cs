@@ -5,8 +5,8 @@ namespace Nikse.SubtitleEdit.UiLogic.Translate
 {
     public class CopyPasteBlock
     {
-        public string TargetText { get; set; }
-        public List<Paragraph> Paragraphs { get; set; }
-        public List<Formatting> Formattings { get; set; }
+        public string TargetText { get; set; } = string.Empty;
+        public List<Paragraph> Paragraphs { get; set; } = new();
+        public List<Formatting> Formattings { get; set; } = new();
     }
 }

@@ -7,7 +7,7 @@ namespace Nikse.SubtitleEdit.UiLogic.Media
     public class FfmpegTrackInfo
     {
         public FfmpegTrackType TrackType { get; set; }
-        public string TrackInfo { get; set; }
+        public string TrackInfo { get; set; } = string.Empty;
         // ISO 639-2/T language tag (e.g. "eng") captured from the ffmpeg
         // "Stream #0:N(LANG): TYPE:" prefix. Empty when ffmpeg did not report one.
         public string Language { get; set; } = string.Empty;

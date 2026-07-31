@@ -4380,7 +4380,7 @@ public partial class OcrViewModel : ObservableObject
         }
         else if (e.Key == Key.V && e.KeyModifiers.HasFlag(KeyModifiers.Control) && e.KeyModifiers.HasFlag(KeyModifiers.Shift))
         {
-            if (SubtitleGrid != null && SubtitleGrid.SelectedItems.Count > 1)
+            if (SubtitleGrid?.SelectedItems?.Count > 1)
             {
                 e.Handled = true;
                 Dispatcher.UIThread.Post(async void () => { await FillSelectedLinesWithClipboard(); });
@@ -4780,7 +4780,7 @@ public partial class OcrViewModel : ObservableObject
     internal void SubtitleGridContextOpening(object? sender, EventArgs e)
     {
         ShowContextMenu = OcrSubtitleItems.Count > 0;
-        HasMultipleLinesSelected = SubtitleGrid != null && SubtitleGrid.SelectedItems.Count > 1;
+        HasMultipleLinesSelected = SubtitleGrid?.SelectedItems?.Count > 1;
     }
 
     internal void SubtitleGridSelectionChanged(object? sender, SelectionChangedEventArgs e)
@@ -4809,7 +4809,7 @@ public partial class OcrViewModel : ObservableObject
             return;
         }
 
-        var selectedItems = SubtitleGrid.SelectedItems.Cast<OcrSubtitleItem>().ToList();
+        var selectedItems = SubtitleGrid.SelectedItems?.Cast<OcrSubtitleItem>().ToList() ?? new List<OcrSubtitleItem>();
         if (selectedItems.Count < 2)
         {
             return;

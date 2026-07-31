@@ -2,7 +2,7 @@
 {
     public class ResultText
     {
-        public string Text { get; set; }
+        public string Text { get; set; } = string.Empty;
 
         /// <summary>
         /// Start seconds

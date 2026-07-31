@@ -18,13 +18,13 @@ namespace Nikse.SubtitleEdit.UiLogic.AutoTranslate
     /// </summary>
     public class GoogleTranslateV1 : IAutoTranslator, IDisposable
     {
-        private HttpClient _httpClient;
+        private HttpClient _httpClient = null!;
 
         public static string StaticName { get; set; } = "Google Translate V1 API";
         public override string ToString() => StaticName;
         public string Name => StaticName;
         public string Url => "https://translate.google.com/";
-        public string Error { get; set; }
+        public string Error { get; set; } = string.Empty;
         public int MaxCharacters => 1500;
 
         public void Initialize()
@@ -56,7 +56,7 @@ namespace Nikse.SubtitleEdit.UiLogic.AutoTranslate
                 var url = $"translate_a/single?client=gtx&sl={sourceLanguageCode}&tl={targetLanguageCode}&dt=t&q={Utilities.UrlEncode(text)}";
 
                 var result = await _httpClient.GetAsync(url, cancellationToken);
-                var bytes = await result.Content.ReadAsByteArrayAsync();
+                var bytes = await result.Content.ReadAsByteArrayAsync(cancellationToken);
                 jsonResultString = Encoding.UTF8.GetString(bytes).Trim();
 
                 if (!result.IsSuccessStatusCode)

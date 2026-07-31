@@ -18,15 +18,15 @@ namespace Nikse.SubtitleEdit.UiLogic.AutoTranslate
     /// </summary>
     public class BaiduTranslate : IAutoTranslator, IDisposable
     {
-        private HttpClient _httpClient;
-        private string _appId;
-        private string _secretKey;
+        private HttpClient _httpClient = null!;
+        private string _appId = string.Empty;
+        private string _secretKey = string.Empty;
 
         public static string StaticName { get; set; } = "Baidu Translate";
         public override string ToString() => StaticName;
         public string Name => StaticName;
         public string Url => "https://fanyi.baidu.com";
-        public string Error { get; set; }
+        public string Error { get; set; } = string.Empty;
         public int MaxCharacters => 1500;
 
         public void Initialize()
@@ -89,7 +89,7 @@ namespace Nikse.SubtitleEdit.UiLogic.AutoTranslate
             var url = $"/api/trans/vip/translate?q={Uri.EscapeDataString(text)}&from={fromLang}&to={toLang}&appid={_appId}&salt={salt}&sign={sign}";
 
             var result = await _httpClient.GetAsync(url, cancellationToken);
-            var bytes = await result.Content.ReadAsByteArrayAsync();
+            var bytes = await result.Content.ReadAsByteArrayAsync(cancellationToken);
             var json = Encoding.UTF8.GetString(bytes).Trim();
 
             if (!result.IsSuccessStatusCode)
