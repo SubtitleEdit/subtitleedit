@@ -340,6 +340,14 @@ public static class TableViewExtras
 
             tableView.SelectedItem = target;
             tableView.ScrollIntoView(target);
+
+            // The jump can scroll the currently focused row container out of the realized
+            // range, dropping keyboard focus out of the TableView entirely (the next
+            // Home/End would then never reach this handler). The key came through the
+            // TableView, so focus belongs inside it - move it to the target row once
+            // layout has realized the container.
+            Dispatcher.UIThread.Post(() => FocusRow(tableView));
+
             e.Handled = true;
         }, Avalonia.Interactivity.RoutingStrategies.Tunnel);
     }
