@@ -112,7 +112,7 @@ public class MainView : ViewBase
 
                 _vm.ContentGrid.InvalidateMeasure();
                 _vm.ContentGrid.InvalidateArrange();
-                Dispatcher.UIThread.Post(() => _vm.SubtitleGrid.Focus());
+                Dispatcher.UIThread.Post(() => TableViewExtras.FocusRow(_vm.SubtitleGrid));
             }, DispatcherPriority.Loaded);
         };
 
