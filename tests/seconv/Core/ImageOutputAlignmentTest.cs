@@ -1,4 +1,5 @@
 using Nikse.SubtitleEdit.Core.BluRaySup;
+using Nikse.SubtitleEdit.Core.VobSub;
 using SeConv.Core;
 using System.Text;
 using Xunit;
@@ -62,24 +63,29 @@ public class ImageOutputAlignmentTest : IDisposable
 
     private async Task<string> ConvertToSup(string content = SrtContent, string extension = ".srt")
     {
+        return await Convert(content, extension, "bluraysup", "*.sup", (1920, 1080));
+    }
+
+    private async Task<string> Convert(string content, string extension, string format, string outputPattern, (int, int) resolution)
+    {
         var input = Path.Combine(_tempRoot, "in" + extension);
         await File.WriteAllTextAsync(input, content);
-        var outFolder = Path.Combine(_tempRoot, "sup");
+        var outFolder = Path.Combine(_tempRoot, format);
         Directory.CreateDirectory(outFolder);
 
         var converter = new SubtitleConverter();
         var result = await converter.ConvertAsync(new ConversionOptions
         {
             Patterns = [input],
-            Format = "bluraysup",
+            Format = format,
             OutputFolder = outFolder,
             Overwrite = true,
-            Resolution = (1920, 1080),
+            Resolution = resolution,
             ImageStyle = new ImageExportStyle(),
         });
 
         Assert.True(result.Success, string.Join("; ", result.Errors));
-        return Assert.Single(Directory.GetFiles(outFolder, "*.sup"));
+        return Assert.Single(Directory.GetFiles(outFolder, outputPattern));
     }
 
     [Fact]
@@ -123,5 +129,31 @@ public class ImageOutputAlignmentTest : IDisposable
         // A line without "\pos" keeps the default bottom placement
         var untagged = subtitles[1].GetPosition();
         Assert.True(untagged.Top > 540, $"untagged line should stay at the bottom, was y={untagged.Top}");
+    }
+
+    [Fact]
+    public async Task ConvertAsync_VobSub_PosTagPositionsTheParagraph()
+    {
+        // VobSub is 720x576 (PAL), so the 960x540 script's "\pos(50,50)" scales to
+        // 50*720/960 = 37.5 -> 38 and 50*576/540 = 53.3 -> 53
+        var subFile = await Convert(AssContent, ".ass", "vobsub", "*.sub", (720, 576));
+
+        var parser = new VobSubParser(true);
+        parser.OpenSubIdx(subFile, Path.ChangeExtension(subFile, ".idx"));
+        var packs = parser.MergeVobSubPacks();
+        Assert.Equal(2, packs.Count);
+
+        // Decoding fills in ImageDisplayArea from the subpicture's display control commands
+        foreach (var pack in packs)
+        {
+            pack.GetBitmap();
+        }
+
+        var positioned = packs[0].SubPicture.ImageDisplayArea;
+        Assert.Equal(38, positioned.Left);
+        Assert.Equal(53, positioned.Top);
+
+        var untagged = packs[1].SubPicture.ImageDisplayArea;
+        Assert.True(untagged.Top > 288, $"untagged line should stay at the bottom, was y={untagged.Top}");
     }
 }
