@@ -1,5 +1,6 @@
 using Avalonia.Controls;
 using Avalonia.Input;
+using Avalonia.Media.Imaging;
 using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
@@ -26,6 +27,12 @@ public partial class FontCollectorViewModel : ObservableObject
     [ObservableProperty] private ObservableCollection<FontCollectorItem> _fontItems;
     [ObservableProperty] private string _statusText;
     [ObservableProperty] private bool _isScanning;
+    [ObservableProperty] private ObservableCollection<string> _installedFontNames;
+    [ObservableProperty] private string? _selectedInstalledFontName;
+    [ObservableProperty] private ObservableCollection<CollectedFont> _collectedFonts;
+    [ObservableProperty] private CollectedFont? _selectedCollectedFont;
+    [ObservableProperty] private int _selectedTabIndex;
+    [ObservableProperty] private Bitmap? _fontPreview;
 
     public Window? Window { get; set; }
 
@@ -38,6 +45,8 @@ public partial class FontCollectorViewModel : ObservableObject
     {
         _folderHelper = folderHelper;
         FontItems = new ObservableCollection<FontCollectorItem>();
+        InstalledFontNames = new ObservableCollection<string>();
+        CollectedFonts = new ObservableCollection<CollectedFont>();
         StatusText = string.Empty;
     }
 
@@ -49,6 +58,97 @@ public partial class FontCollectorViewModel : ObservableObject
 
         var items = FontItems.ToList();
         _ = Task.Run(() => ScanSystemFonts(items, _cancellationTokenSource.Token));
+        _ = Task.Run(LoadFontLists);
+    }
+
+    /// <summary>Fills the "Installed fonts" and "Collected fonts" tabs.</summary>
+    private void LoadFontLists()
+    {
+        try
+        {
+            var installed = FontHelper.GetLibAssaFonts();
+            var collected = FontHelper.GetFontsFolderFonts();
+            Dispatcher.UIThread.Post(() =>
+            {
+                InstalledFontNames.Clear();
+                InstalledFontNames.AddRange(installed);
+                CollectedFonts.Clear();
+                CollectedFonts.AddRange(collected);
+            });
+        }
+        catch (Exception exception)
+        {
+            Se.LogError(exception, "Font collector font list load failed");
+        }
+    }
+
+    partial void OnSelectedTabIndexChanged(int value) => UpdateFontPreview();
+
+    partial void OnSelectedInstalledFontNameChanged(string? value) => UpdateFontPreview();
+
+    partial void OnSelectedCollectedFontChanged(CollectedFont? value) => UpdateFontPreview();
+
+    /// <summary>
+    /// Renders a sample-text preview of the font selected in the installed/collected tab.
+    /// A collected font need not be installed, so it is rendered from its file.
+    /// </summary>
+    private void UpdateFontPreview()
+    {
+        string? fontName = null;
+        SKTypeface? skTypeface = null;
+
+        if (SelectedTabIndex == 1 && !string.IsNullOrEmpty(SelectedInstalledFontName))
+        {
+            fontName = SelectedInstalledFontName;
+            skTypeface = SKTypeface.FromFamilyName(FontHelper.GetSkiaFontNameFromLibAssaFontName(fontName));
+        }
+        else if (SelectedTabIndex == 2 && SelectedCollectedFont != null)
+        {
+            fontName = SelectedCollectedFont.Name;
+            skTypeface = SKTypeface.FromFile(SelectedCollectedFont.FilePath, SelectedCollectedFont.FaceIndex);
+        }
+
+        if (fontName == null || skTypeface == null)
+        {
+            FontPreview?.Dispose();
+            FontPreview = new SKBitmap(1, 1, true).ToAvaloniaBitmap();
+            return;
+        }
+
+        var imageInfo = new SKImageInfo(750, 150, SKColorType.Bgra8888, SKAlphaType.Premul);
+        using var surface = SKSurface.Create(imageInfo);
+        var canvas = surface.Canvas;
+        canvas.Clear(SKColors.Transparent);
+        using var font = new SKFont(skTypeface, 32);
+        using var paint = new SKPaint
+        {
+            Color = SKColors.Orange,
+            IsAntialias = true,
+        };
+
+        var y = 25f;
+        foreach (var line in new[] { fontName, "I know the quick brown fox jumps over the lazy dog.", "0123456789" })
+        {
+            canvas.DrawText(line, 12, y, SKTextAlign.Left, font, paint);
+            y += font.Size + 5;
+        }
+
+        using var skImage = surface.Snapshot();
+        var skBitmap = SKBitmap.FromImage(skImage);
+        FontPreview?.Dispose();
+        FontPreview = skBitmap.ToAvaloniaBitmap();
+    }
+
+    [RelayCommand]
+    private async Task OpenSeFontsFolder()
+    {
+        if (Window == null)
+        {
+            return;
+        }
+
+        Directory.CreateDirectory(Se.FontsFolder);
+        await _folderHelper.OpenFolder(Window, Se.FontsFolder);
     }
 
     /// <summary>
@@ -266,6 +366,7 @@ public partial class FontCollectorViewModel : ObservableObject
         }
 
         await CopyFontsTo(files, Se.FontsFolder);
+        _ = Task.Run(LoadFontLists); // the "Collected fonts" tab just gained fonts
     }
 
     private List<string> GetFoundFontFiles()

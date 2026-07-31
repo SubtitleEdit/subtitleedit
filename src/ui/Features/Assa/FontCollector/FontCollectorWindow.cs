@@ -3,6 +3,7 @@ using Avalonia.Controls;
 using Avalonia.Data;
 using Avalonia.Input;
 using Avalonia.Layout;
+using Avalonia.Media;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 
@@ -27,6 +28,57 @@ public class FontCollectorWindow : Window
         vm.Window = this;
         DataContext = vm;
 
+        var tabControl = new TabControl
+        {
+            HorizontalAlignment = HorizontalAlignment.Stretch,
+            VerticalAlignment = VerticalAlignment.Stretch,
+            Items =
+            {
+                new TabItem
+                {
+                    Header = Se.Language.Assa.FontCollectorCurrentSubtitle,
+                    Content = MakeCurrentSubtitleView(vm),
+                },
+                new TabItem
+                {
+                    Header = Se.Language.Tools.PickFontNameInstalledFonts,
+                    Content = MakeInstalledFontsView(vm),
+                },
+                new TabItem
+                {
+                    Header = Se.Language.Tools.PickFontNameCollectedFonts,
+                    Content = MakeCollectedFontsView(vm),
+                },
+            },
+        };
+        tabControl.Bind(TabControl.SelectedIndexProperty, new Binding(nameof(vm.SelectedTabIndex)) { Source = vm, Mode = BindingMode.TwoWay });
+
+        var grid = new Grid
+        {
+            RowDefinitions =
+            {
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
+            },
+            ColumnDefinitions =
+            {
+                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
+            },
+            Margin = UiUtil.MakeWindowMargin(),
+            RowSpacing = 5,
+            Width = double.NaN,
+            HorizontalAlignment = HorizontalAlignment.Stretch,
+        };
+
+        grid.Add(tabControl, 0);
+        grid.Add(UiUtil.MakeButtonBar(UiUtil.MakeButtonDone(vm.CloseCommand)), 1);
+
+        Content = grid;
+    }
+
+    /// <summary>The fonts the current subtitle uses, with found/not-found status and copy actions.</summary>
+    private static Grid MakeCurrentSubtitleView(FontCollectorViewModel vm)
+    {
         var dataGrid = TableViewExtras.MakeTableView();
         dataGrid.DataContext = vm;
         dataGrid.ItemsSource = vm.FontItems;
@@ -86,10 +138,7 @@ public class FontCollectorWindow : Window
 
         var buttonCopy = UiUtil.MakeButton(Se.Language.Assa.FontCollectorCopyFontsToFolderDotDotDot, vm.CopyFontsToFolderCommand);
         var buttonCopyToSeFolder = UiUtil.MakeButton(Se.Language.Assa.FontCollectorCopyFontsToSeFontsFolder, vm.CopyFontsToSeFontsFolderCommand);
-        var buttonBar = UiUtil.MakeButtonBar(
-            buttonCopy,
-            buttonCopyToSeFolder,
-            UiUtil.MakeButtonDone(vm.CloseCommand));
+        var buttonBar = UiUtil.MakeButtonBar(buttonCopy, buttonCopyToSeFolder);
 
         var grid = new Grid
         {
@@ -103,7 +152,6 @@ public class FontCollectorWindow : Window
                 new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
                 new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) },
             },
-            Margin = UiUtil.MakeWindowMargin(),
             RowSpacing = 5,
             ColumnSpacing = 5,
             Width = double.NaN,
@@ -114,7 +162,114 @@ public class FontCollectorWindow : Window
         grid.Add(statusText, 1, 0);
         grid.Add(buttonBar, 1, 1);
 
-        Content = grid;
+        return grid;
+    }
+
+    /// <summary>All fonts installed on this machine, with a sample-text preview.</summary>
+    private static Grid MakeInstalledFontsView(FontCollectorViewModel vm)
+    {
+        var dataGrid = TableViewExtras.MakeTableView(multiSelect: false);
+        dataGrid.DataContext = vm;
+        dataGrid.ItemsSource = vm.InstalledFontNames;
+
+        var fontNameColumn = new SeTableViewColumn
+        {
+            Header = Se.Language.General.FontName,
+            CellTheme = UiUtil.TableViewCellTheme,
+            HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
+            Binding = new Binding("."),
+            Width = new GridLength(1, GridUnitType.Star),
+        };
+        dataGrid.Columns.Add(fontNameColumn);
+        dataGrid.Bind(TableView.SelectedItemProperty, new Binding(nameof(vm.SelectedInstalledFontName)));
+
+        var grid = new Grid
+        {
+            RowDefinitions =
+            {
+                new RowDefinition { Height = new GridLength(2, GridUnitType.Star) },
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
+            },
+            ColumnDefinitions =
+            {
+                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
+            },
+            RowSpacing = 5,
+            Width = double.NaN,
+            HorizontalAlignment = HorizontalAlignment.Stretch,
+        };
+
+        grid.Add(UiUtil.MakeBorderForControlNoPadding(dataGrid), 0);
+        grid.Add(MakeFontPreviewView(vm), 1);
+
+        return grid;
+    }
+
+    /// <summary>The fonts collected in SE's own Fonts folder, with a sample-text preview.</summary>
+    private static Grid MakeCollectedFontsView(FontCollectorViewModel vm)
+    {
+        var dataGrid = TableViewExtras.MakeTableView(multiSelect: false);
+        dataGrid.DataContext = vm;
+        dataGrid.ItemsSource = vm.CollectedFonts;
+
+        var fontNameColumn = new SeTableViewColumn
+        {
+            Header = Se.Language.General.FontName,
+            CellTheme = UiUtil.TableViewCellTheme,
+            HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
+            Binding = new Binding(nameof(CollectedFont.Name)),
+            Width = new GridLength(220),
+        };
+        var fileColumn = new SeTableViewColumn
+        {
+            Header = Se.Language.Assa.FontCollectorFontFiles,
+            CellTheme = UiUtil.TableViewCellTheme,
+            HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
+            Binding = new Binding(nameof(CollectedFont.FilePath)),
+            Width = new GridLength(1, GridUnitType.Star),
+        };
+        dataGrid.Columns.Add(fontNameColumn);
+        dataGrid.Columns.Add(fileColumn);
+        dataGrid.Bind(TableView.SelectedItemProperty, new Binding(nameof(vm.SelectedCollectedFont)));
+
+        var buttonOpenFolder = UiUtil.MakeButton(Se.Language.Assa.FontCollectorOpenFontsFolder, vm.OpenSeFontsFolderCommand);
+
+        var grid = new Grid
+        {
+            RowDefinitions =
+            {
+                new RowDefinition { Height = new GridLength(2, GridUnitType.Star) },
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
+            },
+            ColumnDefinitions =
+            {
+                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
+            },
+            RowSpacing = 5,
+            Width = double.NaN,
+            HorizontalAlignment = HorizontalAlignment.Stretch,
+        };
+
+        grid.Add(UiUtil.MakeBorderForControlNoPadding(dataGrid), 0);
+        grid.Add(UiUtil.MakeButtonBar(buttonOpenFolder), 1);
+        grid.Add(MakeFontPreviewView(vm), 2);
+
+        return grid;
+    }
+
+    private static Border MakeFontPreviewView(FontCollectorViewModel vm)
+    {
+        var image = new Image
+        {
+            [!Image.SourceProperty] = new Binding(nameof(vm.FontPreview)),
+            DataContext = vm,
+            HorizontalAlignment = HorizontalAlignment.Left,
+            VerticalAlignment = VerticalAlignment.Top,
+            Stretch = Stretch.Uniform,
+        };
+
+        return UiUtil.MakeBorderForControl(image);
     }
 
     protected override void OnKeyDown(KeyEventArgs e)

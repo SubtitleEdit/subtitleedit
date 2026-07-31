@@ -2993,6 +2993,8 @@
     "fontCollectorCopyFontsToFolder": "Copy fonts to folder",
     "fontCollectorCopyFontsToFolderDotDotDot": "Copy fonts to folder...",
     "fontCollectorCopyFontsToSeFontsFolder": "Copy to SE's Fonts folder",
+    "fontCollectorCurrentSubtitle": "Current subtitle",
+    "fontCollectorOpenFontsFolder": "Open SE's Fonts folder...",
     "attachments": "Attachments",
     "fontCollectorNoFontsToCopy": "No font files found to copy.",
     "fontCollectorXFontFilesCopiedToY": "{0} font file(s) copied to {1}",
