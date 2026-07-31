@@ -338,6 +338,7 @@ public static class TableViewExtras
                 return;
             }
 
+            PrePositionScroll(tableView, e.Key == Key.Home ? 0 : items.Count - 1);
             tableView.SelectedItem = target;
             tableView.ScrollIntoView(target);
 
@@ -443,6 +444,92 @@ public static class TableViewExtras
             .OfType<TableViewRow>()
             .Count(r => r.IsVisible && r.Bounds.Height > 0);
         return Math.Max(1, visibleRowCount - 1);
+    }
+
+    /// <summary>Refinement steps <see cref="PrePositionScroll"/> is allowed to take.</summary>
+    private const int PrePositionScrollPasses = 3;
+
+    /// <summary>
+    /// Moves the scroll offset next to <paramref name="index"/> before a
+    /// <see cref="ItemsControl.ScrollIntoView(int)"/>, so the panel never has to travel there
+    /// row by row.
+    /// TableView's VirtualizingStackPanel locates an unrealized row by estimating its offset
+    /// from the average row height, and with variable-height rows that estimate drifts. When it
+    /// drifts far enough the panel falls back to walking - realizing every single row between
+    /// where it is and where it is going. Measured on a 5000-line file: Home realized 78, 139,
+    /// 184, ... 513 containers on successive Home/End round trips (~1 s per keypress, getting
+    /// worse), and a jump to line 100 realized 4935 containers - the entire file - in every
+    /// second attempt, taking >10 seconds. Lines 400 and 700 hit the same walk less often. End
+    /// never did: the drift only bites when travelling towards the top.
+    /// Setting the offset skips rows instead of realizing them, so this walks the estimate in
+    /// instead: measure where the realized rows actually sit, jump, remeasure, at most three
+    /// times. Each pass realizes one viewport, and ScrollIntoView then has less than half a
+    /// viewport left to cover. Measured after: 16-77 containers for any target, no walks.
+    /// </summary>
+    public static void PrePositionScroll(TableView tableView, int index)
+    {
+        var scrollViewer = tableView.GetVisualDescendants().OfType<ScrollViewer>().FirstOrDefault();
+        if (scrollViewer == null || scrollViewer.Viewport.Height <= 0)
+        {
+            return;
+        }
+
+        // The top is the one position that needs no estimate at all.
+        if (index == 0)
+        {
+            if (scrollViewer.Offset.Y > 0.5)
+            {
+                scrollViewer.Offset = new Vector(scrollViewer.Offset.X, 0);
+            }
+
+            return;
+        }
+
+        for (var pass = 0; pass < PrePositionScrollPasses; pass++)
+        {
+            var rows = tableView.GetRealizedContainers()
+                .OfType<TableViewRow>()
+                .Where(r => r.Bounds.Height > 0)
+                .Select(r => (Index: tableView.IndexFromContainer(r), Row: r))
+                .Where(x => x.Index >= 0)
+                .OrderBy(x => x.Index)
+                .ToList();
+
+            // Nothing to measure from, or the target is realized already - ScrollIntoView is
+            // cheap from here.
+            if (rows.Count == 0 || rows.Any(x => x.Index == index))
+            {
+                return;
+            }
+
+            var first = rows[0];
+            var firstTop = ((Visual)first.Row).TranslatePoint(new Point(0, 0), scrollViewer)?.Y;
+            if (firstTop == null)
+            {
+                return;
+            }
+
+            // Where the target should be, from the heights actually on screen rather than from
+            // the panel's own (drifting) average.
+            var averageRowHeight = rows.Average(x => x.Row.Bounds.Height);
+            var delta = ((index - first.Index) * averageRowHeight) - firstTop.Value;
+            if (Math.Abs(delta) < scrollViewer.Viewport.Height / 2)
+            {
+                return;
+            }
+
+            var newY = Math.Max(0, Math.Min(scrollViewer.Offset.Y + delta, scrollViewer.Extent.Height - scrollViewer.Viewport.Height));
+            if (Math.Abs(newY - scrollViewer.Offset.Y) < 1)
+            {
+                return;
+            }
+
+            scrollViewer.Offset = new Vector(scrollViewer.Offset.X, newY);
+
+            // Realize the rows at the new offset so the next pass has something to measure
+            // (and so the caller's ScrollIntoView starts from the corrected position).
+            tableView.UpdateLayout();
+        }
     }
 
     /// <summary>

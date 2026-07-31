@@ -15602,6 +15602,11 @@ public partial class MainViewModel :
             if (indexToScroll >= 0 && indexToScroll < Subtitles.Count)
             {
                 var itemToScroll = Subtitles[indexToScroll];
+
+                // Get the offset next to the target first - left to itself the virtualizing panel
+                // walks there row by row on long jumps, which is what made Home (and Find/Go to
+                // line hits near the top) crawl on large files (see PrePositionScroll).
+                TableViewExtras.PrePositionScroll(SubtitleGrid, indexToScroll);
                 SubtitleGrid.SelectedItem = itemToScroll;
                 SubtitleGrid.ScrollIntoView(itemToScroll);
 
@@ -15702,12 +15707,19 @@ public partial class MainViewModel :
             // Only execute if this is the latest scroll request
             if (subtitleToScroll != null && Subtitles.Contains(subtitleToScroll))
             {
+                TableViewExtras.PrePositionScroll(SubtitleGrid, Subtitles.IndexOf(subtitleToScroll));
                 SubtitleGrid.SelectedItem = subtitleToScroll;
                 SubtitleGrid.ScrollIntoView(subtitleToScroll);
 
                 if (Se.Settings.General.SubtitleGridCenterSelectedRow)
                 {
                     CenterSelectedRowInSubtitleGrid(subtitleToScroll);
+                }
+                else
+                {
+                    // Same follow-up as SelectAndScrollToRow: ScrollIntoView can leave the row
+                    // a few pixels past the bottom edge on a variable-height grid.
+                    EnsureRowFullyVisibleInSubtitleGrid(subtitleToScroll);
                 }
             }
         }, DispatcherPriority.Background);
