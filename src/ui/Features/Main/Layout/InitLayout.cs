@@ -997,16 +997,6 @@ public static partial class InitLayout
         {
             audioVisualizer.MenuFlyout = new MenuFlyout();
         }
-        // Handle DataGrid - clear data bindings and sources
-        else if (control is DataGrid dataGrid)
-        {
-            // Clear data bindings to prevent event handlers from being retained
-            dataGrid.ItemsSource = null;
-            dataGrid.SelectedItem = null;
-            dataGrid.SelectedItems?.Clear();
-            dataGrid.Columns.Clear();
-            dataGrid.ContextFlyout = null;
-        }
         // Handle TableView (the main subtitle grid) - clear data bindings and sources
         else if (control is TableView tableView)
         {

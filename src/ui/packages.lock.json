@@ -22,15 +22,6 @@
           "Avalonia": "12.0.0"
         }
       },
-      "Avalonia.Controls.DataGrid": {
-        "type": "Direct",
-        "requested": "[12.1.0, )",
-        "resolved": "12.1.0",
-        "contentHash": "I4nkzELLRUWAqTLA4nY6lJ4nQFmXdZcGvRF7ze+k1aVE38KMJc5C8lqqs77F2kQQpCHKOwqmRwbO/leFKDQ5GA==",
-        "dependencies": {
-          "Avalonia": "12.1.0"
-        }
-      },
       "Avalonia.Desktop": {
         "type": "Direct",
         "requested": "[12.1.1, )",
