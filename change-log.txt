@@ -14,6 +14,7 @@ v5.2.0-beta1 (TBD)
 * Cut video: option to also cut the subtitle
 * Batch convert: brightness, alpha and color adjustments for image output
 * Open video from URL: video/subtitle checkboxes and auto-generated subtitles, and show the yt-dlp update prompt as a message box
+* Clean up YouTube auto-generated captions on load - one cue per spoken line with plain text instead of roll-up duplicates with per-word time codes
 * Waveform: per-track audio picker with size estimates, live progress and cancel - thx shanytc
 * Waveform: copy the subtitle at the video position (Ctrl+C and context menu) and paste at the waveform position - thx shanytc
 * Text to speech: custom voice models for Piper
