@@ -2988,6 +2988,7 @@
     "fontCollectorInlineLineX": "Line {0}",
     "fontCollectorFound": "Found",
     "fontCollectorNotFound": "Not found",
+    "fontCollectorEmbedded": "Embedded",
     "fontCollectorScanning": "Scanning installed fonts...",
     "fontCollectorXOfYFontsFound": "{0} of {1} fonts found",
     "fontCollectorCopyFontsToSeFontsFolder": "Copy to font collector",

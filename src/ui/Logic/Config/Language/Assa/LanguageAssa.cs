@@ -46,6 +46,7 @@ public class LanguageAssa
     public string FontCollectorInlineLineX { get; set; }
     public string FontCollectorFound { get; set; }
     public string FontCollectorNotFound { get; set; }
+    public string FontCollectorEmbedded { get; set; }
     public string FontCollectorScanning { get; set; }
     public string FontCollectorXOfYFontsFound { get; set; }
     public string FontCollectorCopyFontsToSeFontsFolder { get; set; }
@@ -258,6 +259,7 @@ public class LanguageAssa
         FontCollectorInlineLineX = "Line {0}";
         FontCollectorFound = "Found";
         FontCollectorNotFound = "Not found";
+        FontCollectorEmbedded = "Embedded";
         FontCollectorScanning = "Scanning installed fonts...";
         FontCollectorXOfYFontsFound = "{0} of {1} fonts found";
         FontCollectorCopyFontsToSeFontsFolder = "Copy to font collector";

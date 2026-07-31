@@ -16,6 +16,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
@@ -57,12 +58,121 @@ public partial class FontCollectorViewModel : ObservableObject
     public void Initialize(Subtitle subtitle)
     {
         CollectFontNames(subtitle);
+        MatchEmbeddedFonts(subtitle.Footer);
         IsScanning = true;
         StatusText = Se.Language.Assa.FontCollectorScanning;
 
         var items = FontItems.ToList();
         _ = Task.Run(() => ScanSystemFonts(items, _cancellationTokenSource.Token));
         _ = Task.Run(LoadFontLists);
+    }
+
+    /// <summary>
+    /// Marks the needed fonts that the subtitle itself carries as [Fonts] attachments,
+    /// so an embedded font counts as available and can be previewed from its bytes.
+    /// </summary>
+    private void MatchEmbeddedFonts(string? footer)
+    {
+        foreach (var (fileName, bytes) in GetEmbeddedFonts(footer))
+        {
+            try
+            {
+                using var data = SKData.CreateCopy(bytes);
+                for (var index = 0; index < 30; index++)
+                {
+                    using var typeface = SKTypeface.FromData(data, index);
+                    if (typeface == null)
+                    {
+                        break;
+                    }
+
+                    foreach (var name in new[] { typeface.FamilyName, FontHelper.GetLibAssaFontName(typeface) })
+                    {
+                        var item = FontItems.FirstOrDefault(i =>
+                            i.FontName.Equals(name, StringComparison.OrdinalIgnoreCase) && i.EmbeddedFontBytes == null);
+                        if (item != null)
+                        {
+                            item.EmbeddedFontBytes = bytes;
+                            item.EmbeddedFileName = fileName;
+                            item.Status = Se.Language.Assa.FontCollectorEmbedded;
+                            item.FileDisplay = fileName;
+                        }
+                    }
+                }
+            }
+            catch (Exception exception)
+            {
+                Se.LogError(exception, "Font collector could not read embedded font " + fileName);
+            }
+        }
+    }
+
+    /// <summary>Parses the [Fonts] attachment section of an ASSA footer into decoded font files.</summary>
+    internal static List<(string FileName, byte[] Bytes)> GetEmbeddedFonts(string? footer)
+    {
+        var result = new List<(string, byte[])>();
+        if (string.IsNullOrEmpty(footer))
+        {
+            return result;
+        }
+
+        var inFonts = false;
+        var fileName = string.Empty;
+        var content = new StringBuilder();
+
+        void Flush()
+        {
+            if (fileName.Length > 0 && content.Length > 0)
+            {
+                try
+                {
+                    result.Add((Path.GetFileName(fileName), UUEncoding.UUDecode(content.ToString().Trim())));
+                }
+                catch
+                {
+                    // a malformed attachment should not break the collector
+                }
+            }
+
+            content.Clear();
+            fileName = string.Empty;
+        }
+
+        foreach (var line in footer.SplitToLines())
+        {
+            var s = line.Trim();
+            if (s.Equals("[Fonts]", StringComparison.OrdinalIgnoreCase))
+            {
+                Flush();
+                inFonts = true;
+            }
+            else if (s.StartsWith('['))
+            {
+                Flush();
+                inFonts = false;
+            }
+            else if (!inFonts)
+            {
+                // skip
+            }
+            else if (s.StartsWith("fontname:", StringComparison.OrdinalIgnoreCase) ||
+                     s.StartsWith("filename:", StringComparison.OrdinalIgnoreCase))
+            {
+                Flush();
+                fileName = s.Remove(0, 9).Trim();
+            }
+            else if (s.Length == 0)
+            {
+                Flush();
+            }
+            else
+            {
+                content.AppendLine(s);
+            }
+        }
+
+        Flush();
+        return result;
     }
 
     /// <summary>Fills the "Installed fonts" and "Collected fonts" tabs.</summary>
@@ -103,10 +213,21 @@ public partial class FontCollectorViewModel : ObservableObject
         string? fontName = null;
         SKTypeface? skTypeface = null;
 
-        if (SelectedTabIndex == 0 && SelectedFontItem != null && SelectedFontItem.FoundFiles.Count > 0)
+        if (SelectedTabIndex == 0 && SelectedFontItem != null)
         {
             fontName = SelectedFontItem.FontName;
-            skTypeface = LoadTypefaceForName(SelectedFontItem.FoundFiles[0], fontName);
+            if (SelectedFontItem.FoundFiles.Count > 0)
+            {
+                skTypeface = LoadTypefaceForName(SelectedFontItem.FoundFiles[0], fontName);
+            }
+            else if (SelectedFontItem.EmbeddedFontBytes != null)
+            {
+                skTypeface = LoadTypefaceForNameFromBytes(SelectedFontItem.EmbeddedFontBytes, fontName);
+            }
+            else
+            {
+                fontName = null; // not found anywhere - no preview rather than a misleading fallback font
+            }
         }
         else if (SelectedTabIndex == 1 && !string.IsNullOrEmpty(SelectedInstalledFontName))
         {
@@ -174,6 +295,30 @@ public partial class FontCollectorViewModel : ObservableObject
         }
 
         return SKTypeface.FromFile(fontFile, 0);
+    }
+
+    /// <summary>Like <see cref="LoadTypefaceForName"/>, but for an embedded font's bytes.</summary>
+    private static SKTypeface? LoadTypefaceForNameFromBytes(byte[] bytes, string fontName)
+    {
+        using var data = SKData.CreateCopy(bytes);
+        for (var index = 0; index < 30; index++)
+        {
+            var candidate = SKTypeface.FromData(data, index);
+            if (candidate == null)
+            {
+                break;
+            }
+
+            if (fontName.Equals(candidate.FamilyName, StringComparison.OrdinalIgnoreCase) ||
+                fontName.Equals(FontHelper.GetLibAssaFontName(candidate), StringComparison.OrdinalIgnoreCase))
+            {
+                return candidate;
+            }
+
+            candidate.Dispose();
+        }
+
+        return SKTypeface.FromData(data, 0);
     }
 
     /// <summary>Deletes the selected collected font's file from SE's Fonts folder.</summary>
@@ -377,14 +522,14 @@ public partial class FontCollectorViewModel : ObservableObject
             {
                 foreach (var item in FontItems)
                 {
-                    if (item.FoundFiles.Count == 0)
+                    if (item.FoundFiles.Count == 0 && item.EmbeddedFontBytes == null)
                     {
                         item.Status = Se.Language.Assa.FontCollectorNotFound;
                     }
                 }
 
                 IsScanning = false;
-                var foundCount = FontItems.Count(i => i.FoundFiles.Count > 0);
+                var foundCount = FontItems.Count(i => i.FoundFiles.Count > 0 || i.EmbeddedFontBytes != null);
                 StatusText = string.Format(Se.Language.Assa.FontCollectorXOfYFontsFound, foundCount, FontItems.Count);
                 UpdateFontPreview(); // the selected row may only now have found files
             });
@@ -467,13 +612,21 @@ public partial class FontCollectorViewModel : ObservableObject
         }
 
         var files = GetFoundFontFiles();
-        if (files.Count == 0)
+
+        // Fonts only present as subtitle attachments have no file on disk - write their bytes.
+        var embedded = FontItems
+            .Where(i => i.FoundFiles.Count == 0 && i.EmbeddedFontBytes != null)
+            .DistinctBy(i => i.EmbeddedFileName, StringComparer.OrdinalIgnoreCase)
+            .Select(i => (i.EmbeddedFileName, i.EmbeddedFontBytes!))
+            .ToList();
+
+        if (files.Count == 0 && embedded.Count == 0)
         {
             await MessageBox.Show(Window, Se.Language.Assa.FontCollectorTitle, Se.Language.Assa.FontCollectorNoFontsToCopy, MessageBoxButtons.OK);
             return;
         }
 
-        await CopyFontsTo(files, Se.FontsFolder);
+        await CopyFontsTo(files, Se.FontsFolder, embedded);
         _ = Task.Run(LoadFontLists); // the "Collected fonts" tab just gained fonts
     }
 
@@ -535,7 +688,7 @@ public partial class FontCollectorViewModel : ObservableObject
         return FontItems.SelectMany(i => i.FoundFiles).Distinct(StringComparer.OrdinalIgnoreCase).ToList();
     }
 
-    private async Task CopyFontsTo(List<string> files, string folder)
+    private async Task CopyFontsTo(List<string> files, string folder, List<(string FileName, byte[] Bytes)>? embeddedFonts = null)
     {
         var copied = 0;
         try
@@ -550,6 +703,12 @@ public partial class FontCollectorViewModel : ObservableObject
                 }
 
                 File.Copy(file, target, overwrite: true);
+                copied++;
+            }
+
+            foreach (var (fileName, bytes) in embeddedFonts ?? [])
+            {
+                await File.WriteAllBytesAsync(Path.Combine(folder, fileName), bytes);
                 copied++;
             }
         }
