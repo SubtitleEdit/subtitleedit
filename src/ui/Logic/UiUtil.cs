@@ -74,7 +74,7 @@ public static class UiUtil
             {
                 new Setter(TableViewCell.BackgroundProperty, Brushes.Transparent),
                 new Setter(TableViewCell.PaddingProperty, padding),
-                new Setter(TableViewCell.BorderBrushProperty, GetBorderBrush()),
+                new Setter(TableViewCell.BorderBrushProperty, GetGridLineBrush()),
                 new Setter(TableViewCell.BorderThicknessProperty,
                     new Thickness(0, 0, showVertical ? 1 : 0, showHorizontal ? 1 : 0)), // vertical and horizontal lines
                 new Setter(TableViewCell.TemplateProperty, TableViewCellTemplate),
@@ -101,7 +101,7 @@ public static class UiUtil
                 // default; SE's custom themes (lighter dark, classic gray, pastel) override
                 // both header types with the same brush via app styles in UiTheme.
                 new Setter(TableViewColumnHeader.BackgroundProperty, GetDataGridHeaderBackgroundBrush()),
-                new Setter(TableViewColumnHeader.PaddingProperty, new Thickness(4, 2, 4, 4)),
+                new Setter(TableViewColumnHeader.PaddingProperty, new Thickness(4, 4, 4, 5)),
                 new Setter(TableViewColumnHeader.BorderBrushProperty, GetBorderBrush()),
                 // Both header lines always show, independently of the grid-lines setting: the
                 // bottom line separates the header from the first row and the right line
@@ -353,6 +353,18 @@ public static class UiUtil
 
     private static readonly IBrush BorderBrushDark = new Avalonia.Media.Immutable.ImmutableSolidColorBrush(Colors.White, 0.5);
     private static readonly IBrush BorderBrushLight = new Avalonia.Media.Immutable.ImmutableSolidColorBrush(Colors.Black, 0.5);
+
+    // Fainter variant for the TableView's in-body grid lines: drawn as per-cell borders
+    // they read stronger than the old DataGrid's gridline pass, so tone them down.
+    private static readonly IBrush GridLineBrushDark = new Avalonia.Media.Immutable.ImmutableSolidColorBrush(Colors.White, 0.22);
+    private static readonly IBrush GridLineBrushLight = new Avalonia.Media.Immutable.ImmutableSolidColorBrush(Colors.Black, 0.22);
+
+    public static IBrush GetGridLineBrush()
+    {
+        return Application.Current?.ActualThemeVariant == ThemeVariant.Dark
+            ? GridLineBrushDark
+            : GridLineBrushLight;
+    }
 
     public static IBrush GetBorderBrush()
     {

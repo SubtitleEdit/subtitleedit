@@ -144,16 +144,33 @@ public static class TableViewExtras
     }
 
     /// <summary>
-    /// Tints every other row with <paramref name="brush"/> via an nth-child style.
-    /// nth-child stays correct when rows are inserted/removed/recycled, and selection
-    /// still wins because the theme's :selected background has priority.
+    /// Tints every other row with <paramref name="brush"/>. Applied per container from
+    /// the ContainerPrepared/ContainerIndexChanged events, so the tint stays correct
+    /// when rows are inserted, removed or recycled. Selection and hover still win:
+    /// the row theme's :selected/:pointerover styles set the template Border's
+    /// background directly, overriding the row's own Background.
     /// </summary>
     public static void ApplyAlternatingRows(TableView tableView, IBrush brush)
     {
-        tableView.Styles.Add(new Style(x => x.OfType<TableViewRow>().NthChild(2, 0))
+        static void Apply(Control container, int index, IBrush alternatingBrush)
         {
-            Setters = { new Setter(TemplatedControl.BackgroundProperty, brush) },
-        });
+            if (container is not TableViewRow row)
+            {
+                return;
+            }
+
+            if (index % 2 == 1)
+            {
+                row.Background = alternatingBrush;
+            }
+            else
+            {
+                row.ClearValue(TemplatedControl.BackgroundProperty);
+            }
+        }
+
+        tableView.ContainerPrepared += (_, e) => Apply(e.Container, e.Index, brush);
+        tableView.ContainerIndexChanged += (_, e) => Apply(e.Container, e.NewIndex, brush);
     }
 
     /// <summary>
