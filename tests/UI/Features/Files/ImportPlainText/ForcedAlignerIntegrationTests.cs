@@ -47,7 +47,7 @@ public class ForcedAlignerIntegrationTests
             using var audio = new FfmpegWindowAudioSource("ffmpeg", Audio!, totalSeconds, folder);
             var runner = new CrispAsrAlignOnlyRunner(Executable!, Model!);
 
-            var result = await new ForcedAligner(runner, audio).AlignAsync(lines);
+            var result = await new ForcedAligner(runner, audio).AlignAsync(lines, null, TestContext.Current.CancellationToken);
 
             Assert.True(result.AlignedLines > lines.Count * 0.95,
                 $"only {result.AlignedLines} of {lines.Count} lines aligned");

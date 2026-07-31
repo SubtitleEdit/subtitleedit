@@ -15,18 +15,18 @@ namespace Nikse.SubtitleEdit.UiLogic.AutoTranslate
 {
     public class LaraTranslate : IAutoTranslator, IDisposable
     {
-        private HttpClient _httpClient;
+        private HttpClient _httpClient = null!;
 
         public const string SdkVersion = "1.1.0";
         public static string StaticName { get; set; } = "Lara";
         public override string ToString() => StaticName;
         public string Name => StaticName;
         public string Url => "https://laratranslate.com";
-        public string Error { get; set; }
+        public string Error { get; set; } = string.Empty;
         public int MaxCharacters => 1500;
 
-        private string _accessKeyId;
-        private byte[] _signingKey;
+        private string _accessKeyId = string.Empty;
+        private byte[] _signingKey = Array.Empty<byte>();
 
         public void Initialize()
         {
@@ -82,12 +82,9 @@ namespace Nikse.SubtitleEdit.UiLogic.AutoTranslate
             var signature = Sign(method, "/translate", contentMd5 ?? "", actualContentType, dateHeader);
             request.Headers.TryAddWithoutValidation("Authorization", $"Lara {_accessKeyId}:{signature}");
 
-            // netstandard2.1: ReadAsByteArrayAsync has no CancellationToken
-            // overload; the token is flowed through SendAsync, which is where
-            // the long blocking happens.
             using var response = await _httpClient.SendAsync(request, cancellationToken);
 
-            var bytes = await response.Content.ReadAsByteArrayAsync();
+            var bytes = await response.Content.ReadAsByteArrayAsync(cancellationToken);
             var json = Encoding.UTF8.GetString(bytes).Trim();
             if (!response.IsSuccessStatusCode)
             {
@@ -95,7 +92,7 @@ namespace Nikse.SubtitleEdit.UiLogic.AutoTranslate
                 SeLogger.Error("Lara Translate failed calling API: Status code=" + response.StatusCode + Environment.NewLine +
                     json + Environment.NewLine +
                     "input: " + requestBody + Environment.NewLine +
-                    "url: " + new Uri(_httpClient.BaseAddress, "/translate"));
+                    "url: " + new Uri(_httpClient.BaseAddress!, "/translate"));
             }
 
             response.EnsureSuccessStatusCode();

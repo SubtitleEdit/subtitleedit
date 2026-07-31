@@ -18,13 +18,13 @@ namespace Nikse.SubtitleEdit.UiLogic.AutoTranslate
     {
         private static readonly Regex UnicodeRegex = new Regex(@"\\u([0-9a-fA-F]{4})", RegexOptions.Compiled);
 
-        private HttpClient _httpClient;
+        private HttpClient _httpClient = null!;
 
         public static string StaticName { get; set; } = "ChatGPT";
         public override string ToString() => StaticName;
         public string Name => StaticName;
         public string Url => "https://chat.openai.com/";
-        public string Error { get; set; }
+        public string Error { get; set; } = string.Empty;
         public int MaxCharacters => 1500;
         /// <summary>
         /// Default when no model is configured. A mini model: cheap, broadly available on every
@@ -115,14 +115,14 @@ namespace Nikse.SubtitleEdit.UiLogic.AutoTranslate
             var input = "{\"model\": \"" + Json.EncodeJsonText(model) + "\",\"messages\": [{ \"role\": \"user\", \"content\": \"" + Json.EncodeJsonText(prompt) + "\\n\\n" + Json.EncodeJsonText(text.Trim()) + "\" }]}";
 
             int[] retryDelays = { 2555, 5007, 9013 };
-            HttpResponseMessage result = null;
+            HttpResponseMessage result = null!;
             var json = string.Empty;
             for (var attempt = 0; attempt <= retryDelays.Length; attempt++)
             {
                 var content = new StringContent(input, Encoding.UTF8);
                 content.Headers.ContentType = MediaTypeHeaderValue.Parse("application/json");
                 result = await _httpClient.PostAsync(string.Empty, content, cancellationToken);
-                var bytes = await result.Content.ReadAsByteArrayAsync();
+                var bytes = await result.Content.ReadAsByteArrayAsync(cancellationToken);
                 json = Encoding.UTF8.GetString(bytes).Trim();
 
                 if (!DeepLTranslate.ShouldRetry(result, json) || attempt == retryDelays.Length)

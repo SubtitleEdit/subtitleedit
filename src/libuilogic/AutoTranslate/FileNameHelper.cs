@@ -7,7 +7,7 @@ namespace Nikse.SubtitleEdit.UiLogic.AutoTranslate
 {
     public static class FileNameHelper
     {
-        public static string GetFileNameWithTargetLanguage(string oldFileName, string videoFileName, Subtitle oldSubtitle, SubtitleFormat subtitleFormat, string sourceIsoCode, string targetIsoCode)
+        public static string? GetFileNameWithTargetLanguage(string oldFileName, string videoFileName, Subtitle? oldSubtitle, SubtitleFormat subtitleFormat, string sourceIsoCode, string targetIsoCode)
         {
             if (string.IsNullOrEmpty(targetIsoCode))
             {

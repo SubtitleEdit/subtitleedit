@@ -87,7 +87,7 @@ public class EmbeddedAssetsTests
     {
         var onDisk = Directory
             .GetFiles(Path.Combine(GetAssetsFolder(), ZippedFolder), "*.json")
-            .Select(Path.GetFileName)
+            .Select(f => Path.GetFileName(f)!)
             .OrderBy(f => f, StringComparer.Ordinal)
             .ToList();
 

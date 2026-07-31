@@ -15,13 +15,13 @@ namespace Nikse.SubtitleEdit.UiLogic.AutoTranslate
 {
     public class SeamlessM4TTranslate : IAutoTranslator, IDisposable
     {
-        private HttpClient _httpClient;
+        private HttpClient _httpClient = null!;
 
         public static string StaticName { get; set; } = "SeamlessM4T";
         public override string ToString() => StaticName;
         public string Name => StaticName;
         public string Url => "https://replicate.com/cjwbw/seamless_communication/api";
-        public string Error { get; set; }
+        public string Error { get; set; } = string.Empty;
         public int MaxCharacters => 250;
 
         public void Initialize()
@@ -68,7 +68,7 @@ namespace Nikse.SubtitleEdit.UiLogic.AutoTranslate
             content.Headers.ContentType = MediaTypeHeaderValue.Parse("application/json");
             var result = await _httpClient.PostAsync("predictions", content, cancellationToken);
             result.EnsureSuccessStatusCode();
-            var bytes = await result.Content.ReadAsByteArrayAsync();
+            var bytes = await result.Content.ReadAsByteArrayAsync(cancellationToken);
             var json = Encoding.UTF8.GetString(bytes).Trim();
 
             var parser = new SeJsonParser();

@@ -13,13 +13,13 @@ namespace Nikse.SubtitleEdit.UiLogic.AutoTranslate
 {
     public class NoLanguageLeftBehindServe : IAutoTranslator, IDisposable
     {
-        private HttpClient _httpClient;
+        private HttpClient _httpClient = null!;
         
         public static string StaticName { get; set; } = "thammegowda-nllb-serve";
         public override string ToString() => StaticName;
         public string Name => StaticName;
         public string Url => "https://github.com/thammegowda/nllb-serve";
-        public string Error { get; set; }
+        public string Error { get; set; } = string.Empty;
         public int MaxCharacters => 250;
 
         public void Initialize()
@@ -66,7 +66,7 @@ namespace Nikse.SubtitleEdit.UiLogic.AutoTranslate
 
             var result = await _httpClient.PostAsync("translate", content, cancellationToken);
             result.EnsureSuccessStatusCode();
-            var bytes = await result.Content.ReadAsByteArrayAsync();
+            var bytes = await result.Content.ReadAsByteArrayAsync(cancellationToken);
             var json = Encoding.UTF8.GetString(bytes).Trim();
 
             var parser = new SeJsonParser();

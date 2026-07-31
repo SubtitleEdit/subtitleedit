@@ -20,11 +20,11 @@ namespace Nikse.SubtitleEdit.UiLogic.AutoTranslate
         public override string ToString() => StaticName;
         public string Name => StaticName;
         public string Url => "https://github.com/CrispStrobe/CrispASR";
-        public string Error { get; set; }
+        public string Error { get; set; } = string.Empty;
         public int MaxCharacters => 1000;
 
-        private string _executablePath;
-        private string _modelPath;
+        private string _executablePath = string.Empty;
+        private string _modelPath = string.Empty;
 
         public void Initialize()
         {

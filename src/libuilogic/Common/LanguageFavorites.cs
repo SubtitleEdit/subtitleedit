@@ -46,7 +46,7 @@ namespace Nikse.SubtitleEdit.UiLogic.Common
             IEnumerable<T> items,
             Func<T, string> codeSelector,
             IList<string> favoriteCodes,
-            Func<T, bool> pinTop = null)
+            Func<T, bool>? pinTop = null)
         {
             var list = items.ToList();
             var favorites = (favoriteCodes ?? new List<string>())

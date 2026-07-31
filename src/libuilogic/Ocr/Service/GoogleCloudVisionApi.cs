@@ -241,7 +241,7 @@ namespace Nikse.SubtitleEdit.UiLogic.Ocr.Service
                 if (annotations.Count > 0)
                 {
                     var lines = new List<List<Annotation>>();
-                    Annotation last = null;
+                    Annotation? last = null;
                     var lineThreshold = Math.Max(9, annotations.Average(p => p.Height) / 4.0);
                     var lineIndex = 0;
 
@@ -420,9 +420,9 @@ namespace Nikse.SubtitleEdit.UiLogic.Ocr.Service
 
         public class Annotation
         {
-            public string Text { get; set; }
-            public List<SKPointI> Vertices { get; set; }
-            public string DetectedBreak { get; set; }
+            public string Text { get; set; } = string.Empty;
+            public List<SKPointI> Vertices { get; set; } = new();
+            public string DetectedBreak { get; set; } = string.Empty;
 
             public int Width
             {

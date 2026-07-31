@@ -26,19 +26,19 @@ namespace Nikse.SubtitleEdit.UiLogic.AutoTranslate
         // Azure issues tokens valid for 10 minutes; refresh with a margin so
         // long translation runs do not start failing with 401 mid-run.
         private static readonly TimeSpan AccessTokenLifetime = TimeSpan.FromMinutes(8);
-        private static List<TranslationPair> _translationPairs;
-        private string _accessToken;
+        private static List<TranslationPair>? _translationPairs;
+        private string _accessToken = string.Empty;
         private DateTime _accessTokenFetchedUtc;
-        private string _apiKey;
-        private string _tokenEndpoint;
-        private string _category;
-        private IDownloader _httpClient;
+        private string _apiKey = string.Empty;
+        private string _tokenEndpoint = string.Empty;
+        private string _category = string.Empty;
+        private IDownloader _httpClient = null!;
 
         public static string StaticName { get; set; } = "Bing Microsoft Translator";
         public override string ToString() => StaticName;
         public string Name => StaticName;
         public string Url => "https://www.bing.com/translator";
-        public string Error { get; set; }
+        public string Error { get; set; } = string.Empty;
         public int MaxCharacters => 1500;
 
         public void Initialize()
@@ -88,7 +88,7 @@ namespace Nikse.SubtitleEdit.UiLogic.AutoTranslate
             content.Headers.ContentType = MediaTypeHeaderValue.Parse("application/json");
             var result = await httpClient.PostAsync(url, content, cancellationToken);
             var parser = new JsonParser();
-            var jsonResult = await result.Content.ReadAsStringAsync();
+            var jsonResult = await result.Content.ReadAsStringAsync(cancellationToken);
 
             if (!result.IsSuccessStatusCode)
             {
@@ -195,7 +195,7 @@ namespace Nikse.SubtitleEdit.UiLogic.AutoTranslate
                     {
                         if (v[innerKey] is Dictionary<string, object> l)
                         {
-                            list.Add(new TranslationPair(l["name"].ToString(), innerKey, innerKey));
+                            list.Add(new TranslationPair(l["name"]?.ToString() ?? string.Empty, innerKey, innerKey));
                         }
                     }
                 }
