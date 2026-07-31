@@ -405,6 +405,13 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 paragraph.Text = RemoveWeirdRepeatingHeader(paragraph.Text);
             }
 
+            // YouTube auto-generated captions are roll-up captions with per-word time codes, which
+            // load as unreadable duplicated karaoke text - turn them into one cue per spoken line.
+            if (WebVttAutoCaptionsCleaner.IsAutoCaptions(subtitle))
+            {
+                WebVttAutoCaptionsCleaner.Clean(subtitle);
+            }
+
             if (Configuration.Settings.SubtitleSettings.WebVttMergeLinesWithSameText)
             {
                 var merged = MergeLinesSameTextUtils.MergeLinesWithSameTextInSubtitle(subtitle, false, 1);
