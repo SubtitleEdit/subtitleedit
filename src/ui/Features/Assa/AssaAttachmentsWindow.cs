@@ -52,7 +52,9 @@ public class AssaAttachmentsWindow : Window
         var labelPreview = UiUtil.MakeLabel().WithBindText(vm, nameof(vm.PreviewTitle));
         var buttonCopyToClipboard = UiUtil.MakeButton(Se.Language.General.CopyToClipboard, vm.CopyFontNameToClipboardCommand)
             .WithBindIsVisible(nameof(vm.IsCopyFontnameToClipboardVisible));
-        var previewLine = UiUtil.MakeHorizontalPanel(labelPreview, buttonCopyToClipboard);
+        var buttonCopyToSeFontsFolder = UiUtil.MakeButton(Se.Language.Assa.FontCollectorCopyFontsToSeFontsFolder, vm.CopyToSeFontsFolderCommand)
+            .WithBindIsVisible(nameof(vm.IsCopyFontnameToClipboardVisible));
+        var previewLine = UiUtil.MakeHorizontalPanel(labelPreview, buttonCopyToClipboard, buttonCopyToSeFontsFolder);
 
         var buttonAttach = UiUtil.MakeButton(Se.Language.General.AttachDotDotDot, vm.FileAttachCommand);
         var buttonImport = UiUtil.MakeButton(Se.Language.General.ImportDotDotDot, vm.FileImportCommand);
