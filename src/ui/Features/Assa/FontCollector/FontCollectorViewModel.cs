@@ -71,7 +71,7 @@ public partial class FontCollectorViewModel : ObservableObject
     /// Marks the needed fonts that the subtitle itself carries as [Fonts] attachments,
     /// so an embedded font counts as available and can be previewed from its bytes.
     /// </summary>
-    private void MatchEmbeddedFonts(string? footer)
+    internal void MatchEmbeddedFonts(string? footer)
     {
         foreach (var (fileName, bytes) in GetEmbeddedFonts(footer))
         {
@@ -146,8 +146,11 @@ public partial class FontCollectorViewModel : ObservableObject
                 Flush();
                 inFonts = true;
             }
-            else if (s.StartsWith('['))
+            else if (s == "[Script Info]" || s == "[V4+ Styles]" || s == "[V4 Styles]" || s == "[Events]" ||
+                     s.Equals("[Graphics]", StringComparison.OrdinalIgnoreCase))
             {
+                // Only exact section headers end the fonts section - the UU-style encoding's
+                // alphabet ('!'..'`') contains '[', so encoded lines can start with it.
                 Flush();
                 inFonts = false;
             }
@@ -400,7 +403,7 @@ public partial class FontCollectorViewModel : ObservableObject
     /// Collects the font names an ASSA renderer would need: fonts of styles that are
     /// actually used by lines, plus inline <c>\fn</c> overrides.
     /// </summary>
-    private void CollectFontNames(Subtitle subtitle)
+    internal void CollectFontNames(Subtitle subtitle)
     {
         var usage = new Dictionary<string, List<string>>(StringComparer.OrdinalIgnoreCase);
 
