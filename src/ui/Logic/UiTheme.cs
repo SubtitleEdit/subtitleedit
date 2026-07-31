@@ -295,6 +295,17 @@ public static class UiTheme
         ltcMenuItemStyle.Setters.Add(new Setter(Layoutable.MinHeightProperty, 32.0));
         styles.Add(ltcMenuItemStyle);
 
+        // Scale ComboBox dropdown items too — the dropdown popup renders outside the
+        // LayoutTransformControl, so the window scale transform never reaches it (#13010).
+        // ComboBoxItems only ever appear inside that popup, so no LTC reset counterpart is
+        // needed. Skipped at 100% so windows with locally restyled combos keep their look.
+        if (Math.Abs(factor - 1.0) > 0.0001)
+        {
+            var comboBoxItemStyle = new Style(x => x.OfType<ComboBoxItem>());
+            comboBoxItemStyle.Setters.Add(new Setter(TemplatedControl.FontSizeProperty, 14.0 * factor));
+            styles.Add(comboBoxItemStyle);
+        }
+
         _layoutScaleMenuStyle = styles;
         Application.Current.Styles.Add(styles);
     }
