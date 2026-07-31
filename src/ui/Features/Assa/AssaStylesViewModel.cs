@@ -8,6 +8,7 @@ using CommunityToolkit.Mvvm.Input;
 using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using Nikse.SubtitleEdit.Features.Shared;
+using Nikse.SubtitleEdit.Features.Shared.PickFontName;
 using Nikse.SubtitleEdit.Features.Shared.PromptTextBox;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
@@ -212,6 +213,39 @@ public partial class AssaStylesViewModel : ObservableObject, IClosingCleanup
 
         // Fonts may have been copied into SE's Fonts folder - re-offer them in the combo.
         Task.Run(() => LoadFonts());
+    }
+
+    /// <summary>
+    /// Opens the font picker (installed fonts + fonts collected in SE's Fonts folder)
+    /// and assigns the picked font to the current style.
+    /// </summary>
+    [RelayCommand]
+    private async Task PickFontName()
+    {
+        if (Window == null || CurrentStyle == null)
+        {
+            return;
+        }
+
+        var currentFontName = CurrentStyle.FontName;
+        var result = await _windowService.ShowDialogAsync<PickFontNameWindow, PickFontNameViewModel>(Window, vm =>
+        {
+            vm.Initialize();
+            if (!string.IsNullOrEmpty(currentFontName))
+            {
+                vm.SelectedFontName = currentFontName;
+            }
+        });
+
+        if (result.OkPressed && !string.IsNullOrEmpty(result.SelectedFontName) && CurrentStyle != null)
+        {
+            if (!Fonts.Contains(result.SelectedFontName))
+            {
+                Fonts.Insert(0, result.SelectedFontName);
+            }
+
+            CurrentStyle.FontName = result.SelectedFontName;
+        }
     }
 
     [RelayCommand]

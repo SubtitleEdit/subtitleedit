@@ -70,7 +70,26 @@ public class PickFontNameWindow : Window
             }
         }.WithBindVisible(vm, nameof(vm.IsFontBoldVisible));
 
-        var fontsView = MakeFontsView(vm);
+        var tabControlFonts = new TabControl
+        {
+            HorizontalAlignment = HorizontalAlignment.Stretch,
+            VerticalAlignment = VerticalAlignment.Stretch,
+            Items =
+            {
+                new TabItem
+                {
+                    Header = Se.Language.Tools.PickFontNameInstalledFonts,
+                    Content = MakeFontsView(vm, vm.FontNames, nameof(vm.SelectedFontName)),
+                },
+                new TabItem
+                {
+                    Header = Se.Language.Tools.PickFontNameCollectedFonts,
+                    Content = MakeFontsView(vm, vm.CollectedFontNames, nameof(vm.SelectedCollectedFontName)),
+                },
+            },
+        };
+        tabControlFonts.Bind(TabControl.SelectedIndexProperty, new Binding(nameof(vm.SelectedTabIndex)) { Source = vm, Mode = BindingMode.TwoWay });
+
         var previewView = MakePreviewView(vm);
 
         var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand);
@@ -102,7 +121,7 @@ public class PickFontNameWindow : Window
         grid.Add(panelSearch, 0);
         grid.Add(panelFontSize, 1);
         grid.Add(panelFontBold, 2);
-        grid.Add(fontsView, 3);
+        grid.Add(tabControlFonts, 3);
         grid.Add(previewView, 4);
         grid.Add(buttonPanel, 5);
 
@@ -112,13 +131,13 @@ public class PickFontNameWindow : Window
         KeyDown += (_, e) => vm.OnKeyDown(e);
     }
 
-    private static Border MakeFontsView(PickFontNameViewModel vm)
+    private static Border MakeFontsView(PickFontNameViewModel vm, System.Collections.IEnumerable itemsSource, string selectedItemPath)
     {
         var dataGrid = TableViewExtras.MakeTableView(multiSelect: false);
         dataGrid.Width = double.NaN;
         dataGrid.Height = double.NaN;
         dataGrid.DataContext = vm;
-        dataGrid.ItemsSource = vm.FontNames;
+        dataGrid.ItemsSource = itemsSource;
 
         var fontNameColumn = new SeTableViewColumn
         {
@@ -130,7 +149,7 @@ public class PickFontNameWindow : Window
         };
         dataGrid.Columns.Add(fontNameColumn);
 
-        dataGrid.Bind(TableView.SelectedItemProperty, new Binding(nameof(vm.SelectedFontName)));
+        dataGrid.Bind(TableView.SelectedItemProperty, new Binding(selectedItemPath));
         dataGrid.SelectionChanged += vm.FontNameGridSelectionChanged;
 
         // Font list order is presentation-only (OK uses the selected item), so the

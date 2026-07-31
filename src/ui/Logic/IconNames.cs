@@ -81,6 +81,7 @@ internal class IconNames
     public const string Palette = "mdi-palette";
     public const string Robot = "mdi-robot";
     public const string PanRight = "mdi-pan-right";
+    public const string Paperclip = "mdi-paperclip";
     public const string Pause = "mdi-pause";
     public const string PauseCircle = "mdi-pause-circle";
     public const string Pencil = "mdi-pencil";

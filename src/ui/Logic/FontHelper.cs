@@ -48,14 +48,15 @@ public static class FontHelper
     }
 
     /// <summary>
-    /// Returns the family names of the fonts collected in SE's own Fonts folder
-    /// (<see cref="Se.FontsFolder"/>) - both the libass-compatible face name and the
-    /// typographic family name, so the names match what either renderer would use.
+    /// Returns the fonts collected in SE's own Fonts folder (<see cref="Se.FontsFolder"/>) -
+    /// each name (both the libass-compatible face name and the typographic family name, so
+    /// the names match what either renderer would use) with the file and face index it came
+    /// from, so a collected font can be rendered without being installed.
     /// Collections (.ttc/.otc) are enumerated per face.
     /// </summary>
-    public static List<string> GetFontsFolderFontNames()
+    public static List<CollectedFont> GetFontsFolderFonts()
     {
-        var names = new List<string>();
+        var fonts = new List<CollectedFont>();
         foreach (var file in EnumerateFontFiles(Se.FontsFolder))
         {
             for (var index = 0; index < 30; index++)
@@ -68,17 +69,21 @@ public static class FontHelper
 
                 foreach (var name in new[] { GetLibAssaFontName(typeface), typeface.FamilyName })
                 {
-                    if (!string.IsNullOrEmpty(name) && !names.Contains(name, StringComparer.OrdinalIgnoreCase))
+                    if (!string.IsNullOrEmpty(name) &&
+                        !fonts.Any(f => f.Name.Equals(name, StringComparison.OrdinalIgnoreCase)))
                     {
-                        names.Add(name);
+                        fonts.Add(new CollectedFont(name, file, index));
                     }
                 }
             }
         }
 
-        names.Sort(StringComparer.OrdinalIgnoreCase);
-        return names;
+        fonts.Sort((a, b) => StringComparer.OrdinalIgnoreCase.Compare(a.Name, b.Name));
+        return fonts;
     }
+
+    /// <summary>Family names of the fonts collected in SE's own Fonts folder, sorted.</summary>
+    public static List<string> GetFontsFolderFontNames() => GetFontsFolderFonts().Select(f => f.Name).ToList();
 
     public static List<string> GetSystemFonts()
     {
@@ -112,3 +117,7 @@ public static class FontHelper
     public static string GetSkiaFontNameFromLibAssaFontName(string libAssaFontName) =>
         FontFaces.GetSkiaFamilyName(libAssaFontName);
 }
+
+/// <summary>A font from SE's Fonts folder: a family/face name plus the file (and face index
+/// within a .ttc/.otc collection) it was read from.</summary>
+public sealed record CollectedFont(string Name, string FilePath, int FaceIndex);
