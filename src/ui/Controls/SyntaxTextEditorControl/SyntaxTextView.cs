@@ -101,6 +101,8 @@ public class SyntaxTextView : Control
     private bool _caretOn;
     private bool _isDragSelecting;
     private bool _allowUndoMerge;
+    private bool _isRendering;
+    private bool _scrollMetricsUpdateQueued;
 
     /// <summary>Number of line layouts built - the virtualization tests assert on this.</summary>
     internal int LayoutsCreated { get; private set; }
@@ -268,7 +270,7 @@ public class SyntaxTextView : Control
 
             _scrollOffset = clamped;
             InvalidateVisual();
-            ScrollMetricsChanged?.Invoke(this, EventArgs.Empty);
+            RaiseScrollMetricsChanged();
         }
     }
 
@@ -339,7 +341,38 @@ public class SyntaxTextView : Control
     internal void InvalidateScrollMetrics()
     {
         _scrollOffset = ClampScrollOffset(_scrollOffset);
-        ScrollMetricsChanged?.Invoke(this, EventArgs.Empty);
+        RaiseScrollMetricsChanged();
+    }
+
+    /// <summary>
+    /// Tells the host that the extent or the offset moved, so it can resize its scroll bars.
+    ///
+    /// Laying out a line can widen the extent (see <see cref="GetLineLayout"/>), and that happens
+    /// while drawing - where the host's reaction, setting scroll bar properties, invalidates a
+    /// visual and makes Avalonia throw "Visual was invalidated during the render pass". While a
+    /// paint is running the notification is therefore posted to the next dispatcher turn.
+    /// </summary>
+    private void RaiseScrollMetricsChanged()
+    {
+        if (!_isRendering)
+        {
+            ScrollMetricsChanged?.Invoke(this, EventArgs.Empty);
+            return;
+        }
+
+        if (_scrollMetricsUpdateQueued)
+        {
+            return;
+        }
+
+        _scrollMetricsUpdateQueued = true;
+        Dispatcher.UIThread.Post(
+            () =>
+            {
+                _scrollMetricsUpdateQueued = false;
+                ScrollMetricsChanged?.Invoke(this, EventArgs.Empty);
+            },
+            DispatcherPriority.Background);
     }
 
     protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
@@ -461,7 +494,7 @@ public class SyntaxTextView : Control
         if (width > _maxLineWidth)
         {
             _maxLineWidth = width;
-            ScrollMetricsChanged?.Invoke(this, EventArgs.Empty);
+            RaiseScrollMetricsChanged();
         }
 
         if (_lineLayouts.Count > MaxCachedLayouts)
@@ -593,33 +626,42 @@ public class SyntaxTextView : Control
 
         EnsureFontMetrics();
 
-        var lineHeight = _lineHeight;
-        var (firstLine, lastLine) = GetVisibleLineRange();
-        var selectionStart = SelectionStart;
-        var selectionEnd = SelectionEnd;
-        var caretPosition = _document.GetPosition(_caretOffset);
-        var selectionBrush = SelectionBrush ?? DefaultSelectionBrush;
-
-        using (context.PushClip(new Rect(0, 0, width, height)))
+        // Nothing done from here on may invalidate a visual - see RaiseScrollMetricsChanged.
+        _isRendering = true;
+        try
         {
-            // The caret's line, so it is easy to find in a wall of source text.
-            if (CurrentLineBrush is { } currentLineBrush && selectionStart == selectionEnd)
+            var lineHeight = _lineHeight;
+            var (firstLine, lastLine) = GetVisibleLineRange();
+            var selectionStart = SelectionStart;
+            var selectionEnd = SelectionEnd;
+            var caretPosition = _document.GetPosition(_caretOffset);
+            var selectionBrush = SelectionBrush ?? DefaultSelectionBrush;
+
+            using (context.PushClip(new Rect(0, 0, width, height)))
             {
-                var y = caretPosition.Line * lineHeight - _scrollOffset.Y;
-                context.FillRectangle(currentLineBrush, new Rect(0, y, width, lineHeight));
+                // The caret's line, so it is easy to find in a wall of source text.
+                if (CurrentLineBrush is { } currentLineBrush && selectionStart == selectionEnd)
+                {
+                    var y = caretPosition.Line * lineHeight - _scrollOffset.Y;
+                    context.FillRectangle(currentLineBrush, new Rect(0, y, width, lineHeight));
+                }
+
+                for (var line = firstLine; line <= lastLine; line++)
+                {
+                    var y = line * lineHeight - _scrollOffset.Y;
+                    var x = PaddingLeft - _scrollOffset.X;
+                    var layout = GetLineLayout(line);
+
+                    DrawSelection(context, line, y, layout, selectionStart, selectionEnd, selectionBrush);
+                    layout.Draw(context, new Point(x, y));
+                }
+
+                DrawCaret(context, caretPosition, lineHeight);
             }
-
-            for (var line = firstLine; line <= lastLine; line++)
-            {
-                var y = line * lineHeight - _scrollOffset.Y;
-                var x = PaddingLeft - _scrollOffset.X;
-                var layout = GetLineLayout(line);
-
-                DrawSelection(context, line, y, layout, selectionStart, selectionEnd, selectionBrush);
-                layout.Draw(context, new Point(x, y));
-            }
-
-            DrawCaret(context, caretPosition, lineHeight);
+        }
+        finally
+        {
+            _isRendering = false;
         }
     }
 
