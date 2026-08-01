@@ -46,16 +46,17 @@ public partial class ErrorListViewModel : ObservableObject
         }
     }
 
-    internal void Initialize(List<SubtitleLineViewModel> subtitleLineViewModels)
+    /// <summary>
+    /// The items come ready-made from the caller: it is the only place that still knows each
+    /// line's real neighbours, which the gap/overlap wording needs.
+    /// </summary>
+    internal void Initialize(List<ErrorListItem> errorListItems)
     {
-        for (int i = 0; i < subtitleLineViewModels.Count; i++)
+        foreach (var item in errorListItems)
         {
-            SubtitleLineViewModel? subtitleLine = subtitleLineViewModels[i];
-            var prev = i > 0 ? subtitleLineViewModels[i - 1] : null;
-            var next = i < subtitleLineViewModels.Count - 1 ? subtitleLineViewModels[i + 1] : null;
-            Subtitles.Add(new ErrorListItem(subtitleLine, prev, next));
+            Subtitles.Add(item);
         }
-        
+
         HasErrors = SelectedSubtitle != null;
     }
 
