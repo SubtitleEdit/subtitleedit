@@ -51,6 +51,15 @@ namespace Nikse.SubtitleEdit.Core.Common
                 return;
             }
 
+            if (_workingBitmap.ColorType != SKColorType.Bgra8888)
+            {
+                // PixelData writes raw B,G,R,A bytes; on any other layout (e.g. the
+                // Rgba8888 platform default on macOS/Linux) red and blue would silently
+                // swap. Callers must create their bitmaps as Bgra8888.
+                throw new InvalidOperationException(
+                    $"FastBitmap requires a Bgra8888 bitmap, got {_workingBitmap.ColorType}.");
+            }
+
             _width = _workingBitmap.Width * sizeof(PixelData);
             if (_width % 4 != 0)
             {

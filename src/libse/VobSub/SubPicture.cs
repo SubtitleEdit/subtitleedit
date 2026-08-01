@@ -237,7 +237,9 @@ namespace Nikse.SubtitleEdit.Core.VobSub
                 return new SKBitmap(1, 1);
             }
 
-            var bmp = new SKBitmap(imageDisplayArea.Width + 1, imageDisplayArea.Height + 1);
+            // Bgra8888 explicitly: FastBitmap writes raw B,G,R,A bytes, and the platform
+            // default color type is Rgba8888 on macOS/Linux, which would swap red/blue.
+            var bmp = new SKBitmap(imageDisplayArea.Width + 1, imageDisplayArea.Height + 1, SKColorType.Bgra8888, SKAlphaType.Premul);
             if (fourColors[0] != SKColors.Transparent)
             {
                 using (var canvas = new SKCanvas(bmp))

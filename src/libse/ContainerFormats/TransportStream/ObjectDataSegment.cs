@@ -87,7 +87,9 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
                     y = 500;
                 }
 
-                Image = new SKBitmap(Math.Max(1, width), y + 1);
+                // Bgra8888 explicitly: FastBitmap writes raw B,G,R,A bytes, and the platform
+                // default color type is Rgba8888 on macOS/Linux, which would swap red/blue.
+                Image = new SKBitmap(Math.Max(1, width), y + 1, SKColorType.Bgra8888, SKAlphaType.Premul);
                 Image.Erase(SKColors.Transparent);
                 _fastImage = new FastBitmap(Image);
                 _fastImage.LockImage();
