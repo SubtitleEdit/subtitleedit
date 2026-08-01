@@ -26,6 +26,7 @@ public class CrispAsrEngine : CrispAsrEngineBase
             new CrispAsrFireRed(),
             new CrispAsrFunAsrNano(),
             //new CrispAsrFunAsrMltNano(), does not work well enough
+            new CrispAsrGigaAm(),
             new CrispAsrGlm(),
             new CrispAsrGranite(),
             new CrispAsrQwen3(),
