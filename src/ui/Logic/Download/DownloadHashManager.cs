@@ -225,6 +225,17 @@ public static class DownloadHashManager
         public const string Ref = "VoxCPM2CrispAsr.Ref";
     }
 
+    public static class OmniVoiceCrispAsr
+    {
+        // SHA-256 of each GGUF the omnivoice backend needs: the three main quants and the F16
+        // tokenizer companion. The q8_0 tokenizer is deliberately absent — it breaks reference
+        // encoding, so SE never downloads it. Hashes are the HF LFS oid from the tree API.
+        public const string ModelQ4K = "OmniVoiceCrispAsr.ModelQ4K";
+        public const string ModelQ8_0 = "OmniVoiceCrispAsr.ModelQ8_0";
+        public const string ModelF16 = "OmniVoiceCrispAsr.ModelF16";
+        public const string TokenizerF16 = "OmniVoiceCrispAsr.TokenizerF16";
+    }
+
     public static class MossTtsCrispAsr
     {
         // SHA-256 of each GGUF the moss-tts backend needs: the four backbone quants and the
@@ -1484,6 +1495,26 @@ public static class DownloadHashManager
             [VoxCPM2CrispAsr.Ref] = new[]
             {
                 "9b024ef9a109075aa8ac7219c097a1b1b1bed23d3230b33a902e162c2c10c5f8", // voxcpm2-ref.gguf
+            },
+
+            // OmniVoice (CrispASR) — cstr/omnivoice-GGUF on HuggingFace. Only the F16 tokenizer
+            // is listed: omnivoice-tokenizer-q8_0.gguf loads, but its encoder tensors cannot be
+            // read back as f32, so cloning a reference voice yields noise (see OmniVoiceCrispAsr).
+            [OmniVoiceCrispAsr.ModelQ4K] = new[]
+            {
+                "a1a9c6fcf0253143581ecaa2ab3dd7084abf1378bec7986da3523e358273dda3", // omnivoice-q4_k.gguf
+            },
+            [OmniVoiceCrispAsr.ModelQ8_0] = new[]
+            {
+                "9d8835c80d50cce6ba66bed60c31e94836a7f990c40d2e22496c0b6710c98bb5", // omnivoice-q8_0.gguf
+            },
+            [OmniVoiceCrispAsr.ModelF16] = new[]
+            {
+                "670592a520713f036c1f10fdaa2839d3fb473144c06a772d7e715f7fb813d666", // omnivoice-f16.gguf
+            },
+            [OmniVoiceCrispAsr.TokenizerF16] = new[]
+            {
+                "710ef610e1f2845c6b7333d5432376b24f2d20d2c54a8cec9bc118d183ecea63", // omnivoice-tokenizer-f16.gguf
             },
 
             // MOSS-TTS (CrispASR) — cstr/moss-tts-v1.5-GGUF on HuggingFace.
