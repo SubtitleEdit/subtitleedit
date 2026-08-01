@@ -366,7 +366,10 @@ public class RemoveTextForHearingImpairedWindow : Window
         TableViewExtras.AddSpaceToggle<RemoveItem>(dataGrid,
             item => item.Apply, (item, v) => item.Apply = v);
 
-        var labelLinesFound = UiUtil.MakeLabel().WithBindText(vm, nameof(vm.LinesFoundText));
+        var labelLinesFound = UiUtil.MakeLabel().WithBindText(vm, new Binding($"{nameof(vm.Fixes)}.{nameof(vm.Fixes.Count)}")
+        {
+            StringFormat = Se.Language.Tools.RemoveTextForHearingImpaired.LinesFoundX,
+        });
 
         var grid = new Grid
         {

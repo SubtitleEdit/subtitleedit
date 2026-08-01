@@ -350,7 +350,11 @@ public class TextToSpeechWindow : Window
                     {
                         FontSize = 11.5,
                         Opacity = 0.8,
-                        [!TextBlock.TextProperty] = new Binding(nameof(vm.VoiceCountInfo)) { Mode = BindingMode.OneWay },
+                        [!TextBlock.TextProperty] = new Binding($"{nameof(vm.Voices)}.{nameof(vm.Voices.Count)}")
+                        {
+                            Mode = BindingMode.OneWay,
+                            StringFormat = Se.Language.Video.TextToSpeech.XVoices,
+                        },
                     },
                     [!Border.IsVisibleProperty] = new Binding(nameof(vm.IsVoiceCountVisible)) { Mode = BindingMode.OneWay },
                 },
