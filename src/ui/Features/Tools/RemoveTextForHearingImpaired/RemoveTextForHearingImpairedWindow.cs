@@ -368,6 +368,7 @@ public class RemoveTextForHearingImpairedWindow : Window
 
         var labelLinesFound = UiUtil.MakeLabel().WithBindText(vm, new Binding($"{nameof(vm.Fixes)}.{nameof(vm.Fixes.Count)}")
         {
+            Mode = BindingMode.OneWay,
             StringFormat = Se.Language.Tools.RemoveTextForHearingImpaired.LinesFoundX,
         });
 

@@ -40,6 +40,7 @@ public class BookmarksListWindow : Window
         labelCount.Bind(TextBlock.TextProperty, new Binding($"{nameof(vm.Subtitles)}.{nameof(vm.Subtitles.Count)}")
         {
             Source = vm,
+            Mode = BindingMode.OneWay,
             StringFormat = Se.Language.General.Count + ": {0}",
         });
 
