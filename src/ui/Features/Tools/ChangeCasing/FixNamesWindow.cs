@@ -60,7 +60,11 @@ public class FixNamesWindow : Window
 
         row++;
         var labelNamesCount = new Label();
-        labelNamesCount.Bind(Label.ContentProperty, new Binding(nameof(vm.NamesCount)) { Mode = BindingMode.OneWay });
+        labelNamesCount.Bind(Label.ContentProperty, new Binding($"{nameof(vm.Names)}.{nameof(vm.Names.Count)}")
+        {
+            Mode = BindingMode.OneWay,
+            StringFormat = lang.NamesX,
+        });
         grid.Add(labelNamesCount, row, 0);
 
         row++;
@@ -87,7 +91,10 @@ public class FixNamesWindow : Window
         grid.Add(stackExtraNames, row, 0);
 
         row++;
-        var labelHits = UiUtil.MakeLabel(new Binding(nameof(vm.HitCount)));
+        var labelHits = UiUtil.MakeLabel(new Binding($"{nameof(vm.Hits)}.{nameof(vm.Hits.Count)}")
+        {
+            StringFormat = lang.HitsX,
+        });
         grid.Add(labelHits, row, 0);
 
         row++;
