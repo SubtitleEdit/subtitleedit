@@ -4,6 +4,7 @@ using Avalonia.Markup.Xaml;
 using Avalonia.Styling;
 using Avalonia.VisualTree;
 using Nikse.SubtitleEdit.Controls;
+using Nikse.SubtitleEdit.Logic;
 
 namespace UITests.Controls;
 
@@ -19,11 +20,12 @@ namespace UITests.Controls;
 /// </summary>
 public class SyntaxHighlightingTextPresenterCanaryTests
 {
-    private static (Window window, SyntaxHighlightingTextBox textBox) ShowTextBox(string text)
+    private static (Window window, SyntaxHighlightingTextBox textBox) ShowTextBox(string text, ISourceSyntaxHighlighter? highlighter = null)
     {
         var styles = (Styles)AvaloniaXamlLoader.Load(new Uri("avares://SubtitleEdit/Styles.axaml"));
         var textBox = new SyntaxHighlightingTextBox
         {
+            SourceHighlighter = highlighter,
             Text = text,
             FontSize = 16,
         };
@@ -54,6 +56,23 @@ public class SyntaxHighlightingTextPresenterCanaryTests
         textBox.SelectionEnd = 5;
         presenter.InvalidateSpellCheck(); // public wrapper around InvalidateTextLayout
         Assert.NotNull(presenter.TextLayout);
+    }
+
+    /// <summary>
+    /// The source-format path (media info, format preview) runs the same replicated layout code
+    /// with a multi-line text and bold spans, so it needs the same canary.
+    /// </summary>
+    [AvaloniaFact]
+    public void CreateTextLayoutHandlesSourceHighlighterSpans()
+    {
+        const string srt = "1\r\n00:00:01,000 --> 00:00:02,000\r\nHello <i>world</i>\r\n";
+        var (_, textBox) = ShowTextBox(srt, new SubRipSourceSyntaxHighlighting());
+
+        var presenter = textBox.GetVisualDescendants().OfType<SyntaxHighlightingTextPresenter>().Single();
+
+        var layout = presenter.TextLayout;
+        Assert.NotNull(layout);
+        Assert.Equal(srt.Length, layout.TextLines.Sum(l => l.Length));
     }
 
     [AvaloniaFact]

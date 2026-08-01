@@ -197,11 +197,7 @@ public partial class BatchConvertAssaViewModel : ObservableObject
         textBox.TextArea.TextView.LinkTextForegroundBrush = UiUtil.MakeLinkForeground();
 
         // Add syntax highlighting for subtitle source formats
-        var lineTransformer = new AssaSourceSyntaxHighlighting();
-        if (lineTransformer != null)
-        {
-            textBox.TextArea.TextView.LineTransformers.Add(lineTransformer);
-        }
+        textBox.TextArea.TextView.LineTransformers.Add(new SourceSyntaxColorizer(new AssaSourceSyntaxHighlighting()));
 
         // Setup two-way binding manually since TextEditor doesn't support direct binding
         var isUpdatingFromViewModel = false;
