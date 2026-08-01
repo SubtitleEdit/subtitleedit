@@ -80,8 +80,11 @@ public class SyntaxTextDocumentTests
         var document = Document("onetwo");
         document.Insert(3, "\r\nX\r\n");
 
+        // The seed text has no line break, so the document falls back to
+        // Environment.NewLine and normalizes the inserted breaks to it.
+        var nl = Environment.NewLine;
         Assert.Equal(3, document.LineCount);
-        Assert.Equal("one\r\nX\r\ntwo", document.Text);
+        Assert.Equal($"one{nl}X{nl}two", document.Text);
         Assert.Equal("X", document.GetLine(1));
     }
 
