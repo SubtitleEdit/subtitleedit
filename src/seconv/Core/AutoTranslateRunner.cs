@@ -171,21 +171,11 @@ internal sealed class AutoTranslateRunner
     /// <summary>
     /// Completes a user-supplied --translate-url to the full chat/completions endpoint.
     /// Accepts a bare <c>host:port</c>, an OpenAI-style <c>.../v1</c> base (with or without
-    /// trailing slash), or an already-complete <c>.../chat/completions</c> URL — the old
-    /// <c>Contains("/v1/")</c> check missed the no-trailing-slash base form and produced
-    /// <c>.../v1/v1/chat/completions</c>.
+    /// trailing slash), or an already-complete <c>.../chat/completions</c> URL.
     /// </summary>
     internal static string CompleteChatCompletionsUrl(string url)
     {
-        var trimmed = url.TrimEnd('/');
-        if (trimmed.EndsWith("/chat/completions", StringComparison.OrdinalIgnoreCase))
-        {
-            return trimmed;
-        }
-
-        return trimmed.EndsWith("/v1", StringComparison.OrdinalIgnoreCase)
-            ? trimmed + "/chat/completions"
-            : trimmed + "/v1/chat/completions";
+        return AutoTranslateUrl.Complete(url, LlamaCppTranslate.DefaultUrl);
     }
 
     internal static TranslationPair ResolveLanguage(List<TranslationPair> languages, string requested, string kind)

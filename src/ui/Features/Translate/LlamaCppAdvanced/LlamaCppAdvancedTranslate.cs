@@ -1,4 +1,5 @@
 using Nikse.SubtitleEdit.Core.Common;
+using Nikse.SubtitleEdit.UiLogic.AutoTranslate;
 
 namespace Nikse.SubtitleEdit.Features.Translate.LlamaCppAdvanced;
 
@@ -17,6 +18,6 @@ public class LlamaCppAdvancedTranslate : AdvancedTranslatorBase
 
     protected override string GetApiUrl()
     {
-        return Configuration.Settings.Tools.LlamaCppApiUrl;
+        return AutoTranslateUrl.Complete(Configuration.Settings.Tools.LlamaCppApiUrl, LlamaCppTranslate.DefaultUrl);
     }
 }
