@@ -24,10 +24,6 @@ Subtitle Edit 5 is the Avalonia-based, cross-platform version of Subtitle Edit. 
 ## Spell Check
 
 - **Live spell check in the subtitle grid** — misspelled words are underlined in the grid, and the grid context menu offers suggestions, *Add to user dictionary* and *Ignore all* (when a single line is selected).
-- Spell check now starts at the current line instead of asking first — the "continue from current line?" question only appears when an earlier run was left unfinished — and it can wrap around, with an Undo button and a completion summary (changed / skipped / correct / names / added).
-- **See the source image while spell checking** — for subtitles that came from OCR, the image for the current line is shown next to the text (Blu-ray sup, VobSub, BDN XML, transport stream, Matroska).
-- Dictionaries come from the maintained LibreOffice repository through a redesigned download dialog, with **Georgian, Armenian, Luxembourgish and Faroese** added, dictionary names cleaned up, and the right dictionary auto-selected from the OCR or subtitle language.
-- The **Microsoft Word** spell check engine now uses the dictionary language you selected and recovers from a dead Word session.
 
 See [Spell Check](spell-check.md) for details.
 
