@@ -21,8 +21,6 @@ public partial class FixNamesViewModel : ObservableObject, IClosingCleanup
 {
     [ObservableProperty] private ObservableCollection<FixNameItem> _names;
     [ObservableProperty] private ObservableCollection<FixNameHitItem> _hits;
-    [ObservableProperty] private string _namesCount;
-    [ObservableProperty] private string _hitCount;
     [ObservableProperty] private string _extraNames;
 
     public Window? Window { get; set; }
@@ -50,8 +48,6 @@ public partial class FixNamesViewModel : ObservableObject, IClosingCleanup
         Hits = new ObservableCollection<FixNameHitItem>();
 
         _loading = true;
-        NamesCount = string.Empty;
-        HitCount = string.Empty;
         _nameListInclMulti = new List<string>();
         _language = "en_US";
         _subtitleBefore = new Subtitle();
@@ -156,7 +152,6 @@ public partial class FixNamesViewModel : ObservableObject, IClosingCleanup
 
         Names.Clear();
         Names.AddRange(names);
-        NamesCount = $"Names: {Names.Count:#,##0}";
     }
 
     private static bool IsWordBoundary(string text, int startIndex, string name)
@@ -209,7 +204,6 @@ public partial class FixNamesViewModel : ObservableObject, IClosingCleanup
         {
             Hits.Clear();
             Hits.AddRange(hits);
-            HitCount = $"Hits: {Hits.Count:#,##0}";
         });
     }
 
