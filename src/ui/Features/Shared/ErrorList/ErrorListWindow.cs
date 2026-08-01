@@ -95,12 +95,7 @@ public class ErrorListWindow : Window
             Width = new GridLength(1, GridUnitType.Star) // star sizing to take all available space
         });
 
-        dataGrid.Bind(TableView.SelectedItemProperty, new Binding(nameof(vm.SelectedSubtitle))
-        {
-            Source = vm,
-            Mode = BindingMode.TwoWay
-        });
-        dataGrid.SelectionChanged += vm.GridSelectionChanged;
+        TableViewExtras.BindSelectedItem(dataGrid, vm, nameof(vm.SelectedSubtitle));
         dataGrid.DoubleTapped += (s, e) => vm.GoToCommand.Execute(null);    
         dataGrid.KeyDown += (s, e) => vm.GridKeyDown(e);
         dataGrid.AddHandler(InputElement.KeyDownEvent, (object? _, KeyEventArgs e) =>

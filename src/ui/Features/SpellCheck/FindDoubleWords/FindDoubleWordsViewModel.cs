@@ -65,8 +65,16 @@ public partial class FindDoubleWordsViewModel : ObservableObject
                 Subtitles.Add(new DoubleWordItem(subtitleLine, doubleWord));
             }
         }
+    }
 
-        HasDoubleWords = SelectedSubtitle != null;
+    /// <summary>
+    /// Follows the selection itself instead of the grid's SelectionChanged event: the row the
+    /// grid selects on its own (AlwaysSelected) never raises that event, which left Go to
+    /// disabled while row 0 looked selected.
+    /// </summary>
+    partial void OnSelectedSubtitleChanged(DoubleWordItem? value)
+    {
+        HasDoubleWords = value != null;
     }
 
     private string GetDoubleWordMatch(string input)
@@ -130,11 +138,6 @@ public partial class FindDoubleWordsViewModel : ObservableObject
         }
 
         return true;
-    }
-
-    internal void GridSelectionChanged(object? sender, SelectionChangedEventArgs e)
-    {
-        HasDoubleWords = SelectedSubtitle != null;
     }
 
     internal void OnBookmarksGridDoubleTapped(object? sender, TappedEventArgs e)

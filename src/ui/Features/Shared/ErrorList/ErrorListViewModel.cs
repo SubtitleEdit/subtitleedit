@@ -56,13 +56,16 @@ public partial class ErrorListViewModel : ObservableObject
         {
             Subtitles.Add(item);
         }
-
-        HasErrors = SelectedSubtitle != null;
     }
 
-    internal void GridSelectionChanged(object? sender, SelectionChangedEventArgs e)
+    /// <summary>
+    /// Follows the selection itself instead of the grid's SelectionChanged event: the row the
+    /// grid selects on its own (AlwaysSelected) never raises that event, which left Go to
+    /// disabled while row 0 looked selected.
+    /// </summary>
+    partial void OnSelectedSubtitleChanged(ErrorListItem? value)
     {
-        HasErrors = SelectedSubtitle != null;
+        HasErrors = value != null;
     }
 
     internal void OnBookmarksGridDoubleTapped(object? sender, TappedEventArgs e)

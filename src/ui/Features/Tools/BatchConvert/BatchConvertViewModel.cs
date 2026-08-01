@@ -2643,6 +2643,13 @@ public partial class BatchConvertViewModel : ObservableObject, IClosingCleanup
     {
         UiUtil.RestoreWindowPosition(Window);
         ComboBoxSubtitleFormatChanged();
+
+        // Show the settings of the function the grid starts on. The functions list is built in
+        // the constructor, so the grid selects row 0 before its selection binding exists and no
+        // SelectionChanged is ever raised - the settings panel stayed blank until a function was
+        // clicked. Done here rather than at bind time because FunctionContainer is only replaced
+        // with the real ScrollViewer later in the window's layout.
+        SelectedFunctionChanged();
     }
 
     internal void OnClosing(object? sender, WindowClosingEventArgs e)

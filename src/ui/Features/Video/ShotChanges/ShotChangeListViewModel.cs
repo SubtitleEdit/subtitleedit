@@ -106,13 +106,16 @@ public partial class ShotChangeListViewModel : ObservableObject
         {
             ShotChanges.Add(new ShotChangeItem(ShotChanges.Count, time));
         }
-
-        HasShotChanges = SelectedShotChange != null;
     }
 
-    internal void GridSelectionChanged(object? sender, SelectionChangedEventArgs e)
+    /// <summary>
+    /// Follows the selection itself instead of the grid's SelectionChanged event: the row the
+    /// grid selects on its own (AlwaysSelected) never raises that event, which left Go to and
+    /// Clear disabled while row 0 looked selected.
+    /// </summary>
+    partial void OnSelectedShotChangeChanged(ShotChangeItem? value)
     {
-        HasShotChanges = SelectedShotChange != null;
+        HasShotChanges = value != null;
     }
 
     internal void OnShotChangeGridDoubleTapped(object? sender, TappedEventArgs e)
