@@ -144,8 +144,8 @@ public partial class SsaStylesViewModel : ObservableObject, IClosingCleanup
             return;
         }
 
-        var s = Subtitle.Parse(fileName, format);
-        if (s == null || string.IsNullOrEmpty(s.Header))
+        var ssaStyles = StyleFileImportHelper.LoadStyles(fileName, format);
+        if (ssaStyles.Count == 0)
         {
             await MessageBox.Show(
                 Window,
@@ -155,8 +155,6 @@ public partial class SsaStylesViewModel : ObservableObject, IClosingCleanup
                 MessageBoxIcon.Error);
             return;
         }
-
-        var ssaStyles = AdvancedSubStationAlpha.GetSsaStylesFromHeader(s.Header);
 
         var result = await _windowService.ShowDialogAsync<AssaStylePickerWindow, AssaStylePickerViewModel>(Window, vm =>
         {
@@ -365,8 +363,8 @@ public partial class SsaStylesViewModel : ObservableObject, IClosingCleanup
             return;
         }
 
-        var s = Subtitle.Parse(fileName, format);
-        if (s == null || string.IsNullOrEmpty(s.Header))
+        var ssaStyles = StyleFileImportHelper.LoadStyles(fileName, format);
+        if (ssaStyles.Count == 0)
         {
             await MessageBox.Show(
                 Window,
@@ -376,8 +374,6 @@ public partial class SsaStylesViewModel : ObservableObject, IClosingCleanup
                 MessageBoxIcon.Error);
             return;
         }
-
-        var ssaStyles = AdvancedSubStationAlpha.GetSsaStylesFromHeader(s.Header);
 
         var result = await _windowService.ShowDialogAsync<AssaStylePickerWindow, AssaStylePickerViewModel>(Window, vm =>
         {
