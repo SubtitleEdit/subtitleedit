@@ -67,10 +67,8 @@ public partial class AiReviewViewModel : ObservableObject
     {
         _windowService = windowService;
 
-        Engines = new ObservableCollection<string> { SeAiReview.EngineLlamaCpp, SeAiReview.EngineOllama, SeAiReview.EngineOpenAiCompatible };
-        SelectedEngine = Engines.Contains(Se.Settings.Tools.AiReview.Engine)
-            ? Se.Settings.Tools.AiReview.Engine
-            : SeAiReview.EngineLlamaCpp;
+        Engines = new ObservableCollection<string>();
+        SelectedEngine = AiEngineCombo.Populate(Engines, Se.Settings.Tools.AiReview.Engine);
         OllamaModel = Se.Settings.Tools.AiReview.OllamaModel;
         OpenAiCompatibleUrl = Se.Settings.Tools.AiReview.OpenAiCompatibleUrl;
         OpenAiCompatibleModel = Se.Settings.Tools.AiReview.OpenAiCompatibleModel;
@@ -178,6 +176,17 @@ public partial class AiReviewViewModel : ObservableObject
     }
 
     /// <summary>
+    /// Re-fills the engine combo so its llama.cpp install-status dot is recomputed - the rows keep
+    /// the status they were built with, so an engine download/update leaves a stale dot otherwise.
+    /// </summary>
+    private void RefreshEngines()
+    {
+        var selected = SelectedEngine;
+        SelectedEngine = string.Empty; // drop the selection first, so the combo also rebuilds the closed-state row
+        SelectedEngine = AiEngineCombo.Populate(Engines, selected);
+    }
+
+    /// <summary>
     /// Opens the shared llama.cpp engine settings dialog (installed backend, pinned release, install
     /// status). Its download button stops the server first - it holds llama-server open, so a running
     /// server would block replacing the binary - then re-downloads and refreshes the model dots.
@@ -195,6 +204,7 @@ public partial class AiReviewViewModel : ObservableObject
             vm => vm.Initialize(RedownloadLlamaCppEngineAsync));
 
         RefreshLlamaCppModels();
+        RefreshEngines();
     }
 
     private async Task RedownloadLlamaCppEngineAsync()
@@ -220,6 +230,7 @@ public partial class AiReviewViewModel : ObservableObject
             forceEngineDownload: true);
 
         RefreshLlamaCppModels();
+        RefreshEngines(); // the engine binary just changed - re-evaluate its dot (amber -> green)
     }
 
     private void SaveSettings()
@@ -256,10 +267,12 @@ public partial class AiReviewViewModel : ObservableObject
                     LlamaCppServerManager.GetAllReviewModels(), persistAsTranslateModel: false))
             {
                 RefreshLlamaCppModels();
+                RefreshEngines();
                 return;
             }
 
             RefreshLlamaCppModels(); // pick up the fresh install state (green dot)
+            RefreshEngines();
             display = SelectedLlamaCppModel;
             if (display == null)
             {

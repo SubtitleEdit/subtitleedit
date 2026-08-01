@@ -1,3 +1,5 @@
+using System.Collections.ObjectModel;
+using System.Linq;
 using Avalonia.Controls.Templates;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
@@ -13,6 +15,32 @@ namespace Nikse.SubtitleEdit.Features.Tools.AiReview;
 /// </summary>
 public static class AiEngineCombo
 {
+    private static readonly string[] EngineNames =
+    {
+        SeAiReview.EngineLlamaCpp,
+        SeAiReview.EngineOllama,
+        SeAiReview.EngineOpenAiCompatible,
+    };
+
+    /// <summary>
+    /// Fills <paramref name="engines"/> with the engine names and returns the name to select
+    /// (<paramref name="selectName"/> when it is one of them, otherwise llama.cpp).
+    /// Call it again after installing/updating llama.cpp: the rows are built from a one-off status
+    /// snapshot (see <see cref="StatusDots.ComboItemTemplate{T}"/>), so re-filling the collection is
+    /// what makes the dot re-evaluate - otherwise an updated engine keeps showing the amber
+    /// "update available" dot until the window is reopened.
+    /// </summary>
+    public static string Populate(ObservableCollection<string> engines, string? selectName)
+    {
+        engines.Clear();
+        foreach (var name in EngineNames)
+        {
+            engines.Add(name);
+        }
+
+        return EngineNames.Contains(selectName) ? selectName! : SeAiReview.EngineLlamaCpp;
+    }
+
     /// <summary>
     /// Renders "[dot] engine name". Only llama.cpp is downloadable, so it is the only row with a dot:
     /// grey when nothing is installed, amber when the pinned release is newer than the installed
