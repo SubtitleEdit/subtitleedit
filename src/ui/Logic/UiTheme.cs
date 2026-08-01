@@ -8,8 +8,7 @@ using Avalonia.Media;
 using Avalonia.Styling;
 using Avalonia.Themes.Fluent;
 using Avalonia.VisualTree;
-using AvaloniaEdit;
-using AvaloniaEdit.Editing;
+using Nikse.SubtitleEdit.Controls.SyntaxTextEditorControl;
 using Nikse.SubtitleEdit.Logic.Config;
 using System;
 using System.IO;
@@ -112,15 +111,6 @@ public static class UiTheme
             if (ThemeName == ThemeNameDark)
             {
                 ApplyLighterDark();
-            }
-            else
-            {
-                // When the OS switches dark→light, RequestedThemeVariant stays at Default so
-                // Avalonia's full theme re-evaluation is not triggered. AvaloniaEdit's TextArea
-                // caret renderer then falls into a stale state, retaining the bright brush from
-                // the now-removed dark style. Push an explicit black CaretBrush via a style so
-                // a clean property-changed notification fires and the caret renders correctly.
-                ApplyLightThemeCaretFix();
             }
 
             // Subscribe to theme changes
@@ -628,40 +618,22 @@ public static class UiTheme
                 }
             },
 
-            // TextArea
-            new Style(x => x.OfType<TextArea>())
+            // The source editor's text surface
+            new Style(x => x.OfType<SyntaxTextView>())
             {
                 Setters =
                 {
-                    new Setter(TextArea.ForegroundProperty, new SolidColorBrush(foreColor)),
-                    new Setter(TextArea.CaretBrushProperty, new SolidColorBrush(foreColor)),
+                    new Setter(SyntaxTextView.ForegroundProperty, new SolidColorBrush(foreColor)),
+                    new Setter(SyntaxTextView.CaretBrushProperty, new SolidColorBrush(foreColor)),
                 }
             },
-            
-            // TextArea when focused
-            new Style(x => x.OfType<TextArea>().Class(":focus"))
+
+            // ... and its line numbers
+            new Style(x => x.OfType<LineNumberGutter>())
             {
                 Setters =
                 {
-                    new Setter(TextArea.ForegroundProperty, new SolidColorBrush(foreColor)),
-                }
-            },
-            
-            // TextArea when pointer is over
-            new Style(x => x.OfType<TextArea>().Class(":pointerover"))
-            {
-                Setters =
-                {
-                    new Setter(TextArea.ForegroundProperty, new SolidColorBrush(foreColor)),
-                }
-            },
-            
-            // TextArea when both focused and pointer over (combined state)
-            new Style(x => x.OfType<TextArea>().Class(":focus").Class(":pointerover"))
-            {
-                Setters =
-                {
-                    new Setter(TextArea.ForegroundProperty, new SolidColorBrush(foreColor)),
+                    new Setter(LineNumberGutter.ForegroundProperty, new SolidColorBrush(foreColor)),
                 }
             },
 
@@ -741,21 +713,6 @@ public static class UiTheme
             Application.Current!.Styles.Remove(_themeOverrideStyle);
             _themeOverrideStyle = null;
         }
-    }
-
-    private static void ApplyLightThemeCaretFix()
-    {
-        _themeOverrideStyle = new Styles
-        {
-            new Style(x => x.OfType<TextArea>())
-            {
-                Setters =
-                {
-                    new Setter(TextArea.CaretBrushProperty, Brushes.Black),
-                }
-            },
-        };
-        Application.Current!.Styles.Add(_themeOverrideStyle);
     }
 
     private static void ApplyWindowsClassicGray()
@@ -863,12 +820,12 @@ public static class UiTheme
                 }
             },
 
-            // AvaloniaEdit TextEditor - slightly off-white for consistency
-            new Style(x => x.OfType<TextEditor>())
+            // The source editor - slightly off-white for consistency
+            new Style(x => x.OfType<SyntaxTextEditor>())
             {
                 Setters =
                 {
-                    new Setter(TextEditor.BackgroundProperty, new SolidColorBrush(inputColor))
+                    new Setter(SyntaxTextEditor.BackgroundProperty, new SolidColorBrush(inputColor))
                 }
             },
         };
@@ -978,12 +935,12 @@ public static class UiTheme
                 }
             },
 
-            // AvaloniaEdit TextEditor with soft blue
-            new Style(x => x.OfType<TextEditor>())
+            // The source editor with soft blue
+            new Style(x => x.OfType<SyntaxTextEditor>())
             {
                 Setters =
                 {
-                    new Setter(TextEditor.BackgroundProperty, new SolidColorBrush(lightBlue))
+                    new Setter(SyntaxTextEditor.BackgroundProperty, new SolidColorBrush(lightBlue))
                 }
             },
         };
