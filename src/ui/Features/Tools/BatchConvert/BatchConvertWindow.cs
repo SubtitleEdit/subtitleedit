@@ -507,7 +507,7 @@ public class BatchConvertWindow : Window
                 Width = new GridLength(1, GridUnitType.Star),
             },
         });
-        dataGrid.Bind(TableView.SelectedItemProperty, new Binding(nameof(vm.SelectedBatchFunction)) { Source = vm });
+        TableViewExtras.BindSelectedItem(dataGrid, vm, nameof(vm.SelectedBatchFunction));
         // The DataGrid-era CheckboxMultiSelect helper is replaced by native selection,
         // AddSpaceToggle (Space toggles the checkbox) and a SelectionChanged hook that
         // shows the selected function's settings view (was onFocusedItemChanged).

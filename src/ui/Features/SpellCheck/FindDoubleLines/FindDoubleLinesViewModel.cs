@@ -90,9 +90,14 @@ public partial class FindDoubleLinesViewModel : ObservableObject
         HasDoubleLines = Subtitles.Count > 0;
     }
 
-    internal void GridSelectionChanged(object? sender, SelectionChangedEventArgs e)
+    /// <summary>
+    /// Follows the selection itself instead of the grid's SelectionChanged event: the row the
+    /// grid selects on its own (AlwaysSelected) never raises that event, which left Go to
+    /// disabled while row 0 looked selected.
+    /// </summary>
+    partial void OnSelectedSubtitleChanged(DoubleLineItem? value)
     {
-        HasDoubleLines = SelectedSubtitle != null;
+        HasDoubleLines = value != null;
     }
 
     internal void OnBookmarksGridDoubleTapped(object? sender, TappedEventArgs e)

@@ -386,6 +386,41 @@ public static class TableViewExtras
     }
 
     /// <summary>
+    /// Two-way binds the TableView's selection to <paramref name="propertyName"/> on
+    /// <paramref name="viewModel"/>, and pushes the row the control has already selected into
+    /// that property when it is still null.
+    ///
+    /// <see cref="MakeTableView"/> keeps <see cref="SelectionMode.AlwaysSelected"/>, so the
+    /// control selects row 0 the moment ItemsSource is assigned - before this binding exists -
+    /// and a binding's first push goes source to target. For a list that was already populated
+    /// (the dialog pattern, where the view model is initialized before the window is built) the
+    /// grid therefore shows row 0 highlighted while the view model still sees null: previews
+    /// stay empty, OK picks nothing and "is anything selected" flags stay false, until the user
+    /// clicks another row and back again. Prefer this over binding SelectedItem by hand.
+    /// </summary>
+    public static void BindSelectedItem(TableView tableView, object viewModel, string propertyName)
+    {
+        tableView.Bind(TableView.SelectedItemProperty, new Binding(propertyName)
+        {
+            Source = viewModel,
+            Mode = BindingMode.TwoWay,
+        });
+
+        if (tableView.SelectedItem is not { } selected)
+        {
+            return;
+        }
+
+        var property = viewModel.GetType().GetProperty(propertyName);
+        if (property is { CanWrite: true } &&
+            property.GetValue(viewModel) == null &&
+            property.PropertyType.IsInstanceOfType(selected))
+        {
+            property.SetValue(viewModel, selected);
+        }
+    }
+
+    /// <summary>
     /// Moves keyboard focus to the selected row's container when it is realized, falling
     /// back to the TableView itself. Focusing the row (not the list control) is what makes
     /// the current line visible to screen readers via UI Automation (issue #13015).
