@@ -257,22 +257,7 @@ public partial class AssaStylesViewModel : ObservableObject, IClosingCleanup
 
     private static List<SsaStyle> LoadStylesFromImportFile(string fileName)
     {
-        if (fileName.EndsWith(".sty", StringComparison.OrdinalIgnoreCase))
-        {
-            var content = System.IO.File.ReadAllText(fileName);
-            var header = "[V4+ Styles]" + Environment.NewLine +
-                         SsaStyle.DefaultAssStyleFormat + Environment.NewLine +
-                         content;
-            return AdvancedSubStationAlpha.GetSsaStylesFromHeader(header);
-        }
-
-        var s = Subtitle.Parse(fileName, new AdvancedSubStationAlpha());
-        if (s == null || string.IsNullOrEmpty(s.Header))
-        {
-            return new List<SsaStyle>();
-        }
-
-        return AdvancedSubStationAlpha.GetSsaStylesFromHeader(s.Header);
+        return StyleFileImportHelper.LoadStyles(fileName, new AdvancedSubStationAlpha());
     }
 
     private static string MakeUniqueName(string name, ObservableCollection<StyleDisplay> styles)
@@ -531,6 +516,16 @@ public partial class AssaStylesViewModel : ObservableObject, IClosingCleanup
         }
 
         var ssaStyles = LoadStylesFromImportFile(fileName);
+        if (ssaStyles.Count == 0)
+        {
+            await MessageBox.Show(
+                Window,
+                Se.Language.General.Error,
+                "Nothing to import",
+                MessageBoxButtons.OK,
+                MessageBoxIcon.Error);
+            return;
+        }
 
         var result = await _windowService.ShowDialogAsync<AssaStylePickerWindow, AssaStylePickerViewModel>(Window, vm =>
         {
