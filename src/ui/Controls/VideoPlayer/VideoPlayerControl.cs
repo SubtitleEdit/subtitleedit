@@ -823,6 +823,13 @@ namespace Nikse.SubtitleEdit.Controls.VideoPlayer
         internal void CloseAndDisposePlayer()
         {
             Close();
+
+            // Mark before the content goes. On the OpenGL host mpv's render context may only be
+            // freed from the GL deinit callback (the GL context has to be current), and dropping
+            // the content is what fires that callback - so it has to already know the player is
+            // being discarded, or it hands back to a Dispose that can no longer free the context.
+            (_videoPlayerInstance as LibMpvDynamicPlayer)?.MarkForDispose();
+
             Content = null;
 
             if (_videoPlayerInstance is not IDisposable disposablePlayer)

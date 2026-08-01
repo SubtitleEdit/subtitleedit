@@ -24,6 +24,11 @@ public sealed class LibMpvDynamicPlayer : IDisposable, IVideoPlayer
     private IntPtr _library = IntPtr.Zero;
     private IntPtr _mpv = IntPtr.Zero;
     private IntPtr _renderContext = IntPtr.Zero;
+
+    // True once the render context was created against a graphics API whose context is
+    // thread-affine (OpenGL, Metal), which decides who is allowed to free it - see Dispose.
+    private volatile bool _renderContextNeedsGraphicsContext;
+    private volatile bool _disposePendingRenderContextFree;
     private volatile bool _disposed;
     private volatile bool _coreInitialized;
     private string _fileName = string.Empty;
@@ -530,6 +535,9 @@ public sealed class LibMpvDynamicPlayer : IDisposable, IVideoPlayer
                 Se.LogError(new InvalidOperationException(GetErrorString(err)), "LibMpvDynamicPlayer InitializeWithOpenGL mpv_render_context_create");
             }
 
+            // Only the GL thread may free this again - see Dispose / FreeRenderContext.
+            _renderContextNeedsGraphicsContext = true;
+
             // Set update callback
             _renderUpdateCallback = OnRenderUpdate;
             var callbackPtr = Marshal.GetFunctionPointerForDelegate(_renderUpdateCallback);
@@ -619,6 +627,9 @@ public sealed class LibMpvDynamicPlayer : IDisposable, IVideoPlayer
             {
                 Se.LogError(new InvalidOperationException(GetErrorString(err)), "LibMpvDynamicPlayer InitializeWithMetal mpv_render_context_create");
             }
+
+            // Only the render thread may free this again - see Dispose / FreeRenderContext.
+            _renderContextNeedsGraphicsContext = true;
 
             // Register the render-update callback so mpv can trigger redraws.
             _renderUpdateCallback = OnRenderUpdate;
@@ -743,22 +754,82 @@ public sealed class LibMpvDynamicPlayer : IDisposable, IVideoPlayer
     }
 
     /// <summary>
-    /// Destroys the mpv core. Safe to call more than once and from more than one thread at
-    /// a time: a control can dispose its player when it is detached from the visual tree
-    /// while the owner disposes the same instance on a worker thread, and handing the same
-    /// handle to <c>mpv_terminate_destroy</c> twice is a double free. Each handle is claimed
-    /// with an interlocked exchange so exactly one caller ever gets a non-zero pointer.
+    /// Records that this player is being thrown away. Call it before detaching the render host:
+    /// dropping the host fires the graphics deinit callback, and that callback only completes a
+    /// teardown it can already see (see <see cref="FreeRenderContextIfDisposePending"/>). Marking
+    /// afterwards would race the callback and leave the core alive - the leak from issue #13048.
+    /// Cheap and non-blocking, unlike <see cref="Dispose"/>.
     /// </summary>
-    public void Dispose()
+    public void MarkForDispose()
     {
-        _disposed = true;
+        if (_renderContextNeedsGraphicsContext)
+        {
+            _disposePendingRenderContextFree = true;
+        }
+    }
 
+    /// <summary>
+    /// Completes a <see cref="Dispose"/> that had to wait for the graphics thread, and does
+    /// nothing at all if no dispose is pending.
+    /// <para>
+    /// Call this from the render control's deinit callback, where the graphics context is
+    /// current: <c>mpv_render_context_free</c> deletes the GPU objects mpv allocated in that
+    /// context, so for OpenGL and Metal no other thread may free it. Deinit alone is not a
+    /// reason to tear anything down - Avalonia deinits on a plain reparent too - which is why
+    /// this is a no-op unless the owner already asked for the player to go away.
+    /// </para>
+    /// </summary>
+    public void FreeRenderContextIfDisposePending()
+    {
+        if (!_disposePendingRenderContextFree)
+        {
+            return;
+        }
+
+        FreeRenderContext();
+        TerminateCore();
+    }
+
+    private void FreeRenderContext()
+    {
         var renderContext = Interlocked.Exchange(ref _renderContext, IntPtr.Zero);
         if (renderContext != IntPtr.Zero && _mpvRenderContextFree != null)
         {
             _mpvRenderContextFree(renderContext);
         }
+    }
 
+    /// <summary>
+    /// Destroys the mpv core. Safe to call more than once and from more than one thread at
+    /// a time: a control can dispose its player when it is detached from the visual tree
+    /// while the owner disposes the same instance on a worker thread, and handing the same
+    /// handle to <c>mpv_terminate_destroy</c> twice is a double free. Each handle is claimed
+    /// with an interlocked exchange so exactly one caller ever gets a non-zero pointer.
+    /// <para>
+    /// When rendering goes through a graphics API the render context belongs to a thread this
+    /// one is not - freeing an OpenGL render context without that context current is undefined -
+    /// so there this only records the intent and returns. The render control's deinit callback
+    /// then calls <see cref="FreeRenderContextIfDisposePending"/>, which frees the context and
+    /// destroys the core. If that callback never arrives the core outlives us, which is exactly
+    /// what happened before this handshake existed - so asking is never worse than not asking.
+    /// </para>
+    /// </summary>
+    public void Dispose()
+    {
+        _disposed = true;
+
+        if (_renderContextNeedsGraphicsContext && _renderContext != IntPtr.Zero)
+        {
+            _disposePendingRenderContextFree = true;
+            return;
+        }
+
+        FreeRenderContext();
+        TerminateCore();
+    }
+
+    private void TerminateCore()
+    {
         var mpv = Interlocked.Exchange(ref _mpv, IntPtr.Zero);
         if (mpv != IntPtr.Zero && _mpvTerminateDestroy != null)
         {

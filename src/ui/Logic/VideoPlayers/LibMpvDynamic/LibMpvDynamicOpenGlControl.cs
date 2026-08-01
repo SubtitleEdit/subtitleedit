@@ -131,12 +131,13 @@ public class LibMpvDynamicOpenGlControl : OpenGlControlBase
 
     protected override void OnOpenGlDeinit(GlInterface gl)
     {
-        //if (_mpvPlayer != null)
-        //{
-        //    _mpvPlayer.RequestRender -= OnMpvRequestRender;
-        //    _mpvPlayer.Dispose();
-        //    _mpvPlayer = null;
-        //}
+        // This is the only place mpv's OpenGL render context may be freed: it runs on the render
+        // thread with the GL context current, and mpv_render_context_free deletes the GPU objects
+        // mpv allocated in it. But a deinit is not the same as being discarded - Avalonia also
+        // deinits on a plain reparent, and layout 12 reparents the live control on purpose to keep
+        // playback going - so this only completes a teardown the owner already asked for. Without
+        // a pending dispose nothing happens here, exactly as before (issue #13048).
+        _mpvPlayer?.FreeRenderContextIfDisposePending();
 
         base.OnOpenGlDeinit(gl);
     }
