@@ -798,6 +798,51 @@ namespace Nikse.SubtitleEdit.Controls.VideoPlayer
             Duration = 0;
         }
 
+        /// <summary>
+        /// Permanently tears this control down: stops the polling timers, unloads the file,
+        /// detaches the native render host and destroys the underlying player.
+        /// <para>
+        /// Call this - not just <c>VideoPlayer.CloseFile()</c> - whenever a control is thrown
+        /// away (layout rebuild, leaving fullscreen, closing the undocked window). Skipping it
+        /// leaks two things that survive until the app exits: the 50 ms <see cref="_positionTimer"/>,
+        /// which a running <see cref="DispatcherTimer"/> keeps rooted in the dispatcher (so it goes
+        /// on P/Invoking the dead player from the UI thread forever), and the native player core
+        /// itself, whose worker threads and GPU context are only released by its Dispose. Since
+        /// Options/OK rebuilds the layout on any setting change, that used to leak one mpv core
+        /// plus one UI-thread poller per OK, which is what made the waveform playhead stutter
+        /// until restart (issue #13048).
+        /// </para>
+        /// <para>
+        /// Order matters: stop and unload first so the player is idle, then drop the content
+        /// (which destroys the embedded window), and only then destroy the core. mpv's
+        /// <c>mpv_terminate_destroy</c> blocks until every worker has exited - milliseconds when
+        /// idle, but many seconds if a load is stuck on a slow path - so it runs on a worker
+        /// thread rather than freezing the UI (same reasoning as issue #11176).
+        /// </para>
+        /// </summary>
+        internal void CloseAndDisposePlayer()
+        {
+            Close();
+            Content = null;
+
+            if (_videoPlayerInstance is not IDisposable disposablePlayer)
+            {
+                return;
+            }
+
+            Task.Run(() =>
+            {
+                try
+                {
+                    disposablePlayer.Dispose();
+                }
+                catch (Exception exception)
+                {
+                    Se.LogError(exception, "VideoPlayerControl background player dispose");
+                }
+            });
+        }
+
         internal async Task WaitForPlayersReadyAsync(int timeoutMs = 2500)
         {
             var end = DateTime.UtcNow.AddMilliseconds(timeoutMs);

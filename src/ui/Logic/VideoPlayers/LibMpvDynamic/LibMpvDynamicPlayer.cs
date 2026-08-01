@@ -6,6 +6,7 @@ using System.Globalization;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Nikse.SubtitleEdit.Logic.VideoPlayers.LibMpvDynamic;
@@ -741,25 +742,27 @@ public sealed class LibMpvDynamicPlayer : IDisposable, IVideoPlayer
         }
     }
 
+    /// <summary>
+    /// Destroys the mpv core. Safe to call more than once and from more than one thread at
+    /// a time: a control can dispose its player when it is detached from the visual tree
+    /// while the owner disposes the same instance on a worker thread, and handing the same
+    /// handle to <c>mpv_terminate_destroy</c> twice is a double free. Each handle is claimed
+    /// with an interlocked exchange so exactly one caller ever gets a non-zero pointer.
+    /// </summary>
     public void Dispose()
     {
-        if (_disposed)
-        {
-            return;
-        }
-
         _disposed = true;
 
-        if (_renderContext != IntPtr.Zero && _mpvRenderContextFree != null)
+        var renderContext = Interlocked.Exchange(ref _renderContext, IntPtr.Zero);
+        if (renderContext != IntPtr.Zero && _mpvRenderContextFree != null)
         {
-            _mpvRenderContextFree(_renderContext);
-            _renderContext = IntPtr.Zero;
+            _mpvRenderContextFree(renderContext);
         }
 
-        if (_mpv != IntPtr.Zero && _mpvTerminateDestroy != null)
+        var mpv = Interlocked.Exchange(ref _mpv, IntPtr.Zero);
+        if (mpv != IntPtr.Zero && _mpvTerminateDestroy != null)
         {
-            _mpvTerminateDestroy.Invoke(_mpv);
-            _mpv = IntPtr.Zero;
+            _mpvTerminateDestroy.Invoke(mpv);
         }
     }
 
