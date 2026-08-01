@@ -10,7 +10,7 @@ using Avalonia.Media;
 using Avalonia.Styling;
 using Avalonia.Threading;
 using Avalonia.VisualTree;
-using AvaloniaEdit;
+using Nikse.SubtitleEdit.Controls.SyntaxTextEditorControl;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Nikse.SubtitleEdit.Controls.AudioVisualizerControl;
@@ -12244,16 +12244,16 @@ public partial class MainViewModel :
             {
                 // Fallback covers the same control set as IsTextInputFocused so Cmd+A from the
                 // native menu isn't swallowed in non-edit-box text inputs (timecode MaskedTextBox,
-                // source view TextEditor, actor AutoCompleteBox, etc.). MaskedTextBox inherits
+                // source view editor, actor AutoCompleteBox, etc.). MaskedTextBox inherits
                 // from TextBox so the first branch already catches it.
                 var focused = Window?.FocusManager?.GetFocusedElement();
                 if (focused is TextBox tb)
                 {
                     tb.SelectAll();
                 }
-                else if (focused is TextEditor editor)
+                else if (focused is SyntaxTextView sourceView)
                 {
-                    editor.SelectAll();
+                    sourceView.SelectAll();
                 }
                 else if (focused is AutoCompleteBox acb)
                 {
@@ -20527,7 +20527,7 @@ public partial class MainViewModel :
     {
         var focusedElement = Window?.FocusManager?.GetFocusedElement();
 
-        return focusedElement is TextEditor ||
+        return focusedElement is SyntaxTextView ||
                focusedElement is TextBox ||
                focusedElement is MaskedTextBox ||
                focusedElement is AutoCompleteBox ||
@@ -20538,9 +20538,9 @@ public partial class MainViewModel :
     {
         var typeName = control.GetType().Name;
         return typeName.Contains("TextEditor") ||
+               typeName.Contains("TextView") ||
                typeName.Contains("TextBox") ||
                typeName.Contains("MaskedTextBox") ||
-               typeName.Contains("TextArea") ||
                typeName.Contains("TextInput");
     }
 

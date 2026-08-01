@@ -12,9 +12,10 @@ public readonly record struct SourceSyntaxSpan(int Start, int Length, Color Colo
 
 /// <summary>
 /// The syntax rules of one source format, expressed per line and independent of the control that
-/// renders them: <see cref="SourceSyntaxColorizer"/> draws them in an AvaloniaEdit editor (source
-/// view, batch convert ASSA) and <see cref="Controls.SyntaxHighlightingTextPresenter"/> draws them
-/// in a <see cref="Controls.SyntaxHighlightingTextBox"/> (media info, format preview).
+/// renders them: <see cref="Controls.SyntaxTextEditorControl.SyntaxTextView"/> draws them in the
+/// source editor (source view, batch convert ASSA, format preview) and
+/// <see cref="Controls.SyntaxHighlightingTextPresenter"/> draws them in a
+/// <see cref="Controls.SyntaxHighlightingTextBox"/> (media info).
 /// </summary>
 public interface ISourceSyntaxHighlighter
 {
@@ -35,9 +36,8 @@ public interface ISourceSyntaxDocumentFormatter
 /// <summary>
 /// Collects the styles of one line and flattens them into sorted, non-overlapping spans.
 ///
-/// Styles are applied per character and per property, the way overlapping AvaloniaEdit
-/// ChangeLinePart calls behave: a later <see cref="Apply"/> replaces the color of the characters
-/// it covers, and bold, once set, stays set (no rule ever clears it).
+/// Styles are applied per character and per property: a later <see cref="Apply"/> replaces the
+/// color of the characters it covers, and bold, once set, stays set (no rule ever clears it).
 /// </summary>
 public sealed class SourceSyntaxLineStyler
 {

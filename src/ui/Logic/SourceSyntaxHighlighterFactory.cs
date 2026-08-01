@@ -3,8 +3,7 @@ using Nikse.SubtitleEdit.Core.SubtitleFormats;
 namespace Nikse.SubtitleEdit.Logic;
 
 /// <summary>
-/// Picks the syntax rules for a subtitle format - shared by the source view (AvaloniaEdit) and the
-/// format preview in the format picker (SyntaxHighlightingTextBox).
+/// Picks the syntax rules for a subtitle format - shared by the source view and the format preview.
 /// </summary>
 public static class SourceSyntaxHighlighterFactory
 {

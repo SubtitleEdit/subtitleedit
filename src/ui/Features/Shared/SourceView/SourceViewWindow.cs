@@ -2,7 +2,7 @@ using Avalonia.Controls;
 using Avalonia.Data;
 using Avalonia.Interactivity;
 using Avalonia.Layout;
-using AvaloniaEdit;
+using Nikse.SubtitleEdit.Controls.SyntaxTextEditorControl;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 
@@ -23,7 +23,7 @@ public class SourceViewWindow : Window
         DataContext = vm;
 
         // Add a context menu for the advanced text editor.
-        if (vm.SourceViewTextBox.TextControl is TextEditor textEditor)
+        if (vm.SourceViewTextBox.TextControl is SyntaxTextView textEditor)
         {
             var textBoxContextFlyout = new MenuFlyout
             {
