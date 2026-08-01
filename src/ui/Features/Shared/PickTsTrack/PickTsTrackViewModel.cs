@@ -43,6 +43,8 @@ public partial class PickTsTrackViewModel : ObservableObject
     internal void Initialize(TransportStreamParser tsParser, string fileName)
     {
         _tsParser = tsParser;
+        _fileName = fileName;
+        WindowTitle = string.Format(Se.Language.File.PickTransportStreamTrackX, fileName);
 
         var programMapTableParser = new ProgramMapTableParser();
         programMapTableParser.Parse(fileName); // get languages
@@ -161,7 +163,15 @@ public partial class PickTsTrackViewModel : ObservableObject
             return true;
         }
 
+        // GetDvbSubtitles returns null for a packet id it decoded no images for - a subtitle PID
+        // announced by the stream is not a guarantee that anything came out of it.
         var subtitles = _tsParser.GetDvbSubtitles(selectedTrack.TrackNumber);
+        if (subtitles == null)
+        {
+            SubtitleCountText = string.Empty;
+            return false;
+        }
+
         SubtitleCountText = string.Format(Se.Language.File.Import.NumberOfSubtitlesX, subtitles.Count);
         for (var i = 0; i < 20 && i < subtitles.Count; i++)
         {
@@ -189,6 +199,11 @@ public partial class PickTsTrackViewModel : ObservableObject
 
         Dispatcher.UIThread.Post(() =>
         {
+            // Select via the view model, not just the grid index - see the same fix in
+            // PickMatroskaTrackViewModel: AlwaysSelected has already put the grid on row 0, so
+            // re-assigning the index raises no SelectionChanged and SelectedTrack stayed null,
+            // which left the preview empty and made OK return no track at all.
+            SelectedTrack = Tracks[index];
             TracksGrid.SelectedIndex = index;
             if (TracksGrid.SelectedItem is { } selectedItem)
             {

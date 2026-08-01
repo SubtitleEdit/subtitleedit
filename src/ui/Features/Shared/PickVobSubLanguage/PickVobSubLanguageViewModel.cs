@@ -151,6 +151,11 @@ public partial class PickVobSubLanguageViewModel : ObservableObject
 
         Dispatcher.UIThread.Post(() =>
         {
+            // Select via the view model, not just the grid index - see the same fix in
+            // PickMatroskaTrackViewModel: AlwaysSelected has already put the grid on row 0, so
+            // re-assigning the index raises no SelectionChanged and SelectedLanguage stayed null,
+            // which left the preview empty and made OK do nothing.
+            SelectedLanguage = Languages[index];
             LanguagesGrid.SelectedIndex = index;
             if (LanguagesGrid.SelectedItem is { } selectedItem)
             {

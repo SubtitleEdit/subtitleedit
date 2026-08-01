@@ -414,6 +414,12 @@ public partial class PickMatroskaTrackViewModel : ObservableObject
 
         Dispatcher.UIThread.Post(() =>
         {
+            // Select via the view model, not just the grid index: the tracks TableView is created
+            // with SelectionMode.AlwaysSelected, so it auto-selects row 0 while its SelectedItem
+            // binding is still being set up. Assigning the same index back is then a no-op that
+            // raises no SelectionChanged, so SelectedTrack stayed null - the preview pane opened
+            // empty (and OK picked nothing) until another track was clicked and back again.
+            SelectedTrack = Tracks[index];
             TracksGrid.SelectedIndex = index;
             if (TracksGrid.SelectedItem is { } selectedItem)
             {
