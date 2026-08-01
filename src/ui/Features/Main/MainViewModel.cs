@@ -9790,19 +9790,22 @@ public partial class MainViewModel :
             return;
         }
 
-        var list = new List<SubtitleLineViewModel>();
+        // The message is built only for the lines that actually have an error, and with the
+        // neighbours from the subtitle - not from the filtered list, where the previous error
+        // line is rarely the previous line and the gap/overlap wording came out wrong.
+        var list = new List<ErrorListItem>();
         for (int i = 0; i < Subtitles.Count; i++)
         {
             SubtitleLineViewModel? s = Subtitles[i];
             var prev = i > 0 ? Subtitles[i - 1] : null;
             var next = i < Subtitles.Count - 1 ? Subtitles[i + 1] : null;
-            if (!string.IsNullOrEmpty(s.GetErrors(prev, next)))
+            if (s.HasErrors(prev, next))
             {
-                list.Add(s);
+                list.Add(new ErrorListItem(s, prev, next));
             }
         }
 
-        var result = await ShowDialogAsync<ErrorListWindow, ErrorListViewModel>(vm => { vm.Initialize(list.ToList()); });
+        var result = await ShowDialogAsync<ErrorListWindow, ErrorListViewModel>(vm => { vm.Initialize(list); });
 
         if (result.GoToPressed && result.SelectedSubtitle != null)
         {
@@ -9836,7 +9839,7 @@ public partial class MainViewModel :
             var s = Subtitles[i];
             var prev = i > 0 ? Subtitles[i - 1] : null;
             var next = i < Subtitles.Count - 1 ? Subtitles[i + 1] : null;
-            if (!string.IsNullOrEmpty(s.GetErrors(prev, next)))
+            if (s.HasErrors(prev, next))
             {
                 SelectAndScrollToRow(i);
                 break;
@@ -9872,7 +9875,7 @@ public partial class MainViewModel :
             var s = Subtitles[i];
             var prev = i > 0 ? Subtitles[i - 1] : null;
             var next = i < Subtitles.Count - 1 ? Subtitles[i + 1] : null;
-            if (!string.IsNullOrEmpty(s.GetErrors(prev, next)))
+            if (s.HasErrors(prev, next))
             {
                 SelectAndScrollToRow(i);
                 break;
