@@ -33,13 +33,18 @@ namespace Nikse.SubtitleEdit.UiLogic.AutoTranslate
             "deepseek-v4-pro",
         };
 
+        /// <summary>
+        /// Endpoint used when the url in settings is only the service base - see <see cref="AutoTranslateUrl"/>.
+        /// </summary>
+        public const string DefaultUrl = "https://api.deepseek.com/chat/completions";
+
         public void Initialize()
         {
             _httpClient?.Dispose();
             _httpClient = HttpClientFactoryWithProxy.CreateHttpClientWithProxy();
             _httpClient.DefaultRequestHeaders.TryAddWithoutValidation("Content-Type", "application/json");
             _httpClient.DefaultRequestHeaders.TryAddWithoutValidation("accept", "application/json");
-            _httpClient.BaseAddress = new Uri(Configuration.Settings.Tools.DeepSeekUrl.TrimEnd('/'));
+            _httpClient.BaseAddress = new Uri(AutoTranslateUrl.Complete(Configuration.Settings.Tools.DeepSeekUrl, DefaultUrl));
             _httpClient.Timeout = TimeSpan.FromMinutes(15);
 
             if (!string.IsNullOrEmpty(Configuration.Settings.Tools.DeepSeekApiKey))

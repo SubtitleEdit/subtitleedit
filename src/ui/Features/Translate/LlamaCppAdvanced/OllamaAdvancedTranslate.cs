@@ -1,4 +1,5 @@
 using Nikse.SubtitleEdit.Logic.Config;
+using Nikse.SubtitleEdit.UiLogic.AutoTranslate;
 
 namespace Nikse.SubtitleEdit.Features.Translate.LlamaCppAdvanced;
 
@@ -16,9 +17,14 @@ public class OllamaAdvancedTranslate : AdvancedTranslatorBase
     public override string Name => StaticName;
     public override string Url => "https://ollama.com";
 
+    /// <summary>
+    /// Endpoint used when the url in settings is only the service base - see <see cref="AutoTranslateUrl"/>.
+    /// </summary>
+    public const string DefaultUrl = "http://localhost:11434/v1/chat/completions";
+
     protected override string GetApiUrl()
     {
-        return Se.Settings.AutoTranslate.OllamaAdvancedUrl;
+        return AutoTranslateUrl.Complete(Se.Settings.AutoTranslate.OllamaAdvancedUrl, DefaultUrl);
     }
 
     protected override string? GetModel()

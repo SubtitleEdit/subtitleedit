@@ -23,13 +23,18 @@ namespace Nikse.SubtitleEdit.UiLogic.AutoTranslate
         public string Error { get; set; } = string.Empty;
         public int MaxCharacters => 1000;
 
+        /// <summary>
+        /// Endpoint used when the url in settings is only the service base - see <see cref="AutoTranslateUrl"/>.
+        /// </summary>
+        public const string DefaultUrl = "http://localhost:11434/api/generate";
+
         public void Initialize()
         {
             _httpClient?.Dispose();
             _httpClient = new HttpClient();
             _httpClient.DefaultRequestHeaders.TryAddWithoutValidation("Content-Type", "application/json");
             _httpClient.DefaultRequestHeaders.TryAddWithoutValidation("accept", "application/json");
-            _httpClient.BaseAddress = new Uri(Configuration.Settings.Tools.OllamaApiUrl.TrimEnd('/'));
+            _httpClient.BaseAddress = new Uri(AutoTranslateUrl.Complete(Configuration.Settings.Tools.OllamaApiUrl, DefaultUrl));
             _httpClient.Timeout = TimeSpan.FromMinutes(25);
         }
 
