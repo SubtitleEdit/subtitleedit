@@ -6,7 +6,6 @@ using Avalonia.Layout;
 using Avalonia.Media;
 using Avalonia.Threading;
 using AvaloniaEdit;
-using AvaloniaEdit.Rendering;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Nikse.SubtitleEdit.Core.Common;
@@ -185,10 +184,10 @@ public partial class SourceViewViewModel : ObservableObject, IClosingCleanup
         textBox.TextArea.TextView.LinkTextForegroundBrush = UiUtil.MakeLinkForeground();
 
         // Add syntax highlighting for subtitle source formats
-        var lineTransformer = GetLineTransformer(text, subtitleFormat);
-        if (lineTransformer != null)
+        var highlighter = SourceSyntaxHighlighterFactory.ForFormat(text, subtitleFormat);
+        if (highlighter != null)
         {
-            textBox.TextArea.TextView.LineTransformers.Add(lineTransformer);
+            textBox.TextArea.TextView.LineTransformers.Add(new SourceSyntaxColorizer(highlighter));
         }
 
         // Setup two-way binding manually since TextEditor doesn't support direct binding
@@ -263,45 +262,6 @@ public partial class SourceViewViewModel : ObservableObject, IClosingCleanup
         };
 
         return new TextEditorWrapper(textBox, textBoxBorder);
-    }
-
-    private static DocumentColorizingTransformer? GetLineTransformer(string text, SubtitleFormat subtitleFormat)
-    {
-        // SubRip (.srt) and WebVTT (.vtt) use similar time code formats
-        if (subtitleFormat is SubRip ||
-            subtitleFormat is WebVTT ||
-            subtitleFormat is WebVTTFileWithLineNumber)
-        {
-            return new SubRipSourceSyntaxHighlighting();
-        }
-
-        // Advanced SubStation Alpha (.ass) and SubStation Alpha (.ssa) formats
-        if (subtitleFormat is AdvancedSubStationAlpha || subtitleFormat is SubStationAlpha)
-        {
-            return new AssaSourceSyntaxHighlighting();
-        }
-
-        // XML-based formats (e.g., TTML, Netflix DFXP, etc.)
-        if (subtitleFormat.Extension == ".xml" ||
-            subtitleFormat.AlternateExtensions.Contains(".xml") ||
-            text.Contains("<?xml version=") ||
-            subtitleFormat is Sami ||
-            subtitleFormat is SamiModern ||
-            subtitleFormat is SamiYouTube ||
-            subtitleFormat is SamiAvDicPlayer)
-        {
-            return new XmlSourceSyntaxHighlighting();
-        }
-
-        // Json-based formats
-        if (subtitleFormat.Extension == ".json" ||
-            subtitleFormat.AlternateExtensions.Contains(".json"))
-        {
-            return new JsonSourceSyntaxHighlighting();
-        }
-
-        // No syntax highlighting for other formats
-        return null;
     }
 
     [RelayCommand]

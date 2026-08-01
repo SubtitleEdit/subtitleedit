@@ -1,6 +1,4 @@
 using Avalonia.Media;
-using AvaloniaEdit.Document;
-using AvaloniaEdit.Rendering;
 using System;
 using System.Text;
 
@@ -10,44 +8,39 @@ namespace Nikse.SubtitleEdit.Logic;
 /// Fast syntax highlighting for XML-based subtitle formats (TTML, DFXP, etc.)
 /// Automatically reformats single-line XML for better performance
 /// </summary>
-public partial class XmlSourceSyntaxHighlighting : DocumentColorizingTransformer
+public class XmlSourceSyntaxHighlighting : ISourceSyntaxHighlighter, ISourceSyntaxDocumentFormatter
 {
     // Color scheme
-    private static readonly IBrush XmlTagBrush = new SolidColorBrush(Color.Parse("#569CD6"));
-    private static readonly IBrush XmlAttributeBrush = new SolidColorBrush(Color.Parse("#9CDCFE"));
-    private static readonly IBrush XmlValueBrush = new SolidColorBrush(Color.Parse("#CE9178"));
-    private static readonly IBrush CommentBrush = new SolidColorBrush(Color.Parse("#6A9955"));
+    private static readonly Color XmlTagColor = Color.Parse("#569CD6");
+    private static readonly Color XmlAttributeColor = Color.Parse("#9CDCFE");
+    private static readonly Color XmlValueColor = Color.Parse("#CE9178");
+    private static readonly Color CommentColor = Color.Parse("#6A9955");
 
-    private bool _hasReformatted;
-
-    protected override void ColorizeLine(DocumentLine line)
+    /// <summary>
+    /// Reflows XML that arrives (almost) all on one line - unreadable to scroll through, and slow
+    /// to lay out as a single huge line.
+    /// </summary>
+    public bool TryFormat(string text, out string formatted)
     {
-        // On first run, check if we need to reformat
-        if (!_hasReformatted)
+        if (!ShouldReformat(text))
         {
-            _hasReformatted = true;
-            var doc = CurrentContext.Document;
-
-            // Check if document is mostly on one line (line count < 10% of tag count)
-            if (ShouldReformat(doc.Text))
-            {
-                var formatted = FormatXml(doc.Text);
-                if (formatted != doc.Text)
-                {
-                    doc.Text = formatted;
-                    return; // Exit, let next render handle the formatted document
-                }
-            }
+            formatted = text;
+            return false;
         }
 
-        var lineText = CurrentContext.Document.GetText(line);
+        formatted = FormatXml(text);
+        return formatted != text;
+    }
+
+    public void HighlightLine(string lineText, SourceSyntaxLineStyler styler)
+    {
         if (string.IsNullOrEmpty(lineText))
         {
             return;
         }
 
         // Fast single-pass colorization
-        ColorizeLineContent(line, lineText);
+        ColorizeLineContent(lineText, styler);
     }
 
     private static bool ShouldReformat(string text)
@@ -200,7 +193,7 @@ public partial class XmlSourceSyntaxHighlighting : DocumentColorizingTransformer
         return sb.ToString();
     }
 
-    private void ColorizeLineContent(DocumentLine line, string lineText)
+    private static void ColorizeLineContent(string lineText, SourceSyntaxLineStyler styler)
     {
         int i = 0;
         int len = lineText.Length;
@@ -225,10 +218,7 @@ public partial class XmlSourceSyntaxHighlighting : DocumentColorizingTransformer
                     i++;
                 }
 
-                ChangeLinePart(
-                    line.Offset + start,
-                    line.Offset + i,
-                    element => element.TextRunProperties.SetForegroundBrush(CommentBrush));
+                styler.Apply(start, i - start, CommentColor);
                 continue;
             }
 
@@ -252,13 +242,10 @@ public partial class XmlSourceSyntaxHighlighting : DocumentColorizingTransformer
                 int tagEnd = i;
 
                 // Colorize entire tag
-                ChangeLinePart(
-                    line.Offset + tagStart,
-                    line.Offset + tagEnd,
-                    element => element.TextRunProperties.SetForegroundBrush(XmlTagBrush));
+                styler.Apply(tagStart, tagEnd - tagStart, XmlTagColor);
 
                 // Now find and colorize attributes
-                ColorizeAttributes(line, lineText, tagStart, tagEnd);
+                ColorizeAttributes(lineText, styler, tagStart, tagEnd);
                 continue;
             }
 
@@ -266,7 +253,7 @@ public partial class XmlSourceSyntaxHighlighting : DocumentColorizingTransformer
         }
     }
 
-    private void ColorizeAttributes(DocumentLine line, string lineText, int tagStart, int tagEnd)
+    private static void ColorizeAttributes(string lineText, SourceSyntaxLineStyler styler, int tagStart, int tagEnd)
     {
         int i = tagStart + 1;
 
@@ -299,10 +286,7 @@ public partial class XmlSourceSyntaxHighlighting : DocumentColorizingTransformer
             if (i > attrStart)
             {
                 // Colorize attribute name
-                ChangeLinePart(
-                    line.Offset + attrStart,
-                    line.Offset + i,
-                    element => element.TextRunProperties.SetForegroundBrush(XmlAttributeBrush));
+                styler.Apply(attrStart, i - attrStart, XmlAttributeColor);
 
                 // Skip whitespace and =
                 while (i < tagEnd && (char.IsWhiteSpace(lineText[i]) || lineText[i] == '='))
@@ -328,10 +312,7 @@ public partial class XmlSourceSyntaxHighlighting : DocumentColorizingTransformer
                     }
 
                     // Colorize value
-                    ChangeLinePart(
-                        line.Offset + valueStart,
-                        line.Offset + i,
-                        element => element.TextRunProperties.SetForegroundBrush(XmlValueBrush));
+                    styler.Apply(valueStart, i - valueStart, XmlValueColor);
                 }
             }
             else
@@ -339,10 +320,5 @@ public partial class XmlSourceSyntaxHighlighting : DocumentColorizingTransformer
                 i++;
             }
         }
-    }
-
-    public void Reset()
-    {
-        _hasReformatted = false;
     }
 }
