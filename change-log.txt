@@ -51,6 +51,8 @@ v5.2.0-beta1 (TBD)
 * Download 64-bit libVLC on Windows x64 - thx StandAloof
 * Screen readers: keyboard focus in the subtitle grid is exposed via UI Automation again - the main grid and all dialog grids now use TableView - thx Urs2026
 * Accessibility: announce rule violations in the grid row's accessible name, safer initial focus, accessible names for icon buttons, and keep keyboard focus in the grid on Home/End jumps
+* Flatpak: bundle OpenBLAS so the CrispASR speech-to-text engines can start in the sandbox - thx DarkSwan86
+* Speech to text: report a missing shared library instead of silently returning an empty result
 * Update Italian translation - thx bovirus
 * Update Korean translation - thx 12si27
 * Update Polish translation - thx potplayer-fanpack

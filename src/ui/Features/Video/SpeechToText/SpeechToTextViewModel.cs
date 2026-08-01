@@ -143,6 +143,7 @@ public partial class SpeechToTextViewModel : ObservableObject
     private bool _unknownArgument;
     private bool _cudaOutOfMemory;
     private bool _incompleteModel;
+    private string? _missingSharedLibrary;
     private bool _loadedFromStdOut;
     private string? _videoFileName;
     private string _audioFileName = string.Empty;
@@ -752,7 +753,13 @@ public partial class SpeechToTextViewModel : ObservableObject
                 ProgressValue = 100;
 
                 var hasError = false;
-                if (_incompleteModel)
+                if (_missingSharedLibrary != null)
+                {
+                    await MessageBox.Show(Window!, "Speech to text engine could not start",
+                        GetMissingSharedLibraryMessage(_missingSharedLibrary));
+                    hasError = true;
+                }
+                else if (_incompleteModel)
                 {
                     await MessageBox.Show(Window!, "Incomplete model",
                         "The model is incomplete. Please download the full model.");
@@ -915,6 +922,28 @@ public partial class SpeechToTextViewModel : ObservableObject
         _timerWhisper.Start();
     }
 
+    /// <summary>
+    /// Builds the message shown when the engine binary could not be started because a shared
+    /// library it links against is missing (issue #12970).
+    /// </summary>
+    private static string GetMissingSharedLibraryMessage(string libraryName)
+    {
+        var message =
+            $"The speech to text engine could not start - the shared library \"{libraryName}\" is missing.{Environment.NewLine}{Environment.NewLine}" +
+            "Install it with your package manager and try again.";
+
+        if (libraryName.StartsWith("libopenblas", StringComparison.OrdinalIgnoreCase))
+        {
+            message +=
+                $"{Environment.NewLine}{Environment.NewLine}" +
+                $"Debian/Ubuntu: sudo apt install libopenblas0{Environment.NewLine}" +
+                $"Fedora: sudo dnf install openblas{Environment.NewLine}" +
+                "Arch: sudo pacman -S openblas";
+        }
+
+        return message;
+    }
+
     private void ProcessQwen3AsrCppTranscription(SeAudioToText settings)
     {
         var jsonPath = _qwen3AsrOutputJsonPath;
@@ -944,6 +973,15 @@ public partial class SpeechToTextViewModel : ObservableObject
             Dispatcher.UIThread.Invoke<Task>(async () =>
             {
                 LogToConsole($"Speech to text ({settings.WhisperChoice}) done in {_sw.Elapsed}{Environment.NewLine}");
+                if (_missingSharedLibrary != null)
+                {
+                    await MessageBox.Show(Window!, "Speech to text engine could not start",
+                        GetMissingSharedLibraryMessage(_missingSharedLibrary));
+                    ProgressValue = 100;
+                    IsTranscribeEnabled = true;
+                    return;
+                }
+
                 if (_unknownArgument && !string.IsNullOrEmpty(settings.WhisperCustomCommandLineArguments))
                 {
                     await MessageBox.Show(Window!, $"Unknown argument: {settings.WhisperCustomCommandLineArguments}",
@@ -3008,6 +3046,7 @@ public partial class SpeechToTextViewModel : ObservableObject
             _unknownArgument = false;
             _cudaOutOfMemory = false;
             _incompleteModel = false;
+            _missingSharedLibrary = null;
             _loadedFromStdOut = false;
 
             Se.Settings.Tools.AudioToText.WhisperChoice = engine.Choice;
@@ -4057,6 +4096,13 @@ public partial class SpeechToTextViewModel : ObservableObject
         if (string.IsNullOrWhiteSpace(outLine.Data))
         {
             return;
+        }
+
+        // Check before the language guard below - the dynamic loader fails before the engine
+        // prints anything else, and this must be reported even if no language is selected.
+        if (_missingSharedLibrary == null)
+        {
+            _missingSharedLibrary = MissingSharedLibrary.GetName(outLine.Data);
         }
 
         if (SelectedLanguage is not WhisperLanguage language)

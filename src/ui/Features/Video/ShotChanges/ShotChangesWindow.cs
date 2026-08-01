@@ -167,11 +167,12 @@ public class ShotChangesWindow : Window
         var progressBar = UiUtil.MakeProgressBar();
         progressBar.MinWidth = 400;
         progressBar[!ProgressBar.ValueProperty] = new Binding(nameof(vm.ProgressValue)) { Mode = BindingMode.TwoWay, UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged };
-        var progressText = UiUtil.MakeLabel().WithBindText(vm, nameof(ShotChangesViewModel.ProgressText)).WithAlignmentCenter().WithMarginTop(14); 
+        var progressText = UiUtil.MakeLabel().WithBindText(vm, nameof(ShotChangesViewModel.ProgressText)).WithAlignmentCenter();
         var gridProgress = new Grid
         {
             Width = double.NaN,
             HorizontalAlignment = HorizontalAlignment.Stretch,
+            RowSpacing = 5,
             ColumnDefinitions =
             {
                 new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
@@ -179,10 +180,11 @@ public class ShotChangesWindow : Window
             RowDefinitions =
             {
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
             },
         };
         gridProgress.Add(progressBar, 0);
-        gridProgress.Add(progressText, 0);
+        gridProgress.Add(progressText, 1);
 
         grid.Add(UiUtil.MakeBorderForControlNoPadding(tableView), 0);
         grid.Add(panelSensitivity, 1);

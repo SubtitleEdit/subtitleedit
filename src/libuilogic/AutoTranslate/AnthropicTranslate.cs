@@ -38,6 +38,11 @@ namespace Nikse.SubtitleEdit.UiLogic.AutoTranslate
             "claude-sonnet-4-6",
         };
 
+        /// <summary>
+        /// Endpoint used when the url in settings is only the service base - see <see cref="AutoTranslateUrl"/>.
+        /// </summary>
+        public const string DefaultUrl = "https://api.anthropic.com/v1/messages";
+
         public void Initialize()
         {
             _httpClient?.Dispose();
@@ -45,7 +50,7 @@ namespace Nikse.SubtitleEdit.UiLogic.AutoTranslate
             _httpClient.DefaultRequestHeaders.TryAddWithoutValidation("Content-Type", "application/json");
             _httpClient.DefaultRequestHeaders.TryAddWithoutValidation("accept", "application/json");
             _httpClient.DefaultRequestHeaders.TryAddWithoutValidation("anthropic-version", "2023-06-01");
-            _httpClient.BaseAddress = new Uri(Configuration.Settings.Tools.AnthropicApiUrl.TrimEnd('/'));
+            _httpClient.BaseAddress = new Uri(AutoTranslateUrl.Complete(Configuration.Settings.Tools.AnthropicApiUrl, DefaultUrl));
 
             if (!string.IsNullOrEmpty(Configuration.Settings.Tools.AnthropicApiKey))
             {

@@ -22,15 +22,6 @@
           "Avalonia": "12.0.0"
         }
       },
-      "Avalonia.Controls.DataGrid": {
-        "type": "Direct",
-        "requested": "[12.1.0, )",
-        "resolved": "12.1.0",
-        "contentHash": "I4nkzELLRUWAqTLA4nY6lJ4nQFmXdZcGvRF7ze+k1aVE38KMJc5C8lqqs77F2kQQpCHKOwqmRwbO/leFKDQ5GA==",
-        "dependencies": {
-          "Avalonia": "12.1.0"
-        }
-      },
       "Avalonia.Desktop": {
         "type": "Direct",
         "requested": "[12.1.1, )",
@@ -174,9 +165,9 @@
       },
       "SharpCompress": {
         "type": "Direct",
-        "requested": "[0.50.1, )",
-        "resolved": "0.50.1",
-        "contentHash": "VY90K8BBvaAMvvRDJ8EvsfI/GgoIYxlgxMpxdgwpzaesJ0pGSHTLbZ7SD4JYxsGCnOibzua/+8HvDjV6KTw4jA=="
+        "requested": "[0.50.2, )",
+        "resolved": "0.50.2",
+        "contentHash": "BANkH6yDD8uyTwQAO9lcklc+tJ9xhML9ueNNtEQJP47rw14kF3IatdiNDvyphnLMp2O5vXVyWoJLhySIRd1W5Q=="
       },
       "SkiaSharp.HarfBuzz": {
         "type": "Direct",

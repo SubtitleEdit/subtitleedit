@@ -48,7 +48,7 @@ public class SyntaxHighlightingTextPresenter : TextPresenter
     // Run properties are cached per token color and rebuilt when font/foreground changes;
     // reusing the instances avoids re-allocating them on every layout pass (each keystroke,
     // selection change etc.).
-    private readonly Dictionary<Color, GenericTextRunProperties> _tokenPropertiesCache = new();
+    private readonly Dictionary<(Color Color, bool Bold), GenericTextRunProperties> _tokenPropertiesCache = new();
     private GenericTextRunProperties? _defaultProperties;
     private Typeface _cachedTypeface;
     private double _cachedFontSize = double.NaN;
@@ -82,6 +82,7 @@ public class SyntaxHighlightingTextPresenter : TextPresenter
     // never mutated: the overlay methods below always build new lists.
     private string? _syntaxSpansText;
     private List<ValueSpan<TextRunProperties>>? _syntaxSpans;
+    private readonly List<SourceSyntaxSpan> _syntaxRanges = new();
 
     // The selection highlight properties are reused across layout passes while dragging.
     private GenericTextRunProperties? _selectionProperties;
@@ -119,21 +120,26 @@ public class SyntaxHighlightingTextPresenter : TextPresenter
         return _defaultProperties;
     }
 
-    private GenericTextRunProperties GetTokenProperties(Color color)
+    private GenericTextRunProperties GetTokenProperties(Color color, bool bold)
     {
-        if (!_tokenPropertiesCache.TryGetValue(color, out var properties))
+        if (!_tokenPropertiesCache.TryGetValue((color, bold), out var properties))
         {
             if (_tokenPropertiesCache.Count > 256)
             {
                 _tokenPropertiesCache.Clear();
             }
 
+            // Bold keeps the control's own font - only the weight changes.
+            var typeface = bold
+                ? new Typeface(_cachedTypeface.FontFamily, _cachedTypeface.Style, FontWeight.Bold, _cachedTypeface.Stretch)
+                : _cachedTypeface;
+
             properties = new GenericTextRunProperties(
-                _cachedTypeface,
+                typeface,
                 _cachedFontSize,
                 foregroundBrush: GetBrush(color),
                 fontFeatures: _cachedFontFeatures);
-            _tokenPropertiesCache[color] = properties;
+            _tokenPropertiesCache[(color, bold)] = properties;
         }
 
         return properties;
@@ -200,10 +206,9 @@ public class SyntaxHighlightingTextPresenter : TextPresenter
     }
 
     /// <summary>
-    /// Builds sorted, non-overlapping spans covering the whole text: tag tokens get the color
-    /// from <see cref="SubtitleSyntaxTokenizer"/> and the text between them gets the default
-    /// foreground (gaps must be covered explicitly, otherwise the tag style bleeds into the
-    /// surrounding text).
+    /// Builds sorted, non-overlapping spans covering the whole text: colored tokens get their
+    /// token style and the text between them gets the default foreground (gaps must be covered
+    /// explicitly, otherwise the token style bleeds into the surrounding text).
     /// </summary>
     private List<ValueSpan<TextRunProperties>>? BuildSyntaxSpans(string? text, Typeface typeface)
     {
@@ -220,27 +225,28 @@ public class SyntaxHighlightingTextPresenter : TextPresenter
             return _syntaxSpans;
         }
 
+        CollectSyntaxRanges(text);
+
         List<ValueSpan<TextRunProperties>>? spans = null;
-        var tokens = SubtitleSyntaxTokenizer.Tokenize(text);
-        if (tokens.Count > 0)
+        if (_syntaxRanges.Count > 0)
         {
-            spans = new List<ValueSpan<TextRunProperties>>(tokens.Count * 2 + 1);
+            spans = new List<ValueSpan<TextRunProperties>>(_syntaxRanges.Count * 2 + 1);
             var position = 0;
-            foreach (var token in tokens)
+            foreach (var range in _syntaxRanges)
             {
-                if (token.Start < position)
+                if (range.Start < position)
                 {
                     continue; // overlapping token - first one wins
                 }
 
-                if (token.Start > position)
+                if (range.Start > position)
                 {
-                    spans.Add(new ValueSpan<TextRunProperties>(position, token.Start - position, defaultProperties));
+                    spans.Add(new ValueSpan<TextRunProperties>(position, range.Start - position, defaultProperties));
                 }
 
-                spans.Add(new ValueSpan<TextRunProperties>(token.Start, token.Length, GetTokenProperties(token.Color)));
+                spans.Add(new ValueSpan<TextRunProperties>(range.Start, range.Length, GetTokenProperties(range.Color, range.Bold)));
 
-                position = token.Start + token.Length;
+                position = range.Start + range.Length;
             }
 
             if (position < text.Length)
@@ -249,9 +255,31 @@ public class SyntaxHighlightingTextPresenter : TextPresenter
             }
         }
 
+        _syntaxRanges.Clear();
         _syntaxSpansText = text;
         _syntaxSpans = spans;
         return spans;
+    }
+
+    /// <summary>
+    /// Fills <see cref="_syntaxRanges"/> from the owner's source-format highlighter (source text
+    /// like media info or a format preview), or from <see cref="SubtitleSyntaxTokenizer"/> - the
+    /// HTML/ASSA tag coloring of the subtitle edit box - when no highlighter is set.
+    /// </summary>
+    private void CollectSyntaxRanges(string text)
+    {
+        _syntaxRanges.Clear();
+
+        if (TemplatedParent is SyntaxHighlightingTextBox { SourceHighlighter: { } highlighter })
+        {
+            _syntaxRanges.AddRange(SourceSyntaxTokenizer.Tokenize(text, highlighter));
+            return;
+        }
+
+        foreach (var token in SubtitleSyntaxTokenizer.Tokenize(text))
+        {
+            _syntaxRanges.Add(new SourceSyntaxSpan(token.Start, token.Length, token.Color, false));
+        }
     }
 
     private GenericTextRunProperties GetSelectionProperties(Typeface typeface)

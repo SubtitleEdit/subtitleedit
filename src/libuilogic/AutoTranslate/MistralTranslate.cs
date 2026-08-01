@@ -40,6 +40,11 @@ namespace Nikse.SubtitleEdit.UiLogic.AutoTranslate
             "ministral-8b-latest",      // Ministral 3 8B — lightweight, fast
         };
 
+        /// <summary>
+        /// Endpoint used when the url in settings is only the service base - see <see cref="AutoTranslateUrl"/>.
+        /// </summary>
+        public const string DefaultUrl = "https://api.mistral.ai/v1/chat/completions";
+
         public void Initialize()
         {
             _apiKey = Configuration.Settings.Tools.AutoTranslateMistralApiKey;
@@ -51,7 +56,7 @@ namespace Nikse.SubtitleEdit.UiLogic.AutoTranslate
             }
 
             _httpClient = HttpClientFactoryWithProxy.CreateHttpClientWithProxy();
-            _httpClient.BaseAddress = new Uri(_apiUrl.Trim().TrimEnd('/'));
+            _httpClient.BaseAddress = new Uri(AutoTranslateUrl.Complete(_apiUrl, DefaultUrl));
             _httpClient.DefaultRequestHeaders.TryAddWithoutValidation("Authorization", "Bearer " + _apiKey.Trim());
         }
 

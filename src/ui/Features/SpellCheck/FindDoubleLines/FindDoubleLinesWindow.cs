@@ -87,12 +87,7 @@ public class FindDoubleLinesWindow : Window
             HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
         });
 
-        tableView.Bind(TableView.SelectedItemProperty, new Binding(nameof(vm.SelectedSubtitle))
-        {
-            Source = vm,
-            Mode = BindingMode.TwoWay
-        });
-        tableView.SelectionChanged += vm.GridSelectionChanged;
+        TableViewExtras.BindSelectedItem(tableView, vm, nameof(vm.SelectedSubtitle));
         tableView.DoubleTapped += (s, e) => vm.GoToCommand.Execute(null);
         tableView.KeyDown += (s, e) => vm.GridKeyDown(e);
         tableView.AddHandler(InputElement.KeyDownEvent, (object? _, KeyEventArgs e) =>

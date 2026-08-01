@@ -6156,7 +6156,11 @@ public partial class MainViewModel :
             var position = vp.Position;
             var volume = vp.Volume;
             var videoFileName = vp.VideoPlayer.FileName;
-            VideoPlayerControl?.Close();
+
+            // The undocked window below builds its own player, so this one is finished. Close()
+            // alone stopped its timers but left the native player core alive for the rest of the
+            // session (issue #13048).
+            VideoPlayerControl?.CloseAndDisposePlayer();
             VideoPlayerControl = null;
 
             if (_videoPlayerUndockedViewModel != null)
@@ -9826,19 +9830,22 @@ public partial class MainViewModel :
             return;
         }
 
-        var list = new List<SubtitleLineViewModel>();
+        // The message is built only for the lines that actually have an error, and with the
+        // neighbours from the subtitle - not from the filtered list, where the previous error
+        // line is rarely the previous line and the gap/overlap wording came out wrong.
+        var list = new List<ErrorListItem>();
         for (int i = 0; i < Subtitles.Count; i++)
         {
             SubtitleLineViewModel? s = Subtitles[i];
             var prev = i > 0 ? Subtitles[i - 1] : null;
             var next = i < Subtitles.Count - 1 ? Subtitles[i + 1] : null;
-            if (!string.IsNullOrEmpty(s.GetErrors(prev, next)))
+            if (s.HasErrors(prev, next))
             {
-                list.Add(s);
+                list.Add(new ErrorListItem(s, prev, next));
             }
         }
 
-        var result = await ShowDialogAsync<ErrorListWindow, ErrorListViewModel>(vm => { vm.Initialize(list.ToList()); });
+        var result = await ShowDialogAsync<ErrorListWindow, ErrorListViewModel>(vm => { vm.Initialize(list); });
 
         if (result.GoToPressed && result.SelectedSubtitle != null)
         {
@@ -9872,7 +9879,7 @@ public partial class MainViewModel :
             var s = Subtitles[i];
             var prev = i > 0 ? Subtitles[i - 1] : null;
             var next = i < Subtitles.Count - 1 ? Subtitles[i + 1] : null;
-            if (!string.IsNullOrEmpty(s.GetErrors(prev, next)))
+            if (s.HasErrors(prev, next))
             {
                 SelectAndScrollToRow(i);
                 break;
@@ -9908,7 +9915,7 @@ public partial class MainViewModel :
             var s = Subtitles[i];
             var prev = i > 0 ? Subtitles[i - 1] : null;
             var next = i < Subtitles.Count - 1 ? Subtitles[i + 1] : null;
-            if (!string.IsNullOrEmpty(s.GetErrors(prev, next)))
+            if (s.HasErrors(prev, next))
             {
                 SelectAndScrollToRow(i);
                 break;
@@ -15638,6 +15645,11 @@ public partial class MainViewModel :
             if (indexToScroll >= 0 && indexToScroll < Subtitles.Count)
             {
                 var itemToScroll = Subtitles[indexToScroll];
+
+                // Get the offset next to the target first - left to itself the virtualizing panel
+                // walks there row by row on long jumps, which is what made Home (and Find/Go to
+                // line hits near the top) crawl on large files (see PrePositionScroll).
+                TableViewExtras.PrePositionScroll(SubtitleGrid, indexToScroll);
                 SubtitleGrid.SelectedItem = itemToScroll;
                 SubtitleGrid.ScrollIntoView(itemToScroll);
 
@@ -15738,12 +15750,19 @@ public partial class MainViewModel :
             // Only execute if this is the latest scroll request
             if (subtitleToScroll != null && Subtitles.Contains(subtitleToScroll))
             {
+                TableViewExtras.PrePositionScroll(SubtitleGrid, Subtitles.IndexOf(subtitleToScroll));
                 SubtitleGrid.SelectedItem = subtitleToScroll;
                 SubtitleGrid.ScrollIntoView(subtitleToScroll);
 
                 if (Se.Settings.General.SubtitleGridCenterSelectedRow)
                 {
                     CenterSelectedRowInSubtitleGrid(subtitleToScroll);
+                }
+                else
+                {
+                    // Same follow-up as SelectAndScrollToRow: ScrollIntoView can leave the row
+                    // a few pixels past the bottom edge on a variable-height grid.
+                    EnsureRowFullyVisibleInSubtitleGrid(subtitleToScroll);
                 }
             }
         }, DispatcherPriority.Background);

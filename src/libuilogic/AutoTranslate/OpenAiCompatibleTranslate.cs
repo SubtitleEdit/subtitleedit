@@ -29,13 +29,18 @@ namespace Nikse.SubtitleEdit.UiLogic.AutoTranslate
         public string Error { get; set; } = string.Empty;
         public int MaxCharacters => 1500;
 
+        /// <summary>
+        /// Endpoint used when the url in settings is only the service base - see <see cref="AutoTranslateUrl"/>.
+        /// </summary>
+        public const string DefaultUrl = "http://localhost:8000/v1/chat/completions";
+
         public void Initialize()
         {
             _httpClient?.Dispose();
             _httpClient = HttpClientFactoryWithProxy.CreateHttpClientWithProxy();
             _httpClient.DefaultRequestHeaders.TryAddWithoutValidation("Content-Type", "application/json");
             _httpClient.DefaultRequestHeaders.TryAddWithoutValidation("accept", "application/json");
-            _httpClient.BaseAddress = new Uri(Configuration.Settings.Tools.OpenAiCompatibleTranslateUrl.TrimEnd('/'));
+            _httpClient.BaseAddress = new Uri(AutoTranslateUrl.Complete(Configuration.Settings.Tools.OpenAiCompatibleTranslateUrl, DefaultUrl));
             _httpClient.Timeout = TimeSpan.FromMinutes(15);
 
             if (!string.IsNullOrEmpty(Configuration.Settings.Tools.OpenAiCompatibleTranslateApiKey))

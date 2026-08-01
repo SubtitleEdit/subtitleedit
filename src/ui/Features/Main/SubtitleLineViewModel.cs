@@ -235,6 +235,24 @@ public partial class SubtitleLineViewModel : ObservableObject
         return p;
     }
 
+    // Read-time memo for the html-stripped, line-split text: the pixel width column, the text
+    // error verdict and GetErrors all need it, and each used to strip and split the text again -
+    // three times per line for a single error scan. Keyed on the text instance like the memos
+    // below. The returned list is shared, so callers must only read it.
+    private string? _strippedLinesCacheText;
+    private List<string>? _strippedLinesCacheValue;
+
+    private List<string> GetStrippedLines()
+    {
+        if (_strippedLinesCacheValue == null || !ReferenceEquals(_strippedLinesCacheText, Text))
+        {
+            _strippedLinesCacheValue = SubtitleTextInfoHelper.StripHtml(Text).SplitToLines();
+            _strippedLinesCacheText = Text;
+        }
+
+        return _strippedLinesCacheValue;
+    }
+
     // Read-time memo, see CharactersPerSecond below: the pixel-width column binding re-reads this
     // on every cell repaint and each read shapes every line with HarfBuzz.
     private string? _pixelWidthCacheText;
@@ -259,8 +277,7 @@ public partial class SubtitleLineViewModel : ObservableObject
                 return _pixelWidthCacheValue;
             }
 
-            var text = HtmlUtil.RemoveHtmlTags(Text, true);
-            var lines = text.SplitToLines();
+            var lines = GetStrippedLines();
             var maxWidth = 0;
             foreach (var line in lines)
             {
@@ -383,39 +400,38 @@ public partial class SubtitleLineViewModel : ObservableObject
         }
     }
 
-    public IBrush TextBackgroundBrush
+    public IBrush TextBackgroundBrush => HasTextRuleError() ? _errorBrush : _transparentBrush;
+
+    /// <summary>
+    /// The memoized "text too long / too wide / too many lines" verdict behind
+    /// <see cref="TextBackgroundBrush"/>. Also read by <see cref="AccessibleErrorText"/> and
+    /// <see cref="HasErrors"/>, so scanning the file for errors twice (list errors, go to
+    /// next error) never re-strips or re-shapes a line whose text is unchanged.
+    /// </summary>
+    private bool HasTextRuleError()
     {
-        get
+        if (string.IsNullOrEmpty(Text))
         {
-            if (string.IsNullOrEmpty(Text))
-            {
-                return _transparentBrush;
-            }
-
-            var settings = TextErrorSettings.Current();
-            if (!ReferenceEquals(_textErrorCacheText, Text) || !_textErrorCacheSettings.Equals(settings))
-            {
-                _textErrorCacheText = Text;
-                _textErrorCacheSettings = settings;
-                _textErrorCacheValue = HasTextError(Text, settings);
-            }
-
-            return _textErrorCacheValue ? _errorBrush : _transparentBrush;
+            return false;
         }
+
+        var settings = TextErrorSettings.Current();
+        if (!ReferenceEquals(_textErrorCacheText, Text) || !_textErrorCacheSettings.Equals(settings))
+        {
+            _textErrorCacheText = Text;
+            _textErrorCacheSettings = settings;
+            _textErrorCacheValue = HasTextError(settings);
+        }
+
+        return _textErrorCacheValue;
     }
 
-    private static bool HasTextError(string text, TextErrorSettings settings)
+    private bool HasTextError(TextErrorSettings settings)
     {
-        // Strip HTML and split into lines once and reuse across all settings-enabled branches.
-        string? stripped = null;
-        List<string>? strippedLines = null;
-
+        // The stripped lines are memoized (GetStrippedLines), so the enabled branches share them.
         if (settings.ColorTextTooLong)
         {
-            stripped = SubtitleTextInfoHelper.StripHtml(text);
-            strippedLines = stripped.SplitToLines();
-
-            foreach (var line in strippedLines)
+            foreach (var line in GetStrippedLines())
             {
                 if (SubtitleTextInfoHelper.GetLineLength(line) > settings.MaxLineLength)
                 {
@@ -426,9 +442,7 @@ public partial class SubtitleLineViewModel : ObservableObject
 
         if (settings.ColorTextTooWide)
         {
-            stripped ??= SubtitleTextInfoHelper.StripHtml(text);
-            strippedLines ??= stripped.SplitToLines();
-            foreach (var line in strippedLines)
+            foreach (var line in GetStrippedLines())
             {
                 if (CalculatePixelWidth(line) > settings.MaxPixelWidth)
                 {
@@ -439,9 +453,7 @@ public partial class SubtitleLineViewModel : ObservableObject
 
         if (settings.ColorTextTooManyLines)
         {
-            stripped ??= SubtitleTextInfoHelper.StripHtml(text);
-            strippedLines ??= stripped.SplitToLines();
-            if (strippedLines.Count > settings.MaxNumberOfLines)
+            if (GetStrippedLines().Count > settings.MaxNumberOfLines)
             {
                 return true;
             }
@@ -629,8 +641,8 @@ public partial class SubtitleLineViewModel : ObservableObject
                 Add("WPM " + Math.Round(WordsPerMinute));
             }
 
-            // TextBackgroundBrush caches the expensive HarfBuzz width check by (Text, settings).
-            if (!ReferenceEquals(TextBackgroundBrush, _transparentBrush))
+            // Memoized by (Text, settings) - the same verdict the Text cell tint uses.
+            if (HasTextRuleError())
             {
                 Add("text too long or wide");
             }
@@ -926,18 +938,66 @@ public partial class SubtitleLineViewModel : ObservableObject
         return SubtitleTextInfoHelper.GetCharactersPerSecond(Text, StartTime, EndTime);
     }
 
+    /// <summary>
+    /// Whether <see cref="GetErrors"/> would report anything, without building the message.
+    /// Same rules, but allocation-free and short-circuiting, and the text rules go through the
+    /// memoized verdict - the error scans (list errors, go to next/previous error) only need
+    /// the yes/no answer, and they ask it for every line of the file.
+    /// </summary>
+    public bool HasErrors(SubtitleLineViewModel? prev, SubtitleLineViewModel? next)
+    {
+        var general = Se.Settings.General;
+
+        if (general.ColorCharactersPerSecond &&
+            Math.Round(CharactersPerSecond, 2, MidpointRounding.AwayFromZero) > general.SubtitleMaximumCharactersPerSeconds)
+        {
+            return true;
+        }
+
+        var durMsRounded = Math.Round(Duration.TotalMilliseconds, 3, MidpointRounding.AwayFromZero);
+        if (general.ColorDurationTooShort && durMsRounded < general.SubtitleMinimumDisplayMilliseconds)
+        {
+            return true;
+        }
+
+        if (general.ColorDurationTooLong && durMsRounded > general.SubtitleMaximumDisplayMilliseconds)
+        {
+            return true;
+        }
+
+        if (prev != null && HasGapError(general, (StartTime - prev.EndTime).TotalMilliseconds))
+        {
+            return true;
+        }
+
+        if (next != null && HasGapError(general, (next.StartTime - EndTime).TotalMilliseconds))
+        {
+            return true;
+        }
+
+        // Last, because these are the only rules that touch the text (and, with
+        // "text too wide" on, shape every line with HarfBuzz).
+        return HasTextRuleError();
+    }
+
+    private static bool HasGapError(SeGeneral general, double gapMs)
+        => gapMs < 0
+            ? general.ColorTimeCodeOverlap
+            : general.ColorGapTooShort && gapMs < general.MinimumBetweenLines.GetMilliseconds();
+
     public string GetErrors(SubtitleLineViewModel? prev, SubtitleLineViewModel? next)
     {
         var errors = new StringBuilder();
 
         var general = Se.Settings.General;
-        var strippedText = SubtitleTextInfoHelper.StripHtml(Text);
-        var lines = strippedText.SplitToLines();
-        var lineCount = lines.Count;
 
-        if (lineCount > general.MaxNumberOfLines && Se.Settings.General.ColorTextTooManyLines)
+        if (Se.Settings.General.ColorTextTooManyLines)
         {
-            errors.AppendLine("Max #lines: " + lineCount + " >" + general.MaxNumberOfLines);
+            var lineCount = GetStrippedLines().Count;
+            if (lineCount > general.MaxNumberOfLines)
+            {
+                errors.AppendLine("Max #lines: " + lineCount + " >" + general.MaxNumberOfLines);
+            }
         }
 
         var cpsRounded = Math.Round(CharactersPerSecond, 2, MidpointRounding.AwayFromZero);
@@ -964,7 +1024,7 @@ public partial class SubtitleLineViewModel : ObservableObject
 
         if (Se.Settings.General.ColorTextTooLong)
         {
-            foreach (var line in lines)
+            foreach (var line in GetStrippedLines())
             {
                 var lineLength = SubtitleTextInfoHelper.GetLineLength(line);
                 if (lineLength > general.SubtitleLineMaximumLength)
@@ -976,7 +1036,7 @@ public partial class SubtitleLineViewModel : ObservableObject
 
         if (Se.Settings.General.ColorTextTooWide)
         {
-            foreach (var line in lines)
+            foreach (var line in GetStrippedLines())
             {
                 var pixelWidth = CalculatePixelWidth(line);
                 if (pixelWidth > general.ColorTextTooWidePixels)
