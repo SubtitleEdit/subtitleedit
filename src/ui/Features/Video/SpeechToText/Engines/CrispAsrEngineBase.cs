@@ -28,7 +28,7 @@ public abstract class CrispAsrEngineBase : ICrispAsrEngine
     /// CrispASR ships several builds per platform whose sizes differ by two orders of magnitude,
     /// and the variant is picked at download time rather than now — so Windows and Linux get a
     /// range rather than a single number that would either understate the GPU bundles or scare
-    /// users off the CPU one. Figures are the v0.8.24 release assets
+    /// users off the CPU one. Figures are the v0.8.25 release assets
     /// (<see cref="Nikse.SubtitleEdit.Logic.Download.CrispAsrDownloadService"/> holds the pin);
     /// they drift with every release, so treat them as indicative.
     /// </summary>
@@ -38,17 +38,17 @@ public abstract class CrispAsrEngineBase : ICrispAsrEngine
         {
             if (OperatingSystem.IsWindows())
             {
-                // CPU ~7 MB, Vulkan ~33 MB, CUDA ~695 MB.
-                return "~7 MB – 695 MB";
+                // CPU ~7 MB, Vulkan ~32 MB, CUDA ~688 MB.
+                return "~7 MB – 688 MB";
             }
             if (OperatingSystem.IsLinux())
             {
-                // CPU ~24 MB (arm64 ~22 MB), Vulkan ~59 MB, ROCm ~89 MB, CUDA 13 ~205 MB, CUDA 12 ~271 MB.
-                return "~24 MB – 271 MB";
+                // CPU ~25 MB (arm64 ~23 MB), Vulkan ~55 MB, ROCm ~97 MB, CUDA 13 ~190 MB, CUDA 12 ~259 MB.
+                return "~25 MB – 259 MB";
             }
             if (OperatingSystem.IsMacOS())
             {
-                return "~14 MB";
+                return "~15 MB";
             }
             return string.Empty;
         }

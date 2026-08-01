@@ -1,0 +1,8 @@
+
+🇷🇺 GigaAM-v3
+
+Type: Rotary Conformer encoder with CTC or RNN-T head (ai-sage)
+Focus: 🗣️ Russian only — language detection is skipped
+Note: the "e2e" models write punctuation and capital letters by themselves;
+      the plain ctc/rnnt models return lowercase text without punctuation
+
