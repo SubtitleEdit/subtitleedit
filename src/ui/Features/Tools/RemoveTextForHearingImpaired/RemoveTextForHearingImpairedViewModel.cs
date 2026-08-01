@@ -72,7 +72,6 @@ public partial class RemoveTextForHearingImpairedViewModel : ObservableObject
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(IsSettingsMode))]
     private bool _isApplyVisible;
-    [ObservableProperty] private string _linesFoundText;
 
     public Window? Window { get; set; }
 
@@ -97,7 +96,6 @@ public partial class RemoveTextForHearingImpairedViewModel : ObservableObject
         Languages = new ObservableCollection<LanguageItem>(LanguageItem.GetAll());
         Fixes = new ObservableCollection<RemoveItem>();
         FixText = string.Empty;
-        LinesFoundText = string.Format(Se.Language.Tools.RemoveTextForHearingImpaired.LinesFoundX, 0);
         _timer = new Timer(500);
         _timer.Elapsed += TimerElapsed;
         _subtitle = new Subtitle();
@@ -297,8 +295,6 @@ public partial class RemoveTextForHearingImpairedViewModel : ObservableObject
                 newFixes.Add(new RemoveItem(apply, index, p.Text, newText, p));
             }
         }
-
-        LinesFoundText = string.Format(Se.Language.Tools.RemoveTextForHearingImpaired.LinesFoundX, newFixes.Count);
 
         if (newFixes.Count == Fixes.Count)
         {

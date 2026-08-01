@@ -76,8 +76,6 @@ public partial class TextToSpeechViewModel : ObservableObject
     [ObservableProperty] private bool _hasRegion;
     [ObservableProperty] private string _region;
     [ObservableProperty] private bool _hasModel;
-    [ObservableProperty] private int _voiceCount;
-    [ObservableProperty] private string _voiceCountInfo;
     [ObservableProperty] private bool _isVoiceCountVisible;
     [ObservableProperty] private string _linesInfo = string.Empty;
     [ObservableProperty] private bool _hasVideoFile;
@@ -171,7 +169,6 @@ public partial class TextToSpeechViewModel : ObservableObject
         Languages = new ObservableCollection<TtsLanguage>();
         ApiKey = string.Empty;
         Region = string.Empty;
-        VoiceCountInfo = string.Empty;
         ProgressText = string.Empty;
         IsVoiceTestEnabled = true;
         IsVoiceComboEnabled = true;
@@ -1722,8 +1719,6 @@ public partial class TextToSpeechViewModel : ObservableObject
         SelectedVoice = Voices.FirstOrDefault(v => v.Name == currentVoiceName)
                         ?? Voices.FirstOrDefault(v => v.Name == Se.Settings.Video.TextToSpeech.Voice)
                         ?? Voices.FirstOrDefault();
-        VoiceCount = Voices.Count;
-        VoiceCountInfo = string.Format(Se.Language.Video.TextToSpeech.XVoices, Voices.Count);
         IsVoiceCountVisible = Voices.Count > 0;
     }
 
@@ -3290,10 +3285,6 @@ public partial class TextToSpeechViewModel : ObservableObject
             {
                 Voices.Add(vo);
             }
-            VoiceCount = Voices.Count;
-            // The label binds VoiceCountInfo; only VoiceCount was ever written, so the voice
-            // count next to the combo stayed permanently blank.
-            VoiceCountInfo = string.Format(Se.Language.Video.TextToSpeech.XVoices, Voices.Count);
             IsVoiceCountVisible = Voices.Count > 0;
 
             var lastVoice = Voices.FirstOrDefault(v => v.Name == Se.Settings.Video.TextToSpeech.Voice);
