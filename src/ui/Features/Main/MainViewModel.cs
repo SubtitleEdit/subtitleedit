@@ -6120,7 +6120,11 @@ public partial class MainViewModel :
             var position = vp.Position;
             var volume = vp.Volume;
             var videoFileName = vp.VideoPlayer.FileName;
-            VideoPlayerControl?.Close();
+
+            // The undocked window below builds its own player, so this one is finished. Close()
+            // alone stopped its timers but left the native player core alive for the rest of the
+            // session (issue #13048).
+            VideoPlayerControl?.CloseAndDisposePlayer();
             VideoPlayerControl = null;
 
             if (_videoPlayerUndockedViewModel != null)
