@@ -1,0 +1,46 @@
+name: Validate language files
+
+# Translation files under src/ui/Assets/Languages are frequently updated by direct
+# commits rather than pull requests, and a malformed one is silent at build time:
+# Se.LoadLanguage just falls back to English at start-up. Polish.json shipped on main
+# with two trailing commas (System.Text.Json rejects those) before this gate existed.
+#
+# This runs the two test classes that cover the translation files:
+#   LanguageJsonFilesTests    - every *.json parses as strict JSON
+#   SeLanguageJsonContextTests - the source-generated context reads the same graph as
+#                                the reflection serializer, so a section that fails to
+#                                map cannot silently deserialize as null
+#
+# Deliberately not filtered on `paths`: the source-gen test also depends on the
+# SeLanguage model classes, and a paths list that drifts would make this check quietly
+# stop running. The job is a plain .NET build, so running it on every push is cheap and
+# it stays safe to mark as a required status check.
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  validate-language-files:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: '10.0.x'
+
+      - name: Restore
+        run: dotnet restore tests/UI/UITests.csproj
+
+      - name: Build
+        run: dotnet build tests/UI/UITests.csproj --no-restore
+
+      - name: Validate translation JSON
+        run: >
+          dotnet test tests/UI/UITests.csproj --no-build
+          --filter "FullyQualifiedName~LanguageJsonFilesTests|FullyQualifiedName~SeLanguageJsonContextTests"
