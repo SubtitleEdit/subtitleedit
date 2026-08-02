@@ -782,6 +782,23 @@ public static partial class InitListViewAndEditBox
         insertSubtitleFileAfterLineMenuItem.Command = vm.InsertSubtitleFileAfterThisLineCommand;
         flyout.Items.Add(insertSubtitleFileAfterLineMenuItem);
 
+        // SE4 had "Copy as text to clipboard" right here - without it the copy commands are only
+        // reachable via shortcuts, and the text-only ones have no default shortcut at all
+        var copyToClipboardMenuItem = new MenuItem { Header = Se.Language.General.CopyToClipboard, DataContext = vm };
+        copyToClipboardMenuItem.Bind(Visual.IsVisibleProperty, new Binding(nameof(vm.IsSubtitleGridDataMenuVisible)));
+        copyToClipboardMenuItem.Command = vm.SubtitleGridCopyCommand;
+        flyout.Items.Add(copyToClipboardMenuItem);
+
+        var copyTextToClipboardMenuItem = new MenuItem { Header = Se.Language.General.CopyTextToClipboard, DataContext = vm };
+        copyTextToClipboardMenuItem.Bind(Visual.IsVisibleProperty, new Binding(nameof(vm.IsSubtitleGridDataMenuVisible)));
+        copyTextToClipboardMenuItem.Command = vm.CopyTextToClipboardCommand;
+        flyout.Items.Add(copyTextToClipboardMenuItem);
+
+        var copyOriginalTextToClipboardMenuItem = new MenuItem { Header = Se.Language.Options.Shortcuts.CopyTextFromOriginalToClipboard, DataContext = vm };
+        copyOriginalTextToClipboardMenuItem.Bind(Visual.IsVisibleProperty, new Binding(nameof(vm.ShowColumnOriginalText)));
+        copyOriginalTextToClipboardMenuItem.Command = vm.CopyTextFromOriginalToClipboardCommand;
+        flyout.Items.Add(copyOriginalTextToClipboardMenuItem);
+
         var copyOriginal = new MenuItem { Header = Se.Language.Main.CopyTextFromOriginalToCurrent, Command = vm.ColumnCopyTextFromOriginalToCurrentCommand };
         copyOriginal.Bind(Visual.IsVisibleProperty, new Binding(nameof(vm.ShowColumnOriginalText)));
 

@@ -4342,7 +4342,23 @@ public partial class MainViewModel :
             }
         }
 
-        if (detectedFormat == null)
+        var subtitle = new Subtitle();
+        detectedFormat?.LoadSubtitle(subtitle, lines, null);
+
+        // SE4 parity: plain text (e.g. a few lines copied from a text document) is not a subtitle
+        // format, but should still paste into the text column - one clipboard line per subtitle.
+        var textOnlySource = subtitle.Paragraphs.Count == 0;
+        if (textOnlySource)
+        {
+            // trailing blank lines are an artifact of the copy, not something to paste
+            var lastLineWithText = lines.FindLastIndex(p => !string.IsNullOrWhiteSpace(p));
+            for (var i = 0; i <= lastLineWithText; i++)
+            {
+                subtitle.Paragraphs.Add(new Paragraph(lines[i], 0, 0));
+            }
+        }
+
+        if (subtitle.Paragraphs.Count == 0)
         {
             await MessageBox.Show(Window, Se.Language.General.Error, Se.Language.General.UnknownSubtitleFormat,
                 MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -4350,14 +4366,23 @@ public partial class MainViewModel :
             return;
         }
 
-        var subtitle = new Subtitle();
-        detectedFormat.LoadSubtitle(subtitle, lines, null);
+        var result = await ShowDialogAsync<ColumnPasteWindow, ColumnPasteViewModel>(vm =>
+        {
+            if (textOnlySource)
+            {
+                vm.SetTextOnlySource();
+            }
+        });
 
-        var result = await ShowDialogAsync<ColumnPasteWindow, ColumnPasteViewModel>();
         if (!result.OkPressed)
         {
             return;
         }
+
+        // a plain text source has no time codes, so the text column is the only thing to paste
+        var columnsAll = result.ColumnsAll && !textOnlySource;
+        var columnsTimeCodesOnly = result.ColumnsTimeCodesOnly && !textOnlySource;
+        var columnsTextOnly = result.ColumnsTextOnly || textOnlySource;
 
         var count = 0;
         var overWrite = result.ModeOverwrite;
@@ -4367,17 +4392,17 @@ public partial class MainViewModel :
             {
                 for (int j = Subtitles.Count - 1; j > idx; j--)
                 {
-                    if (result.ColumnsAll)
+                    if (columnsAll)
                     {
                         Subtitles[j].SetStartTimeOnly(Subtitles[j - 1].StartTime);
                         Subtitles[j].EndTime = Subtitles[j - 1].EndTime;
                         Subtitles[j].Text = Subtitles[j - 1].Text;
                     }
-                    else if (result.ColumnsTextOnly)
+                    else if (columnsTextOnly)
                     {
                         Subtitles[j].Text = Subtitles[j - 1].Text;
                     }
-                    else if (result.ColumnsTimeCodesOnly)
+                    else if (columnsTimeCodesOnly)
                     {
                         Subtitles[j].SetStartTimeOnly(Subtitles[j - 1].StartTime);
                         Subtitles[j].EndTime = Subtitles[j - 1].EndTime;
@@ -4385,17 +4410,17 @@ public partial class MainViewModel :
                 }
             }
 
-            if (result.ColumnsAll)
+            if (columnsAll)
             {
                 Subtitles[idx].SetStartTimeOnly(subtitle.Paragraphs[i].StartTime.TimeSpan);
                 Subtitles[idx].EndTime = subtitle.Paragraphs[i].EndTime.TimeSpan;
                 Subtitles[idx].Text = subtitle.Paragraphs[i].Text;
             }
-            else if (result.ColumnsTextOnly)
+            else if (columnsTextOnly)
             {
                 Subtitles[idx].Text = subtitle.Paragraphs[i].Text;
             }
-            else if (result.ColumnsTimeCodesOnly)
+            else if (columnsTimeCodesOnly)
             {
                 Subtitles[idx].SetStartTimeOnly(subtitle.Paragraphs[i].StartTime.TimeSpan);
                 Subtitles[idx].EndTime = subtitle.Paragraphs[i].EndTime.TimeSpan;
