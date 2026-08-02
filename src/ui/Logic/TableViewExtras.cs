@@ -10,6 +10,7 @@ using Avalonia.Threading;
 using Avalonia.VisualTree;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 
 namespace Nikse.SubtitleEdit.Logic;
@@ -639,6 +640,65 @@ public static class TableViewExtras
 
             scrollViewer.Offset = new Vector(offset.X, newY);
         }, DispatcherPriority.Loaded);
+    }
+
+    /// <summary>
+    /// Moves the selected rows within <paramref name="items"/> (see <see cref="ListReorder"/>)
+    /// and leaves the same rows selected at their new positions, with the moved block
+    /// scrolled into view.
+    /// </summary>
+    public static void MoveSelectedRows<TItem>(TableView tableView, ObservableCollection<TItem> items, ListMoveDirection direction)
+        where TItem : class
+    {
+        var selected = tableView.SelectedItems?.OfType<TItem>().ToList();
+        if (selected == null || selected.Count == 0)
+        {
+            return;
+        }
+
+        // The row the control treats as the selection anchor - restored first below so it
+        // stays SelectedItem (view models bind their "current row" to that, not to SelectedItems).
+        var anchor = tableView.SelectedItem as TItem;
+
+        ListReorder.Move(items, selected.Select(items.IndexOf), direction);
+
+        var remaining = new HashSet<TItem>(selected);
+        var newIndices = new List<int>(selected.Count);
+        for (var i = 0; i < items.Count && remaining.Count > 0; i++)
+        {
+            if (remaining.Remove(items[i]))
+            {
+                newIndices.Add(i);
+            }
+        }
+
+        if (newIndices.Count == 0)
+        {
+            return;
+        }
+
+        // ObservableCollection.Move raises one CollectionChanged per row, and the selection
+        // model's index bookkeeping does not survive a run of them intact - restore the
+        // whole selection explicitly. The batch defers SelectionChanged to the end, so
+        // SelectionMode.AlwaysSelected never sees the momentarily empty selection and
+        // cannot force row 0 back in.
+        tableView.Selection.BeginBatchUpdate();
+        tableView.Selection.Clear();
+        var anchorIndex = anchor != null ? items.IndexOf(anchor) : -1;
+        if (anchorIndex >= 0)
+        {
+            tableView.Selection.Select(anchorIndex); // first Select after Clear sets SelectedIndex
+        }
+
+        foreach (var index in newIndices)
+        {
+            tableView.Selection.Select(index);
+        }
+
+        tableView.Selection.EndBatchUpdate();
+
+        var edgeIndex = direction is ListMoveDirection.Up or ListMoveDirection.Top ? newIndices[0] : newIndices[^1];
+        tableView.ScrollIntoView(items[edgeIndex]);
     }
 }
 
