@@ -310,6 +310,8 @@
     "multiMode": "Multi mode",
     "moveDown": "Move down",
     "moveUp": "Move up",
+    "moveToTop": "Move to top",
+    "moveToBottom": "Move to bottom",
     "multipleReplace": "Multiple replace",
     "name": "Name",
     "new": "New",

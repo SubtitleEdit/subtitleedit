@@ -23,6 +23,7 @@ Manage Advanced SubStation Alpha (ASS/SSA) subtitle styles, including file style
 - View all styles defined in the current subtitle file.
 - Add, remove, copy, or rename styles.
 - Import styles from other subtitle files.
+- Reorder styles via the right-click menu — **Move up** (`Ctrl+Up`), **Move down** (`Ctrl+Down`), **Move to top**, and **Move to bottom**. Select several styles first to move them as a block. This is the order the styles are written to the file with, so it is also the order other tools will list them in.
 
 ### Storage Styles
 - Maintain a library of reusable styles separate from any subtitle file.

@@ -310,6 +310,8 @@ public class LanguageGeneral
     public string MultiMode { get; set; }
     public string MoveDown { get; set; }
     public string MoveUp { get; set; }
+    public string MoveToTop { get; set; }
+    public string MoveToBottom { get; set; }
     public string MultipleReplace { get; set; }
     public string Name { get; set; }
     public string New { get; set; }
@@ -1025,6 +1027,8 @@ public class LanguageGeneral
         MultiMode = "Multi mode";
         MoveDown = "Move down";
         MoveUp = "Move up";
+        MoveToTop = "Move to top";
+        MoveToBottom = "Move to bottom";
         MultipleReplace = "Multiple replace";
         Name = "Name";
         New = "New";
