@@ -34,6 +34,7 @@ public partial class AiReviewViewModel : ObservableObject
     [ObservableProperty] private string _openAiCompatibleUrl;
     [ObservableProperty] private string _openAiCompatibleModel;
     [ObservableProperty] private string _openAiCompatibleApiKey;
+    [ObservableProperty] private int _requestDelaySeconds;
     [ObservableProperty] private ObservableCollection<LlamaCppModelDisplay> _llamaCppModels;
     [ObservableProperty] private LlamaCppModelDisplay? _selectedLlamaCppModel;
     [ObservableProperty] private string _languageDisplay;
@@ -73,6 +74,7 @@ public partial class AiReviewViewModel : ObservableObject
         OpenAiCompatibleUrl = Se.Settings.Tools.AiReview.OpenAiCompatibleUrl;
         OpenAiCompatibleModel = Se.Settings.Tools.AiReview.OpenAiCompatibleModel;
         OpenAiCompatibleApiKey = Se.Settings.Tools.AiReview.OpenAiCompatibleApiKey;
+        RequestDelaySeconds = Se.Settings.Tools.AiReview.RequestDelaySeconds;
         LlamaCppModels = new ObservableCollection<LlamaCppModelDisplay>();
         SelectedLlamaCppModel = LlamaCppDownloadHelper.PopulateModels(
             LlamaCppModels,
@@ -242,6 +244,7 @@ public partial class AiReviewViewModel : ObservableObject
         settings.OpenAiCompatibleUrl = OpenAiCompatibleUrl.Trim();
         settings.OpenAiCompatibleModel = OpenAiCompatibleModel.Trim();
         settings.OpenAiCompatibleApiKey = OpenAiCompatibleApiKey.Trim();
+        settings.RequestDelaySeconds = RequestDelaySeconds;
         Se.SaveSettings();
     }
 
@@ -339,6 +342,29 @@ public partial class AiReviewViewModel : ObservableObject
         using var client = new AiReviewClient();
         var processedLines = 0;
         var consecutiveErrors = 0;
+        var delay = TimeSpan.FromSeconds(Math.Max(0, RequestDelaySeconds));
+        var lastRequestCompletedUtc = DateTime.MinValue;
+
+        // Cloud engines enforce strict requests-per-minute limits and answer with 429 when they are
+        // exceeded, so wait until the delay has passed since the previous request finished - the same
+        // rule auto-translate uses. The first request of a run never waits.
+        async Task<string> ChatWithDelayAsync(string content)
+        {
+            var remaining = delay - (DateTime.UtcNow - lastRequestCompletedUtc);
+            if (remaining > TimeSpan.Zero)
+            {
+                await Task.Delay(remaining, ct);
+            }
+
+            try
+            {
+                return await client.ChatAsync(url, model, systemPrompt, content, ct, apiKey);
+            }
+            finally
+            {
+                lastRequestCompletedUtc = DateTime.UtcNow;
+            }
+        }
 
         try
         {
@@ -353,12 +379,12 @@ public partial class AiReviewViewModel : ObservableObject
                 List<AiReviewChange>? changes = null;
                 try
                 {
-                    var reply = await client.ChatAsync(url, model, systemPrompt, userContent, ct, apiKey);
+                    var reply = await ChatWithDelayAsync(userContent);
                     changes = AiReviewProtocol.ParseChanges(reply, editableNumbers);
                     if (changes.Count == 0 && AiReviewProtocol.ExtractJsonObject(reply) == null)
                     {
                         // invalid reply - one retry for this chunk
-                        reply = await client.ChatAsync(url, model, systemPrompt, userContent, ct, apiKey);
+                        reply = await ChatWithDelayAsync(userContent);
                         changes = AiReviewProtocol.ParseChanges(reply, editableNumbers);
                     }
 

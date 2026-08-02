@@ -301,30 +301,7 @@ public class CosyVoice3CrispAsr : ITtsEngine
             foreach (var src in Directory.GetFiles(sourceFolder, "*.wav"))
             {
                 var dest = Path.Combine(voicesFolder, Path.GetFileName(src));
-
-                if (!File.Exists(dest))
-                {
-                    try
-                    {
-                        var ffmpeg = FfmpegGenerator.ConvertToMono16kHzWav(src, dest);
-                        if (!ffmpeg.Start())
-                        {
-                            File.Copy(src, dest);
-                        }
-                        else
-                        {
-                            ffmpeg.WaitForExit();
-                        }
-                    }
-                    catch (Exception ex)
-                    {
-                        Se.LogError(ex, $"CosyVoice3 (CrispASR): resample seed '{src}' failed; falling back to plain copy");
-                        try { if (!File.Exists(dest))
-                        {
-                            File.Copy(src, dest);
-                        } } catch { }
-                    }
-                }
+                VoiceSeedHelper.CopyOrResample(src, dest, 16000, "CosyVoice3 (CrispASR)");
 
                 var sidecar = Path.ChangeExtension(src, ".txt");
                 if (File.Exists(sidecar))
@@ -404,7 +381,7 @@ public class CosyVoice3CrispAsr : ITtsEngine
         return true;
     }
 
-    public Task<Voice[]> GetVoices(string language)
+    public async Task<Voice[]> GetVoices(string language)
     {
         var result = new List<Voice>();
 
@@ -416,7 +393,9 @@ public class CosyVoice3CrispAsr : ITtsEngine
             result.Add(new Voice(new CosyVoice3Voice(display, preset)));
         }
 
-        var voicesFolder = GetSetVoicesFolder();
+        // Off the UI thread: GetSetVoicesFolder does one-time reference-WAV seeding through
+        // ffmpeg, and this is awaited from SelectedEngineChanged on the dispatcher.
+        var voicesFolder = await Task.Run(GetSetVoicesFolder);
         if (Directory.Exists(voicesFolder))
         {
             foreach (var file in Directory.GetFiles(voicesFolder, "*.wav"))
@@ -427,7 +406,7 @@ public class CosyVoice3CrispAsr : ITtsEngine
             }
         }
 
-        return Task.FromResult(result.ToArray());
+        return result.ToArray();
     }
 
     private static string TryReadRefText(string wavPath)

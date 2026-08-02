@@ -1,4 +1,4 @@
-using Avalonia;
+﻿using Avalonia;
 using Nikse.SubtitleEdit.Features.Edit.ModifySelection;
 using Nikse.SubtitleEdit.Features.Main;
 using Nikse.SubtitleEdit.Logic.Config;
@@ -22,7 +22,7 @@ public class ModifySelectionViewModelTests
             Se.Settings.Edit.ModifySelectionRule = nameof(RuleType.LengthGreaterThan);
             Se.Settings.Edit.ModifySelectionNumber = 77;
 
-            var vm = new ModifySelectionViewModel();
+            var vm = new ModifySelectionViewModel(null!);
             vm.InitializeRules(new List<SubtitleLineViewModel>());
 
             Assert.Equal(RuleType.LengthGreaterThan, vm.SelectedRule!.RuleType);
@@ -43,7 +43,7 @@ public class ModifySelectionViewModelTests
             Se.Settings = new Se();
             Se.Settings.General.SubtitleLineMaximumLength = 51;
 
-            var vm = new ModifySelectionViewModel();
+            var vm = new ModifySelectionViewModel(null!);
             vm.InitializeRules(new List<SubtitleLineViewModel>());
             var lengthRule = vm.Rules.Single(r => r.RuleType == RuleType.LengthGreaterThan);
 
@@ -66,7 +66,7 @@ public class ModifySelectionViewModelTests
             Se.Settings = new Se();
             Se.Settings.General.SubtitleLineMaximumPixelWidth = 640;
 
-            var vm = new ModifySelectionViewModel();
+            var vm = new ModifySelectionViewModel(null!);
             vm.InitializeRules(new List<SubtitleLineViewModel>());
             var pixelRule = vm.Rules.Single(r => r.RuleType == RuleType.PixelWidthLengthGreaterThan);
 
@@ -90,7 +90,7 @@ public class ModifySelectionViewModelTests
             Se.Settings.General.SubtitleLineMaximumLength = 47;
             Se.Settings.General.SubtitleLineMaximumPixelWidth = 580;
 
-            var vm = new ModifySelectionViewModel();
+            var vm = new ModifySelectionViewModel(null!);
             vm.InitializeRules(new List<SubtitleLineViewModel>());
             var lengthRule = vm.Rules.Single(r => r.RuleType == RuleType.LengthGreaterThan);
             var pixelRule = vm.Rules.Single(r => r.RuleType == RuleType.PixelWidthLengthGreaterThan);
@@ -119,7 +119,7 @@ public class ModifySelectionViewModelTests
             Se.Settings = new Se();
             Se.Settings.General.SubtitleLineMaximumLength = 43;
 
-            var vm = new ModifySelectionViewModel();
+            var vm = new ModifySelectionViewModel(null!);
             vm.InitializeRules(new List<SubtitleLineViewModel>());
             var lengthRule = vm.Rules.Single(r => r.RuleType == RuleType.LengthGreaterThan);
             vm.SelectedRule = lengthRule;
@@ -127,7 +127,7 @@ public class ModifySelectionViewModelTests
 
             vm.OkCommand.Execute(null);
 
-            var reopened = new ModifySelectionViewModel();
+            var reopened = new ModifySelectionViewModel(null!);
             reopened.InitializeRules(new List<SubtitleLineViewModel>());
 
             Assert.Equal(RuleType.LengthGreaterThan, reopened.SelectedRule!.RuleType);
@@ -158,7 +158,7 @@ public class ModifySelectionViewModelTests
             Se.Settings = new Se();
             Se.Settings.Edit.ModifySelectionNumber = 88;
 
-            var vm = new ModifySelectionViewModel();
+            var vm = new ModifySelectionViewModel(null!);
             vm.InitializeRules(new List<SubtitleLineViewModel>());
             vm.SelectedRule = vm.Rules.First(r => !r.HasNumber);
             vm.OkCommand.Execute(null);

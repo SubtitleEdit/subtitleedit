@@ -350,11 +350,6 @@ public partial class RemoveTextForHearingImpairedViewModel : ObservableObject
             CustomEnd = CustomEnd,
         };
 
-        foreach (var item in TextContains.Split(new[] { ',', ';' }, StringSplitOptions.RemoveEmptyEntries))
-        {
-            settings.RemoveIfTextContains.Add(item.Trim());
-        }
-
         return settings;
     }
 

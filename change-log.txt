@@ -3,7 +3,7 @@ Subtitle Edit Changelog
 
 -----------------------------------------------------------------------------------------------------
 
-v5.2.0-beta1 (TBD)
+v5.2.0-beta1 (2nd of August 2026)
 
 * Auto-translate: advanced llama.cpp and Ollama engines with batch context - thx subof
 * Auto-translate: system prompt, parameter settings and schema-forced output for these engines
@@ -59,7 +59,13 @@ v5.2.0-beta1 (TBD)
 * Flatpak: bundle OpenBLAS so the CrispASR engines can start in the sandbox - thx DarkSwan86
 * Speech to text: report a missing shared library instead of silently returning an empty result
 * Fix "set start/end time" doing nothing when the video position was past the other time code - thx LabinSub
-* Update Italian translation - thx bovirus
+* Modify selection: new "Hearing impaired (SDH)" rule - thx subof
+* Add "AI review" to the subtitle grid "Selected lines" context menu
+* AI review: new "delay in seconds between requests" setting for rate-limited cloud engines
+* Find and replace: also search the original text column in translator mode - thx radektuma
+* Fix the SSA storage styles context menu reading the file style list
+* Fix the UI freezing while text to speech seeded reference voices with ffmpeg
+* Update Italian translation - thx bovirus, SiriosDev
 * Update Korean translation - thx 12si27
 * Update Polish translation - thx potplayer-fanpack
 

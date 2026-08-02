@@ -273,31 +273,9 @@ public class VoxCPM2CrispAsr : ITtsEngine
             {
                 var dest = Path.Combine(voicesFolder, Path.GetFileName(src));
 
-                if (!File.Exists(dest))
-                {
-                    try
-                    {
-                        // qwen3-tts.cpp voice pack ships at 16 kHz; resample to 24 kHz mono on
-                        // seed (crispasr upsamples to VoxCPM2's 48 kHz internally).
-                        var ffmpeg = FfmpegGenerator.ConvertToMono24kHzWav(src, dest);
-                        if (!ffmpeg.Start())
-                        {
-                            File.Copy(src, dest);
-                        }
-                        else
-                        {
-                            ffmpeg.WaitForExit();
-                        }
-                    }
-                    catch (Exception ex)
-                    {
-                        Se.LogError(ex, $"VoxCPM2 (CrispASR): resample seed '{src}' failed; falling back to plain copy");
-                        try { if (!File.Exists(dest))
-                        {
-                            File.Copy(src, dest);
-                        } } catch { }
-                    }
-                }
+                // qwen3-tts.cpp voice pack ships at 16 kHz; resample to 24 kHz mono on
+                // seed (crispasr upsamples to VoxCPM2's 48 kHz internally).
+                VoiceSeedHelper.CopyOrResample(src, dest, 24000, "VoxCPM2 (CrispASR)");
 
                 var sidecar = Path.ChangeExtension(src, ".txt");
                 if (File.Exists(sidecar))
@@ -378,13 +356,15 @@ public class VoxCPM2CrispAsr : ITtsEngine
         return true;
     }
 
-    public Task<Voice[]> GetVoices(string language)
+    public async Task<Voice[]> GetVoices(string language)
     {
         var result = new List<Voice>();
 
         // Voice cloning only — no built-in default voice. The combo is empty until the user
         // imports a reference WAV (or the qwen3-tts.cpp voice seed runs above).
-        var voicesFolder = GetSetVoicesFolder();
+        // Off the UI thread: GetSetVoicesFolder does one-time reference-WAV seeding through
+        // ffmpeg, and this is awaited from SelectedEngineChanged on the dispatcher.
+        var voicesFolder = await Task.Run(GetSetVoicesFolder);
         if (Directory.Exists(voicesFolder))
         {
             foreach (var file in Directory.GetFiles(voicesFolder, "*.wav"))
@@ -394,7 +374,7 @@ public class VoxCPM2CrispAsr : ITtsEngine
             }
         }
 
-        return Task.FromResult(result.ToArray());
+        return result.ToArray();
     }
 
     public bool IsVoiceInstalled(Voice voice) => true;
