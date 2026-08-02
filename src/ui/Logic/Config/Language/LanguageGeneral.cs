@@ -76,6 +76,7 @@ public class LanguageGeneral
     public string Cancelled { get; set; }
     public string CaseInsensitive { get; set; }
     public string CaseSensitive { get; set; }
+    public string Casing { get; set; }
     public string Category { get; set; }
     public string Center { get; set; }
     public string CenterHorizontally { get; set; }
@@ -331,6 +332,7 @@ public class LanguageGeneral
     public string NormalCasing { get; set; }
     public string NotAvailable { get; set; }
     public string NotInstalled { get; set; }
+    public string NothingSelected { get; set; }
     public string Number { get; set; }
     public string NumberSymbol { get; set; }
     public string OcrDotDotDot { get; set; }
@@ -475,6 +477,9 @@ public class LanguageGeneral
     public string SelectSaveFolder { get; set; }
     public string SelectSubtitle { get; set; }
     public string SelectedAFolderToSaveTo { get; set; }
+    public string SelectionToLowercase { get; set; }
+    public string SelectionToSentenceCase { get; set; }
+    public string SelectionToUppercase { get; set; }
     public string SelectedLines { get; set; }
     public string SelectedlinesX { get; set; }
     public string Sensitivity { get; set; }
@@ -793,6 +798,7 @@ public class LanguageGeneral
         Cancelled = "Cancelled";
         CaseInsensitive = "Case insensitive";
         CaseSensitive = "Case sensitive";
+        Casing = "Casing";
         Category = "Category";
         Center = "Center";
         CenterHorizontally = "Center horizontally";
@@ -1048,6 +1054,7 @@ public class LanguageGeneral
         NormalCasing = "Normal casing";
         NotAvailable = "N/A";
         NotInstalled = "Not installed";
+        NothingSelected = "Nothing selected";
         Number = "Number";
         NumberSymbol = "#";
         OcrDotDotDot = "OCR...";
@@ -1192,6 +1199,9 @@ public class LanguageGeneral
         SelectSaveFolder = "Select a folder to save to";
         SelectSubtitle = "Select subtitle";
         SelectedAFolderToSaveTo = "Selected a folder to save to";
+        SelectionToLowercase = "Selection to lowercase";
+        SelectionToSentenceCase = "Selection to Sentence case";
+        SelectionToUppercase = "Selection to UPPERCASE";
         SelectedLines = "Selected lines";
         SelectedlinesX = "Selected lines: {0}";
         Sensitivity = "Sensitivity";
