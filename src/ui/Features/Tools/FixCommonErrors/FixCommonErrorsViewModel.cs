@@ -84,6 +84,8 @@ public partial class FixCommonErrorsViewModel : ObservableObject, IFixCallbacks
     private int _totalFixes;
     private SubtitleFormat _subtitleFormat;
     private readonly INamesList _namesList;
+    private string? _namesListFolder;
+    private string? _namesListLanguage;
     private readonly IWindowService _windowService;
     private readonly IOcrFixEngine _ocrFixEngine;
 
@@ -595,6 +597,8 @@ public partial class FixCommonErrorsViewModel : ObservableObject, IFixCallbacks
             return;
         }
 
+        LoadNamesListIfNeeded();
+
         _totalErrors = 0;
         _allowedFixLookup = null; // fix selection may have changed since the last pass
 
@@ -1016,6 +1020,26 @@ public partial class FixCommonErrorsViewModel : ObservableObject, IFixCallbacks
             _totalFixes += fixes;
             //            LogStatus(message, string.Format(LanguageSettings.Current.FixCommonErrors.XFixesApplied, fixes));
         }
+    }
+
+    /// <summary>
+    /// The names list backs <see cref="IsName"/> and <see cref="GetAbbreviations"/>, so without
+    /// this the rules saw no names and no abbreviations at all - e.g. Dutch "dhr. de vries" was
+    /// capitalized to "dhr. De vries" (#13082). Reloaded only when the language changes, like
+    /// the batch converter does.
+    /// </summary>
+    private void LoadNamesListIfNeeded()
+    {
+        var dictionaryFolder = Se.DictionariesFolder;
+        if (string.Equals(_namesListFolder, dictionaryFolder, StringComparison.Ordinal) &&
+            string.Equals(_namesListLanguage, Language, StringComparison.Ordinal))
+        {
+            return;
+        }
+
+        _namesList.Load(dictionaryFolder, Language);
+        _namesListFolder = dictionaryFolder;
+        _namesListLanguage = Language;
     }
 
     public bool IsName(string candidate)
