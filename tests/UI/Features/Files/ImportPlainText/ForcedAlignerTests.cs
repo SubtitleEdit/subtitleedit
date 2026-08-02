@@ -17,6 +17,40 @@ public class ForcedAlignerTests
     }
 
     /// <summary>
+    /// Records progress reports on the reporting thread, synchronously.
+    /// <para>
+    /// <see cref="Progress{T}"/> posts to the captured synchronization context instead, so the
+    /// reports land some unknown time after the run finishes - the test used to sleep 200 ms and
+    /// hope, which failed under load, and appended to a plain List from a pool thread while the
+    /// assertions read it. Reporting inline removes both problems: nothing here needs the
+    /// callbacks marshalled anywhere.
+    /// </para>
+    /// </summary>
+    private sealed class CollectingProgress : IProgress<ForcedAligner.Progress>
+    {
+        private readonly List<ForcedAligner.Progress> _reports = new();
+
+        public IReadOnlyList<ForcedAligner.Progress> Reports
+        {
+            get
+            {
+                lock (_reports)
+                {
+                    return _reports.ToList();
+                }
+            }
+        }
+
+        public void Report(ForcedAligner.Progress value)
+        {
+            lock (_reports)
+            {
+                _reports.Add(value);
+            }
+        }
+    }
+
+    /// <summary>
     /// Stands in for ffmpeg: reports a duration and hands out window file names without
     /// touching the disk for audio.
     /// </summary>
@@ -216,14 +250,12 @@ public class ForcedAlignerTests
         try
         {
             var audio = new FakeAudio(1200, folder);
-            var reports = new List<ForcedAligner.Progress>();
-            var progress = new Progress<ForcedAligner.Progress>(p => reports.Add(p));
+            var progress = new CollectingProgress();
 
             await new ForcedAligner(new FakeRunner(240), audio)
                 .AlignAsync(Script(300), progress, TestContext.Current.CancellationToken);
 
-            // Progress<T> marshals asynchronously; give the posted callbacks a moment.
-            await Task.Delay(200, TestContext.Current.CancellationToken);
+            var reports = progress.Reports;
 
             Assert.NotEmpty(reports);
             Assert.All(reports, r => Assert.Equal(300, r.LinesTotal));
