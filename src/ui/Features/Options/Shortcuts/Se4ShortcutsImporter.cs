@@ -315,6 +315,7 @@ public static class Se4ShortcutsImporter
         // General
         ["GeneralGoToFirstSelectedLine"] = nameof(MainViewModel.FocusSelectedLineCommand),
         ["GeneralGoToNextSubtitle"] = nameof(MainViewModel.GoToNextLineCommand),
+        ["GeneralGoToNextSubtitleCursorAtEnd"] = nameof(MainViewModel.GoToNextLineCursorAtEndCommand),
         ["GeneralGoToPrevSubtitle"] = nameof(MainViewModel.GoToPreviousLineCommand),
         ["GeneralGoToNextBookmark"] = nameof(MainViewModel.GoToNextBookmarkCommand),
         ["GeneralGoToPreviousBookmark"] = nameof(MainViewModel.GoToPreviousBookmarkCommand),
