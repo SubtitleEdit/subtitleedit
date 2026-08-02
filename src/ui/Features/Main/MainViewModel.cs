@@ -12421,6 +12421,38 @@ public partial class MainViewModel :
     }
 
     [RelayCommand]
+    private void GoToNextLineCursorAtEnd()
+    {
+        var idx = (SelectedSubtitleIndex ?? -1) + 1;
+        if (idx <= 0 || idx >= Subtitles.Count)
+        {
+            return;
+        }
+
+        GoToNextLine();
+
+        // SelectAndScrollToRow places the caret at the start in a dispatcher post;
+        // queue the caret-at-end placement after it. The text-box binding may not
+        // have propagated yet by then (same situation as ShowFindMatch), so make
+        // sure the box shows the target line's text before measuring its length.
+        Dispatcher.UIThread.Post(() =>
+        {
+            var subtitle = Subtitles.GetOrNull(idx);
+            if (subtitle == null || !ReferenceEquals(SubtitleGrid.SelectedItem, subtitle))
+            {
+                return;
+            }
+
+            if (EditTextBox.Text != subtitle.Text)
+            {
+                EditTextBox.Text = subtitle.Text;
+            }
+
+            EditTextBox.CaretIndex = EditTextBox.Text.Length;
+        });
+    }
+
+    [RelayCommand]
     private void GoToPreviousLine()
     {
         var idx = SelectedSubtitleIndex ?? -1;
@@ -15729,6 +15761,7 @@ public partial class MainViewModel :
             if (indexToScroll >= 0 && indexToScroll < Subtitles.Count)
             {
                 var itemToScroll = Subtitles[indexToScroll];
+                var rowChanged = !ReferenceEquals(SubtitleGrid.SelectedItem, itemToScroll);
 
                 // Get the offset next to the target first - left to itself the virtualizing panel
                 // walks there row by row on long jumps, which is what made Home (and Find/Go to
@@ -15736,6 +15769,18 @@ public partial class MainViewModel :
                 TableViewExtras.PrePositionScroll(SubtitleGrid, indexToScroll);
                 SubtitleGrid.SelectedItem = itemToScroll;
                 SubtitleGrid.ScrollIntoView(itemToScroll);
+
+                // Avalonia keeps the caret index when the bound text changes, so navigating
+                // to another line left the caret at the previous line's (clamped) position -
+                // seemingly random (issue #12707). SE4 always lands at the start (WinForms
+                // resets the caret when Text is assigned); do the same. Callers that place
+                // the caret themselves (e.g. find match highlight) set the selected row
+                // before calling, so rowChanged is false and they are not clobbered here.
+                if (rowChanged)
+                {
+                    EditTextBox.CaretIndex = 0;
+                    EditTextBoxOriginal.CaretIndex = 0;
+                }
 
                 if (Se.Settings.General.SubtitleGridCenterSelectedRow)
                 {

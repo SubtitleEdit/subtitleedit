@@ -24,6 +24,7 @@ public class LanguageSettingsShortcuts
     public string GeneralToggleTranslationMode { get; set; }
     public string GeneralChooseLayout { get; set; }
     public string GeneralGoToNextSubtitle { get; set; }
+    public string GeneralGoToNextSubtitleCursorAtEnd { get; set; }
     public string GeneralGoToPrevSubtitle { get; set; }
     public string GeneralGoToVideoPosition { get; set; }
     public string GeneralToggleItalic { get; set; }
@@ -271,6 +272,7 @@ public class LanguageSettingsShortcuts
         GeneralToggleTranslationMode = "Toggle translation mode";
         GeneralChooseLayout = "Choose layout";
         GeneralGoToNextSubtitle = "Go to next subtitle";
+        GeneralGoToNextSubtitleCursorAtEnd = "Go to next subtitle and set cursor at end";
         GeneralGoToPrevSubtitle = "Go to previous subtitle";
         GeneralGoToVideoPosition = "Go to video position";
         GeneralToggleItalic = "Toggle italic";
