@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Russian abbreviations - a period here ends an abbreviation, not a sentence, so "Fix common
+  errors" must not capitalize the following word (issue #13082). Matching is case insensitive,
+  so one entry per abbreviation is enough. Abbreviations with an inner period (e.g. "a.m.") are
+  already recognized by a general rule and need no entry here.
+-->
+<Abbreviations>
+  <Item>акад.</Item>
+  <Item>Г-жа.</Item>
+  <Item>Г-н.</Item>
+  <Item>г-ца.</Item>
+  <Item>гл.</Item>
+  <Item>Д-р.</Item>
+  <Item>др.</Item>
+  <Item>им.</Item>
+  <Item>млн.</Item>
+  <Item>млрд.</Item>
+  <Item>проф.</Item>
+  <Item>рис.</Item>
+  <Item>руб.</Item>
+  <Item>стр.</Item>
+  <Item>табл.</Item>
+  <Item>тыс.</Item>
+  <Item>ул.</Item>
+</Abbreviations>

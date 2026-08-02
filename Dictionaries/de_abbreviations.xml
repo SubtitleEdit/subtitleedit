@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  German abbreviations - a period here ends an abbreviation, not a sentence, so "Fix common
+  errors" must not capitalize the following word (issue #13082). Matching is case insensitive,
+  so one entry per abbreviation is enough. Abbreviations with an inner period (e.g. "a.m.") are
+  already recognized by a general rule and need no entry here.
+-->
+<Abbreviations>
+  <Item>Abb.</Item>
+  <Item>Abs.</Item>
+  <Item>Abt.</Item>
+  <Item>Anm.</Item>
+  <Item>Aufl.</Item>
+  <Item>bes.</Item>
+  <Item>bspw.</Item>
+  <Item>bzgl.</Item>
+  <Item>bzw.</Item>
+  <Item>ca.</Item>
+  <Item>Dr.</Item>
+  <Item>einschl.</Item>
+  <Item>etc.</Item>
+  <Item>evtl.</Item>
+  <Item>exkl.</Item>
+  <Item>Fr.</Item>
+  <Item>Frl.</Item>
+  <Item>geb.</Item>
+  <Item>gest.</Item>
+  <Item>ggf.</Item>
+  <Item>Hr.</Item>
+  <Item>Hrsg.</Item>
+  <Item>inkl.</Item>
+  <Item>insb.</Item>
+  <Item>Jh.</Item>
+  <Item>Kap.</Item>
+  <Item>Mio.</Item>
+  <Item>Mr.</Item>
+  <Item>Mrd.</Item>
+  <Item>Mrs.</Item>
+  <Item>Ms.</Item>
+  <Item>Nr.</Item>
+  <Item>sog.</Item>
+  <Item>Std.</Item>
+  <Item>Str.</Item>
+  <Item>Tel.</Item>
+  <Item>usf.</Item>
+  <Item>usw.</Item>
+  <Item>vgl.</Item>
+</Abbreviations>

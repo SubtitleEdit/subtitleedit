@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Bulgarian abbreviations - a period here ends an abbreviation, not a sentence, so "Fix common
+  errors" must not capitalize the following word (issue #13082). Matching is case insensitive,
+  so one entry per abbreviation is enough. Abbreviations with an inner period (e.g. "a.m.") are
+  already recognized by a general rule and need no entry here.
+-->
+<Abbreviations>
+  <Item>ап.</Item>
+  <Item>бул.</Item>
+  <Item>гр.</Item>
+  <Item>доц.</Item>
+  <Item>ет.</Item>
+  <Item>инж.</Item>
+  <Item>кв.</Item>
+  <Item>напр.</Item>
+  <Item>Проф.</Item>
+  <Item>Св.</Item>
+  <Item>стр.</Item>
+  <Item>ул.</Item>
+</Abbreviations>
