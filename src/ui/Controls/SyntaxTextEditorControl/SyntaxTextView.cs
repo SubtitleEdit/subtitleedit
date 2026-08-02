@@ -630,6 +630,11 @@ public class SyntaxTextView : Control
         _isRendering = true;
         try
         {
+            // Hit testing follows rendered geometry, so fill the whole surface: without this,
+            // clicks in the empty space beside or below the text fall through to the parent and
+            // never place the caret or start a drag selection.
+            context.FillRectangle(Brushes.Transparent, new Rect(0, 0, width, height));
+
             var lineHeight = _lineHeight;
             var (firstLine, lastLine) = GetVisibleLineRange();
             var selectionStart = SelectionStart;
