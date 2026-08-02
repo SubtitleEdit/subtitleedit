@@ -13675,12 +13675,11 @@ public partial class MainViewModel :
             return;
         }
 
+        // #13066: always stamp the start time, even when the playhead is past the line's
+        // current end (a fresh line sits right after the previous one, so that is the normal
+        // case when spotting forward). SetCueTimeHelper drags the end along when needed.
         var videoPositionSeconds = vp.Position;
-        var gap = Se.Settings.General.MinimumBetweenLines.GetMilliseconds() / 1000.0;
-        if (videoPositionSeconds >= s.EndTime.TotalSeconds - gap)
-        {
-            return;
-        }
+        var minimumDurationMs = Se.Settings.General.SubtitleMinimumDisplayMilliseconds;
 
         var isAssa = SelectedSubtitleFormat is AdvancedSubStationAlpha;
         if (isAssa)
@@ -13688,12 +13687,12 @@ public partial class MainViewModel :
             var selectedItems = SubtitleGridSelectedItems.Cast<SubtitleLineViewModel>().ToList();
             foreach (var item in selectedItems)
             {
-                item.SetStartTimeOnly(TimeSpan.FromSeconds(videoPositionSeconds));
+                SetCueTimeHelper.SetStart(item, TimeSpan.FromSeconds(videoPositionSeconds), minimumDurationMs);
             }
         }
         else
         {
-            s.SetStartTimeOnly(TimeSpan.FromSeconds(videoPositionSeconds));
+            SetCueTimeHelper.SetStart(s, TimeSpan.FromSeconds(videoPositionSeconds), minimumDurationMs);
         }
 
         _updateAudioVisualizer = true;
@@ -13719,12 +13718,9 @@ public partial class MainViewModel :
             return;
         }
 
+        // #13066: the start time is always stamped - see WaveformSetStart.
         var videoPositionSeconds = vp.Position;
-        var gap = Se.Settings.General.MinimumBetweenLines.GetMilliseconds() / 1000.0;
-        if (videoPositionSeconds >= s.EndTime.TotalSeconds - gap)
-        {
-            return;
-        }
+        var minimumDurationMs = Se.Settings.General.SubtitleMinimumDisplayMilliseconds;
 
         var isAssa = SelectedSubtitleFormat is AdvancedSubStationAlpha;
         if (isAssa)
@@ -13732,12 +13728,12 @@ public partial class MainViewModel :
             var selectedItems = SubtitleGridSelectedItems.Cast<SubtitleLineViewModel>().ToList();
             foreach (var item in selectedItems)
             {
-                item.SetStartTimeOnly(TimeSpan.FromSeconds(videoPositionSeconds));
+                SetCueTimeHelper.SetStart(item, TimeSpan.FromSeconds(videoPositionSeconds), minimumDurationMs);
             }
         }
         else
         {
-            s.SetStartTimeOnly(TimeSpan.FromSeconds(videoPositionSeconds));
+            SetCueTimeHelper.SetStart(s, TimeSpan.FromSeconds(videoPositionSeconds), minimumDurationMs);
         }
 
         SelectAndScrollToRow(idx + 1);
@@ -13786,12 +13782,10 @@ public partial class MainViewModel :
             return;
         }
 
+        // #13066: always stamp the end time, even when the playhead is before the line's
+        // current start - SetCueTimeHelper drags the start along when needed.
         var videoPositionSeconds = vp.Position;
-        var gap = Se.Settings.General.MinimumBetweenLines.GetMilliseconds() / 1000.0;
-        if (videoPositionSeconds < s.StartTime.TotalSeconds + gap)
-        {
-            return;
-        }
+        var minimumDurationMs = Se.Settings.General.SubtitleMinimumDisplayMilliseconds;
 
         var isAssa = SelectedSubtitleFormat is AdvancedSubStationAlpha;
         if (isAssa)
@@ -13799,12 +13793,12 @@ public partial class MainViewModel :
             var selectedItems = SubtitleGridSelectedItems.Cast<SubtitleLineViewModel>().ToList();
             foreach (var item in selectedItems)
             {
-                item.EndTime = TimeSpan.FromSeconds(videoPositionSeconds);
+                SetCueTimeHelper.SetEnd(item, TimeSpan.FromSeconds(videoPositionSeconds), minimumDurationMs);
             }
         }
         else
         {
-            s.EndTime = TimeSpan.FromSeconds(videoPositionSeconds);
+            SetCueTimeHelper.SetEnd(s, TimeSpan.FromSeconds(videoPositionSeconds), minimumDurationMs);
         }
 
         _updateAudioVisualizer = true;
@@ -13826,14 +13820,9 @@ public partial class MainViewModel :
             return;
         }
 
+        // #13066: the end time is always stamped - see WaveformSetEnd.
         var videoPositionSeconds = vp.Position;
-        var gap = Se.Settings.General.MinimumBetweenLines.GetMilliseconds() / 1000.0;
-        if (videoPositionSeconds < s.StartTime.TotalSeconds + gap)
-        {
-            return;
-        }
-
-        s.EndTime = TimeSpan.FromSeconds(videoPositionSeconds);
+        SetCueTimeHelper.SetEnd(s, TimeSpan.FromSeconds(videoPositionSeconds), Se.Settings.General.SubtitleMinimumDisplayMilliseconds);
 
         SelectAndScrollToRow(idx + 1);
 
