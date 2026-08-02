@@ -3,7 +3,7 @@ Subtitle Edit Changelog
 
 -----------------------------------------------------------------------------------------------------
 
-v5.2.0-beta1 (TBD)
+v5.2.0-beta1 (2nd of August 2026)
 
 * Auto-translate: advanced llama.cpp and Ollama engines with batch context - thx subof
 * Auto-translate: system prompt, parameter settings and schema-forced output for these engines
