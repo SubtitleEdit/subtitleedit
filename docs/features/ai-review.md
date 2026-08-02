@@ -14,6 +14,22 @@ Proofread the subtitle text with a local (or remote) large language model - typo
 - **Ollama** — uses a running [Ollama](https://ollama.com) instance; type a model name or pick one from the server.
 - **OpenAI-compatible** — any endpoint that speaks the OpenAI chat API: LM Studio, KoboldCpp, vLLM, a llama.cpp server on another machine, or cloud APIs (OpenAI, Groq, OpenRouter, DeepSeek, Mistral, Gemini). Enter the URL, model name, and an API key if the service needs one.
 
+### Using a cloud model
+
+If a local model is too slow on your machine, select the **OpenAI-compatible** engine and point it at a cloud provider. Only the URL, model name and API key differ:
+
+| Provider | URL | Example model |
+|----------|-----|---------------|
+| Google Gemini | `https://generativelanguage.googleapis.com/v1beta/openai/chat/completions` | `gemini-3.1-flash-lite` |
+| OpenAI | `https://api.openai.com/v1/chat/completions` | `gpt-4o-mini` |
+| DeepSeek | `https://api.deepseek.com/v1/chat/completions` | `deepseek-chat` |
+| Groq | `https://api.groq.com/openai/v1/chat/completions` | `llama-3.3-70b-versatile` |
+| Mistral | `https://api.mistral.ai/v1/chat/completions` | `mistral-small-latest` |
+| OpenRouter | `https://openrouter.ai/api/v1/chat/completions` | `google/gemini-3.1-flash-lite` |
+| LM Studio (local) | `http://localhost:1234/v1/chat/completions` | *name shown in LM Studio* |
+
+The API key goes in the **API key** field - Subtitle Edit sends it as a bearer token. Note that the whole subtitle is sent in batches without a delay between them, so a rate limited free tier may start rejecting requests on a long file - press **Stop** to keep the suggestions found so far.
+
 ## Reviewing
 
 Press **Review** to start. The subtitle is sent to the model in small batches, and suggestions appear in the grid while the review runs - you can inspect, check and uncheck rows before it finishes, or press **Stop** to keep what was found so far.
