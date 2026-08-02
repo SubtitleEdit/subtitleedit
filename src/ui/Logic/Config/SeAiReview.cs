@@ -11,6 +11,7 @@ public class SeAiReview
     public string OpenAiCompatibleApiKey { get; set; }
     public string Prompt { get; set; }
     public int MaxLinesPerBatch { get; set; }
+    public int RequestDelaySeconds { get; set; }
 
     public const string EngineOllama = "Ollama";
     public const string EngineLlamaCpp = "llama.cpp";
@@ -32,5 +33,6 @@ public class SeAiReview
         OpenAiCompatibleApiKey = string.Empty;
         Prompt = DefaultPrompt;
         MaxLinesPerBatch = 15;
+        RequestDelaySeconds = 0;
     }
 }

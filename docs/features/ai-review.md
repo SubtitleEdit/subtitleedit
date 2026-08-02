@@ -28,7 +28,11 @@ If a local model is too slow on your machine, select the **OpenAI-compatible** e
 | OpenRouter | `https://openrouter.ai/api/v1/chat/completions` | `google/gemini-3.1-flash-lite` |
 | LM Studio (local) | `http://localhost:1234/v1/chat/completions` | *name shown in LM Studio* |
 
-The API key goes in the **API key** field - Subtitle Edit sends it as a bearer token. Note that the whole subtitle is sent in batches without a delay between them, so a rate limited free tier may start rejecting requests on a long file - press **Stop** to keep the suggestions found so far.
+The API key goes in the **API key** field - Subtitle Edit sends it as a bearer token.
+
+The subtitle is sent in batches, and free tiers usually limit how many requests you may send per minute. The timer field after the API key sets a **delay in seconds between requests** - raise it if the provider starts rejecting requests. It is off (0) by default, and the first request of a review never waits.
+
+Reviewing only part of a subtitle is also possible: select the lines in the subtitle grid, then right-click → **Selected lines** → **AI review...**.
 
 ## Reviewing
 
