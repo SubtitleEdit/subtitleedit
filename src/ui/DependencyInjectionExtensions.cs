@@ -407,6 +407,7 @@ public static class DependencyInjectionExtensions
         collection.AddTransient<GetKeyViewModel>();
         collection.AddTransient<GoToLineNumberViewModel>();
         collection.AddTransient<GoToVideoPositionViewModel>();
+        collection.AddTransient<HearingImpairedRuleSettingsViewModel>();
         collection.AddTransient<ImageBasedPreviewViewModel>();
         collection.AddTransient<ImageBasedProfileViewModel>();
         collection.AddTransient<ImportCsvXlsxCustomColumnsViewModel>();

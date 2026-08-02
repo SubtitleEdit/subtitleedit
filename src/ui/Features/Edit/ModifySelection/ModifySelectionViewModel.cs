@@ -9,6 +9,7 @@ using Nikse.SubtitleEdit.Logic.Config;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Nikse.SubtitleEdit.Features.Edit.ModifySelection;
 
@@ -34,11 +35,14 @@ public partial class ModifySelectionViewModel : ObservableObject, IClosingCleanu
     private readonly System.Timers.Timer _previewTimer;
     private volatile bool _isClosing;
     private readonly Dictionary<RuleType, double> _ruleNumbers;
+    private readonly IWindowService _windowService;
     private RuleType? _activeRuleType;
     private bool _isDirty;
 
-    public ModifySelectionViewModel()
+    public ModifySelectionViewModel(IWindowService windowService)
     {
+        _windowService = windowService;
+
         Rules = new ObservableCollection<ModifySelectionRule>();
         Subtitles = new ObservableCollection<PreviewItem>();
         Selection = new List<SubtitleLineViewModel>();
@@ -189,6 +193,29 @@ public partial class ModifySelectionViewModel : ObservableObject, IClosingCleanu
     private void Cancel()
     {
         Window?.Close();
+    }
+
+    [RelayCommand]
+    private async Task ShowRuleSettings()
+    {
+        var rule = SelectedRule;
+        if (Window == null || rule?.HearingImpairedOptions == null)
+        {
+            return;
+        }
+
+        var options = rule.HearingImpairedOptions;
+        var savedHiSettings = Se.Settings.Tools.RemoveTextForHi;
+        var result = await _windowService
+            .ShowDialogAsync<HearingImpairedRuleSettingsWindow, HearingImpairedRuleSettingsViewModel>(
+                Window,
+                vm => vm.Initialize(options, savedHiSettings.CustomStart, savedHiSettings.CustomEnd));
+
+        if (result.OkPressed)
+        {
+            options.CopyFrom(result.GetOptions());
+            OnRuleChanged();
+        }
     }
 
     internal void KeyDown(object? sender, KeyEventArgs e)
