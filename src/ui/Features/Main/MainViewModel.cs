@@ -10654,43 +10654,83 @@ public partial class MainViewModel :
                 return;
             }
 
+            // SE4 parity: the first selected line decides the next state for the whole selection,
+            // otherwise lines in different states drift apart on every press.
+            var first = selectedItems[0].Text;
             foreach (var item in selectedItems)
             {
-                item.Text = _casingToggler.ToggleCasing(item.Text, SelectedSubtitleFormat);
+                item.Text = _casingToggler.ToggleCasing(item.Text, SelectedSubtitleFormat, first);
             }
 
             _updateAudioVisualizer = true;
             return;
         }
 
-        if (EditTextBox.SelectedText.Length <= 0)
+        var tb = GetFocusedTextBoxWrapper() ?? EditTextBox;
+        if (tb.SelectedText.Length <= 0)
         {
+            ShowStatus(Se.Language.General.NothingSelected);
             return;
         }
 
-        EditTextBox.SelectedText = _casingToggler.ToggleCasing(EditTextBox.SelectedText, SelectedSubtitleFormat);
+        ReplaceSelectedText(tb, _casingToggler.ToggleCasing(tb.SelectedText, SelectedSubtitleFormat));
     }
 
     [RelayCommand]
     private void SelectionToLower()
     {
-        if (EditTextBox.SelectedText.Length <= 0)
+        var tb = GetFocusedTextBoxWrapper() ?? EditTextBox;
+        if (tb.SelectedText.Length <= 0)
         {
+            ShowStatus(Se.Language.General.NothingSelected);
             return;
         }
 
-        EditTextBox.SelectedText = EditTextBox.SelectedText.ToLower(CultureInfo.CurrentCulture);
+        ReplaceSelectedText(tb, tb.SelectedText.ToLower(CultureInfo.CurrentCulture));
     }
 
     [RelayCommand]
     private void SelectionToUpper()
     {
-        if (EditTextBox.SelectedText.Length <= 0)
+        var tb = GetFocusedTextBoxWrapper() ?? EditTextBox;
+        if (tb.SelectedText.Length <= 0)
         {
+            ShowStatus(Se.Language.General.NothingSelected);
             return;
         }
 
-        EditTextBox.SelectedText = EditTextBox.SelectedText.ToUpper(CultureInfo.CurrentCulture);
+        ReplaceSelectedText(tb, tb.SelectedText.ToUpper(CultureInfo.CurrentCulture));
+    }
+
+    [RelayCommand]
+    private void SelectionToSentenceCase()
+    {
+        var tb = GetFocusedTextBoxWrapper() ?? EditTextBox;
+        if (tb.SelectedText.Length <= 0)
+        {
+            ShowStatus(Se.Language.General.NothingSelected);
+            return;
+        }
+
+        var text = tb.Text ?? string.Empty;
+        var selectionStart = Math.Min(tb.SelectionStart, tb.SelectionEnd);
+        var textBefore = selectionStart > 0 && selectionStart <= text.Length
+            ? text.Substring(0, selectionStart)
+            : string.Empty;
+
+        var language = Subtitles.AutoDetectGoogleLanguage() ?? "en";
+        ReplaceSelectedText(tb, SentenceCaser.SentenceCase(textBefore, tb.SelectedText, language));
+    }
+
+    /// <summary>
+    /// Replaces the selected text and re-selects the result, so casing commands can be
+    /// pressed repeatedly on the same selection (SE4 parity).
+    /// </summary>
+    private static void ReplaceSelectedText(ITextBoxWrapper tb, string newText)
+    {
+        var selectionStart = Math.Min(tb.SelectionStart, tb.SelectionEnd);
+        tb.SelectedText = newText;
+        tb.Select(selectionStart, newText.Length);
     }
 
     [RelayCommand]

@@ -1502,6 +1502,38 @@ public static partial class InitListViewAndEditBox
 
         flyoutTextBox.Items.Add(new Separator());
 
+        // Casing was shortcut-only, which made people think it had been removed (#13093).
+        var menuItemTextBoxCasing = new MenuItem { Header = Se.Language.General.Casing };
+        menuItemTextBoxCasing.Items.Add(new MenuItem
+        {
+            Header = Se.Language.General.ToggleCasing,
+            Command = vm.ToggleCasingCommand,
+        });
+        menuItemTextBoxCasing.Items.Add(new MenuItem
+        {
+            Header = Se.Language.General.SelectionToUppercase,
+            Command = vm.SelectionToUpperCommand,
+        });
+        menuItemTextBoxCasing.Items.Add(new MenuItem
+        {
+            Header = Se.Language.General.SelectionToLowercase,
+            Command = vm.SelectionToLowerCommand,
+        });
+        menuItemTextBoxCasing.Items.Add(new MenuItem
+        {
+            Header = Se.Language.General.SelectionToSentenceCase,
+            Command = vm.SelectionToSentenceCaseCommand,
+        });
+        menuItemTextBoxCasing.Items.Add(new Separator());
+        menuItemTextBoxCasing.Items.Add(new MenuItem
+        {
+            Header = Se.Language.Main.Menu.ChangeCasing,
+            Command = vm.ChangeCasingSelectedLinesCommand,
+        });
+        flyoutTextBox.Items.Add(menuItemTextBoxCasing);
+
+        flyoutTextBox.Items.Add(new Separator());
+
         var unicodeSymbols = Se.Settings.Tools.UnicodeSymbolsToInsert.Split(';', System.StringSplitOptions.RemoveEmptyEntries);
         if (unicodeSymbols.Length > 0)
         {

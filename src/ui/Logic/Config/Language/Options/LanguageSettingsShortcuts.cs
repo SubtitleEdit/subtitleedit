@@ -232,6 +232,8 @@ public class LanguageSettingsShortcuts
     public string GoToPreviousBookmark { get; set; }
     public string SelectionToLower { get; set; }
     public string SelectionToUpper { get; set; }
+    public string SelectionToSentenceCase { get; set; }
+    public string SelectionToggleCasing { get; set; }
     public string GoogleIt { get; set; }
     public string SetActorXY { get; set; }
     public string SetNewActor { get; set; }
@@ -482,6 +484,8 @@ public class LanguageSettingsShortcuts
         GoToPreviousBookmark = "Go to previous bookmark";
         SelectionToLower = "Text box: Selection to lowercase";
         SelectionToUpper = "Text box: Selection to uppercase";
+        SelectionToSentenceCase = "Text box: Selection to Sentence case";
+        SelectionToggleCasing = "Text box: Toggle casing (UPPER -> lower -> Title Case)";
         GoogleIt = "Google it (selected text)";
         SetActorXY = "Set actor {0}: {1}";
         SetNewActor = "Set new actor...";
