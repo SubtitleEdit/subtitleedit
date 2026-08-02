@@ -3400,6 +3400,28 @@ public static class UiUtil
         return false;
     }
 
+    /// <summary>
+    /// Completes Avalonia's bare-Alt menu cycle when the window loses activation while Alt is held.
+    /// AccessKeyHandler tracks the Alt press privately and only settles on the Alt <em>release</em>;
+    /// when a modal window steals focus mid-gesture (e.g. Alt, O, ... opening the Shortcuts window),
+    /// the release never reaches this window and the handler is stranded with "Alt is down / ignore
+    /// the next Alt up" state - the next bare Alt press then fails to open the menu bar (#13083).
+    /// Raising a synthetic Alt KeyUp lets the handler finish its cycle. When Alt was down with no
+    /// other key pressed, that release legitimately opens the menu - callers run their
+    /// menu-deactivation cleanup afterwards to close it again.
+    /// </summary>
+    internal static void RaiseSyntheticAltKeyUp(Window? window)
+    {
+        window?.RaiseEvent(new KeyEventArgs
+        {
+            RoutedEvent = InputElement.KeyUpEvent,
+            Source = window,
+            Key = Key.LeftAlt,
+            PhysicalKey = PhysicalKey.AltLeft,
+            KeyModifiers = KeyModifiers.None,
+        });
+    }
+
     private static bool _windowsSystemMenuClassHandlerRegistered;
 
     /// <summary>

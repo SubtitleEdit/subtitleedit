@@ -943,9 +943,14 @@ public static class ShortcutsMain
             new(nameof(vm.RightToLeftToggleCommand), [cmd, "Shift", "Alt", nameof(Avalonia.Input.Key.R)], ShortcutCategory.General),
 
             // Timing / creation (V4 defaults)
+            // Note: WaveformSetEndAndGoToNext deliberately ships without its V4 default (F10).
+            // Bare F10 activates the main menu bar (Windows standard, #11745), and a registered
+            // single-key F10 shortcut suppresses that (#12504) - so a shipped F10 default would
+            // permanently kill F10 menu activation for everyone (#13083). Users who want the V4
+            // behavior can still assign F10 to the action themselves; that user-defined shortcut
+            // then wins over the menu toggle. Se.MigrateShortcuts clears the old persisted default.
             new(nameof(vm.WaveformSetStartCommand), [nameof(Avalonia.Input.Key.F11)], ShortcutCategory.General),
             new(nameof(vm.WaveformSetEndCommand), [nameof(Avalonia.Input.Key.F12)], ShortcutCategory.General),
-            new(nameof(vm.WaveformSetEndAndGoToNextCommand), [nameof(Avalonia.Input.Key.F10)], ShortcutCategory.General),
             new(nameof(vm.InsertLineAfterCommand), ["Alt", nameof(Avalonia.Input.Key.Insert)], ShortcutCategory.General),
             new(nameof(vm.InsertLineBeforeCommand), [cmd, "Shift", nameof(Avalonia.Input.Key.Insert)], ShortcutCategory.General),
             new(nameof(vm.AutoBreakCommand), [cmd, "Alt", nameof(Avalonia.Input.Key.B)], ShortcutCategory.General),

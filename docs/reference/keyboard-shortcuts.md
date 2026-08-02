@@ -79,7 +79,11 @@ See also: [Shortcuts Settings](../features/shortcuts.md)
 |----------|--------|
 | F11 | Set start time |
 | F12 | Set end time |
-| F10 | Set end time and go to next line |
+
+"Set end time and go to next line" has no default shortcut: bare F10 activates the
+main menu bar (the Windows standard). Assign F10 to the action in Options →
+Shortcuts if you prefer the Subtitle Edit 4 behavior — a user-assigned shortcut
+wins over the menu activation.
 
 ## Waveform
 
