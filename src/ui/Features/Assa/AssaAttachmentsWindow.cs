@@ -132,7 +132,7 @@ public class AssaAttachmentsWindow : Window
         dataGrid.Bind(TableView.SelectedItemProperty, new Binding(nameof(vm.SelectedAttachment)) { Source = vm });
         dataGrid.SelectionChanged += vm.DataGridSelectionChanged;
         dataGrid.KeyDown += vm.AttachmentsDataGridKeyDown;
-        TableViewExtras.AttachHomeEndNavigation(dataGrid);
+        TableViewExtras.AttachListNavigation(dataGrid);
 
         var flyout = new MenuFlyout();
         flyout.Opening += vm.AttachmentsContextMenuOpening;

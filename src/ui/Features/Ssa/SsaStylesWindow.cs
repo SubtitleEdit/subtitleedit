@@ -159,7 +159,7 @@ public class SsaStylesWindow : Window
         dataGrid.GotFocus += vm.FileStylesGotFocus;
         dataGrid.KeyDown += vm.FileStylesKeyDown;
         dataGrid.AddHandler(InputElement.KeyDownEvent, vm.FileStylesMoveKeyDown, RoutingStrategies.Tunnel);
-        TableViewExtras.AttachHomeEndNavigation(dataGrid);
+        TableViewExtras.AttachListNavigation(dataGrid);
         vm.FileStyleGrid = dataGrid;
 
         var flyout = new MenuFlyout();

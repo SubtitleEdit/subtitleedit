@@ -216,7 +216,7 @@ public class BatchConvertWindow : Window
         dataGrid.Bind(TableView.SelectedItemProperty, new Binding(nameof(vm.SelectedBatchItem)) { Source = vm });
         dataGrid.KeyDown += vm.FileGridKeyDown;
         vm.FileGrid = dataGrid;
-        TableViewExtras.AttachHomeEndNavigation(dataGrid);
+        TableViewExtras.AttachListNavigation(dataGrid);
 
         // Header-click sorting (the DataGrid sorted these columns too, incl. Status via
         // SortMemberPath, #12431). The sorter reorders BatchItems in place - safe here

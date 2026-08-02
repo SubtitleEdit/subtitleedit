@@ -21339,13 +21339,25 @@ public partial class MainViewModel :
                 else if (keyEventArgs.Key == Key.PageDown && keyEventArgs.KeyModifiers == KeyModifiers.Shift && Subtitles.Count > 0)
                 {
                     keyEventArgs.Handled = true;
-                    HandleShiftArrowSelection(GetSubtitleGridPageSize());
+                    HandleShiftArrowSelection(GetSubtitleGridPageStep(true));
                     return;
                 }
                 else if (keyEventArgs.Key == Key.PageUp && keyEventArgs.KeyModifiers == KeyModifiers.Shift && Subtitles.Count > 0)
                 {
                     keyEventArgs.Handled = true;
-                    HandleShiftArrowSelection(-GetSubtitleGridPageSize());
+                    HandleShiftArrowSelection(GetSubtitleGridPageStep(false));
+                    return;
+                }
+                // Plain PageUp/PageDown moves the selection a page, like every desktop list control
+                // (and like SE 4's ListView) - TableView's virtualizing panel ignores the page keys,
+                // so they only scrolled and left the selected row behind (#13060).
+                else if ((keyEventArgs.Key == Key.PageDown || keyEventArgs.Key == Key.PageUp) &&
+                         keyEventArgs.KeyModifiers == KeyModifiers.None &&
+                         Subtitles.Count > 0)
+                {
+                    keyEventArgs.Handled = true;
+                    var current = SelectedSubtitleIndex ?? 0;
+                    SelectAndScrollToRow(TableViewExtras.GetPageTarget(SubtitleGrid, current, keyEventArgs.Key == Key.PageDown));
                     return;
                 }
                 else if (keyEventArgs.Key == Key.Home && keyEventArgs.KeyModifiers == KeyModifiers.Shift && Subtitles.Count > 0)
@@ -21699,9 +21711,16 @@ public partial class MainViewModel :
         SubtitleGridSelectionChanged();
     }
 
-    private int GetSubtitleGridPageSize()
+    /// <summary>
+    /// Rows a Shift+PageUp/PageDown should move the selection's moving end by - the same
+    /// edge-first step the plain page keys use, so both stay in sync with the rows actually
+    /// on screen (variable row heights make a fixed row count drift, #13060).
+    /// </summary>
+    private int GetSubtitleGridPageStep(bool down)
     {
-        return TableViewExtras.GetPageSize(SubtitleGrid);
+        var from = _shiftSelectCurrentIndex >= 0 ? _shiftSelectCurrentIndex : SelectedSubtitleIndex ?? 0;
+        var target = TableViewExtras.GetPageTarget(SubtitleGrid, from, down);
+        return target < 0 ? 0 : target - from;
     }
 
     public void SubtitleGrid_PointerReleased(object? sender, PointerReleasedEventArgs e)
