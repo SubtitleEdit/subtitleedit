@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Portuguese abbreviations - a period here ends an abbreviation, not a sentence, so "Fix common
+  errors" must not capitalize the following word (issue #13082). Matching is case insensitive,
+  so one entry per abbreviation is enough. Abbreviations with an inner period (e.g. "a.m.") are
+  already recognized by a general rule and need no entry here.
+-->
+<Abbreviations>
+  <Item>Art.</Item>
+  <Item>Arts.</Item>
+  <Item>Cap.</Item>
+  <Item>Caps.</Item>
+  <Item>Cf.</Item>
+  <Item>D.</Item>
+  <Item>decr.</Item>
+  <Item>Dr.</Item>
+  <Item>Dra.</Item>
+  <Item>Ed.</Item>
+  <Item>Eng.</Item>
+  <Item>etc.</Item>
+  <Item>Exma.</Item>
+  <Item>Exmo.</Item>
+  <Item>Fig.</Item>
+  <Item>Fr.</Item>
+  <Item>Gov.</Item>
+  <Item>gram.</Item>
+  <Item>Jr.</Item>
+  <Item>Mlle.</Item>
+  <Item>Mme.</Item>
+  <Item>Mna.</Item>
+  <Item>Mno.</Item>
+  <Item>Mr.</Item>
+  <Item>Mrs.</Item>
+  <Item>Ms.</Item>
+  <Item>P.</Item>
+  <Item>Pe.</Item>
+  <Item>Prof.</Item>
+  <Item>Pág.</Item>
+  <Item>Págs.</Item>
+  <Item>Ref.</Item>
+  <Item>Refs.</Item>
+  <Item>Sr.</Item>
+  <Item>Sra.</Item>
+  <Item>Srs.</Item>
+  <Item>Srta.</Item>
+  <Item>St.</Item>
+  <Item>Sta.</Item>
+  <Item>Sto.</Item>
+  <Item>Séc.</Item>
+  <Item>Sécs.</Item>
+  <Item>vol.</Item>
+  <Item>vols.</Item>
+  <Item>Vs.</Item>
+</Abbreviations>

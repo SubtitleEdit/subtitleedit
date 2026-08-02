@@ -26,7 +26,11 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
 
             var word = string.Empty;
             var i = index - 1;
-            while (i >= 0 && char.IsLetter(text[i]))
+
+            // An inner hyphen is part of the word, so Russian/Ukrainian "д-р." and "г-жа." are
+            // found - but only between two letters, so a dialog dash ("- dhr.") is not swallowed.
+            while (i >= 0 && (char.IsLetter(text[i]) ||
+                              text[i] == '-' && i > 0 && char.IsLetter(text[i - 1]) && word.Length > 0))
             {
                 word = text[i--] + word;
             }

@@ -77,6 +77,22 @@ public class FixStartWithUppercaseLetterAfterPeriodInsideParagraphTest
         Assert.Equal(input, Fix(input, "en", "Dr."));
     }
 
+    // An inner hyphen is part of the word, so Russian/Ukrainian "д-р." and "г-жа." are found.
+    [Theory]
+    [InlineData("Я видел д-р. иванова вчера.")]
+    [InlineData("Я видел г-жа. иванова вчера.")]
+    public void HyphenatedAbbreviationIsRecognized(string input)
+    {
+        Assert.Equal(input, Fix(input, "ru", "д-р.", "г-жа."));
+    }
+
+    // A dialog dash must not become part of the word.
+    [Fact]
+    public void DialogDashIsNotPartOfTheWord()
+    {
+        Assert.Equal("Ja. - Nee. Tot morgen.", Fix("Ja. - Nee. tot morgen.", "nl", "dhr."));
+    }
+
     // A period that is not an abbreviation must still be fixed.
     [Fact]
     public void CapitalizesAfterNonAbbreviation()

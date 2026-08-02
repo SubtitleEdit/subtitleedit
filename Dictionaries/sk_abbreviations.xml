@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Slovak abbreviations - a period here ends an abbreviation, not a sentence, so "Fix common
+  errors" must not capitalize the following word (issue #13082). Matching is case insensitive,
+  so one entry per abbreviation is enough. Abbreviations with an inner period (e.g. "a.m.") are
+  already recognized by a general rule and need no entry here.
+-->
+<Abbreviations>
+  <Item>apod.</Item>
+  <Item>atď.</Item>
+  <Item>Dr.</Item>
+  <Item>hod.</Item>
+  <Item>max.</Item>
+  <Item>mil.</Item>
+  <Item>min.</Item>
+  <Item>mld.</Item>
+  <Item>napr.</Item>
+  <Item>P.</Item>
+  <Item>resp.</Item>
+  <Item>Sl.</Item>
+  <Item>Sleč.</Item>
+  <Item>str.</Item>
+  <Item>tis.</Item>
+  <Item>tzn.</Item>
+  <Item>tzv.</Item>
+</Abbreviations>
