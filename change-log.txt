@@ -57,6 +57,7 @@ v5.2.0-beta1 (TBD)
 * Accessibility: accessible names for icon buttons, keep grid keyboard focus on Home/End jumps
 * Flatpak: bundle OpenBLAS so the CrispASR engines can start in the sandbox - thx DarkSwan86
 * Speech to text: report a missing shared library instead of silently returning an empty result
+* Fix "set start/end time" doing nothing when the video position was past the other time code - thx LabinSub
 * Update Italian translation - thx bovirus
 * Update Korean translation - thx 12si27
 * Update Polish translation - thx potplayer-fanpack
