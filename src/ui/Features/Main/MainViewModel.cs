@@ -11238,15 +11238,17 @@ public partial class MainViewModel :
 
         _findPreviousFocus = Window?.FocusManager?.GetFocusedElement() as Control;
         var subs = Subtitles.Select(p => p.Text).ToList();
+        var origs = GetOriginalTextsForFind();
         var result = _windowService.ShowWindow<FindWindow, FindViewModel>(Window!, (window, vm) =>
         {
             WindowService.KeepTopmostWhileOwnerActive(window, Window!);
             _findViewModel = vm;
 
             var selectedText = string.Empty;
-            if (EditTextBox != null && !string.IsNullOrEmpty(EditTextBox.SelectedText))
+            var textBox = GetFindTextBox(EditTextBoxOriginal.IsFocused);
+            if (textBox != null && !string.IsNullOrEmpty(textBox.SelectedText))
             {
-                selectedText = EditTextBox.SelectedText;
+                selectedText = textBox.SelectedText;
             }
 
             if ((string.IsNullOrEmpty(selectedText) || string.Equals(selectedText, _findService.CurrentTextFound, _findService.CurrentFindMode == FindMode.CaseInsensitive ? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal))
@@ -11255,7 +11257,7 @@ public partial class MainViewModel :
                 selectedText = _findService.SearchText;
             }
 
-            vm.InitializeFindData(_findService, subs, selectedText, this);
+            vm.InitializeFindData(_findService, subs, selectedText, this, origs);
             window.AddHandler(InputElement.KeyDownEvent, _shortcutManager.OnKeyPressed, RoutingStrategies.Tunnel);
             window.AddHandler(InputElement.KeyUpEvent, _shortcutManager.OnKeyReleased, RoutingStrategies.Bubble);
             window.KeyDown += async (_, e) =>
@@ -11293,7 +11295,7 @@ public partial class MainViewModel :
 
                 if (vm.ResultFound)
                 {
-                    FocusEditTextBox();
+                    FocusEditTextBox(_findService.CurrentMatchInOriginal);
                 }
                 else
                 {
@@ -11313,15 +11315,16 @@ public partial class MainViewModel :
         }
 
         var subs = Subtitles.Select(p => p.Text).ToList();
+        var origs = GetOriginalTextsForFind();
 
         if (_findViewModel != null)
         {
-            _findViewModel.InitializeFindData(_findService, subs, _findService.SearchText, this);
+            _findViewModel.InitializeFindData(_findService, subs, _findService.SearchText, this, origs);
         }
 
         if (_replaceViewModel != null)
         {
-            _replaceViewModel.RefreshSubtitles(subs);
+            _replaceViewModel.RefreshSubtitles(subs, origs);
         }
     }
 
@@ -11339,16 +11342,19 @@ public partial class MainViewModel :
         {
             var currentLineIndex = Subtitles.IndexOf(selectedSubtitle);
             var subs = Subtitles.Select(p => p.Text).ToList();
-            _findService.Initialize(subs, SelectedSubtitleIndex ?? 0, result.WholeWord, result.FindMode);
+            var origs = GetOriginalTextsForFind();
+            var startInOriginal = IsFindPositionInOriginal();
+            var startTextBox = GetFindTextBox(startInOriginal);
+            _findService.Initialize(subs, SelectedSubtitleIndex ?? 0, result.WholeWord, result.FindMode, origs);
 
             var idx = -1;
             if (result.FindNextPressed)
             {
-                idx = _findService.FindNext(result.SearchText, subs, currentLineIndex, EditTextBox.SelectionEnd);
+                idx = _findService.FindNext(result.SearchText, subs, currentLineIndex, startTextBox.SelectionEnd, origs, startInOriginal);
             }
             else
             {
-                idx = _findService.FindPrevious(result.SearchText, subs, currentLineIndex, EditTextBox.SelectionStart - 1);
+                idx = _findService.FindPrevious(result.SearchText, subs, currentLineIndex, startTextBox.SelectionStart - 1, origs, startInOriginal);
             }
 
             if (idx < 0)
@@ -11364,8 +11370,8 @@ public partial class MainViewModel :
                     return;
                 }
                 idx = result.FindNextPressed
-                    ? _findService.FindNext(result.SearchText, subs, 0, 0)
-                    : _findService.FindPrevious(result.SearchText, subs, subs.Count, 0);
+                    ? _findService.FindNext(result.SearchText, subs, 0, 0, origs)
+                    : _findService.FindPrevious(result.SearchText, subs, subs.Count, 0, origs);
                 if (idx < 0)
                 {
                     ShowStatus(string.Format(Se.Language.General.XNotFound, _findService.SearchText));
@@ -11378,27 +11384,7 @@ public partial class MainViewModel :
                 _findViewModel.ResultFound = true;
             }
 
-            Dispatcher.UIThread.Post(() =>
-            {
-                var subtitle = Subtitles.GetOrNull(idx);
-                if (subtitle == null)
-                {
-                    return;
-                }
-
-                SubtitleGrid.SelectedIndex = idx;
-                SubtitleGrid.SelectedItem = subtitle;
-                SelectAndScrollToRow(idx);
-
-                ShowStatus(string.Format(Se.Language.General.FoundXInLineYZ, _findService.CurrentTextFound.Replace("\r\n", "·").Replace("\n", "·"), _findService.CurrentLineNumber + 1, _findService.CurrentTextIndex + 1));
-
-                if (EditTextBox.Text != subtitle.Text)
-                {
-                    EditTextBox.Text = subtitle.Text;
-                }
-
-                EditTextBox.Select(_findService.CurrentTextIndex, _findService.CurrentTextFound.Length);
-            });
+            ShowFindMatch(idx, _findService.CurrentTextFound, _findService.CurrentLineNumber, _findService.CurrentTextIndex, _findService.CurrentMatchInOriginal);
         }
     }
 
@@ -11418,9 +11404,11 @@ public partial class MainViewModel :
         }
 
         var subs = Subtitles.Select(p => p.Text).ToList();
+        var origs = GetOriginalTextsForFind();
+        var startInOriginal = IsFindPositionInOriginal();
         var currentLineIndex = Subtitles.IndexOf(selectedSubtitle);
-        var currentCharIndex = EditTextBox.SelectionEnd;
-        var idx = _findService.FindNext(_findService.SearchText, subs, currentLineIndex, currentCharIndex);
+        var currentCharIndex = GetFindTextBox(startInOriginal).SelectionEnd;
+        var idx = _findService.FindNext(_findService.SearchText, subs, currentLineIndex, currentCharIndex, origs, startInOriginal);
 
         if (idx < 0)
         {
@@ -11431,7 +11419,7 @@ public partial class MainViewModel :
                 _shortcutManager.ClearKeys();
                 return;
             }
-            idx = _findService.FindNext(_findService.SearchText, subs, 0, 0);
+            idx = _findService.FindNext(_findService.SearchText, subs, 0, 0, origs);
             if (idx < 0)
             {
                 ShowStatus(string.Format(Se.Language.General.XNotFound, _findService.SearchText));
@@ -11440,33 +11428,10 @@ public partial class MainViewModel :
             }
         }
 
-        var foundText = _findService.CurrentTextFound;
-        var foundLine = _findService.CurrentLineNumber;
-        var foundIndex = _findService.CurrentTextIndex;
+        var foundInOriginal = _findService.CurrentMatchInOriginal;
+        ShowFindMatch(idx, _findService.CurrentTextFound, _findService.CurrentLineNumber, _findService.CurrentTextIndex, foundInOriginal);
 
-        Dispatcher.UIThread.Post(() =>
-        {
-            var subtitle = Subtitles.GetOrNull(idx);
-            if (subtitle == null)
-            {
-                return;
-            }
-
-            SubtitleGrid.SelectedIndex = idx;
-            SubtitleGrid.SelectedItem = subtitle;
-            SelectAndScrollToRow(idx);
-
-            ShowStatus(string.Format(Se.Language.General.FoundXInLineYZ, foundText.Replace("\r\n", "·").Replace("\n", "·"), foundLine + 1, foundIndex + 1));
-
-            if (EditTextBox.Text != subtitle.Text)
-            {
-                EditTextBox.Text = subtitle.Text;
-            }
-
-            EditTextBox.Select(foundIndex, foundText.Length);
-        });
-
-        FocusEditTextBox();
+        FocusEditTextBox(foundInOriginal);
         _shortcutManager.ClearKeys();
     }
 
@@ -11486,8 +11451,10 @@ public partial class MainViewModel :
         }
 
         var subs = Subtitles.Select(p => p.Text).ToList();
+        var origs = GetOriginalTextsForFind();
+        var startInOriginal = IsFindPositionInOriginal();
         var currentLineIndex = Subtitles.IndexOf(selectedSubtitle);
-        var idx = _findService.FindPrevious(_findService.SearchText, subs, currentLineIndex, EditTextBox.SelectionStart - 1);
+        var idx = _findService.FindPrevious(_findService.SearchText, subs, currentLineIndex, GetFindTextBox(startInOriginal).SelectionStart - 1, origs, startInOriginal);
 
         if (idx < 0)
         {
@@ -11498,7 +11465,7 @@ public partial class MainViewModel :
                 _shortcutManager.ClearKeys();
                 return;
             }
-            idx = _findService.FindPrevious(_findService.SearchText, subs, subs.Count, 0);
+            idx = _findService.FindPrevious(_findService.SearchText, subs, subs.Count, 0, origs);
             if (idx < 0)
             {
                 ShowStatus(string.Format(Se.Language.General.XNotFound, _findService.SearchText));
@@ -11507,10 +11474,55 @@ public partial class MainViewModel :
             }
         }
 
-        var foundText = _findService.CurrentTextFound;
-        var foundLine = _findService.CurrentLineNumber;
-        var foundIndex = _findService.CurrentTextIndex;
+        var foundInOriginal = _findService.CurrentMatchInOriginal;
+        ShowFindMatch(idx, _findService.CurrentTextFound, _findService.CurrentLineNumber, _findService.CurrentTextIndex, foundInOriginal);
 
+        FocusEditTextBox(foundInOriginal);
+        _shortcutManager.ClearKeys();
+    }
+
+    /// <summary>
+    /// Original texts to search alongside the main texts, or null when no original subtitle
+    /// is loaded. SE 4 searched both columns too (issue #13053).
+    /// </summary>
+    private List<string>? GetOriginalTextsForFind()
+    {
+        return ShowColumnOriginalText
+            ? Subtitles.Select(p => p.OriginalText ?? string.Empty).ToList()
+            : null;
+    }
+
+    /// <summary>
+    /// Which column a find should continue from: the focused text box if one has focus
+    /// (find/replace windows do not take focus from it), otherwise the column of the last match.
+    /// </summary>
+    private bool IsFindPositionInOriginal()
+    {
+        if (!ShowColumnOriginalText)
+        {
+            return false;
+        }
+
+        if (EditTextBoxOriginal.IsFocused)
+        {
+            return true;
+        }
+
+        if (EditTextBox.IsFocused)
+        {
+            return false;
+        }
+
+        return _findService.CurrentMatchInOriginal;
+    }
+
+    private ITextBoxWrapper GetFindTextBox(bool inOriginal)
+    {
+        return inOriginal ? EditTextBoxOriginal : EditTextBox;
+    }
+
+    private void ShowFindMatch(int idx, string foundText, int foundLine, int foundIndex, bool inOriginal)
+    {
         Dispatcher.UIThread.Post(() =>
         {
             var subtitle = Subtitles.GetOrNull(idx);
@@ -11525,16 +11537,17 @@ public partial class MainViewModel :
 
             ShowStatus(string.Format(Se.Language.General.FoundXInLineYZ, foundText.Replace("\r\n", "·").Replace("\n", "·"), foundLine + 1, foundIndex + 1));
 
-            if (EditTextBox.Text != subtitle.Text)
+            // The text-box binding may not have propagated yet by the time this dispatcher
+            // post runs; ensure it shows the target subtitle's text before selecting.
+            var textBox = GetFindTextBox(inOriginal);
+            var text = inOriginal ? subtitle.OriginalText : subtitle.Text;
+            if (textBox.Text != text)
             {
-                EditTextBox.Text = subtitle.Text;
+                textBox.Text = text;
             }
 
-            EditTextBox.Select(foundIndex, foundText.Length);
+            textBox.Select(foundIndex, foundText.Length);
         });
-
-        FocusEditTextBox();
-        _shortcutManager.ClearKeys();
     }
 
     private async Task<MessageBoxResult> ShowWrapAroundDialog(string message)
@@ -11583,15 +11596,17 @@ public partial class MainViewModel :
 
         _replacePreviousFocus = Window?.FocusManager?.GetFocusedElement() as Control;
         var subs = Subtitles.Select(p => p.Text).ToList();
+        var origs = GetOriginalTextsForFind();
         var result = _windowService.ShowWindow<ReplaceWindow, ReplaceViewModel>(Window!, (window, vm) =>
         {
             WindowService.KeepTopmostWhileOwnerActive(window, Window!);
             _replaceViewModel = vm;
 
             var selectedText = string.Empty;
-            if (EditTextBox != null && !string.IsNullOrEmpty(EditTextBox.SelectedText))
+            var textBox = GetFindTextBox(EditTextBoxOriginal.IsFocused);
+            if (textBox != null && !string.IsNullOrEmpty(textBox.SelectedText))
             {
-                selectedText = EditTextBox.SelectedText;
+                selectedText = textBox.SelectedText;
             }
 
             if ((string.IsNullOrEmpty(selectedText) || string.Equals(selectedText, _findService.CurrentTextFound, _findService.CurrentFindMode == FindMode.CaseInsensitive ? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal))
@@ -11600,7 +11615,7 @@ public partial class MainViewModel :
                 selectedText = _findService.SearchText;
             }
 
-            vm.InitializeFindData(_findService, subs, selectedText, this);
+            vm.InitializeFindData(_findService, subs, selectedText, this, origs);
             if (!string.IsNullOrEmpty(findSearchText))
             {
                 vm.SearchText = findSearchText;
@@ -11638,7 +11653,7 @@ public partial class MainViewModel :
 
                 if (vm.ResultFound)
                 {
-                    FocusEditTextBox();
+                    FocusEditTextBox(_findService.CurrentMatchInOriginal);
                 }
                 else
                 {
@@ -11733,6 +11748,7 @@ public partial class MainViewModel :
         {
             var currentLineIndex = Subtitles.IndexOf(selectedSubtitle);
             var subs = Subtitles.Select(p => p.Text).ToList();
+            var origs = GetOriginalTextsForFind();
 
             // Save the previous find result before Initialize wipes it. The
             // replace path uses these — not the EditTextBox selection — to
@@ -11742,13 +11758,17 @@ public partial class MainViewModel :
             var savedFoundLine = _findService.CurrentLineNumber;
             var savedFoundIndex = _findService.CurrentTextIndex;
             var savedFoundText = _findService.CurrentTextFound;
+            var savedFoundInOriginal = _findService.CurrentMatchInOriginal;
 
-            _findService.Initialize(subs, SelectedSubtitleIndex ?? 0, result.WholeWord, result.FindMode);
+            var startInOriginal = IsFindPositionInOriginal();
+            var startTextBox = GetFindTextBox(startInOriginal);
+
+            _findService.Initialize(subs, SelectedSubtitleIndex ?? 0, result.WholeWord, result.FindMode, origs);
 
             var idx = -1;
             if (result.FindNextPressed)
             {
-                idx = _findService.FindNext(result.SearchText, subs, currentLineIndex, EditTextBox.SelectionEnd);
+                idx = _findService.FindNext(result.SearchText, subs, currentLineIndex, startTextBox.SelectionEnd, origs, startInOriginal);
             }
             else if (result.ReplaceAllPressed)
             {
@@ -11764,37 +11784,62 @@ public partial class MainViewModel :
                     }
                 }
 
+                if (origs != null)
+                {
+                    for (var i = 0; i < Subtitles.Count && i < origs.Count; i++)
+                    {
+                        var s = Subtitles[i];
+                        var newText = origs[i];
+                        if (newText != s.OriginalText)
+                        {
+                            s.OriginalText = newText;
+                        }
+                    }
+                }
+
                 ShowStatus(string.Format(Se.Language.Main.ReplacedXWithYCountZ, result.SearchText, result.ReplaceText, replaceCount));
                 return;
             }
             else // replace requested
             {
-                var nextStartIndex = EditTextBox.SelectionEnd;
+                var nextStartIndex = startTextBox.SelectionEnd;
                 var nextStartLine = currentLineIndex;
+                var nextStartInOriginal = startInOriginal;
 
-                if (savedFoundLine >= 0
-                    && savedFoundLine < subs.Count
+                // The match to replace may sit in the original text column (translator mode).
+                var savedLines = savedFoundInOriginal ? origs : subs;
+                if (savedLines != null
+                    && savedFoundLine >= 0
+                    && savedFoundLine < savedLines.Count
                     && savedFoundIndex >= 0
                     && !string.IsNullOrEmpty(savedFoundText))
                 {
-                    var line = subs[savedFoundLine];
+                    var line = savedLines[savedFoundLine];
                     if (savedFoundIndex + savedFoundText.Length <= line.Length)
                     {
                         var replaced = TryBuildReplacement(line, savedFoundIndex, savedFoundText, result, out var newLine);
                         if (replaced.HasValue)
                         {
-                            subs[savedFoundLine] = newLine;
+                            savedLines[savedFoundLine] = newLine;
                             if (savedFoundLine < Subtitles.Count)
                             {
-                                Subtitles[savedFoundLine].Text = newLine;
+                                if (savedFoundInOriginal)
+                                {
+                                    Subtitles[savedFoundLine].OriginalText = newLine;
+                                }
+                                else
+                                {
+                                    Subtitles[savedFoundLine].Text = newLine;
+                                }
                             }
                             nextStartLine = savedFoundLine;
                             nextStartIndex = savedFoundIndex + replaced.Value;
+                            nextStartInOriginal = savedFoundInOriginal;
                         }
                     }
                 }
 
-                idx = _findService.FindNext(result.SearchText, subs, nextStartLine, nextStartIndex);
+                idx = _findService.FindNext(result.SearchText, subs, nextStartLine, nextStartIndex, origs, nextStartInOriginal);
             }
 
             if (idx < 0)
@@ -11806,7 +11851,7 @@ public partial class MainViewModel :
                     ShowStatus(string.Format(Se.Language.General.XNotFound, _findService.SearchText));
                     return;
                 }
-                idx = _findService.FindNext(result.SearchText, subs, 0, 0);
+                idx = _findService.FindNext(result.SearchText, subs, 0, 0, origs);
                 if (idx < 0)
                 {
                     ShowStatus(string.Format(Se.Language.General.XNotFound, _findService.SearchText));
@@ -11819,33 +11864,7 @@ public partial class MainViewModel :
                 _replaceViewModel.ResultFound = true;
             }
 
-            var foundText = _findService.CurrentTextFound;
-            var foundLine = _findService.CurrentLineNumber;
-            var foundIndex = _findService.CurrentTextIndex;
-
-            Dispatcher.UIThread.Post(() =>
-            {
-                var subtitle = Subtitles.GetOrNull(idx);
-                if (subtitle == null)
-                {
-                    return;
-                }
-
-                SubtitleGrid.SelectedIndex = idx;
-                SubtitleGrid.SelectedItem = subtitle;
-                SelectAndScrollToRow(idx);
-
-                // The text-box binding may not have propagated yet by the time this dispatcher
-                // post runs; ensure it shows the target subtitle's text before selecting.
-                if (EditTextBox.Text != subtitle.Text)
-                {
-                    EditTextBox.Text = subtitle.Text;
-                }
-
-                EditTextBox.Select(foundIndex, foundText.Length);
-
-                ShowStatus(string.Format(Se.Language.General.FoundXInLineYZ, foundText.Replace("\r\n", "·").Replace("\n", "·"), foundLine + 1, foundIndex + 1));
-            });
+            ShowFindMatch(idx, _findService.CurrentTextFound, _findService.CurrentLineNumber, _findService.CurrentTextIndex, _findService.CurrentMatchInOriginal);
         }
     }
 
@@ -13435,6 +13454,11 @@ public partial class MainViewModel :
 
     private void FocusEditTextBox()
     {
+        FocusEditTextBox(false);
+    }
+
+    private void FocusEditTextBox(bool original)
+    {
         Dispatcher.UIThread.Post(async () =>
         {
             if (AudioVisualizer != null && AudioVisualizer.IsFocused)
@@ -13442,10 +13466,11 @@ public partial class MainViewModel :
                 AudioVisualizer.SkipNextPointerEntered = true;
             }
 
+            var textBox = GetFindTextBox(original);
             ActivateWindow(Window);
-            EditTextBox.Focus();
+            textBox.Focus();
             await Task.Delay(10);
-            EditTextBox.Focus();
+            textBox.Focus();
         });
     }
 
