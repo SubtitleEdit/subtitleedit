@@ -1137,7 +1137,7 @@
       "addLineBetweenSubtitles": "Dodaj linię między napisami",
       "titleExportDCinemaInteropPng": "D-Cinema interop/png",
       "titleExportDCinemaSmpte2014Png": "D-Cinema SMPTE 2014/png",
-      "imageBasedSubtitleSaved": "Zapisano napisy oparte na obrazach",
+      "imageBasedSubtitleSaved": "Zapisano napisy oparte na obrazach"
     },
     "statistics": {
       "title": "Statystyki",
@@ -1685,7 +1685,7 @@
       "outputFormatAssa": "Advanced Sub Station Alpha (.ass)",
       "style1": "Styl 1",
       "style2": "Styl 2",
-      "merge": "_Połącz",
+      "merge": "_Połącz"
     },
     "splitSubtitle": {
       "title": "Podziel napisy",
