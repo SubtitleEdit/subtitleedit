@@ -285,6 +285,7 @@ namespace Nikse.SubtitleEdit.Core.Romanize
         }
 
         CultureInfo IRomanizer.Culture { get; } = Culture;
+        RomanizerLanguages IRomanizer.Language { get; } = RomanizerLanguages.Japanese;
 
         public bool IsValid(char chr)
         {

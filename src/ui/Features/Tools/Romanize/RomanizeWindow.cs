@@ -1,18 +1,16 @@
 using Avalonia;
 using Avalonia.Controls;
-using Avalonia.Controls.Primitives;
 using Avalonia.Controls.Templates;
 using Avalonia.Data;
-using Avalonia.Input;
-using Avalonia.Interactivity;
 using Avalonia.Layout;
 using Avalonia.Media;
 
+using Nikse.SubtitleEdit.Core.Romanize;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 
 using System;
-using System.Collections;
+using TagLib.Ape;
 
 namespace Nikse.SubtitleEdit.Features.Tools.Romanize;
 
@@ -33,6 +31,8 @@ public class RomanizeWindow : Window
         var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand);
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
         var panelButtons = UiUtil.MakeButtonBar(buttonOk, buttonCancel);
+        var languages = MakeLanguagesView(vm);
+        var romanized = UiUtil.MakeBorderForControlNoPadding(MakeRomanizedView(vm));
 
         var grid = new Grid
         {
@@ -53,8 +53,8 @@ public class RomanizeWindow : Window
             HorizontalAlignment = HorizontalAlignment.Stretch,
         };
 
-        grid.Add(MakeLanguagesView(vm), 0);
-        grid.Add(MakeRomanizedView(vm), 1);
+        grid.Add(languages, 0);
+        grid.Add(romanized, 1);
         grid.Add(panelButtons, 2);
 
         Content = grid;
@@ -65,240 +65,193 @@ public class RomanizeWindow : Window
         vm.RomanizeAllCommand.Execute(null);
     }
 
-    private static Grid MakeLanguagesView(RomanizeViewModel vm)
+    private static StackPanel MakeLanguagesView(RomanizeViewModel vm)
     {
-        var grid = new Grid
+        return new StackPanel
         {
-            RowDefinitions =
+            Spacing = 8,
+            Children =
             {
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-            },
-            ColumnDefinitions =
-            {
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) },
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) },
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) },
-            },
-            ColumnSpacing = 10,
-            RowSpacing = 10,
-            HorizontalAlignment = HorizontalAlignment.Stretch,
-        };
-
-        var toggletitle = new TextBlock
-        { 
-            Text = Se.Language.Tools.Romanize.ToggleTitle
-        };
-        var korean = new CheckBox
-        {
-            Content = Se.Language.Tools.Romanize.Korean,
-
-            [!CheckBox.IsCheckedProperty] = new Binding(nameof(RomanizeViewModel.RomanizeKorean))
-        };
-        var japanese = new CheckBox
-        {
-            Content = Se.Language.Tools.Romanize.Japanese,
-
-            [!CheckBox.IsCheckedProperty] = new Binding(nameof(RomanizeViewModel.RomanizeJapanese))
-        };
-        var russian = new CheckBox
-        {
-            Content = Se.Language.Tools.Romanize.Russian,
-
-            [!CheckBox.IsCheckedProperty] = new Binding(nameof(RomanizeViewModel.RomanizeRussian))
-        };
-
-        var operationstitle = new TextBlock
-        {
-            Text = Se.Language.Tools.Romanize.OperationsTitle
-        };
-        var merge = new CheckBox
-        {
-            Content = Se.Language.General.MergeLines,
-            IsChecked = vm.SubtitleItemsMerged ?? default,
-            HorizontalContentAlignment = HorizontalAlignment.Left,
-            HorizontalAlignment = HorizontalAlignment.Center,
-            VerticalAlignment = VerticalAlignment.Center,
-
-            [!CheckBox.IsCheckedProperty] = new Binding(nameof(RomanizeViewModel.SubtitleItemsMerged))
-            {
-                Mode = BindingMode.OneWayToSource
-            },
-        };
-        var position = new ComboBox
-        {
-            Background = Brushes.Transparent,
-            BorderThickness = new Thickness(0),
-            Margin = new Thickness(0, 1, 0, 0),
-            SelectedValue = vm.SubtitleItemsRomanizedLinePosition ?? default,
-            HorizontalAlignment = HorizontalAlignment.Left,
-            VerticalAlignment = VerticalAlignment.Center,
-            ItemsSource = Enum.GetValues<RomanizedLinePositions>(),
-
-            [!ComboBox.SelectedItemProperty] = new Binding(nameof(RomanizeViewModel.SubtitleItemsRomanizedLinePosition))
-            {
-                Mode = BindingMode.OneWayToSource,
-            },
-
-            ItemTemplate = new FuncDataTemplate<RomanizedLinePositions>((item, nameScope) => new TextBlock
-            {
-                Text = item.ToString()
-            }),
-
-            SelectionBoxItemTemplate = new FuncDataTemplate<RomanizedLinePositions>((item, nameScope) => new TextBlock
-            {
-                Text = string.Format("{0}: {1}", Se.Language.General.Position, item)
-            }),
-        };
-
-        merge.Click += (obj, args) => vm.RomanizeAllCommand.Execute(null);
-        position.SelectionChanged += (obj, args) => vm.RomanizeAllCommand.Execute(null);
-
-        grid.Add(toggletitle, 0, 0, 1, 3);
-        grid.Add(korean, 1, 0);
-        grid.Add(japanese, 1, 1);
-        grid.Add(russian, 1, 2);
-        grid.Add(operationstitle, 2, 0, 1, 3);
-        grid.Add(merge, 3, 0);
-        grid.Add(position, 3, 1, 1, 2);
-
-        return grid;
-    }
-    private static Grid MakeRomanizedView(RomanizeViewModel vm)
-    {
-        var grid = new Grid
-        {
-            RowDefinitions =
-            {
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
-            },
-            ColumnDefinitions =
-            {
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
-            },
-            ColumnSpacing = 10,
-            RowSpacing = 10,
-            HorizontalAlignment = HorizontalAlignment.Stretch,
-        };
-
-        var dataGrid = new DataGrid
-        {
-            AutoGenerateColumns = false,
-            SelectionMode = DataGridSelectionMode.Single,
-            CanUserResizeColumns = true,
-            CanUserSortColumns = true,
-            HorizontalAlignment = HorizontalAlignment.Stretch,
-            VerticalAlignment = VerticalAlignment.Stretch,
-            Width = double.NaN,
-            Height = double.NaN,
-            DataContext = vm,
-            ItemsSource = vm.SubtitleItems,
-            Columns =
-            {
-                new DataGridTextColumn
+                new TextBlock
                 {
-                    Header = Se.Language.General.NumberSymbol,
-                    Binding = new Binding(nameof(RomanizeSubtitleLineItem.LineNumber)),
-                    CellTheme = UiUtil.DataGridNoBorderNoPaddingCellTheme,
-                    Width = new DataGridLength(1, DataGridLengthUnitType.Auto),
-                    IsReadOnly = true,
+                    Text = Se.Language.Tools.Romanize.TitleSettings,
                 },
-                new DataGridTextColumn
+                new WrapPanel
                 {
-                    Header = Se.Language.General.OriginalText,
-                    Binding = new Binding(nameof(RomanizeSubtitleLineItem.TextOriginal)),
-                    Width = new DataGridLength(1, DataGridLengthUnitType.Auto),
-                    CellTheme = UiUtil.DataGridNoBorderCellTheme,
-                    IsReadOnly = true,
-                },
-                new DataGridTemplateColumn
-                {
-                    Width = new DataGridLength(1, DataGridLengthUnitType.Auto),
-
-                    Header = Se.Language.General.MergeLines,
-                    CellTheme = UiUtil.DataGridNoBorderCellTheme,
-                    CellTemplate = new FuncDataTemplate<RomanizeSubtitleLineItem>((item, _) =>
+                    ItemSpacing = 8,
+                    Orientation = Orientation.Horizontal,
+                    Children =
                     {
-                        var checkbox = new CheckBox
+                        new CheckBox
                         {
-                            HorizontalAlignment = HorizontalAlignment.Center,
-                            VerticalAlignment = VerticalAlignment.Center,
-                            
-                            [!CheckBox.IsCheckedProperty] = new Binding(nameof(RomanizeSubtitleLineItem.Merged)),
-                        };
+                            Content = Se.Language.General.MergeLines,
+                            IsChecked = vm.SubtitleItemsMerged ?? default,
 
-                        checkbox.Click += (obj, args) =>
-                        {
-                            if (item.LineNumber.HasValue)
-                                vm.RomanizeSingleCommand.Execute(item.LineNumber.Value - 1);
-                        };
-
-                        return checkbox;
-                    }),
-                },
-                new DataGridTemplateColumn
-                {
-                    Width = new DataGridLength(1, DataGridLengthUnitType.Auto),
-                    
-                    Header = Se.Language.General.Position,
-                    CellTheme = UiUtil.DataGridNoBorderCellTheme,
-                    CellTemplate = new FuncDataTemplate<RomanizeSubtitleLineItem>((item, _) =>
-                    {
-                        var combobox = new ComboBox
+                            [!CheckBox.IsCheckedProperty] = new Binding(nameof(RomanizeViewModel.SubtitleItemsMerged))
+                            {
+                                Mode = BindingMode.OneWayToSource
+                            },
+                        },
+                        new ComboBox
                         {
                             Background = Brushes.Transparent,
                             BorderThickness = new Thickness(0),
-                            HorizontalAlignment = HorizontalAlignment.Stretch,
-                            VerticalAlignment = VerticalAlignment.Center,
+                            Margin = new Thickness(0, 3.5, 0, 0),
                             ItemsSource = Enum.GetValues<RomanizedLinePositions>(),
-
-                            [!ComboBox.SelectedItemProperty] = new Binding(nameof(RomanizeSubtitleLineItem.RomanizedLinePosition)),
-                        };
-
-                        combobox.SelectionChanged += (obj, args) =>
-                        {
-                            if (args.AddedItems?.Count == 1 && 
-                                args.RemovedItems?.Count == 1 && 
-                                item.LineNumber.HasValue && 
-                                Enum.TryParse(args.AddedItems[0]!.ToString(), out RomanizedLinePositions _placement))
+                            SelectedValue = vm.SubtitleItemsRomanizedLinePosition ?? default,
+                            SelectionBoxItemTemplate = new FuncDataTemplate<RomanizedLinePositions>((item, nameScope) => new TextBlock
                             {
-                                int number = item.LineNumber.Value - 1;
-                                
-                                vm.SubtitleItems[number].RomanizedLinePosition = _placement;
-                                vm.RomanizeSingleCommand.Execute(number);
-                            }
-                        };
+                                Text = string.Format("{0}: {1}", Se.Language.General.Position, item)
+                            }),
 
-                        return combobox;
-                    }),
+                            [!ComboBox.SelectedItemProperty] = new Binding(nameof(RomanizeViewModel.SubtitleItemsRomanizedLinePosition))
+                            {
+                                Mode = BindingMode.OneWayToSource,
+                            },
+                        }
+                    }
                 },
-                new DataGridTextColumn
+                new TextBlock
                 {
-                    Header = Se.Language.General.Romanize,
-                    Binding = new Binding(nameof(RomanizeSubtitleLineItem.Text)),
-                    Width = new DataGridLength(1, DataGridLengthUnitType.Star),
-                    CellTheme = UiUtil.DataGridNoBorderCellTheme,
-                    IsReadOnly = false,
+                    Margin = new Thickness(0, 8, 0, 0),
+                    Text = Se.Language.Tools.Romanize.TitleLanguages,
                 },
-            },
-        };
-
-        dataGrid.AddHandler(InputElement.KeyDownEvent, (object? _, KeyEventArgs e) =>
-        {
-            if (e.Key is Key.Home or Key.End && dataGrid.ItemsSource is IList items && items.Count > 0)
-            {
-                var target = e.Key == Key.Home ? items[0] : items[^1];
-                dataGrid.SelectedItem = target;
-                dataGrid.ScrollIntoView(target, null);
-                e.Handled = true;
+                new WrapPanel
+                {
+                    ItemSpacing = 8,
+                    Orientation = Orientation.Horizontal,
+                    Children =
+                    {
+                        new CheckBox
+                        {
+                            Content = Se.Language.General.All,
+                            
+                            [!CheckBox.IsCheckedProperty] = new Binding(nameof(RomanizeViewModel.Romanize))
+                        },
+                        new CheckBox
+                        {
+                            Content = Se.Language.Tools.Romanize.Korean,
+                            
+                            [!CheckBox.IsCheckedProperty] = new Binding(nameof(RomanizeViewModel.RomanizeKorean))
+                        },
+                        new CheckBox
+                        {
+                            Content = Se.Language.Tools.Romanize.Japanese,
+                            
+                            [!CheckBox.IsCheckedProperty] = new Binding(nameof(RomanizeViewModel.RomanizeJapanese))
+                        },
+                        new CheckBox
+                        {
+                            Content = Se.Language.Tools.Romanize.Russian,
+                            
+                            [!CheckBox.IsCheckedProperty] = new Binding(nameof(RomanizeViewModel.RomanizeRussian))
+                        },
+                    }
+                }
             }
+        };
+    }
+    private static TableView MakeRomanizedView(RomanizeViewModel vm)
+    {
+        var dataGrid = TableViewExtras.MakeTableView(multiSelect: false);
 
-        }, RoutingStrategies.Tunnel);
+        dataGrid.SelectionMode = SelectionMode.Single;
+        dataGrid.CanUserResizeColumns = true;
+        dataGrid.HorizontalAlignment = HorizontalAlignment.Stretch;
+        dataGrid.VerticalAlignment = VerticalAlignment.Stretch;
+        dataGrid.Width = double.NaN;
+        dataGrid.Height = double.NaN;
+        dataGrid.DataContext = vm;
+        dataGrid.ItemsSource = vm.SubtitleItems;
+        dataGrid.Columns =
+        [
+            new SeTableViewColumn
+            {
+                Binding = new Binding(nameof(RomanizeSubtitleLineItem.LineNumber)),
+                CellTheme = UiUtil.TableViewCellTheme,
+                Header = Se.Language.General.NumberSymbol,
+                HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
+                Width = new GridLength(60),
+            },
+            new SeTableViewColumn
+            {
+                Binding = new Binding(nameof(RomanizeSubtitleLineItem.TextOriginal)),
+                CellTheme = UiUtil.TableViewCellTheme,
+                Header = Se.Language.General.OriginalText,
+                HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
+                Width = new GridLength(1, GridUnitType.Star),
+            },
+            new SeTableViewColumn
+            {
+                CellTheme = UiUtil.TableViewCellTheme,
+                CellTemplate = new FuncDataTemplate<RomanizeSubtitleLineItem>((item, _) =>
+                {
+                    var checkbox = new CheckBox
+                    {
+                        HorizontalAlignment = HorizontalAlignment.Center,
+                        VerticalAlignment = VerticalAlignment.Center,
 
-        grid.Add(UiUtil.MakeBorderForControlNoPadding(dataGrid), 0);
+                        [!CheckBox.IsCheckedProperty] = new Binding(nameof(RomanizeSubtitleLineItem.Merged)),
+                    };
 
-        return grid;
+                    checkbox.Click += (obj, args) =>
+                    {
+                        if (item.LineNumber.HasValue)
+                            vm.RomanizeSingleCommand.Execute(item.LineNumber.Value - 1);
+                    };
+
+                    return checkbox;
+                }),
+                Header = Se.Language.General.MergeLines,
+                Width = new GridLength(100),
+            },
+            new SeTableViewColumn
+            {
+                CellTheme = UiUtil.TableViewCellTheme,
+                CellTemplate = new FuncDataTemplate<RomanizeSubtitleLineItem>((item, _) =>
+                {
+                    var combobox = new ComboBox
+                    {
+                        Background = Brushes.Transparent,
+                        BorderThickness = new Thickness(0),
+                        Margin = new Thickness(0, 1, 0, 0),
+                        HorizontalAlignment = HorizontalAlignment.Stretch,
+                        VerticalAlignment = VerticalAlignment.Center,
+                        ItemsSource = Enum.GetValues<RomanizedLinePositions>(),
+
+                        [!ComboBox.SelectedItemProperty] = new Binding(nameof(RomanizeSubtitleLineItem.RomanizedLinePosition)),
+                    };
+
+                    combobox.SelectionChanged += (obj, args) =>
+                    {
+                        if (args.AddedItems?.Count == 1 &&
+                            args.RemovedItems?.Count == 1 &&
+                            item.LineNumber.HasValue &&
+                            Enum.TryParse(args.AddedItems[0]!.ToString(), out RomanizedLinePositions _placement))
+                        {
+                            int number = item.LineNumber.Value - 1;
+
+                            vm.SubtitleItems[number].RomanizedLinePosition = _placement;
+                            vm.RomanizeSingleCommand.Execute(number);
+                        }
+                    };
+
+                    return combobox;
+                }),
+                Header = Se.Language.General.Position,
+                Width = new GridLength(120),
+            },
+            new SeTableViewColumn
+            {
+                Header = Se.Language.General.Romanized,
+                CellTheme = UiUtil.TableViewCellTheme,
+                HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
+                Binding = new Binding(nameof(RomanizeSubtitleLineItem.Text)),
+                Width = new GridLength(1, GridUnitType.Star),
+                
+            }
+        ];
+
+        return dataGrid;
     }
 }

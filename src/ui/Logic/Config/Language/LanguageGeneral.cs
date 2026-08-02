@@ -450,6 +450,7 @@ public class LanguageGeneral
     public string RightToLeft { get; set; }
     public string Rules { get; set; }
     public string Romanize { get; set; }
+    public string Romanized { get; set; }
     public string SaveChangesMessage { get; set; }
     public string SaveChangesTitle { get; set; }
     public string SaveChangesToX { get; set; }
@@ -1172,6 +1173,7 @@ public class LanguageGeneral
         Right = "Right";
         RightToLeft = "Right to left";
         Romanize = "Romanize";
+        Romanized = "Romanized";
         Rules = "Rules";
         SaveChangesMessage = "Do you want to save changes to the current subtitle file?";
         SaveChangesTitle = "Save changes?";

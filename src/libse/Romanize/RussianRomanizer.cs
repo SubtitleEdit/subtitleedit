@@ -105,6 +105,7 @@ namespace Nikse.SubtitleEdit.Core.Romanize
         }
 
         CultureInfo IRomanizer.Culture { get; } = Culture;
+        RomanizerLanguages IRomanizer.Language { get; } = RomanizerLanguages.Russian;
 
         public bool IsValid(char chr)
         {

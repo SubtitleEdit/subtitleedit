@@ -3,6 +3,7 @@ using Avalonia.Input;
 using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using Google.Protobuf.WellKnownTypes;
 using Nikse.SubtitleEdit.Core.Romanize;
 using Nikse.SubtitleEdit.Features.Main;
 using Nikse.SubtitleEdit.Logic;
@@ -18,12 +19,15 @@ namespace Nikse.SubtitleEdit.Features.Tools.Romanize;
 
 public partial class RomanizeViewModel : ObservableObject
 {
-    [ObservableProperty] private bool? _subtitleItemsMerged;
-    [ObservableProperty] private RomanizedLinePositions? _subtitleItemsRomanizedLinePosition;
-    [ObservableProperty] private ObservableCollection<RomanizeSubtitleLineItem> _subtitleItems;
+    [ObservableProperty] private bool _romanize = true;
     [ObservableProperty] private bool _romanizeKorean = true;
     [ObservableProperty] private bool _romanizeJapanese = true;
     [ObservableProperty] private bool _romanizeRussian = true;
+    [ObservableProperty] private bool? _subtitleItemsMerged;
+    [ObservableProperty] private RomanizedLinePositions? _subtitleItemsRomanizedLinePosition;
+    [ObservableProperty] private ObservableCollection<RomanizeSubtitleLineItem> _subtitleItems;
+
+    protected bool _updatingRomanizeFlags = false;
 
     public List<SubtitleLineViewModel> Subtitles { get; }
 
@@ -48,10 +52,31 @@ public partial class RomanizeViewModel : ObservableObject
 
         switch (e.PropertyName)
         {
+            case nameof(Romanize):
+                if (_updatingRomanizeFlags) break;
+                _updatingRomanizeFlags = true;
+                RomanizeKorean = RomanizeJapanese = RomanizeRussian = Romanize;
+                _updatingRomanizeFlags = false;
+                RomanizeAll();
+                break;
             case nameof(RomanizeJapanese):
             case nameof(RomanizeKorean):
             case nameof(RomanizeRussian):
+                if (_updatingRomanizeFlags) break;
+                _updatingRomanizeFlags = true;
+                Romanize = RomanizeKorean && RomanizeJapanese && RomanizeRussian;
+                _updatingRomanizeFlags = false;
                 RomanizeAll();
+                break;
+
+            case nameof(SubtitleItemsMerged):
+                if (SubtitleItemsMerged is not null)
+                    RomanizeAll();
+                break;
+
+            case nameof(SubtitleItemsRomanizedLinePosition):
+                if (SubtitleItemsRomanizedLinePosition is not null)
+                    RomanizeAll();
                 break;
 
             default: break;
@@ -130,12 +155,8 @@ public partial class RomanizeViewModel : ObservableObject
         });
     }
 
-    private void LoadSettings()
-    { }
-    private void SaveSettings()
-    {
-        Se.SaveSettings();
-    }
+    private void LoadSettings() { }
+    private void SaveSettings() { }
 
     internal void KeyDown(object? sender, KeyEventArgs e)
     {

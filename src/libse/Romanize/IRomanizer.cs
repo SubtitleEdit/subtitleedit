@@ -20,6 +20,7 @@ namespace Nikse.SubtitleEdit.Core.Romanize
         }
 
         CultureInfo Culture { get; }
+        RomanizerLanguages Language { get; }
 
         bool IsValid(char chr);
         bool IsValid(string text);
@@ -59,5 +60,12 @@ namespace Nikse.SubtitleEdit.Core.Romanize
 
             return sb.ToString();
         }
+    }
+
+    public enum RomanizerLanguages
+    {
+        Japanese,
+        Korean,
+        Russian,
     }
 }
