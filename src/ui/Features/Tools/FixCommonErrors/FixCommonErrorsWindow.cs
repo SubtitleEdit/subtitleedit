@@ -723,7 +723,7 @@ public class FixCommonErrorsWindow : Window
         _vm.GridSubtitles = dataGridSubtitles;
         // Home/End jump to the first/last row even when focus is on the grid itself
         // (this replaces the hand-rolled tunnel handler the DataGrid needed).
-        TableViewExtras.AttachHomeEndNavigation(dataGridSubtitles);
+        TableViewExtras.AttachListNavigation(dataGridSubtitles);
 
         var gridCurrentSubtbtitle = MakeStep2EditPanel();
 

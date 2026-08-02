@@ -1,4 +1,5 @@
 using Nikse.SubtitleEdit.Core.Common;
+using Nikse.SubtitleEdit.Core.Dictionaries;
 using Nikse.SubtitleEdit.Core.Forms.FixCommonErrors;
 using Nikse.SubtitleEdit.Core.Interfaces;
 using Nikse.SubtitleEdit.UiLogic.Ocr.FixEngine;
@@ -144,6 +145,10 @@ internal static class FixCommonErrorsRunner
         var callbacks = new EmptyFixCallback
         {
             Language = language,
+
+            // Without this the uppercase-after-period rules treat every abbreviation period as a
+            // sentence ending, e.g. Dutch "dhr. de vries" -> "dhr. De vries" (#13082).
+            Abbreviations = AbbreviationList.Load(SpellCheckConfig.DictionariesFolder(), language),
         };
 
         // Fix Common Errors is not idempotent in a single pass: one rule can create a

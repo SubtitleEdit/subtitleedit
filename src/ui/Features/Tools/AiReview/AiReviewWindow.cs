@@ -57,12 +57,27 @@ public class AiReviewWindow : Window
             .WithAccessibleName(Se.Language.General.ApiKey);
         textBoxOpenAiApiKey.PlaceholderText = Se.Language.General.ApiKey;
         textBoxOpenAiApiKey.PasswordChar = '\u25cf';
+
+        // Free cloud tiers rate limit hard, so the delay between requests lives next to the API key
+        // rather than in a settings dialog. The label would not fit the toolbar - a timer icon plus
+        // tooltip carries the meaning, and the accessible name keeps it readable for screen readers.
+        var numericDelay = UiUtil.MakeNumericUpDownInt(0, 600, 0, 70, vm, nameof(vm.RequestDelaySeconds))
+            .WithAccessibleName(Se.Language.Translate.DelayInSecondsBetweenRequests);
+        ToolTip.SetTip(numericDelay, Se.Language.Translate.DelayInSecondsBetweenRequests);
+        var iconDelay = new Optris.Icons.Avalonia.Icon
+        {
+            Value = "mdi-timer-outline",
+            FontSize = 16,
+            VerticalAlignment = VerticalAlignment.Center,
+        };
+        ToolTip.SetTip(iconDelay, Se.Language.Translate.DelayInSecondsBetweenRequests);
+
         var panelOpenAiCompatible = new StackPanel
         {
             Orientation = Orientation.Horizontal,
             Spacing = 5,
             VerticalAlignment = VerticalAlignment.Center,
-            Children = { textBoxOpenAiUrl, textBoxOpenAiModel, textBoxOpenAiApiKey },
+            Children = { textBoxOpenAiUrl, textBoxOpenAiModel, textBoxOpenAiApiKey, iconDelay, numericDelay },
         };
         panelOpenAiCompatible.Bind(IsVisibleProperty, new Binding(nameof(vm.IsOpenAiCompatibleVisible)));
 

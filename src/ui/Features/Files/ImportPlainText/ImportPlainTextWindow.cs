@@ -67,7 +67,10 @@ public class ImportPlainTextWindow : Window
         };
 
         // Shares its cell with the alignment progress, so it steps aside while that runs.
-        var labelNumberOfSubtitles = UiUtil.MakeLabel().WithBindText(vm, nameof(vm.NumberOfSubtitles)).WithAlignmentTop();
+        var labelNumberOfSubtitles = UiUtil.MakeLabel().WithBindText(vm, new Binding($"{nameof(vm.Subtitles)}.{nameof(vm.Subtitles.Count)}")
+        {
+            StringFormat = Se.Language.File.Import.NumberOfSubtitlesX,
+        }).WithAlignmentTop();
         labelNumberOfSubtitles.Bind(IsVisibleProperty, new Binding(nameof(vm.IsAligning))
         {
             Source = vm,

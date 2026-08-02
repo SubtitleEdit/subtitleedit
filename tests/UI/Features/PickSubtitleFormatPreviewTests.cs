@@ -1,19 +1,19 @@
-using Avalonia.Controls;
 using Avalonia.Headless.XUnit;
-using Nikse.SubtitleEdit.Controls;
+using Nikse.SubtitleEdit.Controls.SyntaxTextEditorControl;
 using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using Nikse.SubtitleEdit.Features.Shared.PickSubtitleFormat;
+using Nikse.SubtitleEdit.Logic;
 
 namespace UITests.Features;
 
 /// <summary>
-/// The format preview renders in a <see cref="SyntaxHighlightingTextBox"/> (it used to be an
-/// AvaloniaEdit editor); formats without syntax rules fall back to a plain text box.
+/// The format preview renders in the virtualizing source editor, with line numbers and the syntax
+/// rules of the selected format.
 /// </summary>
 public class PickSubtitleFormatPreviewTests
 {
-    private static TextBox ShowPreview(SubtitleFormat format)
+    private static SyntaxTextEditor ShowPreview(SubtitleFormat format)
     {
         var subtitle = new Subtitle();
         subtitle.Paragraphs.Add(new Paragraph("Hello, World!", 1000, 3000));
@@ -22,27 +22,27 @@ public class PickSubtitleFormatPreviewTests
         var vm = new PickSubtitleFormatViewModel();
         vm.Initialize(format, subtitle);
 
-        return Assert.IsAssignableFrom<TextBox>(vm.PreviewContainer.Child);
+        return Assert.IsType<SyntaxTextEditor>(vm.PreviewContainer.Child);
     }
 
     [AvaloniaFact]
     public void KnownFormatIsPreviewedWithSyntaxHighlighting()
     {
-        var textBox = ShowPreview(new SubRip());
+        var editor = ShowPreview(new SubRip());
 
-        var syntaxTextBox = Assert.IsType<SyntaxHighlightingTextBox>(textBox);
-        Assert.IsType<Nikse.SubtitleEdit.Logic.SubRipSourceSyntaxHighlighting>(syntaxTextBox.SourceHighlighter);
-        Assert.True(syntaxTextBox.IsReadOnly);
-        Assert.Contains("00:00:01,000 --> 00:00:03,000", syntaxTextBox.Text);
+        Assert.IsType<SubRipSourceSyntaxHighlighting>(editor.SourceHighlighter);
+        Assert.True(editor.IsReadOnly);
+        Assert.True(editor.ShowLineNumbers);
+        Assert.Contains("00:00:01,000 --> 00:00:03,000", editor.Text);
     }
 
     [AvaloniaFact]
-    public void FormatWithoutSyntaxRulesUsesAPlainTextBox()
+    public void FormatWithoutSyntaxRulesIsShownWithoutColoring()
     {
-        var textBox = ShowPreview(new UnknownSubtitle1());
+        var editor = ShowPreview(new UnknownSubtitle1());
 
-        Assert.IsNotType<SyntaxHighlightingTextBox>(textBox);
-        Assert.True(textBox.IsReadOnly);
-        Assert.False(string.IsNullOrEmpty(textBox.Text));
+        Assert.Null(editor.SourceHighlighter);
+        Assert.True(editor.IsReadOnly);
+        Assert.False(string.IsNullOrEmpty(editor.Text));
     }
 }

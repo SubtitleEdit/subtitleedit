@@ -1,6 +1,6 @@
 # Modify Selection
 
-Select or deselect subtitle lines based on rules — text content, duration, characters per second, gaps, line count, bookmarks, styles, actors, and more.
+Select or deselect subtitle lines based on rules — text content, hearing-impaired text, duration, characters per second, gaps, line count, bookmarks, styles, actors, and more.
 
 - **Menu:** Edit → Modify selection...
 - **Shortcut:** Configurable (no default)
@@ -48,6 +48,29 @@ Metadata rules:
 - **Bookmark contains** — Bookmark text contains the entered string
 - **Style** — Line uses one of the checked styles (list built from the styles present in the file; ASSA subtitles)
 - **Actor** — Line has one of the checked actors
+
+Hearing impaired:
+
+- **Hearing impaired (SDH)** — Line contains hearing-impaired text, i.e. anything [Remove text for hearing impaired](remove-text-hi.md) would remove or change
+
+## Hearing Impaired (SDH)
+
+This rule runs the *Remove text for hearing impaired* engine over every line and matches the ones it would change — sound descriptions in brackets, `SPEAKER:` labels, uppercase-only lines, interjections, and so on. Plain dialogue is left alone.
+
+Use it to get the SDH out of a file as a separate subtitle: pick the rule, click **OK**, then cut the selected lines (Ctrl+X) and paste them into a new window to save as `.srt`. This is handy before aligning a subtitle, so the SDH can be merged back in afterwards.
+
+Click **Settings** to choose what counts as hearing-impaired text:
+
+- **Remove text between** — **Brackets [...]**, **Curly brackets {...}**, **Parentheses (...)**, **Custom** (the delimiters set in *Remove text for hearing impaired* are shown next to the box)
+- **Text before colon** — Speaker labels like `SPEAKER:`
+- **Uppercase line** — Lines that are entirely uppercase
+- **Line contains** — Lines containing one of the configured substrings
+- **Only music symbols** — Lines that consist only of music symbols
+- **Interjections** — Common interjections such as "hmm" and "uh"
+
+The boxes start out matching what *Remove text for hearing impaired* is currently set to remove, so by default the selection is exactly what that tool would delete. Changes made here are not written back to that tool — they last until the Modify selection window is closed.
+
+Everything else the engine needs — the custom delimiters, the *if line contains* list, the uppercase whitelist, and the per-language interjections — is taken from **Tools → Remove text for hearing impaired**. Change it there if the rule matches too much or too little.
 
 ## Selection Actions
 

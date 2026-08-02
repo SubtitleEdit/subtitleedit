@@ -1,4 +1,4 @@
-using Avalonia.Controls;
+﻿using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Threading;
@@ -21,6 +21,7 @@ using Nikse.SubtitleEdit.Features.Video.TextToSpeech.ElevenLabsSettings;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.EncodingSettings;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.Engines;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.F5TtsCrispAsrSettings;
+using Nikse.SubtitleEdit.Features.Video.TextToSpeech.OmniVoiceCrispAsrSettings;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.VoxCPM2CrispAsrSettings;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.MossTtsCrispAsrSettings;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.IndexTtsCrispAsrSettings;
@@ -75,8 +76,6 @@ public partial class TextToSpeechViewModel : ObservableObject
     [ObservableProperty] private bool _hasRegion;
     [ObservableProperty] private string _region;
     [ObservableProperty] private bool _hasModel;
-    [ObservableProperty] private int _voiceCount;
-    [ObservableProperty] private string _voiceCountInfo;
     [ObservableProperty] private bool _isVoiceCountVisible;
     [ObservableProperty] private string _linesInfo = string.Empty;
     [ObservableProperty] private bool _hasVideoFile;
@@ -170,7 +169,6 @@ public partial class TextToSpeechViewModel : ObservableObject
         Languages = new ObservableCollection<TtsLanguage>();
         ApiKey = string.Empty;
         Region = string.Empty;
-        VoiceCountInfo = string.Empty;
         ProgressText = string.Empty;
         IsVoiceTestEnabled = true;
         IsVoiceComboEnabled = true;
@@ -244,6 +242,11 @@ public partial class TextToSpeechViewModel : ObservableObject
             new MossTtsCrispAsr(),
 
             new ZonosTtsCrispAsr(),
+
+            // OmniVoice (CrispASR) — the same model family as the standalone OmniVoice TTS
+            // above, but on the shared CrispASR runtime and as a persistent server, so the
+            // model loads once instead of once per line.
+            new OmniVoiceCrispAsr(),
 
             new ChatterboxTtsCpp(),
         ];
@@ -414,6 +417,10 @@ public partial class TextToSpeechViewModel : ObservableObject
         {
             Se.Settings.Video.TextToSpeech.VoxCPM2CrispAsrModel = SelectedModel ?? VoxCPM2CrispAsr.DefaultModelKey;
         }
+        else if (SelectedEngine is OmniVoiceCrispAsr)
+        {
+            Se.Settings.Video.TextToSpeech.OmniVoiceCrispAsrModel = SelectedModel ?? OmniVoiceCrispAsr.DefaultModelKey;
+        }
         else if (SelectedEngine is MossTtsCrispAsr)
         {
             Se.Settings.Video.TextToSpeech.MossTtsCrispAsrModel = SelectedModel ?? MossTtsCrispAsr.DefaultModelKey;
@@ -582,6 +589,7 @@ public partial class TextToSpeechViewModel : ObservableObject
         string? wavPath = null;
         bool isCosyVoice3 = false;
         bool isVoxCPM2 = false;
+        bool isOmniVoiceCrispAsr = false;
         bool isMossTts = false;
         bool isQwen3Clone = false;
         if (voice.EngineVoice is CosyVoice3Voice cosy && !string.IsNullOrEmpty(cosy.FilePath) && string.IsNullOrEmpty(cosy.RefText))
@@ -604,6 +612,16 @@ public partial class TextToSpeechViewModel : ObservableObject
             {
                 wavPath = vox.FilePath;
                 isVoxCPM2 = true;
+            }
+        }
+        else if (voice.EngineVoice is OmniVoiceCrispAsrVoice omniCrisp && !string.IsNullOrEmpty(omniCrisp.FilePath))
+        {
+            // Empty FilePath means the built-in voice, which clones nothing and needs no ref-text.
+            var existing = TryReadRefTextSibling(omniCrisp.FilePath);
+            if (string.IsNullOrEmpty(existing))
+            {
+                wavPath = omniCrisp.FilePath;
+                isOmniVoiceCrispAsr = true;
             }
         }
         else if (voice.EngineVoice is MossTtsVoice moss && !string.IsNullOrEmpty(moss.FilePath))
@@ -672,6 +690,10 @@ public partial class TextToSpeechViewModel : ObservableObject
             else if (isVoxCPM2)
             {
                 written = VoxCPM2CrispAsr.TryWriteRefTextSidecar(wavPath, result.Text);
+            }
+            else if (isOmniVoiceCrispAsr)
+            {
+                written = OmniVoiceCrispAsr.TryWriteRefTextSidecar(wavPath, result.Text);
             }
             else if (isMossTts)
             {
@@ -1132,6 +1154,10 @@ public partial class TextToSpeechViewModel : ObservableObject
         {
             VoxCPM2CrispAsr.StopServer();
         }
+        if (keepAlive is not OmniVoiceCrispAsr)
+        {
+            OmniVoiceCrispAsr.StopServer();
+        }
         if (keepAlive is not MossTtsCrispAsr)
         {
             MossTtsCrispAsr.StopServer();
@@ -1339,6 +1365,10 @@ public partial class TextToSpeechViewModel : ObservableObject
         {
             await _windowService.ShowDialogAsync<F5TtsCrispAsrSettingsWindow, F5TtsCrispAsrSettingsViewModel>(Window!, vm => vm.Initialize());
         }
+        else if (SelectedEngine is OmniVoiceCrispAsr)
+        {
+            await _windowService.ShowDialogAsync<OmniVoiceCrispAsrSettingsWindow, OmniVoiceCrispAsrSettingsViewModel>(Window!, vm => vm.Initialize());
+        }
         else if (SelectedEngine is VoxCPM2CrispAsr)
         {
             await _windowService.ShowDialogAsync<VoxCPM2CrispAsrSettingsWindow, VoxCPM2CrispAsrSettingsViewModel>(Window!, vm => vm.Initialize());
@@ -1439,6 +1469,9 @@ public partial class TextToSpeechViewModel : ObservableObject
             case VoxCPM2CrispAsr:
                 await _windowService.ShowDialogAsync<DownloadTtsWindow, DownloadTtsViewModel>(Window!, vm => vm.StartDownloadVoxCPM2CrispAsrModels(VoxCPM2CrispAsr.ResolveModelKey(SelectedModel)));
                 break;
+            case OmniVoiceCrispAsr:
+                await _windowService.ShowDialogAsync<DownloadTtsWindow, DownloadTtsViewModel>(Window!, vm => vm.StartDownloadOmniVoiceCrispAsrModels(OmniVoiceCrispAsr.ResolveModelKey(SelectedModel)));
+                break;
             case MossTtsCrispAsr:
                 await _windowService.ShowDialogAsync<DownloadTtsWindow, DownloadTtsViewModel>(Window!, vm => vm.StartDownloadMossTtsCrispAsrModels(MossTtsCrispAsr.ResolveModelKey(SelectedModel)));
                 break;
@@ -1504,6 +1537,9 @@ public partial class TextToSpeechViewModel : ObservableObject
                 ? DownloadDotStatus.UpToDate
                 : DownloadDotStatus.NotInstalled,
             VoxCPM2CrispAsr => VoxCPM2CrispAsr.AreModelsInstalled(modelKey)
+                ? DownloadDotStatus.UpToDate
+                : DownloadDotStatus.NotInstalled,
+            OmniVoiceCrispAsr => OmniVoiceCrispAsr.AreModelsInstalled(modelKey)
                 ? DownloadDotStatus.UpToDate
                 : DownloadDotStatus.NotInstalled,
             MossTtsCrispAsr => MossTtsCrispAsr.AreModelsInstalled(modelKey)
@@ -1683,8 +1719,6 @@ public partial class TextToSpeechViewModel : ObservableObject
         SelectedVoice = Voices.FirstOrDefault(v => v.Name == currentVoiceName)
                         ?? Voices.FirstOrDefault(v => v.Name == Se.Settings.Video.TextToSpeech.Voice)
                         ?? Voices.FirstOrDefault();
-        VoiceCount = Voices.Count;
-        VoiceCountInfo = string.Format(Se.Language.Video.TextToSpeech.XVoices, Voices.Count);
         IsVoiceCountVisible = Voices.Count > 0;
     }
 
@@ -3251,10 +3285,6 @@ public partial class TextToSpeechViewModel : ObservableObject
             {
                 Voices.Add(vo);
             }
-            VoiceCount = Voices.Count;
-            // The label binds VoiceCountInfo; only VoiceCount was ever written, so the voice
-            // count next to the combo stayed permanently blank.
-            VoiceCountInfo = string.Format(Se.Language.Video.TextToSpeech.XVoices, Voices.Count);
             IsVoiceCountVisible = Voices.Count > 0;
 
             var lastVoice = Voices.FirstOrDefault(v => v.Name == Se.Settings.Video.TextToSpeech.Voice);
@@ -3404,6 +3434,16 @@ public partial class TextToSpeechViewModel : ObservableObject
             else if (SelectedEngine is VoxCPM2CrispAsr)
             {
                 SelectedModel = Models.FirstOrDefault(p => p == Se.Settings.Video.TextToSpeech.VoxCPM2CrispAsrModel);
+                if (string.IsNullOrEmpty(SelectedModel))
+                {
+                    SelectedModel = Models.FirstOrDefault();
+                }
+                IsEngineSettingsVisible = true;
+                IsModelDownloadVisible = true;
+            }
+            else if (SelectedEngine is OmniVoiceCrispAsr)
+            {
+                SelectedModel = Models.FirstOrDefault(p => p == Se.Settings.Video.TextToSpeech.OmniVoiceCrispAsrModel);
                 if (string.IsNullOrEmpty(SelectedModel))
                 {
                     SelectedModel = Models.FirstOrDefault();

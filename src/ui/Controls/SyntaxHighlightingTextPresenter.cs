@@ -56,8 +56,8 @@ public class SyntaxHighlightingTextPresenter : TextPresenter
     private FontFeatureCollection? _cachedFontFeatures;
     private bool _cachedIsDarkTheme;
 
-    // Live spell check: the red underline decoration matches SpellCheckUnderlineTransformer's
-    // (the AvaloniaEdit editor), so both editors underline identically.
+    // Live spell check: which words count as misspelled comes from SpellCheckWordScanner, so the
+    // edit box and its context menu always agree.
     private static readonly TextDecorationCollection SpellCheckUnderline = new()
     {
         new TextDecoration
@@ -351,7 +351,7 @@ public class SyntaxHighlightingTextPresenter : TextPresenter
         if (_spellCheckedText != text)
         {
             _spellCheckedText = text;
-            _spellCheckedWords = SpellCheckUnderlineTransformer.GetMisspelledWords(text, spellCheckManager);
+            _spellCheckedWords = SpellCheckWordScanner.GetMisspelledWords(text, spellCheckManager);
         }
 
         if (_spellCheckedWords.Count == 0)

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Macedonian abbreviations - a period here ends an abbreviation, not a sentence, so "Fix common
+  errors" must not capitalize the following word (issue #13082). Matching is case insensitive,
+  so one entry per abbreviation is enough. Abbreviations with an inner period (e.g. "a.m.") are
+  already recognized by a general rule and need no entry here.
+-->
+<Abbreviations>
+  <Item>анг.</Item>
+  <Item>англ.</Item>
+  <Item>бр.</Item>
+  <Item>год.</Item>
+  <Item>напр.</Item>
+  <Item>проф.</Item>
+  <Item>стр.</Item>
+  <Item>ул.</Item>
+  <Item>чл.</Item>
+</Abbreviations>

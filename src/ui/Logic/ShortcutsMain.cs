@@ -229,6 +229,7 @@ public static class ShortcutsMain
         { nameof(MainViewModel.CommandShowLayoutCommand), Se.Language.Options.Shortcuts.GeneralChooseLayout },
 
         { nameof(MainViewModel.GoToNextLineCommand), Se.Language.Options.Shortcuts.GeneralGoToNextSubtitle },
+        { nameof(MainViewModel.GoToNextLineCursorAtEndCommand), Se.Language.Options.Shortcuts.GeneralGoToNextSubtitleCursorAtEnd },
         { nameof(MainViewModel.GoToPreviousLineCommand), Se.Language.Options.Shortcuts.GeneralGoToPrevSubtitle },
         { nameof(MainViewModel.GoToNextLineAndSetVideoPositionCommand), Se.Language.Options.Shortcuts.GoToNextLineAndSetVideoPosition },
         { nameof(MainViewModel.GoToPreviousLineAndSetVideoPositionCommand), Se.Language.Options.Shortcuts.GoToPreviousLineAndSetVideoPosition },
@@ -431,9 +432,10 @@ public static class ShortcutsMain
         { nameof(MainViewModel.PlaySelectedLinesWithLoopCommand), Se.Language.General.PlaySelectedLinesWithLoop },
         { nameof(MainViewModel.PlaySelectedLinesAndFocusWaveformCommand), Se.Language.General.PlaySelectedLinesAndFocusWaveform },
         { nameof(MainViewModel.PlaySelectedLinesWithLoopAndFocusWaveformCommand), Se.Language.General.PlaySelectedLinesWithLoopAndFocusWaveform },
-        { nameof(MainViewModel.ToggleCasingCommand), Se.Language.General.ToggleCasing },
+        { nameof(MainViewModel.ToggleCasingCommand), Se.Language.Options.Shortcuts.SelectionToggleCasing },
         { nameof(MainViewModel.SelectionToLowerCommand), Se.Language.Options.Shortcuts.SelectionToLower },
         { nameof(MainViewModel.SelectionToUpperCommand), Se.Language.Options.Shortcuts.SelectionToUpper },
+        { nameof(MainViewModel.SelectionToSentenceCaseCommand), Se.Language.Options.Shortcuts.SelectionToSentenceCase },
         { nameof(MainViewModel.GoogleItCommand), Se.Language.Options.Shortcuts.GoogleIt },
         { nameof(MainViewModel.ImportImageSubtitleForEditCommand), Se.Language.Options.Shortcuts.ImportImageSubtitleForEdit },
         { nameof(MainViewModel.ShowMediaInformationCommand), Se.Language.Options.Shortcuts.ShowMediaInformation },
@@ -578,6 +580,7 @@ public static class ShortcutsMain
 
         AddShortcut(shortcuts, vm.GoToPreviousLineCommand, nameof(vm.GoToPreviousLineCommand), ShortcutCategory.General);
         AddShortcut(shortcuts, vm.GoToNextLineCommand, nameof(vm.GoToNextLineCommand), ShortcutCategory.General);
+        AddShortcut(shortcuts, vm.GoToNextLineCursorAtEndCommand, nameof(vm.GoToNextLineCursorAtEndCommand), ShortcutCategory.General);
         AddShortcut(shortcuts, vm.GoToPreviousLineAndSetVideoPositionCommand, nameof(vm.GoToPreviousLineAndSetVideoPositionCommand), ShortcutCategory.General);
         AddShortcut(shortcuts, vm.GoToNextLineAndSetVideoPositionCommand, nameof(vm.GoToNextLineAndSetVideoPositionCommand), ShortcutCategory.General);
         AddShortcut(shortcuts, vm.GoToPreviousLineFromVideoPositionCommand, nameof(vm.GoToPreviousLineFromVideoPositionCommand), ShortcutCategory.General);
@@ -826,9 +829,12 @@ public static class ShortcutsMain
         AddShortcut(shortcuts, vm.PlaySelectedLinesWithLoopCommand, nameof(vm.PlaySelectedLinesWithLoopCommand), ShortcutCategory.General, ShortcutGroup.Video);
         AddShortcut(shortcuts, vm.PlaySelectedLinesAndFocusWaveformCommand, nameof(vm.PlaySelectedLinesAndFocusWaveformCommand), ShortcutCategory.General, ShortcutGroup.Video);
         AddShortcut(shortcuts, vm.PlaySelectedLinesWithLoopAndFocusWaveformCommand, nameof(vm.PlaySelectedLinesWithLoopAndFocusWaveformCommand), ShortcutCategory.General, ShortcutGroup.Video);
-        AddShortcut(shortcuts, vm.ToggleCasingCommand, nameof(vm.ToggleCasingCommand), ShortcutCategory.SubtitleGridAndTextBox);
+        // "Toggle casing" also works on selected lines in the grid, but it belongs next to the two
+        // other casing actions when browsing shortcuts - the group is display-only (#13093).
+        AddShortcut(shortcuts, vm.ToggleCasingCommand, nameof(vm.ToggleCasingCommand), ShortcutCategory.SubtitleGridAndTextBox, ShortcutGroup.TextBox);
         AddShortcut(shortcuts, vm.SelectionToLowerCommand, nameof(vm.SelectionToLowerCommand), ShortcutCategory.TextBox);
         AddShortcut(shortcuts, vm.SelectionToUpperCommand, nameof(vm.SelectionToUpperCommand), ShortcutCategory.TextBox);
+        AddShortcut(shortcuts, vm.SelectionToSentenceCaseCommand, nameof(vm.SelectionToSentenceCaseCommand), ShortcutCategory.TextBox);
         AddShortcut(shortcuts, vm.GoogleItCommand, nameof(vm.GoogleItCommand), ShortcutCategory.TextBox, ShortcutGroup.Search);
         AddShortcut(shortcuts, vm.ImportImageSubtitleForEditCommand, nameof(vm.ImportImageSubtitleForEditCommand), ShortcutCategory.General, ShortcutGroup.File);
         AddShortcut(shortcuts, vm.ShowMediaInformationCommand, nameof(vm.ShowMediaInformationCommand), ShortcutCategory.General, ShortcutGroup.Video);
@@ -943,9 +949,14 @@ public static class ShortcutsMain
             new(nameof(vm.RightToLeftToggleCommand), [cmd, "Shift", "Alt", nameof(Avalonia.Input.Key.R)], ShortcutCategory.General),
 
             // Timing / creation (V4 defaults)
+            // Note: WaveformSetEndAndGoToNext deliberately ships without its V4 default (F10).
+            // Bare F10 activates the main menu bar (Windows standard, #11745), and a registered
+            // single-key F10 shortcut suppresses that (#12504) - so a shipped F10 default would
+            // permanently kill F10 menu activation for everyone (#13083). Users who want the V4
+            // behavior can still assign F10 to the action themselves; that user-defined shortcut
+            // then wins over the menu toggle. Se.MigrateShortcuts clears the old persisted default.
             new(nameof(vm.WaveformSetStartCommand), [nameof(Avalonia.Input.Key.F11)], ShortcutCategory.General),
             new(nameof(vm.WaveformSetEndCommand), [nameof(Avalonia.Input.Key.F12)], ShortcutCategory.General),
-            new(nameof(vm.WaveformSetEndAndGoToNextCommand), [nameof(Avalonia.Input.Key.F10)], ShortcutCategory.General),
             new(nameof(vm.InsertLineAfterCommand), ["Alt", nameof(Avalonia.Input.Key.Insert)], ShortcutCategory.General),
             new(nameof(vm.InsertLineBeforeCommand), [cmd, "Shift", nameof(Avalonia.Input.Key.Insert)], ShortcutCategory.General),
             new(nameof(vm.AutoBreakCommand), [cmd, "Alt", nameof(Avalonia.Input.Key.B)], ShortcutCategory.General),

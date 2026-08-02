@@ -1,4 +1,4 @@
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.DependencyInjection;
 using Nikse.SubtitleEdit.Features.Assa;
 using Nikse.SubtitleEdit.Features.Assa.AssaApplyAdvancedEffect;
 using Nikse.SubtitleEdit.Features.Assa.AssaApplyCustomOverrideTags;
@@ -158,6 +158,7 @@ using Nikse.SubtitleEdit.Features.Video.TextToSpeech.VibeVoiceCrispAsrSettings;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.IndexTtsCrispAsrSettings;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.CosyVoice3CrispAsrSettings;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.F5TtsCrispAsrSettings;
+using Nikse.SubtitleEdit.Features.Video.TextToSpeech.OmniVoiceCrispAsrSettings;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.VoxCPM2CrispAsrSettings;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.MossTtsCrispAsrSettings;
 using Nikse.SubtitleEdit.Features.Video.SpeechToText.EngineSettings;
@@ -269,6 +270,7 @@ public static class DependencyInjectionExtensions
         collection.AddHttpClient<IIndexTtsCrispAsrDownloadService, IndexTtsCrispAsrDownloadService>();
         collection.AddHttpClient<ICosyVoice3CrispAsrDownloadService, CosyVoice3CrispAsrDownloadService>();
         collection.AddHttpClient<IF5TtsCrispAsrDownloadService, F5TtsCrispAsrDownloadService>();
+        collection.AddHttpClient<IOmniVoiceCrispAsrDownloadService, OmniVoiceCrispAsrDownloadService>();
         collection.AddHttpClient<IVoxCPM2CrispAsrDownloadService, VoxCPM2CrispAsrDownloadService>();
         collection.AddHttpClient<IMossTtsCrispAsrDownloadService, MossTtsCrispAsrDownloadService>();
         collection.AddHttpClient<IZonosTtsCrispAsrDownloadService, ZonosTtsCrispAsrDownloadService>();
@@ -406,6 +408,7 @@ public static class DependencyInjectionExtensions
         collection.AddTransient<GetKeyViewModel>();
         collection.AddTransient<GoToLineNumberViewModel>();
         collection.AddTransient<GoToVideoPositionViewModel>();
+        collection.AddTransient<HearingImpairedRuleSettingsViewModel>();
         collection.AddTransient<ImageBasedPreviewViewModel>();
         collection.AddTransient<ImageBasedProfileViewModel>();
         collection.AddTransient<ImportCsvXlsxCustomColumnsViewModel>();
@@ -445,6 +448,7 @@ public static class DependencyInjectionExtensions
         collection.AddTransient<IndexTtsCrispAsrSettingsViewModel>();
         collection.AddTransient<CosyVoice3CrispAsrSettingsViewModel>();
         collection.AddTransient<F5TtsCrispAsrSettingsViewModel>();
+        collection.AddTransient<OmniVoiceCrispAsrSettingsViewModel>();
         collection.AddTransient<VoxCPM2CrispAsrSettingsViewModel>();
         collection.AddTransient<MossTtsCrispAsrSettingsViewModel>();
         collection.AddTransient<KokoroTtsSettingsViewModel>();

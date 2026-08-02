@@ -4,14 +4,13 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using Avalonia;
 using Avalonia.Controls;
-using Avalonia.Controls.Primitives;
 using Avalonia.Input;
 using Avalonia.Layout;
 using Avalonia.Media;
 using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using Nikse.SubtitleEdit.Controls;
+using Nikse.SubtitleEdit.Controls.SyntaxTextEditorControl;
 using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using Nikse.SubtitleEdit.Logic;
@@ -208,29 +207,17 @@ public partial class PickSubtitleFormatViewModel : ObservableObject
             text = formatted;
         }
 
-        PreviewContainer.Child = MakePreviewTextBox(text, highlighter);
-    }
-
-    private static TextBox MakePreviewTextBox(string text, ISourceSyntaxHighlighter? highlighter)
-    {
-        // Formats without syntax rules are shown in a plain text box - nothing to color.
-        var textBox = highlighter == null
-            ? new TextBox()
-            : new SyntaxHighlightingTextBox { SourceHighlighter = highlighter };
-
-        textBox.Text = text;
-        textBox.IsReadOnly = true;
-        textBox.IsUndoEnabled = false;
-        textBox.AcceptsReturn = true;
-        textBox.TextWrapping = TextWrapping.NoWrap;
-        textBox.VerticalAlignment = VerticalAlignment.Stretch;
-        textBox.HorizontalAlignment = HorizontalAlignment.Stretch;
-        textBox.FontFamily = new FontFamily("Courier New, Consolas, monospace");
-        textBox.FontSize = 12;
-        textBox[ScrollViewer.VerticalScrollBarVisibilityProperty] = ScrollBarVisibility.Auto;
-        textBox[ScrollViewer.HorizontalScrollBarVisibilityProperty] = ScrollBarVisibility.Auto;
-
-        return textBox;
+        PreviewContainer.Child = new SyntaxTextEditor
+        {
+            Text = text,
+            SourceHighlighter = highlighter,
+            IsReadOnly = true,
+            ShowLineNumbers = true,
+            VerticalAlignment = VerticalAlignment.Stretch,
+            HorizontalAlignment = HorizontalAlignment.Stretch,
+            FontFamily = new FontFamily("Courier New, Consolas, monospace"),
+            FontSize = 12,
+        };
     }
 
     // Shows an informational note for formats with no text preview (image-based outputs).

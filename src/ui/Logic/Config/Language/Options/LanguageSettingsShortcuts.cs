@@ -24,6 +24,7 @@ public class LanguageSettingsShortcuts
     public string GeneralToggleTranslationMode { get; set; }
     public string GeneralChooseLayout { get; set; }
     public string GeneralGoToNextSubtitle { get; set; }
+    public string GeneralGoToNextSubtitleCursorAtEnd { get; set; }
     public string GeneralGoToPrevSubtitle { get; set; }
     public string GeneralGoToVideoPosition { get; set; }
     public string GeneralToggleItalic { get; set; }
@@ -232,6 +233,8 @@ public class LanguageSettingsShortcuts
     public string GoToPreviousBookmark { get; set; }
     public string SelectionToLower { get; set; }
     public string SelectionToUpper { get; set; }
+    public string SelectionToSentenceCase { get; set; }
+    public string SelectionToggleCasing { get; set; }
     public string GoogleIt { get; set; }
     public string SetActorXY { get; set; }
     public string SetNewActor { get; set; }
@@ -269,6 +272,7 @@ public class LanguageSettingsShortcuts
         GeneralToggleTranslationMode = "Toggle translation mode";
         GeneralChooseLayout = "Choose layout";
         GeneralGoToNextSubtitle = "Go to next subtitle";
+        GeneralGoToNextSubtitleCursorAtEnd = "Go to next subtitle and set cursor at end";
         GeneralGoToPrevSubtitle = "Go to previous subtitle";
         GeneralGoToVideoPosition = "Go to video position";
         GeneralToggleItalic = "Toggle italic";
@@ -482,6 +486,8 @@ public class LanguageSettingsShortcuts
         GoToPreviousBookmark = "Go to previous bookmark";
         SelectionToLower = "Text box: Selection to lowercase";
         SelectionToUpper = "Text box: Selection to uppercase";
+        SelectionToSentenceCase = "Text box: Selection to Sentence case";
+        SelectionToggleCasing = "Text box: Toggle casing (UPPER -> lower -> Title Case)";
         GoogleIt = "Google it (selected text)";
         SetActorXY = "Set actor {0}: {1}";
         SetNewActor = "Set new actor...";

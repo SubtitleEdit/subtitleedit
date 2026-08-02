@@ -5,9 +5,9 @@ using Avalonia.Input;
 using Avalonia.Layout;
 using Avalonia.Media;
 using Avalonia.Threading;
-using AvaloniaEdit;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using Nikse.SubtitleEdit.Controls.SyntaxTextEditorControl;
 using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using Nikse.SubtitleEdit.Features.Shared.TextBoxUtils;
@@ -64,22 +64,34 @@ public partial class SourceViewViewModel : ObservableObject, IClosingCleanup
         Dispatcher.UIThread.Post(() =>
         {
             var caretIndex = SourceViewTextBox.CaretIndex;
-            var text = SourceViewTextBox.Text ?? string.Empty;
+            int lineNumber;
+            int columnNumber;
 
-            // Calculate line and column
-            var lineNumber = 1;
-            var columnNumber = 1;
-
-            for (int i = 0; i < Math.Min(caretIndex, text.Length); i++)
+            if (SourceViewTextBox.TextControl is SyntaxTextView view)
             {
-                if (text[i] == '\n')
+                // The editor already indexes the lines - asking it beats walking the whole source
+                // four times a second (which on a large file costs more than the editing does).
+                var position = view.Document.GetPosition(caretIndex);
+                lineNumber = position.Line + 1;
+                columnNumber = position.Column + 1;
+            }
+            else
+            {
+                var text = SourceViewTextBox.Text ?? string.Empty;
+                lineNumber = 1;
+                columnNumber = 1;
+
+                for (var i = 0; i < Math.Min(caretIndex, text.Length); i++)
                 {
-                    lineNumber++;
-                    columnNumber = 1;
-                }
-                else if (text[i] != '\r') // Skip carriage return
-                {
-                    columnNumber++;
+                    if (text[i] == '\n')
+                    {
+                        lineNumber++;
+                        columnNumber = 1;
+                    }
+                    else if (text[i] != '\r') // Skip carriage return
+                    {
+                        columnNumber++;
+                    }
                 }
             }
 
@@ -104,28 +116,16 @@ public partial class SourceViewViewModel : ObservableObject, IClosingCleanup
         _subtitleFormat = subtitleFormat;
         _cursorTimer.Start();
         _initialCaretIndex = FindSelectedParagraphCaretIndex(text, subtitle, subtitleFormat, selectedParagraphIndex);
-        if (text.Length > 2_000_000)
-        {
-            SourceViewTextBox = CreateSimpleTextBoxWrapper();
-        }
-        else
-        {
-            SourceViewTextBox = CreateAdvancedTextBoxWrapper(text, subtitleFormat);
-        }
+
+        // The editor only lays out the lines it shows, so even a very large source opens fast -
+        // no need for the plain-text-box fallback this used to need above 2 MB.
+        SourceViewTextBox = CreateAdvancedTextBoxWrapper(text, subtitleFormat);
     }
 
     internal void FocusEditor()
     {
+        SourceViewTextBox.Focus();
         SourceViewTextBox.CaretIndex = _initialCaretIndex;
-        if (SourceViewTextBox.TextControl is TextEditor textEditor)
-        {
-            textEditor.TextArea.Focus();
-            textEditor.TextArea.Caret.BringCaretToView();
-        }
-        else
-        {
-            SourceViewTextBox.Focus();
-        }
     }
 
     private static int FindSelectedParagraphCaretIndex(
@@ -155,113 +155,30 @@ public partial class SourceViewViewModel : ObservableObject, IClosingCleanup
         return index < source.Length ? index : 0;
     }
 
-    private TextBoxWrapper CreateSimpleTextBoxWrapper()
+    private SyntaxTextEditorWrapper CreateAdvancedTextBoxWrapper(string text, SubtitleFormat subtitleFormat)
     {
-        var textBox = new TextBox
-        {
-            Margin = new Thickness(0, 0, 10, 0),
-            [!TextBox.TextProperty] = new Binding(nameof(Text)) { Mode = BindingMode.TwoWay },
-            VerticalAlignment = VerticalAlignment.Stretch,
-            HorizontalAlignment = HorizontalAlignment.Stretch,
-            AcceptsReturn = true,
-        };
-
-        return new TextBoxWrapper(textBox);
-    }
-
-    private TextEditorWrapper CreateAdvancedTextBoxWrapper(string text, SubtitleFormat subtitleFormat)
-    {
-        var textBox = new TextEditor
+        var editor = new SyntaxTextEditor
         {
             Margin = new Thickness(0, 0, 10, 0),
             VerticalAlignment = VerticalAlignment.Stretch,
             HorizontalAlignment = HorizontalAlignment.Stretch,
             ShowLineNumbers = true,
-            WordWrap = true,
+            SourceHighlighter = SourceSyntaxHighlighterFactory.ForFormat(text, subtitleFormat),
+            Text = text,
         };
 
-        // Override the built-in link color with our softer pastel color
-        textBox.TextArea.TextView.LinkTextForegroundBrush = UiUtil.MakeLinkForeground();
-
-        // Add syntax highlighting for subtitle source formats
-        var highlighter = SourceSyntaxHighlighterFactory.ForFormat(text, subtitleFormat);
-        if (highlighter != null)
-        {
-            textBox.TextArea.TextView.LineTransformers.Add(new SourceSyntaxColorizer(highlighter));
-        }
-
-        // Setup two-way binding manually since TextEditor doesn't support direct binding
-        var isUpdatingFromViewModel = false;
-        var isUpdatingFromEditor = false;
-
-        void UpdateEditorFromViewModel()
-        {
-            if (isUpdatingFromEditor)
-            {
-                return;
-            }
-
-            isUpdatingFromViewModel = true;
-            try
-            {
-                var text = Text ?? string.Empty;
-                if (textBox.Text != text)
-                {
-                    textBox.Text = text;
-                }
-            }
-            finally
-            {
-                isUpdatingFromViewModel = false;
-            }
-        }
-
-        void UpdateViewModelFromEditor()
-        {
-            if (isUpdatingFromViewModel)
-            {
-                return;
-            }
-
-            isUpdatingFromEditor = true;
-            try
-            {
-                if (Text != textBox.Text)
-                {
-                    Text = textBox.Text;
-                }
-            }
-            finally
-            {
-                isUpdatingFromEditor = false;
-            }
-        }
-
-        // Listen to ViewModel changes
-        PropertyChanged += (s, e) =>
-        {
-            if (e.PropertyName == nameof(Text))
-            {
-                UpdateEditorFromViewModel();
-            }
-        };
-
-        // Listen to TextEditor changes
-        textBox.TextChanged += (s, e) => UpdateViewModelFromEditor();
-
-        // Initial text load
-        UpdateEditorFromViewModel();
-
+        // The view model's Text is not kept in sync while typing on purpose: materializing the
+        // whole source on every keystroke is what made a large file crawl. Ok reads the editor.
         var textBoxBorder = new Border
         {
             BorderBrush = Brushes.Gray,
             BorderThickness = new Thickness(1),
-            Child = textBox,
+            Child = editor,
             VerticalAlignment = VerticalAlignment.Stretch,
             HorizontalAlignment = HorizontalAlignment.Stretch,
         };
 
-        return new TextEditorWrapper(textBox, textBoxBorder);
+        return new SyntaxTextEditorWrapper(editor, textBoxBorder);
     }
 
     [RelayCommand]
@@ -272,7 +189,10 @@ public partial class SourceViewViewModel : ObservableObject, IClosingCleanup
             return;
         }
 
-        var text = TrimJunk(Text);
+        // Read the edited source from the editor, not from Text - Text is only the value the
+        // window opened with.
+        var sourceText = SourceViewTextBox.Text;
+        var text = TrimJunk(sourceText);
         if (string.IsNullOrEmpty(text))
         {
             OkPressed = false;
@@ -280,7 +200,7 @@ public partial class SourceViewViewModel : ObservableObject, IClosingCleanup
             return;
         }
 
-        var lines = Text.SplitToLines();
+        var lines = sourceText.SplitToLines();
         var subtitle = new Subtitle();
         _subtitleFormat.LoadSubtitle(subtitle, lines, string.Empty);
         if (subtitle.Paragraphs.Count > 0)

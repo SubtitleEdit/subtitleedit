@@ -1,4 +1,4 @@
-using Avalonia;
+﻿using Avalonia;
 using Avalonia.Automation;
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
@@ -189,6 +189,8 @@ public class TextToSpeechWindow : Window
                 return StatusDots.From(engine.IsInstalled(null).Result, F5TtsCrispAsr.GetEngineUpdateStatus());
             case VoxCPM2CrispAsr:
                 return StatusDots.From(engine.IsInstalled(null).Result, VoxCPM2CrispAsr.GetEngineUpdateStatus());
+            case OmniVoiceCrispAsr:
+                return StatusDots.From(engine.IsInstalled(null).Result, OmniVoiceCrispAsr.GetEngineUpdateStatus());
             case MossTtsCrispAsr:
                 return StatusDots.From(engine.IsInstalled(null).Result, MossTtsCrispAsr.GetEngineUpdateStatus());
             case ZonosTtsCrispAsr:
@@ -350,7 +352,11 @@ public class TextToSpeechWindow : Window
                     {
                         FontSize = 11.5,
                         Opacity = 0.8,
-                        [!TextBlock.TextProperty] = new Binding(nameof(vm.VoiceCountInfo)) { Mode = BindingMode.OneWay },
+                        [!TextBlock.TextProperty] = new Binding($"{nameof(vm.Voices)}.{nameof(vm.Voices.Count)}")
+                        {
+                            Mode = BindingMode.OneWay,
+                            StringFormat = Se.Language.Video.TextToSpeech.XVoices,
+                        },
                     },
                     [!Border.IsVisibleProperty] = new Binding(nameof(vm.IsVoiceCountVisible)) { Mode = BindingMode.OneWay },
                 },

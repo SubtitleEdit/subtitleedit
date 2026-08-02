@@ -3,7 +3,7 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Media;
 using Avalonia.VisualTree;
-using AvaloniaEdit.Editing;
+using Nikse.SubtitleEdit.Controls.SyntaxTextEditorControl;
 using Nikse.SubtitleEdit.Controls;
 using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Logic.Config;
@@ -150,9 +150,9 @@ internal static class RightToLeftHelper
         {
             textBox.FlowDirection = GetContentDirection(textBox.Text, flowDirection);
         }
-        else if (visual is TextArea textArea)
+        else if (visual is SyntaxTextView sourceView)
         {
-            textArea.FlowDirection = GetContentDirection(textArea.Document?.Text, flowDirection);
+            sourceView.FlowDirection = GetContentDirection(sourceView.Document.GetLine(0), flowDirection);
         }
 
         foreach (var child in visual.GetVisualChildren())

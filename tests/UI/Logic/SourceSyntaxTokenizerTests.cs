@@ -7,8 +7,8 @@ namespace UITests.Logic;
 
 /// <summary>
 /// The span model behind <see cref="ISourceSyntaxHighlighter"/>: the rules are written once and
-/// rendered both by AvaloniaEdit (source view) and by the syntax text box (media info, format
-/// preview), so the spans they produce have to be sorted, non-overlapping and correctly offset.
+/// rendered by both the source editor and the syntax text box, so the spans they produce have to
+/// be sorted, non-overlapping and correctly offset.
 /// </summary>
 public class SourceSyntaxTokenizerTests
 {
@@ -47,7 +47,7 @@ public class SourceSyntaxTokenizerTests
     [Fact]
     public void LaterApplyWinsPerCharacter()
     {
-        // Mirrors overlapping AvaloniaEdit ChangeLinePart calls: the last color wins.
+        // Overlapping rules layer: the last color wins.
         var spans = Flatten(6, s =>
         {
             s.Apply(0, 6, Red);
@@ -65,8 +65,8 @@ public class SourceSyntaxTokenizerTests
     [Fact]
     public void BoldSurvivesALaterRecolor()
     {
-        // AvaloniaEdit keeps the bold typeface a first rule set when a later rule only changes
-        // the foreground (e.g. a number inside a bold media info track header).
+        // Bold set by an earlier rule survives a later rule that only changes the foreground
+        // (e.g. a number inside a bold media info track header).
         var spans = Flatten(4, s =>
         {
             s.Apply(0, 4, Red, bold: true);

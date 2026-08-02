@@ -138,6 +138,9 @@ public class ModifySelectionWindow : Window
         dataGridMultiSelect.BindIsVisible(vm, nameof(vm.SelectedRule) + "." + nameof(vm.SelectedRule.HasMultiSelect));
         dataGridMultiSelect.Bind(TableView.ItemsSourceProperty, new Binding(nameof(vm.SelectedRule) + "." + nameof(vm.SelectedRule.MultiSelectItems)) { Source = vm });
 
+        var buttonRuleSettings = UiUtil.MakeButton(Se.Language.General.Settings, vm.ShowRuleSettingsCommand).WithTopAlignment();
+        buttonRuleSettings.BindIsVisible(vm, nameof(vm.SelectedRule) + "." + nameof(vm.SelectedRule.HasSettings));
+
         var panelRule = new StackPanel
         {
             Orientation = Orientation.Horizontal,
@@ -149,6 +152,7 @@ public class ModifySelectionWindow : Window
                 textBoxRuleText,
                 numericUpDownRuleNumber,
                 dataGridMultiSelect,
+                buttonRuleSettings,
             },
         };
 

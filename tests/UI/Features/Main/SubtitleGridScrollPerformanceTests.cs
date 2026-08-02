@@ -95,6 +95,17 @@ public class SubtitleGridScrollPerformanceTests
 
         int Press(PhysicalKey key)
         {
+            // Re-anchor focus on the grid before every press. KeyPressQwerty routes through the
+            // application-wide focused element, and that leaks between headless tests: closing a
+            // window does not clear it, so a detached row container from an earlier test can
+            // still be "focused". The panel recycling this grid's focused row during a jump then
+            // hands focus back to that stale row, and every later press lands there instead -
+            // the test failed with realized=0 and an unchanged SelectedIndex, at a different
+            // round each run. What this test measures is how many rows a jump realizes, not how
+            // Avalonia routes keys, so pin the focus rather than depend on it.
+            TableViewExtras.FocusRow(grid);
+            Dispatcher.UIThread.RunJobs();
+
             prepared = 0;
             window.KeyPressQwerty(key, RawInputModifiers.None);
             Settle(window);

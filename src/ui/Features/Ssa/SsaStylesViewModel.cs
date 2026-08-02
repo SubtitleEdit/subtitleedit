@@ -45,6 +45,7 @@ public partial class SsaStylesViewModel : ObservableObject, IClosingCleanup
     [ObservableProperty] private bool _isTakeUsagesFromVisible;
     [ObservableProperty] private bool _isSetStyleAsDefaultVisible;
     [ObservableProperty] private bool _isCopyToFileStylesVisible;
+    [ObservableProperty] private bool _isMoveVisible;
 
     public Window? Window { get; set; }
     public bool OkPressed { get; private set; }
@@ -144,8 +145,8 @@ public partial class SsaStylesViewModel : ObservableObject, IClosingCleanup
             return;
         }
 
-        var s = Subtitle.Parse(fileName, format);
-        if (s == null || string.IsNullOrEmpty(s.Header))
+        var ssaStyles = StyleFileImportHelper.LoadStyles(fileName, format);
+        if (ssaStyles.Count == 0)
         {
             await MessageBox.Show(
                 Window,
@@ -155,8 +156,6 @@ public partial class SsaStylesViewModel : ObservableObject, IClosingCleanup
                 MessageBoxIcon.Error);
             return;
         }
-
-        var ssaStyles = AdvancedSubStationAlpha.GetSsaStylesFromHeader(s.Header);
 
         var result = await _windowService.ShowDialogAsync<AssaStylePickerWindow, AssaStylePickerViewModel>(Window, vm =>
         {
@@ -235,6 +234,27 @@ public partial class SsaStylesViewModel : ObservableObject, IClosingCleanup
     private void FileRemoveAll()
     {
         FileStyles.Clear();
+    }
+
+    [RelayCommand]
+    private void FileMoveUp() => MoveFileStyles(ListMoveDirection.Up);
+
+    [RelayCommand]
+    private void FileMoveDown() => MoveFileStyles(ListMoveDirection.Down);
+
+    [RelayCommand]
+    private void FileMoveToTop() => MoveFileStyles(ListMoveDirection.Top);
+
+    [RelayCommand]
+    private void FileMoveToBottom() => MoveFileStyles(ListMoveDirection.Bottom);
+
+    /// <summary>
+    /// Reorders the selected file styles. The list order is not presentation-only - it is
+    /// the order the styles are written to the file header on OK (#13056).
+    /// </summary>
+    private void MoveFileStyles(ListMoveDirection direction)
+    {
+        TableViewExtras.MoveSelectedRows(FileStyleGrid, FileStyles, direction);
     }
 
     [RelayCommand]
@@ -365,8 +385,8 @@ public partial class SsaStylesViewModel : ObservableObject, IClosingCleanup
             return;
         }
 
-        var s = Subtitle.Parse(fileName, format);
-        if (s == null || string.IsNullOrEmpty(s.Header))
+        var ssaStyles = StyleFileImportHelper.LoadStyles(fileName, format);
+        if (ssaStyles.Count == 0)
         {
             await MessageBox.Show(
                 Window,
@@ -376,8 +396,6 @@ public partial class SsaStylesViewModel : ObservableObject, IClosingCleanup
                 MessageBoxIcon.Error);
             return;
         }
-
-        var ssaStyles = AdvancedSubStationAlpha.GetSsaStylesFromHeader(s.Header);
 
         var result = await _windowService.ShowDialogAsync<AssaStylePickerWindow, AssaStylePickerViewModel>(Window, vm =>
         {
@@ -930,6 +948,30 @@ public partial class SsaStylesViewModel : ObservableObject, IClosingCleanup
         }
     }
 
+    /// <summary>
+    /// Ctrl+Up/Ctrl+Down reorder the selected styles, as in SE 4. Tunneled, because the
+    /// ListBox underneath TableView handles Ctrl+Arrow itself (move focus without changing
+    /// the selection) and a bubbling handler would never see the key.
+    /// </summary>
+    internal void FileStylesMoveKeyDown(object? sender, KeyEventArgs e)
+    {
+        if (e.KeyModifiers != KeyModifiers.Control || e.Source is TextBox)
+        {
+            return;
+        }
+
+        if (e.Key == Key.Up)
+        {
+            MoveFileStyles(ListMoveDirection.Up);
+            e.Handled = true;
+        }
+        else if (e.Key == Key.Down)
+        {
+            MoveFileStyles(ListMoveDirection.Down);
+            e.Handled = true;
+        }
+    }
+
     private void DeleteFileStyle(StyleDisplay? selectedStyle)
     {
         if (selectedStyle == null)
@@ -1047,11 +1089,15 @@ public partial class SsaStylesViewModel : ObservableObject, IClosingCleanup
     {
         IsDeleteAllVisible = FileStyles.Count > 0;
         IsDeleteVisible = SelectedFileStyle != null;
+        IsMoveVisible = FileStyles.Count > 1 && FileStyleGrid.SelectedItems?.Count > 0;
     }
 
     internal void StoreContextMenuOpening(object? sender, EventArgs e)
     {
-        IsDeleteAllVisible = FileStyles.Count > 0;
-        IsDeleteVisible = SelectedFileStyle != null;
+        // The storage menu's "Delete"/"Clear" must follow the storage list, not the file list -
+        // reading FileStyles here hid "Delete" whenever no file style happened to be selected,
+        // and offered "Clear" on an empty storage list.
+        IsDeleteAllVisible = StorageStyles.Count > 0;
+        IsDeleteVisible = SelectedStorageStyle != null;
     }
 }

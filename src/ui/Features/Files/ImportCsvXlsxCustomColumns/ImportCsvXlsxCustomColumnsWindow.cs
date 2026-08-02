@@ -53,7 +53,10 @@ public class ImportCsvXlsxCustomColumnsWindow : Window
         _previewGrid.ItemsSource = vm.PreviewSubtitles;
         BuildPreviewColumns(_previewGrid);
 
-        var labelPreview = UiUtil.MakeLabel().WithBindText(vm, nameof(vm.PreviewCount)).WithAlignmentTop();
+        var labelPreview = UiUtil.MakeLabel().WithBindText(vm, new Binding($"{nameof(vm.PreviewSubtitles)}.{nameof(vm.PreviewSubtitles.Count)}")
+        {
+            StringFormat = Se.Language.File.Import.NumberOfSubtitlesX,
+        }).WithAlignmentTop();
 
         var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand);
         buttonOk.Bind(Button.IsEnabledProperty, new Binding(nameof(vm.IsOkEnabled)) { Source = vm });

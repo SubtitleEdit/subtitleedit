@@ -105,8 +105,11 @@ public class RestoreAutoBackupWindow : Window
             VerticalAlignment = VerticalAlignment.Center,
             Opacity = 0.8,
             Margin = new Thickness(10, 0, 0, 0),
+            [!TextBlock.TextProperty] = new Binding($"{nameof(vm.Files)}.{nameof(vm.Files.Count)}")
+            {
+                StringFormat = Se.Language.File.RestoreAutoBackup.XBackups
+            }
         };
-        summaryText.Bind(TextBlock.TextProperty, new Binding(nameof(vm.FilesSummaryText)));
 
         var buttonDeleteAllSubtitles = UiUtil.MakeButton(Se.Language.File.RestoreAutoBackup.DeleteAll, vm.DeleteAllFilesCommand)
             .WithBindIsVisible(nameof(vm.IsEmptyFilesVisible))

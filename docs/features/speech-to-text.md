@@ -18,6 +18,8 @@ Subtitle Edit can automatically transcribe audio to text using Whisper-based and
 | Whisper Const-me | Windows | DirectX-based engine |
 | Whisper OpenAI | All | Python-based OpenAI Whisper workflow |
 | OpenAI Compatible Server | All | Connect to any OpenAI-compatible speech-to-text endpoint |
+| OpenRouter | All | Online. One API key routes to Whisper, gpt-4o-transcribe, Groq and Google Chirp |
+| Alibaba Qwen3-ASR | All | Online Qwen3-ASR via Alibaba Model Studio (DashScope) |
 | Qwen3 ASR CPP | Windows, Linux | Local Qwen3 ASR engine with downloadable GGUF models |
 | Crisp ASR | Windows, Linux, macOS | Single engine with selectable backends: Parakeet, Canary, Cohere, Fire Red, GLM, Granite, Qwen3, Mega, Omni, Kyutai |
 
@@ -32,6 +34,20 @@ Engines and models are downloaded automatically on first use.
 - A **Forced aligner** option is shown for Crisp ASR backends and exposes the built-in aligner, Canary CTC, Qwen3, and the wav2vec2 zoo (12 language-specific CTC aligners that run on top of any Crisp ASR backend).
 - Several newer engines support automatic language selection.
 - Each engine can have separate advanced command-line parameters.
+
+## Language-specific models
+
+Some backends offer models fine-tuned for one language, which usually beat the general model on that language.
+
+These models live under the **Crisp ASR** engine, not under the standalone Qwen3 ASR CPP engine. To reach them, set **Engine** to *Crisp ASR*, then pick the backend from the Crisp ASR backend dropdown - the model list updates to that backend's models. For Japanese:
+
+| Backend | Model | Notes |
+|---------|-------|-------|
+| Crisp ASR Qwen3 | `qwen3-asr-1.7b-ja-anime-q8_0.gguf` (or `-q4_k.gguf`) | Fine-tuned on anime / visual novel speech - the best starting point for anime audio |
+| Crisp ASR Cohere | `cohere-asr-ja-q8_0.gguf` (also q4_k / q6_k / f16) | Japanese fine-tune covering general and anime domains |
+| Crisp ASR Parakeet | `parakeet-tdt-0.6b-ja-q8_0.gguf` (also q4_k / unquantized) | Fast Japanese model |
+
+The general `qwen3-asr-1.7b` and Whisper `large-v3-turbo` models are also strong on Japanese if you prefer a single model for mixed content.
 
 ## How to Use
 

@@ -185,6 +185,9 @@ namespace Nikse.SubtitleEdit
                 // Set current theme
                 UiTheme.SetCurrentTheme();
 
+                // Type-to-search in all drop-downs (e.g. typing "Ar" selects "Arial")
+                UiUtil.EnableComboBoxTypeSearch();
+
                 // Setup main window (Batch Convert standalone if requested via CLI)
                 if (HasBatchConvertUiArg(args))
                 {
@@ -241,11 +244,6 @@ namespace Nikse.SubtitleEdit
                 b.Instance.Styles.Add(new StyleInclude(new Uri("avares://SubtitleEdit/Styles.axaml", UriKind.Absolute))
                 {
                     Source = new Uri("avares://SubtitleEdit/Styles.axaml")
-                });
-
-                b.Instance.Styles.Add(new StyleInclude(new Uri("avares://AvaloniaEdit/Themes/Fluent/AvaloniaEdit.xaml", UriKind.Absolute))
-                {
-                    Source = new Uri("avares://AvaloniaEdit/Themes/Fluent/AvaloniaEdit.xaml")
                 });
 
                 // The Fluent theme makes every GridSplitter focusable (keyboard resize), so screen

@@ -49,6 +49,7 @@ public class SeAudioToText
     // CJK-friendlier max line length (each char is roughly a whole word/syllable).
     public string CommandLineParameterCrispAsrFunAsrNano { get; set; } = "--max-len 20 --split-on-punct";
     public string CommandLineParameterCrispAsrFunAsrMltNano { get; set; } = "--max-len 50 --split-on-punct";
+    public string CommandLineParameterCrispAsrGigaAm { get; set; } = "--max-len 50 --split-on-punct";
     public string CommandLineParameterCrispAsrGlm { get; set; } = "--max-len 50 --split-on-punct";
     public string CommandLineParameterCrispAsrGranite { get; set; } = "--max-len 50 --split-on-punct";
     public string CommandLineParameterCrispAsrParakeet { get; set; } = "--max-len 50 --split-on-punct";

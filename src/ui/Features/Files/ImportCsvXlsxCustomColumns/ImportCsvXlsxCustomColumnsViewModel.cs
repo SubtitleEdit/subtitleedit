@@ -23,7 +23,6 @@ public partial class ImportCsvXlsxCustomColumnsViewModel : ObservableObject
     [ObservableProperty] private ObservableCollection<CsvColumnDefinition> _columns;
     [ObservableProperty] private ObservableCollection<CsvRowItem> _rows;
     [ObservableProperty] private ObservableCollection<SubtitleLineViewModel> _previewSubtitles;
-    [ObservableProperty] private string _previewCount;
     [ObservableProperty] private bool _isOkEnabled;
 
     public Window? Window { get; set; }
@@ -71,7 +70,6 @@ public partial class ImportCsvXlsxCustomColumnsViewModel : ObservableObject
         Columns = new ObservableCollection<CsvColumnDefinition>();
         Rows = new ObservableCollection<CsvRowItem>();
         PreviewSubtitles = new ObservableCollection<SubtitleLineViewModel>();
-        PreviewCount = string.Empty;
     }
 
     [RelayCommand]
@@ -254,7 +252,6 @@ public partial class ImportCsvXlsxCustomColumnsViewModel : ObservableObject
         IsOkEnabled = textCol != null && Rows.Count > 0;
         if (textCol == null)
         {
-            PreviewCount = string.Empty;
             return;
         }
 
@@ -301,8 +298,6 @@ public partial class ImportCsvXlsxCustomColumnsViewModel : ObservableObject
             };
             PreviewSubtitles.Add(line);
         }
-
-        PreviewCount = string.Format(Se.Language.File.Import.NumberOfSubtitlesX, PreviewSubtitles.Count);
     }
 
     private static double ParseTimeCell(string? cell, bool isFrames, bool isMilliseconds)
@@ -529,7 +524,6 @@ public partial class ImportCsvXlsxCustomColumnsViewModel : ObservableObject
         Columns.Clear();
         Rows.Clear();
         PreviewSubtitles.Clear();
-        PreviewCount = string.Empty;
         SeparatorDisplay = string.Empty;
         IsOkEnabled = false;
         ColumnsRebuilt?.Invoke(this, EventArgs.Empty);

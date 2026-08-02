@@ -5,6 +5,7 @@ using Avalonia.Interactivity;
 using Avalonia.Layout;
 using Avalonia.Media;
 using System.Collections;
+using System.Windows.Input;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Logic.ValueConverters;
@@ -82,7 +83,8 @@ public class JoinSubtitlesWindow : Window
 
         // Sorting dropped in the DataGrid -> TableView conversion: the join is produced
         // by iterating this list in order (the VM sorts it by start time itself), so the
-        // list must not be reordered by clicking a header.
+        // list must not be reordered by clicking a header. Reordering is done explicitly
+        // instead, through the move items in the context menu.
         var dataGrid = TableViewExtras.MakeTableView(multiSelect: false);
         _tableViewFiles = dataGrid;
         dataGrid.Width = double.NaN;
@@ -137,6 +139,8 @@ public class JoinSubtitlesWindow : Window
                 e.Handled = true;
             }
         }, RoutingStrategies.Tunnel);
+        dataGrid.AddHandler(InputElement.KeyDownEvent, vm.GridMoveKeyDown, RoutingStrategies.Tunnel);
+        vm.JoinItemsGrid = dataGrid;
 
         var flyout = new MenuFlyout();
         flyout.Opening += vm.ItemsContextMenuOpening;
@@ -151,6 +155,8 @@ public class JoinSubtitlesWindow : Window
         };
         menuItemDelete.Bind(MenuItem.IsVisibleProperty, new Binding(nameof(vm.IsDeleteVisible)) { Source = vm });
         flyout.Items.Add(menuItemDelete);
+
+        AddMoveMenuItems(flyout, vm);
 
         var buttonAdd = UiUtil.MakeButton(vm.AddCommand, IconNames.Plus, Se.Language.General.New);
         var buttonRemove = UiUtil.MakeButton(vm.RemoveCommand, IconNames.Trash, Se.Language.General.Remove);
@@ -171,6 +177,40 @@ public class JoinSubtitlesWindow : Window
         grid.Add(panelButtons, 1);
 
         return UiUtil.MakeBorderForControlNoPadding(grid);
+    }
+
+    /// <summary>
+    /// The "move up/down/to top/to bottom" block of the file list context menu (#13092).
+    /// The files are joined in list order, so this is real reordering, not a view sort.
+    /// Hidden in "Keep time codes" mode, where the order does not matter - the paragraphs
+    /// are sorted by start time regardless - exactly as in SE 4.
+    /// </summary>
+    private static void AddMoveMenuItems(MenuFlyout flyout, JoinSubtitlesViewModel vm)
+    {
+        var separator = new Separator();
+        separator.Bind(Separator.IsVisibleProperty, new Binding(nameof(vm.IsMoveVisible)) { Source = vm });
+        flyout.Items.Add(separator);
+
+        var items = new (string Header, ICommand Command, KeyGesture? Gesture)[]
+        {
+            (Se.Language.General.MoveUp, vm.MoveUpCommand, new KeyGesture(Key.Up, KeyModifiers.Control)),
+            (Se.Language.General.MoveDown, vm.MoveDownCommand, new KeyGesture(Key.Down, KeyModifiers.Control)),
+            (Se.Language.General.MoveToTop, vm.MoveToTopCommand, null),
+            (Se.Language.General.MoveToBottom, vm.MoveToBottomCommand, null),
+        };
+
+        foreach (var (header, command, gesture) in items)
+        {
+            var menuItem = new MenuItem
+            {
+                Header = header,
+                DataContext = vm,
+                Command = command,
+                InputGesture = gesture,
+            };
+            menuItem.Bind(MenuItem.IsVisibleProperty, new Binding(nameof(vm.IsMoveVisible)) { Source = vm });
+            flyout.Items.Add(menuItem);
+        }
     }
 
     private static StackPanel MakeControlsView(JoinSubtitlesViewModel vm)

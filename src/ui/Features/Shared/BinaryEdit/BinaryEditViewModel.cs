@@ -2581,6 +2581,11 @@ public partial class BinaryEditViewModel : ObservableObject
     /// </summary>
     internal void OnWindowDeactivated(object? sender, EventArgs e)
     {
+        // Complete Avalonia's bare-Alt cycle when a modal steals focus while Alt is held, so the
+        // stranded AccessKeyHandler state cannot leave the next bare Alt press unable to open the
+        // menu bar (#13083). If the synthetic release opens the menu, the cleanup below closes it.
+        UiUtil.RaiseSyntheticAltKeyUp(Window);
+
         // A task switch (Alt+Tab) must drop any active menu-bar state, otherwise Avalonia leaves
         // the access-key underlines / selection armed and they reappear when the window is re-activated
         // (#11745 beta-2 feedback).

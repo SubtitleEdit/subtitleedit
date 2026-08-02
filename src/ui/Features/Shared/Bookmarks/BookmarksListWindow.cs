@@ -37,7 +37,12 @@ public class BookmarksListWindow : Window
             VerticalAlignment = VerticalAlignment.Bottom,
             Margin = new Thickness(0, 0, 0, 10),
         };
-        labelCount.Bind(TextBlock.TextProperty, new Binding(nameof(vm.CountText)) { Source = vm });
+        labelCount.Bind(TextBlock.TextProperty, new Binding($"{nameof(vm.Subtitles)}.{nameof(vm.Subtitles.Count)}")
+        {
+            Source = vm,
+            Mode = BindingMode.OneWay,
+            StringFormat = Se.Language.General.Count + ": {0}",
+        });
 
         var grid = new Grid
         {

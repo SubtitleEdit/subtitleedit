@@ -245,31 +245,9 @@ public class F5TtsCrispAsr : ITtsEngine
             {
                 var dest = Path.Combine(voicesFolder, Path.GetFileName(src));
 
-                if (!File.Exists(dest))
-                {
-                    try
-                    {
-                        // qwen3-tts.cpp voice pack ships at 16 kHz; F5-TTS expects 24 kHz.
-                        // Resample on seed via ffmpeg so cloning sees 24 kHz directly.
-                        var ffmpeg = FfmpegGenerator.ConvertToMono24kHzWav(src, dest);
-                        if (!ffmpeg.Start())
-                        {
-                            File.Copy(src, dest);
-                        }
-                        else
-                        {
-                            ffmpeg.WaitForExit();
-                        }
-                    }
-                    catch (Exception ex)
-                    {
-                        Se.LogError(ex, $"F5-TTS (CrispASR): resample seed '{src}' failed; falling back to plain copy");
-                        try { if (!File.Exists(dest))
-                        {
-                            File.Copy(src, dest);
-                        } } catch { }
-                    }
-                }
+                // qwen3-tts.cpp voice pack ships at 16 kHz; F5-TTS expects 24 kHz.
+                // Resample on seed via ffmpeg so cloning sees 24 kHz directly.
+                VoiceSeedHelper.CopyOrResample(src, dest, 24000, "F5-TTS (CrispASR)");
 
                 var sidecar = Path.ChangeExtension(src, ".txt");
                 if (File.Exists(sidecar))
@@ -339,13 +317,15 @@ public class F5TtsCrispAsr : ITtsEngine
     public static bool AreModelsInstalled(string? modelKey = null) =>
         IsValidLocalModelFile(GetTalkerPath(modelKey), GetTalkerFileName(modelKey));
 
-    public Task<Voice[]> GetVoices(string language)
+    public async Task<Voice[]> GetVoices(string language)
     {
         var result = new List<Voice>();
 
         // Voice cloning only — no built-in default voice. The combo is empty until the user
         // imports a reference WAV (or the qwen3-tts.cpp voice seed runs above).
-        var voicesFolder = GetSetVoicesFolder();
+        // Off the UI thread: GetSetVoicesFolder does one-time reference-WAV seeding through
+        // ffmpeg, and this is awaited from SelectedEngineChanged on the dispatcher.
+        var voicesFolder = await Task.Run(GetSetVoicesFolder);
         if (Directory.Exists(voicesFolder))
         {
             foreach (var file in Directory.GetFiles(voicesFolder, "*.wav"))
@@ -355,7 +335,7 @@ public class F5TtsCrispAsr : ITtsEngine
             }
         }
 
-        return Task.FromResult(result.ToArray());
+        return result.ToArray();
     }
 
     public bool IsVoiceInstalled(Voice voice) => true;

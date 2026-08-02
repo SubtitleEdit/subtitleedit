@@ -2,9 +2,11 @@
 using Avalonia.Controls;
 using Avalonia.Data;
 using Avalonia.Input;
+using Avalonia.Interactivity;
 using Avalonia.Layout;
 using Avalonia.Media;
 using System.Collections;
+using System.Windows.Input;
 using Nikse.SubtitleEdit.Features.Shared.ColorPicker;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
@@ -155,7 +157,8 @@ public class AssaStylesWindow : Window
         dataGrid.SelectionChanged += vm.FileStylesChanged;
         dataGrid.GotFocus += vm.FileStylesGotFocus;
         dataGrid.KeyDown += vm.FileStylesKeyDown;
-        TableViewExtras.AttachHomeEndNavigation(dataGrid);
+        dataGrid.AddHandler(InputElement.KeyDownEvent, vm.FileStylesMoveKeyDown, RoutingStrategies.Tunnel);
+        TableViewExtras.AttachListNavigation(dataGrid);
         vm.FileStyleGrid = dataGrid;
 
         var flyout = new MenuFlyout();
@@ -207,6 +210,8 @@ public class AssaStylesWindow : Window
         };
         menuItemReplaceWith.Bind(MenuItem.IsVisibleProperty, new Binding(nameof(vm.IsFileStyleSelected)) { Source = vm });
         flyout.Items.Add(menuItemReplaceWith);
+
+        AddMoveMenuItems(flyout, vm);
 
         var buttonNew = UiUtil.MakeButton(vm.FileNewCommand, IconNames.Plus, Se.Language.General.New);
         var buttonRemove = UiUtil.MakeButton(vm.FileRemoveCommand, IconNames.Trash, Se.Language.General.Delete);
@@ -714,5 +719,38 @@ public class AssaStylesWindow : Window
         };
 
         return button;
+    }
+
+    /// <summary>
+    /// The "move up/down/to top/to bottom" block of the file styles context menu (#13056).
+    /// The styles are written to the file header in list order, so this is real reordering,
+    /// not a view sort.
+    /// </summary>
+    private static void AddMoveMenuItems(MenuFlyout flyout, AssaStylesViewModel vm)
+    {
+        var separator = new Separator();
+        separator.Bind(Separator.IsVisibleProperty, new Binding(nameof(vm.IsMoveVisible)) { Source = vm });
+        flyout.Items.Add(separator);
+
+        var items = new (string Header, ICommand Command, KeyGesture? Gesture)[]
+        {
+            (Se.Language.General.MoveUp, vm.FileMoveUpCommand, new KeyGesture(Key.Up, KeyModifiers.Control)),
+            (Se.Language.General.MoveDown, vm.FileMoveDownCommand, new KeyGesture(Key.Down, KeyModifiers.Control)),
+            (Se.Language.General.MoveToTop, vm.FileMoveToTopCommand, null),
+            (Se.Language.General.MoveToBottom, vm.FileMoveToBottomCommand, null),
+        };
+
+        foreach (var (header, command, gesture) in items)
+        {
+            var menuItem = new MenuItem
+            {
+                Header = header,
+                DataContext = vm,
+                Command = command,
+                InputGesture = gesture,
+            };
+            menuItem.Bind(MenuItem.IsVisibleProperty, new Binding(nameof(vm.IsMoveVisible)) { Source = vm });
+            flyout.Items.Add(menuItem);
+        }
     }
 }

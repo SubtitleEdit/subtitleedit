@@ -27,6 +27,13 @@ public class ModifySelectionRule
     public double DefaultValue { get; set; }
     public List<MultiSelectItem> MultiSelectItems { get; set; }
 
+    // Rules with too many options for the one-line rule row get a "Settings..." button instead.
+    public bool HasSettings { get; set; }
+
+    // Only set for RuleType.HearingImpaired - its options and the (lazily built) removal engine.
+    public HearingImpairedRuleOptions? HearingImpairedOptions { get; set; }
+    public HearingImpairedDetector? HearingImpairedDetector { get; set; }
+
     // IsMatch runs against every line on the preview timer, so the regex is compiled once per
     // (pattern, options) instead of going through the static Regex cache per line. A null
     // cached regex with matching key means the pattern failed to parse.
@@ -239,6 +246,14 @@ public class ModifySelectionRule
             },
             new()
             {
+                RuleType = RuleType.HearingImpaired,
+                Name = l.HearingImpaired,
+                HasSettings = true,
+                HearingImpairedOptions = HearingImpairedRuleOptions.FromSettings(),
+                HearingImpairedDetector = new HearingImpairedDetector(lines),
+            },
+            new()
+            {
                 RuleType = RuleType.Style,
                 Name = g.Style,
                 HasMultiSelect = true,
@@ -398,6 +413,11 @@ public class ModifySelectionRule
 
             case RuleType.BlankLines:
                 return string.IsNullOrWhiteSpace(text);
+
+            case RuleType.HearingImpaired:
+                return HearingImpairedDetector != null &&
+                       HearingImpairedOptions != null &&
+                       HearingImpairedDetector.IsMatch(text, HearingImpairedOptions);
 
             case RuleType.Style:
                 if (string.IsNullOrEmpty(item.Style))

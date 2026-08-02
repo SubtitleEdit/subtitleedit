@@ -10,6 +10,7 @@ using Avalonia.Threading;
 using Avalonia.VisualTree;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 
 namespace Nikse.SubtitleEdit.Logic;
@@ -314,15 +315,19 @@ public static class TableViewExtras
     }
 
     /// <summary>
-    /// Home/End jump to the first/last row even when the TableView itself (not a row)
-    /// has keyboard focus - ListBox's native handling only runs with focus on an item.
+    /// Home/End jump to the first/last row and PageUp/PageDown move the selection a page,
+    /// even when the TableView itself (not a row) has keyboard focus - ListBox's native
+    /// handling only runs with focus on an item, and its virtualizing panel ignores the
+    /// page keys entirely, so they only scrolled and left the selection behind (#13060).
     /// Skipped when the key originates in a TextBox (e.g. an in-cell editor).
     /// </summary>
-    public static void AttachHomeEndNavigation(TableView tableView)
+    public static void AttachListNavigation(TableView tableView)
     {
         tableView.AddHandler(InputElement.KeyDownEvent, (object? _, KeyEventArgs e) =>
         {
-            if (e.Key is not (Key.Home or Key.End) || e.Source is TextBox)
+            if (e.Key is not (Key.Home or Key.End or Key.PageUp or Key.PageDown) ||
+                e.KeyModifiers is not (KeyModifiers.None or KeyModifiers.Control) ||
+                e.Source is TextBox)
             {
                 return;
             }
@@ -332,15 +337,28 @@ public static class TableViewExtras
                 return;
             }
 
-            var target = e.Key == Key.Home ? items[0] : items[^1];
+            var targetIndex = e.Key switch
+            {
+                Key.Home => 0,
+                Key.End => items.Count - 1,
+                _ => GetPageTarget(tableView, tableView.SelectedIndex, e.Key == Key.PageDown),
+            };
+
+            if (targetIndex < 0 || targetIndex >= items.Count)
+            {
+                return;
+            }
+
+            var target = items[targetIndex];
             if (target == null)
             {
                 return;
             }
 
-            PrePositionScroll(tableView, e.Key == Key.Home ? 0 : items.Count - 1);
+            PrePositionScroll(tableView, targetIndex);
             tableView.SelectedItem = target;
             tableView.ScrollIntoView(target);
+            EnsureRowFullyVisible(tableView, target);
 
             // The jump can scroll the currently focused row container out of the realized
             // range, dropping keyboard focus out of the TableView entirely (the next
@@ -470,8 +488,9 @@ public static class TableViewExtras
     }
 
     /// <summary>
-    /// Number of rows that fit in the viewport (used as the PageUp/PageDown step).
-    /// Counts realized rows, which works with variable row heights.
+    /// Rough number of rows in a page, from the realized row count. Only a fallback for
+    /// <see cref="GetPageTarget"/> - realization overshoots the viewport, so with variable
+    /// row heights this over-counts; prefer the geometry-based target.
     /// </summary>
     public static int GetPageSize(TableView tableView)
     {
@@ -479,6 +498,108 @@ public static class TableViewExtras
             .OfType<TableViewRow>()
             .Count(r => r.IsVisible && r.Bounds.Height > 0);
         return Math.Max(1, visibleRowCount - 1);
+    }
+
+    /// <summary>
+    /// The row a PageDown (<paramref name="down"/>) or PageUp from <paramref name="currentIndex"/>
+    /// should move the selection to: the last (first) fully visible row, or - when the current row
+    /// already is that row - the edge row one viewport further on. This is what Explorer and the
+    /// WinForms/WPF list controls do, and unlike stepping a fixed row count it stays correct with
+    /// the variable row heights of the subtitle grid (#13060): the step is read from the rows
+    /// actually on screen, and the target row is on screen by construction.
+    /// Note this may scroll the grid by one viewport - that is how the next edge row is located
+    /// exactly rather than estimated; callers select and scroll to the returned index as usual.
+    /// Returns -1 for an empty grid.
+    /// </summary>
+    public static int GetPageTarget(TableView tableView, int currentIndex, bool down)
+    {
+        var count = tableView.ItemCount;
+        if (count == 0)
+        {
+            return -1;
+        }
+
+        currentIndex = Math.Clamp(currentIndex, 0, count - 1);
+        var fallback = Math.Clamp(currentIndex + (down ? GetPageSize(tableView) : -GetPageSize(tableView)), 0, count - 1);
+
+        var scrollViewer = tableView.GetVisualDescendants().OfType<ScrollViewer>().FirstOrDefault();
+        if (scrollViewer == null || scrollViewer.Viewport.Height <= 0)
+        {
+            return fallback;
+        }
+
+        // Without the current row on screen there is no edge to move from (the user scrolled
+        // away with the wheel, or the row is taller than the viewport) - estimate instead.
+        var visible = GetFullyVisibleRows(tableView, scrollViewer);
+        if (visible.All(x => x.Index != currentIndex))
+        {
+            return fallback;
+        }
+
+        var edge = down ? visible[^1] : visible[0];
+        if (edge.Index != currentIndex)
+        {
+            return edge.Index;
+        }
+
+        // Already at the edge: move on a viewport by putting the current row at the opposite
+        // edge, then take whatever row now sits at this edge.
+        var delta = down ? edge.Top : edge.Top + edge.Height - scrollViewer.Viewport.Height;
+        var newY = Math.Max(0, Math.Min(scrollViewer.Offset.Y + delta, scrollViewer.Extent.Height - scrollViewer.Viewport.Height));
+        if (Math.Abs(newY - scrollViewer.Offset.Y) < 1)
+        {
+            // Nowhere left to scroll - the list end is already on screen.
+            return down ? visible[^1].Index : visible[0].Index;
+        }
+
+        scrollViewer.Offset = new Vector(scrollViewer.Offset.X, newY);
+        tableView.UpdateLayout();
+
+        visible = GetFullyVisibleRows(tableView, scrollViewer);
+        if (visible.Count == 0)
+        {
+            return fallback;
+        }
+
+        var target = down ? visible[^1].Index : visible[0].Index;
+
+        // A single row taller than half the viewport can leave the current row at the edge
+        // again; always advance at least one row so the key is never a no-op.
+        return target != currentIndex ? target : Math.Clamp(currentIndex + (down ? 1 : -1), 0, count - 1);
+    }
+
+    /// <summary>
+    /// The realized rows that are completely inside the viewport, ordered by item index,
+    /// with each row's top in viewport coordinates.
+    /// </summary>
+    private static List<(int Index, double Top, double Height)> GetFullyVisibleRows(TableView tableView, ScrollViewer scrollViewer)
+    {
+        var rows = new List<(int Index, double Top, double Height)>();
+        foreach (var row in tableView.GetRealizedContainers().OfType<TableViewRow>())
+        {
+            var height = row.Bounds.Height;
+            if (height <= 0)
+            {
+                continue;
+            }
+
+            var index = tableView.IndexFromContainer(row);
+            if (index < 0)
+            {
+                continue;
+            }
+
+            var top = ((Visual)row).TranslatePoint(new Point(0, 0), scrollViewer)?.Y;
+            if (top == null || top.Value < -0.5 || top.Value + height > scrollViewer.Viewport.Height + 0.5)
+            {
+                continue;
+            }
+
+            rows.Add((index, top.Value, height));
+        }
+
+        rows.Sort((a, b) => a.Index.CompareTo(b.Index));
+        return rows;
     }
 
     /// <summary>Refinement steps <see cref="PrePositionScroll"/> is allowed to take.</summary>
@@ -639,6 +760,65 @@ public static class TableViewExtras
 
             scrollViewer.Offset = new Vector(offset.X, newY);
         }, DispatcherPriority.Loaded);
+    }
+
+    /// <summary>
+    /// Moves the selected rows within <paramref name="items"/> (see <see cref="ListReorder"/>)
+    /// and leaves the same rows selected at their new positions, with the moved block
+    /// scrolled into view.
+    /// </summary>
+    public static void MoveSelectedRows<TItem>(TableView tableView, ObservableCollection<TItem> items, ListMoveDirection direction)
+        where TItem : class
+    {
+        var selected = tableView.SelectedItems?.OfType<TItem>().ToList();
+        if (selected == null || selected.Count == 0)
+        {
+            return;
+        }
+
+        // The row the control treats as the selection anchor - restored first below so it
+        // stays SelectedItem (view models bind their "current row" to that, not to SelectedItems).
+        var anchor = tableView.SelectedItem as TItem;
+
+        ListReorder.Move(items, selected.Select(items.IndexOf), direction);
+
+        var remaining = new HashSet<TItem>(selected);
+        var newIndices = new List<int>(selected.Count);
+        for (var i = 0; i < items.Count && remaining.Count > 0; i++)
+        {
+            if (remaining.Remove(items[i]))
+            {
+                newIndices.Add(i);
+            }
+        }
+
+        if (newIndices.Count == 0)
+        {
+            return;
+        }
+
+        // ObservableCollection.Move raises one CollectionChanged per row, and the selection
+        // model's index bookkeeping does not survive a run of them intact - restore the
+        // whole selection explicitly. The batch defers SelectionChanged to the end, so
+        // SelectionMode.AlwaysSelected never sees the momentarily empty selection and
+        // cannot force row 0 back in.
+        tableView.Selection.BeginBatchUpdate();
+        tableView.Selection.Clear();
+        var anchorIndex = anchor != null ? items.IndexOf(anchor) : -1;
+        if (anchorIndex >= 0)
+        {
+            tableView.Selection.Select(anchorIndex); // first Select after Clear sets SelectedIndex
+        }
+
+        foreach (var index in newIndices)
+        {
+            tableView.Selection.Select(index);
+        }
+
+        tableView.Selection.EndBatchUpdate();
+
+        var edgeIndex = direction is ListMoveDirection.Up or ListMoveDirection.Top ? newIndices[0] : newIndices[^1];
+        tableView.ScrollIntoView(items[edgeIndex]);
     }
 }
 

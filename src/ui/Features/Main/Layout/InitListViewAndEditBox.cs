@@ -782,6 +782,23 @@ public static partial class InitListViewAndEditBox
         insertSubtitleFileAfterLineMenuItem.Command = vm.InsertSubtitleFileAfterThisLineCommand;
         flyout.Items.Add(insertSubtitleFileAfterLineMenuItem);
 
+        // SE4 had "Copy as text to clipboard" right here - without it the copy commands are only
+        // reachable via shortcuts, and the text-only ones have no default shortcut at all
+        var copyToClipboardMenuItem = new MenuItem { Header = Se.Language.General.CopyToClipboard, DataContext = vm };
+        copyToClipboardMenuItem.Bind(Visual.IsVisibleProperty, new Binding(nameof(vm.IsSubtitleGridDataMenuVisible)));
+        copyToClipboardMenuItem.Command = vm.SubtitleGridCopyCommand;
+        flyout.Items.Add(copyToClipboardMenuItem);
+
+        var copyTextToClipboardMenuItem = new MenuItem { Header = Se.Language.General.CopyTextToClipboard, DataContext = vm };
+        copyTextToClipboardMenuItem.Bind(Visual.IsVisibleProperty, new Binding(nameof(vm.IsSubtitleGridDataMenuVisible)));
+        copyTextToClipboardMenuItem.Command = vm.CopyTextToClipboardCommand;
+        flyout.Items.Add(copyTextToClipboardMenuItem);
+
+        var copyOriginalTextToClipboardMenuItem = new MenuItem { Header = Se.Language.Options.Shortcuts.CopyTextFromOriginalToClipboard, DataContext = vm };
+        copyOriginalTextToClipboardMenuItem.Bind(Visual.IsVisibleProperty, new Binding(nameof(vm.ShowColumnOriginalText)));
+        copyOriginalTextToClipboardMenuItem.Command = vm.CopyTextFromOriginalToClipboardCommand;
+        flyout.Items.Add(copyOriginalTextToClipboardMenuItem);
+
         var copyOriginal = new MenuItem { Header = Se.Language.Main.CopyTextFromOriginalToCurrent, Command = vm.ColumnCopyTextFromOriginalToCurrentCommand };
         copyOriginal.Bind(Visual.IsVisibleProperty, new Binding(nameof(vm.ShowColumnOriginalText)));
 
@@ -1002,6 +1019,12 @@ public static partial class InitListViewAndEditBox
                 {
                     Header = Se.Language.Main.Menu.FixCommonErrors,
                     Command = vm.FixCommonErrorsSelectedLinesCommand,
+                    DataContext = vm,
+                },
+                new MenuItem
+                {
+                    Header = Se.Language.Main.Menu.AiReview,
+                    Command = vm.AiReviewSelectedLinesCommand,
                     DataContext = vm,
                 },
                 new MenuItem
@@ -1476,6 +1499,38 @@ public static partial class InitListViewAndEditBox
         var menuItemTextBoxColor = new MenuItem { Header = Se.Language.General.Color };
         menuItemTextBoxColor.Command = vm.TextBoxColorCommand;
         flyoutTextBox.Items.Add(menuItemTextBoxColor);
+
+        flyoutTextBox.Items.Add(new Separator());
+
+        // Casing was shortcut-only, which made people think it had been removed (#13093).
+        var menuItemTextBoxCasing = new MenuItem { Header = Se.Language.General.Casing };
+        menuItemTextBoxCasing.Items.Add(new MenuItem
+        {
+            Header = Se.Language.General.ToggleCasing,
+            Command = vm.ToggleCasingCommand,
+        });
+        menuItemTextBoxCasing.Items.Add(new MenuItem
+        {
+            Header = Se.Language.General.SelectionToUppercase,
+            Command = vm.SelectionToUpperCommand,
+        });
+        menuItemTextBoxCasing.Items.Add(new MenuItem
+        {
+            Header = Se.Language.General.SelectionToLowercase,
+            Command = vm.SelectionToLowerCommand,
+        });
+        menuItemTextBoxCasing.Items.Add(new MenuItem
+        {
+            Header = Se.Language.General.SelectionToSentenceCase,
+            Command = vm.SelectionToSentenceCaseCommand,
+        });
+        menuItemTextBoxCasing.Items.Add(new Separator());
+        menuItemTextBoxCasing.Items.Add(new MenuItem
+        {
+            Header = Se.Language.Main.Menu.ChangeCasing,
+            Command = vm.ChangeCasingSelectedLinesCommand,
+        });
+        flyoutTextBox.Items.Add(menuItemTextBoxCasing);
 
         flyoutTextBox.Items.Add(new Separator());
 

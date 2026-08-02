@@ -110,7 +110,7 @@ public class PointSyncViaOtherWindow : Window
             Width = new GridLength(1, GridUnitType.Star),
         });
         dataGrid.Bind(TableView.SelectedItemProperty, new Binding(nameof(vm.SelectedSyncPoint)));
-        TableViewExtras.AttachHomeEndNavigation(dataGrid);
+        TableViewExtras.AttachListNavigation(dataGrid);
 
         var menuItemDelete = new MenuItem
         {
@@ -210,7 +210,7 @@ public class PointSyncViaOtherWindow : Window
             },
         });
         dataGrid.Bind(TableView.SelectedItemProperty, new Binding(nameof(vm.SelectedSubtitle)));
-        TableViewExtras.AttachHomeEndNavigation(dataGrid);
+        TableViewExtras.AttachListNavigation(dataGrid);
 
         grid.Add(panelHeader, 0);
         grid.Add(UiUtil.MakeBorderForControlNoPadding(dataGrid), 1);
@@ -303,7 +303,7 @@ public class PointSyncViaOtherWindow : Window
             },
         });
         dataGridSubtitle.Bind(TableView.SelectedItemProperty, new Binding(nameof(vm.SelectedOtherSubtitle)));
-        TableViewExtras.AttachHomeEndNavigation(dataGridSubtitle);
+        TableViewExtras.AttachListNavigation(dataGridSubtitle);
 
         // Clicking a line in the left grid scrolls this grid to the matching time (#12529)
         // without touching its selection.
