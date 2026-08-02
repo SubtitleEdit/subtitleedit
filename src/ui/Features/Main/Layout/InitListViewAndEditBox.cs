@@ -1006,6 +1006,12 @@ public static partial class InitListViewAndEditBox
                 },
                 new MenuItem
                 {
+                    Header = Se.Language.Main.Menu.AiReview,
+                    Command = vm.AiReviewSelectedLinesCommand,
+                    DataContext = vm,
+                },
+                new MenuItem
+                {
                     Header = Se.Language.Main.Menu.MultipleReplace,
                     Command = vm.MultipleReplaceSelectedLinesCommand,
                     DataContext = vm,

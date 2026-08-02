@@ -8982,6 +8982,47 @@ public partial class MainViewModel :
     }
 
     [RelayCommand]
+    private async Task AiReviewSelectedLines()
+    {
+        // Work on the selected lines in grid order - the review sends the block as one unit, so
+        // sentences continuing across the selection are still reviewed together.
+        var selectedItems = new HashSet<SubtitleLineViewModel>(SubtitleGridSelectedItems.Cast<SubtitleLineViewModel>());
+        var ordered = Subtitles.Where(s => selectedItems.Contains(s)).ToList();
+        if (ordered.Count == 0)
+        {
+            return;
+        }
+
+        var sub = new Subtitle();
+        foreach (var line in ordered)
+        {
+            sub.Paragraphs.Add(line.ToParagraph(SelectedSubtitleFormat));
+        }
+
+        var result = await ShowDialogAsync<AiReviewWindow, AiReviewViewModel>(vm => vm.Initialize(sub, SelectedSubtitleFormat));
+        if (!result.OkPressed)
+        {
+            _shortcutManager.ClearKeys();
+            return;
+        }
+
+        // AI review only rewrites text, so the fixed subtitle is 1:1 with the block sent in.
+        var fixedCount = 0;
+        for (var i = 0; i < result.FixedSubtitle.Paragraphs.Count && i < ordered.Count; i++)
+        {
+            var text = result.FixedSubtitle.Paragraphs[i].Text;
+            if (ordered[i].Text != text)
+            {
+                ordered[i].Text = text;
+                fixedCount++;
+            }
+        }
+
+        _updateAudioVisualizer = true;
+        ShowStatus(string.Format(Se.Language.Main.FixedXLines, fixedCount));
+    }
+
+    [RelayCommand]
     private async Task RemoveTextForHearingImpairedSelectedLines()
     {
         if (Window == null)
