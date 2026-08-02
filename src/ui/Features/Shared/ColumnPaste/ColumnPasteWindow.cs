@@ -38,19 +38,30 @@ public class ColumnPasteWindow : Window
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
         var panelButtons = UiUtil.MakeButtonBar(buttonOk, buttonCancel);
 
-        grid.Add(MakeChooseColumnView(vm, out var radioButtonColumnsAll), 0);
+        grid.Add(MakeChooseColumnView(vm, out var radioButtonColumnsAll, out var radioButtonColumnsTextOnly), 0);
         grid.Add(MakeOverwriteView(vm), 0, 1);
         grid.Add(panelButtons, 1, 0, 1, 2);
 
         Content = grid;
 
-        Activated += delegate { radioButtonColumnsAll.Focus(); }; // initial focus on an input, not an action button - a focused button clicks on bare Space
+        // Plain text has no time codes, so the only enabled column choice is "text only"
+        var initialFocusControl = vm.IsTextOnlySource ? radioButtonColumnsTextOnly : radioButtonColumnsAll;
+        Activated += delegate { initialFocusControl.Focus(); }; // initial focus on an input, not an action button - a focused button clicks on bare Space
         KeyDown += vm.KeyDown;
     }
 
-    private static Border MakeChooseColumnView(ColumnPasteViewModel vm, out RadioButton radioButtonAll)
+    private static Border MakeChooseColumnView(ColumnPasteViewModel vm, out RadioButton radioButtonAll, out RadioButton radioButtonTextOnly)
     {
         radioButtonAll = UiUtil.MakeRadioButton(Se.Language.General.All, vm, nameof(vm.ColumnsAll), "column");
+        var radioButtonTimeCodesOnly = UiUtil.MakeRadioButton(Se.Language.Main.TimeCodesOnly, vm, nameof(vm.ColumnsTimeCodesOnly), "column");
+        radioButtonTextOnly = UiUtil.MakeRadioButton(Se.Language.Main.TextOnly, vm, nameof(vm.ColumnsTextOnly), "column");
+
+        if (vm.IsTextOnlySource)
+        {
+            // clipboard was plain text - there are no time codes to paste
+            radioButtonAll.IsEnabled = false;
+            radioButtonTimeCodesOnly.IsEnabled = false;
+        }
 
         var stackPanel = new StackPanel
         {
@@ -59,8 +70,8 @@ public class ColumnPasteWindow : Window
             {
                 UiUtil.MakeLabel(Se.Language.Main.ChooseColumn),
                 radioButtonAll,
-                UiUtil.MakeRadioButton(Se.Language.Main.TimeCodesOnly, vm, nameof(vm.ColumnsTimeCodesOnly), "column"),
-                UiUtil.MakeRadioButton(Se.Language.Main.TextOnly, vm, nameof(vm.ColumnsTextOnly), "column"),
+                radioButtonTimeCodesOnly,
+                radioButtonTextOnly,
             }
         };
 
