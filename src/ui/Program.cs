@@ -185,6 +185,9 @@ namespace Nikse.SubtitleEdit
                 // Set current theme
                 UiTheme.SetCurrentTheme();
 
+                // Type-to-search in all drop-downs (e.g. typing "Ar" selects "Arial")
+                UiUtil.EnableComboBoxTypeSearch();
+
                 // Setup main window (Batch Convert standalone if requested via CLI)
                 if (HasBatchConvertUiArg(args))
                 {
