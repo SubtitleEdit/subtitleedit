@@ -1,5 +1,6 @@
 using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Logic.Config;
+using Nikse.SubtitleEdit.Logic.Download;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -359,6 +360,8 @@ public sealed class LibMpvDynamicPlayer : IDisposable, IVideoPlayer
             return -1;
         }
 
+        SetYtDlpPathOption();
+
         var err = _mpvInitialize(_mpv);
         if (err >= 0)
         {
@@ -404,6 +407,100 @@ public sealed class LibMpvDynamicPlayer : IDisposable, IVideoPlayer
         var nameBytes = GetUtf8Bytes(name);
         var valueBytes = GetUtf8Bytes(value);
         return _mpvSetOptionString(_mpv, nameBytes, valueBytes);
+    }
+
+    /// <summary>
+    /// Tells mpv where to find yt-dlp, which it needs for streaming URLs (YouTube and friends).
+    /// <para>
+    /// mpv's ytdl_hook searches only mpv's own config directory and PATH; the copy Subtitle Edit
+    /// downloads lives in the data folder - <c>%AppData%\Subtitle Edit</c> in an installed Windows
+    /// build - which is on neither, so "open video from URL / open online" failed there. The
+    /// portable build worked only by accident: its data folder IS the folder holding the
+    /// executable, which Windows searches when starting a process (issue #13067). Adding the
+    /// folder to PATH is not an option off Windows either - .NET keeps its own copy of the
+    /// environment on Unix, so a managed PATH change is invisible to libmpv's getenv.
+    /// </para>
+    /// <para>
+    /// Must be called before mpv_initialize: the scripts read their options when they load.
+    /// </para>
+    /// </summary>
+    private void SetYtDlpPathOption()
+    {
+        // Subtitle Edit sets no other script options, so assigning the whole list is safe.
+        // ("script-opts-append", which would append a single entry verbatim, is not accepted by
+        // mpv_set_option_string - it answers MPV_ERROR_OPTION_NOT_FOUND.)
+        var value = "ytdl_hook-ytdl_path=" + GetYtDlpPathList();
+        var err = SetOptionString("script-opts", value);
+        if (err < 0)
+        {
+            Se.LogError(new InvalidOperationException(GetErrorString(err)), "LibMpvDynamicPlayer could not set " + value);
+        }
+    }
+
+    /// <summary>
+    /// The path list handed to ytdl_hook, most specific first. ytdl_hook tries each entry in turn
+    /// and moves on when one cannot be started, so the downloaded copy is listed whether or not it
+    /// exists yet - it may well be downloaded later in the same session, after mpv came up. The
+    /// well-known system locations and mpv's own "yt-dlp" default come last so a user's own
+    /// install keeps working.
+    /// </summary>
+    internal static string GetYtDlpPathList()
+    {
+        // The copy Subtitle Edit downloads into the data folder and version-checks itself.
+        var paths = new List<string> { YtDlpDownloadService.GetFullFileName() };
+
+        if (OperatingSystem.IsWindows())
+        {
+            // Where a portable install keeps it - and where anyone who worked around this bug by
+            // hand put it.
+            paths.Add(Path.Combine(Se.ExePath, "yt-dlp.exe"));
+        }
+        else if (OperatingSystem.IsMacOS())
+        {
+            paths.Add("/opt/homebrew/bin/yt-dlp"); // Homebrew (Apple Silicon)
+            paths.Add("/usr/local/bin/yt-dlp");    // Homebrew (Intel)
+            paths.Add("/opt/local/bin/yt-dlp");    // MacPorts
+            paths.Add("/usr/bin/yt-dlp");
+        }
+        else if (OperatingSystem.IsLinux())
+        {
+            paths.Add("/usr/local/bin/yt-dlp");
+            paths.Add("/usr/bin/yt-dlp");
+            paths.Add("/opt/yt-dlp/yt-dlp");
+            paths.Add(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), ".local", "bin", "yt-dlp"));
+        }
+
+        paths.Add("yt-dlp"); // mpv's own default: whatever is in PATH
+
+        return JoinYtDlpPaths(paths);
+    }
+
+    /// <summary>
+    /// Joins the candidates the way ytdl_hook wants them: separated by <c>;</c> on Windows and
+    /// <c>:</c> elsewhere, in order, without repeats (in a portable install the data folder IS the
+    /// executable folder). Candidates that cannot survive the trip are dropped - script-opts is a
+    /// comma-separated key=value list with no escaping, so one path holding a comma, or the list
+    /// separator itself, makes mpv reject the entire option (MPV_ERROR_OPTION_ERROR) and no path at
+    /// all reaches the hook.
+    /// </summary>
+    internal static string JoinYtDlpPaths(IEnumerable<string> paths)
+    {
+        var seen = new HashSet<string>(StringComparer.Ordinal);
+        var usable = new List<string>();
+        foreach (var path in paths)
+        {
+            if (path.Contains(',') || path.Contains(Path.PathSeparator))
+            {
+                continue;
+            }
+
+            if (seen.Add(path))
+            {
+                usable.Add(path);
+            }
+        }
+
+        return string.Join(Path.PathSeparator, usable);
     }
 
     private int _brightness;
@@ -481,6 +578,8 @@ public sealed class LibMpvDynamicPlayer : IDisposable, IVideoPlayer
         // On Linux, do NOT force gpu-context.  Avalonia (11.x) has no native
         // Wayland backend — it always provides an X11/XWayland OpenGL context,
         // so let mpv auto-detect from the context it receives.
+
+        SetYtDlpPathOption();
 
         // Initialize mpv first
         var err = _mpvInitialize(_mpv);
@@ -578,6 +677,8 @@ public sealed class LibMpvDynamicPlayer : IDisposable, IVideoPlayer
         // Tell mpv to use the external (libmpv) renderer.
         SetOptionString("vo", "libmpv");
         SetOptionString("gpu-api", "metal");
+
+        SetYtDlpPathOption();
 
         var err = _mpvInitialize(_mpv);
         if (err < 0)
@@ -899,56 +1000,9 @@ public sealed class LibMpvDynamicPlayer : IDisposable, IVideoPlayer
             Se.LogError(new InvalidOperationException(GetErrorString(err)), "LibMpvDynamicPlayer LoadFile");
         }
 
-        if (OperatingSystem.IsMacOS())
-        {
-            // add yt-dlp to the process PATH on macOS so mpv can find it for youtube URLs
-            var macYtDlpPaths = new[]
-            {
-                "/opt/local/bin/yt-dlp",       // MacPorts
-                "/usr/local/bin/yt-dlp",        // Homebrew (Intel)
-                "/opt/homebrew/bin/yt-dlp",     // Homebrew (Apple Silicon)
-                "/usr/bin/yt-dlp",
-                Path.Combine(Se.DataFolder, "yt-dlp_macos"),
-            };
-            foreach (var ytDlpPath in macYtDlpPaths)
-            {
-                if (File.Exists(ytDlpPath))
-                {
-                    var dir = Path.GetDirectoryName(ytDlpPath)!;
-                    var currentPath = Environment.GetEnvironmentVariable("PATH") ?? string.Empty;
-                    if (!currentPath.Split(Path.PathSeparator).Contains(dir))
-                    {
-                        Environment.SetEnvironmentVariable("PATH", currentPath + Path.PathSeparator + dir);
-                    }
-                    break;
-                }
-            }
-        }
-        else if (OperatingSystem.IsLinux())
-        {
-            // add yt-dlp to the process PATH on Linux so mpv can find it for youtube URLs
-            var linuxYtDlpPaths = new[]
-            {
-                "/usr/local/bin/yt-dlp",
-                "/usr/bin/yt-dlp",
-                "/opt/yt-dlp/yt-dlp",
-                Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), ".local/bin/yt-dlp"),
-                Path.Combine(Se.DataFolder, "yt-dlp_linux"),
-            };
-            foreach (var ytDlpPath in linuxYtDlpPaths)
-            {
-                if (File.Exists(ytDlpPath))
-                {
-                    var dir = Path.GetDirectoryName(ytDlpPath)!;
-                    var currentPath = Environment.GetEnvironmentVariable("PATH") ?? string.Empty;
-                    if (!currentPath.Split(Path.PathSeparator).Contains(dir))
-                    {
-                        Environment.SetEnvironmentVariable("PATH", currentPath + Path.PathSeparator + dir);
-                    }
-                    break;
-                }
-            }
-        }
+        // yt-dlp used to be pointed at from here by appending its folder to PATH - it never
+        // reached libmpv (see SetYtDlpPathOption) and it ran after loadfile, too late for the
+        // hook it was meant to help. The path is handed to ytdl_hook before mpv_initialize now.
 
         SetOptionString("keep-open", "always");
         SetOptionString("sid", "no");
@@ -1640,6 +1694,8 @@ public sealed class LibMpvDynamicPlayer : IDisposable, IVideoPlayer
         {
             throw new InvalidOperationException("MPV delegates not loaded for software rendering.");
         }
+
+        SetYtDlpPathOption();
 
         // Initialize mpv
         var err = _mpvInitialize(_mpv);
