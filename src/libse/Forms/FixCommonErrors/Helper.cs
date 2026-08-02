@@ -1,4 +1,5 @@
 ﻿using Nikse.SubtitleEdit.Core.Common;
+using Nikse.SubtitleEdit.Core.Interfaces;
 using System;
 using System.Linq;
 using System.Text;
@@ -7,6 +8,41 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
 {
     public static class Helper
     {
+        /// <summary>
+        /// True if the period at <paramref name="index"/> ends an abbreviation ("dhr.", "O.R.")
+        /// rather than a sentence, so the next word must not be capitalized.
+        /// </summary>
+        public static bool IsAbbreviation(string text, int index, IFixCallbacks callbacks)
+        {
+            if (string.IsNullOrEmpty(text) || index < 0 || index >= text.Length || text[index] != '.')
+            {
+                return false;
+            }
+
+            if (index - 3 > 0 && char.IsLetterOrDigit(text[index - 1]) && text[index - 2] == '.') // e.g: O.R.
+            {
+                return true;
+            }
+
+            var word = string.Empty;
+            var i = index - 1;
+            while (i >= 0 && char.IsLetter(text[i]))
+            {
+                word = text[i--] + word;
+            }
+
+            return callbacks.GetAbbreviations().Contains(word + ".");
+        }
+
+        /// <summary>
+        /// True if <paramref name="text"/> ends with an abbreviation, e.g. a subtitle line ending
+        /// in "Ik sprak met dhr." where the next line continues the same sentence.
+        /// </summary>
+        public static bool EndsWithAbbreviation(string text, IFixCallbacks callbacks)
+        {
+            return !string.IsNullOrEmpty(text) && IsAbbreviation(text, text.Length - 1, callbacks);
+        }
+
         public static bool IsTurkishLittleI(char firstLetter, Encoding encoding, string language)
         {
             if (language != "tr")
