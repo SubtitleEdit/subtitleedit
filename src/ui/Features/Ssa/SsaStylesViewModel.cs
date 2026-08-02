@@ -1094,7 +1094,10 @@ public partial class SsaStylesViewModel : ObservableObject, IClosingCleanup
 
     internal void StoreContextMenuOpening(object? sender, EventArgs e)
     {
-        IsDeleteAllVisible = FileStyles.Count > 0;
-        IsDeleteVisible = SelectedFileStyle != null;
+        // The storage menu's "Delete"/"Clear" must follow the storage list, not the file list -
+        // reading FileStyles here hid "Delete" whenever no file style happened to be selected,
+        // and offered "Clear" on an empty storage list.
+        IsDeleteAllVisible = StorageStyles.Count > 0;
+        IsDeleteVisible = SelectedStorageStyle != null;
     }
 }

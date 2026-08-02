@@ -273,33 +273,7 @@ public class OmniVoiceCrispAsr : ITtsEngine
             foreach (var src in Directory.GetFiles(sourceFolder, "*.wav"))
             {
                 var dest = Path.Combine(voicesFolder, Path.GetFileName(src));
-                if (!File.Exists(dest))
-                {
-                    try
-                    {
-                        var ffmpeg = FfmpegGenerator.ConvertToMono24kHzWav(src, dest);
-                        if (!ffmpeg.Start())
-                        {
-                            File.Copy(src, dest);
-                        }
-                        else
-                        {
-                            ffmpeg.WaitForExit();
-                        }
-                    }
-                    catch (Exception ex)
-                    {
-                        Se.LogError(ex, $"OmniVoice (CrispASR): resample seed '{src}' failed; falling back to plain copy");
-                        try
-                        {
-                            if (!File.Exists(dest))
-                            {
-                                File.Copy(src, dest);
-                            }
-                        }
-                        catch { }
-                    }
-                }
+                VoiceSeedHelper.CopyOrResample(src, dest, 24000, "OmniVoice (CrispASR)");
 
                 var sidecar = Path.ChangeExtension(src, ".txt");
                 if (File.Exists(sidecar))
@@ -374,7 +348,7 @@ public class OmniVoiceCrispAsr : ITtsEngine
         return true;
     }
 
-    public Task<Voice[]> GetVoices(string language)
+    public async Task<Voice[]> GetVoices(string language)
     {
         // The backend has a usable built-in voice, so "Default" leads and cloning is opt-in.
         var result = new List<Voice>
@@ -382,7 +356,9 @@ public class OmniVoiceCrispAsr : ITtsEngine
             new Voice(new OmniVoiceCrispAsrVoice(DefaultVoiceName, string.Empty)),
         };
 
-        var voicesFolder = GetSetVoicesFolder();
+        // Off the UI thread: GetSetVoicesFolder does one-time reference-WAV seeding through
+        // ffmpeg, and this is awaited from SelectedEngineChanged on the dispatcher.
+        var voicesFolder = await Task.Run(GetSetVoicesFolder);
         if (Directory.Exists(voicesFolder))
         {
             foreach (var file in Directory.GetFiles(voicesFolder, "*.wav"))
@@ -392,7 +368,7 @@ public class OmniVoiceCrispAsr : ITtsEngine
             }
         }
 
-        return Task.FromResult(result.ToArray());
+        return result.ToArray();
     }
 
     public bool IsVoiceInstalled(Voice voice) => true;

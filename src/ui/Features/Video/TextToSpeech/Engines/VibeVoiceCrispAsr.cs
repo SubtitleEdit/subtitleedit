@@ -234,30 +234,9 @@ public class VibeVoiceCrispAsr : ITtsEngine
             foreach (var src in Directory.GetFiles(sourceFolder, "*.wav"))
             {
                 var dest = Path.Combine(voicesFolder, Path.GetFileName(src));
-                if (File.Exists(dest))
-                {
-                    continue;
-                }
 
-                try
-                {
-                    var ffmpeg = FfmpegGenerator.ConvertToMono24kHzWav(src, dest);
-                    if (!ffmpeg.Start())
-                    {
-                        // ffmpeg unavailable — better to seed at 16 kHz than skip the voice.
-                        File.Copy(src, dest);
-                        continue;
-                    }
-                    ffmpeg.WaitForExit();
-                }
-                catch (Exception ex)
-                {
-                    Se.LogError(ex, $"VibeVoice (CrispASR): resample seed '{src}' failed; falling back to plain copy");
-                    try { if (!File.Exists(dest))
-                    {
-                        File.Copy(src, dest);
-                    } } catch { }
-                }
+                // When ffmpeg cannot do it, seeding at 16 kHz beats skipping the voice.
+                VoiceSeedHelper.CopyOrResample(src, dest, 24000, "VibeVoice (CrispASR)");
             }
         }
         catch (Exception ex)
@@ -315,13 +294,15 @@ public class VibeVoiceCrispAsr : ITtsEngine
     public static bool AreModelsInstalled(string? modelKey = null) =>
         IsValidLocalModelFile(GetTalkerPath(modelKey), GetTalkerFileName(modelKey));
 
-    public Task<Voice[]> GetVoices(string language)
+    public async Task<Voice[]> GetVoices(string language)
     {
         var result = new List<Voice>();
 
         // Voice cloning only — no built-in default voice. The combo is empty until the user
         // imports a reference WAV (or the qwen3-tts.cpp voice seed runs above).
-        var voicesFolder = GetSetVoicesFolder();
+        // Off the UI thread: GetSetVoicesFolder does one-time reference-WAV seeding through
+        // ffmpeg, and this is awaited from SelectedEngineChanged on the dispatcher.
+        var voicesFolder = await Task.Run(GetSetVoicesFolder);
         if (Directory.Exists(voicesFolder))
         {
             foreach (var file in Directory.GetFiles(voicesFolder, "*.wav"))
@@ -331,7 +312,7 @@ public class VibeVoiceCrispAsr : ITtsEngine
             }
         }
 
-        return Task.FromResult(result.ToArray());
+        return result.ToArray();
     }
 
     public bool IsVoiceInstalled(Voice voice) => true;
