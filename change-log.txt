@@ -7,6 +7,7 @@ v5.2.0-beta2 (unreleased)
 
 * Fix F10 no longer activating the menu bar: remove the default F10 "set end and go to next" binding (a one-time migration clears the stale persisted copy; re-assign F10 to get the SE4 behavior back) - thx GrampaWildWilly
 * Fix Alt no longer activating the menu bar after a dialog opened while Alt was held - thx GrampaWildWilly
+* Update Chinese Traditional translation
 
 -----------------------------------------------------------------------------------------------------
 
