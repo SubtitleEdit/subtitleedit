@@ -169,24 +169,29 @@ public class LineNumberGutter : Control
         var lastLine = Math.Min(LineCount - 1, (int)((VerticalOffset + height) / lineHeight));
         var currentLine = CurrentLine;
 
-        for (var line = firstLine; line <= lastLine; line++)
+        // The first and last visible lines are usually only partially scrolled in - clip so
+        // their numbers do not spill above or below the gutter (the view clips the same way).
+        using (context.PushClip(new Rect(0, 0, width, height)))
         {
-            var y = line * lineHeight - VerticalOffset;
-            var text = (line + 1).ToString(CultureInfo.InvariantCulture);
-            var layout = new TextLayout(text, _typeface, FontSize, foreground);
+            for (var line = firstLine; line <= lastLine; line++)
+            {
+                var y = line * lineHeight - VerticalOffset;
+                var text = (line + 1).ToString(CultureInfo.InvariantCulture);
+                var layout = new TextLayout(text, _typeface, FontSize, foreground);
 
-            // Right aligned, like every other editor gutter.
-            var x = width - PaddingRight - layout.WidthIncludingTrailingWhitespace;
-            if (line == currentLine)
-            {
-                layout.Draw(context, new Point(x, y));
-            }
-            else
-            {
-                // Everything but the caret's line is dimmed.
-                using (context.PushOpacity(0.55))
+                // Right aligned, like every other editor gutter.
+                var x = width - PaddingRight - layout.WidthIncludingTrailingWhitespace;
+                if (line == currentLine)
                 {
                     layout.Draw(context, new Point(x, y));
+                }
+                else
+                {
+                    // Everything but the caret's line is dimmed.
+                    using (context.PushOpacity(0.55))
+                    {
+                        layout.Draw(context, new Point(x, y));
+                    }
                 }
             }
         }
