@@ -20860,6 +20860,13 @@ public partial class MainViewModel :
     /// </summary>
     internal void OnWindowDeactivated(object? sender, EventArgs e)
     {
+        // Avalonia's AccessKeyHandler must not be left mid-Alt-gesture either: a modal opened
+        // while Alt was held (Alt, O, ... reaching the Shortcuts window) eats the physical Alt
+        // release, and the stranded "ignore the next Alt up" state makes the next bare Alt press
+        // fail to open the menu bar (#13083). Complete the cycle with a synthetic release first;
+        // if that release opens the menu, the deactivation cleanup below closes it again.
+        UiUtil.RaiseSyntheticAltKeyUp(Window);
+
         // Drop any held-key state when focus leaves the window. A modal dialog (e.g. the
         // "Save changes?" prompt that Ctrl+O raises on a changed file) steals focus, so the KeyUp
         // for the held keys never reaches the main window and they stay "stuck down". That left
@@ -21271,7 +21278,9 @@ public partial class MainViewModel :
             // into the menu bar, a second press deactivates it and restores the previous focus. This
             // also lets the menu be reached and read with a screen reader without a mouse (#11745).
             // A user-assigned F10 shortcut wins over the menu toggle (#12504) - the menu stays
-            // reachable via Alt.
+            // reachable via Alt. The shipped defaults deliberately bind no bare F10 (and
+            // Se.MigrateShortcuts clears the old persisted F10 default), so a registered single-key
+            // F10 here really is the user's own choice (#13083).
             if (k == Key.F10 && keyEventArgs.KeyModifiers == KeyModifiers.None && !_shortcutManager.HasSingleKeyShortcut("F10"))
             {
                 if (IsMainMenuFocused())
