@@ -61,10 +61,11 @@ v5.2.0-beta1 (TBD)
 * Fix "set start/end time" doing nothing when the video position was past the other time code - thx LabinSub
 * Modify selection: new "Hearing impaired (SDH)" rule - thx subof
 * Add "AI review" to the subtitle grid "Selected lines" context menu
+* AI review: new "delay in seconds between requests" setting for rate-limited cloud engines
 * Find and replace: also search the original text column in translator mode - thx radektuma
 * Fix the SSA storage styles context menu reading the file style list
 * Fix the UI freezing while text to speech seeded reference voices with ffmpeg
-* Update Italian translation - thx bovirus
+* Update Italian translation - thx bovirus, SiriosDev
 * Update Korean translation - thx 12si27
 * Update Polish translation - thx potplayer-fanpack
 
