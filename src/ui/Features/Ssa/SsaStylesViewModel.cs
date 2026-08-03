@@ -57,6 +57,7 @@ public partial class SsaStylesViewModel : ObservableObject, IClosingCleanup
     private readonly IFileHelper _fileHelper;
     private readonly IWindowService _windowService;
     private IApplySsaStyles? _applySsaStyles;
+    private readonly FileStyleRenameTracker _renameTracker;
     private Subtitle _subtitle;
     private string _subtitleFileName;
     private volatile bool _isClosing;
@@ -83,8 +84,24 @@ public partial class SsaStylesViewModel : ObservableObject, IClosingCleanup
 
         LoadSettings();
 
+        _renameTracker = new FileStyleRenameTracker(FileStyles, () => _subtitle, UpdateUsages);
+
         _timerUpdatePreview = new System.Timers.Timer(500);
         _timerUpdatePreview.Elapsed += TimerUpdatePreviewElapsed;
+    }
+
+    /// <summary>
+    /// The font combo box binds SelectedItem to CurrentStyle.FontName; a font missing from
+    /// the item list would make Avalonia clear the selection and null out the style's font.
+    /// Make sure the font is listed before the style becomes current (#13101).
+    /// </summary>
+    partial void OnCurrentStyleChanging(StyleDisplay? value)
+    {
+        var fontName = value?.FontName;
+        if (!string.IsNullOrEmpty(fontName) && !Fonts.Contains(fontName))
+        {
+            Fonts.Insert(0, fontName);
+        }
     }
 
     private void TimerUpdatePreviewElapsed(object? sender, System.Timers.ElapsedEventArgs e)
@@ -687,7 +704,7 @@ public partial class SsaStylesViewModel : ObservableObject, IClosingCleanup
     {
         foreach (var style in FileStyles)
         {
-            style.UsageCount = _subtitle.Paragraphs.Count(p => p.Extra != null && p.Extra.TrimStart('*').Equals(style.Name.TrimStart('*')));
+            style.UsageCount = _subtitle.Paragraphs.Count(p => p.Extra != null && p.Extra.TrimStart('*').Equals(style.Name.TrimStart('*'), StringComparison.OrdinalIgnoreCase));
         }
     }
 

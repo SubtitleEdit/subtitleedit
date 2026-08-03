@@ -888,7 +888,16 @@ public sealed class LibMpvDynamicPlayer : IDisposable, IVideoPlayer
         }
 
         FreeRenderContext();
-        TerminateCore();
+
+        // Only the render-context free needs the graphics context - the core does not, and
+        // mpv_terminate_destroy blocks until every mpv worker has exited. The deinit callback
+        // runs on the UI thread, so terminating here would freeze the UI for as long as a
+        // stuck load takes to unwind (the "Not Responding" kill in issue #13083) - the very
+        // thing the worker-thread dispose in VideoPlayerControl.CloseAndDisposePlayer was
+        // meant to prevent (issue #11176) but couldn't, because on this path the Dispose it
+        // runs is reduced to setting a flag. TerminateCore is idempotent (interlocked handle
+        // claim), so racing the owner's background Dispose is safe.
+        Task.Run(TerminateCore);
     }
 
     private void FreeRenderContext()

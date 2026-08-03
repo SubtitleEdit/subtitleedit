@@ -187,6 +187,13 @@ public partial class VideoPlayerUndockedViewModel : ObservableObject
                 await videoPlayerControl.WaitForPlayersReadyAsync();
                 await Task.Delay(100);
 
+                // Re-docking while this restore was awaiting has already disposed the
+                // player this window built - don't keep driving it (#13083).
+                if (videoPlayerControl.IsDisposed)
+                {
+                    return;
+                }
+
                 videoPlayerControl.Volume = _originalVolume;
                 videoPlayerControl.Position = _originalPosition;
 

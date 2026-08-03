@@ -64,6 +64,17 @@ public static partial class InitListViewAndEditBox
         // reader (issue #13015). Grid lines come from the TableView cell themes; sorting
         // was already disabled on the DataGrid and TableView has none.
         var subtitleGrid = TableViewExtras.MakeTableView();
+
+        // TableView itself is not focusable by default, and with no rows there is no focusable
+        // row container either - so an empty grid left the window without any focusable content.
+        // Keyboard focus then either stayed on the window root (Avalonia's AccessKeyHandler
+        // ignores all keys in that state, so Alt appeared dead and no access keys were
+        // underlined) or, once it reached the menu bar, could never leave it again because the
+        // menu deactivation had no focus target to restore to (#13111). The grid is both the
+        // startup focus target and that deactivation fallback, so it must be able to hold focus
+        // even with no rows - like an empty list view on Windows.
+        subtitleGrid.Focusable = true;
+
         subtitleGrid.Height = double.NaN;
         subtitleGrid.Margin = new Thickness(Se.Settings.Appearance.GridCompactMode ? 0 : 2);
         subtitleGrid.ItemsSource = vm.Subtitles;
