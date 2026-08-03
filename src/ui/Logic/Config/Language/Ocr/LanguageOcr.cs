@@ -101,6 +101,7 @@ public class LanguageOcr
     public string VobSubIsolateColors { get; set; }
     public string VobSubIsolateColorsHint { get; set; }
     public string LlamaCppOcrSettingsTitle { get; set; }
+    public string SelectTesseractDictionary { get; set; }
     public string InspectBinaryOcrAdditionsTitle { get; set; }
     public string LlamaCppOcr { get; set; }
     public string LlamaCppOcrDescription { get; set; }
@@ -221,6 +222,7 @@ public class LanguageOcr
         VobSubIsolateColorsHint = "Rebuild each VobSub image as crisp black-on-white before OCR by keeping the most frequent color (text) and dropping the outline/anti-alias colors. Improves recognition on discs where gray outlines merge characters together.";
 
         LlamaCppOcrSettingsTitle = "llama.cpp OCR settings";
+        SelectTesseractDictionary = "Select Tesseract dictionary:";
         InspectBinaryOcrAdditionsTitle = "Inspect Binary OCR Additions";
         LlamaCppOcr = "llama.cpp OCR";
         LlamaCppOcrDescription = "Local llama.cpp server (multimodal model) used for OCR.";

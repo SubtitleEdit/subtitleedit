@@ -24,7 +24,7 @@ public class DownloadTesseractWindow : Window
 
         var titleText = new TextBlock
         {
-            Text = "Downloading Tesseract",
+            Text = string.Format(Se.Language.General.DownloadingX, "Tesseract"),
             FontSize = 20,
             FontWeight = FontWeight.Bold,
         };

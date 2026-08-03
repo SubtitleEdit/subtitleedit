@@ -71,7 +71,7 @@ public partial class DownloadGoogleLensOcrViewModel : ObservableObject, IClosing
 
                 if (!File.Exists(_tempFileName))
                 {
-                    ProgressText = "Download failed";
+                    ProgressText = Se.Language.General.DownloadFailed;
                     Error = "No data received";
                     return;
                 }
@@ -79,7 +79,7 @@ public partial class DownloadGoogleLensOcrViewModel : ObservableObject, IClosing
                 var fileInfo = new FileInfo(_tempFileName);
                 if (fileInfo.Length == 0)
                 {
-                    ProgressText = "Download failed";
+                    ProgressText = Se.Language.General.DownloadFailed;
                     Error = "No data received";
                     return;
                 }
@@ -93,7 +93,7 @@ public partial class DownloadGoogleLensOcrViewModel : ObservableObject, IClosing
                     // Timer callbacks swallow exceptions, so an unpack failure would
                     // otherwise hang the dialog with no error shown (#12127).
                     Se.LogError(exception, "Google Lens OCR unpack failed");
-                    ProgressText = "Unpacking failed";
+                    ProgressText = Se.Language.General.UnpackingFailed;
                     Error = exception.Message;
                     return;
                 }
@@ -108,12 +108,12 @@ public partial class DownloadGoogleLensOcrViewModel : ObservableObject, IClosing
                 var ex = _downloadTask.Exception?.InnerException ?? _downloadTask.Exception;
                 if (ex is OperationCanceledException)
                 {
-                    ProgressText = "Download canceled";
+                    ProgressText = Se.Language.General.DownloadCanceled;
                     Close();
                 }
                 else
                 {
-                    ProgressText = "Download failed";
+                    ProgressText = Se.Language.General.DownloadFailed;
                     Error = ex?.Message ?? "Unknown error";
                 }
             }

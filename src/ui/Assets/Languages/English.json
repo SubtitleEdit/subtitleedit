@@ -3022,6 +3022,7 @@
     "vobSubIsolateColors": "Isolate VobSub colors for OCR",
     "vobSubIsolateColorsHint": "Rebuild each VobSub image as crisp black-on-white before OCR by keeping the most frequent color (text) and dropping the outline/anti-alias colors. Improves recognition on discs where gray outlines merge characters together.",
     "llamaCppOcrSettingsTitle": "llama.cpp OCR settings",
+    "selectTesseractDictionary": "Select Tesseract dictionary:",
     "inspectBinaryOcrAdditionsTitle": "Inspect Binary OCR Additions",
     "llamaCppOcr": "llama.cpp OCR",
     "llamaCppOcrDescription": "Local llama.cpp server (multimodal model) used for OCR.",
