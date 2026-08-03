@@ -44,14 +44,19 @@ public class LlamaCppEngineSettingsButtonTests
     {
         var vm = new AiReviewViewModel(new WindowService(new NullServiceProvider()));
         var window = new AiReviewWindow(vm);
+        try
+        {
 
-        var button = FindEngineSettingsButton(window);
+                    var button = FindEngineSettingsButton(window);
 
-        Assert.NotNull(button);
-        Assert.True(vm.IsLlamaCppVisible, "llama.cpp is the default engine, so its controls must be visible.");
-        Assert.True(button!.IsVisible);
-
-        window.Close();
+                    Assert.NotNull(button);
+                    Assert.True(vm.IsLlamaCppVisible, "llama.cpp is the default engine, so its controls must be visible.");
+                    Assert.True(button!.IsVisible);
+        }
+        finally
+        {
+            window.Close();
+        }
     }
 
     [AvaloniaFact]
@@ -59,14 +64,19 @@ public class LlamaCppEngineSettingsButtonTests
     {
         var vm = new AiAssistantViewModel(new WindowService(new NullServiceProvider()));
         var window = new AiAssistantWindow(vm);
+        try
+        {
 
-        var button = FindEngineSettingsButton(window);
+                    var button = FindEngineSettingsButton(window);
 
-        Assert.NotNull(button);
-        Assert.True(vm.IsLlamaCppVisible, "llama.cpp is the default engine, so its controls must be visible.");
-        Assert.True(button!.IsVisible);
-
-        window.Close();
+                    Assert.NotNull(button);
+                    Assert.True(vm.IsLlamaCppVisible, "llama.cpp is the default engine, so its controls must be visible.");
+                    Assert.True(button!.IsVisible);
+        }
+        finally
+        {
+            window.Close();
+        }
     }
 
     /// <summary>
@@ -93,13 +103,18 @@ public class LlamaCppEngineSettingsButtonTests
     {
         var vm = new AiReviewViewModel(new WindowService(new NullServiceProvider()));
         var window = new AiReviewWindow(vm);
+        try
+        {
 
-        var engineCombo = window.GetLogicalDescendants().OfType<ComboBox>()
-            .First(c => AutomationProperties.GetName(c) == Se.Language.General.Engine);
+                    var engineCombo = window.GetLogicalDescendants().OfType<ComboBox>()
+                        .First(c => AutomationProperties.GetName(c) == Se.Language.General.Engine);
 
-        Assert.NotNull(engineCombo.ItemTemplate);
-
-        window.Close();
+                    Assert.NotNull(engineCombo.ItemTemplate);
+        }
+        finally
+        {
+            window.Close();
+        }
     }
 
     [AvaloniaFact]
@@ -107,13 +122,18 @@ public class LlamaCppEngineSettingsButtonTests
     {
         var vm = new AiAssistantViewModel(new WindowService(new NullServiceProvider()));
         var window = new AiAssistantWindow(vm);
+        try
+        {
 
-        var engineCombo = window.GetLogicalDescendants().OfType<ComboBox>()
-            .First(c => AutomationProperties.GetName(c) == Se.Language.General.Engine);
+                    var engineCombo = window.GetLogicalDescendants().OfType<ComboBox>()
+                        .First(c => AutomationProperties.GetName(c) == Se.Language.General.Engine);
 
-        Assert.NotNull(engineCombo.ItemTemplate);
-
-        window.Close();
+                    Assert.NotNull(engineCombo.ItemTemplate);
+        }
+        finally
+        {
+            window.Close();
+        }
     }
 
     /// <summary>
@@ -126,10 +146,15 @@ public class LlamaCppEngineSettingsButtonTests
     {
         var vm = new AutoTranslateViewModel(new WindowService(new NullServiceProvider()), new FolderHelper());
         var window = new AutoTranslateWindow(vm);
+        try
+        {
 
-        Assert.NotNull(FindEngineSettingsButton(window));
-
-        window.Close();
+                    Assert.NotNull(FindEngineSettingsButton(window));
+        }
+        finally
+        {
+            window.Close();
+        }
     }
 
     /// <summary>
@@ -141,14 +166,19 @@ public class LlamaCppEngineSettingsButtonTests
     {
         var vm = new AiReviewViewModel(new WindowService(new NullServiceProvider()));
         var window = new AiReviewWindow(vm);
+        try
+        {
 
-        vm.SelectedEngine = SeAiReview.EngineOllama;
+                    vm.SelectedEngine = SeAiReview.EngineOllama;
 
-        Assert.False(vm.IsLlamaCppVisible);
-        var button = FindEngineSettingsButton(window);
-        Assert.NotNull(button);
-        Assert.False(button!.IsEffectivelyVisible);
-
-        window.Close();
+                    Assert.False(vm.IsLlamaCppVisible);
+                    var button = FindEngineSettingsButton(window);
+                    Assert.NotNull(button);
+                    Assert.False(button!.IsEffectivelyVisible);
+        }
+        finally
+        {
+            window.Close();
+        }
     }
 }
