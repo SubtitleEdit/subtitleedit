@@ -1313,7 +1313,10 @@ public partial class MainViewModel :
 
         var result = await ShowDialogAsync<AssaStylesWindow, AssaStylesViewModel>(vm =>
         {
-            vm.Initialize(_subtitle, SelectedSubtitleFormat, _subtitleFileName ?? string.Empty,
+            // GetUpdateSubtitle: the dialog needs paragraphs with Extra set to the grid rows'
+            // current styles - a stale _subtitle breaks usage counts and the positional
+            // re-apply of styles on OK (#13101).
+            vm.Initialize(GetUpdateSubtitle(), SelectedSubtitleFormat, _subtitleFileName ?? string.Empty,
                 SelectedSubtitle?.Style ?? string.Empty, this);
         });
 
@@ -1373,7 +1376,8 @@ public partial class MainViewModel :
 
         var result = await ShowDialogAsync<SsaStylesWindow, SsaStylesViewModel>(vm =>
         {
-            vm.Initialize(_subtitle, SelectedSubtitleFormat, _subtitleFileName ?? string.Empty,
+            // GetUpdateSubtitle: see ShowAssaStyles (#13101).
+            vm.Initialize(GetUpdateSubtitle(), SelectedSubtitleFormat, _subtitleFileName ?? string.Empty,
                 SelectedSubtitle?.Style ?? string.Empty, this);
         });
 
