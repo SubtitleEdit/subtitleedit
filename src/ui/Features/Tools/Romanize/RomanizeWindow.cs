@@ -5,12 +5,10 @@ using Avalonia.Data;
 using Avalonia.Layout;
 using Avalonia.Media;
 
-using Nikse.SubtitleEdit.Core.Romanize;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 
 using System;
-using TagLib.Ape;
 
 namespace Nikse.SubtitleEdit.Features.Tools.Romanize;
 
@@ -97,7 +95,7 @@ public class RomanizeWindow : Window
                         {
                             Background = Brushes.Transparent,
                             BorderThickness = new Thickness(0),
-                            Margin = new Thickness(0, 3.4, 0, 0),
+                            Margin = new Thickness(0, 3.50, 0, 0),
                             ItemsSource = Enum.GetValues<RomanizedLinePositions>(),
                             SelectedValue = vm.SubtitleItemsRomanizedLinePosition ?? default,
                             SelectionBoxItemTemplate = new FuncDataTemplate<RomanizedLinePositions>((item, nameScope) => new TextBlock
@@ -158,7 +156,7 @@ public class RomanizeWindow : Window
         dataGrid.SelectionMode = SelectionMode.Single;
         dataGrid.CanUserResizeColumns = true;
         dataGrid.HorizontalAlignment = HorizontalAlignment.Stretch;
-        dataGrid.VerticalAlignment = VerticalAlignment.Stretch;
+        dataGrid.VerticalAlignment = VerticalAlignment.Center;
         dataGrid.Width = double.NaN;
         dataGrid.Height = double.NaN;
         dataGrid.DataContext = vm;
@@ -175,8 +173,24 @@ public class RomanizeWindow : Window
             },
             new SeTableViewColumn
             {
-                Binding = new Binding(nameof(RomanizeSubtitleLineItem.TextOriginal)),
                 CellTheme = UiUtil.TableViewCellTheme,
+                CellTemplate = new FuncDataTemplate<RomanizeSubtitleLineItem>((item, _) => 
+                {
+                    var textbox = new TextBox
+                    {
+                        ContextMenu = null,
+                        IsReadOnly = true,
+                        IsEnabled = false,
+                        VerticalContentAlignment = VerticalAlignment.Center,
+
+                        [!TextBox.TextProperty] = new Binding(nameof(RomanizeSubtitleLineItem.TextOriginal)),
+                    };
+
+                    textbox.Resources["TextControlBackgroundDisabled"] = 
+                    textbox.Resources["TextControlBorderBrushDisabled"] = Brushes.Transparent;
+
+                    return textbox;
+                }),
                 Header = Se.Language.General.OriginalText,
                 HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
                 Width = new GridLength(1, GridUnitType.Star),
