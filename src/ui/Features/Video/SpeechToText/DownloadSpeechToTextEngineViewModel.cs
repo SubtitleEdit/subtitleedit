@@ -221,7 +221,7 @@ public partial class DownloadSpeechToTextEngineViewModel : ObservableObject, ICl
                 if (_downloadStream.Length == 0)
                 {
                     ProgressText = "Download failed";
-                    Error = "No data received";
+                    Error = Se.Language.General.NoDataReceived;
                     return;
                 }
 

@@ -197,7 +197,7 @@ public partial class DownloadTtsViewModel : ObservableObject
                 if (_downloadStream.Length == 0)
                 {
                     ProgressText = Se.Language.General.DownloadFailed;
-                    Error = "No data received";
+                    Error = Se.Language.General.NoDataReceived;
                     return;
                 }
 
@@ -261,7 +261,7 @@ public partial class DownloadTtsViewModel : ObservableObject
                 if (_downloadStreamModel.Length == 0)
                 {
                     ProgressText = Se.Language.General.DownloadFailed;
-                    Error = "No data received";
+                    Error = Se.Language.General.NoDataReceived;
                     return;
                 }
 
@@ -272,7 +272,7 @@ public partial class DownloadTtsViewModel : ObservableObject
                 if (_downloadStreamConfig.Length == 0)
                 {
                     ProgressText = Se.Language.General.DownloadFailed;
-                    Error = "No data received";
+                    Error = Se.Language.General.NoDataReceived;
                     return;
                 }
 
@@ -321,7 +321,7 @@ public partial class DownloadTtsViewModel : ObservableObject
                 if (_downloadStreamQwen3TtsCpp.Length == 0)
                 {
                     ProgressText = Se.Language.General.DownloadFailed;
-                    Error = "No data received";
+                    Error = Se.Language.General.NoDataReceived;
                     return;
                 }
 
@@ -476,7 +476,7 @@ public partial class DownloadTtsViewModel : ObservableObject
                 if (_downloadStreamKokoroTtsCpp.Length == 0)
                 {
                     ProgressText = Se.Language.General.DownloadFailed;
-                    Error = "No data received";
+                    Error = Se.Language.General.NoDataReceived;
                     return;
                 }
 
@@ -1322,7 +1322,7 @@ public partial class DownloadTtsViewModel : ObservableObject
                 if (_downloadStreamOmniVoice.Length == 0)
                 {
                     ProgressText = Se.Language.General.DownloadFailed;
-                    Error = "No data received";
+                    Error = Se.Language.General.NoDataReceived;
                     return;
                 }
 

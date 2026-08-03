@@ -72,7 +72,7 @@ public partial class DownloadGoogleLensOcrViewModel : ObservableObject, IClosing
                 if (!File.Exists(_tempFileName))
                 {
                     ProgressText = Se.Language.General.DownloadFailed;
-                    Error = "No data received";
+                    Error = Se.Language.General.NoDataReceived;
                     return;
                 }
 
@@ -80,7 +80,7 @@ public partial class DownloadGoogleLensOcrViewModel : ObservableObject, IClosing
                 if (fileInfo.Length == 0)
                 {
                     ProgressText = Se.Language.General.DownloadFailed;
-                    Error = "No data received";
+                    Error = Se.Language.General.NoDataReceived;
                     return;
                 }
 

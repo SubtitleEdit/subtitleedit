@@ -114,7 +114,7 @@ public partial class DownloadPaddleOcrViewModel : ObservableObject, IClosingClea
                 if (!AllFileExists())
                 {
                     ProgressText = Se.Language.General.DownloadFailed;
-                    Error = "No data received";
+                    Error = Se.Language.General.NoDataReceived;
                     return;
                 }
 
