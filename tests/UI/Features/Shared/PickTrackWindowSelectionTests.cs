@@ -81,6 +81,8 @@ public class PickTrackWindowSelectionTests
         Assert.True(vm.OkPressed);
         Assert.NotNull(vm.SelectedMatroskaTrack);
         Assert.Equal(1, vm.SelectedMatroskaTrack!.TrackNumber);
+
+        window.Close();
     }
 
     private static PickMp4TrackViewModel MakeMp4ViewModel(int trackCount)
