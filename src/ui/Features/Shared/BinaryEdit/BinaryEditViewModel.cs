@@ -2243,7 +2243,7 @@ public partial class BinaryEditViewModel : ObservableObject
         // Only allow if exactly one subtitle is selected
         if (SelectedSubtitle == null)
         {
-            await MessageBox.Show(Window, "No subtitle selected", "Please select exactly one subtitle.",
+            await MessageBox.Show(Window, Se.Language.Edit.NoSubtitleSelected, Se.Language.Edit.PleaseSelectExactlyOneSubtitle,
                 MessageBoxButtons.OK, MessageBoxIcon.Information);
             return;
         }

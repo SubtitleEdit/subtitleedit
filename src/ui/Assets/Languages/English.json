@@ -1299,6 +1299,10 @@
     "xProperties": "{0} properties"
   },
   "edit": {
+    "noSubtitleSelected": "No subtitle selected",
+    "pleaseSelectExactlyOneSubtitle": "Please select exactly one subtitle.",
+    "boxType": "Box type:",
+    "backgroundColor": "Background color:",
     "modifySelection": {
       "title": "Modify selection",
       "contains": "Contains",
