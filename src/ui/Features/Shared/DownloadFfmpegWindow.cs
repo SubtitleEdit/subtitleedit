@@ -4,6 +4,7 @@ using Avalonia.Data;
 using Avalonia.Media;
 using Avalonia.Styling;
 using Nikse.SubtitleEdit.Logic;
+using Nikse.SubtitleEdit.Logic.Config;
 
 namespace Nikse.SubtitleEdit.Features.Shared;
 
@@ -13,7 +14,7 @@ public class DownloadFfmpegWindow : Window
     {
         vm.Window = this;
         UiUtil.InitializeWindow(this, GetType().Name);
-        Title = "Downloading ffmpeg";
+        Title = string.Format(Se.Language.General.DownloadingX, "ffmpeg");
         SizeToContent = SizeToContent.WidthAndHeight;
         CanResize = false;
         WindowStartupLocation = WindowStartupLocation.CenterOwner;

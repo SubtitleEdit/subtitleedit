@@ -10,7 +10,7 @@ public class ExportCavena890Window : Window
     public ExportCavena890Window(ExportCavena890ViewModel vm)
     {
         UiUtil.InitializeWindow(this, GetType().Name);
-        Title = "Export Cavena 890";
+        Title = Se.Language.File.Export.TitleExportCavena890;
         SizeToContent = SizeToContent.WidthAndHeight;
         CanResize = false;
         vm.Window = this;

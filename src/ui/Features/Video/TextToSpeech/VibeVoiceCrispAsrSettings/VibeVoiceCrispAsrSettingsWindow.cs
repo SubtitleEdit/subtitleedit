@@ -21,7 +21,7 @@ public class VibeVoiceCrispAsrSettingsWindow : Window
     public VibeVoiceCrispAsrSettingsWindow(VibeVoiceCrispAsrSettingsViewModel vm)
     {
         UiUtil.InitializeWindow(this, GetType().Name);
-        Title = "VibeVoice (CrispASR) settings";
+        Title = string.Format(Se.Language.Video.TtsCrispAsrSettingsTitle, "VibeVoice");
         SizeToContent = SizeToContent.WidthAndHeight;
         CanResize = false;
         MinWidth = 580;

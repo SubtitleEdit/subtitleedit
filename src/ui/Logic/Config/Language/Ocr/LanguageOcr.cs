@@ -30,6 +30,7 @@ public class LanguageOcr
     public string ExpandInfoX { get; set; }
     public string EditNOcrDatabaseXWithYItems { get; set; }
     public string NewNOcrDatabase { get; set; }
+    public string NewBinaryImageCompareDatabase { get; set; }
     public string RenameNOcrDatabase { get; set; }
     public string NOcrDatabase { get; set; }
     public string DrawMode { get; set; }
@@ -100,6 +101,7 @@ public class LanguageOcr
     public string VobSubIsolateColors { get; set; }
     public string VobSubIsolateColorsHint { get; set; }
     public string LlamaCppOcrSettingsTitle { get; set; }
+    public string InspectBinaryOcrAdditionsTitle { get; set; }
     public string LlamaCppOcrPromptHint { get; set; }
     public string LlamaCppOcrPromptEmpty { get; set; }
     public string LlamaCppOcrPromptMissingLanguagePlaceholder { get; set; }
@@ -142,6 +144,7 @@ public class LanguageOcr
         ExpandInfoX = "Expand count: {0}";
         EditNOcrDatabaseXWithYItems = "Edit nOCR database {0} with {1:#,###,##0} items";
         NewNOcrDatabase = "New nOCR database";
+        NewBinaryImageCompareDatabase = "New/rename Binary Image Compare database";
         RenameNOcrDatabase = "Rename nOCR database";
         NOcrDatabase = "nOCR database";
         DrawMode = "Draw mode:";
@@ -213,6 +216,7 @@ public class LanguageOcr
         VobSubIsolateColorsHint = "Rebuild each VobSub image as crisp black-on-white before OCR by keeping the most frequent color (text) and dropping the outline/anti-alias colors. Improves recognition on discs where gray outlines merge characters together.";
 
         LlamaCppOcrSettingsTitle = "llama.cpp OCR settings";
+        InspectBinaryOcrAdditionsTitle = "Inspect Binary OCR Additions";
         LlamaCppOcrPromptHint = "Use {language} to insert the selected OCR language.";
         LlamaCppOcrPromptEmpty = "The prompt cannot be empty.";
         LlamaCppOcrPromptMissingLanguagePlaceholder = "The prompt must contain the {language} placeholder.";

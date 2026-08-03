@@ -21,7 +21,7 @@ public class MossTtsCrispAsrSettingsWindow : Window
     public MossTtsCrispAsrSettingsWindow(MossTtsCrispAsrSettingsViewModel vm)
     {
         UiUtil.InitializeWindow(this, GetType().Name);
-        Title = "MOSS-TTS (CrispASR) settings";
+        Title = string.Format(Se.Language.Video.TtsCrispAsrSettingsTitle, "MOSS-TTS");
         SizeToContent = SizeToContent.WidthAndHeight;
         CanResize = false;
         MinWidth = 580;

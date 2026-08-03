@@ -147,6 +147,7 @@ public class LanguageGeneral
     public string DownloadX { get; set; }
     public string DownloadingX { get; set; }
     public string DownloadingXPercent { get; set; }
+    public string PickVobSubLanguageTitle { get; set; }
     public string Duplicate { get; set; }
     public string Duration { get; set; }
     public string DurationMinutes { get; set; }
@@ -872,6 +873,7 @@ public class LanguageGeneral
         DownloadX = "Download {0}";
         DownloadingX = "Downloading {0}";
         DownloadingXPercent = "Downloading {0}%";
+        PickVobSubLanguageTitle = "Pick VobSub language - {0}";
         Duplicate = "Duplicate";
         Duration = "Duration";
         DurationMinutes = "Duration in minutes";
