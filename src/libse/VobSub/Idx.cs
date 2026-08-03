@@ -13,6 +13,11 @@ namespace Nikse.SubtitleEdit.Core.VobSub
         public readonly List<SKColor> Palette = new List<SKColor>();
         public readonly List<string> Languages = new List<string>();
 
+        /// <summary>
+        /// Two-letter ISO 639-1 codes from the idx "id:" lines, parallel to <see cref="Languages"/>.
+        /// </summary>
+        public readonly List<string> LanguageCodes = new List<string>();
+
         private static readonly Regex TimeCodeLinePattern = new Regex(@"^timestamp: \d+:\d+:\d+:\d+, filepos: [\dabcdefABCDEF]+$", RegexOptions.Compiled);
 
         public Idx(string fileName)
@@ -61,6 +66,7 @@ namespace Nikse.SubtitleEdit.Core.VobSub
                         }
                         // Use U+200E (LEFT-TO-RIGHT MARK) to support right-to-left scripts
                         Languages.Add(string.Format("{0} \x200E(0x{1:x})", languageName, languageIndex + 32));
+                        LanguageCodes.Add(twoLetterLanguageId);
                         languageIndex++;
                     }
                 }

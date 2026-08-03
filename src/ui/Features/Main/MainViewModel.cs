@@ -17585,7 +17585,17 @@ public partial class MainViewModel :
             streamId = languageStreamIds.First();
         }
 
-        var result = await ShowDialogAsync<OcrWindow, OcrViewModel>(vm => { vm.Initialize(streamIdDictionary[streamId], palette, vobSubFileName); });
+        // Recover the picked stream's language code from the idx: Idx.cs formats language
+        // entries as "{LanguageName} ‎(0x{streamId:x})", parallel to IdxLanguageCodes.
+        string? languageCode = null;
+        var languageMarker = $"(0x{streamId:x})";
+        var languageIndex = vobSubParser.IdxLanguages.FindIndex(l => l.Contains(languageMarker, StringComparison.OrdinalIgnoreCase));
+        if (languageIndex >= 0 && languageIndex < vobSubParser.IdxLanguageCodes.Count)
+        {
+            languageCode = vobSubParser.IdxLanguageCodes[languageIndex];
+        }
+
+        var result = await ShowDialogAsync<OcrWindow, OcrViewModel>(vm => { vm.Initialize(streamIdDictionary[streamId], palette, vobSubFileName, languageCode); });
 
         if (result.OkPressed)
         {
