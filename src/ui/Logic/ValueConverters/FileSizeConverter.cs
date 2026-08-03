@@ -6,7 +6,6 @@ using System.Globalization;
 namespace Nikse.SubtitleEdit.Logic.ValueConverters;
 internal class FileSizeConverter : IValueConverter
 {
-    private static readonly string[] SizeSuffixes = { Se.Language.General.Bytes, "KB", "MB", "GB", "TB", "PB" };
 
     public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
@@ -42,10 +41,11 @@ internal class FileSizeConverter : IValueConverter
         }
 
         int magnitude = 0;
+        var sizeSuffixes = new[] { Se.Language.General.Bytes, "KB", "MB", "GB", "TB", "PB" };
         double adjustedSize = bytes;
 
         // Keep dividing by 1024 until we get a manageable number
-        while (adjustedSize >= 1024 && magnitude < SizeSuffixes.Length - 1)
+        while (adjustedSize >= 1024 && magnitude < sizeSuffixes.Length - 1)
         {
             magnitude++;
             adjustedSize /= 1024;
@@ -54,7 +54,7 @@ internal class FileSizeConverter : IValueConverter
         // Format with appropriate decimal places
         string format = adjustedSize >= 100 ? "0" : (adjustedSize >= 10 ? "0.0" : "0.##");
 
-        var result = $"{adjustedSize.ToString(format, culture)} {SizeSuffixes[magnitude]}";
+        var result = $"{adjustedSize.ToString(format, culture)} {sizeSuffixes[magnitude]}";
         return result;
     }
 
