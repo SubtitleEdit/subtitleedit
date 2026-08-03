@@ -594,7 +594,7 @@ public class FixCommonErrorsWindow : Window
         Grid.SetRow(buttonBarFixes, 2);
         Grid.SetColumn(buttonBarFixes, 0);
 
-        var borderFixes = UiUtil.MakeBorderForControlNoPadding(gridFixes).WithMarginBottom(5);
+        var borderFixes = UiUtil.MakeBorderForControlNoPadding(gridFixes);
 
         // bottom
         var gridSubtitles = new Grid
@@ -741,8 +741,9 @@ public class FixCommonErrorsWindow : Window
         {
             RowDefinitions =
             {
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Star), MinHeight = 150 },
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Star), MinHeight = 150 },
             },
             ColumnDefinitions =
             {
@@ -753,12 +754,25 @@ public class FixCommonErrorsWindow : Window
             Width = double.NaN,
             HorizontalAlignment = HorizontalAlignment.Stretch,
         };
+
+        var splitter = new GridSplitter
+        {
+            Height = UiUtil.SplitterWidthOrHeight,
+            ResizeDirection = GridResizeDirection.Rows,
+            HorizontalAlignment = HorizontalAlignment.Stretch,
+            Margin = new Thickness(0, 2),
+        };
+
         grid.Children.Add(borderFixes);
         Grid.SetRow(borderFixes, 0);
         Grid.SetColumn(borderFixes, 0);
 
+        grid.Children.Add(splitter);
+        Grid.SetRow(splitter, 1);
+        Grid.SetColumn(splitter, 0);
+
         grid.Children.Add(borderSubtitles);
-        Grid.SetRow(borderSubtitles, 1);
+        Grid.SetRow(borderSubtitles, 2);
         Grid.SetColumn(borderSubtitles, 0);
 
         return grid;
