@@ -57,7 +57,5 @@ public class MediaInfoViewWindow : Window
         Content = grid;
 
         AddHandler(KeyDownEvent, vm.OnKeyDownHandler, RoutingStrategies.Tunnel | RoutingStrategies.Bubble, handledEventsToo: false);
-
-        KeyDown += (_, e) => vm.OnKeyDown(e);
     }
 }
