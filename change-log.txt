@@ -3,7 +3,7 @@ Subtitle Edit Changelog
 
 -----------------------------------------------------------------------------------------------------
 
-v5.2.0-beta2 (unreleased)
+v5.2.0-beta2 (3rd of August 2026)
 
 * Add type-to-search to all combo boxes - thx 9jfcc
 * Add "Sentence case" and make the casing options visible in the text box context menu - thx shanedk
@@ -20,6 +20,7 @@ v5.2.0-beta2 (unreleased)
 * Source view: fix ASSA property contrast in the light theme, make empty areas clickable
 * Fix the Polish translation not loading (trailing commas in the JSON) and validate all in CI
 * Update Japanese translation - thx hisui3393
+* Update Korean translation - thx 12si27
 * Update Polish translation - thx potplayer-fanpack
 * Update Chinese Traditional translation
 
