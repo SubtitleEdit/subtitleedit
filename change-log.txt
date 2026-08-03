@@ -19,6 +19,7 @@ v5.2.0-beta2 (unreleased)
 * Join subtitles: the files can be rearranged again - thx Nino-kun
 * Source view: fix ASSA property contrast in the light theme, make empty areas clickable
 * Fix the Polish translation not loading (trailing commas in the JSON) and validate all in CI
+* Update Japanese translation - thx hisui3393
 * Update Polish translation - thx potplayer-fanpack
 * Update Chinese Traditional translation
 
