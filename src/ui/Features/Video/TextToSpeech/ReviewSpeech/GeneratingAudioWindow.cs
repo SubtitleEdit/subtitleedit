@@ -1,4 +1,5 @@
 using Avalonia.Controls;
+using Avalonia.Input;
 using Avalonia.Layout;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
@@ -56,6 +57,15 @@ public class GeneratingAudioWindow : Window
         Loaded += delegate
         {
             buttonCancel.Focus();
+        };
+
+        KeyDown += (_, e) =>
+        {
+            if (e.Key == Key.Escape)
+            {
+                vm.CancelCommand?.Execute(null);
+                e.Handled = true;
+            }
         };
     }
 }
