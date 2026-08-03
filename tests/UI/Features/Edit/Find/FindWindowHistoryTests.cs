@@ -56,16 +56,16 @@ public class FindWindowHistoryTests
         var window = new FindWindow(vm);
         try
         {
-                    window.Show();
-                    Dispatcher.UIThread.RunJobs();
+            window.Show();
+            Dispatcher.UIThread.RunJobs();
 
-                    var historyButton = window.GetLogicalDescendants().OfType<Button>().First(b => b.Flyout != null);
+            var historyButton = window.GetLogicalDescendants().OfType<Button>().First(b => b.Flyout != null);
 
-                    Assert.False(historyButton.IsVisible);
+            Assert.False(historyButton.IsVisible);
 
-                    // First search lands in history -> button appears.
-                    vm.SearchHistory.Add("foo");
-                    Assert.True(historyButton.IsVisible);
+            // First search lands in history -> button appears.
+            vm.SearchHistory.Add("foo");
+            Assert.True(historyButton.IsVisible);
         }
         finally
         {

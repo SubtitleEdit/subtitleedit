@@ -46,12 +46,11 @@ public class LlamaCppEngineSettingsButtonTests
         var window = new AiReviewWindow(vm);
         try
         {
+            var button = FindEngineSettingsButton(window);
 
-                    var button = FindEngineSettingsButton(window);
-
-                    Assert.NotNull(button);
-                    Assert.True(vm.IsLlamaCppVisible, "llama.cpp is the default engine, so its controls must be visible.");
-                    Assert.True(button!.IsVisible);
+            Assert.NotNull(button);
+            Assert.True(vm.IsLlamaCppVisible, "llama.cpp is the default engine, so its controls must be visible.");
+            Assert.True(button!.IsVisible);
         }
         finally
         {
@@ -66,12 +65,11 @@ public class LlamaCppEngineSettingsButtonTests
         var window = new AiAssistantWindow(vm);
         try
         {
+            var button = FindEngineSettingsButton(window);
 
-                    var button = FindEngineSettingsButton(window);
-
-                    Assert.NotNull(button);
-                    Assert.True(vm.IsLlamaCppVisible, "llama.cpp is the default engine, so its controls must be visible.");
-                    Assert.True(button!.IsVisible);
+            Assert.NotNull(button);
+            Assert.True(vm.IsLlamaCppVisible, "llama.cpp is the default engine, so its controls must be visible.");
+            Assert.True(button!.IsVisible);
         }
         finally
         {
@@ -105,11 +103,10 @@ public class LlamaCppEngineSettingsButtonTests
         var window = new AiReviewWindow(vm);
         try
         {
+            var engineCombo = window.GetLogicalDescendants().OfType<ComboBox>()
+                .First(c => AutomationProperties.GetName(c) == Se.Language.General.Engine);
 
-                    var engineCombo = window.GetLogicalDescendants().OfType<ComboBox>()
-                        .First(c => AutomationProperties.GetName(c) == Se.Language.General.Engine);
-
-                    Assert.NotNull(engineCombo.ItemTemplate);
+            Assert.NotNull(engineCombo.ItemTemplate);
         }
         finally
         {
@@ -124,11 +121,10 @@ public class LlamaCppEngineSettingsButtonTests
         var window = new AiAssistantWindow(vm);
         try
         {
+            var engineCombo = window.GetLogicalDescendants().OfType<ComboBox>()
+                .First(c => AutomationProperties.GetName(c) == Se.Language.General.Engine);
 
-                    var engineCombo = window.GetLogicalDescendants().OfType<ComboBox>()
-                        .First(c => AutomationProperties.GetName(c) == Se.Language.General.Engine);
-
-                    Assert.NotNull(engineCombo.ItemTemplate);
+            Assert.NotNull(engineCombo.ItemTemplate);
         }
         finally
         {
@@ -148,8 +144,7 @@ public class LlamaCppEngineSettingsButtonTests
         var window = new AutoTranslateWindow(vm);
         try
         {
-
-                    Assert.NotNull(FindEngineSettingsButton(window));
+            Assert.NotNull(FindEngineSettingsButton(window));
         }
         finally
         {
@@ -168,13 +163,12 @@ public class LlamaCppEngineSettingsButtonTests
         var window = new AiReviewWindow(vm);
         try
         {
+            vm.SelectedEngine = SeAiReview.EngineOllama;
 
-                    vm.SelectedEngine = SeAiReview.EngineOllama;
-
-                    Assert.False(vm.IsLlamaCppVisible);
-                    var button = FindEngineSettingsButton(window);
-                    Assert.NotNull(button);
-                    Assert.False(button!.IsEffectivelyVisible);
+            Assert.False(vm.IsLlamaCppVisible);
+            var button = FindEngineSettingsButton(window);
+            Assert.NotNull(button);
+            Assert.False(button!.IsEffectivelyVisible);
         }
         finally
         {

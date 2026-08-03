@@ -122,13 +122,12 @@ public class ShowHistoryTableViewTests
         var window = ShowWindow(vm);
         try
         {
+            var tableView = GetTableView(window);
 
-                    var tableView = GetTableView(window);
-
-                    Assert.Equal(2, tableView.Columns.Count);
-                    Assert.Equal(GridUnitType.Auto, tableView.Columns[0].Width.GridUnitType);
-                    Assert.Equal(GridUnitType.Star, tableView.Columns[1].Width.GridUnitType);
-                    Assert.Equal(vm.HistoryItems, tableView.ItemsSource);
+            Assert.Equal(2, tableView.Columns.Count);
+            Assert.Equal(GridUnitType.Auto, tableView.Columns[0].Width.GridUnitType);
+            Assert.Equal(GridUnitType.Star, tableView.Columns[1].Width.GridUnitType);
+            Assert.Equal(vm.HistoryItems, tableView.ItemsSource);
         }
         finally
         {
@@ -143,15 +142,14 @@ public class ShowHistoryTableViewTests
         var window = ShowWindow(vm);
         try
         {
+            var tableView = GetTableView(window);
+            var rows = tableView.GetVisualDescendants().OfType<TableViewRow>().ToList();
+            Assert.Equal(3, rows.Count);
 
-                    var tableView = GetTableView(window);
-                    var rows = tableView.GetVisualDescendants().OfType<TableViewRow>().ToList();
-                    Assert.Equal(3, rows.Count);
-
-                    // Cell content must actually resolve through TableViewColumn.Binding.
-                    var texts = rows[0].GetVisualDescendants().OfType<TextBlock>().Select(t => t.Text).ToList();
-                    Assert.Contains("2026-07-21 10:00:00", texts);
-                    Assert.Contains("Change 0", texts);
+            // Cell content must actually resolve through TableViewColumn.Binding.
+            var texts = rows[0].GetVisualDescendants().OfType<TextBlock>().Select(t => t.Text).ToList();
+            Assert.Contains("2026-07-21 10:00:00", texts);
+            Assert.Contains("Change 0", texts);
         }
         finally
         {
@@ -166,14 +164,13 @@ public class ShowHistoryTableViewTests
         var window = ShowWindow(vm);
         try
         {
+            var tableView = GetTableView(window);
+            Assert.False(vm.IsRollbackEnabled);
 
-                    var tableView = GetTableView(window);
-                    Assert.False(vm.IsRollbackEnabled);
+            tableView.SelectedIndex = 1;
 
-                    tableView.SelectedIndex = 1;
-
-                    Assert.Same(vm.HistoryItems[1], vm.SelectedHistoryItem);
-                    Assert.True(vm.IsRollbackEnabled);
+            Assert.Same(vm.HistoryItems[1], vm.SelectedHistoryItem);
+            Assert.True(vm.IsRollbackEnabled);
         }
         finally
         {
@@ -299,11 +296,10 @@ public class ShowHistoryTableViewTests
         var window = ShowWindow(vm);
         try
         {
+            var tableView = GetTableView(window);
+            var realized = tableView.GetVisualDescendants().OfType<TableViewRow>().Count();
 
-                    var tableView = GetTableView(window);
-                    var realized = tableView.GetVisualDescendants().OfType<TableViewRow>().Count();
-
-                    Assert.InRange(realized, 1, 200);
+            Assert.InRange(realized, 1, 200);
         }
         finally
         {
