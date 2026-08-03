@@ -60,27 +60,27 @@ public partial class ChatterboxTtsSettingsViewModel : ObservableObject
 
         if (!IsEngineInstalled)
         {
-            EngineLabel = "CrispASR not installed";
+            EngineLabel = string.Format(Se.Language.Video.TtsEngineNotInstalled, "CrispASR");
             EngineBrush = new SolidColorBrush(Color.FromRgb(0xF4, 0x43, 0x36)); // red
-            EngineDownloadButtonText = "Download CrispASR";
+            EngineDownloadButtonText = string.Format(Se.Language.General.DownloadX, "CrispASR");
         }
         else if (!ChatterboxTtsCpp.IsCrispAsrChatterboxCapable())
         {
-            EngineLabel = "CrispASR too old - update required";
+            EngineLabel = string.Format(Se.Language.Video.TtsEngineTooOldUpdateRequired, "CrispASR");
             EngineBrush = new SolidColorBrush(Color.FromRgb(0xFF, 0x98, 0x00)); // amber
-            EngineDownloadButtonText = "Update CrispASR";
+            EngineDownloadButtonText = string.Format(Se.Language.Video.TtsUpdateX, "CrispASR");
         }
         else if (ChatterboxTtsCpp.GetEngineUpdateStatus() == DownloadHashManager.UpdateStatus.UpdateAvailable)
         {
-            EngineLabel = "CrispASR - update available";
+            EngineLabel = string.Format(Se.Language.Video.TtsEngineUpdateAvailable, "CrispASR");
             EngineBrush = new SolidColorBrush(Color.FromRgb(0xFF, 0x98, 0x00)); // amber
-            EngineDownloadButtonText = "Update CrispASR";
+            EngineDownloadButtonText = string.Format(Se.Language.Video.TtsUpdateX, "CrispASR");
         }
         else
         {
-            EngineLabel = "CrispASR (Chatterbox-capable)";
+            EngineLabel = string.Format(Se.Language.Video.TtsEngineChatterboxCapable, "CrispASR");
             EngineBrush = new SolidColorBrush(Color.FromRgb(0x4C, 0xAF, 0x50)); // green
-            EngineDownloadButtonText = "Re-download CrispASR";
+            EngineDownloadButtonText = string.Format(Se.Language.General.ReDownloadX, "CrispASR");
         }
 
         // Append the installed CrispASR version asynchronously so the `crispasr --version`
@@ -118,26 +118,26 @@ public partial class ChatterboxTtsSettingsViewModel : ObservableObject
             baseInstalled,
             label => BaseModelLabel = label,
             brush => BaseModelBrush = brush);
-        BaseDownloadButtonText = baseInstalled ? "Re-download Base" : "Download Base";
+        BaseDownloadButtonText = baseInstalled ? string.Format(Se.Language.General.ReDownloadX, "Base") : string.Format(Se.Language.General.DownloadX, "Base");
 
         var turboInstalled = ChatterboxTtsCpp.AreModelsInstalled(ChatterboxTtsCpp.ModelKeyTurbo);
         ApplyModelStatus(
             turboInstalled,
             label => TurboModelLabel = label,
             brush => TurboModelBrush = brush);
-        TurboDownloadButtonText = turboInstalled ? "Re-download Turbo" : "Download Turbo";
+        TurboDownloadButtonText = turboInstalled ? string.Format(Se.Language.General.ReDownloadX, "Turbo") : string.Format(Se.Language.General.DownloadX, "Turbo");
     }
 
     private static void ApplyModelStatus(bool installed, Action<string> setLabel, Action<IBrush> setBrush)
     {
         if (installed)
         {
-            setLabel("Installed");
+            setLabel(Se.Language.General.Installed);
             setBrush(new SolidColorBrush(Color.FromRgb(0x4C, 0xAF, 0x50))); // green
         }
         else
         {
-            setLabel("Not installed");
+            setLabel(Se.Language.General.NotInstalled);
             setBrush(new SolidColorBrush(Color.FromRgb(0x9E, 0x9E, 0x9E))); // grey
         }
     }

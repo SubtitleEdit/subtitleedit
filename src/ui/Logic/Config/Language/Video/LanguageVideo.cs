@@ -77,6 +77,16 @@ public class LanguageVideo
     public string ReEncodeGeneratingDone { get; set; }
     public string ReEncodeGeneratedFilesX { get; set; }
     public string ReEncodeFfmpegParameters { get; set; }
+    public string Voices { get; set; }
+    public string Presets { get; set; }
+    public string TalkerX { get; set; }
+    public string BaseModel { get; set; }
+    public string TurboModel { get; set; }
+    public string TtsUpdateX { get; set; }
+    public string TtsEngineNotInstalled { get; set; }
+    public string TtsEngineUpdateAvailable { get; set; }
+    public string TtsEngineTooOldUpdateRequired { get; set; }
+    public string TtsEngineChatterboxCapable { get; set; }
 
     public LanguageVideo()
     {
@@ -147,6 +157,16 @@ public class LanguageVideo
         ReEncodeGeneratingDone = "Generating done";
         ReEncodeGeneratedFilesX = "Generated files ({0}):";
         ReEncodeFfmpegParameters = "ffmpeg parameters";
+        Voices = "Voices";
+        Presets = "Presets";
+        TalkerX = "Talker {0}";
+        BaseModel = "Base model";
+        TurboModel = "Turbo model";
+        TtsUpdateX = "Update {0}";
+        TtsEngineNotInstalled = "{0} not installed";
+        TtsEngineUpdateAvailable = "{0} - update available";
+        TtsEngineTooOldUpdateRequired = "{0} too old - update required";
+        TtsEngineChatterboxCapable = "{0} (Chatterbox-capable)";
         OutputSettingsTitle = "Output settings";
         TtsCrispAsrSettingsTitle = "{0} (CrispASR) settings";
         TtsDownloadEngineTitle = "TTS - Download engine";
