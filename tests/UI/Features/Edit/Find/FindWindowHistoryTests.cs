@@ -5,6 +5,7 @@ using Avalonia.Headless;
 using Avalonia.Headless.XUnit;
 using Avalonia.Input;
 using Avalonia.LogicalTree;
+using Avalonia.Threading;
 using Nikse.SubtitleEdit.Features.Edit.Find;
 
 namespace UITests.Features.Edit.Find;
@@ -24,6 +25,10 @@ public class FindWindowHistoryTests
 
         var window = new FindWindow(vm);
         window.Show();
+        // Settle the window's Opened callbacks (UiUtil posts a working-area clamp at
+        // Background priority) while the window is alive, so closing it afterwards
+        // cannot hit the disposed platform implementation during session teardown.
+        Dispatcher.UIThread.RunJobs();
 
         var historyButton = window.GetLogicalDescendants().OfType<Button>().First(b => b.Flyout != null);
         return (window, historyButton);
@@ -32,9 +37,11 @@ public class FindWindowHistoryTests
     [AvaloniaFact]
     public void HistoryButton_IsVisible_WhenHistoryExists()
     {
-        var (_, historyButton) = BuildShownWindow();
+        var (window, historyButton) = BuildShownWindow();
 
         Assert.True(historyButton.IsVisible);
+
+        window.Close();
     }
 
     [AvaloniaFact]
@@ -43,6 +50,7 @@ public class FindWindowHistoryTests
         var vm = new FindViewModel();
         var window = new FindWindow(vm);
         window.Show();
+        Dispatcher.UIThread.RunJobs();
 
         var historyButton = window.GetLogicalDescendants().OfType<Button>().First(b => b.Flyout != null);
 
@@ -51,12 +59,14 @@ public class FindWindowHistoryTests
         // First search lands in history -> button appears.
         vm.SearchHistory.Add("foo");
         Assert.True(historyButton.IsVisible);
+
+        window.Close();
     }
 
     [AvaloniaFact]
     public void HistoryFlyout_HasItemsBeforeOpening_AndFollowsHistoryChanges()
     {
-        var (_, historyButton) = BuildShownWindow();
+        var (window, historyButton) = BuildShownWindow();
 
         var flyout = Assert.IsType<MenuFlyout>(historyButton.Flyout);
         Assert.Equal(2, flyout.Items.Count);
@@ -66,6 +76,8 @@ public class FindWindowHistoryTests
         vm.SearchHistory.Add("baz");
 
         Assert.Equal(3, flyout.Items.Count);
+
+        window.Close();
     }
 
     [AvaloniaFact]
@@ -84,5 +96,7 @@ public class FindWindowHistoryTests
         var flyout = Assert.IsType<MenuFlyout>(historyButton.Flyout);
         Assert.True(flyout.IsOpen, "history flyout should open on click");
         Assert.Equal(2, flyout.Items.Count);
+
+        window.Close();
     }
 }

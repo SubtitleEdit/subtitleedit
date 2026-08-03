@@ -50,6 +50,8 @@ public class LlamaCppEngineSettingsButtonTests
         Assert.NotNull(button);
         Assert.True(vm.IsLlamaCppVisible, "llama.cpp is the default engine, so its controls must be visible.");
         Assert.True(button!.IsVisible);
+
+        window.Close();
     }
 
     [AvaloniaFact]
@@ -63,6 +65,8 @@ public class LlamaCppEngineSettingsButtonTests
         Assert.NotNull(button);
         Assert.True(vm.IsLlamaCppVisible, "llama.cpp is the default engine, so its controls must be visible.");
         Assert.True(button!.IsVisible);
+
+        window.Close();
     }
 
     /// <summary>
@@ -94,6 +98,8 @@ public class LlamaCppEngineSettingsButtonTests
             .First(c => AutomationProperties.GetName(c) == Se.Language.General.Engine);
 
         Assert.NotNull(engineCombo.ItemTemplate);
+
+        window.Close();
     }
 
     [AvaloniaFact]
@@ -106,6 +112,8 @@ public class LlamaCppEngineSettingsButtonTests
             .First(c => AutomationProperties.GetName(c) == Se.Language.General.Engine);
 
         Assert.NotNull(engineCombo.ItemTemplate);
+
+        window.Close();
     }
 
     /// <summary>
@@ -120,6 +128,8 @@ public class LlamaCppEngineSettingsButtonTests
         var window = new AutoTranslateWindow(vm);
 
         Assert.NotNull(FindEngineSettingsButton(window));
+
+        window.Close();
     }
 
     /// <summary>
@@ -138,5 +148,7 @@ public class LlamaCppEngineSettingsButtonTests
         var button = FindEngineSettingsButton(window);
         Assert.NotNull(button);
         Assert.False(button!.IsEffectivelyVisible);
+
+        window.Close();
     }
 }

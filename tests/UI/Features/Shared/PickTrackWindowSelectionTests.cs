@@ -131,6 +131,8 @@ public class PickTrackWindowSelectionTests
 
         Assert.True(vm.OkPressed);
         Assert.Same(vm.Tracks[0], vm.SelectedMatroskaTrack);
+
+        window.Close();
     }
 
     private static PickTsTrackViewModel MakeTsViewModel(int trackCount)
@@ -180,6 +182,8 @@ public class PickTrackWindowSelectionTests
 
         // The view model left WindowTitle empty, so the window opened with no title at all.
         Assert.Contains("movie.ts", window.Title);
+
+        window.Close();
     }
 
     private static PickVobSubLanguageViewModel MakeVobSubViewModel(int languageCount)
@@ -231,5 +235,7 @@ public class PickTrackWindowSelectionTests
 
         Assert.True(vm.OkPressed);
         Assert.Equal(0x20, vm.SelectedStreamId);
+
+        window.Close();
     }
 }
