@@ -28,6 +28,8 @@ public class LanguageAssa
     // Progress Bar Generator
     public string ProgressBarTitle { get; set; }
     public string ProgressBarSettings { get; set; }
+    public string MouseOverColor { get; set; }
+    public string ClickedColor { get; set; }
     public string ProgressBarForeColor { get; set; }
     public string ProgressBarSquareCorners { get; set; }
     public string ProgressBarRoundedCorners { get; set; }
@@ -432,5 +434,7 @@ public class LanguageAssa
         AdvancedEffectSlideInRightDescription = "Text slides in from off-screen right, holds, then exits back to the right";
         AdvancedEffectFadeInOutDescription = "Text fades in at the start and fades out at the end of each subtitle";
         OverrideTagsHistory = "Override tags history";
+        MouseOverColor = "Mouse-over color";
+        ClickedColor = "Clicked color";
     }
 }
