@@ -14,7 +14,7 @@ public class DownloadFfmpegWindow : Window
     {
         vm.Window = this;
         UiUtil.InitializeWindow(this, GetType().Name);
-        Title = "Downloading ffmpeg";
+        Title = string.Format(Se.Language.General.DownloadingX, "ffmpeg");
         SizeToContent = SizeToContent.WidthAndHeight;
         CanResize = false;
         WindowStartupLocation = WindowStartupLocation.CenterOwner;

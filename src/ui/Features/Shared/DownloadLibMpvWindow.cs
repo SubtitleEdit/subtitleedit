@@ -14,7 +14,7 @@ public class DownloadLibMpvWindow : Window
     {
         vm.Window = this;
         UiUtil.InitializeWindow(this, GetType().Name);
-        Title = "Downloading libmpv";
+        Title = string.Format(Se.Language.General.DownloadingX, "libmpv");
         SizeToContent = SizeToContent.WidthAndHeight;
         CanResize = false;
         WindowStartupLocation = WindowStartupLocation.CenterOwner;

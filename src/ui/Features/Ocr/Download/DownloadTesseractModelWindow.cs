@@ -8,7 +8,7 @@ using Avalonia.Styling;
 using Nikse.SubtitleEdit.Features.Shared;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.ValueConverters;
-using Nikse.SubtitleEdit.UiLogic.Ocr;
+using Nikse.SubtitleEdit.Logic.Config;
 
 namespace Nikse.SubtitleEdit.Features.Ocr.Download;
 
@@ -18,7 +18,7 @@ public class DownloadTesseractModelWindow : Window
     {
         vm.Window = this;
         UiUtil.InitializeWindow(this, GetType().Name);
-        Title = "Downloading Tesseract model";
+        Title = string.Format(Se.Language.General.DownloadingX, "Tesseract model");
         SizeToContent = SizeToContent.WidthAndHeight;
         CanResize = false;
         WindowStartupLocation = WindowStartupLocation.CenterOwner;
