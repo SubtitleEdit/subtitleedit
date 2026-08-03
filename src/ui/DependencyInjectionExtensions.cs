@@ -21,6 +21,7 @@ using Nikse.SubtitleEdit.Features.Files.ExportCustomTextFormat;
 using Nikse.SubtitleEdit.Features.Files.ExportImageBased;
 using Nikse.SubtitleEdit.Features.Files.ExportPac;
 using Nikse.SubtitleEdit.Features.Files.ExportPlainText;
+using Nikse.SubtitleEdit.Features.Files.FormatProperties.DCinemaInteropProperties;
 using Nikse.SubtitleEdit.Features.Files.FormatProperties.DCinemaSmpteProperties;
 using Nikse.SubtitleEdit.Features.Files.FormatProperties.ItunesTimedTextProperties;
 using Nikse.SubtitleEdit.Features.Files.FormatProperties.TimedText10Properties;
@@ -358,6 +359,7 @@ public static class DependencyInjectionExtensions
         collection.AddTransient<CustomContinuationStyleViewModel>();
         collection.AddTransient<CutVideoViewModel>();
         collection.AddTransient<VideoOcrViewModel>();
+        collection.AddTransient<DCinemaInteropPropertiesViewModel>();
         collection.AddTransient<DCinemaSmptePropertiesViewModel>();
         collection.AddTransient<DownloadFfmpegViewModel>();
         collection.AddTransient<DownloadGoogleLensOcrViewModel>();
