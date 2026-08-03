@@ -65,9 +65,17 @@ public static class InitVideoPlayer
             {
                 await control.Open(mediaFile);
                 await control.WaitForPlayersReadyAsync();
+
+                // A second rebuild within the ready wait (Options/OK, dock/undock) disposes
+                // this control's player via the block above - stop restoring into it (#13083).
                 for (var i = 0; i < 10; i++)
                 {
                     await System.Threading.Tasks.Task.Delay(10);
+                    if (control.IsDisposed)
+                    {
+                        return;
+                    }
+
                     control.Position = position;
                 }
             });

@@ -733,6 +733,11 @@ namespace Nikse.SubtitleEdit.Controls.VideoPlayer
 
         internal async Task Open(string videoFileName)
         {
+            if (IsDisposed)
+            {
+                return;
+            }
+
             // Reset slider state before LoadFile. Otherwise, when the new file's
             // Duration arrives on the next timer tick, the slider's Maximum drops
             // and a stale Value (left over from the previous file) gets clamped to
@@ -741,6 +746,15 @@ namespace Nikse.SubtitleEdit.Controls.VideoPlayer
             Duration = 0;
 
             await _videoPlayerInstance.LoadFile(videoFileName);
+
+            // The control may have been torn down while LoadFile was awaiting (fullscreen
+            // closed mid-open, a second layout rebuild). Starting the position timer then
+            // would poll the disposed player from the dispatcher for the rest of the session.
+            if (IsDisposed)
+            {
+                return;
+            }
+
             _videoPlayerInstance.Volume = Volume;
             _positionTimer?.Stop();
             _slowPollCounter = 4; // force Duration+icon update on the very first tick
@@ -799,6 +813,17 @@ namespace Nikse.SubtitleEdit.Controls.VideoPlayer
         }
 
         /// <summary>
+        /// Set once <see cref="CloseAndDisposePlayer"/> has started tearing this control down.
+        /// Every async open/restore sequence (Open, WaitForPlayersReadyAsync, the reopen
+        /// continuations in the layout rebuild, fullscreen and Reopen paths) must bail out when
+        /// this is set: a control is disposed from window Closed handlers and layout rebuilds
+        /// while such a sequence may still be awaiting, and without the check the continuation
+        /// keeps polling and seeking the dead player for seconds (issue #13083) - or worse,
+        /// restarts the 50 ms position timer on it, which then P/Invokes the freed core forever.
+        /// </summary>
+        internal bool IsDisposed { get; private set; }
+
+        /// <summary>
         /// Permanently tears this control down: stops the polling timers, unloads the file,
         /// detaches the native render host and destroys the underlying player.
         /// <para>
@@ -822,6 +847,7 @@ namespace Nikse.SubtitleEdit.Controls.VideoPlayer
         /// </summary>
         internal void CloseAndDisposePlayer()
         {
+            IsDisposed = true;
             Close();
 
             // Mark before the content goes. On the OpenGL host mpv's render context may only be
@@ -855,6 +881,13 @@ namespace Nikse.SubtitleEdit.Controls.VideoPlayer
             var end = DateTime.UtcNow.AddMilliseconds(timeoutMs);
             while (DateTime.UtcNow < end)
             {
+                // A disposed player reports Duration 0 forever, so without this check the
+                // poll always runs to the full timeout against the dead core (issue #13083).
+                if (IsDisposed)
+                {
+                    return;
+                }
+
                 // Consider player ready when Duration is known (> 0)
                 var ready = VideoPlayer.Duration > 0.001;
 
