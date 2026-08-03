@@ -82,7 +82,7 @@ public class FontCollectorEmbeddedMatchTests
         var (familyName, bytes) = font.Value;
         var footer = "[Fonts]\r\nfontname: embedded_0.ttf\r\n" + UUEncoding.UUEncode(bytes) + "\r\n";
 
-        var embedded = FontCollectorViewModel.GetEmbeddedFonts(footer);
+        var embedded = Nikse.SubtitleEdit.Logic.AssaFontEmbedder.GetEmbeddedFonts(footer);
 
         Assert.Single(embedded);
         Assert.True(embedded[0].Bytes.Length >= bytes.Length, $"decoded {embedded[0].Bytes.Length} < original {bytes.Length}");

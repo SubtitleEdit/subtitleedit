@@ -23,6 +23,7 @@ public enum BatchConvertFunctionType
     RemoveLineBreaks,
     AssaChangeResolution,
     AssaChangeStyle,
+    AssaEmbedFonts,
     MergeShortLines,
     ApplyDurationLimits,
     AutoBalanceLines,

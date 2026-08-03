@@ -139,9 +139,11 @@ public class FontCollectorWindow : Window
             [!TextBlock.TextProperty] = new Binding(nameof(vm.StatusText)),
         };
 
+        var buttonEmbedFonts = UiUtil.MakeButton(Se.Language.Assa.FontCollectorEmbedFontsDotDotDot, vm.EmbedFontsInSubtitleCommand)
+            .WithIconLeft(IconNames.Paperclip);
         var buttonCopyToSeFolder = UiUtil.MakeButton(Se.Language.Assa.FontCollectorCopyFontsToSeFontsFolder, vm.CopyFontsToSeFontsFolderCommand)
             .WithIconLeft(IconNames.FormatFont);
-        var buttonBar = UiUtil.MakeButtonBar(buttonCopyToSeFolder);
+        var buttonBar = UiUtil.MakeButtonBar(buttonEmbedFonts, buttonCopyToSeFolder);
 
         var grid = new Grid
         {

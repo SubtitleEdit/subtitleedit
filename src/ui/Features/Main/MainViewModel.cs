@@ -1435,10 +1435,16 @@ public partial class MainViewModel :
             return;
         }
 
-        await ShowDialogAsync<Features.Assa.FontCollector.FontCollectorWindow, Features.Assa.FontCollector.FontCollectorViewModel>(vm =>
+        var result = await ShowDialogAsync<Features.Assa.FontCollector.FontCollectorWindow, Features.Assa.FontCollector.FontCollectorViewModel>(vm =>
         {
             vm.Initialize(GetUpdateSubtitle());
         });
+
+        if (result.UpdatedFooter != null)
+        {
+            // "Embed fonts in subtitle" was used (and already confirmed in the dialog).
+            _subtitle.Footer = result.UpdatedFooter;
+        }
     }
 
     [RelayCommand]

@@ -7,7 +7,6 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
-using Nikse.SubtitleEdit.Features.Assa.FontCollector;
 using Nikse.SubtitleEdit.Features.Shared;
 using Nikse.SubtitleEdit.Features.Shared.PickFontName;
 using Nikse.SubtitleEdit.Features.Shared.PromptTextBox;
@@ -260,7 +259,7 @@ public partial class AssaStylesViewModel : ObservableObject, IClosingCleanup
         try
         {
             var bytes = File.ReadAllBytes(font.FilePath);
-            _subtitle.Footer = FontCollectorViewModel.AddFontToFooter(_subtitle.Footer, font.FilePath, bytes);
+            _subtitle.Footer = AssaFontEmbedder.AddFontToFooter(_subtitle.Footer, font.FilePath, bytes);
         }
         catch (Exception exception)
         {
