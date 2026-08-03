@@ -1275,6 +1275,8 @@
       "fadeUpTime": "Fade up time",
       "fadeDownTime": "Fade down time",
       "frames": "Frames",
+      "zPosition": "Z-position",
+      "zPositionHelp": "Positive numbers move text away, negative numbers move text closer, if z-position is zero then it's 2D",
       "export": "Export..."
     },
     "compare": "Compare",

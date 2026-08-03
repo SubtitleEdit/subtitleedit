@@ -26,6 +26,8 @@ public class LanguageFilePropertiesDCinema
     public string FadeUpTime { get; internal set; }
     public string FadeDownTime { get; internal set; }
     public string Frames { get; internal set; }
+    public string ZPosition { get; internal set; }
+    public string ZPositionHelp { get; internal set; }
     public string Export { get; internal set; }
 
     public LanguageFilePropertiesDCinema()
@@ -54,6 +56,8 @@ public class LanguageFilePropertiesDCinema
         FadeUpTime = "Fade up time";
         FadeDownTime = "Fade down time";
         Frames = "Frames";
+        ZPosition = "Z-position";
+        ZPositionHelp = "Positive numbers move text away, negative numbers move text closer, if z-position is zero then it's 2D";
         Export = "Export...";
     }
 

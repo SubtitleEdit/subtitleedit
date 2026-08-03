@@ -49,6 +49,7 @@ using Nikse.SubtitleEdit.Features.Files.ExportEbuStl;
 using Nikse.SubtitleEdit.Features.Files.ExportImageBased;
 using Nikse.SubtitleEdit.Features.Files.ExportPac;
 using Nikse.SubtitleEdit.Features.Files.ExportPlainText;
+using Nikse.SubtitleEdit.Features.Files.FormatProperties.DCinemaInteropProperties;
 using Nikse.SubtitleEdit.Features.Files.FormatProperties.DCinemaSmpteProperties;
 using Nikse.SubtitleEdit.Features.Files.FormatProperties.ItunesTimedTextProperties;
 using Nikse.SubtitleEdit.Features.Files.FormatProperties.RosettaProperties;
@@ -2432,42 +2433,57 @@ public partial class MainViewModel :
 
         if (format is DCinemaSmpte2007 or DCinemaSmpte2010 or DCinemaSmpte2014)
         {
-            Se.Settings.File.DCinemaSmpte.CurrentDCinemaSubtitleId = Configuration.Settings.SubtitleSettings.CurrentDCinemaSubtitleId;
-            Se.Settings.File.DCinemaSmpte.CurrentDCinemaMovieTitle = Configuration.Settings.SubtitleSettings.CurrentDCinemaMovieTitle;
-            Se.Settings.File.DCinemaSmpte.CurrentDCinemaReelNumber = Configuration.Settings.SubtitleSettings.CurrentDCinemaReelNumber;
-            Se.Settings.File.DCinemaSmpte.CurrentDCinemaIssueDate = Configuration.Settings.SubtitleSettings.CurrentDCinemaIssueDate;
-            Se.Settings.File.DCinemaSmpte.CurrentDCinemaLanguage = Configuration.Settings.SubtitleSettings.CurrentDCinemaLanguage;
-            Se.Settings.File.DCinemaSmpte.CurrentDCinemaEditRate = Configuration.Settings.SubtitleSettings.CurrentDCinemaEditRate;
-            Se.Settings.File.DCinemaSmpte.CurrentDCinemaTimeCodeRate = Configuration.Settings.SubtitleSettings.CurrentDCinemaTimeCodeRate;
-            Se.Settings.File.DCinemaSmpte.CurrentDCinemaStartTime = Configuration.Settings.SubtitleSettings.CurrentDCinemaStartTime;
-            Se.Settings.File.DCinemaSmpte.CurrentDCinemaFontId = Configuration.Settings.SubtitleSettings.CurrentDCinemaFontId;
-            Se.Settings.File.DCinemaSmpte.CurrentDCinemaFontUri = Configuration.Settings.SubtitleSettings.CurrentDCinemaFontUri;
-            Se.Settings.File.DCinemaSmpte.CurrentDCinemaFontColor = Configuration.Settings.SubtitleSettings.CurrentDCinemaFontColor.ToHex();
-            Se.Settings.File.DCinemaSmpte.CurrentDCinemaFontEffect = Configuration.Settings.SubtitleSettings.CurrentDCinemaFontEffect;
-            Se.Settings.File.DCinemaSmpte.CurrentDCinemaFontEffectColor = Configuration.Settings.SubtitleSettings.CurrentDCinemaFontEffectColor.ToHex();
-            Se.Settings.File.DCinemaSmpte.CurrentDCinemaFontSize = Configuration.Settings.SubtitleSettings.CurrentDCinemaFontSize;
-
+            CopyCurrentDCinemaSettingsToSe();
             var result = await ShowDialogAsync<DCinemaSmptePropertiesWindow, DCinemaSmptePropertiesViewModel>(vm => { vm.Initialize(GetUpdateSubtitle(), format); });
+            CopyCurrentDCinemaSettingsFromSe();
+            SetLibSeSettings();
+        }
 
-            Configuration.Settings.SubtitleSettings.CurrentDCinemaSubtitleId = Se.Settings.File.DCinemaSmpte.CurrentDCinemaSubtitleId;
-            Configuration.Settings.SubtitleSettings.CurrentDCinemaMovieTitle = Se.Settings.File.DCinemaSmpte.CurrentDCinemaMovieTitle;
-            Configuration.Settings.SubtitleSettings.CurrentDCinemaReelNumber = Se.Settings.File.DCinemaSmpte.CurrentDCinemaReelNumber;
-            Configuration.Settings.SubtitleSettings.CurrentDCinemaIssueDate = Se.Settings.File.DCinemaSmpte.CurrentDCinemaIssueDate;
-            Configuration.Settings.SubtitleSettings.CurrentDCinemaLanguage = Se.Settings.File.DCinemaSmpte.CurrentDCinemaLanguage;
-            Configuration.Settings.SubtitleSettings.CurrentDCinemaEditRate = Se.Settings.File.DCinemaSmpte.CurrentDCinemaEditRate;
-            Configuration.Settings.SubtitleSettings.CurrentDCinemaTimeCodeRate = Se.Settings.File.DCinemaSmpte.CurrentDCinemaTimeCodeRate;
-            Configuration.Settings.SubtitleSettings.CurrentDCinemaStartTime = Se.Settings.File.DCinemaSmpte.CurrentDCinemaStartTime;
-            Configuration.Settings.SubtitleSettings.CurrentDCinemaFontId = Se.Settings.File.DCinemaSmpte.CurrentDCinemaFontId;
-            Configuration.Settings.SubtitleSettings.CurrentDCinemaFontUri = Se.Settings.File.DCinemaSmpte.CurrentDCinemaFontUri;
-            Configuration.Settings.SubtitleSettings.CurrentDCinemaFontColor = Se.Settings.File.DCinemaSmpte.CurrentDCinemaFontColor.FromHexToColor().ToSkColor();
-            Configuration.Settings.SubtitleSettings.CurrentDCinemaFontEffect = Se.Settings.File.DCinemaSmpte.CurrentDCinemaFontEffect;
-            Configuration.Settings.SubtitleSettings.CurrentDCinemaFontEffectColor = Se.Settings.File.DCinemaSmpte.CurrentDCinemaFontEffectColor.FromHexToColor().ToSkColor();
-            Configuration.Settings.SubtitleSettings.CurrentDCinemaFontSize = Se.Settings.File.DCinemaSmpte.CurrentDCinemaFontSize;
-
+        if (format is DCinemaInterop)
+        {
+            CopyCurrentDCinemaSettingsToSe();
+            var result = await ShowDialogAsync<DCinemaInteropPropertiesWindow, DCinemaInteropPropertiesViewModel>(vm => { vm.Initialize(GetUpdateSubtitle(), format); });
+            CopyCurrentDCinemaSettingsFromSe();
             SetLibSeSettings();
         }
 
         _shortcutManager.ClearKeys();
+    }
+
+    private static void CopyCurrentDCinemaSettingsToSe()
+    {
+        Se.Settings.File.DCinemaSmpte.CurrentDCinemaSubtitleId = Configuration.Settings.SubtitleSettings.CurrentDCinemaSubtitleId;
+        Se.Settings.File.DCinemaSmpte.CurrentDCinemaMovieTitle = Configuration.Settings.SubtitleSettings.CurrentDCinemaMovieTitle;
+        Se.Settings.File.DCinemaSmpte.CurrentDCinemaReelNumber = Configuration.Settings.SubtitleSettings.CurrentDCinemaReelNumber;
+        Se.Settings.File.DCinemaSmpte.CurrentDCinemaIssueDate = Configuration.Settings.SubtitleSettings.CurrentDCinemaIssueDate;
+        Se.Settings.File.DCinemaSmpte.CurrentDCinemaLanguage = Configuration.Settings.SubtitleSettings.CurrentDCinemaLanguage;
+        Se.Settings.File.DCinemaSmpte.CurrentDCinemaEditRate = Configuration.Settings.SubtitleSettings.CurrentDCinemaEditRate;
+        Se.Settings.File.DCinemaSmpte.CurrentDCinemaTimeCodeRate = Configuration.Settings.SubtitleSettings.CurrentDCinemaTimeCodeRate;
+        Se.Settings.File.DCinemaSmpte.CurrentDCinemaStartTime = Configuration.Settings.SubtitleSettings.CurrentDCinemaStartTime;
+        Se.Settings.File.DCinemaSmpte.CurrentDCinemaFontId = Configuration.Settings.SubtitleSettings.CurrentDCinemaFontId;
+        Se.Settings.File.DCinemaSmpte.CurrentDCinemaFontUri = Configuration.Settings.SubtitleSettings.CurrentDCinemaFontUri;
+        Se.Settings.File.DCinemaSmpte.CurrentDCinemaFontColor = Configuration.Settings.SubtitleSettings.CurrentDCinemaFontColor.ToHex();
+        Se.Settings.File.DCinemaSmpte.CurrentDCinemaFontEffect = Configuration.Settings.SubtitleSettings.CurrentDCinemaFontEffect;
+        Se.Settings.File.DCinemaSmpte.CurrentDCinemaFontEffectColor = Configuration.Settings.SubtitleSettings.CurrentDCinemaFontEffectColor.ToHex();
+        Se.Settings.File.DCinemaSmpte.CurrentDCinemaFontSize = Configuration.Settings.SubtitleSettings.CurrentDCinemaFontSize;
+    }
+
+    private static void CopyCurrentDCinemaSettingsFromSe()
+    {
+        Configuration.Settings.SubtitleSettings.CurrentDCinemaSubtitleId = Se.Settings.File.DCinemaSmpte.CurrentDCinemaSubtitleId;
+        Configuration.Settings.SubtitleSettings.CurrentDCinemaMovieTitle = Se.Settings.File.DCinemaSmpte.CurrentDCinemaMovieTitle;
+        Configuration.Settings.SubtitleSettings.CurrentDCinemaReelNumber = Se.Settings.File.DCinemaSmpte.CurrentDCinemaReelNumber;
+        Configuration.Settings.SubtitleSettings.CurrentDCinemaIssueDate = Se.Settings.File.DCinemaSmpte.CurrentDCinemaIssueDate;
+        Configuration.Settings.SubtitleSettings.CurrentDCinemaLanguage = Se.Settings.File.DCinemaSmpte.CurrentDCinemaLanguage;
+        Configuration.Settings.SubtitleSettings.CurrentDCinemaEditRate = Se.Settings.File.DCinemaSmpte.CurrentDCinemaEditRate;
+        Configuration.Settings.SubtitleSettings.CurrentDCinemaTimeCodeRate = Se.Settings.File.DCinemaSmpte.CurrentDCinemaTimeCodeRate;
+        Configuration.Settings.SubtitleSettings.CurrentDCinemaStartTime = Se.Settings.File.DCinemaSmpte.CurrentDCinemaStartTime;
+        Configuration.Settings.SubtitleSettings.CurrentDCinemaFontId = Se.Settings.File.DCinemaSmpte.CurrentDCinemaFontId;
+        Configuration.Settings.SubtitleSettings.CurrentDCinemaFontUri = Se.Settings.File.DCinemaSmpte.CurrentDCinemaFontUri;
+        Configuration.Settings.SubtitleSettings.CurrentDCinemaFontColor = Se.Settings.File.DCinemaSmpte.CurrentDCinemaFontColor.FromHexToColor().ToSkColor();
+        Configuration.Settings.SubtitleSettings.CurrentDCinemaFontEffect = Se.Settings.File.DCinemaSmpte.CurrentDCinemaFontEffect;
+        Configuration.Settings.SubtitleSettings.CurrentDCinemaFontEffectColor = Se.Settings.File.DCinemaSmpte.CurrentDCinemaFontEffectColor.FromHexToColor().ToSkColor();
+        Configuration.Settings.SubtitleSettings.CurrentDCinemaFontSize = Se.Settings.File.DCinemaSmpte.CurrentDCinemaFontSize;
     }
 
     [RelayCommand]
@@ -23984,7 +24000,7 @@ public partial class MainViewModel :
         if (e.AddedItems.Count == 1)
         {
             var format = e.AddedItems[0] as SubtitleFormat;
-            if (format is TimedTextImsc11 or ItunesTimedText or TimedText10 or TimedTextImscRosetta or TmpegEncXml or DCinemaSmpte2007 or DCinemaSmpte2010 or DCinemaSmpte2014)
+            if (format is TimedTextImsc11 or ItunesTimedText or TimedText10 or TimedTextImscRosetta or TmpegEncXml or DCinemaSmpte2007 or DCinemaSmpte2010 or DCinemaSmpte2014 or DCinemaInterop)
             {
                 IsFilePropertiesVisible = true;
                 FilePropertiesText = string.Format(Se.Language.Main.XPropertiesDotDotDot, format.Name);
