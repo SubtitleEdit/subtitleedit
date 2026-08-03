@@ -11,6 +11,10 @@ public class LanguageExport
     public string PreviewTitle { get; set; }
     public string TitleExportDvdSup { get; set; }
     public string TitleExportVobSub { get; set; }
+    public string TitleExportImscImage { get; set; }
+    public string TitleExportDostPng { get; set; }
+    public string TitleExportFcpImage { get; set; }
+    public string TitleExportWebVttThumbnails { get; set; }
     public string TitleExportCavena890 { get; set; }
     public string TitleExportEbuStl { get; set; }
     public string TitleExportPac { get; set; }
@@ -51,6 +55,10 @@ public class LanguageExport
         PreviewTitle = "Preview - current size: {0}x{1}, target size: {2}x{3}, zoom: {4}%";
         TitleExportDvdSup = "DVD sup (MuxMan/Scenarist)";
         TitleExportVobSub = "VobSub (sub/idx)";
+        TitleExportImscImage = "IMSC 1.1 image profile";
+        TitleExportDostPng = "DOST/png";
+        TitleExportFcpImage = "Final Cut Pro + image";
+        TitleExportWebVttThumbnails = "WebVTT png";
         TitleExportCavena890 = "Export Cavena 890";
         TitleExportEbuStl = "Export EBU STL";
         TitleExportPac = "Export Pac";
