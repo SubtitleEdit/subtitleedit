@@ -2185,7 +2185,8 @@
     "reEncodeOutputVideoFileNotGenerated": "Output video file not generated: {0}\r\nParameters: {1}",
     "reEncodeGeneratingDone": "Generating done",
     "reEncodeGeneratedFilesX": "Generated files ({0}):",
-    "reEncodeFfmpegParameters": "ffmpeg parameters"
+    "reEncodeFfmpegParameters": "ffmpeg parameters",
+    "assaStyleWillBeUsed": "Current ASSA style will be used\n\nChange subtitle format if\nyou want to set styles here"
   },
   "waveform": {
     "guessTimeCodes": "Guess time codes",
