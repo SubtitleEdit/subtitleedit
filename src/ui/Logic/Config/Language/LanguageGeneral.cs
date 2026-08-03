@@ -121,6 +121,7 @@ public class LanguageGeneral
     public string CouldNotOpenFileXErrorY { get; set; }
     public string Count { get; set; }
     public string Cps { get; set; }
+    public string CudaRuntime { get; set; }
     public string CurrentVideoPosition { get; set; }
     public string Custom { get; set; }
     public string Cut { get; set; }
@@ -858,6 +859,7 @@ public class LanguageGeneral
         CouldNotOpenFileXErrorY = "Could not open file \"{0}\". Error: {1}";
         Count = "Count";
         Cps = "Chars/sec";
+        CudaRuntime = "CUDA runtime";
         CurrentVideoPosition = "Current video position";
         Custom = "Custom";
         Cut = "Cut";

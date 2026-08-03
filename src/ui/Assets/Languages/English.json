@@ -121,6 +121,7 @@
     "couldNotOpenFileXErrorY": "Could not open file \"{0}\". Error: {1}",
     "count": "Count",
     "cps": "Chars/sec",
+    "cudaRuntime": "CUDA runtime",
     "currentVideoPosition": "Current video position",
     "custom": "Custom",
     "cut": "Cut",
