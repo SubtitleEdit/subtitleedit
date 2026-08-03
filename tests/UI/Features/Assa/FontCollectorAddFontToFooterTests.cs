@@ -1,5 +1,5 @@
 using Nikse.SubtitleEdit.Core.Common;
-using Nikse.SubtitleEdit.Features.Assa.FontCollector;
+using Nikse.SubtitleEdit.Logic;
 
 namespace UITests.Features.Assa;
 
@@ -26,9 +26,9 @@ public class FontCollectorAddFontToFooterTests
     {
         var bytes = MakeBytes(300, 7);
 
-        var footer = FontCollectorViewModel.AddFontToFooter(null, "/some/folder/MyFont.ttf", bytes);
+        var footer = AssaFontEmbedder.AddFontToFooter(null, "/some/folder/MyFont.ttf", bytes);
 
-        var fonts = FontCollectorViewModel.GetEmbeddedFonts(footer);
+        var fonts = AssaFontEmbedder.GetEmbeddedFonts(footer);
         Assert.Single(fonts);
         Assert.Equal("MyFont.ttf", fonts[0].FileName);
         Assert.Equal(bytes, fonts[0].Bytes);
@@ -42,9 +42,9 @@ public class FontCollectorAddFontToFooterTests
         var bytes2 = MakeBytes(81, 90);
         var footer = "[Fonts]\r\nfontname: one.ttf\r\n" + UUEncoding.UUEncode(bytes1);
 
-        footer = FontCollectorViewModel.AddFontToFooter(footer, "two.otf", bytes2);
+        footer = AssaFontEmbedder.AddFontToFooter(footer, "two.otf", bytes2);
 
-        var fonts = FontCollectorViewModel.GetEmbeddedFonts(footer);
+        var fonts = AssaFontEmbedder.GetEmbeddedFonts(footer);
         Assert.Equal(2, fonts.Count);
         Assert.Equal("one.ttf", fonts[0].FileName);
         Assert.Equal(bytes1, fonts[0].Bytes);
@@ -64,9 +64,9 @@ public class FontCollectorAddFontToFooterTests
             "[Graphics]\r\n" +
             "filename: img.png\r\nAAAA\r\n";
 
-        footer = FontCollectorViewModel.AddFontToFooter(footer, "two.otf", bytes2);
+        footer = AssaFontEmbedder.AddFontToFooter(footer, "two.otf", bytes2);
 
-        var fonts = FontCollectorViewModel.GetEmbeddedFonts(footer);
+        var fonts = AssaFontEmbedder.GetEmbeddedFonts(footer);
         Assert.Equal(2, fonts.Count);
         Assert.Equal("one.ttf", fonts[0].FileName);
         Assert.Equal("two.otf", fonts[1].FileName);
@@ -80,9 +80,9 @@ public class FontCollectorAddFontToFooterTests
         var bytes = MakeBytes(300, 7);
         var footer = "[Graphics]\r\nfilename: img.png\r\nAAAA\r\n";
 
-        footer = FontCollectorViewModel.AddFontToFooter(footer, "MyFont.ttf", bytes);
+        footer = AssaFontEmbedder.AddFontToFooter(footer, "MyFont.ttf", bytes);
 
-        var fonts = FontCollectorViewModel.GetEmbeddedFonts(footer);
+        var fonts = AssaFontEmbedder.GetEmbeddedFonts(footer);
         Assert.Single(fonts);
         Assert.Equal("MyFont.ttf", fonts[0].FileName);
         Assert.True(footer.IndexOf("[Fonts]", StringComparison.Ordinal) < footer.IndexOf("[Graphics]", StringComparison.Ordinal));
@@ -93,11 +93,11 @@ public class FontCollectorAddFontToFooterTests
     public void SameFileName_IsNotAttachedTwice()
     {
         var bytes = MakeBytes(300, 7);
-        var footer = FontCollectorViewModel.AddFontToFooter(null, "MyFont.ttf", bytes);
+        var footer = AssaFontEmbedder.AddFontToFooter(null, "MyFont.ttf", bytes);
 
-        var unchanged = FontCollectorViewModel.AddFontToFooter(footer, "/other/path/MyFont.ttf", MakeBytes(60, 1));
+        var unchanged = AssaFontEmbedder.AddFontToFooter(footer, "/other/path/MyFont.ttf", MakeBytes(60, 1));
 
         Assert.Equal(footer, unchanged);
-        Assert.Single(FontCollectorViewModel.GetEmbeddedFonts(unchanged));
+        Assert.Single(AssaFontEmbedder.GetEmbeddedFonts(unchanged));
     }
 }

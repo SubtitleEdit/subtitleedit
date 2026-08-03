@@ -59,6 +59,11 @@ public class LanguageAssa
     public string Attachments { get; set; }
     public string FontCollectorNoFontsToCopy { get; set; }
     public string FontCollectorXFontFilesCopiedToY { get; set; }
+    public string FontCollectorEmbedFontsDotDotDot { get; set; }
+    public string FontCollectorEmbedXFontsSizeYZPrompt { get; set; }
+    public string FontCollectorAndXMoreFonts { get; set; }
+    public string FontCollectorNoFontsToEmbed { get; set; }
+    public string FontCollectorXFontFilesEmbedded { get; set; }
 
     // Resolution Resampler
     public string ResolutionResamplerTitle { get; set; }
@@ -276,6 +281,11 @@ public class LanguageAssa
         Attachments = "Attachments";
         FontCollectorNoFontsToCopy = "No font files found to copy.";
         FontCollectorXFontFilesCopiedToY = "{0} font file(s) copied to {1}";
+        FontCollectorEmbedFontsDotDotDot = "Embed fonts in subtitle...";
+        FontCollectorEmbedXFontsSizeYZPrompt = "Embed {0} font file(s) in the subtitle?\n\nTotal font size: {1} - about {2} as text in the ASSA file.\n\n{3}";
+        FontCollectorAndXMoreFonts = "...and {0} more";
+        FontCollectorNoFontsToEmbed = "No new fonts to embed - the needed fonts are already embedded or were not found.";
+        FontCollectorXFontFilesEmbedded = "{0} font file(s) embedded in the subtitle.";
         ResolutionResamplerTitle = "Change resolution";
         ResolutionResamplerSourceRes = "Source resolution";
         ResolutionResamplerTargetRes = "Target resolution";
