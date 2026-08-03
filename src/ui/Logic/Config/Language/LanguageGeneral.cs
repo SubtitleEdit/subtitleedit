@@ -379,6 +379,8 @@ public class LanguageGeneral
     public string LlamaCppUseRemoteServer { get; set; }
     public string LlamaCppEngineSettings { get; set; }
     public string LlamaCppEngineSettingsSubtitle { get; set; }
+    public string StartServer { get; set; }
+    public string StopServer { get; set; }
     public string PickOutputFolder { get; set; }
     public string PickResolutionFromCurrentVideo { get; set; }
     public string PickResolutionFromVideoDotDotDot { get; set; }
@@ -1101,6 +1103,8 @@ public class LanguageGeneral
         LlamaCppUseRemoteServer = "Use external server (URL)";
         LlamaCppEngineSettings = "llama.cpp engine settings";
         LlamaCppEngineSettingsSubtitle = "Local llama.cpp server build";
+        StartServer = "Start server";
+        StopServer = "Stop server";
         PickOutputFolder = "Pick output folder";
         PickResolutionFromCurrentVideo = "Pick resolution from current video";
         PickResolutionFromVideoDotDotDot = "Pick resolution from video...";

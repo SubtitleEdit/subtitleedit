@@ -113,6 +113,9 @@ public class LanguageOcr
     public string OllamaModelLikelyWrong { get; set; }
     public string LlamaCppNotDownloaded { get; set; }
     public string LlamaCppReturnedNoText { get; set; }
+    public string LlamaCppDownloadEngineAndModelPrompt { get; set; }
+    public string LlamaCppDownloadEnginePrompt { get; set; }
+    public string LlamaCppDownloadModelPrompt { get; set; }
 
     public LanguageOcr()
     {
@@ -228,5 +231,8 @@ public class LanguageOcr
         OllamaModelLikelyWrong = "Ollama returned no text - the selected model may not support OCR / vision";
         LlamaCppNotDownloaded = "llama.cpp engine/model not downloaded - download via batch convert settings";
         LlamaCppReturnedNoText = "llama.cpp returned no text - check the server and model";
+        LlamaCppDownloadEngineAndModelPrompt = "llama.cpp requires the llama-server engine and the selected OCR model to be downloaded. Download now?";
+        LlamaCppDownloadEnginePrompt = "llama.cpp requires the llama-server engine to be downloaded. Download now?";
+        LlamaCppDownloadModelPrompt = "llama.cpp requires the selected OCR model to be downloaded. Download now?";
     }
 }
