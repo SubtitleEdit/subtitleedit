@@ -190,4 +190,13 @@ public partial class ReplaceViewModel : ObservableObject
             await FindNextCommand.ExecuteAsync(null);
         }
     }
+
+    internal async void ReplaceTextBoxKeyDown(object? sender, KeyEventArgs e)
+    {
+        if (e.Key == Key.Enter)
+        {
+            e.Handled = true;
+            await ReplaceCommand.ExecuteAsync(null);
+        }
+    }
 }
