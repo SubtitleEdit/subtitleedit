@@ -103,7 +103,7 @@ public class AssaImageColorPickerWindow : Window
             BorderBrush = new SolidColorBrush(Colors.Gray),
             [!Border.BackgroundProperty] = new Binding(nameof(vm.CurrentMouseColor)),
         };
-        ToolTip.SetTip(mouseColorBox, "Mouse-over color");
+        ToolTip.SetTip(mouseColorBox, Se.Language.Assa.MouseOverColor);
 
         var mouseColorInfo = new StackPanel
         {
@@ -112,7 +112,7 @@ public class AssaImageColorPickerWindow : Window
             HorizontalAlignment = HorizontalAlignment.Left,
             Children =
             {
-                UiUtil.MakeLabel("Mouse-over color"),
+                UiUtil.MakeLabel(Se.Language.Assa.MouseOverColor),
                 new TextBlock
                 {
                     [!TextBlock.TextProperty] = new Binding(nameof(vm.CurrentMouseColorHex)),
@@ -130,7 +130,7 @@ public class AssaImageColorPickerWindow : Window
             [!Border.BackgroundProperty] = new Binding(nameof(vm.ClickedColor)),
             Margin = new Thickness(40, 0, 0, 0),
         };
-        ToolTip.SetTip(clickedColorBox, "Clicked color");
+        ToolTip.SetTip(clickedColorBox, Se.Language.Assa.ClickedColor);
 
         var copyButton = new Button
         {
@@ -147,7 +147,7 @@ public class AssaImageColorPickerWindow : Window
             HorizontalAlignment = HorizontalAlignment.Left,
             Children =
             {
-                UiUtil.MakeLabel("Clicked color"),
+                UiUtil.MakeLabel(Se.Language.Assa.ClickedColor),
                 new TextBlock
                 {
                     [!TextBlock.TextProperty] = new Binding(nameof(vm.ClickedColorHex)),

@@ -1629,6 +1629,7 @@
     },
     "batchConvert": {
       "title": "Batch convert",
+      "assaSource": "ASSA source",
       "oneActionsSelected": "One action selected",
       "xActionsSelected": "{0} actions selected",
       "outputFolderSource": " Output folder: Source folder",
@@ -3030,6 +3031,8 @@
     "llamaCppDownloadModelPrompt": "llama.cpp requires the selected OCR model to be downloaded. Download now?"
   },
   "assa": {
+    "mouseOverColor": "Mouse-over color",
+    "clickedColor": "Clicked color",
     "assaDraw": "ASSA Draw",
     "drawSelectTool": "Select (move points)",
     "drawLineTool": "Line Tool (F4)",

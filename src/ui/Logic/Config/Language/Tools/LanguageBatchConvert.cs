@@ -15,6 +15,7 @@ public class LanguageBatchConvert
     public string FileNameContainsDotDotDot { get; set; }
     public string TrackLanguageContainsDotDotDot { get; set; }
     public string BatchConvertSettings { get; set; }
+    public string AssaSource { get; set; }
     public string AddFormatting { get; set; }
     public string AddItalic { get; set; }
     public string AddBold { get; set; }
@@ -82,5 +83,6 @@ public class LanguageBatchConvert
         AssaChangeStyleToStyle = "to";
         AssaChangeStyleImportStyle = "Import style...";
         AssaChangeStyleTrimUnusedStyles = "Trim unused styles";
+        AssaSource = "ASSA source";
     }
 }
