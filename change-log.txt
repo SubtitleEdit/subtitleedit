@@ -5,8 +5,21 @@ Subtitle Edit Changelog
 
 v5.2.0-beta2 (unreleased)
 
-* Fix F10 no longer activating the menu bar: remove the default F10 "set end and go to next" binding (a one-time migration clears the stale persisted copy; re-assign F10 to get the SE4 behavior back) - thx GrampaWildWilly
-* Fix Alt no longer activating the menu bar after a dialog opened while Alt was held - thx GrampaWildWilly
+* Add type-to-search to all combo boxes - thx 9jfcc
+* Add "Sentence case" and make the casing options visible in the text box context menu - thx shanedk
+* Restore the copy-to-clipboard items in the subtitle grid context menu
+* Column "Paste from clipboard" accepts plain text again (text column only, like SE4)
+* Fix common errors: don't uppercase the word after an abbreviation like "dhr." - thx fraternl
+* Add abbreviation lists for 30 more languages
+* Fix the ASSA style editor losing data on rename and style switch - thx SiriosDev
+* Fix F10 not activating the menu bar: the default F10 binding is removed - thx GrampaWildWilly
+* Fix Alt not activating the menu bar after a dialog opened while Alt was held - thx GrampaWildWilly
+* Fix errors and a hang after closing the video player (mpv teardown race) - thx GrampaWildWilly
+* Text box: place the cursor at the line start when navigating between lines - thx lsmxpftz-cmyk
+* Join subtitles: the files can be rearranged again - thx Nino-kun
+* Source view: fix ASSA property contrast in the light theme, make empty areas clickable
+* Fix the Polish translation not loading (trailing commas in the JSON) and validate all in CI
+* Update Polish translation - thx potplayer-fanpack
 * Update Chinese Traditional translation
 
 -----------------------------------------------------------------------------------------------------
