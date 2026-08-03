@@ -382,6 +382,8 @@
     "llamaCppUseRemoteServer": "Use external server (URL)",
     "llamaCppEngineSettings": "llama.cpp engine settings",
     "llamaCppEngineSettingsSubtitle": "Local llama.cpp server build",
+    "startServer": "Start server",
+    "stopServer": "Stop server",
     "pickOutputFolder": "Pick output folder",
     "pickResolutionFromCurrentVideo": "Pick resolution from current video",
     "pickResolutionFromVideoDotDotDot": "Pick resolution from video...",
@@ -3010,7 +3012,10 @@
     "showAllOllamaModels": "Show all models (not just vision-capable)",
     "ollamaModelLikelyWrong": "Ollama returned no text - the selected model may not support OCR / vision",
     "llamaCppNotDownloaded": "llama.cpp engine/model not downloaded - download via batch convert settings",
-    "llamaCppReturnedNoText": "llama.cpp returned no text - check the server and model"
+    "llamaCppReturnedNoText": "llama.cpp returned no text - check the server and model",
+    "llamaCppDownloadEngineAndModelPrompt": "llama.cpp requires the llama-server engine and the selected OCR model to be downloaded. Download now?",
+    "llamaCppDownloadEnginePrompt": "llama.cpp requires the llama-server engine to be downloaded. Download now?",
+    "llamaCppDownloadModelPrompt": "llama.cpp requires the selected OCR model to be downloaded. Download now?"
   },
   "assa": {
     "assaDraw": "ASSA Draw",

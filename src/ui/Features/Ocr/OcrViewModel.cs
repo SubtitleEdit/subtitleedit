@@ -239,7 +239,7 @@ public partial class OcrViewModel : ObservableObject
         OllamaUrl = string.Empty;
         LlamaCppUrl = string.Empty;
         LlamaCppOcrModels = new ObservableCollection<LlamaCppModelDisplay>();
-        LlamaCppOcrServerButtonText = "Start server";
+        LlamaCppOcrServerButtonText = Se.Language.General.StartServer;
         CrispEmbedBackends = new ObservableCollection<CrispEmbedBackend>(CrispEmbedEngine.GetBackends());
         CrispEmbedModels = new ObservableCollection<CrispEmbedModelDisplay>();
         TesseractDictionaryItems = new ObservableCollection<TesseractDictionary>();
@@ -1271,7 +1271,7 @@ public partial class OcrViewModel : ObservableObject
 
     private void UpdateLlamaCppOcrServerButtonText()
     {
-        LlamaCppOcrServerButtonText = LlamaCppServerManager.IsServerRunning ? "Stop server" : "Start server";
+        LlamaCppOcrServerButtonText = LlamaCppServerManager.IsServerRunning ? Se.Language.General.StopServer : Se.Language.General.StartServer;
     }
 
     [RelayCommand]
@@ -1348,15 +1348,15 @@ public partial class OcrViewModel : ObservableObject
             string message;
             if (!engineInstalled && !modelInstalled)
             {
-                message = "llama.cpp requires the llama-server engine and the selected OCR model to be downloaded. Download now?";
+                message = Se.Language.Ocr.LlamaCppDownloadEngineAndModelPrompt;
             }
             else if (!engineInstalled)
             {
-                message = "llama.cpp requires the llama-server engine to be downloaded. Download now?";
+                message = Se.Language.Ocr.LlamaCppDownloadEnginePrompt;
             }
             else
             {
-                message = "llama.cpp requires the selected OCR model to be downloaded. Download now?";
+                message = Se.Language.Ocr.LlamaCppDownloadModelPrompt;
             }
 
             var answer = await MessageBox.Show(
