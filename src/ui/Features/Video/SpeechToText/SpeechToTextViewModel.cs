@@ -1880,7 +1880,7 @@ public partial class SpeechToTextViewModel : ObservableObject
 
         if (DoAdjustTimings || DoPostProcessing)
         {
-            ProgressText = "Post-processing...";
+            ProgressText = Se.Language.Video.PostProcessing;
         }
 
         var postProcessor = new SpeechToTextPostProcessor(DoTranslateToEnglish ? "en" : languageCode)
