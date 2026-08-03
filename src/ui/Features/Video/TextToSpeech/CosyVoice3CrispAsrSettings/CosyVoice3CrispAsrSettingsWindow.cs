@@ -105,6 +105,7 @@ public class CosyVoice3CrispAsrSettingsWindow : Window
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
             },
             ColumnSpacing = 12,
             RowSpacing = 10,
@@ -146,7 +147,26 @@ public class CosyVoice3CrispAsrSettingsWindow : Window
         grid.Add(MakeLabel(Se.Language.General.Speed), 5, 0);
         grid.Add(MakeSpeedPanel(), 5, 1);
 
-        grid.Add(MakeLabel(Se.Language.General.InstallFolder), 6, 0);
+        // Language spoken in imported reference WAVs — sent as `source_lang` so cross-lingual
+        // cloning engages when the target language differs (the server cannot detect the
+        // reference language itself for Latin scripts). Presets carry their own bank language.
+        grid.Add(MakeLabel("Reference language"), 6, 0);
+        var sourceLanguageCombo = UiUtil.MakeComboBox(vm.SourceLanguages, vm, nameof(vm.SelectedSourceLanguage));
+        var sourceLanguageHint = new TextBlock
+        {
+            Text = "Language spoken in imported reference WAVs (for cross-lingual cloning)",
+            FontSize = 12,
+            Opacity = 0.75,
+            VerticalAlignment = VerticalAlignment.Center,
+            Margin = new Thickness(8, 0, 0, 0),
+        };
+        grid.Add(new StackPanel
+        {
+            Orientation = Orientation.Horizontal,
+            Children = { sourceLanguageCombo, sourceLanguageHint },
+        }, 6, 1);
+
+        grid.Add(MakeLabel(Se.Language.General.InstallFolder), 7, 0);
         var folderText = new TextBox
         {
             IsReadOnly = true,
@@ -158,7 +178,7 @@ public class CosyVoice3CrispAsrSettingsWindow : Window
             FontSize = 12,
             [!TextBox.TextProperty] = new Binding(nameof(vm.ModelsFolder)),
         };
-        grid.Add(folderText, 6, 1);
+        grid.Add(folderText, 7, 1);
 
         return new Border
         {

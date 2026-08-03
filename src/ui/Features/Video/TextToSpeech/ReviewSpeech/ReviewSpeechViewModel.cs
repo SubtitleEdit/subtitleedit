@@ -1512,11 +1512,29 @@ public partial class ReviewSpeechViewModel : ObservableObject
 
             // Same preference order as SelectedModelChanged: the saved language, then English,
             // then whatever comes first.
-            SelectedLanguage = Languages.FirstOrDefault(p => p.Name == Se.Settings.Video.TextToSpeech.ElevenLabsLanguage)
-                               ?? Languages.FirstOrDefault(p => p.Code == "en")
-                               ?? Languages.FirstOrDefault();
+            SelectedLanguage = ResolveSavedLanguage(engine);
         }
     }
+
+    /// <summary>
+    /// The language to preselect for <paramref name="engine"/> from the current
+    /// <see cref="Languages"/> list. The CrispASR cloning engines lead with "Auto" and persist
+    /// per-engine picks — restore those, and fall back to Auto (first entry) rather than English
+    /// so an untouched language combo keeps the engine's pre-language-selection behaviour.
+    /// Everything else keeps the saved-ElevenLabs → English → first order.
+    /// </summary>
+    private TtsLanguage? ResolveSavedLanguage(ITtsEngine engine) => engine switch
+    {
+        MossTtsCrispAsr => Languages.FirstOrDefault(p => p.Name == Se.Settings.Video.TextToSpeech.MossTtsCrispAsrLanguage)
+                           ?? Languages.FirstOrDefault(),
+        CosyVoice3CrispAsr => Languages.FirstOrDefault(p => p.Name == Se.Settings.Video.TextToSpeech.CosyVoice3CrispAsrLanguage)
+                              ?? Languages.FirstOrDefault(),
+        Qwen3TtsCrispAsr => Languages.FirstOrDefault(p => p.Name == Se.Settings.Video.TextToSpeech.Qwen3TtsCrispAsrLanguage)
+                            ?? Languages.FirstOrDefault(),
+        _ => Languages.FirstOrDefault(p => p.Name == Se.Settings.Video.TextToSpeech.ElevenLabsLanguage)
+             ?? Languages.FirstOrDefault(p => p.Code == "en")
+             ?? Languages.FirstOrDefault(),
+    };
 
     internal void SelectedLanguageChanged(object? sender, SelectionChangedEventArgs e)
     {
@@ -1574,11 +1592,7 @@ public partial class ReviewSpeechViewModel : ObservableObject
                     Languages.Add(language);
                 }
 
-                SelectedLanguage = Languages.FirstOrDefault(p => p.Name == Se.Settings.Video.TextToSpeech.ElevenLabsLanguage);
-                if (SelectedLanguage == null)
-                {
-                    SelectedLanguage = Languages.FirstOrDefault(p => p.Code == "en");
-                }
+                SelectedLanguage = ResolveSavedLanguage(engine);
             }
         });
     }

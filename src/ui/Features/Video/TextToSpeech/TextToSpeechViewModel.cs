@@ -396,6 +396,7 @@ public partial class TextToSpeechViewModel : ObservableObject
             // Shared instruction text with the qwen3-tts.cpp engine so the same voice
             // description applies whichever Qwen3 backend the user picks.
             Se.Settings.Video.TextToSpeech.Qwen3TtsCppInstruction = (Instruction ?? string.Empty).Trim();
+            Se.Settings.Video.TextToSpeech.Qwen3TtsCrispAsrLanguage = SelectedLanguage?.Name ?? string.Empty;
         }
         else if (SelectedEngine is VibeVoiceCrispAsr)
         {
@@ -408,6 +409,7 @@ public partial class TextToSpeechViewModel : ObservableObject
         else if (SelectedEngine is CosyVoice3CrispAsr)
         {
             Se.Settings.Video.TextToSpeech.CosyVoice3CrispAsrModel = SelectedModel ?? CosyVoice3CrispAsr.DefaultModelKey;
+            Se.Settings.Video.TextToSpeech.CosyVoice3CrispAsrLanguage = SelectedLanguage?.Name ?? string.Empty;
         }
         else if (SelectedEngine is F5TtsCrispAsr)
         {
@@ -3311,13 +3313,18 @@ public partial class TextToSpeechViewModel : ObservableObject
 
                 // OmniVoice has 646 alphabetically-sorted languages; the first entry ("Abadi") is
                 // a useless default. Default to English so the engine is usable out of the box.
-                // MOSS-TTS restores the saved pick (its list leads with "Auto", which is also the
-                // right fallback - it reproduces the pre-language-selection behaviour).
+                // The CrispASR cloning engines restore the saved pick (their lists lead with
+                // "Auto", which is also the right fallback - it reproduces the
+                // pre-language-selection behaviour).
                 SelectedLanguage = engine switch
                 {
                     OmniVoiceTtsCpp => Languages.FirstOrDefault(l => l.Code == "en") ?? Languages.FirstOrDefault(),
                     MossTtsCrispAsr => Languages.FirstOrDefault(l => l.Name == Se.Settings.Video.TextToSpeech.MossTtsCrispAsrLanguage)
                                        ?? Languages.FirstOrDefault(),
+                    CosyVoice3CrispAsr => Languages.FirstOrDefault(l => l.Name == Se.Settings.Video.TextToSpeech.CosyVoice3CrispAsrLanguage)
+                                          ?? Languages.FirstOrDefault(),
+                    Qwen3TtsCrispAsr => Languages.FirstOrDefault(l => l.Name == Se.Settings.Video.TextToSpeech.Qwen3TtsCrispAsrLanguage)
+                                        ?? Languages.FirstOrDefault(),
                     _ => Languages.FirstOrDefault(),
                 };
             }
