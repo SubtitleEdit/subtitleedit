@@ -42,7 +42,7 @@ public class Qwen3TtsCrispAsr : ITtsEngine
 {
     public string Name => "Qwen3 TTS (CrispASR)";
     public string Description => "via CrispASR (VoiceDesign or CustomVoice 1.7B)";
-    public bool HasLanguageParameter => false;
+    public bool HasLanguageParameter => true;
     public bool HasApiKey => false;
     public bool HasRegion => false;
     public bool HasModel => true;
@@ -718,7 +718,7 @@ public class Qwen3TtsCrispAsr : ITtsEngine
 
     public Task<string[]> GetModels() => Task.FromResult(new[] { ModelKeyVoiceDesign, ModelKeyCustomVoice, ModelKeyClone });
 
-    public Task<TtsLanguage[]> GetLanguages(Voice voice, string? model) => Task.FromResult(Array.Empty<TtsLanguage>());
+    public Task<TtsLanguage[]> GetLanguages(Voice voice, string? model) => Task.FromResult(Qwen3TtsCrispAsrLanguages.All);
 
     public Task<Voice[]> RefreshVoices(string language, CancellationToken cancellationToken) =>
         GetVoices(language);
@@ -808,9 +808,19 @@ public class Qwen3TtsCrispAsr : ITtsEngine
             payload["instructions"] = "a calm female voice";
         }
 
+        // Output language (#13110): the backend maps the ISO code to the talker's explicit
+        // codec_language_id — applies to VoiceDesign, CustomVoice and cloned voices alike.
+        // Auto (empty) sends no field and lets the model infer the language from the text,
+        // which for a cloned reference in another language surfaces as a strong accent.
+        var languageArg = Qwen3TtsCrispAsrLanguages.ResolveLanguageArg(language);
+        if (!string.IsNullOrEmpty(languageArg))
+        {
+            payload["language"] = languageArg;
+        }
+
         var body = JsonSerializer.Serialize(payload);
         using var content = new StringContent(body, Encoding.UTF8, "application/json");
-        Se.WriteToolsLog($"Qwen3 TTS (CrispASR): POST {ServerBaseUrl}/v1/audio/speech (voice={qwen3Voice}, model={modelKey}, textLen={text.Length}, instructionLen={instruction.Length})");
+        Se.WriteToolsLog($"Qwen3 TTS (CrispASR): POST {ServerBaseUrl}/v1/audio/speech (voice={qwen3Voice}, model={modelKey}, textLen={text.Length}, instructionLen={instruction.Length}, language={(string.IsNullOrEmpty(languageArg) ? "(auto)" : languageArg)})");
 
         HttpResponseMessage response;
         try
