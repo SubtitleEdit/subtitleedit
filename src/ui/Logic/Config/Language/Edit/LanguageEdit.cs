@@ -8,10 +8,18 @@ public class LanguageEdit
     public LanguageRegularExpressionContextMenu RegularExpressionContextMenu { get; set; } = new();
     public string ShowHistory { get; set; }
     public string RestoreSelected { get; set; }
+    public string NoSubtitleSelected { get; set; }
+    public string PleaseSelectExactlyOneSubtitle { get; set; }
+    public string BoxType { get; set; }
+    public string BackgroundColor { get; set; }
 
     public LanguageEdit()
     {
         ShowHistory = "History for undo";
         RestoreSelected = "Restore selected";
+        NoSubtitleSelected = "No subtitle selected";
+        PleaseSelectExactlyOneSubtitle = "Please select exactly one subtitle.";
+        BoxType = "Box type:";
+        BackgroundColor = "Background color:";
     }
 }
