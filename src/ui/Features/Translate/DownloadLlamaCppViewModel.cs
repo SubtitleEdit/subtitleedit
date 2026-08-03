@@ -160,7 +160,7 @@ public partial class DownloadLlamaCppViewModel : ObservableObject
         }
         catch (Exception ex)
         {
-            ProgressText = "Download failed";
+            ProgressText = Se.Language.General.DownloadFailed;
             Error = ex.Message;
             Se.LogError(ex, "Error downloading llama.cpp");
         }
