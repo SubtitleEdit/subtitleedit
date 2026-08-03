@@ -110,7 +110,7 @@ public class Qwen3TtsCrispAsrSettingsWindow : Window
             RowSpacing = 10,
         };
 
-        grid.Add(MakeLabel("Engine"), 0, 0);
+        grid.Add(MakeLabel(Se.Language.General.Engine), 0, 0);
         var enginePanel = MakeStatusPanel(nameof(vm.EngineBrush), nameof(vm.EngineLabel));
         var engineButton = UiUtil.MakeButton(string.Empty, vm.RedownloadEngineCommand)
             .WithIconLeft(IconNames.Download)
@@ -131,7 +131,7 @@ public class Qwen3TtsCrispAsrSettingsWindow : Window
         grid.Add(MakeLabel("Codec (12 Hz)"), 4, 0);
         grid.Add(MakeStatusPanel(nameof(vm.CodecBrush), nameof(vm.CodecLabel)), 4, 1);
 
-        grid.Add(MakeLabel("Voices"), 5, 0);
+        grid.Add(MakeLabel(Se.Language.Video.Voices), 5, 0);
         var voicesText = new TextBlock
         {
             VerticalAlignment = VerticalAlignment.Center,

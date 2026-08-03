@@ -107,7 +107,7 @@ public class ChatterboxTtsSettingsWindow : Window
             RowSpacing = 10,
         };
 
-        grid.Add(MakeLabel("Engine"), 0, 0);
+        grid.Add(MakeLabel(Se.Language.General.Engine), 0, 0);
         var enginePanel = MakeStatusPanel(nameof(vm.EngineBrush), nameof(vm.EngineLabel));
         var engineButton = UiUtil.MakeButton(string.Empty, vm.RedownloadEngineCommand)
             .WithIconLeft(IconNames.Download)
@@ -116,10 +116,10 @@ public class ChatterboxTtsSettingsWindow : Window
         enginePanel.Children.Add(engineButton);
         grid.Add(enginePanel, 0, 1);
 
-        grid.Add(MakeLabel("Base model"), 1, 0);
+        grid.Add(MakeLabel(Se.Language.Video.BaseModel), 1, 0);
         grid.Add(MakeStatusPanel(nameof(vm.BaseModelBrush), nameof(vm.BaseModelLabel)), 1, 1);
 
-        grid.Add(MakeLabel("Turbo model"), 2, 0);
+        grid.Add(MakeLabel(Se.Language.Video.TurboModel), 2, 0);
         grid.Add(MakeStatusPanel(nameof(vm.TurboModelBrush), nameof(vm.TurboModelLabel)), 2, 1);
 
         grid.Add(MakeLabel(Se.Language.General.InstallFolder), 3, 0);

@@ -109,7 +109,7 @@ public class VoxCPM2CrispAsrSettingsWindow : Window
             RowSpacing = 10,
         };
 
-        grid.Add(MakeLabel("Engine"), 0, 0);
+        grid.Add(MakeLabel(Se.Language.General.Engine), 0, 0);
         var enginePanel = MakeStatusPanel(nameof(vm.EngineBrush), nameof(vm.EngineLabel));
         var engineButton = UiUtil.MakeButton(string.Empty, vm.RedownloadEngineCommand)
             .WithIconLeft(IconNames.Download)
@@ -124,7 +124,7 @@ public class VoxCPM2CrispAsrSettingsWindow : Window
         grid.Add(MakeLabel("Model " + VoxCPM2CrispAsr.ModelKeyF16), 2, 0);
         grid.Add(MakeStatusPanel(nameof(vm.ModelF16Brush), nameof(vm.ModelF16Label)), 2, 1);
 
-        grid.Add(MakeLabel("Voices"), 3, 0);
+        grid.Add(MakeLabel(Se.Language.Video.Voices), 3, 0);
         var voicesText = new TextBlock
         {
             VerticalAlignment = VerticalAlignment.Center,

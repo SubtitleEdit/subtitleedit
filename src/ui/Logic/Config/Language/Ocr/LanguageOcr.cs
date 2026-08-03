@@ -102,6 +102,8 @@ public class LanguageOcr
     public string VobSubIsolateColorsHint { get; set; }
     public string LlamaCppOcrSettingsTitle { get; set; }
     public string InspectBinaryOcrAdditionsTitle { get; set; }
+    public string LlamaCppOcr { get; set; }
+    public string LlamaCppOcrDescription { get; set; }
     public string LlamaCppOcrPromptHint { get; set; }
     public string LlamaCppOcrPromptEmpty { get; set; }
     public string LlamaCppOcrPromptMissingLanguagePlaceholder { get; set; }
@@ -217,6 +219,8 @@ public class LanguageOcr
 
         LlamaCppOcrSettingsTitle = "llama.cpp OCR settings";
         InspectBinaryOcrAdditionsTitle = "Inspect Binary OCR Additions";
+        LlamaCppOcr = "llama.cpp OCR";
+        LlamaCppOcrDescription = "Local llama.cpp server (multimodal model) used for OCR.";
         LlamaCppOcrPromptHint = "Use {language} to insert the selected OCR language.";
         LlamaCppOcrPromptEmpty = "The prompt cannot be empty.";
         LlamaCppOcrPromptMissingLanguagePlaceholder = "The prompt must contain the {language} placeholder.";

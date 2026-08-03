@@ -2194,7 +2194,17 @@
     "reEncodeOutputVideoFileNotGenerated": "Output video file not generated: {0}\r\nParameters: {1}",
     "reEncodeGeneratingDone": "Generating done",
     "reEncodeGeneratedFilesX": "Generated files ({0}):",
-    "reEncodeFfmpegParameters": "ffmpeg parameters"
+    "reEncodeFfmpegParameters": "ffmpeg parameters",
+    "voices": "Voices",
+    "presets": "Presets",
+    "talkerX": "Talker {0}",
+    "baseModel": "Base model",
+    "turboModel": "Turbo model",
+    "ttsUpdateX": "Update {0}",
+    "ttsEngineNotInstalled": "{0} not installed",
+    "ttsEngineUpdateAvailable": "{0} - update available",
+    "ttsEngineTooOldUpdateRequired": "{0} too old - update required",
+    "ttsEngineChatterboxCapable": "{0} (Chatterbox-capable)"
   },
   "waveform": {
     "guessTimeCodes": "Guess time codes",
@@ -2990,6 +3000,8 @@
     "vobSubIsolateColorsHint": "Rebuild each VobSub image as crisp black-on-white before OCR by keeping the most frequent color (text) and dropping the outline/anti-alias colors. Improves recognition on discs where gray outlines merge characters together.",
     "llamaCppOcrSettingsTitle": "llama.cpp OCR settings",
     "inspectBinaryOcrAdditionsTitle": "Inspect Binary OCR Additions",
+    "llamaCppOcr": "llama.cpp OCR",
+    "llamaCppOcrDescription": "Local llama.cpp server (multimodal model) used for OCR.",
     "llamaCppOcrPromptHint": "Use {language} to insert the selected OCR language.",
     "llamaCppOcrPromptEmpty": "The prompt cannot be empty.",
     "llamaCppOcrPromptMissingLanguagePlaceholder": "The prompt must contain the {language} placeholder.",
