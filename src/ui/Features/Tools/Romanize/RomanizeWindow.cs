@@ -70,6 +70,7 @@ public class RomanizeWindow : Window
         return new StackPanel
         {
             Spacing = 8,
+            Margin = new Thickness(0, 0, 0, 8),
             Children =
             {
                 new TextBlock
@@ -96,7 +97,7 @@ public class RomanizeWindow : Window
                         {
                             Background = Brushes.Transparent,
                             BorderThickness = new Thickness(0),
-                            Margin = new Thickness(0, 3.5, 0, 0),
+                            Margin = new Thickness(0, 3.4, 0, 0),
                             ItemsSource = Enum.GetValues<RomanizedLinePositions>(),
                             SelectedValue = vm.SubtitleItemsRomanizedLinePosition ?? default,
                             SelectionBoxItemTemplate = new FuncDataTemplate<RomanizedLinePositions>((item, nameScope) => new TextBlock
@@ -113,7 +114,6 @@ public class RomanizeWindow : Window
                 },
                 new TextBlock
                 {
-                    Margin = new Thickness(0, 8, 0, 0),
                     Text = Se.Language.Tools.Romanize.TitleLanguages,
                 },
                 new WrapPanel
@@ -203,6 +203,7 @@ public class RomanizeWindow : Window
                     return checkbox;
                 }),
                 Header = Se.Language.General.MergeLines,
+                HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
                 Width = new GridLength(100),
             },
             new SeTableViewColumn
@@ -239,16 +240,22 @@ public class RomanizeWindow : Window
                     return combobox;
                 }),
                 Header = Se.Language.General.Position,
+                HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
                 Width = new GridLength(120),
             },
             new SeTableViewColumn
             {
-                Header = Se.Language.General.Romanized,
                 CellTheme = UiUtil.TableViewCellTheme,
+                CellTemplate = new FuncDataTemplate<RomanizeSubtitleLineItem>((item, _) => new TextBox
+                {
+                    Background = Brushes.Transparent, 
+                    BorderBrush = Brushes.Transparent, 
+
+                    [!TextBox.TextProperty] = new Binding(nameof(RomanizeSubtitleLineItem.Text)),
+                }),
+                Header = Se.Language.General.Romanized,
                 HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
-                Binding = new Binding(nameof(RomanizeSubtitleLineItem.Text)),
                 Width = new GridLength(1, GridUnitType.Star),
-                
             }
         ];
 
