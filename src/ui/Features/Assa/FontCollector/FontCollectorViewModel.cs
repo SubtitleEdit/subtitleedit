@@ -178,6 +178,78 @@ public partial class FontCollectorViewModel : ObservableObject
         return result;
     }
 
+    /// <summary>
+    /// Adds a font file to the [Fonts] attachment section of an ASSA footer, creating the
+    /// section if needed. A font whose file name is already attached is not added twice.
+    /// </summary>
+    internal static string AddFontToFooter(string? footer, string fontFilePath, byte[] fontBytes)
+    {
+        var fileName = Path.GetFileName(fontFilePath);
+        if (GetEmbeddedFonts(footer).Any(f => f.FileName.Equals(fileName, StringComparison.OrdinalIgnoreCase)))
+        {
+            return footer!;
+        }
+
+        var entryLines = new List<string> { "fontname: " + fileName };
+        entryLines.AddRange(UUEncoding.UUEncode(fontBytes).Trim().SplitToLines());
+
+        if (string.IsNullOrWhiteSpace(footer))
+        {
+            return "[Fonts]" + Environment.NewLine + string.Join(Environment.NewLine, entryLines) + Environment.NewLine;
+        }
+
+        var lines = footer.SplitToLines();
+        var result = new List<string>(lines.Count + entryLines.Count + 2);
+        var inFonts = false;
+        var inserted = false;
+
+        void InsertEntry()
+        {
+            while (result.Count > 0 && result[^1].Trim().Length == 0)
+            {
+                result.RemoveAt(result.Count - 1);
+            }
+
+            result.AddRange(entryLines);
+            inserted = true;
+        }
+
+        foreach (var line in lines)
+        {
+            var s = line.Trim();
+            if (s.Equals("[Fonts]", StringComparison.OrdinalIgnoreCase))
+            {
+                inFonts = true;
+            }
+            else if (inFonts && !inserted &&
+                     (s == "[Script Info]" || s == "[V4+ Styles]" || s == "[V4 Styles]" || s == "[Events]" ||
+                      s.Equals("[Graphics]", StringComparison.OrdinalIgnoreCase) ||
+                      s.Equals("[Aegisub Extradata]", StringComparison.OrdinalIgnoreCase)))
+            {
+                // Only exact section headers end the fonts section (see GetEmbeddedFonts).
+                InsertEntry();
+                result.Add(string.Empty);
+                inFonts = false;
+            }
+
+            result.Add(line);
+        }
+
+        if (inFonts && !inserted)
+        {
+            InsertEntry();
+        }
+
+        if (!inserted)
+        {
+            // No [Fonts] section - fonts go first, same order the attachments window writes.
+            return "[Fonts]" + Environment.NewLine + string.Join(Environment.NewLine, entryLines) +
+                   Environment.NewLine + Environment.NewLine + footer.TrimStart();
+        }
+
+        return string.Join(Environment.NewLine, result) + Environment.NewLine;
+    }
+
     /// <summary>Fills the "Installed fonts" and "Collected fonts" tabs.</summary>
     private void LoadFontLists()
     {
