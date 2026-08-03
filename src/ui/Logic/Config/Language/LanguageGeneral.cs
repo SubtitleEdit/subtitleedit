@@ -885,7 +885,7 @@ public class LanguageGeneral
         DownloadingX = "Downloading {0}";
         DownloadingXPercent = "Downloading {0}%";
         DownloadFailed = "Download failed";
-        DownloadCanceled = "Download canceled";
+        DownloadCanceled = "Download cancelled";
         UnpackFailed = "Unpack failed: {0}";
         UnpackingFailed = "Unpacking failed";
         NoDataReceived = "No data received";
