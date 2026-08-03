@@ -100,6 +100,7 @@ public class LanguageOcr
     public string VobSubIsolateColors { get; set; }
     public string VobSubIsolateColorsHint { get; set; }
     public string LlamaCppOcrSettingsTitle { get; set; }
+    public string SelectTesseractDictionary { get; set; }
     public string LlamaCppOcrPromptHint { get; set; }
     public string LlamaCppOcrPromptEmpty { get; set; }
     public string LlamaCppOcrPromptMissingLanguagePlaceholder { get; set; }
@@ -213,6 +214,7 @@ public class LanguageOcr
         VobSubIsolateColorsHint = "Rebuild each VobSub image as crisp black-on-white before OCR by keeping the most frequent color (text) and dropping the outline/anti-alias colors. Improves recognition on discs where gray outlines merge characters together.";
 
         LlamaCppOcrSettingsTitle = "llama.cpp OCR settings";
+        SelectTesseractDictionary = "Select Tesseract dictionary:";
         LlamaCppOcrPromptHint = "Use {language} to insert the selected OCR language.";
         LlamaCppOcrPromptEmpty = "The prompt cannot be empty.";
         LlamaCppOcrPromptMissingLanguagePlaceholder = "The prompt must contain the {language} placeholder.";

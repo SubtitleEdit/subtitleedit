@@ -149,6 +149,7 @@ public class LanguageGeneral
     public string DownloadFailed { get; set; }
     public string DownloadCanceled { get; set; }
     public string UnpackFailed { get; set; }
+    public string UnpackingFailed { get; set; }
     public string Duplicate { get; set; }
     public string Duration { get; set; }
     public string DurationMinutes { get; set; }
@@ -874,6 +875,7 @@ public class LanguageGeneral
         DownloadFailed = "Download failed";
         DownloadCanceled = "Download canceled";
         UnpackFailed = "Unpack failed: {0}";
+        UnpackingFailed = "Unpacking failed";
         Duplicate = "Duplicate";
         Duration = "Duration";
         DurationMinutes = "Duration in minutes";

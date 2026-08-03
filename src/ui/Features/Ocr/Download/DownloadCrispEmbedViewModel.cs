@@ -120,7 +120,7 @@ public partial class DownloadCrispEmbedViewModel : ObservableObject, IClosingCle
                 {
                     // e.g. a truncated archive that still had Length > 0 - without this the
                     // Timer would swallow the exception and leave the dialog stuck open.
-                    ProgressText = _isModelDownload ? "Download failed" : "Unpacking failed";
+                    ProgressText = _isModelDownload ? Se.Language.General.DownloadFailed : Se.Language.General.UnpackingFailed;
                     Error = ex.Message;
                     Se.LogError(ex, "CrispEmbed download post-processing failed");
                 }
@@ -136,12 +136,12 @@ public partial class DownloadCrispEmbedViewModel : ObservableObject, IClosingCle
                 var ex = _downloadTask.Exception?.InnerException ?? _downloadTask.Exception;
                 if (ex is OperationCanceledException)
                 {
-                    ProgressText = "Download canceled";
+                    ProgressText = Se.Language.General.DownloadCanceled;
                     Close();
                 }
                 else
                 {
-                    ProgressText = "Download failed";
+                    ProgressText = Se.Language.General.DownloadFailed;
                     Error = ex?.Message ?? "Unknown error";
                 }
             }
@@ -152,7 +152,7 @@ public partial class DownloadCrispEmbedViewModel : ObservableObject, IClosingCle
     {
         if (_downloadStream.Length == 0)
         {
-            ProgressText = "Download failed";
+            ProgressText = Se.Language.General.DownloadFailed;
             Error = "No data received";
             return;
         }
@@ -195,7 +195,7 @@ public partial class DownloadCrispEmbedViewModel : ObservableObject, IClosingCle
     {
         if (!File.Exists(_modelTempFileName) || new FileInfo(_modelTempFileName).Length == 0)
         {
-            ProgressText = "Download failed";
+            ProgressText = Se.Language.General.DownloadFailed;
             Error = "No data received";
             return;
         }

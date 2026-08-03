@@ -5,6 +5,7 @@ using Avalonia.Media;
 using Avalonia.Styling;
 using Nikse.SubtitleEdit.Features.Shared;
 using Nikse.SubtitleEdit.Logic;
+using Nikse.SubtitleEdit.Logic.Config;
 
 namespace Nikse.SubtitleEdit.Features.Ocr.Download;
 
@@ -23,7 +24,7 @@ public class DownloadTesseractWindow : Window
 
         var titleText = new TextBlock
         {
-            Text = "Downloading Tesseract",
+            Text = string.Format(Se.Language.General.DownloadingX, "Tesseract"),
             FontSize = 20,
             FontWeight = FontWeight.Bold,
         };
