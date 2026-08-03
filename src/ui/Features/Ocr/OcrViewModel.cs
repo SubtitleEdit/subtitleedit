@@ -1586,7 +1586,7 @@ public partial class OcrViewModel : ObservableObject
         if (result.NewPressed)
         {
             var newResult = await _windowService.ShowDialogAsync<BinaryOcrDbNewWindow, BinaryOcrDbNewViewModel>(Window!,
-                vm => { vm.Initialize(Se.Language.Ocr.NewNOcrDatabase, string.Empty); });
+                vm => { vm.Initialize(Se.Language.Ocr.NewBinaryImageCompareDatabase, string.Empty); });
             if (newResult.OkPressed)
             {
                 if (!Directory.Exists(Se.OcrFolder))
@@ -1623,7 +1623,7 @@ public partial class OcrViewModel : ObservableObject
             var newResult = await _windowService.ShowDialogAsync<BinaryOcrDbNewWindow, BinaryOcrDbNewViewModel>(Window!,
             vm =>
             {
-                vm.Initialize(Se.Language.Ocr.RenameNOcrDatabase, result.BinaryOcrDatabaseName);
+                vm.Initialize(Se.Language.Ocr.RenameBinaryImageCompareDatabase, result.BinaryOcrDatabaseName);
             });
 
             _isCtrlDown = false;

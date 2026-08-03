@@ -32,6 +32,7 @@ public class LanguageOcr
     public string NewNOcrDatabase { get; set; }
     public string NewBinaryImageCompareDatabase { get; set; }
     public string RenameNOcrDatabase { get; set; }
+    public string RenameBinaryImageCompareDatabase { get; set; }
     public string NOcrDatabase { get; set; }
     public string DrawMode { get; set; }
     public string AddNewCharcter { get; set; }
@@ -152,6 +153,7 @@ public class LanguageOcr
         NewNOcrDatabase = "New nOCR database";
         NewBinaryImageCompareDatabase = "New/rename Binary Image Compare database";
         RenameNOcrDatabase = "Rename nOCR database";
+        RenameBinaryImageCompareDatabase = "Rename Binary Image Compare database";
         NOcrDatabase = "nOCR database";
         DrawMode = "Draw mode:";
         AddNewCharcter = "Add new character";

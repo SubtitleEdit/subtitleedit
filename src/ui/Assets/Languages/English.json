@@ -2956,6 +2956,7 @@
     "newNOcrDatabase": "New nOCR database",
     "newBinaryImageCompareDatabase": "New/rename Binary Image Compare database",
     "renameNOcrDatabase": "Rename nOCR database",
+    "renameBinaryImageCompareDatabase": "Rename Binary Image Compare database",
     "nOcrDatabase": "nOCR database",
     "drawMode": "Draw mode:",
     "addNewCharcter": "Add new character",
