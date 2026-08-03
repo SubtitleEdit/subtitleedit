@@ -1,17 +1,18 @@
 ﻿using Avalonia.Data.Converters;
+using Nikse.SubtitleEdit.Logic.Config;
 using System;
 using System.Globalization;
 
 namespace Nikse.SubtitleEdit.Logic.ValueConverters;
 internal class FileSizeConverter : IValueConverter
 {
-    private static readonly string[] SizeSuffixes = { "bytes", "KB", "MB", "GB", "TB", "PB" };
+    private static readonly string[] SizeSuffixes = { Se.Language.General.Bytes, "KB", "MB", "GB", "TB", "PB" };
 
     public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
         if (value == null)
         {
-            return "0 bytes";
+            return Se.Language.General.ZeroBytes;
         }
 
         long bytes;
@@ -27,17 +28,17 @@ internal class FileSizeConverter : IValueConverter
         }
         else if (!long.TryParse(value.ToString(), out bytes))
         {
-            return "Invalid size";
+            return Se.Language.General.InvalidSize;
         }
 
         if (bytes < 0)
         {
-            return "Invalid size";
+            return Se.Language.General.InvalidSize;
         }
 
         if (bytes == 0)
         {
-            return "0 bytes";
+            return Se.Language.General.ZeroBytes;
         }
 
         int magnitude = 0;

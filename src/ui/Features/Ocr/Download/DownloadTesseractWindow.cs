@@ -15,7 +15,7 @@ public class DownloadTesseractWindow : Window
     {
         vm.Window = this;
         UiUtil.InitializeWindow(this, GetType().Name);
-        Title = "Downloading Tesseract";
+        Title = string.Format(Se.Language.General.DownloadingX, "Tesseract");
         SizeToContent = SizeToContent.WidthAndHeight;
         CanResize = false;
         WindowStartupLocation = WindowStartupLocation.CenterOwner;

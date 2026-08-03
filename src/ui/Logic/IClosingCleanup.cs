@@ -7,7 +7,8 @@ namespace Nikse.SubtitleEdit.Logic;
 /// timers are stopped and disposed on every close path - OK/Cancel buttons, Escape, the title-bar
 /// close and Alt+F4 alike - without each view model having to hook them individually.
 ///
-/// Implementations must be idempotent: the method may run after the view model has already torn its
+/// The central hook guarantees at most one invocation per window (#13100), but implementations
+/// must still be idempotent: the method may run after the view model has already torn its
 /// timers down through some other path.
 /// </summary>
 public interface IClosingCleanup

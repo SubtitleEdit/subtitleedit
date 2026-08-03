@@ -15,7 +15,7 @@ public class SetTextWindow : Window
     public SetTextWindow(SetTextViewModel vm)
     {
         UiUtil.InitializeWindow(this, GetType().Name);
-        Title = "Set Text";
+        Title = Se.Language.Tools.ImageBasedEdit.SetText;
         SizeToContent = SizeToContent.WidthAndHeight;
         CanResize = true;
         MinWidth = 600;

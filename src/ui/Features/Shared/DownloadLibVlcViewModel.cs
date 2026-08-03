@@ -74,16 +74,16 @@ public partial class DownloadLibVlcViewModel : ObservableObject, IClosingCleanup
 
                 if (!File.Exists(_tempFileName))
                 {
-                    ProgressText = "Download failed";
-                    Error = "No data received";
+                    ProgressText = Se.Language.General.DownloadFailed;
+                    Error = Se.Language.General.NoDataReceived;
                     return;
                 }
 
                 var fileInfo = new FileInfo(_tempFileName);
                 if (fileInfo.Length == 0)
                 {
-                    ProgressText = "Download failed";
-                    Error = "No data received";
+                    ProgressText = Se.Language.General.DownloadFailed;
+                    Error = Se.Language.General.NoDataReceived;
                     return;
                 }
 
@@ -104,7 +104,7 @@ public partial class DownloadLibVlcViewModel : ObservableObject, IClosingCleanup
                     // otherwise hang the dialog with no error shown (#12127).
                     Se.LogError(exception, "libVLC unpack failed");
                     StopIndeterminateProgress();
-                    ProgressText = "Unpacking failed";
+                    ProgressText = Se.Language.General.UnpackingFailed;
                     Error = exception.Message;
                     return;
                 }
@@ -121,13 +121,13 @@ public partial class DownloadLibVlcViewModel : ObservableObject, IClosingCleanup
                 var ex = _downloadTask.Exception?.InnerException ?? _downloadTask.Exception;
                 if (ex is OperationCanceledException)
                 {
-                    ProgressText = "Download canceled";
+                    ProgressText = Se.Language.General.DownloadCanceled;
                     Close();
                 }
                 else
                 {
-                    ProgressText = "Download failed";
-                    Error = ex?.Message ?? "Unknown error";
+                    ProgressText = Se.Language.General.DownloadFailed;
+                    Error = ex?.Message ?? Se.Language.General.UnknownError;
                 }
             }
         }

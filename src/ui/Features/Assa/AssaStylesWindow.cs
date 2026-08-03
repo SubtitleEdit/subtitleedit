@@ -462,18 +462,18 @@ public class AssaStylesWindow : Window
         var checkBoxStrikeout = UiUtil.MakeCheckBox(Se.Language.General.Strikeout, vm, nameof(vm.CurrentStyle) + "." + nameof(StyleDisplay.Strikeout));
         var panelFontStyle = UiUtil.MakeHorizontalPanel(checkBoxBold, checkBoxItalic, checkBoxUnderline, checkBoxStrikeout).WithMarginBottom(10);
 
-        var labelScaleX = UiUtil.MakeLabel("Scale X").WithMinWidth(60);
+        var labelScaleX = UiUtil.MakeLabel(Se.Language.Assa.ScaleX).WithMinWidth(60);
         var numericUpDownScaleX = UiUtil.MakeNumericUpDownOneDecimal(1, 1000, 130, vm, nameof(vm.CurrentStyle) + "." + nameof(StyleDisplay.ScaleX));
         numericUpDownScaleX.Increment = 1;
-        var labelScaleY = UiUtil.MakeLabel("Scale Y").WithMinWidth(60);
+        var labelScaleY = UiUtil.MakeLabel(Se.Language.Assa.ScaleY).WithMinWidth(60);
         var numericUpDownScaleY = UiUtil.MakeNumericUpDownOneDecimal(1, 1000, 130, vm, nameof(vm.CurrentStyle) + "." + nameof(StyleDisplay.ScaleY));
         numericUpDownScaleY.Increment = 1;
         var panelTransform1 = UiUtil.MakeHorizontalPanel(labelScaleX, numericUpDownScaleX, labelScaleY, numericUpDownScaleY);
 
-        var labelSpacing = UiUtil.MakeLabel("Spacing").WithMinWidth(60);
+        var labelSpacing = UiUtil.MakeLabel(Se.Language.Assa.Spacing).WithMinWidth(60);
         var numericUpDownSpacing = UiUtil.MakeNumericUpDownOneDecimal(-100, 100, 130, vm, nameof(vm.CurrentStyle) + "." + nameof(StyleDisplay.Spacing));
         numericUpDownSpacing.Increment = 1;
-        var labelAngle = UiUtil.MakeLabel("Angle").WithMinWidth(60);
+        var labelAngle = UiUtil.MakeLabel(Se.Language.Assa.Angle).WithMinWidth(60);
         var numericUpDownAngle = UiUtil.MakeNumericUpDownOneDecimal(-360, 360, 130, vm, nameof(vm.CurrentStyle) + "." + nameof(StyleDisplay.Angle));
         numericUpDownAngle.Increment = 1;
         var panelTransform2 = UiUtil.MakeHorizontalPanel(labelSpacing, numericUpDownSpacing, labelAngle, numericUpDownAngle).WithMarginBottom(10);

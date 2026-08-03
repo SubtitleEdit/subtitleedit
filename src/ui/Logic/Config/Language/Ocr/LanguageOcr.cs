@@ -30,6 +30,7 @@ public class LanguageOcr
     public string ExpandInfoX { get; set; }
     public string EditNOcrDatabaseXWithYItems { get; set; }
     public string NewNOcrDatabase { get; set; }
+    public string NewBinaryImageCompareDatabase { get; set; }
     public string RenameNOcrDatabase { get; set; }
     public string NOcrDatabase { get; set; }
     public string DrawMode { get; set; }
@@ -101,6 +102,9 @@ public class LanguageOcr
     public string VobSubIsolateColorsHint { get; set; }
     public string LlamaCppOcrSettingsTitle { get; set; }
     public string SelectTesseractDictionary { get; set; }
+    public string InspectBinaryOcrAdditionsTitle { get; set; }
+    public string LlamaCppOcr { get; set; }
+    public string LlamaCppOcrDescription { get; set; }
     public string LlamaCppOcrPromptHint { get; set; }
     public string LlamaCppOcrPromptEmpty { get; set; }
     public string LlamaCppOcrPromptMissingLanguagePlaceholder { get; set; }
@@ -114,6 +118,9 @@ public class LanguageOcr
     public string OllamaModelLikelyWrong { get; set; }
     public string LlamaCppNotDownloaded { get; set; }
     public string LlamaCppReturnedNoText { get; set; }
+    public string LlamaCppDownloadEngineAndModelPrompt { get; set; }
+    public string LlamaCppDownloadEnginePrompt { get; set; }
+    public string LlamaCppDownloadModelPrompt { get; set; }
 
     public LanguageOcr()
     {
@@ -143,6 +150,7 @@ public class LanguageOcr
         ExpandInfoX = "Expand count: {0}";
         EditNOcrDatabaseXWithYItems = "Edit nOCR database {0} with {1:#,###,##0} items";
         NewNOcrDatabase = "New nOCR database";
+        NewBinaryImageCompareDatabase = "New/rename Binary Image Compare database";
         RenameNOcrDatabase = "Rename nOCR database";
         NOcrDatabase = "nOCR database";
         DrawMode = "Draw mode:";
@@ -215,6 +223,9 @@ public class LanguageOcr
 
         LlamaCppOcrSettingsTitle = "llama.cpp OCR settings";
         SelectTesseractDictionary = "Select Tesseract dictionary:";
+        InspectBinaryOcrAdditionsTitle = "Inspect Binary OCR Additions";
+        LlamaCppOcr = "llama.cpp OCR";
+        LlamaCppOcrDescription = "Local llama.cpp server (multimodal model) used for OCR.";
         LlamaCppOcrPromptHint = "Use {language} to insert the selected OCR language.";
         LlamaCppOcrPromptEmpty = "The prompt cannot be empty.";
         LlamaCppOcrPromptMissingLanguagePlaceholder = "The prompt must contain the {language} placeholder.";
@@ -230,5 +241,8 @@ public class LanguageOcr
         OllamaModelLikelyWrong = "Ollama returned no text - the selected model may not support OCR / vision";
         LlamaCppNotDownloaded = "llama.cpp engine/model not downloaded - download via batch convert settings";
         LlamaCppReturnedNoText = "llama.cpp returned no text - check the server and model";
+        LlamaCppDownloadEngineAndModelPrompt = "llama.cpp requires the llama-server engine and the selected OCR model to be downloaded. Download now?";
+        LlamaCppDownloadEnginePrompt = "llama.cpp requires the llama-server engine to be downloaded. Download now?";
+        LlamaCppDownloadModelPrompt = "llama.cpp requires the selected OCR model to be downloaded. Download now?";
     }
 }
