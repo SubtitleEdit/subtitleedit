@@ -1908,12 +1908,12 @@ namespace Nikse.SubtitleEdit.Controls
             {
                 if (showDuration || Configuration.Settings.General.CurrentVideoOffsetInMs != 0)
                 {
-                    var span = TimeCode.FromSeconds(positionInSeconds + 0.017 + Configuration.Settings.General.CurrentVideoOffsetInMs / TimeCode.BaseUnit);
+                    var span = TimeCode.FromSeconds(positionInSeconds + Configuration.Settings.General.CurrentVideoOffsetInMs / TimeCode.BaseUnit);
                     displayTimeCode = $"{span.ToDisplayString()} / {dur.ToDisplayString()} SMPTE";
                 }
                 else
                 {
-                    var pos = positionInSeconds + 0.017 + Configuration.Settings.General.CurrentVideoOffsetInMs / TimeCode.BaseUnit;
+                    var pos = positionInSeconds + Configuration.Settings.General.CurrentVideoOffsetInMs / TimeCode.BaseUnit;
                     var seconds = (pos - dur.TotalSeconds) * -1;
                     if (seconds < 0)
                     {
@@ -2124,15 +2124,15 @@ namespace Nikse.SubtitleEdit.Controls
                 {
                     var v = value;
 
-                    if (SmpteMode)
-                    {
-                        v *= 1.001;
-                    }
-
                     if (Configuration.Settings.General.UseTimeFormatHHMMSSFF)
                     {
                         var tc = TimeCode.FromSeconds(v);
                         v = tc.AlignToFrame().TotalSeconds;
+                    }
+
+                    if (SmpteMode)
+                    {
+                        v *= 1.001;
                     }
 
                     VideoPlayer.CurrentPosition = v;
