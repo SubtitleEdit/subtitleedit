@@ -8677,15 +8677,15 @@ public partial class MainViewModel :
             return;
         }
 
-        for (var i = 0; i < Subtitles.Count; i++)
+        for (var i = 0; i < Subtitles.Count && i < result.Subtitles.Count; i++)
         {
-            if (result.Rows.Count <= i)
+            if (!result.TranslatedRowIndices.Contains(i))
             {
-                break;
+                continue;
             }
 
             Subtitles[i].OriginalText = Subtitles[i].Text;
-            Subtitles[i].Text = result.Rows[i].TranslatedText;
+            Subtitles[i].Text = result.Subtitles[i].Text;
         }
 
         // The subtitle language just changed, so the cached auto-trim language is stale (issue #12144).
