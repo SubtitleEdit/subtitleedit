@@ -133,6 +133,10 @@ public class LanguageAssa
     public string SpinIn { get; set; }
     public string SetPosition { get; set; }
     public string Rotation { get; set; }
+    public string ScaleX { get; set; }
+    public string ScaleY { get; set; }
+    public string Spacing { get; set; }
+    public string Angle { get; set; }
     public string ImageColorPicker { get; set; }
     public string CopyColorAsHextoClipboard { get; set; }
     public string GeneratingBackgroundBoxXOfY { get; set; }
@@ -345,6 +349,10 @@ public class LanguageAssa
         SpinIn = "Spin in";
         SetPosition = "Set position";
         Rotation = "Rotation";
+        ScaleX = "Scale X";
+        ScaleY = "Scale Y";
+        Spacing = "Spacing";
+        Angle = "Angle";
         ImageColorPicker = "Image color picker";
         CopyColorAsHextoClipboard = "Copy color as hex to clipboard";
         GeneratingBackgroundBoxXOfY = "Generating background box {0} of {1}...";
