@@ -1658,7 +1658,7 @@ public static partial class InitListViewAndEditBox
         // add label to panelSingleLineLengthsOriginal
         var singleLineLengthLabel = new TextBlock
         {
-            Text = "Line lengths: x/x",
+            Text = Se.Language.Main.SingleLineLength,
             FontWeight = FontWeight.Bold,
             Margin = new Thickness(0, 0, 5, 0)
         };

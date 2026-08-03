@@ -211,7 +211,7 @@ public static class InitMenu
                         },
                         new MenuItem
                         {
-                            Header = "IMSC 1.1 image profile",
+                            Header = Se.Language.File.Export.TitleExportImscImage,
                             Command = vm.ExportImscImageCommand,
                         },
                         new MenuItem
@@ -251,7 +251,7 @@ public static class InitMenu
                         },
                         new MenuItem
                         {
-                            Header = "DOST/png",
+                            Header = Se.Language.File.Export.TitleExportDostPng,
                             Command = vm.ExportDostPngCommand,
                         },
                         new MenuItem
@@ -261,7 +261,7 @@ public static class InitMenu
                         },
                         new MenuItem
                         {
-                            Header = "Final Cut Pro + image",
+                            Header = Se.Language.File.Export.TitleExportFcpImage,
                             Command = vm.ExportFcpPngCommand,
                         },
                         new MenuItem
@@ -286,7 +286,7 @@ public static class InitMenu
                         },
                         new MenuItem
                         {
-                            Header = "WebVTT png",
+                            Header = Se.Language.File.Export.TitleExportWebVttThumbnails,
                             Command = vm.ExportWebVttThumbnailsCommand,
                         },
                         new Separator(),

@@ -21,7 +21,7 @@ public class MossTtsCrispAsrSettingsWindow : Window
     public MossTtsCrispAsrSettingsWindow(MossTtsCrispAsrSettingsViewModel vm)
     {
         UiUtil.InitializeWindow(this, GetType().Name);
-        Title = "MOSS-TTS (CrispASR) settings";
+        Title = string.Format(Se.Language.Video.TtsCrispAsrSettingsTitle, "MOSS-TTS");
         SizeToContent = SizeToContent.WidthAndHeight;
         CanResize = false;
         MinWidth = 580;
@@ -111,7 +111,7 @@ public class MossTtsCrispAsrSettingsWindow : Window
             RowSpacing = 10,
         };
 
-        grid.Add(MakeLabel("Engine"), 0, 0);
+        grid.Add(MakeLabel(Se.Language.General.Engine), 0, 0);
         var enginePanel = MakeStatusPanel(nameof(vm.EngineBrush), nameof(vm.EngineLabel));
         var engineButton = UiUtil.MakeButton(string.Empty, vm.RedownloadEngineCommand)
             .WithIconLeft(IconNames.Download)
@@ -132,7 +132,7 @@ public class MossTtsCrispAsrSettingsWindow : Window
         grid.Add(MakeLabel("Model " + MossTtsCrispAsr.ModelKeyF16), 4, 0);
         grid.Add(MakeStatusPanel(nameof(vm.ModelF16Brush), nameof(vm.ModelF16Label)), 4, 1);
 
-        grid.Add(MakeLabel("Voices"), 5, 0);
+        grid.Add(MakeLabel(Se.Language.Video.Voices), 5, 0);
         var voicesText = new TextBlock
         {
             VerticalAlignment = VerticalAlignment.Center,

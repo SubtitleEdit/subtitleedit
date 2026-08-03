@@ -21,7 +21,7 @@ public class CosyVoice3CrispAsrSettingsWindow : Window
     public CosyVoice3CrispAsrSettingsWindow(CosyVoice3CrispAsrSettingsViewModel vm)
     {
         UiUtil.InitializeWindow(this, GetType().Name);
-        Title = "CosyVoice3 (CrispASR) settings";
+        Title = string.Format(Se.Language.Video.TtsCrispAsrSettingsTitle, "CosyVoice3");
         SizeToContent = SizeToContent.WidthAndHeight;
         CanResize = false;
         MinWidth = 580;
@@ -110,7 +110,7 @@ public class CosyVoice3CrispAsrSettingsWindow : Window
             RowSpacing = 10,
         };
 
-        grid.Add(MakeLabel("Engine"), 0, 0);
+        grid.Add(MakeLabel(Se.Language.General.Engine), 0, 0);
         var enginePanel = MakeStatusPanel(nameof(vm.EngineBrush), nameof(vm.EngineLabel));
         var engineButton = UiUtil.MakeButton(string.Empty, vm.RedownloadEngineCommand)
             .WithIconLeft(IconNames.Download)
@@ -125,7 +125,7 @@ public class CosyVoice3CrispAsrSettingsWindow : Window
         grid.Add(MakeLabel(CosyVoice3CrispAsr.ModelKeyF16), 2, 0);
         grid.Add(MakeStatusPanel(nameof(vm.F16BundleBrush), nameof(vm.F16BundleLabel)), 2, 1);
 
-        grid.Add(MakeLabel("Presets"), 3, 0);
+        grid.Add(MakeLabel(Se.Language.Video.Presets), 3, 0);
         var presetsText = new TextBlock
         {
             VerticalAlignment = VerticalAlignment.Center,
@@ -134,7 +134,7 @@ public class CosyVoice3CrispAsrSettingsWindow : Window
         };
         grid.Add(presetsText, 3, 1);
 
-        grid.Add(MakeLabel("Voices"), 4, 0);
+        grid.Add(MakeLabel(Se.Language.Video.Voices), 4, 0);
         var voicesText = new TextBlock
         {
             VerticalAlignment = VerticalAlignment.Center,

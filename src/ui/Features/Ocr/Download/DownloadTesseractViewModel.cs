@@ -75,7 +75,7 @@ public partial class DownloadTesseractViewModel : ObservableObject, IClosingClea
 
                 if (_downloadStream.Length == 0)
                 {
-                    StatusText = "Download failed";
+                    StatusText = Se.Language.General.DownloadFailed;
                     Error = "No data received";
                     return;
                 }
@@ -91,12 +91,12 @@ public partial class DownloadTesseractViewModel : ObservableObject, IClosingClea
                 var ex = _downloadTask.Exception?.InnerException ?? _downloadTask.Exception;
                 if (ex is OperationCanceledException)
                 {
-                    StatusText = "Download canceled";
+                    StatusText = Se.Language.General.DownloadCanceled;
                     Close();
                 }
                 else
                 {
-                    StatusText = "Download failed";
+                    StatusText = Se.Language.General.DownloadFailed;
                     Error = ex?.Message ?? "Unknown error";
                 }
             }

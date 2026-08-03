@@ -19,7 +19,7 @@ public class BatchConvertFixCommonErrorsSettingsWindow : Window
     public BatchConvertFixCommonErrorsSettingsWindow(BatchConvertFixCommonErrorsSettingsViewModel vm)
     {
         UiUtil.InitializeWindow(this, GetType().Name);
-        Title = "Fix common error settings";
+        Title = Se.Language.Tools.FixCommonErrorsSettingsTitle;
         CanResize = false;
         Width = 1000;
         Height = 800;
