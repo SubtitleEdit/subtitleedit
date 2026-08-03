@@ -310,14 +310,14 @@ public partial class DownloadVideoFromUrlViewModel : ObservableObject, IClosingC
                 var ex = _downloadTask.Exception?.InnerException ?? _downloadTask.Exception;
                 if (ex is OperationCanceledException)
                 {
-                    StatusText = "Download canceled";
+                    StatusText = Se.Language.General.DownloadCanceled;
                     TryDeletePartial();
                     Close();
                 }
                 else
                 {
-                    StatusText = "Download failed";
-                    Error = ex?.Message ?? "Unknown error";
+                    StatusText = Se.Language.General.DownloadFailed;
+                    Error = ex?.Message ?? Se.Language.General.UnknownError;
                     TryDeletePartial();
                     Se.LogError(ex ?? new Exception("Unknown download error"), "yt-dlp video download failed");
                 }

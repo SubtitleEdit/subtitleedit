@@ -151,7 +151,7 @@ public class LanguageOcr
         ExpandInfoX = "Expand count: {0}";
         EditNOcrDatabaseXWithYItems = "Edit nOCR database {0} with {1:#,###,##0} items";
         NewNOcrDatabase = "New nOCR database";
-        NewBinaryImageCompareDatabase = "New/rename Binary Image Compare database";
+        NewBinaryImageCompareDatabase = "New Binary Image Compare database";
         RenameNOcrDatabase = "Rename nOCR database";
         RenameBinaryImageCompareDatabase = "Rename Binary Image Compare database";
         NOcrDatabase = "nOCR database";

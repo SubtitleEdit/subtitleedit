@@ -41,11 +41,10 @@ internal class FileSizeConverter : IValueConverter
         }
 
         int magnitude = 0;
-        var sizeSuffixes = new[] { Se.Language.General.Bytes, "KB", "MB", "GB", "TB", "PB" };
         double adjustedSize = bytes;
 
         // Keep dividing by 1024 until we get a manageable number
-        while (adjustedSize >= 1024 && magnitude < sizeSuffixes.Length - 1)
+        while (adjustedSize >= 1024 && magnitude < 5)
         {
             magnitude++;
             adjustedSize /= 1024;
@@ -54,7 +53,16 @@ internal class FileSizeConverter : IValueConverter
         // Format with appropriate decimal places
         string format = adjustedSize >= 100 ? "0" : (adjustedSize >= 10 ? "0.0" : "0.##");
 
-        var result = $"{adjustedSize.ToString(format, culture)} {sizeSuffixes[magnitude]}";
+        var suffix = magnitude switch
+        {
+            0 => Se.Language.General.Bytes,
+            1 => "KB",
+            2 => "MB",
+            3 => "GB",
+            4 => "TB",
+            _ => "PB",
+        };
+        var result = $"{adjustedSize.ToString(format, culture)} {suffix}";
         return result;
     }
 

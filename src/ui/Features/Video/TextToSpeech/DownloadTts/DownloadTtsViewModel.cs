@@ -250,7 +250,7 @@ public partial class DownloadTtsViewModel : ObservableObject
                 else
                 {
                     ProgressText = Se.Language.General.DownloadFailed;
-                    Error = ex?.Message ?? "Unknown error";
+                    Error = ex?.Message ?? Se.Language.General.UnknownError;
                 }
             }
 
@@ -294,7 +294,7 @@ public partial class DownloadTtsViewModel : ObservableObject
                 else
                 {
                     ProgressText = Se.Language.General.DownloadFailed;
-                    Error = ex?.Message ?? "Unknown error";
+                    Error = ex?.Message ?? Se.Language.General.UnknownError;
                 }
             }
 
@@ -310,7 +310,7 @@ public partial class DownloadTtsViewModel : ObservableObject
                 else
                 {
                     ProgressText = Se.Language.General.DownloadFailed;
-                    Error = ex?.Message ?? "Unknown error";
+                    Error = ex?.Message ?? Se.Language.General.UnknownError;
                 }
             }
 
@@ -399,7 +399,7 @@ public partial class DownloadTtsViewModel : ObservableObject
                 else
                 {
                     ProgressText = Se.Language.General.DownloadFailed;
-                    Error = ex?.Message ?? "Unknown error";
+                    Error = ex?.Message ?? Se.Language.General.UnknownError;
                 }
             }
 
@@ -465,7 +465,7 @@ public partial class DownloadTtsViewModel : ObservableObject
                 else
                 {
                     ProgressText = Se.Language.General.DownloadFailed;
-                    Error = ex?.Message ?? "Unknown error";
+                    Error = ex?.Message ?? Se.Language.General.UnknownError;
                 }
             }
 
@@ -528,7 +528,7 @@ public partial class DownloadTtsViewModel : ObservableObject
                 else
                 {
                     ProgressText = Se.Language.General.DownloadFailed;
-                    Error = ex?.Message ?? "Unknown error";
+                    Error = ex?.Message ?? Se.Language.General.UnknownError;
                 }
             }
 
@@ -550,7 +550,7 @@ public partial class DownloadTtsViewModel : ObservableObject
                 else
                 {
                     ProgressText = Se.Language.General.DownloadFailed;
-                    Error = ex?.Message ?? "Unknown error";
+                    Error = ex?.Message ?? Se.Language.General.UnknownError;
                 }
             }
 
@@ -572,7 +572,7 @@ public partial class DownloadTtsViewModel : ObservableObject
                 else
                 {
                     ProgressText = Se.Language.General.DownloadFailed;
-                    Error = ex?.Message ?? "Unknown error";
+                    Error = ex?.Message ?? Se.Language.General.UnknownError;
                 }
             }
 
@@ -625,7 +625,7 @@ public partial class DownloadTtsViewModel : ObservableObject
                 else
                 {
                     ProgressText = Se.Language.General.DownloadFailed;
-                    Error = ex?.Message ?? "Unknown error";
+                    Error = ex?.Message ?? Se.Language.General.UnknownError;
                 }
             }
 
@@ -727,7 +727,7 @@ public partial class DownloadTtsViewModel : ObservableObject
                 else
                 {
                     ProgressText = Se.Language.General.DownloadFailed;
-                    Error = ex?.Message ?? "Unknown error";
+                    Error = ex?.Message ?? Se.Language.General.UnknownError;
                 }
             }
 
@@ -815,7 +815,7 @@ public partial class DownloadTtsViewModel : ObservableObject
                 else
                 {
                     ProgressText = Se.Language.General.DownloadFailed;
-                    Error = ex?.Message ?? "Unknown error";
+                    Error = ex?.Message ?? Se.Language.General.UnknownError;
                 }
             }
 
@@ -899,7 +899,7 @@ public partial class DownloadTtsViewModel : ObservableObject
                 else
                 {
                     ProgressText = Se.Language.General.DownloadFailed;
-                    Error = ex?.Message ?? "Unknown error";
+                    Error = ex?.Message ?? Se.Language.General.UnknownError;
                 }
             }
 
@@ -969,7 +969,7 @@ public partial class DownloadTtsViewModel : ObservableObject
                 else
                 {
                     ProgressText = Se.Language.General.DownloadFailed;
-                    Error = ex?.Message ?? "Unknown error";
+                    Error = ex?.Message ?? Se.Language.General.UnknownError;
                 }
             }
 
@@ -1014,7 +1014,7 @@ public partial class DownloadTtsViewModel : ObservableObject
                 else
                 {
                     ProgressText = Se.Language.General.DownloadFailed;
-                    Error = ex?.Message ?? "Unknown error";
+                    Error = ex?.Message ?? Se.Language.General.UnknownError;
                 }
             }
 
@@ -1100,7 +1100,7 @@ public partial class DownloadTtsViewModel : ObservableObject
                 else
                 {
                     ProgressText = Se.Language.General.DownloadFailed;
-                    Error = ex?.Message ?? "Unknown error";
+                    Error = ex?.Message ?? Se.Language.General.UnknownError;
                 }
             }
 
@@ -1186,7 +1186,7 @@ public partial class DownloadTtsViewModel : ObservableObject
                 else
                 {
                     ProgressText = Se.Language.General.DownloadFailed;
-                    Error = ex?.Message ?? "Unknown error";
+                    Error = ex?.Message ?? Se.Language.General.UnknownError;
                 }
             }
 
@@ -1272,7 +1272,7 @@ public partial class DownloadTtsViewModel : ObservableObject
                 else
                 {
                     ProgressText = Se.Language.General.DownloadFailed;
-                    Error = ex?.Message ?? "Unknown error";
+                    Error = ex?.Message ?? Se.Language.General.UnknownError;
                 }
             }
 
@@ -1411,7 +1411,7 @@ public partial class DownloadTtsViewModel : ObservableObject
                 else
                 {
                     ProgressText = Se.Language.General.DownloadFailed;
-                    Error = ex?.Message ?? "Unknown error";
+                    Error = ex?.Message ?? Se.Language.General.UnknownError;
                 }
             }
 
@@ -1477,7 +1477,7 @@ public partial class DownloadTtsViewModel : ObservableObject
                 else
                 {
                     ProgressText = Se.Language.General.DownloadFailed;
-                    Error = ex?.Message ?? "Unknown error";
+                    Error = ex?.Message ?? Se.Language.General.UnknownError;
                 }
             }
         }
