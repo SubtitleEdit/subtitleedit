@@ -62,6 +62,7 @@ All listed files exist on disk. Filenames are stable and may be linked from `../
 - `join-subtitles.png` — Join subtitles window
 - `sort-by.png` — Sort by window
 - `renumber.png` — Renumber window
+- `romanize.png` — Romanize window
 - `remove-text-hi.png` — Remove text for hearing impaired window
 
 ## Synchronization
