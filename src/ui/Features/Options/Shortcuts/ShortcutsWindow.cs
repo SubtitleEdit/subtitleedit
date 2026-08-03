@@ -4,6 +4,7 @@ using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
 using Avalonia.Controls.Templates;
 using Avalonia.Data;
+using Avalonia.Data.Converters;
 using Avalonia.Input;
 using Avalonia.Layout;
 using Avalonia.Media;
@@ -110,6 +111,17 @@ public class ShortcutsWindow : Window
                 Setters =
                 {
                     new Setter(ListBoxItem.PaddingProperty, new Thickness(6, 2)),
+                    // Accessible name for the tile container - without it screen readers
+                    // announce the item as the ShortcutGroupTile class name (issue #12087).
+                    new Setter(AutomationProperties.NameProperty, new MultiBinding
+                    {
+                        StringFormat = "{0} ({1})",
+                        Bindings =
+                        {
+                            new Binding(nameof(ShortcutGroupTile.Name)),
+                            new Binding(nameof(ShortcutGroupTile.Count)),
+                        },
+                    }),
                 },
             },
             ItemTemplate = new FuncDataTemplate<ShortcutGroupTile>((_, _) =>
@@ -365,6 +377,24 @@ public class ShortcutsWindow : Window
         shortcutsGrid.Columns.Add(columnCategory);
         shortcutsGrid.Columns.Add(columnName);
         shortcutsGrid.Columns.Add(columnShortcut);
+
+        // Accessible row name "title (category): shortcut" - without it screen readers
+        // announce every row as the ShortcutTreeNode class name (issue #12087). Same
+        // row-binding pattern as the main subtitle grid (#13015). DisplayShortcut is
+        // observable, so reassigning a key updates the announced name too.
+        var shortcutOrUnassignedConverter = new FuncValueConverter<string?, string>(s =>
+            string.IsNullOrEmpty(s) ? Se.Language.Options.Shortcuts.Unassigned : s);
+        TableViewExtras.BindRowProperty(shortcutsGrid, AutomationProperties.NameProperty,
+            new MultiBinding
+            {
+                StringFormat = "{0} ({1}): {2}",
+                Bindings =
+                {
+                    new Binding(nameof(ShortcutTreeNode.Title)),
+                    new Binding(nameof(ShortcutTreeNode.GroupName)),
+                    new Binding(nameof(ShortcutTreeNode.DisplayShortcut)) { Converter = shortcutOrUnassignedConverter },
+                },
+            });
 
         shortcutsGrid.Bind(TableView.SelectedItemProperty, new Binding(nameof(vm.SelectedNode)) { Source = vm });
         shortcutsGrid.SelectionChanged += vm.ShortcutsGrid_SelectionChanged;
