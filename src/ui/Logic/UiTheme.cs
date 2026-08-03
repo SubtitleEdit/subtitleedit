@@ -637,6 +637,16 @@ public static class UiTheme
                 }
             },
 
+            // The source editor owns its text surface, so unlike a TextBox it does not inherit
+            // the dark input background from Fluent.
+            new Style(x => x.OfType<SyntaxTextEditor>())
+            {
+                Setters =
+                {
+                    new Setter(SyntaxTextEditor.BackgroundProperty, new SolidColorBrush(bgColor)),
+                }
+            },
+
             // MenuItem
             new Style(x => x.OfType<Avalonia.Controls.MenuItem>())
             {
