@@ -75,7 +75,7 @@ public partial class DownloadTesseractModelViewModel : ObservableObject, IClosin
                 if (_downloadStream.Length == 0)
                 {
                     StatusText = Se.Language.General.DownloadFailed;
-                    Error = "No data received";
+                    Error = Se.Language.General.NoDataReceived;
                     return;
                 }
 

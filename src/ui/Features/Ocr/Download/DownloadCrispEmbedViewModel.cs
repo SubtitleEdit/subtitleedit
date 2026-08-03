@@ -153,7 +153,7 @@ public partial class DownloadCrispEmbedViewModel : ObservableObject, IClosingCle
         if (_downloadStream.Length == 0)
         {
             ProgressText = Se.Language.General.DownloadFailed;
-            Error = "No data received";
+            Error = Se.Language.General.NoDataReceived;
             return;
         }
 
@@ -196,7 +196,7 @@ public partial class DownloadCrispEmbedViewModel : ObservableObject, IClosingCle
         if (!File.Exists(_modelTempFileName) || new FileInfo(_modelTempFileName).Length == 0)
         {
             ProgressText = Se.Language.General.DownloadFailed;
-            Error = "No data received";
+            Error = Se.Language.General.NoDataReceived;
             return;
         }
 
