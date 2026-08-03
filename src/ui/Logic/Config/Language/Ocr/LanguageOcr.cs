@@ -30,6 +30,7 @@ public class LanguageOcr
     public string ExpandInfoX { get; set; }
     public string EditNOcrDatabaseXWithYItems { get; set; }
     public string NewNOcrDatabase { get; set; }
+    public string NewBinaryImageCompareDatabase { get; set; }
     public string RenameNOcrDatabase { get; set; }
     public string NOcrDatabase { get; set; }
     public string DrawMode { get; set; }
@@ -143,6 +144,7 @@ public class LanguageOcr
         ExpandInfoX = "Expand count: {0}";
         EditNOcrDatabaseXWithYItems = "Edit nOCR database {0} with {1:#,###,##0} items";
         NewNOcrDatabase = "New nOCR database";
+        NewBinaryImageCompareDatabase = "New/rename Binary Image Compare database";
         RenameNOcrDatabase = "Rename nOCR database";
         NOcrDatabase = "nOCR database";
         DrawMode = "Draw mode:";

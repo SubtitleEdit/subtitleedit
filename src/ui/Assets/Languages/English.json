@@ -2918,6 +2918,7 @@
     "expandInfoX": "Expand count: {0}",
     "editNOcrDatabaseXWithYItems": "Edit nOCR database {0} with {1:#,###,##0} items",
     "newNOcrDatabase": "New nOCR database",
+    "newBinaryImageCompareDatabase": "New/rename Binary Image Compare database",
     "renameNOcrDatabase": "Rename nOCR database",
     "nOcrDatabase": "nOCR database",
     "drawMode": "Draw mode:",

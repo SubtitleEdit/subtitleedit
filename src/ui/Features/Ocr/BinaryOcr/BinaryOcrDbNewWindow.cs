@@ -8,7 +8,7 @@ public class BinaryOcrDbNewWindow : Window
 {
     public BinaryOcrDbNewWindow(BinaryOcrDbNewViewModel vm)
     {
-        Title = Se.Language.Ocr.NewNOcrDatabase;
+        Title = Se.Language.Ocr.NewBinaryImageCompareDatabase;
         vm.Window = this;
         UiUtil.InitializeWindow(this, GetType().Name);
         SizeToContent = SizeToContent.WidthAndHeight;
