@@ -23,7 +23,7 @@ public class DownloadFfmpegWindow : Window
 
         var titleText = new TextBlock
         {
-            Text = "Downloading ffmpeg",
+            Text = string.Format(Se.Language.General.DownloadingX, "ffmpeg"),
             FontSize = 20,
             FontWeight = FontWeight.Bold,
         };

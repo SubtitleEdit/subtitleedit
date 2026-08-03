@@ -23,7 +23,7 @@ public class DownloadLibMpvWindow : Window
 
         var titleText = new TextBlock
         {
-            Text = "Downloading libmpv",
+            Text = string.Format(Se.Language.General.DownloadingX, "libmpv"),
             FontSize = 20,
             FontWeight = FontWeight.Bold,
         };
