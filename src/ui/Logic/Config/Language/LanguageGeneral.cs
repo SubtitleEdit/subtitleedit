@@ -149,6 +149,12 @@ public class LanguageGeneral
     public string DownloadFailed { get; set; }
     public string DownloadCanceled { get; set; }
     public string UnpackFailed { get; set; }
+    public string UnpackingFailed { get; set; }
+    public string NoDataReceived { get; set; }
+    public string UnknownError { get; set; }
+    public string DownloadComplete { get; set; }
+    public string DownloadCompleteButCouldNotDeleteFile { get; set; }
+    public string PleaseRestartSeToUseTheNewLibmpv { get; set; }
     public string Duplicate { get; set; }
     public string Duration { get; set; }
     public string DurationMinutes { get; set; }
@@ -874,6 +880,12 @@ public class LanguageGeneral
         DownloadFailed = "Download failed";
         DownloadCanceled = "Download canceled";
         UnpackFailed = "Unpack failed: {0}";
+        UnpackingFailed = "Unpacking failed";
+        NoDataReceived = "No data received";
+        UnknownError = "Unknown error";
+        DownloadComplete = "Download complete...";
+        DownloadCompleteButCouldNotDeleteFile = "Download complete, but could not delete existing file.";
+        PleaseRestartSeToUseTheNewLibmpv = "Please restart SE to use the new libmpv.";
         Duplicate = "Duplicate";
         Duration = "Duration";
         DurationMinutes = "Duration in minutes";

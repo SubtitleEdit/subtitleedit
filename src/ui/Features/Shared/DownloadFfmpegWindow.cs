@@ -4,6 +4,7 @@ using Avalonia.Data;
 using Avalonia.Media;
 using Avalonia.Styling;
 using Nikse.SubtitleEdit.Logic;
+using Nikse.SubtitleEdit.Logic.Config;
 
 namespace Nikse.SubtitleEdit.Features.Shared;
 
@@ -22,7 +23,7 @@ public class DownloadFfmpegWindow : Window
 
         var titleText = new TextBlock
         {
-            Text = "Downloading ffmpeg",
+            Text = string.Format(Se.Language.General.DownloadingX, "ffmpeg"),
             FontSize = 20,
             FontWeight = FontWeight.Bold,
         };
