@@ -2448,7 +2448,7 @@ public partial class SpeechToTextViewModel : ObservableObject
 
         if (string.IsNullOrEmpty(error))
         {
-            await MessageBox.Show(Window!, "Unknown error", $"Unable to start {engine.Name}!");
+            await MessageBox.Show(Window!, Se.Language.General.UnknownError, $"Unable to start {engine.Name}!");
         }
         else
         {

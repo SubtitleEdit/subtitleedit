@@ -162,7 +162,9 @@ public class LanguageVideo
         ReEncodeGeneratingDone = "Generating done";
         ReEncodeGeneratedFilesX = "Generated files ({0}):";
         ReEncodeFfmpegParameters = "ffmpeg parameters";
-        AssaStyleWillBeUsed = "Current ASSA style will be used\n\nChange subtitle format if\nyou want to set styles here";
+        AssaStyleWillBeUsed = "Current ASSA style will be used" + Environment.NewLine + Environment.NewLine +
+                              "Change subtitle format if" + Environment.NewLine +
+                              "you want to set styles here";
         Voices = "Voices";
         Presets = "Presets";
         TalkerX = "Talker {0}";

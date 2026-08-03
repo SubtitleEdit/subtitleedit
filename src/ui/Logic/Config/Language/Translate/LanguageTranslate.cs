@@ -49,6 +49,9 @@ public class LanguageTranslate
     public string MaxTokensPerReply { get; set; }
     public string ServerContextSizeTokens { get; set; }
     public string CustomPromptHint { get; set; }
+    public string LlamaCppDownloadEngineAndModelPrompt { get; set; }
+    public string LlamaCppDownloadEnginePrompt { get; set; }
+    public string LlamaCppDownloadModelPrompt { get; set; }
 
     public LanguageTranslate()
     {
@@ -99,5 +102,8 @@ public class LanguageTranslate
         MaxTokensPerReply = "Max tokens per reply";
         ServerContextSizeTokens = "Server context size (tokens)";
         CustomPromptHint = "Custom instructions ({0} = source language, {1} = target language); empty = built-in prompt";
+        LlamaCppDownloadEngineAndModelPrompt = "llama.cpp requires the llama-server engine and a translation model to be downloaded. Download now?";
+        LlamaCppDownloadEnginePrompt = "llama.cpp requires the llama-server engine to be downloaded. Download now?";
+        LlamaCppDownloadModelPrompt = "llama.cpp requires the selected translation model to be downloaded. Download now?";
     }
 }

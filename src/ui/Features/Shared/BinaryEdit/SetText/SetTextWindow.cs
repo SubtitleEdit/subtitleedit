@@ -135,14 +135,14 @@ public class SetTextWindow : Window
         var numericUpDownShadowWidth = UiUtil.MakeNumericUpDownOneDecimal(0, 50, 120, vm, nameof(vm.ShadowWidth));
         numericUpDownShadowWidth.Margin = new Thickness(5);
 
-        var labelBoxType = UiUtil.MakeLabel(Se.Language.Edit.BoxType);
+        var labelBoxType = UiUtil.MakeLabel(Se.Language.Video.BurnIn.BoxType + ":");
         labelBoxType.Margin = new Thickness(5);
         
         var comboBoxBoxType = UiUtil.MakeComboBox(vm.BoxTypes, vm, nameof(vm.SelectedBoxType))
             .WithMinWidth(150);
         comboBoxBoxType.Margin = new Thickness(5);
 
-        var labelBackgroundColor = UiUtil.MakeLabel(Se.Language.Edit.BackgroundColor);
+        var labelBackgroundColor = UiUtil.MakeLabel(Se.Language.General.BackgroundColor + ":");
         labelBackgroundColor.Margin = new Thickness(5);
         
         var colorPickerBackgroundColor = UiUtil.MakeColorPickerButton(vm, nameof(vm.BackgroundColor));

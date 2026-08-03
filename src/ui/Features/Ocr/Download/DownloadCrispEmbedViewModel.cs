@@ -142,7 +142,7 @@ public partial class DownloadCrispEmbedViewModel : ObservableObject, IClosingCle
                 else
                 {
                     ProgressText = Se.Language.General.DownloadFailed;
-                    Error = ex?.Message ?? "Unknown error";
+                    Error = ex?.Message ?? Se.Language.General.UnknownError;
                 }
             }
         }

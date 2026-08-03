@@ -97,7 +97,7 @@ public partial class DownloadTesseractModelViewModel : ObservableObject, IClosin
                 else
                 {
                     StatusText = Se.Language.General.DownloadFailed;
-                    Error = ex?.Message ?? "Unknown error";
+                    Error = ex?.Message ?? Se.Language.General.UnknownError;
                 }
             }
         }

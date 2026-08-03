@@ -114,7 +114,7 @@ public partial class DownloadGoogleLensOcrViewModel : ObservableObject, IClosing
                 else
                 {
                     ProgressText = Se.Language.General.DownloadFailed;
-                    Error = ex?.Message ?? "Unknown error";
+                    Error = ex?.Message ?? Se.Language.General.UnknownError;
                 }
             }
         }

@@ -1,4 +1,4 @@
-﻿using Avalonia.Controls;
+using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Media.Imaging;
 using Avalonia.Threading;
