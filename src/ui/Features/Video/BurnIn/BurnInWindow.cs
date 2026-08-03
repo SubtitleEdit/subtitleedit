@@ -482,10 +482,7 @@ public class BurnInWindow : Window
             {
                 new Label
                 {
-                    Content = "Current ASSA style will be used" + Environment.NewLine +
-                    Environment.NewLine +
-                    "Change subtitle format if"+ Environment.NewLine +
-                    "you want to set styles here",
+                    Content = Se.Language.Video.AssaStyleWillBeUsed,
                     FontWeight = FontWeight.Bold,
                     FontSize = 22,
                     HorizontalAlignment = HorizontalAlignment.Center,

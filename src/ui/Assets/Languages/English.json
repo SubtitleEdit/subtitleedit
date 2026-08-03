@@ -2220,6 +2220,7 @@
     "reEncodeGeneratingDone": "Generating done",
     "reEncodeGeneratedFilesX": "Generated files ({0}):",
     "reEncodeFfmpegParameters": "ffmpeg parameters",
+    "assaStyleWillBeUsed": "Current ASSA style will be used\n\nChange subtitle format if\nyou want to set styles here",
     "voices": "Voices",
     "presets": "Presets",
     "talkerX": "Talker {0}",
