@@ -85,6 +85,30 @@ public partial class PickTsTrackViewModel : ObservableObject
             };
             Tracks.Add(display);
         }
+
+        foreach (var aribPid in tsParser.AribSubtitlesLookup)
+        {
+            foreach (var language in aribPid.Value)
+            {
+                var languageCode = string.Empty;
+                if (tsParser.AribLanguageLookup.TryGetValue(aribPid.Key, out var languageCodes))
+                {
+                    languageCodes.TryGetValue(language.Key, out languageCode);
+                }
+
+                var display = new TsTrackInfoDisplay
+                {
+                    TrackNumber = aribPid.Key,
+                    Teletext = language.Value,
+                    IsDefault = false,
+                    IsForced = false,
+                    Language = languageCode ?? string.Empty,
+                    Codec = "ARIB caption",
+                    IsTeletext = true, // text track - same preview/open handling as teletext
+                };
+                Tracks.Add(display);
+            }
+        }
     }
 
     private void Close()

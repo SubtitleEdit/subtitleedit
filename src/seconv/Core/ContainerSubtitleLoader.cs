@@ -419,6 +419,32 @@ internal static class ContainerSubtitleLoader
                     tracks.Add(new LoadedTrack(subtitle, new SubRip(), $"teletext_{pidEntry.Key}_p{pageEntry.Key}", pidEntry.Key));
                 }
             }
+
+            // ARIB STD-B24 captions (ISDB broadcasts) — also text
+            foreach (var pidEntry in parser.AribSubtitlesLookup)
+            {
+                foreach (var languageEntry in pidEntry.Value)
+                {
+                    if (languageEntry.Value.Count == 0)
+                    {
+                        continue;
+                    }
+
+                    var languageCode = string.Empty;
+                    if (parser.AribLanguageLookup.TryGetValue(pidEntry.Key, out var languageCodes))
+                    {
+                        languageCodes.TryGetValue(languageEntry.Key, out languageCode);
+                    }
+
+                    var subtitle = new Subtitle();
+                    subtitle.Paragraphs.AddRange(languageEntry.Value);
+                    subtitle.Renumber();
+                    var trackName = string.IsNullOrEmpty(languageCode)
+                        ? $"arib_{pidEntry.Key}"
+                        : $"arib_{pidEntry.Key}_{languageCode}";
+                    tracks.Add(new LoadedTrack(subtitle, new SubRip(), trackName, pidEntry.Key));
+                }
+            }
         }
 
         // 2. DVB-sub (image) — runs through Tesseract
