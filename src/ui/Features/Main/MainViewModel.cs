@@ -12185,8 +12185,10 @@ public partial class MainViewModel :
                     // Wait until the player really has the file. Mpv initializes its
                     // core lazily on the first render pass, so while the rebuilt layout
                     // is still coming up the duration can take much longer to arrive
-                    // than the default ready wait allows.
-                    for (var i = 0; i < 200 && vp.VideoPlayer.Duration <= 0.001; i++)
+                    // than the default ready wait allows. A disposed player (another
+                    // rebuild got here first) reports Duration 0 forever - bail instead
+                    // of polling the dead core to the 10 s cap (#13083).
+                    for (var i = 0; i < 200 && !vp.IsDisposed && vp.VideoPlayer.Duration <= 0.001; i++)
                     {
                         await Task.Delay(50);
                     }
@@ -12197,7 +12199,7 @@ public partial class MainViewModel :
                     // clamped back to the start. Re-assert the seek until the player
                     // reports it, as the first ones are swallowed while the surface is
                     // still coming up.
-                    for (var i = 0; i < 40 && videoPosition > 0; i++)
+                    for (var i = 0; i < 40 && videoPosition > 0 && !vp.IsDisposed; i++)
                     {
                         vp.VideoPlayer.Position = videoPosition;
                         await Task.Delay(50);
@@ -12205,6 +12207,11 @@ public partial class MainViewModel :
                         {
                             break;
                         }
+                    }
+
+                    if (vp.IsDisposed)
+                    {
+                        return;
                     }
 
                     ReapplyPlaybackSpeed();
