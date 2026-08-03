@@ -11,6 +11,10 @@ public class LanguageExport
     public string PreviewTitle { get; set; }
     public string TitleExportDvdSup { get; set; }
     public string TitleExportVobSub { get; set; }
+    public string TitleExportImscImage { get; set; }
+    public string TitleExportDostPng { get; set; }
+    public string TitleExportFcpImage { get; set; }
+    public string TitleExportWebVttThumbnails { get; set; }
     public string CustomTextFormatsDotDotDot { get; set; }
     public string PlainTextDotDotDot { get; set; }
     public string CustomTextFormats { get; set; }
@@ -43,6 +47,10 @@ public class LanguageExport
         PreviewTitle = "Preview - current size: {0}x{1}, target size: {2}x{3}, zoom: {4}%";
         TitleExportDvdSup = "DVD sup (MuxMan/Scenarist)";
         TitleExportVobSub = "VobSub (sub/idx)";
+        TitleExportImscImage = "IMSC 1.1 image profile";
+        TitleExportDostPng = "DOST/png";
+        TitleExportFcpImage = "Final Cut Pro + image";
+        TitleExportWebVttThumbnails = "WebVTT png";
         CustomTextFormatsDotDotDot = "_Custom text formats...";
         PlainTextDotDotDot = "_Plain text...";
         CustomTextFormats = "Custom text formats";
