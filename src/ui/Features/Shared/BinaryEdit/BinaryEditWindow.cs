@@ -427,6 +427,13 @@ public class BinaryEditWindow : Window
 
         // Grid for subtitle lines (grid lines come from the TableView cell themes)
         var dataGrid = TableViewExtras.MakeTableView();
+
+        // TableView itself is not focusable by default, and without rows there are no focusable
+        // row containers either - the grid must be able to hold keyboard focus even when empty,
+        // both as the menu-deactivation fallback and so the window never ends up without any
+        // focusable content (same fix as the main subtitle grid, #13111).
+        dataGrid.Focusable = true;
+
         dataGrid.Height = double.NaN;
         dataGrid.FontSize = Se.Settings.Appearance.SubtitleGridFontSize;
 

@@ -20943,11 +20943,19 @@ public partial class MainViewModel :
 
         _focusBeforeMainMenu = Window?.FocusManager?.GetFocusedElement() as Control;
 
-        // Defer focusing the menu bar: moving focus from inside the key handler is racy (Avalonia's
-        // access-key handling may still process the same key afterwards and reset focus). Let the
-        // current key event finish first, mirroring the deferred focus restore in DeactivateMainMenu
-        // (#11745).
-        Dispatcher.UIThread.Post(() => TryFocusMainMenu());
+        // Defer the activation: opening the menu from inside the key handler is racy (Avalonia's
+        // access-key handling may still process the same key afterwards and reset focus). Menu.Open
+        // is the same call Avalonia's bare-Alt handling makes: it selects and focuses the first
+        // top-level item, so the activation is visible ("File" highlights). Merely focusing the
+        // item, as this did before, gave no visual feedback at all - a top-level MenuItem has no
+        // keyboard-focus visual - which read as "F10 does nothing" (#13111).
+        Dispatcher.UIThread.Post(() =>
+        {
+            if (Menu is { IsOpen: false })
+            {
+                Menu.Open();
+            }
+        });
         return true;
     }
 
@@ -20972,7 +20980,27 @@ public partial class MainViewModel :
                 return;
             }
 
-            SubtitleGrid?.Focus();
+            // Only pull focus somewhere else when it is actually still stuck in the menu:
+            // overlapping deactivations (e.g. Alt+Tab plus the synthetic Alt release, both running
+            // through here) would otherwise stomp the focus the first one just restored (#13111).
+            if (!IsMainMenuFocused())
+            {
+                return;
+            }
+
+            if (SubtitleGrid != null)
+            {
+                TableViewExtras.FocusRow(SubtitleGrid);
+            }
+
+            // Deactivation must never leave focus inside the menu: the bar would stay armed and
+            // every arrow key would keep navigating it even though it looks closed (#13111). If
+            // even the grid could not take focus (e.g. not part of the current layout), fall back
+            // to the edit text box as a last resort.
+            if (IsMainMenuFocused())
+            {
+                EditTextBox?.Focus();
+            }
         });
     }
 
@@ -21404,7 +21432,7 @@ public partial class MainViewModel :
             // F10 here really is the user's own choice (#13083).
             if (k == Key.F10 && keyEventArgs.KeyModifiers == KeyModifiers.None && !_shortcutManager.HasSingleKeyShortcut("F10"))
             {
-                if (IsMainMenuFocused())
+                if (IsMainMenuFocused() || Menu is { IsOpen: true })
                 {
                     DeactivateMainMenu();
                     keyEventArgs.Handled = true;
@@ -21727,6 +21755,18 @@ public partial class MainViewModel :
                 _focusBeforeMainMenu = focusToRestore;
             }
 
+            DeactivateMainMenu();
+        }
+        else if (e.Key is Key.LeftAlt or Key.RightAlt && Menu is { IsOpen: false } && IsMainMenuFocused())
+        {
+            // Alt on an open menu bar: Avalonia's AccessKeyHandler closes the bar on the Alt press,
+            // but it only restores focus for bars it opened itself via bare Alt - after an F10
+            // activation (Menu.Open) it has no saved focus element, so the close leaves keyboard
+            // focus stranded on the menu item and the bar keeps swallowing every key (#13111). By
+            // the time the release arrives the press has settled, so "focused but not open" is
+            // exactly that stranded state - deactivate fully, restoring the focus saved at
+            // activation. (When Avalonia opens the bar on this very release, IsOpen is already
+            // true here and this branch stays out of the way.)
             DeactivateMainMenu();
         }
 
