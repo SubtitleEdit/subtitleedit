@@ -61,6 +61,8 @@ public class LanguageVideo
     public string PickOnlineSubtitleTitle { get; set; }
     public string PickOnlineSubtitleFetching { get; set; }
     public string PickOnlineSubtitleNoneFound { get; set; }
+    public string ForcedAligner { get; set; }
+    public string PostProcessing { get; set; }
     public string ToggleCurrentSubtitleWhilePlaying { get; set; }
     public string ToggleSubtitlesOnVideoPlayer { get; set; }
     public string SubtitlesOnVideoPlayerOn { get; set; }
@@ -128,6 +130,8 @@ public class LanguageVideo
         PickOnlineSubtitleTitle = "Pick subtitle to download";
         PickOnlineSubtitleFetching = "Downloading subtitles...";
         PickOnlineSubtitleNoneFound = "No subtitles found for this URL.";
+        ForcedAligner = "Forced aligner";
+        PostProcessing = "Post-processing...";
         ToggleCurrentSubtitleWhilePlaying = "Toggle current subtitle while playing";
         ToggleSubtitlesOnVideoPlayer = "Toggle subtitles on video player";
         SubtitlesOnVideoPlayerOn = "Subtitles on video player: on";

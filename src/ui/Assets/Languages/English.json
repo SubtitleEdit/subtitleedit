@@ -2173,6 +2173,8 @@
     "pickOnlineSubtitleTitle": "Pick subtitle to download",
     "pickOnlineSubtitleFetching": "Downloading subtitles...",
     "pickOnlineSubtitleNoneFound": "No subtitles found for this URL.",
+    "forcedAligner": "Forced aligner",
+    "postProcessing": "Post-processing...",
     "toggleCurrentSubtitleWhilePlaying": "Toggle current subtitle while playing",
     "toggleSubtitlesOnVideoPlayer": "Toggle subtitles on video player",
     "subtitlesOnVideoPlayerOn": "Subtitles on video player: on",
