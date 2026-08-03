@@ -40,6 +40,7 @@ public class LanguageTools
     public string PickSubtitleFormat { get; set; }
     public string PickSubtitleFormatImageBasedNoPreview { get; set; }
     public string RecentColors { get; set; }
+    public string FixCommonErrorsSettingsTitle { get; set; }
 
     public LanguageTools()
     {
@@ -54,5 +55,6 @@ public class LanguageTools
         PickSubtitleFormat = "Choose subtitle format";
         PickSubtitleFormatImageBasedNoPreview = "Image-based subtitle format.\nBitmaps are generated during conversion - no text preview.";
         RecentColors = "Recent colors";
+        FixCommonErrorsSettingsTitle = "Fix common error settings";
     }
 }

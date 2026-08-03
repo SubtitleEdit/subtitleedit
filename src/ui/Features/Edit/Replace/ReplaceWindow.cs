@@ -70,6 +70,7 @@ public class ReplaceWindow : Window
             PlaceholderText = Se.Language.Edit.Find.ReplaceTextWatermark,
             [!TextBox.TextProperty] = new Binding(nameof(vm.ReplaceText)) { Mode = BindingMode.TwoWay }
         };
+        textBoxReplace.KeyDown += vm.ReplaceTextBoxKeyDown;
 
         var panelReplace = new StackPanel
         {

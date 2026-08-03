@@ -15,6 +15,14 @@ public class LanguageExport
     public string TitleExportDostPng { get; set; }
     public string TitleExportFcpImage { get; set; }
     public string TitleExportWebVttThumbnails { get; set; }
+    public string TitleExportCavena890 { get; set; }
+    public string TitleExportEbuStl { get; set; }
+    public string TitleExportPac { get; set; }
+    public string ExportCavenaTranslatedTitle { get; set; }
+    public string ExportCavenaOriginalTitle { get; set; }
+    public string ExportCavenaTranslator { get; set; }
+    public string ExportCavenaComment { get; set; }
+    public string ExportCavenaStartOfProgramme { get; set; }
     public string CustomTextFormatsDotDotDot { get; set; }
     public string PlainTextDotDotDot { get; set; }
     public string CustomTextFormats { get; set; }
@@ -51,6 +59,14 @@ public class LanguageExport
         TitleExportDostPng = "DOST/png";
         TitleExportFcpImage = "Final Cut Pro + image";
         TitleExportWebVttThumbnails = "WebVTT png";
+        TitleExportCavena890 = "Export Cavena 890";
+        TitleExportEbuStl = "Export EBU STL";
+        TitleExportPac = "Export Pac";
+        ExportCavenaTranslatedTitle = "Translated title";
+        ExportCavenaOriginalTitle = "Original title";
+        ExportCavenaTranslator = "Translator";
+        ExportCavenaComment = "Comment";
+        ExportCavenaStartOfProgramme = "Start of programme";
         CustomTextFormatsDotDotDot = "_Custom text formats...";
         PlainTextDotDotDot = "_Plain text...";
         CustomTextFormats = "Custom text formats";

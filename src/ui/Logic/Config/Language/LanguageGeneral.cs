@@ -72,6 +72,7 @@ public class LanguageGeneral
     public string BoxPadding { get; set; }
     public string BoxPerLine { get; set; }
     public string BridgeGaps { get; set; }
+    public string Bytes { get; set; }
     public string Cancel { get; set; }
     public string Cancelled { get; set; }
     public string CaseInsensitive { get; set; }
@@ -146,6 +147,7 @@ public class LanguageGeneral
     public string DownloadX { get; set; }
     public string DownloadingX { get; set; }
     public string DownloadingXPercent { get; set; }
+    public string PickVobSubLanguageTitle { get; set; }
     public string Duplicate { get; set; }
     public string Duration { get; set; }
     public string DurationMinutes { get; set; }
@@ -257,6 +259,7 @@ public class LanguageGeneral
     public string InsertNewSelection { get; set; }
     public string InsertSubtitleAfterCurrentLine { get; set; }
     public string InsertSubtitleFileAtVideoPositionDotDotDot { get; set; }
+    public string InvalidSize { get; set; }
     public string InspectAdditions { get; set; }
     public string InstallFolder { get; set; }
     public string InvertSelection { get; set; }
@@ -379,6 +382,8 @@ public class LanguageGeneral
     public string LlamaCppUseRemoteServer { get; set; }
     public string LlamaCppEngineSettings { get; set; }
     public string LlamaCppEngineSettingsSubtitle { get; set; }
+    public string StartServer { get; set; }
+    public string StopServer { get; set; }
     public string PickOutputFolder { get; set; }
     public string PickResolutionFromCurrentVideo { get; set; }
     public string PickResolutionFromVideoDotDotDot { get; set; }
@@ -673,6 +678,7 @@ public class LanguageGeneral
     public string XRequiresAnApiKey { get; set; }
     public string XRequiresAValidUrl { get; set; }
     public string Yes { get; set; }
+    public string ZeroBytes { get; set; }
     public string CopyToClipboard { get; set; }
     public string CopiedToClipboard { get; set; }
     public string PlayCurrent { get; set; }
@@ -794,6 +800,7 @@ public class LanguageGeneral
         BoxPadding = "Box padding";
         BoxPerLine = "Box per line";
         BridgeGaps = "Bridge gaps";
+        Bytes = "bytes";
         Cancel = "C_ancel";
         Cancelled = "Cancelled";
         CaseInsensitive = "Case insensitive";
@@ -868,6 +875,7 @@ public class LanguageGeneral
         DownloadX = "Download {0}";
         DownloadingX = "Downloading {0}";
         DownloadingXPercent = "Downloading {0}%";
+        PickVobSubLanguageTitle = "Pick VobSub language - {0}";
         Duplicate = "Duplicate";
         Duration = "Duration";
         DurationMinutes = "Duration in minutes";
@@ -979,6 +987,7 @@ public class LanguageGeneral
         InsertNewSelection = "Insert new selection";
         InsertSubtitleAfterCurrentLine = "Insert subtitle after current line...";
         InsertSubtitleFileAtVideoPositionDotDotDot = "Insert subtitle file at video position...";
+        InvalidSize = "Invalid size";
         InspectAdditions = "Inspect additions...";
         InstallFolder = "Install folder";
         InvertSelection = "Invert selection";
@@ -1101,6 +1110,8 @@ public class LanguageGeneral
         LlamaCppUseRemoteServer = "Use external server (URL)";
         LlamaCppEngineSettings = "llama.cpp engine settings";
         LlamaCppEngineSettingsSubtitle = "Local llama.cpp server build";
+        StartServer = "Start server";
+        StopServer = "Stop server";
         PickOutputFolder = "Pick output folder";
         PickResolutionFromCurrentVideo = "Pick resolution from current video";
         PickResolutionFromVideoDotDotDot = "Pick resolution from video...";
@@ -1395,6 +1406,7 @@ public class LanguageGeneral
         XRequiresAnApiKey = "{0} requires an API key";
         XRequiresAValidUrl = "{0} requires a valid URL (e.g. \"http://...\" or \"https://...\")";
         Yes = "Yes";
+        ZeroBytes = "0 bytes";
         CopyToClipboard = "Copy to clipboard";
         CopiedToClipboard = "Copied to clipboard";
         PlayCurrent = "Play current";   
