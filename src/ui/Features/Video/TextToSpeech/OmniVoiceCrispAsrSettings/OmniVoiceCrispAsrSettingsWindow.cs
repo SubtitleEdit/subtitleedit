@@ -21,7 +21,7 @@ public class OmniVoiceCrispAsrSettingsWindow : Window
     public OmniVoiceCrispAsrSettingsWindow(OmniVoiceCrispAsrSettingsViewModel vm)
     {
         UiUtil.InitializeWindow(this, GetType().Name);
-        Title = "OmniVoice TTS (CrispASR) settings";
+        Title = string.Format(Se.Language.Video.TtsCrispAsrSettingsTitle, "OmniVoice TTS");
         // Explicit width + height-only auto-sizing: SizeToContent.WidthAndHeight comes out far
         // too wide on macOS.
         Width = 620;

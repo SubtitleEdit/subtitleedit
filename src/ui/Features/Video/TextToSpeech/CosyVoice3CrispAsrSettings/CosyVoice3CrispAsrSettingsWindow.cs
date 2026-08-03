@@ -21,7 +21,7 @@ public class CosyVoice3CrispAsrSettingsWindow : Window
     public CosyVoice3CrispAsrSettingsWindow(CosyVoice3CrispAsrSettingsViewModel vm)
     {
         UiUtil.InitializeWindow(this, GetType().Name);
-        Title = "CosyVoice3 (CrispASR) settings";
+        Title = string.Format(Se.Language.Video.TtsCrispAsrSettingsTitle, "CosyVoice3");
         SizeToContent = SizeToContent.WidthAndHeight;
         CanResize = false;
         MinWidth = 580;

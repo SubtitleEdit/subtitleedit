@@ -14,7 +14,7 @@ public class EditWholeTextWindow : Window
     public EditWholeTextWindow(EditWholeTextViewModel vm)
     {
         UiUtil.InitializeWindow(this, GetType().Name);
-        Title = "Spell check - Edit whole text";
+        Title = Se.Language.SpellCheck.EditWholeTextTitle;
         SizeToContent = SizeToContent.WidthAndHeight;
         CanResize = false;
         vm.Window = this;

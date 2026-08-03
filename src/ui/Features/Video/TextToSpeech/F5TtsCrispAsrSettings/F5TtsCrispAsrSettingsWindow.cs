@@ -21,7 +21,7 @@ public class F5TtsCrispAsrSettingsWindow : Window
     public F5TtsCrispAsrSettingsWindow(F5TtsCrispAsrSettingsViewModel vm)
     {
         UiUtil.InitializeWindow(this, GetType().Name);
-        Title = "F5-TTS (CrispASR) settings";
+        Title = string.Format(Se.Language.Video.TtsCrispAsrSettingsTitle, "F5-TTS");
         SizeToContent = SizeToContent.WidthAndHeight;
         CanResize = false;
         MinWidth = 580;

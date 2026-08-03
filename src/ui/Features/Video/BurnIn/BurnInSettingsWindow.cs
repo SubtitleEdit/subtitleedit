@@ -3,6 +3,7 @@ using Avalonia.Data;
 using Avalonia.Input;
 using Avalonia.Layout;
 using Nikse.SubtitleEdit.Logic;
+using Nikse.SubtitleEdit.Logic.Config;
 
 namespace Nikse.SubtitleEdit.Features.Video.BurnIn;
 
@@ -13,7 +14,7 @@ public class BurnInSettingsWindow : Window
     public BurnInSettingsWindow(BurnInSettingsViewModel vm)
     {
         UiUtil.InitializeWindow(this, GetType().Name);
-        Title = "Output settings";
+        Title = Se.Language.Video.OutputSettingsTitle;
         SizeToContent = SizeToContent.WidthAndHeight;
         CanResize = false;
         
