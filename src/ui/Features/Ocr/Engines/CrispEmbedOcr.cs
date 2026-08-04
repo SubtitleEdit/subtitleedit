@@ -3,6 +3,7 @@ using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using SkiaSharp;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Net.Http;
@@ -32,6 +33,10 @@ public class CrispEmbedOcr : IDisposable
     private string _cliRecognizerModel = string.Empty;
     private string _cliDetectorModel = string.Empty;
     private bool _isCliPipeline;
+
+    private const int MaxCapturedOutputLines = 12;
+    private readonly Queue<string> _lastOutputLines = new();
+    private readonly Lock _outputLock = new();
 
     public string Error { get; set; }
 
@@ -112,8 +117,8 @@ public class CrispEmbedOcr : IDisposable
                 },
             };
 
-            _serverProcess.OutputDataReceived += (_, e) => LogServerOutput(e.Data);
-            _serverProcess.ErrorDataReceived += (_, e) => LogServerOutput(e.Data);
+            _serverProcess.OutputDataReceived += (_, e) => CaptureServerOutput(e.Data);
+            _serverProcess.ErrorDataReceived += (_, e) => CaptureServerOutput(e.Data);
             _serverProcess.Start();
             _serverProcess.BeginOutputReadLine();
             _serverProcess.BeginErrorReadLine();
@@ -137,7 +142,7 @@ public class CrispEmbedOcr : IDisposable
 
             if (_serverProcess.HasExited)
             {
-                Error = $"CrispEmbed server exited with code {_serverProcess.ExitCode}";
+                Error = await BuildStartupFailureMessage(_serverProcess);
                 SeLogger.Error("CrispEmbed server exited during startup: " + Error);
                 return false;
             }
@@ -387,6 +392,100 @@ public class CrispEmbedOcr : IDisposable
         {
             Se.WriteToolsLog("crispembed-server: " + line);
         }
+    }
+
+    /// <summary>
+    /// Mirrors the server's output to the tools log and keeps the last few lines in memory, so a
+    /// process that dies during startup can report what it actually said instead of only an exit
+    /// code. Raised on threadpool threads by the async readers, hence the lock.
+    /// </summary>
+    private void CaptureServerOutput(string? line)
+    {
+        LogServerOutput(line);
+
+        if (string.IsNullOrWhiteSpace(line))
+        {
+            return;
+        }
+
+        lock (_outputLock)
+        {
+            _lastOutputLines.Enqueue(line.Trim());
+            while (_lastOutputLines.Count > MaxCapturedOutputLines)
+            {
+                _lastOutputLines.Dequeue();
+            }
+        }
+    }
+
+    /// <summary>
+    /// Builds the message shown when the server exits before it starts listening. The useful part
+    /// is almost always on the process's own stderr - a missing shared library, an unreadable
+    /// model - so wait for the async readers to drain and append what they saw. Without this the
+    /// user only ever sees "exited with code N" while the real cause sits in the tools log.
+    /// </summary>
+    private async Task<string> BuildStartupFailureMessage(Process process)
+    {
+        var exitCode = process.ExitCode;
+
+        // The process has already exited; this only lets the redirected streams finish. It is
+        // capped because a surviving grandchild can hold the pipe open indefinitely.
+        try
+        {
+            using var drain = new CancellationTokenSource(TimeSpan.FromSeconds(2));
+            await process.WaitForExitAsync(drain.Token);
+        }
+        catch (OperationCanceledException)
+        {
+            // report whatever was captured before the deadline
+        }
+
+        var message = $"CrispEmbed server exited with code {exitCode}";
+
+        var hint = GetExitCodeHint(exitCode);
+        if (!string.IsNullOrEmpty(hint))
+        {
+            message += Environment.NewLine + Environment.NewLine + hint;
+        }
+
+        string output;
+        lock (_outputLock)
+        {
+            output = string.Join(Environment.NewLine, _lastOutputLines);
+        }
+
+        if (!string.IsNullOrWhiteSpace(output))
+        {
+            message += Environment.NewLine + Environment.NewLine + output;
+        }
+
+        return message;
+    }
+
+    /// <summary>
+    /// Plain-language help for the exit codes the dynamic loader and the shell use on Unix, which
+    /// a user cannot be expected to decode. 127 is the common one: the CrispEmbed CPU builds for
+    /// Linux link against OpenBLAS but do not ship it (see SubtitleEdit issue #13205).
+    /// </summary>
+    internal static string GetExitCodeHint(int exitCode)
+    {
+        if (OperatingSystem.IsWindows())
+        {
+            return string.Empty;
+        }
+
+        return exitCode switch
+        {
+            127 => "Exit code 127 means a shared library the CrispEmbed binaries depend on could not be loaded." +
+                   Environment.NewLine +
+                   "The Linux CrispEmbed builds need OpenBLAS, which they do not ship: try installing it" +
+                   Environment.NewLine +
+                   "(\"sudo apt install libopenblas0\", \"sudo pacman -S openblas\", or your distro's equivalent).",
+            126 => "Exit code 126 means the CrispEmbed binary could not be executed - it may be missing the" +
+                   Environment.NewLine +
+                   "executable permission, or be blocked by the system.",
+            _ => string.Empty,
+        };
     }
 
     private static int GetFreePort()
