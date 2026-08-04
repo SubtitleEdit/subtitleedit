@@ -1,5 +1,6 @@
 using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.Voices;
+using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Logic.Download;
 using Nikse.SubtitleEdit.Logic.Media;
@@ -22,7 +23,7 @@ namespace Nikse.SubtitleEdit.Features.Video.TextToSpeech.Engines;
 public class OmniVoiceTtsCpp : ITtsEngine
 {
     public string Name => "OmniVoice TTS";
-    public string Description => "646 languages, voice cloning, runs on CPU";
+    public string Description => "646 languages, voice cloning, CPU/Vulkan/CUDA";
     public bool HasLanguageParameter => true;
     public bool HasApiKey => false;
     public bool HasRegion => false;
@@ -335,14 +336,17 @@ public class OmniVoiceTtsCpp : ITtsEngine
 
             if (process.ExitCode != 0 || !File.Exists(outputFileName))
             {
-                var msg = $"OmniVoice TTS failed (exit code {process.ExitCode}) - "
+                // A process killed by the Windows loader (e.g. missing CUDA runtime, issue #13196)
+                // never reaches main, so stderr is empty and the bare exit code is all the user sees.
+                // NativeExitCodeHelper turns the known status codes into an actionable sentence.
+                var detail = NativeExitCodeHelper.Format(Name, process.ExitCode, GetSetFolder());
+                var msg = $"{detail} - "
                     + $"Voice: {omniVoice}, Text: {text}, "
                     + $"Args: {string.Join(' ', psi.ArgumentList)}, "
                     + $"StdErr: {stderr.Trim()}, StdOut: {stdout.Trim()}";
                 Se.LogError(msg);
                 Se.WriteToolsLog(msg);
-                throw new InvalidOperationException(
-                    $"OmniVoice TTS failed (exit code {process.ExitCode}). {stderr.Trim()}");
+                throw new InvalidOperationException($"{detail} {stderr.Trim()}".TrimEnd());
             }
 
             return new TtsResult(outputFileName, text);
