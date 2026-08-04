@@ -446,6 +446,7 @@ public partial class MainViewModel :
     private static SolidColorBrush _errorBrush = new SolidColorBrush(_errorColor);
     private SpellCheckDictionaryDisplay? _currentSpellCheckDictionary;
     private bool _spellCheckSessionInProgress;
+    private bool _reDetectSpellCheckLanguage;
     private FfmpegMediaInfo2? _mediaInfo;
     string _dropDownFormatsSearchText = string.Empty;
     private System.Timers.Timer _dropDownFormatsSearchTimer = new System.Timers.Timer(1000);
@@ -1944,6 +1945,7 @@ public partial class MainViewModel :
         UpdateVideoOffsetStatus();
         _currentSpellCheckDictionary = null;
         _spellCheckSessionInProgress = false;
+        _reDetectSpellCheckLanguage = true;
         _autoTrimLanguageCode = null;
 
         if (format != null)
@@ -6310,20 +6312,14 @@ public partial class MainViewModel :
             return;
         }
 
-        // Fall back to the last dictionary used, so the spell check window opens with the same
-        // language as the previous session instead of re-detecting it.
-        var spellCheckDictionary = _currentSpellCheckDictionary;
-        if (spellCheckDictionary == null && !string.IsNullOrEmpty(Se.Settings.SpellCheck.LastLanguageDictionaryName))
-        {
-            spellCheckDictionary = new SpellCheckDictionaryDisplay
-            {
-                Name = Se.Settings.SpellCheck.LastLanguageDictionaryName,
-                DictionaryFileName = Se.Settings.SpellCheck.LastLanguageDictionaryFile ?? string.Empty,
-            };
-        }
+        // Only a dictionary the user picked explicitly for the subtitle currently loaded is passed
+        // on - it is cleared in ResetSubtitle, so open/import lets the window detect the language
+        // again (issue #13117). The dictionary of the previous session lives in
+        // Se.Settings.SpellCheck and is applied inside the window, where it can be weighed against
+        // the detected language instead of overriding it.
         var result = await ShowDialogAsync<SpellCheckWindow, SpellCheckViewModel>(vm =>
         {
-            vm.Initialize(Subtitles, SelectedSubtitleIndex, this, spellCheckDictionary, _spellCheckSessionInProgress);
+            vm.Initialize(Subtitles, SelectedSubtitleIndex, this, _currentSpellCheckDictionary, _spellCheckSessionInProgress);
         });
 
         // Only an unfinished spell check leaves something to continue from, and only then is the
@@ -16611,8 +16607,31 @@ public partial class MainViewModel :
         return null;
     }
 
+    /// <summary>
+    /// Re-detects the live spell check language after a reset filled the grid with new content -
+    /// an import that runs OCR, "import plain text", a join/merge and so on. Those paths call
+    /// ResetSubtitle, which drops the dictionary the user picked, but the spell check manager keeps
+    /// the dictionary of the previous file loaded, so the imported text would keep being underlined
+    /// against the language of the file before it (issue #13117). Auto detection costs ~15 ms on a
+    /// 900 line subtitle, so it is tied to a preceding reset instead of running on every grid fill:
+    /// operations that only rewrite the current subtitle (fix common errors, undo) do not reset and
+    /// keep their dictionary, including its "ignore all" list.
+    /// </summary>
+    private void ReDetectSpellCheckLanguageIfPending()
+    {
+        if (!_reDetectSpellCheckLanguage)
+        {
+            return;
+        }
+
+        _reDetectSpellCheckLanguage = false;
+        SetupLiveSpellCheck();
+    }
+
     private void SetupLiveSpellCheck()
     {
+        _reDetectSpellCheckLanguage = false;
+
         // A dictionary the user picked explicitly (live spell check context menu or the spell
         // check window) wins over auto detection - otherwise the next call here would silently
         // revert to the auto detected language. It is cleared in ResetSubtitle.
@@ -17705,6 +17724,8 @@ public partial class MainViewModel :
         {
             grid!.ItemsSource = Subtitles;
         }
+
+        ReDetectSpellCheckLanguageIfPending();
     }
 
     private void SetSubtitles(Subtitle subtitle, Subtitle? subtitleOriginal = null)
@@ -17733,6 +17754,8 @@ public partial class MainViewModel :
         SubtitleGrid.ItemsSource = Subtitles;
 
         _updateAudioVisualizer = true;
+
+        ReDetectSpellCheckLanguageIfPending();
     }
 
     private void SetSubtitles(List<SubtitleLineViewModel> subtitles)
@@ -17750,6 +17773,8 @@ public partial class MainViewModel :
 
         SubtitleGrid.ItemsSource = Subtitles;
         _updateAudioVisualizer = true;
+
+        ReDetectSpellCheckLanguageIfPending();
     }
 
     public bool HasChanges()
