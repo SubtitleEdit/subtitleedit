@@ -23,7 +23,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4
         public string VttcLanguage { get; private set; }
 
         /// <summary>
-        /// Sample codec of <see cref="VttcSubtitle"/>: "wvtt", "stpp" or "tx3g".
+        /// Sample codec of <see cref="VttcSubtitle"/>: "wvtt", "stpp", "tx3g", "stxt" or "sbtt".
         /// </summary>
         public string VttcCodec { get; private set; }
 
@@ -610,7 +610,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4
             public uint? TrackId { get; set; }
             public Subtitle Subtitle { get; } = new Subtitle();
             public string Language { get; set; }
-            public string Codec { get; set; } // "wvtt", "stpp" or "tx3g"
+            public string Codec { get; set; } // "wvtt", "stpp", "tx3g", "stxt" or "sbtt"
             public double LegacyTimeTotalMs; // running clock for fragments without data offsets
             public long NextTicks; // running decode time for fragments without tfdt
             public HashSet<string> AddedTtmlCues { get; } = new HashSet<string>();
@@ -777,7 +777,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4
         }
 
         /// <summary>
-        /// Text subtitle samples (wvtt/stpp/tx3g) from the pending moof's track fragments.
+        /// Text subtitle samples (wvtt/stpp/tx3g/stxt/sbtt) from the pending moof's track fragments.
         /// Slices exact sample byte ranges via trun data offsets and sizes, so it also works
         /// for muxed fMP4 where the mdat interleaves video/audio/subtitle data. Falls back
         /// to scanning the mdat for WebVTT cue boxes when no offsets are available.
@@ -921,6 +921,10 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4
             {
                 ReadStppSample(sample, startMs, durationMs, track);
             }
+            else if (Mp4TextSampleHelper.IsSimpleTextCodec(kind))
+            {
+                ReadSimpleTextSample(sample, startMs, durationMs, track);
+            }
             else if (kind != null)
             {
                 ReadTx3gSample(sample, startMs, durationMs, track); // tx3g / generic MPEG-4 timed text
@@ -930,7 +934,8 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4
         /// <summary>
         /// Codec guess for a subtitle sample when no moov is available (a lone DASH .m4s
         /// segment without its init file): wvtt samples are ISO-BMFF boxes, stpp samples
-        /// are TTML XML documents, tx3g samples are a 16-bit length + UTF-8 text.
+        /// are TTML XML documents, tx3g samples are a 16-bit length + UTF-8 text, and
+        /// anything left that is readable text is treated as an stxt/sbtt text stream.
         /// </summary>
         private static string SniffTextSampleKind(byte[] sample)
         {
@@ -985,7 +990,46 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4
                 }
             }
 
-            return null;
+            return IsPlainText(sample) ? "stxt" : null;
+        }
+
+        /// <summary>
+        /// Whether the whole sample is readable text, i.e. valid UTF-8 without control
+        /// characters. Last resort of <see cref="SniffTextSampleKind"/>, so it must not
+        /// accept the binary samples of the codecs checked before it.
+        /// </summary>
+        private static bool IsPlainText(byte[] sample)
+        {
+            if (sample.Length == 0)
+            {
+                return false;
+            }
+
+            string text;
+            try
+            {
+                text = new UTF8Encoding(false, true).GetString(sample);
+            }
+            catch (ArgumentException)
+            {
+                return false;
+            }
+
+            var letters = 0;
+            foreach (var ch in text)
+            {
+                if (char.IsControl(ch) && ch != '\r' && ch != '\n' && ch != '\t')
+                {
+                    return false;
+                }
+
+                if (!char.IsWhiteSpace(ch))
+                {
+                    letters++;
+                }
+            }
+
+            return letters > 0;
         }
 
         private static void ReadWvttSample(byte[] sample, double startMs, double durationMs, FragmentedTextTrack track)
@@ -1089,18 +1133,32 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4
 
         private static void ReadTx3gSample(byte[] sample, double startMs, double durationMs, FragmentedTextTrack track)
         {
-            if (sample.Length < 2 || durationMs <= 0)
+            if (durationMs <= 0)
             {
                 return;
             }
 
-            int textSize = System.Buffers.Binary.BinaryPrimitives.ReadUInt16BigEndian(sample.AsSpan(0, 2));
-            if (textSize == 0 || textSize > sample.Length - 2)
+            var text = Mp4TextSampleHelper.ReadTx3gSampleText(sample);
+            if (string.IsNullOrEmpty(text))
             {
                 return;
             }
 
-            var text = GetString(sample, 2, textSize).TrimEnd();
+            track.Subtitle.Paragraphs.Add(new Paragraph(text, startMs, startMs + durationMs));
+        }
+
+        /// <summary>
+        /// "stxt"/"sbtt" text stream samples (ISO/IEC 14496-30) - the sample is the text
+        /// itself, with no 16-bit length in front of it like tx3g has.
+        /// </summary>
+        private static void ReadSimpleTextSample(byte[] sample, double startMs, double durationMs, FragmentedTextTrack track)
+        {
+            if (durationMs <= 0)
+            {
+                return;
+            }
+
+            var text = Mp4TextSampleHelper.ReadSimpleTextSample(sample);
             if (string.IsNullOrEmpty(text))
             {
                 return;

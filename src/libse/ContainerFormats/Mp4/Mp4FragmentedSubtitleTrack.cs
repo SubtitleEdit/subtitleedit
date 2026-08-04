@@ -13,7 +13,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4
 
         public string Language { get; set; }
 
-        /// <summary>Sample codec: "wvtt", "stpp" or "tx3g".</summary>
+        /// <summary>Sample codec: "wvtt", "stpp", "tx3g", "stxt" or "sbtt".</summary>
         public string Codec { get; set; }
 
         public Subtitle Subtitle { get; set; } = new Subtitle();
