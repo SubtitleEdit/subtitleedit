@@ -11,6 +11,19 @@ public class TimeSpanToDisplayFullConverter : IValueConverter
 {
     public static readonly TimeSpanToDisplayFullConverter Instance = new();
 
+    /// <summary>
+    /// A private readonly instance of the <see cref="Nikse.SubtitleEdit.Core.Common.TimeCode"/> class used for
+    /// formatting time-related values in the conversion process.
+    /// </summary>
+    /// <remarks>
+    /// This variable is used internally within the <see cref="TimeSpanToDisplayFullConverter"/> class
+    /// to facilitate time span conversions into formatted string representations based on the application's
+    /// settings, such as frame-based or standard time-based formatting.
+    /// </remarks>
+    private readonly TimeCode _formattingTimeCode = new();
+    private const string ZeroFrameMode = "00:00:00.00";
+    private const string ZeroTime = "00:00:00,000";
+
     public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
         if (value is TimeSpan ts)
@@ -20,22 +33,17 @@ public class TimeSpanToDisplayFullConverter : IValueConverter
                 ts = ts.Add(TimeSpan.FromMilliseconds(Se.Settings.General.CurrentVideoOffsetInMs));
             }
 
+            _formattingTimeCode.TimeSpan = ts;
+
             if (Se.Settings.General.UseFrameMode)
             {
-                var resultFrames = new TimeCode(ts).ToHHMMSSFF();
-                return resultFrames;
+                return _formattingTimeCode.ToHHMMSSFF();
             }
 
-            var result = new TimeCode(ts).ToString();
-            return result;
+            return _formattingTimeCode.ToString();
         }
 
-        if (Se.Settings.General.UseFrameMode)
-        {
-            return "00:00:00.00";
-        }
-
-        return "00:00:00,000";
+        return Se.Settings.General.UseFrameMode ? ZeroFrameMode : ZeroTime;
     }
 
     public object ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
