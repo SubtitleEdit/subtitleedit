@@ -90,6 +90,22 @@ public class BinaryOcrMatcher : IBinaryOcrMatcher
 
         var bob = new BinaryOcrBitmap(target) { X = targetItem.X, Y = targetItem.Top };
 
+        // The two expanded-match passes below need the BinaryOcrBitmap of the glyphs
+        // following the target; constructing one is a per-pixel scan plus a Murmur hash,
+        // so cache them per offset instead of rebuilding for every candidate DB entry.
+        Dictionary<int, BinaryOcrBitmap>? followingBobCache = null;
+        BinaryOcrBitmap GetFollowingBob(int offset)
+        {
+            followingBobCache ??= new Dictionary<int, BinaryOcrBitmap>();
+            if (!followingBobCache.TryGetValue(offset, out var cached))
+            {
+                cached = new BinaryOcrBitmap(list[listIndex + offset + 1].NikseBitmap!);
+                followingBobCache.Add(offset, cached);
+            }
+
+            return cached;
+        }
+
         // precise expanded match
         for (var k = 0; k < binaryOcrDb.CompareImagesExpanded.Count; k++)
         {
@@ -101,7 +117,7 @@ public class BinaryOcrMatcher : IBinaryOcrMatcher
                 {
                     if (listIndex + i + 1 < list.Count && list[listIndex + i + 1].NikseBitmap != null)
                     {
-                        var bobNext = new BinaryOcrBitmap(list[listIndex + i + 1].NikseBitmap!);
+                        var bobNext = GetFollowingBob(i);
                         if (b.ExpandedList[i].Hash == bobNext.Hash)
                         {
                             ok = true;
@@ -137,7 +153,7 @@ public class BinaryOcrMatcher : IBinaryOcrMatcher
                 {
                     if (listIndex + i + 1 < list.Count && list[listIndex + i + 1].NikseBitmap != null)
                     {
-                        var bobNext = new BinaryOcrBitmap(list[listIndex + i + 1].NikseBitmap!);
+                        var bobNext = GetFollowingBob(i);
                         if (b.ExpandedList[i].Hash == bobNext.Hash)
                         {
                             ok = true;

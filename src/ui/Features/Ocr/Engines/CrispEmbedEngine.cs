@@ -30,26 +30,26 @@ public static class CrispEmbedEngine
     }
 
     /// <summary>
-    /// Like CrispASR, the Windows variants differ wildly in size (CPU ~5 MB, Vulkan ~24 MB,
-    /// CUDA ~691 MB) and the variant is picked at download time, so show a range.
+    /// Like CrispASR, the Windows variants differ wildly in size (CPU ~6 MB, Vulkan ~25 MB,
+    /// CUDA ~684 MB) and the variant is picked at download time, so show a range.
     /// </summary>
     public static string DownloadSizeText
     {
         get
         {
-            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            if (OperatingSystem.IsWindows())
             {
-                return "~5 MB – 691 MB";
+                return "~6 MB – 684 MB";
             }
 
-            if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+            if (OperatingSystem.IsLinux())
+            {
+                return "~10 MB";
+            }
+
+            if (OperatingSystem.IsMacOS())
             {
                 return "~8 MB";
-            }
-
-            if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
-            {
-                return "~6 MB";
             }
 
             return string.Empty;
@@ -87,12 +87,28 @@ public static class CrispEmbedEngine
 
     public static string GetServerExecutableFileName()
     {
-        return RuntimeInformation.IsOSPlatform(OSPlatform.Windows) ? "crispembed-server.exe" : "crispembed-server";
+        return OperatingSystem.IsWindows() ? "crispembed-server.exe" : "crispembed-server";
     }
 
     public static string GetServerExecutable()
     {
         return Path.Combine(GetAndCreateFolder(), GetServerExecutableFileName());
+    }
+
+    public static string GetCliExecutableFileName()
+    {
+        return OperatingSystem.IsWindows() ? "crispembed.exe" : "crispembed";
+    }
+
+    /// <summary>
+    /// The single-shot CLI from the same archive. PP-OCRv6 runs through it because
+    /// crispembed-server only exposes the detector+recognizer orchestrator when it is also given
+    /// a primary embedding model (-m), which Subtitle Edit has no use for - see
+    /// <see cref="CrispEmbedOcr"/>.
+    /// </summary>
+    public static string GetCliExecutable()
+    {
+        return Path.Combine(GetAndCreateFolder(), GetCliExecutableFileName());
     }
 
     public static bool IsEngineInstalled()
@@ -109,6 +125,28 @@ public static class CrispEmbedEngine
     {
         return new List<CrispEmbedBackend>
         {
+            // PP-OCRv6 (CrispEmbed v0.17.0) is a detector + recognizer pair rather than a VLM:
+            // two small GGUFs instead of one ~1 GB model, and it keeps punctuation and per-line
+            // breaks on subtitle bitmaps. Only the "medium" tier is offered - "tiny" returns
+            // garbage on subtitle-sized text and "small", while as accurate here, saves too
+            // little to be worth a second entry (verified 2026-08-04).
+            new()
+            {
+                Name = "PP-OCRv6",
+                Models = new List<CrispEmbedModel>
+                {
+                    new()
+                    {
+                        Name = "PP-OCRv6_medium_rec-f16.gguf",
+                        Size = "79 MB",
+                        Url = "https://huggingface.co/cstr/PP-OCRv6-medium-rec-GGUF/resolve/main/PP-OCRv6_medium_rec-f16.gguf",
+                        DetectorName = "PP-OCRv6_medium_det-f16.gguf",
+                        DetectorUrl = "https://huggingface.co/cstr/PP-OCRv6-medium-det-GGUF/resolve/main/PP-OCRv6_medium_det-f16.gguf",
+                        MinimumSizeBytes = 30_000_000,
+                        MinimumDetectorSizeBytes = 30_000_000,
+                    },
+                },
+            },
             new()
             {
                 Name = "GLM-OCR",

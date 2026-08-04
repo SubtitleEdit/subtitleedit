@@ -73,6 +73,7 @@ seconv list-encodings       # list text encodings
 seconv list-pac-codepages   # list PAC code pages
 seconv list-ocr-engines     # list OCR engines + installation status
 seconv list-fce-rules       # list FixCommonErrors rule IDs
+seconv dump-settings        # print a full --settings JSON with libse defaults
 seconv info <file>          # print format/encoding/duration/language for a file
 seconv lint <pattern>       # validate subtitle(s); exit 1 if issues found
 seconv --help               # show help
@@ -362,6 +363,14 @@ Available template tokens: `{title}`, `{number}`, `{start}`, `{end}`, `{duration
 
 #### Settings JSON
 
+> **This is seconv's own schema — not the Subtitle Edit GUI's `Settings.json`.** The desktop app's settings file uses different key names (e.g. the GUI's `IsRemoveTextUppercaseLineOn` is `removeIfAllUppercase` here) and a different structure; feeding it to `--settings` won't do what you expect (unrecognized keys are ignored with a warning). To get a correct starter file, run **`seconv dump-settings`** — it prints this whole schema populated with the current libse defaults:
+>
+> ```bash
+> seconv dump-settings > my-settings.json   # edit, then: --settings:my-settings.json
+> ```
+
+The keys and defaults below are exactly what `dump-settings` emits:
+
 ```json
 {
   "general": {
@@ -450,6 +459,7 @@ Operations run after the structural transforms (offset, fps, renumber, adjust-du
 | `--delete-contains:<word>` | Delete entries containing the given word |
 | `--fix-common-errors` | Fix common subtitle errors (all 39 rules) |
 | `--fix-common-errors-rules:<list>` | Run a subset of FCE rules (CSV; supports `all,-RuleId`) |
+| `--fce-language:<code>` | Force the language for FCE language-gated rules (code or English name, e.g. `es` / `Spanish`); default: auto-detect from content |
 | `--fix-rtl-via-unicode-chars` | Fix RTL via Unicode characters |
 | `--merge-same-texts` | Merge entries with same text |
 | `--merge-same-time-codes` | Merge entries with same time codes |
@@ -467,6 +477,15 @@ Operations run after the structural transforms (offset, fps, renumber, adjust-du
 seconv *.srt subrip --remove-text-for-hi --merge-same-texts --split-long-lines --overwrite
 ```
 
+#### `--apply-min-gap` vs `--fix-common-errors-rules:FixOverlappingDisplayTimes`
+
+Both touch boundary timings but solve different problems:
+
+- **`--apply-min-gap[:<ms>]`** walks every pair of adjacent paragraphs and, when the gap is shorter than `<ms>`, **shortens the previous cue's end time** to open it up. It does **not** move the next cue's start. Pairs are also **skipped** when shortening would drop the previous cue below `General.SubtitleMinimumDisplayMilliseconds` — so this is best-effort, not a hard guarantee. Use it for delivery specs (e.g. broadcast standards that ask for 2 frames between cues) while accepting that minimum-display-duration collisions are left alone.
+- **`FixOverlappingDisplayTimes`** is one rule inside Fix Common Errors and only resolves cases where a paragraph's end > the next paragraph's start (a true overlap). It does *not* enforce a non-zero minimum gap once overlaps are gone.
+
+In most batch pipelines `--apply-min-gap` is the better choice; reach for the FCE rule when you specifically want to keep the tight gaps the source already has and only repair true overlaps.
+
 ### FixCommonErrors rule selection
 
 `--fix-common-errors` (no value) runs all 39 rules. Pass `--fix-common-errors-rules:<list>` to pick a subset — supplying that option implies `--fix-common-errors`.
@@ -475,10 +494,66 @@ seconv *.srt subrip --remove-text-for-hi --merge-same-texts --split-long-lines -
 seconv movie.srt subrip --fix-common-errors                                  # all rules
 seconv movie.srt subrip --fix-common-errors-rules:FixCommas,FixMissingSpaces
 seconv movie.srt subrip --fix-common-errors-rules:all,-FixDanishLetterI      # all except one
-seconv list-fce-rules                                                        # show rule IDs
+seconv movie.srt subrip --fix-common-errors --fce-language:es                # force the Spanish gate
+seconv list-fce-rules                                                        # show rule IDs (marks language gates)
 ```
 
-`FixCommonOcrErrors` is intentionally excluded — it requires UI-side spell-check and OCR-engine setup that seconv doesn't carry.
+**Language-specific rules.** A few rules only make sense for one language and mirror the GUI's *Fix Common Errors* window, which only offers them when the detected language matches: `FixAloneLowercaseIToUppercaseI` (English), `FixDanishLetterI` (Danish), `FixSpanishInvertedQuestionAndExclamationMarks` (Spanish), and `FixTurkishAnsiToUnicode` (Turkish). `seconv list-fce-rules` marks each gated rule with its language in a *Language gate* column. These run **only when the language matches** — so e.g. the Spanish inverted-`¿` fix never lands on English content (issue #11037). This holds however the rule was selected: naming it in `--fix-common-errors-rules` picks it into the run but does **not** bypass the gate, which makes mixed-language batches safe (a Spanish rule in your rule set self-skips on the English and French files).
+
+The language is auto-detected from the content. To force it:
+
+- **`--fce-language:<code>`** forces the language used for *all* gated rules (and the OCR-fix pass). Use it when a genuinely Spanish/Danish/Turkish file mis-detects (e.g. it's too short), or to run a named language rule on content that would auto-detect as something else. Accepts a two-letter code, three-letter code, or English name (`es`, `spa`, `Spanish`); an unrecognized value warns and falls back to auto-detection.
+
+**Rule selection is CLI-only.** The set of rules is chosen with `--fix-common-errors-rules`, not through the `--settings` JSON. The settings file shapes *how* the rules behave (line length, min gap, dialog/continuation style, CPS — see [Settings JSON](#settings-json)); it does not select which rules run.
+
+`FixCommonOcrErrors` runs only when a dictionary folder is available — bundled for English, or supplied via `--dictionary-folder` for other languages (see [OCR options](#ocr)). Without one, that rule is skipped and every other rule still runs.
+
+#### Rule ID ↔ GUI equivalent
+
+The CLI rule IDs match the check-box rules in the desktop app's *Fix Common Errors* window. If you prototyped a fix set in the GUI, use this table (or `seconv list-fce-rules`, which prints the same three columns) to find the matching `--fix-common-errors-rules` IDs. *Language gate* marks rules that only run for one detected language (override with `--fce-language`, or by naming the rule).
+
+| Rule ID | GUI equivalent | Language gate |
+|---|---|---|
+| `AddMissingQuotes` | Add missing quotes (") | — |
+| `Fix3PlusLines` | Fix subtitles with more than two lines | — |
+| `FixAloneLowercaseIToUppercaseI` | Fix alone lowercase 'i' to 'I' (English) | en only |
+| `FixCommas` | Fix commas | — |
+| `FixContinuationStyle` | Fix continuation style | — |
+| `FixDanishLetterI` | Fix Danish letter 'i' | da only |
+| `FixDialogsOnOneLine` | Split dialogs on one line | — |
+| `FixDoubleApostrophes` | Fix double apostrophe characters ('') to a single quote (") | — |
+| `FixDoubleDash` | Fix '--' -> '...' | — |
+| `FixDoubleGreaterThan` | Remove '>>' | — |
+| `FixEllipsesStart` | Remove leading '...' | — |
+| `FixEmptyLines` | Remove empty lines/unused line breaks | — |
+| `FixHyphensInDialog` | Fix dash in dialogs via style | — |
+| `FixHyphensRemoveDashSingleLine` | Remove dialog dashes in single lines | — |
+| `FixInvalidItalicTags` | Fix invalid italic tags | — |
+| `FixLongDisplayTimes` | Fix long display times | — |
+| `FixLongLines` | Break long lines | — |
+| `FixMissingOpenBracket` | Fix missing [ or ( in line | — |
+| `FixMissingPeriodsAtEndOfLine` | Add period after lines where next line starts with uppercase letter | — |
+| `FixMissingSpaces` | Fix missing spaces | — |
+| `FixMusicNotation` | Replace music symbols with preferred symbol | — |
+| `FixOverlappingDisplayTimes` | Fix overlapping display times | — |
+| `FixShortDisplayTimes` | Fix short display times | — |
+| `FixShortGaps` | Fix short gaps | — |
+| `FixShortLines` | Remove line breaks in short texts with only one sentence | — |
+| `FixShortLinesAll` | Remove line breaks in short texts (all except dialogs) | — |
+| `FixShortLinesPixelWidth` | Unbreak subtitles that can fit on one line (pixel width) | — |
+| `FixSpanishInvertedQuestionAndExclamationMarks` | Fix Spanish inverted question and exclamation marks | es only |
+| `FixStartWithUppercaseLetterAfterColon` | Start with uppercase letter after colon/semicolon | — |
+| `FixStartWithUppercaseLetterAfterParagraph` | Start with uppercase letter after paragraph | — |
+| `FixStartWithUppercaseLetterAfterPeriodInsideParagraph` | Start with uppercase letter after period inside paragraph | — |
+| `FixTurkishAnsiToUnicode` | Fix Turkish ANSI (Icelandic) letters to Unicode | tr only |
+| `FixUnnecessaryLeadingDots` | Remove unnecessary leading dots | — |
+| `FixUnneededPeriods` | Remove unneeded periods | — |
+| `FixUnneededSpaces` | Remove unneeded spaces | — |
+| `FixUppercaseIInsideWords` | Fix uppercase 'i' inside lowercase words (OCR error) | — |
+| `NormalizeStrings` | Normalize strings | — |
+| `RemoveDialogFirstLineInNonDialogs` | Remove start dash in first line for non-dialogs | — |
+| `RemoveSpaceBetweenNumbers` | Remove space between numbers | — |
+| `FixCommonOcrErrors` | Fix common OCR errors (using OCR replace list) | — |
 
 ## Output format aliases
 
@@ -588,7 +663,7 @@ seconv movie.srt customtext --custom-format:lines-template.xml --output-filename
 
 ```
 src/
-├── libse/        Core subtitle library (NuGet-shippable, netstandard2.1)
+├── libse/        Core subtitle library (NuGet-shippable, netstandard2.1;net10.0)
 ├── libuilogic/   Shared headless logic (BatchConverter pipeline, OCR matchers, image renderer)
 ├── seconv/       This CLI
 └── ui/           Avalonia desktop UI (not referenced by seconv)

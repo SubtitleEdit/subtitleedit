@@ -87,11 +87,16 @@ namespace Nikse.SubtitleEdit.Logic
             var window = CreateWindow<T>();
 
             configure?.Invoke(window);
-            window.Show();
-            window.Focus();
 
+            // Must run before Show(): ApplyScaleToWindow sets the Windows dark-mode title bar, and
+            // DWM does not repaint the caption once the window is on screen - it only picks up the
+            // change on the next activation. Applying afterwards leaves a light title bar until the
+            // window loses and regains focus. (#12665)
             ApplyRightToLeftSettings(window);
             UiTheme.ApplyScaleToWindow(window);
+
+            window.Show();
+            window.Focus();
 
             return window;
         }
@@ -114,11 +119,13 @@ namespace Nikse.SubtitleEdit.Logic
             configureViewModel?.Invoke(window, viewModel);
 
             window.WindowStartupLocation = WindowStartupLocation.CenterOwner; //TODO: does this work on mac?
-            window.Show(owner);
-            window.Focus();
 
+            // Must run before Show() - see the note in ShowWindow<T>. (#12665)
             ApplyRightToLeftSettings(window);
             UiTheme.ApplyScaleToWindow(window);
+
+            window.Show(owner);
+            window.Focus();
 
             return viewModel;
         }
@@ -139,11 +146,12 @@ namespace Nikse.SubtitleEdit.Logic
             var window = (T)w;
             configureViewModel?.Invoke(window, viewModel);
 
-            window.Show();
-            window.Focus();
-
+            // Must run before Show() - see the note in ShowWindow<T>. (#12665)
             ApplyRightToLeftSettings(window);
             UiTheme.ApplyScaleToWindow(window);
+
+            window.Show();
+            window.Focus();
 
             return viewModel;
         }

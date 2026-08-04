@@ -11,7 +11,7 @@ public class PickAlignmentWindow : Window
     public PickAlignmentWindow(PickAlignmentViewModel vm)
     {
         UiUtil.InitializeWindow(this, GetType().Name);
-        Title = Se.Language.Tools.PickAlignmentTitle;
+        Title = Se.Language.General.ChooseAlignment;
         CanResize = false;
         SizeToContent = SizeToContent.WidthAndHeight;
         vm.Window = this;

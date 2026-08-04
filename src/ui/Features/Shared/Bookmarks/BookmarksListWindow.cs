@@ -37,7 +37,12 @@ public class BookmarksListWindow : Window
             VerticalAlignment = VerticalAlignment.Bottom,
             Margin = new Thickness(0, 0, 0, 10),
         };
-        labelCount.Bind(TextBlock.TextProperty, new Binding(nameof(vm.CountText)) { Source = vm });
+        labelCount.Bind(TextBlock.TextProperty, new Binding($"{nameof(vm.Subtitles)}.{nameof(vm.Subtitles.Count)}")
+        {
+            Source = vm,
+            Mode = BindingMode.OneWay,
+            StringFormat = Se.Language.General.Count + ": {0}",
+        });
 
         var grid = new Grid
         {
@@ -69,16 +74,11 @@ public class BookmarksListWindow : Window
 
     private static Border MakeBookmarkGridView(BookmarksListViewModel vm)
     {
-        var dataGrid = new DataGrid
-        {
-            Height = double.NaN, // auto size inside scroll viewer
-            Margin = new Thickness(2),
-            ItemsSource = vm.Subtitles, // Use ItemsSource instead of Items
-            CanUserSortColumns = false,
-            IsReadOnly = true,
-            SelectionMode = DataGridSelectionMode.Extended,
-            DataContext = vm.Subtitles,
-        };
+        var dataGrid = TableViewExtras.MakeTableView();
+        dataGrid.Height = double.NaN; // auto size inside scroll viewer
+        dataGrid.Margin = new Thickness(2);
+        dataGrid.ItemsSource = vm.Subtitles;
+        dataGrid.DataContext = vm.Subtitles;
 
         dataGrid.DoubleTapped += vm.OnBookmarksGridDoubleTapped;
 
@@ -86,23 +86,27 @@ public class BookmarksListWindow : Window
         var shortTimeConverter = new TimeSpanToDisplayShortConverter();
 
         // Columns
-        dataGrid.Columns.Add(new DataGridTextColumn
+        dataGrid.Columns.Add(new SeTableViewColumn
         {
             Header = Se.Language.General.NumberSymbol,
             Binding = new Binding(nameof(SubtitleLineViewModel.Number)),
-            CellTheme = UiUtil.DataGridNoBorderCellTheme,
+            Width = new GridLength(50), // was Auto; TableView treats Auto as star
+            CellTheme = UiUtil.TableViewCellTheme,
+            HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
         });
-        dataGrid.Columns.Add(new DataGridTextColumn
+        dataGrid.Columns.Add(new SeTableViewColumn
         {
             Header = Se.Language.General.Text,
             Binding = new Binding(nameof(SubtitleLineViewModel.Bookmark)),
-            CellTheme = UiUtil.DataGridNoBorderCellTheme,
-            Width = new DataGridLength(1, DataGridLengthUnitType.Star) // star sizing to take all available space
+            CellTheme = UiUtil.TableViewCellTheme,
+            HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
+            Width = new GridLength(1, GridUnitType.Star) // star sizing to take all available space
         });
-        dataGrid.Columns.Add(new DataGridTemplateColumn
+        dataGrid.Columns.Add(new SeTableViewColumn
         {
             Header = Se.Language.General.Delete,
-            CellTheme = UiUtil.DataGridNoBorderNoPaddingCellTheme,
+            CellTheme = UiUtil.TableViewNoPaddingCellTheme,
+            HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
             CellTemplate = new FuncDataTemplate<SubtitleLineViewModel>((item, _) =>
             {
                 var deleteButton = new Button
@@ -115,11 +119,10 @@ public class BookmarksListWindow : Window
                 Optris.Icons.Avalonia.Attached.SetIcon(deleteButton, IconNames.Trash);
                 return deleteButton;
             }),
-            Width = new DataGridLength(1, DataGridLengthUnitType.Auto)
+            Width = new GridLength(80) // was Auto; TableView treats Auto as star
         });
 
-        dataGrid.DataContext = vm.Subtitles;
-        dataGrid.Bind(DataGrid.SelectedItemProperty, new Binding(nameof(vm.SelectedSubtitle))
+        dataGrid.Bind(TableView.SelectedItemProperty, new Binding(nameof(vm.SelectedSubtitle))
         {
             Source = vm,
             Mode = BindingMode.TwoWay
@@ -133,7 +136,11 @@ public class BookmarksListWindow : Window
             {
                 var target = e.Key == Key.Home ? items[0] : items[^1];
                 dataGrid.SelectedItem = target;
-                dataGrid.ScrollIntoView(target, null);
+                if (target != null)
+                {
+                    dataGrid.ScrollIntoView(target);
+                }
+
                 e.Handled = true;
             }
         }, Avalonia.Interactivity.RoutingStrategies.Tunnel);

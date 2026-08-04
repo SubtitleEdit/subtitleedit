@@ -7,6 +7,7 @@ using Avalonia.Media;
 using Avalonia.Styling;
 using Nikse.SubtitleEdit.Features.Shared;
 using Nikse.SubtitleEdit.Logic;
+using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Logic.ValueConverters;
 
 namespace Nikse.SubtitleEdit.Features.Ocr.Download;
@@ -17,7 +18,7 @@ public class DownloadTesseractModelWindow : Window
     {
         vm.Window = this;
         UiUtil.InitializeWindow(this, GetType().Name);
-        Title = "Downloading Tesseract model";
+        Title = string.Format(Se.Language.General.DownloadingX, "Tesseract model");
         SizeToContent = SizeToContent.WidthAndHeight;
         CanResize = false;
         WindowStartupLocation = WindowStartupLocation.CenterOwner;
@@ -26,7 +27,7 @@ public class DownloadTesseractModelWindow : Window
 
         var titleText = new TextBlock
         {
-            Text = "Downloading Tesseract model",
+            Text = string.Format(Se.Language.General.DownloadingX, "Tesseract model"),
             FontSize = 20,
             FontWeight = FontWeight.Bold,
         };
@@ -41,7 +42,7 @@ public class DownloadTesseractModelWindow : Window
             {
                 new TextBlock
                 {
-                    Text = "Select Tesseract dictionary:",
+                    Text = Se.Language.Ocr.SelectTesseractDictionary,
                     VerticalAlignment = VerticalAlignment.Center,
                 },
                 new ComboBox
@@ -51,7 +52,7 @@ public class DownloadTesseractModelWindow : Window
                     ItemsSource = vm.TesseractDictionaryItems,
                     SelectedItem = vm.SelectedTesseractDictionaryItem
                 }.WithBindSelected(nameof(vm.SelectedTesseractDictionaryItem)),
-                UiUtil.MakeButton("Download", vm.DownloadCommand),
+                UiUtil.MakeButton(Se.Language.General.Download, vm.DownloadCommand),
             }
         };
         panelPickDictionary.Bind(Panel.IsVisibleProperty, new Binding(nameof(vm.IsProgressVisible)) { Converter = new InverseBooleanConverter() });

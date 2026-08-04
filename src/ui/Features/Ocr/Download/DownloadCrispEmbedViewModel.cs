@@ -23,7 +23,7 @@ namespace Nikse.SubtitleEdit.Features.Ocr.Download;
 /// Downloads either the CrispEmbed engine binaries (release archive, variant-aware, with an
 /// .installed.sha256 sidecar for update tracking) or a single GGUF model (streamed to disk).
 /// </summary>
-public partial class DownloadCrispEmbedViewModel : ObservableObject
+public partial class DownloadCrispEmbedViewModel : ObservableObject, IClosingCleanup
 {
     [ObservableProperty] private string _titleText;
     [ObservableProperty] private double _progressValue;
@@ -46,6 +46,8 @@ public partial class DownloadCrispEmbedViewModel : ObservableObject
     private CrispEmbedModel? _model;
     private string _modelTempFileName = string.Empty;
     private string _modelFileName = string.Empty;
+    private string _detectorTempFileName = string.Empty;
+    private string _detectorFileName = string.Empty;
 
     public DownloadCrispEmbedViewModel(ICrispEmbedDownloadService downloadService, IZipUnpacker zipUnpacker)
     {
@@ -74,7 +76,7 @@ public partial class DownloadCrispEmbedViewModel : ObservableObject
     {
         _isModelDownload = false;
         _engineVariant = variant;
-        var displayName = RuntimeInformation.IsOSPlatform(OSPlatform.Windows) || variant == "cuda"
+        var displayName = OperatingSystem.IsWindows() || variant == "cuda"
             ? $"{CrispEmbedEngine.StaticName} {_engineVariant}".TrimEnd()
             : CrispEmbedEngine.StaticName;
         TitleText = string.Format(Se.Language.General.DownloadingX, displayName);
@@ -87,6 +89,14 @@ public partial class DownloadCrispEmbedViewModel : ObservableObject
         _model = model;
         _modelFileName = backend.GetModelPath(model);
         _modelTempFileName = _modelFileName + ".$tmp$";
+
+        // PP-OCRv6 needs its text detector as well - one dialog, two files.
+        if (model.HasDetector)
+        {
+            _detectorFileName = backend.GetDetectorPath(model);
+            _detectorTempFileName = _detectorFileName + ".$tmp$";
+        }
+
         TitleText = string.Format(Se.Language.General.DownloadingX, model.Name);
         StartDownload();
     }
@@ -120,7 +130,7 @@ public partial class DownloadCrispEmbedViewModel : ObservableObject
                 {
                     // e.g. a truncated archive that still had Length > 0 - without this the
                     // Timer would swallow the exception and leave the dialog stuck open.
-                    ProgressText = _isModelDownload ? "Download failed" : "Unpacking failed";
+                    ProgressText = _isModelDownload ? Se.Language.General.DownloadFailed : Se.Language.General.UnpackingFailed;
                     Error = ex.Message;
                     Se.LogError(ex, "CrispEmbed download post-processing failed");
                 }
@@ -136,13 +146,13 @@ public partial class DownloadCrispEmbedViewModel : ObservableObject
                 var ex = _downloadTask.Exception?.InnerException ?? _downloadTask.Exception;
                 if (ex is OperationCanceledException)
                 {
-                    ProgressText = "Download canceled";
+                    ProgressText = Se.Language.General.DownloadCanceled;
                     Close();
                 }
                 else
                 {
-                    ProgressText = "Download failed";
-                    Error = ex?.Message ?? "Unknown error";
+                    ProgressText = Se.Language.General.DownloadFailed;
+                    Error = ex?.Message ?? Se.Language.General.UnknownError;
                 }
             }
         }
@@ -152,8 +162,8 @@ public partial class DownloadCrispEmbedViewModel : ObservableObject
     {
         if (_downloadStream.Length == 0)
         {
-            ProgressText = "Download failed";
-            Error = "No data received";
+            ProgressText = Se.Language.General.DownloadFailed;
+            Error = Se.Language.General.NoDataReceived;
             return;
         }
 
@@ -168,14 +178,14 @@ public partial class DownloadCrispEmbedViewModel : ObservableObject
         _zipUnpacker.UnpackZipStream(_downloadStream, folder, string.Empty, false, new List<string>(), null);
         _downloadStream.Dispose();
 
-        if (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+        if (!OperatingSystem.IsWindows())
         {
             foreach (var name in CrispEmbedEngine.BinaryBaseNames)
             {
                 var path = Path.Combine(folder, name);
                 if (File.Exists(path))
                 {
-                    if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+                    if (OperatingSystem.IsMacOS())
                     {
                         MacHelper.MakeExecutable(path);
                     }
@@ -193,21 +203,38 @@ public partial class DownloadCrispEmbedViewModel : ObservableObject
 
     private void FinishModelDownload()
     {
-        if (!File.Exists(_modelTempFileName) || new FileInfo(_modelTempFileName).Length == 0)
+        if (!IsDownloaded(_modelTempFileName) ||
+            (_model is { HasDetector: true } && !IsDownloaded(_detectorTempFileName)))
         {
-            ProgressText = "Download failed";
-            Error = "No data received";
+            ProgressText = Se.Language.General.DownloadFailed;
+            Error = Se.Language.General.NoDataReceived;
+            DeleteTempModelFile();
             return;
         }
 
-        if (File.Exists(_modelFileName))
+        if (_model is { HasDetector: true })
         {
-            File.Delete(_modelFileName);
+            MoveIntoPlace(_detectorTempFileName, _detectorFileName);
         }
 
-        File.Move(_modelTempFileName, _modelFileName);
+        MoveIntoPlace(_modelTempFileName, _modelFileName);
         OkPressed = true;
         Close();
+    }
+
+    private static bool IsDownloaded(string fileName)
+    {
+        return File.Exists(fileName) && new FileInfo(fileName).Length > 0;
+    }
+
+    private static void MoveIntoPlace(string tempFileName, string fileName)
+    {
+        if (File.Exists(fileName))
+        {
+            File.Delete(fileName);
+        }
+
+        File.Move(tempFileName, fileName);
     }
 
     /// <summary>
@@ -230,7 +257,7 @@ public partial class DownloadCrispEmbedViewModel : ObservableObject
                 var ext = Path.GetExtension(file).ToLowerInvariant();
                 var name = Path.GetFileName(file);
                 var isBinary = ext is ".exe" or ".dll" or ".so" or ".dylib"
-                    || (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows)
+                    || (!OperatingSystem.IsWindows()
                         && Array.IndexOf(CrispEmbedEngine.BinaryBaseNames, name) >= 0);
                 if (!isBinary)
                 {
@@ -265,9 +292,11 @@ public partial class DownloadCrispEmbedViewModel : ObservableObject
 
         if (_isModelDownload && _model != null)
         {
-            _downloadTask = _downloadService.DownloadModel(_model.Url, _modelTempFileName, downloadProgress, _cancellationTokenSource.Token);
+            _downloadTask = _model.HasDetector
+                ? DownloadModelWithDetector(_model, downloadProgress)
+                : _downloadService.DownloadModel(_model.Url, _modelTempFileName, downloadProgress, _cancellationTokenSource.Token);
         }
-        else if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+        else if (OperatingSystem.IsWindows())
         {
             _downloadTask = _engineVariant switch
             {
@@ -276,7 +305,7 @@ public partial class DownloadCrispEmbedViewModel : ObservableObject
                 _ => _downloadService.DownloadEngineWindowsVulkan(_downloadStream, downloadProgress, _cancellationTokenSource.Token),
             };
         }
-        else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux)
+        else if (OperatingSystem.IsLinux()
                  && _engineVariant == "cuda"
                  && RuntimeInformation.ProcessArchitecture != Architecture.Arm64)
         {
@@ -288,6 +317,20 @@ public partial class DownloadCrispEmbedViewModel : ObservableObject
         }
 
         _timer.Start();
+    }
+
+    /// <summary>
+    /// Downloads the detector and then the recognizer as one logical task, mapping each file onto
+    /// half of the progress bar. The detector is fetched first so a cancel mid-way never leaves a
+    /// complete recognizer next to a missing detector.
+    /// </summary>
+    private async System.Threading.Tasks.Task DownloadModelWithDetector(CrispEmbedModel model, IProgress<float> progress)
+    {
+        var detectorProgress = new Progress<float>(number => progress.Report(number * 0.5f));
+        await _downloadService.DownloadModel(model.DetectorUrl, _detectorTempFileName, detectorProgress, _cancellationTokenSource.Token);
+
+        var modelProgress = new Progress<float>(number => progress.Report(0.5f + number * 0.5f));
+        await _downloadService.DownloadModel(model.Url, _modelTempFileName, modelProgress, _cancellationTokenSource.Token);
     }
 
     private void Close()
@@ -303,18 +346,28 @@ public partial class DownloadCrispEmbedViewModel : ObservableObject
     {
         _cancellationTokenSource?.Cancel();
         _done = true;
-        _timer.Stop();
         DeleteTempModelFile();
         Close();
     }
 
+    public void OnClosingCleanup()
+    {
+        _timer.StopAndDispose(OnTimerOnElapsed);
+    }
+
     private void DeleteTempModelFile()
+    {
+        DeleteQuietly(_modelTempFileName);
+        DeleteQuietly(_detectorTempFileName);
+    }
+
+    private static void DeleteQuietly(string fileName)
     {
         try
         {
-            if (!string.IsNullOrEmpty(_modelTempFileName) && File.Exists(_modelTempFileName))
+            if (!string.IsNullOrEmpty(fileName) && File.Exists(fileName))
             {
-                File.Delete(_modelTempFileName);
+                File.Delete(fileName);
             }
         }
         catch

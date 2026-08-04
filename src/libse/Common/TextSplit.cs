@@ -11,6 +11,7 @@ namespace Nikse.SubtitleEdit.Core.Common
         private readonly int _singleLineMaxLength;
         private const string EndLineChars = ".!?…؟。？！";
         private const string Commas = ",،，、";
+        private static readonly char[] PeriodQuestionExclamation = { '.', '?', '!' };
 
         public TextSplit(string text, int singleLineMaxLength, string language)
         {
@@ -25,18 +26,23 @@ namespace Nikse.SubtitleEdit.Core.Common
                 {
                     var l1 = text.Substring(0, i).Trim();
                     var l2 = text.Substring(i + 1).Trim();
-                    _allSplits.Add(new TextSplitResult(new List<string> { l1, l2 }));
+
+                    // One result shared by both lists. _splits is a subset of _allSplits, so
+                    // building a second identical instance measured the same two lines twice.
+                    var split = new TextSplitResult(new List<string> { l1, l2 });
+                    _allSplits.Add(split);
                     if (Utilities.CanBreak(text, i, language))
                     {
-                        _splits.Add(new TextSplitResult(new List<string> { l1, l2 }));
+                        _splits.Add(split);
                     }
                 }
                 else if ((language == "zh" || language == "ja" || language == "ko") && "，。？、?".Contains(text[i]))
                 {
                     var l1 = text.Substring(0, i + 1).Trim();
                     var l2 = text.Substring(i + 1).Trim();
-                    _allSplits.Add(new TextSplitResult(new List<string> { l1, l2 }));
-                    _splits.Add(new TextSplitResult(new List<string> { l1, l2 }));
+                    var split = new TextSplitResult(new List<string> { l1, l2 });
+                    _allSplits.Add(split);
+                    _splits.Add(split);
                 }
             }
         }
@@ -79,28 +85,50 @@ namespace Nikse.SubtitleEdit.Core.Common
             return GetBestLengthSplit();
         }
 
+        // The methods below need "the first element with the smallest key", which used to be
+        // Where(...).OrderBy(...).FirstOrDefault() - a full O(n log n) sort (plus the LINQ
+        // machinery) to pick element 0. OrderBy is stable, so a strictly-less linear scan
+        // returns exactly the same candidate.
+        private static TextSplitResult MinBy(List<TextSplitResult> splits, Predicate<TextSplitResult> filter, Func<TextSplitResult, double> key)
+        {
+            TextSplitResult best = null;
+            var bestDiff = double.MaxValue;
+            foreach (var p in splits)
+            {
+                if (filter != null && !filter(p))
+                {
+                    continue;
+                }
+
+                var diff = key(p);
+                if (diff < bestDiff)
+                {
+                    bestDiff = diff;
+                    best = p;
+                }
+            }
+
+            return best;
+        }
+
         private string GetBestDialog()
         {
-            var orderedArray = _splits.Where(IsDialog).OrderBy(p => p.DiffFromAveragePixel());
-            var best = orderedArray.FirstOrDefault();
+            var best = MinBy(_splits, IsDialog, p => p.DiffFromAveragePixel());
             return best != null ? string.Join(Environment.NewLine, best.Lines) : null;
         }
 
         private string GetBestEnding(string chars)
         {
-            var orderedArray = _splits.Where(p => p.IsLineLengthOkay(_singleLineMaxLength) && EndsWith(p, chars)).OrderBy(p => p.DiffFromAveragePixel());
-            var best = orderedArray.FirstOrDefault();
+            var best = MinBy(_splits, p => p.IsLineLengthOkay(_singleLineMaxLength) && EndsWith(p, chars), p => p.DiffFromAveragePixel());
             return best != null ? string.Join(Environment.NewLine, best.Lines) : null;
         }
 
         private string GetBestPixelSplit()
         {
-            var orderedArray = _splits.Where(p => p.IsLineLengthOkay(_singleLineMaxLength)).OrderBy(p => p.DiffFromAveragePixel());
-            var best = orderedArray.FirstOrDefault();
+            var best = MinBy(_splits, p => p.IsLineLengthOkay(_singleLineMaxLength), p => p.DiffFromAveragePixel());
             if (best != null && !best.IsBottomHeavy && Configuration.Settings.Tools.AutoBreakUsePixelWidth && Configuration.Settings.Tools.AutoBreakPreferBottomHeavy)
             {
-                orderedArray = _splits.Where(p => p.IsLineLengthOkay(_singleLineMaxLength)).OrderBy(p => p.DiffFromAveragePixelBottomHeavy());
-                best = orderedArray.FirstOrDefault() ?? best;
+                best = MinBy(_splits, p => p.IsLineLengthOkay(_singleLineMaxLength), p => p.DiffFromAveragePixelBottomHeavy()) ?? best;
             }
 
             return best != null ? string.Join(Environment.NewLine, best.Lines) : null;
@@ -108,15 +136,13 @@ namespace Nikse.SubtitleEdit.Core.Common
 
         private string GetBestLengthSplit()
         {
-            var orderedArray = _splits.OrderBy(p => p.DiffFromAverage());
-            var best = orderedArray.FirstOrDefault();
+            var best = MinBy(_splits, null, p => p.DiffFromAverage());
             if (best != null)
             {
                 return string.Join(Environment.NewLine, best.Lines);
             }
 
-            orderedArray = _allSplits.OrderBy(p => p.DiffFromAverage());
-            best = orderedArray.FirstOrDefault();
+            best = MinBy(_allSplits, null, p => p.DiffFromAverage());
             return best != null ? string.Join(Environment.NewLine, best.Lines) : null;
         }
 
@@ -236,7 +262,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                 }
 
                 // check for period in last part of current
-                var lastPeriodIdx = p.Text.LastIndexOfAny(new[] { '.', '?', '!' });
+                var lastPeriodIdx = p.Text.LastIndexOfAny(PeriodQuestionExclamation);
                 if (lastPeriodIdx > 3 && lastPeriodIdx > p.Text.Length - maxMoveChunkSize)
                 {
                     var newCurrentText = p.Text.Substring(0, lastPeriodIdx + 1).Trim();
@@ -277,7 +303,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                 }
 
                 // check for period in beginning of next
-                var firstPeriodIdx = next.Text.IndexOfAny(new[] { '.', '?', '!' });
+                var firstPeriodIdx = next.Text.IndexOfAny(PeriodQuestionExclamation);
                 if (firstPeriodIdx >= 3 && firstPeriodIdx < maxMoveChunkSize)
                 {
                     var newCurrentText = next.Text.Substring(0, firstPeriodIdx + 1).Trim();

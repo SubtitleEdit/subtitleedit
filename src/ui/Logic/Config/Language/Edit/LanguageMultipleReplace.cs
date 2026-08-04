@@ -2,8 +2,6 @@
 
 public class LanguageMultipleReplace
 {
-
-    public string Title { get; set; }
     public string EditRule { get; set; }
     public string NewRule { get; set; }
     public string EditCategory { get; set; }
@@ -20,7 +18,6 @@ public class LanguageMultipleReplace
 
     public LanguageMultipleReplace()
     {
-        Title = "Multiple replace";
         EditRule = "Edit rule";
         EditCategory = "Edit category";
         NewRule = "New rule";

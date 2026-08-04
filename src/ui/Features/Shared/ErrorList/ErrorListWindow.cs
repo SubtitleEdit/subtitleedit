@@ -58,16 +58,11 @@ public class ErrorListWindow : Window
 
     private static Border MakeErrorsGridView(ErrorListViewModel vm)
     {
-        var dataGrid = new DataGrid
-        {
-            Height = double.NaN, // auto size inside scroll viewer
-            Margin = new Thickness(2),
-            ItemsSource = vm.Subtitles, // Use ItemsSource instead of Items
-            CanUserSortColumns = false,
-            IsReadOnly = true,
-            SelectionMode = DataGridSelectionMode.Extended,
-            DataContext = vm.Subtitles,
-        };
+        var dataGrid = TableViewExtras.MakeTableView();
+        dataGrid.Height = double.NaN; // auto size inside scroll viewer
+        dataGrid.Margin = new Thickness(2);
+        dataGrid.ItemsSource = vm.Subtitles;
+        dataGrid.DataContext = vm.Subtitles;
 
         dataGrid.DoubleTapped += vm.OnBookmarksGridDoubleTapped;
 
@@ -75,34 +70,32 @@ public class ErrorListWindow : Window
         var shortTimeConverter = new TimeSpanToDisplayShortConverter();
 
         // Columns
-        dataGrid.Columns.Add(new DataGridTextColumn
+        dataGrid.Columns.Add(new SeTableViewColumn
         {
             Header = Se.Language.General.NumberSymbol,
             Binding = new Binding(nameof(ErrorListItem.Number)),
-            CellTheme = UiUtil.DataGridNoBorderCellTheme,
+            Width = new GridLength(50), // was Auto; TableView treats Auto as star
+            CellTheme = UiUtil.TableViewCellTheme,
+            HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
         });
-        dataGrid.Columns.Add(new DataGridTextColumn
+        dataGrid.Columns.Add(new SeTableViewColumn
         {
             Header = Se.Language.General.Text,
             Binding = new Binding(nameof(ErrorListItem.Text)),
-            CellTheme = UiUtil.DataGridNoBorderCellTheme,
-            Width = new DataGridLength(1, DataGridLengthUnitType.Star) // star sizing to take all available space
+            CellTheme = UiUtil.TableViewCellTheme,
+            HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
+            Width = new GridLength(1, GridUnitType.Star) // star sizing to take all available space
         });
-        dataGrid.Columns.Add(new DataGridTextColumn
+        dataGrid.Columns.Add(new SeTableViewColumn
         {
             Header = Se.Language.General.Error,
             Binding = new Binding(nameof(ErrorListItem.Error)),
-            CellTheme = UiUtil.DataGridNoBorderCellTheme,
-            Width = new DataGridLength(1, DataGridLengthUnitType.Star) // star sizing to take all available space
+            CellTheme = UiUtil.TableViewCellTheme,
+            HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
+            Width = new GridLength(1, GridUnitType.Star) // star sizing to take all available space
         });
 
-        dataGrid.DataContext = vm.Subtitles;
-        dataGrid.Bind(DataGrid.SelectedItemProperty, new Binding(nameof(vm.SelectedSubtitle))
-        {
-            Source = vm,
-            Mode = BindingMode.TwoWay
-        });
-        dataGrid.SelectionChanged += vm.GridSelectionChanged;
+        TableViewExtras.BindSelectedItem(dataGrid, vm, nameof(vm.SelectedSubtitle));
         dataGrid.DoubleTapped += (s, e) => vm.GoToCommand.Execute(null);    
         dataGrid.KeyDown += (s, e) => vm.GridKeyDown(e);
         dataGrid.AddHandler(InputElement.KeyDownEvent, (object? _, KeyEventArgs e) =>
@@ -111,7 +104,11 @@ public class ErrorListWindow : Window
             {
                 var target = e.Key == Key.Home ? items[0] : items[^1];
                 dataGrid.SelectedItem = target;
-                dataGrid.ScrollIntoView(target, null);
+                if (target != null)
+                {
+                    dataGrid.ScrollIntoView(target);
+                }
+
                 e.Handled = true;
             }
         }, Avalonia.Interactivity.RoutingStrategies.Tunnel);

@@ -4,35 +4,46 @@ using System.Net.Http;
 using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
+using Nikse.SubtitleEdit.UiLogic;
 
 namespace Nikse.SubtitleEdit.Logic.Download;
 
 public interface ILlamaCppDownloadService
 {
     Task DownloadEngine(Stream stream, string variant, IProgress<float>? progress, CancellationToken cancellationToken);
-    Task DownloadCudaRuntime(Stream stream, IProgress<float>? progress, CancellationToken cancellationToken);
+    Task DownloadCudaRuntime(Stream stream, string variant, IProgress<float>? progress, CancellationToken cancellationToken);
     Task DownloadModel(string url, string destinationFileName, IProgress<float>? progress, CancellationToken cancellationToken);
 }
 
 public class LlamaCppDownloadService(HttpClient httpClient) : ILlamaCppDownloadService
 {
-    private const string Version = "b10035";
-    private const string BaseUrl = "https://github.com/ggml-org/llama.cpp/releases/download/" + Version + "/";
+    /// <summary>
+    /// The pinned llama.cpp release tag. Public so the engine settings dialog can show which build
+    /// SE downloads; index 0 of every <see cref="DownloadHashManager.LlamaCpp"/> hash list must match it.
+    /// </summary>
+    public const string ReleaseTag = "b10256";
+
+    private const string BaseUrl = "https://github.com/ggml-org/llama.cpp/releases/download/" + ReleaseTag + "/";
 
     public const string VariantCpu = "cpu";
     public const string VariantVulkan = "vulkan";
+
+    /// <summary>The CUDA 12.4 build - works with most current NVIDIA drivers.</summary>
     public const string VariantCuda = "cuda";
+
+    /// <summary>The CUDA 13.3 build - for driver stacks built for CUDA 13.</summary>
+    public const string VariantCuda13 = "cuda13";
 
     public async Task DownloadEngine(Stream stream, string variant, IProgress<float>? progress, CancellationToken cancellationToken)
     {
         await DownloadHelper.DownloadFileAsync(httpClient, GetEngineUrl(variant), stream, progress, cancellationToken);
-        VerifyArchive(stream, DownloadHashManager.ResolveLlamaCppKey(variant), "engine");
+        await VerifyArchive(stream, DownloadHashManager.ResolveLlamaCppKey(variant), "engine", cancellationToken);
     }
 
     // Compares the downloaded bytes against the known SHA-256 for this key and throws on mismatch
     // so the caller's IsFaulted branch surfaces "Download failed" instead of silently unpacking a
     // truncated or tampered file. Mirrors Qwen3TtsCppDownloadService.VerifyArchive.
-    private static void VerifyArchive(Stream stream, string? key, string label)
+    private static async Task VerifyArchive(Stream stream, string? key, string label, CancellationToken cancellationToken)
     {
         if (string.IsNullOrEmpty(key) || stream.Length == 0)
         {
@@ -46,7 +57,7 @@ public class LlamaCppDownloadService(HttpClient httpClient) : ILlamaCppDownloadS
         }
 
         stream.Position = 0;
-        var actual = DownloadHashManager.ComputeSha256(stream);
+        var actual = await Sha256Util.ComputeSha256Async(stream, cancellationToken);
         stream.Position = 0;
 
         if (!string.Equals(expected, actual, StringComparison.OrdinalIgnoreCase))
@@ -56,10 +67,16 @@ public class LlamaCppDownloadService(HttpClient httpClient) : ILlamaCppDownloadS
         }
     }
 
-    public async Task DownloadCudaRuntime(Stream stream, IProgress<float>? progress, CancellationToken cancellationToken)
+    public async Task DownloadCudaRuntime(Stream stream, string variant, IProgress<float>? progress, CancellationToken cancellationToken)
     {
-        await DownloadHelper.DownloadFileAsync(httpClient, BaseUrl + "cudart-llama-bin-win-cuda-12.4-x64.zip", stream, progress, cancellationToken);
-        VerifyArchive(stream, DownloadHashManager.LlamaCpp.WindowsCudaRuntime, "CUDA runtime");
+        // The two CUDA builds need different redistributables (cudart64_12.dll vs cudart64_13.dll),
+        // so the runtime archive has to follow whichever engine variant was picked.
+        var isCuda13 = variant == VariantCuda13;
+        var url = BaseUrl + (isCuda13 ? "cudart-llama-bin-win-cuda-13.3-x64.zip" : "cudart-llama-bin-win-cuda-12.4-x64.zip");
+        var key = isCuda13 ? DownloadHashManager.LlamaCpp.WindowsCuda13Runtime : DownloadHashManager.LlamaCpp.WindowsCudaRuntime;
+
+        await DownloadHelper.DownloadFileAsync(httpClient, url, stream, progress, cancellationToken);
+        await VerifyArchive(stream, key, "CUDA runtime", cancellationToken);
     }
 
     public async Task DownloadModel(string url, string destinationFileName, IProgress<float>? progress, CancellationToken cancellationToken)
@@ -72,7 +89,7 @@ public class LlamaCppDownloadService(HttpClient httpClient) : ILlamaCppDownloadS
     /// </summary>
     public static bool VariantNeedsCudaRuntime(string variant)
     {
-        return OperatingSystem.IsWindows() && variant == VariantCuda;
+        return OperatingSystem.IsWindows() && (variant == VariantCuda || variant == VariantCuda13);
     }
 
     private static string GetEngineUrl(string variant)
@@ -81,9 +98,10 @@ public class LlamaCppDownloadService(HttpClient httpClient) : ILlamaCppDownloadS
         {
             return variant switch
             {
-                VariantCuda => BaseUrl + "llama-" + Version + "-bin-win-cuda-12.4-x64.zip",
-                VariantVulkan => BaseUrl + "llama-" + Version + "-bin-win-vulkan-x64.zip",
-                _ => BaseUrl + "llama-" + Version + "-bin-win-cpu-x64.zip",
+                VariantCuda => BaseUrl + "llama-" + ReleaseTag + "-bin-win-cuda-12.4-x64.zip",
+                VariantCuda13 => BaseUrl + "llama-" + ReleaseTag + "-bin-win-cuda-13.3-x64.zip",
+                VariantVulkan => BaseUrl + "llama-" + ReleaseTag + "-bin-win-vulkan-x64.zip",
+                _ => BaseUrl + "llama-" + ReleaseTag + "-bin-win-cpu-x64.zip",
             };
         }
 
@@ -97,20 +115,20 @@ public class LlamaCppDownloadService(HttpClient httpClient) : ILlamaCppDownloadS
                 }
 
                 return variant == VariantVulkan
-                    ? BaseUrl + "llama-" + Version + "-bin-ubuntu-vulkan-arm64.tar.gz"
-                    : BaseUrl + "llama-" + Version + "-bin-ubuntu-arm64.tar.gz";
+                    ? BaseUrl + "llama-" + ReleaseTag + "-bin-ubuntu-vulkan-arm64.tar.gz"
+                    : BaseUrl + "llama-" + ReleaseTag + "-bin-ubuntu-arm64.tar.gz";
             }
 
             return variant == VariantVulkan
-                ? BaseUrl + "llama-" + Version + "-bin-ubuntu-vulkan-x64.tar.gz"
-                : BaseUrl + "llama-" + Version + "-bin-ubuntu-x64.tar.gz";
+                ? BaseUrl + "llama-" + ReleaseTag + "-bin-ubuntu-vulkan-x64.tar.gz"
+                : BaseUrl + "llama-" + ReleaseTag + "-bin-ubuntu-x64.tar.gz";
         }
 
         if (OperatingSystem.IsMacOS())
         {
             return RuntimeInformation.ProcessArchitecture == Architecture.Arm64
-                ? BaseUrl + "llama-" + Version + "-bin-macos-arm64.tar.gz"
-                : BaseUrl + "llama-" + Version + "-bin-macos-x64.tar.gz";
+                ? BaseUrl + "llama-" + ReleaseTag + "-bin-macos-arm64.tar.gz"
+                : BaseUrl + "llama-" + ReleaseTag + "-bin-macos-x64.tar.gz";
         }
 
         throw new PlatformNotSupportedException("llama.cpp download is not supported on this platform.");

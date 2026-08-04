@@ -68,10 +68,11 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 if (index >= 0 && index + 1 < line.Length)
                 {
                     var indexOfBrackets = line.IndexOf("{}", StringComparison.Ordinal);
-                    if (indexOfBrackets >= 0 && indexOfBrackets < index)
+                    while (indexOfBrackets >= 0 && indexOfBrackets < index)
                     {
                         line = line.Insert(indexOfBrackets + 1, "0"); // set empty time codes to zero
                         index++;
+                        indexOfBrackets = line.IndexOf("{}", StringComparison.Ordinal); // both time codes may be empty
                     }
 
                     while (line.Contains(' ') && line.IndexOf(' ') < index)

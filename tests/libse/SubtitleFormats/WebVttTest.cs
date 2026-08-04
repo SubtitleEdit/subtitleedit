@@ -44,6 +44,21 @@ public class WebVttTest
     }
 
     [Fact]
+    public void LoadSubtitleSupportsHourlessEndTimestamp()
+    {
+        // WebVTT allows each timestamp independently to omit the hour part
+        var vtt = "WEBVTT\r\n\r\n00:00:05.000 --> 00:10.000\r\nHello there\r\n\r\n00:11.000 --> 00:00:14.000\r\nSecond cue";
+        var subtitle = LoadWebVttSubtitle(vtt);
+        Assert.Equal(2, subtitle.Paragraphs.Count);
+        Assert.Equal("Hello there", subtitle.Paragraphs[0].Text);
+        Assert.Equal(5000, subtitle.Paragraphs[0].StartTime.TotalMilliseconds);
+        Assert.Equal(10000, subtitle.Paragraphs[0].EndTime.TotalMilliseconds);
+        Assert.Equal("Second cue", subtitle.Paragraphs[1].Text);
+        Assert.Equal(11000, subtitle.Paragraphs[1].StartTime.TotalMilliseconds);
+        Assert.Equal(14000, subtitle.Paragraphs[1].EndTime.TotalMilliseconds);
+    }
+
+    [Fact]
     public void LoadSubtitleDoesNotMergeCuesWithDifferentTimeCodes()
     {
         var vtt = "WEBVTT\r\n\r\n00:00:01.000 --> 00:00:04.000\r\nHello\r\n\r\n00:00:05.000 --> 00:00:08.000\r\nWorld";
@@ -174,5 +189,90 @@ public class WebVttTest
         Assert.DoesNotContain("<c.", converted);
         Assert.Contains("<font color=\"#008000\">", converted);
         Assert.Contains("</font>", converted);
+    }
+
+    // yt-dlp "--write-auto-subs" output for a YouTube video: roll-up captions where each spoken
+    // line first appears with per-word time codes and then again as the top line of the next cue,
+    // joined by 10 ms bridge cues, all tagged "align:start position:0%".
+    private const string YouTubeAutoCaptionsVtt =
+        "WEBVTT\r\n" +
+        "Kind: captions\r\n" +
+        "Language: en\r\n" +
+        "\r\n" +
+        "00:00:00.000 --> 00:00:01.510 align:start position:0%\r\n" +
+        " \r\n" +
+        "Let<00:00:00.320><c> us</c><00:00:00.440><c> look</c><00:00:00.640><c> at</c><00:00:00.720><c> some</c><00:00:00.920><c> new</c><00:00:01.080><c> features</c><00:00:01.440><c> in</c>\r\n" +
+        "\r\n" +
+        "00:00:01.510 --> 00:00:01.520 align:start position:0%\r\n" +
+        "Let us look at some new features in\r\n" +
+        " \r\n" +
+        "\r\n" +
+        "00:00:01.520 --> 00:00:03.750 align:start position:0%\r\n" +
+        "Let us look at some new features in\r\n" +
+        "Subtitle<00:00:02.120><c> Edit</c><00:00:02.560><c> that</c><00:00:02.720><c> I</c><00:00:02.800><c> feel</c><00:00:03.200><c> you</c><00:00:03.400><c> need</c><00:00:03.640><c> to</c>\r\n" +
+        "\r\n" +
+        "00:00:03.750 --> 00:00:03.760 align:start position:0%\r\n" +
+        "Subtitle Edit that I feel you need to\r\n" +
+        " \r\n" +
+        "\r\n" +
+        "00:00:03.760 --> 00:00:06.190 align:start position:0%\r\n" +
+        "Subtitle Edit that I feel you need to\r\n" +
+        "know<00:00:03.880><c> about</c><00:00:04.400><c> now.</c>\r\n";
+
+    [Fact]
+    public void LoadSubtitleCleansUpYouTubeAutoCaptions()
+    {
+        var subtitle = LoadWebVttSubtitle(YouTubeAutoCaptionsVtt);
+
+        Assert.Equal(3, subtitle.Paragraphs.Count);
+
+        Assert.Equal("Let us look at some new features in", subtitle.Paragraphs[0].Text);
+        Assert.Equal(0, subtitle.Paragraphs[0].StartTime.TotalMilliseconds);
+        Assert.Equal(1510, subtitle.Paragraphs[0].EndTime.TotalMilliseconds);
+
+        Assert.Equal("Subtitle Edit that I feel you need to", subtitle.Paragraphs[1].Text);
+        Assert.Equal(1520, subtitle.Paragraphs[1].StartTime.TotalMilliseconds);
+        Assert.Equal(3750, subtitle.Paragraphs[1].EndTime.TotalMilliseconds);
+
+        Assert.Equal("know about now.", subtitle.Paragraphs[2].Text);
+        Assert.Equal(3760, subtitle.Paragraphs[2].StartTime.TotalMilliseconds);
+        Assert.Equal(6190, subtitle.Paragraphs[2].EndTime.TotalMilliseconds);
+    }
+
+    [Fact]
+    public void LoadSubtitleYouTubeAutoCaptionsHasNoTagsLeft()
+    {
+        var subtitle = LoadWebVttSubtitle(YouTubeAutoCaptionsVtt);
+
+        foreach (var p in subtitle.Paragraphs)
+        {
+            Assert.DoesNotContain("{\\an", p.Text);
+            Assert.DoesNotContain("<c", p.Text);
+            Assert.DoesNotContain("<00:", p.Text);
+        }
+    }
+
+    // A karaoke-style WebVTT has the same per-word time codes but no roll-up duplicates - it must
+    // be left exactly as it is.
+    [Fact]
+    public void LoadSubtitleKeepsKaraokeStyleWordTimeCodes()
+    {
+        var vtt = "WEBVTT\r\n" +
+                  "\r\n" +
+                  "00:00:01.000 --> 00:00:04.000\r\n" +
+                  "One<00:00:02.000><c> two</c>\r\n" +
+                  "\r\n" +
+                  "00:00:05.000 --> 00:00:08.000\r\n" +
+                  "Three<00:00:06.000><c> four</c>\r\n" +
+                  "\r\n" +
+                  "00:00:09.000 --> 00:00:12.000\r\n" +
+                  "Five<00:00:10.000><c> six</c>\r\n" +
+                  "\r\n" +
+                  "00:00:13.000 --> 00:00:16.000\r\n" +
+                  "Seven<00:00:14.000><c> eight</c>\r\n";
+        var subtitle = LoadWebVttSubtitle(vtt);
+
+        Assert.Equal(4, subtitle.Paragraphs.Count);
+        Assert.Equal("One<00:00:02.000><c> two</c>", subtitle.Paragraphs[0].Text);
     }
 }

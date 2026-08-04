@@ -507,33 +507,6 @@ public class NOcrDb
         },
     };
 
-    public static NOcrChar MakeItalicNOcrChar(NOcrChar oldChar, int movePixelsLeft, double unItalicFactor)
-    {
-        var c = new NOcrChar();
-        foreach (var op in oldChar.LinesForeground)
-        {
-            c.LinesForeground.Add(new NOcrLine(MakePointItalic(op.Start, oldChar.Height, movePixelsLeft, unItalicFactor), MakePointItalic(op.End, oldChar.Height, movePixelsLeft, unItalicFactor)));
-        }
-
-        foreach (var op in oldChar.LinesBackground)
-        {
-            c.LinesBackground.Add(new NOcrLine(MakePointItalic(op.Start, oldChar.Height, movePixelsLeft, unItalicFactor), MakePointItalic(op.End, oldChar.Height, movePixelsLeft, unItalicFactor)));
-        }
-
-        c.Text = oldChar.Text;
-        c.Width = oldChar.Width;
-        c.Height = oldChar.Height;
-        c.MarginTop = oldChar.MarginTop;
-        c.Italic = true;
-
-        return c;
-    }
-
-    private static OcrPoint MakePointItalic(OcrPoint p, int height, int moveLeftPixels, double italicAngle)
-    {
-        return new OcrPoint((int)Math.Round(p.X + (height - p.Y) * italicAngle - moveLeftPixels), p.Y);
-    }
-
     public static bool IsMatch(NikseBitmap2 bitmap, NOcrChar oc, int errorsAllowed)
     {
         // A zero-line entry would skip both foreach loops below and return true, matching any

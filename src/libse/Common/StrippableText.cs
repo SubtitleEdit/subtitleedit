@@ -126,7 +126,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             return id;
         }
 
-        private void ReplaceNames1Remove(List<string> nameList, List<string> replaceIds, List<string> replaceNames, List<string> originalNames)
+        private void ReplaceNames1Remove(IEnumerable<string> nameList, List<string> replaceIds, List<string> replaceNames, List<string> originalNames)
         {
             if (Post.StartsWith('.'))
             {
@@ -186,7 +186,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             }
         }
 
-        private void ReplacAssaTagsRemove(List<string> nameList, List<string> replaceIds, List<string> replaceNames, List<string> originalNames)
+        private void ReplacAssaTagsRemove(List<string> replaceIds, List<string> replaceNames, List<string> originalNames)
         {
             int idName = 1000;
             var idx = 0;
@@ -221,13 +221,13 @@ namespace Nikse.SubtitleEdit.Core.Common
         }
 
         private static readonly char[] ExpectedCharsArray = { '.', '!', '?', ':', ';', ')', ']', '}', '(', '[', '{' };
-        public void FixCasing(List<string> nameList, bool changeNameCases, bool makeUppercaseAfterBreak, bool checkLastLine, string lastLine, double millisecondsFromLast = 0)
+        public void FixCasing(IEnumerable<string> nameList, bool changeNameCases, bool makeUppercaseAfterBreak, bool checkLastLine, string lastLine, double millisecondsFromLast = 0)
         {
             var replaceIds = new List<string>();
             var replaceNames = new List<string>();
             var originalNames = new List<string>();
             ReplaceNames1Remove(nameList, replaceIds, replaceNames, originalNames);
-            ReplacAssaTagsRemove(nameList, replaceIds, replaceNames, originalNames);
+            ReplacAssaTagsRemove(replaceIds, replaceNames, originalNames);
 
             if (checkLastLine && ShouldStartWithUpperCase(lastLine, millisecondsFromLast))
             {

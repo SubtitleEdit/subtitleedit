@@ -8,10 +8,10 @@ using Avalonia.Media;
 using Avalonia.Styling;
 using Avalonia.Themes.Fluent;
 using Avalonia.VisualTree;
-using AvaloniaEdit;
-using AvaloniaEdit.Editing;
+using Nikse.SubtitleEdit.Controls.SyntaxTextEditorControl;
 using Nikse.SubtitleEdit.Logic.Config;
 using System;
+using System.IO;
 using System.Linq;
 
 namespace Nikse.SubtitleEdit.Logic;
@@ -38,7 +38,13 @@ public static class UiTheme
             var themeSetting = Se.Settings.Appearance.Theme;
             if (themeSetting == ThemeNameSystem)
             {
-                if (Application.Current!.ActualThemeVariant == ThemeVariant.Dark)
+                // No Application in unit tests or at design time - fall back to dark.
+                if (Application.Current == null)
+                {
+                    return ThemeNameDark;
+                }
+
+                if (Application.Current.ActualThemeVariant == ThemeVariant.Dark)
                 {
                     return ThemeNameDark;
                 }
@@ -53,6 +59,36 @@ public static class UiTheme
     public static bool IsDarkThemeEnabled()
     {
         return ThemeName == ThemeNameDark;
+    }
+
+    /// <summary>
+    /// Folder holding the current theme's images. These are unpacked from Themes.zip into
+    /// <see cref="Se.ThemesFolder"/> at start-up - they are not embedded assets, so they cannot
+    /// be reached through an avares:// URI. Falls back to Dark when the active theme ships no
+    /// image folder of its own (Pastel, for instance), and an explicit icon theme wins over both.
+    /// </summary>
+    public static string ImageFolder
+    {
+        get
+        {
+            var folder = Path.Combine(Se.ThemesFolder, ThemeName);
+            if (!Directory.Exists(folder))
+            {
+                folder = Path.Combine(Se.ThemesFolder, ThemeNameDark);
+            }
+
+            var iconTheme = Se.Settings.Appearance.IconTheme;
+            if (!string.IsNullOrEmpty(iconTheme) && iconTheme != Se.Language.General.Auto)
+            {
+                var iconThemeFolder = Path.Combine(Se.ThemesFolder, iconTheme);
+                if (Directory.Exists(iconThemeFolder))
+                {
+                    folder = iconThemeFolder;
+                }
+            }
+
+            return folder;
+        }
     }
 
     public static void SetCurrentTheme()
@@ -75,15 +111,6 @@ public static class UiTheme
             if (ThemeName == ThemeNameDark)
             {
                 ApplyLighterDark();
-            }
-            else
-            {
-                // When the OS switches dark→light, RequestedThemeVariant stays at Default so
-                // Avalonia's full theme re-evaluation is not triggered. AvaloniaEdit's TextArea
-                // caret renderer then falls into a stale state, retaining the bright brush from
-                // the now-removed dark style. Push an explicit black CaretBrush via a style so
-                // a clean property-changed notification fires and the caret renders correctly.
-                ApplyLightThemeCaretFix();
             }
 
             // Subscribe to theme changes
@@ -258,24 +285,28 @@ public static class UiTheme
         ltcMenuItemStyle.Setters.Add(new Setter(Layoutable.MinHeightProperty, 32.0));
         styles.Add(ltcMenuItemStyle);
 
+        // Scale ComboBox dropdown items too — the dropdown popup renders outside the
+        // LayoutTransformControl, so the window scale transform never reaches it (#13010).
+        // ComboBoxItems only ever appear inside that popup, so no LTC reset counterpart is
+        // needed. Skipped at 100% so windows with locally restyled combos keep their look.
+        if (Math.Abs(factor - 1.0) > 0.0001)
+        {
+            var comboBoxItemStyle = new Style(x => x.OfType<ComboBoxItem>());
+            comboBoxItemStyle.Setters.Add(new Setter(TemplatedControl.FontSizeProperty, 14.0 * factor));
+            styles.Add(comboBoxItemStyle);
+        }
+
         _layoutScaleMenuStyle = styles;
         Application.Current.Styles.Add(styles);
     }
 
     private static Styles? _scrollBarStyle;
     private static bool _scrollBarAllowAutoHide;
-    private static bool _dataGridScrollBarHandlerRegistered;
-
     /// <summary>
     /// Applies scrollbar visibility styles based on the OS preference.
     /// On macOS, reads "Show scroll bars" system setting. When set to "Always",
     /// forces always-expanded scrollbars. ListBox/ScrollViewer scrollbars respond to
-    /// AllowAutoHide=false via the style system. DataGrid sets AllowAutoHide=true on
-    /// its scrollbars at LocalValue priority in OnApplyTemplate, so a class handler on
-    /// Control.LoadedEvent overrides it at LocalValue priority after the fact.
-    /// Designed to be called once at startup. The LoadedEvent handler reads
-    /// _scrollBarAllowAutoHide dynamically, so a second call would update the field
-    /// and affect future DataGrid loads — but already-open DataGrids would not update.
+    /// AllowAutoHide=false via the style system. Designed to be called once at startup.
     /// </summary>
     public static void ApplyScrollBarStyle()
     {
@@ -309,23 +340,6 @@ public static class UiTheme
             },
         };
 
-        if (!_dataGridScrollBarHandlerRegistered)
-        {
-            _dataGridScrollBarHandlerRegistered = true;
-            // DataGrid.OnApplyTemplate sets AllowAutoHide=true on its internal scrollbars at
-            // LocalValue priority (0), which no style can override. By hooking Loaded (which
-            // fires after OnApplyTemplate), we set AllowAutoHide at LocalValue priority too —
-            // overriding the DataGrid's value. This causes UpdateIsExpandedState() to run and
-            // set IsExpanded accordingly, which makes the Fluent [IsExpanded=True] style apply
-            // the full expanded appearance (correct thumb size, color, visible arrows).
-            Control.LoadedEvent.AddClassHandler<DataGrid>((dg, _) =>
-            {
-                foreach (var sb in dg.GetVisualDescendants().OfType<Avalonia.Controls.Primitives.ScrollBar>())
-                {
-                    sb.AllowAutoHide = _scrollBarAllowAutoHide;
-                }
-            });
-        }
 
         Application.Current.Styles.Add(_scrollBarStyle);
     }
@@ -503,6 +517,33 @@ public static class UiTheme
                 }
             },
 
+            // The two styles above paint every text box's inner PART_BorderElement with an
+            // opaque fill on hover/focus. Inside an editable ComboBox the text box covers the
+            // whole text column, on top of the combo's border, so that fill wipes the border
+            // out on hover, while the drop-down is open, and after selecting (the box keeps
+            // focus) - only the stretch around the arrow, which the text box does not cover,
+            // survives. Fluent guards against exactly this with inline
+            // TextControlBackgroundFocused/PointerOver=Transparent resources on the inner text
+            // box, but the styles above set the border element directly, bypassing resources -
+            // so undo them for text boxes hosted inside a ComboBox template. Later in the
+            // collection = wins over the two styles above.
+            new Style(x => x.OfType<ComboBox>().Template().OfType<TextBox>()
+                .Class(":focus").Template().OfType<Border>().Name("PART_BorderElement"))
+            {
+                Setters =
+                {
+                    new Setter(Border.BackgroundProperty, Brushes.Transparent)
+                }
+            },
+            new Style(x => x.OfType<ComboBox>().Template().OfType<TextBox>()
+                .Class(":pointerover").Template().OfType<Border>().Name("PART_BorderElement"))
+            {
+                Setters =
+                {
+                    new Setter(Border.BackgroundProperty, Brushes.Transparent)
+                }
+            },
+
             // Button
             new Style(x => x.OfType<Button>())
             {
@@ -558,14 +599,6 @@ public static class UiTheme
                 }
             },
 
-            // DataGrid
-            new Style(x => x.OfType<DataGrid>())
-            {
-                Setters =
-                {
-                    new Setter(DataGrid.ForegroundProperty, new SolidColorBrush(foreColor))
-                }
-            },
 
             // Label
             new Style(x => x.OfType<Label>())
@@ -585,40 +618,32 @@ public static class UiTheme
                 }
             },
 
-            // TextArea
-            new Style(x => x.OfType<TextArea>())
+            // The source editor's text surface
+            new Style(x => x.OfType<SyntaxTextView>())
             {
                 Setters =
                 {
-                    new Setter(TextArea.ForegroundProperty, new SolidColorBrush(foreColor)),
-                    new Setter(TextArea.CaretBrushProperty, new SolidColorBrush(foreColor)),
+                    new Setter(SyntaxTextView.ForegroundProperty, new SolidColorBrush(foreColor)),
+                    new Setter(SyntaxTextView.CaretBrushProperty, new SolidColorBrush(foreColor)),
                 }
             },
-            
-            // TextArea when focused
-            new Style(x => x.OfType<TextArea>().Class(":focus"))
+
+            // ... and its line numbers
+            new Style(x => x.OfType<LineNumberGutter>())
             {
                 Setters =
                 {
-                    new Setter(TextArea.ForegroundProperty, new SolidColorBrush(foreColor)),
+                    new Setter(LineNumberGutter.ForegroundProperty, new SolidColorBrush(foreColor)),
                 }
             },
-            
-            // TextArea when pointer is over
-            new Style(x => x.OfType<TextArea>().Class(":pointerover"))
+
+            // The source editor owns its text surface, so unlike a TextBox it does not inherit
+            // the dark input background from Fluent.
+            new Style(x => x.OfType<SyntaxTextEditor>())
             {
                 Setters =
                 {
-                    new Setter(TextArea.ForegroundProperty, new SolidColorBrush(foreColor)),
-                }
-            },
-            
-            // TextArea when both focused and pointer over (combined state)
-            new Style(x => x.OfType<TextArea>().Class(":focus").Class(":pointerover"))
-            {
-                Setters =
-                {
-                    new Setter(TextArea.ForegroundProperty, new SolidColorBrush(foreColor)),
+                    new Setter(SyntaxTextEditor.BackgroundProperty, new SolidColorBrush(bgColor)),
                 }
             },
 
@@ -660,13 +685,14 @@ public static class UiTheme
                 }
             },
 
-            // DataGrid header
-            new Style(x => x.OfType<DataGridColumnHeader>())
+
+            // TableView header
+            new Style(x => x.OfType<TableViewColumnHeader>())
             {
                 Setters =
                 {
-                    new Setter(DataGridColumnHeader.BackgroundProperty, new SolidColorBrush(bgColorHeader)),
-                    new Setter(DataGridColumnHeader.ForegroundProperty, new SolidColorBrush(foreColor))
+                    new Setter(TableViewColumnHeader.BackgroundProperty, new SolidColorBrush(bgColorHeader)),
+                    new Setter(TableViewColumnHeader.ForegroundProperty, new SolidColorBrush(foreColor))
                 }
             },
 
@@ -697,21 +723,6 @@ public static class UiTheme
             Application.Current!.Styles.Remove(_themeOverrideStyle);
             _themeOverrideStyle = null;
         }
-    }
-
-    private static void ApplyLightThemeCaretFix()
-    {
-        _themeOverrideStyle = new Styles
-        {
-            new Style(x => x.OfType<TextArea>())
-            {
-                Setters =
-                {
-                    new Setter(TextArea.CaretBrushProperty, Brushes.Black),
-                }
-            },
-        };
-        Application.Current!.Styles.Add(_themeOverrideStyle);
     }
 
     private static void ApplyWindowsClassicGray()
@@ -781,12 +792,13 @@ public static class UiTheme
                 }
             },
 
-            // DataGrid header
-            new Style(x => x.OfType<DataGridColumnHeader>())
+
+            // TableView header
+            new Style(x => x.OfType<TableViewColumnHeader>())
             {
                 Setters =
                 {
-                    new Setter(DataGridColumnHeader.BackgroundProperty, new SolidColorBrush(headerColor))
+                    new Setter(TableViewColumnHeader.BackgroundProperty, new SolidColorBrush(headerColor))
                 }
             },
 
@@ -818,12 +830,12 @@ public static class UiTheme
                 }
             },
 
-            // AvaloniaEdit TextEditor - slightly off-white for consistency
-            new Style(x => x.OfType<TextEditor>())
+            // The source editor - slightly off-white for consistency
+            new Style(x => x.OfType<SyntaxTextEditor>())
             {
                 Setters =
                 {
-                    new Setter(TextEditor.BackgroundProperty, new SolidColorBrush(inputColor))
+                    new Setter(SyntaxTextEditor.BackgroundProperty, new SolidColorBrush(inputColor))
                 }
             },
         };
@@ -896,12 +908,13 @@ public static class UiTheme
                 }
             },
 
-            // DataGrid header with pastel purple
-            new Style(x => x.OfType<DataGridColumnHeader>())
+
+            // TableView header
+            new Style(x => x.OfType<TableViewColumnHeader>())
             {
                 Setters =
                 {
-                    new Setter(DataGridColumnHeader.BackgroundProperty, new SolidColorBrush(lightPurple))
+                    new Setter(TableViewColumnHeader.BackgroundProperty, new SolidColorBrush(lightPurple))
                 }
             },
 
@@ -932,12 +945,12 @@ public static class UiTheme
                 }
             },
 
-            // AvaloniaEdit TextEditor with soft blue
-            new Style(x => x.OfType<TextEditor>())
+            // The source editor with soft blue
+            new Style(x => x.OfType<SyntaxTextEditor>())
             {
                 Setters =
                 {
-                    new Setter(TextEditor.BackgroundProperty, new SolidColorBrush(lightBlue))
+                    new Setter(SyntaxTextEditor.BackgroundProperty, new SolidColorBrush(lightBlue))
                 }
             },
         };

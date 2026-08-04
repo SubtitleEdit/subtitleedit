@@ -9,6 +9,7 @@ using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using Nikse.SubtitleEdit.Features.Main;
 using Nikse.SubtitleEdit.Features.Options.Shortcuts;
+using Nikse.SubtitleEdit.Features.Shared.PromptFileSaved;
 using Nikse.SubtitleEdit.Features.Shared;
 using Nikse.SubtitleEdit.Features.Video.BurnIn;
 using Nikse.SubtitleEdit.Logic;
@@ -28,6 +29,7 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Timers;
+using Nikse.SubtitleEdit.UiLogic.Media;
 
 namespace Nikse.SubtitleEdit.Features.Video.CutVideo;
 
@@ -55,12 +57,14 @@ public partial class CutVideoViewModel : ObservableObject
     [ObservableProperty] private bool _isSetStartEnabled;
     [ObservableProperty] private bool _isSetEndEnabled;
     [ObservableProperty] private bool _isDeleteEnabled;
+    [ObservableProperty] private bool _cutSubtitleToo;
+    [ObservableProperty] private bool _isCutSubtitleVisible;
 
     public Window? Window { get; set; }
     public bool OkPressed { get; private set; }
     public VideoPlayerControl VideoPlayer { get; internal set; }
     public AudioVisualizer AudioVisualizer { get; internal set; }
-    public DataGrid SegmentGrid { get; internal set; }
+    public TableView SegmentGrid { get; internal set; }
 
     private Subtitle _subtitle = new();
     private readonly StringBuilder _log;
@@ -118,7 +122,7 @@ public partial class CutVideoViewModel : ObservableObject
         JobItems = new ObservableCollection<BurnInJobItem>();
         VideoPlayer = new VideoPlayerControl(new EmptyVideoPlayer());
         AudioVisualizer = new AudioVisualizer();
-        SegmentGrid = new DataGrid();
+        SegmentGrid = new TableView();
         Segments = new ObservableCollection<SubtitleLineViewModel>();
         VideoFileName = string.Empty;
         VideoFileSize = string.Empty;
@@ -147,6 +151,7 @@ public partial class CutVideoViewModel : ObservableObject
         _inputVideoFileName = videoFileName;
         _currentSubtitle = subtitle;
         _subtitleFormat = subtitleFormat;
+        IsCutSubtitleVisible = subtitle.Paragraphs.Count > 0;
 
         _ffmpegListKeyFramesProcess = FfmpegGenerator.ListKeyFrames(videoFileName, OutputHandlerKeyFrames);
 
@@ -377,7 +382,24 @@ public partial class CutVideoViewModel : ObservableObject
 
             if (JobItems.Count == 1)
             {
-                await _folderHelper.OpenFolderWithFileSelected(Window!, jobItem.OutputVideoFileName);
+                var message = string.Format(Se.Language.General.VideoFileGeneratedX, jobItem.OutputVideoFileName);
+
+                var cutSubtitleFileName = WriteCutSubtitle(jobItem.OutputVideoFileName, jobItem.TotalSeconds);
+                if (!string.IsNullOrEmpty(cutSubtitleFileName))
+                {
+                    message += Environment.NewLine + Environment.NewLine +
+                               string.Format(Se.Language.Video.CutVideoSubtitleFileGeneratedX, cutSubtitleFileName);
+                }
+
+                await _windowService.ShowDialogAsync<PromptFileSavedWindow, PromptFileSavedViewModel>(Window!, vm =>
+                {
+                    vm.Initialize(
+                        Se.Language.General.VideoFileGenerated,
+                        message,
+                        jobItem.OutputVideoFileName,
+                        true,
+                        true);
+                });
             }
             else
             {
@@ -473,7 +495,46 @@ public partial class CutVideoViewModel : ObservableObject
         if (long.TryParse(arr[1].Trim(), out var f))
         {
             _processedFrames = f;
-            ProgressValue = (double)_processedFrames * 100.0 / JobItems[_jobItemIndex].TotalFrames;
+            ProgressValue = _processedFrames * 100.0 / JobItems[_jobItemIndex].TotalFrames;
+        }
+    }
+
+    /// <summary>
+    /// Writes the loaded subtitle re-timed to the cut video's timeline, next to the
+    /// output video (same base name). Returns the written file name, or null when the
+    /// option is off, there is no subtitle, or writing failed (best-effort - a subtitle
+    /// problem must not fail the finished video).
+    /// </summary>
+    private string? WriteCutSubtitle(string outputVideoFileName, double totalDurationSeconds)
+    {
+        if (!CutSubtitleToo || _currentSubtitle.Paragraphs.Count == 0)
+        {
+            return null;
+        }
+
+        try
+        {
+            var segments = Segments
+                .OrderBy(p => p.StartTime.TotalMilliseconds)
+                .Select(p => (p.StartTime.TotalSeconds, p.EndTime.TotalSeconds))
+                .ToList();
+
+            var cut = SelectedCutType.CutType == CutType.MergeSegments
+                ? SubtitleSegmentCutter.KeepSegments(_currentSubtitle, segments)
+                : SubtitleSegmentCutter.RemoveSegments(_currentSubtitle, segments, totalDurationSeconds);
+
+            SubtitleFormat format = _subtitleFormat is { Name: AdvancedSubStationAlpha.NameOfFormat }
+                ? new AdvancedSubStationAlpha()
+                : new SubRip();
+
+            var fileName = Path.ChangeExtension(outputVideoFileName, format.Extension);
+            File.WriteAllText(fileName, format.ToText(cut, string.Empty));
+            return fileName;
+        }
+        catch (Exception exception)
+        {
+            Se.LogError(exception, "Failed to write cut subtitle");
+            return null;
         }
     }
 
@@ -607,7 +668,7 @@ public partial class CutVideoViewModel : ObservableObject
     [RelayCommand]
     private void Delete()
     {
-        var selectedSegments = SegmentGrid.SelectedItems.Cast<SubtitleLineViewModel>().ToList();
+        var selectedSegments = SegmentGrid.SelectedItems?.Cast<SubtitleLineViewModel>().ToList() ?? new List<SubtitleLineViewModel>();
         if (selectedSegments.Count == 0)
         {
             return;
@@ -655,7 +716,7 @@ public partial class CutVideoViewModel : ObservableObject
         }
 
         var outputVideoFileName = MakeOutputFileName(VideoFileName);
-        outputVideoFileName = await _fileHelper.PickSaveFile(Window!, SelectedVideoExtension, outputVideoFileName, Se.Language.Video.SaveVideoAsTitle);
+        outputVideoFileName = await _fileHelper.PickSaveFile(Window!, SelectedVideoExtension, outputVideoFileName, Se.Language.General.SaveVideoAsVideoTitle);
         if (string.IsNullOrEmpty(outputVideoFileName))
         {
             return;
@@ -685,6 +746,7 @@ public partial class CutVideoViewModel : ObservableObject
         SelectedVideoExtension = VideoExtensions.Contains(settings.CutDefaultVideoExtension)
             ? settings.CutDefaultVideoExtension
             : VideoExtensions[0];
+        CutSubtitleToo = settings.CutAlsoCutSubtitle;
     }
 
     private void SaveSettings()
@@ -692,6 +754,7 @@ public partial class CutVideoViewModel : ObservableObject
         var settings = Se.Settings.Video;
         settings.CutType = SelectedCutType.CutType.ToString();
         settings.CutDefaultVideoExtension = SelectedVideoExtension;
+        settings.CutAlsoCutSubtitle = CutSubtitleToo;
         Se.SaveSettings();
     }
 
@@ -737,7 +800,7 @@ public partial class CutVideoViewModel : ObservableObject
                 _ = Cancel();
                 return;
             }
-            else if (keyEventArgs.Key == Key.F1)
+            else if (UiUtil.IsHelp(keyEventArgs))
             {
                 keyEventArgs.Handled = true;
                 UiUtil.ShowHelp("features/cut-video");
@@ -767,7 +830,9 @@ public partial class CutVideoViewModel : ObservableObject
                 return;
             }
 
-            if (SegmentGrid.IsFocused)
+            // Focus sits on the TableView row container (the DataGrid took focus itself),
+            // so check for focus anywhere inside the grid.
+            if (SegmentGrid.IsKeyboardFocusWithin)
             {
                 if (keyEventArgs.Key == Key.Home && keyEventArgs.KeyModifiers == KeyModifiers.None && Segments.Count > 0)
                 {
@@ -836,8 +901,6 @@ public partial class CutVideoViewModel : ObservableObject
                 }
             }
 
-            var keys = _shortcutManager.GetActiveKeys().Select(p => p.ToString()).ToList();
-            var hashCode = ShortCut.CalculateHash(keys, ShortcutCategory.General.ToString());
             var rc = _shortcutManager.CheckShortcuts(keyEventArgs, ShortcutCategory.General.ToString().ToLowerInvariant());
             if (rc != null)
             {
@@ -867,6 +930,7 @@ public partial class CutVideoViewModel : ObservableObject
     internal void OnClosing()
     {
         _positionTimer.Stop();
+        _timerGenerate.StopAndDispose(TimerGenerateElapsed);
         VideoPlayer.VideoPlayer.CloseFile();
 
         if (_ffmpegListKeyFramesProcess != null && !_ffmpegListKeyFramesProcess.HasExited)
@@ -918,7 +982,10 @@ public partial class CutVideoViewModel : ObservableObject
         Dispatcher.UIThread.Post(() =>
         {
             SegmentGrid.SelectedIndex = index;
-            SegmentGrid.ScrollIntoView(SegmentGrid.SelectedItem, null);
+            if (SegmentGrid.SelectedItem is { } selectedItem)
+            {
+                SegmentGrid.ScrollIntoView(selectedItem);
+            }
             UpdateSelection();
         }, DispatcherPriority.Background);
     }
@@ -931,8 +998,8 @@ public partial class CutVideoViewModel : ObservableObject
     private void UpdateSelection()
     {
         IsDeleteEnabled = SelectedSegment != null;
-        IsSetStartEnabled = SegmentGrid.SelectedItems.Count == 1;
-        IsSetEndEnabled = SegmentGrid.SelectedItems.Count == 1;
+        IsSetStartEnabled = SegmentGrid.SelectedItems?.Count == 1;
+        IsSetEndEnabled = SegmentGrid.SelectedItems?.Count == 1;
     }
 
     internal void SegmentsGridDoubleTapped(object? sender, TappedEventArgs e)

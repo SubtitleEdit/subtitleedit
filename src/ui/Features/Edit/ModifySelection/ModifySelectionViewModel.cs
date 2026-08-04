@@ -4,14 +4,16 @@ using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Nikse.SubtitleEdit.Features.Main;
+using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Nikse.SubtitleEdit.Features.Edit.ModifySelection;
 
-public partial class ModifySelectionViewModel : ObservableObject
+public partial class ModifySelectionViewModel : ObservableObject, IClosingCleanup
 {
     [ObservableProperty] private ObservableCollection<ModifySelectionRule> _rules;
     [ObservableProperty] private ModifySelectionRule? _selectedRule;
@@ -31,12 +33,16 @@ public partial class ModifySelectionViewModel : ObservableObject
 
     private List<SubtitleLineViewModel> _allSubtitles;
     private readonly System.Timers.Timer _previewTimer;
+    private volatile bool _isClosing;
     private readonly Dictionary<RuleType, double> _ruleNumbers;
+    private readonly IWindowService _windowService;
     private RuleType? _activeRuleType;
     private bool _isDirty;
 
-    public ModifySelectionViewModel()
+    public ModifySelectionViewModel(IWindowService windowService)
     {
+        _windowService = windowService;
+
         Rules = new ObservableCollection<ModifySelectionRule>();
         Subtitles = new ObservableCollection<PreviewItem>();
         Selection = new List<SubtitleLineViewModel>();
@@ -47,18 +53,35 @@ public partial class ModifySelectionViewModel : ObservableObject
         LoadSettings();
 
         _previewTimer = new System.Timers.Timer(250);
-        _previewTimer.Elapsed += (sender, args) =>
+        _previewTimer.Elapsed += PreviewTimerElapsed;
+    }
+
+    private void PreviewTimerElapsed(object? sender, System.Timers.ElapsedEventArgs e)
+    {
+        if (_isClosing)
         {
-            _previewTimer.Stop();
+            return;
+        }
 
-            if (_isDirty)
-            {
-                _isDirty = false;
-                UpdatePreview();
-            }
+        _previewTimer.Stop();
 
+        if (_isDirty)
+        {
+            _isDirty = false;
+            UpdatePreview();
+        }
+
+        // Guard the restart: OnClosingCleanup may have disposed the timer while this handler ran (#12739).
+        if (!_isClosing)
+        {
             _previewTimer.Start();
-        };
+        }
+    }
+
+    public void OnClosingCleanup()
+    {
+        _isClosing = true;
+        _previewTimer.StopAndDispose(PreviewTimerElapsed);
     }
 
     private void UpdatePreview()
@@ -172,12 +195,40 @@ public partial class ModifySelectionViewModel : ObservableObject
         Window?.Close();
     }
 
+    [RelayCommand]
+    private async Task ShowRuleSettings()
+    {
+        var rule = SelectedRule;
+        if (Window == null || rule?.HearingImpairedOptions == null)
+        {
+            return;
+        }
+
+        var options = rule.HearingImpairedOptions;
+        var savedHiSettings = Se.Settings.Tools.RemoveTextForHi;
+        var result = await _windowService
+            .ShowDialogAsync<HearingImpairedRuleSettingsWindow, HearingImpairedRuleSettingsViewModel>(
+                Window,
+                vm => vm.Initialize(options, savedHiSettings.CustomStart, savedHiSettings.CustomEnd));
+
+        if (result.OkPressed)
+        {
+            options.CopyFrom(result.GetOptions());
+            OnRuleChanged();
+        }
+    }
+
     internal void KeyDown(object? sender, KeyEventArgs e)
     {
         if (e.Key == Key.Escape)
         {
             e.Handled = true;
             Window?.Close();
+        }
+        else if (UiUtil.IsHelp(e))
+        {
+            e.Handled = true;
+            UiUtil.ShowHelp("features/modify-selection");
         }
     }
 

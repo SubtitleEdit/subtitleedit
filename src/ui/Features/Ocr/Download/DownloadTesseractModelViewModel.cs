@@ -4,6 +4,7 @@ using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Nikse.SubtitleEdit.Core.Common;
+using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Logic.Download;
 using System;
@@ -15,10 +16,11 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Timers;
 using Timer = System.Timers.Timer;
+using Nikse.SubtitleEdit.UiLogic.Ocr;
 
 namespace Nikse.SubtitleEdit.Features.Ocr.Download;
 
-public partial class DownloadTesseractModelViewModel : ObservableObject
+public partial class DownloadTesseractModelViewModel : ObservableObject, IClosingCleanup
 {
     [ObservableProperty] private ObservableCollection<TesseractDictionary> _tesseractDictionaryItems;
     [ObservableProperty] private TesseractDictionary? _selectedTesseractDictionaryItem;
@@ -72,8 +74,8 @@ public partial class DownloadTesseractModelViewModel : ObservableObject
 
                 if (_downloadStream.Length == 0)
                 {
-                    StatusText = "Download failed";
-                    Error = "No data received";
+                    StatusText = Se.Language.General.DownloadFailed;
+                    Error = Se.Language.General.NoDataReceived;
                     return;
                 }
 
@@ -89,13 +91,13 @@ public partial class DownloadTesseractModelViewModel : ObservableObject
                 var ex = _downloadTask.Exception?.InnerException ?? _downloadTask.Exception;
                 if (ex is OperationCanceledException)
                 {
-                    StatusText = "Download canceled";
+                    StatusText = Se.Language.General.DownloadCanceled;
                     Close();
                 }
                 else
                 {
-                    StatusText = "Download failed";
-                    Error = ex?.Message ?? "Unknown error";
+                    StatusText = Se.Language.General.DownloadFailed;
+                    Error = ex?.Message ?? Se.Language.General.UnknownError;
                 }
             }
         }
@@ -132,8 +134,12 @@ public partial class DownloadTesseractModelViewModel : ObservableObject
     {
         _cancellationTokenSource?.Cancel();
         _done = true;
-        _timer.Stop();
         Close();
+    }
+
+    public void OnClosingCleanup()
+    {
+        _timer.StopAndDispose(OnTimerOnElapsed);
     }
 
     [RelayCommand]

@@ -356,9 +356,9 @@ public partial class ExportEbuStlViewModel : ObservableObject
         _header.TotalNumberOfDisks = SelectedTotalNumberOfDiscs?.ToString(CultureInfo.InvariantCulture) ?? string.Empty;
 
         JustificationCode = (byte)Justifications.IndexOf(SelectedJustification ?? Justifications[0]);
-        Configuration.Settings.SubtitleSettings.EbuStlMarginTop = (int)(SelectedTopAlignment ?? 0);
-        Configuration.Settings.SubtitleSettings.EbuStlMarginBottom = (int)(SelectedBottomAlignment ?? 0);
-        Configuration.Settings.SubtitleSettings.EbuStlNewLineRows = (int)(SelectedRowsAddByNewLine ?? 1);
+        Configuration.Settings.SubtitleSettings.EbuStlMarginTop = SelectedTopAlignment ?? 0;
+        Configuration.Settings.SubtitleSettings.EbuStlMarginBottom = SelectedBottomAlignment ?? 0;
+        Configuration.Settings.SubtitleSettings.EbuStlNewLineRows = SelectedRowsAddByNewLine ?? 1;
         Configuration.Settings.SubtitleSettings.EbuStlTeletextUseBox = UseBox;
         Configuration.Settings.SubtitleSettings.EbuStlTeletextUseDoubleHeight = UseDoubleHeight;
 

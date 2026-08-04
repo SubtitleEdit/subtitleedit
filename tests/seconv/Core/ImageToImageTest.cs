@@ -1,4 +1,7 @@
+using Nikse.SubtitleEdit.Core.BluRaySup;
 using SeConv.Core;
+using System.Text;
+using System.Text.RegularExpressions;
 using Xunit;
 
 namespace SeConvTests.Core;
@@ -77,6 +80,80 @@ public class ImageToImageTest : IDisposable
         Assert.DoesNotContain("VideoFormat=\"400x300\"", index);
     }
 
+    // Three lines the export places in three different spots, so a re-export that drops the
+    // source position (and re-centres everything at the bottom) cannot pass by accident.
+    private const string PositionedAssContent = """
+        [Script Info]
+        ScriptType: v4.00+
+        PlayResX: 1920
+        PlayResY: 1080
+
+        [V4+ Styles]
+        Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding
+        Style: Default,Arial,48,&H00FFFFFF,&H0300FFFF,&H00000000,&H02000000,0,0,0,0,100,100,0,0,1,2,1,2,10,10,10,1
+
+        [Events]
+        Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
+        Dialogue: 0,0:00:01.00,0:00:02.00,Default,,0,0,0,,{\an7\pos(100,100)}Top left corner
+        Dialogue: 0,0:00:03.00,0:00:04.00,Default,,0,0,0,,{\an5\pos(960,540)}Middle of the frame
+        Dialogue: 0,0:00:05.00,0:00:06.00,Default,,0,0,0,,{\an8}Top center
+
+        """;
+
+    [Fact]
+    public async Task ConvertAsync_BluRaySupToBdnXml_PreservesSourcePositions()
+    {
+        var input = Path.Combine(_tempRoot, "positioned.ass");
+        await File.WriteAllTextAsync(input, PositionedAssContent, TestContext.Current.CancellationToken);
+
+        var supFolder = Path.Combine(_tempRoot, "sup");
+        Directory.CreateDirectory(supFolder);
+        var converter = new SubtitleConverter();
+        var supResult = await converter.ConvertAsync(new ConversionOptions
+        {
+            Patterns = [input],
+            Format = "bluraysup",
+            OutputFolder = supFolder,
+            Overwrite = true,
+            Resolution = (1920, 1080),
+            ImageStyle = new ImageExportStyle(),
+        });
+        Assert.True(supResult.Success, string.Join("; ", supResult.Errors));
+        var supFile = Assert.Single(Directory.GetFiles(supFolder, "*.sup"));
+
+        var expected = BluRaySupParser.ParseBluRaySup(supFile, new StringBuilder())
+            .Select(p => p.GetPosition())
+            .ToList();
+        Assert.Equal(3, expected.Count);
+        // The three lines really are in three different places in the source
+        Assert.Equal(3, expected.Select(p => p.Top).Distinct().Count());
+
+        // Re-export the .sup as BDN-XML, which records each bitmap's X/Y
+        var bdnFolder = Path.Combine(_tempRoot, "bdn2");
+        Directory.CreateDirectory(bdnFolder);
+        var bdnResult = await converter.ConvertAsync(new ConversionOptions
+        {
+            Patterns = [supFile],
+            Format = "bdnxml",
+            OutputFolder = bdnFolder,
+            Overwrite = true,
+        });
+        Assert.True(bdnResult.Success, string.Join("; ", bdnResult.Errors));
+
+        var indexFile = Assert.Single(Directory.GetFiles(bdnFolder, "index.xml", SearchOption.AllDirectories));
+        var index = await File.ReadAllTextAsync(indexFile, TestContext.Current.CancellationToken);
+        var written = Regex.Matches(index, @"<Graphic[^>]*\sX=""(\d+)""\s+Y=""(\d+)""")
+            .Select(m => (X: int.Parse(m.Groups[1].Value), Y: int.Parse(m.Groups[2].Value)))
+            .ToList();
+
+        Assert.Equal(expected.Count, written.Count);
+        for (var i = 0; i < expected.Count; i++)
+        {
+            Assert.Equal(expected[i].Left, written[i].X);
+            Assert.Equal(expected[i].Top, written[i].Y);
+        }
+    }
+
     [Fact]
     public async Task ConvertAsync_BluRaySupToSrt_StillRoutesToOcr_NotPreservePath()
     {
@@ -105,5 +182,78 @@ public class ImageToImageTest : IDisposable
 
         Assert.False(result.Success);
         Assert.Contains("Tesseract not found on PATH", result.Errors[0]);
+    }
+
+    private const string SrtContent = """
+        1
+        00:00:01,000 --> 00:00:02,000
+        Hello
+
+        2
+        00:00:03,000 --> 00:00:04,000
+        World
+
+        """;
+
+    [Fact]
+    public async Task ConvertAsync_VobSubToBdnXml_KeepsTheIdxFrameSize_NotDvdPal()
+    {
+        // A 1920x1080 VobSub - Subtitle Edit writes "size: 1920x1080" into the .idx - used to
+        // come back as DVD PAL 720x576, which moves every subpicture inside a smaller frame.
+        var input = Path.Combine(_tempRoot, "in.srt");
+        await File.WriteAllTextAsync(input, SrtContent, TestContext.Current.CancellationToken);
+
+        var vobFolder = Path.Combine(_tempRoot, "vob");
+        Directory.CreateDirectory(vobFolder);
+        var converter = new SubtitleConverter();
+        var vobResult = await converter.ConvertAsync(new ConversionOptions
+        {
+            Patterns = [input],
+            Format = "vobsub",
+            OutputFolder = vobFolder,
+            Overwrite = true,
+            Resolution = (1920, 1080),
+            ImageStyle = new ImageExportStyle(),
+        });
+        Assert.True(vobResult.Success, string.Join("; ", vobResult.Errors));
+
+        var subFile = Assert.Single(Directory.GetFiles(vobFolder, "*.sub"));
+        var idxFile = Path.ChangeExtension(subFile, ".idx");
+        Assert.Contains("size: 1920x1080",
+            await File.ReadAllTextAsync(idxFile, TestContext.Current.CancellationToken));
+
+        var bdnFolder = Path.Combine(_tempRoot, "bdn3");
+        Directory.CreateDirectory(bdnFolder);
+        var bdnResult = await converter.ConvertAsync(new ConversionOptions
+        {
+            Patterns = [subFile],
+            Format = "bdnxml",
+            OutputFolder = bdnFolder,
+            Overwrite = true,
+        });
+        Assert.True(bdnResult.Success, string.Join("; ", bdnResult.Errors));
+
+        var indexFile = Assert.Single(Directory.GetFiles(bdnFolder, "index.xml", SearchOption.AllDirectories));
+        var index = await File.ReadAllTextAsync(indexFile, TestContext.Current.CancellationToken);
+        Assert.Contains("VideoFormat=\"1080p\"", index);
+    }
+
+    [Theory]
+    [InlineData("size: 720x480\npalette: 000000", 720, 480)]
+    [InlineData("SIZE: 1920x1080", 1920, 1080)]
+    public void TryGetVobSubIdxScreenSize_SizeLine_IsParsed(string idxText, int width, int height)
+    {
+        Assert.Equal((width, height), BitmapSubtitleLoader.TryGetVobSubIdxScreenSize(idxText));
+    }
+
+    [Theory]
+    [InlineData(null)]
+    [InlineData("")]
+    [InlineData("palette: 000000")]
+    [InlineData("size: banana")]
+    public void TryGetVobSubIdxScreenSize_NoUsableSizeLine_ReturnsNull(string? idxText)
+    {
+        // null, not a guess - the caller knows whether PAL or NTSC is the right default
+        Assert.Null(BitmapSubtitleLoader.TryGetVobSubIdxScreenSize(idxText));
     }
 }

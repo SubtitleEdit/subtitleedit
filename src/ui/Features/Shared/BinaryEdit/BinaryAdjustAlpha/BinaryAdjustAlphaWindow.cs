@@ -42,7 +42,7 @@ public class BinaryAdjustAlphaWindow : Window
         };
 
         // Left side - controls
-        var leftPanel = MakeControlsPanel(vm);
+        var leftPanel = MakeControlsPanel(vm, out var alphaAdjustmentSlider);
         contentGrid.Add(leftPanel, 0, 0);
 
         // Right side - preview
@@ -59,11 +59,11 @@ public class BinaryAdjustAlphaWindow : Window
 
         Content = mainGrid;
 
-        Activated += delegate { buttonOk.Focus(); };
+        Activated += delegate { alphaAdjustmentSlider.Focus(); }; // initial focus on an input, not an action button - a focused button clicks on bare Space
         KeyDown += (_, e) => vm.OnKeyDown(e);
     }
 
-    private static StackPanel MakeControlsPanel(BinaryAdjustAlphaViewModel vm)
+    private static StackPanel MakeControlsPanel(BinaryAdjustAlphaViewModel vm, out Slider alphaAdjustmentSlider)
     {
         var panel = new StackPanel
         {
@@ -94,6 +94,7 @@ public class BinaryAdjustAlphaWindow : Window
             },
         };
         panel.Children.Add(alphaSlider);
+        alphaAdjustmentSlider = alphaSlider;
 
         var alphaValueLabel = new TextBlock
         {

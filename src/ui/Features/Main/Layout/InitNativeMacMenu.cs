@@ -238,14 +238,14 @@ public static class InitNativeMacMenu
         exportItems.Items.Add(Item(lExport.TitleExportDCinemaInteropPng, v => v.ExportDCinemaInteropPngCommand));
         exportItems.Items.Add(Item(lExport.TitleExportDCinemaSmpte2014Png, v => v.ExportDCinemaSmpte2014PngCommand));
         exportItems.Items.Add(Item(Ebu.NameOfFormat, v => v.ExportEbuStlCommand));
-        exportItems.Items.Add(Item("DOST/png", v => v.ExportDostPngCommand));
+        exportItems.Items.Add(Item(lExport.TitleExportDostPng, v => v.ExportDostPngCommand));
         exportItems.Items.Add(Item(lExport.TitleExportDvdSup, v => v.ExportDvdSupCommand));
-        exportItems.Items.Add(Item("Final Cut Pro + image", v => v.ExportFcpPngCommand));
+        exportItems.Items.Add(Item(lExport.TitleExportFcpImage, v => v.ExportFcpPngCommand));
         exportItems.Items.Add(Item(Se.Language.General.ImagesWithTimeCode, v => v.ExportImagesWithTimeCodeCommand));
         exportItems.Items.Add(Item(Pac.NameOfFormat, v => v.ExportPacCommand));
         exportItems.Items.Add(Item(new PacUnicode().Name, v => v.ExportPacUnicodeCommand));
         exportItems.Items.Add(Item(lExport.TitleExportVobSub, v => v.ExportVobSubCommand));
-        exportItems.Items.Add(Item("WebVTT png", v => v.ExportWebVttThumbnailsCommand));
+        exportItems.Items.Add(Item(lExport.TitleExportWebVttThumbnails, v => v.ExportWebVttThumbnailsCommand));
         exportItems.Items.Add(new NativeMenuItemSeparator());
         exportItems.Items.Add(Item(Clean(lExport.CustomTextFormatsDotDotDot), v => v.ShowExportCustomTextFormatCommand));
         exportItems.Items.Add(Item(Clean(lExport.PlainTextDotDotDot), v => v.ShowExportPlainTextCommand));
@@ -329,6 +329,8 @@ public static class InitNativeMacMenu
         state.Visibilities.Add((state.AudioTracksItem, v => v.IsAudioTracksVisible, [nameof(MainViewModel.IsAudioTracksVisible)]));
         videoItems.Items.Add(state.AudioTracksItem);
 
+        videoItems.Items.Add(new NativeMenuItemSeparator());
+        videoItems.Items.Add(Item(Clean(Se.Language.Video.GoToVideoPositionDotDotDot), v => v.ShowGoToVideoPositionCommand));
         videoItems.Items.Add(new NativeMenuItemSeparator());
         videoItems.Items.Add(Item(Clean(l.SpeechToText), v => v.ShowSpeechToTextWhisperCommand));
         videoItems.Items.Add(Item(Clean(l.TextToSpeech), v => v.ShowVideoTextToSpeechCommand));
@@ -416,6 +418,7 @@ public static class InitNativeMacMenu
             Item(Clean(l.AssaApplyAdvancedEffects), v => v.ShowAssaApplyAdvancedEffectCommand),
             Item(Clean(l.AssaApplyCustomOverrideTags), v => v.ShowAssaApplyCustomOverrideTagsCommand),
             Item(Clean(l.AssaDraw), v => v.ShowAssaDrawCommand),
+            Item(Clean(l.AssaFontCollector), v => v.ShowAssaFontCollectorCommand),
             Item(Clean(l.AssaProperties), v => v.ShowAssaPropertiesCommand),
             Item(Clean(l.AssaAttachments), v => v.ShowAssaAttachmentsCommand),
             Item(Clean(l.AssaStyles), v => v.ShowAssaStylesCommand),

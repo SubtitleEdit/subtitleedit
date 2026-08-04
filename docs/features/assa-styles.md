@@ -23,6 +23,7 @@ Manage Advanced SubStation Alpha (ASS/SSA) subtitle styles, including file style
 - View all styles defined in the current subtitle file.
 - Add, remove, copy, or rename styles.
 - Import styles from other subtitle files.
+- Reorder styles via the right-click menu — **Move up** (`Ctrl+Up`), **Move down** (`Ctrl+Down`), **Move to top**, and **Move to bottom**. Select several styles first to move them as a block. This is the order the styles are written to the file with, so it is also the order other tools will list them in.
 
 ### Storage Styles
 - Maintain a library of reusable styles separate from any subtitle file.
@@ -32,7 +33,7 @@ Manage Advanced SubStation Alpha (ASS/SSA) subtitle styles, including file style
 - Set a style as the default for new subtitles (this only affects newly created/converted subtitles, not the current one).
 
 ### Style Properties
-- **Font:** Name, size, bold, italic, underline, strikeout.
+- **Font:** Name, size, bold, italic, underline, strikeout. The `...` button opens the font picker with two tabs — **Installed fonts** and **Collected fonts** (fonts gathered in Subtitle Edit's own `Fonts` folder inside the data folder) — the paperclip button picks a font from the subtitle's attachments, and the font button opens the **Font collector**, which shows the fonts the subtitle uses, whether they are available, and can copy them to a folder — including SE's `Fonts` folder. The font combo also lists the collected fonts.
 - **Colors:** Primary, secondary, outline, and back (shadow) colors.
 - **Border:** Outline width and border style (outline + shadow or opaque box).
 - **Shadow:** Shadow depth.

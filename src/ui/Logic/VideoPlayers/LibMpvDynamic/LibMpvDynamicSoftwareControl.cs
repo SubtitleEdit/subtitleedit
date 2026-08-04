@@ -169,11 +169,27 @@ public class LibMpvDynamicSoftwareControl : Control
         _isInitialized = false;
     }
 
-    public void LoadFile(string path)
+    public async void LoadFile(string path)
     {
-        _mpvPlayer?.LoadFile(path);
-        // Trigger initial render
-        InvalidateVisual();
+        if (_mpvPlayer == null)
+        {
+            return;
+        }
+
+        try
+        {
+            var loadTask = _mpvPlayer.LoadFile(path);
+
+            // Trigger initial render
+            InvalidateVisual();
+
+            await loadTask;
+        }
+        catch (Exception exception)
+        {
+            // The load task was previously discarded, hiding open failures entirely.
+            Se.LogError(exception, $"mpv failed to load video file: {path}");
+        }
     }
 
     public void TogglePlayPause()

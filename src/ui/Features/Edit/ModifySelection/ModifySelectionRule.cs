@@ -27,6 +27,20 @@ public class ModifySelectionRule
     public double DefaultValue { get; set; }
     public List<MultiSelectItem> MultiSelectItems { get; set; }
 
+    // Rules with too many options for the one-line rule row get a "Settings..." button instead.
+    public bool HasSettings { get; set; }
+
+    // Only set for RuleType.HearingImpaired - its options and the (lazily built) removal engine.
+    public HearingImpairedRuleOptions? HearingImpairedOptions { get; set; }
+    public HearingImpairedDetector? HearingImpairedDetector { get; set; }
+
+    // IsMatch runs against every line on the preview timer, so the regex is compiled once per
+    // (pattern, options) instead of going through the static Regex cache per line. A null
+    // cached regex with matching key means the pattern failed to parse.
+    private Regex? _cachedRegex;
+    private string? _cachedRegexPattern;
+    private RegexOptions _cachedRegexOptions;
+
     public ModifySelectionRule()
     {
         Name = string.Empty;
@@ -232,6 +246,14 @@ public class ModifySelectionRule
             },
             new()
             {
+                RuleType = RuleType.HearingImpaired,
+                Name = l.HearingImpaired,
+                HasSettings = true,
+                HearingImpairedOptions = HearingImpairedRuleOptions.FromSettings(),
+                HearingImpairedDetector = new HearingImpairedDetector(lines),
+            },
+            new()
+            {
                 RuleType = RuleType.Style,
                 Name = g.Style,
                 HasMultiSelect = true,
@@ -319,15 +341,22 @@ public class ModifySelectionRule
                     return false;
                 }
 
-                try
+                var options = HasMatchCase && MatchCase ? RegexOptions.None : RegexOptions.IgnoreCase;
+                if (_cachedRegexPattern != Text || _cachedRegexOptions != options)
                 {
-                    var options = HasMatchCase && MatchCase ? RegexOptions.None : RegexOptions.IgnoreCase;
-                    return Regex.IsMatch(text, Text, options);
+                    _cachedRegexPattern = Text;
+                    _cachedRegexOptions = options;
+                    try
+                    {
+                        _cachedRegex = new Regex(Text, options | RegexOptions.Compiled);
+                    }
+                    catch
+                    {
+                        _cachedRegex = null;
+                    }
                 }
-                catch
-                {
-                    return false;
-                }
+
+                return _cachedRegex != null && _cachedRegex.IsMatch(text);
 
             case RuleType.Odd:
                 return (item.Number % 2) == 1;
@@ -363,13 +392,13 @@ public class ModifySelectionRule
                 return item.Gap > Number;
 
             case RuleType.ExactlyOneLine:
-                return (text?.Split('\n').Length ?? 0) == 1;
+                return CountLines(text) == 1;
 
             case RuleType.ExactlyTwoLines:
-                return (text?.Split('\n').Length ?? 0) == 2;
+                return CountLines(text) == 2;
 
             case RuleType.MoreThanTwoLines:
-                return (text?.Split('\n').Length ?? 0) > 2;
+                return CountLines(text) > 2;
 
             case RuleType.Bookmarked:
                 return !string.IsNullOrEmpty(item.Bookmark);
@@ -385,13 +414,18 @@ public class ModifySelectionRule
             case RuleType.BlankLines:
                 return string.IsNullOrWhiteSpace(text);
 
+            case RuleType.HearingImpaired:
+                return HearingImpairedDetector != null &&
+                       HearingImpairedOptions != null &&
+                       HearingImpairedDetector.IsMatch(text, HearingImpairedOptions);
+
             case RuleType.Style:
                 if (string.IsNullOrEmpty(item.Style))
                 {
                     return false;
                 }
 
-                return MultiSelectItems.Any(p => p.Apply && p.Name == item.Style);
+                return AnyApplied(item.Style);
 
             case RuleType.Actor:
                 if (string.IsNullOrEmpty(item.Actor))
@@ -399,10 +433,29 @@ public class ModifySelectionRule
                     return false;
                 }
 
-                return MultiSelectItems.Any(p => p.Apply && p.Name == item.Actor);
+                return AnyApplied(item.Actor);
 
             default:
                 return false;
         }
+    }
+
+    private bool AnyApplied(string name)
+    {
+        foreach (var multiSelectItem in MultiSelectItems)
+        {
+            if (multiSelectItem.Apply && multiSelectItem.Name == name)
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    // Same result as text.Split('\n').Length without materializing the parts.
+    private static int CountLines(string text)
+    {
+        return text.AsSpan().Count('\n') + 1;
     }
 }

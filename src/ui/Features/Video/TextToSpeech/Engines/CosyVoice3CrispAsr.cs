@@ -56,7 +56,7 @@ public class CosyVoice3CrispAsr : ITtsEngine
 {
     public string Name => "CosyVoice3 (CrispASR)";
     public string Description => "Alibaba CosyVoice3 0.5B with 9 languages + 18 zh dialects, via CrispASR";
-    public bool HasLanguageParameter => false;
+    public bool HasLanguageParameter => true;
     public bool HasApiKey => false;
     public bool HasRegion => false;
     public bool HasModel => true;
@@ -246,10 +246,31 @@ public class CosyVoice3CrispAsr : ITtsEngine
         }
 
         SeedVoicesFromQwen3TtsCppIfEmpty(voicesFolder);
+        NormalizeVoiceTranscriptsOnce(voicesFolder);
         return voicesFolder;
     }
 
     private static bool _voiceSeedAttempted;
+    private static bool _voicesNormalized;
+
+    /// <summary>
+    /// One-time per session: drop unusable ref-text sidecars and backfill missing transcriptions
+    /// from the sibling OmniVoice pack (same generic reference WAVs, real transcripts). CosyVoice3
+    /// needs ref-text more than any sibling — it fails outright without one — yet it was the engine
+    /// that never ran this, so of the seeded voices only the single one that happened to ship a real
+    /// transcript was usable. Browsing the voice combo fired the missing-transcript prompt once per
+    /// voice, and MOSS-TTS had the identical bug fixed this way.
+    /// </summary>
+    private static void NormalizeVoiceTranscriptsOnce(string voicesFolder)
+    {
+        if (_voicesNormalized)
+        {
+            return;
+        }
+        _voicesNormalized = true;
+
+        Qwen3TtsCrispAsr.NormalizeVoiceTranscripts(voicesFolder);
+    }
 
     /// <summary>
     /// One-time best-effort seed of WAV reference voices from qwen3-tts.cpp's voices folder.
@@ -280,30 +301,7 @@ public class CosyVoice3CrispAsr : ITtsEngine
             foreach (var src in Directory.GetFiles(sourceFolder, "*.wav"))
             {
                 var dest = Path.Combine(voicesFolder, Path.GetFileName(src));
-
-                if (!File.Exists(dest))
-                {
-                    try
-                    {
-                        var ffmpeg = FfmpegGenerator.ConvertToMono16kHzWav(src, dest);
-                        if (!ffmpeg.Start())
-                        {
-                            File.Copy(src, dest);
-                        }
-                        else
-                        {
-                            ffmpeg.WaitForExit();
-                        }
-                    }
-                    catch (Exception ex)
-                    {
-                        Se.LogError(ex, $"CosyVoice3 (CrispASR): resample seed '{src}' failed; falling back to plain copy");
-                        try { if (!File.Exists(dest))
-                        {
-                            File.Copy(src, dest);
-                        } } catch { }
-                    }
-                }
+                VoiceSeedHelper.CopyOrResample(src, dest, 16000, "CosyVoice3 (CrispASR)");
 
                 var sidecar = Path.ChangeExtension(src, ".txt");
                 if (File.Exists(sidecar))
@@ -317,7 +315,7 @@ public class CosyVoice3CrispAsr : ITtsEngine
                         // missing-transcription prompt. Same filter Qwen3 (CrispASR) applies.
                         try
                         {
-                            if (!Qwen3TtsCrispAsr.LooksLikeAttributionBlurb(File.ReadAllText(sidecar)))
+                            if (!Qwen3TtsCrispAsr.LooksLikeUnusableTranscript(File.ReadAllText(sidecar)))
                             {
                                 File.Copy(sidecar, sidecarDest);
                             }
@@ -383,7 +381,7 @@ public class CosyVoice3CrispAsr : ITtsEngine
         return true;
     }
 
-    public Task<Voice[]> GetVoices(string language)
+    public async Task<Voice[]> GetVoices(string language)
     {
         var result = new List<Voice>();
 
@@ -395,7 +393,9 @@ public class CosyVoice3CrispAsr : ITtsEngine
             result.Add(new Voice(new CosyVoice3Voice(display, preset)));
         }
 
-        var voicesFolder = GetSetVoicesFolder();
+        // Off the UI thread: GetSetVoicesFolder does one-time reference-WAV seeding through
+        // ffmpeg, and this is awaited from SelectedEngineChanged on the dispatcher.
+        var voicesFolder = await Task.Run(GetSetVoicesFolder);
         if (Directory.Exists(voicesFolder))
         {
             foreach (var file in Directory.GetFiles(voicesFolder, "*.wav"))
@@ -406,7 +406,7 @@ public class CosyVoice3CrispAsr : ITtsEngine
             }
         }
 
-        return Task.FromResult(result.ToArray());
+        return result.ToArray();
     }
 
     private static string TryReadRefText(string wavPath)
@@ -423,7 +423,7 @@ public class CosyVoice3CrispAsr : ITtsEngine
             // transcriptions - treat them as "no transcript" (same read-time filter Qwen3
             // CrispASR applies) so they neither poison ref-text nor suppress the prompt.
             var text = File.ReadAllText(sidecar).Trim();
-            return Qwen3TtsCrispAsr.LooksLikeAttributionBlurb(text) ? string.Empty : text;
+            return Qwen3TtsCrispAsr.LooksLikeUnusableTranscript(text) ? string.Empty : text;
         }
         catch
         {
@@ -437,7 +437,7 @@ public class CosyVoice3CrispAsr : ITtsEngine
 
     public Task<string[]> GetModels() => Task.FromResult(new[] { ModelKeyQ4K, ModelKeyF16 });
 
-    public Task<TtsLanguage[]> GetLanguages(Voice voice, string? model) => Task.FromResult(Array.Empty<TtsLanguage>());
+    public Task<TtsLanguage[]> GetLanguages(Voice voice, string? model) => Task.FromResult(CosyVoice3Languages.All);
 
     public Task<Voice[]> RefreshVoices(string language, CancellationToken cancellationToken) =>
         GetVoices(language);
@@ -487,33 +487,45 @@ public class CosyVoice3CrispAsr : ITtsEngine
         var outputFileName = Path.Combine(GetSetFolder(), Guid.NewGuid() + ".wav");
 
         var speed = Math.Clamp(Se.Settings.Video.TextToSpeech.CosyVoice3CrispAsrSpeed, 0.25, 4.0);
+        // Deliberately NO `voice` / `ref_text` field: for cloning, voiceArg is an absolute WAV
+        // path, which the server rejects outright (HTTP 400, "'voice' must not contain … path
+        // separators" — path-traversal guard), so every clone synthesis failed. The backend gets
+        // both voice (preset name or WAV path) and ref-text from the startup --voice/--ref-text
+        // flags instead, and the server restarts on (voiceArg, ref-text) change — see
+        // EnsureServerRunningAsync. Same bug family as MOSS-TTS #12757.
         var payload = new Dictionary<string, object>
         {
             ["input"] = text,
             ["response_format"] = "wav",
-            ["voice"] = voiceArg,
             ["speed"] = speed,
         };
         if (isClone)
         {
-            // ref_text mirrors the F5-TTS payload guess. CosyVoice3's voice + ref_text are
-            // baked at server startup (see EnsureServerRunningAsync) so this field is mostly
-            // informational, but we send it for logging + future server versions that read it
-            // per-request.
-            payload["ref_text"] = cosyVoice.RefText;
-            // Cloning is gated behind a consent attestation (CrispASR v0.7.0 returns HTTP 400
-            // consent_required without it). The user supplies their own reference voice by
-            // importing a WAV into SE, which is the act being attested here.
-            payload["consent_attestation"] = "I have the speaker's consent, or it is my own voice.";
-            // Skip the audible AI-disclosure prefix CrispASR otherwise prepends to cloned audio;
-            // SE surfaces the AI-generated nature in its UI. The inaudible watermark + C2PA
-            // provenance metadata stay embedded regardless (defaults to true server-side).
-            payload["spoken_disclaimer"] = false;
+            // Attests the user's own imported reference and the AI-disclosure duty; see
+            // CrispAsrTtsProvenance. Skipped when voice cloning has not been accepted in settings.
+            CrispAsrTtsProvenance.AddSpeechAttestations(payload);
+        }
+
+        // Target language for cross-lingual synthesis (#13110): the backend compares it to the
+        // reference voice's language and drops the reference transcript from the prompt when they
+        // differ, so the clone speaks the target language instead of imitating the reference's.
+        // Auto (empty) sends no field and keeps plain zero-shot. Baked presets carry their own
+        // bank language; for imported WAVs the reference language comes from the settings-window
+        // pick (source_lang) since the server's own detection is unreliable for Latin scripts.
+        var languageArg = CosyVoice3Languages.ResolveLanguageArg(language);
+        if (!string.IsNullOrEmpty(languageArg))
+        {
+            payload["language"] = languageArg;
+        }
+        var sourceLanguage = (Se.Settings.Video.TextToSpeech.CosyVoice3CrispAsrSourceLanguage ?? string.Empty).Trim();
+        if (isClone && !string.IsNullOrEmpty(sourceLanguage))
+        {
+            payload["source_lang"] = sourceLanguage;
         }
 
         var body = JsonSerializer.Serialize(payload);
         using var content = new StringContent(body, Encoding.UTF8, "application/json");
-        Se.WriteToolsLog($"CosyVoice3 (CrispASR): POST {ServerBaseUrl}/v1/audio/speech (voice={cosyVoice}, clone={isClone}, refTextLen={cosyVoice.RefText.Length}, textLen={text.Length})");
+        Se.WriteToolsLog($"CosyVoice3 (CrispASR): POST {ServerBaseUrl}/v1/audio/speech (voice={cosyVoice}, clone={isClone}, refTextLen={cosyVoice.RefText.Length}, textLen={text.Length}, language={(string.IsNullOrEmpty(languageArg) ? "(auto)" : languageArg)})");
 
         HttpResponseMessage response;
         try
@@ -690,6 +702,8 @@ public class CosyVoice3CrispAsr : ITtsEngine
                 psi.ArgumentList.Add("--ref-text");
                 psi.ArgumentList.Add(refText);
             }
+
+            CrispAsrTtsProvenance.AddServerMarkingArgs(psi.ArgumentList, exe);
 
             var process = Process.Start(psi)
                 ?? throw new InvalidOperationException("Failed to start crispasr (cosyvoice3-tts)");

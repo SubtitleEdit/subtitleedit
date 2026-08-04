@@ -182,6 +182,23 @@ public class YtDlpDownloadServiceTests
         }
     }
 
+    [Theory]
+    // Real yt-dlp output - the merge is the long silent stretch right after the transfer hits 100%.
+    [InlineData("[Merger] Merging formats into \"download.mp4\"", true)]
+    [InlineData("[FixupM3u8] Fixing MPEG-TS in MP4 container of \"download.mp4\"", true)]
+    [InlineData("[EmbedSubtitle] Embedding subtitles in \"download.mkv\"", true)]
+    [InlineData("[VideoConvertor] Converting video from webm to mp4", true)]
+    [InlineData("[download] 100% of 80.05KiB in 00:00:00 at 300.72KiB/s", false)]
+    [InlineData("[download] Destination: download.f160.mp4", false)]
+    [InlineData("[info] g_mmytsYUd0: Downloading 1 format(s): 160+139", false)]
+    [InlineData("Deleting original file download.f160.mp4 (pass -k to keep)", false)]
+    public void IsPostProcessingLine_OnlyMatchesPostProcessors(string line, bool expected)
+    {
+        var actual = YtDlpDownloadService.IsPostProcessingLine(line);
+
+        Assert.Equal(expected, actual);
+    }
+
     [Fact]
     public async Task VerifyChecksumAsync_UnknownVersion_IsNoOp_AndKeepsFile()
     {

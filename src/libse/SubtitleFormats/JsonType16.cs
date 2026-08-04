@@ -58,7 +58,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             }
 
             var text = sb.ToString().TrimStart();
-            if (!text.StartsWith("[", StringComparison.Ordinal))
+            if (!text.StartsWith('['))
             {
                 var tag = "\"subtitles\":";
                 var startTag = text.IndexOf(tag, StringComparison.Ordinal);
@@ -66,7 +66,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 {
                     text = text.Remove(0, startTag + tag.Length).TrimStart();
                 }
-                if (!text.StartsWith("[", StringComparison.Ordinal))
+                if (!text.StartsWith('['))
                 {
                     return;
                 }

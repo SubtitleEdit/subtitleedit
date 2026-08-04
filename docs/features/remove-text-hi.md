@@ -40,3 +40,7 @@ Click **Edit** next to *Remove interjections* to modify the list of interjection
 ## Preview
 
 All proposed removals are shown in a preview list with **Before** and **After** columns. Uncheck individual items to exclude them before clicking **OK**.
+
+## Keeping the Hearing-Impaired Text
+
+To save the hearing-impaired text instead of just discarding it, use the **Hearing impaired (SDH)** rule in [Modify selection](modify-selection.md). It selects the lines this tool would change, so they can be cut out into a subtitle of their own — useful before aligning, when the SDH should be merged back in afterwards. That rule reads its options from the settings above.

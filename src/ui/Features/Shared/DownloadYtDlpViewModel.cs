@@ -8,7 +8,6 @@ using Nikse.SubtitleEdit.Logic.Download;
 using System;
 using System.Globalization;
 using System.IO;
-using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Timers;
@@ -17,7 +16,7 @@ using Timer = System.Timers.Timer;
 
 namespace Nikse.SubtitleEdit.Features.Shared;
 
-public partial class DownloadYtDlpViewModel : ObservableObject
+public partial class DownloadYtDlpViewModel : ObservableObject, IClosingCleanup
 {
     [ObservableProperty] private double _progress;
     [ObservableProperty] private string _statusText;
@@ -65,11 +64,11 @@ public partial class DownloadYtDlpViewModel : ObservableObject
                 _done = true;
 
                 var fileName = YtDlpDownloadService.GetFullFileName();
-                if (File.Exists(fileName) && RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+                if (File.Exists(fileName) && OperatingSystem.IsMacOS())
                 {
                     MacHelper.MakeExecutable(fileName);
                 }
-                else if (File.Exists(fileName) && RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+                else if (File.Exists(fileName) && OperatingSystem.IsLinux())
                 {
                     LinuxHelper.MakeExecutable(fileName);
                 }
@@ -92,13 +91,13 @@ public partial class DownloadYtDlpViewModel : ObservableObject
                 var ex = _downloadTask.Exception?.InnerException ?? _downloadTask.Exception;
                 if (ex is OperationCanceledException)
                 {
-                    StatusText = "Download canceled";
+                    StatusText = Se.Language.General.DownloadCanceled;
                     Close();
                 }
                 else
                 {
-                    StatusText = "Download failed";
-                    Error = ex?.Message ?? "Unknown error";
+                    StatusText = Se.Language.General.DownloadFailed;
+                    Error = ex?.Message ?? Se.Language.General.UnknownError;
                 }
             }
         }
@@ -117,8 +116,12 @@ public partial class DownloadYtDlpViewModel : ObservableObject
     {
         _cancellationTokenSource?.Cancel();
         _done = true;
-        _timer.Stop();
         Close();
+    }
+
+    public void OnClosingCleanup()
+    {
+        _timer.StopAndDispose(OnTimerOnElapsed);
     }
 
     public void StartDownload()

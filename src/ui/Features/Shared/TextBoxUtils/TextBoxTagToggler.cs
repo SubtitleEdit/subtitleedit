@@ -75,36 +75,8 @@ public static class TextBoxTagToggler
         {
             // Move leading/trailing white-space (spaces and new-lines) outside the tag so
             // " 'word'" becomes " <i>'word'</i>" instead of "<i> 'word'</i>".
-            var pre = string.Empty;
-            var post = string.Empty;
-            var selectedText = tb.Text.Substring(selectionStart, selectionLength);
-            while (selectedText.EndsWith(' ') || selectedText.EndsWith(Environment.NewLine, StringComparison.Ordinal) ||
-                   selectedText.StartsWith(' ') || selectedText.StartsWith(Environment.NewLine, StringComparison.Ordinal))
-            {
-                if (selectedText.EndsWith(' '))
-                {
-                    post = " " + post;
-                    selectedText = selectedText.Remove(selectedText.Length - 1);
-                }
-
-                if (selectedText.EndsWith(Environment.NewLine, StringComparison.Ordinal))
-                {
-                    post = Environment.NewLine + post;
-                    selectedText = selectedText.Remove(selectedText.Length - Environment.NewLine.Length);
-                }
-
-                if (selectedText.StartsWith(' '))
-                {
-                    pre += " ";
-                    selectedText = selectedText.Remove(0, 1);
-                }
-
-                if (selectedText.StartsWith(Environment.NewLine, StringComparison.Ordinal))
-                {
-                    pre += Environment.NewLine;
-                    selectedText = selectedText.Remove(0, Environment.NewLine.Length);
-                }
-            }
+            var selectedText = TextBoxSelectionUtils.SplitOuterWhiteSpace(
+                tb.Text.Substring(selectionStart, selectionLength), out var pre, out var post);
 
             selectedText = pre + HtmlUtil.ToggleTag(selectedText, tag, false, isAssa) + post;
 

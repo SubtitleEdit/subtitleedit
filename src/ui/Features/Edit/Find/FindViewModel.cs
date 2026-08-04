@@ -32,6 +32,7 @@ public partial class FindViewModel : ObservableObject
 
     private IFindService? _findService;
     private List<string> _subs = new List<string>();
+    private List<string>? _originalSubs;
     private IFindResult? _findResult;
 
     public FindViewModel()
@@ -104,7 +105,7 @@ public partial class FindViewModel : ObservableObject
             return;
         }
 
-        var count = _findService.Count(SearchText, _subs, WholeWord, FindMode);
+        var count = _findService.Count(SearchText, _subs, WholeWord, FindMode, _originalSubs);
 
         if (count <= 0)
         {
@@ -153,10 +154,11 @@ public partial class FindViewModel : ObservableObject
         }
     }
 
-    internal void InitializeFindData(IFindService findService, List<string> subs, string selectedText, IFindResult findResult)
+    internal void InitializeFindData(IFindService findService, List<string> subs, string selectedText, IFindResult findResult, List<string>? originalSubs = null)
     {
         _findService = findService;
         _subs = subs;
+        _originalSubs = originalSubs;
         if (string.IsNullOrEmpty(SearchText))
         {
             SearchText = RegexUtils.EscapeNewLines(selectedText.Trim());

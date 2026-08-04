@@ -48,6 +48,32 @@ public class ContainerLoaderTest : IDisposable
     }
 
     [Fact]
+    public async Task ConvertAsync_MkvTextTrackWithoutDeclaredLanguage_AutoDetectsLanguage()
+    {
+        // container_text_undeclared_lang.mkv carries a Danish text track muxed without a
+        // language declaration ("und") - the loader must auto-detect the language instead
+        // of passing the undeclared tag through.
+        var input = Fixtures.Path("container_text_undeclared_lang.mkv");
+        Assert.True(File.Exists(input), $"Fixture missing: {input}");
+        var outputFolder = Path.Combine(_tempRoot, "out");
+        Directory.CreateDirectory(outputFolder);
+
+        var converter = new SubtitleConverter();
+        var result = await converter.ConvertAsync(new ConversionOptions
+        {
+            Patterns = [input],
+            Format = "SubRip",
+            OutputFolder = outputFolder,
+            Overwrite = true,
+        });
+
+        Assert.True(result.Success, string.Join("; ", result.Errors));
+        var outputs = Directory.GetFiles(outputFolder, "*.srt");
+        Assert.Single(outputs);
+        Assert.Contains(".da.", Path.GetFileName(outputs[0]));
+    }
+
+    [Fact]
     public async Task ConvertAsync_MkvWithImageTracks_TimeCodesOnly_ProducesBothTracks()
     {
         // container_image.mkv has both a VobSub (S_VOBSUB) and a PGS (S_HDMV/PGS)

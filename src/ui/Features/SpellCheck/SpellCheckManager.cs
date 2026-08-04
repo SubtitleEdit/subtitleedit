@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using Nikse.SubtitleEdit.UiLogic.SpellCheck;
 
 namespace Nikse.SubtitleEdit.Features.SpellCheck;
 
@@ -127,8 +128,8 @@ public class SpellCheckManager : SpellChecker, ISpellCheckManager
         var word = spellCheckWord.Text;
         var text = p.Text;
 
-        if (SkipAllList.Contains(word.ToUpperInvariant()) ||
-            (word.StartsWith('\'') || word.EndsWith('\'')) && SkipAllList.Contains(word.Trim('\'').ToUpperInvariant()))
+        if (SkipAllList.Contains(word) ||
+            (word.StartsWith('\'') || word.EndsWith('\'')) && SkipAllList.Contains(word.Trim('\'')))
         {
             NoOfSkippedWords++;
             return true;

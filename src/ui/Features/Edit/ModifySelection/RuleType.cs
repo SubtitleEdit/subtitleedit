@@ -25,6 +25,7 @@ public enum RuleType
     Bookmarked,
     BookmarkContains,
     BlankLines,
+    HearingImpaired,
     Style,
     Actor
 }

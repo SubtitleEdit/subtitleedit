@@ -57,7 +57,7 @@ public partial class GetPluginsDisplayItem : ObservableObject
         {
             IsInstalled = false;
             UpdateAvailable = false;
-            StatusText = Se.Language.Plugins.NotInstalled;
+            StatusText = Se.Language.General.NotInstalled;
             ActionText = Se.Language.Plugins.Install;
             NotifyStatusVisualsChanged();
             return;
@@ -68,7 +68,7 @@ public partial class GetPluginsDisplayItem : ObservableObject
         if (UpdateAvailable)
         {
             StatusText = string.Format(Se.Language.Plugins.UpdateAvailableXToY, installedVersion, Entry.Version);
-            ActionText = Se.Language.Plugins.Update;
+            ActionText = Se.Language.General.Update;
         }
         else
         {

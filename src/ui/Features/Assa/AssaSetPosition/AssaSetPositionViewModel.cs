@@ -235,13 +235,13 @@ public partial class AssaSetPositionViewModel : ObservableObject
     [RelayCommand]
     private async Task CenterHorizontally()
     {
-        ScreenshotX = (int)Math.Round((double)(SourceWidth / 2.0) - (double)(ScreenshotOverlayText.Size.Width / 2.0), MidpointRounding.AwayFromZero);
+        ScreenshotX = (int)Math.Round(SourceWidth / 2.0 - ScreenshotOverlayText.Size.Width / 2.0, MidpointRounding.AwayFromZero);
     }
 
     [RelayCommand]
     private async Task CenterVertically()
     {
-        ScreenshotY = (int)Math.Round((double)(SourceHeight / 2.0) - (double)(ScreenshotOverlayText.Size.Height / 2.0), MidpointRounding.AwayFromZero);
+        ScreenshotY = (int)Math.Round(SourceHeight / 2.0 - ScreenshotOverlayText.Size.Height / 2.0, MidpointRounding.AwayFromZero);
     }
 
     [RelayCommand]

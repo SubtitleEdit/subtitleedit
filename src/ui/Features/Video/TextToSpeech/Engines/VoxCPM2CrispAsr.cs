@@ -41,8 +41,9 @@ namespace Nikse.SubtitleEdit.Features.Video.TextToSpeech.Engines;
 ///
 /// Cloning is zero-shot from audio alone; an adjacent .txt transcription (ref-text) is optional
 /// but improves quality, so we pass <c>--ref-text</c> when a sidecar is present (same layout as
-/// F5-TTS / Qwen3 CustomVoice). Server-mode payload shape mirrors the other CrispASR TTS engines
-/// and should be verified against an actual v0.7.0 binary.
+/// F5-TTS / Qwen3 CustomVoice). Verified against crispasr 0.8.23: the reference comes from the
+/// startup <c>--voice</c> flag — the server logs "loaded reference audio '&lt;path&gt;'" and
+/// resamples it to 16 kHz — and the request carries no <c>voice</c> field.
 /// </summary>
 public class VoxCPM2CrispAsr : ITtsEngine
 {
@@ -66,10 +67,10 @@ public class VoxCPM2CrispAsr : ITtsEngine
 
     public const string BackendName = "voxcpm2-tts";
 
-    // Confirmed-by-analogy with F5-TTS/IndexTTS: the cloning backends read the reference audio
-    // from the startup --voice flag, so the server is torn down and restarted when the selected
-    // voice or ref-text changes (keyed by (model, voice, ref-text) below). Verify against a real
-    // v0.7.0 binary; if voxcpm2-tts honours a per-request voice field this can be set to false.
+    // Confirmed on crispasr 0.8.23: voxcpm2-tts reads the reference audio from the startup --voice
+    // flag, so the server is torn down and restarted when the selected voice or ref-text changes
+    // (keyed by (model, voice, ref-text) below). A per-request full path also hangs the server, so
+    // startup flags are the only workable shape here.
     private static readonly bool UseStartupVoiceFlags = true;
 
     /// <summary>
@@ -218,10 +219,29 @@ public class VoxCPM2CrispAsr : ITtsEngine
         }
 
         SeedVoicesFromQwen3TtsCppIfEmpty(voicesFolder);
+        NormalizeVoiceTranscriptsOnce(voicesFolder);
         return voicesFolder;
     }
 
     private static bool _voiceSeedAttempted;
+    private static bool _voicesNormalized;
+
+    /// <summary>
+    /// One-time per session: drop unusable ref-text sidecars and backfill missing transcriptions
+    /// from the sibling OmniVoice pack (same generic reference WAVs, real transcripts), so browsing
+    /// the voice combo does not fire the missing-transcript prompt once per seeded voice. Same fix
+    /// MOSS-TTS already carried.
+    /// </summary>
+    private static void NormalizeVoiceTranscriptsOnce(string voicesFolder)
+    {
+        if (_voicesNormalized)
+        {
+            return;
+        }
+        _voicesNormalized = true;
+
+        Qwen3TtsCrispAsr.NormalizeVoiceTranscripts(voicesFolder);
+    }
 
     /// <summary>
     /// One-time best-effort seed of WAV reference voices from qwen3-tts.cpp's voices folder so
@@ -253,31 +273,9 @@ public class VoxCPM2CrispAsr : ITtsEngine
             {
                 var dest = Path.Combine(voicesFolder, Path.GetFileName(src));
 
-                if (!File.Exists(dest))
-                {
-                    try
-                    {
-                        // qwen3-tts.cpp voice pack ships at 16 kHz; resample to 24 kHz mono on
-                        // seed (crispasr upsamples to VoxCPM2's 48 kHz internally).
-                        var ffmpeg = FfmpegGenerator.ConvertToMono24kHzWav(src, dest);
-                        if (!ffmpeg.Start())
-                        {
-                            File.Copy(src, dest);
-                        }
-                        else
-                        {
-                            ffmpeg.WaitForExit();
-                        }
-                    }
-                    catch (Exception ex)
-                    {
-                        Se.LogError(ex, $"VoxCPM2 (CrispASR): resample seed '{src}' failed; falling back to plain copy");
-                        try { if (!File.Exists(dest))
-                        {
-                            File.Copy(src, dest);
-                        } } catch { }
-                    }
-                }
+                // qwen3-tts.cpp voice pack ships at 16 kHz; resample to 24 kHz mono on
+                // seed (crispasr upsamples to VoxCPM2's 48 kHz internally).
+                VoiceSeedHelper.CopyOrResample(src, dest, 24000, "VoxCPM2 (CrispASR)");
 
                 var sidecar = Path.ChangeExtension(src, ".txt");
                 if (File.Exists(sidecar))
@@ -291,7 +289,7 @@ public class VoxCPM2CrispAsr : ITtsEngine
                         // missing-transcription prompt. Same filter Qwen3 (CrispASR) applies.
                         try
                         {
-                            if (!Qwen3TtsCrispAsr.LooksLikeAttributionBlurb(File.ReadAllText(sidecar)))
+                            if (!Qwen3TtsCrispAsr.LooksLikeUnusableTranscript(File.ReadAllText(sidecar)))
                             {
                                 File.Copy(sidecar, sidecarDest);
                             }
@@ -358,13 +356,15 @@ public class VoxCPM2CrispAsr : ITtsEngine
         return true;
     }
 
-    public Task<Voice[]> GetVoices(string language)
+    public async Task<Voice[]> GetVoices(string language)
     {
         var result = new List<Voice>();
 
         // Voice cloning only — no built-in default voice. The combo is empty until the user
         // imports a reference WAV (or the qwen3-tts.cpp voice seed runs above).
-        var voicesFolder = GetSetVoicesFolder();
+        // Off the UI thread: GetSetVoicesFolder does one-time reference-WAV seeding through
+        // ffmpeg, and this is awaited from SelectedEngineChanged on the dispatcher.
+        var voicesFolder = await Task.Run(GetSetVoicesFolder);
         if (Directory.Exists(voicesFolder))
         {
             foreach (var file in Directory.GetFiles(voicesFolder, "*.wav"))
@@ -374,7 +374,7 @@ public class VoxCPM2CrispAsr : ITtsEngine
             }
         }
 
-        return Task.FromResult(result.ToArray());
+        return result.ToArray();
     }
 
     public bool IsVoiceInstalled(Voice voice) => true;
@@ -418,30 +418,23 @@ public class VoxCPM2CrispAsr : ITtsEngine
         var outputFileName = Path.Combine(GetSetFolder(), Guid.NewGuid() + ".wav");
 
         var speed = Math.Clamp(Se.Settings.Video.TextToSpeech.VoxCPM2CrispAsrSpeed, 0.25, 4.0);
+        // Deliberately NO `voice` / `ref_text` field: the voxcpm2 backend treats a per-request
+        // `voice` as a FILE PATH (read_wav_mono_pcm16) that OVERRIDES the startup --voice, so the
+        // bare stem SE used to send failed to load and silently fell back to zero-shot — a random
+        // speaker per line, the same bug MOSS-TTS had (#12757). With the field omitted the backend
+        // falls back to the init-time --voice path (server mode never sets tts_voice_clone_consent,
+        // so the empty-voice branch resolves to voice_path_) and clones the reference. The server
+        // restarts on (voice, ref-text) change — see EnsureServerRunningAsync.
         var payload = new Dictionary<string, object>
         {
             ["input"] = text,
             ["response_format"] = "wav",
-            // The OpenAI-compat server resolves `voice` as a NAME listed by /v1/voices (the file
-            // stem inside --voice-dir). Passing a full path makes the server hang indefinitely,
-            // so send the reference WAV's base name — it lives in the voices folder = --voice-dir.
-            ["voice"] = Path.GetFileNameWithoutExtension(voxVoice.FilePath),
             ["speed"] = speed,
-            // VoxCPM2 gates voice cloning behind a consent attestation (CrispASR v0.7.0 returns
-            // HTTP 400 consent_required without it). The user supplies their own reference voice
-            // by importing a WAV into SE, which is the act being attested here.
-            ["consent_attestation"] = "I have the speaker's consent, or it is my own voice.",
-            // Skip the audible AI-disclosure prefix CrispASR otherwise prepends to cloned audio;
-            // SE surfaces the AI-generated nature in its UI. The inaudible watermark + C2PA
-            // provenance metadata stay embedded regardless (defaults to true server-side).
-            ["spoken_disclaimer"] = false,
         };
-        if (!string.IsNullOrEmpty(refText))
-        {
-            // TODO: verify field name against a real v0.7.0 binary — the OpenAI-compat server
-            // may expose this as ref_text / ref-text / instructions.
-            payload["ref_text"] = refText;
-        }
+
+        // Attests the user's own imported reference and the AI-disclosure duty; see
+        // CrispAsrTtsProvenance. Skipped when voice cloning has not been accepted in settings.
+        CrispAsrTtsProvenance.AddSpeechAttestations(payload);
 
         var body = JsonSerializer.Serialize(payload);
         using var content = new StringContent(body, Encoding.UTF8, "application/json");
@@ -518,7 +511,7 @@ public class VoxCPM2CrispAsr : ITtsEngine
             // transcriptions - treat them as "no transcript" (same read-time filter Qwen3
             // CrispASR applies) so they neither poison ref-text nor suppress the prompt.
             var text = File.ReadAllText(sidecar).Trim();
-            return Qwen3TtsCrispAsr.LooksLikeAttributionBlurb(text) ? string.Empty : text;
+            return Qwen3TtsCrispAsr.LooksLikeUnusableTranscript(text) ? string.Empty : text;
         }
         catch
         {
@@ -621,6 +614,7 @@ public class VoxCPM2CrispAsr : ITtsEngine
             psi.ArgumentList.Add(port.ToString());
             psi.ArgumentList.Add("--voice-dir");
             psi.ArgumentList.Add(GetSetVoicesFolder());
+            CrispAsrTtsProvenance.AddServerMarkingArgs(psi.ArgumentList, exe);
 
             if (UseStartupVoiceFlags)
             {

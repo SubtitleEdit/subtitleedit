@@ -4,7 +4,7 @@ using Avalonia.Threading;
 using Avalonia.VisualTree;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using Nikse.SubtitleEdit.Core.AudioToText;
+using Nikse.SubtitleEdit.UiLogic.AudioToText;
 using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.ContainerFormats.Matroska;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
@@ -17,6 +17,7 @@ using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Logic.Download;
 using Nikse.SubtitleEdit.Logic.Media;
+using Nikse.SubtitleEdit.UiLogic;
 using Optris.Icons.Avalonia;
 using System.Net.Http;
 using System;
@@ -34,6 +35,8 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Timers;
+using Nikse.SubtitleEdit.UiLogic.Media;
+using Nikse.SubtitleEdit.UiLogic.Common;
 
 namespace Nikse.SubtitleEdit.Features.Video.SpeechToText;
 
@@ -135,11 +138,12 @@ public partial class SpeechToTextViewModel : ObservableObject
     public TextBox TextBoxConsoleLogBatch { get; internal set; }
     public TextBox TextBoxConsoleLogSingle { get; internal set; }
     public Button? CopyConsoleLogButton { get; internal set; }
-    public DataGrid BatchGrid { get; internal set; }
+    public TableView BatchGrid { get; internal set; }
 
     private bool _unknownArgument;
     private bool _cudaOutOfMemory;
     private bool _incompleteModel;
+    private string? _missingSharedLibrary;
     private bool _loadedFromStdOut;
     private string? _videoFileName;
     private string _audioFileName = string.Empty;
@@ -153,6 +157,16 @@ public partial class SpeechToTextViewModel : ObservableObject
     private readonly VideoInfo _videoInfo = new();
     private bool _abort;
     private CancellationTokenSource? _openAiCts;
+
+    /// <summary>
+    /// Language code reported by an online STT provider for the current run.
+    /// Post-processing needs a language, and online engines have no entry in the
+    /// shared language dropdown — so when the user leaves the per-engine hint
+    /// empty (auto-detect), this is what keeps merge/split/line-breaking from
+    /// being skipped entirely (issue #12860).
+    /// </summary>
+    private string? _onlineDetectedLanguage;
+
     private readonly List<ResultText> _resultList = new();
     private bool _useCenterChannelOnly;
 
@@ -172,11 +186,13 @@ public partial class SpeechToTextViewModel : ObservableObject
     private StringBuilder _ffmpegLog = new();
     private readonly Lock _lockObj = new();
     private int _batchIndex = -1;
+    private IList<SpeechToTextJobItem> _jobItems = new List<SpeechToTextJobItem>(); // items for the current run: aliases BatchItems in batch mode, a standalone single item otherwise
     private string _error;
     private List<AudioClip>? _audioClips;
     private bool _audioClipsAutoStart;
     private string _chatLlmText = string.Empty;
     private string _qwen3AsrOutputJsonPath = string.Empty;
+    private int? _qwen3AsrExitCode;
 
     private readonly IWindowService _windowService;
     private readonly IFileHelper _fileHelper;
@@ -200,12 +216,12 @@ public partial class SpeechToTextViewModel : ObservableObject
         _fileHelper = fileHelper;
 
         Engines = [new WhisperCppEngine()];
-        if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+        if (OperatingSystem.IsWindows())
         {
             Engines.Add(new WhisperEnginePurfviewFasterWhisperXxl());
             Engines.Add(new WhisperEngineConstMe());
         }
-        else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux) &&
+        else if (OperatingSystem.IsLinux() &&
                  RuntimeInformation.ProcessArchitecture == Architecture.X64)
         {
             // Purfview only ships Windows and Linux x86_64 builds - there is no Linux ARM64
@@ -213,21 +229,12 @@ public partial class SpeechToTextViewModel : ObservableObject
             Engines.Add(new WhisperEnginePurfviewFasterWhisperXxl());
         }
 
-        if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows) ||
-            (RuntimeInformation.IsOSPlatform(OSPlatform.OSX) && RuntimeInformation.ProcessArchitecture == Architecture.Arm64) ||
-            (RuntimeInformation.IsOSPlatform(OSPlatform.Linux) && RuntimeInformation.ProcessArchitecture == Architecture.X64))
+        if (OperatingSystem.IsWindows() ||
+            (OperatingSystem.IsMacOS() && RuntimeInformation.ProcessArchitecture == Architecture.Arm64) ||
+            (OperatingSystem.IsLinux() && RuntimeInformation.ProcessArchitecture == Architecture.X64))
         {
             Engines.Add(new WhisperEngineCTranslate2());
         }
-
-        // MLX Whisper runs Whisper on the Apple GPU / Neural Engine and is arm64-only, so offer it
-        // only on Apple Silicon.
-        if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX) &&
-            RuntimeInformation.ProcessArchitecture == Architecture.Arm64)
-        {
-            Engines.Add(new MlxWhisperMac());
-        }
-
 
         Engines.Add(new WhisperEngineOpenAi());
 
@@ -238,9 +245,9 @@ public partial class SpeechToTextViewModel : ObservableObject
         Engines.Add(new OpenRouterSttEngine());
         Engines.Add(new DashScopeQwen3SttEngine());
 
-        if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows) ||
-            RuntimeInformation.IsOSPlatform(OSPlatform.Linux) ||
-            RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+        if (OperatingSystem.IsWindows() ||
+            OperatingSystem.IsLinux() ||
+            OperatingSystem.IsMacOS())
         {
             //Engines.Add(new ChatLlmCppEngine());
             Engines.Add(new Qwen3AsrCppEngine());
@@ -284,7 +291,7 @@ public partial class SpeechToTextViewModel : ObservableObject
         TranscribedSubtitle = new Subtitle();
         TextBoxConsoleLogBatch = new TextBox();
         TextBoxConsoleLogSingle = new TextBox();
-        BatchGrid = new DataGrid();
+        BatchGrid = new TableView();
         ReDownloadText = string.Empty;
         EngineDownloadHint = string.Empty;
         _audioTrackNumber = -1;
@@ -345,7 +352,7 @@ public partial class SpeechToTextViewModel : ObservableObject
         }
         else
         {
-            var selectedEngine = Enumerable.FirstOrDefault<ISpeechToTextEngine>((IEnumerable<ISpeechToTextEngine>)Engines, p => p.Choice == savedChoice);
+            var selectedEngine = Engines.FirstOrDefault(p => p.Choice == savedChoice);
             if (selectedEngine != null)
             {
                 SelectedEngine = selectedEngine;
@@ -712,6 +719,18 @@ public partial class SpeechToTextViewModel : ObservableObject
             _timerWhisper.Stop();
 
             var settings = Se.Settings.Tools.AudioToText;
+
+            // Grab the exit code before disposing - it is the key diagnostic when the engine
+            // dies without producing output (e.g. a Qwen3 ASR GPU/Vulkan crash, issue #12815).
+            try
+            {
+                _qwen3AsrExitCode = _whisperProcess.ExitCode;
+            }
+            catch
+            {
+                _qwen3AsrExitCode = null;
+            }
+
             _whisperProcess.Dispose();
 
             var engine = GetEffectiveSelectedEngine();
@@ -734,7 +753,13 @@ public partial class SpeechToTextViewModel : ObservableObject
                 ProgressValue = 100;
 
                 var hasError = false;
-                if (_incompleteModel)
+                if (_missingSharedLibrary != null)
+                {
+                    await MessageBox.Show(Window!, "Speech to text engine could not start",
+                        GetMissingSharedLibraryMessage(_missingSharedLibrary));
+                    hasError = true;
+                }
+                else if (_incompleteModel)
                 {
                     await MessageBox.Show(Window!, "Incomplete model",
                         "The model is incomplete. Please download the full model.");
@@ -897,20 +922,79 @@ public partial class SpeechToTextViewModel : ObservableObject
         _timerWhisper.Start();
     }
 
+    /// <summary>
+    /// Builds the message shown when the engine binary could not be started because a shared
+    /// library it links against is missing (issue #12970).
+    /// </summary>
+    private static string GetMissingSharedLibraryMessage(string libraryName)
+    {
+        var message =
+            $"The speech to text engine could not start - the shared library \"{libraryName}\" is missing.{Environment.NewLine}{Environment.NewLine}" +
+            "Install it with your package manager and try again.";
+
+        if (libraryName.StartsWith("libopenblas", StringComparison.OrdinalIgnoreCase))
+        {
+            message +=
+                $"{Environment.NewLine}{Environment.NewLine}" +
+                $"Debian/Ubuntu: sudo apt install libopenblas0{Environment.NewLine}" +
+                $"Fedora: sudo dnf install openblas{Environment.NewLine}" +
+                "Arch: sudo pacman -S openblas";
+        }
+
+        return message;
+    }
+
     private void ProcessQwen3AsrCppTranscription(SeAudioToText settings)
     {
         var jsonPath = _qwen3AsrOutputJsonPath;
         if (string.IsNullOrEmpty(jsonPath) || !File.Exists(jsonPath))
         {
+            var exitCode = _qwen3AsrExitCode;
+            var isVulkan = false;
+            try
+            {
+                var folder = new Qwen3AsrCppEngine().GetAndCreateWhisperFolder();
+                isVulkan = DownloadHashManager.IsQwen3AsrCppVulkanInstall(folder);
+            }
+            catch
+            {
+                // best-effort diagnostics only
+            }
+
+            // The engine ran but produced no output JSON - almost always a native crash of the
+            // GPU (Vulkan) build. Record the exit code (0xC0000005-style values indicate a hard
+            // crash) and force it to the tools log, since that setting is off by default and
+            // otherwise there is no record of why it failed (issue #12815).
+            var exitCodeText = exitCode.HasValue
+                ? $"exit code {exitCode.Value} (0x{(uint)exitCode.Value:X8})"
+                : "exit code unavailable";
+            Se.WriteToolsLog($"Qwen3 ASR CPP produced no output JSON; {exitCodeText}; Vulkan build: {isVulkan}", true);
+
             Dispatcher.UIThread.Invoke<Task>(async () =>
             {
                 LogToConsole($"Speech to text ({settings.WhisperChoice}) done in {_sw.Elapsed}{Environment.NewLine}");
+                if (_missingSharedLibrary != null)
+                {
+                    await MessageBox.Show(Window!, "Speech to text engine could not start",
+                        GetMissingSharedLibraryMessage(_missingSharedLibrary));
+                    ProgressValue = 100;
+                    IsTranscribeEnabled = true;
+                    return;
+                }
+
                 if (_unknownArgument && !string.IsNullOrEmpty(settings.WhisperCustomCommandLineArguments))
                 {
                     await MessageBox.Show(Window!, $"Unknown argument: {settings.WhisperCustomCommandLineArguments}",
                         "Unknown argument. Please check the advanced settings.");
                 }
-                LogToConsole($"Speech to text: Could not find output JSON file{Environment.NewLine}");
+                LogToConsole($"Speech to text: Could not find output JSON file ({exitCodeText}){Environment.NewLine}");
+                if (exitCode is not (null or 0))
+                {
+                    var url = new Qwen3AsrCppEngine().Url;
+                    LogToConsole(isVulkan
+                        ? $"The Qwen3 ASR GPU (Vulkan) engine crashed before producing output. Try the CPU build instead (re-download the engine and choose CPU), or report it at {url}{Environment.NewLine}"
+                        : $"The Qwen3 ASR engine crashed before producing output. Try re-running, a different model, or report it at {url}{Environment.NewLine}");
+                }
                 ProgressValue = 100;
                 IsTranscribeEnabled = true;
                 await Task.CompletedTask;
@@ -1085,14 +1169,16 @@ public partial class SpeechToTextViewModel : ObservableObject
         // moment for these engines — there is no separate OK button.
         SaveSettings();
 
+        _onlineDetectedLanguage = null;
+
         var transcriber = engine.CreateTranscriber(out var configError);
         if (transcriber == null)
         {
             await Dispatcher.UIThread.InvokeAsync(async () =>
             {
                 await MessageBox.Show(Window!,
-                    configError ?? Se.Language.General.OpenAiCompatibleSttUrlMissing,
-                    Se.Language.General.ConfigurationRequired);
+                    Se.Language.General.ConfigurationRequired,
+                    configError ?? Se.Language.General.OpenAiCompatibleSttUrlMissing);
                 IsTranscribeEnabled = true;
             });
             return;
@@ -1101,13 +1187,30 @@ public partial class SpeechToTextViewModel : ObservableObject
         ProgressText = Se.Language.Video.AudioToText.Transcribing;
         ProgressValue = 5;
 
-        var probeError = await ProbeOpenAiUrlAsync(engine.ProbeUrl, cancellationToken);
-        if (probeError != null)
+        string? probeError;
+        try
         {
-            LogToConsole($"Online STT endpoint probe failed: {probeError}. Retrying...");
-            // Brief delay so transient DNS/socket hiccups have a chance to recover before retrying.
-            await Task.Delay(300, cancellationToken);
             probeError = await ProbeOpenAiUrlAsync(engine.ProbeUrl, cancellationToken);
+            if (probeError != null)
+            {
+                LogToConsole($"Online STT endpoint probe failed: {probeError}. Retrying...");
+                // Brief delay so transient DNS/socket hiccups have a chance to recover before retrying.
+                await Task.Delay(300, cancellationToken);
+                probeError = await ProbeOpenAiUrlAsync(engine.ProbeUrl, cancellationToken);
+            }
+        }
+        catch (OperationCanceledException)
+        {
+            // This runs as a fire-and-forget task, so a cancel during the probe phase
+            // (up to two 8-second probes) must reset the UI here — nothing downstream
+            // will, and the window would otherwise be stuck on a live progress bar.
+            LogToConsole("Transcription cancelled by user");
+            await Dispatcher.UIThread.InvokeAsync(() =>
+            {
+                IsTranscribeEnabled = true;
+                HideProgressBar();
+            });
+            return;
         }
 
         if (probeError != null)
@@ -1115,8 +1218,8 @@ public partial class SpeechToTextViewModel : ObservableObject
             await Dispatcher.UIThread.InvokeAsync(async () =>
             {
                 await MessageBox.Show(Window!,
-                    string.Format(Se.Language.General.OpenAiCompatibleSttUrlNotResponding, probeError),
-                    Se.Language.General.TranscriptionError);
+                    Se.Language.General.TranscriptionError,
+                    string.Format(Se.Language.General.OpenAiCompatibleSttUrlNotResponding, probeError));
                 IsTranscribeEnabled = true;
             });
             return;
@@ -1163,6 +1266,7 @@ public partial class SpeechToTextViewModel : ObservableObject
             else
             {
                 var response = await service.TranscribeAsync(audioFileName, language, null, segmentProgress, cancellationToken);
+                RememberDetectedLanguage(response);
                 IngestTranscriptionResponse(
                     response,
                     subtitle,
@@ -1229,9 +1333,12 @@ public partial class SpeechToTextViewModel : ObservableObject
         catch (HttpRequestException ex)
         {
             // Log the full exception before simplifying the dialog text — the
-            // response body (e.g. DashScope's error code) is the only clue to
-            // what actually failed, and the dialog may hide it.
-            Se.WriteToolsLog($"Online STT transcription failed ({engine.Name}): {ex}");
+            // response body (e.g. DashScope's error code, or xAI's "check the
+            // URL" for a wrong endpoint path) is the only clue to what actually
+            // failed. Force the write: "write tools log" is off by default, so
+            // without it the server's answer is gone the moment the user closes
+            // the dialog (issue #12860).
+            Se.WriteToolsLog($"Online STT transcription failed ({engine.Name}): {ex}", true);
 
             var message = ex.Message;
             if (message.Contains("401") || message.Contains("Unauthorized"))
@@ -1248,10 +1355,14 @@ public partial class SpeechToTextViewModel : ObservableObject
             {
                 message = Se.Language.General.RequestTimeout;
             }
+            else if (IsModelRejectedByServer(ex, engine))
+            {
+                message += Environment.NewLine + Environment.NewLine + Se.Language.General.OpenAiCompatibleSttModelRejectedHint;
+            }
 
             await Dispatcher.UIThread.InvokeAsync(async () =>
             {
-                await MessageBox.Show(Window!, message, Se.Language.General.TranscriptionError);
+                await MessageBox.Show(Window!, Se.Language.General.TranscriptionError, message);
                 IsTranscribeEnabled = true;
             });
         }
@@ -1260,11 +1371,11 @@ public partial class SpeechToTextViewModel : ObservableObject
             // Raised by the online STT services when their own timeout fires
             // (distinct from a user cancel, which arrives as
             // OperationCanceledException above).
-            Se.WriteToolsLog($"Online STT transcription timed out ({engine.Name}): {ex.Message}");
+            Se.WriteToolsLog($"Online STT transcription timed out ({engine.Name}): {ex.Message}", true);
 
             await Dispatcher.UIThread.InvokeAsync(async () =>
             {
-                await MessageBox.Show(Window!, Se.Language.General.RequestTimeout, Se.Language.General.TranscriptionError);
+                await MessageBox.Show(Window!, Se.Language.General.TranscriptionError, Se.Language.General.RequestTimeout);
                 IsTranscribeEnabled = true;
             });
 
@@ -1289,11 +1400,11 @@ public partial class SpeechToTextViewModel : ObservableObject
         }
         catch (Exception ex)
         {
-            Se.WriteToolsLog($"Online STT transcription failed ({engine.Name}): {ex}");
+            Se.WriteToolsLog($"Online STT transcription failed ({engine.Name}): {ex}", true);
 
             await Dispatcher.UIThread.InvokeAsync(async () =>
             {
-                await MessageBox.Show(Window!, $"{Se.Language.General.TranscriptionFailed}: {ex.Message}", "Error");
+                await MessageBox.Show(Window!, Se.Language.General.TranscriptionError, $"{Se.Language.General.TranscriptionFailed}: {ex.Message}");
                 IsTranscribeEnabled = true;
             });
         }
@@ -1510,6 +1621,7 @@ public partial class SpeechToTextViewModel : ObservableObject
                 var chunkResponse = await service.TranscribeAsync(
                     chunkPath, language, null, offsettingProgress, cancellationToken);
 
+                RememberDetectedLanguage(chunkResponse);
                 IngestTranscriptionResponse(
                     chunkResponse,
                     subtitle,
@@ -1618,7 +1730,7 @@ public partial class SpeechToTextViewModel : ObservableObject
     {
         if (IsBatchMode)
         {
-            return string.Format(Se.Language.Video.AudioToText.TranscribingXOfY, _batchIndex + 1, BatchItems.Count);
+            return string.Format(Se.Language.Video.AudioToText.TranscribingXOfY, _batchIndex + 1, _jobItems.Count);
         }
         else
         {
@@ -1628,7 +1740,7 @@ public partial class SpeechToTextViewModel : ObservableObject
 
     private void StartNext(Subtitle? transcribedSubtitle)
     {
-        var currentItem = BatchItems[_batchIndex];
+        var currentItem = _jobItems[_batchIndex];
         if (transcribedSubtitle != null && transcribedSubtitle.Paragraphs.Count > 0)
         {
             currentItem.Status = Se.Language.General.Converted;
@@ -1644,7 +1756,7 @@ public partial class SpeechToTextViewModel : ObservableObject
         _filesToDelete.Clear();
 
         _batchIndex++;
-        if (_batchIndex < BatchItems.Count)
+        if (_batchIndex < _jobItems.Count)
         {
             ProgressValue = 0;
             _startTicks = 0;
@@ -1656,7 +1768,7 @@ public partial class SpeechToTextViewModel : ObservableObject
             ElapsedText = string.Empty;
             EstimatedText = string.Empty;
 
-            var jobItem = BatchItems[_batchIndex];
+            var jobItem = _jobItems[_batchIndex];
             _videoFileName = jobItem.InputVideoFileName;
             _videoInfo.TotalMilliseconds = jobItem.MediaInfo.Duration.TotalMilliseconds;
             _videoInfo.TotalSeconds = jobItem.MediaInfo.Duration.TotalSeconds;
@@ -1675,15 +1787,15 @@ public partial class SpeechToTextViewModel : ObservableObject
                 }
 
                 BatchGrid.SelectedItem = jobItem;
-                BatchGrid.ScrollIntoView(jobItem, null);
+                BatchGrid.ScrollIntoView(jobItem);
             });
 
             var startGenerateAudioFileOk = GenerateAudioFile(_videoFileName, _audioTrackNumber);
             return;
         }
 
-        var convertedJobs = Enumerable.Count<SpeechToTextJobItem>(BatchItems, p => p.Status == Se.Language.General.Converted);
-        var failed = Enumerable.Count<SpeechToTextJobItem>(BatchItems, p => p.Status != Se.Language.General.Converted);
+        var convertedJobs = _jobItems.Count(p => p.Status == Se.Language.General.Converted);
+        var failed = _jobItems.Count(p => p.Status != Se.Language.General.Converted);
 
         Dispatcher.UIThread.Invoke<Task>(async () =>
         {
@@ -1754,12 +1866,21 @@ public partial class SpeechToTextViewModel : ObservableObject
 
         if (string.IsNullOrWhiteSpace(languageCode))
         {
+            // Last resort: read the language off the transcript itself. Providers
+            // that never report one leave the hint fallback empty - xAI's /v1/stt
+            // documents its "language" response field as "currently empty" - and
+            // without a code the whole post-processing step is skipped (#12877).
+            languageCode = LanguageAutoDetect.AutoDetectGoogleLanguageOrNull(transcript);
+        }
+
+        if (string.IsNullOrWhiteSpace(languageCode))
+        {
             return transcript;
         }
 
         if (DoAdjustTimings || DoPostProcessing)
         {
-            ProgressText = "Post-processing...";
+            ProgressText = Se.Language.Video.PostProcessing;
         }
 
         var postProcessor = new SpeechToTextPostProcessor(DoTranslateToEnglish ? "en" : languageCode)
@@ -1799,17 +1920,88 @@ public partial class SpeechToTextViewModel : ObservableObject
     /// <summary>
     /// The language hint configured for the selected online STT engine, or null
     /// for local engines. Online engines don't use the shared language dropdown
-    /// (it's nulled out), so post-processing reads the per-engine setting instead.
+    /// (it's nulled out), so post-processing reads the per-engine setting instead
+    /// — falling back to the language the provider detected when that setting is
+    /// left empty.
     /// </summary>
     private string? GetOnlineEngineLanguageHint()
     {
-        return GetEffectiveSelectedEngine() switch
+        var configured = GetEffectiveSelectedEngine() switch
         {
             OpenRouterSttEngine => Se.Settings.Tools.OpenRouterSttLanguage,
             DashScopeQwen3SttEngine => Se.Settings.Tools.DashScopeSttLanguage,
             OpenAiCompatibleSttEngine => Se.Settings.Tools.OpenAiCompatibleSttLanguage,
             _ => null,
         };
+
+        if (configured == null || !string.IsNullOrWhiteSpace(configured))
+        {
+            return configured;
+        }
+
+        // Hint left empty (auto-detect): use whatever language the provider said
+        // it recognized, so post-processing still runs (issue #12860).
+        return _onlineDetectedLanguage;
+    }
+
+    /// <summary>
+    /// Note the language an online provider reported for this run. Providers are
+    /// inconsistent here — OpenAI's verbose_json says "english" while others send
+    /// "en" — so a full name is mapped back to its whisper language code. The
+    /// first non-empty value wins; later chunks don't overwrite it.
+    /// </summary>
+    private void RememberDetectedLanguage(OpenAiCompatibleSttResponse response)
+    {
+        if (!string.IsNullOrEmpty(_onlineDetectedLanguage) || string.IsNullOrWhiteSpace(response.Language))
+        {
+            return;
+        }
+
+        var reported = response.Language.Trim();
+        if (reported.Length == 2)
+        {
+            _onlineDetectedLanguage = reported.ToLowerInvariant();
+            return;
+        }
+
+        var match = WhisperLanguage.Languages.FirstOrDefault(p =>
+            p.Name.Equals(reported, StringComparison.OrdinalIgnoreCase) ||
+            p.Code.Equals(reported, StringComparison.OrdinalIgnoreCase));
+        if (match != null)
+        {
+            _onlineDetectedLanguage = match.Code;
+        }
+    }
+
+    /// <summary>
+    /// True when a failed OpenAI-compatible STT request looks like the server
+    /// turning down the configured model name. Endpoints differ on this: xAI's
+    /// /v1/stt has no "model" parameter and answers 404 for any value sent,
+    /// while others accept only their own ids - so the fix is to clear the
+    /// field, which isn't something the raw server message says (issue #12877).
+    /// </summary>
+    private static bool IsModelRejectedByServer(HttpRequestException ex, ISpeechToTextEngine engine)
+    {
+        if (engine is not OpenAiCompatibleSttEngine)
+        {
+            return false;
+        }
+
+        var model = Se.Settings.Tools.OpenAiCompatibleSttModel;
+        if (string.IsNullOrWhiteSpace(model))
+        {
+            return false;
+        }
+
+        if (ex.StatusCode is not { } status || (int)status < 400 || (int)status >= 500)
+        {
+            return false;
+        }
+
+        // The message holds the server's response body, so an error naming the
+        // model we sent - or just talking about models at all - points at the field.
+        return ex.Message.Contains(model.Trim(), StringComparison.OrdinalIgnoreCase) ||
+               ex.Message.Contains("model", StringComparison.OrdinalIgnoreCase);
     }
 
     private WavePeakData2? MakeWavePeaks()
@@ -2256,7 +2448,7 @@ public partial class SpeechToTextViewModel : ObservableObject
 
         if (string.IsNullOrEmpty(error))
         {
-            await MessageBox.Show(Window!, "Unknown error", $"Unable to start {engine.Name}!");
+            await MessageBox.Show(Window!, Se.Language.General.UnknownError, $"Unable to start {engine.Name}!");
         }
         else
         {
@@ -2413,7 +2605,7 @@ public partial class SpeechToTextViewModel : ObservableObject
             }
         }
         else if (engine is ICrispAsrEngine
-                 && RuntimeInformation.IsOSPlatform(OSPlatform.Linux)
+                 && OperatingSystem.IsLinux()
                  && RuntimeInformation.ProcessArchitecture != Architecture.Arm64)
         {
             var linuxAnswer = await PromptCrispAsrLinuxVariantAsync(CrispAsrEngine.StaticName);
@@ -2494,7 +2686,8 @@ public partial class SpeechToTextViewModel : ObservableObject
     }
 
     /// <summary>
-    /// Linux x86_64 build prompt: CPU vs CUDA. Returns "cuda", empty string for the default CPU build,
+    /// Linux x86_64 build prompt: CPU, Vulkan (any GPU), CUDA (NVIDIA) or ROCm (AMD).
+    /// Returns "vulkan" / "cuda" / "cuda13" / "hip", empty string for the default CPU build,
     /// or null when the user cancels.
     /// </summary>
     private async Task<string?> PromptCrispAsrLinuxVariantAsync(string engineName)
@@ -2506,12 +2699,43 @@ public partial class SpeechToTextViewModel : ObservableObject
             MessageBoxButtons.Cancel,
             MessageBoxIcon.Question,
             "CPU",
-            "CUDA");
+            "Vulkan",
+            "CUDA",
+            "ROCm");
+
+        if (answer == MessageBoxResult.Custom3)
+        {
+            return await PromptCrispAsrLinuxCudaVersionAsync();
+        }
 
         return answer switch
         {
             MessageBoxResult.Custom1 => string.Empty,
-            MessageBoxResult.Custom2 => "cuda",
+            MessageBoxResult.Custom2 => "vulkan",
+            MessageBoxResult.Custom4 => "hip",
+            _ => null,
+        };
+    }
+
+    /// <summary>
+    /// Follow-up prompt after the user picks "CUDA" in the Linux CrispASR variant selector.
+    /// Returns "cuda" (CUDA 12 build) or "cuda13", or null when the user cancels.
+    /// </summary>
+    private async Task<string?> PromptCrispAsrLinuxCudaVersionAsync()
+    {
+        var answer = await MessageBox.Show(
+            Window!,
+            "CrispASR CUDA build",
+            $"{Environment.NewLine}CUDA 12 works with most current NVIDIA drivers.{Environment.NewLine}{Environment.NewLine}Pick CUDA 13 only if your driver stack is built for CUDA 13.",
+            MessageBoxButtons.Cancel,
+            MessageBoxIcon.Question,
+            "CUDA 12",
+            "CUDA 13");
+
+        return answer switch
+        {
+            MessageBoxResult.Custom1 => "cuda",
+            MessageBoxResult.Custom2 => "cuda13",
             _ => null,
         };
     }
@@ -2655,7 +2879,7 @@ public partial class SpeechToTextViewModel : ObservableObject
         var vm = await _windowService.ShowDialogAsync<SpeechToTextAdvancedWindow, SpeechToTextAdvancedViewModel>(Window!,
             viewModal =>
             {
-                viewModal.Engines = Enumerable.ToList<ISpeechToTextEngine>((IEnumerable<ISpeechToTextEngine>)Engines);
+                viewModal.Engines = Engines.ToList();
                 viewModal.EngineClickedCommand.Execute((ISpeechToTextEngine)SelectedEngine);
             });
 
@@ -2679,12 +2903,6 @@ public partial class SpeechToTextViewModel : ObservableObject
                 viewModal.BreakSplitLongLines = Se.Settings.Tools.AudioToText.WhisperPostProcessingSplitLines;
                 viewModal.ChangeUnderlineToColor = Se.Settings.Tools.AudioToText.WhisperPostProcessingChangeUnderlineToColor;
                 viewModal.ChangeUnderlineToColorColor = Se.Settings.Tools.AudioToText.WhisperPostProcessingChangeUnderlineToColorColor.FromHexToColor();
-                viewModal.CueRebuild = Se.Settings.Tools.AudioToText.WhisperCueRebuild;
-                viewModal.CueMaxChars = Se.Settings.Tools.AudioToText.WhisperCueMaxChars;
-                viewModal.CueMaxSeconds = Se.Settings.Tools.AudioToText.WhisperCueMaxSeconds;
-                viewModal.CueMaxCps = Se.Settings.Tools.AudioToText.WhisperCueMaxCps;
-                viewModal.VocabularyPrompt = Se.Settings.Tools.AudioToText.WhisperVocabularyPrompt;
-                viewModal.BeamSize = Se.Settings.Tools.AudioToText.WhisperBeamSize;
             });
 
         if (vm.OkPressed)
@@ -2698,12 +2916,6 @@ public partial class SpeechToTextViewModel : ObservableObject
             Se.Settings.Tools.AudioToText.WhisperPostProcessingSplitLines = vm.BreakSplitLongLines;
             Se.Settings.Tools.AudioToText.WhisperPostProcessingChangeUnderlineToColor = vm.ChangeUnderlineToColor;
             Se.Settings.Tools.AudioToText.WhisperPostProcessingChangeUnderlineToColorColor = vm.ChangeUnderlineToColorColor.FromColorToHex();
-            Se.Settings.Tools.AudioToText.WhisperCueRebuild = vm.CueRebuild;
-            Se.Settings.Tools.AudioToText.WhisperCueMaxChars = vm.CueMaxChars;
-            Se.Settings.Tools.AudioToText.WhisperCueMaxSeconds = vm.CueMaxSeconds;
-            Se.Settings.Tools.AudioToText.WhisperCueMaxCps = vm.CueMaxCps;
-            Se.Settings.Tools.AudioToText.WhisperVocabularyPrompt = vm.VocabularyPrompt ?? string.Empty;
-            Se.Settings.Tools.AudioToText.WhisperBeamSize = vm.BeamSize;
         }
     }
 
@@ -2834,34 +3046,13 @@ public partial class SpeechToTextViewModel : ObservableObject
             _unknownArgument = false;
             _cudaOutOfMemory = false;
             _incompleteModel = false;
+            _missingSharedLibrary = null;
             _loadedFromStdOut = false;
 
             Se.Settings.Tools.AudioToText.WhisperChoice = engine.Choice;
 
             if (!engine.IsEngineInstalled())
             {
-                if (engine is MlxWhisperMac)
-                {
-                    // pip-managed engine - Subtitle Edit cannot download it. The message explains
-                    // the detection model (SE looks for a Python that can import mlx_whisper, not a
-                    // binary) and the pipx/venv/conda caveat, since a user who installed it that way
-                    // otherwise hits "not found" with no idea why (#12209).
-                    await MessageBox.Show(
-                        Window!,
-                        $"{engine.Name} not found",
-                        "Subtitle Edit could not find a Python that can import the \"mlx_whisper\" package." + Environment.NewLine +
-                        Environment.NewLine +
-                        "If it is not installed yet, install it with:" + Environment.NewLine +
-                        "    pip3 install mlx-whisper" + Environment.NewLine +
-                        Environment.NewLine +
-                        "If you installed it with pipx, a virtual environment, or conda, Subtitle Edit finds it " +
-                        "automatically only when the \"mlx_whisper\" command is on your PATH or at " +
-                        "~/.local/bin/mlx_whisper (where pipx puts it). Check with:" + Environment.NewLine +
-                        "    which mlx_whisper");
-                    return;
-                }
-
-
                 if (engine is ICrispAsrEngine && Configuration.IsRunningOnWindows)
                 {
                     var answer = await MessageBox.Show(
@@ -2931,7 +3122,7 @@ public partial class SpeechToTextViewModel : ObservableObject
                     }
                 }
                 else if (engine is ICrispAsrEngine
-                         && RuntimeInformation.IsOSPlatform(OSPlatform.Linux)
+                         && OperatingSystem.IsLinux()
                          && RuntimeInformation.ProcessArchitecture != Architecture.Arm64)
                 {
                     var crispVariant = await PromptCrispAsrLinuxVariantAsync(engine.Name);
@@ -3172,9 +3363,9 @@ public partial class SpeechToTextViewModel : ObservableObject
                     }
 
                     var models = new ObservableCollection<SpeechToTextModelDisplay>
-                {
-                    displayModelAligner
-                };
+                    {
+                        displayModelAligner
+                    };
                     var vm = await _windowService.ShowDialogAsync<DownloadSpeechToTextModelsWindow, DownloadSpeechToTextModelsViewModel>(
                         Window!, viewModel =>
                         {
@@ -3265,18 +3456,24 @@ public partial class SpeechToTextViewModel : ObservableObject
                 return;
             }
 
-            BatchItems.Add(new SpeechToTextJobItem(_videoFileName, string.Empty, mediaInfo));
+            // do not touch BatchItems here - it holds the user's queued batch list
+            _jobItems = new List<SpeechToTextJobItem> { new SpeechToTextJobItem(_videoFileName, string.Empty, mediaInfo) };
         }
+        else
+        {
+            _jobItems = BatchItems;
+        }
+
         _batchIndex = 0;
 
-        if (BatchItems.Count == 0)
+        if (_jobItems.Count == 0)
         {
             return;
         }
 
         if (IsBatchMode)
         {
-            var jobItem = BatchItems[0];
+            var jobItem = _jobItems[0];
             Dispatcher.UIThread.Post(() =>
             {
                 if (BatchGrid == null)
@@ -3285,16 +3482,16 @@ public partial class SpeechToTextViewModel : ObservableObject
                 }
 
                 BatchGrid.SelectedItem = jobItem;
-                BatchGrid.ScrollIntoView(jobItem, null);
+                BatchGrid.ScrollIntoView(jobItem);
             });
         }
 
 
-        _videoFileName = BatchItems[0].InputVideoFileName;
-        _videoInfo.TotalMilliseconds = BatchItems[0].MediaInfo.Duration.TotalMilliseconds;
-        _videoInfo.TotalSeconds = BatchItems[0].MediaInfo.Duration.TotalSeconds;
-        _videoInfo.Width = BatchItems[0].MediaInfo.Dimension.Width;
-        _videoInfo.Height = BatchItems[0].MediaInfo.Dimension.Height;
+        _videoFileName = _jobItems[0].InputVideoFileName;
+        _videoInfo.TotalMilliseconds = _jobItems[0].MediaInfo.Duration.TotalMilliseconds;
+        _videoInfo.TotalSeconds = _jobItems[0].MediaInfo.Duration.TotalSeconds;
+        _videoInfo.Width = _jobItems[0].MediaInfo.Dimension.Width;
+        _videoInfo.Height = _jobItems[0].MediaInfo.Dimension.Height;
 
         ProgressOpacity = 1;
         ProgressText = Se.Language.General.GeneratingAudioFile;
@@ -3365,8 +3562,7 @@ public partial class SpeechToTextViewModel : ObservableObject
         ProgressOpacity = 1;
         ProgressText = GetProgressText();
 
-        _useCenterChannelOnly = Configuration.Settings.General.FFmpegUseCenterChannelOnly &&
-                                FfmpegMediaInfo.Parse(_videoFileName).HasFrontCenterAudio(_audioTrackNumber);
+        _useCenterChannelOnly = false; // FFmpeg center-channel extraction is not configurable in SE 5 yet
 
         //Delete invalid preprocessor_config.json file
         if (settings.WhisperChoice is WhisperChoice.PurfviewFasterWhisperXxl)
@@ -3509,6 +3705,7 @@ public partial class SpeechToTextViewModel : ObservableObject
             var exe = qwen3Asr.GetExecutable();
             var alignerModel = qwen3Asr.ForcedAlignerModel;
             _qwen3AsrOutputJsonPath = Path.Combine(Path.GetTempPath(), $"qwen3_asr_{Guid.NewGuid():N}.json");
+            _qwen3AsrExitCode = null;
             var qwen3ExtraArgs = engine.CommandLineParameter;
 
             var qwen3Params = string.IsNullOrWhiteSpace(qwen3ExtraArgs)
@@ -3604,9 +3801,13 @@ public partial class SpeechToTextViewModel : ObservableObject
                 }
             }
 
+            // --print-progress: crispasr streams "crispasr: progress = NN% (i/n slices)" lines
+            // in real time (parsed in OutputHandler), while the transcript segments only print
+            // once the whole file is done - without this the progress bar sat idle for the
+            // entire run and jumped straight to 100%.
             var crispParams = string.IsNullOrWhiteSpace(crispArgs)
-                ? $"--backend {crispAsrEngine.BackendName} {langPart}-m \"{crispModel}\"{alignerPart}{vadPart} -f \"{waveFileName}\" --output-srt"
-                : $"--backend {crispAsrEngine.BackendName} {langPart}-m \"{crispModel}\"{alignerPart}{vadPart} -f \"{waveFileName}\" --output-srt {crispArgs}";
+                ? $"--backend {crispAsrEngine.BackendName} {langPart}-m \"{crispModel}\"{alignerPart}{vadPart} -f \"{waveFileName}\" --output-srt --print-progress"
+                : $"--backend {crispAsrEngine.BackendName} {langPart}-m \"{crispModel}\"{alignerPart}{vadPart} -f \"{waveFileName}\" --output-srt --print-progress {crispArgs}";
 
             Se.WriteToolsLog($"{exe} {crispParams}");
 
@@ -3643,106 +3844,6 @@ public partial class SpeechToTextViewModel : ObservableObject
             }
 
             return p;
-        }
-
-        // Cue-building settings for the helper-script engines, from the Whisper
-        // post-processing dialog. The helpers ignore unknown flags, but only these two
-        // engines understand them, so they are added only in their blocks below.
-        static string GetCueArgs()
-        {
-            var audioToText = Se.Settings.Tools.AudioToText;
-
-            // Vocabulary prompt: Whisper's documented way to bias recognition toward
-            // names and technical terms. Quotes are stripped so the value stays a
-            // single command line argument.
-            var promptPart = string.Empty;
-            var vocabularyPrompt = (audioToText.WhisperVocabularyPrompt ?? string.Empty)
-                .Replace("\"", string.Empty).Trim();
-            if (vocabularyPrompt.Length > 0)
-            {
-                promptPart = $" --initial-prompt \"{vocabularyPrompt}\"";
-            }
-
-            if (audioToText.WhisperBeamSize > 1)
-            {
-                promptPart += $" --beam-size {audioToText.WhisperBeamSize}";
-            }
-
-            if (!audioToText.WhisperCueRebuild)
-            {
-                return promptPart + " --raw-segments";
-            }
-
-            return promptPart +
-                   $" --max-cue-chars {audioToText.WhisperCueMaxChars}" +
-                   $" --max-cue-duration {audioToText.WhisperCueMaxSeconds.ToString(CultureInfo.InvariantCulture)}" +
-                   $" --max-cps {audioToText.WhisperCueMaxCps.ToString(CultureInfo.InvariantCulture)}";
-        }
-
-        if (engine is MlxWhisperMac mlxWhisperMac)
-        {
-            // mlx-whisper is a library, not a CLI, so we run a bundled helper script via python3.
-            // It writes "<audio-basename>.srt" into the audio's folder, which GetResultFromSrt then
-            // picks up. MLX runs Whisper on the Apple GPU / Neural Engine.
-            var python = mlxWhisperMac.GetExecutable();
-            var scriptPath = mlxWhisperMac.GetTranscribeScript();
-            var outputDir = Path.GetDirectoryName(waveFileName) ?? string.Empty;
-
-            var mlxLanguage = language;
-            if (mlxLanguage.Equals("english", StringComparison.OrdinalIgnoreCase))
-            {
-                mlxLanguage = "en";
-            }
-
-            var languagePart = !string.IsNullOrWhiteSpace(mlxLanguage) &&
-                               !mlxLanguage.Equals("auto", StringComparison.OrdinalIgnoreCase)
-                ? $" --language {mlxLanguage}"
-                : string.Empty;
-            var taskPart = translate ? " --task translate" : string.Empty;
-            var mlxExtraArgs = engine.CommandLineParameter;
-            var extraPart = string.IsNullOrWhiteSpace(mlxExtraArgs) ? string.Empty : " " + mlxExtraArgs.Trim();
-
-            var mlxParameters =
-                $"\"{scriptPath}\" --audio \"{waveFileName}\" --model {mlxWhisperMac.GetModelForCmdLine(model)} " +
-                $"--output-format srt --output-dir \"{outputDir}\"{languagePart}{taskPart}{GetCueArgs()}{extraPart}";
-
-            Se.WriteToolsLog($"{python} {mlxParameters}");
-
-            var mlxProcess = new Process
-            {
-                StartInfo = new ProcessStartInfo(python, mlxParameters)
-                {
-                    WindowStyle = ProcessWindowStyle.Hidden,
-                    CreateNoWindow = true,
-                    UseShellExecute = false,
-                }
-            };
-
-            mlxProcess.StartInfo.EnvironmentVariables["PYTHONIOENCODING"] = "utf-8";
-            mlxProcess.StartInfo.EnvironmentVariables["PYTHONUTF8"] = "1";
-            mlxProcess.StartInfo.EnvironmentVariables["PYTHONUNBUFFERED"] = "1";
-
-            if (dataReceivedHandler != null)
-            {
-                mlxProcess.StartInfo.StandardOutputEncoding = Encoding.UTF8;
-                mlxProcess.StartInfo.StandardErrorEncoding = Encoding.UTF8;
-                mlxProcess.StartInfo.RedirectStandardOutput = true;
-                mlxProcess.StartInfo.RedirectStandardError = true;
-                mlxProcess.OutputDataReceived += dataReceivedHandler;
-                mlxProcess.ErrorDataReceived += dataReceivedHandler;
-            }
-
-#pragma warning disable CA1416
-            mlxProcess.Start();
-#pragma warning restore CA1416
-
-            if (dataReceivedHandler != null)
-            {
-                mlxProcess.BeginOutputReadLine();
-                mlxProcess.BeginErrorReadLine();
-            }
-
-            return mlxProcess;
         }
 
         var settings = Se.Settings.Tools.AudioToText;
@@ -3837,7 +3938,7 @@ public partial class SpeechToTextViewModel : ObservableObject
             process.StartInfo.EnvironmentVariables["GGML_VULKAN_DEVICE"] = cppVulkanDevice;
         }
 
-        if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+        if (OperatingSystem.IsWindows())
         {
             if (!string.IsNullOrEmpty(Se.Settings.General.FfmpegPath) &&
                 process.StartInfo.EnvironmentVariables["Path"] != null)
@@ -3862,7 +3963,7 @@ public partial class SpeechToTextViewModel : ObservableObject
             }
         }
 
-        if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+        if (OperatingSystem.IsWindows())
         {
             if (!string.IsNullOrEmpty(whisperFolder) && process.StartInfo.EnvironmentVariables["Path"] != null)
             {
@@ -3997,6 +4098,13 @@ public partial class SpeechToTextViewModel : ObservableObject
             return;
         }
 
+        // Check before the language guard below - the dynamic loader fails before the engine
+        // prints anything else, and this must be reported even if no language is selected.
+        if (_missingSharedLibrary == null)
+        {
+            _missingSharedLibrary = MissingSharedLibrary.GetName(outLine.Data);
+        }
+
         if (SelectedLanguage is not WhisperLanguage language)
         {
             return;
@@ -4078,6 +4186,24 @@ public partial class SpeechToTextViewModel : ObservableObject
                     var pctString = arr[1].Trim().TrimEnd('%').TrimEnd();
                     if (double.TryParse(pctString, NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture,
                             out var pct))
+                    {
+                        _endSeconds = _videoInfo.TotalSeconds * pct / 100.0;
+                        _showProgressPct = pct;
+                    }
+                }
+            }
+            else if (line.StartsWith("crispasr: progress =", StringComparison.OrdinalIgnoreCase))
+            {
+                // crispasr --print-progress: "crispasr: progress =  14% (1/7 slices)" - streamed
+                // per 30 s slice for every ASR backend, while the transcript segments only print
+                // after the whole file is processed, so this is the only live progress source.
+                var arr = line.Split('=');
+                if (arr.Length == 2)
+                {
+                    var pctString = arr[1].TrimStart();
+                    var pctEnd = pctString.IndexOf('%');
+                    if (pctEnd > 0 && double.TryParse(pctString[..pctEnd], NumberStyles.AllowDecimalPoint,
+                            CultureInfo.InvariantCulture, out var pct))
                     {
                         _endSeconds = _videoInfo.TotalSeconds * pct / 100.0;
                         _showProgressPct = pct;
@@ -4248,11 +4374,11 @@ public partial class SpeechToTextViewModel : ObservableObject
 
         if (result != null)
         {
-            SelectedModel = Enumerable.FirstOrDefault<SpeechToTextModelDisplay>((IEnumerable<SpeechToTextModelDisplay>)Models, m => m.Model.Name == result.Name);
+            SelectedModel = Models.FirstOrDefault(m => m.Model.Name == result.Name);
         }
         else
         {
-            SelectedModel = Enumerable.FirstOrDefault<SpeechToTextModelDisplay>((IEnumerable<SpeechToTextModelDisplay>)Models, m => m.Model.Name == oldModel.Model.Name);
+            SelectedModel = Models.FirstOrDefault(m => m.Model.Name == oldModel.Model.Name);
         }
     }
 
@@ -4279,14 +4405,14 @@ public partial class SpeechToTextViewModel : ObservableObject
         WhisperLanguage? language = null;
         if (SelectedLanguage is { } prev)
         {
-            language = Enumerable.FirstOrDefault<WhisperLanguage>(Languages, p => p.Code == prev.Code)
-                       ?? Enumerable.FirstOrDefault<WhisperLanguage>(Languages, p => string.Equals(p.Name, prev.Name, StringComparison.OrdinalIgnoreCase));
+            language = Languages.FirstOrDefault(p => p.Code == prev.Code)
+                       ?? Languages.FirstOrDefault(p => string.Equals(p.Name, prev.Name, StringComparison.OrdinalIgnoreCase));
         }
 
         var savedCode = Se.Settings.Tools.AudioToText.WhisperLanguageCode;
         if (language == null && !string.IsNullOrEmpty(savedCode))
         {
-            language = Enumerable.FirstOrDefault<WhisperLanguage>(Languages, p => p.Code == savedCode);
+            language = Languages.FirstOrDefault(p => p.Code == savedCode);
         }
 
         SelectedLanguage = language ?? PickDefaultLanguage(Languages);
@@ -4303,14 +4429,14 @@ public partial class SpeechToTextViewModel : ObservableObject
 
         if (Models.Count > 0)
         {
-            var model = Enumerable.FirstOrDefault<SpeechToTextModelDisplay>((IEnumerable<SpeechToTextModelDisplay>)Models, p => p.Model.Name == Se.Settings.Tools.AudioToText.WhisperModel);
+            var model = Models.FirstOrDefault<SpeechToTextModelDisplay>(p => p.Model.Name == Se.Settings.Tools.AudioToText.WhisperModel);
             if (model != null)
             {
                 SelectedModel = model;
             }
             else
             {
-                SelectedModel = Enumerable.FirstOrDefault<SpeechToTextModelDisplay>((IEnumerable<SpeechToTextModelDisplay>)Models);
+                SelectedModel = Models.FirstOrDefault();
             }
         }
 
@@ -4368,17 +4494,6 @@ public partial class SpeechToTextViewModel : ObservableObject
         // also the answer to issue #11022 (switch backend after the initial install).
         IsEngineSettingsButtonVisible = canDownload && isInstalled && IsSettingsCapable(engine);
 
-        if (engine is MlxWhisperMac && !isInstalled)
-        {
-            // pip-managed engine - Subtitle Edit cannot download it, so show install help instead.
-            // Kept to one line here; the blocking dialog on transcribe explains the pipx/venv
-            // detection caveat in full (#12209).
-            EngineDownloadHint = "mlx-whisper not found - install with \"pip3 install mlx-whisper\", or ensure the \"mlx_whisper\" command is on your PATH";
-            IsEngineDownloadButtonVisible = false;
-            return;
-        }
-
-
         if (!canDownload || isInstalled)
         {
             EngineDownloadHint = string.Empty;
@@ -4388,8 +4503,8 @@ public partial class SpeechToTextViewModel : ObservableObject
 
         var size = engine.DownloadSizeText;
         EngineDownloadHint = string.IsNullOrEmpty(size)
-            ? string.Format(Se.Language.Video.AudioToText.DownloadX, engine.Name)
-            : string.Format(Se.Language.Video.AudioToText.DownloadX, engine.Name) + $" ({size})";
+            ? string.Format(Se.Language.General.DownloadX, engine.Name)
+            : string.Format(Se.Language.General.DownloadX, engine.Name) + $" ({size})";
         IsEngineDownloadButtonVisible = true;
     }
 
@@ -4480,7 +4595,7 @@ public partial class SpeechToTextViewModel : ObservableObject
         }
 
         var crispVariant = DownloadHashManager.GetCrispAsrVariant(key)
-                           ?? (RuntimeInformation.IsOSPlatform(OSPlatform.Windows) ? "vulkan" : string.Empty);
+                           ?? (OperatingSystem.IsWindows() ? "vulkan" : string.Empty);
 
         await _windowService.ShowDialogAsync<DownloadSpeechToTextEngineWindow, DownloadSpeechToTextEngineViewModel>(
             Window!, viewModel =>
@@ -4515,7 +4630,7 @@ public partial class SpeechToTextViewModel : ObservableObject
         if (lookup == null)
         {
             var key = DownloadHashManager.ResolveQwen3AsrCppExecutableKey(useVulkan);
-            var hash = key == null ? null : DownloadHashManager.ComputeSha256(engine.GetExecutable());
+            var hash = key == null ? null : await Sha256Util.ComputeSha256Async(engine.GetExecutable());
             lookup = key == null || hash == null ? null : (key, hash);
         }
 
@@ -4615,7 +4730,7 @@ public partial class SpeechToTextViewModel : ObservableObject
             }
 
             var exePath = engine.GetExecutable();
-            var hash = DownloadHashManager.ComputeSha256(exePath);
+            var hash = Sha256Util.ComputeSha256(exePath);
             return hash == null ? null : (key, hash);
         }
         catch
@@ -4660,11 +4775,11 @@ public partial class SpeechToTextViewModel : ObservableObject
         try
         {
             string? variant = null;
-            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            if (OperatingSystem.IsWindows())
             {
                 variant = DownloadHashManager.DetectCrispAsrWindowsVariant(folder);
             }
-            else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux)
+            else if (OperatingSystem.IsLinux()
                      && RuntimeInformation.ProcessArchitecture != Architecture.Arm64)
             {
                 variant = DownloadHashManager.DetectCrispAsrLinuxVariant(folder);
@@ -4676,7 +4791,7 @@ public partial class SpeechToTextViewModel : ObservableObject
             }
 
             var exePath = engine.GetExecutable();
-            var hash = DownloadHashManager.ComputeSha256(exePath);
+            var hash = Sha256Util.ComputeSha256(exePath);
             return hash == null ? null : (key, hash);
         }
         catch
@@ -4688,9 +4803,9 @@ public partial class SpeechToTextViewModel : ObservableObject
     private static WhisperLanguage? PickDefaultLanguage(IEnumerable<WhisperLanguage> languages)
     {
         var list = languages as IList<WhisperLanguage> ?? languages.ToList();
-        return Enumerable.FirstOrDefault<WhisperLanguage>(list, p => string.Equals(p.Name, "English", StringComparison.OrdinalIgnoreCase))
-            ?? Enumerable.FirstOrDefault<WhisperLanguage>(list, p => p.Code == "en" || p.Code == "eng_Latn")
-            ?? Enumerable.FirstOrDefault<WhisperLanguage>(list);
+        return list.FirstOrDefault(p => string.Equals(p.Name, "English", StringComparison.OrdinalIgnoreCase))
+            ?? list.FirstOrDefault(p => p.Code == "en" || p.Code == "eng_Latn")
+            ?? list.FirstOrDefault();
     }
 
     internal void Initialize(string? videoFileName, int audioTrackNumber)
@@ -4754,6 +4869,8 @@ public partial class SpeechToTextViewModel : ObservableObject
 
     internal void OnWindowClosing(WindowClosingEventArgs e)
     {
+        _timerWhisper.StopAndDispose(OnTimerWhisperOnElapsed);
+        _timerAudioExtract.StopAndDispose(OnTimerAudioExtractOnElapsed);
         UiUtil.SaveWindowPosition(Window);
         Task.Run(() => { DeleteTempFiles(); });
     }

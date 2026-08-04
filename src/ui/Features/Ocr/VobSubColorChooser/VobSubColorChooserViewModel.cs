@@ -172,7 +172,7 @@ public partial class VobSubColorChooserViewModel : ObservableObject
         var vm = await _windowService.ShowDialogAsync<ColorPickerWindow, ColorPickerViewModel>(
             Window, viewModel => viewModel.Initialize(current));
 
-        return vm.OkPressed ? vm.SelectedColor : (Color?)null;
+        return vm.OkPressed ? vm.SelectedColor : null;
     }
 
     [RelayCommand]

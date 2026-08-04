@@ -187,8 +187,19 @@ public partial class VideoPlayerUndockedViewModel : ObservableObject
                 await videoPlayerControl.WaitForPlayersReadyAsync();
                 await Task.Delay(100);
 
+                // Re-docking while this restore was awaiting has already disposed the
+                // player this window built - don't keep driving it (#13083).
+                if (videoPlayerControl.IsDisposed)
+                {
+                    return;
+                }
+
                 videoPlayerControl.Volume = _originalVolume;
                 videoPlayerControl.Position = _originalPosition;
+
+                // Undocking opens the video in a new player, which starts on mpv's default audio
+                // track - re-apply the track the user picked in the main window (issue #12844).
+                MainViewModel?.ReapplySelectedAudioTrack(videoPlayerControl);
             });
         }
 
@@ -208,7 +219,14 @@ public partial class VideoPlayerUndockedViewModel : ObservableObject
                         Math.Abs(cursorPos.Value.Y - _lastCursorPosition.Y) > mouseMovementMinPixels)
                     {
                         _lastCursorPosition = cursorPos.Value;
-                        VideoPlayerControl.NotifyUserActivity();
+
+                        // Only movement over this window counts - the poll is desktop-wide,
+                        // so mouse movement in another app or on another monitor must not
+                        // bring the controls back up (issue #13207).
+                        if (CursorPositionHelper.IsCursorOverWindow(Window, cursorPos.Value))
+                        {
+                            VideoPlayerControl.NotifyUserActivity();
+                        }
                     }
                 }
             }

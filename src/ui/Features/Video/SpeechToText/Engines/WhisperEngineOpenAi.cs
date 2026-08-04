@@ -4,7 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Avalonia.Platform;
-using Nikse.SubtitleEdit.Core.AudioToText;
+using Nikse.SubtitleEdit.UiLogic.AudioToText;
 using Nikse.SubtitleEdit.Logic.Config;
 
 namespace Nikse.SubtitleEdit.Features.Video.SpeechToText.Engines;
@@ -43,7 +43,7 @@ public class WhisperEngineOpenAi : ISpeechToTextEngine
     public string GetAndCreateWhisperFolder()
     {
         var folder = WhisperHelper.GetWhisperFolder(WhisperChoice.OpenAi);
-        return folder;
+        return folder ?? string.Empty;
     }
 
     public string GetAndCreateWhisperModelFolder(WhisperModel? whisperModel)

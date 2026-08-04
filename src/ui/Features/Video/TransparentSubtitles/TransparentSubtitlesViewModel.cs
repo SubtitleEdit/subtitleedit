@@ -11,6 +11,7 @@ using Nikse.SubtitleEdit.Controls.VideoPlayer;
 using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using Nikse.SubtitleEdit.Features.Main.Layout;
+using Nikse.SubtitleEdit.Features.Shared.PromptFileSaved;
 using Nikse.SubtitleEdit.Features.Shared;
 using Nikse.SubtitleEdit.Features.Shared.PromptTextBox;
 using Nikse.SubtitleEdit.Features.Video.BurnIn;
@@ -30,6 +31,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Timers;
+using Nikse.SubtitleEdit.UiLogic.Media;
 
 namespace Nikse.SubtitleEdit.Features.Video.TransparentSubtitles;
 
@@ -90,7 +92,6 @@ public partial class TransparentSubtitlesViewModel : ObservableObject
     private Subtitle _subtitle = new();
     private bool _loading = true;
     private readonly StringBuilder _log;
-    private static readonly Regex FrameFinderRegex = new(@"[Ff]rame=\s*\d+", RegexOptions.Compiled);
     private long _startTicks;
     private long _processedFrames;
     private Process? _ffmpegProcess;
@@ -132,7 +133,7 @@ public partial class TransparentSubtitlesViewModel : ObservableObject
         {
             new(FontBoxType.None, Se.Language.General.None),
             new(FontBoxType.OneBox, Se.Language.Video.BurnIn.OneBox),
-            new(FontBoxType.BoxPerLine, Se.Language.Video.BurnIn.BoxPerLine),
+            new(FontBoxType.BoxPerLine, Se.Language.General.BoxPerLine),
         };
         SelectedFontBoxType = FontBoxTypes[0];
 
@@ -374,7 +375,15 @@ public partial class TransparentSubtitlesViewModel : ObservableObject
 
             if (JobItems.Count == 1)
             {
-                await _folderHelper.OpenFolderWithFileSelected(Window!, jobItem.OutputVideoFileName);
+                await _windowService.ShowDialogAsync<PromptFileSavedWindow, PromptFileSavedViewModel>(Window!, vm =>
+                {
+                    vm.Initialize(
+                        Se.Language.General.VideoFileGenerated,
+                        string.Format(Se.Language.General.VideoFileGeneratedX, jobItem.OutputVideoFileName),
+                        jobItem.OutputVideoFileName,
+                        true,
+                        true);
+                });
             }
             else
             {
@@ -476,6 +485,10 @@ public partial class TransparentSubtitlesViewModel : ObservableObject
         }
 
         var workingDirectory = Path.GetDirectoryName(jobItem.AssaSubtitleFileName) ?? string.Empty;
+        // Machine-readable progress on stdout ("frame=N" etc.) instead of scraping the
+        // human-readable stderr stats, which drift between ffmpeg versions.
+        ffmpegParameters = FfmpegProgressTracker.ProgressArguments + " " + ffmpegParameters;
+
         return FfmpegGenerator.GetProcess(ffmpegParameters, OutputHandler, workingDirectory);
     }
 
@@ -486,13 +499,21 @@ public partial class TransparentSubtitlesViewModel : ObservableObject
             return inputSubtitle;
         }
 
-        var subtitle = new Subtitle();
+        var subtitle = new Subtitle
+        {
+            Header = inputSubtitle.Header, // keep ASSA styles + PlayRes
+            Footer = inputSubtitle.Footer,
+        };
+
         foreach (var p in inputSubtitle.Paragraphs)
         {
-            if (p.StartTime.TotalMilliseconds >= CutFrom.TotalMilliseconds &&
-                p.EndTime.TotalMilliseconds <= CutTo.TotalMilliseconds)
+            if (p.EndTime.TotalMilliseconds > CutFrom.TotalMilliseconds &&
+                p.StartTime.TotalMilliseconds < CutTo.TotalMilliseconds)
             {
-                subtitle.Paragraphs.Add(new Paragraph(p));
+                var paragraph = new Paragraph(p);
+                paragraph.StartTime.TotalMilliseconds = Math.Max(paragraph.StartTime.TotalMilliseconds, CutFrom.TotalMilliseconds);
+                paragraph.EndTime.TotalMilliseconds = Math.Min(paragraph.EndTime.TotalMilliseconds, CutTo.TotalMilliseconds);
+                subtitle.Paragraphs.Add(paragraph);
             }
         }
 
@@ -562,25 +583,20 @@ public partial class TransparentSubtitlesViewModel : ObservableObject
             return;
         }
 
+        if (FfmpegProgressTracker.TryGetFrame(outLine.Data, out var frame))
+        {
+            _processedFrames = frame;
+            ProgressValue = _processedFrames * 100.0 / JobItems[_jobItemIndex].TotalFrames;
+            return;
+        }
+
+        // Keep the twice-a-second "-progress" key/value spam out of the user-facing log.
+        if (FfmpegProgressTracker.IsProgressLine(outLine.Data))
+        {
+            return;
+        }
+
         _log?.AppendLine(outLine.Data);
-
-        var match = FrameFinderRegex.Match(outLine.Data);
-        if (!match.Success)
-        {
-            return;
-        }
-
-        var arr = match.Value.Split('=');
-        if (arr.Length != 2)
-        {
-            return;
-        }
-
-        if (long.TryParse(arr[1].Trim(), out var f))
-        {
-            _processedFrames = f;
-            ProgressValue = (double)_processedFrames * 100.0 / JobItems[_jobItemIndex].TotalFrames;
-        }
     }
 
     private ObservableCollection<BurnInJobItem> GetCurrentVideoAsJobItems()

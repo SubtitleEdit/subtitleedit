@@ -1,5 +1,6 @@
 ﻿using Nikse.SubtitleEdit.Core.BluRaySup;
 using Nikse.SubtitleEdit.Core.Common;
+using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using Nikse.SubtitleEdit.Core.VobSub;
 using System;
 using System.Buffers;
@@ -23,6 +24,9 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
         public List<int> SubtitlePacketIds { get; private set; }
         private HashSet<int> _subtitlePacketIdsLookup;
         public SortedDictionary<int, SortedDictionary<int, List<Paragraph>>> TeletextSubtitlesLookup { get; set; } // teletext
+        public SortedDictionary<int, SortedDictionary<int, List<Paragraph>>> AribSubtitlesLookup { get; set; } // ARIB STD-B24 captions: pid -> language index -> paragraphs
+        public Dictionary<int, Dictionary<int, string>> AribLanguageLookup { get; set; } // pid -> language index -> ISO 639-2 code
+        private Dictionary<int, List<DvbSubPes>> _aribPesLookup;
 
         private List<Packet> SubtitlePackets { get; set; }
         private SortedDictionary<int, List<DvbSubPes>> SubtitlesLookup { get; set; }
@@ -59,6 +63,9 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
             long position = 0;
             SubtitlesLookup = new SortedDictionary<int, List<DvbSubPes>>();
             TeletextSubtitlesLookup = new SortedDictionary<int, SortedDictionary<int, List<Paragraph>>>();
+            AribSubtitlesLookup = new SortedDictionary<int, SortedDictionary<int, List<Paragraph>>>();
+            AribLanguageLookup = new Dictionary<int, Dictionary<int, string>>();
+            _aribPesLookup = new Dictionary<int, List<DvbSubPes>>();
             var teletextPesList = new Dictionary<int, List<DvbSubPes>>();
             var teletextPages = new Dictionary<int, List<int>>();
             ulong? firstMs = null;
@@ -66,7 +73,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
 
             // check for Topfield .rec file
             ms.Seek(position, SeekOrigin.Begin);
-            ms.Read(m2TsTimeCodeBuffer, 0, 3);
+            ms.ReadFully(m2TsTimeCodeBuffer, 0, 3);
             var topfieldCheck = m2TsTimeCodeBuffer.AsSpan(0, 3);
             if (topfieldCheck[0] == 0x54 && topfieldCheck[1] == 0x46 && topfieldCheck[2] == 0x72)
             {
@@ -79,7 +86,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
             {
                 if (_isM2TransportStream)
                 {
-                    ms.Read(m2TsTimeCodeBuffer, 0, m2TsTimeCodeBuffer.Length);
+                    ms.ReadFully(m2TsTimeCodeBuffer, 0, m2TsTimeCodeBuffer.Length);
                     position += m2TsTimeCodeBuffer.Length;
                 }
 
@@ -191,15 +198,18 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
                 SubtitlesLookup.Remove(id);
             }
 
+            ParseAribCaptions(ms, firstVideoMs ?? firstMs);
+
             DvbSubtitlesLookup = new SortedDictionary<int, List<TransportStreamSubtitle>>();
             if (_isM2TransportStream) // m2ts blu-ray images from PES packets
             {
+                var sb = new StringBuilder();
                 foreach (int pid in SubtitlesLookup.Keys)
                 {
                     var bdMs = new MemoryStream();
                     var list = SubtitlesLookup[pid];
                     var currentList = new List<DvbSubPes>();
-                    var sb = new StringBuilder();
+                    sb.Clear();
                     var subList = new List<TransportStreamSubtitle>();
                     var offset = (long)(firstVideoMs ?? 0); // when to use firstMs ?
                     var lastPalettes = new Dictionary<int, List<PaletteInfo>>();
@@ -328,11 +338,76 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
         }
 
         /// <summary>
+        /// Decode collected ARIB STD-B24 caption PES packets (ISDB broadcasts) into text paragraphs
+        /// </summary>
+        private void ParseAribCaptions(Stream ms, ulong? firstMs)
+        {
+            if (_aribPesLookup.Count == 0)
+            {
+                return;
+            }
+
+            // the ARIB data_component_descriptor in the PMT tells profile A (full-seg, 0x0008)
+            // and profile C (one-seg, 0x0012) caption streams apart
+            var pmtParser = new ProgramMapTableParser();
+            pmtParser.Parse(ms);
+            var dataComponentIds = pmtParser.GetAribDataComponentIds(); // partial results are fine
+
+
+            var offset = (long)(firstMs ?? 0);
+            foreach (var pid in _aribPesLookup.Keys)
+            {
+                var profile = AribB24Decoder.AribProfile.ProfileA;
+                if (dataComponentIds.TryGetValue(pid, out var dataComponentId) && dataComponentId == 0x12)
+                {
+                    profile = AribB24Decoder.AribProfile.ProfileC;
+                }
+
+                var parser = new AribCaptionParser(profile);
+                foreach (var pes in _aribPesLookup[pid])
+                {
+                    if (pes.PresentationTimestamp.HasValue)
+                    {
+                        parser.ParsePesPayload(pes.GetAribCaptionData(), pes.PresentationTimestampToMilliseconds());
+                    }
+                }
+                parser.Flush();
+
+                var languages = new SortedDictionary<int, List<Paragraph>>();
+                foreach (var language in parser.ParagraphsByLanguage)
+                {
+                    foreach (var paragraph in language.Value)
+                    {
+                        if (offset <= paragraph.StartTime.TotalMilliseconds)
+                        {
+                            paragraph.StartTime.TotalMilliseconds -= offset;
+                            paragraph.EndTime.TotalMilliseconds -= offset;
+                        }
+                    }
+
+                    if (language.Value.Count > 0)
+                    {
+                        languages.Add(language.Key, language.Value);
+                    }
+                }
+
+                if (languages.Count > 0)
+                {
+                    AribSubtitlesLookup.Add(pid, languages);
+                    AribLanguageLookup.Add(pid, new Dictionary<int, string>(parser.LanguageCodes));
+                }
+            }
+
+            _aribPesLookup.Clear();
+        }
+
+        /// <summary>
         /// Converts a starting '&lt;' char to italic style (can be preceded by a font tag)
         /// E.g. "&lt;Hi there." to "&lt;i&gt;Hi there.&lt;/i&gt;"
         /// </summary>
         private static void FixTeletextItalics(SortedDictionary<int, SortedDictionary<int, List<Paragraph>>> dictionary)
         {
+            var sb = new StringBuilder();
             foreach (var dic in dictionary)
             {
                 foreach (var inner in dic.Value)
@@ -344,7 +419,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
                             continue;
                         }
 
-                        var sb = new StringBuilder();
+                        sb.Clear();
                         foreach (var line in p.Text.SplitToLines())
                         {
                             var s = line.Trim();
@@ -392,12 +467,11 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
             {
                 if (!string.IsNullOrEmpty(dic.Value.Text))
                 {
-                    if (TeletextSubtitlesLookup.ContainsKey(packetId))
+                    if (TeletextSubtitlesLookup.TryGetValue(packetId, out var innerDic))
                     {
-                        var innerDic = TeletextSubtitlesLookup[packetId];
-                        if (innerDic.ContainsKey(dic.Key))
+                        if (innerDic.TryGetValue(dic.Key, out var paragraphs))
                         {
-                            innerDic[dic.Key].Add(dic.Value);
+                            paragraphs.Add(dic.Value);
                         }
                         else
                         {
@@ -434,9 +508,9 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
 
             if (_isM2TransportStream || list.Any(p => p.IsDvbSubPicture))
             {
-                if (SubtitlesLookup.ContainsKey(packetId))
+                if (SubtitlesLookup.TryGetValue(packetId, out var existing))
                 {
-                    SubtitlesLookup[packetId].AddRange(list);
+                    existing.AddRange(list);
                 }
                 else
                 {
@@ -448,30 +522,40 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
             {
                 foreach (var pageNumber in item.PrepareTeletext().Where(p => p > 0))
                 {
-                    if (!teletextPages.ContainsKey(packetId))
+                    var pages = GetOrAddList(teletextPages, packetId);
+                    if (!pages.Contains(pageNumber))
                     {
-                        teletextPages.Add(packetId, new List<int> { pageNumber });
-                    }
-                    else
-                    {
-                        if (!teletextPages[packetId].Contains(pageNumber))
-                        {
-                            teletextPages[packetId].Add(pageNumber);
-                        }
+                        pages.Add(pageNumber);
                     }
                 }
 
-                if (teletextPesList.ContainsKey(packetId))
+                GetOrAddList(teletextPesList, packetId).Add(item);
+            }
+
+            if (!_isM2TransportStream)
+            {
+                foreach (var item in list.Where(p => p.IsAribCaption))
                 {
-                    teletextPesList[packetId].Add(item);
-                }
-                else
-                {
-                    teletextPesList.Add(packetId, new List<DvbSubPes> { item });
+                    GetOrAddList(_aribPesLookup, packetId).Add(item);
                 }
             }
 
             return firstVideoMs;
+        }
+
+        private static List<T> GetOrAddList<T>(Dictionary<int, List<T>> dictionary, int key)
+        {
+#if NET8_0_OR_GREATER
+            ref var list = ref System.Runtime.InteropServices.CollectionsMarshal.GetValueRefOrAddDefault(dictionary, key, out _);
+            return list ??= new List<T>();
+#else
+            if (!dictionary.TryGetValue(key, out var list))
+            {
+                list = new List<T>();
+                dictionary.Add(key, list);
+            }
+            return list;
+#endif
         }
 
         public List<TransportStreamSubtitle> GetDvbSubtitles(int packetId)
@@ -542,29 +626,36 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
                 bufferSize += p.Payload.Length;
             }
 
-            var pesData = new byte[bufferSize];
-            var span = pesData.AsSpan();
-            var offset = 0;
-            foreach (var p in packetList)
+            // DvbSubPes copies the data it keeps, so the concatenation buffer is
+            // only needed while the constructor runs - rent it instead of
+            // allocating per PES packet. Rented buffers can be larger than
+            // requested, so the valid length is passed along explicitly.
+            var pesData = ArrayPool<byte>.Shared.Rent(bufferSize);
+            try
             {
-                p.Payload.AsSpan().CopyTo(span.Slice(offset));
-                offset += p.Payload.Length;
-            }
+                var span = pesData.AsSpan();
+                var offset = 0;
+                foreach (var p in packetList)
+                {
+                    p.Payload.AsSpan().CopyTo(span.Slice(offset));
+                    offset += p.Payload.Length;
+                }
 
-            DvbSubPes pes;
-            if (VobSubParser.IsMpeg2PackHeader(pesData))
-            {
-                pes = new DvbSubPes(pesData, Mpeg2Header.Length);
+                DvbSubPes pes;
+                if (bufferSize >= 4 && VobSubParser.IsMpeg2PackHeader(pesData))
+                {
+                    pes = new DvbSubPes(pesData, Mpeg2Header.Length, bufferSize);
+                }
+                else
+                {
+                    pes = new DvbSubPes(pesData, 0, bufferSize);
+                }
+                list.Add(pes);
             }
-            else if (VobSubParser.IsPrivateStream1(pesData, 0))
+            finally
             {
-                pes = new DvbSubPes(pesData, 0);
+                ArrayPool<byte>.Shared.Return(pesData);
             }
-            else
-            {
-                pes = new DvbSubPes(pesData, 0);
-            }
-            list.Add(pes);
         }
 
         public static bool IsM2TransportStream(Stream ms)
@@ -579,7 +670,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
             var buffer = ArrayPool<byte>.Shared.Rent(requiredLength);
             try
             {
-                ms.Read(buffer, 0, requiredLength);
+                ms.ReadFully(buffer, 0, requiredLength);
                 var span = buffer.AsSpan(0, requiredLength);
                 
                 // Check for standard 188-byte packets
@@ -651,9 +742,9 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
                 {
                     var sub = new TransportStreamSubtitle();
                     sub.StartMilliseconds = (ulong)seconds * 1000UL;
-                    seconds += pes.PageCompositions[0].PageTimeOut;
                     if (pes.PageCompositions.Count > 0)
                     {
+                        seconds += pes.PageCompositions[0].PageTimeOut;
                         sub.EndMilliseconds = sub.StartMilliseconds + (ulong)pes.PageCompositions[0].PageTimeOut * 1000UL;
                     }
                     else

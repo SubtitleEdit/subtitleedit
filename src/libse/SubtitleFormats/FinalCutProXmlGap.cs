@@ -92,6 +92,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             {
                 xml.LoadXml(sb.ToString().Trim());
 
+                var text = new StringBuilder();
                 foreach (XmlNode node in xml.SelectNodes("fcpxml/project/sequence/spine/gap"))
                 {
                     try
@@ -104,7 +105,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                                 var p = new Paragraph();
                                 p.StartTime = DecodeTime(title.Attributes["offset"]);
                                 p.EndTime.TotalMilliseconds = p.StartTime.TotalMilliseconds + DecodeTime(title.Attributes["duration"]).TotalMilliseconds;
-                                var text = new StringBuilder();
+                                text.Clear();
                                 foreach (XmlNode textNode in textNodes)
                                 {
                                     text.AppendLine(textNode.InnerText);

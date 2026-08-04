@@ -345,28 +345,22 @@ public class ZonosTtsCrispAsr : ITtsEngine
         var outputFileName = Path.Combine(GetSetFolder(), Guid.NewGuid() + ".wav");
         var inputText = text;
 
-        // OpenAI-compatible /v1/audio/speech payload. CrispASR's zonos-tts backend uses:
-        //   - `input`             — the text to synthesise
-        //   - `response_format`   — "wav"
-        //   - `voice`             — absolute WAV path or filename in --voice-dir
-        // The server-mode backend ignores the request `voice` field, so we still pass it
-        // (for logging / future server fix) but the reference audio actually used is the
-        // --voice path baked in at server startup — see EnsureServerRunningAsync. Zonos
-        // transcribes the reference internally (eSpeak), so there is no `ref-text` parameter.
+        // OpenAI-compatible /v1/audio/speech payload. Zonos transcribes the reference internally
+        // (eSpeak), so there is no `ref-text` parameter.
+        // Deliberately NO `voice` field: the server rejects absolute paths outright (HTTP 400,
+        // "'voice' must not contain … path separators" — path-traversal guard), so sending
+        // zonosVoice.FilePath failed every synthesis. The zonos backend loads the reference at
+        // init from the startup --voice flag, and the server restarts on voice change — see
+        // EnsureServerRunningAsync. Same bug family as MOSS-TTS #12757.
         var payload = new Dictionary<string, object>
         {
             ["input"] = inputText,
             ["response_format"] = "wav",
-            ["voice"] = zonosVoice.FilePath,
-            // Zonos gates voice cloning behind a consent attestation (CrispASR v0.7.0 returns
-            // HTTP 400 consent_required without it). The user supplies their own reference voice
-            // by importing a WAV into SE, which is the act being attested here.
-            ["consent_attestation"] = "I have the speaker's consent, or it is my own voice.",
-            // Skip the audible AI-disclosure prefix CrispASR otherwise prepends to cloned audio;
-            // SE surfaces the AI-generated nature in its UI. The inaudible watermark + C2PA
-            // provenance metadata stay embedded regardless (defaults to true server-side).
-            ["spoken_disclaimer"] = false,
         };
+
+        // Attests the user's own imported reference and the AI-disclosure duty; see
+        // CrispAsrTtsProvenance. Skipped when voice cloning has not been accepted in settings.
+        CrispAsrTtsProvenance.AddSpeechAttestations(payload);
 
         var body = JsonSerializer.Serialize(payload);
         using var content = new StringContent(body, Encoding.UTF8, "application/json");
@@ -536,6 +530,7 @@ public class ZonosTtsCrispAsr : ITtsEngine
             // means the request's `voice` is ignored and the synth produces the wrong speaker.
             psi.ArgumentList.Add("--voice");
             psi.ArgumentList.Add(voicePath);
+            CrispAsrTtsProvenance.AddServerMarkingArgs(psi.ArgumentList, exe);
 
             var process = Process.Start(psi)
                 ?? throw new InvalidOperationException("Failed to start crispasr (zonos-tts)");

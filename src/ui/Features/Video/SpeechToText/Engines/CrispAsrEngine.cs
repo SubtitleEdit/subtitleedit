@@ -1,4 +1,4 @@
-using Nikse.SubtitleEdit.Core.AudioToText;
+using Nikse.SubtitleEdit.UiLogic.AudioToText;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -26,6 +26,7 @@ public class CrispAsrEngine : CrispAsrEngineBase
             new CrispAsrFireRed(),
             new CrispAsrFunAsrNano(),
             //new CrispAsrFunAsrMltNano(), does not work well enough
+            new CrispAsrGigaAm(),
             new CrispAsrGlm(),
             new CrispAsrGranite(),
             new CrispAsrQwen3(),

@@ -15,6 +15,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
+using Nikse.SubtitleEdit.UiLogic.SpellCheck;
 
 namespace Nikse.SubtitleEdit.Features.Shared.PickSpellCheckDictionary;
 
@@ -104,7 +105,7 @@ public partial class PickSpellCheckDictionaryViewModel : ObservableObject
         if (result.OkPressed)
         {
             LoadDictionaries();
-            SelectedDictionary = Dictionaries.FirstOrDefault(d => d.DictionaryFileName == result.DictionaryFileName);
+            SelectedDictionary = Dictionaries.FirstOrDefault(d => d.DictionaryFileName == result.SpellCheckDictionary?.DictionaryFileName);
         }
     }
 

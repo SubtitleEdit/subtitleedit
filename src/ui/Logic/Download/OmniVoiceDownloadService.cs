@@ -4,6 +4,7 @@ using System.Net.Http;
 using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
+using Nikse.SubtitleEdit.UiLogic;
 
 namespace Nikse.SubtitleEdit.Logic.Download;
 
@@ -32,7 +33,7 @@ public class OmniVoiceDownloadService : IOmniVoiceDownloadService
 
     // omnivoice.cpp release pin. Bump in lockstep with the hashes in DownloadHashManager.OmniVoice
     // (each new release: prepend the new SHA-256 at index 0, keep the previous one for "update available").
-    public const string ReleaseTag = "omnivoice-2026-06-18";
+    public const string ReleaseTag = "omnivoice-2026-08-04";
     private const string ReleaseUrlBase = "https://github.com/niksedk/omnivoice.cpp/releases/download/" + ReleaseTag + "/";
 
     private const string WindowsCpuUrl = ReleaseUrlBase + "omnivoice-win64-cpu.zip";
@@ -75,20 +76,20 @@ public class OmniVoiceDownloadService : IOmniVoiceDownloadService
     public async Task DownloadEngine(Stream stream, string windowsVariant, IProgress<float>? progress, CancellationToken cancellationToken)
     {
         await DownloadHelper.DownloadFileAsync(_httpClient, GetUrl(windowsVariant), stream, progress, cancellationToken);
-        VerifyArchive(stream, DownloadHashManager.ResolveOmniVoiceKey(windowsVariant), "engine");
+        await VerifyArchive(stream, DownloadHashManager.ResolveOmniVoiceKey(windowsVariant), "engine", cancellationToken);
     }
 
     public async Task DownloadVoices(Stream stream, IProgress<float>? progress, CancellationToken cancellationToken)
     {
         await DownloadHelper.DownloadFileAsync(_httpClient, VoicesUrl, stream, progress, cancellationToken);
-        VerifyArchive(stream, DownloadHashManager.OmniVoice.Voices, "voices");
+        await VerifyArchive(stream, DownloadHashManager.OmniVoice.Voices, "voices", cancellationToken);
     }
 
     // Compares the downloaded bytes against the known SHA-256 for this key and throws on mismatch
     // so the caller's IsFaulted branch surfaces "Download failed" instead of silently unpacking a
     // truncated or tampered file. A null/unknown key (e.g. unrecognised Windows variant) skips the
     // check rather than failing closed - same policy as the rest of DownloadHashManager.
-    private static void VerifyArchive(Stream stream, string? key, string label)
+    private static async Task VerifyArchive(Stream stream, string? key, string label, CancellationToken cancellationToken)
     {
         if (string.IsNullOrEmpty(key) || stream.Length == 0)
         {
@@ -102,7 +103,7 @@ public class OmniVoiceDownloadService : IOmniVoiceDownloadService
         }
 
         stream.Position = 0;
-        var actual = DownloadHashManager.ComputeSha256(stream);
+        var actual = await Sha256Util.ComputeSha256Async(stream, cancellationToken);
         stream.Position = 0;
 
         if (!string.Equals(expected, actual, StringComparison.OrdinalIgnoreCase))
@@ -114,7 +115,7 @@ public class OmniVoiceDownloadService : IOmniVoiceDownloadService
 
     private static string GetUrl(string windowsVariant)
     {
-        if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+        if (OperatingSystem.IsWindows())
         {
             return windowsVariant switch
             {
@@ -124,12 +125,12 @@ public class OmniVoiceDownloadService : IOmniVoiceDownloadService
             };
         }
 
-        if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+        if (OperatingSystem.IsMacOS())
         {
             return MacOsUrl;
         }
 
-        if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+        if (OperatingSystem.IsLinux())
         {
             return RuntimeInformation.ProcessArchitecture == Architecture.Arm64
                 ? LinuxArm64Url

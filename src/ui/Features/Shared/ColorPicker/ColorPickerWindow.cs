@@ -21,7 +21,7 @@ public class ColorPickerWindow : Window
         vm.Window = this;
         DataContext = vm;
 
-        var colorView = MakeColorView(vm);
+        var colorView = MakeColorView(vm, out var hexTextBox);
 
         var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand);
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
@@ -44,11 +44,11 @@ public class ColorPickerWindow : Window
 
         Content = grid;
 
-        Activated += delegate { buttonOk.Focus(); }; // hack to make OnKeyDown work
+        Activated += delegate { hexTextBox.Focus(); }; // initial focus on an input, not an action button - a focused button clicks on bare Space
         KeyDown += (_, e) => vm.OnKeyDown(e);
     }
 
-    private static Grid MakeColorView(ColorPickerViewModel vm)
+    private static Grid MakeColorView(ColorPickerViewModel vm, out TextBox hexTextBox)
     {
         // Main layout grid
         var mainGrid = new Grid
@@ -101,7 +101,7 @@ public class ColorPickerWindow : Window
         Grid.SetRow(leftPanel, 0);
 
         // RGBA Sliders
-        var slidersPanel = CreateSlidersPanel(vm);
+        var slidersPanel = CreateSlidersPanel(vm, out hexTextBox);
         Grid.SetColumn(slidersPanel, 2);
         Grid.SetRow(slidersPanel, 0);
 
@@ -118,7 +118,7 @@ public class ColorPickerWindow : Window
         return mainGrid;
     }
 
-    private static StackPanel CreateSlidersPanel(ColorPickerViewModel vm)
+    private static StackPanel CreateSlidersPanel(ColorPickerViewModel vm, out TextBox hexInputTextBox)
     {
         var panel = new StackPanel
         {
@@ -243,6 +243,8 @@ public class ColorPickerWindow : Window
             Path = nameof(vm.HexColor),
             Mode = BindingMode.TwoWay
         });
+
+        hexInputTextBox = hexTextBox;
 
         var hexPanel = new StackPanel
         {

@@ -123,7 +123,7 @@ internal sealed class ConvertCommand : AsyncCommand<ConvertCommand.Settings>
         public bool TimeCodesOnly { get; init; }
 
         [CommandOption("--no-vobsub-isolate-colors|--novobsubisolatecolors")]
-        [Description("Disable VobSub OCR colour isolation (on by default). Isolation binarises each subpicture to black-on-white by keeping the most frequent opaque colour (glyph fill) and dropping the outline/anti-alias colours; pass this to OCR the raw palette instead")]
+        [Description("Disable VobSub OCR colour isolation (on by default). Isolation binarises each subpicture to black-on-white by keeping the innermost colour plane (glyph fill) and dropping the outline/anti-alias colours; pass this to OCR the raw palette instead")]
         public bool NoVobSubIsolateColors { get; init; }
 
         [CommandOption("--no-pgs-isolate-colors|--nopgsisolatecolors")]
@@ -329,6 +329,10 @@ internal sealed class ConvertCommand : AsyncCommand<ConvertCommand.Settings>
         [Description("Comma-separated FCE rule IDs (or 'all,-RuleId' to subtract). See: seconv list-fce-rules")]
         public string? FixCommonErrorsRules { get; init; }
 
+        [CommandOption("--fce-language|--FixCommonErrorsLanguage")]
+        [Description("Force the language for FCE language-gated rules (code or English name, e.g. es or Spanish); default: auto-detect from content")]
+        public string? FixCommonErrorsLanguage { get; init; }
+
         [CommandOption("--fix-rtl-via-unicode-chars|--FixRtlViaUnicodeChars")]
         [Description("Fix RTL via Unicode characters")]
         public bool FixRtlViaUnicodeChars { get; init; }
@@ -470,6 +474,7 @@ internal sealed class ConvertCommand : AsyncCommand<ConvertCommand.Settings>
             // Load --settings:path.json overrides into libse Configuration before any conversion.
             // --profile <name> selects a named overlay from the same file.
             var imageStyle = new ImageExportStyle();
+            var settingsWarnings = new List<string>();
             if (!string.IsNullOrWhiteSpace(settings.SettingsPath))
             {
                 try
@@ -481,12 +486,21 @@ internal sealed class ConvertCommand : AsyncCommand<ConvertCommand.Settings>
                     // Unknown keys are ignored by the JSON reader, which used to mean a typo - or a
                     // key from a newer seconv - silently produced default output (issue #12437).
                     var unknownKeys = seConvSettings.GetUnknownKeys().ToList();
-                    if (unknownKeys.Count > 0 && !silent)
+                    if (unknownKeys.Count > 0)
                     {
-                        AnsiConsole.MarkupLineInterpolated(
-                            $"[yellow]Warning: ignoring unknown key(s) in --settings file: {string.Join(", ", unknownKeys)}[/]");
-                        AnsiConsole.MarkupLine(
-                            "[yellow]Check for typos, or update seconv if the key was added in a newer version.[/]");
+                        // Also recorded in the result warnings below, so --quiet and --json
+                        // consumers see it too — the typo-produces-default-output failure this
+                        // warning exists for hits scripted runs hardest.
+                        settingsWarnings.Add(
+                            $"Ignoring unknown key(s) in --settings file: {string.Join(", ", unknownKeys)}. " +
+                            "Check for typos, or update seconv if the key was added in a newer version.");
+                        if (!silent)
+                        {
+                            AnsiConsole.MarkupLineInterpolated(
+                                $"[yellow]Warning: ignoring unknown key(s) in --settings file: {string.Join(", ", unknownKeys)}[/]");
+                            AnsiConsole.MarkupLine(
+                                "[yellow]Check for typos, or update seconv if the key was added in a newer version.[/]");
+                        }
                     }
                 }
                 catch (Exception ex)
@@ -519,23 +533,28 @@ internal sealed class ConvertCommand : AsyncCommand<ConvertCommand.Settings>
 
             // Resolve FCE rule selection. Passing --FixCommonErrorsRules implicitly
             // enables --FixCommonErrors so users don't have to specify both.
-            // We also parse out which rules the user named by hand — that's a separate
-            // signal from the resolved set so language-conditional rules can bypass
-            // their gate when explicitly requested (see FixCommonErrorsRunner.Run).
             IReadOnlyList<string> fceRules = [];
-            IReadOnlyList<string> fceExplicitlyNamed = [];
             var fceRequested = settings.FixCommonErrors || !string.IsNullOrWhiteSpace(settings.FixCommonErrorsRules);
             if (fceRequested)
             {
                 try
                 {
                     fceRules = FixCommonErrorsRunner.ResolveRuleIds(settings.FixCommonErrorsRules);
-                    fceExplicitlyNamed = FixCommonErrorsRunner.ParseExplicitlyNamedRules(settings.FixCommonErrorsRules);
                 }
                 catch (ArgumentException ex)
                 {
                     AnsiConsole.MarkupLineInterpolated($"[red]Error: {ex.Message}[/]");
                     return 1;
+                }
+
+                // A supplied --fce-language that can't be resolved falls back to auto-detect;
+                // warn so a typo ("--fce-language:spanihs") isn't silently ignored.
+                if (!silent
+                    && !string.IsNullOrWhiteSpace(settings.FixCommonErrorsLanguage)
+                    && FixCommonErrorsRunner.NormalizeLanguageOverride(settings.FixCommonErrorsLanguage) == null)
+                {
+                    AnsiConsole.MarkupLineInterpolated(
+                        $"[yellow]Warning: --fce-language '{settings.FixCommonErrorsLanguage}' not recognized; falling back to auto-detected language.[/]");
                 }
             }
 
@@ -636,7 +655,7 @@ internal sealed class ConvertCommand : AsyncCommand<ConvertCommand.Settings>
                 Overwrite = settings.Overwrite,
                 Operations = operations,
                 FixCommonErrorsRules = fceRules,
-                FixCommonErrorsExplicitlyNamedRules = fceExplicitlyNamed,
+                FixCommonErrorsLanguage = settings.FixCommonErrorsLanguage,
                 DeleteFirst = settings.DeleteFirst,
                 DeleteLast = settings.DeleteLast,
                 DeleteContains = settings.DeleteContains,
@@ -740,6 +759,14 @@ internal sealed class ConvertCommand : AsyncCommand<ConvertCommand.Settings>
             var result = await converter.ConvertAsync(options);
             stopwatch.Stop();
 
+            // Surface settings-file warnings in the machine-readable output too; in non-silent
+            // mode they were already printed above, but --quiet/--json would otherwise drop
+            // them entirely (the silent-typo failure from issue #12437).
+            if (settingsWarnings.Count > 0 && silent)
+            {
+                result.Warnings.InsertRange(0, settingsWarnings);
+            }
+
             var elapsed = FormatElapsed(stopwatch.Elapsed);
 
             if (settings.Json)
@@ -752,8 +779,17 @@ internal sealed class ConvertCommand : AsyncCommand<ConvertCommand.Settings>
             AnsiConsole.WriteLine();
             if (result.Success)
             {
-                AnsiConsole.MarkupLine($"[green]✓[/] Conversion completed successfully!");
+                if (result.Warnings.Count > 0)
+                {
+                    AnsiConsole.MarkupLine($"[yellow]⚠[/] Conversion completed with warnings");
+                }
+                else
+                {
+                    AnsiConsole.MarkupLine($"[green]✓[/] Conversion completed successfully!");
+                }
+
                 AnsiConsole.MarkupLine($"[dim]Converted {result.SuccessfulFiles} file(s) in {elapsed}[/]");
+                PrintWarnings(result);
             }
             else
             {
@@ -779,6 +815,8 @@ internal sealed class ConvertCommand : AsyncCommand<ConvertCommand.Settings>
                     }
                 }
 
+                PrintWarnings(result);
+
                 return 1;
             }
 
@@ -799,6 +837,21 @@ internal sealed class ConvertCommand : AsyncCommand<ConvertCommand.Settings>
                 }
             }
             return 1;
+        }
+    }
+
+    private static void PrintWarnings(ConversionResult result)
+    {
+        if (result.Warnings.Count == 0)
+        {
+            return;
+        }
+
+        AnsiConsole.WriteLine();
+        AnsiConsole.MarkupLine("[yellow]Warnings:[/]");
+        foreach (var warning in result.Warnings)
+        {
+            AnsiConsole.MarkupLineInterpolated($"  [yellow]•[/] {warning}");
         }
     }
 
@@ -824,8 +877,10 @@ internal sealed class ConvertCommand : AsyncCommand<ConvertCommand.Settings>
                 output = f.Output,
                 success = f.Success,
                 error = f.Error,
+                warnings = f.Warnings,
             }),
             errors = result.Errors,
+            warnings = result.Warnings,
         };
         Console.WriteLine(System.Text.Json.JsonSerializer.Serialize(payload, JsonOptions));
     }

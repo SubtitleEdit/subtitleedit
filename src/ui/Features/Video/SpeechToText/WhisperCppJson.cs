@@ -96,13 +96,14 @@ public class TranscriptionSegment
             return result;
         }
 
+        var textBuilder = new StringBuilder();
         foreach (var token in Tokens)
         {
             var startMs = TimeCode.ParseToMilliseconds(token.Timestamps.From);
             var endMs = TimeCode.ParseToMilliseconds(token.Timestamps.To);
 
             // Build text with underlined active word
-            var textBuilder = new StringBuilder();
+            textBuilder.Clear();
             foreach (var t in Tokens)
             {
                 if (t == token)

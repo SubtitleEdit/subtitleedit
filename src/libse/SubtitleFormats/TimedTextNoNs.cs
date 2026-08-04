@@ -316,12 +316,13 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             Configuration.Settings.SubtitleSettings.TimedText10TimeCodeFormatSource = null;
 
             XmlNode lastDiv = null;
+            var pText = new StringBuilder();
             foreach (XmlNode node in body.SelectNodes("//p"))
             {
                 try
                 {
                     // Parse and convert paragraph text
-                    var pText = new StringBuilder();
+                    pText.Clear();
                     ReadParagraph(pText, node);
 
                     // Time codes

@@ -28,6 +28,17 @@ public class LanguageModifySelection
     public string Bookmarked { get; set; }
     public string BookmarkContains { get; set; }
     public string BlankLines { get; set; }
+    public string HearingImpaired { get; set; }
+    public string HearingImpairedBrackets { get; set; }
+    public string HearingImpairedCurlyBrackets { get; set; }
+    public string HearingImpairedParentheses { get; set; }
+    public string HearingImpairedCustom { get; set; }
+    public string HearingImpairedTextBeforeColon { get; set; }
+    public string HearingImpairedUppercaseLine { get; set; }
+    public string HearingImpairedLineContains { get; set; }
+    public string HearingImpairedMusicSymbols { get; set; }
+    public string HearingImpairedInterjections { get; set; }
+    public string HearingImpairedSettingsHint { get; set; }
     public string SelectionNew { get; set; }
     public string SelectionAdd { get; set; }
     public string SelectionSubtract { get; set; }
@@ -58,6 +69,17 @@ public class LanguageModifySelection
         Bookmarked = "Bookmarked";
         BookmarkContains = "Bookmark contains";
         BlankLines = "Blank lines";
+        HearingImpaired = "Hearing impaired (SDH)";
+        HearingImpairedBrackets = "Brackets [...]";
+        HearingImpairedCurlyBrackets = "Curly brackets {...}";
+        HearingImpairedParentheses = "Parentheses (...)";
+        HearingImpairedCustom = "Custom";
+        HearingImpairedTextBeforeColon = "Text before colon";
+        HearingImpairedUppercaseLine = "Uppercase line";
+        HearingImpairedLineContains = "Line contains";
+        HearingImpairedMusicSymbols = "Only music symbols";
+        HearingImpairedInterjections = "Interjections";
+        HearingImpairedSettingsHint = "Details come from Tools > Remove text for hearing impaired";
         SelectionNew = "New selection";
         SelectionAdd = "Add to selection";
         SelectionSubtract = "Subtract from selection";

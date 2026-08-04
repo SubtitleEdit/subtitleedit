@@ -4,6 +4,7 @@ using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Nikse.SubtitleEdit.Core.Common;
+using Nikse.SubtitleEdit.Core.ContainerFormats.Mp4;
 using Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using Nikse.SubtitleEdit.Features.Shared.PromptFileSaved;
@@ -29,7 +30,7 @@ public partial class PickMp4TrackViewModel : ObservableObject
     [ObservableProperty] private string _subtitleCountText;
 
     public Window? Window { get; set; }
-    public DataGrid TracksGrid { get; set; }
+    public TableView TracksGrid { get; set; }
     public Mp4TrackInfoDisplay? SelectedMatroskaTrack { get; set; }
     public bool OkPressed { get; private set; }
     public string WindowTitle { get; private set; }
@@ -45,7 +46,7 @@ public partial class PickMp4TrackViewModel : ObservableObject
         _fileHelper = fileHelper;
         _windowService = windowService;
         Tracks = new ObservableCollection<Mp4TrackInfoDisplay>();
-        TracksGrid = new DataGrid();
+        TracksGrid = new TableView();
         WindowTitle = string.Empty;
         SubtitleCountText = string.Empty;
         Rows = new ObservableCollection<Mp4SubtitleCueDisplay>();
@@ -66,11 +67,52 @@ public partial class PickMp4TrackViewModel : ObservableObject
                 Name = track.Mdia.Name,
                 StartPosition = track.Mdia.StartPosition,
                 IsVobSubSubtitle = track.Mdia.IsVobSubSubtitle,
-                Duration = track.Tkhd.Duration,
+                Duration = LastCueEnd(track.Mdia?.Minf?.Stbl?.GetParagraphs()),
                 Track = track,
             };
             Tracks.Add(display);
         }
+    }
+
+    /// <summary>
+    /// Initializes with fragmented (DASH/CMAF) text tracks, where cues come from
+    /// moof/traf/trun samples instead of moov sample tables.
+    /// </summary>
+    public void Initialize(List<Mp4FragmentedSubtitleTrack> fragmentedTracks, string fileName)
+    {
+        _fileName = fileName;
+        WindowTitle = $"Pick MP4 track - {fileName}";
+        foreach (var track in fragmentedTracks)
+        {
+            Tracks.Add(new Mp4TrackInfoDisplay
+            {
+                HandlerType = track.Codec ?? string.Empty,
+                Name = track.TrackId != null
+                    ? $"Track {track.TrackId} ({track.Language ?? "?"})"
+                    : track.Language ?? string.Empty,
+                StartPosition = 0,
+                IsVobSubSubtitle = false,
+                Duration = LastCueEnd(track.Subtitle.Paragraphs),
+                FragmentedTrack = track,
+            });
+        }
+    }
+
+    private static TimeSpan LastCueEnd(List<Paragraph>? paragraphs)
+    {
+        return paragraphs == null || paragraphs.Count == 0
+            ? TimeSpan.Zero
+            : paragraphs[paragraphs.Count - 1].EndTime.TimeSpan;
+    }
+
+    private static List<Paragraph> GetTrackParagraphs(Mp4TrackInfoDisplay display)
+    {
+        if (display.FragmentedTrack != null)
+        {
+            return display.FragmentedTrack.Subtitle.Paragraphs;
+        }
+
+        return display.Track?.Mdia?.Minf?.Stbl?.GetParagraphs() ?? new List<Paragraph>();
     }
 
     private void Close()
@@ -89,15 +131,14 @@ public partial class PickMp4TrackViewModel : ObservableObject
     private async Task Export()
     {
         var selectedTrack = SelectedTrack;
-        var track = selectedTrack?.Track;
-        if (Window == null || track == null)
+        if (Window == null || selectedTrack == null || (selectedTrack.Track == null && selectedTrack.FragmentedTrack == null))
         {
             return;
         }
 
-        var suggestedFileName = Path.GetFileNameWithoutExtension(_fileName);
+        var suggestedFileName = Utilities.GetPathAndFileNameWithoutExtension(_fileName);
 
-        if (track.Mdia.IsVobSubSubtitle)
+        if (selectedTrack.Track is { } track && track.Mdia.IsVobSubSubtitle)
         {
             var fileName = await _fileHelper.PickSaveSubtitleFile(Window, ".sup", suggestedFileName, Se.Language.General.SaveFileAsTitle);
             if (string.IsNullOrEmpty(fileName))
@@ -153,7 +194,7 @@ public partial class PickMp4TrackViewModel : ObservableObject
         else
         {
             var subtitle = new Subtitle();
-            subtitle.Paragraphs.AddRange(track.Mdia.Minf.Stbl.GetParagraphs());
+            subtitle.Paragraphs.AddRange(GetTrackParagraphs(selectedTrack));
             subtitle.Renumber();
             var format = new SubRip();
             var rawText = format.ToText(subtitle, string.Empty);
@@ -192,7 +233,7 @@ public partial class PickMp4TrackViewModel : ObservableObject
         }
     }
 
-    internal void DataGridTracksSelectionChanged(object? sender, SelectionChangedEventArgs e)
+    internal void TracksGridSelectionChanged(object? sender, SelectionChangedEventArgs e)
     {
         bool flowControl = TrackChanged();
         if (!flowControl)
@@ -204,15 +245,14 @@ public partial class PickMp4TrackViewModel : ObservableObject
     private bool TrackChanged()
     {
         var selectedTrack = SelectedTrack;
-        if (selectedTrack == null || selectedTrack.Track == null)
+        if (selectedTrack == null || (selectedTrack.Track == null && selectedTrack.FragmentedTrack == null))
         {
             SubtitleCountText = string.Empty;
             return false;
         }
 
         Rows.Clear();
-        var trackinfo = selectedTrack.Track!;
-        var subtitles = trackinfo.Mdia.Minf.Stbl.GetParagraphs();
+        var subtitles = GetTrackParagraphs(selectedTrack);
         SubtitleCountText = string.Format(Se.Language.File.Import.NumberOfSubtitlesX, subtitles.Count);
         var i = 0;
         foreach (var item in subtitles)
@@ -226,7 +266,7 @@ public partial class PickMp4TrackViewModel : ObservableObject
                 Duration = TimeSpan.FromMilliseconds(item.EndTime.TotalMilliseconds - item.StartTime.TotalMilliseconds),
             };
 
-            if (selectedTrack.IsVobSubSubtitle)
+            if (selectedTrack.IsVobSubSubtitle && selectedTrack.Track is { } trackinfo)
             {
                 cue.Image = new Image { Source = trackinfo.Mdia.Minf.Stbl.SubPictures[i - 1].GetBitmap(null, SKColors.Transparent, SKColors.Black, SKColors.White, SKColors.Black, false).ToAvaloniaBitmap() };
             }
@@ -250,8 +290,16 @@ public partial class PickMp4TrackViewModel : ObservableObject
 
         Dispatcher.UIThread.Post(() =>
         {
+            // Select via the view model, not just the grid index - see the same fix in
+            // PickMatroskaTrackViewModel: AlwaysSelected has already put the grid on row 0, so
+            // re-assigning the index raises no SelectionChanged and SelectedTrack stayed null.
+            SelectedTrack = Tracks[index];
             TracksGrid.SelectedIndex = index;
-            TracksGrid.ScrollIntoView(TracksGrid.SelectedItem, null);
+            if (TracksGrid.SelectedItem is { } selectedItem)
+            {
+                TracksGrid.ScrollIntoView(selectedItem);
+            }
+
             TrackChanged();
         }, DispatcherPriority.Background);
     }

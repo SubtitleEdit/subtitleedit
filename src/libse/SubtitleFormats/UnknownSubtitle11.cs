@@ -82,6 +82,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         public override string ToText(Subtitle subtitle, string title)
         {
             var sb = new StringBuilder();
+            var lineSb = new StringBuilder();
             foreach (Paragraph p in subtitle.Paragraphs)
             {
                 sb.Append('{');
@@ -98,7 +99,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 bool italicOn = false;
                 bool boldOn = false;
                 bool underlineOn = false;
-                var lineSb = new StringBuilder();
+                lineSb.Clear();
                 foreach (string line in parts)
                 {
                     if (count > 0)
@@ -176,6 +177,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         {
             _errorCount = 0;
 
+            var lineSb = new StringBuilder();
             foreach (string line in lines)
             {
                 string s = RemoveIllegalSpacesAndFixEmptyCodes(line);
@@ -196,7 +198,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                             string post = string.Empty;
                             string[] parts = text.Split(new[] { '|' }, StringSplitOptions.RemoveEmptyEntries);
                             int count = 0;
-                            var lineSb = new StringBuilder();
+                            lineSb.Clear();
                             foreach (string s2 in parts)
                             {
                                 if (count > 0)

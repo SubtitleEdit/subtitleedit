@@ -40,7 +40,7 @@ public partial class BinaryOcrCharacterHistoryViewModel : ObservableObject
 
     public BinaryOcrCharacterHistoryViewModel()
     {
-        Title = "Inspect Binary OCR Additions";
+        Title = Se.Language.Ocr.InspectBinaryOcrAdditionsTitle;
         NewText = string.Empty;
         ResolutionAndTopMargin = string.Empty;
         IsNewTextItalic = false;

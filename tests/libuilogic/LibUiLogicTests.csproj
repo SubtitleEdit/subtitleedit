@@ -13,12 +13,23 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="18.7.0" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="18.8.1" />
     <PackageReference Include="xunit.runner.visualstudio" Version="3.1.5">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="xunit.v3" Version="3.2.2" />
+
+    <!--
+      libuilogic's OCR / image export paths go through SkiaSharp + SkiaSharp.HarfBuzz, and those
+      packages bundle the macOS/Windows natives but NOT Linux - src\ui and src\seconv each reference
+      the Linux assets themselves for exactly that reason (issue #11872). Without this the test run
+      dies on Linux with "Unable to load shared library 'libSkiaSharp'". Pinned to the same versions
+      as the managed SkiaSharp / HarfBuzzSharp wrappers (3.119.4 / 8.3.1.5) to avoid a native/managed
+      ABI mismatch (cf. issues #11864, #11931).
+    -->
+    <PackageReference Include="SkiaSharp.NativeAssets.Linux" Version="3.119.4" />
+    <PackageReference Include="HarfBuzzSharp.NativeAssets.Linux" Version="8.3.1.5" />
   </ItemGroup>
 
   <ItemGroup>

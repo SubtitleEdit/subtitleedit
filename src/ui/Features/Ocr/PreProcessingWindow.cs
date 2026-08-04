@@ -132,7 +132,8 @@ public class PreProcessingWindow : Window
 
         Content = grid;
 
-        Activated += delegate { buttonOk.Focus(); }; // hack to make OnKeyDown work
+        // initial focus on an input, not an action button - a focused button clicks on bare Space
+        Activated += delegate { checkBoxCropTransparent.Focus(); };
         KeyDown += vm.KeyDown;
     }
 
@@ -148,7 +149,9 @@ public class PreProcessingWindow : Window
             MaxHeight = 200,
         };
 
-        return UiUtil.MakeBorderForControl(image);
+        var border = UiUtil.MakeBorderForControl(image);
+        border.Background = UiUtil.GetCheckerboardBrush();
+        return border;
     }
 
     private static Border MakePostProcessedImageView(PreProcessingViewModel vm)
@@ -163,6 +166,8 @@ public class PreProcessingWindow : Window
             MaxHeight = 200,
         };
 
-        return UiUtil.MakeBorderForControl(image);
+        var border = UiUtil.MakeBorderForControl(image);
+        border.Background = UiUtil.GetCheckerboardBrush();
+        return border;
     }
 }

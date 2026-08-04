@@ -14,6 +14,37 @@ public interface IThemeInitializer
 
 public class ThemeInitializer(IZipUnpacker zipUnpacker) : IThemeInitializer
 {
+    private static int _repairAttempted;
+
+    /// <summary>
+    /// Recovery path for a theme folder that claims to be current (version.txt matches) but is
+    /// missing files - e.g. an icon added between releases without a version bump, or a user
+    /// deleting files by hand. Re-unpacks Themes.zip over the existing folder. At most one
+    /// attempt per process, so a zip that is itself missing the file cannot loop.
+    /// </summary>
+    public static bool TryRepair(string missingFileName)
+    {
+        if (System.Threading.Interlocked.Exchange(ref _repairAttempted, 1) == 1)
+        {
+            return false;
+        }
+
+        try
+        {
+            Se.LogError($"Theme image \"{missingFileName}\" missing - re-unpacking Themes.zip to \"{Se.ThemesFolder}\"");
+            var zipUri = new Uri("avares://SubtitleEdit/Assets/Themes.zip");
+            using var zipStream = AssetLoader.Open(zipUri);
+            new Compression.ZipUnpacker().UnpackZipStream(zipStream, Se.ThemesFolder);
+            WriteNewVersionFile();
+            return true;
+        }
+        catch (Exception e)
+        {
+            Se.LogError(e, $"Re-unpacking Themes.zip to \"{Se.ThemesFolder}\" failed");
+            return false;
+        }
+    }
+
     public async Task UpdateThemesIfNeeded()
     {
         if (await NeedsUpdate())

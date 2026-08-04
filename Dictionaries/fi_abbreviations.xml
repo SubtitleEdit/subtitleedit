@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Finnish abbreviations - a period here ends an abbreviation, not a sentence, so "Fix common
+  errors" must not capitalize the following word (issue #13082). Matching is case insensitive,
+  so one entry per abbreviation is enough. Abbreviations with an inner period (e.g. "a.m.") are
+  already recognized by a general rule and need no entry here.
+-->
+<Abbreviations>
+  <Item>Dr.</Item>
+  <Item>esim.</Item>
+  <Item>Hra.</Item>
+  <Item>jne.</Item>
+  <Item>kpl.</Item>
+  <Item>krs.</Item>
+  <Item>milj.</Item>
+  <Item>mm.</Item>
+  <Item>mrd.</Item>
+  <Item>nro.</Item>
+  <Item>ns.</Item>
+  <Item>Nti.</Item>
+  <Item>os.</Item>
+  <Item>puh.</Item>
+  <Item>Rva.</Item>
+  <Item>tms.</Item>
+  <Item>ts.</Item>
+  <Item>yht.</Item>
+  <Item>ym.</Item>
+  <Item>yms.</Item>
+</Abbreviations>

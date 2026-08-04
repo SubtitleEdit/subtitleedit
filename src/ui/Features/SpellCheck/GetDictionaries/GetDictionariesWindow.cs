@@ -71,7 +71,9 @@ public class GetDictionariesWindow : Window
         {
             ColumnDefinitions =
             {
-                new ColumnDefinition { Width = new GridLength(LabelWidth, GridUnitType.Pixel) },
+                // Auto (not a fixed width) so longer translations of the labels - e.g. Italian
+                // "Cartella installazione" for "Install folder" - are not clipped (#12886).
+                new ColumnDefinition { Width = GridLength.Auto, MinWidth = LabelWidth },
                 new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
             },
             RowDefinitions =

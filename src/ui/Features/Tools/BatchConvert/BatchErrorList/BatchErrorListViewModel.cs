@@ -99,16 +99,24 @@ public partial class BatchErrorListViewModel : ObservableObject
                 continue;
             }
 
-            for (int i = 0; i < batchItem.Subtitle.Paragraphs.Count; i++)
+            // One view model per paragraph, reused as its neighbours' prev/next: the previous
+            // version built three of them (plus a format) for every paragraph of every file and
+            // threw away all but the ones with an error.
+            var format = batchItem.Subtitle.OriginalFormat ?? new SubRip();
+            var lines = new List<SubtitleLineViewModel>(batchItem.Subtitle.Paragraphs.Count);
+            foreach (var p in batchItem.Subtitle.Paragraphs)
             {
-                Core.Common.Paragraph? p = batchItem.Subtitle.Paragraphs[i];
-                var prev = i > 0 ? batchItem.Subtitle.Paragraphs[i - 1] : null;
-                var next = i < batchItem.Subtitle.Paragraphs.Count - 1 ? batchItem.Subtitle.Paragraphs[i + 1] : null;
-                var format = batchItem.Subtitle.OriginalFormat ?? new SubRip();
-                var errorItem = new BatchErrorListItem(batchItem.FileName, new SubtitleLineViewModel(p, format), prev, next);
-                if (!string.IsNullOrEmpty(errorItem.Error))
+                lines.Add(new SubtitleLineViewModel(p, format));
+            }
+
+            for (var i = 0; i < lines.Count; i++)
+            {
+                var line = lines[i];
+                var prev = i > 0 ? lines[i - 1] : null;
+                var next = i < lines.Count - 1 ? lines[i + 1] : null;
+                if (line.HasErrors(prev, next))
                 {
-                    Subtitles.Add(errorItem);
+                    Subtitles.Add(new BatchErrorListItem(batchItem.FileName, line, prev, next));
                 }
             }
         }

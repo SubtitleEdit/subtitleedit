@@ -15,12 +15,17 @@ namespace Nikse.SubtitleEdit.Features.Tools.RemoveTextForHearingImpaired;
 
 public class RemoveTextForHearingImpairedWindow : Window
 {
+    // Same presets the SE 4 combo boxes offered - awkward characters to type, and they cover
+    // nearly every real use of these fields. All three fields stay free text.
+    private static readonly string[] SymbolPresets = ["¶", "♪", "♫"];
+    private static readonly string[] ContainsPresets = ["¶", "♪", "♫", "♪,♫"];
+
     private readonly RemoveTextForHearingImpairedViewModel _vm;
 
     public RemoveTextForHearingImpairedWindow(RemoveTextForHearingImpairedViewModel vm)
     {
         UiUtil.InitializeWindow(this, GetType().Name);
-        Title = Se.Language.Tools.RemoveTextForHearingImpaired.Title;
+        Title = Se.Language.General.RemoveTextForHearingImpaired;
         Width = 910;
         Height = 640;
         MinWidth = 800;
@@ -77,6 +82,9 @@ public class RemoveTextForHearingImpairedWindow : Window
         Content = grid;
 
         Activated += delegate { (vm.IsApplyVisible ? buttonDone : buttonOk).Focus(); }; // hack to make OnKeyDown work
+
+        Closing += delegate { UiUtil.SaveWindowPosition(this); };
+        Loaded += delegate { UiUtil.RestoreWindowPosition(this); };
     }
 
     private StackPanel MakeSettingsView(RemoveTextForHearingImpairedViewModel vm)
@@ -114,9 +122,9 @@ public class RemoveTextForHearingImpairedWindow : Window
         var comboBoxParentheses = UiUtil.MakeCheckBox(Se.Language.Tools.RemoveTextForHearingImpaired.Parentheses, vm, nameof(vm.IsRemoveParenthesesOn));
 
         var checkBoxCustom = UiUtil.MakeCheckBox(string.Empty, vm, nameof(vm.IsRemoveCustomOn));
-        var textBoxCustomStart = UiUtil.MakeTextBox(30, vm, nameof(vm.CustomStart));
+        var textBoxCustomStart = UiUtil.MakeEditableComboBox(80, SymbolPresets, vm, nameof(vm.CustomStart));
         var labelAnd = UiUtil.MakeLabel(Se.Language.Tools.RemoveTextForHearingImpaired.And);
-        var textBoxCustomEnd = UiUtil.MakeTextBox(30, vm, nameof(vm.CustomEnd));
+        var textBoxCustomEnd = UiUtil.MakeEditableComboBox(80, SymbolPresets, vm, nameof(vm.CustomEnd));
         var panelCustom = new StackPanel
         {
             Orientation = Orientation.Horizontal,
@@ -218,7 +226,7 @@ public class RemoveTextForHearingImpairedWindow : Window
     private static Border MakeLineContainsView(RemoveTextForHearingImpairedViewModel vm)
     {
         var comboBoxLineContains = UiUtil.MakeCheckBox(Se.Language.Tools.RemoveTextForHearingImpaired.IfLineContains, vm, nameof(vm.IsRemoveTextContainsOn));
-        var textBoxContains = UiUtil.MakeTextBox(120, vm, nameof(vm.TextContains)).WithMarginLeft(5);
+        var textBoxContains = UiUtil.MakeEditableComboBox(150, ContainsPresets, vm, nameof(vm.TextContains)).WithMarginLeft(5);
         var panelContains = new StackPanel
         {
             Orientation = Orientation.Horizontal,
@@ -295,24 +303,20 @@ public class RemoveTextForHearingImpairedWindow : Window
 
     private Grid MakeFixesView(RemoveTextForHearingImpairedViewModel vm)
     {
-        var dataGrid = new DataGrid
+        // Sorting dropped in the DataGrid -> TableView conversion: the grid previews
+        // fixes in subtitle order.
+        var dataGrid = TableViewExtras.MakeTableView();
+        dataGrid.Width = double.NaN;
+        dataGrid.Height = double.NaN;
+        dataGrid.DataContext = _vm;
+        dataGrid.ItemsSource = _vm.Fixes;
+        dataGrid.Columns.AddRange(new TableViewColumn[]
         {
-            AutoGenerateColumns = false,
-            SelectionMode = DataGridSelectionMode.Single,
-            CanUserResizeColumns = true,
-            CanUserSortColumns = true,
-            HorizontalAlignment = HorizontalAlignment.Stretch,
-            VerticalAlignment = VerticalAlignment.Stretch,
-            Width = double.NaN,
-            Height = double.NaN,
-            DataContext = _vm,
-            ItemsSource = _vm.Fixes,
-            Columns =
-            {
-                new DataGridTemplateColumn
+                new SeTableViewColumn
                 {
                     Header = Se.Language.General.Apply,
-                    CellTheme = UiUtil.DataGridNoBorderNoPaddingCellTheme,
+                    CellTheme = UiUtil.TableViewNoPaddingCellTheme,
+                    HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
                     CellTemplate = new FuncDataTemplate<RemoveItem>((item, _) =>
                         new Border
                         {
@@ -325,37 +329,48 @@ public class RemoveTextForHearingImpairedWindow : Window
                                 HorizontalAlignment = HorizontalAlignment.Center
                             }
                         }),
-                    Width = new DataGridLength(1, DataGridLengthUnitType.Auto)
+                    // Content-sized (Auto) on the DataGrid; TableView treats Auto as star.
+                    Width = new GridLength(70)
                 },
-                new DataGridTextColumn
+                new SeTableViewColumn
                 {
                     Header = Se.Language.General.NumberSymbol,
-                    CellTheme = UiUtil.DataGridNoBorderNoPaddingCellTheme,
+                    CellTheme = UiUtil.TableViewCellTheme,
+                    HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
                     Binding = new Binding(nameof(RemoveItem.IndexDisplay)),
-                    IsReadOnly = true,
+                    Width = new GridLength(60),
                 },
-                new DataGridTextColumn
+                new SeTableViewColumn
                 {
+                    // Content-sized (Auto) on the DataGrid; Before holds subtitle text,
+                    // so it shares the star width with After.
                     Header = Se.Language.General.Before,
-                    CellTheme = UiUtil.DataGridNoBorderNoPaddingCellTheme,
+                    CellTheme = UiUtil.TableViewCellTheme,
+                    HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
                     Binding = new Binding(nameof(RemoveItem.Before)),
-                    IsReadOnly = true,
+                    Width = new GridLength(1, GridUnitType.Star),
                 },
-                new DataGridTextColumn
+                new SeTableViewColumn
                 {
                     Header = Se.Language.General.After,
-                    CellTheme = UiUtil.DataGridNoBorderNoPaddingCellTheme,
+                    CellTheme = UiUtil.TableViewCellTheme,
+                    HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
                     Binding = new Binding(nameof(RemoveItem.After)),
-                    IsReadOnly = true,
-                    Width = new DataGridLength(1, DataGridLengthUnitType.Star),
+                    Width = new GridLength(1, GridUnitType.Star),
                 },
-            },
-        };
-        dataGrid.Bind(DataGrid.SelectedItemProperty, new Binding(nameof(_vm.SelectedFix)));
-        _ = new DataGridCheckboxMultiSelect<RemoveItem>(dataGrid,
+        });
+        dataGrid.Bind(TableView.SelectedItemProperty, new Binding(nameof(_vm.SelectedFix)));
+
+        // Extended selection is native ListBox behavior on TableView; only the
+        // Space-toggles-checkbox piece of the old CheckboxMultiSelect needs wiring.
+        TableViewExtras.AddSpaceToggle<RemoveItem>(dataGrid,
             item => item.Apply, (item, v) => item.Apply = v);
 
-        var labelLinesFound = UiUtil.MakeLabel().WithBindText(vm, nameof(vm.LinesFoundText));
+        var labelLinesFound = UiUtil.MakeLabel().WithBindText(vm, new Binding($"{nameof(vm.Fixes)}.{nameof(vm.Fixes.Count)}")
+        {
+            Mode = BindingMode.OneWay,
+            StringFormat = Se.Language.Tools.RemoveTextForHearingImpaired.LinesFoundX,
+        });
 
         var grid = new Grid
         {

@@ -101,7 +101,7 @@ public static class FormattingReplacer
         else if (to == ChangeFormattingType.Color)
         {
             // Replace formatting tags with color
-            var skColor = new SkiaSharp.SKColor((byte)color.R, (byte)color.G, (byte)color.B, (byte)color.A);
+            var skColor = new SkiaSharp.SKColor(color.R, color.G, color.B, color.A);
             var colorTag = "{\\" + AdvancedSubStationAlpha.GetSsaColorStringForEvent(skColor) + "&}";
 
             var fromTag = GetAssaTagLetter(from);

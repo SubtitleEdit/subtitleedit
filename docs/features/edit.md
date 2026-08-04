@@ -34,6 +34,8 @@ Options:
 
 > **Matching a line break with a regular expression:** use `\n` between the words on the two lines (for example `ear\ntwice`). `\r\n` and `\r` are accepted too and are treated the same as `\n`, so a rule works regardless of how it was written or which platform created it.
 
+> **Translator mode:** with an original subtitle loaded, both the text and the original text are searched. Within a line the text is searched first, then the original text, and the match is selected in the text box of the column it was found in.
+
 <!-- Screenshot: Find window -->
 ![Find](../screenshots/find.png)
 
@@ -43,6 +45,8 @@ Find and replace text in the subtitle.
 
 - **Menu:** Edit → Replace
 - **Shortcut:** `Ctrl+H`
+
+With an original subtitle loaded, replace works on both the text and the original text (same as Find).
 
 <!-- Screenshot: Replace window -->
 ![Replace](../screenshots/replace.png)
@@ -152,8 +156,7 @@ Select or deselect subtitle lines based on rules (e.g., text contains, duration,
 
 - **Menu:** Edit → Modify selection...
 
-<!-- Screenshot: Modify selection window -->
-![Modify Selection](../screenshots/modify-selection.png)
+See [Modify Selection](modify-selection.md) for the full list of rules and selection actions.
 
 ## Select All
 

@@ -44,12 +44,12 @@ namespace Nikse.SubtitleEdit.Core.Common
 
         public static uint ToArgb(this SKColor color)
         {
-            var number = (uint)color.Alpha << 24 | (uint)color.Red << 16 | (uint)color.Green << 8 | (uint)color.Blue;
+            var number = (uint)color.Alpha << 24 | (uint)color.Red << 16 | (uint)color.Green << 8 | color.Blue;
             return number;
         }
         public static string ToArgbString(this SKColor color)
         {
-            var number = (uint)color.Alpha << 24 | (uint)color.Red << 16 | (uint)color.Green << 8 | (uint)color.Blue;
+            var number = (uint)color.Alpha << 24 | (uint)color.Red << 16 | (uint)color.Green << 8 | color.Blue;
             return number.ToString(CultureInfo.InvariantCulture);
         }
 
@@ -75,12 +75,7 @@ namespace Nikse.SubtitleEdit.Core.Common
 
         internal static SKColor FromArgb(int alpha, SKColor c)
         {
-            return new SKColor(c.Red, c.Green, c.Blue, (byte)alpha);    
-        }
-
-        internal static SKColor FromArgb(int alpha, byte blue, byte green, byte red)
-        {
-            return new SKColor(red, green, blue, (byte)alpha);
+            return new SKColor(c.Red, c.Green, c.Blue, (byte)alpha);
         }
     }
 }

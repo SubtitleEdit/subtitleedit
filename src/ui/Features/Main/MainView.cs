@@ -112,7 +112,7 @@ public class MainView : ViewBase
 
                 _vm.ContentGrid.InvalidateMeasure();
                 _vm.ContentGrid.InvalidateArrange();
-                Dispatcher.UIThread.Post(() => _vm.SubtitleGrid.Focus());
+                Dispatcher.UIThread.Post(() => TableViewExtras.FocusRow(_vm.SubtitleGrid));
             }, DispatcherPriority.Loaded);
         };
 
@@ -120,6 +120,11 @@ public class MainView : ViewBase
 
         AddHandler(KeyDownEvent, _vm.OnKeyDownHandler, RoutingStrategies.Tunnel | RoutingStrategies.Bubble, handledEventsToo: false);
         AddHandler(KeyUpEvent, _vm.OnKeyUpHandler, RoutingStrategies.Tunnel | RoutingStrategies.Bubble, handledEventsToo: true);
+
+        // Tunnelling, and handledEventsToo since controls like the waveform mark their presses handled:
+        // needed to see that Alt was held for a mouse gesture and cancel the menu-bar activation that
+        // would otherwise fire on the Alt release (discussion #11744).
+        AddHandler(PointerPressedEvent, _vm.OnPointerPressedHandler, RoutingStrategies.Tunnel, handledEventsToo: true);
 
         return root;
     }

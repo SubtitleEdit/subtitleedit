@@ -2,19 +2,14 @@
 
 public class LanguageFixCommonErrors
 {
-    public string Title { get; set; }
-    public string Step1 { get; set; }
-    public string WhatToFix { get; set; }
-    public string Example { get; set; }
-    public string SelectAll { get; set; }
-    public string InverseSelection { get; set; }
     public string Back { get; set; }
     public string Next { get; set; }
-    public string Step2 { get; set; }
     public string Fixes { get; set; }
-    public string Log { get; set; }
-    public string Function { get; set; }
     public string RemovedEmptyLine { get; set; }
+    public string RuleDetailsDotDotDot { get; set; }
+    public string ShowOnlyThisRule { get; set; }
+    public string AppliedRulesForLineX { get; set; }
+    public string RuleX { get; set; }
     public string RemovedEmptyLineAtTop { get; set; }
     public string RemovedEmptyLineAtBottom { get; set; }
     public string RemovedEmptyLineInMiddle { get; set; }
@@ -40,7 +35,6 @@ public class LanguageFixCommonErrors
     public string StartWithUppercaseLetterAfterColon { get; set; }
     public string FixLowercaseIToUppercaseI { get; set; }
     public string FixCommonOcrErrors { get; set; }
-    public string CommonOcrErrorsFixed { get; set; }
     public string RemoveSpaceBetweenNumber { get; set; }
     public string BreakDialogsOnOneLine { get; set; }
     public string RemoveDialogFirstInNonDialogs { get; set; }
@@ -63,27 +57,20 @@ public class LanguageFixCommonErrors
     public string StartWithUppercaseLetterAfterColonExample { get; set; }
     public string RemoveHyphensSingleLineExample { get; set; }
     public string Fix3PlusLinesExample { get; set; }
-    public string XMissingQuotesAdded { get; set; }
     public string Fix3PlusLine { get; set; }
     public string Fix3PlusLines { get; set; }
     public string Analysing { get; set; }
     public string NothingToFix { get; set; }
-    public string FixesFoundX { get; set; }
     public string XFixesApplied { get; set; }
     public string XFixesYSelected { get; set; }
-    public string NothingFixableBut { get; set; }
-    public string XFixedBut { get; set; }
-    public string XCouldBeFixedBut { get; set; }
     public string FixFirstLetterToUppercaseAfterParagraph { get; set; }
     public string MergeShortLine { get; set; }
     public string MergeShortLineAll { get; set; }
-    public string UnbreakShortLinePixelWidth { get; set; }
     public string BreakLongLine { get; set; }
     public string FixLongDisplayTime { get; set; }
     public string FixInvalidItalicTag { get; set; }
     public string FixShortDisplayTime { get; set; }
     public string FixOverlappingDisplayTime { get; set; }
-    public string FixShortGap { get; set; }
     public string FixInvalidItalicTagsExample { get; set; }
     public string RemoveUnneededSpacesExample { get; set; }
     public string RemoveUnneededPeriodsExample { get; set; }
@@ -100,7 +87,6 @@ public class LanguageFixCommonErrors
     public string FixUppercaseIInsideLowercaseWord { get; set; }
     public string FixMissingPeriodAtEndOfLine { get; set; }
     public string RefreshFixes { get; set; }
-    public string ApplyFixes { get; set; }
     public string AutoBreak { get; set; }
     public string Unbreak { get; set; }
     public string FixDoubleDash { get; set; }
@@ -113,14 +99,10 @@ public class LanguageFixCommonErrors
     public string FixEllipsesStartExample { get; set; }
     public string FixMissingOpenBracketExample { get; set; }
     public string FixMusicNotationExample { get; set; }
-    public string NumberOfImportantLogMessages { get; set; }
-    public string FixedOkXY { get; set; }
     public string FixOcrErrorExample { get; set; }
     public string FixSpaceBetweenNumbersExample { get; set; }
     public string FixDialogsOneLineExample { get; set; }
     public string RemoveDialogFirstInNonDialogsExample { get; set; }
-    public string SelectDefault { get; set; }
-    public string SetDefault { get; set; }
     public string FixContinuationStyleX { get; set; }
     public string FixUnnecessaryLeadingDots { get; set; }
     public string FixCommonErrorsProfiles { get; set; }
@@ -128,7 +110,6 @@ public class LanguageFixCommonErrors
     public string SearchRulesDotDotDot { get; set; }
     public string GoToApplyFixes { get; set; }
     public string BackToFixList { get; set; }
-    public string ApplyFixesAndClose { get; set; }
     public string FixCommonOcrErrorsStep2 { get; set; }
     public string FixCommonOcrErrorsStep2FixesFoundX { get; set; }
     public string Action { get; set; }
@@ -140,19 +121,14 @@ public class LanguageFixCommonErrors
 
     public LanguageFixCommonErrors()
     {
-        Title = "Fix common errors";
-        Step1 = "Step 1/2 - Choose which errors to fix";
-        WhatToFix = "What to fix";
-        Example = "Example";
-        SelectAll = "Select all";
-        InverseSelection = "Invert selection";
         Back = "< &Back";
         Next = "&Next >";
-        Step2 = "Step 2/2 - Verify fixes";
         Fixes = "Fixes";
-        Log = "Log";
-        Function = "Function";
         RemovedEmptyLine = "Remove empty line";
+        RuleDetailsDotDotDot = "Rule details...";
+        ShowOnlyThisRule = "Show only fixes from this rule";
+        AppliedRulesForLineX = "Applied rule(s) for line {0}";
+        RuleX = "Rule: {0}";
         RemovedEmptyLineAtTop = "Remove empty line at top";
         RemovedEmptyLineAtBottom = "Remove empty line at bottom";
         RemovedEmptyLineInMiddle = "Remove empty line in middle";
@@ -176,7 +152,6 @@ public class LanguageFixCommonErrors
         StartWithUppercaseLetterAfterParagraph = "Start with uppercase letter after paragraph";
         StartWithUppercaseLetterAfterPeriodInsideParagraph = "Start with uppercase letter after period inside paragraph";
         StartWithUppercaseLetterAfterColon = "Start with uppercase letter after colon/semicolon";
-        CommonOcrErrorsFixed = "Common OCR errors fixed (OcrReplaceList file used): {0}";
         RemoveSpaceBetweenNumber = "Remove space between numbers";
         BreakDialogsOnOneLine = "Split dialogs on one line";
         RemoveDialogFirstInNonDialogs = "Remove start dash in first line for non-dialogs";
@@ -202,27 +177,20 @@ public class LanguageFixCommonErrors
         StartWithUppercaseLetterAfterColonExample = "Speaker: hello world! -> Speaker: Hello world!";
         RemoveHyphensSingleLineExample = "- Foobar. -> Foobar.";
         Fix3PlusLinesExample = "Foo</br>bar</br>baz! -> Foo bar baz!";
-        XMissingQuotesAdded = "Missing quotes added: {0}";
         Fix3PlusLine = "Fix subtitle with more than two lines";
         Fix3PlusLines = "Fix subtitles with more than two lines";
         Analysing = "Analyzing...";
         NothingToFix = "Nothing to fix :)";
-        FixesFoundX = "Fixes found: {0}";
         XFixesApplied = "Fixes applied: {0}";
         XFixesYSelected = "{0} fixes - {1} selected";
-        NothingFixableBut = "Nothing could be fixed automatically. The subtitle contains errors - see log for details";
-        XFixedBut = "{0} issue(s) fixed but the subtitle still contains errors - see log for details";
-        XCouldBeFixedBut = "{0} issue(s) could be fixed but the subtitle will still contain errors - see log for details";
         FixFirstLetterToUppercaseAfterParagraph = "Fix first letter to uppercase after paragraph";
         MergeShortLine = "Merge short line (single sentence)";
         MergeShortLineAll = "Merge short line (all except dialogs)";
-        UnbreakShortLinePixelWidth = "Unbreak short line (pixel width)";
         BreakLongLine = "Break long line";
         FixLongDisplayTime = "Fix long display time";
         FixInvalidItalicTag = "Fix invalid italic tag";
         FixShortDisplayTime = "Fix short display time";
         FixOverlappingDisplayTime = "Fix overlapping display time";
-        FixShortGap = "Fix short gap";
         FixInvalidItalicTagsExample = "<i>What do I care.<i> -> <i>What do I care.</i>";
         RemoveUnneededSpacesExample = "Hey   you ; there. -> Hey you; there.";
         RemoveUnneededPeriodsExample = "Hey you!. -> Hey you!";
@@ -238,7 +206,6 @@ public class LanguageFixCommonErrors
         FixMissingSpace = "Fix missing space";
         FixUppercaseIInsideLowercaseWord = "Fix uppercase 'i' inside lowercase word";
         FixMissingPeriodAtEndOfLine = "Add missing period at end of line";
-        ApplyFixes = "A&pply selected fixes";
         RefreshFixes = "Refresh available fixes";
         FixDoubleDash = "Fix '--' -> '...'";
         FixDoubleGreaterThan = "Remove '>>'";
@@ -253,14 +220,10 @@ public class LanguageFixCommonErrors
         AutoBreak = "Auto &br";
         Unbreak = "&Unbreak";
         FixCommonOcrErrors = "Fix common OCR errors (using OCR replace list)";
-        NumberOfImportantLogMessages = "{0} important log messages!";
-        FixedOkXY = "Fixed and OK - '{0}': {1}";
         FixOcrErrorExample = "D0n't -> Don't";
         FixSpaceBetweenNumbersExample = "1 100 -> 1100";
         FixDialogsOneLineExample = "Hi John! - Hi Ida! -> Hi John!<br />- Hi Ida!";
         RemoveDialogFirstInNonDialogsExample = "- How are you? -> How are you?";
-        SelectDefault = "Select default";
-        SetDefault = "Set current fixes as default";
         FixContinuationStyleX = "Fix continuation style: {0}";
         FixUnnecessaryLeadingDots = "Remove unnecessary leading dots";
         FixCommonErrorsProfiles = "Fix common errors profiles";
@@ -269,9 +232,7 @@ public class LanguageFixCommonErrors
         SearchRulesDotDotDot = "Search rules...";
         GoToApplyFixes = "Go to apply fixes";
         BackToFixList =  "Back to fix list";
-        ApplyFixes = "Apply selected fixes & close";
         FixCommonOcrErrorsStep2FixesFoundX =  "Fix common errors, step 2 - Fixes found: {0}";
-        ApplyFixesAndClose = "Apply fixes & close";
         Action = "Action";
         ApplySelectedFixes = "Apply selected fixes";
         UnbreakShortLine = "Unbreak short line";

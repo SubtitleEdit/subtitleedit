@@ -23,34 +23,37 @@ public class RestoreAutoBackupWindow : Window
         vm.Window = this;
         DataContext = vm;
 
-        var dataGrid = new DataGrid
+        var dataGrid = TableViewExtras.MakeTableView(multiSelect: false);
+        dataGrid.Width = double.NaN;
+        dataGrid.Height = double.NaN;
+        dataGrid.DataContext = vm;
+
+        // The DataGrid sized these columns to content (Auto); TableView treats Auto as
+        // star, so the narrow columns get fixed widths and the file name is the star column.
+        dataGrid.Columns.AddRange(new[]
         {
-            Width = double.NaN,
-            Height = double.NaN,
-            HorizontalAlignment = HorizontalAlignment.Stretch,
-            VerticalAlignment = VerticalAlignment.Stretch,
-            SelectionMode = DataGridSelectionMode.Single,
-            IsReadOnly = true,
-            DataContext = vm,
-            AutoGenerateColumns = false,
-            Columns =
-            {
-                new DataGridTextColumn
+                new SeTableViewColumn
                 {
                     Header = Se.Language.General.DateAndTime,
                     Binding = new Binding(nameof(DisplayFile.DateAndTime)),
-                    CellTheme = UiUtil.DataGridNoBorderCellTheme,
+                    Width = new GridLength(160),
+                    CellTheme = UiUtil.TableViewCellTheme,
+                    HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
                 },
-                new DataGridTextColumn
+                new SeTableViewColumn
                 {
                     Header = Se.Language.General.FileName,
                     Binding = new Binding(nameof(DisplayFile.FileName)),
-                    CellTheme = UiUtil.DataGridNoBorderCellTheme,
+                    Width = new GridLength(1, GridUnitType.Star),
+                    CellTheme = UiUtil.TableViewCellTheme,
+                    HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
                 },
-                new DataGridTemplateColumn
+                new SeTableViewColumn
                 {
                     Header = Se.Language.General.FileExtension,
-                    CellTheme = UiUtil.DataGridNoBorderCellTheme,
+                    Width = new GridLength(110),
+                    CellTheme = UiUtil.TableViewNoPaddingCellTheme,
+                    HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
                     CellTemplate = new FuncDataTemplate<DisplayFile>((item, _) =>
                     {
                         if (item == null)
@@ -80,20 +83,20 @@ public class RestoreAutoBackupWindow : Window
                             },
                         };
                     }),
-                    Width = new DataGridLength(1, DataGridLengthUnitType.Auto),
                 },
-                new DataGridTextColumn
+                new SeTableViewColumn
                 {
                     Header = Se.Language.General.Size,
                     Binding = new Binding(nameof(DisplayFile.Size)),
-                    CellTheme = UiUtil.DataGridNoBorderCellTheme,
+                    Width = new GridLength(90),
+                    CellTheme = UiUtil.TableViewCellTheme,
+                    HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
                 }
-            }
-        };
+        });
 
-        dataGrid.Bind(DataGrid.ItemsSourceProperty, new Binding(nameof(vm.Files)));
-        dataGrid.Bind(DataGrid.SelectedItemProperty, new Binding(nameof(vm.SelectedFile)));
-        dataGrid.SelectionChanged += vm.DataGridSelectionChanged;
+        dataGrid.Bind(TableView.ItemsSourceProperty, new Binding(nameof(vm.Files)));
+        dataGrid.Bind(TableView.SelectedItemProperty, new Binding(nameof(vm.SelectedFile)));
+        dataGrid.SelectionChanged += vm.GridSelectionChanged;
 
         var linkOpenFolder = UiUtil.MakeLink(Se.Language.File.RestoreAutoBackup.OpenAutoBackupFolder, vm.OpenFolderCommand);
 
@@ -102,8 +105,11 @@ public class RestoreAutoBackupWindow : Window
             VerticalAlignment = VerticalAlignment.Center,
             Opacity = 0.8,
             Margin = new Thickness(10, 0, 0, 0),
+            [!TextBlock.TextProperty] = new Binding($"{nameof(vm.Files)}.{nameof(vm.Files.Count)}")
+            {
+                StringFormat = Se.Language.File.RestoreAutoBackup.XBackups
+            }
         };
-        summaryText.Bind(TextBlock.TextProperty, new Binding(nameof(vm.FilesSummaryText)));
 
         var buttonDeleteAllSubtitles = UiUtil.MakeButton(Se.Language.File.RestoreAutoBackup.DeleteAll, vm.DeleteAllFilesCommand)
             .WithBindIsVisible(nameof(vm.IsEmptyFilesVisible))
@@ -155,7 +161,7 @@ public class RestoreAutoBackupWindow : Window
 
         Content = grid;
 
-        Activated += delegate { buttonOk.Focus(); }; // hack to make OnKeyDown work
+        Activated += delegate { TableViewExtras.FocusRow(dataGrid); }; // initial focus on an input, not an action button - a focused button clicks on bare Space
         KeyDown += (_, e) => vm.OnKeyDown(e);
     }
 

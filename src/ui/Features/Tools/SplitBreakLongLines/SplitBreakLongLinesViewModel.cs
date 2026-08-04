@@ -13,7 +13,7 @@ using System.Collections.ObjectModel;
 
 namespace Nikse.SubtitleEdit.Features.Tools.SplitBreakLongLines;
 
-public partial class SplitBreakLongLinesViewModel : ObservableObject
+public partial class SplitBreakLongLinesViewModel : ObservableObject, IClosingCleanup
 {
     [ObservableProperty] private ObservableCollection<SplitBreakLongLinesItem> _fixes;
     [ObservableProperty] private SplitBreakLongLinesItem? _selectedFix;
@@ -26,6 +26,7 @@ public partial class SplitBreakLongLinesViewModel : ObservableObject
     [ObservableProperty] private int _maxNumberOfLines;
 
     [ObservableProperty] private bool _rebalanceLongLines;
+    [ObservableProperty] private int _unbreakLinesShorterThan;
 
     [ObservableProperty] private string _fixesInfo;
 
@@ -34,8 +35,10 @@ public partial class SplitBreakLongLinesViewModel : ObservableObject
     public List<SubtitleLineViewModel> AllSubtitlesFixed { get; set; }
 
     private List<SubtitleLineViewModel> _allSubtitles;
+    private string _languageCode = "en";
 
     private readonly System.Timers.Timer _previewTimer;
+    private volatile bool _isClosing;
     private bool _isDirty;
 
     public SplitBreakLongLinesViewModel()
@@ -49,18 +52,37 @@ public partial class SplitBreakLongLinesViewModel : ObservableObject
         LoadSettings();
 
         _previewTimer = new System.Timers.Timer(250);
-        _previewTimer.Elapsed += (sender, args) =>
+        _previewTimer.Elapsed += PreviewTimerElapsed;
+    }
+
+    private void PreviewTimerElapsed(object? sender, System.Timers.ElapsedEventArgs e)
+    {
+        if (_isClosing)
         {
-            _previewTimer.Stop();
+            return;
+        }
 
-            if (_isDirty)
-            {
-                _isDirty = false;
-                UpdatePreview();
-            }
+        _previewTimer.Stop();
 
+        if (_isDirty)
+        {
+            _isDirty = false;
+            UpdatePreview();
+        }
+
+        // Guard the restart: OnClosingCleanup may have disposed the timer while this handler ran,
+        // and Start() on a disposed timer throws ObjectDisposedException (no longer swallowed on
+        // modern .NET), crashing the app from a thread-pool thread. (#12739)
+        if (!_isClosing)
+        {
             _previewTimer.Start();
-        };
+        }
+    }
+
+    public void OnClosingCleanup()
+    {
+        _isClosing = true;
+        _previewTimer.StopAndDispose(PreviewTimerElapsed);
     }
 
     private void UpdatePreview()
@@ -108,10 +130,18 @@ public partial class SplitBreakLongLinesViewModel : ObservableObject
 
             if (RebalanceLongLines)
             {
+                // AutoBreakLine keeps text on one line only when it is strictly shorter than the
+                // unbreak threshold, so a threshold at or above the single line max length means
+                // "keep any text that fits on one line" - and capping there also prevents merging
+                // to a single line that would exceed the max length (#12910).
+                var mergeLinesShorterThan = UnbreakLinesShorterThan >= SingleLineMaxLength
+                    ? SingleLineMaxLength + 1
+                    : UnbreakLinesShorterThan;
+
                 for (var index = 0; index < AllSubtitlesFixed.Count; index++)
                 {
                     var item = AllSubtitlesFixed[index];
-                    var rebalancedText = Utilities.AutoBreakLine(item.Text, SingleLineMaxLength, Se.Settings.General.UnbreakLinesShorterThan, "en");
+                    var rebalancedText = Utilities.AutoBreakLine(item.Text, SingleLineMaxLength, mergeLinesShorterThan, _languageCode);
                     if (rebalancedText != item.Text)
                     {
                         rebalanceCount++;
@@ -561,6 +591,7 @@ public partial class SplitBreakLongLinesViewModel : ObservableObject
     {
         SingleLineMaxLength = Se.Settings.General.SubtitleLineMaximumLength;
         MaxNumberOfLines = Se.Settings.General.MaxNumberOfLines;
+        UnbreakLinesShorterThan = Se.Settings.General.UnbreakLinesShorterThan;
         SplitLongLines = Se.Settings.Tools.SplitRebalanceLongLinesSplit;
         RebalanceLongLines = Se.Settings.Tools.SplitRebalanceLongLinesRebalance;
     }
@@ -608,6 +639,14 @@ public partial class SplitBreakLongLinesViewModel : ObservableObject
     public void Initialize(List<SubtitleLineViewModel> toList)
     {
         _allSubtitles = toList;
+
+        var subtitle = new Subtitle();
+        foreach (var line in toList)
+        {
+            subtitle.Paragraphs.Add(new Paragraph(line.Text, line.StartTime.TotalMilliseconds, line.EndTime.TotalMilliseconds));
+        }
+        _languageCode = LanguageAutoDetect.AutoDetectGoogleLanguageOrNull(subtitle) ?? "en";
+
         _previewTimer.Start();
     }
 

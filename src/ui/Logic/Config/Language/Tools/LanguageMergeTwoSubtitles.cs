@@ -13,12 +13,7 @@ public class LanguageMergeTwoSubtitles
     public string OutputFormatAssa { get; set; }
     public string Style1 { get; set; }
     public string Style2 { get; set; }
-    public string OutlineWidth { get; set; }
-    public string ShadowWidth { get; set; }
-    public string AlignTop { get; set; }
-    public string AlignBottom { get; set; }
     public string Merge { get; set; }
-    public string PleaseLoadTwoSubtitles { get; set; }
 
     public LanguageMergeTwoSubtitles()
     {
@@ -33,11 +28,6 @@ public class LanguageMergeTwoSubtitles
         OutputFormatAssa = "Advanced Sub Station Alpha (.ass)";
         Style1 = "Style 1";
         Style2 = "Style 2";
-        OutlineWidth = "Outline width";
-        ShadowWidth = "Shadow width";
-        AlignTop = "Top";
-        AlignBottom = "Bottom";
         Merge = "_Merge";
-        PleaseLoadTwoSubtitles = "Please load two subtitles";
     }
 }

@@ -37,6 +37,7 @@ public partial class ReplaceViewModel : ObservableObject
 
     private IFindService? _findService;
     private List<string> _subs = new List<string>();
+    private List<string>? _originalSubs;
     private IFindResult? _findResult;
 
     public ReplaceViewModel()
@@ -111,7 +112,7 @@ public partial class ReplaceViewModel : ObservableObject
             return;
         }
 
-        var count = _findService.Count(SearchText, _subs, WholeWord, FindMode);
+        var count = _findService.Count(SearchText, _subs, WholeWord, FindMode, _originalSubs);
 
         if (count <= 0)
         {
@@ -157,15 +158,17 @@ public partial class ReplaceViewModel : ObservableObject
         }
     }
 
-    internal void RefreshSubtitles(List<string> subs)
+    internal void RefreshSubtitles(List<string> subs, List<string>? originalSubs = null)
     {
         _subs = subs;
+        _originalSubs = originalSubs;
     }
 
-    internal void InitializeFindData(IFindService findService, List<string> subs, string selectedText, MainViewModel mainViewModel)
+    internal void InitializeFindData(IFindService findService, List<string> subs, string selectedText, MainViewModel mainViewModel, List<string>? originalSubs = null)
     {
         _findService = findService;
         _subs = subs;
+        _originalSubs = originalSubs;
         _findResult = mainViewModel;
         if (!string.IsNullOrEmpty(selectedText))
         {
@@ -185,6 +188,15 @@ public partial class ReplaceViewModel : ObservableObject
         {
             e.Handled = true;
             await FindNextCommand.ExecuteAsync(null);
+        }
+    }
+
+    internal async void ReplaceTextBoxKeyDown(object? sender, KeyEventArgs e)
+    {
+        if (e.Key == Key.Enter)
+        {
+            e.Handled = true;
+            await ReplaceCommand.ExecuteAsync(null);
         }
     }
 }

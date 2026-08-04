@@ -1,13 +1,9 @@
-using Nikse.SubtitleEdit.Core.Interfaces;
-using System;
-using System.Collections.Generic;
 using System.Globalization;
-using System.IO;
-using System.Linq;
 using System.Text.RegularExpressions;
+using Nikse.SubtitleEdit.Core.Interfaces;
 using WeCantSpell.Hunspell;
 
-namespace Nikse.SubtitleEdit.Features.SpellCheck;
+namespace Nikse.SubtitleEdit.UiLogic.SpellCheck;
 
 /// <summary>
 /// Framework-agnostic spell-checking core: Hunspell (pure-managed WeCantSpell) plus the names /
@@ -32,7 +28,9 @@ public class SpellChecker : ISpellChecker, IDoSpell
 
     private WordList? _hunspellWeCantSpell;
     protected SpellCheckWordLists? WordLists;
-    protected readonly HashSet<string> SkipAllList = new();
+    // Case-insensitive so per-word membership tests need no ToUpperInvariant allocation -
+    // IsWordCorrect runs per word per grid cell repaint with live spell check on.
+    protected readonly HashSet<string> SkipAllList = new(StringComparer.OrdinalIgnoreCase);
     protected readonly Dictionary<string, string> ChangeAllDictionary = new();
     private string _twoLetterLanguageCode = string.Empty;
 
@@ -305,8 +303,8 @@ public class SpellChecker : ISpellChecker, IDoSpell
     {
         var word = spellCheckWord.Text;
 
-        if (SkipAllList.Contains(word.ToUpperInvariant()) ||
-            (word.StartsWith('\'') || word.EndsWith('\'')) && SkipAllList.Contains(word.Trim('\'').ToUpperInvariant()))
+        if (SkipAllList.Contains(word) ||
+            (word.StartsWith('\'') || word.EndsWith('\'')) && SkipAllList.Contains(word.Trim('\'')))
         {
             NoOfSkippedWords++;
             return true;
@@ -418,6 +416,19 @@ public class SpellChecker : ISpellChecker, IDoSpell
 
     protected static bool IsNumber(string word)
     {
+        // Same trick as IsEmailUrlOrHashTag above: this runs once per word during spell check,
+        // and an ordinary word can never match any of the three patterns. Every match must
+        // start with a digit, '-', '.', '%' (PercentageRegex accepts a bare "%"), or a
+        // currency sign; the empty string is only reachable through NumberRegex below.
+        if (word.Length > 0)
+        {
+            var c = word[0];
+            if (!char.IsDigit(c) && c != '-' && c != '.' && c != '%' && c != '$' && c != '£' && c != '€')
+            {
+                return false;
+            }
+        }
+
         return NumberRegex.IsMatch(word) || PercentageRegex.IsMatch(word) || CurrencyRegex.IsMatch(word);
     }
 

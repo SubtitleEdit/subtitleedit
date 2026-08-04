@@ -69,7 +69,7 @@ public partial class BinaryEditViewModel : ObservableObject
 
     public Window? Window { get; set; }
     public Menu? Menu { get; set; }
-    public DataGrid? SubtitleGrid { get; set; }
+    public TableView? SubtitleGrid { get; set; }
     public VideoPlayerControl? VideoPlayerControl { get; set; }
     public Image? SubtitleOverlayImage { get; set; }
     public Border? VideoContentBorder { get; set; }
@@ -79,6 +79,8 @@ public partial class BinaryEditViewModel : ObservableObject
 
     private ScrollViewer? _subtitleGridScrollViewer;
     private Control? _focusBeforeMenu;
+    private bool _altClosesMenuOnKeyUp;
+    private readonly AltMenuActivationGuard _altMenuActivationGuard = new();
 
     private readonly IFileHelper _fileHelper;
     private readonly IFolderHelper _folderHelper;
@@ -1848,10 +1850,10 @@ public partial class BinaryEditViewModel : ObservableObject
         {
             Dispatcher.UIThread.Post(() =>
             {
-                if (SubtitleGrid == null || selectedItems == null) return;
-                SubtitleGrid.SelectedItems.Clear();
+                if (SubtitleGrid?.SelectedItems is not { } gridSelection || selectedItems == null) return;
+                gridSelection.Clear();
                 foreach (var item in selectedItems)
-                    SubtitleGrid.SelectedItems.Add(item);
+                    gridSelection.Add(item);
             });
         }
 
@@ -1921,10 +1923,10 @@ public partial class BinaryEditViewModel : ObservableObject
         {
             Dispatcher.UIThread.Post(() =>
             {
-                if (SubtitleGrid == null || selectedItems == null) return;
-                SubtitleGrid.SelectedItems.Clear();
+                if (SubtitleGrid?.SelectedItems is not { } gridSelection || selectedItems == null) return;
+                gridSelection.Clear();
                 foreach (var item in selectedItems)
-                    SubtitleGrid.SelectedItems.Add(item);
+                    gridSelection.Add(item);
             });
         }
 
@@ -2063,7 +2065,7 @@ public partial class BinaryEditViewModel : ObservableObject
     [RelayCommand]
     private void InsertBefore()
     {
-        if (Window == null || SubtitleGrid?.SelectedItems.Count != 1)
+        if (Window == null || SubtitleGrid?.SelectedItems?.Count != 1)
         {
             return;
         }
@@ -2086,7 +2088,7 @@ public partial class BinaryEditViewModel : ObservableObject
     [RelayCommand]
     private void InsertAfter()
     {
-        if (Window == null || SubtitleGrid?.SelectedItems.Count != 1)
+        if (Window == null || SubtitleGrid?.SelectedItems?.Count != 1)
         {
             return;
         }
@@ -2109,7 +2111,7 @@ public partial class BinaryEditViewModel : ObservableObject
     [RelayCommand]
     private void ToggleForced()
     {
-        if (Window == null || SubtitleGrid == null || SubtitleGrid.SelectedItems.Count <= 0)
+        if (Window == null || SubtitleGrid?.SelectedItems is not { Count: > 0 })
         {
             return;
         }
@@ -2140,7 +2142,7 @@ public partial class BinaryEditViewModel : ObservableObject
     private List<int> GetSelectedIndices() =>
         GetSelectedItems().Select(item => Subtitles.IndexOf(item)).Where(i => i >= 0).ToList();
 
-    // Adding many rows to a realized DataGrid's SelectedItems is O(n) visual work per
+    // Adding many rows to a realized grid's SelectedItems is O(n) visual work per
     // row, so selecting all forced/non-forced lines on a large file hangs (#11529).
     // Detaching ItemsSource de-realizes the rows so the adds only touch the grid's
     // internal selection table; a single layout pass repaints after we reattach.
@@ -2164,10 +2166,10 @@ public partial class BinaryEditViewModel : ObservableObject
         SubtitleGrid.ItemsSource = null;
         SubtitleGrid.ItemsSource = itemsSource;
 
-        SubtitleGrid.SelectedItems.Clear();
+        SubtitleGrid.SelectedItems?.Clear();
         foreach (var item in items)
         {
-            SubtitleGrid.SelectedItems.Add(item);
+            SubtitleGrid.SelectedItems?.Add(item);
         }
 
         if (preserveScroll && scrollViewer != null)
@@ -2242,7 +2244,7 @@ public partial class BinaryEditViewModel : ObservableObject
         // Only allow if exactly one subtitle is selected
         if (SelectedSubtitle == null)
         {
-            await MessageBox.Show(Window, "No subtitle selected", "Please select exactly one subtitle.",
+            await MessageBox.Show(Window, Se.Language.Edit.NoSubtitleSelected, Se.Language.Edit.PleaseSelectExactlyOneSubtitle,
                 MessageBoxButtons.OK, MessageBoxIcon.Information);
             return;
         }
@@ -2371,7 +2373,7 @@ public partial class BinaryEditViewModel : ObservableObject
         // menu toggle (#12504) - the menu stays reachable via Alt.
         if (e.Key == Key.F10 && e.KeyModifiers == KeyModifiers.None && !_shortcutManager.HasSingleKeyShortcut("F10"))
         {
-            if (IsMenuFocused())
+            if (IsMenuFocused() || Menu is { IsOpen: true })
             {
                 DeactivateMenu();
                 e.Handled = true;
@@ -2393,6 +2395,32 @@ public partial class BinaryEditViewModel : ObservableObject
             Menu is not { IsOpen: true } && !IsMenuFocused())
         {
             _focusBeforeMenu = Window?.FocusManager?.GetFocusedElement() as Control;
+        }
+
+        // Alt while keyboard focus is inside an open drop-down must close the whole menu (Windows
+        // standard). The built-in AccessKeyHandler owns that toggle, but its key-down handler
+        // ignores any key whose focused element is not a visual descendant of the window - and
+        // drop-down items live in their own popup top-level, so a second Alt while navigating a
+        // drop-down did nothing (#12087). Close on the *release*, not here: the built-in tunnel
+        // key-up handler still holds "showing access keys" state from the activation, and its
+        // MainMenu.Open() call would instantly undo a close done on the press (it no-ops while
+        // the menu is still open). Mirrors MainViewModel.OnKeyDownHandler.
+        if (e.Key is Key.LeftAlt or Key.RightAlt)
+        {
+            if (e.KeyModifiers == KeyModifiers.Alt &&
+                Menu is { IsOpen: true } && IsMenuFocused() &&
+                Window?.FocusManager?.GetFocusedElement() is Visual focusedVisual &&
+                TopLevel.GetTopLevel(focusedVisual) is { } focusedTopLevel &&
+                !ReferenceEquals(focusedTopLevel, Window))
+            {
+                _altClosesMenuOnKeyUp = true;
+            }
+        }
+        else
+        {
+            // Alt+<key> is a shortcut or access key, not a toggle - releasing Alt afterwards
+            // must leave the menu alone (mirrors the built-in "ignore Alt up" bookkeeping).
+            _altClosesMenuOnKeyUp = false;
         }
 
         // While the menu has keyboard focus, let it own its own navigation keys. The window key
@@ -2433,6 +2461,13 @@ public partial class BinaryEditViewModel : ObservableObject
             return;
         }
 
+        if (UiUtil.IsHelp(e))
+        {
+            e.Handled = true;
+            UiUtil.ShowHelp("features/binary-edit");
+            return;
+        }
+
         // Handle shortcuts
         _shortcutManager.OnKeyPressed(this, e);
         if (_shortcutManager.GetActiveKeys().Count == 0)
@@ -2448,24 +2483,87 @@ public partial class BinaryEditViewModel : ObservableObject
         }
     }
 
-    public void OnKeyUp(KeyEventArgs e)
+    /// <summary>
+    /// Tunnelling pointer handler that tells <see cref="_altMenuActivationGuard"/> when Alt was used as
+    /// a mouse modifier, so the menu-bar activation Avalonia performs on the following Alt release can
+    /// be undone again (discussion #11744).
+    /// </summary>
+    internal void OnPointerPressed(object? sender, PointerPressedEventArgs e)
     {
-        _shortcutManager.OnKeyReleased(this, e);
+        if (!e.KeyModifiers.HasFlag(KeyModifiers.Alt))
+        {
+            return; // plain clicks arm nothing, and this runs on every press in the window
+        }
+
+        var isMenuPress = Menu is { IsOpen: true } || IsWithinMenu(e.Source as Visual);
+        _altMenuActivationGuard.NotifyPointerPressed(true, isMenuPress);
+
+        // The clicked control takes focus while the press is being handled, so read the resulting focus
+        // afterwards - that is where focus must return when the activation is undone.
+        Dispatcher.UIThread.Post(() =>
+            _altMenuActivationGuard.NotifyFocusAfterPointerPress(Window?.FocusManager?.GetFocusedElement() as Control));
     }
 
-    /// <summary>
-    /// Moves keyboard focus to the first top-level menu item so the menu can be opened and
-    /// navigated with the keyboard / a screen reader (F10, #11745). No-op when the menu is hidden
-    /// (macOS uses the native menu).
-    /// </summary>
-    private bool TryFocusMenu()
+    private bool IsWithinMenu(Visual? visual)
     {
-        if (Menu == null || !Menu.IsVisible || Menu.Items.Count == 0)
+        if (Menu == null)
         {
             return false;
         }
 
-        return Menu.Items[0] is MenuItem firstItem && firstItem.Focus(NavigationMethod.Tab);
+        while (visual != null)
+        {
+            if (ReferenceEquals(visual, Menu))
+            {
+                return true;
+            }
+
+            visual = visual.GetVisualParent();
+        }
+
+        return false;
+    }
+
+    public void OnKeyUp(KeyEventArgs e)
+    {
+        // Undo the menu-bar activation Avalonia performs when Alt is released after an Alt+click/drag -
+        // otherwise the IsMenuFocused() guard in OnKeyDown swallows every shortcut until the user clicks
+        // something (discussion #11744).
+        if (_altMenuActivationGuard.TryConsumeAltRelease(e.Key, out var focusToRestore) &&
+            (Menu is { IsOpen: true } || IsMenuFocused()))
+        {
+            if (focusToRestore is { IsEffectivelyVisible: true })
+            {
+                _focusBeforeMenu = focusToRestore;
+            }
+
+            DeactivateMenu();
+        }
+        else if (e.Key is Key.LeftAlt or Key.RightAlt && Menu is { IsOpen: false, IsVisible: true } && IsMenuFocused())
+        {
+            // Alt on an open menu bar: Avalonia's AccessKeyHandler closes the bar on the Alt press,
+            // but it only restores focus for bars it opened itself via bare Alt - after an F10
+            // activation (Menu.Open) it has no saved focus element, so the close leaves keyboard
+            // focus stranded on the menu item, where the bar keeps swallowing every key (#13111).
+            // By the time the release arrives the press has settled, so "focused but not open" is
+            // exactly that stranded state - deactivate fully, restoring the focus saved at
+            // activation. (When Avalonia opens the bar on this very release, IsOpen is already
+            // true here and this branch stays out of the way.)
+            DeactivateMenu();
+        }
+        else if (e.Key is Key.LeftAlt or Key.RightAlt && _altClosesMenuOnKeyUp)
+        {
+            // Alt pressed while focus was inside an open drop-down (armed in OnKeyDown, where the
+            // built-in AccessKeyHandler ignores popup-focused keys): close the whole menu now that
+            // the built-in tunnel key-up handling has run out of ways to reopen it.
+            _altClosesMenuOnKeyUp = false;
+            if (Menu is { IsOpen: true } || IsMenuFocused())
+            {
+                DeactivateMenu();
+            }
+        }
+
+        _shortcutManager.OnKeyReleased(this, e);
     }
 
     /// <summary>
@@ -2482,7 +2580,20 @@ public partial class BinaryEditViewModel : ObservableObject
         }
 
         _focusBeforeMenu = Window?.FocusManager?.GetFocusedElement() as Control;
-        return TryFocusMenu();
+
+        // Defer the activation: opening the menu from inside the key handler is racy, so let the
+        // current event finish first. Menu.Open is the same call Avalonia's bare-Alt handling
+        // makes: it selects and focuses the first top-level item, so the activation is visible
+        // ("File" highlights). Merely focusing the item, as this did before, gave no visual
+        // feedback at all - a top-level MenuItem has no keyboard-focus visual (#13111).
+        Dispatcher.UIThread.Post(() =>
+        {
+            if (Menu is { IsOpen: false })
+            {
+                Menu.Open();
+            }
+        });
+        return true;
     }
 
     /// <summary>
@@ -2506,7 +2617,15 @@ public partial class BinaryEditViewModel : ObservableObject
                 return;
             }
 
-            SubtitleGrid?.Focus();
+            // Only pull focus somewhere else when it is actually still stuck in the menu:
+            // overlapping deactivations (e.g. a task switch plus the synthetic Alt release, both
+            // running through here) would otherwise stomp the focus the first one just restored.
+            // Deactivation must never leave focus inside the menu - the bar would stay armed and
+            // every arrow key would keep navigating it even though it looks closed (#13111).
+            if (IsMenuFocused() && SubtitleGrid != null)
+            {
+                TableViewExtras.FocusRow(SubtitleGrid);
+            }
         });
     }
 
@@ -2515,9 +2634,16 @@ public partial class BinaryEditViewModel : ObservableObject
     /// </summary>
     internal void OnWindowDeactivated(object? sender, EventArgs e)
     {
+        // Complete Avalonia's bare-Alt cycle when a modal steals focus while Alt is held, so the
+        // stranded AccessKeyHandler state cannot leave the next bare Alt press unable to open the
+        // menu bar (#13083). If the synthetic release opens the menu, the cleanup below closes it.
+        UiUtil.RaiseSyntheticAltKeyUp(Window);
+
         // A task switch (Alt+Tab) must drop any active menu-bar state, otherwise Avalonia leaves
         // the access-key underlines / selection armed and they reappear when the window is re-activated
         // (#11745 beta-2 feedback).
+        _altMenuActivationGuard.Reset();
+        _altClosesMenuOnKeyUp = false; // the matching Alt release will never arrive
         if (Menu is { IsOpen: true } || IsMenuFocused())
         {
             DeactivateMenu();
@@ -2719,11 +2845,14 @@ public partial class BinaryEditViewModel : ObservableObject
                 SubtitleGrid.SelectedIndex = index;
             }
 
-            SubtitleGrid.ScrollIntoView(SubtitleGrid.SelectedItem, null);
+            if (SubtitleGrid.SelectedItem is { } selectedItem)
+            {
+                SubtitleGrid.ScrollIntoView(selectedItem);
+            }
         });
     }
 
-    internal void OnDataGridKeyDown(KeyEventArgs e)
+    internal void OnSubtitleGridKeyDown(KeyEventArgs e)
     {
         if (e.Key == Key.Delete)
         {
@@ -2803,7 +2932,7 @@ public partial class BinaryEditViewModel : ObservableObject
         IsInsertBeforeVisible = selectedCount == 1;
     }
 
-    internal void OnDataGridDoubleTapped(TappedEventArgs e)
+    internal void OnSubtitleGridDoubleTapped(TappedEventArgs e)
     {
         var vp = VideoPlayerControl;
         var item = SubtitleGrid?.SelectedItem as BinarySubtitleItem;

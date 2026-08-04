@@ -34,8 +34,8 @@ env:
   #   2. Download https://github.com/iina/iina/releases/download/<ver>/IINA.<ver>.dmg
   #   3. Run `shasum -a 256` on it and update IINA_SHA256.
   #   4. Verify the new release still ships a universal Contents/Frameworks/ payload.
-  IINA_VERSION: v1.4.2
-  IINA_SHA256: 2e0fd89fbba1c92a6c115171e5b51904883bb497fbe513a6961d080fbab08ff6
+  IINA_VERSION: v1.4.4
+  IINA_SHA256: dd0fc0bd4b37fb57a1c8d30d6e3201b3a64bafd29959fe56953964613237beb1
 
 
 jobs:
@@ -324,6 +324,8 @@ jobs:
         run: |
           Invoke-WebRequest -Uri "https://github.com/SubtitleEdit/support-files/releases/download/libmpv-2026-04-21/libmpv2-win64.zip" -OutFile "libmpv2-64.zip"
           Expand-Archive -Path "libmpv2-64.zip" -DestinationPath "libmpv-temp"
+          Invoke-WebRequest -Uri "https://github.com/SubtitleEdit/support-files/releases/download/libmpv-2026-04-21/libmpv2-win-arm64.zip" -OutFile "libmpv2-arm64.zip"
+          Expand-Archive -Path "libmpv2-arm64.zip" -DestinationPath "libmpv-arm64-temp"
 
       - name: Publish Windows x64 app
         run: |
@@ -350,6 +352,8 @@ jobs:
             -p:FileVersion=$env:APP_VER_FULL `
             -p:InformationalVersion=$env:APP_VER_DISPLAY `
             -o ./publish/windows-arm64
+          # Must be the native ARM64 libmpv build — an ARM64 process cannot load the x64 DLL (issue #12087).
+          Copy-Item "libmpv-arm64-temp/libmpv-2.dll" "./publish/windows-arm64/"
           Get-ChildItem -Path "./publish/windows-arm64" -Filter "*.pdb" -Recurse -File | Remove-Item -Force
 
       # - name: Setup WiX
@@ -609,6 +613,14 @@ jobs:
           set -e
           app="./SubtitleEdit-${{ matrix.arch_label }}.app"
           cp -R "./installer/macBundle/SubtitleEdit.app" "$app"
+
+          # .gitkeep only exists so git tracks the empty Contents/MacOS folder.
+          # codesign treats every file in MacOS/ as code, so leaving it in place
+          # makes `codesign --verify --deep --strict` fail the whole bundle with
+          # "code object is not signed at all". Unsigned builds never hit this,
+          # because they strip the signature instead of verifying it.
+          # .DS_Store can arrive the same way and is unsignable for the same reason.
+          find "$app" \( -name ".gitkeep" -o -name ".DS_Store" \) -delete
 
           cp "./publish/macos-${{ matrix.arch }}/SubtitleEdit" "$app/Contents/MacOS/"
           cp "./publish/macos-${{ matrix.arch }}/"*.dylib "$app/Contents/MacOS/" 2>/dev/null || true
@@ -881,7 +893,7 @@ jobs:
             1. Read and fix requirements, please see [System Requirements](https://github.com/SubtitleEdit/subtitleedit#-system-requirements)
             2. Download the appropriate package for your platform
             3. Extract the archive (or use installer if available)
-            4. Run the executable (on macOS, the app is unsigned - see [System Requirements](https://github.com/SubtitleEdit/subtitleedit#-system-requirements) for how to allow it).
+            4. Run the executable (on macOS, the app is signed and notarized by Apple - just drag it to Applications and open it).
       
             ### Change Log
             See the full [Change Log](https://raw.githubusercontent.com/SubtitleEdit/subtitleedit/refs/heads/main/change-log.txt) for details.

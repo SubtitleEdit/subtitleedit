@@ -14,10 +14,11 @@ using Avalonia.Platform.Storage;
 using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using Nikse.SubtitleEdit.Core.AudioToText;
+using Nikse.SubtitleEdit.UiLogic.AudioToText;
 using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Features.Shared;
 using Nikse.SubtitleEdit.Features.Video.SpeechToText.Engines;
+using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Logic.Download;
 using Nikse.SubtitleEdit.Logic.Media;
@@ -25,7 +26,7 @@ using Timer = System.Timers.Timer;
 
 namespace Nikse.SubtitleEdit.Features.Video.SpeechToText;
 
-public partial class DownloadSpeechToTextModelsViewModel : ObservableObject
+public partial class DownloadSpeechToTextModelsViewModel : ObservableObject, IClosingCleanup
 {
 
     [ObservableProperty] private ObservableCollection<SpeechToTextModelDisplay> _models;
@@ -54,6 +55,7 @@ public partial class DownloadSpeechToTextModelsViewModel : ObservableObject
 
     private const string TemporaryFileExtension = ".$$$";
     private readonly Timer _timer;
+    private volatile bool _isClosing;
     private readonly CancellationTokenSource _cancellationTokenSource;
 
     public DownloadSpeechToTextModelsViewModel(IWhisperDownloadService whisperDownloadService, IFolderHelper folderHelper)
@@ -62,7 +64,7 @@ public partial class DownloadSpeechToTextModelsViewModel : ObservableObject
         _whisperDownloadService = whisperDownloadService;
 
         Models = new ObservableCollection<SpeechToTextModelDisplay>();
-        SelectedModel = Enumerable.FirstOrDefault<SpeechToTextModelDisplay>((IEnumerable<SpeechToTextModelDisplay>)Models);
+        SelectedModel = Models.FirstOrDefault<SpeechToTextModelDisplay>();
 
         _cancellationTokenSource = new CancellationTokenSource();
 
@@ -102,6 +104,11 @@ public partial class DownloadSpeechToTextModelsViewModel : ObservableObject
     {
         lock (_lockObj)
         {
+            if (_isClosing)
+            {
+                return;
+            }
+
             _timer.Stop();
 
             // IsCompletedSuccessfully, not the broader IsCompleted (also true for
@@ -120,16 +127,16 @@ public partial class DownloadSpeechToTextModelsViewModel : ObservableObject
                 var ex = _downloadTask.Exception?.InnerException ?? _downloadTask.Exception;
                 if (ex is OperationCanceledException)
                 {
-                    ProgressText = "Download canceled";
+                    ProgressText = Se.Language.General.DownloadCanceled;
                     Cancel();
 
                     return;
                 }
 
-                // A 404 (FileNotFoundException) on an optional file isn't fatal: each model
-                // ships only one of vocabulary.txt / vocabulary.json, but the URL list asks for
-                // both, so one always 404s. Skip it and continue, like faster-whisper-xxl.exe
-                // does - only model.bin is required. (#12133 follow-up)
+                // A 404 (FileNotFoundException) on an optional file isn't fatal: the URL list is
+                // the union of file names across all models, so every model 404s on some of them.
+                // Skip those and continue, like faster-whisper-xxl.exe does - only model.bin is
+                // required. (#12133 follow-up, #8703)
                 if (ex is FileNotFoundException && IsOptionalFile(_downloadUrls[_downloadIndex]))
                 {
                     DeletePartialDownload();
@@ -138,19 +145,27 @@ public partial class DownloadSpeechToTextModelsViewModel : ObservableObject
                     return;
                 }
 
-                ProgressText = "Download failed";
-                Error = ex?.Message ?? "Unknown error";
+                ProgressText = Se.Language.General.DownloadFailed;
+                Error = ex?.Message ?? Se.Language.General.UnknownError;
 
                 return;
             }
 
-            _timer.Start();
+            // Guard the restart: OnClosingCleanup may have disposed the timer while this
+            // handler ran, and Start() on a disposed timer throws ObjectDisposedException,
+            // crashing the app from a thread-pool thread. (#12739)
+            if (!_isClosing)
+            {
+                _timer.Start();
+            }
         }
     }
 
-    // Files a model may or may not ship. A model provides exactly one vocabulary variant,
-    // but the URL list requests both, so a 404 on one of these is expected, not an error.
-    private static readonly string[] OptionalFileNames = { "vocabulary.txt", "vocabulary.json" };
+    // Files a model may or may not ship, so a 404 on one of these is expected, not an error.
+    // A model provides exactly one vocabulary variant, but the URL list requests both. And the
+    // older Systran/faster-whisper-* repos (tiny ... large-v2) ship no preprocessor_config.json
+    // at all - faster-whisper then falls back to the default feature extractor settings.
+    private static readonly string[] OptionalFileNames = { "vocabulary.txt", "vocabulary.json", "preprocessor_config.json" };
 
     private static bool IsOptionalFile(string url)
     {
@@ -168,7 +183,11 @@ public partial class DownloadSpeechToTextModelsViewModel : ObservableObject
             _downloadTask = _whisperDownloadService.DownloadFile(url, _downloadFileName, MakeDownloadProgress(), _cancellationTokenSource.Token);
             ProgressFileName = string.Format(Se.Language.General.FileNameX, Path.GetFileName(url));
             ProgressValue = 0;
-            _timer.Start();
+            // Guard the restart against a concurrent OnClosingCleanup disposal (#12739).
+            if (!_isClosing)
+            {
+                _timer.Start();
+            }
 
             return;
         }
@@ -266,11 +285,16 @@ public partial class DownloadSpeechToTextModelsViewModel : ObservableObject
         });
     }
 
+    public void OnClosingCleanup()
+    {
+        _isClosing = true;
+        _timer.StopAndDispose(OnTimerOnElapsed);
+    }
+
     [RelayCommand]
     private void Cancel()
     {
         _cancellationTokenSource?.Cancel();
-        _timer.Stop();
         OkPressed = false;
         Close();
     }
@@ -422,7 +446,19 @@ public partial class DownloadSpeechToTextModelsViewModel : ObservableObject
 
     internal async void StartDownload()
     {
-        await Task.Delay(200);
-        Download();
+        try
+        {
+            await Task.Delay(200);
+            Download();
+        }
+        catch (Exception exception)
+        {
+            // async void: without this catch a throw from Download() (bad URL list,
+            // path failure) would land in the dispatcher unhandled and crash the app,
+            // with the caller unable to observe it.
+            Se.LogError(exception, "Speech-to-text model download failed to start");
+            ProgressText = Se.Language.General.DownloadFailed;
+            Error = exception.Message;
+        }
     }
 }

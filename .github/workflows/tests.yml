@@ -1,0 +1,53 @@
+name: Tests
+
+# Runs the whole unit-test suite on pull requests and on pushes to main.
+#
+# Until this workflow existed nothing ran tests on GitHub: every other workflow here is
+# workflow_dispatch only, and the `dotnet test` steps in build-ui.yml / build-seconv.yml
+# are commented out. AppVeyor runs LibSETests and UITests on commits, but a broken
+# Polish.json still reached main, so the suite also needs to gate merges here.
+#
+# This covers the translation files as well - UITests contains LanguageJsonFilesTests and
+# SeLanguageJsonContextTests - which is why there is no separate language-file workflow:
+# building UITests is nearly the whole cost of this job, so a second workflow that builds
+# the same project to run 66 of its tests would roughly double CI time for no extra
+# coverage.
+#
+# `dotnet test` on the solution picks up the four test projects (libse, libuilogic,
+# seconv, UI); the benchmark projects are not test projects and are skipped.
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: '10.0.x'
+
+      - name: Restore
+        run: dotnet restore SubtitleEdit.sln
+
+      - name: Build
+        run: dotnet build SubtitleEdit.sln --no-restore
+
+      - name: Test
+        run: dotnet test SubtitleEdit.sln --no-build --logger "trx;LogFileName=tests.trx"
+
+      # Uploaded on failure so a red check can be diagnosed without re-running locally.
+      - name: Upload test results
+        if: failure()
+        uses: actions/upload-artifact@v5
+        with:
+          name: test-results
+          path: '**/TestResults/*.trx'
+          if-no-files-found: ignore

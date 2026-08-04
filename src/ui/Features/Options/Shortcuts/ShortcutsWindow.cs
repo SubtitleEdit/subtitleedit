@@ -4,6 +4,7 @@ using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
 using Avalonia.Controls.Templates;
 using Avalonia.Data;
+using Avalonia.Data.Converters;
 using Avalonia.Input;
 using Avalonia.Layout;
 using Avalonia.Media;
@@ -13,6 +14,8 @@ using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Logic.ValueConverters;
 using System;
+using System.Globalization;
+using System.Linq;
 using Attached = Optris.Icons.Avalonia.Attached;
 
 namespace Nikse.SubtitleEdit.Features.Options.Shortcuts;
@@ -26,7 +29,7 @@ public class ShortcutsWindow : Window
     {
         var language = Se.Language.Options.Shortcuts;
         UiUtil.InitializeWindow(this, GetType().Name);
-        Title = language.Title;
+        Title = Se.Language.General.Shortcuts;
         Width = 900;
         Height = 720;
         MinWidth = 860;
@@ -69,7 +72,7 @@ public class ShortcutsWindow : Window
             }
         };
 
-        var labelFilter = UiUtil.MakeTextBlock(language.Filter);
+        var labelFilter = UiUtil.MakeTextBlock(Se.Language.General.Filter);
         var comboBoxFilter = UiUtil.MakeComboBox(vm.Filters, vm, nameof(vm.SelectedFilter))
             .WithMinWidth(120)
             .WithMargin(5, 0, 10, 0);
@@ -108,6 +111,17 @@ public class ShortcutsWindow : Window
                 Setters =
                 {
                     new Setter(ListBoxItem.PaddingProperty, new Thickness(6, 2)),
+                    // Accessible name for the tile container - without it screen readers
+                    // announce the item as the ShortcutGroupTile class name (issue #12087).
+                    new Setter(AutomationProperties.NameProperty, new MultiBinding
+                    {
+                        StringFormat = "{0} ({1})",
+                        Bindings =
+                        {
+                            new Binding(nameof(ShortcutGroupTile.Name)),
+                            new Binding(nameof(ShortcutGroupTile.Count)),
+                        },
+                    }),
                 },
             },
             ItemTemplate = new FuncDataTemplate<ShortcutGroupTile>((_, _) =>
@@ -159,188 +173,255 @@ public class ShortcutsWindow : Window
         groupTiles.Bind(SelectingItemsControl.SelectedItemProperty, new Binding(nameof(vm.SelectedGroupTile)) { Source = vm, Mode = BindingMode.TwoWay });
         AutomationProperties.SetName(groupTiles, Se.Language.General.Category);
 
-        var dataGrid = new DataGrid
+        // TableView has no content-based column sizing (Auto behaves as star), so the
+        // former Auto columns get pixel widths measured from the widest strings they
+        // can show (the VM is initialized before the window ctor, so the rows exist).
+        const double sortArrowSlack = 18; // room for TableViewHeaderSorter's ▲/▼ header suffix
+        static double MeasureWidth(string text, double fontSize, FontWeight fontWeight) =>
+            new FormattedText(text, CultureInfo.CurrentUICulture, FlowDirection.LeftToRight,
+                new Typeface(Typeface.Default.FontFamily, FontStyle.Normal, fontWeight), fontSize, null).Width;
+        static double HeaderWidth(string header) =>
+            MeasureWidth(header, 14, FontWeight.SemiBold) + 8 + sortArrowSlack;
+
+        var activeInTexts = new[]
         {
-            AutoGenerateColumns = false,
-            SelectionMode = DataGridSelectionMode.Single,
-            CanUserResizeColumns = true,
-            CanUserSortColumns = true,
-            HorizontalAlignment = HorizontalAlignment.Stretch,
-            VerticalAlignment = VerticalAlignment.Stretch,
-            Width = double.NaN,
-            Height = double.NaN,
-            DataContext = vm,
-            ItemsSource = vm.FlatNodes,
-            Columns =
-            {
-                new DataGridTemplateColumn
-                {
-                    Header = language.ActiveIn,
-                    CellTheme = UiUtil.DataGridNoBorderNoPaddingCellTheme,
-                    // Template columns need an explicit SortMemberPath to be sortable (#12431).
-                    SortMemberPath = nameof(ShortcutTreeNode.ActiveIn),
-                    IsReadOnly = true,
-                    CellTemplate = new FuncDataTemplate<ShortcutTreeNode>((_, _) =>
-                    {
-                        var text = new TextBlock
-                        {
-                            FontSize = 11,
-                            VerticalAlignment = VerticalAlignment.Center,
-                        };
-                        text.Bind(TextBlock.TextProperty, new Binding(nameof(ShortcutTreeNode.ActiveIn)));
-
-                        var pill = new Border
-                        {
-                            BorderBrush = UiUtil.GetBorderBrush(),
-                            BorderThickness = new Thickness(1),
-                            CornerRadius = new CornerRadius(99),
-                            Padding = new Thickness(8, 1, 8, 2),
-                            Margin = new Thickness(4, 0, 4, 0),
-                            HorizontalAlignment = HorizontalAlignment.Left,
-                            VerticalAlignment = VerticalAlignment.Center,
-                            Child = text,
-                        };
-                        pill.Bind(Visual.OpacityProperty, new Binding(nameof(ShortcutTreeNode.ActiveInOpacity)));
-                        return pill;
-                    }),
-                },
-                new DataGridTemplateColumn
-                {
-                    Header = string.Empty,
-                    CellTheme = UiUtil.DataGridNoBorderNoPaddingCellTheme,
-                    SortMemberPath = nameof(ShortcutTreeNode.GroupName),
-                    CanUserResize = false,
-                    IsReadOnly = true,
-                    CellTemplate = new FuncDataTemplate<ShortcutTreeNode>((_, _) =>
-                    {
-                        var icon = new ContentControl
-                        {
-                            FontSize = 16,
-                            HorizontalAlignment = HorizontalAlignment.Center,
-                            VerticalAlignment = VerticalAlignment.Center,
-                        };
-                        icon.Bind(Attached.IconProperty, new Binding(nameof(ShortcutTreeNode.GroupIconName)));
-                        icon.Bind(TemplatedControl.ForegroundProperty, new Binding(nameof(ShortcutTreeNode.GroupBrush)));
-
-                        var square = new Border
-                        {
-                            Width = 24,
-                            Height = 24,
-                            CornerRadius = new CornerRadius(6),
-                            Margin = new Thickness(4, 2, 4, 2),
-                            HorizontalAlignment = HorizontalAlignment.Center,
-                            VerticalAlignment = VerticalAlignment.Center,
-                            Child = icon,
-                        };
-                        square.Bind(Border.BackgroundProperty, new Binding(nameof(ShortcutTreeNode.GroupSoftBrush)));
-                        square.Bind(ToolTip.TipProperty, new Binding(nameof(ShortcutTreeNode.GroupName)));
-                        return square;
-                    }),
-                },
-                new DataGridTemplateColumn
-                {
-                    Header = Se.Language.General.Category,
-                    CellTheme = UiUtil.DataGridNoBorderNoPaddingCellTheme,
-                    SortMemberPath = nameof(ShortcutTreeNode.GroupName),
-                    IsReadOnly = true,
-                    CellTemplate = new FuncDataTemplate<ShortcutTreeNode>((_, _) =>
-                    {
-                        // Category name in the group color so the grouping reads at a glance.
-                        var text = new TextBlock
-                        {
-                            FontSize = 12,
-                            FontWeight = FontWeight.Medium,
-                            VerticalAlignment = VerticalAlignment.Center,
-                            Margin = new Thickness(2, 0, 6, 0),
-                        };
-                        text.Bind(TextBlock.TextProperty, new Binding(nameof(ShortcutTreeNode.GroupName)));
-                        text.Bind(TextBlock.ForegroundProperty, new Binding(nameof(ShortcutTreeNode.GroupBrush)));
-                        return text;
-                    }),
-                },
-                new DataGridTextColumn
-                {
-                    Header = Se.Language.General.Name,
-                    CellTheme = UiUtil.DataGridNoBorderNoPaddingCellTheme,
-                    Binding = new Binding(nameof(ShortcutTreeNode.Title)),
-                    IsReadOnly = true,
-                    // Normal weight: semi-bold on every row made the whole list read as bold (#12351).
-                    FontWeight = FontWeight.Normal,
-                    Width = new DataGridLength(1, DataGridLengthUnitType.Star),
-                },
-                new DataGridTemplateColumn
-                {
-                    Header = Se.Language.General.Shortcut,
-                    CellTheme = UiUtil.DataGridNoBorderNoPaddingCellTheme,
-                    SortMemberPath = nameof(ShortcutTreeNode.DisplayShortcut),
-                    IsReadOnly = true,
-                    Width = new DataGridLength(1, DataGridLengthUnitType.Auto),
-                    CellTemplate = new FuncDataTemplate<ShortcutTreeNode>((_, _) =>
-                    {
-                        // Keycap-style chips, one per key, right-aligned like the column header side.
-                        var keys = new ItemsControl
-                        {
-                            HorizontalAlignment = HorizontalAlignment.Right,
-                            VerticalAlignment = VerticalAlignment.Center,
-                            ItemsPanel = new FuncTemplate<Panel?>(() => new StackPanel
-                            {
-                                Orientation = Orientation.Horizontal,
-                                Spacing = 3,
-                            }),
-                            ItemTemplate = new FuncDataTemplate<string>((_, _) =>
-                            {
-                                var keyText = new TextBlock
-                                {
-                                    FontSize = 11,
-                                    FontWeight = FontWeight.SemiBold,
-                                    HorizontalAlignment = HorizontalAlignment.Center,
-                                };
-                                keyText.Bind(TextBlock.TextProperty, new Binding("."));
-                                return new Border
-                                {
-                                    Background = new SolidColorBrush(Colors.Gray, 0.12),
-                                    BorderBrush = new SolidColorBrush(Colors.Gray, 0.45),
-                                    BorderThickness = new Thickness(1, 1, 1, 2),
-                                    CornerRadius = new CornerRadius(4),
-                                    Padding = new Thickness(6, 1, 6, 2),
-                                    MinWidth = 24,
-                                    Child = keyText,
-                                };
-                            }),
-                        };
-                        keys.Bind(ItemsControl.ItemsSourceProperty, new Binding(nameof(ShortcutTreeNode.KeyParts)));
-                        keys.Bind(Visual.IsVisibleProperty, new Binding(nameof(ShortcutTreeNode.IsAssigned)));
-
-                        var notSet = new TextBlock
-                        {
-                            Text = Se.Language.Options.Shortcuts.Unassigned,
-                            FontSize = 11,
-                            FontStyle = FontStyle.Italic,
-                            Opacity = 0.45,
-                            HorizontalAlignment = HorizontalAlignment.Right,
-                            VerticalAlignment = VerticalAlignment.Center,
-                        };
-                        notSet.Bind(Visual.IsVisibleProperty, new Binding(nameof(ShortcutTreeNode.IsUnassigned)));
-
-                        return new Panel
-                        {
-                            // Extra right margin so the DataGrid's overlay scrollbar
-                            // does not cover the key chips in the last column.
-                            Margin = new Thickness(4, 2, 20, 2),
-                            Children = { keys, notSet },
-                        };
-                    }),
-                },
-            },
+            language.CategorySubtitleGridAndTextBox,
+            language.CategorySubtitleGrid,
+            Se.Language.General.Waveform,
+            language.CategoryTextBox,
+            language.ActiveInEverywhere,
         };
-        dataGrid.Bind(DataGrid.SelectedItemProperty, new Binding(nameof(vm.SelectedNode)) { Source = vm });
-        dataGrid.SelectionChanged += vm.ShortcutsDataGrid_SelectionChanged;
-        dataGrid.DoubleTapped += vm.ShortcutsDataGridDoubleTapped;
-        // Trough paging and shift+click jump now come from the app-wide DataGrid style (Styles.axaml).
-        var borderDataGrid = UiUtil.MakeBorderForControlNoPadding(dataGrid).WithMarginBottom(5);
+        // Pill chrome: 8+8 padding, 1+1 border, 4+4 margin, plus a little slack.
+        var activeInWidth = Math.Max(HeaderWidth(language.ActiveIn),
+            activeInTexts.Max(t => MeasureWidth(t, 11, FontWeight.Normal)) + 30);
+
+        // Category text chrome: 2+14 margin plus a little slack.
+        var categoryWidth = Math.Max(HeaderWidth(Se.Language.General.Category),
+            vm.FlatNodes.Select(n => n.GroupName).Distinct()
+                .Select(t => MeasureWidth(t, 12, FontWeight.Medium) + 24)
+                .DefaultIfEmpty(90).Max());
+
+        // Keycap chips: 6+6 padding, 1+1 border, min 24 wide, 3 spacing; panel margin 4+20.
+        static double ChipRowWidth(ShortcutTreeNode node) => node.KeyParts.Count == 0
+            ? MeasureWidth(Se.Language.Options.Shortcuts.Unassigned, 11, FontWeight.Normal)
+            : node.KeyParts.Sum(k => Math.Max(24, MeasureWidth(k, 11, FontWeight.SemiBold) + 14)) +
+              (node.KeyParts.Count - 1) * 3;
+        var shortcutWidth = Math.Max(HeaderWidth(Se.Language.General.Shortcut),
+            vm.FlatNodes.Select(ChipRowWidth).DefaultIfEmpty(100).Max() + 24);
+
+        var columnActiveIn = new SeTableViewColumn
+        {
+            Header = language.ActiveIn,
+            CellTheme = UiUtil.TableViewNoPaddingCellTheme,
+            HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
+            Width = new GridLength(activeInWidth),
+            CellTemplate = new FuncDataTemplate<ShortcutTreeNode>((_, _) =>
+            {
+                var text = new TextBlock
+                {
+                    FontSize = 11,
+                    VerticalAlignment = VerticalAlignment.Center,
+                };
+                text.Bind(TextBlock.TextProperty, new Binding(nameof(ShortcutTreeNode.ActiveIn)));
+
+                var pill = new Border
+                {
+                    BorderBrush = UiUtil.GetBorderBrush(),
+                    BorderThickness = new Thickness(1),
+                    CornerRadius = new CornerRadius(99),
+                    Padding = new Thickness(8, 1, 8, 2),
+                    Margin = new Thickness(4, 0, 4, 0),
+                    HorizontalAlignment = HorizontalAlignment.Left,
+                    VerticalAlignment = VerticalAlignment.Center,
+                    Child = text,
+                };
+                pill.Bind(Visual.OpacityProperty, new Binding(nameof(ShortcutTreeNode.ActiveInOpacity)));
+                return pill;
+            }),
+        };
+
+        var columnGroupIcon = new SeTableViewColumn
+        {
+            Header = string.Empty,
+            CellTheme = UiUtil.TableViewNoPaddingCellTheme,
+            HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
+            Width = new GridLength(40),
+            CanUserResize = false,
+            CellTemplate = new FuncDataTemplate<ShortcutTreeNode>((_, _) =>
+            {
+                var icon = new ContentControl
+                {
+                    FontSize = 16,
+                    HorizontalAlignment = HorizontalAlignment.Center,
+                    VerticalAlignment = VerticalAlignment.Center,
+                };
+                icon.Bind(Attached.IconProperty, new Binding(nameof(ShortcutTreeNode.GroupIconName)));
+                icon.Bind(TemplatedControl.ForegroundProperty, new Binding(nameof(ShortcutTreeNode.GroupBrush)));
+
+                var square = new Border
+                {
+                    Width = 24,
+                    Height = 24,
+                    CornerRadius = new CornerRadius(6),
+                    Margin = new Thickness(4, 2, 4, 2),
+                    HorizontalAlignment = HorizontalAlignment.Center,
+                    VerticalAlignment = VerticalAlignment.Center,
+                    Child = icon,
+                };
+                square.Bind(Border.BackgroundProperty, new Binding(nameof(ShortcutTreeNode.GroupSoftBrush)));
+                square.Bind(ToolTip.TipProperty, new Binding(nameof(ShortcutTreeNode.GroupName)));
+                return square;
+            }),
+        };
+
+        var columnCategory = new SeTableViewColumn
+        {
+            Header = Se.Language.General.Category,
+            CellTheme = UiUtil.TableViewNoPaddingCellTheme,
+            HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
+            Width = new GridLength(categoryWidth),
+            CellTemplate = new FuncDataTemplate<ShortcutTreeNode>((_, _) =>
+            {
+                // Category name in the group color so the grouping reads at a glance
+                // (text variant: darkened on the light theme for contrast, #12778).
+                var text = new TextBlock
+                {
+                    FontSize = 12,
+                    FontWeight = FontWeight.Medium,
+                    VerticalAlignment = VerticalAlignment.Center,
+                    Margin = new Thickness(2, 0, 14, 0),
+                };
+                text.Bind(TextBlock.TextProperty, new Binding(nameof(ShortcutTreeNode.GroupName)));
+                text.Bind(TextBlock.ForegroundProperty, new Binding(nameof(ShortcutTreeNode.GroupTextBrush)));
+                return text;
+            }),
+        };
+
+        var columnName = new SeTableViewColumn
+        {
+            Header = Se.Language.General.Name,
+            CellTheme = UiUtil.TableViewCellTheme,
+            HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
+            Binding = new Binding(nameof(ShortcutTreeNode.Title)),
+            Width = new GridLength(1, GridUnitType.Star),
+        };
+
+        var columnShortcut = new SeTableViewColumn
+        {
+            Header = Se.Language.General.Shortcut,
+            CellTheme = UiUtil.TableViewNoPaddingCellTheme,
+            HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
+            Width = new GridLength(shortcutWidth),
+            CellTemplate = new FuncDataTemplate<ShortcutTreeNode>((_, _) =>
+            {
+                // Keycap-style chips, one per key, right-aligned like the column header side.
+                var keys = new ItemsControl
+                {
+                    HorizontalAlignment = HorizontalAlignment.Right,
+                    VerticalAlignment = VerticalAlignment.Center,
+                    ItemsPanel = new FuncTemplate<Panel?>(() => new StackPanel
+                    {
+                        Orientation = Orientation.Horizontal,
+                        Spacing = 3,
+                    }),
+                    ItemTemplate = new FuncDataTemplate<string>((_, _) =>
+                    {
+                        var keyText = new TextBlock
+                        {
+                            FontSize = 11,
+                            FontWeight = FontWeight.SemiBold,
+                            HorizontalAlignment = HorizontalAlignment.Center,
+                        };
+                        keyText.Bind(TextBlock.TextProperty, new Binding("."));
+                        return new Border
+                        {
+                            Background = new SolidColorBrush(Colors.Gray, 0.12),
+                            BorderBrush = new SolidColorBrush(Colors.Gray, 0.45),
+                            BorderThickness = new Thickness(1, 1, 1, 2),
+                            CornerRadius = new CornerRadius(4),
+                            Padding = new Thickness(6, 1, 6, 2),
+                            MinWidth = 24,
+                            Child = keyText,
+                        };
+                    }),
+                };
+                keys.Bind(ItemsControl.ItemsSourceProperty, new Binding(nameof(ShortcutTreeNode.KeyParts)));
+                keys.Bind(Visual.IsVisibleProperty, new Binding(nameof(ShortcutTreeNode.IsAssigned)));
+
+                var notSet = new TextBlock
+                {
+                    Text = Se.Language.Options.Shortcuts.Unassigned,
+                    FontSize = 11,
+                    FontStyle = FontStyle.Italic,
+                    Opacity = 0.45,
+                    HorizontalAlignment = HorizontalAlignment.Right,
+                    VerticalAlignment = VerticalAlignment.Center,
+                };
+                notSet.Bind(Visual.IsVisibleProperty, new Binding(nameof(ShortcutTreeNode.IsUnassigned)));
+
+                return new Panel
+                {
+                    // Extra right margin so the TableView's overlay scrollbar
+                    // does not cover the key chips in the last column.
+                    Margin = new Thickness(4, 2, 20, 2),
+                    Children = { keys, notSet },
+                };
+            }),
+        };
+
+        var shortcutsGrid = TableViewExtras.MakeTableView(multiSelect: false);
+        shortcutsGrid.DataContext = vm;
+        shortcutsGrid.ItemsSource = vm.FlatNodes;
+        shortcutsGrid.Columns.Add(columnActiveIn);
+        shortcutsGrid.Columns.Add(columnGroupIcon);
+        shortcutsGrid.Columns.Add(columnCategory);
+        shortcutsGrid.Columns.Add(columnName);
+        shortcutsGrid.Columns.Add(columnShortcut);
+
+        // Accessible row name "title (category): shortcut" - without it screen readers
+        // announce every row as the ShortcutTreeNode class name (issue #12087). Same
+        // row-binding pattern as the main subtitle grid (#13015). DisplayShortcut is
+        // observable, so reassigning a key updates the announced name too.
+        var shortcutOrUnassignedConverter = new FuncValueConverter<string?, string>(s =>
+            string.IsNullOrEmpty(s) ? Se.Language.Options.Shortcuts.Unassigned : s);
+        TableViewExtras.BindRowProperty(shortcutsGrid, AutomationProperties.NameProperty,
+            new MultiBinding
+            {
+                StringFormat = "{0} ({1}): {2}",
+                Bindings =
+                {
+                    new Binding(nameof(ShortcutTreeNode.Title)),
+                    new Binding(nameof(ShortcutTreeNode.GroupName)),
+                    new Binding(nameof(ShortcutTreeNode.DisplayShortcut)) { Converter = shortcutOrUnassignedConverter },
+                },
+            });
+
+        shortcutsGrid.Bind(TableView.SelectedItemProperty, new Binding(nameof(vm.SelectedNode)) { Source = vm });
+        shortcutsGrid.SelectionChanged += vm.ShortcutsGrid_SelectionChanged;
+        shortcutsGrid.DoubleTapped += (s, e) =>
+        {
+            // Double-clicking a sortable column header must not open the detect-key dialog.
+            if (!TableViewExtras.IsInColumnHeader(e.Source as Visual))
+            {
+                vm.ShortcutsGridDoubleTapped(s, e);
+            }
+        };
+
+        // Click-to-sort on every column the DataGrid sorted (the SortMemberPath template
+        // columns and the Name text column, #12431). The list's order is presentation-
+        // only - OK/save reads Se.Settings.Shortcuts, not FlatNodes - and a search or
+        // filter change rebuilds the list in its default group order again.
+        var sorter = new TableViewHeaderSorter(shortcutsGrid);
+        sorter.AddSortable<ShortcutTreeNode, string>(columnActiveIn, x => x.ActiveIn)
+            .AddSortable<ShortcutTreeNode, string>(columnGroupIcon, x => x.GroupName)
+            .AddSortable<ShortcutTreeNode, string>(columnCategory, x => x.GroupName)
+            .AddSortable<ShortcutTreeNode, string>(columnName, x => x.Title)
+            .AddSortable<ShortcutTreeNode, string>(columnShortcut, x => x.DisplayShortcut);
+
+        var borderShortcutsGrid = UiUtil.MakeBorderForControlNoPadding(shortcutsGrid).WithMarginBottom(5);
 
         var flyout = new MenuFlyout();
-        dataGrid.ContextFlyout = flyout;
+        shortcutsGrid.ContextFlyout = flyout;
         var menuItemImport = new MenuItem
         {
             Header = Se.Language.General.ImportDotDotDot,
@@ -405,7 +486,7 @@ public class ShortcutsWindow : Window
         };
         grid.Add(topGrid, 0);
         grid.Add(groupTiles, 1);
-        grid.Add(borderDataGrid, 2);
+        grid.Add(borderShortcutsGrid, 2);
 
         var editPanel = new StackPanel
         {
@@ -463,13 +544,19 @@ public class ShortcutsWindow : Window
         editPanel.Children.Add(comboBoxKeys);
 
         // browse button
-        var buttonBrowse = UiUtil.MakeButtonBrowse(vm.ShowGetKeyCommand);
+        var buttonBrowse = UiUtil.MakeButtonBrowse(vm.ShowGetKeyCommand, accessibleName: Se.Language.Options.Shortcuts.DetectKey);
+        if (Se.Settings.Appearance.ShowHints)
+        {
+            ToolTip.SetTip(buttonBrowse, Se.Language.Options.Shortcuts.DetectKey);
+        }
+
         editPanel.Children.Add(buttonBrowse);
         buttonBrowse.Bind(IsEnabledProperty, new Binding(nameof(vm.IsControlsEnabled)) { Source = vm });
         buttonBrowse.Margin = new Thickness(0, 0, 9, 0);
 
         // configure button
-        var buttonConfig = UiUtil.MakeButton(vm.ConfigureCommand, IconNames.Settings);
+        var buttonConfig = UiUtil.MakeButton(vm.ConfigureCommand, IconNames.Settings, Se.Language.General.Settings);
+
         editPanel.Children.Add(buttonConfig);
         buttonConfig.Bind(IsEnabledProperty, new Binding(nameof(vm.IsControlsEnabled)) { Source = vm });
         buttonConfig.Bind(IsVisibleProperty, new Binding(nameof(vm.IsConfigureVisible)) { Source = vm });

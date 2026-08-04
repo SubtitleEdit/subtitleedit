@@ -11,6 +11,7 @@ using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Compression;
 using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Logic.Download;
+using Nikse.SubtitleEdit.UiLogic;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -21,7 +22,7 @@ using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Timers;
-using static Nikse.SubtitleEdit.Core.AudioToText.SpeechToTextPostProcessor;
+using static Nikse.SubtitleEdit.Features.Video.SpeechToText.SpeechToTextPostProcessor;
 using Timer = System.Timers.Timer;
 
 namespace Nikse.SubtitleEdit.Features.Video.TextToSpeech.DownloadTts;
@@ -64,6 +65,9 @@ public partial class DownloadTtsViewModel : ObservableObject
     private Task? _downloadTaskF5TtsCrispAsrVoices;
     private Task? _downloadTaskVoxCPM2CrispAsrModels;
     private Task? _downloadTaskVoxCPM2CrispAsrVoices;
+    private Task? _downloadTaskMossTtsCrispAsrModels;
+    private Task? _downloadTaskMossTtsCrispAsrVoices;
+    private Task? _downloadTaskOmniVoiceCrispAsrModels;
     private Task? _downloadTaskZonosTtsCrispAsrModels;
     private Task? _downloadTaskZonosTtsCrispAsrVoices;
     private Task? _downloadTaskOmniVoice;
@@ -72,6 +76,7 @@ public partial class DownloadTtsViewModel : ObservableObject
     private string _omniVoiceVariant = OmniVoiceDownloadService.WindowsVariantVulkan;
     private string _qwen3TtsCppVariant = Qwen3TtsCppDownloadService.WindowsVariantVulkan;
     private readonly Timer _timer = new();
+    private volatile bool _isClosing;
 
     private readonly ITtsDownloadService _ttsDownloadService;
     private readonly IQwen3TtsCppDownloadService _qwen3TtsCppDownloadService;
@@ -83,6 +88,8 @@ public partial class DownloadTtsViewModel : ObservableObject
     private readonly ICosyVoice3CrispAsrDownloadService _cosyVoice3CrispAsrDownloadService;
     private readonly IF5TtsCrispAsrDownloadService _f5TtsCrispAsrDownloadService;
     private readonly IVoxCPM2CrispAsrDownloadService _voxCPM2CrispAsrDownloadService;
+    private readonly IMossTtsCrispAsrDownloadService _mossTtsCrispAsrDownloadService;
+    private readonly IOmniVoiceCrispAsrDownloadService _omniVoiceCrispAsrDownloadService;
     private readonly IZonosTtsCrispAsrDownloadService _zonosTtsCrispAsrDownloadService;
     private readonly IOmniVoiceDownloadService _omniVoiceDownloadService;
     private readonly CancellationTokenSource _cancellationTokenSource;
@@ -98,6 +105,7 @@ public partial class DownloadTtsViewModel : ObservableObject
     private readonly MemoryStream _downloadStreamCosyVoice3CrispAsrVoices;
     private readonly MemoryStream _downloadStreamF5TtsCrispAsrVoices;
     private readonly MemoryStream _downloadStreamVoxCPM2CrispAsrVoices;
+    private readonly MemoryStream _downloadStreamMossTtsCrispAsrVoices;
     private readonly MemoryStream _downloadStreamZonosTtsCrispAsrVoices;
     private readonly MemoryStream _downloadStreamOmniVoice;
     private readonly MemoryStream _downloadStreamOmniVoices;
@@ -116,6 +124,8 @@ public partial class DownloadTtsViewModel : ObservableObject
         ICosyVoice3CrispAsrDownloadService cosyVoice3CrispAsrDownloadService,
         IF5TtsCrispAsrDownloadService f5TtsCrispAsrDownloadService,
         IVoxCPM2CrispAsrDownloadService voxCPM2CrispAsrDownloadService,
+        IMossTtsCrispAsrDownloadService mossTtsCrispAsrDownloadService,
+        IOmniVoiceCrispAsrDownloadService omniVoiceCrispAsrDownloadService,
         IZonosTtsCrispAsrDownloadService zonosTtsCrispAsrDownloadService,
         IOmniVoiceDownloadService omniVoiceDownloadService)
     {
@@ -129,6 +139,8 @@ public partial class DownloadTtsViewModel : ObservableObject
         _cosyVoice3CrispAsrDownloadService = cosyVoice3CrispAsrDownloadService;
         _f5TtsCrispAsrDownloadService = f5TtsCrispAsrDownloadService;
         _voxCPM2CrispAsrDownloadService = voxCPM2CrispAsrDownloadService;
+        _mossTtsCrispAsrDownloadService = mossTtsCrispAsrDownloadService;
+        _omniVoiceCrispAsrDownloadService = omniVoiceCrispAsrDownloadService;
         _zonosTtsCrispAsrDownloadService = zonosTtsCrispAsrDownloadService;
         _omniVoiceDownloadService = omniVoiceDownloadService;
         _zipUnpacker = zipUnpacker;
@@ -147,6 +159,7 @@ public partial class DownloadTtsViewModel : ObservableObject
         _downloadStreamCosyVoice3CrispAsrVoices = new MemoryStream();
         _downloadStreamF5TtsCrispAsrVoices = new MemoryStream();
         _downloadStreamVoxCPM2CrispAsrVoices = new MemoryStream();
+        _downloadStreamMossTtsCrispAsrVoices = new MemoryStream();
         _downloadStreamZonosTtsCrispAsrVoices = new MemoryStream();
         _downloadStreamOmniVoice = new MemoryStream();
         _downloadStreamOmniVoices = new MemoryStream();
@@ -165,6 +178,11 @@ public partial class DownloadTtsViewModel : ObservableObject
 
     private void OnTimerOnElapsed(object? sender, ElapsedEventArgs args)
     {
+        if (_isClosing)
+        {
+            return;
+        }
+
         lock (_lock)
         {
             if (!_timer.Enabled)
@@ -178,8 +196,8 @@ public partial class DownloadTtsViewModel : ObservableObject
 
                 if (_downloadStream.Length == 0)
                 {
-                    ProgressText = "Download failed";
-                    Error = "No data received";
+                    ProgressText = Se.Language.General.DownloadFailed;
+                    Error = Se.Language.General.NoDataReceived;
                     return;
                 }
 
@@ -194,14 +212,14 @@ public partial class DownloadTtsViewModel : ObservableObject
                 }
                 catch (Exception ex)
                 {
-                    ProgressText = "Unpack failed: " + ex.Message;
+                    ProgressText = string.Format(Se.Language.General.UnpackFailed, ex.Message);
                     Error = ex.Message;
                     Se.LogError(ex);
                     return;
                 }
 
                 var path = Piper.GetPiperExecutableFileName();
-                if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+                if (OperatingSystem.IsLinux())
                 {
                     if (File.Exists(path))
                     {
@@ -209,7 +227,7 @@ public partial class DownloadTtsViewModel : ObservableObject
                         FixSymbolicLink(path);
                     }
                 }
-                else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+                else if (OperatingSystem.IsMacOS())
                 {
                     if (File.Exists(path))
                     {
@@ -226,13 +244,13 @@ public partial class DownloadTtsViewModel : ObservableObject
                 var ex = _downloadTask.Exception?.InnerException ?? _downloadTask.Exception;
                 if (ex is OperationCanceledException)
                 {
-                    ProgressText = "Download canceled";
+                    ProgressText = Se.Language.General.DownloadCanceled;
                     Close();
                 }
                 else
                 {
-                    ProgressText = "Download failed";
-                    Error = ex?.Message ?? "Unknown error";
+                    ProgressText = Se.Language.General.DownloadFailed;
+                    Error = ex?.Message ?? Se.Language.General.UnknownError;
                 }
             }
 
@@ -242,8 +260,8 @@ public partial class DownloadTtsViewModel : ObservableObject
 
                 if (_downloadStreamModel.Length == 0)
                 {
-                    ProgressText = "Download failed";
-                    Error = "No data received";
+                    ProgressText = Se.Language.General.DownloadFailed;
+                    Error = Se.Language.General.NoDataReceived;
                     return;
                 }
 
@@ -253,8 +271,8 @@ public partial class DownloadTtsViewModel : ObservableObject
 
                 if (_downloadStreamConfig.Length == 0)
                 {
-                    ProgressText = "Download failed";
-                    Error = "No data received";
+                    ProgressText = Se.Language.General.DownloadFailed;
+                    Error = Se.Language.General.NoDataReceived;
                     return;
                 }
 
@@ -270,13 +288,13 @@ public partial class DownloadTtsViewModel : ObservableObject
                 var ex = _downloadTaskVoiceModel.Exception?.InnerException ?? _downloadTaskVoiceModel.Exception;
                 if (ex is OperationCanceledException)
                 {
-                    ProgressText = "Download canceled";
+                    ProgressText = Se.Language.General.DownloadCanceled;
                     Close();
                 }
                 else
                 {
-                    ProgressText = "Download failed";
-                    Error = ex?.Message ?? "Unknown error";
+                    ProgressText = Se.Language.General.DownloadFailed;
+                    Error = ex?.Message ?? Se.Language.General.UnknownError;
                 }
             }
 
@@ -286,13 +304,13 @@ public partial class DownloadTtsViewModel : ObservableObject
                 var ex = _downloadTaskVoiceConfig.Exception?.InnerException ?? _downloadTaskVoiceConfig.Exception;
                 if (ex is OperationCanceledException)
                 {
-                    ProgressText = "Download canceled";
+                    ProgressText = Se.Language.General.DownloadCanceled;
                     Close();
                 }
                 else
                 {
-                    ProgressText = "Download failed";
-                    Error = ex?.Message ?? "Unknown error";
+                    ProgressText = Se.Language.General.DownloadFailed;
+                    Error = ex?.Message ?? Se.Language.General.UnknownError;
                 }
             }
 
@@ -302,8 +320,8 @@ public partial class DownloadTtsViewModel : ObservableObject
 
                 if (_downloadStreamQwen3TtsCpp.Length == 0)
                 {
-                    ProgressText = "Download failed";
-                    Error = "No data received";
+                    ProgressText = Se.Language.General.DownloadFailed;
+                    Error = Se.Language.General.NoDataReceived;
                     return;
                 }
 
@@ -317,21 +335,21 @@ public partial class DownloadTtsViewModel : ObservableObject
                 }
                 catch (Exception ex)
                 {
-                    ProgressText = "Unpack failed: " + ex.Message;
+                    ProgressText = string.Format(Se.Language.General.UnpackFailed, ex.Message);
                     Error = ex.Message;
                     Se.LogError(ex);
                     return;
                 }
 
                 var exePath = Qwen3TtsCpp.GetExecutableFileName();
-                if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+                if (OperatingSystem.IsLinux())
                 {
                     if (File.Exists(exePath))
                     {
                         LinuxHelper.MakeExecutable(exePath);
                     }
                 }
-                else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+                else if (OperatingSystem.IsMacOS())
                 {
                     if (File.Exists(exePath))
                     {
@@ -352,7 +370,7 @@ public partial class DownloadTtsViewModel : ObservableObject
                     return;
                 }
 
-                TitleText = "Downloading Qwen3 TTS voices";
+                TitleText = string.Format(Se.Language.General.DownloadingX, "Qwen3 TTS voices");
                 ProgressValue = 0;
                 ProgressText = Se.Language.General.StartingDotDotDot;
                 var voicesProgress = new Progress<float>(number =>
@@ -364,7 +382,10 @@ public partial class DownloadTtsViewModel : ObservableObject
                 });
                 _downloadTaskQwen3TtsCppVoices = _qwen3TtsCppDownloadService.DownloadVoices(
                     _downloadStreamQwen3TtsCppVoices, voicesProgress, _cancellationTokenSource.Token);
-                _timer.Start();
+                if (!_isClosing)
+                {
+                    _timer.Start();
+                }
             }
             else if (_downloadTaskQwen3TtsCpp is { IsFaulted: true })
             {
@@ -372,13 +393,13 @@ public partial class DownloadTtsViewModel : ObservableObject
                 var ex = _downloadTaskQwen3TtsCpp.Exception?.InnerException ?? _downloadTaskQwen3TtsCpp.Exception;
                 if (ex is OperationCanceledException)
                 {
-                    ProgressText = "Download canceled";
+                    ProgressText = Se.Language.General.DownloadCanceled;
                     Close();
                 }
                 else
                 {
-                    ProgressText = "Download failed";
-                    Error = ex?.Message ?? "Unknown error";
+                    ProgressText = Se.Language.General.DownloadFailed;
+                    Error = ex?.Message ?? Se.Language.General.UnknownError;
                 }
             }
 
@@ -412,7 +433,7 @@ public partial class DownloadTtsViewModel : ObservableObject
                 var ex = _downloadTaskQwen3TtsCppVoices.Exception?.InnerException ?? _downloadTaskQwen3TtsCppVoices.Exception;
                 if (ex is OperationCanceledException)
                 {
-                    ProgressText = "Download canceled";
+                    ProgressText = Se.Language.General.DownloadCanceled;
                     Close();
                     return;
                 }
@@ -438,13 +459,13 @@ public partial class DownloadTtsViewModel : ObservableObject
                 var ex = _downloadTaskQwen3TtsModels.Exception?.InnerException ?? _downloadTaskQwen3TtsModels.Exception;
                 if (ex is OperationCanceledException)
                 {
-                    ProgressText = "Download canceled";
+                    ProgressText = Se.Language.General.DownloadCanceled;
                     Close();
                 }
                 else
                 {
-                    ProgressText = "Download failed";
-                    Error = ex?.Message ?? "Unknown error";
+                    ProgressText = Se.Language.General.DownloadFailed;
+                    Error = ex?.Message ?? Se.Language.General.UnknownError;
                 }
             }
 
@@ -454,8 +475,8 @@ public partial class DownloadTtsViewModel : ObservableObject
 
                 if (_downloadStreamKokoroTtsCpp.Length == 0)
                 {
-                    ProgressText = "Download failed";
-                    Error = "No data received";
+                    ProgressText = Se.Language.General.DownloadFailed;
+                    Error = Se.Language.General.NoDataReceived;
                     return;
                 }
 
@@ -469,21 +490,21 @@ public partial class DownloadTtsViewModel : ObservableObject
                 }
                 catch (Exception ex)
                 {
-                    ProgressText = "Unpack failed: " + ex.Message;
+                    ProgressText = string.Format(Se.Language.General.UnpackFailed, ex.Message);
                     Error = ex.Message;
                     Se.LogError(ex);
                     return;
                 }
 
                 var exePath = KokoroTtsCpp.GetExecutableFileName();
-                if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+                if (OperatingSystem.IsLinux())
                 {
                     if (File.Exists(exePath))
                     {
                         LinuxHelper.MakeExecutable(exePath);
                     }
                 }
-                else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+                else if (OperatingSystem.IsMacOS())
                 {
                     if (File.Exists(exePath))
                     {
@@ -501,13 +522,13 @@ public partial class DownloadTtsViewModel : ObservableObject
                 var ex = _downloadTaskKokoroTtsCpp.Exception?.InnerException ?? _downloadTaskKokoroTtsCpp.Exception;
                 if (ex is OperationCanceledException)
                 {
-                    ProgressText = "Download canceled";
+                    ProgressText = Se.Language.General.DownloadCanceled;
                     Close();
                 }
                 else
                 {
-                    ProgressText = "Download failed";
-                    Error = ex?.Message ?? "Unknown error";
+                    ProgressText = Se.Language.General.DownloadFailed;
+                    Error = ex?.Message ?? Se.Language.General.UnknownError;
                 }
             }
 
@@ -523,13 +544,13 @@ public partial class DownloadTtsViewModel : ObservableObject
                 var ex = _downloadTaskKokoroTtsModels.Exception?.InnerException ?? _downloadTaskKokoroTtsModels.Exception;
                 if (ex is OperationCanceledException)
                 {
-                    ProgressText = "Download canceled";
+                    ProgressText = Se.Language.General.DownloadCanceled;
                     Close();
                 }
                 else
                 {
-                    ProgressText = "Download failed";
-                    Error = ex?.Message ?? "Unknown error";
+                    ProgressText = Se.Language.General.DownloadFailed;
+                    Error = ex?.Message ?? Se.Language.General.UnknownError;
                 }
             }
 
@@ -545,13 +566,13 @@ public partial class DownloadTtsViewModel : ObservableObject
                 var ex = _downloadTaskChatterboxModels.Exception?.InnerException ?? _downloadTaskChatterboxModels.Exception;
                 if (ex is OperationCanceledException)
                 {
-                    ProgressText = "Download canceled";
+                    ProgressText = Se.Language.General.DownloadCanceled;
                     Close();
                 }
                 else
                 {
-                    ProgressText = "Download failed";
-                    Error = ex?.Message ?? "Unknown error";
+                    ProgressText = Se.Language.General.DownloadFailed;
+                    Error = ex?.Message ?? Se.Language.General.UnknownError;
                 }
             }
 
@@ -574,7 +595,7 @@ public partial class DownloadTtsViewModel : ObservableObject
                     return;
                 }
 
-                TitleText = "Downloading Qwen3 TTS (CrispASR) voices";
+                TitleText = string.Format(Se.Language.General.DownloadingX, "Qwen3 TTS (CrispASR) voices");
                 ProgressValue = 0;
                 ProgressText = Se.Language.General.StartingDotDotDot;
                 var voicesProgress = new Progress<float>(number =>
@@ -598,13 +619,13 @@ public partial class DownloadTtsViewModel : ObservableObject
                 var ex = _downloadTaskQwen3TtsCrispAsrModels.Exception?.InnerException ?? _downloadTaskQwen3TtsCrispAsrModels.Exception;
                 if (ex is OperationCanceledException)
                 {
-                    ProgressText = "Download canceled";
+                    ProgressText = Se.Language.General.DownloadCanceled;
                     Close();
                 }
                 else
                 {
-                    ProgressText = "Download failed";
-                    Error = ex?.Message ?? "Unknown error";
+                    ProgressText = Se.Language.General.DownloadFailed;
+                    Error = ex?.Message ?? Se.Language.General.UnknownError;
                 }
             }
 
@@ -647,7 +668,7 @@ public partial class DownloadTtsViewModel : ObservableObject
                 _timer.Stop();
                 if (_cancellationTokenSource.IsCancellationRequested)
                 {
-                    ProgressText = "Download canceled";
+                    ProgressText = Se.Language.General.DownloadCanceled;
                     Close();
                     return;
                 }
@@ -680,7 +701,7 @@ public partial class DownloadTtsViewModel : ObservableObject
                     return;
                 }
 
-                TitleText = "Downloading VibeVoice (CrispASR) voices";
+                TitleText = string.Format(Se.Language.General.DownloadingX, "VibeVoice (CrispASR) voices");
                 ProgressValue = 0;
                 ProgressText = Se.Language.General.StartingDotDotDot;
                 var voicesProgress = new Progress<float>(number =>
@@ -700,13 +721,13 @@ public partial class DownloadTtsViewModel : ObservableObject
                 var ex = _downloadTaskVibeVoiceCrispAsrModels.Exception?.InnerException ?? _downloadTaskVibeVoiceCrispAsrModels.Exception;
                 if (ex is OperationCanceledException)
                 {
-                    ProgressText = "Download canceled";
+                    ProgressText = Se.Language.General.DownloadCanceled;
                     Close();
                 }
                 else
                 {
-                    ProgressText = "Download failed";
-                    Error = ex?.Message ?? "Unknown error";
+                    ProgressText = Se.Language.General.DownloadFailed;
+                    Error = ex?.Message ?? Se.Language.General.UnknownError;
                 }
             }
 
@@ -739,7 +760,7 @@ public partial class DownloadTtsViewModel : ObservableObject
                 _timer.Stop();
                 if (_cancellationTokenSource.IsCancellationRequested)
                 {
-                    ProgressText = "Download canceled";
+                    ProgressText = Se.Language.General.DownloadCanceled;
                     Close();
                     return;
                 }
@@ -768,7 +789,7 @@ public partial class DownloadTtsViewModel : ObservableObject
                     return;
                 }
 
-                TitleText = "Downloading IndexTTS (CrispASR) voices";
+                TitleText = string.Format(Se.Language.General.DownloadingX, "IndexTTS (CrispASR) voices");
                 ProgressValue = 0;
                 ProgressText = Se.Language.General.StartingDotDotDot;
                 var voicesProgress = new Progress<float>(number =>
@@ -788,13 +809,13 @@ public partial class DownloadTtsViewModel : ObservableObject
                 var ex = _downloadTaskIndexTtsCrispAsrModels.Exception?.InnerException ?? _downloadTaskIndexTtsCrispAsrModels.Exception;
                 if (ex is OperationCanceledException)
                 {
-                    ProgressText = "Download canceled";
+                    ProgressText = Se.Language.General.DownloadCanceled;
                     Close();
                 }
                 else
                 {
-                    ProgressText = "Download failed";
-                    Error = ex?.Message ?? "Unknown error";
+                    ProgressText = Se.Language.General.DownloadFailed;
+                    Error = ex?.Message ?? Se.Language.General.UnknownError;
                 }
             }
 
@@ -824,7 +845,7 @@ public partial class DownloadTtsViewModel : ObservableObject
                 _timer.Stop();
                 if (_cancellationTokenSource.IsCancellationRequested)
                 {
-                    ProgressText = "Download canceled";
+                    ProgressText = Se.Language.General.DownloadCanceled;
                     Close();
                     return;
                 }
@@ -852,7 +873,7 @@ public partial class DownloadTtsViewModel : ObservableObject
                     return;
                 }
 
-                TitleText = "Downloading Zonos TTS (CrispASR) voices";
+                TitleText = string.Format(Se.Language.General.DownloadingX, "Zonos TTS (CrispASR) voices");
                 ProgressValue = 0;
                 ProgressText = Se.Language.General.StartingDotDotDot;
                 var voicesProgress = new Progress<float>(number =>
@@ -872,13 +893,13 @@ public partial class DownloadTtsViewModel : ObservableObject
                 var ex = _downloadTaskZonosTtsCrispAsrModels.Exception?.InnerException ?? _downloadTaskZonosTtsCrispAsrModels.Exception;
                 if (ex is OperationCanceledException)
                 {
-                    ProgressText = "Download canceled";
+                    ProgressText = Se.Language.General.DownloadCanceled;
                     Close();
                 }
                 else
                 {
-                    ProgressText = "Download failed";
-                    Error = ex?.Message ?? "Unknown error";
+                    ProgressText = Se.Language.General.DownloadFailed;
+                    Error = ex?.Message ?? Se.Language.General.UnknownError;
                 }
             }
 
@@ -908,7 +929,7 @@ public partial class DownloadTtsViewModel : ObservableObject
                 _timer.Stop();
                 if (_cancellationTokenSource.IsCancellationRequested)
                 {
-                    ProgressText = "Download canceled";
+                    ProgressText = Se.Language.General.DownloadCanceled;
                     Close();
                     return;
                 }
@@ -926,6 +947,32 @@ public partial class DownloadTtsViewModel : ObservableObject
             // cloning from user-supplied 16 kHz WAVs. After the model bundle finishes, chain the
             // qwen3-tts.cpp voice pack ZIP so the user has the shared reference WAVs available
             // without a second manual download step. Baked presets work regardless of this step.
+            // OmniVoice (CrispASR) is model-only: the backend ships a usable built-in voice,
+            // so there is no voices ZIP to fetch afterwards the way CosyVoice3/VoxCPM2 need.
+            if (_downloadTaskOmniVoiceCrispAsrModels is { IsCompletedSuccessfully: true })
+            {
+                _timer.Stop();
+                _downloadTaskOmniVoiceCrispAsrModels = null;
+                OkPressed = true;
+                Close();
+                return;
+            }
+            else if (_downloadTaskOmniVoiceCrispAsrModels is { IsFaulted: true })
+            {
+                _timer.Stop();
+                var ex = _downloadTaskOmniVoiceCrispAsrModels.Exception?.InnerException ?? _downloadTaskOmniVoiceCrispAsrModels.Exception;
+                if (ex is OperationCanceledException)
+                {
+                    ProgressText = Se.Language.General.DownloadCanceled;
+                    Close();
+                }
+                else
+                {
+                    ProgressText = Se.Language.General.DownloadFailed;
+                    Error = ex?.Message ?? Se.Language.General.UnknownError;
+                }
+            }
+
             if (_downloadTaskCosyVoice3CrispAsrModels is { IsCompletedSuccessfully: true })
             {
                 _timer.Stop();
@@ -941,7 +988,7 @@ public partial class DownloadTtsViewModel : ObservableObject
                     return;
                 }
 
-                TitleText = "Downloading CosyVoice3 (CrispASR) voices";
+                TitleText = string.Format(Se.Language.General.DownloadingX, "CosyVoice3 (CrispASR) voices");
                 ProgressValue = 0;
                 ProgressText = Se.Language.General.StartingDotDotDot;
                 var voicesProgress = new Progress<float>(number =>
@@ -961,13 +1008,13 @@ public partial class DownloadTtsViewModel : ObservableObject
                 var ex = _downloadTaskCosyVoice3CrispAsrModels.Exception?.InnerException ?? _downloadTaskCosyVoice3CrispAsrModels.Exception;
                 if (ex is OperationCanceledException)
                 {
-                    ProgressText = "Download canceled";
+                    ProgressText = Se.Language.General.DownloadCanceled;
                     Close();
                 }
                 else
                 {
-                    ProgressText = "Download failed";
-                    Error = ex?.Message ?? "Unknown error";
+                    ProgressText = Se.Language.General.DownloadFailed;
+                    Error = ex?.Message ?? Se.Language.General.UnknownError;
                 }
             }
 
@@ -997,7 +1044,7 @@ public partial class DownloadTtsViewModel : ObservableObject
                 _timer.Stop();
                 if (_cancellationTokenSource.IsCancellationRequested)
                 {
-                    ProgressText = "Download canceled";
+                    ProgressText = Se.Language.General.DownloadCanceled;
                     Close();
                     return;
                 }
@@ -1027,7 +1074,7 @@ public partial class DownloadTtsViewModel : ObservableObject
                     return;
                 }
 
-                TitleText = "Downloading F5-TTS (CrispASR) voices";
+                TitleText = string.Format(Se.Language.General.DownloadingX, "F5-TTS (CrispASR) voices");
                 ProgressValue = 0;
                 ProgressText = Se.Language.General.StartingDotDotDot;
                 var voicesProgress = new Progress<float>(number =>
@@ -1047,13 +1094,13 @@ public partial class DownloadTtsViewModel : ObservableObject
                 var ex = _downloadTaskF5TtsCrispAsrModels.Exception?.InnerException ?? _downloadTaskF5TtsCrispAsrModels.Exception;
                 if (ex is OperationCanceledException)
                 {
-                    ProgressText = "Download canceled";
+                    ProgressText = Se.Language.General.DownloadCanceled;
                     Close();
                 }
                 else
                 {
-                    ProgressText = "Download failed";
-                    Error = ex?.Message ?? "Unknown error";
+                    ProgressText = Se.Language.General.DownloadFailed;
+                    Error = ex?.Message ?? Se.Language.General.UnknownError;
                 }
             }
 
@@ -1083,7 +1130,7 @@ public partial class DownloadTtsViewModel : ObservableObject
                 _timer.Stop();
                 if (_cancellationTokenSource.IsCancellationRequested)
                 {
-                    ProgressText = "Download canceled";
+                    ProgressText = Se.Language.General.DownloadCanceled;
                     Close();
                     return;
                 }
@@ -1113,7 +1160,7 @@ public partial class DownloadTtsViewModel : ObservableObject
                     return;
                 }
 
-                TitleText = "Downloading VoxCPM2 (CrispASR) voices";
+                TitleText = string.Format(Se.Language.General.DownloadingX, "VoxCPM2 (CrispASR) voices");
                 ProgressValue = 0;
                 ProgressText = Se.Language.General.StartingDotDotDot;
                 var voicesProgress = new Progress<float>(number =>
@@ -1133,13 +1180,13 @@ public partial class DownloadTtsViewModel : ObservableObject
                 var ex = _downloadTaskVoxCPM2CrispAsrModels.Exception?.InnerException ?? _downloadTaskVoxCPM2CrispAsrModels.Exception;
                 if (ex is OperationCanceledException)
                 {
-                    ProgressText = "Download canceled";
+                    ProgressText = Se.Language.General.DownloadCanceled;
                     Close();
                 }
                 else
                 {
-                    ProgressText = "Download failed";
-                    Error = ex?.Message ?? "Unknown error";
+                    ProgressText = Se.Language.General.DownloadFailed;
+                    Error = ex?.Message ?? Se.Language.General.UnknownError;
                 }
             }
 
@@ -1169,11 +1216,97 @@ public partial class DownloadTtsViewModel : ObservableObject
                 _timer.Stop();
                 if (_cancellationTokenSource.IsCancellationRequested)
                 {
-                    ProgressText = "Download canceled";
+                    ProgressText = Se.Language.General.DownloadCanceled;
                     Close();
                     return;
                 }
                 var ex = _downloadTaskVoxCPM2CrispAsrVoices.Exception?.InnerException ?? _downloadTaskVoxCPM2CrispAsrVoices.Exception;
+                if (ex != null)
+                {
+                    Se.LogError(ex);
+                }
+                OkPressed = true;
+                Close();
+            }
+
+            // MOSS-TTS mirrors VoxCPM2: model first, then a voices ZIP from the shared
+            // qwen3-tts.cpp voice pack (same 24 kHz mono format the cloning backends want).
+            if (_downloadTaskMossTtsCrispAsrModels is { IsCompletedSuccessfully: true })
+            {
+                _timer.Stop();
+                _downloadTaskMossTtsCrispAsrModels = null;
+
+                var voicesFolder = MossTtsCrispAsr.GetSetVoicesFolder();
+                var voicesAlreadyInstalled = Directory.Exists(voicesFolder)
+                    && Directory.EnumerateFiles(voicesFolder, "*.wav").Any();
+                if (voicesAlreadyInstalled)
+                {
+                    OkPressed = true;
+                    Close();
+                    return;
+                }
+
+                TitleText = string.Format(Se.Language.General.DownloadingX, "MOSS-TTS (CrispASR) voices");
+                ProgressValue = 0;
+                ProgressText = Se.Language.General.StartingDotDotDot;
+                var voicesProgress = new Progress<float>(number =>
+                {
+                    var percentage = (int)Math.Round(number * 100.0, MidpointRounding.AwayFromZero);
+                    var pctString = percentage.ToString(CultureInfo.InvariantCulture);
+                    ProgressValue = percentage;
+                    ProgressText = string.Format(Se.Language.General.DownloadingXPercent, pctString);
+                });
+                _downloadTaskMossTtsCrispAsrVoices = _qwen3TtsCppDownloadService.DownloadVoices(
+                    _downloadStreamMossTtsCrispAsrVoices, voicesProgress, _cancellationTokenSource.Token);
+                _timer.Start();
+            }
+            else if (_downloadTaskMossTtsCrispAsrModels is { IsFaulted: true })
+            {
+                _timer.Stop();
+                var ex = _downloadTaskMossTtsCrispAsrModels.Exception?.InnerException ?? _downloadTaskMossTtsCrispAsrModels.Exception;
+                if (ex is OperationCanceledException)
+                {
+                    ProgressText = Se.Language.General.DownloadCanceled;
+                    Close();
+                }
+                else
+                {
+                    ProgressText = Se.Language.General.DownloadFailed;
+                    Error = ex?.Message ?? Se.Language.General.UnknownError;
+                }
+            }
+
+            if (_downloadTaskMossTtsCrispAsrVoices is { IsCompletedSuccessfully: true })
+            {
+                _timer.Stop();
+                if (_downloadStreamMossTtsCrispAsrVoices.Length > 0)
+                {
+                    var voicesFolder = MossTtsCrispAsr.GetSetVoicesFolder();
+                    try
+                    {
+                        _downloadStreamMossTtsCrispAsrVoices.Position = 0;
+                        _zipUnpacker.UnpackZipStream(_downloadStreamMossTtsCrispAsrVoices, voicesFolder, string.Empty, false, new List<string>(), null);
+                        ResampleVoicesTo24kHz(voicesFolder);
+                    }
+                    catch (Exception ex)
+                    {
+                        Se.LogError(ex);
+                    }
+                    _downloadStreamMossTtsCrispAsrVoices.Dispose();
+                }
+                OkPressed = true;
+                Close();
+            }
+            else if (_downloadTaskMossTtsCrispAsrVoices is { IsFaulted: true })
+            {
+                _timer.Stop();
+                if (_cancellationTokenSource.IsCancellationRequested)
+                {
+                    ProgressText = Se.Language.General.DownloadCanceled;
+                    Close();
+                    return;
+                }
+                var ex = _downloadTaskMossTtsCrispAsrVoices.Exception?.InnerException ?? _downloadTaskMossTtsCrispAsrVoices.Exception;
                 if (ex != null)
                 {
                     Se.LogError(ex);
@@ -1188,8 +1321,8 @@ public partial class DownloadTtsViewModel : ObservableObject
 
                 if (_downloadStreamOmniVoice.Length == 0)
                 {
-                    ProgressText = "Download failed";
-                    Error = "No data received";
+                    ProgressText = Se.Language.General.DownloadFailed;
+                    Error = Se.Language.General.NoDataReceived;
                     return;
                 }
 
@@ -1208,7 +1341,7 @@ public partial class DownloadTtsViewModel : ObservableObject
                 }
                 catch (Exception ex)
                 {
-                    ProgressText = "Unpack failed: " + ex.Message;
+                    ProgressText = string.Format(Se.Language.General.UnpackFailed, ex.Message);
                     Error = ex.Message;
                     Se.LogError(ex);
                     return;
@@ -1216,7 +1349,7 @@ public partial class DownloadTtsViewModel : ObservableObject
 
                 var exePath = OmniVoiceTtsCpp.GetExecutableFileName();
                 var codecExePath = OmniVoiceTtsCpp.GetCodecExecutableFileName();
-                if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+                if (OperatingSystem.IsLinux())
                 {
                     if (File.Exists(exePath))
                     {
@@ -1227,7 +1360,7 @@ public partial class DownloadTtsViewModel : ObservableObject
                         LinuxHelper.MakeExecutable(codecExePath);
                     }
                 }
-                else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+                else if (OperatingSystem.IsMacOS())
                 {
                     if (File.Exists(exePath))
                     {
@@ -1252,7 +1385,7 @@ public partial class DownloadTtsViewModel : ObservableObject
                     return;
                 }
 
-                TitleText = "Downloading OmniVoice TTS voices";
+                TitleText = string.Format(Se.Language.General.DownloadingX, "OmniVoice TTS voices");
                 ProgressValue = 0;
                 ProgressText = Se.Language.General.StartingDotDotDot;
                 var voicesProgress = new Progress<float>(number =>
@@ -1272,13 +1405,13 @@ public partial class DownloadTtsViewModel : ObservableObject
                 var ex = _downloadTaskOmniVoice.Exception?.InnerException ?? _downloadTaskOmniVoice.Exception;
                 if (ex is OperationCanceledException)
                 {
-                    ProgressText = "Download canceled";
+                    ProgressText = Se.Language.General.DownloadCanceled;
                     Close();
                 }
                 else
                 {
-                    ProgressText = "Download failed";
-                    Error = ex?.Message ?? "Unknown error";
+                    ProgressText = Se.Language.General.DownloadFailed;
+                    Error = ex?.Message ?? Se.Language.General.UnknownError;
                 }
             }
 
@@ -1312,7 +1445,7 @@ public partial class DownloadTtsViewModel : ObservableObject
                 var ex = _downloadTaskOmniVoices.Exception?.InnerException ?? _downloadTaskOmniVoices.Exception;
                 if (ex is OperationCanceledException)
                 {
-                    ProgressText = "Download canceled";
+                    ProgressText = Se.Language.General.DownloadCanceled;
                     Close();
                     return;
                 }
@@ -1338,13 +1471,13 @@ public partial class DownloadTtsViewModel : ObservableObject
                 var ex = _downloadTaskOmniVoiceModels.Exception?.InnerException ?? _downloadTaskOmniVoiceModels.Exception;
                 if (ex is OperationCanceledException)
                 {
-                    ProgressText = "Download canceled";
+                    ProgressText = Se.Language.General.DownloadCanceled;
                     Close();
                 }
                 else
                 {
-                    ProgressText = "Download failed";
-                    Error = ex?.Message ?? "Unknown error";
+                    ProgressText = Se.Language.General.DownloadFailed;
+                    Error = ex?.Message ?? Se.Language.General.UnknownError;
                 }
             }
         }
@@ -1533,7 +1666,7 @@ public partial class DownloadTtsViewModel : ObservableObject
             }
 
             archiveStream.Position = 0;
-            var hash = DownloadHashManager.ComputeSha256(archiveStream);
+            var hash = Sha256Util.ComputeSha256(archiveStream);
 
             var sidecar = Path.Combine(folder, ".installed.sha256");
             File.WriteAllText(sidecar, key + Environment.NewLine + hash);
@@ -1558,7 +1691,7 @@ public partial class DownloadTtsViewModel : ObservableObject
 
     public void StartDownloadPiper()
     {
-        TitleText = "Downloading Piper";
+        TitleText = string.Format(Se.Language.General.DownloadingX, "Piper");
 
         var downloadProgress = new Progress<float>(number =>
         {
@@ -1574,7 +1707,7 @@ public partial class DownloadTtsViewModel : ObservableObject
 
     public void StartDownloadPiperVoice(PiperVoice piperVoice)
     {
-        TitleText = $"Downloading voice: {piperVoice.Voice}";
+        TitleText = string.Format(Se.Language.General.DownloadingX, $"voice: {piperVoice.Voice}");
 
         var folder = Piper.GetSetPiperFolder();
         _modelFileName = Path.Combine(folder, piperVoice.ModelShort);
@@ -1603,8 +1736,8 @@ public partial class DownloadTtsViewModel : ObservableObject
         _qwen3TtsCppVariant = windowsVariant;
 
         TitleText = Configuration.IsRunningOnWindows
-            ? $"Downloading Qwen3 TTS ({windowsVariant})"
-            : "Downloading Qwen3 TTS";
+            ? string.Format(Se.Language.General.DownloadingX, $"Qwen3 TTS ({windowsVariant})")
+            : string.Format(Se.Language.General.DownloadingX, "Qwen3 TTS");
 
         var downloadProgress = new Progress<float>(number =>
         {
@@ -1621,7 +1754,7 @@ public partial class DownloadTtsViewModel : ObservableObject
     public void StartDownloadQwen3TtsModels(string? modelKey = null)
     {
         var ttsModelFileName = Qwen3TtsCpp.GetModelFileName(Qwen3TtsCpp.ResolveModelKey(modelKey));
-        TitleText = $"Downloading Qwen3 TTS models ({ttsModelFileName})";
+        TitleText = string.Format(Se.Language.General.DownloadingX, $"Qwen3 TTS models ({ttsModelFileName})");
 
         var downloadProgress = new Progress<float>(number =>
         {
@@ -1642,7 +1775,7 @@ public partial class DownloadTtsViewModel : ObservableObject
 
     public void StartDownloadKokoroTtsCpp()
     {
-        TitleText = "Downloading Kokoro TTS";
+        TitleText = string.Format(Se.Language.General.DownloadingX, "Kokoro TTS");
 
         var downloadProgress = new Progress<float>(number =>
         {
@@ -1658,7 +1791,7 @@ public partial class DownloadTtsViewModel : ObservableObject
 
     public void StartDownloadKokoroTtsModels()
     {
-        TitleText = "Downloading Kokoro TTS models (~380 MB)";
+        TitleText = string.Format(Se.Language.General.DownloadingX, "Kokoro TTS models (~380 MB)");
 
         var downloadProgress = new Progress<float>(number =>
         {
@@ -1681,7 +1814,7 @@ public partial class DownloadTtsViewModel : ObservableObject
     {
         var resolved = ChatterboxTtsCppDownloadService.ResolveModelKey(modelKey);
         var sizeText = resolved == ChatterboxTtsCppDownloadService.ModelKeyTurbo ? "~1 GB" : "~990 MB";
-        TitleText = $"Downloading Chatterbox TTS {resolved} models ({sizeText})";
+        TitleText = string.Format(Se.Language.General.DownloadingX, $"Chatterbox TTS {resolved} models ({sizeText})");
 
         var downloadProgress = new Progress<float>(number =>
         {
@@ -1704,7 +1837,7 @@ public partial class DownloadTtsViewModel : ObservableObject
     {
         var resolved = Qwen3TtsCrispAsr.ResolveModelKey(modelKey);
         var talkerFileName = Qwen3TtsCrispAsr.GetTalkerFileName(resolved);
-        TitleText = $"Downloading Qwen3 TTS (CrispASR) models ({resolved}): {talkerFileName}";
+        TitleText = string.Format(Se.Language.General.DownloadingX, $"Qwen3 TTS (CrispASR) models ({resolved}): {talkerFileName}");
 
         var downloadProgress = new Progress<float>(number =>
         {
@@ -1727,7 +1860,7 @@ public partial class DownloadTtsViewModel : ObservableObject
     {
         var resolved = VibeVoiceCrispAsr.ResolveModelKey(modelKey);
         var talkerFileName = VibeVoiceCrispAsr.GetTalkerFileName(resolved);
-        TitleText = $"Downloading VibeVoice (CrispASR) model ({resolved}): {talkerFileName}";
+        TitleText = string.Format(Se.Language.General.DownloadingX, $"VibeVoice (CrispASR) model ({resolved}): {talkerFileName}");
 
         var downloadProgress = new Progress<float>(number =>
         {
@@ -1750,7 +1883,7 @@ public partial class DownloadTtsViewModel : ObservableObject
     {
         var resolved = IndexTtsCrispAsr.ResolveModelKey(modelKey);
         var talkerFileName = IndexTtsCrispAsr.GetTalkerFileName(resolved);
-        TitleText = $"Downloading IndexTTS (CrispASR) models ({resolved}): {talkerFileName}";
+        TitleText = string.Format(Se.Language.General.DownloadingX, $"IndexTTS (CrispASR) models ({resolved}): {talkerFileName}");
 
         var downloadProgress = new Progress<float>(number =>
         {
@@ -1771,7 +1904,7 @@ public partial class DownloadTtsViewModel : ObservableObject
 
     public void StartDownloadZonosTtsCrispAsrModels()
     {
-        TitleText = $"Downloading Zonos TTS (CrispASR) models: {ZonosTtsCrispAsr.TalkerFileName}";
+        TitleText = string.Format(Se.Language.General.DownloadingX, $"Zonos TTS (CrispASR) models: {ZonosTtsCrispAsr.TalkerFileName}");
 
         var downloadProgress = new Progress<float>(number =>
         {
@@ -1794,7 +1927,7 @@ public partial class DownloadTtsViewModel : ObservableObject
     {
         var resolved = CosyVoice3CrispAsr.ResolveModelKey(modelKey);
         var llmFileName = CosyVoice3CrispAsr.GetLlmFileName(resolved);
-        TitleText = $"Downloading CosyVoice3 (CrispASR) model ({resolved}): {llmFileName}";
+        TitleText = string.Format(Se.Language.General.DownloadingX, $"CosyVoice3 (CrispASR) model ({resolved}): {llmFileName}");
 
         var downloadProgress = new Progress<float>(number =>
         {
@@ -1817,7 +1950,7 @@ public partial class DownloadTtsViewModel : ObservableObject
     {
         var resolved = F5TtsCrispAsr.ResolveModelKey(modelKey);
         var talkerFileName = F5TtsCrispAsr.GetTalkerFileName(resolved);
-        TitleText = $"Downloading F5-TTS (CrispASR) model ({resolved}): {talkerFileName}";
+        TitleText = string.Format(Se.Language.General.DownloadingX, $"F5-TTS (CrispASR) model ({resolved}): {talkerFileName}");
 
         var downloadProgress = new Progress<float>(number =>
         {
@@ -1840,7 +1973,7 @@ public partial class DownloadTtsViewModel : ObservableObject
     {
         var resolved = VoxCPM2CrispAsr.ResolveModelKey(modelKey);
         var modelFileName = VoxCPM2CrispAsr.GetModelFileName(resolved);
-        TitleText = $"Downloading VoxCPM2 (CrispASR) model ({resolved}): {modelFileName}";
+        TitleText = string.Format(Se.Language.General.DownloadingX, $"VoxCPM2 (CrispASR) model ({resolved}): {modelFileName}");
 
         var downloadProgress = new Progress<float>(number =>
         {
@@ -1857,6 +1990,52 @@ public partial class DownloadTtsViewModel : ObservableObject
 
         _downloadTaskVoxCPM2CrispAsrModels =
             _voxCPM2CrispAsrDownloadService.DownloadModels(VoxCPM2CrispAsr.GetSetModelsFolder(), resolved, downloadProgress, titleProgress, _cancellationTokenSource.Token);
+    }
+
+    public void StartDownloadOmniVoiceCrispAsrModels(string? modelKey = null)
+    {
+        var resolved = OmniVoiceCrispAsr.ResolveModelKey(modelKey);
+        var modelFileName = OmniVoiceCrispAsr.GetModelFileName(resolved);
+        TitleText = string.Format(Se.Language.General.DownloadingX, $"OmniVoice (CrispASR) model ({resolved}): {modelFileName}");
+
+        var downloadProgress = new Progress<float>(number =>
+        {
+            var percentage = (int)Math.Round(number * 100.0, MidpointRounding.AwayFromZero);
+            var pctString = percentage.ToString(CultureInfo.InvariantCulture);
+            ProgressValue = percentage;
+            ProgressText = string.Format(Se.Language.General.DownloadingXPercent, pctString);
+        });
+
+        var titleProgress = new Action<string>(title =>
+        {
+            Dispatcher.UIThread.Post(() => TitleText = title);
+        });
+
+        _downloadTaskOmniVoiceCrispAsrModels =
+            _omniVoiceCrispAsrDownloadService.DownloadModels(OmniVoiceCrispAsr.GetSetModelsFolder(), resolved, downloadProgress, titleProgress, _cancellationTokenSource.Token);
+    }
+
+    public void StartDownloadMossTtsCrispAsrModels(string? modelKey = null)
+    {
+        var resolved = MossTtsCrispAsr.ResolveModelKey(modelKey);
+        var modelFileName = MossTtsCrispAsr.GetModelFileName(resolved);
+        TitleText = string.Format(Se.Language.General.DownloadingX, $"MOSS-TTS (CrispASR) model ({resolved}): {modelFileName}");
+
+        var downloadProgress = new Progress<float>(number =>
+        {
+            var percentage = (int)Math.Round(number * 100.0, MidpointRounding.AwayFromZero);
+            var pctString = percentage.ToString(CultureInfo.InvariantCulture);
+            ProgressValue = percentage;
+            ProgressText = string.Format(Se.Language.General.DownloadingXPercent, pctString);
+        });
+
+        var titleProgress = new Action<string>(title =>
+        {
+            Dispatcher.UIThread.Post(() => TitleText = title);
+        });
+
+        _downloadTaskMossTtsCrispAsrModels =
+            _mossTtsCrispAsrDownloadService.DownloadModels(MossTtsCrispAsr.GetSetModelsFolder(), resolved, downloadProgress, titleProgress, _cancellationTokenSource.Token);
     }
 
     public void StartDownloadOmniVoice(string windowsVariant = OmniVoiceDownloadService.WindowsVariantVulkan)
@@ -1881,7 +2060,7 @@ public partial class DownloadTtsViewModel : ObservableObject
             variantLabel = "Linux x64 CPU";
         }
 
-        TitleText = $"Downloading OmniVoice TTS ({variantLabel})";
+        TitleText = string.Format(Se.Language.General.DownloadingX, $"OmniVoice TTS ({variantLabel})");
 
         var downloadProgress = new Progress<float>(number =>
         {
@@ -1897,7 +2076,7 @@ public partial class DownloadTtsViewModel : ObservableObject
 
     public void StartDownloadOmniVoiceModels()
     {
-        TitleText = "Downloading OmniVoice TTS models (~1.4 GB)";
+        TitleText = string.Format(Se.Language.General.DownloadingX, "OmniVoice TTS models (~1.4 GB)");
 
         var downloadProgress = new Progress<float>(number =>
         {
@@ -1932,9 +2111,8 @@ public partial class DownloadTtsViewModel : ObservableObject
     internal void OnClosing()
     {
         try { _cancellationTokenSource.Cancel(); } catch (ObjectDisposedException) { }
-        _timer.Stop();
-        _timer.Elapsed -= OnTimerOnElapsed;
-        _timer.Dispose();
+        _isClosing = true;
+        _timer.StopAndDispose(OnTimerOnElapsed);
 
         DisposeQuietly(_downloadStream);
         DisposeQuietly(_downloadStreamModel);

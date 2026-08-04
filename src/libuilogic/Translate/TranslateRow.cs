@@ -1,7 +1,6 @@
 using CommunityToolkit.Mvvm.ComponentModel;
-using System;
 
-namespace Nikse.SubtitleEdit.Features.Translate;
+namespace Nikse.SubtitleEdit.UiLogic.Translate;
 
 public partial class TranslateRow : ObservableObject
 {

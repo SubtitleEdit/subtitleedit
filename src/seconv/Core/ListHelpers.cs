@@ -1,7 +1,7 @@
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
-using Nikse.SubtitleEdit.Logic.LlamaCpp;
 using Spectre.Console;
 using System.Text;
+using Nikse.SubtitleEdit.UiLogic.LlamaCpp;
 
 namespace SeConv.Core;
 
@@ -72,22 +72,40 @@ internal static class ListHelpers
 
     public static void PrintFixCommonErrorsRules()
     {
-        AnsiConsole.MarkupLine("[bold cyan]FixCommonErrors rule IDs (pass via --FixCommonErrorsRules)[/]");
+        AnsiConsole.MarkupLine("[bold cyan]FixCommonErrors rule IDs (pass via --fix-common-errors-rules)[/]");
         AnsiConsole.WriteLine();
         var table = new Table().Border(TableBorder.Rounded);
         table.AddColumn("[yellow]Rule ID[/]");
+        table.AddColumn("[yellow]GUI equivalent[/]");
+        table.AddColumn("[yellow]Language gate[/]");
 
+        var gates = FixCommonErrorsRunner.LanguageGates;
+        var guiLabels = FixCommonErrorsRunner.GuiLabels;
         foreach (var id in FixCommonErrorsRunner.AvailableRuleIds)
         {
-            table.AddRow($"[green]{id}[/]");
+            // GUI equivalent: the checkbox label the desktop Fix Common Errors window shows for
+            // this rule, so users who prototyped in the GUI can find the matching CLI ID (#11037).
+            var gui = guiLabels.TryGetValue(id, out var label) ? $"[cyan]{label.EscapeMarkup()}[/]" : "[dim]—[/]";
+
+            // Language-gated rules only run when the subtitle's language (auto-detected, or
+            // forced via --fce-language) matches. Mark them so the gate is discoverable from
+            // the CLI without reading the source.
+            var gate = gates.TryGetValue(id, out var lang) ? $"[magenta]{lang} only[/]" : "[dim]—[/]";
+            table.AddRow($"[green]{id}[/]", gui, gate);
         }
 
         AnsiConsole.Write(table);
         AnsiConsole.MarkupLine(
+            "\n[dim]The GUI equivalent is the checkbox label in the desktop Fix Common Errors window.[/]\n" +
+            "[dim]Language-gated rules run only when the language matches — auto-detected, or forced with[/] " +
+            "[green]--fce-language:<code>[/][dim]. Naming a gated rule selects it but does not bypass the gate.[/]");
+        AnsiConsole.MarkupLine(
             "\n[dim]Examples:[/]\n" +
-            "  [dim]--FixCommonErrors[/]                                       [dim]# all rules[/]\n" +
-            "  [dim]--FixCommonErrorsRules:FixCommas,FixEllipsesStart[/]       [dim]# only these two[/]\n" +
-            "  [dim]--FixCommonErrorsRules:all,-FixDanishLetterI[/]            [dim]# all except one[/]");
+            "  [dim]--fix-common-errors[/]                                          [dim]# all rules (gates active)[/]\n" +
+            "  [dim]--fix-common-errors-rules:FixCommas,FixEllipsesStart[/]         [dim]# only these two[/]\n" +
+            "  [dim]--fix-common-errors-rules:all,-FixDanishLetterI[/]              [dim]# all except one[/]\n" +
+            "  [dim]--fix-common-errors --fce-language:es[/]                        [dim]# force Spanish gate[/]\n" +
+            "  [dim]--fix-common-errors-rules:FixSpanishInvertedQuestionAndExclamationMarks --fce-language:es[/]  [dim]# force a named gated rule[/]");
     }
 
     public static void PrintOcrEngines()

@@ -10,7 +10,7 @@ public class ChangeFrameRateWindow : Window
     public ChangeFrameRateWindow(ChangeFrameRateViewModel vm)
     {
         UiUtil.InitializeWindow(this, GetType().Name);
-        Title = Se.Language.Sync.ChangeFrameRate;
+        Title = Se.Language.General.ChangeFrameRate;
         SizeToContent = SizeToContent.WidthAndHeight;
         CanResize = false;
         vm.Window = this;
@@ -30,9 +30,10 @@ public class ChangeFrameRateWindow : Window
         .WithBindItemsSource(nameof(vm.FromFrameRates))
         .WithBindSelected(nameof(vm.SelectedFromFrameRate));
 
-        var buttonFromFrameRate = UiUtil.MakeButtonBrowse(vm.BrowseFromFrameRateCommand);
+        var buttonFromFrameRate = UiUtil.MakeButtonBrowse(vm.BrowseFromFrameRateCommand, accessibleName: Se.Language.Sync.FromFrameRate);
 
-        var buttonSwitch = UiUtil.MakeButton(vm.SwitchFrameRatesCommand, IconNames.SwapVertical);
+        var buttonSwitch = UiUtil.MakeButton(vm.SwitchFrameRatesCommand, IconNames.SwapVertical,
+            $"{Se.Language.Sync.FromFrameRate} <-> {Se.Language.Sync.ToFrameRate}");
 
         var labelToFrameRate = new Label
         {
@@ -48,7 +49,7 @@ public class ChangeFrameRateWindow : Window
         .WithBindItemsSource(nameof(vm.ToFrameRates))
         .WithBindSelected(nameof(vm.SelectedToFrameRate));
 
-        var buttonToFrameRate = UiUtil.MakeButtonBrowse(vm.BrowseToFrameRateCommand);
+        var buttonToFrameRate = UiUtil.MakeButtonBrowse(vm.BrowseToFrameRateCommand, accessibleName: Se.Language.Sync.ToFrameRate);
 
         var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand);
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
@@ -92,7 +93,7 @@ public class ChangeFrameRateWindow : Window
 
         Content = grid;
         
-        Activated += delegate { buttonOk.Focus(); }; // hack to make OnKeyDown work
+        Activated += delegate { comboFromFrameRate.Focus(); }; // initial focus on an input, not an action button - a focused button clicks on bare Space
         Loaded += (_, _) => UiUtil.RestoreWindowPosition(this);
         Closing += (_, _) => UiUtil.SaveWindowPosition(this);
         KeyDown += (_, e) => vm.OnKeyDown(e);

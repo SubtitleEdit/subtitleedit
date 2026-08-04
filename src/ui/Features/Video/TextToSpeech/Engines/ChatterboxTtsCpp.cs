@@ -4,6 +4,7 @@ using Nikse.SubtitleEdit.Features.Video.TextToSpeech.Voices;
 using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Logic.Download;
 using Nikse.SubtitleEdit.Logic.Media;
+using Nikse.SubtitleEdit.UiLogic;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -11,7 +12,6 @@ using System.IO;
 using System.Net;
 using System.Net.Http;
 using System.Net.Sockets;
-using System.Runtime.InteropServices;
 using System.Text;
 using System.Text.Json;
 using System.Threading;
@@ -128,7 +128,7 @@ public class ChatterboxTtsCpp : ITtsEngine
         }
 
         var folder = Path.GetDirectoryName(exe);
-        var variant = RuntimeInformation.IsOSPlatform(OSPlatform.Windows) && folder != null
+        var variant = OperatingSystem.IsWindows() && folder != null
             ? DownloadHashManager.DetectCrispAsrWindowsVariant(folder)
             : null;
         var key = DownloadHashManager.ResolveCrispAsrExecutableKey(variant);
@@ -137,7 +137,7 @@ public class ChatterboxTtsCpp : ITtsEngine
             return true;
         }
 
-        var hash = DownloadHashManager.ComputeSha256(exe);
+        var hash = Sha256Util.ComputeSha256(exe);
         if (hash == null)
         {
             return true;
@@ -307,34 +307,7 @@ public class ChatterboxTtsCpp : ITtsEngine
         var outputFileName = Path.Combine(GetSetFolder(), Guid.NewGuid() + ".wav");
         var inputText = text;
 
-        // Send the bare file name as the `voice` field, not the path: the crispasr server rejects
-        // anything with a path separator ("'voice' must not contain '..', a leading '/' or '~', or
-        // path separators" - HTTP 400 invalid_voice), which used to fail every imported voice.
-        // The chatterbox backend then opens that name relative to its working directory, which is
-        // why the server is started in the voices folder (see EnsureServerRunningAsync). The name
-        // must keep its .wav extension - the backend does not append one.
-        // Empty string falls back to the model's baked default voice.
-        var payload = new Dictionary<string, object>
-        {
-            ["input"] = inputText,
-            ["response_format"] = "wav",
-        };
-        if (!string.IsNullOrEmpty(chatterboxVoice.FilePath))
-        {
-            payload["voice"] = Path.GetFileName(chatterboxVoice.FilePath);
-
-            // Chatterbox gates voice cloning behind a consent attestation (CrispASR
-            // returns HTTP 400 consent_required without it). The user supplies their
-            // own reference voice by importing a WAV into SE, which is the act being
-            // attested here. The baked default voice is not cloning, so no attestation
-            // is sent for it.
-            payload["consent_attestation"] = "I have the speaker's consent, or it is my own voice.";
-
-            // Skip the audible AI-disclosure prefix CrispASR otherwise prepends to cloned
-            // audio; SE surfaces the AI-generated nature in its UI. The inaudible watermark
-            // + C2PA provenance metadata stay embedded regardless (defaults to true server-side).
-            payload["spoken_disclaimer"] = false;
-        }
+        var payload = BuildSpeakPayload(inputText, chatterboxVoice.FilePath);
 
         var body = JsonSerializer.Serialize(payload);
         using var content = new StringContent(body, Encoding.UTF8, "application/json");
@@ -402,6 +375,38 @@ public class ChatterboxTtsCpp : ITtsEngine
         }
 
         return new TtsResult(outputFileName, text);
+    }
+
+    /// <summary>
+    /// Builds the <c>/v1/audio/speech</c> JSON payload. Extracted so the cloning attestations are
+    /// unit-testable without a running crispasr server.
+    /// </summary>
+    /// <remarks>
+    /// Sends the bare file name as the <c>voice</c> field, not the path: the crispasr server
+    /// rejects anything with a path separator ("'voice' must not contain '..', a leading '/' or
+    /// '~', or path separators" — HTTP 400 invalid_voice), which used to fail every imported voice.
+    /// The chatterbox backend then opens that name relative to its working directory, which is why
+    /// the server is started in the voices folder (see <see cref="EnsureServerRunningAsync"/>). The
+    /// name must keep its <c>.wav</c> extension — the backend does not append one, and it is also
+    /// the exact test the server uses to decide a request is voice cloning, which makes Chatterbox
+    /// the one SE engine that hard-requires the attestations. An empty path falls back to the
+    /// model's baked default voice, which is not cloning and needs no attestation.
+    /// </remarks>
+    internal static Dictionary<string, object> BuildSpeakPayload(string inputText, string? voiceFilePath)
+    {
+        var payload = new Dictionary<string, object>
+        {
+            ["input"] = inputText,
+            ["response_format"] = "wav",
+        };
+
+        if (!string.IsNullOrEmpty(voiceFilePath))
+        {
+            payload["voice"] = Path.GetFileName(voiceFilePath);
+            CrispAsrTtsProvenance.AddSpeechAttestations(payload);
+        }
+
+        return payload;
     }
 
     /// <summary>
@@ -506,6 +511,7 @@ public class ChatterboxTtsCpp : ITtsEngine
             // that is what the working directory above is for.
             psi.ArgumentList.Add("--voice-dir");
             psi.ArgumentList.Add(GetSetVoicesFolder());
+            CrispAsrTtsProvenance.AddServerMarkingArgs(psi.ArgumentList, exe);
 
             var process = Process.Start(psi)
                 ?? throw new InvalidOperationException("Failed to start crispasr (chatterbox)");

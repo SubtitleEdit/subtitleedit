@@ -4,7 +4,6 @@ public class LanguageAiReview
 {
     public string Title { get; set; }
     public string Review { get; set; }
-    public string Stop { get; set; }
     public string EditPrompt { get; set; }
     public string EditPromptTitle { get; set; }
     public string PromptInfo { get; set; }
@@ -15,7 +14,6 @@ public class LanguageAiReview
     public string ReviewingLineXOfY { get; set; }
     public string ReviewDone { get; set; }
     public string NoIssuesFound { get; set; }
-    public string CategoryAll { get; set; }
     public string CategorySpelling { get; set; }
     public string CategoryGrammar { get; set; }
     public string CategoryPunctuation { get; set; }
@@ -26,13 +24,11 @@ public class LanguageAiReview
     public string LinesXToY { get; set; }
     public string LargeChangeWarning { get; set; }
     public string EngineError { get; set; }
-    public string SetupHint { get; set; }
 
     public LanguageAiReview()
     {
         Title = "AI review";
         Review = "Review";
-        Stop = "Stop";
         EditPrompt = "Edit prompt...";
         EditPromptTitle = "Edit review prompt";
         PromptInfo = "Instructions sent to the model - {language} is replaced with the subtitle language.";
@@ -43,7 +39,6 @@ public class LanguageAiReview
         ReviewingLineXOfY = "Reviewing line {0} of {1}...";
         ReviewDone = "Review done - {0} suggestions in {1} lines";
         NoIssuesFound = "No issues found";
-        CategoryAll = "All";
         CategorySpelling = "Spelling";
         CategoryGrammar = "Grammar";
         CategoryPunctuation = "Punctuation";
@@ -54,6 +49,5 @@ public class LanguageAiReview
         LinesXToY = "Lines {0}-{1}";
         LargeChangeWarning = "Large change - looks like a rewrite, review carefully";
         EngineError = "The AI engine could not be reached: {0}";
-        SetupHint = "Please choose an engine and model in Tools -> AI review first.";
     }
 }

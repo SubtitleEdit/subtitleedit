@@ -37,12 +37,27 @@ internal static class ContainerSubtitleLoader
 
         if (ext is ".mp4" or ".m4v" or ".m4s" or ".3gp")
         {
-            // Old converter applied a 10 KB minimum. Below that, fall through to text loader.
             try
             {
-                if (new FileInfo(filePath).Length > 10_000)
+                var fileLength = new FileInfo(filePath).Length;
+                if (fileLength > 10_000)
                 {
                     return LoadMp4(filePath, options);
+                }
+
+                // Subtitle-only DASH/CMAF files (an init segment plus a few m4s fragments)
+                // are typically just a few KB. Try the MP4 parser, but on failure fall
+                // through to the text loader as the old 10 KB minimum did.
+                if (fileLength > 100)
+                {
+                    try
+                    {
+                        return LoadMp4(filePath, options);
+                    }
+                    catch (InvalidOperationException)
+                    {
+                        // No tracks found; let the text loader try.
+                    }
                 }
             }
             catch
@@ -84,6 +99,22 @@ internal static class ContainerSubtitleLoader
             }
 
             return null;
+        }
+
+        if (ext == ".idx")
+        {
+            // 5.0.0 accepted the .idx of a VobSub pair as the input file; keep that working
+            // by redirecting to the companion .sub (which holds the actual subpictures) and
+            // using the given .idx for timing + palette (issue #12772).
+            var subPath = Path.ChangeExtension(filePath, ".sub");
+            if (!File.Exists(subPath))
+            {
+                throw new InvalidOperationException(
+                    $"VobSub '.idx' input has no companion '.sub' ({Path.GetFileName(subPath)}) — "
+                    + "the .idx only holds timing and palette; the subtitle images live in the .sub.");
+            }
+
+            return LoadVobSub(subPath, filePath, options);
         }
 
         if (ext is ".ts" or ".m2ts" or ".mts")
@@ -274,7 +305,10 @@ internal static class ContainerSubtitleLoader
             }
             subtitle.Renumber();
 
+            // Same fallback as the MP4 VTTC path: an MKV track without a declared language
+            // gets auto-detected instead of an empty language.
             var lang = SanitizeLang(track.Language);
+            lang = IsUndeclaredLanguage(lang) ? LanguageAutoDetect.AutoDetectGoogleLanguageOrNull(subtitle) ?? lang : lang;
             tracks.Add(new LoadedTrack(subtitle, format, lang, track.TrackNumber));
         }
 
@@ -286,28 +320,34 @@ internal static class ContainerSubtitleLoader
         var tracks = new List<LoadedTrack>();
         var parser = new MP4Parser(filePath);
 
-        // VTTC sidecar track (some MP4s embed WebVTT cues alongside text tracks)
-        if (parser.VttcSubtitle is { } vttc && vttc.Paragraphs.Count > 0)
+        // Fragmented (DASH/CMAF) text tracks - cues extracted from moof/traf/trun samples
+        foreach (var fragmentedTrack in parser.FragmentedSubtitleTracks)
         {
-            vttc.Renumber();
-            var lang = SanitizeLang(parser.VttcLanguage)
-                ?? LanguageAutoDetect.AutoDetectGoogleLanguageOrNull(vttc)
-                ?? string.Empty;
-            tracks.Add(new LoadedTrack(vttc, new SubRip(), lang, null));
+            var trackNumber = (int?)fragmentedTrack.TrackId;
+            if (trackNumber != null && options.TrackNumbers.Count > 0 && !options.TrackNumbers.Contains(trackNumber.Value))
+            {
+                continue;
+            }
+
+            var fragmentedSubtitle = fragmentedTrack.Subtitle;
+            fragmentedSubtitle.Renumber();
+            var fragmentedLang = SanitizeLang(fragmentedTrack.Language);
+            fragmentedLang = IsUndeclaredLanguage(fragmentedLang) ? LanguageAutoDetect.AutoDetectGoogleLanguageOrNull(fragmentedSubtitle) ?? fragmentedLang : fragmentedLang;
+            tracks.Add(new LoadedTrack(fragmentedSubtitle, new SubRip(), fragmentedLang, trackNumber));
         }
 
-        foreach (var trak in parser.GetSubtitleTracks())
+        foreach (var track in parser.GetSubtitleTracks())
         {
-            var trackId = (int)trak.Tkhd.TrackId;
+            var trackId = (int)track.Tkhd.TrackId;
             if (options.TrackNumbers.Count > 0 && !options.TrackNumbers.Contains(trackId))
             {
                 continue;
             }
-            if (trak.Mdia.IsVobSubSubtitle)
+            if (track.Mdia.IsVobSubSubtitle)
             {
                 try
                 {
-                    var vobSub = ImageOcrLoader.LoadMp4VobSub(trak, options);
+                    var vobSub = ImageOcrLoader.LoadMp4VobSub(track, options);
                     if (vobSub.Paragraphs.Count > 0)
                     {
                         var vobLang = LanguageAutoDetect.AutoDetectGoogleLanguageOrNull(vobSub) ?? string.Empty;
@@ -321,7 +361,7 @@ internal static class ContainerSubtitleLoader
                 continue;
             }
 
-            var paragraphs = trak.Mdia.Minf.Stbl.GetParagraphs();
+            var paragraphs = track.Mdia.Minf.Stbl.GetParagraphs();
             if (paragraphs.Count == 0)
             {
                 continue;
@@ -401,6 +441,32 @@ internal static class ContainerSubtitleLoader
                     tracks.Add(new LoadedTrack(subtitle, new SubRip(), $"teletext_{pidEntry.Key}_p{pageEntry.Key}", pidEntry.Key));
                 }
             }
+
+            // ARIB STD-B24 captions (ISDB broadcasts) — also text
+            foreach (var pidEntry in parser.AribSubtitlesLookup)
+            {
+                foreach (var languageEntry in pidEntry.Value)
+                {
+                    if (languageEntry.Value.Count == 0)
+                    {
+                        continue;
+                    }
+
+                    var languageCode = string.Empty;
+                    if (parser.AribLanguageLookup.TryGetValue(pidEntry.Key, out var languageCodes))
+                    {
+                        languageCodes.TryGetValue(languageEntry.Key, out languageCode);
+                    }
+
+                    var subtitle = new Subtitle();
+                    subtitle.Paragraphs.AddRange(languageEntry.Value);
+                    subtitle.Renumber();
+                    var trackName = string.IsNullOrEmpty(languageCode)
+                        ? $"arib_{pidEntry.Key}"
+                        : $"arib_{pidEntry.Key}_{languageCode}";
+                    tracks.Add(new LoadedTrack(subtitle, new SubRip(), trackName, pidEntry.Key));
+                }
+            }
         }
 
         // 2. DVB-sub (image) — runs through Tesseract
@@ -433,6 +499,14 @@ internal static class ContainerSubtitleLoader
     /// problematic in filenames on Windows. Note: "und" (ISO 639 "undetermined") is
     /// kept, so MKV tracks tagged as such still get a distinct suffix.
     /// </summary>
+    /// <summary>
+    /// True when a sanitized track language carries no usable information: empty, or the
+    /// ISO 639-2 "und" (undetermined) code that muxers like ffmpeg write when no language
+    /// was declared.
+    /// </summary>
+    internal static bool IsUndeclaredLanguage(string? lang) =>
+        string.IsNullOrEmpty(lang) || lang.Equals("und", StringComparison.OrdinalIgnoreCase);
+
     internal static string SanitizeLang(string? lang)
     {
         if (string.IsNullOrWhiteSpace(lang))

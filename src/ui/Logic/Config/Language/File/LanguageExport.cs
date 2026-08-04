@@ -5,13 +5,22 @@ public class LanguageExport
     public string ExportImagesProfiles { get; set; }
     public string LeftRightMargin { get;  set; }
     public string TopBottomMargin { get; set; }
-    public string TitleExportBluRaySup { get;    set; }
     public string LineSpacingPercent { get;  set; }
     public string PaddingLeftRight { get; set; }
     public string PaddingTopBottom { get; set; }
     public string PreviewTitle { get; set; }
     public string TitleExportDvdSup { get; set; }
     public string TitleExportVobSub { get; set; }
+    public string TitleExportImscImage { get; set; }
+    public string TitleExportDostPng { get; set; }
+    public string TitleExportFcpImage { get; set; }
+    public string TitleExportWebVttThumbnails { get; set; }
+    public string TitleExportCavena890 { get; set; }
+    public string ExportCavenaTranslatedTitle { get; set; }
+    public string ExportCavenaOriginalTitle { get; set; }
+    public string ExportCavenaTranslator { get; set; }
+    public string ExportCavenaComment { get; set; }
+    public string ExportCavenaStartOfProgramme { get; set; }
     public string CustomTextFormatsDotDotDot { get; set; }
     public string PlainTextDotDotDot { get; set; }
     public string CustomTextFormats { get; set; }
@@ -32,23 +41,28 @@ public class LanguageExport
     public string TitleExportDCinemaInteropPng { get; set; }
     public string TitleExportDCinemaSmpte2014Png { get; set; }
     public string ImageBasedSubtitleSaved { get; set; }
-    public string TitleExportBdnXml { get; set; }
-    public string TitleExportWebVttThumbnails { get; set; }
 
     public LanguageExport()
     {
         ExportImagesProfiles = "Export images profiles";
         LeftRightMargin = "Left/right margin";
         TopBottomMargin = "Top/bottom margin";
-        TitleExportBluRaySup = "Export Blu-ray (sup)";
-        TitleExportBdnXml = "Export BDN/xml";
-        TitleExportWebVttThumbnails = "Export WebVTT (thumbnails)";
         LineSpacingPercent = "Line spacing %";
         PaddingLeftRight = "Padding left/right";
         PaddingTopBottom = "Padding top/bottom";
         PreviewTitle = "Preview - current size: {0}x{1}, target size: {2}x{3}, zoom: {4}%";
         TitleExportDvdSup = "DVD sup (MuxMan/Scenarist)";
         TitleExportVobSub = "VobSub (sub/idx)";
+        TitleExportImscImage = "IMSC 1.1 image profile";
+        TitleExportDostPng = "DOST/png";
+        TitleExportFcpImage = "Final Cut Pro + image";
+        TitleExportWebVttThumbnails = "WebVTT png";
+        TitleExportCavena890 = "Export Cavena 890";
+        ExportCavenaTranslatedTitle = "Translated title";
+        ExportCavenaOriginalTitle = "Original title";
+        ExportCavenaTranslator = "Translator";
+        ExportCavenaComment = "Comment";
+        ExportCavenaStartOfProgramme = "Start of programme";
         CustomTextFormatsDotDotDot = "_Custom text formats...";
         PlainTextDotDotDot = "_Plain text...";
         CustomTextFormats = "Custom text formats";

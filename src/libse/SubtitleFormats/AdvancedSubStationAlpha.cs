@@ -10,11 +10,23 @@ using System.Xml;
 
 namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 {
-    public class AdvancedSubStationAlpha : SubtitleFormat
+    public partial class AdvancedSubStationAlpha : SubtitleFormat
     {
+#if NET7_0_OR_GREATER
+        [GeneratedRegex(@"\\p[123456789]")]
+        private static partial Regex RegexDrawStartGen();
+        private static readonly Regex RegexDrawStart = RegexDrawStartGen();
+#else
         private static readonly Regex RegexDrawStart = new Regex(@"\\p[123456789]", RegexOptions.Compiled);
+#endif
 
+#if NET7_0_OR_GREATER
+        [GeneratedRegex("ScriptType: *v4.00")]
+        private static partial Regex ScriptTypeFinderGen();
+        private static readonly Regex ScriptTypeFinder = ScriptTypeFinderGen();
+#else
         private static readonly Regex ScriptTypeFinder = new Regex("ScriptType: *v4.00", RegexOptions.Compiled);
+#endif
         public string Errors { get; private set; }
 
         public static string DefaultStyle
@@ -131,10 +143,6 @@ $@"
 [Events]
 Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text";
 
-            const string timeCodeFormat = "{0}:{1:00}:{2:00}.{3:00}"; // h:mm:ss.cc
-            const string paragraphWriteFormat = "Dialogue: {9},{0},{1},{3},{4},{5},{6},{7},{8},{2}";
-            const string commentWriteFormat = "Comment: {9},{0},{1},{3},{4},{5},{6},{7},{8},{2}";
-
             var sb = new StringBuilder();
             var isValidAssHeader = !string.IsNullOrEmpty(subtitle.Header) && subtitle.Header.Contains("[V4+ Styles]");
             var styles = new List<string>();
@@ -196,16 +204,20 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text"
                 styles = GetStylesFromHeader(header);
             }
 
+            // List.Contains is a linear scan and runs up to three times per paragraph below;
+            // styled files routinely carry hundreds of styles, so probe a set instead. The
+            // default string comparer matches List.Contains' ordinal equality and is null-safe
+            // (p.Extra can be null on the second probe).
+            var styleSet = new HashSet<string>(styles);
+            var hasDefaultStyle = styleSet.Contains("Default");
             foreach (var p in subtitle.Paragraphs)
             {
-                var start = MakeTimeCode(timeCodeFormat, p.StartTime);
-                var end = MakeTimeCode(timeCodeFormat, p.EndTime);
                 var style = "Default";
-                if (!string.IsNullOrEmpty(p.Extra) && isValidAssHeader && styles.Contains(p.Extra))
+                if (!string.IsNullOrEmpty(p.Extra) && isValidAssHeader && styleSet.Contains(p.Extra))
                 {
                     style = p.Extra;
                 }
-                else if (styles.Count > 0 && !styles.Contains(style) && styles.Contains(p.Extra))
+                else if (styles.Count > 0 && !hasDefaultStyle && styleSet.Contains(p.Extra))
                 {
                     style = p.Extra;
                 }
@@ -214,7 +226,7 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text"
                     style = styles[0];
                 }
 
-                if (fromTtml && !string.IsNullOrEmpty(p.Style) && isValidAssHeader && styles.Contains(p.Style))
+                if (fromTtml && !string.IsNullOrEmpty(p.Style) && isValidAssHeader && styleSet.Contains(p.Style))
                 {
                     style = p.Style;
                 }
@@ -250,14 +262,20 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text"
                 }
 
                 var text = p.Text.Replace(Environment.NewLine, "\\N");
-                if (p.IsComment)
-                {
-                    sb.AppendFormat(commentWriteFormat, start, end, FormatText(text), style, actor, marginL, marginR, marginV, effect, p.Layer).AppendLine();
-                }
-                else
-                {
-                    sb.AppendFormat(paragraphWriteFormat, start, end, FormatText(text), style, actor, marginL, marginR, marginV, effect, p.Layer).AppendLine();
-                }
+                // Layout: "(Dialogue|Comment): {layer},{start},{end},{style},{actor},{marginL},{marginR},{marginV},{effect},{text}".
+                // Appending directly skips AppendFormat's per-call format parsing, the object[10]
+                // and the boxed layer, plus the two intermediate time-code strings.
+                sb.Append(p.IsComment ? "Comment: " : "Dialogue: ");
+                sb.Append(p.Layer).Append(',');
+                AppendTimeCode(sb, p.StartTime).Append(',');
+                AppendTimeCode(sb, p.EndTime).Append(',');
+                sb.Append(style).Append(',');
+                sb.Append(actor).Append(',');
+                sb.Append(marginL).Append(',');
+                sb.Append(marginR).Append(',');
+                sb.Append(marginV).Append(',');
+                sb.Append(effect).Append(',');
+                sb.Append(FormatText(text)).AppendLine();
             }
 
             if (!string.IsNullOrEmpty(subtitle.Footer) &&
@@ -267,20 +285,51 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text"
                 sb.AppendLine(subtitle.Footer);
             }
 
-            return sb.ToString().Trim() + Environment.NewLine;
+            // Trim inside the builder instead of "sb.ToString().Trim() + newline", which
+            // allocated the whole multi-megabyte output twice more.
+            TrimBuilder(sb);
+            return sb.Append(Environment.NewLine).ToString();
         }
 
-        private static string MakeTimeCode(string timeCodeFormat, TimeCode timeCode)
+        // Writes "h:mm:ss.cc". Replaces string.Format over a TimeCode whose Hours/Minutes/
+        // Seconds getters each re-ran the TimeSpan conversion (~7 conversions and 4 boxes per
+        // call, twice per paragraph on save).
+        private static StringBuilder AppendTimeCode(StringBuilder sb, TimeCode timeCode)
         {
-            var tc = new TimeCode(timeCode.Hours, timeCode.Minutes, timeCode.Seconds, timeCode.Milliseconds);
-            var fragment = (int)Math.Round(timeCode.Milliseconds / 10.0, MidpointRounding.AwayFromZero);
+            var ts = timeCode.TimeSpan;
+            var fragment = (int)Math.Round(ts.Milliseconds / 10.0, MidpointRounding.AwayFromZero);
             if (fragment >= 100)
             {
-                tc = new TimeCode(tc.Hours, tc.Minutes, tc.Seconds + 1, 0);
+                ts = new TimeSpan(ts.Days, ts.Hours, ts.Minutes, ts.Seconds, 0).Add(TimeSpan.FromSeconds(1));
                 fragment = 0;
             }
 
-            return string.Format(timeCodeFormat, tc.Hours, tc.Minutes, tc.Seconds, fragment);
+            AppendNumber(sb, ts.Days * 24 + ts.Hours, 1);
+            sb.Append(':');
+            AppendNumber(sb, ts.Minutes, 2);
+            sb.Append(':');
+            AppendNumber(sb, ts.Seconds, 2);
+            sb.Append('.');
+            AppendNumber(sb, fragment, 2);
+            return sb;
+        }
+
+        // Matches "{0:00}"-style formatting: sign first, then the absolute value padded with
+        // leading zeros to minDigits.
+        private static void AppendNumber(StringBuilder sb, int value, int minDigits)
+        {
+            if (value < 0)
+            {
+                sb.Append('-');
+                value = -value;
+            }
+
+            if (minDigits >= 2 && value < 10)
+            {
+                sb.Append('0');
+            }
+
+            sb.Append(value);
         }
 
         public static string GetHeaderAndStylesFromSubStationAlpha(string header)
@@ -1086,16 +1135,19 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text"
             return text;
         }
 
+        private static readonly char[] QuoteChars = { '"', '\'' };
+        private static readonly char[] SpaceOrGreaterThan = { ' ', '>' };
+
         private static string FormatTag(ref string text, int start, string fontTag, string tag, string ssaTagName, string endSsaTag)
         {
             if (fontTag.Contains(tag))
             {
                 var fontStart = fontTag.IndexOf(tag, StringComparison.Ordinal);
 
-                var fontEnd = fontTag.IndexOfAny(new[] { '"', '\'' }, fontStart + tag.Length);
+                var fontEnd = fontTag.IndexOfAny(QuoteChars, fontStart + tag.Length);
                 if (fontEnd < 0)
                 {
-                    fontEnd = fontTag.IndexOfAny(new[] { ' ', '>' }, fontStart + tag.Length);
+                    fontEnd = fontTag.IndexOfAny(SpaceOrGreaterThan, fontStart + tag.Length);
                 }
 
                 if (fontEnd > 0)
@@ -1125,19 +1177,28 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text"
             {
                 for (var i = 0; i < 10; i++) // just look ten times...
                 {
+                    // Each pattern check below is a single IndexOf (the old Contains-then-IndexOf
+                    // did every scan twice), and an iteration that changes nothing breaks out -
+                    // this runs per dialogue line on ASSA/SSA load, and a plain line used to pay
+                    // all ten iterations' scans for nothing.
+                    var changed = false;
+
                     bool italic;
-                    if (text.Contains(@"{\i1\"))
+                    var italicStart = text.IndexOf(@"{\i1\", StringComparison.Ordinal);
+                    if (italicStart >= 0)
                     {
-                        var start = text.IndexOf(@"{\i1\", StringComparison.Ordinal);
-                        text = text.Remove(start, 4).Insert(start, "<i>{");
+                        text = text.Remove(italicStart, 4).Insert(italicStart, "<i>{");
+                        changed = true;
                     }
 
-                    if (text.Contains(@"{\fn"))
+                    var fontNameStart = text.IndexOf(@"{\fn", StringComparison.Ordinal);
+                    if (fontNameStart >= 0)
                     {
-                        var start = text.IndexOf(@"{\fn", StringComparison.Ordinal);
+                        var start = fontNameStart;
                         var end = text.IndexOf('}', start);
                         if (end > 0 && !text.Substring(start).StartsWith("{\\fn}", StringComparison.Ordinal))
                         {
+                            changed = true;
                             var fontName = text.Substring(start + 4, end - (start + 4));
                             var extraTags = string.Empty;
                             CheckAndAddSubTags(ref fontName, ref extraTags, out var unknownTags, out italic);
@@ -1176,9 +1237,10 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text"
                         }
                     }
 
-                    if (text.Contains(@"{\fs"))
+                    var fontSizeStart = text.IndexOf(@"{\fs", StringComparison.Ordinal);
+                    if (fontSizeStart >= 0)
                     {
-                        var start = text.IndexOf(@"{\fs", StringComparison.Ordinal);
+                        var start = fontSizeStart;
                         var end = text.IndexOf('}', start);
                         if (end > 0 && !text.Substring(start).StartsWith("{\\fs}", StringComparison.Ordinal))
                         {
@@ -1187,6 +1249,7 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text"
                             CheckAndAddSubTags(ref fontSize, ref extraTags, out var unknownTags, out italic);
                             if (float.TryParse(fontSize, NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out _))
                             {
+                                changed = true;
                                 text = text.Remove(start, end - start + 1);
                                 if (italic)
                                 {
@@ -1223,12 +1286,14 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text"
                         }
                     }
 
-                    if (text.Contains(@"{\c"))
+                    var colorStart = text.IndexOf(@"{\c", StringComparison.Ordinal);
+                    if (colorStart >= 0)
                     {
-                        var start = text.IndexOf(@"{\c", StringComparison.Ordinal);
+                        var start = colorStart;
                         var end = text.IndexOf('}', start);
                         if (end > 0 && !text.Substring(start).StartsWith("{\\c}", StringComparison.Ordinal) && !text.Substring(start).StartsWith("{\\clip", StringComparison.Ordinal))
                         {
+                            changed = true;
                             var color = text.Substring(start + 4, end - (start + 4));
                             var extraTags = string.Empty;
                             CheckAndAddSubTags(ref color, ref extraTags, out var unknownTags, out italic);
@@ -1267,12 +1332,14 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text"
                         }
                     }
 
-                    if (text.Contains(@"{\1c")) // "1" specifices primary color
+                    var primaryColorStart = text.IndexOf(@"{\1c", StringComparison.Ordinal); // "1" specifices primary color
+                    if (primaryColorStart >= 0)
                     {
-                        var start = text.IndexOf(@"{\1c", StringComparison.Ordinal);
+                        var start = primaryColorStart;
                         var end = text.IndexOf('}', start);
                         if (end > 0 && !text.Substring(start).StartsWith("{\\1c}", StringComparison.Ordinal))
                         {
+                            changed = true;
                             var color = text.Substring(start + 5, end - (start + 5));
                             var extraTags = string.Empty;
                             CheckAndAddSubTags(ref color, ref extraTags, out var unknownTags, out italic);
@@ -1309,6 +1376,11 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text"
                                 text += "</font>";
                             }
                         }
+                    }
+
+                    if (!changed)
+                    {
+                        break; // nothing matched - the remaining iterations would scan for nothing
                     }
                 }
             }

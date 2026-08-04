@@ -263,7 +263,7 @@ namespace Nikse.SubtitleEdit.Core.Forms
                                     !l1Trimmed.EndsWith('♪') &&
                                     !l1Trimmed.EndsWith('♫') &&
                                     !l1Trimmed.EndsWith("--", StringComparison.Ordinal) &&
-                                    !l1Trimmed.EndsWith("—", StringComparison.Ordinal))
+                                    !l1Trimmed.EndsWith('—'))
                                 {
                                     remove = false;
                                 }
@@ -525,7 +525,7 @@ namespace Nikse.SubtitleEdit.Core.Forms
                         if (insertDash)
                         {
                             var arr0QuoteTrimmed = arr[0].TrimEnd('"');
-                            if (arr0QuoteTrimmed.Length > 0 && !".?!♪♫".Contains(arr0QuoteTrimmed[arr0QuoteTrimmed.Length - 1]) && !arr0QuoteTrimmed.EndsWith("</i>", StringComparison.Ordinal) && !arr0QuoteTrimmed.EndsWith("--", StringComparison.Ordinal) && !arr0QuoteTrimmed.EndsWith("—", StringComparison.Ordinal))
+                            if (arr0QuoteTrimmed.Length > 0 && !".?!♪♫".Contains(arr0QuoteTrimmed[arr0QuoteTrimmed.Length - 1]) && !arr0QuoteTrimmed.EndsWith("</i>", StringComparison.Ordinal) && !arr0QuoteTrimmed.EndsWith("--", StringComparison.Ordinal) && !arr0QuoteTrimmed.EndsWith('—'))
                             {
                                 if (!arr1Strippable.Pre.Contains('-'))
                                 {
@@ -1096,7 +1096,7 @@ namespace Nikse.SubtitleEdit.Core.Forms
                 text = st.Pre + text + st.Post;
             }
 
-            if ((input.TrimStart().StartsWith("-", StringComparison.Ordinal) || input.TrimStart().StartsWith("<i>-", StringComparison.Ordinal)) &&
+            if ((input.TrimStart().StartsWith('-') || input.TrimStart().StartsWith("<i>-", StringComparison.Ordinal)) &&
                 text != null && !text.Contains(Environment.NewLine) &&
                 (input.Contains(Environment.NewLine + "-") ||
                  input.Contains(Environment.NewLine + " - ") ||

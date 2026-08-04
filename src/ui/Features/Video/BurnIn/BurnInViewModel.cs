@@ -10,6 +10,7 @@ using Nikse.SubtitleEdit.Controls.VideoPlayer;
 using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using Nikse.SubtitleEdit.Features.Main.Layout;
+using Nikse.SubtitleEdit.Features.Shared.PromptFileSaved;
 using Nikse.SubtitleEdit.Features.Shared;
 using Nikse.SubtitleEdit.Features.Shared.PromptTextBox;
 using Nikse.SubtitleEdit.Logic;
@@ -28,6 +29,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Timers;
+using Nikse.SubtitleEdit.UiLogic.Media;
 
 namespace Nikse.SubtitleEdit.Features.Video.BurnIn;
 
@@ -104,13 +106,12 @@ public partial class BurnInViewModel : ObservableObject
 
     public Window? Window { get; set; }
     public bool OkPressed { get; private set; }
-    public DataGrid? BatchGrid { get; internal set; }
+    public TableView? BatchGrid { get; internal set; }
     public BurnInLogo BurnInLogo { get; set; }
 
     private Subtitle _subtitle = new();
     private bool _loading = true;
     private readonly StringBuilder _log;
-    private static readonly Regex FrameFinderRegex = new(@"[Ff]rame=\s*\d+", RegexOptions.Compiled);
     private long _startTicks;
     private long _processedFrames;
     private Process? _ffmpegProcess;
@@ -156,7 +157,7 @@ public partial class BurnInViewModel : ObservableObject
         {
             new(FontBoxType.None, Se.Language.General.None),
             new(FontBoxType.OneBox, Se.Language.Video.BurnIn.OneBox),
-            new(FontBoxType.BoxPerLine, Se.Language.Video.BurnIn.BoxPerLine),
+            new(FontBoxType.BoxPerLine, Se.Language.General.BoxPerLine),
         };
         SelectedFontBoxType = FontBoxTypes[0];
 
@@ -312,7 +313,9 @@ public partial class BurnInViewModel : ObservableObject
         {
             var percentage = (int)Math.Round((double)_processedFrames / JobItems[_jobItemIndex].TotalFrames * 100.0,
                 MidpointRounding.AwayFromZero);
-            percentage = Math.Clamp(percentage, 0, 100);
+            // Cap at 99 while ffmpeg is still running: the frame total can be underestimated
+            // (VFR sources), and "100%" that never finishes reads as a hang in bug reports.
+            percentage = Math.Clamp(percentage, 0, 99);
 
             var durationMs = (DateTime.UtcNow.Ticks - _startTicks) / 10_000;
             var msPerFrame = (float)durationMs / _processedFrames;
@@ -344,11 +347,7 @@ public partial class BurnInViewModel : ObservableObject
             }
 
             _ffmpegProcess = process;
-#pragma warning disable CA1416 // Validate platform compatibility
-            _ffmpegProcess.Start();
-#pragma warning restore CA1416 // Validate platform compatibility
-            _ffmpegProcess.BeginOutputReadLine();
-            _ffmpegProcess.BeginErrorReadLine();
+            StartFfmpegProcess(process, "two-pass encode (pass 2)");
 
             _timerGenerate.Start();
         });
@@ -376,7 +375,9 @@ public partial class BurnInViewModel : ObservableObject
         {
             var percentage = (int)Math.Round((double)_processedFrames / JobItems[_jobItemIndex].TotalFrames * 100.0,
                 MidpointRounding.AwayFromZero);
-            percentage = Math.Clamp(percentage, 0, 100);
+            // Cap at 99 while ffmpeg is still running: the frame total can be underestimated
+            // (VFR sources), and "100%" that never finishes reads as a hang in bug reports.
+            percentage = Math.Clamp(percentage, 0, 99);
 
             var durationMs = (DateTime.UtcNow.Ticks - _startTicks) / 10_000;
             var msPerFrame = (float)durationMs / _processedFrames;
@@ -401,6 +402,7 @@ public partial class BurnInViewModel : ObservableObject
         ProgressText = string.Empty;
 
         var jobItem = JobItems[_jobItemIndex];
+        Se.WriteToolsLog($"Burn-in ffmpeg finished with exit code {_ffmpegProcess.ExitCode} for \"{jobItem.OutputVideoFileName}\"");
 
         if (!File.Exists(jobItem.OutputVideoFileName))
         {
@@ -444,7 +446,15 @@ public partial class BurnInViewModel : ObservableObject
 
             if (JobItems.Count == 1)
             {
-                await _folderHelper.OpenFolderWithFileSelected(Window!, jobItem.OutputVideoFileName);
+                await _windowService.ShowDialogAsync<PromptFileSavedWindow, PromptFileSavedViewModel>(Window!, vm =>
+                {
+                    vm.Initialize(
+                        Se.Language.General.VideoFileGenerated,
+                        string.Format(Se.Language.General.VideoFileGeneratedX, jobItem.OutputVideoFileName),
+                        jobItem.OutputVideoFileName,
+                        true,
+                        true);
+                });
             }
             else
             {
@@ -509,7 +519,7 @@ public partial class BurnInViewModel : ObservableObject
             }
 
             BatchGrid.SelectedItem = jobItem;
-            BatchGrid.ScrollIntoView(jobItem, null);
+            BatchGrid.ScrollIntoView(jobItem);
         });
 
         bool result;
@@ -555,11 +565,7 @@ public partial class BurnInViewModel : ObservableObject
         }
 
         _ffmpegProcess = process;
-#pragma warning disable CA1416 // Validate platform compatibility
-        _ffmpegProcess.Start();
-#pragma warning restore CA1416 // Validate platform compatibility
-        _ffmpegProcess.BeginOutputReadLine();
-        _ffmpegProcess.BeginErrorReadLine();
+        StartFfmpegProcess(process, "two-pass analyze (pass 1)");
         _startTicks = DateTime.UtcNow.Ticks;
 
         return true;
@@ -657,11 +663,7 @@ public partial class BurnInViewModel : ObservableObject
         }
 
         _ffmpegProcess = process;
-#pragma warning disable CA1416 // Validate platform compatibility
-        _ffmpegProcess.Start();
-#pragma warning restore CA1416 // Validate platform compatibility
-        _ffmpegProcess.BeginOutputReadLine();
-        _ffmpegProcess.BeginErrorReadLine();
+        StartFfmpegProcess(process, "encode");
 
         return true;
     }
@@ -738,7 +740,26 @@ public partial class BurnInViewModel : ObservableObject
         }
 
         var workingDirectory = Path.GetDirectoryName(jobItem.AssaSubtitleFileName) ?? string.Empty;
+        // Machine-readable progress on stdout ("frame=N" etc.) instead of scraping the
+        // human-readable stderr stats, which drift between ffmpeg versions.
+        ffmpegParameters = FfmpegProgressTracker.ProgressArguments + " " + ffmpegParameters;
+
         return FfmpegGenerator.GetProcess(ffmpegParameters, OutputHandler, workingDirectory);
+    }
+
+    /// <summary>
+    /// Starts an ffmpeg pass with its full command line written to the tools log. Burn-in hangs
+    /// and failures were undiagnosable from user reports: the command was only logged on the
+    /// missing-output-file path, and a wedged ffmpeg logged nothing at all.
+    /// </summary>
+    private void StartFfmpegProcess(Process process, string stage)
+    {
+        Se.WriteToolsLog($"Burn-in {stage}: \"{process.StartInfo.FileName}\" {process.StartInfo.Arguments}");
+#pragma warning disable CA1416 // Validate platform compatibility
+        process.Start();
+#pragma warning restore CA1416 // Validate platform compatibility
+        process.BeginOutputReadLine();
+        process.BeginErrorReadLine();
     }
 
     private void OutputHandler(object sendingProcess, DataReceivedEventArgs outLine)
@@ -748,25 +769,20 @@ public partial class BurnInViewModel : ObservableObject
             return;
         }
 
+        if (FfmpegProgressTracker.TryGetFrame(outLine.Data, out var frame))
+        {
+            _processedFrames = frame;
+            ProgressValue = _processedFrames * 100.0 / JobItems[_jobItemIndex].TotalFrames;
+            return;
+        }
+
+        // Keep the twice-a-second "-progress" key/value spam out of the user-facing log.
+        if (FfmpegProgressTracker.IsProgressLine(outLine.Data))
+        {
+            return;
+        }
+
         _log?.AppendLine(outLine.Data);
-
-        var match = FrameFinderRegex.Match(outLine.Data);
-        if (!match.Success)
-        {
-            return;
-        }
-
-        var arr = match.Value.Split('=');
-        if (arr.Length != 2)
-        {
-            return;
-        }
-
-        if (long.TryParse(arr[1].Trim(), out var f))
-        {
-            _processedFrames = f;
-            ProgressValue = (double)_processedFrames * 100.0 / JobItems[_jobItemIndex].TotalFrames;
-        }
     }
 
     private ObservableCollection<BurnInJobItem> GetCurrentVideoAsJobItems(string outputVideoFileName)
@@ -818,6 +834,7 @@ public partial class BurnInViewModel : ObservableObject
         var isAssa = subtitleFileName.EndsWith(".ass", StringComparison.OrdinalIgnoreCase);
 
         var subtitle = Subtitle.Parse(subtitleFileName);
+        subtitle = GetSubtitleBasedOnCut(subtitle);
 
         if (!isAssa)
         {
@@ -838,6 +855,39 @@ public partial class BurnInViewModel : ObservableObject
         var assaFileName = Path.Combine(Path.GetTempFileName() + assa.Extension);
         File.WriteAllText(assaFileName, assa.ToText(subtitle, string.Empty));
         return assaFileName;
+    }
+
+    // The "-ss" input seek makes ffmpeg restart timestamps at zero, so the burned-in
+    // subtitle must be limited to the cut window and shifted accordingly (same as
+    // TransparentSubtitlesViewModel.GetSubtitleBasedOnCut).
+    private Subtitle GetSubtitleBasedOnCut(Subtitle inputSubtitle)
+    {
+        if (!IsCutActive)
+        {
+            return inputSubtitle;
+        }
+
+        var subtitle = new Subtitle
+        {
+            Header = inputSubtitle.Header, // keep ASSA styles + PlayRes
+            Footer = inputSubtitle.Footer,
+        };
+
+        foreach (var p in inputSubtitle.Paragraphs)
+        {
+            if (p.EndTime.TotalMilliseconds > CutFrom.TotalMilliseconds &&
+                p.StartTime.TotalMilliseconds < CutTo.TotalMilliseconds)
+            {
+                var paragraph = new Paragraph(p);
+                paragraph.StartTime.TotalMilliseconds = Math.Max(paragraph.StartTime.TotalMilliseconds, CutFrom.TotalMilliseconds);
+                paragraph.EndTime.TotalMilliseconds = Math.Min(paragraph.EndTime.TotalMilliseconds, CutTo.TotalMilliseconds);
+                subtitle.Paragraphs.Add(paragraph);
+            }
+        }
+
+        subtitle.AddTimeToAllParagraphs(TimeSpan.FromMilliseconds(-CutFrom.TotalMilliseconds));
+
+        return subtitle;
     }
 
     private void SetStyleForNonAssa(Subtitle sub, int width, int height)

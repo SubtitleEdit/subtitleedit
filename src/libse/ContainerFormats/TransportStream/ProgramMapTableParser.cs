@@ -50,7 +50,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
 
                 // check for Topfield .rec file
                 ms.Seek(position, SeekOrigin.Begin);
-                ms.Read(m2TsTimeCodeBuffer, 0, 3);
+                ms.ReadFully(m2TsTimeCodeBuffer, 0, 3);
                 if (m2TsTimeCodeBuffer[0] == 0x54 && m2TsTimeCodeBuffer[1] == 0x46 && m2TsTimeCodeBuffer[2] == 0x72)
                 {
                     position = 3760;
@@ -66,19 +66,30 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
 
                     if (isM2TransportStream)
                     {
-                        ms.Read(m2TsTimeCodeBuffer, 0, m2TsTimeCodeBuffer.Length);
+                        ms.ReadFully(m2TsTimeCodeBuffer, 0, m2TsTimeCodeBuffer.Length);
                         position += m2TsTimeCodeBuffer.Length;
                     }
 
-                    ms.Read(packetBuffer, 0, packetLength);
+                    ms.ReadFully(packetBuffer, 0, packetLength);
                     if (packetBuffer[0] == Packet.SynchronizationByte)
                     {
                         var packet = new Packet(packetBuffer);
 
                         if (pmtPids.Contains(packet.PacketId))
                         {
-                            var pmt = new ProgramMapTable(packet.Payload, 0);
-                            _programMapTables.Add(pmt);
+                            if (packet.PayloadUnitStartIndicator)
+                            {
+                                try
+                                {
+                                    var pmt = new ProgramMapTable(packet.Payload, 0);
+                                    _programMapTables.Add(pmt);
+                                }
+                                catch
+                                {
+                                    // sections longer than one TS packet are not assembled - parsing
+                                    // the truncated payload can run out of bounds, skip those
+                                }
+                            }
                         }
                         else if (packet.IsProgramAssociationTable)
                         {
@@ -114,6 +125,29 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
                 }
             }
             return list;
+        }
+
+        /// <summary>
+        /// Get data_component_id per elementary PID from ARIB data_component_descriptors (tag 0xFD) -
+        /// identifies ISDB caption streams: 0x0008 = ARIB profile A captions, 0x0012 = profile C (one-seg)
+        /// </summary>
+        public Dictionary<int, int> GetAribDataComponentIds()
+        {
+            var result = new Dictionary<int, int>();
+            foreach (var programMapTable in _programMapTables)
+            {
+                foreach (var stream in programMapTable.Streams)
+                {
+                    foreach (var descriptor in stream.Descriptors)
+                    {
+                        if (descriptor.Tag == 0xfd && descriptor.Content?.Length >= 2 && !result.ContainsKey(stream.ElementaryPid))
+                        {
+                            result.Add(stream.ElementaryPid, (descriptor.Content[0] << 8) | descriptor.Content[1]);
+                        }
+                    }
+                }
+            }
+            return result;
         }
 
         public string GetSubtitleLanguage(int packetId)

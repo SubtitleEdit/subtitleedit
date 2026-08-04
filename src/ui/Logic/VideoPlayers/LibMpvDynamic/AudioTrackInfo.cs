@@ -10,6 +10,12 @@ public class AudioTrackInfo
     public bool IsSelected { get; set; }
     public int? FfIndex { get; set; }
 
+    /// <summary>Codec name as reported by mpv (e.g. "truehd", "ac3", "aac"), or null if unknown.</summary>
+    public string? Codec { get; set; }
+
+    /// <summary>Number of audio channels (e.g. 8 for 7.1, 6 for 5.1, 2 for stereo), or null if unknown.</summary>
+    public int? Channels { get; set; }
+
     public override string ToString()
     {
         var parts = new List<string>();

@@ -18,7 +18,7 @@ public class ShotChangesWindow : Window
     public ShotChangesWindow(ShotChangesViewModel vm)
     {
         UiUtil.InitializeWindow(this, GetType().Name);
-        Title = Se.Language.Video.ShotChanges.TitleGenerateOrImport;
+        Title = Se.Language.General.GenerateImportShotChanges;
         CanResize = true;
         Width = 900;
         Height = 800;
@@ -75,7 +75,14 @@ public class ShotChangesWindow : Window
 
         Content = grid;
 
-        Activated += delegate { buttonOk.Focus(); }; // hack to make OnKeyDown work
+        Activated += delegate
+        {
+            // initial focus on an input, not an action button - a focused button clicks on bare Space
+            if (vm.FfmpegLinesGrid != null)
+            {
+                TableViewExtras.FocusRow(vm.FfmpegLinesGrid);
+            }
+        };
     }
 
     private static Grid MakeGenerateView(ShotChangesViewModel vm)
@@ -98,31 +105,28 @@ public class ShotChangesWindow : Window
             HorizontalAlignment = HorizontalAlignment.Stretch,
         };
 
-        var dataGrid = new DataGrid
-        {
-            Height = double.NaN, // auto size inside scroll viewer
-            Margin = new Thickness(2),
-            ItemsSource = vm.FfmpegLines, // Use ItemsSource instead of Items
-            CanUserSortColumns = false,
-            IsReadOnly = true,
-            SelectionMode = DataGridSelectionMode.Extended,
-            DataContext = vm,
-        };
-        dataGrid.Columns.Add(new DataGridTextColumn
+        var tableView = TableViewExtras.MakeTableView();
+        tableView.Height = double.NaN; // auto size inside scroll viewer
+        tableView.Margin = new Thickness(2);
+        tableView.ItemsSource = vm.FfmpegLines;
+        tableView.DataContext = vm;
+        tableView.Columns.Add(new SeTableViewColumn
         {
             Header = Se.Language.General.NumberSymbol,
             Binding = new Binding(nameof(TimeItem.Number)),
-            Width = new DataGridLength(50),
-            CellTheme = UiUtil.DataGridNoBorderCellTheme,
+            Width = new GridLength(50),
+            CellTheme = UiUtil.TableViewCellTheme,
+            HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
         });
-        dataGrid.Columns.Add(new DataGridTextColumn
+        tableView.Columns.Add(new SeTableViewColumn
         {
             Header = Se.Language.Video.ShotChanges.ShotChangeTimeCode,
             Binding = new Binding(nameof(TimeItem.TimeText)),
-            Width = new DataGridLength(1, DataGridLengthUnitType.Star),
-            CellTheme = UiUtil.DataGridNoBorderCellTheme,
+            Width = new GridLength(1, GridUnitType.Star),
+            CellTheme = UiUtil.TableViewCellTheme,
+            HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
         });
-        vm.DataGridFfmpegLines = dataGrid;
+        vm.FfmpegLinesGrid = tableView;
 
         var labelSensitivity = UiUtil.MakeLabel(Se.Language.General.Sensitivity);
         var sliderSensitivity = new Slider
@@ -163,11 +167,12 @@ public class ShotChangesWindow : Window
         var progressBar = UiUtil.MakeProgressBar();
         progressBar.MinWidth = 400;
         progressBar[!ProgressBar.ValueProperty] = new Binding(nameof(vm.ProgressValue)) { Mode = BindingMode.TwoWay, UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged };
-        var progressText = UiUtil.MakeLabel().WithBindText(vm, nameof(ShotChangesViewModel.ProgressText)).WithAlignmentCenter().WithMarginTop(14); 
+        var progressText = UiUtil.MakeLabel().WithBindText(vm, nameof(ShotChangesViewModel.ProgressText)).WithAlignmentCenter();
         var gridProgress = new Grid
         {
             Width = double.NaN,
             HorizontalAlignment = HorizontalAlignment.Stretch,
+            RowSpacing = 5,
             ColumnDefinitions =
             {
                 new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
@@ -175,12 +180,13 @@ public class ShotChangesWindow : Window
             RowDefinitions =
             {
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
             },
         };
         gridProgress.Add(progressBar, 0);
-        gridProgress.Add(progressText, 0);
+        gridProgress.Add(progressText, 1);
 
-        grid.Add(UiUtil.MakeBorderForControlNoPadding(dataGrid), 0);
+        grid.Add(UiUtil.MakeBorderForControlNoPadding(tableView), 0);
         grid.Add(panelSensitivity, 1);
         grid.Add(gridProgress, 2);
 

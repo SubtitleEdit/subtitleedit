@@ -7,6 +7,7 @@ using Avalonia.Data;
 using Avalonia.Data.Converters;
 using Avalonia.Input;
 using Avalonia.Layout;
+using Avalonia.Media;
 using Avalonia.Styling;
 using Nikse.SubtitleEdit.Features.Ocr.Engines;
 using Nikse.SubtitleEdit.Features.Ocr.FixEngine;
@@ -18,7 +19,11 @@ using Optris.Icons.Avalonia;
 using System;
 using System.Collections;
 using System.ComponentModel;
+using System.Globalization;
+using System.Linq;
+using Nikse.SubtitleEdit.UiLogic.Ocr.FixEngine;
 using MenuItem = Avalonia.Controls.MenuItem;
+using Nikse.SubtitleEdit.UiLogic.Ocr;
 
 namespace Nikse.SubtitleEdit.Features.Ocr;
 
@@ -195,12 +200,20 @@ public class OcrWindow : Window
         Attached.SetIcon(toggleButtonFallbackDatabase, IconNames.DatabaseArrowRight);
         ToolTip.SetTip(toggleButtonFallbackDatabase, Se.Language.Ocr.FallbackOcrDatabase);
 
+        var toggleButtonShowOnlyForced = new ToggleButton();
+        Attached.SetIcon(toggleButtonShowOnlyForced, IconNames.Filter);
+        ToolTip.SetTip(toggleButtonShowOnlyForced, Se.Language.Ocr.ShowOnlyForcedSubtitles);
+        toggleButtonShowOnlyForced.Bind(ToggleButton.IsCheckedProperty, new Binding(nameof(vm.ShowOnlyForced)));
+        toggleButtonShowOnlyForced.Bind(Visual.IsVisibleProperty, new Binding(nameof(vm.HasForcedSubtitles)));
+        toggleButtonShowOnlyForced.Bind(InputElement.IsEnabledProperty, new Binding(nameof(vm.IsOcrRunning)) { Converter = new InverseBooleanConverter() });
+
         var panelRight = new StackPanel
         {
             Orientation = Orientation.Horizontal,
             HorizontalAlignment = HorizontalAlignment.Right,
             Children =
             {
+                toggleButtonShowOnlyForced,
                 toggleButtonCaptureAlignment,
                 toggleButtonPreProcessing,
                 toggleButtonVobSubColors,
@@ -240,7 +253,7 @@ public class OcrWindow : Window
                 UiUtil.MakeComboBox(vm.NOcrDatabases, vm, nameof(vm.SelectedNOcrDatabase), nameof(vm.IsNOcrVisible))
                     .WithMarginRight(0)
                     .BindIsEnabled(vm, nameof(OcrViewModel.IsOcrRunning), new InverseBooleanConverter()),
-                UiUtil.MakeButton(vm.ShowNOcrSettingsCommand, IconNames.Settings)
+                UiUtil.MakeButton(vm.ShowNOcrSettingsCommand, IconNames.Settings, Se.Language.General.Settings)
                     .WithMarginRight(20)
                     .WithMarginBottom(2)
                     .WithBottomAlignment()
@@ -262,7 +275,7 @@ public class OcrWindow : Window
                 UiUtil.MakeComboBox(vm.ImageCompareDatabases, vm, nameof(vm.SelectedImageCompareDatabase), nameof(vm.IsBinaryImageCompareVisible))
                     .WithMarginRight(0)
                     .BindIsEnabled(vm, nameof(OcrViewModel.IsOcrRunning), new InverseBooleanConverter()),
-                UiUtil.MakeButton(vm.ShowBinaryOcrSettingsCommand, IconNames.Settings)
+                UiUtil.MakeButton(vm.ShowBinaryOcrSettingsCommand, IconNames.Settings, Se.Language.General.Settings)
                     .WithMarginRight(20)
                     .WithMarginBottom(2)
                     .WithBottomAlignment()
@@ -395,46 +408,95 @@ public class OcrWindow : Window
     {
         var fullTimeConverter = new TimeSpanToDisplayFullConverter();
         var shortTimeConverter = new TimeSpanToDisplayShortConverter();
-        var dataGridSubtitle = new DataGrid
+
+        // TableView (Avalonia 12.1) pilot #2, after Show history (#12704): this is SE's
+        // heaviest grid - virtualized template columns with per-row bitmaps - chosen to
+        // judge TableView's scrolling against DataGrid's. Differences vs the DataGrid it
+        // replaces: no column sorting (TableView has none), and extended selection
+        // (shift/ctrl-click, shift+arrows) is native ListBox behavior instead of
+        // DataGridCheckboxMultiSelect.
+        //
+        // TableView has no content-based column sizing either - GridLength.Auto is
+        // treated as 1* by its layout helper - so the narrow columns get pixel widths
+        // measured from their widest content (the VM is initialized before the window
+        // ctor, so the items are available here).
+        const double cellChrome = 16; // cell padding/margins + slack
+        double MeasureWidth(string text) =>
+            new FormattedText(text, CultureInfo.CurrentUICulture, FlowDirection.LeftToRight,
+                Typeface.Default, 14, null).Width;
+        double ColumnWidth(string header, string widestCellText) =>
+            Math.Max(MeasureWidth(header), MeasureWidth(widestCellText)) + cellChrome;
+
+        var lastItem = vm.OcrSubtitleItems.LastOrDefault();
+        var maxDuration = vm.OcrSubtitleItems.Count > 0 ? vm.OcrSubtitleItems.Max(p => p.Duration) : TimeSpan.Zero;
+        var numberWidth = ColumnWidth(Se.Language.General.NumberSymbol, vm.OcrSubtitleItems.Count.ToString());
+        var showWidth = ColumnWidth(Se.Language.General.Show,
+            fullTimeConverter.Convert(lastItem?.StartTime ?? TimeSpan.Zero, typeof(string), null, CultureInfo.CurrentUICulture) as string ?? string.Empty);
+        var durationWidth = ColumnWidth(Se.Language.General.Duration,
+            shortTimeConverter.Convert(maxDuration, typeof(string), null, CultureInfo.CurrentUICulture) as string ?? string.Empty);
+        var dataGridSubtitle = new TableView
         {
-            AutoGenerateColumns = false,
-            SelectionMode = DataGridSelectionMode.Extended,
+            SelectionMode = SelectionMode.Multiple,
             CanUserResizeColumns = true,
-            CanUserSortColumns = true,
             HorizontalAlignment = HorizontalAlignment.Stretch,
             VerticalAlignment = VerticalAlignment.Stretch,
             Width = double.NaN,
             Height = double.NaN,
             DataContext = vm,
             ItemsSource = vm.OcrSubtitleItems,
-            Columns =
+        };
+
+        if (vm.HasForcedSubtitles)
+        {
+            dataGridSubtitle.Columns.Add(new TableViewColumn
             {
-                new DataGridTextColumn
+                Header = Se.Language.General.Forced,
+                Width = new GridLength(MeasureWidth(Se.Language.General.Forced) + cellChrome),
+                CellTheme = UiUtil.TableViewNoPaddingCellTheme,
+                HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
+                CellTemplate = new FuncDataTemplate<OcrSubtitleItem>((_, _) =>
+                    new CheckBox
+                    {
+                        [!ToggleButton.IsCheckedProperty] = new Binding(nameof(OcrSubtitleItem.IsForced)) { Mode = BindingMode.OneWay },
+                        HorizontalAlignment = HorizontalAlignment.Center,
+                        IsHitTestVisible = false,
+                        Focusable = false,
+                    }),
+            });
+        }
+
+        dataGridSubtitle.Columns.AddRange(new[]
+        {
+                new TableViewColumn
                 {
                     Header = Se.Language.General.NumberSymbol,
-                    CellTheme = UiUtil.DataGridNoBorderNoPaddingCellTheme,
+                    Width = new GridLength(numberWidth),
+                    CellTheme = UiUtil.TableViewCellTheme,
+                    HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
                     Binding = new Binding(nameof(OcrSubtitleItem.Number)),
-                    IsReadOnly = true,
                 },
-                new DataGridTextColumn
+                new TableViewColumn
                 {
                     Header = Se.Language.General.Show,
-                    CellTheme = UiUtil.DataGridNoBorderNoPaddingCellTheme,
+                    Width = new GridLength(showWidth),
+                    CellTheme = UiUtil.TableViewCellTheme,
+                    HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
                     Binding = new Binding(nameof(OcrSubtitleItem.StartTime)) { Converter = fullTimeConverter },
-                    IsReadOnly = true,
                 },
-                new DataGridTextColumn
+                new TableViewColumn
                 {
                     Header = Se.Language.General.Duration,
-                    CellTheme = UiUtil.DataGridNoBorderNoPaddingCellTheme,
+                    Width = new GridLength(durationWidth),
+                    CellTheme = UiUtil.TableViewCellTheme,
+                    HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
                     Binding = new Binding(nameof(OcrSubtitleItem.Duration)) { Converter = shortTimeConverter },
-                    IsReadOnly = true,
                 },
-                new DataGridTemplateColumn
+                new TableViewColumn
                 {
                     Header = Se.Language.General.Image,
-                    IsReadOnly = true,
-                    CellTheme = UiUtil.DataGridNoBorderNoPaddingCellTheme,
+                    Width = new GridLength(vm.ImageMaxWidth + cellChrome),
+                    CellTheme = UiUtil.TableViewNoPaddingCellTheme,
+                    HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
                     CellTemplate = new FuncDataTemplate<OcrSubtitleItem>((item, _) =>
                     {
                         var stackPanel = new StackPanel
@@ -456,6 +518,9 @@ public class OcrWindow : Window
 
                             // Subtitle bitmaps are usually light text on a transparent background, which
                             // is invisible on a light grid - give them a dark backdrop so they show.
+                            // A checkerboard was tried here (issue #12692) but the tiling competes with
+                            // the glyphs at thumbnail size and makes the grid harder to read; it is kept
+                            // only in the pre-processing preview, where the image is large enough for it.
                             var imageContainer = new Border
                             {
                                 Background = new Avalonia.Media.SolidColorBrush(Avalonia.Media.Color.FromRgb(0x2D, 0x2D, 0x30)),
@@ -469,12 +534,12 @@ public class OcrWindow : Window
                         return stackPanel;
                     })
                 },
-                new DataGridTemplateColumn
+                new TableViewColumn
                 {
                     Header = Se.Language.General.Text,
-                    IsReadOnly = true,
-                    Width = new DataGridLength(1, DataGridLengthUnitType.Star),
-                    CellTheme = UiUtil.DataGridNoBorderNoPaddingCellTheme,
+                    Width = new GridLength(1, GridUnitType.Star),
+                    CellTheme = UiUtil.TableViewNoPaddingCellTheme,
+                    HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
                     CellTemplate = new FuncDataTemplate<OcrSubtitleItem>((item, _) =>
                     {
                         var contentPresenter = new ContentPresenter
@@ -495,16 +560,28 @@ public class OcrWindow : Window
                         return contentPresenter;
                     })
                 },
-            },
+        });
+
+        // The image thumbnails scale with Ctrl+plus/minus (Image.MaxWidth/MaxHeight are
+        // bound to the VM) - keep the pixel-sized image column in step with the zoom.
+        var imageColumn = dataGridSubtitle.Columns[dataGridSubtitle.Columns.Count - 2];
+        vm.PropertyChanged += (_, args) =>
+        {
+            if (args.PropertyName == nameof(vm.ImageMaxWidth))
+            {
+                imageColumn.Width = new GridLength(vm.ImageMaxWidth + cellChrome);
+            }
         };
-        dataGridSubtitle.Bind(DataGrid.SelectedItemProperty, new Binding(nameof(vm.SelectedOcrSubtitleItem)) { Source = vm });
+
+        UiUtil.ApplyTableViewRowStyle(dataGridSubtitle);
+        TableViewExtras.AttachListNavigation(dataGridSubtitle);
+        dataGridSubtitle.Bind(TableView.SelectedItemProperty, new Binding(nameof(vm.SelectedOcrSubtitleItem)) { Source = vm });
         dataGridSubtitle.KeyDown += vm.SubtitleGridKeyDown;
         dataGridSubtitle.DoubleTapped += (s, e) => vm.SubtitleGridDoubleTapped();
         dataGridSubtitle.AddHandler(InputElement.PointerPressedEvent, vm.DataGridSubtitleMacPointerPressed, Avalonia.Interactivity.RoutingStrategies.Tunnel);
         dataGridSubtitle.AddHandler(InputElement.PointerReleasedEvent, vm.DataGridSubtitleMacPointerReleased, Avalonia.Interactivity.RoutingStrategies.Tunnel);
         dataGridSubtitle.SelectionChanged += vm.SubtitleGridSelectionChanged;
         vm.SubtitleGrid = dataGridSubtitle;
-        _ = new DataGridCheckboxMultiSelect<OcrSubtitleItem>(dataGridSubtitle);
 
         // Create a Flyout for the DataGrid
         var flyout = new MenuFlyout();
@@ -722,8 +799,7 @@ public class OcrWindow : Window
             .WithBindIsVisible(nameof(vm.IsDictionaryLoaded));
         var checkBoxTryToGuessUnknownWords = UiUtil.MakeCheckBox(Se.Language.Ocr.TryToGuessUnknownWords, vm, nameof(vm.DoTryToGuessUnknownWords))
             .WithBindIsVisible(nameof(vm.IsDictionaryLoaded));
-        var checkBoxAutoBreak = UiUtil.MakeCheckBox(string.Format(Se.Language.Ocr.AutoBreakIfMoreThanXLines, Se.Settings.General.MaxNumberOfLines), vm, nameof(vm.DoAutoBreak))
-            .WithBindIsVisible(nameof(vm.IsDictionaryLoaded));
+        var checkBoxAutoBreak = UiUtil.MakeCheckBox(string.Format(Se.Language.Ocr.AutoBreakIfMoreThanXLines, Se.Settings.General.MaxNumberOfLines), vm, nameof(vm.DoAutoBreak));
 
         var panelOptions = new StackPanel
         {

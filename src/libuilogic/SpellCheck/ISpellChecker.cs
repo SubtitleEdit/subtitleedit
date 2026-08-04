@@ -1,7 +1,4 @@
-using System.Collections.Generic;
-
-// Kept in the original UI namespace so existing references resolve unchanged.
-namespace Nikse.SubtitleEdit.Features.SpellCheck;
+namespace Nikse.SubtitleEdit.UiLogic.SpellCheck;
 
 /// <summary>
 /// Minimal spell-checking surface the OCR-fix engine (libuilogic) needs, so it does not depend on the

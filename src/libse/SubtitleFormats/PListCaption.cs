@@ -119,12 +119,13 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             XmlDocument xml = new XmlDocument { XmlResolver = null };
             xml.LoadXml(sb.ToString().Trim());
             string lastKey = string.Empty;
+            var pText = new StringBuilder();
             foreach (XmlNode node in xml.DocumentElement.SelectNodes("array/dict"))
             {
                 try
                 {
                     Paragraph p = new Paragraph();
-                    var pText = new StringBuilder();
+                    pText.Clear();
                     foreach (XmlNode innerNode in node.ChildNodes)
                     {
                         if (innerNode.Name == "key")

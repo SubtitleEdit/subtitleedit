@@ -62,6 +62,7 @@ public class SeOcr
         Engine = "nOCR";
         DoFixOcrErrors = true;
         DoTryToGuessUnknownWords = true;
+        DoAutoBreak = true;
 
         NOcrDatabase = "Latin";
         NOcrBinaryOcrFallbackDatabase = string.Empty;

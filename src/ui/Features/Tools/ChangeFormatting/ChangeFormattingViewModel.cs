@@ -14,7 +14,7 @@ using System.Linq;
 
 namespace Nikse.SubtitleEdit.Features.Tools.ChangeFormatting;
 
-public partial class ChangeFormattingViewModel : ObservableObject
+public partial class ChangeFormattingViewModel : ObservableObject, IClosingCleanup
 {
     [ObservableProperty] private ObservableCollection<ChangeFormattingDisplayItem> _subtitles;
     [ObservableProperty] private ChangeFormattingDisplayItem? _selectedSubtitle;
@@ -34,6 +34,7 @@ public partial class ChangeFormattingViewModel : ObservableObject
     public List<SubtitleLineViewModel> FixedSubtitle { get; set; }
 
     private readonly System.Timers.Timer _timerUpdatePreview;
+    private volatile bool _isClosing;
     private bool _dirty;
     private SubtitleFormat _format = new SubRip();
 
@@ -49,16 +50,36 @@ public partial class ChangeFormattingViewModel : ObservableObject
         LoadSettings();
 
         _timerUpdatePreview = new System.Timers.Timer(500);
-        _timerUpdatePreview.Elapsed += (s, e) =>
+        _timerUpdatePreview.Elapsed += TimerUpdatePreviewElapsed;
+    }
+
+    private void TimerUpdatePreviewElapsed(object? sender, System.Timers.ElapsedEventArgs e)
+    {
+        if (_isClosing)
         {
-            _timerUpdatePreview.Stop();
-            if (_dirty)
-            {
-                _dirty = false;
-                UpdatePreview();
-            }
+            return;
+        }
+
+        _timerUpdatePreview.Stop();
+        if (_dirty)
+        {
+            _dirty = false;
+            UpdatePreview();
+        }
+
+        // Guard the restart: OnClosingCleanup may have disposed the timer while this handler ran,
+        // and Start() on a disposed timer throws ObjectDisposedException (no longer swallowed on
+        // modern .NET), crashing the app from a thread-pool thread. (#12739)
+        if (!_isClosing)
+        {
             _timerUpdatePreview.Start();
-        };
+        }
+    }
+
+    public void OnClosingCleanup()
+    {
+        _isClosing = true;
+        _timerUpdatePreview.StopAndDispose(TimerUpdatePreviewElapsed);
     }
 
     private void UpdatePreview()

@@ -91,6 +91,51 @@ public class HtmlUtilTest
     }
 
     [Fact]
+    public void FixInvalidItalicTagsDanglingStartTagAtEnd()
+    {
+        const string s = "<i>a</i><i>";
+        Assert.Equal("<i>a</i>", HtmlUtil.FixInvalidItalicTags(s));
+    }
+
+    [Fact]
+    public void FixInvalidItalicTagsDanglingStartTagKeepsCharBeforeTag()
+    {
+        // Used to become "<i>ab</i></i>" - the "c" was eaten and an extra end tag appended
+        const string s = "<i>ab</i>c<i>";
+        Assert.Equal("<i>ab</i>c", HtmlUtil.FixInvalidItalicTags(s));
+    }
+
+    [Fact]
+    public void FixInvalidItalicTagsDanglingStartTagKeepsWordBeforeTag()
+    {
+        // Used to become "<i>Hello</i> </i>" - the "d" was eaten
+        const string s = "<i>Hello</i> d<i>";
+        Assert.Equal("<i>Hello</i> d", HtmlUtil.FixInvalidItalicTags(s));
+    }
+
+    // Two lines, four stray "</i>" tags, no "<i>" - each line with a tag becomes italic.
+    // The first six cases pin the long-standing behavior for shapes the old condition matched;
+    // the rest used to fall through and be returned with the invalid tags unchanged.
+    [Theory]
+    [InlineData("</i>Hello</i>|</i>World</i>", "<i>Hello</i>|<i>World</i>")]
+    [InlineData("</i>Hello|</i>a</i>World</i>", "<i>Hello</i>|<i>aWorld</i>")]
+    [InlineData("</i>Hello</i>x|</i>World</i>", "<i>Hellox</i>|<i>World</i>")]
+    [InlineData("<i>Hello<i>|<i>World<i>", "<i>Hello</i>|<i>World</i>")]
+    [InlineData("<i>Hello|<i>a<i>World<i>", "<i>Hello</i>|<i>aWorld</i>")]
+    [InlineData("<i>Hello<i>x|<i>World<i>", "<i>Hellox</i>|<i>World</i>")]
+    [InlineData("</i>Hello</i>a</i>|World</i>", "<i>Helloa</i>|<i>World</i>")]
+    [InlineData("a</i>b</i>|c</i>d</i>", "<i>ab</i>|<i>cd</i>")]
+    [InlineData("</i>Hello</i>b</i>c</i>|plain", "<i>Hellobc</i>|plain")]
+    [InlineData("<i>Hello<i>a<i>|World<i>", "<i>Helloa</i>|<i>World</i>")]
+    [InlineData("a<i>b<i>|c<i>d<i>", "<i>ab</i>|<i>cd</i>")]
+    [InlineData("<i>Hello<i>b<i>c<i>|plain", "<i>Hellobc</i>|plain")]
+    public void FixInvalidItalicTagsTwoLinesOnlyStrayTags(string input, string expected)
+    {
+        var s = input.Replace("|", Environment.NewLine);
+        Assert.Equal(expected.Replace("|", Environment.NewLine), HtmlUtil.FixInvalidItalicTags(s));
+    }
+
+    [Fact]
     public void EncodeNumericEncodesNonAsciiBmpChar()
     {
         Assert.Equal("Hi&#229;", HtmlUtil.EncodeNumeric("Hiå")); // å

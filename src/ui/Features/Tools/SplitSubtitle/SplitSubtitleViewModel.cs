@@ -17,7 +17,7 @@ using System.Threading.Tasks;
 
 namespace Nikse.SubtitleEdit.Features.Tools.SplitSubtitle;
 
-public partial class SplitSubtitleViewModel : ObservableObject
+public partial class SplitSubtitleViewModel : ObservableObject, IClosingCleanup
 {
     [ObservableProperty] private ObservableCollection<SplitDisplayItem> _splitItems;
     [ObservableProperty] private SplitDisplayItem? _selectedSpiltItem;
@@ -44,6 +44,7 @@ public partial class SplitSubtitleViewModel : ObservableObject
     private string _subtitleFileName;
     private List<Subtitle> _parts;
     private readonly System.Timers.Timer _timerUpdatePreview;
+    private volatile bool _isClosing;
     private bool _dirty;
     private bool _loading;
 
@@ -71,16 +72,36 @@ public partial class SplitSubtitleViewModel : ObservableObject
         LoadSettings();
 
         _timerUpdatePreview = new System.Timers.Timer(500);
-        _timerUpdatePreview.Elapsed += (s, e) =>
+        _timerUpdatePreview.Elapsed += TimerUpdatePreviewElapsed;
+    }
+
+    private void TimerUpdatePreviewElapsed(object? sender, System.Timers.ElapsedEventArgs e)
+    {
+        if (_isClosing)
         {
-            _timerUpdatePreview.Stop();
-            if (_dirty)
-            {
-                _dirty = false;
-                UpdateSplit();
-            }
+            return;
+        }
+
+        _timerUpdatePreview.Stop();
+        if (_dirty)
+        {
+            _dirty = false;
+            UpdateSplit();
+        }
+
+        // Guard the restart: OnClosingCleanup may have disposed the timer while this handler ran,
+        // and Start() on a disposed timer throws ObjectDisposedException (no longer swallowed on
+        // modern .NET), crashing the app from a thread-pool thread. (#12739)
+        if (!_isClosing)
+        {
             _timerUpdatePreview.Start();
-        };
+        }
+    }
+
+    public void OnClosingCleanup()
+    {
+        _isClosing = true;
+        _timerUpdatePreview.StopAndDispose(TimerUpdatePreviewElapsed);
     }
 
     public void Initialize(string fileName, Subtitle subtitle)

@@ -10,11 +10,14 @@ using Avalonia.Threading;
 using Avalonia.Media;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
+using System.Linq;
 
 namespace Nikse.SubtitleEdit.Features.Tools.MergeContinuationLines;
 
 public class MergeContinuationLinesWindow : Window
 {
+    private NumericUpDown _numericGap = null!;
+
     public MergeContinuationLinesWindow(MergeContinuationLinesViewModel vm)
     {
         UiUtil.InitializeWindow(this, GetType().Name);
@@ -58,13 +61,15 @@ public class MergeContinuationLinesWindow : Window
 
         Content = grid;
 
-        Activated += delegate { buttonOk.Focus(); };
+        Activated += delegate { _numericGap.Focus(); }; // initial focus on an input, not an action button - a focused button clicks on bare Space
         KeyDown += vm.KeyDown;
         Loaded += delegate { vm.Loaded(); };
-        Closed += delegate { vm.OnClosed(); };
+
+        Closing += delegate { UiUtil.SaveWindowPosition(this); };
+        Loaded += delegate { UiUtil.RestoreWindowPosition(this); };
     }
 
-    private static Grid MakeControlsView(MergeContinuationLinesViewModel vm)
+    private Grid MakeControlsView(MergeContinuationLinesViewModel vm)
     {
         var grid = new Grid
         {
@@ -86,6 +91,7 @@ public class MergeContinuationLinesWindow : Window
 
         var labelGap = UiUtil.MakeLabel(Se.Language.Tools.MergeContinuationLines.MaxMillisecondsBetweenLines);
         var numericGap = UiUtil.MakeNumericUpDownInt(0, 10000, 250, 150, vm, nameof(vm.MaxMillisecondsBetweenLines));
+        _numericGap = numericGap;
         numericGap.ValueChanged += (_, _) => vm.SetChanged();
 
         var labelMax = UiUtil.MakeLabel(Se.Language.Tools.MergeContinuationLines.MaxCharacters);
@@ -124,78 +130,79 @@ public class MergeContinuationLinesWindow : Window
             .WithMarginTop(10)
             .WithMarginLeft(10);
 
-        var dataGrid = new DataGrid
+        // The DataGrid this replaces used DataGridCheckboxMultiSelect for extended
+        // selection + Space toggling; shift/ctrl multi-select is native ListBox behavior
+        // on TableView, so only the Space toggle needs wiring (below).
+        var dataGrid = TableViewExtras.MakeTableView();
+        dataGrid.Width = double.NaN;
+        dataGrid.Height = double.NaN;
+        dataGrid.DataContext = vm;
+        dataGrid.ItemsSource = vm.Candidates;
+
+        // The checkbox and number columns were content-sized (Auto) on the DataGrid;
+        // TableView treats Auto as star, so they get fixed widths instead.
+        dataGrid.Columns.Add(new SeTableViewColumn
         {
-            AutoGenerateColumns = false,
-            SelectionMode = DataGridSelectionMode.Single,
-            CanUserResizeColumns = true,
-            CanUserSortColumns = false,
-            HorizontalAlignment = HorizontalAlignment.Stretch,
-            VerticalAlignment = VerticalAlignment.Stretch,
-            Width = double.NaN,
-            Height = double.NaN,
-            DataContext = vm,
-            ItemsSource = vm.Candidates,
-            Columns =
+            Header = Se.Language.Tools.MergeContinuationLines.ColumnMerge,
+            CellTheme = UiUtil.TableViewNoPaddingCellTheme,
+            HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
+            CellTemplate = new FuncDataTemplate<MergeContinuationLinesCandidate>((_, _) =>
             {
-                new DataGridTemplateColumn
+                return new Border
                 {
-                    Header = Se.Language.Tools.MergeContinuationLines.ColumnMerge,
-                    CellTheme = UiUtil.DataGridNoBorderNoPaddingCellTheme,
-                    CellTemplate = new FuncDataTemplate<MergeContinuationLinesCandidate>((_, _) =>
+                    Background = Brushes.Transparent,
+                    Padding = new Thickness(4),
+                    Child = new CheckBox
                     {
-                        return new Border
+                        Focusable = false,
+                        [!ToggleButton.IsCheckedProperty] = new Binding(nameof(MergeContinuationLinesCandidate.IsSelected))
                         {
-                            Background = Brushes.Transparent,
-                            Padding = new Thickness(4),
-                            Child = new CheckBox
-                            {
-                                Focusable = false,
-                                [!ToggleButton.IsCheckedProperty] = new Binding(nameof(MergeContinuationLinesCandidate.IsSelected))
-                                {
-                                    Mode = BindingMode.TwoWay,
-                                },
-                                HorizontalAlignment = HorizontalAlignment.Center,
-                            },
-                        };
-                    }),
-                    Width = new DataGridLength(1, DataGridLengthUnitType.Auto),
-                },
-                new DataGridTextColumn
-                {
-                    Header = Se.Language.General.NumberSymbol,
-                    Binding = new Binding(nameof(MergeContinuationLinesCandidate.Number)),
-                    CellTheme = UiUtil.DataGridNoBorderNoPaddingCellTheme,
-                    IsReadOnly = true,
-                },
-                new DataGridTextColumn
-                {
-                    Header = Se.Language.Tools.MergeContinuationLines.ColumnFirst,
-                    Binding = new Binding(nameof(MergeContinuationLinesCandidate.Text1)),
-                    CellTheme = UiUtil.DataGridNoBorderCellTheme,
-                    Width = new DataGridLength(1, DataGridLengthUnitType.Star),
-                    IsReadOnly = true,
-                },
-                new DataGridTextColumn
-                {
-                    Header = Se.Language.Tools.MergeContinuationLines.ColumnSecond,
-                    Binding = new Binding(nameof(MergeContinuationLinesCandidate.Text2)),
-                    CellTheme = UiUtil.DataGridNoBorderCellTheme,
-                    Width = new DataGridLength(1, DataGridLengthUnitType.Star),
-                    IsReadOnly = true,
-                },
-                new DataGridTextColumn
-                {
-                    Header = Se.Language.Tools.MergeContinuationLines.ColumnMerged,
-                    Binding = new Binding(nameof(MergeContinuationLinesCandidate.MergedTextDisplay)),
-                    CellTheme = UiUtil.DataGridNoBorderCellTheme,
-                    Width = new DataGridLength(1.4, DataGridLengthUnitType.Star),
-                    IsReadOnly = true,
-                },
-            },
-        };
-        _ = new DataGridCheckboxMultiSelect<MergeContinuationLinesCandidate>(dataGrid,
-            item => item.IsSelected, (item, v) => item.IsSelected = v);
+                            Mode = BindingMode.TwoWay,
+                        },
+                        HorizontalAlignment = HorizontalAlignment.Center,
+                    },
+                };
+            }),
+            Width = new GridLength(80),
+        });
+        dataGrid.Columns.Add(new SeTableViewColumn
+        {
+            Header = Se.Language.General.NumberSymbol,
+            Binding = new Binding(nameof(MergeContinuationLinesCandidate.Number)),
+            CellTheme = UiUtil.TableViewCellTheme,
+            HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
+            Width = new GridLength(60),
+        });
+        dataGrid.Columns.Add(new SeTableViewColumn
+        {
+            Header = Se.Language.Tools.MergeContinuationLines.ColumnFirst,
+            Binding = new Binding(nameof(MergeContinuationLinesCandidate.Text1)),
+            CellTheme = UiUtil.TableViewCellTheme,
+            HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
+            Width = new GridLength(1, GridUnitType.Star),
+        });
+        dataGrid.Columns.Add(new SeTableViewColumn
+        {
+            Header = Se.Language.Tools.MergeContinuationLines.ColumnSecond,
+            Binding = new Binding(nameof(MergeContinuationLinesCandidate.Text2)),
+            CellTheme = UiUtil.TableViewCellTheme,
+            HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
+            Width = new GridLength(1, GridUnitType.Star),
+        });
+        dataGrid.Columns.Add(new SeTableViewColumn
+        {
+            Header = Se.Language.Tools.MergeContinuationLines.ColumnMerged,
+            Binding = new Binding(nameof(MergeContinuationLinesCandidate.MergedTextDisplay)),
+            CellTheme = UiUtil.TableViewCellTheme,
+            HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
+            Width = new GridLength(1.4, GridUnitType.Star),
+        });
+
+        // Space toggles the checkbox of every selected row - the piece of the old
+        // DataGridCheckboxMultiSelect helper that TableView does not provide natively.
+        TableViewExtras.AddSpaceToggle<MergeContinuationLinesCandidate>(dataGrid,
+            item => item.IsSelected,
+            (item, value) => item.IsSelected = value);
 
         grid.Add(labelInfo, 0);
         grid.Add(UiUtil.MakeBorderForControlNoPadding(dataGrid), 1);

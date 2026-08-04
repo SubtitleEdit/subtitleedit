@@ -35,6 +35,7 @@ seconv movie.mkv subrip --track-number:3                         # extract MKV t
 seconv movie.sup subrip --ocr-engine:tesseract --ocr-language:eng # OCR a Blu-ray .sup
 seconv movie.sup subrip --time-codes-only                        # timing only, no OCR
 seconv subs.srt bluraysup --resolution:1920x1080                 # render text → Blu-ray sup
+seconv dump-settings > my.json                                   # starter --settings file (libse defaults)
 ```
 
 Run `seconv` with no arguments for built-in help, or `seconv formats` to list every format.

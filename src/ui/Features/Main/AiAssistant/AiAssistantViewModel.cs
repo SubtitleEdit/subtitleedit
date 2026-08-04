@@ -5,14 +5,17 @@ using CommunityToolkit.Mvvm.Input;
 using Nikse.SubtitleEdit.Features.Shared;
 using Nikse.SubtitleEdit.Features.Tools.AiReview;
 using Nikse.SubtitleEdit.Features.Translate;
+using Nikse.SubtitleEdit.Features.Translate.LlamaCppEngineSettings;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
+using Nikse.SubtitleEdit.Logic.Download;
 using Nikse.SubtitleEdit.Logic.LlamaCpp;
 using System;
 using System.Collections.ObjectModel;
 using System.Globalization;
 using System.Threading;
 using System.Threading.Tasks;
+using Nikse.SubtitleEdit.UiLogic.LlamaCpp;
 
 namespace Nikse.SubtitleEdit.Features.Main.AiAssistant;
 
@@ -74,8 +77,8 @@ public partial class AiAssistantViewModel : ObservableObject
         _maxSingleLineLength = 42;
 
         var review = Se.Settings.Tools.AiReview;
-        Engines = new ObservableCollection<string> { SeAiReview.EngineLlamaCpp, SeAiReview.EngineOllama, SeAiReview.EngineOpenAiCompatible };
-        SelectedEngine = Engines.Contains(review.Engine) ? review.Engine : SeAiReview.EngineLlamaCpp;
+        Engines = new ObservableCollection<string>();
+        SelectedEngine = AiEngineCombo.Populate(Engines, review.Engine);
         OllamaModel = review.OllamaModel;
         OpenAiCompatibleUrl = review.OpenAiCompatibleUrl;
         OpenAiCompatibleModel = review.OpenAiCompatibleModel;
@@ -162,6 +165,64 @@ public partial class AiAssistantViewModel : ObservableObject
             LlamaCppModels,
             LlamaCppServerManager.GetAllReviewModels(),
             selectedFileName);
+    }
+
+    /// <summary>
+    /// Re-fills the engine combo so its llama.cpp install-status dot is recomputed - the rows keep
+    /// the status they were built with, so an engine download/update leaves a stale dot otherwise.
+    /// </summary>
+    private void RefreshEngines()
+    {
+        var selected = SelectedEngine;
+        SelectedEngine = string.Empty; // drop the selection first, so the combo also rebuilds the closed-state row
+        SelectedEngine = AiEngineCombo.Populate(Engines, selected);
+    }
+
+    /// <summary>
+    /// Opens the shared llama.cpp engine settings dialog (installed backend, pinned release, install
+    /// status). Its download button stops the server first - it holds llama-server open, so a running
+    /// server would block replacing the binary - then re-downloads and refreshes the model dots.
+    /// </summary>
+    [RelayCommand]
+    private async Task ShowLlamaCppEngineSettings()
+    {
+        if (Window == null)
+        {
+            return;
+        }
+
+        await _windowService.ShowDialogAsync<LlamaCppEngineSettingsWindow, LlamaCppEngineSettingsViewModel>(
+            Window,
+            vm => vm.Initialize(RedownloadLlamaCppEngineAsync));
+
+        RefreshLlamaCppModels();
+        RefreshEngines();
+    }
+
+    private async Task RedownloadLlamaCppEngineAsync()
+    {
+        if (Window == null)
+        {
+            return;
+        }
+
+        LlamaCppServerManager.StopServer();
+
+        // Reuse the installed backend so the user is not re-asked CPU/Vulkan/CUDA on a re-download;
+        // null on a fresh install (or off Windows), which lets DownloadAsync prompt.
+        var variant = OperatingSystem.IsWindows()
+            ? DownloadHashManager.DetectLlamaCppWindowsVariant(LlamaCppServerManager.GetAndCreateFolder())
+            : null;
+
+        await LlamaCppDownloadHelper.DownloadAsync(
+            Window,
+            _windowService,
+            SelectedLlamaCppModel?.Model,
+            variant,
+            forceEngineDownload: true);
+
+        RefreshLlamaCppModels();
+        RefreshEngines(); // the engine binary just changed - re-evaluate its dot (amber -> green)
     }
 
     [RelayCommand]
@@ -273,10 +334,12 @@ public partial class AiAssistantViewModel : ObservableObject
                         LlamaCppServerManager.GetAllReviewModels(), persistAsTranslateModel: false))
                 {
                     RefreshLlamaCppModels();
+                    RefreshEngines();
                     return;
                 }
 
                 RefreshLlamaCppModels(); // pick up the fresh install state (green dot)
+                RefreshEngines();
                 display = SelectedLlamaCppModel;
                 if (display == null)
                 {
@@ -341,7 +404,7 @@ public partial class AiAssistantViewModel : ObservableObject
 
         // A model may still answer with a JSON object (some ignore the plain-text
         // request); take the first string value out of it.
-        if (text.StartsWith("{", StringComparison.Ordinal))
+        if (text.StartsWith('{'))
         {
             var fromJson = TryExtractJsonString(text);
             if (!string.IsNullOrWhiteSpace(fromJson))
@@ -442,6 +505,11 @@ public partial class AiAssistantViewModel : ObservableObject
             e.Handled = true;
             _cancellationTokenSource?.Cancel();
             Window?.Close();
+        }
+        else if (UiUtil.IsHelp(e))
+        {
+            e.Handled = true;
+            UiUtil.ShowHelp("features/ai-assistant");
         }
     }
 

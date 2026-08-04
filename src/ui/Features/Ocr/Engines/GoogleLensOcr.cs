@@ -116,7 +116,7 @@ public class GoogleLensOcr
                             var existingInput = input.FirstOrDefault(p => Path.GetFileName(p.FileName) == currentFileName);
                             if (existingInput != null && results.ContainsKey(currentFileName))
                             {
-                                existingInput.Text = results[currentFileName].Trim();
+                                existingInput.Text = OcrLoneDashFixer.FixLoneDashes(results[currentFileName].Trim());
                                 lock (_lockObject)
                                 {
                                     var progressReport = new PaddleOcrBatchProgress
@@ -197,7 +197,7 @@ public class GoogleLensOcr
                     var existingInput = input.FirstOrDefault(p => Path.GetFileName(p.FileName) == currentFileName);
                     if (existingInput != null && results.ContainsKey(currentFileName))
                     {
-                        existingInput.Text = results[currentFileName].Trim();
+                        existingInput.Text = OcrLoneDashFixer.FixLoneDashes(results[currentFileName].Trim());
                         lock (_lockObject)
                         {
                             var progressReport = new PaddleOcrBatchProgress

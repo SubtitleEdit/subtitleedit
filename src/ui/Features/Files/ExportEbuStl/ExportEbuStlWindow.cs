@@ -13,7 +13,7 @@ public class ExportEbuStlWindow : Window
     public ExportEbuStlWindow(ExportEbuStlViewModel vm)
     {
         UiUtil.InitializeWindow(this, GetType().Name);
-        Title = "Export EBU STL";
+        Title = Se.Language.Options.Shortcuts.FileExportEbuStl;
         SizeToContent = SizeToContent.WidthAndHeight;
         CanResize = false;
         vm.Window = this;
@@ -23,7 +23,7 @@ public class ExportEbuStlWindow : Window
         var tabGeneral = new TabItem
         {
             Header = Se.Language.General.General,
-            Content = MakeGeneralView(vm),
+            Content = MakeGeneralView(vm, out var comboBoxCodePage),
         };
         tabControl.Items.Add(tabGeneral);
 
@@ -68,11 +68,11 @@ public class ExportEbuStlWindow : Window
 
         Content = grid;
 
-        Activated += delegate { buttonOk.Focus(); }; // hack to make OnKeyDown work
+        Activated += delegate { comboBoxCodePage.Focus(); }; // initial focus on an input, not an action button - a focused button clicks on bare Space
         KeyDown += vm.OnKeyDown;
     }
 
-    private Border MakeGeneralView(ExportEbuStlViewModel vm)
+    private Border MakeGeneralView(ExportEbuStlViewModel vm, out ComboBox comboBoxCodePage)
     {
         var grid = new Grid
         {
@@ -109,6 +109,7 @@ public class ExportEbuStlWindow : Window
 
         var labelCodePageNumber = UiUtil.MakeLabel(Se.Language.File.EbuSaveOptions.CodePageNumber);
         var comboBoxCodeNumbers = UiUtil.MakeComboBox(vm.CodePages, vm, nameof(vm.SelectedCodePage)).WithMinWidth(textBoxWidth);
+        comboBoxCodePage = comboBoxCodeNumbers;
 
         var labelDiskFormatCode = UiUtil.MakeLabel(Se.Language.File.EbuSaveOptions.DiskFormatCode);
         var comboboxDiskFormatCodes = UiUtil.MakeComboBox(vm.DiskFormatCodes, vm, nameof(vm.SelectedDiskFormatCode)).WithMinWidth(textBoxWidth);

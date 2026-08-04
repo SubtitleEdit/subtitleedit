@@ -50,17 +50,17 @@ public class CustomContinuationStyleWindow : Window
             HorizontalAlignment = HorizontalAlignment.Stretch,
         };
 
-        grid.Add(MakeControlsGrid(vm), 0, 0);
+        grid.Add(MakeControlsGrid(vm, out var comboBoxFirstInput), 0, 0);
         grid.Add(MakePreviewView(vm), 0, 1);
         grid.Add(panelButtons, 1, 0, 1, 2);
 
         Content = grid;
 
-        Activated += delegate { buttonOk.Focus(); }; // hack to make OnKeyDown work
+        Activated += delegate { comboBoxFirstInput.Focus(); }; // initial focus on an input, not an action button - a focused button clicks on bare Space
         KeyDown += vm.KeyDown;
     }
 
-    private static Border MakeControlsGrid(CustomContinuationStyleViewModel vm)
+    private static Border MakeControlsGrid(CustomContinuationStyleViewModel vm, out ComboBox firstInput)
     {
         var grid = new Grid
         {
@@ -95,6 +95,7 @@ public class CustomContinuationStyleWindow : Window
 
         var labelPrefix = UiUtil.MakeLabel(Se.Language.General.Prefix);
         var comboBoxPrefix = UiUtil.MakeComboBox(vm.PreAndSuffixes, vm, nameof(vm.SelectedPrefix));
+        firstInput = comboBoxPrefix;
         comboBoxPrefix.SelectionChanged += (s, e) => vm.StyleChanged();
         var checkBoxPrefixAddSpace = UiUtil.MakeCheckBox(Se.Language.Options.Settings.AddSpace, vm, nameof(vm.SelectedPrefixAddSpace));
         checkBoxPrefixAddSpace.IsCheckedChanged += (s, e) => vm.StyleChanged();

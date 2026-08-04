@@ -7,20 +7,22 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
-using System.Runtime.InteropServices;
 using System.Text;
 using System.Text.Json;
+using System.Threading.Tasks;
 
 namespace Nikse.SubtitleEdit.Logic.Config;
 
 public class Se
 {
     internal const int CurrentMacOsFontMigrationVersion = 1;
+    internal const int CurrentShortcutsMigrationVersion = 1;
 
-    public static string Version { get; set; } = "v5.1.0-rc6";
+    public static string Version { get; set; } = "v5.2.0-beta3";
 
     public SeGeneral General { get; set; } = new();
     public List<SeShortCut> Shortcuts { get; set; } = new();
+    public int? ShortcutsMigrationVersion { get; set; }
     public string Color1 { get; set; } = "#ffff00ff";
     public string Color2 { get; set; } = "#ff0000ff";
     public string Color3 { get; set; } = "#00ff00ff";
@@ -70,21 +72,33 @@ public class Se
     public static readonly string DataFolder;
     internal static string? SettingsFilePathOverride { get; set; }
 
+    /// <summary>Name of the translation currently held in <see cref="Language"/>, so repeat
+    /// <see cref="LoadLanguage()"/> calls for the same language skip the expensive deserialize.</summary>
+    private static string? _loadedLanguage;
+
     static Se()
     {
         ExePath = AppContext.BaseDirectory;
         var programFiles = Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles);
         var programFilesX86 = Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86);
 
+        // Portable mode - keeping data next to the executable - is a Windows notion: a zip
+        // install that lives outside Program Files. Off Windows both folder paths come back
+        // empty, and StartsWith(string.Empty) is always true, so every install already counted
+        // as "in Program Files" and used the per-user data folder. That is the behaviour we
+        // want off Windows, but it was reached by accident; state it outright, because flipping
+        // it would move the data folder out from under existing macOS and Linux installs.
         IsInstalledInProgramFiles =
-            ExePath.StartsWith(programFiles, StringComparison.OrdinalIgnoreCase) ||
-            ExePath.StartsWith(programFilesX86, StringComparison.OrdinalIgnoreCase);
+            !OperatingSystem.IsWindows() ||
+            IsUnder(ExePath, programFiles) ||
+            IsUnder(ExePath, programFilesX86);
 
         IsPortable = !IsInstalledInProgramFiles;
 
-        DataFolder = IsPortable
-            ? ExePath
-            : Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Subtitle Edit");
+        static bool IsUnder(string path, string root) =>
+            !string.IsNullOrEmpty(root) && path.StartsWith(root, StringComparison.OrdinalIgnoreCase);
+
+        DataFolder = ResolveDataFolder(IsPortable, ExePath, GetApplicationDataFolder());
 
         try
         {
@@ -103,6 +117,41 @@ public class Se
         NetflixQualityCheck.NetflixCheckShotChange.ShotChangeDirectory = Se.ShotChangesFolder;
     }
 
+    /// <summary>
+    /// The per-user application-data folder - <c>%AppData%</c> on Windows, <c>$XDG_CONFIG_HOME</c>
+    /// or <c>~/.config</c> on Linux, <c>~/Library/Application Support</c> on macOS.
+    /// <para>
+    /// The folder option matters off Windows. With the default (None) the runtime hands back an
+    /// EMPTY string whenever the folder does not exist yet - a fresh account, a container, a
+    /// sandboxed HOME - which quietly turned DataFolder into the relative "Subtitle Edit" and
+    /// scattered settings, dictionaries and themes into whatever the working directory happened
+    /// to be. DoNotVerify asks for the path only: it never touches the file system, so it cannot
+    /// come back empty for a folder that is merely missing, and it cannot throw. Creating the
+    /// folder is left to the guarded <see cref="Directory.CreateDirectory(string)"/> in the
+    /// static constructor, which makes the whole chain and logs on failure. The Create option
+    /// would create it here instead, but it throws when the folder is missing AND uncreatable
+    /// (a read-only or non-existent HOME) - and a throw in the static constructor takes the app
+    /// down at startup, before there is a window to report it in.
+    /// </para>
+    /// </summary>
+    internal static string GetApplicationDataFolder()
+        => Environment.GetFolderPath(
+            Environment.SpecialFolder.ApplicationData, Environment.SpecialFolderOption.DoNotVerify);
+
+    /// <summary>
+    /// Picks the data folder from the portable flag and the per-user application-data folder.
+    /// Falls back to the executable folder when there is no application-data folder at all -
+    /// <see cref="Environment.GetFolderPath(Environment.SpecialFolder)"/> still comes back empty
+    /// off Windows when the home directory cannot be determined (no HOME and no passwd entry, as
+    /// in a container running under an unknown uid) - so the result is always absolute and never
+    /// resolves against the working directory. Split out of the static constructor because that
+    /// reads the real environment and runs only once per process.
+    /// </summary>
+    internal static string ResolveDataFolder(bool isPortable, string exePath, string appDataFolder)
+        => isPortable || string.IsNullOrEmpty(appDataFolder)
+            ? exePath
+            : Path.Combine(appDataFolder, "Subtitle Edit");
+
     private static string? _dictionariesFolder;
     public static string DictionariesFolder
     {
@@ -110,6 +159,7 @@ public class Se
         set => _dictionariesFolder = value;
     }
     public static string ThemesFolder => Path.Combine(DataFolder, "Themes");
+    public static string FontsFolder => Path.Combine(DataFolder, "Fonts");
     public static string AutoBackupFolder => Path.Combine(DataFolder, "AutoBackup");
     public static string FfmpegFolder => Path.Combine(DataFolder, "ffmpeg");
     public static string TextToSpeechFolder => Path.Combine(DataFolder, "TextToSpeech");
@@ -137,7 +187,7 @@ public class Se
 
     private static string ResolveTesseractFolder()
     {
-        if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+        if (OperatingSystem.IsWindows())
         {
             return Path.Combine(DataFolder, "Tesseract550");
         }
@@ -208,6 +258,8 @@ public class Se
 
     public void InitializeMainShortcuts(MainViewModel vm)
     {
+        MigrateShortcuts();
+
         var defaults = ShortcutsMain.GetDefaultShortcuts(vm);
 
         if (Shortcuts.Count == 0)
@@ -222,6 +274,37 @@ public class Se
             if (!existing.Contains(def.ActionName))
             {
                 Shortcuts.Add(def);
+            }
+        }
+    }
+
+    /// <summary>
+    /// One-time shortcut migrations, versioned like <see cref="MigrateMacOsFontSettings"/> so a
+    /// binding the user re-assigns afterwards is never touched again.
+    ///
+    /// Version 1: v5.0.0 - v5.2.0-beta1 shipped F10 as the default for "set end and go to next",
+    /// and any visit to the Shortcuts window persisted that default to Settings.json. Once the
+    /// F10-suppression check from #12504 landed, the persisted default permanently disabled the
+    /// standard F10 menu-bar activation (#13083). The default is gone now, and the stale persisted
+    /// copy - indistinguishable from a user assignment - is cleared here once; users who really
+    /// want F10 on the action can assign it again and it will stick.
+    /// </summary>
+    internal void MigrateShortcuts()
+    {
+        if (ShortcutsMigrationVersion.GetValueOrDefault() >= CurrentShortcutsMigrationVersion)
+        {
+            return;
+        }
+
+        ShortcutsMigrationVersion = CurrentShortcutsMigrationVersion;
+
+        foreach (var shortcut in Shortcuts)
+        {
+            if (shortcut.ActionName == nameof(MainViewModel.WaveformSetEndAndGoToNextCommand) &&
+                shortcut.Keys.Count == 1 &&
+                shortcut.Keys[0].Equals(nameof(Avalonia.Input.Key.F10), StringComparison.OrdinalIgnoreCase))
+            {
+                shortcut.Keys.Clear();
             }
         }
     }
@@ -334,6 +417,15 @@ public class Se
             return;
         }
 
+        // MainView.Build() calls this again as a safety net for windows created via other entry
+        // points, and File > New window repeats it per window. Deserializing the ~185 KB / ~3300
+        // property translation graph costs well over 100 ms, so only do it when the loaded
+        // translation isn't already the requested one.
+        if (_loadedLanguage == Settings.General.Language)
+        {
+            return;
+        }
+
         try
         {
             var jsonFileName = Path.Combine(TranslationFolder, Settings.General.Language + ".json");
@@ -342,19 +434,40 @@ public class Se
                 return;
             }
 
-            var json = System.IO.File.ReadAllText(jsonFileName, Encoding.UTF8);
-            var language = JsonSerializer.Deserialize<SeLanguage>(json, new JsonSerializerOptions
-            {
-                PropertyNameCaseInsensitive = true,
-            });
+            using var stream = System.IO.File.OpenRead(jsonFileName);
+            var language = JsonSerializer.Deserialize(stream, SeLanguageJsonContext.Default.SeLanguage);
             if (language != null)
             {
                 Language = language;
+                _loadedLanguage = Settings.General.Language;
             }
         }
         catch (Exception exception)
         {
             Se.LogError(exception, "Failed to load UI language");
+        }
+    }
+
+    /// <summary>
+    /// Loads a translation file chosen at runtime (Options > Language) into <see cref="Language"/>.
+    /// Goes through here rather than assigning <see cref="Language"/> directly so the
+    /// already-loaded marker stays in step and a later <see cref="LoadLanguage()"/> — e.g. from a
+    /// new editor window — doesn't skip a language it hasn't actually loaded.
+    /// </summary>
+    public static async Task LoadLanguageFromFileAsync(string jsonFileName)
+    {
+        try
+        {
+            await using var stream = System.IO.File.OpenRead(jsonFileName);
+            var language = await JsonSerializer.DeserializeAsync(stream, SeLanguageJsonContext.Default.SeLanguage);
+            Language = language ?? new SeLanguage();
+            _loadedLanguage = language == null ? null : Path.GetFileNameWithoutExtension(jsonFileName);
+        }
+        catch (Exception exception)
+        {
+            Se.LogError(exception, "Failed to load UI language from " + jsonFileName);
+            Language = new SeLanguage();
+            _loadedLanguage = null;
         }
     }
 
@@ -499,11 +612,13 @@ public class Se
     private static void UpdateLibSeSettings()
     {
         Configuration.Settings.General.FFmpegLocation = Settings.General.FfmpegPath;
-        Configuration.Settings.General.UseDarkTheme = Settings.Appearance.Theme == "Dark";
         Configuration.Settings.General.UseTimeFormatHHMMSSFF = Settings.General.UseFrameMode;
 
         Configuration.Settings.Proxy.ProxyAddress = Settings.General.ProxyAddress ?? string.Empty;
         Configuration.Settings.Proxy.UserName = Settings.General.ProxyUserName ?? string.Empty;
+        Configuration.Settings.Proxy.Domain = Settings.General.ProxyDomain ?? string.Empty;
+        Configuration.Settings.Proxy.UseDefaultCredentials = Settings.General.ProxyUseDefaultCredentials;
+        Configuration.Settings.Proxy.BypassList = Settings.General.ProxyBypassList ?? string.Empty;
         if (!string.IsNullOrEmpty(Settings.General.ProxyPassword))
         {
             Configuration.Settings.Proxy.EncodePassword(Settings.General.ProxyPassword);
@@ -513,56 +628,24 @@ public class Se
             Configuration.Settings.Proxy.Password = null;
         }
 
+        Configuration.Settings.Tools.AutoBreakLineEndingEarly = Settings.Tools.AutoBreakLineEndingEarly;
+        Configuration.Settings.Tools.AutoBreakCommaBreakEarly = Settings.Tools.AutoBreakCommaBreakEarly;
+        Configuration.Settings.Tools.AutoBreakDashEarly = Settings.Tools.AutoBreakDashEarly;
+        Configuration.Settings.Tools.AutoBreakUsePixelWidth = Settings.Tools.AutoBreakUsePixelWidth;
+        Configuration.Settings.Tools.AutoBreakPreferBottomHeavy = Settings.Tools.AutoBreakPreferBottomHeavy;
+
         var stt = Settings.Tools.AudioToText;
         Configuration.Settings.Tools.WhisperChoice = stt.WhisperChoice;
-        Configuration.Settings.Tools.WhisperIgnoreVersion = stt.WhisperIgnoreVersion;
-        Configuration.Settings.Tools.WhisperDeleteTempFiles = stt.WhisperDeleteTempFiles;
-        Configuration.Settings.Tools.WhisperModel = stt.WhisperModel;
-        Configuration.Settings.Tools.WhisperLanguageCode = stt.WhisperLanguageCode;
         Configuration.Settings.Tools.WhisperLocation = stt.WhisperLocation;
         Configuration.Settings.Tools.WhisperCtranslate2Location = stt.WhisperCtranslate2Location;
-        Configuration.Settings.Tools.WhisperPurfviewFasterWhisperLocation = stt.WhisperPurfviewFasterWhisperLocation;
-        Configuration.Settings.Tools.WhisperPurfviewFasterWhisperDefaultCmd = stt.WhisperPurfviewFasterWhisperDefaultCmd;
         Configuration.Settings.Tools.WhisperXLocation = stt.WhisperXLocation;
         Configuration.Settings.Tools.WhisperStableTsLocation = stt.WhisperStableTsLocation;
         Configuration.Settings.Tools.WhisperCppModelLocation = stt.WhisperCppModelLocation;
-        Configuration.Settings.Tools.WhisperExtraSettings = stt.WhisperCustomCommandLineArguments;
-        Configuration.Settings.Tools.WhisperExtraSettingsHistory = stt.WhisperExtraSettingsHistory;
-        Configuration.Settings.Tools.WhisperAutoAdjustTimings = stt.WhisperAutoAdjustTimings;
-        Configuration.Settings.Tools.WhisperUseLineMaxChars = stt.WhisperUseLineMaxChars;
-        Configuration.Settings.Tools.WhisperPostProcessingAddPeriods = stt.WhisperPostProcessingAddPeriods;
-        Configuration.Settings.Tools.WhisperPostProcessingMergeLines = stt.WhisperPostProcessingMergeLines;
-        Configuration.Settings.Tools.WhisperPostProcessingSplitLines = stt.WhisperPostProcessingSplitLines;
-        Configuration.Settings.Tools.WhisperPostProcessingFixCasing = stt.WhisperPostProcessingFixCasing;
-        Configuration.Settings.Tools.WhisperPostProcessingFixShortDuration = stt.WhisperPostProcessingFixShortDuration;
-        Configuration.Settings.Tools.VoskPostProcessing = stt.PostProcessing;
 
-        Configuration.Settings.Tools.OpenAiCompatibleSttUrl = Settings.Tools.OpenAiCompatibleSttUrl;
-        Configuration.Settings.Tools.OpenAiCompatibleSttApiKey = Settings.Tools.OpenAiCompatibleSttApiKey;
-        Configuration.Settings.Tools.OpenAiCompatibleSttModel = Settings.Tools.OpenAiCompatibleSttModel;
-        Configuration.Settings.Tools.OpenAiCompatibleSttExtraHeaders = Settings.Tools.OpenAiCompatibleSttExtraHeaders;
-        Configuration.Settings.Tools.OpenAiCompatibleSttTimeoutSeconds = Settings.Tools.OpenAiCompatibleSttTimeoutSeconds;
-        Configuration.Settings.Tools.OpenAiCompatibleSttLanguage = Settings.Tools.OpenAiCompatibleSttLanguage;
-        Configuration.Settings.Tools.OpenAiCompatibleSttTemperature = Settings.Tools.OpenAiCompatibleSttTemperature;
-        Configuration.Settings.Tools.OpenAiCompatibleSttPrompt = Settings.Tools.OpenAiCompatibleSttPrompt;
-        Configuration.Settings.Tools.OpenAiCompatibleSttAutoTranscribeOnAudioSelection = Settings.Tools.OpenAiCompatibleSttAutoTranscribeOnAudioSelection;
-        Configuration.Settings.Tools.OpenAiCompatibleSttStream = Settings.Tools.OpenAiCompatibleSttStream;
 
-        Configuration.Settings.Tools.OpenRouterSttApiKey = Settings.Tools.OpenRouterSttApiKey;
-        Configuration.Settings.Tools.OpenRouterSttModel = Settings.Tools.OpenRouterSttModel;
-        Configuration.Settings.Tools.OpenRouterSttLanguage = Settings.Tools.OpenRouterSttLanguage;
-        Configuration.Settings.Tools.OpenRouterSttTemperature = Settings.Tools.OpenRouterSttTemperature;
-        Configuration.Settings.Tools.OpenRouterSttPrompt = Settings.Tools.OpenRouterSttPrompt;
-        Configuration.Settings.Tools.OpenRouterSttTimeoutSeconds = Settings.Tools.OpenRouterSttTimeoutSeconds;
 
-        Configuration.Settings.Tools.DashScopeSttApiKey = Settings.Tools.DashScopeSttApiKey;
-        Configuration.Settings.Tools.DashScopeSttModel = Settings.Tools.DashScopeSttModel;
-        Configuration.Settings.Tools.DashScopeSttLanguage = Settings.Tools.DashScopeSttLanguage;
-        Configuration.Settings.Tools.DashScopeSttRegion = Settings.Tools.DashScopeSttRegion;
-        Configuration.Settings.Tools.DashScopeSttEnableWords = Settings.Tools.DashScopeSttEnableWords;
-        Configuration.Settings.Tools.DashScopeSttTimeoutSeconds = Settings.Tools.DashScopeSttTimeoutSeconds;
 
-        Configuration.Settings.Tools.AutoTranslateLastName = Settings.AutoTranslate.AutoTranslateLastName;
+        Configuration.Settings.Tools.AutoTranslateDelaySeconds = (int)Math.Round(Settings.AutoTranslate.RequestDelaySeconds, MidpointRounding.AwayFromZero);
 
         // BeautifyTimeCodes profile: skip apply on a fresh install so libse's built-in
         // default-preset values stay intact. Once the user clicks OK in the profile editor,
@@ -572,20 +655,6 @@ public class Se
             Settings.BeautifyTimeCodes.ApplyTo(Configuration.Settings.BeautifyTimeCodes);
         }
 
-        Configuration.Settings.Tools.ImportTextSplitting = Settings.Tools.ImportTextSplitting;
-        Configuration.Settings.Tools.ImportTextSplittingLineMode = Settings.Tools.ImportTextSplittingLineMode;
-        Configuration.Settings.Tools.ImportTextLineBreak = Settings.Tools.ImportTextLineBreak;
-        Configuration.Settings.Tools.ImportTextMergeShortLines = Settings.Tools.ImportTextMergeShortLines;
-        Configuration.Settings.Tools.ImportTextAutoSplitAtBlank = Settings.Tools.ImportTextAutoSplitAtBlank;
-        Configuration.Settings.Tools.ImportTextRemoveLinesNoLetters = Settings.Tools.ImportTextRemoveLinesNoLetters;
-        Configuration.Settings.Tools.ImportTextGenerateTimeCodes = Settings.Tools.ImportTextGenerateTimeCodes;
-        Configuration.Settings.Tools.ImportTextAutoBreak = Settings.Tools.ImportTextAutoBreak;
-        Configuration.Settings.Tools.ImportTextAutoBreakAtEnd = Settings.Tools.ImportTextAutoBreakAtEnd;
-        Configuration.Settings.Tools.ImportTextGap = Settings.Tools.ImportTextGap;
-        Configuration.Settings.Tools.ImportTextAutoSplitNumberOfLines = Settings.Tools.ImportTextAutoSplitNumberOfLines;
-        Configuration.Settings.Tools.ImportTextAutoBreakAtEndMarkerText = Settings.Tools.ImportTextAutoBreakAtEndMarkerText;
-        Configuration.Settings.Tools.ImportTextDurationAuto = Settings.Tools.ImportTextDurationAuto;
-        Configuration.Settings.Tools.ImportTextFixedDuration = Settings.Tools.ImportTextFixedDuration;
 
         Configuration.Settings.Tools.MusicSymbol = Settings.Tools.MusicSymbol;
         Configuration.Settings.Tools.MusicSymbolReplace = Settings.Tools.MusicSymbolReplace;

@@ -207,7 +207,7 @@ public class OpenRouterSttService : ISttTranscriber
 
     public static OpenRouterSttSettings GetSettingsFromConfiguration()
     {
-        var tools = Configuration.Settings.Tools;
+        var tools = Se.Settings.Tools;
         return new OpenRouterSttSettings
         {
             EndpointUrl = DefaultEndpointUrl,
@@ -217,7 +217,9 @@ public class OpenRouterSttService : ISttTranscriber
             Temperature = (double)tools.OpenRouterSttTemperature,
             Prompt = tools.OpenRouterSttPrompt,
             TimeoutSeconds = tools.OpenRouterSttTimeoutSeconds,
-            Logger = Se.WriteToolsLog,
+            // See OpenAiSttService.GetSettingsFromConfiguration: hard-failure
+            // diagnostics must survive the default-off "write tools log" setting.
+            Logger = log => Se.WriteToolsLog(log, true),
         };
     }
 }

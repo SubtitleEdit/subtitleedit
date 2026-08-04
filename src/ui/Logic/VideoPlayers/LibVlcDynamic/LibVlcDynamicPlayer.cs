@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Nikse.SubtitleEdit.Logic.VideoPlayers.LibMpvDynamic;
@@ -241,15 +242,15 @@ public sealed class LibVlcDynamicPlayer : IDisposable, IVideoPlayer
 
     private static string[] GetLibraryNames()
     {
-        if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+        if (OperatingSystem.IsWindows())
         {
             return ["libvlc.dll"];
         }
-        else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+        else if (OperatingSystem.IsLinux())
         {
             return ["libvlc.so"];
         }
-        else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+        else if (OperatingSystem.IsMacOS())
         {
             return ["libvlc.dylib"];
         }
@@ -261,7 +262,7 @@ public sealed class LibVlcDynamicPlayer : IDisposable, IVideoPlayer
 
     private static string[] GetLibraryPaths()
     {
-        if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+        if (OperatingSystem.IsWindows())
         {
             return
             [
@@ -272,7 +273,7 @@ public sealed class LibVlcDynamicPlayer : IDisposable, IVideoPlayer
                 string.Empty,
             ];
         }
-        else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+        else if (OperatingSystem.IsLinux())
         {
             return
             [
@@ -292,7 +293,7 @@ public sealed class LibVlcDynamicPlayer : IDisposable, IVideoPlayer
                 "/snap/vlc/current/usr/lib",
             ];
         }
-        else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+        else if (OperatingSystem.IsMacOS())
         {
             return
             [
@@ -1076,7 +1077,7 @@ public sealed class LibVlcDynamicPlayer : IDisposable, IVideoPlayer
             return;
         }
 
-        if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+        if (OperatingSystem.IsWindows())
         {
             _libvlc_media_player_set_hwnd?.Invoke(_mediaPlayer, _windowHandle);
             System.Diagnostics.Debug.WriteLine($"Set HWND: {_windowHandle}");
@@ -1088,34 +1089,34 @@ public sealed class LibVlcDynamicPlayer : IDisposable, IVideoPlayer
         }
     }
 
+    /// <summary>
+    /// Releases the VLC instance. Safe to call more than once and from more than one thread
+    /// at a time - releasing the same native pointer twice is a double free - so each handle
+    /// is claimed with an interlocked exchange and only the caller that wins releases it.
+    /// </summary>
     public void Dispose()
     {
-        if (_disposed)
-        {
-            return;
-        }
-
         _disposed = true;
 
         try
         {
-            if (_mediaPlayer != IntPtr.Zero)
+            var mediaPlayer = Interlocked.Exchange(ref _mediaPlayer, IntPtr.Zero);
+            if (mediaPlayer != IntPtr.Zero)
             {
-                _libvlc_media_player_stop?.Invoke(_mediaPlayer);
-                _libvlc_media_player_release?.Invoke(_mediaPlayer);
-                _mediaPlayer = IntPtr.Zero;
+                _libvlc_media_player_stop?.Invoke(mediaPlayer);
+                _libvlc_media_player_release?.Invoke(mediaPlayer);
             }
 
-            if (_libVlc != IntPtr.Zero && _libvlc_release != null)
+            var libVlc = Interlocked.Exchange(ref _libVlc, IntPtr.Zero);
+            if (libVlc != IntPtr.Zero && _libvlc_release != null)
             {
-                _libvlc_release(_libVlc);
-                _libVlc = IntPtr.Zero;
+                _libvlc_release(libVlc);
             }
 
-            if (_library != IntPtr.Zero)
+            var library = Interlocked.Exchange(ref _library, IntPtr.Zero);
+            if (library != IntPtr.Zero)
             {
-                NativeMethods.CrossFreeLibrary(_library);
-                _library = IntPtr.Zero;
+                NativeMethods.CrossFreeLibrary(library);
             }
         }
         catch

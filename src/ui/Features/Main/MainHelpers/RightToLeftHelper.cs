@@ -3,7 +3,7 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Media;
 using Avalonia.VisualTree;
-using AvaloniaEdit.Editing;
+using Nikse.SubtitleEdit.Controls.SyntaxTextEditorControl;
 using Nikse.SubtitleEdit.Controls;
 using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Logic.Config;
@@ -100,7 +100,7 @@ internal static class RightToLeftHelper
     /// the items source re-creates the rows; selection and scroll position are
     /// restored.
     /// </summary>
-    internal static void RefreshDataGridBindings(DataGrid? grid, System.Collections.IEnumerable? itemsSource, object? selected)
+    internal static void RefreshDataGridBindings(TableView? grid, System.Collections.IEnumerable? itemsSource, object? selected)
     {
         if (grid == null)
         {
@@ -112,7 +112,7 @@ internal static class RightToLeftHelper
         if (selected != null)
         {
             grid.SelectedItem = selected;
-            grid.ScrollIntoView(selected, null);
+            grid.ScrollIntoView(selected);
         }
     }
 
@@ -138,9 +138,9 @@ internal static class RightToLeftHelper
             return;
         }
 
-        if (visual is DataGrid dataGrid)
+        if (visual is TableView tableView)
         {
-            dataGrid.FlowDirection = flowDirection;
+            tableView.FlowDirection = flowDirection;
         }
         else if (visual is Grid grid && grid.Name == "SubtitleTextEditGrid")
         {
@@ -150,9 +150,9 @@ internal static class RightToLeftHelper
         {
             textBox.FlowDirection = GetContentDirection(textBox.Text, flowDirection);
         }
-        else if (visual is TextArea textArea)
+        else if (visual is SyntaxTextView sourceView)
         {
-            textArea.FlowDirection = GetContentDirection(textArea.Document?.Text, flowDirection);
+            sourceView.FlowDirection = GetContentDirection(sourceView.Document.GetLine(0), flowDirection);
         }
 
         foreach (var child in visual.GetVisualChildren())

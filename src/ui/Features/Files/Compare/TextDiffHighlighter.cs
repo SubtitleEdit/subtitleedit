@@ -2,6 +2,7 @@
 using Avalonia.Controls.Documents;
 using Avalonia.Layout;
 using Avalonia.Media;
+using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Logic;
 using System;
 using System.Collections.Generic;
@@ -61,8 +62,27 @@ public static class TextDiffHighlighter
         return new SolidColorBrush(Color.FromRgb(230, 255, 237));
     }
 
+    // Diff and render with line-feed line breaks only. Subtitle text can carry \r\n (libse joins
+    // lines with Environment.NewLine, so CRLF on Windows) while regex-replaced text comes back
+    // \n-normalized (RegexUtils.ReplaceNewLineSafe). Diffing the raw strings then isolates the \r
+    // as a one-character "difference" run - and while \r\n inside a single Run renders as one
+    // line break, a \r/\n pair split across two runs renders as two, showing a phantom empty
+    // line (plus a red mark for the invisible \r) in the Multiple Replace preview (#12622).
+    private static string NormalizeNewLines(string text)
+    {
+        if (string.IsNullOrEmpty(text) || (text.IndexOf('\r') < 0 && text.IndexOf('\u2028') < 0))
+        {
+            return text;
+        }
+
+        return string.Join("\n", text.SplitToLines());
+    }
+
     public static (TextBlock left, TextBlock right) Compare(string text1, string text2)
     {
+        text1 = NormalizeNewLines(text1);
+        text2 = NormalizeNewLines(text2);
+
         var left = new TextBlock { TextWrapping = TextWrapping.Wrap, VerticalAlignment = VerticalAlignment.Center };
         var right = new TextBlock { TextWrapping = TextWrapping.Wrap, VerticalAlignment = VerticalAlignment.Center };
 
@@ -120,6 +140,9 @@ public static class TextDiffHighlighter
 
     public static (TextBlock before, TextBlock after) CompareReplacement(string text1, string text2)
     {
+        text1 = NormalizeNewLines(text1);
+        text2 = NormalizeNewLines(text2);
+
         var before = new TextBlock { TextWrapping = TextWrapping.Wrap, VerticalAlignment = VerticalAlignment.Center };
         var after = new TextBlock { TextWrapping = TextWrapping.Wrap, VerticalAlignment = VerticalAlignment.Center };
 

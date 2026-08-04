@@ -14,6 +14,19 @@ internal class Program
         // libHarfBuzzSharp deep-binds its own hb_* symbols and doesn't crash on Linux (#11864).
         Nikse.SubtitleEdit.UiLogic.HarfBuzzNativeFix.Apply();
 
+        // On Windows the console defaults to the legacy OEM codepage, which mangles any
+        // non-ASCII output (file names, previews - and it wrote the ¶ HI separator in
+        // dump-settings as raw byte 0x14, #12793). Redirected output stays UTF-8 too.
+        // Skipped when stdout is not attached to a console handle it can configure.
+        try
+        {
+            Console.OutputEncoding = System.Text.Encoding.UTF8;
+        }
+        catch (Exception)
+        {
+            // No console (service/pipe edge cases) - keep the default encoding.
+        }
+
         // Encoding code pages and the headless EBU UI helper are wired by the
         // module initializer in SeConv.Core.Bootstrap.
 
@@ -64,6 +77,18 @@ internal class Program
                 ListHelpers.PrintFixCommonErrorsRules();
                 return 0;
             }
+            if (first.Equals("dump-settings", StringComparison.OrdinalIgnoreCase) ||
+                first.Equals("default-settings", StringComparison.OrdinalIgnoreCase))
+            {
+                // Pure JSON to stdout so `seconv dump-settings > my.json` yields a clean file;
+                // the usage hint goes to stderr so it never lands in the redirected output.
+                Console.Out.WriteLine(SeConvSettings.DumpDefaults());
+                Console.Error.WriteLine(
+                    "// Above: seconv's settings schema with the current libse defaults. " +
+                    "Redirect to a file and pass it via --settings:<path.json>. " +
+                    "Note: these are seconv's key names, not the SE GUI's Settings.json.");
+                return 0;
+            }
             if (first.Equals("info", StringComparison.OrdinalIgnoreCase))
             {
                 return RunInfoCommand(args.Skip(1).ToArray());
@@ -108,12 +133,20 @@ internal class Program
     /// Skips path-like arguments (anything containing a path separator after the leading
     /// slash) so Unix absolute paths and Windows drive paths pass through unchanged.
     /// </summary>
-    private static string[] ConvertLegacyArguments(string[] args)
+    internal static string[] ConvertLegacyArguments(string[] args)
     {
         var converted = new List<string>();
 
         foreach (var arg in args)
         {
+            // SE 4.x invocations start with a "/convert" verb; modern seconv has no such
+            // option, so drop the token entirely — the remaining pattern/format positionals
+            // and rewritten /option:value args match the modern grammar.
+            if (arg.Equals("/convert", StringComparison.OrdinalIgnoreCase))
+            {
+                continue;
+            }
+
             if (arg.StartsWith('/') && arg != "/?" && arg != "/help" && !LooksLikePath(arg))
             {
                 converted.Add("--" + arg.Substring(1));

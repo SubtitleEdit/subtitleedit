@@ -6,13 +6,56 @@ using System.Text.RegularExpressions;
 
 namespace Nikse.SubtitleEdit.Core.Common
 {
-    public static class ContinuationUtilities
+    public static partial class ContinuationUtilities
     {
+        // SanitizeString runs several times per paragraph pair in the continuation fixes; the
+        // static Regex.Replace overloads went through the global regex cache (a lock + key
+        // hash per call), and the music-symbol loop even rebuilt its pattern strings per call.
+#if NET7_0_OR_GREATER
+        [GeneratedRegex("<.*?>")]
+        private static partial Regex HtmlTagRegexGen();
+        private static readonly Regex HtmlTagRegex = HtmlTagRegexGen();
+
+        [GeneratedRegex("\\(.*?\\)", RegexOptions.Singleline)]
+        private static partial Regex ParenthesesRegexGen();
+        private static readonly Regex ParenthesesRegex = ParenthesesRegexGen();
+
+        [GeneratedRegex("\\[.*?\\]", RegexOptions.Singleline)]
+        private static partial Regex SquareBracketsRegexGen();
+        private static readonly Regex SquareBracketsRegex = SquareBracketsRegexGen();
+
+        [GeneratedRegex("\\{.*?\\}")]
+        private static partial Regex CurlyBracesRegexGen();
+        private static readonly Regex CurlyBracesRegex = CurlyBracesRegexGen();
+#else
+        private static readonly Regex HtmlTagRegex = new Regex("<.*?>", RegexOptions.Compiled);
+        private static readonly Regex ParenthesesRegex = new Regex("\\(.*?\\)", RegexOptions.Compiled | RegexOptions.Singleline);
+        private static readonly Regex SquareBracketsRegex = new Regex("\\[.*?\\]", RegexOptions.Compiled | RegexOptions.Singleline);
+        private static readonly Regex CurlyBracesRegex = new Regex("\\{.*?\\}", RegexOptions.Compiled);
+#endif
+
+        // One per char in MusicSymbols ("♪♫#*¶"), same "\x.*?\x" patterns the loop built.
+        private static readonly Regex[] MusicSymbolRegexes = BuildMusicSymbolRegexes();
+
+        private static Regex[] BuildMusicSymbolRegexes()
+        {
+            var regexes = new Regex[MusicSymbols.Length];
+            for (var i = 0; i < MusicSymbols.Length; i++)
+            {
+                var c = MusicSymbols[i];
+                regexes[i] = new Regex("\\" + c + ".*?\\" + c, RegexOptions.Compiled | RegexOptions.Singleline);
+            }
+
+            return regexes;
+        }
+
         private static readonly string Dashes = "-‐–—";
         private static readonly string Quotes = "'\"“”‘’«»‹›„“‚‘";
         private static readonly string SingleQuotes = "'‘’‘";
         private static readonly string DoubleQuotes = "''‘‘’’‚‚‘‘";
-        private static readonly string MusicSymbols = "♪♫#*¶";
+        // const (not static readonly) so MusicSymbolRegexes above can reference it from its
+        // field initializer regardless of declaration order.
+        private const string MusicSymbols = "♪♫#*¶";
         private static readonly string ExplanationQuotes = "'\"“”‘’«»‹›";
 
         private static readonly List<string> LanguagesWithoutCaseDistinction = new List<string>
@@ -50,16 +93,16 @@ namespace Nikse.SubtitleEdit.Core.Common
             }
 
             var checkString = input;
-            checkString = Regex.Replace(checkString, "<.*?>", string.Empty);
-            checkString = Regex.Replace(checkString, "\\(.*?\\)", string.Empty, RegexOptions.Singleline);
-            checkString = Regex.Replace(checkString, "\\[.*?\\]", string.Empty, RegexOptions.Singleline);
-            checkString = Regex.Replace(checkString, "\\{.*?\\}", string.Empty);
+            checkString = HtmlTagRegex.Replace(checkString, string.Empty);
+            checkString = ParenthesesRegex.Replace(checkString, string.Empty);
+            checkString = SquareBracketsRegex.Replace(checkString, string.Empty);
+            checkString = CurlyBracesRegex.Replace(checkString, string.Empty);
 
             if (Configuration.Settings.General.FixContinuationStyleIgnoreLyrics)
             {
-                foreach (var c in MusicSymbols)
+                foreach (var regex in MusicSymbolRegexes)
                 {
-                    checkString = Regex.Replace(checkString, "\\" + c + ".*?\\" + c, string.Empty, RegexOptions.Singleline);
+                    checkString = regex.Replace(checkString, string.Empty);
                 }
             }
 
@@ -181,7 +224,7 @@ namespace Nikse.SubtitleEdit.Core.Common
         public static string ExtractParagraphOnly(string input, bool removeDashes)
         {
             var checkString = input;
-            checkString = Regex.Replace(checkString, "\\{.*?\\}", string.Empty);
+            checkString = CurlyBracesRegex.Replace(checkString, string.Empty);
             checkString = checkString.Trim();
 
             // Remove string elevation
@@ -894,13 +937,13 @@ namespace Nikse.SubtitleEdit.Core.Common
                 return false;
             }
 
-            var lineStartIndex = (position > 0 && position < input.Length) ? input.LastIndexOf("\n", position, StringComparison.Ordinal) : 0;
+            var lineStartIndex = (position > 0 && position < input.Length) ? input.LastIndexOf('\n', position) : 0;
             if (lineStartIndex == -1)
             {
                 lineStartIndex = 0;
             }
 
-            var lineEndIndex = (position > 0 && position < input.Length) ? input.IndexOf("\n", position, StringComparison.Ordinal) : input.Length;
+            var lineEndIndex = (position > 0 && position < input.Length) ? input.IndexOf('\n', position) : input.Length;
             if (lineEndIndex == -1)
             {
                 lineEndIndex = input.Length;
@@ -908,7 +951,7 @@ namespace Nikse.SubtitleEdit.Core.Common
 
             input = input.Substring(lineStartIndex, lineEndIndex - lineStartIndex);
 
-            var startIndex = input.IndexOf("<", StringComparison.Ordinal);
+            var startIndex = input.IndexOf('<');
             if (startIndex < 0)
             {
                 return false;
@@ -920,11 +963,11 @@ namespace Nikse.SubtitleEdit.Core.Common
                 if (startIndex == endIndex)
                 {
                     startIndex = 0;
-                    endIndex = input.IndexOf(">", endIndex, StringComparison.Ordinal) + 1;
+                    endIndex = input.IndexOf('>', endIndex) + 1;
                 }
                 else
                 {
-                    endIndex = input.IndexOf(">", endIndex, StringComparison.Ordinal) + 1;
+                    endIndex = input.IndexOf('>', endIndex) + 1;
                 }
             }
             else
@@ -1254,7 +1297,7 @@ namespace Nikse.SubtitleEdit.Core.Common
         public static bool IsArabicInsert(string originalInput, string sanitizedInput)
         {
             var input = ExtractParagraphOnly(originalInput);
-            input = Regex.Replace(input, "<.*?>", string.Empty);
+            input = HtmlTagRegex.Replace(input, string.Empty);
 
             if (input.Length >= 2)
             {

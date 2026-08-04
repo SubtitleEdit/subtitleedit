@@ -56,7 +56,7 @@ public class BinaryAdjustColorWindow : Window
 
         Content = mainGrid;
 
-        Activated += delegate { buttonOk.Focus(); };
+        Activated += delegate { buttonCancel.Focus(); }; // initial focus on a safe button, not an action button - a focused button clicks on bare Space
         KeyDown += (_, e) => vm.OnKeyDown(e);
     }
 
@@ -115,6 +115,10 @@ public class BinaryAdjustColorWindow : Window
 
         scrollViewer.Content = image;
 
-        return UiUtil.MakeBorderForControl(scrollViewer);
+        // Image based subtitles are light or dark text on a transparent background, both
+        // invisible on a matching flat backdrop - use the mid-gray checkerboard (issue #12692).
+        var border = UiUtil.MakeBorderForControl(scrollViewer);
+        border.Background = UiUtil.GetCheckerboardBrush();
+        return border;
     }
 }

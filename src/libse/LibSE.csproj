@@ -1,23 +1,34 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<TargetFramework>netstandard2.1</TargetFramework>
+		<TargetFrameworks>netstandard2.1;net10.0</TargetFrameworks>
 		<RootNamespace>Nikse.SubtitleEdit.Core</RootNamespace>
 		<AssemblyName>libse</AssemblyName>
 		<GenerateAssemblyInfo>false</GenerateAssemblyInfo>
 		<GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+		<PackageId>libse</PackageId>
+		<!-- Default version for local packs; the publish-nuget workflow overrides this with -p:Version= -->
+		<Version>5.1.0</Version>
+		<Description>Subtitle Edit's subtitle library - read/write 300+ subtitle formats (SubRip, ASSA, WebVTT, EBU STL, Blu-ray sup, and many more), fix common errors, auto-break lines, convert formats, and more.</Description>
 		<PackageProjectUrl>https://github.com/SubtitleEdit/subtitleedit/tree/main/src/libse</PackageProjectUrl>
 		<RepositoryUrl>https://github.com/SubtitleEdit/subtitleedit</RepositoryUrl>
 		<PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
-		<PackageTags>subtitle subtitles subrip srt blu-ray sup</PackageTags>
+		<PackageTags>subtitle subtitles subrip srt assa webvtt vtt ebu stl blu-ray sup convert</PackageTags>
 		<Authors>Nikolaj Olsson</Authors>
 		<PackageIcon>Icon.png</PackageIcon>
 		<IsPackable>true</IsPackable>
 		<RepositoryType>git</RepositoryType>
 		<IncludeContentInPack>true</IncludeContentInPack>
-		<PackageReleaseNotes>SE 5.0.0</PackageReleaseNotes>
+		<PackageReleaseNotes>https://github.com/SubtitleEdit/subtitleedit/releases</PackageReleaseNotes>
 		<PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
 		<PackageReadmeFile>Readme.md</PackageReadmeFile>
+		<GenerateDocumentationFile>true</GenerateDocumentationFile>
+		<!-- 1591: missing XML comments - most of the API is not documented yet -->
+		<NoWarn>$(NoWarn);1591</NoWarn>
+		<PublishRepositoryUrl>true</PublishRepositoryUrl>
+		<EmbedUntrackedSources>true</EmbedUntrackedSources>
+		<IncludeSymbols>true</IncludeSymbols>
+		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
 	</PropertyGroup>
 
 	<ItemGroup>
@@ -48,9 +59,7 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Microsoft.Win32.Registry" Version="5.0.0" />
 		<PackageReference Include="SkiaSharp" Version="3.119.4" />
-		<PackageReference Include="System.Net.Http" Version="4.3.4" />
 		<PackageReference Include="UTF.Unknown" Version="2.6.0" />
 	</ItemGroup>
 

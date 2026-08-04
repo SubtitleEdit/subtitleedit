@@ -234,30 +234,9 @@ public class VibeVoiceCrispAsr : ITtsEngine
             foreach (var src in Directory.GetFiles(sourceFolder, "*.wav"))
             {
                 var dest = Path.Combine(voicesFolder, Path.GetFileName(src));
-                if (File.Exists(dest))
-                {
-                    continue;
-                }
 
-                try
-                {
-                    var ffmpeg = FfmpegGenerator.ConvertToMono24kHzWav(src, dest);
-                    if (!ffmpeg.Start())
-                    {
-                        // ffmpeg unavailable — better to seed at 16 kHz than skip the voice.
-                        File.Copy(src, dest);
-                        continue;
-                    }
-                    ffmpeg.WaitForExit();
-                }
-                catch (Exception ex)
-                {
-                    Se.LogError(ex, $"VibeVoice (CrispASR): resample seed '{src}' failed; falling back to plain copy");
-                    try { if (!File.Exists(dest))
-                    {
-                        File.Copy(src, dest);
-                    } } catch { }
-                }
+                // When ffmpeg cannot do it, seeding at 16 kHz beats skipping the voice.
+                VoiceSeedHelper.CopyOrResample(src, dest, 24000, "VibeVoice (CrispASR)");
             }
         }
         catch (Exception ex)
@@ -315,13 +294,15 @@ public class VibeVoiceCrispAsr : ITtsEngine
     public static bool AreModelsInstalled(string? modelKey = null) =>
         IsValidLocalModelFile(GetTalkerPath(modelKey), GetTalkerFileName(modelKey));
 
-    public Task<Voice[]> GetVoices(string language)
+    public async Task<Voice[]> GetVoices(string language)
     {
         var result = new List<Voice>();
 
         // Voice cloning only — no built-in default voice. The combo is empty until the user
         // imports a reference WAV (or the qwen3-tts.cpp voice seed runs above).
-        var voicesFolder = GetSetVoicesFolder();
+        // Off the UI thread: GetSetVoicesFolder does one-time reference-WAV seeding through
+        // ffmpeg, and this is awaited from SelectedEngineChanged on the dispatcher.
+        var voicesFolder = await Task.Run(GetSetVoicesFolder);
         if (Directory.Exists(voicesFolder))
         {
             foreach (var file in Directory.GetFiles(voicesFolder, "*.wav"))
@@ -331,7 +312,7 @@ public class VibeVoiceCrispAsr : ITtsEngine
             }
         }
 
-        return Task.FromResult(result.ToArray());
+        return result.ToArray();
     }
 
     public bool IsVoiceInstalled(Voice voice) => true;
@@ -376,27 +357,31 @@ public class VibeVoiceCrispAsr : ITtsEngine
         // OpenAI-compatible /v1/audio/speech payload. CrispASR's vibevoice backends look at:
         //   - `input`             — the text to synthesise
         //   - `response_format`   — "wav"
-        //   - `voice`             — absolute WAV path or filename in --voice-dir
+        //   - `voice`             — see below
         //   - `speed`             — server-side linear resample of the synth output (0.25-4.0).
         //                           VibeVoice 1.5B tends to be on the slow side; default is 1.1
         //                           and the user can override in the engine settings dialog.
         // VibeVoice does not use `instructions` or `ref-text` (those are qwen3-tts-only).
+        //
+        // `voice` must be the extension-less STEM of the reference file: the server rejects
+        // absolute paths outright (HTTP 400, "'voice' must not contain … path separators" —
+        // path-traversal guard), so the full FilePath SE used to send failed every synthesis.
+        // The vibevoice backend resolves a bare name (no path separators, no .wav/.gguf suffix)
+        // against --voice-dir as <stem>.gguf then <stem>.wav, loading the WAV-clone path per
+        // request — which is why this engine, unlike the others, needs no startup --voice flag
+        // or server restart on voice change. Same bug family as MOSS-TTS #12757.
         var speed = Math.Clamp(Se.Settings.Video.TextToSpeech.VibeVoiceCrispAsrSpeed, 0.25, 4.0);
         var payload = new Dictionary<string, object>
         {
             ["input"] = inputText,
             ["response_format"] = "wav",
-            ["voice"] = vibeVoice.FilePath,
+            ["voice"] = Path.GetFileNameWithoutExtension(vibeVoice.FilePath),
             ["speed"] = speed,
-            // VibeVoice gates voice cloning behind a consent attestation (CrispASR v0.7.0 returns
-            // HTTP 400 consent_required without it). The user supplies their own reference voice
-            // by importing a WAV into SE, which is the act being attested here.
-            ["consent_attestation"] = "I have the speaker's consent, or it is my own voice.",
-            // Skip the audible AI-disclosure prefix CrispASR otherwise prepends to cloned audio;
-            // SE surfaces the AI-generated nature in its UI. The inaudible watermark + C2PA
-            // provenance metadata stay embedded regardless (defaults to true server-side).
-            ["spoken_disclaimer"] = false,
         };
+
+        // Attests the user's own imported reference and the AI-disclosure duty; see
+        // CrispAsrTtsProvenance. Skipped when voice cloning has not been accepted in settings.
+        CrispAsrTtsProvenance.AddSpeechAttestations(payload);
 
         var body = JsonSerializer.Serialize(payload);
         using var content = new StringContent(body, Encoding.UTF8, "application/json");
@@ -555,6 +540,7 @@ public class VibeVoiceCrispAsr : ITtsEngine
             // /v1/audio/speech gates `voice` field on --voice-dir being set. Same as Qwen3.
             psi.ArgumentList.Add("--voice-dir");
             psi.ArgumentList.Add(GetSetVoicesFolder());
+            CrispAsrTtsProvenance.AddServerMarkingArgs(psi.ArgumentList, exe);
 
             var process = Process.Start(psi)
                 ?? throw new InvalidOperationException("Failed to start crispasr (vibevoice)");

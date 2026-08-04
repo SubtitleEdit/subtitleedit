@@ -19,10 +19,11 @@ using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Timers;
+using Nikse.SubtitleEdit.UiLogic.SpellCheck;
 
 namespace Nikse.SubtitleEdit.Features.SpellCheck.GetDictionaries;
 
-public partial class GetDictionariesViewModel : ObservableObject
+public partial class GetDictionariesViewModel : ObservableObject, IClosingCleanup
 {
     [ObservableProperty] private ObservableCollection<GetSpellCheckDictionaryDisplay> _dictionaries;
     [ObservableProperty] private GetSpellCheckDictionaryDisplay? selectedDictionary;
@@ -38,7 +39,7 @@ public partial class GetDictionariesViewModel : ObservableObject
     public Window? Window { get; set; }
 
     public bool OkPressed { get; private set; }
-    public string? DictionaryFileName { get; private set; }
+    public SpellCheckDictionaryDisplay? SpellCheckDictionary { get; private set; }
 
     private Task? _downloadTask;
     private bool _done;
@@ -57,11 +58,15 @@ public partial class GetDictionariesViewModel : ObservableObject
     {
         { "Finnish", "fi" },
         { "Polish", "pl_PL" },
+        { "Armenian", "hy_AM" },
         { "Basque", "eu" },
+        { "Faroese", "fo_FO" },
+        { "Georgian", "ka_GE" },
         { "Irish", "ga" },
         { "Khmer", "km" },
         { "Latin", "la" },
         { "Lower Sorbian", "dsb" },
+        { "Luxembourgish", "lb_LU" },
         { "Malay", "ms" },
         { "Malayalam", "ml" },
         { "Macedonian", "mk" },
@@ -82,7 +87,7 @@ public partial class GetDictionariesViewModel : ObservableObject
         IsDownloadEnabled = true;
         IsProgressVisible = false;
         StatusText = string.Empty;
-        DictionaryFileName = string.Empty;
+        SpellCheckDictionary = null;
 
         _cancellationTokenSource = new CancellationTokenSource();
         _progressOpacity = 0;
@@ -114,8 +119,11 @@ public partial class GetDictionariesViewModel : ObservableObject
             {
                 _timer.Stop();
                 _done = true;
-                StatusText = "Download canceled";
-                Close();
+                Dispatcher.UIThread.Post(() =>
+                {
+                    StatusText = Se.Language.General.DownloadCanceled;
+                    Close();
+                });
             }
             else if (_downloadTask is { IsFaulted: true })
             {
@@ -123,7 +131,7 @@ public partial class GetDictionariesViewModel : ObservableObject
             }
             else if (_downloadTask is { IsCompletedSuccessfully: true })
             {
-                if (string.IsNullOrEmpty(DictionaryFileName))
+                if (SpellCheckDictionary == null)
                 {
                     HandleDownloadFailure();
                 }
@@ -131,8 +139,11 @@ public partial class GetDictionariesViewModel : ObservableObject
                 {
                     _timer.Stop();
                     _done = true;
-                    OkPressed = true;
-                    Close();
+                    Dispatcher.UIThread.Post(() =>
+                    {
+                        OkPressed = true;
+                        Close();
+                    });
                 }
             }
         }
@@ -147,7 +158,7 @@ public partial class GetDictionariesViewModel : ObservableObject
         _downloadTask = null;
         Dispatcher.UIThread.Post(() =>
         {
-            StatusText = "Download failed";
+            StatusText = Se.Language.General.DownloadFailed;
             Progress = 0;
             ProgressOpacity = 0;
             IsProgressVisible = false;
@@ -157,17 +168,22 @@ public partial class GetDictionariesViewModel : ObservableObject
 
     private void Close()
     {
-        _timer.Stop();
         Dispatcher.UIThread.Post(() => { Window?.Close(); });
+    }
+
+    public void OnClosingCleanup()
+    {
+        _timer.StopAndDispose(OnTimerOnElapsed);
     }
 
     /// <summary>
     /// Downloads every file of the selected dictionary. A LibreOffice entry has direct
     /// .aff/.dic links that are saved as-is; a legacy entry has a single .oxt/.zip/.xpi
-    /// archive that is unzipped. Sets <see cref="DictionaryFileName"/> to the largest .dic.
+    /// archive that is unzipped. Sets <see cref="SpellCheckDictionary"/> to the largest .dic.
     /// </summary>
-    private async Task DownloadAndUnpackAsync(IReadOnlyList<string> files, IProgress<float> progress, CancellationToken cancellationToken)
+    private async Task DownloadAndUnpackAsync(GetSpellCheckDictionaryDisplay dictionary, IProgress<float> progress, CancellationToken cancellationToken)
     {
+        var files = dictionary.Files;
         var folder = Se.DictionariesFolder;
         if (!Directory.Exists(folder))
         {
@@ -220,7 +236,14 @@ public partial class GetDictionariesViewModel : ObservableObject
             }
         }
 
-        DictionaryFileName = GetLargestFile(dicFiles);
+        var largestDicFile = GetLargestFile(dicFiles);
+        SpellCheckDictionary = string.IsNullOrEmpty(largestDicFile)
+            ? null
+            : new SpellCheckDictionaryDisplay
+            {
+                Name = dictionary.EnglishName,
+                DictionaryFileName = largestDicFile,
+            };
     }
 
     private static bool IsHunspellFile(string url)
@@ -265,28 +288,24 @@ public partial class GetDictionariesViewModel : ObservableObject
     {
         var uri = new Uri("avares://SubtitleEdit/Assets/HunspellDictionaries.json");
         using var stream = AssetLoader.Open(uri);
-        using var reader = new StreamReader(stream);
-
-        var jsonContent = reader.ReadToEnd();
-
         var options = new JsonSerializerOptions
         {
             PropertyNameCaseInsensitive = true,
             PropertyNamingPolicy = JsonNamingPolicy.CamelCase
         };
 
-        var dictionaries = JsonSerializer.Deserialize<List<GetSpellCheckDictionaryDisplay>>(jsonContent, options);
+        var dictionaries = JsonSerializer.Deserialize<List<GetSpellCheckDictionaryDisplay>>(stream, options);
         foreach (var dictionary in dictionaries ?? new List<GetSpellCheckDictionaryDisplay>())
         {
             Dictionaries.Add(dictionary);
         }
 
         var englishName = CultureInfo.CurrentCulture.EnglishName;
-        if (englishName.Contains('(') && englishName.Contains(')'))
+        var startIndex = englishName.IndexOf('(') + 1;
+        var endIndex = englishName.IndexOf(')', startIndex);
+        if (startIndex > 0 && endIndex > startIndex)
         {
-            var start = englishName.IndexOf('(') + 1;
-            var end = englishName.IndexOf(')');
-            englishName = englishName.Substring(start, end - start).Trim();
+            englishName = englishName.Substring(startIndex, endIndex - startIndex).Trim();
         }
 
         var selected = Dictionaries.FirstOrDefault(d => d.EnglishName.Contains(englishName, StringComparison.OrdinalIgnoreCase) ||
@@ -383,7 +402,7 @@ public partial class GetDictionariesViewModel : ObservableObject
             StatusText = string.Format(Se.Language.General.DownloadingXPercent, pctString);
         });
 
-        _downloadTask = DownloadAndUnpackAsync(selected.Files, downloadProgress, _cancellationTokenSource.Token);
+        _downloadTask = DownloadAndUnpackAsync(selected, downloadProgress, _cancellationTokenSource.Token);
     }
 
     [RelayCommand]
@@ -400,7 +419,6 @@ public partial class GetDictionariesViewModel : ObservableObject
     [RelayCommand]
     private void Ok()
     {
-        _timer.Stop();
         Close();
     }
 
@@ -408,7 +426,6 @@ public partial class GetDictionariesViewModel : ObservableObject
     private void Cancel()
     {
         _cancellationTokenSource.Cancel();
-        _timer.Stop();
         _done = true;
         Close();
     }

@@ -1,7 +1,4 @@
 using Avalonia.Media;
-using AvaloniaEdit.Document;
-using AvaloniaEdit.Rendering;
-using System;
 using System.Text.RegularExpressions;
 
 namespace Nikse.SubtitleEdit.Logic;
@@ -9,16 +6,15 @@ namespace Nikse.SubtitleEdit.Logic;
 /// <summary>
 /// Syntax highlighting for JSON-based subtitle formats
 /// </summary>
-public partial class JsonSourceSyntaxHighlighting : DocumentColorizingTransformer
+public partial class JsonSourceSyntaxHighlighting : ISourceSyntaxHighlighter
 {
     // Color scheme (VS Code-like JSON colors)
-    private static readonly IBrush PropertyNameBrush = new SolidColorBrush(Color.Parse("#9CDCFE")); // Light blue for property names
-    private static readonly IBrush StringBrush = new SolidColorBrush(Color.Parse("#CE9178")); // Orange for string values
-    private static readonly IBrush NumberBrush = new SolidColorBrush(Color.Parse("#B5CEA8")); // Light green for numbers
-    private static readonly IBrush BooleanBrush = new SolidColorBrush(Color.Parse("#569CD6")); // Blue for true/false/null
-    private static readonly IBrush BraceBrush = new SolidColorBrush(Color.Parse("#FFD700")); // Gold for braces and brackets
-    private static readonly IBrush ColonCommaBrush = new SolidColorBrush(Color.Parse("#D4D4D4")); // Light gray for : and ,
-    private static readonly Typeface BoldTypeface = new(FontFamily.Default, weight: FontWeight.Bold);
+    private static readonly Color PropertyNameColor = Color.Parse("#9CDCFE"); // Light blue for property names
+    private static readonly Color StringColor = Color.Parse("#CE9178"); // Orange for string values
+    private static readonly Color NumberColor = Color.Parse("#B5CEA8"); // Light green for numbers
+    private static readonly Color BooleanColor = Color.Parse("#569CD6"); // Blue for true/false/null
+    private static readonly Color BraceColor = Color.Parse("#FFD700"); // Gold for braces and brackets
+    private static readonly Color ColonCommaColor = Color.Parse("#D4D4D4"); // Light gray for : and ,
 
     // JSON property names (e.g., "start": or "text":)
     [GeneratedRegex(@"""([^""\\]*(\\.[^""\\]*)*)""(?=\s*:)", RegexOptions.Compiled)]
@@ -44,50 +40,43 @@ public partial class JsonSourceSyntaxHighlighting : DocumentColorizingTransforme
     [GeneratedRegex(@"[,:]", RegexOptions.Compiled)]
     private static partial Regex JsonDelimitersRegex();
 
-    protected override void ColorizeLine(DocumentLine line)
+    public void HighlightLine(string lineText, SourceSyntaxLineStyler styler)
     {
-        var lineText = CurrentContext.Document.GetText(line);
         if (string.IsNullOrEmpty(lineText))
         {
             return;
         }
 
         // Order matters: we need to colorize in the right sequence to avoid overlaps
-        
+
         // 1. Colorize property names first (strings followed by colon)
-        ColorizePropertyNames(line, lineText);
+        ColorizePropertyNames(lineText, styler);
 
         // 2. Colorize string values (strings not followed by colon)
-        ColorizeStringValues(line, lineText);
+        ColorizeStringValues(lineText, styler);
 
         // 3. Colorize booleans and null
-        ColorizeBooleanNull(line, lineText);
+        ColorizeBooleanNull(lineText, styler);
 
         // 4. Colorize numbers
-        ColorizeNumbers(line, lineText);
+        ColorizeNumbers(lineText, styler);
 
         // 5. Colorize structural characters (braces, brackets)
-        ColorizeBraces(line, lineText);
+        ColorizeBraces(lineText, styler);
 
         // 6. Colorize delimiters (colons, commas)
-        ColorizeDelimiters(line, lineText);
+        ColorizeDelimiters(lineText, styler);
     }
 
-    private void ColorizePropertyNames(DocumentLine line, string lineText)
+    private static void ColorizePropertyNames(string lineText, SourceSyntaxLineStyler styler)
     {
         foreach (Match match in JsonPropertyNameRegex().Matches(lineText))
         {
-            ChangeLinePart(
-                line.Offset + match.Index,
-                line.Offset + match.Index + match.Length,
-                element =>
-                {
-                    element.TextRunProperties.SetForegroundBrush(PropertyNameBrush);
-                });
+            styler.Apply(match.Index, match.Length, PropertyNameColor);
         }
     }
 
-    private void ColorizeStringValues(DocumentLine line, string lineText)
+    private static void ColorizeStringValues(string lineText, SourceSyntaxLineStyler styler)
     {
         foreach (Match match in JsonStringValueRegex().Matches(lineText))
         {
@@ -97,17 +86,11 @@ public partial class JsonSourceSyntaxHighlighting : DocumentColorizingTransforme
                 continue;
             }
 
-            ChangeLinePart(
-                line.Offset + match.Index,
-                line.Offset + match.Index + match.Length,
-                element =>
-                {
-                    element.TextRunProperties.SetForegroundBrush(StringBrush);
-                });
+            styler.Apply(match.Index, match.Length, StringColor);
         }
     }
 
-    private void ColorizeNumbers(DocumentLine line, string lineText)
+    private static void ColorizeNumbers(string lineText, SourceSyntaxLineStyler styler)
     {
         foreach (Match match in JsonNumberRegex().Matches(lineText))
         {
@@ -120,18 +103,12 @@ public partial class JsonSourceSyntaxHighlighting : DocumentColorizingTransforme
             // Validate it's a proper JSON number (not part of a string or property name)
             if (IsValidJsonNumber(lineText, match.Index, match.Length))
             {
-                ChangeLinePart(
-                    line.Offset + match.Index,
-                    line.Offset + match.Index + match.Length,
-                    element =>
-                    {
-                        element.TextRunProperties.SetForegroundBrush(NumberBrush);
-                    });
+                styler.Apply(match.Index, match.Length, NumberColor);
             }
         }
     }
 
-    private void ColorizeBooleanNull(DocumentLine line, string lineText)
+    private static void ColorizeBooleanNull(string lineText, SourceSyntaxLineStyler styler)
     {
         foreach (Match match in JsonBooleanNullRegex().Matches(lineText))
         {
@@ -141,18 +118,11 @@ public partial class JsonSourceSyntaxHighlighting : DocumentColorizingTransforme
                 continue;
             }
 
-            ChangeLinePart(
-                line.Offset + match.Index,
-                line.Offset + match.Index + match.Length,
-                element =>
-                {
-                    element.TextRunProperties.SetForegroundBrush(BooleanBrush);
-                    element.TextRunProperties.SetTypeface(BoldTypeface);
-                });
+            styler.Apply(match.Index, match.Length, BooleanColor, bold: true);
         }
     }
 
-    private void ColorizeBraces(DocumentLine line, string lineText)
+    private static void ColorizeBraces(string lineText, SourceSyntaxLineStyler styler)
     {
         foreach (Match match in JsonBracesRegex().Matches(lineText))
         {
@@ -162,18 +132,11 @@ public partial class JsonSourceSyntaxHighlighting : DocumentColorizingTransforme
                 continue;
             }
 
-            ChangeLinePart(
-                line.Offset + match.Index,
-                line.Offset + match.Index + match.Length,
-                element =>
-                {
-                    element.TextRunProperties.SetForegroundBrush(BraceBrush);
-                    element.TextRunProperties.SetTypeface(BoldTypeface);
-                });
+            styler.Apply(match.Index, match.Length, BraceColor, bold: true);
         }
     }
 
-    private void ColorizeDelimiters(DocumentLine line, string lineText)
+    private static void ColorizeDelimiters(string lineText, SourceSyntaxLineStyler styler)
     {
         foreach (Match match in JsonDelimitersRegex().Matches(lineText))
         {
@@ -183,13 +146,7 @@ public partial class JsonSourceSyntaxHighlighting : DocumentColorizingTransforme
                 continue;
             }
 
-            ChangeLinePart(
-                line.Offset + match.Index,
-                line.Offset + match.Index + match.Length,
-                element =>
-                {
-                    element.TextRunProperties.SetForegroundBrush(ColonCommaBrush);
-                });
+            styler.Apply(match.Index, match.Length, ColonCommaColor);
         }
     }
 

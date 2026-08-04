@@ -70,9 +70,12 @@ public class WordListsWindow : Window
 
         Content = grid;
 
-        Activated += delegate { buttonOk.Focus(); }; // hack to make OnKeyDown work
+        Activated += delegate { comboLanguages.Focus(); }; // initial focus on an input, not an action button - a focused button clicks on bare Space
         Closing += (s, e) => _vm.Closing();
         Loaded += (s, e) => vm.Loaded();
+
+        Closing += delegate { UiUtil.SaveWindowPosition(this); };
+        Loaded += delegate { UiUtil.RestoreWindowPosition(this); };
     }
 
     // Panel header with the list's icon on a colored rounded square plus a count badge in the

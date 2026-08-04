@@ -1,6 +1,9 @@
+using Avalonia.Automation;
 using Avalonia.Controls;
+using Avalonia.Data;
 using Avalonia.Interactivity;
 using Avalonia.Layout;
+using Nikse.SubtitleEdit.Controls;
 using Nikse.SubtitleEdit.Controls.AudioVisualizerControl;
 using Nikse.SubtitleEdit.Features.Main.Layout;
 using Nikse.SubtitleEdit.Logic;
@@ -54,6 +57,27 @@ public class SetSyncPointWindow : Window
         comboBoxLeft.HorizontalAlignment = HorizontalAlignment.Stretch;
         vm.ComboBoxSubtitle = comboBoxLeft;
 
+        vm.TimeCodeUpDownSyncPoint = new TimeCodeUpDown
+        {
+            VerticalAlignment = VerticalAlignment.Center,
+            [!TimeCodeUpDown.ValueProperty] = new Binding(nameof(vm.SyncPointTimeCode))
+            {
+                Mode = BindingMode.TwoWay,
+            },
+        };
+        AutomationProperties.SetName(vm.TimeCodeUpDownSyncPoint, Se.Language.General.VideoPosition);
+
+        var panelTimeCode = new StackPanel
+        {
+            Orientation = Orientation.Horizontal,
+            Spacing = 10,
+            Children =
+            {
+                UiUtil.MakeLabel(Se.Language.General.VideoPosition),
+                vm.TimeCodeUpDownSyncPoint,
+            }
+        };
+
         var panelLeftButtons = new StackPanel
         {
             Orientation = Orientation.Horizontal,
@@ -78,6 +102,7 @@ public class SetSyncPointWindow : Window
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Star) }, // video player
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // audio visualizer
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // combo box
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // sync point time code
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // buttons
             },
             ColumnDefinitions =
@@ -93,7 +118,8 @@ public class SetSyncPointWindow : Window
         gridLeft.Add(vm.VideoPlayerControl, 0);
         gridLeft.Add(vm.AudioVisualizer, 1);
         gridLeft.Add(comboBoxLeft, 2);
-        gridLeft.Add(panelLeftButtons, 3);
+        gridLeft.Add(panelTimeCode, 3);
+        gridLeft.Add(panelLeftButtons, 4);
 
         var grid = new Grid
         {
@@ -120,9 +146,17 @@ public class SetSyncPointWindow : Window
 
         Content = grid;
 
-        Activated += delegate { buttonOk.Focus(); }; // hack to make OnKeyDown work
+        // Focus the time code box, not a button, so the window receives key events without arming
+        // any button: a focused button fires OnClick on bare Space, and "Set sync point" used to be
+        // focused here - so the first Space a user pressed closed the dialog instead of playing.
+        Activated += delegate { vm.FocusTimeCodeUpDown(); };
 
         AddHandler(KeyDownEvent, vm.OnKeyDownHandler, RoutingStrategies.Tunnel | RoutingStrategies.Bubble, handledEventsToo: false);
+
+        // Avalonia's Button raises OnClick from OnKeyUp on Space whenever it is focused - it does
+        // not check that it also saw the KeyDown - so handling Space in OnKeyDownHandler alone is
+        // not enough to keep a focused button from clicking on Space release.
+        AddHandler(KeyUpEvent, vm.OnKeyUpHandler, RoutingStrategies.Tunnel | RoutingStrategies.Bubble, handledEventsToo: true);
         Loaded += (_, e) => vm.OnLoaded();
         Closing += (_, e) => vm.OnClosing();
     }

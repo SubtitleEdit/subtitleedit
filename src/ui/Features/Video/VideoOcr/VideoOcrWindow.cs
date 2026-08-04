@@ -12,6 +12,7 @@ using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Logic.LlamaCpp;
 using Nikse.SubtitleEdit.Logic.ValueConverters;
 using System.Linq;
+using Nikse.SubtitleEdit.UiLogic.LlamaCpp;
 
 namespace Nikse.SubtitleEdit.Features.Video.VideoOcr;
 
@@ -74,7 +75,7 @@ public class VideoOcrWindow : Window
 
         Content = grid;
 
-        Activated += delegate { buttonStart.Focus(); }; // hack to make OnKeyDown work
+        Activated += delegate { _comboEngine?.Focus(); }; // initial focus on an input, not an action button - a focused button clicks on bare Space
         Loaded += (s, e) => vm.OnLoaded();
         Closing += (s, e) => vm.OnClosing();
         AddHandler(KeyDownEvent, vm.OnKeyDownHandler, RoutingStrategies.Tunnel | RoutingStrategies.Bubble, handledEventsToo: false);
@@ -202,31 +203,31 @@ public class VideoOcrWindow : Window
 
         // Paddle OCR settings
         var paddlePanel = new StackPanel { Orientation = Orientation.Vertical, Spacing = 4 };
-        paddlePanel.Children.Add(UiUtil.MakeLabel(Se.Language.Video.VideoOcr.Language));
+        paddlePanel.Children.Add(UiUtil.MakeLabel(Se.Language.General.Language));
         paddlePanel.Children.Add(comboPaddleLanguage);
         paddlePanel.Bind(StackPanel.IsVisibleProperty, new Binding(nameof(vm.IsPaddleEngine)) { Source = vm });
         panel.Children.Add(paddlePanel);
 
         // Ollama settings
         var ollamaPanel = new StackPanel { Orientation = Orientation.Vertical, Spacing = 4 };
-        ollamaPanel.Children.Add(UiUtil.MakeLabel(Se.Language.Video.VideoOcr.Url));
+        ollamaPanel.Children.Add(UiUtil.MakeLabel(Se.Language.General.Url));
         ollamaPanel.Children.Add(UiUtil.MakeTextBox(330, vm, nameof(vm.OllamaUrl)));
-        ollamaPanel.Children.Add(UiUtil.MakeLabel(Se.Language.Video.VideoOcr.Model));
+        ollamaPanel.Children.Add(UiUtil.MakeLabel(Se.Language.General.Model));
         ollamaPanel.Children.Add(UiUtil.MakeTextBox(330, vm, nameof(vm.OllamaModel)));
-        ollamaPanel.Children.Add(UiUtil.MakeLabel(Se.Language.Video.VideoOcr.Language));
+        ollamaPanel.Children.Add(UiUtil.MakeLabel(Se.Language.General.Language));
         ollamaPanel.Children.Add(UiUtil.MakeTextBox(330, vm, nameof(vm.OllamaLanguage)));
         ollamaPanel.Bind(StackPanel.IsVisibleProperty, new Binding(nameof(vm.IsOllamaEngine)) { Source = vm });
         panel.Children.Add(ollamaPanel);
 
         // GLM settings
         var glmPanel = new StackPanel { Orientation = Orientation.Vertical, Spacing = 4 };
-        glmPanel.Children.Add(UiUtil.MakeLabel(Se.Language.Video.VideoOcr.Url));
+        glmPanel.Children.Add(UiUtil.MakeLabel(Se.Language.General.Url));
         glmPanel.Children.Add(UiUtil.MakeTextBox(330, vm, nameof(vm.GlmUrl)));
-        glmPanel.Children.Add(UiUtil.MakeLabel(Se.Language.Video.VideoOcr.Model));
+        glmPanel.Children.Add(UiUtil.MakeLabel(Se.Language.General.Model));
         glmPanel.Children.Add(UiUtil.MakeTextBox(330, vm, nameof(vm.GlmModel)));
-        glmPanel.Children.Add(UiUtil.MakeLabel(Se.Language.Video.VideoOcr.ApiKey));
+        glmPanel.Children.Add(UiUtil.MakeLabel(Se.Language.General.ApiKey));
         glmPanel.Children.Add(UiUtil.MakeApiKeyTextBox(290, vm, nameof(vm.GlmApiKey)));
-        glmPanel.Children.Add(UiUtil.MakeLabel(Se.Language.Video.VideoOcr.Language));
+        glmPanel.Children.Add(UiUtil.MakeLabel(Se.Language.General.Language));
         glmPanel.Children.Add(UiUtil.MakeTextBox(330, vm, nameof(vm.GlmLanguage)));
         glmPanel.Bind(StackPanel.IsVisibleProperty, new Binding(nameof(vm.IsGlmEngine)) { Source = vm });
         panel.Children.Add(glmPanel);
@@ -237,13 +238,13 @@ public class VideoOcrWindow : Window
         _comboLlamaCppModel = comboLlamaCppModel;
 
         var llamaCppPanel = new StackPanel { Orientation = Orientation.Vertical, Spacing = 4 };
-        llamaCppPanel.Children.Add(UiUtil.MakeLabel(Se.Language.Video.VideoOcr.Model));
+        llamaCppPanel.Children.Add(UiUtil.MakeLabel(Se.Language.General.Model));
         llamaCppPanel.Children.Add(comboLlamaCppModel);
         var llamaCppButtons = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 5 };
         llamaCppButtons.Children.Add(UiUtil.MakeButton(vm.DownloadLlamaCppCommand, IconNames.Download, Se.Language.General.Download));
         llamaCppButtons.Children.Add(MakeLlamaCppServerButton(vm));
         llamaCppPanel.Children.Add(llamaCppButtons);
-        llamaCppPanel.Children.Add(UiUtil.MakeLabel(Se.Language.Video.VideoOcr.Language));
+        llamaCppPanel.Children.Add(UiUtil.MakeLabel(Se.Language.General.Language));
         llamaCppPanel.Children.Add(UiUtil.MakeTextBox(330, vm, nameof(vm.LlamaCppLanguage)));
         llamaCppPanel.Bind(StackPanel.IsVisibleProperty, new Binding(nameof(vm.IsLlamaCppEngine)) { Source = vm });
         panel.Children.Add(llamaCppPanel);
@@ -363,77 +364,98 @@ public class VideoOcrWindow : Window
     {
         var fullTimeConverter = new TimeSpanToDisplayFullConverter();
         var shortTimeConverter = new TimeSpanToDisplayShortConverter();
-        var dataGrid = new DataGrid
+        var tableView = TableViewExtras.MakeTableView();
+        tableView.DataContext = vm;
+        tableView.ItemsSource = vm.Lines;
+
+        tableView.Columns.Add(new SeTableViewColumn
         {
-            AutoGenerateColumns = false,
-            SelectionMode = DataGridSelectionMode.Extended,
-            CanUserResizeColumns = true,
-            HorizontalAlignment = HorizontalAlignment.Stretch,
-            VerticalAlignment = VerticalAlignment.Stretch,
-            IsReadOnly = false, // the text column is editable so OCR mistakes can be fixed in place
-            DataContext = vm,
-            ItemsSource = vm.Lines,
-            Columns =
+            Header = Se.Language.General.NumberSymbol,
+            CellTheme = UiUtil.TableViewCellTheme,
+            HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
+            Binding = new Binding(nameof(VideoOcrLineItem.Number)),
+            Width = new GridLength(50),
+        });
+        tableView.Columns.Add(new SeTableViewColumn
+        {
+            Header = Se.Language.General.Show,
+            CellTheme = UiUtil.TableViewCellTheme,
+            HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
+            Binding = new Binding(nameof(VideoOcrLineItem.StartTime)) { Converter = fullTimeConverter },
+            Width = new GridLength(110),
+        });
+        tableView.Columns.Add(new SeTableViewColumn
+        {
+            Header = Se.Language.General.Hide,
+            CellTheme = UiUtil.TableViewCellTheme,
+            HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
+            Binding = new Binding(nameof(VideoOcrLineItem.EndTime)) { Converter = fullTimeConverter },
+            Width = new GridLength(110),
+        });
+        tableView.Columns.Add(new SeTableViewColumn
+        {
+            Header = Se.Language.General.Duration,
+            CellTheme = UiUtil.TableViewCellTheme,
+            HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
+            Binding = new Binding(nameof(VideoOcrLineItem.Duration)) { Converter = shortTimeConverter },
+            Width = new GridLength(90),
+        });
+
+        // TableView has no cell editing, so the editable text column (OCR mistakes must stay
+        // fixable in place) becomes a borderless in-cell TextBox bound two-way.
+        tableView.Columns.Add(new SeTableViewColumn
+        {
+            Header = Se.Language.General.Text,
+            CellTheme = UiUtil.TableViewNoPaddingCellTheme,
+            HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
+            Width = new GridLength(1, GridUnitType.Star),
+            CellTemplate = new Avalonia.Controls.Templates.FuncDataTemplate<VideoOcrLineItem>((item, _) =>
             {
-                new DataGridTextColumn
+                if (item == null)
                 {
-                    Header = Se.Language.General.NumberSymbol,
-                    CellTheme = UiUtil.DataGridNoBorderNoPaddingCellTheme,
-                    Binding = new Binding(nameof(VideoOcrLineItem.Number)),
-                    IsReadOnly = true,
-                },
-                new DataGridTextColumn
+                    return new TextBlock();
+                }
+
+                var textBox = new TextBox
                 {
-                    Header = Se.Language.General.Show,
-                    CellTheme = UiUtil.DataGridNoBorderNoPaddingCellTheme,
-                    Binding = new Binding(nameof(VideoOcrLineItem.StartTime)) { Converter = fullTimeConverter },
-                    IsReadOnly = true,
-                },
-                new DataGridTextColumn
-                {
-                    Header = Se.Language.General.Hide,
-                    CellTheme = UiUtil.DataGridNoBorderNoPaddingCellTheme,
-                    Binding = new Binding(nameof(VideoOcrLineItem.EndTime)) { Converter = fullTimeConverter },
-                    IsReadOnly = true,
-                },
-                new DataGridTextColumn
-                {
-                    Header = Se.Language.General.Duration,
-                    CellTheme = UiUtil.DataGridNoBorderNoPaddingCellTheme,
-                    Binding = new Binding(nameof(VideoOcrLineItem.Duration)) { Converter = shortTimeConverter },
-                    IsReadOnly = true,
-                },
-                new DataGridTextColumn
-                {
-                    Header = Se.Language.General.Text,
-                    CellTheme = UiUtil.DataGridNoBorderNoPaddingCellTheme,
-                    Binding = new Binding(nameof(VideoOcrLineItem.Text)),
-                    IsReadOnly = false,
-                    Width = new DataGridLength(1, DataGridLengthUnitType.Star),
-                },
-            },
-        };
+                    Background = Brushes.Transparent,
+                    BorderThickness = new Thickness(0),
+                    VerticalContentAlignment = VerticalAlignment.Center,
+                    [!TextBox.TextProperty] = new Binding(nameof(VideoOcrLineItem.Text)) { Mode = BindingMode.TwoWay },
+                };
+
+                // Clicking into a cell to edit should also make it the current row, so the
+                // double-tap preview seek and Delete act on the line being edited.
+                textBox.GotFocus += (_, _) => tableView.SelectedItem = item;
+                return textBox;
+            }),
+        });
 
         // Double-click a line to see the frame it came from in the preview.
-        dataGrid.DoubleTapped += (s, e) =>
+        tableView.DoubleTapped += (s, e) =>
         {
-            if (dataGrid.SelectedItem is VideoOcrLineItem item)
+            if (tableView.SelectedItem is VideoOcrLineItem item)
             {
                 vm.SeekPreview(item);
             }
         };
 
         // Delete removes the selected lines (unless a cell edit is in progress).
-        dataGrid.KeyDown += (s, e) =>
+        tableView.KeyDown += (s, e) =>
         {
             if (e.Key == Avalonia.Input.Key.Delete && e.Source is not TextBox)
             {
-                vm.DeleteLines(dataGrid.SelectedItems.OfType<VideoOcrLineItem>().ToList());
+                var selectedItems = tableView.SelectedItems;
+                if (selectedItems != null)
+                {
+                    vm.DeleteLines(selectedItems.OfType<VideoOcrLineItem>().ToList());
+                }
+
                 e.Handled = true;
             }
         };
 
-        return UiUtil.MakeBorderForControl(dataGrid);
+        return UiUtil.MakeBorderForControl(tableView);
     }
 
     private static Grid MakeProgressView(VideoOcrViewModel vm)

@@ -4,6 +4,16 @@
 <dict>
     <key>com.apple.security.cs.allow-jit</key>
     <true/>
+    <!-- CoreCLR's JIT can write executable pages that allow-jit alone does not
+         cover; without this the app is killed at start-up under hardened
+         runtime. Notarization still passes either way - the notary service
+         never launches the app - so this only shows up on user machines. -->
+    <key>com.apple.security.cs.allow-unsigned-executable-memory</key>
+    <true/>
+    <!-- Native libraries fetched at runtime (engine downloads) are not signed
+         with our Team ID, and library validation would refuse to load them. -->
+    <key>com.apple.security.cs.disable-library-validation</key>
+    <true/>
     <key>com.apple.security.automation.apple-events</key>
     <true/>
 </dict>

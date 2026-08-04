@@ -9,6 +9,24 @@ namespace Nikse.SubtitleEdit.Logic;
 
 internal static class SkBitmapExtensions
 {
+    /// <summary>
+    /// Decodes an image to 32-bit BGRA regardless of the source format. SKBitmap.Decode
+    /// preserves the file's color type (e.g. an 8-bit grayscale PNG decodes to Gray8,
+    /// 1 byte/pixel), but SE's pixel-walking code assumes 4 bytes/pixel throughout -
+    /// grayscale images from InpaintDelogo rendered as noise (issue #12694).
+    /// </summary>
+    public static SKBitmap DecodeToBgra8888(byte[] imageBytes)
+    {
+        using var codec = SKCodec.Create(new MemoryStream(imageBytes));
+        if (codec == null)
+        {
+            return new SKBitmap(1, 1, SKColorType.Bgra8888, SKAlphaType.Premul);
+        }
+
+        var info = new SKImageInfo(codec.Info.Width, codec.Info.Height, SKColorType.Bgra8888, SKAlphaType.Premul);
+        return SKBitmap.Decode(codec, info) ?? new SKBitmap(1, 1, SKColorType.Bgra8888, SKAlphaType.Premul);
+    }
+
     public static SKBitmap MakeImageBrighter(SKBitmap bitmap, float brightnessIncrease = 0.25f)
     {
         using var canvas = new SKCanvas(bitmap);
@@ -151,6 +169,34 @@ internal static class SkBitmapExtensions
         return data.ToArray();
     }
 
+    /// <summary>
+    /// Returns a Bgra8888/Unpremul copy, i.e. with straight (non-premultiplied) color values.
+    /// <see cref="ToSkBitmap"/> hands back premultiplied pixels, where R, G and B are already
+    /// scaled by A. Per-pixel editing math (brightness, color, alpha) needs straight values:
+    /// scaled color makes an operation's strength depend on the pixel's alpha, and storing a
+    /// changed alpha next to unscaled color yields RGB > A, which Skia renders as clipped
+    /// halos. <see cref="ToAvaloniaBitmap"/> premultiplies again on the way back.
+    /// </summary>
+    public static SKBitmap ToUnpremultiplied(this SKBitmap bitmap)
+    {
+        if (bitmap.Width <= 0 || bitmap.Height <= 0)
+        {
+            return bitmap.Copy();
+        }
+
+        var info = new SKImageInfo(bitmap.Width, bitmap.Height, SKColorType.Bgra8888, SKAlphaType.Unpremul);
+        var unpremultiplied = new SKBitmap(info);
+        using var image = SKImage.FromBitmap(bitmap);
+        if (image == null || !image.ReadPixels(info, unpremultiplied.GetPixels(), unpremultiplied.RowBytes, 0, 0))
+        {
+            // Conversion failed - hand back a plain copy so callers still get valid pixels.
+            unpremultiplied.Dispose();
+            return bitmap.Copy();
+        }
+
+        return unpremultiplied;
+    }
+
     // Original simple code for ToAvaloniaBitmap :
     //public static Bitmap ToAvaloniaBitmapOld(this SKBitmap skBitmap)
     //{
@@ -171,6 +217,22 @@ internal static class SkBitmapExtensions
         if (skBitmap.Width <= 0 || skBitmap.Height <= 0)
         {
             return new WriteableBitmap(new PixelSize(1, 1), Vector.One, PixelFormat.Bgra8888, AlphaFormat.Premul);
+        }
+
+        // The row loop below reads 4 bytes per pixel; anything narrower (Gray8 from a
+        // grayscale PNG, Rgb565, ...) would render as noise and read past the pixel
+        // buffer (issue #12694). Convert first.
+        if (skBitmap.ColorType != SKColorType.Bgra8888)
+        {
+            using var converted = skBitmap.Copy(SKColorType.Bgra8888);
+            if (converted == null)
+            {
+                // Unconvertible color type - never fall through to the 4-bytes/pixel
+                // walk below, it would read past the pixel buffer.
+                return new WriteableBitmap(new PixelSize(1, 1), Vector.One, PixelFormat.Bgra8888, AlphaFormat.Premul);
+            }
+
+            return converted.ToAvaloniaBitmap();
         }
 
         var bitmap = new WriteableBitmap(

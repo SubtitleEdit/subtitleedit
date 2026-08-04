@@ -22,7 +22,7 @@ public partial class PickTsTrackViewModel : ObservableObject
     [ObservableProperty] private string _subtitleCountText;
 
     public Window? Window { get; set; }
-    public DataGrid TracksGrid { get; set; }
+    public TableView TracksGrid { get; set; }
     public bool OkPressed { get; private set; }
     public string WindowTitle { get; private set; }
     public Subtitle TeletextSubtitle { get; private set; }
@@ -33,7 +33,7 @@ public partial class PickTsTrackViewModel : ObservableObject
     public PickTsTrackViewModel()
     {
         Tracks = new ObservableCollection<TsTrackInfoDisplay>();
-        TracksGrid = new DataGrid();
+        TracksGrid = new TableView();
         WindowTitle = string.Empty;
         SubtitleCountText = string.Empty;
         Rows = new ObservableCollection<TsSubtitleCueDisplay>();
@@ -43,6 +43,8 @@ public partial class PickTsTrackViewModel : ObservableObject
     internal void Initialize(TransportStreamParser tsParser, string fileName)
     {
         _tsParser = tsParser;
+        _fileName = fileName;
+        WindowTitle = string.Format(Se.Language.File.PickTransportStreamTrackX, fileName);
 
         var programMapTableParser = new ProgramMapTableParser();
         programMapTableParser.Parse(fileName); // get languages
@@ -83,6 +85,30 @@ public partial class PickTsTrackViewModel : ObservableObject
             };
             Tracks.Add(display);
         }
+
+        foreach (var aribPid in tsParser.AribSubtitlesLookup)
+        {
+            foreach (var language in aribPid.Value)
+            {
+                var languageCode = string.Empty;
+                if (tsParser.AribLanguageLookup.TryGetValue(aribPid.Key, out var languageCodes))
+                {
+                    languageCodes.TryGetValue(language.Key, out languageCode);
+                }
+
+                var display = new TsTrackInfoDisplay
+                {
+                    TrackNumber = aribPid.Key,
+                    Teletext = language.Value,
+                    IsDefault = false,
+                    IsForced = false,
+                    Language = languageCode ?? string.Empty,
+                    Codec = "ARIB caption",
+                    IsTeletext = true, // text track - same preview/open handling as teletext
+                };
+                Tracks.Add(display);
+            }
+        }
     }
 
     private void Close()
@@ -119,7 +145,7 @@ public partial class PickTsTrackViewModel : ObservableObject
         }
     }
 
-    internal void DataGridTracksSelectionChanged(object? sender, SelectionChangedEventArgs e)
+    internal void TracksGridSelectionChanged(object? sender, SelectionChangedEventArgs e)
     {
         bool flowControl = TrackChanged();
         if (!flowControl)
@@ -161,7 +187,15 @@ public partial class PickTsTrackViewModel : ObservableObject
             return true;
         }
 
+        // GetDvbSubtitles returns null for a packet id it decoded no images for - a subtitle PID
+        // announced by the stream is not a guarantee that anything came out of it.
         var subtitles = _tsParser.GetDvbSubtitles(selectedTrack.TrackNumber);
+        if (subtitles == null)
+        {
+            SubtitleCountText = string.Empty;
+            return false;
+        }
+
         SubtitleCountText = string.Format(Se.Language.File.Import.NumberOfSubtitlesX, subtitles.Count);
         for (var i = 0; i < 20 && i < subtitles.Count; i++)
         {
@@ -189,8 +223,17 @@ public partial class PickTsTrackViewModel : ObservableObject
 
         Dispatcher.UIThread.Post(() =>
         {
+            // Select via the view model, not just the grid index - see the same fix in
+            // PickMatroskaTrackViewModel: AlwaysSelected has already put the grid on row 0, so
+            // re-assigning the index raises no SelectionChanged and SelectedTrack stayed null,
+            // which left the preview empty and made OK return no track at all.
+            SelectedTrack = Tracks[index];
             TracksGrid.SelectedIndex = index;
-            TracksGrid.ScrollIntoView(TracksGrid.SelectedItem, null);
+            if (TracksGrid.SelectedItem is { } selectedItem)
+            {
+                TracksGrid.ScrollIntoView(selectedItem);
+            }
+
             TrackChanged();
         }, DispatcherPriority.Background);
     }

@@ -65,7 +65,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     }
                     try
                     {
-                        var timeCodes = line.Substring(line.IndexOf(")", StringComparison.Ordinal) + 1, line.IndexOf("Durée", StringComparison.Ordinal) - 2).Trim().Split(" \t".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+                        var timeCodes = line.Substring(line.IndexOf(')') + 1, line.IndexOf("Durée", StringComparison.Ordinal) - 2).Trim().Split(" \t".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
                         p = new Paragraph(string.Empty, TimeCode.ParseHHMMSSFFToMilliseconds(timeCodes[0]), TimeCode.ParseHHMMSSFFToMilliseconds(timeCodes[1]));
                     }
                     catch (Exception)

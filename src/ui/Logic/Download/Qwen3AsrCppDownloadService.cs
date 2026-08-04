@@ -18,12 +18,15 @@ public class Qwen3AsrCppDownloadService : IQwen3AsrCppDownloadService
 
     // Built by https://github.com/niksedk/qwen3-asr.cpp (.github/workflows/release.yml) — these
     // are the binaries with the JSON word-truncation fix (issue #11717) plus the valid-JSON fix
-    // for non-finite/oversized timestamps (issue #11375), on the ggml 0.15.3 backend. v0.1.6
-    // merges upstream (mixed-CJK tokenization fix, multilingual alignment encoding, tokenizer-
-    // config GGUF vocab, thread-count propagation). CPU for every platform, plus Vulkan (GPU)
-    // for win64 and linux-x64. When bumping: also prepend the new archive + executable hashes
-    // in DownloadHashManager (Qwen3AsrCpp keys) so the update prompt fires for old installs.
-    private const string ReleaseUrlBase = "https://github.com/niksedk/qwen3-asr.cpp/releases/download/v0.1.6/";
+    // for non-finite/oversized timestamps (issue #11375). v0.1.6 merged upstream (mixed-CJK
+    // tokenization fix, multilingual alignment encoding, tokenizer-config GGUF vocab, thread-
+    // count propagation). v0.1.7 fixes the Vulkan (discrete GPU) crash where the engine produced
+    // no output JSON — weights are now uploaded to a device-local buffer instead of wrapped from
+    // an unreadable host pointer (issue #12815) — and bumps the ggml backend to 0.17.0. CPU for
+    // every platform, plus Vulkan (GPU) for win64 and linux-x64. When bumping: also prepend the
+    // new archive + executable hashes in DownloadHashManager (Qwen3AsrCpp keys) so the update
+    // prompt fires for old installs.
+    private const string ReleaseUrlBase = "https://github.com/niksedk/qwen3-asr.cpp/releases/download/v0.1.7/";
     private const string WindowsUrl = ReleaseUrlBase + "qwen3-asr-cpp-win64.zip";
     private const string WindowsVulkanUrl = ReleaseUrlBase + "qwen3-asr-cpp-win64-vulkan.zip";
     private const string MacArmUrl = ReleaseUrlBase + "qwen3-asr-cpp-mac.zip";
@@ -48,7 +51,7 @@ public class Qwen3AsrCppDownloadService : IQwen3AsrCppDownloadService
             return false;
         }
 
-        return RuntimeInformation.IsOSPlatform(OSPlatform.Windows) || RuntimeInformation.IsOSPlatform(OSPlatform.Linux);
+        return OperatingSystem.IsWindows() || OperatingSystem.IsLinux();
     }
 
     public async Task DownloadEngine(Stream stream, IProgress<float>? progress, CancellationToken cancellationToken, bool useVulkan = false)
@@ -58,12 +61,12 @@ public class Qwen3AsrCppDownloadService : IQwen3AsrCppDownloadService
 
     private static string GetUrl(bool useVulkan)
     {
-        if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+        if (OperatingSystem.IsWindows())
         {
             return useVulkan ? WindowsVulkanUrl : WindowsUrl;
         }
 
-        if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+        if (OperatingSystem.IsLinux())
         {
             if (RuntimeInformation.ProcessArchitecture == Architecture.Arm64)
             {
@@ -73,7 +76,7 @@ public class Qwen3AsrCppDownloadService : IQwen3AsrCppDownloadService
             return useVulkan ? LinuxVulkanUrl : LinuxUrl;
         }
 
-        if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+        if (OperatingSystem.IsMacOS())
         {
             return RuntimeInformation.ProcessArchitecture == Architecture.Arm64 ? MacArmUrl : MacX64Url;
         }

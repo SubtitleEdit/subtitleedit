@@ -1,6 +1,7 @@
 ﻿using Nikse.SubtitleEdit.Core.Common;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Text;
 
 namespace Nikse.SubtitleEdit.Core.SubtitleFormats
@@ -21,10 +22,18 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         public override bool IsMine(List<string> lines, string fileName)
         {
-            if (fileName.EndsWith(".chk", StringComparison.OrdinalIgnoreCase))
+            if (!string.IsNullOrEmpty(fileName) && File.Exists(fileName) &&
+                fileName.EndsWith(".chk", StringComparison.OrdinalIgnoreCase))
             {
-                var buffer = FileUtil.ReadAllBytesShared(fileName);
-                return buffer.Length > 0 && buffer[0] == 0x1d;
+                try
+                {
+                    var buffer = FileUtil.ReadBytesShared(fileName, 1);
+                    return buffer.Length > 0 && buffer[0] == 0x1d;
+                }
+                catch
+                {
+                    return false;
+                }
             }
             return false;
         }

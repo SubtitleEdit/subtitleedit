@@ -70,7 +70,7 @@ public class PickMatroskaTrackWindow : Window
             Dispatcher.UIThread.InvokeAsync(() =>
             {
                 vm.SelectAndScrollToRow(0);
-                vm.TracksGrid.Focus();
+                TableViewExtras.FocusRow(vm.TracksGrid);
             }, DispatcherPriority.Input);
         };
     }
@@ -78,69 +78,85 @@ public class PickMatroskaTrackWindow : Window
     private static Border MakeTracksView(PickMatroskaTrackViewModel vm)
     {
         var booleanToCheckMarkConverter = new BooleanToCheckMarkConverter();
-        var dataGridTracks = new DataGrid
+        var dataGridTracks = TableViewExtras.MakeTableView(multiSelect: false);
+        dataGridTracks.Width = double.NaN;
+        dataGridTracks.Height = double.NaN;
+        dataGridTracks.DataContext = vm;
+        dataGridTracks.ItemsSource = vm.Tracks;
+
+        // Content-sized (Auto) on the DataGrid; TableView treats Auto as star, so the
+        // narrow columns get fixed widths and Name becomes the star column (the old
+        // grid's star was on the trailing Forced column, which only fills space).
+        var numberColumn = new SeTableViewColumn
         {
-            AutoGenerateColumns = false,
-            SelectionMode = DataGridSelectionMode.Single,
-            CanUserResizeColumns = true,
-            CanUserSortColumns = true,
-            HorizontalAlignment = HorizontalAlignment.Stretch,
-            VerticalAlignment = VerticalAlignment.Stretch,
-            Width = double.NaN,
-            Height = double.NaN,
-            DataContext = vm,
-            ItemsSource = vm.Tracks,
-            Columns =
-            {
-                new DataGridTextColumn
-                {
-                    Header = Se.Language.General.NumberSymbol,
-                    CellTheme = UiUtil.DataGridNoBorderNoPaddingCellTheme,
-                    Binding = new Binding(nameof(MatroskaTrackInfoDisplay.TrackNumber)),
-                    IsReadOnly = true,
-                },
-                new DataGridTextColumn
-                {
-                    Header = Se.Language.General.Name ,
-                    CellTheme = UiUtil.DataGridNoBorderNoPaddingCellTheme,
-                    Binding = new Binding(nameof(MatroskaTrackInfoDisplay.Name)),
-                    IsReadOnly = true,
-                },
-                new DataGridTextColumn
-                {
-                    Header = Se.Language.General.Language,
-                    CellTheme = UiUtil.DataGridNoBorderNoPaddingCellTheme,
-                    Binding = new Binding(nameof(MatroskaTrackInfoDisplay.Language)),
-                    IsReadOnly = true,
-                },
-                new DataGridTextColumn
-                {
-                    Header = Se.Language.General.Codec,
-                    CellTheme = UiUtil.DataGridNoBorderNoPaddingCellTheme,
-                    Binding = new Binding(nameof(MatroskaTrackInfoDisplay.Codec)),
-                    IsReadOnly = true,
-                },
-                new DataGridTextColumn
-                {
-                    Header = Se.Language.General.Default,
-                    CellTheme = UiUtil.DataGridNoBorderNoPaddingCellTheme,
-                    Binding = new Binding(nameof(MatroskaTrackInfoDisplay.IsDefault)) { Mode = BindingMode.OneWay, Converter = booleanToCheckMarkConverter },
-                    IsReadOnly = true,
-                },
-                new DataGridTextColumn
-                {
-                    Header = Se.Language.General.Forced,
-                    CellTheme = UiUtil.DataGridNoBorderNoPaddingCellTheme,
-                    Binding = new Binding(nameof(MatroskaTrackInfoDisplay.IsForced)) { Mode = BindingMode.OneWay, Converter = booleanToCheckMarkConverter},
-                    IsReadOnly = true,
-                    Width = new DataGridLength(1, DataGridLengthUnitType.Star),
-                },
-            },
+            Header = Se.Language.General.NumberSymbol,
+            CellTheme = UiUtil.TableViewCellTheme,
+            HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
+            Binding = new Binding(nameof(MatroskaTrackInfoDisplay.TrackNumber)),
+            Width = new GridLength(60),
         };
-        dataGridTracks.Bind(DataGrid.SelectedItemProperty, new Binding(nameof(vm.SelectedTrack)));
-        dataGridTracks.SelectionChanged += vm.DataGridTracksSelectionChanged;
+        var nameColumn = new SeTableViewColumn
+        {
+            Header = Se.Language.General.Name,
+            CellTheme = UiUtil.TableViewCellTheme,
+            HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
+            Binding = new Binding(nameof(MatroskaTrackInfoDisplay.Name)),
+            Width = new GridLength(1, GridUnitType.Star),
+        };
+        var languageColumn = new SeTableViewColumn
+        {
+            Header = Se.Language.General.Language,
+            CellTheme = UiUtil.TableViewCellTheme,
+            HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
+            Binding = new Binding(nameof(MatroskaTrackInfoDisplay.Language)),
+            Width = new GridLength(100),
+        };
+        var codecColumn = new SeTableViewColumn
+        {
+            Header = Se.Language.General.Codec,
+            CellTheme = UiUtil.TableViewCellTheme,
+            HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
+            Binding = new Binding(nameof(MatroskaTrackInfoDisplay.Codec)),
+            Width = new GridLength(140),
+        };
+        var defaultColumn = new SeTableViewColumn
+        {
+            Header = Se.Language.General.Default,
+            CellTheme = UiUtil.TableViewCellTheme,
+            HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
+            Binding = new Binding(nameof(MatroskaTrackInfoDisplay.IsDefault)) { Mode = BindingMode.OneWay, Converter = booleanToCheckMarkConverter },
+            Width = new GridLength(80),
+        };
+        var forcedColumn = new SeTableViewColumn
+        {
+            Header = Se.Language.General.Forced,
+            CellTheme = UiUtil.TableViewCellTheme,
+            HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
+            Binding = new Binding(nameof(MatroskaTrackInfoDisplay.IsForced)) { Mode = BindingMode.OneWay, Converter = booleanToCheckMarkConverter },
+            Width = new GridLength(80),
+        };
+
+        dataGridTracks.Columns.Add(numberColumn);
+        dataGridTracks.Columns.Add(nameColumn);
+        dataGridTracks.Columns.Add(languageColumn);
+        dataGridTracks.Columns.Add(codecColumn);
+        dataGridTracks.Columns.Add(defaultColumn);
+        dataGridTracks.Columns.Add(forcedColumn);
+
+        dataGridTracks.Bind(TableView.SelectedItemProperty, new Binding(nameof(vm.SelectedTrack)));
+        dataGridTracks.SelectionChanged += vm.TracksGridSelectionChanged;
         dataGridTracks.DoubleTapped += (_, _) => vm.OkCommand.Execute(null);
         vm.TracksGrid = dataGridTracks;
+
+        // Track order is presentation-only (OK uses the selected item), so the
+        // in-place header sorter is safe.
+        new TableViewHeaderSorter(dataGridTracks)
+            .AddSortable<MatroskaTrackInfoDisplay, int>(numberColumn, x => x.TrackNumber)
+            .AddSortable<MatroskaTrackInfoDisplay, string>(nameColumn, x => x.Name)
+            .AddSortable<MatroskaTrackInfoDisplay, string>(languageColumn, x => x.Language)
+            .AddSortable<MatroskaTrackInfoDisplay, string>(codecColumn, x => x.Codec)
+            .AddSortable<MatroskaTrackInfoDisplay, bool>(defaultColumn, x => x.IsDefault)
+            .AddSortable<MatroskaTrackInfoDisplay, bool>(forcedColumn, x => x.IsForced);
 
         return UiUtil.MakeBorderForControlNoPadding(dataGridTracks);
     }
@@ -149,46 +165,45 @@ public class PickMatroskaTrackWindow : Window
     {
         var fullTimeConverter = new TimeSpanToDisplayFullConverter();
         var shortTimeConverter = new TimeSpanToDisplayShortConverter();
-        var dataGridSubtitle = new DataGrid
+        var dataGridSubtitle = TableViewExtras.MakeTableView(multiSelect: false);
+        dataGridSubtitle.Width = double.NaN;
+        dataGridSubtitle.Height = double.NaN;
+        dataGridSubtitle.DataContext = vm;
+        dataGridSubtitle.ItemsSource = vm.Rows;
+
+        // No sorter here: the preview shows subtitle cues in subtitle order.
+        dataGridSubtitle.Columns.AddRange(new TableViewColumn[]
         {
-            AutoGenerateColumns = false,
-            SelectionMode = DataGridSelectionMode.Single,
-            CanUserResizeColumns = true,
-            CanUserSortColumns = true,
-            HorizontalAlignment = HorizontalAlignment.Stretch,
-            VerticalAlignment = VerticalAlignment.Stretch,
-            Width = double.NaN,
-            Height = double.NaN,
-            DataContext = vm,
-            ItemsSource = vm.Rows,
-            Columns =
-            {
-                new DataGridTextColumn
+                new SeTableViewColumn
                 {
                     Header = Se.Language.General.NumberSymbol,
-                    CellTheme = UiUtil.DataGridNoBorderNoPaddingCellTheme,
+                    CellTheme = UiUtil.TableViewCellTheme,
+                    HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
                     Binding = new Binding(nameof(MatroskaSubtitleCueDisplay.Number)),
-                    IsReadOnly = true,
+                    Width = new GridLength(60),
                 },
-                new DataGridTextColumn
+                new SeTableViewColumn
                 {
                     Header = Se.Language.General.Show,
-                    CellTheme = UiUtil.DataGridNoBorderNoPaddingCellTheme,
+                    CellTheme = UiUtil.TableViewCellTheme,
+                    HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
                     Binding = new Binding(nameof(MatroskaSubtitleCueDisplay.Show)) { Converter = fullTimeConverter },
-                    IsReadOnly = true,
+                    Width = new GridLength(120),
                 },
-                new DataGridTextColumn
+                new SeTableViewColumn
                 {
                     Header = Se.Language.General.Duration,
-                    CellTheme = UiUtil.DataGridNoBorderNoPaddingCellTheme,
+                    CellTheme = UiUtil.TableViewCellTheme,
+                    HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
                     Binding = new Binding(nameof(MatroskaSubtitleCueDisplay.Duration)) { Converter = shortTimeConverter },
-                    IsReadOnly = true,
+                    Width = new GridLength(90),
                 },
-                new DataGridTemplateColumn
+                new SeTableViewColumn
                 {
                     Header = Se.Language.General.TextOrImage,
-                    IsReadOnly = true,
-                    Width = new DataGridLength(1, DataGridLengthUnitType.Star),
+                    CellTheme = UiUtil.TableViewCellTheme,
+                    HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
+                    Width = new GridLength(1, GridUnitType.Star),
                     CellTemplate = new FuncDataTemplate<MatroskaSubtitleCueDisplay>((item, _) =>
                     {
                         var stackPanel = new StackPanel
@@ -225,8 +240,7 @@ public class PickMatroskaTrackWindow : Window
                         return stackPanel;
                     })
                 },
-            },
-        };
+        });
 
         return UiUtil.MakeBorderForControlNoPadding(dataGridSubtitle);
     }

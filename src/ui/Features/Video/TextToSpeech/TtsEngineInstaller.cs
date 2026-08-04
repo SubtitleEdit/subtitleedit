@@ -1,4 +1,4 @@
-using Avalonia.Controls;
+﻿using Avalonia.Controls;
 using Avalonia.Threading;
 using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Features.Shared;
@@ -400,6 +400,82 @@ public static class TtsEngineInstaller
 
                 var dlResult = await windowService.ShowDialogAsync<DownloadTtsWindow, DownloadTtsViewModel>(window, vm => vm.StartDownloadVoxCPM2CrispAsrModels(voxModelKey));
                 if (!dlResult.OkPressed || !VoxCPM2CrispAsr.AreModelsInstalled(voxModelKey))
+                {
+                    return false;
+                }
+
+                await Dispatcher.UIThread.InvokeAsync(async () =>
+                {
+                    await refreshVoices();
+                });
+                return true;
+            }
+
+            return true;
+        }
+
+        if (engine is OmniVoiceCrispAsr)
+        {
+            if (!await TtsVoiceInstaller.EnsureCrispAsrForOmniVoice(window, windowService, forceRedownload: false))
+            {
+                return false;
+            }
+
+            var omniCrispModelKey = OmniVoiceCrispAsr.ResolveModelKey(model);
+            if (!OmniVoiceCrispAsr.AreModelsInstalled(omniCrispModelKey))
+            {
+                var answer = await MessageBox.Show(
+                    window,
+                    "Download OmniVoice (CrispASR) model?",
+                    $"{Environment.NewLine}\"OmniVoice TTS (CrispASR)\" ({omniCrispModelKey}) requires a model.{Environment.NewLine}{Environment.NewLine}Download model?",
+                    MessageBoxButtons.YesNoCancel,
+                    MessageBoxIcon.Question);
+
+                if (answer != MessageBoxResult.Yes)
+                {
+                    return false;
+                }
+
+                var dlResult = await windowService.ShowDialogAsync<DownloadTtsWindow, DownloadTtsViewModel>(window, vm => vm.StartDownloadOmniVoiceCrispAsrModels(omniCrispModelKey));
+                if (!dlResult.OkPressed || !OmniVoiceCrispAsr.AreModelsInstalled(omniCrispModelKey))
+                {
+                    return false;
+                }
+
+                await Dispatcher.UIThread.InvokeAsync(async () =>
+                {
+                    await refreshVoices();
+                });
+                return true;
+            }
+
+            return true;
+        }
+
+        if (engine is MossTtsCrispAsr)
+        {
+            if (!await TtsVoiceInstaller.EnsureCrispAsrForMossTts(window, windowService, forceRedownload: false))
+            {
+                return false;
+            }
+
+            var mossModelKey = MossTtsCrispAsr.ResolveModelKey(model);
+            if (!MossTtsCrispAsr.AreModelsInstalled(mossModelKey))
+            {
+                var answer = await MessageBox.Show(
+                    window,
+                    "Download MOSS-TTS (CrispASR) model?",
+                    $"{Environment.NewLine}\"MOSS-TTS (CrispASR)\" ({mossModelKey}) requires a model.{Environment.NewLine}{Environment.NewLine}Download model?",
+                    MessageBoxButtons.YesNoCancel,
+                    MessageBoxIcon.Question);
+
+                if (answer != MessageBoxResult.Yes)
+                {
+                    return false;
+                }
+
+                var dlResult = await windowService.ShowDialogAsync<DownloadTtsWindow, DownloadTtsViewModel>(window, vm => vm.StartDownloadMossTtsCrispAsrModels(mossModelKey));
+                if (!dlResult.OkPressed || !MossTtsCrispAsr.AreModelsInstalled(mossModelKey))
                 {
                     return false;
                 }

@@ -58,7 +58,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             }
 
             var text = sb.ToString().TrimStart();
-            if (!text.StartsWith("[", StringComparison.Ordinal))
+            if (!text.StartsWith('['))
             {
                 return;
             }

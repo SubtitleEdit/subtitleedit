@@ -73,7 +73,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                             }
                             else if (Helper.IsTurkishLittleI(text[k], callbacks.Encoding, callbacks.Language))
                             {
-                                text = text.Remove(j, 1).Insert(j, Helper.GetTurkishUppercaseLetter(text[k], callbacks.Encoding).ToString(CultureInfo.InvariantCulture));
+                                text = text.Remove(k, 1).Insert(k, Helper.GetTurkishUppercaseLetter(text[k], callbacks.Encoding).ToString(CultureInfo.InvariantCulture));
                             }
                         }
                     }

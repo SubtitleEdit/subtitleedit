@@ -1,9 +1,11 @@
 using Nikse.SubtitleEdit.Core.Common;
+using Nikse.SubtitleEdit.Core.Dictionaries;
 using Nikse.SubtitleEdit.Core.Forms.FixCommonErrors;
 using Nikse.SubtitleEdit.Core.Interfaces;
-using Nikse.SubtitleEdit.Features.Ocr.FixEngine;
-using Nikse.SubtitleEdit.Features.SpellCheck;
+using Nikse.SubtitleEdit.UiLogic.Ocr.FixEngine;
+using Nikse.SubtitleEdit.UiLogic.SpellCheck;
 using SkiaSharp;
+using System.Globalization;
 
 namespace SeConv.Core;
 
@@ -34,36 +36,94 @@ internal static class FixCommonErrorsRunner
         Rules.Select(r => r.Id).Append(OcrFixRuleId).ToArray();
 
     /// <summary>
+    /// Rules that only run when the subtitle's language (auto-detected, or forced via
+    /// <c>--fce-language</c>) matches the mapped two-letter ISO code. Single source of truth
+    /// for both the runtime gate (<see cref="IsLanguageOnlyRule"/>) and the <c>list-fce-rules</c>
+    /// display. Mirrors the GUI's per-language rule additions in <c>FixCommonErrorsViewModel</c>.
+    /// A gated rule runs only when the language matches — auto-detected from the content, or
+    /// forced with <c>--fce-language:&lt;code&gt;</c>. Naming it in <c>--FixCommonErrorsRules</c>
+    /// selects it but does not bypass the gate (issue #11037).
+    /// </summary>
+    public static IReadOnlyDictionary<string, string> LanguageGates { get; } =
+        new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
+        {
+            [nameof(FixAloneLowercaseIToUppercaseI)] = "en",
+            [nameof(FixDanishLetterI)] = "da",
+            [nameof(FixSpanishInvertedQuestionAndExclamationMarks)] = "es",
+            [nameof(FixTurkishAnsiToUnicode)] = "tr",
+        };
+
+    /// <summary>
+    /// Maps each CLI rule ID to the label the GUI's <em>Fix Common Errors</em> window shows for
+    /// the same rule, so users who prototyped in the desktop app can find the matching
+    /// <c>--fix-common-errors-rules</c> ID (issue #11037 review). Single source of truth for the
+    /// <c>list-fce-rules</c> "GUI equivalent" column and the published rule-mapping table.
+    /// Kept in sync with the GUI strings in <c>LanguageFixCommonErrors</c> /
+    /// <c>FixCommonErrorsViewModel.MakeDefaultRules</c>; a test asserts every
+    /// <see cref="AvailableRuleIds"/> entry has a label here.
+    /// </summary>
+    public static IReadOnlyDictionary<string, string> GuiLabels { get; } =
+        new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
+        {
+            [nameof(AddMissingQuotes)] = "Add missing quotes (\")",
+            [nameof(Fix3PlusLines)] = "Fix subtitles with more than two lines",
+            [nameof(FixAloneLowercaseIToUppercaseI)] = "Fix alone lowercase 'i' to 'I' (English)",
+            [nameof(FixCommas)] = "Fix commas",
+            [nameof(FixContinuationStyle)] = "Fix continuation style",
+            [nameof(FixDanishLetterI)] = "Fix Danish letter 'i'",
+            [nameof(FixDialogsOnOneLine)] = "Split dialogs on one line",
+            [nameof(FixDoubleApostrophes)] = "Fix double apostrophe characters ('') to a single quote (\")",
+            [nameof(FixDoubleDash)] = "Fix '--' -> '...'",
+            [nameof(FixDoubleGreaterThan)] = "Remove '>>'",
+            [nameof(FixEllipsesStart)] = "Remove leading '...'",
+            [nameof(FixEmptyLines)] = "Remove empty lines/unused line breaks",
+            [nameof(FixHyphensInDialog)] = "Fix dash in dialogs via style",
+            [nameof(FixHyphensRemoveDashSingleLine)] = "Remove dialog dashes in single lines",
+            [nameof(FixInvalidItalicTags)] = "Fix invalid italic tags",
+            [nameof(FixLongDisplayTimes)] = "Fix long display times",
+            [nameof(FixLongLines)] = "Break long lines",
+            [nameof(FixMissingOpenBracket)] = "Fix missing [ or ( in line",
+            [nameof(FixMissingPeriodsAtEndOfLine)] = "Add period after lines where next line starts with uppercase letter",
+            [nameof(FixMissingSpaces)] = "Fix missing spaces",
+            [nameof(FixMusicNotation)] = "Replace music symbols with preferred symbol",
+            [nameof(FixOverlappingDisplayTimes)] = "Fix overlapping display times",
+            [nameof(FixShortDisplayTimes)] = "Fix short display times",
+            [nameof(FixShortGaps)] = "Fix short gaps",
+            [nameof(FixShortLines)] = "Remove line breaks in short texts with only one sentence",
+            [nameof(FixShortLinesAll)] = "Remove line breaks in short texts (all except dialogs)",
+            [nameof(FixShortLinesPixelWidth)] = "Unbreak subtitles that can fit on one line (pixel width)",
+            [nameof(FixSpanishInvertedQuestionAndExclamationMarks)] = "Fix Spanish inverted question and exclamation marks",
+            [nameof(FixStartWithUppercaseLetterAfterColon)] = "Start with uppercase letter after colon/semicolon",
+            [nameof(FixStartWithUppercaseLetterAfterParagraph)] = "Start with uppercase letter after paragraph",
+            [nameof(FixStartWithUppercaseLetterAfterPeriodInsideParagraph)] = "Start with uppercase letter after period inside paragraph",
+            [nameof(FixTurkishAnsiToUnicode)] = "Fix Turkish ANSI (Icelandic) letters to Unicode",
+            [nameof(FixUnnecessaryLeadingDots)] = "Remove unnecessary leading dots",
+            [nameof(FixUnneededPeriods)] = "Remove unneeded periods",
+            [nameof(FixUnneededSpaces)] = "Remove unneeded spaces",
+            [nameof(FixUppercaseIInsideWords)] = "Fix uppercase 'i' inside lowercase words (OCR error)",
+            [nameof(NormalizeStrings)] = "Normalize strings",
+            [nameof(RemoveDialogFirstLineInNonDialogs)] = "Remove start dash in first line for non-dialogs",
+            [nameof(RemoveSpaceBetweenNumbers)] = "Remove space between numbers",
+            [OcrFixRuleId] = "Fix common OCR errors (using OCR replace list)",
+        };
+
+    /// <summary>
     /// Runs every available rule against the subtitle. Equivalent to
     /// <c>Run(subtitle, null)</c>.
     /// </summary>
     public static void RunAll(Subtitle subtitle) => Run(subtitle, null);
 
     /// <summary>
-    /// Back-compat overload. Pass <c>null</c> or an empty collection to run all rules
-    /// (gates language-conditional rules to their language). When a non-empty list is
-    /// passed, every entry is treated as both <em>wanted</em> and <em>explicitly named</em> —
-    /// language gates are bypassed for those rules. Rules execute in canonical order,
-    /// not caller order, to keep behaviour stable across invocations.
-    /// </summary>
-    public static void Run(Subtitle subtitle, IReadOnlyCollection<string>? ruleIds)
-        => Run(subtitle, ruleIds, explicitlyNamedRules: ruleIds);
-
-    /// <summary>
-    /// Runs the specified rules.
-    /// <para><paramref name="ruleIds"/> selects which rules execute (<c>null</c>/empty = all).</para>
-    /// <para><paramref name="explicitlyNamedRules"/> lists rules the user named by hand —
-    /// these bypass language gating. <c>null</c> means "no signal, treat <paramref name="ruleIds"/>
-    /// as explicit" (back-compat); an empty collection means "no rule was explicitly named"
-    /// (the CLI's implicit <c>--FixCommonErrors</c> path), which keeps language gates active.</para>
-    /// The split matters because the CLI pre-resolves a bare <c>--FixCommonErrors</c> to
-    /// the full rule list, so a <c>wanted == null</c> check alone would never fire for the
-    /// default path — see <see cref="ParseExplicitlyNamedRules"/>.
+    /// Runs the specified rules. <paramref name="ruleIds"/> selects which rules execute
+    /// (<c>null</c>/empty = all). Language-conditional rules run only when the language matches
+    /// (see <paramref name="languageOverride"/> / auto-detect); selecting one by name does not
+    /// bypass its gate. Rules execute in canonical order, not caller order, to keep behaviour
+    /// stable across invocations.
     /// </summary>
     public static void Run(
         Subtitle subtitle,
         IReadOnlyCollection<string>? ruleIds,
-        IReadOnlyCollection<string>? explicitlyNamedRules)
+        string? languageOverride = null)
     {
         if (subtitle == null || subtitle.Paragraphs.Count == 0)
         {
@@ -76,27 +136,19 @@ internal static class FixCommonErrorsRunner
             wanted = new HashSet<string>(ruleIds, StringComparer.OrdinalIgnoreCase);
         }
 
-        // null = treat wanted as explicit (back-compat path used by direct callers / tests).
-        // empty = "user named nothing" — keeps language gates fully active.
-        // non-empty = exact set of rules the user typed by hand.
-        HashSet<string>? explicitlyNamed;
-        if (explicitlyNamedRules == null)
-        {
-            explicitlyNamed = wanted;
-        }
-        else if (explicitlyNamedRules.Count == 0)
-        {
-            explicitlyNamed = null;
-        }
-        else
-        {
-            explicitlyNamed = new HashSet<string>(explicitlyNamedRules, StringComparer.OrdinalIgnoreCase);
-        }
-
-        var language = LanguageAutoDetect.AutoDetectGoogleLanguageOrNull(subtitle) ?? "en";
+        // --fce-language forces the language used for gating (and OCR-fix), so a genuinely
+        // Spanish/Danish/Turkish file that auto-detects wrong still gets its per-language
+        // rule. Falls back to content auto-detection, then "en".
+        var language = NormalizeLanguageOverride(languageOverride)
+            ?? LanguageAutoDetect.AutoDetectGoogleLanguageOrNull(subtitle)
+            ?? "en";
         var callbacks = new EmptyFixCallback
         {
             Language = language,
+
+            // Without this the uppercase-after-period rules treat every abbreviation period as a
+            // sentence ending, e.g. Dutch "dhr. de vries" -> "dhr. De vries" (#13082).
+            Abbreviations = AbbreviationList.Load(SpellCheckConfig.DictionariesFolder(), language),
         };
 
         // Fix Common Errors is not idempotent in a single pass: one rule can create a
@@ -106,7 +158,7 @@ internal static class FixCommonErrorsRunner
         var previousSnapshot = Snapshot(subtitle);
         for (var pass = 0; pass < MaxPasses; pass++)
         {
-            RunSinglePass(subtitle, wanted, explicitlyNamed, language, callbacks);
+            RunSinglePass(subtitle, wanted, language, callbacks);
 
             var snapshot = Snapshot(subtitle);
             if (snapshot == previousSnapshot)
@@ -174,7 +226,6 @@ internal static class FixCommonErrorsRunner
     private static void RunSinglePass(
         Subtitle subtitle,
         HashSet<string>? wanted,
-        HashSet<string>? explicitlyNamed,
         string language,
         EmptyFixCallback callbacks)
     {
@@ -189,9 +240,9 @@ internal static class FixCommonErrorsRunner
             // (FixCommonErrorsViewModel.cs:359-377), which only surfaces these rules
             // when the detected language matches. Running e.g. the Spanish inverted-mark
             // fix on French content would insert ¿ / ¡ on every question — issue #11037.
-            // The user can still opt in explicitly by naming the rule in --FixCommonErrorsRules.
-            if (IsLanguageOnlyRule(id, language)
-                && (explicitlyNamed == null || !explicitlyNamed.Contains(id)))
+            // Naming the rule in --FixCommonErrorsRules selects it but does not bypass the
+            // gate; force a mismatching language with --fce-language:<code> instead.
+            if (IsLanguageOnlyRule(id, language))
             {
                 continue;
             }
@@ -236,44 +287,41 @@ internal static class FixCommonErrorsRunner
     }
 
     /// <summary>
-    /// Extracts the rule IDs a user named by hand in a <c>--FixCommonErrorsRules</c> spec.
-    /// Returns an empty list for null / empty / whitespace / <c>all</c> specs (= no rule
-    /// was explicitly named). Negative tokens (<c>-FixCommas</c>) and the literal <c>all</c>
-    /// are excluded — only positive, named rules count as "explicit". Unknown rule names
-    /// are kept as-is here; <see cref="ResolveRuleIds"/> is responsible for validation.
-    /// </summary>
-    public static IReadOnlyList<string> ParseExplicitlyNamedRules(string? spec)
-    {
-        if (string.IsNullOrWhiteSpace(spec))
-        {
-            return [];
-        }
-
-        return spec.Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)
-            .Where(t => !t.StartsWith('-') && !"all".Equals(t, StringComparison.OrdinalIgnoreCase))
-            .ToArray();
-    }
-
-    /// <summary>
     /// Returns true when <paramref name="ruleId"/> is a language-conditional rule
     /// that should not run because the detected language doesn't match. Mirrors
     /// the GUI's per-language rule additions in <c>FixCommonErrorsViewModel</c>.
-    /// Bypassable via explicit <c>--FixCommonErrorsRules</c>.
     /// </summary>
     private static bool IsLanguageOnlyRule(string ruleId, string language)
+        => LanguageGates.TryGetValue(ruleId, out var required)
+           && !required.Equals(language, StringComparison.OrdinalIgnoreCase);
+
+    /// <summary>
+    /// Normalizes a user-supplied <c>--fce-language</c> value to a two-letter ISO code so it can
+    /// match the <see cref="LanguageGates"/> map. Accepts a two-letter code (<c>es</c>), a
+    /// three-letter code (<c>spa</c>), or an English name (<c>Spanish</c>). Returns <c>null</c>
+    /// for null/blank input (no override) or when the value can't be resolved — the caller then
+    /// falls back to content auto-detection.
+    /// </summary>
+    internal static string? NormalizeLanguageOverride(string? value)
     {
-        return ruleId switch
+        if (string.IsNullOrWhiteSpace(value))
         {
-            "FixAloneLowercaseIToUppercaseI"
-                => !"en".Equals(language, StringComparison.OrdinalIgnoreCase),
-            "FixDanishLetterI"
-                => !"da".Equals(language, StringComparison.OrdinalIgnoreCase),
-            "FixSpanishInvertedQuestionAndExclamationMarks"
-                => !"es".Equals(language, StringComparison.OrdinalIgnoreCase),
-            "FixTurkishAnsiToUnicode"
-                => !"tr".Equals(language, StringComparison.OrdinalIgnoreCase),
-            _ => false,
-        };
+            return null;
+        }
+
+        var v = value.Trim();
+        if (v.Length == 2)
+        {
+            return v.ToLowerInvariant();
+        }
+
+        var culture = CultureInfo.GetCultures(CultureTypes.NeutralCultures)
+            .FirstOrDefault(c =>
+                c.TwoLetterISOLanguageName.Equals(v, StringComparison.OrdinalIgnoreCase)
+                || c.ThreeLetterISOLanguageName.Equals(v, StringComparison.OrdinalIgnoreCase)
+                || c.EnglishName.Equals(v, StringComparison.OrdinalIgnoreCase));
+
+        return culture?.TwoLetterISOLanguageName;
     }
 
     /// <summary>

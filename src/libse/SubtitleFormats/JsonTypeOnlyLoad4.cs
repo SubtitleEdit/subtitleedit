@@ -40,7 +40,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             foreach (var subtitleItem in subtitleArray)
             {
                 var contentItems = parser.GetArrayElementsByName(subtitleItem, "content");
-                sb = new StringBuilder();
+                sb.Clear();
                 foreach (var content in contentItems)
                 {
                     foreach (var textElement in parser.GetArrayElementsByName(content, "text"))

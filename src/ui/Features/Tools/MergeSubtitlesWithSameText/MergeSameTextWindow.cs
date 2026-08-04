@@ -20,7 +20,7 @@ public class MergeSameTextWindow : Window
     public MergeSameTextWindow(MergeSameTextViewModel vm)
     {
         UiUtil.InitializeWindow(this, GetType().Name);
-        Title = Se.Language.Tools.MergeLinesWithSameText.Title;
+        Title = Se.Language.General.MergeLinesWithSameText;
         CanResize = true;
         Width = 900;
         Height = 800;
@@ -62,6 +62,9 @@ public class MergeSameTextWindow : Window
 
         Activated += delegate { buttonCancel.Focus(); }; // hack to make OnKeyDown work
         KeyDown += vm.OnKeyDown;
+
+        Closing += delegate { UiUtil.SaveWindowPosition(this); };
+        Loaded += delegate { UiUtil.RestoreWindowPosition(this); };
     }
 
     private static StackPanel MakeControlsView(MergeSameTextViewModel vm)
@@ -78,24 +81,20 @@ public class MergeSameTextWindow : Window
 
     private static Border MakeMergesView(MergeSameTextViewModel vm)
     {
-        var dataGrid = new DataGrid
+        // Sorting dropped in the DataGrid -> TableView conversion: the grid shows
+        // merge candidates in subtitle order.
+        var dataGrid = TableViewExtras.MakeTableView(multiSelect: false);
+        dataGrid.Width = double.NaN;
+        dataGrid.Height = double.NaN;
+        dataGrid.DataContext = vm;
+        dataGrid.ItemsSource = vm.MergeItems;
+        dataGrid.Columns.AddRange(new TableViewColumn[]
         {
-            AutoGenerateColumns = false,
-            SelectionMode = DataGridSelectionMode.Single,
-            CanUserResizeColumns = true,
-            CanUserSortColumns = true,
-            HorizontalAlignment = HorizontalAlignment.Stretch,
-            VerticalAlignment = VerticalAlignment.Stretch,
-            Width = double.NaN,
-            Height = double.NaN,
-            DataContext = vm,
-            ItemsSource = vm.MergeItems,
-            Columns =
-            {
-                new DataGridTemplateColumn
-               {
+                new SeTableViewColumn
+                {
                     Header = Se.Language.General.Apply,
-                    CellTheme = UiUtil.DataGridNoBorderNoPaddingCellTheme,
+                    CellTheme = UiUtil.TableViewNoPaddingCellTheme,
+                    HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
                     CellTemplate = new FuncDataTemplate<MergeDisplayItem>((item, _) =>
                     new Border
                     {
@@ -107,41 +106,45 @@ public class MergeSameTextWindow : Window
                             HorizontalAlignment = HorizontalAlignment.Center
                         }
                     }),
-                    Width = new DataGridLength(1, DataGridLengthUnitType.Auto)
+                    // Content-sized (Auto) on the DataGrid; TableView treats Auto as star.
+                    Width = new GridLength(70)
                 },
-                new DataGridTextColumn
+                new SeTableViewColumn
                 {
                     Header = Se.Language.General.Lines,
-                    CellTheme = UiUtil.DataGridNoBorderNoPaddingCellTheme,
+                    CellTheme = UiUtil.TableViewCellTheme,
+                    HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
                     Binding = new Binding(nameof(MergeDisplayItem.Lines)),
-                    IsReadOnly = true,
+                    Width = new GridLength(110),
                 },
-                new DataGridTextColumn
+                new SeTableViewColumn
                 {
+                    // The merged text is the wide content, so it takes the star width
+                    // (the DataGrid content-sized it and gave Group the star).
                     Header = Se.Language.General.Text,
-                    CellTheme = UiUtil.DataGridNoBorderNoPaddingCellTheme,
+                    CellTheme = UiUtil.TableViewCellTheme,
+                    HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
                     Binding = new Binding(nameof(MergeDisplayItem.MergedText)),
-                    IsReadOnly = true,
+                    Width = new GridLength(1, GridUnitType.Star),
                 },
-                new DataGridTextColumn
+                new SeTableViewColumn
                 {
                     Header = Se.Language.General.Group,
-                    CellTheme = UiUtil.DataGridNoBorderNoPaddingCellTheme,
+                    CellTheme = UiUtil.TableViewCellTheme,
+                    HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
                     Binding = new Binding(nameof(MergeDisplayItem.MergedGroup)),
-                    IsReadOnly = true,
-                    Width = new DataGridLength(1, DataGridLengthUnitType.Star),
+                    Width = new GridLength(90),
                 },
-            },
-        };
-        dataGrid.Bind(DataGrid.SelectedItemProperty, new Binding(nameof(vm.SelectedMergeItem)) { Source = vm });
-        dataGrid.SelectionChanged += vm.DataGridMergeItemChanged;
+        });
+        dataGrid.Bind(TableView.SelectedItemProperty, new Binding(nameof(vm.SelectedMergeItem)) { Source = vm });
+        dataGrid.SelectionChanged += vm.MergeItemChanged;
         dataGrid.AddHandler(InputElement.KeyDownEvent, (object? _, KeyEventArgs e) =>
         {
             if (e.Key is Key.Home or Key.End && dataGrid.ItemsSource is IList items && items.Count > 0)
             {
-                var target = e.Key == Key.Home ? items[0] : items[^1];
-                dataGrid.SelectedItem = target;
-                dataGrid.ScrollIntoView(target, null);
+                var index = e.Key == Key.Home ? 0 : items.Count - 1;
+                dataGrid.SelectedIndex = index;
+                dataGrid.ScrollIntoView(index);
                 e.Handled = true;
             }
         }, RoutingStrategies.Tunnel);
@@ -153,69 +156,66 @@ public class MergeSameTextWindow : Window
     {
         var fullTimeConverter = new TimeSpanToDisplayFullConverter();
 
-        var dataGrid = new DataGrid
+        // Sorting dropped in the DataGrid -> TableView conversion: the grid previews
+        // subtitle lines in timeline order.
+        var dataGrid = TableViewExtras.MakeTableView();
+        dataGrid.Width = double.NaN;
+        dataGrid.Height = double.NaN;
+        dataGrid.DataContext = vm;
+        dataGrid.ItemsSource = vm.MergeSubtitles;
+        dataGrid.Columns.AddRange(new TableViewColumn[]
         {
-            AutoGenerateColumns = false,
-            SelectionMode = DataGridSelectionMode.Extended,
-            CanUserResizeColumns = true,
-            CanUserSortColumns = true,
-            HorizontalAlignment = HorizontalAlignment.Stretch,
-            VerticalAlignment = VerticalAlignment.Stretch,
-            Width = double.NaN,
-            Height = double.NaN,
-            DataContext = vm,
-            ItemsSource = vm.MergeSubtitles,
-            Columns =
-            {
-                new DataGridTextColumn
+                new SeTableViewColumn
                 {
                     Header = Se.Language.General.NumberSymbol,
-                    CellTheme = UiUtil.DataGridNoBorderNoPaddingCellTheme,
+                    CellTheme = UiUtil.TableViewCellTheme,
+                    HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
                     Binding = new Binding(nameof(SubtitleLineViewModel.Number)),
-                    IsReadOnly = true,
+                    // Content-sized (Auto) on the DataGrid; TableView treats Auto as star.
+                    Width = new GridLength(60),
                 },
-                new DataGridTextColumn
+                new SeTableViewColumn
                 {
                     Header = Se.Language.General.Show,
-                    CellTheme = UiUtil.DataGridNoBorderNoPaddingCellTheme,
+                    CellTheme = UiUtil.TableViewCellTheme,
+                    HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
                     Binding = new Binding(nameof(SubtitleLineViewModel.StartTime)) { Converter = fullTimeConverter },
-                    IsReadOnly = true,
-                    Width = new DataGridLength(120, DataGridLengthUnitType.Pixel),
+                    Width = new GridLength(120),
                 },
-                new DataGridTextColumn
+                new SeTableViewColumn
                 {
                     Header = Se.Language.General.Hide,
-                    CellTheme = UiUtil.DataGridNoBorderNoPaddingCellTheme,
+                    CellTheme = UiUtil.TableViewCellTheme,
+                    HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
                     Binding = new Binding(nameof(SubtitleLineViewModel.EndTime)) { Converter = fullTimeConverter },
-                    IsReadOnly = true,
-                    Width = new DataGridLength(120, DataGridLengthUnitType.Pixel),
+                    Width = new GridLength(120),
                 },
-                new DataGridTextColumn
+                new SeTableViewColumn
                 {
                     Header = Se.Language.General.Text,
-                    CellTheme = UiUtil.DataGridNoBorderNoPaddingCellTheme,
-                    Binding = new Binding(nameof(SubtitleLineViewModel.Text)),
-                    IsReadOnly = true,
-                    Width = new DataGridLength(1, DataGridLengthUnitType.Star),
+                    CellTheme = UiUtil.TableViewCellTheme,
+                    HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
+                    CellTemplate = TableViewExtras.MakeTextCellTemplate(nameof(SubtitleLineViewModel.Text)),
+                    Width = new GridLength(1, GridUnitType.Star),
                 },
-                 new DataGridTextColumn
+                new SeTableViewColumn
                 {
                     Header = Se.Language.General.Group,
-                    CellTheme = UiUtil.DataGridNoBorderNoPaddingCellTheme,
+                    CellTheme = UiUtil.TableViewCellTheme,
+                    HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
                     Binding = new Binding(nameof(SubtitleLineViewModel.Extra)),
-                    IsReadOnly = true,
+                    Width = new GridLength(90),
                 },
-            },
-        };
-        dataGrid.Bind(DataGrid.SelectedItemProperty, new Binding(nameof(vm.SelectedMergeSubtitle)) { Source = vm });
+        });
+        dataGrid.Bind(TableView.SelectedItemProperty, new Binding(nameof(vm.SelectedMergeSubtitle)) { Source = vm });
         vm.SubtitleGrid = dataGrid;
         dataGrid.AddHandler(InputElement.KeyDownEvent, (object? _, KeyEventArgs e) =>
         {
             if (e.Key is Key.Home or Key.End && dataGrid.ItemsSource is IList items && items.Count > 0)
             {
-                var target = e.Key == Key.Home ? items[0] : items[^1];
-                dataGrid.SelectedItem = target;
-                dataGrid.ScrollIntoView(target, null);
+                var index = e.Key == Key.Home ? 0 : items.Count - 1;
+                dataGrid.SelectedIndex = index;
+                dataGrid.ScrollIntoView(index);
                 e.Handled = true;
             }
         }, RoutingStrategies.Tunnel);

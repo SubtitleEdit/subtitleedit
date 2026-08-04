@@ -19,42 +19,26 @@ namespace Nikse.SubtitleEdit.Core.Common
 
         public string FileName { get; set; }
 
-        public static int MaximumHistoryItems => 100;
-
         public SubtitleFormat OriginalFormat { get; set; }
         public Encoding OriginalEncoding { get; private set; }
 
-        public List<HistoryItem> HistoryItems { get; }
-        public bool CanUndo => HistoryItems.Count > 0;
-
-        public Subtitle() : this(new List<Paragraph>(), new List<HistoryItem>())
+        public Subtitle() : this(new List<Paragraph>())
         {
         }
 
-        public Subtitle(List<Paragraph> paragraphs) : this(paragraphs, new List<HistoryItem>())
+        public Subtitle(List<Paragraph> paragraphs)
         {
-        }
-
-        public Subtitle(List<HistoryItem> historyItems) : this(new List<Paragraph>(), historyItems)
-        {
-        }
-
-        public Subtitle(List<Paragraph> paragraphs, List<HistoryItem> historyItems)
-        {
-            HistoryItems = historyItems;
             Paragraphs = paragraphs;
             FileName = "Untitled";
         }
 
         /// <summary>
-        /// Copy constructor (without history).
+        /// Copy constructor.
         /// </summary>
         /// <param name="subtitle">Subtitle to copy</param>
         /// <param name="generateNewId">Generate new ID (guid) for paragraphs</param>
         public Subtitle(Subtitle subtitle, bool generateNewId = true)
         {
-            HistoryItems = new List<HistoryItem>();
-
             if (subtitle == null)
             {
                 FileName = "Untitled";
@@ -91,7 +75,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             return Paragraphs[index];
         }
 
-        public Paragraph GetParagraphOrDefaultById(string id)
+        public Paragraph GetParagraphOrDefaultById(Guid? id)
         {
             return Paragraphs.Find(p => p.Id == id);
         }
@@ -369,35 +353,6 @@ namespace Nikse.SubtitleEdit.Core.Common
             return subtitleFormat;
         }
 
-        public void MakeHistoryForUndo(string description, string subtitleFormatFriendlyName, DateTime fileModified, Subtitle original, string originalSubtitleFileName, int lineNumber, int linePosition, int linePositionOriginal)
-        {
-            // don't fill memory with history - use a max rollback points
-            if (HistoryItems.Count > MaximumHistoryItems)
-            {
-                HistoryItems.RemoveAt(0);
-            }
-
-            HistoryItems.Add(new HistoryItem(HistoryItems.Count, this, description, FileName, fileModified, subtitleFormatFriendlyName, original, originalSubtitleFileName, lineNumber, linePosition, linePositionOriginal));
-        }
-
-        public string UndoHistory(int index, out string subtitleFormatFriendlyName, out DateTime fileModified, out Subtitle originalSubtitle, out string originalSubtitleFileName)
-        {
-            Paragraphs.Clear();
-            foreach (var p in HistoryItems[index].Subtitle.Paragraphs)
-            {
-                Paragraphs.Add(new Paragraph(p));
-            }
-
-            subtitleFormatFriendlyName = HistoryItems[index].SubtitleFormatFriendlyName;
-            FileName = HistoryItems[index].FileName;
-            fileModified = HistoryItems[index].FileModified;
-            originalSubtitle = new Subtitle(HistoryItems[index].OriginalSubtitle);
-            originalSubtitleFileName = HistoryItems[index].OriginalSubtitleFileName;
-            Header = HistoryItems[index].Subtitle.Header;
-
-            return FileName;
-        }
-
         /// <summary>
         /// Creates subtitle as text in its native format.
         /// </summary>
@@ -430,9 +385,13 @@ namespace Nikse.SubtitleEdit.Core.Common
 
         public void AdjustDisplayTimeUsingPercent(double percent, List<int> selectedIndexes, List<double> shotChanges = null, bool enforceDurationLimits = true)
         {
+            // List.Contains per paragraph made this O(paragraphs * selection) - quadratic with
+            // "select all". The ascending walk has to stay: each iteration reads the next
+            // paragraph's (possibly already adjusted) start time.
+            var selected = selectedIndexes == null ? null : new HashSet<int>(selectedIndexes);
             for (int i = 0; i < Paragraphs.Count; i++)
             {
-                if (selectedIndexes == null || selectedIndexes.Contains(i))
+                if (selected == null || selected.Contains(i))
                 {
                     double nextStartMilliseconds = double.MaxValue;
                     if (i + 1 < Paragraphs.Count)
@@ -630,9 +589,12 @@ namespace Nikse.SubtitleEdit.Core.Common
 
         public void SetFixedDuration(List<int> selectedIndexes, double fixedDurationMilliseconds, List<double> shotChanges = null)
         {
+            // See AdjustDisplayTimeUsingPercent: probing a set instead of the list keeps this
+            // linear when the whole subtitle is selected.
+            var selected = selectedIndexes == null ? null : new HashSet<int>(selectedIndexes);
             for (var i = 0; i < Paragraphs.Count; i++)
             {
-                if (selectedIndexes == null || selectedIndexes.Contains(i))
+                if (selected == null || selected.Contains(i))
                 {
                     var p = GetParagraphOrDefault(i);
                     if (p == null)
@@ -790,14 +752,10 @@ namespace Nikse.SubtitleEdit.Core.Common
             }
 
             var firstNumber = Paragraphs[0].Number;
-            for (var i = Paragraphs.Count - 1; i >= 0; i--)
-            {
-                var p = Paragraphs[i];
-                if (p.Text.IsOnlyControlCharactersOrWhiteSpace())
-                {
-                    Paragraphs.RemoveAt(i);
-                }
-            }
+
+            // RemoveAt shifts every following element, so removing k lines one at a time was
+            // O(paragraphs * k). RemoveAll compacts in a single pass.
+            Paragraphs.RemoveAll(p => p.Text.IsOnlyControlCharactersOrWhiteSpace());
 
             if (count != Paragraphs.Count)
             {
@@ -832,10 +790,11 @@ namespace Nikse.SubtitleEdit.Core.Common
         /// </summary>
         /// <param name="ids">IDs of paragraphs/lines to delete</param>
         /// <returns>Number of lines deleted</returns>
-        public int RemoveParagraphsByIds(IEnumerable<string> ids)
+        public int RemoveParagraphsByIds(IEnumerable<Guid?> ids)
         {
             var beforeCount = Paragraphs.Count;
-            Paragraphs = Paragraphs.Where(p => !ids.Contains(p.Id)).ToList();
+            var idSet = new HashSet<Guid?>(ids);
+            Paragraphs = Paragraphs.Where(p => !idSet.Contains(p.Id)).ToList();
             return beforeCount - Paragraphs.Count;
         }
 
@@ -860,7 +819,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                     Paragraphs = Paragraphs.OrderBy(p => p.DurationTotalMilliseconds).ThenBy(p => p.Number).ToList();
                     break;
                 case SubtitleSortCriteria.Gap:
-                    var lookupDictionary = new Dictionary<string, double>();
+                    var lookupDictionary = new Dictionary<Guid?, double>();
                     for (var index = 0; index < Paragraphs.Count; index++)
                     {
                         var paragraph = Paragraphs[index];

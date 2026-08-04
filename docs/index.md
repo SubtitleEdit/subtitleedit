@@ -1,6 +1,6 @@
 # Subtitle Edit - Documentation
 
-Subtitle Edit is a free, open-source editor for video subtitles. This is the documentation for the Avalonia-based cross-platform version (Subtitle Edit 5).
+Subtitle Edit is a free, open-source editor for video subtitles. This is the documentation for the cross-platform version (Subtitle Edit 5).
 
 ## Getting Started
 
@@ -13,11 +13,16 @@ Subtitle Edit is a free, open-source editor for video subtitles. This is the doc
 
 ### File Operations
 - [File Menu](features/file.md) — New, Open, Save, Import, Export
+- [Import Plain Text](features/import-plain-text.md) — Create subtitles from text, with forced-aligner timing
+- [Edit Image-based Subtitle](features/binary-edit.md) — Edit Blu-ray SUP/VobSub/DVB subtitles without OCR
 
 ### Editing
-- [Edit Menu](features/edit.md) — Find, Replace, Multiple Replace, Modify Selection, History
+- [Edit Menu](features/edit.md) — Find, Replace, Multiple Replace, History
+- [Source View](features/source-view.md) — Edit the raw subtitle source: syntax coloring, live parse check, find/replace, line commands
+- [Modify Selection](features/modify-selection.md) — Select lines by rules: text, hearing-impaired text, duration, CPS, gaps, styles, actors
 - [Subtitle Grid](features/subtitle-grid.md) — Working with the subtitle list/grid
 - [Text Editor](features/text-editor.md) — Editing subtitle text
+- [AI Assistant](features/ai-assistant.md) — AI help for the current line: fix errors, fit reading speed, change tone
 
 ### Tools
 - [AI Review](features/ai-review.md) — Proofread with a local LLM (llama.cpp, Ollama, or any OpenAI-compatible endpoint)
@@ -69,6 +74,7 @@ Subtitle Edit is a free, open-source editor for video subtitles. This is the doc
 
 ### Translation
 - [Auto Translate](features/auto-translate.md) — Automatic subtitle translation
+- [Auto Translate: Advanced Local Engines](features/auto-translate-advanced.md) — Batch/context settings for the llama.cpp and Ollama advanced engines
 - [Copy/Paste Translate](features/copy-paste-translate.md) — Translate via copy/paste workflow
 
 ### Spell Check

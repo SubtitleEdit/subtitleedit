@@ -2,9 +2,11 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Data;
 using Avalonia.Input;
+using Avalonia.Interactivity;
 using Avalonia.Layout;
 using Avalonia.Media;
 using System.Collections;
+using System.Windows.Input;
 using Nikse.SubtitleEdit.Features.Assa;
 using Nikse.SubtitleEdit.Features.Shared.ColorPicker;
 using Nikse.SubtitleEdit.Logic;
@@ -62,8 +64,12 @@ public class SsaStylesWindow : Window
 
         Content = grid;
 
-        Activated += delegate { buttonOk.Focus(); }; // hack to make OnKeyDown work
+        // initial focus on an input, not an action button - a focused button clicks on bare Space
+        Activated += delegate { TableViewExtras.FocusRow(vm.FileStyleGrid); };
         KeyDown += vm.KeyDown;
+
+        Closing += delegate { UiUtil.SaveWindowPosition(this); };
+        Loaded += delegate { UiUtil.RestoreWindowPosition(this); };
     }
 
     private static Grid MakeLeftView(SsaStylesViewModel vm)
@@ -109,67 +115,51 @@ public class SsaStylesWindow : Window
 
         var label = UiUtil.MakeLabel(Se.Language.Assa.StylesInFile).WithBold();
 
-        var dataGrid = new DataGrid
+        // No header sorting: SSA styles are written to the file header in list
+        // order on OK, so the collection order is not presentation-only.
+        var dataGrid = TableViewExtras.MakeTableView();
+        dataGrid.DataContext = vm;
+        dataGrid.ItemsSource = vm.FileStyles;
+
+        dataGrid.Columns.Add(new SeTableViewColumn
         {
-            AutoGenerateColumns = false,
-            SelectionMode = DataGridSelectionMode.Extended,
-            CanUserResizeColumns = true,
-            CanUserSortColumns = true,
-            HorizontalAlignment = HorizontalAlignment.Stretch,
-            VerticalAlignment = VerticalAlignment.Stretch,
-            Width = double.NaN,
-            Height = double.NaN,
-            DataContext = vm,
-            ItemsSource = vm.FileStyles,
-            Columns =
-            {
-                new DataGridTextColumn
-                {
-                    Header = Se.Language.General.Name,
-                    CellTheme = UiUtil.DataGridNoBorderNoPaddingCellTheme,
-                    Binding = new Binding(nameof(StyleDisplay.Name)),
-                    IsReadOnly = true,
-                },
-                new DataGridTextColumn
-                {
-                    Header = Se.Language.General.FontName,
-                    CellTheme = UiUtil.DataGridNoBorderNoPaddingCellTheme,
-                    Binding = new Binding(nameof(StyleDisplay.FontName)),
-                    IsReadOnly = true,
-                    Width = new DataGridLength(1, DataGridLengthUnitType.Star),
-                },
-                new DataGridTextColumn
-                {
-                    Header = Se.Language.General.FontSize,
-                    CellTheme = UiUtil.DataGridNoBorderNoPaddingCellTheme,
-                    Binding = new Binding(nameof(StyleDisplay.FontSize)),
-                    IsReadOnly = true,
-                    Width = new DataGridLength(1, DataGridLengthUnitType.Star),
-                },
-                new DataGridTextColumn
-                {
-                    Header = Se.Language.General.Usages,
-                    CellTheme = UiUtil.DataGridNoBorderNoPaddingCellTheme,
-                    Binding = new Binding(nameof(StyleDisplay.UsageCount)),
-                    IsReadOnly = true,
-                    Width = new DataGridLength(1, DataGridLengthUnitType.Star),
-                },
-            },
-        };
-        dataGrid.Bind(DataGrid.SelectedItemProperty, new Binding(nameof(vm.SelectedFileStyle)) { Source = vm });
+            Header = Se.Language.General.Name,
+            CellTheme = UiUtil.TableViewCellTheme,
+            HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
+            Binding = new Binding(nameof(StyleDisplay.Name)),
+            Width = new GridLength(1, GridUnitType.Star),
+        });
+        dataGrid.Columns.Add(new SeTableViewColumn
+        {
+            Header = Se.Language.General.FontName,
+            CellTheme = UiUtil.TableViewCellTheme,
+            HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
+            Binding = new Binding(nameof(StyleDisplay.FontName)),
+            Width = new GridLength(150),
+        });
+        dataGrid.Columns.Add(new SeTableViewColumn
+        {
+            Header = Se.Language.General.FontSize,
+            CellTheme = UiUtil.TableViewCellTheme,
+            HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
+            Binding = new Binding(nameof(StyleDisplay.FontSize)),
+            Width = new GridLength(90),
+        });
+        dataGrid.Columns.Add(new SeTableViewColumn
+        {
+            Header = Se.Language.General.Usages,
+            CellTheme = UiUtil.TableViewCellTheme,
+            HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
+            Binding = new Binding(nameof(StyleDisplay.UsageCount)),
+            Width = new GridLength(90),
+        });
+
+        dataGrid.Bind(TableView.SelectedItemProperty, new Binding(nameof(vm.SelectedFileStyle)) { Source = vm });
         dataGrid.SelectionChanged += vm.FileStylesChanged;
         dataGrid.GotFocus += vm.FileStylesGotFocus;
         dataGrid.KeyDown += vm.FileStylesKeyDown;
-        dataGrid.AddHandler(InputElement.KeyDownEvent, (object? _, KeyEventArgs e) =>
-        {
-            if (e.Key is Key.Home or Key.End && dataGrid.ItemsSource is IList items && items.Count > 0)
-            {
-                var target = e.Key == Key.Home ? items[0] : items[^1];
-                dataGrid.SelectedItem = target;
-                dataGrid.ScrollIntoView(target, null);
-                e.Handled = true;
-            }
-        }, Avalonia.Interactivity.RoutingStrategies.Tunnel);
+        dataGrid.AddHandler(InputElement.KeyDownEvent, vm.FileStylesMoveKeyDown, RoutingStrategies.Tunnel);
+        TableViewExtras.AttachListNavigation(dataGrid);
         vm.FileStyleGrid = dataGrid;
 
         var flyout = new MenuFlyout();
@@ -213,6 +203,8 @@ public class SsaStylesWindow : Window
         menuItemTakeUsagesFrom.Bind(MenuItem.IsVisibleProperty, new Binding(nameof(vm.IsTakeUsagesFromVisible)) { Source = vm });
         flyout.Items.Add(menuItemTakeUsagesFrom);
 
+        AddMoveMenuItems(flyout, vm);
+
         var buttonNew = UiUtil.MakeButton(vm.FileNewCommand, IconNames.Plus, Se.Language.General.New);
         var buttonRemove = UiUtil.MakeButton(vm.FileRemoveCommand, IconNames.Trash, Se.Language.General.Delete);
         var buttonDuplicate = UiUtil.MakeButton(vm.FilesDuplicateCommand, IconNames.Duplicate, Se.Language.General.Duplicate);
@@ -255,52 +247,46 @@ public class SsaStylesWindow : Window
 
         var label = UiUtil.MakeLabel(Se.Language.Assa.StylesSaved).WithBold();
 
-        var dataGrid = new DataGrid
+        // No header sorting: the storage style order is persisted to settings in
+        // list order on OK, so the collection order is not presentation-only.
+        var dataGrid = TableViewExtras.MakeTableView();
+        dataGrid.DataContext = vm;
+        dataGrid.ItemsSource = vm.StorageStyles;
+
+        dataGrid.Columns.Add(new SeTableViewColumn
         {
-            AutoGenerateColumns = false,
-            SelectionMode = DataGridSelectionMode.Extended,
-            CanUserResizeColumns = true,
-            CanUserSortColumns = true,
-            HorizontalAlignment = HorizontalAlignment.Stretch,
-            VerticalAlignment = VerticalAlignment.Stretch,
-            Width = double.NaN,
-            Height = double.NaN,
-            DataContext = vm,
-            ItemsSource = vm.StorageStyles,
-            Columns =
-            {
-                new DataGridTextColumn
-                {
-                    Header = Se.Language.General.Name,
-                    CellTheme = UiUtil.DataGridNoBorderNoPaddingCellTheme,
-                    Binding = new Binding(nameof(StyleDisplay.Name)),
-                    IsReadOnly = true,
-                },
-                new DataGridTextColumn
-                {
-                    Header = Se.Language.General.FontName,
-                    CellTheme = UiUtil.DataGridNoBorderNoPaddingCellTheme,
-                    Binding = new Binding(nameof(StyleDisplay.FontName)),
-                    IsReadOnly = true,
-                },
-                new DataGridTextColumn
-                {
-                    Header = Se.Language.General.FontSize,
-                    CellTheme = UiUtil.DataGridNoBorderNoPaddingCellTheme,
-                    Binding = new Binding(nameof(StyleDisplay.FontSize)),
-                    IsReadOnly = true,
-                },
-                new DataGridTextColumn
-                {
-                    Header = Se.Language.General.IsDefault,
-                    CellTheme = UiUtil.DataGridNoBorderNoPaddingCellTheme,
-                    Binding = new Binding(nameof(StyleDisplay.IsDefault)),
-                    IsReadOnly = true,
-                    Width = new DataGridLength(1, DataGridLengthUnitType.Star),
-                },
-            },
-        };
-        dataGrid.Bind(DataGrid.SelectedItemProperty, new Binding(nameof(vm.SelectedStorageStyle)) { Source = vm });
+            Header = Se.Language.General.Name,
+            CellTheme = UiUtil.TableViewCellTheme,
+            HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
+            Binding = new Binding(nameof(StyleDisplay.Name)),
+            Width = new GridLength(1, GridUnitType.Star),
+        });
+        dataGrid.Columns.Add(new SeTableViewColumn
+        {
+            Header = Se.Language.General.FontName,
+            CellTheme = UiUtil.TableViewCellTheme,
+            HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
+            Binding = new Binding(nameof(StyleDisplay.FontName)),
+            Width = new GridLength(150),
+        });
+        dataGrid.Columns.Add(new SeTableViewColumn
+        {
+            Header = Se.Language.General.FontSize,
+            CellTheme = UiUtil.TableViewCellTheme,
+            HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
+            Binding = new Binding(nameof(StyleDisplay.FontSize)),
+            Width = new GridLength(90),
+        });
+        dataGrid.Columns.Add(new SeTableViewColumn
+        {
+            Header = Se.Language.General.IsDefault,
+            CellTheme = UiUtil.TableViewCellTheme,
+            HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
+            Binding = new Binding(nameof(StyleDisplay.IsDefault)),
+            Width = new GridLength(90),
+        });
+
+        dataGrid.Bind(TableView.SelectedItemProperty, new Binding(nameof(vm.SelectedStorageStyle)) { Source = vm });
         dataGrid.SelectionChanged += vm.StorageStylesChanged;
         dataGrid.GotFocus += vm.StorageStylesGotFocus;
         vm.StorageStyleGrid = dataGrid;
@@ -437,18 +423,18 @@ public class SsaStylesWindow : Window
         var checkBoxStrikeout = UiUtil.MakeCheckBox(Se.Language.General.Strikeout, vm, nameof(vm.CurrentStyle) + "." + nameof(StyleDisplay.Strikeout));
         var panelFontStyle = UiUtil.MakeHorizontalPanel(checkBoxBold, checkBoxItalic, checkBoxUnderline, checkBoxStrikeout).WithMarginBottom(10);
 
-        var labelScaleX = UiUtil.MakeLabel("Scale X").WithMinWidth(60);
+        var labelScaleX = UiUtil.MakeLabel(Se.Language.Assa.ScaleX).WithMinWidth(60);
         var numericUpDownScaleX = UiUtil.MakeNumericUpDownOneDecimal(1, 1000, 130, vm, nameof(vm.CurrentStyle) + "." + nameof(StyleDisplay.ScaleX));
         numericUpDownScaleX.Increment = 1;
-        var labelScaleY = UiUtil.MakeLabel("Scale Y").WithMinWidth(60);
+        var labelScaleY = UiUtil.MakeLabel(Se.Language.Assa.ScaleY).WithMinWidth(60);
         var numericUpDownScaleY = UiUtil.MakeNumericUpDownOneDecimal(1, 1000, 130, vm, nameof(vm.CurrentStyle) + "." + nameof(StyleDisplay.ScaleY));
         numericUpDownScaleY.Increment = 1;
         var panelTransform1 = UiUtil.MakeHorizontalPanel(labelScaleX, numericUpDownScaleX, labelScaleY, numericUpDownScaleY);
 
-        var labelSpacing = UiUtil.MakeLabel("Spacing").WithMinWidth(60);
+        var labelSpacing = UiUtil.MakeLabel(Se.Language.Assa.Spacing).WithMinWidth(60);
         var numericUpDownSpacing = UiUtil.MakeNumericUpDownOneDecimal(-100, 100, 130, vm, nameof(vm.CurrentStyle) + "." + nameof(StyleDisplay.Spacing));
         numericUpDownSpacing.Increment = 1;
-        var labelAngle = UiUtil.MakeLabel("Angle").WithMinWidth(60);
+        var labelAngle = UiUtil.MakeLabel(Se.Language.Assa.Angle).WithMinWidth(60);
         var numericUpDownAngle = UiUtil.MakeNumericUpDownOneDecimal(-360, 360, 130, vm, nameof(vm.CurrentStyle) + "." + nameof(StyleDisplay.Angle));
         numericUpDownAngle.Increment = 1;
         var panelTransform2 = UiUtil.MakeHorizontalPanel(labelSpacing, numericUpDownSpacing, labelAngle, numericUpDownAngle).WithMarginBottom(10);
@@ -697,5 +683,38 @@ public class SsaStylesWindow : Window
         };
 
         return button;
+    }
+
+    /// <summary>
+    /// The "move up/down/to top/to bottom" block of the file styles context menu (#13056).
+    /// The styles are written to the file header in list order, so this is real reordering,
+    /// not a view sort.
+    /// </summary>
+    private static void AddMoveMenuItems(MenuFlyout flyout, SsaStylesViewModel vm)
+    {
+        var separator = new Separator();
+        separator.Bind(Separator.IsVisibleProperty, new Binding(nameof(vm.IsMoveVisible)) { Source = vm });
+        flyout.Items.Add(separator);
+
+        var items = new (string Header, ICommand Command, KeyGesture? Gesture)[]
+        {
+            (Se.Language.General.MoveUp, vm.FileMoveUpCommand, new KeyGesture(Key.Up, KeyModifiers.Control)),
+            (Se.Language.General.MoveDown, vm.FileMoveDownCommand, new KeyGesture(Key.Down, KeyModifiers.Control)),
+            (Se.Language.General.MoveToTop, vm.FileMoveToTopCommand, null),
+            (Se.Language.General.MoveToBottom, vm.FileMoveToBottomCommand, null),
+        };
+
+        foreach (var (header, command, gesture) in items)
+        {
+            var menuItem = new MenuItem
+            {
+                Header = header,
+                DataContext = vm,
+                Command = command,
+                InputGesture = gesture,
+            };
+            menuItem.Bind(MenuItem.IsVisibleProperty, new Binding(nameof(vm.IsMoveVisible)) { Source = vm });
+            flyout.Items.Add(menuItem);
+        }
     }
 }

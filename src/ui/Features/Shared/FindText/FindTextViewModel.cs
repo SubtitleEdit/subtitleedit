@@ -13,7 +13,7 @@ using System.Threading;
 
 namespace Nikse.SubtitleEdit.Features.Shared.FindText;
 
-public partial class FindTextViewModel : ObservableObject
+public partial class FindTextViewModel : ObservableObject, IClosingCleanup
 {
     [ObservableProperty] private string _title;
     [ObservableProperty] private string _searchText;
@@ -24,7 +24,7 @@ public partial class FindTextViewModel : ObservableObject
     public Window? Window { get; set; }
 
     public bool OkPressed { get; private set; }
-    public DataGrid SubtitleGrid { get; internal set; }
+    public TableView SubtitleGrid { get; internal set; }
 
     private List<SubtitleLineViewModel> _allSubtitles;
     private bool _dirty;
@@ -36,7 +36,7 @@ public partial class FindTextViewModel : ObservableObject
         _allSubtitles = new List<SubtitleLineViewModel>();
         Subtitles = new ObservableCollection<SubtitleLineViewModel>();
         Title = string.Empty;
-        SubtitleGrid = new DataGrid();
+        SubtitleGrid = new TableView();
         SearchText = string.Empty;
         _updateLock = new Lock();
         _searchTimer = new System.Timers.Timer();
@@ -66,6 +66,11 @@ public partial class FindTextViewModel : ObservableObject
                 Subtitles.AddRange(_allSubtitles.Where(p => p.Text.Contains(SearchText, System.StringComparison.InvariantCultureIgnoreCase)));
             });
         }
+    }
+
+    public void OnClosingCleanup()
+    {
+        _searchTimer.StopAndDispose(_searchTimer_Elapsed);
     }
 
     internal void Initialize(List<SubtitleLineViewModel> subtitleLines, string title)
@@ -113,7 +118,7 @@ public partial class FindTextViewModel : ObservableObject
 
     internal void OnSubtitleGridDoubleTapped(object? sender, TappedEventArgs e)
     {
-        if (sender is DataGrid grid && grid.SelectedItem != null)
+        if (sender is TableView grid && grid.SelectedItem != null)
         {
             if (grid.SelectedItem is SubtitleLineViewModel selectedItem)
             {

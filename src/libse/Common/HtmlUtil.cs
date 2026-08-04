@@ -11,7 +11,7 @@ namespace Nikse.SubtitleEdit.Core.Common
     /// <summary>
     /// HTML specific string manipulations.
     /// </summary>
-    public static class HtmlUtil
+    public static partial class HtmlUtil
     {
         /// <summary>
         /// Represents the HTML tag used for italic text formatting.
@@ -38,7 +38,13 @@ namespace Nikse.SubtitleEdit.Core.Common
         /// </summary>
         public static string TagCyrillicI => "\u0456"; // Cyrillic Small Letter Byelorussian-Ukrainian i (http://graphemica.com/%D1%96)
 
+#if NET7_0_OR_GREATER
+        [GeneratedRegex(@"<\s*(?:/\s*)?(\w+)[^>]*>")]
+        private static partial Regex TagOpenRegexGen();
+        private static readonly Regex TagOpenRegex = TagOpenRegexGen();
+#else
         private static readonly Regex TagOpenRegex = new Regex(@"<\s*(?:/\s*)?(\w+)[^>]*>", RegexOptions.Compiled);
+#endif
 
         /// <summary>
         /// Remove all of the specified opening and closing tags from the source HTML string.
@@ -537,7 +543,7 @@ namespace Nikse.SubtitleEdit.Core.Common
         }
 
         /// <summary>
-        /// Optimized method to remove common html tags, like <i>, <b>, <u>, and <font>
+        /// Optimized method to remove common html tags, like &lt;i&gt;, &lt;b&gt;, &lt;u&gt;, and &lt;font&gt;
         /// </summary>
         /// <param name="s">Text to remove html tags from</param>
         /// <returns>Text stripped from common html tags</returns>
@@ -969,15 +975,12 @@ namespace Nikse.SubtitleEdit.Core.Common
                 }
                 else
                 {
+                    // Remove the spurious last begin tag, keeping any text around it. The old
+                    // near-end branch here did "Substring(0, lastIndex - 1) + endTag", which ate
+                    // the character before the tag and appended an unbalanced end tag
+                    // ("<i>ab</i>c<i>" became "<i>ab</i></i>" - the "c" was lost).
                     var lastIndex = text.LastIndexOf(beginTag, StringComparison.Ordinal);
-                    if (text.Length > lastIndex + endTag.Length)
-                    {
-                        text = text.Substring(0, lastIndex) + text.Substring(lastIndex - 1 + endTag.Length);
-                    }
-                    else
-                    {
-                        text = text.Substring(0, lastIndex - 1) + endTag;
-                    }
+                    text = text.Remove(lastIndex, beginTag.Length);
                 }
                 if (text.StartsWith(beginTag, StringComparison.Ordinal) && text.EndsWith(endTag, StringComparison.Ordinal) && text.Contains(endTag + Environment.NewLine + beginTag))
                 {
@@ -1168,29 +1171,25 @@ namespace Nikse.SubtitleEdit.Core.Common
                 }
             }
 
+            // </i>Foo</i>     (two lines with only stray "</i>" tags - the subtitle was
+            // </i>Bar</i>      meant to be italic, so italicize each line that has a tag)
             if (noOfLines == 2 && italicBeginTagCount == 0 && italicEndTagCount == 4)
             {
                 var lines = text.SplitToLines();
-                if (lines.Count == 2 &&
-                    lines[0].StartsWith("</i>", StringComparison.InvariantCulture) && lines[1].EndsWith("</i>", StringComparison.InvariantCulture) &&
-                    lines[1].StartsWith("</i>", StringComparison.InvariantCulture) && lines[1].EndsWith("</i>", StringComparison.InvariantCulture))
+                if (lines.Count == 2)
                 {
-                    var s1 = lines[0].Replace("</i>", string.Empty);
-                    var s2 = lines[1].Replace("</i>", string.Empty);
-                    text = "<i>" + s1.Trim() + "</i>" + Environment.NewLine + "<i>" + s2.Trim() + "</i>";
+                    text = ItalicizeLineRemovingStrayTag(lines[0], endTag) + Environment.NewLine + ItalicizeLineRemovingStrayTag(lines[1], endTag);
                 }
             }
 
+            // <i>Foo<i>     (two lines with only stray "<i>" tags)
+            // <i>Bar<i>
             if (noOfLines == 2 && italicBeginTagCount == 4 && italicEndTagCount == 0)
             {
                 var lines = text.SplitToLines();
-                if (lines.Count == 2 &&
-                    lines[0].StartsWith("<i>", StringComparison.InvariantCulture) && lines[1].EndsWith("<i>", StringComparison.InvariantCulture) &&
-                    lines[1].StartsWith("<i>", StringComparison.InvariantCulture) && lines[1].EndsWith("<i>", StringComparison.InvariantCulture))
+                if (lines.Count == 2)
                 {
-                    var s1 = lines[0].Replace("<i>", string.Empty);
-                    var s2 = lines[1].Replace("<i>", string.Empty);
-                    text = "<i>" + s1.Trim() + "</i>" + Environment.NewLine + "<i>" + s2.Trim() + "</i>";
+                    text = ItalicizeLineRemovingStrayTag(lines[0], beginTag) + Environment.NewLine + ItalicizeLineRemovingStrayTag(lines[1], beginTag);
                 }
             }
 
@@ -1243,6 +1242,22 @@ namespace Nikse.SubtitleEdit.Core.Common
             }
 
             return preTags + text;
+        }
+
+        /// <summary>
+        /// Used by <see cref="FixInvalidItalicTags"/> for two-line subtitles that contain only
+        /// stray copies of a single italic tag (e.g. four "&lt;/i&gt;" and no "&lt;i&gt;"): the tags carry no
+        /// pairing information, so a line containing the tag was meant to be italic - strip the
+        /// stray tags and wrap the whole line in proper tags. Lines without the tag are kept as-is.
+        /// </summary>
+        private static string ItalicizeLineRemovingStrayTag(string line, string strayTag)
+        {
+            if (!line.Contains(strayTag))
+            {
+                return line;
+            }
+
+            return "<i>" + line.Replace(strayTag, string.Empty).Trim() + "</i>";
         }
 
         /// <summary>
@@ -1456,7 +1471,7 @@ namespace Nikse.SubtitleEdit.Core.Common
         /// "rgb(r, g, b)", "rgba(r, g, b, a)", or a hex color string like "#RRGGBB" or "#RRGGBBAA".
         /// </summary>
         /// <param name="s">The string representation of the color.</param>
-        /// <returns>A Color object corresponding to the input string. If the string cannot be parsed, the default color is white.</returns
+        /// <returns>A Color object corresponding to the input string. If the string cannot be parsed, the default color is white.</returns>
         public static SKColor GetColorFromString(string s)
         {
             try
@@ -1512,13 +1527,19 @@ namespace Nikse.SubtitleEdit.Core.Common
             }
         }
 
+#if NET7_0_OR_GREATER
+        [GeneratedRegex("[ ]*(COLOR|color|Color)=[\"']*[#\\dA-Za-z]*[\"']*[ ]*")]
+        private static partial Regex ColorAttributeRegexGen();
+        private static readonly Regex ColorAttributeRegex = ColorAttributeRegexGen();
+#else
+        private static readonly Regex ColorAttributeRegex = new Regex("[ ]*(COLOR|color|Color)=[\"']*[#\\dA-Za-z]*[\"']*[ ]*", RegexOptions.Compiled);
+#endif
+
         /// <summary>
         /// Remove color tags from the input string, adjusting for potentially surrounding font tags.
         /// </summary>
         /// <param name="input">The string from which to remove color tags.</param>
         /// <returns>A new string with color tags removed.</returns>
-        private static readonly Regex ColorAttributeRegex = new Regex("[ ]*(COLOR|color|Color)=[\"']*[#\\dA-Za-z]*[\"']*[ ]*", RegexOptions.Compiled);
-
         public static string RemoveColorTags(string input)
         {
             var r = ColorAttributeRegex;
@@ -1566,10 +1587,28 @@ namespace Nikse.SubtitleEdit.Core.Common
             return s.Trim();
         }
 
+#if NET7_0_OR_GREATER
+        [GeneratedRegex("[ ]*(FACE|face|Face)=[\"']*[\\d\\p{L} ]*[\"']*[ ]*")]
+        private static partial Regex FontFaceAttributeRegexGen();
+        private static readonly Regex FontFaceAttributeRegex = FontFaceAttributeRegexGen();
+
+        [GeneratedRegex("{\\\\fn[a-zA-Z \\d]+}")]
+        private static partial Regex AssaFontNameOnlyTagRegexGen();
+        private static readonly Regex AssaFontNameOnlyTagRegex = AssaFontNameOnlyTagRegexGen();
+
+        [GeneratedRegex("\\\\fn[a-zA-Z \\d]+}")]
+        private static partial Regex AssaFontNameLastTagRegexGen();
+        private static readonly Regex AssaFontNameLastTagRegex = AssaFontNameLastTagRegexGen();
+
+        [GeneratedRegex("\\\\fn[a-zA-Z \\d]+\\\\")]
+        private static partial Regex AssaFontNameInnerTagRegexGen();
+        private static readonly Regex AssaFontNameInnerTagRegex = AssaFontNameInnerTagRegexGen();
+#else
         private static readonly Regex FontFaceAttributeRegex = new Regex("[ ]*(FACE|face|Face)=[\"']*[\\d\\p{L} ]*[\"']*[ ]*", RegexOptions.Compiled);
         private static readonly Regex AssaFontNameOnlyTagRegex = new Regex("{\\\\fn[a-zA-Z \\d]+}", RegexOptions.Compiled);
         private static readonly Regex AssaFontNameLastTagRegex = new Regex("\\\\fn[a-zA-Z \\d]+}", RegexOptions.Compiled);
         private static readonly Regex AssaFontNameInnerTagRegex = new Regex("\\\\fn[a-zA-Z \\d]+\\\\", RegexOptions.Compiled);
+#endif
 
         /// <summary>
         /// Remove font tag from HTML or ASSA.
@@ -1625,6 +1664,13 @@ namespace Nikse.SubtitleEdit.Core.Common
         /// <returns>A new string without ASS and SSA alignment tags.</returns>
         public static string RemoveAssAlignmentTags(string s)
         {
+            // Every pattern below contains a backslash, so plain text (the common case in
+            // batch convert) skips all 45 Replace scans.
+            if (s.IndexOf('\\') < 0)
+            {
+                return s;
+            }
+
             return s.Replace("{\\an1}", string.Empty) // ASS tags alone
                 .Replace("{\\an2}", string.Empty)
                 .Replace("{\\an3}", string.Empty)
@@ -1683,14 +1729,49 @@ namespace Nikse.SubtitleEdit.Core.Common
         /// <returns>A new string with all ASSA color tags removed.</returns>
         public static string RemoveAssaColor(string input)
         {
+            // Every pattern requires a backslash; the static Regex.Replace overloads also went
+            // through the global regex cache (a lock + key hash per call) on every line.
+            if (input.IndexOf('\\') < 0)
+            {
+                return input;
+            }
+
             var text = input;
-            text = Regex.Replace(text, "\\\\alpha&H.{1,2}&\\\\", "\\");
-            text = Regex.Replace(text, "{\\\\1c&[abcdefghABCDEFGH\\d]*&}", string.Empty);
-            text = Regex.Replace(text, "{\\\\c&[abcdefghABCDEFGH\\d]*&}", string.Empty);
-            text = Regex.Replace(text, "\\\\c&[abcdefghABCDEFGH\\d]*&", string.Empty);
-            text = Regex.Replace(text, "\\\\1c&[abcdefghABCDEFGH\\d]*&", string.Empty);
+            text = AssaAlphaTagRegex.Replace(text, "\\");
+            text = Assa1cBraceRegex.Replace(text, string.Empty);
+            text = AssaCBraceRegex.Replace(text, string.Empty);
+            text = AssaCRegex.Replace(text, string.Empty);
+            text = Assa1cRegex.Replace(text, string.Empty);
             return text;
         }
+
+#if NET7_0_OR_GREATER
+        [GeneratedRegex("\\\\alpha&H.{1,2}&\\\\")]
+        private static partial Regex AssaAlphaTagRegexGen();
+        private static readonly Regex AssaAlphaTagRegex = AssaAlphaTagRegexGen();
+
+        [GeneratedRegex("{\\\\1c&[abcdefghABCDEFGH\\d]*&}")]
+        private static partial Regex Assa1cBraceRegexGen();
+        private static readonly Regex Assa1cBraceRegex = Assa1cBraceRegexGen();
+
+        [GeneratedRegex("{\\\\c&[abcdefghABCDEFGH\\d]*&}")]
+        private static partial Regex AssaCBraceRegexGen();
+        private static readonly Regex AssaCBraceRegex = AssaCBraceRegexGen();
+
+        [GeneratedRegex("\\\\c&[abcdefghABCDEFGH\\d]*&")]
+        private static partial Regex AssaCRegexGen();
+        private static readonly Regex AssaCRegex = AssaCRegexGen();
+
+        [GeneratedRegex("\\\\1c&[abcdefghABCDEFGH\\d]*&")]
+        private static partial Regex Assa1cRegexGen();
+        private static readonly Regex Assa1cRegex = Assa1cRegexGen();
+#else
+        private static readonly Regex AssaAlphaTagRegex = new Regex("\\\\alpha&H.{1,2}&\\\\", RegexOptions.Compiled);
+        private static readonly Regex Assa1cBraceRegex = new Regex("{\\\\1c&[abcdefghABCDEFGH\\d]*&}", RegexOptions.Compiled);
+        private static readonly Regex AssaCBraceRegex = new Regex("{\\\\c&[abcdefghABCDEFGH\\d]*&}", RegexOptions.Compiled);
+        private static readonly Regex AssaCRegex = new Regex("\\\\c&[abcdefghABCDEFGH\\d]*&", RegexOptions.Compiled);
+        private static readonly Regex Assa1cRegex = new Regex("\\\\1c&[abcdefghABCDEFGH\\d]*&", RegexOptions.Compiled);
+#endif
 
         /// <summary>
         /// Gets the closing HTML tag for the specified opening tag.
@@ -1719,7 +1800,7 @@ namespace Nikse.SubtitleEdit.Core.Common
         /// Determines if the provided HTML tag is an opening tag.
         /// </summary>
         /// <param name="tag">The HTML tag to check.</param>
-        /// <returns>True if the tag is an opening tag, otherwise false.</returns
+        /// <returns>True if the tag is an opening tag, otherwise false.</returns>
         public static bool IsOpenTag(string tag) => tag.Length > 1 && tag[1] != '/';
 
         /// <summary>

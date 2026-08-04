@@ -1,13 +1,16 @@
 using Avalonia.Controls;
 using Avalonia.Input;
+using Avalonia.Media;
 using Nikse.SubtitleEdit.Features.SpellCheck;
+using Nikse.SubtitleEdit.Logic;
 using System;
 
 namespace Nikse.SubtitleEdit.Controls;
 
 /// <summary>
 /// A <see cref="TextBox"/> that colors HTML tags and ASS/SSA override tags while typing, using
-/// the same color scheme as the AvaloniaEdit based editor (SubtitleSyntaxHighlighting).
+/// the shared subtitle syntax color scheme (SubtitleSyntaxTokenizer) - or a whole source format
+/// when <see cref="SourceHighlighter"/> is set.
 /// It behaves exactly like a normal text box (alignment, selection, IME, context menu) -
 /// the coloring is done by <see cref="SyntaxHighlightingTextPresenter"/>, which the
 /// ":syntaxHighlighting" style in Styles.axaml swaps in for the default text presenter.
@@ -24,6 +27,13 @@ public class SyntaxHighlightingTextBox : TextBox
     /// </summary>
     internal SyntaxHighlightingTextPresenter? SyntaxPresenter { get; set; }
 
+    /// <summary>
+    /// Colors a whole source document (media info, a subtitle format preview) instead of the
+    /// default subtitle tag coloring. Set it when the box is created; it is not meant to change
+    /// afterwards (the presenter caches its spans per text, not per highlighter).
+    /// </summary>
+    public ISourceSyntaxHighlighter? SourceHighlighter { get; init; }
+
     public ISpellCheckManager? SpellCheckManager { get; private set; }
 
     public bool IsSpellCheckEnabled { get; private set; }
@@ -31,6 +41,14 @@ public class SyntaxHighlightingTextBox : TextBox
     public SyntaxHighlightingTextBox()
     {
         PseudoClasses.Add(":syntaxHighlighting");
+
+        // Turn off standard/contextual ligatures: with e.g. DejaVu Sans, "ffi" is otherwise
+        // shaped into the single ﬃ glyph, and since the caret and mouse hit testing work on
+        // glyph clusters, the three letters behave as one un-enterable character (#12585).
+        // An edit box must navigate per character. Required ligatures ("rlig", used by e.g.
+        // Arabic lam-alef) and contextual alternates ("calt", cursive joining forms) are
+        // deliberately left on - they are script-critical and do not merge Latin letters.
+        FontFeatures = FontFeatureCollection.Parse("-liga, -clig");
     }
 
     public void EnableSpellCheck(ISpellCheckManager spellCheckManager)

@@ -4,7 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Avalonia.Platform;
-using Nikse.SubtitleEdit.Core.AudioToText;
+using Nikse.SubtitleEdit.UiLogic.AudioToText;
 using Nikse.SubtitleEdit.Features.Video.SpeechToText.OpenRouter;
 using Nikse.SubtitleEdit.Logic.Config;
 
@@ -58,7 +58,7 @@ public class OpenRouterSttEngine : IOnlineSttEngine
     public long UploadThresholdBytes => UploadThreshold;
     public long ChunkSizeBytes => ChunkSize;
 
-    public string GetAndCreateWhisperFolder() => WhisperHelper.GetWhisperFolder(WhisperChoice.OpenRouter);
+    public string GetAndCreateWhisperFolder() => WhisperHelper.GetWhisperFolder(WhisperChoice.OpenRouter) ?? string.Empty;
     public string GetAndCreateWhisperModelFolder(WhisperModel? whisperModel) => new WhisperModel().ModelFolder;
     public string GetExecutable() => string.Empty;
     public bool IsModelInstalled(WhisperModel model) => true;

@@ -19,7 +19,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 {
                     if (fileName.EndsWith(Extension, StringComparison.OrdinalIgnoreCase))
                     {
-                        byte[] buffer = FileUtil.ReadAllBytesShared(fileName);
+                        byte[] buffer = FileUtil.ReadBytesShared(fileName, 3);
 
                         return buffer[0] == 0x46 &&  // FCX
                                buffer[1] == 0x43 &&
@@ -42,12 +42,13 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             const int blockSize = 528;
             int i = 100;
             byte[] buffer = FileUtil.ReadAllBytesShared(fileName);
+            var sb = new StringBuilder();
             while (i < buffer.Length - blockSize)
             {
                 if (buffer[i] == 0x10 && buffer[i + 1] == 0 && buffer[i + 2] == 1) // subtitle block
                 {
                     var p = new Paragraph();
-                    var sb = new StringBuilder();
+                    sb.Clear();
                     int idx = i;
                     int nextPosition = idx + blockSize;
                     while (idx < nextPosition)

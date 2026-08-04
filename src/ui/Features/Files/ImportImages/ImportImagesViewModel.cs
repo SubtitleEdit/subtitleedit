@@ -206,11 +206,20 @@ public partial class ImportImagesViewModel : ObservableObject
         }
     }
 
-    internal void FileGridTapped()
+    internal async void FileGridTapped()
     {
         if (Images.Count == 0)
         {
-            FileImport().ConfigureAwait(false);
+            try
+            {
+                await FileImport();
+            }
+            catch (Exception exception)
+            {
+                // async void: a throw from the picker/import would otherwise be lost
+                // (or crash), leaving the tap silently doing nothing.
+                Se.LogError(exception, "Import images via grid tap failed");
+            }
         }
     }
 }

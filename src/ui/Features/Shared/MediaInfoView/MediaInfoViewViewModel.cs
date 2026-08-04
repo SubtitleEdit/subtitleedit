@@ -1,12 +1,13 @@
 using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Controls.Primitives;
 using Avalonia.Input;
 using Avalonia.Layout;
 using Avalonia.Media;
 using Avalonia.Threading;
-using AvaloniaEdit;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using Nikse.SubtitleEdit.Controls;
 using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.ContainerFormats.Matroska;
 using Nikse.SubtitleEdit.Core.ContainerFormats.Mp4;
@@ -16,6 +17,7 @@ using Nikse.SubtitleEdit.Logic.Media;
 using System.IO;
 using System.Text;
 using System.Threading.Tasks;
+using Nikse.SubtitleEdit.UiLogic.Media;
 
 namespace Nikse.SubtitleEdit.Features.Shared.MediaInfoView;
 
@@ -53,7 +55,7 @@ public partial class MediaInfoViewViewModel : ObservableObject
         {
             await Task.Delay(50); // Slight delay to ensure control is ready
 
-            SourceViewTextBox = CreateAdvancedTextBoxWrapper(Text);
+            SourceViewTextBox = CreateAdvancedTextBoxWrapper();
 
             TextBoxContainer.Child = SourceViewTextBox.ContentControl;
 
@@ -157,96 +159,34 @@ public partial class MediaInfoViewViewModel : ObservableObject
         return sb.ToString().Trim();
     }
 
-    private TextEditorWrapper CreateAdvancedTextBoxWrapper(string text)
+    private TextBoxWrapper CreateAdvancedTextBoxWrapper()
     {
-        var textBox = new TextEditor
+        var textBox = new SyntaxHighlightingTextBox
         {
+            SourceHighlighter = new MediaInfoSyntaxHighlighting(),
+            Text = Text ?? string.Empty,
             Margin = new Thickness(0, 0, 10, 0),
             VerticalAlignment = VerticalAlignment.Stretch,
             HorizontalAlignment = HorizontalAlignment.Stretch,
-            ShowLineNumbers = false,
-            WordWrap = true,
+            AcceptsReturn = true,
+            TextWrapping = TextWrapping.Wrap,
             IsReadOnly = true,
+            IsUndoEnabled = false,
+            [ScrollViewer.VerticalScrollBarVisibilityProperty] = ScrollBarVisibility.Auto,
+            [ScrollViewer.HorizontalScrollBarVisibilityProperty] = ScrollBarVisibility.Disabled,
         };
 
-        // Override the built-in link color with our softer pastel color
-        textBox.TextArea.TextView.LinkTextForegroundBrush = UiUtil.MakeLinkForeground();
-
-        // Add syntax highlighting for subtitle source formats
-        textBox.TextArea.TextView.LineTransformers.Add(new MediaInfoSyntaxHighlighting());
-
-        // Setup two-way binding manually since TextEditor doesn't support direct binding
-        var isUpdatingFromViewModel = false;
-        var isUpdatingFromEditor = false;
-
-        void UpdateEditorFromViewModel()
-        {
-            if (isUpdatingFromEditor)
-            {
-                return;
-            }
-
-            isUpdatingFromViewModel = true;
-            try
-            {
-                var text = Text ?? string.Empty;
-                if (textBox.Text != text)
-                {
-                    textBox.Text = text;
-                }
-            }
-            finally
-            {
-                isUpdatingFromViewModel = false;
-            }
-        }
-
-        void UpdateViewModelFromEditor()
-        {
-            if (isUpdatingFromViewModel)
-            {
-                return;
-            }
-
-            isUpdatingFromEditor = true;
-            try
-            {
-                if (Text != textBox.Text)
-                {
-                    Text = textBox.Text;
-                }
-            }
-            finally
-            {
-                isUpdatingFromEditor = false;
-            }
-        }
-
-        // Listen to ViewModel changes
-        PropertyChanged += (s, e) =>
+        // The full report arrives from a background parse, so the box follows the view model.
+        // One way only - the box is read-only, nothing can edit it back.
+        PropertyChanged += (_, e) =>
         {
             if (e.PropertyName == nameof(Text))
             {
-                UpdateEditorFromViewModel();
+                textBox.Text = Text ?? string.Empty;
             }
         };
 
-        // Listen to TextEditor changes
-        textBox.TextChanged += (s, e) => UpdateViewModelFromEditor();
-
-        // Initial text load
-        UpdateEditorFromViewModel();
-
-        var textBoxBorder = new Border
-        {
-            BorderBrush = Brushes.Gray,
-            BorderThickness = new Thickness(1),
-            Child = textBox,
-            VerticalAlignment = VerticalAlignment.Stretch,
-            HorizontalAlignment = HorizontalAlignment.Stretch,
-        };
-
-        return new TextEditorWrapper(textBox, textBoxBorder);
+        return new TextBoxWrapper(textBox);
     }
 
     [RelayCommand]

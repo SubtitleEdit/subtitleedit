@@ -1,4 +1,4 @@
-using Avalonia.Controls;
+﻿using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -58,7 +58,17 @@ public partial class VoiceSettingsViewModel : ObservableObject
             return;
         }
 
-        var fileName = await _fileHelper.PickOpenFile(Window!, "Open audio file (for clone)", Se.Language.General.AudioFiles, "*.wav;*.mp3");
+        string fileName;
+        if (_engine is Piper)
+        {
+            // Piper voices are trained models (.onnx + .onnx.json), not audio to clone from.
+            fileName = await _fileHelper.PickOpenFile(Window!, Se.Language.Video.TextToSpeech.ImportPiperVoiceTitle, "Piper voice model", "*.onnx");
+        }
+        else
+        {
+            fileName = await _fileHelper.PickOpenFile(Window!, "Open audio file (for clone)", Se.Language.General.AudioFiles, "*.wav;*.mp3");
+        }
+
         if (string.IsNullOrEmpty(fileName))
         {
             return;
@@ -167,7 +177,7 @@ public partial class VoiceSettingsViewModel : ObservableObject
             // it. Either way show the result for a quick review/correction (clone quality is
             // sensitive to ref-text accuracy), keeping the STT button to re-run if needed.
             var transcript = TryReadSiblingTranscript(fileName);
-            if (string.IsNullOrWhiteSpace(transcript) || Qwen3TtsCrispAsr.LooksLikeAttributionBlurb(transcript))
+            if (Qwen3TtsCrispAsr.LooksLikeUnusableTranscript(transcript))
             {
                 transcript = await RunSpeechToTextAsync(fileName) ?? string.Empty;
             }
@@ -214,6 +224,63 @@ public partial class VoiceSettingsViewModel : ObservableObject
                 ? voxEngine.ImportVoice(fileName, (result.Text ?? string.Empty).Trim())
                 : voxEngine.ImportVoice(fileName);
         }
+        else if (_engine is OmniVoiceCrispAsr omniCrispEngine)
+        {
+            // OmniVoice clones zero-shot from audio alone; a transcription (ref-text) is optional
+            // but improves quality, so prompt like VoxCPM2 while allowing an empty answer.
+            var transcript = TryReadSiblingTranscript(fileName) ?? string.Empty;
+            var audioFileName = fileName;
+            var result = await _windowService.ShowDialogAsync<PromptTextBoxWindow, PromptTextBoxViewModel>(Window!, vm =>
+            {
+                vm.Initialize(
+                    Se.Language.Video.TextToSpeech.VoiceCloneTranscriptTitle,
+                    transcript,
+                    500,
+                    150);
+                vm.ConfigureExtraButton(
+                    Se.Language.Video.TextToSpeech.UseSpeechToTextDotDotDot,
+                    () => RunSpeechToTextAsync(audioFileName));
+            });
+
+            ok = result.OkPressed
+                ? omniCrispEngine.ImportVoice(fileName, (result.Text ?? string.Empty).Trim())
+                : omniCrispEngine.ImportVoice(fileName);
+        }
+        else if (_engine is MossTtsCrispAsr mossEngine)
+        {
+            // MOSS-TTS clones zero-shot from audio alone; a transcription (ref-text) is optional
+            // but improves quality, so prompt like VoxCPM2 while allowing an empty answer.
+            var transcript = TryReadSiblingTranscript(fileName) ?? string.Empty;
+            var audioFileName = fileName;
+            var result = await _windowService.ShowDialogAsync<PromptTextBoxWindow, PromptTextBoxViewModel>(Window!, vm =>
+            {
+                vm.Initialize(
+                    Se.Language.Video.TextToSpeech.VoiceCloneTranscriptTitle,
+                    transcript,
+                    500,
+                    150);
+                vm.ConfigureExtraButton(
+                    Se.Language.Video.TextToSpeech.UseSpeechToTextDotDotDot,
+                    () => RunSpeechToTextAsync(audioFileName));
+            });
+
+            ok = result.OkPressed
+                ? mossEngine.ImportVoice(fileName, (result.Text ?? string.Empty).Trim())
+                : mossEngine.ImportVoice(fileName);
+        }
+        else if (_engine is Piper piperEngine)
+        {
+            ok = piperEngine.ImportVoice(fileName);
+            if (!ok)
+            {
+                // The only user-fixable failure: the .onnx.json config is not next to the model.
+                await MessageBox.Show(
+                    Window,
+                    Se.Language.Video.TextToSpeech.PiperVoiceConfigMissingTitle,
+                    string.Format(Se.Language.Video.TextToSpeech.PiperVoiceConfigMissingMessage, Path.GetFileName(fileName) + ".json"));
+                return;
+            }
+        }
         else
         {
             ok = _engine.ImportVoice(fileName);
@@ -237,7 +304,7 @@ public partial class VoiceSettingsViewModel : ObservableObject
             return;
         }
 
-        if (e.DataTransfer.Contains(DataFormat.File) && HasSupportedAudioFile(e))
+        if (e.DataTransfer.Contains(DataFormat.File) && HasSupportedImportFile(e))
         {
             e.DragEffects = DragDropEffects.Copy;
             IsDragOver = true;
@@ -267,7 +334,7 @@ public partial class VoiceSettingsViewModel : ObservableObject
 
         var fileName = e.DataTransfer.TryGetFiles()?
             .Select(f => f.Path.LocalPath)
-            .FirstOrDefault(IsSupportedAudioFile);
+            .FirstOrDefault(IsSupportedImportFile);
 
         if (string.IsNullOrEmpty(fileName))
         {
@@ -277,13 +344,13 @@ public partial class VoiceSettingsViewModel : ObservableObject
         Dispatcher.UIThread.PostSafe(() => ImportVoiceFromFileAsync(fileName));
     }
 
-    private static bool HasSupportedAudioFile(DragEventArgs e)
+    private bool HasSupportedImportFile(DragEventArgs e)
     {
         var files = e.DataTransfer.TryGetFiles();
-        return files != null && files.Any(f => IsSupportedAudioFile(f.Path.LocalPath));
+        return files != null && files.Any(f => IsSupportedImportFile(f.Path.LocalPath));
     }
 
-    private static bool IsSupportedAudioFile(string fileName)
+    private bool IsSupportedImportFile(string fileName)
     {
         if (string.IsNullOrEmpty(fileName))
         {
@@ -291,6 +358,13 @@ public partial class VoiceSettingsViewModel : ObservableObject
         }
 
         var ext = Path.GetExtension(fileName);
+
+        // Piper imports voice models, not audio to clone from.
+        if (_engine is Piper)
+        {
+            return string.Equals(ext, ".onnx", StringComparison.OrdinalIgnoreCase);
+        }
+
         return SupportedAudioExtensions.Any(s => string.Equals(s, ext, StringComparison.OrdinalIgnoreCase));
     }
 
@@ -304,7 +378,11 @@ public partial class VoiceSettingsViewModel : ObservableObject
 
         try
         {
-            return File.ReadAllText(siblingTextFile);
+            // Voice-pack sidecars can be Wikimedia attribution blurbs, not spoken
+            // transcriptions - pre-filling the transcript prompt with one poisons the
+            // ref-text when the user just clicks OK. Treat a blurb as "no transcript".
+            var text = File.ReadAllText(siblingTextFile);
+            return Qwen3TtsCrispAsr.LooksLikeUnusableTranscript(text) ? null : text;
         }
         catch
         {
@@ -362,13 +440,16 @@ public partial class VoiceSettingsViewModel : ObservableObject
     internal void Initialize(ITtsEngine engine)
     {
         _engine = engine;
-        IsImportVoiceVisible = engine.GetType() == typeof(Qwen3TtsCpp)
+        IsImportVoiceVisible = engine.GetType() == typeof(Piper)
+                               || engine.GetType() == typeof(Qwen3TtsCpp)
                                || engine.GetType() == typeof(Qwen3TtsCrispAsr)
                                || engine.GetType() == typeof(VibeVoiceCrispAsr)
                                || engine.GetType() == typeof(IndexTtsCrispAsr)
                                || engine.GetType() == typeof(CosyVoice3CrispAsr)
                                || engine.GetType() == typeof(F5TtsCrispAsr)
                                || engine.GetType() == typeof(VoxCPM2CrispAsr)
+                               || engine.GetType() == typeof(OmniVoiceCrispAsr)
+                               || engine.GetType() == typeof(MossTtsCrispAsr)
                                || engine.GetType() == typeof(ZonosTtsCrispAsr)
                                || engine.GetType() == typeof(ChatterboxTtsCpp)
                                || engine.GetType() == typeof(OmniVoiceTtsCpp);

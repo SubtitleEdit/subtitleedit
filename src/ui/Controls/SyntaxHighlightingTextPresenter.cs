@@ -9,13 +9,13 @@ using Nikse.SubtitleEdit.Logic;
 using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
+using Nikse.SubtitleEdit.UiLogic.SpellCheck;
 
 namespace Nikse.SubtitleEdit.Controls;
 
 /// <summary>
 /// A <see cref="TextPresenter"/> that colors HTML tags and ASS/SSA override tags while typing,
-/// using the same color scheme as the AvaloniaEdit colorizer (via
-/// <see cref="SubtitleSyntaxTokenizer"/>).
+/// using the shared subtitle syntax color scheme (via <see cref="SubtitleSyntaxTokenizer"/>).
 ///
 /// <see cref="CreateTextLayout"/> is a replica of the Avalonia 12.1.0 implementation with syntax
 /// highlight style overrides merged in; the private members it needs are reached with
@@ -48,15 +48,16 @@ public class SyntaxHighlightingTextPresenter : TextPresenter
     // Run properties are cached per token color and rebuilt when font/foreground changes;
     // reusing the instances avoids re-allocating them on every layout pass (each keystroke,
     // selection change etc.).
-    private readonly Dictionary<Color, GenericTextRunProperties> _tokenPropertiesCache = new();
+    private readonly Dictionary<(Color Color, bool Bold), GenericTextRunProperties> _tokenPropertiesCache = new();
     private GenericTextRunProperties? _defaultProperties;
     private Typeface _cachedTypeface;
     private double _cachedFontSize = double.NaN;
     private IBrush? _cachedForeground;
     private FontFeatureCollection? _cachedFontFeatures;
+    private bool _cachedIsDarkTheme;
 
-    // Live spell check: the red underline decoration matches SpellCheckUnderlineTransformer's
-    // (the AvaloniaEdit editor), so both editors underline identically.
+    // Live spell check: which words count as misspelled comes from SpellCheckWordScanner, so the
+    // edit box and its context menu always agree.
     private static readonly TextDecorationCollection SpellCheckUnderline = new()
     {
         new TextDecoration
@@ -76,18 +77,34 @@ public class SyntaxHighlightingTextPresenter : TextPresenter
     private string? _spellCheckedText;
     private List<SpellCheckWord> _spellCheckedWords = new();
 
+    // Syntax spans are cached per text so selection/caret layout passes (e.g. every pointer
+    // move during a mouse-drag selection) don't re-tokenize unchanged text. The cached list is
+    // never mutated: the overlay methods below always build new lists.
+    private string? _syntaxSpansText;
+    private List<ValueSpan<TextRunProperties>>? _syntaxSpans;
+    private readonly List<SourceSyntaxSpan> _syntaxRanges = new();
+
+    // The selection highlight properties are reused across layout passes while dragging.
+    private GenericTextRunProperties? _selectionProperties;
+    private IBrush? _cachedSelectionForeground;
+
     private GenericTextRunProperties GetDefaultProperties(Typeface typeface)
     {
+        // The theme is part of the key: the token colors from SubtitleSyntaxTokenizer are
+        // theme-dependent, so the spans cached below must not survive a variant switch.
+        var isDarkTheme = UiTheme.IsDarkThemeEnabled();
         if (_defaultProperties is null ||
             !typeface.Equals(_cachedTypeface) ||
             FontSize != _cachedFontSize ||
             !ReferenceEquals(Foreground, _cachedForeground) ||
-            !ReferenceEquals(FontFeatures, _cachedFontFeatures))
+            !ReferenceEquals(FontFeatures, _cachedFontFeatures) ||
+            isDarkTheme != _cachedIsDarkTheme)
         {
             _cachedTypeface = typeface;
             _cachedFontSize = FontSize;
             _cachedForeground = Foreground;
             _cachedFontFeatures = FontFeatures;
+            _cachedIsDarkTheme = isDarkTheme;
             _defaultProperties = new GenericTextRunProperties(
                 typeface,
                 FontSize,
@@ -95,26 +112,34 @@ public class SyntaxHighlightingTextPresenter : TextPresenter
                 fontFeatures: FontFeatures);
             _tokenPropertiesCache.Clear();
             _underlinedPropertiesCache.Clear();
+            _syntaxSpansText = null;
+            _syntaxSpans = null;
+            _selectionProperties = null;
         }
 
         return _defaultProperties;
     }
 
-    private GenericTextRunProperties GetTokenProperties(Color color)
+    private GenericTextRunProperties GetTokenProperties(Color color, bool bold)
     {
-        if (!_tokenPropertiesCache.TryGetValue(color, out var properties))
+        if (!_tokenPropertiesCache.TryGetValue((color, bold), out var properties))
         {
             if (_tokenPropertiesCache.Count > 256)
             {
                 _tokenPropertiesCache.Clear();
             }
 
+            // Bold keeps the control's own font - only the weight changes.
+            var typeface = bold
+                ? new Typeface(_cachedTypeface.FontFamily, _cachedTypeface.Style, FontWeight.Bold, _cachedTypeface.Stretch)
+                : _cachedTypeface;
+
             properties = new GenericTextRunProperties(
-                _cachedTypeface,
+                typeface,
                 _cachedFontSize,
                 foregroundBrush: GetBrush(color),
                 fontFeatures: _cachedFontFeatures);
-            _tokenPropertiesCache[color] = properties;
+            _tokenPropertiesCache[(color, bold)] = properties;
         }
 
         return properties;
@@ -142,26 +167,10 @@ public class SyntaxHighlightingTextPresenter : TextPresenter
         var length = Math.Max(selectionStart, selectionEnd) - start;
         var isPassword = PasswordChar != default(char) && !RevealPassword;
 
-        // In an RTL paragraph the ASSA override-tag characters are permuted in the layout string
-        // (display only - Text is untouched) so the bidi reordering shows "{\an8}" instead of
-        // "{an8\}"; see AssaTagRtlLayout. Skipped during IME composition, where the combined
-        // text's indices are shifted by the preedit string.
-        var layoutText = text;
-        int[]? rtlTagMap = null;
-        if (!isPassword && string.IsNullOrEmpty(preeditText) && !string.IsNullOrEmpty(text) &&
-            FlowDirection == FlowDirection.RightToLeft &&
-            AssaTagRtlLayout.TryPermuteForRtlDisplay(text, out var permutedText, out var toSource))
-        {
-            layoutText = permutedText;
-            rtlTagMap = toSource;
-        }
-
-        var textStyleOverrides = isPassword ? null : BuildSyntaxSpans(text, typeface, rtlTagMap);
+        var textStyleOverrides = isPassword ? null : BuildSyntaxSpans(text, typeface);
 
         // Spell check underlines are skipped during IME composition: the combined text has the
         // preedit string spliced in at the caret, so the word positions would not line up.
-        // Word positions are valid on the permuted layout text too - the permutation only
-        // reorders characters inside override tags, which the word scan skips.
         if (!isPassword && string.IsNullOrEmpty(preeditText))
         {
             textStyleOverrides = ApplySpellCheckUnderlines(textStyleOverrides, text, typeface);
@@ -181,12 +190,7 @@ public class SyntaxHighlightingTextPresenter : TextPresenter
         }
         else if (ShowSelectionHighlight && length > 0 && SelectionForegroundBrush != null)
         {
-            var selectionHighlight = new ValueSpan<TextRunProperties>(start, length,
-                new GenericTextRunProperties(
-                    typeface,
-                    FontSize,
-                    foregroundBrush: SelectionForegroundBrush,
-                    fontFeatures: FontFeatures));
+            var selectionHighlight = new ValueSpan<TextRunProperties>(start, length, GetSelectionProperties(typeface));
 
             textStyleOverrides = OverlaySpan(textStyleOverrides, selectionHighlight);
         }
@@ -198,97 +202,103 @@ public class SyntaxHighlightingTextPresenter : TextPresenter
             return CreateTextLayoutInternal(this, constraint, new string(PasswordChar, text?.Length ?? 0), typeface, textStyleOverrides);
         }
 
-        return CreateTextLayoutInternal(this, constraint, layoutText, typeface, textStyleOverrides);
+        return CreateTextLayoutInternal(this, constraint, text, typeface, textStyleOverrides);
     }
 
     /// <summary>
-    /// Builds sorted, non-overlapping spans covering the whole text: tag tokens get the color
-    /// from <see cref="SubtitleSyntaxTokenizer"/> and the text between them gets the default
-    /// foreground (gaps must be covered explicitly, otherwise the tag style bleeds into the
-    /// surrounding text). When <paramref name="rtlTagMap"/> is set the layout string is a
-    /// permutation of <paramref name="text"/> (see AssaTagRtlLayout) and the spans are emitted
-    /// in layout order so every character keeps its own color.
+    /// Builds sorted, non-overlapping spans covering the whole text: colored tokens get their
+    /// token style and the text between them gets the default foreground (gaps must be covered
+    /// explicitly, otherwise the token style bleeds into the surrounding text).
     /// </summary>
-    private List<ValueSpan<TextRunProperties>>? BuildSyntaxSpans(string? text, Typeface typeface, int[]? rtlTagMap)
+    private List<ValueSpan<TextRunProperties>>? BuildSyntaxSpans(string? text, Typeface typeface)
     {
         if (string.IsNullOrEmpty(text))
         {
             return null;
         }
 
-        var tokens = SubtitleSyntaxTokenizer.Tokenize(text);
-        if (tokens.Count == 0)
-        {
-            return null;
-        }
-
+        // GetDefaultProperties drops the cached spans when font/foreground changed, so it must
+        // run before the per-text cache check.
         var defaultProperties = GetDefaultProperties(typeface);
-
-        if (rtlTagMap != null)
+        if (text == _syntaxSpansText)
         {
-            return BuildPermutedSyntaxSpans(text, tokens, rtlTagMap, defaultProperties);
+            return _syntaxSpans;
         }
 
-        var spans = new List<ValueSpan<TextRunProperties>>(tokens.Count * 2 + 1);
-        var position = 0;
-        foreach (var token in tokens)
+        CollectSyntaxRanges(text);
+
+        List<ValueSpan<TextRunProperties>>? spans = null;
+        if (_syntaxRanges.Count > 0)
         {
-            if (token.Start < position)
+            spans = new List<ValueSpan<TextRunProperties>>(_syntaxRanges.Count * 2 + 1);
+            var position = 0;
+            foreach (var range in _syntaxRanges)
             {
-                continue; // overlapping token - first one wins
+                if (range.Start < position)
+                {
+                    continue; // overlapping token - first one wins
+                }
+
+                if (range.Start > position)
+                {
+                    spans.Add(new ValueSpan<TextRunProperties>(position, range.Start - position, defaultProperties));
+                }
+
+                spans.Add(new ValueSpan<TextRunProperties>(range.Start, range.Length, GetTokenProperties(range.Color, range.Bold)));
+
+                position = range.Start + range.Length;
             }
 
-            if (token.Start > position)
+            if (position < text.Length)
             {
-                spans.Add(new ValueSpan<TextRunProperties>(position, token.Start - position, defaultProperties));
+                spans.Add(new ValueSpan<TextRunProperties>(position, text.Length - position, defaultProperties));
             }
-
-            spans.Add(new ValueSpan<TextRunProperties>(token.Start, token.Length, GetTokenProperties(token.Color)));
-
-            position = token.Start + token.Length;
         }
 
-        if (position < text.Length)
-        {
-            spans.Add(new ValueSpan<TextRunProperties>(position, text.Length - position, defaultProperties));
-        }
-
+        _syntaxRanges.Clear();
+        _syntaxSpansText = text;
+        _syntaxSpans = spans;
         return spans;
     }
 
     /// <summary>
-    /// Token spans fragment across the RTL tag permutation, so colors are resolved per
-    /// character through the layout-to-source map and then run-length encoded back into spans.
+    /// Fills <see cref="_syntaxRanges"/> from the owner's source-format highlighter (source text
+    /// like media info or a format preview), or from <see cref="SubtitleSyntaxTokenizer"/> - the
+    /// HTML/ASSA tag coloring of the subtitle edit box - when no highlighter is set.
     /// </summary>
-    private List<ValueSpan<TextRunProperties>> BuildPermutedSyntaxSpans(string text,
-        List<SubtitleSyntaxTokenizer.ColoredRange> tokens, int[] rtlTagMap, GenericTextRunProperties defaultProperties)
+    private void CollectSyntaxRanges(string text)
     {
-        var charColors = new Color?[text.Length];
-        foreach (var token in tokens)
+        _syntaxRanges.Clear();
+
+        if (TemplatedParent is SyntaxHighlightingTextBox { SourceHighlighter: { } highlighter })
         {
-            var end = Math.Min(token.Start + token.Length, text.Length);
-            for (var i = Math.Max(0, token.Start); i < end; i++)
-            {
-                charColors[i] ??= token.Color; // overlapping token - first one wins
-            }
+            _syntaxRanges.AddRange(SourceSyntaxTokenizer.Tokenize(text, highlighter));
+            return;
         }
 
-        var spans = new List<ValueSpan<TextRunProperties>>();
-        var position = 0;
-        while (position < text.Length)
+        foreach (var token in SubtitleSyntaxTokenizer.Tokenize(text))
         {
-            var color = charColors[rtlTagMap[position]];
-            var runStart = position;
-            while (position < text.Length && charColors[rtlTagMap[position]] == color)
-            {
-                position++;
-            }
+            _syntaxRanges.Add(new SourceSyntaxSpan(token.Start, token.Length, token.Color, false));
+        }
+    }
 
-            spans.Add(new ValueSpan<TextRunProperties>(runStart, position - runStart,
-                color == null ? defaultProperties : GetTokenProperties(color.Value)));
+    private GenericTextRunProperties GetSelectionProperties(Typeface typeface)
+    {
+        // Refreshes the caches (and clears _selectionProperties) on font/foreground changes;
+        // needed here because the password path skips BuildSyntaxSpans.
+        GetDefaultProperties(typeface);
+
+        if (_selectionProperties is null || !ReferenceEquals(SelectionForegroundBrush, _cachedSelectionForeground))
+        {
+            _cachedSelectionForeground = SelectionForegroundBrush;
+            _selectionProperties = new GenericTextRunProperties(
+                _cachedTypeface,
+                _cachedFontSize,
+                foregroundBrush: SelectionForegroundBrush,
+                fontFeatures: _cachedFontFeatures);
         }
 
-        return spans;
+        return _selectionProperties;
     }
 
     protected override void OnAttachedToVisualTree(VisualTreeAttachmentEventArgs e)
@@ -300,6 +310,18 @@ public class SyntaxHighlightingTextPresenter : TextPresenter
         if (TemplatedParent is SyntaxHighlightingTextBox box)
         {
             box.SyntaxPresenter = this;
+        }
+    }
+
+    protected override void OnDetachedFromVisualTree(VisualTreeAttachmentEventArgs e)
+    {
+        base.OnDetachedFromVisualTree(e);
+
+        // Unregister so the owner never invalidates a presenter that left the tree (e.g. after
+        // a template swap).
+        if (TemplatedParent is SyntaxHighlightingTextBox box && ReferenceEquals(box.SyntaxPresenter, this))
+        {
+            box.SyntaxPresenter = null;
         }
     }
 
@@ -329,7 +351,7 @@ public class SyntaxHighlightingTextPresenter : TextPresenter
         if (_spellCheckedText != text)
         {
             _spellCheckedText = text;
-            _spellCheckedWords = SpellCheckUnderlineTransformer.GetMisspelledWords(text, spellCheckManager);
+            _spellCheckedWords = SpellCheckWordScanner.GetMisspelledWords(text, spellCheckManager);
         }
 
         if (_spellCheckedWords.Count == 0)

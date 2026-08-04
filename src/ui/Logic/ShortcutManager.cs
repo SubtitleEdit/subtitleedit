@@ -10,6 +10,7 @@ namespace Nikse.SubtitleEdit.Logic;
 
 public class ShortcutManager : IShortcutManager
 {
+    private const KeyModifiers ControlAltModifiers = KeyModifiers.Control | KeyModifiers.Alt;
     private readonly HashSet<Key> _activeKeys = [];
     // Parallel to _activeKeys but uses the physical-key-aware string token (see
     // GetShortcutKeyName). Numpad keys collapse to NumLock-on names in Avalonia's
@@ -22,6 +23,7 @@ public class ShortcutManager : IShortcutManager
     private bool _isDirty = true;
     private bool _isControlPressed = false;
     private bool _isShiftPressed = false;
+    private bool _isWindowsAltGrPressed = false;
 
     public static string GetKeyDisplayName(string key)
     {
@@ -149,12 +151,13 @@ public class ShortcutManager : IShortcutManager
         // collides with Shift+,. The non-ASCII '<' next to Z is mis-reported
         // as OemComma for the same reason. Fall back to the layout-independent
         // PhysicalKey so each physical key gets a unique, stable token.
-        if (key.ToString().StartsWith("Oem", StringComparison.Ordinal))
+        var plainKeyName = key.ToString();
+        if (plainKeyName.StartsWith("Oem", StringComparison.Ordinal))
         {
             return physicalKey.ToString();
         }
 
-        return key.ToString();
+        return plainKeyName;
     }
 
     // Maps tokens that were stored before the PhysicalKey fix onto the modern
@@ -236,6 +239,20 @@ public class ShortcutManager : IShortcutManager
         }
 
         var key = GetShortcutKey(e);
+        var isRightAlt = key == Key.RightAlt || e.PhysicalKey == PhysicalKey.AltRight;
+        var isControlAltPressed = (e.KeyModifiers & ControlAltModifiers) == ControlAltModifiers;
+        if (!isControlAltPressed)
+        {
+            _isWindowsAltGrPressed = false;
+        }
+
+        // Track physical right Alt independently of the logical layout mapping.
+        if (OperatingSystem.IsWindows() &&
+            isRightAlt &&
+            isControlAltPressed)
+        {
+            _isWindowsAltGrPressed = true;
+        }
 
         // Skip standalone modifier-like keys: Ctrl/Shift/Alt/Win redundantly
         // duplicate KeyEventArgs.KeyModifiers, and NumLock is a state toggle —
@@ -255,6 +272,13 @@ public class ShortcutManager : IShortcutManager
 
     public void OnKeyReleased(object? sender, KeyEventArgs e)
     {
+        if (e.Key == Key.RightAlt ||
+            e.PhysicalKey == PhysicalKey.AltRight ||
+            (e.KeyModifiers & ControlAltModifiers) != ControlAltModifiers)
+        {
+            _isWindowsAltGrPressed = false;
+        }
+
         if (e.Key is Key.ImeProcessed or Key.ImeConvert or Key.ImeNonConvert or
             Key.ImeAccept or Key.ImeModeChange or Key.DeadCharProcessed or Key.None)
         {
@@ -277,6 +301,7 @@ public class ShortcutManager : IShortcutManager
         _activeKeyNames.Clear();
         _isControlPressed = false;
         _isShiftPressed = false;
+        _isWindowsAltGrPressed = false;
     }
 
     public void RegisterShortcut(ShortCut shortcut)
@@ -336,6 +361,24 @@ public class ShortcutManager : IShortcutManager
 
     public IRelayCommand? CheckShortcuts(KeyEventArgs keyEventArgs, string activeControl)
     {
+        // Windows reports AltGr as a synthetic LeftCtrl followed by RightAlt.
+        // Modifier transitions must not complete a shortcut using a still-held typing key.
+        if (keyEventArgs.Key is (Key.LeftCtrl or Key.RightCtrl or
+            Key.LeftShift or Key.RightShift or
+            Key.LeftAlt or Key.RightAlt or
+            Key.LWin or Key.RWin or Key.NumLock) &&
+            _activeKeyNames.Count > 0)
+        {
+            return null;
+        }
+
+        // Prefer the character produced by AltGr over an equivalent Ctrl+Alt shortcut.
+        if (_isWindowsAltGrPressed &&
+            (keyEventArgs.KeyModifiers & ControlAltModifiers) == ControlAltModifiers)
+        {
+            return null;
+        }
+
         if (_isDirty || _lookupTable is null)
         {
             RebuildLookupTable();
@@ -380,11 +423,54 @@ public class ShortcutManager : IShortcutManager
             return shortcut.Action;
         }
 
-        // 2. Check normalized hash with activeControl
-        var normalizedHash = CalculateNormalizedHash(currentInputKeys, activeControl);
-        if (normalizedHash != inputHash && _lookupTable!.TryGetValue(normalizedHash, out shortcut))
+        // 2. Check normalized hash with activeControl. In practice no token normalizes on a
+        // real keypress (_activeKeyNames excludes the modifier keys themselves and the
+        // modifiers appended above are already canonical), so only build the second list and
+        // hash when normalization actually changes something. NormalizeKeyToken returns the
+        // input instance for unmatched tokens, so a reference check suffices.
+        List<string>? normalizedKeys = null;
+        for (var keyIndex = 0; keyIndex < currentInputKeys.Count; keyIndex++)
         {
-            return shortcut.Action;
+            var normalized = NormalizeKeyToken(currentInputKeys[keyIndex]);
+            if (!ReferenceEquals(normalized, currentInputKeys[keyIndex]))
+            {
+                normalizedKeys ??= new List<string>(currentInputKeys);
+                normalizedKeys[keyIndex] = normalized;
+            }
+        }
+
+        if (normalizedKeys != null)
+        {
+            var normalizedHash = ShortCut.CalculateHash(normalizedKeys, activeControl);
+            if (normalizedHash != inputHash && _lookupTable!.TryGetValue(normalizedHash, out shortcut))
+            {
+                return shortcut.Action;
+            }
+        }
+
+        // 3. Numpad navigation fallback: with NumLock off the numpad emits Home/End/
+        // PageUp/... with a "NumPad" prefix so they can be bound independently (#10934).
+        // When no numpad-specific binding matched above, retry with the main-keyboard
+        // token so a plain "Ctrl+Home" binding fires from the numpad Home key too (#13194).
+        List<string>? collapsedKeys = null;
+        var lookupKeys = normalizedKeys ?? currentInputKeys;
+        for (var keyIndex = 0; keyIndex < lookupKeys.Count; keyIndex++)
+        {
+            var collapsed = CollapseNumPadNavigationToken(lookupKeys[keyIndex]);
+            if (!ReferenceEquals(collapsed, lookupKeys[keyIndex]))
+            {
+                collapsedKeys ??= new List<string>(lookupKeys);
+                collapsedKeys[keyIndex] = collapsed;
+            }
+        }
+
+        if (collapsedKeys != null)
+        {
+            var collapsedHash = ShortCut.CalculateHash(collapsedKeys, activeControl);
+            if (collapsedHash != inputHash && _lookupTable!.TryGetValue(collapsedHash, out shortcut))
+            {
+                return shortcut.Action;
+            }
         }
 
         return null;
@@ -407,6 +493,36 @@ public class ShortcutManager : IShortcutManager
         };
     }
 
+    /// <summary>
+    /// Maps the NumLock-off numpad navigation tokens ("NumPadHome", ...) onto their
+    /// main-keyboard counterparts. Used ONLY as the last lookup stage in
+    /// <see cref="CheckShortcuts"/> - never in binding hashes - so a numpad-specific
+    /// binding keeps its distinct identity and always wins (#10934), while a plain
+    /// "Ctrl+Home" binding also fires from the numpad Home key (#13194). Both alias
+    /// spellings of the page keys are listed because Key.ToString() picks an
+    /// unspecified alias for enum members sharing a value (PageUp/Prior, PageDown/Next).
+    /// </summary>
+    public static string CollapseNumPadNavigationToken(string key)
+    {
+        return key switch
+        {
+            "NumPadHome" => "Home",
+            "NumPadEnd" => "End",
+            "NumPadPageUp" => "PageUp",
+            "NumPadPrior" => "Prior",
+            "NumPadPageDown" => "PageDown",
+            "NumPadNext" => "Next",
+            "NumPadUp" => "Up",
+            "NumPadDown" => "Down",
+            "NumPadLeft" => "Left",
+            "NumPadRight" => "Right",
+            "NumPadInsert" => "Insert",
+            "NumPadDelete" => "Delete",
+            "NumPadClear" => "Clear",
+            _ => key
+        };
+    }
+
     public static string CalculateNormalizedHash(List<string> inputKeys, string? control)
     {
         var keys = new List<string>(inputKeys.Count);
@@ -419,6 +535,27 @@ public class ShortcutManager : IShortcutManager
     }
 
     public HashSet<Key> GetActiveKeys() => [.. _activeKeys];
+
+    /// <summary>
+    /// Allocation-free alternatives to <see cref="GetActiveKeys"/> for the per-keystroke
+    /// probes in the window key handler, which only need the count or the single active key.
+    /// </summary>
+    public int ActiveKeyCount => _activeKeys.Count;
+
+    public bool TryGetSingleActiveKey(out Key key)
+    {
+        if (_activeKeys.Count == 1)
+        {
+            foreach (var k in _activeKeys)
+            {
+                key = k;
+                return true;
+            }
+        }
+
+        key = default;
+        return false;
+    }
 
     public bool IsControlPressed() => _isControlPressed;
     public bool IsShiftPressed() => _isShiftPressed;

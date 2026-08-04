@@ -21,6 +21,7 @@ using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.ContainerFormats.Matroska;
 using System.Text;
 using SkiaSharp;
+using System.Buffers;
 using System.Collections.Generic;
 using System.IO;
 using System;
@@ -178,7 +179,9 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
                     return new SKBitmap(1, 1);
                 }
 
-                var bm = new SKBitmap(w, h, SKColorType.Rgba8888, SKAlphaType.Opaque);
+                // Unpremul (not Premul) as FillPixels/PutPixelFast below write straight, non-premultiplied RGBA.
+                // Opaque here would make Skia drop the alpha channel when encoding (transparent areas turn black).
+                var bm = new SKBitmap(w, h, SKColorType.Rgba8888, SKAlphaType.Unpremul);
                 var pixelPtr = bm.GetPixels(); // Writable pixel buffer
                 if (pixelPtr == IntPtr.Zero)
                 {
@@ -267,11 +270,28 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
             private static void FillPixels(Span<byte> pixelSpan, int offset, int count, SKColor color)
             {
                 var idx = offset * 4; // Assuming RGBA8888 (4 bytes per pixel)
+                if (idx < 0 || count <= 0)
+                {
+                    return;
+                }
+
+                // Clamp against the span so a malformed RLE run cannot write out of bounds
+                var maxCount = (pixelSpan.Length - idx) / 4;
+                if (maxCount <= 0)
+                {
+                    return;
+                }
+
+                if (count > maxCount)
+                {
+                    count = maxCount;
+                }
+
                 var r = color.Red;
                 var g = color.Green;
                 var b = color.Blue;
                 var a = color.Alpha;
-                
+
                 for (var i = 0; i < count; i++)
                 {
                     pixelSpan[idx++] = r;
@@ -285,6 +305,11 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
             private static void PutPixelFast(Span<byte> pixelSpan, int offset, SKColor color)
             {
                 var idx = offset * 4; // Assuming RGBA8888 (4 bytes per pixel)
+                if (idx < 0 || idx + 3 >= pixelSpan.Length)
+                {
+                    return;
+                }
+
                 pixelSpan[idx] = color.Red;
                 pixelSpan[idx + 1] = color.Green;
                 pixelSpan[idx + 2] = color.Blue;
@@ -462,6 +487,45 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
             }
         }
 
+        /// <summary>
+        /// Parses a raw PGS elementary stream: display segments without the "PG" + PTS/DTS
+        /// wrapper, exactly as they are stored inside a Matroska S_HDMV/PGS track (and as
+        /// dumped by raw-mode extraction). Such a stream carries no timestamps - they live
+        /// in the container - so all returned start/end times are zero and the caller must
+        /// assign timing (issue #12683).
+        /// </summary>
+        /// <param name="fileName">Raw PGS file name</param>
+        /// <param name="log">Parsing info is logged here</param>
+        /// <returns>List of BluRaySupPictures with untimed display sets</returns>
+        public static List<PcsData> ParseRawPgsSegmentStream(string fileName, StringBuilder log)
+        {
+            using (var fs = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+            {
+                var lastPalettes = new Dictionary<int, List<PaletteInfo>>();
+                var lastBitmapObjects = new Dictionary<int, List<OdsData>>();
+                return ParseBluRaySup(fs, log, true, lastPalettes, lastBitmapObjects);
+            }
+        }
+
+        /// <summary>
+        /// Assigns sequential placeholder timings to untimed display sets (see
+        /// <see cref="ParseRawPgsSegmentStream"/>): 3 seconds shown, 1 second gap.
+        /// The result is deliberately uniform so it is obvious the timing is synthetic
+        /// and must be adjusted manually after OCR.
+        /// </summary>
+        public static void SetPlaceholderTimings(List<PcsData> subtitles)
+        {
+            const long ticksPerMillisecond = 90; // PTS is a 90 kHz clock
+            const long durationMs = 3000;
+            const long gapMs = 1000;
+            for (var i = 0; i < subtitles.Count; i++)
+            {
+                var startMs = i * (durationMs + gapMs);
+                subtitles[i].StartTime = startMs * ticksPerMillisecond;
+                subtitles[i].EndTime = (startMs + durationMs) * ticksPerMillisecond;
+            }
+        }
+
         public static List<PcsData> ParseBluRaySupFromMatroska(MatroskaTrackInfo matroskaSubtitleInfo, MatroskaFile matroska)
         {
             var sub = matroska.GetSubtitle(matroskaSubtitleInfo.TrackNumber, null);
@@ -590,7 +654,7 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
 
         private static PcsData ParsePicture(byte[] buffer, SupSegment segment)
         {
-            if (buffer.Length < 11)
+            if (segment.Size < 11)
             {
                 return new PcsData
                 {
@@ -626,6 +690,11 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
                 pcs.PcsObjects = new List<PcsObject>();
                 for (var compObjIndex = 0; compObjIndex < compositionObjectCount; compObjIndex++)
                 {
+                    if (11 + offset + 8 > segment.Size)
+                    {
+                        break;
+                    }
+
                     var pcsObj = ParsePcs(buffer, offset);
                     pcs.PcsObjects.Add(pcsObj);
                     sb.AppendLine();
@@ -678,6 +747,12 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
         /// <returns>number of valid palette entries (-1 for fault)</returns>
         private static PdsData ParsePds(byte[] buffer, SupSegment segment)
         {
+            // See ParseOds: don't read stale rented-buffer bytes on truncated segments.
+            if (segment.Size < 2)
+            {
+                return new PdsData { Message = "Empty palette" };
+            }
+
             int paletteId = buffer[0];  // 8bit palette ID (0..7)
             // 8bit palette version number (incremented for each palette change)
             int paletteUpdate = buffer[1];
@@ -710,6 +785,21 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
         /// <returns>true if this is a valid new object (neither invalid nor a fragment)</returns>
         private static OdsData ParseOds(byte[] buffer, SupSegment segment, bool forceFirst)
         {
+            // The rented segment buffer holds stale data from previous segments beyond
+            // segment.Size. A truncated ODS (< 4 header bytes) used to throw on the reads
+            // below and be skipped by the caller's catch; reading stale bytes instead can
+            // fabricate an ObjectId that overwrites a live object's image data. ObjectId -1
+            // can never match a real object, so the caller's "missing first ods" path runs.
+            if (segment.Size < 4)
+            {
+                return new OdsData
+                {
+                    ObjectId = -1,
+                    Message = "Invalid ObjectDefinitionSegment size: " + segment.Size,
+                    Fragment = new ImageObjectFragment { ImageBuffer = Array.Empty<byte>() },
+                };
+            }
+
             var objId = BigEndianInt16(buffer, 0);      // 16bit object_id
             int objVer = buffer[2];     // 16bit object_id nikse - index 2 or 1???
             int objSeq = buffer[3];     // 8bit  first_in_sequence (0x80),
@@ -729,7 +819,7 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
                 // smaller than that — `new byte[Size - 11]` then throws
                 // OverflowException and aborts the whole SUP parse. Bail out with
                 // an empty fragment instead so the rest of the file is still read.
-                if (segment.Size < 11 || buffer.Length < 11)
+                if (segment.Size < 11)
                 {
                     return new OdsData { IsFirst = true, Fragment = info, ObjectId = objId, ObjectVersion = objVer, Message = "ODS too short" };
                 }
@@ -754,7 +844,7 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
 
             // Continuation-fragment ODS layout: 4-byte header before image bytes.
             // Same defensive guard as the first-fragment branch above.
-            if (segment.Size < 4 || buffer.Length < 4)
+            if (segment.Size < 4)
             {
                 return new OdsData { IsFirst = false, Fragment = info, ObjectId = objId, ObjectVersion = objVer, Message = "ODS too short" };
             }
@@ -782,184 +872,200 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
             var pcsList = new List<PcsData>();
             var headerBuffer = fromMatroskaFile ? new byte[3] : new byte[HeaderSize];
 
-            while (ms.Read(headerBuffer, 0, headerBuffer.Length) == headerBuffer.Length)
+            // Segment.Size is a 16-bit field, so one rented buffer covers every
+            // segment — avoids a fresh allocation per segment in the loop below.
+            // Reads must be bounded by segment.Size, not buffer length: the
+            // rented array is larger and holds stale data from prior segments.
+            var buffer = ArrayPool<byte>.Shared.Rent(ushort.MaxValue);
+            try
             {
-                var segment = fromMatroskaFile ? ParseSegmentHeaderFromMatroska(headerBuffer) : ParseSegmentHeader(headerBuffer, log);
-                position += headerBuffer.Length;
-
-                try
+                while (ms.Read(headerBuffer, 0, headerBuffer.Length) == headerBuffer.Length)
                 {
-                    // Read segment data
-                    var buffer = new byte[segment.Size];
-                    var bytesRead = ms.Read(buffer, 0, buffer.Length);
-                    if (bytesRead < buffer.Length)
+                    var segment = fromMatroskaFile ? ParseSegmentHeaderFromMatroska(headerBuffer) : ParseSegmentHeader(headerBuffer, log);
+                    position += headerBuffer.Length;
+
+                    try
                     {
-                        break;
-                    }
+                        // Read segment data
+                        var bytesRead = ms.Read(buffer, 0, segment.Size);
+                        if (bytesRead < segment.Size)
+                        {
+                            break;
+                        }
 
 
-#if DEBUG
-                    log.Append(segmentCount + ": ");
-#endif
+    #if DEBUG
+                        log.Append(segmentCount + ": ");
+    #endif
 
-                    switch (segment.Type)
-                    {
-                        case 0x14: // Palette
-                            if (latestPcs != null)
-                            {
-#if DEBUG
-                                log.AppendLine($"0x14 - Palette - PDS offset={position} size={segment.Size}");
-#endif
-                                var pds = ParsePds(buffer, segment);
-#if DEBUG
-                                log.AppendLine(pds.Message);
-#endif
-                                if (pds.PaletteInfo != null)
+                        switch (segment.Type)
+                        {
+                            case 0x14: // Palette
+                                if (latestPcs != null)
                                 {
-                                    if (!palettes.TryGetValue(pds.PaletteId, out var paletteList))
+    #if DEBUG
+                                    log.AppendLine($"0x14 - Palette - PDS offset={position} size={segment.Size}");
+    #endif
+                                    var pds = ParsePds(buffer, segment);
+    #if DEBUG
+                                    log.AppendLine(pds.Message);
+    #endif
+                                    if (pds.PaletteInfo != null)
                                     {
-                                        paletteList = new List<PaletteInfo>();
-                                        palettes[pds.PaletteId] = paletteList;
-                                    }
-                                    else
-                                    {
-                                        if (latestPcs.PaletteUpdate)
+                                        if (!palettes.TryGetValue(pds.PaletteId, out var paletteList))
                                         {
-                                            paletteList.RemoveAt(paletteList.Count - 1);
+                                            paletteList = new List<PaletteInfo>();
+                                            palettes[pds.PaletteId] = paletteList;
                                         }
                                         else
                                         {
-#if DEBUG
-                                            log.AppendLine("Extra Palette");
-#endif
+                                            if (latestPcs.PaletteUpdate)
+                                            {
+                                                paletteList.RemoveAt(paletteList.Count - 1);
+                                            }
+                                            else
+                                            {
+    #if DEBUG
+                                                log.AppendLine("Extra Palette");
+    #endif
+                                            }
                                         }
+                                        paletteList.Add(pds.PaletteInfo);
                                     }
-                                    paletteList.Add(pds.PaletteInfo);
                                 }
-                            }
-                            break;
+                                break;
 
-                        case 0x15: // Object Definition Segment (image bitmap data)
-                            if (latestPcs != null)
-                            {
-#if DEBUG
-                                log.AppendLine($"0x15 - Bitmap data - ODS offset={position} size={segment.Size}");
-#endif
-                                var ods = ParseOds(buffer, segment, forceFirstOds);
-#if DEBUG
-                                log.AppendLine(ods.Message);
-#endif
-                                if (!latestPcs.PaletteUpdate)
+                            case 0x15: // Object Definition Segment (image bitmap data)
+                                if (latestPcs != null)
                                 {
-                                    List<OdsData> odsList = new List<OdsData>();
-                                    if (ods.IsFirst)
+    #if DEBUG
+                                    log.AppendLine($"0x15 - Bitmap data - ODS offset={position} size={segment.Size}");
+    #endif
+                                    var ods = ParseOds(buffer, segment, forceFirstOds);
+    #if DEBUG
+                                    log.AppendLine(ods.Message);
+    #endif
+                                    if (!latestPcs.PaletteUpdate)
                                     {
-                                        odsList.Add(ods);
-                                        bitmapObjects[ods.ObjectId] = odsList;
-                                    }
-                                    else
-                                    {
-                                        if (bitmapObjects.TryGetValue(ods.ObjectId, out var odsList2))
+                                        List<OdsData> odsList = new List<OdsData>();
+                                        if (ods.IsFirst)
                                         {
-                                            odsList = odsList2;
                                             odsList.Add(ods);
+                                            bitmapObjects[ods.ObjectId] = odsList;
                                         }
                                         else
                                         {
-#if DEBUG
-                                            log.AppendLine($"INVALID ObjectId {ods.ObjectId} in ODS, offset={position}");
-#endif
+                                            if (bitmapObjects.TryGetValue(ods.ObjectId, out var odsList2))
+                                            {
+                                                odsList = odsList2;
+                                                odsList.Add(ods);
+                                            }
+                                            else
+                                            {
+    #if DEBUG
+                                                log.AppendLine($"INVALID ObjectId {ods.ObjectId} in ODS, offset={position}");
+    #endif
+                                            }
                                         }
                                     }
+                                    else
+                                    {
+    #if DEBUG
+                                        log.AppendLine($"Bitmap Data Ignore due to PaletteUpdate offset={position}");
+    #endif
+                                    }
+                                    forceFirstOds = false;
                                 }
-                                else
+                                break;
+
+                            case 0x16: // Picture time codes
+                                if (latestPcs != null)
                                 {
-#if DEBUG
-                                    log.AppendLine($"Bitmap Data Ignore due to PaletteUpdate offset={position}");
-#endif
+                                    if (CompletePcs(latestPcs, bitmapObjects, palettes.Count > 0 ? palettes : lastPalettes))
+                                    {
+                                        pcsList.Add(latestPcs);
+                                    }
                                 }
-                                forceFirstOds = false;
-                            }
-                            break;
 
-                        case 0x16: // Picture time codes
-                            if (latestPcs != null)
-                            {
-                                if (CompletePcs(latestPcs, bitmapObjects, palettes.Count > 0 ? palettes : lastPalettes))
+    #if DEBUG
+                                log.AppendLine($"0x16 - Picture codes, offset={position} size={segment.Size}");
+    #endif
+                                forceFirstOds = true;
+                                var nextPcs = ParsePicture(buffer, segment);
+                                if (nextPcs.StartTime > 0 && pcsList.Count > 0 && pcsList.Last().EndTime == 0)
                                 {
-                                    pcsList.Add(latestPcs);
+                                    pcsList.Last().EndTime = nextPcs.StartTime;
                                 }
-                            }
-
-#if DEBUG
-                            log.AppendLine($"0x16 - Picture codes, offset={position} size={segment.Size}");
-#endif
-                            forceFirstOds = true;
-                            var nextPcs = ParsePicture(buffer, segment);
-                            if (nextPcs.StartTime > 0 && pcsList.Count > 0 && pcsList.Last().EndTime == 0)
-                            {
-                                pcsList.Last().EndTime = nextPcs.StartTime;
-                            }
-#if DEBUG
-                            log.AppendLine(nextPcs.Message);
-#endif
-                            latestPcs = nextPcs;
-                            if (latestPcs.CompositionState == CompositionState.EpochStart)
-                            {
-                                bitmapObjects.Clear();
-                                palettes.Clear();
-                            }
-                            break;
-
-                        case 0x17: // Window display
-                            if (latestPcs != null)
-                            {
-#if DEBUG
-                                log.AppendLine($"0x17 - Window display offset={position} size={segment.Size}");
-#endif
-                                int windowCount = buffer[0];
-                                var offset = 0;
-                                for (var nextWindow = 0; nextWindow < windowCount; nextWindow++)
+    #if DEBUG
+                                log.AppendLine(nextPcs.Message);
+    #endif
+                                latestPcs = nextPcs;
+                                if (latestPcs.CompositionState == CompositionState.EpochStart)
                                 {
-                                    int windowId = buffer[1 + offset];
-                                    var x = BigEndianInt16(buffer, 2 + offset);
-                                    var y = BigEndianInt16(buffer, 4 + offset);
-                                    var width = BigEndianInt16(buffer, 6 + offset);
-                                    var height = BigEndianInt16(buffer, 8 + offset);
-                                    log.AppendLine(string.Format("WinId: {4}, X: {0}, Y: {1}, Width: {2}, Height: {3}", x, y, width, height, windowId));
-                                    offset += 9;
+                                    bitmapObjects.Clear();
+                                    palettes.Clear();
                                 }
-                            }
-                            break;
+                                break;
 
-                        case 0x80:
-                            forceFirstOds = true;
-#if DEBUG
-                            log.AppendLine($"0x80 - END offset={position} size={segment.Size}");
-#endif
-                            if (latestPcs != null)
-                            {
-                                if (CompletePcs(latestPcs, bitmapObjects, palettes.Count > 0 ? palettes : lastPalettes))
+                            case 0x17: // Window display
+                                if (latestPcs != null)
                                 {
-                                    pcsList.Add(latestPcs);
-                                }
-                                latestPcs = null;
-                            }
-                            break;
+    #if DEBUG
+                                    log.AppendLine($"0x17 - Window display offset={position} size={segment.Size}");
+    #endif
+                                    int windowCount = segment.Size >= 1 ? buffer[0] : 0;
+                                    var offset = 0;
+                                    for (var nextWindow = 0; nextWindow < windowCount; nextWindow++)
+                                    {
+                                        if (1 + offset + 9 > segment.Size)
+                                        {
+                                            break;
+                                        }
 
-                        default:
-#if DEBUG
-                            log.AppendLine($"0x?? - END offset={position} UNKNOWN SEGMENT TYPE={segment.Type}");
-#endif
-                            break;
+                                        int windowId = buffer[1 + offset];
+                                        var x = BigEndianInt16(buffer, 2 + offset);
+                                        var y = BigEndianInt16(buffer, 4 + offset);
+                                        var width = BigEndianInt16(buffer, 6 + offset);
+                                        var height = BigEndianInt16(buffer, 8 + offset);
+                                        log.AppendLine(string.Format("WinId: {4}, X: {0}, Y: {1}, Width: {2}, Height: {3}", x, y, width, height, windowId));
+                                        offset += 9;
+                                    }
+                                }
+                                break;
+
+                            case 0x80:
+                                forceFirstOds = true;
+    #if DEBUG
+                                log.AppendLine($"0x80 - END offset={position} size={segment.Size}");
+    #endif
+                                if (latestPcs != null)
+                                {
+                                    if (CompletePcs(latestPcs, bitmapObjects, palettes.Count > 0 ? palettes : lastPalettes))
+                                    {
+                                        pcsList.Add(latestPcs);
+                                    }
+                                    latestPcs = null;
+                                }
+                                break;
+
+                            default:
+    #if DEBUG
+                                log.AppendLine($"0x?? - END offset={position} UNKNOWN SEGMENT TYPE={segment.Type}");
+    #endif
+                                break;
+                        }
                     }
+                    catch (IndexOutOfRangeException e)
+                    {
+                        log.Append($"Index of of range at pos {position - headerBuffer.Length}: {e.StackTrace}");
+                    }
+                    position += segment.Size;
+                    segmentCount++;
                 }
-                catch (IndexOutOfRangeException e)
-                {
-                    log.Append($"Index of of range at pos {position - headerBuffer.Length}: {e.StackTrace}");
-                }
-                position += segment.Size;
-                segmentCount++;
+            }
+            finally
+            {
+                ArrayPool<byte>.Shared.Return(buffer);
             }
 
             if (latestPcs != null)

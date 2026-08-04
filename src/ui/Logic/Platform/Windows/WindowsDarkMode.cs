@@ -20,7 +20,7 @@ public static class WindowsDarkMode
 
     public static void Apply(IntPtr hwnd, bool dark)
     {
-        if (hwnd == IntPtr.Zero || !RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+        if (hwnd == IntPtr.Zero || !OperatingSystem.IsWindows())
         {
             return;
         }

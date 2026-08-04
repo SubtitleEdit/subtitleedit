@@ -14,7 +14,7 @@ using System.Text;
 
 namespace Nikse.SubtitleEdit.Features.Files.ManualChosenEncoding;
 
-public partial class ManualChosenEncodingViewModel : ObservableObject
+public partial class ManualChosenEncodingViewModel : ObservableObject, IClosingCleanup
 {
     [ObservableProperty] private string _searchText;
     [ObservableProperty] private ObservableCollection<TextEncoding> _encodings;
@@ -30,6 +30,7 @@ public partial class ManualChosenEncodingViewModel : ObservableObject
     private byte[] _fileBuffer;
     private List<TextEncoding> _allEncodings;
     private bool _dirty;
+    private volatile bool _isClosing;
     private readonly System.Timers.Timer _timerSearch;
 
     public ManualChosenEncodingViewModel()
@@ -42,19 +43,38 @@ public partial class ManualChosenEncodingViewModel : ObservableObject
         _fileBuffer = [];
 
         _timerSearch = new System.Timers.Timer(500);
-        _timerSearch.Elapsed += (s, e) =>
+        _timerSearch.Elapsed += TimerSearchElapsed;
+    }
+
+    private void TimerSearchElapsed(object? sender, System.Timers.ElapsedEventArgs e)
+    {
+        if (_isClosing)
         {
-            _timerSearch.Stop();
-            if (_dirty)
+            return;
+        }
+
+        _timerSearch.Stop();
+        if (_dirty)
+        {
+            Dispatcher.UIThread.Invoke(() =>
             {
-                Dispatcher.UIThread.Invoke(() =>
-                {
-                    _dirty = false;
-                    UpdateSearchEncodings();
-                });
-            }
+                _dirty = false;
+                UpdateSearchEncodings();
+            });
+        }
+
+        // Guard the restart: OnClosingCleanup may have disposed the timer while this handler
+        // ran, and Start() on a disposed timer throws ObjectDisposedException. (#12739)
+        if (!_isClosing)
+        {
             _timerSearch.Start();
-        };
+        }
+    }
+
+    public void OnClosingCleanup()
+    {
+        _isClosing = true;
+        _timerSearch.StopAndDispose(TimerSearchElapsed);
     }
 
     private void UpdateSearchEncodings()

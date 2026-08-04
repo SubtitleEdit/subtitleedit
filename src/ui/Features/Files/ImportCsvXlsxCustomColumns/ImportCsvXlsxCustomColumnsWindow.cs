@@ -13,8 +13,8 @@ namespace Nikse.SubtitleEdit.Features.Files.ImportCsvXlsxCustomColumns;
 
 public class ImportCsvXlsxCustomColumnsWindow : Window
 {
-    private readonly DataGrid _dataGrid;
-    private readonly DataGrid _previewGrid;
+    private readonly TableView _sourceGrid;
+    private readonly TableView _previewGrid;
 
     public ImportCsvXlsxCustomColumnsWindow(ImportCsvXlsxCustomColumnsViewModel vm)
     {
@@ -40,37 +40,23 @@ public class ImportCsvXlsxCustomColumnsWindow : Window
             Spacing = 10,
         };
 
-        _dataGrid = new DataGrid
-        {
-            AutoGenerateColumns = false,
-            SelectionMode = DataGridSelectionMode.Single,
-            CanUserResizeColumns = true,
-            CanUserSortColumns = false,
-            HorizontalAlignment = HorizontalAlignment.Stretch,
-            VerticalAlignment = VerticalAlignment.Stretch,
-            Width = double.NaN,
-            Height = double.NaN,
-            HeadersVisibility = DataGridHeadersVisibility.Column,
-            DataContext = vm,
-            ItemsSource = vm.Rows,
-        };
+        _sourceGrid = TableViewExtras.MakeTableView(multiSelect: false);
+        _sourceGrid.Width = double.NaN;
+        _sourceGrid.Height = double.NaN;
+        _sourceGrid.DataContext = vm;
+        _sourceGrid.ItemsSource = vm.Rows;
 
-        _previewGrid = new DataGrid
-        {
-            AutoGenerateColumns = false,
-            SelectionMode = DataGridSelectionMode.Single,
-            CanUserResizeColumns = true,
-            CanUserSortColumns = false,
-            HorizontalAlignment = HorizontalAlignment.Stretch,
-            VerticalAlignment = VerticalAlignment.Stretch,
-            Width = double.NaN,
-            Height = double.NaN,
-            DataContext = vm,
-            ItemsSource = vm.PreviewSubtitles,
-        };
+        _previewGrid = TableViewExtras.MakeTableView(multiSelect: false);
+        _previewGrid.Width = double.NaN;
+        _previewGrid.Height = double.NaN;
+        _previewGrid.DataContext = vm;
+        _previewGrid.ItemsSource = vm.PreviewSubtitles;
         BuildPreviewColumns(_previewGrid);
 
-        var labelPreview = UiUtil.MakeLabel().WithBindText(vm, nameof(vm.PreviewCount)).WithAlignmentTop();
+        var labelPreview = UiUtil.MakeLabel().WithBindText(vm, new Binding($"{nameof(vm.PreviewSubtitles)}.{nameof(vm.PreviewSubtitles.Count)}")
+        {
+            StringFormat = Se.Language.File.Import.NumberOfSubtitlesX,
+        }).WithAlignmentTop();
 
         var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand);
         buttonOk.Bind(Button.IsEnabledProperty, new Binding(nameof(vm.IsOkEnabled)) { Source = vm });
@@ -107,7 +93,7 @@ public class ImportCsvXlsxCustomColumnsWindow : Window
         };
 
         grid.Add(topPanel, 0);
-        grid.Add(UiUtil.MakeBorderForControlNoPadding(_dataGrid), 1);
+        grid.Add(UiUtil.MakeBorderForControlNoPadding(_sourceGrid), 1);
         grid.Add(splitter, 2);
         grid.Add(labelPreview, 3);
         grid.Add(UiUtil.MakeBorderForControlNoPadding(_previewGrid), 4);
@@ -116,26 +102,29 @@ public class ImportCsvXlsxCustomColumnsWindow : Window
         Content = grid;
 
         vm.ColumnsRebuilt += (_, _) => RebuildSourceGridColumns(vm);
-        Activated += delegate { buttonOk.Focus(); };
+        Activated += delegate { TableViewExtras.FocusRow(_sourceGrid); }; // initial focus on an input, not an action button - a focused button clicks on bare Space
         KeyDown += (_, e) => vm.OnKeyDown(e);
     }
 
     private void RebuildSourceGridColumns(ImportCsvXlsxCustomColumnsViewModel vm)
     {
-        _dataGrid.Columns.Clear();
+        _sourceGrid.Columns.Clear();
 
         for (var i = 0; i < vm.Columns.Count; i++)
         {
             var def = vm.Columns[i];
-            var column = new DataGridTextColumn
+
+            // The DataGrid sized these columns to content (Auto); TableView treats Auto
+            // as star, so use a fixed width that fits the role ComboBox in the header.
+            var column = new SeTableViewColumn
             {
                 Header = MakeColumnHeader(def),
-                CellTheme = UiUtil.DataGridNoBorderNoPaddingCellTheme,
+                CellTheme = UiUtil.TableViewCellTheme,
+                HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
                 Binding = new Binding($"Cells[{i}]"),
-                IsReadOnly = true,
-                Width = new DataGridLength(1, DataGridLengthUnitType.Auto),
+                Width = new GridLength(140),
             };
-            _dataGrid.Columns.Add(column);
+            _sourceGrid.Columns.Add(column);
         }
     }
 
@@ -184,57 +173,59 @@ public class ImportCsvXlsxCustomColumnsWindow : Window
         };
     }
 
-    private static void BuildPreviewColumns(DataGrid grid)
+    private static void BuildPreviewColumns(TableView grid)
     {
+        // The DataGrid sized these columns to content (Auto); TableView treats Auto as
+        // star, so the narrow columns get fixed widths and Text stays the star column.
         var fullTimeConverter = new TimeSpanToDisplayFullConverter();
         var shortTimeConverter = new TimeSpanToDisplayShortConverter();
-        grid.Columns.Add(new DataGridTextColumn
+        grid.Columns.Add(new SeTableViewColumn
         {
             Header = Se.Language.General.NumberSymbol,
-            CellTheme = UiUtil.DataGridNoBorderNoPaddingCellTheme,
+            CellTheme = UiUtil.TableViewCellTheme,
+            HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
             Binding = new Binding(nameof(SubtitleLineViewModel.Number)),
-            IsReadOnly = true,
-            Width = new DataGridLength(1, DataGridLengthUnitType.Auto),
+            Width = new GridLength(50),
         });
-        grid.Columns.Add(new DataGridTextColumn
+        grid.Columns.Add(new SeTableViewColumn
         {
             Header = Se.Language.General.Show,
-            CellTheme = UiUtil.DataGridNoBorderNoPaddingCellTheme,
+            CellTheme = UiUtil.TableViewCellTheme,
+            HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
             Binding = new Binding(nameof(SubtitleLineViewModel.StartTime)) { Converter = fullTimeConverter, Mode = BindingMode.OneWay },
-            IsReadOnly = true,
-            Width = new DataGridLength(1, DataGridLengthUnitType.Auto),
+            Width = new GridLength(120),
         });
-        grid.Columns.Add(new DataGridTextColumn
+        grid.Columns.Add(new SeTableViewColumn
         {
             Header = Se.Language.General.Hide,
-            CellTheme = UiUtil.DataGridNoBorderNoPaddingCellTheme,
+            CellTheme = UiUtil.TableViewCellTheme,
+            HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
             Binding = new Binding(nameof(SubtitleLineViewModel.EndTime)) { Converter = fullTimeConverter, Mode = BindingMode.OneWay },
-            IsReadOnly = true,
-            Width = new DataGridLength(1, DataGridLengthUnitType.Auto),
+            Width = new GridLength(120),
         });
-        grid.Columns.Add(new DataGridTextColumn
+        grid.Columns.Add(new SeTableViewColumn
         {
             Header = Se.Language.General.Duration,
-            CellTheme = UiUtil.DataGridNoBorderNoPaddingCellTheme,
+            CellTheme = UiUtil.TableViewCellTheme,
+            HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
             Binding = new Binding(nameof(SubtitleLineViewModel.Duration)) { Converter = shortTimeConverter, Mode = BindingMode.OneWay },
-            IsReadOnly = true,
-            Width = new DataGridLength(1, DataGridLengthUnitType.Auto),
+            Width = new GridLength(90),
         });
-        grid.Columns.Add(new DataGridTextColumn
+        grid.Columns.Add(new SeTableViewColumn
         {
             Header = Se.Language.General.Actor,
-            CellTheme = UiUtil.DataGridNoBorderNoPaddingCellTheme,
+            CellTheme = UiUtil.TableViewCellTheme,
+            HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
             Binding = new Binding(nameof(SubtitleLineViewModel.Actor)),
-            IsReadOnly = true,
-            Width = new DataGridLength(1, DataGridLengthUnitType.Auto),
+            Width = new GridLength(120),
         });
-        grid.Columns.Add(new DataGridTextColumn
+        grid.Columns.Add(new SeTableViewColumn
         {
             Header = Se.Language.General.Text,
-            CellTheme = UiUtil.DataGridNoBorderNoPaddingCellTheme,
-            Binding = new Binding(nameof(SubtitleLineViewModel.Text)),
-            IsReadOnly = true,
-            Width = new DataGridLength(1, DataGridLengthUnitType.Star),
+            CellTheme = UiUtil.TableViewCellTheme,
+            HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
+            CellTemplate = TableViewExtras.MakeTextCellTemplate(nameof(SubtitleLineViewModel.Text)),
+            Width = new GridLength(1, GridUnitType.Star),
         });
     }
 

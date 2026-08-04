@@ -1,5 +1,7 @@
 using Nikse.SubtitleEdit.Logic.Download;
 using System.IO;
+using Nikse.SubtitleEdit.UiLogic;
+using Nikse.SubtitleEdit.UiLogic.LlamaCpp;
 
 namespace Nikse.SubtitleEdit.Logic.LlamaCpp;
 
@@ -35,7 +37,7 @@ public static class LlamaCppUpdateStatus
 
         try
         {
-            var hash = DownloadHashManager.ComputeSha256(exe);
+            var hash = Sha256Util.ComputeSha256(exe);
             return DownloadHashManager.GetStatus(key, hash);
         }
         catch

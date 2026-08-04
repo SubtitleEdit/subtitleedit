@@ -7,15 +7,25 @@ using System.Text.RegularExpressions;
 
 namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 {
-    public class SubRip : SubtitleFormat
+    public partial class SubRip : SubtitleFormat
     {
         public string Errors { get; private set; }
         private StringBuilder _errors;
         private int _lineNumber;
         private bool _isMsFrames;
         private bool _isWsrt;
+#if NET7_0_OR_GREATER
+        [GeneratedRegex(@"<3\d>")]
+        private static partial Regex _regExWsrtItalicStartGen();
+        private static readonly Regex _regExWsrtItalicStart = _regExWsrtItalicStartGen();
+
+        [GeneratedRegex(@"</3\d>")]
+        private static partial Regex _regExWsrtItalicEndGen();
+        private static readonly Regex _regExWsrtItalicEnd = _regExWsrtItalicEndGen();
+#else
         private static Regex _regExWsrtItalicStart = new Regex(@"<3\d>", RegexOptions.Compiled);
         private static Regex _regExWsrtItalicEnd = new Regex(@"</3\d>", RegexOptions.Compiled);
+#endif
 
         private enum ExpectingLine
         {
@@ -51,14 +61,19 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         public override string ToText(Subtitle subtitle, string title)
         {
-            const string paragraphWriteFormat = "{0}{4}{1} --> {2}{4}{3}{4}{4}";
-
+            // Append the parts directly: AppendFormat re-parsed the composite format and boxed
+            // p.Number per paragraph, and "sb.ToString().Trim() + ..." allocated the whole
+            // multi-megabyte output twice more.
             var sb = new StringBuilder();
             foreach (var p in subtitle.Paragraphs)
             {
-                sb.AppendFormat(paragraphWriteFormat, p.Number, p.StartTime, p.EndTime, p.Text, Environment.NewLine);
+                sb.Append(p.Number).Append(Environment.NewLine);
+                sb.Append(p.StartTime.ToString()).Append(" --> ").Append(p.EndTime.ToString()).Append(Environment.NewLine);
+                sb.Append(p.Text).Append(Environment.NewLine).Append(Environment.NewLine);
             }
-            return sb.ToString().Trim() + Environment.NewLine + Environment.NewLine;
+
+            TrimBuilder(sb);
+            return sb.Append(Environment.NewLine).Append(Environment.NewLine).ToString();
         }
 
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)
@@ -226,12 +241,12 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                             line = _regExWsrtItalicEnd.Replace(line, "</i>");
                         }
 
-                        if (_paragraph.Text.Length > 0)
-                        {
-                            _paragraph.Text += Environment.NewLine;
-                        }
-
-                        _paragraph.Text += line.Replace('\0', ' ').TrimEnd();
+                        // One string.Concat instead of two "+=" - appending the newline and the
+                        // text separately allocated an extra intermediate string per text line.
+                        var textToAppend = line.Replace('\0', ' ').TrimEnd();
+                        _paragraph.Text = _paragraph.Text.Length == 0
+                            ? textToAppend
+                            : _paragraph.Text + Environment.NewLine + textToAppend;
 
                         if (string.IsNullOrWhiteSpace(line) && Utilities.IsInteger(next) && TryReadTimeCodesLine(nextNext, null, false))
                         {
@@ -280,6 +295,21 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         private bool TryReadTimeCodesLine(string input, Paragraph paragraph, bool validate)
         {
             if (string.IsNullOrEmpty(input) || input.Length < 10)
+            {
+                return false;
+            }
+
+            // No '>' means this cannot be a time code line, so bail before the normalization
+            // below. Exact, not a heuristic: to return true the code must get past step 7 ('-')
+            // and step 8 ('>') of IsValidTimeCode *and* split into 8 numeric groups, which only
+            // the "-->" separator produces - and every separator variant normalized below
+            // ("->", "—>", "-->>", ...) contains '>' too, as does a bare ">". None of the other
+            // replacements can introduce one.
+            //
+            // Without this, any ordinary subtitle line that merely starts with a digit ("1999
+            // was a long time ago.") fell through to the ~20 allocating Replace calls, twice per
+            // line - and once more per neighbouring blank line via IsText.
+            if (input.IndexOf('>') < 0)
             {
                 return false;
             }

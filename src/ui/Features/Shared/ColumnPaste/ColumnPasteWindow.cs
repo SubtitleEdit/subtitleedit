@@ -38,27 +38,40 @@ public class ColumnPasteWindow : Window
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
         var panelButtons = UiUtil.MakeButtonBar(buttonOk, buttonCancel);
 
-        grid.Add(MakeChooseColumnView(vm), 0);
+        grid.Add(MakeChooseColumnView(vm, out var radioButtonColumnsAll, out var radioButtonColumnsTextOnly), 0);
         grid.Add(MakeOverwriteView(vm), 0, 1);
         grid.Add(panelButtons, 1, 0, 1, 2);
 
         Content = grid;
 
-        Activated += delegate { buttonOk.Focus(); }; // hack to make OnKeyDown work
+        // Plain text has no time codes, so the only enabled column choice is "text only"
+        var initialFocusControl = vm.IsTextOnlySource ? radioButtonColumnsTextOnly : radioButtonColumnsAll;
+        Activated += delegate { initialFocusControl.Focus(); }; // initial focus on an input, not an action button - a focused button clicks on bare Space
         KeyDown += vm.KeyDown;
     }
 
-    private static Border MakeChooseColumnView(ColumnPasteViewModel vm)
+    private static Border MakeChooseColumnView(ColumnPasteViewModel vm, out RadioButton radioButtonAll, out RadioButton radioButtonTextOnly)
     {
+        radioButtonAll = UiUtil.MakeRadioButton(Se.Language.General.All, vm, nameof(vm.ColumnsAll), "column");
+        var radioButtonTimeCodesOnly = UiUtil.MakeRadioButton(Se.Language.Main.TimeCodesOnly, vm, nameof(vm.ColumnsTimeCodesOnly), "column");
+        radioButtonTextOnly = UiUtil.MakeRadioButton(Se.Language.Main.TextOnly, vm, nameof(vm.ColumnsTextOnly), "column");
+
+        if (vm.IsTextOnlySource)
+        {
+            // clipboard was plain text - there are no time codes to paste
+            radioButtonAll.IsEnabled = false;
+            radioButtonTimeCodesOnly.IsEnabled = false;
+        }
+
         var stackPanel = new StackPanel
         {
             Orientation = Avalonia.Layout.Orientation.Vertical,
             Children =
             {
                 UiUtil.MakeLabel(Se.Language.Main.ChooseColumn),
-                UiUtil.MakeRadioButton(Se.Language.General.All, vm,  nameof(vm.ColumnsAll), "column"),
-                UiUtil.MakeRadioButton(Se.Language.Main.TimeCodesOnly, vm, nameof(vm.ColumnsTimeCodesOnly), "column"),
-                UiUtil.MakeRadioButton(Se.Language.Main.TextOnly, vm, nameof(vm.ColumnsTextOnly), "column"),
+                radioButtonAll,
+                radioButtonTimeCodesOnly,
+                radioButtonTextOnly,
             }
         };
 

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Ukrainian abbreviations - a period here ends an abbreviation, not a sentence, so "Fix common
+  errors" must not capitalize the following word (issue #13082). Matching is case insensitive,
+  so one entry per abbreviation is enough. Abbreviations with an inner period (e.g. "a.m.") are
+  already recognized by a general rule and need no entry here.
+-->
+<Abbreviations>
+  <Item>акад.</Item>
+  <Item>вул.</Item>
+  <Item>гл.</Item>
+  <Item>Д-р.</Item>
+  <Item>млн.</Item>
+  <Item>млрд.</Item>
+  <Item>П-ня.</Item>
+  <Item>п.</Item>
+  <Item>проф.</Item>
+  <Item>рис.</Item>
+  <Item>стор.</Item>
+  <Item>табл.</Item>
+  <Item>тис.</Item>
+  <Item>ін.</Item>
+</Abbreviations>

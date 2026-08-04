@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Runtime.InteropServices;
 using CommunityToolkit.Mvvm.ComponentModel;
 using Nikse.SubtitleEdit.Logic.Config;
 
@@ -27,7 +26,7 @@ public partial class VideoPlayerItem : ObservableObject
         var result = new List<VideoPlayerItem>();
         result.Add(new VideoPlayerItem { Name = Se.Language.Options.Settings.MpvOpenGl, Code = VideoPlayerName.MpvOpenGl });
 
-        if (!RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+        if (!OperatingSystem.IsMacOS())
         {
             result.Add(new VideoPlayerItem { Name = Se.Language.Options.Settings.MpvWidRendering, Code = VideoPlayerName.MpvWid });
         }

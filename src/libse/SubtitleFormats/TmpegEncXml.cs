@@ -493,11 +493,12 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 }
             }
 
+            var pText = new StringBuilder();
             foreach (XmlNode node in xml.DocumentElement.SelectNodes("Subtitle/SubtitleItem"))
             {
                 try
                 {
-                    var pText = new StringBuilder();
+                    pText.Clear();
                     foreach (XmlNode innerNode in node.SelectSingleNode("Text").ChildNodes)
                     {
                         if (innerNode.Name == "br")

@@ -38,11 +38,9 @@ public class SeAudioToText
     public string CommandLineParameterCppVulkan { get; set; } = string.Empty;
     public string CommandLineParameterConstMe { get; set; } = string.Empty;
     public string CommandLineParameterCTranslate2 { get; set; } = "--vad_filter True";
-    public string CommandLineParameterMlxWhisperMac { get; set; } = string.Empty;
     public string CommandLineParameterPurfviewFasterWhisperXxl { get; set; } = "--standard";
     public string CommandLineParameterOpenAi { get; set; } = string.Empty;
     public string CommandLineParameterQwen3AsrCpp { get; set; } = string.Empty;
-    public string CommandLineParameterParakeetCpp { get; set; } = string.Empty;
     public string CommandLineParameterChatLlm { get; set; } = string.Empty;
     public string CommandLineParameterCrispAsrCanary { get; set; } = "--max-len 50 --split-on-punct";
     public string CommandLineParameterCrispAsrCohere { get; set; } = "--max-len 50 --split-on-punct";
@@ -51,6 +49,7 @@ public class SeAudioToText
     // CJK-friendlier max line length (each char is roughly a whole word/syllable).
     public string CommandLineParameterCrispAsrFunAsrNano { get; set; } = "--max-len 20 --split-on-punct";
     public string CommandLineParameterCrispAsrFunAsrMltNano { get; set; } = "--max-len 50 --split-on-punct";
+    public string CommandLineParameterCrispAsrGigaAm { get; set; } = "--max-len 50 --split-on-punct";
     public string CommandLineParameterCrispAsrGlm { get; set; } = "--max-len 50 --split-on-punct";
     public string CommandLineParameterCrispAsrGranite { get; set; } = "--max-len 50 --split-on-punct";
     public string CommandLineParameterCrispAsrParakeet { get; set; } = "--max-len 50 --split-on-punct";
@@ -79,15 +78,6 @@ public class SeAudioToText
 
     public bool WhisperPostProcessingFixShortDuration { get; set; } = true;
 
-    // Cue building for the MLX Whisper helper script:
-    // rebuild cues from word timestamps per the Netflix Timed Text Style Guide / BBC
-    // subtitle guideline limits below, instead of writing Whisper's raw segments.
-    public bool WhisperCueRebuild { get; set; } = true;
-    public int WhisperCueMaxChars { get; set; } = 84;
-    public string WhisperVocabularyPrompt { get; set; } = string.Empty;
-    public int WhisperBeamSize { get; set; } = 5;
-    public double WhisperCueMaxSeconds { get; set; } = 7.0;
-    public double WhisperCueMaxCps { get; set; } = 20.0;
     public bool WhisperPostProcessingChangeUnderlineToColor { get; set; }
     public string WhisperPostProcessingChangeUnderlineToColorColor { get; set; } = Colors.Red.FromColorToHex();
     public string WhisperCppVulkanGpuDevice { get; set; } = string.Empty;

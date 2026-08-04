@@ -13,6 +13,7 @@ public partial class ShortcutTreeNode : ObservableObject
     [ObservableProperty] private string _groupIconName;
     [ObservableProperty] private IBrush _groupBrush;
     [ObservableProperty] private IBrush _groupSoftBrush;
+    [ObservableProperty] private IBrush _groupTextBrush;
     [ObservableProperty] private string _title;
     [ObservableProperty] private string _displayShortcut;
     [ObservableProperty] private List<string> _keyParts;
@@ -49,6 +50,7 @@ public partial class ShortcutTreeNode : ObservableObject
         GroupIconName = ShortcutGroupUi.GetIconName(shortcut.Group);
         GroupBrush = ShortcutGroupUi.GetBrush(shortcut.Group);
         GroupSoftBrush = ShortcutGroupUi.GetSoftBrush(shortcut.Group);
+        GroupTextBrush = ShortcutGroupUi.GetTextBrush(shortcut.Group);
         // "Everywhere" pills are dimmed so context-scoped shortcuts stand out while scrolling.
         ActiveInOpacity = shortcut.Category == ShortcutCategory.General ? 0.55 : 1.0;
     }

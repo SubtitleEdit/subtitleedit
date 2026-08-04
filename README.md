@@ -25,21 +25,13 @@ You can find the latest cross-platform builds here:
 - **Minimum macOS version**: 12 (Monterey) or newer
 - The `.dmg` is self-contained: `libmpv` and `ffmpeg` are bundled inside `Subtitle Edit.app`, so no MacPorts or Homebrew install is required.
 
-#### Installing Subtitle Edit on macOS (Unsigned App)
+#### Installing Subtitle Edit on macOS
 
-Because *Subtitle Edit* is not signed with an Apple developer certificate, macOS will block it by default. You can still install and run it by following these steps:
+As of **v5.1.0-rc13**, the `.dmg` is signed with an Apple Developer ID and notarized by Apple, so it opens normally — no Terminal quarantine-removal step is needed:
 
 1. **Download** and **double-click** the `.dmg` file to mount it.
 2. In the window that appears, **drag `Subtitle Edit.app` into your `Applications` folder**.
-3. Open the **Terminal** app (you can find it via Spotlight or in `/Applications/Utilities/`).
-4. In Terminal, run the following commands to remove macOS’s security quarantine flag and add adhoc code signature:
-   ````bash
-   sudo xattr -rd com.apple.quarantine "/Applications/Subtitle Edit.app"
-   ````
-
-   ````bash
-   sudo codesign --force --deep --sign - "/Applications/Subtitle Edit.app"
-   ````
+3. Open **Subtitle Edit** from Applications (or Launchpad).
 
 ### Linux
 

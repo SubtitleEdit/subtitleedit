@@ -18,6 +18,7 @@ public class LibMpvDownloadService : ILibMpvDownloadService
 {
     private readonly HttpClient _httpClient;
     private const string WindowsUrl = "https://github.com/SubtitleEdit/support-files/releases/download/libmpv-2026-04-21/libmpv2-win64.zip";
+    private const string WindowsUrlArm = "https://github.com/SubtitleEdit/support-files/releases/download/libmpv-2026-04-21/libmpv2-win-arm64.zip";
     private const string MacUrl = "";
     private const string MacUrlArm = "";
 
@@ -28,15 +29,19 @@ public class LibMpvDownloadService : ILibMpvDownloadService
 
     private static string GetUrl()
     {
-        if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+        if (OperatingSystem.IsWindows())
         {
-            return WindowsUrl;
+            // A native ARM64 process cannot load an x64 DLL, so the download
+            // must match the process architecture (issue #12087).
+            return RuntimeInformation.ProcessArchitecture == Architecture.Arm64
+                ? WindowsUrlArm
+                : WindowsUrl;
         }
 
         throw new PlatformNotSupportedException("Unsupported platform for libmpv download." + Environment.NewLine +
             RuntimeInformation.OSDescription);
 
-        //if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+        //if (OperatingSystem.IsMacOS())
         //{
         //    switch (RuntimeInformation.ProcessArchitecture)
         //    {

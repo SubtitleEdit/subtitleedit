@@ -14,6 +14,8 @@ namespace Nikse.SubtitleEdit.Features.Tools.SplitBreakLongLines;
 
 public class SplitBreakLongLinesWindow : Window
 {
+    private CheckBox _checkBoxSplitLongLines = null!;
+
     public SplitBreakLongLinesWindow(SplitBreakLongLinesViewModel vm)
     {
         UiUtil.InitializeWindow(this, GetType().Name);
@@ -55,17 +57,21 @@ public class SplitBreakLongLinesWindow : Window
 
         Content = grid;
 
-        Activated += delegate { buttonOk.Focus(); }; // hack to make OnKeyDown work
+        Activated += delegate { _checkBoxSplitLongLines.Focus(); }; // initial focus on an input, not an action button - a focused button clicks on bare Space
         KeyDown += vm.KeyDown;
         Loaded += (_, _)  => vm.Loaded();
+
+        Closing += delegate { UiUtil.SaveWindowPosition(this); };
+        Loaded += delegate { UiUtil.RestoreWindowPosition(this); };
     }
 
-    private static Grid MakeControlsView(SplitBreakLongLinesViewModel vm)
+    private Grid MakeControlsView(SplitBreakLongLinesViewModel vm)
     {
         var grid = new Grid
         {
             RowDefinitions =
             {
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
             },
@@ -83,6 +89,7 @@ public class SplitBreakLongLinesWindow : Window
 
         var checkBoxSplitLongLines = UiUtil.MakeCheckBox(Se.Language.Tools.SplitBreakLongLines.SplitLongLines, vm, nameof(vm.SplitLongLines))
             .WithMarginRight(40);
+        _checkBoxSplitLongLines = checkBoxSplitLongLines;
         checkBoxSplitLongLines.IsCheckedChanged += (s, e) => vm.SetChanged();
 
         var checkBoxRebalanceLongLines = UiUtil.MakeCheckBox(Se.Language.Tools.SplitBreakLongLines.RebalanceLongLines, vm, nameof(vm.RebalanceLongLines))
@@ -97,6 +104,15 @@ public class SplitBreakLongLinesWindow : Window
         var numericUpDownMaxNumberOfLines = UiUtil.MakeNumericUpDownInt(1, 10, 2, 130, vm, nameof(vm.MaxNumberOfLines));
         numericUpDownMaxNumberOfLines.ValueChanged += (s, e) => vm.SetChanged();
 
+        var labelUnbreakLinesShorterThan = UiUtil.MakeLabel(Se.Language.Options.Settings.UnbreakSubtitlesShortThan);
+        var numericUpDownUnbreakLinesShorterThan = UiUtil.MakeNumericUpDownInt(1, 1000, 33, 130, vm, nameof(vm.UnbreakLinesShorterThan));
+        numericUpDownUnbreakLinesShorterThan.ValueChanged += (s, e) => vm.SetChanged();
+        if (Se.Settings.Appearance.ShowHints)
+        {
+            ToolTip.SetTip(labelUnbreakLinesShorterThan, Se.Language.Tools.SplitBreakLongLines.UnbreakLinesShorterThanHint);
+            ToolTip.SetTip(numericUpDownUnbreakLinesShorterThan, Se.Language.Tools.SplitBreakLongLines.UnbreakLinesShorterThanHint);
+        }
+
         grid.Add(checkBoxSplitLongLines, 0);
         grid.Add(labelSingleLineMaxLength, 0, 1);
         grid.Add(numericUpDownSingleLineMaxLength, 0, 2);
@@ -104,6 +120,9 @@ public class SplitBreakLongLinesWindow : Window
         grid.Add(checkBoxRebalanceLongLines, 1);
         grid.Add(labelMaxNumberOfLines, 1, 1);
         grid.Add(numericUpDownMaxNumberOfLines, 1, 2);
+
+        grid.Add(labelUnbreakLinesShorterThan, 2, 1);
+        grid.Add(numericUpDownUnbreakLinesShorterThan, 2, 2);
 
         return grid;
     }
@@ -131,31 +150,29 @@ public class SplitBreakLongLinesWindow : Window
             .WithMarginTop(10)
             .WithMarginLeft(10);
 
-        var dataGrid = new DataGrid
+        // Sorting dropped in the DataGrid -> TableView conversion: the grid previews
+        // split/rebalance fixes in subtitle order.
+        var dataGrid = TableViewExtras.MakeTableView(multiSelect: false);
+        dataGrid.Width = double.NaN;
+        dataGrid.Height = double.NaN;
+        dataGrid.DataContext = vm;
+        dataGrid.ItemsSource = vm.Fixes;
+        dataGrid.Columns.AddRange(new TableViewColumn[]
         {
-            AutoGenerateColumns = false,
-            SelectionMode = DataGridSelectionMode.Single,
-            CanUserResizeColumns = true,
-            CanUserSortColumns = true,
-            HorizontalAlignment = HorizontalAlignment.Stretch,
-            VerticalAlignment = VerticalAlignment.Stretch,
-            Width = double.NaN,
-            Height = double.NaN,
-            DataContext = vm,
-            ItemsSource = vm.Fixes,
-            Columns =
-            {
-                new DataGridTextColumn
+                new SeTableViewColumn
                 {
                     Header = Se.Language.General.NumberSymbol,
                     Binding = new Binding(nameof(SplitBreakLongLinesItem.Number)),
-                    CellTheme = UiUtil.DataGridNoBorderNoPaddingCellTheme,
-                    IsReadOnly = true,
+                    CellTheme = UiUtil.TableViewCellTheme,
+                    HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
+                    // Content-sized (Auto) on the DataGrid; TableView treats Auto as star.
+                    Width = new GridLength(60),
                 },
-                new DataGridTemplateColumn
+                new SeTableViewColumn
                 {
                     Header = Se.Language.General.Name,
-                    CellTheme = UiUtil.DataGridNoBorderNoPaddingCellTheme,
+                    CellTheme = UiUtil.TableViewNoPaddingCellTheme,
+                    HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
                     CellTemplate = new FuncDataTemplate<SplitBreakLongLinesItem>((item, _) =>
                     {
                         if (item == null)
@@ -186,27 +203,27 @@ public class SplitBreakLongLinesWindow : Window
                             },
                         };
                     }),
-                    IsReadOnly = true,
-                    Width = new DataGridLength(1, DataGridLengthUnitType.Auto),
+                    // Content-sized (Auto) on the DataGrid; fits the "Split long line" /
+                    // "Rebalance long line" pill.
+                    Width = new GridLength(150),
                 },
-                new DataGridTextColumn
+                new SeTableViewColumn
                 {
                     Header = Se.Language.General.Fix,
                     Binding = new Binding(nameof(SplitBreakLongLinesItem.Fix)),
-                    Width = new DataGridLength(1, DataGridLengthUnitType.Star),
-                    CellTheme = UiUtil.DataGridNoBorderCellTheme,
-                    IsReadOnly = true,
+                    Width = new GridLength(1, GridUnitType.Star),
+                    CellTheme = UiUtil.TableViewCellTheme,
+                    HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
                 },
-            },
-        };
+        });
 
         dataGrid.AddHandler(InputElement.KeyDownEvent, (object? _, KeyEventArgs e) =>
         {
             if (e.Key is Key.Home or Key.End && dataGrid.ItemsSource is IList items && items.Count > 0)
             {
-                var target = e.Key == Key.Home ? items[0] : items[^1];
-                dataGrid.SelectedItem = target;
-                dataGrid.ScrollIntoView(target, null);
+                var index = e.Key == Key.Home ? 0 : items.Count - 1;
+                dataGrid.SelectedIndex = index;
+                dataGrid.ScrollIntoView(index);
                 e.Handled = true;
             }
         }, RoutingStrategies.Tunnel);

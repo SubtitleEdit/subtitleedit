@@ -14,7 +14,7 @@ using System.Linq;
 
 namespace Nikse.SubtitleEdit.Features.Tools.BridgeGaps;
 
-public partial class BridgeGapsViewModel : ObservableObject
+public partial class BridgeGapsViewModel : ObservableObject, IClosingCleanup
 {
     [ObservableProperty] private ObservableCollection<BridgeGapDisplayItem> _subtitles;
     [ObservableProperty] private BridgeGapDisplayItem? _selectedSubtitle;
@@ -30,6 +30,7 @@ public partial class BridgeGapsViewModel : ObservableObject
 
     private readonly System.Timers.Timer _timerUpdatePreview;
     private bool _dirty;
+    private volatile bool _isClosing;
     private Dictionary<string, string> _dic;
 
 
@@ -45,16 +46,36 @@ public partial class BridgeGapsViewModel : ObservableObject
         LoadSettings();
 
         _timerUpdatePreview = new System.Timers.Timer(500);
-        _timerUpdatePreview.Elapsed += (s, e) =>
+        _timerUpdatePreview.Elapsed += TimerUpdatePreviewElapsed;
+    }
+
+    private void TimerUpdatePreviewElapsed(object? sender, System.Timers.ElapsedEventArgs e)
+    {
+        if (_isClosing)
         {
-            _timerUpdatePreview.Stop();
-            if (_dirty)
-            {
-                _dirty = false;
-                UpdatePreview();
-            }
+            return;
+        }
+
+        _timerUpdatePreview.Stop();
+        if (_dirty)
+        {
+            _dirty = false;
+            UpdatePreview();
+        }
+
+        // Guard the restart: OnClosingCleanup may have disposed the timer while this handler ran,
+        // and Start() on a disposed timer throws ObjectDisposedException (no longer swallowed on
+        // modern .NET), crashing the app from a thread-pool thread. (#12739)
+        if (!_isClosing)
+        {
             _timerUpdatePreview.Start();
-        };
+        }
+    }
+
+    public void OnClosingCleanup()
+    {
+        _isClosing = true;
+        _timerUpdatePreview.StopAndDispose(TimerUpdatePreviewElapsed);
     }
 
     private void UpdatePreview()

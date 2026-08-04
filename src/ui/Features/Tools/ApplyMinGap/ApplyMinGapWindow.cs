@@ -64,75 +64,80 @@ public class ApplyMinGapWindow : Window
 
         Content = grid;
 
-        Activated += delegate { buttonOk.Focus(); }; // hack to make OnKeyDown work
+        Activated += delegate { numericUpDownMinGap.Focus(); }; // initial focus on an input, not an action button - a focused button clicks on bare Space
         KeyDown += (_, e) => vm.OnKeyDown(e);
+
+        Closing += delegate { UiUtil.SaveWindowPosition(this); };
+        Loaded += delegate { UiUtil.RestoreWindowPosition(this); };
     }
 
     private static Border MakeSubtitleView(ApplyMinGapViewModel vm)
     {
         var fullTimeConverter = new TimeSpanToDisplayFullConverter();
         var shortTimeConverter = new TimeSpanToDisplayShortConverter();
-        var dataGridSubtitle = new DataGrid
+        // No header-click sorting (the DataGrid's CanUserSortColumns is not carried
+        // over): gap-change previews in subtitle order.
+        var dataGridSubtitle = TableViewExtras.MakeTableView(multiSelect: false);
+        dataGridSubtitle.Width = double.NaN;
+        dataGridSubtitle.Height = double.NaN;
+        dataGridSubtitle.DataContext = vm;
+        dataGridSubtitle.ItemsSource = vm.Subtitles;
+        dataGridSubtitle.Columns.AddRange(new[]
         {
-            AutoGenerateColumns = false,
-            SelectionMode = DataGridSelectionMode.Single,
-            CanUserResizeColumns = true,
-            CanUserSortColumns = true,
-            HorizontalAlignment = HorizontalAlignment.Stretch,
-            VerticalAlignment = VerticalAlignment.Stretch,
-            Width = double.NaN,
-            Height = double.NaN,
-            DataContext = vm,
-            ItemsSource = vm.Subtitles,
-            Columns =
+            new SeTableViewColumn
             {
-                new DataGridTextColumn
-                {
-                    Header = Se.Language.General.NumberSymbol,
-                    CellTheme = UiUtil.DataGridNoBorderNoPaddingCellTheme,
-                    Binding = new Binding(nameof(ApplyMinGapItem.Number)),
-                    IsReadOnly = true,
-                },
-                new DataGridTextColumn
-                {
-                    Header = Se.Language.General.Show,
-                    CellTheme = UiUtil.DataGridNoBorderNoPaddingCellTheme,
-                    Binding = new Binding(nameof(ApplyMinGapItem.StartTime)) { Converter = fullTimeConverter },
-                    IsReadOnly = true,
-                },
-                new DataGridTextColumn
-                {
-                    Header = Se.Language.General.Duration,
-                    CellTheme = UiUtil.DataGridNoBorderNoPaddingCellTheme,
-                    Binding = new Binding(nameof(ApplyMinGapItem.Duration)) { Converter = shortTimeConverter },
-                    IsReadOnly = true,
-                },
-                new DataGridTextColumn
-                {
-                    Header = Se.Language.General.Text,
-                    CellTheme = UiUtil.DataGridNoBorderNoPaddingCellTheme,
-                    Binding = new Binding(nameof(ApplyMinGapItem.Text)),
-                    IsReadOnly = true,
-                    Width = new DataGridLength(1, DataGridLengthUnitType.Star),
-                },
-                new DataGridTextColumn
-                {
-                    Header = Se.Language.Tools.BridgeGaps.GapChange,
-                    CellTheme = UiUtil.DataGridNoBorderNoPaddingCellTheme,
-                    Binding = new Binding(nameof(ApplyMinGapItem.InfoText)),
-                    IsReadOnly = true,
-                    Width = new DataGridLength(1, DataGridLengthUnitType.Star),
-                },
+                Header = Se.Language.General.NumberSymbol,
+                CellTheme = UiUtil.TableViewCellTheme,
+                HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
+                Binding = new Binding(nameof(ApplyMinGapItem.Number)),
+                Width = new GridLength(60), // content-sized (Auto) on the DataGrid; TableView treats Auto as star
             },
-        };
+            new SeTableViewColumn
+            {
+                Header = Se.Language.General.Show,
+                CellTheme = UiUtil.TableViewCellTheme,
+                HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
+                Binding = new Binding(nameof(ApplyMinGapItem.StartTime)) { Converter = fullTimeConverter },
+                Width = new GridLength(115),
+            },
+            new SeTableViewColumn
+            {
+                Header = Se.Language.General.Duration,
+                CellTheme = UiUtil.TableViewCellTheme,
+                HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
+                Binding = new Binding(nameof(ApplyMinGapItem.Duration)) { Converter = shortTimeConverter },
+                Width = new GridLength(90),
+            },
+            new SeTableViewColumn
+            {
+                Header = Se.Language.General.Text,
+                CellTheme = UiUtil.TableViewCellTheme,
+                HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
+                Binding = new Binding(nameof(ApplyMinGapItem.Text)),
+                Width = new GridLength(1, GridUnitType.Star),
+            },
+            new SeTableViewColumn
+            {
+                Header = Se.Language.Tools.BridgeGaps.GapChange,
+                CellTheme = UiUtil.TableViewCellTheme,
+                HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
+                Binding = new Binding(nameof(ApplyMinGapItem.InfoText)),
+                Width = new GridLength(1, GridUnitType.Star),
+            },
+        });
 
         dataGridSubtitle.AddHandler(InputElement.KeyDownEvent, (object? _, KeyEventArgs e) =>
         {
             if (e.Key is Key.Home or Key.End && dataGridSubtitle.ItemsSource is IList items && items.Count > 0)
             {
                 var target = e.Key == Key.Home ? items[0] : items[^1];
+                if (target == null)
+                {
+                    return;
+                }
+
                 dataGridSubtitle.SelectedItem = target;
-                dataGridSubtitle.ScrollIntoView(target, null);
+                dataGridSubtitle.ScrollIntoView(target);
                 e.Handled = true;
             }
         }, RoutingStrategies.Tunnel);

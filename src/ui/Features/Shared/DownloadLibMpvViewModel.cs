@@ -3,13 +3,13 @@ using Avalonia.Input;
 using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Compression;
 using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Logic.Download;
 using System;
 using System.Globalization;
 using System.IO;
-using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Timers;
@@ -17,7 +17,7 @@ using Timer = System.Timers.Timer;
 
 namespace Nikse.SubtitleEdit.Features.Shared;
 
-public partial class DownloadLibMpvViewModel : ObservableObject
+public partial class DownloadLibMpvViewModel : ObservableObject, IClosingCleanup
 {
     [ObservableProperty] private double _progress;
     [ObservableProperty] private string _statusText;
@@ -74,8 +74,8 @@ public partial class DownloadLibMpvViewModel : ObservableObject
 
                 if (_downloadStream.Length == 0)
                 {
-                    StatusText = "Download failed";
-                    Error = "No data received";
+                    StatusText = Se.Language.General.DownloadFailed;
+                    Error = Se.Language.General.NoDataReceived;
                     return;
                 }
 
@@ -92,14 +92,14 @@ public partial class DownloadLibMpvViewModel : ObservableObject
                         // If the file is in use, we will not be able to delete it.
                         // We will just leave it and let the user know to restart SE.
 
-                        StatusText = "Download complete...";
+                        StatusText = Se.Language.General.DownloadComplete;
                         Dispatcher.UIThread.Post(async () =>
                         {
                             _ = await MessageBox.Show(
                                 Window!,
-                                "Error",
-                                "Download complete, but could not delete existing file." + Environment.NewLine +
-                                "Please restart SE to use the new libmpv.",
+                                Se.Language.General.Error,
+                                Se.Language.General.DownloadCompleteButCouldNotDeleteFile + Environment.NewLine +
+                                Se.Language.General.PleaseRestartSeToUseTheNewLibmpv,
                                 MessageBoxButtons.OK,
                                 MessageBoxIcon.Error);
                             return;
@@ -123,13 +123,13 @@ public partial class DownloadLibMpvViewModel : ObservableObject
                 var ex = _downloadTask.Exception?.InnerException ?? _downloadTask.Exception;
                 if (ex is OperationCanceledException)
                 {
-                    StatusText = "Download canceled";
+                    StatusText = Se.Language.General.DownloadCanceled;
                     Close();
                 }
                 else
                 {
-                    StatusText = "Download failed";
-                    Error = ex?.Message ?? "Unknown error";
+                    StatusText = Se.Language.General.DownloadFailed;
+                    Error = ex?.Message ?? Se.Language.General.UnknownError;
                 }
             }
         }
@@ -156,7 +156,7 @@ public partial class DownloadLibMpvViewModel : ObservableObject
 
     public static string GetLibMpvFileName()
     {
-        if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+        if (OperatingSystem.IsWindows())
         {
             return Path.Combine(Se.DataFolder, "libmpv-2.dll");
         }
@@ -172,7 +172,7 @@ public partial class DownloadLibMpvViewModel : ObservableObject
             Directory.CreateDirectory(newFolder);
         }
 
-        if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+        if (OperatingSystem.IsWindows())
         {
             return Path.Combine(newFolder, "libmpv-2.dll");
         }
@@ -193,8 +193,12 @@ public partial class DownloadLibMpvViewModel : ObservableObject
     {
         _cancellationTokenSource?.Cancel();
         _done = true;
-        _timer.Stop();
         Close();
+    }
+
+    public void OnClosingCleanup()
+    {
+        _timer.StopAndDispose(OnTimerOnElapsed);
     }
 
     public void StartDownload()

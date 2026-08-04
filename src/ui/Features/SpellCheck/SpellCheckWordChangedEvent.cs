@@ -1,5 +1,6 @@
 ﻿using Nikse.SubtitleEdit.Features.Main;
 using System;
+using Nikse.SubtitleEdit.UiLogic.SpellCheck;
 
 namespace Nikse.SubtitleEdit.Features.SpellCheck;
 

@@ -1,4 +1,4 @@
-using Nikse.SubtitleEdit.Core.AudioToText;
+using Nikse.SubtitleEdit.UiLogic.AudioToText;
 using Nikse.SubtitleEdit.Features.Video.SpeechToText.Engines;
 using Nikse.SubtitleEdit.Logic.Config;
 
@@ -12,6 +12,7 @@ public class CrispAsrEngineTests
     [InlineData(WhisperChoice.CrispAsrKyutai, typeof(CrispAsrKyutai), "kyutai-stt")]
     [InlineData(WhisperChoice.CrispAsrMega, typeof(CrispAsrMega), "mega-asr")]
     [InlineData(WhisperChoice.CrispAsrFunAsrNano, typeof(CrispAsrFunAsrNano), "funasr")]
+    [InlineData(WhisperChoice.CrispAsrGigaAm, typeof(CrispAsrGigaAm), "gigaam")]
     public void TrySelectBackendChoice_SelectsPersistedCrispBackendChoice(string choice, Type backendType, string backendName)
     {
         var engine = new CrispAsrEngine();

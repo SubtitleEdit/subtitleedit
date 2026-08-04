@@ -6,12 +6,12 @@ using Avalonia.Media;
 using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using Nikse.SubtitleEdit.Core.AutoTranslate;
+using Nikse.SubtitleEdit.UiLogic.AutoTranslate;
 using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.ContainerFormats.Matroska;
 using Nikse.SubtitleEdit.Core.ContainerFormats.Mp4;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
-using Nikse.SubtitleEdit.Core.Translate;
+using Nikse.SubtitleEdit.UiLogic.Translate;
 using Nikse.SubtitleEdit.Features.Assa;
 using Nikse.SubtitleEdit.Features.Edit.MultipleReplace;
 using Nikse.SubtitleEdit.Features.Files.ExportCustomTextFormat;
@@ -45,10 +45,11 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Nikse.SubtitleEdit.UiLogic.LlamaCpp;
 
 namespace Nikse.SubtitleEdit.Features.Tools.BatchConvert;
 
-public partial class BatchConvertViewModel : ObservableObject
+public partial class BatchConvertViewModel : ObservableObject, IClosingCleanup
 {
     [ObservableProperty] private ObservableCollection<BatchConvertItem> _batchItems;
     [ObservableProperty] private BatchConvertItem? _selectedBatchItem;
@@ -177,6 +178,17 @@ public partial class BatchConvertViewModel : ObservableObject
     [ObservableProperty] private bool _mergeSameTimeMergeDialog;
     [ObservableProperty] private bool _mergeSameTimeAutoBreak;
 
+    // Adjust image brightness/alpha/color (image-based target formats only)
+    [ObservableProperty] private bool _imageAdjustBrightnessOn;
+    [ObservableProperty] private double _imageAdjustBrightness;
+    [ObservableProperty] private double _imageAdjustContrast;
+    [ObservableProperty] private double _imageAdjustGamma;
+    [ObservableProperty] private bool _imageAdjustAlphaOn;
+    [ObservableProperty] private double _imageAdjustAlpha;
+    [ObservableProperty] private double _imageAdjustAlphaThreshold;
+    [ObservableProperty] private bool _imageAdjustColorOn;
+    [ObservableProperty] private Color _imageAdjustColorValue = Colors.White;
+
     // Fix right-to-left
     [ObservableProperty] private bool _rtlFixViaUniCode;
     [ObservableProperty] private bool _rtlRemoveUniCode;
@@ -225,7 +237,7 @@ public partial class BatchConvertViewModel : ObservableObject
     [ObservableProperty] private bool _sortByDescending;
 
     public Window? Window { get; set; }
-    public DataGrid FileGrid { get; set; } = new();
+    public TableView FileGrid { get; set; } = new();
 
     public bool OkPressed { get; private set; }
     public ScrollViewer FunctionContainer { get; internal set; }
@@ -236,6 +248,7 @@ public partial class BatchConvertViewModel : ObservableObject
     private List<BatchConvertItem> _allBatchItems;
     private readonly System.Timers.Timer _filesTimer;
     private bool _isFilesDirty;
+    private volatile bool _isClosing;
     private readonly IWindowService _windowService;
     private readonly IFileHelper _fileHelper;
     private readonly IFolderHelper _folderHelper;
@@ -244,6 +257,7 @@ public partial class BatchConvertViewModel : ObservableObject
     private CancellationToken _cancellationToken;
     private CancellationTokenSource _cancellationTokenSource;
     private CancellationTokenSource _addFilesCancellationTokenSource = new();
+    private CancellationTokenSource? _statusClearCts; // supersedes the pending status-clear timer
     private List<string> _encodings;
     private List<string> _targetFormatsWithSettings;
 
@@ -335,8 +349,8 @@ public partial class BatchConvertViewModel : ObservableObject
 
         SortByOptions = new ObservableCollection<SortByOption>
         {
-            new("Number", Se.Language.Tools.SortBy.SortByNumber),
-            new("StartTime", Se.Language.Tools.SortBy.SortByStartTime),
+            new("Number", Se.Language.General.Number),
+            new("StartTime", Se.Language.General.StartTime),
             new("EndTime", Se.Language.Tools.SortBy.SortByEndTime),
         };
         SelectedSortByOption = SortByOptions[0];
@@ -402,22 +416,46 @@ public partial class BatchConvertViewModel : ObservableObject
         LoadSettings();
         FilterComboBoxChanged();
         _filesTimer = new System.Timers.Timer(250);
-        _filesTimer.Elapsed += (sender, args) =>
-        {
-            Dispatcher.UIThread.Post(() =>
-            {
-                _filesTimer.Stop();
-
-                if (_isFilesDirty)
-                {
-                    _isFilesDirty = false;
-                    UpdateFilteredFiles();
-                }
-
-                _filesTimer.Start();
-            });
-        };
+        _filesTimer.Elapsed += FilesTimerElapsed;
         _filesTimer.Start();
+    }
+
+    private void FilesTimerElapsed(object? sender, System.Timers.ElapsedEventArgs e)
+    {
+        if (_isClosing)
+        {
+            return;
+        }
+
+        Dispatcher.UIThread.Post(() =>
+        {
+            if (_isClosing)
+            {
+                return;
+            }
+
+            _filesTimer.Stop();
+
+            if (_isFilesDirty)
+            {
+                _isFilesDirty = false;
+                UpdateFilteredFiles();
+            }
+
+            // Guard the restart: OnClosingCleanup may have disposed the timer while this posted
+            // action was queued, and Start() on a disposed timer throws ObjectDisposedException
+            // (no longer swallowed on modern .NET), crashing the UI thread. (#12739)
+            if (!_isClosing)
+            {
+                _filesTimer.Start();
+            }
+        });
+    }
+
+    public void OnClosingCleanup()
+    {
+        _isClosing = true;
+        _filesTimer.StopAndDispose(FilesTimerElapsed);
     }
 
     private void UpdateFilteredFiles()
@@ -589,6 +627,17 @@ public partial class BatchConvertViewModel : ObservableObject
         Se.Settings.Tools.BatchConvert.SortBy = SelectedSortByOption?.Key ?? "Number";
         Se.Settings.Tools.BatchConvert.SortByDescending = SortByDescending;
 
+        // Adjust image brightness/alpha/color
+        Se.Settings.Tools.BatchConvert.ImageAdjustBrightnessOn = ImageAdjustBrightnessOn;
+        Se.Settings.Tools.BatchConvert.ImageAdjustBrightness = ImageAdjustBrightness;
+        Se.Settings.Tools.BatchConvert.ImageAdjustContrast = ImageAdjustContrast;
+        Se.Settings.Tools.BatchConvert.ImageAdjustGamma = ImageAdjustGamma;
+        Se.Settings.Tools.BatchConvert.ImageAdjustAlphaOn = ImageAdjustAlphaOn;
+        Se.Settings.Tools.BatchConvert.ImageAdjustAlpha = ImageAdjustAlpha;
+        Se.Settings.Tools.BatchConvert.ImageAdjustAlphaThreshold = ImageAdjustAlphaThreshold;
+        Se.Settings.Tools.BatchConvert.ImageAdjustColorOn = ImageAdjustColorOn;
+        Se.Settings.Tools.BatchConvert.ImageAdjustColorValue = ImageAdjustColorValue.ToString();
+
         // Fix right-to-left
         if (RtlFixViaUniCode)
         {
@@ -755,6 +804,20 @@ public partial class BatchConvertViewModel : ObservableObject
         // Remove line breaks
         RemoveLineBreaksOnlyShortLines = Se.Settings.Tools.BatchConvert.RemoveLineBreaksOnlyShortLines;
 
+        // Adjust image brightness/alpha/color
+        ImageAdjustBrightnessOn = Se.Settings.Tools.BatchConvert.ImageAdjustBrightnessOn;
+        ImageAdjustBrightness = Se.Settings.Tools.BatchConvert.ImageAdjustBrightness;
+        ImageAdjustContrast = Se.Settings.Tools.BatchConvert.ImageAdjustContrast;
+        ImageAdjustGamma = Se.Settings.Tools.BatchConvert.ImageAdjustGamma;
+        ImageAdjustAlphaOn = Se.Settings.Tools.BatchConvert.ImageAdjustAlphaOn;
+        ImageAdjustAlpha = Se.Settings.Tools.BatchConvert.ImageAdjustAlpha;
+        ImageAdjustAlphaThreshold = Se.Settings.Tools.BatchConvert.ImageAdjustAlphaThreshold;
+        ImageAdjustColorOn = Se.Settings.Tools.BatchConvert.ImageAdjustColorOn;
+        if (Color.TryParse(Se.Settings.Tools.BatchConvert.ImageAdjustColorValue, out var imageAdjustColor))
+        {
+            ImageAdjustColorValue = imageAdjustColor;
+        }
+
         // ASSA change resolution
         AssaChangeResolutionTargetWidth = Se.Settings.Tools.BatchConvert.AssaChangeResolutionTargetWidth;
         AssaChangeResolutionTargetHeight = Se.Settings.Tools.BatchConvert.AssaChangeResolutionTargetHeight;
@@ -897,15 +960,20 @@ public partial class BatchConvertViewModel : ObservableObject
         IsProgressVisible = true;
         IsConverting = true;
         AreControlsEnabled = false;
-        ProgressMaxValue = BatchItems.Count;
+        // Snapshot the job list: the loop below runs on a background thread while
+        // BatchItems stays live in the UI, where header-click sorting (and re-filtering)
+        // rebuilds the collection in place - enumerating the live collection there
+        // could throw mid-run. Status updates still reach the grid per item.
+        var itemsToConvert = BatchItems.ToList();
+        ProgressMaxValue = itemsToConvert.Count;
         _ = Task.Run(async () =>
         {
             var count = 1;
-            foreach (var batchItem in BatchItems)
+            foreach (var batchItem in itemsToConvert)
             {
                 var countDisplay = count;
-                ProgressText = string.Format(Se.Language.General.ConvertingXofYDotDoDot, countDisplay, BatchItems.Count);
-                ProgressValue = countDisplay / (double)BatchItems.Count;
+                ProgressText = string.Format(Se.Language.General.ConvertingXofYDotDoDot, countDisplay, itemsToConvert.Count);
+                ProgressValue = countDisplay / (double)itemsToConvert.Count;
 
                 if (batchItem.Format!.StartsWith("Transport Stream", StringComparison.Ordinal))
                 {
@@ -940,7 +1008,7 @@ public partial class BatchConvertViewModel : ObservableObject
 
             var end = DateTime.UtcNow.Ticks;
             var elapsed = new TimeSpan(end - start).TotalMilliseconds;
-            var message = string.Format(Se.Language.General.XFilesConvertedInY, BatchItems.Count, elapsed);
+            var message = string.Format(Se.Language.General.XFilesConvertedInY, itemsToConvert.Count, elapsed);
             if (_cancellationToken.IsCancellationRequested)
             {
                 message += Environment.NewLine + Se.Language.General.ConversionCancelledByUser;
@@ -1560,6 +1628,33 @@ public partial class BatchConvertViewModel : ObservableObject
         };
     }
 
+    private static Subtitle? TryLoadBdnXml(string fileName)
+    {
+        try
+        {
+            var lines = FileUtil.ReadAllLinesShared(fileName, LanguageAutoDetect.GetEncodingFromFile(fileName));
+            var bdnXml = new BdnXml();
+            if (!bdnXml.IsMine(lines, fileName))
+            {
+                return null;
+            }
+
+            var subtitle = new Subtitle();
+            bdnXml.LoadSubtitle(subtitle, lines, fileName);
+            if (subtitle.Paragraphs.Count == 0)
+            {
+                return null;
+            }
+
+            subtitle.OriginalFormat = bdnXml;
+            return subtitle;
+        }
+        catch
+        {
+            return null;
+        }
+    }
+
     // Parses a file and appends the resulting item(s) to _allBatchItems only (no UI-bound
     // collection touched), so it is safe to call from a background thread. Returns the items
     // added for this file; callers add them to the visible BatchItems on the UI thread.
@@ -1579,6 +1674,19 @@ public partial class BatchConvertViewModel : ObservableObject
         if (ext == ".sub" && FileUtil.IsVobSub(fileName))
         {
             format = BatchConverter.FormatVobSub;
+        }
+
+        if (ext == ".xml" && fileInfo.Length < 20_000_000)
+        {
+            // BDN xml only lives in SubtitleFormat.GetTextOtherFormats(), so neither Subtitle.Parse
+            // nor the GetBinaryFormats() fallback below would ever find it. The "<BDN" requirement in
+            // BdnXml.LoadSubtitle keeps this from stealing other xml formats like TTML.
+            var bdnSubtitle = TryLoadBdnXml(fileName);
+            if (bdnSubtitle != null)
+            {
+                format = BatchConverter.FormatBdnXml;
+                subtitle = bdnSubtitle;
+            }
         }
 
         if (ext == ".mkv" || ext == ".mks")
@@ -1756,7 +1864,7 @@ public partial class BatchConvertViewModel : ObservableObject
             return;
         }
 
-        var selectedItems = FileGrid.SelectedItems.Cast<BatchConvertItem>().ToList();
+        var selectedItems = FileGrid.SelectedItems?.Cast<BatchConvertItem>().ToList() ?? new List<BatchConvertItem>();
         if (selectedItems.Count == 0)
         {
             return;
@@ -1897,9 +2005,9 @@ public partial class BatchConvertViewModel : ObservableObject
                 AdjustmentType = SelectedAdjustType.Type,
                 Percentage = AdjustPercent,
                 FixedMilliseconds = (int)AdjustFixed,
-                MaxCharsPerSecond = (double)AdjustRecalculateMaxCharacterPerSecond,
-                OptimalCharsPerSecond = (double)AdjustRecalculateOptimalCharacterPerSecond,
-                Seconds = (double)AdjustSeconds,
+                MaxCharsPerSecond = AdjustRecalculateMaxCharacterPerSecond,
+                OptimalCharsPerSecond = AdjustRecalculateOptimalCharacterPerSecond,
+                Seconds = AdjustSeconds,
             },
 
             AutoTranslate = new BatchConvertConfig.AutoTranslateSettings
@@ -2063,6 +2171,11 @@ public partial class BatchConvertViewModel : ObservableObject
                 TrimUnusedStyles = AssaChangeStyleTrimUnusedStyles,
             },
 
+            AssaEmbedFonts = new BatchConvertConfig.AssaEmbedFontsSettings
+            {
+                IsActive = activeFunctions.Contains(BatchConvertFunctionType.AssaEmbedFonts),
+            },
+
             MergeShortLines = new BatchConvertConfig.MergeShortLinesSettings
             {
                 IsActive = activeFunctions.Contains(BatchConvertFunctionType.MergeShortLines),
@@ -2090,6 +2203,20 @@ public partial class BatchConvertViewModel : ObservableObject
                 IsActive = activeFunctions.Contains(BatchConvertFunctionType.SortBy),
                 SortBy = SelectedSortByOption?.Key ?? "Number",
                 Descending = SortByDescending,
+            },
+
+            AdjustImageColors = new BatchConvertConfig.AdjustImageColorsSettings
+            {
+                IsActive = activeFunctions.Contains(BatchConvertFunctionType.AdjustImageColors),
+                AdjustBrightness = ImageAdjustBrightnessOn,
+                Brightness = ImageAdjustBrightness,
+                Contrast = ImageAdjustContrast,
+                Gamma = ImageAdjustGamma,
+                AdjustAlpha = ImageAdjustAlphaOn,
+                AlphaAdjustment = ImageAdjustAlpha,
+                TransparencyThreshold = ImageAdjustAlphaThreshold,
+                AdjustColor = ImageAdjustColorOn,
+                ColorValue = ImageAdjustColorValue,
             },
         };
     }
@@ -2231,14 +2358,36 @@ public partial class BatchConvertViewModel : ObservableObject
         });
     }
 
-    private async Task ShowStatus(string statusText)
+    private Task ShowStatus(string statusText)
     {
-        StatusText = statusText;
-        var _ = Task.Run(async () =>
+        // Post so callers on background threads (the convert Task.Run) set the
+        // bound property on the UI thread, and so the supersede logic below is
+        // serialized — a new status must cancel the previous clear timer, or an
+        // older 6-second timer would wipe a newer message early.
+        Dispatcher.UIThread.Post(() =>
         {
-            await Task.Delay(6000, _cancellationToken).ConfigureAwait(false);
-            StatusText = string.Empty;
-        }); 
+            StatusText = statusText;
+            _statusClearCts?.Cancel();
+            var cts = new CancellationTokenSource();
+            _statusClearCts = cts;
+            _ = ClearStatusAfterDelay(cts.Token);
+        });
+
+        return Task.CompletedTask;
+    }
+
+    private async Task ClearStatusAfterDelay(CancellationToken token)
+    {
+        try
+        {
+            await Task.Delay(6000, token);
+        }
+        catch (OperationCanceledException)
+        {
+            return; // superseded by a newer status message
+        }
+
+        StatusText = string.Empty;
     }
 
     internal void FileGridOnDragOver(object? sender, DragEventArgs e)
@@ -2368,7 +2517,7 @@ public partial class BatchConvertViewModel : ObservableObject
             AutoTranslateModel = string.Empty;
             AutoTranslateModelBrowseIsVisible = false;
             AutoTranslateModelIsVisible = false;
-            AutoTranslateUrl = Se.Settings.AutoTranslate.NnlbApiUrl;
+            AutoTranslateUrl = Se.Settings.AutoTranslate.NllbApiUrl;
             AutoTranslateUrlIsVisible = true;
             AutoTranslateApiKey = string.Empty;
             AutoTranslateApiKeyIsVisible = false;
@@ -2499,6 +2648,13 @@ public partial class BatchConvertViewModel : ObservableObject
     {
         UiUtil.RestoreWindowPosition(Window);
         ComboBoxSubtitleFormatChanged();
+
+        // Show the settings of the function the grid starts on. The functions list is built in
+        // the constructor, so the grid selects row 0 before its selection binding exists and no
+        // SelectionChanged is ever raised - the settings panel stayed blank until a function was
+        // clicked. Done here rather than at bind time because FunctionContainer is only replaced
+        // with the real ScrollViewer later in the window's layout.
+        SelectedFunctionChanged();
     }
 
     internal void OnClosing(object? sender, WindowClosingEventArgs e)
@@ -2539,8 +2695,19 @@ public partial class BatchConvertViewModel : ObservableObject
 
     internal void FileGridContextMenuOpening()
     {
-        IsRemoveVisible = FileGrid.SelectedItems.Count > 0;
-        IsOpenContainingFolderVisible = FileGrid.SelectedItems.Count == 1;
+        var selectedCount = FileGrid.SelectedItems?.Count ?? 0;
+        IsRemoveVisible = selectedCount > 0;
+        IsOpenContainingFolderVisible = selectedCount == 1;
+    }
+
+    internal void FileGridKeyDown(object? sender, KeyEventArgs e)
+    {
+        // Delete removes the selected files, like the "Remove" button/context menu item.
+        if (e.Key == Key.Delete && e.Source is not TextBox && !IsConverting)
+        {
+            e.Handled = true;
+            RemoveSelectedFilesCommand.Execute(null);
+        }
     }
 
     internal void ComboBoxSubtitleFormatPointerPressed(object? sender, PointerPressedEventArgs e)

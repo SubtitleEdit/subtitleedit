@@ -71,50 +71,53 @@ public class PickOnlineSubtitleWindow : Window
 
     private static Border MakeTracksView(PickOnlineSubtitleViewModel vm)
     {
-        var dataGridTracks = new DataGrid
+        var dataGridTracks = TableViewExtras.MakeTableView(multiSelect: false);
+        dataGridTracks.Width = double.NaN;
+        dataGridTracks.Height = double.NaN;
+        dataGridTracks.DataContext = vm;
+        dataGridTracks.ItemsSource = vm.Tracks;
+
+        var columnLanguage = new SeTableViewColumn
         {
-            AutoGenerateColumns = false,
-            SelectionMode = DataGridSelectionMode.Single,
-            CanUserResizeColumns = true,
-            CanUserSortColumns = true,
-            HorizontalAlignment = HorizontalAlignment.Stretch,
-            VerticalAlignment = VerticalAlignment.Stretch,
-            Width = double.NaN,
-            Height = double.NaN,
-            DataContext = vm,
-            ItemsSource = vm.Tracks,
-            Columns =
-            {
-                new DataGridTextColumn
-                {
-                    Header = Se.Language.General.Language,
-                    CellTheme = UiUtil.DataGridNoBorderNoPaddingCellTheme,
-                    Binding = new Binding(nameof(OnlineSubtitleTrackDisplay.Language)),
-                    IsReadOnly = true,
-                    Width = new DataGridLength(1.6, DataGridLengthUnitType.Star),
-                },
-                new DataGridTextColumn
-                {
-                    Header = Se.Language.General.Name,
-                    CellTheme = UiUtil.DataGridNoBorderNoPaddingCellTheme,
-                    Binding = new Binding(nameof(OnlineSubtitleTrackDisplay.Name)),
-                    IsReadOnly = true,
-                    Width = new DataGridLength(1, DataGridLengthUnitType.Star),
-                },
-                new DataGridTextColumn
-                {
-                    Header = Se.Language.General.Format,
-                    CellTheme = UiUtil.DataGridNoBorderNoPaddingCellTheme,
-                    Binding = new Binding(nameof(OnlineSubtitleTrackDisplay.Format)),
-                    IsReadOnly = true,
-                    Width = new DataGridLength(0.6, DataGridLengthUnitType.Star),
-                },
-            },
+            Header = Se.Language.General.Language,
+            CellTheme = UiUtil.TableViewCellTheme,
+            HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
+            Binding = new Binding(nameof(OnlineSubtitleTrackDisplay.Language)),
+            Width = new GridLength(1.6, GridUnitType.Star),
         };
-        dataGridTracks.Bind(DataGrid.SelectedItemProperty, new Binding(nameof(vm.SelectedTrack)) { Mode = BindingMode.TwoWay });
-        dataGridTracks.DoubleTapped += (_, _) =>
+        var columnName = new SeTableViewColumn
         {
-            if (vm.IsOkEnabled)
+            Header = Se.Language.General.Name,
+            CellTheme = UiUtil.TableViewCellTheme,
+            HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
+            Binding = new Binding(nameof(OnlineSubtitleTrackDisplay.Name)),
+            Width = new GridLength(1, GridUnitType.Star),
+        };
+        var columnFormat = new SeTableViewColumn
+        {
+            Header = Se.Language.General.Format,
+            CellTheme = UiUtil.TableViewCellTheme,
+            HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
+            Binding = new Binding(nameof(OnlineSubtitleTrackDisplay.Format)),
+            Width = new GridLength(0.6, GridUnitType.Star),
+        };
+        dataGridTracks.Columns.Add(columnLanguage);
+        dataGridTracks.Columns.Add(columnName);
+        dataGridTracks.Columns.Add(columnFormat);
+
+        // Header sorting is safe here: the list is a pick list of search results whose
+        // order is presentation-only - the chosen subtitle is consumed via SelectedTrack,
+        // never via the collection's order or indexes.
+        var sorter = new TableViewHeaderSorter(dataGridTracks);
+        sorter.AddSortable<OnlineSubtitleTrackDisplay, string>(columnLanguage, x => x.Language)
+              .AddSortable<OnlineSubtitleTrackDisplay, string>(columnName, x => x.Name)
+              .AddSortable<OnlineSubtitleTrackDisplay, string>(columnFormat, x => x.Format);
+
+        dataGridTracks.Bind(TableView.SelectedItemProperty, new Binding(nameof(vm.SelectedTrack)) { Mode = BindingMode.TwoWay });
+        dataGridTracks.DoubleTapped += (_, e) =>
+        {
+            // A double click on a column header (sorting) must not count as "pick".
+            if (vm.IsOkEnabled && !TableViewExtras.IsInColumnHeader(e.Source as Avalonia.Visual))
             {
                 vm.OkCommand.Execute(null);
             }
@@ -128,51 +131,46 @@ public class PickOnlineSubtitleWindow : Window
     {
         var fullTimeConverter = new TimeSpanToDisplayFullConverter();
         var shortTimeConverter = new TimeSpanToDisplayShortConverter();
-        var dataGridPreview = new DataGrid
+
+        // No header sorting: this is a read-only preview of the subtitle's cues in
+        // subtitle order.
+        var dataGridPreview = TableViewExtras.MakeTableView(multiSelect: false);
+        dataGridPreview.Width = double.NaN;
+        dataGridPreview.Height = double.NaN;
+        dataGridPreview.DataContext = vm;
+        dataGridPreview.ItemsSource = vm.PreviewRows;
+        dataGridPreview.Columns.Add(new SeTableViewColumn
         {
-            AutoGenerateColumns = false,
-            SelectionMode = DataGridSelectionMode.Single,
-            CanUserResizeColumns = true,
-            CanUserSortColumns = true,
-            HorizontalAlignment = HorizontalAlignment.Stretch,
-            VerticalAlignment = VerticalAlignment.Stretch,
-            Width = double.NaN,
-            Height = double.NaN,
-            DataContext = vm,
-            ItemsSource = vm.PreviewRows,
-            Columns =
-            {
-                new DataGridTextColumn
-                {
-                    Header = Se.Language.General.NumberSymbol,
-                    CellTheme = UiUtil.DataGridNoBorderNoPaddingCellTheme,
-                    Binding = new Binding(nameof(OnlineSubtitleCueDisplay.Number)),
-                    IsReadOnly = true,
-                },
-                new DataGridTextColumn
-                {
-                    Header = Se.Language.General.Show,
-                    CellTheme = UiUtil.DataGridNoBorderNoPaddingCellTheme,
-                    Binding = new Binding(nameof(OnlineSubtitleCueDisplay.Show)) { Converter = fullTimeConverter },
-                    IsReadOnly = true,
-                },
-                new DataGridTextColumn
-                {
-                    Header = Se.Language.General.Duration,
-                    CellTheme = UiUtil.DataGridNoBorderNoPaddingCellTheme,
-                    Binding = new Binding(nameof(OnlineSubtitleCueDisplay.Duration)) { Converter = shortTimeConverter },
-                    IsReadOnly = true,
-                },
-                new DataGridTextColumn
-                {
-                    Header = Se.Language.General.Text,
-                    CellTheme = UiUtil.DataGridNoBorderNoPaddingCellTheme,
-                    Binding = new Binding(nameof(OnlineSubtitleCueDisplay.Text)),
-                    IsReadOnly = true,
-                    Width = new DataGridLength(1, DataGridLengthUnitType.Star),
-                },
-            },
-        };
+            Header = Se.Language.General.NumberSymbol,
+            CellTheme = UiUtil.TableViewCellTheme,
+            HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
+            Binding = new Binding(nameof(OnlineSubtitleCueDisplay.Number)),
+            Width = new GridLength(60), // was content-sized (Auto) on the DataGrid
+        });
+        dataGridPreview.Columns.Add(new SeTableViewColumn
+        {
+            Header = Se.Language.General.Show,
+            CellTheme = UiUtil.TableViewCellTheme,
+            HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
+            Binding = new Binding(nameof(OnlineSubtitleCueDisplay.Show)) { Converter = fullTimeConverter },
+            Width = new GridLength(120), // was content-sized (Auto) on the DataGrid
+        });
+        dataGridPreview.Columns.Add(new SeTableViewColumn
+        {
+            Header = Se.Language.General.Duration,
+            CellTheme = UiUtil.TableViewCellTheme,
+            HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
+            Binding = new Binding(nameof(OnlineSubtitleCueDisplay.Duration)) { Converter = shortTimeConverter },
+            Width = new GridLength(90), // was content-sized (Auto) on the DataGrid
+        });
+        dataGridPreview.Columns.Add(new SeTableViewColumn
+        {
+            Header = Se.Language.General.Text,
+            CellTheme = UiUtil.TableViewCellTheme,
+            HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
+            Binding = new Binding(nameof(OnlineSubtitleCueDisplay.Text)),
+            Width = new GridLength(1, GridUnitType.Star),
+        });
 
         return UiUtil.MakeBorderForControlNoPadding(dataGridPreview);
     }

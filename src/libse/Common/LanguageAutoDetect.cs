@@ -1,5 +1,9 @@
 ﻿using Nikse.SubtitleEdit.Core.DetectEncoding;
 using System;
+#if NET8_0_OR_GREATER
+using System.Buffers;
+#endif
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -11,11 +15,22 @@ namespace Nikse.SubtitleEdit.Core.Common
     public static class LanguageAutoDetect
     {
 
+        // One detection run probes ~40+ distinct word-list patterns - far more than fit in the
+        // built-in regex cache (Regex.CacheSize is 15), so with the static Regex.Matches API
+        // every AutoDetectGoogleLanguage call re-parsed every large alternation pattern from
+        // scratch. The word lists are fixed for the app lifetime, so cache compiled instances.
+        private static readonly ConcurrentDictionary<string, Regex> WordCountRegexCache = new ConcurrentDictionary<string, Regex>();
+
         private static int GetCount(string text, params string[] words)
         {
-            var options = RegexOptions.CultureInvariant | RegexOptions.ExplicitCapture;
+            // Case-insensitive so a keyword still matches when it falls at the start of a
+            // sentence (capitalized). This matters most on short/single-line subtitles, where
+            // a large share of words are sentence-initial and case-sensitive matching used to
+            // miss them (e.g. "Você"/"Burada" not matching the lowercase list entries).
             var pattern = "\\b(" + string.Join("|", words) + ")\\b";
-            return Regex.Matches(text, pattern, options).Count;
+            var regex = WordCountRegexCache.GetOrAdd(pattern, p =>
+                new Regex(p, RegexOptions.CultureInvariant | RegexOptions.ExplicitCapture | RegexOptions.Compiled | RegexOptions.IgnoreCase));
+            return regex.Matches(text).Count;
         }
 
         private static int GetCountContains(string text, params string[] words)
@@ -23,7 +38,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             int count = 0;
             foreach (var w in words)
             {
-                var regEx = new Regex(w);
+                var regEx = WordCountRegexCache.GetOrAdd(w, p => new Regex(p, RegexOptions.Compiled));
                 count += regEx.Matches(text).Count;
             }
             return count;
@@ -257,6 +272,35 @@ namespace Nikse.SubtitleEdit.Core.Common
             "yang", "tahu", "bisa", "akan", "tahun", "tapi", "dengan", "untuk", "rumah", "dalam", "sudah", "bertemu"
         };
 
+        // Catalan — distinctive words that don't collide with Spanish/French/Italian/Portuguese
+        // (accents matter: "què"/"gràcies"/"això" won't match the Spanish "qué"/"gracias").
+        private static readonly string[] AutoDetectWordsCatalan =
+        {
+            "què", "això", "amb", "però", "molt", "moltes", "molts", "gràcies", "aquest", "aquesta", "aquestes",
+            "nosaltres", "vosaltres", "vull", "puc", "pots", "sóc", "ets", "són", "fer", "fas", "fem", "tinc",
+            "tens", "seva", "teu", "meu", "ara", "res", "també", "perquè", "sisplau", "endavant", "ningú",
+            "sempre", "doncs", "gairebé", "cadascú"
+        };
+
+        // Tagalog / Filipino — distinctive Austronesian function words; low overlap with European
+        // languages. Spanish loanwords ("para", "pero") are intentionally left out to avoid collisions.
+        private static readonly string[] AutoDetectWordsTagalog =
+        {
+            "ang", "ng", "mga", "ako", "ikaw", "siya", "kami", "tayo", "kayo", "sila", "ito", "iyan", "iyon",
+            "dito", "diyan", "doon", "hindi", "wala", "mayroon", "meron", "salamat", "kumusta", "bakit", "ano",
+            "sino", "saan", "kailan", "paano", "gusto", "alam", "ginagawa", "talaga", "naman", "kasi", "namin",
+            "natin", "ninyo", "nila", "niya", "kaya", "dahil", "ganito", "ganyan", "kung", "kapag", "mahal"
+        };
+
+        // Afrikaans — only words that are NOT also valid Dutch, so a Dutch clip is never mistaken
+        // for Afrikaans (the Dutch list is small; shared words like "maak"/"goed"/"weet" would leak).
+        private static readonly string[] AutoDetectWordsAfrikaans =
+        {
+            "nie", "baie", "jy", "jou", "ek", "moenie", "dankie", "asseblief", "hoekom", "hierdie", "daardie",
+            "sal", "vir", "hulle", "saam", "gesels", "meisie", "altyd", "regtig", "aandag", "vinnig", "seblief",
+            "nogal", "sommer", "elkeen"
+        };
+
         private static readonly string[] AutoDetectWordsThai =
         {
             "ผู้กอง", "โรเบิร์ต", "วิตตอเรีย", "เข้าใจมั้ย", "คุณตำรวจ", "ราเชล", "เพื่อน", "เลดดิส", "พระเจ้า", "เท็ดดี้", "หัวหน้า", "แอนดรูว์", "ขอโทษครับ", "ขอบคุณ", "วาร์กัส", "ทุกคน",
@@ -433,13 +477,33 @@ namespace Nikse.SubtitleEdit.Core.Common
 
         private static string AutoDetectGoogleLanguage(string text, int bestCount)
         {
+            // Score-based selection instead of first-match-wins: every language block below is
+            // evaluated and records a candidate via Consider(); the candidate with the most
+            // keyword hits wins (ties keep the earlier/higher-priority language via strict '>').
+            // This fixes short-file mis-detection where an ambiguous token used to hand the clip
+            // to whichever language happened to sit earliest in the fixed scan order (e.g. a short
+            // Portuguese clip returning "es"). The per-language disambiguation guards (es vs pt/fr,
+            // ru vs bg/uk/mk, hr vs sr/sl, cs vs sk, ...) are preserved exactly; only the outer
+            // control flow changed from returning on the first hit to picking the strongest.
+            var best = string.Empty;
+            var bestScore = -1;
+
+            void Consider(string languageCode, int score)
+            {
+                if (score > bestScore)
+                {
+                    best = languageCode;
+                    bestScore = score;
+                }
+            }
+
             var count = GetCount(text, AutoDetectWordsEnglish);
             if (count > bestCount)
             {
                 var dutchCount = GetCount(text, AutoDetectWordsDutch);
                 if (dutchCount < count)
                 {
-                    return "en";
+                    Consider("en", count);
                 }
             }
 
@@ -454,10 +518,12 @@ namespace Nikse.SubtitleEdit.Core.Common
                 {
                     if (icelandicCount > count * 1.5)
                     {
-                        return "is";
+                        Consider("is", count);
                     }
-
-                    return "da";
+                    else
+                    {
+                        Consider("da", count);
+                    }
                 }
             }
 
@@ -469,14 +535,14 @@ namespace Nikse.SubtitleEdit.Core.Common
                 var swedishCount = GetCount(text, AutoDetectWordsSwedish);
                 if (danishCount < 2 && dutchCount < count && swedishCount < count)
                 {
-                    return "no";
+                    Consider("no", count);
                 }
             }
 
             count = GetCount(text, AutoDetectWordsSwedish);
             if (count > bestCount)
             {
-                return "sv";
+                Consider("sv", count);
             }
 
             count = GetCount(text, AutoDetectWordsSpanish);
@@ -487,7 +553,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                                                      "jantar", "conheço", "atenção", "foste", "milhões", "devias", "ganhar", "raios"); // not spanish words
                 if (frenchCount < 2 && portugueseCount < 2)
                 {
-                    return "es";
+                    Consider("es", count);
                 }
             }
 
@@ -497,7 +563,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                 var frenchCount = GetCount(text, "[Cc]'est", "pas", "vous", "pour", "suis", "Pourquoi", "maison", "souviens", "quelque"); // not italian words
                 if (frenchCount < 2)
                 {
-                    return "it";
+                    Consider("it", count);
                 }
             }
 
@@ -507,7 +573,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                 var romanianCount = GetCount(text, "[Vv]reau", "[Ss]înt", "[Aa]cum", "pentru", "domnule", "aici");
                 if (romanianCount < 5)
                 {
-                    return "fr";
+                    Consider("fr", count);
                 }
             }
 
@@ -517,22 +583,36 @@ namespace Nikse.SubtitleEdit.Core.Common
                 var slovenianCount = GetCount(text, AutoDetectWordsSlovenian);
                 if (slovenianCount > count)
                 {
-                    return "sl";
+                    Consider("sl", count);
                 }
+                else
+                {
+                    Consider("pt", count); // Portuguese
+                }
+            }
 
-                return "pt"; // Portuguese
+            count = GetCount(text, AutoDetectWordsCatalan);
+            if (count > bestCount)
+            {
+                Consider("ca", count); // Catalan
             }
 
             count = GetCount(text, AutoDetectWordsGerman);
             if (count > bestCount)
             {
-                return "de";
+                Consider("de", count);
             }
 
             count = GetCount(text, AutoDetectWordsDutch);
             if (count > bestCount)
             {
-                return "nl";
+                Consider("nl", count);
+            }
+
+            count = GetCount(text, AutoDetectWordsAfrikaans);
+            if (count > bestCount)
+            {
+                Consider("af", count); // Afrikaans
             }
 
             count = GetCount(text, AutoDetectWordsPolish);
@@ -541,16 +621,18 @@ namespace Nikse.SubtitleEdit.Core.Common
                 var czechWordsCount = GetCount(text, AutoDetectWordsCzech);
                 if (czechWordsCount > count)
                 {
-                    return "cs";
+                    Consider("cs", count);
                 }
-
-                return "pl";
+                else
+                {
+                    Consider("pl", count);
+                }
             }
 
             count = GetCount(text, AutoDetectWordsGreek);
             if (count > bestCount)
             {
-                return "el"; // Greek
+                Consider("el", count); // Greek
             }
 
             count = GetCount(text, AutoDetectWordsRussian);
@@ -563,41 +645,44 @@ namespace Nikse.SubtitleEdit.Core.Common
                 {
                     if (ukrainianCount > bulgarianCount && ukrainianCount > macedonianCount)
                     {
-                        return "uk"; // Ukrainian
+                        Consider("uk", count); // Ukrainian
                     }
-
-                    if (macedonianCount > bulgarianCount && macedonianCount > ukrainianCount)
+                    else if (macedonianCount > bulgarianCount && macedonianCount > ukrainianCount)
                     {
-                        return "mk"; // Macedonian
+                        Consider("mk", count); // Macedonian
                     }
-
-                    return "bg"; // Bulgarian
+                    else
+                    {
+                        Consider("bg", count); // Bulgarian
+                    }
                 }
-
-                if (ukrainianCount > count)
+                else if (ukrainianCount > count)
                 {
-                    return "uk"; // Ukrainian
+                    Consider("uk", count); // Ukrainian
                 }
-
-                var serbianCount = GetCount(text, AutoDetectWordsSerbianCyrillic);
-                if (serbianCount > count)
+                else
                 {
-                    return "sr"; // Serbian
+                    var serbianCount = GetCount(text, AutoDetectWordsSerbianCyrillic);
+                    var serbianWordsOnlyCount = GetCount(text, AutoDetectWordsSerbianCyrillicOnly);
+                    if (serbianCount > count)
+                    {
+                        Consider("sr", count); // Serbian
+                    }
+                    else if (serbianWordsOnlyCount > 1)
+                    {
+                        Consider("sr", count); // Serbian
+                    }
+                    else
+                    {
+                        Consider("ru", count); // Russian
+                    }
                 }
-
-                var serbianWordsOnlyCount = GetCount(text, AutoDetectWordsSerbianCyrillicOnly);
-                if (serbianWordsOnlyCount > 1)
-                {
-                    return "sr"; // Serbian
-                }
-
-                return "ru"; // Russian
             }
 
             count = GetCount(text, AutoDetectWordsUkrainian);
             if (count > bestCount)
             {
-                return "uk"; // Ukrainian
+                Consider("uk", count); // Ukrainian
             }
 
             count = GetCount(text, AutoDetectWordsBulgarian);
@@ -606,16 +691,18 @@ namespace Nikse.SubtitleEdit.Core.Common
                 var macedonianCount = GetCount(text, AutoDetectWordsMacedonian);
                 if (macedonianCount > count)
                 {
-                    return "mk";
+                    Consider("mk", count);
                 }
-
-                return "bg"; // Bulgarian
+                else
+                {
+                    Consider("bg", count); // Bulgarian
+                }
             }
 
             count = GetCount(text, AutoDetectWordsAlbanian);
             if (count > bestCount)
             {
-                return "sq"; // Albanian
+                Consider("sq", count); // Albanian
             }
 
             count = GetCount(text, AutoDetectWordsArabic);
@@ -625,20 +712,20 @@ namespace Nikse.SubtitleEdit.Core.Common
                 var farsiCount = GetCount(text, AutoDetectWordsFarsi);
                 if (hebrewCount < count && farsiCount < count)
                 {
-                    return "ar"; // Arabic
+                    Consider("ar", count); // Arabic
                 }
             }
 
             count = GetCount(text, AutoDetectWordsHebrew);
             if (count > bestCount)
             {
-                return "he"; // Hebrew
+                Consider("he", count); // Hebrew
             }
 
             count = GetCount(text, AutoDetectWordsFarsi);
             if (count > bestCount)
             {
-                return "fa"; // Farsi (Persian)
+                Consider("fa", count); // Farsi (Persian)
             }
 
             count = GetCount(text, AutoDetectWordsCroatianAndSerbian);
@@ -651,66 +738,75 @@ namespace Nikse.SubtitleEdit.Core.Common
                 {
                     if (slovenianCount > croatianCount)
                     {
-                        return "sl";
+                        Consider("sl", count);
                     }
-
-                    return "hr"; // Croatian
+                    else
+                    {
+                        Consider("hr", count); // Croatian
+                    }
                 }
-
-                if (slovenianCount > count)
+                else if (slovenianCount > count)
                 {
-                    return "sl";
+                    Consider("sl", count);
                 }
-
-                return "sr"; // Serbian
+                else
+                {
+                    Consider("sr", count); // Serbian
+                }
             }
 
             count = GetCount(text, AutoDetectWordsVietnamese);
             if (count > bestCount)
             {
-                return "vi"; // Vietnamese
+                Consider("vi", count); // Vietnamese
             }
 
             count = GetCount(text, AutoDetectWordsHungarian);
             if (count > bestCount)
             {
-                return "hu"; // Hungarian
+                Consider("hu", count); // Hungarian
             }
 
             count = GetCount(text, AutoDetectWordsTurkish);
             if (count > bestCount)
             {
-                return "tr"; // Turkish
+                Consider("tr", count); // Turkish
             }
 
             count = GetCount(text, AutoDetectWordsIndonesian);
             if (count > bestCount)
             {
-                return "id"; // Indonesian
+                Consider("id", count); // Indonesian
+            }
+
+            count = GetCount(text, AutoDetectWordsTagalog);
+            if (count > bestCount)
+            {
+                Consider("tl", count); // Tagalog / Filipino
             }
 
             count = GetCount(text, AutoDetectWordsThai);
             if (count > 10 || count > bestCount)
             {
-                return "th"; // Thai
+                Consider("th", count); // Thai
             }
 
             count = GetCount(text, AutoDetectWordsKorean);
             if (count > 10 || count > bestCount)
             {
-                return "ko"; // Korean
+                Consider("ko", count); // Korean
             }
 
             count = GetCount(text, AutoDetectWordsFinnish);
             if (count > bestCount)
             {
-                return "fi"; // Finnish
+                Consider("fi", count); // Finnish
             }
 
             count = GetCount(text, AutoDetectWordsRomanian);
             if (count > bestCount)
             {
-                return "ro"; // Romanian
+                Consider("ro", count); // Romanian
             }
 
             count = GetCountContains(text, "シ", "ュ", "シン", "シ", "ン", "ユ");
@@ -719,7 +815,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             count += GetCountContains(text, "シ", "ュ", "シ", "ン", "だ", "う");
             if (count > bestCount * 2)
             {
-                return "ja"; // Japanese - not tested...
+                Consider("ja", count); // Japanese - not tested...
             }
 
             count = GetCountContains(text, "是", "是早", "吧", "的", "爱", "上好");
@@ -728,7 +824,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             count += GetCountContains(text, "来", "卡", "拉", "吐", "滚", "他");
             if (count > bestCount * 2)
             {
-                return "zh"; // Chinese (simplified) - not tested...
+                Consider("zh", count); // Chinese (simplified) - not tested...
             }
 
             count = GetCount(text, AutoDetectWordsCzechAndSlovak);
@@ -739,19 +835,20 @@ namespace Nikse.SubtitleEdit.Core.Common
                 var estonianCount = GetCount(text, AutoDetectWordsEstonian);
                 if (estonianCount > count && estonianCount > lithuanianCount && estonianCount > finnishCount)
                 {
-                    return "et";
+                    Consider("et", count);
                 }
-
-                if (lithuanianCount <= count && finnishCount < count)
+                else if (lithuanianCount <= count && finnishCount < count)
                 {
                     int czechWordsCount = GetCount(text, AutoDetectWordsCzech);
                     int slovakWordsCount = GetCount(text, AutoDetectWordsSlovak);
                     if (czechWordsCount >= slovakWordsCount)
                     {
-                        return "cs"; // Czech
+                        Consider("cs", count); // Czech
                     }
-
-                    return "sk"; // Slovak
+                    else
+                    {
+                        Consider("sk", count); // Slovak
+                    }
                 }
             }
 
@@ -761,61 +858,63 @@ namespace Nikse.SubtitleEdit.Core.Common
                 var estonianCount = GetCount(text, AutoDetectWordsEstonian);
                 if (estonianCount > count)
                 {
-                    return "et";
+                    Consider("et", count);
                 }
-
-                return "sl";
+                else
+                {
+                    Consider("sl", count);
+                }
             }
 
             count = GetCount(text, AutoDetectWordsEstonian);
             if (count > bestCount)
             {
-                return "et";
+                Consider("et", count);
             }
 
             count = GetCount(text, AutoDetectWordsLatvian);
             if (count > bestCount * 1.2)
             {
-                return "lv";
+                Consider("lv", count);
             }
 
             count = GetCount(text, AutoDetectWordsLithuanian);
             if (count > bestCount)
             {
-                return "lt";
+                Consider("lt", count);
             }
 
             count = GetCount(text, AutoDetectWordsHindi);
             if (count > bestCount)
             {
-                return "hi";
+                Consider("hi", count);
             }
 
             count = GetCount(text, AutoDetectWordsUrdu);
             if (count > bestCount)
             {
-                return "ur";
+                Consider("ur", count);
             }
 
             count = GetCount(text, AutoDetectWordsSinhalese);
             if (count > bestCount)
             {
-                return "si";
+                Consider("si", count);
             }
 
             count = GetCount(text, AutoDetectWordsMacedonian);
             if (count > bestCount)
             {
-                return "mk";
+                Consider("mk", count);
             }
 
             count = GetCount(text, AutoDetectWordsIcelandic);
             if (count > bestCount)
             {
-                return "is";
+                Consider("is", count);
             }
 
-            return string.Empty;
+            return best;
         }
 
         public static string AutoDetectGoogleLanguage(Subtitle subtitle)
@@ -1010,6 +1109,21 @@ namespace Nikse.SubtitleEdit.Core.Common
                 {
                     LanguageCode = "id",
                     Words = AutoDetectWordsIndonesian,
+                },
+                new LanguageForAutoDetect
+                {
+                    LanguageCode = "tl",
+                    Words = AutoDetectWordsTagalog,
+                },
+                new LanguageForAutoDetect
+                {
+                    LanguageCode = "ca",
+                    Words = AutoDetectWordsCatalan,
+                },
+                new LanguageForAutoDetect
+                {
+                    LanguageCode = "af",
+                    Words = AutoDetectWordsAfrikaans,
                 },
                 new LanguageForAutoDetect
                 {
@@ -1828,7 +1942,9 @@ namespace Nikse.SubtitleEdit.Core.Common
                     }
                     else if (bom[0] == 0x2b && bom[1] == 0x2f && bom[2] == 0x76 && (bom[3] == 0x38 || bom[3] == 0x39 || bom[3] == 0x2b || bom[3] == 0x2f)) // utf-7
                     {
+#pragma warning disable SYSLIB0001 // legacy subtitle files may still be UTF-7 encoded; only used when the file carries a UTF-7 BOM
                         encoding = Encoding.UTF7;
+#pragma warning restore SYSLIB0001
                     }
                     else if (file.Length > bom.Length)
                     {
@@ -1840,7 +1956,7 @@ namespace Nikse.SubtitleEdit.Core.Common
 
                         file.Position = 0;
                         var buffer = new byte[length];
-                        file.Read(buffer, 0, buffer.Length);
+                        file.ReadFully(buffer, 0, buffer.Length);
 
                         if (IsUtf8(buffer, out var couldBeUtf8))
                         {
@@ -1924,6 +2040,10 @@ namespace Nikse.SubtitleEdit.Core.Common
 
         private static readonly char[] RightToLeftLetters = string.Concat(AutoDetectWordsArabic.Concat(AutoDetectWordsHebrew).Concat(AutoDetectWordsFarsi).Concat(AutoDetectWordsUrdu)).Distinct().ToArray();
 
+#if NET8_0_OR_GREATER
+        private static readonly SearchValues<char> RightToLeftLetterSearchValues = SearchValues.Create(RightToLeftLetters);
+#endif
+
         public static bool CouldBeRightToLeftLanguage(Subtitle subtitle)
         {
             const int maxNumberOfLinesToCheck = 20;
@@ -1940,6 +2060,9 @@ namespace Nikse.SubtitleEdit.Core.Common
 
         public static bool ContainsRightToLeftLetter(string text)
         {
+#if NET8_0_OR_GREATER
+            return text.AsSpan().ContainsAny(RightToLeftLetterSearchValues);
+#else
             foreach (var letter in RightToLeftLetters)
             {
                 if (text.Contains(letter))
@@ -1948,7 +2071,97 @@ namespace Nikse.SubtitleEdit.Core.Common
                 }
             }
             return false;
+#endif
         }
+
+        // Score slots, in the order the language codes are reported. LetterSets is indexed in
+        // lock step with this array, and ties are broken in this order (see below), so the two
+        // must stay aligned.
+        private static readonly string[] LanguageCodes =
+        {
+            "ar", "ko", "ja", "th", "si", "ur", "ru", "el", "he", "hi",
+            "bn", "hy", "ka", "zh", "am", "km", "de", "sv", "fr", "es"
+        };
+
+        // Slots in LanguageCodes that get a unique-character bonus. Derived rather than
+        // hard-coded so reordering LanguageCodes cannot silently misapply the bonuses.
+        private static readonly int IndexUr = Array.IndexOf(LanguageCodes, "ur");
+        private static readonly int IndexDe = Array.IndexOf(LanguageCodes, "de");
+        private static readonly int IndexSv = Array.IndexOf(LanguageCodes, "sv");
+        private static readonly int IndexFr = Array.IndexOf(LanguageCodes, "fr");
+        private static readonly int IndexEs = Array.IndexOf(LanguageCodes, "es");
+
+        private static readonly string[] PriorityOrder = { "zh", "ja", "ko", "th", "ur", "ar", "he", "ru", "el", "hi", "de", "fr", "es", "sv" };
+
+        private const string GermanUniqueLetters = "üßÜ";
+        private const string SwedishOnlyLetters = "åÅ";  // å is unique to Swedish among these languages
+        private const string FrenchUniqueLetters = "çÇœŒâêîôûÂÊÎÔÛŸ";
+        private const string SpanishUniqueLetters = "ñÑ¡¿";
+        private const string UrduUniqueLetters = "ﭖﭘﭙﭗﭦﭨﭩﭧﮮﮯﮦﮨﮩﮧﯼﯾﯿﯽﮪﮬﮭﮫﹱﹷﹹپچگےھیںۓڑ";
+
+#if NET8_0_OR_GREATER
+        // SearchValues gives an O(1) probabilistic lookup instead of a linear scan over the
+        // const string, which is what dominated this method - it ran one scan per language
+        // per character.
+        private static readonly SearchValues<char>[] LetterSets =
+        {
+            SearchValues.Create(Letters.Arabic), SearchValues.Create(Letters.Korean),
+            SearchValues.Create(Letters.Japanese), SearchValues.Create(Letters.Thai),
+            SearchValues.Create(Letters.Sinhalese), SearchValues.Create(Letters.Urdu),
+            SearchValues.Create(Letters.Russian), SearchValues.Create(Letters.Greek),
+            SearchValues.Create(Letters.Hebrew), SearchValues.Create(Letters.Devanagari),
+            SearchValues.Create(Letters.Bengali), SearchValues.Create(Letters.Armenian),
+            SearchValues.Create(Letters.Georgian), SearchValues.Create(Letters.Chinese),
+            SearchValues.Create(Letters.Amharic), SearchValues.Create(Letters.Khmer),
+            SearchValues.Create(Letters.Deutsch), SearchValues.Create(Letters.Swedish),
+            SearchValues.Create(Letters.French), SearchValues.Create(Letters.Spanish)
+        };
+
+        private static readonly SearchValues<char> GermanUniqueSet = SearchValues.Create(GermanUniqueLetters);
+        private static readonly SearchValues<char> SwedishOnlySet = SearchValues.Create(SwedishOnlyLetters);
+        private static readonly SearchValues<char> FrenchUniqueSet = SearchValues.Create(FrenchUniqueLetters);
+        private static readonly SearchValues<char> SpanishUniqueSet = SearchValues.Create(SpanishUniqueLetters);
+        private static readonly SearchValues<char> UrduUniqueSet = SearchValues.Create(UrduUniqueLetters);
+
+        private static bool ContainsAny(string text, SearchValues<char> set)
+        {
+            return text.AsSpan().IndexOfAny(set) >= 0;
+        }
+#else
+        // netstandard2.1 has no SearchValues; a HashSet is still a big win over the linear scan.
+        private static readonly HashSet<char>[] LetterSets =
+        {
+            new HashSet<char>(Letters.Arabic), new HashSet<char>(Letters.Korean),
+            new HashSet<char>(Letters.Japanese), new HashSet<char>(Letters.Thai),
+            new HashSet<char>(Letters.Sinhalese), new HashSet<char>(Letters.Urdu),
+            new HashSet<char>(Letters.Russian), new HashSet<char>(Letters.Greek),
+            new HashSet<char>(Letters.Hebrew), new HashSet<char>(Letters.Devanagari),
+            new HashSet<char>(Letters.Bengali), new HashSet<char>(Letters.Armenian),
+            new HashSet<char>(Letters.Georgian), new HashSet<char>(Letters.Chinese),
+            new HashSet<char>(Letters.Amharic), new HashSet<char>(Letters.Khmer),
+            new HashSet<char>(Letters.Deutsch), new HashSet<char>(Letters.Swedish),
+            new HashSet<char>(Letters.French), new HashSet<char>(Letters.Spanish)
+        };
+
+        private static readonly HashSet<char> GermanUniqueSet = new HashSet<char>(GermanUniqueLetters);
+        private static readonly HashSet<char> SwedishOnlySet = new HashSet<char>(SwedishOnlyLetters);
+        private static readonly HashSet<char> FrenchUniqueSet = new HashSet<char>(FrenchUniqueLetters);
+        private static readonly HashSet<char> SpanishUniqueSet = new HashSet<char>(SpanishUniqueLetters);
+        private static readonly HashSet<char> UrduUniqueSet = new HashSet<char>(UrduUniqueLetters);
+
+        private static bool ContainsAny(string text, HashSet<char> set)
+        {
+            foreach (var c in text)
+            {
+                if (set.Contains(c))
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+#endif
 
         public static string GetEncodingViaLetter(string text)
         {
@@ -1957,98 +2170,94 @@ namespace Nikse.SubtitleEdit.Core.Common
                 return null;
             }
 
-            var languageScores = new Dictionary<string, int>
-            {
-                { "ar", 0 }, { "ko", 0 }, { "ja", 0 }, { "th", 0 }, { "si", 0 },
-                { "ur", 0 }, { "ru", 0 }, { "el", 0 }, { "he", 0 }, { "hi", 0 },
-                { "bn", 0 }, { "hy", 0 }, { "ka", 0 }, { "zh", 0 }, { "am", 0 },
-                { "km", 0 }, { "de", 0 }, { "sv", 0 }, { "fr", 0 }, { "es", 0 }
-            };
-
-            // Define unique characters for each language
-            var germanUnique = new HashSet<char>("üßÜ");
-            var swedishOnly = new HashSet<char>("åÅ");  // å is unique to Swedish among these languages
-            var frenchUnique = new HashSet<char>("çÇœŒâêîôûÂÊÎÔÛŸ");
-            var spanishUnique = new HashSet<char>("ñÑ¡¿");
-            var urduUnique = new HashSet<char>("ﭖﭘﭙﭗﭦﭨﭩﭧﮮﮯﮦﮨﮩﮧﯼﯾﯿﯽﮪﮬﮭﮫﹱﹷﹹپچگےھیںۓڑ");
-
             // Check for unique characters first
-            var hasGermanUnique = text.Any(c => germanUnique.Contains(c));
-            var hasSwedishUnique = text.Any(c => swedishOnly.Contains(c));
-            var hasFrenchUnique = text.Any(c => frenchUnique.Contains(c));
-            var hasSpanishUnique = text.Any(c => spanishUnique.Contains(c));
-            var hasUrduUnique = text.Any(c => urduUnique.Contains(c));
+            var hasGermanUnique = ContainsAny(text, GermanUniqueSet);
+            var hasSwedishUnique = ContainsAny(text, SwedishOnlySet);
+            var hasFrenchUnique = ContainsAny(text, FrenchUniqueSet);
+            var hasSpanishUnique = ContainsAny(text, SpanishUniqueSet);
+            var hasUrduUnique = ContainsAny(text, UrduUniqueSet);
 
             // Count all special characters
+            var languageScores = new int[LanguageCodes.Length];
             foreach (var c in text)
             {
-                if (Letters.Arabic.Contains(c)) languageScores["ar"]++;
-                if (Letters.Korean.Contains(c)) languageScores["ko"]++;
-                if (Letters.Japanese.Contains(c)) languageScores["ja"]++;
-                if (Letters.Thai.Contains(c)) languageScores["th"]++;
-                if (Letters.Sinhalese.Contains(c)) languageScores["si"]++;
-                if (Letters.Urdu.Contains(c)) languageScores["ur"]++;
-                if (Letters.Russian.Contains(c)) languageScores["ru"]++;
-                if (Letters.Greek.Contains(c)) languageScores["el"]++;
-                if (Letters.Hebrew.Contains(c)) languageScores["he"]++;
-                if (Letters.Devanagari.Contains(c)) languageScores["hi"]++;
-                if (Letters.Bengali.Contains(c)) languageScores["bn"]++;
-                if (Letters.Armenian.Contains(c)) languageScores["hy"]++;
-                if (Letters.Georgian.Contains(c)) languageScores["ka"]++;
-                if (Letters.Chinese.Contains(c)) languageScores["zh"]++;
-                if (Letters.Amharic.Contains(c)) languageScores["am"]++;
-                if (Letters.Khmer.Contains(c)) languageScores["km"]++;
-                if (Letters.Deutsch.Contains(c)) languageScores["de"]++;
-                if (Letters.Swedish.Contains(c)) languageScores["sv"]++;
-                if (Letters.French.Contains(c)) languageScores["fr"]++;
-                if (Letters.Spanish.Contains(c)) languageScores["es"]++;
+                for (var i = 0; i < LetterSets.Length; i++)
+                {
+                    if (LetterSets[i].Contains(c))
+                    {
+                        languageScores[i]++;
+                    }
+                }
             }
 
             // Apply unique character bonuses for disambiguation
-            if (hasUrduUnique && languageScores["ur"] > 0)
+            if (hasUrduUnique && languageScores[IndexUr] > 0)
             {
-                languageScores["ur"] += 100;  // Strong boost for Urdu
+                languageScores[IndexUr] += 100;  // Strong boost for Urdu
             }
-            if (hasGermanUnique && languageScores["de"] > 0)
+            if (hasGermanUnique && languageScores[IndexDe] > 0)
             {
-                languageScores["de"] += 50;
+                languageScores[IndexDe] += 50;
             }
-            if (hasSwedishUnique && languageScores["sv"] > 0)
+            if (hasSwedishUnique && languageScores[IndexSv] > 0)
             {
-                languageScores["sv"] += 50;
+                languageScores[IndexSv] += 50;
             }
-            if (hasFrenchUnique && languageScores["fr"] > 0)
+            if (hasFrenchUnique && languageScores[IndexFr] > 0)
             {
-                languageScores["fr"] += 50;
+                languageScores[IndexFr] += 50;
             }
-            if (hasSpanishUnique && languageScores["es"] > 0)
+            if (hasSpanishUnique && languageScores[IndexEs] > 0)
             {
-                languageScores["es"] += 50;
+                languageScores[IndexEs] += 50;
             }
 
-            var maxScore = languageScores.Values.Max();
+            var maxScore = 0;
+            for (var i = 0; i < languageScores.Length; i++)
+            {
+                if (languageScores[i] > maxScore)
+                {
+                    maxScore = languageScores[i];
+                }
+            }
+
             if (maxScore < 1)
             {
                 return null;
             }
 
-            var topLanguages = languageScores.Where(x => x.Value == maxScore).ToList();
-            if (topLanguages.Count == 1)
+            var topCount = 0;
+            var firstTop = -1;
+            for (var i = 0; i < languageScores.Length; i++)
             {
-                return topLanguages[0].Key;
-            }
-
-            // Priority order for tie-breaking
-            var priorityOrder = new[] { "zh", "ja", "ko", "th", "ur", "ar", "he", "ru", "el", "hi", "de", "fr", "es", "sv" };
-            foreach (var lang in priorityOrder)
-            {
-                if (topLanguages.Any(x => x.Key == lang))
+                if (languageScores[i] == maxScore)
                 {
-                    return lang;
+                    topCount++;
+                    if (firstTop < 0)
+                    {
+                        firstTop = i;
+                    }
                 }
             }
 
-            return topLanguages[0].Key;
+            if (topCount == 1)
+            {
+                return LanguageCodes[firstTop];
+            }
+
+            // Priority order for tie-breaking
+            foreach (var lang in PriorityOrder)
+            {
+                for (var i = 0; i < languageScores.Length; i++)
+                {
+                    if (languageScores[i] == maxScore && LanguageCodes[i] == lang)
+                    {
+                        return lang;
+                    }
+                }
+            }
+
+            return LanguageCodes[firstTop];
         }
 
         public static bool IsLanguageWithoutPeriods(string language)

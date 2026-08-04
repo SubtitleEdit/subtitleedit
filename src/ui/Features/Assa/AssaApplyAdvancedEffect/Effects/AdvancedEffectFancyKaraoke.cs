@@ -71,6 +71,7 @@ public class AdvancedEffectFancyKaraoke : IAdvancedEffectDisplay
         string header, List<SubtitleLineViewModel> subtitles, int width, int height, WavePeakData2? wavePeaks)
     {
         var result = new List<SubtitleLineViewModel>();
+        var sb = new StringBuilder();
         foreach (var sub in subtitles)
         {
             // If auto mode is enabled, attempt auto-sequencing by words.
@@ -89,7 +90,7 @@ public class AdvancedEffectFancyKaraoke : IAdvancedEffectDisplay
             var parsed = ParseActiveWord(sub.Text);
             var newSub = new SubtitleLineViewModel(sub, generateNewId: true);
             string posTags = ExtractPositionalTags(sub.Text);
-            var sb = new StringBuilder();
+            sb.Clear();
             if (!string.IsNullOrEmpty(posTags))
             {
                 sb.Append(posTags);
@@ -192,6 +193,7 @@ public class AdvancedEffectFancyKaraoke : IAdvancedEffectDisplay
         }
 
         var result = new List<SubtitleLineViewModel>();
+        var sb = new StringBuilder();
 
         for (int w = 0; w < wordCount; w++)
         {
@@ -204,7 +206,7 @@ public class AdvancedEffectFancyKaraoke : IAdvancedEffectDisplay
             line.EndTime = end;
 
             // Build text for this word index
-            var sb = new StringBuilder();
+            sb.Clear();
             if (!string.IsNullOrEmpty(posTags))
             {
                 sb.Append(posTags);
@@ -390,10 +392,11 @@ public class AdvancedEffectFancyKaraoke : IAdvancedEffectDisplay
     private static List<(string Tags, string Text)> BuildSegments(string text)
     {
         var result = new List<(string Tags, string Text)>();
+        var tags = new StringBuilder();
         int pos = 0;
         while (pos < text.Length)
         {
-            var tags = new StringBuilder();
+            tags.Clear();
             while (pos < text.Length && text[pos] == '{')
             {
                 int end = text.IndexOf('}', pos);

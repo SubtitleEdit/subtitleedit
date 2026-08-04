@@ -9,6 +9,8 @@ using Avalonia.Media;
 using Avalonia.Threading;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
+using System;
+using System.Linq;
 
 namespace Nikse.SubtitleEdit.Features.Tools.ChangeCasing;
 
@@ -21,7 +23,7 @@ public class FixNamesWindow : Window
     {
         var lang = Se.Language.Tools.ChangeCasing;
         UiUtil.InitializeWindow(this, GetType().Name);
-        Title = lang.Title;
+        Title = Se.Language.General.ChangeCasing;
         Width = 900;
         Height = 800;
         MinWidth = 800;
@@ -58,7 +60,11 @@ public class FixNamesWindow : Window
 
         row++;
         var labelNamesCount = new Label();
-        labelNamesCount.Bind(Label.ContentProperty, new Binding(nameof(vm.NamesCount)) { Mode = BindingMode.OneWay });
+        labelNamesCount.Bind(Label.ContentProperty, new Binding($"{nameof(vm.Names)}.{nameof(vm.Names.Count)}")
+        {
+            Mode = BindingMode.OneWay,
+            StringFormat = lang.NamesX,
+        });
         grid.Add(labelNamesCount, row, 0);
 
         row++;
@@ -85,7 +91,10 @@ public class FixNamesWindow : Window
         grid.Add(stackExtraNames, row, 0);
 
         row++;
-        var labelHits = UiUtil.MakeLabel(new Binding(nameof(vm.HitCount)));
+        var labelHits = UiUtil.MakeLabel(new Binding($"{nameof(vm.Hits)}.{nameof(vm.Hits.Count)}")
+        {
+            StringFormat = lang.HitsX,
+        });
         grid.Add(labelHits, row, 0);
 
         row++;
@@ -103,23 +112,26 @@ public class FixNamesWindow : Window
         grid.Add(panelButtonsBottom, row, 0);
 
         Content = grid;
+
+        Closing += delegate { UiUtil.SaveWindowPosition(this); };
+        Loaded += delegate { UiUtil.RestoreWindowPosition(this); };
     }
 
     private static Border MakeNamesView(FixNamesViewModel vm)
     {
-        var dataGrid = new DataGrid
-        {
-            Height = double.NaN,
-            ItemsSource = vm.Names,
-            CanUserSortColumns = false,
-            SelectionMode = DataGridSelectionMode.Single,
-            DataContext = vm,
-        };
+        // The DataGrid this replaces used DataGridCheckboxMultiSelect for extended
+        // selection + Space toggling; shift/ctrl multi-select is native ListBox behavior
+        // on TableView, so only the Space toggle needs wiring (TableViewExtras.AddSpaceToggle).
+        var dataGrid = TableViewExtras.MakeTableView();
+        dataGrid.Height = double.NaN;
+        dataGrid.ItemsSource = vm.Names;
+        dataGrid.DataContext = vm;
 
-        dataGrid.Columns.Add(new DataGridTemplateColumn
+        dataGrid.Columns.Add(new SeTableViewColumn
         {
             Header = Se.Language.General.Enabled,
-            CellTheme = UiUtil.DataGridNoBorderNoPaddingCellTheme,
+            CellTheme = UiUtil.TableViewNoPaddingCellTheme,
+            HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
             CellTemplate = new FuncDataTemplate<FixNameItem>(static (item, _) =>
             new Border
             {
@@ -132,19 +144,20 @@ public class FixNamesWindow : Window
                     HorizontalAlignment = Avalonia.Layout.HorizontalAlignment.Center,
                 }
             }),
-            Width = new DataGridLength(1, DataGridLengthUnitType.Auto)
+            // Content-sized (Auto) on the DataGrid; TableView treats Auto as star.
+            Width = new GridLength(80)
         });
 
-        dataGrid.Columns.Add(new DataGridTextColumn
+        dataGrid.Columns.Add(new SeTableViewColumn
         {
             Header = Se.Language.General.Name,
             Binding = new Binding(nameof(FixNameItem.Name)),
-            Width = new DataGridLength(1, DataGridLengthUnitType.Star),
-            CellTheme = UiUtil.DataGridNoBorderCellTheme,
-            IsReadOnly = true,
+            Width = new GridLength(1, GridUnitType.Star),
+            CellTheme = UiUtil.TableViewCellTheme,
+            HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
         });
 
-        _ = new DataGridCheckboxMultiSelect<FixNameItem>(dataGrid,
+        TableViewExtras.AddSpaceToggle<FixNameItem>(dataGrid,
             item => item.IsChecked, (item, v) => item.IsChecked = v);
 
         var flyout = new MenuFlyout();
@@ -159,21 +172,16 @@ public class FixNamesWindow : Window
 
     private static Border MakeHitsView(FixNamesViewModel vm)
     {
-        var dataGrid = new DataGrid
-        {
-            Height = double.NaN,
-            ItemsSource = vm.Hits,
-            CanUserSortColumns = false,
-            IsReadOnly = false,
-            SelectionMode = DataGridSelectionMode.Single,
-            DataContext = vm,
-        };
+        var dataGrid = TableViewExtras.MakeTableView();
+        dataGrid.Height = double.NaN;
+        dataGrid.ItemsSource = vm.Hits;
+        dataGrid.DataContext = vm;
 
-        dataGrid.Columns.Add(new DataGridTemplateColumn
+        dataGrid.Columns.Add(new SeTableViewColumn
         {
             Header = Se.Language.General.Apply,
-            CellTheme = UiUtil.DataGridNoBorderCellTheme,
-            IsReadOnly = false,
+            CellTheme = UiUtil.TableViewNoPaddingCellTheme,
+            HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
             CellTemplate = new FuncDataTemplate<FixNameHitItem>(static (_, _) => new Border
             {
                 Background = Brushes.Transparent, // Prevents highlighting
@@ -185,34 +193,35 @@ public class FixNamesWindow : Window
                     HorizontalAlignment = Avalonia.Layout.HorizontalAlignment.Center,
                 }
             }),
-            Width = new DataGridLength(1, DataGridLengthUnitType.Auto)
+            // Content-sized (Auto) on the DataGrid; TableView treats Auto as star.
+            Width = new GridLength(80)
         });
-        dataGrid.Columns.Add(new DataGridTextColumn
+        dataGrid.Columns.Add(new SeTableViewColumn
         {
             Header = Se.Language.General.Name,
             Binding = new Binding(nameof(FixNameHitItem.LineIndexDisplay)),
-            Width = new DataGridLength(140),
-            CellTheme = UiUtil.DataGridNoBorderCellTheme,
-            IsReadOnly = true
+            Width = new GridLength(140),
+            CellTheme = UiUtil.TableViewCellTheme,
+            HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
         });
-        dataGrid.Columns.Add(new DataGridTextColumn
+        dataGrid.Columns.Add(new SeTableViewColumn
         {
             Header = Se.Language.General.Before,
             Binding = new Binding(nameof(FixNameHitItem.Before)),
-            Width = new DataGridLength(220),
-            CellTheme = UiUtil.DataGridNoBorderCellTheme,
-            IsReadOnly = true
+            Width = new GridLength(220),
+            CellTheme = UiUtil.TableViewCellTheme,
+            HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
         });
-        dataGrid.Columns.Add(new DataGridTextColumn
+        dataGrid.Columns.Add(new SeTableViewColumn
         {
             Header = Se.Language.General.After,
             Binding = new Binding(nameof(FixNameHitItem.After)),
-            Width = new DataGridLength(1, DataGridLengthUnitType.Star),
-            CellTheme = UiUtil.DataGridNoBorderCellTheme,
-            IsReadOnly = true
+            Width = new GridLength(1, GridUnitType.Star),
+            CellTheme = UiUtil.TableViewCellTheme,
+            HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
         });
 
-        _ = new DataGridCheckboxMultiSelect<FixNameHitItem>(dataGrid,
+        TableViewExtras.AddSpaceToggle<FixNameHitItem>(dataGrid,
             item => item.IsEnabled, (item, v) => item.IsEnabled = v);
 
         var flyout = new MenuFlyout();
@@ -224,6 +233,7 @@ public class FixNamesWindow : Window
         var border = UiUtil.MakeBorderForControlNoPadding(dataGrid);
         return border;
     }
+
 
     protected override void OnKeyDown(Avalonia.Input.KeyEventArgs e)
     {

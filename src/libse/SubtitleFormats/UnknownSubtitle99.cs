@@ -61,7 +61,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                             subtitle.Paragraphs.Add(p);
                         }
 
-                        text = new StringBuilder();
+                        text.Clear();
                         var arr = s.Split(':');
                         if (arr.Length == 4)
                         {

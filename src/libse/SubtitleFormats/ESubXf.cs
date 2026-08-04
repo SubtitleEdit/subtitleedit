@@ -297,7 +297,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 {
                     string start = node.Attributes["display"].InnerText;
                     string end = node.Attributes["clear"].InnerText;
-                    sb = new StringBuilder();
+                    sb.Clear();
                     var hregion = node.SelectSingleNode("esub-xf:hregion", ns);
                     var topAlign = hregion.Attributes["vposition"]?.Value == "top";
                     foreach (XmlNode lineNode in node.SelectNodes("esub-xf:hregion/esub-xf:line", ns))

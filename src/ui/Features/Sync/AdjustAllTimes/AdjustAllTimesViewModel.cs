@@ -33,9 +33,16 @@ public partial class AdjustAllTimesViewModel : ObservableObject
         StatusText = string.Empty;
     }
 
-    public void Initialize(IAdjustCallback adjustCallback, int selectedLinesCount)
+    public void Initialize(IAdjustCallback adjustCallback, int selectedLinesCount, bool forceSelectedLines = false)
     {
         _adjustCallback = adjustCallback;
+
+        if (forceSelectedLines)
+        {
+            SelectAdjustSelectedLines();
+            return;
+        }
+
         if (selectedLinesCount > 1)
         {
             AdjustSelectedLines = true;
@@ -53,6 +60,13 @@ public partial class AdjustAllTimesViewModel : ObservableObject
             AdjustSelectedLines = choice == "Selected";
             AdjustSelectedLinesAndForward = choice == "SelectedAndForward";
         }
+    }
+
+    internal void SelectAdjustSelectedLines()
+    {
+        AdjustAll = false;
+        AdjustSelectedLinesAndForward = false;
+        AdjustSelectedLines = true;
     }
 
     private void LoadSettings()
@@ -86,7 +100,7 @@ public partial class AdjustAllTimesViewModel : ObservableObject
     private void ShowEarlier()
     {
         _totalAdjustment -= Adjustment;
-        ShowStatus(string.Format(Se.Language.Sync.TotalAdjustmentX, new TimeCode(_totalAdjustment).ToShortDisplayString()));
+        ShowStatus(string.Format(Se.Language.General.TotalAdjustmentX, new TimeCode(_totalAdjustment).ToShortDisplayString()));
         _isNegativeAdjustment = true;
         Apply();
     }
@@ -96,7 +110,7 @@ public partial class AdjustAllTimesViewModel : ObservableObject
     {
         Adjustment = ts;
         _totalAdjustment -= Adjustment;
-        ShowStatus(string.Format(Se.Language.Sync.TotalAdjustmentX, new TimeCode(_totalAdjustment).ToShortDisplayString()));
+        ShowStatus(string.Format(Se.Language.General.TotalAdjustmentX, new TimeCode(_totalAdjustment).ToShortDisplayString()));
         _isNegativeAdjustment = true;
         Apply();
     }
@@ -105,7 +119,7 @@ public partial class AdjustAllTimesViewModel : ObservableObject
     private void ShowLater()
     {
         _totalAdjustment += Adjustment;
-        ShowStatus(string.Format(Se.Language.Sync.TotalAdjustmentX, new TimeCode(_totalAdjustment).ToShortDisplayString()));
+        ShowStatus(string.Format(Se.Language.General.TotalAdjustmentX, new TimeCode(_totalAdjustment).ToShortDisplayString()));
         _isNegativeAdjustment = false;
         Apply();
     }
@@ -115,7 +129,7 @@ public partial class AdjustAllTimesViewModel : ObservableObject
     {
         Adjustment = ts;
         _totalAdjustment += Adjustment;
-        ShowStatus(string.Format(Se.Language.Sync.TotalAdjustmentX, new TimeCode(_totalAdjustment).ToShortDisplayString()));
+        ShowStatus(string.Format(Se.Language.General.TotalAdjustmentX, new TimeCode(_totalAdjustment).ToShortDisplayString()));
         _isNegativeAdjustment = false;
         Apply();
     }

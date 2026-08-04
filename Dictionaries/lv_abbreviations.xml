@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Latvian abbreviations - a period here ends an abbreviation, not a sentence, so "Fix common
+  errors" must not capitalize the following word (issue #13082). Matching is case insensitive,
+  so one entry per abbreviation is enough. Abbreviations with an inner period (e.g. "a.m.") are
+  already recognized by a general rule and need no entry here.
+-->
+<Abbreviations>
+  <Item>Dr.</Item>
+  <Item>K.</Item>
+  <Item>Kdz.</Item>
+  <Item>lpp.</Item>
+  <Item>nr.</Item>
+  <Item>piem.</Item>
+  <Item>utt.</Item>
+</Abbreviations>

@@ -1,6 +1,4 @@
 using Avalonia.Media;
-using AvaloniaEdit.Document;
-using AvaloniaEdit.Rendering;
 using System;
 using System.Text.RegularExpressions;
 
@@ -9,21 +7,21 @@ namespace Nikse.SubtitleEdit.Logic;
 /// <summary>
 /// Syntax highlighting for SubRip (.srt) and WebVTT (.vtt) subtitle formats
 /// </summary>
-public partial class SubRipSourceSyntaxHighlighting : DocumentColorizingTransformer
+public partial class SubRipSourceSyntaxHighlighting : ISourceSyntaxHighlighter
 {
     // SubRip-specific colors
-    private static readonly IBrush NumberBrush =  new SolidColorBrush(Color.FromRgb(140, 170, 0));
-    private static readonly IBrush TimeBrush = new SolidColorBrush(Color.FromRgb(80, 160, 210), 0.5);
-    private static readonly IBrush TimeSeparatorBrush = new SolidColorBrush(Color.FromRgb(170, 110, 180));
-    private static readonly Typeface BoldTypeface = new(FontFamily.Default, weight: FontWeight.Bold);
+    private static readonly Color NumberColor = Color.FromRgb(140, 170, 0);
+    private static readonly Color TimeColor = Color.FromArgb(128, 80, 160, 210); // half transparent, so it reads as softer
+    private static readonly Color TimeSeparatorColor = Color.FromRgb(170, 110, 180);
 
-    // HTML/ASS syntax highlighting colors (matching SubtitleSyntaxHighlighting.cs)
-    private static readonly Color ElementColor = Color.FromRgb(183, 89, 155);    // Soft purple - HTML element tags
-    private static readonly Color AttributeColor = Color.FromRgb(86, 156, 214);  // Soft blue - HTML attribute names
-    private static readonly Color CommentColor = Color.FromRgb(106, 153, 85);    // Soft green - HTML comments
-    private static readonly Color CharsColor = Color.FromRgb(128, 128, 128);     // Gray - delimiters and special chars
-    private static readonly Color ValuesColor = Color.FromRgb(206, 145, 120);    // Soft orange/peach - attribute values
-    private static readonly Color StyleColor = Color.FromRgb(156, 220, 254);     // Light cyan - CSS property values
+    // HTML/ASS syntax highlighting colors (the shared, theme-dependent scheme from
+    // SubtitleSyntaxTokenizer) - resolved per use so a theme switch is picked up.
+    private static Color ElementColor => SubtitleSyntaxTokenizer.ElementColor;
+    private static Color AttributeColor => SubtitleSyntaxTokenizer.AttributeColor;
+    private static Color CommentColor => SubtitleSyntaxTokenizer.CommentColor;
+    private static Color CharsColor => SubtitleSyntaxTokenizer.CharsColor;
+    private static Color ValuesColor => SubtitleSyntaxTokenizer.ValuesColor;
+    private static Color StyleColor => SubtitleSyntaxTokenizer.StyleColor;
 
     // SubRip number pattern (e.g., "1", "2", "123")
     [GeneratedRegex(@"^\d+$", RegexOptions.Multiline)]
@@ -33,38 +31,30 @@ public partial class SubRipSourceSyntaxHighlighting : DocumentColorizingTransfor
     [GeneratedRegex(@"\d{2}:\d{2}:\d{2}[,\.]\d{3}\s*-->\s*\d{2}:\d{2}:\d{2}[,\.]\d{3}")]
     private static partial Regex SubRipTimecodeRegex();
 
-    protected override void ColorizeLine(DocumentLine line)
+    public void HighlightLine(string lineText, SourceSyntaxLineStyler styler)
     {
-        var lineText = CurrentContext.Document.GetText(line);
         if (string.IsNullOrEmpty(lineText))
         {
             return;
         }
 
         // First, colorize SubRip-specific elements (numbers and timecodes)
-        if (ColorizeSubRipFormat(line, lineText))
+        if (ColorizeSubRipFormat(lineText, styler))
         {
             return; // This line is a number or timecode, skip HTML coloring
         }
 
         // Then colorize HTML/ASS tags in subtitle text
-        ColorizeHtmlAndAssTags(line, lineText);
+        ColorizeHtmlAndAssTags(lineText, styler);
     }
 
-    private bool ColorizeSubRipFormat(DocumentLine line, string lineText)
+    private static bool ColorizeSubRipFormat(string lineText, SourceSyntaxLineStyler styler)
     {
         // Colorize SubRip sequence numbers
         var numberMatch = SubRipNumberRegex().Match(lineText);
         if (numberMatch.Success && numberMatch.Value == lineText.Trim())
         {
-            ChangeLinePart(
-                line.Offset,
-                line.Offset + line.Length,
-                element =>
-                {
-                    element.TextRunProperties.SetForegroundBrush(NumberBrush);
-                    element.TextRunProperties.SetTypeface(BoldTypeface);
-                });
+            styler.Apply(0, lineText.Length, NumberColor, bold: true);
             return true;
         }
 
@@ -78,15 +68,7 @@ public partial class SubRipSourceSyntaxHighlighting : DocumentColorizingTransfor
             if (separatorIndex >= 0)
             {
                 // Colorize the start timecode (before "-->")
-                var startTimecodeLength = separatorIndex;
-                ChangeLinePart(
-                    line.Offset + timecodeMatch.Index,
-                    line.Offset + timecodeMatch.Index + startTimecodeLength,
-                    element =>
-                    {
-                        element.TextRunProperties.SetForegroundBrush(TimeBrush);
-                        element.TextRunProperties.SetTypeface(BoldTypeface);
-                    });
+                styler.Apply(timecodeMatch.Index, separatorIndex, TimeColor, bold: true);
 
                 // Colorize the separator "-->" with a different color
                 var separatorStart = timecodeMatch.Index + separatorIndex;
@@ -104,52 +86,29 @@ public partial class SubRipSourceSyntaxHighlighting : DocumentColorizingTransfor
                     separatorEnd++;
                 }
 
-                ChangeLinePart(
-                    line.Offset + separatorStart,
-                    line.Offset + separatorEnd,
-                    element =>
-                    {
-                        element.TextRunProperties.SetForegroundBrush(TimeSeparatorBrush);
-                        element.TextRunProperties.SetTypeface(BoldTypeface);
-                    });
+                styler.Apply(separatorStart, separatorEnd - separatorStart, TimeSeparatorColor, bold: true);
 
                 // Colorize the end timecode (after "-->")
-                var endTimecodeStart = separatorEnd;
-                var endTimecodeLength = timecodeMatch.Index + timecodeMatch.Length - endTimecodeStart;
-
-                if (endTimecodeLength > 0)
+                var endTimecodeEnd = timecodeMatch.Index + timecodeMatch.Length;
+                if (endTimecodeEnd > separatorEnd)
                 {
-                    ChangeLinePart(
-                        line.Offset + endTimecodeStart,
-                        line.Offset + timecodeMatch.Index + timecodeMatch.Length,
-                        element =>
-                        {
-                            element.TextRunProperties.SetForegroundBrush(TimeBrush);
-                            element.TextRunProperties.SetTypeface(BoldTypeface);
-                        });
+                    styler.Apply(separatorEnd, endTimecodeEnd - separatorEnd, TimeColor, bold: true);
                 }
             }
             else
             {
                 // Fallback: colorize the entire match as timecode
-                ChangeLinePart(
-                    line.Offset + timecodeMatch.Index,
-                    line.Offset + timecodeMatch.Index + timecodeMatch.Length,
-                    element =>
-                    {
-                        element.TextRunProperties.SetForegroundBrush(TimeBrush);
-                        element.TextRunProperties.SetTypeface(BoldTypeface);
-                    });
+                styler.Apply(timecodeMatch.Index, timecodeMatch.Length, TimeColor, bold: true);
             }
+
             return true;
         }
 
         return false;
     }
 
-    private void ColorizeHtmlAndAssTags(DocumentLine line, string lineText)
+    private static void ColorizeHtmlAndAssTags(string lineText, SourceSyntaxLineStyler styler)
     {
-        var lineStartOffset = line.Offset;
         var inComment = false;
         var inHtmlTag = false;
         var inAttributeVal = false;
@@ -167,10 +126,7 @@ public partial class SubRipSourceSyntaxHighlighting : DocumentColorizingTransfor
                 if (tagEnd != -1)
                 {
                     // Color opening brace and backslash
-                    ChangeLinePart(lineStartOffset + i, lineStartOffset + i + 2, element =>
-                    {
-                        element.TextRunProperties.SetForegroundBrush(new SolidColorBrush(CharsColor));
-                    });
+                    styler.Apply(i, 2, CharsColor);
 
                     // Find where the tag name ends (before any numbers or special chars)
                     var tagNameStart = i + 2;
@@ -183,26 +139,17 @@ public partial class SubRipSourceSyntaxHighlighting : DocumentColorizingTransfor
                     // Color tag name
                     if (tagNameEnd > tagNameStart)
                     {
-                        ChangeLinePart(lineStartOffset + tagNameStart, lineStartOffset + tagNameEnd, element =>
-                        {
-                            element.TextRunProperties.SetForegroundBrush(new SolidColorBrush(ElementColor));
-                        });
+                        styler.Apply(tagNameStart, tagNameEnd - tagNameStart, ElementColor);
                     }
 
                     // Color tag value/parameters
                     if (tagNameEnd < tagEnd)
                     {
-                        ChangeLinePart(lineStartOffset + tagNameEnd, lineStartOffset + tagEnd, element =>
-                        {
-                            element.TextRunProperties.SetForegroundBrush(new SolidColorBrush(ValuesColor));
-                        });
+                        styler.Apply(tagNameEnd, tagEnd - tagNameEnd, ValuesColor);
                     }
 
                     // Color closing brace
-                    ChangeLinePart(lineStartOffset + tagEnd, lineStartOffset + tagEnd + 1, element =>
-                    {
-                        element.TextRunProperties.SetForegroundBrush(new SolidColorBrush(CharsColor));
-                    });
+                    styler.Apply(tagEnd, 1, CharsColor);
 
                     i = tagEnd;
                     continue;
@@ -216,28 +163,19 @@ public partial class SubRipSourceSyntaxHighlighting : DocumentColorizingTransfor
                     // Comment start: <!--
                     var commentEnd = lineText.IndexOf("-->", i + 4, StringComparison.Ordinal);
                     var commentLength = commentEnd != -1 ? commentEnd + 3 - i : lineText.Length - i;
-                    ChangeLinePart(lineStartOffset + i, lineStartOffset + i + commentLength, element =>
-                    {
-                        element.TextRunProperties.SetForegroundBrush(new SolidColorBrush(CommentColor));
-                    });
+                    styler.Apply(i, commentLength, CommentColor);
                     i += commentLength - 1;
                     continue;
                 }
                 else
                 {
                     // HTML tag start
-                    ChangeLinePart(lineStartOffset + i, lineStartOffset + i + 1, element =>
-                    {
-                        element.TextRunProperties.SetForegroundBrush(new SolidColorBrush(CharsColor));
-                    });
+                    styler.Apply(i, 1, CharsColor);
 
                     if (c2 == '/')
                     {
                         // Closing tag
-                        ChangeLinePart(lineStartOffset + i + 1, lineStartOffset + i + 2, element =>
-                        {
-                            element.TextRunProperties.SetForegroundBrush(new SolidColorBrush(CharsColor));
-                        });
+                        styler.Apply(i + 1, 1, CharsColor);
                         i++;
                     }
 
@@ -259,10 +197,7 @@ public partial class SubRipSourceSyntaxHighlighting : DocumentColorizingTransfor
 
                     if (elementEnd > elementStart)
                     {
-                        ChangeLinePart(lineStartOffset + elementStart, lineStartOffset + elementEnd, element =>
-                        {
-                            element.TextRunProperties.SetForegroundBrush(new SolidColorBrush(ElementColor));
-                        });
+                        styler.Apply(elementStart, elementEnd - elementStart, ElementColor);
                         i = elementEnd - 1;
                     }
                 }
@@ -270,10 +205,7 @@ public partial class SubRipSourceSyntaxHighlighting : DocumentColorizingTransfor
             else if (inHtmlTag && c == '>')
             {
                 // HTML tag end
-                ChangeLinePart(lineStartOffset + i, lineStartOffset + i + 1, element =>
-                {
-                    element.TextRunProperties.SetForegroundBrush(new SolidColorBrush(CharsColor));
-                });
+                styler.Apply(i, 1, CharsColor);
                 inHtmlTag = false;
                 inAttributeVal = false;
                 quoteChar = '\0';
@@ -281,10 +213,7 @@ public partial class SubRipSourceSyntaxHighlighting : DocumentColorizingTransfor
             else if (inHtmlTag && c == '/' && c2 == '>')
             {
                 // Self-closing tag
-                ChangeLinePart(lineStartOffset + i, lineStartOffset + i + 2, element =>
-                {
-                    element.TextRunProperties.SetForegroundBrush(new SolidColorBrush(CharsColor));
-                });
+                styler.Apply(i, 2, CharsColor);
                 inHtmlTag = false;
                 inAttributeVal = false;
                 quoteChar = '\0';
@@ -299,19 +228,13 @@ public partial class SubRipSourceSyntaxHighlighting : DocumentColorizingTransfor
                     i++;
                 }
 
-                ChangeLinePart(lineStartOffset + attrStart, lineStartOffset + i, element =>
-                {
-                    element.TextRunProperties.SetForegroundBrush(new SolidColorBrush(AttributeColor));
-                });
+                styler.Apply(attrStart, i - attrStart, AttributeColor);
                 i--;
             }
             else if (inHtmlTag && c == '=')
             {
                 // Equals sign
-                ChangeLinePart(lineStartOffset + i, lineStartOffset + i + 1, element =>
-                {
-                    element.TextRunProperties.SetForegroundBrush(new SolidColorBrush(CharsColor));
-                });
+                styler.Apply(i, 1, CharsColor);
             }
             else if (inHtmlTag && (c == '"' || c == '\''))
             {
@@ -332,10 +255,7 @@ public partial class SubRipSourceSyntaxHighlighting : DocumentColorizingTransfor
                     }
 
                     // Color the quotes
-                    ChangeLinePart(lineStartOffset + valueStart, lineStartOffset + valueStart + 1, element =>
-                    {
-                        element.TextRunProperties.SetForegroundBrush(new SolidColorBrush(CharsColor));
-                    });
+                    styler.Apply(valueStart, 1, CharsColor);
 
                     // Color the value content (check for style attribute)
                     var hasColon = lineText.IndexOf(':', i + 1, valueEnd - i - 2) != -1;
@@ -343,16 +263,10 @@ public partial class SubRipSourceSyntaxHighlighting : DocumentColorizingTransfor
 
                     if (valueEnd > valueStart + 1)
                     {
-                        ChangeLinePart(lineStartOffset + valueStart + 1, lineStartOffset + valueEnd - 1, element =>
-                        {
-                            element.TextRunProperties.SetForegroundBrush(new SolidColorBrush(valueColor));
-                        });
+                        styler.Apply(valueStart + 1, valueEnd - 1 - (valueStart + 1), valueColor);
 
                         // Color closing quote
-                        ChangeLinePart(lineStartOffset + valueEnd - 1, lineStartOffset + valueEnd, element =>
-                        {
-                            element.TextRunProperties.SetForegroundBrush(new SolidColorBrush(CharsColor));
-                        });
+                        styler.Apply(valueEnd - 1, 1, CharsColor);
                     }
 
                     i = valueEnd - 1;

@@ -3,6 +3,7 @@ using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Platform;
 using Avalonia.Threading;
+using Nikse.SubtitleEdit.Logic.Config;
 using System;
 using System.Runtime.InteropServices;
 using System.Timers;
@@ -26,6 +27,7 @@ public class LibMpvDynamicNativeControl : NativeControlHost
     private const uint WM_PAINT = 0x000F;
     private const uint WM_LBUTTONDOWN = 0x0201;
     private const uint WM_NCHITTEST = 0x0084;
+    private const uint WM_SETCURSOR = 0x0020;
     private const int GWLP_WNDPROC = -4;
     private const int HTCLIENT = 1;
     private const int COLOR_BACKGROUND = 1;
@@ -35,13 +37,18 @@ public class LibMpvDynamicNativeControl : NativeControlHost
     private WndProcDelegate? _customWndProc;
     private IntPtr _originalWndProc = IntPtr.Zero;
 
+    // Set while the full-screen overlay auto-hides the pointer. The embedded video
+    // HWND renders on top of Avalonia, so hiding it goes through WM_SETCURSOR here
+    // rather than through Avalonia's Cursor property.
+    private volatile bool _cursorHidden;
+
     // Linux still needs the temporary hide/show workaround during live resize.
-    private static bool ShouldHideNativeControlDuringResize => RuntimeInformation.IsOSPlatform(OSPlatform.Linux);
+    private static bool ShouldHideNativeControlDuringResize => OperatingSystem.IsLinux();
 
     // On Windows, use a dedicated child HWND for the embedded renderer instead of
     // the parent host handle. Reusing the parent handle makes native video jump to
     // the top-left corner during live resize.
-    private static bool ShouldUseOwnedChildHandle => RuntimeInformation.IsOSPlatform(OSPlatform.Windows);
+    private static bool ShouldUseOwnedChildHandle => OperatingSystem.IsWindows();
 
     public LibMpvDynamicPlayer? Player => _mpvPlayer;
 
@@ -227,7 +234,7 @@ public class LibMpvDynamicNativeControl : NativeControlHost
             System.Diagnostics.Debug.WriteLine($"Failed to set wid: {_mpvPlayer.GetErrorString(err)}");
         }
 
-        if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+        if (OperatingSystem.IsLinux())
         {
             _mpvPlayer.SetOptionString("vo", "xv,x11,gpu");
         }
@@ -240,7 +247,7 @@ public class LibMpvDynamicNativeControl : NativeControlHost
         _mpvPlayer.SetOptionString("keep-open", "always");
         _mpvPlayer.SetOptionString("background-color", "#000000");
 
-        if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+        if (OperatingSystem.IsLinux())
         {
             _mpvPlayer.SetOptionString("idle", "yes");
             _mpvPlayer.SetOptionString("force-window", "yes");
@@ -261,15 +268,15 @@ public class LibMpvDynamicNativeControl : NativeControlHost
 
     private static string GetWindowIdString(IntPtr handle)
     {
-        if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+        if (OperatingSystem.IsWindows())
         {
             return handle.ToString();
         }
-        else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+        else if (OperatingSystem.IsLinux())
         {
             return handle.ToString();
         }
-        else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+        else if (OperatingSystem.IsMacOS())
         {
             return handle.ToString();
         }
@@ -279,6 +286,9 @@ public class LibMpvDynamicNativeControl : NativeControlHost
 
     [DllImport("user32.dll")]
     private static extern bool ShowWindow(IntPtr hWnd, int nCmdShow);
+
+    [DllImport("user32.dll")]
+    private static extern IntPtr SetCursor(IntPtr hCursor);
 
     [DllImport("user32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
     private static extern IntPtr CreateWindowExW(
@@ -351,6 +361,15 @@ public class LibMpvDynamicNativeControl : NativeControlHost
             // WM_LBUTTONDOWN is actually delivered here.
             return new IntPtr(HTCLIENT);
         }
+        if (msg == WM_SETCURSOR && _cursorHidden)
+        {
+            // While the full-screen overlay is hidden, keep the pointer hidden over the
+            // embedded video window. The STATIC class otherwise re-asserts the arrow
+            // cursor on every WM_SETCURSOR (sent as the mouse moves), so clearing the
+            // cursor and returning TRUE (stop further processing) is what keeps it hidden.
+            SetCursor(IntPtr.Zero);
+            return new IntPtr(1);
+        }
         if (msg == WM_ERASEBKGND)
         {
             if (!string.IsNullOrEmpty(_mpvPlayer?.FileName))
@@ -398,7 +417,7 @@ public class LibMpvDynamicNativeControl : NativeControlHost
     protected override void OnPointerPressed(PointerPressedEventArgs e)
     {
         base.OnPointerPressed(e);
-        if (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows) &&
+        if (!OperatingSystem.IsWindows() &&
             e.GetCurrentPoint(this).Properties.IsLeftButtonPressed)
         {
             TogglePlayPause();
@@ -406,9 +425,43 @@ public class LibMpvDynamicNativeControl : NativeControlHost
         }
     }
 
-    public void LoadFile(string path)
+    /// <summary>
+    /// Hides or shows the mouse pointer over the embedded video window. Used by the
+    /// full-screen auto-hide so the cursor disappears with the on-screen controls.
+    /// </summary>
+    public void SetCursorHidden(bool hidden)
     {
-        _mpvPlayer?.LoadFile(path);
+        _cursorHidden = hidden;
+        Dispatcher.UIThread.Post(() =>
+        {
+            Cursor = new Cursor(hidden ? StandardCursorType.None : StandardCursorType.Arrow);
+            if (hidden)
+            {
+                PlatformCursorManager.HideCursor();
+            }
+            else
+            {
+                PlatformCursorManager.ForceArrowCursor();
+            }
+        });
+    }
+
+    public async void LoadFile(string path)
+    {
+        if (_mpvPlayer == null)
+        {
+            return;
+        }
+
+        try
+        {
+            await _mpvPlayer.LoadFile(path);
+        }
+        catch (Exception exception)
+        {
+            // The load task was previously discarded, hiding open failures entirely.
+            Se.LogError(exception, $"mpv failed to load video file: {path}");
+        }
     }
 
     public void TogglePlayPause()

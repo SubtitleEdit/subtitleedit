@@ -62,7 +62,8 @@ public class SpeechToTextWindow : Window
         vm.RefreshEngineCombo = () => comboEngine.ItemTemplate = MakeEngineItemTemplate();
         var buttonEngineWebsite = UiUtil.MakeButton(vm.ShowWebLinkCommand, IconNames.Web)
             .WithMarginLeft(5)
-            .WithMarginTop(10);
+            .WithMarginTop(10)
+            .WithAccessibleName($"{Se.Language.General.Engine} - {Se.Language.General.MoreInfo}");
         var buttonEngineDownload = UiUtil.MakeButton(vm.DownloadSelectedEngineCommand, IconNames.Download)
             .WithMarginLeft(5)
             .WithMarginTop(10)
@@ -113,7 +114,7 @@ public class SpeechToTextWindow : Window
             .BindIsVisible(vm, nameof(vm.IsCrispAsrSelected))
             .WithLabeledBy(labelBackend);
 
-        var labelForcedAligner = UiUtil.MakeTextBlock("Forced aligner").WithMarginTop(10)
+        var labelForcedAligner = UiUtil.MakeTextBlock(Se.Language.Video.ForcedAligner).WithMarginTop(10)
             .BindIsVisible(vm, nameof(vm.IsForcedAlignerVisible));
         var comboForcedAligner = UiUtil.MakeComboBox(vm.ForcedAligners, vm, nameof(vm.SelectedForcedAligner))
             .WithMinWidth(220)
@@ -522,44 +523,38 @@ public class SpeechToTextWindow : Window
         vm.TextBoxConsoleLogBatch = textBoxConsoleLog;
 
 
-        var dataGrid = new DataGrid
+        // No header sorting: the batch queue is processed top-to-bottom (the run aliases
+        // BatchItems and walks it in list order), so the list order is meaningful.
+        var dataGrid = TableViewExtras.MakeTableView(multiSelect: false);
+        dataGrid.Width = double.NaN;
+        dataGrid.Height = double.NaN;
+        dataGrid.DataContext = vm;
+        dataGrid.ItemsSource = vm.BatchItems;
+        dataGrid.Columns.Add(new SeTableViewColumn
         {
-            AutoGenerateColumns = false,
-            SelectionMode = DataGridSelectionMode.Single,
-            CanUserResizeColumns = true,
-            CanUserSortColumns = true,
-            HorizontalAlignment = HorizontalAlignment.Stretch,
-            VerticalAlignment = VerticalAlignment.Stretch,
-            Width = double.NaN,
-            Height = double.NaN,
-            DataContext = vm,
-            ItemsSource = vm.BatchItems,
-            Columns =
-            {
-                new DataGridTextColumn
-                {
-                    Header = Se.Language.General.FileName,
-                    CellTheme = UiUtil.DataGridNoBorderNoPaddingCellTheme,
-                    Binding = new Binding(nameof(SpeechToTextJobItem.InputVideoFileNameShort)),
-                    IsReadOnly = true,
-                },
-                new DataGridTextColumn
-                {
-                    Header = Se.Language.General.Size,
-                    CellTheme = UiUtil.DataGridNoBorderNoPaddingCellTheme,
-                    Binding = new Binding(nameof(SpeechToTextJobItem.SizeDisplay)),
-                    IsReadOnly = true,
-                },
-                new DataGridTextColumn
-                {
-                    Header = Se.Language.General.Status,
-                    CellTheme = UiUtil.DataGridNoBorderNoPaddingCellTheme,
-                    Binding = new Binding(nameof(SpeechToTextJobItem.Status)),
-                    IsReadOnly = true,
-                },
-            },
-        };
-        dataGrid.Bind(DataGrid.SelectedItemProperty, new Binding(nameof(vm.SelectedBatchItem)) { Source = vm });
+            Header = Se.Language.General.FileName,
+            CellTheme = UiUtil.TableViewCellTheme,
+            HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
+            Binding = new Binding(nameof(SpeechToTextJobItem.InputVideoFileNameShort)),
+            Width = new GridLength(1, GridUnitType.Star),
+        });
+        dataGrid.Columns.Add(new SeTableViewColumn
+        {
+            Header = Se.Language.General.Size,
+            CellTheme = UiUtil.TableViewCellTheme,
+            HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
+            Binding = new Binding(nameof(SpeechToTextJobItem.SizeDisplay)),
+            Width = new GridLength(90), // was content-sized (Auto) on the DataGrid
+        });
+        dataGrid.Columns.Add(new SeTableViewColumn
+        {
+            Header = Se.Language.General.Status,
+            CellTheme = UiUtil.TableViewCellTheme,
+            HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
+            Binding = new Binding(nameof(SpeechToTextJobItem.Status)),
+            Width = new GridLength(110), // was content-sized (Auto) on the DataGrid
+        });
+        dataGrid.Bind(TableView.SelectedItemProperty, new Binding(nameof(vm.SelectedBatchItem)) { Source = vm });
         AutomationProperties.SetName(dataGrid, Se.Language.General.BatchMode);
         vm.BatchGrid = dataGrid;
 
@@ -594,7 +589,7 @@ public class SpeechToTextWindow : Window
             HorizontalAlignment = HorizontalAlignment.Stretch,
         };
 
-        // hack to make drag and drop work on the DataGrid - also on empty rows
+        // hack to make drag and drop work on the grid - also on empty rows
         var dropHost = new Border
         {
             Background = Brushes.Transparent,
@@ -878,13 +873,6 @@ public class SpeechToTextWindow : Window
     {
         if (!engine.CanBeDownloaded())
         {
-            // MLX Whisper is installed via pip rather than downloaded by Subtitle Edit,
-            // but it still has a local install state worth surfacing.
-            if (engine is MlxWhisperMac)
-            {
-                return engine.IsEngineInstalled() ? DownloadDotStatus.UpToDate : DownloadDotStatus.NotInstalled;
-            }
-
             return DownloadDotStatus.None; // cloud / API engine - nothing to install
         }
 

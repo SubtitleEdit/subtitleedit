@@ -5,6 +5,7 @@ using Nikse.SubtitleEdit.Features.SpellCheck;
 using Nikse.SubtitleEdit.Logic;
 using System.Collections.Generic;
 using System.Linq;
+using Nikse.SubtitleEdit.UiLogic.SpellCheck;
 
 namespace Nikse.SubtitleEdit.Features.Shared.TextBoxUtils;
 
@@ -171,7 +172,7 @@ public class TextBoxWrapper : ITextBoxWrapper
             return false;
         }
 
-        return SpellCheckUnderlineTransformer.IsWordMisspelled(word, Text, spellCheckManager);
+        return SpellCheckWordScanner.IsWordMisspelled(word, Text, spellCheckManager);
     }
 
     public List<string>? GetSuggestionsForWordAtOffset(int offset)

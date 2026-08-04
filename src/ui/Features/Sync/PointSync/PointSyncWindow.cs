@@ -2,12 +2,14 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Data;
 using Avalonia.Input;
+using Avalonia.Interactivity;
 using Avalonia.Layout;
 using Nikse.SubtitleEdit.Features.Main;
 using Nikse.SubtitleEdit.Features.Sync.PointSyncViaOther;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Logic.ValueConverters;
+using System.Collections;
 
 namespace Nikse.SubtitleEdit.Features.Sync.PointSync;
 
@@ -84,26 +86,28 @@ public class PointSyncWindow : Window
             Margin = new Thickness(0, 60, 0, 0),
         };
 
-        var dataGrid = new DataGrid
+        // The DataGrid this replaces hid its header (HeadersVisibility.None); TableView
+        // has no such switch, so the single column's header now doubles as the panel title.
+        var dataGrid = TableViewExtras.MakeTableView(multiSelect: false);
+        dataGrid.CanUserResizeColumns = false; // single star column, nothing to resize
+        // Fixed width: this panel sits in an Auto-sized outer column, and a TableView
+        // with a star column measured without a width constraint demands more than the
+        // whole window (star columns have no content-based size), squeezing the
+        // subtitle grids to slivers and overflowing the right edge.
+        dataGrid.Width = 280;
+        dataGrid.DataContext = vm;
+        dataGrid.ItemsSource = vm.SyncPoints;
+        dataGrid.Columns.Add(new SeTableViewColumn
         {
-            AutoGenerateColumns = false,
-            SelectionMode = DataGridSelectionMode.Single,
-            DataContext = vm,
-            ItemsSource = vm.SyncPoints,
-            HeadersVisibility = DataGridHeadersVisibility.None,
-            Columns =
-            {
-                new DataGridTextColumn
-                {
-                    Header = Se.Language.Sync.SyncPoints,
-                    CellTheme = UiUtil.DataGridNoBorderNoPaddingCellTheme,
-                    Binding = new Binding(nameof(SyncPoint.Text)),
-                    IsReadOnly = true,
-                },
-            },
-        };
+            Header = Se.Language.Sync.SyncPoints,
+            CellTheme = UiUtil.TableViewCellTheme,
+            HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
+            Binding = new Binding(nameof(SyncPoint.Text)),
+            Width = new GridLength(1, GridUnitType.Star),
+        });
 
-        dataGrid.Bind(DataGrid.SelectedItemProperty, new Binding(nameof(vm.SelectedSyncPoint)));
+        dataGrid.Bind(TableView.SelectedItemProperty, new Binding(nameof(vm.SelectedSyncPoint)));
+        TableViewExtras.AttachListNavigation(dataGrid);
 
         var menuItemDelete = new MenuItem
         {
@@ -137,53 +141,53 @@ public class PointSyncWindow : Window
     {
         var fullTimeConverter = new TimeSpanToDisplayFullConverter();
         var shortTimeConverter = new TimeSpanToDisplayShortConverter();
-        var dataGrid = new DataGrid
+        // No header-click sorting (the DataGrid's CanUserSortColumns is not carried
+        // over): the lines are shown in timeline order, which the sync-point logic
+        // relies on.
+        var dataGrid = TableViewExtras.MakeTableView(multiSelect: false);
+        dataGrid.Width = double.NaN;
+        dataGrid.Height = double.NaN;
+        dataGrid.DataContext = vm;
+        dataGrid.ItemsSource = vm.Subtitles;
+        dataGrid.Columns.AddRange(new[]
         {
-            AutoGenerateColumns = false,
-            SelectionMode = DataGridSelectionMode.Single,
-            CanUserResizeColumns = true,
-            CanUserSortColumns = true,
-            HorizontalAlignment = HorizontalAlignment.Stretch,
-            VerticalAlignment = VerticalAlignment.Stretch,
-            Width = double.NaN,
-            Height = double.NaN,
-            DataContext = vm,
-            ItemsSource = vm.Subtitles,
-            Columns =
+            new SeTableViewColumn
             {
-                new DataGridTextColumn
-                {
-                    Header = Se.Language.General.NumberSymbol,
-                    CellTheme = UiUtil.DataGridNoBorderNoPaddingCellTheme,
-                    Binding = new Binding(nameof(SubtitleLineViewModel.Number)),
-                    IsReadOnly = true,
-                },
-                new DataGridTextColumn
-                {
-                    Header = Se.Language.General.Show,
-                    CellTheme = UiUtil.DataGridNoBorderNoPaddingCellTheme,
-                    Binding = new Binding(nameof(SubtitleLineViewModel.StartTime)) { Converter = fullTimeConverter },
-                    IsReadOnly = true,
-                },
-                new DataGridTextColumn
-                {
-                    Header = Se.Language.General.Duration,
-                    CellTheme = UiUtil.DataGridNoBorderNoPaddingCellTheme,
-                    Binding = new Binding(nameof(SubtitleLineViewModel.Duration)) { Converter = shortTimeConverter },
-                    IsReadOnly = true,
-                },
-                new DataGridTextColumn
-                {
-                    Header = Se.Language.General.Text,
-                    CellTheme = UiUtil.DataGridNoBorderNoPaddingCellTheme,
-                    Binding = new Binding(nameof(SubtitleLineViewModel.Text)),
-                    IsReadOnly = true,
-                    Width = new DataGridLength(1, DataGridLengthUnitType.Star),
-                },
+                Header = Se.Language.General.NumberSymbol,
+                CellTheme = UiUtil.TableViewCellTheme,
+                HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
+                Binding = new Binding(nameof(SubtitleLineViewModel.Number)),
+                Width = new GridLength(60), // content-sized (Auto) on the DataGrid; TableView treats Auto as star
             },
-        };
-        dataGrid.Bind(DataGrid.SelectedItemProperty, new Binding(nameof(vm.SelectedSubtitle)));
+            new SeTableViewColumn
+            {
+                Header = Se.Language.General.Show,
+                CellTheme = UiUtil.TableViewCellTheme,
+                HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
+                Binding = new Binding(nameof(SubtitleLineViewModel.StartTime)) { Converter = fullTimeConverter },
+                Width = new GridLength(115),
+            },
+            new SeTableViewColumn
+            {
+                Header = Se.Language.General.Duration,
+                CellTheme = UiUtil.TableViewCellTheme,
+                HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
+                Binding = new Binding(nameof(SubtitleLineViewModel.Duration)) { Converter = shortTimeConverter },
+                Width = new GridLength(90),
+            },
+            new SeTableViewColumn
+            {
+                Header = Se.Language.General.Text,
+                CellTheme = UiUtil.TableViewCellTheme,
+                HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
+                CellTemplate = TableViewExtras.MakeTextCellTemplate(nameof(SubtitleLineViewModel.Text)),
+                Width = new GridLength(1, GridUnitType.Star),
+            },
+        });
+        dataGrid.Bind(TableView.SelectedItemProperty, new Binding(nameof(vm.SelectedSubtitle)));
+        TableViewExtras.AttachListNavigation(dataGrid);
 
         return UiUtil.MakeBorderForControlNoPadding(dataGrid);
     }
+
 }

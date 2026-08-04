@@ -44,7 +44,7 @@ public class AssSetBackgroundWindow : Window
         };
 
         // Padding settings
-        leftPanel.Add(CreatePaddingPanel(vm), 0);
+        leftPanel.Add(CreatePaddingPanel(vm, out var paddingLeftBox), 0);
 
         // Fill width settings
         leftPanel.Add(CreateFillWidthPanel(vm), 1);
@@ -86,13 +86,14 @@ public class AssSetBackgroundWindow : Window
 
         Content = mainGrid;
 
-        Activated += delegate { buttonOk.Focus(); };
+        // initial focus on an input, not an action button - a focused button clicks on bare Space
+        Activated += delegate { paddingLeftBox.Focus(); };
         AddHandler(KeyDownEvent, vm.KeyDown, RoutingStrategies.Tunnel | RoutingStrategies.Bubble, handledEventsToo: false);
         Loaded += (_, _) => vm.OnLoaded();
         Closing += (_, _) => vm.OnClosing();
     }
 
-    private static Border CreatePaddingPanel(AssSetBackgroundViewModel vm)
+    private static Border CreatePaddingPanel(AssSetBackgroundViewModel vm, out NumericUpDown firstInput)
     {
         var grid = new Grid
         {
@@ -115,7 +116,7 @@ public class AssSetBackgroundWindow : Window
 
         var titleLabel = new TextBlock
         {
-            Text = Se.Language.Assa.BackgroundBoxPadding,
+            Text = Se.Language.General.Padding,
             FontWeight = FontWeight.Bold,
             Margin = new Thickness(0, 0, 0, 5),
         };
@@ -126,6 +127,7 @@ public class AssSetBackgroundWindow : Window
         grid.Add(leftLabel, 1, 0);
 
         var leftBox = UiUtil.MakeNumericUpDownInt(0, 500, 0, 120, vm, nameof(vm.PaddingLeft));
+        firstInput = leftBox;
         grid.Add(leftBox, 1, 1);
 
         // Right
@@ -136,14 +138,14 @@ public class AssSetBackgroundWindow : Window
         grid.Add(rightBox, 1, 3);
 
         // Top
-        var topLabel = new TextBlock { Text = Se.Language.Assa.ProgressBarTop, VerticalAlignment = VerticalAlignment.Center };
+        var topLabel = new TextBlock { Text = Se.Language.General.Top, VerticalAlignment = VerticalAlignment.Center };
         grid.Add(topLabel, 2, 0);
 
         var topBox = UiUtil.MakeNumericUpDownInt(0, 500, 0, 120, vm, nameof(vm.PaddingTop));
         grid.Add(topBox, 2, 1);
 
         // Bottom
-        var bottomLabel = new TextBlock { Text = Se.Language.Assa.ProgressBarBottom, VerticalAlignment = VerticalAlignment.Center };
+        var bottomLabel = new TextBlock { Text = Se.Language.General.Bottom, VerticalAlignment = VerticalAlignment.Center };
         grid.Add(bottomLabel, 2, 2);
 
         var bottomBox = UiUtil.MakeNumericUpDownInt(0, 500, 0, 120, vm, nameof(vm.PaddingBottom));
@@ -242,7 +244,7 @@ public class AssSetBackgroundWindow : Window
         grid.Add(titleLabel, 0, 0, 1, 2);
 
         // Box style
-        var styleLabel = new TextBlock { Text = Se.Language.Assa.ProgressBarStyle, VerticalAlignment = VerticalAlignment.Center };
+        var styleLabel = new TextBlock { Text = Se.Language.General.Style, VerticalAlignment = VerticalAlignment.Center };
         grid.Add(styleLabel, 1, 0);
 
         var styleCombo = new ComboBox
@@ -306,7 +308,7 @@ public class AssSetBackgroundWindow : Window
         grid.Add(titleLabel, 0, 0, 1, 2);
 
         // Box color
-        var boxLabel = new TextBlock { Text = Se.Language.Assa.BackgroundBoxBoxColor, VerticalAlignment = VerticalAlignment.Center };
+        var boxLabel = new TextBlock { Text = Se.Language.General.BoxColor, VerticalAlignment = VerticalAlignment.Center };
         grid.Add(boxLabel, 1, 0);
 
         var boxPicker = UiUtil.MakeColorPickerButton(vm, nameof(vm.BoxColor));

@@ -285,7 +285,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
             if (allBoldItalic)
             {
-                return text.Replace(Environment.NewLine, "^U^B^I|^I^B^U");
+                return text.Replace(Environment.NewLine, "^B^I|^I^B");
             }
 
             if (allItalic)

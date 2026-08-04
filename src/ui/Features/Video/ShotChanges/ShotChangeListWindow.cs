@@ -61,51 +61,45 @@ public class ShotChangeListWindow : Window
 
     private static Border MakeBookmarkGridView(ShotChangeListViewModel vm)
     {
-        var dataGrid = new DataGrid
-        {
-            Height = double.NaN, // auto size inside scroll viewer
-            Margin = new Thickness(2),
-            ItemsSource = vm.ShotChanges, // Use ItemsSource instead of Items
-            CanUserSortColumns = false,
-            IsReadOnly = true,
-            SelectionMode = DataGridSelectionMode.Extended,
-            DataContext = vm,
-        };
+        var tableView = TableViewExtras.MakeTableView();
+        tableView.Height = double.NaN; // auto size inside scroll viewer
+        tableView.Margin = new Thickness(2);
+        tableView.ItemsSource = vm.ShotChanges;
+        tableView.DataContext = vm;
 
-        dataGrid.DoubleTapped += vm.OnShotChangeGridDoubleTapped;
-
-        var fullTimeConverter = new TimeSpanToDisplayFullConverter();
-        var shortTimeConverter = new TimeSpanToDisplayShortConverter();
+        tableView.DoubleTapped += vm.OnShotChangeGridDoubleTapped;
 
         // Columns
-        dataGrid.Columns.Add(new DataGridTextColumn
+        tableView.Columns.Add(new SeTableViewColumn
         {
             Header = Se.Language.General.NumberSymbol,
             Binding = new Binding(nameof(ShotChangeItem.Index)),
-            CellTheme = UiUtil.DataGridNoBorderCellTheme,
+            Width = new GridLength(60),
+            CellTheme = UiUtil.TableViewCellTheme,
+            HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
         });
-        dataGrid.Columns.Add(new DataGridTextColumn
+        tableView.Columns.Add(new SeTableViewColumn
         {
             Header = Se.Language.General.Text,
             Binding = new Binding(nameof(ShotChangeItem.TimeText)),
-            CellTheme = UiUtil.DataGridNoBorderCellTheme,
-            Width = new DataGridLength(1, DataGridLengthUnitType.Star) // star sizing to take all available space
+            Width = new GridLength(1, GridUnitType.Star), // star sizing to take all available space
+            CellTheme = UiUtil.TableViewCellTheme,
+            HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
         });
-        dataGrid.Bind(DataGrid.SelectedItemProperty, new Binding(nameof(vm.SelectedShotChange))
+        TableViewExtras.BindSelectedItem(tableView, vm, nameof(vm.SelectedShotChange));
+        tableView.DoubleTapped += (s, e) => vm.GoToCommand.Execute(null);
+        tableView.KeyDown += (s, e) => vm.GridKeyDown(e);
+        tableView.AddHandler(InputElement.KeyDownEvent, (object? _, KeyEventArgs e) =>
         {
-            Source = vm,
-            Mode = BindingMode.TwoWay
-        });
-        dataGrid.SelectionChanged += vm.GridSelectionChanged;
-        dataGrid.DoubleTapped += (s, e) => vm.GoToCommand.Execute(null);
-        dataGrid.KeyDown += (s, e) => vm.GridKeyDown(e);
-        dataGrid.AddHandler(InputElement.KeyDownEvent, (object? _, KeyEventArgs e) =>
-        {
-            if (e.Key is Key.Home or Key.End && dataGrid.ItemsSource is IList items && items.Count > 0)
+            if (e.Key is Key.Home or Key.End && tableView.ItemsSource is IList items && items.Count > 0)
             {
                 var target = e.Key == Key.Home ? items[0] : items[^1];
-                dataGrid.SelectedItem = target;
-                dataGrid.ScrollIntoView(target, null);
+                if (target != null)
+                {
+                    tableView.SelectedItem = target;
+                    tableView.ScrollIntoView(target);
+                }
+
                 e.Handled = true;
             }
         }, Avalonia.Interactivity.RoutingStrategies.Tunnel);
@@ -121,10 +115,10 @@ public class ShotChangeListWindow : Window
             }
         };
         flyout.Items.Add(deleteMenuItem);
-        dataGrid.ContextFlyout = flyout;
-        UiUtil.AttachMacContextFlyoutHandler(dataGrid);
+        tableView.ContextFlyout = flyout;
+        UiUtil.AttachMacContextFlyoutHandler(tableView);
 
-        return UiUtil.MakeBorderForControl(dataGrid);
+        return UiUtil.MakeBorderForControl(tableView);
     }
 
     protected override void OnKeyDown(KeyEventArgs e)

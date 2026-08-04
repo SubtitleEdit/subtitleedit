@@ -5,6 +5,7 @@ using System.IO;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
+using Nikse.SubtitleEdit.UiLogic;
 
 namespace Nikse.SubtitleEdit.Logic.Download;
 
@@ -164,7 +165,7 @@ public class Qwen3TtsCrispAsrDownloadService : IQwen3TtsCrispAsrDownloadService
         string actual;
         await using (var stream = File.OpenRead(filePath))
         {
-            actual = await DownloadHashManager.ComputeSha256Async(stream, cancellationToken);
+            actual = await Sha256Util.ComputeSha256Async(stream, cancellationToken);
         }
 
         if (!string.Equals(expected, actual, StringComparison.OrdinalIgnoreCase))

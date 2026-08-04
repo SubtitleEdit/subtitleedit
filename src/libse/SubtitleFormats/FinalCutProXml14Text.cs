@@ -64,10 +64,11 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             xml.LoadXml(xmlStructure);
             XmlNode videoNode = xml.DocumentElement.SelectSingleNode("//project/sequence/spine/gap");
             int number = 1;
+            var trimmedTitle = new StringBuilder();
             foreach (Paragraph p in subtitle.Paragraphs)
             {
                 XmlNode video = xml.CreateElement("video");
-                var trimmedTitle = new StringBuilder();
+                trimmedTitle.Clear();
                 foreach (var ch in HtmlUtil.RemoveHtmlTags(p.Text, true))
                 {
                     if (CharUtils.IsEnglishAlphabet(ch) || char.IsDigit(ch))

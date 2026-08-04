@@ -1,17 +1,17 @@
 ﻿using Avalonia.Data.Converters;
+using Nikse.SubtitleEdit.Logic.Config;
 using System;
 using System.Globalization;
 
 namespace Nikse.SubtitleEdit.Logic.ValueConverters;
 internal class FileSizeConverter : IValueConverter
 {
-    private static readonly string[] SizeSuffixes = { "bytes", "KB", "MB", "GB", "TB", "PB" };
 
     public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
         if (value == null)
         {
-            return "0 bytes";
+            return Se.Language.General.ZeroBytes;
         }
 
         long bytes;
@@ -27,24 +27,24 @@ internal class FileSizeConverter : IValueConverter
         }
         else if (!long.TryParse(value.ToString(), out bytes))
         {
-            return "Invalid size";
+            return Se.Language.General.InvalidSize;
         }
 
         if (bytes < 0)
         {
-            return "Invalid size";
+            return Se.Language.General.InvalidSize;
         }
 
         if (bytes == 0)
         {
-            return "0 bytes";
+            return Se.Language.General.ZeroBytes;
         }
 
         int magnitude = 0;
         double adjustedSize = bytes;
 
         // Keep dividing by 1024 until we get a manageable number
-        while (adjustedSize >= 1024 && magnitude < SizeSuffixes.Length - 1)
+        while (adjustedSize >= 1024 && magnitude < 5)
         {
             magnitude++;
             adjustedSize /= 1024;
@@ -53,7 +53,16 @@ internal class FileSizeConverter : IValueConverter
         // Format with appropriate decimal places
         string format = adjustedSize >= 100 ? "0" : (adjustedSize >= 10 ? "0.0" : "0.##");
 
-        var result = $"{adjustedSize.ToString(format, culture)} {SizeSuffixes[magnitude]}";
+        var suffix = magnitude switch
+        {
+            0 => Se.Language.General.Bytes,
+            1 => "KB",
+            2 => "MB",
+            3 => "GB",
+            4 => "TB",
+            _ => "PB",
+        };
+        var result = $"{adjustedSize.ToString(format, culture)} {suffix}";
         return result;
     }
 

@@ -31,6 +31,7 @@ using System.Threading.Tasks;
 using System.Timers;
 using ElevenLabsSettingsViewModel = Nikse.SubtitleEdit.Features.Video.TextToSpeech.ElevenLabsSettings.ElevenLabsSettingsViewModel;
 using Timer = System.Timers.Timer;
+using Nikse.SubtitleEdit.UiLogic.Media;
 
 namespace Nikse.SubtitleEdit.Features.Video.TextToSpeech.ReviewSpeech;
 
@@ -87,7 +88,7 @@ public partial class ReviewSpeechViewModel : ObservableObject
     private bool _suppressKeywordSync;
 
     public Window? Window { get; set; }
-    public DataGrid LineGrid { get; internal set; }
+    public TableView LineGrid { get; internal set; }
     public AudioVisualizer? AudioVisualizer { get; set; }
     public TtsStepResult[] StepResults { get; set; }
 
@@ -119,6 +120,7 @@ public partial class ReviewSpeechViewModel : ObservableObject
     private LibMpvDynamicPlayer? _mpvContext;
     private Lock _playLock;
     private readonly Timer _timer;
+    private volatile bool _isClosing;
     private string _videoFileName;
     private string _waveFolder;
     private CancellationTokenSource _cancellationTokenSource;
@@ -136,7 +138,7 @@ public partial class ReviewSpeechViewModel : ObservableObject
         _folderHelper = folderHelper;
         _windowService = windowService;
 
-        LineGrid = new DataGrid();
+        LineGrid = new TableView();
         Lines = new ObservableCollection<ReviewRow>();
         Engines = new ObservableCollection<ITtsEngine>();
         Voices = new ObservableCollection<Voice>();
@@ -166,6 +168,11 @@ public partial class ReviewSpeechViewModel : ObservableObject
 
     private async void OnTimerOnElapsed(object? sender, ElapsedEventArgs args)
     {
+        if (_isClosing)
+        {
+            return;
+        }
+
         try
         {
             _timer.Stop();
@@ -223,7 +230,7 @@ public partial class ReviewSpeechViewModel : ObservableObject
                         nextLine.IsPlaying = true;
                         _playingRow = nextLine;
                         SelectedLine = nextLine;
-                        LineGrid.ScrollIntoView(nextLine, null);
+                        LineGrid.ScrollIntoView(nextLine);
                         await PlayAudio(nextLine.StepResult.CurrentFileName);
                     }
                     else
@@ -248,7 +255,12 @@ public partial class ReviewSpeechViewModel : ObservableObject
                 IsStopVisible = true;
             });
 
-            _timer.Start();
+            // OnClosing may have disposed the timer while this async handler awaited; Start() on a
+            // disposed timer throws ObjectDisposedException (no longer swallowed on modern .NET). (#12739)
+            if (!_isClosing)
+            {
+                _timer.Start();
+            }
         }
         catch (Exception ex)
         {
@@ -297,21 +309,43 @@ public partial class ReviewSpeechViewModel : ObservableObject
             return;
         }
 
-        lock (_playLock)
+        try
         {
-            _mpvContext?.Stop();
-            _mpvContext?.Dispose();
-
-            _mpvContext = new LibMpvDynamicPlayer();
-            _mpvContext.LoadLib(); 
-            var err = _mpvContext.Initialize();
-            if (err < 0)
+            lock (_playLock)
             {
-                throw new InvalidOperationException($"Failed to initialize mpv: {_mpvContext.GetErrorString(err)}");
-            }
-        }
+                _mpvContext?.Stop();
+                _mpvContext?.Dispose();
 
-        await _mpvContext.LoadAudio(fileName);
+                _mpvContext = new LibMpvDynamicPlayer();
+                _mpvContext.LoadLib();
+                var err = _mpvContext.Initialize();
+                if (err < 0)
+                {
+                    throw new InvalidOperationException($"Failed to initialize mpv: {_mpvContext.GetErrorString(err)}");
+                }
+            }
+
+            await _mpvContext.LoadAudio(fileName);
+        }
+        catch (Exception exception)
+        {
+            // An mpv load/init failure must not escape: the callers disable all rows before
+            // awaiting and only the playback timer re-enables them, so an unhandled throw
+            // leaves every play/regenerate button dead until the window is reopened.
+            SeLogger.Error(exception, $"ReviewSpeech: unable to play audio file \"{fileName}\"");
+            ResetPlaybackUiState();
+            if (Window != null)
+            {
+                await MessageBox.Show(
+                    Window,
+                    Se.Language.General.Error,
+                    "Unable to play audio: " + exception.Message,
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Error);
+            }
+
+            return;
+        }
 
         _timer.Start();
     }
@@ -379,10 +413,10 @@ public partial class ReviewSpeechViewModel : ObservableObject
 
         SelectedEngine = engine;
 
-        ObservableCollectionExtensions.AddRange(Voices, voices);
+        Voices.AddRange(voices);
         SelectedVoice = voice;
 
-        ObservableCollectionExtensions.AddRange(Languages, languages);
+        Languages.AddRange(languages);
         SelectedLanguage = language;
 
         _videoFileName = videoFileName;
@@ -392,7 +426,7 @@ public partial class ReviewSpeechViewModel : ObservableObject
         {
             SelectedLine = Lines[0];
             LineGrid.SelectedIndex = 0;
-            LineGrid.ScrollIntoView(LineGrid.SelectedItem, null);
+            LineGrid.ScrollIntoView(Lines[0]);
         }
     }
 
@@ -610,8 +644,8 @@ public partial class ReviewSpeechViewModel : ObservableObject
                 // moved or shared, and Import resolves the path against the JSON's own directory.
                 // Forward slash so the same JSON opens on Windows, macOS and Linux.
                 AudioFileName = string.IsNullOrEmpty(targetFileName) ? string.Empty : "wav/" + Path.GetFileName(targetFileName),
-                StartMs = (long)Math.Round((double)line.StepResult.Paragraph.StartTime.TotalMilliseconds, MidpointRounding.AwayFromZero),
-                EndMs = (long)Math.Round((double)line.StepResult.Paragraph.EndTime.TotalMilliseconds, MidpointRounding.AwayFromZero),
+                StartMs = (long)Math.Round(line.StepResult.Paragraph.StartTime.TotalMilliseconds, MidpointRounding.AwayFromZero),
+                EndMs = (long)Math.Round(line.StepResult.Paragraph.EndTime.TotalMilliseconds, MidpointRounding.AwayFromZero),
                 VoiceName = line.StepResult.Voice?.Name ?? string.Empty,
                 // Per-line engine snapshot, not the global SelectedEngine — different rows can
                 // come from different engines via the cast workflow, and on re-import we want
@@ -1478,11 +1512,29 @@ public partial class ReviewSpeechViewModel : ObservableObject
 
             // Same preference order as SelectedModelChanged: the saved language, then English,
             // then whatever comes first.
-            SelectedLanguage = Languages.FirstOrDefault(p => p.Name == Se.Settings.Video.TextToSpeech.ElevenLabsLanguage)
-                               ?? Languages.FirstOrDefault(p => p.Code == "en")
-                               ?? Languages.FirstOrDefault();
+            SelectedLanguage = ResolveSavedLanguage(engine);
         }
     }
+
+    /// <summary>
+    /// The language to preselect for <paramref name="engine"/> from the current
+    /// <see cref="Languages"/> list. The CrispASR cloning engines lead with "Auto" and persist
+    /// per-engine picks — restore those, and fall back to Auto (first entry) rather than English
+    /// so an untouched language combo keeps the engine's pre-language-selection behaviour.
+    /// Everything else keeps the saved-ElevenLabs → English → first order.
+    /// </summary>
+    private TtsLanguage? ResolveSavedLanguage(ITtsEngine engine) => engine switch
+    {
+        MossTtsCrispAsr => Languages.FirstOrDefault(p => p.Name == Se.Settings.Video.TextToSpeech.MossTtsCrispAsrLanguage)
+                           ?? Languages.FirstOrDefault(),
+        CosyVoice3CrispAsr => Languages.FirstOrDefault(p => p.Name == Se.Settings.Video.TextToSpeech.CosyVoice3CrispAsrLanguage)
+                              ?? Languages.FirstOrDefault(),
+        Qwen3TtsCrispAsr => Languages.FirstOrDefault(p => p.Name == Se.Settings.Video.TextToSpeech.Qwen3TtsCrispAsrLanguage)
+                            ?? Languages.FirstOrDefault(),
+        _ => Languages.FirstOrDefault(p => p.Name == Se.Settings.Video.TextToSpeech.ElevenLabsLanguage)
+             ?? Languages.FirstOrDefault(p => p.Code == "en")
+             ?? Languages.FirstOrDefault(),
+    };
 
     internal void SelectedLanguageChanged(object? sender, SelectionChangedEventArgs e)
     {
@@ -1498,7 +1550,7 @@ public partial class ReviewSpeechViewModel : ObservableObject
             {
                 var voices = await murf.GetVoices(SelectedLanguage?.Code ?? string.Empty);
                 Voices.Clear();
-                ObservableCollectionExtensions.AddRange(Voices, voices);
+                Voices.AddRange(voices);
 
                 var lastVoice = Voices.FirstOrDefault(v => v.Name == Se.Settings.Video.TextToSpeech.Voice);
                 if (lastVoice == null)
@@ -1540,11 +1592,7 @@ public partial class ReviewSpeechViewModel : ObservableObject
                     Languages.Add(language);
                 }
 
-                SelectedLanguage = Languages.FirstOrDefault(p => p.Name == Se.Settings.Video.TextToSpeech.ElevenLabsLanguage);
-                if (SelectedLanguage == null)
-                {
-                    SelectedLanguage = Languages.FirstOrDefault(p => p.Code == "en");
-                }
+                SelectedLanguage = ResolveSavedLanguage(engine);
             }
         });
     }
@@ -1795,9 +1843,8 @@ public partial class ReviewSpeechViewModel : ObservableObject
         var regenerateInFlight = !IsRegenerateEnabled;
 
         _skipAutoContinue = true;
-        _timer.Stop();
-        _timer.Elapsed -= OnTimerOnElapsed;
-        _timer.Dispose();
+        _isClosing = true;
+        _timer.StopAndDispose(OnTimerOnElapsed);
         try { _cancellationTokenSource.Cancel(); } catch (ObjectDisposedException) { }
         if (!regenerateInFlight)
         {
@@ -1849,7 +1896,7 @@ public partial class ReviewSpeechViewModel : ObservableObject
         UiUtil.SaveWindowPosition(Window);
     }
 
-    internal void DataGridDoubleClicked()
+    internal void LineGridDoubleClicked()
     {
         var line = SelectedLine;
         if (line == null || line.IsPlaying || !line.IsPlayingEnabled)

@@ -30,6 +30,7 @@ public partial class ReviewSpeechHistoryViewModel : ObservableObject
     private LibMpvDynamicPlayer? _mpvContext;
     private Lock _playLock;
     private readonly System.Timers.Timer _timer;
+    private volatile bool _isClosing;
     private CancellationTokenSource _cancellationTokenSource;
     private CancellationToken _cancellationToken;
 
@@ -47,6 +48,11 @@ public partial class ReviewSpeechHistoryViewModel : ObservableObject
 
     private void OnTimerOnElapsed(object? sender, ElapsedEventArgs e)
     {
+        if (_isClosing)
+        {
+            return;
+        }
+
         _timer.Stop();
 
         // Same shape as the review window's watchdog: read mpv state under the lock (the
@@ -68,7 +74,12 @@ public partial class ReviewSpeechHistoryViewModel : ObservableObject
             return;
         }
 
-        _timer.Start();
+        // OnWindowClosing may have disposed the timer while this handler ran; Start() on a disposed
+        // timer throws ObjectDisposedException (no longer swallowed on modern .NET). (#12739)
+        if (!_isClosing)
+        {
+            _timer.Start();
+        }
     }
 
     private void StopPlay()
@@ -198,7 +209,8 @@ public partial class ReviewSpeechHistoryViewModel : ObservableObject
 
     internal void OnWindowClosing(WindowClosingEventArgs e)
     {
-        _timer.Stop();
+        _isClosing = true;
+        _timer.StopAndDispose(OnTimerOnElapsed);
         _cancellationTokenSource.Cancel();
         lock (_playLock)
         {

@@ -12,9 +12,10 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
-using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
+using Nikse.SubtitleEdit.UiLogic;
+using Nikse.SubtitleEdit.UiLogic.LlamaCpp;
 
 namespace Nikse.SubtitleEdit.Features.Translate;
 
@@ -28,7 +29,7 @@ public partial class DownloadLlamaCppViewModel : ObservableObject
     public Window? Window { get; set; }
     public bool OkPressed { get; private set; }
 
-    /// <summary>"cpu", "vulkan" or "cuda" - which llama.cpp build to download (Windows only).</summary>
+    /// <summary>"cpu", "vulkan", "cuda" or "cuda13" - which llama.cpp build to download (Windows only).</summary>
     public string Variant { get; set; } = LlamaCppDownloadService.VariantCpu;
 
     /// <summary>The model to download, or null to only install the engine.</summary>
@@ -90,16 +91,16 @@ public partial class DownloadLlamaCppViewModel : ObservableObject
 
                 if (LlamaCppDownloadService.VariantNeedsCudaRuntime(Variant))
                 {
-                    TitleText = string.Format(Se.Language.General.DownloadingX, "CUDA runtime");
+                    TitleText = string.Format(Se.Language.General.DownloadingX, Se.Language.General.CudaRuntime);
                     using var cudartStream = new MemoryStream();
-                    await _downloadService.DownloadCudaRuntime(cudartStream, MakeProgress(), token);
+                    await _downloadService.DownloadCudaRuntime(cudartStream, Variant, MakeProgress(), token);
                     if (token.IsCancellationRequested)
                     {
                         Close();
                         return;
                     }
 
-                    TitleText = string.Format(Se.Language.General.UnpackingX, "CUDA runtime");
+                    TitleText = string.Format(Se.Language.General.UnpackingX, Se.Language.General.CudaRuntime);
                     cudartStream.Position = 0;
                     _zipUnpacker.UnpackZipStream(cudartStream, folder, string.Empty, true, new List<string>(), null);
                 }
@@ -159,7 +160,7 @@ public partial class DownloadLlamaCppViewModel : ObservableObject
         }
         catch (Exception ex)
         {
-            ProgressText = "Download failed";
+            ProgressText = Se.Language.General.DownloadFailed;
             Error = ex.Message;
             Se.LogError(ex, "Error downloading llama.cpp");
         }
@@ -190,7 +191,7 @@ public partial class DownloadLlamaCppViewModel : ObservableObject
             }
 
             engineStream.Position = 0;
-            var hash = DownloadHashManager.ComputeSha256(engineStream);
+            var hash = Sha256Util.ComputeSha256(engineStream);
 
             var sidecar = Path.Combine(folder, ".installed.sha256");
             File.WriteAllText(sidecar, key + Environment.NewLine + hash);
@@ -208,11 +209,11 @@ public partial class DownloadLlamaCppViewModel : ObservableObject
             return;
         }
 
-        if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+        if (OperatingSystem.IsMacOS())
         {
             MacHelper.MakeExecutable(path);
         }
-        else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+        else if (OperatingSystem.IsLinux())
         {
             LinuxHelper.MakeExecutable(path);
         }

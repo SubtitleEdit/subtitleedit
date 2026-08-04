@@ -107,4 +107,34 @@ public class VobSubColorIsolationTest
         Assert.Equal(SKColors.White, result.GetPixel(4, 0));
         Assert.Equal(SKColors.Black, result.GetPixel(0, 7));
     }
+
+    [Fact]
+    public void Isolate_OutlineOutnumbersFill_FillStillWins()
+    {
+        // Issue #12772 part 3: with the real .idx palette a thick outline can hold MORE
+        // pixels than the fill (3,715 outline vs 1,668 fill on the reporter's disc), so
+        // frequency-based selection kept the outline and OCR read fused blobs. The fill is
+        // the innermost plane — it must win regardless of pixel counts. Build a 16x16 frame:
+        // an 8x8 fill block (64 px) fully wrapped by a 3-pixel-thick outline ring (~300 px).
+        var fill = new SKColor(229, 229, 229);
+        var outline = new SKColor(0, 0, 0);
+        using var source = MakeBitmap(16, 16, (x, y) =>
+        {
+            if (x is >= 4 and <= 11 && y is >= 4 and <= 11)
+            {
+                return fill; // 64 pixels, entirely enclosed
+            }
+            if (x is >= 1 and <= 14 && y is >= 1 and <= 14)
+            {
+                return outline; // 132 pixels, faces the transparent background
+            }
+            return SKColors.Transparent;
+        });
+
+        using var result = VobSubColorIsolation.Isolate(source);
+
+        Assert.Equal(SKColors.Black, result.GetPixel(7, 7));    // fill kept
+        Assert.Equal(SKColors.White, result.GetPixel(2, 2));    // outline dropped
+        Assert.Equal(SKColors.White, result.GetPixel(0, 0));    // background
+    }
 }

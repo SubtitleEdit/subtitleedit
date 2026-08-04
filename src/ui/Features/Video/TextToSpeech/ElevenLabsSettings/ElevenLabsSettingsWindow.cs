@@ -35,7 +35,7 @@ public class ElevenLabsSettingsWindow : Window
             [!Slider.ValueProperty] = new Binding(nameof(ElevenLabsSettingsViewModel.Stability)),
         };
         var labelStabilityValue = UiUtil.MakeLabel().WithBindText(vm, nameof(ElevenLabsSettingsViewModel.Stability), new DoubleToTwoDecimalConverter());
-        var buttonStability = UiUtil.MakeButton(vm.ShowStabilityHelpCommand, IconNames.Help);
+        var buttonStability = UiUtil.MakeButton(vm.ShowStabilityHelpCommand, IconNames.Help, $"{Se.Language.Video.TextToSpeech.Stability} - {Se.Language.General.Help}");
 
         var labelSimilarity = UiUtil.MakeLabel(Se.Language.Video.TextToSpeech.Similarity);
         var sliderSimilarity = new Slider
@@ -48,7 +48,7 @@ public class ElevenLabsSettingsWindow : Window
             [!Slider.ValueProperty] = new Binding(nameof(ElevenLabsSettingsViewModel.Similarity)),
         };
         var labelSimilarityValue = UiUtil.MakeLabel().WithBindText(vm, nameof(ElevenLabsSettingsViewModel.Similarity), new DoubleToTwoDecimalConverter());
-        var buttonSimilarity = UiUtil.MakeButton(vm.ShowSimilarityHelpCommand, IconNames.Help);
+        var buttonSimilarity = UiUtil.MakeButton(vm.ShowSimilarityHelpCommand, IconNames.Help, $"{Se.Language.Video.TextToSpeech.Similarity} - {Se.Language.General.Help}");
 
         var labelSpeakerBoost = UiUtil.MakeLabel(Se.Language.Video.TextToSpeech.SpeakerBoost);
         var sliderSpeakerBoost = new Slider
@@ -61,7 +61,7 @@ public class ElevenLabsSettingsWindow : Window
             [!Slider.ValueProperty] = new Binding(nameof(ElevenLabsSettingsViewModel.SpeakerBoost)),
         };
         var labelSpeakerBoostValue = UiUtil.MakeLabel().WithBindText(vm, nameof(ElevenLabsSettingsViewModel.SpeakerBoost), new DoubleToTwoDecimalConverter());
-        var buttonSpeakerBoost = UiUtil.MakeButton(vm.ShowSpeakerBoostHelpCommand, IconNames.Help);
+        var buttonSpeakerBoost = UiUtil.MakeButton(vm.ShowSpeakerBoostHelpCommand, IconNames.Help, $"{Se.Language.Video.TextToSpeech.SpeakerBoost} - {Se.Language.General.Help}");
 
         var labelSpeed = UiUtil.MakeLabel(Se.Language.General.Speed);
         var sliderSpeed = new Slider
@@ -74,7 +74,7 @@ public class ElevenLabsSettingsWindow : Window
             [!Slider.ValueProperty] = new Binding(nameof(ElevenLabsSettingsViewModel.Speed)),
         };
         var labelSpeedValue = UiUtil.MakeLabel().WithBindText(vm, nameof(ElevenLabsSettingsViewModel.Speed), new DoubleToTwoDecimalConverter());
-        var buttonSpeed = UiUtil.MakeButton(vm.ShowSpeedHelpCommand, IconNames.Help);
+        var buttonSpeed = UiUtil.MakeButton(vm.ShowSpeedHelpCommand, IconNames.Help, $"{Se.Language.General.Speed} - {Se.Language.General.Help}");
 
         var labelStyleExaggeration = UiUtil.MakeLabel(Se.Language.General.StyleExaggeration);
         var sliderStyleExaggeration = new Slider
@@ -87,7 +87,7 @@ public class ElevenLabsSettingsWindow : Window
             [!Slider.ValueProperty] = new Binding(nameof(ElevenLabsSettingsViewModel.StyleExaggeration)),
         };
         var labelStyleExaggerationValue = UiUtil.MakeLabel().WithBindText(vm, nameof(ElevenLabsSettingsViewModel.StyleExaggeration), new DoubleToTwoDecimalConverter());
-        var buttonStyleExaggeration = UiUtil.MakeButton(vm.ShowStyleExaggerationHelpCommand, IconNames.Help);
+        var buttonStyleExaggeration = UiUtil.MakeButton(vm.ShowStyleExaggerationHelpCommand, IconNames.Help, $"{Se.Language.General.StyleExaggeration} - {Se.Language.General.Help}");
 
         var buttonWeb = UiUtil.MakeButton(Se.Language.General.MoreInfo, vm.ShowMoreOnWebCommand).WithIconLeft(IconNames.Web);
         var buttonReset = UiUtil.MakeButton(Se.Language.General.Reset, vm.ResetCommand).WithIconLeft(IconNames.Repeat);
@@ -149,7 +149,7 @@ public class ElevenLabsSettingsWindow : Window
 
         Content = grid;
 
-        Activated += delegate { buttonOk.Focus(); }; // hack to make OnKeyDown work
+        Activated += delegate { sliderStability.Focus(); }; // initial focus on an input, not an action button - a focused button clicks on bare Space
     }
 
     protected override void OnKeyDown(KeyEventArgs e)

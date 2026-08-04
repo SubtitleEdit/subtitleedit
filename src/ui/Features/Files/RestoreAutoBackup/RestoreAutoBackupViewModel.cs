@@ -21,7 +21,6 @@ public partial class RestoreAutoBackupViewModel : ObservableObject
     [ObservableProperty] private DisplayFile? _selectedFile;
     [ObservableProperty] private ObservableCollection<DisplayFile> _files;
     [ObservableProperty] private bool _isEmptyFilesVisible;
-    [ObservableProperty] private string _filesSummaryText = string.Empty;
 
     public Window? Window { get; set; }
     public string? RestoreFileName { get; set; }
@@ -69,8 +68,6 @@ public partial class RestoreAutoBackupViewModel : ObservableObject
             SelectedFile = Files[0];
             IsEmptyFilesVisible = true;
         }
-
-        FilesSummaryText = string.Format(Se.Language.File.RestoreAutoBackup.XBackups, Files.Count);
     }
 
     [RelayCommand]
@@ -169,7 +166,7 @@ public partial class RestoreAutoBackupViewModel : ObservableObject
         }
     }
 
-    public void DataGridSelectionChanged(object? sender, SelectionChangedEventArgs e)
+    public void GridSelectionChanged(object? sender, SelectionChangedEventArgs e)
     {
         IsOkButtonEnabled = e.AddedItems.Count > 0;
     }

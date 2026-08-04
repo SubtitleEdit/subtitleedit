@@ -105,7 +105,7 @@ public class VisualSyncWindow : Window
         var labelInfo = UiUtil.MakeLabel(string.Empty).WithBindText(vm, nameof(vm.AdjustInfo));
         var buttonSync = new SplitButton
         {
-            Content = Se.Language.Sync.Sync,
+            Content = Se.Language.General.Sync,
             Command = vm.SyncCommand,
             Flyout = new MenuFlyout
             {
@@ -202,7 +202,7 @@ public class VisualSyncWindow : Window
 
         Content = grid;
 
-        Activated += delegate { buttonOk.Focus(); }; // hack to make OnKeyDown work
+        Activated += delegate { comboBoxLeft.Focus(); }; // initial focus on an input, not an action button - a focused button clicks on bare Space
 
         AddHandler(KeyDownEvent, vm.OnKeyDownHandler, RoutingStrategies.Tunnel | RoutingStrategies.Bubble, handledEventsToo: false);
         Loaded += (_, _) => vm.OnLoaded();

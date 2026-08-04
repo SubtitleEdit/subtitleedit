@@ -1,5 +1,7 @@
 using System;
+using System.Collections.ObjectModel;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using Avalonia.Controls;
 using Avalonia.Input;
@@ -50,6 +52,19 @@ public partial class CosyVoice3CrispAsrSettingsViewModel : ObservableObject
         Se.Settings.Video.TextToSpeech.CosyVoice3CrispAsrSpeed = Math.Clamp(value, 0.25, 4.0);
     }
 
+    // Language spoken in imported reference WAVs, sent as the request's `source_lang` field so
+    // cross-lingual cloning engages even when the server cannot detect the reference language
+    // itself (its detection only answers for non-Latin scripts). "Auto" (empty code) sends no
+    // field. Applies to imported WAV clones only — baked presets carry their own bank language.
+    public ObservableCollection<TtsLanguage> SourceLanguages { get; } = new(CosyVoice3Languages.All);
+
+    [ObservableProperty] private TtsLanguage? _selectedSourceLanguage;
+
+    partial void OnSelectedSourceLanguageChanged(TtsLanguage? value)
+    {
+        Se.Settings.Video.TextToSpeech.CosyVoice3CrispAsrSourceLanguage = value?.Code ?? string.Empty;
+    }
+
     [ObservableProperty] private string _modelsFolder = string.Empty;
     [ObservableProperty] private string _voicesFolder = string.Empty;
     [ObservableProperty] private bool _isEngineInstalled;
@@ -68,6 +83,10 @@ public partial class CosyVoice3CrispAsrSettingsViewModel : ObservableObject
         ModelsFolder = CosyVoice3CrispAsr.GetSetModelsFolder();
         VoicesFolder = CosyVoice3CrispAsr.GetSetVoicesFolder();
         Speed = Math.Clamp(Se.Settings.Video.TextToSpeech.CosyVoice3CrispAsrSpeed, 0.25, 4.0);
+        var savedSourceLanguage = Se.Settings.Video.TextToSpeech.CosyVoice3CrispAsrSourceLanguage;
+        SelectedSourceLanguage =
+            SourceLanguages.FirstOrDefault(l => l.Code == savedSourceLanguage && !string.IsNullOrEmpty(l.Code))
+            ?? SourceLanguages.FirstOrDefault();
         PresetsLabel = $"{CosyVoice3CrispAsr.Presets.Length} baked presets (zero-shot + FLEURS en/de/zh/ja/fr/es/ko)";
         Refresh();
     }
@@ -79,21 +98,21 @@ public partial class CosyVoice3CrispAsrSettingsViewModel : ObservableObject
 
         if (!IsEngineInstalled)
         {
-            EngineLabel = "CrispASR not installed";
+            EngineLabel = string.Format(Se.Language.Video.TtsEngineNotInstalled, "CrispASR");
             EngineBrush = Red();
-            EngineDownloadButtonText = "Download CrispASR";
+            EngineDownloadButtonText = string.Format(Se.Language.General.DownloadX, "CrispASR");
         }
         else if (CosyVoice3CrispAsr.GetEngineUpdateStatus() == DownloadHashManager.UpdateStatus.UpdateAvailable)
         {
-            EngineLabel = "CrispASR - update available";
+            EngineLabel = string.Format(Se.Language.Video.TtsEngineUpdateAvailable, "CrispASR");
             EngineBrush = Amber();
-            EngineDownloadButtonText = "Update CrispASR";
+            EngineDownloadButtonText = string.Format(Se.Language.Video.TtsUpdateX, "CrispASR");
         }
         else
         {
             EngineLabel = "CrispASR";
             EngineBrush = Green();
-            EngineDownloadButtonText = "Re-download CrispASR";
+            EngineDownloadButtonText = string.Format(Se.Language.General.ReDownloadX, "CrispASR");
         }
 
         if (IsEngineInstalled)

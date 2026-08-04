@@ -130,8 +130,11 @@ public class ConvertActorsWindow : Window
 
         Content = grid;
 
-        Activated += delegate { buttonOk.Focus(); };
+        Activated += delegate { comboBoxFrom.Focus(); }; // initial focus on an input, not an action button - a focused button clicks on bare Space
         KeyDown += (_, e) => vm.OnKeyDown(e);
+
+        Closing += delegate { UiUtil.SaveWindowPosition(this); };
+        Loaded += delegate { UiUtil.RestoreWindowPosition(this); };
     }
 
     private static Border MakeSubtitleView(ConvertActorsViewModel vm)
@@ -140,26 +143,21 @@ public class ConvertActorsWindow : Window
         var shortTimeConverter = new TimeSpanToDisplayShortConverter();
         var colorConverter = new TextWithSubtitleSyntaxHighlightingConverter();
 
-        var dataGrid = new DataGrid
+        // Sorting dropped in the DataGrid -> TableView conversion: the grid previews
+        // subtitle lines in timeline order.
+        var dataGrid = TableViewExtras.MakeTableView();
+        dataGrid.Width = double.NaN;
+        dataGrid.Height = double.NaN;
+        dataGrid.DataContext = vm;
+        dataGrid.ItemsSource = vm.Subtitles;
+        dataGrid.Columns.AddRange(new TableViewColumn[]
         {
-            AutoGenerateColumns = false,
-            SelectionMode = DataGridSelectionMode.Single,
-            CanUserResizeColumns = true,
-            CanUserSortColumns = true,
-            HorizontalAlignment = HorizontalAlignment.Stretch,
-            VerticalAlignment = VerticalAlignment.Stretch,
-            Width = double.NaN,
-            Height = double.NaN,
-            DataContext = vm,
-            ItemsSource = vm.Subtitles,
-            Columns =
-            {
-                new DataGridTemplateColumn
+                new SeTableViewColumn
                 {
                     Header = Se.Language.General.Apply,
-                    CellTheme = UiUtil.DataGridNoBorderNoPaddingCellTheme,
-                    IsReadOnly = false,
-                    Width = new DataGridLength(55),
+                    CellTheme = UiUtil.TableViewNoPaddingCellTheme,
+                    HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
+                    Width = new GridLength(55),
                     CellTemplate = new FuncDataTemplate<ConvertActorsDisplayItem>((_, _) =>
                         new CheckBox
                         {
@@ -169,26 +167,29 @@ public class ConvertActorsWindow : Window
                             [!CheckBox.IsCheckedProperty] = new Binding(nameof(ConvertActorsDisplayItem.IsChecked)) { Mode = BindingMode.TwoWay },
                         }),
                 },
-                new DataGridTextColumn
+                new SeTableViewColumn
                 {
                     Header = Se.Language.General.NumberSymbol,
-                    CellTheme = UiUtil.DataGridNoBorderNoPaddingCellTheme,
+                    CellTheme = UiUtil.TableViewCellTheme,
+                    HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
                     Binding = new Binding(nameof(ConvertActorsDisplayItem.Number)),
-                    IsReadOnly = true,
+                    // Content-sized (Auto) on the DataGrid; TableView treats Auto as star.
+                    Width = new GridLength(60),
                 },
-                new DataGridTextColumn
+                new SeTableViewColumn
                 {
                     Header = Se.Language.General.Show,
-                    CellTheme = UiUtil.DataGridNoBorderNoPaddingCellTheme,
+                    CellTheme = UiUtil.TableViewCellTheme,
+                    HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
                     Binding = new Binding(nameof(ConvertActorsDisplayItem.StartTime)) { Converter = fullTimeConverter },
-                    IsReadOnly = true,
+                    Width = new GridLength(120),
                 },
-                new DataGridTemplateColumn
+                new SeTableViewColumn
                 {
                     Header = Se.Language.General.Before,
-                    CellTheme = UiUtil.DataGridNoBorderNoPaddingCellTheme,
-                    IsReadOnly = true,
-                    Width = new DataGridLength(1, DataGridLengthUnitType.Star),
+                    CellTheme = UiUtil.TableViewNoPaddingCellTheme,
+                    HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
+                    Width = new GridLength(1, GridUnitType.Star),
                     CellTemplate = new FuncDataTemplate<ConvertActorsDisplayItem>((_, _) =>
                     {
                         var border = new Border { Padding = new Thickness(4, 2) };
@@ -206,12 +207,12 @@ public class ConvertActorsWindow : Window
                         return border;
                     }),
                 },
-                new DataGridTemplateColumn
+                new SeTableViewColumn
                 {
                     Header = Se.Language.General.After,
-                    CellTheme = UiUtil.DataGridNoBorderNoPaddingCellTheme,
-                    IsReadOnly = true,
-                    Width = new DataGridLength(1, DataGridLengthUnitType.Star),
+                    CellTheme = UiUtil.TableViewNoPaddingCellTheme,
+                    HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
+                    Width = new GridLength(1, GridUnitType.Star),
                     CellTemplate = new FuncDataTemplate<ConvertActorsDisplayItem>((_, _) =>
                     {
                         var border = new Border { Padding = new Thickness(4, 2) };
@@ -229,9 +230,11 @@ public class ConvertActorsWindow : Window
                         return border;
                     }),
                 },
-            },
-        };
-        _ = new DataGridCheckboxMultiSelect<ConvertActorsDisplayItem>(dataGrid,
+        });
+
+        // Extended selection is native ListBox behavior on TableView; only the
+        // Space-toggles-checkbox piece of the old CheckboxMultiSelect needs wiring.
+        TableViewExtras.AddSpaceToggle<ConvertActorsDisplayItem>(dataGrid,
             item => item.IsChecked, (item, v) => item.IsChecked = v);
 
         return UiUtil.MakeBorderForControlNoPadding(dataGrid);

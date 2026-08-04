@@ -1,4 +1,5 @@
 ﻿using System.IO;
+using Nikse.SubtitleEdit.Core.Common;
 
 namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
 {
@@ -12,7 +13,8 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
         public readonly string HandlerType;
         public readonly string HandlerName = string.Empty;
 
-        public bool IsTextSubtitle => HandlerType == "sbtl" || HandlerType == "text";
+        // "subt" is the handler for stpp (TTML/IMSC1) tracks, ISO/IEC 14496-30
+        public bool IsTextSubtitle => HandlerType == "sbtl" || HandlerType == "text" || HandlerType == "subt";
 
         public bool IsVobSubSubtitle => HandlerType == "subp";
 
@@ -55,7 +57,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
                 else if (Name == "hdlr")
                 {
                     Buffer = new byte[Size - 4];
-                    fs.Read(Buffer, 0, Buffer.Length);
+                    fs.ReadFully(Buffer, 0, Buffer.Length);
                     HandlerType = GetString(8, 4);
                     if (Size > 25)
                     {

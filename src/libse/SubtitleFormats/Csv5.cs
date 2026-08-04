@@ -57,7 +57,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     var start = parts[0].RemoveChar(' ', '-');
                     var end = parts[1].RemoveChar(' ', '-');
                     string text = line.Remove(0, parts[0].Length + 1 + parts[1].Length).Replace("///", Environment.NewLine).Replace("\"", string.Empty).Trim();
-                    if (text.StartsWith(",", StringComparison.Ordinal))
+                    if (text.StartsWith(','))
                     {
                         text = text.Remove(0, 1);
                         if (TimeCodeRegex.IsMatch(start) && TimeCodeRegex.IsMatch(end))
@@ -80,7 +80,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 else if (!string.IsNullOrWhiteSpace(line))
                 {
                     _errorCount++;
-                    if (line.StartsWith("$", StringComparison.Ordinal))
+                    if (line.StartsWith('$'))
                     {
                         _errorCount += 500;
                     }

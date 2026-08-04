@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Italian abbreviations - a period here ends an abbreviation, not a sentence, so "Fix common
+  errors" must not capitalize the following word (issue #13082). Matching is case insensitive,
+  so one entry per abbreviation is enough. Abbreviations with an inner period (e.g. "a.m.") are
+  already recognized by a general rule and need no entry here.
+-->
+<Abbreviations>
+  <Item>art.</Item>
+  <Item>Avv.</Item>
+  <Item>ca.</Item>
+  <Item>cap.</Item>
+  <Item>cfr.</Item>
+  <Item>Dott.</Item>
+  <Item>Dr.</Item>
+  <Item>ecc.</Item>
+  <Item>es.</Item>
+  <Item>Geom.</Item>
+  <Item>Ing.</Item>
+  <Item>num.</Item>
+  <Item>on.</Item>
+  <Item>pag.</Item>
+  <Item>Prof.</Item>
+  <Item>Rag.</Item>
+  <Item>Sig.</Item>
+  <Item>tel.</Item>
+  <Item>vol.</Item>
+</Abbreviations>

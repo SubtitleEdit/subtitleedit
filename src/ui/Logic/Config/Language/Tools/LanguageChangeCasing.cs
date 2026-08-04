@@ -2,8 +2,9 @@
 
 public class LanguageChangeCasing
 {
-    public string Title { get; set; }
     public string FixNames { get; set; }
+    public string NamesX { get; set; }
+    public string HitsX { get; set; }
     public string ExtraNames { get; set; }
     public string EnterExtraNamesHint { get; set; }
     public string OnlyFixUppercaseLines { get; set; }
@@ -13,8 +14,9 @@ public class LanguageChangeCasing
 
     public LanguageChangeCasing()
     {
-        Title = "Change casing";
         FixNames = "Fix names";
+        NamesX = "Names: {0:#,##0}";
+        HitsX = "Hits: {0:#,##0}";
         ExtraNames = "Extra names";
         EnterExtraNamesHint = "Enter extra names to fix, separated by comma";
         OnlyFixUppercaseLines = "Only fix uppercase lines";

@@ -28,8 +28,10 @@ public class LanguageTools
     public LanguageNetflixCheckAndFix NetflixCheckAndFix { get; set; } = new();
     public LanguageImageBasedEdit ImageBasedEdit { get; set; } = new();
     public LanguageRemoveTextForHearingImpaired RemoveTextForHearingImpaired { get; set; } = new();
-    public string PickAlignmentTitle { get; set; }
+    public LanguageRemoveUnicodeCharacters RemoveUnicodeCharacters { get; set; } = new();
     public string PickFontNameTitle { get; set; }
+    public string PickFontNameInstalledFonts { get; set; }
+    public string PickFontNameCollectedFonts { get; set; }
     public string ColorPickerTitle { get; set; }
     public string FilterLayersTitle { get; set; }
     public string FilterLayersHideFromWaveform { get; set; }
@@ -37,13 +39,14 @@ public class LanguageTools
     public string FilterLayersHideFromVideoPreview { get; set; }
     public string PickSubtitleFormat { get; set; }
     public string PickSubtitleFormatImageBasedNoPreview { get; set; }
-    public string PickLayerTitle { get; set; }
     public string RecentColors { get; set; }
+    public string FixCommonErrorsSettingsTitle { get; set; }
 
     public LanguageTools()
     {
-        PickAlignmentTitle = "Choose alignment";
         PickFontNameTitle = "Choose font name";
+        PickFontNameInstalledFonts = "Installed fonts";
+        PickFontNameCollectedFonts = "Collected fonts";
         ColorPickerTitle = "Choose color";
         FilterLayersTitle = "Filter layers for display";
         FilterLayersHideFromWaveform = "Hide from waveform/spectrogram";
@@ -51,7 +54,7 @@ public class LanguageTools
         FilterLayersHideFromVideoPreview = "Hide from video preview";
         PickSubtitleFormat = "Choose subtitle format";
         PickSubtitleFormatImageBasedNoPreview = "Image-based subtitle format.\nBitmaps are generated during conversion - no text preview.";
-        PickLayerTitle = "Set layer";
         RecentColors = "Recent colors";
+        FixCommonErrorsSettingsTitle = "Fix common error settings";
     }
 }

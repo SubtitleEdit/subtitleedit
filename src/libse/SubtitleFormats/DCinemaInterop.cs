@@ -149,6 +149,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
             var mainListFont = xml.DocumentElement.SelectSingleNode("Font");
             var no = 0;
+            var txt = new StringBuilder();
+            var html = new StringBuilder();
             foreach (var p in subtitle.Paragraphs)
             {
                 if (!string.IsNullOrEmpty(p.Text))
@@ -261,8 +263,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         textNode.Attributes.Append(direction);
 
                         var i = 0;
-                        var txt = new StringBuilder();
-                        var html = new StringBuilder();
+                        txt.Clear();
+                        html.Clear();
                         XmlNode nodeTemp = xml.CreateElement("temp");
                         while (i < line.Length)
                         {
@@ -687,6 +689,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 System.Diagnostics.Debug.WriteLine(exception.Message);
             }
 
+            var pText = new StringBuilder();
             foreach (XmlNode node in xml.DocumentElement.SelectNodes("//Subtitle"))
             {
                 try
@@ -696,7 +699,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                                        node.ParentNode.Attributes["Italic"].InnerText.Equals("yes", StringComparison.OrdinalIgnoreCase);
 
                     var textLines = new List<SubtitleLine>();
-                    var pText = new StringBuilder();
+                    pText.Clear();
                     var vAlignment = string.Empty;
                     var lastVPosition = string.Empty;
                     var extra = string.Empty;

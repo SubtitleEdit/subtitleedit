@@ -4,7 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Avalonia.Platform;
-using Nikse.SubtitleEdit.Core.AudioToText;
+using Nikse.SubtitleEdit.UiLogic.AudioToText;
 using Nikse.SubtitleEdit.Core.Settings;
 using Nikse.SubtitleEdit.Features.Video.SpeechToText.OpenAiCompatible;
 using Nikse.SubtitleEdit.Logic.Config;
@@ -67,7 +67,7 @@ public class OpenAiCompatibleSttEngine : IOnlineSttEngine
 
     public string GetAndCreateWhisperFolder()
     {
-        return WhisperHelper.GetWhisperFolder(WhisperChoice.OpenAiCompatible);
+        return WhisperHelper.GetWhisperFolder(WhisperChoice.OpenAiCompatible) ?? string.Empty;
     }
 
     public string GetAndCreateWhisperModelFolder(WhisperModel? whisperModel)

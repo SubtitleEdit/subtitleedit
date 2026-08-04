@@ -50,7 +50,7 @@ public class GetPluginsWindow : Window
                 VerticalAlignment = VerticalAlignment.Bottom,
                 Child = new TextBlock
                 {
-                    Text = Se.Language.Plugins.Update,
+                    Text = Se.Language.General.Update,
                     FontSize = 10,
                     FontWeight = FontWeight.SemiBold,
                     Foreground = Brushes.White,

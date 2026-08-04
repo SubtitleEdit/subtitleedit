@@ -2,6 +2,7 @@ using Avalonia.Controls;
 using Avalonia.Data;
 using Avalonia.Layout;
 using Nikse.SubtitleEdit.Logic;
+using Nikse.SubtitleEdit.Logic.Config;
 
 namespace Nikse.SubtitleEdit.Features.Video.TransparentSubtitles;
 
@@ -10,7 +11,7 @@ public class TransparentSettingsWindow : Window
     public TransparentSettingsWindow(TransparentSettingsViewModel vm)
     {
         UiUtil.InitializeWindow(this, GetType().Name);
-        Title = "Output settings";
+        Title = Se.Language.Video.OutputSettingsTitle;
         SizeToContent = SizeToContent.WidthAndHeight;
         CanResize = false;
         vm.Window = this;
@@ -41,7 +42,7 @@ public class TransparentSettingsWindow : Window
             Width = 400,
         };
 
-        var buttonBrowse = UiUtil.MakeButtonBrowse(vm.BrowseOutputFolderCommand);
+        var buttonBrowse = UiUtil.MakeButtonBrowse(vm.BrowseOutputFolderCommand, accessibleName: "Use output folder");
 
         var panelOutputFolder = new StackPanel
         {
@@ -86,7 +87,7 @@ public class TransparentSettingsWindow : Window
 
         Content = grid;
 
-        Activated += delegate { buttonOk.Focus(); }; // hack to make OnKeyDown work
+        Activated += delegate { checkBoxUseSourceFolder.Focus(); }; // initial focus on an input, not an action button - a focused button clicks on bare Space
         KeyDown += (_, e) => vm.OnKeyDown(e);
     }
 }

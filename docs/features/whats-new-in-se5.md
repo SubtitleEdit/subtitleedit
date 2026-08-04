@@ -14,11 +14,18 @@ Subtitle Edit 5 is the Avalonia-based, cross-platform version of Subtitle Edit. 
 ## Editing and Grid
 
 - **Show formatting in grid** — formatting tags (italic, bold, color, etc.) can now be rendered visually in the subtitle grid.
+- **Tag coloring in the subtitle text box** — HTML and ASSA tags are syntax-highlighted while you type, using a native text box so centering, IME/CJK input, right-to-left text, live spell check (red underlines, suggestions, add to dictionary, ignore all) and the full context menu all keep working with color tags enabled.
 - Edit controls Show/Hide/Duration are now optional and can be toggled on/off.
 - Deleting many lines at once in the subtitle grid / list view is dramatically faster.
 - New **Tools → Change formatting** dialog for adding or removing italic, bold, underline, and other formatting across selected lines.
 - New **Tools → Merge two subtitles** tool that combines two subtitles (or the loaded subtitle's text + translation) into one bilingual subtitle. Output as SubRip (overlapping pairs stacked as line 1 / line 2) or ASSA with two configurable styles (font, color, outline, shadow, top/bottom alignment) and a live preview.
 - **AI assistant for the current line** — ask a local AI model about the selected line or ask it for a change (fix errors, fit reading speed, more formal/casual, or a free-form request), from the text box context menu or the edit-box toolbar. Runs via llama.cpp, Ollama, or any OpenAI-compatible endpoint.
+
+## Spell Check
+
+- **Live spell check in the subtitle grid** — misspelled words are underlined in the grid, and the grid context menu offers suggestions, *Add to user dictionary* and *Ignore all* (when a single line is selected).
+
+See [Spell Check](spell-check.md) for details.
 
 ## Video
 
@@ -46,6 +53,19 @@ Subtitle Edit 5 is the Avalonia-based, cross-platform version of Subtitle Edit. 
 
 - New **Tools → Beautify time codes…** brings the SE 4 beautifier across, but as a live tool: two stacked waveform visualizers (original / beautified) show the result before you accept it, with prev/next navigation, frame and millisecond deltas, and a per-cue reason line (*snapped to shot change* · *min. gap enforced* · *min. duration enforced*, etc.).
 - The full **profile editor** (zones, chaining, connected-subtitle handling, per-cue gap, presets for Netflix and SDI) is available from the tool window and from Options → Settings → Waveform. Profile edits persist into `Settings.json`.
+
+## OCR
+
+Beyond the classic engines, image-to-text now includes AI-based local and online options:
+
+- **CrispEmbed** — a new local ggml-based OCR engine (same family as CrispASR) with GLM-OCR, GOT-OCR2 and Qwen3-VL backends, downloaded and managed by Subtitle Edit.
+- **llama.cpp vision models** — OCR through a server-managed llama.cpp instance, also available in Batch Convert and `seconv`.
+- More engines overall: Tesseract, nOCR, Binary OCR, Google Lens, Google Vision, Ollama, Mistral OCR, and Paddle OCR (standalone or Python).
+- **Show only forced subtitles** — a filter plus a *Forced* column, so only the forced lines are OCR'ed and returned (SE 4 parity).
+- **Histogram-based color isolation** for VobSub/DVD subtitles, making it easier to separate text from borders and background.
+- The spell-check dictionary is auto-selected from the OCR language, and the OCR fix replace lists are applied even when no Hunspell dictionary is installed.
+
+See [OCR](ocr.md) and [Video OCR](video-ocr.md) for details.
 
 ## Speech to Text
 
@@ -95,7 +115,7 @@ See [AI Review](ai-review.md) for details.
 
 ## Batch conversion
 
-- **OCR while converting** — Batch Convert can turn image-based subtitles into text-based formats in bulk, using nOCR, Binary OCR, Tesseract, Ollama, or PaddleOCR. Language and pixels-are-space settings can be auto-detected for nOCR/Binary OCR, so converting many files with similar fonts needs far less manual setup.
+- **OCR while converting** — Batch Convert can turn image-based subtitles into text-based formats in bulk, using nOCR, Binary OCR, Tesseract, Ollama, llama.cpp vision models, or PaddleOCR. Language and pixels-are-space settings can be auto-detected for nOCR/Binary OCR, so converting many files with similar fonts needs far less manual setup.
 - **Local auto-translate in the queue** — the new local engines (server-managed llama.cpp / TranslateGemma and CrispASR MADLAD) can be applied directly as a batch conversion step, fully offline.
 - **More chainable functions** — including the new *Change formatting* (add/remove italic, bold, underline, etc.) alongside the existing fixes, replacements, casing, time-code, gap, merge, and split operations.
 - **Speech-to-text batch mode** — transcribe many media files at once and save the results next to the source files.
@@ -111,7 +131,10 @@ See [Batch Convert](batch-convert.md), [OCR](ocr.md), and [Command Line (seconv)
 
 ## Subtitle Formats
 
+- Added **EBU-TT-D** (read and write) — the TTML distribution profile used by European broadcasters (BBC iPlayer, ARD/ZDF, NPO) and HbbTV.
 - Added **IMSC-Rosetta Timed Text** subtitle format support.
+- New **IMSC 1.1 image profile** export — a single self-contained TTML file with base64 PNG subtitles (`smpte:image`) for streaming and broadcast image-subtitle delivery, from File → Export and from the image/binary subtitle editor.
+- New **DVD sup (MuxMan/Scenarist)** image-based export — the classic DVD-Video subpicture `.sup` that DVD authoring tools import.
 - New **Import CSV/XLSX with custom columns** window for spreadsheets that don't fit the standard layout — pick which columns map to start, end, text, etc.
 
 ## Command Line (seconv)

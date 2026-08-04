@@ -14,6 +14,8 @@ public interface IShortcutManager
     IRelayCommand? CheckShortcuts(KeyEventArgs keyEventArgs, string activeControl);
     void ClearShortcuts();
     HashSet<Key> GetActiveKeys();
+    int ActiveKeyCount { get; }
+    bool TryGetSingleActiveKey(out Key key);
     bool IsControlPressed();
     bool IsShiftPressed();
 }

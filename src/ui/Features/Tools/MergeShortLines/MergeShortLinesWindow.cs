@@ -11,6 +11,8 @@ namespace Nikse.SubtitleEdit.Features.Tools.MergeShortLines;
 
 public class MergeShortLinesWindow : Window
 {
+    private NumericUpDown _numericUpDownSingleLineMaxLength = null!;
+
     public MergeShortLinesWindow(MergeShortLinesViewModel vm)
     {
         UiUtil.InitializeWindow(this, GetType().Name);
@@ -52,12 +54,15 @@ public class MergeShortLinesWindow : Window
 
         Content = grid;
 
-        Activated += delegate { buttonOk.Focus(); }; // hack to make OnKeyDown work
+        Activated += delegate { _numericUpDownSingleLineMaxLength.Focus(); }; // initial focus on an input, not an action button - a focused button clicks on bare Space
         KeyDown += vm.KeyDown;
         Loaded += delegate { vm.Loaded(); };
+
+        Closing += delegate { UiUtil.SaveWindowPosition(this); };
+        Loaded += delegate { UiUtil.RestoreWindowPosition(this); };
     }
 
-    private static Grid MakeControlsView(MergeShortLinesViewModel vm)
+    private Grid MakeControlsView(MergeShortLinesViewModel vm)
     {
         var grid = new Grid
         {
@@ -79,6 +84,7 @@ public class MergeShortLinesWindow : Window
 
         var labelSingleLineMaxLength = UiUtil.MakeLabel(Se.Language.Options.Settings.SingleLineMaxLength);
         var numericUpDownSingleLineMaxLength = UiUtil.MakeNumericUpDownInt(5, 1000, 10, 130, vm, nameof(vm.SingleLineMaxLength));
+        _numericUpDownSingleLineMaxLength = numericUpDownSingleLineMaxLength;
         numericUpDownSingleLineMaxLength.ValueChanged += (s, e) => vm.SetChanged();
 
         var labelMaxNumberOfLines = UiUtil.MakeLabel(Se.Language.Options.Settings.MaxLines);
@@ -122,45 +128,41 @@ public class MergeShortLinesWindow : Window
             .WithMarginTop(10)
             .WithMarginLeft(10);
 
-        var dataGrid = new DataGrid
+        // Sorting dropped in the DataGrid -> TableView conversion: the grid previews
+        // merge candidates in subtitle order.
+        var dataGrid = TableViewExtras.MakeTableView(multiSelect: false);
+        dataGrid.Width = double.NaN;
+        dataGrid.Height = double.NaN;
+        dataGrid.DataContext = vm;
+        dataGrid.ItemsSource = vm.Fixes;
+        dataGrid.Columns.AddRange(new TableViewColumn[]
         {
-            AutoGenerateColumns = false,
-            SelectionMode = DataGridSelectionMode.Single,
-            CanUserResizeColumns = true,
-            CanUserSortColumns = true,
-            HorizontalAlignment = HorizontalAlignment.Stretch,
-            VerticalAlignment = VerticalAlignment.Stretch,
-            Width = double.NaN,
-            Height = double.NaN,
-            DataContext = vm,
-            ItemsSource = vm.Fixes,
-            Columns =
-            {
-                new DataGridTextColumn
+                new SeTableViewColumn
                 {
                     Header = Se.Language.General.NumberSymbol,
                     Binding = new Binding(nameof(MergeShortLinesItem.Number)),
-                    CellTheme = UiUtil.DataGridNoBorderNoPaddingCellTheme,
-                    IsReadOnly = true,
+                    CellTheme = UiUtil.TableViewCellTheme,
+                    HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
+                    // Content-sized (Auto) on the DataGrid; TableView treats Auto as star.
+                    Width = new GridLength(60),
                 },
-                new DataGridTextColumn
+                new SeTableViewColumn
                 {
                     Header = Se.Language.General.Fix,
                     Binding = new Binding(nameof(MergeShortLinesItem.Fix)),
-                    Width = new DataGridLength(1, DataGridLengthUnitType.Star),
-                    CellTheme = UiUtil.DataGridNoBorderCellTheme,
-                    IsReadOnly = true,
+                    Width = new GridLength(1, GridUnitType.Star),
+                    CellTheme = UiUtil.TableViewCellTheme,
+                    HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
                 },
-            },
-        };
+        });
 
         dataGrid.AddHandler(InputElement.KeyDownEvent, (object? _, KeyEventArgs e) =>
         {
             if (e.Key is Key.Home or Key.End && dataGrid.ItemsSource is IList items && items.Count > 0)
             {
-                var target = e.Key == Key.Home ? items[0] : items[^1];
-                dataGrid.SelectedItem = target;
-                dataGrid.ScrollIntoView(target, null);
+                var index = e.Key == Key.Home ? 0 : items.Count - 1;
+                dataGrid.SelectedIndex = index;
+                dataGrid.ScrollIntoView(index);
                 e.Handled = true;
             }
         }, RoutingStrategies.Tunnel);

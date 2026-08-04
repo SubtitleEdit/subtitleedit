@@ -1,5 +1,6 @@
 using Avalonia;
 using Avalonia.Automation;
+using Avalonia.Automation.Peers;
 using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml.Styling;
@@ -19,6 +20,7 @@ using Optris.Icons.Avalonia.MaterialDesign;
 using System;
 using System.Linq;
 using System.Text;
+using Nikse.SubtitleEdit.UiLogic.SpellCheck;
 
 namespace Nikse.SubtitleEdit
 {
@@ -72,12 +74,23 @@ namespace Nikse.SubtitleEdit
                 // Load settings
                 Se.LoadSettings();
 
+                // Must precede the format warm-up below: the CHK format's constructor resolves
+                // code page 850, which throws NotSupportedException without this provider.
+                Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
+
+                // Building the subtitle-format list loads and JIT-compiles ~330 types, which cost
+                // ~40-90 ms on the UI thread inside the MainViewModel constructor. Start it now on
+                // a worker thread so it runs alongside the dependency-injection build and Avalonia's
+                // XAML parsing below; by the time the view model asks for the list it is usually
+                // already there, and if it isn't the caller just waits as long as it used to.
+                Nikse.SubtitleEdit.Core.SubtitleFormats.SubtitleFormat.WarmUpAsync();
+
                 // Wire the shared spell-check / OCR-fix engine (libuilogic) to the live UI settings so
                 // it reads the same values without depending on the UI's Se config type (#11744).
-                Nikse.SubtitleEdit.Features.SpellCheck.SpellCheckConfig.DictionariesFolder = () => Se.DictionariesFolder;
-                Nikse.SubtitleEdit.Features.SpellCheck.SpellCheckConfig.UseWordSplitList = () => Se.Settings.Ocr.UseWordSplitList;
-                Nikse.SubtitleEdit.Features.SpellCheck.SpellCheckConfig.TreatInApostropheAsIng = () => Se.Settings.Tools.SpellCheckEnglishTreatInApostropheAsIng;
-                Nikse.SubtitleEdit.Features.SpellCheck.SpellCheckConfig.LogError = msg => Se.LogError(msg);
+                SpellCheckConfig.DictionariesFolder = () => Se.DictionariesFolder;
+                SpellCheckConfig.UseWordSplitList = () => Se.Settings.Ocr.UseWordSplitList;
+                SpellCheckConfig.TreatInApostropheAsIng = () => Se.Settings.Tools.SpellCheckEnglishTreatInApostropheAsIng;
+                SpellCheckConfig.LogError = msg => Se.LogError(msg);
 
                 // Load the UI translation before any window or the macOS native menu bar is built,
                 // so the menu bar isn't constructed with the default English strings (issue #11505).
@@ -170,11 +183,11 @@ namespace Nikse.SubtitleEdit
                 // Configure dependency injection
                 SetupDependencyInjection();
 
-                // Register encoding provider
-                Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
-
                 // Set current theme
                 UiTheme.SetCurrentTheme();
+
+                // Type-to-search in all drop-downs (e.g. typing "Ar" selects "Arial")
+                UiUtil.EnableComboBoxTypeSearch();
 
                 // Setup main window (Batch Convert standalone if requested via CLI)
                 if (HasBatchConvertUiArg(args))
@@ -228,21 +241,10 @@ namespace Nikse.SubtitleEdit
             {
                 b.Instance.Styles.Add(UiTheme.FluentTheme);
 
-                // Add DataGrid styles
-                b.Instance.Styles.Add(new StyleInclude(new Uri("avares://Avalonia.Controls.DataGrid/Themes/Fluent.xaml", UriKind.Absolute))
-                {
-                    Source = new Uri("avares://Avalonia.Controls.DataGrid/Themes/Fluent.xaml")
-                });
-
-                // Apply app-level style overrides (must come after DataGrid theme)
+                // Apply app-level style overrides
                 b.Instance.Styles.Add(new StyleInclude(new Uri("avares://SubtitleEdit/Styles.axaml", UriKind.Absolute))
                 {
                     Source = new Uri("avares://SubtitleEdit/Styles.axaml")
-                });
-
-                b.Instance.Styles.Add(new StyleInclude(new Uri("avares://AvaloniaEdit/Themes/Fluent/AvaloniaEdit.xaml", UriKind.Absolute))
-                {
-                    Source = new Uri("avares://AvaloniaEdit/Themes/Fluent/AvaloniaEdit.xaml")
                 });
 
                 // The Fluent theme makes every GridSplitter focusable (keyboard resize), so screen
@@ -252,6 +254,18 @@ namespace Nikse.SubtitleEdit
                 {
                     Setters = { new Setter(AutomationProperties.NameProperty, Se.Language.General.ResizePanels) },
                 });
+
+                // NumericUpDown's inner text box is what actually holds keyboard focus. Screen
+                // readers deliberately stay quiet when a plain edit control's value changes (the
+                // caret events cover it in a real text field), so Up/Down stepping is inaudible;
+                // announced as a spinner, every value change is spoken (#12087).
+                b.Instance.Styles.Add(new Style(x => x.OfType<NumericUpDown>().Descendant().OfType<TextBox>())
+                {
+                    Setters = { new Setter(AutomationProperties.ControlTypeOverrideProperty, AutomationControlType.Spinner) },
+                });
+
+                // Make combo box / spinner value changes audible to screen readers (#12087).
+                ScreenReaderAnnouncements.Initialize();
 
                 // Set application name
                 b.Instance.Name = AppName;
@@ -266,14 +280,7 @@ namespace Nikse.SubtitleEdit
             // Apply scrollbar visibility based on OS preference
             UiTheme.ApplyScrollBarStyle();
 
-            // Prevent scrollbar double-tap from triggering DataGrid/ListBox actions globally
-            DataGrid.DoubleTappedEvent.AddClassHandler<DataGrid>((_, e) =>
-            {
-                if (UiUtil.IsScrollBarSource(e))
-                {
-                    e.Handled = true;
-                }
-            });
+            // Prevent scrollbar double-tap from triggering ListBox/TableView actions globally
             ListBox.DoubleTappedEvent.AddClassHandler<ListBox>((_, e) =>
             {
                 if (UiUtil.IsScrollBarSource(e))

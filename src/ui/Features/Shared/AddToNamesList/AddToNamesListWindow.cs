@@ -8,6 +8,11 @@ namespace Nikse.SubtitleEdit.Features.Shared.AddToNamesList;
 
 public class AddToNamesListWindow : Window
 {
+    // One width for the name box, the multi-name box and the dictionary drop-down, so the
+    // dialog keeps the same size in both modes and long entries like "English (United
+    // States) [en_US]" are not truncated (#12886).
+    private const int ContentWidth = 400;
+
     public AddToNamesListWindow(AddToNamesListViewModel vm)
     {
         UiUtil.InitializeWindow(this, GetType().Name);
@@ -21,14 +26,14 @@ public class AddToNamesListWindow : Window
         var labelWord = UiUtil.MakeLabel(Se.Language.Ocr.NameToAdd);
         labelWord.Bind(Label.IsVisibleProperty, new Binding(nameof(vm.IsSingleMode)));
 
-        var textBoxWord = UiUtil.MakeTextBox(200, vm, nameof(vm.Name), nameof(vm.IsSingleMode));
+        var textBoxWord = UiUtil.MakeTextBox(ContentWidth, vm, nameof(vm.Name), nameof(vm.IsSingleMode));
 
         var labelMultiNames = UiUtil.MakeLabel(Se.Language.SpellCheck.EnterOneNamePerLine);
         labelMultiNames.Bind(Label.IsVisibleProperty, new Binding(nameof(vm.IsMultiMode)));
 
         var textBoxMultiNames = new TextBox
         {
-            Width = 400,
+            Width = ContentWidth,
             Height = 250,
             AcceptsReturn = true,
             VerticalAlignment = VerticalAlignment.Stretch,
@@ -40,7 +45,8 @@ public class AddToNamesListWindow : Window
         var labelDictionary = UiUtil.MakeLabel(Se.Language.General.Dictionary).WithMarginTop(20);
         var comboBoxDictionaries = new ComboBox
         {
-            Width = 200,
+            Width = ContentWidth,
+            HorizontalAlignment = HorizontalAlignment.Left,
             [!ComboBox.SelectedItemProperty] = new Binding(nameof(vm.SelectedDictionary)) { Mode = BindingMode.TwoWay },
             [!ComboBox.ItemsSourceProperty] = new Binding(nameof(vm.Dictionaries)) { Mode = BindingMode.TwoWay },
         };
@@ -84,7 +90,7 @@ public class AddToNamesListWindow : Window
 
         Content = grid;
 
-        Activated += delegate { buttonOk.Focus(); }; // hack to make OnKeyDown work
+        Activated += delegate { (vm.IsSingleMode ? textBoxWord : textBoxMultiNames).Focus(); }; // initial focus on an input, not an action button - a focused button clicks on bare Space
         KeyDown += vm.KeyDown;
     }
 }

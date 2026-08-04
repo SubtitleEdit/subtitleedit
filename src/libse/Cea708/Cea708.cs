@@ -311,6 +311,11 @@ namespace Nikse.SubtitleEdit.Core.Cea708
                 }
                 else if (b == ClearWindows.Id)
                 {
+                    if (bytes.Length - i < 2)
+                    {
+                        break;
+                    }
+
                     // ClearWindows clears all the windows specified in the 8 bit window bitmap.
                     var clearWindows = new ClearWindows(lineIndex, bytes, i + 1);
                     state.Commands.Add(clearWindows);
@@ -323,6 +328,11 @@ namespace Nikse.SubtitleEdit.Core.Cea708
                 }
                 else if (b == DisplayWindows.Id)
                 {
+                    if (bytes.Length - i < 2)
+                    {
+                        break;
+                    }
+
                     // DisplayWindows displays all the windows specified in the 8 bit window bitmap.
                     var displayWindows = new DisplayWindows(lineIndex, bytes, i + 1);
                     state.Commands.Add(displayWindows);
@@ -335,6 +345,11 @@ namespace Nikse.SubtitleEdit.Core.Cea708
                 }
                 else if (b == HideWindows.Id)
                 {
+                    if (bytes.Length - i < 2)
+                    {
+                        break;
+                    }
+
                     FlushText(DebugMode ? debugBuilder : textBuilder, state);
 
                     // HideWindows hides all the windows specified in the 8 bit window bitmap.
@@ -349,6 +364,11 @@ namespace Nikse.SubtitleEdit.Core.Cea708
                 }
                 else if (b == ToggleWindows.Id)
                 {
+                    if (bytes.Length - i < 2)
+                    {
+                        break;
+                    }
+
                     FlushText(DebugMode ? debugBuilder : textBuilder, state);
 
                     // ToggleWindows hides all displayed windows, and displays all hidden windows specified in the 8 bit window bitmap.
@@ -363,6 +383,11 @@ namespace Nikse.SubtitleEdit.Core.Cea708
                 }
                 else if (b == DeleteWindows.Id)
                 {
+                    if (bytes.Length - i < 2)
+                    {
+                        break;
+                    }
+
                     FlushText(DebugMode ? debugBuilder : textBuilder, state);
 
                     // DeleteWindows deletes all the windows specified in the 8 bit window bitmap.If the current window, as specified by the last SetCurrentWindow command, is deleted then the current window becomes undefined and the window attribute commands should have no effect until after the next SetCurrentWindow or DefineWindow command.
@@ -377,6 +402,11 @@ namespace Nikse.SubtitleEdit.Core.Cea708
                 }
                 else if (b == Delay.Id)
                 {
+                    if (bytes.Length - i < 2)
+                    {
+                        break;
+                    }
+
                     // Delay suspends all processing of the current service, except for DelayCancel and Reset scanning.The period of suspension is set to by the one byte parameter.The parameter specifies the delay in tenths of a second, so the minimum delay is 0.1 seconds, and the maximum delay is 25.5 seconds.A zero second delay can safely be ignored in a decoder, but should not be emitted from an encoder.A delay should be cancelled if the caption decoder's input buffer becomes full, a DelayCancel or Reset is received, or the specified delay time elapses.
                     var delay = new Delay(lineIndex, bytes, i + 1);
                     state.Commands.Add(delay);

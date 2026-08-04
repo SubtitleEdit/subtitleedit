@@ -4,6 +4,7 @@ internal class IconNames
 {
     public const string Account = "mdi-account";
     public const string AccountVoice = "mdi-account-voice";
+    public const string Alert = "mdi-alert";
     public const string AlignHorizontalCenter = "mdi-align-horizontal-center";
     public const string AlignHorizontalDistribute = "mdi-align-horizontal-distribute";
     public const string AnimationPlay = "mdi-animation-play";
@@ -53,6 +54,7 @@ internal class IconNames
     public const string Folder = "mdi-folder";
     public const string FolderOpen = "mdi-folder-open";
     public const string FormatClear = "mdi-format-clear";
+    public const string FormatFont = "mdi-format-font";
     public const string FormTextBox = "mdi-form-textbox";
     public const string Fullscreen = "mdi-fullscreen";
     public const string FullscreenExit = "mdi-fullscreen-exit";
@@ -79,6 +81,7 @@ internal class IconNames
     public const string Palette = "mdi-palette";
     public const string Robot = "mdi-robot";
     public const string PanRight = "mdi-pan-right";
+    public const string Paperclip = "mdi-paperclip";
     public const string Pause = "mdi-pause";
     public const string PauseCircle = "mdi-pause-circle";
     public const string Pencil = "mdi-pencil";

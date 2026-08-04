@@ -8,6 +8,7 @@ using Avalonia.Layout;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Logic.ValueConverters;
+using System;
 
 namespace Nikse.SubtitleEdit.Features.Shared.PickMp4Track;
 
@@ -80,60 +81,73 @@ public class PickMp4TrackWindow : Window
 
     private Border MakeTracksView(PickMp4TrackViewModel vm)
     {
-        var dataGridTracks = new DataGrid
+        var dataGridTracks = TableViewExtras.MakeTableView(multiSelect: false);
+        dataGridTracks.Width = double.NaN;
+        dataGridTracks.Height = double.NaN;
+        dataGridTracks.DataContext = _vm;
+        dataGridTracks.ItemsSource = _vm.Tracks;
+
+        // Content-sized (Auto) on the DataGrid; TableView treats Auto as star, so the
+        // narrow columns get fixed widths and Name becomes the star column.
+        var handlerColumn = new SeTableViewColumn
         {
-            AutoGenerateColumns = false,
-            SelectionMode = DataGridSelectionMode.Single,
-            CanUserResizeColumns = true,
-            CanUserSortColumns = true,
-            HorizontalAlignment = HorizontalAlignment.Stretch,
-            VerticalAlignment = VerticalAlignment.Stretch,
-            Width = double.NaN,
-            Height = double.NaN,
-            DataContext = _vm,
-            ItemsSource = _vm.Tracks,
-            Columns =
-            {
-                new DataGridTextColumn
-                {
-                    Header = "HandlerName",
-                    CellTheme = UiUtil.DataGridNoBorderNoPaddingCellTheme,
-                    Binding = new Binding(nameof(Mp4TrackInfoDisplay.HandlerType)),
-                    IsReadOnly = true,
-                },
-                new DataGridTextColumn
-                {
-                    Header = "Name",
-                    CellTheme = UiUtil.DataGridNoBorderNoPaddingCellTheme,
-                    Binding = new Binding(nameof(Mp4TrackInfoDisplay.Name)),
-                    IsReadOnly = true,
-                },
-                new DataGridTextColumn
-                {
-                    Header = "Duration",
-                    CellTheme = UiUtil.DataGridNoBorderNoPaddingCellTheme,
-                    Binding = new Binding(nameof(Mp4TrackInfoDisplay.Duration)),
-                    IsReadOnly = true,
-                },
-                new DataGridTextColumn
-                {
-                    Header = "IsVobSubSubtitle",
-                    CellTheme = UiUtil.DataGridNoBorderNoPaddingCellTheme,
-                    Binding = new Binding(nameof(Mp4TrackInfoDisplay.IsVobSubSubtitle)),
-                    IsReadOnly = true,
-                },
-                new DataGridTextColumn
-                {
-                    Header = "StartPosition",
-                    CellTheme = UiUtil.DataGridNoBorderNoPaddingCellTheme,
-                    Binding = new Binding(nameof(Mp4TrackInfoDisplay.StartPosition)),
-                    IsReadOnly = true,
-                },
-            },
+            Header = "HandlerName",
+            CellTheme = UiUtil.TableViewCellTheme,
+            HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
+            Binding = new Binding(nameof(Mp4TrackInfoDisplay.HandlerType)),
+            Width = new GridLength(120),
         };
-        dataGridTracks.Bind(DataGrid.SelectedItemProperty, new Binding(nameof(_vm.SelectedTrack)));
-        dataGridTracks.SelectionChanged += vm.DataGridTracksSelectionChanged;
-        vm.TracksGrid = dataGridTracks; 
+        var nameColumn = new SeTableViewColumn
+        {
+            Header = "Name",
+            CellTheme = UiUtil.TableViewCellTheme,
+            HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
+            Binding = new Binding(nameof(Mp4TrackInfoDisplay.Name)),
+            Width = new GridLength(1, GridUnitType.Star),
+        };
+        var durationColumn = new SeTableViewColumn
+        {
+            Header = "Duration",
+            CellTheme = UiUtil.TableViewCellTheme,
+            HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
+            Binding = new Binding(nameof(Mp4TrackInfoDisplay.Duration)) { Converter = new TimeSpanToDisplayFullConverter() },
+            Width = new GridLength(100),
+        };
+        var vobSubColumn = new SeTableViewColumn
+        {
+            Header = "IsVobSubSubtitle",
+            CellTheme = UiUtil.TableViewCellTheme,
+            HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
+            Binding = new Binding(nameof(Mp4TrackInfoDisplay.IsVobSubSubtitle)),
+            Width = new GridLength(130),
+        };
+        var startPositionColumn = new SeTableViewColumn
+        {
+            Header = "StartPosition",
+            CellTheme = UiUtil.TableViewCellTheme,
+            HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
+            Binding = new Binding(nameof(Mp4TrackInfoDisplay.StartPosition)),
+            Width = new GridLength(110),
+        };
+
+        dataGridTracks.Columns.Add(handlerColumn);
+        dataGridTracks.Columns.Add(nameColumn);
+        dataGridTracks.Columns.Add(durationColumn);
+        dataGridTracks.Columns.Add(vobSubColumn);
+        dataGridTracks.Columns.Add(startPositionColumn);
+
+        dataGridTracks.Bind(TableView.SelectedItemProperty, new Binding(nameof(_vm.SelectedTrack)));
+        dataGridTracks.SelectionChanged += vm.TracksGridSelectionChanged;
+        vm.TracksGrid = dataGridTracks;
+
+        // Track order is presentation-only (OK uses the selected item), so the
+        // in-place header sorter is safe.
+        new TableViewHeaderSorter(dataGridTracks)
+            .AddSortable<Mp4TrackInfoDisplay, string>(handlerColumn, x => x.HandlerType)
+            .AddSortable<Mp4TrackInfoDisplay, string>(nameColumn, x => x.Name)
+            .AddSortable<Mp4TrackInfoDisplay, TimeSpan>(durationColumn, x => x.Duration)
+            .AddSortable<Mp4TrackInfoDisplay, bool>(vobSubColumn, x => x.IsVobSubSubtitle)
+            .AddSortable<Mp4TrackInfoDisplay, ulong>(startPositionColumn, x => x.StartPosition);
 
         return UiUtil.MakeBorderForControlNoPadding(dataGridTracks);
     }
@@ -142,45 +156,45 @@ public class PickMp4TrackWindow : Window
     {
         var fullTimeConverter = new TimeSpanToDisplayFullConverter();
         var shortTimeConverter = new TimeSpanToDisplayShortConverter();
-        var dataGridSubtitle = new DataGrid
+        var dataGridSubtitle = TableViewExtras.MakeTableView(multiSelect: false);
+        dataGridSubtitle.Width = double.NaN;
+        dataGridSubtitle.Height = double.NaN;
+        dataGridSubtitle.DataContext = _vm;
+        dataGridSubtitle.ItemsSource = _vm.Rows;
+
+        // No sorter here: the preview shows subtitle cues in subtitle order.
+        dataGridSubtitle.Columns.AddRange(new TableViewColumn[]
         {
-            AutoGenerateColumns = false,
-            SelectionMode = DataGridSelectionMode.Single,
-            CanUserResizeColumns = true,
-            CanUserSortColumns = true,
-            HorizontalAlignment = HorizontalAlignment.Stretch,
-            VerticalAlignment = VerticalAlignment.Stretch,
-            Width = double.NaN,
-            Height = double.NaN,
-            DataContext = _vm,
-            ItemsSource = _vm.Rows,
-            Columns =
-            {
-                new DataGridTextColumn
+                new SeTableViewColumn
                 {
                     Header = "#",
-                    CellTheme = UiUtil.DataGridNoBorderNoPaddingCellTheme,
+                    CellTheme = UiUtil.TableViewCellTheme,
+                    HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
                     Binding = new Binding(nameof(Mp4SubtitleCueDisplay.Number)),
-                    IsReadOnly = true,
+                    Width = new GridLength(60),
                 },
-                new DataGridTextColumn
+                new SeTableViewColumn
                 {
                     Header = "Show",
-                    CellTheme = UiUtil.DataGridNoBorderNoPaddingCellTheme,
+                    CellTheme = UiUtil.TableViewCellTheme,
+                    HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
                     Binding = new Binding(nameof(Mp4SubtitleCueDisplay.Show)) { Converter = fullTimeConverter },
-                    IsReadOnly = true,
+                    Width = new GridLength(120),
                 },
-                new DataGridTextColumn
+                new SeTableViewColumn
                 {
                     Header = "Duration",
-                    CellTheme = UiUtil.DataGridNoBorderNoPaddingCellTheme,
+                    CellTheme = UiUtil.TableViewCellTheme,
+                    HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
                     Binding = new Binding(nameof(Mp4SubtitleCueDisplay.Duration)) { Converter = shortTimeConverter },
-                    IsReadOnly = true,
+                    Width = new GridLength(90),
                 },
-                new DataGridTemplateColumn
+                new SeTableViewColumn
                 {
                     Header = "Text/Image",
-                    IsReadOnly = true,
+                    CellTheme = UiUtil.TableViewCellTheme,
+                    HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
+                    Width = new GridLength(1, GridUnitType.Star),
                     CellTemplate = new FuncDataTemplate<Mp4SubtitleCueDisplay>((item, _) =>
                     {
                         var stackPanel = new StackPanel
@@ -217,8 +231,7 @@ public class PickMp4TrackWindow : Window
                         return stackPanel;
                     })
                 },
-            },
-        };
+        });
 
         return UiUtil.MakeBorderForControlNoPadding(dataGridSubtitle);
     }

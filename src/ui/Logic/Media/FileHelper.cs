@@ -9,7 +9,6 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 
 namespace Nikse.SubtitleEdit.Logic.Media
@@ -261,10 +260,13 @@ namespace Nikse.SubtitleEdit.Logic.Media
             var options = new FilePickerSaveOptions
             {
                 Title = title,
-                SuggestedFileName = suggestedFileName,
+                SuggestedFileName = Path.GetFileName(suggestedFileName),
                 FileTypeChoices = MakeSaveFilePickerFileTypes(currentFormat),
                 DefaultExtension = currentFormat.Extension.TrimStart('.')
             };
+
+            await SetSuggestedStartLocation(topLevel, options, suggestedFileName);
+
             var file = await NativePickers.SaveFilePickerAsync(topLevel, options);
 
             if (file != null)
@@ -281,9 +283,6 @@ namespace Nikse.SubtitleEdit.Logic.Media
             string suggestedFileName,
             string title)
         {
-            var suggestedStartLocationPath = Path.GetDirectoryName(suggestedFileName); 
-            suggestedFileName = Path.GetFileName(suggestedFileName);
-            
             var topLevel = TopLevel.GetTopLevel(sender)!;
             var filePickerFileTypes = MakeSaveFilePickerAllFileTypes(currentFormat);
             var defaultChoice = filePickerFileTypes
@@ -291,25 +290,12 @@ namespace Nikse.SubtitleEdit.Logic.Media
             var options = new FilePickerSaveOptions
             {
                 Title = title,
-                SuggestedFileName = suggestedFileName,
+                SuggestedFileName = Path.GetFileName(suggestedFileName),
                 FileTypeChoices = filePickerFileTypes,
                 SuggestedFileType = defaultChoice,
             };
 
-            if (!string.IsNullOrEmpty(suggestedStartLocationPath))
-            {
-                try
-                {
-                    var folder = await topLevel.StorageProvider.TryGetFolderFromPathAsync(suggestedStartLocationPath);
-                    if (folder != null)
-                    {
-                        options.SuggestedStartLocation = folder;
-                    }
-                }
-                catch
-                {
-                }
-            }
+            await SetSuggestedStartLocation(topLevel, options, suggestedFileName);
 
             // Use SaveFilePickerWithResultAsync instead of SaveFilePickerAsync
             var result = await topLevel.StorageProvider.SaveFilePickerWithResultAsync(options);
@@ -327,6 +313,33 @@ namespace Nikse.SubtitleEdit.Logic.Media
                 FileName = AddMissingExtension(result.File.Path.LocalPath, subtitleFormat.Extension),
                 SubtitleFormat = subtitleFormat,
             };
+        }
+
+        /// <summary>
+        /// Open the save picker in the folder of <paramref name="suggestedFileName"/> when it is
+        /// path-qualified, so e.g. exporting a track from a .mkv defaults to the folder holding
+        /// that .mkv instead of wherever the picker was last used. A bare file name is a no-op.
+        /// </summary>
+        private static async Task SetSuggestedStartLocation(TopLevel topLevel, FilePickerSaveOptions options, string suggestedFileName)
+        {
+            var suggestedStartLocationPath = Path.GetDirectoryName(suggestedFileName);
+            if (string.IsNullOrEmpty(suggestedStartLocationPath))
+            {
+                return;
+            }
+
+            try
+            {
+                var folder = await topLevel.StorageProvider.TryGetFolderFromPathAsync(suggestedStartLocationPath);
+                if (folder != null)
+                {
+                    options.SuggestedStartLocation = folder;
+                }
+            }
+            catch
+            {
+                // ignore - the picker falls back to its default folder
+            }
         }
 
         private static string AddMissingExtension(string fileName, string extension)
@@ -382,26 +395,12 @@ namespace Nikse.SubtitleEdit.Logic.Media
             var options = new FilePickerSaveOptions
             {
                 Title = title,
-                SuggestedFileName = suggestedFileName,
+                SuggestedFileName = Path.GetFileName(suggestedFileName),
                 FileTypeChoices = MakeSaveFilePickerFileTypes(extension, extension),
                 DefaultExtension = extension.TrimStart('.')
             };
 
-            var suggestedStartLocationPath = Path.GetDirectoryName(suggestedFileName);
-            if (!string.IsNullOrEmpty(suggestedStartLocationPath))
-            {
-                try
-                {
-                    var folder = await topLevel.StorageProvider.TryGetFolderFromPathAsync(suggestedStartLocationPath);
-                    if (folder != null)
-                    {
-                        options.SuggestedStartLocation = folder;
-                    }
-                }
-                catch
-                {
-                }
-            }
+            await SetSuggestedStartLocation(topLevel, options, suggestedFileName);
 
             var file = await NativePickers.SaveFilePickerAsync(topLevel, options);
 
@@ -433,26 +432,12 @@ namespace Nikse.SubtitleEdit.Logic.Media
             var options = new FilePickerSaveOptions
             {
                 Title = title,
-                SuggestedFileName = System.IO.Path.GetFileName(suggestedFileName),
+                SuggestedFileName = Path.GetFileName(suggestedFileName),
                 FileTypeChoices = MakeSaveFilePickerFileTypes(fileTypes),
                 DefaultExtension = defaultExtension.TrimStart('.'),
             };
 
-            var suggestedStartLocationPath = Path.GetDirectoryName(suggestedFileName);
-            if (!string.IsNullOrEmpty(suggestedStartLocationPath))
-            {
-                try
-                {
-                    var folder = await topLevel.StorageProvider.TryGetFolderFromPathAsync(suggestedStartLocationPath);
-                    if (folder != null)
-                    {
-                        options.SuggestedStartLocation = folder;
-                    }
-                }
-                catch
-                {
-                }
-            }
+            await SetSuggestedStartLocation(topLevel, options, suggestedFileName);
 
             var file = await NativePickers.SaveFilePickerAsync(topLevel, options);
 
@@ -648,7 +633,7 @@ namespace Nikse.SubtitleEdit.Logic.Media
 
             try
             {
-                if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                if (OperatingSystem.IsWindows())
                 {
                     // Windows: use explorer with the file path
                     Process.Start(new ProcessStartInfo
@@ -657,7 +642,7 @@ namespace Nikse.SubtitleEdit.Logic.Media
                         UseShellExecute = true
                     });
                 }
-                else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+                else if (OperatingSystem.IsMacOS())
                 {
                     // macOS: use 'open' command
                     Process.Start(new ProcessStartInfo
@@ -667,7 +652,7 @@ namespace Nikse.SubtitleEdit.Logic.Media
                         UseShellExecute = false
                     });
                 }
-                else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+                else if (OperatingSystem.IsLinux())
                 {
                     // Linux: use 'xdg-open' command
                     Process.Start(new ProcessStartInfo

@@ -16,7 +16,8 @@ public interface ILibVlcDownloadService
 
 public class LibVlcDownloadService(HttpClient httpClient) : ILibVlcDownloadService
 {
-    private const string WindowsUrl = "https://get.videolan.org/vlc/3.0.23/win32/vlc-3.0.23-win32.7z";
+    private const string WindowsX64Url = "https://get.videolan.org/vlc/3.0.23/win64/vlc-3.0.23-win64.7z";
+    private const string WindowsX86Url = "https://get.videolan.org/vlc/3.0.23/win32/vlc-3.0.23-win32.7z";
     private const string MacX64Url = "https://github.com/SubtitleEdit/support-files/releases/download/vlc3/libvlc-osx64.7z";
 
     public async Task DownloadLibVlc(string destinationFileName, IProgress<float>? progress, CancellationToken cancellationToken)
@@ -33,7 +34,15 @@ public class LibVlcDownloadService(HttpClient httpClient) : ILibVlcDownloadServi
     {
         if (OperatingSystem.IsWindows())
         {
-            return WindowsUrl;
+            switch (RuntimeInformation.ProcessArchitecture)
+            {
+                case Architecture.X64:
+                    return WindowsX64Url;
+                case Architecture.X86:
+                    return WindowsX86Url;
+                default:
+                    throw new PlatformNotSupportedException("Unsupported Windows architecture.");
+            }
         }
 
         if (OperatingSystem.IsMacOS())

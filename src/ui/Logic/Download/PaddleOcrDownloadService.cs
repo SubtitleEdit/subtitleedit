@@ -37,7 +37,7 @@ public class PaddleOcrDownloadService : IPaddleOcrDownloadService
     {
         var url = DownloadWindowsEngineCpuUrl;
 
-        if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+        if (OperatingSystem.IsLinux())
         {
             if (RuntimeInformation.ProcessArchitecture == Architecture.Arm64)
             {
@@ -54,7 +54,7 @@ public class PaddleOcrDownloadService : IPaddleOcrDownloadService
     {
         var url = DownloadWindowsEngineGpuUrl;
 
-        if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+        if (OperatingSystem.IsLinux())
         {
             if (RuntimeInformation.ProcessArchitecture == Architecture.Arm64)
             {

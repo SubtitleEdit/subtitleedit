@@ -85,7 +85,7 @@ public class ContinuationStyleDisplay
             },
             new() 
             { 
-                Name = Se.Language.Options.Settings.ContinuationStyleCustom, 
+                Name = Se.Language.General.Custom, 
                 Code = Core.Enums.ContinuationStyle.Custom.ToString()  
             },
         ];

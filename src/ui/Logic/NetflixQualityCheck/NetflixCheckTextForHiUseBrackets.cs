@@ -27,21 +27,21 @@ public class NetflixCheckTextForHiUseBrackets : INetflixQualityChecker
         {
             string newText = p.Text;
             var arr = p.Text.SplitToLines();
-            if (newText.StartsWith("(", StringComparison.Ordinal) && newText.EndsWith(")", StringComparison.Ordinal))
+            if (newText.StartsWith('(') && newText.EndsWith(')'))
             {
                 newText = "[" + newText.Substring(1, newText.Length - 2) + "]";
             }
-            else if (newText.StartsWith("{", StringComparison.Ordinal) && newText.EndsWith("}", StringComparison.Ordinal) && !IsAssaOverride(newText))
+            else if (newText.StartsWith('{') && newText.EndsWith('}') && !IsAssaOverride(newText))
             {
                 newText = "[" + newText.Substring(1, newText.Length - 2) + "]";
             }
-            else if (arr.Count == 2 && arr[0].StartsWith("-", StringComparison.Ordinal) && arr[1].StartsWith("-", StringComparison.Ordinal))
+            else if (arr.Count == 2 && arr[0].StartsWith('-') && arr[1].StartsWith('-'))
             {
-                if ((arr[0].StartsWith("-(", StringComparison.Ordinal) && arr[0].EndsWith(")", StringComparison.Ordinal)) || (arr[0].StartsWith("-{", StringComparison.Ordinal) && arr[0].EndsWith("}", StringComparison.Ordinal) && !IsAssaOverride(arr[0].Substring(1))))
+                if ((arr[0].StartsWith("-(", StringComparison.Ordinal) && arr[0].EndsWith(')')) || (arr[0].StartsWith("-{", StringComparison.Ordinal) && arr[0].EndsWith('}') && !IsAssaOverride(arr[0].Substring(1))))
                 {
                     arr[0] = "-[" + newText.Substring(2, newText.Length - 3) + "]";
                 }
-                if ((arr[1].StartsWith("-(", StringComparison.Ordinal) && arr[1].EndsWith(")", StringComparison.Ordinal)) || (arr[1].StartsWith("-{", StringComparison.Ordinal) && arr[1].EndsWith("}", StringComparison.Ordinal) && !IsAssaOverride(arr[1].Substring(1))))
+                if ((arr[1].StartsWith("-(", StringComparison.Ordinal) && arr[1].EndsWith(')')) || (arr[1].StartsWith("-{", StringComparison.Ordinal) && arr[1].EndsWith('}') && !IsAssaOverride(arr[1].Substring(1))))
                 {
                     arr[1] = "-[" + arr[1].Substring(2, arr[1].Length - 3) + "]";
                 }

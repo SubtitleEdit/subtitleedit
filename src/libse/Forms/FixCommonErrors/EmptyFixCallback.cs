@@ -60,9 +60,15 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
 
         public Encoding Encoding { get; set; } = Encoding.UTF8;
 
+        /// <summary>
+        /// Abbreviations like "dhr." or "U.S." - empty unless the caller fills it in, e.g. from
+        /// <see cref="Dictionaries.AbbreviationList"/> and the names list.
+        /// </summary>
+        public HashSet<string> Abbreviations { get; set; } = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+
         public HashSet<string> GetAbbreviations()
         {
-            return new HashSet<string>();
+            return Abbreviations;
         }
 
         public bool DoSpell(string word)

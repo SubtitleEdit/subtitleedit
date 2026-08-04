@@ -23,9 +23,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             //\t\t-ENOUGH!
             const string writeFormat = "{0:00}:{1:00}:{2:00} {3}";
             var sb = new StringBuilder();
+            var textBuilder = new StringBuilder();
             foreach (var p in subtitle.Paragraphs)
             {
-                var textBuilder = new StringBuilder();
+                textBuilder.Clear();
                 var list = p.Text.SplitToLines();
                 for (var index = 0; index < list.Count; index++)
                 {

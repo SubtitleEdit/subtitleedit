@@ -7,7 +7,6 @@ public class LanguagePlugins
     public string NoPluginsInstalled { get; set; }
     public string GetPluginsOnline { get; set; }
     public string GetPluginsTitle { get; set; }
-    public string Enabled { get; set; }
     public string Disabled { get; set; }
     public string NotSupportedOnThisOs { get; set; }
     public string RemovePluginXConfirm { get; set; }
@@ -24,10 +23,8 @@ public class LanguagePlugins
     public string DownloadingXPercent { get; set; }
     public string PluginXInstalled { get; set; }
     public string CouldNotInstallPluginX { get; set; }
-    public string NotInstalled { get; set; }
     public string Install { get; set; }
     public string Reinstall { get; set; }
-    public string Update { get; set; }
     public string InstalledX { get; set; }
     public string UpdateAvailableXToY { get; set; }
     public string ApplyPluginToWhichLinesX { get; set; }
@@ -43,7 +40,6 @@ public class LanguagePlugins
         NoPluginsInstalled = "No plugins installed";
         GetPluginsOnline = "Get plugins online...";
         GetPluginsTitle = "Get plugins";
-        Enabled = "Enabled";
         Disabled = "Disabled";
         NotSupportedOnThisOs = "Not supported on this operating system";
         RemovePluginXConfirm = "Remove plugin '{0}'? This deletes the plugin folder:{1}";
@@ -60,10 +56,8 @@ public class LanguagePlugins
         DownloadingXPercent = "Downloading {0}%...";
         PluginXInstalled = "'{0}' installed.";
         CouldNotInstallPluginX = "Could not install '{0}': {1}";
-        NotInstalled = "Not installed";
         Install = "Install";
         Reinstall = "Reinstall";
-        Update = "Update";
         InstalledX = "Installed ({0})";
         UpdateAvailableXToY = "Update available ({0} → {1})";
         ApplyPluginToWhichLinesX = "Apply '{0}' to:";

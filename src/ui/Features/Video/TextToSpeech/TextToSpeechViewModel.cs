@@ -1,4 +1,4 @@
-using Avalonia.Controls;
+﻿using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Threading;
@@ -8,6 +8,7 @@ using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using Nikse.SubtitleEdit.Features.Main;
 using Nikse.SubtitleEdit.Features.Shared;
+using Nikse.SubtitleEdit.Features.Shared.PromptFileSaved;
 using Nikse.SubtitleEdit.Features.Shared.PromptTextBox;
 using Nikse.SubtitleEdit.Features.Tools.MergeContinuationLines;
 using Nikse.SubtitleEdit.Features.Video.SpeechToText;
@@ -20,7 +21,9 @@ using Nikse.SubtitleEdit.Features.Video.TextToSpeech.ElevenLabsSettings;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.EncodingSettings;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.Engines;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.F5TtsCrispAsrSettings;
+using Nikse.SubtitleEdit.Features.Video.TextToSpeech.OmniVoiceCrispAsrSettings;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.VoxCPM2CrispAsrSettings;
+using Nikse.SubtitleEdit.Features.Video.TextToSpeech.MossTtsCrispAsrSettings;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.IndexTtsCrispAsrSettings;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.KokoroTtsSettings;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.PiperSettings;
@@ -44,12 +47,14 @@ using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Text.Json;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Timers;
 using ElevenLabsSettingsViewModel = Nikse.SubtitleEdit.Features.Video.TextToSpeech.ElevenLabsSettings.ElevenLabsSettingsViewModel;
 using ReviewSpeechViewModel = Nikse.SubtitleEdit.Features.Video.TextToSpeech.ReviewSpeech.ReviewSpeechViewModel;
 using Timer = System.Timers.Timer;
+using Nikse.SubtitleEdit.UiLogic.Media;
 
 namespace Nikse.SubtitleEdit.Features.Video.TextToSpeech;
 
@@ -71,8 +76,6 @@ public partial class TextToSpeechViewModel : ObservableObject
     [ObservableProperty] private bool _hasRegion;
     [ObservableProperty] private string _region;
     [ObservableProperty] private bool _hasModel;
-    [ObservableProperty] private int _voiceCount;
-    [ObservableProperty] private string _voiceCountInfo;
     [ObservableProperty] private bool _isVoiceCountVisible;
     [ObservableProperty] private string _linesInfo = string.Empty;
     [ObservableProperty] private bool _hasVideoFile;
@@ -166,7 +169,6 @@ public partial class TextToSpeechViewModel : ObservableObject
         Languages = new ObservableCollection<TtsLanguage>();
         ApiKey = string.Empty;
         Region = string.Empty;
-        VoiceCountInfo = string.Empty;
         ProgressText = string.Empty;
         IsVoiceTestEnabled = true;
         IsVoiceComboEnabled = true;
@@ -235,7 +237,16 @@ public partial class TextToSpeechViewModel : ObservableObject
             // CrispASR v0.7.0, so synthesis is fast enough for the TTS-from-subtitles workflow.
             new VoxCPM2CrispAsr(),
 
+            // MOSS-TTS (CrispASR) — Qwen3-8B backbone + 1.6B transformer codec at 24 kHz with
+            // zero-shot voice cloning, via the moss-tts backend (#12617).
+            new MossTtsCrispAsr(),
+
             new ZonosTtsCrispAsr(),
+
+            // OmniVoice (CrispASR) — the same model family as the standalone OmniVoice TTS
+            // above, but on the shared CrispASR runtime and as a persistent server, so the
+            // model loads once instead of once per line.
+            new OmniVoiceCrispAsr(),
 
             new ChatterboxTtsCpp(),
         ];
@@ -385,6 +396,7 @@ public partial class TextToSpeechViewModel : ObservableObject
             // Shared instruction text with the qwen3-tts.cpp engine so the same voice
             // description applies whichever Qwen3 backend the user picks.
             Se.Settings.Video.TextToSpeech.Qwen3TtsCppInstruction = (Instruction ?? string.Empty).Trim();
+            Se.Settings.Video.TextToSpeech.Qwen3TtsCrispAsrLanguage = SelectedLanguage?.Name ?? string.Empty;
         }
         else if (SelectedEngine is VibeVoiceCrispAsr)
         {
@@ -397,6 +409,7 @@ public partial class TextToSpeechViewModel : ObservableObject
         else if (SelectedEngine is CosyVoice3CrispAsr)
         {
             Se.Settings.Video.TextToSpeech.CosyVoice3CrispAsrModel = SelectedModel ?? CosyVoice3CrispAsr.DefaultModelKey;
+            Se.Settings.Video.TextToSpeech.CosyVoice3CrispAsrLanguage = SelectedLanguage?.Name ?? string.Empty;
         }
         else if (SelectedEngine is F5TtsCrispAsr)
         {
@@ -405,6 +418,15 @@ public partial class TextToSpeechViewModel : ObservableObject
         else if (SelectedEngine is VoxCPM2CrispAsr)
         {
             Se.Settings.Video.TextToSpeech.VoxCPM2CrispAsrModel = SelectedModel ?? VoxCPM2CrispAsr.DefaultModelKey;
+        }
+        else if (SelectedEngine is OmniVoiceCrispAsr)
+        {
+            Se.Settings.Video.TextToSpeech.OmniVoiceCrispAsrModel = SelectedModel ?? OmniVoiceCrispAsr.DefaultModelKey;
+        }
+        else if (SelectedEngine is MossTtsCrispAsr)
+        {
+            Se.Settings.Video.TextToSpeech.MossTtsCrispAsrModel = SelectedModel ?? MossTtsCrispAsr.DefaultModelKey;
+            Se.Settings.Video.TextToSpeech.MossTtsCrispAsrLanguage = SelectedLanguage?.Name ?? string.Empty;
         }
         else if (SelectedEngine is OmniVoiceTtsCpp)
         {
@@ -551,6 +573,12 @@ public partial class TextToSpeechViewModel : ObservableObject
 
     private bool _isPromptingForRefText;
 
+    // Reference WAVs whose transcript prompt the user dismissed this session. Selection changes
+    // re-fire the prompt (engine switch, voice-list refresh, re-picking the same voice), so
+    // without this memory a declined prompt kept coming back - "prompts several times for
+    // transcript". Cancel now means "not for this voice, stop asking" until the window reopens.
+    private readonly HashSet<string> _refTextPromptDeclined = new(StringComparer.OrdinalIgnoreCase);
+
     private async Task EnsureClonedVoiceRefTextAsync(Voice? voice)
     {
         if (_isPromptingForRefText || Window == null || voice == null)
@@ -563,6 +591,8 @@ public partial class TextToSpeechViewModel : ObservableObject
         string? wavPath = null;
         bool isCosyVoice3 = false;
         bool isVoxCPM2 = false;
+        bool isOmniVoiceCrispAsr = false;
+        bool isMossTts = false;
         bool isQwen3Clone = false;
         if (voice.EngineVoice is CosyVoice3Voice cosy && !string.IsNullOrEmpty(cosy.FilePath) && string.IsNullOrEmpty(cosy.RefText))
         {
@@ -586,6 +616,25 @@ public partial class TextToSpeechViewModel : ObservableObject
                 isVoxCPM2 = true;
             }
         }
+        else if (voice.EngineVoice is OmniVoiceCrispAsrVoice omniCrisp && !string.IsNullOrEmpty(omniCrisp.FilePath))
+        {
+            // Empty FilePath means the built-in voice, which clones nothing and needs no ref-text.
+            var existing = TryReadRefTextSibling(omniCrisp.FilePath);
+            if (string.IsNullOrEmpty(existing))
+            {
+                wavPath = omniCrisp.FilePath;
+                isOmniVoiceCrispAsr = true;
+            }
+        }
+        else if (voice.EngineVoice is MossTtsVoice moss && !string.IsNullOrEmpty(moss.FilePath))
+        {
+            var existing = TryReadRefTextSibling(moss.FilePath);
+            if (string.IsNullOrEmpty(existing))
+            {
+                wavPath = moss.FilePath;
+                isMossTts = true;
+            }
+        }
         else if (voice.EngineVoice is Voices.Qwen3TtsVoice qwen3 && !string.IsNullOrEmpty(qwen3.FilePath))
         {
             // Only the Voice clone (Base) model carries a FilePath; CustomVoice/VoiceDesign leave
@@ -599,7 +648,7 @@ public partial class TextToSpeechViewModel : ObservableObject
             }
         }
 
-        if (string.IsNullOrEmpty(wavPath))
+        if (string.IsNullOrEmpty(wavPath) || _refTextPromptDeclined.Contains(wavPath))
         {
             return;
         }
@@ -631,6 +680,7 @@ public partial class TextToSpeechViewModel : ObservableObject
 
             if (!result.OkPressed || string.IsNullOrWhiteSpace(result.Text))
             {
+                _refTextPromptDeclined.Add(wavPath);
                 return;
             }
 
@@ -642,6 +692,14 @@ public partial class TextToSpeechViewModel : ObservableObject
             else if (isVoxCPM2)
             {
                 written = VoxCPM2CrispAsr.TryWriteRefTextSidecar(wavPath, result.Text);
+            }
+            else if (isOmniVoiceCrispAsr)
+            {
+                written = OmniVoiceCrispAsr.TryWriteRefTextSidecar(wavPath, result.Text);
+            }
+            else if (isMossTts)
+            {
+                written = MossTtsCrispAsr.TryWriteRefTextSidecar(wavPath, result.Text);
             }
             else if (isQwen3Clone)
             {
@@ -680,7 +738,7 @@ public partial class TextToSpeechViewModel : ObservableObject
             // An attribution-blurb sidecar (pre-filter seeding) is not a transcript - report it
             // as missing so the transcript prompt still fires instead of being suppressed.
             var text = File.ReadAllText(sidecar).Trim();
-            return Qwen3TtsCrispAsr.LooksLikeAttributionBlurb(text) ? null : text;
+            return Qwen3TtsCrispAsr.LooksLikeUnusableTranscript(text) ? null : text;
         }
         catch
         {
@@ -705,10 +763,98 @@ public partial class TextToSpeechViewModel : ObservableObject
             return null;
         }
 
-        return string.Join(' ', sttResult.TranscribedSubtitle.Paragraphs
-            .Select(p => p.Text?.Replace('\n', ' ').Replace('\r', ' ').Trim())
-            .Where(t => !string.IsNullOrWhiteSpace(t)));
+        return BuildRefTextFromTranscription(sttResult.TranscribedSubtitle.Paragraphs.Select(p => p.Text));
     }
+
+    /// <summary>
+    /// Flattens a transcription into the single plain sentence a cloning backend wants as ref-text.
+    /// </summary>
+    /// <remarks>
+    /// Strips subtitle markup and drops cues whose text the result already contains. Both matter
+    /// because the transcription comes from whatever the user has configured under Audio to text,
+    /// and a karaoke setup — faster-whisper's <c>--highlight_words</c>, whisper.cpp's <c>-owts</c> —
+    /// emits one cue per word, each repeating the entire sentence with the current word wrapped in
+    /// <c>&lt;u&gt;</c>. Joining that raw produced kilobytes of tag-laced repetition, which
+    /// CosyVoice3 then rendered instead of the line it was asked to speak. With the markup gone
+    /// those cues are identical, so the containment check collapses them back to one sentence.
+    /// </remarks>
+    internal static string BuildRefTextFromTranscription(IEnumerable<string?> paragraphTexts)
+    {
+        var parts = new List<string>();
+        foreach (var raw in paragraphTexts)
+        {
+            if (string.IsNullOrWhiteSpace(raw))
+            {
+                continue;
+            }
+
+            var text = HtmlUtil.RemoveHtmlTags(raw, true)
+                .Replace('\n', ' ')
+                .Replace('\r', ' ')
+                .Trim();
+            text = Regex.Replace(text, @"\s{2,}", " ");
+            if (string.IsNullOrWhiteSpace(text))
+            {
+                continue;
+            }
+
+            // Skip a cue the result already covers: identical karaoke repeats, and the growing
+            // prefixes some word-timestamp modes emit. Cheap because ref-text stays short.
+            if (parts.Any(p => CoversWords(p, text)))
+            {
+                continue;
+            }
+
+            // Conversely, drop an earlier part this cue supersedes.
+            parts.RemoveAll(p => CoversWords(text, p));
+            parts.Add(text);
+        }
+
+        return string.Join(' ', parts);
+    }
+
+    /// <summary>
+    /// True when <paramref name="inner"/>'s words appear as a contiguous run inside
+    /// <paramref name="outer"/>'s words.
+    /// </summary>
+    /// <remarks>
+    /// Whole words, not raw substrings: a plain <c>Contains</c> also matches inside a word, so a
+    /// cue of "Yes" was dropped by a later "Yesterday we left.", and "I" — about as common as cues
+    /// get — by any later cue containing "It". The ref-text then no longer matched the reference
+    /// audio, which is the mismatch that degrades cloning in the first place.
+    /// </remarks>
+    private static bool CoversWords(string outer, string inner)
+    {
+        var outerWords = SplitWords(outer);
+        var innerWords = SplitWords(inner);
+        if (innerWords.Length == 0 || innerWords.Length > outerWords.Length)
+        {
+            return false;
+        }
+
+        for (var start = 0; start + innerWords.Length <= outerWords.Length; start++)
+        {
+            var matched = true;
+            for (var i = 0; i < innerWords.Length; i++)
+            {
+                if (!string.Equals(outerWords[start + i], innerWords[i], StringComparison.OrdinalIgnoreCase))
+                {
+                    matched = false;
+                    break;
+                }
+            }
+
+            if (matched)
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private static string[] SplitWords(string text) =>
+        text.Split((char[]?)null, StringSplitOptions.RemoveEmptyEntries);
 
     private static ObservableCollection<string> BuildKeywordOptions(string[] keywords)
     {
@@ -1010,6 +1156,14 @@ public partial class TextToSpeechViewModel : ObservableObject
         {
             VoxCPM2CrispAsr.StopServer();
         }
+        if (keepAlive is not OmniVoiceCrispAsr)
+        {
+            OmniVoiceCrispAsr.StopServer();
+        }
+        if (keepAlive is not MossTtsCrispAsr)
+        {
+            MossTtsCrispAsr.StopServer();
+        }
         if (keepAlive is not ZonosTtsCrispAsr)
         {
             ZonosTtsCrispAsr.StopServer();
@@ -1213,9 +1367,17 @@ public partial class TextToSpeechViewModel : ObservableObject
         {
             await _windowService.ShowDialogAsync<F5TtsCrispAsrSettingsWindow, F5TtsCrispAsrSettingsViewModel>(Window!, vm => vm.Initialize());
         }
+        else if (SelectedEngine is OmniVoiceCrispAsr)
+        {
+            await _windowService.ShowDialogAsync<OmniVoiceCrispAsrSettingsWindow, OmniVoiceCrispAsrSettingsViewModel>(Window!, vm => vm.Initialize());
+        }
         else if (SelectedEngine is VoxCPM2CrispAsr)
         {
             await _windowService.ShowDialogAsync<VoxCPM2CrispAsrSettingsWindow, VoxCPM2CrispAsrSettingsViewModel>(Window!, vm => vm.Initialize());
+        }
+        else if (SelectedEngine is MossTtsCrispAsr)
+        {
+            await _windowService.ShowDialogAsync<MossTtsCrispAsrSettingsWindow, MossTtsCrispAsrSettingsViewModel>(Window!, vm => vm.Initialize());
         }
         else if (SelectedEngine is KokoroTtsCpp)
         {
@@ -1309,6 +1471,12 @@ public partial class TextToSpeechViewModel : ObservableObject
             case VoxCPM2CrispAsr:
                 await _windowService.ShowDialogAsync<DownloadTtsWindow, DownloadTtsViewModel>(Window!, vm => vm.StartDownloadVoxCPM2CrispAsrModels(VoxCPM2CrispAsr.ResolveModelKey(SelectedModel)));
                 break;
+            case OmniVoiceCrispAsr:
+                await _windowService.ShowDialogAsync<DownloadTtsWindow, DownloadTtsViewModel>(Window!, vm => vm.StartDownloadOmniVoiceCrispAsrModels(OmniVoiceCrispAsr.ResolveModelKey(SelectedModel)));
+                break;
+            case MossTtsCrispAsr:
+                await _windowService.ShowDialogAsync<DownloadTtsWindow, DownloadTtsViewModel>(Window!, vm => vm.StartDownloadMossTtsCrispAsrModels(MossTtsCrispAsr.ResolveModelKey(SelectedModel)));
+                break;
             case ZonosTtsCrispAsr:
                 await _windowService.ShowDialogAsync<DownloadTtsWindow, DownloadTtsViewModel>(Window!, vm => vm.StartDownloadZonosTtsCrispAsrModels());
                 break;
@@ -1373,6 +1541,12 @@ public partial class TextToSpeechViewModel : ObservableObject
             VoxCPM2CrispAsr => VoxCPM2CrispAsr.AreModelsInstalled(modelKey)
                 ? DownloadDotStatus.UpToDate
                 : DownloadDotStatus.NotInstalled,
+            OmniVoiceCrispAsr => OmniVoiceCrispAsr.AreModelsInstalled(modelKey)
+                ? DownloadDotStatus.UpToDate
+                : DownloadDotStatus.NotInstalled,
+            MossTtsCrispAsr => MossTtsCrispAsr.AreModelsInstalled(modelKey)
+                ? DownloadDotStatus.UpToDate
+                : DownloadDotStatus.NotInstalled,
             ZonosTtsCrispAsr => ZonosTtsCrispAsr.AreModelsInstalled()
                 ? DownloadDotStatus.UpToDate
                 : DownloadDotStatus.NotInstalled,
@@ -1430,7 +1604,11 @@ public partial class TextToSpeechViewModel : ObservableObject
         var testVoiceToken = generatingAudioVm.CancellationTokenSource.Token;
         try
         {
-            var result = await engine.Speak(text, _waveFolder, voice, SelectedLanguage, SelectedRegion, SelectedModel, testVoiceToken);
+            // Off the UI thread — Speak() does its server startup synchronously before its first
+            // await, so awaiting it directly kept the dispatcher busy and left the "please wait"
+            // popup above unpainted for the whole spawn (#12878).
+            var result = await Task.Run(() =>
+                engine.Speak(text, _waveFolder, voice, SelectedLanguage, SelectedRegion, SelectedModel, testVoiceToken));
             if (!testVoiceToken.IsCancellationRequested)
             {
                 if (result.Error || string.IsNullOrEmpty(result.FileName) || !File.Exists(result.FileName))
@@ -1528,14 +1706,21 @@ public partial class TextToSpeechViewModel : ObservableObject
             return;
         }
 
+        // Keep the user's current pick across the refresh: this runs right after the ref-text
+        // prompt and after the voice-settings dialog, and re-selecting by the *saved* settings
+        // voice - only written on Generate/Test voice/OK, so stale mid-session - silently
+        // switched the combo to another voice. The user then generated with a different voice
+        // than the one they had just picked and transcribed.
+        var currentVoiceName = SelectedVoice?.Name;
+
         Voices.Clear();
         foreach (var voice in voices)
         {
             Voices.Add(voice);
         }
-        SelectedVoice = Voices.FirstOrDefault(v => v.Name == Se.Settings.Video.TextToSpeech.Voice) ?? Voices.FirstOrDefault();
-        VoiceCount = Voices.Count;
-        VoiceCountInfo = string.Format(Se.Language.Video.TextToSpeech.XVoices, Voices.Count);
+        SelectedVoice = Voices.FirstOrDefault(v => v.Name == currentVoiceName)
+                        ?? Voices.FirstOrDefault(v => v.Name == Se.Settings.Video.TextToSpeech.Voice)
+                        ?? Voices.FirstOrDefault();
         IsVoiceCountVisible = Voices.Count > 0;
     }
 
@@ -1574,8 +1759,8 @@ public partial class TextToSpeechViewModel : ObservableObject
             return;
         }
 
-        var json = await File.ReadAllTextAsync(fileName, _cancellationToken);
-        var importExport = JsonSerializer.Deserialize<TtsImportExport>(json);
+        await using var stream = File.OpenRead(fileName);
+        var importExport = await JsonSerializer.DeserializeAsync<TtsImportExport>(stream, cancellationToken: _cancellationToken);
         if (importExport == null)
         {
             var answer = await MessageBox.Show(
@@ -1838,7 +2023,7 @@ public partial class TextToSpeechViewModel : ObservableObject
                 videoFileName,
                 -1,
                 tempWaveFileName,
-                Configuration.Settings.General.VlcWaveTranscodeSettings,
+                "acodec=s16l",
                 out _))
             {
                 process.Start();
@@ -1879,11 +2064,34 @@ public partial class TextToSpeechViewModel : ObservableObject
     // OK closes the window accepting the session's subtitle changes: the main window then
     // applies merged lines and review text edits (MergedSubtitle/ReviewTextChanges) to the
     // open subtitle. Cancel (or Escape / title-bar close) discards them.
+    //
+    // Every step is guarded and logged: a report of the whole app dying on OK (#12626) could
+    // not be tied to any step here, so nothing in the close path may throw its way out of the
+    // command, and the tools-log breadcrumbs bisect where a hard (native) crash happens.
     [RelayCommand]
     private void Ok()
     {
-        SaveSettings();
-        _cancellationTokenSource.Cancel();
+        Se.WriteToolsLog("TTS window: OK clicked - closing");
+
+        try
+        {
+            SaveSettings();
+        }
+        catch (Exception ex)
+        {
+            SeLogger.Error(ex, "TTS window: saving settings on OK failed");
+        }
+
+        try
+        {
+            _cancellationTokenSource.Cancel();
+        }
+        catch (Exception ex)
+        {
+            // Cancel() runs registered callbacks synchronously - a throwing callback lands here.
+            SeLogger.Error(ex, "TTS window: cancelling the pipeline token on OK failed");
+        }
+
         IsGenerating = false;
         IsNotGenerating = true;
         ProgressOpacity = 0;
@@ -1898,7 +2106,16 @@ public partial class TextToSpeechViewModel : ObservableObject
         // user can adjust settings and generate again.
         if (IsGenerating)
         {
-            _cancellationTokenSource.Cancel();
+            Se.WriteToolsLog("TTS window: Cancel clicked during generation - stopping pipeline");
+            try
+            {
+                _cancellationTokenSource.Cancel();
+            }
+            catch (Exception ex)
+            {
+                SeLogger.Error(ex, "TTS window: cancelling the running pipeline failed");
+            }
+
             IsGenerating = false;
             IsNotGenerating = true;
             ProgressOpacity = 0;
@@ -1906,6 +2123,7 @@ public partial class TextToSpeechViewModel : ObservableObject
         }
 
         // Idle: close without applying anything to the main window (OkPressed stays false).
+        Se.WriteToolsLog("TTS window: Cancel clicked - closing");
         Close();
     }
 
@@ -1977,20 +2195,30 @@ public partial class TextToSpeechViewModel : ObservableObject
             var outputFileName = await AddAudioToVideoFile(mergedAudioFileName, outputFolder, cancellationToken);
             if (!string.IsNullOrEmpty(outputFileName) && Window != null)
             {
-                await MessageBox.Show(
-                    Window,
-                    Se.Language.Video.TextToSpeech.Title,
-                    string.Format(Se.Language.General.VideoFileGeneratedX, outputFileName),
-                    MessageBoxButtons.OK,
-                    MessageBoxIcon.Information);
-
-                await _folderHelper.OpenFolder(Window!, outputFolder);
+                await _windowService.ShowDialogAsync<PromptFileSavedWindow, PromptFileSavedViewModel>(Window, vm =>
+                {
+                    vm.Initialize(
+                        Se.Language.General.VideoFileGenerated,
+                        string.Format(Se.Language.General.VideoFileGeneratedX, outputFileName),
+                        outputFileName,
+                        true,
+                        true);
+                });
             }
         }
-        else
+        else if (Window != null)
         {
-            var path = Path.GetDirectoryName(mergedAudioFileName)!;
-            await _folderHelper.OpenFolder(Window!, outputFolder);
+            // The bare-audio ending used to pop the output folder with no in-app confirmation at
+            // all - the saved-file prompt confirms the wav and offers show-in-folder/play instead.
+            await _windowService.ShowDialogAsync<PromptFileSavedWindow, PromptFileSavedViewModel>(Window, vm =>
+            {
+                vm.Initialize(
+                    Se.Language.General.AudioFileSaved,
+                    string.Format(Se.Language.General.FileSavedToX, mergedAudioFileName),
+                    mergedAudioFileName,
+                    true,
+                    true);
+            });
         }
     }
 
@@ -2477,9 +2705,14 @@ public partial class TextToSpeechViewModel : ObservableObject
         var rawText = _castKind == ActorVoiceDetector.CastKind.WebVttVoices
             ? ActorVoiceDetector.StripWebVttVoiceTags(paragraph.Text)
             : paragraph.Text;
+        // Strip formatting markup (<i>…</i>, <font …>, {\an8}, …) before synthesis. TTS engines
+        // don't interpret subtitle tags, and some — notably MOSS-TTS (CrispASR) — vocalize them
+        // ("<i>" spoken as "I") or run away into garbled audio rather than ignoring them (#12757).
+        // No engine should ever receive them, so strip HTML + SSA/ASS tags centrally.
+        var cleanText = HtmlUtil.RemoveHtmlTags(rawText, alsoSsaTags: true);
         // Unbreak line endings centrally so every engine sees a single flowing line —
         // many TTS engines otherwise insert weird pauses on \r\n.
-        var text = Utilities.UnbreakLine(rawText);
+        var text = Utilities.UnbreakLine(cleanText);
 
         // Fallbacks must carry the panel's instruction, not "": TtsInstructionSwap swaps the
         // engine's saved instruction to whatever is passed here for the duration of the Speak
@@ -3054,10 +3287,6 @@ public partial class TextToSpeechViewModel : ObservableObject
             {
                 Voices.Add(vo);
             }
-            VoiceCount = Voices.Count;
-            // The label binds VoiceCountInfo; only VoiceCount was ever written, so the voice
-            // count next to the combo stayed permanently blank.
-            VoiceCountInfo = string.Format(Se.Language.Video.TextToSpeech.XVoices, Voices.Count);
             IsVoiceCountVisible = Voices.Count > 0;
 
             var lastVoice = Voices.FirstOrDefault(v => v.Name == Se.Settings.Video.TextToSpeech.Voice);
@@ -3084,9 +3313,20 @@ public partial class TextToSpeechViewModel : ObservableObject
 
                 // OmniVoice has 646 alphabetically-sorted languages; the first entry ("Abadi") is
                 // a useless default. Default to English so the engine is usable out of the box.
-                SelectedLanguage = engine is OmniVoiceTtsCpp
-                    ? Languages.FirstOrDefault(l => l.Code == "en") ?? Languages.FirstOrDefault()
-                    : Languages.FirstOrDefault();
+                // The CrispASR cloning engines restore the saved pick (their lists lead with
+                // "Auto", which is also the right fallback - it reproduces the
+                // pre-language-selection behaviour).
+                SelectedLanguage = engine switch
+                {
+                    OmniVoiceTtsCpp => Languages.FirstOrDefault(l => l.Code == "en") ?? Languages.FirstOrDefault(),
+                    MossTtsCrispAsr => Languages.FirstOrDefault(l => l.Name == Se.Settings.Video.TextToSpeech.MossTtsCrispAsrLanguage)
+                                       ?? Languages.FirstOrDefault(),
+                    CosyVoice3CrispAsr => Languages.FirstOrDefault(l => l.Name == Se.Settings.Video.TextToSpeech.CosyVoice3CrispAsrLanguage)
+                                          ?? Languages.FirstOrDefault(),
+                    Qwen3TtsCrispAsr => Languages.FirstOrDefault(l => l.Name == Se.Settings.Video.TextToSpeech.Qwen3TtsCrispAsrLanguage)
+                                        ?? Languages.FirstOrDefault(),
+                    _ => Languages.FirstOrDefault(),
+                };
             }
             else if (SelectedVoice == null)
             {
@@ -3208,6 +3448,26 @@ public partial class TextToSpeechViewModel : ObservableObject
                 IsEngineSettingsVisible = true;
                 IsModelDownloadVisible = true;
             }
+            else if (SelectedEngine is OmniVoiceCrispAsr)
+            {
+                SelectedModel = Models.FirstOrDefault(p => p == Se.Settings.Video.TextToSpeech.OmniVoiceCrispAsrModel);
+                if (string.IsNullOrEmpty(SelectedModel))
+                {
+                    SelectedModel = Models.FirstOrDefault();
+                }
+                IsEngineSettingsVisible = true;
+                IsModelDownloadVisible = true;
+            }
+            else if (SelectedEngine is MossTtsCrispAsr)
+            {
+                SelectedModel = Models.FirstOrDefault(p => p == Se.Settings.Video.TextToSpeech.MossTtsCrispAsrModel);
+                if (string.IsNullOrEmpty(SelectedModel))
+                {
+                    SelectedModel = Models.FirstOrDefault();
+                }
+                IsEngineSettingsVisible = true;
+                IsModelDownloadVisible = true;
+            }
             else if (SelectedEngine is F5TtsCrispAsr)
             {
                 SelectedModel = Models.FirstOrDefault(p => p == Se.Settings.Video.TextToSpeech.F5TtsCrispAsrModel);
@@ -3293,23 +3553,56 @@ public partial class TextToSpeechViewModel : ObservableObject
 
     internal void OnClosing(WindowClosingEventArgs e)
     {
+        // Each teardown step is guarded and bracketed by tools-log breadcrumbs: a report of the
+        // whole app dying when this window closes (#12626) left nothing in error-log.txt, which
+        // points at a hard (native) crash - the last breadcrumb then names the step that died.
+        Se.WriteToolsLog($"TTS window: closing (okPressed={OkPressed})");
+
         // Title-bar close during a run: cancel the pipeline so it unwinds instead of running
         // headless against a closed window (progress writes, folder picker, message boxes) while
         // StopAllCrispAsrServers below kills the engine server it is talking to.
-        try { _cancellationTokenSource?.Cancel(); } catch (ObjectDisposedException) { }
+        try
+        {
+            _cancellationTokenSource?.Cancel();
+        }
+        catch (Exception ex)
+        {
+            SeLogger.Error(ex, "TTS window close: cancelling the pipeline failed");
+        }
 
         // An enabled System.Timers.Timer is rooted: without stopping it here, every open/close
         // of this window leaked a view model whose Elapsed handler kept firing every 100 ms for
         // the rest of the session (ReviewSpeechViewModel already does this on close).
-        _timer.Stop();
-        _timer.Elapsed -= OnTimerOnElapsed;
-        _timer.Dispose();
-
-        lock (_playLock)
+        try
         {
-            _mpvContext?.Dispose();
-            _mpvContext = null;
+            _timer.StopAndDispose(OnTimerOnElapsed);
         }
+        catch (Exception ex)
+        {
+            SeLogger.Error(ex, "TTS window close: stopping the playback timer failed");
+        }
+
+        try
+        {
+            lock (_playLock)
+            {
+                if (_mpvContext != null)
+                {
+                    // Only used when Test voice played a clip. Stop before Dispose so libmpv
+                    // tears down from an idle state instead of mid-playback - this dispose is
+                    // the prime native-crash suspect in #12626.
+                    Se.WriteToolsLog("TTS window: disposing audio preview player (mpv)");
+                    _mpvContext.Stop();
+                    _mpvContext.Dispose();
+                    _mpvContext = null;
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            SeLogger.Error(ex, "TTS window close: disposing the audio preview player failed");
+        }
+
         // Release VRAM held by any still-running crispasr.exe servers so models don't stay
         // pinned for the rest of the SE session. Fire-and-forget on the threadpool — each
         // StopServer is Kill + WaitForExit(2000), so doing this on the UI thread could block
@@ -3317,7 +3610,17 @@ public partial class TextToSpeechViewModel : ObservableObject
         // performs the same teardown if SE exits before the task completes, so nothing is
         // left running.
         _ = Task.Run(StopAllCrispAsrServers);
-        UiUtil.SaveWindowPosition(Window);
+
+        try
+        {
+            UiUtil.SaveWindowPosition(Window);
+        }
+        catch (Exception ex)
+        {
+            SeLogger.Error(ex, "TTS window close: saving the window position failed");
+        }
+
+        Se.WriteToolsLog("TTS window: close cleanup done");
     }
 
     internal void OnLoaded(RoutedEventArgs e)
@@ -3364,6 +3667,8 @@ public partial class TextToSpeechViewModel : ObservableObject
             return;
         }
 
+        var previousLanguageName = SelectedLanguage?.Name;
+
         Dispatcher.UIThread.PostSafe(async () =>
         {
             if (engine.HasLanguageParameter)
@@ -3375,7 +3680,10 @@ public partial class TextToSpeechViewModel : ObservableObject
                     Languages.Add(language);
                 }
 
-                SelectedLanguage = Languages.FirstOrDefault(p => p.Name == Se.Settings.Video.TextToSpeech.ElevenLabsLanguage);
+                // Keep the language the user already picked when it survives the model switch -
+                // otherwise a MOSS-TTS quant change (Q4_K <-> F16) silently re-selects English.
+                SelectedLanguage = Languages.FirstOrDefault(p => p.Name == previousLanguageName)
+                                   ?? Languages.FirstOrDefault(p => p.Name == Se.Settings.Video.TextToSpeech.ElevenLabsLanguage);
                 if (SelectedLanguage == null)
                 {
                     SelectedLanguage = Languages.FirstOrDefault(p => p.Code == "en");

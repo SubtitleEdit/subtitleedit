@@ -23,8 +23,12 @@ public class SevenZipInitializer() : ISevenZipInitializer
         {
             if (await NeedsUpdate(outputDir))
             {
-                await UnpackWindows(outputDir);
-                WriteNewVersionFile(outputDir);
+                // Only stamp the version once the unpack succeeded - otherwise a failed unpack
+                // is recorded as current and 7-Zip is never retried for this version.
+                if (await UnpackWindows(outputDir))
+                {
+                    WriteNewVersionFile(outputDir);
+                }
             }
         }
 
@@ -32,8 +36,10 @@ public class SevenZipInitializer() : ISevenZipInitializer
         {
             if (await NeedsUpdate(outputDir))
             {
-                await UnpackLinux64(outputDir);
-                WriteNewVersionFile(outputDir);
+                if (await UnpackLinux64(outputDir))
+                {
+                    WriteNewVersionFile(outputDir);
+                }
             }
         }
     }
@@ -83,7 +89,8 @@ public class SevenZipInitializer() : ISevenZipInitializer
         return false;
     }
 
-    private static async Task UnpackWindows(string outputDir)
+    /// <returns><see langword="true"/> when 7-Zip was unpacked.</returns>
+    private static async Task<bool> UnpackWindows(string outputDir)
     {
         try
         {
@@ -96,14 +103,17 @@ public class SevenZipInitializer() : ISevenZipInitializer
             await using var zipStream = AssetLoader.Open(zipUri);
             var zipUnpacker = new ZipUnpacker();
             zipUnpacker.UnpackZipStream(zipStream, outputDir);
+            return true;
         }
-        catch
+        catch (Exception exception)
         {
-            // Ignore
+            Se.LogError(exception, $"Could not unpack 7-Zip into \"{outputDir}\".");
+            return false;
         }
     }
 
-    private static async Task UnpackLinux64(string outputDir)
+    /// <returns><see langword="true"/> when 7-Zip was unpacked.</returns>
+    private static async Task<bool> UnpackLinux64(string outputDir)
     {
         try
         {
@@ -116,10 +126,12 @@ public class SevenZipInitializer() : ISevenZipInitializer
             await using var zipStream = AssetLoader.Open(zipUri);
             var zipUnpacker = new ZipUnpacker();
             zipUnpacker.UnpackZipStream(zipStream, outputDir);
+            return true;
         }
-        catch
+        catch (Exception exception)
         {
-            // Ignore
+            Se.LogError(exception, $"Could not unpack 7-Zip into \"{outputDir}\".");
+            return false;
         }
     }
 }

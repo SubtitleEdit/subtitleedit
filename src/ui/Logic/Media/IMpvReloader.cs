@@ -10,4 +10,5 @@ public interface IMpvReloader
     Task RefreshMpv(LibMpvDynamicPlayer mpv, Subtitle subtitle, Subtitle? subtitleSecondary, SubtitleFormat uiFormat);
     void Reset();
     bool SmpteMode { get; set; }
+    bool SubtitlesVisible { get; set; }
 }

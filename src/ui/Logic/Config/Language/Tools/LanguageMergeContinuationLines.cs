@@ -11,8 +11,6 @@ public class LanguageMergeContinuationLines
     public string ColumnFirst { get; set; }
     public string ColumnSecond { get; set; }
     public string ColumnMerged { get; set; }
-    public string SelectAll { get; set; }
-    public string InverseSelection { get; set; }
 
     public LanguageMergeContinuationLines()
     {
@@ -25,7 +23,5 @@ public class LanguageMergeContinuationLines
         ColumnFirst = "First line";
         ColumnSecond = "Second line";
         ColumnMerged = "Merged";
-        SelectAll = "Select all";
-        InverseSelection = "Inverse selection";
     }
 }

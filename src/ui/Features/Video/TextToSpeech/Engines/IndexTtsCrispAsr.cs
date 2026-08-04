@@ -242,30 +242,9 @@ public class IndexTtsCrispAsr : ITtsEngine
             foreach (var src in Directory.GetFiles(sourceFolder, "*.wav"))
             {
                 var dest = Path.Combine(voicesFolder, Path.GetFileName(src));
-                if (File.Exists(dest))
-                {
-                    continue;
-                }
 
-                try
-                {
-                    var ffmpeg = FfmpegGenerator.ConvertToMono24kHzWav(src, dest);
-                    if (!ffmpeg.Start())
-                    {
-                        // ffmpeg unavailable — better to seed at 16 kHz than skip the voice.
-                        File.Copy(src, dest);
-                        continue;
-                    }
-                    ffmpeg.WaitForExit();
-                }
-                catch (Exception ex)
-                {
-                    Se.LogError(ex, $"IndexTTS (CrispASR): resample seed '{src}' failed; falling back to plain copy");
-                    try { if (!File.Exists(dest))
-                    {
-                        File.Copy(src, dest);
-                    } } catch { }
-                }
+                // When ffmpeg cannot do it, seeding at 16 kHz beats skipping the voice.
+                VoiceSeedHelper.CopyOrResample(src, dest, 24000, "IndexTTS (CrispASR)");
             }
         }
         catch (Exception ex)
@@ -327,13 +306,15 @@ public class IndexTtsCrispAsr : ITtsEngine
         }
     }
 
-    public Task<Voice[]> GetVoices(string language)
+    public async Task<Voice[]> GetVoices(string language)
     {
         var result = new List<Voice>();
 
         // Voice cloning only — no built-in default voice. The combo is empty until the user
         // imports a reference WAV (or the qwen3-tts.cpp voice seed runs above).
-        var voicesFolder = GetSetVoicesFolder();
+        // Off the UI thread: GetSetVoicesFolder does one-time reference-WAV seeding through
+        // ffmpeg, and this is awaited from SelectedEngineChanged on the dispatcher.
+        var voicesFolder = await Task.Run(GetSetVoicesFolder);
         if (Directory.Exists(voicesFolder))
         {
             foreach (var file in Directory.GetFiles(voicesFolder, "*.wav"))
@@ -343,7 +324,7 @@ public class IndexTtsCrispAsr : ITtsEngine
             }
         }
 
-        return Task.FromResult(result.ToArray());
+        return result.ToArray();
     }
 
     public bool IsVoiceInstalled(Voice voice) => true;
@@ -398,21 +379,22 @@ public class IndexTtsCrispAsr : ITtsEngine
         // Qwen3 CustomVoice there is no `ref-text` parameter. v1.5 has no `instructions`
         // (emotion control) — that's IndexTTS-2 which isn't in CrispASR yet.
         var speed = Math.Clamp(Se.Settings.Video.TextToSpeech.IndexTtsCrispAsrSpeed, 0.25, 4.0);
+        // Deliberately NO `voice` field: the server rejects absolute paths outright (HTTP 400,
+        // "'voice' must not contain … path separators" — path-traversal guard), so sending
+        // indexVoice.FilePath failed every synthesis. The indextts backend loads the reference
+        // once at init from the startup --voice flag anyway (per-request voice is never re-read),
+        // and the server restarts on voice change — see EnsureServerRunningAsync. Same bug family
+        // as MOSS-TTS #12757.
         var payload = new Dictionary<string, object>
         {
             ["input"] = inputText,
             ["response_format"] = "wav",
-            ["voice"] = indexVoice.FilePath,
             ["speed"] = speed,
-            // IndexTTS gates voice cloning behind a consent attestation (CrispASR v0.7.0 returns
-            // HTTP 400 consent_required without it). The user supplies their own reference voice
-            // by importing a WAV into SE, which is the act being attested here.
-            ["consent_attestation"] = "I have the speaker's consent, or it is my own voice.",
-            // Skip the audible AI-disclosure prefix CrispASR otherwise prepends to cloned audio;
-            // SE surfaces the AI-generated nature in its UI. The inaudible watermark + C2PA
-            // provenance metadata stay embedded regardless (defaults to true server-side).
-            ["spoken_disclaimer"] = false,
         };
+
+        // Attests the user's own imported reference and the AI-disclosure duty; see
+        // CrispAsrTtsProvenance. Skipped when voice cloning has not been accepted in settings.
+        CrispAsrTtsProvenance.AddSpeechAttestations(payload);
 
         var body = JsonSerializer.Serialize(payload);
         using var content = new StringContent(body, Encoding.UTF8, "application/json");
@@ -587,6 +569,7 @@ public class IndexTtsCrispAsr : ITtsEngine
             // produces noise. See CrispASR 0.6.11 upstream bug.
             psi.ArgumentList.Add("--voice");
             psi.ArgumentList.Add(voicePath);
+            CrispAsrTtsProvenance.AddServerMarkingArgs(psi.ArgumentList, exe);
 
             var process = Process.Start(psi)
                 ?? throw new InvalidOperationException("Failed to start crispasr (indextts)");

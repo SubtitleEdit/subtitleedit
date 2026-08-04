@@ -14,7 +14,7 @@ using System.Linq;
 
 namespace Nikse.SubtitleEdit.Features.Tools.MergeSubtitlesWithSameTimeCodes;
 
-public partial class MergeSameTimeCodesViewModel : ObservableObject
+public partial class MergeSameTimeCodesViewModel : ObservableObject, IClosingCleanup
 {
     [ObservableProperty] private ObservableCollection<MergeDisplayItem> _mergeItems;
     [ObservableProperty] private MergeDisplayItem? _selectedMergeItem;
@@ -29,9 +29,10 @@ public partial class MergeSameTimeCodesViewModel : ObservableObject
 
     public bool OkPressed { get; private set; }
     public List<SubtitleLineViewModel> ResultSubtitles { get; set; }
-    public DataGrid SubtitleGrid { get; set; }
+    public TableView SubtitleGrid { get; set; }
 
     private readonly System.Timers.Timer _timerUpdatePreview;
+    private volatile bool _isClosing;
     private bool _dirty;
     private string _language;
     private List<SubtitleLineViewModel> _subtitles;
@@ -41,26 +42,44 @@ public partial class MergeSameTimeCodesViewModel : ObservableObject
         MergeItems = new ObservableCollection<MergeDisplayItem>();
         MergeSubtitles = new ObservableCollection<SubtitleLineViewModel>();
         ResultSubtitles = new List<SubtitleLineViewModel>();
-        SubtitleGrid = new DataGrid();
+        SubtitleGrid = new TableView();
 
         LoadSettings();
 
         _language = "en";
         _subtitles = new List<SubtitleLineViewModel>();
         _timerUpdatePreview = new System.Timers.Timer(500);
-        _timerUpdatePreview.Elapsed += (s, e) =>
+        _timerUpdatePreview.Elapsed += TimerUpdatePreviewElapsed;
+    }
+
+    private void TimerUpdatePreviewElapsed(object? sender, System.Timers.ElapsedEventArgs e)
+    {
+        if (_isClosing)
         {
-            _timerUpdatePreview.Stop();
-            if (_dirty)
+            return;
+        }
+
+        _timerUpdatePreview.Stop();
+        if (_dirty)
+        {
+            Dispatcher.UIThread.Invoke(() =>
             {
-                Dispatcher.UIThread.Invoke(() =>
-                {
-                    _dirty = false;
-                    UpdatePreview();
-                });
-            }
+                _dirty = false;
+                UpdatePreview();
+            });
+        }
+
+        // Guard the restart: OnClosingCleanup may have disposed the timer while this handler ran (#12739).
+        if (!_isClosing)
+        {
             _timerUpdatePreview.Start();
-        };
+        }
+    }
+
+    public void OnClosingCleanup()
+    {
+        _isClosing = true;
+        _timerUpdatePreview.StopAndDispose(TimerUpdatePreviewElapsed);
     }
 
     public void Initialize(List<SubtitleLineViewModel> subtitles, Subtitle subtitle)
@@ -292,20 +311,21 @@ public partial class MergeSameTimeCodesViewModel : ObservableObject
         Window?.Close();
     }
 
-    internal void DataGridMergeItemChanged(object? sender, SelectionChangedEventArgs e)
+    internal void MergeItemChanged(object? sender, SelectionChangedEventArgs e)
     {
         var selected = SelectedMergeItem;
-        if (selected == null)
+        var selectedItems = SubtitleGrid.SelectedItems;
+        if (selected == null || selectedItems == null)
         {
             return;
         }
 
-        SubtitleGrid.SelectedItems.Clear();
+        selectedItems.Clear();
         foreach (var item in MergeSubtitles)
         {
             if (item is SubtitleLineViewModel svm && svm.Extra == selected.MergedGroup)
             {
-                SubtitleGrid.SelectedItems.Add(item);
+                selectedItems.Add(item);
             }
         }
     }

@@ -1,0 +1,69 @@
+<Project>
+	<!--
+	  Builds the asset zip archives from their source folders at build time, so the zips are
+	  never checked in and can never drift out of sync with the loose files:
+
+	    Themes.zip       from <repo>/Themes
+	    Dictionaries.zip from <repo>/Dictionaries
+	    Ocr.zip          from <repo>/Ocr
+	    Languages.zip    from <repo>/src/ui/Assets/Languages (shipping the 6.8 MB of
+	                     translation JSON deflated instead of as loose uncompressed
+	                     Avalonia resources saves ~5 MB in the executable)
+
+	  Each zip is staged through a Copy so .DS_Store and other stray files never end up in
+	  the archive (ZipDirectory has no exclude support). The importing project hooks the
+	  Build*Zip targets it needs and adds the produced zip as an AvaloniaResource or
+	  EmbeddedResource itself - see UI.csproj and seconv.csproj.
+
+	  Incremental-build caveat: deleting a source file does not by itself retrigger a zip
+	  (nothing is newer than the output); a rebuild after adding/updating files does.
+	-->
+	<PropertyGroup>
+		<AssetZipsRepoRoot>$(MSBuildThisFileDirectory)..\</AssetZipsRepoRoot>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<ThemesZipSource Include="$(AssetZipsRepoRoot)Themes\**\*" Exclude="$(AssetZipsRepoRoot)Themes\**\.DS_Store" />
+		<DictionariesZipSource Include="$(AssetZipsRepoRoot)Dictionaries\**\*" Exclude="$(AssetZipsRepoRoot)Dictionaries\**\.DS_Store" />
+		<OcrZipSource Include="$(AssetZipsRepoRoot)Ocr\**\*" Exclude="$(AssetZipsRepoRoot)Ocr\**\.DS_Store" />
+		<LanguagesZipSource Include="$(MSBuildThisFileDirectory)ui\Assets\Languages\*.json" />
+	</ItemGroup>
+
+	<!--
+	  $(IntermediateOutputPath) is only defined once the SDK's .targets have been imported,
+	  which happens after this file, so the derived properties must be computed at target
+	  execution time rather than at evaluation time. Every Build*Zip target below depends on
+	  this one; Inputs/Outputs attributes are expanded after DependsOnTargets have run, so
+	  they see the final values.
+	-->
+	<Target Name="_InitAssetZipProperties">
+		<PropertyGroup>
+			<AssetZipsOutDir>$(IntermediateOutputPath)AssetZips\</AssetZipsOutDir>
+			<AssetZipsStagingDir>$(AssetZipsOutDir)staging\</AssetZipsStagingDir>
+		</PropertyGroup>
+	</Target>
+
+	<Target Name="BuildThemesZip" DependsOnTargets="_InitAssetZipProperties" Inputs="@(ThemesZipSource)" Outputs="$(AssetZipsOutDir)Themes.zip">
+		<RemoveDir Directories="$(AssetZipsStagingDir)Themes" />
+		<Copy SourceFiles="@(ThemesZipSource)" DestinationFiles="@(ThemesZipSource->'$(AssetZipsStagingDir)Themes\%(RecursiveDir)%(Filename)%(Extension)')" />
+		<ZipDirectory SourceDirectory="$(AssetZipsStagingDir)Themes" DestinationFile="$(AssetZipsOutDir)Themes.zip" Overwrite="true" />
+	</Target>
+
+	<Target Name="BuildDictionariesZip" DependsOnTargets="_InitAssetZipProperties" Inputs="@(DictionariesZipSource)" Outputs="$(AssetZipsOutDir)Dictionaries.zip">
+		<RemoveDir Directories="$(AssetZipsStagingDir)Dictionaries" />
+		<Copy SourceFiles="@(DictionariesZipSource)" DestinationFiles="@(DictionariesZipSource->'$(AssetZipsStagingDir)Dictionaries\%(RecursiveDir)%(Filename)%(Extension)')" />
+		<ZipDirectory SourceDirectory="$(AssetZipsStagingDir)Dictionaries" DestinationFile="$(AssetZipsOutDir)Dictionaries.zip" Overwrite="true" />
+	</Target>
+
+	<Target Name="BuildOcrZip" DependsOnTargets="_InitAssetZipProperties" Inputs="@(OcrZipSource)" Outputs="$(AssetZipsOutDir)Ocr.zip">
+		<RemoveDir Directories="$(AssetZipsStagingDir)Ocr" />
+		<Copy SourceFiles="@(OcrZipSource)" DestinationFiles="@(OcrZipSource->'$(AssetZipsStagingDir)Ocr\%(RecursiveDir)%(Filename)%(Extension)')" />
+		<ZipDirectory SourceDirectory="$(AssetZipsStagingDir)Ocr" DestinationFile="$(AssetZipsOutDir)Ocr.zip" Overwrite="true" />
+	</Target>
+
+	<Target Name="BuildLanguagesZip" DependsOnTargets="_InitAssetZipProperties" Inputs="@(LanguagesZipSource)" Outputs="$(AssetZipsOutDir)Languages.zip">
+		<RemoveDir Directories="$(AssetZipsStagingDir)Languages" />
+		<Copy SourceFiles="@(LanguagesZipSource)" DestinationFiles="@(LanguagesZipSource->'$(AssetZipsStagingDir)Languages\%(Filename)%(Extension)')" />
+		<ZipDirectory SourceDirectory="$(AssetZipsStagingDir)Languages" DestinationFile="$(AssetZipsOutDir)Languages.zip" Overwrite="true" />
+	</Target>
+</Project>

@@ -1,13 +1,9 @@
 ﻿using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.Dictionaries;
 using Nikse.SubtitleEdit.Core.Interfaces;
-using Nikse.SubtitleEdit.Features.SpellCheck;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
+using Nikse.SubtitleEdit.UiLogic.SpellCheck;
 
-namespace Nikse.SubtitleEdit.Features.Ocr.FixEngine;
+namespace Nikse.SubtitleEdit.UiLogic.Ocr.FixEngine;
 
 public interface IOcrFixEngine
 {
@@ -59,7 +55,12 @@ public partial class OcrFixEngine : IOcrFixEngine, IDoSpell
         _twoLetterIsoLanguageName = twoLetterIsoLanguageName;
         _spellCheckManager.Initialize(spellCheckDictionary.DictionaryFileName, twoLetterIsoLanguageName);
 
-        _fiveLetterName = Path.GetFileNameWithoutExtension(spellCheckDictionary.DictionaryFileName);
+        // Use the same normalized five-letter language name that the main spell checker and the OCR
+        // "add to user dictionary" write path use (e.g. es_ANY -> es_ES). Using the raw file base name
+        // here made ReloadNames() read a different *_user.xml than words were saved to, so newly added
+        // user-dictionary words were never recognized and the prompt kept re-opening the same word (#12824).
+        _fiveLetterName = spellCheckDictionary.GetFiveLetterLanguageName()
+                          ?? Path.GetFileNameWithoutExtension(spellCheckDictionary.DictionaryFileName);
 
         _threeLetterIsoLanguageName = threeLetterIsoLanguageName;
         _subtitle = subtitle;
@@ -296,7 +297,11 @@ public partial class OcrFixEngine : IOcrFixEngine, IDoSpell
                 isWordCorrect = true;
             }
 
-            var lineText = splitLine.GetText();
+            // Only build the line text when it can still be read: every use below is guarded by
+            // !isWordCorrect, and isWordCorrect never flips back to false. GetText walks all
+            // words of the line, so skipping it for already-correct words (the common case)
+            // saves a StringBuilder + string per word.
+            var lineText = isWordCorrect ? string.Empty : splitLine.GetText();
             if (!isWordCorrect && _spellCheckWordLists.HasNameExtended(result, lineText))
             {
                 isWordCorrect = true;

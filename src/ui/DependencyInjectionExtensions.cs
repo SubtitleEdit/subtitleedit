@@ -1,4 +1,4 @@
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.DependencyInjection;
 using Nikse.SubtitleEdit.Features.Assa;
 using Nikse.SubtitleEdit.Features.Assa.AssaApplyAdvancedEffect;
 using Nikse.SubtitleEdit.Features.Assa.AssaApplyCustomOverrideTags;
@@ -21,6 +21,7 @@ using Nikse.SubtitleEdit.Features.Files.ExportCustomTextFormat;
 using Nikse.SubtitleEdit.Features.Files.ExportImageBased;
 using Nikse.SubtitleEdit.Features.Files.ExportPac;
 using Nikse.SubtitleEdit.Features.Files.ExportPlainText;
+using Nikse.SubtitleEdit.Features.Files.FormatProperties.DCinemaInteropProperties;
 using Nikse.SubtitleEdit.Features.Files.FormatProperties.DCinemaSmpteProperties;
 using Nikse.SubtitleEdit.Features.Files.FormatProperties.ItunesTimedTextProperties;
 using Nikse.SubtitleEdit.Features.Files.FormatProperties.TimedText10Properties;
@@ -29,6 +30,7 @@ using Nikse.SubtitleEdit.Features.Files.FormatProperties.WebVttProperties;
 using Nikse.SubtitleEdit.Features.Files.ImportImages;
 using Nikse.SubtitleEdit.Features.Files.ImportCsvXlsxCustomColumns;
 using Nikse.SubtitleEdit.Features.Files.ImportPlainText;
+using Nikse.SubtitleEdit.Features.Files.ImportPlainText.ForcedAlignerSetup;
 using Nikse.SubtitleEdit.Features.Files.ManualChosenEncoding;
 using Nikse.SubtitleEdit.Features.Files.RestoreAutoBackup;
 using Nikse.SubtitleEdit.Features.Files.Statistics;
@@ -87,6 +89,7 @@ using Nikse.SubtitleEdit.Features.Shared.PickSubtitleFormat;
 using Nikse.SubtitleEdit.Features.Shared.PickTsTrack;
 using Nikse.SubtitleEdit.Features.Shared.PickVobSubLanguage;
 using Nikse.SubtitleEdit.Features.Shared.PromptFileSaved;
+using Nikse.SubtitleEdit.Features.Shared.PromptCheckBox;
 using Nikse.SubtitleEdit.Features.Shared.PromptTextBox;
 using Nikse.SubtitleEdit.Features.Shared.ShowImage;
 using Nikse.SubtitleEdit.Features.Shared.SourceView;
@@ -124,11 +127,13 @@ using Nikse.SubtitleEdit.Features.Tools.MergeTwoSubtitles;
 using Nikse.SubtitleEdit.Features.Tools.MergeSubtitlesWithSameText;
 using Nikse.SubtitleEdit.Features.Tools.MergeSubtitlesWithSameTimeCodes;
 using Nikse.SubtitleEdit.Features.Tools.RemoveTextForHearingImpaired;
+using Nikse.SubtitleEdit.Features.Tools.RemoveUnicodeCharacters;
 using Nikse.SubtitleEdit.Features.Tools.Renumber;
 using Nikse.SubtitleEdit.Features.Tools.SortBy;
 using Nikse.SubtitleEdit.Features.Tools.SplitBreakLongLines;
 using Nikse.SubtitleEdit.Features.Tools.SplitSubtitle;
 using Nikse.SubtitleEdit.Features.Translate;
+using Nikse.SubtitleEdit.Features.Translate.LlamaCppEngineSettings;
 using Nikse.SubtitleEdit.Features.Video.BlankVideo;
 using Nikse.SubtitleEdit.Features.Video.BurnIn;
 using Nikse.SubtitleEdit.Features.Video.CutVideo;
@@ -154,7 +159,9 @@ using Nikse.SubtitleEdit.Features.Video.TextToSpeech.VibeVoiceCrispAsrSettings;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.IndexTtsCrispAsrSettings;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.CosyVoice3CrispAsrSettings;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.F5TtsCrispAsrSettings;
+using Nikse.SubtitleEdit.Features.Video.TextToSpeech.OmniVoiceCrispAsrSettings;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.VoxCPM2CrispAsrSettings;
+using Nikse.SubtitleEdit.Features.Video.TextToSpeech.MossTtsCrispAsrSettings;
 using Nikse.SubtitleEdit.Features.Video.SpeechToText.EngineSettings;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.EncodingSettings;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.ReviewSpeech;
@@ -171,6 +178,9 @@ using Nikse.SubtitleEdit.UiLogic.Ocr;
 using Nikse.SubtitleEdit.Logic.Ocr;
 using Nikse.SubtitleEdit.Logic.Ocr.GoogleLens;
 using Nikse.SubtitleEdit.Logic.UndoRedo;
+using Nikse.SubtitleEdit.UiLogic.LlamaCpp;
+using Nikse.SubtitleEdit.UiLogic.Ocr.FixEngine;
+using Nikse.SubtitleEdit.UiLogic.SpellCheck;
 using AssaApplyCustomOverrideTagsViewModel = Nikse.SubtitleEdit.Features.Assa.AssaApplyCustomOverrideTags.AssaApplyCustomOverrideTagsViewModel;
 using SpeechToTextViewModel = Nikse.SubtitleEdit.Features.Video.SpeechToText.SpeechToTextViewModel;
 using AudioVisualizerUndockedViewModel = Nikse.SubtitleEdit.Features.Shared.Undocked.AudioVisualizerUndockedViewModel;
@@ -199,8 +209,8 @@ public static class DependencyInjectionExtensions
     {
         // LlamaCppServerManager lives in libuilogic (shared with seconv) and cannot see the
         // UI's Se config - point it at the UI's llama.cpp folder and tools log explicitly.
-        Logic.LlamaCpp.LlamaCppServerManager.FolderOverride = Logic.Config.Se.LlamaCppFolder;
-        Logic.LlamaCpp.LlamaCppServerManager.LogAction = Logic.Config.Se.WriteToolsLog;
+        LlamaCppServerManager.FolderOverride = Logic.Config.Se.LlamaCppFolder;
+        LlamaCppServerManager.LogAction = Logic.Config.Se.WriteToolsLog;
 
         // Misc services
         collection.AddTransient<IBinaryOcrMatcher, BinaryOcrMatcher>();
@@ -261,7 +271,9 @@ public static class DependencyInjectionExtensions
         collection.AddHttpClient<IIndexTtsCrispAsrDownloadService, IndexTtsCrispAsrDownloadService>();
         collection.AddHttpClient<ICosyVoice3CrispAsrDownloadService, CosyVoice3CrispAsrDownloadService>();
         collection.AddHttpClient<IF5TtsCrispAsrDownloadService, F5TtsCrispAsrDownloadService>();
+        collection.AddHttpClient<IOmniVoiceCrispAsrDownloadService, OmniVoiceCrispAsrDownloadService>();
         collection.AddHttpClient<IVoxCPM2CrispAsrDownloadService, VoxCPM2CrispAsrDownloadService>();
+        collection.AddHttpClient<IMossTtsCrispAsrDownloadService, MossTtsCrispAsrDownloadService>();
         collection.AddHttpClient<IZonosTtsCrispAsrDownloadService, ZonosTtsCrispAsrDownloadService>();
         collection.AddHttpClient<IKokoroTtsCppDownloadService, KokoroTtsCppDownloadService>();
         collection.AddHttpClient<IChatterboxTtsCppDownloadService, ChatterboxTtsCppDownloadService>();
@@ -287,6 +299,7 @@ public static class DependencyInjectionExtensions
         collection.AddTransient<AssaImageColorPickerViewModel>();
         collection.AddTransient<AssaProgressBarViewModel>();
         collection.AddTransient<AssaPropertiesViewModel>();
+        collection.AddTransient<Features.Assa.FontCollector.FontCollectorViewModel>();
         collection.AddTransient<AssaResolutionResamplerViewModel>();
         collection.AddTransient<AssaSetPositionViewModel>();
         collection.AddTransient<AssaSingleStyleViewModel>();
@@ -347,6 +360,7 @@ public static class DependencyInjectionExtensions
         collection.AddTransient<CustomContinuationStyleViewModel>();
         collection.AddTransient<CutVideoViewModel>();
         collection.AddTransient<VideoOcrViewModel>();
+        collection.AddTransient<DCinemaInteropPropertiesViewModel>();
         collection.AddTransient<DCinemaSmptePropertiesViewModel>();
         collection.AddTransient<DownloadFfmpegViewModel>();
         collection.AddTransient<DownloadGoogleLensOcrViewModel>();
@@ -396,6 +410,7 @@ public static class DependencyInjectionExtensions
         collection.AddTransient<GetKeyViewModel>();
         collection.AddTransient<GoToLineNumberViewModel>();
         collection.AddTransient<GoToVideoPositionViewModel>();
+        collection.AddTransient<HearingImpairedRuleSettingsViewModel>();
         collection.AddTransient<ImageBasedPreviewViewModel>();
         collection.AddTransient<ImageBasedProfileViewModel>();
         collection.AddTransient<ImportCsvXlsxCustomColumnsViewModel>();
@@ -425,6 +440,8 @@ public static class DependencyInjectionExtensions
         collection.AddTransient<NOcrInspectViewModel>();
         collection.AddTransient<NOcrSettingsViewModel>();
         collection.AddTransient<LlamaCppOcrSettingsViewModel>();
+        collection.AddTransient<LlamaCppEngineSettingsViewModel>();
+        collection.AddTransient<Features.Translate.LlamaCppAdvanced.LlamaCppAdvancedSettingsViewModel>();
         collection.AddTransient<OcrViewModel>();
         collection.AddTransient<OmniVoiceSettingsViewModel>();
         collection.AddTransient<Qwen3TtsSettingsViewModel>();
@@ -433,7 +450,9 @@ public static class DependencyInjectionExtensions
         collection.AddTransient<IndexTtsCrispAsrSettingsViewModel>();
         collection.AddTransient<CosyVoice3CrispAsrSettingsViewModel>();
         collection.AddTransient<F5TtsCrispAsrSettingsViewModel>();
+        collection.AddTransient<OmniVoiceCrispAsrSettingsViewModel>();
         collection.AddTransient<VoxCPM2CrispAsrSettingsViewModel>();
+        collection.AddTransient<MossTtsCrispAsrSettingsViewModel>();
         collection.AddTransient<KokoroTtsSettingsViewModel>();
         collection.AddTransient<ChatterboxTtsSettingsViewModel>();
         collection.AddTransient<PiperSettingsViewModel>();
@@ -448,6 +467,7 @@ public static class DependencyInjectionExtensions
         collection.AddTransient<PickLayerViewModel>();
         collection.AddTransient<PickMatroskaTrackViewModel>();
         collection.AddTransient<PickMillisecondsViewModel>();
+        collection.AddTransient<ForcedAlignerSetupViewModel>();
         collection.AddTransient<PickMp4TrackViewModel>();
         collection.AddTransient<PickOllamaModelViewModel>();
         collection.AddTransient<PickRuleProfileViewModel>();
@@ -466,10 +486,12 @@ public static class DependencyInjectionExtensions
         collection.AddTransient<ProfilesExportViewModel>();
         collection.AddTransient<ProfilesViewModel>();
         collection.AddTransient<PromptFileSavedViewModel>();
+        collection.AddTransient<PromptCheckBoxViewModel>();
         collection.AddTransient<PromptTextBoxViewModel>();
         collection.AddTransient<PromptUnknownWordViewModel>();
         collection.AddTransient<ReEncodeVideoViewModel>();
         collection.AddTransient<RemoveTextForHearingImpairedViewModel>();
+        collection.AddTransient<RemoveUnicodeCharactersViewModel>();
         collection.AddTransient<RenumberViewModel>();
         collection.AddTransient<ReplaceViewModel>();
         collection.AddTransient<RestoreAutoBackupViewModel>();

@@ -71,7 +71,7 @@ public partial class PickRuleProfileViewModel : ObservableObject
         }
     }
 
-    internal void DataGridDown(object? sender, KeyEventArgs e)
+    internal void ProfileGridKeyDown(object? sender, KeyEventArgs e)
     {
         if (e.Key == Key.Enter)
         {
@@ -80,7 +80,7 @@ public partial class PickRuleProfileViewModel : ObservableObject
         }
     }
 
-    public void DataGridDoubleTapped(object? sender, TappedEventArgs e)
+    public void ProfileGridDoubleTapped(object? sender, TappedEventArgs e)
     {
         if (SelectedProfile != null)
         {

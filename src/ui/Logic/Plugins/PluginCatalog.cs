@@ -2,7 +2,6 @@ using Nikse.SubtitleEdit.Logic.Config;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Runtime.InteropServices;
 using System.Text.Json;
 
 namespace Nikse.SubtitleEdit.Logic.Plugins;
@@ -86,12 +85,12 @@ public class PluginCatalog : IPluginCatalog
             return null;
         }
 
-        if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+        if (OperatingSystem.IsWindows())
         {
             return executables.Windows;
         }
 
-        if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+        if (OperatingSystem.IsMacOS())
         {
             return executables.Macos;
         }

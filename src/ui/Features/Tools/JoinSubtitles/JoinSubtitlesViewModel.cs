@@ -14,6 +14,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace Nikse.SubtitleEdit.Features.Tools.JoinSubtitles;
@@ -26,20 +27,26 @@ public partial class JoinSubtitlesViewModel : ObservableObject
     [ObservableProperty] private bool _appendTimeCodes;
     [ObservableProperty] private bool _isJoinEnabled;
     [ObservableProperty] private bool _isDeleteVisible;
+    [ObservableProperty] private bool _isMoveVisible;
     [ObservableProperty] private int _appendTimeCodesAddMilliseconds;
 
     public Window? Window { get; set; }
+    public TableView JoinItemsGrid { get; set; }
 
     public bool OkPressed { get; private set; }
     public SubtitleFormat JoinedFormat { get; private set; }
     public Subtitle JoinedSubtitle { get; private set; }
 
+    private static readonly Regex NumberRegex = new(@"\d+", RegexOptions.Compiled);
+
     private readonly IFileHelper _fileHelper;
+    private bool _loadFailed;
 
     public JoinSubtitlesViewModel(IFileHelper fileHelper)
     {
         _fileHelper = fileHelper;
         JoinItems = new ObservableCollection<JoinDisplayItem>();
+        JoinItemsGrid = new TableView();
         JoinedFormat = new SubRip();
         JoinedSubtitle = new Subtitle();
         LoadSettings();
@@ -50,6 +57,23 @@ public partial class JoinSubtitlesViewModel : ObservableObject
         KeepTimeCodes = Se.Settings.Tools.JoinKeepTimeCodes;
         AppendTimeCodes = !KeepTimeCodes;
         AppendTimeCodesAddMilliseconds = Se.Settings.Tools.JoinAppendMilliseconds;
+    }
+
+    /// <summary>
+    /// Switching time-code mode changes the joined result and, for "Keep time codes", the
+    /// list order too (SortAndLoad sorts by start time there) - so rebuild, as SE 4 does.
+    /// Posted, because the radio group sets <see cref="KeepTimeCodes"/> and
+    /// <see cref="AppendTimeCodes"/> one after the other and SortAndLoad must not run
+    /// between the two.
+    /// </summary>
+    partial void OnKeepTimeCodesChanged(bool value)
+    {
+        if (JoinItems.Count == 0)
+        {
+            return;
+        }
+
+        Dispatcher.UIThread.Post(async void () => await SortAndLoad());
     }
 
     private void SaveSettings()
@@ -74,20 +98,28 @@ public partial class JoinSubtitlesViewModel : ObservableObject
             return;
         }
 
-        foreach (var fileName in fileNames)
+        await AddFiles(fileNames);
+    }
+
+    /// <summary>
+    /// Appends the files to the end of the list, in natural file name order (so "part2"
+    /// lands before "part10"), as in SE 4. The list must not be re-sorted by start time
+    /// here: in "Append time codes" mode the order is the user's to decide, and re-sorting
+    /// on every add made it impossible to arrange the files at all (issue #13092).
+    /// </summary>
+    private async Task AddFiles(IEnumerable<string> fileNames)
+    {
+        var newFileNames = fileNames.ToList();
+        newFileNames.Sort(NaturalCompare);
+
+        foreach (var fileName in newFileNames)
         {
-            bool flowControl = await AddFile(fileName);
-            if (!flowControl)
+            if (JoinItems.Any(p => p.FullFileName.Equals(fileName, StringComparison.OrdinalIgnoreCase)))
             {
                 continue;
             }
-        }
 
-        var items = JoinItems.ToList();
-        JoinItems.Clear();
-        foreach (var item in items.OrderBy(p=>p.StartTime))
-        {
-            JoinItems.Add(item);
+            await AddFile(fileName);
         }
 
         await SortAndLoad();
@@ -95,11 +127,22 @@ public partial class JoinSubtitlesViewModel : ObservableObject
         IsJoinEnabled = JoinItems.Count > 1;
     }
 
-    private async Task<bool> AddFile(string fileName)
+    /// <summary>
+    /// SE 4's natural file name order: digit runs are zero-padded before an ordinal
+    /// compare, so "CD2" sorts before "CD10".
+    /// </summary>
+    private static int NaturalCompare(string x, string y)
+    {
+        var a = NumberRegex.Replace(x, m => m.Value.PadLeft(10, '0')).Replace(" ", string.Empty);
+        var b = NumberRegex.Replace(y, m => m.Value.PadLeft(10, '0')).Replace(" ", string.Empty);
+        return string.Compare(a, b, StringComparison.OrdinalIgnoreCase);
+    }
+
+    private async Task AddFile(string fileName)
     {
         if (Window == null)
         {
-            return false;
+            return;
         }
 
         var subtitle = Subtitle.Parse(fileName);
@@ -122,7 +165,7 @@ public partial class JoinSubtitlesViewModel : ObservableObject
         if (subtitle == null || subtitle.Paragraphs.Count == 0)
         {
             await MessageBox.Show(Window, Se.Language.General.Error, "Unable to read subtitle from file: " + fileName);
-            return false;
+            return;
         }
 
         var item = new JoinDisplayItem
@@ -134,11 +177,10 @@ public partial class JoinSubtitlesViewModel : ObservableObject
             Lines = subtitle.Paragraphs.Count,
         };
         JoinItems.Add(item);
-        return true;
     }
 
     [RelayCommand]
-    private void Remove()
+    private async Task Remove()
     {
         var selected = SelectedJoinItem;
         if (selected == null)
@@ -159,18 +201,62 @@ public partial class JoinSubtitlesViewModel : ObservableObject
         }
 
         IsJoinEnabled = JoinItems.Count > 1;
+
+        await SortAndLoad();
     }
 
     [RelayCommand]
     private void Clear()
     {
         JoinItems.Clear();
+        JoinedSubtitle = new Subtitle();
         IsJoinEnabled = false;
     }
 
     [RelayCommand]
-    private void Ok()
+    private Task MoveUp() => Move(ListMoveDirection.Up);
+
+    [RelayCommand]
+    private Task MoveDown() => Move(ListMoveDirection.Down);
+
+    [RelayCommand]
+    private Task MoveToTop() => Move(ListMoveDirection.Top);
+
+    [RelayCommand]
+    private Task MoveToBottom() => Move(ListMoveDirection.Bottom);
+
+    /// <summary>
+    /// Reorders the files to join. Only meaningful in "Append time codes" mode - "Keep time
+    /// codes" sorts everything by start time anyway, which is why the menu items are hidden
+    /// there, as in SE 4.
+    /// </summary>
+    private async Task Move(ListMoveDirection direction)
     {
+        if (!AppendTimeCodes || JoinItems.Count < 2)
+        {
+            return;
+        }
+
+        TableViewExtras.MoveSelectedRows(JoinItemsGrid, JoinItems, direction);
+
+        await SortAndLoad();
+    }
+
+    [RelayCommand]
+    private async Task Ok()
+    {
+        // The joined subtitle is built by SortAndLoad, and the time-code mode and the added
+        // milliseconds can both have changed since the last one ran - rebuild before handing
+        // it over, so the result always matches what the dialog shows.
+        await SortAndLoad();
+
+        // A file that has become unreadable since it was added drops out of the list here,
+        // so stay open with the shortened list rather than joining the remains silently.
+        if (_loadFailed)
+        {
+            return;
+        }
+
         SaveSettings();
         OkPressed = true;
         Window?.Close();
@@ -184,6 +270,7 @@ public partial class JoinSubtitlesViewModel : ObservableObject
 
     private async Task SortAndLoad()
     {
+        _loadFailed = false;
         JoinedFormat = new SubRip(); // default subtitle format
         string? header = null;
         SubtitleFormat? lastFormat = null;
@@ -406,6 +493,8 @@ public partial class JoinSubtitlesViewModel : ObservableObject
 
     private async Task Revert(int idx, string message)
     {
+        _loadFailed = true;
+
         if (Window == null)
         {
             return;
@@ -419,18 +508,43 @@ public partial class JoinSubtitlesViewModel : ObservableObject
         await MessageBox.Show(Window, "", message);
     }
 
-    internal void DataGridKeyDown(object? sender, KeyEventArgs e)
+    internal void GridKeyDown(object? sender, KeyEventArgs e)
     {
         if (e.Key == Key.Delete && SelectedJoinItem != null)
         {
             e.Handled = true;
-            Remove();
+            RemoveCommand.Execute(null);
+        }
+    }
+
+    /// <summary>
+    /// Ctrl+Up/Ctrl+Down reorder the selected file. Tunneled, because the ListBox underneath
+    /// TableView handles Ctrl+Arrow itself (move focus without changing the selection) and a
+    /// bubbling handler would never see the key.
+    /// </summary>
+    internal void GridMoveKeyDown(object? sender, KeyEventArgs e)
+    {
+        if (e.KeyModifiers != KeyModifiers.Control)
+        {
+            return;
+        }
+
+        if (e.Key == Key.Up)
+        {
+            e.Handled = true;
+            MoveUpCommand.Execute(null);
+        }
+        else if (e.Key == Key.Down)
+        {
+            e.Handled = true;
+            MoveDownCommand.Execute(null);
         }
     }
 
     internal void ItemsContextMenuOpening(object? sender, EventArgs e)
     {
         IsDeleteVisible = SelectedJoinItem != null;
+        IsMoveVisible = AppendTimeCodes && JoinItems.Count > 1 && JoinItemsGrid.SelectedItems?.Count > 0;
     }
 
     internal void KeyDown(object? sender, KeyEventArgs e)
@@ -469,34 +583,22 @@ public partial class JoinSubtitlesViewModel : ObservableObject
         }
 
         var files = e.DataTransfer.TryGetFiles();
-        if (files != null)
+        if (files == null)
         {
-            Dispatcher.UIThread.Post(async () =>
-            {
-                foreach (var file in files)
-                {
-                    var path = file.Path?.LocalPath;
-                    if (path != null && System.IO.File.Exists(path))
-                    {
-                        bool flowControl = await AddFile(path);
-                        if (!flowControl)
-                        {
-                            continue;
-                        }
-                    }
-                }
-
-                var items = JoinItems.ToList();
-                JoinItems.Clear();
-                foreach (var item in items.OrderBy(p => p.StartTime))
-                {
-                    JoinItems.Add(item);
-                }
-
-                await SortAndLoad();
-
-                IsJoinEnabled = JoinItems.Count > 1;
-            });
+            return;
         }
+
+        var fileNames = files
+            .Select(p => p.Path?.LocalPath)
+            .Where(p => p != null && System.IO.File.Exists(p))
+            .Select(p => p!)
+            .ToList();
+
+        if (fileNames.Count == 0)
+        {
+            return;
+        }
+
+        Dispatcher.UIThread.Post(async void () => await AddFiles(fileNames));
     }
 }

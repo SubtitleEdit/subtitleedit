@@ -1,19 +1,65 @@
 ﻿using SkiaSharp;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Nikse.SubtitleEdit.Core.Common
 {
     public class TextSplitResult
     {
         public List<string> Lines { get; set; }
-        public List<float> LengthPixels { get; set; }
+
+        /// <summary>
+        /// Per-line pixel widths. Measured on first read - see <see cref="EnsurePixelsMeasured"/>.
+        /// </summary>
+        public List<float> LengthPixels
+        {
+            get
+            {
+                EnsurePixelsMeasured();
+                return _lengthPixels;
+            }
+            set
+            {
+                _lengthPixels = value;
+                _pixelsMeasured = true;
+            }
+        }
+
         public List<int> LengthCharacters { get; set; }
         public bool IsBottomHeavy => LengthPixels[1] + 2 > LengthPixels[0]; // allow a small diff of 2 pixels
         public static float SpaceLengthPixels { get; set; }
-        public double TotalLength => Lines.Sum(p => p.Length);
-        public double TotalLengthPixels => LengthPixels.Sum(p => p) - SpaceLengthPixels;
+        public double TotalLength => SumLengths(Lines);
+        public double TotalLengthPixels => SumPixels(LengthPixels) - SpaceLengthPixels;
+
+        // These run inside the per-candidate sort keys of TextSplit (one candidate per space in
+        // the line), where the LINQ Sum overloads allocated a closure and a boxed enumerator
+        // per call - for lists that always hold two elements.
+        private static double SumLengths(List<string> lines)
+        {
+            double total = 0;
+            for (var i = 0; i < lines.Count; i++)
+            {
+                total += lines[i].Length;
+            }
+
+            return total;
+        }
+
+        private static float SumPixels(List<float> pixels)
+        {
+            // Accumulate in double and round to float at the end - same as Enumerable.Sum's
+            // float overload, so the value is bit-identical to what the LINQ call produced.
+            double total = 0;
+            for (var i = 0; i < pixels.Count; i++)
+            {
+                total += pixels[i];
+            }
+
+            return (float)total;
+        }
+
+        private List<float> _lengthPixels;
+        private bool _pixelsMeasured;
 
         // SkiaSharp resolves a default typeface the first time SKFont's object
         // initializer runs; on headless Linux setups without fontconfig (e.g. the
@@ -65,32 +111,6 @@ namespace Nikse.SubtitleEdit.Core.Common
         public TextSplitResult(List<string> lines)
         {
             Lines = lines;
-            LengthPixels = new List<float>();
-            if (Configuration.Settings.Tools.AutoBreakUsePixelWidth)
-            {
-                if (Lines[0].Length > 1000)
-                {
-                    SpaceLengthPixels = Lines[0].Length * 7;
-                }
-                else
-                {
-                    LengthPixels.Add(GetWidth(Lines[0]));
-                }
-
-                if (Lines[1].Length > 1000)
-                {
-                    SpaceLengthPixels = Lines[1].Length * 7;
-                }
-                else
-                {
-                    LengthPixels.Add(GetWidth(Lines[1]));
-                }
-
-                if (Math.Abs(SpaceLengthPixels) < 0.01)
-                {
-                    SpaceLengthPixels = GetWidth(" ");
-                }
-            }
 
             LengthCharacters = new List<int>();
             foreach (var line in lines)
@@ -99,6 +119,50 @@ namespace Nikse.SubtitleEdit.Core.Common
             }
         }
 
+        // TextSplit builds one of these per space in the line, but only the candidates that
+        // survive the IsLineLengthOkay/IsDialog filters are ever ordered by pixel width - and
+        // GetBestLengthSplit orders by character count, so its candidates need no measuring at
+        // all. Measuring in the constructor meant a Skia MeasureText call per line of every
+        // candidate regardless; deferring it to first read skips the ones nothing looks at.
+        //
+        // The body is the constructor's original code apart from the over-long-line fix in
+        // EstimateOrMeasure below.
+        private void EnsurePixelsMeasured()
+        {
+            if (_pixelsMeasured)
+            {
+                return;
+            }
+
+            _pixelsMeasured = true;
+            _lengthPixels = new List<float>();
+            if (!Configuration.Settings.Tools.AutoBreakUsePixelWidth)
+            {
+                return;
+            }
+
+            _lengthPixels.Add(EstimateOrMeasure(Lines[0]));
+            _lengthPixels.Add(EstimateOrMeasure(Lines[1]));
+
+            if (Math.Abs(SpaceLengthPixels) < 0.01)
+            {
+                SpaceLengthPixels = GetWidth(" ");
+            }
+        }
+
+        // A line past the cutoff is estimated rather than measured, the same trick GetWidth
+        // already uses above it for text over 128 characters.
+        //
+        // This used to assign the estimate to SpaceLengthPixels instead of adding it to the
+        // list, which was wrong twice over. SpaceLengthPixels is a process-wide static holding
+        // the width of a single space, and TotalLengthPixels subtracts it - so one long line
+        // left it at (for example) 8400 instead of ~3.33 and skewed every later line break in
+        // the process. And because nothing was added to the list, LengthPixels came back with
+        // fewer than two entries, which IsBottomHeavy and DiffFromAveragePixelBottomHeavy index
+        // directly.
+        private static float EstimateOrMeasure(string line)
+            => line.Length > 1000 ? line.Length * 7 : GetWidth(line);
+
         public bool IsLineLengthOkay(int singleLineMaxLength)
         {
             return Lines[0].Length <= singleLineMaxLength && Lines[1].Length <= singleLineMaxLength;
@@ -106,14 +170,28 @@ namespace Nikse.SubtitleEdit.Core.Common
 
         public double DiffFromAverage()
         {
-            var avg = TotalLength / Lines.Count;
-            return Lines.Sum(line => Math.Abs(avg - line.Length));
+            var lines = Lines;
+            var avg = SumLengths(lines) / lines.Count;
+            double diff = 0;
+            for (var i = 0; i < lines.Count; i++)
+            {
+                diff += Math.Abs(avg - lines[i].Length);
+            }
+
+            return diff;
         }
 
         public double DiffFromAveragePixel()
         {
-            var avg = TotalLengthPixels / Lines.Count;
-            return LengthPixels.Sum(w => Math.Abs(avg - w));
+            var pixels = LengthPixels;
+            var avg = (double)(SumPixels(pixels) - SpaceLengthPixels) / Lines.Count;
+            double diff = 0;
+            for (var i = 0; i < pixels.Count; i++)
+            {
+                diff += Math.Abs(avg - pixels[i]);
+            }
+
+            return diff;
         }
 
         public double DiffFromAveragePixelBottomHeavy()

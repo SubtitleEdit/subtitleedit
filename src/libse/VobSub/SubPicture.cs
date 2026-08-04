@@ -121,7 +121,7 @@ namespace Nikse.SubtitleEdit.Core.VobSub
                             commandIndex++;
                             break;
                         case (int)DisplayControlCommand.SetColor: // 3
-                            if (colorLookUpTable != null && fourColors.Count == 4)
+                            if (colorLookUpTable != null && fourColors.Count == 4 && _data.Length > commandIndex + 2)
                             {
                                 byte[] imageColor = { _data[commandIndex + 1], _data[commandIndex + 2] };
                                 if (!useCustomColors)
@@ -135,7 +135,7 @@ namespace Nikse.SubtitleEdit.Core.VobSub
                             commandIndex += 3;
                             break;
                         case (int)DisplayControlCommand.SetContrast: // 4
-                            if (colorLookUpTable != null && fourColors.Count == 4)
+                            if (colorLookUpTable != null && fourColors.Count == 4 && _data.Length > commandIndex + 2)
                             {
                                 var imageContrast = new[] { _data[commandIndex + 1], _data[commandIndex + 2] };
                                 if (imageContrast[0] + imageContrast[1] > 0)
@@ -237,7 +237,9 @@ namespace Nikse.SubtitleEdit.Core.VobSub
                 return new SKBitmap(1, 1);
             }
 
-            var bmp = new SKBitmap(imageDisplayArea.Width + 1, imageDisplayArea.Height + 1);
+            // Bgra8888 explicitly: FastBitmap writes raw B,G,R,A bytes, and the platform
+            // default color type is Rgba8888 on macOS/Linux, which would swap red/blue.
+            var bmp = new SKBitmap(imageDisplayArea.Width + 1, imageDisplayArea.Height + 1, SKColorType.Bgra8888, SKAlphaType.Premul);
             if (fourColors[0] != SKColors.Transparent)
             {
                 using (var canvas = new SKCanvas(bmp))

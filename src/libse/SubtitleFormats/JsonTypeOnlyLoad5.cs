@@ -38,9 +38,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             subtitle.Paragraphs.Clear();
             var parser = new SeJsonParser();
             var subtitleArray = parser.GetArrayElementsByName(text, "Paragraphs");
+            var content = new StringBuilder();
             foreach (var subtitleItem in subtitleArray)
             {
-                var content = new StringBuilder();
+                content.Clear();
                 var paragraphLines = parser.GetArrayElementsByName(subtitleItem, "Lines");
                 var start = parser.GetFirstObject(subtitleItem, "Start");
                 var end = parser.GetFirstObject(subtitleItem, "End");

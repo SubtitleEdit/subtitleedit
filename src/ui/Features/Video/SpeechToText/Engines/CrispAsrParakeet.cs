@@ -1,8 +1,8 @@
-﻿using Nikse.SubtitleEdit.Core.AudioToText;
+﻿using Nikse.SubtitleEdit.UiLogic.AudioToText;
 using Nikse.SubtitleEdit.Logic.Config;
+using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Runtime.InteropServices;
 
 namespace Nikse.SubtitleEdit.Features.Video.SpeechToText.Engines;
 
@@ -140,6 +140,129 @@ public class CrispAsrParakeet : CrispAsrEngineBase
                     "https://huggingface.co/cstr/parakeet-rnnt-1.1b-GGUF/resolve/main/parakeet-rnnt-1.1b-f16.gguf",
                 ],
             },
+
+            // Largest TDT variant - the accuracy ceiling for this backend. Roughly
+            // 1.3x-1.6x the download of tdt-0.6b-v3 depending on quant (652 MB vs
+            // 489 MB at q4_k, 2.00 GB vs 1.26 GB at F16).
+            new WhisperModel
+            {
+                Name = "parakeet-tdt-1.1b-q4_k.gguf",
+                Size = "652 MB",
+                Urls =
+                [
+                    "https://huggingface.co/cstr/parakeet-tdt-1.1b-GGUF/resolve/main/parakeet-tdt-1.1b-q4_k.gguf",
+                ],
+            },
+            new WhisperModel
+            {
+                Name = "parakeet-tdt-1.1b-q8_0.gguf",
+                Size = "1.07 GB",
+                Urls =
+                [
+                    "https://huggingface.co/cstr/parakeet-tdt-1.1b-GGUF/resolve/main/parakeet-tdt-1.1b-q8_0.gguf",
+                ],
+            },
+            new WhisperModel
+            {
+                Name = "parakeet-tdt-1.1b.gguf",
+                Size = "2.00 GB",
+                Urls =
+                [
+                    "https://huggingface.co/cstr/parakeet-tdt-1.1b-GGUF/resolve/main/parakeet-tdt-1.1b.gguf",
+                ],
+            },
+
+            // v2 predates the multilingual v3: English only, but trained for mixed-case
+            // output with punctuation, which suits subtitling better than a bare lowercase
+            // transcript. Worth keeping alongside v3 for English-only jobs.
+            new WhisperModel
+            {
+                Name = "parakeet-tdt-0.6b-v2-q4_k.gguf",
+                Size = "379 MB",
+                Urls =
+                [
+                    "https://huggingface.co/cstr/parakeet-tdt-0.6b-v2-GGUF/resolve/main/parakeet-tdt-0.6b-v2-q4_k.gguf",
+                ],
+            },
+            new WhisperModel
+            {
+                Name = "parakeet-tdt-0.6b-v2-q8_0.gguf",
+                Size = "634 MB",
+                Urls =
+                [
+                    "https://huggingface.co/cstr/parakeet-tdt-0.6b-v2-GGUF/resolve/main/parakeet-tdt-0.6b-v2-q8_0.gguf",
+                ],
+            },
+            new WhisperModel
+            {
+                Name = "parakeet-tdt-0.6b-v2.gguf",
+                Size = "1.15 GB",
+                Urls =
+                [
+                    "https://huggingface.co/cstr/parakeet-tdt-0.6b-v2-GGUF/resolve/main/parakeet-tdt-0.6b-v2.gguf",
+                ],
+            },
+
+            // Smallest model on this backend by a wide margin - the q4_k build is 75 MB,
+            // for low-end CPUs where even the 0.6b variants are too slow. TDT head, so
+            // native timestamps still apply.
+            new WhisperModel
+            {
+                Name = "parakeet-tdt_ctc-110m-q4_k.gguf",
+                Size = "75 MB",
+                Urls =
+                [
+                    "https://huggingface.co/cstr/parakeet-tdt_ctc-110m-GGUF/resolve/main/parakeet-tdt_ctc-110m-q4_k.gguf",
+                ],
+            },
+            new WhisperModel
+            {
+                Name = "parakeet-tdt_ctc-110m-q8_0.gguf",
+                Size = "121 MB",
+                Urls =
+                [
+                    "https://huggingface.co/cstr/parakeet-tdt_ctc-110m-GGUF/resolve/main/parakeet-tdt_ctc-110m-q8_0.gguf",
+                ],
+            },
+            new WhisperModel
+            {
+                Name = "parakeet-tdt_ctc-110m.gguf",
+                Size = "219 MB",
+                Urls =
+                [
+                    "https://huggingface.co/cstr/parakeet-tdt_ctc-110m-GGUF/resolve/main/parakeet-tdt_ctc-110m.gguf",
+                ],
+            },
+
+            // Hybrid TDT+CTC at 1.1b - same TDT decoding path (and native timestamps) as
+            // parakeet-tdt-1.1b, with a CTC head available to the runtime.
+            new WhisperModel
+            {
+                Name = "parakeet-tdt_ctc-1.1b-q4_k.gguf",
+                Size = "654 MB",
+                Urls =
+                [
+                    "https://huggingface.co/cstr/parakeet-tdt_ctc-1.1b-GGUF/resolve/main/parakeet-tdt_ctc-1.1b-q4_k.gguf",
+                ],
+            },
+            new WhisperModel
+            {
+                Name = "parakeet-tdt_ctc-1.1b-q8_0.gguf",
+                Size = "1.07 GB",
+                Urls =
+                [
+                    "https://huggingface.co/cstr/parakeet-tdt_ctc-1.1b-GGUF/resolve/main/parakeet-tdt_ctc-1.1b-q8_0.gguf",
+                ],
+            },
+            new WhisperModel
+            {
+                Name = "parakeet-tdt_ctc-1.1b.gguf",
+                Size = "2.00 GB",
+                Urls =
+                [
+                    "https://huggingface.co/cstr/parakeet-tdt_ctc-1.1b-GGUF/resolve/main/parakeet-tdt_ctc-1.1b.gguf",
+                ],
+            },
        };
 
     public override string Extension => string.Empty;
@@ -213,7 +336,7 @@ public class CrispAsrParakeet : CrispAsrEngineBase
 
     internal static string GetExecutableFileName()
     {
-        if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+        if (OperatingSystem.IsWindows())
         {
             return "crispasr.exe";
         }

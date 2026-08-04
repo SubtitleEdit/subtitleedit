@@ -89,4 +89,29 @@ public class OutputFileNameTest : IDisposable
 
         Assert.Equal(explicitOutput, result);
     }
+
+    [Fact]
+    public void Resolve_RelativeOutputFilenameWithOutputFolder_CombinesThem()
+    {
+        var input = Path.Combine(_tempRoot, "input.srt");
+        File.WriteAllText(input, "");
+
+        var result = SubtitleConverter.ResolveOutputFileName(input, Opts(overwrite: true, outputFilename: "renamed.vtt"));
+
+        Assert.Equal(Path.Combine(_tempRoot, "renamed.vtt"), result);
+    }
+
+    [Fact]
+    public void Resolve_AbsoluteOutputFilename_IgnoresOutputFolder()
+    {
+        var input = Path.Combine(_tempRoot, "input.srt");
+        File.WriteAllText(input, "");
+        var other = Path.Combine(_tempRoot, "elsewhere");
+        Directory.CreateDirectory(other);
+        var absolute = Path.Combine(other, "renamed.vtt");
+
+        var result = SubtitleConverter.ResolveOutputFileName(input, Opts(overwrite: true, outputFilename: absolute));
+
+        Assert.Equal(absolute, result);
+    }
 }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Buffers.Binary;
 
 namespace Nikse.SubtitleEdit.Core.VobSub
 {
@@ -15,7 +16,7 @@ namespace Nikse.SubtitleEdit.Core.VobSub
         public SpHeader(byte[] buffer)
         {
             Identifier = System.Text.Encoding.ASCII.GetString(buffer, 0, 2);
-            int startMilliseconds = (int)Math.Round(Helper.GetLittleEndian32(buffer, 2) / 90.0);
+            int startMilliseconds = (int)Math.Round(BinaryPrimitives.ReadInt32LittleEndian(buffer.AsSpan(2)) / 90.0);
             StartTime = TimeSpan.FromMilliseconds(startMilliseconds);
             NextBlockPosition = Helper.GetEndianWord(buffer, 10) - 4;
             ControlSequencePosition = Helper.GetEndianWord(buffer, 12) - 4;

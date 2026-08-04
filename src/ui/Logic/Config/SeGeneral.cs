@@ -50,6 +50,8 @@ public class SeGeneral
     public bool SubtitleGridCenterSelectedRow { get; set; }
     public string SaveAsBehavior { get; set; }
     public string SaveAsAppendLanguageCode { get; set; }
+    public string DefaultSaveLocation { get; set; }
+    public string DefaultSaveLocationCustomFolder { get; set; }
     public bool AutoConvertToUtf8 { get; set; }
     public bool AutoGuessAnsiEncoding { get; set; }
     public int MaxNumberOfLinesPlusAbort { get; set; }
@@ -93,6 +95,9 @@ public class SeGeneral
     public string ProxyAddress { get; set; }
     public string ProxyUserName { get; set; }
     public string ProxyPassword { get; set; }
+    public string ProxyDomain { get; set; }
+    public bool ProxyUseDefaultCredentials { get; set; }
+    public string ProxyBypassList { get; set; }
 
     public bool ShowColumnStartTime { get; set; }
     public bool ShowColumnEndTime { get; set; }
@@ -172,6 +177,8 @@ public class SeGeneral
         SubtitleDoubleClickAction = nameof(SubtitleDoubleClickActionType.GoToSubtitleAndPause);
         SubtitleGridCenterSelectedRow = false;
         SaveAsBehavior = nameof(SaveAsBehaviourType.UseVideoFileNameThenSubtitleFileName);
+        DefaultSaveLocation = nameof(DefaultSaveLocationType.SourceFileFolder);
+        DefaultSaveLocationCustomFolder = string.Empty;
         SaveAsAppendLanguageCode = nameof(SaveAsLanguageAppendType.None);
         AutoConvertToUtf8 = false;
         AutoGuessAnsiEncoding = true;
@@ -207,6 +214,8 @@ public class SeGeneral
         ProxyAddress = string.Empty;
         ProxyUserName = string.Empty;
         ProxyPassword = string.Empty;
+        ProxyDomain = string.Empty;
+        ProxyBypassList = string.Empty;
 
         ShowColumnStartTime = true;
         ShowColumnEndTime = true;

@@ -1,4 +1,4 @@
-using Nikse.SubtitleEdit.Logic.LlamaCpp;
+using Nikse.SubtitleEdit.UiLogic.LlamaCpp;
 
 namespace SeConv.Core;
 

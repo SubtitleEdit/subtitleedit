@@ -9,6 +9,7 @@ using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Nikse.SubtitleEdit.UiLogic.LlamaCpp;
 
 namespace Nikse.SubtitleEdit.Features.Translate;
 
@@ -168,7 +169,7 @@ public static class LlamaCppDownloadHelper
             {
                 MessageBoxResult.Custom1 => Logic.Download.LlamaCppDownloadService.VariantCpu,
                 MessageBoxResult.Custom2 => Logic.Download.LlamaCppDownloadService.VariantVulkan,
-                MessageBoxResult.Custom3 => Logic.Download.LlamaCppDownloadService.VariantCuda,
+                MessageBoxResult.Custom3 => await PromptCudaVersionAsync(owner),
                 _ => null,
             } ?? string.Empty;
 
@@ -197,6 +198,30 @@ public static class LlamaCppDownloadHelper
     }
 
     /// <summary>
+    /// Follow-up prompt after the user picks "CUDA" in the Windows build selector - llama.cpp ships
+    /// both a CUDA 12.4 and a CUDA 13.3 build. Returns "cuda" (CUDA 12) or "cuda13", or null when
+    /// the user cancels. Mirrors the CrispASR CUDA version prompt.
+    /// </summary>
+    private static async Task<string?> PromptCudaVersionAsync(Window owner)
+    {
+        var answer = await MessageBox.Show(
+            owner,
+            "llama.cpp CUDA build",
+            $"{Environment.NewLine}CUDA 12 works with most current NVIDIA drivers.{Environment.NewLine}{Environment.NewLine}Pick CUDA 13 only if your driver stack is built for CUDA 13.",
+            MessageBoxButtons.Cancel,
+            MessageBoxIcon.Question,
+            "CUDA 12",
+            "CUDA 13");
+
+        return answer switch
+        {
+            MessageBoxResult.Custom1 => Logic.Download.LlamaCppDownloadService.VariantCuda,
+            MessageBoxResult.Custom2 => Logic.Download.LlamaCppDownloadService.VariantCuda13,
+            _ => null,
+        };
+    }
+
+    /// <summary>
     /// Ensures the llama-server binary and the requested model are installed, prompting the user
     /// to download them if not.
     /// </summary>
@@ -213,7 +238,6 @@ public static class LlamaCppDownloadHelper
             if (persistAsTranslateModel && Se.Settings.AutoTranslate.LlamaCppModel != modelPath)
             {
                 Se.Settings.AutoTranslate.LlamaCppModel = modelPath;
-                Configuration.Settings.Tools.LlamaCppModel = modelPath;
                 Se.SaveSettings();
             }
 
@@ -237,15 +261,15 @@ public static class LlamaCppDownloadHelper
         string message;
         if (!engineInstalled && !modelInstalled)
         {
-            message = "llama.cpp requires the llama-server engine and a translation model to be downloaded. Download now?";
+            message = Se.Language.Translate.LlamaCppDownloadEngineAndModelPrompt;
         }
         else if (!engineInstalled)
         {
-            message = "llama.cpp requires the llama-server engine to be downloaded. Download now?";
+            message = Se.Language.Translate.LlamaCppDownloadEnginePrompt;
         }
         else
         {
-            message = "llama.cpp requires the selected translation model to be downloaded. Download now?";
+            message = Se.Language.Translate.LlamaCppDownloadModelPrompt;
         }
 
         var answer = await MessageBox.Show(

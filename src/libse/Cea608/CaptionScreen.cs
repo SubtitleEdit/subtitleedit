@@ -178,7 +178,13 @@ namespace Nikse.SubtitleEdit.Core.Cea608
             }
 
             var rows = Rows.ToList();
-            rows.RemoveAt(CurrentRow - NumberOfRollUpRows.Value + 1);
+            var removeIndex = CurrentRow - NumberOfRollUpRows.Value + 1;
+            if (removeIndex < 0 || removeIndex >= rows.Count)
+            {
+                return;
+            }
+
+            rows.RemoveAt(removeIndex);
             rows.Add(new CcRow());
             Rows = rows.ToArray();
         }

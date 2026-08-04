@@ -5,7 +5,6 @@ using SkiaSharp;
 using System;
 using System.Diagnostics;
 using System.IO;
-using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -25,7 +24,7 @@ public class TesseractOcr
 
     public static string GetExecutablePath()
     {
-        if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+        if (OperatingSystem.IsWindows())
         {
             var windowsPath = Path.Combine(Se.TesseractFolder, "tesseract.exe");
             return File.Exists(windowsPath) ? windowsPath : "tesseract.exe";
@@ -129,7 +128,7 @@ public class TesseractOcr
             catch (System.ComponentModel.Win32Exception ex)
             {
                 Error = $"Could not start Tesseract at \"{_executablePath}\": {ex.Message}." +
-                        (RuntimeInformation.IsOSPlatform(OSPlatform.Windows)
+                        (OperatingSystem.IsWindows()
                             ? string.Empty
                             : " Make sure Tesseract is installed (e.g. \"brew install tesseract\" on macOS, \"apt install tesseract-ocr\" on Linux).");
                 return string.Empty;

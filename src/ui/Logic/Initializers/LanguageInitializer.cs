@@ -1,4 +1,5 @@
 ﻿using Avalonia.Platform;
+using Nikse.SubtitleEdit.Logic.Compression;
 using Nikse.SubtitleEdit.Logic.Config;
 using System;
 using System.IO;
@@ -11,53 +12,20 @@ public interface ILanguageInitializer
     Task UpdateLanguagesIfNeeded();
 }
 
-public class LanguageInitializer() : ILanguageInitializer
+public class LanguageInitializer(IZipUnpacker zipUnpacker) : ILanguageInitializer
 {
-    // List of available language files in Assets/Languages folder
-    private static readonly string[] LanguageFiles =
-    [
-        "Arabic",
-        "Basque",
-        "Bulgarian",
-        "ChineseSimplified",
-        "ChineseTraditional",
-        "Czech",
-        "Danish",
-        "Dutch",
-        "English",
-        "Estonian",
-        "Farsi",
-        "Finnish",
-        "French",
-        "German",
-        "Hebrew",
-        "Hungarian",
-        "Italian",
-        "Japanese",
-        "Korean",
-        "Norwegian",
-        "Macedonian",
-        "Persian",
-        "Polish",
-        "Portuguese",
-        "Portuguese (Brazil)",
-        "Romanian",
-        "Russian",
-        "Slovak",
-        "Spanish",
-        "Swedish",
-        "Thai",
-        "Turkish",
-        "Ukrainian",
-        "Vietnamese",
-    ];
+    private static readonly Uri LanguagesZipUri = new("avares://SubtitleEdit/Assets/Languages.zip");
 
     public async Task UpdateLanguagesIfNeeded()
     {
         if (await NeedsUpdate())
         {
-            await Unpack();
-            WriteNewVersionFile();
+            // Only stamp the version once everything actually landed. Stamping regardless would
+            // mark a half-unpacked folder as current, and this version would then never retry.
+            if (Unpack())
+            {
+                WriteNewVersionFile();
+            }
         }
     }
 
@@ -108,28 +76,19 @@ public class LanguageInitializer() : ILanguageInitializer
         return false;
     }
 
-    private async Task Unpack()
+    /// <returns><see langword="true"/> when every language file was written.</returns>
+    private bool Unpack()
     {
-        var outputDir = Se.TranslationFolder;
-        if (!Directory.Exists(outputDir))
+        try
         {
-            Directory.CreateDirectory(outputDir);
+            using var zipStream = AssetLoader.Open(LanguagesZipUri);
+            zipUnpacker.UnpackZipStream(zipStream, Se.TranslationFolder);
+            return true;
         }
-
-        foreach (var languageFile in LanguageFiles)
+        catch (Exception exception)
         {
-            try
-            {
-                var uri = new Uri($"avares://SubtitleEdit/Assets/Languages/{languageFile}.json");
-                await using var stream = AssetLoader.Open(uri);
-                var outputPath = Path.Combine(outputDir, $"{languageFile}.json");
-                await using var fileStream = File.Create(outputPath);
-                await stream.CopyToAsync(fileStream);
-            }
-            catch
-            {
-                // Ignore
-            }
+            Se.LogError(exception, $"Could not unpack language files into \"{Se.TranslationFolder}\".");
+            return false;
         }
     }
 }

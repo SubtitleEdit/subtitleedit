@@ -1,6 +1,7 @@
 using Avalonia.Controls;
 using Avalonia.Data;
 using Avalonia.Layout;
+using Avalonia.Media;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 
@@ -54,8 +55,10 @@ public class ExportPlainTextWindow : Window
 
         Content = grid;
 
-        Activated += delegate { buttonSaveAs.Focus(); }; // hack to make OnKeyDown work
+        Activated += delegate { comboBoxEncoding.Focus(); }; // initial focus on an input, not an action button - a focused button clicks on bare Space
         KeyDown += vm.OnKeyDown;
+        Loaded += delegate { UiUtil.RestoreWindowPosition(this); };
+        Closing += delegate { UiUtil.SaveWindowPosition(this); };
     }
 
     private static Grid MakeSettingsView(ExportPlainTextViewModel vm)
@@ -199,6 +202,7 @@ public class ExportPlainTextWindow : Window
             AcceptsReturn = true,
             AcceptsTab = true,
             IsReadOnly = true,
+            TextWrapping = TextWrapping.Wrap,
             Width = double.NaN,
             Height = double.NaN,
         };

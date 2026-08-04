@@ -1655,7 +1655,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 {
                     try
                     {
-                        var buffer = FileUtil.ReadAllBytesShared(fileName);
+                        var buffer = FileUtil.ReadBytesShared(fileName, 1024);
                         var header = ReadHeader(buffer);
                         if (header.DiskFormatCode.StartsWith("STL23", StringComparison.Ordinal) ||
                             header.DiskFormatCode.StartsWith("STL24", StringComparison.Ordinal) ||
@@ -2112,6 +2112,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
             var list = new List<EbuTextTimingInformation>();
             var index = startOfTextAndTimingBlock;
+            var sb = new StringBuilder();
             while (index + ttiSize <= buffer.Length)
             {
                 var tti = new EbuTextTimingInformation
@@ -2143,7 +2144,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 var open = header.DisplayStandardCode != "1" && header.DisplayStandardCode != "2";
                 var closed = header.DisplayStandardCode != "0";
                 var max = i + 112;
-                var sb = new StringBuilder();
+                sb.Clear();
                 var lastWasNewLine = false;
                 while (i < max)
                 {

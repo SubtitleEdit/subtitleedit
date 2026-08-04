@@ -43,8 +43,8 @@ public partial class CompareViewModel : ObservableObject
 
     public Window? Window { get; internal set; }
     public bool OkPressed { get; private set; }
-    public DataGrid? LeftDataGrid { get; set; } = new();
-    public DataGrid? RightDataGrid { get; set; } = new();
+    public TableView? LeftGrid { get; set; } = new();
+    public TableView? RightGrid { get; set; } = new();
 
     private IFileHelper _fileHelper;
     private IFolderHelper _folderHelper;
@@ -109,7 +109,7 @@ public partial class CompareViewModel : ObservableObject
         AddColoringAndCountDifferences();
         SetTextStackPanels();
         IsExportVisible = LeftSubtitles.Count > 0 && RightSubtitles.Count > 0;
-        SelectAndScrollToRow(LeftDataGrid, 0);
+        SelectAndScrollToRow(LeftGrid, 0);
     }
 
     private void SetTextStackPanels()
@@ -639,7 +639,7 @@ public partial class CompareViewModel : ObservableObject
             idx--;
             if (LeftSubtitles[idx].HasDifference)
             {
-                SelectAndScrollToRow(LeftDataGrid, idx);
+                SelectAndScrollToRow(LeftGrid, idx);
                 return;
             }
         }
@@ -665,7 +665,7 @@ public partial class CompareViewModel : ObservableObject
             idx++;
             if (LeftSubtitles[idx].HasDifference)
             {
-                SelectAndScrollToRow(LeftDataGrid, idx);
+                SelectAndScrollToRow(LeftGrid, idx);
                 return;
             }
         }
@@ -855,7 +855,7 @@ public partial class CompareViewModel : ObservableObject
         }
     }
 
-    internal void LeftDataGridSelectionChanged(object? sender, SelectionChangedEventArgs e)
+    internal void LeftGridSelectionChanged(object? sender, SelectionChangedEventArgs e)
     {
         if (e.AddedItems.Count == 0)
         {
@@ -871,11 +871,11 @@ public partial class CompareViewModel : ObservableObject
         var idx = LeftSubtitles.IndexOf(selection);
         Dispatcher.UIThread.Post(() =>
         {
-            SelectAndScrollToRow(RightDataGrid, idx);
+            SelectAndScrollToRow(RightGrid, idx);
         });
     }
 
-    internal void RightDataGridSelectionChanged(object? sender, SelectionChangedEventArgs e)
+    internal void RightGridSelectionChanged(object? sender, SelectionChangedEventArgs e)
     {
         if (e.AddedItems.Count == 0)
         {
@@ -891,25 +891,28 @@ public partial class CompareViewModel : ObservableObject
         var idx = RightSubtitles.IndexOf(selection);
         Dispatcher.UIThread.Post(() =>
         {
-            SelectAndScrollToRow(LeftDataGrid, idx);
+            SelectAndScrollToRow(LeftGrid, idx);
         });
     }
 
-    private void SelectAndScrollToRow(DataGrid? datagrid, int index)
+    private void SelectAndScrollToRow(TableView? tableView, int index)
     {
-        if (index < 0 || datagrid == null)
+        if (index < 0 || tableView == null)
         {
             return;
         }
 
         Dispatcher.UIThread.Post(() =>
         {
-            if (datagrid.SelectedIndex != index)
+            if (tableView.SelectedIndex != index)
             {
-                datagrid.SelectedIndex = index;
+                tableView.SelectedIndex = index;
             }
 
-            datagrid.ScrollIntoView(datagrid.SelectedItem, null);
+            if (tableView.SelectedItem is { } item)
+            {
+                tableView.ScrollIntoView(item);
+            }
         });
     }
 

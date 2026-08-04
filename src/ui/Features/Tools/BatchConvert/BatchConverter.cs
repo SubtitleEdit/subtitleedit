@@ -38,6 +38,8 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
+using Nikse.SubtitleEdit.UiLogic.LlamaCpp;
+using Nikse.SubtitleEdit.UiLogic.Translate;
 
 namespace Nikse.SubtitleEdit.Features.Tools.BatchConvert;
 
@@ -61,6 +63,10 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
 
     private BatchConvertConfig _config;
     private List<SubtitleFormat> _subtitleFormats;
+
+    // Font-name -> found font files, shared across the items of one batch run so the
+    // "Embed fonts" function does not rescan the font folders for every file.
+    private readonly Dictionary<string, List<string>> _fontFilesCache = new(StringComparer.OrdinalIgnoreCase);
 
     public SubtitleFormat Format { get; set; } = new SubRip();
 
@@ -90,6 +96,7 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
     {
         _config = config;
         _subtitleFormats = SubtitleFormatHelper.GetSubtitleFormatsWithFavoritesAtTop();
+        _fontFilesCache.Clear();
     }
 
     /// <summary>
@@ -154,7 +161,7 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
                             if (trackId == track.TrackNumber.ToString(CultureInfo.InvariantCulture))
                             {
                                 var vobSubs = LoadVobSubFromMatroska(track, matroska, out var idx);
-                                imageSubtitle = new OcrSubtitleVobSub(vobSubs)
+                                imageSubtitle = new OcrSubtitleVobSub(vobSubs, idx?.Palette)
                                 {
                                     IsolateColors = Se.Settings.Tools.BatchConvert.VobSubIsolateColors,
                                 };
@@ -441,6 +448,17 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
             if (paragraphs.Count > 0)
             {
                 result.Add(new TransportStreamResult { IsImage = false, Subtitle = new Subtitle(paragraphs) });
+            }
+        }
+
+        foreach (var aribPid in tsParser.AribSubtitlesLookup)
+        {
+            foreach (var language in aribPid.Value)
+            {
+                if (language.Value.Count > 0)
+                {
+                    result.Add(new TransportStreamResult { IsImage = false, Subtitle = new Subtitle(language.Value) });
+                }
             }
         }
 
@@ -748,7 +766,7 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
         item.Subtitle = new Subtitle();
         var results = new Paragraph[totalCount];
         var processedCount = 0;
-        var lockObj = new object();
+        var lockObj = new Lock();
 
         Parallel.For(0, totalCount, new ParallelOptions
         {
@@ -876,7 +894,7 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
         for (var i = 0; i < matches.Count - 1; i++)
         {
             var match = matches[i];
-            if (match.Text.EndsWith("1", StringComparison.Ordinal) && !match.Italic)
+            if (match.Text.EndsWith('1') && !match.Italic)
             {
                 var pixelsLess = 0;
                 if (pixelsAreSpace > 7)
@@ -1013,7 +1031,7 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
         var totalCount = imageSubtitles.Count;
         var results = new Paragraph[totalCount];
         var processedCount = 0;
-        var lockObj = new object();
+        var lockObj = new Lock();
 
         Parallel.For(
             0,
@@ -1346,6 +1364,53 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
         }
     }
 
+    /// <summary>
+    /// Applies the "Adjust image brightness/alpha/color" function to a source image
+    /// before export. Returns the input untouched when the function is off.
+    /// </summary>
+    private SKBitmap ApplyImageAdjustments(SKBitmap bitmap)
+    {
+        var settings = _config.AdjustImageColors;
+        if (!settings.IsActive)
+        {
+            return bitmap;
+        }
+
+        var result = bitmap;
+
+        if (settings.AdjustBrightness)
+        {
+            var old = result;
+            result = Logic.Media.SubtitleImageAdjuster.AdjustBrightness(old, (float)settings.Brightness, (float)settings.Contrast, (float)(settings.Gamma / 100.0));
+            if (!ReferenceEquals(old, bitmap))
+            {
+                old.Dispose();
+            }
+        }
+
+        if (settings.AdjustAlpha)
+        {
+            var old = result;
+            result = Logic.Media.SubtitleImageAdjuster.AdjustAlpha(old, (float)settings.AlphaAdjustment, (byte)Math.Clamp(settings.TransparencyThreshold, 0, 255));
+            if (!ReferenceEquals(old, bitmap))
+            {
+                old.Dispose();
+            }
+        }
+
+        if (settings.AdjustColor)
+        {
+            var old = result;
+            result = Logic.Media.SubtitleImageAdjuster.Colorize(old, settings.ColorValue.R, settings.ColorValue.G, settings.ColorValue.B);
+            if (!ReferenceEquals(old, bitmap))
+            {
+                old.Dispose();
+            }
+        }
+
+        return result;
+    }
+
     private void WriteToImageBasedFormat(BatchConvertItem item, IOcrSubtitle? imageSubtitle, CancellationToken cancellationToken)
     {
         if (imageSubtitle == null)
@@ -1381,7 +1446,7 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
                 ScreenHeight = imageSubtitle.GetScreenSize(i).Height,
                 BottomTopMargin = 0,
                 LeftRightMargin = 0,
-                Bitmap = imageSubtitle.GetBitmap(i),
+                Bitmap = ApplyImageAdjustments(imageSubtitle.GetBitmap(i)),
             };
             var position = imageSubtitle.GetPosition(i);
             if (position.X >= 0 && position.Y >= 0)
@@ -1487,6 +1552,13 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
                         s.Footer = _config.AssaFooter;
                     }
                 }
+
+                // After the header/footer template above, so fonts are collected from the
+                // styles that are actually written and the embedding is not overwritten.
+                if (_config.AssaEmbedFonts.IsActive)
+                {
+                    AssaFontEmbedder.EmbedUsedFonts(s, cancellationToken, _fontFilesCache);
+                }
             }
 
             var converted = targetFormat.ToText(s, Path.GetFileNameWithoutExtension(item.FileName));
@@ -1539,18 +1611,22 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
             return null;
         }
 
+        var (scriptWidth, scriptHeight) = ExportTextTags.GetScriptResolution(item.Subtitle.Header);
+
         var imageParameters = new List<ImageParameter>();
         for (var i = 0; i < item.Subtitle.Paragraphs.Count; i++)
         {
             Paragraph? subtitle = item.Subtitle.Paragraphs[i];
             var imageParameter = new ImageParameter
             {
-                Alignment = ExportAlignment.BottomCenter,
+                // "{\an8}" & co. were stripped from the text but not honored, so top-positioned
+                // lines silently ended up at the bottom (issue #13025).
+                Alignment = ExportTextTags.GetAlignment(subtitle.Text, ExportAlignment.BottomCenter),
                 ContentAlignment = ExportContentAlignment.Center,
                 PaddingLeftRight = profile.PaddingLeftRight,
                 PaddingTopBottom = profile.PaddingTopBottom,
                 Index = i,
-                Text = HtmlUtil.RemoveAssAlignmentTags(subtitle.Text),
+                Text = ExportTextTags.ToRenderableText(subtitle.Text),
                 StartTime = subtitle.StartTime.TimeSpan,
                 EndTime = subtitle.EndTime.TimeSpan,
                 FontColor = profile.FontColor.FromHexToColor().ToSKColor(),
@@ -1571,6 +1647,11 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
             };
 
             imageParameter.Bitmap = ExportImageBasedViewModel.GenerateBitmap(imageParameter);
+
+            // "{\pos(x,y)}" anchors the rendered text, so it needs the bitmap size - and the
+            // coordinates are in the script's own resolution, not the export canvas.
+            ExportTextTags.ApplyPositionTag(imageParameter, subtitle.Text, scriptWidth, scriptHeight);
+
             imageParameters.Add(imageParameter);
         }
 
@@ -2383,7 +2464,7 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
         Configuration.Settings.Tools.AutoTranslateLibreUrl = Se.Settings.AutoTranslate.LibreTranslateUrl;
         Configuration.Settings.Tools.AutoTranslateLibreApiKey = Se.Settings.AutoTranslate.LibreTranslateApiKey;
 
-        Configuration.Settings.Tools.AutoTranslateNllbApiUrl = Se.Settings.AutoTranslate.NnlbApiUrl;
+        Configuration.Settings.Tools.AutoTranslateNllbApiUrl = Se.Settings.AutoTranslate.NllbApiUrl;
 
         Configuration.Settings.Tools.AutoTranslateNllbServeUrl = Se.Settings.AutoTranslate.NnlbServeUrl;
 

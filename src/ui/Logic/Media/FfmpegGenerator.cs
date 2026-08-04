@@ -1004,6 +1004,14 @@ public class FfmpegGenerator
 
         processMakeVideo.StartInfo.Arguments = processMakeVideo.StartInfo.Arguments.Trim();
 
+        // Never let ffmpeg wait on a console prompt: stdin is inherited (not redirected), so an
+        // interactive question - e.g. "File exists. Overwrite? [y/N]" when user-edited custom
+        // parameters lack -y - blocks forever with the UI stuck at the last progress value.
+        if (!processMakeVideo.StartInfo.Arguments.Contains("-nostdin"))
+        {
+            processMakeVideo.StartInfo.Arguments = "-nostdin " + processMakeVideo.StartInfo.Arguments;
+        }
+
         SetupDataReceiveHandler(dataReceivedHandler, processMakeVideo);
 
         return processMakeVideo;
@@ -1026,6 +1034,14 @@ public class FfmpegGenerator
         };
 
         processMakeVideo.StartInfo.Arguments = processMakeVideo.StartInfo.Arguments.Trim();
+
+        // Never let ffmpeg wait on a console prompt: stdin is inherited (not redirected), so an
+        // interactive question - e.g. "File exists. Overwrite? [y/N]" when user-edited custom
+        // parameters lack -y - blocks forever with the UI stuck at the last progress value.
+        if (!processMakeVideo.StartInfo.Arguments.Contains("-nostdin"))
+        {
+            processMakeVideo.StartInfo.Arguments = "-nostdin " + processMakeVideo.StartInfo.Arguments;
+        }
 
         SetupDataReceiveHandler(dataReceivedHandler, processMakeVideo);
 

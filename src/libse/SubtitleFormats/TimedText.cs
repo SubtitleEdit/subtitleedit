@@ -157,11 +157,12 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             }
             bool couldBeFrames = true;
             bool couldBeMillisecondsWithMissingLastDigit = true;
+            var pText = new StringBuilder();
             foreach (XmlNode node in div.ChildNodes)
             {
                 try
                 {
-                    var pText = new StringBuilder();
+                    pText.Clear();
                     var styleName = string.Empty;
                     if (node.Attributes?["style"] != null)
                     {
@@ -316,8 +317,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                                     p.Extra = styleName;
                                 }
                             }
-                            else if (start != null && start.EndsWith("t", StringComparison.Ordinal) &&
-                                     end != null && end.EndsWith("t", StringComparison.Ordinal) &&
+                            else if (start != null && start.EndsWith('t') &&
+                                     end != null && end.EndsWith('t') &&
                                      double.TryParse(start.TrimEnd('t'), NumberStyles.Float | NumberStyles.AllowThousands, CultureInfo.InvariantCulture, out dBegin) && double.TryParse(end.TrimEnd('t'), NumberStyles.Float | NumberStyles.AllowThousands, CultureInfo.InvariantCulture, out dEnd))
                             {
                                 var p = new Paragraph(text, TimeSpan.FromTicks((long)dBegin).TotalMilliseconds, TimeSpan.FromTicks((long)dEnd).TotalMilliseconds);

@@ -163,11 +163,12 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             var nsmgr = new XmlNamespaceManager(xml.NameTable);
             nsmgr.AddNamespace("ttaf1", xml.DocumentElement.NamespaceURI);
             var fixOverlap = false;
+            var pText = new StringBuilder();
             foreach (XmlNode node in xml.DocumentElement.SelectNodes("//ttaf1:p", nsmgr))
             {
                 try
                 {
-                    var pText = new StringBuilder();
+                    pText.Clear();
                     foreach (XmlNode innerNode in node.ChildNodes)
                     {
                         switch (innerNode.Name)

@@ -53,58 +53,58 @@ public class FindDoubleLinesWindow : Window
         Activated += delegate { buttonCancel.Focus(); }; // hack to make OnKeyDown work
 
         KeyDown += (s, e) => vm.OnKeyDown(e);
+
+        Closing += delegate { UiUtil.SaveWindowPosition(this); };
+        Loaded += delegate { UiUtil.RestoreWindowPosition(this); };
     }
 
     private static Border MakeGridView(FindDoubleLinesViewModel vm)
     {
-        var dataGrid = new DataGrid
-        {
-            Height = double.NaN,
-            Margin = new Thickness(2),
-            ItemsSource = vm.Subtitles,
-            CanUserSortColumns = false,
-            IsReadOnly = true,
-            SelectionMode = DataGridSelectionMode.Extended,
-            DataContext = vm.Subtitles,
-        };
+        var tableView = TableViewExtras.MakeTableView();
+        tableView.Height = double.NaN;
+        tableView.Margin = new Thickness(2);
+        tableView.ItemsSource = vm.Subtitles;
+        tableView.DataContext = vm.Subtitles;
 
-        dataGrid.DoubleTapped += vm.OnBookmarksGridDoubleTapped;
+        tableView.DoubleTapped += vm.OnBookmarksGridDoubleTapped;
 
-        // Columns
-        dataGrid.Columns.Add(new DataGridTextColumn
+        // Columns (the DataGrid sized the number column to content; TableView treats
+        // Auto as star, so it gets a fixed width instead)
+        tableView.Columns.Add(new SeTableViewColumn
         {
             Header = Se.Language.General.NumberSymbol,
             Binding = new Binding(nameof(DoubleLineItem.Number)),
-            CellTheme = UiUtil.DataGridNoBorderCellTheme,
+            Width = new GridLength(60),
+            CellTheme = UiUtil.TableViewCellTheme,
+            HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
         });
-        dataGrid.Columns.Add(new DataGridTextColumn
+        tableView.Columns.Add(new SeTableViewColumn
         {
             Header = Se.Language.General.Text,
             Binding = new Binding(nameof(DoubleLineItem.Text)),
-            CellTheme = UiUtil.DataGridNoBorderCellTheme,
-            Width = new DataGridLength(1, DataGridLengthUnitType.Star),
+            Width = new GridLength(1, GridUnitType.Star),
+            CellTheme = UiUtil.TableViewCellTheme,
+            HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
         });
 
-        dataGrid.DataContext = vm.Subtitles;
-        dataGrid.Bind(DataGrid.SelectedItemProperty, new Binding(nameof(vm.SelectedSubtitle))
+        TableViewExtras.BindSelectedItem(tableView, vm, nameof(vm.SelectedSubtitle));
+        tableView.DoubleTapped += (s, e) => vm.GoToCommand.Execute(null);
+        tableView.KeyDown += (s, e) => vm.GridKeyDown(e);
+        tableView.AddHandler(InputElement.KeyDownEvent, (object? _, KeyEventArgs e) =>
         {
-            Source = vm,
-            Mode = BindingMode.TwoWay
-        });
-        dataGrid.SelectionChanged += vm.GridSelectionChanged;
-        dataGrid.DoubleTapped += (s, e) => vm.GoToCommand.Execute(null);
-        dataGrid.KeyDown += (s, e) => vm.GridKeyDown(e);
-        dataGrid.AddHandler(InputElement.KeyDownEvent, (object? _, KeyEventArgs e) =>
-        {
-            if (e.Key is Key.Home or Key.End && dataGrid.ItemsSource is IList items && items.Count > 0)
+            if (e.Key is Key.Home or Key.End && tableView.ItemsSource is IList items && items.Count > 0)
             {
                 var target = e.Key == Key.Home ? items[0] : items[^1];
-                dataGrid.SelectedItem = target;
-                dataGrid.ScrollIntoView(target, null);
+                tableView.SelectedItem = target;
+                if (target != null)
+                {
+                    tableView.ScrollIntoView(target);
+                }
+
                 e.Handled = true;
             }
         }, Avalonia.Interactivity.RoutingStrategies.Tunnel);
 
-        return UiUtil.MakeBorderForControlNoPadding(dataGrid);
+        return UiUtil.MakeBorderForControlNoPadding(tableView);
     }
 }

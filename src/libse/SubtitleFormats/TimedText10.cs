@@ -851,12 +851,13 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
             var topRegions = GetRegionsTopFromHeader(xml);
             XmlNode lastDiv = null;
+            var pText = new StringBuilder();
             foreach (XmlNode node in body.SelectNodes("//ttml:p", nsmgr))
             {
                 try
                 {
                     // Parse and convert paragraph text
-                    var pText = new StringBuilder();
+                    pText.Clear();
                     ReadParagraph(pText, node, styles, xml);
 
                     // Time codes
@@ -1112,21 +1113,19 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         private static readonly Regex _endsWithTreeDigits = new Regex(@"\d\d\d$");
         private static readonly Regex FixAmpersandRegex = new Regex("&(?!amp;)", RegexOptions.Compiled);
+        private static readonly char[] FractionSeparators = { '.', ',' };
+        private static readonly char[] TimePartSeparators = { ':', ';' };
         private static bool IsFrames(string timeCode)
         {
-            if (timeCode.Length == 12 && (timeCode[8] == '.' || timeCode[8] == ',')) // 00:00:08.292 or 00:00:08,292
+            var lastFractionSeparator = timeCode.LastIndexOfAny(FractionSeparators);
+            if (lastFractionSeparator >= 0 && lastFractionSeparator > timeCode.LastIndexOfAny(TimePartSeparators))
             {
-                return false;
-            }
-
-            if (timeCode.Length == 11 && timeCode[8] == '.') // 00:00:08.12 (last part is milliseconds / 10)
-            {
-                return false;
+                return false; // '.'/',' after the last ':'/';' starts a fraction of a second, not a frame count - e.g. 00:00:08.292 or 00:00:01.5
             }
 
             if (_endsWithTreeDigits.IsMatch(timeCode))
             {
-                return false;
+                return false; // e.g. 00:00:08:292 - last part is milliseconds
             }
 
             if (timeCode.Split(':', '.', ',', ';').Length < 4)
@@ -1387,7 +1386,23 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 hours = 0;
             }
 
-            return new TimeCode(hours, int.Parse(parts[1]), int.Parse(parts[2]), parts.Length > 3 ? int.Parse(parts[3]) : 0);
+            var milliseconds = 0;
+            if (parts.Length > 3)
+            {
+                var fractionSeparatorIndex = s.LastIndexOfAny(FractionSeparators);
+                if (fractionSeparatorIndex > s.LastIndexOfAny(TimePartSeparators))
+                {
+                    // '.'/',' starts a fraction of a second with any number of digits (TTML spec)
+                    var fraction = double.Parse(parts[3], CultureInfo.InvariantCulture);
+                    milliseconds = (int)Math.Round(fraction * Math.Pow(10, 3 - parts[3].Length));
+                }
+                else
+                {
+                    milliseconds = int.Parse(parts[3]); // legacy: 00:00:08:123 - last part is milliseconds
+                }
+            }
+
+            return new TimeCode(hours, int.Parse(parts[1]), int.Parse(parts[2]), milliseconds);
         }
 
         public override List<string> AlternateExtensions => new List<string> { ".itt", ".dfxp", ".ttml" };
@@ -1595,8 +1610,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 displayAlign = styleNode.Attributes["displayAlign"].Value;
             }
 
-            if (originArr.Length == 2 && originArr[0].EndsWith("%", StringComparison.Ordinal) && originArr[1].EndsWith("%", StringComparison.Ordinal) &&
-                extentArr.Length == 2 && extentArr[0].EndsWith("%", StringComparison.Ordinal) && extentArr[1].EndsWith("%", StringComparison.Ordinal) &&
+            if (originArr.Length == 2 && originArr[0].EndsWith('%') && originArr[1].EndsWith('%') &&
+                extentArr.Length == 2 && extentArr[0].EndsWith('%') && extentArr[1].EndsWith('%') &&
                 !string.IsNullOrEmpty(displayAlign))
             {
                 var yPos = Convert.ToDouble(originArr[1].TrimEnd('%'), CultureInfo.InvariantCulture);
@@ -1660,8 +1675,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 displayAlign = styleNode.Attributes["displayAlign"].Value;
             }
 
-            if (originArr.Length == 2 && originArr[0].EndsWith("%", StringComparison.Ordinal) && originArr[1].EndsWith("%", StringComparison.Ordinal) &&
-                extentArr.Length == 2 && extentArr[0].EndsWith("%", StringComparison.Ordinal) && extentArr[1].EndsWith("%", StringComparison.Ordinal) &&
+            if (originArr.Length == 2 && originArr[0].EndsWith('%') && originArr[1].EndsWith('%') &&
+                extentArr.Length == 2 && extentArr[0].EndsWith('%') && extentArr[1].EndsWith('%') &&
                 !string.IsNullOrEmpty(displayAlign))
             {
                 if (double.TryParse(originArr[1].TrimEnd('%'), NumberStyles.Float, CultureInfo.InvariantCulture, out var yPos) &&

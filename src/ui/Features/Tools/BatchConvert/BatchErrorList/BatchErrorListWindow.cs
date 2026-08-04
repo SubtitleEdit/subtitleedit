@@ -8,7 +8,6 @@ using System.Collections;
 using Nikse.SubtitleEdit.Features.Tools.BatchConvert.BatchErrorList;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
-using Nikse.SubtitleEdit.Logic.ValueConverters;
 
 namespace Nikse.SubtitleEdit.Features.Shared.ErrorList;
 
@@ -60,51 +59,48 @@ public class BatchErrorListWindow : Window
 
     private static Border MakeErrorsGridView(BatchErrorListViewModel vm)
     {
-        var dataGrid = new DataGrid
-        {
-            Height = double.NaN, // auto size inside scroll viewer
-            Margin = new Thickness(2),
-            ItemsSource = vm.Subtitles, // Use ItemsSource instead of Items
-            CanUserSortColumns = false,
-            IsReadOnly = true,
-            SelectionMode = DataGridSelectionMode.Extended,
-            DataContext = vm.Subtitles,
-        };
+        var dataGrid = TableViewExtras.MakeTableView();
+        dataGrid.Height = double.NaN; // auto size inside scroll viewer
+        dataGrid.Margin = new Thickness(2);
+        dataGrid.ItemsSource = vm.Subtitles;
+        dataGrid.DataContext = vm.Subtitles;
 
-        var fullTimeConverter = new TimeSpanToDisplayFullConverter();
-        var shortTimeConverter = new TimeSpanToDisplayShortConverter();
-
-        // Columns
-        dataGrid.Columns.Add(new DataGridTextColumn
+        // Columns - the number column was content-sized (Auto) on the DataGrid; TableView
+        // treats Auto as star, so it gets a fixed width instead.
+        dataGrid.Columns.Add(new SeTableViewColumn
         {
             Header = Se.Language.General.FileName,
             Binding = new Binding(nameof(BatchErrorListItem.FileName)),
-            CellTheme = UiUtil.DataGridNoBorderCellTheme,
-            Width = new DataGridLength(1, DataGridLengthUnitType.Star) 
+            CellTheme = UiUtil.TableViewCellTheme,
+            HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
+            Width = new GridLength(1, GridUnitType.Star)
         });
-        dataGrid.Columns.Add(new DataGridTextColumn
+        dataGrid.Columns.Add(new SeTableViewColumn
         {
             Header = Se.Language.General.NumberSymbol,
             Binding = new Binding(nameof(BatchErrorListItem.Number)),
-            CellTheme = UiUtil.DataGridNoBorderCellTheme,
+            CellTheme = UiUtil.TableViewCellTheme,
+            HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
+            Width = new GridLength(60)
         });
-        dataGrid.Columns.Add(new DataGridTextColumn
+        dataGrid.Columns.Add(new SeTableViewColumn
         {
             Header = Se.Language.General.Text,
             Binding = new Binding(nameof(BatchErrorListItem.Text)),
-            CellTheme = UiUtil.DataGridNoBorderCellTheme,
-            Width = new DataGridLength(1, DataGridLengthUnitType.Star) 
+            CellTheme = UiUtil.TableViewCellTheme,
+            HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
+            Width = new GridLength(1, GridUnitType.Star)
         });
-        dataGrid.Columns.Add(new DataGridTextColumn
+        dataGrid.Columns.Add(new SeTableViewColumn
         {
             Header = Se.Language.General.Error,
             Binding = new Binding(nameof(BatchErrorListItem.Error)),
-            CellTheme = UiUtil.DataGridNoBorderCellTheme,
-            Width = new DataGridLength(1, DataGridLengthUnitType.Star) 
+            CellTheme = UiUtil.TableViewCellTheme,
+            HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
+            Width = new GridLength(1, GridUnitType.Star)
         });
 
-        dataGrid.DataContext = vm.Subtitles;
-        dataGrid.Bind(DataGrid.SelectedItemProperty, new Binding(nameof(vm.SelectedSubtitle))
+        dataGrid.Bind(TableView.SelectedItemProperty, new Binding(nameof(vm.SelectedSubtitle))
         {
             Source = vm,
             Mode = BindingMode.TwoWay
@@ -112,11 +108,11 @@ public class BatchErrorListWindow : Window
         dataGrid.SelectionChanged += vm.GridSelectionChanged;
         dataGrid.AddHandler(InputElement.KeyDownEvent, (object? _, KeyEventArgs e) =>
         {
-            if (e.Key is Key.Home or Key.End && dataGrid.ItemsSource is IList items && items.Count > 0)
+            if (e.Key is Key.Home or Key.End && dataGrid.ItemsSource is IList items && items.Count > 0 &&
+                (e.Key == Key.Home ? items[0] : items[^1]) is { } target)
             {
-                var target = e.Key == Key.Home ? items[0] : items[^1];
                 dataGrid.SelectedItem = target;
-                dataGrid.ScrollIntoView(target, null);
+                dataGrid.ScrollIntoView(target);
                 e.Handled = true;
             }
         }, RoutingStrategies.Tunnel);

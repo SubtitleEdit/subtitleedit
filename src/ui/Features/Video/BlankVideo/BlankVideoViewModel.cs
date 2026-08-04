@@ -7,6 +7,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
+using Nikse.SubtitleEdit.Features.Shared.PromptFileSaved;
 using Nikse.SubtitleEdit.Features.Shared;
 using Nikse.SubtitleEdit.Features.Video.BurnIn;
 using Nikse.SubtitleEdit.Logic;
@@ -20,6 +21,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Timers;
+using Nikse.SubtitleEdit.UiLogic.Media;
 
 namespace Nikse.SubtitleEdit.Features.Video.BlankVideo;
 
@@ -192,7 +194,15 @@ public partial class BlankVideoViewModel : ObservableObject
 
             if (JobItems.Count == 1)
             {
-                await _folderHelper.OpenFolderWithFileSelected(Window!, jobItem.OutputVideoFileName);
+                await _windowService.ShowDialogAsync<PromptFileSavedWindow, PromptFileSavedViewModel>(Window!, vm =>
+                {
+                    vm.Initialize(
+                        Se.Language.General.VideoFileGenerated,
+                        string.Format(Se.Language.General.VideoFileGeneratedX, jobItem.OutputVideoFileName),
+                        jobItem.OutputVideoFileName,
+                        true,
+                        true);
+                });
             }
             else
             {
@@ -285,7 +295,7 @@ public partial class BlankVideoViewModel : ObservableObject
         if (long.TryParse(arr[1].Trim(), out var f))
         {
             _processedFrames = f;
-            ProgressValue = (double)_processedFrames * 100.0 / JobItems[_jobItemIndex].TotalFrames;
+            ProgressValue = _processedFrames * 100.0 / JobItems[_jobItemIndex].TotalFrames;
         }
     }
 
@@ -412,7 +422,7 @@ public partial class BlankVideoViewModel : ObservableObject
             path = Path.Combine(Path.GetDirectoryName(_subtitleFileName) ?? Se.Settings.Video.BurnIn.OutputFolder, videoFileName + ".mkv");
         }
 
-        videoFileName = await _fileHelper.PickSaveFile(Window!, ".mkv", path, Se.Language.Video.SaveVideoAsTitle);
+        videoFileName = await _fileHelper.PickSaveFile(Window!, ".mkv", path, Se.Language.General.SaveVideoAsVideoTitle);
         if (string.IsNullOrEmpty(videoFileName))
         {
             return;

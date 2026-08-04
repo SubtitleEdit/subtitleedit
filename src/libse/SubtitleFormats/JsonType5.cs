@@ -126,19 +126,21 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             var times = Json.ReadArray(allText, "text_tees");
             var texts = Json.ReadArray(allText, "text_content");
 
+            var textSb = new StringBuilder();
+            var innerSb = new StringBuilder();
             for (var i = 0; i < Math.Min(times.Count, texts.Count); i++)
             {
                 var text = texts[i];
                 if (text.StartsWith('['))
                 {
                     var textLines = Json.ReadArray("{\"text\":" + texts[i] + "}", "text");
-                    var textSb = new StringBuilder();
+                    textSb.Clear();
                     foreach (string line in textLines)
                     {
                         var t = Json.DecodeJsonText(line);
                         if (t.StartsWith("[\"", StringComparison.Ordinal) && t.EndsWith("\"]", StringComparison.Ordinal))
                         {
-                            var innerSb = new StringBuilder();
+                            innerSb.Clear();
                             var innerTextLines = Json.ReadArray("{\"text\":" + t + "}", "text");
                             foreach (string innerLine in innerTextLines)
                             {

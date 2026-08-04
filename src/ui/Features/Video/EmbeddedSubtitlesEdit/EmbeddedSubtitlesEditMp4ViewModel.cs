@@ -19,6 +19,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Timers;
+using Nikse.SubtitleEdit.UiLogic.Media;
 
 namespace Nikse.SubtitleEdit.Features.Video.EmbeddedSubtitlesEdit;
 
@@ -46,7 +47,7 @@ public partial class EmbeddedSubtitlesEditMp4ViewModel : ObservableObject
 
     public Window? Window { get; set; }
     public bool OkPressed { get; private set; }
-    public DataGrid TracksGrid { get; internal set; }
+    public TableView TracksGrid { get; internal set; }
 
     private readonly StringBuilder _log;
     private long _startTicks;
@@ -82,7 +83,7 @@ public partial class EmbeddedSubtitlesEditMp4ViewModel : ObservableObject
         Tracks = new ObservableCollection<EmbeddedTrack>();
         VideoFileName = string.Empty;
         ProgressText = string.Empty;
-        TracksGrid = new DataGrid();
+        TracksGrid = new TableView();
 
         _log = new StringBuilder();
         _timerGenerate = new Timer { Interval = 100 };
@@ -243,7 +244,7 @@ public partial class EmbeddedSubtitlesEditMp4ViewModel : ObservableObject
             _processedFrames = f;
             if (_totalFrames > 0)
             {
-                ProgressValue = (double)_processedFrames * 100.0 / _totalFrames;
+                ProgressValue = _processedFrames * 100.0 / _totalFrames;
             }
         }
     }
@@ -572,7 +573,7 @@ public partial class EmbeddedSubtitlesEditMp4ViewModel : ObservableObject
             Window!,
             string.IsNullOrEmpty(Path.GetExtension(VideoFileName)) ? ".mp4" : Path.GetExtension(VideoFileName),
             outputVideoFileName,
-            Se.Language.Video.SaveVideoAsTitle);
+            Se.Language.General.SaveVideoAsVideoTitle);
         if (string.IsNullOrEmpty(outputVideoFileName))
         {
             return;
@@ -713,7 +714,10 @@ public partial class EmbeddedSubtitlesEditMp4ViewModel : ObservableObject
         Dispatcher.UIThread.Post(() =>
         {
             TracksGrid.SelectedIndex = index;
-            TracksGrid.ScrollIntoView(TracksGrid.SelectedItem, null);
+            if (TracksGrid.SelectedItem is { } selectedItem)
+            {
+                TracksGrid.ScrollIntoView(selectedItem);
+            }
         }, DispatcherPriority.Background);
     }
 

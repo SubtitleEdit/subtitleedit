@@ -80,7 +80,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                             {
                                 var before = st.StrippedText[match.Index];
                                 var after = '\0';
-                                if (match.Index < st.StrippedText.Length - 3)
+                                if (match.Index < st.StrippedText.Length - 2)
                                 {
                                     after = st.StrippedText[match.Index + 2];
                                 }

@@ -2,7 +2,6 @@
 
 public class LanguageBridgeGaps
 {
-    public string Title { get; set; }
     public string BridgeGapsSmallerThan { get; set; }
     public string MinGap { get; set; }
     public string NumberOfSmallGapsBridgedX { get; set; }
@@ -11,7 +10,6 @@ public class LanguageBridgeGaps
 
     public LanguageBridgeGaps()
     {
-        Title = "Bridge gaps";
         BridgeGapsSmallerThan = "Bridge gaps smaller than (ms)";
         MinGap = "Minimum gap (ms)";
         NumberOfSmallGapsBridgedX = "Number of small gaps bridged: {0}";

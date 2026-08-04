@@ -13,6 +13,7 @@ using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.Settings;
 using Nikse.SubtitleEdit.Features.Video.SpeechToText.Engines;
 using Nikse.SubtitleEdit.Logic.Config;
+using Nikse.SubtitleEdit.UiLogic.Http;
 
 namespace Nikse.SubtitleEdit.Features.Video.SpeechToText.OpenAiCompatible;
 
@@ -127,7 +128,6 @@ public class OpenAiSttService : ISttTranscriber
         var uploadFileName = NormalizeUploadFileName(fileName, effectiveFormat);
         var fileContent = new StreamContent(audioStream);
         fileContent.Headers.ContentType = new MediaTypeHeaderValue(GetMediaTypeForFormat(effectiveFormat));
-        content.Add(fileContent, "file", uploadFileName);
 
         // Add model
         if (!string.IsNullOrEmpty(_settings.Model))
@@ -174,6 +174,12 @@ public class OpenAiSttService : ISttTranscriber
             content.Add(new StringContent(_settings.Prompt), "prompt");
         }
 
+        // The audio goes in last on purpose: xAI's /v1/stt documents that "file"
+        // must be the final field in the multipart form, and servers that stream
+        // the upload to a decoder generally want the parameters parsed before the
+        // payload arrives. OpenAI and friends don't care about field order.
+        content.Add(fileContent, "file", uploadFileName);
+
         // Create request
         using var request = new HttpRequestMessage(HttpMethod.Post, _settings.EndpointUrl)
         {
@@ -217,9 +223,14 @@ public class OpenAiSttService : ISttTranscriber
                 $"Status: {statusCode} {response.StatusCode}{Environment.NewLine}" +
                 $"RequestParams: {paramSummary}{Environment.NewLine}" +
                 $"ResponseBody: {errorContent}");
+            // Carry the status code on the exception: the caller turns a 4xx that
+            // complains about "model" into a hint about the Model field, and
+            // sniffing the number back out of the message is fragile (issue #12877).
             throw new HttpRequestException(
                 $"STT request failed with status {statusCode} ({response.StatusCode}) " +
-                $"calling {safeEndpoint}. Response: {errorContent}");
+                $"calling {safeEndpoint}. Response: {errorContent}",
+                null,
+                response.StatusCode);
         }
 
         // Check if streaming (SSE)
@@ -659,7 +670,7 @@ public class OpenAiSttService : ISttTranscriber
 
     public static OpenAiCompatibleSettings GetSettingsFromConfiguration()
     {
-        var settings = Configuration.Settings.Tools;
+        var settings = Se.Settings.Tools;
         return new OpenAiCompatibleSettings
         {
             EndpointUrl = settings.OpenAiCompatibleSttUrl,
@@ -672,7 +683,11 @@ public class OpenAiSttService : ISttTranscriber
             Prompt = settings.OpenAiCompatibleSttPrompt,
             Stream = settings.OpenAiCompatibleSttStream,
             AudioFormat = settings.OpenAiCompatibleSttAudioFormat,
-            Logger = Se.WriteToolsLog
+            // Forced write: the logger only fires on a hard HTTP failure, and the
+            // "write tools log" setting is off by default — without force the
+            // request params and the server's response body never reach the log
+            // the user would attach to a bug report (issue #12860).
+            Logger = log => Se.WriteToolsLog(log, true)
         };
     }
 

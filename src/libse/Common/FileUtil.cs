@@ -102,7 +102,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                 return encoding.GetString(bytes, 3, bytes.Length - 3).SplitToLines();
             }
 
-            if (bytes.Length > 2 && Equals(encoding, Encoding.Unicode) && bytes[0] == 0xfe && bytes[1] == 0xff)
+            if (bytes.Length > 2 && Equals(encoding, Encoding.Unicode) && bytes[0] == 0xff && bytes[1] == 0xfe)
             {
                 return encoding.GetString(bytes, 2, bytes.Length - 2).SplitToLines();
             }
@@ -360,7 +360,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             using (var fs = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
             {
                 var buffer = new byte[11];
-                fs.Read(buffer, 0, buffer.Length);
+                fs.ReadFully(buffer, 0, buffer.Length);
                 return Encoding.ASCII.GetString(buffer, 0, buffer.Length) == "d8:announce";
             }
         }
@@ -375,9 +375,59 @@ namespace Nikse.SubtitleEdit.Core.Common
             using (var fs = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
             {
                 var buffer = new byte[2];
-                fs.Read(buffer, 0, buffer.Length);
+                fs.ReadFully(buffer, 0, buffer.Length);
                 return buffer[0] == 0x50 // P
                        && buffer[1] == 0x47; // G
+            }
+        }
+
+        /// <summary>
+        /// Checks if a file is a raw PGS elementary stream, i.e. a sequence of PGS display
+        /// segments without the "PG" + PTS/DTS headers a standalone Blu-ray .sup file has.
+        /// Such files come from extracting an S_HDMV/PGS Matroska track in raw mode; the
+        /// timestamps live in the container, so the raw stream cannot be timed (issue #12683).
+        /// </summary>
+        /// <param name="fileName">The file to check.</param>
+        /// <returns>True if the file starts with a chain of valid raw PGS segments, otherwise false.</returns>
+        public static bool IsRawPgsSegmentStream(string fileName)
+        {
+            using (var fs = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+            {
+                var buffer = new byte[64 * 1024];
+                // Read may return fewer bytes than requested (network shares, filter
+                // drivers) - fill until EOF or the sniff buffer is full so a partial
+                // first read can't misclassify a genuine raw PGS stream.
+                var bytesRead = 0;
+                int read;
+                while (bytesRead < buffer.Length &&
+                       (read = fs.Read(buffer, bytesRead, buffer.Length - bytesRead)) > 0)
+                {
+                    bytesRead += read;
+                }
+
+                // Each raw segment is: type (1 byte) + payload size (2 bytes, big endian) + payload.
+                // Require a chain of valid segment types to avoid false positives on other binary
+                // files that happen to start with one plausible byte.
+                var validSegments = 0;
+                var position = 0;
+                while (position + 3 <= bytesRead)
+                {
+                    var segmentType = buffer[position];
+                    if (segmentType != 0x14 && // PDS (palette)
+                        segmentType != 0x15 && // ODS (object/bitmap)
+                        segmentType != 0x16 && // PCS (presentation composition)
+                        segmentType != 0x17 && // WDS (window)
+                        segmentType != 0x80)   // END of display set
+                    {
+                        return false;
+                    }
+
+                    var payloadSize = (buffer[position + 1] << 8) + buffer[position + 2];
+                    position += 3 + payloadSize;
+                    validSegments++;
+                }
+
+                return validSegments >= 3;
             }
         }
 
@@ -433,7 +483,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             using (var fs = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
             {
                 var buffer = new byte[4];
-                fs.Read(buffer, 0, buffer.Length);
+                fs.ReadFully(buffer, 0, buffer.Length);
                 return VobSubParser.IsPrivateStream2(buffer, 0);
             }
         }
@@ -448,7 +498,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             using (var fs = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
             {
                 var buffer = new byte[4];
-                fs.Read(buffer, 0, buffer.Length);
+                fs.ReadFully(buffer, 0, buffer.Length);
                 return VobSubParser.IsMpeg2PackHeader(buffer)
                        || VobSubParser.IsPrivateStream1(buffer, 0);
             }
@@ -579,7 +629,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             using (var fs = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
             {
                 var buffer = new byte[3];
-                fs.Read(buffer, 0, buffer.Length);
+                fs.ReadFully(buffer, 0, buffer.Length);
                 return buffer[0] == 0xef && buffer[1] == 0xbb && buffer[2] == 0xbf;
             }
         }
@@ -890,7 +940,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             using (var fs = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
             {
                 var buffer = new byte[4];
-                fs.Read(buffer, 0, buffer.Length);
+                fs.ReadFully(buffer, 0, buffer.Length);
 
                 // 1a 45 df a3
                 return buffer[0] == 0x1a && buffer[1] == 0x45 && buffer[2] == 0xdf && buffer[3] == 0xa3;

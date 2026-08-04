@@ -30,7 +30,9 @@ public class LanguageOcr
     public string ExpandInfoX { get; set; }
     public string EditNOcrDatabaseXWithYItems { get; set; }
     public string NewNOcrDatabase { get; set; }
+    public string NewBinaryImageCompareDatabase { get; set; }
     public string RenameNOcrDatabase { get; set; }
+    public string RenameBinaryImageCompareDatabase { get; set; }
     public string NOcrDatabase { get; set; }
     public string DrawMode { get; set; }
     public string AddNewCharcter { get; set; }
@@ -68,6 +70,7 @@ public class LanguageOcr
     public string Binarize { get; set; }
     public string BorderSize { get; set; }
     public string CaptureTopAlign { get; set; }
+    public string ShowOnlyForcedSubtitles { get; set; }
     public string OcrImage { get; set; }
     public string OneColor { get; set; }
     public string DarknessThreshold { get; set; }
@@ -92,7 +95,6 @@ public class LanguageOcr
     public string VobSubColorsTitle { get; set; }
     public string VobSubColorsHeader { get; set; }
     public string VobSubColorsDescription { get; set; }
-    public string VobSubColorBackground { get; set; }
     public string VobSubColorPattern { get; set; }
     public string VobSubColorEmphasis1 { get; set; }
     public string VobSubColorEmphasis2 { get; set; }
@@ -100,6 +102,10 @@ public class LanguageOcr
     public string VobSubIsolateColors { get; set; }
     public string VobSubIsolateColorsHint { get; set; }
     public string LlamaCppOcrSettingsTitle { get; set; }
+    public string SelectTesseractDictionary { get; set; }
+    public string InspectBinaryOcrAdditionsTitle { get; set; }
+    public string LlamaCppOcr { get; set; }
+    public string LlamaCppOcrDescription { get; set; }
     public string LlamaCppOcrPromptHint { get; set; }
     public string LlamaCppOcrPromptEmpty { get; set; }
     public string LlamaCppOcrPromptMissingLanguagePlaceholder { get; set; }
@@ -113,6 +119,9 @@ public class LanguageOcr
     public string OllamaModelLikelyWrong { get; set; }
     public string LlamaCppNotDownloaded { get; set; }
     public string LlamaCppReturnedNoText { get; set; }
+    public string LlamaCppDownloadEngineAndModelPrompt { get; set; }
+    public string LlamaCppDownloadEnginePrompt { get; set; }
+    public string LlamaCppDownloadModelPrompt { get; set; }
 
     public LanguageOcr()
     {
@@ -142,7 +151,9 @@ public class LanguageOcr
         ExpandInfoX = "Expand count: {0}";
         EditNOcrDatabaseXWithYItems = "Edit nOCR database {0} with {1:#,###,##0} items";
         NewNOcrDatabase = "New nOCR database";
+        NewBinaryImageCompareDatabase = "New Binary Image Compare database";
         RenameNOcrDatabase = "Rename nOCR database";
+        RenameBinaryImageCompareDatabase = "Rename Binary Image Compare database";
         NOcrDatabase = "nOCR database";
         DrawMode = "Draw mode:";
         AddNewCharcter = "Add new character";
@@ -180,6 +191,7 @@ public class LanguageOcr
         Binarize = "Binarize";
         BorderSize = "Border size";
         CaptureTopAlign = "Auto-detect ASSA alignment";
+        ShowOnlyForcedSubtitles = "Show only forced subtitles";
         OcrImage = "OCR image";
         OneColor = "One color (white)";
         DarknessThreshold = "Darkness threshold";
@@ -204,7 +216,6 @@ public class LanguageOcr
         VobSubColorsTitle = "VobSub/DVD colors";
         VobSubColorsHeader = "Customize the four VobSub colors";
         VobSubColorsDescription = "VobSub/DVD subtitles use four indexed colors: background, pattern, emphasis 1 and emphasis 2. Pick each color below to override the embedded palette - useful when the original colors give poor OCR contrast.";
-        VobSubColorBackground = "Background";
         VobSubColorPattern = "Pattern";
         VobSubColorEmphasis1 = "Emphasis 1";
         VobSubColorEmphasis2 = "Emphasis 2";
@@ -213,6 +224,10 @@ public class LanguageOcr
         VobSubIsolateColorsHint = "Rebuild each VobSub image as crisp black-on-white before OCR by keeping the most frequent color (text) and dropping the outline/anti-alias colors. Improves recognition on discs where gray outlines merge characters together.";
 
         LlamaCppOcrSettingsTitle = "llama.cpp OCR settings";
+        SelectTesseractDictionary = "Select Tesseract dictionary:";
+        InspectBinaryOcrAdditionsTitle = "Inspect Binary OCR Additions";
+        LlamaCppOcr = "llama.cpp OCR";
+        LlamaCppOcrDescription = "Local llama.cpp server (multimodal model) used for OCR.";
         LlamaCppOcrPromptHint = "Use {language} to insert the selected OCR language.";
         LlamaCppOcrPromptEmpty = "The prompt cannot be empty.";
         LlamaCppOcrPromptMissingLanguagePlaceholder = "The prompt must contain the {language} placeholder.";
@@ -228,5 +243,8 @@ public class LanguageOcr
         OllamaModelLikelyWrong = "Ollama returned no text - the selected model may not support OCR / vision";
         LlamaCppNotDownloaded = "llama.cpp engine/model not downloaded - download via batch convert settings";
         LlamaCppReturnedNoText = "llama.cpp returned no text - check the server and model";
+        LlamaCppDownloadEngineAndModelPrompt = "llama.cpp requires the llama-server engine and the selected OCR model to be downloaded. Download now?";
+        LlamaCppDownloadEnginePrompt = "llama.cpp requires the llama-server engine to be downloaded. Download now?";
+        LlamaCppDownloadModelPrompt = "llama.cpp requires the selected OCR model to be downloaded. Download now?";
     }
 }

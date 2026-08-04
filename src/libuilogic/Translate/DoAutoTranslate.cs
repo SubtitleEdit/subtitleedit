@@ -1,14 +1,9 @@
-﻿using Nikse.SubtitleEdit.Core.AutoTranslate;
+﻿using System.Collections.ObjectModel;
+using Nikse.SubtitleEdit.UiLogic.AutoTranslate;
 using Nikse.SubtitleEdit.Core.Common;
-using Nikse.SubtitleEdit.Core.Translate;
-using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
+using Nikse.SubtitleEdit.UiLogic.Translate;
 
-namespace Nikse.SubtitleEdit.Features.Translate;
+namespace Nikse.SubtitleEdit.UiLogic.Translate;
 
 public class DoAutoTranslate
 {
@@ -28,16 +23,21 @@ public class DoAutoTranslate
         {
             translator.Initialize();
             var start = 0;
-            var forceSingleLineMode = TranslateEachLineSeparately ||
-                                      translator.Name ==
-                                      NoLanguageLeftBehindApi.StaticName || // NLLB seems to miss some text...
-                                      translator.Name == NoLanguageLeftBehindServe.StaticName ||
-                                      translator.Name == CrispAsrMadladTranslate.StaticName; // one CLI process per line
+            // Single-line mode forced by the user setting or the engine itself is permanent;
+            // forceSingleLineMode may additionally be turned on temporarily after errors and
+            // is only allowed to fall back to merged mode when the permanent flag is off.
+            var alwaysSingleLineMode = TranslateEachLineSeparately ||
+                                       translator.Name ==
+                                       NoLanguageLeftBehindApi.StaticName || // NLLB seems to miss some text...
+                                       translator.Name == NoLanguageLeftBehindServe.StaticName ||
+                                       translator.Name == CrispAsrMadladTranslate.StaticName; // one CLI process per line
+            var forceSingleLineMode = alwaysSingleLineMode;
 
             var index = start;
             var linesTranslated = 0;
             var errorCount = 0;
             var noErrorCount = 0;
+            var noProgressCount = 0;
 
             var rows = new ObservableCollection<TranslateRow>();
             foreach (var p in subtitle.Paragraphs)
@@ -67,7 +67,8 @@ public class DoAutoTranslate
                     linesTranslated += linesMergedAndTranslated;
                     errorCount = 0;
 
-                    if (noErrorCount > 7)
+                    noProgressCount = 0;
+                    if (noErrorCount > 7 && !alwaysSingleLineMode)
                     {
                         forceSingleLineMode = false;
                     }
@@ -100,11 +101,20 @@ public class DoAutoTranslate
                 if (translateCount > 0)
                 {
                     index += translateCount;
+                    noProgressCount = 0;
                     Progress?.Invoke(Math.Min(index, subtitle.Paragraphs.Count), subtitle.Paragraphs.Count);
                 }
                 else
                 {
                     forceSingleLineMode = true;
+
+                    // The engine keeps returning nothing for this line without throwing -
+                    // without a cap the loop would retry the same line forever.
+                    noProgressCount++;
+                    if (noProgressCount > 3)
+                    {
+                        throw new Exception($"Translation engine {translator.Name} returned no translation for line {index + 1} after {noProgressCount} attempts");
+                    }
                 }
             }
 

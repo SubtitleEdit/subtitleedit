@@ -1,4 +1,5 @@
 ﻿using Nikse.SubtitleEdit.Features.Ocr.FixEngine;
+using Nikse.SubtitleEdit.UiLogic.Ocr.FixEngine;
 
 namespace Nikse.SubtitleEdit.Features.Ocr;
 

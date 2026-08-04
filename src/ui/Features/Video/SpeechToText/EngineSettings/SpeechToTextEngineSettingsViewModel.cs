@@ -14,6 +14,7 @@ using Nikse.SubtitleEdit.Features.Video.SpeechToText.Engines;
 using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Logic.Download;
 using Nikse.SubtitleEdit.Logic.Media;
+using Nikse.SubtitleEdit.UiLogic;
 
 namespace Nikse.SubtitleEdit.Features.Video.SpeechToText.EngineSettings;
 
@@ -183,7 +184,14 @@ public partial class SpeechToTextEngineSettingsViewModel : ObservableObject
                     return "Linux ARM64 (CPU)";
                 }
                 var linuxVariant = DownloadHashManager.DetectCrispAsrLinuxVariant(folder);
-                return linuxVariant == "cuda" ? "Linux x64 (CUDA)" : "Linux x64 (CPU)";
+                return linuxVariant switch
+                {
+                    "cuda" => "Linux x64 (CUDA)",
+                    "cuda13" => "Linux x64 (CUDA 13)",
+                    "vulkan" => "Linux x64 (Vulkan)",
+                    "hip" => "Linux x64 (ROCm)",
+                    _ => "Linux x64 (CPU)",
+                };
             }
 
             var winVariant = DownloadHashManager.DetectCrispAsrWindowsVariant(folder);
@@ -259,7 +267,7 @@ public partial class SpeechToTextEngineSettingsViewModel : ObservableObject
             {
                 return null;
             }
-            var hash = DownloadHashManager.ComputeSha256(engine.GetExecutable());
+            var hash = Sha256Util.ComputeSha256(engine.GetExecutable());
             return hash == null ? null : (key, hash);
         }
         catch
@@ -286,7 +294,7 @@ public partial class SpeechToTextEngineSettingsViewModel : ObservableObject
             {
                 return null;
             }
-            var hash = DownloadHashManager.ComputeSha256(engine.GetExecutable());
+            var hash = Sha256Util.ComputeSha256(engine.GetExecutable());
             return hash == null ? null : (key, hash);
         }
         catch

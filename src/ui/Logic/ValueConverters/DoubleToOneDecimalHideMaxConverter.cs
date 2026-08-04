@@ -6,13 +6,13 @@ namespace Nikse.SubtitleEdit.Logic.ValueConverters;
 
 public class DoubleToOneDecimalHideMaxConverter : IValueConverter
 {
-    public static readonly DoubleToOneDecimalConverter Instance = new();
+    public static readonly DoubleToOneDecimalHideMaxConverter Instance = new();
 
     public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
         if (value is double d)
         {
-            if (d == double.MaxValue || d == double.NaN)
+            if (d == double.MaxValue || double.IsNaN(d))
             {
                 return string.Empty;
             }

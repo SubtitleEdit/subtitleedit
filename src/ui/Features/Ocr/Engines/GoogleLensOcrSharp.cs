@@ -37,17 +37,7 @@ public class GoogleLensOcrSharp
 
             var result = await _lens.ScanByBitmap(bmpInput.Bitmap, language);
 
-            var lines = result.Segments.Select(x => x.Text).ToList();
-
-            //join "-" with next line
-            for (int i = 0; i < lines.Count; i++)
-            {
-                if (lines[i] == "-" && i + 1 < lines.Count)
-                {
-                    lines[i] = $"- {lines[i + 1]}";
-                    lines.RemoveAt(i + 1);
-                }
-            }
+            var lines = OcrLoneDashFixer.FixLoneDashes(result.Segments.Select(x => x.Text).ToList());
 
             //join "..." with line
             for (int i = 0; i < lines.Count; i++)

@@ -19,7 +19,7 @@ public class BatchConvertFixCommonErrorsSettingsWindow : Window
     public BatchConvertFixCommonErrorsSettingsWindow(BatchConvertFixCommonErrorsSettingsViewModel vm)
     {
         UiUtil.InitializeWindow(this, GetType().Name);
-        Title = "Fix common error settings";
+        Title = Se.Language.Tools.FixCommonErrorsSettingsTitle;
         CanResize = false;
         Width = 1000;
         Height = 800;
@@ -58,62 +58,59 @@ public class BatchConvertFixCommonErrorsSettingsWindow : Window
         grid.Add(panelButtons, 1, 0);
         Content = grid;
 
-        Activated += delegate { buttonOk.Focus(); }; // hack to make OnKeyDown work
+        Activated += delegate { comboProfile.Focus(); }; // initial focus on an input, not an action button - a focused button clicks on bare Space
         KeyDown += (_, e) => vm.OnKeyDown(e);
     }
 
     private static Border MakeRulesView(BatchConvertFixCommonErrorsSettingsViewModel vm)
     {
-        var rulesGrid = new DataGrid
+        // No header-click sorting (the DataGrid's CanUserSortColumns is not carried
+        // over): the fix rules are a settings checklist in their fixed rule order.
+        // The DataGrid-era DataGridCheckboxMultiSelect is replaced by native extended
+        // selection plus TableViewExtras.AddSpaceToggle for the Space-toggles-checkbox piece.
+        var rulesGrid = TableViewExtras.MakeTableView();
+        rulesGrid.Width = double.NaN;
+        rulesGrid.Height = double.NaN;
+        rulesGrid[!TableView.ItemsSourceProperty] = new Binding($"{nameof(vm.SelectedProfile)}.{nameof(ProfileDisplayItem.FixRules)}");
+        rulesGrid.Columns.AddRange(new[]
         {
-            AutoGenerateColumns = false,
-            SelectionMode = DataGridSelectionMode.Single,
-            CanUserResizeColumns = true,
-            CanUserSortColumns = true,
-            HorizontalAlignment = HorizontalAlignment.Stretch,
-            VerticalAlignment = VerticalAlignment.Stretch,
-            Width = double.NaN,
-            Height = double.NaN,
-            [!DataGrid.ItemsSourceProperty] = new Binding($"{nameof(vm.SelectedProfile)}.{nameof(ProfileDisplayItem.FixRules)}"),
-            IsReadOnly = false,
-            Columns =
+            new SeTableViewColumn
             {
-                new DataGridTemplateColumn
-                {
-                    Header = Se.Language.General.Enabled,
-                    CellTheme = UiUtil.DataGridNoBorderNoPaddingCellTheme,
-                    CellTemplate = new FuncDataTemplate<FixRuleDisplayItem>((item, _) =>
-                        new Border
+                Header = Se.Language.General.Enabled,
+                CellTheme = UiUtil.TableViewNoPaddingCellTheme,
+                HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
+                CellTemplate = new FuncDataTemplate<FixRuleDisplayItem>((item, _) =>
+                    new Border
+                    {
+                        Background = Brushes.Transparent, // Prevents highlighting
+                        Padding = new Thickness(4),
+                        Child = new CheckBox
                         {
-                            Background = Brushes.Transparent, // Prevents highlighting
-                            Padding = new Thickness(4),
-                            Child = new CheckBox
-                            {
-                                Focusable = false,
-                                [!ToggleButton.IsCheckedProperty] = new Binding(nameof(FixRuleDisplayItem.IsSelected)),
-                                HorizontalAlignment = HorizontalAlignment.Center
-                            }
-                        }),
-                    Width = new DataGridLength(1, DataGridLengthUnitType.Auto)
-                },
-                new DataGridTextColumn
-                {
-                    Header = Se.Language.General.Name,
-                    CellTheme = UiUtil.DataGridNoBorderNoPaddingCellTheme,
-                    Binding = new Binding(nameof(FixRuleDisplayItem.Name)),
-                    IsReadOnly = true,
-                },
-                new DataGridTextColumn
-                {
-                    Header = Se.Language.General.Example,
-                    CellTheme = UiUtil.DataGridNoBorderNoPaddingCellTheme,
-                    Binding = new Binding(nameof(FixRuleDisplayItem.Example)),
-                    IsReadOnly = true,
-                    Width = new DataGridLength(1, DataGridLengthUnitType.Star)
-                },
+                            Focusable = false,
+                            [!ToggleButton.IsCheckedProperty] = new Binding(nameof(FixRuleDisplayItem.IsSelected)),
+                            HorizontalAlignment = HorizontalAlignment.Center
+                        }
+                    }),
+                Width = new GridLength(80), // content-sized (Auto) on the DataGrid; TableView treats Auto as star
             },
-        };
-        _ = new DataGridCheckboxMultiSelect<FixRuleDisplayItem>(rulesGrid,
+            new SeTableViewColumn
+            {
+                Header = Se.Language.General.Name,
+                CellTheme = UiUtil.TableViewCellTheme,
+                HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
+                Binding = new Binding(nameof(FixRuleDisplayItem.Name)),
+                Width = new GridLength(340), // content-sized (Auto) on the DataGrid; rule names are long
+            },
+            new SeTableViewColumn
+            {
+                Header = Se.Language.General.Example,
+                CellTheme = UiUtil.TableViewCellTheme,
+                HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
+                Binding = new Binding(nameof(FixRuleDisplayItem.Example)),
+                Width = new GridLength(1, GridUnitType.Star),
+            },
+        });
+        TableViewExtras.AddSpaceToggle<FixRuleDisplayItem>(rulesGrid,
             item => item.IsSelected, (item, v) => item.IsSelected = v);
 
         return UiUtil.MakeBorderForControl(rulesGrid);

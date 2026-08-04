@@ -118,7 +118,7 @@ public class AdvancedEffectAudioTextPulse : IAdvancedEffectDisplay
         long sum = 0;
         for (int i = start; i <= end; i++)
             sum += wavePeaks.Peaks[i].Abs;
-        return (double)(sum / (end - start + 1)) / localPeak;
+        return sum / (end - start + 1) / localPeak;
     }
 
     private static double ComputeLocalPeak(

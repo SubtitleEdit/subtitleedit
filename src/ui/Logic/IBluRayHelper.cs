@@ -6,5 +6,5 @@ namespace Nikse.SubtitleEdit.Logic;
 
 public interface IBluRayHelper
 {
-    List<BluRaySupParser.PcsData> LoadBluRaySubFromMatroska(MatroskaTrackInfo track, MatroskaFile matroska, out string errorMessage);
+    List<BluRaySupParser.PcsData> LoadBluRaySubFromMatroska(MatroskaTrackInfo track, MatroskaFile matroska, out string errorMessage, MatroskaFile.LoadMatroskaCallback? progressCallback = null);
 }

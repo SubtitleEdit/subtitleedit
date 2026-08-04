@@ -8,10 +8,9 @@ using Avalonia.Input;
 using Avalonia.Layout;
 using Avalonia.Media;
 using Avalonia.Threading;
-using AvaloniaEdit;
-using AvaloniaEdit.Rendering;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using Nikse.SubtitleEdit.Controls.SyntaxTextEditorControl;
 using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using Nikse.SubtitleEdit.Logic;
@@ -119,7 +118,7 @@ public partial class PickSubtitleFormatViewModel : ObservableObject
             SubtitleFormatNames.Clear();
             if (string.IsNullOrWhiteSpace(SearchText))
             {
-                ObservableCollectionExtensions.AddRange(SubtitleFormatNames, _allSubtitleFormatNames);
+                SubtitleFormatNames.AddRange(_allSubtitleFormatNames);
                 return;
             }
 
@@ -199,27 +198,26 @@ public partial class PickSubtitleFormatViewModel : ObservableObject
 
         PreviewText = text;
 
-        var textEditor = new TextEditor
+        var highlighter = format != null ? SourceSyntaxHighlighterFactory.ForFormat(text, format) : null;
+
+        // XML that comes on a single line is reflowed first - otherwise the preview is one
+        // endless line.
+        if (highlighter is ISourceSyntaxDocumentFormatter formatter && formatter.TryFormat(text, out var formatted))
+        {
+            text = formatted;
+        }
+
+        PreviewContainer.Child = new SyntaxTextEditor
         {
             Text = text,
+            SourceHighlighter = highlighter,
             IsReadOnly = true,
             ShowLineNumbers = true,
-            WordWrap = false,
             VerticalAlignment = VerticalAlignment.Stretch,
             HorizontalAlignment = HorizontalAlignment.Stretch,
             FontFamily = new FontFamily("Courier New, Consolas, monospace"),
             FontSize = 12,
         };
-
-        textEditor.TextArea.TextView.LinkTextForegroundBrush = UiUtil.MakeLinkForeground();
-
-        var lineTransformer = format != null ? GetLineTransformer(text, format) : null;
-        if (lineTransformer != null)
-        {
-            textEditor.TextArea.TextView.LineTransformers.Add(lineTransformer);
-        }
-
-        PreviewContainer.Child = textEditor;
     }
 
     // Shows an informational note for formats with no text preview (image-based outputs).
@@ -235,45 +233,6 @@ public partial class PickSubtitleFormatViewModel : ObservableObject
             HorizontalAlignment = HorizontalAlignment.Center,
             Opacity = 0.7,
         };
-    }
-
-    private static DocumentColorizingTransformer? GetLineTransformer(string text, SubtitleFormat subtitleFormat)
-    {
-        // SubRip (.srt) and WebVTT (.vtt) use similar time code formats
-        if (subtitleFormat is SubRip ||
-            subtitleFormat is WebVTT ||
-            subtitleFormat is WebVTTFileWithLineNumber)
-        {
-            return new SubRipSourceSyntaxHighlighting();
-        }
-
-        // Advanced SubStation Alpha (.ass) and SubStation Alpha (.ssa) formats
-        if (subtitleFormat is AdvancedSubStationAlpha || subtitleFormat is SubStationAlpha)
-        {
-            return new AssaSourceSyntaxHighlighting();
-        }
-
-        // XML-based formats (e.g., TTML, Netflix DFXP, etc.)
-        if (subtitleFormat.Extension == ".xml" ||
-            subtitleFormat.AlternateExtensions.Contains(".xml") ||
-            text.Contains("<?xml version=") ||
-            subtitleFormat is Sami ||
-            subtitleFormat is SamiModern ||
-            subtitleFormat is SamiYouTube ||
-            subtitleFormat is SamiAvDicPlayer)
-        {
-            return new XmlSourceSyntaxHighlighting();
-        }
-
-        // Json-based formats
-        if (subtitleFormat.Extension == ".json" ||
-            subtitleFormat.AlternateExtensions.Contains(".json"))
-        {
-            return new JsonSourceSyntaxHighlighting();
-        }
-
-        // No syntax highlighting for other formats
-        return null;
     }
 
     [RelayCommand]

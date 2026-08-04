@@ -4,6 +4,7 @@ using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Nikse.SubtitleEdit.Features.Main;
+using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using System;
 using System.Collections.Generic;
@@ -24,13 +25,13 @@ public partial class PickLayerFilterViewModel : ObservableObject
 
     public bool OkPressed { get; private set; }
     public List<int>? SelectedLayers { get; private set; }
-    public DataGrid LayerGrid { get; set; }
+    public TableView LayerGrid { get; set; }
 
     public PickLayerFilterViewModel()
     {
         Layers = new ObservableCollection<LayerItem>();
         SelectedLayers = new List<int>();
-        LayerGrid = new DataGrid();
+        LayerGrid = new TableView();
         HideFromWaveform = Se.Settings.Assa.HideLayersFromWaveform;
         HideFromGridView = Se.Settings.Assa.HideLayersFromSubtitleGrid;
         HideFromVideoPreview = Se.Settings.Assa.HideLayersFromVideoPreview;
@@ -130,38 +131,33 @@ public partial class PickLayerFilterViewModel : ObservableObject
         SelectAndScrollToRow(LayerGrid, 0);
     }
 
-    private void SelectAndScrollToRow(DataGrid? datagrid, int index)
+    private void SelectAndScrollToRow(TableView? tableView, int index)
     {
-        if (index < 0 || datagrid == null)
+        if (index < 0 || tableView == null)
         {
             return;
         }
 
         Dispatcher.UIThread.Post(() =>
         {
-            datagrid.Focus();
-
-            if (datagrid.SelectedIndex != index)
+            if (tableView.SelectedIndex != index)
             {
-                datagrid.SelectedIndex = index;
+                tableView.SelectedIndex = index;
             }
 
-            datagrid.ScrollIntoView(datagrid.SelectedItem, null);
+            if (tableView.SelectedItem is { } selectedItem)
+            {
+                tableView.ScrollIntoView(selectedItem);
+            }
+
+            TableViewExtras.FocusRow(tableView);
         });
     }
 
+    // Space (toggle checkbox) is handled by TableViewExtras.AddSpaceToggle in the window.
     internal void LayerGridKeyDown(KeyEventArgs e)
     {
-        if (e.Key == Key.Space)
-        {
-            e.Handled = true;
-            var selectedItem = LayerGrid.SelectedItem as LayerItem;
-            if (selectedItem != null)
-            {
-                selectedItem.IsSelected = !selectedItem.IsSelected;
-            }
-        }
-        else if (e.Key == Key.Enter || e.Key == Key.Return)
+        if (e.Key == Key.Enter || e.Key == Key.Return)
         {
             e.Handled = true;
             Ok();

@@ -8,6 +8,7 @@ using Avalonia.Interactivity;
 using Avalonia.Layout;
 using Avalonia.Media;
 using Avalonia.Threading;
+using Nikse.SubtitleEdit.Controls;
 using Nikse.SubtitleEdit.Controls.AudioVisualizerControl;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
@@ -20,33 +21,6 @@ using System.Threading.Tasks;
 using MenuItem = Avalonia.Controls.MenuItem;
 
 namespace Nikse.SubtitleEdit.Features.Main.Layout;
-
-public class NonSpaceButton : Button
-{
-    protected override Type StyleKeyOverride => typeof(Button);
-
-    protected override void OnKeyDown(KeyEventArgs e)
-    {
-        if (e.Key == Key.Space)
-        {
-            e.Handled = true;
-            return;
-        }
-
-        base.OnKeyDown(e);
-    }
-
-    protected override void OnKeyUp(KeyEventArgs e)
-    {
-        if (e.Key == Key.Space)
-        {
-            e.Handled = true;
-            return;
-        }
-
-        base.OnKeyUp(e);
-    }
-}
 
 public class InitWaveform
 {
@@ -99,6 +73,7 @@ public class InitWaveform
                 WaveformHeightPercentage = settings.SpectrogramCombinedWaveformHeight,
             };
 
+            vm.AudioVisualizer.GetIsVideoPlaying = () => vm.GetVideoPlayerControl()?.IsPlaying == true;
             vm.AudioVisualizer.OnNewSelectionInsert += vm.AudioVisualizerOnNewSelectionInsert;
             vm.AudioVisualizer.OnVideoPositionChanged += vm.AudioVisualizerOnVideoPositionChanged;
             vm.AudioVisualizer.OnToggleSelection += vm.AudioVisualizerOnToggleSelection;
@@ -163,7 +138,7 @@ public class InitWaveform
             var pasteFromClipboardMenuItem = new MenuItem
             {
                 Header = Se.Language.General.WaveformPasteFromClipboard,
-                Command = vm.WaveformNewSelectionPasteFromClipboardCommand,
+                Command = vm.WaveformPasteFromClipboardCommand,
             };
             flyout.Items.Add(pasteFromClipboardMenuItem);
             vm.MenuItemAudioVisualizerPasteFromClipboardMenuItem = pasteFromClipboardMenuItem;
@@ -208,6 +183,22 @@ public class InitWaveform
             };
             flyout.Items.Add(insertAfterMenuItem);
             vm.MenuItemAudioVisualizerInsertAfter = insertAfterMenuItem;
+
+            var copyMenuItem = new MenuItem
+            {
+                Header = Se.Language.General.CopySubtitle,
+                Command = vm.WaveformCopyToClipboardCommand,
+            };
+            flyout.Items.Add(copyMenuItem);
+            vm.MenuItemAudioVisualizerCopy = copyMenuItem;
+
+            var copyTextMenuItem = new MenuItem
+            {
+                Header = Se.Language.General.CopyTextOnly,
+                Command = vm.WaveformCopyTextToClipboardCommand,
+            };
+            flyout.Items.Add(copyTextMenuItem);
+            vm.MenuItemAudioVisualizerCopyText = copyTextMenuItem;
 
             var separator1 = new Separator();
             flyout.Items.Add(separator1);
@@ -317,6 +308,12 @@ public class InitWaveform
             }.BindIsVisible(vm, nameof(vm.ShowWaveformWaveformAndSpectrogram));
             flyout.Items.Add(showWaveformAndSpectrogramMenuItem);
 
+            // The flyout is reused across openings, so its menu items can keep keyboard focus
+            // after it closes while being detached from the visual tree - which leaves every
+            // shortcut dead until the user clicks something (#11744). Hooked here rather than
+            // on the control's initial flyout, which this replaces on every layout rebuild.
+            flyout.Closed += (_, _) => vm.RestoreFocusIfLost();
+
             vm.AudioVisualizer.MenuFlyout = flyout;
         }
 
@@ -377,6 +374,59 @@ public class InitWaveform
             [ToolTip.TipProperty] = UiUtil.MakeToolTip(languageHints.PlayNextHint, shortcuts, nameof(vm.PlayNextCommand)),
         };
         Attached.SetIcon(buttonPlayNext, IconNames.SkipNext);
+
+        // SE 4 "Translate tab" style text buttons: play a single line and stop at its end
+        // (unlike the icon PlayNext button, which keeps playing past the line).
+        var settingTextPrevious = GetToolbarSettingFor(SeWaveformToolbarItemType.TextPrevious);
+        var buttonTextPrevious = new NonSpaceButton
+        {
+            Content = Se.Language.General.Previous,
+            Margin = new Thickness(settingTextPrevious.LeftMargin, 0, settingTextPrevious.RightMargin, 0),
+            FontSize = settingTextPrevious.FontSize,
+            VerticalAlignment = VerticalAlignment.Center,
+            Command = vm.PlayPreviousAndStopCommand,
+            [ToolTip.TipProperty] = UiUtil.MakeToolTip(languageHints.TextPreviousHint, shortcuts, nameof(vm.PlayPreviousAndStopCommand)),
+        };
+
+        var settingTextPlay = GetToolbarSettingFor(SeWaveformToolbarItemType.TextPlay);
+        var buttonTextPlay = new NonSpaceButton
+        {
+            Content = Se.Language.General.Play,
+            Margin = new Thickness(settingTextPlay.LeftMargin, 0, settingTextPlay.RightMargin, 0),
+            FontSize = settingTextPlay.FontSize,
+            VerticalAlignment = VerticalAlignment.Center,
+            Command = vm.PlaySelectedLinesWithoutLoopCommand,
+            [ToolTip.TipProperty] = UiUtil.MakeToolTip(languageHints.TextPlayHint, shortcuts, nameof(vm.PlaySelectedLinesWithoutLoopCommand)),
+        };
+
+        var settingTextPause = GetToolbarSettingFor(SeWaveformToolbarItemType.TextPause);
+        var buttonTextPause = new NonSpaceButton
+        {
+            Content = Se.Language.General.Pause,
+            Margin = new Thickness(settingTextPause.LeftMargin, 0, settingTextPause.RightMargin, 0),
+            FontSize = settingTextPause.FontSize,
+            VerticalAlignment = VerticalAlignment.Center,
+            Command = vm.PauseCommand,
+            [ToolTip.TipProperty] = UiUtil.MakeToolTip(languageHints.TextPauseHint, shortcuts, nameof(vm.PauseCommand)),
+        };
+
+        var settingTextNext = GetToolbarSettingFor(SeWaveformToolbarItemType.TextNext);
+        var buttonTextNext = new NonSpaceButton
+        {
+            Content = Se.Language.General.Next,
+            Margin = new Thickness(settingTextNext.LeftMargin, 0, settingTextNext.RightMargin, 0),
+            FontSize = settingTextNext.FontSize,
+            VerticalAlignment = VerticalAlignment.Center,
+            Command = vm.PlayNextAndStopCommand,
+            [ToolTip.TipProperty] = UiUtil.MakeToolTip(languageHints.TextNextHint, shortcuts, nameof(vm.PlayNextAndStopCommand)),
+        };
+
+        // SE 4 parity: the Previous/Play/Next buttons put focus in the subtitle text box so the
+        // user can start typing right away (translate workflow). FocusTextBox posts the focus to
+        // the dispatcher, so it lands after the play command has run.
+        buttonTextPrevious.Click += (_, _) => vm.FocusTextBoxCommand.Execute(null);
+        buttonTextPlay.Click += (_, _) => vm.FocusTextBoxCommand.Execute(null);
+        buttonTextNext.Click += (_, _) => vm.FocusTextBoxCommand.Execute(null);
 
         var settingPlayNew = GetToolbarSettingFor(SeWaveformToolbarItemType.New);
         var buttonNew = new NonSpaceButton
@@ -639,6 +689,47 @@ public class InitWaveform
             }
         };
 
+        // Audio-track picker: choose which audio track the waveform is extracted from. Only rendered
+        // when the open video has more than one audio track (IsAudioTracksVisible), on top of the
+        // toolbar item's own configured visibility. Each item's label includes a rough
+        // extraction-time estimate, so a heavy lossless track (e.g. TrueHD ~5 min) vs. a light one
+        // (e.g. AC3 ~25 sec) is obvious before choosing.
+        var settingAudioTrack = GetToolbarSettingFor(SeWaveformToolbarItemType.AudioTrackPicker);
+        var audioTracksLabel = Se.Language.Main.Menu.AudioTracks.Replace("_", string.Empty);
+        var iconAudioTrack = new Icon
+        {
+            Value = IconNames.Waveform,
+            VerticalAlignment = VerticalAlignment.Center,
+            Margin = new Thickness(10, 0, 4, 0),
+            FontSize = 18,
+        };
+        var comboBoxAudioTrack = new ComboBox
+        {
+            VerticalAlignment = VerticalAlignment.Center,
+            Margin = new Thickness(0, 0, 10, 0),
+            FontSize = settingAudioTrack.FontSize,
+            MaxHeight = 22,
+            MinHeight = 22,
+            MinWidth = 0,
+            Padding = new Thickness(4, 2, 0, 2),
+            Background = Brushes.Transparent,
+            BorderThickness = new Thickness(0),
+            [ToolTip.TipProperty] = audioTracksLabel,
+            [AutomationProperties.NameProperty] = audioTracksLabel,
+        };
+        comboBoxAudioTrack.Bind(ItemsControl.ItemsSourceProperty, new Binding(nameof(vm.WaveformAudioTracks)));
+        comboBoxAudioTrack.Bind(SelectingItemsControl.SelectedItemProperty, new Binding(nameof(vm.SelectedWaveformAudioTrack)) { Mode = BindingMode.TwoWay });
+
+        var panelAudioTrack = new StackPanel
+        {
+            Orientation = Orientation.Horizontal,
+            VerticalAlignment = VerticalAlignment.Center,
+            Margin = new Thickness(settingAudioTrack.LeftMargin, 0, settingAudioTrack.RightMargin, 0),
+            DataContext = vm,
+            Children = { iconAudioTrack, comboBoxAudioTrack },
+        };
+        panelAudioTrack.Bind(StackPanel.IsVisibleProperty, new Binding(nameof(vm.IsAudioTracksVisible)));
+
         var settingAutoSelectOnPlay = GetToolbarSettingFor(SeWaveformToolbarItemType.AutoSelectOnPlay);
         var toggleButtonAutoSelectOnPlay = new ToggleButton
         {
@@ -776,6 +867,10 @@ public class InitWaveform
             buttonPlaySelectedLines,
             buttonPlaySelectedLinesRepeat,
             buttonPlayNext,
+            buttonTextPrevious,
+            buttonTextPlay,
+            buttonTextPause,
+            buttonTextNext,
             buttonNew,
             buttonSetStartAndOffsetTheRest,
             buttonSetStart,
@@ -786,6 +881,7 @@ public class InitWaveform
             iconVertical,
             panelVerticalZoom,
             sliderPosition,
+            panelAudioTrack,
             panelSpeed,
             toggleButtonAutoSelectOnPlay,
             toggleButtonCenter,
@@ -821,6 +917,10 @@ public class InitWaveform
         Button buttonPlaySelectedLines,
         Button buttonPlaySelectedLinesRepeat,
         Button buttonPlayNext,
+        Button buttonTextPrevious,
+        Button buttonTextPlay,
+        Button buttonTextPause,
+        Button buttonTextNext,
         Button buttonNew,
         Button buttonSetStartAndOffsetTheRest,
         Button buttonSetStart,
@@ -831,6 +931,7 @@ public class InitWaveform
         Icon iconVertical,
         StackPanel panelVerticalZoom,
         Slider sliderPosition,
+        StackPanel panelAudioTrack,
         StackPanel panelSpeed,
         ToggleButton toggleButtonAutoSelectOnPlay,
         ToggleButton toggleButtonCenter,
@@ -860,6 +961,18 @@ public class InitWaveform
                 case SeWaveformToolbarItemType.PlayNext:
                     toolbarButtonForSort.Add(new SortedControl { Sort = item.SortOrder, Control = buttonPlayNext });
                     break;
+                case SeWaveformToolbarItemType.TextPrevious:
+                    toolbarButtonForSort.Add(new SortedControl { Sort = item.SortOrder, Control = buttonTextPrevious });
+                    break;
+                case SeWaveformToolbarItemType.TextPlay:
+                    toolbarButtonForSort.Add(new SortedControl { Sort = item.SortOrder, Control = buttonTextPlay });
+                    break;
+                case SeWaveformToolbarItemType.TextPause:
+                    toolbarButtonForSort.Add(new SortedControl { Sort = item.SortOrder, Control = buttonTextPause });
+                    break;
+                case SeWaveformToolbarItemType.TextNext:
+                    toolbarButtonForSort.Add(new SortedControl { Sort = item.SortOrder, Control = buttonTextNext });
+                    break;
                 case SeWaveformToolbarItemType.New:
                     toolbarButtonForSort.Add(new SortedControl { Sort = item.SortOrder, Control = buttonNew });
                     break;
@@ -885,6 +998,9 @@ public class InitWaveform
                     break;
                 case SeWaveformToolbarItemType.VideoPositionSlider:
                     toolbarButtonForSort.Add(new SortedControl { Sort = item.SortOrder, Control = sliderPosition });
+                    break;
+                case SeWaveformToolbarItemType.AudioTrackPicker:
+                    toolbarButtonForSort.Add(new SortedControl { Sort = item.SortOrder, Control = panelAudioTrack });
                     break;
                 case SeWaveformToolbarItemType.PlaybackSpeed:
                     toolbarButtonForSort.Add(new SortedControl { Sort = item.SortOrder, Control = panelSpeed });

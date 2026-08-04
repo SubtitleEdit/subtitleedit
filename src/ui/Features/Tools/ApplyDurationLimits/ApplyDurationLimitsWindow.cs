@@ -18,6 +18,8 @@ namespace Nikse.SubtitleEdit.Features.Tools.ApplyDurationLimits;
 
 public class ApplyDurationLimitsWindow : Window
 {
+    private CheckBox _checkBoxFixMinDuration = null!;
+
     public ApplyDurationLimitsWindow(ApplyDurationLimitsViewModel vm)
     {
         UiUtil.InitializeWindow(this, GetType().Name);
@@ -61,11 +63,14 @@ public class ApplyDurationLimitsWindow : Window
 
         Content = grid;
 
-        Activated += delegate { buttonOk.Focus(); }; // hack to make OnKeyDown work
+        Activated += delegate { _checkBoxFixMinDuration.Focus(); }; // initial focus on an input, not an action button - a focused button clicks on bare Space
         KeyDown += vm.KeyDown;
+
+        Closing += delegate { UiUtil.SaveWindowPosition(this); };
+        Loaded += delegate { UiUtil.RestoreWindowPosition(this); };
     }
 
-    private static Grid MakeControlsView(ApplyDurationLimitsViewModel vm)
+    private Grid MakeControlsView(ApplyDurationLimitsViewModel vm)
     {
         var grid = new Grid
         {
@@ -85,6 +90,7 @@ public class ApplyDurationLimitsWindow : Window
         };
 
         var checkBoxFixMinDuration = UiUtil.MakeCheckBox(Se.Language.Tools.ApplyDurationLimits.FixMinDurationMs, vm, nameof(vm.FixMinDurationMs));
+        _checkBoxFixMinDuration = checkBoxFixMinDuration;
         checkBoxFixMinDuration.IsCheckedChanged += (s, e) => vm.SetChanged();
         var numericUpDownMinDuration = UiUtil.MakeNumericUpDownInt(1, 10000, 1000, 150, vm, nameof(vm.MinDurationMs))
                 .WithBindEnabled(nameof(vm.FixMinDurationMs));
@@ -134,56 +140,54 @@ public class ApplyDurationLimitsWindow : Window
             .WithMarginTop(10)
             .WithMarginLeft(10);
 
-        var dataGrid = new DataGrid
+        // No header-click sorting (the DataGrid's CanUserSortColumns is not carried
+        // over): the fixes are previews in subtitle order. The DataGrid-era
+        // DataGridCheckboxMultiSelect is replaced by native extended selection plus
+        // TableViewExtras.AddSpaceToggle for the Space-toggles-checkbox piece.
+        var dataGrid = TableViewExtras.MakeTableView();
+        dataGrid.Width = double.NaN;
+        dataGrid.Height = double.NaN;
+        dataGrid.DataContext = vm;
+        dataGrid.ItemsSource = vm.Fixes;
+        dataGrid.Columns.AddRange(new[]
         {
-            AutoGenerateColumns = false,
-            SelectionMode = DataGridSelectionMode.Single,
-            CanUserResizeColumns = true,
-            CanUserSortColumns = true,
-            HorizontalAlignment = HorizontalAlignment.Stretch,
-            VerticalAlignment = VerticalAlignment.Stretch,
-            Width = double.NaN,
-            Height = double.NaN,
-            DataContext = vm,
-            ItemsSource = vm.Fixes,
-            Columns =
+            new SeTableViewColumn
             {
-                new DataGridTemplateColumn
-                {
-                    Header = Se.Language.General.Apply,
-                    CellTheme = UiUtil.DataGridNoBorderNoPaddingCellTheme,
-                    CellTemplate = new FuncDataTemplate<ApplyDurationLimitItem>((item, _) =>
-                        new Border
+                Header = Se.Language.General.Apply,
+                CellTheme = UiUtil.TableViewNoPaddingCellTheme,
+                HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
+                CellTemplate = new FuncDataTemplate<ApplyDurationLimitItem>((item, _) =>
+                    new Border
+                    {
+                        Background = Brushes.Transparent, // Prevents highlighting
+                        Padding = new Thickness(4),
+                        Child = new CheckBox
                         {
-                            Background = Brushes.Transparent, // Prevents highlighting
-                            Padding = new Thickness(4),
-                            Child = new CheckBox
-                            {
-                                Focusable = false,
-                                [!ToggleButton.IsCheckedProperty] = new Binding(nameof(ApplyDurationLimitItem.Apply)),
-                                HorizontalAlignment = HorizontalAlignment.Center
-                            }
-                        }),
-                    Width = new DataGridLength(1, DataGridLengthUnitType.Auto)
-                },
-                new DataGridTextColumn
-                {
-                    Header = Se.Language.General.NumberSymbol,
-                    Binding = new Binding(nameof(ApplyDurationLimitItem.Number)),
-                    CellTheme = UiUtil.DataGridNoBorderNoPaddingCellTheme,
-                    IsReadOnly = true,
-                },
-                new DataGridTextColumn
-                {
-                    Header = Se.Language.General.Fix,
-                    Binding = new Binding(nameof(ApplyDurationLimitItem.Fix)),
-                    Width = new DataGridLength(1, DataGridLengthUnitType.Star),
-                    CellTheme = UiUtil.DataGridNoBorderCellTheme,
-                    IsReadOnly = true,
-                },
+                            Focusable = false,
+                            [!ToggleButton.IsCheckedProperty] = new Binding(nameof(ApplyDurationLimitItem.Apply)),
+                            HorizontalAlignment = HorizontalAlignment.Center
+                        }
+                    }),
+                Width = new GridLength(80), // content-sized (Auto) on the DataGrid; TableView treats Auto as star
             },
-        };
-        _ = new DataGridCheckboxMultiSelect<ApplyDurationLimitItem>(dataGrid,
+            new SeTableViewColumn
+            {
+                Header = Se.Language.General.NumberSymbol,
+                Binding = new Binding(nameof(ApplyDurationLimitItem.Number)),
+                CellTheme = UiUtil.TableViewCellTheme,
+                HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
+                Width = new GridLength(60),
+            },
+            new SeTableViewColumn
+            {
+                Header = Se.Language.General.Fix,
+                Binding = new Binding(nameof(ApplyDurationLimitItem.Fix)),
+                Width = new GridLength(1, GridUnitType.Star),
+                CellTheme = UiUtil.TableViewCellTheme,
+                HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
+            },
+        });
+        TableViewExtras.AddSpaceToggle<ApplyDurationLimitItem>(dataGrid,
             item => item.Apply, (item, v) => item.Apply = v);
 
         grid.Add(labelFixesAvailable, 0);
@@ -218,61 +222,60 @@ public class ApplyDurationLimitsWindow : Window
         var fullTimeConverter = new TimeSpanToDisplayFullConverter();
         var shortTimeConverter = new TimeSpanToDisplayShortConverter();
 
-        var dataGrid = new DataGrid
+        // No header-click sorting here either: lines that cannot be fixed, in subtitle order.
+        var dataGrid = TableViewExtras.MakeTableView(multiSelect: false);
+        dataGrid.Width = double.NaN;
+        dataGrid.Height = double.NaN;
+        dataGrid.DataContext = vm;
+        dataGrid.ItemsSource = vm.Subtitles;
+        dataGrid.Columns.AddRange(new[]
         {
-            AutoGenerateColumns = false,
-            SelectionMode = DataGridSelectionMode.Single,
-            CanUserResizeColumns = true,
-            CanUserSortColumns = true,
-            HorizontalAlignment = HorizontalAlignment.Stretch,
-            VerticalAlignment = VerticalAlignment.Stretch,
-            Width = double.NaN,
-            Height = double.NaN,
-            DataContext = vm,
-            ItemsSource = vm.Subtitles,
-            Columns =
+            new SeTableViewColumn
             {
-                new DataGridTextColumn
-                {
-                    Header = Se.Language.General.NumberSymbol,
-                    Binding = new Binding(nameof(SubtitleLineViewModel.Number)),
-                    CellTheme = UiUtil.DataGridNoBorderNoPaddingCellTheme,
-                    IsReadOnly = true,
-                },
-                new DataGridTextColumn
-                {
-                    Header = Se.Language.General.Show,
-                    Binding = new Binding(nameof(SubtitleLineViewModel.StartTime)) { Converter = fullTimeConverter },
-                    Width = new DataGridLength(120),
-                    CellTheme = UiUtil.DataGridNoBorderCellTheme,
-                    IsReadOnly = true,
-                },
-                new DataGridTextColumn
-                {
-                    Header = Se.Language.General.Duration,
-                    Binding = new Binding(nameof(SubtitleLineViewModel.Duration)) { Converter = shortTimeConverter },
-                    Width = new DataGridLength(120),
-                    CellTheme = UiUtil.DataGridNoBorderCellTheme,
-                    IsReadOnly = true,
-                },
-                new DataGridTextColumn
-                {
-                    Header = Se.Language.General.Text,
-                    Binding = new Binding(nameof(SubtitleLineViewModel.Text)),
-                    Width = new DataGridLength(1, DataGridLengthUnitType.Star),
-                    CellTheme = UiUtil.DataGridNoBorderCellTheme,
-                    IsReadOnly = true,
-                },
+                Header = Se.Language.General.NumberSymbol,
+                Binding = new Binding(nameof(SubtitleLineViewModel.Number)),
+                CellTheme = UiUtil.TableViewCellTheme,
+                HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
+                Width = new GridLength(60), // content-sized (Auto) on the DataGrid; TableView treats Auto as star
             },
-        };
+            new SeTableViewColumn
+            {
+                Header = Se.Language.General.Show,
+                Binding = new Binding(nameof(SubtitleLineViewModel.StartTime)) { Converter = fullTimeConverter },
+                Width = new GridLength(120),
+                CellTheme = UiUtil.TableViewCellTheme,
+                HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
+            },
+            new SeTableViewColumn
+            {
+                Header = Se.Language.General.Duration,
+                Binding = new Binding(nameof(SubtitleLineViewModel.Duration)) { Converter = shortTimeConverter },
+                Width = new GridLength(120),
+                CellTheme = UiUtil.TableViewCellTheme,
+                HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
+            },
+            new SeTableViewColumn
+            {
+                Header = Se.Language.General.Text,
+                CellTemplate = TableViewExtras.MakeTextCellTemplate(nameof(SubtitleLineViewModel.Text)),
+                Width = new GridLength(1, GridUnitType.Star),
+                CellTheme = UiUtil.TableViewCellTheme,
+                HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
+            },
+        });
 
         dataGrid.AddHandler(InputElement.KeyDownEvent, (object? _, KeyEventArgs e) =>
         {
             if (e.Key is Key.Home or Key.End && dataGrid.ItemsSource is IList items && items.Count > 0)
             {
                 var target = e.Key == Key.Home ? items[0] : items[^1];
+                if (target == null)
+                {
+                    return;
+                }
+
                 dataGrid.SelectedItem = target;
-                dataGrid.ScrollIntoView(target, null);
+                dataGrid.ScrollIntoView(target);
                 e.Handled = true;
             }
         }, RoutingStrategies.Tunnel);

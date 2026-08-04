@@ -308,6 +308,11 @@ public partial class PluginManagerViewModel : ObservableObject
             e.Handled = true;
             Window?.Close();
         }
+        else if (UiUtil.IsHelp(e))
+        {
+            e.Handled = true;
+            UiUtil.ShowHelp("plugin");
+        }
     }
 
     // Cancel an in-flight Update-All loop when the manager window closes — without

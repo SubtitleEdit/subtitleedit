@@ -12,7 +12,7 @@ namespace Nikse.SubtitleEdit.Features.Assa.AssaApplyAdvancedEffect.Effects;
 /// </summary>
 public class AdvancedEffectFadeInOut : IAdvancedEffectDisplay
 {
-    public string Name => Se.Language.Assa.AdvancedEffectFadeInOut;
+    public string Name => Se.Language.General.FadeInOut;
     public string Description => Se.Language.Assa.AdvancedEffectFadeInOutDescription;
     public bool UsesAudio => false;
 

@@ -99,7 +99,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             var header = new StringBuilder();
             foreach (string line in lines)
             {
-                if (subtitle.Paragraphs.Count == 0 && expecting == ExpectingLine.TimeCodes && line.StartsWith("[", StringComparison.Ordinal))
+                if (subtitle.Paragraphs.Count == 0 && expecting == ExpectingLine.TimeCodes && line.StartsWith('['))
                 {
                     header.AppendLine(line);
                 }

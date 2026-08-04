@@ -84,19 +84,19 @@ namespace Nikse.SubtitleEdit.Core.Common
                     {
                         case ',' when !quoteOn && separator == ',':
                             lines.Add(item.ToString());
-                            item = new StringBuilder();
+                            item.Clear();
                             index++;
                             stringOn = false;
                             continue;
                         case ';' when !quoteOn && separator == ';':
                             lines.Add(item.ToString());
-                            item = new StringBuilder();
+                            item.Clear();
                             index++;
                             stringOn = false;
                             continue;
                         case '\t' when !quoteOn && separator == '\t':
                             lines.Add(item.ToString());
-                            item = new StringBuilder();
+                            item.Clear();
                             index++;
                             stringOn = false;
                             continue;
@@ -134,7 +134,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                 else if (ch == separator)
                 {
                     lines.Add(item.ToString());
-                    item = new StringBuilder();
+                    item.Clear();
                     index++;
                     continue;
                 }

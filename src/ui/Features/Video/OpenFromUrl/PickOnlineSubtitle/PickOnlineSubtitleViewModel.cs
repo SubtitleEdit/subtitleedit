@@ -28,7 +28,7 @@ public partial class PickOnlineSubtitleViewModel : ObservableObject
     [ObservableProperty] private bool _isOkEnabled;
 
     public Window? Window { get; set; }
-    public DataGrid TracksGrid { get; set; }
+    public TableView TracksGrid { get; set; }
     public bool OkPressed { get; private set; }
     public string? SelectedSubtitlePath { get; private set; }
 
@@ -44,7 +44,7 @@ public partial class PickOnlineSubtitleViewModel : ObservableObject
         Tracks = new ObservableCollection<OnlineSubtitleTrackDisplay>();
         PreviewRows = new ObservableCollection<OnlineSubtitleCueDisplay>();
         StatusText = string.Empty;
-        TracksGrid = new DataGrid();
+        TracksGrid = new TableView();
     }
 
     /// <summary>
@@ -83,7 +83,7 @@ public partial class PickOnlineSubtitleViewModel : ObservableObject
         var initial = Tracks.First();
         SelectedTrack = initial;
         TracksGrid.SelectedItem = initial;
-        TracksGrid.ScrollIntoView(initial, null);
+        TracksGrid.ScrollIntoView(initial);
     }
 
     partial void OnSelectedTrackChanged(OnlineSubtitleTrackDisplay? value)

@@ -209,10 +209,8 @@ namespace Nikse.SubtitleEdit.Core.Common
                     }
                     else if ("+-0123456789".IndexOf(ch) >= 0)
                     {
-                        var sb = new StringBuilder();
                         while ("+-0123456789.Ee".IndexOf(content[i]) >= 0 && i < max)
                         {
-                            sb.Append(content[i]);
                             i++;
                         }
                         state.Pop();

@@ -10,7 +10,7 @@ public static class ViewMultipleReplace
     public static Control Make(BatchConvertViewModel vm)
     {
         var labelHeader = UiUtil.MakeLabel(Se.Language.General.MultipleReplace).WithBold();
-        var buttonSettings = UiUtil.MakeButton(vm.ShowMultipleReplaceCommand, IconNames.Settings);
+        var buttonSettings = UiUtil.MakeButton(vm.ShowMultipleReplaceCommand, IconNames.Settings, Se.Language.General.Settings);
 
         var grid = new Grid
         {

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  English abbreviations - a period here ends an abbreviation, not a sentence, so "Fix common
+  errors" must not capitalize the following word (issue #13082). Matching is case insensitive,
+  so one entry per abbreviation is enough. Abbreviations with an inner period (e.g. "a.m.") are
+  already recognized by a general rule and need no entry here.
+-->
+<Abbreviations>
+  <Item>approx.</Item>
+  <Item>Ave.</Item>
+  <Item>Blvd.</Item>
+  <Item>Capt.</Item>
+  <Item>Co.</Item>
+  <Item>Col.</Item>
+  <Item>dept.</Item>
+  <Item>Dr.</Item>
+  <Item>etc.</Item>
+  <Item>fig.</Item>
+  <Item>Gen.</Item>
+  <Item>Inc.</Item>
+  <Item>Lt.</Item>
+  <Item>Ltd.</Item>
+  <Item>Mr.</Item>
+  <Item>Mrs.</Item>
+  <Item>Ms.</Item>
+  <Item>pp.</Item>
+  <Item>Prof.</Item>
+  <Item>Rd.</Item>
+  <Item>Rev.</Item>
+  <Item>Sgt.</Item>
+  <Item>vol.</Item>
+  <Item>vs.</Item>
+</Abbreviations>

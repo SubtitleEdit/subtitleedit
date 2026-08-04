@@ -20,7 +20,7 @@ using Timer = System.Timers.Timer;
 
 namespace Nikse.SubtitleEdit.Features.Ocr.Download;
 
-public partial class DownloadPaddleOcrViewModel : ObservableObject
+public partial class DownloadPaddleOcrViewModel : ObservableObject, IClosingCleanup
 {
     [ObservableProperty] private double _progressValue;
     [ObservableProperty] private string _progressText;
@@ -113,52 +113,67 @@ public partial class DownloadPaddleOcrViewModel : ObservableObject
 
                 if (!AllFileExists())
                 {
-                    ProgressText = "Download failed";
-                    Error = "No data received";
+                    ProgressText = Se.Language.General.DownloadFailed;
+                    Error = Se.Language.General.NoDataReceived;
                     return;
                 }
 
                 StartIndeterminateProgress();
-                var firstFile = Path.Combine(_tempFolder, Path.GetFileName(_downloadTaskUrls[0]));
-                if (_downloadType == PaddleOcrDownloadType.Models)
+
+                try
                 {
-                    StatusText = string.Format(Se.Language.General.UnpackingX, Se.Language.General.Models);
-                    Unpacker.Extract7Zip(firstFile, Se.PaddleOcrModelsFolder, "PaddleOCR.PP-OCRv5.support.files", _cancellationTokenSource, text => ProgressText = text);
-                }
-                else if (_downloadType == PaddleOcrDownloadType.EngineCpu)
-                {
-                    StatusText = string.Format(Se.Language.General.UnpackingX, Se.Language.Ocr.PaddleOcr);
-                    Unpacker.Extract7Zip(firstFile, Se.PaddleOcrFolder, "PaddleOCR-CPU-v1.4.0", _cancellationTokenSource, text => ProgressText = text);
-                }
-                else if (_downloadType == PaddleOcrDownloadType.EngineGpu11)
-                {
-                    StatusText = string.Format(Se.Language.General.UnpackingX, Se.Language.Ocr.PaddleOcr);
-                    Unpacker.Extract7Zip(firstFile, Se.PaddleOcrFolder, "PaddleOCR-GPU-v1.4.0-CUDA-11.8", _cancellationTokenSource, text => ProgressText = text);
-                }
-                else if (_downloadType == PaddleOcrDownloadType.EngineGpu12)
-                {
-                    StatusText = string.Format(Se.Language.General.UnpackingX, Se.Language.Ocr.PaddleOcr);
-                    Unpacker.Extract7Zip(firstFile, Se.PaddleOcrFolder, "PaddleOCR-GPU-v1.4.0-CUDA-12.9", _cancellationTokenSource, text => ProgressText = text);
-                }
-                else if (_downloadType == PaddleOcrDownloadType.EngineCpuLinux)
-                {
-                    StatusText = string.Format(Se.Language.General.UnpackingX, Se.Language.Ocr.PaddleOcr);
-                    Unpacker.Extract7Zip(firstFile, Se.PaddleOcrFolder, "PaddleOCR-CPU-v1.4.0-Linux", _cancellationTokenSource, text => ProgressText = text);
-                    var binFile = Path.Combine(Se.PaddleOcrFolder, "paddleocr.bin");
-                    if (File.Exists(binFile))
+                    var firstFile = Path.Combine(_tempFolder, Path.GetFileName(_downloadTaskUrls[0]));
+                    if (_downloadType == PaddleOcrDownloadType.Models)
                     {
-                        LinuxHelper.MakeExecutable(binFile);
-                    }                    
-                }
-                else if (_downloadType == PaddleOcrDownloadType.EngineGpuLinux)
-                {
-                    StatusText = string.Format(Se.Language.General.UnpackingX, Se.Language.Ocr.PaddleOcr);
-                    Unpacker.Extract7Zip(firstFile, Se.PaddleOcrFolder, "PaddleOCR-GPU-v1.4.0-CUDA-12.9-Linux", _cancellationTokenSource, text => ProgressText = text);
-                    var binFile = Path.Combine(Se.PaddleOcrFolder, "paddleocr.bin");
-                    if (File.Exists(binFile))
-                    {
-                        LinuxHelper.MakeExecutable(binFile);
+                        StatusText = string.Format(Se.Language.General.UnpackingX, Se.Language.General.Models);
+                        Unpacker.Extract7Zip(firstFile, Se.PaddleOcrModelsFolder, "PaddleOCR.PP-OCRv5.support.files", _cancellationTokenSource, text => ProgressText = text);
                     }
+                    else if (_downloadType == PaddleOcrDownloadType.EngineCpu)
+                    {
+                        StatusText = string.Format(Se.Language.General.UnpackingX, Se.Language.Ocr.PaddleOcr);
+                        Unpacker.Extract7Zip(firstFile, Se.PaddleOcrFolder, "PaddleOCR-CPU-v1.4.0", _cancellationTokenSource, text => ProgressText = text);
+                    }
+                    else if (_downloadType == PaddleOcrDownloadType.EngineGpu11)
+                    {
+                        StatusText = string.Format(Se.Language.General.UnpackingX, Se.Language.Ocr.PaddleOcr);
+                        Unpacker.Extract7Zip(firstFile, Se.PaddleOcrFolder, "PaddleOCR-GPU-v1.4.0-CUDA-11.8", _cancellationTokenSource, text => ProgressText = text);
+                    }
+                    else if (_downloadType == PaddleOcrDownloadType.EngineGpu12)
+                    {
+                        StatusText = string.Format(Se.Language.General.UnpackingX, Se.Language.Ocr.PaddleOcr);
+                        Unpacker.Extract7Zip(firstFile, Se.PaddleOcrFolder, "PaddleOCR-GPU-v1.4.0-CUDA-12.9", _cancellationTokenSource, text => ProgressText = text);
+                    }
+                    else if (_downloadType == PaddleOcrDownloadType.EngineCpuLinux)
+                    {
+                        StatusText = string.Format(Se.Language.General.UnpackingX, Se.Language.Ocr.PaddleOcr);
+                        Unpacker.Extract7Zip(firstFile, Se.PaddleOcrFolder, "PaddleOCR-CPU-v1.4.0-Linux", _cancellationTokenSource, text => ProgressText = text);
+                        var binFile = Path.Combine(Se.PaddleOcrFolder, "paddleocr.bin");
+                        if (File.Exists(binFile))
+                        {
+                            LinuxHelper.MakeExecutable(binFile);
+                        }                    
+                    }
+                    else if (_downloadType == PaddleOcrDownloadType.EngineGpuLinux)
+                    {
+                        StatusText = string.Format(Se.Language.General.UnpackingX, Se.Language.Ocr.PaddleOcr);
+                        Unpacker.Extract7Zip(firstFile, Se.PaddleOcrFolder, "PaddleOCR-GPU-v1.4.0-CUDA-12.9-Linux", _cancellationTokenSource, text => ProgressText = text);
+                        var binFile = Path.Combine(Se.PaddleOcrFolder, "paddleocr.bin");
+                        if (File.Exists(binFile))
+                        {
+                            LinuxHelper.MakeExecutable(binFile);
+                        }
+                    }
+
+                }
+                catch (Exception exception)
+                {
+                    // Timer callbacks swallow exceptions, so an unpack failure would
+                    // otherwise hang the dialog with no error shown (#12127).
+                    Se.LogError(exception, "PaddleOCR unpack failed");
+                    StopIndeterminateProgress();
+                    ProgressText = Se.Language.General.UnpackingFailed;
+                    Error = exception.Message;
+                    return;
                 }
 
                 StopIndeterminateProgress();
@@ -172,13 +187,13 @@ public partial class DownloadPaddleOcrViewModel : ObservableObject
                 var ex = _downloadTask.Exception?.InnerException ?? _downloadTask.Exception;
                 if (ex is OperationCanceledException)
                 {
-                    ProgressText = "Download canceled";
+                    ProgressText = Se.Language.General.DownloadCanceled;
                     Close();
                 }
                 else
                 {
-                    ProgressText = "Download failed";
-                    Error = ex?.Message ?? "Unknown error";
+                    ProgressText = Se.Language.General.DownloadFailed;
+                    Error = ex?.Message ?? Se.Language.General.UnknownError;
                 }
             }
         }
@@ -231,8 +246,12 @@ public partial class DownloadPaddleOcrViewModel : ObservableObject
     {
         _cancellationTokenSource?.Cancel();
         _done = true;
-        _timer.Stop();
         Close();
+    }
+
+    public void OnClosingCleanup()
+    {
+        _timer.StopAndDispose(OnTimerOnElapsed);
     }
 
     public void StartDownload()
@@ -302,7 +321,7 @@ public partial class DownloadPaddleOcrViewModel : ObservableObject
         else
         {
             Se.LogError($"Unknown Paddle OCR download type: {_downloadType}");
-            ProgressText = "Download failed";
+            ProgressText = Se.Language.General.DownloadFailed;
             Error = "Unknown download type";
             return;
         }

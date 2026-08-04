@@ -8,6 +8,7 @@ using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using SkiaSharp;
 using System;
+using Nikse.SubtitleEdit.UiLogic.Ocr.FixEngine;
 
 namespace Nikse.SubtitleEdit.Features.Ocr;
 
@@ -89,6 +90,9 @@ public partial class OcrSubtitleItem : ObservableObject
     }
 
     public bool IsForced => _ocrSubtitle.GetIsForced(_index);
+
+    /// <summary>Index into the underlying IOcrSubtitle source - stable across filtering/deletion of the view collection.</summary>
+    public int SourceIndex => _index;
 
     public SKPointI GetPosition()
     {

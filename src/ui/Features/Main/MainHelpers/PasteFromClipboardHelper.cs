@@ -30,12 +30,26 @@ public class PasteFromClipboardHelper : IPasteFromClipboardHelper
         var list = new List<string>(text.SplitToLines());
         var result = new List<SubtitleLineViewModel>(); 
 
-        if (new AdvancedSubStationAlpha().IsMine(list, string.Empty))
+        // Try the current subtitle format first, so a line copied from the waveform/grid (which
+        // serializes in the current format) round-trips no matter what that format is.
+        if (subtitleFormat.IsMine(list, string.Empty))
+        {
+            format = subtitleFormat;
+        }
+        else if (new AdvancedSubStationAlpha().IsMine(list, string.Empty))
         {
             format = new AdvancedSubStationAlpha();
         }
 
         format.LoadSubtitle(tmp, list, null);
+
+        if (tmp.Paragraphs.Count > 0 && videoPositionInMilliseconds >= 0)
+        {
+            // SE4 parity: anchor the pasted block at the paste position - the first line starts
+            // there and the rest keep their relative offsets - instead of keeping original times.
+            var offset = videoPositionInMilliseconds - tmp.Paragraphs[0].StartTime.TotalMilliseconds;
+            tmp.AddTimeToAllParagraphs(TimeSpan.FromMilliseconds(offset));
+        }
 
         if (tmp.Paragraphs.Count == 0 && videoPositionInMilliseconds >= 0)
         {

@@ -17,12 +17,10 @@ using System.Threading;
 
 namespace Nikse.SubtitleEdit.Features.Tools.ChangeCasing;
 
-public partial class FixNamesViewModel : ObservableObject
+public partial class FixNamesViewModel : ObservableObject, IClosingCleanup
 {
     [ObservableProperty] private ObservableCollection<FixNameItem> _names;
     [ObservableProperty] private ObservableCollection<FixNameHitItem> _hits;
-    [ObservableProperty] private string _namesCount;
-    [ObservableProperty] private string _hitCount;
     [ObservableProperty] private string _extraNames;
 
     public Window? Window { get; set; }
@@ -35,7 +33,9 @@ public partial class FixNamesViewModel : ObservableObject
     private NameList? _nameList;
     private List<string> _nameListInclMulti;
     private string _language;
-    private const string ExpectedEndChars = " ,.!?:;…')]<-\"\r\n";
+    private const string PrefixChars = "([ --'>\r\n¿¡\"”“„";
+    private const string SuffixChars = " ,.!?:;…')]<-\"\r\n";
+    private static readonly string[] CommonWords = ["US", "Lane", "Bill", "Rose"];
     private readonly HashSet<string> _usedNames;
     private string _oldNames;
     private readonly System.Timers.Timer _previewTimer;
@@ -48,8 +48,6 @@ public partial class FixNamesViewModel : ObservableObject
         Hits = new ObservableCollection<FixNameHitItem>();
 
         _loading = true;
-        NamesCount = string.Empty;
-        HitCount = string.Empty;
         _nameListInclMulti = new List<string>();
         _language = "en_US";
         _subtitleBefore = new Subtitle();
@@ -61,18 +59,25 @@ public partial class FixNamesViewModel : ObservableObject
         Subtitle = new Subtitle();
 
         _previewTimer = new System.Timers.Timer(500);
-        _previewTimer.Elapsed += (sender, args) =>
+        _previewTimer.Elapsed += PreviewTimerElapsed;
+    }
+
+    private void PreviewTimerElapsed(object? sender, System.Timers.ElapsedEventArgs e)
+    {
+        var namesString = string.Join(' ', Names.Where(p => p.IsChecked).Select(p => p.Name));
+        if (namesString != _oldNames && !_loading)
         {
-            var namesString = string.Join(' ', Names.Where(p => p.IsChecked).Select(p => p.Name));
-            if (namesString != _oldNames && !_loading)
+            lock (_lock)
             {
-                lock (_lock)
-                {
-                    GeneratePreview();
-                    _oldNames = namesString;
-                }
+                GeneratePreview();
+                _oldNames = namesString;
             }
-        };
+        }
+    }
+
+    public void OnClosingCleanup()
+    {
+        _previewTimer.StopAndDispose(PreviewTimerElapsed);
     }
 
     internal void Initialize(Subtitle subtitle)
@@ -92,7 +97,6 @@ public partial class FixNamesViewModel : ObservableObject
     private void FindAllNames()
     {
         var text = HtmlUtil.RemoveHtmlTags(_subtitle.GetAllTexts());
-        var textToLower = text.ToLowerInvariant();
 
         _nameListInclMulti = _nameList!.GetAllNames(); // Will contains both one word names and multi names
         foreach (var s in ExtraNames.Split(','))
@@ -106,97 +110,93 @@ public partial class FixNamesViewModel : ObservableObject
 
         _usedNames.Clear();
         var names = new List<FixNameItem>();
+
+        const string english = "en";
+        const string dont = "don't";
+
         foreach (var name in _nameListInclMulti)
         {
-            var startIndex = textToLower.IndexOf(name.ToLowerInvariant(), StringComparison.Ordinal);
-            if (startIndex >= 0)
+            // filter out invalid names
+            if (name.Length <= 1 || name == name.ToLowerInvariant())
             {
-                while (startIndex >= 0 && startIndex < text.Length &&
-                       textToLower.Substring(startIndex).Contains(name.ToLowerInvariant()) && name.Length > 1 && name != name.ToLowerInvariant())
+                continue;
+            }
+
+            var startIndex = text.IndexOf(name, StringComparison.OrdinalIgnoreCase);
+            while (startIndex >= 0)
+            {
+                if (IsWordBoundary(text, startIndex, name) && !text.AsSpan().Slice(startIndex, name.Length).Equals(name, StringComparison.Ordinal)) // do not add names where casing already is correct
                 {
-                    var startOk = startIndex == 0 || "([ --'>\r\n¿¡\"”“„".Contains(text[startIndex - 1]);
-                    if (startOk)
+                    if (!_usedNames.Contains(name))
                     {
-                        var end = startIndex + name.Length;
-                        var endOk = end <= text.Length;
-                        if (endOk)
+                        var skip = false;
+                        var isChecked = true;
+                        if (_language.StartsWith(english, StringComparison.OrdinalIgnoreCase))
                         {
-                            endOk = end == text.Length || ExpectedEndChars.Contains(text[end]);
+                            skip = text.AsSpan()[startIndex..].StartsWith(dont, StringComparison.OrdinalIgnoreCase);
+                            isChecked = !CommonWords.Contains(name);
                         }
 
-                        if (endOk && text.Substring(startIndex, name.Length) != name) // do not add names where casing already is correct
+                        if (!skip)
                         {
-                            if (!_usedNames.Contains(name))
-                            {
-                                var skip = false;
-                                var isChecked = true;
-                                if (_language.StartsWith("en", StringComparison.OrdinalIgnoreCase))
-                                {
-                                    var isDont = text.Substring(startIndex).StartsWith("don't", StringComparison.InvariantCultureIgnoreCase);
-                                    if (isDont)
-                                    {
-                                        skip = true;
-                                    }
-
-                                    var commonNamesAndWords = new List<string>
-                                    {
-                                        "US",
-                                        "Lane",
-                                        "Bill",
-                                        "Rose",
-                                    };
-                                    if (commonNamesAndWords.Contains(name))
-                                    {
-                                        isChecked = false;
-                                    }
-                                }
-
-                                if (!skip)
-                                {
-                                    _usedNames.Add(name);
-                                    names.Add(new FixNameItem(name, isChecked));
-                                    break; // break while
-                                }
-                            }
+                            _usedNames.Add(name);
+                            names.Add(new FixNameItem(name, isChecked));
+                            break; // break while
                         }
                     }
-
-                    startIndex = textToLower.IndexOf(name.ToLowerInvariant(), startIndex + 2, StringComparison.Ordinal);
                 }
+
+                startIndex = text.IndexOf(name, startIndex + name.Length, StringComparison.OrdinalIgnoreCase);
             }
         }
 
         Names.Clear();
         Names.AddRange(names);
-        NamesCount = string.Format("Names: {0:#,##0}", Names.Count);
+    }
+
+    private static bool IsWordBoundary(string text, int startIndex, string name)
+    {
+        var afterNameIndex = startIndex + name.Length;
+        return (startIndex == 0 || PrefixChars.Contains(text[startIndex - 1]))
+               && (afterNameIndex == text.Length || SuffixChars.Contains(text[afterNameIndex]));
     }
 
     private void GeneratePreview()
     {
         var hits = new List<FixNameHitItem>();
+
+        // reusable array
+        var processingNames = new string[1];
+
+        // filter out non-active name to avoid extra processing
+        var activeNameItems = Names.Where(n => n.IsChecked).ToArray();
+
         foreach (var p in _subtitle.Paragraphs)
         {
             var text = p.Text;
-            foreach (var item in Names)
+            foreach (var item in activeNameItems)
             {
-                var name = item.Name;
+                // no extra processing if paragraph doesn't contain name
+                if (!text.Contains(item.Name, StringComparison.OrdinalIgnoreCase))
+                {
+                    continue;
+                }
 
                 var textNoTags = HtmlUtil.RemoveHtmlTags(text, true);
+
+                // has letter and not already uppercase
                 if (textNoTags != textNoTags.ToUpperInvariant())
                 {
-                    if (item.IsChecked && text != null && text.Contains(name, StringComparison.OrdinalIgnoreCase) && name.Length > 1 && name != name.ToLowerInvariant())
-                    {
-                        var st = new StrippableText(text);
-                        st.FixCasing(new List<string> { name }, true, false, false, string.Empty);
-                        text = st.MergedString;
-                    }
+                    var st = new StrippableText(text);
+                    processingNames[0] = item.Name;
+                    st.FixCasing(processingNames, true, false, false, string.Empty);
+                    text = st.MergedString;
                 }
             }
 
-            if (text != p.Text && p.Text != null && text != null)
+            if (text != p.Text)
             {
-                var hit = new FixNameHitItem(p.Text, p.Number, p.Text, text, true);
-                hits.Add(hit);
+                hits.Add(new FixNameHitItem(p.Text, p.Number, p.Text, text, true));
             }
         }
 
@@ -204,7 +204,6 @@ public partial class FixNamesViewModel : ObservableObject
         {
             Hits.Clear();
             Hits.AddRange(hits);
-            HitCount = string.Format("Hits: {0:#,##0}", Hits.Count);
         });
     }
 
@@ -296,9 +295,19 @@ public partial class FixNamesViewModel : ObservableObject
         }
     }
 
-    internal void OnLoaded(RoutedEventArgs e)
+    internal async void OnLoaded(RoutedEventArgs e)
     {
-        DictionaryLoader.UnpackIfNotFound().ConfigureAwait(false);
+        try
+        {
+            // Must finish before NameList reads Se.DictionariesFolder — on first
+            // run the folder is only populated by this unpack.
+            await DictionaryLoader.UnpackIfNotFound();
+        }
+        catch (Exception exception)
+        {
+            Se.LogError(exception, "Failed to unpack bundled dictionaries");
+        }
+
         _nameList = new NameList(Se.DictionariesFolder, _language, false, string.Empty);
 
         ExtraNames = Se.Settings.Tools.ChangeCasing.ExtraNames;

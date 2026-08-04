@@ -36,7 +36,9 @@ public class ExportHandlerVobSub : IExportHandler
         var p = new Paragraph(param.Text, param.StartTime.TotalMilliseconds, param.EndTime.TotalMilliseconds);
         var alignment = MapAlignment(param);
 
-        _vobSubWriter.WriteParagraph(p, param.Bitmap, alignment);
+        // "{\pos(x,y)}" (ExportTextTags.ApplyPositionTag) wins over the alignment, as in the
+        // other image based handlers.
+        _vobSubWriter.WriteParagraph(p, param.Bitmap, alignment, param.OverridePositionPoint);
     }
 
     private static BluRayContentAlignment MapAlignment(ImageParameter param)

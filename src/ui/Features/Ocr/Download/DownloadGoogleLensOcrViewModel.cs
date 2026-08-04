@@ -3,6 +3,7 @@ using Avalonia.Input;
 using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Logic.Download;
 using Nikse.SubtitleEdit.Logic.SevenZipExtractor;
@@ -16,7 +17,7 @@ using Timer = System.Timers.Timer;
 
 namespace Nikse.SubtitleEdit.Features.Ocr.Download;
 
-public partial class DownloadGoogleLensOcrViewModel : ObservableObject
+public partial class DownloadGoogleLensOcrViewModel : ObservableObject, IClosingCleanup
 {
     [ObservableProperty] private double _progressValue;
     [ObservableProperty] private string _progressText;
@@ -70,20 +71,32 @@ public partial class DownloadGoogleLensOcrViewModel : ObservableObject
 
                 if (!File.Exists(_tempFileName))
                 {
-                    ProgressText = "Download failed";
-                    Error = "No data received";
+                    ProgressText = Se.Language.General.DownloadFailed;
+                    Error = Se.Language.General.NoDataReceived;
                     return;
                 }
 
                 var fileInfo = new FileInfo(_tempFileName);
                 if (fileInfo.Length == 0)
                 {
-                    ProgressText = "Download failed";
-                    Error = "No data received";
+                    ProgressText = Se.Language.General.DownloadFailed;
+                    Error = Se.Language.General.NoDataReceived;
                     return;
                 }
 
-                Unpacker.Extract7Zip(_tempFileName, Se.GoogleLensOcrFolder, "Chrome-Lens-OCR-v3.4.0", _cancellationTokenSource, text => ProgressText = text); 
+                try
+                {
+                    Unpacker.Extract7Zip(_tempFileName, Se.GoogleLensOcrFolder, "Chrome-Lens-OCR-v3.4.0", _cancellationTokenSource, text => ProgressText = text);
+                }
+                catch (Exception exception)
+                {
+                    // Timer callbacks swallow exceptions, so an unpack failure would
+                    // otherwise hang the dialog with no error shown (#12127).
+                    Se.LogError(exception, "Google Lens OCR unpack failed");
+                    ProgressText = Se.Language.General.UnpackingFailed;
+                    Error = exception.Message;
+                    return;
+                }
 
                 OkPressed = true;
                 Close();
@@ -95,13 +108,13 @@ public partial class DownloadGoogleLensOcrViewModel : ObservableObject
                 var ex = _downloadTask.Exception?.InnerException ?? _downloadTask.Exception;
                 if (ex is OperationCanceledException)
                 {
-                    ProgressText = "Download canceled";
+                    ProgressText = Se.Language.General.DownloadCanceled;
                     Close();
                 }
                 else
                 {
-                    ProgressText = "Download failed";
-                    Error = ex?.Message ?? "Unknown error";
+                    ProgressText = Se.Language.General.DownloadFailed;
+                    Error = ex?.Message ?? Se.Language.General.UnknownError;
                 }
             }
         }
@@ -120,8 +133,12 @@ public partial class DownloadGoogleLensOcrViewModel : ObservableObject
     {
         _cancellationTokenSource?.Cancel();
         _done = true;
-        _timer.Stop();
         Close();
+    }
+
+    public void OnClosingCleanup()
+    {
+        _timer.StopAndDispose(OnTimerOnElapsed);
     }
 
     public void StartDownload()

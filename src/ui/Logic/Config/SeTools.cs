@@ -18,6 +18,7 @@ public class SeTools
     public SeBatchConvert BatchConvert { get; set; } = new();
     public SeChangeCasing ChangeCasing { get; set; } = new();
     public SeRemoveTextForHi RemoveTextForHi { get; set; } = new();
+    public SeRemoveUnicodeCharacters RemoveUnicodeCharacters { get; set; } = new();
     public SeMergeSameTimeCode MergeSameTimeCode { get; set; } = new();
     public SeMergeSameText MergeSameText { get; set; } = new();
 
@@ -61,6 +62,7 @@ public class SeTools
     public string? SplitSubtitleEncoding { get; set; }
     public string SplitOddLinesAction { get; set; }
     public bool GoToLineNumberAlsoSetVideoPosition { get; set; }
+    public bool GoToFirstAndLastLineAlsoSetVideoPosition { get; set; }
     public bool SplitRebalanceLongLinesSplit { get; set; }
     public bool SplitRebalanceLongLinesRebalance { get; set; }
     public string UnicodeSymbolsToInsert { get; set; }
@@ -145,6 +147,13 @@ public class SeTools
 
     public List<string> FindHistory { get; set; } = new List<string>();
     public bool AllowSingleLetterShortcutsInTextbox { get; set; }
+
+    // Auto-break (auto br) - defaults must match libse ToolsSettings
+    public bool AutoBreakLineEndingEarly { get; set; } = false;
+    public bool AutoBreakCommaBreakEarly { get; set; } = false;
+    public bool AutoBreakDashEarly { get; set; } = true;
+    public bool AutoBreakUsePixelWidth { get; set; } = true;
+    public bool AutoBreakPreferBottomHeavy { get; set; } = true;
     public bool SpellCheckEnglishTreatInApostropheAsIng { get; set; } = true;
     public bool WriteToolsLog { get; set; } = false;
 
@@ -180,6 +189,7 @@ public class SeTools
         SplitOutputFolder = string.Empty;
         SplitSubtitleFormat = new SubRip().Name;
         GoToLineNumberAlsoSetVideoPosition = true;
+        GoToFirstAndLastLineAlsoSetVideoPosition = true;
         SplitRebalanceLongLinesSplit = true;
         SplitRebalanceLongLinesRebalance = true;
         SplitOddLinesAction = nameof(SplitOddLinesActionType.Smart);

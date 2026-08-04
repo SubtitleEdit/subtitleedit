@@ -127,6 +127,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
             int i = 256;
             Paragraph last = null;
+            var sb = new StringBuilder();
             while (i < buffer.Length - 20)
             {
                 var p = new Paragraph();
@@ -182,7 +183,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 if (!textEnd)
                 {
                     i -= 2;
-                    var sb = new StringBuilder();
+                    sb.Clear();
                     while (!textEnd && i < buffer.Length - 20)
                     {
                         if (buffer[i] == 0x14 && buffer[i + 1] == 0x2c) // text end

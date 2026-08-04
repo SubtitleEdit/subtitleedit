@@ -6,7 +6,8 @@ using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Layout;
 using Avalonia.Media;
-using Nikse.SubtitleEdit.Core.AutoTranslate;
+using Nikse.SubtitleEdit.UiLogic.AutoTranslate;
+using Nikse.SubtitleEdit.Features.Translate.LlamaCppAdvanced;
 using Nikse.SubtitleEdit.Features.Video.SpeechToText;
 using Nikse.SubtitleEdit.Features.Video.SpeechToText.Engines;
 using Nikse.SubtitleEdit.Logic;
@@ -14,6 +15,8 @@ using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Logic.Download;
 using Nikse.SubtitleEdit.Logic.LlamaCpp;
 using System.ComponentModel;
+using Nikse.SubtitleEdit.UiLogic.LlamaCpp;
+using Nikse.SubtitleEdit.UiLogic.Translate;
 
 namespace Nikse.SubtitleEdit.Features.Translate;
 
@@ -36,7 +39,7 @@ public class AutoTranslateWindow : Window
         vm.Window = this;
         _vm = vm;
 
-        var dataGridCard = BuildDataGridCard(vm);
+        var rowGridCard = BuildRowGridCard(vm);
         var controlsCard = BuildControlsCard(vm);
         var apiConfigCard = BuildApiConfigCard(vm);
         var footer = BuildFooter(vm);
@@ -49,8 +52,8 @@ public class AutoTranslateWindow : Window
         };
 
         var row = 0;
-        grid.Children.Add(dataGridCard);
-        Grid.SetRow(dataGridCard, row++);
+        grid.Children.Add(rowGridCard);
+        Grid.SetRow(rowGridCard, row++);
 
         grid.Children.Add(controlsCard);
         Grid.SetRow(controlsCard, row++);
@@ -219,6 +222,7 @@ public class AutoTranslateWindow : Window
         switch (translator)
         {
             case LlamaCppTranslate:
+            case LlamaCppAdvancedTranslate:
                 return StatusDots.From(
                     LlamaCppServerManager.IsEngineInstalled(),
                     LlamaCppUpdateStatus.GetEngineUpdateStatus());
@@ -294,6 +298,21 @@ public class AutoTranslateWindow : Window
             .WithMarginLeft(5);
         buttonLlamaCppOpenFolder.Bind(Button.IsVisibleProperty, new Binding(nameof(vm.LlamaCppButtonsAreVisible)));
 
+        var buttonLlamaCppEngineSettings = UiUtil.MakeButton(vm.ShowLlamaCppEngineSettingsCommand, IconNames.Settings)
+            .WithMarginLeft(5)
+            .WithAccessibleName(Se.Language.General.LlamaCppEngineSettings);
+        ToolTip.SetTip(buttonLlamaCppEngineSettings, Se.Language.General.LlamaCppEngineSettings);
+        buttonLlamaCppEngineSettings.Bind(Button.IsVisibleProperty, new Binding(nameof(vm.LlamaCppButtonsAreVisible)));
+
+        var buttonLlamaCppAdvancedSettings = UiUtil.MakeButton(Se.Language.Translate.AdvancedDotDotDot, vm.ShowLlamaCppAdvancedSettingsCommand)
+            .WithMarginLeft(5)
+            .WithAccessibleName(Se.Language.Translate.AdvancedSettings);
+        if (Se.Settings.Appearance.ShowHints)
+        {
+            ToolTip.SetTip(buttonLlamaCppAdvancedSettings, Se.Language.Translate.AdvancedSettings);
+        }
+        buttonLlamaCppAdvancedSettings.Bind(Button.IsVisibleProperty, new Binding(nameof(vm.LlamaCppAdvancedButtonIsVisible)));
+
         var settingsPanel = new WrapPanel
         {
             Orientation = Orientation.Horizontal,
@@ -319,7 +338,14 @@ public class AutoTranslateWindow : Window
         settingsPanel.Children.Add(checkBoxLlamaCppRemote);
 
         settingsPanel.Children.Add(UiUtil.MakeTextBlock(Se.Language.General.Url, vm, null, nameof(vm.ApiUrlIsVisible)).WithMarginRight(5));
-        settingsPanel.Children.Add(UiUtil.MakeTextBox(200, vm, nameof(vm.ApiUrlText), nameof(vm.ApiUrlIsVisible)).WithMarginRight(15).WithAccessibleName(Se.Language.General.Url));
+        // Wide enough for typical ".../v1/chat/completions" endpoints, with the full value in a
+        // tooltip - a clipped URL hid a broken endpoint in #12907.
+        var textBoxApiUrl = UiUtil.MakeTextBox(300, vm, nameof(vm.ApiUrlText), nameof(vm.ApiUrlIsVisible)).WithMarginRight(15).WithAccessibleName(Se.Language.General.Url);
+        if (Se.Settings.Appearance.ShowHints)
+        {
+            textBoxApiUrl.Bind(ToolTip.TipProperty, new Binding(nameof(vm.ApiUrlText)));
+        }
+        settingsPanel.Children.Add(textBoxApiUrl);
 
         settingsPanel.Children.Add(UiUtil.MakeTextBlock(Se.Language.General.Model, vm, null, nameof(vm.ModelIsVisible)).WithMarginRight(5));
         settingsPanel.Children.Add(UiUtil.MakeTextBox(150, vm, nameof(vm.ModelText), nameof(vm.ModelIsVisible)).WithAccessibleName(Se.Language.General.Model));
@@ -334,6 +360,8 @@ public class AutoTranslateWindow : Window
         settingsPanel.Children.Add(buttonDownloadLlamaCpp);
         settingsPanel.Children.Add(buttonLlamaCppServer);
         settingsPanel.Children.Add(buttonLlamaCppOpenFolder);
+        settingsPanel.Children.Add(buttonLlamaCppEngineSettings);
+        settingsPanel.Children.Add(buttonLlamaCppAdvancedSettings);
 
         var settingsButton = UiUtil.MakeButton(vm.OpenSettingsCommand, IconNames.Settings, Se.Language.General.Settings);
         settingsButton.HorizontalAlignment = HorizontalAlignment.Right;
@@ -352,7 +380,7 @@ public class AutoTranslateWindow : Window
         return MakeCard(grid);
     }
 
-    private Border BuildDataGridCard(AutoTranslateViewModel vm)
+    private Border BuildRowGridCard(AutoTranslateViewModel vm)
     {
         var contextMenu = new MenuFlyout
         {
@@ -366,62 +394,62 @@ public class AutoTranslateWindow : Window
             }
         };
 
-        var dataGrid = new DataGrid
+        var tableView = TableViewExtras.MakeTableView();
+        tableView.Height = double.NaN;
+        tableView.ContextFlyout = contextMenu;
+        tableView.DataContext = vm;
+
+        // The DataGrid sized the number and show columns to content (Auto); TableView
+        // treats Auto as star, so they get fixed widths instead.
+        tableView.Columns.Add(new SeTableViewColumn
         {
-            Height = double.NaN,
-            CanUserSortColumns = false,
-            ContextFlyout = contextMenu,
-            DataContext = vm,
-            IsReadOnly = true,
-            AutoGenerateColumns = false,
-            Columns =
-            {
-                new DataGridTextColumn
-                {
-                    Header = Se.Language.General.NumberSymbol,
-                    Binding = new Binding(nameof(TranslateRow.Number)),
-                    Width = new DataGridLength(1, DataGridLengthUnitType.Auto),
-                    CellTheme = UiUtil.DataGridNoBorderNoPaddingCellTheme,
-                },
-                new DataGridTextColumn
-                {
-                    Header = Se.Language.General.Show,
-                    Binding = new Binding(nameof(TranslateRow.Show)),
-                    Width = new DataGridLength(1, DataGridLengthUnitType.Auto),
-                    CellTheme = UiUtil.DataGridNoBorderNoPaddingCellTheme,
-                },
-                new DataGridTextColumn
-                {
-                    Header = Se.Language.General.Duration,
-                    Binding = new Binding(nameof(TranslateRow.Duration)),
-                    Width = new DataGridLength(80),
-                    CellTheme = UiUtil.DataGridNoBorderNoPaddingCellTheme,
-                },
-                new DataGridTextColumn
-                {
-                    Header = Se.Language.General.Text,
-                    Binding = new Binding(nameof(TranslateRow.Text)),
-                    Width = new DataGridLength(200, DataGridLengthUnitType.Star),
-                    CellTheme = UiUtil.DataGridNoBorderNoPaddingCellTheme,
-                },
-                new DataGridTextColumn
-                {
-                    Header = Se.Language.General.Translation,
-                    Binding = new Binding(nameof(TranslateRow.TranslatedText)),
-                    Width = new DataGridLength(200, DataGridLengthUnitType.Star),
-                    CellTheme = UiUtil.DataGridNoBorderNoPaddingCellTheme,
-                }
-            }
-        };
+            Header = Se.Language.General.NumberSymbol,
+            Binding = new Binding(nameof(TranslateRow.Number)),
+            Width = new GridLength(60),
+            CellTheme = UiUtil.TableViewCellTheme,
+            HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
+        });
+        tableView.Columns.Add(new SeTableViewColumn
+        {
+            Header = Se.Language.General.Show,
+            Binding = new Binding(nameof(TranslateRow.Show)),
+            Width = new GridLength(110),
+            CellTheme = UiUtil.TableViewCellTheme,
+            HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
+        });
+        tableView.Columns.Add(new SeTableViewColumn
+        {
+            Header = Se.Language.General.Duration,
+            Binding = new Binding(nameof(TranslateRow.Duration)),
+            Width = new GridLength(80),
+            CellTheme = UiUtil.TableViewCellTheme,
+            HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
+        });
+        tableView.Columns.Add(new SeTableViewColumn
+        {
+            Header = Se.Language.General.Text,
+            Binding = new Binding(nameof(TranslateRow.Text)),
+            Width = new GridLength(1, GridUnitType.Star),
+            CellTheme = UiUtil.TableViewCellTheme,
+            HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
+        });
+        tableView.Columns.Add(new SeTableViewColumn
+        {
+            Header = Se.Language.General.Translation,
+            Binding = new Binding(nameof(TranslateRow.TranslatedText)),
+            Width = new GridLength(1, GridUnitType.Star),
+            CellTheme = UiUtil.TableViewCellTheme,
+            HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
+        });
 
-        dataGrid.Bind(DataGrid.ItemsSourceProperty, new Binding(nameof(vm.Rows)));
-        dataGrid.Bind(DataGrid.SelectedItemProperty, new Binding(nameof(vm.SelectedTranslateRow)));
-        UiUtil.AttachMacContextFlyoutHandler(dataGrid);
-        dataGrid.WithAccessibleName(Se.Language.General.Lines);
-        vm.RowGrid = dataGrid;
+        tableView.Bind(TableView.ItemsSourceProperty, new Binding(nameof(vm.Rows)));
+        tableView.Bind(TableView.SelectedItemProperty, new Binding(nameof(vm.SelectedTranslateRow)));
+        UiUtil.AttachMacContextFlyoutHandler(tableView);
+        tableView.WithAccessibleName(Se.Language.General.Lines);
+        vm.RowGrid = tableView;
 
-        var dataGridBorder = UiUtil.MakeBorderForControlNoPadding(dataGrid);
-        return MakeCard(dataGridBorder, new Thickness(1));
+        var tableViewBorder = UiUtil.MakeBorderForControlNoPadding(tableView);
+        return MakeCard(tableViewBorder, new Thickness(1));
     }
 
     private Control BuildFooter(AutoTranslateViewModel vm)
@@ -526,6 +554,7 @@ public class AutoTranslateWindow : Window
 
         if (DataContext is AutoTranslateViewModel vm)
         {
+            vm.OnClosing();
             vm.SaveSettings();
             vm.PropertyChanged -= OnViewModelPropertyChanged;
         }

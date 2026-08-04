@@ -87,7 +87,7 @@ public class AssaApplyCustomOverrideTagsWindow : Window
         vm.ComboBoxLeft = comboBoxLeft;
         comboBoxLeft.SelectionChanged += vm.ComboBoxParagraphsChanged;
 
-        var buttonPlay = UiUtil.MakeButton(Se.Language.Assa.PlayCurrent, vm.PlayAndBackCommand).WithLeftAlignment();
+        var buttonPlay = UiUtil.MakeButton(Se.Language.General.PlayCurrent, vm.PlayAndBackCommand).WithLeftAlignment();
 
         var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand);
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
@@ -146,7 +146,8 @@ public class AssaApplyCustomOverrideTagsWindow : Window
 
         Content = grid;
 
-        Activated += delegate { buttonOk.Focus(); }; // hack to make OnKeyDown work
+        // initial focus on an input, not an action button - a focused button clicks on bare Space
+        Activated += delegate { comboBoxOverrideTags.Focus(); };
 
         AddHandler(KeyDownEvent, vm.OnKeyDownHandler, RoutingStrategies.Tunnel | RoutingStrategies.Bubble, handledEventsToo: false);
         Loaded += (_, _) => vm.OnLoaded();

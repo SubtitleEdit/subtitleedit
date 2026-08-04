@@ -23,10 +23,11 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             var sb = new StringBuilder();
             int index = 0;
             int index2 = 0;
+            var text = new StringBuilder();
             foreach (Paragraph p in subtitle.Paragraphs)
             {
                 index++;
-                var text = new StringBuilder();
+                text.Clear();
                 text.Append(HtmlUtil.RemoveHtmlTags(p.Text.Replace(Environment.NewLine, " ")));
                 while (text.Length < 34)
                 {

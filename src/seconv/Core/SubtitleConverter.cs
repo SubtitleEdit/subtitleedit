@@ -1,5 +1,6 @@
 using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
+using Nikse.SubtitleEdit.UiLogic.SpellCheck;
 using Spectre.Console;
 
 namespace SeConv.Core;
@@ -81,12 +82,22 @@ internal class SubtitleConverter
                         {
                             AnsiConsole.MarkupInterpolated($"[dim]{fileIndex}:[/] [cyan]{Path.GetFileName(inputFile)}[/] [dim]->[/] [green]{outputFile}[/]...");
                         }
-                        await ConvertFileAsync(inputFile, outputFile, options);
+                        var warnings = new List<string>();
+                        await ConvertFileAsync(inputFile, outputFile, options, warnings);
                         result.SuccessfulFiles++;
-                        result.Files.Add(new FileConversionResult(inputFile, outputFile, true, null));
+                        result.Files.Add(new FileConversionResult(inputFile, outputFile, true, null, warnings.Count > 0 ? warnings : null));
+                        foreach (var warning in warnings)
+                        {
+                            result.Warnings.Add($"{Path.GetFileName(inputFile)}: {warning}");
+                        }
+
                         if (!options.Quiet)
                         {
                             AnsiConsole.MarkupLine(" [green]done.[/]");
+                            foreach (var warning in warnings)
+                            {
+                                AnsiConsole.MarkupLineInterpolated($"   [yellow]warning: {warning}[/]");
+                            }
                         }
                     }
                     else
@@ -309,6 +320,22 @@ internal class SubtitleConverter
             return false;
         }
 
+        if (ext == ".idx")
+        {
+            // Accept the .idx of a VobSub pair as input (5.0.0 did): redirect to the
+            // companion .sub and use this .idx for timing + palette (issue #12772).
+            var subPath = Path.ChangeExtension(inputFile, ".sub");
+            if (!File.Exists(subPath))
+            {
+                throw new InvalidOperationException(
+                    $"VobSub '.idx' input has no companion '.sub' ({Path.GetFileName(subPath)}) — "
+                    + "the .idx only holds timing and palette; the subtitle images live in the .sub.");
+            }
+
+            return await PassThroughSingleStreamAsync(subPath, options, result, fileIndex,
+                () => BitmapSubtitleLoader.LoadVobSub(subPath, inputFile, isPal: true));
+        }
+
         if (ext is ".mkv" or ".mks")
         {
             return await PassThroughMatroskaPgsAsync(inputFile, options, result, fileIndex);
@@ -382,40 +409,48 @@ internal class SubtitleConverter
             return false;
         }
 
-        var pgsTracks = matroska.GetTracks(true)
-            .Where(t => t.CodecId.Equals("S_HDMV/PGS", StringComparison.OrdinalIgnoreCase))
+        // Both bitmap track kinds are eligible for image-to-image: PGS, and VobSub (whose
+        // subpictures previously fell through to the OCR pipeline and were re-rasterised as
+        // text at the default font — issue #12772 part 3).
+        var bitmapTracks = matroska.GetTracks(true)
+            .Where(t => t.CodecId.Equals("S_HDMV/PGS", StringComparison.OrdinalIgnoreCase)
+                        || t.CodecId.Equals("S_VOBSUB", StringComparison.OrdinalIgnoreCase))
             .Where(t => !options.ForcedOnly || t.IsForced)
             .Where(t => options.TrackNumbers.Count == 0 || options.TrackNumbers.Contains(t.TrackNumber))
             .ToList();
 
-        if (pgsTracks.Count == 0)
+        if (bitmapTracks.Count == 0)
         {
-            // MKV has no PGS tracks usable for image-to-image; fall through so the regular
+            // MKV has no bitmap tracks usable for image-to-image; fall through so the regular
             // container loader can handle text tracks / OCR-friendly tracks.
             return false;
         }
 
-        if (pgsTracks.Count > 1 && !string.IsNullOrEmpty(options.OutputFilename))
+        if (bitmapTracks.Count > 1 && !string.IsNullOrEmpty(options.OutputFilename))
         {
             throw new InvalidOperationException(
                 "--output-filename can only target a single track. Use --track-number to select one.");
         }
 
-        foreach (var track in pgsTracks)
+        foreach (var track in bitmapTracks)
         {
+            var isVobSub = track.CodecId.Equals("S_VOBSUB", StringComparison.OrdinalIgnoreCase);
             var outputFile = ResolveOutputFileName(
                 inputFile, options, ContainerSubtitleLoader.SanitizeLang(track.Language), track.TrackNumber);
 
             if (!options.Quiet)
             {
                 var trackLabel = $"#{track.TrackNumber} ";
-                AnsiConsole.MarkupInterpolated($"[dim]{fileIndex}:[/] [cyan]{Path.GetFileName(inputFile)}[/] [yellow]{trackLabel}[/][dim](PGS img→img)→[/] [green]{outputFile}[/]...");
+                var kind = isVobSub ? "VobSub" : "PGS";
+                AnsiConsole.MarkupInterpolated($"[dim]{fileIndex}:[/] [cyan]{Path.GetFileName(inputFile)}[/] [yellow]{trackLabel}[/][dim]({kind} img→img)→[/] [green]{outputFile}[/]...");
             }
 
             IReadOnlyList<BitmapSubtitleLoader.BitmapSubtitleItem>? items = null;
             try
             {
-                items = BitmapSubtitleLoader.LoadMatroskaPgs(matroska, track);
+                items = isVobSub
+                    ? BitmapSubtitleLoader.LoadMatroskaVobSub(matroska, track)
+                    : BitmapSubtitleLoader.LoadMatroskaPgs(matroska, track);
                 WritePreservedBitmaps(items, outputFile, options);
                 result.SuccessfulFiles++;
                 result.Files.Add(new FileConversionResult(inputFile, outputFile, true, null));
@@ -576,7 +611,7 @@ internal class SubtitleConverter
         return files;
     }
 
-    private async Task ConvertFileAsync(string inputFile, string outputFile, ConversionOptions options)
+    private async Task ConvertFileAsync(string inputFile, string outputFile, ConversionOptions options, List<string> warnings)
     {
         // Frame-based formats (e.g. MicroDVD) read Configuration.Settings.General.CurrentFrameRate
         // when loading. Set it before LoadSubtitle and restore in finally so concurrent or
@@ -603,7 +638,7 @@ internal class SubtitleConverter
 
                 // Load subtitle file using LibSE — keep the detected format so the
                 // save side can apply RemoveNativeFormatting when the target differs.
-                var (subtitle, sourceFormat) = LibSEIntegration.LoadSubtitleWithFormat(inputFile, resolvedOptions.Encoding, resolvedOptions.InputEncodingFallback);
+                var (subtitle, sourceFormat) = LibSEIntegration.LoadSubtitleWithFormat(inputFile, resolvedOptions.Encoding, resolvedOptions.InputEncodingFallback, warnings);
 
                 if (subtitle == null || subtitle.Paragraphs.Count == 0)
                 {
@@ -701,16 +736,16 @@ internal class SubtitleConverter
             // Wire the shared spell-check / OCR-fix engine (libuilogic) to seconv's options so the
             // "Fix common OCR errors" pass can run headless. Use --dictionary-folder when given, else
             // fall back to the dictionaries bundled into seconv (English out of the box) (#11744).
-            Nikse.SubtitleEdit.Features.SpellCheck.SpellCheckConfig.DictionariesFolder = () =>
+            SpellCheckConfig.DictionariesFolder = () =>
                 !string.IsNullOrEmpty(options.DictionaryFolder) ? options.DictionaryFolder : BundledDictionaries.GetFolder();
-            Nikse.SubtitleEdit.Features.SpellCheck.SpellCheckConfig.UseWordSplitList = () => true;
-            Nikse.SubtitleEdit.Features.SpellCheck.SpellCheckConfig.TreatInApostropheAsIng = () => false;
+            SpellCheckConfig.UseWordSplitList = () => true;
+            SpellCheckConfig.TreatInApostropheAsIng = () => false;
 
             LibSEIntegration.ApplyOperations(
                 subtitle,
                 options.Operations,
                 options.FixCommonErrorsRules,
-                options.FixCommonErrorsExplicitlyNamedRules);
+                options.FixCommonErrorsLanguage);
         }
 
         if (options.BridgeGapsMaxMs.HasValue && options.BridgeGapsMaxMs.Value > 0)
@@ -760,7 +795,11 @@ internal class SubtitleConverter
         string baseName;
         if (!string.IsNullOrEmpty(options.OutputFilename))
         {
-            baseName = options.OutputFilename;
+            // A relative --output-filename still lands in --output-folder; an absolute
+            // one wins outright.
+            baseName = !string.IsNullOrEmpty(options.OutputFolder) && !Path.IsPathRooted(options.OutputFilename)
+                ? Path.Combine(options.OutputFolder, options.OutputFilename)
+                : options.OutputFilename;
         }
         else
         {
@@ -834,12 +873,11 @@ internal record class ConversionOptions
     public IReadOnlyList<string> FixCommonErrorsRules { get; init; } = [];
 
     /// <summary>
-    /// Rules the user named by hand in <c>--FixCommonErrorsRules</c>. Used to bypass
-    /// language gating for explicitly-requested rules. Populate via
-    /// <see cref="FixCommonErrorsRunner.ParseExplicitlyNamedRules"/>. Empty means
-    /// "implicit all-rules pass" (gates stay active).
+    /// Forces the language used for FCE gating and OCR-fix (from <c>--fce-language</c>).
+    /// Null/blank = auto-detect from subtitle content. Accepts a two-letter code, three-letter
+    /// code, or English name (see <see cref="FixCommonErrorsRunner.NormalizeLanguageOverride"/>).
     /// </summary>
-    public IReadOnlyList<string> FixCommonErrorsExplicitlyNamedRules { get; init; } = [];
+    public string? FixCommonErrorsLanguage { get; init; }
     public int? DeleteFirst { get; init; }
     public int? DeleteLast { get; init; }
     public string? DeleteContains { get; init; }
@@ -893,7 +931,7 @@ internal record class ConversionOptions
 
     /// <summary>
     /// VobSub OCR only: before recognition, rebuild each subpicture as a crisp black-on-white
-    /// bitmap using histogram-based colour isolation — the most frequent opaque colour (the
+    /// bitmap using histogram-based colour isolation — the innermost colour plane (the
     /// glyph fill) becomes black and the outline / anti-alias tiers collapse into the white
     /// background. Improves recognition on discs whose gray outlines otherwise melt adjacent
     /// characters together. On by default; disable with <c>--no-vobsub-isolate-colors</c> to
@@ -963,8 +1001,12 @@ internal class ConversionResult
     public int SuccessfulFiles { get; set; }
     public int FailedFiles { get; set; }
     public List<string> Errors { get; set; } = new();
+
+    /// <summary>Non-fatal per-file issues (e.g. undecodable rows skipped); do not affect <see cref="Success"/>.</summary>
+    public List<string> Warnings { get; set; } = new();
+
     public List<FileConversionResult> Files { get; set; } = new();
     public bool Success => FailedFiles == 0 && Errors.Count == 0;
 }
 
-internal sealed record FileConversionResult(string Input, string? Output, bool Success, string? Error);
+internal sealed record FileConversionResult(string Input, string? Output, bool Success, string? Error, IReadOnlyList<string>? Warnings = null);

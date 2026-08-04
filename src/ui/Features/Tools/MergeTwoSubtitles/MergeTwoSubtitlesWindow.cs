@@ -14,6 +14,8 @@ namespace Nikse.SubtitleEdit.Features.Tools.MergeTwoSubtitles;
 
 public class MergeTwoSubtitlesWindow : Window
 {
+    private TableView? _tableViewSubtitle1;
+
     public MergeTwoSubtitlesWindow(MergeTwoSubtitlesViewModel vm)
     {
         UiUtil.InitializeWindow(this, GetType().Name);
@@ -75,11 +77,18 @@ public class MergeTwoSubtitlesWindow : Window
 
         Content = grid;
 
-        Activated += delegate { buttonOk.Focus(); };
+        Activated += delegate
+        {
+            // initial focus on an input, not an action button - a focused button clicks on bare Space
+            if (_tableViewSubtitle1 != null)
+            {
+                TableViewExtras.FocusRow(_tableViewSubtitle1);
+            }
+        };
         KeyDown += vm.KeyDown;
     }
 
-    private static Border MakeListsView(MergeTwoSubtitlesViewModel vm)
+    private Border MakeListsView(MergeTwoSubtitlesViewModel vm)
     {
         var grid = new Grid
         {
@@ -110,7 +119,7 @@ public class MergeTwoSubtitlesWindow : Window
         return UiUtil.MakeBorderForControlNoPadding(grid);
     }
 
-    private static Border MakeOneListView(MergeTwoSubtitlesViewModel vm,
+    private Border MakeOneListView(MergeTwoSubtitlesViewModel vm,
         string title,
         string itemsPath,
         string selectedItemPath,
@@ -123,62 +132,54 @@ public class MergeTwoSubtitlesWindow : Window
 
         var fullTimeConverter = new TimeSpanToDisplayFullConverter();
 
-        var dataGrid = new DataGrid
+        var dataGrid = TableViewExtras.MakeTableView(multiSelect: false);
+        _tableViewSubtitle1 ??= dataGrid; // first list created is subtitle 1
+        dataGrid.Width = double.NaN;
+        dataGrid.Height = double.NaN;
+        dataGrid.DataContext = vm;
+
+        dataGrid.Columns.Add(new SeTableViewColumn
         {
-            AutoGenerateColumns = false,
-            SelectionMode = DataGridSelectionMode.Single,
-            CanUserResizeColumns = true,
-            HorizontalAlignment = HorizontalAlignment.Stretch,
-            VerticalAlignment = VerticalAlignment.Stretch,
-            Width = double.NaN,
-            Height = double.NaN,
-            DataContext = vm,
-            ItemsSource = null,
-            Columns =
-            {
-                new DataGridTextColumn
-                {
-                    Header = Se.Language.General.NumberSymbol,
-                    CellTheme = UiUtil.DataGridNoBorderNoPaddingCellTheme,
-                    Binding = new Binding(nameof(MergeTwoSubtitlesDisplayItem.Number)),
-                    IsReadOnly = true,
-                    Width = new DataGridLength(60, DataGridLengthUnitType.Pixel),
-                },
-                new DataGridTextColumn
-                {
-                    Header = Se.Language.General.StartTime,
-                    CellTheme = UiUtil.DataGridNoBorderNoPaddingCellTheme,
-                    Binding = new Binding(nameof(MergeTwoSubtitlesDisplayItem.StartTime)) { Converter = fullTimeConverter },
-                    IsReadOnly = true,
-                    Width = new DataGridLength(120, DataGridLengthUnitType.Pixel),
-                },
-                new DataGridTextColumn
-                {
-                    Header = Se.Language.General.EndTime,
-                    CellTheme = UiUtil.DataGridNoBorderNoPaddingCellTheme,
-                    Binding = new Binding(nameof(MergeTwoSubtitlesDisplayItem.EndTime)) { Converter = fullTimeConverter },
-                    IsReadOnly = true,
-                    Width = new DataGridLength(120, DataGridLengthUnitType.Pixel),
-                },
-                new DataGridTextColumn
-                {
-                    Header = Se.Language.General.Text,
-                    CellTheme = UiUtil.DataGridNoBorderNoPaddingCellTheme,
-                    Binding = new Binding(nameof(MergeTwoSubtitlesDisplayItem.Text)),
-                    IsReadOnly = true,
-                    Width = new DataGridLength(1, DataGridLengthUnitType.Star),
-                },
-            },
-        };
-        dataGrid.Bind(DataGrid.ItemsSourceProperty, new Binding(itemsPath) { Source = vm });
-        dataGrid.Bind(DataGrid.SelectedItemProperty, new Binding(selectedItemPath) { Source = vm });
+            Header = Se.Language.General.NumberSymbol,
+            CellTheme = UiUtil.TableViewCellTheme,
+            HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
+            Binding = new Binding(nameof(MergeTwoSubtitlesDisplayItem.Number)),
+            Width = new GridLength(60),
+        });
+        dataGrid.Columns.Add(new SeTableViewColumn
+        {
+            Header = Se.Language.General.StartTime,
+            CellTheme = UiUtil.TableViewCellTheme,
+            HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
+            Binding = new Binding(nameof(MergeTwoSubtitlesDisplayItem.StartTime)) { Converter = fullTimeConverter },
+            Width = new GridLength(120),
+        });
+        dataGrid.Columns.Add(new SeTableViewColumn
+        {
+            Header = Se.Language.General.EndTime,
+            CellTheme = UiUtil.TableViewCellTheme,
+            HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
+            Binding = new Binding(nameof(MergeTwoSubtitlesDisplayItem.EndTime)) { Converter = fullTimeConverter },
+            Width = new GridLength(120),
+        });
+        dataGrid.Columns.Add(new SeTableViewColumn
+        {
+            Header = Se.Language.General.Text,
+            CellTheme = UiUtil.TableViewCellTheme,
+            HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
+            Binding = new Binding(nameof(MergeTwoSubtitlesDisplayItem.Text)),
+            Width = new GridLength(1, GridUnitType.Star),
+        });
+
+        dataGrid.Bind(TableView.ItemsSourceProperty, new Binding(itemsPath) { Source = vm });
+        dataGrid.Bind(TableView.SelectedItemProperty, new Binding(selectedItemPath) { Source = vm });
         dataGrid.AddHandler(InputElement.KeyDownEvent, (object? _, KeyEventArgs e) =>
         {
-            if (e.Key is Key.Home or Key.End && dataGrid.ItemsSource is IList items && items.Count > 0)
+            if (e.Key is Key.Home or Key.End && dataGrid.ItemsSource is IList items && items.Count > 0 &&
+                (e.Key == Key.Home ? items[0] : items[^1]) is { } target)
             {
-                var target = e.Key == Key.Home ? items[0] : items[^1];
                 dataGrid.SelectedItem = target;
-                dataGrid.ScrollIntoView(target, null);
+                dataGrid.ScrollIntoView(target);
                 e.Handled = true;
             }
         }, RoutingStrategies.Tunnel);
@@ -306,16 +307,16 @@ public class MergeTwoSubtitlesWindow : Window
         var labelOutline = UiUtil.MakeLabel(Se.Language.General.OutlineColor);
         var outlinePicker = UiUtil.MakeColorPickerButton(vm, outlineColorPath, false);
 
-        var labelOutlineWidth = UiUtil.MakeLabel(l.OutlineWidth);
+        var labelOutlineWidth = UiUtil.MakeLabel(Se.Language.General.OutlineWidth);
         var numOutlineWidth = UiUtil.MakeNumericUpDownOneDecimal(0, 20, 140, vm, outlineWidthPath);
 
-        var labelShadowWidth = UiUtil.MakeLabel(l.ShadowWidth);
+        var labelShadowWidth = UiUtil.MakeLabel(Se.Language.General.ShadowWidth);
         var numShadowWidth = UiUtil.MakeNumericUpDownOneDecimal(0, 20, 140, vm, shadowWidthPath);
 
-        var radioTop = UiUtil.MakeRadioButton(l.AlignTop, vm, alignTopPath, alignGroupName);
+        var radioTop = UiUtil.MakeRadioButton(Se.Language.General.Top, vm, alignTopPath, alignGroupName);
         var radioBottom = new RadioButton
         {
-            Content = l.AlignBottom,
+            Content = Se.Language.General.Bottom,
             GroupName = alignGroupName,
             DataContext = vm,
         };

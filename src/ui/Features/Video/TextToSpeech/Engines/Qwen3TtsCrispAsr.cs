@@ -42,7 +42,7 @@ public class Qwen3TtsCrispAsr : ITtsEngine
 {
     public string Name => "Qwen3 TTS (CrispASR)";
     public string Description => "via CrispASR (VoiceDesign or CustomVoice 1.7B)";
-    public bool HasLanguageParameter => false;
+    public bool HasLanguageParameter => true;
     public bool HasApiKey => false;
     public bool HasRegion => false;
     public bool HasModel => true;
@@ -304,24 +304,11 @@ public class Qwen3TtsCrispAsr : ITtsEngine
             foreach (var src in Directory.GetFiles(sourceFolder, "*.wav"))
             {
                 var dest = Path.Combine(voicesFolder, Path.GetFileName(src));
-                if (File.Exists(dest))
-                {
-                    continue;
-                }
 
-                try
-                {
-                    // Resample to 24 kHz mono — the Base backend rejects any other rate.
-                    var process = FfmpegGenerator.ConvertToMono24kHzWav(src, dest);
-                    if (process.Start())
-                    {
-                        process.WaitForExit();
-                    }
-                }
-                catch (Exception ex)
-                {
-                    Se.LogError(ex, $"Qwen3 TTS (CrispASR): failed to resample seeded voice {Path.GetFileName(src)}");
-                }
+                // Resample to 24 kHz mono — the Base backend rejects any other rate, so a voice
+                // that cannot be resampled is skipped rather than copied at its original rate.
+                VoiceSeedHelper.CopyOrResample(
+                    src, dest, 24000, "Qwen3 TTS (CrispASR)", copyOnFailure: false);
             }
         }
         catch (Exception ex)
@@ -478,7 +465,7 @@ public class Qwen3TtsCrispAsr : ITtsEngine
                 if (File.Exists(sidecar))
                 {
                     var text = File.ReadAllText(sidecar).Trim();
-                    if (!string.IsNullOrWhiteSpace(text) && !LooksLikeAttributionBlurb(text))
+                    if (!LooksLikeUnusableTranscript(text))
                     {
                         continue; // already carries a usable transcription
                     }
@@ -536,7 +523,7 @@ public class Qwen3TtsCrispAsr : ITtsEngine
             }
 
             var text = File.ReadAllText(sidecar).Trim();
-            return string.IsNullOrWhiteSpace(text) || LooksLikeAttributionBlurb(text) ? null : text;
+            return LooksLikeUnusableTranscript(text) ? null : text;
         }
         catch
         {
@@ -587,6 +574,37 @@ public class Qwen3TtsCrispAsr : ITtsEngine
             || text.Contains("This file is licensed", StringComparison.OrdinalIgnoreCase)
             || text.Contains("Downsampled to", StringComparison.OrdinalIgnoreCase);
     }
+
+    /// <summary>
+    /// True when a <c>.txt</c> sidecar cannot be a spoken transcription of its reference WAV, so it
+    /// must be treated as "no transcript" rather than fed to a backend as ref-text.
+    /// </summary>
+    /// <remarks>
+    /// Covers <see cref="LooksLikeAttributionBlurb"/> plus anything carrying subtitle markup. A
+    /// transcript filled in via "Use speech to text…" is joined straight out of the transcription,
+    /// so an STT engine configured for karaoke output (faster-whisper's <c>--highlight_words</c>,
+    /// whisper.cpp's <c>-owts</c>) yields one cue per word, each repeating the whole sentence with
+    /// the current word wrapped in <c>&lt;u&gt;</c> — kilobytes of tag-laced repetition that reads
+    /// as a valid transcript to every other check. CosyVoice3 hands that to the s3tok tokenizer and
+    /// renders the ref-text instead of the requested line. Nothing spoken contains markup, so its
+    /// presence is a reliable tell, and dropping the sidecar lets the OmniVoice backfill replace it.
+    /// </remarks>
+    public static bool LooksLikeUnusableTranscript(string? text)
+    {
+        if (string.IsNullOrWhiteSpace(text))
+        {
+            return true;
+        }
+
+        if (LooksLikeAttributionBlurb(text))
+        {
+            return true;
+        }
+
+        return SubtitleMarkupHints.Any(hint => text.Contains(hint, StringComparison.OrdinalIgnoreCase));
+    }
+
+    private static readonly string[] SubtitleMarkupHints = { "<u>", "</u>", "<i>", "</i>", "<b>", "<font", "{\\" };
 
     public static string GetTalkerPath(string? modelKey = null) =>
         Path.Combine(GetSetModelsFolder(), GetTalkerFileName(modelKey));
@@ -650,7 +668,7 @@ public class Qwen3TtsCrispAsr : ITtsEngine
         }
     }
 
-    public Task<Voice[]> GetVoices(string language)
+    public async Task<Voice[]> GetVoices(string language)
     {
         var result = new List<Voice>();
         var modelKey = ResolveModelKey(Se.Settings.Video.TextToSpeech.Qwen3TtsCrispAsrModel);
@@ -660,7 +678,7 @@ public class Qwen3TtsCrispAsr : ITtsEngine
             // VoiceDesign has no speaker encoder — the instruction string drives the voice, so
             // a single "Default" entry is all the combo needs.
             result.Add(new Voice(new Qwen3TtsVoice("Default", string.Empty)));
-            return Task.FromResult(result.ToArray());
+            return result.ToArray();
         }
 
         if (modelKey == ModelKeyCustomVoice)
@@ -673,13 +691,15 @@ public class Qwen3TtsCrispAsr : ITtsEngine
             {
                 result.Add(new Voice(new Qwen3TtsVoice(speaker, string.Empty)));
             }
-            return Task.FromResult(result.ToArray());
+            return result.ToArray();
         }
 
         // Voice clone (Base): list the imported reference WAVs. Voice cloning refuses requests
         // without a reference, so there is no "Default" entry — the user must import a voice
         // (with its transcript) first.
-        var voicesFolder = GetSetVoicesFolder();
+        // Off the UI thread: GetSetVoicesFolder does one-time reference-WAV seeding through
+        // ffmpeg, and this is awaited from SelectedEngineChanged on the dispatcher.
+        var voicesFolder = await Task.Run(GetSetVoicesFolder);
         if (Directory.Exists(voicesFolder))
         {
             foreach (var file in Directory.GetFiles(voicesFolder, "*.wav"))
@@ -689,7 +709,7 @@ public class Qwen3TtsCrispAsr : ITtsEngine
             }
         }
 
-        return Task.FromResult(result.ToArray());
+        return result.ToArray();
     }
 
     public bool IsVoiceInstalled(Voice voice) => true;
@@ -698,7 +718,7 @@ public class Qwen3TtsCrispAsr : ITtsEngine
 
     public Task<string[]> GetModels() => Task.FromResult(new[] { ModelKeyVoiceDesign, ModelKeyCustomVoice, ModelKeyClone });
 
-    public Task<TtsLanguage[]> GetLanguages(Voice voice, string? model) => Task.FromResult(Array.Empty<TtsLanguage>());
+    public Task<TtsLanguage[]> GetLanguages(Voice voice, string? model) => Task.FromResult(Qwen3TtsCrispAsrLanguages.All);
 
     public Task<Voice[]> RefreshVoices(string language, CancellationToken cancellationToken) =>
         GetVoices(language);
@@ -765,13 +785,10 @@ public class Qwen3TtsCrispAsr : ITtsEngine
         if (modelKey == ModelKeyClone && !string.IsNullOrEmpty(qwen3Voice.FilePath))
         {
             payload["voice"] = Path.GetFileNameWithoutExtension(qwen3Voice.FilePath);
-            // The reference is the user's own imported WAV — attest consent so the request also
-            // works against CrispASR builds that gate cloning on it.
-            payload["consent_attestation"] = "I have the speaker's consent, or it is my own voice.";
-            // Skip the audible AI-disclosure prefix CrispASR otherwise prepends to cloned audio;
-            // SE surfaces the AI-generated nature in its UI. The inaudible watermark + C2PA
-            // provenance metadata stay embedded regardless (defaults to true server-side).
-            payload["spoken_disclaimer"] = false;
+            // The reference is the user's own imported WAV — attest consent and the AI-disclosure
+            // duty so the request also works against CrispASR builds that gate cloning on it. See
+            // CrispAsrTtsProvenance; skipped when voice cloning has not been accepted in settings.
+            CrispAsrTtsProvenance.AddSpeechAttestations(payload);
         }
         else if (modelKey == ModelKeyCustomVoice && !string.IsNullOrEmpty(qwen3Voice.Voice))
         {
@@ -791,9 +808,19 @@ public class Qwen3TtsCrispAsr : ITtsEngine
             payload["instructions"] = "a calm female voice";
         }
 
+        // Output language (#13110): the backend maps the ISO code to the talker's explicit
+        // codec_language_id — applies to VoiceDesign, CustomVoice and cloned voices alike.
+        // Auto (empty) sends no field and lets the model infer the language from the text,
+        // which for a cloned reference in another language surfaces as a strong accent.
+        var languageArg = Qwen3TtsCrispAsrLanguages.ResolveLanguageArg(language);
+        if (!string.IsNullOrEmpty(languageArg))
+        {
+            payload["language"] = languageArg;
+        }
+
         var body = JsonSerializer.Serialize(payload);
         using var content = new StringContent(body, Encoding.UTF8, "application/json");
-        Se.WriteToolsLog($"Qwen3 TTS (CrispASR): POST {ServerBaseUrl}/v1/audio/speech (voice={qwen3Voice}, model={modelKey}, textLen={text.Length}, instructionLen={instruction.Length})");
+        Se.WriteToolsLog($"Qwen3 TTS (CrispASR): POST {ServerBaseUrl}/v1/audio/speech (voice={qwen3Voice}, model={modelKey}, textLen={text.Length}, instructionLen={instruction.Length}, language={(string.IsNullOrEmpty(languageArg) ? "(auto)" : languageArg)})");
 
         HttpResponseMessage response;
         try
@@ -953,6 +980,7 @@ public class Qwen3TtsCrispAsr : ITtsEngine
             // makes /v1/voices reflect any imported reference WAVs.
             psi.ArgumentList.Add("--voice-dir");
             psi.ArgumentList.Add(GetSetVoicesFolder());
+            CrispAsrTtsProvenance.AddServerMarkingArgs(psi.ArgumentList, exe);
 
             var process = Process.Start(psi)
                 ?? throw new InvalidOperationException("Failed to start crispasr (qwen3-tts)");

@@ -5,6 +5,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using System.Xml;
 
 namespace Nikse.SubtitleEdit.Core.SubtitleFormats
@@ -16,7 +17,43 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         private static IList<SubtitleFormat> _allSubtitleFormats;
         private static IList<SubtitleFormat> _subtitleFormatsWithDefaultOrder;
 
+        /// <summary>
+        /// Guards the format cache below. Building it loads and JIT-compiles ~330 types, which is
+        /// why <see cref="WarmUpAsync"/> exists to do it off the start-up critical path - and that
+        /// makes concurrent access real. A lock rather than a lazy/volatile publish because the
+        /// build deliberately assigns <see cref="_allSubtitleFormats"/> before ordering it, so
+        /// <see cref="GetOrderedFormatsList"/> can re-enter this property through
+        /// <c>Utilities.GetSubtitleFormatByFriendlyName</c>; Monitor is re-entrant on the same
+        /// thread, so that keeps working, while another thread can no longer observe the
+        /// intermediate unordered list.
+        /// </summary>
+        /// <remarks>
+        /// Stays a plain <see cref="object"/> - unlike the rest of the code base, which uses
+        /// <c>System.Threading.Lock</c> - because LibSE also targets netstandard2.1, where that
+        /// type does not exist. Guarding one field with <c>#if NET9_0_OR_GREATER</c> is not worth
+        /// the target-framework conditional: the lock is taken a handful of times at start-up, so
+        /// there is nothing to gain from the faster primitive.
+        /// </remarks>
+        private static readonly object SubtitleFormatsLock = new object();
+
         protected static readonly char[] SplitCharColon = { ':' };
+
+        /// <summary>
+        /// Builds the format cache on a worker thread so the ~330 type loads and constructor JITs
+        /// overlap with other start-up work instead of blocking the first window. Purely an
+        /// optimisation: any caller touching <see cref="AllSubtitleFormats"/> first, or while this
+        /// is still running, simply blocks on the same lock and gets the same list.
+        /// </summary>
+        public static Task WarmUpAsync()
+        {
+            return Task.Run(() =>
+            {
+                foreach (var unused in AllSubtitleFormats)
+                {
+                    // Enumerating is enough - the work happens in the property getter.
+                }
+            });
+        }
 
         /// <summary>
         /// Text formats supported by Subtitle Edit
@@ -25,6 +62,15 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         {
             get
             {
+                lock (SubtitleFormatsLock)
+                {
+                    return GetOrBuildAllSubtitleFormats();
+                }
+            }
+        }
+
+        private static IEnumerable<SubtitleFormat> GetOrBuildAllSubtitleFormats()
+        {
                 if (_allSubtitleFormats != null)
                 {
                     if (SubtitleFormatsOrderChanged)
@@ -48,6 +94,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     new AdobeEncoreWithLineNumbersNtsc(),
                     new AdvancedSubStationAlpha(),
                     new AQTitle(),
+                    new AudacityLabels(),
                     new AvidCaption(),
                     new AvidCaptionDropFrame(),
                     new AvidDvd(),
@@ -378,7 +425,6 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 _allSubtitleFormats = GetOrderedFormatsList(_subtitleFormatsWithDefaultOrder);
 
                 return _allSubtitleFormats;
-            }
         }
 
         protected int _errorCount;
@@ -397,7 +443,30 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         public bool IsFrameBased => !IsTimeBased;
 
-        public string FriendlyName => $"{Name} ({Extension})";
+        private string _friendlyName;
+        private string _friendlyNameExtension;
+
+        /// <summary>
+        /// "Name (Extension)" - cached because it is accessed in loops over all ~300 formats
+        /// (FromName, GetSubtitleFormatByFriendlyName, format combo boxes) and interpolation
+        /// allocated a new string on every access. A few formats have a settings-dependent
+        /// Extension (MPlayer2, TimedText), so the cache is keyed on the Extension instance:
+        /// constants are interned and the settings values keep their instance until changed.
+        /// </summary>
+        public string FriendlyName
+        {
+            get
+            {
+                var extension = Extension;
+                if (_friendlyName == null || !ReferenceEquals(_friendlyNameExtension, extension))
+                {
+                    _friendlyNameExtension = extension;
+                    _friendlyName = $"{Name} ({extension})";
+                }
+
+                return _friendlyName;
+            }
+        }
 
         public int ErrorCount => _errorCount;
 
@@ -481,6 +550,29 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         public bool BatchMode { get; set; }
         public double? BatchSourceFrameRate { get; set; }
+
+        /// <summary>
+        /// Trims leading/trailing whitespace inside the builder - the "sb.ToString().Trim()"
+        /// idiom in ToText implementations allocates the whole output an extra time.
+        /// </summary>
+        protected static void TrimBuilder(StringBuilder sb)
+        {
+            while (sb.Length > 0 && char.IsWhiteSpace(sb[sb.Length - 1]))
+            {
+                sb.Length--;
+            }
+
+            var start = 0;
+            while (start < sb.Length && char.IsWhiteSpace(sb[start]))
+            {
+                start++;
+            }
+
+            if (start > 0)
+            {
+                sb.Remove(0, start);
+            }
+        }
 
         public static string ToUtf8XmlString(XmlDocument xml, bool omitXmlDeclaration = false)
         {
@@ -675,7 +767,6 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 new JsonArchtime(),
                 new Rdf1(),
                 new CombinedXml(),
-                new AudacityLabels(),
                 new Fte(),
                 new ClqttJson(),
             };

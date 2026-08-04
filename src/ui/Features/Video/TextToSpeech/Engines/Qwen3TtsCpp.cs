@@ -1,5 +1,6 @@
 using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.Voices;
+using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Logic.Download;
 using Nikse.SubtitleEdit.Logic.Media;
@@ -415,8 +416,13 @@ public class Qwen3TtsCpp : ITtsEngine
                     _serverProcess = null;
                     _serverPort = 0;
                     _serverModelFileName = null;
+                    // An empty tail plus a 0xC00000xx code means the loader killed it before main -
+                    // NativeExitCodeHelper explains those instead of just printing the raw number.
+                    var hint = NativeExitCodeHelper.GetHint(process.ExitCode, "Qwen3 TTS", GetSetFolder());
                     throw new InvalidOperationException(
-                        $"qwen3-tts-server exited during startup (code {process.ExitCode}). Output: {tail}");
+                        $"qwen3-tts-server exited during startup (code {NativeExitCodeHelper.Describe(process.ExitCode)})."
+                        + (hint == null ? string.Empty : " " + hint)
+                        + $" Output: {tail}");
                 }
                 if (await ProbeHealthAsync(port, TimeSpan.FromSeconds(1), ct))
                 {

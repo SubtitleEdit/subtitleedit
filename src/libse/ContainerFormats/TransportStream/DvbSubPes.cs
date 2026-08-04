@@ -36,8 +36,18 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
         private readonly byte[] _dataBuffer;
 
         public DvbSubPes(byte[] buffer, int index)
+            : this(buffer, index, buffer.Length)
         {
-            if (buffer.Length < index + 9)
+        }
+
+        /// <summary>
+        /// Same as <see cref="DvbSubPes(byte[], int)"/>, but only the first
+        /// <paramref name="length"/> bytes of <paramref name="buffer"/> are valid
+        /// data - allows passing an oversized buffer, e.g. one rented from ArrayPool.
+        /// </summary>
+        public DvbSubPes(byte[] buffer, int index, int length)
+        {
+            if (length < index + 9)
             {
                 return;
             }
@@ -61,7 +71,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
 
             HeaderDataLength = buffer[index + 8];
 
-            if (buffer.Length <= index + 9 + HeaderDataLength)
+            if (length <= index + 9 + HeaderDataLength)
             {
                 return;
             }
@@ -74,7 +84,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
                     SubPictureStreamId = id;
                 }
             }
-            if (index + 9 + 4 < buffer.Length)
+            if (index + 9 + 4 < length)
             {
                 int tempIndex = index + 9;
                 if (PresentationTimestampDecodeTimestampFlags == 0b00000010 || PresentationTimestampDecodeTimestampFlags == 0b00000011)
@@ -97,9 +107,9 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
             int dataIndex = index + HeaderDataLength + 24 - Mpeg2HeaderLength;
             int dataSize = Length - (4 + HeaderDataLength);
 
-            if (dataSize < 0 || (dataSize + dataIndex > buffer.Length)) // to fix bad subs...
+            if (dataSize < 0 || (dataSize + dataIndex > length)) // to fix bad subs...
             {
-                dataSize = buffer.Length - dataIndex;
+                dataSize = length - dataIndex;
                 if (dataSize < 0)
                 {
                     return;
@@ -282,6 +292,15 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
         public bool IsDvbSubPicture => SubPictureStreamId.HasValue && SubPictureStreamId.Value == 32;
 
         public bool IsTeletext => DataIdentifier == 16;
+
+        /// <summary>
+        /// ARIB STD-B24 caption data (ISDB broadcasts): private_stream_1 with
+        /// data_identifier 0x80 (captions) or 0x81 (superimpose) + private_stream_id 0xFF
+        /// </summary>
+        public bool IsAribCaption => StreamId == 0xbd && AribCaptionParser.IsAribCaptionPayload(_dataBuffer);
+
+        /// <summary>PES data starting at data_identifier - for <see cref="AribCaptionParser"/></summary>
+        public byte[] GetAribCaptionData() => _dataBuffer;
 
         public int DataIdentifier
         {

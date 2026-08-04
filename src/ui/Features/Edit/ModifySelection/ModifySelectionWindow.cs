@@ -66,6 +66,9 @@ public class ModifySelectionWindow : Window
             }
         };
         KeyDown += vm.KeyDown;
+
+        Closing += delegate { UiUtil.SaveWindowPosition(this); };
+        Loaded += delegate { UiUtil.RestoreWindowPosition(this); };
     }
 
     private static Border MakeRulesView(ModifySelectionViewModel vm, out TextBox textBoxRuleText)
@@ -104,42 +107,39 @@ public class ModifySelectionWindow : Window
         numericUpDownRuleNumber.BindIsVisible(vm, nameof(vm.SelectedRule) + "." + nameof(vm.SelectedRule.HasNumber));
         numericUpDownRuleNumber.ValueChanged += (sender, args) => vm.OnRuleChanged();
 
-        var dataGridMultiSelect = new DataGrid
+        var dataGridMultiSelect = TableViewExtras.MakeTableView(multiSelect: false);
+        dataGridMultiSelect.CanUserResizeColumns = false;
+        dataGridMultiSelect.Width = 280;
+        dataGridMultiSelect.MaxHeight = 200;
+        dataGridMultiSelect.DataContext = vm;
+        dataGridMultiSelect.Columns.Add(new SeTableViewColumn
         {
-            AutoGenerateColumns = false,
-            SelectionMode = DataGridSelectionMode.Single,
-            HorizontalAlignment = HorizontalAlignment.Stretch,
-            VerticalAlignment = VerticalAlignment.Stretch,
-            Width = double.NaN,
-            Height = double.NaN,
-            DataContext = vm,
-            MaxHeight = 200,
-            Columns =
+            Header = Se.Language.General.Enabled,
+            CellTheme = UiUtil.TableViewNoPaddingCellTheme,
+            HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
+            CellTemplate = new FuncDataTemplate<MultiSelectItem>((item, _) =>
+            new Border
             {
-                new DataGridTemplateColumn
-                {
-                    Header = Se.Language.General.Enabled,
-                    CellTheme = UiUtil.DataGridNoBorderNoPaddingCellTheme,
-                    CellTemplate = new FuncDataTemplate<MultiSelectItem>((item, _) =>
-                    new Border
-                    {
-                        Background = Brushes.Transparent, // Prevents highlighting
-                        Padding = new Thickness(4),
-                        Child = MakeCheckBox(vm)
-                    }),
-                    Width = new DataGridLength(1, DataGridLengthUnitType.Auto)
-                },
-                new DataGridTextColumn
-                {
-                    Header = Se.Language.General.Name,
-                    CellTheme = UiUtil.DataGridNoBorderNoPaddingCellTheme,
-                    Binding = new Binding(nameof(StyleDisplay.Name)),
-                    IsReadOnly = true,
-                },
-            },
-        };
+                Background = Brushes.Transparent, // Prevents highlighting
+                Padding = new Thickness(4),
+                Child = MakeCheckBox(vm)
+            }),
+            // Content-sized (Auto) on the DataGrid; TableView treats Auto as star.
+            Width = new GridLength(80)
+        });
+        dataGridMultiSelect.Columns.Add(new SeTableViewColumn
+        {
+            Header = Se.Language.General.Name,
+            CellTheme = UiUtil.TableViewCellTheme,
+            HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
+            Binding = new Binding(nameof(StyleDisplay.Name)),
+            Width = new GridLength(1, GridUnitType.Star),
+        });
         dataGridMultiSelect.BindIsVisible(vm, nameof(vm.SelectedRule) + "." + nameof(vm.SelectedRule.HasMultiSelect));
-        dataGridMultiSelect.Bind(DataGrid.ItemsSourceProperty, new Binding(nameof(vm.SelectedRule) + "." + nameof(vm.SelectedRule.MultiSelectItems)) { Source = vm });
+        dataGridMultiSelect.Bind(TableView.ItemsSourceProperty, new Binding(nameof(vm.SelectedRule) + "." + nameof(vm.SelectedRule.MultiSelectItems)) { Source = vm });
+
+        var buttonRuleSettings = UiUtil.MakeButton(Se.Language.General.Settings, vm.ShowRuleSettingsCommand).WithTopAlignment();
+        buttonRuleSettings.BindIsVisible(vm, nameof(vm.SelectedRule) + "." + nameof(vm.SelectedRule.HasSettings));
 
         var panelRule = new StackPanel
         {
@@ -152,6 +152,7 @@ public class ModifySelectionWindow : Window
                 textBoxRuleText,
                 numericUpDownRuleNumber,
                 dataGridMultiSelect,
+                buttonRuleSettings,
             },
         };
 
@@ -213,71 +214,69 @@ public class ModifySelectionWindow : Window
         var fullTimeConverter = new TimeSpanToDisplayFullConverter();
         var shortTimeConverter = new TimeSpanToDisplayShortConverter();
 
-        var dataGrid = new DataGrid
+        // No header sorting (the DataGrid's CanUserSortColumns is not carried over):
+        // this is a subtitle-line preview in subtitle order, and Ok() iterates the
+        // collection in order to build the selection.
+        var dataGrid = TableViewExtras.MakeTableView(multiSelect: false);
+        dataGrid.DataContext = vm;
+        dataGrid.Columns.AddRange(new TableViewColumn[]
         {
-            AutoGenerateColumns = false,
-            SelectionMode = DataGridSelectionMode.Single,
-            CanUserResizeColumns = true,
-            CanUserSortColumns = true,
-            HorizontalAlignment = HorizontalAlignment.Stretch,
-            VerticalAlignment = VerticalAlignment.Stretch,
-            Width = double.NaN,
-            Height = double.NaN,
-            DataContext = vm,
-            Columns =
+            new SeTableViewColumn
             {
-                new DataGridTemplateColumn
-                {
-                    Header = Se.Language.General.Apply,
-                    CellTheme = UiUtil.DataGridNoBorderNoPaddingCellTheme,
-                    CellTemplate = new FuncDataTemplate<PreviewItem>((item, _) =>
-                        new Border
+                Header = Se.Language.General.Apply,
+                CellTheme = UiUtil.TableViewNoPaddingCellTheme,
+                HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
+                CellTemplate = new FuncDataTemplate<PreviewItem>((item, _) =>
+                    new Border
+                    {
+                        Background = Brushes.Transparent, // Prevents highlighting
+                        Padding = new Thickness(4),
+                        Child = new CheckBox
                         {
-                            Background = Brushes.Transparent, // Prevents highlighting
-                            Padding = new Thickness(4),
-                            Child = new CheckBox
-                            {
-                                [!ToggleButton.IsCheckedProperty] = new Binding(nameof(PreviewItem.Apply)),
-                                HorizontalAlignment = HorizontalAlignment.Center
-                            }
-                        }),
-                    Width = new DataGridLength(1, DataGridLengthUnitType.Auto)
-                },
-                new DataGridTextColumn
-                {
-                    Header = Se.Language.General.NumberSymbol,
-                    CellTheme = UiUtil.DataGridNoBorderNoPaddingCellTheme,
-                    Binding = new Binding(nameof(PreviewItem.Number)),
-                    IsReadOnly = true,
-                },
-                new DataGridTextColumn
-                {
-                    Header = Se.Language.General.Show,
-                    Binding = new Binding(nameof(PreviewItem.Show)) { Converter = fullTimeConverter },
-                    Width = new DataGridLength(120),
-                    CellTheme = UiUtil.DataGridNoBorderCellTheme,
-                },
-                new DataGridTextColumn
-                {
-                    Header = Se.Language.General.Duration,
-                    Binding = new Binding(nameof(PreviewItem.Duration)) { Converter = shortTimeConverter },
-                    Width = new DataGridLength(120),
-                    CellTheme = UiUtil.DataGridNoBorderCellTheme,
-                },
-                new DataGridTextColumn
-                {
-                    Header = Se.Language.General.Text,
-                    CellTheme = UiUtil.DataGridNoBorderNoPaddingCellTheme,
-                    Binding = new Binding(nameof(PreviewItem.Text)),
-                    IsReadOnly = true,
-                    Width = new DataGridLength(1, DataGridLengthUnitType.Star),
-                },
+                            [!ToggleButton.IsCheckedProperty] = new Binding(nameof(PreviewItem.Apply)),
+                            HorizontalAlignment = HorizontalAlignment.Center
+                        }
+                    }),
+                // Content-sized (Auto) on the DataGrid; TableView treats Auto as star.
+                Width = new GridLength(80)
             },
-        };
+            new SeTableViewColumn
+            {
+                Header = Se.Language.General.NumberSymbol,
+                CellTheme = UiUtil.TableViewCellTheme,
+                HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
+                Binding = new Binding(nameof(PreviewItem.Number)),
+                Width = new GridLength(60),
+            },
+            new SeTableViewColumn
+            {
+                Header = Se.Language.General.Show,
+                Binding = new Binding(nameof(PreviewItem.Show)) { Converter = fullTimeConverter },
+                Width = new GridLength(120),
+                CellTheme = UiUtil.TableViewCellTheme,
+                HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
+            },
+            new SeTableViewColumn
+            {
+                Header = Se.Language.General.Duration,
+                Binding = new Binding(nameof(PreviewItem.Duration)) { Converter = shortTimeConverter },
+                Width = new GridLength(120),
+                CellTheme = UiUtil.TableViewCellTheme,
+                HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
+            },
+            new SeTableViewColumn
+            {
+                Header = Se.Language.General.Text,
+                CellTheme = UiUtil.TableViewCellTheme,
+                HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
+                Binding = new Binding(nameof(PreviewItem.Text)),
+                Width = new GridLength(1, GridUnitType.Star),
+            },
+        });
 
         // Bind ItemsSource to the property (rather than assigning the instance once)
         // so the grid follows the collection when the view model swaps it on preview.
-        dataGrid.Bind(DataGrid.ItemsSourceProperty, new Binding(nameof(vm.Subtitles)) { Source = vm });
+        dataGrid.Bind(TableView.ItemsSourceProperty, new Binding(nameof(vm.Subtitles)) { Source = vm });
 
         return UiUtil.MakeBorderForControlNoPadding(dataGrid);
     }

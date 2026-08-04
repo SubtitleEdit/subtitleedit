@@ -3,6 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Nikse.SubtitleEdit;
 using Nikse.SubtitleEdit.Features.Ocr;
 using Nikse.SubtitleEdit.Features.SpellCheck;
+using Nikse.SubtitleEdit.UiLogic.SpellCheck;
 
 namespace UITests.Features.Ocr;
 

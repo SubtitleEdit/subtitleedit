@@ -262,33 +262,33 @@ public partial class SsaAttachmentsViewModel : ObservableObject
                 {
                     AddToListIfNotEmpty(attachments, attachmentContent.ToString(), attachmentFileName, category);
                     attachmentOn = false;
-                    attachmentContent = new StringBuilder();
+                    attachmentContent.Clear();
                     attachmentFileName = string.Empty;
                 }
                 else if (s == string.Empty)
                 {
                     AddToListIfNotEmpty(attachments, attachmentContent.ToString(), attachmentFileName, category);
-                    attachmentContent = new StringBuilder();
+                    attachmentContent.Clear();
                     attachmentFileName = string.Empty;
                 }
                 else if (s.Equals("[Fonts]", StringComparison.OrdinalIgnoreCase))
                 {
                     AddToListIfNotEmpty(attachments, attachmentContent.ToString(), attachmentFileName, category);
-                    attachmentContent = new StringBuilder();
+                    attachmentContent.Clear();
                     attachmentFileName = string.Empty;
                     category = Se.Language.General.Fonts;
                 }
                 else if (s.Equals("[Graphics]", StringComparison.OrdinalIgnoreCase))
                 {
                     AddToListIfNotEmpty(attachments, attachmentContent.ToString(), attachmentFileName, category);
-                    attachmentContent = new StringBuilder();
+                    attachmentContent.Clear();
                     attachmentFileName = string.Empty;
                     category = Se.Language.Assa.Graphics;
                 }
                 else if (s.StartsWith("filename:") || s.StartsWith("fontname:"))
                 {
                     AddToListIfNotEmpty(attachments, attachmentContent.ToString(), attachmentFileName, category);
-                    attachmentContent = new StringBuilder();
+                    attachmentContent.Clear();
                     attachmentFileName = s.Remove(0, 9).Trim();
                 }
                 else
@@ -300,14 +300,14 @@ public partial class SsaAttachmentsViewModel : ObservableObject
             {
                 category = Se.Language.General.Fonts;
                 attachmentOn = true;
-                attachmentContent = new StringBuilder();
+                attachmentContent.Clear();
                 attachmentFileName = string.Empty;
             }
             else if (s.Equals("[Graphics]", StringComparison.OrdinalIgnoreCase))
             {
                 category = Se.Language.Assa.Graphics;
                 attachmentOn = true;
-                attachmentContent = new StringBuilder();
+                attachmentContent.Clear();
                 attachmentFileName = string.Empty;
             }
         }

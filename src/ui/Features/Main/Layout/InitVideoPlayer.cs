@@ -9,7 +9,6 @@ using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Logic.VideoPlayers;
 using Nikse.SubtitleEdit.Logic.VideoPlayers.LibMpvDynamic;
 using System;
-using System.Runtime.InteropServices;
 
 namespace Nikse.SubtitleEdit.Features.Main.Layout;
 
@@ -33,8 +32,13 @@ public static class InitVideoPlayer
         {
             mediaFile = vm.VideoPlayerControl.VideoPlayer.FileName;
             position = vm.VideoPlayerControl.VideoPlayer.Position;
-            vm.VideoPlayerControl.VideoPlayer.CloseFile();
-            vm.VideoPlayerControl.Content = null;
+
+            // The old control is replaced by the one built below and never used again, so tear
+            // it down completely. Closing the file alone left its 50 ms position timer running
+            // (which keeps the whole control alive in the dispatcher, polling a dead player from
+            // the UI thread) and left the native player core undestroyed - one leaked mpv per
+            // layout rebuild, and Options/OK rebuilds the layout on any setting change (#13048).
+            vm.VideoPlayerControl.CloseAndDisposePlayer();
             vm.VideoPlayerControl = null;
         }
 
@@ -61,9 +65,17 @@ public static class InitVideoPlayer
             {
                 await control.Open(mediaFile);
                 await control.WaitForPlayersReadyAsync();
+
+                // A second rebuild within the ready wait (Options/OK, dock/undock) disposes
+                // this control's player via the block above - stop restoring into it (#13083).
                 for (var i = 0; i < 10; i++)
                 {
                     await System.Threading.Tasks.Task.Delay(10);
+                    if (control.IsDisposed)
+                    {
+                        return;
+                    }
+
                     control.Position = position;
                 }
             });
@@ -72,9 +84,7 @@ public static class InitVideoPlayer
         control.FullScreenCommand = vm.VideoFullScreenCommand;
         videoPlayerControl = control;
         vm.VideoPlayerControl = control;
-        control.Volume = Se.Settings.Video.Volume;
         control.VideoPlayerDisplayTimeLeft = Se.Settings.Video.VideoPlayerDisplayTimeLeft;
-        control.VolumeChanged += v => { Se.Settings.Video.Volume = v; };
         control.ToggleDisplayProgressTextModeRequested += () => { vm.ToggleVideoPlayerDisplayTimeLeftCommand.Execute(null); };
         control.VideoFileNamePointerPressed += vm.VideoPlayerControlPointerPressed;
         control.SurfacePointerPressed += (_, _) => vm.VideoPlayerAreaPointerPressed();
@@ -160,7 +170,7 @@ public static class InitVideoPlayer
     /// </summary>
     public static VideoPlayerControl MakeVideoPlayerPreferNonNative()
     {
-        if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows) && Se.Settings.Video.VideoPlayer != VideoPlayerName.MpvOpenGl)
+        if (OperatingSystem.IsWindows() && Se.Settings.Video.VideoPlayer != VideoPlayerName.MpvOpenGl)
         {
             var player = new LibMpvDynamicPlayer();
             if (player.CanLoad())
@@ -175,13 +185,16 @@ public static class InitVideoPlayer
 
     private static VideoPlayerControl MakeVideoPlayerControl(IVideoPlayer videoPlayer, Control view)
     {
-        return new VideoPlayerControl(videoPlayer)
+        var control = new VideoPlayerControl(videoPlayer)
         {
             PlayerContent = view,
             StopIsVisible = Se.Settings.Video.ShowStopButton,
             FullScreenIsVisible = Se.Settings.Video.ShowFullscreenButton,
             VerticalAlignment = VerticalAlignment.Stretch,
             HorizontalAlignment = HorizontalAlignment.Stretch,
+            Volume = Se.Settings.Video.Volume,
         };
+        control.VolumeChanged += v => { Se.Settings.Video.Volume = v; };
+        return control;
     }
 }

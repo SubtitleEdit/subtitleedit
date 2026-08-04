@@ -5,6 +5,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Nikse.SubtitleEdit.Core.VobSub;
 using Nikse.SubtitleEdit.Logic;
+using Nikse.SubtitleEdit.Logic.Config;
 using SkiaSharp;
 using System;
 using System.Collections.Generic;
@@ -21,7 +22,7 @@ public partial class PickVobSubLanguageViewModel : ObservableObject
     [ObservableProperty] private ObservableCollection<VobSubLanguageCueDisplay> _rows;
 
     public Window? Window { get; set; }
-    public DataGrid LanguagesGrid { get; set; }
+    public TableView LanguagesGrid { get; set; }
     public bool OkPressed { get; private set; }
     public string WindowTitle { get; private set; }
 
@@ -37,7 +38,7 @@ public partial class PickVobSubLanguageViewModel : ObservableObject
     {
         Languages = new ObservableCollection<VobSubLanguageDisplay>();
         Rows = new ObservableCollection<VobSubLanguageCueDisplay>();
-        LanguagesGrid = new DataGrid();
+        LanguagesGrid = new TableView();
         WindowTitle = string.Empty;
         SelectedLanguageString = string.Empty;
         _streamIdDictionary = new Dictionary<int, List<VobSubMergedPack>>();
@@ -47,7 +48,7 @@ public partial class PickVobSubLanguageViewModel : ObservableObject
     {
         _streamIdDictionary = streamIdDictionary;
         _palette = palette;
-        WindowTitle = "Pick VobSub language - " + Path.GetFileName(fileName);
+        WindowTitle = string.Format(Se.Language.General.PickVobSubLanguageTitle, Path.GetFileName(fileName));
 
         foreach (var streamId in streamIdDictionary.Keys.OrderBy(k => k))
         {
@@ -101,14 +102,14 @@ public partial class PickVobSubLanguageViewModel : ObservableObject
             Cancel();
             e.Handled = true;
         }
-        else if (e.Key == Key.Enter && LanguagesGrid.IsFocused)
+        else if (e.Key == Key.Enter && LanguagesGrid.IsKeyboardFocusWithin)
         {
             Ok();
             e.Handled = true;
         }
     }
 
-    internal void DataGridLanguagesSelectionChanged(object? sender, SelectionChangedEventArgs e)
+    internal void LanguagesGridSelectionChanged(object? sender, SelectionChangedEventArgs e)
     {
         LanguageChanged();
     }
@@ -151,8 +152,17 @@ public partial class PickVobSubLanguageViewModel : ObservableObject
 
         Dispatcher.UIThread.Post(() =>
         {
+            // Select via the view model, not just the grid index - see the same fix in
+            // PickMatroskaTrackViewModel: AlwaysSelected has already put the grid on row 0, so
+            // re-assigning the index raises no SelectionChanged and SelectedLanguage stayed null,
+            // which left the preview empty and made OK do nothing.
+            SelectedLanguage = Languages[index];
             LanguagesGrid.SelectedIndex = index;
-            LanguagesGrid.ScrollIntoView(LanguagesGrid.SelectedItem, null);
+            if (LanguagesGrid.SelectedItem is { } selectedItem)
+            {
+                LanguagesGrid.ScrollIntoView(selectedItem);
+            }
+
             LanguageChanged();
         }, DispatcherPriority.Background);
     }

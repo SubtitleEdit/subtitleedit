@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Dutch abbreviations - a period here ends an abbreviation, not a sentence, so "Fix common
+  errors" must not capitalize the following word (issue #13082). Matching is case insensitive,
+  so one entry per abbreviation is enough. Abbreviations with an inner period (o.a., i.p.v.,
+  d.w.z., m.b.t.) are already recognized by a general rule and need no entry here.
+-->
+<Abbreviations>
+  <Item>afb.</Item>
+  <Item>afd.</Item>
+  <Item>art.</Item>
+  <Item>bijv.</Item>
+  <Item>bijz.</Item>
+  <Item>blz.</Item>
+  <Item>bv.</Item>
+  <Item>ca.</Item>
+  <Item>dhr.</Item>
+  <Item>div.</Item>
+  <Item>dl.</Item>
+  <Item>dr.</Item>
+  <Item>drs.</Item>
+  <Item>ds.</Item>
+  <Item>enz.</Item>
+  <Item>etc.</Item>
+  <Item>evt.</Item>
+  <Item>excl.</Item>
+  <Item>fam.</Item>
+  <Item>geb.</Item>
+  <Item>gem.</Item>
+  <Item>hfdst.</Item>
+  <Item>incl.</Item>
+  <Item>ing.</Item>
+  <Item>ir.</Item>
+  <Item>jl.</Item>
+  <Item>jr.</Item>
+  <Item>max.</Item>
+  <Item>mej.</Item>
+  <Item>mevr.</Item>
+  <Item>min.</Item>
+  <Item>mld.</Item>
+  <Item>mln.</Item>
+  <Item>mr.</Item>
+  <Item>mw.</Item>
+  <Item>nl.</Item>
+  <Item>nr.</Item>
+  <Item>ong.</Item>
+  <Item>opm.</Item>
+  <Item>pag.</Item>
+  <Item>prof.</Item>
+  <Item>resp.</Item>
+  <Item>tel.</Item>
+  <Item>vgl.</Item>
+  <Item>vnl.</Item>
+  <Item>zgn.</Item>
+  <Item>zn.</Item>
+</Abbreviations>

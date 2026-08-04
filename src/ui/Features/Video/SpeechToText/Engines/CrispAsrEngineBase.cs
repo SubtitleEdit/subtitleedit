@@ -1,9 +1,9 @@
 using Avalonia.Platform;
-using Nikse.SubtitleEdit.Core.AudioToText;
+using Nikse.SubtitleEdit.UiLogic.AudioToText;
+using Nikse.SubtitleEdit.Logic.Config;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 
 namespace Nikse.SubtitleEdit.Features.Video.SpeechToText.Engines;
@@ -25,26 +25,30 @@ public abstract class CrispAsrEngineBase : ICrispAsrEngine
     public abstract bool CanBeDownloaded();
 
     /// <summary>
-    /// CrispASR ships several Windows variants of very different sizes (CPU ~3 MB, Vulkan
-    /// ~25 MB, CUDA ~684 MB), and the variant is picked at download time rather than now.
-    /// We surface the smallest reasonable number and note that it varies so the user has a
-    /// floor without being misled by the CUDA bundle.
+    /// CrispASR ships several builds per platform whose sizes differ by two orders of magnitude,
+    /// and the variant is picked at download time rather than now — so Windows and Linux get a
+    /// range rather than a single number that would either understate the GPU bundles or scare
+    /// users off the CPU one. Figures are the v0.8.25 release assets
+    /// (<see cref="Nikse.SubtitleEdit.Logic.Download.CrispAsrDownloadService"/> holds the pin);
+    /// they drift with every release, so treat them as indicative.
     /// </summary>
     public virtual string DownloadSizeText
     {
         get
         {
-            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            if (OperatingSystem.IsWindows())
             {
-                return "~3 MB – 684 MB"; // CPU – CUDA depending on variant chosen at download time
+                // CPU ~7 MB, Vulkan ~32 MB, CUDA ~688 MB.
+                return "~7 MB – 688 MB";
             }
-            if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+            if (OperatingSystem.IsLinux())
             {
-                return "~5 MB";
+                // CPU ~25 MB (arm64 ~23 MB), Vulkan ~55 MB, ROCm ~97 MB, CUDA 13 ~190 MB, CUDA 12 ~259 MB.
+                return "~25 MB – 259 MB";
             }
-            if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+            if (OperatingSystem.IsMacOS())
             {
-                return "~4 MB";
+                return "~15 MB";
             }
             return string.Empty;
         }
@@ -59,18 +63,29 @@ public abstract class CrispAsrEngineBase : ICrispAsrEngine
 
     public virtual async Task<string> GetHelpText()
     {
+        // The per-backend asset name is derived from Name, so a backend added without its
+        // matching .txt would throw straight into the caller's RelayCommand. Fall back to the
+        // shared text instead - missing help is not worth taking the dialog down for.
         var assetName = $"{Name.Replace(" ", string.Empty)}.txt";
         var uri = new Uri($"avares://SubtitleEdit/Assets/SpeechToText/{assetName}");
         var commonUri = new Uri("avares://SubtitleEdit/Assets/SpeechToText/CrispASRCommon.txt");
 
-        await using var headerStream = AssetLoader.Open(uri);
-        using var headerReader = new StreamReader(headerStream);
-        var header = await headerReader.ReadToEndAsync();
+        var header = string.Empty;
+        try
+        {
+            await using var headerStream = AssetLoader.Open(uri);
+            using var headerReader = new StreamReader(headerStream);
+            header = (await headerReader.ReadToEndAsync()).TrimEnd();
+        }
+        catch
+        {
+            Se.LogError($"No help text asset \"{assetName}\" for speech-to-text backend \"{Name}\".");
+        }
 
         await using var commonStream = AssetLoader.Open(commonUri);
         using var commonReader = new StreamReader(commonStream);
         var common = await commonReader.ReadToEndAsync();
 
-        return header.TrimEnd() + Environment.NewLine + common;
+        return header.Length == 0 ? common : header + Environment.NewLine + common;
     }
 }

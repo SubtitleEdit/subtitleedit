@@ -1447,7 +1447,6 @@
     <Word from="noćeš" to="hoćeš" />
     <Word from="nsiam" to="nisam" />
     <Word from="nteko" to="netko" />
-    <Word from="nrka" to="neka" />
     <Word from="nrgo" to="nego" />
     <Word from="nuduo" to="nudio" />
     <!-- o -->
@@ -2335,6 +2334,7 @@
     <Word from="senatorka" to="senatorica" />
     <Word from="Senka" to="Sjenka" />
     <Word from="senka" to="sjenka" />
+    <Word from="senkama" to="sjenkama" />
     <Word from="senke" to="sjenke" />
     <Word from="senki" to="sjenki" />
     <Word from="senku" to="sjenku" />
@@ -2682,6 +2682,7 @@
     <Word from="Svešće" to="Svest će" />
     <Word from="svetala" to="svjetala" />
     <Word from="svetiljku" to="svjetiljku" />
+    <Word from="svetina" to="svjetina" />
     <Word from="sveže" to="svježe" />
     <Word from="svežih" to="svježih" />
     <Word from="svežu" to="svježu" />
@@ -4506,6 +4507,7 @@
     <RegEx find="Bukval" replaceWith="Doslov" />
     <RegEx find="bunić" replaceWith="bunit ć" />
     <RegEx find="\bCalifornij?" replaceWith="Kalifornij" />
+    <RegEx find="celit" replaceWith="cjelit" />
     <RegEx find="cetr" replaceWith="centr" />
     <RegEx find="\b([cC])j?el([aeiou]|o[mgj]|i[mh]|ima?|osti)\b" replaceWith="$1ijel$2" />
     <RegEx find="([cC])elod" replaceWith="$1jelod" />
@@ -5294,7 +5296,7 @@
     <RegEx find="Vj?eštačk" replaceWith="Umjetn" />
     <RegEx find="([vV])et(ar|r[aeuo])" replaceWith="$1jet$2" />
     <RegEx find="([vV])ever" replaceWith="$1jever" />
-    <RegEx find="([vV])ezać" replaceWith="$1ezat ć" />
+    <RegEx find="([vrVR])ezać" replaceWith="$1ezat ć" />
     <RegEx find="([vV])ežb" replaceWith="$1ježb" />
     <RegEx find="([vV])ide([hlt])" replaceWith="$1idje$2" />
     <RegEx find="([vVTt])idj?eć(?!i)" replaceWith="$1idjet ć" />
@@ -5641,6 +5643,7 @@
     <RegEx find="m([io]t?)rić" replaceWith="m$1rit ć" />
     <RegEx find="mi?j?enić" replaceWith="mijenit ć" />
     <RegEx find="mjenim" replaceWith="mijenim" />
+    <RegEx find="mpb" replaceWith="mob" />
     <RegEx find="mpg" replaceWith="mog" />
     <RegEx find="mpra" replaceWith="mora" />
     <RegEx find="mp[zž]" replaceWith="mož" />

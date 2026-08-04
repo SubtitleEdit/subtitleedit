@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  French abbreviations - a period here ends an abbreviation, not a sentence, so "Fix common
+  errors" must not capitalize the following word (issue #13082). Matching is case insensitive,
+  so one entry per abbreviation is enough. Abbreviations with an inner period (e.g. "a.m.") are
+  already recognized by a general rule and need no entry here.
+-->
+<Abbreviations>
+  <Item>apr.</Item>
+  <Item>art.</Item>
+  <Item>av.</Item>
+  <Item>cf.</Item>
+  <Item>ch.</Item>
+  <Item>chap.</Item>
+  <Item>Dr.</Item>
+  <Item>env.</Item>
+  <Item>etc.</Item>
+  <Item>ex.</Item>
+  <Item>fig.</Item>
+  <Item>M.</Item>
+  <Item>Mlle.</Item>
+  <Item>Mme.</Item>
+  <Item>qqch.</Item>
+  <Item>qqn.</Item>
+  <Item>réf.</Item>
+  <Item>St.</Item>
+  <Item>Ste.</Item>
+  <Item>tél.</Item>
+  <Item>vol.</Item>
+  <Item>éd.</Item>
+</Abbreviations>

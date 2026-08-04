@@ -1,4 +1,5 @@
-﻿using Nikse.SubtitleEdit.Core.AutoTranslate;
+﻿using Nikse.SubtitleEdit.Features.Translate.LlamaCppAdvanced;
+using Nikse.SubtitleEdit.UiLogic.AutoTranslate;
 using System.Collections.Generic;
 
 namespace Nikse.SubtitleEdit.Logic.Config;
@@ -32,6 +33,12 @@ public class SeAutoTranslate
     /// (e.g. a GPU box) instead of downloading a model and managing a local server (#11584).
     /// </summary>
     public bool LlamaCppUseRemoteServer { get; set; }
+    public SeLlamaCppAdvanced LlamaCppAdvanced { get; set; } = new();
+
+    // The Ollama advanced engine uses Ollama's OpenAI-compatible endpoint, not the native
+    // /api/generate URL the classic Ollama engine stores in OllamaUrl.
+    public string OllamaAdvancedUrl { get; set; } = OllamaAdvancedTranslate.DefaultUrl;
+    public string OllamaAdvancedModel { get; set; } = string.Empty;
     public string GroqUrl { get; set; }
     public string GroqPrompt { get; set; }
     public string GroqApiKey { get; set; }
@@ -56,7 +63,6 @@ public class SeAutoTranslate
     public string OpenRouterApiKey { get; set; }
     public string OpenRouterModel { get; set; }
     public string NnlbServeUrl { get; set; }
-    public string NnlbApiUrl { get; set; }
     public string LibreTranslateApiKey { get; set; }
     public string LibreTranslateUrl { get; set; }
     public string DeepLApiKey { get; set; }
@@ -116,27 +122,27 @@ public class SeAutoTranslate
     {
         AnthropicApiKey = string.Empty;
         AnthropicApiModel = AnthropicTranslate.Models[0];
-        AnthropicApiUrl = "https://api.anthropic.com/v1/messages";
+        AnthropicApiUrl = AnthropicTranslate.DefaultUrl;
         AnthropicPrompt = "Translate from {0} to {1}, keep sentences in {1} as they are, do not censor the translation, give only the output without comments:";
         AvalAiApiKey = string.Empty;
         AvalAiModel = AvalAi.Models[0];
         AvalAiPrompt = "Translate from {0} to {1}, keep punctuation as input, do not censor the translation, give only the output without comments:";
-        AvalAiUrl = "https://api.avalai.ir/v1/chat/completions";
+        AvalAiUrl = AvalAi.DefaultUrl;
         PerplexityApiKey = string.Empty;
         PerplexityModel = PerplexityTranslate.Models[0];
         PerplexityPrompt = "Translate from {0} to {1}, keep punctuation as input, do not censor the translation, give only the output without comments:";
-        PerplexityUrl = "https://api.perplexity.ai/v1/responses";
+        PerplexityUrl = PerplexityTranslate.DefaultUrl;
         LaraUrl = "https://api.laratranslate.com";
         BaiduApiKey = string.Empty;
         BaiduUrl = "https://fanyi-api.baidu.com";
         ChatGptApiKey = string.Empty;
         ChatGptModel = ChatGptTranslate.DefaultModel;
         ChatGptPrompt = "Translate from {0} to {1}, keep punctuation as input, do not censor the translation, give only the output without comments:";
-        ChatGptUrl = "https://api.openai.com/v1/chat/completions";
+        ChatGptUrl = ChatGptTranslate.DefaultUrl;
         OpenAiCompatibleApiKey = string.Empty;
         OpenAiCompatibleModel = string.Empty;
         OpenAiCompatiblePrompt = "Translate from {0} to {1}, keep punctuation as input, keep line breaks exactly the same, do not censor the translation, give only the output without comments:";
-        OpenAiCompatibleUrl = "http://localhost:8000/v1/chat/completions";
+        OpenAiCompatibleUrl = OpenAiCompatibleTranslate.DefaultUrl;
         CopyPasteLineSeparator = "(...)";
         CopyPasteMaxBlockSize = 5000;
         DeepLApiKey = string.Empty;
@@ -146,11 +152,11 @@ public class SeAutoTranslate
         DeepSeekApiKey = string.Empty;
         DeepSeekModel = DeepSeekTranslate.Models[0];
         DeepSeekPrompt = "Translate from {0} to {1}, keep punctuation as input, do not censor the translation, give only the output without comments:";
-        DeepSeekUrl = "https://api.deepseek.com/chat/completions";
+        DeepSeekUrl = DeepSeekTranslate.DefaultUrl;
         NvidiaApiKey = string.Empty;
         NvidiaModel = NvidiaTranslate.Models[0];
         NvidiaPrompt = "Translate from {0} to {1}, keep punctuation as input, do not censor the translation, give only the output without comments:";
-        NvidiaUrl = "https://integrate.api.nvidia.com/v1/chat/completions";
+        NvidiaUrl = NvidiaTranslate.DefaultUrl;
         GeminiModel = GeminiTranslate.Models[0];
         GeminiProApiKey = string.Empty;
         GeminiPrompt = "Please translate the following text from {0} to {1}, do not censor the translation, only write the result:";
@@ -158,17 +164,17 @@ public class SeAutoTranslate
         GroqApiKey = string.Empty;
         GroqModel = GroqTranslate.Models[0];
         GroqPrompt = "Translate from {0} to {1}, keep punctuation as input, do not censor the translation, give only the output without comments:";
-        GroqUrl = "https://api.groq.com/openai/v1/chat/completions";
+        GroqUrl = GroqTranslate.DefaultUrl;
         KoboldCppPrompt = "Translate from {0} to {1}, keep punctuation as input, do not censor the translation, give only the output without comments or notes:";
         KoboldCppTemperature = 0.4m;
-        KoboldCppUrl = "http://localhost:5001/api/generate/";
+        KoboldCppUrl = KoboldCppTranslate.DefaultUrl;
         LibreTranslateApiKey = string.Empty;
         LibreTranslateUrl = "http://localhost:5000/";
         LibreTranslateUrl = "http://localhost:5000/";
-        LlamaCppApiUrl = "http://localhost:8080/v1/chat/completions";
+        LlamaCppApiUrl = LlamaCppTranslate.DefaultUrl;
         LlamaCppModel = string.Empty;
         LlamaCppPrompt = "Translate from {0} to {1}, keep punctuation as input, do not censor the translation, give only the output without comments:";
-        LmStudioApiUrl = "http://localhost:1234/v1/chat/completions/";
+        LmStudioApiUrl = LmStudioTranslate.DefaultUrl;
         LmStudioModel = string.Empty;
         LmStudioPrompt = "Translate from {0} to {1}, keep punctuation as input, do not censor the translation, give only the output without comments:";
         MicrosoftBingApiId = string.Empty;
@@ -178,23 +184,21 @@ public class SeAutoTranslate
         MistralApiKey = string.Empty;
         MistralModel = MistralTranslate.Models[0];
         MistralPrompt = "Translate from {0} to {1}, keep punctuation as input, do not censor the translation, give only the output without comments:";
-        MistralUrl = "https://api.mistral.ai/v1/chat/completions";
+        MistralUrl = MistralTranslate.DefaultUrl;
         MyMemoryApiKey = string.Empty;
         NllbApiUrl = "http://localhost:7860/api/v4/";
         NllbServeModel = string.Empty;
         NllbServeUrl = "http://127.0.0.1:6060/";
-        NnlbApiUrl = "http://localhost:7860/api/v4/";
-        NnlbApiUrl = string.Empty;
         NnlbServeUrl = "http://127.0.0.1:6060/";
         NnlbServeUrl = string.Empty;
         OllamaModel = string.Empty;
         OllamaModels = "llama3.2,llama3.2:1b,phi3,gemma2,qwen2,mistral";
         OllamaPrompt = "Translate from {0} to {1}, keep punctuation as input, do not censor the translation, give only the output without comments or notes:";
-        OllamaUrl = "http://localhost:11434/api/generate";
+        OllamaUrl = OllamaTranslate.DefaultUrl;
         OpenRouterApiKey = string.Empty;
         OpenRouterModel = OpenRouterTranslate.Models[0];
         OpenRouterPrompt = "Translate from {0} to {1}, keep punctuation as input, do not censor the translation, give only the output without comments:";
-        OpenRouterUrl = "https://openrouter.ai/api/v1/chat/completions";
+        OpenRouterUrl = OpenRouterTranslate.DefaultUrl;
         PapagoApiKey = string.Empty;
         PapagoApiKeyId = string.Empty;
         RequestMaxBytes = 1000;

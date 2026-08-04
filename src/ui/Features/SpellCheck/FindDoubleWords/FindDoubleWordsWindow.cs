@@ -6,7 +6,6 @@ using Avalonia.Layout;
 using System.Collections;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
-using Nikse.SubtitleEdit.Logic.ValueConverters;
 
 namespace Nikse.SubtitleEdit.Features.SpellCheck.FindDoubleWords;
 
@@ -54,68 +53,66 @@ public class FindDoubleWordsWindow : Window
         Activated += delegate { buttonCancel.Focus(); }; // hack to make OnKeyDown work
 
         KeyDown += (s, e) => vm.OnKeyDown(e);
+
+        Closing += delegate { UiUtil.SaveWindowPosition(this); };
+        Loaded += delegate { UiUtil.RestoreWindowPosition(this); };
     }
 
     private static Border MakeGridView(FindDoubleWordsViewModel vm)
     {
-        var dataGrid = new DataGrid
-        {
-            Height = double.NaN, // auto size inside scroll viewer
-            Margin = new Thickness(2),
-            ItemsSource = vm.Subtitles, // Use ItemsSource instead of Items
-            CanUserSortColumns = false,
-            IsReadOnly = true,
-            SelectionMode = DataGridSelectionMode.Extended,
-            DataContext = vm.Subtitles,
-        };
+        var tableView = TableViewExtras.MakeTableView();
+        tableView.Height = double.NaN; // auto size inside scroll viewer
+        tableView.Margin = new Thickness(2);
+        tableView.ItemsSource = vm.Subtitles;
+        tableView.DataContext = vm.Subtitles;
 
-        dataGrid.DoubleTapped += vm.OnBookmarksGridDoubleTapped;
+        tableView.DoubleTapped += vm.OnBookmarksGridDoubleTapped;
 
-        var fullTimeConverter = new TimeSpanToDisplayFullConverter();
-        var shortTimeConverter = new TimeSpanToDisplayShortConverter();
-
-        // Columns
-        dataGrid.Columns.Add(new DataGridTextColumn
+        // Columns (the DataGrid sized the number column to content; TableView treats
+        // Auto as star, so it gets a fixed width instead)
+        tableView.Columns.Add(new SeTableViewColumn
         {
             Header = Se.Language.General.NumberSymbol,
             Binding = new Binding(nameof(DoubleWordItem.Number)),
-            CellTheme = UiUtil.DataGridNoBorderCellTheme,
+            Width = new GridLength(60),
+            CellTheme = UiUtil.TableViewCellTheme,
+            HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
         });
-        dataGrid.Columns.Add(new DataGridTextColumn
+        tableView.Columns.Add(new SeTableViewColumn
         {
             Header = Se.Language.General.Text,
             Binding = new Binding(nameof(DoubleWordItem.Text)),
-            CellTheme = UiUtil.DataGridNoBorderCellTheme,
-            Width = new DataGridLength(1, DataGridLengthUnitType.Star) // star sizing to take all available space
+            Width = new GridLength(1, GridUnitType.Star), // star sizing to take all available space
+            CellTheme = UiUtil.TableViewCellTheme,
+            HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
         });
-        dataGrid.Columns.Add(new DataGridTextColumn
+        tableView.Columns.Add(new SeTableViewColumn
         {
             Header = Se.Language.General.DoubleWords,
             Binding = new Binding(nameof(DoubleWordItem.Hit)),
-            CellTheme = UiUtil.DataGridNoBorderCellTheme,
-            Width = new DataGridLength(1, DataGridLengthUnitType.Star) // star sizing to take all available space
+            Width = new GridLength(1, GridUnitType.Star), // star sizing to take all available space
+            CellTheme = UiUtil.TableViewCellTheme,
+            HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
         });
 
-        dataGrid.DataContext = vm.Subtitles;
-        dataGrid.Bind(DataGrid.SelectedItemProperty, new Binding(nameof(vm.SelectedSubtitle))
+        TableViewExtras.BindSelectedItem(tableView, vm, nameof(vm.SelectedSubtitle));
+        tableView.DoubleTapped += (s, e) => vm.GoToCommand.Execute(null);
+        tableView.KeyDown += (s, e) => vm.GridKeyDown(e);
+        tableView.AddHandler(InputElement.KeyDownEvent, (object? _, KeyEventArgs e) =>
         {
-            Source = vm,
-            Mode = BindingMode.TwoWay
-        });
-        dataGrid.SelectionChanged += vm.GridSelectionChanged;
-        dataGrid.DoubleTapped += (s, e) => vm.GoToCommand.Execute(null);
-        dataGrid.KeyDown += (s, e) => vm.GridKeyDown(e);
-        dataGrid.AddHandler(InputElement.KeyDownEvent, (object? _, KeyEventArgs e) =>
-        {
-            if (e.Key is Key.Home or Key.End && dataGrid.ItemsSource is IList items && items.Count > 0)
+            if (e.Key is Key.Home or Key.End && tableView.ItemsSource is IList items && items.Count > 0)
             {
                 var target = e.Key == Key.Home ? items[0] : items[^1];
-                dataGrid.SelectedItem = target;
-                dataGrid.ScrollIntoView(target, null);
+                tableView.SelectedItem = target;
+                if (target != null)
+                {
+                    tableView.ScrollIntoView(target);
+                }
+
                 e.Handled = true;
             }
         }, Avalonia.Interactivity.RoutingStrategies.Tunnel);
 
-        return UiUtil.MakeBorderForControlNoPadding(dataGrid);
+        return UiUtil.MakeBorderForControlNoPadding(tableView);
     }
 }

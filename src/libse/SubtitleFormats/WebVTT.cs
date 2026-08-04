@@ -12,16 +12,55 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
     /// <summary>
     /// https://w3c.github.io/webvtt/
     /// </summary>
-    public class WebVTT : SubtitleFormat
+    public partial class WebVTT : SubtitleFormat
     {
+#if NET7_0_OR_GREATER
+        [GeneratedRegex(@"^-?\d+:-?\d+:-?\d+\.-?\d+\s*-->\s*-?\d+:-?\d+:-?\d+\.-?\d+")]
+        private static partial Regex RegexTimeCodesGen();
+        private static readonly Regex RegexTimeCodes = RegexTimeCodesGen();
+
+        [GeneratedRegex(@"^-?\d+:-?\d+\.-?\d+\s*-->\s*-?\d+:-?\d+:-?\d+\.-?\d+")]
+        private static partial Regex RegexTimeCodesMiddleGen();
+        private static readonly Regex RegexTimeCodesMiddle = RegexTimeCodesMiddleGen();
+
+        [GeneratedRegex(@"^-?\d+:-?\d+\.-?\d+\s*-->\s*-?\d+:-?\d+\.-?\d+")]
+        private static partial Regex RegexTimeCodesShortGen();
+        private static readonly Regex RegexTimeCodesShort = RegexTimeCodesShortGen();
+
+        [GeneratedRegex(@"^-?\d+:-?\d+:-?\d+\.-?\d+\s*-->\s*-?\d+:-?\d+\.-?\d+")]
+        private static partial Regex RegexTimeCodesEndShortGen();
+        private static readonly Regex RegexTimeCodesEndShort = RegexTimeCodesEndShortGen();
+
+        [GeneratedRegex(@"-->\s*")]
+        private static partial Regex RegexShortArrowGen();
+        private static readonly Regex RegexShortArrow = RegexShortArrowGen();
+
+        [GeneratedRegex(@"\</?c([a-zA-Z\._\-\d%#]*)\>")]
+        private static partial Regex RegexRemoveCTagsGen();
+        private static readonly Regex RegexRemoveCTags = RegexRemoveCTagsGen();
+
+        [GeneratedRegex(@"\<\d+:\d+:\d+\.\d+\>")] // <00:00:10.049>
+        private static partial Regex RegexRemoveTimeCodesGen();
+        private static readonly Regex RegexRemoveTimeCodes = RegexRemoveTimeCodesGen();
+
+        [GeneratedRegex(@"(\{\\an\d\})[\s\r\n]+")]
+        private static partial Regex RegexTagsPlusWhiteSpaceGen();
+        private static readonly Regex RegexTagsPlusWhiteSpace = RegexTagsPlusWhiteSpaceGen();
+
+        [GeneratedRegex(@"::cue\(([a-zA-Z\._\-\d%#]*)\)\s*{")]
+        private static partial Regex RegexCueLineGen();
+        private static readonly Regex RegexCueLine = RegexCueLineGen();
+#else
         private static readonly Regex RegexTimeCodes = new Regex(@"^-?\d+:-?\d+:-?\d+\.-?\d+\s*-->\s*-?\d+:-?\d+:-?\d+\.-?\d+", RegexOptions.Compiled);
         private static readonly Regex RegexTimeCodesMiddle = new Regex(@"^-?\d+:-?\d+\.-?\d+\s*-->\s*-?\d+:-?\d+:-?\d+\.-?\d+", RegexOptions.Compiled);
         private static readonly Regex RegexTimeCodesShort = new Regex(@"^-?\d+:-?\d+\.-?\d+\s*-->\s*-?\d+:-?\d+\.-?\d+", RegexOptions.Compiled);
+        private static readonly Regex RegexTimeCodesEndShort = new Regex(@"^-?\d+:-?\d+:-?\d+\.-?\d+\s*-->\s*-?\d+:-?\d+\.-?\d+", RegexOptions.Compiled);
         private static readonly Regex RegexShortArrow = new Regex(@"-->\s*", RegexOptions.Compiled);
         private static readonly Regex RegexRemoveCTags = new Regex(@"\</?c([a-zA-Z\._\-\d%#]*)\>", RegexOptions.Compiled);
         private static readonly Regex RegexRemoveTimeCodes = new Regex(@"\<\d+:\d+:\d+\.\d+\>", RegexOptions.Compiled); // <00:00:10.049>
         private static readonly Regex RegexTagsPlusWhiteSpace = new Regex(@"(\{\\an\d\})[\s\r\n]+", RegexOptions.Compiled);
         private static readonly Regex RegexCueLine = new Regex(@"::cue\(([a-zA-Z\._\-\d%#]*)\)\s*{", RegexOptions.Compiled);
+#endif
 
         public static readonly Dictionary<string, SKColor> DefaultColorClasses = new Dictionary<string, SKColor>
         {
@@ -267,6 +306,11 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     s = "00:" + RegexShortArrow.Replace(s, "--> 00:", 1);
                 }
 
+                if (isTimeCode && RegexTimeCodesEndShort.IsMatch(s))
+                {
+                    s = RegexShortArrow.Replace(s, "--> 00:", 1); // start has hours, end is without hours
+                }
+
                 if (isNextTimeCode && Utilities.IsNumber(s) && p?.Text.Length > 0)
                 {
                     numbers++;
@@ -312,6 +356,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 else if (p != null && hadEmptyLine &&
                          (RegexTimeCodesMiddle.IsMatch(next) ||
                           RegexTimeCodesShort.IsMatch(next) ||
+                          RegexTimeCodesEndShort.IsMatch(next) ||
                           RegexTimeCodes.IsMatch(next)))
                 {
                     // can both be number or an "identifier" which can be text
@@ -358,6 +403,13 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 //  paragraph.Text = ColorWebVttToHtml(paragraph.Text);
                 paragraph.Text = EscapeDecodeText(paragraph.Text);
                 paragraph.Text = RemoveWeirdRepeatingHeader(paragraph.Text);
+            }
+
+            // YouTube auto-generated captions are roll-up captions with per-word time codes, which
+            // load as unreadable duplicated karaoke text - turn them into one cue per spoken line.
+            if (WebVttAutoCaptionsCleaner.IsAutoCaptions(subtitle))
+            {
+                WebVttAutoCaptionsCleaner.Clean(subtitle);
             }
 
             if (Configuration.Settings.SubtitleSettings.WebVttMergeLinesWithSameText)
@@ -885,8 +937,18 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             return null;
         }
 
+#if NET7_0_OR_GREATER
+        [GeneratedRegex(@"<c.[a-z]*>")]
+        private static partial Regex RegexWebVttColorGen();
+        private static readonly Regex RegexWebVttColor = RegexWebVttColorGen();
+
+        [GeneratedRegex(@"<c.[a-z0123456789]*>")]
+        private static partial Regex RegexWebVttColorHexGen();
+        private static readonly Regex RegexWebVttColorHex = RegexWebVttColorHexGen();
+#else
         private static readonly Regex RegexWebVttColor = new Regex(@"<c.[a-z]*>", RegexOptions.Compiled);
         private static readonly Regex RegexWebVttColorHex = new Regex(@"<c.[a-z0123456789]*>", RegexOptions.Compiled);
+#endif
 
         internal static string ColorWebVttToHtml(string text)
         {
@@ -934,10 +996,28 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             return res;
         }
 
+#if NET7_0_OR_GREATER
+        [GeneratedRegex("<font color=\"[a-z]*\">")]
+        private static partial Regex RegexHtmlColorGen();
+        private static readonly Regex RegexHtmlColor = RegexHtmlColorGen();
+
+        [GeneratedRegex("<font color=[a-z]*>")]
+        private static partial Regex RegexHtmlColor2Gen();
+        private static readonly Regex RegexHtmlColor2 = RegexHtmlColor2Gen();
+
+        [GeneratedRegex("<font color=\"#[ABCDEFabcdef\\d]*\">")]
+        private static partial Regex RegexHtmlColor3Gen();
+        private static readonly Regex RegexHtmlColor3 = RegexHtmlColor3Gen();
+
+        [GeneratedRegex("<font color=\"[A-Za-z]*\">")]
+        private static partial Regex RegexHtmlColor4Gen();
+        private static readonly Regex RegexHtmlColor4 = RegexHtmlColor4Gen();
+#else
         private static readonly Regex RegexHtmlColor = new Regex("<font color=\"[a-z]*\">", RegexOptions.Compiled);
         private static readonly Regex RegexHtmlColor2 = new Regex("<font color=[a-z]*>", RegexOptions.Compiled);
         private static readonly Regex RegexHtmlColor3 = new Regex("<font color=\"#[ABCDEFabcdef\\d]*\">", RegexOptions.Compiled);
         private static readonly Regex RegexHtmlColor4 = new Regex("<font color=\"[A-Za-z]*\">", RegexOptions.Compiled);
+#endif
 
         private static string ColorHtmlToWebVtt(string text)
         {

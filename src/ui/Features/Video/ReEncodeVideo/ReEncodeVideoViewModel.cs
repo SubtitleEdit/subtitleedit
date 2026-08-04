@@ -5,6 +5,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
+using Nikse.SubtitleEdit.Features.Shared.PromptFileSaved;
 using Nikse.SubtitleEdit.Features.Shared;
 using Nikse.SubtitleEdit.Features.Shared.PromptTextBox;
 using Nikse.SubtitleEdit.Features.Video.BurnIn;
@@ -20,6 +21,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Timers;
+using Nikse.SubtitleEdit.UiLogic.Media;
 
 namespace Nikse.SubtitleEdit.Features.Video.ReEncodeVideo;
 
@@ -47,7 +49,6 @@ public partial class ReEncodeVideoViewModel : ObservableObject
 
     private Subtitle _subtitle = new();
     private readonly StringBuilder _log;
-    private static readonly Regex FrameFinderRegex = new(@"[Ff]rame=\s*\d+", RegexOptions.Compiled);
     private long _startTicks;
     private long _processedFrames;
     private Process? _ffmpegProcess;
@@ -225,7 +226,15 @@ public partial class ReEncodeVideoViewModel : ObservableObject
 
             if (JobItems.Count == 1)
             {
-                await _folderHelper.OpenFolderWithFileSelected(Window!, jobItem.OutputVideoFileName);
+                await _windowService.ShowDialogAsync<PromptFileSavedWindow, PromptFileSavedViewModel>(Window!, vm =>
+                {
+                    vm.Initialize(
+                        Se.Language.General.VideoFileGenerated,
+                        string.Format(Se.Language.General.VideoFileGeneratedX, jobItem.OutputVideoFileName),
+                        jobItem.OutputVideoFileName,
+                        true,
+                        true);
+                });
             }
             else
             {
@@ -290,6 +299,10 @@ public partial class ReEncodeVideoViewModel : ObservableObject
             ffmpegParameters = result.Text.Trim();
         }
 
+        // Machine-readable progress on stdout ("frame=N" etc.) instead of scraping the
+        // human-readable stderr stats, which drift between ffmpeg versions.
+        ffmpegParameters = FfmpegProgressTracker.ProgressArguments + " " + ffmpegParameters;
+
         _ffmpegProcess = FfmpegGenerator.GetProcess(ffmpegParameters, OutputHandler);
 #pragma warning disable CA1416 // Validate platform compatibility
         _ffmpegProcess.Start();
@@ -307,25 +320,20 @@ public partial class ReEncodeVideoViewModel : ObservableObject
             return;
         }
 
+        if (FfmpegProgressTracker.TryGetFrame(outLine.Data, out var frame))
+        {
+            _processedFrames = frame;
+            ProgressValue = _processedFrames * 100.0 / JobItems[_jobItemIndex].TotalFrames;
+            return;
+        }
+
+        // Keep the twice-a-second "-progress" key/value spam out of the user-facing log.
+        if (FfmpegProgressTracker.IsProgressLine(outLine.Data))
+        {
+            return;
+        }
+
         _log?.AppendLine(outLine.Data);
-
-        var match = FrameFinderRegex.Match(outLine.Data);
-        if (!match.Success)
-        {
-            return;
-        }
-
-        var arr = match.Value.Split('=');
-        if (arr.Length != 2)
-        {
-            return;
-        }
-
-        if (long.TryParse(arr[1].Trim(), out var f))
-        {
-            _processedFrames = f;
-            ProgressValue = (double)_processedFrames * 100.0 / JobItems[_jobItemIndex].TotalFrames;
-        }
     }
 
     private ObservableCollection<BurnInJobItem> GetCurrentVideoAsJobItems(string outputVideoFileName)
@@ -404,7 +412,7 @@ public partial class ReEncodeVideoViewModel : ObservableObject
     private async Task Generate()
     {
         var outputVideoFileName = Path.ChangeExtension(VideoFileName, SelectedVideoExtension);
-        outputVideoFileName = await _fileHelper.PickSaveFile(Window!, SelectedVideoExtension, outputVideoFileName, Se.Language.Video.SaveVideoAsTitle);
+        outputVideoFileName = await _fileHelper.PickSaveFile(Window!, SelectedVideoExtension, outputVideoFileName, Se.Language.General.SaveVideoAsVideoTitle);
         if (string.IsNullOrEmpty(outputVideoFileName))
         {
             return;

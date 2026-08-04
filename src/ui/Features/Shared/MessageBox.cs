@@ -7,6 +7,7 @@ using Avalonia.Media.Imaging;
 using CommunityToolkit.Mvvm.Input;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
+using System.IO;
 using System.Threading.Tasks;
 
 namespace Nikse.SubtitleEdit.Features.Shared;
@@ -21,6 +22,7 @@ public enum MessageBoxResult
     Custom1,
     Custom2,
     Custom3,
+    Custom4,
 }
 
 public enum MessageBoxButtons
@@ -52,7 +54,7 @@ public class MessageBox : Window
     private readonly bool _hasOnlyOk;
     private readonly bool _hasNo;
 
-    private MessageBox(string title, string message, MessageBoxButtons buttons, MessageBoxIcon icon, string? custom1 = null, string? custom2 = null, string? custom3 = null)
+    private MessageBox(string title, string message, MessageBoxButtons buttons, MessageBoxIcon icon, string? custom1 = null, string? custom2 = null, string? custom3 = null, string? custom4 = null)
     {
         UiUtil.InitializeWindow(this, GetType().Name);
         Title = title;
@@ -91,14 +93,16 @@ public class MessageBox : Window
 
         if (icon != MessageBoxIcon.None)
         {
-            var iconPath = $"Assets/Themes/Dark/{icon}.png";
+            // Theme images are unpacked from Themes.zip into Se.ThemesFolder at start-up; a path
+            // relative to the working directory never resolved, so no icon was ever shown here.
+            var iconPath = Path.Combine(UiTheme.ImageFolder, $"{icon}.png");
             try
             {
                 iconImage.Source = new Bitmap(iconPath);
             }
             catch
             {
-                // If icon not found, silently ignore
+                Se.LogError($"Could not load message box icon \"{iconPath}\".");
             }
 
             grid.Children.Add(iconImage);
@@ -168,6 +172,11 @@ public class MessageBox : Window
             AddButton(custom3, MessageBoxResult.Custom3);
         }
 
+        if (!string.IsNullOrEmpty(custom4))
+        {
+            AddButton(custom4, MessageBoxResult.Custom4);
+        }
+
         // Add buttons based on MessageBoxButtons
         switch (buttons)
         {
@@ -226,7 +235,10 @@ public class MessageBox : Window
         grid.ContextFlyout = contextMenu;
         UiUtil.AttachMacContextFlyoutHandler(this, grid);
 
-        Activated += delegate { buttonPanel.Children[0].Focus(); }; // hack to make OnKeyDown work
+        // Focus the last button (buttons are added positive-first, so the last one is the
+        // negative/cancel choice) - a focused button clicks on bare Space, and focusing e.g.
+        // "Yes" in a Yes/No box would make Space answer Yes by accident.
+        Activated += delegate { buttonPanel.Children[buttonPanel.Children.Count - 1].Focus(); };
 
         UiTheme.ApplyScaleToWindow(this);
     }
@@ -239,9 +251,10 @@ public class MessageBox : Window
         MessageBoxIcon icon = MessageBoxIcon.None,
         string? custom1 = null,
         string? custom2 = null,
-        string? custom3 = null)
+        string? custom3 = null,
+        string? custom4 = null)
     {
-        var msgBox = new MessageBox(title, message, buttons, icon, custom1, custom2, custom3);
+        var msgBox = new MessageBox(title, message, buttons, icon, custom1, custom2, custom3, custom4);
 
         // Keep the message box above undocked tool windows (audio visualizer / video player),
         // which float on top of the main window via KeepTopmostWhileOwnerActive. Without this the

@@ -24,6 +24,7 @@ public class LanguageMain
     public string ErrorLoadJpg { get; set; }
     public string ErrorLoadPng { get; set; }
     public string ErrorLoadRar { get; set; }
+    public string ErrorLoadRawPgsPrompt { get; set; }
     public string ErrorLoadSrr { get; set; }
     public string ErrorLoadTorrent { get; set; }
     public string ErrorLoadZip { get; set; }
@@ -58,7 +59,6 @@ public class LanguageMain
     public string RemovedUnicodeControlCharactersX { get; set; }
     public string RemovedXBlankLines { get; set; }
     public string ReplacedXWithYCountZ { get; set; }
-    public string ReplacedXWithYInLineZ { get; set; }
     public string ReversedStartAndEndingsForRightToLeftX { get; set; }
     public string RuleProfileIsX { get; set; }
     public string SaveLanguageFile { get; set; }
@@ -66,7 +66,6 @@ public class LanguageMain
     public string ShiftTextCellsDown { get; set; }
     public string SingleLineLength { get; set; }
     public string SpeedIsNowX { get; set; }
-    public string SpellCheckResult { get; set; }
     public string SubtitleGridFormattingX { get; set; }
     public string SubtitleImportedFromMatroskaFile { get; set; }
     public string TextDown { get; set; }
@@ -153,6 +152,7 @@ public class LanguageMain
         ErrorLoadJpg = "This file seems to be a JPG image file.\n\nSubtitle Edit cannot open image files.";
         ErrorLoadPng = "This file seems to be a PNG image file.\n\nSubtitle Edit cannot open image files.";
         ErrorLoadRar = "This file seems to be a compressed 7-Zip file.\n\nSubtitle Edit cannot open compressed files.";
+        ErrorLoadRawPgsPrompt = "This file seems to be a raw PGS stream without the Blu-ray SUP \"PG\" headers, so it contains no timestamps.\n\nThis usually happens when a Matroska PGS track is extracted in \"raw\" mode. For correct timings, re-extract the track in normal track mode (e.g. \"mkvextract tracks\" without --raw), or open the original Matroska file directly in Subtitle Edit.\n\nDo you want to import the subtitle images anyway, with auto-generated placeholder timings that must be fixed manually?";
         ErrorLoadSrr = "This file seems to be a ReScene SRR file.\n\nSubtitle Edit cannot open SRR files.";
         ErrorLoadTorrent = "This file seems to be a BitTorrent file.\n\nSubtitle Edit cannot open torrent files.";
         ErrorLoadZip = "This file seems to be a compressed ZIP file.\n\nSubtitle Edit cannot open compressed files.";
@@ -187,7 +187,6 @@ public class LanguageMain
         RemovedUnicodeControlCharactersX = "Removed Unicode control characters from {0} lines";
         RemovedXBlankLines = "Removed {0} blank lines";
         ReplacedXWithYCountZ = "Replaced \"{0}\" with \"{1}\" ({2} occurrences)";
-        ReplacedXWithYInLineZ = "Replaced \"{0}\" with \"{1}\" in line {2}";
         ReversedStartAndEndingsForRightToLeftX = "Reversed start and endings for right-to-left in {0} lines";
         RuleProfileIsX = "Rule profile is now \"{0}\"";
         SaveLanguageFile = "Save language file";
@@ -195,7 +194,6 @@ public class LanguageMain
         ShiftTextCellsDown = "Shift text cells down";
         SingleLineLength = "Line length: ";
         SpeedIsNowX = "Speed is now \"{0}\"";
-        SpellCheckResult = "Spell check completed. \n\n• Changed words: {0}\n• Skipped words: {1}";
         SubtitleGridFormattingX = "Grid formatting: {0}";
         SubtitleImportedFromMatroskaFile = "Subtitle imported from Matroska file";
         TextDown = "Text down";
@@ -208,7 +206,7 @@ public class LanguageMain
         UndoPerformed = "Undo performed";
         UndoPerformedXActionLeft = "Undo performed (actions left: {0})";
         XLinesCopiedFromOriginal = "{0} lines copied from original subtitle";
-        XLinesMerged = "X lines merged";
+        XLinesMerged = "{0} lines merged";
         XLinesSelectedOfY = "{0} lines selected of {1}";
         XLinesSwitched = "{0} lines switched";
         XShotChangedLoaded = "{0} shot changes loaded";

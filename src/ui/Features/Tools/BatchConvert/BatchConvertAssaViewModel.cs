@@ -5,9 +5,9 @@ using Avalonia.Input;
 using Avalonia.Layout;
 using Avalonia.Media;
 using Avalonia.Threading;
-using AvaloniaEdit;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using Nikse.SubtitleEdit.Controls.SyntaxTextEditorControl;
 using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using Nikse.SubtitleEdit.Features.Assa;
@@ -43,18 +43,21 @@ public partial class BatchConvertAssaViewModel : ObservableObject
         _windowService = windowService;
 
         Text = string.Empty;
-        SourceViewTextBox = new TextEditorWrapper(new TextEditor(), new Border());
+        SourceViewTextBox = new SyntaxTextEditorWrapper(new SyntaxTextEditor());
         TextBoxContainer = new Border();
         Fonts = new ObservableCollection<string>(FontHelper.GetSystemFonts());
         BorderTypes = new ObservableCollection<BorderStyleItem>(BorderStyleItem.List());
         SelectedBorderType = BorderTypes[0];
         _subtitle = new Subtitle();
         _subtitle.Paragraphs.Add(new Paragraph("Sample subtitle", 0, 2000));
-        Text = _subtitle.ToText(new AdvancedSubStationAlpha());
 
         UseSourceStylesIfPossible = Se.Settings.Tools.BatchConvert.AssaUseSourceStylesIfPossible;
         _subtitle.Header = Se.Settings.Tools.BatchConvert.AssaHeader;
         _subtitle.Footer = Se.Settings.Tools.BatchConvert.AssaFooter;
+
+        // Generate the source view after the saved header/footer have been applied - otherwise
+        // the window always shows the default styles instead of the saved ones (#12839).
+        Text = _subtitle.ToText(new AdvancedSubStationAlpha());
     }
 
     [RelayCommand]
@@ -64,6 +67,8 @@ public partial class BatchConvertAssaViewModel : ObservableObject
         {
             return;
         }
+
+        UpdateSubtitleFromText();
 
         var result = await _windowService.ShowDialogAsync<AssaStylesWindow, AssaStylesViewModel>(Window, vm =>
         {
@@ -85,6 +90,8 @@ public partial class BatchConvertAssaViewModel : ObservableObject
             return;
         }
 
+        UpdateSubtitleFromText();
+
         var result = await _windowService.ShowDialogAsync<AssaAttachmentsWindow, AssaAttachmentsViewModel>(Window, vm =>
         {
             vm.Initialize(_subtitle, new AdvancedSubStationAlpha(), string.Empty);
@@ -105,6 +112,8 @@ public partial class BatchConvertAssaViewModel : ObservableObject
             return;
         }
 
+        UpdateSubtitleFromText();
+
         var result = await _windowService.ShowDialogAsync<AssaPropertiesWindow, AssaPropertiesViewModel>(Window, vm =>
         {
             vm.Initialize(_subtitle, new AdvancedSubStationAlpha(), string.Empty, string.Empty);
@@ -120,11 +129,37 @@ public partial class BatchConvertAssaViewModel : ObservableObject
     [RelayCommand]
     private void Ok()
     {
+        // Pick up any hand edits made in the source view before saving.
+        UpdateSubtitleFromText();
+
         OkPressed = true;
         Se.Settings.Tools.BatchConvert.AssaUseSourceStylesIfPossible = UseSourceStylesIfPossible;
-        Se.Settings.Tools.BatchConvert.AssaHeader = _subtitle.Header;
-        Se.Settings.Tools.BatchConvert.AssaFooter = _subtitle.Footer;
+        Se.Settings.Tools.BatchConvert.AssaHeader = _subtitle.Header ?? string.Empty;
+        Se.Settings.Tools.BatchConvert.AssaFooter = _subtitle.Footer ?? string.Empty;
+        Se.SaveSettings();
         Window?.Close();
+    }
+
+    /// <summary>
+    /// Read the header/footer back from the source view, so edits made directly in the
+    /// text editor are kept and not overwritten by the last dialog result.
+    /// </summary>
+    private void UpdateSubtitleFromText()
+    {
+        if (string.IsNullOrWhiteSpace(Text))
+        {
+            return;
+        }
+
+        var sub = new Subtitle();
+        new AdvancedSubStationAlpha().LoadSubtitle(sub, Text.SplitToLines(), string.Empty);
+        if (string.IsNullOrEmpty(sub.Header))
+        {
+            return; // not parsable as ASSA - keep what we have
+        }
+
+        _subtitle.Header = sub.Header;
+        _subtitle.Footer = sub.Footer;
     }
 
     [RelayCommand]
@@ -133,113 +168,68 @@ public partial class BatchConvertAssaViewModel : ObservableObject
         Window?.Close();
     }
 
-    private TextBoxWrapper CreateSimpleTextBoxWrapper()
+    private SyntaxTextEditorWrapper CreateAdvancedTextBoxWrapper(string text)
     {
-        var textBox = new TextBox
-        {
-            Margin = new Thickness(0, 0, 10, 0),
-            [!TextBox.TextProperty] = new Binding(nameof(Text)) { Mode = BindingMode.TwoWay },
-            VerticalAlignment = VerticalAlignment.Stretch,
-            HorizontalAlignment = HorizontalAlignment.Stretch,
-            AcceptsReturn = true,
-        };
-
-        return new TextBoxWrapper(textBox);
-    }
-
-    private TextEditorWrapper CreateAdvancedTextBoxWrapper(string text)
-    {
-        var textBox = new TextEditor
+        var editor = new SyntaxTextEditor
         {
             Margin = new Thickness(0, 0, 10, 0),
             VerticalAlignment = VerticalAlignment.Stretch,
             HorizontalAlignment = HorizontalAlignment.Stretch,
             ShowLineNumbers = true,
-            WordWrap = false,
+            SourceHighlighter = new AssaSourceSyntaxHighlighting(),
+            Text = text,
         };
 
-        // Override the built-in link color with our softer pastel color
-        textBox.TextArea.TextView.LinkTextForegroundBrush = UiUtil.MakeLinkForeground();
+        // Two way by hand: the ASSA property editors rebuild Text, and typing in the editor has to
+        // come back the other way. The header is small, so mirroring it per keystroke is fine here.
+        var updating = false;
 
-        // Add syntax highlighting for subtitle source formats
-        var lineTransformer = new AssaSourceSyntaxHighlighting();
-        if (lineTransformer != null)
+        PropertyChanged += (_, e) =>
         {
-            textBox.TextArea.TextView.LineTransformers.Add(lineTransformer);
-        }
-
-        // Setup two-way binding manually since TextEditor doesn't support direct binding
-        var isUpdatingFromViewModel = false;
-        var isUpdatingFromEditor = false;
-
-        void UpdateEditorFromViewModel()
-        {
-            if (isUpdatingFromEditor)
+            if (e.PropertyName != nameof(Text) || updating)
             {
                 return;
             }
 
-            isUpdatingFromViewModel = true;
+            updating = true;
             try
             {
-                var text = Text ?? string.Empty;
-                if (textBox.Text != text)
-                {
-                    textBox.Text = text;
-                }
+                editor.Text = Text ?? string.Empty;
             }
             finally
             {
-                isUpdatingFromViewModel = false;
+                updating = false;
             }
-        }
+        };
 
-        void UpdateViewModelFromEditor()
+        editor.TextChanged += (_, _) =>
         {
-            if (isUpdatingFromViewModel)
+            if (updating)
             {
                 return;
             }
 
-            isUpdatingFromEditor = true;
+            updating = true;
             try
             {
-                if (Text != textBox.Text)
-                {
-                    Text = textBox.Text;
-                }
+                Text = editor.Text;
             }
             finally
             {
-                isUpdatingFromEditor = false;
-            }
-        }
-
-        // Listen to ViewModel changes
-        PropertyChanged += (s, e) =>
-        {
-            if (e.PropertyName == nameof(Text))
-            {
-                UpdateEditorFromViewModel();
+                updating = false;
             }
         };
-
-        // Listen to TextEditor changes
-        textBox.TextChanged += (s, e) => UpdateViewModelFromEditor();
-
-        // Initial text load
-        UpdateEditorFromViewModel();
 
         var textBoxBorder = new Border
         {
             BorderBrush = Brushes.Gray,
             BorderThickness = new Thickness(1),
-            Child = textBox,
+            Child = editor,
             VerticalAlignment = VerticalAlignment.Stretch,
             HorizontalAlignment = HorizontalAlignment.Stretch,
         };
 
-        return new TextEditorWrapper(textBox, textBoxBorder);
+        return new SyntaxTextEditorWrapper(editor, textBoxBorder);
     }
 
     internal void OnKeyDown(KeyEventArgs e)
@@ -257,15 +247,7 @@ public partial class BatchConvertAssaViewModel : ObservableObject
         {
             await Task.Delay(50); // Slight delay to ensure control is ready
 
-            var useSimpleTextBox = Text.Length > 2_000_000;
-            if (useSimpleTextBox)
-            {
-                SourceViewTextBox = CreateSimpleTextBoxWrapper();
-            }
-            else
-            {
-                SourceViewTextBox = CreateAdvancedTextBoxWrapper(Text);
-            }
+            SourceViewTextBox = CreateAdvancedTextBoxWrapper(Text);
 
             TextBoxContainer.Child = SourceViewTextBox.ContentControl;
 

@@ -10,6 +10,7 @@ using Nikse.SubtitleEdit.Core.Interfaces;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using Nikse.SubtitleEdit.Features.Main;
 using Nikse.SubtitleEdit.Features.Ocr.FixEngine;
+using Nikse.SubtitleEdit.Features.Shared;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Logic.Config.Language.Tools;
@@ -21,11 +22,19 @@ using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Nikse.SubtitleEdit.UiLogic.Ocr.FixEngine;
+using Nikse.SubtitleEdit.UiLogic.Common;
 
 namespace Nikse.SubtitleEdit.Features.Tools.FixCommonErrors;
 
 public partial class FixCommonErrorsViewModel : ObservableObject, IFixCallbacks
 {
+    // A scan often takes only a frame or two, so "Analyzing..." has to be held for a moment to be seen at all.
+    private const int AnalysingMinimumVisibleMilliseconds = 250;
+
+    // Long enough for the dispatcher to get a frame out before the scan blocks the UI thread again.
+    private const int AnalysingPaintDelayMilliseconds = 20;
+
     [ObservableProperty] private string _searchText;
     [ObservableProperty] private ObservableCollection<LanguageDisplayItem> _languages;
     [ObservableProperty] private LanguageDisplayItem? _selectedLanguage;
@@ -44,6 +53,8 @@ public partial class FixCommonErrorsViewModel : ObservableObject, IFixCallbacks
     [ObservableProperty] private bool _tryToGuessUnknownWords;
     [ObservableProperty] private string _step2Title;
     [ObservableProperty] private string _fixesAppliedText = string.Empty;
+    [ObservableProperty] private bool _nothingToFixIsVisible;
+    [ObservableProperty] private bool _analysingIsVisible;
     [ObservableProperty] private string _editTextTotalLength = string.Empty;
     [ObservableProperty] private IBrush _editTextTotalLengthBackground = Brushes.Transparent;
 
@@ -55,7 +66,7 @@ public partial class FixCommonErrorsViewModel : ObservableObject, IFixCallbacks
     public SubtitleFormat Format { get; set; } = new SubRip();
     public Encoding Encoding { get; set; } = Encoding.UTF8;
     public string Language { get; set; } = "en";
-    public DataGrid GridSubtitles { get; internal set; }
+    public TableView GridSubtitles { get; internal set; }
 
     public Subtitle FixedSubtitle = new();
 
@@ -64,11 +75,17 @@ public partial class FixCommonErrorsViewModel : ObservableObject, IFixCallbacks
     private bool _previewMode = true;
     public List<int> DeleteIndices = new();
     private List<FixDisplayItem> _oldFixes = new();
+    private HashSet<(Guid? id, string action)>? _allowedFixLookup;
+    private FixRuleDisplayItem? _currentRunningRule;
+    private bool _nothingToFix;
+    private bool _isAnalysing;
     private LanguageDisplayItem _oldSelectedLanguage;
     private int _totalErrors;
     private int _totalFixes;
     private SubtitleFormat _subtitleFormat;
     private readonly INamesList _namesList;
+    private string? _namesListFolder;
+    private string? _namesListLanguage;
     private readonly IWindowService _windowService;
     private readonly IOcrFixEngine _ocrFixEngine;
 
@@ -78,7 +95,7 @@ public partial class FixCommonErrorsViewModel : ObservableObject, IFixCallbacks
         _windowService = windowService;
         _ocrFixEngine = ocrFixEngine;
 
-        GridSubtitles = new DataGrid();
+        GridSubtitles = new TableView();
         SearchText = string.Empty;
         Languages = new ObservableCollection<LanguageDisplayItem>();
         Language = new string(' ', 0);
@@ -197,19 +214,22 @@ public partial class FixCommonErrorsViewModel : ObservableObject, IFixCallbacks
     }
 
     [RelayCommand]
-    public void DoRefreshFixes()
+    public async Task DoRefreshFixes()
     {
-        RefreshFixes();
+        await RunScanWithFeedbackAsync(RefreshFixes);
     }
 
     [RelayCommand]
-    private void DoApplyFixes()
+    private async Task DoApplyFixes()
     {
-        _previewMode = false;
-        ApplyFixes();
+        await RunScanWithFeedbackAsync(() =>
+        {
+            _previewMode = false;
+            ApplyFixes();
 
-        RefreshFixes();
-        FixesAppliedText = string.Format(_language.XFixesApplied, _totalFixes);
+            RefreshFixes();
+            FixesAppliedText = string.Format(_language.XFixesApplied, _totalFixes);
+        });
     }
 
     [RelayCommand]
@@ -219,21 +239,33 @@ public partial class FixCommonErrorsViewModel : ObservableObject, IFixCallbacks
         Step1IsVisible = true;
     }
 
+    // Used when step 1 is skipped at startup - the window is not up yet, so there is nothing to flash on.
     private void ShowStep2()
+    {
+        EnterStep2();
+        RefreshFixes();
+    }
+
+    private async Task ShowStep2Async()
+    {
+        EnterStep2();
+        await RunScanWithFeedbackAsync(RefreshFixes);
+    }
+
+    private void EnterStep2()
     {
         Step1IsVisible = false;
         Step2IsVisible = true;
         _oldSelectedLanguage = SelectedLanguage!;
         _totalFixes = 0;
         FixesAppliedText = string.Empty;
-        RefreshFixes();
     }
 
     [RelayCommand]
-    private void ToApplyFixes()
+    private async Task ToApplyFixes()
     {
         SaveProfiles();
-        ShowStep2();
+        await ShowStep2Async();
     }
 
     [RelayCommand]
@@ -433,12 +465,15 @@ public partial class FixCommonErrorsViewModel : ObservableObject, IFixCallbacks
     }
 
     [RelayCommand]
-    public void ApplySelectedFixes()
+    public async Task ApplySelectedFixes()
     {
-        _previewMode = false;
-        ApplyFixes();
+        await RunScanWithFeedbackAsync(() =>
+        {
+            _previewMode = false;
+            ApplyFixes();
 
-        RefreshFixes();
+            RefreshFixes();
+        });
     }
 
     partial void OnSelectedParagraphChanged(SubtitleLineViewModel? oldValue, SubtitleLineViewModel? newValue)
@@ -468,7 +503,7 @@ public partial class FixCommonErrorsViewModel : ObservableObject, IFixCallbacks
         // Re-scan so the fix list reflects the toggle right away; while step 1 is up there is no list yet.
         if (Step2IsVisible)
         {
-            RefreshFixes();
+            _ = RunScanWithFeedbackAsync(RefreshFixes);
         }
     }
 
@@ -511,6 +546,36 @@ public partial class FixCommonErrorsViewModel : ObservableObject, IFixCallbacks
         EditTextTotalLengthBackground = info.TotalBackground;
     }
 
+    // Flash "Analyzing..." around a re-scan. A repeat scan that finds nothing changes nothing on
+    // screen, so without this there is still no sign that the button did anything (#12849). The scan
+    // itself runs on the UI thread - it mutates collections bound to the grid - so the status has to
+    // be painted before it starts and held for a moment after it ends.
+    private async Task RunScanWithFeedbackAsync(Action scan)
+    {
+        if (_isAnalysing)
+        {
+            return;
+        }
+
+        _isAnalysing = true;
+        try
+        {
+            NothingToFixIsVisible = false;
+            AnalysingIsVisible = true;
+            await Task.Delay(AnalysingPaintDelayMilliseconds);
+
+            scan();
+
+            await Task.Delay(AnalysingMinimumVisibleMilliseconds);
+        }
+        finally
+        {
+            AnalysingIsVisible = false;
+            NothingToFixIsVisible = _nothingToFix;
+            _isAnalysing = false;
+        }
+    }
+
     private void RefreshFixes()
     {
         _oldFixes = new List<FixDisplayItem>(Fixes);
@@ -518,6 +583,11 @@ public partial class FixCommonErrorsViewModel : ObservableObject, IFixCallbacks
         VisibleFixes.Clear();
         _previewMode = true;
         ApplyFixes();
+
+        // Confirm that the scan actually ran when it came up empty - the counters do not change in
+        // that case, so without this "Refresh available fixes" looks like a dead button (#12849).
+        _nothingToFix = SelectedProfile != null && Fixes.Count == 0;
+        NothingToFixIsVisible = _nothingToFix && !AnalysingIsVisible;
     }
 
     private void ApplyFixes()
@@ -527,7 +597,10 @@ public partial class FixCommonErrorsViewModel : ObservableObject, IFixCallbacks
             return;
         }
 
+        LoadNamesListIfNeeded();
+
         _totalErrors = 0;
+        _allowedFixLookup = null; // fix selection may have changed since the last pass
 
         var subtitle = _previewMode ? new Subtitle(FixedSubtitle, false) : FixedSubtitle;
         foreach (var paragraph in subtitle.Paragraphs)
@@ -535,14 +608,29 @@ public partial class FixCommonErrorsViewModel : ObservableObject, IFixCallbacks
             paragraph.Text = string.Join(Environment.NewLine, paragraph.Text.SplitToLines());
         }
 
-        foreach (var fix in SelectedProfile.FixRules)
+        // The step-1 rules grid sorts its backing collection in place (TableViewHeaderSorter),
+        // so SelectedProfile.FixRules may be in a cosmetic display order. Rules are chained -
+        // e.g. empty lines are removed before the timing fixes run - so always execute them
+        // in the canonical order they were defined in (_allFixRules), never the sort order.
+        var canonicalOrder = new Dictionary<string, int>(_allFixRules.Count);
+        for (var i = 0; i < _allFixRules.Count; i++)
         {
-            if (fix.IsSelected)
-            {
-                var fixCommonError = fix.GetFixCommonErrorFunction();
-                fixCommonError.Fix(subtitle, this);
-            }
+            canonicalOrder.TryAdd(_allFixRules[i].FixCommonErrorFunctionName, i);
         }
+
+        var selectedRules = SelectedProfile.FixRules
+            .Where(f => f.IsSelected)
+            .OrderBy(f => canonicalOrder.TryGetValue(f.FixCommonErrorFunctionName, out var order) ? order : int.MaxValue)
+            .ToList(); // OrderBy is stable, so unknown rules keep their relative order at the end
+
+        foreach (var fix in selectedRules)
+        {
+            var fixCommonError = fix.GetFixCommonErrorFunction();
+            _currentRunningRule = fix;
+            fixCommonError.Fix(subtitle, this);
+        }
+
+        _currentRunningRule = null;
 
         Paragraphs.Clear();
         Paragraphs.AddRange(FixedSubtitle.Paragraphs.Select(p => new SubtitleLineViewModel(p, _subtitleFormat) { IsCpsColumnVisible = false }));
@@ -792,8 +880,79 @@ public partial class FixCommonErrorsViewModel : ObservableObject, IFixCallbacks
             return true;
         }
 
-        var allowFix = Fixes.Any(f => f.Paragraph.Id.ToLowerInvariant() == p.Id.ToLowerInvariant() && f.Action == action && f.IsSelected);
-        return allowFix;
+        // Every fix rule probes this once per paragraph during apply, so a linear scan of
+        // Fixes made the pass O(paragraphs x rules x fixes). Fixes is stable while applying
+        // (AddFixToListView is a no-op outside preview mode), so one lookup set per pass is safe.
+        if (_allowedFixLookup == null)
+        {
+            _allowedFixLookup = new HashSet<(Guid? id, string action)>(Fixes.Count);
+            foreach (var fix in Fixes)
+            {
+                if (fix.IsSelected)
+                {
+                    _allowedFixLookup.Add((fix.Paragraph.Id, fix.Action));
+                }
+            }
+        }
+
+        return _allowedFixLookup.Contains((p.Id, action));
+    }
+
+    [RelayCommand]
+    private async Task ShowRuleDetails()
+    {
+        var selectedFix = SelectedFix;
+        if (selectedFix == null || Window == null)
+        {
+            return;
+        }
+
+        var lineFixes = Fixes
+            .Where(f => f.Paragraph.Id == selectedFix.Paragraph.Id)
+            .OrderBy(f => f.ActionDisplay, StringComparer.OrdinalIgnoreCase)
+            .ToList();
+
+        var sb = new StringBuilder();
+        foreach (var fix in lineFixes)
+        {
+            sb.AppendLine(fix.ActionDisplay);
+
+            if (!string.IsNullOrEmpty(fix.RuleName) && fix.RuleName != fix.ActionDisplay)
+            {
+                sb.AppendLine("  " + string.Format(_language.RuleX, fix.RuleName));
+            }
+
+            if (!string.IsNullOrEmpty(fix.RuleExample))
+            {
+                sb.AppendLine("  " + string.Format(Se.Language.General.ExampleX, fix.RuleExample));
+            }
+
+            sb.AppendLine("  " + Se.Language.General.Before + ": " + fix.Before);
+            sb.AppendLine("  " + Se.Language.General.After + ": " + fix.After);
+            sb.AppendLine();
+        }
+
+        await MessageBox.Show(
+            Window,
+            string.Format(_language.AppliedRulesForLineX, selectedFix.Number),
+            sb.ToString().TrimEnd(),
+            MessageBoxButtons.OK);
+    }
+
+    [RelayCommand]
+    private void FilterBySelectedFixRule()
+    {
+        var selectedFix = SelectedFix;
+        if (selectedFix == null)
+        {
+            return;
+        }
+
+        var chip = FixChips.FirstOrDefault(c => c.Action == selectedFix.ActionDisplay);
+        if (chip != null)
+        {
+            SetFixFilter(chip);
+        }
     }
 
     public void AddFixToListView(Paragraph p, string action, string before, string after)
@@ -803,10 +962,10 @@ public partial class FixCommonErrorsViewModel : ObservableObject, IFixCallbacks
             return;
         }
 
-        var oldFix = _oldFixes.FirstOrDefault(f => f.Paragraph.Id.ToLowerInvariant() == p.Id.ToLowerInvariant() && f.Action == action);
+        var oldFix = _oldFixes.FirstOrDefault(f => f.Paragraph.Id == p.Id && f.Action == action);
         var isSelected = oldFix is not { IsSelected: false };
 
-        AddFix(new FixDisplayItem(p, p.Number, action, before, after, isSelected));
+        AddFix(MakeFixDisplayItem(p, action, before, after, isSelected));
     }
 
     public void AddFixToListView(Paragraph p, string action, string before, string after, bool isChecked)
@@ -816,14 +975,27 @@ public partial class FixCommonErrorsViewModel : ObservableObject, IFixCallbacks
             return;
         }
 
-        var oldFix = _oldFixes.FirstOrDefault(f => f.Paragraph.Id.ToLowerInvariant() == p.Id.ToLowerInvariant() && f.Action == action);
+        var oldFix = _oldFixes.FirstOrDefault(f => f.Paragraph.Id == p.Id && f.Action == action);
         var isSelected = isChecked;
         if (oldFix is { IsSelected: false })
         {
             isSelected = false;
         }
 
-        AddFix(new FixDisplayItem(p, p.Number, action, before, after, isSelected));
+        AddFix(MakeFixDisplayItem(p, action, before, after, isSelected));
+    }
+
+    /// <summary>
+    /// Stamps the fix with the rule that is currently running (set by the ApplyFixes loop)
+    /// so the rule-details popup can show which step-1 rule produced it.
+    /// </summary>
+    private FixDisplayItem MakeFixDisplayItem(Paragraph p, string action, string before, string after, bool isSelected)
+    {
+        return new FixDisplayItem(p, p.Number, action, before, after, isSelected)
+        {
+            RuleName = _currentRunningRule?.Name ?? string.Empty,
+            RuleExample = _currentRunningRule?.Example ?? string.Empty,
+        };
     }
 
     public void LogStatus(string sender, string message)
@@ -848,6 +1020,26 @@ public partial class FixCommonErrorsViewModel : ObservableObject, IFixCallbacks
             _totalFixes += fixes;
             //            LogStatus(message, string.Format(LanguageSettings.Current.FixCommonErrors.XFixesApplied, fixes));
         }
+    }
+
+    /// <summary>
+    /// The names list backs <see cref="IsName"/> and <see cref="GetAbbreviations"/>, so without
+    /// this the rules saw no names and no abbreviations at all - e.g. Dutch "dhr. de vries" was
+    /// capitalized to "dhr. De vries" (#13082). Reloaded only when the language changes, like
+    /// the batch converter does.
+    /// </summary>
+    private void LoadNamesListIfNeeded()
+    {
+        var dictionaryFolder = Se.DictionariesFolder;
+        if (string.Equals(_namesListFolder, dictionaryFolder, StringComparison.Ordinal) &&
+            string.Equals(_namesListLanguage, Language, StringComparison.Ordinal))
+        {
+            return;
+        }
+
+        _namesList.Load(dictionaryFolder, Language);
+        _namesListFolder = dictionaryFolder;
+        _namesListLanguage = Language;
     }
 
     public bool IsName(string candidate)
@@ -876,7 +1068,7 @@ public partial class FixCommonErrorsViewModel : ObservableObject, IFixCallbacks
         if (p != null)
         {
             SelectedParagraph = p;
-            GridSubtitles.ScrollIntoView(GridSubtitles.SelectedItem, null);
+            GridSubtitles.ScrollIntoView(p);
         }
     }
 }

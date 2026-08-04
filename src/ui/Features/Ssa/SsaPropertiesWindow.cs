@@ -46,18 +46,19 @@ public class SsaPropertiesWindow : Window
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
         var panelButtons = UiUtil.MakeButtonBar(buttonOk, buttonCancel);
 
-        grid.Add(MakeScriptView(vm), 0);
+        grid.Add(MakeScriptView(vm, out var textBoxTitle), 0);
         grid.Add(MakeResolutionView(vm), 1);
         grid.Add(MakeOptionsView(vm), 2);
         grid.Add(panelButtons, 3);
 
         Content = grid;
 
-        Activated += delegate { buttonOk.Focus(); }; // hack to make OnKeyDown work
+        // initial focus on an input, not an action button - a focused button clicks on bare Space
+        Activated += delegate { textBoxTitle.Focus(); };
         KeyDown += vm.KeyDown;
     }
 
-    private static Border MakeScriptView(SsaPropertiesViewModel vm)
+    private static Border MakeScriptView(SsaPropertiesViewModel vm, out TextBox firstInput)
     {
         var grid = new Grid
         {
@@ -87,6 +88,7 @@ public class SsaPropertiesWindow : Window
 
         var labelTitle = UiUtil.MakeLabel(Se.Language.General.Title);
         var textBoxTitle = UiUtil.MakeTextBox(200, vm, nameof(vm.ScriptTitle));
+        firstInput = textBoxTitle;
 
         var labelOriginalScript = UiUtil.MakeLabel(Se.Language.Assa.OriginalScript);
         var textBoxOriginalScript = UiUtil.MakeTextBox(200, vm, nameof(vm.OriginalScript));
@@ -160,7 +162,7 @@ public class SsaPropertiesWindow : Window
         var numericUpDownWidth = UiUtil.MakeNumericUpDownInt(0, 10000, 1920, 120, vm, nameof(vm.VideoWidth));
         var labelX = UiUtil.MakeLabel("x");
         var numericUpDownHeight = UiUtil.MakeNumericUpDownInt(0, 10000, 1080, 120, vm, nameof(vm.VideoHeight));
-        var buttonBrowseResolution = UiUtil.MakeButtonBrowse(vm.BrowseResolutionCommand);
+        var buttonBrowseResolution = UiUtil.MakeButtonBrowse(vm.BrowseResolutionCommand, null, Se.Language.General.VideoResolution);
         var buttonFromCurrentVideo = UiUtil.MakeButton(Se.Language.General.PickResolutionFromCurrentVideo, vm.GetResolutionFromCurrentVideoCommand);
 
         grid.Add(label, 0, 0, 1, 6);

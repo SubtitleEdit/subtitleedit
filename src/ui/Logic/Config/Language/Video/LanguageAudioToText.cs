@@ -21,8 +21,6 @@ public class LanguageAudioToText
     public string AddCustomModelDotDotDot { get; set; }
     public string CustomModelHelp { get; set; }
     public string ViewToolsLogFile { get; set; }
-    public string ReDownloadX { get; set; }
-    public string DownloadX { get; set; }
     public string UpdateXTitle { get; set; }
     public string UpdateXMessage { get; set; }
     public string? DownloadingSpeechToTextModel { get; set; }
@@ -34,14 +32,6 @@ public class LanguageAudioToText
     public string FixCasing { get; set; }
     public string AddPeriods { get; set; }
     public string ChangeUnderlineToColor { get; set; }
-    public string CueBuilding { get; set; }
-    public string CueRebuild { get; set; }
-    public string CueMaxChars { get; set; }
-    public string CueMaxSeconds { get; set; }
-    public string CueMaxCps { get; set; }
-    public string VocabularyPrompt { get; set; }
-    public string BeamSize { get; set; }
-    public string BeamSizeNote { get; set; }
 
     public string EngineSettings { get; set; }
     public string EngineSettingsSubtitle { get; set; }
@@ -68,8 +58,6 @@ public class LanguageAudioToText
         AddCustomModelDotDotDot = "Add custom model...";
         CustomModelHelp = "You can use your own model: pick the model file (whisper.cpp ggml '.bin') or model folder (faster-whisper folder with a 'model.bin' inside). It is copied to the models folder and added to the list above.";
         ViewToolsLogFile = "View tools log file";
-        ReDownloadX = "Re-download {0}";
-        DownloadX = "Download {0}";
         UpdateXTitle = "Update {0}?";
         UpdateXMessage = "A newer version of {0} is available.{1}{1}Download and install the update now?";
         DownloadingSpeechToTextModel = "Downloading speech-to-text model";
@@ -81,14 +69,6 @@ public class LanguageAudioToText
         FixCasing = "Fix casing";
         AddPeriods = "Add periods";
         ChangeUnderlineToColor = "Change underline to color";
-        CueBuilding = "Cue building (MLX Whisper)";
-        CueRebuild = "Rebuild cues from word timestamps";
-        CueMaxChars = "Max characters per cue";
-        CueMaxSeconds = "Max seconds per cue";
-        CueMaxCps = "Max characters per second";
-        VocabularyPrompt = "Vocabulary prompt (names, places, terms)";
-        BeamSize = "Beam size";
-        BeamSizeNote = "0 decodes fastest. 5 gives the best accuracy (like Faster Whisper) at roughly 20-30% more time. Values above 5 rarely help.";
 
         EngineSettings = "Speech-to-text engine settings";
         EngineSettingsSubtitle = "Speech-to-text engine";

@@ -18,13 +18,13 @@ public static class InitNativeMacMenuBinaryEdit
         var exportMenu = new NativeMenu();
         Add(exportMenu, Se.Language.General.BluRaySup, vm.ExportBluRaySupCommand);
         Add(exportMenu, Se.Language.General.BdnXml, vm.ExportBdnXmlCommand);
-        Add(exportMenu, "IMSC 1.1 image profile", vm.ExportImscImageCommand);
-        Add(exportMenu, "DOST/png", vm.ExportDostPngCommand);
-        Add(exportMenu, "Final Cut Pro + image", vm.ExportFcpPngCommand);
+        Add(exportMenu, Se.Language.File.Export.TitleExportImscImage, vm.ExportImscImageCommand);
+        Add(exportMenu, Se.Language.File.Export.TitleExportDostPng, vm.ExportDostPngCommand);
+        Add(exportMenu, Se.Language.File.Export.TitleExportFcpImage, vm.ExportFcpPngCommand);
         Add(exportMenu, Se.Language.General.ImagesWithHtmlIndex, vm.ExportHtmlIndexCommand);
         Add(exportMenu, Se.Language.General.ImagesWithTimeCode, vm.ExportImagesWithTimeCodeCommand);
         Add(exportMenu, Se.Language.File.Export.TitleExportVobSub, vm.ExportVobSubCommand);
-        Add(exportMenu, "WebVTT png", vm.ExportWebVttThumbnailCommand);
+        Add(exportMenu, Se.Language.File.Export.TitleExportWebVttThumbnails, vm.ExportWebVttThumbnailCommand);
         fileMenu.Items.Add(new NativeMenuItem(Clean(l.Export)) { Menu = exportMenu });
         fileMenu.Items.Add(new NativeMenuItemSeparator());
         Add(fileMenu, Se.Language.Tools.ImageBasedEdit.ImportTimeCodes, vm.ImportTimeCodesCommand);
@@ -35,7 +35,7 @@ public static class InitNativeMacMenuBinaryEdit
         // Tools menu
         var toolsMenu = new NativeMenu();
         Add(toolsMenu, Se.Language.General.AlignmentDotDotDot, vm.AlignmentCommand);
-        Add(toolsMenu, Se.Language.Tools.ImageBasedEdit.CenterHorizontally, vm.CenterHorizontallyCommand);
+        Add(toolsMenu, Se.Language.General.CenterHorizontally, vm.CenterHorizontallyCommand);
         Add(toolsMenu, Se.Language.Tools.ImageBasedEdit.TopAlignLines, vm.TopAlignCommand);
         Add(toolsMenu, Se.Language.Tools.ImageBasedEdit.BottomAlignLines, vm.BottomAlignCommand);
         toolsMenu.Items.Add(new NativeMenuItemSeparator());

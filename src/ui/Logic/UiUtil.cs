@@ -2,6 +2,8 @@ using Avalonia;
 using Avalonia.Automation;
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
+using Avalonia.Controls.Presenters;
+using Avalonia.Controls.Templates;
 using Avalonia.Data;
 using Avalonia.Data.Converters;
 using Avalonia.Input;
@@ -10,6 +12,7 @@ using Avalonia.Layout;
 using Avalonia.Media;
 using Avalonia.Platform;
 using Avalonia.Styling;
+using Avalonia.VisualTree;
 using Avalonia.Threading;
 using CommunityToolkit.Mvvm.Input;
 using Nikse.SubtitleEdit.Features.Shared.ColorPicker;
@@ -19,6 +22,7 @@ using Nikse.SubtitleEdit.Logic.ValueConverters;
 using Optris.Icons.Avalonia;
 using SkiaSharp;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
@@ -26,7 +30,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
-using System.Runtime.InteropServices;
+using System.Runtime.CompilerServices;
 
 namespace Nikse.SubtitleEdit.Logic;
 
@@ -36,59 +40,183 @@ public static class UiUtil
     public const int CornerRadius = 4;
     public const int SplitterWidthOrHeight = 4;
 
-    public static ControlTheme DataGridNoBorderCellTheme => GetDataGridNoBorderCellTheme();
+    /// <summary>
+    /// Grid lines for <see cref="TableView"/>, which - unlike DataGrid - has no
+    /// GridLinesVisibility property. Drawn as cell borders from the same
+    /// Appearance.GridLinesAppearance setting (a <see cref="SeGridLinesVisibility"/>
+    /// name) and compact-mode padding the DataGrid cell themes above use, so both
+    /// controls honour the user's "Show grid lines" choice identically.
+    /// </summary>
+    public static ControlTheme TableViewCellTheme => GetTableViewCellTheme(noPadding: false);
 
-    private static ControlTheme GetDataGridNoBorderCellTheme()
+    /// <summary>As <see cref="TableViewCellTheme"/> but with no cell padding, for cells hosting their own controls.</summary>
+    public static ControlTheme TableViewNoPaddingCellTheme => GetTableViewCellTheme(noPadding: true);
+
+    private static ControlTheme GetTableViewCellTheme(bool noPadding)
     {
         var showVertical =
-            Se.Settings.Appearance.GridLinesAppearance == nameof(DataGridGridLinesVisibility.Vertical) ||
-            Se.Settings.Appearance.GridLinesAppearance == nameof(DataGridGridLinesVisibility.All);
+            Se.Settings.Appearance.GridLinesAppearance == nameof(SeGridLinesVisibility.Vertical) ||
+            Se.Settings.Appearance.GridLinesAppearance == nameof(SeGridLinesVisibility.All);
 
         var showHorizontal =
-            Se.Settings.Appearance.GridLinesAppearance == nameof(DataGridGridLinesVisibility.Horizontal) ||
-            Se.Settings.Appearance.GridLinesAppearance == nameof(DataGridGridLinesVisibility.All);
+            Se.Settings.Appearance.GridLinesAppearance == nameof(SeGridLinesVisibility.Horizontal) ||
+            Se.Settings.Appearance.GridLinesAppearance == nameof(SeGridLinesVisibility.All);
 
-        var compactMode = Se.Settings.Appearance.GridCompactMode;
+        // Horizontal inset keeps text off the vertical grid line; the vertical inset sets the
+        // row height, because ApplyTableViewRowStyle zeroes the row's own padding (the cell must
+        // fill the row or its borders float inside it instead of forming continuous lines).
+        var padding = noPadding
+            ? new Thickness(0)
+            : new Thickness(4, Se.Settings.Appearance.GridCompactMode ? 2 : 6);
 
-        return new ControlTheme(typeof(DataGridCell))
+        return new ControlTheme(typeof(TableViewCell))
         {
             Setters =
             {
-                new Setter(DataGridCell.BackgroundProperty, Brushes.Transparent),
-                new Setter(DataGridCell.FocusAdornerProperty, null),
-                new Setter(DataGridCell.PaddingProperty, new Thickness(compactMode ? 0 : 4)),
-                new Setter(DataGridCell.BorderBrushProperty, GetBorderBrush()),
-                new Setter(DataGridCell.BorderThicknessProperty,
+                new Setter(TableViewCell.BackgroundProperty, Brushes.Transparent),
+                new Setter(TableViewCell.PaddingProperty, padding),
+                new Setter(TableViewCell.BorderBrushProperty, GetGridLineBrush()),
+                new Setter(TableViewCell.BorderThicknessProperty,
                     new Thickness(0, 0, showVertical ? 1 : 0, showHorizontal ? 1 : 0)), // vertical and horizontal lines
+                new Setter(TableViewCell.TemplateProperty, TableViewCellTemplate),
             }
         };
     }
 
-    public static ControlTheme DataGridNoBorderNoPaddingCellTheme => GetDataGridNoBorderNoPaddingCellTheme();
+    /// <summary>
+    /// Column-header theme matching <see cref="TableViewCellTheme"/>: the same border brush and
+    /// text inset, a bottom line closing the top of the first row, and a right line continuing
+    /// the cells' vertical grid line. The built-in header draws its separator as a semi-transparent
+    /// rectangle inside the resize Thumb, which is both a different colour and 6px off from the
+    /// cell borders - <see cref="ApplyTableViewRowStyle"/> hides it and aligns the rows.
+    /// </summary>
+    public static ControlTheme TableViewColumnHeaderTheme => GetTableViewColumnHeaderTheme();
 
-    private static ControlTheme GetDataGridNoBorderNoPaddingCellTheme()
+    private static ControlTheme GetTableViewColumnHeaderTheme()
     {
-        var showVertical =
-            Se.Settings.Appearance.GridLinesAppearance == nameof(DataGridGridLinesVisibility.Vertical) ||
-            Se.Settings.Appearance.GridLinesAppearance == nameof(DataGridGridLinesVisibility.All);
-
-        var showHorizontal =
-            Se.Settings.Appearance.GridLinesAppearance == nameof(DataGridGridLinesVisibility.Horizontal) ||
-            Se.Settings.Appearance.GridLinesAppearance == nameof(DataGridGridLinesVisibility.All);
-
-        return new ControlTheme(typeof(DataGridCell))
+        return new ControlTheme(typeof(TableViewColumnHeader))
         {
             Setters =
             {
-                new Setter(DataGridCell.BackgroundProperty, Brushes.Transparent),
-                new Setter(DataGridCell.FocusAdornerProperty, null),
-                new Setter(DataGridCell.PaddingProperty, new Thickness(0)),
-                new Setter(DataGridCell.BorderBrushProperty, GetBorderBrush()),
-                new Setter(DataGridCell.BorderThicknessProperty,
-                    new Thickness(0, 0, showVertical ? 1 : 0, showHorizontal ? 1 : 0)), // vertical and horizontal lines
+                // Match the DataGrid header background: the Fluent DataGrid resource by
+                // default; SE's custom themes (lighter dark, classic gray, pastel) override
+                // both header types with the same brush via app styles in UiTheme.
+                new Setter(TableViewColumnHeader.BackgroundProperty, GetDataGridHeaderBackgroundBrush()),
+                new Setter(TableViewColumnHeader.PaddingProperty, new Thickness(4, 6, 4, 5)),
+                // The faint grid-line brush, not the full border brush: with grid lines set
+                // to None these are the only separators in the grid, and at 0.5 opacity they
+                // read much stronger than anything the old DataGrid drew.
+                new Setter(TableViewColumnHeader.BorderBrushProperty, GetGridLineBrush()),
+                // Both header lines always show, independently of the grid-lines setting: the
+                // bottom line separates the header from the first row and the right line
+                // separates the column headers from each other, the way DataGrid's header
+                // (with its always-on separators) does.
+                new Setter(TableViewColumnHeader.BorderThicknessProperty, new Thickness(0, 0, 1, 1)),
+                new Setter(TableViewColumnHeader.TemplateProperty, TableViewColumnHeaderTemplate),
             }
         };
     }
+
+    private static IBrush GetDataGridHeaderBackgroundBrush()
+    {
+        if (Application.Current != null &&
+            Application.Current.TryGetResource("DataGridColumnHeaderBackgroundBrush",
+                Application.Current.ActualThemeVariant, out var resource) &&
+            resource is IBrush brush)
+        {
+            return brush;
+        }
+
+        return Brushes.Transparent;
+    }
+
+    // Mirrors the built-in header template (content + resize thumb) but routes the border
+    // properties to the presenter so the header's lines match the cells', and drops the
+    // thumb's own off-colour separator rectangle.
+    private static readonly FuncControlTemplate<TableViewColumnHeader> TableViewColumnHeaderTemplate =
+        new((_, scope) =>
+        {
+            var presenter = new ContentPresenter
+            {
+                Name = "PART_ContentPresenter",
+                [!ContentPresenter.ContentProperty] = new TemplateBinding(ContentControl.ContentProperty),
+                [!ContentPresenter.ContentTemplateProperty] = new TemplateBinding(ContentControl.ContentTemplateProperty),
+                [!ContentPresenter.BackgroundProperty] = new TemplateBinding(TemplatedControl.BackgroundProperty),
+                [!ContentPresenter.BorderBrushProperty] = new TemplateBinding(TemplatedControl.BorderBrushProperty),
+                [!ContentPresenter.BorderThicknessProperty] = new TemplateBinding(TemplatedControl.BorderThicknessProperty),
+                [!ContentPresenter.PaddingProperty] = new TemplateBinding(TemplatedControl.PaddingProperty),
+                [!ContentPresenter.HorizontalContentAlignmentProperty] = new TemplateBinding(ContentControl.HorizontalContentAlignmentProperty),
+                [!ContentPresenter.VerticalContentAlignmentProperty] = new TemplateBinding(ContentControl.VerticalContentAlignmentProperty),
+            }.RegisterInNameScope(scope);
+
+            // Keep the resize grip - TableViewColumn.CanUserResize works through it.
+            var thumb = new Thumb
+            {
+                Name = "PART_Resizer",
+                Width = 12,
+                Margin = new Thickness(0, 0, -6, 0),
+                HorizontalAlignment = HorizontalAlignment.Right,
+                Cursor = new Cursor(StandardCursorType.SizeWestEast),
+                Background = Brushes.Transparent,
+                Template = new FuncControlTemplate<Thumb>((_, _) => new Border { Background = Brushes.Transparent }),
+            }.RegisterInNameScope(scope);
+
+            return new Panel { Children = { presenter, thumb } };
+        });
+
+    /// <summary>
+    /// Makes <see cref="TableView"/> rows tight to their cells. TableViewRow is a ListBoxItem
+    /// and its default padding sits *outside* the cells, so cell borders would be drawn inside
+    /// the row - horizontal lines floating above the row edge and vertical lines broken into
+    /// one segment per row instead of continuous columns. The cells carry the inset instead
+    /// (see the cell themes above). Call this on any TableView using those cell themes.
+    /// </summary>
+    public static void ApplyTableViewRowStyle(TableView tableView)
+    {
+        tableView.Styles.Add(new Style(x => x.OfType<TableViewRow>())
+        {
+            Setters =
+            {
+                new Setter(TableViewRow.PaddingProperty, new Thickness(0)),
+                new Setter(TableViewRow.MinHeightProperty, 0.0),
+            }
+        });
+
+        // TableView's template wraps the header in a Border with hard-coded 6,9,6,12 padding
+        // while rows sit flush against the control edge. Left alone the header's column border
+        // lands 6px right of the cell borders below it, and its bottom line floats 12px above
+        // the first row. The Border is an unnamed template part, so it can't be reached by a
+        // selector - zero its padding once the template is applied.
+        tableView.Loaded += (_, _) =>
+        {
+            var headersPresenter = tableView.GetVisualDescendants()
+                .OfType<TableViewColumnHeadersPresenter>()
+                .FirstOrDefault();
+            if (headersPresenter?.GetVisualParent() is Border headerBorder)
+            {
+                headerBorder.Padding = new Thickness(0);
+            }
+        };
+    }
+
+    // TableViewCell's built-in template only template-binds Background, so the border
+    // properties set above would never be drawn. Bind them through to the presenter
+    // (which renders its own border) so the grid lines actually appear.
+    private static readonly FuncControlTemplate<TableViewCell> TableViewCellTemplate =
+        new((_, scope) => new ContentPresenter
+        {
+            Name = "PART_ContentPresenter",
+            [!ContentPresenter.ContentProperty] = new TemplateBinding(ContentControl.ContentProperty),
+            [!ContentPresenter.ContentTemplateProperty] = new TemplateBinding(ContentControl.ContentTemplateProperty),
+            [!ContentPresenter.BackgroundProperty] = new TemplateBinding(TemplatedControl.BackgroundProperty),
+            [!ContentPresenter.BorderBrushProperty] = new TemplateBinding(TemplatedControl.BorderBrushProperty),
+            [!ContentPresenter.BorderThicknessProperty] = new TemplateBinding(TemplatedControl.BorderThicknessProperty),
+            [!ContentPresenter.PaddingProperty] = new TemplateBinding(TemplatedControl.PaddingProperty),
+            [!ContentPresenter.HorizontalContentAlignmentProperty] = new TemplateBinding(ContentControl.HorizontalContentAlignmentProperty),
+            [!ContentPresenter.VerticalContentAlignmentProperty] = new TemplateBinding(ContentControl.VerticalContentAlignmentProperty),
+        }.RegisterInNameScope(scope));
+
+
 
     // On macOS the default UI font's ascent sits right at the cap height, so Avalonia's line box
     // clips the dots on tall diacritics (Ä/Ö/Ü) at the top - in text boxes and grid cells alike
@@ -120,6 +248,24 @@ public static class UiUtil
         return MakeButton(text, null);
     }
 
+    private static readonly string[] GoodFontNames =
+    {
+        "Segoe UI",
+        "San Francisco",
+        "SF Pro Text",
+        "Roboto",
+        "Open Sans",
+        "Lato",
+        "Source Sans Pro",
+        "Calibri",
+        "Verdana",
+        "Tahoma",
+        "Inter",
+        "Noto Sans",
+        "System UI",
+        "Arial",
+    };
+
     public static string GetDefaultFontName()
     {
         if (!string.IsNullOrEmpty(Se.Settings.Appearance.FontName))
@@ -128,25 +274,7 @@ public static class UiUtil
         }
 
         var systemFontNames = FontHelper.GetSystemFonts();
-        var goodFontNames = new List<string>()
-        {
-            "Segoe UI",
-            "San Francisco",
-            "SF Pro Text",
-            "Roboto",
-            "Open Sans",
-            "Lato",
-            "Source Sans Pro",
-            "Calibri",
-            "Verdana",
-            "Tahoma",
-            "Inter",
-            "Noto Sans",
-            "System UI",
-            "Arial",
-        };
-
-        foreach (var goodFontName in goodFontNames)
+        foreach (var goodFontName in GoodFontNames)
         {
             if (systemFontNames.Contains(goodFontName))
             {
@@ -157,38 +285,44 @@ public static class UiUtil
         return systemFontNames.First();
     }
 
+    // These brushes are handed out from many hot construction paths (borders, separators,
+    // grid cell themes), so cache immutable instances per theme/opacity instead of allocating
+    // a new SolidColorBrush on every call. ImmutableSolidColorBrush is safe to share.
+    private static readonly Dictionary<(bool IsDark, double Opacity), IBrush> TextBrushCache = new();
+
     public static IBrush GetTextColor(double opacity = 1.0)
     {
-        var app = Application.Current;
-        if (app == null)
+        var isDark = Application.Current?.ActualThemeVariant == ThemeVariant.Dark;
+        var key = (isDark, opacity);
+        if (!TextBrushCache.TryGetValue(key, out var brush))
         {
-            return new SolidColorBrush(Colors.Black, opacity);
+            brush = new Avalonia.Media.Immutable.ImmutableSolidColorBrush(isDark ? Colors.White : Colors.Black, opacity);
+            TextBrushCache[key] = brush;
         }
 
-        var theme = app.ActualThemeVariant;
-        if (theme == ThemeVariant.Dark)
-        {
-            return new SolidColorBrush(Colors.White, opacity);
-        }
+        return brush;
+    }
 
-        return new SolidColorBrush(Colors.Black, opacity);
+    private static readonly IBrush BorderBrushDark = new Avalonia.Media.Immutable.ImmutableSolidColorBrush(Colors.White, 0.5);
+    private static readonly IBrush BorderBrushLight = new Avalonia.Media.Immutable.ImmutableSolidColorBrush(Colors.Black, 0.5);
+
+    // Fainter variant for the TableView's in-body grid lines: drawn as per-cell borders
+    // they read stronger than the old DataGrid's gridline pass, so tone them down.
+    private static readonly IBrush GridLineBrushDark = new Avalonia.Media.Immutable.ImmutableSolidColorBrush(Colors.White, 0.22);
+    private static readonly IBrush GridLineBrushLight = new Avalonia.Media.Immutable.ImmutableSolidColorBrush(Colors.Black, 0.22);
+
+    public static IBrush GetGridLineBrush()
+    {
+        return Application.Current?.ActualThemeVariant == ThemeVariant.Dark
+            ? GridLineBrushDark
+            : GridLineBrushLight;
     }
 
     public static IBrush GetBorderBrush()
     {
-        var app = Application.Current;
-        if (app == null)
-        {
-            return new SolidColorBrush(Colors.Black);
-        }
-
-        var theme = app.ActualThemeVariant;
-        if (theme == ThemeVariant.Dark)
-        {
-            return new SolidColorBrush(Colors.White, 0.5);
-        }
-
-        return new SolidColorBrush(Colors.Black, 0.5);
+        return Application.Current?.ActualThemeVariant == ThemeVariant.Dark
+            ? BorderBrushDark
+            : BorderBrushLight;
     }
 
     public static IBrush GetAccentBrush()
@@ -286,12 +420,29 @@ public static class UiUtil
         if (Se.Settings.Appearance.UseFocusedButtonBackgroundColor)
         {
             var focusStyle = new Style(x => x.OfType<Button>().Class(":focus"));
-            focusStyle.Setters.Add(new Setter(Button.BackgroundProperty, new SolidColorBrush(Se.Settings.Appearance.FocusedButtonBackgroundColor.FromHexToColor())));
+            focusStyle.Setters.Add(new Setter(Button.BackgroundProperty, GetFocusedButtonBackgroundBrush()));
             //focusStyle.Setters.Add(new Setter(Button.ForegroundProperty, Brushes.White));
             button.Styles.Add(focusStyle);
         }
 
         return button;
+    }
+
+    private static IBrush? _focusedButtonBackgroundBrush;
+    private static string? _focusedButtonBackgroundHex;
+
+    // Every button parses the configured hex color and allocated a brush; cache one
+    // immutable brush and only rebuild it when the setting changes.
+    private static IBrush GetFocusedButtonBackgroundBrush()
+    {
+        var hex = Se.Settings.Appearance.FocusedButtonBackgroundColor;
+        if (_focusedButtonBackgroundBrush == null || _focusedButtonBackgroundHex != hex)
+        {
+            _focusedButtonBackgroundBrush = new Avalonia.Media.Immutable.ImmutableSolidColorBrush(hex.FromHexToColor());
+            _focusedButtonBackgroundHex = hex;
+        }
+
+        return _focusedButtonBackgroundBrush;
     }
 
     // Parses a single `_` access-key marker out of a button label and returns the visible text plus
@@ -320,11 +471,13 @@ public static class UiUtil
         var upper = char.ToUpperInvariant(c);
         if (upper >= 'A' && upper <= 'Z')
         {
-            return Enum.TryParse(upper.ToString(), out key);
+            key = Key.A + (upper - 'A');
+            return true;
         }
         if (upper >= '0' && upper <= '9')
         {
-            return Enum.TryParse("D" + upper, out key);
+            key = Key.D0 + (upper - '0');
+            return true;
         }
         key = Key.None;
         return false;
@@ -611,6 +764,86 @@ public static class UiUtil
         return comboBox;
     }
 
+    private sealed class ComboBoxTypeSearchState
+    {
+        public string Prefix = string.Empty;
+        public long LastTypedTicks;
+    }
+
+    private static readonly ConditionalWeakTable<ComboBox, ComboBoxTypeSearchState> ComboBoxTypeSearchStates = new();
+
+    /// <summary>
+    /// App-wide: lets the user jump to a drop-down item by typing its first letters
+    /// (e.g. "Ar" selects "Arial"), like a classic WinForms combo box. Repeating the
+    /// same letter cycles through items starting with it; the typed prefix resets
+    /// after a short pause. Call once at startup.
+    /// </summary>
+    public static void EnableComboBoxTypeSearch()
+    {
+        InputElement.TextInputEvent.AddClassHandler<ComboBox>(ComboBoxTypeSearchTextInput, RoutingStrategies.Tunnel);
+    }
+
+    private static void ComboBoxTypeSearchTextInput(ComboBox comboBox, TextInputEventArgs e)
+    {
+        if (comboBox.IsEditable)
+        {
+            return; // typing must edit the text, not jump the selection
+        }
+
+        var text = e.Text;
+        if (string.IsNullOrEmpty(text) || char.IsControl(text[0]))
+        {
+            return;
+        }
+
+        var state = ComboBoxTypeSearchStates.GetOrCreateValue(comboBox);
+        var nowTicks = Environment.TickCount64;
+        if (nowTicks - state.LastTypedTicks > 1200)
+        {
+            state.Prefix = string.Empty;
+        }
+        state.LastTypedTicks = nowTicks;
+        state.Prefix += text;
+
+        var items = comboBox.Items;
+        if (items.Count == 0)
+        {
+            return;
+        }
+
+        var index = FindItemStartingWith(items, state.Prefix, startIndex: 0);
+        if (index < 0 && state.Prefix.Length > 1 && state.Prefix.All(c => char.ToLowerInvariant(c) == char.ToLowerInvariant(state.Prefix[0])))
+        {
+            // Same letter repeated: cycle through items starting with that letter.
+            state.Prefix = state.Prefix[..1];
+            index = FindItemStartingWith(items, state.Prefix, startIndex: comboBox.SelectedIndex + 1);
+            if (index < 0)
+            {
+                index = FindItemStartingWith(items, state.Prefix, startIndex: 0);
+            }
+        }
+
+        if (index >= 0)
+        {
+            comboBox.SelectedIndex = index;
+            e.Handled = true;
+        }
+    }
+
+    private static int FindItemStartingWith(IList items, string prefix, int startIndex)
+    {
+        for (var i = Math.Max(0, startIndex); i < items.Count; i++)
+        {
+            var display = items[i]?.ToString();
+            if (display != null && display.StartsWith(prefix, StringComparison.CurrentCultureIgnoreCase))
+            {
+                return i;
+            }
+        }
+
+        return -1;
+    }
+
     internal static ComboBox MakeComboBoxBindText<T>(ObservableCollection<T> sourceItems, object vm, string textPath,
         string propertySelectedIndexPath)
     {
@@ -637,6 +870,35 @@ public static class UiUtil
         string? propertySelectedPath)
     {
         return MakeComboBox(sourceItems, viewModal, propertySelectedPath, null);
+    }
+
+    /// <summary>
+    /// A text box with a drop-down of preset values - the user can still type anything.
+    /// Use where a handful of values cover most cases but the field is free text, e.g. the
+    /// music/pilcrow symbols in "Remove text for hearing impaired" (SE 4 parity).
+    /// </summary>
+    public static ComboBox MakeEditableComboBox(double width, IEnumerable<string> presets, object viewModel,
+        string propertyTextPath)
+    {
+        var comboBox = new ComboBox
+        {
+            Width = width,
+            IsEditable = true,
+            ItemsSource = presets.ToList(),
+            DataContext = viewModel,
+            HorizontalAlignment = HorizontalAlignment.Left,
+            VerticalAlignment = VerticalAlignment.Center,
+            HorizontalContentAlignment = HorizontalAlignment.Left,
+            VerticalContentAlignment = VerticalAlignment.Center,
+        };
+
+        comboBox.Bind(ComboBox.TextProperty, new Binding
+        {
+            Path = propertyTextPath,
+            Mode = BindingMode.TwoWay,
+        });
+
+        return comboBox;
     }
 
     public static TextBox MakeTextBox(double width, object viewModel, string propertyTextPath)
@@ -1577,6 +1839,7 @@ public static class UiUtil
         return control;
     }
 
+
     public static CheckBox WithMarginLeft(this CheckBox control, int marginLeft)
     {
         var m = control.Margin;
@@ -1737,6 +2000,51 @@ public static class UiUtil
         };
     }
 
+    private static ImageBrush? _checkerboardBrush;
+
+    /// <summary>
+    /// Theme-independent checkerboard backdrop for image previews whose content can be pure
+    /// white, pure black or transparent (e.g. OCR bitmaps and pre-processing output). Two
+    /// mid-tone grays so both extremes stay visible in light and dark theme (issue #12692).
+    /// </summary>
+    public static ImageBrush GetCheckerboardBrush()
+    {
+        if (_checkerboardBrush != null)
+        {
+            return _checkerboardBrush;
+        }
+
+        const int tileSize = 16; // 2x2 squares of 8px
+        const int squareSize = tileSize / 2;
+        var bitmap = new Avalonia.Media.Imaging.WriteableBitmap(
+            new PixelSize(tileSize, tileSize),
+            new Vector(96, 96),
+            PixelFormat.Bgra8888,
+            AlphaFormat.Opaque);
+        using (var frameBuffer = bitmap.Lock())
+        {
+            unsafe
+            {
+                var pixels = (uint*)frameBuffer.Address;
+                for (var y = 0; y < tileSize; y++)
+                {
+                    for (var x = 0; x < tileSize; x++)
+                    {
+                        var isDark = (x / squareSize + y / squareSize) % 2 == 0;
+                        pixels[y * frameBuffer.RowBytes / 4 + x] = isDark ? 0xFF666666 : 0xFF999999;
+                    }
+                }
+            }
+        }
+
+        _checkerboardBrush = new ImageBrush(bitmap)
+        {
+            TileMode = TileMode.Tile,
+            DestinationRect = new RelativeRect(0, 0, tileSize, tileSize, RelativeUnit.Absolute),
+        };
+        return _checkerboardBrush;
+    }
+
     public static Border MakeBorderForControl(Control control)
     {
         return new Border
@@ -1850,6 +2158,22 @@ public static class UiUtil
         return new Thickness(WindowMarginWidth, WindowMarginWidth * 2, WindowMarginWidth, WindowMarginWidth);
     }
 
+    // Property lookups here run on every swatch read/refresh; cache PropertyInfo per
+    // (declaring type, property name) so repeated reflection resolves are dictionary hits.
+    private static readonly Dictionary<(Type Type, string Name), PropertyInfo?> PropertyInfoCache = new();
+
+    private static PropertyInfo? GetCachedProperty(object owner, string name)
+    {
+        var key = (owner.GetType(), name);
+        if (!PropertyInfoCache.TryGetValue(key, out var pi))
+        {
+            pi = key.Item1.GetProperty(name, BindingFlags.Public | BindingFlags.Instance);
+            PropertyInfoCache[key] = pi;
+        }
+
+        return pi;
+    }
+
     internal static Button MakeColorPickerButton(object source, string colorPropertyPath, bool showAlpha = true)
     {
         var pathParts = colorPropertyPath.Split('.');
@@ -1863,14 +2187,14 @@ public static class UiUtil
                 {
                     return (null, null);
                 }
-                var pi = current.GetType().GetProperty(pathParts[i], BindingFlags.Public | BindingFlags.Instance);
+                var pi = GetCachedProperty(current, pathParts[i]);
                 current = pi?.GetValue(current);
             }
             if (current == null)
             {
                 return (null, null);
             }
-            var leafProp = current.GetType().GetProperty(pathParts[^1], BindingFlags.Public | BindingFlags.Instance);
+            var leafProp = GetCachedProperty(current, pathParts[^1]);
             return (current, leafProp);
         }
 
@@ -1957,7 +2281,7 @@ public static class UiUtil
                     {
                         break;
                     }
-                    var pi = current.GetType().GetProperty(pathParts[i], BindingFlags.Public | BindingFlags.Instance);
+                    var pi = GetCachedProperty(current, pathParts[i]);
                     current = pi?.GetValue(current);
                 }
             }
@@ -2162,14 +2486,7 @@ public static class UiUtil
             });
         }
 
-        control.AddHandler(InputElement.PointerWheelChangedEvent, (s, e) =>
-        {
-            control.Value = Math.Clamp((control.Value ?? 0) + (e.Delta.Y > 0 ? control.Increment : -control.Increment),
-                                        control.Minimum,
-                                        control.Maximum);
-            e.Handled = true;
-        });
-
+        MakeNumeriUpDownMouseWheelHandler(control);
         ForwardAutomationNameToInnerTextBox(control);
 
         return control;
@@ -2213,14 +2530,7 @@ public static class UiUtil
             });
         }
 
-        control.AddHandler(InputElement.PointerWheelChangedEvent, (s, e) =>
-        {
-            control.Value = Math.Clamp((control.Value ?? 0) + (e.Delta.Y > 0 ? control.Increment : -control.Increment),
-                                        control.Minimum,
-                                        control.Maximum);
-            e.Handled = true;
-        });
-
+        MakeNumeriUpDownMouseWheelHandler(control);
         ForwardAutomationNameToInnerTextBox(control);
 
         return control;
@@ -2346,11 +2656,23 @@ public static class UiUtil
         return control;
     }
 
+    /// <summary>
+    /// Lets the mouse wheel step a <see cref="NumericUpDown"/> - but only while it has keyboard
+    /// focus. Without that guard, scrolling a dialog with the pointer merely passing over a numeric
+    /// field silently changed the value and swallowed the scroll, so e.g. "Waveform text font size"
+    /// walked down to its minimum of 10 while the user scrolled the settings page (issue #12864).
+    /// </summary>
     private static void MakeNumeriUpDownMouseWheelHandler(NumericUpDown control)
     {
         control.AddHandler(InputElement.PointerWheelChangedEvent, (s, e) =>
         {
-            control.Value = Math.Clamp((control.Value ?? 0) + (e.Delta.Y > 0 ? control.Increment : -control.Increment),
+            if (!control.IsKeyboardFocusWithin)
+            {
+                return;
+            }
+
+            var current = control.Value ?? Math.Clamp(0m, control.Minimum, control.Maximum);
+            control.Value = Math.Clamp(current + (e.Delta.Y > 0 ? control.Increment : -control.Increment),
                                         control.Minimum,
                                         control.Maximum);
             e.Handled = true;
@@ -2561,17 +2883,16 @@ public static class UiUtil
         return theme == ThemeVariant.Dark;
     }
 
+    private static readonly SKColor CheckerboardLight = new(0xFFEEEEEE);
+    private static readonly SKColor CheckerboardDark = new(0xFFBBBBBB);
+    private static readonly SKColor CheckerboardLightDarkTheme = new(0xFF333333);
+    private static readonly SKColor CheckerboardDarkDarkTheme = new(0xFF555555);
+
     public static void DrawCheckerboardBackground(SKCanvas canvas, int width, int height, int squareSize = 16)
     {
-        // Define colors for the checkerboard pattern        
-        var lightColor = SKColor.Parse("#EEEEEE");
-        var darkColor = SKColor.Parse("#BBBBBB");
-
-        if (UiUtil.IsDarkTheme())
-        {
-            lightColor = SKColor.Parse("#333333"); // Darker color for light squares in dark theme
-            darkColor = SKColor.Parse("#555555"); // Lighter color for dark squares in dark theme
-        }
+        var isDarkTheme = IsDarkTheme();
+        var lightColor = isDarkTheme ? CheckerboardLightDarkTheme : CheckerboardLight;
+        var darkColor = isDarkTheme ? CheckerboardDarkDarkTheme : CheckerboardDark;
 
         using (var lightPaint = new SKPaint { Color = lightColor, Style = SKPaintStyle.Fill })
         using (var darkPaint = new SKPaint { Color = darkColor, Style = SKPaintStyle.Fill })
@@ -2697,24 +3018,15 @@ public static class UiUtil
         return Color.FromArgb(color.A, r, g, b);
     }
 
-    internal static DataGridGridLinesVisibility GetGridLinesVisibility()
+    internal static SeGridLinesVisibility GetGridLinesVisibility()
     {
-        if (Se.Settings.Appearance.GridLinesAppearance == DataGridGridLinesVisibility.Horizontal.ToString())
+        return Se.Settings.Appearance.GridLinesAppearance switch
         {
-            return DataGridGridLinesVisibility.Horizontal;
-        }
-
-        if (Se.Settings.Appearance.GridLinesAppearance == DataGridGridLinesVisibility.Vertical.ToString())
-        {
-            return DataGridGridLinesVisibility.Vertical;
-        }
-
-        if (Se.Settings.Appearance.GridLinesAppearance == DataGridGridLinesVisibility.All.ToString())
-        {
-            return DataGridGridLinesVisibility.All;
-        }
-
-        return DataGridGridLinesVisibility.None;
+            nameof(SeGridLinesVisibility.Horizontal) => SeGridLinesVisibility.Horizontal,
+            nameof(SeGridLinesVisibility.Vertical) => SeGridLinesVisibility.Vertical,
+            nameof(SeGridLinesVisibility.All) => SeGridLinesVisibility.All,
+            _ => SeGridLinesVisibility.None,
+        };
     }
 
     internal static Color GetDarkThemeBackgroundColor()
@@ -2766,11 +3078,12 @@ public static class UiUtil
 
     public static string? MakeToolTip(string hint, List<ShortCut> shortcuts, string shortcutName = "")
     {
-        string shortcutString = MakeShortcutsString(shortcuts, shortcutName);
+        if (!Se.Settings.Appearance.ShowHints)
+        {
+            return null;
+        }
 
-        return Se.Settings.Appearance.ShowHints
-            ? string.Format(hint, shortcutString).Trim()
-            : null;
+        return string.Format(hint, MakeShortcutsString(shortcuts, shortcutName)).Trim();
     }
 
     public static string MakeShortcutsString(List<ShortCut> shortcuts, string shortcutName)
@@ -2790,6 +3103,23 @@ public static class UiUtil
     {
         window.Icon = GetSeIcon();
         window.Name = name;
+
+        // Stop and dispose any background timers the view model owns the moment the window closes,
+        // whatever the close path (buttons, Escape, title-bar X, Alt+F4). Without this a running
+        // System.Timers.Timer keeps its (captured) view model - and the whole closed window - alive
+        // and ticking. Wired here, in the one place every window funnels through, so individual
+        // dialogs don't each have to remember to do it. (#12739)
+        // Guarded so the cleanup runs at most once per window even if Closed were ever raised
+        // again, keeping non-idempotent cleanups safe by construction. (#13100)
+        var cleanedUp = false;
+        window.Closed += (_, _) =>
+        {
+            if (!cleanedUp && window.DataContext is IClosingCleanup cleanup)
+            {
+                cleanedUp = true;
+                cleanup.OnClosingCleanup();
+            }
+        };
 
         // On small or high-DPI screens (e.g. 1920x1080 at 150% = 1280x853 DIPs of
         // working area) SizeToContent windows can measure taller/wider than the screen,
@@ -2912,7 +3242,7 @@ public static class UiUtil
 
         // Reconstruct the last known rect
         var desired = new PixelPoint(existing.X, existing.Y);
-        var windowRect = new PixelRect(desired, new PixelSize((int)existing.Width, (int)existing.Height));
+        var windowRect = new PixelRect(desired, new PixelSize(existing.Width, existing.Height));
 
         var screens = window.Screens.All;
         bool fits = screens.Any(s => s.Bounds.Intersects(windowRect));
@@ -2929,8 +3259,8 @@ public static class UiUtil
             if (targetScreen != null)
             {
                 // center on that screen
-                var px = targetScreen.Bounds.X + (targetScreen.Bounds.Width - (int)existing.Width) / 2;
-                var py = targetScreen.Bounds.Y + (targetScreen.Bounds.Height - (int)existing.Height) / 2;
+                var px = targetScreen.Bounds.X + (targetScreen.Bounds.Width - existing.Width) / 2;
+                var py = targetScreen.Bounds.Y + (targetScreen.Bounds.Height - existing.Height) / 2;
                 desired = new PixelPoint(px, py);
             }
             else
@@ -2939,8 +3269,8 @@ public static class UiUtil
                 var primary = window.Screens.Primary;
                 if (primary != null)
                 {
-                    var px = primary.Bounds.X + (primary.Bounds.Width - (int)existing.Width) / 2;
-                    var py = primary.Bounds.Y + (primary.Bounds.Height - (int)existing.Height) / 2;
+                    var px = primary.Bounds.X + (primary.Bounds.Width - existing.Width) / 2;
+                    var py = primary.Bounds.Y + (primary.Bounds.Height - existing.Height) / 2;
                     desired = new PixelPoint(px, py);
                 }
             }
@@ -2972,7 +3302,7 @@ public static class UiUtil
 
     public static void ShowHelp(string helpName, string section = "")
     {
-        var helpUrl = string.Format($"http://subtitleedit.github.io/subtitleedit/{helpName}.html");
+        var helpUrl = $"http://subtitleedit.github.io/subtitleedit/{helpName}.html";
         if (!string.IsNullOrEmpty(section))
         {
             helpUrl += $"#{section}";
@@ -2983,8 +3313,7 @@ public static class UiUtil
 
     public static void ShowHelp()
     {
-        var helpUrl = string.Format($"http://subtitleedit.github.io/subtitleedit");
-        OpenUrl(helpUrl);
+        OpenUrl("http://subtitleedit.github.io/subtitleedit");
     }
 
     public static void OpenUrl(string url)
@@ -3017,12 +3346,50 @@ public static class UiUtil
 
     internal static bool IsHelp(KeyEventArgs e)
     {
-        return e.Key == Key.F1;
+        var shortcut = Se.Settings.Shortcuts.FirstOrDefault(s =>
+            s.ActionName == nameof(Features.Main.MainViewModel.ShowHelpCommand) && s.Keys.Count > 0);
+        if (shortcut == null)
+        {
+            return e.Key == Key.F1;
+        }
+
+        var requiredModifiers = KeyModifiers.None;
+        string? keyName = null;
+        foreach (var token in shortcut.Keys)
+        {
+            switch (ShortcutManager.NormalizeKeyToken(token))
+            {
+                case "Control":
+                    requiredModifiers |= KeyModifiers.Control;
+                    break;
+                case "Alt":
+                    requiredModifiers |= KeyModifiers.Alt;
+                    break;
+                case "Shift":
+                    requiredModifiers |= KeyModifiers.Shift;
+                    break;
+                case "Win":
+                    requiredModifiers |= KeyModifiers.Meta;
+                    break;
+                default:
+                    keyName = token;
+                    break;
+            }
+        }
+
+        // A modifier-only binding can never match a key press.
+        if (keyName == null)
+        {
+            return false;
+        }
+
+        return e.KeyModifiers == requiredModifiers &&
+               string.Equals(ShortcutManager.GetShortcutKey(e).ToString(), keyName, StringComparison.OrdinalIgnoreCase);
     }
 
     internal static bool TryHandleWindowSystemMenu(KeyEventArgs e, Window? window)
     {
-        if (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows) || window == null)
+        if (!OperatingSystem.IsWindows() || window == null)
         {
             return false;
         }
@@ -3037,6 +3404,28 @@ public static class UiUtil
         return false;
     }
 
+    /// <summary>
+    /// Completes Avalonia's bare-Alt menu cycle when the window loses activation while Alt is held.
+    /// AccessKeyHandler tracks the Alt press privately and only settles on the Alt <em>release</em>;
+    /// when a modal window steals focus mid-gesture (e.g. Alt, O, ... opening the Shortcuts window),
+    /// the release never reaches this window and the handler is stranded with "Alt is down / ignore
+    /// the next Alt up" state - the next bare Alt press then fails to open the menu bar (#13083).
+    /// Raising a synthetic Alt KeyUp lets the handler finish its cycle. When Alt was down with no
+    /// other key pressed, that release legitimately opens the menu - callers run their
+    /// menu-deactivation cleanup afterwards to close it again.
+    /// </summary>
+    internal static void RaiseSyntheticAltKeyUp(Window? window)
+    {
+        window?.RaiseEvent(new KeyEventArgs
+        {
+            RoutedEvent = InputElement.KeyUpEvent,
+            Source = window,
+            Key = Key.LeftAlt,
+            PhysicalKey = PhysicalKey.AltLeft,
+            KeyModifiers = KeyModifiers.None,
+        });
+    }
+
     private static bool _windowsSystemMenuClassHandlerRegistered;
 
     /// <summary>
@@ -3046,7 +3435,7 @@ public static class UiUtil
     /// </summary>
     internal static void RegisterWindowsSystemMenuClassHandler()
     {
-        if (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows) || _windowsSystemMenuClassHandlerRegistered)
+        if (!OperatingSystem.IsWindows() || _windowsSystemMenuClassHandlerRegistered)
         {
             return;
         }
@@ -3110,4 +3499,9 @@ public static class UiUtil
             }
         }, RoutingStrategies.Tunnel, handledEventsToo: true);
     }
+
+    /// <summary>
+    /// Makes Home/End jump to the first/last row of <paramref name="dataGrid"/> and select it.
+    /// Avalonia's DataGrid only moves the cell cursor, which is why this is needed. Tunnel
+    /// phase so the grid's own navigation does not consume the key first.
 }

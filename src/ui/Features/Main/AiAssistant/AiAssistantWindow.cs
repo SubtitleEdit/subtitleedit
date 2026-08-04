@@ -7,6 +7,7 @@ using Avalonia.Input;
 using Avalonia.Layout;
 using Avalonia.Media;
 using Avalonia.Styling;
+using Nikse.SubtitleEdit.Features.Tools.AiReview;
 using Nikse.SubtitleEdit.Features.Translate;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
@@ -31,6 +32,22 @@ public class AiAssistantWindow : Window
         // ---------- toolbar: engine + model settings (same engines as Tools -> AI review) ----------
         var comboEngine = UiUtil.MakeComboBox(vm.Engines, vm, nameof(vm.SelectedEngine))
             .WithAccessibleName(Se.Language.General.Engine);
+        comboEngine.ItemTemplate = AiEngineCombo.ItemTemplate();
+
+        var buttonLlamaCppEngineSettings = UiUtil.MakeButton(vm.ShowLlamaCppEngineSettingsCommand, IconNames.Settings)
+            .WithAccessibleName(Se.Language.General.LlamaCppEngineSettings);
+        ToolTip.SetTip(buttonLlamaCppEngineSettings, Se.Language.General.LlamaCppEngineSettings);
+        buttonLlamaCppEngineSettings.Bind(IsVisibleProperty, new Binding(nameof(vm.IsLlamaCppVisible)));
+
+        // The engine settings button sits directly after the engine combo, not with the model combo:
+        // it configures the engine itself (backend build, release, install state), not the model.
+        var panelEngine = new StackPanel
+        {
+            Orientation = Orientation.Horizontal,
+            Spacing = 5,
+            VerticalAlignment = VerticalAlignment.Center,
+            Children = { comboEngine, buttonLlamaCppEngineSettings },
+        };
 
         var textBoxOllamaModel = UiUtil.MakeTextBox(190, vm, nameof(vm.OllamaModel))
             .WithAccessibleName(Se.Language.General.Model);
@@ -66,35 +83,16 @@ public class AiAssistantWindow : Window
 
         var comboLlamaCppModel = UiUtil.MakeComboBox(vm.LlamaCppModels, vm, nameof(vm.SelectedLlamaCppModel))
             .WithAccessibleName(Se.Language.General.Model);
-        comboLlamaCppModel.Bind(IsVisibleProperty, new Binding(nameof(vm.IsLlamaCppVisible)));
-        comboLlamaCppModel.ItemTemplate = new FuncDataTemplate<LlamaCppModelDisplay>((item, _) =>
-        {
-            var panel = new StackPanel
-            {
-                Orientation = Orientation.Horizontal,
-                Spacing = 7,
-                VerticalAlignment = VerticalAlignment.Center,
-            };
-            if (item != null)
-            {
-                panel.Children.Add(new Avalonia.Controls.Shapes.Ellipse
-                {
-                    Width = 8,
-                    Height = 8,
-                    VerticalAlignment = VerticalAlignment.Center,
-                    Fill = item.IsInstalled
-                        ? new SolidColorBrush(Color.FromRgb(0x5c, 0xb8, 0x5c))
-                        : new SolidColorBrush(Color.FromArgb(0x50, 0x80, 0x88, 0x90)),
-                });
-                panel.Children.Add(new TextBlock
-                {
-                    Text = item.DisplayText,
-                    VerticalAlignment = VerticalAlignment.Center,
-                });
-            }
+        // Shared dot template, so the install colours here match auto-translate, AI review and the
+        // engine settings dialog rather than this window's former bespoke green/grey pair.
+        comboLlamaCppModel.ItemTemplate = StatusDots.ComboItemTemplate<LlamaCppModelDisplay>(
+            m => m.Model.DisplayName,
+            m => string.IsNullOrEmpty(m.Model.Url)
+                ? (string.IsNullOrEmpty(m.Model.Size) ? Se.Language.General.Custom : $"{Se.Language.General.Custom}, {m.Model.Size}")
+                : (string.IsNullOrEmpty(m.Model.Size) ? null : m.Model.Size),
+            m => m.IsInstalled ? DownloadDotStatus.UpToDate : DownloadDotStatus.NotInstalled);
 
-            return panel;
-        });
+        comboLlamaCppModel.Bind(IsVisibleProperty, new Binding(nameof(vm.IsLlamaCppVisible)));
 
         var languageChip = new Border
         {
@@ -125,7 +123,7 @@ public class AiAssistantWindow : Window
         var labelEngine = UiUtil.MakeTextBlock(Se.Language.General.Engine).WithMarginRight(2);
         labelEngine.VerticalAlignment = VerticalAlignment.Center;
         toolbar.Add(labelEngine, 0, 0);
-        toolbar.Add(comboEngine, 0, 1);
+        toolbar.Add(panelEngine, 0, 1);
         toolbar.Add(panelOllama, 0, 2);
         toolbar.Add(comboLlamaCppModel, 0, 3);
         toolbar.Add(panelOpenAiCompatible, 0, 4);

@@ -32,6 +32,7 @@ public class AiReviewWindow : Window
         // ---------- toolbar ----------
         var comboEngine = UiUtil.MakeComboBox(vm.Engines, vm, nameof(vm.SelectedEngine))
             .WithAccessibleName(Se.Language.General.Engine);
+        comboEngine.ItemTemplate = AiEngineCombo.ItemTemplate();
 
         var textBoxOllamaModel = UiUtil.MakeTextBox(220, vm, nameof(vm.OllamaModel))
             .WithAccessibleName(Se.Language.General.Model);
@@ -56,46 +57,57 @@ public class AiReviewWindow : Window
             .WithAccessibleName(Se.Language.General.ApiKey);
         textBoxOpenAiApiKey.PlaceholderText = Se.Language.General.ApiKey;
         textBoxOpenAiApiKey.PasswordChar = '\u25cf';
+
+        // Free cloud tiers rate limit hard, so the delay between requests lives next to the API key
+        // rather than in a settings dialog. The label would not fit the toolbar - a timer icon plus
+        // tooltip carries the meaning, and the accessible name keeps it readable for screen readers.
+        var numericDelay = UiUtil.MakeNumericUpDownInt(0, 600, 0, 70, vm, nameof(vm.RequestDelaySeconds))
+            .WithAccessibleName(Se.Language.Translate.DelayInSecondsBetweenRequests);
+        ToolTip.SetTip(numericDelay, Se.Language.Translate.DelayInSecondsBetweenRequests);
+        var iconDelay = new Optris.Icons.Avalonia.Icon
+        {
+            Value = "mdi-timer-outline",
+            FontSize = 16,
+            VerticalAlignment = VerticalAlignment.Center,
+        };
+        ToolTip.SetTip(iconDelay, Se.Language.Translate.DelayInSecondsBetweenRequests);
+
         var panelOpenAiCompatible = new StackPanel
         {
             Orientation = Orientation.Horizontal,
             Spacing = 5,
             VerticalAlignment = VerticalAlignment.Center,
-            Children = { textBoxOpenAiUrl, textBoxOpenAiModel, textBoxOpenAiApiKey },
+            Children = { textBoxOpenAiUrl, textBoxOpenAiModel, textBoxOpenAiApiKey, iconDelay, numericDelay },
         };
         panelOpenAiCompatible.Bind(IsVisibleProperty, new Binding(nameof(vm.IsOpenAiCompatibleVisible)));
 
         var comboLlamaCppModel = UiUtil.MakeComboBox(vm.LlamaCppModels, vm, nameof(vm.SelectedLlamaCppModel))
             .WithAccessibleName(Se.Language.General.Model);
-        comboLlamaCppModel.Bind(IsVisibleProperty, new Binding(nameof(vm.IsLlamaCppVisible)));
-        comboLlamaCppModel.ItemTemplate = new FuncDataTemplate<Features.Translate.LlamaCppModelDisplay>((item, _) =>
-        {
-            var panel = new StackPanel
-            {
-                Orientation = Orientation.Horizontal,
-                Spacing = 7,
-                VerticalAlignment = VerticalAlignment.Center,
-            };
-            if (item != null)
-            {
-                panel.Children.Add(new Avalonia.Controls.Shapes.Ellipse
-                {
-                    Width = 8,
-                    Height = 8,
-                    VerticalAlignment = VerticalAlignment.Center,
-                    Fill = item.IsInstalled
-                        ? new SolidColorBrush(Color.FromRgb(0x5c, 0xb8, 0x5c))
-                        : new SolidColorBrush(Color.FromArgb(0x50, 0x80, 0x88, 0x90)),
-                });
-                panel.Children.Add(new TextBlock
-                {
-                    Text = item.DisplayText,
-                    VerticalAlignment = VerticalAlignment.Center,
-                });
-            }
+        // Shared dot template, so the install colours here match auto-translate and the engine
+        // settings dialog rather than this window's former bespoke green/grey pair.
+        comboLlamaCppModel.ItemTemplate = StatusDots.ComboItemTemplate<Features.Translate.LlamaCppModelDisplay>(
+            m => m.Model.DisplayName,
+            m => string.IsNullOrEmpty(m.Model.Url)
+                ? (string.IsNullOrEmpty(m.Model.Size) ? Se.Language.General.Custom : $"{Se.Language.General.Custom}, {m.Model.Size}")
+                : (string.IsNullOrEmpty(m.Model.Size) ? null : m.Model.Size),
+            m => m.IsInstalled ? DownloadDotStatus.UpToDate : DownloadDotStatus.NotInstalled);
 
-            return panel;
-        });
+        comboLlamaCppModel.Bind(IsVisibleProperty, new Binding(nameof(vm.IsLlamaCppVisible)));
+
+        var buttonLlamaCppEngineSettings = UiUtil.MakeButton(vm.ShowLlamaCppEngineSettingsCommand, IconNames.Settings)
+            .WithAccessibleName(Se.Language.General.LlamaCppEngineSettings);
+        ToolTip.SetTip(buttonLlamaCppEngineSettings, Se.Language.General.LlamaCppEngineSettings);
+        buttonLlamaCppEngineSettings.Bind(IsVisibleProperty, new Binding(nameof(vm.IsLlamaCppVisible)));
+
+        // The engine settings button sits directly after the engine combo, not with the model combo:
+        // it configures the engine itself (backend build, release, install state), not the model.
+        var panelEngine = new StackPanel
+        {
+            Orientation = Orientation.Horizontal,
+            Spacing = 5,
+            VerticalAlignment = VerticalAlignment.Center,
+            Children = { comboEngine, buttonLlamaCppEngineSettings },
+        };
 
         var languageChip = new Border
         {
@@ -128,7 +140,7 @@ public class AiReviewWindow : Window
         var labelEngine = UiUtil.MakeTextBlock(Se.Language.General.Engine).WithMarginRight(2);
         labelEngine.VerticalAlignment = VerticalAlignment.Center;
         toolbar.Add(labelEngine, 0, 0);
-        toolbar.Add(comboEngine, 0, 1);
+        toolbar.Add(panelEngine, 0, 1);
         toolbar.Add(panelOllama, 0, 2);
         toolbar.Add(comboLlamaCppModel, 0, 3);
         toolbar.Add(panelOpenAiCompatible, 0, 4);
@@ -201,24 +213,22 @@ public class AiReviewWindow : Window
         chipsBar.Add(warningNote, 0, 1);
 
         // ---------- suggestions grid ----------
-        var dataGrid = new DataGrid
+        // No header-click sorting (the DataGrid's CanUserSortColumns is not carried
+        // over): suggestions are fix previews in subtitle order. The DataGrid-era
+        // DataGridCheckboxMultiSelect is replaced by native extended selection plus
+        // TableViewExtras.AddSpaceToggle for the Space-toggles-checkbox piece.
+        var dataGrid = TableViewExtras.MakeTableView();
+        dataGrid.Width = double.NaN;
+        dataGrid.Height = double.NaN;
+        dataGrid.DataContext = vm;
+        dataGrid.ItemsSource = vm.Suggestions;
+        dataGrid.Columns.AddRange(new[]
         {
-            AutoGenerateColumns = false,
-            CanUserResizeColumns = true,
-            CanUserSortColumns = true,
-            HorizontalAlignment = HorizontalAlignment.Stretch,
-            VerticalAlignment = VerticalAlignment.Stretch,
-            Width = double.NaN,
-            Height = double.NaN,
-            DataContext = vm,
-            ItemsSource = vm.Suggestions,
-            IsReadOnly = false,
-            Columns =
-            {
-                new DataGridTemplateColumn
+                new SeTableViewColumn
                 {
                     Header = Se.Language.General.Apply,
-                    CellTheme = UiUtil.DataGridNoBorderNoPaddingCellTheme,
+                    CellTheme = UiUtil.TableViewNoPaddingCellTheme,
+                    HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
                     CellTemplate = new FuncDataTemplate<ReviewSuggestionItem>((item, _) => new Border
                     {
                         Background = Brushes.Transparent,
@@ -231,19 +241,21 @@ public class AiReviewWindow : Window
                             HorizontalAlignment = HorizontalAlignment.Center,
                         },
                     }),
-                    Width = new DataGridLength(1, DataGridLengthUnitType.Auto),
+                    Width = new GridLength(80), // content-sized (Auto) on the DataGrid; TableView treats Auto as star
                 },
-                new DataGridTextColumn
+                new SeTableViewColumn
                 {
                     Header = Se.Language.General.NumberSymbol,
-                    CellTheme = UiUtil.DataGridNoBorderNoPaddingCellTheme,
+                    CellTheme = UiUtil.TableViewCellTheme,
+                    HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
                     Binding = new Binding(nameof(ReviewSuggestionItem.Number)),
-                    IsReadOnly = true,
+                    Width = new GridLength(60),
                 },
-                new DataGridTemplateColumn
+                new SeTableViewColumn
                 {
                     Header = Se.Language.Tools.FixCommonErrors.Action,
-                    CellTheme = UiUtil.DataGridNoBorderNoPaddingCellTheme,
+                    CellTheme = UiUtil.TableViewNoPaddingCellTheme,
+                    HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
                     CellTemplate = new FuncDataTemplate<ReviewSuggestionItem>((item, _) =>
                     {
                         var panel = new StackPanel
@@ -302,13 +314,13 @@ public class AiReviewWindow : Window
                             Child = panel,
                         };
                     }),
-                    IsReadOnly = true,
-                    Width = new DataGridLength(1, DataGridLengthUnitType.Auto),
+                    Width = new GridLength(150), // content-sized (Auto) on the DataGrid; TableView treats Auto as star
                 },
-                new DataGridTemplateColumn
+                new SeTableViewColumn
                 {
                     Header = Se.Language.General.Before,
-                    CellTheme = UiUtil.DataGridNoBorderNoPaddingCellTheme,
+                    CellTheme = UiUtil.TableViewNoPaddingCellTheme,
+                    HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
                     CellTemplate = new FuncDataTemplate<ReviewSuggestionItem>((item, _) =>
                     {
                         if (item == null)
@@ -324,13 +336,13 @@ public class AiReviewWindow : Window
                             Child = beforeBlock,
                         };
                     }),
-                    IsReadOnly = true,
-                    Width = new DataGridLength(1, DataGridLengthUnitType.Star),
+                    Width = new GridLength(1, GridUnitType.Star),
                 },
-                new DataGridTemplateColumn
+                new SeTableViewColumn
                 {
                     Header = Se.Language.General.After,
-                    CellTheme = UiUtil.DataGridNoBorderNoPaddingCellTheme,
+                    CellTheme = UiUtil.TableViewNoPaddingCellTheme,
+                    HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
                     CellTemplate = new FuncDataTemplate<ReviewSuggestionItem>((item, _) =>
                     {
                         if (item == null)
@@ -346,14 +358,12 @@ public class AiReviewWindow : Window
                             Child = afterBlock,
                         };
                     }),
-                    IsReadOnly = true,
-                    Width = new DataGridLength(1, DataGridLengthUnitType.Star),
+                    Width = new GridLength(1, GridUnitType.Star),
                 },
-            },
-        };
+        });
         AutomationProperties.SetName(dataGrid, l.Title);
-        dataGrid.Bind(DataGrid.SelectedItemProperty, new Binding(nameof(vm.SelectedSuggestion)));
-        _ = new DataGridCheckboxMultiSelect<ReviewSuggestionItem>(dataGrid,
+        dataGrid.Bind(TableView.SelectedItemProperty, new Binding(nameof(vm.SelectedSuggestion)));
+        TableViewExtras.AddSpaceToggle<ReviewSuggestionItem>(dataGrid,
             item => item.IsSelected, (item, v) => item.IsSelected = v);
 
         var borderGrid = UiUtil.MakeBorderForControlNoPadding(dataGrid);
@@ -431,7 +441,7 @@ public class AiReviewWindow : Window
             .WithIconLeft("fa-solid fa-robot");
         buttonReview.Bind(IsVisibleProperty, new Binding(nameof(vm.IsNotReviewing)));
 
-        var buttonStop = UiUtil.MakeButton(l.Stop, vm.StopReviewCommand)
+        var buttonStop = UiUtil.MakeButton(Se.Language.General.Stop, vm.StopReviewCommand)
             .WithIconLeft("fa-solid fa-stop");
         buttonStop.Bind(IsVisibleProperty, new Binding(nameof(vm.IsReviewing)));
 

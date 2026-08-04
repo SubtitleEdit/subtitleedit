@@ -45,10 +45,5 @@ namespace Nikse.SubtitleEdit.Core.VobSub
 
             return 0;
         }
-
-        public static int GetLittleEndian32(byte[] buffer, int index)
-        {
-            return (buffer[index + 3] << 24 | buffer[index + 2] << 16 | buffer[index + 1] << 8 | buffer[index + 0]);
-        }
     }
 }

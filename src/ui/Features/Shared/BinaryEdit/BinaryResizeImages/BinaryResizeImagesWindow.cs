@@ -43,7 +43,7 @@ public class BinaryResizeImagesWindow : Window
         };
 
         // Left side - controls
-        var leftPanel = MakeControlsPanel(vm);
+        var leftPanel = MakeControlsPanel(vm, out var percentageInput);
         contentGrid.Add(leftPanel, 0, 0);
 
         // Right side - preview
@@ -60,11 +60,11 @@ public class BinaryResizeImagesWindow : Window
 
         Content = mainGrid;
 
-        Activated += delegate { buttonOk.Focus(); };
+        Activated += delegate { percentageInput.Focus(); }; // initial focus on an input, not an action button - a focused button clicks on bare Space
         KeyDown += (_, e) => vm.OnKeyDown(e);
     }
 
-    private static StackPanel MakeControlsPanel(BinaryResizeImagesViewModel vm)
+    private static StackPanel MakeControlsPanel(BinaryResizeImagesViewModel vm, out NumericUpDown percentageInput)
     {
         var panel = new StackPanel
         {
@@ -95,6 +95,7 @@ public class BinaryResizeImagesWindow : Window
             },
         };
         panel.Children.Add(percentageUpDown);
+        percentageInput = percentageUpDown;
 
         // Image size display
         var imageSizeLabel = new TextBlock
@@ -141,6 +142,10 @@ public class BinaryResizeImagesWindow : Window
 
         vm.PreviewImage = image;
 
-        return UiUtil.MakeBorderForControl(scrollViewer);
+        // Image based subtitles are light or dark text on a transparent background, both
+        // invisible on a matching flat backdrop - use the mid-gray checkerboard (issue #12692).
+        var border = UiUtil.MakeBorderForControl(scrollViewer);
+        border.Background = UiUtil.GetCheckerboardBrush();
+        return border;
     }
 }

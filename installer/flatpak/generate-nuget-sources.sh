@@ -228,7 +228,8 @@ for src in data:
             added.append(entry)
         break
 
-# netstandard2.1 reference assemblies (LibSE targets netstandard2.1). The system
+# netstandard2.1 reference assemblies (LibSE multi-targets netstandard2.1;net10.0,
+# and the netstandard2.1 leg still builds during restore/build). The system
 # SDK used by the fallback path resolves these from its bundled packs without
 # downloading, so they never get captured here — but the flatpak SDK needs them
 # from the offline feed, otherwise restore fails with NU1101. The version is tied

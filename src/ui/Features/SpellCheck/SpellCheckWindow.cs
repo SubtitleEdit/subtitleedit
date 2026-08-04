@@ -27,7 +27,7 @@ public class SpellCheckWindow : Window
             [!Label.ContentProperty] = new Binding(nameof(SpellCheckViewModel.LineText)) { Mode = BindingMode.OneWay }
         };
 
-        var buttonEditWholeText = UiUtil.MakeButton(vm.EditWholeTextCommand, IconNames.Pencil);
+        var buttonEditWholeText = UiUtil.MakeButton(vm.EditWholeTextCommand, IconNames.Pencil, Se.Language.SpellCheck.EditWholeText);
         buttonEditWholeText.HorizontalAlignment = HorizontalAlignment.Right;
         buttonEditWholeText.VerticalAlignment = VerticalAlignment.Top;
         buttonEditWholeText.Margin = new Thickness(0, 3, 0, 5);
@@ -63,8 +63,7 @@ public class SpellCheckWindow : Window
         var buttonDone = UiUtil.MakeButtonDone(vm.OkCommand).WithLeftAlignment();
         // Icon button left of "Done" to attach/show the source image(s) — a context menu
         // alone isn't reliable on macOS (panels without a background aren't hit-tested).
-        var buttonLoadSourceImage = UiUtil.MakeButton(vm.LoadSourceImageCommand, IconNames.Image);
-        ToolTip.SetTip(buttonLoadSourceImage, Se.Language.SpellCheck.LoadSourceImage);
+        var buttonLoadSourceImage = UiUtil.MakeButton(vm.LoadSourceImageCommand, IconNames.Image, Se.Language.SpellCheck.LoadSourceImage);
         var panelButtonsOk = UiUtil.MakeButtonBar(buttonLoadSourceImage, buttonDone);
 
         var grid = new Grid

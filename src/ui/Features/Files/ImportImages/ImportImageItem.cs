@@ -70,7 +70,9 @@ public partial class ImportImageItem : ObservableObject
 
     internal SKBitmap GetBitmap()
     {
-        return SKBitmap.Decode(Bytes);
+        // Normalize to BGRA - InpaintDelogo emits 8-bit grayscale PNGs, which
+        // SKBitmap.Decode would keep as 1-byte/pixel Gray8 (issue #12694).
+        return Logic.SkBitmapExtensions.DecodeToBgra8888(Bytes);
     }
 }
 

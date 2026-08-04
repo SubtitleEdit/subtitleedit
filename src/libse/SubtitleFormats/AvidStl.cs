@@ -130,7 +130,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     var fi = new FileInfo(fileName);
                     if (fi.Length > 1150 && fi.Length < 1024000) // not too small or too big
                     {
-                        byte[] buffer = FileUtil.ReadAllBytesShared(fileName);
+                        byte[] buffer = FileUtil.ReadBytesShared(fileName, 1284);
                         if (buffer[0] == 0x38 &&
                             buffer[1] == 0x35 &&
                             buffer[2] == 0x30 &&

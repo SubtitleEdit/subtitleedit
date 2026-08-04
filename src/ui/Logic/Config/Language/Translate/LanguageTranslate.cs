@@ -29,6 +29,29 @@ public class LanguageTranslate
     public string TranslationCancelled { get; set; }
     public string SwapLanguages { get; set; }
     public string XIsAlreadyDownloadedReDownload { get; set; }
+    public string AdvancedDotDotDot { get; set; }
+    public string AdvancedSettings { get; set; }
+    public string AdvancedSettingsSubtitle { get; set; }
+    public string Context { get; set; }
+    public string Synopsis { get; set; }
+    public string SynopsisHint { get; set; }
+    public string Glossary { get; set; }
+    public string GlossaryHint { get; set; }
+    public string PreviousLinesAsContext { get; set; }
+    public string LinesPerBatch { get; set; }
+    public string KeepLineBreaks { get; set; }
+    public string SamplingParameters { get; set; }
+    public string MinusOneMeansDefault { get; set; }
+    public string Temperature { get; set; }
+    public string TopP { get; set; }
+    public string TopK { get; set; }
+    public string RepeatPenalty { get; set; }
+    public string MaxTokensPerReply { get; set; }
+    public string ServerContextSizeTokens { get; set; }
+    public string CustomPromptHint { get; set; }
+    public string LlamaCppDownloadEngineAndModelPrompt { get; set; }
+    public string LlamaCppDownloadEnginePrompt { get; set; }
+    public string LlamaCppDownloadModelPrompt { get; set; }
 
     public LanguageTranslate()
     {
@@ -59,5 +82,28 @@ public class LanguageTranslate
         TranslationCancelled = "Translation cancelled";
         SwapLanguages = "Swap source and target languages";
         XIsAlreadyDownloadedReDownload = "{0} is already downloaded. Re-download?";
+        AdvancedDotDotDot = "Advanced...";
+        AdvancedSettings = "Advanced settings";
+        AdvancedSettingsSubtitle = "Batch, context and sampling options for the advanced llama.cpp engine";
+        Context = "Context";
+        Synopsis = "Synopsis";
+        SynopsisHint = "Optional description of the content (genre, setting, tone) - included in every request";
+        Glossary = "Glossary";
+        GlossaryHint = "One per line: source term = translation";
+        PreviousLinesAsContext = "Previous lines as context";
+        LinesPerBatch = "Lines per batch";
+        KeepLineBreaks = "Keep line breaks";
+        SamplingParameters = "Sampling parameters";
+        MinusOneMeansDefault = "-1 = model/server default";
+        Temperature = "Temperature";
+        TopP = "Top-p";
+        TopK = "Top-k";
+        RepeatPenalty = "Repeat penalty";
+        MaxTokensPerReply = "Max tokens per reply";
+        ServerContextSizeTokens = "Server context size (tokens)";
+        CustomPromptHint = "Custom instructions ({0} = source language, {1} = target language); empty = built-in prompt";
+        LlamaCppDownloadEngineAndModelPrompt = "llama.cpp requires the llama-server engine and a translation model to be downloaded. Download now?";
+        LlamaCppDownloadEnginePrompt = "llama.cpp requires the llama-server engine to be downloaded. Download now?";
+        LlamaCppDownloadModelPrompt = "llama.cpp requires the selected translation model to be downloaded. Download now?";
     }
 }

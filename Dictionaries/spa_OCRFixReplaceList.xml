@@ -423,7 +423,7 @@
     <!-- Acentos al principio de los signos de interrogación con minúsculas -->
     <LinePart from="¿aun" to="¿aún" />
     <LinePart from="¿tu " to="¿tú " />
-    <LinePart from="¿que " to="¿qué " />
+    <!-- ¿que/¿Que -> ¿qué/¿Qué handled by a guarded RegEx (see RegularExpressions) to avoid false positives on echo questions like "¿Que nos separaremos?" (#12834) -->
     <LinePart from="¿sabes que" to="¿sabes qué" />
     <LinePart from="¿sabes adonde" to="¿sabes adónde" />
     <LinePart from="¿sabes cual" to="¿sabes cuál" />
@@ -542,7 +542,7 @@
     <LinePart from="¿estas " to="¿estás " />
     <!-- Acentos al principio de los signos de interrogación con mayúsculas -->
     <LinePart from="¿Aun" to="¿Aún" />
-    <LinePart from="¿Que " to="¿Qué " />
+    <!-- ¿Que -> ¿Qué handled by a guarded RegEx (see RegularExpressions), see #12834 -->
     <LinePart from="¿Sabes que" to="¿Sabes qué" />
     <LinePart from="¿Sabes adonde" to="¿Sabes adónde" />
     <LinePart from="¿Sabes cual" to="¿Sabes cuál" />
@@ -721,6 +721,9 @@
     <Ending from=".»." to="»." />
   </EndLines>
   <RegularExpressions>
+    <!-- Acento interrogativo: ¿que/¿Que -> ¿qué/¿Qué, pero no cuando es una pregunta de eco/reformulación
+         seguida de pronombre de sujeto o de sí/si/no (p. ej. "¿Que yo?", "¿Que tú lo sabías?", "¿Que sí?"). Ver #12834. -->
+    <RegEx find="¿([Qq])ue (?!(?i:yo|tú|usted|ustedes|él|ella|ellos|ellas|nosotros|nosotras|vosotros|vosotras|sí|si|no)\b)" replaceWith="¿$1ué " />
     <!-- Abreviaturas compuestas -->
     <RegEx find="\b[Ss](r|ra|rta)\b\.?" replaceWith="S$1." />
     <RegEx find="\b[Dd](r|ra)\b\.?" replaceWith="D$1." />

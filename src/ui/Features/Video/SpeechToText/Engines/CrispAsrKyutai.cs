@@ -1,8 +1,8 @@
-using Nikse.SubtitleEdit.Core.AudioToText;
+using Nikse.SubtitleEdit.UiLogic.AudioToText;
 using Nikse.SubtitleEdit.Logic.Config;
+using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Runtime.InteropServices;
 
 namespace Nikse.SubtitleEdit.Features.Video.SpeechToText.Engines;
 
@@ -51,6 +51,41 @@ public class CrispAsrKyutai : CrispAsrEngineBase
                 Urls =
                 [
                     "https://huggingface.co/cstr/kyutai-stt-1b-GGUF/resolve/main/kyutai-stt-1b.gguf"
+                ],
+            },
+
+            // 48-layer 2.6b variant with a 3.5 s lookahead, so it trades latency for
+            // accuracy - fine for file transcription. File names carry no "-en" suffix
+            // even though the repo does.
+            //
+            // English only. The Languages list above is engine-wide and is passed through
+            // as a command-line flag, so "fr" applies to the 1b model only - pair the
+            // 2.6b model with "en".
+            new WhisperModel
+            {
+                Name = "kyutai-stt-2.6b-q4_k.gguf",
+                Size = "1.47 GB",
+                Urls =
+                [
+                    "https://huggingface.co/cstr/kyutai-stt-2.6b-en-GGUF/resolve/main/kyutai-stt-2.6b-q4_k.gguf"
+                ],
+            },
+            new WhisperModel
+            {
+                Name = "kyutai-stt-2.6b-q8_0.gguf",
+                Size = "2.70 GB",
+                Urls =
+                [
+                    "https://huggingface.co/cstr/kyutai-stt-2.6b-en-GGUF/resolve/main/kyutai-stt-2.6b-q8_0.gguf"
+                ],
+            },
+            new WhisperModel
+            {
+                Name = "kyutai-stt-2.6b-f16.gguf",
+                Size = "5.01 GB",
+                Urls =
+                [
+                    "https://huggingface.co/cstr/kyutai-stt-2.6b-en-GGUF/resolve/main/kyutai-stt-2.6b-f16.gguf"
                 ],
             },
        };
@@ -126,7 +161,7 @@ public class CrispAsrKyutai : CrispAsrEngineBase
 
     internal static string GetExecutableFileName()
     {
-        if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+        if (OperatingSystem.IsWindows())
         {
             return "crispasr.exe";
         }

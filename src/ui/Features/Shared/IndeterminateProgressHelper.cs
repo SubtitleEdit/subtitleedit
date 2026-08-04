@@ -84,8 +84,9 @@ public class IndeterminateProgressHelper : IDisposable
             }
         }
 
-        // Restore opacity
+        // Restore opacity and reset progress
         _setProgressOpacity(1.0);
+        _setProgressValue(0);
     }
 
     private static double EaseInOutCubic(double x)

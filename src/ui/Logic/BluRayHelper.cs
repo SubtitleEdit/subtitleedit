@@ -9,7 +9,7 @@ namespace Nikse.SubtitleEdit.Logic;
 
 public class BluRayHelper : IBluRayHelper
 {
-    public List<BluRaySupParser.PcsData> LoadBluRaySubFromMatroska(MatroskaTrackInfo track, MatroskaFile matroska, out string errorMessage)
+    public List<BluRaySupParser.PcsData> LoadBluRaySubFromMatroska(MatroskaTrackInfo track, MatroskaFile matroska, out string errorMessage, MatroskaFile.LoadMatroskaCallback? progressCallback = null)
     {
         errorMessage = string.Empty;
         if (track.ContentEncodingType == 1)
@@ -18,7 +18,7 @@ public class BluRayHelper : IBluRayHelper
             return new List<BluRaySupParser.PcsData>();
         }
 
-        var sub = matroska.GetSubtitle(track.TrackNumber, null);
+        var sub = matroska.GetSubtitle(track.TrackNumber, progressCallback);
         var noOfErrors = 0;
         var lastError = string.Empty;
         var subtitle = new Subtitle();

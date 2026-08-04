@@ -1,3 +1,4 @@
+using Avalonia;
 ﻿using Avalonia.Controls;
 using Avalonia.Data;
 using Avalonia.Input;
@@ -65,22 +66,62 @@ public class ImportPlainTextWindow : Window
             Spacing = 10,
         };
 
-        var labelNumberOfSubtitles = UiUtil.MakeLabel().WithBindText(vm, nameof(vm.NumberOfSubtitles)).WithAlignmentTop();
+        // Shares its cell with the alignment progress, so it steps aside while that runs.
+        var labelNumberOfSubtitles = UiUtil.MakeLabel().WithBindText(vm, new Binding($"{nameof(vm.Subtitles)}.{nameof(vm.Subtitles.Count)}")
+        {
+            StringFormat = Se.Language.File.Import.NumberOfSubtitlesX,
+        }).WithAlignmentTop();
+        labelNumberOfSubtitles.Bind(IsVisibleProperty, new Binding(nameof(vm.IsAligning))
+        {
+            Source = vm,
+            Converter = new InverseBooleanConverter(),
+        });
+
+        // Progress sits next to the line count; forced alignment of a long video runs for
+        // minutes, so the window must show that something is happening.
+        var labelAlignProgress = UiUtil.MakeLabel()
+            .WithBindText(vm, nameof(vm.AlignProgress))
+            .WithAlignmentTop()
+            .WithBindVisible(vm, nameof(vm.IsAligning));
+
+        // Alignment on a long video runs for minutes over many chunks, so show how far it
+        // has actually got rather than just that something is happening.
+        var progressBarAlign = new ProgressBar
+        {
+            Minimum = 0,
+            Maximum = 100,
+            Width = 220,
+            Height = 6,
+            VerticalAlignment = VerticalAlignment.Center,
+            Margin = new Thickness(0, 4, 10, 0),
+        };
+        progressBarAlign.Bind(ProgressBar.ValueProperty, new Binding(nameof(vm.AlignPercent)));
+        progressBarAlign.Bind(IsVisibleProperty, new Binding(nameof(vm.IsAligning)));
+
+        var panelAlignProgress = new StackPanel
+        {
+            Orientation = Orientation.Horizontal,
+            HorizontalAlignment = HorizontalAlignment.Left,
+            VerticalAlignment = VerticalAlignment.Top,
+            Children = { progressBarAlign, labelAlignProgress },
+        };
 
         var buttonAlignViaWhisper = UiUtil.MakeButton(Se.Language.File.Import.AlignViaSpeechToText, vm.AlignScriptWithTimestampsFromWhisperCommand);
+        var buttonAlignViaForcedAligner = UiUtil.MakeButton(Se.Language.File.Import.AlignViaForcedAligner, vm.AlignScriptWithForcedAlignerCommand);
         var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand);
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
-        var panelButtons = UiUtil.MakeButtonBar(buttonAlignViaWhisper, buttonOk, buttonCancel);
+        var panelButtons = UiUtil.MakeButtonBar(buttonAlignViaForcedAligner, buttonAlignViaWhisper, buttonOk, buttonCancel);
 
         grid.Add(panelImport, 0);
         grid.Add(MakeTextBoxAndControlsView(vm), 1);
         grid.Add(MakeSubtitleGridView(vm), 2);
         grid.Add(labelNumberOfSubtitles, 3, 0);
+        grid.Add(panelAlignProgress, 3, 0);
         grid.Add(panelButtons, 3, 0);
 
         Content = grid;
 
-        Activated += delegate { buttonOk.Focus(); }; // hack to make OnKeyDown work
+        Activated += delegate { checkBoxImportFiles.Focus(); }; // initial focus on an input, not an action button - a focused button clicks on bare Space
         KeyDown += vm.KeyDown;
     }
 
@@ -118,41 +159,36 @@ public class ImportPlainTextWindow : Window
         textBox.TextChanged += (s, e) => vm.PlainTextChanged();
         var sizeConverter = new FileSizeConverter();
 
-        var dataGrid = new DataGrid
+        // No header sorting (the DataGrid's CanUserSortColumns is not carried over):
+        // the preview builds one subtitle line per file in collection order, so
+        // reordering the backing collection would reorder the imported lines.
+        var dataGrid = TableViewExtras.MakeTableView(multiSelect: false);
+        dataGrid.Height = 348;
+        dataGrid.DataContext = vm;
+        dataGrid.ItemsSource = vm.Files;
+        dataGrid.Columns.AddRange(new TableViewColumn[]
         {
-            AutoGenerateColumns = false,
-            SelectionMode = DataGridSelectionMode.Single,
-            CanUserResizeColumns = true,
-            CanUserSortColumns = true,
-            HorizontalAlignment = HorizontalAlignment.Stretch,
-            VerticalAlignment = VerticalAlignment.Stretch,
-            Width = double.NaN,
-            Height = 348,
-            DataContext = vm,
-            ItemsSource = vm.Files,
-            Columns =
+            new SeTableViewColumn
             {
-                new DataGridTextColumn
-                {
-                    Header = Se.Language.General.FileName,
-                    CellTheme = UiUtil.DataGridNoBorderNoPaddingCellTheme,
-                    Binding = new Binding(nameof(DisplayFile.FileName)),
-                    IsReadOnly = true,
-                    Width = new DataGridLength(1, DataGridLengthUnitType.Auto),
-                },
-                new DataGridTextColumn
-                {
-                    Header = Se.Language.General.Size,
-                    CellTheme = UiUtil.DataGridNoBorderNoPaddingCellTheme,
-                    Binding = new Binding(nameof(DisplayFile.Size)) { Converter = sizeConverter, Mode = BindingMode.OneWay },
-                    IsReadOnly = true,
-                    Width = new DataGridLength(1, DataGridLengthUnitType.Auto),
-                },
+                Header = Se.Language.General.FileName,
+                CellTheme = UiUtil.TableViewCellTheme,
+                HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
+                Binding = new Binding(nameof(DisplayFile.FileName)),
+                // Content-sized (Auto) on the DataGrid; TableView treats Auto as star.
+                Width = new GridLength(1, GridUnitType.Star),
             },
-        };
-        dataGrid.Bind(DataGrid.SelectedItemProperty, new Binding(nameof(vm.SelectedFile)) { Source = vm });
+            new SeTableViewColumn
+            {
+                Header = Se.Language.General.Size,
+                CellTheme = UiUtil.TableViewCellTheme,
+                HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
+                Binding = new Binding(nameof(DisplayFile.Size)) { Converter = sizeConverter, Mode = BindingMode.OneWay },
+                Width = new GridLength(100),
+            },
+        });
+        dataGrid.Bind(TableView.SelectedItemProperty, new Binding(nameof(vm.SelectedFile)) { Source = vm });
 
-        // hack to make drag and drop work on the DataGrid - also on empty rows
+        // hack to make drag and drop work on the grid - also on empty rows
         var dropHost = new Border
         {
             Background = Brushes.Transparent,
@@ -261,64 +297,57 @@ public class ImportPlainTextWindow : Window
 
         var fullTimeConverter = new TimeSpanToDisplayFullConverter();
         var shortTimeConverter = new TimeSpanToDisplayShortConverter();
-        var fileSizeConverter = new FileSizeConverter();
-        var dataGrid = new DataGrid
+
+        // No header sorting (the DataGrid's CanUserSortColumns is not carried over):
+        // this is the subtitle preview, consumed by the caller in collection order.
+        var dataGrid = TableViewExtras.MakeTableView(multiSelect: false);
+        dataGrid.DataContext = vm;
+        dataGrid.ItemsSource = vm.Subtitles;
+        dataGrid.Columns.AddRange(new TableViewColumn[]
         {
-            AutoGenerateColumns = false,
-            SelectionMode = DataGridSelectionMode.Single,
-            CanUserResizeColumns = true,
-            CanUserSortColumns = true,
-            HorizontalAlignment = HorizontalAlignment.Stretch,
-            VerticalAlignment = VerticalAlignment.Stretch,
-            Width = double.NaN,
-            Height = double.NaN,
-            DataContext = vm,
-            ItemsSource = vm.Subtitles,
-            Columns =
+            new SeTableViewColumn
             {
-                new DataGridTextColumn
-                {
-                    Header = Se.Language.General.NumberSymbol,
-                    CellTheme = UiUtil.DataGridNoBorderNoPaddingCellTheme,
-                    Binding = new Binding(nameof(SubtitleLineViewModel.Number)),
-                    IsReadOnly = true,
-                    Width = new DataGridLength(1, DataGridLengthUnitType.Auto),
-                },
-                new DataGridTextColumn
-                {
-                    Header = Se.Language.General.Show,
-                    CellTheme = UiUtil.DataGridNoBorderNoPaddingCellTheme,
-                    Binding = new Binding(nameof(SubtitleLineViewModel.StartTime)) { Converter = fullTimeConverter, Mode = BindingMode.OneWay },
-                    IsReadOnly = true,
-                    Width = new DataGridLength(1, DataGridLengthUnitType.Auto),
-                },
-                new DataGridTextColumn
-                {
-                    Header = Se.Language.General.Hide,
-                    CellTheme = UiUtil.DataGridNoBorderNoPaddingCellTheme,
-                    Binding = new Binding(nameof(SubtitleLineViewModel.EndTime)) { Converter = fullTimeConverter, Mode = BindingMode.OneWay },
-                    IsReadOnly = true,
-                    Width = new DataGridLength(1, DataGridLengthUnitType.Auto),
-                },
-                new DataGridTextColumn
-                {
-                    Header = Se.Language.General.Duration,
-                    CellTheme = UiUtil.DataGridNoBorderNoPaddingCellTheme,
-                    Binding = new Binding(nameof(SubtitleLineViewModel.Duration)) { Converter = shortTimeConverter, Mode = BindingMode.OneWay },
-                    IsReadOnly = true,
-                    Width = new DataGridLength(1, DataGridLengthUnitType.Auto),
-                },
-                new DataGridTextColumn
-                {
-                    Header = Se.Language.General.Text,
-                    CellTheme = UiUtil.DataGridNoBorderNoPaddingCellTheme,
-                    Binding = new Binding(nameof(SubtitleLineViewModel.Text)),
-                    IsReadOnly = true,
-                    Width = new DataGridLength(1, DataGridLengthUnitType.Star),
-                },
+                Header = Se.Language.General.NumberSymbol,
+                CellTheme = UiUtil.TableViewCellTheme,
+                HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
+                Binding = new Binding(nameof(SubtitleLineViewModel.Number)),
+                // Content-sized (Auto) on the DataGrid; TableView treats Auto as star.
+                Width = new GridLength(60),
             },
-        };
-        dataGrid.Bind(DataGrid.SelectedItemProperty, new Binding(nameof(vm.SelectedSubtitle)) { Source = vm });
+            new SeTableViewColumn
+            {
+                Header = Se.Language.General.Show,
+                CellTheme = UiUtil.TableViewCellTheme,
+                HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
+                Binding = new Binding(nameof(SubtitleLineViewModel.StartTime)) { Converter = fullTimeConverter, Mode = BindingMode.OneWay },
+                Width = new GridLength(130),
+            },
+            new SeTableViewColumn
+            {
+                Header = Se.Language.General.Hide,
+                CellTheme = UiUtil.TableViewCellTheme,
+                HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
+                Binding = new Binding(nameof(SubtitleLineViewModel.EndTime)) { Converter = fullTimeConverter, Mode = BindingMode.OneWay },
+                Width = new GridLength(130),
+            },
+            new SeTableViewColumn
+            {
+                Header = Se.Language.General.Duration,
+                CellTheme = UiUtil.TableViewCellTheme,
+                HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
+                Binding = new Binding(nameof(SubtitleLineViewModel.Duration)) { Converter = shortTimeConverter, Mode = BindingMode.OneWay },
+                Width = new GridLength(110),
+            },
+            new SeTableViewColumn
+            {
+                Header = Se.Language.General.Text,
+                CellTheme = UiUtil.TableViewCellTheme,
+                HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
+                CellTemplate = TableViewExtras.MakeTextCellTemplate(nameof(SubtitleLineViewModel.Text)),
+                Width = new GridLength(1, GridUnitType.Star),
+            },
+        });
+        dataGrid.Bind(TableView.SelectedItemProperty, new Binding(nameof(vm.SelectedSubtitle)) { Source = vm });
 
         grid.Add(dataGrid, 0);
 

@@ -49,12 +49,12 @@ public class ChatLlmDownloadService : IChatLlmDownloadService
 
     private static string GetUrl()
     {
-        if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+        if (OperatingSystem.IsWindows())
         {
             return WindowsUrl;
         }
 
-        if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+        if (OperatingSystem.IsLinux())
         {
             if (RuntimeInformation.ProcessArchitecture == Architecture.Arm64)
             {
@@ -64,7 +64,7 @@ public class ChatLlmDownloadService : IChatLlmDownloadService
             return LinuxUrl;
         }
 
-        if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+        if (OperatingSystem.IsMacOS())
         {
             switch (RuntimeInformation.ProcessArchitecture)
             {

@@ -200,6 +200,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
             XmlNode mainListFont = xml.DocumentElement.SelectSingleNode("dcst:SubtitleList/dcst:Font", nsmgr);
             int no = 0;
+            var txt = new StringBuilder();
+            var html = new StringBuilder();
             foreach (Paragraph p in subtitle.Paragraphs)
             {
                 if (p.Text != null)
@@ -305,8 +307,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         textNode.Attributes.Append(direction);
 
                         var i = 0;
-                        var txt = new StringBuilder();
-                        var html = new StringBuilder();
+                        txt.Clear();
+                        html.Clear();
                         var nodeTemp = xml.CreateElement("temp");
                         while (i < line.Length)
                         {
@@ -701,12 +703,13 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 System.Diagnostics.Debug.WriteLine(exception.Message);
             }
 
+            var pText = new StringBuilder();
             foreach (XmlNode node in xml.DocumentElement.SelectNodes("//Subtitle"))
             {
                 try
                 {
                     var textLines = new List<DCinemaInterop.SubtitleLine>();
-                    var pText = new StringBuilder();
+                    pText.Clear();
                     var vAlignment = string.Empty;
                     string lastVPosition = string.Empty;
                     foreach (XmlNode innerNode in node.ChildNodes)

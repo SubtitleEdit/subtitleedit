@@ -35,7 +35,7 @@ public static class SystemMenu
 
     public static void Show(Window window)
     {
-        if (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+        if (!OperatingSystem.IsWindows())
         {
             return;
         }

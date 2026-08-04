@@ -47,7 +47,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         }
                         else if (path != null)
                         {
-                            int indexOfSlash = text.LastIndexOf("/", StringComparison.Ordinal);
+                            int indexOfSlash = text.LastIndexOf('/');
                             if (indexOfSlash >= 0 && File.Exists(Path.Combine(path, text.Remove(0, indexOfSlash + 1))))
                             {
                                 text = Path.Combine(path, text.Remove(0, indexOfSlash + 1));

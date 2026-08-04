@@ -140,88 +140,93 @@ public class BatchConvertWindow : Window
             RowSpacing = 0,
         };
 
-        var dataGrid = new DataGrid
+        var columnFileName = new SeTableViewColumn
         {
-            AutoGenerateColumns = false,
-            CanUserResizeColumns = true,
-            CanUserSortColumns = true,
-            HorizontalAlignment = HorizontalAlignment.Stretch,
-            VerticalAlignment = VerticalAlignment.Stretch,
-            Width = double.NaN,
-            Height = double.NaN,
-            DataContext = vm,
-            ItemsSource = vm.BatchItems,
-            Columns =
-            {
-                new DataGridTextColumn
-                {
-                    Header = Se.Language.General.FileName,
-                    CellTheme = UiUtil.DataGridNoBorderNoPaddingCellTheme,
-                    Binding = new Binding(nameof(BatchConvertItem.FileName)),
-                    IsReadOnly = true,
-                    Width = new DataGridLength(1, DataGridLengthUnitType.Star),
-                },
-                new DataGridTextColumn
-                {
-                    Header = Se.Language.General.Size,
-                    CellTheme = UiUtil.DataGridNoBorderNoPaddingCellTheme,
-                    Binding = new Binding(nameof(BatchConvertItem.Size)) { Converter = new FileSizeConverter(), Mode = BindingMode.OneWay },
-                    IsReadOnly = true,
-                    Width = new DataGridLength(90, DataGridLengthUnitType.Pixel),
-                },
-                new DataGridTextColumn
-                {
-                    Header = Se.Language.General.Format,
-                    CellTheme = UiUtil.DataGridNoBorderNoPaddingCellTheme,
-                    Binding = new Binding(nameof(BatchConvertItem.Format)),
-                    IsReadOnly = true,
-                    Width = new DataGridLength(170, DataGridLengthUnitType.Pixel),
-                },
-                new DataGridTemplateColumn
-                {
-                    Header = Se.Language.General.Status,
-                    CellTheme = UiUtil.DataGridNoBorderNoPaddingCellTheme,
-                    // Template columns need an explicit SortMemberPath to be sortable (#12431).
-                    SortMemberPath = nameof(BatchConvertItem.Status),
-                    IsReadOnly = true,
-                    Width = new DataGridLength(120, DataGridLengthUnitType.Pixel),
-                    CellTemplate = new FuncDataTemplate<BatchConvertItem>((_, _) =>
-                    {
-                        // Status as a colored badge: green converted, red errors, gray cancelled;
-                        // in-progress statuses render as plain text (converter returns unset).
-                        var text = new TextBlock
-                        {
-                            FontSize = 11,
-                            VerticalAlignment = VerticalAlignment.Center,
-                        };
-                        text.Bind(TextBlock.TextProperty, new Binding(nameof(BatchConvertItem.Status)));
-                        text.Bind(TextBlock.ForegroundProperty, new Binding(nameof(BatchConvertItem.Status))
-                        {
-                            Converter = new BatchConvertStatusColorConverter(),
-                        });
-
-                        var pill = new Border
-                        {
-                            CornerRadius = new CornerRadius(99),
-                            Padding = new Thickness(8, 1, 8, 2),
-                            Margin = new Thickness(4, 0, 4, 0),
-                            HorizontalAlignment = HorizontalAlignment.Left,
-                            VerticalAlignment = VerticalAlignment.Center,
-                            Child = text,
-                        };
-                        pill.Bind(Border.BackgroundProperty, new Binding(nameof(BatchConvertItem.Status))
-                        {
-                            Converter = new BatchConvertStatusColorConverter(),
-                            ConverterParameter = "background",
-                        });
-                        return pill;
-                    }),
-                },
-            },
+            Header = Se.Language.General.FileName,
+            CellTheme = UiUtil.TableViewCellTheme,
+            HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
+            Binding = new Binding(nameof(BatchConvertItem.FileName)),
+            Width = new GridLength(1, GridUnitType.Star),
         };
-        dataGrid.Bind(DataGrid.SelectedItemProperty, new Binding(nameof(vm.SelectedBatchItem)) { Source = vm });
+
+        var columnSize = new SeTableViewColumn
+        {
+            Header = Se.Language.General.Size,
+            CellTheme = UiUtil.TableViewCellTheme,
+            HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
+            Binding = new Binding(nameof(BatchConvertItem.Size)) { Converter = new FileSizeConverter(), Mode = BindingMode.OneWay },
+            Width = new GridLength(90),
+        };
+
+        var columnFormat = new SeTableViewColumn
+        {
+            Header = Se.Language.General.Format,
+            CellTheme = UiUtil.TableViewCellTheme,
+            HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
+            Binding = new Binding(nameof(BatchConvertItem.Format)),
+            Width = new GridLength(170),
+        };
+
+        var columnStatus = new SeTableViewColumn
+        {
+            Header = Se.Language.General.Status,
+            CellTheme = UiUtil.TableViewNoPaddingCellTheme,
+            HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
+            Width = new GridLength(120),
+            CellTemplate = new FuncDataTemplate<BatchConvertItem>((_, _) =>
+            {
+                // Status as a colored badge: green converted, red errors, gray cancelled;
+                // in-progress statuses render as plain text (converter returns unset).
+                var text = new TextBlock
+                {
+                    FontSize = 11,
+                    VerticalAlignment = VerticalAlignment.Center,
+                };
+                text.Bind(TextBlock.TextProperty, new Binding(nameof(BatchConvertItem.Status)));
+                text.Bind(TextBlock.ForegroundProperty, new Binding(nameof(BatchConvertItem.Status))
+                {
+                    Converter = new BatchConvertStatusColorConverter(),
+                });
+
+                var pill = new Border
+                {
+                    CornerRadius = new CornerRadius(99),
+                    Padding = new Thickness(8, 1, 8, 2),
+                    Margin = new Thickness(4, 0, 4, 0),
+                    HorizontalAlignment = HorizontalAlignment.Left,
+                    VerticalAlignment = VerticalAlignment.Center,
+                    Child = text,
+                };
+                pill.Bind(Border.BackgroundProperty, new Binding(nameof(BatchConvertItem.Status))
+                {
+                    Converter = new BatchConvertStatusColorConverter(),
+                    ConverterParameter = "background",
+                });
+                return pill;
+            }),
+        };
+
+        var dataGrid = TableViewExtras.MakeTableView();
+        dataGrid.Width = double.NaN;
+        dataGrid.Height = double.NaN;
+        dataGrid.DataContext = vm;
+        dataGrid.ItemsSource = vm.BatchItems;
+        dataGrid.Columns.AddRange(new[] { columnFileName, columnSize, columnFormat, columnStatus });
+
+        dataGrid.Bind(TableView.SelectedItemProperty, new Binding(nameof(vm.SelectedBatchItem)) { Source = vm });
+        dataGrid.KeyDown += vm.FileGridKeyDown;
         vm.FileGrid = dataGrid;
-        _ = new DataGridCheckboxMultiSelect<BatchConvertItem>(dataGrid);
+        TableViewExtras.AttachListNavigation(dataGrid);
+
+        // Header-click sorting (the DataGrid sorted these columns too, incl. Status via
+        // SortMemberPath, #12431). The sorter reorders BatchItems in place - safe here
+        // because the job order is presentation-only and the conversion loop walks a
+        // snapshot of the list, not the live collection.
+        new TableViewHeaderSorter(dataGrid)
+            .AddSortable<BatchConvertItem, string>(columnFileName, x => x.FileName)
+            .AddSortable<BatchConvertItem, long>(columnSize, x => x.Size)
+            .AddSortable<BatchConvertItem, string>(columnFormat, x => x.Format)
+            .AddSortable<BatchConvertItem, string>(columnStatus, x => x.Status);
 
         var comboBoxSubtitleFormat = UiUtil.MakeComboBox(vm.TargetFormats, vm, nameof(vm.SelectedTargetFormat));
         comboBoxSubtitleFormat.SelectionChanged += (_, _) => vm.ComboBoxSubtitleFormatChanged();
@@ -233,16 +238,11 @@ public class BatchConvertWindow : Window
             handledEventsToo: true);
         comboBoxSubtitleFormat.Width = 240;
 
-        var buttonTargetFormatSettings = UiUtil.MakeButton(vm.ShowTargetFormatSettingsCommand, IconNames.Settings)
+        var buttonTargetFormatSettings = UiUtil.MakeButton(vm.ShowTargetFormatSettingsCommand, IconNames.Settings, Se.Language.Tools.BatchConvert.TargetFormatSettings)
             .WithMarginLeft(5)
             .WithMarginRight(5);
         buttonTargetFormatSettings.WithBindIsVisible(vm, nameof(vm.IsTargetFormatSettingsVisible));
-        var buttonSettings = UiUtil.MakeButton(vm.ShowOutputPropertiesCommand, IconNames.Settings).WithMarginLeft(15).WithMarginRight(5);
-        if (Se.Settings.Appearance.ShowHints)
-        {
-            ToolTip.SetTip(buttonTargetFormatSettings, Se.Language.Tools.BatchConvert.TargetFormatSettings);
-            ToolTip.SetTip(buttonSettings, Se.Language.General.Settings);
-        }
+        var buttonSettings = UiUtil.MakeButton(vm.ShowOutputPropertiesCommand, IconNames.Settings, Se.Language.General.Settings).WithMarginLeft(15).WithMarginRight(5);
 
         var panelFileControls = new StackPanel
         {
@@ -322,7 +322,7 @@ public class BatchConvertWindow : Window
         };
         flyout.Items.Add(menuItemImport);
 
-        // hack to make drag and drop work on the DataGrid - also on empty rows
+        // hack to make drag and drop work on the file grid - also on empty rows
         var dropHost = new Border
         {
             Background = Brushes.Transparent,
@@ -449,67 +449,71 @@ public class BatchConvertWindow : Window
 
     private static Border MakeFunctionsListView(BatchConvertViewModel vm)
     {
-        var dataGrid = new DataGrid
+        // The DataGrid this replaces hid its header row (HeadersVisibility.None);
+        // TableView has no such switch, so the two columns now show headers. No
+        // header-click sorting: the functions are a curated checklist in a fixed order
+        // (the old grid's headers were hidden, so its sorting was unreachable anyway).
+        var dataGrid = TableViewExtras.MakeTableView(multiSelect: false);
+        // Fixed width: this grid sits in an Auto-sized outer column, and a TableView
+        // with a star column measured without a width constraint demands more than
+        // the whole window (star columns have no content-based size).
+        dataGrid.Width = 360;
+        dataGrid.Height = 300;
+        dataGrid.DataContext = vm;
+        dataGrid.ItemsSource = vm.BatchFunctions;
+        dataGrid.ContextFlyout = new MenuFlyout()
         {
-            AutoGenerateColumns = false,
-            HeadersVisibility = DataGridHeadersVisibility.None,
-            SelectionMode = DataGridSelectionMode.Single,
-            CanUserResizeColumns = true,
-            CanUserSortColumns = true,
-            HorizontalAlignment = HorizontalAlignment.Stretch,
-            VerticalAlignment = VerticalAlignment.Stretch,
-            Width = double.NaN,
-            Height = 300,
-            DataContext = vm,
-            ItemsSource = vm.BatchFunctions,
-            ContextFlyout = new MenuFlyout()
+            Items =
             {
-                Items =
+                new MenuItem()
                 {
-                    new MenuItem()
-                    {
-                        Header =Se.Language.General.SelectAll,
-                        Command = vm.SelectAllCommand,
-                    },
-                    new MenuItem()
-                    {
-                        Header = Se.Language.General.InvertSelection,
-                        Command = vm.InvertSelectionCommand,
-                    },
-                    new MenuItem()
-                    {
-                        Header =Se.Language.General.SelectNone,
-                        Command = vm.SelectNoneCommand,
-                    }
+                    Header = Se.Language.General.SelectAll,
+                    Command = vm.SelectAllCommand,
+                },
+                new MenuItem()
+                {
+                    Header = Se.Language.General.InvertSelection,
+                    Command = vm.InvertSelectionCommand,
+                },
+                new MenuItem()
+                {
+                    Header = Se.Language.General.SelectNone,
+                    Command = vm.SelectNoneCommand,
                 }
-            },
-            Columns =
-            {
-                new DataGridTemplateColumn
-                {
-                    Header = Se.Language.General.Enabled,
-                    CellTheme = UiUtil.DataGridNoBorderNoPaddingCellTheme,
-                    CellTemplate = new FuncDataTemplate<BatchConvertFunction>((item, _) =>
-                    new Border
-                    {
-                        Background = Brushes.Transparent, // Prevents highlighting
-                        Padding = new Thickness(0),
-                        Child = MakeSelectedCheckBox(vm)
-                    }),
-                    Width = new DataGridLength(1, DataGridLengthUnitType.Auto)
-                },
-                new DataGridTextColumn
-                {
-                    CellTheme = UiUtil.DataGridNoBorderCellTheme,
-                    Binding = new Binding(nameof(BatchConvertFunction.Name)),
-                    IsReadOnly = true,
-                },
-            },
+            }
         };
-        dataGrid.Bind(DataGrid.SelectedItemProperty, new Binding(nameof(vm.SelectedBatchFunction)) { Source = vm });
-        _ = new DataGridCheckboxMultiSelect<BatchConvertFunction>(dataGrid,
-            item => item.IsSelected, (item, v) => item.IsSelected = v,
-            onFocusedItemChanged: _ => vm.SelectedFunctionChanged());
+        dataGrid.Columns.AddRange(new[]
+        {
+            new SeTableViewColumn
+            {
+                Header = Se.Language.General.Enabled,
+                CellTheme = UiUtil.TableViewNoPaddingCellTheme,
+                HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
+                CellTemplate = new FuncDataTemplate<BatchConvertFunction>((item, _) =>
+                new Border
+                {
+                    Background = Brushes.Transparent, // Prevents highlighting
+                    Padding = new Thickness(0),
+                    Child = MakeSelectedCheckBox(vm)
+                }),
+                Width = new GridLength(80), // content-sized (Auto) on the DataGrid; TableView treats Auto as star
+            },
+            new SeTableViewColumn
+            {
+                Header = Se.Language.General.Name,
+                CellTheme = UiUtil.TableViewCellTheme,
+                HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
+                Binding = new Binding(nameof(BatchConvertFunction.Name)),
+                Width = new GridLength(1, GridUnitType.Star),
+            },
+        });
+        TableViewExtras.BindSelectedItem(dataGrid, vm, nameof(vm.SelectedBatchFunction));
+        // The DataGrid-era CheckboxMultiSelect helper is replaced by native selection,
+        // AddSpaceToggle (Space toggles the checkbox) and a SelectionChanged hook that
+        // shows the selected function's settings view (was onFocusedItemChanged).
+        dataGrid.SelectionChanged += (_, _) => vm.SelectedFunctionChanged();
+        TableViewExtras.AddSpaceToggle<BatchConvertFunction>(dataGrid,
+            item => item.IsSelected, (item, v) => item.IsSelected = v);
         UiUtil.AttachMacContextFlyoutHandler(dataGrid);
 
         return UiUtil.MakeBorderForControl(dataGrid);

@@ -1,8 +1,7 @@
-using Nikse.SubtitleEdit.Core.AutoTranslate;
+using Nikse.SubtitleEdit.UiLogic.AutoTranslate;
 using Nikse.SubtitleEdit.Core.Common;
-using Nikse.SubtitleEdit.Core.Translate;
-using Nikse.SubtitleEdit.Features.Translate;
-using Nikse.SubtitleEdit.Logic.LlamaCpp;
+using Nikse.SubtitleEdit.UiLogic.Translate;
+using Nikse.SubtitleEdit.UiLogic.LlamaCpp;
 
 namespace SeConv.Core;
 
@@ -61,10 +60,9 @@ internal sealed class AutoTranslateRunner
                 if (!string.IsNullOrEmpty(url))
                 {
                     // User-managed server. LlamaCppTranslate posts to the URL as-is, so accept a
-                    // bare host:port and complete it to the chat/completions endpoint.
-                    tools.LlamaCppApiUrl = url.Contains("/v1/", StringComparison.OrdinalIgnoreCase)
-                        ? url
-                        : url.TrimEnd('/') + "/v1/chat/completions";
+                    // bare host:port or an OpenAI-style ".../v1" base and complete either to the
+                    // chat/completions endpoint (without doubling an already-present /v1).
+                    tools.LlamaCppApiUrl = CompleteChatCompletionsUrl(url);
                 }
                 else
                 {
@@ -168,6 +166,16 @@ internal sealed class AutoTranslateRunner
                 subtitle.Paragraphs[i].Text = rows[i].TranslatedText;
             }
         }
+    }
+
+    /// <summary>
+    /// Completes a user-supplied --translate-url to the full chat/completions endpoint.
+    /// Accepts a bare <c>host:port</c>, an OpenAI-style <c>.../v1</c> base (with or without
+    /// trailing slash), or an already-complete <c>.../chat/completions</c> URL.
+    /// </summary>
+    internal static string CompleteChatCompletionsUrl(string url)
+    {
+        return AutoTranslateUrl.Complete(url, LlamaCppTranslate.DefaultUrl);
     }
 
     internal static TranslationPair ResolveLanguage(List<TranslationPair> languages, string requested, string kind)

@@ -1,3 +1,4 @@
+using Avalonia.Headless.XUnit;
 using Avalonia.Media;
 using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.Common.TextLengthCalculator;
@@ -65,7 +66,10 @@ public class SubtitleMetricsRegressionTests
         }
     }
 
-    [Fact]
+    // Reading SolidColorBrush.Color goes through Avalonia's dispatcher affinity check, so this
+    // one has to run on the UI thread - as a plain [Fact] it only passed when xUnit happened to
+    // schedule it there.
+    [AvaloniaFact]
     public void StrategyAwareLineLength_IsConsistentBetweenHighlightAndErrors()
     {
         var originalSettings = Se.Settings;
