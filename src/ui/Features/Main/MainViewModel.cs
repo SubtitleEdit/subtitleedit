@@ -291,9 +291,49 @@ public partial class MainViewModel :
 
     public TableView SubtitleGrid { get; set; }
 
-    // ListBox.SelectedItems is nullable (IList?) where DataGrid's was not; the grid
-    // always provides one, so this non-null view keeps the many call sites tidy.
-    public System.Collections.IList SubtitleGridSelectedItems => SubtitleGrid.SelectedItems!;
+    /// <summary>
+    /// The selected rows, always in subtitle order (topmost row first) no matter how they were
+    /// picked. The control's own SelectedItems follows selection order, so shift-clicking upwards
+    /// leaves the anchor row in front and ctrl-clicking around scrambles the list entirely - and
+    /// everything downstream (copy, merge, export, ...) then works on the rows out of order.
+    /// </summary>
+    public List<SubtitleLineViewModel> SubtitleGridSelectedItems => GetSelectedSubtitlesInOrder();
+
+    private List<SubtitleLineViewModel> GetSelectedSubtitlesInOrder()
+    {
+        var selected = SubtitleGrid.SelectedItems;
+        var count = selected?.Count ?? 0;
+        if (count == 0)
+        {
+            return new List<SubtitleLineViewModel>();
+        }
+
+        if (count == 1)
+        {
+            // Single selection is the common case (every arrow key lands here) - no ordering needed.
+            return new List<SubtitleLineViewModel>(1) { (SubtitleLineViewModel)selected![0]! };
+        }
+
+        // One pass over the subtitles rather than IndexOf per selected row, which would be
+        // O(selected * subtitles) and this runs on every selection change.
+        var wanted = new HashSet<SubtitleLineViewModel>(count);
+        for (var i = 0; i < count; i++)
+        {
+            wanted.Add((SubtitleLineViewModel)selected![i]!);
+        }
+
+        var ordered = new List<SubtitleLineViewModel>(count);
+        for (var i = 0; i < Subtitles.Count && ordered.Count < wanted.Count; i++)
+        {
+            if (wanted.Contains(Subtitles[i]))
+            {
+                ordered.Add(Subtitles[i]);
+            }
+        }
+
+        return ordered;
+    }
+
     public TableViewColumnManager? SubtitleGridColumnManager { get; set; }
     public TableViewDragSelect? SubtitleGridDragSelect { get; set; }
     public Border? SubtitleGridDropHost { get; set; }
@@ -13100,10 +13140,7 @@ public partial class MainViewModel :
         // Distributes the duration spanning the first..last selected paragraphs
         // proportionally to each paragraph's CPS character count, packing them
         // back-to-back with the configured minimum gap between them.
-        var selectedItems = SubtitleGridSelectedItems
-            .Cast<SubtitleLineViewModel>()
-            .OrderBy(p => Subtitles.IndexOf(p))
-            .ToList();
+        var selectedItems = SubtitleGridSelectedItems;
 
         if (selectedItems.Count < 2)
         {
@@ -19863,8 +19900,8 @@ public partial class MainViewModel :
             .OrderBy(i => i)
             .ToList();
 
-        // Anchor on the lowest selected index, not selectedItems.First() (which is the
-        // first-clicked row and can differ from row order on an out-of-order selection).
+        // Anchor on the lowest selected index - rows that are no longer in Subtitles drop out
+        // of the mapping above, so this is not simply Subtitles.IndexOf(selectedItems[0]).
         var idx = sortedIndices.FirstOrDefault();
 
         var firstLine = Subtitles.GetOrNull(sortedIndices.FirstOrDefault());
@@ -23519,10 +23556,12 @@ public partial class MainViewModel :
                 Math.Abs(p.StartTime.TotalMilliseconds - e.Paragraph.StartTime.TotalMilliseconds) < 0.01);
             if (p != null)
             {
-                var selectedItems = SubtitleGridSelectedItems;
+                // Toggling has to go through the control's own (selection-ordered) list -
+                // SubtitleGridSelectedItems is an ordered snapshot, mutating it does nothing.
+                var selectedItems = SubtitleGrid.SelectedItems!;
                 if (selectedItems.Contains(p))
                 {
-                    if (selectedItems.Count != 1 || selectedItems[0] != p)
+                    if (selectedItems.Count != 1 || !ReferenceEquals(selectedItems[0], p))
                     {
                         selectedItems.Remove(p);
                     }
