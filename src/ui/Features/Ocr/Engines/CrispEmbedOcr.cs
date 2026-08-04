@@ -24,16 +24,59 @@ namespace Nikse.SubtitleEdit.Features.Ocr.Engines;
 public class CrispEmbedOcr : IDisposable
 {
     private readonly HttpClient _httpClient;
+    private readonly int _timeoutMinutes;
     private Process? _serverProcess;
     private int _port;
+
+    private string _cliExecutable = string.Empty;
+    private string _cliRecognizerModel = string.Empty;
+    private string _cliDetectorModel = string.Empty;
+    private bool _isCliPipeline;
 
     public string Error { get; set; }
 
     public CrispEmbedOcr(int timeoutMinutes = 5)
     {
         Error = string.Empty;
+        _timeoutMinutes = Math.Max(1, timeoutMinutes);
         _httpClient = new HttpClient();
-        _httpClient.Timeout = TimeSpan.FromMinutes(Math.Max(1, timeoutMinutes));
+        _httpClient.Timeout = TimeSpan.FromMinutes(_timeoutMinutes);
+    }
+
+    /// <summary>
+    /// Prepares the PP-OCRv6 detector+recognizer pipeline, which runs as one crispembed CLI
+    /// invocation per image instead of through crispembed-server. The server only enables its
+    /// OCR orchestrator when it is also given a primary embedding model via -m, and dies on
+    /// startup if that model is not a real embedding GGUF - so there is no server-side route to
+    /// the pipeline without downloading an unrelated model. The CLI reloads the pair per image,
+    /// which costs little: the two GGUFs are a few MB and a full invocation is well under a
+    /// second, i.e. no slower than one already-loaded VLM request.
+    /// </summary>
+    public bool StartCliPipeline(string cliExecutable, string recognizerFileName, string detectorFileName)
+    {
+        if (!File.Exists(cliExecutable))
+        {
+            Error = $"CrispEmbed CLI not found: {cliExecutable}";
+            return false;
+        }
+
+        if (!File.Exists(recognizerFileName))
+        {
+            Error = $"CrispEmbed model not found: {recognizerFileName}";
+            return false;
+        }
+
+        if (!File.Exists(detectorFileName))
+        {
+            Error = $"CrispEmbed text detector not found: {detectorFileName}";
+            return false;
+        }
+
+        _cliExecutable = cliExecutable;
+        _cliRecognizerModel = recognizerFileName;
+        _cliDetectorModel = detectorFileName;
+        _isCliPipeline = true;
+        return true;
     }
 
     public async Task<bool> StartServerAsync(string serverExecutable, string modelFileName, CancellationToken cancellationToken)
@@ -133,6 +176,11 @@ public class CrispEmbedOcr : IDisposable
                 await File.WriteAllBytesAsync(tempFileName, flattened.ToPngArray(), cancellationToken);
             }
 
+            if (_isCliPipeline)
+            {
+                return await OcrViaCliPipeline(tempFileName, cancellationToken);
+            }
+
             // The server reads the image from disk, so only the path goes over the wire. The
             // server's request parser does not un-escape JSON strings, so send forward slashes
             // (fine with Windows file APIs) to keep the serialized path escape-free.
@@ -185,6 +233,128 @@ public class CrispEmbedOcr : IDisposable
             {
                 // ignore
             }
+        }
+    }
+
+    /// <summary>
+    /// Runs one crispembed CLI invocation for the PP-OCRv6 pipeline and returns the recognized
+    /// text. --json keeps the result on a single line ("full_text" with "\n" between detected
+    /// regions), which is unambiguous next to the progress lines the CLI writes to stdout.
+    /// </summary>
+    private async Task<string> OcrViaCliPipeline(string imageFileName, CancellationToken cancellationToken)
+    {
+        var arguments = $"--ocr-pipeline \"{imageFileName}\" --ocr-engine ppocrv6 " +
+                        $"--ocr-det \"{_cliDetectorModel}\" --ocr-rec \"{_cliRecognizerModel}\" --json";
+
+        using var process = new Process
+        {
+            StartInfo = new ProcessStartInfo(_cliExecutable, arguments)
+            {
+                WindowStyle = ProcessWindowStyle.Hidden,
+                CreateNoWindow = true,
+                UseShellExecute = false,
+                RedirectStandardOutput = true,
+                RedirectStandardError = true,
+                WorkingDirectory = Path.GetDirectoryName(_cliExecutable),
+            },
+        };
+
+        process.Start();
+
+        var stdOutTask = process.StandardOutput.ReadToEndAsync(cancellationToken);
+        var stdErrTask = process.StandardError.ReadToEndAsync(cancellationToken);
+
+        using var timeout = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
+        timeout.CancelAfter(TimeSpan.FromMinutes(_timeoutMinutes));
+
+        try
+        {
+            await process.WaitForExitAsync(timeout.Token);
+        }
+        catch (OperationCanceledException) when (!cancellationToken.IsCancellationRequested)
+        {
+            KillQuietly(process);
+            Error = "CrispEmbed OCR timed out";
+            SeLogger.Error("CrispEmbed CLI pipeline timed out: " + arguments);
+            return string.Empty;
+        }
+        catch (OperationCanceledException)
+        {
+            KillQuietly(process);
+            throw;
+        }
+
+        var output = await stdOutTask;
+        var errorOutput = await stdErrTask;
+        if (!string.IsNullOrWhiteSpace(errorOutput))
+        {
+            LogServerOutput("crispembed: " + errorOutput.Trim());
+        }
+
+        if (process.ExitCode != 0)
+        {
+            Error = string.IsNullOrWhiteSpace(errorOutput)
+                ? $"CrispEmbed exited with code {process.ExitCode}"
+                : errorOutput.Trim();
+            SeLogger.Error("CrispEmbed CLI pipeline failed: " + Error);
+            return string.Empty;
+        }
+
+        return ParseCliPipelineOutput(output);
+    }
+
+    /// <summary>
+    /// Picks the JSON object out of the CLI's stdout - the detector prints progress lines such as
+    /// "ppocrv6-det: persistent GGML detector graph ready" before it - and returns "full_text"
+    /// with the platform's newlines.
+    /// </summary>
+    internal static string ParseCliPipelineOutput(string? output)
+    {
+        if (string.IsNullOrWhiteSpace(output))
+        {
+            return string.Empty;
+        }
+
+        foreach (var line in output.Split('\n'))
+        {
+            var trimmed = line.Trim();
+            if (!trimmed.StartsWith('{'))
+            {
+                continue;
+            }
+
+            try
+            {
+                using var document = JsonDocument.Parse(trimmed);
+                if (document.RootElement.TryGetProperty("full_text", out var fullText))
+                {
+                    return (fullText.GetString() ?? string.Empty)
+                        .Replace("\r\n", "\n")
+                        .Replace("\n", Environment.NewLine)
+                        .Trim();
+                }
+            }
+            catch (JsonException)
+            {
+                // not the result object - keep looking
+            }
+        }
+
+        return string.Empty;
+    }
+
+    private static void KillQuietly(Process process)
+    {
+        try
+        {
+            if (!process.HasExited)
+            {
+                process.Kill(entireProcessTree: true);
+            }
+        }
+        catch
+        {
+            // ignore
         }
     }
 

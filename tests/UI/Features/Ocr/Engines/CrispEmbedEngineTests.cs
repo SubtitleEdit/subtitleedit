@@ -10,7 +10,78 @@ public class CrispEmbedEngineTests
     {
         var backends = CrispEmbedEngine.GetBackends();
 
-        Assert.Equal(new[] { "GLM-OCR", "GOT-OCR2", "Qwen3-VL-2B" }, backends.Select(p => p.Name));
+        Assert.Equal(new[] { "PP-OCRv6", "GLM-OCR", "GOT-OCR2", "Qwen3-VL-2B" }, backends.Select(p => p.Name));
+    }
+
+    [Fact]
+    public void GetBackends_OnlyPpOcrV6UsesTextDetector()
+    {
+        foreach (var backend in CrispEmbedEngine.GetBackends())
+        {
+            Assert.Equal(backend.Name == "PP-OCRv6", backend.UsesTextDetector);
+
+            // A backend is all-or-nothing: the run path is picked from the backend, not per model.
+            Assert.All(backend.Models, model => Assert.Equal(backend.UsesTextDetector, model.HasDetector));
+        }
+    }
+
+    [Fact]
+    public void GetBackends_DetectorModelsAreWellFormed()
+    {
+        var models = CrispEmbedEngine.GetBackends()
+            .Where(p => p.UsesTextDetector)
+            .SelectMany(p => p.Models)
+            .ToList();
+
+        Assert.NotEmpty(models);
+
+        foreach (var model in models)
+        {
+            Assert.EndsWith(".gguf", model.DetectorName);
+            Assert.StartsWith("https://huggingface.co/", model.DetectorUrl);
+            Assert.EndsWith("/" + model.DetectorName, model.DetectorUrl);
+
+            // The detector lands in the same models folder as the recognizer.
+            Assert.NotEqual(model.Name, model.DetectorName);
+
+            // Truncation floors must stay below the real file sizes or a good download reads
+            // as "not installed" forever.
+            Assert.InRange(model.MinimumSizeBytes, 1, 40_000_000);
+            Assert.InRange(model.MinimumDetectorSizeBytes, 1, 40_000_000);
+        }
+    }
+
+    [Fact]
+    public void GetBackends_ModelFileNamesAreUniqueAcrossBackends()
+    {
+        var names = CrispEmbedEngine.GetBackends()
+            .SelectMany(p => p.Models)
+            .SelectMany(m => m.HasDetector ? new[] { m.Name, m.DetectorName } : new[] { m.Name })
+            .ToList();
+
+        Assert.Equal(names.Count, names.Distinct().Count());
+    }
+
+    [Theory]
+    [InlineData(
+        "ppocrv6-det: persistent GGML detector graph ready (CPU, 736x96)\n{\"n_regions\":2,\"mean_confidence\":0.92,\"full_text\":\"Line one\\nLine two\"}\n",
+        "Line one\nLine two")]
+    [InlineData("{\"n_regions\":0,\"mean_confidence\":0.0,\"full_text\":\"\"}", "")]
+    [InlineData("ppocrv6-det: nothing but progress noise\n", "")]
+    [InlineData("", "")]
+    public void ParseCliPipelineOutput_ReturnsFullText(string output, string expected)
+    {
+        var actual = CrispEmbedOcr.ParseCliPipelineOutput(output);
+
+        Assert.Equal(expected.Replace("\n", Environment.NewLine), actual);
+    }
+
+    [Fact]
+    public void ParseCliPipelineOutput_SkipsNonResultJson()
+    {
+        const string output = "{\"warning\":\"some other object\"}\n{\"full_text\":\"the real result\"}\n";
+
+        Assert.Equal("the real result", CrispEmbedOcr.ParseCliPipelineOutput(output));
     }
 
     [Fact]

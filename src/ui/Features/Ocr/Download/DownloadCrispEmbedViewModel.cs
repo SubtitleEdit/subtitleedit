@@ -46,6 +46,8 @@ public partial class DownloadCrispEmbedViewModel : ObservableObject, IClosingCle
     private CrispEmbedModel? _model;
     private string _modelTempFileName = string.Empty;
     private string _modelFileName = string.Empty;
+    private string _detectorTempFileName = string.Empty;
+    private string _detectorFileName = string.Empty;
 
     public DownloadCrispEmbedViewModel(ICrispEmbedDownloadService downloadService, IZipUnpacker zipUnpacker)
     {
@@ -87,6 +89,14 @@ public partial class DownloadCrispEmbedViewModel : ObservableObject, IClosingCle
         _model = model;
         _modelFileName = backend.GetModelPath(model);
         _modelTempFileName = _modelFileName + ".$tmp$";
+
+        // PP-OCRv6 needs its text detector as well - one dialog, two files.
+        if (model.HasDetector)
+        {
+            _detectorFileName = backend.GetDetectorPath(model);
+            _detectorTempFileName = _detectorFileName + ".$tmp$";
+        }
+
         TitleText = string.Format(Se.Language.General.DownloadingX, model.Name);
         StartDownload();
     }
@@ -193,21 +203,38 @@ public partial class DownloadCrispEmbedViewModel : ObservableObject, IClosingCle
 
     private void FinishModelDownload()
     {
-        if (!File.Exists(_modelTempFileName) || new FileInfo(_modelTempFileName).Length == 0)
+        if (!IsDownloaded(_modelTempFileName) ||
+            (_model is { HasDetector: true } && !IsDownloaded(_detectorTempFileName)))
         {
             ProgressText = Se.Language.General.DownloadFailed;
             Error = Se.Language.General.NoDataReceived;
+            DeleteTempModelFile();
             return;
         }
 
-        if (File.Exists(_modelFileName))
+        if (_model is { HasDetector: true })
         {
-            File.Delete(_modelFileName);
+            MoveIntoPlace(_detectorTempFileName, _detectorFileName);
         }
 
-        File.Move(_modelTempFileName, _modelFileName);
+        MoveIntoPlace(_modelTempFileName, _modelFileName);
         OkPressed = true;
         Close();
+    }
+
+    private static bool IsDownloaded(string fileName)
+    {
+        return File.Exists(fileName) && new FileInfo(fileName).Length > 0;
+    }
+
+    private static void MoveIntoPlace(string tempFileName, string fileName)
+    {
+        if (File.Exists(fileName))
+        {
+            File.Delete(fileName);
+        }
+
+        File.Move(tempFileName, fileName);
     }
 
     /// <summary>
@@ -265,7 +292,9 @@ public partial class DownloadCrispEmbedViewModel : ObservableObject, IClosingCle
 
         if (_isModelDownload && _model != null)
         {
-            _downloadTask = _downloadService.DownloadModel(_model.Url, _modelTempFileName, downloadProgress, _cancellationTokenSource.Token);
+            _downloadTask = _model.HasDetector
+                ? DownloadModelWithDetector(_model, downloadProgress)
+                : _downloadService.DownloadModel(_model.Url, _modelTempFileName, downloadProgress, _cancellationTokenSource.Token);
         }
         else if (OperatingSystem.IsWindows())
         {
@@ -288,6 +317,20 @@ public partial class DownloadCrispEmbedViewModel : ObservableObject, IClosingCle
         }
 
         _timer.Start();
+    }
+
+    /// <summary>
+    /// Downloads the detector and then the recognizer as one logical task, mapping each file onto
+    /// half of the progress bar. The detector is fetched first so a cancel mid-way never leaves a
+    /// complete recognizer next to a missing detector.
+    /// </summary>
+    private async System.Threading.Tasks.Task DownloadModelWithDetector(CrispEmbedModel model, IProgress<float> progress)
+    {
+        var detectorProgress = new Progress<float>(number => progress.Report(number * 0.5f));
+        await _downloadService.DownloadModel(model.DetectorUrl, _detectorTempFileName, detectorProgress, _cancellationTokenSource.Token);
+
+        var modelProgress = new Progress<float>(number => progress.Report(0.5f + number * 0.5f));
+        await _downloadService.DownloadModel(model.Url, _modelTempFileName, modelProgress, _cancellationTokenSource.Token);
     }
 
     private void Close()
@@ -314,11 +357,17 @@ public partial class DownloadCrispEmbedViewModel : ObservableObject, IClosingCle
 
     private void DeleteTempModelFile()
     {
+        DeleteQuietly(_modelTempFileName);
+        DeleteQuietly(_detectorTempFileName);
+    }
+
+    private static void DeleteQuietly(string fileName)
+    {
         try
         {
-            if (!string.IsNullOrEmpty(_modelTempFileName) && File.Exists(_modelTempFileName))
+            if (!string.IsNullOrEmpty(fileName) && File.Exists(fileName))
             {
-                File.Delete(_modelTempFileName);
+                File.Delete(fileName);
             }
         }
         catch
