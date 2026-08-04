@@ -88,14 +88,17 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4
 
             ulong timePeriodStart = 0; // ???
             ulong timeScale = 0;
-            if (Moov?.Tracks[0].Mdia.Mdhd.TimeScale > 0)
-            {
-                timeScale = Moov.Tracks[0].Mdia.Mdhd.TimeScale;
-            }
 
+            // Fragment ticks are media-track times, so the track's mdhd timescale is the
+            // right clock; the movie (mvhd) timescale is only a fallback.
             if (Moov?.Mvhd?.TimeScale > 0)
             {
                 timeScale = Moov.Mvhd.TimeScale;
+            }
+
+            if (Moov?.Tracks?.Count > 0 && Moov.Tracks[0].Mdia?.Mdhd?.TimeScale > 0)
+            {
+                timeScale = Moov.Tracks[0].Mdia.Mdhd.TimeScale;
             }
 
             if (timeScale == 0)
@@ -121,7 +124,10 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4
                     // payloads.
                     if (payload != null)
                     {
-                        Subtitle.Paragraphs.Add(new Paragraph(payload, timePeriodStart + startTime / timeScale, timePeriodStart + currentTime / timeScale));
+                        // Paragraph takes milliseconds; integer tick division truncated to whole seconds
+                        var startMs = (timePeriodStart + startTime) / (double)timeScale * 1000.0;
+                        var endMs = (timePeriodStart + currentTime) / (double)timeScale * 1000.0;
+                        Subtitle.Paragraphs.Add(new Paragraph(payload, startMs, endMs));
                     }
                 }
             }

@@ -37,12 +37,27 @@ internal static class ContainerSubtitleLoader
 
         if (ext is ".mp4" or ".m4v" or ".m4s" or ".3gp")
         {
-            // Old converter applied a 10 KB minimum. Below that, fall through to text loader.
             try
             {
-                if (new FileInfo(filePath).Length > 10_000)
+                var fileLength = new FileInfo(filePath).Length;
+                if (fileLength > 10_000)
                 {
                     return LoadMp4(filePath, options);
+                }
+
+                // Subtitle-only DASH/CMAF files (an init segment plus a few m4s fragments)
+                // are typically just a few KB. Try the MP4 parser, but on failure fall
+                // through to the text loader as the old 10 KB minimum did.
+                if (fileLength > 100)
+                {
+                    try
+                    {
+                        return LoadMp4(filePath, options);
+                    }
+                    catch (InvalidOperationException)
+                    {
+                        // No tracks found; let the text loader try.
+                    }
                 }
             }
             catch
