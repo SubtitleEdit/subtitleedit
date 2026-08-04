@@ -16877,19 +16877,24 @@ public partial class MainViewModel :
         });
         ShowStatus(string.Empty);
 
-        if (tsParser.SubtitlePacketIds.Count == 0 && tsParser.TeletextSubtitlesLookup.Count == 0)
+        if (tsParser.SubtitlePacketIds.Count == 0 && tsParser.TeletextSubtitlesLookup.Count == 0 &&
+            tsParser.AribSubtitlesLookup.Count == 0)
         {
             await MessageBox.Show(Window!, Se.Language.General.Error, Se.Language.General.NoSubtitlesFound,
                 MessageBoxButtons.OK, MessageBoxIcon.Error);
             return;
         }
 
-        if (tsParser.SubtitlePacketIds.Count == 0 && tsParser.TeletextSubtitlesLookup.Count == 1 &&
-            tsParser.TeletextSubtitlesLookup.First().Value.Count == 1)
+        var teletextTrackCount = tsParser.TeletextSubtitlesLookup.Sum(p => p.Value.Count);
+        var aribTrackCount = tsParser.AribSubtitlesLookup.Sum(p => p.Value.Count);
+        if (tsParser.SubtitlePacketIds.Count == 0 && teletextTrackCount + aribTrackCount == 1)
         {
             VideoCloseFile();
             ResetSubtitle();
-            _subtitle = new Subtitle(tsParser.TeletextSubtitlesLookup.First().Value.First().Value);
+            var textParagraphs = teletextTrackCount == 1
+                ? tsParser.TeletextSubtitlesLookup.First().Value.First().Value
+                : tsParser.AribSubtitlesLookup.First().Value.First().Value;
+            _subtitle = new Subtitle(textParagraphs);
             _subtitle.Renumber();
             ReplaceSubtitles(_subtitle.Paragraphs.Select(p => new SubtitleLineViewModel(p, SelectedSubtitleFormat)));
             SelectAndScrollToRow(0);
@@ -16904,7 +16909,7 @@ public partial class MainViewModel :
         }
 
         int packetId = 0;
-        if (tsParser.SubtitlePacketIds.Count + tsParser.TeletextSubtitlesLookup.Sum(p => p.Value.Count) > 1)
+        if (tsParser.SubtitlePacketIds.Count + teletextTrackCount + aribTrackCount > 1)
         {
             var result = await ShowDialogAsync<PickTsTrackWindow, PickTsTrackViewModel>(vm => { vm.Initialize(tsParser, fileName); });
 

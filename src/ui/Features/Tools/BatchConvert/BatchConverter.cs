@@ -451,6 +451,17 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
             }
         }
 
+        foreach (var aribPid in tsParser.AribSubtitlesLookup)
+        {
+            foreach (var language in aribPid.Value)
+            {
+                if (language.Value.Count > 0)
+                {
+                    result.Add(new TransportStreamResult { IsImage = false, Subtitle = new Subtitle(language.Value) });
+                }
+            }
+        }
+
         return result;
     }
 

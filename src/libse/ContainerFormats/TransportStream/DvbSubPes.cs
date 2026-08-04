@@ -293,6 +293,15 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
 
         public bool IsTeletext => DataIdentifier == 16;
 
+        /// <summary>
+        /// ARIB STD-B24 caption data (ISDB broadcasts): private_stream_1 with
+        /// data_identifier 0x80 (captions) or 0x81 (superimpose) + private_stream_id 0xFF
+        /// </summary>
+        public bool IsAribCaption => StreamId == 0xbd && AribCaptionParser.IsAribCaptionPayload(_dataBuffer);
+
+        /// <summary>PES data starting at data_identifier - for <see cref="AribCaptionParser"/></summary>
+        public byte[] GetAribCaptionData() => _dataBuffer;
+
         public int DataIdentifier
         {
             get
