@@ -204,18 +204,39 @@ public class BurnInWindow : Window
         // Re-fit the window to the current mode's content (single mode is narrower; batch mode
         // needs more width for the file list), then lock that size in as the new minimum while
         // still allowing the user to enlarge the window further.
-        MinWidth = 0;
+        //
+        // heightOnly re-fits only the height: the width (and the minimum locked for it) is the
+        // user's, and clearing MinWidth here would leave it at zero - the callback below never
+        // restores it - so the window could be dragged narrower than its content, which is the
+        // clipping this whole method exists to prevent.
+        if (!heightOnly)
+        {
+            MinWidth = 0;
+        }
+
         MinHeight = 0;
-        SizeToContent = SizeToContent.WidthAndHeight;
+        SizeToContent = heightOnly ? SizeToContent.Height : SizeToContent.WidthAndHeight;
         Dispatcher.UIThread.Post(() =>
         {
             var width = ClientSize.Width;
             var height = ClientSize.Height;
-            // Width/Height include the window chrome (title bar + borders); the minimum must
-            // cover the content plus the chrome, otherwise the window can be shrunk below the
-            // content and the bottom row (buttons) gets clipped.
+            // Any difference between the window size and the client size (title bar, borders) has
+            // to be added on top of the content, or the minimum sits below it and the bottom row
+            // (buttons) gets clipped. Avalonia measures windows by client area, so this is
+            // normally zero; Width/Height are also NaN until something assigns them, hence the
+            // guard - NaN here would wipe out the minimum entirely.
             var chromeWidth = Width - width;
             var chromeHeight = Height - height;
+            if (double.IsNaN(chromeWidth) || chromeWidth < 0)
+            {
+                chromeWidth = 0;
+            }
+
+            if (double.IsNaN(chromeHeight) || chromeHeight < 0)
+            {
+                chromeHeight = 0;
+            }
+
             SizeToContent = SizeToContent.Manual;
             if (width > 0 && height > 0)
             {
