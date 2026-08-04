@@ -2,7 +2,9 @@
 using Avalonia.Threading;
 using Microsoft.Extensions.DependencyInjection;
 using Nikse.SubtitleEdit;
+using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.ContainerFormats.Matroska;
+using Nikse.SubtitleEdit.Core.ContainerFormats.Mp4;
 using Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream;
 using Nikse.SubtitleEdit.Core.VobSub;
 using Nikse.SubtitleEdit.Features.Shared.PickMatroskaTrack;
@@ -150,6 +152,59 @@ public class PickTrackWindowSelectionTests
 
             Assert.True(vm.OkPressed);
             Assert.Same(vm.Tracks[0], vm.SelectedMatroskaTrack);
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    // Fragmented (DASH/CMAF) MP4s have no moov Trak objects; the picker is fed
+    // Mp4FragmentedSubtitleTrack instead, and both the cue preview and OK must work
+    // off the fragmented subtitle.
+    [AvaloniaFact]
+    public void PickMp4TrackWindow_FragmentedTracks_PreviewAndOkWork()
+    {
+        var services = new ServiceCollection();
+        services.AddSubtitleEditServices();
+        var provider = services.BuildServiceProvider();
+        var vm = provider.GetRequiredService<PickMp4TrackViewModel>();
+
+        var english = new Subtitle();
+        english.Paragraphs.Add(new Paragraph("Hello", 1000, 2000));
+        english.Paragraphs.Add(new Paragraph("World", 3000, 4000));
+        var danish = new Subtitle();
+        danish.Paragraphs.Add(new Paragraph("Hej", 1000, 2000));
+        var fragmentedTracks = new List<Mp4FragmentedSubtitleTrack>
+        {
+            new() { TrackId = 1, Language = "eng", Codec = "wvtt", Subtitle = english },
+            new() { TrackId = 2, Language = "dan", Codec = "stpp", Subtitle = danish },
+        };
+
+        vm.Initialize(fragmentedTracks, "test.mp4");
+
+        var window = new PickMp4TrackWindow(vm);
+        try
+        {
+            window.Show();
+            Dispatcher.UIThread.RunJobs();
+            window.UpdateLayout();
+            Dispatcher.UIThread.RunJobs();
+
+            Assert.Equal(2, vm.Tracks.Count);
+            Assert.Equal("wvtt", vm.Tracks[0].HandlerType);
+            Assert.Equal("stpp", vm.Tracks[1].HandlerType);
+            Assert.Same(vm.Tracks[0], vm.SelectedTrack);
+
+            // preview is built from the fragmented cues (no Trak/stbl involved)
+            Assert.Equal(2, vm.Rows.Count);
+            Assert.Equal("Hello", vm.Rows[0].Text);
+
+            vm.OkCommand.Execute(null);
+            Dispatcher.UIThread.RunJobs();
+
+            Assert.True(vm.OkPressed);
+            Assert.Same(fragmentedTracks[0], vm.SelectedMatroskaTrack!.FragmentedTrack);
         }
         finally
         {

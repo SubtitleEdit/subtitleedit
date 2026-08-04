@@ -27,6 +27,12 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4
         /// </summary>
         public string VttcCodec { get; private set; }
 
+        /// <summary>
+        /// All text subtitle tracks found in movie fragments (DASH/CMAF), in file order.
+        /// <see cref="VttcSubtitle"/> is the first of these.
+        /// </summary>
+        public List<Mp4FragmentedSubtitleTrack> FragmentedSubtitleTracks { get; } = new List<Mp4FragmentedSubtitleTrack>();
+
         public Subtitle TrunCea608Subtitle { get; private set; }
         public Subtitle TrunCea708Subtitle { get; private set; }
         private List<Cea608.CcData> _trunCea608CcData = new List<Cea608.CcData>();
@@ -196,23 +202,38 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4
 
             fs.Close();
 
-            // Surface the first fragmented text track that produced cues (DASH/CMAF
-            // subtitle representations, or the subtitle track of a muxed fMP4).
-            var bestFragmentedTrack = _fragmentedTextTracks.FirstOrDefault(p => p.Subtitle.Paragraphs.Count > 0);
-            if (bestFragmentedTrack != null)
+            // Surface the fragmented text tracks (DASH/CMAF subtitle representations, or
+            // the subtitle tracks of a muxed fMP4); VttcSubtitle is the first of them.
+            foreach (var fragmentedTrack in _fragmentedTextTracks)
             {
-                var sorted = bestFragmentedTrack.Subtitle.Paragraphs.OrderBy(p => p.StartTime.TotalMilliseconds).ToList();
-                bestFragmentedTrack.Subtitle.Paragraphs.Clear();
-                bestFragmentedTrack.Subtitle.Paragraphs.AddRange(sorted);
-                VttcSubtitle = bestFragmentedTrack.Subtitle;
-                VttcLanguage = bestFragmentedTrack.Language;
-                VttcCodec = bestFragmentedTrack.Codec;
+                if (fragmentedTrack.Subtitle.Paragraphs.Count == 0)
+                {
+                    continue;
+                }
+
+                var sorted = fragmentedTrack.Subtitle.Paragraphs.OrderBy(p => p.StartTime.TotalMilliseconds).ToList();
+                fragmentedTrack.Subtitle.Paragraphs.Clear();
+                fragmentedTrack.Subtitle.Paragraphs.AddRange(sorted);
+
+                var merged = MergeLinesSameTextUtils.MergeLinesWithSameTextInSubtitle(fragmentedTrack.Subtitle, false, 250);
+                merged.Header = fragmentedTrack.Subtitle.Header;
+                merged.Renumber();
+
+                FragmentedSubtitleTracks.Add(new Mp4FragmentedSubtitleTrack
+                {
+                    TrackId = fragmentedTrack.TrackId,
+                    Language = fragmentedTrack.Language,
+                    Codec = fragmentedTrack.Codec,
+                    Subtitle = merged,
+                });
             }
 
-            if (VttcSubtitle != null)
+            var firstFragmentedTrack = FragmentedSubtitleTracks.FirstOrDefault();
+            if (firstFragmentedTrack != null)
             {
-                var merged = MergeLinesSameTextUtils.MergeLinesWithSameTextInSubtitle(VttcSubtitle, false, 250);
-                VttcSubtitle = merged;
+                VttcSubtitle = firstFragmentedTrack.Subtitle;
+                VttcLanguage = firstFragmentedTrack.Language;
+                VttcCodec = firstFragmentedTrack.Codec;
             }
 
             CheckForTrunCea608();

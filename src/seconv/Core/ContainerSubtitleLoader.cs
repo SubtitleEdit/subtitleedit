@@ -320,13 +320,20 @@ internal static class ContainerSubtitleLoader
         var tracks = new List<LoadedTrack>();
         var parser = new MP4Parser(filePath);
 
-        // VTTC sidecar track (some MP4s embed WebVTT cues alongside text tracks)
-        if (parser.VttcSubtitle is { } vttc && vttc.Paragraphs.Count > 0)
+        // Fragmented (DASH/CMAF) text tracks - cues extracted from moof/traf/trun samples
+        foreach (var fragmentedTrack in parser.FragmentedSubtitleTracks)
         {
-            vttc.Renumber();
-            var lang = SanitizeLang(parser.VttcLanguage);
-            lang = IsUndeclaredLanguage(lang) ? LanguageAutoDetect.AutoDetectGoogleLanguageOrNull(vttc) ?? lang : lang;
-            tracks.Add(new LoadedTrack(vttc, new SubRip(), lang, null));
+            var trackNumber = (int?)fragmentedTrack.TrackId;
+            if (trackNumber != null && options.TrackNumbers.Count > 0 && !options.TrackNumbers.Contains(trackNumber.Value))
+            {
+                continue;
+            }
+
+            var fragmentedSubtitle = fragmentedTrack.Subtitle;
+            fragmentedSubtitle.Renumber();
+            var fragmentedLang = SanitizeLang(fragmentedTrack.Language);
+            fragmentedLang = IsUndeclaredLanguage(fragmentedLang) ? LanguageAutoDetect.AutoDetectGoogleLanguageOrNull(fragmentedSubtitle) ?? fragmentedLang : fragmentedLang;
+            tracks.Add(new LoadedTrack(fragmentedSubtitle, new SubRip(), fragmentedLang, trackNumber));
         }
 
         foreach (var track in parser.GetSubtitleTracks())

@@ -4,6 +4,7 @@ using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Nikse.SubtitleEdit.Core.Common;
+using Nikse.SubtitleEdit.Core.ContainerFormats.Mp4;
 using Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using Nikse.SubtitleEdit.Features.Shared.PromptFileSaved;
@@ -73,6 +74,42 @@ public partial class PickMp4TrackViewModel : ObservableObject
         }
     }
 
+    /// <summary>
+    /// Initializes with fragmented (DASH/CMAF) text tracks, where cues come from
+    /// moof/traf/trun samples instead of moov sample tables.
+    /// </summary>
+    public void Initialize(List<Mp4FragmentedSubtitleTrack> fragmentedTracks, string fileName)
+    {
+        _fileName = fileName;
+        WindowTitle = $"Pick MP4 track - {fileName}";
+        foreach (var track in fragmentedTracks)
+        {
+            var paragraphs = track.Subtitle.Paragraphs;
+            var lastCue = paragraphs.Count > 0 ? paragraphs[paragraphs.Count - 1] : null;
+            Tracks.Add(new Mp4TrackInfoDisplay
+            {
+                HandlerType = track.Codec ?? string.Empty,
+                Name = track.TrackId != null
+                    ? $"Track {track.TrackId} ({track.Language ?? "?"})"
+                    : track.Language ?? string.Empty,
+                StartPosition = 0,
+                IsVobSubSubtitle = false,
+                Duration = lastCue != null ? (ulong)lastCue.EndTime.TotalMilliseconds : 0,
+                FragmentedTrack = track,
+            });
+        }
+    }
+
+    private static List<Paragraph> GetTrackParagraphs(Mp4TrackInfoDisplay display)
+    {
+        if (display.FragmentedTrack != null)
+        {
+            return display.FragmentedTrack.Subtitle.Paragraphs;
+        }
+
+        return display.Track?.Mdia?.Minf?.Stbl?.GetParagraphs() ?? new List<Paragraph>();
+    }
+
     private void Close()
     {
         Dispatcher.UIThread.Post(() =>
@@ -89,15 +126,14 @@ public partial class PickMp4TrackViewModel : ObservableObject
     private async Task Export()
     {
         var selectedTrack = SelectedTrack;
-        var track = selectedTrack?.Track;
-        if (Window == null || track == null)
+        if (Window == null || selectedTrack == null || (selectedTrack.Track == null && selectedTrack.FragmentedTrack == null))
         {
             return;
         }
 
         var suggestedFileName = Utilities.GetPathAndFileNameWithoutExtension(_fileName);
 
-        if (track.Mdia.IsVobSubSubtitle)
+        if (selectedTrack.Track is { } track && track.Mdia.IsVobSubSubtitle)
         {
             var fileName = await _fileHelper.PickSaveSubtitleFile(Window, ".sup", suggestedFileName, Se.Language.General.SaveFileAsTitle);
             if (string.IsNullOrEmpty(fileName))
@@ -153,7 +189,7 @@ public partial class PickMp4TrackViewModel : ObservableObject
         else
         {
             var subtitle = new Subtitle();
-            subtitle.Paragraphs.AddRange(track.Mdia.Minf.Stbl.GetParagraphs());
+            subtitle.Paragraphs.AddRange(GetTrackParagraphs(selectedTrack));
             subtitle.Renumber();
             var format = new SubRip();
             var rawText = format.ToText(subtitle, string.Empty);
@@ -204,15 +240,14 @@ public partial class PickMp4TrackViewModel : ObservableObject
     private bool TrackChanged()
     {
         var selectedTrack = SelectedTrack;
-        if (selectedTrack == null || selectedTrack.Track == null)
+        if (selectedTrack == null || (selectedTrack.Track == null && selectedTrack.FragmentedTrack == null))
         {
             SubtitleCountText = string.Empty;
             return false;
         }
 
         Rows.Clear();
-        var trackinfo = selectedTrack.Track!;
-        var subtitles = trackinfo.Mdia.Minf.Stbl.GetParagraphs();
+        var subtitles = GetTrackParagraphs(selectedTrack);
         SubtitleCountText = string.Format(Se.Language.File.Import.NumberOfSubtitlesX, subtitles.Count);
         var i = 0;
         foreach (var item in subtitles)
@@ -226,7 +261,7 @@ public partial class PickMp4TrackViewModel : ObservableObject
                 Duration = TimeSpan.FromMilliseconds(item.EndTime.TotalMilliseconds - item.StartTime.TotalMilliseconds),
             };
 
-            if (selectedTrack.IsVobSubSubtitle)
+            if (selectedTrack.IsVobSubSubtitle && selectedTrack.Track is { } trackinfo)
             {
                 cue.Image = new Image { Source = trackinfo.Mdia.Minf.Stbl.SubPictures[i - 1].GetBitmap(null, SKColors.Transparent, SKColors.Black, SKColors.White, SKColors.Black, false).ToAvaloniaBitmap() };
             }

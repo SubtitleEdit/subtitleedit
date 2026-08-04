@@ -152,6 +152,46 @@ public class Mp4DashSubtitleTest
         Assert.Equal(10_500, p.EndTime.TotalMilliseconds, 1);
     }
 
+    // A muxed fragmented file can carry several text tracks (e.g. languages); all of
+    // them must be exposed so the UI can offer a track picker. VttcSubtitle stays the
+    // first track for callers that only handle one.
+    [Fact]
+    public void FragmentedMultiTrack_ExposesAllTextTracks()
+    {
+        var init = BuildInit("subt", "stpp", trackId: 2, mdhdTimeScale: 1000, mvhdTimeScale: 600,
+            extraTrack: BuildTrak("text", "wvtt", trackId: 1, mdhdTimeScale: 1000));
+        var wvttSample = WvttCueSample("English cue");
+        var ttmlSample = Encoding.UTF8.GetBytes(TtmlDoc("<p begin=\"00:00:01.000\" end=\"00:00:02.000\">Dansk cue</p>"));
+        var segment = BuildMuxedSegment(
+            (trackId: 1u, tfdtTicks: 0u, durations: new uint[] { 2000 }, samples: new[] { wvttSample }),
+            (trackId: 2u, tfdtTicks: 0u, durations: new uint[] { 4000 }, samples: new[] { ttmlSample }));
+
+        var tempFile = Path.GetTempFileName();
+        try
+        {
+            File.WriteAllBytes(tempFile, Concat(init, segment));
+            var parser = new MP4Parser(tempFile);
+
+            Assert.Equal(2, parser.FragmentedSubtitleTracks.Count);
+
+            var first = parser.FragmentedSubtitleTracks[0];
+            Assert.Equal(1u, first.TrackId);
+            Assert.Equal("wvtt", first.Codec);
+            Assert.Equal("English cue", Assert.Single(first.Subtitle.Paragraphs).Text);
+
+            var second = parser.FragmentedSubtitleTracks[1];
+            Assert.Equal(2u, second.TrackId);
+            Assert.Equal("stpp", second.Codec);
+            Assert.Equal("Dansk cue", Assert.Single(second.Subtitle.Paragraphs).Text);
+
+            Assert.Same(first.Subtitle, parser.VttcSubtitle);
+        }
+        finally
+        {
+            File.Delete(tempFile);
+        }
+    }
+
     [Fact]
     public void SplitTtmlDocuments_ConcatenatedDocuments_SplitsEach()
     {
