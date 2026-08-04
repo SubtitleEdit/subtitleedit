@@ -1018,7 +1018,7 @@
     "undoPerformed": "已执行撤消",
     "undoPerformedXActionLeft": "已执行撤消（剩余操作: {0}）",
     "xLinesCopiedFromOriginal": "已从原始字幕复制 {0} 行",
-    "xLinesMerged": "已合并 X 行",
+    "xLinesMerged": "已合并 {0} 行",
     "xLinesSelectedOfY": "已选中 {1} 行中的 {0} 行",
     "xLinesSwitched": "已切换 {0} 行",
     "xShotChangedLoaded": "已加载 {0} 个镜头切换点",

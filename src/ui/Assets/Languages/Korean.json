@@ -983,7 +983,7 @@
     "undoPerformed": "실행 취소됨",
     "undoPerformedXActionLeft": "실행 취소됨(남은 작업: {0})",
     "xLinesCopiedFromOriginal": "원본 자막에서 {0}번 줄 복사",
-    "xLinesMerged": "X개의 줄이 합쳐짐",
+    "xLinesMerged": "{0}개의 줄이 합쳐짐",
     "xLinesSelectedOfY": "총 {1}줄 중 {0}줄 선택",
     "xLinesSwitched": "{0}번 줄 변경됨",
     "xShotChangedLoaded": "{0}개의 장면 전환을 불러옴",

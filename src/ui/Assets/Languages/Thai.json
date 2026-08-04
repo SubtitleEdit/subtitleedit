@@ -1018,7 +1018,7 @@
     "undoPerformed": "เลิกทำแล้ว",
     "undoPerformedXActionLeft": "เลิกทำแล้ว (การกระทำที่เหลือ: {0})",
     "xLinesCopiedFromOriginal": "คัดลอก {0} บรรทัดจากคำบรรยายต้นฉบับแล้ว",
-    "xLinesMerged": "รวม X บรรทัดแล้ว",
+    "xLinesMerged": "รวม {0} บรรทัดแล้ว",
     "xLinesSelectedOfY": "เลือก {0} บรรทัดจาก {1}",
     "xLinesSwitched": "สลับ {0} บรรทัดแล้ว",
     "xShotChangedLoaded": "โหลดจุดเปลี่ยนฉาก {0} จุดแล้ว",

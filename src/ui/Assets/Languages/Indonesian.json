@@ -1018,7 +1018,7 @@
     "undoPerformed": "Urungkan dilakukan",
     "undoPerformedXActionLeft": "Urungkan dilakukan (aksi tersisa: {0})",
     "xLinesCopiedFromOriginal": "{0} baris disalin dari subtitel asli",
-    "xLinesMerged": "X baris digabungkan",
+    "xLinesMerged": "{0} baris digabungkan",
     "xLinesSelectedOfY": "{0} baris terpilih dari {1}",
     "xLinesSwitched": "{0} baris ditukar",
     "xShotChangedLoaded": "{0} perubahan shot dimuat",

@@ -999,7 +999,7 @@
     "undoPerformed": "Cofnięcie wykonanej czynności",
     "undoPerformedXActionLeft": "Cofnięto wykonaną czynność (pozostałe czynności: {0})",
     "xLinesCopiedFromOriginal": "Skopiowano {0} linii z oryginalnych napisów",
-    "xLinesMerged": "Połączono X linii",
+    "xLinesMerged": "Połączono {0} linii",
     "xLinesSelectedOfY": "Wybrano {0} linii z {1}",
     "xLinesSwitched": "Przełączono {0} linii",
     "xShotChangedLoaded": "Wczytano {0} zmian ujęć",
