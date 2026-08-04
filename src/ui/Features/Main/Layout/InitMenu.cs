@@ -38,6 +38,11 @@ public static class InitMenu
         menu.Items.Clear();
         menu.Opened += (s, e) => DisplayShortcuts(menu, vm);
 
+        // In undocked mode the tool windows are topmost while SE is active (#11971), which
+        // covers the menu popups - drop their topmost while a menu is open (#13187/#12899).
+        menu.Opened += (s, e) => vm.SetUndockedWindowsTopmost(false);
+        menu.Closed += (s, e) => vm.SetUndockedWindowsTopmost(true);
+
         // Drop the menu's font one notch below the theme default and tighten
         // each item's vertical padding — a denser menu reads better when there
         // are this many entries. The style targets nested MenuItems so submenu

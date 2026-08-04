@@ -6269,6 +6269,23 @@ public partial class MainViewModel :
         });
     }
 
+    /// <summary>
+    /// Suppress (or restore) the undocked tool windows' topmost state. They float above the
+    /// main window while SE is active (KeepTopmostWhileOwnerActive, #11971), which also puts
+    /// them above the main menu's popups - so the menu drops their topmost while it is open
+    /// (#13187/#12899). Restoring re-applies the helper's rule instead of a blanket true.
+    /// </summary>
+    internal void SetUndockedWindowsTopmost(bool topmost)
+    {
+        foreach (var undockedWindow in new[] { _videoPlayerUndockedViewModel?.Window, _audioVisualizerUndockedViewModel?.Window })
+        {
+            if (undockedWindow != null)
+            {
+                undockedWindow.Topmost = topmost && (Window?.IsActive == true || undockedWindow.IsActive);
+            }
+        }
+    }
+
     [RelayCommand]
     private void VideoRedockControls()
     {
@@ -15840,6 +15857,17 @@ public partial class MainViewModel :
                 SubtitleGrid.SelectedItem = itemToScroll;
                 SubtitleGrid.ScrollIntoView(itemToScroll);
 
+                // TableView can initialize row 0 as selected when ItemsSource is assigned
+                // without raising SelectionChanged, so after a fresh file open the grid
+                // shows the first row highlighted while SelectedSubtitle is still null -
+                // empty edit box and go to next/previous line dead until the selection is
+                // moved away and back (#13190). Assigning the same item above raises no
+                // event either, so sync the view model explicitly.
+                if (!ReferenceEquals(SelectedSubtitle, itemToScroll))
+                {
+                    SubtitleGridSelectionChanged();
+                }
+
                 // Avalonia keeps the caret index when the bound text changes, so navigating
                 // to another line left the caret at the previous line's (clamped) position -
                 // seemingly random (issue #12707). SE4 always lands at the start (WinForms
@@ -16548,6 +16576,14 @@ public partial class MainViewModel :
     {
         var vp = GetVideoPlayerControl();
         if (string.IsNullOrEmpty(_videoFileName) || SelectedSubtitle == null || vp == null)
+        {
+            return;
+        }
+
+        // A remembered first-line selection is not a previously established position - it is
+        // just where the grid always lands on open. Leave the video at 0:00 instead of jumping
+        // to the first caption's start time (#13191 / #12898); only a mid-file line restores.
+        if ((SelectedSubtitleIndex ?? 0) == 0)
         {
             return;
         }

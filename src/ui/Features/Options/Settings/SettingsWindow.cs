@@ -1,5 +1,6 @@
 using Avalonia.Controls;
 using Avalonia.Input;
+using Avalonia.Threading;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 
@@ -21,7 +22,17 @@ public class SettingsWindow : Window
         CanResize = true;
 
         vm.Window = this;
-        Content = new SettingsPage(vm);
+        var page = new SettingsPage(vm);
+        Content = page;
+
+        // Without an explicit Activate/Focus the dialog can open with keyboard focus left in the
+        // main window (reproducible in undocked mode with floating topmost tool windows, #13185).
+        Opened += (_, _) =>
+        {
+            Activate();
+            Dispatcher.UIThread.Post(() => page.FocusSearchBox(), DispatcherPriority.Input);
+        };
+
         Loaded += vm.Onloaded;
         Closing += vm.OnClosing;
     }
