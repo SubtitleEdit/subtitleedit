@@ -196,8 +196,8 @@ modules:
     sources:
       - type: git
         url: https://github.com/FFmpeg/FFmpeg.git
-        tag: n7.1.2
-        commit: 7003a8c4544b780eb0ab5c02ac4ad89d2132f2a2
+        tag: n9.0
+        commit: 5b9252abfe2fda0ccb71ed45cd7a954cc45d2b6f
 
   - name: libXpresent
     buildsystem: autotools
