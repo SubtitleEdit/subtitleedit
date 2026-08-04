@@ -103,7 +103,14 @@ public class FullScreenVideoWindow : Window
                         Math.Abs(cursorPos.Value.Y - _lastCursorPosition.Y) > mouseMovementMinPixels)
                     {
                         _lastCursorPosition = cursorPos.Value;
-                        videoPlayer.NotifyUserActivity();
+
+                        // Only movement over this window counts - the poll is desktop-wide,
+                        // so mouse movement in another app or on another monitor must not
+                        // bring the controls back up (issue #13207).
+                        if (CursorPositionHelper.IsCursorOverWindow(this, cursorPos.Value))
+                        {
+                            videoPlayer.NotifyUserActivity();
+                        }
                     }
                 }
             }
