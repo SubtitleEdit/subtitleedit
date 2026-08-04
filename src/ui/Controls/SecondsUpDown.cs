@@ -153,6 +153,11 @@ public class SecondsUpDown : TemplatedControl
             // screen readers to announce it (e.g. "Duration") instead of just the value.
             _textBox.Bind(AutomationProperties.NameProperty, this.GetObservable(AutomationProperties.NameProperty));
 
+            // Screen readers deliberately stay quiet when a plain edit control's value changes,
+            // so stepping with Up/Down was inaudible; announced as a spinner, every value change
+            // is spoken (#12087).
+            AutomationProperties.SetControlTypeOverride(_textBox, Avalonia.Automation.Peers.AutomationControlType.Spinner);
+
             _textBox.KeyDown += OnTextBoxKeyDown;
             _textBox.LostFocus += (_, _) => ParseAndUpdate();
             _textBox.PointerWheelChanged += (_, args) =>
