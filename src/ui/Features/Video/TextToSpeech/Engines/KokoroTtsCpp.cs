@@ -1,5 +1,6 @@
 using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.Voices;
+using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Logic.Download;
 using System;
@@ -357,8 +358,13 @@ public class KokoroTtsCpp : ITtsEngine
                     var tail = SnapshotStderr(stderrBuffer);
                     _serverProcess = null;
                     _serverPort = 0;
+                    // An empty tail plus a 0xC00000xx code means the loader killed it before main -
+                    // NativeExitCodeHelper explains those instead of just printing the raw number.
+                    var hint = NativeExitCodeHelper.GetHint(process.ExitCode, "Kokoro TTS", GetSetFolder());
                     throw new InvalidOperationException(
-                        $"kokoro-tts-server exited during startup (code {process.ExitCode}). Output: {tail}");
+                        $"kokoro-tts-server exited during startup (code {NativeExitCodeHelper.Describe(process.ExitCode)})."
+                        + (hint == null ? string.Empty : " " + hint)
+                        + $" Output: {tail}");
                 }
                 if (await ProbeHealthAsync(port, TimeSpan.FromSeconds(1), ct))
                 {
