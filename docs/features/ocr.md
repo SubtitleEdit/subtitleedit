@@ -56,8 +56,9 @@ Local LLM-based OCR using a llama.cpp-compatible server.
 
 ### CrispEmbed
 Local OCR engine with multiple model backends (free/open source).
-- Backends: **GLM-OCR**, **GOT-OCR2**, and **Qwen3-VL-2B**
-- Each backend offers a smaller `q4_k` and a higher-quality `q8_0` model (from about 445 MB for GOT-OCR2 q4_k up to about 2.3 GB for Qwen3-VL-2B q8_0)
+- Backends: **PP-OCRv6**, **GLM-OCR**, **GOT-OCR2**, and **Qwen3-VL-2B**
+- **PP-OCRv6** is a text detector plus recognizer rather than a vision language model, so it needs only two small files (about 79 MB in total) and is the quickest way to get started
+- The other backends each offer a smaller `q4_k` and a higher-quality `q8_0` model (from about 445 MB for GOT-OCR2 q4_k up to about 2.3 GB for Qwen3-VL-2B q8_0)
 - The engine and models are downloaded from the OCR window on first use
 
 ### Mistral OCR
