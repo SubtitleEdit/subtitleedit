@@ -67,7 +67,7 @@ public partial class PickMp4TrackViewModel : ObservableObject
                 Name = track.Mdia.Name,
                 StartPosition = track.Mdia.StartPosition,
                 IsVobSubSubtitle = track.Mdia.IsVobSubSubtitle,
-                Duration = track.Tkhd.Duration,
+                Duration = LastCueEnd(track.Mdia?.Minf?.Stbl?.GetParagraphs()),
                 Track = track,
             };
             Tracks.Add(display);
@@ -84,8 +84,6 @@ public partial class PickMp4TrackViewModel : ObservableObject
         WindowTitle = $"Pick MP4 track - {fileName}";
         foreach (var track in fragmentedTracks)
         {
-            var paragraphs = track.Subtitle.Paragraphs;
-            var lastCue = paragraphs.Count > 0 ? paragraphs[paragraphs.Count - 1] : null;
             Tracks.Add(new Mp4TrackInfoDisplay
             {
                 HandlerType = track.Codec ?? string.Empty,
@@ -94,10 +92,17 @@ public partial class PickMp4TrackViewModel : ObservableObject
                     : track.Language ?? string.Empty,
                 StartPosition = 0,
                 IsVobSubSubtitle = false,
-                Duration = lastCue != null ? (ulong)lastCue.EndTime.TotalMilliseconds : 0,
+                Duration = LastCueEnd(track.Subtitle.Paragraphs),
                 FragmentedTrack = track,
             });
         }
+    }
+
+    private static TimeSpan LastCueEnd(List<Paragraph>? paragraphs)
+    {
+        return paragraphs == null || paragraphs.Count == 0
+            ? TimeSpan.Zero
+            : paragraphs[paragraphs.Count - 1].EndTime.TimeSpan;
     }
 
     private static List<Paragraph> GetTrackParagraphs(Mp4TrackInfoDisplay display)

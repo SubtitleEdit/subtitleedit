@@ -26,13 +26,13 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4
             var pos = 0;
             while (pos < text.Length)
             {
-                var start = FindRootTag(text, pos);
+                var start = FindRootTag(text, pos, out var rootTagName);
                 if (start < 0)
                 {
                     break;
                 }
 
-                var close = FindCloseTag(text, start);
+                var close = FindCloseTag(text, start, rootTagName);
                 if (close < 0)
                 {
                     result.Add(text.Substring(start));
@@ -54,63 +54,86 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4
         /// <summary>
         /// Index of the next TTML root tag ("&lt;tt&gt;", "&lt;tt ...&gt;" or a namespaced
         /// "&lt;ns:tt ...&gt;" like "&lt;tt:tt&gt;") at or after <paramref name="startIndex"/>,
-        /// or -1. Plain "&lt;tt" prefix matching is not enough: it would also hit
-        /// "&lt;ttm:title&gt;" inside the document head.
+        /// or -1. <paramref name="rootTagName"/> receives the qualified name as written, so the
+        /// matching close tag can be found by exact name. Plain "&lt;tt" prefix matching is not
+        /// enough: it would also hit "&lt;ttm:title&gt;" inside the document head.
         /// </summary>
-        private static int FindRootTag(string text, int startIndex)
+        private static int FindRootTag(string text, int startIndex, out string rootTagName)
         {
+            rootTagName = null;
             var pos = startIndex;
             while (pos < text.Length)
             {
-                var idx = text.IndexOf("<tt", pos, StringComparison.Ordinal);
-                if (idx < 0)
+                var i = text.IndexOf('<', pos);
+                if (i < 0)
                 {
                     return -1;
                 }
 
-                var after = idx + 3;
-                if (after >= text.Length)
+                pos = i + 1;
+                var nameStart = i + 1;
+                var nameEnd = nameStart;
+                while (nameEnd < text.Length && IsNameChar(text[nameEnd]))
                 {
-                    return -1;
+                    nameEnd++;
                 }
 
-                var c = text[after];
-                if (c == '>' || c == ' ' || c == '\t' || c == '\r' || c == '\n')
+                if (nameEnd == nameStart || nameEnd >= text.Length)
                 {
-                    return idx;
+                    continue; // "</...", "<?xml ...", "<!--" or a truncated tag
                 }
 
-                if (c == ':' && after + 2 < text.Length && text[after + 1] == 't' && text[after + 2] == 't')
+                var afterName = text[nameEnd];
+                if (afterName != '>' && afterName != '/' && afterName != ' ' && afterName != '\t' && afterName != '\r' && afterName != '\n')
                 {
-                    return idx;
+                    continue;
                 }
 
-                pos = idx + 1;
+                var qualifiedName = text.Substring(nameStart, nameEnd - nameStart);
+                var colon = qualifiedName.LastIndexOf(':');
+                var localName = colon < 0 ? qualifiedName : qualifiedName.Substring(colon + 1);
+                if (localName == "tt")
+                {
+                    rootTagName = qualifiedName;
+                    return i;
+                }
             }
 
             return -1;
         }
 
-        /// <summary>
-        /// Index just past the root close tag ("&lt;/tt&gt;" or "&lt;/tt:tt&gt;") that ends the
-        /// document whose root starts at <paramref name="rootIndex"/>, or -1.
-        /// </summary>
-        private static int FindCloseTag(string text, int rootIndex)
+        private static bool IsNameChar(char c)
         {
+            return char.IsLetterOrDigit(c) || c == ':' || c == '_' || c == '-' || c == '.';
+        }
+
+        /// <summary>
+        /// Index just past the close tag that ends the document whose root starts at
+        /// <paramref name="rootIndex"/>, or -1. The close tag must carry the root's own
+        /// qualified name: matching "&lt;/tt" loosely also hits "&lt;/tt:p&gt;", which cut
+        /// namespaced documents off after their first cue.
+        /// </summary>
+        private static int FindCloseTag(string text, int rootIndex, string rootTagName)
+        {
+            var closeTag = "</" + rootTagName;
             var pos = rootIndex;
             while (pos < text.Length)
             {
-                var idx = text.IndexOf("</tt", pos, StringComparison.Ordinal);
+                var idx = text.IndexOf(closeTag, pos, StringComparison.Ordinal);
                 if (idx < 0)
                 {
                     return -1;
                 }
 
-                var after = idx + 4;
-                if (after < text.Length && (text[after] == '>' || text[after] == ':'))
+                var after = idx + closeTag.Length;
+                while (after < text.Length && (text[after] == ' ' || text[after] == '\t' || text[after] == '\r' || text[after] == '\n'))
                 {
-                    var end = text.IndexOf('>', after);
-                    return end < 0 ? -1 : end + 1;
+                    after++;
+                }
+
+                if (after < text.Length && text[after] == '>')
+                {
+                    return after + 1;
                 }
 
                 pos = idx + 1;
@@ -147,8 +170,8 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4
         /// <summary>
         /// Whether the cue times in a TTML sample document are relative to the sample start
         /// (Smooth Streaming style zero-based documents) rather than absolute media times.
-        /// If all cues end within the sample's duration while the sample itself starts later,
-        /// the times are segment-relative and must be shifted by the sample start.
+        /// If all cues start before the sample does and end within the sample's duration, the
+        /// times are segment-relative and must be shifted by the sample start.
         /// </summary>
         public static bool AreTimesSampleRelative(List<Paragraph> docParagraphs, double sampleStartMs, double sampleDurationMs)
         {
@@ -159,6 +182,15 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4
 
             foreach (var p in docParagraphs)
             {
+                // A cue with absolute media times cannot start before the sample carrying it.
+                // Without this the check misfired on any absolute cue that happened to end
+                // inside the sample duration (long segments, or a track with a start offset),
+                // shifting it a whole sample start too late.
+                if (p.StartTime.TotalMilliseconds >= sampleStartMs)
+                {
+                    return false;
+                }
+
                 if (p.EndTime.TotalMilliseconds > sampleDurationMs)
                 {
                     return false;

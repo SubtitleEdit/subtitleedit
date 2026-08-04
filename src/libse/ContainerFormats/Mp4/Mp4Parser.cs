@@ -156,9 +156,25 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4
             }
         }
 
+        /// <summary>
+        /// Upper bound on top-level boxes to walk. A DASH/CMAF file holds styp+moof+mdat per
+        /// segment, so a long subtitle representation legitimately has many thousands of them -
+        /// a flat cap silently truncated the extraction (a 2-second-segment file stopped after
+        /// ~33 minutes). Real segments are at least a few hundred bytes, so scale with the file
+        /// size and keep a ceiling so a malformed file still cannot spin for long.
+        /// </summary>
+        private static int GetMaxTopLevelBoxes(long fileLength)
+        {
+            const long minBoxes = 3000;
+            const long maxBoxes = 200_000;
+            var scaled = fileLength / 32;
+            return (int)(scaled < minBoxes ? minBoxes : scaled > maxBoxes ? maxBoxes : scaled);
+        }
+
         private void ParseMp4(Stream fs)
         {
             var count = 0;
+            var maxBoxes = GetMaxTopLevelBoxes(fs.Length);
             Position = 0;
             fs.Seek(0, SeekOrigin.Begin);
             var moreBytes = true;
@@ -187,7 +203,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4
                 }
 
                 count++;
-                if (count > 3000)
+                if (count > maxBoxes)
                 {
                     break;
                 }
@@ -714,13 +730,16 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4
                 }
 
                 var dts = traf.Tfdt.BaseMediaDecodeTime;
+                // trun data offsets are relative to tfhd's base-data-offset when present
+                // (PIFF/Smooth Streaming sets it), and to the moof start otherwise.
+                var baseOffset = traf.Tfhd?.BaseDataOffset ?? Moof.StartPosition;
                 var haveStartPosition = false;
                 ulong startPosition = 0;
                 foreach (var trun in traf.Truns)
                 {
                     if (trun.DataOffset != null)
                     {
-                        startPosition = (ulong)((long)Moof.StartPosition + trun.DataOffset.Value);
+                        startPosition = (ulong)((long)baseOffset + trun.DataOffset.Value);
                         haveStartPosition = true;
                     }
 
