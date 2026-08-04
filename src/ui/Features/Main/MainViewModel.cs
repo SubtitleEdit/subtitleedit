@@ -363,6 +363,7 @@ public partial class MainViewModel :
     FindViewModel? _findViewModel;
     Control? _findPreviousFocus;
     Control? _focusBeforeMainMenu;
+    bool _altClosesMainMenuOnKeyUp;
     readonly AltMenuActivationGuard _altMenuActivationGuard = new();
     bool _findClosingProgrammatically;
     ReplaceViewModel? _replaceViewModel;
@@ -21255,6 +21256,7 @@ public partial class MainViewModel :
         // cleared by some other action (issue #11548).
         _shortcutManager.ClearKeys();
         _altMenuActivationGuard.Reset();
+        _altClosesMainMenuOnKeyUp = false; // the matching Alt release will never arrive
 
         // A task switch (Alt+Tab) must also drop any active menu-bar state. Otherwise Avalonia leaves
         // the access-key underlines / selection armed and they reappear when the window is re-activated,
@@ -21638,6 +21640,32 @@ public partial class MainViewModel :
                 _focusBeforeMainMenu = Window?.FocusManager?.GetFocusedElement() as Control;
             }
 
+            // Alt while keyboard focus is inside an open drop-down must close the whole menu
+            // (Windows standard). The built-in AccessKeyHandler owns that toggle, but its key-down
+            // handler ignores any key whose focused element is not a visual descendant of the
+            // window - and drop-down items live in their own popup top-level, so a second Alt
+            // while navigating a drop-down did nothing (#12087). Close on the *release*, not here:
+            // the built-in tunnel key-up handler still holds "showing access keys" state from the
+            // activation, and its MainMenu.Open() call would instantly undo a close done on the
+            // press (it no-ops while the menu is still open).
+            if (k is Key.LeftAlt or Key.RightAlt)
+            {
+                if (keyEventArgs.KeyModifiers == KeyModifiers.Alt &&
+                    Menu is { IsOpen: true } && IsMainMenuFocused() &&
+                    Window?.FocusManager?.GetFocusedElement() is Visual focusedVisual &&
+                    TopLevel.GetTopLevel(focusedVisual) is { } focusedTopLevel &&
+                    !ReferenceEquals(focusedTopLevel, Window))
+                {
+                    _altClosesMainMenuOnKeyUp = true;
+                }
+            }
+            else
+            {
+                // Alt+<key> is a shortcut or access key, not a toggle - releasing Alt afterwards
+                // must leave the menu alone (mirrors the built-in "ignore Alt up" bookkeeping).
+                _altClosesMainMenuOnKeyUp = false;
+            }
+
             if (UiUtil.TryHandleWindowSystemMenu(keyEventArgs, Window))
             {
                 return;
@@ -22012,6 +22040,17 @@ public partial class MainViewModel :
             // activation. (When Avalonia opens the bar on this very release, IsOpen is already
             // true here and this branch stays out of the way.)
             DeactivateMainMenu();
+        }
+        else if (e.Key is Key.LeftAlt or Key.RightAlt && _altClosesMainMenuOnKeyUp)
+        {
+            // Alt pressed while focus was inside an open drop-down (armed in OnKeyDownHandler,
+            // where the built-in AccessKeyHandler ignores popup-focused keys): close the whole
+            // menu now that the built-in tunnel key-up handling has run out of ways to reopen it.
+            _altClosesMainMenuOnKeyUp = false;
+            if (Menu is { IsOpen: true } || IsMainMenuFocused())
+            {
+                DeactivateMainMenu();
+            }
         }
 
         _shortcutManager.OnKeyReleased(this, e);

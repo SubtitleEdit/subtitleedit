@@ -1,3 +1,4 @@
+using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Headless;
 using Avalonia.Headless.XUnit;
@@ -140,6 +141,86 @@ public class MainMenuKeyboardActivationTests
         Assert.False(IsFocusOnMenuItem(window));
         Assert.Same(vm.SubtitleGrid, window.FocusManager?.GetFocusedElement());
 
+        window.Close();
+    }
+
+    [AvaloniaFact]
+    public void BareAlt_ClosesTheMenu_WhileFocusIsInsideAnOpenDropDown()
+    {
+        var (window, vm) = ShowMainWindowWithEmptyGrid();
+        TableViewExtras.FocusRow(vm.SubtitleGrid);
+        Settle(window);
+
+        // Bare Alt activates the bar (Avalonia's AccessKeyHandler opens it on the release).
+        PressAndRelease(window, PhysicalKey.AltLeft, RawInputModifiers.Alt);
+        Assert.True(vm.Menu.IsOpen);
+
+        // Down opens the File drop-down and focuses its first item. (The headless platform hosts
+        // drop-downs in the window's overlay layer, so this cannot reproduce the desktop bug
+        // where they live in a separate popup top-level - the test below covers that part.)
+        PressAndRelease(window, PhysicalKey.ArrowDown, RawInputModifiers.None);
+        Assert.True(IsFocusOnMenuItem(window));
+
+        PressAndRelease(window, PhysicalKey.AltLeft, RawInputModifiers.Alt);
+
+        Assert.False(vm.Menu.IsOpen);
+        Assert.False(IsFocusOnMenuItem(window));
+        Assert.Same(vm.SubtitleGrid, window.FocusManager?.GetFocusedElement());
+
+        window.Close();
+    }
+
+    [AvaloniaFact]
+    public void BareAlt_ClosesTheMenu_WhenTheFocusedMenuItemLivesInAnotherTopLevel()
+    {
+        var (window, vm) = ShowMainWindowWithEmptyGrid();
+        TableViewExtras.FocusRow(vm.SubtitleGrid);
+        Settle(window);
+
+        PressAndRelease(window, PhysicalKey.F10, RawInputModifiers.None);
+        Assert.True(vm.Menu.IsOpen);
+
+        // On desktop an open drop-down hosts its items in a PopupRoot - a separate top-level,
+        // where Avalonia's AccessKeyHandler ignores every key, so its bare-Alt toggle never saw
+        // the second Alt (#12087). The headless platform has no popup top-levels, so model the
+        // same focus topology with a second window hosting the focused menu item.
+        var popupStandIn = new Window { Content = new Menu { Items = { new MenuItem { Header = "Item" } } } };
+        popupStandIn.Show();
+        Dispatcher.UIThread.RunJobs();
+        var popupItem = (MenuItem)((Menu)popupStandIn.Content!).Items[0]!;
+        popupItem.Focusable = true;
+        Assert.True(popupItem.Focus());
+        Settle(window);
+        Assert.NotSame(window, TopLevel.GetTopLevel(window.FocusManager?.GetFocusedElement() as Visual));
+
+        // Guard against a false pass: if showing the second window had already closed the menu
+        // (e.g. via a deactivation handler), the Alt cycle below would have nothing to do.
+        Assert.True(vm.Menu.IsOpen);
+
+        // The key events reach the main window's handlers through the popup's event route; the
+        // headless KeyPress helpers only target one window, so raise them the way the route would.
+        vm.OnKeyDownHandler(null, new KeyEventArgs
+        {
+            RoutedEvent = InputElement.KeyDownEvent,
+            Source = popupItem,
+            Key = Key.LeftAlt,
+            PhysicalKey = PhysicalKey.AltLeft,
+            KeyModifiers = KeyModifiers.Alt,
+        });
+        vm.OnKeyUpHandler(null, new KeyEventArgs
+        {
+            RoutedEvent = InputElement.KeyUpEvent,
+            Source = popupItem,
+            Key = Key.LeftAlt,
+            PhysicalKey = PhysicalKey.AltLeft,
+            KeyModifiers = KeyModifiers.None,
+        });
+        Settle(window);
+
+        Assert.False(vm.Menu.IsOpen);
+        Assert.Same(vm.SubtitleGrid, window.FocusManager?.GetFocusedElement());
+
+        popupStandIn.Close();
         window.Close();
     }
 
