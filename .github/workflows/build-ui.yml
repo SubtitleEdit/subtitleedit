@@ -34,8 +34,8 @@ env:
   #   2. Download https://github.com/iina/iina/releases/download/<ver>/IINA.<ver>.dmg
   #   3. Run `shasum -a 256` on it and update IINA_SHA256.
   #   4. Verify the new release still ships a universal Contents/Frameworks/ payload.
-  IINA_VERSION: v1.4.2
-  IINA_SHA256: 2e0fd89fbba1c92a6c115171e5b51904883bb497fbe513a6961d080fbab08ff6
+  IINA_VERSION: v1.4.4
+  IINA_SHA256: dd0fc0bd4b37fb57a1c8d30d6e3201b3a64bafd29959fe56953964613237beb1
 
 
 jobs:
