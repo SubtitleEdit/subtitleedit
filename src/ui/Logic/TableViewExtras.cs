@@ -268,6 +268,12 @@ public static class TableViewExtras
         };
 
         UiUtil.ApplyTableViewRowStyle(tableView);
+
+        // Home/End/PageUp/PageDown (and Ctrl+Home/End) list navigation in every grid (#13194).
+        // Handlers attached earlier in the routing path (window-level tunnel handlers, shortcut
+        // dispatch) still win; this is the fallback when nothing else handled the key.
+        AttachListNavigation(tableView);
+
         return tableView;
     }
 

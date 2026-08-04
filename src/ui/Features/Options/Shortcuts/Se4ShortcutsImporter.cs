@@ -133,7 +133,9 @@ public static class Se4ShortcutsImporter
         ["MainVideoGoToNextSubtitle"] = nameof(MainViewModel.GoToNextLineAndSetVideoPositionCommand),
         ["MainVideoGoToPrevTimeCode"] = nameof(MainViewModel.VideoGoToPreviousTimeCodeCommand),
         ["MainVideoGoToNextTimeCode"] = nameof(MainViewModel.VideoGoToNextTimeCodeCommand),
-        ["MainVideoStop"] = nameof(MainViewModel.PauseCommand),
+        // SE4's "Stop" pauses and rewinds to 0 - GoToFirstLine does the same (plus selecting
+        // line 1); PauseCommand was a lossy stand-in that never rewound (#13194).
+        ["MainVideoStop"] = nameof(MainViewModel.GoToFirstLineCommand),
         ["MainVideoSelectNextSubtitle"] = nameof(MainViewModel.GoToNextLineCommand),
 
         // Synchronization
