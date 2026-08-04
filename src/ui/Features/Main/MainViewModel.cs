@@ -17015,27 +17015,27 @@ public partial class MainViewModel :
         var mp4SubtitleTracks = mp4Parser.GetSubtitleTracks();
         if (mp4SubtitleTracks.Count == 0)
         {
-            if (mp4Parser.VttcSubtitle?.Paragraphs.Count > 0)
+            // Fragmented (DASH/CMAF) files have empty moov sample tables; their text
+            // tracks come from the fragments instead.
+            if (mp4Parser.FragmentedSubtitleTracks.Count > 1)
             {
-                VideoCloseFile();
-                ResetSubtitle();
-                SetSubtitleFormat(SubtitleFormats.FirstOrDefault(p => p.Name == new WebVTT().Name) ??
-                                  SelectedSubtitleFormat);
-                _subtitle = mp4Parser.VttcSubtitle;
-                _subtitle.Renumber();
-                _subtitleFileName = Utilities.GetPathAndFileNameWithoutExtension(fileName) +
-                                    SelectedSubtitleFormat.Extension;
-                ReplaceSubtitles(
-                    _subtitle.Paragraphs.Select(p => new SubtitleLineViewModel(p, SelectedSubtitleFormat)));
-                _converted = true;
-                ShowStatus(string.Format(Se.Language.General.SubtitleLoadedX, fileName));
-                SelectAndScrollToRow(0);
-
-                if (Se.Settings.Video.AutoOpen && mp4Parser.GetVideoTracks().Count > 0)
+                var pickResult = await ShowDialogAsync<PickMp4TrackWindow, PickMp4TrackViewModel>(vm =>
                 {
-                    await VideoOpenFile(fileName);
+                    vm.Initialize(mp4Parser.FragmentedSubtitleTracks, fileName);
+                });
+
+                if (pickResult.OkPressed && pickResult.SelectedTrack?.FragmentedTrack != null)
+                {
+                    await LoadFragmentedMp4Subtitle(fileName, pickResult.SelectedTrack.FragmentedTrack, mp4Parser);
+                    return true;
                 }
 
+                return false;
+            }
+
+            if (mp4Parser.FragmentedSubtitleTracks.Count == 1)
+            {
+                await LoadFragmentedMp4Subtitle(fileName, mp4Parser.FragmentedSubtitleTracks[0], mp4Parser);
                 return true;
             }
 
@@ -17094,6 +17094,36 @@ public partial class MainViewModel :
         }
 
         return false;
+    }
+
+    /// <summary>
+    /// Loads a fragmented (DASH/CMAF) text track - cues extracted from moof/traf/trun
+    /// samples, so there is no moov Trak to go through <see cref="LoadMp4Subtitle"/>.
+    /// </summary>
+    private async Task LoadFragmentedMp4Subtitle(string fileName, Mp4FragmentedSubtitleTrack track, MP4Parser mp4Parser)
+    {
+        VideoCloseFile();
+        ResetSubtitle();
+        if (track.Codec == "wvtt")
+        {
+            SetSubtitleFormat(SubtitleFormats.FirstOrDefault(p => p.Name == new WebVTT().Name) ??
+                              SelectedSubtitleFormat);
+        }
+
+        _subtitle = track.Subtitle;
+        _subtitle.Renumber();
+        _subtitleFileName = Utilities.GetPathAndFileNameWithoutExtension(fileName) +
+                            SelectedSubtitleFormat.Extension;
+        ReplaceSubtitles(
+            _subtitle.Paragraphs.Select(p => new SubtitleLineViewModel(p, SelectedSubtitleFormat)));
+        _converted = true;
+        ShowStatus(string.Format(Se.Language.General.SubtitleLoadedX, fileName));
+        SelectAndScrollToRow(0);
+
+        if (Se.Settings.Video.AutoOpen && mp4Parser.GetVideoTracks().Count > 0)
+        {
+            await VideoOpenFile(fileName);
+        }
     }
 
     private void LoadMp4Subtitle(string fileName, Trak mp4SubtitleTrack)
