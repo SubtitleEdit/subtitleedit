@@ -128,6 +128,11 @@ public class SettingsPage : UserControl
         _searchBox.TextChanged += (_, e) => UpdateVisibleSections(_searchBox.Text ?? string.Empty);
     }
 
+    public void FocusSearchBox()
+    {
+        _searchBox.Focus();
+    }
+
     private static Button MakeMenuItem(SettingsSection section, IRelayCommand command)
     {
         var label = new Label
