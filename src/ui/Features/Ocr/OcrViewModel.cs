@@ -4173,21 +4173,29 @@ public partial class OcrViewModel : ObservableObject
             try
             {
                 ProgressText = "Loading CrispEmbed model...";
-                var started = await engine.StartServerAsync(
-                    CrispEmbedEngine.GetServerExecutable(),
-                    backend.GetModelPath(model.Model),
-                    cancellationToken);
+
+                // PP-OCRv6 is a detector+recognizer pair driven through the CLI; the VLM backends
+                // load once into crispembed-server.
+                var started = backend.UsesTextDetector
+                    ? engine.StartCliPipeline(
+                        CrispEmbedEngine.GetCliExecutable(),
+                        backend.GetModelPath(model.Model),
+                        backend.GetDetectorPath(model.Model))
+                    : await engine.StartServerAsync(
+                        CrispEmbedEngine.GetServerExecutable(),
+                        backend.GetModelPath(model.Model),
+                        cancellationToken);
 
                 if (!started)
                 {
                     var error = engine.Error;
-                    SeLogger.Error("CrispEmbed server failed to start: " + error);
+                    SeLogger.Error("CrispEmbed failed to start: " + error);
                     await Dispatcher.UIThread.InvokeAsync(async () =>
                     {
                         await MessageBox.Show(
                             Window!,
                             "CrispEmbed error",
-                            $"The CrispEmbed server could not be started:{Environment.NewLine}{Environment.NewLine}{error}",
+                            $"CrispEmbed could not be started:{Environment.NewLine}{Environment.NewLine}{error}",
                             MessageBoxButtons.OK,
                             MessageBoxIcon.Error);
                     });

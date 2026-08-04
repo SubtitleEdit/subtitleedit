@@ -3,6 +3,7 @@ using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using SkiaSharp;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Net.Http;
@@ -24,16 +25,63 @@ namespace Nikse.SubtitleEdit.Features.Ocr.Engines;
 public class CrispEmbedOcr : IDisposable
 {
     private readonly HttpClient _httpClient;
+    private readonly int _timeoutMinutes;
     private Process? _serverProcess;
     private int _port;
+
+    private string _cliExecutable = string.Empty;
+    private string _cliRecognizerModel = string.Empty;
+    private string _cliDetectorModel = string.Empty;
+    private bool _isCliPipeline;
+
+    private const int MaxCapturedOutputLines = 12;
+    private readonly Queue<string> _lastOutputLines = new();
+    private readonly Lock _outputLock = new();
 
     public string Error { get; set; }
 
     public CrispEmbedOcr(int timeoutMinutes = 5)
     {
         Error = string.Empty;
+        _timeoutMinutes = Math.Max(1, timeoutMinutes);
         _httpClient = new HttpClient();
-        _httpClient.Timeout = TimeSpan.FromMinutes(Math.Max(1, timeoutMinutes));
+        _httpClient.Timeout = TimeSpan.FromMinutes(_timeoutMinutes);
+    }
+
+    /// <summary>
+    /// Prepares the PP-OCRv6 detector+recognizer pipeline, which runs as one crispembed CLI
+    /// invocation per image instead of through crispembed-server. The server only enables its
+    /// OCR orchestrator when it is also given a primary embedding model via -m, and dies on
+    /// startup if that model is not a real embedding GGUF - so there is no server-side route to
+    /// the pipeline without downloading an unrelated model. The CLI reloads the pair per image,
+    /// which costs little: the two GGUFs are a few MB and a full invocation is well under a
+    /// second, i.e. no slower than one already-loaded VLM request.
+    /// </summary>
+    public bool StartCliPipeline(string cliExecutable, string recognizerFileName, string detectorFileName)
+    {
+        if (!File.Exists(cliExecutable))
+        {
+            Error = $"CrispEmbed CLI not found: {cliExecutable}";
+            return false;
+        }
+
+        if (!File.Exists(recognizerFileName))
+        {
+            Error = $"CrispEmbed model not found: {recognizerFileName}";
+            return false;
+        }
+
+        if (!File.Exists(detectorFileName))
+        {
+            Error = $"CrispEmbed text detector not found: {detectorFileName}";
+            return false;
+        }
+
+        _cliExecutable = cliExecutable;
+        _cliRecognizerModel = recognizerFileName;
+        _cliDetectorModel = detectorFileName;
+        _isCliPipeline = true;
+        return true;
     }
 
     public async Task<bool> StartServerAsync(string serverExecutable, string modelFileName, CancellationToken cancellationToken)
@@ -69,8 +117,8 @@ public class CrispEmbedOcr : IDisposable
                 },
             };
 
-            _serverProcess.OutputDataReceived += (_, e) => LogServerOutput(e.Data);
-            _serverProcess.ErrorDataReceived += (_, e) => LogServerOutput(e.Data);
+            _serverProcess.OutputDataReceived += (_, e) => CaptureServerOutput(e.Data);
+            _serverProcess.ErrorDataReceived += (_, e) => CaptureServerOutput(e.Data);
             _serverProcess.Start();
             _serverProcess.BeginOutputReadLine();
             _serverProcess.BeginErrorReadLine();
@@ -94,7 +142,7 @@ public class CrispEmbedOcr : IDisposable
 
             if (_serverProcess.HasExited)
             {
-                Error = $"CrispEmbed server exited with code {_serverProcess.ExitCode}";
+                Error = await BuildStartupFailureMessage(_serverProcess);
                 SeLogger.Error("CrispEmbed server exited during startup: " + Error);
                 return false;
             }
@@ -131,6 +179,11 @@ public class CrispEmbedOcr : IDisposable
             using (var flattened = FlattenImage(bitmap))
             {
                 await File.WriteAllBytesAsync(tempFileName, flattened.ToPngArray(), cancellationToken);
+            }
+
+            if (_isCliPipeline)
+            {
+                return await OcrViaCliPipeline(tempFileName, cancellationToken);
             }
 
             // The server reads the image from disk, so only the path goes over the wire. The
@@ -189,6 +242,128 @@ public class CrispEmbedOcr : IDisposable
     }
 
     /// <summary>
+    /// Runs one crispembed CLI invocation for the PP-OCRv6 pipeline and returns the recognized
+    /// text. --json keeps the result on a single line ("full_text" with "\n" between detected
+    /// regions), which is unambiguous next to the progress lines the CLI writes to stdout.
+    /// </summary>
+    private async Task<string> OcrViaCliPipeline(string imageFileName, CancellationToken cancellationToken)
+    {
+        var arguments = $"--ocr-pipeline \"{imageFileName}\" --ocr-engine ppocrv6 " +
+                        $"--ocr-det \"{_cliDetectorModel}\" --ocr-rec \"{_cliRecognizerModel}\" --json";
+
+        using var process = new Process
+        {
+            StartInfo = new ProcessStartInfo(_cliExecutable, arguments)
+            {
+                WindowStyle = ProcessWindowStyle.Hidden,
+                CreateNoWindow = true,
+                UseShellExecute = false,
+                RedirectStandardOutput = true,
+                RedirectStandardError = true,
+                WorkingDirectory = Path.GetDirectoryName(_cliExecutable),
+            },
+        };
+
+        process.Start();
+
+        var stdOutTask = process.StandardOutput.ReadToEndAsync(cancellationToken);
+        var stdErrTask = process.StandardError.ReadToEndAsync(cancellationToken);
+
+        using var timeout = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
+        timeout.CancelAfter(TimeSpan.FromMinutes(_timeoutMinutes));
+
+        try
+        {
+            await process.WaitForExitAsync(timeout.Token);
+        }
+        catch (OperationCanceledException) when (!cancellationToken.IsCancellationRequested)
+        {
+            KillQuietly(process);
+            Error = "CrispEmbed OCR timed out";
+            SeLogger.Error("CrispEmbed CLI pipeline timed out: " + arguments);
+            return string.Empty;
+        }
+        catch (OperationCanceledException)
+        {
+            KillQuietly(process);
+            throw;
+        }
+
+        var output = await stdOutTask;
+        var errorOutput = await stdErrTask;
+        if (!string.IsNullOrWhiteSpace(errorOutput))
+        {
+            LogServerOutput("crispembed: " + errorOutput.Trim());
+        }
+
+        if (process.ExitCode != 0)
+        {
+            Error = string.IsNullOrWhiteSpace(errorOutput)
+                ? $"CrispEmbed exited with code {process.ExitCode}"
+                : errorOutput.Trim();
+            SeLogger.Error("CrispEmbed CLI pipeline failed: " + Error);
+            return string.Empty;
+        }
+
+        return ParseCliPipelineOutput(output);
+    }
+
+    /// <summary>
+    /// Picks the JSON object out of the CLI's stdout - the detector prints progress lines such as
+    /// "ppocrv6-det: persistent GGML detector graph ready" before it - and returns "full_text"
+    /// with the platform's newlines.
+    /// </summary>
+    internal static string ParseCliPipelineOutput(string? output)
+    {
+        if (string.IsNullOrWhiteSpace(output))
+        {
+            return string.Empty;
+        }
+
+        foreach (var line in output.Split('\n'))
+        {
+            var trimmed = line.Trim();
+            if (!trimmed.StartsWith('{'))
+            {
+                continue;
+            }
+
+            try
+            {
+                using var document = JsonDocument.Parse(trimmed);
+                if (document.RootElement.TryGetProperty("full_text", out var fullText))
+                {
+                    return (fullText.GetString() ?? string.Empty)
+                        .Replace("\r\n", "\n")
+                        .Replace("\n", Environment.NewLine)
+                        .Trim();
+                }
+            }
+            catch (JsonException)
+            {
+                // not the result object - keep looking
+            }
+        }
+
+        return string.Empty;
+    }
+
+    private static void KillQuietly(Process process)
+    {
+        try
+        {
+            if (!process.HasExited)
+            {
+                process.Kill(entireProcessTree: true);
+            }
+        }
+        catch
+        {
+            // ignore
+        }
+    }
+
+    /// <summary>
     /// Draws the bitmap onto an opaque black background with a small margin. Subtitle bitmaps
     /// are usually white/coloured glyphs on full transparency, which would otherwise be
     /// flattened to an arbitrary background by the server's image loader.
@@ -217,6 +392,100 @@ public class CrispEmbedOcr : IDisposable
         {
             Se.WriteToolsLog("crispembed-server: " + line);
         }
+    }
+
+    /// <summary>
+    /// Mirrors the server's output to the tools log and keeps the last few lines in memory, so a
+    /// process that dies during startup can report what it actually said instead of only an exit
+    /// code. Raised on threadpool threads by the async readers, hence the lock.
+    /// </summary>
+    private void CaptureServerOutput(string? line)
+    {
+        LogServerOutput(line);
+
+        if (string.IsNullOrWhiteSpace(line))
+        {
+            return;
+        }
+
+        lock (_outputLock)
+        {
+            _lastOutputLines.Enqueue(line.Trim());
+            while (_lastOutputLines.Count > MaxCapturedOutputLines)
+            {
+                _lastOutputLines.Dequeue();
+            }
+        }
+    }
+
+    /// <summary>
+    /// Builds the message shown when the server exits before it starts listening. The useful part
+    /// is almost always on the process's own stderr - a missing shared library, an unreadable
+    /// model - so wait for the async readers to drain and append what they saw. Without this the
+    /// user only ever sees "exited with code N" while the real cause sits in the tools log.
+    /// </summary>
+    private async Task<string> BuildStartupFailureMessage(Process process)
+    {
+        var exitCode = process.ExitCode;
+
+        // The process has already exited; this only lets the redirected streams finish. It is
+        // capped because a surviving grandchild can hold the pipe open indefinitely.
+        try
+        {
+            using var drain = new CancellationTokenSource(TimeSpan.FromSeconds(2));
+            await process.WaitForExitAsync(drain.Token);
+        }
+        catch (OperationCanceledException)
+        {
+            // report whatever was captured before the deadline
+        }
+
+        var message = $"CrispEmbed server exited with code {exitCode}";
+
+        var hint = GetExitCodeHint(exitCode);
+        if (!string.IsNullOrEmpty(hint))
+        {
+            message += Environment.NewLine + Environment.NewLine + hint;
+        }
+
+        string output;
+        lock (_outputLock)
+        {
+            output = string.Join(Environment.NewLine, _lastOutputLines);
+        }
+
+        if (!string.IsNullOrWhiteSpace(output))
+        {
+            message += Environment.NewLine + Environment.NewLine + output;
+        }
+
+        return message;
+    }
+
+    /// <summary>
+    /// Plain-language help for the exit codes the dynamic loader and the shell use on Unix, which
+    /// a user cannot be expected to decode. 127 is the common one: the CrispEmbed CPU builds for
+    /// Linux link against OpenBLAS but do not ship it (see SubtitleEdit issue #13205).
+    /// </summary>
+    internal static string GetExitCodeHint(int exitCode)
+    {
+        if (OperatingSystem.IsWindows())
+        {
+            return string.Empty;
+        }
+
+        return exitCode switch
+        {
+            127 => "Exit code 127 means a shared library the CrispEmbed binaries depend on could not be loaded." +
+                   Environment.NewLine +
+                   "The Linux CrispEmbed builds need OpenBLAS, which they do not ship: try installing it" +
+                   Environment.NewLine +
+                   "(\"sudo apt install libopenblas0\", \"sudo pacman -S openblas\", or your distro's equivalent).",
+            126 => "Exit code 126 means the CrispEmbed binary could not be executed - it may be missing the" +
+                   Environment.NewLine +
+                   "executable permission, or be blocked by the system.",
+            _ => string.Empty,
+        };
     }
 
     private static int GetFreePort()
