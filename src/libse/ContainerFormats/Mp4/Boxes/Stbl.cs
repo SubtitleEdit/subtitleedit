@@ -357,6 +357,18 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
                                 paragraphs.Add(new Paragraph(wvttText.ToString(), before * 1000.0, totalTime * 1000.0));
                             }
                         }
+                        else if (stsdCodec == "stpp") // TTML/IMSC1 in MP4 (ISO 14496-30)
+                        {
+                            if (sampleSize <= 10_000_000)
+                            {
+                                var sampleData = new byte[sampleSize];
+                                fs.Seek((long)sampleOffset, SeekOrigin.Begin);
+                                if (fs.Read(sampleData, 0, sampleData.Length) == sampleData.Length)
+                                {
+                                    AddTtmlSample(sampleData, before * 1000.0, (totalTime - before) * 1000.0, paragraphs);
+                                }
+                            }
+                        }
                         else
                         {
                             fs.Seek((long)sampleOffset, SeekOrigin.Begin);
@@ -426,6 +438,44 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
             }
 
             return paragraphs;
+        }
+
+        private readonly HashSet<string> _addedTtmlCues = new HashSet<string>();
+
+        /// <summary>
+        /// An stpp sample is a complete TTML document covering the sample's time window;
+        /// cue times inside the document are media times (or sample-relative for Smooth
+        /// Streaming style documents), and cues spanning several samples are repeated in
+        /// each document, so duplicates are dropped.
+        /// </summary>
+        private void AddTtmlSample(byte[] sampleData, double sampleStartMs, double sampleDurationMs, List<Paragraph> paragraphs)
+        {
+            var xml = Encoding.UTF8.GetString(sampleData);
+            foreach (var doc in Mp4TtmlHelper.SplitTtmlDocuments(xml))
+            {
+                var docParagraphs = Mp4TtmlHelper.ParseTtmlDocument(doc);
+                if (docParagraphs.Count == 0)
+                {
+                    continue;
+                }
+
+                if (Mp4TtmlHelper.AreTimesSampleRelative(docParagraphs, sampleStartMs, sampleDurationMs))
+                {
+                    foreach (var p in docParagraphs)
+                    {
+                        p.StartTime.TotalMilliseconds += sampleStartMs;
+                        p.EndTime.TotalMilliseconds += sampleStartMs;
+                    }
+                }
+
+                foreach (var p in docParagraphs)
+                {
+                    if (_addedTtmlCues.Add($"{p.StartTime.TotalMilliseconds:0}|{p.EndTime.TotalMilliseconds:0}|{p.Text}"))
+                    {
+                        paragraphs.Add(p);
+                    }
+                }
+            }
         }
 
         private static string GetC608Text(SerializedRow[] screen)
