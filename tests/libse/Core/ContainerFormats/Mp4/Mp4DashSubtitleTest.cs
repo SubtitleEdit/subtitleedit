@@ -220,14 +220,119 @@ public class Mp4DashSubtitleTest
         Assert.Contains("</tt>", docs[0]);
     }
 
-    [Fact]
-    public void SplitTtmlDocuments_NamespacedRoot_IsRecognized()
+    // Matching "</tt" loosely also hit "</tt:p>", so a namespaced document was cut off after
+    // its first cue and the truncated fragment no longer parsed as XML at all.
+    [Theory]
+    [InlineData("tt")]
+    [InlineData("ttml")]
+    public void SplitTtmlDocuments_NamespacedRoot_KeepsWholeDocument(string prefix)
     {
-        var doc = "<tt:tt xmlns:tt=\"http://www.w3.org/ns/ttml\"><tt:body><tt:div><tt:p begin=\"00:00:01.000\" end=\"00:00:02.000\">One</tt:p></tt:div></tt:body></tt:tt>";
+        var doc = $"<{prefix}:tt xmlns:{prefix}=\"http://www.w3.org/ns/ttml\"><{prefix}:body><{prefix}:div>" +
+                  $"<{prefix}:p begin=\"00:00:01.000\" end=\"00:00:02.000\">One</{prefix}:p>" +
+                  $"<{prefix}:p begin=\"00:00:03.000\" end=\"00:00:04.000\">Two</{prefix}:p>" +
+                  $"</{prefix}:div></{prefix}:body></{prefix}:tt>";
 
         var docs = Mp4TtmlHelper.SplitTtmlDocuments(doc + doc);
 
         Assert.Equal(2, docs.Count);
+        Assert.All(docs, d =>
+        {
+            Assert.EndsWith($"</{prefix}:tt>", d);
+            var paragraphs = Mp4TtmlHelper.ParseTtmlDocument(d);
+            Assert.Equal(2, paragraphs.Count);
+            Assert.Equal("One", paragraphs[0].Text);
+            Assert.Equal("Two", paragraphs[1].Text);
+        });
+    }
+
+    [Fact]
+    public void FragmentedStpp_NamespacedTtml_ExtractsAllCues()
+    {
+        var doc = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><tt:tt xmlns:tt=\"http://www.w3.org/ns/ttml\"><tt:body><tt:div>" +
+                  "<tt:p begin=\"00:00:01.000\" end=\"00:00:02.000\">One</tt:p>" +
+                  "<tt:p begin=\"00:00:02.500\" end=\"00:00:03.500\">Two</tt:p></tt:div></tt:body></tt:tt>";
+        var init = BuildInit("subt", "stpp", trackId: 1, mdhdTimeScale: 1000, mvhdTimeScale: 600);
+        var segment = BuildSegment(1, 0, new uint[] { 4000 }, new[] { Encoding.UTF8.GetBytes(doc) });
+
+        var subtitle = ParseVttc(Concat(init, segment));
+
+        Assert.NotNull(subtitle);
+        Assert.Equal(2, subtitle.Paragraphs.Count);
+        Assert.Equal("One", subtitle.Paragraphs[0].Text);
+        Assert.Equal(1000, subtitle.Paragraphs[0].StartTime.TotalMilliseconds, 1);
+        Assert.Equal("Two", subtitle.Paragraphs[1].Text);
+        Assert.Equal(2500, subtitle.Paragraphs[1].StartTime.TotalMilliseconds, 1);
+    }
+
+    // The zero-based-times heuristic used to look only at cue ends versus the sample duration,
+    // so an absolute cue that happened to end inside a long sample was shifted by tfdt.
+    [Fact]
+    public void FragmentedStpp_AbsoluteDocumentTimes_AreNotShifted()
+    {
+        var doc = TtmlDoc("<p begin=\"00:00:02.500\" end=\"00:00:05.000\">Absolute</p>");
+        var init = BuildInit("subt", "stpp", trackId: 1, mdhdTimeScale: 1000, mvhdTimeScale: 600);
+        var segment = BuildSegment(1, 2000, new uint[] { 10_000 }, new[] { Encoding.UTF8.GetBytes(doc) });
+
+        var subtitle = ParseVttc(Concat(init, segment));
+
+        Assert.NotNull(subtitle);
+        var p = Assert.Single(subtitle.Paragraphs);
+        Assert.Equal(2500, p.StartTime.TotalMilliseconds, 1);
+        Assert.Equal(5000, p.EndTime.TotalMilliseconds, 1);
+    }
+
+    // A DASH file is styp+moof+mdat per segment, so a flat 3000-box scan limit stopped the
+    // parse after ~1000 segments and silently dropped the rest of the subtitle.
+    [Fact]
+    public void ManySegments_AreNotTruncatedByTheBoxScanLimit()
+    {
+        const int segmentCount = 1100; // > 3000 top-level boxes
+        var parts = new System.Collections.Generic.List<byte[]> { BuildInit("text", "wvtt", 1, 1000, 600) };
+        for (var i = 0; i < segmentCount; i++)
+        {
+            parts.Add(BuildSegment(1, (uint)(i * 2000), new uint[] { 2000 }, new[] { WvttCueSample($"Cue {i}") }));
+        }
+
+        var subtitle = ParseVttc(Concat(parts.ToArray()));
+
+        Assert.NotNull(subtitle);
+        Assert.Equal(segmentCount, subtitle.Paragraphs.Count);
+        Assert.Equal($"Cue {segmentCount - 1}", subtitle.Paragraphs[segmentCount - 1].Text);
+    }
+
+    // IsmtDfxp splits each mdat into TTML documents before parsing; a namespaced document must
+    // survive that split intact, as the whole mdat used to go straight to TimedText10.
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    public void IsmtDfxp_TtmlInMdat_LoadsAllCues(bool namespaced)
+    {
+        var xml = namespaced
+            ? "<?xml version=\"1.0\" encoding=\"UTF-8\"?><tt:tt xmlns:tt=\"http://www.w3.org/ns/ttml\"><tt:body><tt:div>" +
+              "<tt:p begin=\"00:00:01.000\" end=\"00:00:02.000\">One</tt:p>" +
+              "<tt:p begin=\"00:00:03.000\" end=\"00:00:04.000\">Two</tt:p></tt:div></tt:body></tt:tt>"
+            : TtmlDoc("<p begin=\"00:00:01.000\" end=\"00:00:02.000\">One</p><p begin=\"00:00:03.000\" end=\"00:00:04.000\">Two</p>");
+
+        var file = Concat(
+            Box("ftyp", Ascii("isml"), UInt32Be(1), Ascii("piff"), Ascii("iso2")),
+            Box("moov", BuildTrak("sbtl", "dfxp", trackId: 1, mdhdTimeScale: 10_000_000)),
+            Box("mdat", Encoding.UTF8.GetBytes(xml)));
+
+        var tempFile = Path.GetTempFileName();
+        try
+        {
+            File.WriteAllBytes(tempFile, file);
+            var subtitle = new Nikse.SubtitleEdit.Core.Common.Subtitle();
+            new Nikse.SubtitleEdit.Core.SubtitleFormats.IsmtDfxp().LoadSubtitle(subtitle, new System.Collections.Generic.List<string>(), tempFile);
+
+            Assert.Equal(2, subtitle.Paragraphs.Count);
+            Assert.Equal("One", subtitle.Paragraphs[0].Text);
+            Assert.Equal("Two", subtitle.Paragraphs[1].Text);
+        }
+        finally
+        {
+            File.Delete(tempFile);
+        }
     }
 
     private static Nikse.SubtitleEdit.Core.Common.Subtitle ParseVttc(byte[] fileBytes)
