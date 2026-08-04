@@ -617,6 +617,7 @@ public class FixCommonErrorsWindow : Window
         var fullTimeConverter = new TimeSpanToDisplayFullConverter();
         var shortTimeConverter = new TimeSpanToDisplayShortConverter();
         var syntaxHighlightingConverter = new TextWithSubtitleSyntaxHighlightingConverter();
+        var textToFlowDirectionConverter = new TextToFlowDirectionConverter();
         var dataGridSubtitles = TableViewExtras.MakeTableView(multiSelect: false);
         dataGridSubtitles.DataContext = _vm;
         dataGridSubtitles.ItemsSource = _vm.Paragraphs;
@@ -704,6 +705,10 @@ public class FixCommonErrorsWindow : Window
                     VerticalAlignment = VerticalAlignment.Center,
                     TextWrapping = TextWrapping.NoWrap,
                     [!TextBlock.InlinesProperty] = new Binding(nameof(SubtitleLineViewModel.Text)) { Converter = syntaxHighlightingConverter },
+
+                    // Right-to-left text needs a right-to-left cell, or Avalonia splits the
+                    // line at every zero width non-joiner and reverses the word order (#13160).
+                    [!TextBlock.FlowDirectionProperty] = new Binding(nameof(SubtitleLineViewModel.Text)) { Converter = textToFlowDirectionConverter },
                 };
                 if (!string.IsNullOrEmpty(Se.Settings.Appearance.SubtitleTextBoxAndGridFontName))
                 {

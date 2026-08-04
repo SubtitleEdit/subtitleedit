@@ -1,6 +1,7 @@
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
+using Avalonia.Controls.Templates;
 using Avalonia.Data;
 using Avalonia.Input;
 using Avalonia.Layout;
@@ -8,6 +9,7 @@ using Avalonia.Media;
 using Avalonia.Styling;
 using Avalonia.Threading;
 using Avalonia.VisualTree;
+using Nikse.SubtitleEdit.Logic.ValueConverters;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -240,6 +242,8 @@ public sealed class TableViewColumnManager
 /// </summary>
 public static class TableViewExtras
 {
+    private static readonly TextToFlowDirectionConverter TextToFlowDirection = new();
+
     /// <summary>
     /// Creates a TableView with SE's standard look and behavior (multi-select by
     /// default, resizable columns, tight row style).
@@ -269,6 +273,30 @@ public static class TableViewExtras
 
         UiUtil.ApplyTableViewRowStyle(tableView);
         return tableView;
+    }
+
+    /// <summary>
+    /// A read-only text cell whose flow direction follows its own content, the way the
+    /// main subtitle grid's text cells do. Use it for every column showing subtitle text
+    /// instead of the column's plain <c>Binding</c>.
+    /// <para>
+    /// A plain binding leaves the cell with the window's left-to-right direction, and
+    /// Avalonia then lays a right-to-left line out under a left-to-right base direction:
+    /// the line is cut at every zero width non-joiner (U+200C, bidi class BN, which
+    /// Avalonia leaves at the paragraph level instead of giving it the surrounding
+    /// right-to-left level) and the resulting runs are placed left to right. Persian and
+    /// Arabic words written with a ZWNJ are torn in half and the word order is reversed
+    /// (issue #13160).
+    /// </para>
+    /// </summary>
+    public static IDataTemplate MakeTextCellTemplate(string propertyPath)
+    {
+        return new FuncDataTemplate<object>((_, _) => new TextBlock
+        {
+            VerticalAlignment = VerticalAlignment.Center,
+            [!TextBlock.TextProperty] = new Binding(propertyPath) { Mode = BindingMode.OneWay },
+            [!TextBlock.FlowDirectionProperty] = new Binding(propertyPath) { Converter = TextToFlowDirection, Mode = BindingMode.OneWay },
+        });
     }
 
     /// <summary>

@@ -141,7 +141,7 @@ public class CopyPasteTranslateWindow : Window
         vm.SubtitleGrid.Columns.Add(new SeTableViewColumn
         {
             Header = Se.Language.General.Text,
-            Binding = new Binding(nameof(SubtitleLineViewModel.OriginalText)),
+            CellTemplate = TableViewExtras.MakeTextCellTemplate(nameof(SubtitleLineViewModel.OriginalText)),
             Width = new GridLength(1, GridUnitType.Star),
             CellTheme = UiUtil.TableViewCellTheme,
             HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
@@ -149,7 +149,7 @@ public class CopyPasteTranslateWindow : Window
         vm.SubtitleGrid.Columns.Add(new SeTableViewColumn
         {
             Header = Se.Language.General.Translation,
-            Binding = new Binding(nameof(SubtitleLineViewModel.Text)),
+            CellTemplate = TableViewExtras.MakeTextCellTemplate(nameof(SubtitleLineViewModel.Text)),
             Width = new GridLength(1, GridUnitType.Star),
             CellTheme = UiUtil.TableViewCellTheme,
             HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
