@@ -77,6 +77,31 @@ public class CrispEmbedEngineTests
     }
 
     [Fact]
+    public void GetExitCodeHint_ExplainsLoaderFailures()
+    {
+        if (OperatingSystem.IsWindows())
+        {
+            // 126/127 are Unix loader/shell conventions - no hint to give on Windows.
+            Assert.Equal(string.Empty, CrispEmbedOcr.GetExitCodeHint(127));
+            return;
+        }
+
+        // The cause of SubtitleEdit issue #13205: the Linux builds link against OpenBLAS but do
+        // not ship it, so the loader aborts before the server can say anything itself.
+        Assert.Contains("OpenBLAS", CrispEmbedOcr.GetExitCodeHint(127));
+        Assert.Contains("executed", CrispEmbedOcr.GetExitCodeHint(126));
+    }
+
+    [Theory]
+    [InlineData(0)]
+    [InlineData(1)]
+    [InlineData(139)]
+    public void GetExitCodeHint_IsEmptyForCodesWithNothingToAdd(int exitCode)
+    {
+        Assert.Equal(string.Empty, CrispEmbedOcr.GetExitCodeHint(exitCode));
+    }
+
+    [Fact]
     public void ParseCliPipelineOutput_SkipsNonResultJson()
     {
         const string output = "{\"warning\":\"some other object\"}\n{\"full_text\":\"the real result\"}\n";
