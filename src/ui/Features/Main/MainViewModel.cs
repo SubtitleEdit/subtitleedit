@@ -296,8 +296,17 @@ public partial class MainViewModel :
     /// picked. The control's own SelectedItems follows selection order, so shift-clicking upwards
     /// leaves the anchor row in front and ctrl-clicking around scrambles the list entirely - and
     /// everything downstream (copy, merge, export, ...) then works on the rows out of order.
+    ///
+    /// Building this walks the whole subtitle list, so read it into a local instead of touching it
+    /// repeatedly, and use <see cref="SubtitleGridSelectedCount"/> when only the count is needed.
     /// </summary>
     public List<SubtitleLineViewModel> SubtitleGridSelectedItems => GetSelectedSubtitlesInOrder();
+
+    /// <summary>
+    /// Number of selected rows. Ordering the rows costs a pass over every subtitle, which callers
+    /// that only ask how many are selected (menu visibility and the like) must not pay for.
+    /// </summary>
+    public int SubtitleGridSelectedCount => SubtitleGrid.SelectedItems?.Count ?? 0;
 
     private List<SubtitleLineViewModel> GetSelectedSubtitlesInOrder()
     {
@@ -5514,20 +5523,16 @@ public partial class MainViewModel :
     private List<int> GetSelectedSubtitleIndices()
     {
         var selectedIndices = new List<int>();
-        if (SubtitleGridSelectedItems != null)
+        foreach (var item in SubtitleGridSelectedItems)
         {
-            foreach (var item in SubtitleGridSelectedItems.Cast<SubtitleLineViewModel>())
+            var index = Subtitles.IndexOf(item);
+            if (index >= 0)
             {
-                var index = Subtitles.IndexOf(item);
-                if (index >= 0)
-                {
-                    selectedIndices.Add(index);
-                }
+                selectedIndices.Add(index);
             }
-
-            selectedIndices.Sort();
         }
 
+        selectedIndices.Sort();
         return selectedIndices;
     }
 
@@ -8371,7 +8376,7 @@ public partial class MainViewModel :
         var result = _windowService.ShowWindow<AdjustAllTimesWindow, AdjustAllTimesViewModel>(Window, (window, vm) =>
         {
             _adjustAllTimesViewModel = vm;
-            var selectedCount = SubtitleGridSelectedItems.Count;
+            var selectedCount = SubtitleGridSelectedCount;
             vm.Initialize(this, selectedCount, forceSelectedLines); // uses call from IAdjustCallback: Adjust
         });
     }
@@ -10865,7 +10870,7 @@ public partial class MainViewModel :
             return;
         }
 
-        var result = await ShowDialogAsync<PickAlignmentWindow, PickAlignmentViewModel>(vm => { vm.Initialize(selected, SubtitleGridSelectedItems.Count); });
+        var result = await ShowDialogAsync<PickAlignmentWindow, PickAlignmentViewModel>(vm => { vm.Initialize(selected, SubtitleGridSelectedCount); });
 
         if (result.OkPressed)
         {
@@ -15779,14 +15784,13 @@ public partial class MainViewModel :
 
     private void InverseRowSelection()
     {
-        if (SubtitleGridSelectedItems == null || Subtitles.Count == 0)
+        if (Subtitles.Count == 0)
         {
             return;
         }
 
         // Store currently selected items
-        var selectedItems =
-            new HashSet<SubtitleLineViewModel>(SubtitleGridSelectedItems.Cast<SubtitleLineViewModel>());
+        var selectedItems = new HashSet<SubtitleLineViewModel>(SubtitleGridSelectedItems);
 
         // Inverting a small selection on a large file selects almost every row, so
         // apply via the detach/reattach helper to avoid the per-row hang (#11529).
@@ -20397,17 +20401,18 @@ public partial class MainViewModel :
     {
         var idx = SubtitleGrid.SelectedIndex;
         var count = Subtitles.Count;
-        MenuItemMergeAsDialog.IsVisible = SubtitleGridSelectedItems.Count == 2;
-        MenuItemMerge.IsVisible = SubtitleGridSelectedItems.Count > 1;
+        var selectedCount = SubtitleGridSelectedCount;
+        MenuItemMergeAsDialog.IsVisible = selectedCount == 2;
+        MenuItemMerge.IsVisible = selectedCount > 1;
         // With 2+ lines selected at least one of them has a neighbor on either side,
         // so the focused-index boundary check only applies to single selection (#12981)
         MenuItemExtendToLineBefore.IsVisible = Subtitles.Count > 1 &&
-            (SubtitleGridSelectedItems.Count > 1 || (SubtitleGridSelectedItems.Count == 1 && idx > 0));
+            (selectedCount > 1 || (selectedCount == 1 && idx > 0));
         MenuItemExtendToLineAfter.IsVisible = Subtitles.Count > 1 &&
-            (SubtitleGridSelectedItems.Count > 1 || (SubtitleGridSelectedItems.Count == 1 && idx < count - 1));
+            (selectedCount > 1 || (selectedCount == 1 && idx < count - 1));
         AreAssaContentMenuItemsVisible = false;
-        ShowAutoTranslateSelectedLines = SubtitleGridSelectedItems.Count > 0 && ShowColumnOriginalText;
-        HasMultipleLinesSelected = SubtitleGridSelectedItems.Count > 1;
+        ShowAutoTranslateSelectedLines = selectedCount > 0 && ShowColumnOriginalText;
+        HasMultipleLinesSelected = selectedCount > 1;
         ShowColumnLayerFlyoutMenuItem = IsFormatAssa;
 
         if (IsSubtitleGridFlyoutHeaderVisible)
@@ -20429,11 +20434,11 @@ public partial class MainViewModel :
         else
         {
             IsSubtitleGridDataMenuVisible = true;
-            IsMergeWithNextOrPreviousVisible = SubtitleGridSelectedItems.Count == 1;
+            IsMergeWithNextOrPreviousVisible = selectedCount == 1;
             IsInsertLineNoSelectionVisible = false;
             // Any single selected line, not only the last - a pre-timed file keeps its own time
             // codes, so inserting midway is a normal workflow (discussion #11744).
-            IsInsertSubtitleFileAfterLineVisible = SubtitleGridSelectedItems.Count == 1;
+            IsInsertSubtitleFileAfterLineVisible = selectedCount == 1;
 
             if (IsFormatAssa || IsFormatSsa)
             {
@@ -20552,7 +20557,7 @@ public partial class MainViewModel :
         // lines selected the per-word suggestions/"ignore all" would be ambiguous (they act on the
         // one clicked cell, not the selection).
         if (IsSubtitleGridFlyoutHeaderVisible ||
-            SubtitleGridSelectedItems.Count != 1 ||
+            SubtitleGridSelectedCount != 1 ||
             (!Se.Settings.Appearance.SubtitleGridLiveSpellCheck && !Se.Settings.Appearance.SubtitleTextBoxLiveSpellCheck))
         {
             return;
@@ -22039,8 +22044,9 @@ public partial class MainViewModel :
 
         if (_shiftSelectAnchorIndex < 0)
         {
-            var anchor = SelectedSubtitleIndex ?? (SubtitleGridSelectedItems.Count > 0
-                ? Subtitles.IndexOf((SubtitleLineViewModel)SubtitleGridSelectedItems[0]!)
+            var selectedInOrder = SubtitleGridSelectedItems;
+            var anchor = SelectedSubtitleIndex ?? (selectedInOrder.Count > 0
+                ? Subtitles.IndexOf(selectedInOrder[0])
                 : -1);
             if (anchor < 0)
             {
@@ -22161,7 +22167,9 @@ public partial class MainViewModel :
             }
         }
 
-        SubtitleGridSelectionChanged();
+        // Hand the ordered selection on rather than letting SubtitleGridSelectionChanged read the
+        // property again: building it walks every subtitle, and this runs on every arrow key.
+        SubtitleGridSelectionChanged(selectedItems);
     }
 
     /// <summary>
@@ -22181,15 +22189,15 @@ public partial class MainViewModel :
         return Subtitles.IndexOf(item);
     }
 
-    private void SubtitleGridSelectionChanged()
+    private void SubtitleGridSelectionChanged(List<SubtitleLineViewModel>? alreadyOrderedSelection = null)
     {
-        var selectedItems = SubtitleGridSelectedItems;
+        var selectedItems = alreadyOrderedSelection ?? SubtitleGridSelectedItems;
         EditTextBox.ClearSelection();
         EditTextBoxOriginal.ClearSelection();
         ResetPlaySelection();
         _updateAudioVisualizer = true;
 
-        if (selectedItems == null || selectedItems.Count == 0)
+        if (selectedItems.Count == 0)
         {
             SelectedSubtitle = null;
             SelectedSubtitleIndex = null;

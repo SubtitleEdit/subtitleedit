@@ -156,4 +156,27 @@ public class BurnInWindowTests
             window.ClientSize.Height >= before,
             $"Window shrank when generating started ({before:0.#} -> {window.ClientSize.Height:0.#}).");
     }
+
+    // Re-locking the minimum for the progress row is height-only, but it used to clear MinWidth
+    // along the way and never put it back - so starting (or finishing) a burn-in left the window
+    // freely shrinkable sideways, clipping the very content the minimum protects.
+    [AvaloniaFact]
+    public void Window_KeepsMinimumWidth_WhenGeneratingStartsAndStops()
+    {
+        var window = BuildWindow();
+        var vm = window.DataContext as BurnInViewModel;
+        Assert.NotNull(vm);
+        window.Show();
+        Avalonia.Threading.Dispatcher.UIThread.RunJobs();
+        var lockedMinWidth = window.MinWidth;
+        Assert.True(lockedMinWidth > 0, "The window never locked a minimum width to begin with.");
+
+        vm.IsGenerating = true;
+        Avalonia.Threading.Dispatcher.UIThread.RunJobs();
+        Assert.Equal(lockedMinWidth, window.MinWidth);
+
+        vm.IsGenerating = false;
+        Avalonia.Threading.Dispatcher.UIThread.RunJobs();
+        Assert.Equal(lockedMinWidth, window.MinWidth);
+    }
 }
