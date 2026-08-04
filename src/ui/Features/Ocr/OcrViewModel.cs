@@ -1324,8 +1324,8 @@ public partial class OcrViewModel : ObservableObject
                     $"{Environment.NewLine}\"CrispEmbed\" requires downloading the CrispEmbed engine.{Environment.NewLine}{Environment.NewLine}Download and use CrispEmbed?",
                     MessageBoxButtons.Cancel,
                     MessageBoxIcon.Question,
-                    "CPU",
-                    "GPU CUDA");
+                    "CPU (~10 MB)",
+                    "GPU CUDA (~705 MB)");
 
                 if (answer == MessageBoxResult.Cancel)
                 {
