@@ -79,6 +79,7 @@ public partial class BinaryEditViewModel : ObservableObject
 
     private ScrollViewer? _subtitleGridScrollViewer;
     private Control? _focusBeforeMenu;
+    private bool _altClosesMenuOnKeyUp;
     private readonly AltMenuActivationGuard _altMenuActivationGuard = new();
 
     private readonly IFileHelper _fileHelper;
@@ -2396,6 +2397,32 @@ public partial class BinaryEditViewModel : ObservableObject
             _focusBeforeMenu = Window?.FocusManager?.GetFocusedElement() as Control;
         }
 
+        // Alt while keyboard focus is inside an open drop-down must close the whole menu (Windows
+        // standard). The built-in AccessKeyHandler owns that toggle, but its key-down handler
+        // ignores any key whose focused element is not a visual descendant of the window - and
+        // drop-down items live in their own popup top-level, so a second Alt while navigating a
+        // drop-down did nothing (#12087). Close on the *release*, not here: the built-in tunnel
+        // key-up handler still holds "showing access keys" state from the activation, and its
+        // MainMenu.Open() call would instantly undo a close done on the press (it no-ops while
+        // the menu is still open). Mirrors MainViewModel.OnKeyDownHandler.
+        if (e.Key is Key.LeftAlt or Key.RightAlt)
+        {
+            if (e.KeyModifiers == KeyModifiers.Alt &&
+                Menu is { IsOpen: true } && IsMenuFocused() &&
+                Window?.FocusManager?.GetFocusedElement() is Visual focusedVisual &&
+                TopLevel.GetTopLevel(focusedVisual) is { } focusedTopLevel &&
+                !ReferenceEquals(focusedTopLevel, Window))
+            {
+                _altClosesMenuOnKeyUp = true;
+            }
+        }
+        else
+        {
+            // Alt+<key> is a shortcut or access key, not a toggle - releasing Alt afterwards
+            // must leave the menu alone (mirrors the built-in "ignore Alt up" bookkeeping).
+            _altClosesMenuOnKeyUp = false;
+        }
+
         // While the menu has keyboard focus, let it own its own navigation keys. The window key
         // handler runs even on keys the menu already handled (handledEventsToo: true), so without
         // this arrow/Enter would be consumed as shortcuts, breaking menu navigation. Escape is
@@ -2524,6 +2551,17 @@ public partial class BinaryEditViewModel : ObservableObject
             // true here and this branch stays out of the way.)
             DeactivateMenu();
         }
+        else if (e.Key is Key.LeftAlt or Key.RightAlt && _altClosesMenuOnKeyUp)
+        {
+            // Alt pressed while focus was inside an open drop-down (armed in OnKeyDown, where the
+            // built-in AccessKeyHandler ignores popup-focused keys): close the whole menu now that
+            // the built-in tunnel key-up handling has run out of ways to reopen it.
+            _altClosesMenuOnKeyUp = false;
+            if (Menu is { IsOpen: true } || IsMenuFocused())
+            {
+                DeactivateMenu();
+            }
+        }
 
         _shortcutManager.OnKeyReleased(this, e);
     }
@@ -2605,6 +2643,7 @@ public partial class BinaryEditViewModel : ObservableObject
         // the access-key underlines / selection armed and they reappear when the window is re-activated
         // (#11745 beta-2 feedback).
         _altMenuActivationGuard.Reset();
+        _altClosesMenuOnKeyUp = false; // the matching Alt release will never arrive
         if (Menu is { IsOpen: true } || IsMenuFocused())
         {
             DeactivateMenu();
