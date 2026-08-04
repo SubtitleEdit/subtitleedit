@@ -1016,7 +1016,7 @@
     "undoPerformed": "Скасовано",
     "undoPerformedXActionLeft": "Скасовано (дій залишилося: {0})",
     "xLinesCopiedFromOriginal": "{0} рядків скопійовано з оригінальних субтитрів",
-    "xLinesMerged": "X рядків об'єднано",
+    "xLinesMerged": "{0} рядків об'єднано",
     "xLinesSelectedOfY": "{0} рядків вибрано з {1}",
     "xLinesSwitched": "{0} рядків перемкнено",
     "xShotChangedLoaded": "{0} змін кадрів завантажено",

@@ -1018,7 +1018,7 @@
     "undoPerformed": "Annulation effectuée",
     "undoPerformedXActionLeft": "Annulation effectuée (actions restantes : {0})",
     "xLinesCopiedFromOriginal": "{0} lignes copiées du sous-titre original",
-    "xLinesMerged": "X lignes fusionnées",
+    "xLinesMerged": "{0} lignes fusionnées",
     "xLinesSelectedOfY": "{0} lignes sélectionnées sur {1}",
     "xLinesSwitched": "{0} lignes modifiées",
     "xShotChangedLoaded": "{0} modifications de plan chargées",

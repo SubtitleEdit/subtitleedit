@@ -1016,7 +1016,7 @@
     "undoPerformed": "Anulare efectuată",
     "undoPerformedXActionLeft": "Anulare efectuată (acțiuni rămase: {0})",
     "xLinesCopiedFromOriginal": "{0} rânduri copiate din subtitrarea originală",
-    "xLinesMerged": "Liniile X au fuzionat",
+    "xLinesMerged": "Liniile {0} au fuzionat",
     "xLinesSelectedOfY": "{0} linii selectate din {1}",
     "xLinesSwitched": "{0} linii schimbate",
     "xShotChangedLoaded": "S-au încărcat {0} modificări de fotografie",

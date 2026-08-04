@@ -979,7 +979,7 @@
     "undoPerformed": "Geri alma yapıldı",
     "undoPerformedXActionLeft": "Geri alma yapıldı (kalan işlem: {0})",
     "xLinesCopiedFromOriginal": "Orijinal alt yazıdan {0} satır kopyalandı",
-    "xLinesMerged": "X satır birleştirildi",
+    "xLinesMerged": "{0} satır birleştirildi",
     "xLinesSelectedOfY": "{0} / {1} satır seçildi",
     "xLinesSwitched": "{0} satır değiştirildi",
     "xShotChangedLoaded": "{0} sahne değişimi yüklendi",

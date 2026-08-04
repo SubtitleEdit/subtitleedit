@@ -1018,7 +1018,7 @@
     "undoPerformed": "Отмена выполнена",
     "undoPerformedXActionLeft": "Отмена выполнена (осталось действий: {0})",
     "xLinesCopiedFromOriginal": "{0} строк, скопированных из оригинального субтитра",
-    "xLinesMerged": "Линии X объединены",
+    "xLinesMerged": "Линии {0} объединены",
     "xLinesSelectedOfY": "{0} строк выбрано из {1}",
     "xLinesSwitched": "{0} строк переключены",
     "xShotChangedLoaded": "{0} изменения кадра загружены",
