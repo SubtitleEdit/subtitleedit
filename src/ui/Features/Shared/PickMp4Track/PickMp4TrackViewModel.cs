@@ -148,6 +148,7 @@ public partial class PickMp4TrackViewModel : ObservableObject
 
             var paragraphs = track.Mdia.Minf.Stbl.GetParagraphs();
             var subPictures = track.Mdia.Minf.Stbl.SubPictures;
+            var palette = track.Mdia.Minf.Stbl.VobSubPalette;
             var count = Math.Min(paragraphs.Count, subPictures.Count);
             if (count == 0)
             {
@@ -176,7 +177,7 @@ public partial class PickMp4TrackViewModel : ObservableObject
                 var paragraph = paragraphs[i];
                 exportHandler.WriteParagraph(new ImageParameter
                 {
-                    Bitmap = subPicture.GetBitmap(null, SKColors.Transparent, SKColors.Black, SKColors.White, SKColors.Black, false),
+                    Bitmap = subPicture.GetBitmap(palette, SKColors.Transparent, SKColors.Black, SKColors.White, SKColors.Black, false),
                     StartTime = TimeSpan.FromMilliseconds(paragraph.StartTime.TotalMilliseconds),
                     EndTime = TimeSpan.FromMilliseconds(paragraph.EndTime.TotalMilliseconds),
                     ScreenWidth = screenWidth,
@@ -268,7 +269,7 @@ public partial class PickMp4TrackViewModel : ObservableObject
 
             if (selectedTrack.IsVobSubSubtitle && selectedTrack.Track is { } trackinfo)
             {
-                cue.Image = new Image { Source = trackinfo.Mdia.Minf.Stbl.SubPictures[i - 1].GetBitmap(null, SKColors.Transparent, SKColors.Black, SKColors.White, SKColors.Black, false).ToAvaloniaBitmap() };
+                cue.Image = new Image { Source = trackinfo.Mdia.Minf.Stbl.SubPictures[i - 1].GetBitmap(trackinfo.Mdia.Minf.Stbl.VobSubPalette, SKColors.Transparent, SKColors.Black, SKColors.White, SKColors.Black, false).ToAvaloniaBitmap() };
             }
             else
             {
