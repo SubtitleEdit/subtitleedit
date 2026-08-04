@@ -26,6 +26,9 @@ public class LanguageSettingsShortcuts
     public string GeneralGoToNextSubtitle { get; set; }
     public string GeneralGoToNextSubtitleCursorAtEnd { get; set; }
     public string GeneralGoToPrevSubtitle { get; set; }
+    public string GeneralGoToFirstLine { get; set; }
+    public string GeneralGoToLastLine { get; set; }
+    public string AlsoSetVideoPosition { get; set; }
     public string GeneralGoToVideoPosition { get; set; }
     public string GeneralToggleItalic { get; set; }
     public string GeneralToggleBold { get; set; }
@@ -274,6 +277,9 @@ public class LanguageSettingsShortcuts
         GeneralGoToNextSubtitle = "Go to next subtitle";
         GeneralGoToNextSubtitleCursorAtEnd = "Go to next subtitle and set cursor at end";
         GeneralGoToPrevSubtitle = "Go to previous subtitle";
+        GeneralGoToFirstLine = "Go to first line";
+        GeneralGoToLastLine = "Go to last line";
+        AlsoSetVideoPosition = "Also set video position";
         GeneralGoToVideoPosition = "Go to video position";
         GeneralToggleItalic = "Toggle italic";
         GeneralToggleBold = "Toggle bold";

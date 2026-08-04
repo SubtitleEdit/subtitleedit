@@ -12627,6 +12627,68 @@ public partial class MainViewModel :
         }
     }
 
+    // Ctrl+Home/Ctrl+End (#13194): jump to the first/last line and - unless turned off via the
+    // shortcut's Configure button - move the video to its start/end as well. SE 4 had the
+    // rewind half of this as the confusingly named "Stop" video shortcut.
+    [RelayCommand]
+    private void GoToFirstLine()
+    {
+        if (Subtitles.Count > 0)
+        {
+            SelectAndScrollToRow(0);
+        }
+
+        if (!Se.Settings.Tools.GoToFirstAndLastLineAlsoSetVideoPosition)
+        {
+            return;
+        }
+
+        var vp = GetVideoPlayerControl();
+        if (string.IsNullOrEmpty(_videoFileName) || vp == null)
+        {
+            return;
+        }
+
+        // Same behavior as the player's Stop button: pause, seek to 0 and pin the
+        // waveform cursor there right away instead of waiting for mpv to report back.
+        vp.VideoPlayer.Stop();
+        OnVideoPlayerStopRequested();
+
+        if (AudioVisualizer != null && AudioVisualizer.WavePeaks != null)
+        {
+            AudioVisualizerCenterOnPositionIfNeeded(0);
+        }
+    }
+
+    [RelayCommand]
+    private void GoToLastLine()
+    {
+        if (Subtitles.Count > 0)
+        {
+            SelectAndScrollToRow(Subtitles.Count - 1);
+        }
+
+        if (!Se.Settings.Tools.GoToFirstAndLastLineAlsoSetVideoPosition)
+        {
+            return;
+        }
+
+        var vp = GetVideoPlayerControl();
+        if (string.IsNullOrEmpty(_videoFileName) || vp == null || vp.Duration <= 0)
+        {
+            return;
+        }
+
+        PauseVideoAndFreezePlayhead(vp);
+        vp.Position = vp.Duration;
+        PinPlayheadTo(vp.Duration);
+
+        if (AudioVisualizer != null && AudioVisualizer.WavePeaks != null)
+        {
+            AudioVisualizerCenterOnPositionIfNeeded(vp.Duration);
+        }
+    }
+
     [RelayCommand]
     private void GoToNextLineFromVideoPosition()
     {
@@ -21683,6 +21745,16 @@ public partial class MainViewModel :
                     return;
                 }
 
+                // Home/End (with or without Ctrl/Cmd/Shift) is likewise standard text editing -
+                // line/document start/end and selection. The "go to first/last line" shortcuts
+                // default to Ctrl+Home/End (#13194) but must stay out of text inputs.
+                if ((keyEventArgs.Key == Key.Home || keyEventArgs.Key == Key.End)
+                    && (keyEventArgs.KeyModifiers & ~(KeyModifiers.Control | KeyModifiers.Shift | KeyModifiers.Meta)) == KeyModifiers.None)
+                {
+                    _shortcutManager.ClearKeys();
+                    return;
+                }
+
                 if (_shortcutManager.TryGetSingleActiveKey(out var key))
                 {
                     if (EditTextBox.IsFocused && key == Key.Return &&
@@ -21766,12 +21838,14 @@ public partial class MainViewModel :
                     HandleShiftArrowSelection(Subtitles.Count); // clamps to Count - 1
                     return;
                 }
-                // Handle Ctrl+Home/End the same as plain Home/End: Ctrl is the habitual
-                // "go to top/bottom" chord, and routing it through SelectAndScrollToRow reuses the
-                // reliable scroll (EnsureRowFullyVisibleInSubtitleGrid) instead of falling through to
-                // Avalonia's default DataGrid navigation, which leaves the last row partially visible (#12173).
+                // Plain Home/End goes through SelectAndScrollToRow for the reliable scroll
+                // (EnsureRowFullyVisibleInSubtitleGrid) instead of falling through to Avalonia's
+                // default navigation, which leaves the last row partially visible (#12173).
+                // Ctrl+Home/End is deliberately NOT handled here anymore: it falls through to the
+                // shortcut dispatch below so the bindable "go to first/last line" actions run
+                // (#13194); if unbound, the grid's own AttachListNavigation handler picks it up.
                 else if (keyEventArgs.Key == Key.Home &&
-                         (keyEventArgs.KeyModifiers == KeyModifiers.None || keyEventArgs.KeyModifiers == KeyModifiers.Control) &&
+                         keyEventArgs.KeyModifiers == KeyModifiers.None &&
                          Subtitles.Count > 0)
                 {
                     keyEventArgs.Handled = true;
@@ -21779,7 +21853,7 @@ public partial class MainViewModel :
                     return;
                 }
                 else if (keyEventArgs.Key == Key.End &&
-                         (keyEventArgs.KeyModifiers == KeyModifiers.None || keyEventArgs.KeyModifiers == KeyModifiers.Control) &&
+                         keyEventArgs.KeyModifiers == KeyModifiers.None &&
                          Subtitles.Count > 0)
                 {
                     keyEventArgs.Handled = true;

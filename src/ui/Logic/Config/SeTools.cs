@@ -62,6 +62,7 @@ public class SeTools
     public string? SplitSubtitleEncoding { get; set; }
     public string SplitOddLinesAction { get; set; }
     public bool GoToLineNumberAlsoSetVideoPosition { get; set; }
+    public bool GoToFirstAndLastLineAlsoSetVideoPosition { get; set; }
     public bool SplitRebalanceLongLinesSplit { get; set; }
     public bool SplitRebalanceLongLinesRebalance { get; set; }
     public string UnicodeSymbolsToInsert { get; set; }
@@ -188,6 +189,7 @@ public class SeTools
         SplitOutputFolder = string.Empty;
         SplitSubtitleFormat = new SubRip().Name;
         GoToLineNumberAlsoSetVideoPosition = true;
+        GoToFirstAndLastLineAlsoSetVideoPosition = true;
         SplitRebalanceLongLinesSplit = true;
         SplitRebalanceLongLinesRebalance = true;
         SplitOddLinesAction = nameof(SplitOddLinesActionType.Smart);
