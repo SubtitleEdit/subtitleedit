@@ -1688,7 +1688,7 @@
     "changeCasing": {
       "fixNames": "Corriger les noms",
       "namesX": "Noms : {0:#,##0}",
-      "hitsX": " {Occurrences :{0:#,##0}",
+      "hitsX": "Occurrences :{0:#,##0}",
       "extraNames": "Noms supplémentaires",
       "enterExtraNamesHint": "Saisir des noms supplémentaires à corriger, séparés par une virgule",
       "onlyFixUppercaseLines": "Corriger uniquement les lignes en majuscules",
