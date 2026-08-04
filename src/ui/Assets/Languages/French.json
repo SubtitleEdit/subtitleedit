@@ -1725,7 +1725,7 @@
       "outputFormatAssa": "Advanced_Sub_Station_Alpha (.ass)",
       "style1": "Style 1",
       "style2": "Style 2",
-      "merge": "_Fusionner",
+      "merge": "_Fusionner"
     },
     "splitSubtitle": {
       "title": "Scinder le sous-titre",
