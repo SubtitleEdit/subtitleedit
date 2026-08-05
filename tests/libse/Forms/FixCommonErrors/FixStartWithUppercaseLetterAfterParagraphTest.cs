@@ -46,6 +46,30 @@ public class FixStartWithUppercaseLetterAfterParagraphTest
         Assert.Equal("he is asleep.", Fix("It is 5 a.m.", "he is asleep.", "en"));
     }
 
+    // A line ending with a quotation mark is not a paragraph end - the quote is not
+    // preceded by sentence-ending punctuation, so the next line continues the sentence (#12227).
+    [Fact]
+    public void KeepsLowercaseWhenPreviousParagraphEndsWithQuote()
+    {
+        Assert.Equal("me ontmoeten.", Fix("\"u\"", "me ontmoeten.", "nl"));
+    }
+
+    // The previous subtitle is a one-letter fragment ("u") - not a paragraph end, so the
+    // next line must not be capitalized (#12227).
+    [Fact]
+    public void KeepsLowercaseWhenPreviousParagraphIsSingleLetter()
+    {
+        Assert.Equal("me ontmoeten.", Fix("u", "me ontmoeten.", "nl"));
+    }
+
+    // Same, but the one-letter fragment is line one of a two-line subtitle.
+    [Fact]
+    public void KeepsLowercaseWhenFirstLineIsSingleLetter()
+    {
+        var text = "u" + Environment.NewLine + "me ontmoeten.";
+        Assert.Equal(text, Fix("- Wilt", text, "nl"));
+    }
+
     // A real sentence ending must still be fixed.
     [Fact]
     public void CapitalizesAfterSentenceEnding()

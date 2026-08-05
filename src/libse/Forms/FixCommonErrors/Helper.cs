@@ -321,7 +321,11 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
         {
             if (string.IsNullOrEmpty(prevText) || prevText.Length < 3)
             {
-                return true;
+                // Short lines are usually paragraph markers (dash, music note, etc.) that end a
+                // paragraph - but a short line of actual text (e.g. "u") continues the same
+                // sentence and must not trigger capitalization of the next line (#12227).
+                var trimmed = prevText.TrimEnd();
+                return string.IsNullOrEmpty(trimmed) || !char.IsLetterOrDigit(trimmed[trimmed.Length - 1]);
             }
 
             prevText = prevText.Replace("♪", string.Empty).Replace("♫", string.Empty).Trim();
