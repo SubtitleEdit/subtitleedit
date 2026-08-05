@@ -101,30 +101,36 @@ internal static class SubtitleGridCopyPasteHelper
     internal static async Task Paste(Window window, ObservableCollection<SubtitleLineViewModel> subtitles, int index, SubtitleFormat subtitleFormat)
     {
         var text = await ClipboardHelper.GetTextAsync(window);
+        Paste(subtitles, index, subtitleFormat, text);
+    }
+
+    internal static void Paste(ObservableCollection<SubtitleLineViewModel> subtitles, int index, SubtitleFormat subtitleFormat, string? text)
+    {
         if (string.IsNullOrEmpty(text))
         {
             return;
         }
 
-        var addTimeMilliseconds = (double)0;
-        if (subtitles.Count > 0 && index >= 0 && index < subtitles.Count)
-        {
-            addTimeMilliseconds = subtitles[index].EndTime.TotalMilliseconds + Se.Settings.General.MinimumBetweenLines.GetMilliseconds();
-            index++;
-        }
-        else if (subtitles.Count > 0)
-        {
-             // If index is invalid (e.g. -1), append to end
-             addTimeMilliseconds = subtitles[subtitles.Count - 1].EndTime.TotalMilliseconds + Se.Settings.General.MinimumBetweenLines.GetMilliseconds();
-             index = subtitles.Count;
-        }
-
-
         var lines = text.SplitToLines();
         var subtitle = Subtitle.Parse(lines, subtitleFormat.Extension);
+
+        var beforeIndex = -1;
+        if (subtitles.Count > 0 && index >= 0 && index < subtitles.Count)
+        {
+            beforeIndex = index;
+            index++;
+        }
+        else
+        {
+            // If index is invalid (e.g. -1), append to end. This also clamps an empty
+            // subtitle's insertion index to zero.
+            beforeIndex = subtitles.Count - 1;
+            index = subtitles.Count;
+        }
+
         if (subtitle?.Paragraphs.Count > 0)
         {
-            LoadParagraphs(subtitles, index, subtitleFormat, subtitle);
+            LoadParagraphs(subtitles, index, subtitleFormat, subtitle, GetOverlapShift(subtitles, beforeIndex, subtitle));
             return;
         }
 
@@ -133,12 +139,15 @@ internal static class SubtitleGridCopyPasteHelper
             if (item.IsMine(lines, string.Empty) && subtitle != null)
             {
                 item.LoadSubtitle(subtitle, lines, string.Empty);
-                LoadParagraphs(subtitles, index, subtitleFormat, subtitle);
+                LoadParagraphs(subtitles, index, subtitleFormat, subtitle, GetOverlapShift(subtitles, beforeIndex, subtitle));
                 return;
             }
         }
 
         // fallback - plain text
+        var addTimeMilliseconds = beforeIndex >= 0
+            ? subtitles[beforeIndex].EndTime.TotalMilliseconds + Se.Settings.General.MinimumBetweenLines.GetMilliseconds()
+            : 0;
         foreach (var line in lines)
         {
             if (!string.IsNullOrWhiteSpace(line))
@@ -156,10 +165,32 @@ internal static class SubtitleGridCopyPasteHelper
         }
     }
 
-    private static void LoadParagraphs(ObservableCollection<SubtitleLineViewModel> subtitles, int index, SubtitleFormat subtitleFormat, Subtitle subtitle)
+    private static double GetOverlapShift(ObservableCollection<SubtitleLineViewModel> subtitles, int beforeIndex, Subtitle subtitle)
+    {
+        if (subtitle.Paragraphs.Count == 0 || beforeIndex < 0 || beforeIndex >= subtitles.Count)
+        {
+            return 0;
+        }
+
+        var lastEnd = subtitles[beforeIndex].EndTime.TotalMilliseconds;
+        var firstPastedStart = subtitle.Paragraphs[0].StartTime.TotalMilliseconds;
+        var startsAfterNextLine = beforeIndex + 1 < subtitles.Count &&
+                                  subtitles[beforeIndex + 1].StartTime.TotalMilliseconds < firstPastedStart;
+        return lastEnd > firstPastedStart || startsAfterNextLine
+            ? lastEnd + Se.Settings.General.MinimumBetweenLines.GetMilliseconds() - firstPastedStart
+            : 0;
+    }
+
+    private static void LoadParagraphs(ObservableCollection<SubtitleLineViewModel> subtitles, int index, SubtitleFormat subtitleFormat, Subtitle subtitle, double addTimeMilliseconds)
     {
         foreach (var p in subtitle.Paragraphs)
         {
+            if (addTimeMilliseconds != 0)
+            {
+                p.StartTime.TotalMilliseconds += addTimeMilliseconds;
+                p.EndTime.TotalMilliseconds += addTimeMilliseconds;
+            }
+
             subtitles.Insert(index, new SubtitleLineViewModel(p, subtitleFormat));
             index++;
         }
