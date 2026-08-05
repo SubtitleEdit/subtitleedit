@@ -999,7 +999,7 @@
     "undoPerformed": "已執行復原",
     "undoPerformedXActionLeft": "已執行撤銷（剩餘操作：{0}）",
     "xLinesCopiedFromOriginal": "從原始字幕複製的 {0} 行",
-    "xLinesMerged": "行已合併",
+    "xLinesMerged": "已合併 {0} 行",
     "xLinesSelectedOfY": "已選擇 {0} 行，共 {1} 行",
     "xLinesSwitched": "已調換 {0} 行",
     "xShotChangedLoaded": "已載入 {0} 個分鏡切換點",
