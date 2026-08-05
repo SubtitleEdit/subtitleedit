@@ -298,6 +298,15 @@ public static class UiTheme
 
         _layoutScaleMenuStyle = styles;
         Application.Current.Styles.Add(styles);
+
+        // The Fluent menu/context-menu popup templates cap their width at 456 via the
+        // FlyoutThemeMaxWidth resource, which clips long localized menu items (e.g. Italian,
+        // #13011) without an ellipsis. The cap sits on a Border inside the templates as a
+        // DynamicResource, so a style cannot target it - overriding the resource is the only
+        // lever, and it deliberately raises the cap for every flyout. It scales with the menu
+        // font size above, so 150%+ layouts do not clip again; popups still size to their
+        // content, so short menus are unaffected.
+        Application.Current.Resources["FlyoutThemeMaxWidth"] = 680d * factor;
     }
 
     private static Styles? _scrollBarStyle;
