@@ -19032,24 +19032,18 @@ public partial class MainViewModel :
                     ? tracks.FirstOrDefault(t => t.Id == desiredAudioTrackId)
                     : null;
 
-                // On a fresh open (no explicitly requested/restored track) with more than one audio
-                // track, default to the track that is fastest to extract a waveform from - e.g. a
-                // compressed AC3/AAC track over lossless TrueHD - so the waveform appears in seconds
-                // instead of minutes. A track requested via desiredAudioTrackId (e.g. restored from
-                // recent files) always wins.
-                if (chosen == null && desiredAudioTrackId < 0 && tracks.Count > 1)
-                {
-                    chosen = tracks
-                        .OrderByDescending(t => WaveformExtractionEstimate.GetDecodeSpeedFactor(t.Codec))
-                        .ThenBy(t => t.Id)
-                        .First();
-                }
+                // On a fresh open (no explicitly requested/restored track), follow mpv's own
+                // selection, which honors the container's default-track flag - picking any other
+                // track (e.g. the fastest to decode) can land on a commentary or audio-description
+                // track (#13233). The waveform audio-track picker still shows per-track extraction
+                // estimates for users who want a faster track.
+                chosen ??= tracks.FirstOrDefault(t => t.IsSelected)
+                    ?? tracks.FirstOrDefault(t => t.IsDefault)
+                    ?? tracks[0];
 
-                chosen ??= tracks.FirstOrDefault(t => t.IsSelected) ?? tracks[0];
-
-                // Switch mpv to the chosen track when it isn't already the selected one (fastest
-                // default or a restored track) so playback, the track menu and the waveform picker
-                // all agree on the same track.
+                // Switch mpv to the chosen track when it isn't already the selected one (e.g. a
+                // track restored from recent files) so playback, the track menu and the waveform
+                // picker all agree on the same track.
                 if (chosen.Id != -1 && !chosen.IsSelected)
                 {
                     mpv.SetAudioTrack(chosen.Id);
