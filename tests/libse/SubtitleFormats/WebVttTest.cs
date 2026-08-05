@@ -275,4 +275,20 @@ public class WebVttTest
         Assert.Equal(4, subtitle.Paragraphs.Count);
         Assert.Equal("One<00:00:02.000><c> two</c>", subtitle.Paragraphs[0].Text);
     }
+
+    // Cue settings with exact line%/position% values must survive a load/save round trip - before
+    // the fix the export re-mapped them to the coarse WebVttCueAnX grid defaults (#10209).
+    [Theory]
+    [InlineData("line:25% position:25%")]
+    [InlineData("line:72.69% align:left position:44.90% size:10.21%")]
+    [InlineData("line:90% position:50%")]
+    public void ToTextKeepsExactCuePositionSettings(string cueSettings)
+    {
+        var vtt = "WEBVTT\n\n00:00:01.000 --> 00:00:02.000 " + cueSettings + "\nHello";
+        var subtitle = LoadWebVttSubtitle(vtt);
+
+        var output = new WebVTT().ToText(subtitle, null);
+
+        Assert.Contains(cueSettings, output);
+    }
 }

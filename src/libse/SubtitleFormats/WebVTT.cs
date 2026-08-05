@@ -143,41 +143,61 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         internal static string GetPositionInfoFromAssTag(Paragraph p)
         {
             string positionInfo;
+            string currentTag = null;
             if (p.Text.StartsWith("{\\an1", StringComparison.Ordinal))
             {
                 positionInfo = Configuration.Settings.SubtitleSettings.WebVttCueAn1;
+                currentTag = "{\\an1}";
             }
             else if (p.Text.StartsWith("{\\an3", StringComparison.Ordinal))
             {
                 positionInfo = Configuration.Settings.SubtitleSettings.WebVttCueAn3;
+                currentTag = "{\\an3}";
             }
             else if (p.Text.StartsWith("{\\an4", StringComparison.Ordinal))
             {
                 positionInfo = Configuration.Settings.SubtitleSettings.WebVttCueAn4;
+                currentTag = "{\\an4}";
             }
             else if (p.Text.StartsWith("{\\an5", StringComparison.Ordinal))
             {
                 positionInfo = Configuration.Settings.SubtitleSettings.WebVttCueAn5;
+                currentTag = "{\\an5}";
             }
             else if (p.Text.StartsWith("{\\an6", StringComparison.Ordinal))
             {
                 positionInfo = Configuration.Settings.SubtitleSettings.WebVttCueAn6;
+                currentTag = "{\\an6}";
             }
             else if (p.Text.StartsWith("{\\an7", StringComparison.Ordinal))
             {
                 positionInfo = Configuration.Settings.SubtitleSettings.WebVttCueAn7;
+                currentTag = "{\\an7}";
             }
             else if (p.Text.StartsWith("{\\an8", StringComparison.Ordinal))
             {
                 positionInfo = Configuration.Settings.SubtitleSettings.WebVttCueAn8;
+                currentTag = "{\\an8}";
             }
             else if (p.Text.StartsWith("{\\an9", StringComparison.Ordinal))
             {
                 positionInfo = Configuration.Settings.SubtitleSettings.WebVttCueAn9;
+                currentTag = "{\\an9}";
             }
             else
             {
                 positionInfo = Configuration.Settings.SubtitleSettings.WebVttCueAn2;
+            }
+
+            // The raw cue settings captured at load ("line:72.69% align:left position:44.90% size:10.21%")
+            // are exact, while the WebVttCueAnX settings are coarse 3x3-grid defaults. Re-emit the raw
+            // settings when they are still consistent with the current alignment tag (i.e. the user has
+            // not changed the alignment since load), so line%/position% are not lost or grid-locked (#10209).
+            if (!string.IsNullOrEmpty(p.Style) &&
+                !string.IsNullOrEmpty(GetPositionInfoRaw(p.Style)) &&
+                GetPositionInfo(p.Style) == (currentTag ?? string.Empty))
+            {
+                positionInfo = p.Style.Trim();
             }
 
             return (" " + positionInfo).TrimEnd();
