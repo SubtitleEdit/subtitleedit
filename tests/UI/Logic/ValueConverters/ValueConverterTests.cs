@@ -274,6 +274,53 @@ public class ValueConverterTests
         }
     }
 
+    // Without a \t(...) transition, two primary color tags are plain overrides and ASSA's
+    // last-wins rule applies - the contrast pick must not second-guess libass here, or the
+    // grid disagrees with the video preview.
+    [AvaloniaFact]
+    public void ShowFormatting_ConsecutiveStaticAssaColors_LastOneWins()
+    {
+        TextWithSubtitleSyntaxHighlightingConverter.GridBackgroundOverride = () => Color.FromRgb(33, 33, 33);
+        try
+        {
+            // White first, then blue (&HFF0000& is BGR => #0000FF). White has by far the better
+            // contrast on #212121, so a contrast pick would choose it - but blue is written
+            // last, and last wins.
+            var run = SingleRun(Highlight("{\\1c&HFFFFFF&\\1c&HFF0000&}x",
+                SubtitleGridFormattingTypes.ShowFormatting));
+
+            Assert.Equal(Color.FromArgb(255, 0, 0, 255),
+                Assert.IsAssignableFrom<ISolidColorBrush>(run.Foreground).Color);
+        }
+        finally
+        {
+            TextWithSubtitleSyntaxHighlightingConverter.GridBackgroundOverride = null;
+        }
+    }
+
+    // The same two colors, but now the second one is a \t(...) destination, so the contrast
+    // pick applies and the more visible of the two is shown.
+    [AvaloniaFact]
+    public void ShowFormatting_StaticPlusTransitionColor_MostVisibleWins()
+    {
+        TextWithSubtitleSyntaxHighlightingConverter.GridBackgroundOverride = () => Color.FromRgb(33, 33, 33);
+        try
+        {
+            var run = SingleRun(Highlight("{\\1c&HFFFFFF&\\t(20,1000,0.9,\\1c&HFF0000&)}x",
+                SubtitleGridFormattingTypes.ShowFormatting));
+
+            // Same two colors as the last-wins test above, but the second one is now a
+            // transition destination: blue #0000FF has very low contrast on #212121, so the
+            // white static color is shown instead of the textually last one.
+            Assert.Equal(Colors.White,
+                Assert.IsAssignableFrom<ISolidColorBrush>(run.Foreground).Color);
+        }
+        finally
+        {
+            TextWithSubtitleSyntaxHighlightingConverter.GridBackgroundOverride = null;
+        }
+    }
+
     // A color tag whose value does not parse still resets the color, exactly as it did before
     // candidate collection was introduced.
     [AvaloniaFact]

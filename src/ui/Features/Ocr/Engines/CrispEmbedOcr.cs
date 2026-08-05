@@ -486,8 +486,10 @@ public class CrispEmbedOcr : IDisposable
 
     /// <summary>
     /// Plain-language help for the exit codes the dynamic loader and the shell use on Unix, which
-    /// a user cannot be expected to decode. 127 is the common one: the CrispEmbed CPU builds for
-    /// Linux link against OpenBLAS but do not ship it (see SubtitleEdit issue #13205).
+    /// a user cannot be expected to decode. 127 means a shared library could not be loaded.
+    /// The original cause (issue #13205) was an unshipped OpenBLAS dependency, fixed upstream in
+    /// CrispEmbed v0.17.5; what remains is typically a glibc too old for the pinned build, so the
+    /// hint no longer names a specific package to install.
     /// </summary>
     internal static string GetExitCodeHint(int exitCode)
     {
@@ -500,9 +502,11 @@ public class CrispEmbedOcr : IDisposable
         {
             127 => "Exit code 127 means a shared library the CrispEmbed binaries depend on could not be loaded." +
                    Environment.NewLine +
-                   "The Linux CrispEmbed builds need OpenBLAS, which they do not ship: try installing it" +
+                   "This is usually a system C library (glibc) older than the one the CrispEmbed build needs;" +
                    Environment.NewLine +
-                   "(\"sudo apt install libopenblas0\", \"sudo pacman -S openblas\", or your distro's equivalent).",
+                   "the CUDA builds in particular require a newer glibc than the CPU builds." +
+                   Environment.NewLine +
+                   "Run \"ldd\" on the CrispEmbed binary to see which library is missing.",
             126 => "Exit code 126 means the CrispEmbed binary could not be executed - it may be missing the" +
                    Environment.NewLine +
                    "executable permission, or be blocked by the system.",

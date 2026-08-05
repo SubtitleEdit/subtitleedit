@@ -159,6 +159,39 @@ public class MergeManagerTests
         Assert.Equal(TimeSpan.FromMilliseconds(3500), subtitles[0].EndTime);
     }
 
+    // The merged line must span every merged line, so the end time is the latest of them - not
+    // the last one in selection order. An ASSA sign event that outlives a dialog line merged
+    // into it is exactly the case the ASSA-only default targets, and taking "last" silently
+    // truncated it.
+    [Fact]
+    public void MergeSelectedLines_ShouldKeepLatestEndTime_NotLastLineEndTime()
+    {
+        var mergeManager = new MergeManager();
+        var subtitles = new ObservableCollection<SubtitleLineViewModel>
+        {
+            new()
+            {
+                Number = 1,
+                Text = "Sign that stays up",
+                StartTime = TimeSpan.Zero,
+                EndTime = TimeSpan.FromSeconds(10),
+            },
+            new()
+            {
+                Number = 2,
+                Text = "Short dialog",
+                StartTime = TimeSpan.FromSeconds(2),
+                EndTime = TimeSpan.FromSeconds(4),
+            },
+        };
+
+        mergeManager.MergeSelectedLines(subtitles, [subtitles[0], subtitles[1]], keepEndTime: true);
+
+        Assert.Single(subtitles);
+        Assert.Equal(TimeSpan.Zero, subtitles[0].StartTime);
+        Assert.Equal(TimeSpan.FromSeconds(10), subtitles[0].EndTime);
+    }
+
     [Theory]
     [InlineData(false, true, true, false)] // setting off => never keep, even for ASSA
     [InlineData(false, false, false, false)]

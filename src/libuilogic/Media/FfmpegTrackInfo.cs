@@ -12,6 +12,10 @@ namespace Nikse.SubtitleEdit.UiLogic.Media
         // "Stream #0:N(LANG): TYPE:" prefix. Empty when ffmpeg did not report one.
         public string Language { get; set; } = string.Empty;
 
+        // The global ffmpeg stream index N from "Stream #0:N" - the same number used in
+        // "-map 0:N". -1 when ffmpeg did not report one.
+        public int StreamIndex { get; set; } = -1;
+
         public int BitRate
         {
             get

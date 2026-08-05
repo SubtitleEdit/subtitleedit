@@ -413,6 +413,19 @@ Format: Marked, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
                     header.AppendLine(line);
                 }
 
+                // An event line also starts the event section, so a header-less payload (the
+                // clipboard carries bare event lines) still parses. Set before the section
+                // chain below so this same line is then parsed as an event (#10476).
+                if (!eventsStarted && !string.IsNullOrEmpty(line) &&
+                    (line.TrimStart().StartsWith("dialogue:", StringComparison.OrdinalIgnoreCase) ||
+                     line.TrimStart().StartsWith("dialog:", StringComparison.OrdinalIgnoreCase) ||
+                     line.TrimStart().StartsWith("comment:", StringComparison.OrdinalIgnoreCase)))
+                {
+                    eventsStarted = true;
+                    fontsStarted = false;
+                    graphicsStarted = false;
+                }
+
                 if (!string.IsNullOrEmpty(line) && line.TrimStart().StartsWith(';'))
                 {
                     // skip comment lines

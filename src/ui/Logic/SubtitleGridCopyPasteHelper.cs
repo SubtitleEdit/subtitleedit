@@ -71,7 +71,21 @@ internal static class SubtitleGridCopyPasteHelper
 
             if (firstEventIndex > 0)
             {
-                var eventLines = lines.GetRange(firstEventIndex, lines.Count - firstEventIndex);
+                // Stop at the first section that follows the events: ToText appends the
+                // subtitle footer ([Fonts] / [Graphics] / [Aegisub Extradata], including the
+                // embedded font payload) after the event lines, and that would be pasted as
+                // fake subtitle lines just like the header was (#10476).
+                var endIndex = lines.Count;
+                for (var i = firstEventIndex; i < lines.Count; i++)
+                {
+                    if (lines[i].TrimStart().StartsWith('['))
+                    {
+                        endIndex = i;
+                        break;
+                    }
+                }
+
+                var eventLines = lines.GetRange(firstEventIndex, endIndex - firstEventIndex);
                 while (eventLines.Count > 0 && string.IsNullOrWhiteSpace(eventLines[eventLines.Count - 1]))
                 {
                     eventLines.RemoveAt(eventLines.Count - 1);

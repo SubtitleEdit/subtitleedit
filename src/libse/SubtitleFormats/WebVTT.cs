@@ -197,7 +197,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 !string.IsNullOrEmpty(GetPositionInfoRaw(p.Style)) &&
                 GetPositionInfo(p.Style) == (currentTag ?? string.Empty))
             {
-                positionInfo = p.Style.Trim();
+                // "region:" is written separately by the caller, so drop it here - otherwise a
+                // cue that listed it after the other settings ("line:10% region:r1") is saved
+                // with the region twice.
+                positionInfo = RemoveCueSetting(p.Style, "region:").Trim();
             }
 
             return (" " + positionInfo).TrimEnd();
@@ -693,6 +696,28 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         {
             var region = GetTag(s, "region:");
             return region;
+        }
+
+        /// <summary>
+        /// Removes a "name:value" cue setting (and its trailing space) from a raw cue settings
+        /// string, leaving the other settings untouched.
+        /// </summary>
+        internal static string RemoveCueSetting(string s, string tag)
+        {
+            if (string.IsNullOrEmpty(s))
+            {
+                return s;
+            }
+
+            var pos = s.IndexOf(tag, StringComparison.Ordinal);
+            if (pos < 0)
+            {
+                return s;
+            }
+
+            var end = s.IndexOf(' ', pos);
+            var result = end < 0 ? s.Remove(pos) : s.Remove(pos, end - pos + 1);
+            return result.Trim();
         }
 
         private static string GetTag(string s, string tag)

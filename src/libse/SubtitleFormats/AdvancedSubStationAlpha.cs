@@ -1603,8 +1603,13 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text"
                 {
                     // skip empty and comment lines
                 }
-                else if (trimmedLine.StartsWith("dialog:", StringComparison.OrdinalIgnoreCase) || trimmedLine.StartsWith("dialogue:", StringComparison.OrdinalIgnoreCase))
+                else if (trimmedLine.StartsWith("dialog:", StringComparison.OrdinalIgnoreCase) ||
+                         trimmedLine.StartsWith("dialogue:", StringComparison.OrdinalIgnoreCase) ||
+                         trimmedLine.StartsWith("comment:", StringComparison.OrdinalIgnoreCase))
                 {
+                    // "Comment:" also starts the event section: a header-less payload (the
+                    // clipboard carries bare event lines) can begin with a commented event,
+                    // and without this those lines never reach the event parser (#10476).
                     eventsStarted = true;
                     fontsStarted = false;
                     graphicsStarted = false;
