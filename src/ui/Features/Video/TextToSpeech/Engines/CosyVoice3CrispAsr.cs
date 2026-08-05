@@ -79,6 +79,15 @@ public class CosyVoice3CrispAsr : ITtsEngine
     public const string BackendName = "cosyvoice3-tts";
 
     /// <summary>
+    /// Combo-box group labels for the engine's two generation modes: a voice baked into
+    /// <c>cosyvoice3-voices.gguf</c>, or zero-shot cloning from an imported reference WAV.
+    /// crispasr's cosyvoice3-tts backend has no third mode — the instruct / voice-design path of
+    /// the upstream web demo is not ported — so these two cover it.
+    /// </summary>
+    public const string PresetLabel = "Preset";
+    public const string CloneLabel = "Clone";
+
+    /// <summary>
     /// All filenames that must be present in <see cref="GetSetModelsFolder"/> for the chosen
     /// quant. Both quants share the F16 companion set — only the LLM differs. Listed in this
     /// order so the download dialog progresses through them deterministically.
@@ -388,9 +397,15 @@ public class CosyVoice3CrispAsr : ITtsEngine
         // Baked-in presets come first so the combo opens on a working default. Imported WAVs
         // (zero-shot clones) follow — they need a .txt sidecar with the transcription or the
         // server returns noise.
+        //
+        // The two groups are the engine's two generation modes (crispasr's cosyvoice3-tts takes
+        // either a bank name or a reference WAV, and nothing else), so they are labelled as such:
+        // the flat concatenation gave no way to tell an engine preset from your own import
+        // (#13272). Labels live on DisplayName, never on the voice Name, which is what saved
+        // cast-row mappings match against.
         foreach (var (display, preset) in Presets)
         {
-            result.Add(new Voice(new CosyVoice3Voice(display, preset)));
+            result.Add(new Voice(new CosyVoice3Voice(display, preset), $"{PresetLabel}: {display}"));
         }
 
         // Off the UI thread: GetSetVoicesFolder does one-time reference-WAV seeding through
@@ -402,7 +417,7 @@ public class CosyVoice3CrispAsr : ITtsEngine
             {
                 var name = Path.GetFileNameWithoutExtension(file).Replace('_', ' ');
                 var refText = TryReadRefText(file);
-                result.Add(new Voice(new CosyVoice3Voice(name, file, refText)));
+                result.Add(new Voice(new CosyVoice3Voice(name, file, refText), $"{CloneLabel}: {name}"));
             }
         }
 
@@ -510,22 +525,44 @@ public class CosyVoice3CrispAsr : ITtsEngine
         // reference voice's language and drops the reference transcript from the prompt when they
         // differ, so the clone speaks the target language instead of imitating the reference's.
         // Auto (empty) sends no field and keeps plain zero-shot. Baked presets carry their own
-        // bank language; for imported WAVs the reference language comes from the settings-window
-        // pick (source_lang) since the server's own detection is unreliable for Latin scripts.
+        // bank language; for imported WAVs the reference language is resolved per voice below.
         var languageArg = CosyVoice3Languages.ResolveLanguageArg(language);
         if (!string.IsNullOrEmpty(languageArg))
         {
             payload["language"] = languageArg;
         }
-        var sourceLanguage = (Se.Settings.Video.TextToSpeech.CosyVoice3CrispAsrSourceLanguage ?? string.Empty).Trim();
-        if (isClone && !string.IsNullOrEmpty(sourceLanguage))
+
+        // Reference language, per voice: the settings-window pick when set, otherwise detected
+        // from this voice's own transcript. The backend needs BOTH sides to go cross-lingual and
+        // its own detection declines on Latin-script transcripts, so leaving this empty is what
+        // made an en->de clone come out with the English reference's accent (#13272). One global
+        // setting also cannot be right for a user with reference WAVs in two languages, which is
+        // why the per-voice transcript wins over nothing at all.
+        var sourceLanguage = isClone
+            ? CosyVoice3Languages.ResolveSourceLanguageArg(cosyVoice.RefText)
+            : string.Empty;
+        if (!string.IsNullOrEmpty(sourceLanguage))
         {
             payload["source_lang"] = sourceLanguage;
+        }
+        else if (isClone && !string.IsNullOrEmpty(languageArg))
+        {
+            // Target language asked for, reference language unknowable: the backend will fall
+            // back to plain zero-shot and keep the reference's accent. It says so in its own log,
+            // which nobody reads on a request that returned 200 - so say it here, where the user
+            // can act on it.
+            Se.WriteToolsLog(
+                $"CosyVoice3 (CrispASR): target language '{languageArg}' requested for cloned voice "
+                + $"'{cosyVoice.Voice}', but the language of its reference WAV could not be determined "
+                + "from the transcript. Synthesis stays zero-shot and keeps the reference's accent - "
+                + "set \"Reference language\" in the CosyVoice3 settings window to enable cross-lingual "
+                + "synthesis.",
+                true);
         }
 
         var body = JsonSerializer.Serialize(payload);
         using var content = new StringContent(body, Encoding.UTF8, "application/json");
-        Se.WriteToolsLog($"CosyVoice3 (CrispASR): POST {ServerBaseUrl}/v1/audio/speech (voice={cosyVoice}, clone={isClone}, refTextLen={cosyVoice.RefText.Length}, textLen={text.Length}, language={(string.IsNullOrEmpty(languageArg) ? "(auto)" : languageArg)})");
+        Se.WriteToolsLog($"CosyVoice3 (CrispASR): POST {ServerBaseUrl}/v1/audio/speech (voice={cosyVoice}, clone={isClone}, refTextLen={cosyVoice.RefText.Length}, textLen={text.Length}, language={(string.IsNullOrEmpty(languageArg) ? "(auto)" : languageArg)}, sourceLanguage={(string.IsNullOrEmpty(sourceLanguage) ? "(unknown)" : sourceLanguage)})");
 
         HttpResponseMessage response;
         try

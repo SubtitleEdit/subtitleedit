@@ -154,7 +154,8 @@ public class CosyVoice3CrispAsrSettingsWindow : Window
         var sourceLanguageCombo = UiUtil.MakeComboBox(vm.SourceLanguages, vm, nameof(vm.SelectedSourceLanguage));
         var sourceLanguageHint = new TextBlock
         {
-            Text = "Language spoken in imported reference WAVs (for cross-lingual cloning)",
+            Text = "Language spoken in imported reference WAVs (for cross-lingual cloning). "
+                   + "Auto detects it from each voice's transcript.",
             FontSize = 12,
             Opacity = 0.75,
             VerticalAlignment = VerticalAlignment.Center,
