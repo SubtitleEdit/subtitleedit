@@ -18,8 +18,22 @@ namespace UITests.Logic;
 /// pieces left to right - Persian words are torn in half and the word order is reversed
 /// (issue #13160, reported for "Point sync via other subtitle").
 /// </summary>
-public class TableViewTextCellFlowDirectionTests
+public class TableViewTextCellFlowDirectionTests : IDisposable
 {
+    // Every window opened by a test is closed again in Dispose: if a test stops early, an
+    // unclosed window would outlive the test and race with the headless session teardown.
+    private readonly List<Window> _windows = new();
+
+    public void Dispose()
+    {
+        foreach (var window in _windows)
+        {
+            window.Close();
+        }
+
+        _windows.Clear();
+    }
+
     /// <summary>"دیگه نمی‌خوام ببینمت." - one Persian sentence with a ZWNJ inside نمی‌خوام.</summary>
     private const string PersianWithZwnj = "دیگه نمی‌خوام ببینمت.";
 
@@ -65,7 +79,7 @@ public class TableViewTextCellFlowDirectionTests
     /// Builds a one-column grid with the shared text-cell template, shows it, and returns
     /// the realized cell's text block.
     /// </summary>
-    private static TextBlock RealizeTextCell(string text)
+    private TextBlock RealizeTextCell(string text)
     {
         var tableView = TableViewExtras.MakeTableView(multiSelect: false);
         tableView.Columns.Add(new SeTableViewColumn
@@ -82,6 +96,7 @@ public class TableViewTextCellFlowDirectionTests
         };
 
         var window = new Window { Width = 400, Height = 200, Content = tableView };
+        _windows.Add(window);
         window.Show();
         Dispatcher.UIThread.RunJobs();
         window.UpdateLayout();

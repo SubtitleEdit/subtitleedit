@@ -18,8 +18,21 @@ namespace UITests.Features.Assa;
 ///   current style's font was not in the combo's item list.
 /// These tests drive the real controls headless, built exactly like the production windows.
 /// </summary>
-public class AssaStyleEditorDataLossTests
+public class AssaStyleEditorDataLossTests : IDisposable
 {
+    // Every window opened by a test is closed again in Dispose: if a test stops early, an
+    // unclosed window would outlive the test and race with the headless session teardown.
+    private readonly List<Window> _windows = new();
+
+    public void Dispose()
+    {
+        foreach (var window in _windows)
+        {
+            window.Close();
+        }
+
+        _windows.Clear();
+    }
     private static AssaStylesViewModel MakeVm()
     {
         var services = new ServiceCollection();
@@ -52,6 +65,7 @@ public class AssaStyleEditorDataLossTests
         var b = new StyleDisplay(new SsaStyle { Name = "B", Alignment = "5" });
 
         var window = new Window { Content = MakeAlignmentRadios(vm) };
+        _windows.Add(window);
         window.Show();
 
         vm.CurrentStyle = a;
@@ -78,6 +92,7 @@ public class AssaStyleEditorDataLossTests
         var storageStyle = new StyleDisplay(new SsaStyle { Name = "StorageDefault", Alignment = "2" });
 
         var window = new Window { Content = MakeAlignmentRadios(vm) };
+        _windows.Add(window);
         window.Show();
 
         vm.CurrentStyle = fileStyle;
@@ -103,6 +118,7 @@ public class AssaStyleEditorDataLossTests
 
         var panel = MakeAlignmentRadios(vm);
         var window = new Window { Content = panel };
+        _windows.Add(window);
         window.Show();
 
         vm.CurrentStyle = style;
@@ -130,6 +146,7 @@ public class AssaStyleEditorDataLossTests
 
         var combo = UiUtil.MakeComboBox(vm.Fonts, vm, nameof(vm.CurrentStyle) + "." + nameof(StyleDisplay.FontName));
         var window = new Window { Content = combo };
+        _windows.Add(window);
         window.Show();
 
         vm.CurrentStyle = a;

@@ -14,8 +14,22 @@ namespace UITests.Logic;
 /// and time codes went blank and a selection starting at row 1 left row 1 out (issue #13230).
 /// <see cref="TableViewExtras.MakeTableView"/> repairs the collection on every ItemsSource change.
 /// </summary>
-public class TableViewSelectionSyncTests
+public class TableViewSelectionSyncTests : IDisposable
 {
+    // Every window opened by a test is closed again in Dispose: if a test stops early, an
+    // unclosed window would outlive the test and race with the headless session teardown.
+    private readonly List<Window> _windows = new();
+
+    public void Dispose()
+    {
+        foreach (var window in _windows)
+        {
+            window.Close();
+        }
+
+        _windows.Clear();
+    }
+
     private sealed class Row
     {
         public string Text { get; set; } = string.Empty;
@@ -53,7 +67,7 @@ public class TableViewSelectionSyncTests
     /// The main subtitle grid: multi-select, always selected, with the view model's current row and
     /// index bound two-way - and filled the way SetSubtitles fills it (detach, fill, re-attach).
     /// </summary>
-    private static (TableView Grid, Vm Vm, ObservableCollection<Row> Items) MakeGridWithRows(int rowCount)
+    private (TableView Grid, Vm Vm, ObservableCollection<Row> Items) MakeGridWithRows(int rowCount)
     {
         var items = new ObservableCollection<Row>();
         var vm = new Vm();
@@ -64,7 +78,9 @@ public class TableViewSelectionSyncTests
         grid[!TableView.SelectedItemProperty] = new Binding(nameof(vm.Selected)) { Mode = BindingMode.TwoWay, Source = vm };
         grid[!TableView.SelectedIndexProperty] = new Binding(nameof(vm.SelectedIndex)) { Mode = BindingMode.TwoWay, Source = vm };
 
-        new Window { Width = 400, Height = 300, Content = grid }.Show();
+        var window = new Window { Width = 400, Height = 300, Content = grid };
+        _windows.Add(window);
+        window.Show();
 
         grid.ItemsSource = null;
         for (var i = 1; i <= rowCount; i++)

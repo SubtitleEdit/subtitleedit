@@ -16,9 +16,23 @@ namespace UITests.Logic;
 /// <see cref="UiUtil.RaiseSyntheticAltKeyUp"/> to complete the cycle; these tests pin both the
 /// broken Avalonia behavior (a canary for upstream fixes) and the recovery.
 /// </summary>
-public class AltMenuAccessKeyResetTests
+public class AltMenuAccessKeyResetTests : IDisposable
 {
-    private static Window MakeWindowWithMenu(out Menu menu)
+    // Every window opened by a test is closed again in Dispose: if a test stops early, an
+    // unclosed window would outlive the test and race with the headless session teardown.
+    private readonly List<Window> _windows = new();
+
+    public void Dispose()
+    {
+        foreach (var window in _windows)
+        {
+            window.Close();
+        }
+
+        _windows.Clear();
+    }
+
+    private Window MakeWindowWithMenu(out Menu menu)
     {
         menu = new Menu { Items = { new MenuItem { Header = "_File" } } };
         var editor = new TextBox();
@@ -26,6 +40,7 @@ public class AltMenuAccessKeyResetTests
         {
             Content = new StackPanel { Children = { menu, editor } },
         };
+        _windows.Add(window);
 
         window.Show();
         Dispatcher.UIThread.RunJobs();

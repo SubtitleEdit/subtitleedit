@@ -12,14 +12,29 @@ namespace UITests.Logic;
 /// style now bakes in the scaled font size. At 100% no style is added at all, so windows
 /// that locally restyle their combos (e.g. the burn-in window's compact 12.5) keep their look.
 /// </summary>
-public class ComboBoxDropDownScaleTests
+public class ComboBoxDropDownScaleTests : IDisposable
 {
-    private static ComboBoxItem FirstDropDownItem(double scaleFactor)
+    // Every window opened by a test is closed again in Dispose: if a test stops early, an
+    // unclosed window would outlive the test and race with the headless session teardown.
+    private readonly List<Window> _windows = new();
+
+    public void Dispose()
+    {
+        foreach (var window in _windows)
+        {
+            window.Close();
+        }
+
+        _windows.Clear();
+    }
+
+    private ComboBoxItem FirstDropDownItem(double scaleFactor)
     {
         UiTheme.SetLayoutScale(scaleFactor);
 
         var comboBox = new ComboBox { ItemsSource = new[] { "One", "Two" } };
         var window = new Window { Content = comboBox, Width = 300, Height = 200 };
+        _windows.Add(window);
         window.Show();
         window.UpdateLayout();
 
