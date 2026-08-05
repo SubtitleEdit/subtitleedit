@@ -38,13 +38,8 @@ public class ForcedAlignerSetupWindow : Window
             VerticalAlignment = VerticalAlignment.Center,
         };
         Attached.SetIcon(introIcon, IconNames.Waveform);
-        if (introIcon.Content is Optris.Icons.Avalonia.Icon glyph)
-        {
-            // The dark-theme icon style (UiTheme.ApplyLighterDark) overrides the inherited
-            // white foreground with the custom dark-theme foreground color, which can make
-            // the glyph hard to see on the colored square (#12717) - pin it to white locally.
-            glyph.Foreground = Brushes.White;
-        }
+        // Keep the glyph white on the colored square in the dark theme too (#12717).
+        introIcon.Classes.Add(UiTheme.IconOnAccentClassName);
 
         var introGlyph = new Border
         {

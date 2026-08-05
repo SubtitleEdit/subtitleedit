@@ -92,13 +92,8 @@ public class WordListsWindow : Window
             VerticalAlignment = VerticalAlignment.Center,
         };
         Optris.Icons.Avalonia.Attached.SetIcon(icon, iconName);
-        if (icon.Content is Optris.Icons.Avalonia.Icon iconGlyph)
-        {
-            // The dark-theme icon style (UiTheme.ApplyLighterDark) overrides the inherited
-            // white foreground with the custom dark-theme foreground color, which can make
-            // the glyph hard to see on the colored square (#12717) - pin it to white locally.
-            iconGlyph.Foreground = Brushes.White;
-        }
+        // Keep the glyph white on the colored square in the dark theme too (#12717).
+        icon.Classes.Add(UiTheme.IconOnAccentClassName);
         var glyph = new Border
         {
             Width = 22,
