@@ -85,7 +85,7 @@ public partial class DownloadLibMpvViewModel : ObservableObject, IClosingCleanup
                 {
                     try
                     {
-                        File.Delete(fileName); //TODO: might be in use... save to temp file instead
+                        File.Delete(fileName);
                     }
                     catch
                     {

@@ -7866,6 +7866,10 @@ public partial class MainViewModel :
             return;
         }
 
+        var maxStartDistance = Se.Settings.Waveform.SnapToShotChangeStartMaxSeconds;
+        var maxEndDistance = Se.Settings.Waveform.SnapToShotChangeEndMaxSeconds;
+        var maxSameShotEndDistance = Se.Settings.Waveform.SnapToShotChangeSameShotEndMaxSeconds;
+
         foreach (var line in selectedLines)
         {
             var idx = Subtitles.IndexOf(line);
@@ -7874,11 +7878,11 @@ public partial class MainViewModel :
 
             var nearestStartShotChange = AudioVisualizer.ShotChanges
                 .OrderBy(s => Math.Abs(s - line.StartTime.TotalSeconds))
-                .FirstOrDefault(s => Math.Abs(s - line.StartTime.TotalSeconds) < 1.0); //TODO: customizable
+                .FirstOrDefault(s => Math.Abs(s - line.StartTime.TotalSeconds) < maxStartDistance);
 
             var nearestEndShotChange = AudioVisualizer.ShotChanges
                 .OrderBy(s => Math.Abs(s - line.EndTime.TotalSeconds))
-                .FirstOrDefault(s => Math.Abs(s - line.EndTime.TotalSeconds) < 1.5); //TODO: customizable
+                .FirstOrDefault(s => Math.Abs(s - line.EndTime.TotalSeconds) < maxEndDistance);
 
             if (nearestStartShotChange == 0 && nearestEndShotChange == 0)
             {
@@ -7913,7 +7917,7 @@ public partial class MainViewModel :
             {
                 nearestEndShotChange = AudioVisualizer.ShotChanges
                     .OrderBy(s => Math.Abs(s - line.EndTime.TotalSeconds))
-                    .FirstOrDefault(s => Math.Abs(s - line.EndTime.TotalSeconds) < 0.5); //TODO: customizable
+                    .FirstOrDefault(s => Math.Abs(s - line.EndTime.TotalSeconds) < maxSameShotEndDistance);
 
                 if (nearestEndShotChange > 0 && nearestEndShotChange > line.StartTime.TotalSeconds)
                 {

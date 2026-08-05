@@ -68,12 +68,8 @@
             var r = Unham84[a];
             if (r == 0xff)
             {
+                // Unrecoverable data error - fall back to zero.
                 r = 0;
-                //TODO: Cast exception???
-                //if (config.Verbose)
-                //{
-                //    Console.WriteLine($"! Unrecoverable data error; UNHAM8/4({a:X2})");
-                //}
             }
             return (byte)(r & 0x0f);
         }

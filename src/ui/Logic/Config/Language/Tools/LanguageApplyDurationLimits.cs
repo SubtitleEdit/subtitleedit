@@ -8,6 +8,8 @@ public class LanguageApplyDurationLimits
     public string FixMinDurationMs { get; set; }
     public string DoNotGoPastShotChange { get; set; }
     public string FixMaxDurationMs { get; set; }
+    public string MinimumDurationMilliseconds { get; set; }
+    public string MaximumDurationMilliseconds { get; set; }
     public string MaxDurationShouldBeHigherThanMinDuration { get; set; }
     public string ChangedDurationFromXToYCommentZ { get; set; }
     public string OnlyPartialFixed { get; set; }
@@ -22,6 +24,8 @@ public class LanguageApplyDurationLimits
         FixMinDurationMs = "Fix minimum duration (ms)";
         DoNotGoPastShotChange = "Do not go past shot change";
         FixMaxDurationMs = "Fix maximum duration (ms)";
+        MinimumDurationMilliseconds = "Minimum duration (milliseconds):";
+        MaximumDurationMilliseconds = "Maximum duration (milliseconds):";
         MaxDurationShouldBeHigherThanMinDuration = "Maximum duration should be higher than minimum duration";
         ChangedDurationFromXToYCommentZ =  "Changed duration from {0} to {1} {2}";
         OnlyPartialFixed = "(only partial fix)";

@@ -1,4 +1,5 @@
 ﻿using Avalonia.Media;
+using WhisperChoices = Nikse.SubtitleEdit.UiLogic.AudioToText.WhisperChoice;
 
 namespace Nikse.SubtitleEdit.Logic.Config;
 
@@ -6,7 +7,9 @@ public class SeAudioToText
 {
     public bool PostProcessing { get; set; } = true;
 
-    public string WhisperChoice { get; set; } = "WhisperCPP"; //TODO: WhisperEngineCpp.StaticName;
+    // Must be one of the WhisperChoice constants - the engine lookup in SpeechToTextViewModel
+    // matches on ISpeechToTextEngine.Choice/Name, so an unknown value selects no engine at all.
+    public string WhisperChoice { get; set; } = WhisperChoices.Cpp;
 
     public bool WhisperIgnoreVersion { get; set; } = false;
 
