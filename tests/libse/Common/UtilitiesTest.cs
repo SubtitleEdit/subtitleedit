@@ -120,4 +120,16 @@ public class UtilitiesTest
     {
         Assert.Equal(input, Utilities.AddSpaceBeforeFrenchPunctuation(input));
     }
+
+    // The " 's " → "'s " merge is an English possessive OCR fix - it must not run for Dutch
+    // (" 's avonds" is a separate genitive word, issue #12144) nor for the empty language code
+    // the auto-trim path produces when language detection fails.
+    [Theory]
+    [InlineData("Ik hoorde ze 's avonds ruzie maken.", "nl", "Ik hoorde ze 's avonds ruzie maken.")]
+    [InlineData("Ik hoorde ze 's avonds ruzie maken.", "", "Ik hoorde ze 's avonds ruzie maken.")]
+    [InlineData("John 's car is red.", "en", "John's car is red.")]
+    public void RemoveUnneededSpaces_ApostropheSMerge_EnglishOnly(string input, string language, string expected)
+    {
+        Assert.Equal(expected, Utilities.RemoveUnneededSpaces(input, language));
+    }
 }

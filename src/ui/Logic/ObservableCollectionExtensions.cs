@@ -66,7 +66,9 @@ public static class ObservableCollectionExtensions
             subtitle.Paragraphs.Add(new Paragraph(line.Text, line.StartTime.TotalMilliseconds, line.EndTime.TotalMilliseconds));
         }
 
-        return LanguageAutoDetect.AutoDetectGoogleLanguage(subtitle);
+        // Detection failure returns null (the method's nullable signature) so auto-trim call sites
+        // can distinguish "undetected" from "English" via their "?? string.Empty" fallback (#12144).
+        return LanguageAutoDetect.AutoDetectGoogleLanguageOrNull(subtitle);
     }
 
 }
