@@ -30,6 +30,8 @@ public class SeTools
     public string GroqPrompt { get; set; }
     public string OpenRouterPrompt { get; set; }
     public string NvidiaPrompt { get; set; }
+    public bool MergeKeepEndTime { get; set; }
+    public bool MergeKeepEndTimeOnlyAssa { get; set; } = true;
     public bool JoinKeepTimeCodes { get; set; }
     public int JoinAppendMilliseconds { get; set; }
     public bool BinEditAppendKeepTimeCodes { get; set; }
