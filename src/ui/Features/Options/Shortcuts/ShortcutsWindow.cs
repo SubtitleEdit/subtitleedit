@@ -134,6 +134,17 @@ public class ShortcutsWindow : Window
                     VerticalAlignment = VerticalAlignment.Center,
                 };
                 icon.Bind(Attached.IconProperty, new Binding(nameof(ShortcutGroupTile.IconName)));
+                // The icon is attached via a data-template binding, so pin the glyph color to
+                // white when the Icon is created - the dark-theme icon style
+                // (UiTheme.ApplyLighterDark) would otherwise override the inherited white with
+                // the custom dark-theme foreground color (#12717).
+                icon.PropertyChanged += (_, e) =>
+                {
+                    if (e.Property == Attached.IconProperty && icon.Content is Optris.Icons.Avalonia.Icon glyph)
+                    {
+                        glyph.Foreground = Brushes.White;
+                    }
+                };
 
                 var glyph = new Border
                 {

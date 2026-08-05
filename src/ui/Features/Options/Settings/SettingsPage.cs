@@ -151,6 +151,13 @@ public class SettingsPage : UserControl
             VerticalAlignment = VerticalAlignment.Center,
         };
         Attached.SetIcon(image, section.IconName);
+        if (image.Content is Optris.Icons.Avalonia.Icon icon)
+        {
+            // The dark-theme icon style (UiTheme.ApplyLighterDark) overrides the inherited
+            // white foreground with the custom dark-theme foreground color, which can make
+            // the glyph hard to see on the colored square (#12717) - pin it to white locally.
+            icon.Foreground = Brushes.White;
+        }
         var glyph = new Border
         {
             Width = 22,
