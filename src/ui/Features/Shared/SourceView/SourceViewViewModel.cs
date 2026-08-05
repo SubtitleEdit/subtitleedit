@@ -14,6 +14,7 @@ using Nikse.SubtitleEdit.Features.Shared.TextBoxUtils;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using System;
+using System.Globalization;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
@@ -220,7 +221,10 @@ public partial class SourceViewViewModel : ObservableObject, IClosingCleanup
 
         var document = _editor.Document;
         var position = document.GetPosition(_editor.CaretOffset);
-        LineAndColumnInfo = string.Format(Se.Language.General.LineXColumnY, position.Line + 1, position.Column + 1);
+        LineAndColumnInfo = string.Format(
+            Se.Language.General.LineXColumnY,
+            Grouped(position.Line + 1),
+            Grouped(position.Column + 1));
 
         var selectionLength = _editor.SelectionLength;
         if (selectionLength == 0)
@@ -233,9 +237,15 @@ public partial class SourceViewViewModel : ObservableObject, IClosingCleanup
         var lastLine = document.GetPosition(_editor.SelectionStart + selectionLength).Line;
         SelectionInfo = string.Format(
             Se.Language.SourceView.SelectedXCharactersYLines,
-            selectionLength,
-            lastLine - firstLine + 1);
+            Grouped(selectionLength),
+            Grouped(lastLine - firstLine + 1));
     }
+
+    /// <summary>
+    /// A source file runs to tens of thousands of lines and characters, so the status line counts
+    /// are only readable with thousand separators.
+    /// </summary>
+    private static string Grouped(int value) => value.ToString("#,##0", CultureInfo.CurrentCulture);
 
     private void ValidationTimerTick(object? sender, EventArgs e)
     {
@@ -260,7 +270,7 @@ public partial class SourceViewViewModel : ObservableObject, IClosingCleanup
         if (source.Length > MaxValidationTextLength)
         {
             IsValidationError = false;
-            ValidationInfo = string.Format(Se.Language.SourceView.XLinesYSubtitles, lineCount, "?");
+            ValidationInfo = string.Format(Se.Language.SourceView.XLinesYSubtitles, Grouped(lineCount), "?");
             return;
         }
 
@@ -293,8 +303,12 @@ public partial class SourceViewViewModel : ObservableObject, IClosingCleanup
         var errorCount = _subtitleFormat.ErrorCount;
         IsValidationError = errorCount > 0;
         ValidationInfo = errorCount > 0
-            ? string.Format(Se.Language.SourceView.XLinesYSubtitlesZErrors, lineCount, subtitle.Paragraphs.Count, errorCount)
-            : string.Format(Se.Language.SourceView.XLinesYSubtitles, lineCount, subtitle.Paragraphs.Count);
+            ? string.Format(
+                Se.Language.SourceView.XLinesYSubtitlesZErrors,
+                Grouped(lineCount),
+                Grouped(subtitle.Paragraphs.Count),
+                Grouped(errorCount))
+            : string.Format(Se.Language.SourceView.XLinesYSubtitles, Grouped(lineCount), Grouped(subtitle.Paragraphs.Count));
     }
 
     // ----------------------------------------------------------------------------------------
@@ -691,6 +705,14 @@ public partial class SourceViewViewModel : ObservableObject, IClosingCleanup
             ? (e.KeyModifiers & KeyModifiers.Meta) != 0
             : (e.KeyModifiers & KeyModifiers.Control) != 0;
         var shift = (e.KeyModifiers & KeyModifiers.Shift) != 0;
+
+        // Help is user-configurable, so it cannot be a case in the switch below.
+        if (UiUtil.IsHelp(e))
+        {
+            e.Handled = true;
+            UiUtil.ShowHelp("features/source-view");
+            return;
+        }
 
         switch (e.Key)
         {

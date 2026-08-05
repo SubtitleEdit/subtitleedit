@@ -58,6 +58,8 @@ On macOS, use Cmd where Ctrl is shown, and Option+Backspace / Option+Delete for 
 
 The same commands — plus find, replace and go to line — are in the editor's right-click menu.
 
+**F1** opens this help page.
+
 ## See also
 
 - [Edit Menu](edit.md) — find and replace across subtitle lines rather than raw source
