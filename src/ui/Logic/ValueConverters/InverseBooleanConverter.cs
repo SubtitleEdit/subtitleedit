@@ -10,19 +10,19 @@ public class InverseBooleanConverter : IValueConverter
     {
         if (value is bool boolValue)
         {
-            return !boolValue;
+            return ConverterBoxes.Bool(!boolValue);
         }
 
-        return false;
+        return ConverterBoxes.False;
     }
 
     public object ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
         if (value is bool boolValue)
         {
-            return !boolValue;
+            return ConverterBoxes.Bool(!boolValue);
         }
 
-        return false;
+        return ConverterBoxes.False;
     }
 }

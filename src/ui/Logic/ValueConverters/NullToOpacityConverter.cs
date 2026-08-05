@@ -8,7 +8,7 @@ public class NullToOpacityConverter : IValueConverter
 {
     public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
-        return value != null ? 1.0 : 0.0;
+        return value != null ? ConverterBoxes.OneDouble : ConverterBoxes.ZeroDouble;
     }
 
     public object ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
