@@ -10808,7 +10808,7 @@ public partial class MainViewModel :
             ? text.Substring(0, selectionStart)
             : string.Empty;
 
-        var language = Subtitles.AutoDetectGoogleLanguage() ?? "en";
+        var language = Subtitles.AutoDetectGoogleLanguage();
         ReplaceSelectedText(tb, SentenceCaser.SentenceCase(textBefore, tb.SelectedText, language));
     }
 
@@ -16858,7 +16858,9 @@ public partial class MainViewModel :
     {
         if (Se.Settings.General.AutoTrimWhiteSpace)
         {
-            _autoTrimLanguageCode = Subtitles.AutoDetectGoogleLanguage() ?? string.Empty;
+            // OrNull + empty fallback: undetected text must not get the English-only rules
+            // (e.g. the " 's " merge corrupting Dutch, #12144).
+            _autoTrimLanguageCode = Subtitles.AutoDetectGoogleLanguageOrNull() ?? string.Empty;
             foreach (var item in Subtitles)
             {
                 item.Text = Utilities.RemoveUnneededSpaces(item.Text, _autoTrimLanguageCode).Trim();
@@ -22351,7 +22353,7 @@ public partial class MainViewModel :
 
         if (Se.Settings.General.AutoTrimWhiteSpace && e.RemovedItems.Count < 10)
         {
-            var languageCode = _autoTrimLanguageCode ??= Subtitles.AutoDetectGoogleLanguage() ?? string.Empty;
+            var languageCode = _autoTrimLanguageCode ??= Subtitles.AutoDetectGoogleLanguageOrNull() ?? string.Empty;
             foreach (SubtitleLineViewModel? item in e.RemovedItems)
             {
                 if (item != null)

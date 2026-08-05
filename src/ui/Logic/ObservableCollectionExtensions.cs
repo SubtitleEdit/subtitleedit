@@ -53,7 +53,16 @@ public static class ObservableCollectionExtensions
         }
     }
 
-    public static string? AutoDetectGoogleLanguage(this ObservableCollection<SubtitleLineViewModel> collection)
+    public static string AutoDetectGoogleLanguage(this ObservableCollection<SubtitleLineViewModel> collection)
+    {
+        // "en" on detection failure, matching LanguageAutoDetect.AutoDetectGoogleLanguage -
+        // the merge/auto-break call sites want a usable language code, not null.
+        return collection.AutoDetectGoogleLanguageOrNull() ?? "en";
+    }
+
+    // Detection failure returns null so call sites that must not apply English-only rules to
+    // undetected text (the auto-trim paths, #12144) can distinguish "undetected" from "English".
+    public static string? AutoDetectGoogleLanguageOrNull(this ObservableCollection<SubtitleLineViewModel> collection)
     {
         if (collection == null)
         {
@@ -66,8 +75,6 @@ public static class ObservableCollectionExtensions
             subtitle.Paragraphs.Add(new Paragraph(line.Text, line.StartTime.TotalMilliseconds, line.EndTime.TotalMilliseconds));
         }
 
-        // Detection failure returns null (the method's nullable signature) so auto-trim call sites
-        // can distinguish "undetected" from "English" via their "?? string.Empty" fallback (#12144).
         return LanguageAutoDetect.AutoDetectGoogleLanguageOrNull(subtitle);
     }
 
