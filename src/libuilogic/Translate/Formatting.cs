@@ -59,14 +59,16 @@ namespace Nikse.SubtitleEdit.UiLogic.Translate
             var text = input.Trim();
 
             // SSA/ASS tags
-            if (text.StartsWith("{\\", StringComparison.Ordinal))
+            while (text.StartsWith("{\\", StringComparison.Ordinal))
             {
                 var endIndex = text.IndexOf('}');
-                if (endIndex > 0)
+                if (endIndex <= 0)
                 {
-                    StartTags = text.Substring(0, endIndex + 1);
-                    text = text.Remove(0, endIndex + 1).Trim();
+                    break;
                 }
+
+                StartTags += text.Substring(0, endIndex + 1);
+                text = text.Remove(0, endIndex + 1).Trim();
             }
 
             // ASSA reset tag
