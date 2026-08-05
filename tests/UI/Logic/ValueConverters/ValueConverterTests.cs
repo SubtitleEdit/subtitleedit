@@ -209,6 +209,85 @@ public class ValueConverterTests
         Assert.False(run.IsSet(TextElement.ForegroundProperty));
     }
 
+    // Issue #10955: a block with a static color plus a \t(...) fade transition carries two
+    // primary colors. The grid can only show one, so the one with the best contrast against
+    // the grid background wins - regardless of the order the tags appear in.
+    [AvaloniaTheory]
+    [InlineData("{\\c&HFFFFFF&\\t(20,1000,0.9,\\c&H29F2FF&)}became clear.{\\c&HFFFFFF&}")] // static first
+    [InlineData("{\\c&HFFFFFF&\\t(20,1000,0.9,\\1c&H29F2FF&)}x")]                          // \1c variant
+    [InlineData("{\\t(20,1000,0.9,\\c&H29F2FF&)\\c&HFFFFFF&}x")]                           // transition first
+    public void ShowFormatting_AssaFadeTransition_MostVisibleColorWinsOnDarkBackground(string text)
+    {
+        TextWithSubtitleSyntaxHighlightingConverter.GridBackgroundOverride = () => Color.FromRgb(33, 33, 33);
+        try
+        {
+            var run = Assert.IsType<Run>(Highlight(text, SubtitleGridFormattingTypes.ShowFormatting)[0]);
+
+            // White (contrast ~17 on the dark background) beats the pale yellow fade
+            // destination &H29F2FF& (#FFF229, contrast ~14) - and the result must not depend
+            // on which of the two tags comes last.
+            Assert.Equal(Colors.White,
+                Assert.IsAssignableFrom<ISolidColorBrush>(run.Foreground).Color);
+        }
+        finally
+        {
+            TextWithSubtitleSyntaxHighlightingConverter.GridBackgroundOverride = null;
+        }
+    }
+
+    [AvaloniaFact]
+    public void ShowFormatting_AssaFadeTransition_UsesDestinationWhenStaticColorIsInvisible()
+    {
+        TextWithSubtitleSyntaxHighlightingConverter.GridBackgroundOverride = () => Color.FromRgb(33, 33, 33);
+        try
+        {
+            // The static color is nearly the background color, so the fade destination wins.
+            var run = SingleRun(Highlight("{\\c&H2A2A2A&\\t(20,1000,0.9,\\c&H29F2FF&)}x",
+                SubtitleGridFormattingTypes.ShowFormatting));
+
+            // &H29F2FF& is BGR: red = 0xFF, green = 0xF2, blue = 0x29
+            Assert.Equal(Color.FromArgb(255, 255, 242, 41),
+                Assert.IsAssignableFrom<ISolidColorBrush>(run.Foreground).Color);
+        }
+        finally
+        {
+            TextWithSubtitleSyntaxHighlightingConverter.GridBackgroundOverride = null;
+        }
+    }
+
+    [AvaloniaFact]
+    public void ShowFormatting_AssaFadeTransition_LeavesForegroundUnsetWhenNoColorIsVisible()
+    {
+        TextWithSubtitleSyntaxHighlightingConverter.GridBackgroundOverride = () => Colors.White;
+        try
+        {
+            // White and pale yellow are both near-invisible on a white background - leave the
+            // default foreground instead of picking the lesser evil (#10955).
+            var run = SingleRun(Highlight("{\\c&HFFFFFF&\\t(20,1000,0.9,\\c&H29F2FF&)}x",
+                SubtitleGridFormattingTypes.ShowFormatting));
+
+            Assert.False(run.IsSet(TextElement.ForegroundProperty));
+        }
+        finally
+        {
+            TextWithSubtitleSyntaxHighlightingConverter.GridBackgroundOverride = null;
+        }
+    }
+
+    // A color tag whose value does not parse still resets the color, exactly as it did before
+    // candidate collection was introduced.
+    [AvaloniaFact]
+    public void ShowFormatting_InvalidAssaColorAfterValidOneResetsTheColor()
+    {
+        var inlines = Highlight("{\\c&HFFFFFF&}a{\\c&HZZZZZZ&}b", SubtitleGridFormattingTypes.ShowFormatting);
+
+        var first = Assert.IsType<Run>(inlines[0]);
+        Assert.Equal(Colors.White, Assert.IsAssignableFrom<ISolidColorBrush>(first.Foreground).Color);
+
+        var second = Assert.IsType<Run>(inlines[1]);
+        Assert.False(second.IsSet(TextElement.ForegroundProperty));
+    }
+
     [AvaloniaFact]
     public void ShowFormatting_AppliesAssaFontNameAndSize()
     {
