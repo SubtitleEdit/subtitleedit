@@ -625,6 +625,10 @@ public static class UiTheme
                 {
                     new Setter(SyntaxTextView.ForegroundProperty, new SolidColorBrush(foreColor)),
                     new Setter(SyntaxTextView.CaretBrushProperty, new SolidColorBrush(foreColor)),
+
+                    // The default translucent steel blue nearly disappears on a dark background -
+                    // a brighter blue still lets the syntax colors read through on top.
+                    new Setter(SyntaxTextView.SelectionBrushProperty, new SolidColorBrush(Color.FromArgb(0x99, 0x4C, 0x8D, 0xE0))),
                 }
             },
 
