@@ -1,5 +1,6 @@
 ﻿using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.Enums;
+using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using Nikse.SubtitleEdit.Features.Main;
 using Nikse.SubtitleEdit.Logic.Config;
 using System;
@@ -21,7 +22,21 @@ namespace Nikse.SubtitleEdit.Logic
             KeepBreaks
         }
 
-        public Subtitle MergeSelectedLines(Subtitle inputSubtitle, int[] selectedIndices, BreakMode breakMode = BreakMode.Normal)
+        /// <summary>
+        /// True when merged lines should keep the end time of the last merged line even if it
+        /// overlaps the following subtitle, based on the merge settings and the current format.
+        /// </summary>
+        public static bool ShouldKeepEndTime(SubtitleFormat? currentFormat)
+        {
+            if (!Se.Settings.Tools.MergeKeepEndTime)
+            {
+                return false;
+            }
+
+            return !Se.Settings.Tools.MergeKeepEndTimeOnlyAssa || currentFormat is AdvancedSubStationAlpha;
+        }
+
+        public Subtitle MergeSelectedLines(Subtitle inputSubtitle, int[] selectedIndices, BreakMode breakMode = BreakMode.Normal, bool keepEndTime = false)
         {
             if (inputSubtitle.Paragraphs.Count <= 0 || selectedIndices.Length <= 1)
             {
@@ -113,7 +128,7 @@ namespace Nikse.SubtitleEdit.Logic
             currentParagraph.EndTime.TotalMilliseconds = endMilliseconds;
 
             var nextParagraph = subtitle.GetParagraphOrDefault(next);
-            if (nextParagraph != null && currentParagraph.EndTime.TotalMilliseconds > nextParagraph.StartTime.TotalMilliseconds && currentParagraph.StartTime.TotalMilliseconds < nextParagraph.StartTime.TotalMilliseconds)
+            if (!keepEndTime && nextParagraph != null && currentParagraph.EndTime.TotalMilliseconds > nextParagraph.StartTime.TotalMilliseconds && currentParagraph.StartTime.TotalMilliseconds < nextParagraph.StartTime.TotalMilliseconds)
             {
                 currentParagraph.EndTime.TotalMilliseconds = nextParagraph.StartTime.TotalMilliseconds - 1;
             }
@@ -127,7 +142,7 @@ namespace Nikse.SubtitleEdit.Logic
             return subtitle;
         }
 
-        public void MergeSelectedLines(ObservableCollection<SubtitleLineViewModel> inputSubtitle, List<SubtitleLineViewModel> selectedItems, BreakMode breakMode = BreakMode.Normal)
+        public void MergeSelectedLines(ObservableCollection<SubtitleLineViewModel> inputSubtitle, List<SubtitleLineViewModel> selectedItems, BreakMode breakMode = BreakMode.Normal, bool keepEndTime = false)
         {
             if (inputSubtitle.Count <= 0 || selectedItems.Count <= 1)
             {
@@ -246,7 +261,7 @@ namespace Nikse.SubtitleEdit.Logic
             currentParagraph.EndTime = TimeSpan.FromMilliseconds(endMilliseconds);
 
             var nextParagraph = inputSubtitle.GetOrNull(next);
-            if (nextParagraph != null && currentParagraph.EndTime.TotalMilliseconds > nextParagraph.StartTime.TotalMilliseconds && currentParagraph.StartTime.TotalMilliseconds < nextParagraph.StartTime.TotalMilliseconds)
+            if (!keepEndTime && nextParagraph != null && currentParagraph.EndTime.TotalMilliseconds > nextParagraph.StartTime.TotalMilliseconds && currentParagraph.StartTime.TotalMilliseconds < nextParagraph.StartTime.TotalMilliseconds)
             {
                 currentParagraph.EndTime = TimeSpan.FromMilliseconds(nextParagraph.StartTime.TotalMilliseconds - 1);
             }

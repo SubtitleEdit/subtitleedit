@@ -20221,7 +20221,7 @@ public partial class MainViewModel :
                 previous,
                 selectedItem,
             };
-            _mergeManager.MergeSelectedLines(Subtitles, list, breakMode: MergeManager.BreakMode.Normal);
+            _mergeManager.MergeSelectedLines(Subtitles, list, breakMode: MergeManager.BreakMode.Normal, keepEndTime: MergeManager.ShouldKeepEndTime(SelectedSubtitleFormat));
             Renumber();
             SelectAndScrollToRow(index - 1);
             _updateAudioVisualizer = true;
@@ -20246,7 +20246,7 @@ public partial class MainViewModel :
                 previous,
                 selectedItem,
             };
-            _mergeManager.MergeSelectedLines(Subtitles, list, breakMode: MergeManager.BreakMode.KeepBreaks);
+            _mergeManager.MergeSelectedLines(Subtitles, list, breakMode: MergeManager.BreakMode.KeepBreaks, keepEndTime: MergeManager.ShouldKeepEndTime(SelectedSubtitleFormat));
             Renumber();
             SelectAndScrollToRow(index - 1);
             _updateAudioVisualizer = true;
@@ -20271,7 +20271,7 @@ public partial class MainViewModel :
                 selectedItem,
                 next
             };
-            _mergeManager.MergeSelectedLines(Subtitles, list, breakMode: MergeManager.BreakMode.Normal);
+            _mergeManager.MergeSelectedLines(Subtitles, list, breakMode: MergeManager.BreakMode.Normal, keepEndTime: MergeManager.ShouldKeepEndTime(SelectedSubtitleFormat));
             Renumber();
             SelectAndScrollToRow(index);
             _updateAudioVisualizer = true;
@@ -20296,7 +20296,7 @@ public partial class MainViewModel :
                 selectedItem,
                 next
             };
-            _mergeManager.MergeSelectedLines(Subtitles, list, breakMode: MergeManager.BreakMode.KeepBreaks);
+            _mergeManager.MergeSelectedLines(Subtitles, list, breakMode: MergeManager.BreakMode.KeepBreaks, keepEndTime: MergeManager.ShouldKeepEndTime(SelectedSubtitleFormat));
             Renumber();
             SelectAndScrollToRow(index);
         }
@@ -20314,7 +20314,7 @@ public partial class MainViewModel :
         // selection there regardless of the order the rows were clicked in.
         var index = selectedItems.Min(item => Subtitles.IndexOf(item));
 
-        _mergeManager.MergeSelectedLines(Subtitles, selectedItems, breakMode: breakMode);
+        _mergeManager.MergeSelectedLines(Subtitles, selectedItems, breakMode: breakMode, keepEndTime: MergeManager.ShouldKeepEndTime(SelectedSubtitleFormat));
 
         SelectAndScrollToRow(index);
         Renumber();
