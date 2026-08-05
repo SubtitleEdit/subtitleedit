@@ -113,7 +113,7 @@ namespace Nikse.SubtitleEdit.Logic
             currentParagraph.EndTime.TotalMilliseconds = endMilliseconds;
 
             var nextParagraph = subtitle.GetParagraphOrDefault(next);
-            if (nextParagraph != null && currentParagraph.EndTime.TotalMilliseconds > nextParagraph.StartTime.TotalMilliseconds && currentParagraph.StartTime.TotalMilliseconds < nextParagraph.StartTime.TotalMilliseconds)
+            if (!Se.Settings.Waveform.AllowOverlap && nextParagraph != null && currentParagraph.EndTime.TotalMilliseconds > nextParagraph.StartTime.TotalMilliseconds && currentParagraph.StartTime.TotalMilliseconds < nextParagraph.StartTime.TotalMilliseconds)
             {
                 currentParagraph.EndTime.TotalMilliseconds = nextParagraph.StartTime.TotalMilliseconds - 1;
             }
@@ -246,7 +246,7 @@ namespace Nikse.SubtitleEdit.Logic
             currentParagraph.EndTime = TimeSpan.FromMilliseconds(endMilliseconds);
 
             var nextParagraph = inputSubtitle.GetOrNull(next);
-            if (nextParagraph != null && currentParagraph.EndTime.TotalMilliseconds > nextParagraph.StartTime.TotalMilliseconds && currentParagraph.StartTime.TotalMilliseconds < nextParagraph.StartTime.TotalMilliseconds)
+            if (!Se.Settings.Waveform.AllowOverlap && nextParagraph != null && currentParagraph.EndTime.TotalMilliseconds > nextParagraph.StartTime.TotalMilliseconds && currentParagraph.StartTime.TotalMilliseconds < nextParagraph.StartTime.TotalMilliseconds)
             {
                 currentParagraph.EndTime = TimeSpan.FromMilliseconds(nextParagraph.StartTime.TotalMilliseconds - 1);
             }

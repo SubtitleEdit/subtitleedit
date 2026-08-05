@@ -103,6 +103,91 @@ public class MergeManagerTests
         Assert.Single(subtitles);
         Assert.Equal(string.Empty, subtitles[0].OriginalText);
     }
+
+    [Fact]
+    public void MergeSelectedLines_ShouldKeepOriginalEndTime_WhenAllowOverlapEnabled()
+    {
+        // Arrange
+        Se.Settings.Waveform.AllowOverlap = true;
+        var mergeManager = new MergeManager();
+        var subtitles = new ObservableCollection<SubtitleLineViewModel>
+        {
+            new()
+            {
+                Number = 1,
+                Text = "One",
+                OriginalText = "Original one",
+                StartTime = TimeSpan.FromMilliseconds(500),
+                EndTime = TimeSpan.FromMilliseconds(1500),
+            },
+            new()
+            {
+                Number = 2,
+                Text = "Two",
+                OriginalText = "Original two",
+                StartTime = TimeSpan.FromMilliseconds(1600),
+                EndTime = TimeSpan.FromMilliseconds(3500),
+            },
+            new()
+            {
+                Number = 3,
+                Text = "Three",
+                OriginalText = "Original three",
+                StartTime = TimeSpan.FromMilliseconds(3000),
+                EndTime = TimeSpan.FromMilliseconds(4000),
+            },
+        };
+
+        // Act — merge ① into ②, where ② overlaps the following subtitle ③
+        mergeManager.MergeSelectedLines(subtitles, [subtitles[0], subtitles[1]]);
+
+        // Assert — with "Allow overlap" enabled the merged line keeps ②'s original end time
+        Assert.Equal(2, subtitles.Count);
+        Assert.Equal(TimeSpan.FromMilliseconds(500), subtitles[0].StartTime);
+        Assert.Equal(TimeSpan.FromMilliseconds(3500), subtitles[0].EndTime);
+    }
+
+    [Fact]
+    public void MergeSelectedLines_ShouldTrimEndTimeToNextStart_WhenAllowOverlapDisabled()
+    {
+        // Arrange
+        Se.Settings.Waveform.AllowOverlap = false;
+        var mergeManager = new MergeManager();
+        var subtitles = new ObservableCollection<SubtitleLineViewModel>
+        {
+            new()
+            {
+                Number = 1,
+                Text = "One",
+                OriginalText = "Original one",
+                StartTime = TimeSpan.FromMilliseconds(500),
+                EndTime = TimeSpan.FromMilliseconds(1500),
+            },
+            new()
+            {
+                Number = 2,
+                Text = "Two",
+                OriginalText = "Original two",
+                StartTime = TimeSpan.FromMilliseconds(1600),
+                EndTime = TimeSpan.FromMilliseconds(3500),
+            },
+            new()
+            {
+                Number = 3,
+                Text = "Three",
+                OriginalText = "Original three",
+                StartTime = TimeSpan.FromMilliseconds(3000),
+                EndTime = TimeSpan.FromMilliseconds(4000),
+            },
+        };
+
+        // Act — merge ① into ②, where ② overlaps the following subtitle ③
+        mergeManager.MergeSelectedLines(subtitles, [subtitles[0], subtitles[1]]);
+
+        // Assert — default behavior: the merged line is trimmed to end just before ③
+        Assert.Equal(2, subtitles.Count);
+        Assert.Equal(TimeSpan.FromMilliseconds(2999), subtitles[0].EndTime);
+    }
 }
 
 
