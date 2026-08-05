@@ -11,6 +11,7 @@ using Avalonia.Media;
 using Avalonia.Styling;
 using System.Collections.ObjectModel;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.Engines;
+using Nikse.SubtitleEdit.Features.Video.TextToSpeech.Voices;
 using Optris.Icons.Avalonia;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
@@ -328,6 +329,17 @@ public class TextToSpeechWindow : Window
         // The Qwen3 VoiceDesign model has no speaker encoder - the combo is locked to "Default".
         var comboBoxVoices = UiUtil.MakeComboBox(vm.Voices, vm, nameof(vm.SelectedVoice)).WithWidth(controlMinWidth);
         comboBoxVoices.Bind(ComboBox.IsEnabledProperty, new Binding(nameof(vm.IsVoiceComboEnabled)) { Mode = BindingMode.OneWay });
+        // Show Voice.DisplayName rather than the default ToString(): engines whose list mixes
+        // several kinds of voice label them there (CosyVoice3's "Preset: ..." / "Clone: ...",
+        // #13272). DisplayName falls back to the plain name, so every other engine is unchanged.
+        comboBoxVoices.ItemTemplate = new FuncDataTemplate<Voice>((_, _) =>
+        {
+            // Bound rather than assigned: the template supports recycling, and a recycled
+            // container only gets a new DataContext - a statically-set Text would go stale.
+            var textBlock = new TextBlock { VerticalAlignment = VerticalAlignment.Center };
+            textBlock.Bind(TextBlock.TextProperty, new Binding(nameof(Voice.DisplayName)));
+            return textBlock;
+        }, true);
 
         var panelVoice = new StackPanel
         {

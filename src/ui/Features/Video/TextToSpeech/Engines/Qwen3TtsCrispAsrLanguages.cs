@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Nikse.SubtitleEdit.Logic.Config;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -61,7 +62,15 @@ internal static class Qwen3TtsCrispAsrLanguages
     /// </summary>
     public static string ResolveLanguageArg(TtsLanguage? language)
     {
-        var code = language?.Code;
+        // A null language means the CALLER had none to hand over, not that the user picked
+        // "Auto" - the cast dialog's voice-test button and cross-engine cast rows both pass null
+        // and rely on the engine falling back to its own saved default (#13272).
+        if (language == null)
+        {
+            return ResolveSavedLanguageArg();
+        }
+
+        var code = language.Code;
         if (string.IsNullOrWhiteSpace(code))
         {
             return string.Empty;
@@ -72,5 +81,22 @@ internal static class Qwen3TtsCrispAsrLanguages
         return All.Any(l => string.Equals(l.Code, code, StringComparison.OrdinalIgnoreCase))
             ? code
             : string.Empty;
+    }
+
+    /// <summary>
+    /// The language code behind the pick saved by the main TTS window, or an empty string when
+    /// nothing is saved / the saved entry is "Auto". The setting stores the DISPLAY NAME, which
+    /// is how <c>TextToSpeechViewModel</c> writes and restores it.
+    /// </summary>
+    public static string ResolveSavedLanguageArg()
+    {
+        var savedName = Se.Settings.Video.TextToSpeech.Qwen3TtsCrispAsrLanguage;
+        if (string.IsNullOrWhiteSpace(savedName))
+        {
+            return string.Empty;
+        }
+
+        return All.FirstOrDefault(l => string.Equals(l.Name, savedName, StringComparison.OrdinalIgnoreCase))?.Code
+               ?? string.Empty;
     }
 }
