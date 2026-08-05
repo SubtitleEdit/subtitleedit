@@ -3,6 +3,39 @@ Subtitle Edit Changelog
 
 -----------------------------------------------------------------------------------------------------
 
+v5.2.0-beta4 (5th of August 2026)
+
+* Read subtitles from fragmented MP4 (DASH/CMAF): WebVTT, TTML/IMSC1 and tx3g
+* Offer the MP4 track picker for fragmented files with several subtitle tracks
+* Read stxt/sbtt text streams, tx3g styles and the VobSub palette from MP4
+* Source view: find/replace, go to line, live format check and a prompt before discarding edits
+* Add "Go to first line"/"Go to last line" shortcuts with video sync (Ctrl+Home/End) - thx GrampaWildWilly
+* OCR: add the PP-OCRv6 backend (CrispEmbed v0.17.2)
+* AI review/assistant: add Gemma 4 E2B, EuroLLM 9B/22B and Granite 4.1 8B
+* Update ffmpeg downloads - Windows 9.0, macOS ARM 8.1, macOS Intel 8.0
+* Update llama.cpp to b10256
+* Accessibility: announce combo box and spinner value changes, and let Alt close an open drop-down - thx Shaima-Almarzooqi
+* Spell check: detect the subtitle language again after opening/importing a file - thx fraternl
+* Fix right-to-left text rendering in dialog subtitle grids - thx AliNet1974
+* Fix the Settings dialog not opening with focus - thx GrampaWildWilly
+* Fix the subtitle grid getting stuck on the first caption after opening a file - thx GrampaWildWilly
+* Fix the initial video position not being 0:00 - thx GrampaWildWilly
+* Fix menus hidden behind the undocked audio visualizer - thx GrampaWildWilly
+* Fix undocked video controls popping up on mouse movement in other apps - thx GrampaWildWilly
+* Fix OmniVoice text to speech failing to start with the CUDA engine - thx subof
+* Explain native engine exit codes instead of showing a raw number - thx subof
+* Fix the CrispEmbed server exiting with code 127 on Linux - thx perkesfurmah-collab
+* Fix speech to text failing to start in the Flathub package (missing OpenBLAS) - thx DarkSwan86
+* Fix Statistics and batch convert crashing with the Bulgarian UI (bad format strings)
+* Fix the burn-in window losing its minimum width while generating
+* Faster subtitle grid selection handling and time code display - thx ivandrofly
+* Update Polish translation - thx potplayer-fanpack
+* Update French translation - thx Need74
+* Update Korean translation - thx 12si27
+* Update Japanese translation - thx hisui3393
+
+-----------------------------------------------------------------------------------------------------
+
 v5.2.0-beta3 (4th of August 2026)
 
 * Extract ARIB STD-B24 captions from transport streams (Japanese ISDB, Brazilian SBTVD)
