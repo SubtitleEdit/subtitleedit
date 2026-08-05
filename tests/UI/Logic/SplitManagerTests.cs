@@ -72,6 +72,52 @@ public class SplitManagerTests
     }
 
     [Fact]
+    public void Split_WithTextIndex_AppliesConfiguredContinuationStyle()
+    {
+        var originalContinuationStyle = Se.Settings.General.ContinuationStyle;
+        try
+        {
+            Se.Settings.General.MinimumBetweenLines.Milliseconds = 0;
+            Se.Settings.General.ContinuationStyle = nameof(ContinuationStyle.OnlyTrailingEllipsis);
+            var manager = new SplitManager();
+            var subtitle = MakeSubtitle("Hello world foo bar", 1, 3);
+            var subtitles = new ObservableCollection<SubtitleLineViewModel> { subtitle };
+
+            manager.Split(subtitles, subtitle, textIndex: 15, languageCode: "en");
+
+            Assert.Equal("Hello world foo…", subtitles[0].Text);
+            Assert.Equal("bar", subtitles[1].Text);
+        }
+        finally
+        {
+            Se.Settings.General.ContinuationStyle = originalContinuationStyle;
+        }
+    }
+
+    [Fact]
+    public void Split_WithoutSecondHalf_DoesNotAddContinuationMarker()
+    {
+        var originalContinuationStyle = Se.Settings.General.ContinuationStyle;
+        try
+        {
+            Se.Settings.General.MinimumBetweenLines.Milliseconds = 0;
+            Se.Settings.General.ContinuationStyle = nameof(ContinuationStyle.OnlyTrailingEllipsis);
+            var manager = new SplitManager();
+            var subtitle = MakeSubtitle("Hello", 1, 3);
+            var subtitles = new ObservableCollection<SubtitleLineViewModel> { subtitle };
+
+            manager.Split(subtitles, subtitle, textIndex: subtitle.Text.Length, languageCode: "en");
+
+            Assert.Equal("Hello", subtitles[0].Text);
+            Assert.Equal(string.Empty, subtitles[1].Text);
+        }
+        finally
+        {
+            Se.Settings.General.ContinuationStyle = originalContinuationStyle;
+        }
+    }
+
+    [Fact]
     public void Split_WithVideoPosition_UsesVideoPositionAsTimeSplitPoint()
     {
         // Arrange
