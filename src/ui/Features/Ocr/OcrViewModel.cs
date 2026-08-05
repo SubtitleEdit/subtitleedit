@@ -1325,7 +1325,7 @@ public partial class OcrViewModel : ObservableObject
                     MessageBoxButtons.Cancel,
                     MessageBoxIcon.Question,
                     "CPU (~10 MB)",
-                    "GPU CUDA (~705 MB)");
+                    "GPU CUDA (~718 MB)");
 
                 if (answer == MessageBoxResult.Cancel)
                 {
