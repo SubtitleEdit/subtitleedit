@@ -152,8 +152,11 @@ public static class ImageRenderer
         // are distances from the canvas edges - convert before comparing.
         var firstBaseline = textStartY;
         var lastBaseline = textStartY + (lines.Count - 1) * (baseLineHeight + lineSpacing);
-        var lineBoxTop = (int)(firstBaseline - Math.Abs(fontMetrics.Ascent) - Math.Abs(outlineWidth));
-        var lineBoxBottom = (int)(lastBaseline + Math.Abs(fontMetrics.Descent) + Math.Abs(outlineWidth) + Math.Abs(shadowWidth));
+        // Floor/ceiling (not (int) truncation, which rounds toward zero and would wobble the
+        // padding by 0-1 px on negative fractional metrics) so the anchoring is stable
+        // (review follow-up, #13202).
+        var lineBoxTop = (int)Math.Floor(firstBaseline - Math.Abs(fontMetrics.Ascent) - Math.Abs(outlineWidth));
+        var lineBoxBottom = (int)Math.Ceiling(lastBaseline + Math.Abs(fontMetrics.Descent) + Math.Abs(outlineWidth) + Math.Abs(shadowWidth));
         var tightTop = bitmapNoPadding.Top;
         var tightBottom = tempBitmap.Height - 1 - bitmapNoPadding.Bottom;
         var topPad = Math.Max(0, tightTop - lineBoxTop);
