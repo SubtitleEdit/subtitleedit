@@ -78,7 +78,7 @@ public class SubtitleGridEnterShortcutTests
         // The settings singleton is shared across tests in the run, so make sure the action has
         // exactly ONE binding - the user's - or GetUsedShortcuts' GroupBy(First()) would prefer
         // the pre-existing default binding (Alt+Down) over it.
-        var originalGoToNextLine = Se.Settings.Shortcuts.FirstOrDefault(s => s.ActionName == nameof(MainViewModel.GoToNextLineCommand));
+        var originalGoToNextLine = Se.Settings.Shortcuts.Where(s => s.ActionName == nameof(MainViewModel.GoToNextLineCommand)).ToList();
         Se.Settings.Shortcuts.RemoveAll(s => s.ActionName == nameof(MainViewModel.GoToNextLineCommand));
         Se.Settings.Shortcuts.Add(new SeShortCut(nameof(MainViewModel.GoToNextLineCommand), ["Return"]));
         try
@@ -101,10 +101,7 @@ public class SubtitleGridEnterShortcutTests
         finally
         {
             Se.Settings.Shortcuts.RemoveAll(s => s.ActionName == nameof(MainViewModel.GoToNextLineCommand));
-            if (originalGoToNextLine != null)
-            {
-                Se.Settings.Shortcuts.Add(originalGoToNextLine);
-            }
+            Se.Settings.Shortcuts.AddRange(originalGoToNextLine);
         }
     }
 }
