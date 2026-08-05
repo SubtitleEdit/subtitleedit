@@ -151,6 +151,8 @@ public class SettingsPage : UserControl
             VerticalAlignment = VerticalAlignment.Center,
         };
         Attached.SetIcon(image, section.IconName);
+        // Keep the glyph white on the colored square in the dark theme too (#12717).
+        image.Classes.Add(UiTheme.IconOnAccentClassName);
         var glyph = new Border
         {
             Width = 22,

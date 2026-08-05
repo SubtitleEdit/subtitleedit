@@ -23,6 +23,13 @@ public static class UiTheme
     private static ResourceDictionary? _resourceOverrides;
     private static object? _themeChangeSubscription;
 
+    /// <summary>
+    /// Style class for a ContentControl hosting an icon that sits on a colored accent
+    /// square - its glyph stays white in the dark theme instead of getting the custom
+    /// dark-theme foreground (#12717).
+    /// </summary>
+    public const string IconOnAccentClassName = "icon-on-accent";
+
     public const string ThemeNameSystem = "System";
     public const string ThemeNameLight = "Light";
     public const string ThemeNameDark = "Dark";
@@ -675,6 +682,19 @@ public static class UiTheme
                 Setters =
                 {
                     new Setter(Optris.Icons.Avalonia.Icon.ForegroundProperty, new SolidColorBrush(foreColor))
+                }
+            },
+
+            // Icons on a colored accent square (settings sections, word lists, shortcut
+            // groups) keep their white glyph: the blanket icon foreground above would wash
+            // them out against the colored background (#12717). Hosts opt in by adding
+            // IconOnAccentClassName; this must come after the blanket style so it wins.
+            new Style(x => x.OfType<ContentControl>().Class(IconOnAccentClassName)
+                    .Descendant().OfType<Optris.Icons.Avalonia.Icon>())
+            {
+                Setters =
+                {
+                    new Setter(Optris.Icons.Avalonia.Icon.ForegroundProperty, Brushes.White)
                 }
             },
 
