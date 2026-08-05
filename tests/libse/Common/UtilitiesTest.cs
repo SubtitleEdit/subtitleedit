@@ -134,6 +134,47 @@ public class UtilitiesTest
         }
     }
 
+    // A regex entry matches against the text before the break point. CanBreak matches the list
+    // against a span and only materialises that text as a string when the list has a regex in it,
+    // so a list with one still has to work - none of the shipped lists has one.
+    [Fact]
+    public void AutoBreakLine_NoBreakAfterRegexEntry_IsHonored()
+    {
+        var oldDataDirectory = Configuration.DataDirectory;
+        var oldUseNoLineBreakAfter = Configuration.Settings.Tools.UseNoLineBreakAfter;
+        var dictionaryFolder = Path.Combine(Path.GetTempPath(), "seRegexNoBreak_" + Guid.NewGuid().ToString("N"));
+        try
+        {
+            Directory.CreateDirectory(Path.Combine(dictionaryFolder, "Dictionaries"));
+            File.WriteAllText(Path.Combine(dictionaryFolder, "Dictionaries", "zz_NoBreakAfterList.xml"),
+                "<NoBreakAfterList>" + Environment.NewLine +
+                "  <Item RegEx=\"true\">\\bnumber$</Item>" + Environment.NewLine +
+                "</NoBreakAfterList>");
+            Configuration.DataDirectory = dictionaryFolder;
+            Configuration.Settings.Tools.UseNoLineBreakAfter = true;
+            Utilities.ResetNoBreakAfterList();
+
+            var result = Utilities.AutoBreakLinePrivate("Call the number seven now", 14, 0, "zz", false);
+
+            var lines = result.SplitToLines();
+            Assert.True(lines.Count == 2, "Expected two lines, got: " + result);
+            Assert.False(lines[0].TrimEnd().EndsWith("number"), "Broke after the regex entry: " + result);
+        }
+        finally
+        {
+            Configuration.DataDirectory = oldDataDirectory;
+            Configuration.Settings.Tools.UseNoLineBreakAfter = oldUseNoLineBreakAfter;
+            Utilities.ResetNoBreakAfterList();
+            try
+            {
+                Directory.Delete(dictionaryFolder, true);
+            }
+            catch (IOException)
+            {
+            }
+        }
+    }
+
     // GetColorFromFontString measured colorStart relative to the extracted <font> tag
     // but indexed the full string, so a tag that wasn't at the start of the line read
     // the wrong region and returned the default color.

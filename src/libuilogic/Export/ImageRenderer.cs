@@ -139,8 +139,6 @@ public static class ImageRenderer
 
         //System.IO.File.WriteAllBytes(@"C:\temp\debug_raw.png", tempBitmap.ToPngArray());
 
-        var bitmapNoPadding = tempBitmap.TrimTransparentPixels();
-
         // The tight glyph-bound trim would make the bitmap height depend on the glyphs
         // present (ascenders/descenders), so bottom-anchored exports (PGS, VobSub,
         // BDN-XML) would place subtitles with and without descenders at different
@@ -148,25 +146,49 @@ public static class ImageRenderer
         // instead: top = first baseline - ascent, bottom = last baseline + descent,
         // plus room for outline and shadow. The height then depends only on the line
         // count, and the baselines land at fixed screen positions for every alignment.
-        // Note: TrimResult.Top/Left are absolute canvas coordinates, while Right/Bottom
-        // are distances from the canvas edges - convert before comparing.
+        //
+        // Measuring the drawn bounds and cropping to the union of them and the line box
+        // is one copy of the scratch canvas; trimming tight and re-padding afterwards
+        // was two.
+        var drawnBounds = tempBitmap.GetNonTransparentBounds();
+        if (drawnBounds.IsEmpty)
+        {
+            // Text that draws nothing despite not being whitespace (an unsupported codepoint,
+            // say). TrimTransparentPixels fell back to a copy of the whole scratch canvas here,
+            // so keep that shape rather than changing what those exports contain.
+            drawnBounds = new SkiaExt.NonTransparentBounds
+            {
+                Left = 0,
+                Top = 0,
+                Right = tempBitmap.Width - 1,
+                Bottom = tempBitmap.Height - 1,
+            };
+        }
+
         var firstBaseline = textStartY;
         var lastBaseline = textStartY + (lines.Count - 1) * (baseLineHeight + lineSpacing);
         // Floor/ceiling, not (int) truncation - truncation rounds toward zero, which
         // would wobble the padding by 0-1 px depending on the fractional font metrics.
         var lineBoxTop = (int)Math.Floor(firstBaseline - Math.Abs(fontMetrics.Ascent) - Math.Abs(outlineWidth));
         var lineBoxBottom = (int)Math.Ceiling(lastBaseline + Math.Abs(fontMetrics.Descent) + Math.Abs(outlineWidth) + Math.Abs(shadowWidth));
-        var tightTop = bitmapNoPadding.Top;
-        var tightBottom = tempBitmap.Height - 1 - bitmapNoPadding.Bottom;
-        var topPad = Math.Max(0, tightTop - lineBoxTop);
-        var bottomPad = Math.Max(0, lineBoxBottom - tightBottom);
-        var textBitmap = topPad > 0 || bottomPad > 0
-            ? bitmapNoPadding.TrimmedBitmap.AddTransparentMargins(0, topPad, 0, bottomPad)
-            : bitmapNoPadding.TrimmedBitmap;
+
+        // The line box can only fall outside the scratch canvas for text taller than the
+        // canvas, which is already clipped; keep the transparent rows for it anyway so the
+        // exported height stays a function of the line count alone.
+        var cropTop = Math.Max(0, Math.Min(drawnBounds.Top, lineBoxTop));
+        var cropBottom = Math.Min(tempBitmap.Height - 1, Math.Max(drawnBounds.Bottom, lineBoxBottom));
+        var overflowTop = cropTop - Math.Min(drawnBounds.Top, lineBoxTop);
+        var overflowBottom = Math.Max(drawnBounds.Bottom, lineBoxBottom) - cropBottom;
+
+        var textBitmap = tempBitmap.CropTo(drawnBounds.Left, cropTop, drawnBounds.Right, cropBottom);
+        if (overflowTop > 0 || overflowBottom > 0)
+        {
+            textBitmap = Replace(textBitmap, textBitmap.AddTransparentMargins(0, overflowTop, 0, overflowBottom));
+        }
 
         if (ip.BoxType != ExportBoxType.None)
         {
-            textBitmap = DrawBoxBehindText(textBitmap, lines, ip, regularFont, boldFont, italicFont, boldItalicFont, baseLineHeight, lineSpacing);
+            textBitmap = Replace(textBitmap, DrawBoxBehindText(textBitmap, lines, ip, regularFont, boldFont, italicFont, boldItalicFont, baseLineHeight, lineSpacing));
         }
 
         if (ip.PaddingTopBottom == 0 && ip.PaddingLeftRight == 0)
@@ -174,10 +196,26 @@ public static class ImageRenderer
             return textBitmap;
         }
 
-        var bitmapWithMargins = textBitmap.AddTransparentMargins(ip.PaddingLeftRight, ip.PaddingTopBottom, ip.PaddingLeftRight, ip.PaddingTopBottom);
+        var bitmapWithMargins = Replace(textBitmap,
+            textBitmap.AddTransparentMargins(ip.PaddingLeftRight, ip.PaddingTopBottom, ip.PaddingLeftRight, ip.PaddingTopBottom));
         //System.IO.File.WriteAllBytes(@"C:\temp\debug_with_margins.png", bitmapWithMargins.ToPngArray());
 
         return bitmapWithMargins;
+    }
+
+    /// <summary>
+    /// Each of the wrapping steps returns a new bitmap, and every SKBitmap holds a native pixel
+    /// buffer - a feature-length export runs this 2000+ times, so the intermediates have to go
+    /// back straight away instead of waiting for a finalizer.
+    /// </summary>
+    private static SKBitmap Replace(SKBitmap previous, SKBitmap replacement)
+    {
+        if (!ReferenceEquals(previous, replacement))
+        {
+            previous.Dispose();
+        }
+
+        return replacement;
     }
 
     // FontFaces.CreateTypeface may return null when the requested face is missing and Skia
