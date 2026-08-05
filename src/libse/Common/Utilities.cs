@@ -2623,7 +2623,8 @@ namespace Nikse.SubtitleEdit.Core.Common
                 text = text.Replace(" ,", ",");
             }
 
-            if (language != "nl")
+            // " 's " is an English possessive fix - Dutch keeps it as a separate word ("'s avonds", issue #12144)
+            if (language == "en")
             {
                 while (text.Contains(" 's "))
                 {
