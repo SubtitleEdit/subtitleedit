@@ -76,8 +76,10 @@ public partial class PickMp4TrackViewModel : ObservableObject
                 // mdia.Name is the Box.Name of the last parsed child box (typically "minf"),
                 // so it must not be shown as the track name - the track language from the
                 // media header (mdhd) is what identifies the track; fall back to the
-                // handler name from hdlr when no media header is present.
-                Name = mdia.Mdhd?.LanguageString ?? mdia.HandlerName,
+                // handler name from hdlr, and to the handler type when that is blank
+                // (review follow-up, #13225).
+                Name = mdia.Mdhd?.LanguageString ??
+                       (string.IsNullOrEmpty(mdia.HandlerName) ? mdia.HandlerType : mdia.HandlerName),
                 StartPosition = mdia.StartPosition,
                 IsVobSubSubtitle = mdia.IsVobSubSubtitle,
                 Duration = LastCueEnd(mdia.Minf?.Stbl?.GetParagraphs()),
