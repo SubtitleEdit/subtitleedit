@@ -73,7 +73,11 @@ public partial class PickMp4TrackViewModel : ObservableObject
             var display = new Mp4TrackInfoDisplay
             {
                 HandlerType = mdia.HandlerType,
-                Name = mdia.Name,
+                // mdia.Name is the Box.Name of the last parsed child box (typically "minf"),
+                // so it must not be shown as the track name - the track language from the
+                // media header (mdhd) is what identifies the track; fall back to the
+                // handler name from hdlr when no media header is present.
+                Name = mdia.Mdhd?.LanguageString ?? mdia.HandlerName,
                 StartPosition = mdia.StartPosition,
                 IsVobSubSubtitle = mdia.IsVobSubSubtitle,
                 Duration = LastCueEnd(mdia.Minf?.Stbl?.GetParagraphs()),
