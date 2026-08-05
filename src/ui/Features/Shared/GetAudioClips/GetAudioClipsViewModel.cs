@@ -6,6 +6,7 @@ using CommunityToolkit.Mvvm.Input;
 using Nikse.SubtitleEdit.Features.Main;
 using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Logic.Media;
+using Nikse.SubtitleEdit.UiLogic.Media;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -27,6 +28,7 @@ public partial class GetAudioClipsViewModel : ObservableObject
 
     private string _videoFileName;
     private int _audioTrackFfIndex;
+    private bool _useCenterChannelOnly;
     private readonly CancellationTokenSource _cancellationTokenSource;
     private List<SubtitleLineViewModel> _lines;
 
@@ -51,6 +53,10 @@ public partial class GetAudioClipsViewModel : ObservableObject
 
     private void ExtractLines()
     {
+        // Probed once per run - FfmpegMediaInfo.Parse spawns ffmpeg, so it must not run per line.
+        _useCenterChannelOnly = Se.Settings.General.FfmpegUseCenterChannelOnly &&
+                                FfmpegMediaInfo.Parse(_videoFileName).HasFrontCenterAudio(_audioTrackFfIndex);
+
         var count = 0;
         foreach (var line in _lines)
         {
@@ -107,13 +113,11 @@ public partial class GetAudioClipsViewModel : ObservableObject
 
     private Process GetExtractProcess(string videoFileName, SubtitleLineViewModel line, string outputFileName)
     {
-        var useCenterChannelOnly = false; //TODO: Se.Settings.Waveform.cen;
-
         var arguments = FfmpegGenerator.ExtractAudioClipFromVideoParameters(
             videoFileName,
             line.StartTime.TotalSeconds,
             line.Duration.TotalSeconds,
-            useCenterChannelOnly,
+            _useCenterChannelOnly,
             outputFileName,
             _audioTrackFfIndex);
 

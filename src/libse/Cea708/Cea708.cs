@@ -570,16 +570,6 @@ namespace Nikse.SubtitleEdit.Core.Cea708
                     {
                         debugBuilder.Append($"{{SetText CL Group C0:Text={text.Content}}}");
                     }
-
-                    //TODO: ???
-                    //if (b >= 0x10 && b <= 0x17)
-                    //{
-                    //    i++;
-                    //}
-                    //else if (b >= 0x18 && b <= 0x1F)
-                    //{
-                    //    i+=2;
-                    //}
                 }
                 else if (b >= 0x20 && b <= 0x7F)
                 {

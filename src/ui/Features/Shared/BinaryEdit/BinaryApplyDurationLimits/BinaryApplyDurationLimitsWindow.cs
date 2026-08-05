@@ -41,7 +41,7 @@ public class BinaryApplyDurationLimitsWindow : Window
         // Minimum duration
         var minimumLabel = new Label
         {
-            Content = "Minimum duration (milliseconds):", // TODO: Add to language resources
+            Content = Se.Language.Tools.ApplyDurationLimits.MinimumDurationMilliseconds,
             VerticalAlignment = VerticalAlignment.Center,
         };
         grid.Add(minimumLabel, 0, 0);
@@ -63,7 +63,7 @@ public class BinaryApplyDurationLimitsWindow : Window
         // Maximum duration
         var maximumLabel = new Label
         {
-            Content = "Maximum duration (milliseconds):", // TODO: Add to language resources
+            Content = Se.Language.Tools.ApplyDurationLimits.MaximumDurationMilliseconds,
             VerticalAlignment = VerticalAlignment.Center,
         };
         grid.Add(maximumLabel, 0, 1);

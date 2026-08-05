@@ -60,7 +60,9 @@ public partial class BinaryOcrSettingsViewModel : ObservableObject
     private async Task Delete()
     {
         var name = Path.GetFileNameWithoutExtension(BinaryOcrDatabaseName);
-        var totalItemsCount = 1; // TODO: fix to get actual count from database
+        var totalItemsCount = _binaryOcrDb == null
+            ? 0
+            : _binaryOcrDb.CompareImages.Count + _binaryOcrDb.CompareImagesExpanded.Count;
         var answer = await MessageBox.Show(
            Window!,
            "Delete Binary Image Compare database?",

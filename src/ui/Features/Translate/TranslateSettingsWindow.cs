@@ -54,23 +54,9 @@ public class TranslateSettingsWindow : Window
         });
 
         var labelMaxBytes = UiUtil.MakeTextBlock(Se.Language.Translate.MaxBytesPerRequest);
-        var maxBytesNumericUpDown = new NumericUpDown //TODO: UiUtil.MakeNumericUpDown
-        {
-            Minimum = 0,
-            Maximum = 100_000,
-            Value = 1000,
-            Width = 150,
-            VerticalAlignment = VerticalAlignment.Center,
-            HorizontalAlignment = HorizontalAlignment.Left,
-            Increment = 100,
-            FormatString = "#,###,##0",
-        };
-        maxBytesNumericUpDown.Bind(NumericUpDown.ValueProperty, new Binding
-        {
-            Path = nameof(vm.MaxBytesRequest),
-            Mode = BindingMode.TwoWay,
-            Source = vm,
-        });
+        var maxBytesNumericUpDown = UiUtil.MakeNumericUpDownInt(0, 100_000, 1000, 150, vm, nameof(vm.MaxBytesRequest));
+        maxBytesNumericUpDown.Increment = 100;
+        maxBytesNumericUpDown.FormatString = "#,###,##0";
 
         var labelPrompt = UiUtil.MakeTextBlock(Se.Language.Translate.PromptText, vm, null, nameof(vm.PromptIsVisible));
         var promptTextBox = new TextBox

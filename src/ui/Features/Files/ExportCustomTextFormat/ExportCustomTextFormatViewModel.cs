@@ -12,6 +12,7 @@ using Nikse.SubtitleEdit.UiLogic.Export;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace Nikse.SubtitleEdit.Features.Files.ExportCustomTextFormat;
@@ -47,6 +48,8 @@ public partial class ExportCustomTextFormatViewModel : ObservableObject
         _title = string.Empty;
         CustomFormats = new ObservableCollection<CustomFormatItem>();
         Encodings = new ObservableCollection<TextEncoding>(EncodingHelper.GetEncodings());
+        SelectedEncoding = Encodings.FirstOrDefault(p => p.DisplayName == Se.Settings.General.DefaultEncoding) ??
+                           Encodings[0];
         PreviewText = string.Empty;
         _subtitles = new List<SubtitleLineViewModel>();
     }
@@ -150,7 +153,7 @@ public partial class ExportCustomTextFormatViewModel : ObservableObject
             return;
         }
 
-        System.IO.File.WriteAllText(fileName, PreviewText); // TODO: use default encoding
+        await System.IO.File.WriteAllTextAsync(fileName, PreviewText, SelectedEncoding?.Encoding ?? Encoding.UTF8);
     }
 
     [RelayCommand]

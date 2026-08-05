@@ -7,6 +7,7 @@ using CommunityToolkit.Mvvm.Input;
 using Nikse.SubtitleEdit.Features.Main;
 using Nikse.SubtitleEdit.Logic.Config;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Threading.Tasks;
 using Avalonia.Threading;
 using Nikse.SubtitleEdit.Core.Common;
@@ -122,55 +123,43 @@ public partial class ApplyDurationLimitsViewModel : ObservableObject, IClosingCl
 
                 var next = _allSubtitles.GetOrNull(index + 1);
 
-                if (next == null)
+                if (item.Duration.TotalMilliseconds > maxMs && FixMaxDurationMs)
                 {
-                    if (item.Duration.TotalMilliseconds > maxMs && FixMaxDurationMs)
-                    {
-                        var newEndTime = TimeSpan.FromMilliseconds(item.StartTime.TotalMilliseconds + maxMs);
-                        Update(item, newEndTime);
-                        fixCount++;
-                    }
-
-                    if (item.Duration.TotalMilliseconds < minMs && FixMinDurationMs)
-                    {
-                        var newEndTime = TimeSpan.FromMilliseconds(item.StartTime.TotalMilliseconds + minMs);
-                        Update(item, newEndTime);
-                        fixCount++;
-                    }
+                    // Shortening never runs into the next line or a shot change.
+                    var newEndTime = TimeSpan.FromMilliseconds(item.StartTime.TotalMilliseconds + maxMs);
+                    Update(item, newEndTime);
+                    fixCount++;
                 }
-                else
+
+                if (item.Duration.TotalMilliseconds < minMs && FixMinDurationMs)
                 {
-                    if (item.Duration.TotalMilliseconds > maxMs && FixMaxDurationMs)
+                    var wantedEndTime = TimeSpan.FromMilliseconds(item.StartTime.TotalMilliseconds + minMs);
+                    var allowedEndTime = wantedEndTime;
+
+                    // Never overlap the next line.
+                    if (next != null && wantedEndTime > next.StartTime)
                     {
-                        var newEndTime = TimeSpan.FromMilliseconds(item.StartTime.TotalMilliseconds + maxMs);
-                        Update(item, newEndTime);
-                        fixCount++;
+                        allowedEndTime = TimeSpan.FromMilliseconds(next.StartTime.TotalMilliseconds - Se.Settings.General.MinimumBetweenLines.GetMilliseconds());
                     }
 
-                    if (item.Duration.TotalMilliseconds < minMs && FixMinDurationMs)
+                    allowedEndTime = CapAtShotChange(item, allowedEndTime);
+
+                    if (allowedEndTime >= wantedEndTime)
                     {
-                        var newEndTime = TimeSpan.FromMilliseconds(item.StartTime.TotalMilliseconds + minMs);
-                        if (newEndTime > next.StartTime)
-                        {
-                            var cappedEndTime = TimeSpan.FromMilliseconds(next.StartTime.TotalMilliseconds - Se.Settings.General.MinimumBetweenLines.GetMilliseconds());
-                            if (cappedEndTime > item.EndTime)
-                            {
-                                // improved, but not fixed
-                                Update(item, cappedEndTime,  Se.Language.Tools.ApplyDurationLimits.OnlyPartialFixed);
-                                improveCount++;
-                            }
-                            else
-                            {
-                                // unfixable
-                                Subtitles.Add(item);
-                                skipCount++;
-                            }
-                        }
-                        else
-                        {
-                            Update(item, newEndTime);
-                            fixCount++;
-                        }
+                        Update(item, wantedEndTime);
+                        fixCount++;
+                    }
+                    else if (allowedEndTime > item.EndTime)
+                    {
+                        // improved, but not fixed
+                        Update(item, allowedEndTime, Se.Language.Tools.ApplyDurationLimits.OnlyPartialFixed);
+                        improveCount++;
+                    }
+                    else
+                    {
+                        // unfixable
+                        Subtitles.Add(item);
+                        skipCount++;
                     }
                 }
             }
@@ -194,6 +183,43 @@ public partial class ApplyDurationLimitsViewModel : ObservableObject, IClosingCl
 
             FixesSkippedInfo = skipCount > 0 ? string.Format(Se.Language.Tools.ApplyDurationLimits.UnfixableX, skipCount) : string.Empty;
         });
+    }
+
+    /// <summary>
+    /// Caps an extended end time at the first shot change that falls inside the extension, so a line
+    /// is never stretched across a cut. Returns <paramref name="newEndTime"/> unchanged when the
+    /// option is off, when there are no shot changes, or when nothing is in the way.
+    /// </summary>
+    private TimeSpan CapAtShotChange(SubtitleLineViewModel item, TimeSpan newEndTime)
+    {
+        if (!DoNotGoPastShotChange || _shotChanges.Count == 0)
+        {
+            return newEndTime;
+        }
+
+        var currentEndMs = item.EndTime.TotalMilliseconds;
+        var newEndMs = newEndTime.TotalMilliseconds;
+        if (newEndMs <= currentEndMs)
+        {
+            return newEndTime;
+        }
+
+        // _shotChanges is sorted in Initialize, so the first hit is the earliest one.
+        foreach (var shotChangeSeconds in _shotChanges)
+        {
+            var shotChangeMs = shotChangeSeconds * 1000.0;
+            if (shotChangeMs >= newEndMs)
+            {
+                break;
+            }
+
+            if (shotChangeMs > currentEndMs)
+            {
+                return TimeSpan.FromMilliseconds(shotChangeMs);
+            }
+        }
+
+        return newEndTime;
     }
 
     private void Update(SubtitleLineViewModel item, TimeSpan newEndTime, string? comment = null)
@@ -273,9 +299,8 @@ public partial class ApplyDurationLimitsViewModel : ObservableObject, IClosingCl
     public void Initialize(List<SubtitleLineViewModel> toList, List<double> shotChanges)
     {
         _allSubtitles = toList;
-        _shotChanges =  shotChanges;
-        IsDoNotGoPastShotChangeVisible = shotChanges.Count > 0;
-        IsDoNotGoPastShotChangeVisible = false; //TODO: not implemented
+        _shotChanges = shotChanges.OrderBy(p => p).ToList();
+        IsDoNotGoPastShotChangeVisible = _shotChanges.Count > 0;
         _previewTimer.Start();
         _isDirty = true;
     }

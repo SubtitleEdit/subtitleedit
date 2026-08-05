@@ -118,7 +118,7 @@ namespace Nikse.SubtitleEdit.Logic
             var window = (T)w;
             configureViewModel?.Invoke(window, viewModel);
 
-            window.WindowStartupLocation = WindowStartupLocation.CenterOwner; //TODO: does this work on mac?
+            window.WindowStartupLocation = WindowStartupLocation.CenterOwner;
 
             // Must run before Show() - see the note in ShowWindow<T>. (#12665)
             ApplyRightToLeftSettings(window);
@@ -195,7 +195,7 @@ namespace Nikse.SubtitleEdit.Logic
 
             var window = (TWindow)w;
 
-            window.WindowStartupLocation = WindowStartupLocation.CenterOwner; //TODO: does this work on mac?
+            window.WindowStartupLocation = WindowStartupLocation.CenterOwner;
             configureWindow?.Invoke(window);
 
             ApplyRightToLeftSettings(window);
