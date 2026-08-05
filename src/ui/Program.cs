@@ -247,6 +247,12 @@ namespace Nikse.SubtitleEdit
                     Source = new Uri("avares://SubtitleEdit/Styles.axaml")
                 });
 
+                // The Fluent menu popup presenter caps its width at 456 (FlyoutThemeMaxWidth),
+                // which clips long localized menu items (e.g. Italian, #13011) without an
+                // ellipsis - raise the cap, same value the AI-assistant window uses for its
+                // flyout. Popups still size to their content, so short menus are unaffected.
+                b.Instance.Resources["FlyoutThemeMaxWidth"] = 680d;
+
                 // The Fluent theme makes every GridSplitter focusable (keyboard resize), so screen
                 // readers land on each splitter while tabbing; without a name they are announced as
                 // a bare generic Avalonia control. One app-level style names them all (#12087).
