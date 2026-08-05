@@ -59,7 +59,7 @@ public class FixCommonOcrErrorsTests : IDisposable
         public bool IsLoaded() => true;
         public List<string> GetSpellCheckSuggestions(string word) => new();
         public void ChangeAll(string from, string to) { }
-        public void SkipAll(string word) { }
+        public void SkipAll(IEnumerable<string> words) { }
         public void AddName(string name) { }
         public List<string> ReloadNames() => new();
     }

@@ -13,13 +13,14 @@ public interface IOcrFixEngine
     bool IsLoaded();
     List<string> GetSpellCheckSuggestions(string word);
     void ChangeAll(string from, string to);
-    void SkipAll(string word);
+    void SkipAll(IEnumerable<string> words);
     void AddName(string name);
     List<string> ReloadNames();
 }
 
 public partial class OcrFixEngine : IOcrFixEngine, IDoSpell
 {
+    private static readonly object SkipListFileLock = new();
     private bool _isLoaded;
     private OcrFixReplaceList2 _ocrFixReplaceList;
     private string _fiveLetterName;
@@ -68,6 +69,7 @@ public partial class OcrFixEngine : IOcrFixEngine, IDoSpell
         var names = ReloadNames();
         _wordSplitList = StringWithoutSpaceSplitToWords.LoadWordSplitList(SpellCheckConfig.DictionariesFolder(), _threeLetterIsoLanguageName, names);
         _ocrFixReplaceList = OcrFixReplaceList2.FromLanguageId(_threeLetterIsoLanguageName);
+        LoadSkipList();
     }
 
     public OcrFixLineResult FixOcrErrors(int index, string text, bool doTryToGuessUnknownWords)
@@ -539,11 +541,107 @@ public partial class OcrFixEngine : IOcrFixEngine, IDoSpell
         _ocrFixReplaceList.AddWordOrPartial(from, to);
     }
 
-    public void SkipAll(string word)
+    public void SkipAll(IEnumerable<string> words)
     {
-        if (!_wordSkipList.Contains(word) && !string.IsNullOrWhiteSpace(word))
+        var changed = false;
+        foreach (var word in words.Where(p => !string.IsNullOrWhiteSpace(p)))
         {
-            _wordSkipList.Add(word);
+            changed |= _wordSkipList.Add(word);
+        }
+
+        if (changed)
+        {
+            SaveSkipList();
+        }
+    }
+
+    // "Skip all" choices are persisted per language so the same correct word is not flagged
+    // again on the next OCR run (#10166). The file follows the <language>_WordSplitList.txt
+    // pattern: one word per line in the dictionaries folder. Memory is cleared on Unload;
+    // the file stays.
+    private string GetSkipListFileName() =>
+        Path.Combine(SpellCheckConfig.DictionariesFolder(), _threeLetterIsoLanguageName + "_OcrSkipAllList.txt");
+
+    private void LoadSkipList()
+    {
+        // Initialize can be called again on the same engine after the user changes dictionary.
+        // Never merge one language's remembered words into the next language's file.
+        _wordSkipList.Clear();
+
+        try
+        {
+            if (string.IsNullOrEmpty(_threeLetterIsoLanguageName))
+            {
+                return;
+            }
+
+            var fileName = GetSkipListFileName();
+            if (!File.Exists(fileName))
+            {
+                return;
+            }
+
+            foreach (var word in File.ReadAllLines(fileName).Select(p => p.Trim()).Where(p => p.Length > 0))
+            {
+                _wordSkipList.Add(word);
+            }
+        }
+        catch (Exception exception)
+        {
+            SpellCheckConfig.LogError("Error loading OCR skip-all list: " + exception.Message);
+        }
+    }
+
+    private void SaveSkipList()
+    {
+        string? tempFileName = null;
+        try
+        {
+            if (string.IsNullOrEmpty(_threeLetterIsoLanguageName))
+            {
+                return;
+            }
+
+            // SkipListFileLock is process-local: it serialises OCR windows inside one
+            // SubtitleEdit instance, but two instances can still write the same language
+            // file. The merge-before-write below keeps that from corrupting the file -
+            // worst case one instance's word is lost.
+            lock (SkipListFileLock)
+            {
+                var fileName = GetSkipListFileName();
+                if (File.Exists(fileName))
+                {
+                    // Two OCR windows can add words to the same language. Merge the current
+                    // on-disk list while holding the process lock so neither window loses words.
+                    foreach (var word in File.ReadAllLines(fileName).Select(p => p.Trim()).Where(p => p.Length > 0))
+                    {
+                        _wordSkipList.Add(word);
+                    }
+                }
+
+                tempFileName = fileName + "." + Guid.NewGuid().ToString("N") + ".tmp";
+                File.WriteAllLines(tempFileName, _wordSkipList.OrderBy(p => p, StringComparer.Ordinal));
+                File.Move(tempFileName, fileName, true);
+                tempFileName = null;
+            }
+        }
+        catch (Exception exception)
+        {
+            SpellCheckConfig.LogError("Error saving OCR skip-all list: " + exception.Message);
+        }
+        finally
+        {
+            if (tempFileName != null)
+            {
+                try
+                {
+                    File.Delete(tempFileName);
+                }
+                catch
+                {
+                    // Best-effort cleanup after a failed atomic replace.
+                }
+            }
         }
     }
 

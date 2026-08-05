@@ -3685,11 +3685,13 @@ public partial class OcrViewModel : ObservableObject
 
                     if (result.SkipAllPressed)
                     {
-                        foreach (var word in GetUnknownWordSkipForms(unknownWord))
+                        var skipForms = GetUnknownWordSkipForms(unknownWord).ToList();
+                        foreach (var word in skipForms)
                         {
                             skipAllWords.Add(word);
-                            _ocrFixEngine.SkipAll(word);
                         }
+
+                        _ocrFixEngine.SkipAll(skipForms);
 
                         continue;
                     }
