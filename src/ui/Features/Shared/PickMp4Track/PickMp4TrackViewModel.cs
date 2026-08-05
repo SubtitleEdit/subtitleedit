@@ -70,10 +70,22 @@ public partial class PickMp4TrackViewModel : ObservableObject
                 continue;
             }
 
+            // mdia.Name is the Box.Name of the last parsed child box (typically "minf"),
+            // so it must not be shown as the track name - the track language from the
+            // media header (mdhd) is what identifies the track. LanguageString maps an
+            // unknown/unset code to the literal "Any", so that cannot drive the fallback:
+            // an unlabeled track (the common ffmpeg/MP4Box output) shows the handler name
+            // from hdlr, or the handler type when that is blank (review follow-up, #13225).
+            var language = mdia.Mdhd?.LanguageString;
+            if (string.IsNullOrEmpty(language) || language == "Any")
+            {
+                language = string.IsNullOrEmpty(mdia.HandlerName) ? mdia.HandlerType : mdia.HandlerName;
+            }
+
             var display = new Mp4TrackInfoDisplay
             {
                 HandlerType = mdia.HandlerType,
-                Name = mdia.Name,
+                Name = language,
                 StartPosition = mdia.StartPosition,
                 IsVobSubSubtitle = mdia.IsVobSubSubtitle,
                 Duration = LastCueEnd(mdia.Minf?.Stbl?.GetParagraphs()),
