@@ -28,6 +28,7 @@ public class SoftNiSubTest
             var lines = text.SplitToLines();
             var timingIndex = lines.FindIndex(line => line == "*TIMING*");
             Assert.True(timingIndex >= 0, "Missing *TIMING* section");
+            Assert.True(timingIndex + 1 < lines.Count, "Missing timing line after *TIMING* section");
             Assert.Equal(expectedTimingLine, lines[timingIndex + 1]);
         }
         finally
@@ -50,6 +51,7 @@ public class SoftNiSubTest
             var lines = text.SplitToLines();
             var timingIndex = lines.FindIndex(line => line == "*TIMING*");
             Assert.True(timingIndex >= 0, "Missing *TIMING* section");
+            Assert.True(timingIndex + 1 < lines.Count, "Missing timing line after *TIMING* section");
             Assert.Equal("1 24 0", lines[timingIndex + 1]);
         }
         finally
