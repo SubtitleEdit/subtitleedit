@@ -23,6 +23,8 @@ namespace Nikse.SubtitleEdit.Features.Main.Layout;
 
 public static partial class InitListViewAndEditBox
 {
+    private const double EditGridMinimumHeight = 92;
+    private const double EditGridMargin = 10;
 
     public static Grid MakeLayoutListViewAndEditBox(MainView mainPage, MainViewModel vm)
     {
@@ -54,7 +56,13 @@ public static partial class InitListViewAndEditBox
 
         var mainGrid = new Grid
         {
-            RowDefinitions = new RowDefinitions("*,Auto"),
+            RowDefinitions =
+            {
+                new RowDefinition(GridLength.Star),
+                // GridSplitter constrains the row definition, so include editGrid's outer
+                // margin to preserve the text box's 92 px minimum at the drag limit.
+                new RowDefinition(GridLength.Auto) { MinHeight = EditGridMinimumHeight + EditGridMargin * 2 },
+            },
         };
 
         // TableView (Avalonia 12.1) pilot #3, after Show history (#12704) and the OCR grid
@@ -1159,9 +1167,13 @@ public static partial class InitListViewAndEditBox
         // Edit area - restructured with time controls on left, multiline text on right
         var editGrid = new Grid
         {
-            Margin = new Thickness(10),
+            Margin = new Thickness(EditGridMargin),
+            MinHeight = EditGridMinimumHeight,
             ColumnDefinitions = new ColumnDefinitions("Auto, *"), // Two columns: left for time controls, right for text
-            RowDefinitions = new RowDefinitions("Auto")
+            // Star so the section grows when the user drags the splitter above it (#10271):
+            // with Auto, the extra pixel height from the splitter only added dead space below
+            // the fixed-height text box.
+            RowDefinitions = new RowDefinitions("*")
         };
 
         // Left panel for time controls
@@ -1720,6 +1732,23 @@ public static partial class InitListViewAndEditBox
         Grid.SetRow(editGrid, 1);
         mainGrid.Children.Add(editGrid);
 
+        // GridSplitter overlaying the boundary between the subtitle grid (row 0) and the
+        // edit box (row 1) so the text box section can be resized vertically, like SE4
+        // (#10271). The splitter lives in the edit box's own row (no extra row - an extra
+        // row would shrink the grid viewport and break the grid scroll perf tests); with
+        // VerticalAlignment.Top it resizes the row above (grid, Star) and its own row
+        // (edit box, Auto -> becomes Pixel once the user drags). The negative top margin
+        // centers the 4 px strip on the boundary.
+        var editBoxSplitter = new GridSplitter
+        {
+            Height = UiUtil.SplitterWidthOrHeight,
+            HorizontalAlignment = HorizontalAlignment.Stretch,
+            VerticalAlignment = VerticalAlignment.Top,
+            Margin = new Thickness(0, -UiUtil.SplitterWidthOrHeight / 2.0, 0, 0)
+        };
+        Grid.SetRow(editBoxSplitter, 1);
+        mainGrid.Children.Add(editBoxSplitter);
+
 
         textEditGrid.ColumnDefinitions[1].Bind(ColumnDefinition.WidthProperty, new Binding(nameof(vm.ShowColumnOriginalText))
         {
@@ -1832,8 +1861,9 @@ public static partial class InitListViewAndEditBox
 
         textBox.AcceptsReturn = true;
         textBox.TextWrapping = TextWrapping.Wrap;
+        // MinHeight keeps the default layout; no fixed Height so the text box grows with the
+        // resizable edit section (#10271).
         textBox.MinHeight = 92;
-        textBox.Height = 92;
         textBox.FontSize = appearance.SubtitleTextBoxFontSize;
         textBox.FontWeight = appearance.SubtitleTextBoxFontBold ? FontWeight.Bold : FontWeight.Normal;
         textBox.IsUndoEnabled = false;
