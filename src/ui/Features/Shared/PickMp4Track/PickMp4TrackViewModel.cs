@@ -61,13 +61,22 @@ public partial class PickMp4TrackViewModel : ObservableObject
         WindowTitle = $"Pick MP4 track - {fileName}";
         foreach (var track in _mp4Tracks)
         {
+            // A trak box without an mdia child carries no media information at all;
+            // Mp4Parser.GetSubtitleTracks() already drops those, but the callers are
+            // free to hand us any track list.
+            var mdia = track.Mdia;
+            if (mdia == null)
+            {
+                continue;
+            }
+
             var display = new Mp4TrackInfoDisplay
             {
-                HandlerType = track.Mdia.HandlerType,
-                Name = track.Mdia.Name,
-                StartPosition = track.Mdia.StartPosition,
-                IsVobSubSubtitle = track.Mdia.IsVobSubSubtitle,
-                Duration = LastCueEnd(track.Mdia?.Minf?.Stbl?.GetParagraphs()),
+                HandlerType = mdia.HandlerType,
+                Name = mdia.Name,
+                StartPosition = mdia.StartPosition,
+                IsVobSubSubtitle = mdia.IsVobSubSubtitle,
+                Duration = LastCueEnd(mdia.Minf?.Stbl?.GetParagraphs()),
                 Track = track,
             };
             Tracks.Add(display);
