@@ -172,17 +172,28 @@ public partial class DownloadLibVlcViewModel : ObservableObject, IClosingCleanup
 
     public void StartDownload()
     {
-        if (new LibVlcDynamicPlayer().CanLoad())
-        {
-            // libVLC is already available (bundled with the app, a previous
-            // download, or a VLC installation) - complete right away instead of
-            // downloading the full VLC package again (#13222).
-            StatusText = Se.Language.General.Installed;
-            OkPressed = true;
-            Close();
-            return;
-        }
+        // Probing/loading libVLC takes a moment - keep the UI thread responsive, like
+        // SettingsViewModel.SetLibVlcStatus does (#13222, review follow-up).
+        Task.Run(() => new LibVlcDynamicPlayer().CanLoad()).ContinueWith(t =>
+            Dispatcher.UIThread.Post(() =>
+            {
+                if (t.Result)
+                {
+                    // libVLC is already available (bundled with the app, a previous
+                    // download, or a VLC installation) - complete right away instead of
+                    // downloading the full VLC package again (#13222).
+                    StatusText = Se.Language.General.Installed;
+                    OkPressed = true;
+                    Close();
+                    return;
+                }
 
+                StartDownloadCore();
+            }));
+    }
+
+    private void StartDownloadCore()
+    {
         var downloadProgress = new Progress<float>(number =>
         {
             var percentage = (int)Math.Round(number * 100.0, MidpointRounding.AwayFromZero);
