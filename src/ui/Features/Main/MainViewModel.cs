@@ -16139,12 +16139,7 @@ public partial class MainViewModel :
 
                         if (result.OkPressed)
                         {
-                            VideoCloseFile();
-                            ResetSubtitle();
-                            _subtitleFileName = Utilities.GetPathAndFileNameWithoutExtension(fileName);
-                            _converted = true;
-                            ReplaceSubtitles(result.OcredSubtitle);
-                            SelectAndScrollToRow(0);
+                            await FinishOcrImportAsync(fileName, result.OcredSubtitle, videoFileName: videoFileName, skipLoadVideo: skipLoadVideo);
                         }
                     });
                     return;
@@ -16187,12 +16182,7 @@ public partial class MainViewModel :
 
                     if (result.OkPressed)
                     {
-                        VideoCloseFile();
-                        ResetSubtitle();
-                        _subtitleFileName = Utilities.GetPathAndFileNameWithoutExtension(fileName);
-                        _converted = true;
-                        ReplaceSubtitles(result.OcredSubtitle);
-                        SelectAndScrollToRow(0);
+                        await FinishOcrImportAsync(fileName, result.OcredSubtitle, videoFileName: videoFileName, skipLoadVideo: skipLoadVideo);
                     }
                 });
                 return;
@@ -16843,15 +16833,7 @@ public partial class MainViewModel :
 
             if (result.OkPressed)
             {
-                VideoCloseFile();
-                ResetSubtitle();
-                _subtitleFileName = Utilities.GetPathAndFileNameWithoutExtension(fileName);
-                _converted = true;
-                _subtitle.Paragraphs.Clear();
-                ReplaceSubtitles(result.OcredSubtitle);
-                Renumber();
-                ShowStatus(string.Format(Se.Language.General.SubtitleLoadedX, fileName));
-                SelectAndScrollToRow(0);
+                await FinishOcrImportAsync(fileName, result.OcredSubtitle);
             }
         });
 
@@ -16894,15 +16876,7 @@ public partial class MainViewModel :
 
             if (result.OkPressed)
             {
-                VideoCloseFile();
-                ResetSubtitle();
-                _subtitleFileName = Utilities.GetPathAndFileNameWithoutExtension(fileName);
-                _converted = true;
-                _subtitle.Paragraphs.Clear();
-                ReplaceSubtitles(result.OcredSubtitle);
-                Renumber();
-                ShowStatus(string.Format(Se.Language.General.SubtitleLoadedX, fileName));
-                SelectAndScrollToRow(0);
+                await FinishOcrImportAsync(fileName, result.OcredSubtitle);
             }
         });
     }
@@ -16915,15 +16889,7 @@ public partial class MainViewModel :
 
             if (result.OkPressed)
             {
-                VideoCloseFile();
-                ResetSubtitle();
-                _subtitleFileName = Utilities.GetPathAndFileNameWithoutExtension(fileName);
-                _converted = true;
-                _subtitle.Paragraphs.Clear();
-                ReplaceSubtitles(result.OcredSubtitle);
-                Renumber();
-                ShowStatus(string.Format(Se.Language.General.SubtitleLoadedX, fileName));
-                SelectAndScrollToRow(0);
+                await FinishOcrImportAsync(fileName, result.OcredSubtitle);
             }
         });
     }
@@ -16936,15 +16902,7 @@ public partial class MainViewModel :
 
             if (result.OkPressed)
             {
-                VideoCloseFile();
-                ResetSubtitle();
-                _subtitleFileName = Utilities.GetPathAndFileNameWithoutExtension(fileName);
-                _converted = true;
-                _subtitle.Paragraphs.Clear();
-                ReplaceSubtitles(result.OcredSubtitle);
-                Renumber();
-                ShowStatus(string.Format(Se.Language.General.SubtitleLoadedX, fileName));
-                SelectAndScrollToRow(0);
+                await FinishOcrImportAsync(fileName, result.OcredSubtitle);
             }
         });
     }
@@ -16990,15 +16948,7 @@ public partial class MainViewModel :
 
             if (result.OkPressed)
             {
-                VideoCloseFile();
-                ResetSubtitle();
-                _subtitleFileName = Utilities.GetPathAndFileNameWithoutExtension(fileName);
-                _converted = true;
-                _subtitle.Paragraphs.Clear();
-                ReplaceSubtitles(result.OcredSubtitle);
-                Renumber();
-                ShowStatus(string.Format(Se.Language.General.SubtitleLoadedX, fileName));
-                SelectAndScrollToRow(0);
+                await FinishOcrImportAsync(fileName, result.OcredSubtitle);
             }
         });
     }
@@ -17106,11 +17056,9 @@ public partial class MainViewModel :
 
             if (result.OkPressed)
             {
-                VideoCloseFile();
-                ResetSubtitle();
-                _subtitleFileName = Utilities.GetPathAndFileNameWithoutExtension(fileName);
-                ReplaceSubtitles(result.OcredSubtitle);
-                SelectAndScrollToRow(0);
+                // The transport stream itself is the video - the teletext branch above already
+                // opens it, the DVB one used to leave the player empty.
+                await FinishOcrImportAsync(fileName, result.OcredSubtitle, sourceIsVideo: true);
             }
         });
 
@@ -17194,9 +17142,13 @@ public partial class MainViewModel :
         }
         else if (mp4SubtitleTracks.Count == 1)
         {
-            LoadMp4Subtitle(fileName, mp4SubtitleTracks[0]);
+            var hasVideoTrack = mp4Parser.GetVideoTracks().Count > 0;
+            var track = mp4SubtitleTracks[0];
+            LoadMp4Subtitle(fileName, track, hasVideoTrack);
 
-            if (Se.Settings.Video.AutoOpen && mp4Parser.GetVideoTracks().Count > 0)
+            // An image track opens the video itself once OCR is done - opening it here too would
+            // only get it closed again by the VideoCloseFile() at the start of the OCR import.
+            if (!track.Mdia.IsVobSubSubtitle && Se.Settings.Video.AutoOpen && hasVideoTrack)
             {
                 await VideoOpenFile(fileName);
             }
@@ -17210,7 +17162,16 @@ public partial class MainViewModel :
 
             if (result.OkPressed && result.SelectedTrack != null && result.SelectedTrack.Track != null)
             {
-                LoadMp4Subtitle(fileName, result.SelectedTrack.Track);
+                var hasVideoTrack = mp4Parser.GetVideoTracks().Count > 0;
+                LoadMp4Subtitle(fileName, result.SelectedTrack.Track, hasVideoTrack);
+
+                // Picking a track from a multi-track .mp4 left the player empty, unlike the
+                // single-track path right above.
+                if (!result.SelectedTrack.Track.Mdia.IsVobSubSubtitle && Se.Settings.Video.AutoOpen && hasVideoTrack)
+                {
+                    await VideoOpenFile(fileName);
+                }
+
                 return true;
             }
         }
@@ -17248,7 +17209,12 @@ public partial class MainViewModel :
         }
     }
 
-    private void LoadMp4Subtitle(string fileName, Trak mp4SubtitleTrack)
+    /// <param name="hasVideoTrack">
+    /// Whether the .mp4 carries a video track, i.e. whether it can be opened in the player. Only the
+    /// image-track branch uses it - that one finishes asynchronously after OCR and so has to open the
+    /// video itself; for text tracks the caller does it.
+    /// </param>
+    private void LoadMp4Subtitle(string fileName, Trak mp4SubtitleTrack, bool hasVideoTrack)
     {
         if (mp4SubtitleTrack.Mdia.IsVobSubSubtitle)
         {
@@ -17259,14 +17225,7 @@ public partial class MainViewModel :
 
                 if (result.OkPressed)
                 {
-                    VideoCloseFile();
-                    ResetSubtitle();
-                    _subtitleFileName = Utilities.GetPathAndFileNameWithoutExtension(fileName);
-                    _converted = true;
-                    ReplaceSubtitles(result.OcredSubtitle);
-                    Renumber();
-                    ShowStatus(string.Format(Se.Language.General.SubtitleLoadedX, fileName));
-                    SelectAndScrollToRow(0);
+                    await FinishOcrImportAsync(fileName, result.OcredSubtitle, sourceIsVideo: hasVideoTrack);
                 }
             });
         }
@@ -17436,17 +17395,7 @@ public partial class MainViewModel :
 
                 if (result.OkPressed)
                 {
-                    VideoCloseFile();
-                    ResetSubtitle();
-                    _subtitleFileName = Utilities.GetPathAndFileNameWithoutExtension(fileName) + SelectedSubtitleFormat.Extension;
-                    _converted = true;
-                    ReplaceSubtitles(result.OcredSubtitle);
-                    Renumber();
-                    SelectAndScrollToRow(0);
-                    if (Se.Settings.Video.AutoOpen && fileName.EndsWith(".mkv", StringComparison.OrdinalIgnoreCase))
-                    {
-                        await VideoOpenFile(fileName);
-                    }
+                    await FinishOcrImportAsync(fileName, result.OcredSubtitle, sourceIsVideo: IsMatroskaVideoFileName(fileName));
                 }
             });
 
@@ -17584,20 +17533,7 @@ public partial class MainViewModel :
 
             if (result.OkPressed)
             {
-                VideoCloseFile();
-                ResetSubtitle();
-                // ResetSubtitle clears _converted; without setting it again Ctrl+S could write straight
-                // to the (extension-less) container name instead of going to "Save as".
-                _subtitleFileName = Utilities.GetPathAndFileNameWithoutExtension(fileName) + SelectedSubtitleFormat.Extension;
-                _converted = true;
-                ReplaceSubtitles(result.OcredSubtitle);
-                Renumber();
-                SelectAndScrollToRow(0);
-                ShowStatus(string.Format(Se.Language.General.SubtitleLoadedX, fileName));
-                if (Se.Settings.Video.AutoOpen && fileName.EndsWith(".mkv", StringComparison.OrdinalIgnoreCase))
-                {
-                    await VideoOpenFile(fileName);
-                }
+                await FinishOcrImportAsync(fileName, result.OcredSubtitle, sourceIsVideo: IsMatroskaVideoFileName(fileName));
             }
         });
 
@@ -17659,16 +17595,7 @@ public partial class MainViewModel :
 
             if (result.OkPressed)
             {
-                VideoCloseFile();
-                ResetSubtitle();
-                _subtitleFileName = Utilities.GetPathAndFileNameWithoutExtension(fileName) + SelectedSubtitleFormat.Extension;
-                _converted = true;
-                ReplaceSubtitles(result.OcredSubtitle);
-                SelectAndScrollToRow(0);
-                if (Se.Settings.Video.AutoOpen && fileName.EndsWith(".mkv", StringComparison.OrdinalIgnoreCase))
-                {
-                    await VideoOpenFile(fileName);
-                }
+                await FinishOcrImportAsync(fileName, result.OcredSubtitle, sourceIsVideo: IsMatroskaVideoFileName(fileName));
             }
         });
 
@@ -17815,16 +17742,91 @@ public partial class MainViewModel :
 
         if (result.OkPressed)
         {
-            VideoCloseFile();
-            ResetSubtitle();
-            _subtitleFileName = Utilities.GetPathAndFileNameWithoutExtension(vobSubFileName) + SelectedSubtitleFormat.Extension;
-            _converted = true;
-            ReplaceSubtitles(result.OcredSubtitle);
-            SelectAndScrollToRow(0);
+            await FinishOcrImportAsync(vobSubFileName, result.OcredSubtitle, videoFileName: videoFileName);
             return true;
         }
 
         return false;
+    }
+
+    /// <summary>
+    /// True when a Matroska file can be handed to the video player. A .mks holds subtitles only, so
+    /// it is not playable media - after OCR'ing a track from one, the matching video is looked up by
+    /// file name instead, like a stand-alone .sup would be.
+    /// </summary>
+    internal static bool IsMatroskaVideoFileName(string fileName)
+    {
+        return fileName.EndsWith(".mkv", StringComparison.OrdinalIgnoreCase);
+    }
+
+    /// <summary>
+    /// Installs the result of an OCR import: the OCR'd lines become the current subtitle, it gets a
+    /// provisional file name (source name + the current subtitle extension) and the matching video is
+    /// opened, just like opening a text subtitle does.
+    ///
+    /// The video part is the point: every image-subtitle import returns from <see cref="SubtitleOpen"/>
+    /// early and finishes in a dispatcher post once the OCR window closes, so it never reached the
+    /// auto-open block there - OCR'ing "movie.eng.sup" next to "movie.mkv" left no video open, while
+    /// opening "movie.eng.srt" opened it (issue #13236). Worse, the import starts with
+    /// <see cref="VideoCloseFile"/>, so a video the user had already opened was closed and not restored.
+    /// </summary>
+    /// <param name="sourceFileName">The file the images were read from.</param>
+    /// <param name="ocredSubtitle">The lines returned by the OCR window.</param>
+    /// <param name="sourceIsVideo">
+    /// True when the source file is itself playable media (a .mkv/.mp4/.ts container the subtitle track
+    /// was extracted from), in which case it is opened as the video. False for stand-alone image
+    /// subtitles (.sup, .sub/.idx, ...), where a sibling video is looked up by name.
+    /// </param>
+    /// <param name="videoFileName">Video explicitly supplied by the caller (drag-and-drop, command line).</param>
+    /// <param name="skipLoadVideo">Set by callers that must not touch the video player.</param>
+    private async Task FinishOcrImportAsync(
+        string sourceFileName,
+        IEnumerable<SubtitleLineViewModel> ocredSubtitle,
+        bool sourceIsVideo = false,
+        string? videoFileName = null,
+        bool skipLoadVideo = false)
+    {
+        VideoCloseFile();
+        ResetSubtitle();
+
+        // ResetSubtitle clears _converted; without setting it again Ctrl+S could write straight
+        // to the (extension-less) source file name instead of going to "Save as".
+        _subtitleFileName = Utilities.GetPathAndFileNameWithoutExtension(sourceFileName) + SelectedSubtitleFormat.Extension;
+        _converted = true;
+
+        ReplaceSubtitles(ocredSubtitle);
+        Renumber();
+        ShowStatus(string.Format(Se.Language.General.SubtitleLoadedX, sourceFileName));
+        SelectAndScrollToRow(0);
+
+        // Not added to the recent files list on purpose: the OCR'd subtitle does not exist on disk
+        // yet, so the entry would be a dead link until the first save (which adds it itself).
+
+        if (skipLoadVideo || !Se.Settings.Video.AutoOpen)
+        {
+            return;
+        }
+
+        if (sourceIsVideo)
+        {
+            await VideoOpenFile(sourceFileName);
+            return;
+        }
+
+        if (!string.IsNullOrEmpty(videoFileName) && File.Exists(videoFileName))
+        {
+            await VideoOpenFile(videoFileName);
+        }
+        else if (TryGetRecentVideoFileName(_subtitleFileName, out var recentVideoFileName))
+        {
+            // Same precedence as SubtitleOpen: honor the media this subtitle was last opened with
+            // (looked up under the name it would have been saved as) before guessing by file name.
+            await VideoOpenFile(recentVideoFileName);
+        }
+        else if (FindVideoFileName.TryFindVideoFileName(sourceFileName, out var foundVideoFileName))
+        {
+            await VideoOpenFile(foundVideoFileName);
+        }
     }
 
     /// <summary>
