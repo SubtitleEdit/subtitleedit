@@ -933,6 +933,14 @@ public class TextWithSubtitleSyntaxHighlightingConverter : IValueConverter
 
         var content = source.AsSpan(start, length);
 
+        // A block can carry more than one primary color - a static color plus the destination
+        // of a \t(...) fade transition ({\c&HFFFFFF&\t(20,1000,0.9,\c&H29F2FF&)}, #10955).
+        // Collect them all and pick the most visible one against the grid background at the
+        // end of the block instead of letting the textually last tag win.
+        Span<Color> colorCandidates = stackalloc Color[MaxColorCandidates];
+        var colorCandidateCount = 0;
+        var sawColorTag = false;
+
         // Limit number of tags to prevent excessive processing
         const int maxTags = 50;
         var handled = 0;
@@ -964,6 +972,8 @@ public class TextWithSubtitleSyntaxHighlightingConverter : IValueConverter
             if (firstChar == 'r' && tagLen == 1)
             {
                 state.Reset();
+                colorCandidateCount = 0;
+                sawColorTag = false;
                 continue;
             }
 
@@ -1029,10 +1039,17 @@ public class TextWithSubtitleSyntaxHighlightingConverter : IValueConverter
                 {
                     // \c without value resets the color
                     state.Color = null;
+                    colorCandidateCount = 0;
+                    sawColorTag = false;
                 }
                 else
                 {
-                    state.Color = ParseAssaColor(trimmedTag.Slice(1));
+                    sawColorTag = true;
+                    var color = ParseAssaColor(trimmedTag.Slice(1));
+                    if (color.HasValue && colorCandidateCount < colorCandidates.Length)
+                    {
+                        colorCandidates[colorCandidateCount++] = color.Value;
+                    }
                 }
                 continue;
             }
@@ -1043,10 +1060,123 @@ public class TextWithSubtitleSyntaxHighlightingConverter : IValueConverter
                 // For numbered color tags, we only handle primary (1c) for text color
                 if (firstChar == '1')
                 {
-                    state.Color = ParseAssaColor(trimmedTag.Slice(2));
+                    sawColorTag = true;
+                    var color = ParseAssaColor(trimmedTag.Slice(2));
+                    if (color.HasValue && colorCandidateCount < colorCandidates.Length)
+                    {
+                        colorCandidates[colorCandidateCount++] = color.Value;
+                    }
                 }
             }
         }
+
+        if (colorCandidateCount == 1)
+        {
+            state.Color = colorCandidates[0];
+        }
+        else if (colorCandidateCount > 1)
+        {
+            // Two or more colors (static + fade destination): the grid can only show one, so
+            // show the one with the best contrast against the grid background - or none when
+            // even the best would be near-invisible (#10955).
+            state.Color = PickMostVisibleColor(colorCandidates.Slice(0, colorCandidateCount));
+        }
+        else if (sawColorTag)
+        {
+            // A color tag whose value did not parse resets the color, same as before candidate
+            // collection was introduced ({\c&HFFFFFF&}a{\c&HZZZZZZ&}b leaves "b" unset).
+            state.Color = null;
+        }
+    }
+
+    private const int MaxColorCandidates = 8;
+
+    // Below this WCAG contrast ratio a color is treated as unusable against the grid
+    // background (pure white on white is 1.0; white on the default dark background is ~17).
+    private const double MinimumVisibleContrast = 1.3;
+
+    /// <summary>
+    /// Test hook: the grid background normally follows the active theme, which headless unit
+    /// tests do not set up consistently.
+    /// </summary>
+    internal static Func<Color>? GridBackgroundOverride { get; set; }
+
+    private static Color GetGridBackgroundColor()
+    {
+        var backgroundOverride = GridBackgroundOverride;
+        if (backgroundOverride != null)
+        {
+            return backgroundOverride();
+        }
+
+        return UiTheme.IsDarkThemeEnabled()
+            ? Se.Settings.Appearance.DarkModeBackgroundColor.FromHexToColor()
+            : Colors.White;
+    }
+
+    private static Color? PickMostVisibleColor(ReadOnlySpan<Color> candidates)
+    {
+        var background = GetGridBackgroundColor();
+        var backgroundLuminance = RelativeLuminance(background);
+
+        Color? best = null;
+        var bestContrast = 0.0;
+        foreach (var candidate in candidates)
+        {
+            var luminance = RelativeLuminance(CompositeOver(candidate, background));
+            var contrast = ContrastRatio(luminance, backgroundLuminance);
+
+            // ">=" so that on equal contrast the later tag wins - for a fade that is the
+            // transition's destination color, the most logical of the two to show.
+            if (contrast >= bestContrast)
+            {
+                best = candidate;
+                bestContrast = contrast;
+            }
+        }
+
+        return bestContrast >= MinimumVisibleContrast ? best : null;
+    }
+
+    /// <summary>
+    /// Composites a (possibly semi-transparent) color over the given background.
+    /// </summary>
+    private static Color CompositeOver(Color color, Color background)
+    {
+        if (color.A == byte.MaxValue)
+        {
+            return color;
+        }
+
+        var alpha = color.A / 255.0;
+        return Color.FromRgb(
+            (byte)Math.Round(color.R * alpha + background.R * (1 - alpha)),
+            (byte)Math.Round(color.G * alpha + background.G * (1 - alpha)),
+            (byte)Math.Round(color.B * alpha + background.B * (1 - alpha)));
+    }
+
+    /// <summary>
+    /// WCAG relative luminance (0 = black, 1 = white).
+    /// </summary>
+    private static double RelativeLuminance(Color color)
+    {
+        return 0.2126 * Linearize(color.R) + 0.7152 * Linearize(color.G) + 0.0722 * Linearize(color.B);
+
+        static double Linearize(byte value)
+        {
+            var channel = value / 255.0;
+            return channel <= 0.04045 ? channel / 12.92 : Math.Pow((channel + 0.055) / 1.055, 2.4);
+        }
+    }
+
+    /// <summary>
+    /// WCAG contrast ratio between two relative luminances (1 = identical, 21 = black/white).
+    /// </summary>
+    private static double ContrastRatio(double luminance1, double luminance2)
+    {
+        var lighter = Math.Max(luminance1, luminance2);
+        var darker = Math.Min(luminance1, luminance2);
+        return (lighter + 0.05) / (darker + 0.05);
     }
 
     private static Color? ParseAssaColor(ReadOnlySpan<char> colorStr)
@@ -1055,6 +1185,11 @@ public class TextWithSubtitleSyntaxHighlightingConverter : IValueConverter
         {
             return null; // Skip empty or excessively long color strings
         }
+
+        // Inside a \t(...) transition the color tag is followed by the transition's closing
+        // paren, which lands on the color fragment when the block is split on '\'
+        // ({\c&HFFFFFF&\t(20,1000,\c&H29F2FF&)} - #10955); trim it so the color still parses.
+        colorStr = colorStr.TrimEnd(')');
 
         // ASSA colors are in format &HAABBGGRR& or &HBBGGRR& (BGR order, not RGB)
         colorStr = colorStr.Trim("&Hh".AsSpan());
