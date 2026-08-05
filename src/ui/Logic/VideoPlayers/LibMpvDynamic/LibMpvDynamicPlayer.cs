@@ -1665,6 +1665,13 @@ public sealed class LibMpvDynamicPlayer : IDisposable, IVideoPlayer
 
                 trackInfo.IsSelected = err >= 0 && selectedValue == 1;
 
+                // Get track default flag
+                double defaultValue = 0;
+                var defaultBytes = GetUtf8Bytes($"track-list/{i}/default");
+                err = _mpvGetPropertyDouble(_mpv, defaultBytes, MPV_FORMAT_FLAG, ref defaultValue);
+
+                trackInfo.IsDefault = err >= 0 && defaultValue == 1;
+
                 audioTracks.Add(trackInfo);
             }
 

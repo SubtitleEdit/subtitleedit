@@ -8,6 +8,9 @@ public class AudioTrackInfo
     public string? Language { get; set; }
     public string? Title { get; set; }
     public bool IsSelected { get; set; }
+
+    /// <summary>True when the container marks this track as the default track.</summary>
+    public bool IsDefault { get; set; }
     public int? FfIndex { get; set; }
 
     /// <summary>Codec name as reported by mpv (e.g. "truehd", "ac3", "aac"), or null if unknown.</summary>
