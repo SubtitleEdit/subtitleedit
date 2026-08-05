@@ -10,7 +10,7 @@ public class CrispEmbedEngineTests
     {
         var backends = CrispEmbedEngine.GetBackends();
 
-        Assert.Equal(new[] { "PP-OCRv6", "GLM-OCR", "GOT-OCR2", "Qwen3-VL-2B" }, backends.Select(p => p.Name));
+        Assert.Equal(new[] { "PP-OCRv6", "GLM-OCR", "GOT-OCR2", "Qwen3-VL-2B", "DeepSeek-OCR-2" }, backends.Select(p => p.Name));
     }
 
     [Fact]
@@ -99,6 +99,16 @@ public class CrispEmbedEngineTests
     public void GetExitCodeHint_IsEmptyForCodesWithNothingToAdd(int exitCode)
     {
         Assert.Equal(string.Empty, CrispEmbedOcr.GetExitCodeHint(exitCode));
+    }
+
+    [Theory]
+    [InlineData("Line one\n    Line two indented", "Line one\nLine two indented")]
+    [InlineData("  padded  ", "padded")]
+    [InlineData("One\r\nTwo", "One\nTwo")]
+    [InlineData("", "")]
+    public void NormalizeServerText_TrimsEachLine(string input, string expected)
+    {
+        Assert.Equal(expected.Replace("\n", Environment.NewLine), CrispEmbedOcr.NormalizeServerText(input));
     }
 
     [Fact]
