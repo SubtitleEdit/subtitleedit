@@ -21930,8 +21930,11 @@ public partial class MainViewModel :
                     SelectAndScrollToRow(Subtitles.Count - 1);
                     return;
                 }
-                else if (keyEventArgs.Key == Key.Enter && keyEventArgs.KeyModifiers == KeyModifiers.None)
+                else if (keyEventArgs.Key == Key.Enter && keyEventArgs.KeyModifiers == KeyModifiers.None &&
+                         !_shortcutManager.HasSingleKeyShortcut(ShortcutManager.GetShortcutKeyName(keyEventArgs)))
                 {
+                    // A user-assigned bare Return shortcut wins over the built-in "go to subtitle and set
+                    // video position" Enter handling, so the shortcut reaches dispatch below (#12734).
                     if (Se.Settings.General.SubtitleEnterKeyAction == SubtitleEnterKeyActionType.GoToSubtitleAndSetVideoPosition.ToString())
                     {
                         keyEventArgs.Handled = true;
