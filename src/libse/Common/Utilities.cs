@@ -272,6 +272,27 @@ namespace Nikse.SubtitleEdit.Core.Common
                         return false;
                     }
                 }
+
+                // A multi-word entry (e.g. "SORT OF") means the whole phrase must stay together,
+                // so also forbid a break between its words - otherwise the line could still be
+                // split right before the last word of the phrase (issue #9631).
+                var nextSpaceIndex = s.IndexOf(' ', index + 1);
+                if (nextSpaceIndex < 0)
+                {
+                    nextSpaceIndex = s.Length;
+                }
+
+                if (nextSpaceIndex > index + 1)
+                {
+                    var s3 = s.Substring(0, nextSpaceIndex);
+                    foreach (NoBreakAfterItem ending in NoBreakAfterList(language))
+                    {
+                        if (ending.Regex == null && ending.Text != null && ending.Text.IndexOf(' ') >= 0 && ending.IsMatch(s3))
+                        {
+                            return false;
+                        }
+                    }
+                }
             }
             else
             {

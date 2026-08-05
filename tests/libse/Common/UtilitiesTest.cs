@@ -86,6 +86,54 @@ public class UtilitiesTest
         Assert.Equal(input, result);
     }
 
+    // A multi-word "do not break after" entry (e.g. "SORT OF") must keep the whole phrase
+    // together: the line may not be split between its words, even when a single word of the
+    // phrase ("OF") is in the list too (issue #9631).
+    [Theory]
+    [InlineData("HE WAS SORT OF WEIRD", 10, new[] { "SORT OF", "OF" })]
+    [InlineData("HE WAS SORT OF WEIRD", 10, new[] { "SORT OF" })]
+    [InlineData("I AT LEAST KNOW HIM", 8, new[] { "AT LEAST", "LEAST" })]
+    public void AutoBreakLine_NoBreakAfterMultiWordEntry_KeepsPhraseTogether(string input, int maxLength, string[] listItems)
+    {
+        var oldDataDirectory = Configuration.DataDirectory;
+        var oldUseNoLineBreakAfter = Configuration.Settings.Tools.UseNoLineBreakAfter;
+        var dictionaryFolder = Path.Combine(Path.GetTempPath(), "se9631_" + Guid.NewGuid().ToString("N"));
+        try
+        {
+            Directory.CreateDirectory(Path.Combine(dictionaryFolder, "Dictionaries"));
+            var xml = "<NoBreakAfterList>" + Environment.NewLine +
+                      string.Join(Environment.NewLine, listItems.Select(p => "  <Item>" + p + "</Item>")) +
+                      Environment.NewLine + "</NoBreakAfterList>";
+            File.WriteAllText(Path.Combine(dictionaryFolder, "Dictionaries", "zz_NoBreakAfterList.xml"), xml);
+            Configuration.DataDirectory = dictionaryFolder;
+            Configuration.Settings.Tools.UseNoLineBreakAfter = true;
+            Utilities.ResetNoBreakAfterList();
+
+            var result = Utilities.AutoBreakLinePrivate(input, maxLength, 0, "zz", false);
+
+            var lines = result.SplitToLines();
+            Assert.True(lines.Count == 2, "Expected two lines, got: " + result);
+            foreach (var item in listItems.Where(p => p.IndexOf(' ') >= 0))
+            {
+                Assert.True(lines[0].Contains(item) || lines[1].Contains(item),
+                    "Phrase \"" + item + "\" was split: " + result);
+            }
+        }
+        finally
+        {
+            Configuration.DataDirectory = oldDataDirectory;
+            Configuration.Settings.Tools.UseNoLineBreakAfter = oldUseNoLineBreakAfter;
+            Utilities.ResetNoBreakAfterList();
+            try
+            {
+                Directory.Delete(dictionaryFolder, true);
+            }
+            catch (IOException)
+            {
+            }
+        }
+    }
+
     // GetColorFromFontString measured colorStart relative to the extracted <font> tag
     // but indexed the full string, so a tag that wasn't at the start of the line read
     // the wrong region and returned the default color.
