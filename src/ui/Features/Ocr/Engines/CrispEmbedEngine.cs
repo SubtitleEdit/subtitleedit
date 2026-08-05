@@ -117,9 +117,9 @@ public static class CrispEmbedEngine
     }
 
     /// <summary>
-    /// The OCR backends offered in Subtitle Edit - the three CrispEmbed models best suited
-    /// for subtitle OCR. Model URLs/sizes match cstr's HuggingFace repos as referenced by
-    /// the CrispEmbed v0.14.0 model registry.
+    /// The OCR backends offered in Subtitle Edit - the CrispEmbed models best suited for
+    /// subtitle OCR. Model URLs/sizes match cstr's HuggingFace repos as referenced by the
+    /// CrispEmbed model registry.
     /// </summary>
     public static List<CrispEmbedBackend> GetBackends()
     {
@@ -204,6 +204,27 @@ public static class CrispEmbedEngine
                         Name = "qwen3-vl-2b-q8_0.gguf",
                         Size = "2.29 GB",
                         Url = "https://huggingface.co/cstr/qwen3-vl-2b-crispembed-gguf/resolve/main/qwen3-vl-2b-q8_0.gguf",
+                    },
+                },
+            },
+            // DeepSeek-OCR-2 (CrispEmbed v0.17.5): the most accurate backend here on
+            // subtitle-style images - the only one exact on a 9-image EN/DE/FR/ES/IT/ZH/JA/RU
+            // corpus where GLM-OCR scored 6/9 and GOT-OCR2 0/9 (verified 2026-08-05). ~2 s/image
+            // on Apple Silicon with the single-view mode CrispEmbedOcr requests via
+            // DS2_CROP_MODE=0. Only the q4_k "stacked" quant is offered: q8_0 measured slightly
+            // worse on the same corpus (8/9, drops an umlaut) while being 1.3 GB larger and no
+            // faster.
+            new()
+            {
+                Name = "DeepSeek-OCR-2",
+                Models = new List<CrispEmbedModel>
+                {
+                    new()
+                    {
+                        Name = "deepseek-ocr2-q4_k-stacked.gguf",
+                        Size = "2.31 GB",
+                        Url = "https://huggingface.co/cstr/deepseek-ocr2-crispembed-GGUF/resolve/main/deepseek-ocr2-q4_k-stacked.gguf",
+                        MinimumSizeBytes = 2_000_000_000,
                     },
                 },
             },

@@ -117,6 +117,12 @@ public class CrispEmbedOcr : IDisposable
                 },
             };
 
+            // DeepSeek-OCR-2's dynamic crop mode (default since CrispEmbed v0.17.5) tiles the
+            // image into multiple views, which helps full-page documents but is 3-6x slower on
+            // subtitle-sized bitmaps with byte-identical output (measured 2026-08-05, EN/ZH/JA/RU
+            // plus a 1920px two-liner). Only the DeepSeek engine reads this variable.
+            _serverProcess.StartInfo.Environment["DS2_CROP_MODE"] = "0";
+
             _serverProcess.OutputDataReceived += (_, e) => CaptureServerOutput(e.Data);
             _serverProcess.ErrorDataReceived += (_, e) => CaptureServerOutput(e.Data);
             _serverProcess.Start();
@@ -211,7 +217,7 @@ public class CrispEmbedOcr : IDisposable
                     ? textElement.GetString() ?? string.Empty
                     : string.Empty;
 
-            return resultText.Replace("\r\n", "\n").Replace("\n", Environment.NewLine).Trim();
+            return NormalizeServerText(resultText);
         }
         catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
         {
@@ -239,6 +245,22 @@ public class CrispEmbedOcr : IDisposable
                 // ignore
             }
         }
+    }
+
+    /// <summary>
+    /// Normalizes a VLM OCR result to platform newlines with per-line trimming. The document
+    /// models reproduce a centered second line's indentation as literal leading spaces, which
+    /// are never meaningful in a subtitle.
+    /// </summary>
+    internal static string NormalizeServerText(string text)
+    {
+        var lines = text.Replace("\r\n", "\n").Split('\n');
+        for (var i = 0; i < lines.Length; i++)
+        {
+            lines[i] = lines[i].Trim();
+        }
+
+        return string.Join(Environment.NewLine, lines).Trim();
     }
 
     /// <summary>
