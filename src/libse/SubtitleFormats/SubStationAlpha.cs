@@ -408,14 +408,11 @@ Format: Marked, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
             {
                 var line = lines[i1];
                 lineNumber++;
-                if (!eventsStarted)
-                {
-                    header.AppendLine(line);
-                }
-
                 // An event line also starts the event section, so a header-less payload (the
-                // clipboard carries bare event lines) still parses. Set before the section
-                // chain below so this same line is then parsed as an event (#10476).
+                // clipboard carries bare event lines) still parses. Runs before the header
+                // append below so the event line is parsed as an event rather than captured
+                // as header content; in a normal file [Events] has already set eventsStarted,
+                // so nothing changes there (#10476).
                 if (!eventsStarted && !string.IsNullOrEmpty(line) &&
                     (line.TrimStart().StartsWith("dialogue:", StringComparison.OrdinalIgnoreCase) ||
                      line.TrimStart().StartsWith("dialog:", StringComparison.OrdinalIgnoreCase) ||
@@ -424,6 +421,11 @@ Format: Marked, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
                     eventsStarted = true;
                     fontsStarted = false;
                     graphicsStarted = false;
+                }
+
+                if (!eventsStarted)
+                {
+                    header.AppendLine(line);
                 }
 
                 if (!string.IsNullOrEmpty(line) && line.TrimStart().StartsWith(';'))
