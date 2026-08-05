@@ -174,22 +174,35 @@ public partial class DownloadLibVlcViewModel : ObservableObject, IClosingCleanup
     {
         // Probing/loading libVLC takes a moment - keep the UI thread responsive, like
         // SettingsViewModel.SetLibVlcStatus does (#13222, review follow-up).
-        Task.Run(() => new LibVlcDynamicPlayer().CanLoad()).ContinueWith(t =>
+        Task.Run(() =>
+        {
+            using var player = new LibVlcDynamicPlayer();
+            return player.CanLoad();
+        }).ContinueWith(t =>
+        {
+            if (t.Exception != null)
+            {
+                Se.LogError(t.Exception);
+            }
+
             Dispatcher.UIThread.Post(() =>
             {
-                if (t.Result)
+                // Only skip the download on a clean, positive probe - a faulted probe (broken
+                // libVLC install) must fall through to the download, not leave the dialog
+                // stuck with an unobserved exception (review follow-up).
+                if (t.Status == TaskStatus.RanToCompletion && t.Result)
                 {
                     // libVLC is already available (bundled with the app, a previous
                     // download, or a VLC installation) - complete right away instead of
                     // downloading the full VLC package again (#13222).
-                    StatusText = Se.Language.General.Installed;
                     OkPressed = true;
                     Close();
                     return;
                 }
 
                 StartDownloadCore();
-            }));
+            });
+        });
     }
 
     private void StartDownloadCore()
