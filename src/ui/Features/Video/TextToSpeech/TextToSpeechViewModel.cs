@@ -2131,7 +2131,19 @@ public partial class TextToSpeechViewModel : ObservableObject
     {
         Dispatcher.UIThread.Post(() =>
         {
-            Window?.Close();
+            // Guarded (#12626): the crash report showed the app dying on an unhandled exception
+            // thrown out of Window.Close()/CloseInternal() on the UI thread. The close sequence
+            // itself is guarded in OnClosing; this keeps a failure in Avalonia's close machinery
+            // from escaping the dispatcher lambda and terminating the whole application.
+            try
+            {
+                Window?.Close();
+            }
+            catch (Exception ex)
+            {
+                SeLogger.Error(ex, "TTS window: Window.Close() failed");
+                Se.WriteToolsLog("TTS window: Window.Close() failed: " + ex, true);
+            }
         });
     }
 
