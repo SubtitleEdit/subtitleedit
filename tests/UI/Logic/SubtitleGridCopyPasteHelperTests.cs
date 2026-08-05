@@ -33,4 +33,26 @@ public class SubtitleGridCopyPasteHelperTests
         Assert.Equal("Line two", pasted.Paragraphs[1].Text);
         Assert.True(pasted.Paragraphs[1].IsComment);
     }
+
+    // Plain SubStationAlpha (.ssa) has the same [Script Info]/[V4 Styles] headers and the
+    // same Aegisub paste problem, so its clipboard payload gets the same treatment.
+    [Fact]
+    public void SsaCopyPayload_ContainsOnlyEventLines_AndRoundTrips()
+    {
+        var sub = new Subtitle();
+        sub.Paragraphs.Add(new Paragraph("Line one", 1000, 2000));
+        sub.Paragraphs.Add(new Paragraph("Line two", 3000, 4000));
+
+        var payload = SubtitleGridCopyPasteHelper.GetClipboardText(new SubStationAlpha(), sub);
+        var lines = payload.SplitToLines();
+        Assert.All(lines, l => Assert.True(
+            l.TrimStart().StartsWith("Dialogue:", StringComparison.OrdinalIgnoreCase) ||
+            l.TrimStart().StartsWith("Comment:", StringComparison.OrdinalIgnoreCase)));
+
+        var pasted = Subtitle.Parse(lines, "ssa");
+        Assert.NotNull(pasted);
+        Assert.Equal(2, pasted.Paragraphs.Count);
+        Assert.Equal("Line one", pasted.Paragraphs[0].Text);
+        Assert.Equal("Line two", pasted.Paragraphs[1].Text);
+    }
 }

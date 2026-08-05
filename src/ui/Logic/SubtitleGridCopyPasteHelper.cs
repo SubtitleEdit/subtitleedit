@@ -45,7 +45,7 @@ internal static class SubtitleGridCopyPasteHelper
         }
     }
 
-    // When copying ASSA lines, only the event lines ("Dialogue:"/"Comment:") belong on the
+    // When copying ASSA/SSA lines, only the event lines ("Dialogue:"/"Comment:") belong on the
     // clipboard: Aegisub's paste interprets every other clipboard line (the [Script Info] /
     // [V4+ Styles] file header) as a plain-text subtitle line, so the file headers would be
     // pasted as fake subtitle lines (issue #10476). Aegisub's own copy puts only the entry
@@ -54,7 +54,7 @@ internal static class SubtitleGridCopyPasteHelper
     internal static string GetClipboardText(SubtitleFormat subtitleFormat, Subtitle subtitle)
     {
         var text = subtitleFormat.ToText(subtitle, string.Empty);
-        if (subtitleFormat is AdvancedSubStationAlpha)
+        if (subtitleFormat is AdvancedSubStationAlpha or SubStationAlpha)
         {
             var lines = text.SplitToLines();
             var firstEventIndex = -1;
