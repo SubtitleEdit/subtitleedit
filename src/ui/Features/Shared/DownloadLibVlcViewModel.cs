@@ -7,6 +7,7 @@ using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Logic.Download;
 using Nikse.SubtitleEdit.Logic.SevenZipExtractor;
+using Nikse.SubtitleEdit.Logic.VideoPlayers.LibMpvDynamic;
 using System;
 using System.Globalization;
 using System.IO;
@@ -171,6 +172,17 @@ public partial class DownloadLibVlcViewModel : ObservableObject, IClosingCleanup
 
     public void StartDownload()
     {
+        if (new LibVlcDynamicPlayer().CanLoad())
+        {
+            // libVLC is already available (bundled with the app, a previous
+            // download, or a VLC installation) - complete right away instead of
+            // downloading the full VLC package again (#13222).
+            StatusText = Se.Language.General.Installed;
+            OkPressed = true;
+            Close();
+            return;
+        }
+
         var downloadProgress = new Progress<float>(number =>
         {
             var percentage = (int)Math.Round(number * 100.0, MidpointRounding.AwayFromZero);
