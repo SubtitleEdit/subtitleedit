@@ -321,7 +321,18 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
         {
             if (string.IsNullOrEmpty(prevText) || prevText.Length < 3)
             {
-                return true;
+                // One- and two-character lines that are paragraph markers (dash, music note,
+                // "--") or end in punctuation still end a paragraph - but a short line ending
+                // in a letter or digit ("u", "Ja") continues the same sentence, matching what
+                // the full check below decides for longer lines, and must not trigger
+                // capitalization of the next line (#12227).
+                var trimmed = prevText?.TrimEnd();
+                if (string.IsNullOrEmpty(trimmed))
+                {
+                    return true;
+                }
+
+                return !char.IsLetterOrDigit(trimmed[trimmed.Length - 1]);
             }
 
             prevText = prevText.Replace("♪", string.Empty).Replace("♫", string.Empty).Trim();
