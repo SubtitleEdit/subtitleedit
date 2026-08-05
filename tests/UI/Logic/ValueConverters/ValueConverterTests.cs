@@ -209,6 +209,21 @@ public class ValueConverterTests
         Assert.False(run.IsSet(TextElement.ForegroundProperty));
     }
 
+    [AvaloniaTheory]
+    [InlineData("{\\c&HFFFFFF&\\t(20,1000,0.9,\\c&H29F2FF&)}became clear.{\\c&HFFFFFF&}")]
+    [InlineData("{\\c&HFFFFFF&\\t(20,1000,0.9,\\1c&H29F2FF&)}x")]
+    public void ShowFormatting_UsesDestinationColorOfAssaFadeTransition(string text)
+    {
+        // Issue #10955: the destination color inside a \t(...) fade transition is the last
+        // tag before the transition's closing paren - the grid should show that color
+        // instead of losing the color entirely.
+        var run = SingleRun(Highlight(text, SubtitleGridFormattingTypes.ShowFormatting));
+
+        // &H29F2FF& is BGR: red = 0xFF, green = 0xF2, blue = 0x29
+        Assert.Equal(Color.FromArgb(255, 255, 242, 41),
+            Assert.IsAssignableFrom<ISolidColorBrush>(run.Foreground).Color);
+    }
+
     [AvaloniaFact]
     public void ShowFormatting_AppliesAssaFontNameAndSize()
     {

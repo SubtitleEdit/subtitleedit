@@ -1056,7 +1056,11 @@ public class TextWithSubtitleSyntaxHighlightingConverter : IValueConverter
             return null; // Skip empty or excessively long color strings
         }
 
-        // ASSA colors are in format &HAABBGGRR& or &HBBGGRR& (BGR order, not RGB)
+        // ASSA colors are in format &HAABBGGRR& or &HBBGGRR& (BGR order, not RGB).
+        // A trailing ')' is left over when the color is the last tag inside a \t(...)
+        // fade transition ({\c&HFFFFFF&\t(20,1000,0.9,\c&H29F2FF&)}); for fading colors
+        // the grid shows the destination color, so drop the transition's closing paren.
+        colorStr = colorStr.TrimEnd(')');
         colorStr = colorStr.Trim("&Hh".AsSpan());
 
         if (colorStr.Length < 6 || colorStr.Length > 8)
