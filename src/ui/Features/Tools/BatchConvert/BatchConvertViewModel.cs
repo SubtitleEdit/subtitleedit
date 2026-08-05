@@ -194,6 +194,9 @@ public partial class BatchConvertViewModel : ObservableObject, IClosingCleanup
     [ObservableProperty] private bool _rtlRemoveUniCode;
     [ObservableProperty] private bool _rtlReverseStartEnd;
 
+    // Beautify time codes
+    [ObservableProperty] private bool _beautifyTimeCodesSnapToShotChanges;
+
     // Bride gaps
     [ObservableProperty] private int _bridgeGapsSmallerThanMs;
     [ObservableProperty] private int _bridgeGapsMinGapMs;
@@ -627,6 +630,9 @@ public partial class BatchConvertViewModel : ObservableObject, IClosingCleanup
         Se.Settings.Tools.BatchConvert.SortBy = SelectedSortByOption?.Key ?? "Number";
         Se.Settings.Tools.BatchConvert.SortByDescending = SortByDescending;
 
+        // Beautify time codes
+        Se.Settings.Tools.BatchConvert.BeautifyTimeCodesSnapToShotChanges = BeautifyTimeCodesSnapToShotChanges;
+
         // Adjust image brightness/alpha/color
         Se.Settings.Tools.BatchConvert.ImageAdjustBrightnessOn = ImageAdjustBrightnessOn;
         Se.Settings.Tools.BatchConvert.ImageAdjustBrightness = ImageAdjustBrightness;
@@ -753,6 +759,8 @@ public partial class BatchConvertViewModel : ObservableObject, IClosingCleanup
         BridgeGapsSmallerThanMs = Se.Settings.Tools.BridgeGaps.BridgeGapsSmallerThanMs;
         BridgeGapsMinGapMs = Se.Settings.Tools.BridgeGaps.MinGapMs;
         BridgeGapsPercentForLeft = Se.Settings.Tools.BridgeGaps.PercentForLeft;
+
+        BeautifyTimeCodesSnapToShotChanges = Se.Settings.Tools.BatchConvert.BeautifyTimeCodesSnapToShotChanges;
 
         SplitBreakSingleLineMaxLength = Se.Settings.General.SubtitleLineMaximumLength;
         SplitBreakMaxNumberOfLines = Se.Settings.General.MaxNumberOfLines;
@@ -1269,6 +1277,18 @@ public partial class BatchConvertViewModel : ObservableObject, IClosingCleanup
         {
             FixCommonErrorsProfile = result.SelectedProfile;
         }
+    }
+
+    [RelayCommand]
+    private async Task ShowBeautifyTimeCodesProfile()
+    {
+        if (Window == null)
+        {
+            return;
+        }
+
+        await _windowService.ShowDialogAsync<BeautifyTimeCodes.Profile.BeautifyTimeCodesProfileWindow, BeautifyTimeCodes.Profile.BeautifyTimeCodesProfileViewModel>(Window!,
+            vm => { vm.Initialize(); });
     }
 
     [RelayCommand]
@@ -2203,6 +2223,12 @@ public partial class BatchConvertViewModel : ObservableObject, IClosingCleanup
                 IsActive = activeFunctions.Contains(BatchConvertFunctionType.SortBy),
                 SortBy = SelectedSortByOption?.Key ?? "Number",
                 Descending = SortByDescending,
+            },
+
+            BeautifyTimeCodes = new BatchConvertConfig.BeautifyTimeCodesSettings2
+            {
+                IsActive = activeFunctions.Contains(BatchConvertFunctionType.BeautifyTimeCodes),
+                SnapToShotChanges = BeautifyTimeCodesSnapToShotChanges,
             },
 
             AdjustImageColors = new BatchConvertConfig.AdjustImageColorsSettings

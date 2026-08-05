@@ -25,6 +25,7 @@ using Nikse.SubtitleEdit.Features.Tools.SplitBreakLongLines;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Logic.Dictionaries;
+using Nikse.SubtitleEdit.Logic.Media;
 using Nikse.SubtitleEdit.Logic.LlamaCpp;
 using Nikse.SubtitleEdit.UiLogic.Ocr;
 using SkiaSharp;
@@ -1672,6 +1673,7 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
             s = ChangeSpeed(s);
             s = BridgeGaps(s);
             s = ApplyMinGap(s);
+            s = BeautifyTimeCodes(s, item.FileName);
         }
         else
         {
@@ -1699,6 +1701,7 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
             s = FixRightToLeft(s);
             s = AssaChangeResolution(s);
             s = AssaChangeStyle(s);
+            s = BeautifyTimeCodes(s, item.FileName);
             s = SortBy(s);
         }
 
@@ -2089,6 +2092,44 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
             }
         }
 
+        return subtitle;
+    }
+
+    private Subtitle BeautifyTimeCodes(Subtitle subtitle, string subtitleFileName)
+    {
+        if (!_config.BeautifyTimeCodes.IsActive)
+        {
+            return subtitle;
+        }
+
+        // Frame rate and shot changes come from a video file matching the subtitle file
+        // name, when one exists. Shot changes are only available if they were previously
+        // generated/imported for that video (they are cached on disk per video file).
+        var frameRate = Configuration.Settings.General.DefaultFrameRate;
+        var shotChanges = new List<double>();
+
+        if (FindVideoFileName.TryFindVideoFileName(subtitleFileName, out var videoFileName))
+        {
+            try
+            {
+                var mediaInfo = FfmpegMediaInfo2.Parse(videoFileName);
+                if (mediaInfo.FramesRate > 0)
+                {
+                    frameRate = (double)mediaInfo.FramesRate;
+                }
+            }
+            catch
+            {
+                // no ffmpeg or unreadable video file - keep the default frame rate
+            }
+
+            if (_config.BeautifyTimeCodes.SnapToShotChanges)
+            {
+                shotChanges = ShotChangesHelper.FromDisk(videoFileName);
+            }
+        }
+
+        new Core.Forms.TimeCodesBeautifier(subtitle, frameRate, new List<double>(), shotChanges).Beautify();
         return subtitle;
     }
 

@@ -21,6 +21,8 @@ public class LanguageBeautifyTimeCodes
     public string PreviousChange { get; set; }
     public string NextChange { get; set; }
     public string EditProfile { get; set; }
+    public string BatchSnapToShotChanges { get; set; }
+    public string BatchInfo { get; set; }
 
     public LanguageBeautifyTimeCodes()
     {
@@ -43,5 +45,7 @@ public class LanguageBeautifyTimeCodes
         PreviousChange = "Previous change";
         NextChange = "Next change";
         EditProfile = "Edit profile...";
+        BatchSnapToShotChanges = "Snap cues to shot changes (if available)";
+        BatchInfo = "Frame rate and shot changes are read from a video file with the same name as the subtitle file, if one is found.";
     }
 }
