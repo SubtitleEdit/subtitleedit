@@ -410,6 +410,11 @@ public partial class MainViewModel :
     private string? _liveSpellCheckDictionaryFileName;
     private HashSet<int>? _visibleLayers;
     private readonly List<SubtitleLineViewModel> _waveformSubtitleBuffer = new();
+    // Dirty tracking for _waveformSubtitleBuffer - see the rebuild block in the position
+    // timer tick. Starts dirty so the first tick after startup always builds the buffer.
+    private bool _waveformSubtitleBufferDirty = true;
+    private bool _waveformBufferNoLayers;
+    private HashSet<int>? _waveformBufferVisibleLayers;
     private DispatcherTimer _positionTimer = new();
     private DispatcherTimer _slowTimer = new();
     private DispatcherTimer _cursorTimer = new(); // ~60 fps; drives only the waveform/video playhead cursor
@@ -19812,21 +19817,23 @@ public partial class MainViewModel :
         }
     }
 
-    public bool IsTyping()
+    /// <summary>
+    /// True while the user is in the middle of a continuous edit, so undo change detection
+    /// can skip the tick instead of snapshotting a half-finished state (and paying a full
+    /// subtitle deep copy several times a second).
+    /// </summary>
+    public bool IsUserEditing()
     {
-        if (_lastKeyPressedMs == 0)
-        {
-            return false;
-        }
-
-        var ms = Environment.TickCount64;
-        var diff = ms - _lastKeyPressedMs;
-        if (diff < 500)
+        if (_lastKeyPressedMs != 0 && Environment.TickCount64 - _lastKeyPressedMs < 500)
         {
             return true;
         }
 
-        return false;
+        // Dragging time codes in the waveform is the pointer equivalent of typing: it rewrites
+        // the times on every change-detection tick, but presses no key, so the keyboard check
+        // above never covered it and every tick of a drag deep-copied the whole subtitle and
+        // pushed an intermediate state onto the undo stack (issue #13234).
+        return AudioVisualizer?.IsEditingWithPointer == true;
     }
 
     // Hash used by undo change detection. Undo snapshots capture and restore OriginalText,
@@ -19843,9 +19850,42 @@ public partial class MainViewModel :
             return Dispatcher.UIThread.Invoke(GetUndoRedoHash);
         }
 
+        // GetFastHash and GetFastHashOriginal walk Subtitles hashing the same seven per-line
+        // fields; only the text field differs (Text vs OriginalText). Composing them meant two
+        // full passes, and this runs on every change-detection tick (issue #13234) - fold both
+        // texts into one pass instead. The value differs from the old composition, which is
+        // fine: undo hashes are only ever compared with other values from this method, within
+        // this process. Save-tracking keeps using GetFastHash/GetFastHashOriginal separately.
         unchecked
         {
-            return GetFastHash() * 31 + GetFastHashOriginal();
+            var hash = 17;
+            hash = hash * 23 + (_subtitleFileName?.GetHashCode() ?? 0);
+            hash = hash * 23 + (_subtitleFileNameOriginal?.GetHashCode() ?? 0);
+            hash = hash * 23 + (SelectedEncoding.DisplayName?.GetHashCode() ?? 0);
+            hash = hash * 23 + (_subtitle.Header is { } header ? string.GetHashCode(header.AsSpan().Trim()) : 0);
+            hash = hash * 23 + (_subtitle.Footer is { } footer ? string.GetHashCode(footer.AsSpan().Trim()) : 0);
+
+            _subtitleOriginal ??= new Subtitle();
+            hash = hash * 23 + (_subtitleOriginal.Header is { } headerOrg ? string.GetHashCode(headerOrg.AsSpan().Trim()) : 0);
+            hash = hash * 23 + (_subtitleOriginal.Footer is { } footerOrg ? string.GetHashCode(footerOrg.AsSpan().Trim()) : 0);
+
+            var count = Subtitles.Count;
+            for (var i = 0; i < count; i++)
+            {
+                var p = Subtitles[i];
+
+                hash = hash * 23 + p.Number;
+                hash = hash * 23 + p.StartTime.TotalMilliseconds.GetHashCode();
+                hash = hash * 23 + p.EndTime.TotalMilliseconds.GetHashCode();
+                hash = hash * 23 + (p.Text?.GetHashCode() ?? 0);
+                hash = hash * 23 + (p.OriginalText?.GetHashCode() ?? 0);
+                hash = hash * 23 + (p.Style?.GetHashCode() ?? 0);
+                hash = hash * 23 + (p.Extra?.GetHashCode() ?? 0);
+                hash = hash * 23 + (p.Actor?.GetHashCode() ?? 0);
+                hash = hash * 23 + p.Layer;
+            }
+
+            return hash;
         }
     }
 
@@ -19860,7 +19900,7 @@ public partial class MainViewModel :
             return Dispatcher.UIThread.Invoke(GetFastHash);
         }
 
-        // Runs every 250 ms (undo change detection) plus every 400 ms (title/auto-save),
+        // Runs every 333 ms (undo change detection) plus every 400 ms (title/auto-save),
         // so it must not allocate: the old version concatenated fileName+encoding and
         // called Trim() on Header/Footer - the editor normalises subtitles to ASSA, so
         // Header is a multi-KB styles block ending in a newline and Trim() copied all of
@@ -22493,6 +22533,7 @@ public partial class MainViewModel :
     private void OnSubtitlesCollectionChangedForMpv(object? sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
     {
         _mpvPreviewDirty = true;
+        _waveformSubtitleBufferDirty = true;
         if (e.NewItems != null)
             foreach (SubtitleLineViewModel item in e.NewItems)
                 item.PropertyChanged += OnSubtitleItemChangedForMpv;
@@ -22508,6 +22549,13 @@ public partial class MainViewModel :
             or nameof(SubtitleLineViewModel.EndTime))
         {
             _mpvPreviewDirty = true;
+            // A start-time change can reorder the buffer, so it must be rebuilt and re-sorted.
+            _waveformSubtitleBufferDirty = true;
+        }
+        else if (e.PropertyName is nameof(SubtitleLineViewModel.Layer))
+        {
+            // The waveform buffer filters on Layer when layers are hidden from the waveform.
+            _waveformSubtitleBufferDirty = true;
         }
     }
 
@@ -22804,35 +22852,52 @@ public partial class MainViewModel :
                     }
                 }
 
+                // Rebuild + re-sort the buffer only when its inputs changed since the last tick;
+                // an idle tick used to copy and order-check every line 20x a second (#13234).
+                // Membership/order inputs: the collection and each line's times/layer (both flip
+                // _waveformSubtitleBufferDirty via the ForMpv hooks), plus the layer-visibility
+                // state checked here - _visibleLayers is only ever swapped wholesale, so a
+                // reference comparison covers it. The buffer holds live references, so paragraph
+                // content read later this tick is always current either way.
                 var noLayers = _visibleLayers == null || !Se.Settings.Assa.HideLayersFromWaveform || _visibleLayers.Count == 0;
                 var subtitle = _waveformSubtitleBuffer;
-                subtitle.Clear();
-                if (subtitle.Capacity < Subtitles.Count)
+                if (_waveformSubtitleBufferDirty ||
+                    noLayers != _waveformBufferNoLayers ||
+                    !ReferenceEquals(_visibleLayers, _waveformBufferVisibleLayers))
                 {
-                    subtitle.Capacity = Subtitles.Count;
-                }
-                if (noLayers)
-                {
-                    for (var i = 0; i < Subtitles.Count; i++)
+                    _waveformSubtitleBufferDirty = false;
+                    _waveformBufferNoLayers = noLayers;
+                    _waveformBufferVisibleLayers = _visibleLayers;
+
+                    subtitle.Clear();
+                    if (subtitle.Capacity < Subtitles.Count)
                     {
-                        subtitle.Add(Subtitles[i]);
+                        subtitle.Capacity = Subtitles.Count;
                     }
-                }
-                else
-                {
-                    var layerSet = _visibleLayers!;
-                    for (var i = 0; i < Subtitles.Count; i++)
+                    if (noLayers)
                     {
-                        var p = Subtitles[i];
-                        if (layerSet.Contains(p.Layer))
+                        for (var i = 0; i < Subtitles.Count; i++)
                         {
-                            subtitle.Add(p);
+                            subtitle.Add(Subtitles[i]);
                         }
                     }
+                    else
+                    {
+                        var layerSet = _visibleLayers!;
+                        for (var i = 0; i < Subtitles.Count; i++)
+                        {
+                            var p = Subtitles[i];
+                            if (layerSet.Contains(p.Layer))
+                            {
+                                subtitle.Add(p);
+                            }
+                        }
+                    }
+
+                    // The buffer is nearly always already in start-time order, so skip the
+                    // O(n log n) sort after a cheap early-exit ordered check.
+                    ListSortUtil.SortIfNeeded(subtitle, static (a, b) => a.StartTime.Ticks.CompareTo(b.StartTime.Ticks));
                 }
-                // Runs every 50 ms tick and the buffer is nearly always already in start-time
-                // order, so skip the O(n log n) sort after a cheap early-exit ordered check.
-                ListSortUtil.SortIfNeeded(subtitle, static (a, b) => a.StartTime.Ticks.CompareTo(b.StartTime.Ticks));
 
                 // The playhead cursor is interpolated and applied by the dedicated high-frequency
                 // _cursorTimer (see UpdatePlayheadEstimate) so it moves at ~60 fps instead of this
@@ -23021,7 +23086,12 @@ public partial class MainViewModel :
             AutoSaveTick(mainHash, originalHash);
 
             var vp = GetVideoPlayerControl();
-            if (!_mpvPreviewDirty || vp == null || _mpvPreviewRefreshBusy)
+            // IsUserEditing: refreshing the preview mid-edit means paying GetUpdateSubtitle +
+            // two Subtitle copies + ToText + a temp-file write on the UI thread every 400 ms
+            // while the user types or drags in the waveform (issue #13234). The dirty flag
+            // stays set, so the settled state is pushed on the first quiet tick - and the
+            // preview reads better settling once than flickering mid-word anyway.
+            if (!_mpvPreviewDirty || vp == null || _mpvPreviewRefreshBusy || IsUserEditing())
             {
                 return;
             }
