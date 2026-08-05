@@ -90,15 +90,29 @@ public class OcrTableViewTests
         Assert.Equal(3, tableView.ItemsSource!.Cast<object>().Count());
 
         // TableView has no content-based sizing (Auto acts as 1*), so the narrow columns
-        // are pixel-sized from their widest content and only Text is star-sized.
-        Assert.All(tableView.Columns.Take(4), c => Assert.True(c.Width.IsAbsolute && c.Width.Value > 0));
-        Assert.True(tableView.Columns[^1].Width.IsStar);
+        // are pixel-sized from their widest content; Image and Text share the rest as stars.
+        Assert.All(tableView.Columns.Take(3), c => Assert.True(c.Width.IsAbsolute && c.Width.Value > 0));
+        Assert.True(tableView.Columns[3].Width.IsStar); // image column (issue #10533)
+        Assert.True(tableView.Columns[^1].Width.IsStar); // text column
 
-        // The image column tracks the Ctrl+plus/minus zoom via ImageMaxWidth.
-        var imageWidthBefore = tableView.Columns[3].Width.Value;
+        // The image column and its thumbnails grow with the window (issue #10533: the
+        // column used to be pixel-fixed, so resizing the OCR window did not zoom the PGS).
+        var imageColumn = tableView.Columns[3];
+        var firstRowImage = tableView.GetVisualDescendants().OfType<TableViewRow>().First()
+            .GetVisualDescendants().OfType<Image>().First();
+        var columnWidthBefore = imageColumn.ActualWidth;
+        var imageWidthBefore = firstRowImage.Width;
+        window.Width = 1600;
+        Dispatcher.UIThread.RunJobs();
+        window.UpdateLayout();
+        Assert.True(imageColumn.ActualWidth > columnWidthBefore, $"column {imageColumn.ActualWidth} not > {columnWidthBefore}");
+        Assert.True(firstRowImage.Width > imageWidthBefore, $"image {firstRowImage.Width} not > {imageWidthBefore}");
+
+        // The image column still tracks the Ctrl+plus/minus zoom via ImageMaxWidth.
+        var zoomWeightBefore = imageColumn.Width.Value;
         vm.ImageMaxWidth *= 1.1;
         Dispatcher.UIThread.RunJobs();
-        Assert.True(tableView.Columns[3].Width.Value > imageWidthBefore);
+        Assert.True(imageColumn.Width.Value > zoomWeightBefore);
 
         window.Close();
     }

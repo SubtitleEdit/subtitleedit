@@ -494,7 +494,7 @@ public class OcrWindow : Window
                 new TableViewColumn
                 {
                     Header = Se.Language.General.Image,
-                    Width = new GridLength(vm.ImageMaxWidth + cellChrome),
+                    Width = new GridLength(1, GridUnitType.Star),
                     CellTheme = UiUtil.TableViewNoPaddingCellTheme,
                     HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
                     CellTemplate = new FuncDataTemplate<OcrSubtitleItem>((item, _) =>
@@ -513,8 +513,21 @@ public class OcrWindow : Window
                                 Source = bitmap,
                                 Stretch = Avalonia.Media.Stretch.Uniform
                             };
-                            image.Bind(Image.MaxHeightProperty, new Binding(nameof(vm.ImageMaxHeight)) { Source = vm });
-                            image.Bind(Image.MaxWidthProperty, new Binding(nameof(vm.ImageMaxWidth)) { Source = vm });
+                            // Fill the cell (which grows with the window) instead of being capped
+                            // by a fixed max size; keep the same 2:1 box aspect the old 200x100
+                            // max produced, so rows stay compact.
+                            // Note: Layoutable.ActualWidth is a plain CLR property (not an
+                            // AvaloniaProperty), so it cannot be used in a binding - track the
+                            // cell's arranged width via Bounds instead.
+                            var imageHeightRatio = vm.ImageMaxHeight / vm.ImageMaxWidth;
+                            stackPanel.PropertyChanged += (_, e) =>
+                            {
+                                if (e.Property == Layoutable.BoundsProperty && stackPanel.Bounds.Width > 0)
+                                {
+                                    image.Width = stackPanel.Bounds.Width;
+                                    image.Height = stackPanel.Bounds.Width * imageHeightRatio;
+                                }
+                            };
 
                             // Subtitle bitmaps are usually light text on a transparent background, which
                             // is invisible on a light grid - give them a dark backdrop so they show.
@@ -562,14 +575,17 @@ public class OcrWindow : Window
                 },
         });
 
-        // The image thumbnails scale with Ctrl+plus/minus (Image.MaxWidth/MaxHeight are
-        // bound to the VM) - keep the pixel-sized image column in step with the zoom.
+        // The image column shares the window width (star), so the thumbnails scale when the
+        // window is resized. Ctrl+plus/minus zoom (ImageMaxWidth in the VM) changes the
+        // column's share of the width instead; the factor is squared because star widths
+        // distribute the free space, which keeps each zoom step near the old ~10% size change.
         var imageColumn = dataGridSubtitle.Columns[dataGridSubtitle.Columns.Count - 2];
         vm.PropertyChanged += (_, args) =>
         {
             if (args.PropertyName == nameof(vm.ImageMaxWidth))
             {
-                imageColumn.Width = new GridLength(vm.ImageMaxWidth + cellChrome);
+                var zoomFactor = vm.ImageMaxWidth / 200.0; // 200 = default ImageMaxWidth (OcrViewModel)
+                imageColumn.Width = new GridLength(zoomFactor * zoomFactor, GridUnitType.Star);
             }
         };
 
