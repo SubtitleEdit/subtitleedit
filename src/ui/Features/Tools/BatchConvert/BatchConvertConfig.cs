@@ -48,6 +48,7 @@ public class BatchConvertConfig
     public AutoBalanceLinesSettings AutoBalanceLines { get; set; }
     public SortBySettings SortBy { get; set; }
     public AdjustImageColorsSettings AdjustImageColors { get; set; }
+    public BeautifyTimeCodesSettings2 BeautifyTimeCodes { get; set; }
 
     public BatchConvertConfig()
     {
@@ -86,6 +87,7 @@ public class BatchConvertConfig
         AutoBalanceLines = new AutoBalanceLinesSettings();
         SortBy = new SortBySettings();
         AdjustImageColors = new AdjustImageColorsSettings();
+        BeautifyTimeCodes = new BeautifyTimeCodesSettings2();
     }
 
     public bool IsTargetFormatImageBased =>
@@ -369,6 +371,18 @@ public class BatchConvertConfig
         public SortBySettings()
         {
             SortBy = "Number";
+        }
+    }
+
+    // "2" suffix to avoid clashing with libse's BeautifyTimeCodesSettings (the profile store).
+    public class BeautifyTimeCodesSettings2
+    {
+        public bool IsActive { get; set; }
+        public bool SnapToShotChanges { get; set; }
+
+        public BeautifyTimeCodesSettings2()
+        {
+            SnapToShotChanges = true;
         }
     }
 

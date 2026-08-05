@@ -27,6 +27,7 @@ You can chain multiple conversion functions:
 - Offset time codes
 - Adjust duration
 - Change speed/frame rate
+- Beautify time codes — align cues to frames and apply the [Beautify time codes](beautify-time-codes.md) profile rules; frame rate and shot changes are read from a video file with the same name as the subtitle file, if one is found
 - Bridge gaps
 - Apply minimum gap
 - Merge lines with same text

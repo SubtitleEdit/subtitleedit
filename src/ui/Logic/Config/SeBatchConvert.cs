@@ -105,6 +105,8 @@ public class SeBatchConvert
     public string SortBy { get; set; }
     public bool SortByDescending { get; set; }
 
+    public bool BeautifyTimeCodesSnapToShotChanges { get; set; }
+
     public bool ImageAdjustBrightnessOn { get; set; }
     public double ImageAdjustBrightness { get; set; }
     public double ImageAdjustContrast { get; set; }
@@ -173,5 +175,7 @@ public class SeBatchConvert
 
         SortBy = "Number";
         SortByDescending = false;
+
+        BeautifyTimeCodesSnapToShotChanges = true;
     }
 }
