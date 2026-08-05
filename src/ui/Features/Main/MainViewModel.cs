@@ -15213,7 +15213,10 @@ public partial class MainViewModel :
         var countOfTrimmedLines = 0;
 
         var selectedItems = SubtitleGridSelectedItems.Cast<SubtitleLineViewModel>().ToList();
-        var languageCode = LanguageAutoDetect.AutoDetectGoogleLanguage(GetUpdateSubtitle());
+        // Same nullable-detection pattern as the auto-trim path (#12144 audit follow-up): on
+        // detection failure the empty language code keeps the English-only rules (e.g. the
+        // " 's " merge) from corrupting e.g. Dutch text.
+        var languageCode = LanguageAutoDetect.AutoDetectGoogleLanguageOrNull(GetUpdateSubtitle()) ?? string.Empty;
         foreach (var s in selectedItems)
         {
             var originalText = s.Text;
