@@ -11,15 +11,7 @@ public class TimeSpanToDisplayFullConverter : IValueConverter
 {
     public static readonly TimeSpanToDisplayFullConverter Instance = new();
 
-    /// <summary>
-    /// A private readonly instance of the <see cref="Nikse.SubtitleEdit.Core.Common.TimeCode"/> class used for
-    /// formatting time-related values in the conversion process.
-    /// </summary>
-    /// <remarks>
-    /// This variable is used internally within the <see cref="TimeSpanToDisplayFullConverter"/> class
-    /// to facilitate time span conversions into formatted string representations based on the application's
-    /// settings, such as frame-based or standard time-based formatting.
-    /// </remarks>
+    // Reused to avoid per-call TimeCode allocations (expected to be used from the UI thread only).
     private readonly TimeCode _formattingTimeCode = new();
     private const string ZeroFrameMode = "00:00:00.00";
     private const string ZeroTime = "00:00:00,000";
