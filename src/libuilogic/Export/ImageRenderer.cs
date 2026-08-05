@@ -140,7 +140,27 @@ public static class ImageRenderer
         //System.IO.File.WriteAllBytes(@"C:\temp\debug_raw.png", tempBitmap.ToPngArray());
 
         var bitmapNoPadding = tempBitmap.TrimTransparentPixels();
-        var textBitmap = bitmapNoPadding.TrimmedBitmap;
+
+        // The tight glyph-bound trim would make the bitmap height depend on the glyphs
+        // present (ascenders/descenders), so bottom-anchored exports (PGS, VobSub,
+        // BDN-XML) would place subtitles with and without descenders at different
+        // vertical positions (issue #13202). Anchor the bitmap to the font's line box
+        // instead: top = first baseline - ascent, bottom = last baseline + descent,
+        // plus room for outline and shadow. The height then depends only on the line
+        // count, and the baselines land at fixed screen positions for every alignment.
+        // Note: TrimResult.Top/Left are absolute canvas coordinates, while Right/Bottom
+        // are distances from the canvas edges - convert before comparing.
+        var firstBaseline = textStartY;
+        var lastBaseline = textStartY + (lines.Count - 1) * (baseLineHeight + lineSpacing);
+        var lineBoxTop = (int)(firstBaseline - Math.Abs(fontMetrics.Ascent) - Math.Abs(outlineWidth));
+        var lineBoxBottom = (int)(lastBaseline + Math.Abs(fontMetrics.Descent) + Math.Abs(outlineWidth) + Math.Abs(shadowWidth));
+        var tightTop = bitmapNoPadding.Top;
+        var tightBottom = tempBitmap.Height - 1 - bitmapNoPadding.Bottom;
+        var topPad = Math.Max(0, tightTop - lineBoxTop);
+        var bottomPad = Math.Max(0, lineBoxBottom - tightBottom);
+        var textBitmap = topPad > 0 || bottomPad > 0
+            ? bitmapNoPadding.TrimmedBitmap.AddTransparentMargins(0, topPad, 0, bottomPad)
+            : bitmapNoPadding.TrimmedBitmap;
 
         if (ip.BoxType != ExportBoxType.None)
         {
