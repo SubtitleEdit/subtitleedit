@@ -47,11 +47,35 @@ public class FixStartWithUppercaseLetterAfterParagraphTest
     }
 
     // A line ending with a quotation mark is not a paragraph end - the quote is not
-    // preceded by sentence-ending punctuation, so the next line continues the sentence (#12227).
+    // preceded by sentence-ending punctuation, so the next line continues the sentence.
+    // ("\"u\"" is three characters, so this is the pre-existing long-line path - kept as a
+    // regression guard around the short-line change for #12227.)
     [Fact]
     public void KeepsLowercaseWhenPreviousParagraphEndsWithQuote()
     {
         Assert.Equal("me ontmoeten.", Fix("\"u\"", "me ontmoeten.", "nl"));
+    }
+
+    // Two-character lines follow the same rule as longer ones: no sentence-ending
+    // punctuation means no paragraph end (#12227).
+    [Fact]
+    public void KeepsLowercaseWhenPreviousParagraphIsTwoLetterWord()
+    {
+        Assert.Equal("we vertrekken.", Fix("Ja", "we vertrekken.", "nl"));
+    }
+
+    // ...while a short line that ends in sentence punctuation still ends the paragraph.
+    [Fact]
+    public void CapitalizesAfterShortLineEndingWithPeriod()
+    {
+        Assert.Equal("We vertrekken.", Fix("Ja.", "we vertrekken.", "nl"));
+    }
+
+    // A lone dash line is a paragraph marker, not text - it still ends the paragraph.
+    [Fact]
+    public void CapitalizesAfterLoneDashLine()
+    {
+        Assert.Equal("We vertrekken.", Fix("-", "we vertrekken.", "nl"));
     }
 
     // The previous subtitle is a one-letter fragment ("u") - not a paragraph end, so the

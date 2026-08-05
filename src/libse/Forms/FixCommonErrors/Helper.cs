@@ -321,9 +321,11 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
         {
             if (string.IsNullOrEmpty(prevText) || prevText.Length < 3)
             {
-                // Short lines are usually paragraph markers (dash, music note, etc.) that end a
-                // paragraph - but a short line of actual text (e.g. "u") continues the same
-                // sentence and must not trigger capitalization of the next line (#12227).
+                // One- and two-character lines that are paragraph markers (dash, music note,
+                // "--") or end in punctuation still end a paragraph - but a short line ending
+                // in a letter or digit ("u", "Ja") continues the same sentence, matching what
+                // the full check below decides for longer lines, and must not trigger
+                // capitalization of the next line (#12227).
                 var trimmed = prevText?.TrimEnd();
                 if (string.IsNullOrEmpty(trimmed))
                 {
