@@ -21924,8 +21924,17 @@ public partial class MainViewModel :
                     SelectAndScrollToRow(Subtitles.Count - 1);
                     return;
                 }
-                else if (keyEventArgs.Key == Key.Enter && keyEventArgs.KeyModifiers == KeyModifiers.None)
+                else if (keyEventArgs.Key == Key.Enter && keyEventArgs.KeyModifiers == KeyModifiers.None &&
+                         _shortcutManager.CheckShortcuts(keyEventArgs, CategorySubtitleGrid) == null &&
+                         _shortcutManager.CheckShortcuts(keyEventArgs, CategorySubtitleGridAndTextBox) == null &&
+                         _shortcutManager.CheckShortcuts(keyEventArgs, CategoryGeneralLower) == null)
                 {
+                    // A user-assigned bare Return shortcut wins over the built-in "go to subtitle and set
+                    // video position" Enter handling, so the shortcut reaches dispatch below (#12734).
+                    // Probed with the same CheckShortcuts calls the dispatch itself uses - grid
+                    // categories right below, General at the end of the handler - so a Return
+                    // bound only in the waveform or text-box context does not disable the
+                    // built-in Enter behavior here.
                     if (Se.Settings.General.SubtitleEnterKeyAction == SubtitleEnterKeyActionType.GoToSubtitleAndSetVideoPosition.ToString())
                     {
                         keyEventArgs.Handled = true;
