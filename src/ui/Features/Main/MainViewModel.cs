@@ -677,7 +677,15 @@ public partial class MainViewModel :
             "60",
             "120"
         };
-        SelectedFrameRate = FrameRates[0];
+        // Show the configured default frame rate in the toolbar combo (Options -> General ->
+        // "Default frame rate", #13113) instead of a hardcoded 23.976 when no video is loaded.
+        var defaultFrameRate = Se.Settings.General.CurrentFrameRate.ToString("0.###", CultureInfo.InvariantCulture);
+        if (!FrameRates.Contains(defaultFrameRate))
+        {
+            FrameRates.Insert(0, defaultFrameRate);
+        }
+
+        SelectedFrameRate = defaultFrameRate;
 
         StatusTextLeft = string.Empty;
         StatusTextRight = string.Empty;

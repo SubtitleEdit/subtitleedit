@@ -222,6 +222,7 @@ public class LanguageSettings
     public string ResetWaveform { get; set; }
     public string ResetRules { get; set; }
     public string UseFrameMode { get; set; }
+    public string DefaultFrameRate { get; set; }
     public string TextBoxLimitNewLines { get; set; }
     public string MpvOpenGl { get; set; }
     public string MpvSoftwareRendering { get; set; }
@@ -524,6 +525,7 @@ public class LanguageSettings
         ResetWaveform = "Reset waveform";
         ResetRules = "Reset rules";
         UseFrameMode = "Use frame mode (hh.mm.ss.ff)";
+        DefaultFrameRate = "Default frame rate";
         TextBoxLimitNewLines = "Limit number of lines in subtitle text box";
         MpvOpenGl = "libmpv - OpenGL";
         MpvWidRendering = "libmpv - Native Window ID rendering";

@@ -381,9 +381,20 @@ public class Se
 
         SetDefaultValues();
 
+        // The persisted CurrentFrameRate may predate the "Default frame rate" option (it had no
+        // UI until #13113), so it can silently keep 23.976 even after the user changes the
+        // default. The explicit default now wins at startup; the toolbar frame-rate combo still
+        // overrides it for the session/video.
+        Settings.General.CurrentFrameRate = Settings.General.DefaultFrameRate;
+
         MigrateMacOsFontSettings(Settings.Appearance, OperatingSystem.IsMacOS(), true);
 
         UpdateLibSeSettings();
+
+        // Seed libse's live frame rate once at startup. Do not put this in
+        // UpdateLibSeSettings(): SaveSettings also calls that method, and a later save must not
+        // overwrite a frame rate supplied by the parser after a video has been opened.
+        Configuration.Settings.General.CurrentFrameRate = Settings.General.CurrentFrameRate;
     }
 
     internal static void MigrateMacOsFontSettings(SeAppearance appearance, bool isMacOs, bool isLegacySettings)
@@ -613,6 +624,11 @@ public class Se
     {
         Configuration.Settings.General.FFmpegLocation = Settings.General.FfmpegPath;
         Configuration.Settings.General.UseTimeFormatHHMMSSFF = Settings.General.UseFrameMode;
+        Configuration.Settings.General.DefaultFrameRate = Settings.General.DefaultFrameRate;
+        // Note: the CURRENT frame rate is intentionally NOT pushed here - the video-open path
+        // and the toolbar frame-rate combo write both sides directly (MainViewModel), and an
+        // unconditional push would overwrite the parser's rate with a stale UI value whenever
+        // settings are applied after a video was opened (#13113).
 
         Configuration.Settings.Proxy.ProxyAddress = Settings.General.ProxyAddress ?? string.Empty;
         Configuration.Settings.Proxy.UserName = Settings.General.ProxyUserName ?? string.Empty;

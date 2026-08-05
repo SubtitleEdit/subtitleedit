@@ -121,6 +121,9 @@ public partial class SettingsViewModel : ObservableObject
     [NotifyPropertyChangedFor(nameof(MinGapLabel))]
     private bool _useFrameMode;
 
+    [ObservableProperty] private ObservableCollection<string> _frameRates;
+    [ObservableProperty] private string _selectedDefaultFrameRate;
+
     public bool IsMsMode => !UseFrameMode;
     public string MinGapLabel => UseFrameMode
         ? Se.Language.Options.Settings.MinGapFrames
@@ -552,6 +555,20 @@ public partial class SettingsViewModel : ObservableObject
         Encodings = new ObservableCollection<TextEncoding>(EncodingHelper.GetEncodings());
         DefaultEncoding = Encodings.First();
 
+        FrameRates =
+        [
+            "23.976",
+            "24",
+            "25",
+            "29.97",
+            "30",
+            "50",
+            "59.94",
+            "60",
+            "120"
+        ];
+        SelectedDefaultFrameRate = FrameRates[0];
+
         SubtitleEnterKeyActionTypes =
         [
             Se.Language.Options.Settings.GridGoToSubtitleAndSetVideoPosition,
@@ -723,6 +740,11 @@ public partial class SettingsViewModel : ObservableObject
         CpsLineLengthStrategy = CpsLineLengthStrategies.FirstOrDefault(p => p.Code == general.CpsLineLengthStrategy) ?? CpsLineLengthStrategies.First();
 
         UseFrameMode = general.UseFrameMode;
+        SelectedDefaultFrameRate = general.DefaultFrameRate.ToString("0.###", CultureInfo.InvariantCulture);
+        if (!FrameRates.Contains(SelectedDefaultFrameRate))
+        {
+            FrameRates.Insert(0, SelectedDefaultFrameRate);
+        }
         TextBoxLimitNewLines = general.SubtitleTextBoxLimitNewLines;
         NewEmptyDefaultMs = general.NewEmptyDefaultMs;
         TimeCodeUpDownStepMs = general.TimeCodeUpDownStepMs;
@@ -1566,6 +1588,18 @@ public partial class SettingsViewModel : ObservableObject
         general.CpsLineLengthStrategy = CpsLineLengthStrategy.Code;
 
         general.UseFrameMode = UseFrameMode;
+        if (double.TryParse(SelectedDefaultFrameRate, NumberStyles.Any, CultureInfo.InvariantCulture, out var defaultFrameRate))
+        {
+            general.DefaultFrameRate = defaultFrameRate;
+            if (_mainViewModel is { IsVideoLoaded: false })
+            {
+                // Apply the new default immediately when there is no video-derived rate to keep.
+                // Video open and toolbar selection update both settings stores themselves.
+                general.CurrentFrameRate = defaultFrameRate;
+                Configuration.Settings.General.CurrentFrameRate = defaultFrameRate;
+                _mainViewModel.SelectedFrameRate = defaultFrameRate.ToString("0.###", CultureInfo.InvariantCulture);
+            }
+        }
         general.SubtitleTextBoxLimitNewLines = TextBoxLimitNewLines;
         general.NewEmptyDefaultMs = NewEmptyDefaultMs ?? general.NewEmptyDefaultMs;
         general.TimeCodeUpDownStepMs = TimeCodeUpDownStepMs ?? general.TimeCodeUpDownStepMs;
