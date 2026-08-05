@@ -2881,12 +2881,19 @@ public class AudioVisualizer : Control
     // interpolations, and the CPS label another format - per visible paragraph per frame, only
     // to look up an already-shaped FormattedText. Keyed on the values so a hit allocates nothing;
     // the frame-mode flag is part of the key because ToShortDisplayString switches on it.
-    private readonly Dictionary<(int Number, long DurationMs, bool FrameMode), string> _footerNumberDurationCache = new(512);
+    private readonly Dictionary<(int Number, long DurationMs, bool FrameMode, double FrameRate), string> _footerNumberDurationCache = new(512);
     private readonly Dictionary<double, string> _footerCpsCache = new(256);
 
     private string GetCachedNumberAndDurationLabel(SubtitleLineViewModel paragraph)
     {
-        var key = (paragraph.Number, (long)paragraph.Duration.TotalMilliseconds, Se.Settings.General.UseFrameMode);
+        // The frame rate is part of the key: in frame mode ToShortDisplayString renders frames
+        // via Configuration.Settings.General.CurrentFrameRate, so the same duration maps to a
+        // different label after the user changes the project frame rate.
+        var frameMode = Se.Settings.General.UseFrameMode;
+        var key = (paragraph.Number,
+                   (long)paragraph.Duration.TotalMilliseconds,
+                   frameMode,
+                   frameMode ? Configuration.Settings.General.CurrentFrameRate : 0);
         if (!_footerNumberDurationCache.TryGetValue(key, out var label))
         {
             // Same cap as the other per-frame text caches - the key includes the duration, so at
@@ -3879,6 +3886,8 @@ public class AudioVisualizer : Control
         _timeLineTextCache.Clear();
         _paragraphFormattedTextCache.Clear();
         _paragraphTextCache.Clear();
+        _footerNumberDurationCache.Clear();
+        _footerCpsCache.Clear();
         _waveformCacheValid = false;
         _gridLinesGeometry = null;
         _timeLineCacheValid = false;

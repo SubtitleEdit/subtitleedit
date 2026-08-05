@@ -86,9 +86,14 @@ public class CrispEmbedEngineTests
             return;
         }
 
-        // The cause of SubtitleEdit issue #13205: the Linux builds link against OpenBLAS but do
-        // not ship it, so the loader aborts before the server can say anything itself.
-        Assert.Contains("OpenBLAS", CrispEmbedOcr.GetExitCodeHint(127));
+        // 127 = the loader could not resolve a dependency before the server could report
+        // anything itself. The OpenBLAS cause behind #13205 was fixed upstream in v0.17.5, so
+        // the hint must not send users off to install it; glibc is the remaining cause.
+        var hint127 = CrispEmbedOcr.GetExitCodeHint(127);
+        Assert.Contains("shared library", hint127);
+        Assert.Contains("glibc", hint127);
+        Assert.DoesNotContain("OpenBLAS", hint127);
+        Assert.DoesNotContain("libopenblas", hint127);
         Assert.Contains("executed", CrispEmbedOcr.GetExitCodeHint(126));
     }
 

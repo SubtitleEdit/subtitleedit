@@ -187,6 +187,15 @@ public partial class DownloadLibVlcViewModel : ObservableObject, IClosingCleanup
 
             Dispatcher.UIThread.Post(() =>
             {
+                // The user can cancel while the probe is still running (it walks the VLC
+                // install directory and can take seconds). Close() is itself posted, so this
+                // continuation can be queued behind it - bail out rather than reporting
+                // success or kicking off a download on a dialog that is already gone.
+                if (_done || _cancellationTokenSource == null || _cancellationTokenSource.IsCancellationRequested)
+                {
+                    return;
+                }
+
                 // Only skip the download on a clean, positive probe - a faulted probe (broken
                 // libVLC install) must fall through to the download, not leave the dialog
                 // stuck with an unobserved exception (review follow-up).

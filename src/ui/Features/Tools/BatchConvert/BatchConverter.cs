@@ -2105,7 +2105,20 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
         // Frame rate and shot changes come from a video file matching the subtitle file
         // name, when one exists. Shot changes are only available if they were previously
         // generated/imported for that video (they are cached on disk per video file).
-        var frameRate = Configuration.Settings.General.DefaultFrameRate;
+        //
+        // Without a matching video, fall back to the frame rate this batch is actually
+        // producing: the target of the "change frame rate" step when it runs (it runs before
+        // this one), otherwise the project frame rate. Configuration.Settings.General
+        // .DefaultFrameRate is not usable here - nothing in the UI ever assigns it, so it is
+        // always libse's built-in 23.976.
+        var frameRate = _config.ChangeFrameRate.IsActive && _config.ChangeFrameRate.ToFrameRate > 0
+            ? _config.ChangeFrameRate.ToFrameRate
+            : Se.Settings.General.CurrentFrameRate;
+        if (frameRate <= 0)
+        {
+            frameRate = Se.Settings.General.DefaultFrameRate;
+        }
+
         var shotChanges = new List<double>();
 
         if (FindVideoFileName.TryFindVideoFileName(subtitleFileName, out var videoFileName))
@@ -2120,12 +2133,21 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
             }
             catch
             {
-                // no ffmpeg or unreadable video file - keep the default frame rate
+                // no ffmpeg or unreadable video file - keep the fallback frame rate
             }
 
             if (_config.BeautifyTimeCodes.SnapToShotChanges)
             {
-                shotChanges = ShotChangesHelper.FromDisk(videoFileName);
+                try
+                {
+                    shotChanges = ShotChangesHelper.FromDisk(videoFileName);
+                }
+                catch
+                {
+                    // unreadable/corrupt shot-changes cache - beautify without them rather
+                    // than aborting the rest of the batch
+                    shotChanges = new List<double>();
+                }
             }
         }
 

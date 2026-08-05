@@ -3,6 +3,7 @@ using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using Xunit;
 
 namespace LibSETests.SubtitleFormats;
@@ -290,5 +291,39 @@ public class WebVttTest
         var output = new WebVTT().ToText(subtitle, null);
 
         Assert.Contains(cueSettings, output);
+    }
+
+    // "region:" is written separately from the raw cue settings, so re-emitting the raw string
+    // verbatim wrote it twice whenever the source listed it after the other settings.
+    [Theory]
+    [InlineData("region:r1 line:10%")]
+    [InlineData("line:10% region:r1")]
+    [InlineData("line:10% region:r1 align:left")]
+    [InlineData("region:r1")]
+    public void ToTextWritesRegionOnlyOnce(string cueSettings)
+    {
+        var vtt = "WEBVTT\n\nREGION\nid:r1\n\n00:00:01.000 --> 00:00:02.000 " + cueSettings + "\nHello";
+        var subtitle = LoadWebVttSubtitle(vtt);
+
+        var output = new WebVTT().ToText(subtitle, null);
+        var cueLine = output.SplitToLines().First(l => l.Contains("-->"));
+
+        Assert.Equal(1, cueLine.Split(new[] { "region:" }, StringSplitOptions.None).Length - 1);
+        Assert.Contains("region:r1", cueLine);
+    }
+
+    // The other settings must still survive alongside the region.
+    [Fact]
+    public void ToTextKeepsPositionSettingsNextToRegion()
+    {
+        var vtt = "WEBVTT\n\nREGION\nid:r1\n\n00:00:01.000 --> 00:00:02.000 line:72.69% region:r1 position:44.90%\nHello";
+        var subtitle = LoadWebVttSubtitle(vtt);
+
+        var output = new WebVTT().ToText(subtitle, null);
+        var cueLine = output.SplitToLines().First(l => l.Contains("-->"));
+
+        Assert.Contains("line:72.69%", cueLine);
+        Assert.Contains("position:44.90%", cueLine);
+        Assert.Equal(1, cueLine.Split(new[] { "region:" }, StringSplitOptions.None).Length - 1);
     }
 }

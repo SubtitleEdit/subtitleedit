@@ -1592,22 +1592,31 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text"
                 lineNumber++;
                 var trimmedLine = line.Trim();
 
+                if (string.IsNullOrWhiteSpace(line) || trimmedLine.StartsWith(';'))
+                {
+                    // skip empty and comment lines
+                }
+                else if (trimmedLine.StartsWith("dialog:", StringComparison.OrdinalIgnoreCase) ||
+                         trimmedLine.StartsWith("dialogue:", StringComparison.OrdinalIgnoreCase) ||
+                         trimmedLine.StartsWith("comment:", StringComparison.OrdinalIgnoreCase))
+                {
+                    // "Comment:" also starts the event section: a header-less payload (the
+                    // clipboard carries bare event lines) can begin with a commented event,
+                    // and without this those lines never reach the event parser (#10476).
+                    //
+                    // Runs before the header append below so an event line is never captured
+                    // as header content - in a normal file the [Events] section header has
+                    // already set eventsStarted, so nothing changes there.
+                    eventsStarted = true;
+                    fontsStarted = false;
+                    graphicsStarted = false;
+                }
+
                 if (!eventsStarted && !fontsStarted && !graphicsStarted &&
                     !trimmedLine.Equals("[fonts]", StringComparison.InvariantCultureIgnoreCase) &&
                     !trimmedLine.Equals("[graphics]", StringComparison.InvariantCultureIgnoreCase))
                 {
                     header.AppendLine(line);
-                }
-
-                if (string.IsNullOrWhiteSpace(line) || trimmedLine.StartsWith(';'))
-                {
-                    // skip empty and comment lines
-                }
-                else if (trimmedLine.StartsWith("dialog:", StringComparison.OrdinalIgnoreCase) || trimmedLine.StartsWith("dialogue:", StringComparison.OrdinalIgnoreCase))
-                {
-                    eventsStarted = true;
-                    fontsStarted = false;
-                    graphicsStarted = false;
                 }
 
                 if (trimmedLine.Equals("[events]", StringComparison.OrdinalIgnoreCase))

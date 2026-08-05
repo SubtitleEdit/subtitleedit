@@ -16130,7 +16130,7 @@ public partial class MainViewModel :
 
             if (FileUtil.IsMatroskaFileFast(fileName) && FileUtil.IsMatroskaFile(fileName))
             {
-                if (await ImportSubtitleFromMatroskaFile(fileName, videoFileName))
+                if (await ImportSubtitleFromMatroskaFile(fileName, videoFileName, skipLoadVideo))
                 {
                     return;
                 }
@@ -16205,7 +16205,7 @@ public partial class MainViewModel :
             {
                 if (!new IsmtDfxp().IsMine(null, fileName))
                 {
-                    var ok = await ImportSubtitleFromMp4(fileName);
+                    var ok = await ImportSubtitleFromMp4(fileName, skipLoadVideo);
                     if (ok)
                     {
                         return;
@@ -16215,7 +16215,7 @@ public partial class MainViewModel :
 
             if ((ext == ".ts" || ext == ".tsv" || ext == ".tts" || ext == ".rec" || ext == ".mpeg" || ext == ".mpg") && fileSize > 10000 && FileUtil.IsTransportStream(fileName))
             {
-                await ImportSubtitleFromTransportStream(fileName);
+                await ImportSubtitleFromTransportStream(fileName, skipLoadVideo);
                 return;
             }
 
@@ -16232,14 +16232,14 @@ public partial class MainViewModel :
 
                 if (!isTextSt)
                 {
-                    await ImportSubtitleFromTransportStream(fileName);
+                    await ImportSubtitleFromTransportStream(fileName, skipLoadVideo);
                     return;
                 }
             }
 
             if (FileUtil.IsVobSub(fileName) && ext == ".sub")
             {
-                var ok = await ImportSubtitleFromVobSubFile(fileName, videoFileName);
+                var ok = await ImportSubtitleFromVobSubFile(fileName, videoFileName, skipLoadVideo);
                 if (ok)
                 {
                     SelectAndScrollToRow(0);
@@ -16253,7 +16253,7 @@ public partial class MainViewModel :
                 var subFile = Path.ChangeExtension(fileName, ".sub");
                 if (File.Exists(subFile) && FileUtil.IsVobSub(subFile))
                 {
-                    var ok = await ImportSubtitleFromVobSubFile(subFile, videoFileName);
+                    var ok = await ImportSubtitleFromVobSubFile(subFile, videoFileName, skipLoadVideo);
                     if (ok)
                     {
                         SelectAndScrollToRow(0);
@@ -16272,13 +16272,13 @@ public partial class MainViewModel :
 
                     if (_subtitle.OriginalFormat?.Name == new TimedTextBase64Image().Name)
                     {
-                        ImportAndInlineBase64(_subtitle, fileName);
+                        ImportAndInlineBase64(_subtitle, fileName, skipLoadVideo);
                         return;
                     }
 
                     if (_subtitle.OriginalFormat?.Name == new TimedTextImage().Name)
                     {
-                        ImportAndOcrDost(fileName, _subtitle);
+                        ImportAndOcrDost(fileName, _subtitle, skipLoadVideo);
                         return;
                     }
 
@@ -16318,7 +16318,7 @@ public partial class MainViewModel :
 
             if (ext == ".divx" || ext == ".avi")
             {
-                if (ImportSubtitleFromDivX(fileName))
+                if (ImportSubtitleFromDivX(fileName, skipLoadVideo))
                 {
                     return;
                 }
@@ -16373,7 +16373,7 @@ public partial class MainViewModel :
                 {
                     subtitle = new Subtitle();
                     format.LoadSubtitle(subtitle, lines, fileName);
-                    ImportAndOcrWebVttImages(fileName, subtitle);
+                    ImportAndOcrWebVttImages(fileName, subtitle, skipLoadVideo);
                     return;
                 }
             }
@@ -16382,7 +16382,7 @@ public partial class MainViewModel :
             {
                 if (FileUtil.IsSpDvdSup(fileName))
                 {
-                    ImportAndOcrSpDvdSup(fileName);
+                    ImportAndOcrSpDvdSup(fileName, skipLoadVideo);
                     return;
                 }
 
@@ -16831,7 +16831,7 @@ public partial class MainViewModel :
         }
     }
 
-    private bool ImportSubtitleFromDivX(string fileName)
+    private bool ImportSubtitleFromDivX(string fileName, bool skipLoadVideo = false)
     {
         var list = DivXSubParser.ImportSubtitleFromDivX(fileName);
         if (list.Count == 0)
@@ -16845,7 +16845,7 @@ public partial class MainViewModel :
 
             if (result.OkPressed)
             {
-                await FinishOcrImportAsync(fileName, result.OcredSubtitle);
+                await FinishOcrImportAsync(fileName, result.OcredSubtitle, skipLoadVideo: skipLoadVideo);
             }
         });
 
@@ -16882,7 +16882,7 @@ public partial class MainViewModel :
         }
     }
 
-    private void ImportAndOcrDost(string fileName, Subtitle subtitle)
+    private void ImportAndOcrDost(string fileName, Subtitle subtitle, bool skipLoadVideo = false)
     {
         Dispatcher.UIThread.Post(async () =>
         {
@@ -16890,12 +16890,12 @@ public partial class MainViewModel :
 
             if (result.OkPressed)
             {
-                await FinishOcrImportAsync(fileName, result.OcredSubtitle);
+                await FinishOcrImportAsync(fileName, result.OcredSubtitle, skipLoadVideo: skipLoadVideo);
             }
         });
     }
 
-    private void ImportAndOcrWebVttImages(string fileName, Subtitle subtitle)
+    private void ImportAndOcrWebVttImages(string fileName, Subtitle subtitle, bool skipLoadVideo = false)
     {
         Dispatcher.UIThread.Post(async () =>
         {
@@ -16903,12 +16903,12 @@ public partial class MainViewModel :
 
             if (result.OkPressed)
             {
-                await FinishOcrImportAsync(fileName, result.OcredSubtitle);
+                await FinishOcrImportAsync(fileName, result.OcredSubtitle, skipLoadVideo: skipLoadVideo);
             }
         });
     }
 
-    private void ImportAndOcrSpDvdSup(string fileName)
+    private void ImportAndOcrSpDvdSup(string fileName, bool skipLoadVideo = false)
     {
         Dispatcher.UIThread.Post(async () =>
         {
@@ -16916,12 +16916,12 @@ public partial class MainViewModel :
 
             if (result.OkPressed)
             {
-                await FinishOcrImportAsync(fileName, result.OcredSubtitle);
+                await FinishOcrImportAsync(fileName, result.OcredSubtitle, skipLoadVideo: skipLoadVideo);
             }
         });
     }
 
-    private void ImportAndInlineBase64(Subtitle subtitle, string fileName)
+    private void ImportAndInlineBase64(Subtitle subtitle, string fileName, bool skipLoadVideo = false)
     {
         IList<IBinaryParagraphWithPosition> list = [];
         foreach (var p in subtitle.Paragraphs)
@@ -16962,7 +16962,7 @@ public partial class MainViewModel :
 
             if (result.OkPressed)
             {
-                await FinishOcrImportAsync(fileName, result.OcredSubtitle);
+                await FinishOcrImportAsync(fileName, result.OcredSubtitle, skipLoadVideo: skipLoadVideo);
             }
         });
     }
@@ -16987,7 +16987,7 @@ public partial class MainViewModel :
         }
     }
 
-    private async Task ImportSubtitleFromTransportStream(string fileName)
+    private async Task ImportSubtitleFromTransportStream(string fileName, bool skipLoadVideo = false)
     {
         ShowStatus(string.Format(Se.Language.General.ParsingXDotDotDot, fileName));
         var tsParser = new TransportStreamParser();
@@ -17072,7 +17072,7 @@ public partial class MainViewModel :
             {
                 // The transport stream itself is the video - the teletext branch above already
                 // opens it, the DVB one used to leave the player empty.
-                await FinishOcrImportAsync(fileName, result.OcredSubtitle, sourceIsVideo: true);
+                await FinishOcrImportAsync(fileName, result.OcredSubtitle, sourceIsVideo: true, skipLoadVideo: skipLoadVideo);
             }
         });
 
@@ -17093,7 +17093,7 @@ public partial class MainViewModel :
         _lastProgressPercent = percent;
     }
 
-    private async Task<bool> ImportSubtitleFromMp4(string fileName)
+    private async Task<bool> ImportSubtitleFromMp4(string fileName, bool skipLoadVideo = false)
     {
         var mp4Parser = new MP4Parser(fileName);
         var mp4SubtitleTracks = mp4Parser.GetSubtitleTracks();
@@ -17158,7 +17158,7 @@ public partial class MainViewModel :
         {
             var hasVideoTrack = mp4Parser.GetVideoTracks().Count > 0;
             var track = mp4SubtitleTracks[0];
-            LoadMp4Subtitle(fileName, track, hasVideoTrack);
+            LoadMp4Subtitle(fileName, track, hasVideoTrack, skipLoadVideo);
 
             // An image track opens the video itself once OCR is done - opening it here too would
             // only get it closed again by the VideoCloseFile() at the start of the OCR import.
@@ -17177,7 +17177,7 @@ public partial class MainViewModel :
             if (result.OkPressed && result.SelectedTrack != null && result.SelectedTrack.Track != null)
             {
                 var hasVideoTrack = mp4Parser.GetVideoTracks().Count > 0;
-                LoadMp4Subtitle(fileName, result.SelectedTrack.Track, hasVideoTrack);
+                LoadMp4Subtitle(fileName, result.SelectedTrack.Track, hasVideoTrack, skipLoadVideo);
 
                 // Picking a track from a multi-track .mp4 left the player empty, unlike the
                 // single-track path right above.
@@ -17228,7 +17228,7 @@ public partial class MainViewModel :
     /// image-track branch uses it - that one finishes asynchronously after OCR and so has to open the
     /// video itself; for text tracks the caller does it.
     /// </param>
-    private void LoadMp4Subtitle(string fileName, Trak mp4SubtitleTrack, bool hasVideoTrack)
+    private void LoadMp4Subtitle(string fileName, Trak mp4SubtitleTrack, bool hasVideoTrack, bool skipLoadVideo = false)
     {
         if (mp4SubtitleTrack.Mdia.IsVobSubSubtitle)
         {
@@ -17239,7 +17239,7 @@ public partial class MainViewModel :
 
                 if (result.OkPressed)
                 {
-                    await FinishOcrImportAsync(fileName, result.OcredSubtitle, sourceIsVideo: hasVideoTrack);
+                    await FinishOcrImportAsync(fileName, result.OcredSubtitle, sourceIsVideo: hasVideoTrack, skipLoadVideo: skipLoadVideo);
                 }
             });
         }
@@ -17264,7 +17264,7 @@ public partial class MainViewModel :
     /// same path .mp4 files take. It used to dead-end here on a "does not seem to contain any
     /// subtitles" error, so a subtitle-less .mkv could never be opened as a video (#12171).
     /// </summary>
-    private async Task<bool> ImportSubtitleFromMatroskaFile(string fileName, string? videoFileName)
+    private async Task<bool> ImportSubtitleFromMatroskaFile(string fileName, string? videoFileName, bool skipLoadVideo = false)
     {
         var matroska = new MatroskaFile(fileName);
         var subtitleList = matroska.GetTracks(true);
@@ -17282,7 +17282,7 @@ public partial class MainViewModel :
                     await ShowDialogAsync<PickMatroskaTrackWindow, PickMatroskaTrackViewModel>(vm => { vm.Initialize(matroska, subtitleList, fileName); });
                 if (result.OkPressed && result.SelectedMatroskaTrack != null)
                 {
-                    if (await LoadMatroskaSubtitle(result.SelectedMatroskaTrack, matroska, fileName))
+                    if (await LoadMatroskaSubtitle(result.SelectedMatroskaTrack, matroska, fileName, skipLoadVideo))
                     {
                         if (!IsImageSubtitleTrack(result.SelectedMatroskaTrack))
                         {
@@ -17312,7 +17312,7 @@ public partial class MainViewModel :
         else
         {
             var ext = Path.GetExtension(matroska.Path).ToLowerInvariant();
-            if (await LoadMatroskaSubtitle(subtitleList[0], matroska, fileName))
+            if (await LoadMatroskaSubtitle(subtitleList[0], matroska, fileName, skipLoadVideo))
             {
                 if (Se.Settings.Video.AutoOpen && !IsImageSubtitleTrack(subtitleList[0]))
                 {
@@ -17380,7 +17380,8 @@ public partial class MainViewModel :
     private async Task<bool> LoadMatroskaSubtitle(
         MatroskaTrackInfo matroskaSubtitleInfo,
         MatroskaFile matroska,
-        string fileName)
+        string fileName,
+        bool skipLoadVideo = false)
     {
         if (matroskaSubtitleInfo.CodecId.Equals("S_HDMV/PGS", StringComparison.OrdinalIgnoreCase))
         {
@@ -17409,7 +17410,7 @@ public partial class MainViewModel :
 
                 if (result.OkPressed)
                 {
-                    await FinishOcrImportAsync(fileName, result.OcredSubtitle, sourceIsVideo: IsMatroskaVideoFileName(fileName));
+                    await FinishOcrImportAsync(fileName, result.OcredSubtitle, sourceIsVideo: IsMatroskaVideoFileName(fileName), skipLoadVideo: skipLoadVideo);
                 }
             });
 
@@ -17423,12 +17424,12 @@ public partial class MainViewModel :
 
         if (matroskaSubtitleInfo.CodecId.Equals("S_DVBSUB", StringComparison.OrdinalIgnoreCase))
         {
-            return await LoadDvbFromMatroska(matroskaSubtitleInfo, matroska, fileName);
+            return await LoadDvbFromMatroska(matroskaSubtitleInfo, matroska, fileName, skipLoadVideo);
         }
 
         if (matroskaSubtitleInfo.CodecId.Equals("S_VOBSUB", StringComparison.OrdinalIgnoreCase))
         {
-            return await LoadVobSubFromMatroska(matroskaSubtitleInfo, matroska, fileName);
+            return await LoadVobSubFromMatroska(matroskaSubtitleInfo, matroska, fileName, skipLoadVideo);
         }
 
         var sub = await ExtractMatroskaSubtitleAsync(matroska, matroskaSubtitleInfo.TrackNumber);
@@ -17454,7 +17455,8 @@ public partial class MainViewModel :
         track.CodecId.Equals("S_DVBSUB", StringComparison.OrdinalIgnoreCase) ||
         track.CodecId.Equals("S_VOBSUB", StringComparison.OrdinalIgnoreCase);
 
-    private async Task<bool> LoadDvbFromMatroska(MatroskaTrackInfo matroskaSubtitleInfo, MatroskaFile matroska, string fileName)
+    private async Task<bool> LoadDvbFromMatroska(MatroskaTrackInfo matroskaSubtitleInfo, MatroskaFile matroska, string fileName,
+        bool skipLoadVideo = false)
     {
         ShowStatus(Se.Language.Main.ParsingMatroskaFile);
         var sub = await ExtractMatroskaSubtitleAsync(matroska, matroskaSubtitleInfo.TrackNumber);
@@ -17547,7 +17549,7 @@ public partial class MainViewModel :
 
             if (result.OkPressed)
             {
-                await FinishOcrImportAsync(fileName, result.OcredSubtitle, sourceIsVideo: IsMatroskaVideoFileName(fileName));
+                await FinishOcrImportAsync(fileName, result.OcredSubtitle, sourceIsVideo: IsMatroskaVideoFileName(fileName), skipLoadVideo: skipLoadVideo);
             }
         });
 
@@ -17555,7 +17557,7 @@ public partial class MainViewModel :
     }
 
     private async Task<bool> LoadVobSubFromMatroska(MatroskaTrackInfo matroskaSubtitleInfo, MatroskaFile matroska,
-        string fileName)
+        string fileName, bool skipLoadVideo = false)
     {
         if (matroskaSubtitleInfo.ContentEncodingType == 1)
         {
@@ -17609,7 +17611,7 @@ public partial class MainViewModel :
 
             if (result.OkPressed)
             {
-                await FinishOcrImportAsync(fileName, result.OcredSubtitle, sourceIsVideo: IsMatroskaVideoFileName(fileName));
+                await FinishOcrImportAsync(fileName, result.OcredSubtitle, sourceIsVideo: IsMatroskaVideoFileName(fileName), skipLoadVideo: skipLoadVideo);
             }
         });
 
@@ -17692,7 +17694,7 @@ public partial class MainViewModel :
         return true;
     }
 
-    private async Task<bool> ImportSubtitleFromVobSubFile(string vobSubFileName, string? videoFileName)
+    private async Task<bool> ImportSubtitleFromVobSubFile(string vobSubFileName, string? videoFileName, bool skipLoadVideo = false)
     {
         var vobSubParser = new VobSubParser(true);
         string idxFileName = Path.ChangeExtension(vobSubFileName, ".idx");
@@ -17756,7 +17758,7 @@ public partial class MainViewModel :
 
         if (result.OkPressed)
         {
-            await FinishOcrImportAsync(vobSubFileName, result.OcredSubtitle, videoFileName: videoFileName);
+            await FinishOcrImportAsync(vobSubFileName, result.OcredSubtitle, videoFileName: videoFileName, skipLoadVideo: skipLoadVideo);
             return true;
         }
 

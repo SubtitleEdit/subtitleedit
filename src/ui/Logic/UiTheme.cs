@@ -996,6 +996,38 @@ public static class UiTheme
         return Se.Settings.Appearance.DarkModeBackgroundColor.FromHexToColor();
     }
 
+    /// <summary>
+    /// The window/grid background of the active theme. Used where something has to be drawn
+    /// legibly against it (e.g. picking a readable ASSA color for the subtitle grid), so the
+    /// light themes must not all be assumed to be white.
+    /// </summary>
+    public static Color GetThemeBackgroundColor()
+    {
+        try
+        {
+            if (IsDarkThemeEnabled())
+            {
+                return GetDarkThemeBackgroundColor();
+            }
+        }
+        catch
+        {
+            // malformed DarkModeBackgroundColor in the settings file
+            return Color.FromRgb(0x21, 0x21, 0x21);
+        }
+
+        var themeSetting = Se.Settings.Appearance.Theme;
+        if (themeSetting == ThemeNameClassic)
+        {
+            return ClassicBackgroundColor;
+        }
+
+        return themeSetting == ThemeNamePastel ? PastelBackgroundColor : Colors.White;
+    }
+
+    private static readonly Color ClassicBackgroundColor = Color.FromRgb(236, 233, 216);
+    private static readonly Color PastelBackgroundColor = Color.FromRgb(240, 235, 255);
+
     public static Color GetDarkThemeForegroundColor()
     {
         return Se.Settings.Appearance.DarkModeForegroundColor.FromHexToColor();

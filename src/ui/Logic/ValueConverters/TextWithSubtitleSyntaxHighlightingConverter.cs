@@ -941,6 +941,11 @@ public class TextWithSubtitleSyntaxHighlightingConverter : IValueConverter
         var colorCandidateCount = 0;
         var sawColorTag = false;
 
+        // Set by a \t(...) animation in this block. Only then can two primary colors both be
+        // "current" (the static one and the transition's destination); without a transition,
+        // consecutive color tags are plain overrides and the last one wins.
+        var sawTransitionTag = false;
+
         // Limit number of tags to prevent excessive processing
         const int maxTags = 50;
         var handled = 0;
@@ -974,6 +979,15 @@ public class TextWithSubtitleSyntaxHighlightingConverter : IValueConverter
                 state.Reset();
                 colorCandidateCount = 0;
                 sawColorTag = false;
+                sawTransitionTag = false;
+                continue;
+            }
+
+            // Animation: \t(...) - the tags splitter cuts on '\', so the transition's own
+            // color arrives as a later segment; just note that a transition is in play.
+            if (firstChar == 't' && tagLen > 1 && trimmedTag[1] == '(')
+            {
+                sawTransitionTag = true;
                 continue;
             }
 
@@ -1070,16 +1084,20 @@ public class TextWithSubtitleSyntaxHighlightingConverter : IValueConverter
             }
         }
 
-        if (colorCandidateCount == 1)
+        if (colorCandidateCount > 1 && sawTransitionTag)
         {
-            state.Color = colorCandidates[0];
-        }
-        else if (colorCandidateCount > 1)
-        {
-            // Two or more colors (static + fade destination): the grid can only show one, so
-            // show the one with the best contrast against the grid background - or none when
-            // even the best would be near-invisible (#10955).
+            // Static color plus a \t(...) fade destination: the grid can only show one, so show
+            // the one with the best contrast against the grid background - or none when even
+            // the best would be near-invisible (#10955).
             state.Color = PickMostVisibleColor(colorCandidates.Slice(0, colorCandidateCount));
+        }
+        else if (colorCandidateCount > 0)
+        {
+            // No transition involved, so ASSA's last-wins rule applies: consecutive static
+            // color tags resolve to the last one, matching libass and the video preview. The
+            // visibility guard deliberately does not apply here - a single explicit color is
+            // shown as authored even when it has little contrast.
+            state.Color = colorCandidates[colorCandidateCount - 1];
         }
         else if (sawColorTag)
         {
@@ -1109,9 +1127,11 @@ public class TextWithSubtitleSyntaxHighlightingConverter : IValueConverter
             return backgroundOverride();
         }
 
-        return UiTheme.IsDarkThemeEnabled()
-            ? Se.Settings.Appearance.DarkModeBackgroundColor.FromHexToColor()
-            : Colors.White;
+        // Not just white for "not dark": SE also ships the Classic (gray) and Pastel
+        // (lavender) light themes, and contrast has to be measured against the real
+        // background. Also swallows a malformed DarkModeBackgroundColor rather than
+        // letting it throw out of IValueConverter.Convert.
+        return UiTheme.GetThemeBackgroundColor();
     }
 
     private static Color? PickMostVisibleColor(ReadOnlySpan<Color> candidates)

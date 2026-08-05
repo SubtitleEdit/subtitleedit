@@ -96,7 +96,10 @@ namespace Nikse.SubtitleEdit.Logic
                     sb.AppendLine(addText);
                 }
 
-                endMilliseconds = subtitle.Paragraphs[index].EndTime.TotalMilliseconds;
+                // Max, not last: with "keep end time" the merged line must span every merged
+                // line, and selected lines are not necessarily ordered by end time (e.g. an
+                // ASSA sign event that outlives the dialog line merged into it).
+                endMilliseconds = Math.Max(endMilliseconds, subtitle.Paragraphs[index].EndTime.TotalMilliseconds);
             }
 
             var currentParagraph = subtitle.Paragraphs[firstIndex];
@@ -206,7 +209,10 @@ namespace Nikse.SubtitleEdit.Logic
                     sbOriginal.AppendLine(inputSubtitle[index].OriginalText);
                 }
 
-                endMilliseconds = inputSubtitle[index].EndTime.TotalMilliseconds;
+                // Max, not last: with "keep end time" the merged line must span every merged
+                // line, and selected lines are not necessarily ordered by end time (e.g. an
+                // ASSA sign event that outlives the dialog line merged into it).
+                endMilliseconds = Math.Max(endMilliseconds, inputSubtitle[index].EndTime.TotalMilliseconds);
             }
 
             var currentParagraph = inputSubtitle[firstIndex];

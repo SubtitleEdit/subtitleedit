@@ -153,7 +153,11 @@ public partial class ExportCustomTextFormatViewModel : ObservableObject
             return;
         }
 
-        await System.IO.File.WriteAllTextAsync(fileName, PreviewText, SelectedEncoding?.Encoding ?? Encoding.UTF8);
+        // Resolve via the display name, not TextEncoding.Encoding: that property is plain
+        // Encoding.UTF8 (which emits a BOM) for both "UTF-8 with BOM" and "UTF-8 without BOM",
+        // so writing it directly would always add a BOM.
+        var encoding = EncodingHelper.ResolveEncoding(SelectedEncoding?.DisplayName, null);
+        await System.IO.File.WriteAllTextAsync(fileName, PreviewText, encoding);
     }
 
     [RelayCommand]
