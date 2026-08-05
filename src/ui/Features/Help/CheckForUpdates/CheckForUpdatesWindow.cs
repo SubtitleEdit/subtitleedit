@@ -46,6 +46,10 @@ public class CheckForUpdatesWindow : Window
             VerticalAlignment = Avalonia.Layout.VerticalAlignment.Stretch,
             DataContext = vm,
         };
+        // With auto-hiding scrollbars (e.g. macOS "When Scrolling") the horizontal scrollbar
+        // overlays the last line of the changelog; reserve its space like the subtitle grid does,
+        // so the final line is always fully visible when scrolled to the bottom (#12972).
+        ScrollViewer.SetAllowAutoHide(changeLogBox, false);
         changeLogBox.Bind(TextBox.TextProperty, new Binding(nameof(vm.ChangeLogText)));
 
         var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand);
