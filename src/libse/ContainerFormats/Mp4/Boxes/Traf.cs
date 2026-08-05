@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System.Collections.Generic;
+using System.IO;
 
 namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
 {
@@ -7,8 +8,17 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
     /// </summary>
     public class Traf : Box
     {
+        /// <summary>
+        /// All track fragment runs, in file order. ISO/IEC 14496-12 allows several trun
+        /// boxes per traf; keeping only the last one dropped all earlier sample runs.
+        /// </summary>
+        public List<Trun> Truns { get; } = new List<Trun>();
 
-        public Trun Trun { get; set; }
+        /// <summary>
+        /// First track fragment run (for callers that only handle a single run).
+        /// </summary>
+        public Trun Trun => Truns.Count > 0 ? Truns[0] : null;
+
         public Tfdt Tfdt { get; set; }
         public Tfhd Tfhd { get; set; }
 
@@ -24,7 +34,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
 
                 if (Name == "trun")
                 {
-                    Trun = new Trun(fs, Position);
+                    Truns.Add(new Trun(fs, Position));
                 }
                 else if (Name == "tfhd")
                 {
@@ -38,31 +48,34 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
                 fs.Seek((long)Position, SeekOrigin.Begin);
             }
 
-            if (Trun?.Samples == null)
+            foreach (var trun in Truns)
             {
-                return;
-            }
-
-            foreach (var timeSegment in Trun.Samples)
-            {
-                if (Tfdt != null)
-                {
-                    timeSegment.BaseMediaDecodeTime = Tfdt.BaseMediaDecodeTime;
-                }
-
-                if (Tfhd == null)
+                if (trun.Samples == null)
                 {
                     continue;
                 }
 
-                if (timeSegment.Duration == null && Tfhd.DefaultSampleDuration != null)
+                foreach (var timeSegment in trun.Samples)
                 {
-                    timeSegment.Duration = Tfhd.DefaultSampleDuration;
-                }
+                    if (Tfdt != null)
+                    {
+                        timeSegment.BaseMediaDecodeTime = Tfdt.BaseMediaDecodeTime;
+                    }
 
-                if (timeSegment.Size == null && Tfhd.DefaultSampleSize != null)
-                {
-                    timeSegment.Size = Tfhd.DefaultSampleSize;
+                    if (Tfhd == null)
+                    {
+                        continue;
+                    }
+
+                    if (timeSegment.Duration == null && Tfhd.DefaultSampleDuration != null)
+                    {
+                        timeSegment.Duration = Tfhd.DefaultSampleDuration;
+                    }
+
+                    if (timeSegment.Size == null && Tfhd.DefaultSampleSize != null)
+                    {
+                        timeSegment.Size = Tfhd.DefaultSampleSize;
+                    }
                 }
             }
         }

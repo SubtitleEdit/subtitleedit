@@ -121,6 +121,7 @@ public class ExportImageBasedWindow : Window
 
         var fullTimeConverter = new TimeSpanToDisplayFullConverter();
         var shortTimeConverter = new TimeSpanToDisplayShortConverter();
+        var textToFlowDirectionConverter = new TextToFlowDirectionConverter();
 
         // Columns
         vm.SubtitleGrid.Columns.Add(new SeTableViewColumn
@@ -194,7 +195,11 @@ public class ExportImageBasedWindow : Window
                 {
                     VerticalAlignment = VerticalAlignment.Center,
                     TextWrapping = TextWrapping.Wrap,
-                    [!TextBlock.TextProperty] = new Binding(nameof(SubtitleLineViewModel.Text))
+                    [!TextBlock.TextProperty] = new Binding(nameof(SubtitleLineViewModel.Text)),
+
+                    // Right-to-left text needs a right-to-left cell, or Avalonia splits the
+                    // line at every zero width non-joiner and reverses the word order (#13160).
+                    [!TextBlock.FlowDirectionProperty] = new Binding(nameof(SubtitleLineViewModel.Text)) { Converter = textToFlowDirectionConverter },
                 };
 
                 border.Child = textBlock;

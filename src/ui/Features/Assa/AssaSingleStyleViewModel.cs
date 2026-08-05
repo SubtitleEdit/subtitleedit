@@ -33,6 +33,20 @@ public partial class AssaSingleStyleViewModel : ObservableObject
         CurrentStyle = new StyleDisplay(style);
     }
 
+    /// <summary>
+    /// The font combo box binds SelectedItem to CurrentStyle.FontName; a font missing from
+    /// the item list would make Avalonia clear the selection and null out the style's font.
+    /// Make sure the font is listed before the style becomes current (#13101).
+    /// </summary>
+    partial void OnCurrentStyleChanging(StyleDisplay? value)
+    {
+        var fontName = value?.FontName;
+        if (!string.IsNullOrEmpty(fontName) && !Fonts.Contains(fontName))
+        {
+            Fonts.Insert(0, fontName);
+        }
+    }
+
     [RelayCommand]
     private void Ok()
     {

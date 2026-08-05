@@ -387,6 +387,22 @@ public class AudioVisualizer : Control
     private const double ClickDragSlopPixels = 3.0;
     public bool IsScrolling => (Environment.TickCount64 - _audioVisualizerLastScroll) < 100;
 
+    // Wall clock of the last pointer-driven time code edit (drag move/resize/new selection).
+    private long _lastPointerEditMs;
+
+    /// <summary>
+    /// True while the user is dragging time codes in the waveform - the pointer twin of
+    /// <c>MainViewModel.IsUserEditing</c>'s keyboard check, with the same 500 ms grace.
+    /// A drag rewrites the paragraph times on every undo change-detection tick, and each
+    /// tick that sees a change deep-copies the whole subtitle, so the drag has to suppress
+    /// detection the way typing does; the settled state is captured once the grace expires
+    /// (issue #13234). Deliberately a timestamp rather than "_interactionMode != None": a
+    /// drag that loses pointer capture without a PointerReleased must not be able to leave
+    /// change detection switched off for the rest of the session.
+    /// </summary>
+    public bool IsEditingWithPointer =>
+        _lastPointerEditMs != 0 && Environment.TickCount64 - _lastPointerEditMs < 500;
+
     public class PositionEventArgs : EventArgs
     {
         public double PositionInSeconds { get; set; }
@@ -1188,6 +1204,7 @@ public class AudioVisualizer : Control
                 newP.EndTime = TimeSpan.FromSeconds(_newSelectionSeconds);
             }
 
+            _lastPointerEditMs = Environment.TickCount64;
             InvalidateVisual();
             return;
         }
@@ -1460,6 +1477,10 @@ public class AudioVisualizer : Control
 
                 break;
         }
+
+        // Past the early returns above, every remaining interaction mode has just rewritten
+        // the active paragraph's times - see IsEditingWithPointer.
+        _lastPointerEditMs = Environment.TickCount64;
 
         // SE 4 parity: scrub the video to the edge being dragged so the user sees the
         // exact frame at the new start/end while resizing (whole-paragraph moves are excluded).
@@ -2855,6 +2876,56 @@ public class AudioVisualizer : Control
         return formatted;
     }
 
+    // The two footer labels are cached by value, not just by the composed string: building the
+    // key was the cost. "#N  duration" meant a TimeCode plus ToShortDisplayString plus two
+    // interpolations, and the CPS label another format - per visible paragraph per frame, only
+    // to look up an already-shaped FormattedText. Keyed on the values so a hit allocates nothing;
+    // the frame-mode flag is part of the key because ToShortDisplayString switches on it.
+    private readonly Dictionary<(int Number, long DurationMs, bool FrameMode), string> _footerNumberDurationCache = new(512);
+    private readonly Dictionary<double, string> _footerCpsCache = new(256);
+
+    private string GetCachedNumberAndDurationLabel(SubtitleLineViewModel paragraph)
+    {
+        var key = (paragraph.Number, (long)paragraph.Duration.TotalMilliseconds, Se.Settings.General.UseFrameMode);
+        if (!_footerNumberDurationCache.TryGetValue(key, out var label))
+        {
+            // Same cap as the other per-frame text caches - the key includes the duration, so at
+            // high zoom a long drag would otherwise grow this without bound.
+            if (_footerNumberDurationCache.Count > 8000)
+            {
+                _footerNumberDurationCache.Clear();
+            }
+
+            // ToShortDisplayString consults the libse UseTimeFormatHHMMSSFF flag, which SE 5
+            // mirrors from Se.Settings.General.UseFrameMode (Se.cs:409). So flipping frame
+            // mode on automatically switches this label between the time form ("2,500") and
+            // the frame form ("00:00:02:12") without an explicit branch here.
+            label = $"#{paragraph.Number}  {new TimeCode(paragraph.Duration.TotalMilliseconds).ToShortDisplayString()}";
+            _footerNumberDurationCache[key] = label;
+        }
+
+        return label;
+    }
+
+    private string GetCachedCpsLabel(double charactersPerSecond)
+    {
+        // Keyed on the exact value, not a rounded bucket: CharactersPerSecond is itself memoized
+        // per (text, start, end), so an unchanged paragraph yields a bit-identical key every
+        // frame, and no two distinct values can share an entry and print each other's label.
+        if (!_footerCpsCache.TryGetValue(charactersPerSecond, out var label))
+        {
+            if (_footerCpsCache.Count > 8000)
+            {
+                _footerCpsCache.Clear();
+            }
+
+            label = charactersPerSecond.ToString("0.00", CultureInfo.CurrentCulture);
+            _footerCpsCache[charactersPerSecond] = label;
+        }
+
+        return label;
+    }
+
     private (List<string> Lines, string Unwrapped) GetPreparedParagraphText(string rawText)
     {
         if (!_paragraphTextCache.TryGetValue(rawText, out var prepared))
@@ -2969,8 +3040,7 @@ public class AudioVisualizer : Control
                 // mirrors from Se.Settings.General.UseFrameMode (Se.cs:409). So flipping frame
                 // mode on automatically switches this label between the time form ("2,500") and
                 // the frame form ("00:00:02:12") without an explicit branch here.
-                var durationText = new TimeCode(paragraph.Duration.TotalMilliseconds).ToShortDisplayString();
-                var withDuration = $"#{paragraph.Number}  {durationText}";
+                var withDuration = GetCachedNumberAndDurationLabel(paragraph);
                 var probe = GetCachedParagraphText(withDuration);
 
                 baseLine = probe.Width >= availableWidth
@@ -2982,7 +3052,7 @@ public class AudioVisualizer : Control
         string? cpsLine = null;
         if (n > 99 && Se.Settings.Waveform.WaveformShowCps && paragraph.Duration.TotalMilliseconds > 0)
         {
-            cpsLine = $"{paragraph.CharactersPerSecond:0.00}";
+            cpsLine = GetCachedCpsLabel(paragraph.CharactersPerSecond);
         }
 
         if (baseLine == null && cpsLine == null)

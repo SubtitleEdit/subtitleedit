@@ -13,7 +13,8 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
         public readonly string HandlerType;
         public readonly string HandlerName = string.Empty;
 
-        public bool IsTextSubtitle => HandlerType == "sbtl" || HandlerType == "text";
+        // "subt" is the handler for stpp (TTML/IMSC1) tracks, ISO/IEC 14496-30
+        public bool IsTextSubtitle => HandlerType == "sbtl" || HandlerType == "text" || HandlerType == "subt";
 
         public bool IsVobSubSubtitle => HandlerType == "subp";
 

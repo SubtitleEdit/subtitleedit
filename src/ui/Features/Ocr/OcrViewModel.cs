@@ -174,6 +174,7 @@ public partial class OcrViewModel : ObservableObject
     private IOcrSubtitle? _ocrSubtitle;
     private List<OcrSubtitleItem> _allOcrSubtitleItems = new();
     private string _sourceFileName = string.Empty;
+    private Iso639Dash2LanguageCode? _sourceLanguageIso;
     private readonly INOcrCaseFixer _nOcrCaseFixer;
     private readonly IWindowService _windowService;
     private readonly IFileHelper _fileHelper;
@@ -239,7 +240,7 @@ public partial class OcrViewModel : ObservableObject
         OllamaUrl = string.Empty;
         LlamaCppUrl = string.Empty;
         LlamaCppOcrModels = new ObservableCollection<LlamaCppModelDisplay>();
-        LlamaCppOcrServerButtonText = "Start server";
+        LlamaCppOcrServerButtonText = Se.Language.General.StartServer;
         CrispEmbedBackends = new ObservableCollection<CrispEmbedBackend>(CrispEmbedEngine.GetBackends());
         CrispEmbedModels = new ObservableCollection<CrispEmbedModelDisplay>();
         TesseractDictionaryItems = new ObservableCollection<TesseractDictionary>();
@@ -416,6 +417,7 @@ public partial class OcrViewModel : ObservableObject
     partial void OnSelectedPaddleOcrLanguageChanged(OcrLanguage2? value) => AutoSelectDictionaryForOcrLanguage(value?.Code);
     partial void OnSelectedGoogleLensLanguageChanged(OcrLanguage2 value) => AutoSelectDictionaryForOcrLanguage(value?.Code);
     partial void OnSelectedGoogleVisionLanguageChanged(OcrLanguage? value) => AutoSelectDictionaryForOcrLanguage(value?.Code);
+    partial void OnSelectedOllamaLanguageChanged(string? value) => AutoSelectDictionaryForOcrLanguage(Iso639Dash2LanguageCode.GetTwoLetterCodeFromEnglishName(value ?? string.Empty));
 
     private void AutoSelectDictionaryForOcrLanguage(string? languageCode)
     {
@@ -447,6 +449,145 @@ public partial class OcrViewModel : ObservableObject
         {
             SelectedDictionary = match;
         }
+    }
+
+    /// <summary>
+    /// Pre-select the OCR language combo boxes (and via their change handlers, the spell-check
+    /// dictionary) from the source file's declared language: idx stream language, Matroska/mp4
+    /// track language, or a language tag in the file name (#13116). A detected language wins
+    /// over the last-used one; no-op when the source carries no language info.
+    /// </summary>
+    private void AutoDetectSourceLanguage(string? languageCode = null)
+    {
+        var iso = ResolveIsoLanguage(languageCode) ?? ResolveIsoLanguage(DetectLanguageCodeFromFileName(_sourceFileName));
+        if (iso == null)
+        {
+            return;
+        }
+
+        _sourceLanguageIso = iso;
+
+        var ollamaLanguage = OllamaLanguages.FirstOrDefault(p => p == iso.EnglishName);
+        if (ollamaLanguage != null)
+        {
+            SelectedOllamaLanguage = ollamaLanguage;
+        }
+
+        var paddleLanguage = PaddleOcrLanguages.FirstOrDefault(p => p.Code == iso.TwoLetterCode);
+        if (paddleLanguage != null)
+        {
+            SelectedPaddleOcrLanguage = paddleLanguage;
+        }
+
+        var lensLanguage = GoogleLensLanguages.FirstOrDefault(p => p.Code == iso.TwoLetterCode);
+        if (lensLanguage != null)
+        {
+            SelectedGoogleLensLanguage = lensLanguage;
+        }
+
+        var visionLanguage = GoogleVisionLanguages.FirstOrDefault(p => p.Code == iso.ThreeLetterCode || p.Code == iso.TwoLetterCode);
+        if (visionLanguage != null)
+        {
+            SelectedGoogleVisionLanguage = visionLanguage;
+        }
+
+        // The Tesseract list is only populated while the Tesseract engine is active;
+        // EngineSelectionChanged applies _sourceLanguageIso when it loads the list later.
+        var tesseractItem = TesseractDictionaryItems.FirstOrDefault(p => p.Code == iso.ThreeLetterCode);
+        if (tesseractItem != null)
+        {
+            SelectedTesseractDictionaryItem = tesseractItem;
+        }
+
+        // Also point the dictionary directly - the setters above only raise a change (and thereby
+        // auto-select the dictionary) when the combo value actually changes, e.g. not when the
+        // detected language equals the last-used one while the dictionary is something else.
+        AutoSelectDictionaryForOcrLanguage(iso.TwoLetterCode);
+    }
+
+    internal static Iso639Dash2LanguageCode? ResolveIsoLanguage(string? languageCode)
+    {
+        if (string.IsNullOrWhiteSpace(languageCode))
+        {
+            return null;
+        }
+
+        // Strip region subtags like "nl-NL" or "pt_BR".
+        var code = languageCode.Trim().ToLowerInvariant();
+        var separator = code.IndexOfAny(new[] { '-', '_' });
+        if (separator > 0)
+        {
+            code = code.Substring(0, separator);
+        }
+
+        if (code.Length == 2)
+        {
+            return Iso639Dash2LanguageCode.List.FirstOrDefault(p => p.TwoLetterCode == code);
+        }
+
+        if (code.Length == 3)
+        {
+            return Iso639Dash2LanguageCode.List.FirstOrDefault(p => p.ThreeLetterCode == code || p.BibliographicCode == code);
+        }
+
+        return null;
+    }
+
+    internal static string? DetectLanguageCodeFromFileName(string fileName)
+    {
+        if (string.IsNullOrEmpty(fileName))
+        {
+            return null;
+        }
+
+        var name = Path.GetFileNameWithoutExtension(fileName);
+
+        // SE's own Matroska track export names files "..._track3_[dut]" - use the last
+        // bracketed token that is a valid ISO 639 code.
+        var bracketMatches = Regex.Matches(name, @"\[([a-zA-Z]{2,3})\]");
+        for (var i = bracketMatches.Count - 1; i >= 0; i--)
+        {
+            var code = bracketMatches[i].Groups[1].Value;
+            if (ResolveIsoLanguage(code) != null)
+            {
+                return code;
+            }
+        }
+
+        // Trailing dot-separated language tag like "movie.nl.sub" or "movie.dut.forced.sub"
+        // (the extension is already removed). Walk backwards past common non-language subtitle
+        // markers; "hi" is treated as hearing-impaired, not Hindi, as that reading is far more
+        // common in subtitle file names. Three-letter tokens must be lowercase so capitalized
+        // title words ("Big.Ben") are not mistaken for language codes; only the last two
+        // candidate tokens are considered so tokens deep inside the title cannot match.
+        var tokens = name.Split('.');
+        var checkedTokens = 0;
+        for (var i = tokens.Length - 1; i > 0 && checkedTokens < 2; i--)
+        {
+            var token = tokens[i].Trim();
+            if (token.Length == 0 || token.ToLowerInvariant() is "hi" or "sdh" or "cc" or "forced")
+            {
+                continue;
+            }
+
+            checkedTokens++;
+            if (token.Length is not (2 or 3) || !token.All(char.IsLetter))
+            {
+                continue;
+            }
+
+            if (token.Length == 3 && token != token.ToLowerInvariant())
+            {
+                continue;
+            }
+
+            if (ResolveIsoLanguage(token) != null)
+            {
+                return token;
+            }
+        }
+
+        return null;
     }
 
     private string? GetNOcrLanguageFileName()
@@ -1183,8 +1324,8 @@ public partial class OcrViewModel : ObservableObject
                     $"{Environment.NewLine}\"CrispEmbed\" requires downloading the CrispEmbed engine.{Environment.NewLine}{Environment.NewLine}Download and use CrispEmbed?",
                     MessageBoxButtons.Cancel,
                     MessageBoxIcon.Question,
-                    "CPU",
-                    "GPU CUDA");
+                    "CPU (~10 MB)",
+                    "GPU CUDA (~718 MB)");
 
                 if (answer == MessageBoxResult.Cancel)
                 {
@@ -1271,7 +1412,7 @@ public partial class OcrViewModel : ObservableObject
 
     private void UpdateLlamaCppOcrServerButtonText()
     {
-        LlamaCppOcrServerButtonText = LlamaCppServerManager.IsServerRunning ? "Stop server" : "Start server";
+        LlamaCppOcrServerButtonText = LlamaCppServerManager.IsServerRunning ? Se.Language.General.StopServer : Se.Language.General.StartServer;
     }
 
     [RelayCommand]
@@ -1348,15 +1489,15 @@ public partial class OcrViewModel : ObservableObject
             string message;
             if (!engineInstalled && !modelInstalled)
             {
-                message = "llama.cpp requires the llama-server engine and the selected OCR model to be downloaded. Download now?";
+                message = Se.Language.Ocr.LlamaCppDownloadEngineAndModelPrompt;
             }
             else if (!engineInstalled)
             {
-                message = "llama.cpp requires the llama-server engine to be downloaded. Download now?";
+                message = Se.Language.Ocr.LlamaCppDownloadEnginePrompt;
             }
             else
             {
-                message = "llama.cpp requires the selected OCR model to be downloaded. Download now?";
+                message = Se.Language.Ocr.LlamaCppDownloadModelPrompt;
             }
 
             var answer = await MessageBox.Show(
@@ -1586,7 +1727,7 @@ public partial class OcrViewModel : ObservableObject
         if (result.NewPressed)
         {
             var newResult = await _windowService.ShowDialogAsync<BinaryOcrDbNewWindow, BinaryOcrDbNewViewModel>(Window!,
-                vm => { vm.Initialize(Se.Language.Ocr.NewNOcrDatabase, string.Empty); });
+                vm => { vm.Initialize(Se.Language.Ocr.NewBinaryImageCompareDatabase, string.Empty); });
             if (newResult.OkPressed)
             {
                 if (!Directory.Exists(Se.OcrFolder))
@@ -1623,7 +1764,7 @@ public partial class OcrViewModel : ObservableObject
             var newResult = await _windowService.ShowDialogAsync<BinaryOcrDbNewWindow, BinaryOcrDbNewViewModel>(Window!,
             vm =>
             {
-                vm.Initialize(Se.Language.Ocr.RenameNOcrDatabase, result.BinaryOcrDatabaseName);
+                vm.Initialize(Se.Language.Ocr.RenameBinaryImageCompareDatabase, result.BinaryOcrDatabaseName);
             });
 
             _isCtrlDown = false;
@@ -4032,21 +4173,29 @@ public partial class OcrViewModel : ObservableObject
             try
             {
                 ProgressText = "Loading CrispEmbed model...";
-                var started = await engine.StartServerAsync(
-                    CrispEmbedEngine.GetServerExecutable(),
-                    backend.GetModelPath(model.Model),
-                    cancellationToken);
+
+                // PP-OCRv6 is a detector+recognizer pair driven through the CLI; the VLM backends
+                // load once into crispembed-server.
+                var started = backend.UsesTextDetector
+                    ? engine.StartCliPipeline(
+                        CrispEmbedEngine.GetCliExecutable(),
+                        backend.GetModelPath(model.Model),
+                        backend.GetDetectorPath(model.Model))
+                    : await engine.StartServerAsync(
+                        CrispEmbedEngine.GetServerExecutable(),
+                        backend.GetModelPath(model.Model),
+                        cancellationToken);
 
                 if (!started)
                 {
                     var error = engine.Error;
-                    SeLogger.Error("CrispEmbed server failed to start: " + error);
+                    SeLogger.Error("CrispEmbed failed to start: " + error);
                     await Dispatcher.UIThread.InvokeAsync(async () =>
                     {
                         await MessageBox.Show(
                             Window!,
                             "CrispEmbed error",
-                            $"The CrispEmbed server could not be started:{Environment.NewLine}{Environment.NewLine}{error}",
+                            $"CrispEmbed could not be started:{Environment.NewLine}{Environment.NewLine}{error}",
                             MessageBoxButtons.OK,
                             MessageBoxIcon.Error);
                     });
@@ -4480,9 +4629,10 @@ public partial class OcrViewModel : ObservableObject
         Title = string.Format(Se.Language.Ocr.OcrX, fileName);
         _ocrSubtitle = new OcrSubtitleBluRay(subtitles);
         SetOcrSubtitleItems();
+        AutoDetectSourceLanguage();
     }
 
-    public void Initialize(List<VobSubMergedPack> vobSubMergedPackList, List<SKColor> palette, string vobSubFileName)
+    public void Initialize(List<VobSubMergedPack> vobSubMergedPackList, List<SKColor> palette, string vobSubFileName, string? languageCode = null)
     {
         _sourceFileName = vobSubFileName;
         Title = string.Format(Se.Language.Ocr.OcrX, vobSubFileName);
@@ -4490,6 +4640,7 @@ public partial class OcrViewModel : ObservableObject
         SetOcrSubtitleItems();
         IsVobSubVisible = true;
         ApplyStoredVobSubColors();
+        AutoDetectSourceLanguage(languageCode);
     }
 
     public void Initialize(Trak mp4SubtitleTrack, List<Paragraph> paragraphs, string fileName)
@@ -4498,6 +4649,7 @@ public partial class OcrViewModel : ObservableObject
         Title = string.Format(Se.Language.Ocr.OcrX, fileName);
         _ocrSubtitle = new OcrSubtitleMp4VobSub(mp4SubtitleTrack, paragraphs);
         SetOcrSubtitleItems();
+        AutoDetectSourceLanguage(mp4SubtitleTrack.Mdia?.Mdhd?.Iso639ThreeLetterCode);
     }
 
     public void Initialize(List<VobSubMergedPack> mergedVobSubPacks, List<SKColor> palette, MatroskaTrackInfo matroskaSubtitleInfo, string fileName)
@@ -4508,6 +4660,7 @@ public partial class OcrViewModel : ObservableObject
         SetOcrSubtitleItems();
         IsVobSubVisible = true;
         ApplyStoredVobSubColors();
+        AutoDetectSourceLanguage(matroskaSubtitleInfo.Language);
     }
 
     public void Initialize(MatroskaTrackInfo matroskaSubtitleInfo, Subtitle subtitle, List<DvbSubPes> subtitleImages, string fileName)
@@ -4516,6 +4669,7 @@ public partial class OcrViewModel : ObservableObject
         Title = string.Format(Se.Language.Ocr.OcrX, fileName);
         _ocrSubtitle = new OcrSubtitleMkvDvb(matroskaSubtitleInfo, subtitle, subtitleImages);
         SetOcrSubtitleItems();
+        AutoDetectSourceLanguage(matroskaSubtitleInfo.Language);
     }
 
     public void Initialize(MatroskaTrackInfo matroskaSubtitleInfo, List<BluRaySupParser.PcsData> pcsDataList, string fileName)
@@ -4524,6 +4678,7 @@ public partial class OcrViewModel : ObservableObject
         Title = string.Format(Se.Language.Ocr.OcrX, fileName);
         _ocrSubtitle = new OcrSubtitleMkvBluRay(matroskaSubtitleInfo, pcsDataList);
         SetOcrSubtitleItems();
+        AutoDetectSourceLanguage(matroskaSubtitleInfo.Language);
     }
 
     public void Initialize(IList<IBinaryParagraphWithPosition> list, string fileName)
@@ -4532,6 +4687,7 @@ public partial class OcrViewModel : ObservableObject
         Title = string.Format(Se.Language.Ocr.OcrX, fileName);
         _ocrSubtitle = new OcrSubtitleIBinaryParagraph(list);
         SetOcrSubtitleItems();
+        AutoDetectSourceLanguage();
     }
 
     public void InitializeBdn(Subtitle subtitle, string fileName, bool isSon)
@@ -4540,6 +4696,7 @@ public partial class OcrViewModel : ObservableObject
         Title = string.Format(Se.Language.Ocr.OcrX, fileName);
         _ocrSubtitle = new OcrSubtitleBdn(subtitle, fileName, isSon);
         SetOcrSubtitleItems();
+        AutoDetectSourceLanguage();
     }
 
     public void InitializeWebVtt(Subtitle subtitle, string fileName)
@@ -4548,6 +4705,7 @@ public partial class OcrViewModel : ObservableObject
         Title = string.Format(Se.Language.Ocr.OcrX, fileName);
         _ocrSubtitle = new OcrSubtitleWebVttImages(subtitle, fileName);
         SetOcrSubtitleItems();
+        AutoDetectSourceLanguage();
     }
 
     public void InitializeSpDvdSup(string fileName)
@@ -4556,6 +4714,7 @@ public partial class OcrViewModel : ObservableObject
         Title = string.Format(Se.Language.Ocr.OcrX, fileName);
         _ocrSubtitle = new OcrSubtitleSpDvdSupImages(fileName);
         SetOcrSubtitleItems();
+        AutoDetectSourceLanguage();
     }
 
     internal void Initialize(TransportStreamParser tsParser, List<TransportStreamSubtitle> subtitles, string fileName)
@@ -4564,6 +4723,7 @@ public partial class OcrViewModel : ObservableObject
         Title = string.Format(Se.Language.Ocr.OcrX, fileName);
         _ocrSubtitle = new OcrSubtitleTransportStream(tsParser, subtitles, fileName);
         SetOcrSubtitleItems();
+        AutoDetectSourceLanguage();
     }
 
     internal void Initialize(List<ImportImageItem> images)
@@ -4580,6 +4740,7 @@ public partial class OcrViewModel : ObservableObject
         Title = string.Format(Se.Language.Ocr.OcrX, "DivX");
         _ocrSubtitle = new OcrSubtitleDivX(list, fileName);
         SetOcrSubtitleItems();
+        AutoDetectSourceLanguage();
     }
 
     internal void EngineSelectionChanged(object? sender, SelectionChangedEventArgs e)
@@ -4633,7 +4794,8 @@ public partial class OcrViewModel : ObservableObject
             LoadActiveTesseractDictionaries();
             if (SelectedTesseractDictionaryItem == null)
             {
-                SelectedTesseractDictionaryItem = TesseractDictionaryItems.FirstOrDefault(p => p.Code == Se.Settings.Ocr.TesseractLastLanguage) ??
+                SelectedTesseractDictionaryItem = TesseractDictionaryItems.FirstOrDefault(p => _sourceLanguageIso != null && p.Code == _sourceLanguageIso.ThreeLetterCode) ??
+                                                  TesseractDictionaryItems.FirstOrDefault(p => p.Code == Se.Settings.Ocr.TesseractLastLanguage) ??
                                                   TesseractDictionaryItems.FirstOrDefault(p => p.Code == "eng") ??
                                                   TesseractDictionaryItems.FirstOrDefault();
             }

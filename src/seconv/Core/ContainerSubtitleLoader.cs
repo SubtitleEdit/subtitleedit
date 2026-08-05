@@ -37,12 +37,27 @@ internal static class ContainerSubtitleLoader
 
         if (ext is ".mp4" or ".m4v" or ".m4s" or ".3gp")
         {
-            // Old converter applied a 10 KB minimum. Below that, fall through to text loader.
             try
             {
-                if (new FileInfo(filePath).Length > 10_000)
+                var fileLength = new FileInfo(filePath).Length;
+                if (fileLength > 10_000)
                 {
                     return LoadMp4(filePath, options);
+                }
+
+                // Subtitle-only DASH/CMAF files (an init segment plus a few m4s fragments)
+                // are typically just a few KB. Try the MP4 parser, but on failure fall
+                // through to the text loader as the old 10 KB minimum did.
+                if (fileLength > 100)
+                {
+                    try
+                    {
+                        return LoadMp4(filePath, options);
+                    }
+                    catch (InvalidOperationException)
+                    {
+                        // No tracks found; let the text loader try.
+                    }
                 }
             }
             catch
@@ -305,13 +320,20 @@ internal static class ContainerSubtitleLoader
         var tracks = new List<LoadedTrack>();
         var parser = new MP4Parser(filePath);
 
-        // VTTC sidecar track (some MP4s embed WebVTT cues alongside text tracks)
-        if (parser.VttcSubtitle is { } vttc && vttc.Paragraphs.Count > 0)
+        // Fragmented (DASH/CMAF) text tracks - cues extracted from moof/traf/trun samples
+        foreach (var fragmentedTrack in parser.FragmentedSubtitleTracks)
         {
-            vttc.Renumber();
-            var lang = SanitizeLang(parser.VttcLanguage);
-            lang = IsUndeclaredLanguage(lang) ? LanguageAutoDetect.AutoDetectGoogleLanguageOrNull(vttc) ?? lang : lang;
-            tracks.Add(new LoadedTrack(vttc, new SubRip(), lang, null));
+            var trackNumber = (int?)fragmentedTrack.TrackId;
+            if (trackNumber != null && options.TrackNumbers.Count > 0 && !options.TrackNumbers.Contains(trackNumber.Value))
+            {
+                continue;
+            }
+
+            var fragmentedSubtitle = fragmentedTrack.Subtitle;
+            fragmentedSubtitle.Renumber();
+            var fragmentedLang = SanitizeLang(fragmentedTrack.Language);
+            fragmentedLang = IsUndeclaredLanguage(fragmentedLang) ? LanguageAutoDetect.AutoDetectGoogleLanguageOrNull(fragmentedSubtitle) ?? fragmentedLang : fragmentedLang;
+            tracks.Add(new LoadedTrack(fragmentedSubtitle, new SubRip(), fragmentedLang, trackNumber));
         }
 
         foreach (var track in parser.GetSubtitleTracks())
@@ -417,6 +439,32 @@ internal static class ContainerSubtitleLoader
                     subtitle.Paragraphs.AddRange(paragraphs);
                     subtitle.Renumber();
                     tracks.Add(new LoadedTrack(subtitle, new SubRip(), $"teletext_{pidEntry.Key}_p{pageEntry.Key}", pidEntry.Key));
+                }
+            }
+
+            // ARIB STD-B24 captions (ISDB broadcasts) — also text
+            foreach (var pidEntry in parser.AribSubtitlesLookup)
+            {
+                foreach (var languageEntry in pidEntry.Value)
+                {
+                    if (languageEntry.Value.Count == 0)
+                    {
+                        continue;
+                    }
+
+                    var languageCode = string.Empty;
+                    if (parser.AribLanguageLookup.TryGetValue(pidEntry.Key, out var languageCodes))
+                    {
+                        languageCodes.TryGetValue(languageEntry.Key, out languageCode);
+                    }
+
+                    var subtitle = new Subtitle();
+                    subtitle.Paragraphs.AddRange(languageEntry.Value);
+                    subtitle.Renumber();
+                    var trackName = string.IsNullOrEmpty(languageCode)
+                        ? $"arib_{pidEntry.Key}"
+                        : $"arib_{pidEntry.Key}_{languageCode}";
+                    tracks.Add(new LoadedTrack(subtitle, new SubRip(), trackName, pidEntry.Key));
                 }
             }
         }

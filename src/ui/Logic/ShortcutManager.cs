@@ -448,6 +448,31 @@ public class ShortcutManager : IShortcutManager
             }
         }
 
+        // 3. Numpad navigation fallback: with NumLock off the numpad emits Home/End/
+        // PageUp/... with a "NumPad" prefix so they can be bound independently (#10934).
+        // When no numpad-specific binding matched above, retry with the main-keyboard
+        // token so a plain "Ctrl+Home" binding fires from the numpad Home key too (#13194).
+        List<string>? collapsedKeys = null;
+        var lookupKeys = normalizedKeys ?? currentInputKeys;
+        for (var keyIndex = 0; keyIndex < lookupKeys.Count; keyIndex++)
+        {
+            var collapsed = CollapseNumPadNavigationToken(lookupKeys[keyIndex]);
+            if (!ReferenceEquals(collapsed, lookupKeys[keyIndex]))
+            {
+                collapsedKeys ??= new List<string>(lookupKeys);
+                collapsedKeys[keyIndex] = collapsed;
+            }
+        }
+
+        if (collapsedKeys != null)
+        {
+            var collapsedHash = ShortCut.CalculateHash(collapsedKeys, activeControl);
+            if (collapsedHash != inputHash && _lookupTable!.TryGetValue(collapsedHash, out shortcut))
+            {
+                return shortcut.Action;
+            }
+        }
+
         return null;
     }
 
@@ -464,6 +489,36 @@ public class ShortcutManager : IShortcutManager
             "LeftShift" or "RightShift" => "Shift",
             "LeftAlt" or "RightAlt" => "Alt",
             "LWin" or "RWin" => "Win",
+            _ => key
+        };
+    }
+
+    /// <summary>
+    /// Maps the NumLock-off numpad navigation tokens ("NumPadHome", ...) onto their
+    /// main-keyboard counterparts. Used ONLY as the last lookup stage in
+    /// <see cref="CheckShortcuts"/> - never in binding hashes - so a numpad-specific
+    /// binding keeps its distinct identity and always wins (#10934), while a plain
+    /// "Ctrl+Home" binding also fires from the numpad Home key (#13194). Both alias
+    /// spellings of the page keys are listed because Key.ToString() picks an
+    /// unspecified alias for enum members sharing a value (PageUp/Prior, PageDown/Next).
+    /// </summary>
+    public static string CollapseNumPadNavigationToken(string key)
+    {
+        return key switch
+        {
+            "NumPadHome" => "Home",
+            "NumPadEnd" => "End",
+            "NumPadPageUp" => "PageUp",
+            "NumPadPrior" => "Prior",
+            "NumPadPageDown" => "PageDown",
+            "NumPadNext" => "Next",
+            "NumPadUp" => "Up",
+            "NumPadDown" => "Down",
+            "NumPadLeft" => "Left",
+            "NumPadRight" => "Right",
+            "NumPadInsert" => "Insert",
+            "NumPadDelete" => "Delete",
+            "NumPadClear" => "Clear",
             _ => key
         };
     }

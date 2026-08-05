@@ -13,28 +13,6 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
 
         private static readonly char[] ExpectedChars = { '.', '!', '?' };
 
-        private bool IsAbbreviation(string text, int index, IFixCallbacks callbacks)
-        {
-            if (text[index] != '.')
-            {
-                return false;
-            }
-
-            if (index - 3 > 0 && char.IsLetterOrDigit(text[index - 1]) && text[index - 2] == '.') // e.g: O.R.
-            {
-                return true;
-            }
-
-            var word = string.Empty;
-            int i = index - 1;
-            while (i >= 0 && char.IsLetter(text[i]))
-            {
-                word = text[i--] + word;
-            }
-
-            return callbacks.GetAbbreviations().Contains(word + ".");
-        }
-
         public void Fix(Subtitle subtitle, IFixCallbacks callbacks)
         {
             string fixAction = Language.StartWithUppercaseLetterAfterPeriodInsideParagraph;
@@ -69,7 +47,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                             }
                         }
 
-                        if (start + 3 < text.Length && (text[start + 1] == ' ') && !IsAbbreviation(text, start, callbacks))
+                        if (start + 3 < text.Length && (text[start + 1] == ' ') && !Helper.IsAbbreviation(text, start, callbacks))
                         {
                             var textBefore = text.Substring(0, start + 1);
                             var afterText = text.Substring(start + 2);

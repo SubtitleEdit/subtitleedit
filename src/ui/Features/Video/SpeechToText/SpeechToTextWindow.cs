@@ -114,7 +114,7 @@ public class SpeechToTextWindow : Window
             .BindIsVisible(vm, nameof(vm.IsCrispAsrSelected))
             .WithLabeledBy(labelBackend);
 
-        var labelForcedAligner = UiUtil.MakeTextBlock("Forced aligner").WithMarginTop(10)
+        var labelForcedAligner = UiUtil.MakeTextBlock(Se.Language.Video.ForcedAligner).WithMarginTop(10)
             .BindIsVisible(vm, nameof(vm.IsForcedAlignerVisible));
         var comboForcedAligner = UiUtil.MakeComboBox(vm.ForcedAligners, vm, nameof(vm.SelectedForcedAligner))
             .WithMinWidth(220)

@@ -103,7 +103,14 @@ public class FullScreenVideoWindow : Window
                         Math.Abs(cursorPos.Value.Y - _lastCursorPosition.Y) > mouseMovementMinPixels)
                     {
                         _lastCursorPosition = cursorPos.Value;
-                        videoPlayer.NotifyUserActivity();
+
+                        // Only movement over this window counts - the poll is desktop-wide,
+                        // so mouse movement in another app or on another monitor must not
+                        // bring the controls back up (issue #13207).
+                        if (CursorPositionHelper.IsCursorOverWindow(this, cursorPos.Value))
+                        {
+                            videoPlayer.NotifyUserActivity();
+                        }
                     }
                 }
             }
@@ -221,6 +228,14 @@ public class FullScreenVideoWindow : Window
             // where nothing else re-seeks afterwards. Settle briefly and re-apply, the same pattern
             // used by the startup file-restore and Reopen paths.
             await Task.Delay(200);
+
+            // Closing the window while the open sequence above was still awaiting has already
+            // run the Closed handler and disposed the player - don't keep driving it (#13083).
+            if (videoPlayer.IsDisposed)
+            {
+                return;
+            }
+
             videoPlayer.VideoPlayer.Pause();
             videoPlayer.VideoPlayer.Position = position;
             videoPlayer.Position = position;
@@ -232,6 +247,11 @@ public class FullScreenVideoWindow : Window
 
             Dispatcher.UIThread.Post(() =>
             {
+                if (videoPlayer.IsDisposed)
+                {
+                    return;
+                }
+
                 videoPlayer.VideoPlayer.Position = position;
                 videoPlayer.Position = position;
             });

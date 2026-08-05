@@ -18,6 +18,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -74,6 +75,7 @@ public partial class AssaStylesViewModel : ObservableObject, IClosingCleanup
     private volatile bool _isClosing;
     private readonly System.Timers.Timer _timerUpdatePreview;
     private readonly List<string> _extraCategories = new();
+    private readonly FileStyleRenameTracker _renameTracker;
 
     public AssaStylesViewModel(IFileHelper fileHelper, IWindowService windowService)
     {
@@ -98,6 +100,8 @@ public partial class AssaStylesViewModel : ObservableObject, IClosingCleanup
 
         LoadSettings();
 
+        _renameTracker = new FileStyleRenameTracker(FileStyles, () => _subtitle, UpdateUsages);
+
         StorageStylesView = new ObservableCollection<StyleDisplay>();
         StorageStyles.CollectionChanged += (_, _) => RefreshStorageStylesView();
         RefreshStorageStylesView();
@@ -105,6 +109,20 @@ public partial class AssaStylesViewModel : ObservableObject, IClosingCleanup
 
         _timerUpdatePreview = new System.Timers.Timer(500);
         _timerUpdatePreview.Elapsed += TimerUpdatePreviewElapsed;
+    }
+
+    /// <summary>
+    /// The font combo box binds SelectedItem to CurrentStyle.FontName; a font missing from
+    /// the item list would make Avalonia clear the selection and null out the style's font.
+    /// Make sure the font is listed before the style becomes current (#13101).
+    /// </summary>
+    partial void OnCurrentStyleChanging(StyleDisplay? value)
+    {
+        var fontName = value?.FontName;
+        if (!string.IsNullOrEmpty(fontName) && !Fonts.Contains(fontName))
+        {
+            Fonts.Insert(0, fontName);
+        }
     }
 
     private void TimerUpdatePreviewElapsed(object? sender, System.Timers.ElapsedEventArgs e)
@@ -223,6 +241,29 @@ public partial class AssaStylesViewModel : ObservableObject, IClosingCleanup
             }
 
             CurrentStyle.FontName = result.SelectedFontName;
+
+            if (result.SelectedCollectedFont != null)
+            {
+                EmbedCollectedFont(result.SelectedCollectedFont);
+            }
+        }
+    }
+
+    /// <summary>
+    /// A font picked from the "Collected fonts" tab need not be installed on the machine
+    /// that plays the subtitle, so its file is embedded in the [Fonts] attachment section.
+    /// Reaches the main subtitle only on OK, like the rest of this dialog's changes.
+    /// </summary>
+    private void EmbedCollectedFont(CollectedFont font)
+    {
+        try
+        {
+            var bytes = File.ReadAllBytes(font.FilePath);
+            _subtitle.Footer = AssaFontEmbedder.AddFontToFooter(_subtitle.Footer, font.FilePath, bytes);
+        }
+        catch (Exception exception)
+        {
+            Se.LogError(exception, "Could not embed collected font " + font.FilePath);
         }
     }
 
@@ -1063,7 +1104,7 @@ public partial class AssaStylesViewModel : ObservableObject, IClosingCleanup
     {
         foreach (var style in FileStyles)
         {
-            style.UsageCount = _subtitle.Paragraphs.Count(p => p.Extra != null && p.Extra.TrimStart('*').Equals(style.Name.TrimStart('*')));
+            style.UsageCount = _subtitle.Paragraphs.Count(p => p.Extra != null && p.Extra.TrimStart('*').Equals(style.Name.TrimStart('*'), StringComparison.OrdinalIgnoreCase));
         }
     }
 

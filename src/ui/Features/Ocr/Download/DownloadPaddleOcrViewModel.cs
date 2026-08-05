@@ -113,8 +113,8 @@ public partial class DownloadPaddleOcrViewModel : ObservableObject, IClosingClea
 
                 if (!AllFileExists())
                 {
-                    ProgressText = "Download failed";
-                    Error = "No data received";
+                    ProgressText = Se.Language.General.DownloadFailed;
+                    Error = Se.Language.General.NoDataReceived;
                     return;
                 }
 
@@ -171,7 +171,7 @@ public partial class DownloadPaddleOcrViewModel : ObservableObject, IClosingClea
                     // otherwise hang the dialog with no error shown (#12127).
                     Se.LogError(exception, "PaddleOCR unpack failed");
                     StopIndeterminateProgress();
-                    ProgressText = "Unpacking failed";
+                    ProgressText = Se.Language.General.UnpackingFailed;
                     Error = exception.Message;
                     return;
                 }
@@ -187,13 +187,13 @@ public partial class DownloadPaddleOcrViewModel : ObservableObject, IClosingClea
                 var ex = _downloadTask.Exception?.InnerException ?? _downloadTask.Exception;
                 if (ex is OperationCanceledException)
                 {
-                    ProgressText = "Download canceled";
+                    ProgressText = Se.Language.General.DownloadCanceled;
                     Close();
                 }
                 else
                 {
-                    ProgressText = "Download failed";
-                    Error = ex?.Message ?? "Unknown error";
+                    ProgressText = Se.Language.General.DownloadFailed;
+                    Error = ex?.Message ?? Se.Language.General.UnknownError;
                 }
             }
         }
@@ -321,7 +321,7 @@ public partial class DownloadPaddleOcrViewModel : ObservableObject, IClosingClea
         else
         {
             Se.LogError($"Unknown Paddle OCR download type: {_downloadType}");
-            ProgressText = "Download failed";
+            ProgressText = Se.Language.General.DownloadFailed;
             Error = "Unknown download type";
             return;
         }

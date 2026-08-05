@@ -2171,6 +2171,11 @@ public partial class BatchConvertViewModel : ObservableObject, IClosingCleanup
                 TrimUnusedStyles = AssaChangeStyleTrimUnusedStyles,
             },
 
+            AssaEmbedFonts = new BatchConvertConfig.AssaEmbedFontsSettings
+            {
+                IsActive = activeFunctions.Contains(BatchConvertFunctionType.AssaEmbedFonts),
+            },
+
             MergeShortLines = new BatchConvertConfig.MergeShortLinesSettings
             {
                 IsActive = activeFunctions.Contains(BatchConvertFunctionType.MergeShortLines),

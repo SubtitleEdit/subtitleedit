@@ -21,7 +21,7 @@ public class F5TtsCrispAsrSettingsWindow : Window
     public F5TtsCrispAsrSettingsWindow(F5TtsCrispAsrSettingsViewModel vm)
     {
         UiUtil.InitializeWindow(this, GetType().Name);
-        Title = "F5-TTS (CrispASR) settings";
+        Title = string.Format(Se.Language.Video.TtsCrispAsrSettingsTitle, "F5-TTS");
         SizeToContent = SizeToContent.WidthAndHeight;
         CanResize = false;
         MinWidth = 580;
@@ -108,7 +108,7 @@ public class F5TtsCrispAsrSettingsWindow : Window
             RowSpacing = 10,
         };
 
-        grid.Add(MakeLabel("Engine"), 0, 0);
+        grid.Add(MakeLabel(Se.Language.General.Engine), 0, 0);
         var enginePanel = MakeStatusPanel(nameof(vm.EngineBrush), nameof(vm.EngineLabel));
         var engineButton = UiUtil.MakeButton(string.Empty, vm.RedownloadEngineCommand)
             .WithIconLeft(IconNames.Download)
@@ -117,10 +117,10 @@ public class F5TtsCrispAsrSettingsWindow : Window
         enginePanel.Children.Add(engineButton);
         grid.Add(enginePanel, 0, 1);
 
-        grid.Add(MakeLabel("Talker " + F5TtsCrispAsr.ModelKeyF16), 1, 0);
+        grid.Add(MakeLabel(string.Format(Se.Language.Video.TalkerX, F5TtsCrispAsr.ModelKeyF16)), 1, 0);
         grid.Add(MakeStatusPanel(nameof(vm.TalkerF16Brush), nameof(vm.TalkerF16Label)), 1, 1);
 
-        grid.Add(MakeLabel("Voices"), 2, 0);
+        grid.Add(MakeLabel(Se.Language.Video.Voices), 2, 0);
         var voicesText = new TextBlock
         {
             VerticalAlignment = VerticalAlignment.Center,

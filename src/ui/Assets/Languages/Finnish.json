@@ -1017,7 +1017,7 @@
     "undoPerformed": "Kumous suoritettu",
     "undoPerformedXActionLeft": "Kumous suoritettu (jäljellä olevat toimet: {0})",
     "xLinesCopiedFromOriginal": "{0} riviä kopioitu alkuperäisestä tekstityksestä",
-    "xLinesMerged": "X riviä yhdistetty",
+    "xLinesMerged": "{0} riviä yhdistetty",
     "xLinesSelectedOfY": "{0} riviä valittu {1}:stä",
     "xLinesSwitched": "{0} riviä vaihdettu",
     "xShotChangedLoaded": "{0} kuvanvaihtoa ladattu",

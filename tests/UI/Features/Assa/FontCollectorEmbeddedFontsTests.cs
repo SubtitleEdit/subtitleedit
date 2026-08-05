@@ -1,5 +1,5 @@
 using Nikse.SubtitleEdit.Core.Common;
-using Nikse.SubtitleEdit.Features.Assa.FontCollector;
+using Nikse.SubtitleEdit.Logic;
 
 namespace UITests.Features.Assa;
 
@@ -26,7 +26,7 @@ public class FontCollectorEmbeddedFontsTests
         var bytes = MakeBytes(300, 7);
         var footer = "[Fonts]\r\nfontname: MyFont_0.ttf\r\n" + UUEncoding.UUEncode(bytes);
 
-        var fonts = FontCollectorViewModel.GetEmbeddedFonts(footer);
+        var fonts = AssaFontEmbedder.GetEmbeddedFonts(footer);
 
         Assert.Single(fonts);
         Assert.Equal("MyFont_0.ttf", fonts[0].FileName);
@@ -47,7 +47,7 @@ public class FontCollectorEmbeddedFontsTests
             "[Graphics]\r\n" +
             "filename: not-a-font.png\r\nAAAA\r\n";
 
-        var fonts = FontCollectorViewModel.GetEmbeddedFonts(footer);
+        var fonts = AssaFontEmbedder.GetEmbeddedFonts(footer);
 
         Assert.Equal(2, fonts.Count);
         Assert.Equal("one.ttf", fonts[0].FileName);
@@ -59,8 +59,8 @@ public class FontCollectorEmbeddedFontsTests
     [Fact]
     public void GetEmbeddedFonts_EmptyOrFontlessFooter_ReturnsNothing()
     {
-        Assert.Empty(FontCollectorViewModel.GetEmbeddedFonts(null));
-        Assert.Empty(FontCollectorViewModel.GetEmbeddedFonts(string.Empty));
-        Assert.Empty(FontCollectorViewModel.GetEmbeddedFonts("[Graphics]\r\nfilename: img.png\r\nAAAA\r\n"));
+        Assert.Empty(AssaFontEmbedder.GetEmbeddedFonts(null));
+        Assert.Empty(AssaFontEmbedder.GetEmbeddedFonts(string.Empty));
+        Assert.Empty(AssaFontEmbedder.GetEmbeddedFonts("[Graphics]\r\nfilename: img.png\r\nAAAA\r\n"));
     }
 }

@@ -11,19 +11,19 @@ public class BoolToFontStyleConverter : IValueConverter
     {
         if (value is bool boolValue)
         {
-            return boolValue ? FontStyle.Italic : FontStyle.Normal;
+            return boolValue ? ConverterBoxes.FontStyleItalic : ConverterBoxes.FontStyleNormal;
         }
 
-        return FontStyle.Normal;
+        return ConverterBoxes.FontStyleNormal;
     }
 
     public object ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
         if (value is FontStyle fontStyle)
         {
-            return fontStyle == FontStyle.Italic;
+            return ConverterBoxes.Bool(fontStyle == FontStyle.Italic);
         }
 
-        return false;
+        return ConverterBoxes.False;
     }
 }

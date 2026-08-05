@@ -10,7 +10,7 @@ public class ExportCavena890Window : Window
     public ExportCavena890Window(ExportCavena890ViewModel vm)
     {
         UiUtil.InitializeWindow(this, GetType().Name);
-        Title = "Export Cavena 890";
+        Title = Se.Language.File.Export.TitleExportCavena890;
         SizeToContent = SizeToContent.WidthAndHeight;
         CanResize = false;
         vm.Window = this;
@@ -43,22 +43,22 @@ public class ExportCavena890Window : Window
         
         var buttonImport = UiUtil.MakeButton(Se.Language.General.Import, vm.OkCommand).WithRightAlignment();
 
-        var labelTranslatedTitle = UiUtil.MakeLabel("Translated title");
+        var labelTranslatedTitle = UiUtil.MakeLabel(Se.Language.File.Export.ExportCavenaTranslatedTitle);
         var textBoxTranslatedTitle = UiUtil.MakeTextBox(300, vm, nameof(vm.TranslatedTitle));
         
-        var labelOriginalTitle = UiUtil.MakeLabel("Original title");
+        var labelOriginalTitle = UiUtil.MakeLabel(Se.Language.File.Export.ExportCavenaOriginalTitle);
         var textBoxOriginalTitle = UiUtil.MakeTextBox(300, vm, nameof(vm.OriginalTitle));
         
-        var labelTranslator = UiUtil.MakeLabel("Translator");
+        var labelTranslator = UiUtil.MakeLabel(Se.Language.File.Export.ExportCavenaTranslator);
         var textBoxTranslator = UiUtil.MakeTextBox(300, vm, nameof(vm.Translator));
         
-        var labelComment =  UiUtil.MakeLabel("Comment");
+        var labelComment =  UiUtil.MakeLabel(Se.Language.File.Export.ExportCavenaComment);
         var textBoxComment = UiUtil.MakeTextBox(300, vm, nameof(vm.Comment));
         
-        var labelLanguage = UiUtil.MakeLabel("Language");
+        var labelLanguage = UiUtil.MakeLabel(Se.Language.General.Language);
         var textBoxLanguage = UiUtil.MakeTextBox(300, vm, nameof(vm.Language));
         
-        var labelStartOfProgramme = UiUtil.MakeLabel("Start of programme");
+        var labelStartOfProgramme = UiUtil.MakeLabel(Se.Language.File.Export.ExportCavenaStartOfProgramme);
         var textBoxStartOfProgramme = UiUtil.MakeTextBox(300, vm, nameof(vm.StartOfProgramme));
         
         var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand);

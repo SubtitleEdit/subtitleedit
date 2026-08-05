@@ -16,11 +16,13 @@ namespace Nikse.SubtitleEdit.Logic.Config;
 public class Se
 {
     internal const int CurrentMacOsFontMigrationVersion = 1;
+    internal const int CurrentShortcutsMigrationVersion = 1;
 
-    public static string Version { get; set; } = "v5.2.0-beta1";
+    public static string Version { get; set; } = "v5.2.0-beta4";
 
     public SeGeneral General { get; set; } = new();
     public List<SeShortCut> Shortcuts { get; set; } = new();
+    public int? ShortcutsMigrationVersion { get; set; }
     public string Color1 { get; set; } = "#ffff00ff";
     public string Color2 { get; set; } = "#ff0000ff";
     public string Color3 { get; set; } = "#00ff00ff";
@@ -256,6 +258,8 @@ public class Se
 
     public void InitializeMainShortcuts(MainViewModel vm)
     {
+        MigrateShortcuts();
+
         var defaults = ShortcutsMain.GetDefaultShortcuts(vm);
 
         if (Shortcuts.Count == 0)
@@ -270,6 +274,37 @@ public class Se
             if (!existing.Contains(def.ActionName))
             {
                 Shortcuts.Add(def);
+            }
+        }
+    }
+
+    /// <summary>
+    /// One-time shortcut migrations, versioned like <see cref="MigrateMacOsFontSettings"/> so a
+    /// binding the user re-assigns afterwards is never touched again.
+    ///
+    /// Version 1: v5.0.0 - v5.2.0-beta1 shipped F10 as the default for "set end and go to next",
+    /// and any visit to the Shortcuts window persisted that default to Settings.json. Once the
+    /// F10-suppression check from #12504 landed, the persisted default permanently disabled the
+    /// standard F10 menu-bar activation (#13083). The default is gone now, and the stale persisted
+    /// copy - indistinguishable from a user assignment - is cleared here once; users who really
+    /// want F10 on the action can assign it again and it will stick.
+    /// </summary>
+    internal void MigrateShortcuts()
+    {
+        if (ShortcutsMigrationVersion.GetValueOrDefault() >= CurrentShortcutsMigrationVersion)
+        {
+            return;
+        }
+
+        ShortcutsMigrationVersion = CurrentShortcutsMigrationVersion;
+
+        foreach (var shortcut in Shortcuts)
+        {
+            if (shortcut.ActionName == nameof(MainViewModel.WaveformSetEndAndGoToNextCommand) &&
+                shortcut.Keys.Count == 1 &&
+                shortcut.Keys[0].Equals(nameof(Avalonia.Input.Key.F10), StringComparison.OrdinalIgnoreCase))
+            {
+                shortcut.Keys.Clear();
             }
         }
     }

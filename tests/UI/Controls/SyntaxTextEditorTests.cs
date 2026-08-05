@@ -310,4 +310,175 @@ public class SyntaxTextEditorTests : IDisposable
         var visible = view.GetVisibleLineRange();
         Assert.InRange(5_000, visible.First, visible.Last);
     }
+
+    // ----------------------------------------------------------------------------------------
+    // Line commands
+    // ----------------------------------------------------------------------------------------
+
+    private static string Lines(params string[] lines) => string.Join("\r\n", lines);
+
+    [AvaloniaFact]
+    public void AltUpMovesTheCaretLineUpAndKeepsTheColumn()
+    {
+        var (window, editor) = Show(Lines("one", "two", "three"));
+        var view = editor.View;
+
+        view.CaretOffset = view.Document.GetOffset(1, 2); // inside "two"
+        Press(window, Key.Up, RawInputModifiers.Alt);
+
+        Assert.Equal(Lines("two", "one", "three"), editor.Text);
+        Assert.Equal(new SyntaxTextPosition(0, 2), view.Document.GetPosition(view.CaretOffset));
+    }
+
+    [AvaloniaFact]
+    public void AltDownMovesTheWholeSelectedBlock()
+    {
+        var (window, editor) = Show(Lines("a", "b", "c", "d"));
+        var view = editor.View;
+
+        // Select from inside line 0 to inside line 1 - both lines count as touched.
+        view.Select(view.Document.GetOffset(0, 0), view.Document.GetOffset(1, 1));
+        Press(window, Key.Down, RawInputModifiers.Alt);
+
+        Assert.Equal(Lines("c", "a", "b", "d"), editor.Text);
+        Assert.Equal("a\r\nb", view.SelectedText);
+    }
+
+    [AvaloniaFact]
+    public void MovingLinesStaysInsideTheDocument()
+    {
+        var (window, editor) = Show(Lines("first", "last"));
+        var view = editor.View;
+
+        view.CaretOffset = 0;
+        Press(window, Key.Up, RawInputModifiers.Alt);
+        Assert.Equal(Lines("first", "last"), editor.Text);
+
+        view.CaretOffset = view.Document.GetLineStartOffset(1);
+        Press(window, Key.Down, RawInputModifiers.Alt);
+        Assert.Equal(Lines("first", "last"), editor.Text);
+        Assert.False(view.CanUndo);
+    }
+
+    [AvaloniaFact]
+    public void MoveLineUndoesAsOneStep()
+    {
+        var (window, editor) = Show(Lines("one", "two", "three"));
+        var view = editor.View;
+
+        view.CaretOffset = view.Document.GetLineStartOffset(2);
+        Press(window, Key.Up, RawInputModifiers.Alt);
+        Assert.Equal(Lines("one", "three", "two"), editor.Text);
+
+        view.Undo();
+        Assert.Equal(Lines("one", "two", "three"), editor.Text);
+        Assert.False(view.CanUndo);
+    }
+
+    [AvaloniaFact]
+    public void DuplicateLineInsertsTheCopyBelowAndLandsOnIt()
+    {
+        var (window, editor) = Show(Lines("one", "two"));
+        var view = editor.View;
+
+        view.CaretOffset = view.Document.GetOffset(0, 1);
+        Press(window, Key.D, ControlOrMeta);
+
+        Assert.Equal(Lines("one", "one", "two"), editor.Text);
+        Assert.Equal(new SyntaxTextPosition(1, 1), view.Document.GetPosition(view.CaretOffset));
+
+        // Repeating it duplicates the copy, not the original.
+        Press(window, Key.D, ControlOrMeta);
+        Assert.Equal(Lines("one", "one", "one", "two"), editor.Text);
+    }
+
+    [AvaloniaFact]
+    public void DeleteLineTakesTheLineBreakWithIt()
+    {
+        var (window, editor) = Show(Lines("one", "two", "three"));
+        var view = editor.View;
+
+        view.CaretOffset = view.Document.GetLineStartOffset(1);
+        Press(window, Key.K, ControlOrMeta | RawInputModifiers.Shift);
+
+        Assert.Equal(Lines("one", "three"), editor.Text);
+        Assert.Equal(2, view.Document.LineCount);
+    }
+
+    [AvaloniaFact]
+    public void DeletingTheLastLineTakesTheBreakAboveIt()
+    {
+        var (window, editor) = Show(Lines("one", "two"));
+        var view = editor.View;
+
+        view.CaretOffset = view.Document.GetLineStartOffset(1);
+        Press(window, Key.K, ControlOrMeta | RawInputModifiers.Shift);
+
+        Assert.Equal("one", editor.Text);
+        Assert.Equal(1, view.Document.LineCount);
+    }
+
+    [AvaloniaFact]
+    public void DeleteLineOnTheOnlyLineJustEmptiesIt()
+    {
+        var (window, editor) = Show("only");
+        var view = editor.View;
+
+        Press(window, Key.K, ControlOrMeta | RawInputModifiers.Shift);
+
+        Assert.Equal(string.Empty, editor.Text);
+        Assert.Equal(1, view.Document.LineCount);
+    }
+
+    [AvaloniaFact]
+    public void DeleteWordLeftAndRightRemoveOneWord()
+    {
+        var (window, editor) = Show("one two three");
+        var view = editor.View;
+
+        view.CaretOffset = 7; // right after "two"
+        Press(window, Key.Back, WordModifier);
+        Assert.Equal("one  three", editor.Text);
+
+        view.CaretOffset = 4;
+        Press(window, Key.Delete, WordModifier);
+        Assert.Equal("one ", editor.Text);
+    }
+
+    [AvaloniaFact]
+    public void ReadOnlyRefusesTheLineCommands()
+    {
+        var text = Lines("one", "two", "three");
+        var (window, editor) = Show(text, readOnly: true);
+
+        editor.View.CaretOffset = editor.Document.GetLineStartOffset(1);
+        Press(window, Key.Up, RawInputModifiers.Alt);
+        Press(window, Key.D, ControlOrMeta);
+        Press(window, Key.K, ControlOrMeta | RawInputModifiers.Shift);
+        Press(window, Key.Back, WordModifier);
+
+        Assert.Equal(text, editor.Text);
+        Assert.False(editor.View.CanUndo);
+    }
+
+    [AvaloniaFact]
+    public void ReplaceAllTextIsOneUndoStep()
+    {
+        var (_, editor) = Show(Lines("one", "two"));
+
+        editor.ReplaceAllText(Lines("1", "2"));
+        Assert.Equal(Lines("1", "2"), editor.Text);
+
+        editor.Undo();
+        Assert.Equal(Lines("one", "two"), editor.Text);
+        Assert.False(editor.View.CanUndo);
+    }
+
+    // The editor follows the platform: Cmd on macOS, Ctrl elsewhere - and word steps use Option on
+    // macOS, where Ctrl is not a text-editing modifier at all.
+    private static RawInputModifiers ControlOrMeta =>
+        OperatingSystem.IsMacOS() ? RawInputModifiers.Meta : RawInputModifiers.Control;
+
+    private static RawInputModifiers WordModifier =>
+        OperatingSystem.IsMacOS() ? RawInputModifiers.Alt : RawInputModifiers.Control;
 }

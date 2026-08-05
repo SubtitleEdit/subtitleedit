@@ -13,10 +13,14 @@ public partial class AssaSourceSyntaxHighlighting : ISourceSyntaxHighlighter
     private static readonly Color SectionColor = Color.Parse("#569CD6"); // Blue for [Section] headers
     private static readonly Color KeywordColor = Color.Parse("#C586C0"); // Purple for keywords (Dialogue:, Comment:, Style:, Format:)
     private static readonly Color TimeColor = Color.Parse("#4EC9B0"); // Cyan for timecodes
-    private static readonly Color PropertyColor = Color.Parse("#9CDCFE"); // Light blue for property names
+    private static readonly Color PropertyColorDark = Color.Parse("#9CDCFE"); // Light blue for property names
+    private static readonly Color PropertyColorLight = Color.Parse("#1565C0"); // Darker blue - light blue is barely readable on white
     private static readonly Color ValueColor = Color.Parse("#CE9178"); // Orange for values
     private static readonly Color CommentColor = Color.Parse("#6A9955"); // Green for comments
     private static readonly Color NumberColor = Color.Parse("#B5CEA8"); // Light green for numbers
+
+    // Resolved per use so a theme switch is picked up
+    private static Color PropertyColor => UiTheme.IsDarkThemeEnabled() ? PropertyColorDark : PropertyColorLight;
 
     // Section headers like [Script Info], [V4+ Styles], [Events]
     [GeneratedRegex(@"^\s*\[[^\]]+\]\s*$", RegexOptions.Multiline)]

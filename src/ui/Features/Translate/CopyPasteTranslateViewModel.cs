@@ -10,14 +10,12 @@ using Nikse.SubtitleEdit.Logic.Config;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Nikse.SubtitleEdit.Features.Translate;
 
 public partial class CopyPasteTranslateViewModel : ObservableObject
 {
-    [ObservableProperty] private ObservableCollection<TranslateRow> _rows;
     [ObservableProperty] private ObservableCollection<SubtitleLineViewModel> _subtitles;
     [ObservableProperty] private SubtitleLineViewModel? _selectedSubtitle;
     [ObservableProperty] private int? _maxBlockSize;
@@ -28,6 +26,10 @@ public partial class CopyPasteTranslateViewModel : ObservableObject
     public bool OkPressed { get; private set; }
     public TableView SubtitleGrid { get; internal set; }
 
+    // Indices into Subtitles that actually received a translation, so re-translating
+    // a range overwrites instead of shifting the result (issue #13114).
+    public HashSet<int> TranslatedRowIndices { get; } = new();
+
     private readonly IWindowService _windowService;
 
     public CopyPasteTranslateViewModel(IWindowService windowService)
@@ -36,7 +38,6 @@ public partial class CopyPasteTranslateViewModel : ObservableObject
 
         SubtitleGrid = new TableView();
         Subtitles = new ObservableCollection<SubtitleLineViewModel>();
-        Rows = new ObservableCollection<TranslateRow>();
         MaxBlockSize = Se.Settings.AutoTranslate.CopyPasteMaxBlockSize;
         LineSeparator = Se.Settings.AutoTranslate.CopyPasteLineSeparator;
     }
@@ -79,10 +80,8 @@ public partial class CopyPasteTranslateViewModel : ObservableObject
             return;
         }
 
-        var log = new StringBuilder();
         var selectedItems = SubtitleGrid.SelectedItems?.Cast<SubtitleLineViewModel>().ToList() ?? new List<SubtitleLineViewModel>();
         var startIndex = selectedItems.Count <= 0 ? 0 : Subtitles.IndexOf(selectedItems[0]);
-        var start = startIndex;
         var index = startIndex;
 
         List<Core.Common.Paragraph> paragraphs = new List<Core.Common.Paragraph>();
@@ -116,9 +115,8 @@ public partial class CopyPasteTranslateViewModel : ObservableObject
             }
 
             var translatedLines = translator.GetTranslationResult(string.Empty, result.TranslatedText, block);
-            FillTranslatedText(translatedLines, start, index);
+            FillTranslatedText(translatedLines, index);
             index += block.Paragraphs.Count;
-            start = index;
             SelectAndScrollToRow(index);
         }
     }
@@ -138,27 +136,15 @@ public partial class CopyPasteTranslateViewModel : ObservableObject
     }
 
 
-    private void FillTranslatedText(List<string> translatedLines, int start, int end)
+    private void FillTranslatedText(List<string> translatedLines, int start)
     {
         var index = start;
         foreach (string s in translatedLines)
         {
             if (index < Subtitles.Count)
             {
-                var item = Subtitles[index];
-
-                TranslateRow row = new TranslateRow
-                {
-                    Number = item.Number,
-                    Show = item.StartTime,
-                    Hide = item.EndTime,
-                    Duration = item.Duration.ToString(),
-                    Text = item.Text,
-                    TranslatedText = s
-                };
-                Rows.Add(row);
-
-                item.Text = s;
+                Subtitles[index].Text = s;
+                TranslatedRowIndices.Add(index);
             }
             index++;
         }

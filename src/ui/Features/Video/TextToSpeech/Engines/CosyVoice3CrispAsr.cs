@@ -56,7 +56,7 @@ public class CosyVoice3CrispAsr : ITtsEngine
 {
     public string Name => "CosyVoice3 (CrispASR)";
     public string Description => "Alibaba CosyVoice3 0.5B with 9 languages + 18 zh dialects, via CrispASR";
-    public bool HasLanguageParameter => false;
+    public bool HasLanguageParameter => true;
     public bool HasApiKey => false;
     public bool HasRegion => false;
     public bool HasModel => true;
@@ -437,7 +437,7 @@ public class CosyVoice3CrispAsr : ITtsEngine
 
     public Task<string[]> GetModels() => Task.FromResult(new[] { ModelKeyQ4K, ModelKeyF16 });
 
-    public Task<TtsLanguage[]> GetLanguages(Voice voice, string? model) => Task.FromResult(Array.Empty<TtsLanguage>());
+    public Task<TtsLanguage[]> GetLanguages(Voice voice, string? model) => Task.FromResult(CosyVoice3Languages.All);
 
     public Task<Voice[]> RefreshVoices(string language, CancellationToken cancellationToken) =>
         GetVoices(language);
@@ -506,9 +506,26 @@ public class CosyVoice3CrispAsr : ITtsEngine
             CrispAsrTtsProvenance.AddSpeechAttestations(payload);
         }
 
+        // Target language for cross-lingual synthesis (#13110): the backend compares it to the
+        // reference voice's language and drops the reference transcript from the prompt when they
+        // differ, so the clone speaks the target language instead of imitating the reference's.
+        // Auto (empty) sends no field and keeps plain zero-shot. Baked presets carry their own
+        // bank language; for imported WAVs the reference language comes from the settings-window
+        // pick (source_lang) since the server's own detection is unreliable for Latin scripts.
+        var languageArg = CosyVoice3Languages.ResolveLanguageArg(language);
+        if (!string.IsNullOrEmpty(languageArg))
+        {
+            payload["language"] = languageArg;
+        }
+        var sourceLanguage = (Se.Settings.Video.TextToSpeech.CosyVoice3CrispAsrSourceLanguage ?? string.Empty).Trim();
+        if (isClone && !string.IsNullOrEmpty(sourceLanguage))
+        {
+            payload["source_lang"] = sourceLanguage;
+        }
+
         var body = JsonSerializer.Serialize(payload);
         using var content = new StringContent(body, Encoding.UTF8, "application/json");
-        Se.WriteToolsLog($"CosyVoice3 (CrispASR): POST {ServerBaseUrl}/v1/audio/speech (voice={cosyVoice}, clone={isClone}, refTextLen={cosyVoice.RefText.Length}, textLen={text.Length})");
+        Se.WriteToolsLog($"CosyVoice3 (CrispASR): POST {ServerBaseUrl}/v1/audio/speech (voice={cosyVoice}, clone={isClone}, refTextLen={cosyVoice.RefText.Length}, textLen={text.Length}, language={(string.IsNullOrEmpty(languageArg) ? "(auto)" : languageArg)})");
 
         HttpResponseMessage response;
         try

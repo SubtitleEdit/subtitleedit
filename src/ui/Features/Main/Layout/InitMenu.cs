@@ -38,6 +38,11 @@ public static class InitMenu
         menu.Items.Clear();
         menu.Opened += (s, e) => DisplayShortcuts(menu, vm);
 
+        // In undocked mode the tool windows are topmost while SE is active (#11971), which
+        // covers the menu popups - drop their topmost while a menu is open (#13187/#12899).
+        menu.Opened += (s, e) => vm.SetUndockedWindowsTopmost(false);
+        menu.Closed += (s, e) => vm.SetUndockedWindowsTopmost(true);
+
         // Drop the menu's font one notch below the theme default and tighten
         // each item's vertical padding — a denser menu reads better when there
         // are this many entries. The style targets nested MenuItems so submenu
@@ -211,7 +216,7 @@ public static class InitMenu
                         },
                         new MenuItem
                         {
-                            Header = "IMSC 1.1 image profile",
+                            Header = Se.Language.File.Export.TitleExportImscImage,
                             Command = vm.ExportImscImageCommand,
                         },
                         new MenuItem
@@ -251,7 +256,7 @@ public static class InitMenu
                         },
                         new MenuItem
                         {
-                            Header = "DOST/png",
+                            Header = Se.Language.File.Export.TitleExportDostPng,
                             Command = vm.ExportDostPngCommand,
                         },
                         new MenuItem
@@ -261,7 +266,7 @@ public static class InitMenu
                         },
                         new MenuItem
                         {
-                            Header = "Final Cut Pro + image",
+                            Header = Se.Language.File.Export.TitleExportFcpImage,
                             Command = vm.ExportFcpPngCommand,
                         },
                         new MenuItem
@@ -286,7 +291,7 @@ public static class InitMenu
                         },
                         new MenuItem
                         {
-                            Header = "WebVTT png",
+                            Header = Se.Language.File.Export.TitleExportWebVttThumbnails,
                             Command = vm.ExportWebVttThumbnailsCommand,
                         },
                         new Separator(),

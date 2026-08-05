@@ -195,7 +195,7 @@ public class MergeSameTextWindow : Window
                     Header = Se.Language.General.Text,
                     CellTheme = UiUtil.TableViewCellTheme,
                     HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
-                    Binding = new Binding(nameof(SubtitleLineViewModel.Text)),
+                    CellTemplate = TableViewExtras.MakeTextCellTemplate(nameof(SubtitleLineViewModel.Text)),
                     Width = new GridLength(1, GridUnitType.Star),
                 },
                 new SeTableViewColumn

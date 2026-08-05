@@ -1017,7 +1017,7 @@
     "undoPerformed": "Откажи извршено",
     "undoPerformedXActionLeft": "Откажи извршено (остани {0} акции)",
     "xLinesCopiedFromOriginal": "{0} линии копирани од оригиналната титра",
-    "xLinesMerged": "X линии споени",
+    "xLinesMerged": "{0} линии споени",
     "xLinesSelectedOfY": "{0} линии избрани од {1}",
     "xLinesSwitched": "{0} линии заменети",
     "xShotChangedLoaded": "Вчитани {0} промени на сцени",

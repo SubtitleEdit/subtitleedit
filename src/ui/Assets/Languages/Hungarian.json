@@ -1018,7 +1018,7 @@
     "undoPerformed": "Visszavonás végrehajtva",
     "undoPerformedXActionLeft": "Visszavonás végrehajtva (hátralévő műveletek: {0})",
     "xLinesCopiedFromOriginal": "{0} sor átmásolva az eredeti feliratból",
-    "xLinesMerged": "X sor egyesítve",
+    "xLinesMerged": "{0} sor egyesítve",
     "xLinesSelectedOfY": "{0} sor kijelölve a(z) {1} közül",
     "xLinesSwitched": "{0} sor felcserélve",
     "xShotChangedLoaded": "{0} vágásváltás betöltve",

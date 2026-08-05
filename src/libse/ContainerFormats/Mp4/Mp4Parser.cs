@@ -22,6 +22,17 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4
         public Subtitle VttcSubtitle { get; private set; }
         public string VttcLanguage { get; private set; }
 
+        /// <summary>
+        /// Sample codec of <see cref="VttcSubtitle"/>: "wvtt", "stpp", "tx3g", "stxt" or "sbtt".
+        /// </summary>
+        public string VttcCodec { get; private set; }
+
+        /// <summary>
+        /// All text subtitle tracks found in movie fragments (DASH/CMAF), in file order.
+        /// <see cref="VttcSubtitle"/> is the first of these.
+        /// </summary>
+        public List<Mp4FragmentedSubtitleTrack> FragmentedSubtitleTracks { get; } = new List<Mp4FragmentedSubtitleTrack>();
+
         public Subtitle TrunCea608Subtitle { get; private set; }
         public Subtitle TrunCea708Subtitle { get; private set; }
         private List<Cea608.CcData> _trunCea608CcData = new List<Cea608.CcData>();
@@ -145,13 +156,28 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4
             }
         }
 
+        /// <summary>
+        /// Upper bound on top-level boxes to walk. A DASH/CMAF file holds styp+moof+mdat per
+        /// segment, so a long subtitle representation legitimately has many thousands of them -
+        /// a flat cap silently truncated the extraction (a 2-second-segment file stopped after
+        /// ~33 minutes). Real segments are at least a few hundred bytes, so scale with the file
+        /// size and keep a ceiling so a malformed file still cannot spin for long.
+        /// </summary>
+        private static int GetMaxTopLevelBoxes(long fileLength)
+        {
+            const long minBoxes = 3000;
+            const long maxBoxes = 200_000;
+            var scaled = fileLength / 32;
+            return (int)(scaled < minBoxes ? minBoxes : scaled > maxBoxes ? maxBoxes : scaled);
+        }
+
         private void ParseMp4(Stream fs)
         {
             var count = 0;
+            var maxBoxes = GetMaxTopLevelBoxes(fs.Length);
             Position = 0;
             fs.Seek(0, SeekOrigin.Begin);
             var moreBytes = true;
-            var timeTotalMs = 0d;
             while (moreBytes)
             {
                 moreBytes = InitializeSizeAndName(fs);
@@ -167,72 +193,17 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4
                 else if (Name == "moof")
                 {
                     Moof = new Moof(fs, Position);
-
-                    if (Moof.Traf?.Trun?.DataOffset != null && Moof.Traf.Tfdt != null)
-                    {
-                        var dts = Moof.Traf.Tfdt.BaseMediaDecodeTime;
-                        var startPosition = (uint)(Moof.StartPosition + Moof.Traf.Trun.DataOffset.Value);
-                        for (var index = 0; index < Moof.Traf.Trun.Samples.Count; index++)
-                        {
-                            var sample = Moof.Traf.Trun.Samples[index];
-                            if (sample.Size.HasValue)
-                            {
-                                var ccData = GetCcDataHelper.GetCcData(fs, startPosition, sample.Size.Value);
-                                if (ccData.Count > 0)
-                                {
-                                    if (sample.TimeOffset.HasValue)
-                                    {
-                                        ccData[0].Time = (ulong)((long)dts + sample.TimeOffset.Value);
-                                    }
-
-                                    _trunCea608CcData.Add(ccData[0]); //TODO: can there be more than one?
-                                }
-
-                                startPosition += sample.Size.Value;
-                            }
-
-                            if (sample.Duration.HasValue)
-                            {
-                                dts += sample.Duration.Value;
-                            }
-                        }
-                    }
+                    ApplyTrexDefaults();
+                    ReadFragmentedCcSamples(fs);
                 }
-                else if (Name == "mdat" && Moof != null && Moof?.Traf?.Trun?.Samples?.Count > 0)
+                else if (Name == "mdat" && Moof != null)
                 {
-                    var mdat = new Mdat(fs, Position);
-                    if (Moof.Traf?.Trun?.Samples.Count > 0)
-                    {
-                        if (VttcSubtitle == null)
-                        {
-                            VttcSubtitle = new Subtitle();
-
-                            if (Moov?.Tracks.FirstOrDefault()?.Mdia?.Mdhd != null)
-                            {
-                                var track = Moov.Tracks.FirstOrDefault();
-                                VttcLanguage = track.Mdia.Mdhd.Iso639ThreeLetterCode;
-                                if (string.IsNullOrEmpty(VttcLanguage))
-                                {
-                                    VttcLanguage = track.Mdia.Mdhd.LanguageString;
-                                }
-                            }
-                        }
-
-                        if (Moof.Traf.Trun.Samples.All(p => p.Size != null))
-                        {
-                            ReadVttWithSize(mdat, Moof.Traf.Trun.Samples, ref timeTotalMs);
-                        }
-                        else
-                        {
-                            ReadVttWithoutSize(mdat.Vtts, Moof.Traf.Trun.Samples, ref timeTotalMs);
-                        }
-                    }
-
+                    ReadFragmentedTextSamples(fs, (ulong)fs.Position, Position);
                     Moof = null;
                 }
 
                 count++;
-                if (count > 3000)
+                if (count > maxBoxes)
                 {
                     break;
                 }
@@ -247,10 +218,38 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4
 
             fs.Close();
 
-            if (VttcSubtitle != null)
+            // Surface the fragmented text tracks (DASH/CMAF subtitle representations, or
+            // the subtitle tracks of a muxed fMP4); VttcSubtitle is the first of them.
+            foreach (var fragmentedTrack in _fragmentedTextTracks)
             {
-                var merged = MergeLinesSameTextUtils.MergeLinesWithSameTextInSubtitle(VttcSubtitle, false, 250);
-                VttcSubtitle = merged;
+                if (fragmentedTrack.Subtitle.Paragraphs.Count == 0)
+                {
+                    continue;
+                }
+
+                var sorted = fragmentedTrack.Subtitle.Paragraphs.OrderBy(p => p.StartTime.TotalMilliseconds).ToList();
+                fragmentedTrack.Subtitle.Paragraphs.Clear();
+                fragmentedTrack.Subtitle.Paragraphs.AddRange(sorted);
+
+                var merged = MergeLinesSameTextUtils.MergeLinesWithSameTextInSubtitle(fragmentedTrack.Subtitle, false, 250);
+                merged.Header = fragmentedTrack.Subtitle.Header;
+                merged.Renumber();
+
+                FragmentedSubtitleTracks.Add(new Mp4FragmentedSubtitleTrack
+                {
+                    TrackId = fragmentedTrack.TrackId,
+                    Language = fragmentedTrack.Language,
+                    Codec = fragmentedTrack.Codec,
+                    Subtitle = merged,
+                });
+            }
+
+            var firstFragmentedTrack = FragmentedSubtitleTracks.FirstOrDefault();
+            if (firstFragmentedTrack != null)
+            {
+                VttcSubtitle = firstFragmentedTrack.Subtitle;
+                VttcLanguage = firstFragmentedTrack.Language;
+                VttcCodec = firstFragmentedTrack.Codec;
             }
 
             CheckForTrunCea608();
@@ -575,7 +574,15 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4
 
         private void DisplayScreen(DataOutput data)
         {
+            // Fragment ticks are media-track times, so prefer the video track's mdhd
+            // timescale; the movie (mvhd) timescale is only a fallback.
             var timeScale = Moov?.Mvhd?.TimeScale ?? 1000.0;
+            var videoTrack = GetVideoTracks().FirstOrDefault();
+            if (videoTrack?.Mdia?.Mdhd?.TimeScale > 0)
+            {
+                timeScale = videoTrack.Mdia.Mdhd.TimeScale;
+            }
+
             var startMs = data.Start / timeScale * 1000.0;
             var endMs = data.End / timeScale * 1000.0;
             var p = new Paragraph(GetText(data.Screen), startMs, endMs);
@@ -598,16 +605,577 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4
             return sb.ToString().Trim();
         }
 
-        private void ReadVttWithSize(Mdat mdat, List<TimeSegment> trunSamples, ref double timeTotalMs)
+        private sealed class FragmentedTextTrack
+        {
+            public uint? TrackId { get; set; }
+            public Subtitle Subtitle { get; } = new Subtitle();
+            public string Language { get; set; }
+            public string Codec { get; set; } // "wvtt", "stpp", "tx3g", "stxt" or "sbtt"
+            public double LegacyTimeTotalMs; // running clock for fragments without data offsets
+            public long NextTicks; // running decode time for fragments without tfdt
+            public HashSet<string> AddedTtmlCues { get; } = new HashSet<string>();
+        }
+
+        private readonly List<FragmentedTextTrack> _fragmentedTextTracks = new List<FragmentedTextTrack>();
+
+        private Trak FindTrack(uint? trackId)
+        {
+            if (trackId == null || Moov?.Tracks == null)
+            {
+                return null;
+            }
+
+            foreach (var trak in Moov.Tracks)
+            {
+                if (trak.Tkhd?.TrackId == trackId.Value)
+                {
+                    return trak;
+                }
+            }
+
+            return Moov.Tracks.Count == 1 ? Moov.Tracks[0] : null;
+        }
+
+        /// <summary>
+        /// Timescale for a fragment's ticks (tfdt/sample durations). Those are media-track
+        /// times, so the track's mdhd timescale applies - the movie (mvhd) timescale is a
+        /// different clock and using it skewed all DASH/CMAF cue times by their ratio.
+        /// </summary>
+        private double GetTrackTimeScale(Trak trak)
+        {
+            if (trak?.Mdia?.Mdhd?.TimeScale > 0)
+            {
+                return trak.Mdia.Mdhd.TimeScale;
+            }
+
+            if (Moov?.Tracks?.Count == 1 && Moov.Tracks[0].Mdia?.Mdhd?.TimeScale > 0)
+            {
+                return Moov.Tracks[0].Mdia.Mdhd.TimeScale;
+            }
+
+            if (Moov?.Mvhd?.TimeScale > 0)
+            {
+                return Moov.Mvhd.TimeScale;
+            }
+
+            return 1000.0;
+        }
+
+        /// <summary>
+        /// Fills fragment samples that carry no duration/size in trun or tfhd with the
+        /// per-track defaults from moov/mvex/trex (common for the last DASH segment,
+        /// whose tfhd often omits default-sample-duration).
+        /// </summary>
+        private void ApplyTrexDefaults()
+        {
+            if (Moov == null || Moov.Trexs.Count == 0)
+            {
+                return;
+            }
+
+            foreach (var traf in Moof.Trafs)
+            {
+                var trackId = traf.Tfhd?.TrackId;
+                Trex trex = null;
+                foreach (var t in Moov.Trexs)
+                {
+                    if (trackId == null || t.TrackId == trackId.Value)
+                    {
+                        trex = t;
+                        break;
+                    }
+                }
+
+                if (trex == null)
+                {
+                    continue;
+                }
+
+                foreach (var trun in traf.Truns)
+                {
+                    foreach (var sample in trun.Samples)
+                    {
+                        if (sample.Duration == null && trex.DefaultSampleDuration > 0)
+                        {
+                            sample.Duration = trex.DefaultSampleDuration;
+                        }
+
+                        if (sample.Size == null && trex.DefaultSampleSize > 0)
+                        {
+                            sample.Size = trex.DefaultSampleSize;
+                        }
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// CEA-608/708 byte pairs from the pending moof's sample runs (H.264 SEI in
+        /// fragmented video). Only video/clcp tracks can carry them; text and audio
+        /// track fragments are skipped.
+        /// </summary>
+        private void ReadFragmentedCcSamples(Stream fs)
+        {
+            foreach (var traf in Moof.Trafs)
+            {
+                var trak = FindTrack(traf.Tfhd?.TrackId);
+                if (trak?.Mdia != null && !trak.Mdia.IsVideo && !trak.Mdia.IsClosedCaption)
+                {
+                    continue;
+                }
+
+                if (traf.Tfdt == null)
+                {
+                    continue;
+                }
+
+                var dts = traf.Tfdt.BaseMediaDecodeTime;
+                // trun data offsets are relative to tfhd's base-data-offset when present
+                // (PIFF/Smooth Streaming sets it), and to the moof start otherwise.
+                var baseOffset = traf.Tfhd?.BaseDataOffset ?? Moof.StartPosition;
+                var haveStartPosition = false;
+                ulong startPosition = 0;
+                foreach (var trun in traf.Truns)
+                {
+                    if (trun.DataOffset != null)
+                    {
+                        startPosition = (ulong)((long)baseOffset + trun.DataOffset.Value);
+                        haveStartPosition = true;
+                    }
+
+                    if (!haveStartPosition)
+                    {
+                        break;
+                    }
+
+                    for (var index = 0; index < trun.Samples.Count; index++)
+                    {
+                        var sample = trun.Samples[index];
+                        if (sample.Size.HasValue)
+                        {
+                            var ccData = GetCcDataHelper.GetCcData(fs, startPosition, sample.Size.Value);
+                            if (ccData.Count > 0)
+                            {
+                                if (sample.TimeOffset.HasValue)
+                                {
+                                    ccData[0].Time = (ulong)((long)dts + sample.TimeOffset.Value);
+                                }
+
+                                _trunCea608CcData.Add(ccData[0]); //TODO: can there be more than one?
+                            }
+
+                            startPosition += sample.Size.Value;
+                        }
+
+                        if (sample.Duration.HasValue)
+                        {
+                            dts += sample.Duration.Value;
+                        }
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Text subtitle samples (wvtt/stpp/tx3g/stxt/sbtt) from the pending moof's track fragments.
+        /// Slices exact sample byte ranges via trun data offsets and sizes, so it also works
+        /// for muxed fMP4 where the mdat interleaves video/audio/subtitle data. Falls back
+        /// to scanning the mdat for WebVTT cue boxes when no offsets are available.
+        /// </summary>
+        private void ReadFragmentedTextSamples(Stream fs, ulong mdatDataStart, ulong mdatEnd)
+        {
+            foreach (var traf in Moof.Trafs)
+            {
+                var trackId = traf.Tfhd?.TrackId;
+                var trak = FindTrack(trackId);
+                if (trak?.Mdia != null && !trak.Mdia.IsTextSubtitle)
+                {
+                    continue; // audio/video/vobsub; CEA captions are handled at moof time
+                }
+
+                var samples = new List<TimeSegment>();
+                foreach (var trun in traf.Truns)
+                {
+                    samples.AddRange(trun.Samples);
+                }
+
+                if (samples.Count == 0)
+                {
+                    continue;
+                }
+
+                var stsdCodec = trak?.Mdia?.Minf?.Stbl?.Stsd?.Name;
+                var timeScale = GetTrackTimeScale(trak);
+                var track = GetFragmentedTextTrack(trackId, trak);
+
+                var haveOffsets = traf.Tfhd?.BaseDataOffset != null || traf.Truns[0].DataOffset != null;
+                var haveSizes = samples.All(p => p.Size != null);
+                if (haveOffsets && haveSizes)
+                {
+                    ReadFragmentedTextSamplesPrecise(fs, traf, stsdCodec, timeScale, track);
+                }
+                else
+                {
+                    fs.Seek((long)mdatDataStart, SeekOrigin.Begin);
+                    var mdat = new Mdat(fs, mdatEnd);
+                    if (track.Codec == null && mdat.Vtts.Count > 0)
+                    {
+                        track.Codec = "wvtt";
+                    }
+
+                    if (haveSizes)
+                    {
+                        ReadVttWithSize(track, mdat, samples, timeScale);
+                    }
+                    else
+                    {
+                        ReadVttWithoutSize(track, mdat.Vtts, samples, timeScale);
+                    }
+                }
+            }
+        }
+
+        private FragmentedTextTrack GetFragmentedTextTrack(uint? trackId, Trak trak)
+        {
+            foreach (var existing in _fragmentedTextTracks)
+            {
+                if (existing.TrackId == trackId)
+                {
+                    return existing;
+                }
+            }
+
+            var track = new FragmentedTextTrack { TrackId = trackId };
+            var mdhd = trak?.Mdia?.Mdhd ?? Moov?.Tracks?.FirstOrDefault()?.Mdia?.Mdhd;
+            if (mdhd != null)
+            {
+                track.Language = mdhd.Iso639ThreeLetterCode;
+                if (string.IsNullOrEmpty(track.Language))
+                {
+                    track.Language = mdhd.LanguageString;
+                }
+            }
+
+            _fragmentedTextTracks.Add(track);
+            return track;
+        }
+
+        private void ReadFragmentedTextSamplesPrecise(Stream fs, Traf traf, string stsdCodec, double timeScale, FragmentedTextTrack track)
+        {
+            const uint maxSampleSize = 10_000_000; // subtitle samples are small; guard against malformed sizes
+
+            // without a tfdt, fragment times continue from the previous fragment of this track
+            var ticks = traf.Tfdt != null ? (long)traf.Tfdt.BaseMediaDecodeTime : track.NextTicks;
+            var baseOffset = traf.Tfhd?.BaseDataOffset ?? Moof.StartPosition;
+            var samplePosition = baseOffset;
+            foreach (var trun in traf.Truns)
+            {
+                if (trun.DataOffset != null)
+                {
+                    samplePosition = (ulong)((long)baseOffset + trun.DataOffset.Value);
+                }
+
+                foreach (var sample in trun.Samples)
+                {
+                    var size = sample.Size ?? 0;
+                    var startTicks = ticks + (sample.TimeOffset ?? 0);
+                    var durationTicks = sample.Duration ?? 0;
+                    if (sample.Duration.HasValue)
+                    {
+                        ticks += sample.Duration.Value;
+                    }
+
+                    var startMs = startTicks / timeScale * 1000.0;
+                    var durationMs = durationTicks / timeScale * 1000.0;
+
+                    if (size > 2 && size <= maxSampleSize && samplePosition + size <= (ulong)fs.Length)
+                    {
+                        var buffer = new byte[size];
+                        fs.Seek((long)samplePosition, SeekOrigin.Begin);
+                        if (fs.Read(buffer, 0, buffer.Length) == buffer.Length)
+                        {
+                            AddFragmentedTextSample(buffer, stsdCodec, startMs, durationMs, track);
+                        }
+                    }
+
+                    samplePosition += size;
+                }
+            }
+
+            track.NextTicks = ticks;
+        }
+
+        private static void AddFragmentedTextSample(byte[] sample, string stsdCodec, double startMs, double durationMs, FragmentedTextTrack track)
+        {
+            var kind = stsdCodec ?? SniffTextSampleKind(sample);
+            if (track.Codec == null && kind != null)
+            {
+                track.Codec = kind;
+            }
+
+            if (kind == "wvtt")
+            {
+                ReadWvttSample(sample, startMs, durationMs, track);
+            }
+            else if (kind == "stpp")
+            {
+                ReadStppSample(sample, startMs, durationMs, track);
+            }
+            else if (Mp4TextSampleHelper.IsSimpleTextCodec(kind))
+            {
+                ReadSimpleTextSample(sample, startMs, durationMs, track);
+            }
+            else if (kind != null)
+            {
+                ReadTx3gSample(sample, startMs, durationMs, track); // tx3g / generic MPEG-4 timed text
+            }
+        }
+
+        /// <summary>
+        /// Codec guess for a subtitle sample when no moov is available (a lone DASH .m4s
+        /// segment without its init file): wvtt samples are ISO-BMFF boxes, stpp samples
+        /// are TTML XML documents, tx3g samples are a 16-bit length + UTF-8 text, and
+        /// anything left that is readable text is treated as an stxt/sbtt text stream.
+        /// </summary>
+        private static string SniffTextSampleKind(byte[] sample)
+        {
+            if (sample.Length >= 8)
+            {
+                var boxSize = System.Buffers.Binary.BinaryPrimitives.ReadUInt32BigEndian(sample.AsSpan(0, 4));
+                if (boxSize >= 8 && boxSize <= (uint)sample.Length)
+                {
+                    var boxName = Encoding.ASCII.GetString(sample, 4, 4);
+                    if (boxName == "vttc" || boxName == "vtte" || boxName == "vtta")
+                    {
+                        return "wvtt";
+                    }
+                }
+            }
+
+            var i = 0;
+            if (sample.Length >= 3 && sample[0] == 0xEF && sample[1] == 0xBB && sample[2] == 0xBF)
+            {
+                i = 3; // skip UTF-8 BOM
+            }
+
+            while (i < sample.Length && (sample[i] == (byte)' ' || sample[i] == (byte)'\t' || sample[i] == (byte)'\r' || sample[i] == (byte)'\n'))
+            {
+                i++;
+            }
+
+            if (i < sample.Length && sample[i] == (byte)'<')
+            {
+                return "stpp";
+            }
+
+            if (sample.Length >= 2)
+            {
+                int textSize = System.Buffers.Binary.BinaryPrimitives.ReadUInt16BigEndian(sample.AsSpan(0, 2));
+                if (textSize == sample.Length - 2)
+                {
+                    return "tx3g";
+                }
+
+                // text followed by tx3g modifier boxes (styl/hlit/hclr/...)
+                if (textSize > 0 && textSize < sample.Length - 2 - 8)
+                {
+                    var boxStart = 2 + textSize;
+                    var boxSize = System.Buffers.Binary.BinaryPrimitives.ReadUInt32BigEndian(sample.AsSpan(boxStart, 4));
+                    var boxName = Encoding.ASCII.GetString(sample, boxStart + 4, 4);
+                    if (boxSize >= 8 && boxStart + (long)boxSize <= sample.Length &&
+                        (boxName == "styl" || boxName == "hlit" || boxName == "hclr" || boxName == "krok" || boxName == "dlay" || boxName == "href" || boxName == "tbox" || boxName == "blnk" || boxName == "twrp"))
+                    {
+                        return "tx3g";
+                    }
+                }
+            }
+
+            return IsPlainText(sample) ? "stxt" : null;
+        }
+
+        /// <summary>
+        /// Whether the whole sample is readable text, i.e. valid UTF-8 without control
+        /// characters. Last resort of <see cref="SniffTextSampleKind"/>, so it must not
+        /// accept the binary samples of the codecs checked before it.
+        /// </summary>
+        private static bool IsPlainText(byte[] sample)
+        {
+            if (sample.Length == 0)
+            {
+                return false;
+            }
+
+            string text;
+            try
+            {
+                text = new UTF8Encoding(false, true).GetString(sample);
+            }
+            catch (ArgumentException)
+            {
+                return false;
+            }
+
+            var letters = 0;
+            foreach (var ch in text)
+            {
+                if (char.IsControl(ch) && ch != '\r' && ch != '\n' && ch != '\t')
+                {
+                    return false;
+                }
+
+                if (!char.IsWhiteSpace(ch))
+                {
+                    letters++;
+                }
+            }
+
+            return letters > 0;
+        }
+
+        private static void ReadWvttSample(byte[] sample, double startMs, double durationMs, FragmentedTextTrack track)
+        {
+            if (durationMs <= 0)
+            {
+                return;
+            }
+
+            string payloadText = null;
+            string style = null;
+            var pos = 0;
+            while (pos + 8 <= sample.Length)
+            {
+                var boxSize = (int)System.Buffers.Binary.BinaryPrimitives.ReadUInt32BigEndian(sample.AsSpan(pos, 4));
+                if (boxSize < 8 || pos + boxSize > sample.Length)
+                {
+                    break;
+                }
+
+                var boxName = Encoding.ASCII.GetString(sample, pos + 4, 4);
+                if (boxName == "vttc")
+                {
+                    var inner = pos + 8;
+                    var end = pos + boxSize;
+                    while (inner + 8 <= end)
+                    {
+                        var innerSize = (int)System.Buffers.Binary.BinaryPrimitives.ReadUInt32BigEndian(sample.AsSpan(inner, 4));
+                        if (innerSize < 8 || inner + innerSize > end)
+                        {
+                            break;
+                        }
+
+                        var innerName = Encoding.ASCII.GetString(sample, inner + 4, 4);
+                        var contentLength = innerSize - 8;
+                        if (innerName == "payl" && contentLength > 0 && contentLength < 5000)
+                        {
+                            var s = GetString(sample, inner + 8, contentLength).Trim();
+                            payloadText = payloadText == null ? s : payloadText + Environment.NewLine + s;
+                        }
+                        else if (innerName == "sttg" && contentLength > 0 && contentLength < 5000)
+                        {
+                            style = GetString(sample, inner + 8, contentLength).Trim();
+                        }
+
+                        inner += innerSize;
+                    }
+                }
+                // vtte = empty cue (gap marker), vtta = additional text - skip both
+
+                pos += boxSize;
+            }
+
+            if (string.IsNullOrEmpty(payloadText))
+            {
+                return;
+            }
+
+            var p = new Paragraph(payloadText, startMs, startMs + durationMs);
+            var positionInfo = WebVTT.GetPositionInfo(style);
+            if (!string.IsNullOrEmpty(positionInfo))
+            {
+                p.Text = positionInfo + p.Text;
+                p.Extra = style;
+                track.Subtitle.Header = "WEBVTT";
+            }
+
+            track.Subtitle.Paragraphs.Add(p);
+        }
+
+        private static void ReadStppSample(byte[] sample, double startMs, double durationMs, FragmentedTextTrack track)
+        {
+            var xml = Encoding.UTF8.GetString(sample);
+            foreach (var doc in Mp4TtmlHelper.SplitTtmlDocuments(xml))
+            {
+                var docParagraphs = Mp4TtmlHelper.ParseTtmlDocument(doc);
+                if (docParagraphs.Count == 0)
+                {
+                    continue;
+                }
+
+                if (Mp4TtmlHelper.AreTimesSampleRelative(docParagraphs, startMs, durationMs))
+                {
+                    foreach (var p in docParagraphs)
+                    {
+                        p.StartTime.TotalMilliseconds += startMs;
+                        p.EndTime.TotalMilliseconds += startMs;
+                    }
+                }
+
+                foreach (var p in docParagraphs)
+                {
+                    // documents repeat cues that span segment boundaries - add each cue once
+                    if (track.AddedTtmlCues.Add($"{p.StartTime.TotalMilliseconds:0}|{p.EndTime.TotalMilliseconds:0}|{p.Text}"))
+                    {
+                        track.Subtitle.Paragraphs.Add(p);
+                    }
+                }
+            }
+        }
+
+        private static void ReadTx3gSample(byte[] sample, double startMs, double durationMs, FragmentedTextTrack track)
+        {
+            if (durationMs <= 0)
+            {
+                return;
+            }
+
+            var text = Mp4TextSampleHelper.ReadTx3gSampleText(sample);
+            if (string.IsNullOrEmpty(text))
+            {
+                return;
+            }
+
+            track.Subtitle.Paragraphs.Add(new Paragraph(text, startMs, startMs + durationMs));
+        }
+
+        /// <summary>
+        /// "stxt"/"sbtt" text stream samples (ISO/IEC 14496-30) - the sample is the text
+        /// itself, with no 16-bit length in front of it like tx3g has.
+        /// </summary>
+        private static void ReadSimpleTextSample(byte[] sample, double startMs, double durationMs, FragmentedTextTrack track)
+        {
+            if (durationMs <= 0)
+            {
+                return;
+            }
+
+            var text = Mp4TextSampleHelper.ReadSimpleTextSample(sample);
+            if (string.IsNullOrEmpty(text))
+            {
+                return;
+            }
+
+            track.Subtitle.Paragraphs.Add(new Paragraph(text, startMs, startMs + durationMs));
+        }
+
+        private void ReadVttWithSize(FragmentedTextTrack track, Mdat mdat, List<TimeSegment> trunSamples, double timeScale)
         {
             var payloadIndex = 0;
-            var timeScale = Moov?.Mvhd?.TimeScale ?? 1000.0;
             foreach (var timeSegment in trunSamples)
             {
-                var before = timeTotalMs;
+                var before = track.LegacyTimeTotalMs;
                 if (timeSegment.Duration.HasValue)
                 {
-                    timeTotalMs += timeSegment.Duration.Value / timeScale * 1000.0;
+                    track.LegacyTimeTotalMs += timeSegment.Duration.Value / timeScale * 1000.0;
                 }
 
                 var timeSegmentSize = timeSegment.Size;
@@ -619,7 +1187,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4
 
                     if (timeSegment.Duration.HasValue && payload != null)
                     {
-                        AddVttParagraph(timeTotalMs, payload, before, style);
+                        AddVttParagraph(track, track.LegacyTimeTotalMs, payload, before, style);
                     }
 
                     while (payloadIndex + 1 < mdat.Vtts.Count && timeSegmentSize >= payloadSize + mdat.Vtts[payloadIndex + 1].PayloadSize)
@@ -630,7 +1198,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4
 
                         if (timeSegment.Duration.HasValue && payload != null)
                         {
-                            AddVttParagraph(timeTotalMs, payload, before, style);
+                            AddVttParagraph(track, track.LegacyTimeTotalMs, payload, before, style);
                         }
 
                         payloadSize += mdat.Vtts[payloadIndex].PayloadSize; // add 8
@@ -641,7 +1209,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4
             }
         }
 
-        private void AddVttParagraph(double timeTotalMs, string payload, double before, string style)
+        private static void AddVttParagraph(FragmentedTextTrack track, double timeTotalMs, string payload, double before, string style)
         {
             var p = new Paragraph(payload, before, timeTotalMs);
             var positionInfo = WebVTT.GetPositionInfo(style);
@@ -649,31 +1217,31 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4
             {
                 p.Text = positionInfo + p.Text;
                 p.Extra = style;
-                VttcSubtitle.Header = "WEBVTT";
+                track.Subtitle.Header = "WEBVTT";
             }
-            VttcSubtitle.Paragraphs.Add(p);
+
+            track.Subtitle.Paragraphs.Add(p);
         }
 
-        private void ReadVttWithoutSize(List<Vttc.VttData> vtts, List<TimeSegment> trunSamples, ref double timeTotalMs)
+        private static void ReadVttWithoutSize(FragmentedTextTrack track, List<Vttc.VttData> vtts, List<TimeSegment> trunSamples, double timeScale)
         {
             if (vtts == null || trunSamples.Count <= 0 || trunSamples.Count < vtts.Count)
             {
                 return;
             }
 
-            var timeScale = Moov?.Mvhd?.TimeScale ?? 1000.0;
             var sampleIdx = 0;
             foreach (var vtt in vtts)
             {
-                var presentation = Moof.Traf.Trun.Samples[sampleIdx];
+                var presentation = trunSamples[sampleIdx];
                 if (presentation.Duration.HasValue)
                 {
-                    var before = timeTotalMs;
-                    timeTotalMs += presentation.Duration.Value / timeScale * 1000.0;
+                    var before = track.LegacyTimeTotalMs;
+                    track.LegacyTimeTotalMs += presentation.Duration.Value / timeScale * 1000.0;
                     sampleIdx++;
                     if (vtt.Payload != null)
                     {
-                        VttcSubtitle.Paragraphs.Add(new Paragraph(vtt.Payload, before, timeTotalMs));
+                        track.Subtitle.Paragraphs.Add(new Paragraph(vtt.Payload, before, track.LegacyTimeTotalMs));
                     }
                 }
             }

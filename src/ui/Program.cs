@@ -1,5 +1,6 @@
 using Avalonia;
 using Avalonia.Automation;
+using Avalonia.Automation.Peers;
 using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml.Styling;
@@ -185,6 +186,9 @@ namespace Nikse.SubtitleEdit
                 // Set current theme
                 UiTheme.SetCurrentTheme();
 
+                // Type-to-search in all drop-downs (e.g. typing "Ar" selects "Arial")
+                UiUtil.EnableComboBoxTypeSearch();
+
                 // Setup main window (Batch Convert standalone if requested via CLI)
                 if (HasBatchConvertUiArg(args))
                 {
@@ -250,6 +254,18 @@ namespace Nikse.SubtitleEdit
                 {
                     Setters = { new Setter(AutomationProperties.NameProperty, Se.Language.General.ResizePanels) },
                 });
+
+                // NumericUpDown's inner text box is what actually holds keyboard focus. Screen
+                // readers deliberately stay quiet when a plain edit control's value changes (the
+                // caret events cover it in a real text field), so Up/Down stepping is inaudible;
+                // announced as a spinner, every value change is spoken (#12087).
+                b.Instance.Styles.Add(new Style(x => x.OfType<NumericUpDown>().Descendant().OfType<TextBox>())
+                {
+                    Setters = { new Setter(AutomationProperties.ControlTypeOverrideProperty, AutomationControlType.Spinner) },
+                });
+
+                // Make combo box / spinner value changes audible to screen readers (#12087).
+                ScreenReaderAnnouncements.Initialize();
 
                 // Set application name
                 b.Instance.Name = AppName;

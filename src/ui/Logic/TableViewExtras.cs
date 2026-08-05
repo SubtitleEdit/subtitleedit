@@ -1,6 +1,7 @@
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
+using Avalonia.Controls.Templates;
 using Avalonia.Data;
 using Avalonia.Input;
 using Avalonia.Layout;
@@ -8,6 +9,7 @@ using Avalonia.Media;
 using Avalonia.Styling;
 using Avalonia.Threading;
 using Avalonia.VisualTree;
+using Nikse.SubtitleEdit.Logic.ValueConverters;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -240,6 +242,8 @@ public sealed class TableViewColumnManager
 /// </summary>
 public static class TableViewExtras
 {
+    private static readonly TextToFlowDirectionConverter TextToFlowDirection = new();
+
     /// <summary>
     /// Creates a TableView with SE's standard look and behavior (multi-select by
     /// default, resizable columns, tight row style).
@@ -268,7 +272,87 @@ public static class TableViewExtras
         };
 
         UiUtil.ApplyTableViewRowStyle(tableView);
+
+        // SelectionMode.AlwaysSelected picks row 0 the moment ItemsSource is assigned, but that
+        // pick only reaches the internal selection model (and SelectedItem/SelectedIndex) - the
+        // SelectedItems collection stays empty and no SelectionChanged is raised. Repair it
+        // (#13230), see SyncSelectedItemsWithSelection.
+        tableView.PropertyChanged += (_, e) =>
+        {
+            if (e.Property == ItemsControl.ItemsSourceProperty)
+            {
+                SyncSelectedItemsWithSelection(tableView);
+            }
+        };
+
+        // Home/End/PageUp/PageDown (and Ctrl+Home/End) list navigation in every grid (#13194).
+        // Handlers attached earlier in the routing path (window-level tunnel handlers, shortcut
+        // dispatch) still win; this is the fallback when nothing else handled the key.
+        AttachListNavigation(tableView);
+
         return tableView;
+    }
+
+    /// <summary>
+    /// Puts the rows the control considers selected into its <see cref="SelectingItemsControl.SelectedItems"/>
+    /// collection when that collection is empty but the selection model is not.
+    /// <para>
+    /// <see cref="SelectionMode.AlwaysSelected"/> selects row 0 as soon as ItemsSource is assigned
+    /// to a populated collection. That selection reaches the selection model - the row is drawn
+    /// highlighted and SelectedItem/SelectedIndex point at it - but SelectedItems is left empty and
+    /// no SelectionChanged is raised, and neither a layout pass nor a Selection.Clear()/Select(0)
+    /// repairs it; only moving the selection to a different row does. Everything in Subtitle Edit
+    /// reads the selection through SelectedItems, so the grid showed row 1 highlighted while the
+    /// app saw nothing selected: the edit box, Show and Duration went blank the moment anything
+    /// re-read the selection, and a shift-selection starting at row 1 silently left row 1 out of
+    /// every operation (issue #13230).
+    /// </para>
+    /// </summary>
+    public static void SyncSelectedItemsWithSelection(TableView tableView)
+    {
+        var selectedItems = tableView.SelectedItems;
+        if (selectedItems == null || selectedItems.Count > 0)
+        {
+            return;
+        }
+
+        var selection = tableView.Selection;
+        if (selection.Count == 0)
+        {
+            return;
+        }
+
+        foreach (var item in selection.SelectedItems)
+        {
+            if (item != null)
+            {
+                selectedItems.Add(item);
+            }
+        }
+    }
+
+    /// <summary>
+    /// A read-only text cell whose flow direction follows its own content, the way the
+    /// main subtitle grid's text cells do. Use it for every column showing subtitle text
+    /// instead of the column's plain <c>Binding</c>.
+    /// <para>
+    /// A plain binding leaves the cell with the window's left-to-right direction, and
+    /// Avalonia then lays a right-to-left line out under a left-to-right base direction:
+    /// the line is cut at every zero width non-joiner (U+200C, bidi class BN, which
+    /// Avalonia leaves at the paragraph level instead of giving it the surrounding
+    /// right-to-left level) and the resulting runs are placed left to right. Persian and
+    /// Arabic words written with a ZWNJ are torn in half and the word order is reversed
+    /// (issue #13160).
+    /// </para>
+    /// </summary>
+    public static IDataTemplate MakeTextCellTemplate(string propertyPath)
+    {
+        return new FuncDataTemplate<object>((_, _) => new TextBlock
+        {
+            VerticalAlignment = VerticalAlignment.Center,
+            [!TextBlock.TextProperty] = new Binding(propertyPath) { Mode = BindingMode.OneWay },
+            [!TextBlock.FlowDirectionProperty] = new Binding(propertyPath) { Converter = TextToFlowDirection, Mode = BindingMode.OneWay },
+        });
     }
 
     /// <summary>

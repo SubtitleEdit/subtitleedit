@@ -1,7 +1,6 @@
 ﻿using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.Interfaces;
 using System;
-using System.Text;
 
 namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
 {
@@ -22,7 +21,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                 Paragraph prev = subtitle.GetParagraphOrDefault(i - 1);
 
                 string oldText = p.Text;
-                string fixedText = DoFix(new Paragraph(p), prev, callbacks.Encoding, callbacks.Language);
+                string fixedText = DoFix(new Paragraph(p), prev, callbacks);
 
                 if (oldText != fixedText && callbacks.AllowFix(p, fixAction))
                 {
@@ -34,8 +33,11 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
             callbacks.UpdateFixStatus(fixedStartWithUppercaseLetterAfterParagraphTicked, fixAction);
         }
 
-        private static string DoFix(Paragraph p, Paragraph prev, Encoding encoding, string language)
+        private static string DoFix(Paragraph p, Paragraph prev, IFixCallbacks callbacks)
         {
+            var encoding = callbacks.Encoding;
+            var language = callbacks.Language;
+
             if (p.Text != null && p.Text.Length > 1)
             {
                 string text = p.Text;
@@ -101,10 +103,9 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                 if (!isUrl && !char.IsDigit(firstLetter) && isPrevEndOfLine &&
                     (char.IsLower(firstLetter) || Helper.IsTurkishLittleI(firstLetter, encoding, language) || DutchCasing.IsDutch(language)))
                 {
-                    bool isMatchInKnowAbbreviations = language == "en" &&
-                        (prevText.EndsWith(" o.r.", StringComparison.Ordinal) ||
-                         prevText.EndsWith(" a.m.", StringComparison.Ordinal) ||
-                         prevText.EndsWith(" p.m.", StringComparison.Ordinal));
+                    // The previous subtitle can end in an abbreviation ("Ik sprak met dhr.") and
+                    // then this one continues the same sentence - do not capitalize it (#13082).
+                    bool isMatchInKnowAbbreviations = Helper.EndsWithAbbreviation(prevText, callbacks);
 
                     if (!isMatchInKnowAbbreviations)
                     {
@@ -186,10 +187,8 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                         isPrevEndOfLine &&
                         (char.IsLower(firstLetter) || Helper.IsTurkishLittleI(firstLetter, encoding, language) || DutchCasing.IsDutch(language)))
                     {
-                        bool isMatchInKnowAbbreviations = language == "en" &&
-                            (prevText.EndsWith(" o.r.", StringComparison.Ordinal) ||
-                             prevText.EndsWith(" a.m.", StringComparison.Ordinal) ||
-                             prevText.EndsWith(" p.m.", StringComparison.Ordinal));
+                        // Same as above, but for line one ending in an abbreviation.
+                        bool isMatchInKnowAbbreviations = Helper.EndsWithAbbreviation(prevText, callbacks);
 
                         if (!isMatchInKnowAbbreviations)
                         {

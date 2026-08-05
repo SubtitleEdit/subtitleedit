@@ -261,15 +261,15 @@ public static class LlamaCppDownloadHelper
         string message;
         if (!engineInstalled && !modelInstalled)
         {
-            message = "llama.cpp requires the llama-server engine and a translation model to be downloaded. Download now?";
+            message = Se.Language.Translate.LlamaCppDownloadEngineAndModelPrompt;
         }
         else if (!engineInstalled)
         {
-            message = "llama.cpp requires the llama-server engine to be downloaded. Download now?";
+            message = Se.Language.Translate.LlamaCppDownloadEnginePrompt;
         }
         else
         {
-            message = "llama.cpp requires the selected translation model to be downloaded. Download now?";
+            message = Se.Language.Translate.LlamaCppDownloadModelPrompt;
         }
 
         var answer = await MessageBox.Show(

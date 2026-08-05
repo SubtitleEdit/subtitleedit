@@ -59,6 +59,25 @@ See also: [Shortcuts Settings](../features/shortcuts.md)
 | F8 / Shift+F8 | Go to next / previous error |
 | Alt+F7 | Spell check |
 
+## Source View
+
+Inside the [source view](../features/source-view.md) window (F2), which edits the raw subtitle text. These are fixed, not configurable in Options → Shortcuts.
+
+| Shortcut | Action |
+|----------|--------|
+| Ctrl+F | Find in the source |
+| Ctrl+H | Replace in the source (Cmd+Alt+F also works on macOS) |
+| F3 / Shift+F3 | Find next / previous |
+| Ctrl+G | Go to line number |
+| Alt+Up / Alt+Down | Move the current line or selected block up / down |
+| Ctrl+D | Duplicate the current line or selected block |
+| Ctrl+Shift+K | Delete the current line |
+| Ctrl+Backspace | Delete the word before the caret |
+| Ctrl+Delete | Delete the word after the caret |
+| Escape | Close the search bar, then the window |
+
+> **Note:** On macOS the word deletes use Option+Backspace / Option+Delete, matching the platform. Alt+Up / Alt+Down are the same everywhere.
+
 ## Video Playback
 
 | Shortcut | Action |
@@ -79,7 +98,11 @@ See also: [Shortcuts Settings](../features/shortcuts.md)
 |----------|--------|
 | F11 | Set start time |
 | F12 | Set end time |
-| F10 | Set end time and go to next line |
+
+"Set end time and go to next line" has no default shortcut: bare F10 activates the
+main menu bar (the Windows standard). Assign F10 to the action in Options →
+Shortcuts if you prefer the Subtitle Edit 4 behavior — a user-assigned shortcut
+wins over the menu activation.
 
 ## Waveform
 

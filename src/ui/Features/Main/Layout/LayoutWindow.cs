@@ -6,6 +6,7 @@ using Avalonia.Media;
 using Avalonia.Media.Imaging;
 using Avalonia.Platform;
 using Nikse.SubtitleEdit.Logic;
+using Nikse.SubtitleEdit.Logic.Config;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -23,7 +24,7 @@ public class LayoutWindow : Window
     {
         UiUtil.InitializeWindow(this, GetType().Name);
         _vm = viewViewModel;
-        Title = "Choose layout";
+        Title = Se.Language.Options.Shortcuts.GeneralChooseLayout;
         Width = 925;
         Height = 500;
         CanResize = false;

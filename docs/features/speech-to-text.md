@@ -37,13 +37,15 @@ Engines and models are downloaded automatically on first use.
 
 ## Language-specific models
 
-Some backends offer models fine-tuned for one language, which usually beat the general model on that language. They are listed in the normal model dropdown once the matching Crisp ASR backend is selected. For Japanese:
+Some backends offer models fine-tuned for one language, which usually beat the general model on that language.
+
+These models live under the **Crisp ASR** engine, not under the standalone Qwen3 ASR CPP engine. To reach them, set **Engine** to *Crisp ASR*, then pick the backend from the Crisp ASR backend dropdown - the model list updates to that backend's models. For Japanese:
 
 | Backend | Model | Notes |
 |---------|-------|-------|
-| Crisp ASR Qwen3 | `qwen3-asr-1.7b-ja-anime` | Fine-tuned on anime / visual novel speech - the best starting point for anime audio |
-| Crisp ASR Cohere | `cohere-asr-ja` | Japanese fine-tune covering general and anime domains |
-| Crisp ASR Parakeet | `parakeet-tdt-0.6b-ja` | Fast Japanese model |
+| Crisp ASR Qwen3 | `qwen3-asr-1.7b-ja-anime-q8_0.gguf` (or `-q4_k.gguf`) | Fine-tuned on anime / visual novel speech - the best starting point for anime audio |
+| Crisp ASR Cohere | `cohere-asr-ja-q8_0.gguf` (also q4_k / q6_k / f16) | Japanese fine-tune covering general and anime domains |
+| Crisp ASR Parakeet | `parakeet-tdt-0.6b-ja-q8_0.gguf` (also q4_k / unquantized) | Fast Japanese model |
 
 The general `qwen3-asr-1.7b` and Whisper `large-v3-turbo` models are also strong on Japanese if you prefer a single model for mixed content.
 

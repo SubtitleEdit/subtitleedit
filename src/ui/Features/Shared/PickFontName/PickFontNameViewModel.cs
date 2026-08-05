@@ -32,6 +32,9 @@ public partial class PickFontNameViewModel : ObservableObject, IClosingCleanup
 
     public bool OkPressed { get; private set; }
 
+    /// <summary>Set when the pick came from the "Collected fonts" tab - such a font has a file callers can embed.</summary>
+    public CollectedFont? SelectedCollectedFont { get; private set; }
+
     private List<string> _allFontNames;
     private readonly List<CollectedFont> _allCollectedFonts;
     private readonly System.Timers.Timer _timerUpdate;
@@ -224,6 +227,11 @@ public partial class PickFontNameViewModel : ObservableObject, IClosingCleanup
         if (!string.IsNullOrEmpty(fontName))
         {
             SelectedFontName = fontName;
+
+            if (SelectedTabIndex == 1)
+            {
+                SelectedCollectedFont = _allCollectedFonts.Find(f => f.Name.Equals(fontName, StringComparison.OrdinalIgnoreCase));
+            }
         }
 
         OkPressed = true;

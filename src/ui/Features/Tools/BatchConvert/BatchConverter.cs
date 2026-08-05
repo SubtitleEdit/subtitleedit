@@ -64,6 +64,10 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
     private BatchConvertConfig _config;
     private List<SubtitleFormat> _subtitleFormats;
 
+    // Font-name -> found font files, shared across the items of one batch run so the
+    // "Embed fonts" function does not rescan the font folders for every file.
+    private readonly Dictionary<string, List<string>> _fontFilesCache = new(StringComparer.OrdinalIgnoreCase);
+
     public SubtitleFormat Format { get; set; } = new SubRip();
 
     public Encoding Encoding { get; set; } = Encoding.UTF8;
@@ -92,6 +96,7 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
     {
         _config = config;
         _subtitleFormats = SubtitleFormatHelper.GetSubtitleFormatsWithFavoritesAtTop();
+        _fontFilesCache.Clear();
     }
 
     /// <summary>
@@ -443,6 +448,17 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
             if (paragraphs.Count > 0)
             {
                 result.Add(new TransportStreamResult { IsImage = false, Subtitle = new Subtitle(paragraphs) });
+            }
+        }
+
+        foreach (var aribPid in tsParser.AribSubtitlesLookup)
+        {
+            foreach (var language in aribPid.Value)
+            {
+                if (language.Value.Count > 0)
+                {
+                    result.Add(new TransportStreamResult { IsImage = false, Subtitle = new Subtitle(language.Value) });
+                }
             }
         }
 
@@ -1535,6 +1551,13 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
                         s.Header = _config.AssaHeader;
                         s.Footer = _config.AssaFooter;
                     }
+                }
+
+                // After the header/footer template above, so fonts are collected from the
+                // styles that are actually written and the embedding is not overwritten.
+                if (_config.AssaEmbedFonts.IsActive)
+                {
+                    AssaFontEmbedder.EmbedUsedFonts(s, cancellationToken, _fontFilesCache);
                 }
             }
 

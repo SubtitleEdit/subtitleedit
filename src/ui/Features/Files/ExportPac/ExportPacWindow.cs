@@ -1,6 +1,7 @@
 using Avalonia.Controls;
 using Avalonia.Layout;
 using Nikse.SubtitleEdit.Logic;
+using Nikse.SubtitleEdit.Logic.Config;
 
 namespace Nikse.SubtitleEdit.Features.Files.ExportPac;
 
@@ -9,7 +10,7 @@ public class ExportPacWindow : Window
     public ExportPacWindow(ExportPacViewModel vm)
     {
         UiUtil.InitializeWindow(this, GetType().Name);
-        Title = "Export Pac";
+        Title = Se.Language.Options.Shortcuts.FileExportPac;
         SizeToContent = SizeToContent.WidthAndHeight;
         CanResize = false;
         vm.Window = this;

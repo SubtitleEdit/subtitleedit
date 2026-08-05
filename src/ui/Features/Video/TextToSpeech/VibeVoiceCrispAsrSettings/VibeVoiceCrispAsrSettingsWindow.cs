@@ -21,7 +21,7 @@ public class VibeVoiceCrispAsrSettingsWindow : Window
     public VibeVoiceCrispAsrSettingsWindow(VibeVoiceCrispAsrSettingsViewModel vm)
     {
         UiUtil.InitializeWindow(this, GetType().Name);
-        Title = "VibeVoice (CrispASR) settings";
+        Title = string.Format(Se.Language.Video.TtsCrispAsrSettingsTitle, "VibeVoice");
         SizeToContent = SizeToContent.WidthAndHeight;
         CanResize = false;
         MinWidth = 580;
@@ -110,7 +110,7 @@ public class VibeVoiceCrispAsrSettingsWindow : Window
             RowSpacing = 10,
         };
 
-        grid.Add(MakeLabel("Engine"), 0, 0);
+        grid.Add(MakeLabel(Se.Language.General.Engine), 0, 0);
         var enginePanel = MakeStatusPanel(nameof(vm.EngineBrush), nameof(vm.EngineLabel));
         var engineButton = UiUtil.MakeButton(string.Empty, vm.RedownloadEngineCommand)
             .WithIconLeft(IconNames.Download)
@@ -128,7 +128,7 @@ public class VibeVoiceCrispAsrSettingsWindow : Window
         grid.Add(MakeLabel("1.5B " + VibeVoiceCrispAsr.ModelKeyF16), 3, 0);
         grid.Add(MakeStatusPanel(nameof(vm.TalkerF16Brush), nameof(vm.TalkerF16Label)), 3, 1);
 
-        grid.Add(MakeLabel("Voices"), 4, 0);
+        grid.Add(MakeLabel(Se.Language.Video.Voices), 4, 0);
         var voicesText = new TextBlock
         {
             VerticalAlignment = VerticalAlignment.Center,

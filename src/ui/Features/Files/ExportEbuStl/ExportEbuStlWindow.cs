@@ -13,7 +13,7 @@ public class ExportEbuStlWindow : Window
     public ExportEbuStlWindow(ExportEbuStlViewModel vm)
     {
         UiUtil.InitializeWindow(this, GetType().Name);
-        Title = "Export EBU STL";
+        Title = Se.Language.Options.Shortcuts.FileExportEbuStl;
         SizeToContent = SizeToContent.WidthAndHeight;
         CanResize = false;
         vm.Window = this;

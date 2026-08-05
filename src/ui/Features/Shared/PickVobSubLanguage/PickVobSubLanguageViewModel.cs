@@ -5,6 +5,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Nikse.SubtitleEdit.Core.VobSub;
 using Nikse.SubtitleEdit.Logic;
+using Nikse.SubtitleEdit.Logic.Config;
 using SkiaSharp;
 using System;
 using System.Collections.Generic;
@@ -47,7 +48,7 @@ public partial class PickVobSubLanguageViewModel : ObservableObject
     {
         _streamIdDictionary = streamIdDictionary;
         _palette = palette;
-        WindowTitle = "Pick VobSub language - " + Path.GetFileName(fileName);
+        WindowTitle = string.Format(Se.Language.General.PickVobSubLanguageTitle, Path.GetFileName(fileName));
 
         foreach (var streamId in streamIdDictionary.Keys.OrderBy(k => k))
         {

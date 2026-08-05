@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Polskie skróty – kropka w tym przypadku kończy skrót, a nie zdanie, więc w przypadku "Napraw pospolite błędy" 
+  nie należy pisać kolejnego słowa wielką literą (problem nr 13082). Porównanie nie uwzględnia wielkości liter,
+  więc wystarczy jeden wpis na każdy skrót. Skróty z kropką wewnętrzną (np. "a.m.") są już ogólnie rozpoznawane 
+  i nie ma potrzeby ich tutaj uwzględniać.
+-->
+<Abbreviations>
+  <Item>adm.</Item>
+  <Item>al.</Item>
+  <Item>art.</Item>
+  <Item>asp.</Item>
+  <Item>bm.</Item>
+  <Item>br.</Item>
+  <Item>bł.</Item>
+  <Item>bsm.</Item>
+  <Item>bryg.</Item>
+  <Item>cd.</Item>
+  <Item>cdn.</Item>
+  <Item>cnd.</Item>
+  <Item>chor.</Item>
+  <Item>czw.</Item>
+  <Item>def.</Item>
+  <Item>dn.</Item>
+  <Item>doc.</Item>
+  <Item>dol.</Item>
+  <Item>dot.</Item>
+  <Item>dow.</Item>
+  <Item>ds.</Item>
+  <Item>dz.</Item>
+  <Item>ew.</Item>
+  <Item>gr.</Item>
+  <Item>gen.</Item>
+  <Item>gim.</Item>
+  <Item>gm.</Item>
+  <Item>godz.</Item>
+  <Item>hm.</Item>
+  <Item>inż.</Item>
+  <Item>itd.</Item>
+  <Item>itp.</Item>
+  <Item>jn.</Item>
+  <Item>jw.</Item>
+  <Item>kadm.</Item>
+  <Item>kard.</Item>
+  <Item>kat.</Item>
+  <Item>kl.</Item>
+  <Item>kol.</Item>
+  <Item>kpl.</Item>
+  <Item>kpt.</Item>
+  <Item>kpr.</Item>
+  <Item>ks.</Item>
+  <Item>kw.</Item>
+  <Item>lic.</Item>
+  <Item>lp.</Item>
+  <Item>mec.</Item>
+  <Item>min.</Item>
+  <Item>niedz.</Item>
+  <Item>nd.</Item>
+  <Item>np.</Item>
+  <Item>nt.</Item>
+  <Item>nw.</Item>
+  <Item>ok.</Item>
+  <Item>os.</Item>
+  <Item>P.</Item>
+  <Item>par.</Item>
+  <Item>płd.</Item>
+  <Item>płn.</Item>
+  <Item>pn.</Item>
+  <Item>pon.</Item>
+  <Item>pow.</Item>
+  <Item>por.</Item>
+  <Item>poz.</Item>
+  <Item>ppor.</Item>
+  <Item>pt.</Item>
+  <Item>pw.</Item>
+  <Item>prof.</Item>
+  <Item>red.</Item>
+  <Item>rtm.</Item>
+  <Item>ryc.</Item>
+  <Item>rys.</Item>
+  <Item>sek.</Item>
+  <Item>sob.</Item>
+  <Item>SP.</Item>
+  <Item>str.</Item>
+  <Item>szer.</Item>
+  <Item>śr.</Item>
+  <Item>św.</Item>
+  <Item>tj.</Item>
+  <Item>tys.</Item>
+  <Item>tzn.</Item>
+  <Item>tzw.</Item>
+  <Item>ul.</Item>
+  <Item>ur.</Item>
+  <Item>ust.</Item>
+  <Item>woj.</Item>
+  <Item>WP.</Item>
+  <Item>wsch.</Item>
+  <Item>wt.</Item>
+  <Item>ww.</Item>
+  <Item>wz.</Item>
+  <Item>zach.</Item>
+  <Item>zał.</Item>
+  <Item>zm.</Item>
+  <Item>zob.</Item>
+</Abbreviations>

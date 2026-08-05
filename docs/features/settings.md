@@ -52,6 +52,11 @@ Profiles store subtitle rules and limits. You can switch between profiles for di
 - **Force CR+LF on save** — Use Windows-style line endings
 - **Auto-trim whitespace** — Remove trailing spaces
 
+## Tools
+
+- **Merge lines: keep end time (allow overlap with next subtitle)** — Normally, merging lines ("Merge with line before/after" or merging a selection) trims the merged line so it ends just before the next subtitle starts. Enable this to keep the original end time of the last merged line, even if the merged subtitle then overlaps the next one. Off by default.
+- **Merge lines: keep end time only for "Advanced Sub Station Alpha"** — Limits the option above to ASSA files, where overlapping events are a normal part of the format (e.g., signs or effects shown on top of dialog). Uncheck to keep end times when merging in any format. On by default.
+
 ## Video Player (MPV Preview)
 
 - **Font** — Subtitle preview font name, size, and bold

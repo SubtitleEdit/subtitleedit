@@ -87,7 +87,7 @@ public class BatchConvertAssaWindow : Window
             RowSpacing = 5,
         };
         
-        var labelAssaSource = UiUtil.MakeLabel("ASSA source").WithBold();
+        var labelAssaSource = UiUtil.MakeLabel(Se.Language.Tools.BatchConvert.AssaSource).WithBold();
         var contentBorder = new Border
         {
             VerticalAlignment = VerticalAlignment.Stretch,

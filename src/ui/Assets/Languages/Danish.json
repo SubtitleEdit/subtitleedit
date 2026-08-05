@@ -836,7 +836,7 @@
     "undoPerformed": "Fortryd udført",
     "undoPerformedXActionLeft": "Fortryd udført (handlinger tilbage: {0})",
     "xLinesCopiedFromOriginal": "{0} linjer kopieret fra original undertekst",
-    "xLinesMerged": "X linjer slået sammen",
+    "xLinesMerged": "{0} linjer slået sammen",
     "xLinesSelectedOfY": "{0} linjer valgt af {1}",
     "xLinesSwitched": "{0} linjer skiftet",
     "xShotChangedLoaded": "{0} sceneskift blev indlæst",

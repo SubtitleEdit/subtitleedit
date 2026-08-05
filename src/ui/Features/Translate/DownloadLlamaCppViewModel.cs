@@ -91,7 +91,7 @@ public partial class DownloadLlamaCppViewModel : ObservableObject
 
                 if (LlamaCppDownloadService.VariantNeedsCudaRuntime(Variant))
                 {
-                    TitleText = string.Format(Se.Language.General.DownloadingX, "CUDA runtime");
+                    TitleText = string.Format(Se.Language.General.DownloadingX, Se.Language.General.CudaRuntime);
                     using var cudartStream = new MemoryStream();
                     await _downloadService.DownloadCudaRuntime(cudartStream, Variant, MakeProgress(), token);
                     if (token.IsCancellationRequested)
@@ -100,7 +100,7 @@ public partial class DownloadLlamaCppViewModel : ObservableObject
                         return;
                     }
 
-                    TitleText = string.Format(Se.Language.General.UnpackingX, "CUDA runtime");
+                    TitleText = string.Format(Se.Language.General.UnpackingX, Se.Language.General.CudaRuntime);
                     cudartStream.Position = 0;
                     _zipUnpacker.UnpackZipStream(cudartStream, folder, string.Empty, true, new List<string>(), null);
                 }
@@ -160,7 +160,7 @@ public partial class DownloadLlamaCppViewModel : ObservableObject
         }
         catch (Exception ex)
         {
-            ProgressText = "Download failed";
+            ProgressText = Se.Language.General.DownloadFailed;
             Error = ex.Message;
             Se.LogError(ex, "Error downloading llama.cpp");
         }

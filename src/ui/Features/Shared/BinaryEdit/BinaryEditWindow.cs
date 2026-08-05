@@ -208,17 +208,17 @@ public class BinaryEditWindow : Window
                         },
                         new MenuItem
                         {
-                            Header = "IMSC 1.1 image profile",
+                            Header = Se.Language.File.Export.TitleExportImscImage,
                             Command = vm.ExportImscImageCommand,
                         },
                         new MenuItem
                         {
-                            Header = "DOST/png",
+                            Header = Se.Language.File.Export.TitleExportDostPng,
                             Command = vm.ExportDostPngCommand,
                         },
                         new MenuItem
                         {
-                            Header = "Final Cut Pro + image",
+                            Header = Se.Language.File.Export.TitleExportFcpImage,
                             Command = vm.ExportFcpPngCommand,
                         },
                         new MenuItem
@@ -238,7 +238,7 @@ public class BinaryEditWindow : Window
                         },
                         new MenuItem
                         {
-                            Header = "WebVTT png",
+                            Header = Se.Language.File.Export.TitleExportWebVttThumbnails,
                             Command = vm.ExportWebVttThumbnailCommand,
                         },
                     }
@@ -427,6 +427,13 @@ public class BinaryEditWindow : Window
 
         // Grid for subtitle lines (grid lines come from the TableView cell themes)
         var dataGrid = TableViewExtras.MakeTableView();
+
+        // TableView itself is not focusable by default, and without rows there are no focusable
+        // row containers either - the grid must be able to hold keyboard focus even when empty,
+        // both as the menu-deactivation fallback and so the window never ends up without any
+        // focusable content (same fix as the main subtitle grid, #13111).
+        dataGrid.Focusable = true;
+
         dataGrid.Height = double.NaN;
         dataGrid.FontSize = Se.Settings.Appearance.SubtitleGridFontSize;
 

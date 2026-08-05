@@ -32,12 +32,19 @@ public class SeVideoTextToSpeech
     public string Qwen3TtsCppVulkanPath { get; set; }
     public string Qwen3TtsCppInstruction { get; set; }
     public string Qwen3TtsCrispAsrModel { get; set; }
+    // Display name of the picked Qwen3-TTS output language ("Auto" = let the model infer it).
+    public string Qwen3TtsCrispAsrLanguage { get; set; }
     public string VibeVoiceCrispAsrModel { get; set; }
     public double VibeVoiceCrispAsrSpeed { get; set; }
     public string IndexTtsCrispAsrModel { get; set; }
     public double IndexTtsCrispAsrSpeed { get; set; }
     public string CosyVoice3CrispAsrModel { get; set; }
     public double CosyVoice3CrispAsrSpeed { get; set; }
+    // Display name of the picked CosyVoice3 target language ("Auto" = plain zero-shot cloning).
+    public string CosyVoice3CrispAsrLanguage { get; set; }
+    // ISO code of the language spoken in imported reference WAVs (empty = let the server detect).
+    // Sent as `source_lang` so cross-lingual cloning engages for Latin-script references too.
+    public string CosyVoice3CrispAsrSourceLanguage { get; set; }
     public string F5TtsCrispAsrModel { get; set; }
     public double F5TtsCrispAsrSpeed { get; set; }
     public string OmniVoiceCrispAsrModel { get; set; }
@@ -125,12 +132,15 @@ public class SeVideoTextToSpeech
         Qwen3TtsCppVulkanPath = string.Empty;
         Qwen3TtsCppInstruction = string.Empty;
         Qwen3TtsCrispAsrModel = "1.7B VoiceDesign";
+        Qwen3TtsCrispAsrLanguage = string.Empty;
         VibeVoiceCrispAsrModel = "Q8_0 (~2.8 GB)";
         VibeVoiceCrispAsrSpeed = 1.1;
         IndexTtsCrispAsrModel = "Q8_0 (~870 MB)";
         IndexTtsCrispAsrSpeed = 1.0;
         CosyVoice3CrispAsrModel = "Q4_K (~1.6 GB total)";
         CosyVoice3CrispAsrSpeed = 1.0;
+        CosyVoice3CrispAsrLanguage = string.Empty;
+        CosyVoice3CrispAsrSourceLanguage = string.Empty;
         F5TtsCrispAsrModel = "F16 (~953 MB)";
         F5TtsCrispAsrSpeed = 1.0;
         OmniVoiceCrispAsrModel = "Q4_K (~1 GB)";

@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Spanish abbreviations - a period here ends an abbreviation, not a sentence, so "Fix common
+  errors" must not capitalize the following word (issue #13082). Matching is case insensitive,
+  so one entry per abbreviation is enough. Abbreviations with an inner period (e.g. "a.m.") are
+  already recognized by a general rule and need no entry here.
+-->
+<Abbreviations>
+  <Item>aprox.</Item>
+  <Item>Arq.</Item>
+  <Item>art.</Item>
+  <Item>av.</Item>
+  <Item>cap.</Item>
+  <Item>Cnel.</Item>
+  <Item>Dr.</Item>
+  <Item>Dra.</Item>
+  <Item>Dña.</Item>
+  <Item>ej.</Item>
+  <Item>etc.</Item>
+  <Item>Gral.</Item>
+  <Item>Ing.</Item>
+  <Item>Lic.</Item>
+  <Item>Mtra.</Item>
+  <Item>Mtro.</Item>
+  <Item>máx.</Item>
+  <Item>mín.</Item>
+  <Item>núm.</Item>
+  <Item>Pl.</Item>
+  <Item>Prof.</Item>
+  <Item>pág.</Item>
+  <Item>ref.</Item>
+  <Item>Sr.</Item>
+  <Item>Sra.</Item>
+  <Item>Srta.</Item>
+  <Item>Sta.</Item>
+  <Item>Sto.</Item>
+  <Item>tel.</Item>
+  <Item>Tte.</Item>
+  <Item>Ud.</Item>
+  <Item>Uds.</Item>
+  <Item>Vd.</Item>
+  <Item>Vds.</Item>
+  <Item>vol.</Item>
+</Abbreviations>

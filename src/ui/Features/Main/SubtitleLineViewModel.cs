@@ -113,17 +113,25 @@ public partial class SubtitleLineViewModel : ObservableObject
 
     public SubtitleLineViewModel(SubtitleLineViewModel p, bool generateNewId = false)
     {
-        Text = p.Text;
-        OriginalText = p.OriginalText;
-        StartTime = p.StartTime;
-        EndTime = p.EndTime;
-        UpdateDuration();
+        // The observable properties are written as backing fields, not through their setters.
+        // Nothing can be subscribed to an object still inside its own constructor, so every
+        // notification the setters raise is discarded - but ObservableObject allocates a
+        // PropertyChanging/PropertyChangedEventArgs for each one anyway, and the Text and
+        // StartTime/EndTime setters fan out to a dozen more raises via their partial hooks.
+        // That was ~40 dead allocations per line, and undo snapshots this whole collection
+        // (issue #13234). The hooks are notification-only apart from UpdateDuration, which is
+        // what _duration is set to below.
+        _text = p.Text;
+        _originalText = p.OriginalText;
+        _startTime = p.StartTime;
+        _endTime = p.EndTime;
+        _duration = p.EndTime - p.StartTime;
+        _style = p.Style;
+        _actor = p.Actor;
+        _layer = p.Layer;
+        _number = p.Number;
         Language = p.Language;
         Region = p.Region;
-        Style = p.Style;
-        Actor = p.Actor;
-        Layer = p.Layer;
-        Number = p.Number;
         Extra = p.Extra;
         Effect = p.Effect;
         IsComment = p.IsComment;
@@ -132,7 +140,7 @@ public partial class SubtitleLineViewModel : ObservableObject
         MarginV = p.MarginV;
         NewSection = p.NewSection;
         Forced = p.Forced;
-        Bookmark = p.Bookmark;
+        _bookmark = p.Bookmark;
 
         Id = generateNewId ? Guid.NewGuid() : p.Id;
 

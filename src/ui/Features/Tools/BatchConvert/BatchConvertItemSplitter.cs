@@ -64,6 +64,32 @@ public class BatchConvertTransportStreamSplitter : IBatchConvertItemSplitter
             }
         }
 
+        foreach (var aribPid in tsParser.AribSubtitlesLookup)
+        {
+            foreach (var language in aribPid.Value)
+            {
+                if (language.Value.Count == 0)
+                {
+                    continue;
+                }
+
+                var languageCode = string.Empty;
+                if (tsParser.AribLanguageLookup.TryGetValue(aribPid.Key, out var languageCodes))
+                {
+                    languageCodes.TryGetValue(language.Key, out languageCode);
+                }
+
+                result.Add(new BatchConvertItem
+                {
+                    Size = item.Size,
+                    Format = item.Format,
+                    FileName = item.FileName,
+                    Subtitle = new Subtitle(language.Value),
+                    LanguageCode = languageCode ?? string.Empty,
+                });
+            }
+        }
+
         return result;
     }
 }

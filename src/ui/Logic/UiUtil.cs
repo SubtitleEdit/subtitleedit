@@ -30,6 +30,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 
 namespace Nikse.SubtitleEdit.Logic;
 
@@ -761,6 +762,86 @@ public static class UiUtil
         }
 
         return comboBox;
+    }
+
+    private sealed class ComboBoxTypeSearchState
+    {
+        public string Prefix = string.Empty;
+        public long LastTypedTicks;
+    }
+
+    private static readonly ConditionalWeakTable<ComboBox, ComboBoxTypeSearchState> ComboBoxTypeSearchStates = new();
+
+    /// <summary>
+    /// App-wide: lets the user jump to a drop-down item by typing its first letters
+    /// (e.g. "Ar" selects "Arial"), like a classic WinForms combo box. Repeating the
+    /// same letter cycles through items starting with it; the typed prefix resets
+    /// after a short pause. Call once at startup.
+    /// </summary>
+    public static void EnableComboBoxTypeSearch()
+    {
+        InputElement.TextInputEvent.AddClassHandler<ComboBox>(ComboBoxTypeSearchTextInput, RoutingStrategies.Tunnel);
+    }
+
+    private static void ComboBoxTypeSearchTextInput(ComboBox comboBox, TextInputEventArgs e)
+    {
+        if (comboBox.IsEditable)
+        {
+            return; // typing must edit the text, not jump the selection
+        }
+
+        var text = e.Text;
+        if (string.IsNullOrEmpty(text) || char.IsControl(text[0]))
+        {
+            return;
+        }
+
+        var state = ComboBoxTypeSearchStates.GetOrCreateValue(comboBox);
+        var nowTicks = Environment.TickCount64;
+        if (nowTicks - state.LastTypedTicks > 1200)
+        {
+            state.Prefix = string.Empty;
+        }
+        state.LastTypedTicks = nowTicks;
+        state.Prefix += text;
+
+        var items = comboBox.Items;
+        if (items.Count == 0)
+        {
+            return;
+        }
+
+        var index = FindItemStartingWith(items, state.Prefix, startIndex: 0);
+        if (index < 0 && state.Prefix.Length > 1 && state.Prefix.All(c => char.ToLowerInvariant(c) == char.ToLowerInvariant(state.Prefix[0])))
+        {
+            // Same letter repeated: cycle through items starting with that letter.
+            state.Prefix = state.Prefix[..1];
+            index = FindItemStartingWith(items, state.Prefix, startIndex: comboBox.SelectedIndex + 1);
+            if (index < 0)
+            {
+                index = FindItemStartingWith(items, state.Prefix, startIndex: 0);
+            }
+        }
+
+        if (index >= 0)
+        {
+            comboBox.SelectedIndex = index;
+            e.Handled = true;
+        }
+    }
+
+    private static int FindItemStartingWith(IList items, string prefix, int startIndex)
+    {
+        for (var i = Math.Max(0, startIndex); i < items.Count; i++)
+        {
+            var display = items[i]?.ToString();
+            if (display != null && display.StartsWith(prefix, StringComparison.CurrentCultureIgnoreCase))
+            {
+                return i;
+            }
+        }
+
+        return -1;
     }
 
     internal static ComboBox MakeComboBoxBindText<T>(ObservableCollection<T> sourceItems, object vm, string textPath,
@@ -3028,10 +3109,14 @@ public static class UiUtil
         // System.Timers.Timer keeps its (captured) view model - and the whole closed window - alive
         // and ticking. Wired here, in the one place every window funnels through, so individual
         // dialogs don't each have to remember to do it. (#12739)
+        // Guarded so the cleanup runs at most once per window even if Closed were ever raised
+        // again, keeping non-idempotent cleanups safe by construction. (#13100)
+        var cleanedUp = false;
         window.Closed += (_, _) =>
         {
-            if (window.DataContext is IClosingCleanup cleanup)
+            if (!cleanedUp && window.DataContext is IClosingCleanup cleanup)
             {
+                cleanedUp = true;
                 cleanup.OnClosingCleanup();
             }
         };
@@ -3317,6 +3402,28 @@ public static class UiUtil
         }
 
         return false;
+    }
+
+    /// <summary>
+    /// Completes Avalonia's bare-Alt menu cycle when the window loses activation while Alt is held.
+    /// AccessKeyHandler tracks the Alt press privately and only settles on the Alt <em>release</em>;
+    /// when a modal window steals focus mid-gesture (e.g. Alt, O, ... opening the Shortcuts window),
+    /// the release never reaches this window and the handler is stranded with "Alt is down / ignore
+    /// the next Alt up" state - the next bare Alt press then fails to open the menu bar (#13083).
+    /// Raising a synthetic Alt KeyUp lets the handler finish its cycle. When Alt was down with no
+    /// other key pressed, that release legitimately opens the menu - callers run their
+    /// menu-deactivation cleanup afterwards to close it again.
+    /// </summary>
+    internal static void RaiseSyntheticAltKeyUp(Window? window)
+    {
+        window?.RaiseEvent(new KeyEventArgs
+        {
+            RoutedEvent = InputElement.KeyUpEvent,
+            Source = window,
+            Key = Key.LeftAlt,
+            PhysicalKey = PhysicalKey.AltLeft,
+            KeyModifiers = KeyModifiers.None,
+        });
     }
 
     private static bool _windowsSystemMenuClassHandlerRegistered;

@@ -183,6 +183,8 @@ public class LanguageSettings
     public string SpellCheckEnglishTreatInApostropheAsIng { get; set; }
     public string GoToLineNumberSetsVideoPosition { get; set; }
     public string AdjustAllTimesRememberLineSelectionChoice { get; set; }
+    public string MergeKeepEndTime { get; set; }
+    public string MergeKeepEndTimeOnlyAssa { get; set; }
     public string FilesAndLogs { get; set; }
     public string ShowErrorLogFile { get; set; }
     public string ShowToolsLogFile { get; set; }
@@ -479,6 +481,8 @@ public class LanguageSettings
         SpellCheckEnglishTreatInApostropheAsIng = "Spell check: Treat words ending in 'in'' as 'ing' (English only)";
         GoToLineNumberSetsVideoPosition = "Go-to-line-number also sets video position";
         AdjustAllTimesRememberLineSelectionChoice = "Adjust all times, remember line selection choice";
+        MergeKeepEndTime = "Merge lines: keep end time (allow overlap with next subtitle)";
+        MergeKeepEndTimeOnlyAssa = "Merge lines: keep end time only for \"Advanced Sub Station Alpha\"";
         DefaultFormat = "Default format";
         DefaultSaveAsFormat = "Default \"Save as\" format";
         FavoriteSubtitleFormats = "Favorite subtitle formats";

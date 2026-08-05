@@ -64,6 +64,17 @@ public static partial class InitListViewAndEditBox
         // reader (issue #13015). Grid lines come from the TableView cell themes; sorting
         // was already disabled on the DataGrid and TableView has none.
         var subtitleGrid = TableViewExtras.MakeTableView();
+
+        // TableView itself is not focusable by default, and with no rows there is no focusable
+        // row container either - so an empty grid left the window without any focusable content.
+        // Keyboard focus then either stayed on the window root (Avalonia's AccessKeyHandler
+        // ignores all keys in that state, so Alt appeared dead and no access keys were
+        // underlined) or, once it reached the menu bar, could never leave it again because the
+        // menu deactivation had no focus target to restore to (#13111). The grid is both the
+        // startup focus target and that deactivation fallback, so it must be able to hold focus
+        // even with no rows - like an empty list view on Windows.
+        subtitleGrid.Focusable = true;
+
         subtitleGrid.Height = double.NaN;
         subtitleGrid.Margin = new Thickness(Se.Settings.Appearance.GridCompactMode ? 0 : 2);
         subtitleGrid.ItemsSource = vm.Subtitles;
@@ -137,18 +148,23 @@ public static partial class InitListViewAndEditBox
         TableViewExtras.BindRowProperty(vm.SubtitleGrid, Visual.IsVisibleProperty,
             new Binding(nameof(SubtitleLineViewModel.IsHidden)) { Converter = inverseBooleanConverter });
 
-        // Expose "number: text" as the row's accessible name so screen readers announce
-        // something meaningful when the row takes focus (issue #13015). The error summary
-        // is appended because the grid's cell tints are the only other signal for rule
-        // violations, and color never reaches the accessibility tree.
+        // Expose "number: text, start - end, duration" as the row's accessible name so
+        // screen readers announce the full row like SE4's list view did (issues #13015,
+        // #12087). Text stays right after the number so browsing by content is fast; the
+        // time codes follow for review. The error summary is appended because the grid's
+        // cell tints are the only other signal for rule violations, and color never
+        // reaches the accessibility tree.
         TableViewExtras.BindRowProperty(vm.SubtitleGrid, AutomationProperties.NameProperty,
             new MultiBinding
             {
-                StringFormat = "{0}: {1}{2}",
+                StringFormat = "{0}: {1}, {2} - {3}, {4}{5}",
                 Bindings =
                 {
                     new Binding(nameof(SubtitleLineViewModel.Number)),
                     new Binding(nameof(SubtitleLineViewModel.Text)),
+                    new Binding(nameof(SubtitleLineViewModel.StartTime)) { Converter = fullTimeConverter, Mode = BindingMode.OneWay },
+                    new Binding(nameof(SubtitleLineViewModel.EndTime)) { Converter = fullTimeConverter, Mode = BindingMode.OneWay },
+                    new Binding(nameof(SubtitleLineViewModel.Duration)) { Converter = shortTimeConverter, Mode = BindingMode.OneWay },
                     new Binding(nameof(SubtitleLineViewModel.AccessibleErrorText)),
                 },
             });
@@ -781,6 +797,23 @@ public static partial class InitListViewAndEditBox
         insertSubtitleFileAfterLineMenuItem.Bind(Visual.IsVisibleProperty, new Binding(nameof(vm.IsInsertSubtitleFileAfterLineVisible)));
         insertSubtitleFileAfterLineMenuItem.Command = vm.InsertSubtitleFileAfterThisLineCommand;
         flyout.Items.Add(insertSubtitleFileAfterLineMenuItem);
+
+        // SE4 had "Copy as text to clipboard" right here - without it the copy commands are only
+        // reachable via shortcuts, and the text-only ones have no default shortcut at all
+        var copyToClipboardMenuItem = new MenuItem { Header = Se.Language.General.CopyToClipboard, DataContext = vm };
+        copyToClipboardMenuItem.Bind(Visual.IsVisibleProperty, new Binding(nameof(vm.IsSubtitleGridDataMenuVisible)));
+        copyToClipboardMenuItem.Command = vm.SubtitleGridCopyCommand;
+        flyout.Items.Add(copyToClipboardMenuItem);
+
+        var copyTextToClipboardMenuItem = new MenuItem { Header = Se.Language.General.CopyTextToClipboard, DataContext = vm };
+        copyTextToClipboardMenuItem.Bind(Visual.IsVisibleProperty, new Binding(nameof(vm.IsSubtitleGridDataMenuVisible)));
+        copyTextToClipboardMenuItem.Command = vm.CopyTextToClipboardCommand;
+        flyout.Items.Add(copyTextToClipboardMenuItem);
+
+        var copyOriginalTextToClipboardMenuItem = new MenuItem { Header = Se.Language.Options.Shortcuts.CopyTextFromOriginalToClipboard, DataContext = vm };
+        copyOriginalTextToClipboardMenuItem.Bind(Visual.IsVisibleProperty, new Binding(nameof(vm.ShowColumnOriginalText)));
+        copyOriginalTextToClipboardMenuItem.Command = vm.CopyTextFromOriginalToClipboardCommand;
+        flyout.Items.Add(copyOriginalTextToClipboardMenuItem);
 
         var copyOriginal = new MenuItem { Header = Se.Language.Main.CopyTextFromOriginalToCurrent, Command = vm.ColumnCopyTextFromOriginalToCurrentCommand };
         copyOriginal.Bind(Visual.IsVisibleProperty, new Binding(nameof(vm.ShowColumnOriginalText)));
@@ -1485,6 +1518,38 @@ public static partial class InitListViewAndEditBox
 
         flyoutTextBox.Items.Add(new Separator());
 
+        // Casing was shortcut-only, which made people think it had been removed (#13093).
+        var menuItemTextBoxCasing = new MenuItem { Header = Se.Language.General.Casing };
+        menuItemTextBoxCasing.Items.Add(new MenuItem
+        {
+            Header = Se.Language.General.ToggleCasing,
+            Command = vm.ToggleCasingCommand,
+        });
+        menuItemTextBoxCasing.Items.Add(new MenuItem
+        {
+            Header = Se.Language.General.SelectionToUppercase,
+            Command = vm.SelectionToUpperCommand,
+        });
+        menuItemTextBoxCasing.Items.Add(new MenuItem
+        {
+            Header = Se.Language.General.SelectionToLowercase,
+            Command = vm.SelectionToLowerCommand,
+        });
+        menuItemTextBoxCasing.Items.Add(new MenuItem
+        {
+            Header = Se.Language.General.SelectionToSentenceCase,
+            Command = vm.SelectionToSentenceCaseCommand,
+        });
+        menuItemTextBoxCasing.Items.Add(new Separator());
+        menuItemTextBoxCasing.Items.Add(new MenuItem
+        {
+            Header = Se.Language.Main.Menu.ChangeCasing,
+            Command = vm.ChangeCasingSelectedLinesCommand,
+        });
+        flyoutTextBox.Items.Add(menuItemTextBoxCasing);
+
+        flyoutTextBox.Items.Add(new Separator());
+
         var unicodeSymbols = Se.Settings.Tools.UnicodeSymbolsToInsert.Split(';', System.StringSplitOptions.RemoveEmptyEntries);
         if (unicodeSymbols.Length > 0)
         {
@@ -1598,7 +1663,7 @@ public static partial class InitListViewAndEditBox
         // add label to panelSingleLineLengthsOriginal
         var singleLineLengthLabel = new TextBlock
         {
-            Text = "Line lengths: x/x",
+            Text = Se.Language.Main.SingleLineLength,
             FontWeight = FontWeight.Bold,
             Margin = new Thickness(0, 0, 5, 0)
         };

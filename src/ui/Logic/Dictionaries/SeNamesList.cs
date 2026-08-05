@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Xml;
 using Nikse.SubtitleEdit.Core.Common;
+using Nikse.SubtitleEdit.Core.Dictionaries;
 
 namespace Nikse.SubtitleEdit.Logic.Dictionaries;
 
@@ -13,7 +14,10 @@ public class SeNamesList : INamesList
     private HashSet<string> _namesMultiList = new();
     private HashSet<string> _namesMultiListUppercase = new();
     private HashSet<string> _blackList = new();
-    private readonly HashSet<string> _abbreviationList = new();
+
+    // Case insensitive: "dr." is as much an abbreviation as "Dr.", and the name lists only
+    // carry the capitalized form.
+    private readonly HashSet<string> _abbreviationList = new(StringComparer.OrdinalIgnoreCase);
     public string LanguageName { get; private set; } = "en";
 
     public void Load(string dictionaryFolder, string languageCode)
@@ -56,6 +60,12 @@ public class SeNamesList : INamesList
             {
                 _abbreviationList.Add(name);
             }
+        }
+
+        // e.g. nl_abbreviations.xml - abbreviations that are not names ("enz.", "ca.", "nr.").
+        foreach (var abbreviation in AbbreviationList.Load(_dictionaryFolder, languageCode))
+        {
+            _abbreviationList.Add(abbreviation);
         }
     }
 

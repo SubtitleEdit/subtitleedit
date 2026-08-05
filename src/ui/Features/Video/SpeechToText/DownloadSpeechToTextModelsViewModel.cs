@@ -127,7 +127,7 @@ public partial class DownloadSpeechToTextModelsViewModel : ObservableObject, ICl
                 var ex = _downloadTask.Exception?.InnerException ?? _downloadTask.Exception;
                 if (ex is OperationCanceledException)
                 {
-                    ProgressText = "Download canceled";
+                    ProgressText = Se.Language.General.DownloadCanceled;
                     Cancel();
 
                     return;
@@ -145,8 +145,8 @@ public partial class DownloadSpeechToTextModelsViewModel : ObservableObject, ICl
                     return;
                 }
 
-                ProgressText = "Download failed";
-                Error = ex?.Message ?? "Unknown error";
+                ProgressText = Se.Language.General.DownloadFailed;
+                Error = ex?.Message ?? Se.Language.General.UnknownError;
 
                 return;
             }
@@ -457,7 +457,7 @@ public partial class DownloadSpeechToTextModelsViewModel : ObservableObject, ICl
             // path failure) would land in the dispatcher unhandled and crash the app,
             // with the caller unable to observe it.
             Se.LogError(exception, "Speech-to-text model download failed to start");
-            ProgressText = "Download failed";
+            ProgressText = Se.Language.General.DownloadFailed;
             Error = exception.Message;
         }
     }

@@ -79,6 +79,7 @@ public partial class BinaryEditViewModel : ObservableObject
 
     private ScrollViewer? _subtitleGridScrollViewer;
     private Control? _focusBeforeMenu;
+    private bool _altClosesMenuOnKeyUp;
     private readonly AltMenuActivationGuard _altMenuActivationGuard = new();
 
     private readonly IFileHelper _fileHelper;
@@ -2243,7 +2244,7 @@ public partial class BinaryEditViewModel : ObservableObject
         // Only allow if exactly one subtitle is selected
         if (SelectedSubtitle == null)
         {
-            await MessageBox.Show(Window, "No subtitle selected", "Please select exactly one subtitle.",
+            await MessageBox.Show(Window, Se.Language.Edit.NoSubtitleSelected, Se.Language.Edit.PleaseSelectExactlyOneSubtitle,
                 MessageBoxButtons.OK, MessageBoxIcon.Information);
             return;
         }
@@ -2372,7 +2373,7 @@ public partial class BinaryEditViewModel : ObservableObject
         // menu toggle (#12504) - the menu stays reachable via Alt.
         if (e.Key == Key.F10 && e.KeyModifiers == KeyModifiers.None && !_shortcutManager.HasSingleKeyShortcut("F10"))
         {
-            if (IsMenuFocused())
+            if (IsMenuFocused() || Menu is { IsOpen: true })
             {
                 DeactivateMenu();
                 e.Handled = true;
@@ -2394,6 +2395,32 @@ public partial class BinaryEditViewModel : ObservableObject
             Menu is not { IsOpen: true } && !IsMenuFocused())
         {
             _focusBeforeMenu = Window?.FocusManager?.GetFocusedElement() as Control;
+        }
+
+        // Alt while keyboard focus is inside an open drop-down must close the whole menu (Windows
+        // standard). The built-in AccessKeyHandler owns that toggle, but its key-down handler
+        // ignores any key whose focused element is not a visual descendant of the window - and
+        // drop-down items live in their own popup top-level, so a second Alt while navigating a
+        // drop-down did nothing (#12087). Close on the *release*, not here: the built-in tunnel
+        // key-up handler still holds "showing access keys" state from the activation, and its
+        // MainMenu.Open() call would instantly undo a close done on the press (it no-ops while
+        // the menu is still open). Mirrors MainViewModel.OnKeyDownHandler.
+        if (e.Key is Key.LeftAlt or Key.RightAlt)
+        {
+            if (e.KeyModifiers == KeyModifiers.Alt &&
+                Menu is { IsOpen: true } && IsMenuFocused() &&
+                Window?.FocusManager?.GetFocusedElement() is Visual focusedVisual &&
+                TopLevel.GetTopLevel(focusedVisual) is { } focusedTopLevel &&
+                !ReferenceEquals(focusedTopLevel, Window))
+            {
+                _altClosesMenuOnKeyUp = true;
+            }
+        }
+        else
+        {
+            // Alt+<key> is a shortcut or access key, not a toggle - releasing Alt afterwards
+            // must leave the menu alone (mirrors the built-in "ignore Alt up" bookkeeping).
+            _altClosesMenuOnKeyUp = false;
         }
 
         // While the menu has keyboard focus, let it own its own navigation keys. The window key
@@ -2512,23 +2539,31 @@ public partial class BinaryEditViewModel : ObservableObject
 
             DeactivateMenu();
         }
-
-        _shortcutManager.OnKeyReleased(this, e);
-    }
-
-    /// <summary>
-    /// Moves keyboard focus to the first top-level menu item so the menu can be opened and
-    /// navigated with the keyboard / a screen reader (F10, #11745). No-op when the menu is hidden
-    /// (macOS uses the native menu).
-    /// </summary>
-    private bool TryFocusMenu()
-    {
-        if (Menu == null || !Menu.IsVisible || Menu.Items.Count == 0)
+        else if (e.Key is Key.LeftAlt or Key.RightAlt && Menu is { IsOpen: false, IsVisible: true } && IsMenuFocused())
         {
-            return false;
+            // Alt on an open menu bar: Avalonia's AccessKeyHandler closes the bar on the Alt press,
+            // but it only restores focus for bars it opened itself via bare Alt - after an F10
+            // activation (Menu.Open) it has no saved focus element, so the close leaves keyboard
+            // focus stranded on the menu item, where the bar keeps swallowing every key (#13111).
+            // By the time the release arrives the press has settled, so "focused but not open" is
+            // exactly that stranded state - deactivate fully, restoring the focus saved at
+            // activation. (When Avalonia opens the bar on this very release, IsOpen is already
+            // true here and this branch stays out of the way.)
+            DeactivateMenu();
+        }
+        else if (e.Key is Key.LeftAlt or Key.RightAlt && _altClosesMenuOnKeyUp)
+        {
+            // Alt pressed while focus was inside an open drop-down (armed in OnKeyDown, where the
+            // built-in AccessKeyHandler ignores popup-focused keys): close the whole menu now that
+            // the built-in tunnel key-up handling has run out of ways to reopen it.
+            _altClosesMenuOnKeyUp = false;
+            if (Menu is { IsOpen: true } || IsMenuFocused())
+            {
+                DeactivateMenu();
+            }
         }
 
-        return Menu.Items[0] is MenuItem firstItem && firstItem.Focus(NavigationMethod.Tab);
+        _shortcutManager.OnKeyReleased(this, e);
     }
 
     /// <summary>
@@ -2545,7 +2580,20 @@ public partial class BinaryEditViewModel : ObservableObject
         }
 
         _focusBeforeMenu = Window?.FocusManager?.GetFocusedElement() as Control;
-        return TryFocusMenu();
+
+        // Defer the activation: opening the menu from inside the key handler is racy, so let the
+        // current event finish first. Menu.Open is the same call Avalonia's bare-Alt handling
+        // makes: it selects and focuses the first top-level item, so the activation is visible
+        // ("File" highlights). Merely focusing the item, as this did before, gave no visual
+        // feedback at all - a top-level MenuItem has no keyboard-focus visual (#13111).
+        Dispatcher.UIThread.Post(() =>
+        {
+            if (Menu is { IsOpen: false })
+            {
+                Menu.Open();
+            }
+        });
+        return true;
     }
 
     /// <summary>
@@ -2569,7 +2617,12 @@ public partial class BinaryEditViewModel : ObservableObject
                 return;
             }
 
-            if (SubtitleGrid != null)
+            // Only pull focus somewhere else when it is actually still stuck in the menu:
+            // overlapping deactivations (e.g. a task switch plus the synthetic Alt release, both
+            // running through here) would otherwise stomp the focus the first one just restored.
+            // Deactivation must never leave focus inside the menu - the bar would stay armed and
+            // every arrow key would keep navigating it even though it looks closed (#13111).
+            if (IsMenuFocused() && SubtitleGrid != null)
             {
                 TableViewExtras.FocusRow(SubtitleGrid);
             }
@@ -2581,10 +2634,16 @@ public partial class BinaryEditViewModel : ObservableObject
     /// </summary>
     internal void OnWindowDeactivated(object? sender, EventArgs e)
     {
+        // Complete Avalonia's bare-Alt cycle when a modal steals focus while Alt is held, so the
+        // stranded AccessKeyHandler state cannot leave the next bare Alt press unable to open the
+        // menu bar (#13083). If the synthetic release opens the menu, the cleanup below closes it.
+        UiUtil.RaiseSyntheticAltKeyUp(Window);
+
         // A task switch (Alt+Tab) must drop any active menu-bar state, otherwise Avalonia leaves
         // the access-key underlines / selection armed and they reappear when the window is re-activated
         // (#11745 beta-2 feedback).
         _altMenuActivationGuard.Reset();
+        _altClosesMenuOnKeyUp = false; // the matching Alt release will never arrive
         if (Menu is { IsOpen: true } || IsMenuFocused())
         {
             DeactivateMenu();

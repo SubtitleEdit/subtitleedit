@@ -220,8 +220,8 @@ public partial class DownloadSpeechToTextEngineViewModel : ObservableObject, ICl
             {
                 if (_downloadStream.Length == 0)
                 {
-                    ProgressText = "Download failed";
-                    Error = "No data received";
+                    ProgressText = Se.Language.General.DownloadFailed;
+                    Error = Se.Language.General.NoDataReceived;
                     return;
                 }
 
@@ -287,13 +287,13 @@ public partial class DownloadSpeechToTextEngineViewModel : ObservableObject, ICl
             var ex = _downloadTask.Exception?.InnerException ?? _downloadTask.Exception;
             if (ex is OperationCanceledException)
             {
-                ProgressText = "Download canceled";
+                ProgressText = Se.Language.General.DownloadCanceled;
                 Close();
             }
             else
             {
-                ProgressText = "Download failed";
-                Error = ex?.Message ?? "Unknown error";
+                ProgressText = Se.Language.General.DownloadFailed;
+                Error = ex?.Message ?? Se.Language.General.UnknownError;
             }
 
             return;
