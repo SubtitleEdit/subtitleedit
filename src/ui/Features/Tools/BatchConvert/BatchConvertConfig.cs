@@ -379,10 +379,13 @@ public class BatchConvertConfig
     {
         public bool IsActive { get; set; }
         public bool SnapToShotChanges { get; set; }
+        public bool UseFixedFrameRate { get; set; }
+        public double FixedFrameRate { get; set; }
 
         public BeautifyTimeCodesSettings2()
         {
             SnapToShotChanges = true;
+            FixedFrameRate = 23.976;
         }
     }
 

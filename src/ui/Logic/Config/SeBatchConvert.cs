@@ -106,6 +106,8 @@ public class SeBatchConvert
     public bool SortByDescending { get; set; }
 
     public bool BeautifyTimeCodesSnapToShotChanges { get; set; }
+    public bool BeautifyTimeCodesUseFixedFrameRate { get; set; }
+    public double BeautifyTimeCodesFixedFrameRate { get; set; }
 
     public bool ImageAdjustBrightnessOn { get; set; }
     public double ImageAdjustBrightness { get; set; }
@@ -177,5 +179,6 @@ public class SeBatchConvert
         SortByDescending = false;
 
         BeautifyTimeCodesSnapToShotChanges = true;
+        BeautifyTimeCodesFixedFrameRate = 23.976;
     }
 }

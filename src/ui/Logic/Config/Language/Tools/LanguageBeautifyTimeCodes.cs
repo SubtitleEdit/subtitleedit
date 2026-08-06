@@ -22,6 +22,8 @@ public class LanguageBeautifyTimeCodes
     public string NextChange { get; set; }
     public string EditProfile { get; set; }
     public string BatchSnapToShotChanges { get; set; }
+    public string BatchFrameRateFromVideo { get; set; }
+    public string BatchFrameRateFixed { get; set; }
     public string BatchInfo { get; set; }
 
     public LanguageBeautifyTimeCodes()
@@ -46,6 +48,8 @@ public class LanguageBeautifyTimeCodes
         NextChange = "Next change";
         EditProfile = "Edit profile...";
         BatchSnapToShotChanges = "Snap cues to shot changes (if available)";
-        BatchInfo = "Frame rate and shot changes are read from a video file with the same name as the subtitle file, if one is found.";
+        BatchFrameRateFromVideo = "Use frame rate from video file with same name as subtitle file";
+        BatchFrameRateFixed = "Use fixed frame rate";
+        BatchInfo = "Shot changes are read from a video file with the same name as the subtitle file, if one is found.";
     }
 }

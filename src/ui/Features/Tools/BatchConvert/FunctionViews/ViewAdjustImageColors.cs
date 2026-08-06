@@ -26,81 +26,64 @@ public static class ViewAdjustImageColors
             Opacity = 0.7,
             FontStyle = FontStyle.Italic,
             TextWrapping = TextWrapping.Wrap,
-        };
-
-        var brightnessPanel = new StackPanel
-        {
-            Orientation = Orientation.Horizontal,
-            VerticalAlignment = VerticalAlignment.Center,
-            Spacing = 5,
-            Children =
-            {
-                MakeCheckBox(Se.Language.Tools.ImageBasedEdit.AdjustBrightness, vm, nameof(vm.ImageAdjustBrightnessOn)),
-                MakeLabel(Se.Language.Tools.ImageBasedEdit.Brightness),
-                MakeNumericUpDown(vm, nameof(vm.ImageAdjustBrightness), nameof(vm.ImageAdjustBrightnessOn), -100, 100, 1),
-                MakeLabel(Se.Language.Tools.ImageBasedEdit.Contrast),
-                MakeNumericUpDown(vm, nameof(vm.ImageAdjustContrast), nameof(vm.ImageAdjustBrightnessOn), -100, 100, 1),
-                MakeLabel(Se.Language.Tools.ImageBasedEdit.Gamma + " (%)"),
-                MakeNumericUpDown(vm, nameof(vm.ImageAdjustGamma), nameof(vm.ImageAdjustBrightnessOn), 20, 400, 5),
-            }
-        };
-
-        var alphaPanel = new StackPanel
-        {
-            Orientation = Orientation.Horizontal,
-            VerticalAlignment = VerticalAlignment.Center,
-            Spacing = 5,
-            Children =
-            {
-                MakeCheckBox(Se.Language.General.AdjustAlpha, vm, nameof(vm.ImageAdjustAlphaOn)),
-                MakeLabel(Se.Language.General.AlphaAdjustment),
-                MakeNumericUpDown(vm, nameof(vm.ImageAdjustAlpha), nameof(vm.ImageAdjustAlphaOn), -255, 255, 5),
-                MakeLabel(Se.Language.General.AlphaThreshold),
-                MakeNumericUpDown(vm, nameof(vm.ImageAdjustAlphaThreshold), nameof(vm.ImageAdjustAlphaOn), 0, 255, 5),
-            }
+            MaxWidth = 500,
+            HorizontalAlignment = HorizontalAlignment.Left,
         };
 
         var colorPicker = UiUtil.MakeColorPickerButton(vm, nameof(vm.ImageAdjustColorValue));
         colorPicker[!Control.IsEnabledProperty] = new Binding(nameof(vm.ImageAdjustColorOn)) { Source = vm };
-        var colorPanel = new StackPanel
-        {
-            Orientation = Orientation.Horizontal,
-            VerticalAlignment = VerticalAlignment.Center,
-            Spacing = 5,
-            Children =
-            {
-                MakeCheckBox(Se.Language.Tools.ImageBasedEdit.AdjustColor, vm, nameof(vm.ImageAdjustColorOn)),
-                colorPicker,
-            }
-        };
 
         var grid = new Grid
         {
-            RowDefinitions =
-            {
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-            },
             ColumnDefinitions =
             {
                 new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) },
+                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) },
             },
             ColumnSpacing = 10,
-            RowSpacing = 10,
+            RowSpacing = 6,
             Width = double.NaN,
-            HorizontalAlignment = HorizontalAlignment.Stretch,
+            HorizontalAlignment = HorizontalAlignment.Left,
         };
 
-        grid.Add(labelHeader, 0);
-        grid.Add(labelInfo, 1);
-        grid.Add(brightnessPanel, 2);
-        grid.Add(alphaPanel, 3);
-        grid.Add(colorPanel, 4);
+        var row = 0;
+        AddRow(grid, row++, labelHeader);
+        AddRow(grid, row++, labelInfo);
+
+        AddRow(grid, row++, MakeCheckBox(Se.Language.Tools.ImageBasedEdit.AdjustBrightness, vm, nameof(vm.ImageAdjustBrightnessOn)));
+        AddPair(grid, row++, Se.Language.Tools.ImageBasedEdit.Brightness, MakeNumericUpDown(vm, nameof(vm.ImageAdjustBrightness), nameof(vm.ImageAdjustBrightnessOn), -100, 100, 1));
+        AddPair(grid, row++, Se.Language.Tools.ImageBasedEdit.Contrast, MakeNumericUpDown(vm, nameof(vm.ImageAdjustContrast), nameof(vm.ImageAdjustBrightnessOn), -100, 100, 1));
+        AddPair(grid, row++, Se.Language.Tools.ImageBasedEdit.Gamma + " (%)", MakeNumericUpDown(vm, nameof(vm.ImageAdjustGamma), nameof(vm.ImageAdjustBrightnessOn), 20, 400, 5));
+
+        AddRow(grid, row++, MakeCheckBox(Se.Language.General.AdjustAlpha, vm, nameof(vm.ImageAdjustAlphaOn)));
+        AddPair(grid, row++, Se.Language.General.AlphaAdjustment, MakeNumericUpDown(vm, nameof(vm.ImageAdjustAlpha), nameof(vm.ImageAdjustAlphaOn), -255, 255, 5));
+        AddPair(grid, row++, Se.Language.General.AlphaThreshold, MakeNumericUpDown(vm, nameof(vm.ImageAdjustAlphaThreshold), nameof(vm.ImageAdjustAlphaOn), 0, 255, 5));
+
+        AddRow(grid, row++, MakeCheckBox(Se.Language.Tools.ImageBasedEdit.AdjustColor, vm, nameof(vm.ImageAdjustColorOn)));
+        grid.RowDefinitions.Add(new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) });
+        colorPicker.Margin = new Thickness(25, 0, 0, 0);
+        grid.Add(colorPicker, row, 0);
 
         return grid;
+    }
+
+    private static void AddRow(Grid grid, int row, Control control)
+    {
+        grid.RowDefinitions.Add(new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) });
+        grid.Add(control, row, 0, 1, 2);
+    }
+
+    private static void AddPair(Grid grid, int row, string labelText, Control control)
+    {
+        grid.RowDefinitions.Add(new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) });
+        var label = new Label
+        {
+            Content = labelText,
+            VerticalAlignment = VerticalAlignment.Center,
+            Margin = new Thickness(25, 0, 0, 0),
+        };
+        grid.Add(label, row, 0);
+        grid.Add(control, row, 1);
     }
 
     private static CheckBox MakeCheckBox(string content, BatchConvertViewModel vm, string bindingProperty)
@@ -109,17 +92,7 @@ public static class ViewAdjustImageColors
         {
             Content = content,
             VerticalAlignment = VerticalAlignment.Center,
-            Margin = new Thickness(0, 0, 10, 0),
             [!ToggleButton.IsCheckedProperty] = new Binding(bindingProperty) { Source = vm, Mode = BindingMode.TwoWay },
-        };
-    }
-
-    private static Label MakeLabel(string content)
-    {
-        return new Label
-        {
-            Content = content,
-            VerticalAlignment = VerticalAlignment.Center,
         };
     }
 

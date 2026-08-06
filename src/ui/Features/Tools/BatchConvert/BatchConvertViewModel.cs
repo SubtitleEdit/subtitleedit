@@ -197,6 +197,10 @@ public partial class BatchConvertViewModel : ObservableObject, IClosingCleanup
 
     // Beautify time codes
     [ObservableProperty] private bool _beautifyTimeCodesSnapToShotChanges;
+    [ObservableProperty] private bool _beautifyTimeCodesUseVideoFrameRate;
+    [ObservableProperty] private bool _beautifyTimeCodesUseFixedFrameRate;
+    [ObservableProperty] private ObservableCollection<double> _beautifyTimeCodesFrameRates;
+    [ObservableProperty] private double _selectedBeautifyTimeCodesFrameRate;
 
     // Bride gaps
     [ObservableProperty] private int _bridgeGapsSmallerThanMs;
@@ -345,6 +349,21 @@ public partial class BatchConvertViewModel : ObservableObject, IClosingCleanup
             60,
             120,
         };
+        BeautifyTimeCodesFrameRates = new ObservableCollection<double>
+        {
+            23.976,
+            24,
+            25,
+            29.97,
+            30,
+            48,
+            59.94,
+            60,
+            120,
+        };
+        SelectedBeautifyTimeCodesFrameRate = BeautifyTimeCodesFrameRates[0];
+        BeautifyTimeCodesUseVideoFrameRate = true;
+
         AdjustTypes = new ObservableCollection<AdjustDurationDisplay>(AdjustDurationDisplay.ListAll());
         SelectedAdjustType = AdjustTypes.First();
 
@@ -633,6 +652,8 @@ public partial class BatchConvertViewModel : ObservableObject, IClosingCleanup
 
         // Beautify time codes
         Se.Settings.Tools.BatchConvert.BeautifyTimeCodesSnapToShotChanges = BeautifyTimeCodesSnapToShotChanges;
+        Se.Settings.Tools.BatchConvert.BeautifyTimeCodesUseFixedFrameRate = BeautifyTimeCodesUseFixedFrameRate;
+        Se.Settings.Tools.BatchConvert.BeautifyTimeCodesFixedFrameRate = SelectedBeautifyTimeCodesFrameRate;
 
         // Adjust image brightness/alpha/color
         Se.Settings.Tools.BatchConvert.ImageAdjustBrightnessOn = ImageAdjustBrightnessOn;
@@ -762,6 +783,13 @@ public partial class BatchConvertViewModel : ObservableObject, IClosingCleanup
         BridgeGapsPercentForLeft = Se.Settings.Tools.BridgeGaps.PercentForLeft;
 
         BeautifyTimeCodesSnapToShotChanges = Se.Settings.Tools.BatchConvert.BeautifyTimeCodesSnapToShotChanges;
+        BeautifyTimeCodesUseFixedFrameRate = Se.Settings.Tools.BatchConvert.BeautifyTimeCodesUseFixedFrameRate;
+        BeautifyTimeCodesUseVideoFrameRate = !BeautifyTimeCodesUseFixedFrameRate;
+        var beautifyRate = BeautifyTimeCodesFrameRates.FirstOrDefault(p => Math.Abs(p - Se.Settings.Tools.BatchConvert.BeautifyTimeCodesFixedFrameRate) < 0.001);
+        if (beautifyRate > 0)
+        {
+            SelectedBeautifyTimeCodesFrameRate = beautifyRate;
+        }
 
         SplitBreakSingleLineMaxLength = Se.Settings.General.SubtitleLineMaximumLength;
         SplitBreakMaxNumberOfLines = Se.Settings.General.MaxNumberOfLines;
@@ -2297,6 +2325,8 @@ public partial class BatchConvertViewModel : ObservableObject, IClosingCleanup
             {
                 IsActive = activeFunctions.Contains(BatchConvertFunctionType.BeautifyTimeCodes),
                 SnapToShotChanges = BeautifyTimeCodesSnapToShotChanges,
+                UseFixedFrameRate = BeautifyTimeCodesUseFixedFrameRate,
+                FixedFrameRate = SelectedBeautifyTimeCodesFrameRate,
             },
 
             AdjustImageColors = new BatchConvertConfig.AdjustImageColorsSettings

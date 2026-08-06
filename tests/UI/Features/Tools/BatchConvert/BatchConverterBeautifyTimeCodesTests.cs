@@ -24,7 +24,7 @@ Second line.
 Third line.
 ";
 
-    private static async Task<Subtitle> RunConvertAsync(bool beautifyActive)
+    private static async Task<Subtitle> RunConvertAsync(bool beautifyActive, Action<BatchConvertConfig>? configure = null)
     {
         var dir = Directory.CreateTempSubdirectory("se-beautify-test");
         try
@@ -46,6 +46,7 @@ Third line.
                 TargetFormatName = SubRip.NameOfFormat,
             };
             config.BeautifyTimeCodes.IsActive = beautifyActive;
+            configure?.Invoke(config);
 
             var converter = new BatchConverter(null!, null!, null!);
             converter.Initialize(config);
@@ -85,6 +86,30 @@ Third line.
         {
             var gap = result.Paragraphs[i + 1].StartTime.TotalMilliseconds - result.Paragraphs[i].EndTime.TotalMilliseconds;
             Assert.True(gap >= minGapMs, $"gap between cue {i + 1} and {i + 2} is {gap} ms, expected at least {minGapMs} ms");
+        }
+    }
+
+    [Fact]
+    public async Task Convert_BeautifyTimeCodesFixedFrameRate_AlignsCuesToFixedFrameRate()
+    {
+        // 25 fps => frames are 40 ms apart, which no fallback rate (23.976/24/30/...)
+        // would produce, so alignment proves the fixed rate was used.
+        var result = await RunConvertAsync(beautifyActive: true, config =>
+        {
+            config.BeautifyTimeCodes.UseFixedFrameRate = true;
+            config.BeautifyTimeCodes.FixedFrameRate = 25;
+        });
+
+        Assert.Equal(3, result.Paragraphs.Count);
+
+        foreach (var p in result.Paragraphs)
+        {
+            foreach (var ms in new[] { p.StartTime.TotalMilliseconds, p.EndTime.TotalMilliseconds })
+            {
+                var frames = ms * 25.0 / 1000.0;
+                Assert.True(Math.Abs(frames - Math.Round(frames)) < 0.1,
+                    $"time code {ms} ms is not aligned to a 25 fps frame");
+            }
         }
     }
 
