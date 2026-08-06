@@ -1,5 +1,6 @@
 using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Controls.Primitives;
 using Avalonia.Headless;
 using Avalonia.Headless.XUnit;
 using Avalonia.Input;
@@ -278,6 +279,70 @@ public class MainMenuKeyboardActivationTests : IDisposable
         await WaitUntil(() => ReferenceEquals(vm.SubtitleGrid, window.FocusManager?.GetFocusedElement()), "focus should return to the grid");
 
         popupStandIn.Close();
+        window.Close();
+    }
+
+    [AvaloniaFact]
+    public async Task F10_ShowsAccessKeyUnderlines_LikeAlt()
+    {
+        var (window, vm) = ShowMainWindowWithEmptyGrid();
+        TableViewExtras.FocusRow(vm.SubtitleGrid);
+        Settle(window);
+        await WaitForGridFocus(window, vm);
+
+        PressAndRelease(window, PhysicalKey.F10, RawInputModifiers.None);
+        await WaitUntil(() => vm.Menu.IsOpen, "F10 should open the menu bar");
+
+        // Alt activation shows the access-key underlines via this inherited window property;
+        // F10 is its synonym and must do the same - the underlines still *worked* after F10,
+        // they were just invisible (#13111 beta-4/5 feedback).
+        await WaitUntil(() => window.GetValue(AccessText.ShowAccessKeyProperty), "F10 should show the access-key underlines");
+
+        PressAndRelease(window, PhysicalKey.F10, RawInputModifiers.None);
+
+        await WaitUntil(() => !vm.Menu.IsOpen, "the second F10 should close the menu bar");
+        await WaitUntil(() => !window.GetValue(AccessText.ShowAccessKeyProperty), "closing should clear the access-key underlines");
+
+        window.Close();
+    }
+
+    [AvaloniaFact]
+    public async Task Escape_ClosesDropDownKeepingItemHighlighted_ThenDeactivates()
+    {
+        var (window, vm) = ShowMainWindowWithEmptyGrid();
+        TableViewExtras.FocusRow(vm.SubtitleGrid);
+        Settle(window);
+        await WaitForGridFocus(window, vm);
+
+        // Open the bar and move to the second top-level item, then drop its menu down - the
+        // regression showed on any non-first menu: the first Escape yanked the highlight back
+        // to "File" (#13111 beta-4 feedback).
+        PressAndRelease(window, PhysicalKey.F10, RawInputModifiers.None);
+        await WaitUntil(() => vm.Menu.IsOpen, "F10 should open the menu bar");
+        PressAndRelease(window, PhysicalKey.ArrowRight, RawInputModifiers.None);
+        PressAndRelease(window, PhysicalKey.ArrowDown, RawInputModifiers.None);
+        await WaitUntil(() => vm.Menu.Items.OfType<MenuItem>().Any(mi => mi.IsSubMenuOpen), "Down should open the second item's drop-down");
+
+        var openItem = vm.Menu.Items.OfType<MenuItem>().First(mi => mi.IsSubMenuOpen);
+        Assert.NotSame(vm.Menu.Items[0], openItem);
+
+        // First Escape: only the drop-down closes; the bar stays active with the same item
+        // highlighted (Windows standard).
+        PressAndRelease(window, PhysicalKey.Escape, RawInputModifiers.None);
+
+        await WaitUntil(() => !openItem.IsSubMenuOpen, "Escape should close the drop-down");
+        Assert.True(vm.Menu.IsOpen, "the bar must stay active after the first Escape");
+        Assert.Same(openItem, vm.Menu.SelectedItem);
+
+        // Second Escape: the bar deactivates completely - no leftover highlight, focus back in
+        // the editing area.
+        PressAndRelease(window, PhysicalKey.Escape, RawInputModifiers.None);
+
+        await WaitUntil(() => !vm.Menu.IsOpen, "the second Escape should close the menu bar");
+        await WaitUntil(() => vm.Menu.SelectedIndex == -1, "deactivation should clear the top-level highlight");
+        await WaitUntil(() => !IsFocusOnMenuItem(window), "the menu item should lose focus");
+        await WaitUntil(() => ReferenceEquals(vm.SubtitleGrid, window.FocusManager?.GetFocusedElement()), "focus should return to the grid");
+
         window.Close();
     }
 

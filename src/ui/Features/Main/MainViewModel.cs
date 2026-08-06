@@ -360,6 +360,7 @@ public partial class MainViewModel :
 
     VideoPlayerUndockedViewModel? _videoPlayerUndockedViewModel;
     AudioVisualizerUndockedViewModel? _audioVisualizerUndockedViewModel;
+    bool _suppressUndockedTopmost;
     FindViewModel? _findViewModel;
     Control? _findPreviousFocus;
     Control? _focusBeforeMainMenu;
@@ -2040,6 +2041,26 @@ public partial class MainViewModel :
         _formatChangedByUser = false;
         _undoRedoManager.Reset();
         _shortcutManager.ClearKeys();
+
+        // Clearing the rows also removed the focused row container, dropping keyboard focus to
+        // nothing at all - the next arrow key then walks focus from the window root into the first
+        // focusable control, which is the menu bar. After Ctrl+N the bar looked like it "activated
+        // itself" and kept eating keys (#13111). The grid stays focusable while empty exactly for
+        // this (see InitListViewAndEditBox), so put focus back on it. Deferred because the container
+        // only detaches once the collection change has been processed; guarded so a reset that runs
+        // while a dialog or any other control legitimately holds focus does not steal it. The second,
+        // Background-priority pass runs after the layout pass, catching a container that detached
+        // (and dropped focus) later than the first check.
+        void RestoreFocusIfDropped()
+        {
+            if (SubtitleGrid != null && Window?.FocusManager?.GetFocusedElement() == null)
+            {
+                TableViewExtras.FocusRow(SubtitleGrid);
+            }
+        }
+
+        Dispatcher.UIThread.Post(RestoreFocusIfDropped);
+        Dispatcher.UIThread.Post(RestoreFocusIfDropped, DispatcherPriority.Background);
     }
 
     [RelayCommand]
@@ -6253,7 +6274,7 @@ public partial class MainViewModel :
                 // SE loses focus to another app. Mirrors the Find/Replace helper from #11243.
                 // The two undocked windows are still independent in Alt+Tab — KeepTopmost… is
                 // just a Z-order knob, not an ownership change.
-                WindowService.KeepTopmostWhileOwnerActive(window, Window!);
+                WindowService.KeepTopmostWhileOwnerActive(window, Window!, () => _suppressUndockedTopmost);
             });
 
             _windowService.ShowIndependentWindow<AudioVisualizerUndockedWindow, AudioVisualizerUndockedViewModel>((window, vm) =>
@@ -6261,7 +6282,7 @@ public partial class MainViewModel :
                 _audioVisualizerUndockedViewModel = vm;
                 vm.Initialize(AudioVisualizer, this);
                 ReloadAudioVisualizer();
-                WindowService.KeepTopmostWhileOwnerActive(window, Window!);
+                WindowService.KeepTopmostWhileOwnerActive(window, Window!, () => _suppressUndockedTopmost);
             });
 
             InitLayout.MakeLayout12KeepVideo(MainView!, this);
@@ -6283,6 +6304,12 @@ public partial class MainViewModel :
     /// </summary>
     internal void SetUndockedWindowsTopmost(bool topmost)
     {
+        // Remembered (and consulted by the KeepTopmostWhileOwnerActive registrations) so the
+        // helper's activation handler cannot re-assert Topmost while a menu is still open:
+        // opening a cascaded submenu churns window activation, and the re-asserted Topmost put
+        // the tool windows back over the submenu popup (#13187 follow-up).
+        _suppressUndockedTopmost = !topmost;
+
         foreach (var undockedWindow in new[] { _videoPlayerUndockedViewModel?.Window, _audioVisualizerUndockedViewModel?.Window })
         {
             if (undockedWindow != null)
@@ -16044,6 +16071,16 @@ public partial class MainViewModel :
             return;
         }
 
+        // Same guard as SelectAndScrollToRow: a long scroll recycles the focused TableViewRow
+        // container, silently dropping keyboard focus out of the grid. This is the video-playhead
+        // sync path, so it fires on every seek step - once the focused row was recycled, the
+        // still-held seek key walked focus from the window root into the menu bar, which read as
+        // "the menu bar activates itself while skipping through the video" (#13182). Null focus is
+        // reclaimed too: a previous sync step may already have dropped it, and with nothing focused
+        // the very next key press walks into the menu. Focus anywhere else - the text box, the
+        // video player (docked or undocked), a dialog - is never touched.
+        var refocusGrid = IsSubtitleGridFocused() || Window?.FocusManager?.GetFocusedElement() == null;
+
         lock (_scrollLock)
         {
             _pendingScrollSubtitle = subtitle;
@@ -16074,6 +16111,11 @@ public partial class MainViewModel :
                     // Same follow-up as SelectAndScrollToRow: ScrollIntoView can leave the row
                     // a few pixels past the bottom edge on a variable-height grid.
                     EnsureRowFullyVisibleInSubtitleGrid(subtitleToScroll);
+                }
+
+                if (refocusGrid && (IsSubtitleGridFocused() || Window?.FocusManager?.GetFocusedElement() == null))
+                {
+                    Dispatcher.UIThread.Post(() => TableViewExtras.FocusRow(SubtitleGrid));
                 }
             }
         }, DispatcherPriority.Background);
@@ -21198,26 +21240,6 @@ public partial class MainViewModel :
     };
 
     /// <summary>
-    /// Moves keyboard focus to the first top-level item of the main menu bar, so the menu can be
-    /// opened and navigated with the keyboard / a screen reader (F10, #11745). No-op on platforms
-    /// that use the native menu (macOS), where <see cref="Menu"/> has no items.
-    /// </summary>
-    private bool TryFocusMainMenu()
-    {
-        if (Menu == null || Menu.Items.Count == 0)
-        {
-            return false;
-        }
-
-        if (Menu.Items[0] is MenuItem firstItem)
-        {
-            return firstItem.Focus(NavigationMethod.Tab);
-        }
-
-        return false;
-    }
-
-    /// <summary>
     /// Activates the main menu bar for keyboard navigation (Windows standard F10; bare Alt is handled
     /// by Avalonia's built-in AccessKeyHandler), remembering the control that had focus so it can be
     /// restored on deactivation. Returns false on platforms with a native menu (macOS), where the
@@ -21243,6 +21265,13 @@ public partial class MainViewModel :
             if (Menu is { IsOpen: false })
             {
                 Menu.Open();
+
+                // Alt activation also underlines the access keys (Avalonia's AccessKeyHandler sets
+                // this inherited property on the window); Menu.Open alone does not, which made F10
+                // open a menu whose access keys work but are invisible (#13111 beta-4 feedback).
+                // F10 and Alt are synonyms on Windows, so show the underlines here too - the
+                // built-in handler clears the property again on every close path (MainMenuClosed).
+                Window?.SetValue(AccessText.ShowAccessKeyProperty, true);
             }
         });
         return true;
@@ -21256,6 +21285,15 @@ public partial class MainViewModel :
     private void DeactivateMainMenu()
     {
         Menu?.Close();
+
+        // Menu.Close() early-returns when the bar is already closed - but a top-level item can
+        // still be selected in that state (an Escape that closed the drop-down leaves the item
+        // highlighted so the bar stays visibly active), and skipping the reset left that
+        // highlight behind after deactivation (#13111 beta-4 feedback).
+        if (Menu != null)
+        {
+            Menu.SelectedIndex = -1;
+        }
 
         var restore = _focusBeforeMainMenu;
         _focusBeforeMainMenu = null;
@@ -21777,10 +21815,17 @@ public partial class MainViewModel :
             // bar (#11745 beta-2 feedback).
             if (k == Key.Escape && keyEventArgs.KeyModifiers == KeyModifiers.None && (IsMainMenuFocused() || Menu.IsOpen))
             {
-                if (Menu.Items.OfType<MenuItem>().Any(mi => mi.IsSubMenuOpen))
+                if (Menu.Items.OfType<MenuItem>().FirstOrDefault(mi => mi.IsSubMenuOpen) is { } openItem)
                 {
-                    Menu.Close();
-                    TryFocusMainMenu(); // keep the bar focused so the next Escape deactivates it
+                    // Close only the drop-down and keep the bar active with the same item
+                    // highlighted and focused, so the next Escape deactivates it (Windows
+                    // standard). Closing the whole bar and refocusing the first item made the
+                    // highlight jump to "File" no matter which menu was open, and left
+                    // Menu.IsOpen false so the final deactivation skipped its selection reset
+                    // (#13111 beta-4 feedback).
+                    openItem.Close();
+                    Menu.SelectedItem = openItem;
+                    openItem.Focus(NavigationMethod.Tab);
                 }
                 else
                 {
