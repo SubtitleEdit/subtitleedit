@@ -976,53 +976,79 @@ public partial class BatchConvertViewModel : ObservableObject, IClosingCleanup
         ProgressMaxValue = itemsToConvert.Count;
         _ = Task.Run(async () =>
         {
-            var count = 1;
-            foreach (var batchItem in itemsToConvert)
+            // Nothing in this fire-and-forget task may throw its way out: an unobserved fault
+            // leaves IsConverting/IsProgressVisible/AreControlsEnabled set and the dialog frozen
+            // at "Converting 1/4..." forever with no error shown (#12288). The per-item catch
+            // below keeps one bad file from ending the batch; this try/finally guarantees the
+            // dialog is released even if anything outside the loop fails.
+            try
             {
-                var countDisplay = count;
-                ProgressText = string.Format(Se.Language.General.ConvertingXofYDotDoDot, countDisplay, itemsToConvert.Count);
-                ProgressValue = countDisplay / (double)itemsToConvert.Count;
-
-                if (batchItem.Format!.StartsWith("Transport Stream", StringComparison.Ordinal))
+                var count = 1;
+                foreach (var batchItem in itemsToConvert)
                 {
-                    var tsResult = _batchConvertItemSplitter.LoadTransportStream(batchItem, _cancellationToken);
-                    foreach (var bi in tsResult)
+                    var countDisplay = count;
+                    ProgressText = string.Format(Se.Language.General.ConvertingXofYDotDoDot, countDisplay, itemsToConvert.Count);
+                    ProgressValue = countDisplay / (double)itemsToConvert.Count;
+
+                    try
                     {
-                        if (_cancellationToken.IsCancellationRequested)
+                        if (batchItem.Format!.StartsWith("Transport Stream", StringComparison.Ordinal))
                         {
-                            break;
+                            var tsResult = _batchConvertItemSplitter.LoadTransportStream(batchItem, _cancellationToken);
+                            foreach (var bi in tsResult)
+                            {
+                                if (_cancellationToken.IsCancellationRequested)
+                                {
+                                    break;
+                                }
+                                await _batchConverter.Convert(bi, _cancellationToken);
+                            }
                         }
-                        await _batchConverter.Convert(bi, _cancellationToken);
+                        else
+                        {
+                            await _batchConverter.Convert(batchItem, _cancellationToken);
+                        }
+                    }
+                    catch (Exception exception)
+                    {
+                        // A failed item (e.g. auto-translate engine not reachable/not configured) must
+                        // not stall the whole batch: mark it as failed and continue with the next file.
+                        if (!_cancellationToken.IsCancellationRequested)
+                        {
+                            SeLogger.Error(exception, "Batch convert failed for: " + batchItem.FileName);
+                            batchItem.Status = string.Format(Se.Language.General.ErrorX, exception.Message);
+                        }
+                    }
+
+                    count++;
+
+                    if (_cancellationToken.IsCancellationRequested)
+                    {
+                        break;
                     }
                 }
-                else
-                {
-                    await _batchConverter.Convert(batchItem, _cancellationToken);
-                }
 
-                count++;
-
+                var end = DateTime.UtcNow.Ticks;
+                var elapsed = new TimeSpan(end - start).TotalMilliseconds;
+                var message = string.Format(Se.Language.General.XFilesConvertedInY, itemsToConvert.Count, elapsed);
                 if (_cancellationToken.IsCancellationRequested)
                 {
-                    ProgressText = string.Empty;
-                    break;
+                    message += Environment.NewLine + Se.Language.General.ConversionCancelledByUser;
                 }
+
+                await ShowStatus(message);
             }
-
-            IsProgressVisible = false;
-            IsConverting = false;
-            AreControlsEnabled = true;
-            ProgressText = string.Empty;
-
-            var end = DateTime.UtcNow.Ticks;
-            var elapsed = new TimeSpan(end - start).TotalMilliseconds;
-            var message = string.Format(Se.Language.General.XFilesConvertedInY, itemsToConvert.Count, elapsed);
-            if (_cancellationToken.IsCancellationRequested)
+            catch (Exception exception)
             {
-                message += Environment.NewLine + Se.Language.General.ConversionCancelledByUser;
+                SeLogger.Error(exception, "Batch convert failed");
             }
-
-            await ShowStatus(message);
+            finally
+            {
+                IsProgressVisible = false;
+                IsConverting = false;
+                AreControlsEnabled = true;
+                ProgressText = string.Empty;
+            }
         }, _cancellationToken);
     }
 
