@@ -49,6 +49,7 @@ public class LanguageMainMenu
     public string ChangeCasing { get; set; }
     public string ChangeFormatting { get; set; }
     public string AiReview { get; set; }
+    public string GrammarCheck { get; set; }
     public string FixCommonErrors { get; set; }
     public string CheckAndFixNetflixErrors { get; set; }
     public string MakeEmptyTranslationFromCurrentSubtitle { get; set; }
@@ -182,6 +183,7 @@ public class LanguageMainMenu
         AdjustDurations = "_Adjust durations...";
         ApplyDurationLimits = "Apply duration _limits...";
         AiReview = "AI review...";
+        GrammarCheck = "Grammar chec_k (LanguageTool)...";
         FixCommonErrors = "_Fix common errors...";
         CheckAndFixNetflixErrors = "Check and fix Netfli_x errors...";
         MakeEmptyTranslationFromCurrentSubtitle = "Make new _empty translation from current subtitle";

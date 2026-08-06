@@ -478,6 +478,11 @@ public static class InitMenu
             },
             new MenuItem
             {
+                Header = l.GrammarCheck,
+                Command = vm.ShowToolsGrammarCheckCommand,
+            },
+            new MenuItem
+            {
                 Header = l.MakeEmptyTranslationFromCurrentSubtitle,
                 Command = vm.ToolsMakeEmptyTranslationFromCurrentSubtitleCommand,
             },
