@@ -1,5 +1,6 @@
 using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Controls.Primitives;
 using Avalonia.Input;
 using Avalonia.Threading;
 using Avalonia.VisualTree;
@@ -2591,6 +2592,12 @@ public partial class BinaryEditViewModel : ObservableObject
             if (Menu is { IsOpen: false })
             {
                 Menu.Open();
+
+                // Alt activation also underlines the access keys (Avalonia's AccessKeyHandler sets
+                // this inherited property on the window); Menu.Open alone does not, which made F10
+                // open a menu whose access keys work but are invisible (#13111 beta-4 feedback).
+                // The built-in handler clears the property again on every close path.
+                Window?.SetValue(AccessText.ShowAccessKeyProperty, true);
             }
         });
         return true;
@@ -2604,6 +2611,14 @@ public partial class BinaryEditViewModel : ObservableObject
     private void DeactivateMenu()
     {
         Menu?.Close();
+
+        // Menu.Close() early-returns when the bar is already closed - but a top-level item can
+        // still be selected in that state, and skipping the reset would leave its highlight
+        // behind after deactivation (#13111 beta-4 feedback).
+        if (Menu != null)
+        {
+            Menu.SelectedIndex = -1;
+        }
 
         var restore = _focusBeforeMenu;
         _focusBeforeMenu = null;
