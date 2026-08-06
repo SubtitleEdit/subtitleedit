@@ -61,7 +61,7 @@ public class AiReviewWindow : Window
         // Free cloud tiers rate limit hard, so the delay between requests lives next to the API key
         // rather than in a settings dialog. The label would not fit the toolbar - a timer icon plus
         // tooltip carries the meaning, and the accessible name keeps it readable for screen readers.
-        var numericDelay = UiUtil.MakeNumericUpDownInt(0, 600, 0, 70, vm, nameof(vm.RequestDelaySeconds))
+        var numericDelay = UiUtil.MakeNumericUpDownInt(0, 600, 0, double.NaN, vm, nameof(vm.RequestDelaySeconds))
             .WithAccessibleName(Se.Language.Translate.DelayInSecondsBetweenRequests);
         ToolTip.SetTip(numericDelay, Se.Language.Translate.DelayInSecondsBetweenRequests);
         var iconDelay = new Optris.Icons.Avalonia.Icon
