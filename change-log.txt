@@ -3,6 +3,42 @@ Subtitle Edit Changelog
 
 -----------------------------------------------------------------------------------------------------
 
+v5.2.0-beta5 (6th of August 2026)
+
+* Add option to keep the end time when merging lines (allow overlap) - thx hisui3393
+* Add "Beautify time codes" to batch convert - thx xyv1997
+* Open the matching video automatically after OCR - thx fraternl
+* Use the container's default audio track when opening a video - thx fraternl
+* OCR: add the DeepSeek-OCR-2 backend (CrispEmbed v0.17.5)
+* Apply duration limits: the "do not go past shot change" option now works
+* Speech to text: select a Whisper engine on first run
+* Auto-translate via copy-paste: keep all ASSA tag groups in the translated text - thx FoxyLoon
+* Text to speech: keep the target language on cloning and detect the reference language - thx subof
+* ASSA: pick the most visible color for the subtitle grid when fading colors are used - thx rRobis
+* Copy ASSA/SSA lines to the clipboard without the file header - thx ghostminhtoan
+* Keep exact WebVTT cue position settings on save - thx Foxaryse
+* Keep multi-word "do not break" phrases together when auto-breaking - thx uckthis
+* Fix subtitle images changing vertical position with the text in PGS/VobSub export - thx robertmajsky
+* Fix SoftNI sub export always writing 25 fps instead of the project frame rate - thx rodnvs
+* Fix the CJK line termination check with Whisper Chinese - thx ajaska
+* Fix auto-trim white space merging Dutch words like "ze 's avonds" - thx fraternl
+* Fix "Start with uppercase letter after paragraph" treating single-letter lines as paragraph ends - thx fraternl
+* Fix long localized menu items being clipped by the popup width cap - thx Need74
+* Fix subtitle language names in the MP4 track picker - thx 5mrpcn
+* Fix "Download VLC" never completing when libVLC is already installed - thx hisui3393
+* Fix poor contrast of the settings icons with custom colors - thx rRobis
+* Fix the last change log line being covered by the horizontal scrollbar - thx ivandrofly
+* Fix "Return" not working as a shortcut when the subtitle grid has focus - thx Surlime
+* Fix the first line not being selected when opening a subtitle - thx fraternl
+* Faster waveform dragging and text editing - thx hisui3393
+* Faster merging of selected lines, auto-break and image based export
+* Fewer allocations in the UI value converters
+* Update Turkish translation - thx bilimiyorum
+* Update French translation - thx Need74
+* Update Traditional Chinese translation - thx love80312
+
+-----------------------------------------------------------------------------------------------------
+
 v5.2.0-beta4 (5th of August 2026)
 
 * Read subtitles from fragmented MP4 (DASH/CMAF): WebVTT, TTML/IMSC1 and tx3g
