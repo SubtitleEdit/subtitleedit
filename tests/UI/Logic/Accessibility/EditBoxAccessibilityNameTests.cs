@@ -13,6 +13,15 @@ using UITests.Logic.Accessibility;
 
 [assembly: AvaloniaTestApplication(typeof(TestAppBuilder))]
 
+// Avalonia 12 defaults to PerTest isolation, which resets the dispatcher and rebuilds the
+// whole application - including a Compositor on a timer-driven render loop - for every
+// test. That re-initialization races under CI load: DefaultRenderLoop.Add throws
+// "The calling thread cannot access this object" from AvaloniaHeadlessPlatform.Initialize
+// during a random test's cleanup (~2 in 5 runs on GitHub Actions). One shared application
+// per assembly initializes once and closes the race window. The suite is safe to share:
+// tests close their windows and restore any Application-level state they touch.
+[assembly: AvaloniaTestIsolation(AvaloniaTestIsolationLevel.PerAssembly)]
+
 namespace UITests.Logic.Accessibility;
 
 public class TestApp : Application

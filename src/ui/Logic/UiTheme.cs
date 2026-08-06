@@ -7,6 +7,7 @@ using Avalonia.Layout;
 using Avalonia.Media;
 using Avalonia.Styling;
 using Avalonia.Themes.Fluent;
+using Avalonia.Threading;
 using Avalonia.VisualTree;
 using Nikse.SubtitleEdit.Controls.SyntaxTextEditorControl;
 using Nikse.SubtitleEdit.Logic.Config;
@@ -46,7 +47,9 @@ public static class UiTheme
             if (themeSetting == ThemeNameSystem)
             {
                 // No Application in unit tests or at design time - fall back to dark.
-                if (Application.Current == null)
+                // ActualThemeVariant is UI-thread-affine, so an off-thread read (plain
+                // xunit facts, worker threads) must fall back too instead of throwing.
+                if (Application.Current == null || !Dispatcher.UIThread.CheckAccess())
                 {
                     return ThemeNameDark;
                 }
