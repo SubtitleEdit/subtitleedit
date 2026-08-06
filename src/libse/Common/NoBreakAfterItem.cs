@@ -32,13 +32,38 @@ namespace Nikse.SubtitleEdit.Core.Common
                 return Regex.IsMatch(line);
             }
 
-            if (line.EndsWith(Text, StringComparison.Ordinal))
+            return EndsWithWholeWord(line.AsSpan());
+        }
+
+        /// <summary>
+        /// Span overload so <see cref="Utilities.CanBreak"/> - which asks every list entry about
+        /// every candidate break point in the line - does not have to allocate the substring
+        /// before the break point. Only a regex entry still needs a string.
+        /// </summary>
+        public bool IsMatch(ReadOnlySpan<char> line)
+        {
+            if (line.IsEmpty || string.IsNullOrEmpty(Text))
             {
-                var indexBeforeText = line.Length - Text.Length - 1;
-                return indexBeforeText < 0 || line[indexBeforeText] == ' ';
+                return false;
             }
 
-            return false;
+            if (Regex != null)
+            {
+                return Regex.IsMatch(line.ToString());
+            }
+
+            return EndsWithWholeWord(line);
+        }
+
+        private bool EndsWithWholeWord(ReadOnlySpan<char> line)
+        {
+            if (!line.EndsWith(Text.AsSpan(), StringComparison.Ordinal))
+            {
+                return false;
+            }
+
+            var indexBeforeText = line.Length - Text.Length - 1;
+            return indexBeforeText < 0 || line[indexBeforeText] == ' ';
         }
 
         public override string ToString()

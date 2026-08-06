@@ -264,10 +264,14 @@ namespace Nikse.SubtitleEdit.Core.Common
             var head = s.AsSpan(0, index);
             if (Configuration.Settings.Tools.UseNoLineBreakAfter)
             {
-                var s2 = s.Substring(0, index); // the list matches with Regex/EndsWith, which need a string
-                foreach (NoBreakAfterItem ending in NoBreakAfterList(language))
+                var noBreakAfter = GetNoBreakAfterListInfo(language);
+
+                // The list matches with EndsWith, which works on the span - only a regex entry
+                // needs the substring, and none of the shipped lists have one.
+                var s2 = noBreakAfter.HasRegex ? s.Substring(0, index) : null;
+                foreach (var ending in noBreakAfter.Items)
                 {
-                    if (ending.IsMatch(s2))
+                    if (s2 == null ? ending.IsMatch(head) : ending.IsMatch(s2))
                     {
                         return false;
                     }
@@ -275,21 +279,25 @@ namespace Nikse.SubtitleEdit.Core.Common
 
                 // A multi-word entry (e.g. "SORT OF") means the whole phrase must stay together,
                 // so also forbid a break between its words - otherwise the line could still be
-                // split right before the last word of the phrase (issue #9631).
-                var nextSpaceIndex = s.IndexOf(' ', index + 1);
-                if (nextSpaceIndex < 0)
+                // split right before the last word of the phrase (issue #9631). Only 2 of the 33
+                // shipped lists have such an entry, so the whole second pass is normally skipped.
+                if (noBreakAfter.MultiWordItems != null)
                 {
-                    nextSpaceIndex = s.Length;
-                }
-
-                if (nextSpaceIndex > index + 1)
-                {
-                    var s3 = s.Substring(0, nextSpaceIndex);
-                    foreach (NoBreakAfterItem ending in NoBreakAfterList(language))
+                    var nextSpaceIndex = s.IndexOf(' ', index + 1);
+                    if (nextSpaceIndex < 0)
                     {
-                        if (ending.Regex == null && ending.Text != null && ending.Text.IndexOf(' ') >= 0 && ending.IsMatch(s3))
+                        nextSpaceIndex = s.Length;
+                    }
+
+                    if (nextSpaceIndex > index + 1)
+                    {
+                        var s3 = s.AsSpan(0, nextSpaceIndex);
+                        foreach (var ending in noBreakAfter.MultiWordItems)
                         {
-                            return false;
+                            if (ending.IsMatch(s3))
+                            {
+                                return false;
+                            }
                         }
                     }
                 }
@@ -328,17 +336,18 @@ namespace Nikse.SubtitleEdit.Core.Common
         }
 
         private static string _lastNoBreakAfterListLanguage;
-        private static List<NoBreakAfterItem> _lastNoBreakAfterList = new List<NoBreakAfterItem>();
-
-        // CanBreak asks for this once per candidate break point, and AutoBreakLine(text) passes no
-        // language at all, so the "no language" case must not allocate a list every time.
-        private static readonly List<NoBreakAfterItem> EmptyNoBreakAfterList = new List<NoBreakAfterItem>();
+        private static NoBreakAfterListInfo _lastNoBreakAfterList = NoBreakAfterListInfo.Empty;
 
         internal static IEnumerable<NoBreakAfterItem> NoBreakAfterList(string languageName)
         {
+            return GetNoBreakAfterListInfo(languageName).Items;
+        }
+
+        internal static NoBreakAfterListInfo GetNoBreakAfterListInfo(string languageName)
+        {
             if (string.IsNullOrEmpty(languageName))
             {
-                return EmptyNoBreakAfterList;
+                return NoBreakAfterListInfo.Empty;
             }
 
             if (languageName == _lastNoBreakAfterListLanguage)
@@ -346,7 +355,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                 return _lastNoBreakAfterList;
             }
 
-            _lastNoBreakAfterList = new List<NoBreakAfterItem>();
+            var items = new List<NoBreakAfterItem>();
 
             //load words via xml
             string noBreakAfterFileName = DictionaryFolder + languageName + "_NoBreakAfterList.xml";
@@ -361,15 +370,17 @@ namespace Nikse.SubtitleEdit.Core.Common
                         if (node.Attributes?["RegEx"] != null && node.Attributes["RegEx"].InnerText.Equals("true", StringComparison.OrdinalIgnoreCase))
                         {
                             var r = new Regex(node.InnerText, RegexOptions.Compiled);
-                            _lastNoBreakAfterList.Add(new NoBreakAfterItem(r, node.InnerText));
+                            items.Add(new NoBreakAfterItem(r, node.InnerText));
                         }
                         else
                         {
-                            _lastNoBreakAfterList.Add(new NoBreakAfterItem(node.InnerText.TrimStart()));
+                            items.Add(new NoBreakAfterItem(node.InnerText.TrimStart()));
                         }
                     }
                 }
             }
+
+            _lastNoBreakAfterList = new NoBreakAfterListInfo(items);
             _lastNoBreakAfterListLanguage = languageName;
 
             return _lastNoBreakAfterList;
