@@ -77,6 +77,7 @@
     "cancelled": "キャンセル済み",
     "caseInsensitive": "大文字小文字を区別しない",
     "caseSensitive": "大文字小文字を区別",
+    "casing": "大文字/小文字",
     "category": "カテゴリー",
     "center": "中央",
     "centerHorizontally": "左右中央寄せ",
@@ -1143,8 +1144,6 @@
       "titleExportFcpImage": "Final Cut Pro + 画像",
       "titleExportWebVttThumbnails": "WebVTT PNG",
       "titleExportCavena890": "Cavena 890へエクスポート",
-      "titleExportEbuStl": "EBU STLへエクスポート",
-      "titleExportPac": "PACへエクスポート",
       "exportCavenaTranslatedTitle": "翻訳タイトル",
       "exportCavenaOriginalTitle": "原題",
       "exportCavenaTranslator": "翻訳者",
@@ -1301,10 +1300,6 @@
     "xProperties": "{0}のプロパティ"
   },
   "edit": {
-    "noSubtitleSelected": "字幕が選択されていません",
-    "pleaseSelectExactlyOneSubtitle": "字幕を1つだけ選択してください。",
-    "boxType": "ボックスの種類:",
-    "backgroundColor": "背景色:",
     "modifySelection": {
       "title": "選択条件の指定",
       "contains": "含む",
@@ -2099,7 +2094,7 @@
       "applyDefaultToAll": "既定をすべてに適用",
       "clearAllAssignmentsConfirm": "すべての音声割り当てを解除しますか?",
       "setupCast": "キャスト...",
-      "setupCastHint": "各演者 (ASSA) または 音声 (WebVTT) に TTS 音声を割り当てます。",
+      "setupCastHint": "各演者 (ASS) または 音声 (WebVTT) に TTS 音声を割り当てます。",
       "actorVoicesRowSettingsTitle": "TTS - 音声設定",
       "voiceSettingsForX": "\"{0}\" の音声設定",
       "voiceInstructionFreeTextHint": "音声の雰囲気や話し方を調整するための自由記述テキストです。",
@@ -2347,7 +2342,10 @@
     "repeatPenalty": "繰り返しペナルティ",
     "maxTokensPerReply": "返信あたりの最大トークン数",
     "serverContextSizeTokens": "サーバーのコンテキストサイズ（トークン）",
-    "customPromptHint": "カスタム指示（{0}=原文言語、{1}=翻訳先言語）。空の場合は組み込みプロンプトを使用"
+    "customPromptHint": "カスタム指示（{0}=原文言語、{1}=翻訳先言語）。空の場合は組み込みプロンプトを使用",
+    "llamaCppDownloadEngineAndModelPrompt": "llama.cpp を使用するには、llama-server エンジンと翻訳モデルのダウンロードが必要です。今すぐダウンロードしますか？",
+    "llamaCppDownloadEnginePrompt": "llama.cpp を使用するには、llama-server エンジンのダウンロードが必要です。今すぐダウンロードしますか？",
+    "llamaCppDownloadModelPrompt": "llama.cpp を使用するには、選択した翻訳モデルのダウンロードが必要です。今すぐダウンロードしますか？"
   },
   "options": {
     "settings": {
@@ -2660,6 +2658,9 @@
       "generalGoToNextSubtitle": "次の字幕へ移動",
       "generalGoToNextSubtitleCursorAtEnd": "次の字幕へ移動して末尾にカーソルを置く",
       "generalGoToPrevSubtitle": "前の字幕へ移動",
+      "generalGoToFirstLine": "先頭行へ移動",
+      "generalGoToLastLine": "最終行へ移動",
+      "alsoSetVideoPosition": "ビデオ位置も設定",
       "generalGoToVideoPosition": "映像の位置へ移動",
       "generalToggleItalic": "斜体のオン／オフ",
       "generalToggleBold": "太字のオン／オフ",
@@ -3107,6 +3108,11 @@
     "attachments": "添付ファイル",
     "fontCollectorNoFontsToCopy": "コピーするフォントファイルが見つかりませんでした。",
     "fontCollectorXFontFilesCopiedToY": "{0} 個のフォントファイルを {1} にコピーしました",
+    "fontCollectorEmbedFontsDotDotDot": "字幕にフォントを埋め込む...",
+    "fontCollectorEmbedXFontsSizeYZPrompt": "{0} 個のフォントファイルを字幕に埋め込みますか？\n\nフォントの合計サイズ: {1}\nASSファイル内では約 {2} のテキストになります。\n\n{3}",
+    "fontCollectorAndXMoreFonts": "…ほか {0} 個",
+    "fontCollectorNoFontsToEmbed": "埋め込む新しいフォントはありません。必要なフォントは既に埋め込まれているか、見つかりませんでした。",
+    "fontCollectorXFontFilesEmbedded": "{0} 個のフォントファイルを字幕に埋め込みました。",
     "resolutionResamplerTitle": "解像度の変更",
     "resolutionResamplerSourceRes": "ソース解像度",
     "resolutionResamplerTargetRes": "ターゲット解像度",
