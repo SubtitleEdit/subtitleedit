@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Text;
 
 namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
 {
@@ -72,25 +71,25 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
                 return string.Empty;
             }
 
-            // Pre-calculate total length: 8 bits per byte
-            var sb = new StringBuilder(count * 8);
-            var span = buffer.AsSpan(index, count);
-            
-            for (var i = 0; i < count; i++)
+            // 8 bits per byte, written directly into the result string's buffer
+            return string.Create(count * 8, (buffer, index, count), (span, state) =>
             {
-                var b = span[i];
-                // Manual bit extraction is faster than Convert.ToString for single bytes
-                sb.Append((b & 0b10000000) != 0 ? '1' : '0');
-                sb.Append((b & 0b01000000) != 0 ? '1' : '0');
-                sb.Append((b & 0b00100000) != 0 ? '1' : '0');
-                sb.Append((b & 0b00010000) != 0 ? '1' : '0');
-                sb.Append((b & 0b00001000) != 0 ? '1' : '0');
-                sb.Append((b & 0b00000100) != 0 ? '1' : '0');
-                sb.Append((b & 0b00000010) != 0 ? '1' : '0');
-                sb.Append((b & 0b00000001) != 0 ? '1' : '0');
-            }
-
-            return sb.ToString();
+                var src = state.buffer.AsSpan(state.index, state.count);
+                var pos = 0;
+                for (var i = 0; i < src.Length; i++)
+                {
+                    var b = src[i];
+                    // Manual bit extraction is faster than Convert.ToString for single bytes
+                    span[pos++] = (b & 0b10000000) != 0 ? '1' : '0';
+                    span[pos++] = (b & 0b01000000) != 0 ? '1' : '0';
+                    span[pos++] = (b & 0b00100000) != 0 ? '1' : '0';
+                    span[pos++] = (b & 0b00010000) != 0 ? '1' : '0';
+                    span[pos++] = (b & 0b00001000) != 0 ? '1' : '0';
+                    span[pos++] = (b & 0b00000100) != 0 ? '1' : '0';
+                    span[pos++] = (b & 0b00000010) != 0 ? '1' : '0';
+                    span[pos++] = (b & 0b00000001) != 0 ? '1' : '0';
+                }
+            });
         }
     }
 }
