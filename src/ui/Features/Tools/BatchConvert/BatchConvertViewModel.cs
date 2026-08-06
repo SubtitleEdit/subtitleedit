@@ -21,6 +21,7 @@ using Nikse.SubtitleEdit.Features.Files.ExportImageBased;
 using Nikse.SubtitleEdit.Features.Main;
 using Nikse.SubtitleEdit.Features.Ocr;
 using Nikse.SubtitleEdit.Features.Ocr.Download;
+using Nikse.SubtitleEdit.Features.Ocr.Engines;
 using Nikse.SubtitleEdit.Features.Shared;
 using Nikse.SubtitleEdit.Features.Shared.ErrorList;
 using Nikse.SubtitleEdit.Features.Shared.PickSubtitleFormat;
@@ -952,6 +953,11 @@ public partial class BatchConvertViewModel : ObservableObject, IClosingCleanup
             return;
         }
 
+        if (!await EnsureCrispEmbedAvailable(config))
+        {
+            return;
+        }
+
         if (!await EnsureCrispAsrAvailable(config))
         {
             return;
@@ -1159,6 +1165,42 @@ public partial class BatchConvertViewModel : ObservableObject, IClosingCleanup
         }
 
         return true;
+    }
+
+    // Pre-run gate for the CrispEmbed OCR engine: when the run will actually OCR image-based
+    // inputs, make sure the engine binaries and the configured backend's model are on disk
+    // (prompting for downloads if not) - the batch converter itself never prompts.
+    private async Task<bool> EnsureCrispEmbedAvailable(BatchConvertConfig config)
+    {
+        if (Window == null)
+        {
+            return true;
+        }
+
+        if (config.IsTargetFormatImageBased)
+        {
+            return true;
+        }
+
+        if (!Se.Settings.Tools.BatchConvert.OcrEngine.Equals(CrispEmbedEngine.StaticName, StringComparison.OrdinalIgnoreCase))
+        {
+            return true;
+        }
+
+        if (!BatchItems.Any(IsImageBasedInput))
+        {
+            return true;
+        }
+
+        var backend = CrispEmbedEngine.GetBackends().FirstOrDefault(b => b.Name == Se.Settings.Ocr.CrispEmbedBackend);
+        var model = backend?.Models.FirstOrDefault(m => m.Name == Se.Settings.Ocr.CrispEmbedModel)
+                    ?? backend?.Models.FirstOrDefault(m => backend.IsModelInstalled(m));
+        if (backend == null || model == null)
+        {
+            return true; // no matching backend in settings - the converter reports the status per item
+        }
+
+        return await CrispEmbedDownloadHelper.EnsureReadyAsync(Window, _windowService, backend, model);
     }
 
     private async Task<bool> EnsureCrispAsrAvailable(BatchConvertConfig config)

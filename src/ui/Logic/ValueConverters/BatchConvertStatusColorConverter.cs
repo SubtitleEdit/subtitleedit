@@ -46,6 +46,10 @@ public class BatchConvertStatusColorConverter : IValueConverter
         var errorPrefix = GetErrorPrefix(Se.Language.General.ErrorX);
         if (status == Se.Language.General.NoSubtitlesFound ||
             status == Se.Language.Ocr.OllamaModelLikelyWrong ||
+            status == Se.Language.Ocr.LlamaCppNotDownloaded ||
+            status == Se.Language.Ocr.LlamaCppReturnedNoText ||
+            status == Se.Language.Ocr.CrispEmbedNotDownloaded ||
+            status == Se.Language.Ocr.CrispEmbedReturnedNoText ||
             (errorPrefix.Length > 0 && status.StartsWith(errorPrefix, StringComparison.OrdinalIgnoreCase)) ||
             status.StartsWith("BinaryOcr database not found", StringComparison.Ordinal))
         {
