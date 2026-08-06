@@ -221,4 +221,41 @@ public class UtilitiesTest
     {
         Assert.Equal(expected, Utilities.RemoveUnneededSpaces(input, language));
     }
+
+    // ReverseNumbers exercises the internal ReverseString: digit groups of two or more must be
+    // fully mirrored. Guards the span-based rewrite - reversing must read from the source
+    // string, not in-place from the destination span (which starts zero-filled and would also
+    // corrupt the second half after the midpoint).
+    [Theory]
+    [InlineData("Hello 123", "Hello 321")]
+    [InlineData("1234", "4321")]
+    [InlineData("12345", "54321")]
+    [InlineData("25 mm or 7 cm", "52 mm or 7 cm")] // single digits stay untouched
+    [InlineData("Hello", "Hello")]
+    [InlineData("", "")]
+    public void ReverseNumbers_MirrorsTwoOrMoreDigitGroups(string input, string expected)
+    {
+        Assert.Equal(expected, Utilities.ReverseNumbers(input));
+    }
+
+    // ReverseStartAndEndingForRightToLeft exercises the internal ReverseString and
+    // ReverseParenthesis: leading/trailing punctuation swaps ends, brackets are mirrored,
+    // and formatting tags stay in place.
+    [Theory]
+    [InlineData("- Hello.", ".Hello -")]
+    [InlineData("(Hello.)", "(.Hello)")]
+    [InlineData("!?Hello", "Hello?!")]
+    [InlineData("<i>Hello.</i>", "<i>.Hello</i>")]
+    [InlineData("Hello", "Hello")]
+    public void ReverseStartAndEndingForRightToLeft_SwapsAndMirrorsEdges(string input, string expected)
+    {
+        Assert.Equal(expected, Utilities.ReverseStartAndEndingForRightToLeft(input));
+    }
+
+    [Fact]
+    public void ReverseStartAndEndingForRightToLeft_MultipleLines()
+    {
+        var result = Utilities.ReverseStartAndEndingForRightToLeft("- Hello." + Environment.NewLine + "- Bye.");
+        Assert.Equal(".Hello -" + Environment.NewLine + ".Bye -", result);
+    }
 }
