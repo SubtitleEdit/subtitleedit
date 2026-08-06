@@ -8,6 +8,7 @@ using Avalonia.Layout;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Logic.ValueConverters;
+using System;
 
 namespace Nikse.SubtitleEdit.Features.Shared.PickMp4Track;
 
@@ -109,7 +110,7 @@ public class PickMp4TrackWindow : Window
             Header = "Duration",
             CellTheme = UiUtil.TableViewCellTheme,
             HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
-            Binding = new Binding(nameof(Mp4TrackInfoDisplay.Duration)),
+            Binding = new Binding(nameof(Mp4TrackInfoDisplay.Duration)) { Converter = new TimeSpanToDisplayFullConverter() },
             Width = new GridLength(100),
         };
         var vobSubColumn = new SeTableViewColumn
@@ -144,7 +145,7 @@ public class PickMp4TrackWindow : Window
         new TableViewHeaderSorter(dataGridTracks)
             .AddSortable<Mp4TrackInfoDisplay, string>(handlerColumn, x => x.HandlerType)
             .AddSortable<Mp4TrackInfoDisplay, string>(nameColumn, x => x.Name)
-            .AddSortable<Mp4TrackInfoDisplay, ulong>(durationColumn, x => x.Duration)
+            .AddSortable<Mp4TrackInfoDisplay, TimeSpan>(durationColumn, x => x.Duration)
             .AddSortable<Mp4TrackInfoDisplay, bool>(vobSubColumn, x => x.IsVobSubSubtitle)
             .AddSortable<Mp4TrackInfoDisplay, ulong>(startPositionColumn, x => x.StartPosition);
 

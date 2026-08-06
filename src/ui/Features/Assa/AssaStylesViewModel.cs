@@ -18,6 +18,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -240,6 +241,29 @@ public partial class AssaStylesViewModel : ObservableObject, IClosingCleanup
             }
 
             CurrentStyle.FontName = result.SelectedFontName;
+
+            if (result.SelectedCollectedFont != null)
+            {
+                EmbedCollectedFont(result.SelectedCollectedFont);
+            }
+        }
+    }
+
+    /// <summary>
+    /// A font picked from the "Collected fonts" tab need not be installed on the machine
+    /// that plays the subtitle, so its file is embedded in the [Fonts] attachment section.
+    /// Reaches the main subtitle only on OK, like the rest of this dialog's changes.
+    /// </summary>
+    private void EmbedCollectedFont(CollectedFont font)
+    {
+        try
+        {
+            var bytes = File.ReadAllBytes(font.FilePath);
+            _subtitle.Footer = AssaFontEmbedder.AddFontToFooter(_subtitle.Footer, font.FilePath, bytes);
+        }
+        catch (Exception exception)
+        {
+            Se.LogError(exception, "Could not embed collected font " + font.FilePath);
         }
     }
 

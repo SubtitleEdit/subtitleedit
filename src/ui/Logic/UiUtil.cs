@@ -3109,10 +3109,14 @@ public static class UiUtil
         // System.Timers.Timer keeps its (captured) view model - and the whole closed window - alive
         // and ticking. Wired here, in the one place every window funnels through, so individual
         // dialogs don't each have to remember to do it. (#12739)
+        // Guarded so the cleanup runs at most once per window even if Closed were ever raised
+        // again, keeping non-idempotent cleanups safe by construction. (#13100)
+        var cleanedUp = false;
         window.Closed += (_, _) =>
         {
-            if (window.DataContext is IClosingCleanup cleanup)
+            if (!cleanedUp && window.DataContext is IClosingCleanup cleanup)
             {
+                cleanedUp = true;
                 cleanup.OnClosingCleanup();
             }
         };

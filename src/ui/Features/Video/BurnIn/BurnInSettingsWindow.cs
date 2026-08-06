@@ -3,6 +3,7 @@ using Avalonia.Data;
 using Avalonia.Input;
 using Avalonia.Layout;
 using Nikse.SubtitleEdit.Logic;
+using Nikse.SubtitleEdit.Logic.Config;
 
 namespace Nikse.SubtitleEdit.Features.Video.BurnIn;
 
@@ -13,7 +14,7 @@ public class BurnInSettingsWindow : Window
     public BurnInSettingsWindow(BurnInSettingsViewModel vm)
     {
         UiUtil.InitializeWindow(this, GetType().Name);
-        Title = "Output settings";
+        Title = Se.Language.Video.OutputSettingsTitle;
         SizeToContent = SizeToContent.WidthAndHeight;
         CanResize = false;
         
@@ -23,7 +24,7 @@ public class BurnInSettingsWindow : Window
 
         var checkBoxUseSourceFolder = new RadioButton
         {
-            Content = "Use source folder",
+            Content = Se.Language.General.UseSourceFolder,
             IsChecked = vm.UseSourceFolder,
             VerticalAlignment = VerticalAlignment.Center,
             [!Avalonia.Controls.Primitives.ToggleButton.IsCheckedProperty] = new Binding(nameof(vm.UseSourceFolder)) { Mode = BindingMode.TwoWay, UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged },  
@@ -31,7 +32,7 @@ public class BurnInSettingsWindow : Window
 
         var checkBoxUseOutputFolder = new RadioButton
         {
-            Content = "Use output folder",
+            Content = Se.Language.General.UseOutputFolder,
             IsChecked = vm.UseOutputFolder,
             VerticalAlignment = VerticalAlignment.Center,
             [!Avalonia.Controls.Primitives.ToggleButton.IsCheckedProperty] = new Binding(nameof(vm.UseOutputFolder)) { Mode = BindingMode.TwoWay, UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged },  
@@ -42,11 +43,11 @@ public class BurnInSettingsWindow : Window
             Text = vm.OutputFolder,
             VerticalAlignment = VerticalAlignment.Center,
             [!TextBox.TextProperty] = new Binding(nameof(vm.OutputFolder)) { Mode = BindingMode.TwoWay, UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged },  
-            IsEnabled = vm.UseOutputFolder,
+            [!Control.IsEnabledProperty] = new Binding(nameof(vm.UseOutputFolder)) { Mode = BindingMode.OneWay },
             Width = 400,
         };
 
-        var buttonBrowse = UiUtil.MakeButtonBrowse(vm.BrowseOutputFolderCommand, accessibleName: "Use output folder");
+        var buttonBrowse = UiUtil.MakeButtonBrowse(vm.BrowseOutputFolderCommand, accessibleName: Se.Language.General.UseOutputFolder);
 
         var panelOutputFolder = new StackPanel
         {

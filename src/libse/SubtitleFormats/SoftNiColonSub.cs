@@ -116,7 +116,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             sb.AppendLine(@"*READ*");
             sb.AppendLine(@"0,300 15,000 130,000 100,000 25,000");
             sb.AppendLine(@"*TIMING*");
-            sb.AppendLine(@"1 25 0");
+            sb.AppendLine($"1 {(int)Math.Round(Configuration.Settings.General.CurrentFrameRate)} 0");
             sb.AppendLine(@"*TIMED BACKUP NAME*");
             sb.AppendLine(@"C:\");
             sb.AppendLine(@"*FORMAT SAMPLE ÅåÉéÌìÕõÛûÿ*");

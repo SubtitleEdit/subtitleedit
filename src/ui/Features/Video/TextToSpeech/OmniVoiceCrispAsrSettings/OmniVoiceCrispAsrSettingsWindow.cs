@@ -21,7 +21,7 @@ public class OmniVoiceCrispAsrSettingsWindow : Window
     public OmniVoiceCrispAsrSettingsWindow(OmniVoiceCrispAsrSettingsViewModel vm)
     {
         UiUtil.InitializeWindow(this, GetType().Name);
-        Title = "OmniVoice TTS (CrispASR) settings";
+        Title = string.Format(Se.Language.Video.TtsCrispAsrSettingsTitle, "OmniVoice TTS");
         // Explicit width + height-only auto-sizing: SizeToContent.WidthAndHeight comes out far
         // too wide on macOS.
         Width = 620;
@@ -112,7 +112,7 @@ public class OmniVoiceCrispAsrSettingsWindow : Window
             RowSpacing = 10,
         };
 
-        grid.Add(MakeLabel("Engine"), 0, 0);
+        grid.Add(MakeLabel(Se.Language.General.Engine), 0, 0);
         var enginePanel = MakeStatusPanel(nameof(vm.EngineBrush), nameof(vm.EngineLabel));
         var engineButton = UiUtil.MakeButton(string.Empty, vm.RedownloadEngineCommand)
             .WithIconLeft(IconNames.Download)
@@ -130,7 +130,7 @@ public class OmniVoiceCrispAsrSettingsWindow : Window
         grid.Add(MakeLabel("Model " + OmniVoiceCrispAsr.ModelKeyF16), 3, 0);
         grid.Add(MakeStatusPanel(nameof(vm.ModelF16Brush), nameof(vm.ModelF16Label)), 3, 1);
 
-        grid.Add(MakeLabel("Voices"), 4, 0);
+        grid.Add(MakeLabel(Se.Language.Video.Voices), 4, 0);
         var voicesText = new TextBlock
         {
             VerticalAlignment = VerticalAlignment.Center,

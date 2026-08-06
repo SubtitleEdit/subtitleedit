@@ -606,77 +606,54 @@ public partial class SpellCheckViewModel : ObservableObject, IClosingCleanup
             subtitle.Paragraphs.Add(p);
         }
 
-        var languageCode = LanguageAutoDetect.AutoDetectGoogleLanguageOrNull(subtitle);
-        if (languageCode == null)
-        {
-            languageCode = "en";
-        }
+        var detectedLanguageCode = LanguageAutoDetect.AutoDetectGoogleLanguageOrNull(subtitle);
+        var languageCode = detectedLanguageCode ?? "en";
+
+        // Hunspell entries are identified by dictionary file; MS Word entries have no file and are
+        // identified by name only. A dictionary the user picked explicitly wins over detection - it
+        // is only kept for the subtitle currently loaded, so it cannot carry a language over from an
+        // earlier file. When it matches nothing (file deleted since last session, name stored under
+        // another OS locale) the detected language is used instead.
+        var pickedDictionary = spellCheckDictionary == null
+            ? null
+            : (!string.IsNullOrEmpty(spellCheckDictionary.DictionaryFileName)
+                   ? Dictionaries.FirstOrDefault(l => l.DictionaryFileName.Equals(spellCheckDictionary.DictionaryFileName, StringComparison.OrdinalIgnoreCase))
+                   : null)
+              ?? Dictionaries.FirstOrDefault(l => l.Name.Equals(spellCheckDictionary.Name, StringComparison.OrdinalIgnoreCase));
 
         if (_spellCheckManager.WordSpellChecker != null)
         {
-            try
-            {
-                var languages = _spellCheckManager.WordSpellChecker.GetInstalledLanguages();
-                var culture = new CultureInfo(languageCode);
-                var text = culture.NativeName; // "Português (Portugal)"
-                var startIndex = text.IndexOf('(') + 1;
-                var endIndex = text.IndexOf(')', startIndex);
-                if (startIndex > 0 && endIndex > startIndex)
-                {
-                    var languageName = text.AsMemory(startIndex, endIndex - startIndex);
-                    if (!string.IsNullOrWhiteSpace(Se.Settings.SpellCheck.LastLanguageDictionaryName) && Se.Settings.SpellCheck.LastLanguageDictionaryName.Contains(languageName.Span, StringComparison.OrdinalIgnoreCase))
-                    {
-                        var selectedLan = languages.FirstOrDefault(l => l.Name.Contains(Se.Settings.SpellCheck.LastLanguageDictionaryName, StringComparison.OrdinalIgnoreCase));
-                        if (selectedLan != null)
-                        {
-                            _spellCheckManager.WordSpellChecker.CurrentLanguage = selectedLan;
-                            SelectedDictionary = Dictionaries.FirstOrDefault(l => l.Name.Equals(selectedLan.Name, StringComparison.OrdinalIgnoreCase));
-                            return;
-                        }
-                    }
-
-                    var selectedLanguage = languages.FirstOrDefault(l => l.Name.Contains(languageName.Span, StringComparison.OrdinalIgnoreCase));
-                    if (selectedLanguage != null)
-                    {
-                        _spellCheckManager.WordSpellChecker.CurrentLanguage = selectedLanguage;
-                        SelectedDictionary = Dictionaries.FirstOrDefault(l => l.Name.Equals(selectedLanguage.Name, StringComparison.OrdinalIgnoreCase));
-                    }
-                }
-            }
-            catch
-            {
-                // ignore
-            }
+            SetWordLanguage(detectedLanguageCode, pickedDictionary);
             return;
         }
 
         var threeLetterCode = Iso639Dash2LanguageCode.GetThreeLetterCodeFromTwoLetterCode(languageCode);
-        SelectedDictionary = Dictionaries.FirstOrDefault(p => p.GetThreeLetterCode().Equals(threeLetterCode, StringComparison.OrdinalIgnoreCase));
+        var detectedDictionary = Dictionaries.FirstOrDefault(p => p.GetThreeLetterCode().Equals(threeLetterCode, StringComparison.OrdinalIgnoreCase));
 
-        if (spellCheckDictionary is not null)
-        {
-            // Hunspell entries are identified by dictionary file; MS Word entries have no file
-            // and are identified by name only. When the passed dictionary matches nothing (file
-            // deleted since last session, name stored under another OS locale), keep the
-            // auto-detected dictionary instead of clearing it.
-            SelectedDictionary = (!string.IsNullOrEmpty(spellCheckDictionary.DictionaryFileName)
-                    ? Dictionaries.FirstOrDefault(l => l.DictionaryFileName.Equals(spellCheckDictionary.DictionaryFileName, StringComparison.OrdinalIgnoreCase))
-                    : null)
-                ?? Dictionaries.FirstOrDefault(l => l.Name.Equals(spellCheckDictionary.Name, StringComparison.OrdinalIgnoreCase))
-                ?? SelectedDictionary;
-        }
-
-        if (SelectedDictionary == null)
+        if (detectedDictionary == null)
         {
             // Match on the file name ("de_DE.dic" starts with "de") — the display name is
             // localized ("German"/"Deutsch") and does not reliably start with the ISO code.
-            SelectedDictionary = Dictionaries.FirstOrDefault(l =>
+            detectedDictionary = Dictionaries.FirstOrDefault(l =>
                 Path.GetFileName(l.DictionaryFileName).StartsWith(languageCode, StringComparison.OrdinalIgnoreCase));
         }
 
+        SelectedDictionary = pickedDictionary;
+
         if (SelectedDictionary == null)
         {
-            SelectedDictionary = FindLastUsedDictionary(Dictionaries);
+            // The dictionary of the previous session is only a dialect refinement within the
+            // detected language - it keeps "en_GB" over "en_US" for an English subtitle, but it
+            // must not force English onto a Dutch one just because English was spell checked
+            // last (issue #13117). It does stay the best guess when nothing was detected or when
+            // the detected language has no dictionary installed.
+            var lastUsedDictionary = FindLastUsedDictionary(Dictionaries);
+            var keepLastUsed = lastUsedDictionary != null &&
+                               (detectedLanguageCode == null ||
+                                detectedDictionary == null ||
+                                lastUsedDictionary.GetThreeLetterCode().Equals(detectedDictionary.GetThreeLetterCode(), StringComparison.OrdinalIgnoreCase));
+
+            SelectedDictionary = keepLastUsed ? lastUsedDictionary : detectedDictionary;
         }
 
         if (SelectedDictionary == null && Dictionaries.Count > 0)
@@ -688,6 +665,78 @@ public partial class SpellCheckViewModel : ObservableObject, IClosingCleanup
         {
             _spellCheckManager.Initialize(SelectedDictionary.DictionaryFileName, SpellCheckDictionaryDisplay.GetTwoLetterLanguageCode(SelectedDictionary));
         }
+    }
+
+    /// <summary>
+    /// Selects the MS Word language matching the subtitle. Word has no dictionary files - its
+    /// languages are matched by name, and the selection is applied to the Word instance too.
+    /// Leaves the selection made in <see cref="LoadDictionaries"/> (the language of the previous
+    /// session) untouched when nothing matches.
+    /// </summary>
+    private void SetWordLanguage(string? detectedLanguageCode, SpellCheckDictionaryDisplay? pickedDictionary)
+    {
+        var wordSpellChecker = _spellCheckManager.WordSpellChecker;
+        if (wordSpellChecker == null)
+        {
+            return;
+        }
+
+        try
+        {
+            var languages = wordSpellChecker.GetInstalledLanguages();
+
+            if (pickedDictionary != null && SelectWordLanguage(languages, l => l.Name.Equals(pickedDictionary.Name, StringComparison.OrdinalIgnoreCase)))
+            {
+                return;
+            }
+
+            if (detectedLanguageCode == null)
+            {
+                return;
+            }
+
+            // Word reports its languages by local name - "Dutch (Netherlands)" on an English Word,
+            // "Nederlands (Nederland)" on a Dutch one - so the detected language is matched by both
+            // its English and its native name. A two letter code gives a neutral culture, whose
+            // name carries no region in parentheses to match on.
+            var culture = new CultureInfo(detectedLanguageCode);
+            var detectedNames = new[] { culture.EnglishName, culture.NativeName }
+                .Where(n => !string.IsNullOrWhiteSpace(n))
+                .ToArray();
+
+            // The language of the previous session is only a dialect refinement within the detected
+            // language ("English (United Kingdom)" over "English (United States)"); it must not
+            // force English onto a Dutch subtitle just because English was checked last (#13117).
+            var lastUsedName = Se.Settings.SpellCheck.LastLanguageDictionaryName;
+            if (!string.IsNullOrWhiteSpace(lastUsedName) &&
+                detectedNames.Any(n => lastUsedName.Contains(n, StringComparison.OrdinalIgnoreCase)) &&
+                SelectWordLanguage(languages, l => l.Name.Contains(lastUsedName, StringComparison.OrdinalIgnoreCase)))
+            {
+                return;
+            }
+
+            SelectWordLanguage(languages, l => detectedNames.Any(n => l.Name.Contains(n, StringComparison.OrdinalIgnoreCase)));
+        }
+        catch
+        {
+            // ignore
+        }
+    }
+
+    private bool SelectWordLanguage(List<WordSpellCheckLanguage> languages, Func<WordSpellCheckLanguage, bool> predicate)
+    {
+        var language = languages.FirstOrDefault(predicate);
+        var dictionary = language == null
+            ? null
+            : Dictionaries.FirstOrDefault(l => l.Name.Equals(language.Name, StringComparison.OrdinalIgnoreCase));
+        if (language == null || dictionary == null)
+        {
+            return false;
+        }
+
+        _spellCheckManager.WordSpellChecker!.CurrentLanguage = language;
+        SelectedDictionary = dictionary;
+        return true;
     }
 
     [RelayCommand]

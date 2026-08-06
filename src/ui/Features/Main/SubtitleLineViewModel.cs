@@ -113,17 +113,25 @@ public partial class SubtitleLineViewModel : ObservableObject
 
     public SubtitleLineViewModel(SubtitleLineViewModel p, bool generateNewId = false)
     {
-        Text = p.Text;
-        OriginalText = p.OriginalText;
-        StartTime = p.StartTime;
-        EndTime = p.EndTime;
-        UpdateDuration();
+        // The observable properties are written as backing fields, not through their setters.
+        // Nothing can be subscribed to an object still inside its own constructor, so every
+        // notification the setters raise is discarded - but ObservableObject allocates a
+        // PropertyChanging/PropertyChangedEventArgs for each one anyway, and the Text and
+        // StartTime/EndTime setters fan out to a dozen more raises via their partial hooks.
+        // That was ~40 dead allocations per line, and undo snapshots this whole collection
+        // (issue #13234). The hooks are notification-only apart from UpdateDuration, which is
+        // what _duration is set to below.
+        _text = p.Text;
+        _originalText = p.OriginalText;
+        _startTime = p.StartTime;
+        _endTime = p.EndTime;
+        _duration = p.EndTime - p.StartTime;
+        _style = p.Style;
+        _actor = p.Actor;
+        _layer = p.Layer;
+        _number = p.Number;
         Language = p.Language;
         Region = p.Region;
-        Style = p.Style;
-        Actor = p.Actor;
-        Layer = p.Layer;
-        Number = p.Number;
         Extra = p.Extra;
         Effect = p.Effect;
         IsComment = p.IsComment;
@@ -132,7 +140,7 @@ public partial class SubtitleLineViewModel : ObservableObject
         MarginV = p.MarginV;
         NewSection = p.NewSection;
         Forced = p.Forced;
-        Bookmark = p.Bookmark;
+        _bookmark = p.Bookmark;
 
         Id = generateNewId ? Guid.NewGuid() : p.Id;
 
@@ -236,21 +244,34 @@ public partial class SubtitleLineViewModel : ObservableObject
     }
 
     // Read-time memo for the html-stripped, line-split text: the pixel width column, the text
-    // error verdict and GetErrors all need it, and each used to strip and split the text again -
-    // three times per line for a single error scan. Keyed on the text instance like the memos
-    // below. The returned list is shared, so callers must only read it.
+    // error verdict, GetErrors and the edit box's line-length panel all need it, and each used
+    // to strip and split the text again - three times per line for a single error scan. Keyed
+    // on the text instance like the memos below. The returned string/list are shared, so
+    // callers must only read them.
     private string? _strippedLinesCacheText;
+    private string? _strippedTextCacheValue;
     private List<string>? _strippedLinesCacheValue;
 
-    private List<string> GetStrippedLines()
+    private void EnsureStrippedCache()
     {
         if (_strippedLinesCacheValue == null || !ReferenceEquals(_strippedLinesCacheText, Text))
         {
-            _strippedLinesCacheValue = SubtitleTextInfoHelper.StripHtml(Text).SplitToLines();
+            _strippedTextCacheValue = SubtitleTextInfoHelper.StripHtml(Text);
+            _strippedLinesCacheValue = _strippedTextCacheValue.SplitToLines();
             _strippedLinesCacheText = Text;
         }
+    }
 
-        return _strippedLinesCacheValue;
+    internal string GetStrippedText()
+    {
+        EnsureStrippedCache();
+        return _strippedTextCacheValue!;
+    }
+
+    internal List<string> GetStrippedLines()
+    {
+        EnsureStrippedCache();
+        return _strippedLinesCacheValue!;
     }
 
     // Read-time memo, see CharactersPerSecond below: the pixel-width column binding re-reads this

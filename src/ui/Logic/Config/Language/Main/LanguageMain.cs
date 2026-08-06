@@ -206,7 +206,7 @@ public class LanguageMain
         UndoPerformed = "Undo performed";
         UndoPerformedXActionLeft = "Undo performed (actions left: {0})";
         XLinesCopiedFromOriginal = "{0} lines copied from original subtitle";
-        XLinesMerged = "X lines merged";
+        XLinesMerged = "{0} lines merged";
         XLinesSelectedOfY = "{0} lines selected of {1}";
         XLinesSwitched = "{0} lines switched";
         XShotChangedLoaded = "{0} shot changes loaded";

@@ -594,7 +594,7 @@ public class FixCommonErrorsWindow : Window
         Grid.SetRow(buttonBarFixes, 2);
         Grid.SetColumn(buttonBarFixes, 0);
 
-        var borderFixes = UiUtil.MakeBorderForControlNoPadding(gridFixes).WithMarginBottom(5);
+        var borderFixes = UiUtil.MakeBorderForControlNoPadding(gridFixes);
 
         // bottom
         var gridSubtitles = new Grid
@@ -617,6 +617,7 @@ public class FixCommonErrorsWindow : Window
         var fullTimeConverter = new TimeSpanToDisplayFullConverter();
         var shortTimeConverter = new TimeSpanToDisplayShortConverter();
         var syntaxHighlightingConverter = new TextWithSubtitleSyntaxHighlightingConverter();
+        var textToFlowDirectionConverter = new TextToFlowDirectionConverter();
         var dataGridSubtitles = TableViewExtras.MakeTableView(multiSelect: false);
         dataGridSubtitles.DataContext = _vm;
         dataGridSubtitles.ItemsSource = _vm.Paragraphs;
@@ -704,6 +705,10 @@ public class FixCommonErrorsWindow : Window
                     VerticalAlignment = VerticalAlignment.Center,
                     TextWrapping = TextWrapping.NoWrap,
                     [!TextBlock.InlinesProperty] = new Binding(nameof(SubtitleLineViewModel.Text)) { Converter = syntaxHighlightingConverter },
+
+                    // Right-to-left text needs a right-to-left cell, or Avalonia splits the
+                    // line at every zero width non-joiner and reverses the word order (#13160).
+                    [!TextBlock.FlowDirectionProperty] = new Binding(nameof(SubtitleLineViewModel.Text)) { Converter = textToFlowDirectionConverter },
                 };
                 if (!string.IsNullOrEmpty(Se.Settings.Appearance.SubtitleTextBoxAndGridFontName))
                 {
@@ -741,8 +746,9 @@ public class FixCommonErrorsWindow : Window
         {
             RowDefinitions =
             {
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Star), MinHeight = 150 },
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Star), MinHeight = 150 },
             },
             ColumnDefinitions =
             {
@@ -753,12 +759,25 @@ public class FixCommonErrorsWindow : Window
             Width = double.NaN,
             HorizontalAlignment = HorizontalAlignment.Stretch,
         };
+
+        var splitter = new GridSplitter
+        {
+            Height = UiUtil.SplitterWidthOrHeight,
+            ResizeDirection = GridResizeDirection.Rows,
+            HorizontalAlignment = HorizontalAlignment.Stretch,
+            Margin = new Thickness(0, 2),
+        };
+
         grid.Children.Add(borderFixes);
         Grid.SetRow(borderFixes, 0);
         Grid.SetColumn(borderFixes, 0);
 
+        grid.Children.Add(splitter);
+        Grid.SetRow(splitter, 1);
+        Grid.SetColumn(splitter, 0);
+
         grid.Children.Add(borderSubtitles);
-        Grid.SetRow(borderSubtitles, 1);
+        Grid.SetRow(borderSubtitles, 2);
         Grid.SetColumn(borderSubtitles, 0);
 
         return grid;

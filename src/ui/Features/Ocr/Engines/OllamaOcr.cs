@@ -36,6 +36,8 @@ public class OllamaOcr
 
     public async Task<string> Ocr(SKBitmap bitmap, string url, string model, string language, CancellationToken cancellationToken)
     {
+        Error = string.Empty;
+
         try
         {
             // Pad to square to improve OCR accuracy
@@ -108,6 +110,13 @@ public class OllamaOcr
         }
         catch (Exception ex)
         {
+            // E.g. connection refused (Ollama not running) or timeout — record it so the caller
+            // can tell a real failure apart from a textless image. A non-success HTTP status has
+            // already stored the (more informative) response body in Error.
+            if (string.IsNullOrEmpty(Error))
+            {
+                Error = ex.Message;
+            }
             SeLogger.Error(ex, "Error calling Ollama for OCR");
             return string.Empty;
         }

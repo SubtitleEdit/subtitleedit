@@ -1,4 +1,3 @@
-using Avalonia.Media;
 using CommunityToolkit.Mvvm.ComponentModel;
 using Nikse.SubtitleEdit.Features.Main;
 using System.Collections.Generic;
@@ -12,7 +11,6 @@ public partial class ReviewRow : ObservableObject
     [ObservableProperty] private string _voice;
     [ObservableProperty] private string _cps;
     [ObservableProperty] private string _speed;
-    [ObservableProperty] private Color _speedBackgroundColor;
     [ObservableProperty] private string _text;
     [ObservableProperty] private bool _hasHistory;
     [ObservableProperty] private bool _isPlaying;
@@ -39,7 +37,6 @@ public partial class ReviewRow : ObservableObject
         Voice = string.Empty;
         Cps = string.Empty;
         Speed = string.Empty;
-        SpeedBackgroundColor = Colors.AliceBlue; //TODO: (Color)Application.Current!.Resources[ThemeNames.BackgroundColor];
         Text = string.Empty;
         StepResult = new TtsStepResult();
         HistoryItems = new List<ReviewHistoryRow>();

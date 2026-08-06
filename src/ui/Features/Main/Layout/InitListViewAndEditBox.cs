@@ -148,18 +148,23 @@ public static partial class InitListViewAndEditBox
         TableViewExtras.BindRowProperty(vm.SubtitleGrid, Visual.IsVisibleProperty,
             new Binding(nameof(SubtitleLineViewModel.IsHidden)) { Converter = inverseBooleanConverter });
 
-        // Expose "number: text" as the row's accessible name so screen readers announce
-        // something meaningful when the row takes focus (issue #13015). The error summary
-        // is appended because the grid's cell tints are the only other signal for rule
-        // violations, and color never reaches the accessibility tree.
+        // Expose "number: text, start - end, duration" as the row's accessible name so
+        // screen readers announce the full row like SE4's list view did (issues #13015,
+        // #12087). Text stays right after the number so browsing by content is fast; the
+        // time codes follow for review. The error summary is appended because the grid's
+        // cell tints are the only other signal for rule violations, and color never
+        // reaches the accessibility tree.
         TableViewExtras.BindRowProperty(vm.SubtitleGrid, AutomationProperties.NameProperty,
             new MultiBinding
             {
-                StringFormat = "{0}: {1}{2}",
+                StringFormat = "{0}: {1}, {2} - {3}, {4}{5}",
                 Bindings =
                 {
                     new Binding(nameof(SubtitleLineViewModel.Number)),
                     new Binding(nameof(SubtitleLineViewModel.Text)),
+                    new Binding(nameof(SubtitleLineViewModel.StartTime)) { Converter = fullTimeConverter, Mode = BindingMode.OneWay },
+                    new Binding(nameof(SubtitleLineViewModel.EndTime)) { Converter = fullTimeConverter, Mode = BindingMode.OneWay },
+                    new Binding(nameof(SubtitleLineViewModel.Duration)) { Converter = shortTimeConverter, Mode = BindingMode.OneWay },
                     new Binding(nameof(SubtitleLineViewModel.AccessibleErrorText)),
                 },
             });
@@ -1658,7 +1663,7 @@ public static partial class InitListViewAndEditBox
         // add label to panelSingleLineLengthsOriginal
         var singleLineLengthLabel = new TextBlock
         {
-            Text = "Line lengths: x/x",
+            Text = Se.Language.Main.SingleLineLength,
             FontWeight = FontWeight.Bold,
             Margin = new Thickness(0, 0, 5, 0)
         };

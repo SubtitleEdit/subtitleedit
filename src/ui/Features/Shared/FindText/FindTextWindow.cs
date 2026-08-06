@@ -111,7 +111,7 @@ public class FindTextWindow : Window
             Width = new GridLength(1, GridUnitType.Star),
             CellTheme = UiUtil.TableViewCellTheme,
             HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
-            Binding = new Binding(nameof(SubtitleLineViewModel.Text)),
+            CellTemplate = TableViewExtras.MakeTextCellTemplate(nameof(SubtitleLineViewModel.Text)),
         });
 
         vm.SubtitleGrid.DataContext = vm.Subtitles;

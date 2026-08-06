@@ -13,6 +13,11 @@ namespace Nikse.SubtitleEdit.Core.VobSub
         public List<SKColor> IdxPalette { get; private set; } = new List<SKColor>();
         public List<string> IdxLanguages { get; private set; } = new List<string>();
 
+        /// <summary>
+        /// Two-letter ISO 639-1 codes from the idx "id:" lines, parallel to <see cref="IdxLanguages"/>.
+        /// </summary>
+        public List<string> IdxLanguageCodes { get; private set; } = new List<string>();
+
         private const int PacketizedElementaryStreamMaximumLength = 2028;
 
         /// <summary>
@@ -228,6 +233,7 @@ namespace Nikse.SubtitleEdit.Core.VobSub
                 var idx = new Idx(idxFileName);
                 IdxPalette = idx.Palette;
                 IdxLanguages = idx.Languages;
+                IdxLanguageCodes = idx.LanguageCodes;
                 if (idx.IdxParagraphs.Count > 0)
                 {
                     var buffer = new byte[0x800]; // 2048

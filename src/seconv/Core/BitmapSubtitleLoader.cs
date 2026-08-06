@@ -319,19 +319,21 @@ internal static class BitmapSubtitleLoader
     /// VobSub track inside an MP4 (handler type <c>subp</c>, e.g. produced by MP4Box) →
     /// bitmap events. The decoded subpictures and their timing are parsed by libse's
     /// <see cref="Stbl"/>; index <c>i</c> of <c>SubPictures</c> lines up with paragraph
-    /// <c>i</c>. Mirrors the desktop <c>OcrSubtitleMp4VobSub</c> (palette left to default).
+    /// <c>i</c>. Mirrors the desktop <c>OcrSubtitleMp4VobSub</c>, including the CLUT from
+    /// the sample entry when the track has one.
     /// </summary>
     public static IReadOnlyList<BitmapSubtitleItem> LoadMp4VobSub(Trak track)
     {
         var paragraphs = track.Mdia.Minf.Stbl.GetParagraphs();
         var subPictures = track.Mdia.Minf.Stbl.SubPictures;
+        var palette = track.Mdia.Minf.Stbl.VobSubPalette;
         var count = Math.Min(paragraphs.Count, subPictures.Count);
 
         var items = new List<BitmapSubtitleItem>(count);
         for (var i = 0; i < count; i++)
         {
             var bmp = subPictures[i].GetBitmap(
-                null, SKColors.Transparent, SKColors.Black, SKColors.White, SKColors.Black, false);
+                palette, SKColors.Transparent, SKColors.Black, SKColors.White, SKColors.Black, false);
             if (bmp is null)
             {
                 continue;

@@ -18,6 +18,7 @@ Subtitle Edit is a free, open-source editor for video subtitles. This is the doc
 
 ### Editing
 - [Edit Menu](features/edit.md) — Find, Replace, Multiple Replace, History
+- [Source View](features/source-view.md) — Edit the raw subtitle source: syntax coloring, live parse check, find/replace, line commands
 - [Modify Selection](features/modify-selection.md) — Select lines by rules: text, hearing-impaired text, duration, CPS, gaps, styles, actors
 - [Subtitle Grid](features/subtitle-grid.md) — Working with the subtitle list/grid
 - [Text Editor](features/text-editor.md) — Editing subtitle text

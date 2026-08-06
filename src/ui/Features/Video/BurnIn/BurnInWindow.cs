@@ -45,8 +45,13 @@ public class BurnInWindow : Window
         var videoInfoView = MakeVideoInfoView(vm);
         var progressView = MakeProgressView(vm);
 
-        // Keep the left column (subtitle + video + target size) together and top-aligned so the
-        // extra vertical space goes to the preview instead of opening a gap between the boxes.
+        // The left column (subtitle + video settings + target size) is taller than the middle
+        // column's cut/preview/audio/video-info rows. Keeping all three boxes in one packed
+        // panel preserves the v5.1.0 look (no gaps), and the preview row's MinHeight below
+        // guarantees the panel fits in rows 0-3 - so it can never overflow into the
+        // progress-bar row (which used to draw the bar through the "File size in MB" field)
+        // - and the preview box never gets shorter than its label + player, so the player
+        // cannot spill over the audio settings box.
         var leftPanel = new StackPanel
         {
             Orientation = Orientation.Vertical,
@@ -100,9 +105,9 @@ public class BurnInWindow : Window
             RowDefinitions =
             {
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // cut
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Star) }, // preview + batch list
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Star), MinHeight = 400 }, // preview + batch list (never smaller than the preview box needs)
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // audio
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // video info
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // video info + target file size
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // progress bar
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // buttons
             },
@@ -117,7 +122,7 @@ public class BurnInWindow : Window
             HorizontalAlignment = HorizontalAlignment.Stretch,
         };
 
-        grid.Add(leftPanel, 0, 0, 4, 1);
+        grid.Add(leftPanel, 0, 0, 4, 1);  // rows 0-3 (cut + preview + audio + video info)
         grid.Add(cutView, 0, 1);
         grid.Add(previewView, 1, 1);
         grid.Add(audioSettingsView, 2, 1);
@@ -168,6 +173,12 @@ public class BurnInWindow : Window
                 UpdateGrowAreas();
                 LockMinimumToContentSize(); // batch mode needs more width; re-fit and re-lock the minimum
             }
+            else if (e.PropertyName == nameof(vm.IsGenerating))
+            {
+                // The progress row only exists while generating; re-lock the minimum so the
+                // window (and the button row) always fit the content with the bar shown.
+                LockMinimumToContentSize(heightOnly: true);
+            }
         };
         UpdateGrowAreas();
 
@@ -188,25 +199,65 @@ public class BurnInWindow : Window
         };
     }
 
-    private void LockMinimumToContentSize()
+    private void LockMinimumToContentSize(bool heightOnly = false)
     {
         // Re-fit the window to the current mode's content (single mode is narrower; batch mode
         // needs more width for the file list), then lock that size in as the new minimum while
         // still allowing the user to enlarge the window further.
-        MinWidth = 0;
+        //
+        // heightOnly re-fits only the height: the width (and the minimum locked for it) is the
+        // user's, and clearing MinWidth here would leave it at zero - the callback below never
+        // restores it - so the window could be dragged narrower than its content, which is the
+        // clipping this whole method exists to prevent.
+        if (!heightOnly)
+        {
+            MinWidth = 0;
+        }
+
         MinHeight = 0;
-        SizeToContent = SizeToContent.WidthAndHeight;
+        SizeToContent = heightOnly ? SizeToContent.Height : SizeToContent.WidthAndHeight;
         Dispatcher.UIThread.Post(() =>
         {
             var width = ClientSize.Width;
             var height = ClientSize.Height;
+            // Any difference between the window size and the client size (title bar, borders) has
+            // to be added on top of the content, or the minimum sits below it and the bottom row
+            // (buttons) gets clipped. Avalonia measures windows by client area, so this is
+            // normally zero; Width/Height are also NaN until something assigns them, hence the
+            // guard - NaN here would wipe out the minimum entirely.
+            var chromeWidth = Width - width;
+            var chromeHeight = Height - height;
+            if (double.IsNaN(chromeWidth) || chromeWidth < 0)
+            {
+                chromeWidth = 0;
+            }
+
+            if (double.IsNaN(chromeHeight) || chromeHeight < 0)
+            {
+                chromeHeight = 0;
+            }
+
             SizeToContent = SizeToContent.Manual;
             if (width > 0 && height > 0)
             {
-                MinWidth = width;
-                MinHeight = height;
-                Width = width;
-                Height = height;
+                if (heightOnly)
+                {
+                    // Used when generating starts/stops: the progress row only exists while
+                    // generating, so re-lock the minimum for that state. Only enlarge - never
+                    // shrink the window back down automatically.
+                    MinHeight = height + chromeHeight;
+                    if (Height < MinHeight)
+                    {
+                        Height = MinHeight;
+                    }
+                }
+                else
+                {
+                    MinWidth = width + chromeWidth;
+                    MinHeight = height + chromeHeight;
+                    Width = width + chromeWidth;
+                    Height = height + chromeHeight;
+                }
             }
         }, DispatcherPriority.Loaded);
     }
@@ -482,10 +533,7 @@ public class BurnInWindow : Window
             {
                 new Label
                 {
-                    Content = "Current ASSA style will be used" + Environment.NewLine +
-                    Environment.NewLine +
-                    "Change subtitle format if"+ Environment.NewLine +
-                    "you want to set styles here",
+                    Content = Se.Language.Video.AssaStyleWillBeUsed,
                     FontWeight = FontWeight.Bold,
                     FontSize = 22,
                     HorizontalAlignment = HorizontalAlignment.Center,

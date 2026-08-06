@@ -25,6 +25,7 @@ using Nikse.SubtitleEdit.Features.Tools.SplitBreakLongLines;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Logic.Dictionaries;
+using Nikse.SubtitleEdit.Logic.Media;
 using Nikse.SubtitleEdit.Logic.LlamaCpp;
 using Nikse.SubtitleEdit.UiLogic.Ocr;
 using SkiaSharp;
@@ -64,6 +65,10 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
     private BatchConvertConfig _config;
     private List<SubtitleFormat> _subtitleFormats;
 
+    // Font-name -> found font files, shared across the items of one batch run so the
+    // "Embed fonts" function does not rescan the font folders for every file.
+    private readonly Dictionary<string, List<string>> _fontFilesCache = new(StringComparer.OrdinalIgnoreCase);
+
     public SubtitleFormat Format { get; set; } = new SubRip();
 
     public Encoding Encoding { get; set; } = Encoding.UTF8;
@@ -92,6 +97,7 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
     {
         _config = config;
         _subtitleFormats = SubtitleFormatHelper.GetSubtitleFormatsWithFavoritesAtTop();
+        _fontFilesCache.Clear();
     }
 
     /// <summary>
@@ -321,6 +327,10 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
             {
                 await RunLlamaCppOcr(imageSubtitle, item, cancellationToken);
             }
+            else if (Se.Settings.Tools.BatchConvert.OcrEngine.Equals(CrispEmbedEngine.StaticName, StringComparison.OrdinalIgnoreCase))
+            {
+                await RunCrispEmbedOcr(imageSubtitle, item, cancellationToken);
+            }
             else
             {
                 await RunOcrTesseract(imageSubtitle, item, cancellationToken);
@@ -443,6 +453,17 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
             if (paragraphs.Count > 0)
             {
                 result.Add(new TransportStreamResult { IsImage = false, Subtitle = new Subtitle(paragraphs) });
+            }
+        }
+
+        foreach (var aribPid in tsParser.AribSubtitlesLookup)
+        {
+            foreach (var language in aribPid.Value)
+            {
+                if (language.Value.Count > 0)
+                {
+                    result.Add(new TransportStreamResult { IsImage = false, Subtitle = new Subtitle(language.Value) });
+                }
             }
         }
 
@@ -1348,6 +1369,88 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
         }
     }
 
+    private async Task RunCrispEmbedOcr(IOcrSubtitle imageSubtitles, BatchConvertItem item, CancellationToken cancellationToken)
+    {
+        // Backend/model picked in batch convert settings (shared with the OCR window). The batch
+        // run never downloads - the settings dialog prompts for that on OK.
+        var backend = CrispEmbedEngine.GetBackends().FirstOrDefault(b => b.Name == Se.Settings.Ocr.CrispEmbedBackend);
+        var model = backend?.Models.FirstOrDefault(m => m.Name == Se.Settings.Ocr.CrispEmbedModel)
+                    ?? backend?.Models.FirstOrDefault(m => backend.IsModelInstalled(m));
+        if (backend == null || model == null || !CrispEmbedEngine.IsEngineInstalled() || !backend.IsModelInstalled(model))
+        {
+            item.Status = Se.Language.Ocr.CrispEmbedNotDownloaded;
+            return;
+        }
+
+        using var engine = new CrispEmbedOcr(Se.Settings.Ocr.CrispEmbedOcrTimeoutMinutes);
+
+        // PP-OCRv6 is a detector+recognizer pair driven through the CLI; the VLM backends load
+        // once into crispembed-server per file - see CrispEmbedOcr.
+        item.Status = Se.Language.General.OcrDotDotDot;
+        bool started;
+        try
+        {
+            started = backend.UsesTextDetector
+                ? engine.StartCliPipeline(
+                    CrispEmbedEngine.GetCliExecutable(),
+                    backend.GetModelPath(model),
+                    backend.GetDetectorPath(model))
+                : await engine.StartServerAsync(
+                    CrispEmbedEngine.GetServerExecutable(),
+                    backend.GetModelPath(model),
+                    cancellationToken);
+        }
+        catch (OperationCanceledException)
+        {
+            item.Status = Se.Language.General.Cancelled;
+            return;
+        }
+
+        if (!started)
+        {
+            item.Status = string.Format(Se.Language.General.ErrorX, engine.Error);
+            return;
+        }
+
+        item.Subtitle = new Subtitle();
+        var cancelled = false;
+        for (var i = 0; i < imageSubtitles.Count; i++)
+        {
+            var pct = (i + 1) * 100 / imageSubtitles.Count;
+            item.Status = string.Format(Se.Language.General.OcrPercentX, pct);
+            var bitmap = imageSubtitles.GetBitmap(i);
+
+            string text;
+            try
+            {
+                text = await engine.Ocr(bitmap, cancellationToken);
+            }
+            catch (OperationCanceledException)
+            {
+                item.Status = Se.Language.General.Cancelled;
+                return;
+            }
+
+            var p = new Paragraph(text, imageSubtitles.GetStartTime(i).TotalMilliseconds, imageSubtitles.GetEndTime(i).TotalMilliseconds);
+            item.Subtitle.Paragraphs.Add(p);
+
+            if (cancellationToken.IsCancellationRequested)
+            {
+                item.Status = Se.Language.General.Cancelled;
+                cancelled = true;
+                break;
+            }
+        }
+
+        // Every line blank means the engine/model setup is broken - flag the file so the user
+        // notices instead of ending up with a silently-empty subtitle.
+        if (!cancelled && item.Subtitle.Paragraphs.Count > 0 &&
+            item.Subtitle.Paragraphs.All(p => string.IsNullOrWhiteSpace(p.Text)))
+        {
+            item.Status = Se.Language.Ocr.CrispEmbedReturnedNoText;
+        }
+    }
+
     /// <summary>
     /// Applies the "Adjust image brightness/alpha/color" function to a source image
     /// before export. Returns the input untouched when the function is off.
@@ -1536,6 +1639,13 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
                         s.Footer = _config.AssaFooter;
                     }
                 }
+
+                // After the header/footer template above, so fonts are collected from the
+                // styles that are actually written and the embedding is not overwritten.
+                if (_config.AssaEmbedFonts.IsActive)
+                {
+                    AssaFontEmbedder.EmbedUsedFonts(s, cancellationToken, _fontFilesCache);
+                }
             }
 
             var converted = targetFormat.ToText(s, Path.GetFileNameWithoutExtension(item.FileName));
@@ -1649,6 +1759,7 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
             s = ChangeSpeed(s);
             s = BridgeGaps(s);
             s = ApplyMinGap(s);
+            s = BeautifyTimeCodes(s, item.FileName);
         }
         else
         {
@@ -1676,6 +1787,7 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
             s = FixRightToLeft(s);
             s = AssaChangeResolution(s);
             s = AssaChangeStyle(s);
+            s = BeautifyTimeCodes(s, item.FileName);
             s = SortBy(s);
         }
 
@@ -2066,6 +2178,75 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
             }
         }
 
+        return subtitle;
+    }
+
+    private Subtitle BeautifyTimeCodes(Subtitle subtitle, string subtitleFileName)
+    {
+        if (!_config.BeautifyTimeCodes.IsActive)
+        {
+            return subtitle;
+        }
+
+        // Frame rate comes from either a fixed user-chosen rate or a video file matching
+        // the subtitle file name, when one exists. Shot changes are only available if they
+        // were previously generated/imported for that video (they are cached on disk per
+        // video file).
+        //
+        // Without a fixed rate or a matching video, fall back to the frame rate this batch
+        // is actually producing: the target of the "change frame rate" step when it runs
+        // (it runs before this one), otherwise the project frame rate. Configuration
+        // .Settings.General.DefaultFrameRate is not usable here - nothing in the UI ever
+        // assigns it, so it is always libse's built-in 23.976.
+        var frameRate = _config.ChangeFrameRate.IsActive && _config.ChangeFrameRate.ToFrameRate > 0
+            ? _config.ChangeFrameRate.ToFrameRate
+            : Se.Settings.General.CurrentFrameRate;
+        if (frameRate <= 0)
+        {
+            frameRate = Se.Settings.General.DefaultFrameRate;
+        }
+
+        if (_config.BeautifyTimeCodes.UseFixedFrameRate && _config.BeautifyTimeCodes.FixedFrameRate > 0)
+        {
+            frameRate = _config.BeautifyTimeCodes.FixedFrameRate;
+        }
+
+        var shotChanges = new List<double>();
+
+        if (FindVideoFileName.TryFindVideoFileName(subtitleFileName, out var videoFileName))
+        {
+            if (!_config.BeautifyTimeCodes.UseFixedFrameRate)
+            {
+                try
+                {
+                    var mediaInfo = FfmpegMediaInfo2.Parse(videoFileName);
+                    if (mediaInfo.FramesRate > 0)
+                    {
+                        frameRate = (double)mediaInfo.FramesRate;
+                    }
+                }
+                catch
+                {
+                    // no ffmpeg or unreadable video file - keep the fallback frame rate
+                }
+            }
+
+            if (_config.BeautifyTimeCodes.SnapToShotChanges)
+            {
+                try
+                {
+                    shotChanges = ShotChangesHelper.FromDisk(videoFileName);
+                }
+                catch
+                {
+                    // unreadable/corrupt shot-changes cache - beautify without them rather
+                    // than aborting the rest of the batch
+                    shotChanges = new List<double>();
+                }
+            }
+        }
+
+        new Core.Forms.TimeCodesBeautifier(subtitle, frameRate, new List<double>(), shotChanges).Beautify();
         return subtitle;
     }
 

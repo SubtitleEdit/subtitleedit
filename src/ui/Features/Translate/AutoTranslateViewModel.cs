@@ -104,7 +104,7 @@ public partial class AutoTranslateViewModel : ObservableObject
     [ObservableProperty] private bool _llamaCppAdvancedButtonIsVisible;
     [ObservableProperty] private bool _llamaCppRemoteToggleIsVisible;
     [ObservableProperty] private bool _llamaCppUseRemoteServer;
-    [ObservableProperty] private string _llamaCppServerButtonText = "Start server";
+    [ObservableProperty] private string _llamaCppServerButtonText = Se.Language.General.StartServer;
     [ObservableProperty] private string _llamaCppDownloadButtonText = string.Empty;
     [ObservableProperty] private string _crispAsrDownloadButtonText = string.Empty;
 
@@ -952,7 +952,7 @@ public partial class AutoTranslateViewModel : ObservableObject
 
     private void UpdateLlamaCppServerButtonText()
     {
-        LlamaCppServerButtonText = LlamaCppServerManager.IsServerRunning ? "Stop server" : "Start server";
+        LlamaCppServerButtonText = LlamaCppServerManager.IsServerRunning ? Se.Language.General.StopServer : Se.Language.General.StartServer;
     }
 
     [RelayCommand]

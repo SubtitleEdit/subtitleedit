@@ -1,5 +1,6 @@
 ﻿using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.Enums;
+using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using Nikse.SubtitleEdit.Features.Main;
 using Nikse.SubtitleEdit.Logic.Config;
 using System;
@@ -21,7 +22,21 @@ namespace Nikse.SubtitleEdit.Logic
             KeepBreaks
         }
 
-        public Subtitle MergeSelectedLines(Subtitle inputSubtitle, int[] selectedIndices, BreakMode breakMode = BreakMode.Normal)
+        /// <summary>
+        /// True when merged lines should keep the end time of the last merged line even if it
+        /// overlaps the following subtitle, based on the merge settings and the current format.
+        /// </summary>
+        public static bool ShouldKeepEndTime(SubtitleFormat? currentFormat)
+        {
+            if (!Se.Settings.Tools.MergeKeepEndTime)
+            {
+                return false;
+            }
+
+            return !Se.Settings.Tools.MergeKeepEndTimeOnlyAssa || currentFormat is AdvancedSubStationAlpha;
+        }
+
+        public Subtitle MergeSelectedLines(Subtitle inputSubtitle, int[] selectedIndices, BreakMode breakMode = BreakMode.Normal, bool keepEndTime = false)
         {
             if (inputSubtitle.Paragraphs.Count <= 0 || selectedIndices.Length <= 1)
             {
@@ -35,6 +50,14 @@ namespace Nikse.SubtitleEdit.Logic
             var firstIndex = 0;
             double endMilliseconds = 0;
             var next = 0;
+
+            // Auto-detection reads the whole file (two subtitle copies, then ~30 word-count passes
+            // over the joined text), so it must run once per merge - not once per merged line.
+            // Merging the lines only edits trailing continuation marks, which cannot change a
+            // whole-file language verdict.
+            string? language = null;
+            string DetectLanguage() => language ?? (language = LanguageAutoDetect.AutoDetectGoogleLanguage(subtitle));
+
             foreach (var index in selectedIndices)
             {
                 if (first)
@@ -60,7 +83,7 @@ namespace Nikse.SubtitleEdit.Logic
                     var continuationProfile = ContinuationUtilities.GetContinuationProfile(continuationStyle);
                     if (next < firstIndex + selectedIndices.Length)
                     {
-                        var mergeResult = ContinuationUtilities.MergeHelper(subtitle.Paragraphs[index].Text, subtitle.Paragraphs[index + 1].Text, continuationProfile, LanguageAutoDetect.AutoDetectGoogleLanguage(subtitle));
+                        var mergeResult = ContinuationUtilities.MergeHelper(subtitle.Paragraphs[index].Text, subtitle.Paragraphs[index + 1].Text, continuationProfile, DetectLanguage());
                         subtitle.Paragraphs[index].Text = mergeResult.Item1;
                         subtitle.Paragraphs[index + 1].Text = mergeResult.Item2;
                     }
@@ -81,7 +104,10 @@ namespace Nikse.SubtitleEdit.Logic
                     sb.AppendLine(addText);
                 }
 
-                endMilliseconds = subtitle.Paragraphs[index].EndTime.TotalMilliseconds;
+                // Max, not last: with "keep end time" the merged line must span every merged
+                // line, and selected lines are not necessarily ordered by end time (e.g. an
+                // ASSA sign event that outlives the dialog line merged into it).
+                endMilliseconds = Math.Max(endMilliseconds, subtitle.Paragraphs[index].EndTime.TotalMilliseconds);
             }
 
             var currentParagraph = subtitle.Paragraphs[firstIndex];
@@ -104,7 +130,7 @@ namespace Nikse.SubtitleEdit.Logic
             }
             else
             {
-                text = Utilities.AutoBreakLine(text, LanguageAutoDetect.AutoDetectGoogleLanguage(subtitle));
+                text = Utilities.AutoBreakLine(text, DetectLanguage());
             }
 
             currentParagraph.Text = text;
@@ -113,7 +139,7 @@ namespace Nikse.SubtitleEdit.Logic
             currentParagraph.EndTime.TotalMilliseconds = endMilliseconds;
 
             var nextParagraph = subtitle.GetParagraphOrDefault(next);
-            if (nextParagraph != null && currentParagraph.EndTime.TotalMilliseconds > nextParagraph.StartTime.TotalMilliseconds && currentParagraph.StartTime.TotalMilliseconds < nextParagraph.StartTime.TotalMilliseconds)
+            if (!keepEndTime && nextParagraph != null && currentParagraph.EndTime.TotalMilliseconds > nextParagraph.StartTime.TotalMilliseconds && currentParagraph.StartTime.TotalMilliseconds < nextParagraph.StartTime.TotalMilliseconds)
             {
                 currentParagraph.EndTime.TotalMilliseconds = nextParagraph.StartTime.TotalMilliseconds - 1;
             }
@@ -127,7 +153,7 @@ namespace Nikse.SubtitleEdit.Logic
             return subtitle;
         }
 
-        public void MergeSelectedLines(ObservableCollection<SubtitleLineViewModel> inputSubtitle, List<SubtitleLineViewModel> selectedItems, BreakMode breakMode = BreakMode.Normal)
+        public void MergeSelectedLines(ObservableCollection<SubtitleLineViewModel> inputSubtitle, List<SubtitleLineViewModel> selectedItems, BreakMode breakMode = BreakMode.Normal, bool keepEndTime = false)
         {
             if (inputSubtitle.Count <= 0 || selectedItems.Count <= 1)
             {
@@ -142,6 +168,14 @@ namespace Nikse.SubtitleEdit.Logic
             var firstIndex = 0;
             double endMilliseconds = 0;
             var next = 0;
+
+            // Auto-detection copies the whole grid into a Subtitle and runs ~30 word-count passes
+            // over the joined text, so it must run once per merge - not once per merged line (and
+            // not three more times for the auto-break calls below). Merging only edits trailing
+            // continuation marks, which cannot change a whole-file language verdict.
+            string? language = null;
+            string DetectLanguage() => language ?? (language = inputSubtitle.AutoDetectGoogleLanguage());
+
             foreach (var selectedItem in selectedItems)
             {
                 var index = inputSubtitle.IndexOf(selectedItem);
@@ -168,7 +202,7 @@ namespace Nikse.SubtitleEdit.Logic
                     var continuationProfile = ContinuationUtilities.GetContinuationProfile(continuationStyle);
                     if (next < firstIndex + selectedItems.Count)
                     {
-                        var mergeResult = ContinuationUtilities.MergeHelper(inputSubtitle[index].Text, inputSubtitle[index + 1].Text, continuationProfile, inputSubtitle.AutoDetectGoogleLanguage());
+                        var mergeResult = ContinuationUtilities.MergeHelper(inputSubtitle[index].Text, inputSubtitle[index + 1].Text, continuationProfile, DetectLanguage());
                         inputSubtitle[index].Text = mergeResult.Item1;
                         inputSubtitle[index + 1].Text = mergeResult.Item2;
                     }
@@ -191,7 +225,10 @@ namespace Nikse.SubtitleEdit.Logic
                     sbOriginal.AppendLine(inputSubtitle[index].OriginalText);
                 }
 
-                endMilliseconds = inputSubtitle[index].EndTime.TotalMilliseconds;
+                // Max, not last: with "keep end time" the merged line must span every merged
+                // line, and selected lines are not necessarily ordered by end time (e.g. an
+                // ASSA sign event that outlives the dialog line merged into it).
+                endMilliseconds = Math.Max(endMilliseconds, inputSubtitle[index].EndTime.TotalMilliseconds);
             }
 
             var currentParagraph = inputSubtitle[firstIndex];
@@ -214,7 +251,7 @@ namespace Nikse.SubtitleEdit.Logic
             }
             else if (breakMode != BreakMode.KeepBreaks)
             {
-                text = Utilities.AutoBreakLine(text, inputSubtitle.AutoDetectGoogleLanguage());
+                text = Utilities.AutoBreakLine(text, DetectLanguage());
             }
 
             currentParagraph.Text = text;
@@ -236,7 +273,7 @@ namespace Nikse.SubtitleEdit.Logic
                 }
                 else if (breakMode != BreakMode.KeepBreaks)
                 {
-                    originalText = Utilities.AutoBreakLine(originalText, inputSubtitle.AutoDetectGoogleLanguage());
+                    originalText = Utilities.AutoBreakLine(originalText, DetectLanguage());
                 }
 
                 currentParagraph.OriginalText = originalText;
@@ -246,7 +283,7 @@ namespace Nikse.SubtitleEdit.Logic
             currentParagraph.EndTime = TimeSpan.FromMilliseconds(endMilliseconds);
 
             var nextParagraph = inputSubtitle.GetOrNull(next);
-            if (nextParagraph != null && currentParagraph.EndTime.TotalMilliseconds > nextParagraph.StartTime.TotalMilliseconds && currentParagraph.StartTime.TotalMilliseconds < nextParagraph.StartTime.TotalMilliseconds)
+            if (!keepEndTime && nextParagraph != null && currentParagraph.EndTime.TotalMilliseconds > nextParagraph.StartTime.TotalMilliseconds && currentParagraph.StartTime.TotalMilliseconds < nextParagraph.StartTime.TotalMilliseconds)
             {
                 currentParagraph.EndTime = TimeSpan.FromMilliseconds(nextParagraph.StartTime.TotalMilliseconds - 1);
             }

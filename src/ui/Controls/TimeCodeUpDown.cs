@@ -104,6 +104,11 @@ namespace Nikse.SubtitleEdit.Controls
                 // screen readers to announce it (e.g. "Start time") instead of just the value.
                 _textBox.Bind(AutomationProperties.NameProperty, this.GetObservable(AutomationProperties.NameProperty));
 
+                // Screen readers deliberately stay quiet when a plain edit control's value changes,
+                // so stepping with Up/Down was inaudible; announced as a spinner, every value change
+                // is spoken (#12087).
+                AutomationProperties.SetControlTypeOverride(_textBox, Avalonia.Automation.Peers.AutomationControlType.Spinner);
+
                 _textBox.AddHandler(TextInputEvent, OnTextInput, RoutingStrategies.Tunnel);
                 _textBox.AddHandler(KeyDownEvent, OnTextBoxKeyDown, RoutingStrategies.Tunnel);
                 _textBox.GotFocus += OnTextBoxGotFocus;

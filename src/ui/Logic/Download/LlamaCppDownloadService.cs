@@ -21,7 +21,7 @@ public class LlamaCppDownloadService(HttpClient httpClient) : ILlamaCppDownloadS
     /// The pinned llama.cpp release tag. Public so the engine settings dialog can show which build
     /// SE downloads; index 0 of every <see cref="DownloadHashManager.LlamaCpp"/> hash list must match it.
     /// </summary>
-    public const string ReleaseTag = "b10216";
+    public const string ReleaseTag = "b10256";
 
     private const string BaseUrl = "https://github.com/ggml-org/llama.cpp/releases/download/" + ReleaseTag + "/";
 

@@ -28,6 +28,8 @@ public class LanguageAssa
     // Progress Bar Generator
     public string ProgressBarTitle { get; set; }
     public string ProgressBarSettings { get; set; }
+    public string MouseOverColor { get; set; }
+    public string ClickedColor { get; set; }
     public string ProgressBarForeColor { get; set; }
     public string ProgressBarSquareCorners { get; set; }
     public string ProgressBarRoundedCorners { get; set; }
@@ -57,6 +59,11 @@ public class LanguageAssa
     public string Attachments { get; set; }
     public string FontCollectorNoFontsToCopy { get; set; }
     public string FontCollectorXFontFilesCopiedToY { get; set; }
+    public string FontCollectorEmbedFontsDotDotDot { get; set; }
+    public string FontCollectorEmbedXFontsSizeYZPrompt { get; set; }
+    public string FontCollectorAndXMoreFonts { get; set; }
+    public string FontCollectorNoFontsToEmbed { get; set; }
+    public string FontCollectorXFontFilesEmbedded { get; set; }
 
     // Resolution Resampler
     public string ResolutionResamplerTitle { get; set; }
@@ -133,6 +140,10 @@ public class LanguageAssa
     public string SpinIn { get; set; }
     public string SetPosition { get; set; }
     public string Rotation { get; set; }
+    public string ScaleX { get; set; }
+    public string ScaleY { get; set; }
+    public string Spacing { get; set; }
+    public string Angle { get; set; }
     public string ImageColorPicker { get; set; }
     public string CopyColorAsHextoClipboard { get; set; }
     public string GeneratingBackgroundBoxXOfY { get; set; }
@@ -270,6 +281,11 @@ public class LanguageAssa
         Attachments = "Attachments";
         FontCollectorNoFontsToCopy = "No font files found to copy.";
         FontCollectorXFontFilesCopiedToY = "{0} font file(s) copied to {1}";
+        FontCollectorEmbedFontsDotDotDot = "Embed fonts in subtitle...";
+        FontCollectorEmbedXFontsSizeYZPrompt = "Embed {0} font file(s) in the subtitle?\n\nTotal font size: {1} - about {2} as text in the ASSA file.\n\n{3}";
+        FontCollectorAndXMoreFonts = "...and {0} more";
+        FontCollectorNoFontsToEmbed = "No new fonts to embed - the needed fonts are already embedded or were not found.";
+        FontCollectorXFontFilesEmbedded = "{0} font file(s) embedded in the subtitle.";
         ResolutionResamplerTitle = "Change resolution";
         ResolutionResamplerSourceRes = "Source resolution";
         ResolutionResamplerTargetRes = "Target resolution";
@@ -345,6 +361,10 @@ public class LanguageAssa
         SpinIn = "Spin in";
         SetPosition = "Set position";
         Rotation = "Rotation";
+        ScaleX = "Scale X";
+        ScaleY = "Scale Y";
+        Spacing = "Spacing";
+        Angle = "Angle";
         ImageColorPicker = "Image color picker";
         CopyColorAsHextoClipboard = "Copy color as hex to clipboard";
         GeneratingBackgroundBoxXOfY = "Generating background box {0} of {1}...";
@@ -424,5 +444,7 @@ public class LanguageAssa
         AdvancedEffectSlideInRightDescription = "Text slides in from off-screen right, holds, then exits back to the right";
         AdvancedEffectFadeInOutDescription = "Text fades in at the start and fades out at the end of each subtitle";
         OverrideTagsHistory = "Override tags history";
+        MouseOverColor = "Mouse-over color";
+        ClickedColor = "Clicked color";
     }
 }

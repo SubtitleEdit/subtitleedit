@@ -54,6 +54,7 @@ public class ShowHistoryWindow : Window
             },
         };
         UiUtil.ApplyTableViewRowStyle(tableView);
+        TableViewExtras.AttachListNavigation(tableView);
         tableView.SelectionChanged += (sender, args) =>
         {
             vm.IsRollbackEnabled = tableView.SelectedItem != null;

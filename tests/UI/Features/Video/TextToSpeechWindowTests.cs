@@ -17,8 +17,22 @@ namespace UITests.Features.Video;
 /// so a bad grid index or binding only surfaces when the window is instantiated - which no other
 /// test (and no plain app-start smoke run) does.
 /// </summary>
-public class TextToSpeechWindowTests
+public class TextToSpeechWindowTests : IDisposable
 {
+    // Every window opened by a test is closed again in Dispose: if a test stops early, an
+    // unclosed window would outlive the test and race with the headless session teardown.
+    private readonly List<Window> _windows = new();
+
+    public void Dispose()
+    {
+        foreach (var window in _windows)
+        {
+            window.Close();
+        }
+
+        _windows.Clear();
+    }
+
     // WindowService only touches the provider when it creates a child window, which this
     // construction test never does.
     private sealed class NullServiceProvider : IServiceProvider
@@ -26,14 +40,16 @@ public class TextToSpeechWindowTests
         public object? GetService(Type serviceType) => null;
     }
 
-    private static TextToSpeechWindow BuildWindow()
+    private TextToSpeechWindow BuildWindow()
     {
         var vm = new TextToSpeechViewModel(
             new TtsDownloadService(new HttpClient()),
             new WindowService(new NullServiceProvider()),
             new FileHelper(),
             new FolderHelper());
-        return new TextToSpeechWindow(vm);
+        var window = new TextToSpeechWindow(vm);
+        _windows.Add(window);
+        return window;
     }
 
     private static IEnumerable<Button> AllButtons(TextToSpeechWindow window)

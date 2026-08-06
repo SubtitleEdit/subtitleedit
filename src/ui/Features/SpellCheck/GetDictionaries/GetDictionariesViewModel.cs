@@ -119,8 +119,11 @@ public partial class GetDictionariesViewModel : ObservableObject, IClosingCleanu
             {
                 _timer.Stop();
                 _done = true;
-                StatusText = "Download canceled";
-                Close();
+                Dispatcher.UIThread.Post(() =>
+                {
+                    StatusText = Se.Language.General.DownloadCanceled;
+                    Close();
+                });
             }
             else if (_downloadTask is { IsFaulted: true })
             {
@@ -136,8 +139,11 @@ public partial class GetDictionariesViewModel : ObservableObject, IClosingCleanu
                 {
                     _timer.Stop();
                     _done = true;
-                    OkPressed = true;
-                    Close();
+                    Dispatcher.UIThread.Post(() =>
+                    {
+                        OkPressed = true;
+                        Close();
+                    });
                 }
             }
         }
@@ -152,7 +158,7 @@ public partial class GetDictionariesViewModel : ObservableObject, IClosingCleanu
         _downloadTask = null;
         Dispatcher.UIThread.Post(() =>
         {
-            StatusText = "Download failed";
+            StatusText = Se.Language.General.DownloadFailed;
             Progress = 0;
             ProgressOpacity = 0;
             IsProgressVisible = false;

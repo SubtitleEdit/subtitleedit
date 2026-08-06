@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System.Collections.Generic;
+using System.IO;
 
 namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
 {
@@ -7,7 +8,16 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
     /// </summary>
     public class Moof : Box
     {
-        public Traf Traf { get; set; }
+        /// <summary>
+        /// All track fragments in this movie fragment. A muxed fMP4/DASH segment has one
+        /// traf per track (video + audio + subtitles), so keeping only one loses data.
+        /// </summary>
+        public List<Traf> Trafs { get; } = new List<Traf>();
+
+        /// <summary>
+        /// First track fragment (for callers that only handle single-track fragments).
+        /// </summary>
+        public Traf Traf => Trafs.Count > 0 ? Trafs[0] : null;
 
         public Moof(Stream fs, ulong maximumLength)
         {
@@ -21,7 +31,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
 
                 if (Name == "traf")
                 {
-                    Traf = new Traf(fs, Position);
+                    Trafs.Add(new Traf(fs, Position));
                 }
 
                 fs.Seek((long)Position, SeekOrigin.Begin);

@@ -312,40 +312,34 @@ namespace Nikse.SubtitleEdit.Core.Common
                 return text;
             }
 
-            var sb = new StringBuilder(text.Length);
-            var insideAngle = false;
-            var insideCurly = false;
-
-            foreach (char c in text)
+            return string.Create(text.Length, text, (span, src) =>
             {
-                if (c == '<')
-                {
-                    insideAngle = true;
-                }
-                else if (c == '>')
-                {
-                    insideAngle = false;
-                }
-                else if (c == '{')
-                {
-                    insideCurly = true;
-                }
-                else if (c == '}')
-                {
-                    insideCurly = false;
-                }
+                var insideAngle = false;
+                var insideCurly = false;
 
-                if (insideAngle || insideCurly)
+                for (var i = 0; i < span.Length; i++)
                 {
-                    sb.Append(c);
-                }
-                else
-                {
-                    sb.Append(char.ToUpper(c));
-                }
-            }
+                    var c = src[i];
+                    if (c == '<')
+                    {
+                        insideAngle = true;
+                    }
+                    else if (c == '>')
+                    {
+                        insideAngle = false;
+                    }
+                    else if (c == '{')
+                    {
+                        insideCurly = true;
+                    }
+                    else if (c == '}')
+                    {
+                        insideCurly = false;
+                    }
 
-            return sb.ToString();
+                    span[i] = insideAngle || insideCurly ? c : char.ToUpper(c);
+                }
+            });
         }
 
         private string MakeLowerCaseExceptTags(string text)
@@ -355,40 +349,34 @@ namespace Nikse.SubtitleEdit.Core.Common
                 return text;
             }
 
-            var sb = new StringBuilder(text.Length);
-            var insideAngle = false;
-            var insideCurly = false;
-
-            foreach (char c in text)
+            return string.Create(text.Length, text, (span, src) =>
             {
-                if (c == '<')
-                {
-                    insideAngle = true;
-                }
-                else if (c == '>')
-                {
-                    insideAngle = false;
-                }
-                else if (c == '{')
-                {
-                    insideCurly = true;
-                }
-                else if (c == '}')
-                {
-                    insideCurly = false;
-                }
+                var insideAngle = false;
+                var insideCurly = false;
 
-                if (insideAngle || insideCurly)
+                for (var i = 0; i < span.Length; i++)
                 {
-                    sb.Append(c);
-                }
-                else
-                {
-                    sb.Append(char.ToLower(c));
-                }
-            }
+                    var c = src[i];
+                    if (c == '<')
+                    {
+                        insideAngle = true;
+                    }
+                    else if (c == '>')
+                    {
+                        insideAngle = false;
+                    }
+                    else if (c == '{')
+                    {
+                        insideCurly = true;
+                    }
+                    else if (c == '}')
+                    {
+                        insideCurly = false;
+                    }
 
-            return sb.ToString();
+                    span[i] = insideAngle || insideCurly ? c : char.ToLower(c);
+                }
+            });
         }
     }
 }

@@ -136,13 +136,13 @@ public class LlamaCppOcrSettingsWindow : Window
     {
         var title = new TextBlock
         {
-            Text = "llama.cpp OCR",
+            Text = Se.Language.Ocr.LlamaCppOcr,
             FontSize = 18,
             FontWeight = FontWeight.SemiBold,
         };
         var subtitle = new TextBlock
         {
-            Text = "Local llama.cpp server (multimodal model) used for OCR.",
+            Text = Se.Language.Ocr.LlamaCppOcrDescription,
             FontSize = 12,
             Opacity = 0.75,
             Margin = new Thickness(0, 2, 0, 0),

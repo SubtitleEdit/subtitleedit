@@ -41,11 +41,27 @@ jobs:
         run: dotnet build SubtitleEdit.sln --no-restore
 
       - name: Test
+        id: test
+        continue-on-error: true
         run: dotnet test SubtitleEdit.sln --no-build --logger "trx;LogFileName=tests.trx"
 
-      # Uploaded on failure so a red check can be diagnosed without re-running locally.
+      # The headless UI suite has a contamination failure mode no in-test fix can cover:
+      # when a test crashes the shared Avalonia dispatcher thread, every later test that
+      # needs the headless session fails instantly in cleanup ("calling thread cannot
+      # access this object" from AvaloniaHeadlessPlatform.Initialize). A fresh process is
+      # the only recovery, so a failed run gets exactly one retry. A real regression fails
+      # both runs and still blocks the merge; a pass-on-retry stays visible as a warning
+      # annotation plus the first run's trx artifact.
+      - name: Retry tests once on failure
+        if: steps.test.outcome == 'failure'
+        run: |
+          echo "::warning title=Flaky test run::First test run failed; retrying once in a fresh process. Check the test-results artifact for the failure."
+          dotnet test SubtitleEdit.sln --no-build --logger "trx;LogFileName=tests-retry.trx"
+
+      # Uploaded whenever the first run failed - also on a green retry, so flakes can be
+      # diagnosed without re-running locally.
       - name: Upload test results
-        if: failure()
+        if: steps.test.outcome == 'failure'
         uses: actions/upload-artifact@v5
         with:
           name: test-results

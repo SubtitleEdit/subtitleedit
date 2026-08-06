@@ -86,21 +86,21 @@ public partial class IndexTtsCrispAsrSettingsViewModel : ObservableObject
 
         if (!IsEngineInstalled)
         {
-            EngineLabel = "CrispASR not installed";
+            EngineLabel = string.Format(Se.Language.Video.TtsEngineNotInstalled, "CrispASR");
             EngineBrush = Red();
-            EngineDownloadButtonText = "Download CrispASR";
+            EngineDownloadButtonText = string.Format(Se.Language.General.DownloadX, "CrispASR");
         }
         else if (IndexTtsCrispAsr.GetEngineUpdateStatus() == DownloadHashManager.UpdateStatus.UpdateAvailable)
         {
-            EngineLabel = "CrispASR - update available";
+            EngineLabel = string.Format(Se.Language.Video.TtsEngineUpdateAvailable, "CrispASR");
             EngineBrush = Amber();
-            EngineDownloadButtonText = "Update CrispASR";
+            EngineDownloadButtonText = string.Format(Se.Language.Video.TtsUpdateX, "CrispASR");
         }
         else
         {
             EngineLabel = "CrispASR";
             EngineBrush = Green();
-            EngineDownloadButtonText = "Re-download CrispASR";
+            EngineDownloadButtonText = string.Format(Se.Language.General.ReDownloadX, "CrispASR");
         }
 
         // Append the installed CrispASR version asynchronously - the probe is a child

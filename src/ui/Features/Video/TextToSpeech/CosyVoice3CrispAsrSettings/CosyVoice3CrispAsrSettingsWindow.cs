@@ -21,7 +21,7 @@ public class CosyVoice3CrispAsrSettingsWindow : Window
     public CosyVoice3CrispAsrSettingsWindow(CosyVoice3CrispAsrSettingsViewModel vm)
     {
         UiUtil.InitializeWindow(this, GetType().Name);
-        Title = "CosyVoice3 (CrispASR) settings";
+        Title = string.Format(Se.Language.Video.TtsCrispAsrSettingsTitle, "CosyVoice3");
         SizeToContent = SizeToContent.WidthAndHeight;
         CanResize = false;
         MinWidth = 580;
@@ -105,12 +105,13 @@ public class CosyVoice3CrispAsrSettingsWindow : Window
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
             },
             ColumnSpacing = 12,
             RowSpacing = 10,
         };
 
-        grid.Add(MakeLabel("Engine"), 0, 0);
+        grid.Add(MakeLabel(Se.Language.General.Engine), 0, 0);
         var enginePanel = MakeStatusPanel(nameof(vm.EngineBrush), nameof(vm.EngineLabel));
         var engineButton = UiUtil.MakeButton(string.Empty, vm.RedownloadEngineCommand)
             .WithIconLeft(IconNames.Download)
@@ -125,7 +126,7 @@ public class CosyVoice3CrispAsrSettingsWindow : Window
         grid.Add(MakeLabel(CosyVoice3CrispAsr.ModelKeyF16), 2, 0);
         grid.Add(MakeStatusPanel(nameof(vm.F16BundleBrush), nameof(vm.F16BundleLabel)), 2, 1);
 
-        grid.Add(MakeLabel("Presets"), 3, 0);
+        grid.Add(MakeLabel(Se.Language.Video.Presets), 3, 0);
         var presetsText = new TextBlock
         {
             VerticalAlignment = VerticalAlignment.Center,
@@ -134,7 +135,7 @@ public class CosyVoice3CrispAsrSettingsWindow : Window
         };
         grid.Add(presetsText, 3, 1);
 
-        grid.Add(MakeLabel("Voices"), 4, 0);
+        grid.Add(MakeLabel(Se.Language.Video.Voices), 4, 0);
         var voicesText = new TextBlock
         {
             VerticalAlignment = VerticalAlignment.Center,
@@ -146,7 +147,27 @@ public class CosyVoice3CrispAsrSettingsWindow : Window
         grid.Add(MakeLabel(Se.Language.General.Speed), 5, 0);
         grid.Add(MakeSpeedPanel(), 5, 1);
 
-        grid.Add(MakeLabel(Se.Language.General.InstallFolder), 6, 0);
+        // Language spoken in imported reference WAVs — sent as `source_lang` so cross-lingual
+        // cloning engages when the target language differs (the server cannot detect the
+        // reference language itself for Latin scripts). Presets carry their own bank language.
+        grid.Add(MakeLabel("Reference language"), 6, 0);
+        var sourceLanguageCombo = UiUtil.MakeComboBox(vm.SourceLanguages, vm, nameof(vm.SelectedSourceLanguage));
+        var sourceLanguageHint = new TextBlock
+        {
+            Text = "Language spoken in imported reference WAVs (for cross-lingual cloning). "
+                   + "Auto detects it from each voice's transcript.",
+            FontSize = 12,
+            Opacity = 0.75,
+            VerticalAlignment = VerticalAlignment.Center,
+            Margin = new Thickness(8, 0, 0, 0),
+        };
+        grid.Add(new StackPanel
+        {
+            Orientation = Orientation.Horizontal,
+            Children = { sourceLanguageCombo, sourceLanguageHint },
+        }, 6, 1);
+
+        grid.Add(MakeLabel(Se.Language.General.InstallFolder), 7, 0);
         var folderText = new TextBox
         {
             IsReadOnly = true,
@@ -158,7 +179,7 @@ public class CosyVoice3CrispAsrSettingsWindow : Window
             FontSize = 12,
             [!TextBox.TextProperty] = new Binding(nameof(vm.ModelsFolder)),
         };
-        grid.Add(folderText, 6, 1);
+        grid.Add(folderText, 7, 1);
 
         return new Border
         {

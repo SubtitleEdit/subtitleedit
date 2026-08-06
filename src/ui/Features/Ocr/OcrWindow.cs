@@ -574,6 +574,7 @@ public class OcrWindow : Window
         };
 
         UiUtil.ApplyTableViewRowStyle(dataGridSubtitle);
+        TableViewExtras.AttachListNavigation(dataGridSubtitle);
         dataGridSubtitle.Bind(TableView.SelectedItemProperty, new Binding(nameof(vm.SelectedOcrSubtitleItem)) { Source = vm });
         dataGridSubtitle.KeyDown += vm.SubtitleGridKeyDown;
         dataGridSubtitle.DoubleTapped += (s, e) => vm.SubtitleGridDoubleTapped();

@@ -86,6 +86,95 @@ public class UtilitiesTest
         Assert.Equal(input, result);
     }
 
+    // A multi-word "do not break after" entry (e.g. "SORT OF") must keep the whole phrase
+    // together: the line may not be split between its words, even when a single word of the
+    // phrase ("OF") is in the list too (issue #9631).
+    [Theory]
+    [InlineData("HE WAS SORT OF WEIRD", 10, new[] { "SORT OF", "OF" })]
+    [InlineData("HE WAS SORT OF WEIRD", 10, new[] { "SORT OF" })]
+    [InlineData("I AT LEAST KNOW HIM", 8, new[] { "AT LEAST", "LEAST" })]
+    public void AutoBreakLine_NoBreakAfterMultiWordEntry_KeepsPhraseTogether(string input, int maxLength, string[] listItems)
+    {
+        var oldDataDirectory = Configuration.DataDirectory;
+        var oldUseNoLineBreakAfter = Configuration.Settings.Tools.UseNoLineBreakAfter;
+        var dictionaryFolder = Path.Combine(Path.GetTempPath(), "se9631_" + Guid.NewGuid().ToString("N"));
+        try
+        {
+            Directory.CreateDirectory(Path.Combine(dictionaryFolder, "Dictionaries"));
+            var xml = "<NoBreakAfterList>" + Environment.NewLine +
+                      string.Join(Environment.NewLine, listItems.Select(p => "  <Item>" + p + "</Item>")) +
+                      Environment.NewLine + "</NoBreakAfterList>";
+            File.WriteAllText(Path.Combine(dictionaryFolder, "Dictionaries", "zz_NoBreakAfterList.xml"), xml);
+            Configuration.DataDirectory = dictionaryFolder;
+            Configuration.Settings.Tools.UseNoLineBreakAfter = true;
+            Utilities.ResetNoBreakAfterList();
+
+            var result = Utilities.AutoBreakLinePrivate(input, maxLength, 0, "zz", false);
+
+            var lines = result.SplitToLines();
+            Assert.True(lines.Count == 2, "Expected two lines, got: " + result);
+            foreach (var item in listItems.Where(p => p.IndexOf(' ') >= 0))
+            {
+                Assert.True(lines[0].Contains(item) || lines[1].Contains(item),
+                    "Phrase \"" + item + "\" was split: " + result);
+            }
+        }
+        finally
+        {
+            Configuration.DataDirectory = oldDataDirectory;
+            Configuration.Settings.Tools.UseNoLineBreakAfter = oldUseNoLineBreakAfter;
+            Utilities.ResetNoBreakAfterList();
+            try
+            {
+                Directory.Delete(dictionaryFolder, true);
+            }
+            catch (IOException)
+            {
+            }
+        }
+    }
+
+    // A regex entry matches against the text before the break point. CanBreak matches the list
+    // against a span and only materialises that text as a string when the list has a regex in it,
+    // so a list with one still has to work - none of the shipped lists has one.
+    [Fact]
+    public void AutoBreakLine_NoBreakAfterRegexEntry_IsHonored()
+    {
+        var oldDataDirectory = Configuration.DataDirectory;
+        var oldUseNoLineBreakAfter = Configuration.Settings.Tools.UseNoLineBreakAfter;
+        var dictionaryFolder = Path.Combine(Path.GetTempPath(), "seRegexNoBreak_" + Guid.NewGuid().ToString("N"));
+        try
+        {
+            Directory.CreateDirectory(Path.Combine(dictionaryFolder, "Dictionaries"));
+            File.WriteAllText(Path.Combine(dictionaryFolder, "Dictionaries", "zz_NoBreakAfterList.xml"),
+                "<NoBreakAfterList>" + Environment.NewLine +
+                "  <Item RegEx=\"true\">\\bnumber$</Item>" + Environment.NewLine +
+                "</NoBreakAfterList>");
+            Configuration.DataDirectory = dictionaryFolder;
+            Configuration.Settings.Tools.UseNoLineBreakAfter = true;
+            Utilities.ResetNoBreakAfterList();
+
+            var result = Utilities.AutoBreakLinePrivate("Call the number seven now", 14, 0, "zz", false);
+
+            var lines = result.SplitToLines();
+            Assert.True(lines.Count == 2, "Expected two lines, got: " + result);
+            Assert.False(lines[0].TrimEnd().EndsWith("number"), "Broke after the regex entry: " + result);
+        }
+        finally
+        {
+            Configuration.DataDirectory = oldDataDirectory;
+            Configuration.Settings.Tools.UseNoLineBreakAfter = oldUseNoLineBreakAfter;
+            Utilities.ResetNoBreakAfterList();
+            try
+            {
+                Directory.Delete(dictionaryFolder, true);
+            }
+            catch (IOException)
+            {
+            }
+        }
+    }
+
     // GetColorFromFontString measured colorStart relative to the extracted <font> tag
     // but indexed the full string, so a tag that wasn't at the start of the line read
     // the wrong region and returned the default color.
@@ -119,5 +208,54 @@ public class UtilitiesTest
     public void AddSpaceBeforeFrenchPunctuation_LeavesOthersUnchanged(string input)
     {
         Assert.Equal(input, Utilities.AddSpaceBeforeFrenchPunctuation(input));
+    }
+
+    // The " 's " → "'s " merge is an English possessive OCR fix - it must not run for Dutch
+    // (" 's avonds" is a separate genitive word, issue #12144) nor for the empty language code
+    // the auto-trim path produces when language detection fails.
+    [Theory]
+    [InlineData("Ik hoorde ze 's avonds ruzie maken.", "nl", "Ik hoorde ze 's avonds ruzie maken.")]
+    [InlineData("Ik hoorde ze 's avonds ruzie maken.", "", "Ik hoorde ze 's avonds ruzie maken.")]
+    [InlineData("John 's car is red.", "en", "John's car is red.")]
+    public void RemoveUnneededSpaces_ApostropheSMerge_EnglishOnly(string input, string language, string expected)
+    {
+        Assert.Equal(expected, Utilities.RemoveUnneededSpaces(input, language));
+    }
+
+    // ReverseNumbers exercises the internal ReverseString: digit groups of two or more must be
+    // fully mirrored. Guards the span-based rewrite - reversing must read from the source
+    // string, not in-place from the destination span (which starts zero-filled and would also
+    // corrupt the second half after the midpoint).
+    [Theory]
+    [InlineData("Hello 123", "Hello 321")]
+    [InlineData("1234", "4321")]
+    [InlineData("12345", "54321")]
+    [InlineData("25 mm or 7 cm", "52 mm or 7 cm")] // single digits stay untouched
+    [InlineData("Hello", "Hello")]
+    [InlineData("", "")]
+    public void ReverseNumbers_MirrorsTwoOrMoreDigitGroups(string input, string expected)
+    {
+        Assert.Equal(expected, Utilities.ReverseNumbers(input));
+    }
+
+    // ReverseStartAndEndingForRightToLeft exercises the internal ReverseString and
+    // ReverseParenthesis: leading/trailing punctuation swaps ends, brackets are mirrored,
+    // and formatting tags stay in place.
+    [Theory]
+    [InlineData("- Hello.", ".Hello -")]
+    [InlineData("(Hello.)", "(.Hello)")]
+    [InlineData("!?Hello", "Hello?!")]
+    [InlineData("<i>Hello.</i>", "<i>.Hello</i>")]
+    [InlineData("Hello", "Hello")]
+    public void ReverseStartAndEndingForRightToLeft_SwapsAndMirrorsEdges(string input, string expected)
+    {
+        Assert.Equal(expected, Utilities.ReverseStartAndEndingForRightToLeft(input));
+    }
+
+    [Fact]
+    public void ReverseStartAndEndingForRightToLeft_MultipleLines()
+    {
+        var result = Utilities.ReverseStartAndEndingForRightToLeft("- Hello." + Environment.NewLine + "- Bye.");
+        Assert.Equal(".Hello -" + Environment.NewLine + ".Bye -", result);
     }
 }

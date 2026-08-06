@@ -43,9 +43,13 @@ public class BatchConvertStatusColorConverter : IValueConverter
         }
 
         // "Error: {0}" - match on the part before the placeholder so translated texts work too.
-        var errorPrefix = string.Format(Se.Language.General.ErrorX, string.Empty).Trim();
+        var errorPrefix = GetErrorPrefix(Se.Language.General.ErrorX);
         if (status == Se.Language.General.NoSubtitlesFound ||
             status == Se.Language.Ocr.OllamaModelLikelyWrong ||
+            status == Se.Language.Ocr.LlamaCppNotDownloaded ||
+            status == Se.Language.Ocr.LlamaCppReturnedNoText ||
+            status == Se.Language.Ocr.CrispEmbedNotDownloaded ||
+            status == Se.Language.Ocr.CrispEmbedReturnedNoText ||
             (errorPrefix.Length > 0 && status.StartsWith(errorPrefix, StringComparison.OrdinalIgnoreCase)) ||
             status.StartsWith("BinaryOcr database not found", StringComparison.Ordinal))
         {
@@ -54,6 +58,22 @@ public class BatchConvertStatusColorConverter : IValueConverter
 
         // In-progress statuses (OCR percentages etc.) keep the default text color, no badge.
         return AvaloniaProperty.UnsetValue;
+    }
+
+    // Formatting + trimming "Error: {0}" per status cell showed up as the converter's only
+    // allocation; the language string changes at most once, when a translation is loaded.
+    private static string? _errorXFormat;
+    private static string _errorPrefix = string.Empty;
+
+    private static string GetErrorPrefix(string errorXFormat)
+    {
+        if (!ReferenceEquals(_errorXFormat, errorXFormat))
+        {
+            _errorXFormat = errorXFormat;
+            _errorPrefix = string.Format(errorXFormat, string.Empty).Trim();
+        }
+
+        return _errorPrefix;
     }
 
     public object ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)

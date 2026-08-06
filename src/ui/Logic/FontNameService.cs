@@ -95,6 +95,11 @@ public class FontNameService : IFontNameService
 
     public void RemoveFontNames(SubtitleLineViewModel p, bool isAssa)
     {
+        if (p == null || string.IsNullOrEmpty(p.Text))
+        {
+            return;
+        }
 
+        p.Text = HtmlUtil.RemoveFontName(p.Text);
     }
 }

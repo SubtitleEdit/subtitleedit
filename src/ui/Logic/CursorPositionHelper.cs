@@ -1,4 +1,6 @@
-﻿using Nikse.SubtitleEdit.Logic.Config;
+﻿using Avalonia;
+using Avalonia.Controls;
+using Nikse.SubtitleEdit.Logic.Config;
 using System;
 using System.Runtime.InteropServices;
 
@@ -101,5 +103,34 @@ public static  class CursorPositionHelper
         }
 
         return null;
+    }
+
+    /// <summary>
+    /// True when a desktop cursor position from <see cref="GetCursorPosition"/> is inside the
+    /// client area of <paramref name="window"/>.
+    /// The video windows poll the cursor because the mpv "wid" player renders into a native child
+    /// window that swallows Avalonia pointer events - but that poll sees the whole desktop, so
+    /// without this test any mouse movement in any app on any monitor counted as user activity
+    /// and popped the video controls back up (issue #13207).
+    /// </summary>
+    public static bool IsCursorOverWindow(Window? window, (int X, int Y) cursorPosition)
+    {
+        if (window == null || !window.IsVisible || window.WindowState == WindowState.Minimized)
+        {
+            return false;
+        }
+
+        try
+        {
+            var point = window.PointToClient(new PixelPoint(cursorPosition.X, cursorPosition.Y));
+            var size = window.ClientSize;
+            return point.X >= 0 && point.Y >= 0 && point.X < size.Width && point.Y < size.Height;
+        }
+        catch
+        {
+            // Window not (yet) attached to a platform implementation - no logging, this runs
+            // on a 100 ms timer and would spam the log.
+            return false;
+        }
     }
 }

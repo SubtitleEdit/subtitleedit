@@ -73,7 +73,8 @@ public class MpvReloader : IMpvReloader
             {
                 var defaultStyle = GetMpvPreviewStyle(Se.Settings.Video);
                 defaultStyle.BorderStyle = "3";
-                subtitle = new Subtitle(subtitle);
+                // No extra copy here: "subtitle" is already this method's private copy, and
+                // Convert deep-copies its input again internally without mutating it.
                 subtitle = WebVttToAssa.Convert(subtitle, defaultStyle, VideoWidth, VideoHeight);
                 AddSecondarySubtitle(subtitle, subtitleSecondary);
                 text = subtitle.ToText(_assFormat);
@@ -92,8 +93,12 @@ public class MpvReloader : IMpvReloader
                         subtitle.Header = AdvancedSubStationAlpha.GetHeaderAndStylesFromSubStationAlpha(subtitle.Header);
                     }
 
-                    var oldSub = subtitle;
-                    subtitle = new Subtitle(subtitle);
+                    // "subtitle" is already this method's private copy (see the top of the try
+                    // block), so mutating it in place is safe - the second full deep copy that
+                    // used to live here cost one Paragraph + two TimeCode allocations per line
+                    // on the UI thread for every preview refresh. Only the pre-preview-style
+                    // header is needed for the STL checks below.
+                    var oldHeader = subtitle.Header;
                     if (Se.Settings.Appearance.RightToLeft)
                     {
                         for (var index = 0; index < subtitle.Paragraphs.Count; index++)
@@ -111,7 +116,7 @@ public class MpvReloader : IMpvReloader
                         subtitle.Header = MpvPreviewStyleHeader;
                     }
 
-                    if (oldSub.Header != null && oldSub.Header.Length > 20 && oldSub.Header.AsSpan(3, 3).SequenceEqual("STL"))
+                    if (oldHeader != null && oldHeader.Length > 20 && oldHeader.AsSpan(3, 3).SequenceEqual("STL"))
                     {
                         var previewFontName = Configuration.IsRunningOnLinux ? Configuration.DefaultLinuxFontName : "Tahoma";
                         var boxStyle = $"Style: Box,{previewFontName},12,&H00FFFFFF,&H0300FFFF,&H00000000,&H02000000,-1,0,0,0,100,100,0,0,3,2,0,2,10,10,10,1{Environment.NewLine}Style: Default,";
@@ -122,8 +127,8 @@ public class MpvReloader : IMpvReloader
                         {
                             try
                             {
-                                var encoding = Ebu.GetEncoding(oldSub.Header[..3]);
-                                var buffer = encoding.GetBytes(oldSub.Header);
+                                var encoding = Ebu.GetEncoding(oldHeader[..3]);
+                                var buffer = encoding.GetBytes(oldHeader);
                                 var header = Ebu.ReadHeader(buffer);
                                 if (header.DisplayStandardCode != "0")
                                 {

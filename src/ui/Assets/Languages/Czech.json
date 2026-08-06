@@ -1018,7 +1018,7 @@
     "undoPerformed": "Zpět provedeno",
     "undoPerformedXActionLeft": "Zpět provedeno (zbývá akcí: {0})",
     "xLinesCopiedFromOriginal": "{0} řádků zkopírováno z originálních titulků",
-    "xLinesMerged": "X řádků sloučeno",
+    "xLinesMerged": "{0} řádků sloučeno",
     "xLinesSelectedOfY": "Vybráno {0} řádků z {1}",
     "xLinesSwitched": "{0} řádků přehozeno",
     "xShotChangedLoaded": "Načteno {0} změn záběrů",

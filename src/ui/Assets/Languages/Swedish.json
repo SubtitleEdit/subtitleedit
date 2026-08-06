@@ -836,7 +836,7 @@
     "undoPerformed": "Ångra utfört",
     "undoPerformedXActionLeft": "Ångra utfört (åtgärder kvar: {0})",
     "xLinesCopiedFromOriginal": "{0} rader kopierade från originalundertext",
-    "xLinesMerged": "X rader sammanslagna",
+    "xLinesMerged": "{0} rader sammanslagna",
     "xLinesSelectedOfY": "{0} rader markerade av {1}",
     "xLinesSwitched": "{0} rader växlade",
     "xShotChangedLoaded": "{0} scenbyten inlästa",

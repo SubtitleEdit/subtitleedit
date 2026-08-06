@@ -708,7 +708,17 @@ internal static class LibSEIntegration
                 break;
 
             case "beautifytimecodes":
-                // TODO: Beautify time codes
+                {
+                    // No video in headless mode, so no shot changes/exact time codes -
+                    // align cues to frames (honors --fps) and apply the profile's
+                    // gap/duration rules, like the UI's batch convert without a video.
+                    var beautifier = new Nikse.SubtitleEdit.Core.Forms.TimeCodesBeautifier(
+                        subtitle,
+                        Configuration.Settings.General.CurrentFrameRate,
+                        new List<double>(),
+                        new List<double>());
+                    beautifier.Beautify();
+                }
                 break;
 
             case "convertcolorstodialog":

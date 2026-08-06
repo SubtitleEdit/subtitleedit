@@ -2,6 +2,7 @@
 using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using Nikse.SubtitleEdit.Core.VobSub;
+using SkiaSharp;
 using System;
 using System.Buffers.Binary;
 using System.Collections.Generic;
@@ -26,6 +27,12 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
         public List<Paragraph> Paragraphs;
         public List<Paragraph> GetParagraphs() => Paragraphs;
 
+        /// <summary>
+        /// Color lookup table for <see cref="SubPictures"/>, when the VobSub sample entry
+        /// carries one - null means the four default colors are used.
+        /// </summary>
+        public List<SKColor> VobSubPalette { get; private set; }
+
         private List<Cea608.CcData> _cea608CcData = new List<Cea608.CcData>();
         private Dictionary<uint, SampleToChunkMap> _stscLookup;
 
@@ -33,6 +40,9 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
         // 0xFFFFFFFF) must not expand into an OOM-sized list. Far above any real sample
         // count (5M samples is ~23 hours at 60 fps).
         private const int MaxRunLengthEntries = 5_000_000;
+
+        // Text subtitle samples are small; a larger declared size is malformed
+        private const uint MaxTextSampleSize = 10_000_000;
 
         public Stbl(Stream fs, ulong maximumLength, ulong timeScale, string handlerType, Mdia mdia)
         {
@@ -197,6 +207,11 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
                 fs.Seek((long)Position, SeekOrigin.Begin);
             }
 
+            if (handlerType == "subp" && Stsd?.Name == "mp4s")
+            {
+                VobSubPalette = Mp4VobSubPalette.FromMp4sSampleEntry(Stsd.SampleEntryPayload);
+            }
+
             if (handlerType != "soun")
             {
                 Paragraphs = GetParagraphs(fs, handlerType);
@@ -357,6 +372,34 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
                                 paragraphs.Add(new Paragraph(wvttText.ToString(), before * 1000.0, totalTime * 1000.0));
                             }
                         }
+                        else if (stsdCodec == "stpp") // TTML/IMSC1 in MP4 (ISO 14496-30)
+                        {
+                            if (sampleSize <= MaxTextSampleSize)
+                            {
+                                var sampleData = new byte[sampleSize];
+                                fs.Seek((long)sampleOffset, SeekOrigin.Begin);
+                                if (fs.Read(sampleData, 0, sampleData.Length) == sampleData.Length)
+                                {
+                                    AddTtmlSample(sampleData, before * 1000.0, (totalTime - before) * 1000.0, paragraphs);
+                                }
+                            }
+                        }
+                        else if (Mp4TextSampleHelper.IsSimpleTextCodec(stsdCodec)) // text stream in MP4 (ISO 14496-30)
+                        {
+                            if (sampleSize <= MaxTextSampleSize)
+                            {
+                                var sampleData = new byte[sampleSize];
+                                fs.Seek((long)sampleOffset, SeekOrigin.Begin);
+                                if (fs.Read(sampleData, 0, sampleData.Length) == sampleData.Length)
+                                {
+                                    var text = Mp4TextSampleHelper.ReadSimpleTextSample(sampleData);
+                                    if (!string.IsNullOrEmpty(text))
+                                    {
+                                        paragraphs.Add(new Paragraph(text, before * 1000.0, totalTime * 1000.0));
+                                    }
+                                }
+                            }
+                        }
                         else
                         {
                             fs.Seek((long)sampleOffset, SeekOrigin.Begin);
@@ -377,24 +420,33 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
                                         buffer = new byte[textSize + 2];
                                         fs.Seek((long)sampleOffset, SeekOrigin.Begin);
                                         fs.ReadFully(buffer, 0, buffer.Length);
-                                        SubPictures.Add(new SubPicture(buffer)); // TODO: Where is palette?
+                                        SubPictures.Add(new SubPicture(buffer));
                                         paragraphs.Add(p);
                                     }
                                 }
-                                else
+                                else if (_mdia.IsClosedCaption)
                                 {
                                     buffer = new byte[textSize];
                                     fs.ReadFully(buffer, 0, buffer.Length);
-                                    p.Text = GetString(buffer, 0, (int)textSize).TrimEnd();
-
-                                    if (_mdia.IsClosedCaption)
-                                    {
-                                        p.Text = MakeScenaristText(buffer);
-                                    }
+                                    p.Text = MakeScenaristText(buffer);
 
                                     if (!string.IsNullOrEmpty(p.Text))
                                     {
                                         paragraphs.Add(p);
+                                    }
+                                }
+                                else if (sampleSize <= MaxTextSampleSize)
+                                {
+                                    // the whole sample, so the tx3g modifier boxes after the text can be read too
+                                    var sampleData = new byte[sampleSize];
+                                    fs.Seek((long)sampleOffset, SeekOrigin.Begin);
+                                    if (fs.Read(sampleData, 0, sampleData.Length) == sampleData.Length)
+                                    {
+                                        p.Text = Mp4TextSampleHelper.ReadTx3gSampleText(sampleData);
+                                        if (!string.IsNullOrEmpty(p.Text))
+                                        {
+                                            paragraphs.Add(p);
+                                        }
                                     }
                                 }
                             }
@@ -426,6 +478,44 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
             }
 
             return paragraphs;
+        }
+
+        private readonly HashSet<string> _addedTtmlCues = new HashSet<string>();
+
+        /// <summary>
+        /// An stpp sample is a complete TTML document covering the sample's time window;
+        /// cue times inside the document are media times (or sample-relative for Smooth
+        /// Streaming style documents), and cues spanning several samples are repeated in
+        /// each document, so duplicates are dropped.
+        /// </summary>
+        private void AddTtmlSample(byte[] sampleData, double sampleStartMs, double sampleDurationMs, List<Paragraph> paragraphs)
+        {
+            var xml = Encoding.UTF8.GetString(sampleData);
+            foreach (var doc in Mp4TtmlHelper.SplitTtmlDocuments(xml))
+            {
+                var docParagraphs = Mp4TtmlHelper.ParseTtmlDocument(doc);
+                if (docParagraphs.Count == 0)
+                {
+                    continue;
+                }
+
+                if (Mp4TtmlHelper.AreTimesSampleRelative(docParagraphs, sampleStartMs, sampleDurationMs))
+                {
+                    foreach (var p in docParagraphs)
+                    {
+                        p.StartTime.TotalMilliseconds += sampleStartMs;
+                        p.EndTime.TotalMilliseconds += sampleStartMs;
+                    }
+                }
+
+                foreach (var p in docParagraphs)
+                {
+                    if (_addedTtmlCues.Add($"{p.StartTime.TotalMilliseconds:0}|{p.EndTime.TotalMilliseconds:0}|{p.Text}"))
+                    {
+                        paragraphs.Add(p);
+                    }
+                }
+            }
         }
 
         private static string GetC608Text(SerializedRow[] screen)

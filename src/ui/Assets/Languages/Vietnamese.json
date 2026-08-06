@@ -1018,7 +1018,7 @@
     "undoPerformed": "Đã thực hiện hoàn tác",
     "undoPerformedXActionLeft": "Đã thực hiện hoàn tác (thao tác còn lại: {0})",
     "xLinesCopiedFromOriginal": "Đã sao chép {0} dòng từ phụ đề gốc",
-    "xLinesMerged": "Đã gộp X dòng",
+    "xLinesMerged": "Đã gộp {0} dòng",
     "xLinesSelectedOfY": "Đã chọn {0} dòng trong số {1}",
     "xLinesSwitched": "Đã hoán đổi {0} dòng",
     "xShotChangedLoaded": "Đã tải {0} điểm chuyển cảnh",

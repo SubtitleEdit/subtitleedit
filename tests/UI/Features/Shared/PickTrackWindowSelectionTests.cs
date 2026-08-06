@@ -2,7 +2,9 @@
 using Avalonia.Threading;
 using Microsoft.Extensions.DependencyInjection;
 using Nikse.SubtitleEdit;
+using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.ContainerFormats.Matroska;
+using Nikse.SubtitleEdit.Core.ContainerFormats.Mp4;
 using Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream;
 using Nikse.SubtitleEdit.Core.VobSub;
 using Nikse.SubtitleEdit.Features.Shared.PickMatroskaTrack;
@@ -54,15 +56,20 @@ public class PickTrackWindowSelectionTests
     {
         var vm = MakeMatroskaViewModel(2);
         var window = new PickMatroskaTrackWindow(vm);
-        window.Show();
-        Dispatcher.UIThread.RunJobs();
-        window.UpdateLayout();
-        Dispatcher.UIThread.RunJobs();
+        try
+        {
+            window.Show();
+            Dispatcher.UIThread.RunJobs();
+            window.UpdateLayout();
+            Dispatcher.UIThread.RunJobs();
 
-        Assert.Same(vm.Tracks[0], vm.SelectedTrack);
-        Assert.Equal(0, vm.TracksGrid.SelectedIndex);
-
-        window.Close();
+            Assert.Same(vm.Tracks[0], vm.SelectedTrack);
+            Assert.Equal(0, vm.TracksGrid.SelectedIndex);
+        }
+        finally
+        {
+            window.Close();
+        }
     }
 
     [AvaloniaFact]
@@ -70,17 +77,24 @@ public class PickTrackWindowSelectionTests
     {
         var vm = MakeMatroskaViewModel(2);
         var window = new PickMatroskaTrackWindow(vm);
-        window.Show();
-        Dispatcher.UIThread.RunJobs();
-        window.UpdateLayout();
-        Dispatcher.UIThread.RunJobs();
+        try
+        {
+            window.Show();
+            Dispatcher.UIThread.RunJobs();
+            window.UpdateLayout();
+            Dispatcher.UIThread.RunJobs();
 
-        vm.OkCommand.Execute(null);
-        Dispatcher.UIThread.RunJobs();
+            vm.OkCommand.Execute(null);
+            Dispatcher.UIThread.RunJobs();
 
-        Assert.True(vm.OkPressed);
-        Assert.NotNull(vm.SelectedMatroskaTrack);
-        Assert.Equal(1, vm.SelectedMatroskaTrack!.TrackNumber);
+            Assert.True(vm.OkPressed);
+            Assert.NotNull(vm.SelectedMatroskaTrack);
+            Assert.Equal(1, vm.SelectedMatroskaTrack!.TrackNumber);
+        }
+        finally
+        {
+            window.Close();
+        }
     }
 
     private static PickMp4TrackViewModel MakeMp4ViewModel(int trackCount)
@@ -105,15 +119,20 @@ public class PickTrackWindowSelectionTests
     {
         var vm = MakeMp4ViewModel(2);
         var window = new PickMp4TrackWindow(vm);
-        window.Show();
-        Dispatcher.UIThread.RunJobs();
-        window.UpdateLayout();
-        Dispatcher.UIThread.RunJobs();
+        try
+        {
+            window.Show();
+            Dispatcher.UIThread.RunJobs();
+            window.UpdateLayout();
+            Dispatcher.UIThread.RunJobs();
 
-        Assert.Same(vm.Tracks[0], vm.SelectedTrack);
-        Assert.Equal(0, vm.TracksGrid.SelectedIndex);
-
-        window.Close();
+            Assert.Same(vm.Tracks[0], vm.SelectedTrack);
+            Assert.Equal(0, vm.TracksGrid.SelectedIndex);
+        }
+        finally
+        {
+            window.Close();
+        }
     }
 
     [AvaloniaFact]
@@ -121,16 +140,76 @@ public class PickTrackWindowSelectionTests
     {
         var vm = MakeMp4ViewModel(2);
         var window = new PickMp4TrackWindow(vm);
-        window.Show();
-        Dispatcher.UIThread.RunJobs();
-        window.UpdateLayout();
-        Dispatcher.UIThread.RunJobs();
+        try
+        {
+            window.Show();
+            Dispatcher.UIThread.RunJobs();
+            window.UpdateLayout();
+            Dispatcher.UIThread.RunJobs();
 
-        vm.OkCommand.Execute(null);
-        Dispatcher.UIThread.RunJobs();
+            vm.OkCommand.Execute(null);
+            Dispatcher.UIThread.RunJobs();
 
-        Assert.True(vm.OkPressed);
-        Assert.Same(vm.Tracks[0], vm.SelectedMatroskaTrack);
+            Assert.True(vm.OkPressed);
+            Assert.Same(vm.Tracks[0], vm.SelectedMatroskaTrack);
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    // Fragmented (DASH/CMAF) MP4s have no moov Trak objects; the picker is fed
+    // Mp4FragmentedSubtitleTrack instead, and both the cue preview and OK must work
+    // off the fragmented subtitle.
+    [AvaloniaFact]
+    public void PickMp4TrackWindow_FragmentedTracks_PreviewAndOkWork()
+    {
+        var services = new ServiceCollection();
+        services.AddSubtitleEditServices();
+        var provider = services.BuildServiceProvider();
+        var vm = provider.GetRequiredService<PickMp4TrackViewModel>();
+
+        var english = new Subtitle();
+        english.Paragraphs.Add(new Paragraph("Hello", 1000, 2000));
+        english.Paragraphs.Add(new Paragraph("World", 3000, 4000));
+        var danish = new Subtitle();
+        danish.Paragraphs.Add(new Paragraph("Hej", 1000, 2000));
+        var fragmentedTracks = new List<Mp4FragmentedSubtitleTrack>
+        {
+            new() { TrackId = 1, Language = "eng", Codec = "wvtt", Subtitle = english },
+            new() { TrackId = 2, Language = "dan", Codec = "stpp", Subtitle = danish },
+        };
+
+        vm.Initialize(fragmentedTracks, "test.mp4");
+
+        var window = new PickMp4TrackWindow(vm);
+        try
+        {
+            window.Show();
+            Dispatcher.UIThread.RunJobs();
+            window.UpdateLayout();
+            Dispatcher.UIThread.RunJobs();
+
+            Assert.Equal(2, vm.Tracks.Count);
+            Assert.Equal("wvtt", vm.Tracks[0].HandlerType);
+            Assert.Equal("stpp", vm.Tracks[1].HandlerType);
+            Assert.Same(vm.Tracks[0], vm.SelectedTrack);
+
+            // preview is built from the fragmented cues (no Trak/stbl involved)
+            Assert.Equal(2, vm.Rows.Count);
+            Assert.Equal("Hello", vm.Rows[0].Text);
+
+            vm.OkCommand.Execute(null);
+            Dispatcher.UIThread.RunJobs();
+
+            Assert.True(vm.OkPressed);
+            Assert.Same(fragmentedTracks[0], vm.SelectedMatroskaTrack!.FragmentedTrack);
+        }
+        finally
+        {
+            window.Close();
+        }
     }
 
     private static PickTsTrackViewModel MakeTsViewModel(int trackCount)
@@ -161,15 +240,20 @@ public class PickTrackWindowSelectionTests
     {
         var vm = MakeTsViewModel(2);
         var window = new PickTsTrackWindow(vm);
-        window.Show();
-        Dispatcher.UIThread.RunJobs();
-        window.UpdateLayout();
-        Dispatcher.UIThread.RunJobs();
+        try
+        {
+            window.Show();
+            Dispatcher.UIThread.RunJobs();
+            window.UpdateLayout();
+            Dispatcher.UIThread.RunJobs();
 
-        Assert.Same(vm.Tracks[0], vm.SelectedTrack);
-        Assert.Equal(0, vm.TracksGrid.SelectedIndex);
-
-        window.Close();
+            Assert.Same(vm.Tracks[0], vm.SelectedTrack);
+            Assert.Equal(0, vm.TracksGrid.SelectedIndex);
+        }
+        finally
+        {
+            window.Close();
+        }
     }
 
     [AvaloniaFact]
@@ -177,9 +261,15 @@ public class PickTrackWindowSelectionTests
     {
         var vm = MakeTsViewModel(2);
         var window = new PickTsTrackWindow(vm);
-
-        // The view model left WindowTitle empty, so the window opened with no title at all.
-        Assert.Contains("movie.ts", window.Title);
+        try
+        {
+            // The view model left WindowTitle empty, so the window opened with no title at all.
+            Assert.Contains("movie.ts", window.Title);
+        }
+        finally
+        {
+            window.Close();
+        }
     }
 
     private static PickVobSubLanguageViewModel MakeVobSubViewModel(int languageCount)
@@ -205,15 +295,20 @@ public class PickTrackWindowSelectionTests
     {
         var vm = MakeVobSubViewModel(2);
         var window = new PickVobSubLanguageWindow(vm);
-        window.Show();
-        Dispatcher.UIThread.RunJobs();
-        window.UpdateLayout();
-        Dispatcher.UIThread.RunJobs();
+        try
+        {
+            window.Show();
+            Dispatcher.UIThread.RunJobs();
+            window.UpdateLayout();
+            Dispatcher.UIThread.RunJobs();
 
-        Assert.Same(vm.Languages[0], vm.SelectedLanguage);
-        Assert.Equal(0, vm.LanguagesGrid.SelectedIndex);
-
-        window.Close();
+            Assert.Same(vm.Languages[0], vm.SelectedLanguage);
+            Assert.Equal(0, vm.LanguagesGrid.SelectedIndex);
+        }
+        finally
+        {
+            window.Close();
+        }
     }
 
     [AvaloniaFact]
@@ -221,15 +316,22 @@ public class PickTrackWindowSelectionTests
     {
         var vm = MakeVobSubViewModel(2);
         var window = new PickVobSubLanguageWindow(vm);
-        window.Show();
-        Dispatcher.UIThread.RunJobs();
-        window.UpdateLayout();
-        Dispatcher.UIThread.RunJobs();
+        try
+        {
+            window.Show();
+            Dispatcher.UIThread.RunJobs();
+            window.UpdateLayout();
+            Dispatcher.UIThread.RunJobs();
 
-        vm.OkCommand.Execute(null);
-        Dispatcher.UIThread.RunJobs();
+            vm.OkCommand.Execute(null);
+            Dispatcher.UIThread.RunJobs();
 
-        Assert.True(vm.OkPressed);
-        Assert.Equal(0x20, vm.SelectedStreamId);
+            Assert.True(vm.OkPressed);
+            Assert.Equal(0x20, vm.SelectedStreamId);
+        }
+        finally
+        {
+            window.Close();
+        }
     }
 }

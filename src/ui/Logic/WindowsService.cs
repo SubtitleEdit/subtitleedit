@@ -118,7 +118,7 @@ namespace Nikse.SubtitleEdit.Logic
             var window = (T)w;
             configureViewModel?.Invoke(window, viewModel);
 
-            window.WindowStartupLocation = WindowStartupLocation.CenterOwner; //TODO: does this work on mac?
+            window.WindowStartupLocation = WindowStartupLocation.CenterOwner;
 
             // Must run before Show() - see the note in ShowWindow<T>. (#12665)
             ApplyRightToLeftSettings(window);
@@ -195,7 +195,7 @@ namespace Nikse.SubtitleEdit.Logic
 
             var window = (TWindow)w;
 
-            window.WindowStartupLocation = WindowStartupLocation.CenterOwner; //TODO: does this work on mac?
+            window.WindowStartupLocation = WindowStartupLocation.CenterOwner;
             configureWindow?.Invoke(window);
 
             ApplyRightToLeftSettings(window);
@@ -228,8 +228,14 @@ namespace Nikse.SubtitleEdit.Logic
         /// non-modal tool windows (Find, Replace, etc.) so they don't float above other
         /// applications on macOS, where Avalonia maps Topmost to NSWindowLevel.Floating
         /// process-wide.
+        /// <paramref name="suppress"/> (optional) is consulted on every re-assertion: while it
+        /// returns true the child stays non-topmost no matter what the activation state says. The
+        /// main menu uses this for the undocked tool windows - dropping their Topmost once when
+        /// the menu opened was not enough, because opening a cascaded submenu churns window
+        /// activation and the handler below re-asserted Topmost right over the submenu popup
+        /// (#13187 follow-up).
         /// </summary>
-        public static void KeepTopmostWhileOwnerActive(Window child, Window owner)
+        public static void KeepTopmostWhileOwnerActive(Window child, Window owner, Func<bool>? suppress = null)
         {
             void OnFocusChanged(object? sender, EventArgs e)
             {
@@ -242,7 +248,7 @@ namespace Nikse.SubtitleEdit.Logic
                         return;
                     }
 
-                    child.Topmost = owner.IsActive || child.IsActive;
+                    child.Topmost = suppress?.Invoke() != true && (owner.IsActive || child.IsActive);
                 });
             }
 
@@ -258,7 +264,7 @@ namespace Nikse.SubtitleEdit.Logic
                 child.Deactivated -= OnFocusChanged;
             };
 
-            child.Topmost = owner.IsActive || child.IsActive;
+            child.Topmost = suppress?.Invoke() != true && (owner.IsActive || child.IsActive);
         }
 
         /// <summary>

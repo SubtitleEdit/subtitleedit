@@ -59,11 +59,12 @@ public class ShowHistoryTableViewTests
         // dividers below it - and in a different colour, because the built-in header draws its
         // separator as a semi-transparent rectangle inside the resize thumb.
         var previous = Se.Settings.Appearance.GridLinesAppearance;
+        ShowHistoryWindow? window = null;
         try
         {
             Se.Settings.Appearance.GridLinesAppearance = "All";
 
-            var window = ShowWindow(MakeViewModel(3));
+            window = ShowWindow(MakeViewModel(3));
             var tableView = GetTableView(window);
 
             var headers = tableView.GetVisualDescendants().OfType<TableViewColumnHeader>().ToList();
@@ -83,6 +84,7 @@ public class ShowHistoryTableViewTests
         finally
         {
             Se.Settings.Appearance.GridLinesAppearance = previous;
+            window?.Close();
         }
     }
 
@@ -92,11 +94,12 @@ public class ShowHistoryTableViewTests
         // The cells only draw bottom borders, so without a header bottom line the first row had no
         // line above it - and the line has to sit exactly on the row's top edge, not float above it.
         var previous = Se.Settings.Appearance.GridLinesAppearance;
+        ShowHistoryWindow? window = null;
         try
         {
             Se.Settings.Appearance.GridLinesAppearance = "All";
 
-            var window = ShowWindow(MakeViewModel(3));
+            window = ShowWindow(MakeViewModel(3));
             var tableView = GetTableView(window);
 
             var header = tableView.GetVisualDescendants().OfType<TableViewColumnHeader>().First();
@@ -108,6 +111,7 @@ public class ShowHistoryTableViewTests
         finally
         {
             Se.Settings.Appearance.GridLinesAppearance = previous;
+            window?.Close();
         }
     }
 
@@ -116,13 +120,19 @@ public class ShowHistoryTableViewTests
     {
         var vm = MakeViewModel(3);
         var window = ShowWindow(vm);
+        try
+        {
+            var tableView = GetTableView(window);
 
-        var tableView = GetTableView(window);
-
-        Assert.Equal(2, tableView.Columns.Count);
-        Assert.Equal(GridUnitType.Auto, tableView.Columns[0].Width.GridUnitType);
-        Assert.Equal(GridUnitType.Star, tableView.Columns[1].Width.GridUnitType);
-        Assert.Equal(vm.HistoryItems, tableView.ItemsSource);
+            Assert.Equal(2, tableView.Columns.Count);
+            Assert.Equal(GridUnitType.Auto, tableView.Columns[0].Width.GridUnitType);
+            Assert.Equal(GridUnitType.Star, tableView.Columns[1].Width.GridUnitType);
+            Assert.Equal(vm.HistoryItems, tableView.ItemsSource);
+        }
+        finally
+        {
+            window.Close();
+        }
     }
 
     [AvaloniaFact]
@@ -130,15 +140,21 @@ public class ShowHistoryTableViewTests
     {
         var vm = MakeViewModel(3);
         var window = ShowWindow(vm);
+        try
+        {
+            var tableView = GetTableView(window);
+            var rows = tableView.GetVisualDescendants().OfType<TableViewRow>().ToList();
+            Assert.Equal(3, rows.Count);
 
-        var tableView = GetTableView(window);
-        var rows = tableView.GetVisualDescendants().OfType<TableViewRow>().ToList();
-        Assert.Equal(3, rows.Count);
-
-        // Cell content must actually resolve through TableViewColumn.Binding.
-        var texts = rows[0].GetVisualDescendants().OfType<TextBlock>().Select(t => t.Text).ToList();
-        Assert.Contains("2026-07-21 10:00:00", texts);
-        Assert.Contains("Change 0", texts);
+            // Cell content must actually resolve through TableViewColumn.Binding.
+            var texts = rows[0].GetVisualDescendants().OfType<TextBlock>().Select(t => t.Text).ToList();
+            Assert.Contains("2026-07-21 10:00:00", texts);
+            Assert.Contains("Change 0", texts);
+        }
+        finally
+        {
+            window.Close();
+        }
     }
 
     [AvaloniaFact]
@@ -146,14 +162,20 @@ public class ShowHistoryTableViewTests
     {
         var vm = MakeViewModel(3);
         var window = ShowWindow(vm);
+        try
+        {
+            var tableView = GetTableView(window);
+            Assert.False(vm.IsRollbackEnabled);
 
-        var tableView = GetTableView(window);
-        Assert.False(vm.IsRollbackEnabled);
+            tableView.SelectedIndex = 1;
 
-        tableView.SelectedIndex = 1;
-
-        Assert.Same(vm.HistoryItems[1], vm.SelectedHistoryItem);
-        Assert.True(vm.IsRollbackEnabled);
+            Assert.Same(vm.HistoryItems[1], vm.SelectedHistoryItem);
+            Assert.True(vm.IsRollbackEnabled);
+        }
+        finally
+        {
+            window.Close();
+        }
     }
 
     [AvaloniaTheory]
@@ -164,11 +186,12 @@ public class ShowHistoryTableViewTests
     public void ShowHistoryWindow_CellBordersFollowGridLinesSetting(string setting, double right, double bottom)
     {
         var previous = Se.Settings.Appearance.GridLinesAppearance;
+        ShowHistoryWindow? window = null;
         try
         {
             Se.Settings.Appearance.GridLinesAppearance = setting;
 
-            var window = ShowWindow(MakeViewModel(3));
+            window = ShowWindow(MakeViewModel(3));
 
             var cells = GetTableView(window).GetVisualDescendants().OfType<TableViewCell>().ToList();
             Assert.NotEmpty(cells);
@@ -183,6 +206,7 @@ public class ShowHistoryTableViewTests
         finally
         {
             Se.Settings.Appearance.GridLinesAppearance = previous;
+            window?.Close();
         }
     }
 
@@ -194,11 +218,12 @@ public class ShowHistoryTableViewTests
         // the border properties to the ContentPresenter (which paints the border in Avalonia).
         // Without that, grid lines are silently missing.
         var previous = Se.Settings.Appearance.GridLinesAppearance;
+        ShowHistoryWindow? window = null;
         try
         {
             Se.Settings.Appearance.GridLinesAppearance = "All";
 
-            var window = ShowWindow(MakeViewModel(3));
+            window = ShowWindow(MakeViewModel(3));
 
             var cell = GetTableView(window).GetVisualDescendants().OfType<TableViewCell>().First();
             var presenter = cell.GetVisualDescendants().OfType<ContentPresenter>().First();
@@ -210,6 +235,7 @@ public class ShowHistoryTableViewTests
         finally
         {
             Se.Settings.Appearance.GridLinesAppearance = previous;
+            window?.Close();
         }
     }
 
@@ -220,11 +246,12 @@ public class ShowHistoryTableViewTests
         // cells were 18px inside 39px rows, so the horizontal line floated above the row edge and
         // the vertical line was drawn as one short segment per row instead of a continuous column.
         var previous = Se.Settings.Appearance.GridLinesAppearance;
+        ShowHistoryWindow? window = null;
         try
         {
             Se.Settings.Appearance.GridLinesAppearance = "All";
 
-            var window = ShowWindow(MakeViewModel(4));
+            window = ShowWindow(MakeViewModel(4));
 
             var tableView = GetTableView(window);
             var rows = tableView.GetVisualDescendants().OfType<TableViewRow>().ToList();
@@ -256,6 +283,7 @@ public class ShowHistoryTableViewTests
         finally
         {
             Se.Settings.Appearance.GridLinesAppearance = previous;
+            window?.Close();
         }
     }
 
@@ -266,10 +294,16 @@ public class ShowHistoryTableViewTests
         // otherwise a long undo history would realize thousands of rows.
         var vm = MakeViewModel(2000);
         var window = ShowWindow(vm);
+        try
+        {
+            var tableView = GetTableView(window);
+            var realized = tableView.GetVisualDescendants().OfType<TableViewRow>().Count();
 
-        var tableView = GetTableView(window);
-        var realized = tableView.GetVisualDescendants().OfType<TableViewRow>().Count();
-
-        Assert.InRange(realized, 1, 200);
+            Assert.InRange(realized, 1, 200);
+        }
+        finally
+        {
+            window.Close();
+        }
     }
 }

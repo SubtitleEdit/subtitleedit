@@ -3,6 +3,7 @@ using Nikse.SubtitleEdit.Core.ContainerFormats.Mp4;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 
 namespace Nikse.SubtitleEdit.Core.SubtitleFormats
@@ -52,11 +53,25 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             _errorCount = 0;
             subtitle.Paragraphs.Clear();
             var mp4Parser = new MP4Parser(fileName);
+
+            // Box-aware fragmented parsing (trun sample offsets/sizes) beats the mdat
+            // text-sniffing below - it also works when TTML samples share an mdat with
+            // video/audio data. Use it whenever it found TTML cues.
+            if (mp4Parser.VttcCodec == "stpp" && mp4Parser.VttcSubtitle?.Paragraphs.Count > 0)
+            {
+                subtitle.Paragraphs.AddRange(mp4Parser.VttcSubtitle.Paragraphs);
+                subtitle.Renumber();
+                return;
+            }
+
             var dfxpStrings = mp4Parser.GetMdatsAsStrings();
             SubtitleFormat format = new TimedText10();
             SubtitleFormat format2 = new TimedTextBase64Image();
             SubtitleFormat format3 = new TimedTextImage();
-            foreach (var xmlAsString in dfxpStrings)
+            // An mdat may hold several complete TTML sample documents back to back (one
+            // per sample, e.g. DASH segments with gap-filler documents) - parse each
+            // document separately, as the concatenation is not valid XML.
+            foreach (var xmlAsString in dfxpStrings.SelectMany(Mp4TtmlHelper.SplitTtmlDocuments))
             {
                 try
                 {

@@ -396,6 +396,7 @@ public partial class TextToSpeechViewModel : ObservableObject
             // Shared instruction text with the qwen3-tts.cpp engine so the same voice
             // description applies whichever Qwen3 backend the user picks.
             Se.Settings.Video.TextToSpeech.Qwen3TtsCppInstruction = (Instruction ?? string.Empty).Trim();
+            Se.Settings.Video.TextToSpeech.Qwen3TtsCrispAsrLanguage = SelectedLanguage?.Name ?? string.Empty;
         }
         else if (SelectedEngine is VibeVoiceCrispAsr)
         {
@@ -408,6 +409,7 @@ public partial class TextToSpeechViewModel : ObservableObject
         else if (SelectedEngine is CosyVoice3CrispAsr)
         {
             Se.Settings.Video.TextToSpeech.CosyVoice3CrispAsrModel = SelectedModel ?? CosyVoice3CrispAsr.DefaultModelKey;
+            Se.Settings.Video.TextToSpeech.CosyVoice3CrispAsrLanguage = SelectedLanguage?.Name ?? string.Empty;
         }
         else if (SelectedEngine is F5TtsCrispAsr)
         {
@@ -2127,10 +2129,32 @@ public partial class TextToSpeechViewModel : ObservableObject
 
     private void Close()
     {
-        Dispatcher.UIThread.Post(() =>
+        Dispatcher.UIThread.Post(CloseWindowSafely);
+    }
+
+    /// <summary>
+    /// Closes the window without letting a failure escape, for every path that closes the TTS
+    /// window (#12626). An exception thrown out of a dispatcher callback is unhandled and takes
+    /// the whole process down, which is what the crash report shows for the OK button:
+    /// <c>Window.CloseInternal()</c> under the <c>Close</c> command's dispatcher lambda. #12628
+    /// guarded the steps inside the close sequence; this guards the close call itself.
+    /// <para>
+    /// Caveat: this can only contain a <em>managed</em> exception. The reporter's Event Viewer
+    /// entry is an access violation (<c>c0000005</c> in coreclr.dll), which no catch block can
+    /// intercept - if that is the real fault, the crash needs a different root cause.
+    /// </para>
+    /// </summary>
+    private void CloseWindowSafely()
+    {
+        try
         {
             Window?.Close();
-        });
+        }
+        catch (Exception ex)
+        {
+            SeLogger.Error(ex, "TTS window: Window.Close() failed");
+            Se.WriteToolsLog("TTS window: Window.Close() failed: " + ex, true);
+        }
     }
 
     private async Task PlayAudio(string fileName)
@@ -3311,13 +3335,18 @@ public partial class TextToSpeechViewModel : ObservableObject
 
                 // OmniVoice has 646 alphabetically-sorted languages; the first entry ("Abadi") is
                 // a useless default. Default to English so the engine is usable out of the box.
-                // MOSS-TTS restores the saved pick (its list leads with "Auto", which is also the
-                // right fallback - it reproduces the pre-language-selection behaviour).
+                // The CrispASR cloning engines restore the saved pick (their lists lead with
+                // "Auto", which is also the right fallback - it reproduces the
+                // pre-language-selection behaviour).
                 SelectedLanguage = engine switch
                 {
                     OmniVoiceTtsCpp => Languages.FirstOrDefault(l => l.Code == "en") ?? Languages.FirstOrDefault(),
                     MossTtsCrispAsr => Languages.FirstOrDefault(l => l.Name == Se.Settings.Video.TextToSpeech.MossTtsCrispAsrLanguage)
                                        ?? Languages.FirstOrDefault(),
+                    CosyVoice3CrispAsr => Languages.FirstOrDefault(l => l.Name == Se.Settings.Video.TextToSpeech.CosyVoice3CrispAsrLanguage)
+                                          ?? Languages.FirstOrDefault(),
+                    Qwen3TtsCrispAsr => Languages.FirstOrDefault(l => l.Name == Se.Settings.Video.TextToSpeech.Qwen3TtsCrispAsrLanguage)
+                                        ?? Languages.FirstOrDefault(),
                     _ => Languages.FirstOrDefault(),
                 };
             }
@@ -3535,7 +3564,9 @@ public partial class TextToSpeechViewModel : ObservableObject
                 return;
             }
 
-            Window?.Close();
+            // Same guard as the Close command: Escape reaches Avalonia's close machinery through
+            // exactly the same path, so it must not be able to take the app down either (#12626).
+            CloseWindowSafely();
         }
         else if (UiUtil.IsHelp(e))
         {

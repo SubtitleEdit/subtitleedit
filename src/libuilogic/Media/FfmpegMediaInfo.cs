@@ -35,6 +35,10 @@ namespace Nikse.SubtitleEdit.UiLogic.Media
         private static partial Regex Fps2RegexGen();
         private static readonly Regex Fps2Regex = Fps2RegexGen();
 
+        [GeneratedRegex(@"^Stream #\d+:(\d+)")]
+        private static partial Regex StreamIndexRegexGen();
+        private static readonly Regex StreamIndexRegex = StreamIndexRegexGen();
+
         private FfmpegMediaInfo()
         {
             Tracks = new List<FfmpegTrackInfo>();
@@ -61,20 +65,29 @@ namespace Nikse.SubtitleEdit.UiLogic.Media
             return (long)((double)FramesRate * Duration.TotalMilliseconds / TimeCode.BaseUnit);
         }
 
-        public bool HasFrontCenterAudio(int trackNumber)
+        /// <summary>
+        /// True when the given audio track is 5.1/7.1/9.1 and therefore has a front-center
+        /// channel. <paramref name="streamIndex"/> is the global ffmpeg stream index (the N in
+        /// "Stream #0:N" / "-map 0:N"), which is what every caller has; a negative value means
+        /// "no specific track" and falls back to the first audio track.
+        /// </summary>
+        public bool HasFrontCenterAudio(int streamIndex)
         {
-            if (trackNumber < 0)
-            {
-                trackNumber = 0;
-            }
-
             var audioTracks = Tracks.Where(track => track.TrackType == FfmpegTrackType.Audio).ToList();
-            if (trackNumber >= audioTracks.Count)
+            if (audioTracks.Count == 0)
             {
                 return false;
             }
 
-            var info = audioTracks[trackNumber].TrackInfo;
+            var track = streamIndex < 0
+                ? audioTracks[0]
+                : audioTracks.FirstOrDefault(t => t.StreamIndex == streamIndex);
+            if (track == null)
+            {
+                return false;
+            }
+
+            var info = track.TrackInfo;
             return info.Contains("5.1", StringComparison.Ordinal) ||
                    info.Contains("7.1", StringComparison.Ordinal) ||
                    info.Contains("9.1", StringComparison.Ordinal);
@@ -121,21 +134,27 @@ namespace Nikse.SubtitleEdit.UiLogic.Media
                     {
                         var trackType = arr[1].Trim();
                         var trackInfo = arr[2].Trim();
+                        var streamIndexMatch = StreamIndexRegex.Match(s);
+                        var streamIndex = streamIndexMatch.Success &&
+                                          int.TryParse(streamIndexMatch.Groups[1].Value, out var si)
+                            ? si
+                            : -1;
+
                         if (trackType == FfmpegTrackType.Audio.ToString())
                         {
-                            info.Tracks.Add(new FfmpegTrackInfo { TrackType = FfmpegTrackType.Audio, TrackInfo = trackInfo });
+                            info.Tracks.Add(new FfmpegTrackInfo { TrackType = FfmpegTrackType.Audio, TrackInfo = trackInfo, StreamIndex = streamIndex });
                         }
                         else if (trackType == FfmpegTrackType.Video.ToString())
                         {
-                            info.Tracks.Add(new FfmpegTrackInfo { TrackType = FfmpegTrackType.Video, TrackInfo = trackInfo });
+                            info.Tracks.Add(new FfmpegTrackInfo { TrackType = FfmpegTrackType.Video, TrackInfo = trackInfo, StreamIndex = streamIndex });
                         }
                         else if (trackType == FfmpegTrackType.Subtitle.ToString())
                         {
-                            info.Tracks.Add(new FfmpegTrackInfo { TrackType = FfmpegTrackType.Subtitle, TrackInfo = trackInfo });
+                            info.Tracks.Add(new FfmpegTrackInfo { TrackType = FfmpegTrackType.Subtitle, TrackInfo = trackInfo, StreamIndex = streamIndex });
                         }
                         else
                         {
-                            info.Tracks.Add(new FfmpegTrackInfo { TrackType = FfmpegTrackType.Other, TrackInfo = trackInfo });
+                            info.Tracks.Add(new FfmpegTrackInfo { TrackType = FfmpegTrackType.Other, TrackInfo = trackInfo, StreamIndex = streamIndex });
                         }
                     }
                 }

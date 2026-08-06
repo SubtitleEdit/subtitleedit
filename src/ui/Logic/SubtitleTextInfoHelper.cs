@@ -37,7 +37,20 @@ internal static class SubtitleTextInfoHelper
         out string totalText,
         out IBrush totalBackground)
     {
-        var info = PopulateLineLengthsAndTotal(text, panel);
+        // This runs on every keystroke in the edit box, right after the row view model's own
+        // bindings (text error tint, pixel width) already stripped and split the same text.
+        // Reuse that memo instead of stripping/splitting a second time; the guard keeps the
+        // fallback for callers passing a different string than the row's current text.
+        TextTotalInfo info;
+        if (ReferenceEquals(text, item.Text))
+        {
+            info = PopulateLineLengthsAndTotalCore(item.GetStrippedText(), item.GetStrippedLines(), panel);
+        }
+        else
+        {
+            info = PopulateLineLengthsAndTotal(text, panel);
+        }
+
         var maxCps = Se.Settings.General.SubtitleMaximumCharactersPerSeconds;
 
         var cps = GetCharactersPerSecond(text, item.StartTime, item.EndTime);
@@ -49,12 +62,16 @@ internal static class SubtitleTextInfoHelper
 
     internal static TextTotalInfo PopulateLineLengthsAndTotal(string text, StackPanel panel)
     {
+        var cleanText = StripHtml(text);
+        return PopulateLineLengthsAndTotalCore(cleanText, cleanText.SplitToLines(), panel);
+    }
+
+    private static TextTotalInfo PopulateLineLengthsAndTotalCore(string cleanText, List<string> lines, StackPanel panel)
+    {
         var colorTextTooLong = Se.Settings.General.ColorTextTooLong;
         var maxLineLength = Se.Settings.General.SubtitleLineMaximumLength;
 
-        var cleanText = StripHtml(text);
         var totalLength = GetTotalLength(cleanText);
-        var lines = cleanText.SplitToLines();
         var lineCount = lines.Count;
 
         FillLineLengthPanel(panel, lines, colorTextTooLong, maxLineLength);

@@ -4,6 +4,7 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Layout;
 using Avalonia.Media;
+using Nikse.SubtitleEdit.Logic;
 
 namespace Nikse.SubtitleEdit.Features.Options.Settings;
 
@@ -47,6 +48,8 @@ public class SettingsSection
             VerticalAlignment = VerticalAlignment.Center,
         };
         Optris.Icons.Avalonia.Attached.SetIcon(icon, IconName);
+        // Keep the glyph white on the colored square in the dark theme too (#12717).
+        icon.Classes.Add(UiTheme.IconOnAccentClassName);
 
         Panel.Children.Add(new StackPanel
         {

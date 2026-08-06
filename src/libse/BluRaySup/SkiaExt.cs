@@ -158,38 +158,140 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
             public int Bottom { get; set; }
         }
 
-        public static TrimResult TrimTransparentPixels(this SKBitmap bitmap)
+        /// <summary>
+        /// The smallest rectangle containing every pixel with a non-zero alpha, in absolute bitmap
+        /// coordinates, or <see cref="NonTransparentBounds.IsEmpty"/> when the bitmap draws nothing.
+        /// </summary>
+        public struct NonTransparentBounds
+        {
+            public int Top { get; set; }
+            public int Left { get; set; }
+            public int Right { get; set; }
+            public int Bottom { get; set; }
+            public bool IsEmpty => Top > Bottom || Left > Right;
+        }
+
+        // Little-endian view of two pixels: alpha is the 4th byte of each, so the high byte of each
+        // of the two packed uints.
+        private const ulong AlphaMask2Pixels = 0xFF000000FF000000UL;
+        private const uint AlphaMask1Pixel = 0xFF000000u;
+
+        /// <summary>
+        /// Index of the first pixel in [start, end) with a non-zero alpha, or -1 when there is none.
+        /// Image export rasterises into a 4000x2000 scratch canvas and nearly all of it is empty, so
+        /// the scan tests eight pixels per branch and stops at the first hit.
+        /// </summary>
+        private static unsafe int FirstNonTransparent(uint* row, int start, int end)
+        {
+            var x = start;
+            for (; x + 8 <= end; x += 8)
+            {
+                var block = (ulong*)(row + x);
+                if (((block[0] | block[1] | block[2] | block[3]) & AlphaMask2Pixels) != 0)
+                {
+                    break;
+                }
+            }
+
+            for (; x < end; x++)
+            {
+                if ((row[x] & AlphaMask1Pixel) != 0)
+                {
+                    return x;
+                }
+            }
+
+            return -1;
+        }
+
+        /// <summary>
+        /// Index of the last pixel in [start, end) with a non-zero alpha, or -1 when there is none.
+        /// </summary>
+        private static unsafe int LastNonTransparent(uint* row, int start, int end)
+        {
+            var x = end;
+            for (; x - 8 >= start; x -= 8)
+            {
+                var block = (ulong*)(row + x - 8);
+                if (((block[0] | block[1] | block[2] | block[3]) & AlphaMask2Pixels) != 0)
+                {
+                    break;
+                }
+            }
+
+            for (; x > start; x--)
+            {
+                if ((row[x - 1] & AlphaMask1Pixel) != 0)
+                {
+                    return x - 1;
+                }
+            }
+
+            return -1;
+        }
+
+        public static unsafe NonTransparentBounds GetNonTransparentBounds(this SKBitmap bitmap)
         {
             if (bitmap == null)
             {
                 throw new ArgumentNullException(nameof(bitmap));
             }
 
-            int width = bitmap.Width;
-            int height = bitmap.Height;
+            var width = bitmap.Width;
+            var height = bitmap.Height;
+            var top = height;
+            var left = width;
+            var right = -1;
+            var bottom = -1;
 
-            // Find the bounds of non-transparent pixels
-            int top = height;
-            int left = width;
-            int right = -1;
-            int bottom = -1;
+            var ptr = (byte*)bitmap.GetPixels().ToPointer();
+            var bytesPerPixel = bitmap.BytesPerPixel;
+            var rowBytes = bitmap.RowBytes;
 
-            unsafe
+            if (bytesPerPixel == 4 && BitConverter.IsLittleEndian)
             {
-                byte* ptr = (byte*)bitmap.GetPixels().ToPointer();
-                int bytesPerPixel = bitmap.BytesPerPixel;
-                int rowBytes = bitmap.RowBytes;
-
-                // Find top and bottom in one pass
-                for (int y = 0; y < height; y++)
+                for (var y = 0; y < height; y++)
                 {
-                    byte* row = ptr + (y * rowBytes);
+                    var row = (uint*)(ptr + y * rowBytes);
+                    var firstHit = FirstNonTransparent(row, 0, width);
+                    if (firstHit < 0)
+                    {
+                        continue;
+                    }
 
-                    for (int x = 0; x < width; x++)
+                    if (y < top)
+                    {
+                        top = y;
+                    }
+
+                    bottom = y;
+
+                    if (firstHit < left)
+                    {
+                        left = firstHit;
+                    }
+
+                    // Only the part of the row that could push the right edge out still needs
+                    // looking at, so later rows get cheaper as the bounds settle.
+                    if (right < width - 1)
+                    {
+                        var lastHit = LastNonTransparent(row, right + 1, width);
+                        if (lastHit > right)
+                        {
+                            right = lastHit;
+                        }
+                    }
+                }
+            }
+            else
+            {
+                for (var y = 0; y < height; y++)
+                {
+                    var row = ptr + y * rowBytes;
+                    for (var x = 0; x < width; x++)
                     {
                         // Alpha is the 4th byte in RGBA/BGRA formats
-                        byte alpha = row[x * bytesPerPixel + 3];
-
+                        var alpha = row[x * bytesPerPixel + 3];
                         if (alpha > 0)
                         {
                             if (y < top) top = y;
@@ -201,8 +303,36 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
                 }
             }
 
+            return new NonTransparentBounds { Top = top, Left = left, Right = right, Bottom = bottom };
+        }
+
+        /// <summary>
+        /// Copies the given rectangle (inclusive bounds, absolute bitmap coordinates) into a new
+        /// bitmap. Parts of the rectangle outside the bitmap come out transparent.
+        /// </summary>
+        public static SKBitmap CropTo(this SKBitmap bitmap, int left, int top, int right, int bottom)
+        {
+            var newWidth = right - left + 1;
+            var newHeight = bottom - top + 1;
+            var cropped = new SKBitmap(newWidth, newHeight, bitmap.ColorType, bitmap.AlphaType);
+
+            using (var canvas = new SKCanvas(cropped))
+            {
+                canvas.Clear(SKColors.Transparent);
+                var sourceRect = new SKRect(left, top, right + 1, bottom + 1);
+                var destRect = new SKRect(0, 0, newWidth, newHeight);
+                canvas.DrawBitmap(bitmap, sourceRect, destRect);
+            }
+
+            return cropped;
+        }
+
+        public static TrimResult TrimTransparentPixels(this SKBitmap bitmap)
+        {
+            var bounds = bitmap.GetNonTransparentBounds();
+
             // If the entire bitmap is transparent, return the original
-            if (top > bottom || left > right)
+            if (bounds.IsEmpty)
             {
                 return new TrimResult
                 {
@@ -214,27 +344,13 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
                 };
             }
 
-            // Calculate the new dimensions
-            int newWidth = right - left + 1;
-            int newHeight = bottom - top + 1;
-
-            // Create the trimmed bitmap
-            SKBitmap trimmedBitmap = new SKBitmap(newWidth, newHeight, bitmap.ColorType, bitmap.AlphaType);
-
-            using (SKCanvas canvas = new SKCanvas(trimmedBitmap))
-            {
-                SKRect sourceRect = new SKRect(left, top, right + 1, bottom + 1);
-                SKRect destRect = new SKRect(0, 0, newWidth, newHeight);
-                canvas.DrawBitmap(bitmap, sourceRect, destRect);
-            }
-
             return new TrimResult
             {
-                TrimmedBitmap = trimmedBitmap,
-                Top = top,
-                Left = left,
-                Right = width - right - 1,
-                Bottom = height - bottom - 1
+                TrimmedBitmap = bitmap.CropTo(bounds.Left, bounds.Top, bounds.Right, bounds.Bottom),
+                Top = bounds.Top,
+                Left = bounds.Left,
+                Right = bitmap.Width - bounds.Right - 1,
+                Bottom = bitmap.Height - bounds.Bottom - 1
             };
         }
     }
