@@ -15973,9 +15973,17 @@ public partial class MainViewModel :
                 // shows the first row highlighted while SelectedSubtitle is still null -
                 // empty edit box and go to next/previous line dead until the selection is
                 // moved away and back (#13190). Assigning the same item above raises no
-                // event either, so sync the view model explicitly.
-                if (!ReferenceEquals(SelectedSubtitle, itemToScroll))
+                // event either, so sync the view model explicitly. SelectedSubtitle alone
+                // is no proof the pipeline ran: the TwoWay SelectedItem binding writes it
+                // directly when the grid picks row 0 on its own, while _selectedSubtitles -
+                // what delete/copy/italic read - stays empty, leaving those commands dead
+                // on the first row of the first file opened after startup (#13303).
+                var selectionCacheStale = _selectedSubtitles == null
+                                          || _selectedSubtitles.Count != 1
+                                          || !ReferenceEquals(_selectedSubtitles[0], itemToScroll);
+                if (!ReferenceEquals(SelectedSubtitle, itemToScroll) || selectionCacheStale)
                 {
+                    TableViewExtras.SyncSelectedItemsWithSelection(SubtitleGrid);
                     SubtitleGridSelectionChanged();
                 }
 
