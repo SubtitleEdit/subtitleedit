@@ -22612,13 +22612,20 @@ public partial class MainViewModel :
 
     private void OnSubtitleItemChangedForMpv(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
     {
-        if (e.PropertyName is nameof(SubtitleLineViewModel.Text)
-            or nameof(SubtitleLineViewModel.StartTime)
-            or nameof(SubtitleLineViewModel.EndTime))
+        if (e.PropertyName is nameof(SubtitleLineViewModel.StartTime))
         {
             _mpvPreviewDirty = true;
             // A start-time change can reorder the buffer, so it must be rebuilt and re-sorted.
             _waveformSubtitleBufferDirty = true;
+        }
+        else if (e.PropertyName is nameof(SubtitleLineViewModel.Text)
+            or nameof(SubtitleLineViewModel.EndTime))
+        {
+            // Preview only: the buffer holds live references sorted by start time, so text
+            // and end-time edits change neither membership nor order. Marking it dirty here
+            // used to refill + order-check every line 20x a second while the user typed in
+            // the edit box or dragged an end time in the waveform.
+            _mpvPreviewDirty = true;
         }
         else if (e.PropertyName is nameof(SubtitleLineViewModel.Layer))
         {
@@ -22922,8 +22929,8 @@ public partial class MainViewModel :
 
                 // Rebuild + re-sort the buffer only when its inputs changed since the last tick;
                 // an idle tick used to copy and order-check every line 20x a second (#13234).
-                // Membership/order inputs: the collection and each line's times/layer (both flip
-                // _waveformSubtitleBufferDirty via the ForMpv hooks), plus the layer-visibility
+                // Membership/order inputs: the collection and each line's start time/layer (both
+                // flip _waveformSubtitleBufferDirty via the ForMpv hooks), plus the layer-visibility
                 // state checked here - _visibleLayers is only ever swapped wholesale, so a
                 // reference comparison covers it. The buffer holds live references, so paragraph
                 // content read later this tick is always current either way.
