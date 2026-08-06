@@ -15199,10 +15199,19 @@ public partial class MainViewModel :
     [RelayCommand]
     private async Task SubtitleGridPaste()
     {
-        var idx = SelectedSubtitleIndex ?? -1;
-        if (idx < 0 || Window == null)
+        if (Window == null)
         {
             return;
+        }
+
+        // No selection: append at the end instead of silently doing nothing - SE4's grid paste
+        // covered this state (insert at end), and the Paste helper already supports
+        // index >= Count as append (#13200). Empty grid: insert at 0 (the helper handles
+        // index 0 with an empty list; a negative index would throw on Insert).
+        var idx = SelectedSubtitleIndex ?? Subtitles.Count;
+        if (idx < 0 || idx > Subtitles.Count)
+        {
+            idx = Subtitles.Count;
         }
 
         await SubtitleGridCopyPasteHelper.Paste(Window, Subtitles, idx, SelectedSubtitleFormat);
