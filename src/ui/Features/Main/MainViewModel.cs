@@ -18057,7 +18057,8 @@ public partial class MainViewModel :
     }
 
     // Saves the current subtitle, prompting for a file name first when it is still untitled.
-    // Returns false if the save (or the "save as" file picker) was cancelled.
+    // Returns false if the save (or the "save as" file picker) was cancelled or failed, so
+    // close flows abort instead of losing data on a failed write (review follow-up, #12705).
     private async Task<bool> SaveCurrentSubtitle()
     {
         if (string.IsNullOrEmpty(_subtitleFileName))
@@ -18065,8 +18066,7 @@ public partial class MainViewModel :
             return await SaveSubtitleAs();
         }
 
-        await SaveSubtitle();
-        return true;
+        return await SaveSubtitle();
     }
 
     // As SaveCurrentSubtitle, but for the original (translation source) subtitle.
@@ -18077,8 +18077,7 @@ public partial class MainViewModel :
             return await SaveSubtitleOriginalAs();
         }
 
-        await SaveSubtitleOriginal();
-        return true;
+        return await SaveSubtitleOriginal();
     }
 
     private async Task<bool> SaveSubtitle(bool isAutoSave = false)
@@ -18729,8 +18728,9 @@ public partial class MainViewModel :
             // always progresses.
             try
             {
-                if (!await PromptSaveChanges(Se.Language.General.SaveChangesMessage,
-                        () => SaveSubtitle()))
+                // Prompt only for files that actually changed. This also persists the original
+                // subtitle of a translation pair without rewriting an untouched main file.
+                if (!await HasChangesContinue())
                 {
                     // Stay cancelled - window won't close
                     return;
@@ -24160,25 +24160,6 @@ public partial class MainViewModel :
             ApplyLiveSpellCheck(result.SelectedDictionary);
             ShowStatus(string.Format(Se.Language.Main.LiveSpellCheckLanguageXLoaded, result.SelectedDictionary.Name));
         });
-    }
-
-    private async void OnWindowClosing(object? sender, WindowClosingEventArgs e)
-    {
-        if (Window == null || !HasChanges())
-        {
-            return;
-        }
-
-        e.Cancel = true;
-
-        if (!await PromptSaveChanges(Se.Language.General.SaveChangesMessage,
-                () => SaveSubtitle()))
-        {
-            return;
-        }
-
-        Window.Closing -= OnWindowClosing;
-        Window.Close();
     }
 
     public void AudioVisualizerFlyoutMenuOpening(object sender, AudioVisualizer.ContextEventArgs e)
