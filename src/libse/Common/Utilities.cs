@@ -1794,17 +1794,19 @@ namespace Nikse.SubtitleEdit.Core.Common
 
         internal static string ReverseString(string s)
         {
-            int len = s.Length;
-            if (len <= 1)
+            if (s.Length <= 1)
             {
                 return s;
             }
-            var chars = new char[len];
-            for (int i = 0; i < len; i++)
+
+            return string.Create(s.Length, s, (span, src) =>
             {
-                chars[i] = s[len - i - 1];
-            }
-            return new string(chars);
+                int len = span.Length;
+                for (int i = 0; i < len; i++)
+                {
+                    span[i] = src[len - i - 1];
+                }
+            });
         }
 
         private static string ReverseParenthesis(string s)
@@ -1813,29 +1815,30 @@ namespace Nikse.SubtitleEdit.Core.Common
             {
                 return s;
             }
-            int len = s.Length;
-            var chars = new char[len];
-            for (int i = 0; i < len; i++)
+            return string.Create(s.Length, s, (span, src) =>
             {
-                char ch = s[i];
-                switch (ch)
+                for (int i = 0; i < span.Length; i++)
                 {
-                    case '(':
-                        ch = ')';
-                        break;
-                    case ')':
-                        ch = '(';
-                        break;
-                    case '[':
-                        ch = ']';
-                        break;
-                    case ']':
-                        ch = '[';
-                        break;
+                    char ch = src[i];
+                    switch (ch)
+                    {
+                        case '(':
+                            ch = ')';
+                            break;
+                        case ')':
+                            ch = '(';
+                            break;
+                        case '[':
+                            ch = ']';
+                            break;
+                        case ']':
+                            ch = '[';
+                            break;
+                    }
+
+                    span[i] = ch;
                 }
-                chars[i] = ch;
-            }
-            return new string(chars);
+            });
         }
 
         public static string FixEnglishTextInRightToLeftLanguage(string text, string reverseChars)
