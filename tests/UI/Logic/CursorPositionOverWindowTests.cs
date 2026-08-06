@@ -10,11 +10,26 @@ namespace UITests.Logic;
 /// Avalonia pointer events), so activity must be hit-tested against the window - otherwise
 /// mouse movement in any other app or on another monitor shows the video controls (issue #13207).
 /// </summary>
-public class CursorPositionOverWindowTests
+public class CursorPositionOverWindowTests : IDisposable
 {
-    private static Window ShowWindow()
+    // Every window opened by a test is closed again in Dispose: if a test stops early, an
+    // unclosed window would outlive the test and race with the headless session teardown.
+    private readonly List<Window> _windows = new();
+
+    public void Dispose()
+    {
+        foreach (var window in _windows)
+        {
+            window.Close();
+        }
+
+        _windows.Clear();
+    }
+
+    private Window ShowWindow()
     {
         var window = new Window { Width = 400, Height = 300 };
+        _windows.Add(window);
         window.Show();
         return window;
     }

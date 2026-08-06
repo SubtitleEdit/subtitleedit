@@ -6,8 +6,21 @@ using Nikse.SubtitleEdit.Controls;
 
 namespace UITests.Controls;
 
-public class SyntaxHighlightingTextBoxTests
+public class SyntaxHighlightingTextBoxTests : IDisposable
 {
+    // Every window opened by a test is closed again in Dispose: if a test stops early, an
+    // unclosed window would outlive the test and race with the headless session teardown.
+    private readonly List<Window> _windows = new();
+
+    public void Dispose()
+    {
+        foreach (var window in _windows)
+        {
+            window.Close();
+        }
+
+        _windows.Clear();
+    }
     // Ligatures merge letter sequences like "ffi" into one glyph cluster, making the caret
     // and mouse selection treat them as a single character (#12585) - the edit box must
     // disable standard/contextual ligatures ("liga"/"clig") while keeping script-critical
@@ -32,6 +45,7 @@ public class SyntaxHighlightingTextBoxTests
     {
         var textBox = new SyntaxHighlightingTextBox();
         var window = new Window { Content = textBox, Width = 320, Height = 120 };
+        _windows.Add(window);
         window.Show();
         textBox.ApplyTemplate();
 

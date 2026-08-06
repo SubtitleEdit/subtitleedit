@@ -22,9 +22,23 @@ namespace UITests.Features.Main;
 /// successive Home/End round trips (~1 s per keypress, getting worse) while End stayed at 17,
 /// and a jump to line 100 realized all 4935 remaining rows in every second attempt.
 /// </summary>
-public class SubtitleGridScrollPerformanceTests
+public class SubtitleGridScrollPerformanceTests : IDisposable
 {
     private const int LineCount = 5000;
+
+    // Every window opened by a test is closed again in Dispose: if a test stops early, an
+    // unclosed window would outlive the test and race with the headless session teardown.
+    private readonly List<Window> _windows = new();
+
+    public void Dispose()
+    {
+        foreach (var window in _windows)
+        {
+            window.Close();
+        }
+
+        _windows.Clear();
+    }
 
     /// <summary>
     /// A viewport holds ~17 rows. Three passes of pre-positioning plus the ScrollIntoView that
@@ -39,13 +53,14 @@ public class SubtitleGridScrollPerformanceTests
         _output = output;
     }
 
-    private static (Window Window, MainViewModel Vm, TableView Grid, ScrollViewer ScrollViewer) ShowMainWindowWithLines()
+    private (Window Window, MainViewModel Vm, TableView Grid, ScrollViewer ScrollViewer) ShowMainWindowWithLines()
     {
         var services = new ServiceCollection();
         services.AddSubtitleEditServices();
         Locator.Services = services.BuildServiceProvider();
 
         var window = new Window { Width = 1400, Height = 900 };
+        _windows.Add(window);
         MainView.NextHostWindow = window;
         var view = new MainView();
         window.Content = view;

@@ -14,8 +14,22 @@ namespace UITests.Features;
 /// not mirrored into the view model while typing (that cost grows with the file), so the test that
 /// matters most here is that Ok still picks up what was actually typed.
 /// </summary>
-public class SourceViewEditorTests
+public class SourceViewEditorTests : IDisposable
 {
+    // Every window opened by a test is closed again in Dispose: if a test stops early, an
+    // unclosed window would outlive the test and race with the headless session teardown.
+    private readonly List<Window> _windows = new();
+
+    public void Dispose()
+    {
+        foreach (var window in _windows)
+        {
+            window.Close();
+        }
+
+        _windows.Clear();
+    }
+
     /// <summary>Only Go to line opens a window, and none of these tests take that path.</summary>
     private sealed class NoWindowService : IWindowService
     {
@@ -87,6 +101,7 @@ public class SourceViewEditorTests
     {
         var (vm, subtitle, _) = MakeSourceView();
         var window = new Window { Content = new Border { Child = vm.SourceViewTextBox.ContentControl } };
+        _windows.Add(window);
         vm.Window = window;
         window.Show();
         window.UpdateLayout();
@@ -135,6 +150,7 @@ public class SourceViewEditorTests
     {
         var (vm, _, _) = MakeSourceView();
         var window = new Window { Content = new Border { Child = vm.SourceViewTextBox.ContentControl } };
+        _windows.Add(window);
         vm.Window = window;
         window.Show();
         window.UpdateLayout();

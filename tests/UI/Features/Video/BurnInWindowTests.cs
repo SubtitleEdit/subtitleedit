@@ -20,8 +20,26 @@ namespace UITests.Features.Video;
 /// "File size in MB" field) and keeps the preview box taller than its label + player (so the
 /// player can never spill over the audio settings box when the window is shrunk).
 /// </summary>
-public class BurnInWindowTests
+public class BurnInWindowTests : IDisposable
 {
+    // Every window opened by a test is closed again in Dispose: if a test stops early, an
+    // unclosed window would outlive the test and race with the headless session teardown.
+    private readonly List<Window> _windows = new();
+
+    public void Dispose()
+    {
+        foreach (var window in _windows)
+        {
+            // The burn-in window posts its re-fit callback from Opened; flush it while the
+            // window is still alive so it does not run against the disposed platform
+            // implementation during session teardown.
+            Avalonia.Threading.Dispatcher.UIThread.RunJobs();
+            window.Close();
+        }
+
+        _windows.Clear();
+    }
+
     // WindowService only touches the provider when it creates a child window, which this
     // construction test never does.
     private sealed class NullServiceProvider : IServiceProvider
@@ -29,13 +47,15 @@ public class BurnInWindowTests
         public object? GetService(Type serviceType) => null;
     }
 
-    private static BurnInWindow BuildWindow()
+    private BurnInWindow BuildWindow()
     {
         var vm = new BurnInViewModel(
             new FolderHelper(),
             new FileHelper(),
             new WindowService(new NullServiceProvider()));
-        return new BurnInWindow(vm);
+        var window = new BurnInWindow(vm);
+        _windows.Add(window);
+        return window;
     }
 
     /// <summary>Returns the window's root grid (the one holding the progress view).</summary>

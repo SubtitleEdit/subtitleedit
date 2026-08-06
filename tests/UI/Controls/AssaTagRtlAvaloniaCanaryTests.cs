@@ -26,8 +26,21 @@ namespace UITests.Controls;
 /// translation, or drop the workaround entirely if Avalonia now orders the tag
 /// characters correctly on its own.
 /// </summary>
-public class AssaTagRtlAvaloniaCanaryTests
+public class AssaTagRtlAvaloniaCanaryTests : IDisposable
 {
+    // Every window opened by a test is closed again in Dispose: if a test stops early, an
+    // unclosed window would outlive the test and race with the headless session teardown.
+    private readonly List<Window> _windows = new();
+
+    public void Dispose()
+    {
+        foreach (var window in _windows)
+        {
+            window.Close();
+        }
+
+        _windows.Clear();
+    }
     // PR #12567's approach needs to translate hit-test/caret indices from the permuted
     // layout back to Text. A click goes TextBox -> TextPresenter.MoveCaretToPoint ->
     // TextLayout.HitTestPoint; the approach becomes viable as soon as any point on that
@@ -70,6 +83,7 @@ public class AssaTagRtlAvaloniaCanaryTests
             FontSize = 16,
         };
         var window = new Window { Content = textBox, Width = 400, Height = 120 };
+        _windows.Add(window);
         window.Styles.Add(styles);
         window.Show();
         textBox.ApplyTemplate();
