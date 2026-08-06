@@ -3969,9 +3969,13 @@ public partial class OcrViewModel : ObservableObject
     private void RunOllamaOcr(List<int> selectedIndices, CancellationToken cancellationToken)
     {
         var ollamaOcr = new OllamaOcr(Se.Settings.Ocr.OllamaOcrTimeoutMinutes);
+        var url = OllamaUrl;
+        var model = OllamaModel;
 
         _ = Task.Run(async () =>
         {
+            var processedCount = 0;
+            var producedAnyText = false;
             try
             {
                 for (var processedIndex = 0; processedIndex < selectedIndices.Count; processedIndex++)
@@ -3989,20 +3993,65 @@ public partial class OcrViewModel : ObservableObject
 
                     SelectAndScrollToRow(i);
 
-                    var text = await ollamaOcr.Ocr(bitmap, OllamaUrl, OllamaModel, SelectedOllamaLanguage ?? "English", cancellationToken);
+                    var text = await ollamaOcr.Ocr(bitmap, url, model, SelectedOllamaLanguage ?? "English", cancellationToken);
+
+                    // Surface a real failure (Ollama not running, model not pulled, out of memory)
+                    // instead of silently filling the grid with blank lines.
+                    if (string.IsNullOrEmpty(text) && !string.IsNullOrEmpty(ollamaOcr.Error))
+                    {
+                        await ShowOllamaErrorAsync(ollamaOcr.Error, url, model);
+                        return;
+                    }
+
+                    processedCount++;
+                    if (!string.IsNullOrWhiteSpace(text))
+                    {
+                        producedAnyText = true;
+                    }
+
                     item.Text = text;
 
                     OcrFixLineAndSetText(i, item);
                 }
+
+                if (processedCount >= 1 && !producedAnyText && !cancellationToken.IsCancellationRequested)
+                {
+                    await ShowOllamaErrorAsync(
+                        "Ollama returned no text for " +
+                        (processedCount == 1 ? "the line." : "any of the " + processedCount + " lines.") + Environment.NewLine +
+                        "The model may not suit subtitle images, or the selected language may be wrong.",
+                        url, model);
+                }
             }
             catch (OperationCanceledException)
             {
+            }
+            catch (Exception ex)
+            {
+                SeLogger.Error(ex, "Error running Ollama OCR");
+                await ShowOllamaErrorAsync(ollamaOcr.Error is { Length: > 0 } e ? e : ex.Message, url, model);
             }
             finally
             {
                 PauseOcr();
             }
         });
+    }
+
+    private async Task ShowOllamaErrorAsync(string error, string url, string model)
+    {
+        if (Window == null)
+        {
+            return;
+        }
+
+        await Dispatcher.UIThread.InvokeAsync(async () =>
+            await MessageBox.Show(
+                Window!,
+                Se.Language.General.Error,
+                "Ollama OCR failed (model \"" + model + "\" at " + url + "):" + Environment.NewLine + Environment.NewLine + error,
+                MessageBoxButtons.OK,
+                MessageBoxIcon.Error));
     }
 
     private void RunLlamaCppOcr(List<int> selectedIndices, CancellationToken cancellationToken)
