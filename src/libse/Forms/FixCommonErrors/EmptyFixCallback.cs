@@ -53,9 +53,17 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
 
         public string Language { get; set; } = "en";
 
+        /// <summary>
+        /// Names from the <c>Dictionaries/&lt;lang&gt;_names.xml</c> lists, or empty when the
+        /// caller does not load them. Backs <see cref="IsName"/> so rules like "Add missing
+        /// period" do not treat always-uppercase names (e.g. "Roemenië") as sentence starts
+        /// (#12286; case-sensitive, like the GUI names list).
+        /// </summary>
+        public HashSet<string> Names { get; set; } = new HashSet<string>(StringComparer.Ordinal);
+
         public bool IsName(string candidate)
         {
-            return false;
+            return Names.Contains(candidate);
         }
 
         public Encoding Encoding { get; set; } = Encoding.UTF8;
