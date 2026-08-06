@@ -160,6 +160,43 @@ public class SubtitleGridScrollPerformanceTests : IDisposable
     }
 
     [AvaloniaFact]
+    public void EditBoxSplitter_AtMinimum_TextBoxDoesNotOverflowTheLabelRow()
+    {
+        // The edit section is "Auto,*,Auto": the "Text" header and the "Line length /
+        // Total chars" panel sit above and below the box. The section floor has to cover all
+        // three - sized to the box alone, the box (which cannot shrink past its own MinHeight)
+        // overflows its row and draws over the labels underneath (#10271).
+        var (window, _, _, _) = ShowMainWindowWithLines(0);
+
+        try
+        {
+            var splitter = Assert.Single(window.GetVisualDescendants().OfType<GridSplitter>(), s =>
+                Grid.GetRow(s) == 1 &&
+                s.VerticalAlignment == Avalonia.Layout.VerticalAlignment.Top &&
+                s.Parent is Grid { RowDefinitions.Count: 2 });
+            var textEditGrid = window.GetVisualDescendants().OfType<Grid>()
+                .First(g => g.Name == "SubtitleTextEditGrid");
+
+            Drag(splitter, window.Bounds.Height);
+            Settle(window);
+
+            var textBox = textEditGrid.GetVisualDescendants().OfType<TextBox>().First();
+            var textBoxRowBottom = textEditGrid.RowDefinitions[0].ActualHeight +
+                                   textEditGrid.RowDefinitions[1].ActualHeight;
+
+            Assert.True(textBox.Bounds.Bottom <= textBoxRowBottom + 0.5,
+                $"Text box overflows its row and covers the length labels " +
+                $"(box bottom={textBox.Bounds.Bottom:F1}, row bottom={textBoxRowBottom:F1})");
+            Assert.True(textEditGrid.RowDefinitions[2].ActualHeight > 0,
+                "The length-label row collapsed to zero at the minimum section height");
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaFact]
     public void HomeAndEnd_RealizeOnlyAViewportOfRows()
     {
         var (window, _, grid, scrollViewer) = ShowMainWindowWithLines();

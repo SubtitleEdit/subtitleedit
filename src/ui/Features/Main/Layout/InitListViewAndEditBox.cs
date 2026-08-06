@@ -23,8 +23,18 @@ namespace Nikse.SubtitleEdit.Features.Main.Layout;
 
 public static partial class InitListViewAndEditBox
 {
-    private const double EditGridMinimumHeight = 92;
+    // The text box's own floor - unchanged, so the default layout looks exactly as before.
+    private const double SubtitleTextBoxMinimumHeight = 92;
+    // Starting floor for the edit section, replaced by a measured value on first layout (see
+    // TrackEditSectionMinimumHeight). textEditGrid is "Auto,*,Auto": the "Text" header and the
+    // "Line length / Total chars" panel sit above and below the box, and the floor has to cover
+    // all three - sized to the box alone, the box (which cannot shrink past its own MinHeight)
+    // overflows its row and draws over the labels underneath (#10271).
+    private const double EditGridMinimumHeight = SubtitleTextBoxMinimumHeight;
     private const double EditGridMargin = 10;
+    // The subtitle grid row is Star, so without a floor the splitter can drag it away to
+    // nothing and there is no handle left to drag back (#10271).
+    private const double SubtitleGridMinimumHeight = 45;
 
     public static Grid MakeLayoutListViewAndEditBox(MainView mainPage, MainViewModel vm)
     {
@@ -58,7 +68,7 @@ public static partial class InitListViewAndEditBox
         {
             RowDefinitions =
             {
-                new RowDefinition(GridLength.Star),
+                new RowDefinition(GridLength.Star) { MinHeight = SubtitleGridMinimumHeight },
                 // GridSplitter constrains the row definition, so include editGrid's outer
                 // margin to preserve the text box's 92 px minimum at the drag limit.
                 new RowDefinition(GridLength.Auto) { MinHeight = EditGridMinimumHeight + EditGridMargin * 2 },
@@ -1749,6 +1759,8 @@ public static partial class InitListViewAndEditBox
         Grid.SetRow(editBoxSplitter, 1);
         mainGrid.Children.Add(editBoxSplitter);
 
+        TrackEditSectionMinimumHeight(mainGrid, textEditGrid);
+
 
         textEditGrid.ColumnDefinitions[1].Bind(ColumnDefinition.WidthProperty, new Binding(nameof(vm.ShowColumnOriginalText))
         {
@@ -1851,6 +1863,44 @@ public static partial class InitListViewAndEditBox
     /// Makes the subtitle edit text box - a <see cref="SyntaxHighlightingTextBox"/> when
     /// "Color tags" is on, else a normal TextBox.
     /// </summary>
+
+    /// <summary>
+    /// Keeps the edit section's drag floor equal to what the section actually needs: the text
+    /// box's own minimum plus the "Text" header and the "Line length / Total chars" panel that
+    /// sit above and below it. Those two rows are Auto, so their height follows the UI font -
+    /// a hard-coded allowance goes stale as soon as the font size changes, and if it is too
+    /// small the text box (which cannot shrink past its MinHeight) overflows its row and draws
+    /// over the labels (#10271). Measured rather than stored: this is a derived layout fact,
+    /// not something a user should configure.
+    /// </summary>
+    private static void TrackEditSectionMinimumHeight(Grid mainGrid, Grid textEditGrid)
+    {
+        textEditGrid.LayoutUpdated += (_, _) =>
+        {
+            if (textEditGrid.RowDefinitions.Count < 3)
+            {
+                return;
+            }
+
+            var labelRows = textEditGrid.RowDefinitions[0].ActualHeight +
+                            textEditGrid.RowDefinitions[2].ActualHeight;
+            if (labelRows <= 0)
+            {
+                return;
+            }
+
+            var needed = SubtitleTextBoxMinimumHeight + labelRows + EditGridMargin * 2;
+            var row = mainGrid.RowDefinitions[1];
+
+            // Only react to a real change - assigning MinHeight re-triggers layout, so an
+            // unconditional write here would spin.
+            if (Math.Abs(row.MinHeight - needed) > 0.5)
+            {
+                row.MinHeight = needed;
+            }
+        };
+    }
+
     private static TextBox MakeSubtitleTextBox()
     {
         var appearance = Se.Settings.Appearance;
@@ -1863,7 +1913,7 @@ public static partial class InitListViewAndEditBox
         textBox.TextWrapping = TextWrapping.Wrap;
         // MinHeight keeps the default layout; no fixed Height so the text box grows with the
         // resizable edit section (#10271).
-        textBox.MinHeight = 92;
+        textBox.MinHeight = SubtitleTextBoxMinimumHeight;
         textBox.FontSize = appearance.SubtitleTextBoxFontSize;
         textBox.FontWeight = appearance.SubtitleTextBoxFontBold ? FontWeight.Bold : FontWeight.Normal;
         textBox.IsUndoEnabled = false;
