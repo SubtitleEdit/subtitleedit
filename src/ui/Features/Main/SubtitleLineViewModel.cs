@@ -244,21 +244,34 @@ public partial class SubtitleLineViewModel : ObservableObject
     }
 
     // Read-time memo for the html-stripped, line-split text: the pixel width column, the text
-    // error verdict and GetErrors all need it, and each used to strip and split the text again -
-    // three times per line for a single error scan. Keyed on the text instance like the memos
-    // below. The returned list is shared, so callers must only read it.
+    // error verdict, GetErrors and the edit box's line-length panel all need it, and each used
+    // to strip and split the text again - three times per line for a single error scan. Keyed
+    // on the text instance like the memos below. The returned string/list are shared, so
+    // callers must only read them.
     private string? _strippedLinesCacheText;
+    private string? _strippedTextCacheValue;
     private List<string>? _strippedLinesCacheValue;
 
-    private List<string> GetStrippedLines()
+    private void EnsureStrippedCache()
     {
         if (_strippedLinesCacheValue == null || !ReferenceEquals(_strippedLinesCacheText, Text))
         {
-            _strippedLinesCacheValue = SubtitleTextInfoHelper.StripHtml(Text).SplitToLines();
+            _strippedTextCacheValue = SubtitleTextInfoHelper.StripHtml(Text);
+            _strippedLinesCacheValue = _strippedTextCacheValue.SplitToLines();
             _strippedLinesCacheText = Text;
         }
+    }
 
-        return _strippedLinesCacheValue;
+    internal string GetStrippedText()
+    {
+        EnsureStrippedCache();
+        return _strippedTextCacheValue!;
+    }
+
+    internal List<string> GetStrippedLines()
+    {
+        EnsureStrippedCache();
+        return _strippedLinesCacheValue!;
     }
 
     // Read-time memo, see CharactersPerSecond below: the pixel-width column binding re-reads this
