@@ -1,12 +1,15 @@
 ﻿using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Input;
+using Avalonia.Interactivity;
 using Avalonia.Layout;
 using Avalonia.Media;
 using Avalonia.Media.Imaging;
 using CommunityToolkit.Mvvm.Input;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
+using System;
+using System.Diagnostics;
 using System.IO;
 using System.Threading.Tasks;
 
@@ -53,6 +56,14 @@ public class MessageBox : Window
     private readonly bool _hasCancel;
     private readonly bool _hasOnlyOk;
     private readonly bool _hasNo;
+    private readonly StackPanel _buttonPanel;
+    private bool _seenSpaceKeyDown;
+    private long _openedTimestamp;
+
+    private bool IsInStartupGuardPeriod()
+    {
+        return _openedTimestamp == 0 || Stopwatch.GetElapsedTime(_openedTimestamp) < TimeSpan.FromMilliseconds(200);
+    }
 
     private MessageBox(string title, string message, MessageBoxButtons buttons, MessageBoxIcon icon, string? custom1 = null, string? custom2 = null, string? custom3 = null, string? custom4 = null)
     {
@@ -149,6 +160,7 @@ public class MessageBox : Window
             HorizontalAlignment = HorizontalAlignment.Right,
             Margin = new Thickness(10)
         };
+        _buttonPanel = buttonPanel;
 
         void AddButton(string text, MessageBoxResult result)
         {
@@ -235,10 +247,37 @@ public class MessageBox : Window
         grid.ContextFlyout = contextMenu;
         UiUtil.AttachMacContextFlyoutHandler(this, grid);
 
-        // Focus the last button (buttons are added positive-first, so the last one is the
-        // negative/cancel choice) - a focused button clicks on bare Space, and focusing e.g.
-        // "Yes" in a Yes/No box would make Space answer Yes by accident.
-        Activated += delegate { buttonPanel.Children[buttonPanel.Children.Count - 1].Focus(); };
+        // Focus the first button (the positive/default choice - Yes or OK), like classic Win32
+        // message boxes: Space/Enter accepts, Escape cancels, arrow keys move focus. That makes
+        // the key that opened this dialog a hazard: Avalonia's Button clicks on Space KeyUp
+        // without checking it also saw the KeyDown, and a held Enter key-repeats straight into
+        // the new window - either would answer Yes/OK by accident. Guard: swallow Space/Enter
+        // for the first 200 ms after opening, and Space KeyUps whose KeyDown this window never
+        // saw (a Space can be held down well past any fixed time window before releasing).
+        Opened += (_, _) => _openedTimestamp = Stopwatch.GetTimestamp();
+        AddHandler(KeyDownEvent, (_, e) =>
+        {
+            if (e.Key is Key.Space or Key.Enter && IsInStartupGuardPeriod())
+            {
+                e.Handled = true;
+            }
+            else if (e.Key == Key.Space)
+            {
+                _seenSpaceKeyDown = true;
+            }
+        }, RoutingStrategies.Tunnel);
+        AddHandler(KeyUpEvent, (_, e) =>
+        {
+            if (e.Key is Key.Space or Key.Enter && IsInStartupGuardPeriod())
+            {
+                e.Handled = true;
+            }
+            else if (e.Key == Key.Space && !_seenSpaceKeyDown)
+            {
+                e.Handled = true;
+            }
+        }, RoutingStrategies.Tunnel);
+        Activated += delegate { buttonPanel.Children[0].Focus(); };
 
         UiTheme.ApplyScaleToWindow(this);
     }
@@ -286,5 +325,37 @@ public class MessageBox : Window
             Close(_result);
             e.Handled = true;
         }
+        else if (e.Key is Key.Left or Key.Up or Key.Right or Key.Down)
+        {
+            MoveButtonFocus(e.Key is Key.Right or Key.Down ? 1 : -1);
+            e.Handled = true;
+        }
+    }
+
+    private void MoveButtonFocus(int direction)
+    {
+        var buttons = _buttonPanel.Children;
+        if (buttons.Count == 0)
+        {
+            return;
+        }
+
+        var focused = FocusManager?.GetFocusedElement();
+        var index = -1;
+        for (var i = 0; i < buttons.Count; i++)
+        {
+            if (ReferenceEquals(buttons[i], focused))
+            {
+                index = i;
+                break;
+            }
+        }
+
+        index = index < 0
+            ? (direction > 0 ? 0 : buttons.Count - 1)
+            : (index + direction + buttons.Count) % buttons.Count;
+
+        // NavigationMethod.Directional makes the focus adorner visible, like tabbing does
+        buttons[index].Focus(NavigationMethod.Directional);
     }
 }
