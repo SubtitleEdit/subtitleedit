@@ -53,6 +53,7 @@ public class MessageBox : Window
     private readonly bool _hasCancel;
     private readonly bool _hasOnlyOk;
     private readonly bool _hasNo;
+    private readonly StackPanel _buttonPanel;
 
     private MessageBox(string title, string message, MessageBoxButtons buttons, MessageBoxIcon icon, string? custom1 = null, string? custom2 = null, string? custom3 = null, string? custom4 = null)
     {
@@ -149,6 +150,7 @@ public class MessageBox : Window
             HorizontalAlignment = HorizontalAlignment.Right,
             Margin = new Thickness(10)
         };
+        _buttonPanel = buttonPanel;
 
         void AddButton(string text, MessageBoxResult result)
         {
@@ -286,5 +288,37 @@ public class MessageBox : Window
             Close(_result);
             e.Handled = true;
         }
+        else if (e.Key is Key.Left or Key.Up or Key.Right or Key.Down)
+        {
+            MoveButtonFocus(e.Key is Key.Right or Key.Down ? 1 : -1);
+            e.Handled = true;
+        }
+    }
+
+    private void MoveButtonFocus(int direction)
+    {
+        var buttons = _buttonPanel.Children;
+        if (buttons.Count == 0)
+        {
+            return;
+        }
+
+        var focused = FocusManager?.GetFocusedElement();
+        var index = -1;
+        for (var i = 0; i < buttons.Count; i++)
+        {
+            if (ReferenceEquals(buttons[i], focused))
+            {
+                index = i;
+                break;
+            }
+        }
+
+        index = index < 0
+            ? (direction > 0 ? 0 : buttons.Count - 1)
+            : (index + direction + buttons.Count) % buttons.Count;
+
+        // NavigationMethod.Directional makes the focus adorner visible, like tabbing does
+        buttons[index].Focus(NavigationMethod.Directional);
     }
 }
