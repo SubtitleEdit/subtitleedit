@@ -67,18 +67,23 @@ public sealed class SyntaxTextDocument
             return _lines[0];
         }
 
-        var sb = new StringBuilder(TextLength);
-        for (var i = 0; i < _lines.Count; i++)
+        // TextLength counts every line plus a NewLine between each, so the result can be
+        // written straight into the string's buffer.
+        return string.Create(TextLength, this, static (span, doc) =>
         {
-            if (i > 0)
+            var pos = 0;
+            for (var i = 0; i < doc._lines.Count; i++)
             {
-                sb.Append(NewLine);
+                if (i > 0)
+                {
+                    doc.NewLine.AsSpan().CopyTo(span[pos..]);
+                    pos += doc.NewLine.Length;
+                }
+
+                doc._lines[i].AsSpan().CopyTo(span[pos..]);
+                pos += doc._lines[i].Length;
             }
-
-            sb.Append(_lines[i]);
-        }
-
-        return sb.ToString();
+        });
     }
 
     private void SetText(string? text)
