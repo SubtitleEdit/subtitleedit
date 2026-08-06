@@ -1289,110 +1289,18 @@ public partial class OcrViewModel : ObservableObject
             return false;
         }
 
-        if (!CrispEmbedEngine.IsEngineInstalled())
-        {
-            string variant;
-            if (Configuration.IsRunningOnWindows)
+        return await CrispEmbedDownloadHelper.EnsureReadyAsync(
+            Window, _windowService, backend, model.Model, forceModelDownload,
+            onEngineDownloadClosed: () =>
             {
-                var answer = await MessageBox.Show(
-                    Window,
-                    "Download CrispEmbed?",
-                    $"{Environment.NewLine}\"CrispEmbed\" requires downloading the CrispEmbed engine.{Environment.NewLine}{Environment.NewLine}Download and use CrispEmbed?",
-                    MessageBoxButtons.Cancel,
-                    MessageBoxIcon.Question,
-                    "CPU",
-                    "Vulkan",
-                    "CUDA");
-
-                if (answer == MessageBoxResult.Cancel)
-                {
-                    return false;
-                }
-
-                variant = answer switch
-                {
-                    MessageBoxResult.Custom1 => "cpu",
-                    MessageBoxResult.Custom3 => "cuda",
-                    _ => "vulkan",
-                };
-            }
-            else if (Configuration.IsRunningOnLinux && RuntimeInformation.ProcessArchitecture != Architecture.Arm64)
+                _isCtrlDown = false;
+                RefreshEngineCombo?.Invoke();
+            },
+            onModelDownloadClosed: () =>
             {
-                var answer = await MessageBox.Show(
-                    Window,
-                    "Download CrispEmbed?",
-                    $"{Environment.NewLine}\"CrispEmbed\" requires downloading the CrispEmbed engine.{Environment.NewLine}{Environment.NewLine}Download and use CrispEmbed?",
-                    MessageBoxButtons.Cancel,
-                    MessageBoxIcon.Question,
-                    "CPU (~10 MB)",
-                    "GPU CUDA (~718 MB)");
-
-                if (answer == MessageBoxResult.Cancel)
-                {
-                    return false;
-                }
-
-                variant = answer == MessageBoxResult.Custom2 ? "cuda" : string.Empty;
-            }
-            else
-            {
-                var answer = await MessageBox.Show(
-                    Window,
-                    "Download CrispEmbed?",
-                    $"{Environment.NewLine}\"CrispEmbed\" requires downloading the CrispEmbed engine ({CrispEmbedEngine.DownloadSizeText}).{Environment.NewLine}{Environment.NewLine}Download and use CrispEmbed?",
-                    MessageBoxButtons.YesNoCancel,
-                    MessageBoxIcon.Question);
-
-                if (answer != MessageBoxResult.Yes)
-                {
-                    return false;
-                }
-
-                variant = string.Empty;
-            }
-
-            var engineResult = await _windowService.ShowDialogAsync<DownloadCrispEmbedWindow, DownloadCrispEmbedViewModel>(Window,
-                vm => vm.InitializeEngine(variant));
-
-            _isCtrlDown = false;
-            RefreshEngineCombo?.Invoke();
-
-            if (!engineResult.OkPressed)
-            {
-                return false;
-            }
-        }
-
-        if (forceModelDownload || !backend.IsModelInstalled(model.Model))
-        {
-            if (!forceModelDownload)
-            {
-                var answer = await MessageBox.Show(
-                    Window,
-                    "Download model?",
-                    $"{Environment.NewLine}Download the model \"{model.Model.Name}\" ({model.Model.Size})?",
-                    MessageBoxButtons.YesNoCancel,
-                    MessageBoxIcon.Question);
-
-                if (answer != MessageBoxResult.Yes)
-                {
-                    return false;
-                }
-            }
-
-            var modelResult = await _windowService.ShowDialogAsync<DownloadCrispEmbedWindow, DownloadCrispEmbedViewModel>(Window,
-                vm => vm.InitializeModel(backend, model.Model));
-
-            _isCtrlDown = false;
-            RefreshCrispEmbedModelCombo?.Invoke();
-
-            if (!modelResult.OkPressed)
-            {
-                return false;
-            }
-        }
-
-        return true;
+                _isCtrlDown = false;
+                RefreshCrispEmbedModelCombo?.Invoke();
+            });
     }
 
     [RelayCommand]

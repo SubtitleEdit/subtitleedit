@@ -1,6 +1,8 @@
 using Avalonia.Controls;
+using Avalonia.Controls.Templates;
 using Avalonia.Data;
 using Avalonia.Layout;
+using Nikse.SubtitleEdit.Features.Ocr.Engines;
 using Nikse.SubtitleEdit.Features.Translate;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
@@ -107,11 +109,19 @@ public class BatchConvertSettingsWindow : Window
             model => model.Model.DisplayName,
             model => model.Model.Size,
             model => model.IsInstalled ? DownloadDotStatus.UpToDate : DownloadDotStatus.NotInstalled);
+        var labelCrispEmbedBackend = UiUtil.MakeLabel(Se.Language.General.Backend).WithBindVisible(vm, nameof(vm.IsCrispEmbedVisible)).WithMarginLeft(10);
+        var comboBoxCrispEmbedBackends = UiUtil.MakeComboBox(vm.CrispEmbedBackends, vm, nameof(vm.SelectedCrispEmbedBackend))
+            .WithBindVisible(nameof(vm.IsCrispEmbedVisible));
+        var labelCrispEmbedModel = UiUtil.MakeLabel(Se.Language.General.Model).WithBindVisible(vm, nameof(vm.IsCrispEmbedVisible)).WithMarginLeft(10);
+        var comboBoxCrispEmbedModels = UiUtil.MakeComboBox(vm.CrispEmbedModels, vm, nameof(vm.SelectedCrispEmbedModel))
+            .WithBindVisible(nameof(vm.IsCrispEmbedVisible));
+        comboBoxCrispEmbedModels.ItemTemplate = MakeCrispEmbedModelItemTemplate();
+        vm.RefreshCrispEmbedModelCombo = () => comboBoxCrispEmbedModels.ItemTemplate = MakeCrispEmbedModelItemTemplate();
         var panelOcrEngine = new StackPanel
         {
             Orientation = Orientation.Horizontal,
             Margin = new Avalonia.Thickness(0, 30, 0, 0),
-            Children = { labelOcrEngine, comboBoxOcrEngine, labelOcLanguage, comboBoxTesseractLanguages, labelTesseractEngineMode, comboBoxTesseractEngineMode, comboBoxPaddleLanguages, labelBinaryOcrDatabase, comboBoxBinaryOcrDatabases, labelBinaryOcrFallback, comboBoxBinaryOcrFallback, labelNOcrDatabase, comboBoxNOcrDatabases, labelNOcrFallback, comboBoxNOcrFallback, labelOllamaModel, comboBoxOllamaModels, buttonOllamaModelBrowse, labelLlamaCppModel, comboBoxLlamaCppModels }
+            Children = { labelOcrEngine, comboBoxOcrEngine, labelOcLanguage, comboBoxTesseractLanguages, labelTesseractEngineMode, comboBoxTesseractEngineMode, comboBoxPaddleLanguages, labelBinaryOcrDatabase, comboBoxBinaryOcrDatabases, labelBinaryOcrFallback, comboBoxBinaryOcrFallback, labelNOcrDatabase, comboBoxNOcrDatabases, labelNOcrFallback, comboBoxNOcrFallback, labelOllamaModel, comboBoxOllamaModels, buttonOllamaModelBrowse, labelLlamaCppModel, comboBoxLlamaCppModels, labelCrispEmbedBackend, comboBoxCrispEmbedBackends, labelCrispEmbedModel, comboBoxCrispEmbedModels }
         };
         comboBoxOcrEngine.SelectionChanged += (s, e) => vm.OnOcrEngineChanged();
 
@@ -177,5 +187,17 @@ public class BatchConvertSettingsWindow : Window
 
         Activated += delegate { comboBoxTargetEncoding.Focus(); }; // initial focus on an input, not an action button - a focused button clicks on bare Space
         KeyDown += (s, e) => vm.OnKeyDown(e);
+    }
+
+    // Model combo item template: a dot (green = downloaded, grey = not downloaded yet) plus the
+    // model's download size - same treatment as the OCR window's CrispEmbed model combo.
+    private static FuncDataTemplate<CrispEmbedModelDisplay> MakeCrispEmbedModelItemTemplate()
+    {
+        return StatusDots.ComboItemTemplate<CrispEmbedModelDisplay>(
+            model => model.Model.Name,
+            model => string.IsNullOrEmpty(model.Model.Size) ? null : model.Model.Size,
+            model => model.Backend.IsModelInstalled(model.Model)
+                ? DownloadDotStatus.UpToDate
+                : DownloadDotStatus.NotInstalled);
     }
 }

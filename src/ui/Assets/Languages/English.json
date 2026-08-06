@@ -3057,7 +3057,9 @@
     "llamaCppReturnedNoText": "llama.cpp returned no text - check the server and model",
     "llamaCppDownloadEngineAndModelPrompt": "llama.cpp requires the llama-server engine and the selected OCR model to be downloaded. Download now?",
     "llamaCppDownloadEnginePrompt": "llama.cpp requires the llama-server engine to be downloaded. Download now?",
-    "llamaCppDownloadModelPrompt": "llama.cpp requires the selected OCR model to be downloaded. Download now?"
+    "llamaCppDownloadModelPrompt": "llama.cpp requires the selected OCR model to be downloaded. Download now?",
+    "crispEmbedNotDownloaded": "CrispEmbed engine/model not downloaded - download via batch convert settings",
+    "crispEmbedReturnedNoText": "CrispEmbed returned no text - check the model"
   },
   "assa": {
     "assaDraw": "ASSA Draw",

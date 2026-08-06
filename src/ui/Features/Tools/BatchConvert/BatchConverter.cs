@@ -327,6 +327,10 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
             {
                 await RunLlamaCppOcr(imageSubtitle, item, cancellationToken);
             }
+            else if (Se.Settings.Tools.BatchConvert.OcrEngine.Equals(CrispEmbedEngine.StaticName, StringComparison.OrdinalIgnoreCase))
+            {
+                await RunCrispEmbedOcr(imageSubtitle, item, cancellationToken);
+            }
             else
             {
                 await RunOcrTesseract(imageSubtitle, item, cancellationToken);
@@ -1362,6 +1366,88 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
             item.Subtitle.Paragraphs.All(p => string.IsNullOrWhiteSpace(p.Text)))
         {
             item.Status = Se.Language.Ocr.LlamaCppReturnedNoText;
+        }
+    }
+
+    private async Task RunCrispEmbedOcr(IOcrSubtitle imageSubtitles, BatchConvertItem item, CancellationToken cancellationToken)
+    {
+        // Backend/model picked in batch convert settings (shared with the OCR window). The batch
+        // run never downloads - the settings dialog prompts for that on OK.
+        var backend = CrispEmbedEngine.GetBackends().FirstOrDefault(b => b.Name == Se.Settings.Ocr.CrispEmbedBackend);
+        var model = backend?.Models.FirstOrDefault(m => m.Name == Se.Settings.Ocr.CrispEmbedModel)
+                    ?? backend?.Models.FirstOrDefault(m => backend.IsModelInstalled(m));
+        if (backend == null || model == null || !CrispEmbedEngine.IsEngineInstalled() || !backend.IsModelInstalled(model))
+        {
+            item.Status = Se.Language.Ocr.CrispEmbedNotDownloaded;
+            return;
+        }
+
+        using var engine = new CrispEmbedOcr(Se.Settings.Ocr.CrispEmbedOcrTimeoutMinutes);
+
+        // PP-OCRv6 is a detector+recognizer pair driven through the CLI; the VLM backends load
+        // once into crispembed-server per file - see CrispEmbedOcr.
+        item.Status = Se.Language.General.OcrDotDotDot;
+        bool started;
+        try
+        {
+            started = backend.UsesTextDetector
+                ? engine.StartCliPipeline(
+                    CrispEmbedEngine.GetCliExecutable(),
+                    backend.GetModelPath(model),
+                    backend.GetDetectorPath(model))
+                : await engine.StartServerAsync(
+                    CrispEmbedEngine.GetServerExecutable(),
+                    backend.GetModelPath(model),
+                    cancellationToken);
+        }
+        catch (OperationCanceledException)
+        {
+            item.Status = Se.Language.General.Cancelled;
+            return;
+        }
+
+        if (!started)
+        {
+            item.Status = string.Format(Se.Language.General.ErrorX, engine.Error);
+            return;
+        }
+
+        item.Subtitle = new Subtitle();
+        var cancelled = false;
+        for (var i = 0; i < imageSubtitles.Count; i++)
+        {
+            var pct = (i + 1) * 100 / imageSubtitles.Count;
+            item.Status = string.Format(Se.Language.General.OcrPercentX, pct);
+            var bitmap = imageSubtitles.GetBitmap(i);
+
+            string text;
+            try
+            {
+                text = await engine.Ocr(bitmap, cancellationToken);
+            }
+            catch (OperationCanceledException)
+            {
+                item.Status = Se.Language.General.Cancelled;
+                return;
+            }
+
+            var p = new Paragraph(text, imageSubtitles.GetStartTime(i).TotalMilliseconds, imageSubtitles.GetEndTime(i).TotalMilliseconds);
+            item.Subtitle.Paragraphs.Add(p);
+
+            if (cancellationToken.IsCancellationRequested)
+            {
+                item.Status = Se.Language.General.Cancelled;
+                cancelled = true;
+                break;
+            }
+        }
+
+        // Every line blank means the engine/model setup is broken - flag the file so the user
+        // notices instead of ending up with a silently-empty subtitle.
+        if (!cancelled && item.Subtitle.Paragraphs.Count > 0 &&
+            item.Subtitle.Paragraphs.All(p => string.IsNullOrWhiteSpace(p.Text)))
+        {
+            item.Status = Se.Language.Ocr.CrispEmbedReturnedNoText;
         }
     }
 
