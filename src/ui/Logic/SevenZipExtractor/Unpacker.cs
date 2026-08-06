@@ -320,7 +320,6 @@ public static class Unpacker
 
         if (!Directory.Exists(skipPath))
         {
-            // If the skip path doesn't exist, just move everything
             skipPath = sourceDir;
         }
 
@@ -373,7 +372,7 @@ public static class Unpacker
         }
     }
 
-    public static void Extract7ZipSlow(string tempFileName, string dir, string skipFolderLevel, CancellationTokenSource cancellationTokenSource, Action<string> updateProgressText)
+    public static void Extract7ZipSlow(string tempFileName, string dir, string? skipFolderLevel, CancellationTokenSource cancellationTokenSource, Action<string> updateProgressText)
     {
         using Stream stream = File.OpenRead(tempFileName);
         using var archive = SevenZipArchive.OpenArchive(stream);
@@ -381,6 +380,7 @@ public static class Unpacker
         double unpackedSize = 0;
 
         var reader = archive.ExtractAllEntries();
+        var targetRoot = Path.GetFullPath(dir);
         while (reader.MoveToNextEntry())
         {
             if (cancellationTokenSource.IsCancellationRequested)
@@ -390,16 +390,46 @@ public static class Unpacker
 
             if (!string.IsNullOrEmpty(reader.Entry.Key))
             {
-                var entryFullName = reader.Entry.Key;
-                if (!string.IsNullOrEmpty(skipFolderLevel) && entryFullName.StartsWith(skipFolderLevel))
+                var entryFullName = reader.Entry.Key.Replace('\\', '/');
+                var normalizedSkipFolder = skipFolderLevel?.Replace('\\', '/').Trim('/') ?? string.Empty;
+                if (!string.IsNullOrEmpty(normalizedSkipFolder))
                 {
-                    entryFullName = entryFullName[skipFolderLevel.Length..];
+                    if (entryFullName.Equals(normalizedSkipFolder, StringComparison.Ordinal))
+                    {
+                        entryFullName = string.Empty;
+                    }
+                    else if (entryFullName.StartsWith(normalizedSkipFolder + "/", StringComparison.Ordinal))
+                    {
+                        entryFullName = entryFullName[(normalizedSkipFolder.Length + 1)..];
+                    }
                 }
 
                 entryFullName = entryFullName.Replace('/', Path.DirectorySeparatorChar);
-                entryFullName = entryFullName.TrimStart(Path.DirectorySeparatorChar);
+                if (Path.IsPathRooted(entryFullName))
+                {
+                    throw new InvalidDataException($"Archive entry is rooted outside the extraction folder: {reader.Entry.Key}");
+                }
 
-                var fullFileName = Path.Combine(dir, entryFullName);
+                entryFullName = entryFullName.TrimStart(Path.DirectorySeparatorChar);
+                if (string.IsNullOrEmpty(entryFullName))
+                {
+                    if (reader.Entry.IsDirectory)
+                    {
+                        Directory.CreateDirectory(dir);
+                        continue;
+                    }
+
+                    throw new InvalidDataException("Archive contains an empty file entry name.");
+                }
+
+                var fullFileName = Path.GetFullPath(Path.Combine(targetRoot, entryFullName));
+                var relativePath = Path.GetRelativePath(targetRoot, fullFileName);
+                if (relativePath.Equals("..", StringComparison.Ordinal) ||
+                    relativePath.StartsWith(".." + Path.DirectorySeparatorChar, StringComparison.Ordinal) ||
+                    Path.IsPathRooted(relativePath))
+                {
+                    throw new InvalidDataException($"Archive entry is outside the extraction folder: {reader.Entry.Key}");
+                }
 
                 if (reader.Entry.IsDirectory)
                 {
@@ -417,6 +447,8 @@ public static class Unpacker
                     continue;
                 }
 
+                Directory.CreateDirectory(fullPath);
+
                 var displayName = entryFullName;
                 if (displayName.Length > 30)
                 {
@@ -427,7 +459,10 @@ public static class Unpacker
                     updateProgressText(string.Format(Se.Language.General.UnpackingX, displayName));
                 });
 
-                reader.WriteEntryToDirectory(fullPath);
+                // WriteEntryToDirectory appends the entry's original full key again. Since
+                // fullPath already contains the stripped relative path, that produced the
+                // repeated .../numpy/core/Faster-Whisper-XXL/... nesting reported in #13278.
+                reader.WriteEntryToFile(fullFileName);
                 unpackedSize += reader.Entry.Size;
             }
         }
