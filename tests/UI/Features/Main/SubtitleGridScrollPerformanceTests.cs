@@ -1,5 +1,6 @@
 using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Controls.Primitives;
 using Avalonia.Headless;
 using Avalonia.Headless.XUnit;
 using Avalonia.Input;
@@ -53,7 +54,8 @@ public class SubtitleGridScrollPerformanceTests : IDisposable
         _output = output;
     }
 
-    private (Window Window, MainViewModel Vm, TableView Grid, ScrollViewer ScrollViewer) ShowMainWindowWithLines()
+    private (Window Window, MainViewModel Vm, TableView Grid, ScrollViewer ScrollViewer) ShowMainWindowWithLines(
+        int lineCount = LineCount)
     {
         var services = new ServiceCollection();
         services.AddSubtitleEditServices();
@@ -69,7 +71,7 @@ public class SubtitleGridScrollPerformanceTests : IDisposable
         window.UpdateLayout();
 
         var vm = (MainViewModel)view.DataContext!;
-        for (var i = 0; i < LineCount; i++)
+        for (var i = 0; i < lineCount; i++)
         {
             // Every third line is two lines tall - variable row heights are what makes the
             // panel's average-height estimate drift in the first place.
@@ -93,6 +95,104 @@ public class SubtitleGridScrollPerformanceTests : IDisposable
         {
             Dispatcher.UIThread.RunJobs();
             window.UpdateLayout();
+        }
+    }
+
+    private static void Drag(GridSplitter splitter, double verticalChange)
+    {
+        splitter.RaiseEvent(new VectorEventArgs
+        {
+            RoutedEvent = Thumb.DragStartedEvent,
+            Vector = default,
+        });
+        splitter.RaiseEvent(new VectorEventArgs
+        {
+            RoutedEvent = Thumb.DragDeltaEvent,
+            Vector = new Vector(0, verticalChange),
+        });
+        splitter.RaiseEvent(new VectorEventArgs
+        {
+            RoutedEvent = Thumb.DragCompletedEvent,
+            Vector = new Vector(0, verticalChange),
+        });
+    }
+
+    [AvaloniaFact]
+    public void EditBoxSplitter_DragResizesEditSectionAndPreservesMinimumHeight()
+    {
+        var (window, _, _, _) = ShowMainWindowWithLines(0);
+
+        try
+        {
+            var splitter = Assert.Single(window.GetVisualDescendants().OfType<GridSplitter>(), s =>
+                Grid.GetRow(s) == 1 &&
+                s.VerticalAlignment == Avalonia.Layout.VerticalAlignment.Top &&
+                s.Parent is Grid { RowDefinitions.Count: 2 });
+            var mainGrid = Assert.IsType<Grid>(splitter.Parent);
+            var editGrid = Assert.Single(mainGrid.Children.OfType<Grid>(), g => Grid.GetRow(g) == 1);
+            var initialHeight = editGrid.Bounds.Height;
+
+            Drag(splitter, -120);
+            Settle(window);
+            var grownHeight = editGrid.Bounds.Height;
+
+            Assert.True(grownHeight > initialHeight,
+                $"Dragging up should grow editGrid (initial={initialHeight:F1}, grown={grownHeight:F1})");
+
+            Drag(splitter, window.Bounds.Height);
+            Settle(window);
+            var minimumHeight = editGrid.Bounds.Height;
+
+            Assert.True(minimumHeight < grownHeight,
+                $"Dragging down should shrink editGrid (grown={grownHeight:F1}, shrunk={minimumHeight:F1})");
+
+            var textBoxMinimum = editGrid.GetVisualDescendants()
+                .OfType<TextBox>()
+                .Max(p => p.MinHeight);
+            Assert.True(minimumHeight >= textBoxMinimum,
+                $"Dragging must not make editGrid smaller than its text boxes " +
+                $"(grid={minimumHeight:F1}, text box minimum={textBoxMinimum:F1})");
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaFact]
+    public void EditBoxSplitter_AtMinimum_TextBoxDoesNotOverflowTheLabelRow()
+    {
+        // The edit section is "Auto,*,Auto": the "Text" header and the "Line length /
+        // Total chars" panel sit above and below the box. The section floor has to cover all
+        // three - sized to the box alone, the box (which cannot shrink past its own MinHeight)
+        // overflows its row and draws over the labels underneath (#10271).
+        var (window, _, _, _) = ShowMainWindowWithLines(0);
+
+        try
+        {
+            var splitter = Assert.Single(window.GetVisualDescendants().OfType<GridSplitter>(), s =>
+                Grid.GetRow(s) == 1 &&
+                s.VerticalAlignment == Avalonia.Layout.VerticalAlignment.Top &&
+                s.Parent is Grid { RowDefinitions.Count: 2 });
+            var textEditGrid = window.GetVisualDescendants().OfType<Grid>()
+                .First(g => g.Name == "SubtitleTextEditGrid");
+
+            Drag(splitter, window.Bounds.Height);
+            Settle(window);
+
+            var textBox = textEditGrid.GetVisualDescendants().OfType<TextBox>().First();
+            var textBoxRowBottom = textEditGrid.RowDefinitions[0].ActualHeight +
+                                   textEditGrid.RowDefinitions[1].ActualHeight;
+
+            Assert.True(textBox.Bounds.Bottom <= textBoxRowBottom + 0.5,
+                $"Text box overflows its row and covers the length labels " +
+                $"(box bottom={textBox.Bounds.Bottom:F1}, row bottom={textBoxRowBottom:F1})");
+            Assert.True(textEditGrid.RowDefinitions[2].ActualHeight > 0,
+                "The length-label row collapsed to zero at the minimum section height");
+        }
+        finally
+        {
+            window.Close();
         }
     }
 
