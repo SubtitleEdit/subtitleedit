@@ -630,6 +630,38 @@ public static partial class InitListViewAndEditBox
         sepAssa.Bind(Visual.IsVisibleProperty, new Binding(nameof(vm.AreAssaContentMenuItemsVisible)));
         flyout.Items.Add(sepAssa);
 
+        // WebVTT counterpart of the ASSA styles/actors block: cue classes and <v> voices.
+        var webVttStylesMenuItem = new MenuItem
+        {
+            Header = Se.Language.General.Styles,
+            DataContext = vm,
+            Command = vm.SetWebVttStylesForSelectedLinesCommand,
+        };
+        webVttStylesMenuItem.Bind(Visual.IsVisibleProperty, new Binding(nameof(vm.AreWebVttContentMenuItemsVisible)) { Mode = BindingMode.TwoWay });
+        flyout.Items.Add(webVttStylesMenuItem);
+
+        var webVttVoicesMenuItem = new MenuItem
+        {
+            Header = Se.Language.File.WebVtt.Voices,
+            DataContext = vm,
+        };
+        webVttVoicesMenuItem.Bind(Visual.IsVisibleProperty, new Binding(nameof(vm.AreWebVttContentMenuItemsVisible)) { Mode = BindingMode.TwoWay });
+        flyout.Items.Add(webVttVoicesMenuItem);
+        vm.MenuItemWebVttVoices = webVttVoicesMenuItem;
+
+        var webVttBrowserPreviewMenuItem = new MenuItem
+        {
+            Header = Se.Language.File.WebVtt.BrowserPreview,
+            DataContext = vm,
+            Command = vm.ShowWebVttBrowserPreviewCommand,
+        };
+        webVttBrowserPreviewMenuItem.Bind(Visual.IsVisibleProperty, new Binding(nameof(vm.IsWebVttBrowserPreviewVisible)) { Mode = BindingMode.TwoWay });
+        flyout.Items.Add(webVttBrowserPreviewMenuItem);
+
+        var sepWebVtt = new Separator { DataContext = vm };
+        sepWebVtt.Bind(Visual.IsVisibleProperty, new Binding(nameof(vm.AreWebVttContentMenuItemsVisible)));
+        flyout.Items.Add(sepWebVtt);
+
         var showStartTimeMenuItem = new MenuItem
         {
             Header = Se.Language.General.ShowStartColumn,

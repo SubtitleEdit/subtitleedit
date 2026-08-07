@@ -153,6 +153,7 @@ using Nikse.SubtitleEdit.Features.Video.VideoOcr;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.ReviewSpeech;
 using Nikse.SubtitleEdit.Features.Video.TransparentSubtitles;
+using Nikse.SubtitleEdit.Features.WebVtt;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using static Nikse.SubtitleEdit.Logic.FindService;
@@ -195,7 +196,8 @@ public partial class MainViewModel :
     IUndoRedoClient,
     IFindResult,
     IApplyAssaStyles,
-    IApplySsaStyles
+    IApplySsaStyles,
+    IApplyWebVttStyles
 {
     [ObservableProperty] private ObservableCollection<SubtitleLineViewModel> _subtitles;
     [ObservableProperty] private SubtitleLineViewModel? _selectedSubtitle;
@@ -253,7 +255,10 @@ public partial class MainViewModel :
     [ObservableProperty] private bool _isFormatAssa;
     [ObservableProperty] private bool _isFormatSsa;
     [ObservableProperty] private bool _hasFormatStyle;
+    [ObservableProperty] private bool _isFormatWebVtt;
     [ObservableProperty] private bool _areAssaContentMenuItemsVisible;
+    [ObservableProperty] private bool _areWebVttContentMenuItemsVisible;
+    [ObservableProperty] private bool _isWebVttBrowserPreviewVisible;
     [ObservableProperty] private bool _selectCurrentSubtitleWhilePlaying;
     [ObservableProperty] private bool _waveformCenter;
     [ObservableProperty] private bool _isRightToLeftEnabled;
@@ -535,6 +540,7 @@ public partial class MainViewModel :
     public StackPanel PanelSingleLineLengthsOriginal { get; set; }
     public MenuItem MenuItemStyles { get; set; }
     public MenuItem MenuItemActors { get; set; }
+    public MenuItem MenuItemWebVttVoices { get; set; }
     private Button _buttonWaveformPlay = null!;
 
     public Button ButtonWaveformPlay
@@ -641,6 +647,7 @@ public partial class MainViewModel :
         MenuItemAudioVisualizerCopyText = new MenuItem();
         MenuItemStyles = new MenuItem();
         MenuItemActors = new MenuItem();
+        MenuItemWebVttVoices = new MenuItem();
         AudioTraksMenuItem = new MenuItem();
         SubtitleDataGridSyntaxHighlighting = new TextWithSubtitleSyntaxHighlightingConverter();
         Toolbar = new Border();
@@ -1454,6 +1461,222 @@ public partial class MainViewModel :
             }
 
             RefreshSubtitlePreview();
+        }
+    }
+
+    [RelayCommand]
+    private async Task ShowWebVttStyles()
+    {
+        if (Window == null || !IsFormatWebVtt)
+        {
+            return;
+        }
+
+        var result = await ShowDialogAsync<WebVttStylesWindow, WebVttStylesViewModel>(vm =>
+        {
+            // GetUpdateSubtitle: the usage counts are read from the paragraph texts, so the
+            // dialog needs the grid's current text rather than a stale _subtitle.
+            vm.Initialize(GetUpdateSubtitle(), _subtitleFileName ?? string.Empty, GetFirstWebVttStyleOfSelectedLine(), this);
+        });
+
+        if (result.OkPressed)
+        {
+            ApplyWebVttStyles(result);
+        }
+    }
+
+    public void ApplyWebVttStyles(WebVttStylesViewModel result)
+    {
+        _subtitle.Header = result.Header;
+        RefreshSubtitlePreview();
+    }
+
+    private string GetFirstWebVttStyleOfSelectedLine()
+    {
+        var selected = SelectedSubtitle;
+        if (selected == null)
+        {
+            return string.Empty;
+        }
+
+        return WebVttHelper.GetParagraphStyles(selected.ToParagraph(SelectedSubtitleFormat)).FirstOrDefault() ?? string.Empty;
+    }
+
+    /// <summary>
+    /// Fills the "voices" submenu of the subtitle grid context menu with the voices already used
+    /// in the file (<c>&lt;v Name&gt;</c>), plus entries for adding a new one and clearing them.
+    /// </summary>
+    private void FillWebVttVoicesMenu()
+    {
+        MenuItemWebVttVoices.Items.Clear();
+
+        foreach (var voice in WebVTT.GetVoices(GetUpdateSubtitle()).OrderBy(p => p, StringComparer.OrdinalIgnoreCase))
+        {
+            MenuItemWebVttVoices.Items.Add(new MenuItem
+            {
+                Header = voice,
+                Command = SetWebVttVoiceForSelectedLinesCommand,
+                CommandParameter = voice,
+            });
+        }
+
+        if (MenuItemWebVttVoices.Items.Count > 0)
+        {
+            MenuItemWebVttVoices.Items.Add(new Separator());
+        }
+
+        MenuItemWebVttVoices.Items.Add(new MenuItem
+        {
+            Header = Se.Language.File.WebVtt.NewVoiceDotDotDot,
+            Command = SetNewWebVttVoiceForSelectedLinesCommand,
+        });
+
+        MenuItemWebVttVoices.Items.Add(new MenuItem
+        {
+            Header = Se.Language.File.WebVtt.RemoveVoices,
+            Command = RemoveWebVttVoicesCommand,
+        });
+    }
+
+    [RelayCommand]
+    private void SetWebVttVoiceForSelectedLines(string? voice)
+    {
+        if (string.IsNullOrWhiteSpace(voice))
+        {
+            return;
+        }
+
+        var selectedItems = SubtitleGridSelectedItems.Cast<SubtitleLineViewModel>().ToList();
+
+        Dispatcher.UIThread.Post(() =>
+        {
+            foreach (var p in selectedItems)
+            {
+                // Replace any existing voice rather than nesting a second <v> tag.
+                p.Text = "<v " + voice + ">" + WebVTT.RemoveTag("v", p.Text);
+            }
+
+            RefreshSubtitlePreview();
+        });
+    }
+
+    [RelayCommand]
+    private async Task SetNewWebVttVoiceForSelectedLines()
+    {
+        var result = await ShowDialogAsync<PromptTextBoxWindow, PromptTextBoxViewModel>(vm =>
+        {
+            vm.Initialize(Se.Language.File.WebVtt.VoiceName, string.Empty, 250, 20, true);
+        });
+
+        if (result.OkPressed && !string.IsNullOrWhiteSpace(result.Text))
+        {
+            SetWebVttVoiceForSelectedLines(result.Text.Trim());
+        }
+    }
+
+    [RelayCommand]
+    private void RemoveWebVttVoices()
+    {
+        var selectedItems = SubtitleGridSelectedItems.Cast<SubtitleLineViewModel>().ToList();
+
+        Dispatcher.UIThread.Post(() =>
+        {
+            foreach (var p in selectedItems)
+            {
+                p.Text = WebVTT.RemoveTag("v", p.Text);
+            }
+
+            RefreshSubtitlePreview();
+        });
+    }
+
+    [RelayCommand]
+    private async Task SetWebVttStylesForSelectedLines()
+    {
+        if (Window == null || !IsFormatWebVtt)
+        {
+            return;
+        }
+
+        var styles = WebVttHelper.GetStyles(GetUpdateSubtitle().Header);
+        if (styles.Count == 0)
+        {
+            // Nothing to pick from - send the user to the style manager instead of an empty list.
+            await ShowWebVttStyles();
+            return;
+        }
+
+        var selectedItems = SubtitleGridSelectedItems.Cast<SubtitleLineViewModel>().ToList();
+        if (selectedItems.Count == 0)
+        {
+            return;
+        }
+
+        // The check marks start from the focused line, matching what the user sees selected.
+        var currentStyles = WebVttHelper.GetParagraphStyles(selectedItems[0].ToParagraph(SelectedSubtitleFormat));
+
+        var result = await ShowDialogAsync<WebVttStylePickerWindow, WebVttStylePickerViewModel>(vm =>
+        {
+            vm.Initialize(
+                Se.Language.File.WebVtt.SetStylesForSelectedLinesTitle,
+                Se.Language.General.Ok,
+                styles.Select(p => new WebVttStyleDisplay(p) { IsSelected = currentStyles.Contains(p.Name) }).ToList());
+        });
+
+        if (!result.OkPressed)
+        {
+            return;
+        }
+
+        var chosen = result.CheckedStyles.Select(p => p.ToWebVttStyle()).ToList();
+        foreach (var line in selectedItems)
+        {
+            var paragraph = line.ToParagraph(SelectedSubtitleFormat);
+            line.Text = WebVttHelper.SetParagraphStyles(paragraph, chosen);
+        }
+
+        RefreshSubtitlePreview();
+    }
+
+    /// <summary>
+    /// Writes the subtitle into a throw-away HTML page as a base64 <c>&lt;track&gt;</c> next to the
+    /// loaded video and opens it in the default browser, so the cues can be checked in a real
+    /// WebVTT renderer instead of Subtitle Edit's own.
+    /// </summary>
+    [RelayCommand]
+    private void ShowWebVttBrowserPreview()
+    {
+        if (!IsFormatWebVtt || string.IsNullOrEmpty(_videoFileName))
+        {
+            return;
+        }
+
+        try
+        {
+            var subtitleText = new WebVTT().ToText(GetUpdateSubtitle(), "preview");
+            var html = WebVttBrowserPreview.GenerateHtml(subtitleText, _videoFileName);
+            var htmlFileName = Path.Combine(Path.GetTempPath(), $"WebVttPreview_{Guid.NewGuid()}.html");
+            File.WriteAllText(htmlFileName, html, Encoding.UTF8);
+            UiUtil.OpenUrl(htmlFileName);
+
+            // The browser only needs the file while it loads it; clean up so the temp folder
+            // does not fill up with preview pages.
+            _ = Task.Run(async () =>
+            {
+                await Task.Delay(TimeSpan.FromSeconds(30));
+                try
+                {
+                    File.Delete(htmlFileName);
+                }
+                catch
+                {
+                    // Ignore
+                }
+            });
+        }
+        catch (Exception exception)
+        {
+            ShowStatus(exception.Message);
         }
     }
 
@@ -20624,6 +20847,8 @@ public partial class MainViewModel :
         MenuItemExtendToLineAfter.IsVisible = Subtitles.Count > 1 &&
             (selectedCount > 1 || (selectedCount == 1 && idx < count - 1));
         AreAssaContentMenuItemsVisible = false;
+        AreWebVttContentMenuItemsVisible = false;
+        IsWebVttBrowserPreviewVisible = false;
         ShowAutoTranslateSelectedLines = selectedCount > 0 && ShowColumnOriginalText;
         HasMultipleLinesSelected = selectedCount > 1;
         ShowColumnLayerFlyoutMenuItem = IsFormatAssa;
@@ -20734,6 +20959,12 @@ public partial class MainViewModel :
                     removeActorMenuItem.InputGesture = InitMenu.ToKeyGesture(removeActorShortcut);
                 }
                 MenuItemActors.Items.Add(removeActorMenuItem);
+            }
+            else if (IsFormatWebVtt && selectedCount > 0)
+            {
+                AreWebVttContentMenuItemsVisible = true;
+                IsWebVttBrowserPreviewVisible = WebVttBrowserPreview.IsSupportedVideoFile(_videoFileName);
+                FillWebVttVoicesMenu();
             }
         }
 
@@ -24326,6 +24557,7 @@ public partial class MainViewModel :
 
         IsFormatAssa = SelectedSubtitleFormat is AdvancedSubStationAlpha;
         IsFormatSsa = SelectedSubtitleFormat is SubStationAlpha;
+        IsFormatWebVtt = SelectedSubtitleFormat is WebVTT or WebVTTFileWithLineNumber;
         HasFormatStyle = SelectedSubtitleFormat is AdvancedSubStationAlpha or SubStationAlpha;
         ShowLayer = IsFormatAssa && Se.Settings.Appearance.ShowLayer;
         ShowLayerFilterIcon = IsFormatAssa && Se.Settings.Appearance.ShowLayer && _visibleLayers != null;

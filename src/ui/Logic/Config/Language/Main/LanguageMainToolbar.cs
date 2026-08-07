@@ -28,6 +28,7 @@ public class LanguageMainToolbar
     public string AssaAttachmentsHint { get; set; }
     public string AssaDrawHint { get; set; }
     public string SsaStylesHint { get; set; }
+    public string WebVttStylesHint { get; set; }
     public string SsaPropertiesHint { get; set; }
     public string SsaAttachmentsHint { get; set; }
 
@@ -60,6 +61,7 @@ public class LanguageMainToolbar
         AssaAttachmentsHint = "Advanced Sub Station Alpha attachments";
         AssaDrawHint = "Advanced Sub Station Alpha draw shapes";
         SsaStylesHint = "Sub Station Alpha styles";
+        WebVttStylesHint = "WebVTT style manager";
         SsaPropertiesHint = "Sub Station Alpha properties";
         SsaAttachmentsHint = "Sub Station Alpha attachments";
     }
