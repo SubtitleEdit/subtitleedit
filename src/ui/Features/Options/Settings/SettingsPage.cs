@@ -4,6 +4,7 @@ using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
 using Avalonia.Controls.Templates;
 using Avalonia.Data;
+using Avalonia.Data.Converters;
 using Avalonia.Interactivity;
 using Avalonia.Layout;
 using Avalonia.Media;
@@ -651,7 +652,17 @@ public class SettingsPage : UserControl
             new SettingsItem(Se.Language.Options.Settings.AutoBreakPreferBottomPercent, () =>
             {
                 var nud = MakeNumericUpDownInt(nameof(_vm.AutoBreakPreferBottomPercent), 0, 50);
-                nud[!Control.IsEnabledProperty] = new Binding(nameof(_vm.AutoBreakUsePixelWidth)) { Source = _vm };
+                // The engine reads the percent only when both pixel width AND prefer-bottom-heavy
+                // are on (TextSplit), so enable it only when editing it can have an effect.
+                nud[!Control.IsEnabledProperty] = new MultiBinding
+                {
+                    Converter = BoolConverters.And,
+                    Bindings =
+                    {
+                        new Binding(nameof(_vm.AutoBreakUsePixelWidth)) { Source = _vm },
+                        new Binding(nameof(_vm.AutoBreakPreferBottomHeavy)) { Source = _vm },
+                    },
+                };
                 return nud;
             }),
             new SettingsItem(Se.Language.Options.Settings.UseDoNotBreakAfterList, () => new StackPanel

@@ -1883,7 +1883,9 @@ public partial class SpeechToTextViewModel : ObservableObject
         var languageCode = SelectedLanguage?.Code;
         if (string.IsNullOrWhiteSpace(languageCode) || languageCode.Equals("auto", StringComparison.OrdinalIgnoreCase))
         {
-            languageCode = GetOnlineEngineLanguageHint();
+            // Normalized here (not just at the end) so a hint that can't be mapped to a
+            // code falls through to auto-detection instead of being dropped outright.
+            languageCode = NormalizeFileNameLanguageCode(GetOnlineEngineLanguageHint());
         }
 
         if (string.IsNullOrWhiteSpace(languageCode) && transcript != null)
@@ -1896,7 +1898,39 @@ public partial class SpeechToTextViewModel : ObservableObject
             return null;
         }
 
-        return languageCode;
+        return NormalizeFileNameLanguageCode(languageCode);
+    }
+
+    /// <summary>
+    /// Maps a language token to a code usable as a file name part, or null when it can't be.
+    /// The token may come from the online engines' free-text "language hint" setting, so it
+    /// can be a full name ("English" - the APIs accept those) or any arbitrary text; a full
+    /// name is mapped to its whisper code and anything not code-shaped is dropped rather than
+    /// embedded in the file name (path separators and the like would make the save throw).
+    /// </summary>
+    internal static string? NormalizeFileNameLanguageCode(string? languageCode)
+    {
+        if (string.IsNullOrWhiteSpace(languageCode))
+        {
+            return null;
+        }
+
+        var token = languageCode.Trim();
+        var match = WhisperLanguage.Languages.FirstOrDefault(p =>
+            p.Code.Equals(token, StringComparison.OrdinalIgnoreCase) ||
+            p.Name.Equals(token, StringComparison.OrdinalIgnoreCase));
+        if (match != null)
+        {
+            return match.Code;
+        }
+
+        // Unknown but code-shaped ("pt-BR", "yue") - keep as typed, lowercased.
+        if (token.Length <= 6 && token.All(c => char.IsAsciiLetter(c) || c == '-'))
+        {
+            return token.ToLowerInvariant();
+        }
+
+        return null;
     }
 
     private Subtitle PostProcess(Subtitle transcript)
@@ -3070,8 +3104,11 @@ public partial class SpeechToTextViewModel : ObservableObject
         {
             _videoFileName = BatchItems[0].InputVideoFileName;
 
-            if (string.IsNullOrEmpty(_batchOutputFolder) &&
-                BatchItems.Any(b => DocumentPortal.IsPortalPath(b.InputVideoFileName)))
+            // Every run picks its output folder anew - a folder chosen for an earlier batch
+            // in this dialog session must not silently receive a later batch's output.
+            _batchOutputFolder = null;
+
+            if (BatchItems.Any(b => DocumentPortal.IsPortalPath(b.InputVideoFileName)))
             {
                 // Videos opened through the Flatpak document portal live in a single-file
                 // grant where a sibling .srt can never materialize as a real file (issue
