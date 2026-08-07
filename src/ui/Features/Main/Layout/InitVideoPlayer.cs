@@ -98,6 +98,10 @@ public static class InitVideoPlayer
             {
                 vm.RequestPausePlayheadFreeze();
             }
+            else
+            {
+                vm.CancelPausePlayheadFreeze();
+            }
         };
         control.StopRequested += vm.OnVideoPlayerStopRequested;
 
