@@ -222,6 +222,12 @@ public class LanguageAssa
     public string AdvancedEffectSlideInRight { get; set; }
     public string AdvancedEffectSlideInRightDescription { get; set; }
     public string AdvancedEffectFadeInOutDescription { get; set; }
+    public string AdvancedEffectWordFlip3D { get; set; }
+    public string AdvancedEffectWordFlip3DDescription { get; set; }
+    public string AdvancedEffectBurningText { get; set; }
+    public string AdvancedEffectBurningTextDescription { get; set; }
+    public string AdvancedEffectSpotlightReveal { get; set; }
+    public string AdvancedEffectSpotlightRevealDescription { get; set; }
     public string OverrideTagsHistory { get; set; }
 
     public LanguageAssa()
@@ -443,6 +449,12 @@ public class LanguageAssa
         AdvancedEffectSlideInRight = "Slide in from right";
         AdvancedEffectSlideInRightDescription = "Text slides in from off-screen right, holds, then exits back to the right";
         AdvancedEffectFadeInOutDescription = "Text fades in at the start and fades out at the end of each subtitle";
+        AdvancedEffectWordFlip3D = "Word flip 3D";
+        AdvancedEffectWordFlip3DDescription = "Each word folds in with a 3D flip and elastic pop as it is spoken — modern 'Shorts' caption style";
+        AdvancedEffectBurningText = "Burning text";
+        AdvancedEffectBurningTextDescription = "Text flickers with fire colors and a glowing halo while embers rise and fade above it";
+        AdvancedEffectSpotlightReveal = "Spotlight reveal";
+        AdvancedEffectSpotlightRevealDescription = "The screen dims and a moving spotlight sweeps across, revealing the text";
         OverrideTagsHistory = "Override tags history";
         MouseOverColor = "Mouse-over color";
         ClickedColor = "Clicked color";

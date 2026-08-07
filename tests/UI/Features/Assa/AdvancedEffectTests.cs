@@ -213,4 +213,88 @@ public class AdvancedEffectTests
 
         Assert.All(result, line => Assert.True(line.StartTime >= TimeSpan.Zero));
     }
+
+    [Fact]
+    public void WordFlip3D_TwoWords_ProducesSequentialFlipEvents()
+    {
+        var effect = new AdvancedEffectWordFlip3D();
+        var result = effect.ApplyEffect(string.Empty, [MakeLine("aa bb")], 1280, 720, null);
+
+        Assert.Equal(2, result.Count);
+        // Step 0: first word flips in, second word is a hidden placeholder
+        Assert.Contains(@"\frx90", result[0].Text);
+        Assert.Contains(@"\alpha&HFF&", result[0].Text);
+        // Step 1: first word is shown solid, second word flips in
+        Assert.Contains(@"\alpha&H00&\frx0", result[1].Text);
+        Assert.Contains(@"\frx90", result[1].Text);
+        // Sequential, non-overlapping timing
+        Assert.Equal(TimeSpan.Zero, result[0].StartTime);
+        Assert.Equal(result[0].EndTime, result[1].StartTime);
+        Assert.Equal(TimeSpan.FromMilliseconds(2000), result[1].EndTime);
+    }
+
+    /// <summary>
+    /// A source \move must continue seamlessly across the word-events instead of
+    /// restarting at every word boundary (shared AdjustMoveForSegment rewrite).
+    /// </summary>
+    [Fact]
+    public void WordFlip3D_SourceMove_ContinuesAcrossWords()
+    {
+        var effect = new AdvancedEffectWordFlip3D();
+        var result = effect.ApplyEffect(string.Empty, [MakeLine(@"{\move(0,0,100,100)}a b")], 1280, 720, null);
+
+        Assert.Equal(2, result.Count);
+        Assert.Contains(@"\move(0,0,50,50,0,1000)", result[0].Text);
+        Assert.Contains(@"\move(50,50,100,100,0,1000)", result[1].Text);
+    }
+
+    /// <summary>
+    /// The flicker and embers are seeded from the line itself, so the 750 ms preview
+    /// rebuild must produce identical output; ember timestamps stay inside the line.
+    /// </summary>
+    [Fact]
+    public void BurningText_IsDeterministicAndStaysInsideLine()
+    {
+        var effect = new AdvancedEffectBurningText();
+        var first = effect.ApplyEffect(string.Empty, [MakeLine("Fire!", durationMs: 4000)], 1280, 720, null);
+        var second = effect.ApplyEffect(string.Empty, [MakeLine("Fire!", durationMs: 4000)], 1280, 720, null);
+
+        Assert.Equal(first.Select(l => l.Text), second.Select(l => l.Text));
+        Assert.Contains(@"\t(", first[0].Text); // the flicker chain on the text line
+        Assert.All(first, line =>
+        {
+            Assert.True(line.StartTime >= TimeSpan.Zero);
+            Assert.True(line.EndTime <= TimeSpan.FromMilliseconds(4000));
+            Assert.True(line.StartTime < line.EndTime);
+        });
+    }
+
+    /// <summary>
+    /// The overlay, beam and text must sit on distinct ascending layers (overlapping
+    /// unpositioned events on one layer would be collision-shifted by libass).
+    /// </summary>
+    [Fact]
+    public void SpotlightReveal_EmitsThreeDistinctlyLayeredEvents()
+    {
+        var effect = new AdvancedEffectSpotlightReveal();
+        var result = effect.ApplyEffect(string.Empty, [MakeLine("Hello")], 1280, 720, null);
+
+        Assert.Equal(3, result.Count);
+        Assert.Equal(3, result.Select(l => l.Layer).Distinct().Count());
+        Assert.True(result[0].Layer < result[1].Layer && result[1].Layer < result[2].Layer);
+        // The text is revealed by an animated rectangular clip
+        Assert.Contains(@"\clip(0,0,0,720)", result[2].Text);
+        Assert.Contains(@"\t(0,", result[2].Text);
+        Assert.Contains(@"\clip(0,0,1280,720)", result[2].Text);
+    }
+
+    [Fact]
+    public void Factory_ContainsTheNewEffects()
+    {
+        var list = Nikse.SubtitleEdit.Features.Assa.AssaApplyAdvancedEffect.AdvancedEffectDisplayFactory.List();
+
+        Assert.Contains(list, e => e is AdvancedEffectWordFlip3D);
+        Assert.Contains(list, e => e is AdvancedEffectBurningText);
+        Assert.Contains(list, e => e is AdvancedEffectSpotlightReveal);
+    }
 }
