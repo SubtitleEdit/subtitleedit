@@ -304,7 +304,7 @@ public class ChatterboxTtsCpp : ITtsEngine
 
         await EnsureServerRunningAsync(ResolveModelKey(model), cancellationToken);
 
-        var outputFileName = Path.Combine(GetSetFolder(), Guid.NewGuid() + ".wav");
+        var outputFileName = Path.Combine(TtsOutputFolder.Resolve(outputFolder, GetSetFolder), Guid.NewGuid() + ".wav");
         var inputText = text;
 
         var payload = BuildSpeakPayload(inputText, chatterboxVoice.FilePath);
