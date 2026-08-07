@@ -31,7 +31,7 @@ public class AdvancedEffectBounceIn : IAdvancedEffectDisplay
             var cleanText = Utilities.RemoveSsaTags(sub.Text);
             if (string.IsNullOrEmpty(cleanText))
             {
-                result.Add(sub);
+                result.Add(AdvancedEffectUtil.PassThrough(sub));
                 continue;
             }
 
@@ -43,6 +43,12 @@ public class AdvancedEffectBounceIn : IAdvancedEffectDisplay
                 ? (int)Math.Max(20, Math.Min(80, sub.Duration.TotalMilliseconds / 3.0 / nonSpaceCount))
                 : 50;
 
+            // The bounce animation itself runs 0-500 ms, so the last character must start
+            // no later than 500 ms before the subtitle ends or it never finishes (and a
+            // raw char index * stagger could even start after EndTime on long lines).
+            double maxStartOffsetMs = Math.Max(0, sub.Duration.TotalMilliseconds - 500);
+            int visibleIndex = 0;
+
             for (int i = 0; i < chars.Length; i++)
             {
                 if (chars[i] == ' ' || chars[i] == '\n')
@@ -51,8 +57,10 @@ public class AdvancedEffectBounceIn : IAdvancedEffectDisplay
                 }
 
                 var line = new SubtitleLineViewModel(sub, generateNewId: true);
-                line.StartTime = sub.StartTime.Add(TimeSpan.FromMilliseconds(i * staggerMs));
+                line.StartTime = sub.StartTime.Add(TimeSpan.FromMilliseconds(
+                    Math.Min(visibleIndex * staggerMs, maxStartOffsetMs)));
                 line.EndTime = sub.EndTime;
+                visibleIndex++;
 
                 sb.Clear();
                 for (int j = 0; j < chars.Length; j++)
@@ -74,8 +82,10 @@ public class AdvancedEffectBounceIn : IAdvancedEffectDisplay
                     }
                     else
                     {
-                        // Transparent placeholder — preserves spacing but invisible
-                        sb.Append("{\\alpha&HFF&}");
+                        // Transparent placeholder — preserves spacing but invisible.
+                        // The scale reset stops the bouncing char's \t animation from
+                        // carrying over and making the rest of the line pulse.
+                        sb.Append("{\\alpha&HFF&\\fscx100\\fscy100}");
                     }
 
                     sb.Append(chars[j]);

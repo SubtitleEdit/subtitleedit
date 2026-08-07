@@ -29,7 +29,7 @@ public class AdvancedEffectFadeInOut : IAdvancedEffectDisplay
         foreach (var sub in subtitles)
         {
             int durationMs = (int)sub.Duration.TotalMilliseconds;
-            int fadeMs = (int)Math.Min(500, durationMs / 3.0);
+            int fadeMs = Math.Max(0, (int)Math.Min(500, durationMs / 3.0));
 
             var fadeSub = new SubtitleLineViewModel(sub, generateNewId: true);
             fadeSub.Text = $"{{\\fad({fadeMs},{fadeMs})}}" + sub.Text;

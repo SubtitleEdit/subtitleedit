@@ -27,7 +27,7 @@ public class AdvancedEffectTypewriter : IAdvancedEffectDisplay
             var cleanText = Utilities.RemoveSsaTags(subtitle.Text);
             if (string.IsNullOrEmpty(cleanText))
             {
-                result.Add(subtitle);
+                result.Add(AdvancedEffectUtil.PassThrough(subtitle));
                 continue;
             }
 

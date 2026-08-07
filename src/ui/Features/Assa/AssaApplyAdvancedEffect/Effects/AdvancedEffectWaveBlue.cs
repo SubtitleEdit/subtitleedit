@@ -12,6 +12,9 @@ public class AdvancedEffectWaveBlue : IAdvancedEffectDisplay
     public string Description => Se.Language.Assa.AdvancedEffectWaveBlueDescription;
     public bool UsesAudio => false;
 
+    private static readonly System.Text.RegularExpressions.Regex TagOrTextRegex =
+        new(@"(\{.*?\})|([^{]+)", System.Text.RegularExpressions.RegexOptions.Compiled);
+
     public override string ToString() => Name;
 
     public List<SubtitleLineViewModel> ApplyEffect(string header, List<SubtitleLineViewModel> subtitles, int width, int height, WavePeakData2? wavePeaks)
@@ -20,7 +23,7 @@ public class AdvancedEffectWaveBlue : IAdvancedEffectDisplay
 
         foreach (var sub in subtitles)
         {
-            var matches = System.Text.RegularExpressions.Regex.Matches(sub.Text, @"(\{.*?\})|([^{]+)");
+            var matches = TagOrTextRegex.Matches(sub.Text);
             var fullParts = new List<(string Content, bool IsTag)>();
             foreach (System.Text.RegularExpressions.Match m in matches)
                 fullParts.Add((m.Value, m.Value.StartsWith("{")));
@@ -29,12 +32,24 @@ public class AdvancedEffectWaveBlue : IAdvancedEffectDisplay
             for (int p = 0; p < fullParts.Count; p++)
                 if (!fullParts[p].IsTag)
                     for (int c = 0; c < fullParts[p].Content.Length; c++)
-                        visibleChars.Add((fullParts[p].Content[c], p, c));
+                    {
+                        var content = fullParts[p].Content;
+                        if (content[c] == '\\' && c + 1 < content.Length && content[c + 1] is 'N' or 'n' or 'h')
+                        {
+                            // Inline \N/\n/\h stays intact in the rebuilt text but must never
+                            // be animated as if it were two visible glyphs
+                            c++;
+                            continue;
+                        }
+                        visibleChars.Add((content[c], p, c));
+                    }
 
             double totalMs = sub.Duration.TotalMilliseconds;
             int waveSpeed = 150; // Faster updates = smoother motion
             double waveFrequency = 0.5; // Distance between peaks
 
+            int generated = 0;
+            var oceanTransforms = new System.Text.StringBuilder();
             for (int i = 0; i < visibleChars.Count; i++)
             {
                 var target = visibleChars[i];
@@ -44,7 +59,7 @@ public class AdvancedEffectWaveBlue : IAdvancedEffectDisplay
                 }
 
                 var charLine = new SubtitleLineViewModel(sub, generateNewId: true);
-                string oceanTransforms = "";
+                oceanTransforms.Clear();
 
                 for (int time = 0; time < totalMs; time += waveSpeed)
                 {
@@ -63,7 +78,7 @@ public class AdvancedEffectWaveBlue : IAdvancedEffectDisplay
                     // 3. BLUR: Add a "glow" only at the peaks
                     int blurValue = (sineValue > 0.7) ? 4 : 1;
 
-                    oceanTransforms += $@" \t({time},{time + waveSpeed},\fscy{heightScale}\1c{currentColor}\blur{blurValue})";
+                    oceanTransforms.Append($@"\t({time},{time + waveSpeed},\fscy{heightScale}\1c{currentColor}\blur{blurValue})");
                 }
 
                 var finalString = new System.Text.StringBuilder();
@@ -78,7 +93,7 @@ public class AdvancedEffectWaveBlue : IAdvancedEffectDisplay
                         string partText = fullParts[p].Content;
                         // Initial State: Deep Blue, Bottom-Anchored
                         finalString.Append(@"{\alpha&HFF&}").Append(partText.Substring(0, target.CharIndex))
-                                   .Append(@"{\alpha&H00&\1c&HFF8800&" + oceanTransforms + "}").Append(target.Character)
+                                   .Append(@"{\alpha&H00&\1c&HFF8800&").Append(oceanTransforms).Append('}').Append(target.Character)
                                    .Append(@"{\alpha&HFF&}").Append(partText.Substring(target.CharIndex + 1));
                     }
                     else
@@ -89,6 +104,13 @@ public class AdvancedEffectWaveBlue : IAdvancedEffectDisplay
 
                 charLine.Text = finalString.ToString();
                 result.Add(charLine);
+                generated++;
+            }
+
+            if (generated == 0)
+            {
+                // Nothing to animate (empty/whitespace-only line) - keep the line as-is
+                result.Add(AdvancedEffectUtil.PassThrough(sub));
             }
         }
         return result;

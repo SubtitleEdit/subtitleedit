@@ -28,7 +28,7 @@ public class AdvancedEffectFadeOut : IAdvancedEffectDisplay
         foreach (var sub in subtitles)
         {
             result.Add(CreateBlackOverlay(sub.StartTime, sub.Duration.TotalMilliseconds, w, h));
-            result.Add(sub);
+            result.Add(AdvancedEffectUtil.PassThrough(sub));
         }
 
         return result;
@@ -40,10 +40,14 @@ public class AdvancedEffectFadeOut : IAdvancedEffectDisplay
         fadeOut.StartTime = lineStart;
         fadeOut.EndTime = lineStart.Add(TimeSpan.FromMilliseconds(durationMs));
 
+        // Layer is a Dialogue-line field, not an override tag - a "\layer10" tag would be
+        // silently ignored, so the above-the-text z-order is set on the event instead.
+        fadeOut.Layer = 10;
+
         // Vector rectangle covering the whole screen
         string drawBox = $"m 0 0 l {w} 0 l {w} {h} l 0 {h}";
 
-        fadeOut.Text = "{\\p1\\an7\\pos(0,0)\\bord0\\shad0\\1c&H000000&\\layer10\\fad(" + durationMs + ",0)}" + drawBox;
+        fadeOut.Text = "{\\p1\\an7\\pos(0,0)\\bord0\\shad0\\1c&H000000&\\fad(" + (int)Math.Round(durationMs) + ",0)}" + drawBox;
 
         return fadeOut;
     }

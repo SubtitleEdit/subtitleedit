@@ -34,10 +34,10 @@ public class AdvancedEffectRain : IAdvancedEffectDisplay
 
         int dropCount = 350;
 
-        for (int i = 0; i < dropCount; i++)
+        for (int i = 0; i < dropCount && result.Count < AdvancedEffectUtil.MaxGeneratedEvents; i++)
         {
             double currentTimeMs = 0;
-            while (currentTimeMs < totalVideoMs)
+            while (currentTimeMs < totalVideoMs && result.Count < AdvancedEffectUtil.MaxGeneratedEvents)
             {
                 var drop = new SubtitleLineViewModel();
 
@@ -88,18 +88,20 @@ public class AdvancedEffectRain : IAdvancedEffectDisplay
 
                 // --- TAG CONSTRUCTION ---
                 string hexAlpha = alpha.ToString("X2");
-                string tags = $@"\\an5\\bord0\\shad0\\blur{blur:F1}\\1c{color}\\alpha&H{hexAlpha}&\\fad(150,150)" +
-                              $@"\\fscx{dropWidth}\\fscy{dropLength}" +
-                              $@"\\move({startX}, -100, {endX}, {screenHeight + 100})";
+                string tags = $@"\an5\bord0\shad0\blur{AdvancedEffectUtil.Tag(blur)}\1c{color}\alpha&H{hexAlpha}&\fad(150,150)" +
+                              $@"\fscx{dropWidth}\fscy{dropLength}" +
+                              $@"\move({startX},-100,{endX},{screenHeight + 100})";
 
                 drop.Text = "{" + tags + "}·";
                 result.Add(drop);
 
-                currentTimeMs += (fallDuration * rng.NextDouble());
+                // The floor keeps the advance from degenerating towards zero (an unbounded
+                // number of events) when NextDouble() lands close to 0
+                currentTimeMs += fallDuration * (0.35 + 0.65 * rng.NextDouble());
             }
         }
 
-        result.AddRange(subtitles);
+        result.AddRange(subtitles.Select(AdvancedEffectUtil.PassThrough));
         return result;
     }
 }

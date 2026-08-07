@@ -36,11 +36,15 @@ public class AdvancedEffectStarfield : IAdvancedEffectDisplay
         var globalEnd = subtitles.Max(s => s.EndTime);
         double totalMs = (globalEnd - globalStart).TotalMilliseconds;
 
+        // The UI binding can hand over a transient 0 (cleared spinner) or an out-of-range
+        // value while the preview timer is running - clamp before dividing
+        double speedMultiplier = Math.Clamp((double)SpeedMultiplier, 0.1, 10.0);
+
         for (int i = 0; i < StarCount; i++)
         {
             double startMs = rng.NextDouble() * totalMs;
             // INCREASED LIFESPAN: Ensures they stay on screen longer
-            int life = (int)(rng.Next(5000, 19000) / (double)SpeedMultiplier);
+            int life = (int)(rng.Next(5000, 19000) / speedMultiplier);
 
             var star = new SubtitleLineViewModel();
             star.StartTime = globalStart.Add(TimeSpan.FromMilliseconds(startMs));
@@ -68,26 +72,27 @@ public class AdvancedEffectStarfield : IAdvancedEffectDisplay
             int fadeOutStart = (int)(life * 0.8); // Start fading out at 80% of life
 
             // \fad(fadeIn, fadeOut) is the most reliable way to prevent "popping"
-            string tags = $@"\\p1\\an5\\bord0\\shad0\\blur1.8\\1c{color}\\move({startX},{startY},{endX},{endY})\\fad(800,800)";
+            string tags = $@"\p1\an5\bord0\shad0\blur1.8\1c{color}\move({startX},{startY},{endX},{endY})\fad(800,800)";
 
             // Initial setup
-            tags += $@"\\fscx{baseSize / 2}\\fscy{baseSize / 2}";
+            tags += $@"\fscx{baseSize / 2}\fscy{baseSize / 2}";
 
             // Growth over full life
-            tags += $@"\\t(0,{life},\\fscx{baseSize * 2.5}\\fscy{baseSize * 2.5})";
+            int grownSize = (int)Math.Round(baseSize * 2.5);
+            tags += $@"\t(0,{life},\fscx{grownSize}\fscy{grownSize})";
 
             // Twinkle (1 in 8)
             if (rng.Next(0, 8) == 0)
             {
                 int tStep = life / 5;
-                tags += $@"\\t({tStep},{tStep * 2},\\alpha&H66&)\\t({tStep * 2},{tStep * 3},\\alpha&H00&)";
+                tags += $@"\t({tStep},{tStep * 2},\alpha&H66&)\t({tStep * 2},{tStep * 3},\alpha&H00&)";
             }
 
             star.Text = "{" + tags + "}" + shape;
             result.Add(star);
         }
 
-        result.AddRange(subtitles);
+        result.AddRange(subtitles.Select(AdvancedEffectUtil.PassThrough));
         return result;
     }
 }
