@@ -422,6 +422,7 @@ public partial class TextToSpeechViewModel : ObservableObject
         else if (SelectedEngine is OmniVoiceCrispAsr)
         {
             Se.Settings.Video.TextToSpeech.OmniVoiceCrispAsrModel = SelectedModel ?? OmniVoiceCrispAsr.DefaultModelKey;
+            Se.Settings.Video.TextToSpeech.OmniVoiceCrispAsrLanguage = SelectedLanguage?.Name ?? string.Empty;
         }
         else if (SelectedEngine is MossTtsCrispAsr)
         {
@@ -3333,14 +3334,17 @@ public partial class TextToSpeechViewModel : ObservableObject
                     Languages.Add(language);
                 }
 
-                // OmniVoice has 646 alphabetically-sorted languages; the first entry ("Abadi") is
-                // a useless default. Default to English so the engine is usable out of the box.
+                // OmniVoice has 646 alphabetically-sorted languages behind its "Auto" entry;
+                // falling through to the first *language* ("Abadi") would be a useless default,
+                // so omnivoice-tts asks for English explicitly and stays usable out of the box.
                 // The CrispASR cloning engines restore the saved pick (their lists lead with
                 // "Auto", which is also the right fallback - it reproduces the
                 // pre-language-selection behaviour).
                 SelectedLanguage = engine switch
                 {
                     OmniVoiceTtsCpp => Languages.FirstOrDefault(l => l.Code == "en") ?? Languages.FirstOrDefault(),
+                    OmniVoiceCrispAsr => Languages.FirstOrDefault(l => l.Name == Se.Settings.Video.TextToSpeech.OmniVoiceCrispAsrLanguage)
+                                         ?? Languages.FirstOrDefault(),
                     MossTtsCrispAsr => Languages.FirstOrDefault(l => l.Name == Se.Settings.Video.TextToSpeech.MossTtsCrispAsrLanguage)
                                        ?? Languages.FirstOrDefault(),
                     CosyVoice3CrispAsr => Languages.FirstOrDefault(l => l.Name == Se.Settings.Video.TextToSpeech.CosyVoice3CrispAsrLanguage)
