@@ -28,6 +28,14 @@ public partial class SetSyncPointViewModel : ObservableObject
     [ObservableProperty] private ObservableCollection<SubtitleDisplayItem> _paragraphs;
     [ObservableProperty] private int _selectedParagraphIndex = -1;
     [ObservableProperty] private bool _isAudioVisualizerVisible;
+
+    /// <summary>
+    /// Whether the dialog shows its video half at all. With no video there is nothing to scrub, so
+    /// the player, the waveform and the playback buttons come off and the dialog is just the line
+    /// picker and the sync point time code (issue #13341).
+    /// </summary>
+    [ObservableProperty] private bool _isVideoVisible;
+
     [ObservableProperty] private string _title;
     [ObservableProperty] private string _videoInfo;
     [ObservableProperty] private TimeSpan _syncPointTimeCode;
@@ -103,6 +111,7 @@ public partial class SetSyncPointViewModel : ObservableObject
         }
 
         _videoFileName = videoFileName;
+        IsVideoVisible = HasVideo;
         SetVideoInFo(videoFileName);
 
         // Seed the sync point with the line's own start time - a video, when there is one, takes
@@ -366,6 +375,7 @@ public partial class SetSyncPointViewModel : ObservableObject
         // Only now does the player own the sync point - handing it over any earlier would let the
         // timer copy the still-zero position into the time code while the file is loading.
         _videoFileName = fileName;
+        IsVideoVisible = true;
         UpdateTimeCodeFromVideoPosition();
         CenterWaveform(VideoPlayerControl, AudioVisualizer);
         _updateAudioVisualizer = true;

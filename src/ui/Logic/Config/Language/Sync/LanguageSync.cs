@@ -25,6 +25,7 @@ public class LanguageSync
     public string ShowLater { get; set; }
     public string SetSyncPoint { get; set; }
     public string SetSyncPointViaVideo { get; set; }
+    public string SyncPointTimeCode { get; set; }
     public string SyncPoints { get; set; }
     public string PointSync { get; set; }
     public string PointSyncViaOther { get; set; }
@@ -57,6 +58,7 @@ public class LanguageSync
         ShowLater = "Show later";
         SetSyncPoint = "Set sync point";
         SetSyncPointViaVideo = "Set sync point via video...";
+        SyncPointTimeCode = "Sync point time code";
         SyncPoints = "Sync points";
         PointSync = "Point sync";
         PointSyncViaOther = "Point sync via other subtitle";

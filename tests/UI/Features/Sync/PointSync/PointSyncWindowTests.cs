@@ -52,16 +52,29 @@ public class PointSyncWindowTests : IDisposable
     }
 
     /// <summary>
-    /// Button labels. WithIconLeft repacks the content into an icon + text panel, so the caption
-    /// is on a TextBlock inside the button rather than on Button.Content.
+    /// Captions of every button in the window, visible or not. WithIconLeft repacks the content
+    /// into an icon + text panel, so the caption is on a TextBlock inside the button rather than
+    /// on Button.Content.
     /// </summary>
     private static IEnumerable<string> ButtonTexts(Window window)
         => window.GetLogicalDescendants()
             .OfType<Button>()
-            .SelectMany(b => b.GetLogicalDescendants().OfType<TextBlock>().Select(t => t.Text)
-                .Append(b.Content as string))
+            .SelectMany(CaptionsOf)
             .Where(t => !string.IsNullOrEmpty(t))
             .Select(t => t!);
+
+    private static IEnumerable<string?> CaptionsOf(Button button)
+        => button.GetLogicalDescendants().OfType<TextBlock>().Select(t => t.Text)
+            .Append(button.Content as string);
+
+    /// <summary>
+    /// A hidden button is still in the logical tree, so presence says nothing about whether the
+    /// user can see it - this is what the visibility assertions have to go through.
+    /// </summary>
+    private static Button ButtonWithText(Window window, string text)
+        => window.GetLogicalDescendants()
+            .OfType<Button>()
+            .First(b => CaptionsOf(b).Contains(text));
 
     [AvaloniaFact]
     public void PointSyncWindow_Constructs()
@@ -73,6 +86,44 @@ public class PointSyncWindowTests : IDisposable
         var window = Track(new PointSyncWindow(vm));
 
         Assert.NotNull(window.Content);
+    }
+
+    [AvaloniaFact]
+    public void SetSyncPointWindow_WithoutVideo_HidesThePlayerAndPlaybackButton()
+    {
+        // The videoless dialog is just the line picker and the sync point time code - the player,
+        // the waveform and "Play 2 secs & back" have nothing to show or do (issue #13341).
+        var vm = new SetSyncPointViewModel(new WindowService(new NullServiceProvider()), new FileHelper());
+        var lines = TwoLines();
+        vm.Initialize(lines, lines[0], videoFileName: null, subtitleFileName: null, audioVisualizer: null);
+
+        var window = Track(new SetSyncPointWindow(vm));
+
+        Assert.False(vm.IsVideoVisible);
+        Assert.False(vm.VideoPlayerControl.IsVisible);
+        Assert.False(vm.AudioVisualizer.IsVisible);
+        Assert.False(ButtonWithText(window, Se.Language.Sync.PlayTwoSecondsAndBack).IsVisible);
+
+        // Everything that still means something without a video stays.
+        Assert.True(ButtonWithText(window, Se.Language.Sync.GoToSubPos).IsVisible);
+        Assert.True(ButtonWithText(window, Se.Language.General.OpenVideoFile).IsVisible);
+    }
+
+    [AvaloniaFact]
+    public void SetSyncPointWindow_WithVideo_KeepsThePlayerAndPlaybackButton()
+    {
+        var vm = new SetSyncPointViewModel(new WindowService(new NullServiceProvider()), new FileHelper());
+        var lines = TwoLines();
+
+        // A path is enough for the layout decision; nothing opens it here (the open is posted to
+        // the dispatcher and this test never pumps it).
+        vm.Initialize(lines, lines[0], videoFileName: "/does/not/exist.mp4", subtitleFileName: null, audioVisualizer: null);
+
+        var window = Track(new SetSyncPointWindow(vm));
+
+        Assert.True(vm.IsVideoVisible);
+        Assert.True(vm.VideoPlayerControl.IsVisible);
+        Assert.True(ButtonWithText(window, Se.Language.Sync.PlayTwoSecondsAndBack).IsVisible);
     }
 
     [AvaloniaFact]
