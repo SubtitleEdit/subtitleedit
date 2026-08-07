@@ -27,6 +27,7 @@ using Nikse.SubtitleEdit.Features.Files.FormatProperties.ItunesTimedTextProperti
 using Nikse.SubtitleEdit.Features.Files.FormatProperties.TimedText10Properties;
 using Nikse.SubtitleEdit.Features.Files.FormatProperties.TimedTextImsc11Properties;
 using Nikse.SubtitleEdit.Features.Files.FormatProperties.WebVttProperties;
+using Nikse.SubtitleEdit.Features.WebVtt;
 using Nikse.SubtitleEdit.Features.Files.ImportImages;
 using Nikse.SubtitleEdit.Features.Files.ImportCsvXlsxCustomColumns;
 using Nikse.SubtitleEdit.Features.Files.ImportPlainText;
@@ -540,6 +541,8 @@ public static class DependencyInjectionExtensions
         collection.AddTransient<WaveformThemesViewModel>();
         collection.AddTransient<WaveformToolbarItemsViewModel>();
         collection.AddTransient<WebVttPropertiesViewModel>();
+        collection.AddTransient<WebVttStylesViewModel>();
+        collection.AddTransient<WebVttStylePickerViewModel>();
         collection.AddTransient<SpeechToTextAdvancedViewModel>();
         collection.AddTransient<SpeechToTextPostProcessingViewModel>();
         collection.AddTransient<WordListsViewModel>();

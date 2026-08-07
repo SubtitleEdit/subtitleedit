@@ -148,6 +148,10 @@ namespace Nikse.SubtitleEdit.Core.Common
             {
                 webVttStyle.FontName = value;
             }
+            else if (name == "font-size")
+            {
+                SetFontSize(webVttStyle, value);
+            }
             else if (name == "font-style")
             {
                 SetFontStyle(webVttStyle, value);
@@ -255,6 +259,26 @@ namespace Nikse.SubtitleEdit.Core.Common
             }
         }
 
+        /// <summary>
+        /// Reads a <c>font-size</c> declaration. Only absolute pixel sizes are taken - a relative
+        /// size (em/rem/%/"larger") has no fixed pixel value, and <see cref="WebVttStyle.FontSize"/>
+        /// has nothing to express it with, so those are left unset rather than guessed at.
+        /// </summary>
+        private static void SetFontSize(WebVttStyle webVttStyle, string value)
+        {
+            var s = value.Trim();
+            if (s.EndsWith("px", StringComparison.OrdinalIgnoreCase))
+            {
+                s = s.Substring(0, s.Length - 2).Trim();
+            }
+
+            // Anything left with a unit on it ("1.5em", "120%") fails to parse and is skipped.
+            if (decimal.TryParse(s, NumberStyles.Number, CultureInfo.InvariantCulture, out var number) && number > 0)
+            {
+                webVttStyle.FontSize = number;
+            }
+        }
+
         private static void SetFontStyle(WebVttStyle webVttStyle, string value)
         {
             if (value == "italic" || value == "oblique")
@@ -295,7 +319,13 @@ namespace Nikse.SubtitleEdit.Core.Common
                 return;
             }
 
-            if (int.TryParse(arr[1].Replace("px", string.Empty), out var number))
+            // CSS lengths may be fractional ("1.5px"), and the writer round-trips whatever the
+            // user picked, so parse invariant decimals rather than integers only.
+            if (decimal.TryParse(
+                    arr[1].Replace("px", string.Empty),
+                    NumberStyles.Number,
+                    CultureInfo.InvariantCulture,
+                    out var number))
             {
                 webVttStyle.ShadowColor = color;
                 webVttStyle.ShadowWidth = number;
@@ -407,9 +437,12 @@ namespace Nikse.SubtitleEdit.Core.Common
 
             if (style.ShadowColor.HasValue && style.ShadowWidth.HasValue && style.ShadowWidth > 0)
             {
+                // "#101010 3px" - one space, no space before "px", which is what SetTextShadow
+                // reads back. A missing $ used to emit the interpolation itself here, so the
+                // shadow was written as unparsable CSS and lost on the next read.
                 var colorString = Utilities.ColorToHexWithTransparency(style.ShadowColor.Value);
-                var widthString = "{style.ShadowWidth.Value.ToString(CultureInfo.InvariantCulture)} px";
-                sb.Append($"text-shadow: {colorString} {widthString}");
+                var widthString = style.ShadowWidth.Value.ToString(CultureInfo.InvariantCulture);
+                sb.Append($"text-shadow: {colorString} {widthString}px; ");
             }
 
             return sb.ToString().TrimEnd(' ', ';');

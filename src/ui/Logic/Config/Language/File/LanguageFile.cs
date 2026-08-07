@@ -11,6 +11,7 @@ public class LanguageFile
     public LanguageManualChosenEncoding ManualChosenEncoding { get; set; } = new();
     public LanguageRestoreAutoBackup RestoreAutoBackup { get; set; } = new();
     public LanguageFilePropertiesDCinema PropertiesDCinema { get; set; } = new();
+    public LanguageWebVtt WebVtt { get; set; } = new();
     public string Compare { get; set; }
     public string PreviousDifference { get; set; }
     public string NextDifference { get; set; }
