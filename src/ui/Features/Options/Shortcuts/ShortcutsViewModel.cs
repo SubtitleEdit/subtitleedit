@@ -1159,6 +1159,80 @@ public partial class ShortcutsViewModel : ObservableObject
         UpdateVisibleShortcuts(SearchText);
     }
 
+    [RelayCommand]
+    private void ApplyPresetDefault()
+    {
+        if (MainViewModel == null)
+        {
+            return;
+        }
+
+        Se.Settings.Shortcuts.Clear();
+        Se.Settings.InitializeMainShortcuts(MainViewModel);
+        _allShortcuts = ShortcutsMain.GetAllShortcuts(MainViewModel);
+        UpdateVisibleShortcuts(SearchText);
+    }
+
+    [RelayCommand]
+    private void ApplyPresetDesktop()
+    {
+        if (MainViewModel == null)
+        {
+            return;
+        }
+
+        Se.Settings.Shortcuts.Clear();
+        Se.Settings.InitializeMainShortcuts(MainViewModel);
+        _allShortcuts = ShortcutsMain.GetAllShortcuts(MainViewModel);
+        UpdateVisibleShortcuts(SearchText);
+    }
+
+    [RelayCommand]
+    private void ApplyPresetLaptop()
+    {
+        if (MainViewModel == null)
+        {
+            return;
+        }
+
+        Se.Settings.Shortcuts.Clear();
+        Se.Settings.InitializeMainShortcuts(MainViewModel);
+        _allShortcuts = ShortcutsMain.GetAllShortcuts(MainViewModel);
+
+        // Map containing Laptop replacement keys for keys with F1-F12
+        var laptopMappings = new Dictionary<string, string[]>
+        {
+            { nameof(MainViewModel.ShowHelpCommand), ["Ctrl", "Alt", "H"] }, // F1 replacement
+            { nameof(MainViewModel.ShowSourceViewCommand), ["Ctrl", "Alt", "V"] }, // F2 replacement
+            { nameof(MainViewModel.FindNextCommand), ["Ctrl", "Alt", "F3"] }, // F3 replacement
+            { nameof(MainViewModel.FindPreviousCommand), ["Ctrl", "Alt", "Shift", "F3"] }, // F3 shift replacement
+            { nameof(MainViewModel.PlaySelectedLinesWithoutLoopCommand), ["Ctrl", "Alt", "S"] }, // F5 replacement
+            { nameof(MainViewModel.ShowSpellCheckCommand), ["Ctrl", "Alt", "E"] }, // F7 replacement
+            { nameof(MainViewModel.ListErrorsCommand), ["Ctrl", "Alt", "L"] }, // F8 replacement
+            { nameof(MainViewModel.GoToPreviousErrorCommand), ["Ctrl", "Alt", "Shift", "L"] }, // Shift F8 replacement
+            { nameof(MainViewModel.GoToNextErrorCommand), ["Ctrl", "Alt", "L"] }, // F8 replacement
+            { nameof(MainViewModel.WaveformSetStartCommand), ["Ctrl", "Alt", "BracketLeft"] }, // F11 replacement
+            { nameof(MainViewModel.WaveformSetEndCommand), ["Ctrl", "Alt", "BracketRight"] } // F12 replacement
+        };
+
+        foreach (var shortcut in _allShortcuts)
+        {
+            if (shortcut == null) continue;
+
+            if (laptopMappings.TryGetValue(shortcut.Name, out var keys))
+            {
+                shortcut.Keys = new List<string>(keys);
+            }
+            else if (shortcut.Keys.Any(k => k.StartsWith('F') && k.Length > 1 && int.TryParse(k.AsSpan(1), out _)))
+            {
+                // Clear any other F-key shortcuts
+                shortcut.Keys = new List<string>();
+            }
+        }
+
+        UpdateVisibleShortcuts(SearchText);
+    }
+
     private bool Search(string searchText, ShortCut p)
     {
         var filterOk = SelectedFilter == Se.Language.General.All ||

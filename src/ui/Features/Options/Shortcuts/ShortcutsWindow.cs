@@ -456,8 +456,18 @@ public class ShortcutsWindow : Window
         var buttonImportSe4 = UiUtil.MakeButton(language.ImportFromSe4, vm.ImportFromSe4Command);
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CommandCancelCommand);
 
+        var buttonPresets = UiUtil.MakeButton("Presets", null);
+        var presetsFlyout = new MenuFlyout();
+        var itemDefault = new MenuItem { Header = "Default", Command = vm.ApplyPresetDefaultCommand };
+        var itemDesktop = new MenuItem { Header = "Desktop (with F1-F12)", Command = vm.ApplyPresetDesktopCommand };
+        var itemLaptop = new MenuItem { Header = "Laptop (no F1-F12)", Command = vm.ApplyPresetLaptopCommand };
+        presetsFlyout.Items.Add(itemDefault);
+        presetsFlyout.Items.Add(itemDesktop);
+        presetsFlyout.Items.Add(itemLaptop);
+        buttonPresets.Flyout = presetsFlyout;
+
         // Utility actions on the left, dialog actions on the right.
-        var buttonBarLeft = UiUtil.MakeControlBarLeft(buttonImportSe4, buttonResetAllShortcuts);
+        var buttonBarLeft = UiUtil.MakeControlBarLeft(buttonImportSe4, buttonPresets, buttonResetAllShortcuts);
         buttonBarLeft.Margin = new Thickness(10, 20, 10, 10);
         buttonBarLeft.VerticalAlignment = VerticalAlignment.Bottom;
         var buttonBarRight = UiUtil.MakeButtonBar(buttonOk, buttonCancel);
