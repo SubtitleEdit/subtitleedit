@@ -1,7 +1,7 @@
 ﻿{
   "title": "Subtitle Edit",
-  "version": "v5.2.0-beta3",
-  "translatedBy": "Adam Malich - 4.08.2026",
+  "version": "v5.2.0-beta6",
+  "translatedBy": "Adam Malich - 7.08.2026",
   "cultureName": "pl-PL",
   "general": {
     "abort": "Przerwij",
@@ -25,7 +25,7 @@
     "alphaAdjustment": "Dostosowanie alfa",
     "alphaThreshold": "Próg alfa",
     "apiKey": "Klucz API",
-    "formality": "Poziom formalności",
+    "formality": "Stopień formalności",
     "apiSecret": "Klucz ukryty",
     "appearance": "Wygląd",
     "append": "Dołącz",
@@ -77,7 +77,7 @@
     "cancelled": "Anulowane",
     "caseInsensitive": "Nie uwzględniaj wielkości liter",
     "caseSensitive": "Uwzględniaj wielkość liter",
-    "casing": "Budowa",
+    "casing": "Wielkie/małe litery",
     "category": "Kategoria",
     "center": "Wyśrodkuj",
     "centerHorizontally": "Wyśrodkuj w poziomie",
@@ -897,6 +897,7 @@
       "assaAttachmentsHint": "Załączniki Advanced Sub Station Alpha",
       "assaDrawHint": "Rysowanie kształtów Advanced Sub Station Alpha",
       "ssaStylesHint": "Style Sub Station Alpha",
+      "webVttStylesHint": "Menedżer stylów WebVTT",
       "ssaPropertiesHint": "Właściwości Sub Station Alpha",
       "ssaAttachmentsHint": "Załączniki Sub Station Alpha"
     },
@@ -1277,6 +1278,19 @@
       "zPositionHelp": "Liczby dodatnie oddalają tekst, liczby ujemne przybliżają go, jeśli pozycja z wynosi zero, to jest to 2D",
       "export": "Eksportuj..."
     },
+    "webVtt": {
+      "setStylesForSelectedLinesTitle": "Ustaw style WebVTT dla wybranych linii",
+      "voices": "Głosy",
+      "newVoiceDotDotDot": "Nowy głos...",
+      "removeVoices": "Usuń głosy",
+      "voiceName": "Nazwa głosu",
+      "browserPreview": "Podgląd przeglądarki",
+      "importStylesTitle": "Importuj style WebVTT",
+      "exportStylesTitle": "Eksportuj style WebVTT",
+      "openStyleFileTitle": "Otwórz plik WebVTT, aby zaimportować style z",
+      "noStylesToImport": "Nie znaleziono stylów w wybranym pliku",
+      "duplicateStyleNamesX": "Zduplikowane nazwy stylów: {0}"
+    },
     "compare": "Porównaj",
     "previousDifference": "Poprzednia różnica",
     "nextDifference": "Następna różnica",
@@ -1383,6 +1397,21 @@
     "restoreSelected": "Przywróć zaznaczone",
     "noSubtitleSelected": "Nie wybrano napisów",
     "pleaseSelectExactlyOneSubtitle": "Proszę wybrać tylko jeden napis."
+  },
+  "sourceView": {
+    "discardChangesTitle": "Odrzucić zmiany?",
+    "discardChanges": "Tekst źródłowy został zmieniony.\r\nOdrzucić zmiany?",
+    "xLinesYSubtitles": "{0} linii, {1} napisów",
+    "xLinesYSubtitlesZErrors": "{0} linii, {1} napisów, {2} błędów",
+    "couldNotParseAsX": "Nie można przeanalizować jako {0}",
+    "selectedXCharactersYLines": "Wybrano: {0} znaków w {1} liniach",
+    "replacedXOccurrences": "Zastąpiono {0} wystąpień",
+    "invalidRegularExpression": "Nieprawidłowe wyrażenie regularne",
+    "moveLineUp": "Przesuń linię w górę",
+    "moveLineDown": "Przesuń linię w dół",
+    "duplicateLine": "Duplikat linii",
+    "deleteLine": "Usuń linię",
+    "closeSearch": "Zamknij wyszukiwanie"
   },
   "tools": {
     "aiReview": {
@@ -1557,6 +1586,8 @@
       "fixMinDurationMs": "Popraw minimalny czas trwania (ms)",
       "doNotGoPastShotChange": "Nie wykraczaj poza zmianę ujęcia",
       "fixMaxDurationMs": "Popraw maksymalny czas trwania (ms)",
+      "minimumDurationMilliseconds": "Minimalny czas trwania (milisekundy):",
+      "maximumDurationMilliseconds": "Maksymalny czas trwania (milisekundy):",
       "maxDurationShouldBeHigherThanMinDuration": "Maksymalny czas trwania powinien być dłuższy niż minimalny czas trwania",
       "changedDurationFromXToYCommentZ": "Zmieniono czas trwania z {0} na {1} {2}",
       "onlyPartialFixed": "(tylko częściowa poprawa)",
@@ -1591,7 +1622,11 @@
       "noReasonNote": "doprecyzowane według reguł profilu",
       "previousChange": "Poprzednia zmiana",
       "nextChange": "Następna zmiana",
-      "editProfile": "Edytuj profil..."
+      "editProfile": "Edytuj profil...",
+      "batchSnapToShotChanges": "Sygnały wskazujące na zmianę ujęcia (jeśli są dostępne)",
+      "batchFrameRateFromVideo": "Użyj liczby klatek na sekundę z pliku wideo o tej samej nazwie co plik napisów",
+      "batchFrameRateFixed": "Użyj stałej liczby klatek na sekundę",
+      "batchInfo": "Zmiany ujęć są odczytywane z pliku wideo o tej samej nazwie co plik z napisami, o ile taki plik zostanie znaleziony."
     },
     "beautifyTimeCodesProfile": {
       "title": "Edycja profilu ulepszania kodów czasowych",
@@ -2011,7 +2046,9 @@
       "changeUnderlineToColor": "Zmień podkreślenie na kolor",
       "engineSettings": "Ustawienia silnika zamiany mowy na tekst",
       "engineSettingsSubtitle": "Silnik zamiany mowy na tekst",
-      "backendAndUpdateStatus": "Stan zaplecza i aktualizacji"
+      "backendAndUpdateStatus": "Stan zaplecza i aktualizacji",
+      "addLanguageCodeToFileName": "Dodaj kod języka do nazwy pliku",
+      "addLanguageCodeToFileNameHint": "Nazywaj wygenerowane napisy np. \"video.pl.srt\" zamiast \"video.srt\""
     },
     "textToSpeech": {
       "title": "Zamiana tekstu na mowę",
@@ -2431,6 +2468,8 @@
       "autoBreakDashEarly": "Przełam automatycznie po wcześniejszym myślniku (dialogi)",
       "autoBreakUsePixelWidth": "Przełam automatycznie wg szerokości w pikselach",
       "autoBreakPreferBottomHeavy": "Przełam automatycznie preferując szersze ułożenie na dole",
+      "autoBreakPreferBottomPercent": "Automatyczne łamanie w oparciu o procentowy udział dolnej części",
+      "useDoNotBreakAfterList": "Użyj listy NotBreakAfter",
       "newEmptyDefaultMs": "Domyślny czas trwania nowego napisu (ms)",
       "timeCodeUpDownStepMs": "Przyrost czasu w górę/w dół (ms)",
       "promptBeforeDelete": "Pytaj przed usunięciem",
@@ -2521,6 +2560,8 @@
       "spellCheckEnglishTreatInApostropheAsIng": "Sprawdzanie pisowni: słowa kończące się na 'in' traktuj jako 'ing' (tylko język angielski)",
       "goToLineNumberSetsVideoPosition": "Opcja \"Przejdź do numeru linii\" ustawia również pozycję wideo",
       "adjustAllTimesRememberLineSelectionChoice": "Dostosuj wszystkie czasy, zapamiętaj wybór linii",
+      "mergeKeepEndTime": "Połącz linie: zachowaj czas zakończenia (zezwól na nakładanie się na następny napis)",
+      "mergeKeepEndTimeOnlyAssa": "Połącz linie: zachowaj czas zakończenia tylko dla \"Advanced Sub Station Alpha\"",
       "filesAndLogs": "Pliki i dzienniki",
       "showErrorLogFile": "Pokaż plik dziennika błędów",
       "showToolsLogFile": "Pokaż plik dziennika narzędzi",
@@ -2592,6 +2633,10 @@
       "gridGoToSubtitleAndPlay": "Przejdź do napisu i odtwórz",
       "gridGoToSubtitleAndPauseAndFocusTextBox": "Przejdź do napisów, wstrzymaj odtwarzanie i zaznacz pole tekstowe",
       "gridGoToSubtitleAndPlayAndFocusTextBox": "Przejdź do napisów, odtwórz i zaznacz pole tekstowe",
+      "subtitleListActionVideoGoToPositionAndPlayCurrentAndPause": "Przejdź do pozycji wideo, odtwórz bieżący i wstrzymaj",
+      "subtitleListActionVideoGoToPositionMinus1SecAndPause": "Przejdź do pozycji wideo - 1 s i wstrzymaj",
+      "subtitleListActionVideoGoToPositionMinusHalfSecAndPause": "Przejdź do pozycji wideo - 0.5 s i wstrzymaj",
+      "subtitleListActionVideoGoToPositionMinus1SecAndPlay": "Przejdź do pozycji wideo - 1 s i odtwórz",
       "subtitleGridFormattingNone": "Brak formatowania",
       "subtitleGridFormattingShowFormatting": "Pokaż formatowanie",
       "subtitleGridFormattingShowTags": "Pokaż tagi",
@@ -3057,7 +3102,9 @@
     "llamaCppReturnedNoText": "llama.cpp nie zwrócił tekstu — sprawdź serwer i model",
     "llamaCppDownloadEngineAndModelPrompt": "llama.cpp wymaga pobrania silnika llama-server i wybranego modelu OCR. Pobrać teraz?",
     "llamaCppDownloadEnginePrompt": "llama.cpp wymaga pobrania silnika llama-server. Pobrać teraz?",
-    "llamaCppDownloadModelPrompt": "llama.cpp wymaga pobrania wybranego modelu OCR. Czy pobrać teraz?"
+    "llamaCppDownloadModelPrompt": "llama.cpp wymaga pobrania wybranego modelu OCR. Czy pobrać teraz?",
+    "crispEmbedNotDownloaded": "Silnik/model CrispEmbed nie został pobrany — pobierz za pomocą ustawień konwersji wsadowej",
+    "crispEmbedReturnedNoText": "CrispEmbed nie zwrócił tekstu — sprawdź model"
   },
   "assa": {
     "assaDraw": "Rysuj ASSA",
