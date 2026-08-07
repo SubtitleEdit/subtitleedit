@@ -197,6 +197,8 @@ public partial class SpeechToTextViewModel : ObservableObject
 
     private readonly IWindowService _windowService;
     private readonly IFileHelper _fileHelper;
+    private readonly IFolderHelper _folderHelper;
+    private string? _batchOutputFolder;
     private bool _isUpdatingWhisperCppBackend;
     private bool _isUpdatingCrispAsrBackend;
     private static bool _crispAsrUpdatePromptShown;
@@ -211,10 +213,11 @@ public partial class SpeechToTextViewModel : ObservableObject
     /// </summary>
     public Action? RefreshEngineCombo { get; set; }
 
-    public SpeechToTextViewModel(IWindowService windowService, IFileHelper fileHelper)
+    public SpeechToTextViewModel(IWindowService windowService, IFileHelper fileHelper, IFolderHelper folderHelper)
     {
         _windowService = windowService;
         _fileHelper = fileHelper;
+        _folderHelper = folderHelper;
 
         Engines = [new WhisperCppEngine()];
         if (OperatingSystem.IsWindows())
@@ -1748,7 +1751,7 @@ public partial class SpeechToTextViewModel : ObservableObject
         {
             currentItem.Status = Se.Language.General.Converted;
             var languageCode = AddLanguageCodeToFileName ? GetFileNameLanguageCode(transcribedSubtitle) : null;
-            var subtitleFileName = GetSubtitleFileName(currentItem.InputVideoFileName, languageCode);
+            var subtitleFileName = GetSubtitleFileName(currentItem.InputVideoFileName, languageCode, _batchOutputFolder);
             var format = new SubRip();
             var text = format.ToText(transcribedSubtitle, string.Empty);
             File.WriteAllText(subtitleFileName, text);
@@ -1840,9 +1843,13 @@ public partial class SpeechToTextViewModel : ObservableObject
         });
     }
 
-    public static string GetSubtitleFileName(string videoFileName, string? languageCode)
+    public static string GetSubtitleFileName(string videoFileName, string? languageCode, string? outputFolder = null)
     {
-        var path = Path.GetDirectoryName(videoFileName);
+        // For document portal video paths the output goes to the folder picked in
+        // Transcribe() - only the granted video file name itself can exist in such a folder.
+        var path = !string.IsNullOrEmpty(outputFolder) && DocumentPortal.IsPortalPath(videoFileName)
+            ? outputFolder
+            : Path.GetDirectoryName(videoFileName);
         var fileName = Path.GetFileNameWithoutExtension(videoFileName);
         // "video.en.srt" style - the language token must stay right before the
         // extension for media players to pick it up, so the collision counter
@@ -3062,6 +3069,21 @@ public partial class SpeechToTextViewModel : ObservableObject
         if (IsBatchMode && BatchItems.Count > 0)
         {
             _videoFileName = BatchItems[0].InputVideoFileName;
+
+            if (string.IsNullOrEmpty(_batchOutputFolder) &&
+                BatchItems.Any(b => DocumentPortal.IsPortalPath(b.InputVideoFileName)))
+            {
+                // Videos opened through the Flatpak document portal live in a single-file
+                // grant where a sibling .srt can never materialize as a real file (issue
+                // #13308), so ask for a real output folder before transcribing.
+                var folder = await _folderHelper.PickFolderAsync(Window!, Se.Language.General.PickOutputFolder);
+                if (string.IsNullOrEmpty(folder))
+                {
+                    return;
+                }
+
+                _batchOutputFolder = folder;
+            }
         }
 
         if (string.IsNullOrEmpty(_videoFileName))
