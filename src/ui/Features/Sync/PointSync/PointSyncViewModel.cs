@@ -33,6 +33,12 @@ public partial class PointSyncViewModel : ObservableObject
     public bool OkPressed { get; private set; }
     public string WindowTitle { get; private set; }
 
+    /// <summary>
+    /// The video in use when the window closed - the caller adopts it, so a video opened from
+    /// "Set sync point" also reaches the main window (issue #13341).
+    /// </summary>
+    public string VideoFileName => _videoFileName;
+
     private readonly IFileHelper _fileHelper;
     private readonly IWindowService _windowService;
 
@@ -89,6 +95,13 @@ public partial class PointSyncViewModel : ObservableObject
         {
             vm.Initialize(Subtitles.ToList(), SelectedSubtitle, _videoFileName, FileName, _audioVisualizer);
         });
+
+        // Keep a video opened (or found) in there, so the next sync point starts with it loaded -
+        // also when the dialog was cancelled.
+        if (!string.IsNullOrEmpty(result.VideoFileName))
+        {
+            _videoFileName = result.VideoFileName;
+        }
 
         if (!result.OkPressed)
         {

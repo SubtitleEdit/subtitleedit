@@ -26,12 +26,20 @@ public class SetSyncPointWindow : Window
         DataContext = vm;
 
         var labelVideoInfo = UiUtil.MakeLabel(string.Empty).WithBindText(vm, nameof(vm.VideoInfo));
+
+        // Entering point sync without a video used to be a dead end - the sync point can be typed,
+        // but there was no way to load a video from here (issue #13341).
+        var buttonOpenVideo = UiUtil.MakeButton(Se.Language.General.OpenVideoFile, vm.OpenVideoFileCommand);
+
         var panelVideo = new StackPanel
         {
             Orientation = Orientation.Horizontal,
+            Spacing = 10,
+            VerticalAlignment = VerticalAlignment.Center,
             Children =
             {
-                labelVideoInfo
+                buttonOpenVideo,
+                labelVideoInfo,
             }
         };
 
