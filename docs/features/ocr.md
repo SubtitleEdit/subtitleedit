@@ -148,6 +148,25 @@ When the OCR engine encounters uncertain characters, you can:
 - Type the correct text
 - Add to the OCR fix dictionary for automatic correction
 
+### What is remembered
+
+Some of the choices in the unknown-word prompt are saved to disk and reused on later
+OCR runs; others only last as long as the OCR window is open.
+
+| Choice | Remembered? | Stored in |
+|---|---|---|
+| **Change all** | Yes | `{language}_OCRFixReplaceList.xml` |
+| **Add to names list** | Yes | `{language}_names.xml` |
+| **Add to user dictionary** | Yes | `{language}_user.xml` |
+| **Skip once** | No | — |
+| **Skip all** | No — current OCR session only | — |
+
+**"Skip all" is deliberately temporary.** It silences a word for the rest of the current
+OCR session and is forgotten when the OCR window closes, so a mis-click never has lasting
+consequences. If you want a word to be accepted permanently, use **Add to user
+dictionary** (or **Add to names list** for proper nouns) instead, and use **Change all**
+for a correction that should be applied automatically from now on.
+
 ## OCR Fix Replacement Lists
 
 Subtitle Edit uses language-specific XML files to automatically correct common OCR errors. These files are named `{language}_OCRFixReplaceList.xml` (e.g., `eng_OCRFixReplaceList.xml` for English) and are located in the `Dictionaries` folder.
