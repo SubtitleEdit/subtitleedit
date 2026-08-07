@@ -28,7 +28,7 @@ public class VideoPlayerControlTeardownTests
 
         public bool CanLoad() => true;
 
-        public Task LoadFile(string fileName)
+        public Task LoadFile(string fileName, double startPositionSeconds = 0)
         {
             FileName = fileName;
             return Task.CompletedTask;

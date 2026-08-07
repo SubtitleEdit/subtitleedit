@@ -16887,20 +16887,25 @@ public partial class MainViewModel :
 
             if (Se.Settings.Video.AutoOpen && skipLoadVideo == false)
             {
+                // Open the video at the restored line right away. SeekVideoToSelectedLineAsync
+                // below still runs as a safety net, but on its own it means the video comes up at
+                // 0:00, stays there for a few hundred milliseconds and then jumps (issue #13329).
+                var videoStartPositionSeconds = GetRestoredVideoStartPositionSeconds(selectedSubtitleIndex);
+
                 if (!string.IsNullOrEmpty(videoFileName) && File.Exists(videoFileName))
                 {
-                    await VideoOpenFile(videoFileName, desiredAudioTrackId);
+                    await VideoOpenFile(videoFileName, desiredAudioTrackId, videoStartPositionSeconds);
                 }
                 else if (TryGetRecentVideoFileName(fileName, out var recentVideoFileName))
                 {
                     // Honor the media this subtitle was last opened with - e.g. an audio-only
                     // project keeps its .wav instead of grabbing a later burned-in .mp4 of the
                     // same name that FindVideoFileName would otherwise prefer (issue #11612).
-                    await VideoOpenFile(recentVideoFileName, desiredAudioTrackId);
+                    await VideoOpenFile(recentVideoFileName, desiredAudioTrackId, videoStartPositionSeconds);
                 }
                 else if (FindVideoFileName.TryFindVideoFileName(fileName, out videoFileName))
                 {
-                    await VideoOpenFile(videoFileName, desiredAudioTrackId);
+                    await VideoOpenFile(videoFileName, desiredAudioTrackId, videoStartPositionSeconds);
                 }
             }
 
@@ -16924,6 +16929,19 @@ public partial class MainViewModel :
         {
             await SeekVideoToSelectedLineAsync();
         }
+    }
+
+    // Where the video should be opened when a session is restored: the start time of the line the
+    // user was last on. Mirrors the "index 0 is not a restored position" rule in
+    // SeekVideoToSelectedLineAsync, so a freshly opened file still comes up at 0:00.
+    private double GetRestoredVideoStartPositionSeconds(int? selectedSubtitleIndex)
+    {
+        if (selectedSubtitleIndex is not > 0 || selectedSubtitleIndex.Value >= Subtitles.Count)
+        {
+            return 0;
+        }
+
+        return Subtitles[selectedSubtitleIndex.Value].StartTime.TotalSeconds;
     }
 
     // Seek the video to the selected line's start after (re)opening a file, like SE 4 did.
@@ -19305,7 +19323,10 @@ public partial class MainViewModel :
                && (uriResult.Scheme == Uri.UriSchemeHttp || uriResult.Scheme == Uri.UriSchemeHttps);
     }
 
-    private async Task VideoOpenFile(string videoFileName, int desiredAudioTrackId = -1) // OpenVideoFile
+    // startPositionSeconds: where the video should already be when it comes up, for callers that
+    // restore a session. Handing it to the player beats seeking afterwards - the video then never
+    // shows 0:00 first and never visibly jumps (issue #13329).
+    private async Task VideoOpenFile(string videoFileName, int desiredAudioTrackId = -1, double startPositionSeconds = 0) // OpenVideoFile
     {
         var vp = GetVideoPlayerControl();
         if (vp == null)
@@ -19315,7 +19336,7 @@ public partial class MainViewModel :
 
         _videoOpenTokenSource?.Cancel();
         _audioTrack = null;
-        await vp.Open(videoFileName);
+        await vp.Open(videoFileName, startPositionSeconds);
         _videoFileName = videoFileName;
         RefreshSubtitlePreview();
 
