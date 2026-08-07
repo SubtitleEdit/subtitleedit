@@ -1,7 +1,7 @@
 {
   "title": "Subtitle Edit",
-  "version": "v5.2.0-beta4",
-  "translatedBy": "Need74 . ( V5.2.0, 03.08.2026)",
+  "version": "v5.2.0-beta6",
+  "translatedBy": "Need74 . (03.08.2026)",
   "cultureName": "fr-FR",
   "general": {
     "abort": "Interrompre",
@@ -681,7 +681,7 @@
     "xFiles": "{0:#,###,##0} fichiers",
     "xFilesConvertedInY": "{0:#,###,##0} fichiers convertis en {1}",
     "xNoLinesUpdated": "{0} : aucune ligne mise à jour",
-    "xNotFound": "'{0}' introuvable",
+    "xNotFound": "\"{0}\" introuvable",
     "xOfYLinesUpdated": "{0} : {1} ligne(s) sur {2} mise(s) à jour",
     "xOfYLinesUpdatedAndZNeighborsAdjusted": "{0} : {1} ligne(s) sur {2} mise(s) à jour, {3} voisine(s) ajustée(s)",
     "noBookmarksFound": "Plus aucun signet trouvé",
@@ -897,6 +897,7 @@
       "assaAttachmentsHint": "Pièces jointes Advanced_Sub_Station_Alpha",
       "assaDrawHint": "Forme de dessins Advanced_Sub_Station_Alpha",
       "ssaStylesHint": "Styles Sub_Station_Alpha",
+      "webVttStylesHint": "Gestionnaire de styles WebVTT",
       "ssaPropertiesHint": "Propriétés Sub_Station_Alpha",
       "ssaAttachmentsHint": "Pièces jointes Sub_Station_Alpha"
     },
@@ -1277,6 +1278,21 @@
       "zPositionHelp": "Les nombres positifs éloignent le texte, les nombres négatifs le rapprochent. Si la position d'axe z est nulle, il s'agit d'un texte en 2D.",
       "export": "Exporter…"
     },
+    "webVtt": {
+      "setStylesForSelectedLinesTitle": "Définir les styles WebVTT pour les lignes sélectionnées",
+      "voice": "Voix",
+      "showVoiceColumn": "Afficher la colonne \"Voix\"",
+      "voices": "Voix",
+      "newVoiceDotDotDot": "Nouvelle voix...",
+      "removeVoices": "Supprimer les voix",
+      "voiceName": "Nom de la voix",
+      "browserPreview": "Aperçu dans le navigateur",
+      "importStylesTitle": "Importer des styles WebVTT",
+      "exportStylesTitle": "Exporter des styles WebVTT",
+      "openStyleFileTitle": "Ouvrir le fichier WebVTT source des styles",
+      "noStylesToImport": "Aucun style trouvé dans le fichier sélectionné",
+      "duplicateStyleNamesX": "Noms de style en double : {0}"
+    },
     "compare": "Comparer",
     "previousDifference": "Différence précédente",
     "nextDifference": "Différence suivante",
@@ -1383,6 +1399,21 @@
     "restoreSelected": "Restaurer la sélection",
     "noSubtitleSelected": "Aucun sous-titre sélectionné",
     "pleaseSelectExactlyOneSubtitle": "Veuillez sélectionner exactement un sous-titre."
+  },
+  "sourceView": {
+    "discardChangesTitle": "Abandonner les modifications ?",
+    "discardChanges": "Le texte source a été modifié.\r\nAbandonner les modifications ?",
+    "xLinesYSubtitles": "{0} lignes, {1} sous-titres",
+    "xLinesYSubtitlesZErrors": "{0} lignes, {1} sous-titres, {2} erreur(s)",
+    "couldNotParseAsX": "Impossible d'analyser en tant que {0}",
+    "selectedXCharactersYLines": "Sélection : {0} caractères sur {1} ligne(s)",
+    "replacedXOccurrences": "{0} occurrence(s) remplacée(s)",
+    "invalidRegularExpression": "Expression régulière invalide",
+    "moveLineUp": "Déplacer la ligne vers le haut",
+    "moveLineDown": "Déplacer la ligne vers le bas",
+    "duplicateLine": "Dupliquer la ligne",
+    "deleteLine": "Supprimer la ligne",
+    "closeSearch": "Fermer la recherche"
   },
   "tools": {
     "aiReview": {
@@ -1557,6 +1588,8 @@
       "fixMinDurationMs": "Fixer la durée minimale (ms)",
       "doNotGoPastShotChange": "Ne pas dépasser le changement de plan",
       "fixMaxDurationMs": "Fixer la durée maximale (ms)",
+      "minimumDurationMilliseconds": "Durée minimale (ms) :",
+      "maximumDurationMilliseconds": "Durée maximale (ms) :",
       "maxDurationShouldBeHigherThanMinDuration": "La durée maximale doit être supérieure à la durée minimale",
       "changedDurationFromXToYCommentZ": "Durée modifiée de {0} à {1} {2}",
       "onlyPartialFixed": "(correction partielle uniquement)",
@@ -1591,7 +1624,11 @@
       "noReasonNote": "affiné par les règles de profil",
       "previousChange": "Modification précédente",
       "nextChange": "Modification suivante",
-      "editProfile": "Éditer le profil…"
+      "editProfile": "Éditer le profil…",
+      "batchSnapToShotChanges": "Aligner les sous-titres sur les changements de plan (si disponibles)",
+      "batchFrameRateFromVideo": "Utiliser la cadence du fichier vidéo portant le même nom que le fichier de sous-titres",
+      "batchFrameRateFixed": "Utiliser une cadence fixe",
+      "batchInfo": "Les changements de plan sont lus depuis un fichier vidéo portant le même nom que le fichier de sous-titres, s'il en existe un."
     },
     "beautifyTimeCodesProfile": {
       "title": "Éditer le profil d'embellissement de l'horodatage",
@@ -2011,7 +2048,9 @@
       "changeUnderlineToColor": "Changer la couleur du soulignement",
       "engineSettings": "Paramètres du moteur parole vers texte",
       "engineSettingsSubtitle": "Moteur parole vers texte",
-      "backendAndUpdateStatus": "État du moteur (backend) et des mises à jour"
+      "backendAndUpdateStatus": "État du moteur (backend) et des mises à jour",
+      "addLanguageCodeToFileName": "Ajouter le code de langue au nom du fichier",
+      "addLanguageCodeToFileNameHint": "Nommer les sous-titres générés \"video.en.srt\" au lieu de \"video.srt\""
     },
     "textToSpeech": {
       "title": "Texte vers parole ('TTS')",
@@ -2431,6 +2470,8 @@
       "autoBreakDashEarly": "Césure automatique tôt pour le tiret (dialogues)",
       "autoBreakUsePixelWidth": "Césure automatique selon la largeur en pixels",
       "autoBreakPreferBottomHeavy": "Césure automatique préférer le bas lourd",
+      "autoBreakPreferBottomPercent": "Césure auto. privilégiant la ligne du bas (pourcentage)",
+      "useDoNotBreakAfterList": "Utiliser la liste des éléments à ne pas couper après",
       "newEmptyDefaultMs": "Durée par défaut des nouveaux sous-titres (ms)",
       "timeCodeUpDownStepMs": "Incrément de modification de l'horodatage (ms)",
       "promptBeforeDelete": "Demander confirmation avant suppression",
@@ -2521,6 +2562,8 @@
       "spellCheckEnglishTreatInApostropheAsIng": "Correction orthographique : Traiter les mots se terminant par \"in\" comme \"ing\" (anglais uniquement)",
       "goToLineNumberSetsVideoPosition": "La fonction \"Aller à la ligne\" définit également la position vidéo",
       "adjustAllTimesRememberLineSelectionChoice": "Ajuster tous les horodatages en mémorisant le choix de sélection de ligne",
+      "mergeKeepEndTime": "Fusionner les lignes : conserver l'heure de fin (autoriser le chevauchement avec le sous-titre suivant)",
+      "mergeKeepEndTimeOnlyAssa": "Fusionner les lignes : conserver l'heure de fin uniquement pour \"Advanced Sub Station Alpha\"",
       "filesAndLogs": "Fichiers et journaux",
       "showErrorLogFile": "Afficher le fichier journal des erreurs",
       "showToolsLogFile": "Afficher le fichier journal des outils",
@@ -2592,6 +2635,10 @@
       "gridGoToSubtitleAndPlay": "Aller au sous-titre et lire",
       "gridGoToSubtitleAndPauseAndFocusTextBox": "Aller au sous-titre, mettre en pause et sélectionner la zone de texte",
       "gridGoToSubtitleAndPlayAndFocusTextBox": "Aller au sous-titre, lire et placer le curseur dans la zone de texte",
+      "subtitleListActionVideoGoToPositionAndPlayCurrentAndPause": "Aller à la position vidéo, lire le segment actuel et mettre en pause",
+      "subtitleListActionVideoGoToPositionMinus1SecAndPause": "Aller à la position vidéo - 1 s et mettre en pause",
+      "subtitleListActionVideoGoToPositionMinusHalfSecAndPause": "Aller à la position vidéo - 0,5 s et mettre en pause",
+      "subtitleListActionVideoGoToPositionMinus1SecAndPlay": "Aller à la position vidéo - 1 s et lire",
       "subtitleGridFormattingNone": "Aucune mise en forme",
       "subtitleGridFormattingShowFormatting": "Afficher la mise en forme",
       "subtitleGridFormattingShowTags": "Afficher les balises",
@@ -2702,7 +2749,7 @@
       "togglePlayPause": "Lecture/pause",
       "toggleLockTimeCodes": "Verrouiller/déverrouiller les horodatages",
       "duplicateSelectedLines": "Dupliquer les lignes sélectionnées",
-      "sourceView": "Vue source",
+      "sourceView": "Afficher l'icône « Vue source »",
       "addOrEditBookmark": "Ajouter ou modifier un signet",
       "toggleBookmark": "Afficher/masquer le signet (lignes sélectionnées, sans texte)",
       "goToNextBookmark": "Aller au signet suivant",
@@ -3057,7 +3104,9 @@
     "llamaCppReturnedNoText": "llama.cpp n'a renvoyé aucun texte - vérifiez le serveur et le modèle",
     "llamaCppDownloadEngineAndModelPrompt": "llama.cpp nécessite le téléchargement du moteur llama-server et du modèle OCR sélectionné. Télécharger maintenant ?",
     "llamaCppDownloadEnginePrompt": "llama.cpp nécessite le téléchargement du moteur llama-server. Télécharger maintenant ?",
-    "llamaCppDownloadModelPrompt": "llama.cpp nécessite le téléchargement du modèle OCR sélectionné. Télécharger maintenant ?"
+    "llamaCppDownloadModelPrompt": "llama.cpp nécessite le téléchargement du modèle OCR sélectionné. Télécharger maintenant ?",
+    "crispEmbedNotDownloaded": "Moteur/modèle CrispEmbed non téléchargé - télécharger via les paramètres de conversion par lots",
+    "crispEmbedReturnedNoText": "CrispEmbed n'a renvoyé aucun texte - vérifier le modèle"
   },
   "assa": {
     "assaDraw": "ASSA Draw",
