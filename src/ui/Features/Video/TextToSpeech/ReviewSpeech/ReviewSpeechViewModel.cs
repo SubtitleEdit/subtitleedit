@@ -1527,6 +1527,8 @@ public partial class ReviewSpeechViewModel : ObservableObject
     {
         MossTtsCrispAsr => Languages.FirstOrDefault(p => p.Name == Se.Settings.Video.TextToSpeech.MossTtsCrispAsrLanguage)
                            ?? Languages.FirstOrDefault(),
+        OmniVoiceCrispAsr => Languages.FirstOrDefault(p => p.Name == Se.Settings.Video.TextToSpeech.OmniVoiceCrispAsrLanguage)
+                             ?? Languages.FirstOrDefault(),
         CosyVoice3CrispAsr => Languages.FirstOrDefault(p => p.Name == Se.Settings.Video.TextToSpeech.CosyVoice3CrispAsrLanguage)
                               ?? Languages.FirstOrDefault(),
         Qwen3TtsCrispAsr => Languages.FirstOrDefault(p => p.Name == Se.Settings.Video.TextToSpeech.Qwen3TtsCrispAsrLanguage)
