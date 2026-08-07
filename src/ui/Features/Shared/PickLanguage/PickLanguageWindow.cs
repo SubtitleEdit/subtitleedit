@@ -13,7 +13,7 @@ public class PickLanguageWindow : Window
     public PickLanguageWindow(PickLanguageViewModel vm)
     {
         UiUtil.InitializeWindow(this, GetType().Name);
-        Title = Se.Language.Options.Settings.FavoriteLanguages;
+        Title = vm.Title ?? Se.Language.Options.Settings.FavoriteLanguages;
         CanResize = true;
         Width = 500;
         Height = 600;

@@ -654,7 +654,20 @@ public class SettingsPage : UserControl
                 nud[!Control.IsEnabledProperty] = new Binding(nameof(_vm.AutoBreakUsePixelWidth)) { Source = _vm };
                 return nud;
             }),
-            MakeCheckboxSetting(Se.Language.Options.Settings.UseDoNotBreakAfterList, nameof(_vm.UseNoLineBreakAfter)),
+            new SettingsItem(Se.Language.Options.Settings.UseDoNotBreakAfterList, () => new StackPanel
+            {
+                Orientation = Orientation.Horizontal,
+                Spacing = 10,
+                Children =
+                {
+                    new CheckBox
+                    {
+                        VerticalAlignment = VerticalAlignment.Center,
+                        [!ToggleButton.IsCheckedProperty] = new Binding(nameof(_vm.UseNoLineBreakAfter)) { Source = _vm, Mode = BindingMode.TwoWay },
+                    },
+                    UiUtil.MakeButton(Se.Language.General.Edit, _vm.EditDoNotBreakAfterListCommand),
+                }
+            }),
             new SettingsItem(Se.Language.Options.Settings.SplitOddLinesAction, () => new ComboBox
             {
                 MinWidth = 200,
