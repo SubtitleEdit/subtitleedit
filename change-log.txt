@@ -3,6 +3,32 @@ Subtitle Edit Changelog
 
 -----------------------------------------------------------------------------------------------------
 
+v5.2.0-beta6 (7th of August 2026)
+
+* Add "do not break after" list and bottom-heavy percent to the auto-break settings - thx Davanix
+* Add an editor for the "do not break after" lists - thx Davanix
+* Add option to include the language code in batch speech to text file names - thx wjcarpenter
+* Add the CrispEmbed OCR engine to batch convert
+* Batch convert: choose the frame rate source for "Beautify time codes" (matching video file or fixed rate)
+* Make the subtitle text box section resizable - thx Ironship
+* Move focus between message box buttons with the arrow keys
+* Show Ollama OCR errors instead of silently producing empty lines - thx perkesfurmah-collab
+* Fix "merge as dialog" not using the configured dialog style - thx jugorakita-creator
+* Fix stuck ".xdp-" temp file names when saving via the Flatpak document portal - thx wjcarpenter
+* Fix delete not working on the first subtitle row right after startup - thx Davanix
+* Fix changes to the original subtitle being lost when closing with "Yes" - thx Ironship
+* Fix menu bar keyboard issues: focus drops, Escape highlight, F10 underlines, submenu z-order - thx GrampaWildWilly
+* Fix "split line at cursor" not applying the continuation style - thx Ironship
+* Fix command line convert adding periods before known names in "Fix common errors" - thx Ironship
+* Fix repeated folder names when extracting 7-Zip archives (Faster Whisper XXL) - thx Ironship
+* Fix the app closing completely when clicking OK in "Text to speech" - thx Ironship
+* Fix the AI review delay input being too narrow - thx pdjdev
+* Faster typing and video preview with mpv - thx hisui3393
+* Fewer string allocations in hot paths - thx ivandrofly
+* Update Japanese translation - thx hisui3393
+
+-----------------------------------------------------------------------------------------------------
+
 v5.2.0-beta5 (6th of August 2026)
 
 * Add option to keep the end time when merging lines (allow overlap) - thx hisui3393
