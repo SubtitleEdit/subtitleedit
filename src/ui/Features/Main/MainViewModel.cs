@@ -23304,8 +23304,8 @@ public partial class MainViewModel :
                         if (p == null)
                         {
                             PauseVideoAndFreezePlayhead(vp);
-                            vp.Position = _playSelectionItem.EndSeconds;
-                            PinPlayheadTo(_playSelectionItem.EndSeconds);
+                            vp.Position = _playSelectionItem.EndSeconds - 0.05;
+                            PinPlayheadTo(_playSelectionItem.EndSeconds - 0.05);
                             ResetPlaySelection();
                         }
                         else
