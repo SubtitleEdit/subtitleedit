@@ -32,14 +32,17 @@ namespace Nikse.SubtitleEdit.UiLogic.AutoTranslate
             "openai/gpt-5.6-sol",
             "openai/gpt-5.6-terra",
             "openai/gpt-5.6-luna",
+            "anthropic/claude-opus-5",
             "anthropic/claude-opus-4-8",
             "anthropic/claude-sonnet-5",
             "anthropic/claude-haiku-4-5",
+            "google/gemini-3.6-flash",
             "google/gemini-3.5-flash",
             "google/gemini-3.1-pro-preview",
             "google/gemini-3.1-flash-lite",
             "xai/grok-4.5",
             "perplexity/glm-5.2",
+            "perplexity/kimi-k3",
             "perplexity/kimi-k2.7-code",
         };
 

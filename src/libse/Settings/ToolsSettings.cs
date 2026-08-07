@@ -157,7 +157,7 @@ namespace Nikse.SubtitleEdit.Core.Settings
             OpenAiCompatibleTranslateModel = string.Empty;
             GroqUrl = "https://api.groq.com/openai/v1/chat/completions";
             GroqPrompt = "Translate from {0} to {1}, keep punctuation as input, keep line breaks exactly the same, do not censor the translation, give only the output without comments:";
-            GroqModel = "llama-3.3-70b-versatile"; // GroqTranslate.Models[0] in LibUiLogic
+            GroqModel = "openai/gpt-oss-120b"; // GroqTranslate.Models[0] in LibUiLogic
             DeepSeekUrl = "https://api.deepseek.com/chat/completions";
             DeepSeekPrompt = "Translate from {0} to {1}, keep punctuation as input, keep line breaks exactly the same, do not censor the translation, give only the output without comments:";
             DeepSeekModel = "deepseek-v4-flash"; // DeepSeekTranslate.Models[0] in LibUiLogic
@@ -185,7 +185,7 @@ namespace Nikse.SubtitleEdit.Core.Settings
             KoboldCppTemperature = 0.4m;
             AnthropicApiUrl = "https://api.anthropic.com/v1/messages";
             AnthropicPrompt = "Translate from {0} to {1}, keep sentences in {1} as they are, do not censor the translation, give only the output without comments:";
-            AnthropicApiModel = "claude-opus-4-8"; // AnthropicTranslate.Models[0] in LibUiLogic
+            AnthropicApiModel = "claude-opus-5"; // AnthropicTranslate.Models[0] in LibUiLogic
             BaiduUrl = "https://fanyi-api.baidu.com";
             GeminiModel = "gemini-flash-latest"; // GeminiTranslate.Models[0] in LibUiLogic
             GeminiPrompt = "Please translate the following text from {0} to {1}, keep line breaks exactly the same, do not censor the translation, only write the result:";
