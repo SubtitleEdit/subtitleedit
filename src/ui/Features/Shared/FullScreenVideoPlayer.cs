@@ -219,7 +219,9 @@ public class FullScreenVideoWindow : Window
             // Start polling for cursor movement
             _mouseMoveDetectionTimer?.Start();
 
-            await videoPlayer.Open(videoFileName);
+            // Open where the user was rather than at 0:00 - going fullscreen otherwise shows the
+            // start of the video for a moment and then jumps back (issue #13329).
+            await videoPlayer.Open(videoFileName, position);
             await videoPlayer.WaitForPlayersReadyAsync();
 
             // The freshly opened player starts at 0:00; seek back to where the user was. The seek

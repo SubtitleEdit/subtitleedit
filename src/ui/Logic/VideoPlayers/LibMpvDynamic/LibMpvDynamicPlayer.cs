@@ -514,6 +514,29 @@ public sealed class LibMpvDynamicPlayer : IDisposable, IVideoPlayer
         return string.Join(Path.PathSeparator, usable);
     }
 
+    /// <summary>
+    /// Brings the core up paused.
+    /// <para>
+    /// mpv's own default is <c>pause=no</c>, so a file starts playing the moment the demuxer has
+    /// something - Subtitle Edit never wants that: opening a video is an editing action, not a
+    /// "watch it" one, and every caller that does want playback (visual sync, the ASSA previews,
+    /// cut video) asks for it explicitly. Pausing from managed code once the load has been issued
+    /// is too late: that call sits behind an await continuation on the UI thread, which at
+    /// start-up - restoring the last session, building the grid, laying out the waveform - can
+    /// take a few hundred milliseconds, and the user gets a burst of the video at mpv's default
+    /// volume before it lands (issue #13329).
+    /// </para>
+    /// <para>Must be called before mpv_initialize.</para>
+    /// </summary>
+    private void SetStartPausedOption()
+    {
+        var err = SetOptionString("pause", "yes");
+        if (err < 0)
+        {
+            Se.LogError(new InvalidOperationException(GetErrorString(err)), "LibMpvDynamicPlayer could not set pause=yes");
+        }
+    }
+
     private int _brightness;
 
     public int ToggleBrightness()
@@ -585,6 +608,7 @@ public sealed class LibMpvDynamicPlayer : IDisposable, IVideoPlayer
         // Set mpv to use OpenGL render API for all platforms
         SetOptionString("vo", "libmpv");
         SetOptionString("gpu-api", "opengl");
+        SetStartPausedOption();
 
         // On Linux, do NOT force gpu-context.  Avalonia (11.x) has no native
         // Wayland backend — it always provides an X11/XWayland OpenGL context,
@@ -688,6 +712,7 @@ public sealed class LibMpvDynamicPlayer : IDisposable, IVideoPlayer
         // Tell mpv to use the external (libmpv) renderer.
         SetOptionString("vo", "libmpv");
         SetOptionString("gpu-api", "metal");
+        SetStartPausedOption();
 
         SetYtDlpPathOption();
 
@@ -990,7 +1015,7 @@ public sealed class LibMpvDynamicPlayer : IDisposable, IVideoPlayer
         }
     }
 
-    public async Task LoadFile(string path)
+    public async Task LoadFile(string path, double startPositionSeconds = 0)
     {
         EnsureNotDisposed();
 
@@ -1007,7 +1032,27 @@ public sealed class LibMpvDynamicPlayer : IDisposable, IVideoPlayer
         _audioEndBound = null;
         _lastRawTimePos = -1;
 
+        // Open at the wanted position instead of at 0:00 - a seek issued once the file is up
+        // shows the start of the video for a moment and then jumps (issue #13329). "start" is
+        // sticky, so it has to be cleared ("none", its own default) for opens that want the
+        // beginning - a silent failure here would strand every later open at a stale position.
+        var startErr = SetOptionString("start", startPositionSeconds > 0
+            ? startPositionSeconds.ToString(CultureInfo.InvariantCulture)
+            : "none");
+        if (startErr < 0)
+        {
+            Se.LogError(new InvalidOperationException(GetErrorString(startErr)), "LibMpvDynamicPlayer LoadFile start");
+        }
+
         await WaitForCoreInitializedAsync();
+
+        // mpv's own default is pause=no, so it starts playing the instant it has decoded
+        // something. The core is created paused (see the Initialize* methods) and every caller
+        // that wants playback asks for it explicitly, but pause it here too: it is a user
+        // property, so anything the user did to the previous file - or a play that ran while
+        // this one was being picked - would otherwise carry over into this load.
+        DoMpvCommand("set", "pause", "yes");
+        _pausedValue = null;
 
         var err = await Task.Run(() => DoMpvCommand("loadfile", path));
         if (_disposed)
@@ -1076,6 +1121,10 @@ public sealed class LibMpvDynamicPlayer : IDisposable, IVideoPlayer
 
         await WaitForCoreInitializedAsync();
 
+        // Unlike LoadFile this one is meant to start playing: it backs the "play this clip"
+        // buttons in the text-to-speech windows, which load a file and expect to hear it.
+        // Those windows build their own core via Initialize(), which - unlike the three
+        // rendering Initialize* methods - deliberately leaves mpv's pause default alone.
         var err = await Task.Run(() => DoMpvCommand("loadfile", path));
         if (_disposed)
         {
@@ -1717,6 +1766,7 @@ public sealed class LibMpvDynamicPlayer : IDisposable, IVideoPlayer
 
         // Set mpv to use software rendering
         SetOptionString("vo", "libmpv");
+        SetStartPausedOption();
 
         if (_mpvInitialize == null || _mpvRenderContextCreate == null || _mpvRenderContextSetUpdateCallback == null)
         {

@@ -51,7 +51,7 @@ public class EmptyVideoPlayer : IVideoPlayer
         _fileName = string.Empty;
     }
 
-    public Task LoadFile(string fileName)
+    public Task LoadFile(string fileName, double startPositionSeconds = 0)
     {
         _fileName = fileName;
         return Task.CompletedTask;
