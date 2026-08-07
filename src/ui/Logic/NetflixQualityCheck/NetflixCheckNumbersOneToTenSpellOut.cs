@@ -80,7 +80,7 @@ public class NetflixCheckNumbersOneToTenSpellOut : INetflixQualityChecker
 
                 if (ok)
                 {
-                    newText = newText.Remove(m.Index, 2).Insert(m.Index, "ten");
+                    newText = newText.Remove(m.Index, 2).Insert(m.Index, NetflixHelper.ConvertNumberToString(m.Value, false, controller.Language));
                 }
 
                 m = NumberTen.Match(newText, m.Index + 1);
