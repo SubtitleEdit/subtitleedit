@@ -73,6 +73,10 @@ public partial class FixCommonErrorsViewModel : ObservableObject, IFixCallbacks
     private List<FixRuleDisplayItem> _allFixRules = new();
     private readonly LanguageFixCommonErrors _language;
     private bool _previewMode = true;
+
+    // Set while a bulk loop is flipping IsSelected on many fix items, so the per-item
+    // PropertyChanged handler skips its summary recount; the loop runs one recount at the end.
+    private bool _suppressFixesSummaryUpdate;
     public List<int> DeleteIndices = new();
     private List<FixDisplayItem> _oldFixes = new();
     private HashSet<(Guid? id, string action)>? _allowedFixLookup;
@@ -319,9 +323,21 @@ public partial class FixCommonErrorsViewModel : ObservableObject, IFixCallbacks
     public void FixesSelectAll()
     {
         var selectAll = VisibleFixes.Any(f => !f.IsSelected);
-        foreach (var fix in VisibleFixes)
+
+        // Each IsSelected set raises PropertyChanged, whose handler re-runs the full
+        // summary/chip recount - O(visible x fixes) for one click. Suppress the per-item
+        // recounts during the loop and do a single one at the end.
+        _suppressFixesSummaryUpdate = true;
+        try
         {
-            fix.IsSelected = selectAll;
+            foreach (var fix in VisibleFixes)
+            {
+                fix.IsSelected = selectAll;
+            }
+        }
+        finally
+        {
+            _suppressFixesSummaryUpdate = false;
         }
 
         UpdateFixesSummary();
@@ -369,7 +385,7 @@ public partial class FixCommonErrorsViewModel : ObservableObject, IFixCallbacks
     {
         item.PropertyChanged += (_, e) =>
         {
-            if (e.PropertyName == nameof(FixDisplayItem.IsSelected))
+            if (e.PropertyName == nameof(FixDisplayItem.IsSelected) && !_suppressFixesSummaryUpdate)
             {
                 UpdateFixesSummary();
             }
