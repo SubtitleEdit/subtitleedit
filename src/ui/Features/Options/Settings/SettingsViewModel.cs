@@ -581,7 +581,11 @@ public partial class SettingsViewModel : ObservableObject
             Se.Language.Options.Settings.GridGoToSubtitleAndPlay,
             Se.Language.Options.Settings.GridGoToSubtitleAndSetVideoPosition,
             Se.Language.Options.Settings.GridGoToSubtitleAndPauseAndFocusTextBox,
-            Se.Language.Options.Settings.GridGoToSubtitleAndPlayAndFocusTextBox
+            Se.Language.Options.Settings.GridGoToSubtitleAndPlayAndFocusTextBox,
+            Se.Language.Options.Settings.SubtitleListActionVideoGoToPositionAndPlayCurrentAndPause,
+            Se.Language.Options.Settings.SubtitleListActionVideoGoToPositionMinus1SecAndPause,
+            Se.Language.Options.Settings.SubtitleListActionVideoGoToPositionMinusHalfSecAndPause,
+            Se.Language.Options.Settings.SubtitleListActionVideoGoToPositionMinus1SecAndPlay
         ];
         SelectedSubtitleDoubleClickActionType = SubtitleDoubleClickActionTypes[0];
 
@@ -1478,6 +1482,10 @@ public partial class SettingsViewModel : ObservableObject
         { SubtitleDoubleClickActionType.GoToSubtitleOnly.ToString(), Se.Language.Options.Settings.GridGoToSubtitleAndSetVideoPosition },
         { SubtitleDoubleClickActionType.GoToSubtitleAndPauseAndFocusTextBox.ToString(), Se.Language.Options.Settings.GridGoToSubtitleAndPauseAndFocusTextBox },
         { SubtitleDoubleClickActionType.GoToSubtitleAndPlayAndFocusTextBox.ToString(), Se.Language.Options.Settings.GridGoToSubtitleAndPlayAndFocusTextBox },
+        { SubtitleDoubleClickActionType.GoToSubtitleAndPlayCurrentAndPause.ToString(), Se.Language.Options.Settings.SubtitleListActionVideoGoToPositionAndPlayCurrentAndPause },
+        { SubtitleDoubleClickActionType.GoToSubtitleMinus1SecAndPause.ToString(), Se.Language.Options.Settings.SubtitleListActionVideoGoToPositionMinus1SecAndPause },
+        { SubtitleDoubleClickActionType.GoToSubtitleMinusHalfSecAndPause.ToString(), Se.Language.Options.Settings.SubtitleListActionVideoGoToPositionMinusHalfSecAndPause },
+        { SubtitleDoubleClickActionType.GoToSubtitleMinus1SecAndPlay.ToString(), Se.Language.Options.Settings.SubtitleListActionVideoGoToPositionMinus1SecAndPlay },
     };
 
     // Rebuilds the static language-dependent maps in place so callers keep their reference.
