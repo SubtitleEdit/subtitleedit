@@ -1199,20 +1199,20 @@ public partial class ShortcutsViewModel : ObservableObject
         Se.Settings.InitializeMainShortcuts(MainViewModel);
         _allShortcuts = ShortcutsMain.GetAllShortcuts(MainViewModel);
 
-        // Map containing Laptop replacement keys for keys with F1-F12
+        // Map containing Laptop replacement keys for all keys involving F1-F12
         var laptopMappings = new Dictionary<string, string[]>
         {
-            { nameof(MainViewModel.ShowHelpCommand), ["Ctrl", "Alt", "H"] }, // F1 replacement
-            { nameof(MainViewModel.ShowSourceViewCommand), ["Ctrl", "Alt", "V"] }, // F2 replacement
-            { nameof(MainViewModel.FindNextCommand), ["Ctrl", "Alt", "F3"] }, // F3 replacement
-            { nameof(MainViewModel.FindPreviousCommand), ["Ctrl", "Alt", "Shift", "F3"] }, // F3 shift replacement
-            { nameof(MainViewModel.PlaySelectedLinesWithoutLoopCommand), ["Ctrl", "Alt", "S"] }, // F5 replacement
-            { nameof(MainViewModel.ShowSpellCheckCommand), ["Ctrl", "Alt", "E"] }, // F7 replacement
-            { nameof(MainViewModel.ListErrorsCommand), ["Ctrl", "Alt", "L"] }, // F8 replacement
-            { nameof(MainViewModel.GoToPreviousErrorCommand), ["Ctrl", "Alt", "Shift", "L"] }, // Shift F8 replacement
-            { nameof(MainViewModel.GoToNextErrorCommand), ["Ctrl", "Alt", "L"] }, // F8 replacement
-            { nameof(MainViewModel.WaveformSetStartCommand), ["Ctrl", "Alt", "BracketLeft"] }, // F11 replacement
-            { nameof(MainViewModel.WaveformSetEndCommand), ["Ctrl", "Alt", "BracketRight"] } // F12 replacement
+            { nameof(MainViewModel.ShowHelpCommand), ["Ctrl", "Alt", "H"] }, // F1 -> Ctrl+Alt+H
+            { nameof(MainViewModel.ShowSourceViewCommand), ["Ctrl", "Alt", "V"] }, // F2 -> Ctrl+Alt+V
+            { nameof(MainViewModel.FindNextCommand), ["Ctrl", "Alt", "F"] }, // F3 -> Ctrl+Alt+F
+            { nameof(MainViewModel.FindPreviousCommand), ["Ctrl", "Alt", "Shift", "F"] }, // Shift+F3 -> Ctrl+Alt+Shift+F
+            { nameof(MainViewModel.PlaySelectedLinesWithoutLoopCommand), ["Ctrl", "Alt", "P"] }, // F5 -> Ctrl+Alt+P
+            { nameof(MainViewModel.ShowSpellCheckCommand), ["Ctrl", "Alt", "K"] }, // Alt+F7 -> Ctrl+Alt+K
+            { nameof(MainViewModel.ListErrorsCommand), ["Ctrl", "Alt", "E"] }, // Ctrl+F8 -> Ctrl+Alt+E
+            { nameof(MainViewModel.GoToPreviousErrorCommand), ["Ctrl", "Alt", "Shift", "P"] }, // Shift+F8 -> Ctrl+Alt+Shift+P
+            { nameof(MainViewModel.GoToNextErrorCommand), ["Ctrl", "Alt", "N"] }, // F8 -> Ctrl+Alt+N
+            { nameof(MainViewModel.WaveformSetStartCommand), ["Ctrl", "Alt", "OemOpenBrackets"] }, // F11 -> Ctrl+Alt+[
+            { nameof(MainViewModel.WaveformSetEndCommand), ["Ctrl", "Alt", "OemCloseBrackets"] } // F12 -> Ctrl+Alt+]
         };
 
         foreach (var shortcut in _allShortcuts)
@@ -1225,7 +1225,7 @@ public partial class ShortcutsViewModel : ObservableObject
             }
             else if (shortcut.Keys.Any(k => k.StartsWith('F') && k.Length > 1 && int.TryParse(k.AsSpan(1), out _)))
             {
-                // Clear any other F-key shortcuts
+                // Clear any other F-key shortcuts to ensure no F-keys are left
                 shortcut.Keys = new List<string>();
             }
         }
