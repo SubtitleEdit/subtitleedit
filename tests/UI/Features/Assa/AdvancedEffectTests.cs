@@ -249,27 +249,6 @@ public class AdvancedEffectTests
     }
 
     /// <summary>
-    /// The flicker and embers are seeded from the line itself, so the 750 ms preview
-    /// rebuild must produce identical output; ember timestamps stay inside the line.
-    /// </summary>
-    [Fact]
-    public void BurningText_IsDeterministicAndStaysInsideLine()
-    {
-        var effect = new AdvancedEffectBurningText();
-        var first = effect.ApplyEffect(string.Empty, [MakeLine("Fire!", durationMs: 4000)], 1280, 720, null);
-        var second = effect.ApplyEffect(string.Empty, [MakeLine("Fire!", durationMs: 4000)], 1280, 720, null);
-
-        Assert.Equal(first.Select(l => l.Text), second.Select(l => l.Text));
-        Assert.Contains(@"\t(", first[0].Text); // the flicker chain on the text line
-        Assert.All(first, line =>
-        {
-            Assert.True(line.StartTime >= TimeSpan.Zero);
-            Assert.True(line.EndTime <= TimeSpan.FromMilliseconds(4000));
-            Assert.True(line.StartTime < line.EndTime);
-        });
-    }
-
-    /// <summary>
     /// The overlay, beam and text must sit on distinct ascending layers (overlapping
     /// unpositioned events on one layer would be collision-shifted by libass).
     /// </summary>
@@ -288,13 +267,29 @@ public class AdvancedEffectTests
         Assert.Contains(@"\clip(0,0,1280,720)", result[2].Text);
     }
 
+    /// <summary>
+    /// \clip/\move geometry is in SCRIPT space: with a header whose PlayRes differs from
+    /// the video size, the sweep must use the header's resolution or the beam renders
+    /// off-screen and the reveal finishes almost instantly.
+    /// </summary>
+    [Fact]
+    public void SpotlightReveal_UsesHeaderPlayResForGeometry()
+    {
+        const string header = "[Script Info]\nPlayResX: 384\nPlayResY: 288\n\n[V4+ Styles]\n";
+        var effect = new AdvancedEffectSpotlightReveal();
+        var result = effect.ApplyEffect(header, [MakeLine("Hello")], 1920, 1080, null);
+
+        Assert.Contains(@"\clip(0,0,0,288)", result[2].Text);
+        Assert.Contains(@"\clip(0,0,384,288)", result[2].Text);
+        Assert.Contains(",253,", result[1].Text); // beam band at 88% of script height
+    }
+
     [Fact]
     public void Factory_ContainsTheNewEffects()
     {
         var list = Nikse.SubtitleEdit.Features.Assa.AssaApplyAdvancedEffect.AdvancedEffectDisplayFactory.List();
 
         Assert.Contains(list, e => e is AdvancedEffectWordFlip3D);
-        Assert.Contains(list, e => e is AdvancedEffectBurningText);
         Assert.Contains(list, e => e is AdvancedEffectSpotlightReveal);
     }
 }

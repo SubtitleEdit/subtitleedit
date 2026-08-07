@@ -22,7 +22,6 @@ public static class AdvancedEffectDisplayFactory
         {
             new AdvancedEffectAudioTextPulse(),
             new AdvancedEffectBounceIn(),
-            new AdvancedEffectBurningText(),
             new AdvancedEffectConfetti(),
             new AdvancedEffectEndCreditsScroll(),
             new AdvancedEffectFadeIn(),

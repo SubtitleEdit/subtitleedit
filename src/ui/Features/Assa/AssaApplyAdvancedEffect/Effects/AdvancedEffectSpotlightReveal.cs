@@ -24,8 +24,10 @@ public class AdvancedEffectSpotlightReveal : IAdvancedEffectDisplay
         string header, List<SubtitleLineViewModel> subtitles, int width, int height, WavePeakData2? wavePeaks)
     {
         var result = new List<SubtitleLineViewModel>();
-        int w = width > 0 ? width : 1280;
-        int h = height > 0 ? height : 720;
+        // \clip, \move and the drawing coordinates are in SCRIPT space (PlayRes), not
+        // video pixels - with a mismatched header the beam would render off-screen and
+        // the clip sweep would finish almost instantly.
+        var (w, h) = AdvancedEffectUtil.GetScriptResolution(header, width, height);
 
         foreach (var sub in subtitles)
         {
@@ -51,7 +53,8 @@ public class AdvancedEffectSpotlightReveal : IAdvancedEffectDisplay
             result.Add(overlay);
 
             // 2. Soft light spot sweeping across the text band during the reveal
-            int beamY = h - 80;
+            // (proportional so it stays on the text in small script spaces)
+            int beamY = (int)(h * 0.88);
             var beamEnd = sub.StartTime.Add(TimeSpan.FromMilliseconds(Math.Min(durationMs, sweepMs + 300)));
             var beam = new SubtitleLineViewModel
             {
