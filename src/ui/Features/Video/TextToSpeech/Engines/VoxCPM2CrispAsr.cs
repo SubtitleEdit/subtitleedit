@@ -415,7 +415,7 @@ public class VoxCPM2CrispAsr : ITtsEngine
         var modelKey = ResolveModelKey(model);
         await EnsureServerRunningAsync(modelKey, voxVoice.FilePath, refText, cancellationToken);
 
-        var outputFileName = Path.Combine(GetSetFolder(), Guid.NewGuid() + ".wav");
+        var outputFileName = Path.Combine(TtsOutputFolder.Resolve(outputFolder, GetSetFolder), Guid.NewGuid() + ".wav");
 
         var speed = Math.Clamp(Se.Settings.Video.TextToSpeech.VoxCPM2CrispAsrSpeed, 0.25, 4.0);
         // Deliberately NO `voice` / `ref_text` field: the voxcpm2 backend treats a per-request
