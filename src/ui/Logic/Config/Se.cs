@@ -609,7 +609,7 @@ public class Se
         }
     }
 
-    private static void UpdateLibSeSettings()
+    internal static void UpdateLibSeSettings()
     {
         Configuration.Settings.General.FFmpegLocation = Settings.General.FfmpegPath;
         Configuration.Settings.General.UseTimeFormatHHMMSSFF = Settings.General.UseFrameMode;
@@ -633,6 +633,8 @@ public class Se
         Configuration.Settings.Tools.AutoBreakDashEarly = Settings.Tools.AutoBreakDashEarly;
         Configuration.Settings.Tools.AutoBreakUsePixelWidth = Settings.Tools.AutoBreakUsePixelWidth;
         Configuration.Settings.Tools.AutoBreakPreferBottomHeavy = Settings.Tools.AutoBreakPreferBottomHeavy;
+        Configuration.Settings.Tools.AutoBreakPreferBottomPercent = Settings.Tools.AutoBreakPreferBottomPercent;
+        Configuration.Settings.Tools.UseNoLineBreakAfter = Settings.Tools.UseNoLineBreakAfter;
 
         var stt = Settings.Tools.AudioToText;
         Configuration.Settings.Tools.WhisperChoice = stt.WhisperChoice;

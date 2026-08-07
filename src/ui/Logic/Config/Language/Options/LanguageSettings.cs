@@ -87,6 +87,8 @@ public class LanguageSettings
     public string AutoBreakDashEarly { get; set; }
     public string AutoBreakUsePixelWidth { get; set; }
     public string AutoBreakPreferBottomHeavy { get; set; }
+    public string AutoBreakPreferBottomPercent { get; set; }
+    public string UseDoNotBreakAfterList { get; set; }
     public string NewEmptyDefaultMs { get; set; }
     public string TimeCodeUpDownStepMs { get; set; }
     public string PromptBeforeDelete { get; set; }
@@ -390,6 +392,8 @@ public class LanguageSettings
         AutoBreakDashEarly = "Auto-break early for dash (dialogs)";
         AutoBreakUsePixelWidth = "Auto-break by pixel width";
         AutoBreakPreferBottomHeavy = "Auto-break prefer bottom heavy";
+        AutoBreakPreferBottomPercent = "Auto-break bottom heavy percentage";
+        UseDoNotBreakAfterList = "Use do-not-break-after list";
         NewEmptyDefaultMs = "Default new subtitle duration (ms)";
         TimeCodeUpDownStepMs = "Time up/down increment (ms)";
         PromptBeforeDelete = "Prompt before delete";

@@ -646,7 +646,15 @@ public class SettingsPage : UserControl
             MakeCheckboxSetting(Se.Language.Options.Settings.AutoBreakCommaBreakEarly, nameof(_vm.AutoBreakCommaBreakEarly)),
             MakeCheckboxSetting(Se.Language.Options.Settings.AutoBreakDashEarly, nameof(_vm.AutoBreakDashEarly)),
             MakeCheckboxSetting(Se.Language.Options.Settings.AutoBreakUsePixelWidth, nameof(_vm.AutoBreakUsePixelWidth)),
-            MakeCheckboxSetting(Se.Language.Options.Settings.AutoBreakPreferBottomHeavy, nameof(_vm.AutoBreakPreferBottomHeavy)),
+            MakeCheckboxSetting(Se.Language.Options.Settings.AutoBreakPreferBottomHeavy, nameof(_vm.AutoBreakPreferBottomHeavy),
+                new Binding(nameof(_vm.AutoBreakUsePixelWidth)) { Source = _vm }),
+            new SettingsItem(Se.Language.Options.Settings.AutoBreakPreferBottomPercent, () =>
+            {
+                var nud = MakeNumericUpDownInt(nameof(_vm.AutoBreakPreferBottomPercent), 0, 50);
+                nud[!Control.IsEnabledProperty] = new Binding(nameof(_vm.AutoBreakUsePixelWidth)) { Source = _vm };
+                return nud;
+            }),
+            MakeCheckboxSetting(Se.Language.Options.Settings.UseDoNotBreakAfterList, nameof(_vm.UseNoLineBreakAfter)),
             new SettingsItem(Se.Language.Options.Settings.SplitOddLinesAction, () => new ComboBox
             {
                 MinWidth = 200,

@@ -1962,7 +1962,7 @@ public partial class MainViewModel :
         _currentSpellCheckDictionary = null;
         _spellCheckSessionInProgress = false;
         _reDetectSpellCheckLanguage = true;
-        _autoTrimLanguageCode = null;
+        _detectedLanguageCode = null;
 
         if (format != null)
         {
@@ -8657,8 +8657,8 @@ public partial class MainViewModel :
             Subtitles[i].Text = result.Rows[i].TranslatedText;
         }
 
-        // The subtitle language just changed, so the cached auto-trim language is stale (issue #12144).
-        _autoTrimLanguageCode = null;
+        // The subtitle language just changed, so the cached detected language is stale (issue #12144).
+        _detectedLanguageCode = null;
 
         if (!wasOldTranslationChanged)
         {
@@ -8767,8 +8767,8 @@ public partial class MainViewModel :
             }
         }
 
-        // The translated lines changed language, so the cached auto-trim language is stale (issue #12144).
-        _autoTrimLanguageCode = null;
+        // The translated lines changed language, so the cached detected language is stale (issue #12144).
+        _detectedLanguageCode = null;
 
         _updateAudioVisualizer = true;
     }
@@ -8805,8 +8805,8 @@ public partial class MainViewModel :
             Subtitles[i].Text = result.Subtitles[i].Text;
         }
 
-        // The subtitle language just changed, so the cached auto-trim language is stale (issue #12144).
-        _autoTrimLanguageCode = null;
+        // The subtitle language just changed, so the cached detected language is stale (issue #12144).
+        _detectedLanguageCode = null;
 
         _subtitleFileNameOriginal = _subtitleFileName;
         _subtitleOriginal ??= new Subtitle();
@@ -13242,9 +13242,10 @@ public partial class MainViewModel :
             return;
         }
 
+        var language = GetDetectedLanguageCode();
         foreach (var s in selectedItems)
         {
-            s.Text = Utilities.AutoBreakLine(s.Text);
+            s.Text = Utilities.AutoBreakLine(s.Text, language);
         }
 
         _updateAudioVisualizer = true;
@@ -14693,12 +14694,12 @@ public partial class MainViewModel :
         _updateAudioVisualizer = true;
     }
 
-    private static List<string> NormalizeToTwoLines(string text)
+    private List<string> NormalizeToTwoLines(string text)
     {
         var lines = text.SplitToLines();
         if (lines.Count > 2)
         {
-            lines = Utilities.AutoBreakLine(Utilities.UnbreakLine(text)).SplitToLines();
+            lines = Utilities.AutoBreakLine(Utilities.UnbreakLine(text), GetDetectedLanguageCode()).SplitToLines();
         }
 
         if (lines.Count == 1)
@@ -14709,12 +14710,12 @@ public partial class MainViewModel :
         return lines;
     }
 
-    private static string JoinAndCapAtTwoLines(string s1, string s2)
+    private string JoinAndCapAtTwoLines(string s1, string s2)
     {
         var result = s1 + Environment.NewLine + s2;
         if (result.SplitToLines().Count > 2)
         {
-            result = Utilities.AutoBreakLine(Utilities.UnbreakLine(result));
+            result = Utilities.AutoBreakLine(Utilities.UnbreakLine(result), GetDetectedLanguageCode());
         }
 
         return result;
@@ -16911,11 +16912,18 @@ public partial class MainViewModel :
         return true;
     }
 
-    // RemoveUnneededSpaces has language-specific rules - e.g. Dutch keeps the space in
-    // "ze 's avonds" - so auto-trim must not run with an empty language code (issue #12144).
-    // Detection is too slow for the per-selection trim in SubtitleGrid_SelectionChanged,
-    // so the code is cached here; this method re-detects on every file load and auto-save.
-    private string? _autoTrimLanguageCode;
+    // Cached detected language of the loaded subtitle (empty = undetected, null = not yet
+    // detected). Shared by auto-trim and auto-break: RemoveUnneededSpaces has language-specific
+    // rules - e.g. Dutch keeps the space in "ze 's avonds" - so auto-trim must not run with an
+    // empty language code (issue #12144), and auto-break needs the language to pick the
+    // do-not-break-after list. Detection is too slow to run per line or per selection change,
+    // so the code is cached here and reset on file load/new and after translation.
+    private string? _detectedLanguageCode;
+
+    private string GetDetectedLanguageCode()
+    {
+        return _detectedLanguageCode ??= Subtitles.AutoDetectGoogleLanguageOrNull() ?? string.Empty;
+    }
 
     private void AutoTrimWhiteSpaces()
     {
@@ -16923,10 +16931,10 @@ public partial class MainViewModel :
         {
             // OrNull + empty fallback: undetected text must not get the English-only rules
             // (e.g. the " 's " merge corrupting Dutch, #12144).
-            _autoTrimLanguageCode = Subtitles.AutoDetectGoogleLanguageOrNull() ?? string.Empty;
+            _detectedLanguageCode = Subtitles.AutoDetectGoogleLanguageOrNull() ?? string.Empty;
             foreach (var item in Subtitles)
             {
-                item.Text = Utilities.RemoveUnneededSpaces(item.Text, _autoTrimLanguageCode).Trim();
+                item.Text = Utilities.RemoveUnneededSpaces(item.Text, _detectedLanguageCode).Trim();
             }
         }
     }
@@ -17915,7 +17923,7 @@ public partial class MainViewModel :
     /// </summary>
     private void ReplaceSubtitles(IEnumerable<SubtitleLineViewModel> items)
     {
-        _autoTrimLanguageCode = null;
+        _detectedLanguageCode = null;
 
         // Materialize first: callers may pass a lazy query over Subtitles itself.
         var list = items as IReadOnlyList<SubtitleLineViewModel> ?? items.ToList();
@@ -22424,7 +22432,7 @@ public partial class MainViewModel :
 
         if (Se.Settings.General.AutoTrimWhiteSpace && e.RemovedItems.Count < 10)
         {
-            var languageCode = _autoTrimLanguageCode ??= Subtitles.AutoDetectGoogleLanguageOrNull() ?? string.Empty;
+            var languageCode = GetDetectedLanguageCode();
             foreach (SubtitleLineViewModel? item in e.RemovedItems)
             {
                 if (item != null)
