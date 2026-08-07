@@ -43,7 +43,6 @@ public static class AdvancedEffectDisplayFactory
             new AdvancedEffectSlowZoomIn(),
             new AdvancedEffectSlowZoomOut(),
             new AdvancedEffectSnow(),
-            new AdvancedEffectSpotlightReveal(),
             new AdvancedEffectStarWarsScroll(),
             new AdvancedEffectStarfield(),
             new AdvancedEffectTvClose(),

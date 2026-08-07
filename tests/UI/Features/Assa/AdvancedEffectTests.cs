@@ -248,48 +248,11 @@ public class AdvancedEffectTests
         Assert.Contains(@"\move(50,50,100,100,0,1000)", result[1].Text);
     }
 
-    /// <summary>
-    /// The overlay, beam and text must sit on distinct ascending layers (overlapping
-    /// unpositioned events on one layer would be collision-shifted by libass).
-    /// </summary>
-    [Fact]
-    public void SpotlightReveal_EmitsThreeDistinctlyLayeredEvents()
-    {
-        var effect = new AdvancedEffectSpotlightReveal();
-        var result = effect.ApplyEffect(string.Empty, [MakeLine("Hello")], 1280, 720, null);
-
-        Assert.Equal(3, result.Count);
-        Assert.Equal(3, result.Select(l => l.Layer).Distinct().Count());
-        Assert.True(result[0].Layer < result[1].Layer && result[1].Layer < result[2].Layer);
-        // The text is revealed by an animated rectangular clip
-        Assert.Contains(@"\clip(0,0,0,720)", result[2].Text);
-        Assert.Contains(@"\t(0,", result[2].Text);
-        Assert.Contains(@"\clip(0,0,1280,720)", result[2].Text);
-    }
-
-    /// <summary>
-    /// \clip/\move geometry is in SCRIPT space: with a header whose PlayRes differs from
-    /// the video size, the sweep must use the header's resolution or the beam renders
-    /// off-screen and the reveal finishes almost instantly.
-    /// </summary>
-    [Fact]
-    public void SpotlightReveal_UsesHeaderPlayResForGeometry()
-    {
-        const string header = "[Script Info]\nPlayResX: 384\nPlayResY: 288\n\n[V4+ Styles]\n";
-        var effect = new AdvancedEffectSpotlightReveal();
-        var result = effect.ApplyEffect(header, [MakeLine("Hello")], 1920, 1080, null);
-
-        Assert.Contains(@"\clip(0,0,0,288)", result[2].Text);
-        Assert.Contains(@"\clip(0,0,384,288)", result[2].Text);
-        Assert.Contains(",253,", result[1].Text); // beam band at 88% of script height
-    }
-
     [Fact]
     public void Factory_ContainsTheNewEffects()
     {
         var list = Nikse.SubtitleEdit.Features.Assa.AssaApplyAdvancedEffect.AdvancedEffectDisplayFactory.List();
 
         Assert.Contains(list, e => e is AdvancedEffectWordFlip3D);
-        Assert.Contains(list, e => e is AdvancedEffectSpotlightReveal);
     }
 }
