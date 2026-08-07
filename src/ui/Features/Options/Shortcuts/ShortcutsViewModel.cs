@@ -1184,6 +1184,63 @@ public partial class ShortcutsViewModel : ObservableObject
         Se.Settings.Shortcuts.Clear();
         Se.Settings.InitializeMainShortcuts(MainViewModel);
         _allShortcuts = ShortcutsMain.GetAllShortcuts(MainViewModel);
+
+        // Assign unique shortcuts to all unassigned shortcuts using systematic combinations
+        // base letters, numbers, and Ctrl/Alt/Shift modifiers.
+        var letters = new[] { "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z" };
+        var modifiersList = new List<string[]>
+        {
+            new[] { "Ctrl", "Alt" },
+            new[] { "Ctrl", "Shift" },
+            new[] { "Alt", "Shift" },
+            new[] { "Ctrl", "Alt", "Shift" }
+        };
+
+        var usedKeys = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+
+        // 1. Register already assigned defaults first to prevent stealing them
+        foreach (var shortcut in _allShortcuts)
+        {
+            if (shortcut != null && shortcut.Keys.Count > 0)
+            {
+                usedKeys.Add(string.Join("+", shortcut.Keys));
+            }
+        }
+
+        // 2. Assign keys systematically to all unassigned shortcuts
+        int letterIdx = 0;
+        int modIdx = 0;
+
+        foreach (var shortcut in _allShortcuts)
+        {
+            if (shortcut == null) continue;
+            if (shortcut.Keys.Count == 0)
+            {
+                bool assigned = false;
+                while (!assigned && modIdx < modifiersList.Count)
+                {
+                    var mods = modifiersList[modIdx];
+                    var key = letters[letterIdx];
+                    var combo = new List<string>(mods) { key };
+                    var comboStr = string.Join("+", combo);
+
+                    if (!usedKeys.Contains(comboStr))
+                    {
+                        shortcut.Keys = combo;
+                        usedKeys.Add(comboStr);
+                        assigned = true;
+                    }
+
+                    letterIdx++;
+                    if (letterIdx >= letters.Length)
+                    {
+                        letterIdx = 0;
+                        modIdx++;
+                    }
+                }
+            }
+        }
+
         UpdateVisibleShortcuts(SearchText);
     }
 
@@ -1215,6 +1272,9 @@ public partial class ShortcutsViewModel : ObservableObject
             { nameof(MainViewModel.WaveformSetEndCommand), ["Ctrl", "Alt", "OemCloseBrackets"] } // F12 -> Ctrl+Alt+]
         };
 
+        var usedKeys = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+
+        // First apply laptop specific mappings and clear F keys
         foreach (var shortcut in _allShortcuts)
         {
             if (shortcut == null) continue;
@@ -1225,8 +1285,56 @@ public partial class ShortcutsViewModel : ObservableObject
             }
             else if (shortcut.Keys.Any(k => k.StartsWith('F') && k.Length > 1 && int.TryParse(k.AsSpan(1), out _)))
             {
-                // Clear any other F-key shortcuts to ensure no F-keys are left
+                // Clear any other F-key shortcuts
                 shortcut.Keys = new List<string>();
+            }
+
+            if (shortcut.Keys.Count > 0)
+            {
+                usedKeys.Add(string.Join("+", shortcut.Keys));
+            }
+        }
+
+        // Assign unique shortcuts systematically to all remaining unassigned shortcuts
+        var letters = new[] { "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z" };
+        var modifiersList = new List<string[]>
+        {
+            new[] { "Ctrl", "Alt" },
+            new[] { "Ctrl", "Shift" },
+            new[] { "Alt", "Shift" },
+            new[] { "Ctrl", "Alt", "Shift" }
+        };
+
+        int letterIdx = 0;
+        int modIdx = 0;
+
+        foreach (var shortcut in _allShortcuts)
+        {
+            if (shortcut == null) continue;
+            if (shortcut.Keys.Count == 0)
+            {
+                bool assigned = false;
+                while (!assigned && modIdx < modifiersList.Count)
+                {
+                    var mods = modifiersList[modIdx];
+                    var key = letters[letterIdx];
+                    var combo = new List<string>(mods) { key };
+                    var comboStr = string.Join("+", combo);
+
+                    if (!usedKeys.Contains(comboStr))
+                    {
+                        shortcut.Keys = combo;
+                        usedKeys.Add(comboStr);
+                        assigned = true;
+                    }
+
+                    letterIdx++;
+                    if (letterIdx >= letters.Length)
+                    {
+                        letterIdx = 0;
+                        modIdx++;
+                    }
+                }
             }
         }
 
