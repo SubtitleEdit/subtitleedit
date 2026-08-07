@@ -15,6 +15,8 @@ public class SeAudioToText
 
     public bool WhisperDeleteTempFiles { get; set; } = true;
 
+    public bool WhisperAddLanguageCodeToFileName { get; set; }
+
     public string? WhisperModel { get; set; } = string.Empty;
 
     public string WhisperLanguageCode { get; set; } = string.Empty;

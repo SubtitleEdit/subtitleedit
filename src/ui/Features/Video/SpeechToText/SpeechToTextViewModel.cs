@@ -57,6 +57,7 @@ public partial class SpeechToTextViewModel : ObservableObject
     [ObservableProperty] private bool _doTranslateToEnglish;
     [ObservableProperty] private bool _doAdjustTimings;
     [ObservableProperty] private bool _doPostProcessing;
+    [ObservableProperty] private bool _addLanguageCodeToFileName;
 
     [ObservableProperty] private string _parameters;
 
@@ -311,6 +312,7 @@ public partial class SpeechToTextViewModel : ObservableObject
         DoTranslateToEnglish = false;
         DoAdjustTimings = Se.Settings.Tools.AudioToText.WhisperAutoAdjustTimings;
         DoPostProcessing = Se.Settings.Tools.AudioToText.PostProcessing;
+        AddLanguageCodeToFileName = Se.Settings.Tools.AudioToText.WhisperAddLanguageCodeToFileName;
 
         OpenAiCompatibleSttUrl = Se.Settings.Tools.OpenAiCompatibleSttUrl;
         OpenAiCompatibleSttApiKey = Se.Settings.Tools.OpenAiCompatibleSttApiKey;
@@ -368,6 +370,7 @@ public partial class SpeechToTextViewModel : ObservableObject
     {
         Se.Settings.Tools.AudioToText.WhisperAutoAdjustTimings = DoAdjustTimings;
         Se.Settings.Tools.AudioToText.PostProcessing = DoPostProcessing;
+        Se.Settings.Tools.AudioToText.WhisperAddLanguageCodeToFileName = AddLanguageCodeToFileName;
         var engine = GetEffectiveSelectedEngine();
         engine.CommandLineParameter = Parameters;
         Se.Settings.Tools.AudioToText.WhisperChoice = engine.Choice;
@@ -1744,7 +1747,8 @@ public partial class SpeechToTextViewModel : ObservableObject
         if (transcribedSubtitle != null && transcribedSubtitle.Paragraphs.Count > 0)
         {
             currentItem.Status = Se.Language.General.Converted;
-            var subtitleFileName = GetSubtitleFileName(currentItem.InputVideoFileName);
+            var languageCode = AddLanguageCodeToFileName ? GetFileNameLanguageCode(transcribedSubtitle) : null;
+            var subtitleFileName = GetSubtitleFileName(currentItem.InputVideoFileName, languageCode);
             var format = new SubRip();
             var text = format.ToText(transcribedSubtitle, string.Empty);
             File.WriteAllText(subtitleFileName, text);
@@ -1836,20 +1840,56 @@ public partial class SpeechToTextViewModel : ObservableObject
         });
     }
 
-    private static string GetSubtitleFileName(string videoFileName)
+    public static string GetSubtitleFileName(string videoFileName, string? languageCode)
     {
         var path = Path.GetDirectoryName(videoFileName);
         var fileName = Path.GetFileNameWithoutExtension(videoFileName);
+        // "video.en.srt" style - the language token must stay right before the
+        // extension for media players to pick it up, so the collision counter
+        // goes on the base name: "video_2.en.srt".
+        var languagePart = string.IsNullOrWhiteSpace(languageCode) ? string.Empty : "." + languageCode;
         var extension = ".srt";
-        var subtitleFileName = Path.Combine(path!, fileName + extension);
+        var subtitleFileName = Path.Combine(path!, fileName + languagePart + extension);
         int count = 2;
         while (File.Exists(subtitleFileName))
         {
-            subtitleFileName = Path.Combine(path!, fileName + "_" + count + extension);
+            subtitleFileName = Path.Combine(path!, fileName + "_" + count + languagePart + extension);
             count++;
         }
 
         return subtitleFileName;
+    }
+
+    /// <summary>
+    /// The language code to embed in a generated subtitle file name ("video.en.srt"),
+    /// or null when no usable code can be determined. Resolution mirrors PostProcess:
+    /// selected language, then the online engine's configured hint, then auto-detection
+    /// on the transcript itself - but "auto" is never usable as a file name token.
+    /// </summary>
+    private string? GetFileNameLanguageCode(Subtitle? transcript)
+    {
+        if (DoTranslateToEnglish)
+        {
+            return "en";
+        }
+
+        var languageCode = SelectedLanguage?.Code;
+        if (string.IsNullOrWhiteSpace(languageCode) || languageCode.Equals("auto", StringComparison.OrdinalIgnoreCase))
+        {
+            languageCode = GetOnlineEngineLanguageHint();
+        }
+
+        if (string.IsNullOrWhiteSpace(languageCode) && transcript != null)
+        {
+            languageCode = LanguageAutoDetect.AutoDetectGoogleLanguageOrNull(transcript);
+        }
+
+        if (string.IsNullOrWhiteSpace(languageCode) || languageCode.Equals("auto", StringComparison.OrdinalIgnoreCase))
+        {
+            return null;
+        }
+
+        return languageCode;
     }
 
     private Subtitle PostProcess(Subtitle transcript)
