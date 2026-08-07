@@ -1099,8 +1099,7 @@ public partial class MainViewModel :
             return;
         }
 
-        _pauseRequested = false;
-        vp.VideoPlayer.Play();
+        PlayVideo(vp);
     }
 
     [RelayCommand]
@@ -1121,7 +1120,7 @@ public partial class MainViewModel :
         vp.Position = next.StartTime.TotalSeconds;
         PinPlayheadTo(next.StartTime.TotalSeconds);
         SelectAndScrollToSubtitle(next);
-        vp.VideoPlayer.Play();
+        PlayVideo(vp);
     }
 
     [RelayCommand]
@@ -1176,7 +1175,7 @@ public partial class MainViewModel :
         vp.Position = next.StartTime.TotalSeconds;
         PinPlayheadTo(next.StartTime.TotalSeconds);
         _playSelectionItem = new PlaySelectionItem(new List<SubtitleLineViewModel> { next }, next.EndTime, loop);
-        vp.VideoPlayer.Play();
+        PlayVideo(vp);
     }
 
     [RelayCommand]
@@ -1197,7 +1196,7 @@ public partial class MainViewModel :
         vp.Position = previous.StartTime.TotalSeconds;
         PinPlayheadTo(previous.StartTime.TotalSeconds);
         SelectAndScrollToSubtitle(previous);
-        vp.VideoPlayer.Play();
+        PlayVideo(vp);
     }
 
     [RelayCommand]
@@ -1252,7 +1251,7 @@ public partial class MainViewModel :
         vp.Position = previous.StartTime.TotalSeconds;
         PinPlayheadTo(previous.StartTime.TotalSeconds);
         _playSelectionItem = new PlaySelectionItem(new List<SubtitleLineViewModel> { previous }, previous.EndTime, loop);
-        vp.VideoPlayer.Play();
+        PlayVideo(vp);
     }
 
     [RelayCommand]
@@ -1287,7 +1286,7 @@ public partial class MainViewModel :
         }
         else
         {
-            _pauseRequested = false;
+            CancelPausePlayheadFreeze();
         }
 
         control.TogglePlayPause();
@@ -1302,6 +1301,13 @@ public partial class MainViewModel :
         _pauseRequested = true;
         _playheadPausedSettled = false; // reconcile the cursor to mpv's final frame once this pause settles
         _playheadPauseSettleTs = Stopwatch.GetTimestamp();
+    }
+
+    // Playback (re)started, so a pause freeze from a moment ago is stale: while it is set the cursor
+    // is held frozen at the pause spot, which would stall the first ~100 ms of playback.
+    internal void CancelPausePlayheadFreeze()
+    {
+        _pauseRequested = false;
     }
 
     // The player's Stop button pauses and seeks to 0; freeze the cursor immediately and pin it to
@@ -1320,6 +1326,15 @@ public partial class MainViewModel :
     {
         RequestPausePlayheadFreeze();
         vp.VideoPlayer.Pause();
+    }
+
+    // Start playback. Always go through here rather than calling Play() directly: a pending pause
+    // freeze holds the playhead cursor (and any pin) still until mpv confirms the pause, so a flag
+    // left over from a pause a moment earlier would stall the cursor at the start of playback.
+    private void PlayVideo(VideoPlayerControl vp)
+    {
+        CancelPausePlayheadFreeze();
+        vp.VideoPlayer.Play();
     }
 
     [RelayCommand]
@@ -7039,7 +7054,7 @@ public partial class MainViewModel :
         vp.Position = item.StartTime.TotalSeconds;
         PinPlayheadTo(item.StartTime.TotalSeconds);
         _playSelectionItem = new PlaySelectionItem([item], item.EndTime, false);
-        vp.VideoPlayer.Play();
+        PlayVideo(vp);
     }
 
     private bool PlayerSelectedLines(bool loop)
@@ -7056,7 +7071,7 @@ public partial class MainViewModel :
         vp.Position = p.StartTime.TotalSeconds;
         PinPlayheadTo(p.StartTime.TotalSeconds);
         _playSelectionItem = new PlaySelectionItem(selectedItems, p.EndTime, loop);
-        vp.VideoPlayer.Play();
+        PlayVideo(vp);
 
         return true;
     }
@@ -13156,7 +13171,7 @@ public partial class MainViewModel :
         }
 
         vp.VideoPlayer.Stop();
-        vp.VideoPlayer.Play();
+        PlayVideo(vp);
         _updateAudioVisualizer = true;
     }
 
@@ -13178,7 +13193,7 @@ public partial class MainViewModel :
         vp.VideoPlayer.Pause();
         vp.Position = position;
         PinPlayheadTo(position);
-        vp.VideoPlayer.Play();
+        PlayVideo(vp);
         _updateAudioVisualizer = true;
     }
 
@@ -13293,6 +13308,10 @@ public partial class MainViewModel :
             if (willPause)
             {
                 RequestPausePlayheadFreeze();
+            }
+            else
+            {
+                CancelPausePlayheadFreeze();
             }
         };
         _fullScreenVideoPlayerControl.StopRequested += OnVideoPlayerStopRequested;
@@ -14923,7 +14942,7 @@ public partial class MainViewModel :
             {
                 vp.Position = next.StartTime.TotalSeconds;
                 PinPlayheadTo(next.StartTime.TotalSeconds);
-                vp.VideoPlayer.Play();
+                PlayVideo(vp);
             }
         }
 
@@ -22994,7 +23013,14 @@ public partial class MainViewModel :
             var target = _playheadSeekTarget.Value;
             var arrived = Math.Abs(rawPosition - target) < PlayheadSeekArriveToleranceSeconds;
             var timedOut = (nowTimestamp - _playheadSeekTargetTs) * 1000.0 / Stopwatch.Frequency > PlayheadSeekPinTimeoutMs;
-            if (!arrived && !timedOut)
+
+            // A pause was requested but mpv still reports playing: it keeps decoding for ~100-200 ms and
+            // its position runs on past the pinned spot, which is within the arrive tolerance, so "arrived"
+            // would drop the pin and let the cursor chase that wind-down (and then snap back once the seek
+            // lands). Hold the pin until mpv has actually paused - that is the whole point of pinning on a
+            // pause path (see PinPlayheadTo / RequestPausePlayheadFreeze). The pin timeout still bounds it.
+            var pausePending = isPlaying && _pauseRequested;
+            if ((!arrived || pausePending) && !timedOut)
             {
                 _playheadLastRealSeconds = rawPosition;
                 _playheadLastTimestamp = nowTimestamp;
@@ -23131,12 +23157,14 @@ public partial class MainViewModel :
                 _playheadEstimateSeconds = rawPosition;
                 _playheadPausedSettled = true;
             }
-            else if (_playheadPausedSettled && rawChanged)
+            else if (_playheadPausedSettled && rawChanged && !_pauseRequested)
             {
                 // Already settled after the pause, and mpv's position just moved: this is a real seek
                 // while paused (millisecond nudge, frame step, native mpv frame step) - not the pause
                 // wind-down. Follow it so the cursor lands on the stepped frame and stays centered
                 // (#12742 follow-up). Snapping, rather than easing, puts the cursor on the frame at once.
+                // While a pause is still being applied (mpv reports playing, _pauseRequested set) this is
+                // the wind-down by definition, so hold instead of following it forward.
                 _playheadEstimateSeconds = rawPosition;
             }
             else if (!_playheadPausedSettled && !isPlaying && rawStableMs >= PlayheadPausedSettleStableMs)
@@ -23327,6 +23355,12 @@ public partial class MainViewModel :
                             PauseVideoAndFreezePlayhead(vp);
                             vp.Position = _playSelectionItem.EndSeconds;
                             PinPlayheadTo(_playSelectionItem.EndSeconds);
+
+                            // Stopping here is not a user scrub: without this the "center also while paused"
+                            // branch below sees the play-head jump (its baseline is still where playback
+                            // started) and re-selects the line under the play-head - the next line, since the
+                            // stop lands on the shared start/end boundary (#13331).
+                            _pausedSelectLastSeconds = _playSelectionItem.EndSeconds;
                             ResetPlaySelection();
                         }
                         else
@@ -23340,8 +23374,12 @@ public partial class MainViewModel :
                         }
                     }
 
-                    else if (SelectCurrentSubtitleWhilePlaying && _playSelectionItem == null)
+                    else if (SelectCurrentSubtitleWhilePlaying && _playSelectionItem == null && !_pauseRequested)
                     {
+                        // Skipped while a pause is being applied: mpv keeps reporting playing for ~100-200 ms
+                        // after the pause command and the play-head is held at the pause spot, so there is
+                        // nothing new to follow. At a play-selection stop that spot is the boundary the next
+                        // line starts at, and selecting from there would jump the grid forward (#13331).
                         SelectCurrentSubtitleAtPlayhead(mediaPlayerSeconds, subtitle);
                     }
                 }
@@ -24024,7 +24062,7 @@ public partial class MainViewModel :
             if (Se.Settings.General.SubtitleDoubleClickAction == SubtitleDoubleClickActionType.GoToSubtitleAndPlay.ToString())
             {
                 vp.Position = seconds;
-                vp.VideoPlayer.Play();
+                PlayVideo(vp);
                 AudioVisualizerCenterOnPositionIfNeeded(selectedItem, seconds);
                 return;
             }
@@ -24041,7 +24079,7 @@ public partial class MainViewModel :
             if (Se.Settings.General.SubtitleDoubleClickAction == SubtitleDoubleClickActionType.GoToSubtitleAndPlayAndFocusTextBox.ToString())
             {
                 vp.Position = seconds;
-                vp.VideoPlayer.Play();
+                PlayVideo(vp);
                 AudioVisualizerCenterOnPositionIfNeeded(selectedItem, seconds);
                 FocusEditTextBox();
                 return;
@@ -24076,7 +24114,7 @@ public partial class MainViewModel :
             {
                 seconds = Math.Max(0, seconds - 1.0);
                 vp.Position = seconds;
-                vp.VideoPlayer.Play();
+                PlayVideo(vp);
                 AudioVisualizerCenterOnPositionIfNeeded(selectedItem, seconds);
                 return;
             }
@@ -24197,7 +24235,7 @@ public partial class MainViewModel :
             if (Se.Settings.General.SubtitleSingleClickAction == SubtitleSingleClickActionType.GoToSubtitleAndPlay.ToString())
             {
                 vp.Position = seconds;
-                vp.VideoPlayer.Play();
+                PlayVideo(vp);
                 AudioVisualizerCenterOnPositionIfNeeded(selectedItem, seconds);
                 return;
             }
@@ -24214,7 +24252,7 @@ public partial class MainViewModel :
             if (Se.Settings.General.SubtitleSingleClickAction == SubtitleSingleClickActionType.GoToSubtitleAndPlayAndFocusTextBox.ToString())
             {
                 vp.Position = seconds;
-                vp.VideoPlayer.Play();
+                PlayVideo(vp);
                 AudioVisualizerCenterOnPositionIfNeeded(selectedItem, seconds);
                 FocusEditTextBox();
             }
@@ -25120,7 +25158,7 @@ public partial class MainViewModel :
                     PauseVideoAndFreezePlayhead(vp);
                     break;
                 case WaveformDoubleClickActionType.Play:
-                    vp.VideoPlayer.Play();
+                    PlayVideo(vp);
                     break;
             }
 
