@@ -1,6 +1,6 @@
 {
   "title": "Subtitle Edit",
-  "version": "v5.2.0-beta4",
+  "version": "v5.2.0-beta6",
   "translatedBy": "昇 | BAWAN | 風逸蘭 | Jackie Lam | SiderealArt",
   "cultureName": "zh-Hant",
   "general": {
@@ -897,6 +897,7 @@
       "assaAttachmentsHint": "ASSA附件",
       "assaDrawHint": "ASSA繪製圖形",
       "ssaStylesHint": "Sub Station Alpha 樣式",
+      "webVttStylesHint": "WebVTT 樣式管理器",
       "ssaPropertiesHint": "Sub Station Alpha 屬性",
       "ssaAttachmentsHint": "Sub Station Alpha 附件"
     },
@@ -1131,8 +1132,8 @@
     },
     "export": {
       "exportImagesProfiles": "匯出影像設定檔",
-      "leftRightMargin": "左/右邊界",
-      "topBottomMargin": "上/下邊界",
+      "leftRightMargin": "左/右邊距",
+      "topBottomMargin": "上/下邊距",
       "lineSpacingPercent": "行距%",
       "paddingLeftRight": "左/右填充",
       "paddingTopBottom": "頂部/底部填充",
@@ -1277,6 +1278,19 @@
       "zPositionHelp": "正數將文字移遠，負數將文字移近，若 Z 軸位置為零則為 2D",
       "export": "匯出..."
     },
+    "webVtt": {
+      "setStylesForSelectedLinesTitle": "設定選取行的 WebVTT 樣式",
+      "voices": "語音",
+      "newVoiceDotDotDot": "新增語音...",
+      "removeVoices": "移除語音",
+      "voiceName": "語音名稱",
+      "browserPreview": "瀏覽器預覽",
+      "importStylesTitle": "匯入 WebVTT 樣式",
+      "exportStylesTitle": "匯出 WebVTT 樣式",
+      "openStyleFileTitle": "開啟 WebVTT 檔案以匯入樣式",
+      "noStylesToImport": "選取的檔案中未找到任何樣式",
+      "duplicateStyleNamesX": "重複的樣式名稱：{0}"
+    },
     "compare": "比對...",
     "previousDifference": "上一個差異處",
     "nextDifference": "下一個差異處",
@@ -1383,6 +1397,21 @@
     "restoreSelected": "還原選取項目",
     "noSubtitleSelected": "未選取任何字幕",
     "pleaseSelectExactlyOneSubtitle": "請剛好選取一條字幕。"
+  },
+  "sourceView": {
+    "discardChangesTitle": "放棄變更？",
+    "discardChanges": "來源文字已變更。\r\n是否放棄變更？",
+    "xLinesYSubtitles": "{0} 行，{1} 個字幕",
+    "xLinesYSubtitlesZErrors": "{0} 行，{1} 個字幕，{2} 個錯誤",
+    "couldNotParseAsX": "無法解析為 {0}",
+    "selectedXCharactersYLines": "已選取：{1} 行中的 {0} 個字元",
+    "replacedXOccurrences": "已取代 {0} 個相符項目",
+    "invalidRegularExpression": "無效的正規表示式",
+    "moveLineUp": "向上移動行",
+    "moveLineDown": "向下移動行",
+    "duplicateLine": "複製行",
+    "deleteLine": "刪除行",
+    "closeSearch": "關閉搜尋"
   },
   "tools": {
     "aiReview": {
@@ -1557,6 +1586,8 @@
       "fixMinDurationMs": "修正最小持續時間（毫秒）",
       "doNotGoPastShotChange": "不要超過鏡頭切換點",
       "fixMaxDurationMs": "修正最大持續時間（毫秒）",
+      "minimumDurationMilliseconds": "最小持續時間（毫秒）：",
+      "maximumDurationMilliseconds": "最大持續時間（毫秒）：",
       "maxDurationShouldBeHigherThanMinDuration": "最長持續時間應高於最短持續時間",
       "changedDurationFromXToYCommentZ": "將持續時間從 {0} 改為 {1} {2}",
       "onlyPartialFixed": "（僅部分修復）",
@@ -1591,7 +1622,11 @@
       "noReasonNote": "依設定檔規則精修",
       "previousChange": "上一個變更",
       "nextChange": "下一個變更",
-      "editProfile": "編輯設定檔..."
+      "editProfile": "編輯設定檔...",
+      "batchSnapToShotChanges": "對齊提示點至鏡頭切換點（若可用）",
+      "batchFrameRateFromVideo": "使用與字幕檔案同名的影片檔案之影格率",
+      "batchFrameRateFixed": "使用固定影格率",
+      "batchInfo": "若找到與字幕檔案同名的影片檔案，將從中讀取鏡頭切換資訊。"
     },
     "beautifyTimeCodesProfile": {
       "title": "編輯美化時間碼設定檔",
@@ -2011,7 +2046,9 @@
       "changeUnderlineToColor": "將下劃線轉為顏色",
       "engineSettings": "語音轉文本引擎設置",
       "engineSettingsSubtitle": "語音轉文本引擎",
-      "backendAndUpdateStatus": "後台及更新狀態"
+      "backendAndUpdateStatus": "後端與更新狀態",
+      "addLanguageCodeToFileName": "新增語言代碼至檔案名稱",
+      "addLanguageCodeToFileNameHint": "將產生的字幕命名為像是【video.en.srt】，而非【video.srt】"
     },
     "textToSpeech": {
       "title": "文字轉語音",
@@ -2430,7 +2467,9 @@
       "autoBreakCommaBreakEarly": "逗號提早自動斷行",
       "autoBreakDashEarly": "破折號（對話）提早自動斷行",
       "autoBreakUsePixelWidth": "依像素寬度自動斷行",
-      "autoBreakPreferBottomHeavy": "自動斷行偏好上短下長",
+      "autoBreakPreferBottomHeavy": "自動斷行偏好下重上輕",
+      "autoBreakPreferBottomPercent": "自動斷行的下重比例",
+      "useDoNotBreakAfterList": "使用 禁止在其後斷行 清單",
       "newEmptyDefaultMs": "新字幕預設持續時間 (毫秒)",
       "timeCodeUpDownStepMs": "時間 上升/下降 調量（毫秒）",
       "promptBeforeDelete": "刪除前進行提示",
@@ -2521,6 +2560,8 @@
       "spellCheckEnglishTreatInApostropheAsIng": "拼字檢查：將以 'in'' 結尾的單字視為 'ing'（僅限英文）",
       "goToLineNumberSetsVideoPosition": "移至行號時同時同步影片位置",
       "adjustAllTimesRememberLineSelectionChoice": "調整所有時間時，記住行數選取狀態",
+      "mergeKeepEndTime": "合併行：保留結束時間（允許與下一個字幕重疊）",
+      "mergeKeepEndTimeOnlyAssa": "合併行：僅對「Advanced Sub Station Alpha」保留結束時間",
       "filesAndLogs": "檔案和日誌",
       "showErrorLogFile": "顯示錯誤日誌檔案",
       "showToolsLogFile": "顯示工具日誌檔案",
@@ -2592,6 +2633,10 @@
       "gridGoToSubtitleAndPlay": "跳至字幕並播放",
       "gridGoToSubtitleAndPauseAndFocusTextBox": "跳至字幕、暫停和聚焦文字框",
       "gridGoToSubtitleAndPlayAndFocusTextBox": "跳至字幕播放並聚焦文字框",
+      "subtitleListActionVideoGoToPositionAndPlayCurrentAndPause": "跳至影片位置、播放目前字幕之後暫停",
+      "subtitleListActionVideoGoToPositionMinus1SecAndPause": "跳至影片位置 - 1秒 並暫停",
+      "subtitleListActionVideoGoToPositionMinusHalfSecAndPause": "跳至影片位置 - 0.5秒 並暫停",
+      "subtitleListActionVideoGoToPositionMinus1SecAndPlay": "跳至影片位置 - 1秒 並播放",
       "subtitleGridFormattingNone": "無格式",
       "subtitleGridFormattingShowFormatting": "顯示格式",
       "subtitleGridFormattingShowTags": "顯示標籤",
@@ -3057,7 +3102,9 @@
     "llamaCppReturnedNoText": "llama.cpp 未回傳任何文字 — 請檢查伺服器與模型狀態",
     "llamaCppDownloadEngineAndModelPrompt": "llama.cpp 需要下載 llama-server 引擎與所選的 OCR 模型。要立即下載嗎？",
     "llamaCppDownloadEnginePrompt": "llama.cpp 需要下載 llama-server 引擎。要立即下載嗎？",
-    "llamaCppDownloadModelPrompt": "llama.cpp 需要下載所選的 OCR 模型。要立即下載嗎？"
+    "llamaCppDownloadModelPrompt": "llama.cpp 需要下載選取的 OCR 模型。要立即下載嗎？",
+    "crispEmbedNotDownloaded": "未下載 CrispEmbed 引擎／模型 — 請透過批次轉換設定進行下載",
+    "crispEmbedReturnedNoText": "CrispEmbed 未回傳任何文字 — 請檢查模型"
   },
   "assa": {
     "assaDraw": "ASSA 繪圖",
@@ -3120,7 +3167,7 @@
     "resolutionResamplerTitle": "改變解析度",
     "resolutionResamplerSourceRes": "來源解析度",
     "resolutionResamplerTargetRes": "目標解析度",
-    "resolutionResamplerChangeMargins": "變更邊界",
+    "resolutionResamplerChangeMargins": "變更邊距",
     "resolutionResamplerChangeFontSize": "變更字體大小",
     "resolutionResamplerChangePositions": "變更位置",
     "resolutionResamplerChangeDrawing": "變更繪圖",
