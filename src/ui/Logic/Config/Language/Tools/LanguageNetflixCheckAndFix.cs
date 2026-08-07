@@ -23,6 +23,8 @@ public class LanguageNetflixCheckAndFix
     public string TextforHiUseBrackets { get; set; }
     public string TwoFrameGrap { get; set; }
     public string WhiteSpace { get; set; }
+    public string ChildrensProgram { get; set; }
+    public string Sdh { get; set; }
 
     // Checker comment strings
     public string GlyphCheckReport { get; set; }
@@ -83,6 +85,8 @@ public class LanguageNetflixCheckAndFix
         TextforHiUseBrackets = "Text for HI, use brackets";
         TwoFrameGrap = "Two frame gap";
         WhiteSpace = "White space";
+        ChildrensProgram = "Children's program";
+        Sdh = "SDH (deaf/hard of hearing)";
 
         // Checker comment strings
         GlyphCheckReport = "Invalid character {0} found at column {1}";

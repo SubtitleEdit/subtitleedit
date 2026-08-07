@@ -18,7 +18,7 @@ public class NetflixCheckTextForHiUseBrackets : INetflixQualityChecker
 
     public void Check(Subtitle subtitle, NetflixQualityController controller)
     {
-        if (controller.Language == "jp")
+        if (controller.Language == "ja")
         {
             return;
         }
