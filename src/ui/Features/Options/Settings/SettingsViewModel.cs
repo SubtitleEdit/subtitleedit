@@ -15,6 +15,7 @@ using Nikse.SubtitleEdit.Core.Enums;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using Nikse.SubtitleEdit.Features.Assa;
 using Nikse.SubtitleEdit.Features.Main;
+using Nikse.SubtitleEdit.Features.Options.DoNotBreakAfterList;
 using Nikse.SubtitleEdit.Features.Options.Settings.SyntaxColorTooWideSettings;
 using Nikse.SubtitleEdit.Features.Tools.BeautifyTimeCodes.Profile;
 using Nikse.SubtitleEdit.Features.Options.Settings.WaveformThemes;
@@ -2099,6 +2100,17 @@ public partial class SettingsViewModel : ObservableObject
             ColorTextTooWideFontName = viewModel.SelectedFont;
             ColorTextTooWideFontSize = viewModel.FontSize;
         }
+    }
+
+    [RelayCommand]
+    private async Task EditDoNotBreakAfterList()
+    {
+        if (Window == null)
+        {
+            return;
+        }
+
+        await _windowService.ShowDialogAsync<DoNotBreakAfterListWindow, DoNotBreakAfterListViewModel>(Window);
     }
 
     [RelayCommand]
