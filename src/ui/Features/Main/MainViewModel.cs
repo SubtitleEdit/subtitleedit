@@ -8857,6 +8857,12 @@ public partial class MainViewModel :
 
             SelectAndScrollToRow(0);
         }
+
+        // Point sync can open a video of its own - take it over here too (issue #13341).
+        if (string.IsNullOrEmpty(_videoFileName) && File.Exists(result.VideoFileName))
+        {
+            await VideoOpenFile(result.VideoFileName);
+        }
     }
 
     [RelayCommand]
@@ -8884,6 +8890,12 @@ public partial class MainViewModel :
             ReplaceSubtitles(result.SyncedSubtitles);
 
             SelectAndScrollToRow(0);
+        }
+
+        // "Set sync point via video" can open a video of its own - take it over here too (issue #13341).
+        if (string.IsNullOrEmpty(_videoFileName) && File.Exists(result.VideoFileName))
+        {
+            await VideoOpenFile(result.VideoFileName);
         }
     }
 
