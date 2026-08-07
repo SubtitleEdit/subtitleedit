@@ -7029,6 +7029,19 @@ public partial class MainViewModel :
         }
     }
 
+    /// <summary>
+    /// Plays a single line from its start and stops at its end - the SE4
+    /// "go to video position, play current, and pause" behavior.
+    /// </summary>
+    private void PlayLineAndPauseAtEnd(VideoPlayerControl vp, SubtitleLineViewModel item)
+    {
+        vp.VideoPlayer.Pause();
+        vp.Position = item.StartTime.TotalSeconds;
+        PinPlayheadTo(item.StartTime.TotalSeconds);
+        _playSelectionItem = new PlaySelectionItem([item], item.EndTime, false);
+        vp.VideoPlayer.Play();
+    }
+
     private bool PlayerSelectedLines(bool loop)
     {
         var selectedItems = SubtitleGridSelectedItems.Cast<SubtitleLineViewModel>().OrderBy(p => p.StartTime).ToList();
@@ -24010,6 +24023,40 @@ public partial class MainViewModel :
                 vp.VideoPlayer.Play();
                 AudioVisualizerCenterOnPositionIfNeeded(selectedItem, seconds);
                 FocusEditTextBox();
+                return;
+            }
+
+            if (Se.Settings.General.SubtitleDoubleClickAction == SubtitleDoubleClickActionType.GoToSubtitleAndPlayCurrentAndPause.ToString())
+            {
+                PlayLineAndPauseAtEnd(vp, selectedItem);
+                AudioVisualizerCenterOnPositionIfNeeded(selectedItem, seconds);
+                return;
+            }
+
+            if (Se.Settings.General.SubtitleDoubleClickAction == SubtitleDoubleClickActionType.GoToSubtitleMinus1SecAndPause.ToString())
+            {
+                seconds = Math.Max(0, seconds - 1.0);
+                PauseVideoAndFreezePlayhead(vp);
+                vp.Position = seconds;
+                AudioVisualizerCenterOnPositionIfNeeded(selectedItem, seconds);
+                return;
+            }
+
+            if (Se.Settings.General.SubtitleDoubleClickAction == SubtitleDoubleClickActionType.GoToSubtitleMinusHalfSecAndPause.ToString())
+            {
+                seconds = Math.Max(0, seconds - 0.5);
+                PauseVideoAndFreezePlayhead(vp);
+                vp.Position = seconds;
+                AudioVisualizerCenterOnPositionIfNeeded(selectedItem, seconds);
+                return;
+            }
+
+            if (Se.Settings.General.SubtitleDoubleClickAction == SubtitleDoubleClickActionType.GoToSubtitleMinus1SecAndPlay.ToString())
+            {
+                seconds = Math.Max(0, seconds - 1.0);
+                vp.Position = seconds;
+                vp.VideoPlayer.Play();
+                AudioVisualizerCenterOnPositionIfNeeded(selectedItem, seconds);
                 return;
             }
 
