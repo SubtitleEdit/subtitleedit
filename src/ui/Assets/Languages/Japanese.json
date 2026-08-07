@@ -1380,7 +1380,9 @@
       "notInCharacterGroup": "文字グループ外 ([^test])"
     },
     "showHistory": "元に戻す",
-    "restoreSelected": "指定した部分だけ戻す"
+    "restoreSelected": "指定した部分だけ戻す",
+    "noSubtitleSelected": "字幕が選択されていません",
+    "pleaseSelectExactlyOneSubtitle": "字幕を1つだけ選択してください"
   },
   "tools": {
     "aiReview": {
@@ -1643,7 +1645,6 @@
     },
     "batchConvert": {
       "title": "一括変換",
-      "assaSource": "ASSソース",
       "oneActionsSelected": "1件の操作を選択",
       "xActionsSelected": "{0}件の操作を選択",
       "outputFolderSource": "出力フォルダ: 元フォルダ",
@@ -1653,6 +1654,7 @@
       "fileNameContainsDotDotDot": "ファイル名に含む...",
       "trackLanguageContainsDotDotDot": "トラック言語に含む...",
       "batchConvertSettings": "一括変換設定",
+      "assaSource": "ASSAソース",
       "addFormatting": "書式を追加",
       "addItalic": "斜体を追加",
       "addBold": "太字を追加",
@@ -1674,8 +1676,10 @@
       "fontSizeBounceIn": "フォントサイズバウンス表示",
       "assaChangeResolutionOnlyAppliesToAssa": "ASS字幕にのみ適用されます",
       "assaChangeStyleTitle": "スタイル変更",
+      "assaEmbedFontsTitle": "フォントを埋め込む",
+      "assaEmbedFontsInfo": "字幕で使用するフォントを出力ファイルに埋め込みます。Subtitle Edit のフォントフォルダーとシステムフォントから検索し、埋め込み済みのフォントは保持されます。ASSA形式出力時のみ適用されます。",
       "adjustImageColorsTitle": "画像の明るさ・透明度・色を調整",
-      "adjustImageColorsInfo": "画像字幕を別の画像字幕形式へ変換する場合のみ適用されます（例：Blu-ray sup → Blu-ray sup）。",
+      "adjustImageColorsInfo": "画像ベースの字幕を画像ベース形式へ変換する場合にのみ適用されます（例: Blu-ray SUP → Blu-ray SUP）。",
       "assaChangeStyleFromStyle": "変更元スタイル",
       "assaChangeStyleToStyle": "変更先",
       "assaChangeStyleImportStyle": "スタイルをインポート...",
@@ -3053,7 +3057,9 @@
     "llamaCppReturnedNoText": "llama.cppからテキストが返されませんでした - サーバーとモデルを確認してください",
     "llamaCppDownloadEngineAndModelPrompt": "llama.cppには、llama-serverエンジンと選択したOCRモデルのダウンロードが必要です。今すぐダウンロードしますか？",
     "llamaCppDownloadEnginePrompt": "llama.cppには、llama-serverエンジンのダウンロードが必要です。今すぐダウンロードしますか？",
-    "llamaCppDownloadModelPrompt": "llama.cppには、選択したOCRモデルのダウンロードが必要です。今すぐダウンロードしますか？"
+    "llamaCppDownloadModelPrompt": "llama.cppには、選択したOCRモデルのダウンロードが必要です。今すぐダウンロードしますか？",
+    "crispEmbedNotDownloaded": "CrispEmbed エンジン/モデルがダウンロードされていません。バッチ変換の設定からダウンロードしてください",
+    "crispEmbedReturnedNoText": "CrispEmbed の認識結果が空でした。モデルを確認してください"
   },
   "assa": {
     "mouseOverColor": "マウスオーバー時の色",
