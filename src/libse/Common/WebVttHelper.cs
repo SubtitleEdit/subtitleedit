@@ -23,6 +23,8 @@ namespace Nikse.SubtitleEdit.Core.Common
         private static readonly Regex PropertiesRegex = new Regex("{[ \\.\\p{L}\\d:#\\s,_;:\\-\\(\\)]+}", RegexOptions.Compiled);
 #endif
 
+        private static readonly Regex CueClassRegex = new Regex(@"<c\.[\.a-zA-Z\d#_-]+>", RegexOptions.Compiled);
+
         public static List<WebVttStyle> GetStyles(string header)
         {
             if (string.IsNullOrEmpty(header))
@@ -555,19 +557,30 @@ namespace Nikse.SubtitleEdit.Core.Common
 
         public static List<string> GetParagraphStyles(Paragraph paragraph)
         {
+            return paragraph == null ? new List<string>() : GetParagraphStyles(paragraph.Text);
+        }
+
+        /// <summary>
+        /// The cue class names used in a cue text ("&lt;c.loud.red&gt;" gives ".loud" and ".red"),
+        /// in the order they appear and without duplicates.
+        /// </summary>
+        public static List<string> GetParagraphStyles(string text)
+        {
             var list = new List<string>();
-            if (paragraph == null || string.IsNullOrEmpty(paragraph.Text))
+            if (string.IsNullOrEmpty(text))
             {
                 return list;
             }
 
-            var regex = new Regex(@"<c\.[\.a-zA-Z\d#_-]+>");
-            foreach (Match match in regex.Matches(paragraph.Text))
+            foreach (Match match in CueClassRegex.Matches(text))
             {
                 var styles = match.Value.Remove(0, 3).Trim('>', ' ').Split('.');
                 foreach (var styleName in styles)
                 {
-                    if (!string.IsNullOrEmpty(styleName) && !list.Contains(styleName))
+                    // The list holds the names with their leading dot, so the duplicate check
+                    // has to use the same spelling - without it a class used by two separate
+                    // "<c.x>" tags in one cue was listed twice.
+                    if (!string.IsNullOrEmpty(styleName) && !list.Contains("." + styleName))
                     {
                         list.Add("." + styleName);
                     }
@@ -585,12 +598,11 @@ namespace Nikse.SubtitleEdit.Core.Common
             }
 
             var text = p.Text;
-            var regex = new Regex(@"<c\.[\.a-zA-Z\d#_-]+>");
-            var match = regex.Match(text);
+            var match = CueClassRegex.Match(text);
             while (match.Success)
             {
                 text = text.Remove(match.Index, match.Value.Length);
-                match = regex.Match(text);
+                match = CueClassRegex.Match(text);
             }
 
             text = text.Replace("</c>", string.Empty);

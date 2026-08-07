@@ -326,4 +326,23 @@ public class WebVttTest
         Assert.Contains("position:44.90%", cueLine);
         Assert.Equal(1, cueLine.Split(new[] { "region:" }, StringSplitOptions.None).Length - 1);
     }
+
+    [Theory]
+    [InlineData("<v Joe>Hello", "Joe")]
+    [InlineData("<v Joe Smith>Hello</v>", "Joe Smith")]
+    [InlineData("<v Joe>Hello\r\n<v Ann>Hi", "Joe")] // first voice wins - it is the line's speaker
+    [InlineData("Hello", "")]
+    [InlineData("", "")]
+    public void GetVoiceReadsTheFirstVoiceTag(string text, string expected)
+    {
+        Assert.Equal(expected, WebVTT.GetVoice(text));
+    }
+
+    [Fact]
+    public void GetVoicesOfOneTextListsEachVoiceOnce()
+    {
+        var voices = WebVTT.GetVoices("<v Joe>Hello</v> <v Ann>Hi</v> <v Joe>Bye</v>");
+
+        Assert.Equal(new List<string> { "Joe", "Ann" }, voices);
+    }
 }
