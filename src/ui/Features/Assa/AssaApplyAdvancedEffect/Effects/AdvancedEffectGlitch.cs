@@ -38,9 +38,9 @@ public class AdvancedEffectGlitch : IAdvancedEffectDisplay
             double totalMs = sub.Duration.TotalMilliseconds;
             var rng = new Random(sub.Text.GetHashCode());
 
-            if (string.IsNullOrEmpty(cleanText))
+            if (string.IsNullOrEmpty(cleanText) || totalMs <= 0)
             {
-                result.Add(sub);
+                result.Add(AdvancedEffectUtil.PassThrough(sub));
                 continue;
             }
 
@@ -104,7 +104,7 @@ public class AdvancedEffectGlitch : IAdvancedEffectDisplay
                         break;
                     case 3: // Font shear (\fax) — digital skew distortion
                         double shear = rng.NextDouble() * 0.6 - 0.3;
-                        tags = $"\\fax{shear:F2}\\1c&HFFFFFF&\\alpha&H{alphaHex}&\\blur0.5\\shad0";
+                        tags = $"\\fax{AdvancedEffectUtil.Tag(shear)}\\1c&HFFFFFF&\\alpha&H{alphaHex}&\\blur0.5\\shad0";
                         break;
                     case 4: // Scale jitter + slight tilt
                         int glitchFrz = rng.Next(-6, 7);

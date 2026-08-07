@@ -11,6 +11,9 @@ public class AdvancedEffectRainbowPulse : IAdvancedEffectDisplay
     public string Description => Se.Language.Assa.AdvancedEffectRainbowPulseDescription;
     public bool UsesAudio => false;
 
+    private static readonly System.Text.RegularExpressions.Regex TagOrTextRegex =
+        new(@"(\{.*?\})|([^{]+)", System.Text.RegularExpressions.RegexOptions.Compiled);
+
     public override string ToString() => Name;
 
     public List<SubtitleLineViewModel> ApplyEffect(string header, List<SubtitleLineViewModel> subtitles, int width, int height, WavePeakData2? wavePeaks)
@@ -22,7 +25,7 @@ public class AdvancedEffectRainbowPulse : IAdvancedEffectDisplay
         {
             // 1. Split the text into parts (Tags vs Text)
             // This regex finds everything inside { } and everything outside.
-            var matches = System.Text.RegularExpressions.Regex.Matches(sub.Text, @"(\{.*?\})|([^{]+)");
+            var matches = TagOrTextRegex.Matches(sub.Text);
 
             var fullParts = new List<(string Content, bool IsTag)>();
             foreach (System.Text.RegularExpressions.Match m in matches)
@@ -54,6 +57,8 @@ public class AdvancedEffectRainbowPulse : IAdvancedEffectDisplay
             int stepMs = 200;
 
             // 3. Create a line for each visible character
+            int generated = 0;
+            var colorCycle = new System.Text.StringBuilder();
             for (int i = 0; i < visibleChars.Count; i++)
             {
                 var target = visibleChars[i];
@@ -64,13 +69,19 @@ public class AdvancedEffectRainbowPulse : IAdvancedEffectDisplay
 
                 var charLine = new SubtitleLineViewModel(sub, generateNewId: true);
 
+                // All the per-character lines overlap in time at the same position, so each
+                // needs its own ASSA layer: same-layer unpositioned events trigger libass
+                // collision avoidance, which would stack them vertically instead of
+                // rendering them on top of each other.
+                charLine.Layer = sub.Layer + generated;
+
                 // Rainbow logic
                 int startColorIndex = i % rainbowColors.Length;
-                string colorCycle = "";
+                colorCycle.Clear();
                 for (int currentTime = 0, step = 1; currentTime < totalMs; currentTime += stepMs, step++)
                 {
                     int nextIndex = (startColorIndex + step) % rainbowColors.Length;
-                    colorCycle += $@"\t({currentTime},{currentTime + stepMs},\1c{rainbowColors[nextIndex]})";
+                    colorCycle.Append($@"\t({currentTime},{currentTime + stepMs},\1c{rainbowColors[nextIndex]})");
                 }
 
                 // Construct the string by rebuilding the parts
@@ -88,20 +99,27 @@ public class AdvancedEffectRainbowPulse : IAdvancedEffectDisplay
                         string left = partText.Substring(0, target.CharIndex);
                         string right = partText.Substring(target.CharIndex + 1);
 
-                        finalString.Append(@"{ \alpha&HFF& }").Append(left)
-                                   .Append(@"{ \alpha&H00&\1c").Append(rainbowColors[startColorIndex]).Append(colorCycle).Append(" }")
+                        finalString.Append(@"{\alpha&HFF&}").Append(left)
+                                   .Append(@"{\alpha&H00&\1c").Append(rainbowColors[startColorIndex]).Append(colorCycle).Append('}')
                                    .Append(target.Character)
-                                   .Append(@"{ \alpha&HFF& }").Append(right);
+                                   .Append(@"{\alpha&HFF&}").Append(right);
                     }
                     else
                     {
                         // This part is text but doesn't have our active letter, hide it
-                        finalString.Append(@"{ \alpha&HFF& }").Append(fullParts[p].Content);
+                        finalString.Append(@"{\alpha&HFF&}").Append(fullParts[p].Content);
                     }
                 }
 
                 charLine.Text = finalString.ToString();
                 result.Add(charLine);
+                generated++;
+            }
+
+            if (generated == 0)
+            {
+                // Nothing to animate (empty/whitespace-only line) - keep the line as-is
+                result.Add(AdvancedEffectUtil.PassThrough(sub));
             }
         }
         return result;
