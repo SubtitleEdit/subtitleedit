@@ -75,6 +75,49 @@ public class MergeManagerTests
         Assert.Contains("Hvordan gar det?", subtitles[0].OriginalText);
     }
 
+    // Issue #13307: the configured dialog style must decide dash placement and spacing,
+    // also when the first line has no sentence ending.
+    [Theory]
+    [InlineData("DashBothLinesWithSpace", "- Hi there", "- How are you?")]
+    [InlineData("DashBothLinesWithoutSpace", "-Hi there", "-How are you?")]
+    [InlineData("DashSecondLineWithSpace", "Hi there", "- How are you?")]
+    [InlineData("DashSecondLineWithoutSpace", "Hi there", "-How are you?")]
+    public void MergeSelectedLinesAsDialog_ShouldFollowDialogStyleSetting(string dialogStyle, string expectedLine1, string expectedLine2)
+    {
+        var originalDialogStyle = Se.Settings.General.DialogStyle;
+        try
+        {
+            Se.Settings.General.DialogStyle = dialogStyle;
+            var mergeManager = new MergeManager();
+            var subtitles = new ObservableCollection<SubtitleLineViewModel>
+            {
+                new()
+                {
+                    Number = 1,
+                    Text = "Hi there",
+                    StartTime = TimeSpan.FromSeconds(1),
+                    EndTime = TimeSpan.FromSeconds(2),
+                },
+                new()
+                {
+                    Number = 2,
+                    Text = "How are you?",
+                    StartTime = TimeSpan.FromSeconds(2),
+                    EndTime = TimeSpan.FromSeconds(3),
+                },
+            };
+
+            mergeManager.MergeSelectedLinesAsDialog(subtitles, [subtitles[0], subtitles[1]]);
+
+            Assert.Single(subtitles);
+            Assert.Equal(expectedLine1 + Environment.NewLine + expectedLine2, subtitles[0].Text);
+        }
+        finally
+        {
+            Se.Settings.General.DialogStyle = originalDialogStyle;
+        }
+    }
+
     [Fact]
     public void MergeSelectedLines_ShouldKeepOriginalTextEmpty_WhenBothOriginalTextsAreEmpty()
     {

@@ -314,15 +314,20 @@ namespace Nikse.SubtitleEdit.Logic
             var subtitle = new Subtitle();
             subtitle.Paragraphs.AddRange(subtitles.Select(p=>new Paragraph(p.Text, p.StartTime.TotalMilliseconds, p.EndTime.TotalMilliseconds)));
             var language = LanguageAutoDetect.AutoDetectGoogleLanguage(subtitle);
-            var dialogHelper = new DialogSplitMerge { DialogStyle = Enum.Parse<DialogType>(Se.Settings.General.DialogStyle), TwoLetterLanguageCode = language };
-            var dialogText = dialogHelper.FixDashes("- " + currentText.TrimStart(' ', '-') + Environment.NewLine + "- " + nextText.TrimStart(' ', '-'));
+            var dialogHelper = new DialogSplitMerge
+            {
+                DialogStyle = Enum.Parse<DialogType>(Se.Settings.General.DialogStyle),
+                TwoLetterLanguageCode = language,
+                SkipLineEndingCheck = true, // user explicitly asked for a dialog merge
+            };
+            var dialogText = dialogHelper.FixDashesAndSpaces("- " + currentText.TrimStart(' ', '-') + Environment.NewLine + "- " + nextText.TrimStart(' ', '-'));
             currentParagraph.Text = dialogText;
 
             if (!string.IsNullOrWhiteSpace(currentOriginalText) || !string.IsNullOrWhiteSpace(nextOriginalText))
             {
-                var dialogOriginalText = dialogHelper.FixDashes("- " + currentOriginalText.TrimStart(' ', '-') 
-                                                                     + Environment.NewLine + "- " 
-                                                                     + nextOriginalText.TrimStart(' ', '-'));
+                var dialogOriginalText = dialogHelper.FixDashesAndSpaces("- " + currentOriginalText.TrimStart(' ', '-')
+                                                                              + Environment.NewLine + "- "
+                                                                              + nextOriginalText.TrimStart(' ', '-'));
                 currentParagraph.OriginalText = dialogOriginalText;
             }
 
