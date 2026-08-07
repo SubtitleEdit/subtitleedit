@@ -1,3 +1,5 @@
+using Avalonia.Media;
+using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using Nikse.SubtitleEdit.Features.Main;
 using System;
 using System.Globalization;
@@ -48,6 +50,46 @@ internal static class AdvancedEffectUtil
         }
 
         return PositionTagRegex.Replace(text, string.Empty).Replace("{}", string.Empty);
+    }
+
+    /// <summary>
+    /// Formats an Avalonia color as an ASS primary/secondary color value (BGR order).
+    /// </summary>
+    public static string ToAssColor(Color color) => $"&H{color.B:X2}{color.G:X2}{color.R:X2}&";
+
+    /// <summary>
+    /// Resolves the coordinate space for positioning tags. \pos, \move and \clip use
+    /// SCRIPT coordinates (the header's PlayResX/PlayResY), not video pixels - with e.g.
+    /// the 384x288 default header, video-pixel geometry lands far outside the visible
+    /// area. Falls back to the video dimensions, then 1280x720, when the header has no
+    /// resolution.
+    /// </summary>
+    public static (int Width, int Height) GetScriptResolution(string header, int videoWidth, int videoHeight)
+    {
+        int w = 0, h = 0;
+        if (!string.IsNullOrEmpty(header))
+        {
+            w = ParseHeaderInt(AdvancedSubStationAlpha.GetTagFromHeader("PlayResX", "[Script Info]", header));
+            h = ParseHeaderInt(AdvancedSubStationAlpha.GetTagFromHeader("PlayResY", "[Script Info]", header));
+        }
+
+        if (w <= 0)
+        {
+            w = videoWidth > 0 ? videoWidth : 1280;
+        }
+        if (h <= 0)
+        {
+            h = videoHeight > 0 ? videoHeight : 720;
+        }
+        return (w, h);
+    }
+
+    private static int ParseHeaderInt(string? tagLine)
+    {
+        var idx = tagLine?.IndexOf(':') ?? -1;
+        return idx >= 0 && int.TryParse(tagLine![(idx + 1)..].Trim(), NumberStyles.Integer, CultureInfo.InvariantCulture, out var value)
+            ? value
+            : 0;
     }
 
     private static readonly Regex FirstTagBlockRegex = new(@"^\{([^}]*)\}", RegexOptions.Compiled);

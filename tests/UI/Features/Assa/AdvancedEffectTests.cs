@@ -249,10 +249,81 @@ public class AdvancedEffectTests
     }
 
     [Fact]
+    public void CinematicTitle_AppliesTrackingAndFocusPull()
+    {
+        var effect = new AdvancedEffectCinematicTitle();
+        var result = effect.ApplyEffect(string.Empty, [MakeLine("THE END", durationMs: 5000)], 1280, 720, null);
+
+        Assert.Single(result);
+        var text = result[0].Text;
+        Assert.Contains(@"\fsp20\blur16", text);            // wide tracking, out of focus
+        Assert.Contains(@"\t(0,1200,\fsp0\blur0)", text);   // resolve to normal
+        Assert.Contains(@"\t(4200,5000,\fsp12\blur10)", text); // mirrored exit on long lines
+        Assert.Contains(@"\fad(", text);
+        Assert.EndsWith("THE END", text);
+    }
+
+    [Fact]
+    public void CinematicTitle_ShortLine_SkipsTheExit()
+    {
+        var effect = new AdvancedEffectCinematicTitle();
+        var result = effect.ApplyEffect(string.Empty, [MakeLine("Hi", durationMs: 1500)], 1280, 720, null);
+
+        Assert.DoesNotContain(@"\fsp12\blur10", result[0].Text);
+    }
+
+    /// <summary>
+    /// First line is the name, following lines the role; an accent bar slides in between.
+    /// Three events on distinct ascending layers.
+    /// </summary>
+    [Fact]
+    public void LowerThird_NameAndRole_ProducesBarNameAndRole()
+    {
+        var effect = new AdvancedEffectLowerThird();
+        var result = effect.ApplyEffect(string.Empty, [MakeLine("Jane Doe\\NDirector of Photography".Replace("\\N", "\n"))], 1280, 720, null);
+
+        Assert.Equal(3, result.Count);
+        Assert.True(result[0].Layer < result[1].Layer && result[1].Layer < result[2].Layer);
+        Assert.Contains(@"\p1", result[0].Text);              // accent bar drawing
+        Assert.Contains(@"\move(", result[0].Text);
+        Assert.Contains(@"\b1", result[1].Text);              // bold name
+        Assert.EndsWith("Jane Doe", result[1].Text);
+        Assert.Contains(@"\fscx80\fscy80", result[2].Text);   // smaller role
+        Assert.EndsWith("Director of Photography", result[2].Text);
+    }
+
+    [Fact]
+    public void LowerThird_SingleLine_OmitsTheRoleEvent()
+    {
+        var effect = new AdvancedEffectLowerThird();
+        var result = effect.ApplyEffect(string.Empty, [MakeLine("Jane Doe")], 1280, 720, null);
+
+        Assert.Equal(2, result.Count); // bar + name only
+    }
+
+    /// <summary>
+    /// \pos/\move geometry is in SCRIPT space: with a header whose PlayRes differs from
+    /// the video size, the banner must use the header's resolution or it renders
+    /// off-screen (the Spotlight reveal lesson).
+    /// </summary>
+    [Fact]
+    public void LowerThird_UsesHeaderPlayResForGeometry()
+    {
+        const string header = "[Script Info]\nPlayResX: 384\nPlayResY: 288\n\n[V4+ Styles]\n";
+        var effect = new AdvancedEffectLowerThird();
+        var result = effect.ApplyEffect(header, [MakeLine("Jane Doe")], 1920, 1080, null);
+
+        // bar: width 384*0.30=115, y 288*0.845=243, target x 384*0.06=23
+        Assert.Contains(@"\move(-115,243,23,243", result[0].Text);
+    }
+
+    [Fact]
     public void Factory_ContainsTheNewEffects()
     {
         var list = Nikse.SubtitleEdit.Features.Assa.AssaApplyAdvancedEffect.AdvancedEffectDisplayFactory.List();
 
         Assert.Contains(list, e => e is AdvancedEffectWordFlip3D);
+        Assert.Contains(list, e => e is AdvancedEffectCinematicTitle);
+        Assert.Contains(list, e => e is AdvancedEffectLowerThird);
     }
 }
