@@ -178,7 +178,7 @@ public class GoogleSpeech : ITtsEngine
             return new TtsResult { Text = text, FileName = string.Empty, Error = true };
         }
 
-        var fileName = Path.Combine(GetSetGoogleFolder(), Guid.NewGuid() + ".mp3");
+        var fileName = Path.Combine(TtsOutputFolder.Resolve(outputFolder, GetSetGoogleFolder()), Guid.NewGuid() + ".mp3");
         await File.WriteAllBytesAsync(fileName, ms.ToArray(), cancellationToken);
         return new TtsResult { Text = text, FileName = fileName };
     }

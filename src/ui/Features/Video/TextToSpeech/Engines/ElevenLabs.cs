@@ -307,7 +307,7 @@ public class ElevenLabs : ITtsEngine
             return new TtsResult { Text = text, FileName = string.Empty, Error = true, ErrorMessage = error };
         }
 
-        var fileName = Path.Combine(GetSetElevenLabsFolder(), Guid.NewGuid() + ".mp3");
+        var fileName = Path.Combine(TtsOutputFolder.Resolve(outputFolder, GetSetElevenLabsFolder()), Guid.NewGuid() + ".mp3");
         await File.WriteAllBytesAsync(fileName, ms.ToArray(), cancellationToken);
         return new TtsResult { Text = text, FileName = fileName };
     }

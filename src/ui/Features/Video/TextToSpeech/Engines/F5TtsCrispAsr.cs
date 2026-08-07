@@ -376,7 +376,7 @@ public class F5TtsCrispAsr : ITtsEngine
         var modelKey = ResolveModelKey(model);
         await EnsureServerRunningAsync(modelKey, f5Voice.FilePath, refText, cancellationToken);
 
-        var outputFileName = Path.Combine(GetSetFolder(), Guid.NewGuid() + ".wav");
+        var outputFileName = Path.Combine(TtsOutputFolder.Resolve(outputFolder, GetSetFolder()), Guid.NewGuid() + ".wav");
 
         var speed = Math.Clamp(Se.Settings.Video.TextToSpeech.F5TtsCrispAsrSpeed, 0.25, 4.0);
         // Deliberately NO `voice` / `ref_text` field: the server rejects absolute paths outright

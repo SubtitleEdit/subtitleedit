@@ -107,6 +107,11 @@ public class LanguageTextToSpeech
     public string SubtitleMergedLinesAppliedSingular { get; set; }
     public string SubtitleMergedLinesAppliedPlural { get; set; }
 
+    // Output folder for generated audio files (advanced TTS settings)
+    public string OutputFolder { get; set; }
+    public string OutputFolderHint { get; set; }
+    public string OutputFolderBrowse { get; set; }
+
     public LanguageTextToSpeech()
     {
         Title = "Text to speech";
@@ -120,6 +125,9 @@ public class LanguageTextToSpeech
         AddAudioToVideoFile = "Add audio to video file";
         EngineAndVoice = "Engine & voice";
         Output = "Output";
+        OutputFolder = "Output folder";
+        OutputFolderHint = "Folder for the generated audio files. Empty = system temporary folder (per-line files are cleaned up after the merge; the final audio is saved via the save dialog).";
+        OutputFolderBrowse = "Browse...";
         XLinesFromY = "{0} lines from {1}";
         XLines = "{0} lines";
         XVoices = "{0} voices";

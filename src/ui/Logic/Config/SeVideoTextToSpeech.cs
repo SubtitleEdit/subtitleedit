@@ -98,6 +98,11 @@ public class SeVideoTextToSpeech
     // Output sample rate (0 = default)
     public int OutputSampleRate { get; set; }
 
+    // Folder for per-line generated audio files. Empty = system temp (scratch; files are
+    // intermediates and get cleaned up after the merge). When set, generated files are
+    // written to this folder and kept (#13332).
+    public string OutputFolder { get; set; }
+
     // Remembered actor/voice mappings. Pre-fills the cast dialog so users don't have to
     // re-assign the same character voices every time they open a new subtitle. Keyed by actor
     // name; matches happen case-insensitively.
@@ -169,6 +174,7 @@ public class SeVideoTextToSpeech
         HighQualityTimeStretchEnabled = false;
         SilencePaddingMs = 0;
         OutputSampleRate = 0;
+        OutputFolder = string.Empty;
         LastActorVoiceMappings = new List<ActorVoiceMapping>();
     }
 }

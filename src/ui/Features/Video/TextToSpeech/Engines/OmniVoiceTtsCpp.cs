@@ -235,7 +235,7 @@ public class OmniVoiceTtsCpp : ITtsEngine
                 $"OmniVoice TTS models not found in {GetSetModelsFolder()}. Download them via the TTS download dialog.");
         }
 
-        var outputFileName = Path.Combine(GetSetFolder(), Guid.NewGuid() + ".wav");
+        var outputFileName = Path.Combine(TtsOutputFolder.Resolve(outputFolder, GetSetFolder()), Guid.NewGuid() + ".wav");
         var inputText = text;
 
         var psi = new ProcessStartInfo

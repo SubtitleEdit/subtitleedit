@@ -231,7 +231,7 @@ public class Qwen3TtsCpp : ITtsEngine
         var modelFileName = GetModelFileName(ResolveModelKey(model));
         await EnsureServerRunningAsync(modelFileName, cancellationToken);
 
-        var outputFileName = Path.Combine(GetSetFolder(), Guid.NewGuid() + ".wav");
+        var outputFileName = Path.Combine(TtsOutputFolder.Resolve(outputFolder, GetSetFolder()), Guid.NewGuid() + ".wav");
         var inputText = text;
 
         // Voice instruction only does anything on the instruction-tuned VoiceDesign model;

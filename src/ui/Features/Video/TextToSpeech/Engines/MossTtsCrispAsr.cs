@@ -443,7 +443,7 @@ public class MossTtsCrispAsr : ITtsEngine
         var languageArg = MossTtsLanguages.ResolveLanguageArg(language);
         await EnsureServerRunningAsync(modelKey, mossVoice.FilePath, refText, languageArg, cancellationToken);
 
-        var outputFileName = Path.Combine(GetSetFolder(), Guid.NewGuid() + ".wav");
+        var outputFileName = Path.Combine(TtsOutputFolder.Resolve(outputFolder, GetSetFolder()), Guid.NewGuid() + ".wav");
 
         var speed = Math.Clamp(Se.Settings.Video.TextToSpeech.MossTtsCrispAsrSpeed, 0.25, 4.0);
         var payload = BuildSpeakPayload(text, speed);

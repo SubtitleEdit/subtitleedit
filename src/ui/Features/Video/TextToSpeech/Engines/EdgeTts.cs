@@ -123,7 +123,7 @@ public class EdgeTts : ITtsEngine
         }
 
         var folder = GetSetEdgeTtsFolder();
-        var fileName = Path.Combine(folder, Guid.NewGuid() + ".mp3");
+        var fileName = Path.Combine(TtsOutputFolder.Resolve(outputFolder, folder), Guid.NewGuid() + ".mp3");
         var escapedText = EscapeQuotedArgValue(text);
         var escapedVoice = EscapeQuotedArgValue(edgeVoice.Name);
         var args =

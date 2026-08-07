@@ -66,6 +66,32 @@ public class AdvancedTtsSettingsWindow : Window
                 MakeFieldRow(vm, Se.Language.Video.TextToSpeech.OutputSampleRate, nameof(vm.OutputSampleRate), 60,
                     Se.Language.Video.TextToSpeech.OutputSampleRateDescription),
 
+                new StackPanel
+                {
+                    Spacing = 2,
+                    Margin = new Thickness(0, 0, 0, 10),
+                    Children =
+                    {
+                        new StackPanel
+                        {
+                            Orientation = Orientation.Horizontal,
+                            Children =
+                            {
+                                new Label { Content = Se.Language.Video.TextToSpeech.OutputFolder, VerticalAlignment = VerticalAlignment.Center, FontWeight = FontWeight.SemiBold, Margin = new Thickness(0, 0, 5, 0) },
+                                UiUtil.MakeTextBox(260, vm, nameof(vm.OutputFolder)),
+                                UiUtil.MakeButton(Se.Language.Video.TextToSpeech.OutputFolderBrowse, vm.BrowseOutputFolderCommand),
+                            }
+                        },
+                        new TextBlock
+                        {
+                            Text = Se.Language.Video.TextToSpeech.OutputFolderHint,
+                            TextWrapping = TextWrapping.Wrap,
+                            Opacity = 0.7,
+                            Margin = new Thickness(26, 0, 0, 0),
+                        },
+                    }
+                },
+
                 MakeFieldRow(vm, Se.Language.Video.TextToSpeech.EdgeTtsRate, nameof(vm.EdgeTtsRate), 120,
                     Se.Language.Video.TextToSpeech.EdgeTtsRateDescription,
                     nameof(vm.IsEdgeTtsEngine)),

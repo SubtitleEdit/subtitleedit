@@ -144,6 +144,20 @@ public partial class TextToSpeechViewModel : ObservableObject
     private readonly IFileHelper _fileHelper;
     private readonly IFolderHelper _folderHelper;
     private string _waveFolder;
+    private string _generationOutputFolder = string.Empty;
+
+    // Snapshot of the output-folder decision made at Initialize: when the user configured a
+    // custom folder, session files are kept there by design and cleanup is disabled; with the
+    // default scratch folder (system temp) per-line files are intermediates and get deleted
+    // after the merge / on close (#13332). Snapshotting (not re-reading the setting) keeps the
+    // decision stable even if the setting changes mid-session.
+    private bool _keepSessionGeneratedFiles;
+
+    // Per-line files produced by this window's Speak calls (scratch). Deleted after the merge
+    // so the temporary folder doesn't fill with GUID-named wavs; kept when the user configured
+    // a custom output folder (#13332).
+    private readonly object _sessionAudioFilesLock = new();
+    private readonly List<string> _sessionGeneratedAudioFiles = new();
     private CancellationTokenSource _cancellationTokenSource;
     private CancellationToken _cancellationToken;
     private WavePeakData2? _wavePeakData;
@@ -972,6 +986,31 @@ public partial class TextToSpeechViewModel : ObservableObject
         ProgressValue = 0.0;
         _waveFolder = waveFolder;
 
+        // Per-line generated files: user-configured folder when set, otherwise the scratch
+        // folder (system temp). Engines used to ignore the folder they were given and wrote
+        // into their own data folders, piling up GUID-named files that were never cleaned
+        // (#13332) — see TtsOutputFolder.
+        var outputFolderSetting = Se.Settings.Video.TextToSpeech.OutputFolder;
+        _keepSessionGeneratedFiles = !string.IsNullOrWhiteSpace(outputFolderSetting);
+        _generationOutputFolder = _keepSessionGeneratedFiles ? outputFolderSetting : _waveFolder;
+        if (_keepSessionGeneratedFiles)
+        {
+            try
+            {
+                Directory.CreateDirectory(_generationOutputFolder);
+            }
+            catch (Exception ex)
+            {
+                // The setting is a free-text field: an unusable path (invalid chars, a file,
+                // no permission) must not prevent the TTS window from opening - fall back to
+                // the scratch folder and log instead.
+                Se.LogError(ex, "TTS: configured output folder is unusable - falling back to the temporary folder");
+                Se.WriteToolsLog($"TTS: configured output folder \"{outputFolderSetting}\" is unusable - falling back to the temporary folder");
+                _generationOutputFolder = _waveFolder;
+                _keepSessionGeneratedFiles = false;
+            }
+        }
+
         _castKind = ActorVoiceDetector.Detect(subtitle, format);
         // Only surface the cast button when there's actually more than one actor/voice to assign
         // — a single-speaker subtitle uses the global engine/voice and the button would be a no-op.
@@ -1046,7 +1085,7 @@ public partial class TextToSpeechViewModel : ObservableObject
         var usableEngines = ActorVoiceDetector.FilterUsableEngines(Engines).ToList();
         var result = await _windowService.ShowDialogAsync<ActorVoiceMappingWindow, ActorVoiceMappingViewModel>(Window!, vm =>
         {
-            vm.Initialize(actorNames, usableEngines, _actorVoiceMappings, SelectedEngine, SelectedVoice, _castKind, _waveFolder);
+            vm.Initialize(actorNames, usableEngines, _actorVoiceMappings, SelectedEngine, SelectedVoice, _castKind, _generationOutputFolder);
         });
 
         if (result.OkPressed)
@@ -1608,7 +1647,11 @@ public partial class TextToSpeechViewModel : ObservableObject
             // await, so awaiting it directly kept the dispatcher busy and left the "please wait"
             // popup above unpainted for the whole spawn (#12878).
             var result = await Task.Run(() =>
-                engine.Speak(text, _waveFolder, voice, SelectedLanguage, SelectedRegion, SelectedModel, testVoiceToken));
+                engine.Speak(text, _generationOutputFolder, voice, SelectedLanguage, SelectedRegion, SelectedModel, testVoiceToken));
+            if (!result.Error && !string.IsNullOrEmpty(result.FileName))
+            {
+                TrackSessionGeneratedFile(result.FileName);
+            }
             if (!testVoiceToken.IsCancellationRequested)
             {
                 if (result.Error || string.IsNullOrEmpty(result.FileName) || !File.Exists(result.FileName))
@@ -2197,6 +2240,7 @@ public partial class TextToSpeechViewModel : ObservableObject
         var audioFileName = await _fileHelper.PickSaveFile(Window!, ".wav", GetSuggestedMergedAudioFileName(), Se.Language.General.SaveFileAsTitle);
         if (string.IsNullOrEmpty(audioFileName))
         {
+            DeleteSessionGeneratedAudioFiles();
             ResetGeneratingUiState();
             return;
         }
@@ -2207,6 +2251,9 @@ public partial class TextToSpeechViewModel : ObservableObject
 
         await HandleAddToVideo(audioFileName, outputFolder, _cancellationToken);
 
+        // The merged track (saved above) is the deliverable - the per-line scratch wavs this
+        // session generated are no longer needed anywhere (#13332).
+        DeleteSessionGeneratedAudioFiles();
         ResetGeneratingUiState();
     }
 
@@ -2408,6 +2455,62 @@ public partial class TextToSpeechViewModel : ObservableObject
         }
     }
 
+    /// <summary>
+    /// Deletes the per-line audio files (and audio intermediates) this window generated. With
+    /// the default scratch folder (system temp) the files are pure intermediates — the merged
+    /// track the user saves is the deliverable — so they are removed after the merge and on
+    /// window close, instead of piling up GUID-named wavs forever (#13332). When the user
+    /// configured a custom output folder the files are intentionally kept there.
+    /// </summary>
+    private void DeleteSessionGeneratedAudioFiles()
+    {
+        if (_keepSessionGeneratedFiles)
+        {
+            return;
+        }
+
+        List<string> toDelete;
+        lock (_sessionAudioFilesLock)
+        {
+            toDelete = new List<string>(_sessionGeneratedAudioFiles);
+            _sessionGeneratedAudioFiles.Clear();
+        }
+
+        foreach (var file in toDelete)
+        {
+            try
+            {
+                if (File.Exists(file))
+                {
+                    File.Delete(file);
+                }
+            }
+            catch
+            {
+                // ignored - best-effort cleanup of scratch files
+            }
+        }
+    }
+
+    /// <summary>
+    /// Registers a generated audio file (or intermediate) for the session-end cleanup. All
+    /// files are tracked regardless of folder; <see cref="DeleteSessionGeneratedAudioFiles"/>
+    /// decides whether to delete them. Called from background threads (Speak runs off the UI
+    /// thread), hence the lock.
+    /// </summary>
+    private void TrackSessionGeneratedFile(string? filePath)
+    {
+        if (string.IsNullOrEmpty(filePath))
+        {
+            return;
+        }
+
+        lock (_sessionAudioFilesLock)
+        {
+            _sessionGeneratedAudioFiles.Add(filePath);
+        }
+    }
+
     private async Task<string> GenerateSilenceWaveFile(TtsStepResult[] stepResults, CancellationToken cancellationToken)
     {
         ProgressText = Se.Language.Video.TextToSpeech.PreparingMergeDotDotDot;
@@ -2513,8 +2616,12 @@ public partial class TextToSpeechViewModel : ObservableObject
                 var speakResult = await TtsInstructionSwap.RunAsync(
                     resolution.Engine,
                     resolution.Instruction,
-                    () => resolution.Engine.Speak(resolution.Text, _waveFolder, resolution.Voice,
+                    () => resolution.Engine.Speak(resolution.Text, _generationOutputFolder, resolution.Voice,
                         language, region, model, cancellationToken));
+                if (!speakResult.Error && !string.IsNullOrEmpty(speakResult.FileName))
+                {
+                    TrackSessionGeneratedFile(speakResult.FileName);
+                }
                 if (speakResult.Error && !string.IsNullOrEmpty(speakResult.ErrorMessage) && !errorMessages.Contains(speakResult.ErrorMessage))
                 {
                     errorMessages.Add(speakResult.ErrorMessage);
@@ -2820,6 +2927,7 @@ public partial class TextToSpeechViewModel : ObservableObject
                 {
                     // Step 1: Trim silence from start and end
                     var outputFileName1 = Path.Combine(Path.GetDirectoryName(item.CurrentFileName)!, Guid.NewGuid() + ".wav");
+                    TrackSessionGeneratedFile(outputFileName1);
                     var trimProcess = FfmpegGenerator.TrimSilenceStartAndEnd(item.CurrentFileName, outputFileName1);
                     await trimProcess.StartAndWaitAsync(cancellationToken, segmentOperationTimeout);
 
@@ -2831,6 +2939,7 @@ public partial class TextToSpeechViewModel : ObservableObject
                     if (doVad)
                     {
                         var vadOutput = Path.Combine(Path.GetDirectoryName(item.CurrentFileName)!, $"vad_{Guid.NewGuid()}.wav");
+                        TrackSessionGeneratedFile(vadOutput);
                         var vadProcess = FfmpegGenerator.CompressInternalSilence(currentFile, vadOutput, vadMaxSilence);
                         await vadProcess.StartAndWaitAsync(cancellationToken, segmentOperationTimeout);
 
@@ -2913,6 +3022,7 @@ public partial class TextToSpeechViewModel : ObservableObject
                     var ext = ".wav";
                     var factor = (decimal)mediaInfo.Duration.TotalMilliseconds / divisor;
                     var outputFileName2 = Path.Combine(_waveFolder, $"{index}_{Guid.NewGuid()}{ext}");
+                    TrackSessionGeneratedFile(outputFileName2);
                     var overrideFileName = string.Empty;
                     if (!string.IsNullOrEmpty(overrideFileName) && File.Exists(Path.Combine(_waveFolder, overrideFileName)))
                     {
@@ -3066,6 +3176,10 @@ public partial class TextToSpeechViewModel : ObservableObject
                 try
                 {
                     processedFile = await TtsPostProcessor.ApplyPostProcessing(item.CurrentFileName, Path.GetDirectoryName(item.CurrentFileName)!, cancellationToken);
+                    if (!string.Equals(processedFile, item.CurrentFileName, StringComparison.OrdinalIgnoreCase))
+                    {
+                        TrackSessionGeneratedFile(processedFile);
+                    }
                 }
                 catch (Exception ex) when (ex is not OperationCanceledException)
                 {
@@ -3643,6 +3757,11 @@ public partial class TextToSpeechViewModel : ObservableObject
         {
             SeLogger.Error(ex, "TTS window close: saving the window position failed");
         }
+
+        // Scratch per-line wavs from a session that never reached the merge (or whose merge
+        // cancelled) are junk once the window is gone (#13332). No-op with a custom output
+        // folder configured - those files are kept by design.
+        DeleteSessionGeneratedAudioFiles();
 
         Se.WriteToolsLog("TTS window: close cleanup done");
     }

@@ -5,6 +5,7 @@ using CommunityToolkit.Mvvm.Input;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.Engines;
 using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Logic.Media;
+using System.Threading.Tasks;
 
 namespace Nikse.SubtitleEdit.Features.Video.TextToSpeech.AdvancedTtsSettings;
 
@@ -23,12 +24,16 @@ public partial class AdvancedTtsSettingsViewModel : ObservableObject
     [ObservableProperty] private string _edgeTtsVolume;
     [ObservableProperty] private bool _isEdgeTtsEngine;
     [ObservableProperty] private string _rubberbandStatus;
+    [ObservableProperty] private string _outputFolder;
+
+    private readonly IFolderHelper _folderHelper;
 
     public Window? Window { get; set; }
     public bool OkPressed { get; private set; }
 
-    public AdvancedTtsSettingsViewModel()
+    public AdvancedTtsSettingsViewModel(IFolderHelper folderHelper)
     {
+        _folderHelper = folderHelper;
         RubberbandStatus = FfmpegGenerator.IsRubberbandAvailable() ? "(installed)" : "(not found in FFmpeg)";
         var s = Se.Settings.Video.TextToSpeech;
         DoProAudioChain = s.ProAudioChainEnabled;
@@ -39,9 +44,20 @@ public partial class AdvancedTtsSettingsViewModel : ObservableObject
         DoHighQualityTimeStretch = s.HighQualityTimeStretchEnabled;
         SilencePaddingMs = s.SilencePaddingMs.ToString();
         OutputSampleRate = s.OutputSampleRate.ToString();
+        OutputFolder = s.OutputFolder;
         EdgeTtsRate = s.EdgeTtsRate;
         EdgeTtsPitch = s.EdgeTtsPitch;
         EdgeTtsVolume = s.EdgeTtsVolume;
+    }
+
+    [RelayCommand]
+    private async Task BrowseOutputFolder()
+    {
+        var folder = await _folderHelper.PickFolderAsync(Window!, Se.Language.General.SelectSaveFolder);
+        if (!string.IsNullOrEmpty(folder))
+        {
+            OutputFolder = folder;
+        }
     }
 
     [RelayCommand]
@@ -59,6 +75,7 @@ public partial class AdvancedTtsSettingsViewModel : ObservableObject
         s.EdgeTtsRate = EdgeTts.NormalizeProsodyValue(EdgeTtsRate, "%");
         s.EdgeTtsPitch = EdgeTts.NormalizeProsodyValue(EdgeTtsPitch, "Hz");
         s.EdgeTtsVolume = EdgeTts.NormalizeProsodyValue(EdgeTtsVolume, "%");
+        s.OutputFolder = OutputFolder?.Trim() ?? string.Empty;
         Se.SaveSettings();
 
         OkPressed = true;
