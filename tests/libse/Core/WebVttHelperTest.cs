@@ -217,4 +217,27 @@ public class WebVttHelperTest
         Assert.Equal(SKColors.Red, readBack.Color);
         Assert.Equal(SKColors.Blue, readBack.BackgroundColor);
     }
+
+    [Fact]
+    public void GetParagraphStylesReadsAllClassesOfATag()
+    {
+        var styles = WebVttHelper.GetParagraphStyles("<c.loud.red>Hello</c>");
+
+        Assert.Equal(new List<string> { ".loud", ".red" }, styles);
+    }
+
+    [Fact]
+    public void GetParagraphStylesListsAClassUsedTwiceOnlyOnce()
+    {
+        var styles = WebVttHelper.GetParagraphStyles("<c.red>Hello</c>" + Environment.NewLine + "<c.red>world</c>");
+
+        Assert.Equal(new List<string> { ".red" }, styles);
+    }
+
+    [Fact]
+    public void GetParagraphStylesOfTextWithoutClasses()
+    {
+        Assert.Empty(WebVttHelper.GetParagraphStyles("<i>Hello</i>"));
+        Assert.Empty(WebVttHelper.GetParagraphStyles(string.Empty));
+    }
 }

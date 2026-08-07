@@ -1280,6 +1280,8 @@
     },
     "webVtt": {
       "setStylesForSelectedLinesTitle": "Set WebVTT styles for selected lines",
+      "voice": "Voice",
+      "showVoiceColumn": "Show \"Voice\" column",
       "voices": "Voices",
       "newVoiceDotDotDot": "New voice...",
       "removeVoices": "Remove voices",

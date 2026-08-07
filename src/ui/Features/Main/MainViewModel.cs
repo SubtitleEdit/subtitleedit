@@ -254,8 +254,21 @@ public partial class MainViewModel :
     [ObservableProperty] private bool _areVideoControlsUndocked;
     [ObservableProperty] private bool _isFormatAssa;
     [ObservableProperty] private bool _isFormatSsa;
+    [ObservableProperty] private bool _isFormatAssaOrSsa;
+
+    /// <summary>
+    /// True for the formats that have a style per line - ASSA/SSA in <see cref="SubtitleLineViewModel.Style"/>,
+    /// WebVTT as cue classes inside the cue text (<see cref="SubtitleLineViewModel.WebVttStyle"/>).
+    /// Each has its own grid column; this gates the shared "Show style column" menu item.
+    /// </summary>
     [ObservableProperty] private bool _hasFormatStyle;
     [ObservableProperty] private bool _isFormatWebVtt;
+
+    /// <summary>
+    /// Header of the grid's actor/voice toggle in the column context menu - the column itself is
+    /// "Actor" for most formats and "Voice" for WebVTT, and the toggle shows the two columns.
+    /// </summary>
+    [ObservableProperty] private string _showActorColumnMenuHeader = Se.Language.General.ShowActorColumn;
     [ObservableProperty] private bool _areAssaContentMenuItemsVisible;
     [ObservableProperty] private bool _areWebVttContentMenuItemsVisible;
     [ObservableProperty] private bool _isWebVttBrowserPreviewVisible;
@@ -24663,8 +24676,12 @@ public partial class MainViewModel :
 
         IsFormatAssa = SelectedSubtitleFormat is AdvancedSubStationAlpha;
         IsFormatSsa = SelectedSubtitleFormat is SubStationAlpha;
+        IsFormatAssaOrSsa = SelectedSubtitleFormat is AdvancedSubStationAlpha or SubStationAlpha;
         IsFormatWebVtt = SelectedSubtitleFormat is WebVTT or WebVTTFileWithLineNumber;
-        HasFormatStyle = SelectedSubtitleFormat is AdvancedSubStationAlpha or SubStationAlpha;
+        HasFormatStyle = IsFormatAssaOrSsa || IsFormatWebVtt;
+        ShowActorColumnMenuHeader = IsFormatWebVtt
+            ? Se.Language.File.WebVtt.ShowVoiceColumn
+            : Se.Language.General.ShowActorColumn;
         ShowLayer = IsFormatAssa && Se.Settings.Appearance.ShowLayer;
         ShowLayerFilterIcon = IsFormatAssa && Se.Settings.Appearance.ShowLayer && _visibleLayers != null;
 
