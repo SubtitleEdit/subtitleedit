@@ -127,6 +127,39 @@ public class PointSyncWindowTests : IDisposable
     }
 
     [AvaloniaFact]
+    public void SetSyncPointWindow_WithoutVideo_IgnoresASavedWithVideoHeight()
+    {
+        // Both modes save their size under the same window name, so without the MaxHeight cap the
+        // videoless dialog restores the with-video height and opens as a mostly blank window.
+        var rememberBefore = Se.Settings.General.RememberPositionAndSize;
+        var positionsBefore = Se.Settings.General.WindowPositions.ToList();
+        try
+        {
+            Se.Settings.General.RememberPositionAndSize = true;
+            Se.Settings.General.WindowPositions.Add(
+                new SeWindowPosition(nameof(SetSyncPointWindow), false, false, 50, 50, 1100, 900));
+
+            var vm = new SetSyncPointViewModel(new WindowService(new NullServiceProvider()), new FileHelper());
+            var lines = TwoLines();
+            vm.Initialize(lines, lines[0], videoFileName: null, subtitleFileName: null, audioVisualizer: null);
+
+            var window = Track(new SetSyncPointWindow(vm));
+            window.Show();
+            Avalonia.Threading.Dispatcher.UIThread.RunJobs();
+
+            Assert.True(window.Bounds.Height <= window.MaxHeight,
+                $"height was {window.Bounds.Height}, cap {window.MaxHeight}");
+            Assert.True(window.MaxHeight < 400, $"cap was {window.MaxHeight}");
+        }
+        finally
+        {
+            Se.Settings.General.RememberPositionAndSize = rememberBefore;
+            Se.Settings.General.WindowPositions.Clear();
+            Se.Settings.General.WindowPositions.AddRange(positionsBefore);
+        }
+    }
+
+    [AvaloniaFact]
     public void PointSyncViaOtherWindow_HasBothSetSyncPointButtons()
     {
         // The other subtitle stays the usual source, and the video is the fallback for lines it

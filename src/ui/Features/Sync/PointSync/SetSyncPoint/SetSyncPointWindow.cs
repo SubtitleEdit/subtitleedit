@@ -8,6 +8,7 @@ using Nikse.SubtitleEdit.Controls.AudioVisualizerControl;
 using Nikse.SubtitleEdit.Features.Main.Layout;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
+using System;
 
 namespace Nikse.SubtitleEdit.Features.Sync.PointSync.SetSyncPoint;
 
@@ -32,6 +33,13 @@ public class SetSyncPointWindow : Window
         MinWidth = 800;
         Height = vm.IsVideoVisible ? 800 : VideolessHeight;
         MinHeight = vm.IsVideoVisible ? 650 : VideolessMinHeight;
+        if (!vm.IsVideoVisible)
+        {
+            // Both modes save under the same window name, so RestoreWindowPosition would bring
+            // back the with-video height and leave the videoless dialog mostly blank. The content
+            // is fixed-height in this mode - cap the window instead of special-casing the restore.
+            MaxHeight = VideolessHeight;
+        }
 
         var labelVideoInfo = UiUtil.MakeLabel(string.Empty).WithBindText(vm, nameof(vm.VideoInfo));
 
@@ -193,11 +201,9 @@ public class SetSyncPointWindow : Window
             }
 
             rowVideoPlayer.Height = new GridLength(1, GridUnitType.Star);
-            if (Height < 650)
-            {
-                MinHeight = 650;
-                Height = 800;
-            }
+            MaxHeight = double.PositiveInfinity;
+            MinHeight = 650;
+            Height = Math.Max(Height, 800);
         };
 
         // Focus the time code box, not a button, so the window receives key events without arming
