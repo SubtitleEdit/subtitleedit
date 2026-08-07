@@ -1198,12 +1198,15 @@ public partial class ShortcutsViewModel : ObservableObject
 
         var usedKeys = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
 
+        // helper function to normalize a shortcut keys list (sort them so order of modifiers doesn't matter)
+        string NormalizeCombo(IEnumerable<string> keys) => string.Join("+", keys.OrderBy(x => x, StringComparer.OrdinalIgnoreCase));
+
         // 1. Register already assigned defaults first to prevent stealing them
         foreach (var shortcut in _allShortcuts)
         {
             if (shortcut != null && shortcut.Keys.Count > 0)
             {
-                usedKeys.Add(string.Join("+", shortcut.Keys));
+                usedKeys.Add(NormalizeCombo(shortcut.Keys));
             }
         }
 
@@ -1222,7 +1225,7 @@ public partial class ShortcutsViewModel : ObservableObject
                     var mods = modifiersList[modIdx];
                     var key = letters[letterIdx];
                     var combo = new List<string>(mods) { key };
-                    var comboStr = string.Join("+", combo);
+                    var comboStr = NormalizeCombo(combo);
 
                     if (!usedKeys.Contains(comboStr))
                     {
@@ -1273,6 +1276,7 @@ public partial class ShortcutsViewModel : ObservableObject
         };
 
         var usedKeys = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+        string NormalizeCombo(IEnumerable<string> keys) => string.Join("+", keys.OrderBy(x => x, StringComparer.OrdinalIgnoreCase));
 
         // First apply laptop specific mappings and clear F keys
         foreach (var shortcut in _allShortcuts)
@@ -1291,7 +1295,7 @@ public partial class ShortcutsViewModel : ObservableObject
 
             if (shortcut.Keys.Count > 0)
             {
-                usedKeys.Add(string.Join("+", shortcut.Keys));
+                usedKeys.Add(NormalizeCombo(shortcut.Keys));
             }
         }
 
@@ -1319,7 +1323,7 @@ public partial class ShortcutsViewModel : ObservableObject
                     var mods = modifiersList[modIdx];
                     var key = letters[letterIdx];
                     var combo = new List<string>(mods) { key };
-                    var comboStr = string.Join("+", combo);
+                    var comboStr = NormalizeCombo(combo);
 
                     if (!usedKeys.Contains(comboStr))
                     {
