@@ -104,8 +104,11 @@ public class OllamaOcr
 
             return resultText.Trim();
         }
-        catch (OperationCanceledException)
+        catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
         {
+            // Only a real user cancel propagates; an HttpClient timeout also throws
+            // TaskCanceledException, and rethrowing that made a hung Ollama end the OCR
+            // run silently. The catch below records it in Error instead.
             throw;
         }
         catch (Exception ex)

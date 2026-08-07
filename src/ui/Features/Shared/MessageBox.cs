@@ -57,12 +57,58 @@ public class MessageBox : Window
     private readonly bool _hasOnlyOk;
     private readonly bool _hasNo;
     private readonly StackPanel _buttonPanel;
-    private bool _seenSpaceKeyDown;
+    private readonly KeyPressTracker _enterTracker = new();
+    private readonly KeyPressTracker _spaceTracker = new();
+    private bool _initialFocusDone;
     private long _openedTimestamp;
 
     private bool IsInStartupGuardPeriod()
     {
         return _openedTimestamp == 0 || Stopwatch.GetElapsedTime(_openedTimestamp) < TimeSpan.FromMilliseconds(200);
+    }
+
+    // Decides whether a Space/Enter release may activate the focused button. OS key auto-repeat
+    // delivers ordinary KeyDowns, so a single event can't tell a key still held from before this
+    // window opened apart from a fresh press - but the pattern can: repeats of a pre-held key
+    // arrive at the repeat interval (~30-90 ms), while a fresh press that starts repeating waits
+    // the initial repeat delay (>= ~225 ms even at the fastest common OS setting) between its
+    // first and second KeyDown. A lone KeyDown released within 50 ms is a repeat-then-release
+    // slip, not a human tap. A swallowed release costs one extra key press; a leaked one answers
+    // a question the user never saw.
+    private sealed class KeyPressTracker
+    {
+        private int _keyDownCount;
+        private long _firstKeyDownTimestamp;
+        private bool _heldFromBeforeOpen;
+
+        public void OnKeyDown()
+        {
+            _keyDownCount++;
+            if (_keyDownCount == 1)
+            {
+                _firstKeyDownTimestamp = Stopwatch.GetTimestamp();
+            }
+            else if (_keyDownCount == 2 &&
+                     Stopwatch.GetElapsedTime(_firstKeyDownTimestamp) < TimeSpan.FromMilliseconds(225))
+            {
+                _heldFromBeforeOpen = true;
+            }
+        }
+
+        public bool IsFreshTapOnKeyUp()
+        {
+            var isFreshTap = _keyDownCount > 0 && !_heldFromBeforeOpen &&
+                             (_keyDownCount > 1 ||
+                              Stopwatch.GetElapsedTime(_firstKeyDownTimestamp) >= TimeSpan.FromMilliseconds(50));
+            Reset();
+            return isFreshTap;
+        }
+
+        public void Reset()
+        {
+            _keyDownCount = 0;
+            _heldFromBeforeOpen = false;
+        }
     }
 
     private MessageBox(string title, string message, MessageBoxButtons buttons, MessageBoxIcon icon, string? custom1 = null, string? custom2 = null, string? custom3 = null, string? custom4 = null)
@@ -250,10 +296,12 @@ public class MessageBox : Window
         // Focus the first button (the positive/default choice - Yes or OK), like classic Win32
         // message boxes: Space/Enter accepts, Escape cancels, arrow keys move focus. That makes
         // the key that opened this dialog a hazard: Avalonia's Button clicks on Space KeyUp
-        // without checking it also saw the KeyDown, and a held Enter key-repeats straight into
-        // the new window - either would answer Yes/OK by accident. Guard: swallow Space/Enter
-        // for the first 200 ms after opening, and Space KeyUps whose KeyDown this window never
-        // saw (a Space can be held down well past any fixed time window before releasing).
+        // without checking it also saw the KeyDown, and a key still held from the previous
+        // dialog starts OS auto-repeating into this window after the initial repeat delay -
+        // either would answer Yes/OK by accident. Guard three ways: swallow Space/Enter for the
+        // first 200 ms after opening, click Enter on KeyUp ourselves (instead of Avalonia's
+        // KeyDown click, which an auto-repeat would fire directly), and only accept a release
+        // whose press pattern looks like a fresh tap made inside this window (KeyPressTracker).
         Opened += (_, _) => _openedTimestamp = Stopwatch.GetTimestamp();
         AddHandler(KeyDownEvent, (_, e) =>
         {
@@ -261,9 +309,14 @@ public class MessageBox : Window
             {
                 e.Handled = true;
             }
+            else if (e.Key == Key.Enter)
+            {
+                _enterTracker.OnKeyDown();
+                e.Handled = true; // no KeyDown click - the KeyUp handler below clicks instead
+            }
             else if (e.Key == Key.Space)
             {
-                _seenSpaceKeyDown = true;
+                _spaceTracker.OnKeyDown();
             }
         }, RoutingStrategies.Tunnel);
         AddHandler(KeyUpEvent, (_, e) =>
@@ -271,13 +324,41 @@ public class MessageBox : Window
             if (e.Key is Key.Space or Key.Enter && IsInStartupGuardPeriod())
             {
                 e.Handled = true;
+                _enterTracker.Reset();
+                _spaceTracker.Reset();
             }
-            else if (e.Key == Key.Space && !_seenSpaceKeyDown)
+            else if (e.Key == Key.Enter)
             {
                 e.Handled = true;
+                if (_enterTracker.IsFreshTapOnKeyUp() && FocusManager?.GetFocusedElement() is Button focusedButton)
+                {
+                    focusedButton.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
+                }
+            }
+            else if (e.Key == Key.Space && !_spaceTracker.IsFreshTapOnKeyUp())
+            {
+                e.Handled = true; // Button clicks Space on KeyUp; block releases that fail the gate
             }
         }, RoutingStrategies.Tunnel);
-        Activated += delegate { buttonPanel.Children[0].Focus(); };
+        Activated += delegate
+        {
+            // Re-arm the guard on every activation (alt-tabbing back can bring a held key's
+            // auto-repeat along), but move focus only the first time so arrow-key navigation
+            // survives a focus round-trip to another window.
+            _openedTimestamp = Stopwatch.GetTimestamp();
+            if (!_initialFocusDone)
+            {
+                _initialFocusDone = true;
+                buttonPanel.Children[0].Focus();
+            }
+        };
+        Deactivated += delegate
+        {
+            // Key releases go to the newly focused window, so presses counted here would
+            // otherwise linger and mis-classify the next press after refocus.
+            _enterTracker.Reset();
+            _spaceTracker.Reset();
+        };
 
         UiTheme.ApplyScaleToWindow(this);
     }

@@ -281,7 +281,9 @@ public partial class DoNotBreakAfterListViewModel : ObservableObject
         if (e.Key == Key.Enter)
         {
             e.Handled = true;
-            using var _ = AddItem();
+            // Fire-and-forget discard: "using var" would call Task.Dispose when this handler
+            // returns, which throws while the task is still awaiting a message box.
+            _ = AddItem();
         }
     }
 

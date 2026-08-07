@@ -106,8 +106,10 @@ public class MistralOcr
 
             return finalText.Trim();
         }
-        catch (OperationCanceledException)
+        catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
         {
+            // Only a real user cancel propagates; an HttpClient timeout also throws
+            // TaskCanceledException and must be recorded in Error below instead.
             throw;
         }
         catch (Exception ex)
