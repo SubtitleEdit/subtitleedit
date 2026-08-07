@@ -562,6 +562,14 @@ public class SpeechToTextWindow : Window
         var buttonRemove = UiUtil.MakeButton(Se.Language.General.Remove, vm.RemoveCommand).BindIsEnabled(vm, nameof(vm.IsTranscribeEnabled));
         var buttonClear = UiUtil.MakeButton(Se.Language.General.Clear, vm.ClearCommand).BindIsEnabled(vm, nameof(vm.IsTranscribeEnabled));
 
+        var checkAddLanguageCode = UiUtil.MakeCheckBox(Se.Language.Video.AudioToText.AddLanguageCodeToFileName, vm, nameof(vm.AddLanguageCodeToFileName))
+            .BindIsEnabled(vm, nameof(vm.IsTranscribeEnabled));
+        checkAddLanguageCode.Margin = new Thickness(10, 0, 0, 0);
+        if (Se.Settings.Appearance.ShowHints)
+        {
+            ToolTip.SetTip(checkAddLanguageCode, Se.Language.Video.AudioToText.AddLanguageCodeToFileNameHint);
+        }
+
         var panelFileControls = new StackPanel
         {
             Orientation = Orientation.Horizontal,
@@ -572,6 +580,7 @@ public class SpeechToTextWindow : Window
                 buttonAdd,
                 buttonRemove,
                 buttonClear,
+                checkAddLanguageCode,
             }
         };
 
