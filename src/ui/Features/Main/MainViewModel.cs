@@ -843,22 +843,7 @@ public partial class MainViewModel :
 
     private static void SetLibSeSettings()
     {
-        Configuration.Settings.General.SubtitleLineMaximumLength = Se.Settings.General.SubtitleLineMaximumLength;
-        Configuration.Settings.General.SubtitleMaximumCharactersPerSeconds = Se.Settings.General.SubtitleMaximumCharactersPerSeconds;
-        Configuration.Settings.General.SubtitleOptimalCharactersPerSeconds = Se.Settings.General.SubtitleOptimalCharactersPerSeconds;
-        Configuration.Settings.General.SubtitleMaximumWordsPerMinute = Se.Settings.General.SubtitleMaximumWordsPerMinute;
-        Configuration.Settings.General.MinimumMillisecondsBetweenLines = Se.Settings.General.MinimumBetweenLines.GetMilliseconds();
-        Configuration.Settings.General.MaxNumberOfLines = Se.Settings.General.MaxNumberOfLines;
-        Configuration.Settings.General.MergeLinesShorterThan = Se.Settings.General.UnbreakLinesShorterThan;
-
-        if (Enum.TryParse<Core.Enums.DialogType>(Se.Settings.General.DialogStyle, out var dt))
-        {
-            Configuration.Settings.General.DialogStyle = dt;
-        }
-
-        Se.ApplyContinuationStyleToLibSe();
-
-        Configuration.Settings.General.CpsLineLengthStrategy = Se.Settings.General.CpsLineLengthStrategy;
+        Se.ApplyRuleSettingsToLibSe();
 
         TimedTextImscRosetta.LineHeight = Se.Settings.Formats.RosettaLineHeight;
         TimedTextImscRosetta.FontSize = Se.Settings.Formats.RosettaFontSize;
@@ -6753,20 +6738,7 @@ public partial class MainViewModel :
         if (result is { OkPressed: true, SelectedProfile: not null })
         {
             var p = result.SelectedProfile.ToRulesProfile();
-            Se.Settings.General.CurrentProfile = p.Name;
-            Se.Settings.General.SubtitleLineMaximumLength = p.SubtitleLineMaximumLength;
-            Se.Settings.General.SubtitleMaximumCharactersPerSeconds = (double)p.SubtitleMaximumCharactersPerSeconds;
-            Se.Settings.General.SubtitleOptimalCharactersPerSeconds = (double)p.SubtitleOptimalCharactersPerSeconds;
-            Se.Settings.General.SubtitleMaximumWordsPerMinute = (double)p.SubtitleMaximumWordsPerMinute;
-            Se.Settings.General.MinimumBetweenLines.Milliseconds = p.MinimumMillisecondsBetweenLines;
-            Se.Settings.General.MinimumBetweenLines.Frames = SubtitleFormat.MillisecondsToFrames(p.MinimumMillisecondsBetweenLines);
-            Se.Settings.General.MaxNumberOfLines = p.MaxNumberOfLines;
-            Se.Settings.General.UnbreakLinesShorterThan = p.MergeLinesShorterThan;
-            Se.Settings.General.DialogStyle = p.DialogStyle.ToString();
-            Se.Settings.General.ContinuationStyle = p.ContinuationStyle.ToString();
-            Se.Settings.General.CpsLineLengthStrategy = p.CpsLineLengthStrategy;
-
-            Se.Settings.General.CustomContinuationStyle = new CustomContinuationStyle(p.CustomContinuationStyle);
+            Se.ApplyRuleProfile(p);
 
             SetLibSeSettings();
 

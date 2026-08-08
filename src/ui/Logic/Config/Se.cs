@@ -1,5 +1,6 @@
 ﻿using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.Forms.FixCommonErrors;
+using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using Nikse.SubtitleEdit.Features.Main;
 using Nikse.SubtitleEdit.Logic.Config.Language;
 using System;
@@ -727,6 +728,61 @@ public class Se
         }
 
         (g.CustomContinuationStyle ?? new CustomContinuationStyle()).ApplyToGeneralSettings(Configuration.Settings.General);
+    }
+
+    /// <summary>
+    /// Copies every rule in <paramref name="profile"/> into the general settings; callers still
+    /// need to run the libse bridge afterwards. Kept in one place because the profile picker used
+    /// to apply the fields inline and quietly dropped the two duration limits.
+    /// </summary>
+    public static void ApplyRuleProfile(RulesProfile profile)
+    {
+        var g = Settings.General;
+
+        g.CurrentProfile = profile.Name;
+        g.SubtitleLineMaximumLength = profile.SubtitleLineMaximumLength;
+        g.SubtitleMaximumCharactersPerSeconds = (double)profile.SubtitleMaximumCharactersPerSeconds;
+        g.SubtitleOptimalCharactersPerSeconds = (double)profile.SubtitleOptimalCharactersPerSeconds;
+        g.SubtitleMaximumWordsPerMinute = (double)profile.SubtitleMaximumWordsPerMinute;
+        g.SubtitleMinimumDisplayMilliseconds = profile.SubtitleMinimumDisplayMilliseconds;
+        g.SubtitleMaximumDisplayMilliseconds = profile.SubtitleMaximumDisplayMilliseconds;
+        g.MinimumBetweenLines.Milliseconds = profile.MinimumMillisecondsBetweenLines;
+        g.MinimumBetweenLines.Frames = SubtitleFormat.MillisecondsToFrames(profile.MinimumMillisecondsBetweenLines);
+        g.MaxNumberOfLines = profile.MaxNumberOfLines;
+        g.UnbreakLinesShorterThan = profile.MergeLinesShorterThan;
+        g.DialogStyle = profile.DialogStyle.ToString();
+        g.ContinuationStyle = profile.ContinuationStyle.ToString();
+        g.CpsLineLengthStrategy = profile.CpsLineLengthStrategy;
+        g.CustomContinuationStyle = new CustomContinuationStyle(profile.CustomContinuationStyle);
+    }
+
+    /// <summary>
+    /// Pushes the rule settings into libse's Configuration, which is what the fix/merge engines
+    /// and the duration helpers read. Sits next to <see cref="ApplyRuleProfile"/> so the two
+    /// field lists stay in step - the duration limits were missing here for the same reason.
+    /// </summary>
+    public static void ApplyRuleSettingsToLibSe()
+    {
+        var g = Settings.General;
+        var libSe = Configuration.Settings.General;
+
+        libSe.SubtitleLineMaximumLength = g.SubtitleLineMaximumLength;
+        libSe.SubtitleMaximumCharactersPerSeconds = g.SubtitleMaximumCharactersPerSeconds;
+        libSe.SubtitleOptimalCharactersPerSeconds = g.SubtitleOptimalCharactersPerSeconds;
+        libSe.SubtitleMaximumWordsPerMinute = g.SubtitleMaximumWordsPerMinute;
+        libSe.SubtitleMinimumDisplayMilliseconds = g.SubtitleMinimumDisplayMilliseconds;
+        libSe.SubtitleMaximumDisplayMilliseconds = g.SubtitleMaximumDisplayMilliseconds;
+        libSe.MinimumMillisecondsBetweenLines = g.MinimumBetweenLines.GetMilliseconds();
+        libSe.MaxNumberOfLines = g.MaxNumberOfLines;
+        libSe.MergeLinesShorterThan = g.UnbreakLinesShorterThan;
+        libSe.CpsLineLengthStrategy = g.CpsLineLengthStrategy;
+
+        if (Enum.TryParse<Core.Enums.DialogType>(g.DialogStyle, out var dt))
+        {
+            libSe.DialogStyle = dt;
+        }
+
+        ApplyContinuationStyleToLibSe();
     }
 
     public static string GetErrorLogFilePath()
