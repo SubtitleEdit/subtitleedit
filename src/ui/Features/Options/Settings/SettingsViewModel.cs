@@ -2854,6 +2854,13 @@ public partial class SettingsViewModel : ObservableObject
             MinDurationMs = profile.MinDurationMs;
             MaxDurationMs = profile.MaxDurationMs;
             MinGapMs = profile.MinGapMs;
+            // A profile stores the gap in milliseconds only, but the setting is ms-or-frames and
+            // frame mode reads the frame value, so derive it instead of leaving it on the old profile's.
+            if (profile.MinGapMs.HasValue)
+            {
+                MinGapFrames = SubtitleFormat.MillisecondsToFrames(profile.MinGapMs.Value);
+            }
+
             MaxLines = profile.MaxLines;
             UnbreakLinesShorterThan = profile.UnbreakLinesShorterThan;
             DialogStyle = profile.DialogStyle;
@@ -2888,7 +2895,10 @@ public partial class SettingsViewModel : ObservableObject
         profileItem.MaxWordsPerMin = MaxWordsPerMin;
         profileItem.MinDurationMs = MinDurationMs;
         profileItem.MaxDurationMs = MaxDurationMs;
-        profileItem.MinGapMs = MinGapMs;
+        // In frame mode the frames box is the one the user edits, so that is the value to store.
+        profileItem.MinGapMs = UseFrameMode && MinGapFrames.HasValue
+            ? SubtitleFormat.FramesToMilliseconds(MinGapFrames.Value)
+            : MinGapMs;
         profileItem.MaxLines = MaxLines;
         profileItem.UnbreakLinesShorterThan = UnbreakLinesShorterThan;
         profileItem.DialogStyle = DialogStyle;

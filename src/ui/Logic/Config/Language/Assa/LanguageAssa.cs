@@ -222,6 +222,13 @@ public class LanguageAssa
     public string AdvancedEffectSlideInRight { get; set; }
     public string AdvancedEffectSlideInRightDescription { get; set; }
     public string AdvancedEffectFadeInOutDescription { get; set; }
+    public string AdvancedEffectWordFlip3D { get; set; }
+    public string AdvancedEffectWordFlip3DDescription { get; set; }
+    public string AdvancedEffectCinematicTitle { get; set; }
+    public string AdvancedEffectCinematicTitleDescription { get; set; }
+    public string AdvancedEffectLowerThird { get; set; }
+    public string AdvancedEffectLowerThirdDescription { get; set; }
+    public string AdvancedEffectLowerThirdAccentColor { get; set; }
     public string OverrideTagsHistory { get; set; }
 
     public LanguageAssa()
@@ -443,6 +450,13 @@ public class LanguageAssa
         AdvancedEffectSlideInRight = "Slide in from right";
         AdvancedEffectSlideInRightDescription = "Text slides in from off-screen right, holds, then exits back to the right";
         AdvancedEffectFadeInOutDescription = "Text fades in at the start and fades out at the end of each subtitle";
+        AdvancedEffectWordFlip3D = "Word flip 3D";
+        AdvancedEffectWordFlip3DDescription = "Each word folds in with a 3D flip and elastic pop as it is spoken — modern 'Shorts' caption style";
+        AdvancedEffectCinematicTitle = "Cinematic title";
+        AdvancedEffectCinematicTitleDescription = "Letters track from wide to normal spacing while resolving from a soft blur — classic film title reveal";
+        AdvancedEffectLowerThird = "Lower third";
+        AdvancedEffectLowerThirdDescription = "Name and role banner bottom-left with an accent bar sliding in — interview/documentary style (first line = name, following lines = role)";
+        AdvancedEffectLowerThirdAccentColor = "Accent color";
         OverrideTagsHistory = "Override tags history";
         MouseOverColor = "Mouse-over color";
         ClickedColor = "Clicked color";

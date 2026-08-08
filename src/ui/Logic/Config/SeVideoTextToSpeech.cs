@@ -49,6 +49,8 @@ public class SeVideoTextToSpeech
     public double F5TtsCrispAsrSpeed { get; set; }
     public string OmniVoiceCrispAsrModel { get; set; }
     public double OmniVoiceCrispAsrSpeed { get; set; }
+    // Display name of the picked OmniVoice target language ("Auto" = let the model decide).
+    public string OmniVoiceCrispAsrLanguage { get; set; }
     public string VoxCPM2CrispAsrModel { get; set; }
     public double VoxCPM2CrispAsrSpeed { get; set; }
     public string MossTtsCrispAsrModel { get; set; }
@@ -145,6 +147,7 @@ public class SeVideoTextToSpeech
         F5TtsCrispAsrSpeed = 1.0;
         OmniVoiceCrispAsrModel = "Q4_K (~1 GB)";
         OmniVoiceCrispAsrSpeed = 1.0;
+        OmniVoiceCrispAsrLanguage = string.Empty;
         VoxCPM2CrispAsrModel = "Q4_K (~1.7 GB)";
         VoxCPM2CrispAsrSpeed = 1.0;
         MossTtsCrispAsrModel = "Q4_K (~10.5 GB incl. codec)";

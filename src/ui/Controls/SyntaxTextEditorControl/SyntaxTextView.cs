@@ -1599,7 +1599,8 @@ public class SyntaxTextView : Control
         ApplyEdit(start, _caretOffset - start, string.Empty);
     }
 
-    private void DeleteForward()
+    /// <summary>Deletes the selection, or the character after the caret (the Delete key).</summary>
+    public void DeleteForward()
     {
         if (IsReadOnly)
         {

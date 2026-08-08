@@ -15,13 +15,18 @@ Check spelling of subtitle text and correct misspelled words.
 3. The spell checker will highlight the first unknown word
 4. Choose an action for each flagged word:
    - **Change** — Replace with the text in the word field (once)
-   - **Change all** — Replace all occurrences
+   - **Change all** — Replace all occurrences, and remember the correction for future runs
    - **Skip once** — Ignore this occurrence
-   - **Skip all** — Ignore all occurrences of this word
+   - **Skip all** — Ignore all occurrences of this word, for the current session only
    - **Add to names list (case sensitive)** — Add the word to the names/proper nouns list (matches the exact casing)
    - **Add to user dictionary** — Add the word to your personal dictionary
 5. The spell checker advances to the next unknown word automatically
 6. When all words have been checked, the window closes
+
+**Skip all is not saved.** It lasts until the window closes and is not carried over to the
+next run, so a mis-click never has lasting consequences. To accept a word permanently use
+**Add to user dictionary** (or **Add to names list** for proper nouns); to have a
+correction applied automatically from now on use **Change all**.
 
 ## Suggestions
 

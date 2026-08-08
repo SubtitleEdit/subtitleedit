@@ -44,7 +44,7 @@ public class AdvancedEffectTvClose : IAdvancedEffectDisplay
             result.Add(CreateBar(sub.StartTime, durationMs, halfMs, w, h,
                 startY: h, endY: halfH));
 
-            result.Add(sub);
+            result.Add(AdvancedEffectUtil.PassThrough(sub));
         }
 
         return result;

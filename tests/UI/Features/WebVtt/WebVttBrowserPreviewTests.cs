@@ -48,7 +48,11 @@ public class WebVttBrowserPreviewTests
         var html = WebVttBrowserPreview.GenerateHtml("WEBVTT", "/videos/my movie.mp4");
 
         // A raw path with a space would break the src attribute; it has to be percent-encoded.
-        Assert.Contains("file:///videos/my%20movie.mp4", html);
-        Assert.DoesNotContain("src=\"/videos/my movie.mp4\"", html);
+        // Only the tail of the URI is portable: Path.GetFullPath() anchors a rooted path to the
+        // current drive on Windows, so the preview yields file:///C:/videos/... there and
+        // file:///videos/... on Linux and macOS.
+        Assert.Contains("src=\"file:///", html);
+        Assert.Contains("/videos/my%20movie.mp4", html);
+        Assert.DoesNotContain("my movie.mp4", html);
     }
 }

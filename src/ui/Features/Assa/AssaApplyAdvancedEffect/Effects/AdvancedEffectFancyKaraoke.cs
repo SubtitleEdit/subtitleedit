@@ -5,6 +5,7 @@ using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Logic.Media;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -89,7 +90,7 @@ public class AdvancedEffectFancyKaraoke : IAdvancedEffectDisplay
             // Normal behavior: parse active word from explicit markup and render single line.
             var parsed = ParseActiveWord(sub.Text);
             var newSub = new SubtitleLineViewModel(sub, generateNewId: true);
-            string posTags = ExtractPositionalTags(sub.Text);
+            string posTags = AdvancedEffectUtil.ExtractPositionalTags(sub.Text);
             sb.Clear();
             if (!string.IsNullOrEmpty(posTags))
             {
@@ -174,7 +175,7 @@ public class AdvancedEffectFancyKaraoke : IAdvancedEffectDisplay
         var totalMs = sub.Duration.TotalMilliseconds;
         var msPerWord = totalMs / wordCount;
 
-        string posTags = ExtractPositionalTags(sub.Text);
+        string posTags = AdvancedEffectUtil.ExtractPositionalTags(sub.Text);
         // Inactive tags explicitly include InactiveWordColor so color is reset for non-active words and spaces.
         string inactiveTags = $"{{\\alpha&H{255 - InactiveWordColor.A:X2}&\\1c{ToAssColor(InactiveWordColor)}\\bord0\\shad0\\blur0\\fscx100\\fscy100}}";
 
@@ -209,7 +210,10 @@ public class AdvancedEffectFancyKaraoke : IAdvancedEffectDisplay
             sb.Clear();
             if (!string.IsNullOrEmpty(posTags))
             {
-                sb.Append(posTags);
+                // \move times are relative to each event's start, so a \move copied verbatim
+                // into every word-line would restart the motion at every word boundary.
+                // Rewrite it per line so the movement continues seamlessly across words.
+                sb.Append(AdvancedEffectUtil.AdjustMoveForSegment(posTags, w * msPerWord, (end - start).TotalMilliseconds, totalMs));
             }
 
             // The active word for this step. In right-to-left mode advance from the last word
@@ -276,34 +280,6 @@ public class AdvancedEffectFancyKaraoke : IAdvancedEffectDisplay
         }
 
         return result;
-    }
-
-    private static string ExtractPositionalTags(string text)
-    {
-        var firstBlock = System.Text.RegularExpressions.Regex.Match(text, @"^\{([^}]*)\}");
-        if (!firstBlock.Success)
-        {
-            return string.Empty;
-        }
-        string inner = firstBlock.Groups[1].Value;
-        var sb = new StringBuilder("{");
-        var anM = System.Text.RegularExpressions.Regex.Match(inner, @"\\an\d");
-        if (anM.Success)
-        {
-            sb.Append(anM.Value);
-        }
-        var posM = System.Text.RegularExpressions.Regex.Match(inner, @"\\pos\([^)]+\)");
-        if (posM.Success)
-        {
-            sb.Append(posM.Value);
-        }
-        var moveM = System.Text.RegularExpressions.Regex.Match(inner, @"\\move\([^)]+\)");
-        if (moveM.Success)
-        {
-            sb.Append(moveM.Value);
-        }
-        sb.Append("}");
-        return sb.Length > 2 ? sb.ToString() : string.Empty;
     }
 
     private static (string Before, string Active, string After)? ParseActiveWord(string text)
@@ -409,6 +385,12 @@ public class AdvancedEffectFancyKaraoke : IAdvancedEffectDisplay
             }
             int textStart = pos;
             while (pos < text.Length && text[pos] != '{') pos++;
+            if (pos == textStart && pos < text.Length)
+            {
+                // An unmatched '{' has no closing '}', so neither loop above advances -
+                // consume the rest as plain text to guarantee the scan terminates.
+                pos = text.Length;
+            }
             string plainText = text[textStart..pos];
             if (tags.Length > 0 || !string.IsNullOrEmpty(plainText))
             {

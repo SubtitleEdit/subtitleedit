@@ -3,6 +3,8 @@ namespace Nikse.SubtitleEdit.Logic.Config.Language.File;
 public class LanguageWebVtt
 {
     public string SetStylesForSelectedLinesTitle { get; set; }
+    public string Voice { get; set; }
+    public string ShowVoiceColumn { get; set; }
     public string Voices { get; set; }
     public string NewVoiceDotDotDot { get; set; }
     public string RemoveVoices { get; set; }
@@ -17,6 +19,8 @@ public class LanguageWebVtt
     public LanguageWebVtt()
     {
         SetStylesForSelectedLinesTitle = "Set WebVTT styles for selected lines";
+        Voice = "Voice";
+        ShowVoiceColumn = "Show \"Voice\" column";
         Voices = "Voices";
         NewVoiceDotDotDot = "New voice...";
         RemoveVoices = "Remove voices";

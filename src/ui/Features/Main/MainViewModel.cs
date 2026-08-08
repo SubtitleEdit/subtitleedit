@@ -254,8 +254,21 @@ public partial class MainViewModel :
     [ObservableProperty] private bool _areVideoControlsUndocked;
     [ObservableProperty] private bool _isFormatAssa;
     [ObservableProperty] private bool _isFormatSsa;
+    [ObservableProperty] private bool _isFormatAssaOrSsa;
+
+    /// <summary>
+    /// True for the formats that have a style per line - ASSA/SSA in <see cref="SubtitleLineViewModel.Style"/>,
+    /// WebVTT as cue classes inside the cue text (<see cref="SubtitleLineViewModel.WebVttStyle"/>).
+    /// Each has its own grid column; this gates the shared "Show style column" menu item.
+    /// </summary>
     [ObservableProperty] private bool _hasFormatStyle;
     [ObservableProperty] private bool _isFormatWebVtt;
+
+    /// <summary>
+    /// Header of the grid's actor/voice toggle in the column context menu - the column itself is
+    /// "Actor" for most formats and "Voice" for WebVTT, and the toggle shows the two columns.
+    /// </summary>
+    [ObservableProperty] private string _showActorColumnMenuHeader = Se.Language.General.ShowActorColumn;
     [ObservableProperty] private bool _areAssaContentMenuItemsVisible;
     [ObservableProperty] private bool _areWebVttContentMenuItemsVisible;
     [ObservableProperty] private bool _isWebVttBrowserPreviewVisible;
@@ -620,7 +633,9 @@ public partial class MainViewModel :
         ContentGrid = new Grid();
         MenuReopen = new MenuItem();
         MenuPlugins = new MenuItem();
-        Menu = new Menu();
+        // Custom interaction handler so Alt+letter access keys open the Menu itself (Opened
+        // fires, undocked topmost drops) and not just the item's drop-down popup (#13361).
+        Menu = new Menu(new MainMenuInteractionHandler());
         PanelSingleLineLengths = new StackPanel();
         MenuItemMergeAsDialog = new MenuItem();
         MenuItemExtendToLineBefore = new MenuItem();
@@ -652,6 +667,9 @@ public partial class MainViewModel :
         SubtitleDataGridSyntaxHighlighting = new TextWithSubtitleSyntaxHighlightingConverter();
         Toolbar = new Border();
         UiTheme.SystemThemeChangedCallback = OnSystemThemeChanged;
+        // Lets dialogs and popups drop the undocked tool windows' topmost while they are open
+        // (WindowService.SuspendUndockedTopmost, #13325).
+        WindowService.RegisterUndockedTopmostSetter(SetUndockedWindowsTopmost);
         ButtonWaveformPlay = new Button();
         _subtitle = new Subtitle();
         _subtitleOriginal = new Subtitle();
@@ -830,22 +848,7 @@ public partial class MainViewModel :
 
     private static void SetLibSeSettings()
     {
-        Configuration.Settings.General.SubtitleLineMaximumLength = Se.Settings.General.SubtitleLineMaximumLength;
-        Configuration.Settings.General.SubtitleMaximumCharactersPerSeconds = Se.Settings.General.SubtitleMaximumCharactersPerSeconds;
-        Configuration.Settings.General.SubtitleOptimalCharactersPerSeconds = Se.Settings.General.SubtitleOptimalCharactersPerSeconds;
-        Configuration.Settings.General.SubtitleMaximumWordsPerMinute = Se.Settings.General.SubtitleMaximumWordsPerMinute;
-        Configuration.Settings.General.MinimumMillisecondsBetweenLines = Se.Settings.General.MinimumBetweenLines.GetMilliseconds();
-        Configuration.Settings.General.MaxNumberOfLines = Se.Settings.General.MaxNumberOfLines;
-        Configuration.Settings.General.MergeLinesShorterThan = Se.Settings.General.UnbreakLinesShorterThan;
-
-        if (Enum.TryParse<Core.Enums.DialogType>(Se.Settings.General.DialogStyle, out var dt))
-        {
-            Configuration.Settings.General.DialogStyle = dt;
-        }
-
-        Se.ApplyContinuationStyleToLibSe();
-
-        Configuration.Settings.General.CpsLineLengthStrategy = Se.Settings.General.CpsLineLengthStrategy;
+        Se.ApplyRuleSettingsToLibSe();
 
         TimedTextImscRosetta.LineHeight = Se.Settings.Formats.RosettaLineHeight;
         TimedTextImscRosetta.FontSize = Se.Settings.Formats.RosettaFontSize;
@@ -2029,6 +2032,10 @@ public partial class MainViewModel :
             return;
         }
 
+        // The dialog stamps PlayResX/Y into the header when missing; adopt it so the saved file
+        // interprets the \pos below in the same space the dialog measured in.
+        _subtitle.Header = result.ResultSubtitle.Header;
+
         var x = result.ResultX;
         var y = result.ResultY;
         var tags = $"\\pos({x},{y})";
@@ -2071,7 +2078,7 @@ public partial class MainViewModel :
         {
             var paragraphs = Subtitles.Select(p => new SubtitleLineViewModel(p)).ToList();
             var selectedParagraphs = SubtitleGridSelectedItems.Cast<SubtitleLineViewModel>().ToList();
-            vm.Initialize(paragraphs, selectedParagraphs, _videoFileName);
+            vm.Initialize(GetUpdateSubtitle(), paragraphs, selectedParagraphs, _videoFileName);
         });
 
         if (result.OkPressed && result.UpdatedSubtitle.Paragraphs.Count == Subtitles.Count)
@@ -4205,7 +4212,9 @@ public partial class MainViewModel :
         {
             var subsToKeep = Subtitles.Where(p => p.StartTime.TotalSeconds >= vp.Position).ToList();
             _subtitle.Paragraphs.Clear();
-            _subtitle.Paragraphs.AddRange(subsToKeep.Select(p => p.ToParagraph()));
+            // Pass the format so Paragraph.Extra keeps the ASSA style - SetSubtitles below
+            // rebuilds the rows from these paragraphs and reads the style back from Extra.
+            _subtitle.Paragraphs.AddRange(subsToKeep.Select(p => p.ToParagraph(SelectedSubtitleFormat)));
         }
 
         AudioVisualizer.GenerateTimeCodes(_subtitle, startFromSeconds, result.ScanBlockSize.Value, result.ScanBlockAverageMin.Value, result.ScanBlockAverageMax.Value,
@@ -6537,15 +6546,19 @@ public partial class MainViewModel :
     /// <summary>
     /// Suppress (or restore) the undocked tool windows' topmost state. They float above the
     /// main window while SE is active (KeepTopmostWhileOwnerActive, #11971), which also puts
-    /// them above the main menu's popups - so the menu drops their topmost while it is open
-    /// (#13187/#12899). Restoring re-applies the helper's rule instead of a blanket true.
+    /// them above the main window's popups and above modal dialogs. Registered with
+    /// WindowService.RegisterUndockedTopmostSetter, and driven through the ref-counted
+    /// WindowService.SuspendUndockedTopmost while a menu, context menu, or dialog is open
+    /// (#13187/#12899/#13325). Restoring re-applies the helper's rule instead of a blanket true.
     /// </summary>
     internal void SetUndockedWindowsTopmost(bool topmost)
     {
         // Remembered (and consulted by the KeepTopmostWhileOwnerActive registrations) so the
-        // helper's activation handler cannot re-assert Topmost while a menu is still open:
-        // opening a cascaded submenu churns window activation, and the re-asserted Topmost put
-        // the tool windows back over the submenu popup (#13187 follow-up).
+        // helper's activation handler cannot re-assert Topmost while a menu or dialog is still
+        // open: opening a cascaded submenu (or a modal dialog) churns window activation, and the
+        // re-asserted Topmost put the tool windows back over the popup (#13187 follow-up) - and
+        // on Windows the SetWindowPos churn could steal OS activation from a just-opened modal
+        // dialog, leaving it drawn on top but inactive (#13325).
         _suppressUndockedTopmost = !topmost;
 
         foreach (var undockedWindow in new[] { _videoPlayerUndockedViewModel?.Window, _audioVisualizerUndockedViewModel?.Window })
@@ -6734,20 +6747,7 @@ public partial class MainViewModel :
         if (result is { OkPressed: true, SelectedProfile: not null })
         {
             var p = result.SelectedProfile.ToRulesProfile();
-            Se.Settings.General.CurrentProfile = p.Name;
-            Se.Settings.General.SubtitleLineMaximumLength = p.SubtitleLineMaximumLength;
-            Se.Settings.General.SubtitleMaximumCharactersPerSeconds = (double)p.SubtitleMaximumCharactersPerSeconds;
-            Se.Settings.General.SubtitleOptimalCharactersPerSeconds = (double)p.SubtitleOptimalCharactersPerSeconds;
-            Se.Settings.General.SubtitleMaximumWordsPerMinute = (double)p.SubtitleMaximumWordsPerMinute;
-            Se.Settings.General.MinimumBetweenLines.Milliseconds = p.MinimumMillisecondsBetweenLines;
-            Se.Settings.General.MinimumBetweenLines.Frames = SubtitleFormat.MillisecondsToFrames(p.MinimumMillisecondsBetweenLines);
-            Se.Settings.General.MaxNumberOfLines = p.MaxNumberOfLines;
-            Se.Settings.General.UnbreakLinesShorterThan = p.MergeLinesShorterThan;
-            Se.Settings.General.DialogStyle = p.DialogStyle.ToString();
-            Se.Settings.General.ContinuationStyle = p.ContinuationStyle.ToString();
-            Se.Settings.General.CpsLineLengthStrategy = p.CpsLineLengthStrategy;
-
-            Se.Settings.General.CustomContinuationStyle = new CustomContinuationStyle(p.CustomContinuationStyle);
+            Se.ApplyRuleProfile(p);
 
             SetLibSeSettings();
 
@@ -8844,6 +8844,12 @@ public partial class MainViewModel :
 
             SelectAndScrollToRow(0);
         }
+
+        // Point sync can open a video of its own - take it over here too (issue #13341).
+        if (string.IsNullOrEmpty(_videoFileName) && File.Exists(result.VideoFileName))
+        {
+            await VideoOpenFile(result.VideoFileName);
+        }
     }
 
     [RelayCommand]
@@ -8871,6 +8877,12 @@ public partial class MainViewModel :
             ReplaceSubtitles(result.SyncedSubtitles);
 
             SelectAndScrollToRow(0);
+        }
+
+        // "Set sync point via video" can open a video of its own - take it over here too (issue #13341).
+        if (string.IsNullOrEmpty(_videoFileName) && File.Exists(result.VideoFileName))
+        {
+            await VideoOpenFile(result.VideoFileName);
         }
     }
 
@@ -15423,10 +15435,13 @@ public partial class MainViewModel :
         }
     }
 
+    // Deletes the selection, or the character after the caret - a stand-in for the Delete key,
+    // defaulting to Shift+Backspace for Apple keyboards where Delete is only a backspace.
     [RelayCommand]
-    private void TextBoxDeleteSelection()
+    private void TextBoxDeleteForward()
     {
-        EditTextBox.SelectedText = string.Empty;
+        var textBox = EditTextBoxOriginal.IsFocused ? EditTextBoxOriginal : EditTextBox;
+        textBox.DeleteForward();
     }
 
     [RelayCommand]
@@ -22392,8 +22407,7 @@ public partial class MainViewModel :
         ReferenceEquals(command, TextBoxCut2Command) ||
         ReferenceEquals(command, TextBoxCopyCommand) ||
         ReferenceEquals(command, TextBoxPasteCommand) ||
-        ReferenceEquals(command, TextBoxSelectAllCommand) ||
-        ReferenceEquals(command, TextBoxDeleteSelectionCommand);
+        ReferenceEquals(command, TextBoxSelectAllCommand);
 
     /// <summary>
     /// Tunnelling pointer handler that tells <see cref="_altMenuActivationGuard"/> when Alt was used as
@@ -23427,6 +23441,12 @@ public partial class MainViewModel :
         _cursorTimer = new DispatcherTimer(DispatcherPriority.Normal) { Interval = TimeSpan.FromMilliseconds(16) };
         _cursorTimer.Tick += (s, e) =>
         {
+            // Fast settle for the on-video subtitle preview: waiting for the 400 ms _slowTimer
+            // added up to 400 ms of tick alignment on top of the settle window, so the preview
+            // trailed the text by up to ~0.9 s. Checking here costs one bool in the steady
+            // state (the dirty flag gates everything else).
+            TryRefreshVideoPreview();
+
             var vp = GetVideoPlayerControl();
             if (vp == null || string.IsNullOrEmpty(_videoFileName))
             {
@@ -23479,47 +23499,83 @@ public partial class MainViewModel :
             UpdateGaps();
             AutoSaveTick(mainHash, originalHash);
 
-            var vp = GetVideoPlayerControl();
-            // IsUserEditing: refreshing the preview mid-edit means paying GetUpdateSubtitle +
-            // two Subtitle copies + ToText + a temp-file write on the UI thread every 400 ms
-            // while the user types or drags in the waveform (issue #13234). The dirty flag
-            // stays set, so the settled state is pushed on the first quiet tick - and the
-            // preview reads better settling once than flickering mid-word anyway.
-            if (!_mpvPreviewDirty || vp == null || _mpvPreviewRefreshBusy || IsUserEditing())
-            {
-                return;
-            }
-
-            // Filter once instead of: Where().ToList() + Clear + AddRange (which
-            // allocates an extra List and walks the paragraphs three times).
-            // Verified with BenchmarkDotNet at ~1.7-2x faster and 0-45 % less
-            // allocation across 100/1000/5000-line subtitles.
-            var hideLayers = _visibleLayers != null && Se.Settings.Assa.HideLayersFromVideoPreview;
-
-            if (vp.VideoPlayer is LibMpvDynamicPlayer mpv)
-            {
-                var subtitle = GetUpdateSubtitle();
-                _mpvPreviewDirty = false; // clear only after subtitle snapshot is successfully obtained
-                if (hideLayers)
-                {
-                    subtitle.Paragraphs.RemoveAll(p => !_visibleLayers!.Contains(p.Layer));
-                }
-
-                _ = RunPreviewRefresh(() => _mpvReloader.RefreshMpv(mpv, subtitle, _subtitleSecondary, SelectedSubtitleFormat));
-            }
-            else if (vp.VideoPlayer is LibVlcDynamicPlayer vlc)
-            {
-                var subtitle = GetUpdateSubtitle();
-                _mpvPreviewDirty = false; // clear only after subtitle snapshot is successfully obtained
-                if (hideLayers)
-                {
-                    subtitle.Paragraphs.RemoveAll(p => !_visibleLayers!.Contains(p.Layer));
-                }
-
-                _ = RunPreviewRefresh(() => _vlcReloader.RefreshVlc(vlc, subtitle, _subtitleSecondary, SelectedSubtitleFormat));
-            }
+            TryRefreshVideoPreview();
         };
         _slowTimer.Start();
+    }
+
+    // Preview settle window after the last keystroke. Deliberately shorter than
+    // IsUserEditing()'s 500 ms undo window: the expensive serialize now runs off the UI
+    // thread in MpvReloader.RefreshMpv, so a refresh landing in a short typing pause no
+    // longer risks a felt hitch, and the on-video preview follows the text much sooner
+    // (issue #13234 follow-up). Undo change detection keeps the full 500 ms.
+    private const int PreviewSettleAfterTypingMs = 250;
+    private long _previewRetryNotBeforeMs;
+
+    private bool IsUserEditingForPreview()
+    {
+        if (_lastKeyPressedMs != 0 && Environment.TickCount64 - _lastKeyPressedMs < PreviewSettleAfterTypingMs)
+        {
+            return true;
+        }
+
+        // Dragging in the waveform is the pointer equivalent of typing - see IsUserEditing().
+        return AudioVisualizer?.IsEditingWithPointer == true;
+    }
+
+    // Called at ~60 fps from _cursorTimer (fast settle after edits) and every 400 ms from
+    // _slowTimer (safety net when the cursor timer is stopped). Refreshing the preview
+    // mid-edit means paying GetUpdateSubtitle + a Subtitle copy on the UI thread on every
+    // settle check while the user types or drags in the waveform (issue #13234). The dirty
+    // flag stays set, so the settled state is pushed on the first quiet tick - and the
+    // preview reads better settling once than flickering mid-word anyway.
+    private void TryRefreshVideoPreview()
+    {
+        if (!_mpvPreviewDirty || _mpvPreviewRefreshBusy || IsUserEditingForPreview())
+        {
+            return;
+        }
+
+        // After a failed refresh, retry at the old slow cadence instead of ~60 fps.
+        if (Environment.TickCount64 < _previewRetryNotBeforeMs)
+        {
+            return;
+        }
+
+        var vp = GetVideoPlayerControl();
+        if (vp == null)
+        {
+            return;
+        }
+
+        // Filter once instead of: Where().ToList() + Clear + AddRange (which
+        // allocates an extra List and walks the paragraphs three times).
+        // Verified with BenchmarkDotNet at ~1.7-2x faster and 0-45 % less
+        // allocation across 100/1000/5000-line subtitles.
+        var hideLayers = _visibleLayers != null && Se.Settings.Assa.HideLayersFromVideoPreview;
+
+        if (vp.VideoPlayer is LibMpvDynamicPlayer mpv)
+        {
+            var subtitle = GetUpdateSubtitle();
+            _mpvPreviewDirty = false; // clear only after subtitle snapshot is successfully obtained
+            if (hideLayers)
+            {
+                subtitle.Paragraphs.RemoveAll(p => !_visibleLayers!.Contains(p.Layer));
+            }
+
+            _ = RunPreviewRefresh(() => _mpvReloader.RefreshMpv(mpv, subtitle, _subtitleSecondary, SelectedSubtitleFormat));
+        }
+        else if (vp.VideoPlayer is LibVlcDynamicPlayer vlc)
+        {
+            var subtitle = GetUpdateSubtitle();
+            _mpvPreviewDirty = false; // clear only after subtitle snapshot is successfully obtained
+            if (hideLayers)
+            {
+                subtitle.Paragraphs.RemoveAll(p => !_visibleLayers!.Contains(p.Layer));
+            }
+
+            _ = RunPreviewRefresh(() => _vlcReloader.RefreshVlc(vlc, subtitle, _subtitleSecondary, SelectedSubtitleFormat));
+        }
     }
 
     private async Task RunPreviewRefresh(Func<Task> refresh)
@@ -23533,6 +23589,7 @@ public partial class MainViewModel :
         {
             Se.LogError(exception, "Video preview subtitle refresh failed");
             _mpvPreviewDirty = true; // retry on a later tick
+            _previewRetryNotBeforeMs = Environment.TickCount64 + 400;
         }
         finally
         {
@@ -24663,8 +24720,12 @@ public partial class MainViewModel :
 
         IsFormatAssa = SelectedSubtitleFormat is AdvancedSubStationAlpha;
         IsFormatSsa = SelectedSubtitleFormat is SubStationAlpha;
+        IsFormatAssaOrSsa = SelectedSubtitleFormat is AdvancedSubStationAlpha or SubStationAlpha;
         IsFormatWebVtt = SelectedSubtitleFormat is WebVTT or WebVTTFileWithLineNumber;
-        HasFormatStyle = SelectedSubtitleFormat is AdvancedSubStationAlpha or SubStationAlpha;
+        HasFormatStyle = IsFormatAssaOrSsa || IsFormatWebVtt;
+        ShowActorColumnMenuHeader = IsFormatWebVtt
+            ? Se.Language.File.WebVtt.ShowVoiceColumn
+            : Se.Language.General.ShowActorColumn;
         ShowLayer = IsFormatAssa && Se.Settings.Appearance.ShowLayer;
         ShowLayerFilterIcon = IsFormatAssa && Se.Settings.Appearance.ShowLayer && _visibleLayers != null;
 

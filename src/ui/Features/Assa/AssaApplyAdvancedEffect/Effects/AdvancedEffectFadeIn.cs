@@ -26,7 +26,7 @@ public class AdvancedEffectFadeIn : IAdvancedEffectDisplay
         foreach (var sub in subtitles)
         {
             result.Add(CreateLineFadeIn(sub.StartTime, sub.Duration.TotalMilliseconds, w, h));
-            result.Add(sub);
+            result.Add(AdvancedEffectUtil.PassThrough(sub));
         }
 
         return result;
@@ -43,7 +43,7 @@ public class AdvancedEffectFadeIn : IAdvancedEffectDisplay
         string drawBox = $"m 0 0 l {w} 0 l {w} {h} l 0 {h}";
 
         // \fad(0, durationMs) makes the black box go from Opaque (0) to Transparent (durationMs)
-        fadeIn.Text = "{\\p1\\an7\\pos(0,0)\\bord0\\shad0\\1c&H000000&\\fad(0," + durationMs + ")}" + drawBox;
+        fadeIn.Text = "{\\p1\\an7\\pos(0,0)\\bord0\\shad0\\1c&H000000&\\fad(0," + (int)Math.Round(durationMs) + ")}" + drawBox;
 
         return fadeIn;
     }

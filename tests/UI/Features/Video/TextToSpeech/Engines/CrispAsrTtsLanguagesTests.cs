@@ -39,6 +39,84 @@ public class CrispAsrTtsLanguagesTests
         Assert.Equal(11, all.Length);
     }
 
+    /// <summary>
+    /// #13273: the OmniVoice (CrispASR) combo listed all 646 languages and changed nothing —
+    /// Speak() took the pick and never put it on the request. Wiring it up needed "Auto" in front
+    /// of the catalog too: the view model falls back to the first entry, and without Auto that is
+    /// "Abadi", a real ISO 639-3 id the model would happily condition on.
+    /// </summary>
+    [Fact]
+    public void OmniVoiceLanguages_LeadWithAutoThenTheWholeCatalog()
+    {
+        var all = OmniVoiceLanguages.All;
+
+        Assert.Equal("Auto", all[0].Name);
+        Assert.Equal(string.Empty, all[0].Code);
+        Assert.Equal(647, all.Length);
+
+        // The entry that made a bare first-entry fallback dangerous.
+        Assert.Equal("Abadi", all[1].Name);
+    }
+
+    [Theory]
+    [InlineData("German", "de")]
+    [InlineData("Standard Arabic", "arb")]
+    [InlineData("Egyptian Arabic", "arz")]
+    public void OmniVoiceLanguages_SendTheModelsOwnIds(string displayName, string expectedCode)
+    {
+        var language = OmniVoiceLanguages.All.Single(l => l.Name == displayName);
+
+        Assert.Equal(expectedCode, language.Code);
+        Assert.Equal(expectedCode, OmniVoiceLanguages.ResolveLanguageArg(language));
+    }
+
+    /// <summary>
+    /// The ids are ISO 639-3 *individual* languages, so the macrolanguage code "ar" is absent by
+    /// design — Arabic is arb/arz/ary and friends. Asserted so a future "missing Arabic" report
+    /// does not get 'fixed' by inventing an id the model has never seen.
+    /// </summary>
+    [Fact]
+    public void OmniVoiceLanguages_HaveNoMacrolanguageArabic()
+    {
+        Assert.False(OmniVoiceLanguages.IsSupported("ar"));
+        Assert.True(OmniVoiceLanguages.IsSupported("arb"));
+        Assert.True(OmniVoiceLanguages.IsSupported("ary"));
+    }
+
+    [Fact]
+    public void OmniVoiceLanguages_ResolveLanguageArg_AutoAndUnknownSendNoField()
+    {
+        using var _ = new SavedTtsLanguageScope("German", "German", "German", "German");
+
+        // An explicit "Auto" pick must win over whatever is saved - unlike a null argument.
+        Assert.Equal(string.Empty, OmniVoiceLanguages.ResolveLanguageArg(OmniVoiceLanguages.Auto));
+
+        // A language object left over from another engine, and a locale-shaped code the model
+        // has no token for. crispasr falls back to language-agnostic on both, but the request
+        // should not carry them in the first place.
+        Assert.Equal(string.Empty, OmniVoiceLanguages.ResolveLanguageArg(new TtsLanguage("German", "de-DE")));
+        Assert.Equal(string.Empty, OmniVoiceLanguages.ResolveLanguageArg(new TtsLanguage("Klingon", "tlh")));
+    }
+
+    [Fact]
+    public void OmniVoiceLanguages_ResolveLanguageArg_Null_FallsBackToTheSavedPick()
+    {
+        using (new SavedTtsLanguageScope("German", "German", "German", "German"))
+        {
+            Assert.Equal("de", OmniVoiceLanguages.ResolveLanguageArg(null));
+        }
+
+        using (new SavedTtsLanguageScope(string.Empty, string.Empty, string.Empty, string.Empty))
+        {
+            Assert.Equal(string.Empty, OmniVoiceLanguages.ResolveLanguageArg(null));
+        }
+
+        using (new SavedTtsLanguageScope("Auto", "Auto", "Auto", "Auto"))
+        {
+            Assert.Equal(string.Empty, OmniVoiceLanguages.ResolveLanguageArg(null));
+        }
+    }
+
     [Theory]
     [InlineData("Chinese", "zh")]
     [InlineData("German", "de")]
@@ -195,17 +273,20 @@ internal sealed class SavedTtsLanguageScope : IDisposable
     private readonly string _cosyVoice3;
     private readonly string _qwen3;
     private readonly string _moss;
+    private readonly string _omniVoice;
 
-    public SavedTtsLanguageScope(string cosyVoice3, string qwen3, string moss)
+    public SavedTtsLanguageScope(string cosyVoice3, string qwen3, string moss, string omniVoice = "")
     {
         var settings = Se.Settings.Video.TextToSpeech;
         _cosyVoice3 = settings.CosyVoice3CrispAsrLanguage;
         _qwen3 = settings.Qwen3TtsCrispAsrLanguage;
         _moss = settings.MossTtsCrispAsrLanguage;
+        _omniVoice = settings.OmniVoiceCrispAsrLanguage;
 
         settings.CosyVoice3CrispAsrLanguage = cosyVoice3;
         settings.Qwen3TtsCrispAsrLanguage = qwen3;
         settings.MossTtsCrispAsrLanguage = moss;
+        settings.OmniVoiceCrispAsrLanguage = omniVoice;
     }
 
     public void Dispose()
@@ -214,6 +295,7 @@ internal sealed class SavedTtsLanguageScope : IDisposable
         settings.CosyVoice3CrispAsrLanguage = _cosyVoice3;
         settings.Qwen3TtsCrispAsrLanguage = _qwen3;
         settings.MossTtsCrispAsrLanguage = _moss;
+        settings.OmniVoiceCrispAsrLanguage = _omniVoice;
     }
 }
 

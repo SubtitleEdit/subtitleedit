@@ -102,6 +102,11 @@ public class AdvancedEffectHearts : IAdvancedEffectDisplay
 
                 var heart = new SubtitleLineViewModel(sub, generateNewId: true);
                 heart.StartTime = sub.StartTime.Add(TimeSpan.FromMilliseconds(heartStartOffset));
+                if (heart.StartTime < TimeSpan.Zero)
+                {
+                    // The pre-roll must not produce a negative timestamp for subtitles near t=0
+                    heart.StartTime = TimeSpan.Zero;
+                }
                 heart.EndTime = sub.EndTime;
 
                 // Start above the screen, fall past the bottom
@@ -121,7 +126,7 @@ public class AdvancedEffectHearts : IAdvancedEffectDisplay
                 string color = HeartColors[rng.Next(HeartColors.Length)];
                 string shape = HeartShapes[rng.Next(HeartShapes.Length)];
                 string hexAlpha = alpha.ToString("X2");
-                string blurTag = blur > 0 ? $"\\blur{blur:F1}" : "";
+                string blurTag = blur > 0 ? $"\\blur{AdvancedEffectUtil.Tag(blur)}" : "";
 
                 string tags =
                     $"\\p1\\an5\\1c{color}\\bord0\\shad0{blurTag}\\alpha&H{hexAlpha}&" +
@@ -135,7 +140,7 @@ public class AdvancedEffectHearts : IAdvancedEffectDisplay
                 result.Add(heart);
             }
 
-            result.Add(sub);
+            result.Add(AdvancedEffectUtil.PassThrough(sub));
         }
 
         return result;
