@@ -1701,7 +1701,12 @@ public partial class BurnInViewModel : ObservableObject
         {
             items = new List<string> { string.Empty };
         }
-        else if (videoCodec == "prores_ks")
+        else if (videoCodec is "h264_videotoolbox" or "hevc_videotoolbox")
+        {
+            // VideoToolbox has no "preset" option at all - passing one only makes ffmpeg warn.
+            items = new List<string> { string.Empty };
+        }
+        else if (videoCodec is "prores_ks" or "prores_videotoolbox")
         {
             items = new List<string>
             {
@@ -1813,6 +1818,23 @@ public partial class BurnInViewModel : ObservableObject
             VideoCrf.AddRange(items);
             SelectedVideoCrf = null;
         }
+        else if (videoCodec is "h264_videotoolbox" or "hevc_videotoolbox")
+        {
+            // VideoToolbox knows no CRF; quality is "-q:v 1-100" and runs the other way round
+            // (higher is better). It also requires Apple silicon - on Intel Macs ffmpeg errors
+            // out with "qscale not available for encoder", so leave it unset by default and let
+            // ffmpeg pick a bitrate.
+            for (var i = 1; i <= 100; i++)
+            {
+                items.Add(i.ToString(CultureInfo.InvariantCulture));
+            }
+
+            VideoCrfText = "Quality";
+            VideoCrfHint = "1=lowest quality, 100=best quality (Apple silicon only)";
+            VideoCrf.Clear();
+            VideoCrf.AddRange(items);
+            SelectedVideoCrf = null;
+        }
         else if (videoCodec.Contains("av1"))
         {
             for (var i = 0; i <= 63; i++)
@@ -1823,7 +1845,7 @@ public partial class BurnInViewModel : ObservableObject
             VideoCrf.AddRange(items);
             SelectedVideoCrf = "30";
         }
-        else if (videoCodec == "prores_ks")
+        else if (videoCodec is "prores_ks" or "prores_videotoolbox")
         {
             items = new List<string>();
             VideoCrf.Clear();
