@@ -46,6 +46,12 @@ public partial class AssaSetPositionViewModel : ObservableObject
     public decimal ResultRotation => Rotation;
 
     private Subtitle _subtitle = new();
+
+    // Size of the canvas the overlay text was rendered on. ScreenshotX/Y and the overlay bitmap
+    // live in this pixel space; \pos() is PlayRes (SourceWidth/Height) space - see ToScriptSpace.
+    private int _renderWidth = 1920;
+    private int _renderHeight = 1080;
+
     private bool _isLeftAligned = false;
     private bool _isHorizontalCentered = true;
     private bool _isRightAligned = false;
@@ -67,17 +73,17 @@ public partial class AssaSetPositionViewModel : ObservableObject
     {
         get
         {
+            var renderX = (double)ScreenshotX;
             if (_isHorizontalCentered)
             {
-                return (int)Math.Round(ScreenshotX + ScreenshotOverlayText.Size.Width / 2.0, MidpointRounding.AwayFromZero);
+                renderX += ScreenshotOverlayText.Size.Width / 2.0;
             }
-
-            if (_isRightAligned)
+            else if (_isRightAligned)
             {
-                return (int)Math.Round(ScreenshotX + ScreenshotOverlayText.Size.Width, MidpointRounding.AwayFromZero);
+                renderX += ScreenshotOverlayText.Size.Width;
             }
 
-            return ScreenshotX;
+            return ToScriptSpace(renderX, SourceWidth, _renderWidth);
         }
     }
 
@@ -86,18 +92,34 @@ public partial class AssaSetPositionViewModel : ObservableObject
     {
         get
         {
+            var renderY = (double)ScreenshotY;
             if (_isBottomAligned)
             {
-                return (int)Math.Round(ScreenshotY + ScreenshotOverlayText.Size.Height, MidpointRounding.AwayFromZero);
+                renderY += ScreenshotOverlayText.Size.Height;
             }
-
-            if (_isVerticalCentered)
+            else if (_isVerticalCentered)
             {
-                return (int)Math.Round(ScreenshotY + ScreenshotOverlayText.Size.Height / 2.0, MidpointRounding.AwayFromZero);
+                renderY += ScreenshotOverlayText.Size.Height / 2.0;
             }
 
-            return ScreenshotY;
+            return ToScriptSpace(renderY, SourceHeight, _renderHeight);
         }
+    }
+
+    /// <summary>
+    /// The overlay is measured in render (video pixel) space, but libass interprets \pos() in
+    /// PlayRes space - e.g. \pos(320,180) with PlayRes 640x360 is the center of a 1080p frame.
+    /// Convert at this boundary; writing render pixels into the tag put the text off by
+    /// renderSize/playRes whenever the script resolution differs from the video's (#13350).
+    /// </summary>
+    internal static int ToScriptSpace(double renderValue, int playRes, int renderSize)
+    {
+        if (playRes <= 0 || renderSize <= 0)
+        {
+            return (int)Math.Round(renderValue, MidpointRounding.AwayFromZero);
+        }
+
+        return (int)Math.Round(renderValue * playRes / renderSize, MidpointRounding.AwayFromZero);
     }
 
     partial void OnScreenshotXChanged(int value)
@@ -136,7 +158,20 @@ public partial class AssaSetPositionViewModel : ObservableObject
             Rotation = frz;
         }
 
-        var styles = AdvancedSubStationAlpha.GetSsaStylesFromHeader(subtitle.Header);
+        if (string.IsNullOrEmpty(_subtitle.Header))
+        {
+            _subtitle.Header = AdvancedSubStationAlpha.DefaultHeader;
+        }
+
+        // Resolve the script resolution before rendering the preview. A header without PlayRes
+        // would make libass assume 384x288 while this dialog measured in a different space, so
+        // stamp one in that case - ResultSubtitle carries it back so the saved \pos matches.
+        (_subtitle.Header, var playResX, var playResY) =
+            EnsurePlayRes(_subtitle.Header, videoWidth ?? 1920, videoHeight ?? 1080);
+        SourceWidth = playResX;
+        SourceHeight = playResY;
+
+        var styles = AdvancedSubStationAlpha.GetSsaStylesFromHeader(_subtitle.Header);
         var style = styles.FirstOrDefault(s => s.Name.Equals(line.Style, StringComparison.OrdinalIgnoreCase));
         if (style != null)
         {
@@ -149,32 +184,22 @@ public partial class AssaSetPositionViewModel : ObservableObject
             _isBottomAligned = style.Alignment == "1" || style.Alignment == "2" || style.Alignment == "3";
         }
 
-        var previewSubtitle = MakePreviewSubtitle(subtitle, line);
-        var previewScreenshotFileName = FfmpegGenerator.GetScreenShotWithSubtitle(previewSubtitle, videoWidth ?? 1920, videoHeight ?? 1080);
+        // Without a video, render at the script's own resolution so PlayRes aspect is honored and
+        // render space equals script space. GetScreenShotWithSubtitle bumps odd sizes to even for
+        // the encoder - mirror that here so the stored dimensions match the actual canvas.
+        _renderWidth = videoWidth is > 0 ? videoWidth.Value : SourceWidth;
+        _renderHeight = videoHeight is > 0 ? videoHeight.Value : SourceHeight;
+        _renderWidth += _renderWidth % 2;
+        _renderHeight += _renderHeight % 2;
+
+        var previewSubtitle = MakePreviewSubtitle(_subtitle, line);
+        var previewScreenshotFileName = FfmpegGenerator.GetScreenShotWithSubtitle(previewSubtitle, _renderWidth, _renderHeight);
         var skBitmap = SKBitmap.Decode(previewScreenshotFileName);
         var trimResult = skBitmap.TrimTransparentPixels();
 
         ScreenshotOverlayText = trimResult.TrimmedBitmap.ToAvaloniaBitmap();
         ScreenshotX = trimResult.Left;
         ScreenshotY = trimResult.Top;
-
-        if (string.IsNullOrEmpty(_subtitle.Header))
-        {
-            _subtitle.Header = AdvancedSubStationAlpha.DefaultHeader;
-        }
-
-        // Get source resolution from subtitle header
-        var oldPlayResX = AdvancedSubStationAlpha.GetTagValueFromHeader("PlayResX", "[Script Info]", _subtitle.Header);
-        if (int.TryParse(oldPlayResX, out var w) && w > 0)
-        {
-            SourceWidth = w;
-        }
-
-        var oldPlayResY = AdvancedSubStationAlpha.GetTagValueFromHeader("PlayResY", "[Script Info]", _subtitle.Header);
-        if (int.TryParse(oldPlayResY, out var h) && h > 0)
-        {
-            SourceHeight = h;
-        }
 
         // Set target resolution from video if available
         if (videoWidth.HasValue && videoWidth.Value > 0)
@@ -246,16 +271,34 @@ public partial class AssaSetPositionViewModel : ObservableObject
         return previewSubtitle;
     }
 
+    /// <summary>
+    /// Returns the header with a guaranteed PlayResX/PlayResY (stamping the fallback when either
+    /// is missing or invalid) together with the effective values.
+    /// </summary>
+    internal static (string Header, int PlayResX, int PlayResY) EnsurePlayRes(string header, int fallbackWidth, int fallbackHeight)
+    {
+        var hasX = int.TryParse(AdvancedSubStationAlpha.GetTagValueFromHeader("PlayResX", "[Script Info]", header), out var w) && w > 0;
+        var hasY = int.TryParse(AdvancedSubStationAlpha.GetTagValueFromHeader("PlayResY", "[Script Info]", header), out var h) && h > 0;
+        if (hasX && hasY)
+        {
+            return (header, w, h);
+        }
+
+        return (AdvancedSubStationAlpha.SetResolution(header, fallbackWidth, fallbackHeight), fallbackWidth, fallbackHeight);
+    }
+
     [RelayCommand]
     private async Task CenterHorizontally()
     {
-        ScreenshotX = (int)Math.Round(SourceWidth / 2.0 - ScreenshotOverlayText.Size.Width / 2.0, MidpointRounding.AwayFromZero);
+        // ScreenshotX/Y are render-space, so center on the render canvas - centering on
+        // SourceWidth (PlayRes) was off whenever the two resolutions differed.
+        ScreenshotX = (int)Math.Round(_renderWidth / 2.0 - ScreenshotOverlayText.Size.Width / 2.0, MidpointRounding.AwayFromZero);
     }
 
     [RelayCommand]
     private async Task CenterVertically()
     {
-        ScreenshotY = (int)Math.Round(SourceHeight / 2.0 - ScreenshotOverlayText.Size.Height / 2.0, MidpointRounding.AwayFromZero);
+        ScreenshotY = (int)Math.Round(_renderHeight / 2.0 - ScreenshotOverlayText.Size.Height / 2.0, MidpointRounding.AwayFromZero);
     }
 
     [RelayCommand]
@@ -313,9 +356,11 @@ public partial class AssaSetPositionViewModel : ObservableObject
             return;
         }
 
-        // Calculate scale factor based on screenshot image size
-        var scaleX = screenshotImageWidth / TargetWidth;
-        var scaleY = screenshotImageHeight / TargetHeight;
+        // Overlay coordinates are render-canvas pixels; the background screenshot always shows the
+        // same full frame, so map render space to the displayed image size. (TargetWidth is the
+        // PlayRes fallback when no video is loaded, which is the wrong space for the overlay.)
+        var scaleX = screenshotImageWidth / _renderWidth;
+        var scaleY = screenshotImageHeight / _renderHeight;
 
         // Position and size the overlay
         var overlayWidth = overlayBitmap.Size.Width * scaleX;
@@ -341,8 +386,9 @@ public partial class AssaSetPositionViewModel : ObservableObject
         ScreenshotOverlayImage.RenderTransformOrigin = RelativePoint.Center;
         ScreenshotOverlayImage.RenderTransform = new RotateTransform(-(double)Rotation);
 
+        // Show the script-space anchor that OK writes into \pos, not the render-space top-left.
         ScreenshotOverlayPosiion = Rotation == 0
-            ? $"X: {ScreenshotX}, Y: {ScreenshotY}"
-            : $"X: {ScreenshotX}, Y: {ScreenshotY}, {Rotation}°";
+            ? $"X: {ResultX}, Y: {ResultY}"
+            : $"X: {ResultX}, Y: {ResultY}, {Rotation}°";
     }
 }
