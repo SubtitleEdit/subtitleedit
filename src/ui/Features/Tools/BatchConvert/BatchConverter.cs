@@ -2223,9 +2223,8 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
         //
         // Without a fixed rate or a matching video, fall back to the frame rate this batch
         // is actually producing: the target of the "change frame rate" step when it runs
-        // (it runs before this one), otherwise the project frame rate. Configuration
-        // .Settings.General.DefaultFrameRate is not usable here - nothing in the UI ever
-        // assigns it, so it is always libse's built-in 23.976.
+        // (it runs before this one), otherwise the project frame rate. If that is not valid
+        // either, use the user's "Default frame rate" setting from Options (#13113).
         var frameRate = _config.ChangeFrameRate.IsActive && _config.ChangeFrameRate.ToFrameRate > 0
             ? _config.ChangeFrameRate.ToFrameRate
             : Se.Settings.General.CurrentFrameRate;
