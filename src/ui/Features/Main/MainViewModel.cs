@@ -10092,6 +10092,25 @@ public partial class MainViewModel :
         ShowStatus(Se.Language.General.NoBookmarksFound);
     }
 
+    // SE 4 parity (#13370): jump to the next line with no text, moving the video with it
+    // like bookmark navigation does. Silent when there is no empty line below.
+    [RelayCommand]
+    private void GoToNextEmptyLine()
+    {
+        var selected = SelectedSubtitle;
+        var idx = selected == null ? -1 : Subtitles.IndexOf(selected);
+
+        for (var i = idx + 1; i < Subtitles.Count; i++)
+        {
+            if (string.IsNullOrWhiteSpace(Subtitles[i].Text))
+            {
+                SelectAndScrollToSubtitle(Subtitles[i]);
+                SeekVideoToSubtitleStart(Subtitles[i]);
+                return;
+            }
+        }
+    }
+
     private void SortSubtitlesBy(Func<SubtitleLineViewModel, object> keySelector, string statusMessage)
     {
         if (IsEmpty)
