@@ -94,7 +94,7 @@ public class LanguageSettingsShortcuts
     public string VideoGoToPreviousTimeCode { get; set; }
     public string VideoGoToNextTimeCode { get; set; }
     public string GoToNextLineAndSetVideoPosition { get; set; }
-    public string TextBoxDeleteSelectionNoClipboard { get; set; }
+    public string TextBoxDeleteForward { get; set; }
     public string TextBoxCut { get; set; }
     public string TextBoxCut2 { get; set; }
     public string TextBoxPaste { get; set; }
@@ -350,7 +350,7 @@ public class LanguageSettingsShortcuts
         GoToNextLineFromVideoPosition = "Go to next subtitle (from current video position)";
         VideoGoToPreviousTimeCode = "Go to previous time code";
         VideoGoToNextTimeCode = "Go to next time code";
-        TextBoxDeleteSelectionNoClipboard = "Text box: Delete selection (no clipboard)";
+        TextBoxDeleteForward = "Text box: Delete selection or next character (forward delete)";
         TextBoxCut = "Text box: Cut";
         TextBoxCut2 = "Text box: Cut (alternative)";
         TextBoxPaste = "Text box: Paste";
