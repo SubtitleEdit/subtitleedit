@@ -2042,6 +2042,10 @@ public partial class MainViewModel :
             return;
         }
 
+        // The dialog stamps PlayResX/Y into the header when missing; adopt it so the saved file
+        // interprets the \pos below in the same space the dialog measured in.
+        _subtitle.Header = result.ResultSubtitle.Header;
+
         var x = result.ResultX;
         var y = result.ResultY;
         var tags = $"\\pos({x},{y})";
