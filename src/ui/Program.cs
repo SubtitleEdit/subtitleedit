@@ -165,7 +165,16 @@ namespace Nikse.SubtitleEdit
                 appBuilder = appBuilder
                     .With(new X11PlatformOptions
                     {
-                        RenderingMode = new[] { X11RenderingMode.Glx, X11RenderingMode.Egl }
+                        RenderingMode = new[] { X11RenderingMode.Glx, X11RenderingMode.Egl },
+
+                        // Avalonia only connects to the desktop's input method for CJK locales by
+                        // default; European locales fall back to libX11's local compose path, which
+                        // does not work on ibus desktops (GNOME/Fedora/Ubuntu) - dead keys type
+                        // nothing and swallow the next keystroke (issues #13333, #12334, #10618;
+                        // upstream AvaloniaUI/Avalonia#18596). Always enabling IME makes Avalonia
+                        // talk to ibus/fcitx over D-Bus like GTK apps do, so dead-key composition
+                        // (á, ê, õ, ...) works. Users can still opt out with AVALONIA_IM_MODULE=none.
+                        EnableIme = true,
                     })
                     .With(new AvaloniaNativePlatformOptions
                     {
