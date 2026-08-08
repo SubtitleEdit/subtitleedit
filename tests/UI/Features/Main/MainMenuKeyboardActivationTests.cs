@@ -371,4 +371,64 @@ public class MainMenuKeyboardActivationTests : IDisposable
 
         window.Close();
     }
+
+    /// <summary>
+    /// Alt+letter (e.g. Alt+F for "_File") must open the Menu control itself, not just the
+    /// item's drop-down popup. Avalonia's DefaultMenuInteractionHandler.AccessKeyPressed skips
+    /// IMainMenu.Open() - unlike the pointer and bare-Alt paths - so Menu.Opened never fired
+    /// and everything keyed to it silently skipped; most visibly the undocked tool windows
+    /// kept their topmost and covered the drop-down (#13361). MainMenuInteractionHandler
+    /// closes that gap; this test pins it across Avalonia upgrades (the handler subclasses an
+    /// [Unstable] Avalonia class).
+    /// </summary>
+    [AvaloniaFact]
+    public async Task AltLetter_OpensTheMenuBarItself_AndSuspendsUndockedTopmost()
+    {
+        var (window, vm) = ShowMainWindowWithEmptyGrid();
+        TableViewExtras.FocusRow(vm.SubtitleGrid);
+        Settle(window);
+        await WaitForGridFocus(window, vm);
+
+        // Observe the undocked-topmost suspension the way MainViewModel's setter would be
+        // driven (the suspension is keyed to Menu.Opened/Closed, WindowService ref-counted).
+        var topmostCalls = new List<bool>();
+        WindowService.ResetUndockedTopmostSuspensionsForTests();
+        WindowService.RegisterUndockedTopmostSetter(topmostCalls.Add);
+
+        try
+        {
+            // Alt held, F pressed: the access key opens the File drop-down. The assertions run
+            // before the Alt release on purpose - on a desktop the drop-down popup is a separate
+            // top-level that swallows the release, so the release must not be what opens the bar.
+            window.KeyPressQwerty(PhysicalKey.AltLeft, RawInputModifiers.Alt);
+            Dispatcher.UIThread.RunJobs();
+            window.KeyPressQwerty(PhysicalKey.F, RawInputModifiers.Alt);
+            Dispatcher.UIThread.RunJobs();
+            window.KeyReleaseQwerty(PhysicalKey.F, RawInputModifiers.Alt);
+            Settle(window);
+
+            await WaitUntil(() => vm.Menu.Items.OfType<MenuItem>().Any(mi => mi.IsSubMenuOpen), "Alt+F should open the File drop-down");
+            Assert.True(vm.Menu.IsOpen, "Alt+F must open the menu bar itself, not just the drop-down (#13361)");
+            Assert.Equal([false], topmostCalls);
+
+            window.KeyReleaseQwerty(PhysicalKey.AltLeft, RawInputModifiers.None);
+            Settle(window);
+
+            // First Escape closes the drop-down (bar stays armed), second deactivates the bar -
+            // the suspension must be released exactly once, when the bar actually closes.
+            PressAndRelease(window, PhysicalKey.Escape, RawInputModifiers.None);
+            Assert.Equal([false], topmostCalls);
+            PressAndRelease(window, PhysicalKey.Escape, RawInputModifiers.None);
+
+            await WaitUntil(() => !vm.Menu.IsOpen, "the second Escape should close the menu bar");
+            await WaitUntil(() => topmostCalls.Count == 2 && topmostCalls[1], "closing the bar should restore the undocked windows' topmost");
+        }
+        finally
+        {
+            WindowService.RegisterUndockedTopmostSetter(null);
+            WindowService.ResetUndockedTopmostSuspensionsForTests();
+        }
+
+        window.Close();
+    }
 }
