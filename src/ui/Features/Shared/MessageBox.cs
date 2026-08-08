@@ -381,6 +381,12 @@ public class MessageBox : Window
         // message box opens behind them in undocked mode. (#12268)
         WindowService.KeepTopmostWhileOwnerActive(msgBox, owner);
 
+        // Drop the undocked windows' topmost for the dialog's lifetime and make sure the
+        // message box really gets OS activation - without this it was drawn on top but never
+        // activated on Windows in undocked mode: gray buttons, no keyboard focus (#13325).
+        using var undockedSuspension = WindowService.SuspendUndockedTopmost();
+        WindowService.ActivateWhenOpened(msgBox);
+
         return await msgBox.ShowDialog<MessageBoxResult>(owner);
     }
 
