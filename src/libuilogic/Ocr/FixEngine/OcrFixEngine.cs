@@ -536,7 +536,7 @@ public partial class OcrFixEngine : IOcrFixEngine, IDoSpell
             }
         }
 
-        return uppercaseCount * 2 > letterCount;
+        return uppercaseCount > letterCount / 2;
     }
 
     public void ChangeAll(string from, string to)
