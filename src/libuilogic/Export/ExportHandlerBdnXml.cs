@@ -25,6 +25,10 @@ public class ExportHandlerBdnXml : IExportHandler
     {
         _width = imageParameter.ScreenWidth;
         _height = imageParameter.ScreenHeight;
+        if (imageParameter.FramesPerSecond > 0)
+        {
+            _frameRate = imageParameter.FramesPerSecond;
+        }
 
         _folderName = fileOrFolderName;
         if (!Directory.Exists(_folderName))
