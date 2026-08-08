@@ -3,6 +3,37 @@ Subtitle Edit Changelog
 
 -----------------------------------------------------------------------------------------------------
 
+v5.2.0-beta7 (8th of August 2026)
+
+* WebVTT: bring back the style manager, voices and the browser preview from SE 4
+* WebVTT: show styles and voices in the subtitle grid
+* Add advanced ASSA effects: Word flip 3D, Lower third and Cinematic title
+* Restore the four missing SE 4 subtitle grid double-click actions - thx PatriceBG
+* Add Shift+Backspace as forward-delete in the text boxes (for keyboards without a Delete key)
+* Point sync now also works without a video loaded - thx fraternl
+* Update the Netflix quality checks to the current Timed Text Style Guides
+* Update the auto-translate model lists (August 2026)
+* Update llama.cpp to b10310 and CrispEmbed OCR to v0.17.6
+* Fix crashes, locale number corruption and wrong tags in the advanced ASSA effects
+* Fix "Set position" writing coordinates in video pixels instead of script resolution - thx Bibi-skz
+* Fix "Set position" preview not using the line's own style - thx Bibi-skz
+* Fix "Apply custom override tags" preview ignoring the file's styles, and OK without video - thx Bibi-skz
+* Fix ASSA styles being lost in batch convert "Split long lines" and waveform "Delete lines from video position"
+* Fix typing accents (dead keys) on Linux with ibus - thx Pemicope
+* Fix the video playing briefly when opening a file - thx rRobis
+* Fix the grid jumping to the next line after "play selection, then stop" - thx ghostminhtoan
+* Fix text to speech engines cluttering their voice folder instead of using the output folder - thx subof
+* Fix the chosen language being ignored by OmniVoice speech generation - thx subof
+* Fix seven bugs found in a review of the beta 6 changes (message box keys, batch convert, file names)
+* Faster "Fix common errors" select-all, "replace all" with whole word, and file compare
+* Update French translation - thx Need74
+* Update Polish translation - thx Adam Malich
+* Update Korean translation - thx 12si27
+* Update Japanese translation - thx hisui3393
+* Update Hungarian translation - thx Zityi
+
+-----------------------------------------------------------------------------------------------------
+
 v5.2.0-beta6 (7th of August 2026)
 
 * Add "do not break after" list and bottom-heavy percent to the auto-break settings - thx Davanix
