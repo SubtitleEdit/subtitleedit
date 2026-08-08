@@ -633,7 +633,9 @@ public partial class MainViewModel :
         ContentGrid = new Grid();
         MenuReopen = new MenuItem();
         MenuPlugins = new MenuItem();
-        Menu = new Menu();
+        // Custom interaction handler so Alt+letter access keys open the Menu itself (Opened
+        // fires, undocked topmost drops) and not just the item's drop-down popup (#13361).
+        Menu = new Menu(new MainMenuInteractionHandler());
         PanelSingleLineLengths = new StackPanel();
         MenuItemMergeAsDialog = new MenuItem();
         MenuItemExtendToLineBefore = new MenuItem();
