@@ -14,6 +14,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace Nikse.SubtitleEdit.Features.Tools.ChangeCasing;
 
@@ -37,47 +38,20 @@ public partial class FixNamesViewModel : ObservableObject, IClosingCleanup
     private const string SuffixChars = " ,.!?:;…')]<-\"\r\n";
     private static readonly string[] CommonWords = ["US", "Lane", "Bill", "Rose"];
     private readonly HashSet<string> _usedNames;
-    private string _oldNames;
-    private readonly System.Timers.Timer _previewTimer;
-    private bool _loading;
-    private readonly Lock _lock = new();
 
     public FixNamesViewModel()
     {
         Names = new ObservableCollection<FixNameItem>();
         Hits = new ObservableCollection<FixNameHitItem>();
 
-        _loading = true;
         _nameListInclMulti = new List<string>();
         _language = "en_US";
         _subtitleBefore = new Subtitle();
         _subtitle = new Subtitle();
         _usedNames = new HashSet<string>();
         ExtraNames = string.Empty;
-        _oldNames = string.Empty;
         Info = string.Empty;
         Subtitle = new Subtitle();
-
-        _previewTimer = new System.Timers.Timer(500);
-        _previewTimer.Elapsed += PreviewTimerElapsed;
-    }
-
-    private void PreviewTimerElapsed(object? sender, System.Timers.ElapsedEventArgs e)
-    {
-        var namesString = string.Join(' ', Names.Where(p => p.IsChecked).Select(p => p.Name));
-        if (namesString != _oldNames && !_loading)
-        {
-            lock (_lock)
-            {
-                GeneratePreview();
-                _oldNames = namesString;
-            }
-        }
-    }
-
-    public void OnClosingCleanup()
-    {
-        _previewTimer.StopAndDispose(PreviewTimerElapsed);
     }
 
     internal void Initialize(Subtitle subtitle)
@@ -85,8 +59,6 @@ public partial class FixNamesViewModel : ObservableObject, IClosingCleanup
         subtitle.Renumber();
         _subtitle = new Subtitle(subtitle);
         _subtitleBefore = subtitle;
-        _oldNames = string.Empty;
-
         _language = LanguageAutoDetect.AutoDetectGoogleLanguage(_subtitle);
         if (string.IsNullOrEmpty(_language))
         {
@@ -161,6 +133,44 @@ public partial class FixNamesViewModel : ObservableObject, IClosingCleanup
                && (afterNameIndex == text.Length || SuffixChars.Contains(text[afterNameIndex]));
     }
 
+    private CancellationTokenSource? _cancellationTokenSource;
+
+    [RelayCommand]
+    private void FixNameItemChanged(FixNameItem item)
+    {
+        RequestPreview();
+    }
+
+    internal void RequestPreview()
+    {
+        _cancellationTokenSource?.Cancel();
+        _cancellationTokenSource?.Dispose();
+        _cancellationTokenSource = new CancellationTokenSource();
+        _ = DebouncedPreviewAsync(_cancellationTokenSource.Token);
+    }
+
+    private async Task DebouncedPreviewAsync(CancellationToken token)
+    {
+        try
+        {
+            await Task.Delay(500, token).ConfigureAwait(false);
+            GeneratePreview();
+        }
+        catch (OperationCanceledException)
+        {
+            // Superseded by a newer request, or the window closed.
+        }
+    }
+
+    public void OnClosingCleanup()
+    {
+        // Null out so a repeated Closed callback (or a late RequestPreview) never
+        // touches the disposed source.
+        _cancellationTokenSource?.Cancel();
+        _cancellationTokenSource?.Dispose();
+        _cancellationTokenSource = null;
+    }
+
     private void GeneratePreview()
     {
         var hits = new List<FixNameHitItem>();
@@ -214,6 +224,8 @@ public partial class FixNamesViewModel : ObservableObject, IClosingCleanup
         {
             name.IsChecked = true;
         }
+
+        GeneratePreview();
     }
 
     [RelayCommand]
@@ -223,6 +235,8 @@ public partial class FixNamesViewModel : ObservableObject, IClosingCleanup
         {
             name.IsChecked = !name.IsChecked;
         }
+
+        GeneratePreview();
     }
 
     [RelayCommand]
@@ -266,6 +280,7 @@ public partial class FixNamesViewModel : ObservableObject, IClosingCleanup
                 noOfLinesChanged++;
             }
         }
+
         Info = $"Change casing - lines changed: {noOfLinesChanged}";
 
         OkPressed = true;
@@ -281,9 +296,8 @@ public partial class FixNamesViewModel : ObservableObject, IClosingCleanup
     [RelayCommand]
     public void AddExtraName()
     {
-        _loading = true;
         FindAllNames();
-        _loading = false;
+        GeneratePreview();
     }
 
     internal void OnKeyDown(KeyEventArgs e)
@@ -313,7 +327,5 @@ public partial class FixNamesViewModel : ObservableObject, IClosingCleanup
         ExtraNames = Se.Settings.Tools.ChangeCasing.ExtraNames;
         FindAllNames();
         GeneratePreview();
-        _previewTimer.Start();
-        _loading = false;
     }
 }

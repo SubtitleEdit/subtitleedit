@@ -461,10 +461,10 @@ public static class TableViewExtras
     /// CheckboxMultiSelect helper that TableView does not provide natively (extended
     /// selection itself is native ListBox behavior).
     /// </summary>
-    public static void AddSpaceToggle<TItem>(TableView tableView, Func<TItem, bool> getChecked, Action<TItem, bool> setChecked)
+    public static void AddSpaceToggle<TItem>(TableView tableView, Func<TItem, bool> checkStatus, Action<TItem, bool> setChecked)
         where TItem : class
     {
-        tableView.AddHandler(InputElement.KeyDownEvent, (object? _, KeyEventArgs e) =>
+        tableView.AddHandler(InputElement.KeyDownEvent, (_, e) =>
         {
             if (e.Key != Key.Space)
             {
@@ -477,7 +477,7 @@ public static class TableViewExtras
                 return;
             }
 
-            var newValue = !selected.All(getChecked);
+            var newValue = !selected.All(checkStatus);
             foreach (var item in selected)
             {
                 setChecked(item, newValue);
