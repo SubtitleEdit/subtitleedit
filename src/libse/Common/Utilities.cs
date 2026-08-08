@@ -1542,35 +1542,25 @@ namespace Nikse.SubtitleEdit.Core.Common
                 return false;
             }
 
-            while (text.Contains("  "))
+            int startIndex = 0;
+            int len = text.Length;
+            while (startIndex < len && (text[startIndex] == ' ' || text[startIndex] == '.' || text[startIndex] == '-'))
             {
-                text = text.Replace("  ", " ");
+                startIndex++;
             }
 
-            var s1 = "- " + startTag;
-            var s2 = "-" + startTag;
-            var s3 = "- ..." + startTag;
-            var s4 = "- " + startTag + "..."; // - <i>...
-
-            var e1 = endTag + ".";
-            var e2 = endTag + "!";
-            var e3 = endTag + "?";
-            var e4 = endTag + "...";
-            var e5 = endTag + "-";
-
-            bool isStart = false;
-            bool isEnd = false;
-            if (text.StartsWith(startTag, StringComparison.Ordinal) || text.StartsWith(s1, StringComparison.Ordinal) || text.StartsWith(s2, StringComparison.Ordinal) || text.StartsWith(s3, StringComparison.Ordinal) || text.StartsWith(s4, StringComparison.Ordinal))
+            if (!text.AsSpan(startIndex).StartsWith(startTag))
             {
-                isStart = true;
+                return false;
             }
 
-            if (text.EndsWith(endTag, StringComparison.Ordinal) || text.EndsWith(e1, StringComparison.Ordinal) || text.EndsWith(e2, StringComparison.Ordinal) || text.EndsWith(e3, StringComparison.Ordinal) || text.EndsWith(e4, StringComparison.Ordinal) || text.EndsWith(e5, StringComparison.Ordinal))
+            int endIndex = text.Length - 1;
+            while (endIndex >= 0 && (text[endIndex] == '.' || text[endIndex] == '!' || text[endIndex] == '?' || text[endIndex] == '-' || text[endIndex] == ' '))
             {
-                isEnd = true;
+                endIndex--;
             }
 
-            return isStart && isEnd;
+            return text.AsSpan(0, endIndex + 1).EndsWith(endTag);
         }
 
         public static Paragraph GetOriginalParagraph(int index, Paragraph paragraph, List<Paragraph> originalParagraphs)
