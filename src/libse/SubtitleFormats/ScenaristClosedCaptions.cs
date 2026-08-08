@@ -22,7 +22,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         protected virtual Regex RegexTimeCodes => Regex;
         protected bool DropFrame;
 
-        private static readonly List<KeyValuePair<string, string>> LetterDictionary = new List<KeyValuePair<string, string>>
+        private static readonly List<KeyValuePair<string, string>> LetterDictionary = new List<KeyValuePair<string, string>>(339)
         {
             new KeyValuePair<string, string>("20",                  " " ),
             new KeyValuePair<string, string>("a1",                  "!" ),
@@ -732,7 +732,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             {
                 row = 6 - totalLines / 2 + lineNumber;
             }
-            var rowCodes = new List<string> { "91", "91", "92", "92", "15", "15", "16", "16", "97", "97", "10", "13", "13", "94", "94" };
+            var rowCodes = new List<string>(15) { "91", "91", "92", "92", "15", "15", "16", "16", "97", "97", "10", "13", "13", "94", "94" };
             var rowCode = rowCodes[row];
 
             var left = (32 - text.Length) / 2;
@@ -751,28 +751,28 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             switch (column)
             {
                 case 0:
-                    columnCodes = new List<string> { "d0", "70", "d0", "70", "d0", "70", "d0", "70", "d0", "70", "d0", "d0", "70", "d0", "70" };
+                    columnCodes = new List<string>(15) { "d0", "70", "d0", "70", "d0", "70", "d0", "70", "d0", "70", "d0", "d0", "70", "d0", "70" };
                     break;
                 case 4:
-                    columnCodes = new List<string> { "52", "f2", "52", "f2", "52", "f2", "52", "f2", "52", "f2", "52", "52", "f2", "52", "f2" };
+                    columnCodes = new List<string>(15) { "52", "f2", "52", "f2", "52", "f2", "52", "f2", "52", "f2", "52", "52", "f2", "52", "f2" };
                     break;
                 case 8:
-                    columnCodes = new List<string> { "54", "f4", "54", "f4", "54", "f4", "54", "f4", "54", "f4", "54", "54", "f4", "54", "f4" };
+                    columnCodes = new List<string>(15) { "54", "f4", "54", "f4", "54", "f4", "54", "f4", "54", "f4", "54", "54", "f4", "54", "f4" };
                     break;
                 case 12:
-                    columnCodes = new List<string> { "d6", "76", "d6", "76", "d6", "76", "d6", "76", "d6", "76", "d6", "d6", "76", "d6", "76" };
+                    columnCodes = new List<string>(15) { "d6", "76", "d6", "76", "d6", "76", "d6", "76", "d6", "76", "d6", "d6", "76", "d6", "76" };
                     break;
                 case 16:
-                    columnCodes = new List<string> { "58", "f8", "58", "f8", "58", "f8", "58", "f8", "58", "f8", "58", "58", "f8", "58", "f8" };
+                    columnCodes = new List<string>(15) { "58", "f8", "58", "f8", "58", "f8", "58", "f8", "58", "f8", "58", "58", "f8", "58", "f8" };
                     break;
                 case 20:
-                    columnCodes = new List<string> { "da", "7a", "da", "7a", "da", "7a", "da", "7a", "da", "7a", "da", "da", "7a", "da", "7a" };
+                    columnCodes = new List<string>(15) { "da", "7a", "da", "7a", "da", "7a", "da", "7a", "da", "7a", "da", "da", "7a", "da", "7a" };
                     break;
                 case 24:
-                    columnCodes = new List<string> { "dc", "7c", "dc", "7c", "dc", "7c", "dc", "7c", "dc", "7c", "dc", "dc", "7c", "dc", "7c" };
+                    columnCodes = new List<string>(15) { "dc", "7c", "dc", "7c", "dc", "7c", "dc", "7c", "dc", "7c", "dc", "dc", "7c", "dc", "7c" };
                     break;
                 default: // 28
-                    columnCodes = new List<string> { "5e", "fe", "5e", "fe", "5e", "fe", "5e", "fe", "5e", "fe", "5e", "5e", "fe", "5e", "fe" };
+                    columnCodes = new List<string>(15) { "5e", "fe", "5e", "fe", "5e", "fe", "5e", "fe", "5e", "fe", "5e", "5e", "fe", "5e", "fe" };
                     break;
             }
             var code = rowCode + columnCodes[row];

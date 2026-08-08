@@ -29,7 +29,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             BibliographicCode = string.IsNullOrEmpty(bibliographicCode) ? threeLetterCode : bibliographicCode;
         }
 
-        public static readonly List<Iso639Dash2LanguageCode> List = new List<Iso639Dash2LanguageCode>
+        public static readonly List<Iso639Dash2LanguageCode> List = new List<Iso639Dash2LanguageCode>(184)
         {
             new Iso639Dash2LanguageCode("aar", "aa", "Afar", "aar"),
             new Iso639Dash2LanguageCode("abk", "ab", "Abkhazian", "abk"),

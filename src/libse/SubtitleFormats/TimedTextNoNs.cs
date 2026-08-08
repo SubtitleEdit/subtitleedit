@@ -139,7 +139,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         bodyNode.RemoveChild(child);
                     }
 
-                    var lst = new List<XmlNode>();
+                    var lst = new List<XmlNode>(divNode.ChildNodes.Count);
                     foreach (XmlNode child in divNode.ChildNodes)
                     {
                         lst.Add(child);

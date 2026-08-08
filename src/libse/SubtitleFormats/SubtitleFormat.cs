@@ -82,7 +82,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     return _allSubtitleFormats;
                 }
 
-                _allSubtitleFormats = new List<SubtitleFormat>
+                _allSubtitleFormats = new List<SubtitleFormat>(333)
                 {
                     new SubRip(),
                     new AbcIViewer(),

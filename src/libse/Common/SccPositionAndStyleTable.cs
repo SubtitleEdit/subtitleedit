@@ -7,7 +7,7 @@ namespace Nikse.SubtitleEdit.Core.Common
     public static class SccPositionAndStyleTable
     {
         public static readonly ReadOnlyCollection<SccPositionAndStyle> SccPositionAndStyles =
-            new ReadOnlyCollection<SccPositionAndStyle>(new List<SccPositionAndStyle>
+            new ReadOnlyCollection<SccPositionAndStyle>(new List<SccPositionAndStyle>(634)
         {
             //NO x-coordinate?
             new SccPositionAndStyle(SKColors.White, SccFontStyle.Regular, 01, 0, "1140"),

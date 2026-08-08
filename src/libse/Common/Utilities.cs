@@ -1882,7 +1882,7 @@ namespace Nikse.SubtitleEdit.Core.Common
         public static string ToSuperscript(string text)
         {
             var sb = new StringBuilder();
-            var superscript = new List<char>{
+            var superscript = new List<char>(58){
                                               '⁰',
                                               '¹',
                                               '²',
@@ -1942,7 +1942,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                                               'ᵁ',
                                               'ᵂ'
                                             };
-            var normal = new List<char>{
+            var normal = new List<char>(58){
                                          '0', // "⁰"
                                          '1', // "¹"
                                          '2', // "²"
@@ -2021,7 +2021,7 @@ namespace Nikse.SubtitleEdit.Core.Common
         public static string ToSubscript(string text)
         {
             var sb = new StringBuilder();
-            var subcript = new List<char>{
+            var subcript = new List<char>(23){
                                            '₀',
                                            '₁',
                                            '₂',
@@ -2046,7 +2046,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                                            'ᵥ',
                                            'ₓ',
                                             };
-            var normal = new List<char>
+            var normal = new List<char>(23)
                              {
                                '0',  // "₀"
                                '1',  // "₁"
@@ -3286,11 +3286,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                 subtitle.Header = subtitle.Header.Trim() + Environment.NewLine;
             }
 
-            lines = new List<string>();
-            foreach (string l in subtitle.Header.Trim().SplitToLines())
-            {
-                lines.Add(l);
-            }
+            lines = subtitle.Header.Trim().SplitToLines();
 
             const string timeCodeFormat = "{0}:{1:00}:{2:00}.{3:00}"; // h:mm:ss.cc
             foreach (var mp in sub)
