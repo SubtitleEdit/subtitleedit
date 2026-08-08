@@ -24,6 +24,8 @@ public interface ITextBoxWrapper
     void Paste();
     void SelectAll();
     void ClearSelection();
+    /// <summary>Deletes the selection, or the character after the caret (the Delete key).</summary>
+    void DeleteForward();
     void SetAlignment(Avalonia.Media.TextAlignment alignment);
 
     // Live spell check - a no-op for editors without underline support (plain TextBox).

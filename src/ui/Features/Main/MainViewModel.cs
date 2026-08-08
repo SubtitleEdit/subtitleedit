@@ -15454,10 +15454,13 @@ public partial class MainViewModel :
         }
     }
 
+    // Deletes the selection, or the character after the caret - a stand-in for the Delete key,
+    // defaulting to Shift+Backspace for Apple keyboards where Delete is only a backspace.
     [RelayCommand]
-    private void TextBoxDeleteSelection()
+    private void TextBoxDeleteForward()
     {
-        EditTextBox.SelectedText = string.Empty;
+        var textBox = EditTextBoxOriginal.IsFocused ? EditTextBoxOriginal : EditTextBox;
+        textBox.DeleteForward();
     }
 
     [RelayCommand]
@@ -22423,8 +22426,7 @@ public partial class MainViewModel :
         ReferenceEquals(command, TextBoxCut2Command) ||
         ReferenceEquals(command, TextBoxCopyCommand) ||
         ReferenceEquals(command, TextBoxPasteCommand) ||
-        ReferenceEquals(command, TextBoxSelectAllCommand) ||
-        ReferenceEquals(command, TextBoxDeleteSelectionCommand);
+        ReferenceEquals(command, TextBoxSelectAllCommand);
 
     /// <summary>
     /// Tunnelling pointer handler that tells <see cref="_altMenuActivationGuard"/> when Alt was used as

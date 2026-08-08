@@ -85,6 +85,8 @@ public class SyntaxTextEditorWrapper : ITextBoxWrapper
 
     public void ClearSelection() => _editor.ClearSelection();
 
+    public void DeleteForward() => _editor.View.DeleteForward();
+
     /// <summary>
     /// Source text is always left aligned - centering it would only make the time codes harder to
     /// read. The subtitle edit box is the one that follows this setting.

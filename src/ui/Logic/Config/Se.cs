@@ -16,7 +16,7 @@ namespace Nikse.SubtitleEdit.Logic.Config;
 public class Se
 {
     internal const int CurrentMacOsFontMigrationVersion = 1;
-    internal const int CurrentShortcutsMigrationVersion = 1;
+    internal const int CurrentShortcutsMigrationVersion = 2;
 
     public static string Version { get; set; } = "v5.2.0-beta6";
 
@@ -288,23 +288,42 @@ public class Se
     /// standard F10 menu-bar activation (#13083). The default is gone now, and the stale persisted
     /// copy - indistinguishable from a user assignment - is cleared here once; users who really
     /// want F10 on the action can assign it again and it will stick.
+    ///
+    /// Version 2: "Text box: Delete selection (no clipboard)" grew into the forward-delete
+    /// (Delete key) command and was renamed; the persisted entry is renamed with it so user
+    /// assignments - including a deliberately cleared binding - survive.
     /// </summary>
     internal void MigrateShortcuts()
     {
-        if (ShortcutsMigrationVersion.GetValueOrDefault() >= CurrentShortcutsMigrationVersion)
+        var fromVersion = ShortcutsMigrationVersion.GetValueOrDefault();
+        if (fromVersion >= CurrentShortcutsMigrationVersion)
         {
             return;
         }
 
         ShortcutsMigrationVersion = CurrentShortcutsMigrationVersion;
 
-        foreach (var shortcut in Shortcuts)
+        if (fromVersion < 1)
         {
-            if (shortcut.ActionName == nameof(MainViewModel.WaveformSetEndAndGoToNextCommand) &&
-                shortcut.Keys.Count == 1 &&
-                shortcut.Keys[0].Equals(nameof(Avalonia.Input.Key.F10), StringComparison.OrdinalIgnoreCase))
+            foreach (var shortcut in Shortcuts)
             {
-                shortcut.Keys.Clear();
+                if (shortcut.ActionName == nameof(MainViewModel.WaveformSetEndAndGoToNextCommand) &&
+                    shortcut.Keys.Count == 1 &&
+                    shortcut.Keys[0].Equals(nameof(Avalonia.Input.Key.F10), StringComparison.OrdinalIgnoreCase))
+                {
+                    shortcut.Keys.Clear();
+                }
+            }
+        }
+
+        if (fromVersion < 2)
+        {
+            foreach (var shortcut in Shortcuts)
+            {
+                if (shortcut.ActionName == "TextBoxDeleteSelectionCommand")
+                {
+                    shortcut.ActionName = nameof(MainViewModel.TextBoxDeleteForwardCommand);
+                }
             }
         }
     }
