@@ -58,7 +58,7 @@ namespace Nikse.SubtitleEdit.Core.Common
         private const string MusicSymbols = "♪♫#*¶";
         private static readonly string ExplanationQuotes = "'\"“”‘’«»‹›";
 
-        private static readonly List<string> LanguagesWithoutCaseDistinction = new List<string>
+        private static readonly List<string> LanguagesWithoutCaseDistinction = new List<string>(33)
         {
             "am", "ar", "as", "az", "bn", "my", "zh", "ka", "gu", "he", "hi", "ja", "kn", "ks", "km", "ko", "ku", "lo",
             "ml", "ps", "fa", "pa", "sd", "si", "su", "ta", "te", "th", "bo", "ti", "ur", "ug", "yi"
@@ -78,9 +78,9 @@ namespace Nikse.SubtitleEdit.Core.Common
             {'›', '‹'}
         };
 
-        public static readonly List<string> Prefixes = new List<string> { "...", "..", "-", "‐", "–", "—", "…" };
+        public static readonly List<string> Prefixes = new List<string>(7) { "...", "..", "-", "‐", "–", "—", "…" };
         public static readonly List<string> DashPrefixes = new List<string> { "-", "‐", "–", "—" };
-        public static readonly List<string> Suffixes = new List<string> { "...", "..", "-", "‐", "–", "—", "…" };
+        public static readonly List<string> Suffixes = new List<string>(7) { "...", "..", "-", "‐", "–", "—", "…" };
 
         public static readonly List<ContinuationStyle> ContinuationStyles = Enum.GetValues(typeof(ContinuationStyle)).Cast<ContinuationStyle>().ToList();
 
@@ -1203,7 +1203,7 @@ namespace Nikse.SubtitleEdit.Core.Common
 
             if (language == "nl")
             {
-                conjunctions = new List<string>
+                conjunctions = new List<string>(22)
                 {
                     "maar", "dus", "omdat", "aangezien", "want", "vermits", "zodat", "opdat", "zoals", "bijvoorbeeld",
                     "net", "behalve", "al", "alhoewel", "hoewel", "ofschoon", "tenzij", "waardoor", "waarna", "misschien", "waarschijnlijk", "vast"
@@ -1211,21 +1211,21 @@ namespace Nikse.SubtitleEdit.Core.Common
             }
             else if (language == "en")
             {
-                conjunctions = new List<string>
+                conjunctions = new List<string>(8)
                 {
                     "and", "but", "for", "nor", "yet", "or", "so", "such as"
                 };
             }
             else if (language == "fr")
             {
-                conjunctions = new List<string>
+                conjunctions = new List<string>(5)
                 {
                     "mais", "car", "donc", "parce que", "par exemple"
                 };
             }
             else if (language == "pt")
             {
-                conjunctions = new List<string>
+                conjunctions = new List<string>(14)
                 {
                     "mas", "nem", "por exemplo", "e", "bem com", "todavia", "no entanto", "mas também", "como também",
                     "bem como", "porém", "por isso", "porque", "portanto"

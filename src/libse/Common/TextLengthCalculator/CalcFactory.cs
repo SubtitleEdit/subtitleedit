@@ -5,7 +5,7 @@ namespace Nikse.SubtitleEdit.Core.Common.TextLengthCalculator
 {
     public static class CalcFactory
     {
-        public static List<ICalcLength> Calculators = new List<ICalcLength>
+        public static List<ICalcLength> Calculators = new List<ICalcLength>(11)
         {
             new CalcAll(),
             new CalcNoSpaceCpsOnly(),

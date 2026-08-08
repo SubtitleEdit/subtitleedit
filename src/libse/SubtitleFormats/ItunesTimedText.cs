@@ -149,7 +149,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
                     if (divNode != null)
                     {
-                        var lst = new List<XmlNode>();
+                        var lst = new List<XmlNode>(divNode.ChildNodes.Count);
                         foreach (XmlNode child in divNode.ChildNodes)
                         {
                             lst.Add(child);
