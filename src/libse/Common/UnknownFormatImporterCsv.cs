@@ -16,11 +16,11 @@ namespace Nikse.SubtitleEdit.Core.Common
             public bool Play { get; set; }
         }
 
-        private readonly List<string> _startNames = new List<string> { "start", "start time", "in", "begin", "starttime", "start_time", "starttime", "startmillis", "start_millis", "startms", "start_ms", "startms", "startmilliseconds", "start_millisesonds", "startmilliseconds", "from", "fromtime", "from_ms", "fromms", "frommilliseconds", "from_milliseconds", "tc-in", "tc in", "show", "timecode", "start tc", "start-tc", "tc start", "tc-start" };
-        private readonly List<string> _endNames = new List<string> { "end", "end time", "out", "stop", "endtime", "end_time", "endtime", "endmillis", "end_millis", "endms", "end_ms", "endmilliseconds", "end_millisesonds", "endmilliseconds", "to", "totime", "to_ms", "toms", "tomilliseconds", "to_milliseconds", "tc-out", "tc out", "hide", "end tc", "end-tc", "tc end", "tc-end" };
+        private readonly List<string> _startNames = new List<string>(29) { "start", "start time", "in", "begin", "starttime", "start_time", "starttime", "startmillis", "start_millis", "startms", "start_ms", "startms", "startmilliseconds", "start_millisesonds", "startmilliseconds", "from", "fromtime", "from_ms", "fromms", "frommilliseconds", "from_milliseconds", "tc-in", "tc in", "show", "timecode", "start tc", "start-tc", "tc start", "tc-start" };
+        private readonly List<string> _endNames = new List<string>(27) { "end", "end time", "out", "stop", "endtime", "end_time", "endtime", "endmillis", "end_millis", "endms", "end_ms", "endmilliseconds", "end_millisesonds", "endmilliseconds", "to", "totime", "to_ms", "toms", "tomilliseconds", "to_milliseconds", "tc-out", "tc out", "hide", "end tc", "end-tc", "tc end", "tc-end" };
         private readonly List<string> _durationNames = new List<string> { "duration", "durationms", "dur" };
-        private readonly List<string> _textNames = new List<string> { "text", "content", "value", "caption", "sentence", "dialog", "dialogue" };
-        private readonly List<string> _characterNames = new List<string> { "speaker", "voice", "character", "role", "name", "actor", "rolle", "character name", "sprecher" };
+        private readonly List<string> _textNames = new List<string>(7) { "text", "content", "value", "caption", "sentence", "dialog", "dialogue" };
+        private readonly List<string> _characterNames = new List<string>(9) { "speaker", "voice", "character", "role", "name", "actor", "rolle", "character name", "sprecher" };
 
         public Subtitle AutoGuessImport(List<string> lines)
         {
@@ -161,7 +161,12 @@ namespace Nikse.SubtitleEdit.Core.Common
 
         private double[] GetGaps(string[] strings)
         {
-            var gaps = new List<double>();
+            if (strings == null || strings.Length < 2)
+            {
+                return Array.Empty<double>();
+            }
+
+            var gaps = new List<double>(strings.Length - 1);
             for (var i = 1; i < strings.Length; i++)
             {
                 var start = TimeCode.ParseToMilliseconds(strings[i - 1]);
@@ -221,7 +226,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                         !csvLine.Start.Contains(';') &&
                         double.TryParse(csvLine.Start, out var n))
                     {
-                        var msNames = new List<string> { "startmillis", "start_millis", "startms", "start_ms", "startms", "startmilliseconds", "start_millisesonds", "startmilliseconds", "from_ms", "fromms", "frommilliseconds", "from_milliseconds" };
+                        var msNames = new List<string>(12) { "startmillis", "start_millis", "startms", "start_ms", "startms", "startmilliseconds", "start_millisesonds", "startmilliseconds", "from_ms", "fromms", "frommilliseconds", "from_milliseconds" };
                         if (msNames.Contains(headers[startIndex].ToLowerInvariant()))
                         {
                             csvLine.Start = new TimeCode(n).ToString(false);
@@ -239,7 +244,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                         !csvLine.End.Contains(';') &&
                         double.TryParse(csvLine.End, out var n))
                     {
-                        var msNames = new List<string> { "endmillis", "end_millis", "endms", "end_ms", "endmilliseconds", "end_millisesonds", "endmilliseconds", "to_ms", "toms", "tomilliseconds", "to_milliseconds" };
+                        var msNames = new List<string>(11) { "endmillis", "end_millis", "endms", "end_ms", "endmilliseconds", "end_millisesonds", "endmilliseconds", "to_ms", "toms", "tomilliseconds", "to_milliseconds" };
                         if (msNames.Contains(headers[endIndex].ToLowerInvariant()))
                         {
                             csvLine.End = new TimeCode(n).ToString(false);

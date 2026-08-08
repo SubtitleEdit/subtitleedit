@@ -71,7 +71,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             { 0x6c, "ـ" },
         };
 
-        private static readonly List<int> HebrewCodes = new List<int>
+        private static readonly List<int> HebrewCodes = new List<int>(79)
         {
             0x40, // א
             0x41, // ב
@@ -156,7 +156,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             0xAA, // "Z" - weird
         };
 
-        private static readonly List<string> HebrewLetters = new List<string>
+        private static readonly List<string> HebrewLetters = new List<string>(79)
         {
             "א",
             "ב",
@@ -241,7 +241,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             "Z", // 0xAA,
         };
 
-        private static readonly List<int> RussianCodes = new List<int>
+        private static readonly List<int> RussianCodes = new List<int>(44)
         {
             0x42, // Б
             0x45, // Е
@@ -289,7 +289,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             0x68, // П
         };
 
-        private static readonly List<string> RussianLetters = new List<string>
+        private static readonly List<string> RussianLetters = new List<string>(44)
         {
             "Б",
             "Е",
@@ -337,7 +337,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             "х",
         };
 
-        private static readonly List<Tuple<int, string>> Greek = new List<Tuple<int, string>>
+        private static readonly List<Tuple<int, string>> Greek = new List<Tuple<int, string>>(145)
         {
             new Tuple<int, string>(0x20, " "),
             new Tuple<int, string>(0x21, "!"),

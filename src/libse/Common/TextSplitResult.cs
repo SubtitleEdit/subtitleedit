@@ -112,7 +112,7 @@ namespace Nikse.SubtitleEdit.Core.Common
         {
             Lines = lines;
 
-            LengthCharacters = new List<int>();
+            LengthCharacters = new List<int>(lines.Count);
             foreach (var line in lines)
             {
                 LengthCharacters.Add(line.Length);

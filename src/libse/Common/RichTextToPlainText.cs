@@ -33,7 +33,7 @@ namespace Nikse.SubtitleEdit.Core.Common
 
         private static readonly Regex RtfRegex = new Regex(@"\\([a-z]{1,32})(-?\d{1,10})?[ ]?|\\'([0-9a-f]{2})|\\([^a-z])|([{}])|[\r\n]+|(.)", RegexOptions.Singleline | RegexOptions.IgnoreCase);
 
-        private static readonly List<string> Destinations = new List<string>
+        private static readonly List<string> Destinations = new List<string>(294)
         {
             "aftncn","aftnsep","aftnsepc","annotation","atnauthor","atndate","atnicn","atnid",
             "atnparent","atnref","atntime","atrfend","atrfstart","author","background",

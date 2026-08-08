@@ -140,7 +140,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             }
             else // time codes
             {
-                var newTimeCodes = new List<Paragraph>();
+                var newTimeCodes = new List<Paragraph>(15);
                 for (int i = 0; i < 15; i++)
                 {
                     int start = index + 2 + (i * 8);

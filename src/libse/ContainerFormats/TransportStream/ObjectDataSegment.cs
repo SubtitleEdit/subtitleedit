@@ -53,7 +53,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
             {
                 var twoToFourBitColorLookup = new List<int> { 0, 1, 2, 3 };
                 var twoToEightBitColorLookup = new List<int> { 0, 1, 2, 3 };
-                var fourToEightBitColorLookup = new List<int> { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15 };
+                var fourToEightBitColorLookup = new List<int>(16) { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15 };
 
                 int pixelCode = 0;
                 int runLength = 0;
@@ -136,7 +136,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
             {
                 var twoToFourBitColorLookup = new List<int> { 0, 1, 2, 3 };
                 var twoToEightBitColorLookup = new List<int> { 0, 1, 2, 3 };
-                var fourToEightBitColorLookup = new List<int> { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15 };
+                var fourToEightBitColorLookup = new List<int>(16) { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15 };
 
                 var pixelCode = 0;
                 var runLength = 0;

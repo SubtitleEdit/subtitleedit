@@ -121,7 +121,7 @@ namespace Nikse.SubtitleEdit.Core.Dictionaries
 
             if (threeLetterIsoLanguageName == "eng")
             {
-                wordList.AddRange(new List<string>
+                wordList.AddRange(new List<string>(23)
                 {
                     // Ignore list
                     "Andor", "honour", "honours", "putain", "whoah", "eastside", "Starpath", "comlink", "Taamet",

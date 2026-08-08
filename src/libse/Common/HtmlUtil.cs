@@ -1274,7 +1274,7 @@ namespace Nikse.SubtitleEdit.Core.Common
 
             if (assa)
             {
-                var onOffTags = new List<string> { "i", "b", "u", "s", "be" };
+                var onOffTags = new List<string>(5) { "i", "b", "u", "s", "be" };
                 if (onOffTags.Contains(tag))
                 {
                     if (text.Contains($"\\{tag}1"))
@@ -1342,7 +1342,7 @@ namespace Nikse.SubtitleEdit.Core.Common
 
             if (assa)
             {
-                var onOffTags = new List<string> { "i", "b", "u", "s", "be" };
+                var onOffTags = new List<string>(5) { "i", "b", "u", "s", "be" };
                 if (onOffTags.Contains(tag))
                 {
                     return text.Contains($"\\{tag}1");
@@ -1369,7 +1369,7 @@ namespace Nikse.SubtitleEdit.Core.Common
 
             if (assa)
             {
-                var onOffTags = new List<string> { "i", "b", "u", "s", "be" };
+                var onOffTags = new List<string>(5) { "i", "b", "u", "s", "be" };
                 if (onOffTags.Contains(tag))
                 {
                     text = text.Replace($"{{\\{tag}1}}", string.Empty);
@@ -1423,7 +1423,7 @@ namespace Nikse.SubtitleEdit.Core.Common
 
             if (assa)
             {
-                var onOffTags = new List<string> { "i", "b", "u", "s", "be" };
+                var onOffTags = new List<string>(5) { "i", "b", "u", "s", "be" };
                 if (onOffTags.Contains(tag))
                 {
                     if (text.Contains($"\\{tag}1"))

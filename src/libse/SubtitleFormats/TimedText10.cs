@@ -268,7 +268,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         bodyNode.RemoveChild(child);
                     }
 
-                    var lst = new List<XmlNode>();
+                    var lst = new List<XmlNode>(divNode.ChildNodes.Count);
                     foreach (XmlNode child in divNode.ChildNodes)
                     {
                         lst.Add(child);
@@ -881,7 +881,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     }
 
                     // Saving attributes
-                    var effectsToSave = new List<string>
+                    var effectsToSave = new List<string>(8)
                     {
                         "xml:space",
                         "tts:fontSize",
@@ -907,7 +907,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     if (!string.IsNullOrEmpty(region))
                     {
                         var regionCorrespondToTag = false;
-                        var regionTags = new List<KeyValuePair<string, string>>
+                        var regionTags = new List<KeyValuePair<string, string>>(9)
                         {
                             new KeyValuePair<string, string>("bottomLeft", "{\\an1}"),
                             new KeyValuePair<string, string>("bottomCenter", "{\\an2}"),
