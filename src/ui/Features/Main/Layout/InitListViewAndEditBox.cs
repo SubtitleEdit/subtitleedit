@@ -1768,14 +1768,8 @@ public static partial class InitListViewAndEditBox
             Mode = BindingMode.OneWay,
             Source = vm
         });
-        // add label to panelSingleLineLengthsOriginal
-        var singleLineLengthLabel = new TextBlock
-        {
-            Text = Se.Language.Main.SingleLineLength,
-            FontWeight = FontWeight.Bold,
-            Margin = new Thickness(0, 0, 5, 0)
-        };
-        panelSingleLineLengthsOriginal.Children.Add(singleLineLengthLabel);
+        // no seed label here - SubtitleTextInfoHelper.FillLineLengthPanel writes the
+        // "Single line length" label into index 0 itself (and reuses the text blocks)
 
         var buttonPanel = new StackPanel
         {

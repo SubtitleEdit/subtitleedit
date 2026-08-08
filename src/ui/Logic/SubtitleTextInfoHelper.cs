@@ -1,3 +1,4 @@
+using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Layout;
 using Avalonia.Media;
@@ -121,6 +122,9 @@ internal static class SubtitleTextInfoHelper
         }
     }
 
+    private const double LabelFontSize = 12;
+    private static readonly Thickness LabelPadding = new Thickness(2);
+
     private static void SetLabel(Avalonia.Controls.Controls children, ref int index, string text, IBrush? background)
     {
         if (index < children.Count && children[index] is TextBlock existing)
@@ -134,10 +138,32 @@ internal static class SubtitleTextInfoHelper
             {
                 existing.Background = background;
             }
+
+            // The panel may have been built with differently styled text blocks (e.g. a bold
+            // header seeded by the layout code); reused blocks must still look like our own.
+            if (existing.FontWeight != FontWeight.Normal)
+            {
+                existing.FontWeight = FontWeight.Normal;
+            }
+
+            if (Math.Abs(existing.FontSize - LabelFontSize) > 0.001)
+            {
+                existing.FontSize = LabelFontSize;
+            }
+
+            if (existing.Padding != LabelPadding)
+            {
+                existing.Padding = LabelPadding;
+            }
+
+            if (existing.Margin != default)
+            {
+                existing.Margin = default;
+            }
         }
         else
         {
-            var tb = UiUtil.MakeTextBlock(text).WithFontSize(12).WithPadding(2);
+            var tb = UiUtil.MakeTextBlock(text).WithFontSize(LabelFontSize).WithPadding(2);
             tb.Background = background;
             if (index < children.Count)
             {
