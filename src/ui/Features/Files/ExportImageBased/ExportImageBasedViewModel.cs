@@ -69,6 +69,8 @@ public partial class ExportImageBasedViewModel : ObservableObject, IClosingClean
     [ObservableProperty] ExportContentAlignmentDisplay _selectedContentAlignment;
     [ObservableProperty] private ObservableCollection<int> _lineSpacings;
     [ObservableProperty] int _selectedLineSpacing;
+    [ObservableProperty] private ObservableCollection<double> _frameRates;
+    [ObservableProperty] private double _selectedFrameRate;
     [ObservableProperty] private ObservableCollection<SeExportImagesProfile> _profiles;
     [ObservableProperty] private SeExportImagesProfile? _selectedProfile;
     [ObservableProperty] private string _imageInfo;
@@ -162,6 +164,8 @@ public partial class ExportImageBasedViewModel : ObservableObject, IClosingClean
         SelectedContentAlignment = ContentAlignments[0];
         LineSpacings = new ObservableCollection<int>(Enumerable.Range(-50, 501));
         SelectedLineSpacing = 0;
+        FrameRates = new ObservableCollection<double> { 23.976, 24, 25, 29.97, 30, 50, 59.94, 60 };
+        SelectedFrameRate = 25;
         SubtitleGrid = new TableView();
         Title = string.Empty;
         BitmapPreview = new SKBitmap(1, 1, false).ToAvaloniaBitmap();
@@ -548,6 +552,7 @@ public partial class ExportImageBasedViewModel : ObservableObject, IClosingClean
             BottomTopMargin = SelectedTopBottomMargin,
             LeftRightMargin = SelectedLeftRightMargin,
             IsRightToLeft = IsRightToLeft,
+            FramesPerSecond = SelectedFrameRate,
         };
 
         return imageParameter;
@@ -946,6 +951,7 @@ public partial class ExportImageBasedViewModel : ObservableObject, IClosingClean
             SelectedPaddingLeftRight = profile.PaddingLeftRight;
             SelectedPaddingTopBottom = profile.PaddingTopBottom;
             SelectedLineSpacing = profile.LineSpacingPercent;
+            SelectedFrameRate = FrameRates.Contains(profile.FramesPerSecond) ? profile.FramesPerSecond : 25;
         }
     }
 
@@ -977,6 +983,7 @@ public partial class ExportImageBasedViewModel : ObservableObject, IClosingClean
             profile.PaddingLeftRight = SelectedPaddingLeftRight;
             profile.PaddingTopBottom = SelectedPaddingTopBottom;
             profile.LineSpacingPercent = SelectedLineSpacing;
+            profile.FramesPerSecond = SelectedFrameRate;
         }
     }
 
