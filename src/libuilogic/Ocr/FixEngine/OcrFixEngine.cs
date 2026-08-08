@@ -522,15 +522,21 @@ public partial class OcrFixEngine : IOcrFixEngine, IDoSpell
             return false;
         }
 
-        var letters = word.Where(char.IsLetter).ToArray();
-        if (letters.Length == 0)
+        var letterCount = 0;
+        var uppercaseCount = 0;
+        for (int i = 0; i < word.Length; i++)
         {
-            return false;
+            if (char.IsLetter(word[i]))
+            {
+                letterCount++;
+                if (char.IsUpper(word[i]))
+                {
+                    uppercaseCount++;
+                }
+            }
         }
 
-        var uppercaseCount = letters.Count(char.IsUpper);
-
-        return uppercaseCount > letters.Length / 2.0;
+        return uppercaseCount > letterCount / 2;
     }
 
     public void ChangeAll(string from, string to)
