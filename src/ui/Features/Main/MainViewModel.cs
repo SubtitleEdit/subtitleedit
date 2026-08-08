@@ -2084,7 +2084,7 @@ public partial class MainViewModel :
         {
             var paragraphs = Subtitles.Select(p => new SubtitleLineViewModel(p)).ToList();
             var selectedParagraphs = SubtitleGridSelectedItems.Cast<SubtitleLineViewModel>().ToList();
-            vm.Initialize(paragraphs, selectedParagraphs, _videoFileName);
+            vm.Initialize(GetUpdateSubtitle(), paragraphs, selectedParagraphs, _videoFileName);
         });
 
         if (result.OkPressed && result.UpdatedSubtitle.Paragraphs.Count == Subtitles.Count)
