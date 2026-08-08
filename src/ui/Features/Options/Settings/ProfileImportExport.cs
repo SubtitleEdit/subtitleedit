@@ -61,29 +61,40 @@ namespace Nikse.SubtitleEdit.Features.Options.Settings
             var list = new List<ProfileDisplay>();
             foreach (var item in Profiles)
             {
+                // Every rule is left null when the file omits it or it will not parse, so the
+                // existing "?? current setting" fallbacks fill it in. Parsing strictly here meant
+                // one bad or missing field aborted the whole import with a FormatException.
                 var profile = new ProfileDisplay
                 {
                     Name = item.Name,
-                    MaxLines = int.Parse(item.MaxNumberOfLines, CultureInfo.InvariantCulture),
+                    MaxLines = ParseInt(item.MaxNumberOfLines),
                     CpsLineLengthStrategy = CpsLineLengthStrategyDisplay.List().FirstOrDefault(p=>p.Code == item.CpsLineLengthStrategy) ?? CpsLineLengthStrategyDisplay.List().First(),
-                    UnbreakLinesShorterThan = int.Parse(item.MergeLinesShorterThan, CultureInfo.InvariantCulture),
-                    MinGapMs = int.Parse(item.MinimumMillisecondsBetweenLines, CultureInfo.InvariantCulture),
-                    SingleLineMaxLength = int.Parse(item.SubtitleLineMaximumLength, CultureInfo.InvariantCulture),
-                    MaxCharsPerSec = double.Parse(item.SubtitleMaximumCharactersPerSeconds, CultureInfo.InvariantCulture),
-                    MaxDurationMs = int.Parse(item.SubtitleMaximumDisplayMilliseconds, CultureInfo.InvariantCulture),
-                    MaxWordsPerMin = double.Parse(item.SubtitleMaximumWordsPerMinute, CultureInfo.InvariantCulture),
-                    MinDurationMs = int.Parse(item.SubtitleMinimumDisplayMilliseconds, CultureInfo.InvariantCulture),
-                    OptimalCharsPerSec = double.Parse(item.SubtitleOptimalCharactersPerSeconds, CultureInfo.InvariantCulture),
+                    UnbreakLinesShorterThan = ParseInt(item.MergeLinesShorterThan),
+                    MinGapMs = ParseInt(item.MinimumMillisecondsBetweenLines),
+                    SingleLineMaxLength = ParseInt(item.SubtitleLineMaximumLength),
+                    MaxCharsPerSec = ParseDouble(item.SubtitleMaximumCharactersPerSeconds),
+                    MaxDurationMs = ParseInt(item.SubtitleMaximumDisplayMilliseconds),
+                    MaxWordsPerMin = ParseDouble(item.SubtitleMaximumWordsPerMinute),
+                    MinDurationMs = ParseInt(item.SubtitleMinimumDisplayMilliseconds),
+                    OptimalCharsPerSec = ParseDouble(item.SubtitleOptimalCharactersPerSeconds),
                     DialogStyle = DialogStyleDisplay.List().FirstOrDefault(p => p.Code == item.DialogStyle) ?? DialogStyleDisplay.List().First(),
                     ContinuationStyle = ContinuationStyleDisplay.List().FirstOrDefault(p => p.Code == item.ContinuationStyle) ?? ContinuationStyleDisplay.List().First(),
-                    CustomContinuationStyle = item.CustomContinuationStyle != null
-                        ? new CustomContinuationStyle(item.CustomContinuationStyle)
-                        : new CustomContinuationStyle()
+                    CustomContinuationStyle = new CustomContinuationStyle(item.CustomContinuationStyle)
                 };
 
                 list.Add(profile);
             }
             return list;
+        }
+
+        private static int? ParseInt(string value)
+        {
+            return int.TryParse(value, NumberStyles.Any, CultureInfo.InvariantCulture, out var result) ? result : null;
+        }
+
+        private static double? ParseDouble(string value)
+        {
+            return double.TryParse(value, NumberStyles.Any, CultureInfo.InvariantCulture, out var result) ? result : null;
         }
     }
 }
