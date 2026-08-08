@@ -23460,6 +23460,12 @@ public partial class MainViewModel :
         _cursorTimer = new DispatcherTimer(DispatcherPriority.Normal) { Interval = TimeSpan.FromMilliseconds(16) };
         _cursorTimer.Tick += (s, e) =>
         {
+            // Fast settle for the on-video subtitle preview: waiting for the 400 ms _slowTimer
+            // added up to 400 ms of tick alignment on top of the settle window, so the preview
+            // trailed the text by up to ~0.9 s. Checking here costs one bool in the steady
+            // state (the dirty flag gates everything else).
+            TryRefreshVideoPreview();
+
             var vp = GetVideoPlayerControl();
             if (vp == null || string.IsNullOrEmpty(_videoFileName))
             {
@@ -23512,47 +23518,83 @@ public partial class MainViewModel :
             UpdateGaps();
             AutoSaveTick(mainHash, originalHash);
 
-            var vp = GetVideoPlayerControl();
-            // IsUserEditing: refreshing the preview mid-edit means paying GetUpdateSubtitle +
-            // two Subtitle copies + ToText + a temp-file write on the UI thread every 400 ms
-            // while the user types or drags in the waveform (issue #13234). The dirty flag
-            // stays set, so the settled state is pushed on the first quiet tick - and the
-            // preview reads better settling once than flickering mid-word anyway.
-            if (!_mpvPreviewDirty || vp == null || _mpvPreviewRefreshBusy || IsUserEditing())
-            {
-                return;
-            }
-
-            // Filter once instead of: Where().ToList() + Clear + AddRange (which
-            // allocates an extra List and walks the paragraphs three times).
-            // Verified with BenchmarkDotNet at ~1.7-2x faster and 0-45 % less
-            // allocation across 100/1000/5000-line subtitles.
-            var hideLayers = _visibleLayers != null && Se.Settings.Assa.HideLayersFromVideoPreview;
-
-            if (vp.VideoPlayer is LibMpvDynamicPlayer mpv)
-            {
-                var subtitle = GetUpdateSubtitle();
-                _mpvPreviewDirty = false; // clear only after subtitle snapshot is successfully obtained
-                if (hideLayers)
-                {
-                    subtitle.Paragraphs.RemoveAll(p => !_visibleLayers!.Contains(p.Layer));
-                }
-
-                _ = RunPreviewRefresh(() => _mpvReloader.RefreshMpv(mpv, subtitle, _subtitleSecondary, SelectedSubtitleFormat));
-            }
-            else if (vp.VideoPlayer is LibVlcDynamicPlayer vlc)
-            {
-                var subtitle = GetUpdateSubtitle();
-                _mpvPreviewDirty = false; // clear only after subtitle snapshot is successfully obtained
-                if (hideLayers)
-                {
-                    subtitle.Paragraphs.RemoveAll(p => !_visibleLayers!.Contains(p.Layer));
-                }
-
-                _ = RunPreviewRefresh(() => _vlcReloader.RefreshVlc(vlc, subtitle, _subtitleSecondary, SelectedSubtitleFormat));
-            }
+            TryRefreshVideoPreview();
         };
         _slowTimer.Start();
+    }
+
+    // Preview settle window after the last keystroke. Deliberately shorter than
+    // IsUserEditing()'s 500 ms undo window: the expensive serialize now runs off the UI
+    // thread in MpvReloader.RefreshMpv, so a refresh landing in a short typing pause no
+    // longer risks a felt hitch, and the on-video preview follows the text much sooner
+    // (issue #13234 follow-up). Undo change detection keeps the full 500 ms.
+    private const int PreviewSettleAfterTypingMs = 250;
+    private long _previewRetryNotBeforeMs;
+
+    private bool IsUserEditingForPreview()
+    {
+        if (_lastKeyPressedMs != 0 && Environment.TickCount64 - _lastKeyPressedMs < PreviewSettleAfterTypingMs)
+        {
+            return true;
+        }
+
+        // Dragging in the waveform is the pointer equivalent of typing - see IsUserEditing().
+        return AudioVisualizer?.IsEditingWithPointer == true;
+    }
+
+    // Called at ~60 fps from _cursorTimer (fast settle after edits) and every 400 ms from
+    // _slowTimer (safety net when the cursor timer is stopped). Refreshing the preview
+    // mid-edit means paying GetUpdateSubtitle + a Subtitle copy on the UI thread on every
+    // settle check while the user types or drags in the waveform (issue #13234). The dirty
+    // flag stays set, so the settled state is pushed on the first quiet tick - and the
+    // preview reads better settling once than flickering mid-word anyway.
+    private void TryRefreshVideoPreview()
+    {
+        if (!_mpvPreviewDirty || _mpvPreviewRefreshBusy || IsUserEditingForPreview())
+        {
+            return;
+        }
+
+        // After a failed refresh, retry at the old slow cadence instead of ~60 fps.
+        if (Environment.TickCount64 < _previewRetryNotBeforeMs)
+        {
+            return;
+        }
+
+        var vp = GetVideoPlayerControl();
+        if (vp == null)
+        {
+            return;
+        }
+
+        // Filter once instead of: Where().ToList() + Clear + AddRange (which
+        // allocates an extra List and walks the paragraphs three times).
+        // Verified with BenchmarkDotNet at ~1.7-2x faster and 0-45 % less
+        // allocation across 100/1000/5000-line subtitles.
+        var hideLayers = _visibleLayers != null && Se.Settings.Assa.HideLayersFromVideoPreview;
+
+        if (vp.VideoPlayer is LibMpvDynamicPlayer mpv)
+        {
+            var subtitle = GetUpdateSubtitle();
+            _mpvPreviewDirty = false; // clear only after subtitle snapshot is successfully obtained
+            if (hideLayers)
+            {
+                subtitle.Paragraphs.RemoveAll(p => !_visibleLayers!.Contains(p.Layer));
+            }
+
+            _ = RunPreviewRefresh(() => _mpvReloader.RefreshMpv(mpv, subtitle, _subtitleSecondary, SelectedSubtitleFormat));
+        }
+        else if (vp.VideoPlayer is LibVlcDynamicPlayer vlc)
+        {
+            var subtitle = GetUpdateSubtitle();
+            _mpvPreviewDirty = false; // clear only after subtitle snapshot is successfully obtained
+            if (hideLayers)
+            {
+                subtitle.Paragraphs.RemoveAll(p => !_visibleLayers!.Contains(p.Layer));
+            }
+
+            _ = RunPreviewRefresh(() => _vlcReloader.RefreshVlc(vlc, subtitle, _subtitleSecondary, SelectedSubtitleFormat));
+        }
     }
 
     private async Task RunPreviewRefresh(Func<Task> refresh)
@@ -23566,6 +23608,7 @@ public partial class MainViewModel :
         {
             Se.LogError(exception, "Video preview subtitle refresh failed");
             _mpvPreviewDirty = true; // retry on a later tick
+            _previewRetryNotBeforeMs = Environment.TickCount64 + 400;
         }
         finally
         {
