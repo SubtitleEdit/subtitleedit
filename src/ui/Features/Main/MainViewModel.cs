@@ -382,6 +382,7 @@ public partial class MainViewModel :
     FindViewModel? _findViewModel;
     Control? _findPreviousFocus;
     Control? _focusBeforeMainMenu;
+    Control? _focusBeforeWindowDeactivated;
     bool _altClosesMainMenuOnKeyUp;
     readonly AltMenuActivationGuard _altMenuActivationGuard = new();
     bool _findClosingProgrammatically;
@@ -21670,6 +21671,10 @@ public partial class MainViewModel :
     /// </summary>
     internal void OnWindowDeactivated(object? sender, EventArgs e)
     {
+        // Remember where the caret was so re-activation can put it back (see OnWindowActivated).
+        // Captured before the cleanup below, which can move focus itself.
+        _focusBeforeWindowDeactivated = GetRestorableFocusedControl();
+
         // Avalonia's AccessKeyHandler must not be left mid-Alt-gesture either: a modal opened
         // while Alt was held (Alt, O, ... reaching the Shortcuts window) eats the physical Alt
         // release, and the stranded "ignore the next Alt up" state makes the next bare Alt press
@@ -21693,6 +21698,69 @@ public partial class MainViewModel :
         {
             DeactivateMainMenu();
         }
+    }
+
+    /// <summary>
+    /// Restores keyboard focus to the control that had it before the window lost activation.
+    ///
+    /// Another application taking focus and handing it straight back - a global hotkey from a
+    /// clipboard manager, a launcher, a notification - leaves Avalonia without a focus target, and
+    /// focus then lands on the first focusable element in the window: the menu bar. The user sees
+    /// "File" highlighted, the caret gone from the subtitle text box, and every following key
+    /// swallowed by the menu (OnKeyDownHandler bails while IsMainMenuFocused). SE4 kept the caret
+    /// where it was, so do the same (#13371).
+    ///
+    /// Deferred, and only applied when focus is genuinely nowhere useful, so re-activating by
+    /// clicking a control keeps whatever the click focused.
+    /// </summary>
+    internal void OnWindowActivated(object? sender, EventArgs e)
+    {
+        var previous = _focusBeforeWindowDeactivated;
+        _focusBeforeWindowDeactivated = null;
+
+        Dispatcher.UIThread.Post(() =>
+        {
+            if (Window is not { IsActive: true })
+            {
+                return;
+            }
+
+            if (GetRestorableFocusedControl() != null)
+            {
+                return; // focus landed somewhere real (e.g. the user clicked a control) - leave it
+            }
+
+            if (previous != null && TopLevel.GetTopLevel(previous) != null)
+            {
+                previous.Focus();
+                return;
+            }
+
+            SubtitleGrid?.Focus();
+        });
+    }
+
+    /// <summary>
+    /// The focused control, when it is a real, on-screen one worth returning to later. Null for the
+    /// bare window, for a control detached from the visual tree (how a closed popup's menu item
+    /// looks while it still holds focus) and for the main menu bar - focus sitting on the menu is
+    /// exactly the state <see cref="OnWindowActivated"/> exists to undo.
+    /// </summary>
+    private Control? GetRestorableFocusedControl()
+    {
+        if (Window?.FocusManager?.GetFocusedElement() is not Control focused ||
+            focused == Window ||
+            TopLevel.GetTopLevel(focused) == null)
+        {
+            return null;
+        }
+
+        if (focused is MenuItem || IsWithinMainMenu(focused))
+        {
+            return null;
+        }
+
+        return focused;
     }
 
     /// <summary>
@@ -22853,6 +22921,8 @@ public partial class MainViewModel :
             return;
         }
 
+        var rowChanged = !ReferenceEquals(item, SelectedSubtitle);
+
         try
         {
             _subtitleGridSelectionChangedSkip = true;
@@ -22862,6 +22932,19 @@ public partial class MainViewModel :
         finally
         {
             _subtitleGridSelectionChangedSkip = false;
+        }
+
+        // Same caret reset as SelectAndScrollToRow (#12707): Avalonia keeps the caret index when
+        // the bound text changes, so a new line inherited the previous line's clamped offset.
+        // SelectAndScrollToRow only covers the commanded jumps - plain grid navigation (arrow
+        // keys, mouse) comes through here instead and kept the stale caret (#13371). Must run
+        // after SelectedSubtitle is assigned, so the TwoWay Text binding has already updated.
+        // Callers that place the caret themselves set the row first, so they either see
+        // rowChanged false here, or run after this synchronous handler and win anyway.
+        if (rowChanged)
+        {
+            EditTextBox.CaretIndex = 0;
+            EditTextBoxOriginal.CaretIndex = 0;
         }
 
         MakeSubtitleTextInfo(item.Text, item);
