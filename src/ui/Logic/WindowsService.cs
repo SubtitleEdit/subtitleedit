@@ -1,6 +1,7 @@
 using System;
 using System.Threading.Tasks;
 using Avalonia.Controls;
+using Avalonia.Controls.Primitives;
 using Avalonia.Threading;
 using Microsoft.Extensions.DependencyInjection;
 using Nikse.SubtitleEdit.Features.Main.MainHelpers;
@@ -171,6 +172,11 @@ namespace Nikse.SubtitleEdit.Logic
             // behind them in undocked mode. (#11971)
             KeepTopmostWhileOwnerActive(window, owner);
 
+            // Drop the undocked windows' topmost for the dialog's lifetime and make sure the
+            // dialog really gets OS activation, not just top-of-z-order drawing (#13325).
+            using var undockedSuspension = SuspendUndockedTopmost();
+            ActivateWhenOpened(window);
+
             await YieldForPendingFlyoutDismissAsync();
             await window.ShowDialog(owner);
 
@@ -206,6 +212,11 @@ namespace Nikse.SubtitleEdit.Logic
             // behind them in undocked mode. (#11971)
             KeepTopmostWhileOwnerActive(window, owner);
 
+            // Drop the undocked windows' topmost for the dialog's lifetime and make sure the
+            // dialog really gets OS activation, not just top-of-z-order drawing (#13325).
+            using var undockedSuspension = SuspendUndockedTopmost();
+            ActivateWhenOpened(window);
+
             await YieldForPendingFlyoutDismissAsync();
             await window.ShowDialog(owner);
 
@@ -220,6 +231,117 @@ namespace Nikse.SubtitleEdit.Logic
         private static Task YieldForPendingFlyoutDismissAsync()
         {
             return Dispatcher.UIThread.InvokeAsync(static () => { }, DispatcherPriority.Background).GetTask();
+        }
+
+        // The undocked tool windows (audio visualizer / video player) float above the main
+        // window via KeepTopmostWhileOwnerActive - which also puts them above every popup and
+        // dialog the main window opens. Rather than making each popup/dialog fight back with
+        // its own Topmost (#11971/#12268/#12899/#13187 - and the OS foreground churn between
+        // two competing topmost windows left dialogs drawn on top but never activated,
+        // #13325), the undocked windows drop their topmost for the lifetime of whatever
+        // would be covered. MainViewModel registers the setter; the count makes nested
+        // suspensions safe (menu -> dialog -> message box).
+        private static Action<bool>? _setUndockedWindowsTopmost;
+        private static int _undockedTopmostSuspendCount;
+
+        /// <summary>
+        /// Registers the callback that applies (true) or suppresses (false) the undocked tool
+        /// windows' topmost state. Registered by MainViewModel; consulted by
+        /// <see cref="SuspendUndockedTopmost"/>.
+        /// </summary>
+        public static void RegisterUndockedTopmostSetter(Action<bool>? setTopmost)
+        {
+            _setUndockedWindowsTopmost = setTopmost;
+        }
+
+        /// <summary>
+        /// Test hook: clears leftover suspensions from tests that opened a menu or dialog and
+        /// tore the window down without the matching Closed event ever firing.
+        /// </summary>
+        internal static void ResetUndockedTopmostSuspensionsForTests()
+        {
+            _undockedTopmostSuspendCount = 0;
+        }
+
+        /// <summary>
+        /// Drops the undocked tool windows' topmost state until the returned token is disposed.
+        /// Re-entrant: the state is restored when the last outstanding token is disposed.
+        /// </summary>
+        public static IDisposable SuspendUndockedTopmost()
+        {
+            if (++_undockedTopmostSuspendCount == 1)
+            {
+                _setUndockedWindowsTopmost?.Invoke(false);
+            }
+
+            return new UndockedTopmostSuspension();
+        }
+
+        private sealed class UndockedTopmostSuspension : IDisposable
+        {
+            private bool _disposed;
+
+            public void Dispose()
+            {
+                if (_disposed)
+                {
+                    return;
+                }
+
+                _disposed = true;
+                if (--_undockedTopmostSuspendCount == 0)
+                {
+                    _setUndockedWindowsTopmost?.Invoke(true);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Keeps the undocked tool windows non-topmost while <paramref name="flyout"/> is open,
+        /// so its popup (a plain non-topmost native window) is not covered by them in undocked
+        /// mode (#13325). Cascaded submenus are covered too: they belong to the same open flyout.
+        /// </summary>
+        public static void SuspendUndockedTopmostWhileOpen(FlyoutBase flyout)
+        {
+            IDisposable? suspension = null;
+            flyout.Opened += (_, _) => suspension ??= SuspendUndockedTopmost();
+            flyout.Closed += (_, _) =>
+            {
+                suspension?.Dispose();
+                suspension = null;
+            };
+        }
+
+        /// <summary>
+        /// Same as <see cref="SuspendUndockedTopmostWhileOpen(FlyoutBase)"/> for the main menu bar.
+        /// </summary>
+        public static void SuspendUndockedTopmostWhileOpen(MenuBase menu)
+        {
+            IDisposable? suspension = null;
+            menu.Opened += (_, _) => suspension ??= SuspendUndockedTopmost();
+            menu.Closed += (_, _) =>
+            {
+                suspension?.Dispose();
+                suspension = null;
+            };
+        }
+
+        /// <summary>
+        /// Explicitly activates <paramref name="window"/> once it has opened, in case the OS
+        /// left foreground/keyboard focus on another window during the open (seen on Windows in
+        /// undocked mode, where the dialog was drawn on top but never activated - gray buttons,
+        /// no keyboard focus - #13325). Posted at Background priority so pending activation and
+        /// topmost changes settle first; a no-op when the window is already active.
+        /// </summary>
+        public static void ActivateWhenOpened(Window window)
+        {
+            window.Opened += (_, _) => Dispatcher.UIThread.Post(() =>
+            {
+                if (window.IsVisible && !window.IsActive)
+                {
+                    window.Activate();
+                }
+            }, DispatcherPriority.Background);
         }
 
         /// <summary>

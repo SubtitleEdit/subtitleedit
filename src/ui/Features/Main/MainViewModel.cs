@@ -665,6 +665,9 @@ public partial class MainViewModel :
         SubtitleDataGridSyntaxHighlighting = new TextWithSubtitleSyntaxHighlightingConverter();
         Toolbar = new Border();
         UiTheme.SystemThemeChangedCallback = OnSystemThemeChanged;
+        // Lets dialogs and popups drop the undocked tool windows' topmost while they are open
+        // (WindowService.SuspendUndockedTopmost, #13325).
+        WindowService.RegisterUndockedTopmostSetter(SetUndockedWindowsTopmost);
         ButtonWaveformPlay = new Button();
         _subtitle = new Subtitle();
         _subtitleOriginal = new Subtitle();
@@ -6541,15 +6544,19 @@ public partial class MainViewModel :
     /// <summary>
     /// Suppress (or restore) the undocked tool windows' topmost state. They float above the
     /// main window while SE is active (KeepTopmostWhileOwnerActive, #11971), which also puts
-    /// them above the main menu's popups - so the menu drops their topmost while it is open
-    /// (#13187/#12899). Restoring re-applies the helper's rule instead of a blanket true.
+    /// them above the main window's popups and above modal dialogs. Registered with
+    /// WindowService.RegisterUndockedTopmostSetter, and driven through the ref-counted
+    /// WindowService.SuspendUndockedTopmost while a menu, context menu, or dialog is open
+    /// (#13187/#12899/#13325). Restoring re-applies the helper's rule instead of a blanket true.
     /// </summary>
     internal void SetUndockedWindowsTopmost(bool topmost)
     {
         // Remembered (and consulted by the KeepTopmostWhileOwnerActive registrations) so the
-        // helper's activation handler cannot re-assert Topmost while a menu is still open:
-        // opening a cascaded submenu churns window activation, and the re-asserted Topmost put
-        // the tool windows back over the submenu popup (#13187 follow-up).
+        // helper's activation handler cannot re-assert Topmost while a menu or dialog is still
+        // open: opening a cascaded submenu (or a modal dialog) churns window activation, and the
+        // re-asserted Topmost put the tool windows back over the popup (#13187 follow-up) - and
+        // on Windows the SetWindowPos churn could steal OS activation from a just-opened modal
+        // dialog, leaving it drawn on top but inactive (#13325).
         _suppressUndockedTopmost = !topmost;
 
         foreach (var undockedWindow in new[] { _videoPlayerUndockedViewModel?.Window, _audioVisualizerUndockedViewModel?.Window })

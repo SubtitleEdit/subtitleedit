@@ -1251,6 +1251,9 @@ public static partial class InitListViewAndEditBox
 
         // Set the ContextFlyout on the drop host so right-clicks on empty space also show the menu
         dropHost.ContextFlyout = flyout;
+        // In undocked mode the tool windows are topmost while SE is active (#11971), which
+        // covers this context menu and its cascaded submenus (#13325).
+        WindowService.SuspendUndockedTopmostWhileOpen(flyout);
         dropHost.AddHandler(InputElement.PointerPressedEvent, vm.SubtitleGrid_PointerPressed, RoutingStrategies.Tunnel, handledEventsToo: true);
         dropHost.AddHandler(InputElement.PointerReleasedEvent, vm.SubtitleGrid_PointerReleased, RoutingStrategies.Tunnel, handledEventsToo: true);
         dropHost.AddHandler(InputElement.PointerMovedEvent, vm.SubtitleGrid_PointerMoved, RoutingStrategies.Tunnel, handledEventsToo: true);
@@ -1567,6 +1570,8 @@ public static partial class InitListViewAndEditBox
         };
         textEditor.ContextFlyout = flyoutTextBox;
         flyoutTextBox.Opening += vm.TextBoxContextOpening;
+        // Keep the undocked tool windows from covering the text box context menu (#13325).
+        WindowService.SuspendUndockedTopmostWhileOpen(flyoutTextBox);
 
         var cutMenuItem = new MenuItem { Header = Se.Language.General.Cut };
         cutMenuItem.Command = vm.TextBoxCutCommand;
