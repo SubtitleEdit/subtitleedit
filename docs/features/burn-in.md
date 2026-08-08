@@ -61,6 +61,9 @@ differ between Windows/Linux and macOS.
 NVENC takes its own preset list (`p1`–`p7`, `hq`, `ll`, …) instead of the x264 presets. AMF has
 no preset. Quality is left blank by default, which lets FFmpeg pick a bitrate.
 
+All HEVC output is tagged `hvc1` so it plays in QuickTime and other Apple players, which reject
+the `hev1` tag FFmpeg writes by default.
+
 ### macOS (Apple VideoToolbox)
 
 | Encoder | Hardware | Quality setting |
@@ -76,7 +79,6 @@ Notes:
 - The **Quality** setting requires Apple silicon. On Intel Macs FFmpeg reports
   *"qscale not available for encoder"*; leave Quality blank there and use two-pass/bitrate
   instead. Quality is blank by default, so encoding works out of the box on both.
-- `hevc_videotoolbox` output is tagged `hvc1` so QuickTime and other Apple players accept it.
 - `prores_videotoolbox` uses the same profiles as `prores_ks` (proxy, lt, standard, hq, 4444,
   4444xq) and is far faster than the CPU ProRes encoder.
 - Two-pass encoding is not supported by VideoToolbox.

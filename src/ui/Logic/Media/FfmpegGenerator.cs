@@ -85,11 +85,11 @@ public class FfmpegGenerator
         if (!string.IsNullOrWhiteSpace(videoEncoding))
         {
             videoEncodingSettings = $"-c:v {videoEncoding}";
-            if (videoEncoding is "libx265" or "hevc_videotoolbox")
+            if (videoEncoding == "libx265" || videoEncoding.StartsWith("hevc_", StringComparison.Ordinal))
             {
-                // Without the hvc1 tag the mov/mp4 muxer writes hev1, which QuickTime and the
-                // rest of the Apple stack refuse to play - the very platform hevc_videotoolbox
-                // targets.
+                // Without the hvc1 tag the mov/mp4 muxer writes hev1, which QuickTime and the rest
+                // of the Apple stack refuse to play. This used to be applied to libx265 only, so
+                // the hardware HEVC encoders produced .mp4 files that would not open there.
                 videoEncodingSettings += " -tag:v hvc1";
             }
         }

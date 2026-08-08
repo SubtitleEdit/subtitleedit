@@ -5,6 +5,7 @@ namespace UITests.Logic;
 // VideoToolbox (issue #13382) takes a different set of flags than the x264/NVENC/AMF encoders:
 // no -preset, and constant quality is "-q:v 1-100" rather than "-crf". Emitting the wrong flag
 // is not a hard error - ffmpeg just warns and silently ignores it - so lock the mapping down.
+// Also covers the hvc1 tag, which every HEVC encoder needs for Apple playback.
 public class FfmpegVideoToolboxTests
 {
     private static string Generate(string videoEncoding, string preset, string crf)
@@ -52,17 +53,27 @@ public class FfmpegVideoToolboxTests
     }
 
     // QuickTime and the rest of the Apple stack reject the hev1 tag the mov muxer writes by
-    // default - which would make the macOS encoder unusable on macOS.
-    [Fact]
-    public void HevcVideoToolbox_IsTaggedHvc1()
+    // default, so every HEVC encoder needs the tag - not just libx265, which was the only one
+    // getting it before.
+    [Theory]
+    [InlineData("libx265")]
+    [InlineData("hevc_videotoolbox")]
+    [InlineData("hevc_nvenc")]
+    [InlineData("hevc_amf")]
+    [InlineData("hevc_qsv")]
+    public void HevcEncoders_AreTaggedHvc1(string videoEncoding)
     {
-        Assert.Contains("-tag:v hvc1", Generate("hevc_videotoolbox", string.Empty, string.Empty));
+        Assert.Contains("-tag:v hvc1", Generate(videoEncoding, string.Empty, string.Empty));
     }
 
-    [Fact]
-    public void H264VideoToolbox_IsNotTaggedHvc1()
+    [Theory]
+    [InlineData("libx264")]
+    [InlineData("h264_videotoolbox")]
+    [InlineData("h264_nvenc")]
+    [InlineData("prores_videotoolbox")]
+    public void NonHevcEncoders_AreNotTaggedHvc1(string videoEncoding)
     {
-        Assert.DoesNotContain("-tag:v hvc1", Generate("h264_videotoolbox", string.Empty, string.Empty));
+        Assert.DoesNotContain("-tag:v hvc1", Generate(videoEncoding, string.Empty, string.Empty));
     }
 
     // prores_videotoolbox takes the same named profiles as prores_ks, mapped to their indexes.
