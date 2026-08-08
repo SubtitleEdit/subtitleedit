@@ -85,8 +85,11 @@ public class FfmpegGenerator
         if (!string.IsNullOrWhiteSpace(videoEncoding))
         {
             videoEncodingSettings = $"-c:v {videoEncoding}";
-            if (videoEncoding == "libx265")
+            if (videoEncoding == "libx265" || videoEncoding.StartsWith("hevc_", StringComparison.Ordinal))
             {
+                // Without the hvc1 tag the mov/mp4 muxer writes hev1, which QuickTime and the rest
+                // of the Apple stack refuse to play. This used to be applied to libx265 only, so
+                // the hardware HEVC encoders produced .mp4 files that would not open there.
                 videoEncodingSettings += " -tag:v hvc1";
             }
         }
@@ -111,7 +114,7 @@ public class FfmpegGenerator
         var presetSettings = string.Empty;
         if (!string.IsNullOrWhiteSpace(preset))
         {
-            if (videoEncoding == "prores_ks")
+            if (videoEncoding is "prores_ks" or "prores_videotoolbox")
             {
                 if (preset == "proxy")
                 {
@@ -147,6 +150,10 @@ public class FfmpegGenerator
                     presetSettings = $" -profile:v {preset}";
                 }
             }
+            else if (videoEncoding is "h264_videotoolbox" or "hevc_videotoolbox")
+            {
+                // VideoToolbox has no preset option - emitting one only produces an ffmpeg warning.
+            }
             else
             {
                 presetSettings = $" -preset {preset}";
@@ -163,6 +170,11 @@ public class FfmpegGenerator
             else if (videoEncoding == "h264_amf" || videoEncoding == "hevc_amf")
             {
                 crfSettings = $" -quality {crf}";
+            }
+            else if (videoEncoding is "h264_videotoolbox" or "hevc_videotoolbox")
+            {
+                // Constant quality is "-q:v 1-100" (higher is better), not CRF.
+                crfSettings = $" -q:v {crf}";
             }
             else
             {
