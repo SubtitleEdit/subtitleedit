@@ -4222,7 +4222,9 @@ public partial class MainViewModel :
         {
             var subsToKeep = Subtitles.Where(p => p.StartTime.TotalSeconds >= vp.Position).ToList();
             _subtitle.Paragraphs.Clear();
-            _subtitle.Paragraphs.AddRange(subsToKeep.Select(p => p.ToParagraph()));
+            // Pass the format so Paragraph.Extra keeps the ASSA style - SetSubtitles below
+            // rebuilds the rows from these paragraphs and reads the style back from Extra.
+            _subtitle.Paragraphs.AddRange(subsToKeep.Select(p => p.ToParagraph(SelectedSubtitleFormat)));
         }
 
         AudioVisualizer.GenerateTimeCodes(_subtitle, startFromSeconds, result.ScanBlockSize.Value, result.ScanBlockAverageMin.Value, result.ScanBlockAverageMax.Value,

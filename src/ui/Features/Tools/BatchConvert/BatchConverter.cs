@@ -2128,7 +2128,10 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
         subtitle.Paragraphs.Clear();
         foreach (var sv in subtitlesFixed)
         {
-            subtitle.Paragraphs.Add(sv.ToParagraph());
+            // Pass the format: a bare ToParagraph leaves Paragraph.Extra empty, and the ASSA
+            // writer reads the Dialogue style column from Extra - every line in a styled file
+            // would fall back to the first style in the header.
+            subtitle.Paragraphs.Add(sv.ToParagraph(subtitle.OriginalFormat));
         }
 
         return subtitle;
