@@ -149,12 +149,7 @@ public partial class AssaSetPositionViewModel : ObservableObject
             _isBottomAligned = style.Alignment == "1" || style.Alignment == "2" || style.Alignment == "3";
         }
 
-        var previewSubtitle = new Subtitle(subtitle);
-        previewSubtitle.Paragraphs.Clear();
-        var previewParagraph = line.ToParagraph();
-        previewParagraph.StartTime.TotalSeconds = 0;
-        previewParagraph.EndTime.TotalSeconds = 10;
-        previewSubtitle.Paragraphs.Add(previewParagraph);
+        var previewSubtitle = MakePreviewSubtitle(subtitle, line);
         var previewScreenshotFileName = FfmpegGenerator.GetScreenShotWithSubtitle(previewSubtitle, videoWidth ?? 1920, videoHeight ?? 1080);
         var skBitmap = SKBitmap.Decode(previewScreenshotFileName);
         var trimResult = skBitmap.TrimTransparentPixels();
@@ -230,6 +225,25 @@ public partial class AssaSetPositionViewModel : ObservableObject
         {
             Screenshot = BinaryAdjustAlphaViewModel.CreateCheckeredBackground(TargetWidth, TargetHeight);
         }
+    }
+
+    /// <summary>
+    /// Builds the one-line subtitle that ffmpeg renders into the draggable text overlay.
+    /// </summary>
+    internal static Subtitle MakePreviewSubtitle(Subtitle subtitle, SubtitleLineViewModel line)
+    {
+        var previewSubtitle = new Subtitle(subtitle);
+        previewSubtitle.Paragraphs.Clear();
+
+        // The ASSA writer takes the style name from Paragraph.Extra, which ToParagraph only fills
+        // in when it knows the format. Without it every preview fell back to the first style in the
+        // header, so lines using any other style were positioned against the wrong font/size (#13350).
+        var previewParagraph = line.ToParagraph(new AdvancedSubStationAlpha());
+        previewParagraph.StartTime.TotalSeconds = 0;
+        previewParagraph.EndTime.TotalSeconds = 10;
+        previewSubtitle.Paragraphs.Add(previewParagraph);
+
+        return previewSubtitle;
     }
 
     [RelayCommand]
