@@ -271,7 +271,7 @@ public class CrispEmbedOcr : IDisposable
     private async Task<string> OcrViaCliPipeline(string imageFileName, CancellationToken cancellationToken)
     {
         var arguments = $"--ocr-pipeline \"{imageFileName}\" --ocr-engine ppocrv6 " +
-                        $"--ocr-det \"{_cliDetectorModel}\" --ocr-rec \"{_cliRecognizerModel}\" --json";
+                        $"--ocr-det \"{_cliDetectorModel}\" --ocr-rec \"{_cliRecognizerModel}\" -t 4 --json";
 
         using var process = new Process
         {
@@ -286,12 +286,14 @@ public class CrispEmbedOcr : IDisposable
             },
         };
 
-        // v0.17.7 made the PP-OCRv6 detector CUDA-resident, which left the scalar path everyone
-        // else runs (Metal, CPU) ~18% slower than v0.17.6 on a ten-image subtitle corpus, and
-        // slower on all 12 pairs of an interleaved A/B run. The release ships the recovery as an
-        // opt-in gate; it takes back about two thirds of that (+18.1% -> +5.6%) with the text,
-        // region count and mean confidence identical on all ten images. Reported upstream as
-        // CrispStrobe/CrispEmbed#45 - drop this if the gate ever defaults on (2026-08-09).
+        // v0.17.7's n_threads audit made the PP-OCRv6 detector honor the CLI's -t 1 default where
+        // it previously ran at ggml's 4-thread default, costing ~18% wall clock on the scalar
+        // (Metal/CPU) path; "-t 4" above restores it and stays correct after the upstream fix,
+        // since an explicit -t always wins over the fixed min(4, cores) default. The env gate is
+        // a separate, thread-independent win on the recognizer's scalar convs; upstream flips it
+        // default-on for the recognizer after this report, and the env keeps precedence, so
+        // setting it stays harmless. Both diagnosed in CrispStrobe/CrispEmbed#45 (2026-08-09);
+        // output is byte-identical in every arm. Drop both once the pin moves past v0.17.7.
         process.StartInfo.Environment["CRISPEMBED_CONV2D_MK"] = "1";
 
         process.Start();
