@@ -304,7 +304,10 @@ public partial class OcrViewModel : ObservableObject
             GoogleVisionApiKey = ocr.GoogleVisionApiKey;
             MistralApiKey = ocr.MistralApiKey;
             SelectedGoogleVisionLanguage = GoogleVisionLanguages.FirstOrDefault(p => p.Code == ocr.GoogleVisionLanguage);
-            SelectedPaddleOcrLanguage = PaddleOcrLanguages.FirstOrDefault(p => p.Code == Se.Settings.Ocr.PaddleOcrLastLanguage) ?? PaddleOcrLanguages.First();
+            var paddleOcrLastLanguage = PaddleOcr.NormalizeLanguageCode(Se.Settings.Ocr.PaddleOcrLastLanguage);
+            SelectedPaddleOcrLanguage = PaddleOcrLanguages.FirstOrDefault(p => p.Code == paddleOcrLastLanguage) ??
+                                        PaddleOcrLanguages.FirstOrDefault(p => p.Code == "en") ??
+                                        PaddleOcrLanguages.First();
             SelectedGoogleLensLanguage = GoogleLensLanguages.FirstOrDefault(p => p.Code == Se.Settings.Ocr.GoogleLensOcrLastLanguage) ?? GoogleLensLanguages.First();
             if (!string.IsNullOrEmpty(ocr.TextBoxFontName))
             {
@@ -4785,7 +4788,8 @@ public partial class OcrViewModel : ObservableObject
         {
             if (SelectedPaddleOcrLanguage == null)
             {
-                SelectedPaddleOcrLanguage = PaddleOcrLanguages.FirstOrDefault(p => p.Code == "eng") ??
+                SelectedPaddleOcrLanguage = PaddleOcrLanguages.FirstOrDefault(p => _sourceLanguageIso != null && p.Code == _sourceLanguageIso.TwoLetterCode) ??
+                                            PaddleOcrLanguages.FirstOrDefault(p => p.Code == "en") ??
                                             PaddleOcrLanguages.FirstOrDefault();
             }
         }
