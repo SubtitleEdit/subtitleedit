@@ -10,6 +10,12 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 {
     public class Sami : SubtitleFormat
     {
+        /// <summary>
+        /// Characters a CSS class name may contain. Built once - the class-name scan below tests
+        /// this per character and used to concatenate the two literals every time.
+        /// </summary>
+        private static readonly string ClassNameChars = Utilities.LowercaseLettersWithNumbers + @"'""";
+
         public override string Extension => ".smi";
 
         public override string Name => "SAMI";
@@ -280,16 +286,18 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             var partial = new StringBuilder();
             while (syncStartPos >= 0)
             {
-                string millisecondsAsString = string.Empty;
+                partial.Clear();
                 while (index < allInput.Length && expectedChars.Contains(allInput[index]))
                 {
                     if (allInput[index] != '"' && allInput[index] != '\'')
                     {
-                        millisecondsAsString += allInput[index];
+                        partial.Append(allInput[index]);
                     }
 
                     index++;
                 }
+
+                string millisecondsAsString = partial.ToString();
 
                 while (index < allInput.Length && allInput[index] != '>')
                 {
@@ -327,7 +335,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     className.Clear();
                     int startClass = textToLower.IndexOf(" class=", StringComparison.Ordinal);
                     int indexClass = startClass + 7;
-                    while (indexClass < textToLower.Length && (Utilities.LowercaseLettersWithNumbers + @"'""").Contains(textToLower[indexClass]))
+                    while (indexClass < textToLower.Length && ClassNameChars.Contains(textToLower[indexClass]))
                     {
                         className.Append(text[indexClass]);
                         indexClass++;
@@ -344,7 +352,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     }
 
                     int st = sourceIndex - 1;
-                    while (st > 0 && text.Substring(st, 2).ToUpperInvariant() != "<P")
+                    while (st > 0 && string.Compare(text, st, "<P", 0, 2, StringComparison.OrdinalIgnoreCase) != 0)
                     {
                         st--;
                     }
@@ -353,7 +361,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         text = text.Substring(0, st) + text.Substring(sourceIndex);
                     }
                     int et = st;
-                    while (et < text.Length - 5 && text.Substring(et, 3).ToUpperInvariant() != "<P>" && text.Substring(et, 4).ToUpperInvariant() != "</P>")
+                    while (et < text.Length - 5 &&
+                           string.Compare(text, et, "<P>", 0, 3, StringComparison.OrdinalIgnoreCase) != 0 &&
+                           string.Compare(text, et, "</P>", 0, 4, StringComparison.OrdinalIgnoreCase) != 0)
                     {
                         et++;
                     }
@@ -373,7 +383,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 text = text.Replace("</BODY>", string.Empty).Replace("</SAMI>", string.Empty).TrimEnd();
                 text = text.Replace("</body>", string.Empty).Replace("</sami>", string.Empty).TrimEnd();
 
-                int endSyncPos = text.ToUpperInvariant().IndexOf("</SYNC>", StringComparison.OrdinalIgnoreCase);
+                int endSyncPos = text.IndexOf("</SYNC>", StringComparison.OrdinalIgnoreCase);
                 if (text.IndexOf('>') > 0 && (text.IndexOf('>') < endSyncPos || endSyncPos == -1))
                 {
                     text = text.Remove(0, text.IndexOf('>') + 1);

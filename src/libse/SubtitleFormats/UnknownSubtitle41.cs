@@ -69,7 +69,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     }
                     else
                     {
-                        if (line.Length > 1 && line.Length < 11 && RegexTimeCodes.Match(line).Success)
+                        if (line.Length > 1 && line.Length < 11 && RegexTimeCodes.IsMatch(line))
                         {
                             p = new Paragraph();
                             sb.Clear();

@@ -51,7 +51,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             foreach (string line in lines)
             {
                 string s = line.Trim();
-                if (RegexTimeCodes.Match(s).Success)
+                if (RegexTimeCodes.IsMatch(s))
                 {
                     try
                     {

@@ -52,7 +52,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             {
                 if (!string.IsNullOrWhiteSpace(line) && line[0] != '$' && !line.StartsWith("//", StringComparison.Ordinal))
                 {
-                    if (RegexTimeCodes.Match(line).Success)
+                    if (RegexTimeCodes.IsMatch(line))
                     {
                         string[] toPart = line.Substring(0, 24).Trim(',').Split(',');
                         var p = new Paragraph();

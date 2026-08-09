@@ -66,7 +66,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             foreach (string line in lines)
             {
                 bool success = false;
-                if (line.IndexOf(':') > 0 && RegexTimeCodes.Match(line).Success)
+                if (line.IndexOf(':') > 0 && RegexTimeCodes.IsMatch(line))
                 {
                     try
                     {
