@@ -162,10 +162,15 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text"
 
                 // Most headers end at "[Events]", but some (e.g. HeaderNoStyles) already carry
                 // the events format line - appending another gave a duplicate "Format:" line.
+                // Only the exact standard line may be skipped: Dialogue lines are always written
+                // in the standard field order, so a nonstandard Format line (an MKV CodecPrivate
+                // is kept verbatim in the header) must still be overridden by appending the
+                // standard one after it - the last Format line wins when parsing.
+                const string eventsFormatLine = "Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text";
                 var eventsIndex = subtitle.Header.LastIndexOf("[Events]", StringComparison.Ordinal);
-                if (eventsIndex < 0 || subtitle.Header.IndexOf("Format:", eventsIndex, StringComparison.Ordinal) < 0)
+                if (eventsIndex < 0 || subtitle.Header.IndexOf(eventsFormatLine, eventsIndex, StringComparison.Ordinal) < 0)
                 {
-                    sb.AppendLine("Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text");
+                    sb.AppendLine(eventsFormatLine);
                 }
 
                 styles = GetStylesFromHeader(subtitle.Header);
