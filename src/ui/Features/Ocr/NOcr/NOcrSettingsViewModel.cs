@@ -21,6 +21,7 @@ public partial class NOcrSettingsViewModel : ObservableObject
     public bool DeletePressed { get; set; }
     public bool NewPressed { get; set; }
     public bool RenamePressed { get; set; }
+    public bool TrainPressed { get; set; }
     private NOcrDb _nOcrDb;
 
     private readonly IWindowService _windowService;
@@ -79,6 +80,13 @@ public partial class NOcrSettingsViewModel : ObservableObject
     private void Rename()
     {
         RenamePressed = true;
+        Close();
+    }
+
+    [RelayCommand]
+    private void Train()
+    {
+        TrainPressed = true;
         Close();
     }
 

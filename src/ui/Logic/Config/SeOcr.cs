@@ -51,6 +51,12 @@ public class SeOcr
     public bool TextBoxFontBold { get; set; }
     public string TextBoxFontName { get; set; }
     public bool UseWordSplitList { get; set; }
+    public string NOcrTrainFonts { get; set; }
+    public string NOcrTrainMergedLetters { get; set; }
+    public int NOcrTrainFontSize { get; set; }
+    public int NOcrTrainSegmentCount { get; set; }
+    public bool NOcrTrainBold { get; set; }
+    public bool NOcrTrainItalic { get; set; }
     public bool VobSubUseCustomColors { get; set; }
     public string VobSubColorBackground { get; set; }
     public string VobSubColorPattern { get; set; }
@@ -115,6 +121,11 @@ public class SeOcr
         CaptureAssaPosition = false;
 
         PromptForBlankOcrText = true;
+
+        NOcrTrainFonts = string.Empty;
+        NOcrTrainMergedLetters = string.Empty;
+        NOcrTrainFontSize = 30;
+        NOcrTrainSegmentCount = 60;
 
         VobSubUseCustomColors = false;
         VobSubColorBackground = "#00000000";

@@ -48,6 +48,17 @@ public class NOcrSettingsWindow : Window
 
         Content = grid;
 
+        // Semi-hidden power-user feature: right-click anywhere in the dialog to train a new
+        // nOCR database from installed fonts (port of SE4's "Train nOCR").
+        var menuFlyout = new MenuFlyout();
+        menuFlyout.Items.Add(new MenuItem
+        {
+            Header = Se.Language.Ocr.TrainNOcrDatabase,
+            Command = vm.TrainCommand,
+        });
+        grid.ContextFlyout = menuFlyout;
+        UiUtil.AttachMacContextFlyoutHandler(this, grid);
+
         Activated += delegate
         {
             buttonEdit.Focus(); // hack to make OnKeyDown work

@@ -1564,6 +1564,14 @@ namespace Nikse.SubtitleEdit.Core.Common
             return count;
         }
 
+        /// <summary>
+        /// True if <paramref name="text"/> starts with <paramref name="startTag"/> and ends with
+        /// <paramref name="endTag"/>, ignoring leading dialog dashes/dots/spaces and trailing
+        /// punctuation ('.', '!', '?', '-') and spaces.
+        /// The skipped characters must not overlap the tags: <paramref name="startTag"/> must not
+        /// begin with ' ', '.' or '-', and <paramref name="endTag"/> must not end with
+        /// ' ', '.', '!', '?' or '-' (always true for HTML tags like "&lt;i&gt;").
+        /// </summary>
         public static bool StartsAndEndsWithTag(string text, string startTag, string endTag)
         {
             if (string.IsNullOrWhiteSpace(text))
@@ -1576,35 +1584,24 @@ namespace Nikse.SubtitleEdit.Core.Common
                 return false;
             }
 
-            while (text.Contains("  "))
+            var startIndex = 0;
+            while (startIndex < text.Length && (text[startIndex] == ' ' || text[startIndex] == '.' || text[startIndex] == '-'))
             {
-                text = text.Replace("  ", " ");
+                startIndex++;
             }
 
-            var s1 = "- " + startTag;
-            var s2 = "-" + startTag;
-            var s3 = "- ..." + startTag;
-            var s4 = "- " + startTag + "..."; // - <i>...
-
-            var e1 = endTag + ".";
-            var e2 = endTag + "!";
-            var e3 = endTag + "?";
-            var e4 = endTag + "...";
-            var e5 = endTag + "-";
-
-            bool isStart = false;
-            bool isEnd = false;
-            if (text.StartsWith(startTag, StringComparison.Ordinal) || text.StartsWith(s1, StringComparison.Ordinal) || text.StartsWith(s2, StringComparison.Ordinal) || text.StartsWith(s3, StringComparison.Ordinal) || text.StartsWith(s4, StringComparison.Ordinal))
+            if (!text.AsSpan(startIndex).StartsWith(startTag))
             {
-                isStart = true;
+                return false;
             }
 
-            if (text.EndsWith(endTag, StringComparison.Ordinal) || text.EndsWith(e1, StringComparison.Ordinal) || text.EndsWith(e2, StringComparison.Ordinal) || text.EndsWith(e3, StringComparison.Ordinal) || text.EndsWith(e4, StringComparison.Ordinal) || text.EndsWith(e5, StringComparison.Ordinal))
+            var endIndex = text.Length - 1;
+            while (endIndex >= startIndex && (text[endIndex] == '.' || text[endIndex] == '!' || text[endIndex] == '?' || text[endIndex] == '-' || text[endIndex] == ' '))
             {
-                isEnd = true;
+                endIndex--;
             }
 
-            return isStart && isEnd;
+            return text.AsSpan(0, endIndex + 1).EndsWith(endTag);
         }
 
         public static Paragraph GetOriginalParagraph(int index, Paragraph paragraph, List<Paragraph> originalParagraphs)

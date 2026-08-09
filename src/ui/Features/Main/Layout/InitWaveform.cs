@@ -395,7 +395,9 @@ public class InitWaveform
         var settingTextPlay = GetToolbarSettingFor(SeWaveformToolbarItemType.TextPlay);
         var buttonTextPlay = new NonSpaceButton
         {
-            Content = Se.Language.General.Play,
+            // "Play current" like SE 4's Translate tab - "Play" alone reads as the plain
+            // play/pause button next to it, which is a different action.
+            Content = Se.Language.General.PlayCurrent,
             Margin = new Thickness(settingTextPlay.LeftMargin, 0, settingTextPlay.RightMargin, 0),
             FontSize = settingTextPlay.FontSize,
             VerticalAlignment = VerticalAlignment.Center,

@@ -1558,6 +1558,24 @@ public partial class OcrViewModel : ObservableObject
             return;
         }
 
+        if (result.TrainPressed)
+        {
+            var trainResult = await _windowService.ShowDialogAsync<NOcrTrainWindow, NOcrTrainViewModel>(Window!, _ => { });
+            _isCtrlDown = false;
+            if (trainResult.TrainedDatabaseName != null)
+            {
+                NOcrDatabases.Clear();
+                foreach (var s in NOcrDb.GetDatabases(Se.OcrFolder).OrderBy(p => p))
+                {
+                    NOcrDatabases.Add(s);
+                }
+
+                SelectedNOcrDatabase = trainResult.TrainedDatabaseName;
+            }
+
+            return;
+        }
+
         if (result.RenamePressed)
         {
             var newResult = await _windowService.ShowDialogAsync<NOcrDbNewWindow, NOcrDbNewViewModel>(Window!,
