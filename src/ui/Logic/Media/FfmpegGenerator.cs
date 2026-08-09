@@ -161,7 +161,11 @@ public class FfmpegGenerator
         }
 
         var crfSettings = string.Empty;
-        if (!string.IsNullOrWhiteSpace(crf) && string.IsNullOrWhiteSpace(pass))
+        // A bit rate target and a quality target are mutually exclusive. With -pass that is
+        // implicit, but VideoToolbox targets a file size in a single pass (no -pass), and there
+        // ffmpeg takes -q:v and silently ignores -b:v - the encode would quietly come out at the
+        // quality-based size instead of the requested one (#13401).
+        if (!string.IsNullOrWhiteSpace(crf) && string.IsNullOrWhiteSpace(pass) && string.IsNullOrWhiteSpace(twoPassBitRate))
         {
             if (videoEncoding == "h264_nvenc" || videoEncoding == "hevc_nvenc")
             {
@@ -191,7 +195,18 @@ public class FfmpegGenerator
         outputVideoFileName = $"\"{outputVideoFileName}\"";
 
         var passSettings = string.Empty;
-        if (!string.IsNullOrWhiteSpace(pass) && !string.IsNullOrWhiteSpace(twoPassBitRate))
+        if (string.IsNullOrWhiteSpace(pass) && !string.IsNullOrWhiteSpace(twoPassBitRate))
+        {
+            // Single-pass average bit rate, used where two-pass is not available (VideoToolbox
+            // writes no stats file, so its "pass 1" is wasted work - see #13401).
+            passSettings = $" -b:v {twoPassBitRate}";
+
+            if (!string.IsNullOrWhiteSpace(audioBitRate))
+            {
+                passSettings += $" -b:a {audioBitRate}";
+            }
+        }
+        else if (!string.IsNullOrWhiteSpace(pass) && !string.IsNullOrWhiteSpace(twoPassBitRate))
         {
             passSettings = $" -b:v {twoPassBitRate} -pass {pass}";
 
