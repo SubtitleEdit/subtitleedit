@@ -22,6 +22,7 @@ public class Se4WaveformToolbarTests : IDisposable
         SeWaveformToolbarItemType.VideoPositionSlider,
         SeWaveformToolbarItemType.AudioTrackPicker,
         SeWaveformToolbarItemType.PlaybackSpeed,
+        SeWaveformToolbarItemType.AutoSelectOnPlay,
         SeWaveformToolbarItemType.Center,
         SeWaveformToolbarItemType.More,
     ];
@@ -77,7 +78,6 @@ public class Se4WaveformToolbarTests : IDisposable
         Assert.Contains(SeWaveformToolbarItemType.RemoveBlankLines, hidden);
         Assert.Contains(SeWaveformToolbarItemType.VerticalZoom, hidden);
         Assert.Contains(SeWaveformToolbarItemType.VideoSeek, hidden);
-        Assert.Contains(SeWaveformToolbarItemType.AutoSelectOnPlay, hidden);
     }
 
     [Fact]

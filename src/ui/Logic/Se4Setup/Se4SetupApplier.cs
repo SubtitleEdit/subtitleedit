@@ -45,6 +45,7 @@ public static class Se4SetupApplier
         ApplyToolbarAndEditBox();
         ApplyWaveformColors();
         ApplyWaveformToolbar();
+        ApplySelectCurrentLineWhilePlaying(vm);
 
         Se.SaveSettings();
         return result;
@@ -210,9 +211,21 @@ public static class Se4SetupApplier
         SeWaveformToolbarItemType.VideoPositionSlider,      // SE 4 trackBarWaveformPosition
         SeWaveformToolbarItemType.AudioTrackPicker,         // only rendered for multi-track videos
         SeWaveformToolbarItemType.PlaybackSpeed,            // SE 4 play-rate split button
+        SeWaveformToolbarItemType.AutoSelectOnPlay,         // SE 4 checkBoxSyncListViewWithVideoWhilePlaying
         SeWaveformToolbarItemType.Center,                   // SE 4 "lock center" toggle
         SeWaveformToolbarItemType.More,                     // kept so the toolbar can be reconfigured
     ];
+
+    // "Select current subtitle while playing" - SE 4 had it as a checkbox sitting right
+    // above the waveform (checkBoxSyncListViewWithVideoWhilePlaying); in SE 5 it is the
+    // AutoSelectOnPlay toggle in the waveform toolbar, turned on here so the SE 4 setup
+    // arrives with it enabled. MainViewModel keeps its own observable copy of the setting
+    // and writes that back on exit, so both have to be set or this value is lost again.
+    private static void ApplySelectCurrentLineWhilePlaying(MainViewModel vm)
+    {
+        Se.Settings.General.SelectCurrentSubtitleWhilePlaying = true;
+        vm.SelectCurrentSubtitleWhilePlaying = true;
+    }
 
     internal static void ApplyWaveformToolbar()
     {
