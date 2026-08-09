@@ -243,7 +243,7 @@ public partial class DownloadCrispEmbedViewModel : ObservableObject, IClosingCle
     /// the new executable would load by mistake. Only top-level executables and shared
     /// libraries are removed; the models/ subfolder and the sidecar are left in place.
     /// </summary>
-    private static void RemoveStaleBinaries(string folder)
+    internal static void RemoveStaleBinaries(string folder)
     {
         if (!Directory.Exists(folder))
         {
