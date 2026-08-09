@@ -188,7 +188,7 @@ public class MpvReloader : IMpvReloader
             // No extra copy here: "subtitle" is already RefreshMpv's private copy, and
             // Convert deep-copies its input again internally without mutating it.
             subtitle = WebVttToAssa.Convert(subtitle, defaultStyle, VideoWidth, VideoHeight);
-            AddSecondarySubtitle(subtitle, subtitleSecondary);
+            SecondarySubtitleMerger.AddSecondarySubtitle(subtitle, subtitleSecondary);
             // The WebVTT path never used the hash memo, so keep it untouched (HashValid false).
             return (subtitle, subtitle.ToText(_assFormat), 0, false);
         }
@@ -267,7 +267,7 @@ public class MpvReloader : IMpvReloader
             }
         }
 
-        AddSecondarySubtitle(subtitle, subtitleSecondary);
+        SecondarySubtitleMerger.AddSecondarySubtitle(subtitle, subtitleSecondary);
         var hash = subtitle.GetFastHashCode(null);
         if (hash != oldHash || string.IsNullOrEmpty(oldText))
         {
@@ -275,23 +275,6 @@ public class MpvReloader : IMpvReloader
         }
 
         return (subtitle, oldText, hash, true);
-    }
-
-    private static void AddSecondarySubtitle(Subtitle subtitle, Subtitle? subtitleSecondary)
-    {
-        if (subtitleSecondary == null)
-        {
-            return;
-        }
-
-
-        var styleName = subtitleSecondary.Paragraphs.FirstOrDefault()?.Extra ?? "Secondary";
-        var style = AdvancedSubStationAlpha.GetSsaStyle(styleName, subtitleSecondary.Header);
-        subtitle.Header = AdvancedSubStationAlpha.AddSsaStyle(style, subtitle.Header);
-        foreach (var p in subtitleSecondary.Paragraphs)
-        {
-            subtitle.Paragraphs.Add(p);
-        }
     }
 
     private string MpvPreviewStyleHeader
