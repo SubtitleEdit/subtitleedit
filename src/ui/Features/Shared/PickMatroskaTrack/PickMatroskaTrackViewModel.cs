@@ -9,6 +9,7 @@ using Nikse.SubtitleEdit.Core.BluRaySup;
 using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.ContainerFormats.Matroska;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
+using Nikse.SubtitleEdit.Core.VobSub;
 using Nikse.SubtitleEdit.Features.Files.ExportImageBased;
 using Nikse.SubtitleEdit.Features.Shared.PromptFileSaved;
 using Nikse.SubtitleEdit.Logic;
@@ -192,11 +193,23 @@ public partial class PickMatroskaTrackViewModel : ObservableObject
             var screenSize = packs[0].GetScreenSize();
             var screenWidth = (int)Math.Round(screenSize.Width, MidpointRounding.AwayFromZero);
             var screenHeight = (int)Math.Round(screenSize.Height, MidpointRounding.AwayFromZero);
+            if (idx is { ScreenWidth: > 0, ScreenHeight: > 0 })
+            {
+                // The pack default is NTSC 720x480; a PAL track declares 720x576 on the idx
+                // "size:" line, and positions past y=480 would otherwise be discarded.
+                screenWidth = idx.ScreenWidth;
+                screenHeight = idx.ScreenHeight;
+            }
+
             var exportHandler = new ExportHandlerVobSub();
             exportHandler.WriteHeader(fileName, new ImageParameter
             {
                 ScreenWidth = screenWidth,
                 ScreenHeight = screenHeight,
+                // Pattern/emphasis of the written DVD palette. Left at the default (transparent
+                // black) the four-color flatten maps every visible pixel to an invisible color.
+                FontColor = SKColors.White,
+                OutlineColor = SKColors.Black,
             });
 
             for (var i = 0; i < packs.Count; i++)
@@ -208,7 +221,6 @@ public partial class PickMatroskaTrackViewModel : ObservableObject
                 }
 
                 using var packBitmap = pack.GetBitmap();
-                var position = pack.GetPosition();
                 exportHandler.WriteParagraph(new ImageParameter
                 {
                     Bitmap = packBitmap,
@@ -217,7 +229,7 @@ public partial class PickMatroskaTrackViewModel : ObservableObject
                     ScreenWidth = screenWidth,
                     ScreenHeight = screenHeight,
                     Index = i + 1,
-                    OverridePosition = new SKPointI(position.Left, position.Top),
+                    OverridePosition = GetCroppedPosition(pack),
                 });
             }
 
@@ -230,6 +242,22 @@ public partial class PickMatroskaTrackViewModel : ObservableObject
         {
             await MessageBox.Show(Window, Se.Language.General.Error, "Format not supported: " + trackInfo.CodecId);
         }
+    }
+
+    /// <summary>
+    /// GetBitmap() crops the transparent borders away, so the display-area origin must be
+    /// shifted by the cropped top/left margins - otherwise the text drifts up/left (a
+    /// full-frame subpicture would jump to the top of the screen).
+    /// </summary>
+    private static SKPointI GetCroppedPosition(VobSubMergedPack pack)
+    {
+        var left = pack.SubPicture.ImageDisplayArea.Left;
+        var top = pack.SubPicture.ImageDisplayArea.Top;
+        using var uncropped = pack.SubPicture.GetBitmap(pack.Palette, SKColors.Transparent, SKColors.Black, SKColors.White, SKColors.Black, false, false);
+        var nikseBitmap = new NikseBitmap(uncropped);
+        top += nikseBitmap.CropTopTransparent(0);
+        left += nikseBitmap.CalcLeftCroppingTransparent();
+        return new SKPointI(left, top);
     }
 
     private async Task WriteTextSubtitleFile(Window window, MatroskaTrackInfo trackInfo, List<MatroskaSubtitle> subtitles, SubtitleFormat format)
