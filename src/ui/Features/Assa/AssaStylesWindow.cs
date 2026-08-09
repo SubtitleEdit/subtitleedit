@@ -710,7 +710,7 @@ public class AssaStylesWindow : Window
             var pickerVm = new ColorPickerViewModel();
             pickerVm.Initialize(currentColor);
             var pickerWindow = new ColorPickerWindow(pickerVm);
-            await pickerWindow.ShowDialog(window);
+            await WindowService.ShowModalAsync(window, pickerWindow);
 
             if (pickerVm.OkPressed)
             {
