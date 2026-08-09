@@ -134,6 +134,16 @@ public class MpvReloader : IMpvReloader
                     // fields alone - remembering this text as the one mpv is showing is what used
                     // to make the miss permanent - and let the caller retry. The retry budget is
                     // not spent either: nothing was loaded to retry against yet.
+                    if (!reAdd)
+                    {
+                        // A failed sub-reload cannot fix itself: it means the player has no
+                        // loadable file behind its subtitle track (leaving fullscreen goes back
+                        // to a player whose temp file was deleted when fullscreen opened).
+                        // Forget the file so the retry takes the sub-remove + sub-add path
+                        // instead of reloading into the void every 400 ms.
+                        _mpvTextFileName = null;
+                    }
+
                     return false;
                 }
 

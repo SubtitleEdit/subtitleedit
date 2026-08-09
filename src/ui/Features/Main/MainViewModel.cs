@@ -13502,6 +13502,12 @@ public partial class MainViewModel :
                 dockedMpv.SetSubtitleVisibility(_mpvReloader.SubtitlesVisible);
             }
 
+            // And the subtitle itself: entering fullscreen reset the reloader, which deleted
+            // the temp file behind the docked player's still-loaded subtitle - so it can only
+            // show the pre-fullscreen text and cannot even be sub-reloaded. Re-arm the preview
+            // so the docked player gets a fresh push (#13407).
+            RefreshSubtitlePreview();
+
             Dispatcher.UIThread.Post(() => TableViewExtras.FocusRow(SubtitleGrid));
         }, toggleKeys, showMediaInfoKeys, showMediaInformationOwnedBy, extraBindings, readyPlayer =>
         {
