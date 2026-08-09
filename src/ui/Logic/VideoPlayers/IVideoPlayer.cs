@@ -9,7 +9,17 @@ public interface IVideoPlayer
     string FileName { get; }
 
     bool CanLoad();
-    Task LoadFile(string fileName);
+
+    /// <summary>
+    /// Loads a media file. Playback never starts by itself - the player comes up paused and
+    /// only <see cref="Play"/> / <see cref="PlayOrPause"/> start it (issue #13329).
+    /// </summary>
+    /// <param name="startPositionSeconds">
+    /// Where the first presented frame should be. Seeking after the file is up leaves the player
+    /// showing 0:00 for a few hundred milliseconds and then visibly jumping, so callers that
+    /// already know the wanted position (session restore, fullscreen, undock) pass it here.
+    /// </param>
+    Task LoadFile(string fileName, double startPositionSeconds = 0);
     void CloseFile();
 
     void Play();

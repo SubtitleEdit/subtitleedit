@@ -621,21 +621,39 @@ public partial class BeautifyTimeCodesViewModel : ObservableObject, IDisposable
         StopPositionTimer();
         _timerUpdatePreview.StopAndDispose(TimerUpdatePreviewElapsed);
 
-        // Apply final beautification to commit the result back to _allSubtitles
-        var subtitle = BuildSubtitleFromRows();
-
-        var beautifier = new Core.Forms.TimeCodesBeautifier(subtitle, _frameRate, new List<double>(), _shotChanges);
-        beautifier.Beautify();
-
-        _allSubtitles.Clear();
-        var subRipFormat = new SubRip();
-        foreach (var p in subtitle.Paragraphs)
-        {
-            _allSubtitles.Add(new SubtitleLineViewModel(p, subRipFormat));
-        }
+        CommitBeautifiedTimes(_allSubtitles, _frameRate, _shotChanges);
 
         OkPressed = true;
         Window?.Close();
+    }
+
+    /// <summary>
+    /// Runs the final beautify and writes the new times back onto the existing rows (sorted by
+    /// start time, as the beautifier expects). The rows keep all their view-model-only state -
+    /// the previous rebuild from Paragraphs silently dropped OriginalText, Id and the ASSA style.
+    /// </summary>
+    internal static void CommitBeautifiedTimes(List<SubtitleLineViewModel> rows, double frameRate, List<double> shotChanges)
+    {
+        var ordered = rows.OrderBy(p => p.StartTime.TotalMilliseconds).ToList();
+        var subtitle = new Subtitle();
+        foreach (var vm in ordered)
+        {
+            subtitle.Paragraphs.Add(vm.ToParagraph());
+        }
+
+        var beautifier = new Core.Forms.TimeCodesBeautifier(subtitle, frameRate, new List<double>(), shotChanges);
+        beautifier.Beautify();
+
+        // Beautify adjusts cue boundaries only, so the paragraphs still line up with the rows.
+        for (var i = 0; i < ordered.Count && i < subtitle.Paragraphs.Count; i++)
+        {
+            ordered[i].StartTime = TimeSpan.FromMilliseconds(subtitle.Paragraphs[i].StartTime.TotalMilliseconds);
+            ordered[i].EndTime = TimeSpan.FromMilliseconds(subtitle.Paragraphs[i].EndTime.TotalMilliseconds);
+            ordered[i].UpdateDuration();
+        }
+
+        rows.Clear();
+        rows.AddRange(ordered);
     }
 
     [RelayCommand]

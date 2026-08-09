@@ -20,7 +20,7 @@ public partial class TranslateSettingsViewModel : ObservableObject
     [ObservableProperty] private string _selectedMergeOptions;
 
     [ObservableProperty] private decimal? _serverDelaySeconds;
-    [ObservableProperty] private decimal? _maxBytesRequest;
+    [ObservableProperty] private int? _maxBytesRequest;
 
     [ObservableProperty] private string _promptText;
     [ObservableProperty] private bool _promptIsVisible;
@@ -196,7 +196,7 @@ public partial class TranslateSettingsViewModel : ObservableObject
             : MergeOptions[0];
 
         ServerDelaySeconds = Se.Settings.AutoTranslate.RequestDelaySeconds;
-        MaxBytesRequest = Se.Settings.AutoTranslate.RequestMaxBytes;
+        MaxBytesRequest = (int)Se.Settings.AutoTranslate.RequestMaxBytes;
         PromptText = string.Empty;
         PromptIsVisible = true;
 

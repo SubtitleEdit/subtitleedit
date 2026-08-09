@@ -25,6 +25,7 @@ using Nikse.SubtitleEdit.Features.Tools.SplitBreakLongLines;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Logic.Dictionaries;
+using Nikse.SubtitleEdit.Logic.Media;
 using Nikse.SubtitleEdit.Logic.LlamaCpp;
 using Nikse.SubtitleEdit.UiLogic.Ocr;
 using SkiaSharp;
@@ -320,11 +321,27 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
             }
             else if (Se.Settings.Tools.BatchConvert.OcrEngine.Equals("Ollama", StringComparison.OrdinalIgnoreCase))
             {
-                await RunOllamaOcr(imageSubtitle, item, cancellationToken);
+                // A false return means the runner already set a terminal status (engine not
+                // downloaded, startup failure, cancelled, every line blank) - stop here so the
+                // save path below cannot overwrite it with "Converted" or a generic error.
+                if (!await RunOllamaOcr(imageSubtitle, item, cancellationToken))
+                {
+                    return;
+                }
             }
             else if (Se.Settings.Tools.BatchConvert.OcrEngine.Equals("llama.cpp", StringComparison.OrdinalIgnoreCase))
             {
-                await RunLlamaCppOcr(imageSubtitle, item, cancellationToken);
+                if (!await RunLlamaCppOcr(imageSubtitle, item, cancellationToken))
+                {
+                    return;
+                }
+            }
+            else if (Se.Settings.Tools.BatchConvert.OcrEngine.Equals(CrispEmbedEngine.StaticName, StringComparison.OrdinalIgnoreCase))
+            {
+                if (!await RunCrispEmbedOcr(imageSubtitle, item, cancellationToken))
+                {
+                    return;
+                }
             }
             else
             {
@@ -1271,7 +1288,12 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
         }
     }
     
-    private async Task RunOllamaOcr(IOcrSubtitle imageSubtitles, BatchConvertItem item, CancellationToken cancellationToken)
+    /// <returns>
+    /// True when the item should continue through convert functions and save; false when the
+    /// runner already set a terminal status (not downloaded, startup failure, cancelled, every
+    /// line blank) that the save path must not overwrite.
+    /// </returns>
+    private async Task<bool> RunOllamaOcr(IOcrSubtitle imageSubtitles, BatchConvertItem item, CancellationToken cancellationToken)
     {
         var ollamaOcr = new OllamaOcr();
         var url = Se.Settings.Ocr.OllamaUrl;
@@ -1304,10 +1326,14 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
             item.Subtitle.Paragraphs.All(p => string.IsNullOrWhiteSpace(p.Text)))
         {
             item.Status = Se.Language.Ocr.OllamaModelLikelyWrong;
+            return false;
         }
+
+        return !cancelled;
     }
 
-    private async Task RunLlamaCppOcr(IOcrSubtitle imageSubtitles, BatchConvertItem item, CancellationToken cancellationToken)
+    /// <inheritdoc cref="RunOllamaOcr"/>
+    private async Task<bool> RunLlamaCppOcr(IOcrSubtitle imageSubtitles, BatchConvertItem item, CancellationToken cancellationToken)
     {
         // Curated OCR model from settings (picked in batch convert settings / the OCR window).
         // The batch run never downloads - the settings dialog prompts for that on OK.
@@ -1316,7 +1342,7 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
         if (model == null || !LlamaCppServerManager.IsEngineInstalled() || !LlamaCppServerManager.IsModelInstalled(model))
         {
             item.Status = Se.Language.Ocr.LlamaCppNotDownloaded;
-            return;
+            return false;
         }
 
         try
@@ -1327,7 +1353,7 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
         catch (Exception ex)
         {
             item.Status = string.Format(Se.Language.General.ErrorX, ex.Message);
-            return;
+            return false;
         }
 
         var engine = new LlamaCppOcr(Se.Settings.Ocr.LlamaCppOcrTimeoutMinutes);
@@ -1361,7 +1387,96 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
             item.Subtitle.Paragraphs.All(p => string.IsNullOrWhiteSpace(p.Text)))
         {
             item.Status = Se.Language.Ocr.LlamaCppReturnedNoText;
+            return false;
         }
+
+        return !cancelled;
+    }
+
+    /// <inheritdoc cref="RunOllamaOcr"/>
+    private async Task<bool> RunCrispEmbedOcr(IOcrSubtitle imageSubtitles, BatchConvertItem item, CancellationToken cancellationToken)
+    {
+        // Backend/model picked in batch convert settings (shared with the OCR window). The batch
+        // run never downloads - the settings dialog prompts for that on OK.
+        var backend = CrispEmbedEngine.GetBackends().FirstOrDefault(b => b.Name == Se.Settings.Ocr.CrispEmbedBackend);
+        var model = backend?.Models.FirstOrDefault(m => m.Name == Se.Settings.Ocr.CrispEmbedModel)
+                    ?? backend?.Models.FirstOrDefault(m => backend.IsModelInstalled(m));
+        if (backend == null || model == null || !CrispEmbedEngine.IsEngineInstalled() || !backend.IsModelInstalled(model))
+        {
+            item.Status = Se.Language.Ocr.CrispEmbedNotDownloaded;
+            return false;
+        }
+
+        using var engine = new CrispEmbedOcr(Se.Settings.Ocr.CrispEmbedOcrTimeoutMinutes);
+
+        // PP-OCRv6 is a detector+recognizer pair driven through the CLI; the VLM backends load
+        // once into crispembed-server per file - see CrispEmbedOcr.
+        item.Status = Se.Language.General.OcrDotDotDot;
+        bool started;
+        try
+        {
+            started = backend.UsesTextDetector
+                ? engine.StartCliPipeline(
+                    CrispEmbedEngine.GetCliExecutable(),
+                    backend.GetModelPath(model),
+                    backend.GetDetectorPath(model))
+                : await engine.StartServerAsync(
+                    CrispEmbedEngine.GetServerExecutable(),
+                    backend.GetModelPath(model),
+                    cancellationToken);
+        }
+        catch (OperationCanceledException)
+        {
+            item.Status = Se.Language.General.Cancelled;
+            return false;
+        }
+
+        if (!started)
+        {
+            item.Status = string.Format(Se.Language.General.ErrorX, engine.Error);
+            return false;
+        }
+
+        item.Subtitle = new Subtitle();
+        var cancelled = false;
+        for (var i = 0; i < imageSubtitles.Count; i++)
+        {
+            var pct = (i + 1) * 100 / imageSubtitles.Count;
+            item.Status = string.Format(Se.Language.General.OcrPercentX, pct);
+            var bitmap = imageSubtitles.GetBitmap(i);
+
+            string text;
+            try
+            {
+                text = await engine.Ocr(bitmap, cancellationToken);
+            }
+            catch (OperationCanceledException)
+            {
+                item.Status = Se.Language.General.Cancelled;
+                return false;
+            }
+
+            var p = new Paragraph(text, imageSubtitles.GetStartTime(i).TotalMilliseconds, imageSubtitles.GetEndTime(i).TotalMilliseconds);
+            item.Subtitle.Paragraphs.Add(p);
+
+            if (cancellationToken.IsCancellationRequested)
+            {
+                item.Status = Se.Language.General.Cancelled;
+                cancelled = true;
+                break;
+            }
+        }
+
+        // Every line blank means the engine/model setup is broken - flag the file so the user
+        // notices instead of ending up with a silently-empty subtitle.
+        if (!cancelled && item.Subtitle.Paragraphs.Count > 0 &&
+            item.Subtitle.Paragraphs.All(p => string.IsNullOrWhiteSpace(p.Text)))
+        {
+            item.Status = Se.Language.Ocr.CrispEmbedReturnedNoText;
+            return false;
+        }
+
+        return !cancelled;
     }
 
     /// <summary>
@@ -1672,6 +1787,7 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
             s = ChangeSpeed(s);
             s = BridgeGaps(s);
             s = ApplyMinGap(s);
+            s = BeautifyTimeCodes(s, item.FileName);
         }
         else
         {
@@ -1699,6 +1815,7 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
             s = FixRightToLeft(s);
             s = AssaChangeResolution(s);
             s = AssaChangeStyle(s);
+            s = BeautifyTimeCodes(s, item.FileName);
             s = SortBy(s);
         }
 
@@ -2011,7 +2128,10 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
         subtitle.Paragraphs.Clear();
         foreach (var sv in subtitlesFixed)
         {
-            subtitle.Paragraphs.Add(sv.ToParagraph());
+            // Pass the format: a bare ToParagraph leaves Paragraph.Extra empty, and the ASSA
+            // writer reads the Dialogue style column from Extra - every line in a styled file
+            // would fall back to the first style in the header.
+            subtitle.Paragraphs.Add(sv.ToParagraph(subtitle.OriginalFormat));
         }
 
         return subtitle;
@@ -2089,6 +2209,75 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
             }
         }
 
+        return subtitle;
+    }
+
+    private Subtitle BeautifyTimeCodes(Subtitle subtitle, string subtitleFileName)
+    {
+        if (!_config.BeautifyTimeCodes.IsActive)
+        {
+            return subtitle;
+        }
+
+        // Frame rate comes from either a fixed user-chosen rate or a video file matching
+        // the subtitle file name, when one exists. Shot changes are only available if they
+        // were previously generated/imported for that video (they are cached on disk per
+        // video file).
+        //
+        // Without a fixed rate or a matching video, fall back to the frame rate this batch
+        // is actually producing: the target of the "change frame rate" step when it runs
+        // (it runs before this one), otherwise the project frame rate. Configuration
+        // .Settings.General.DefaultFrameRate is not usable here - nothing in the UI ever
+        // assigns it, so it is always libse's built-in 23.976.
+        var frameRate = _config.ChangeFrameRate.IsActive && _config.ChangeFrameRate.ToFrameRate > 0
+            ? _config.ChangeFrameRate.ToFrameRate
+            : Se.Settings.General.CurrentFrameRate;
+        if (frameRate <= 0)
+        {
+            frameRate = Se.Settings.General.DefaultFrameRate;
+        }
+
+        if (_config.BeautifyTimeCodes.UseFixedFrameRate && _config.BeautifyTimeCodes.FixedFrameRate > 0)
+        {
+            frameRate = _config.BeautifyTimeCodes.FixedFrameRate;
+        }
+
+        var shotChanges = new List<double>();
+
+        if (FindVideoFileName.TryFindVideoFileName(subtitleFileName, out var videoFileName))
+        {
+            if (!_config.BeautifyTimeCodes.UseFixedFrameRate)
+            {
+                try
+                {
+                    var mediaInfo = FfmpegMediaInfo2.Parse(videoFileName);
+                    if (mediaInfo.FramesRate > 0)
+                    {
+                        frameRate = (double)mediaInfo.FramesRate;
+                    }
+                }
+                catch
+                {
+                    // no ffmpeg or unreadable video file - keep the fallback frame rate
+                }
+            }
+
+            if (_config.BeautifyTimeCodes.SnapToShotChanges)
+            {
+                try
+                {
+                    shotChanges = ShotChangesHelper.FromDisk(videoFileName);
+                }
+                catch
+                {
+                    // unreadable/corrupt shot-changes cache - beautify without them rather
+                    // than aborting the rest of the batch
+                    shotChanges = new List<double>();
+                }
+            }
+        }
+
+        new Core.Forms.TimeCodesBeautifier(subtitle, frameRate, new List<double>(), shotChanges).Beautify();
         return subtitle;
     }
 

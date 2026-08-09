@@ -1129,10 +1129,39 @@ public class SyntaxTextView : Control
             ? (e.KeyModifiers & KeyModifiers.Alt) != 0
             : (e.KeyModifiers & KeyModifiers.Control) != 0;
 
+        // Alt+Up/Down moves lines everywhere, including macOS - the same binding VS Code uses. The
+        // guarded cases must come before the plain ones below or the compiler calls them subsumed.
+        var altModifier = (e.KeyModifiers & KeyModifiers.Alt) != 0;
+
         var isNavigation = true;
 
         switch (e.Key)
         {
+            case Key.Up when altModifier && !shift:
+                isNavigation = false;
+                MoveSelectedLines(-1);
+                break;
+            case Key.Down when altModifier && !shift:
+                isNavigation = false;
+                MoveSelectedLines(1);
+                break;
+            case Key.D when commandModifier && !shift:
+                isNavigation = false;
+                DuplicateSelectedLines();
+                break;
+            case Key.K when commandModifier && shift:
+                isNavigation = false;
+                DeleteSelectedLines();
+                break;
+            case Key.Back when wordModifier:
+                isNavigation = false;
+                DeleteWordLeft();
+                break;
+            case Key.Delete when wordModifier:
+                isNavigation = false;
+                DeleteWordRight();
+                break;
+
             case Key.Left:
                 SetCaret(wordModifier ? GetWordLeftOffset(_caretOffset) : GetPreviousCaretStop(_caretOffset), shift);
                 break;
@@ -1570,7 +1599,8 @@ public class SyntaxTextView : Control
         ApplyEdit(start, _caretOffset - start, string.Empty);
     }
 
-    private void DeleteForward()
+    /// <summary>Deletes the selection, or the character after the caret (the Delete key).</summary>
+    public void DeleteForward()
     {
         if (IsReadOnly)
         {
@@ -1591,6 +1621,200 @@ public class SyntaxTextView : Control
 
         _allowUndoMerge = false;
         ApplyEdit(_caretOffset, end - _caretOffset, string.Empty);
+    }
+
+    /// <summary>Deletes from the caret back to the start of the word (Ctrl/Option+Backspace).</summary>
+    public void DeleteWordLeft()
+    {
+        if (IsReadOnly)
+        {
+            return;
+        }
+
+        if (SelectionLength > 0)
+        {
+            DeleteSelection();
+            return;
+        }
+
+        var start = GetWordLeftOffset(_caretOffset);
+        if (start == _caretOffset)
+        {
+            return;
+        }
+
+        _allowUndoMerge = false;
+        ApplyEdit(start, _caretOffset - start, string.Empty);
+    }
+
+    /// <summary>Deletes from the caret forward to the end of the word (Ctrl/Option+Delete).</summary>
+    public void DeleteWordRight()
+    {
+        if (IsReadOnly)
+        {
+            return;
+        }
+
+        if (SelectionLength > 0)
+        {
+            DeleteSelection();
+            return;
+        }
+
+        var end = GetWordRightOffset(_caretOffset);
+        if (end == _caretOffset)
+        {
+            return;
+        }
+
+        _allowUndoMerge = false;
+        ApplyEdit(_caretOffset, end - _caretOffset, string.Empty);
+    }
+
+    /// <summary>
+    /// The first and last line the selection touches. The line commands work on whole lines, so a
+    /// caret anywhere in a line is enough to include it.
+    /// </summary>
+    private (int First, int Last) GetSelectedLineRange()
+    {
+        var first = _document.GetPosition(SelectionStart).Line;
+        var endPosition = _document.GetPosition(SelectionEnd);
+        var last = endPosition.Line;
+
+        // A selection that stops exactly at the start of a line does not really reach into it.
+        if (last > first && endPosition.Column == 0)
+        {
+            last--;
+        }
+
+        return (first, last);
+    }
+
+    private string GetLinesText(int firstLine, int lastLine)
+    {
+        var start = _document.GetLineStartOffset(firstLine);
+        return _document.GetText(start, _document.GetLineEndOffset(lastLine) - start);
+    }
+
+    /// <summary>
+    /// Puts the caret and the selection back on text that moved <paramref name="lineDelta"/> lines,
+    /// so the block stays selected and the command can be repeated.
+    /// </summary>
+    private void RestoreSelectionShiftedByLines(
+        SyntaxTextPosition caretBefore,
+        SyntaxTextPosition anchorBefore,
+        int lineDelta)
+    {
+        _selectionAnchor = _document.GetOffset(anchorBefore.Line + lineDelta, anchorBefore.Column);
+        SetCaret(_document.GetOffset(caretBefore.Line + lineDelta, caretBefore.Column), extendSelection: true);
+        InvalidateVisual();
+        BringCaretIntoView();
+    }
+
+    /// <summary>Moves the lines the selection touches one line up (-1) or down (+1).</summary>
+    public void MoveSelectedLines(int lineDelta)
+    {
+        if (IsReadOnly || lineDelta == 0)
+        {
+            return;
+        }
+
+        var (first, last) = GetSelectedLineRange();
+        if ((lineDelta < 0 && first == 0) || (lineDelta > 0 && last >= _document.LineCount - 1))
+        {
+            return;
+        }
+
+        var block = GetLinesText(first, last);
+        var neighborLine = lineDelta < 0 ? first - 1 : last + 1;
+        var neighbor = _document.GetLine(neighborLine);
+
+        // Rewrite the block and the line it swaps with in one edit: one undo step, and the lines
+        // below it never move, so the view keeps its cached layouts.
+        var replacement = lineDelta < 0
+            ? block + _document.NewLine + neighbor
+            : neighbor + _document.NewLine + block;
+
+        var caretBefore = _document.GetPosition(_caretOffset);
+        var anchorBefore = _document.GetPosition(_selectionAnchor);
+
+        var regionStart = _document.GetLineStartOffset(Math.Min(first, neighborLine));
+        var regionEnd = _document.GetLineEndOffset(Math.Max(last, neighborLine));
+
+        _allowUndoMerge = false;
+        ApplyEdit(regionStart, regionEnd - regionStart, replacement);
+        _allowUndoMerge = false;
+
+        RestoreSelectionShiftedByLines(caretBefore, anchorBefore, lineDelta);
+    }
+
+    /// <summary>Inserts a copy of the lines the selection touches below them.</summary>
+    public void DuplicateSelectedLines()
+    {
+        if (IsReadOnly)
+        {
+            return;
+        }
+
+        var (first, last) = GetSelectedLineRange();
+        var block = GetLinesText(first, last);
+
+        var caretBefore = _document.GetPosition(_caretOffset);
+        var anchorBefore = _document.GetPosition(_selectionAnchor);
+
+        _allowUndoMerge = false;
+        ApplyEdit(_document.GetLineEndOffset(last), 0, _document.NewLine + block);
+        _allowUndoMerge = false;
+
+        // Land on the copy, so pressing it again duplicates the copy rather than the original.
+        RestoreSelectionShiftedByLines(caretBefore, anchorBefore, last - first + 1);
+    }
+
+    /// <summary>Removes the lines the selection touches, line break and all.</summary>
+    public void DeleteSelectedLines()
+    {
+        if (IsReadOnly)
+        {
+            return;
+        }
+
+        var (first, last) = GetSelectedLineRange();
+        var start = _document.GetLineStartOffset(first);
+        int end;
+
+        if (last < _document.LineCount - 1)
+        {
+            end = _document.GetLineStartOffset(last + 1); // take the line break below with it
+        }
+        else if (first > 0)
+        {
+            start = _document.GetLineEndOffset(first - 1); // last line: take the break above instead
+            end = _document.GetLineEndOffset(last);
+        }
+        else
+        {
+            end = _document.GetLineEndOffset(last); // nothing above to take a break from: empty it
+        }
+
+        _allowUndoMerge = false;
+        ApplyEdit(start, end - start, string.Empty);
+        _allowUndoMerge = false;
+    }
+
+    /// <summary>
+    /// Replaces the whole text as one undoable edit. Assigning <see cref="Text"/> would go behind
+    /// the undo stack's back, so replace-all uses this.
+    /// </summary>
+    public void ReplaceAllText(string newText)
+    {
+        if (IsReadOnly)
+        {
+            return;
+        }
+
+        _allowUndoMerge = false;
+        ApplyEdit(0, _document.TextLength, newText ?? string.Empty);
+        _allowUndoMerge = false;
     }
 
     /// <summary>The offset one character (or one whole line break) before <paramref name="offset"/>.</summary>

@@ -7,6 +7,7 @@ using Avalonia.Layout;
 using Avalonia.Media;
 using Avalonia.Styling;
 using Avalonia.Themes.Fluent;
+using Avalonia.Threading;
 using Avalonia.VisualTree;
 using Nikse.SubtitleEdit.Controls.SyntaxTextEditorControl;
 using Nikse.SubtitleEdit.Logic.Config;
@@ -22,6 +23,13 @@ public static class UiTheme
     private static IStyle? _layoutScaleMenuStyle;
     private static ResourceDictionary? _resourceOverrides;
     private static object? _themeChangeSubscription;
+
+    /// <summary>
+    /// Style class for a ContentControl hosting an icon that sits on a colored accent
+    /// square - its glyph stays white in the dark theme instead of getting the custom
+    /// dark-theme foreground (#12717).
+    /// </summary>
+    public const string IconOnAccentClassName = "icon-on-accent";
 
     public const string ThemeNameSystem = "System";
     public const string ThemeNameLight = "Light";
@@ -39,7 +47,9 @@ public static class UiTheme
             if (themeSetting == ThemeNameSystem)
             {
                 // No Application in unit tests or at design time - fall back to dark.
-                if (Application.Current == null)
+                // ActualThemeVariant is UI-thread-affine, so an off-thread read (plain
+                // xunit facts, worker threads) must fall back too instead of throwing.
+                if (Application.Current == null || !Dispatcher.UIThread.CheckAccess())
                 {
                     return ThemeNameDark;
                 }
@@ -298,6 +308,15 @@ public static class UiTheme
 
         _layoutScaleMenuStyle = styles;
         Application.Current.Styles.Add(styles);
+
+        // The Fluent menu/context-menu popup templates cap their width at 456 via the
+        // FlyoutThemeMaxWidth resource, which clips long localized menu items (e.g. Italian,
+        // #13011) without an ellipsis. The cap sits on a Border inside the templates as a
+        // DynamicResource, so a style cannot target it - overriding the resource is the only
+        // lever, and it deliberately raises the cap for every flyout. It scales with the menu
+        // font size above, so 150%+ layouts do not clip again; popups still size to their
+        // content, so short menus are unaffected.
+        Application.Current.Resources["FlyoutThemeMaxWidth"] = 680d * factor;
     }
 
     private static Styles? _scrollBarStyle;
@@ -625,6 +644,10 @@ public static class UiTheme
                 {
                     new Setter(SyntaxTextView.ForegroundProperty, new SolidColorBrush(foreColor)),
                     new Setter(SyntaxTextView.CaretBrushProperty, new SolidColorBrush(foreColor)),
+
+                    // The default translucent steel blue nearly disappears on a dark background -
+                    // a brighter blue still lets the syntax colors read through on top.
+                    new Setter(SyntaxTextView.SelectionBrushProperty, new SolidColorBrush(Color.FromArgb(0x99, 0x4C, 0x8D, 0xE0))),
                 }
             },
 
@@ -662,6 +685,19 @@ public static class UiTheme
                 Setters =
                 {
                     new Setter(Optris.Icons.Avalonia.Icon.ForegroundProperty, new SolidColorBrush(foreColor))
+                }
+            },
+
+            // Icons on a colored accent square (settings sections, word lists, shortcut
+            // groups) keep their white glyph: the blanket icon foreground above would wash
+            // them out against the colored background (#12717). Hosts opt in by adding
+            // IconOnAccentClassName; this must come after the blanket style so it wins.
+            new Style(x => x.OfType<ContentControl>().Class(IconOnAccentClassName)
+                    .Descendant().OfType<Optris.Icons.Avalonia.Icon>())
+            {
+                Setters =
+                {
+                    new Setter(Optris.Icons.Avalonia.Icon.ForegroundProperty, Brushes.White)
                 }
             },
 
@@ -962,6 +998,38 @@ public static class UiTheme
     {
         return Se.Settings.Appearance.DarkModeBackgroundColor.FromHexToColor();
     }
+
+    /// <summary>
+    /// The window/grid background of the active theme. Used where something has to be drawn
+    /// legibly against it (e.g. picking a readable ASSA color for the subtitle grid), so the
+    /// light themes must not all be assumed to be white.
+    /// </summary>
+    public static Color GetThemeBackgroundColor()
+    {
+        try
+        {
+            if (IsDarkThemeEnabled())
+            {
+                return GetDarkThemeBackgroundColor();
+            }
+        }
+        catch
+        {
+            // malformed DarkModeBackgroundColor in the settings file
+            return Color.FromRgb(0x21, 0x21, 0x21);
+        }
+
+        var themeSetting = Se.Settings.Appearance.Theme;
+        if (themeSetting == ThemeNameClassic)
+        {
+            return ClassicBackgroundColor;
+        }
+
+        return themeSetting == ThemeNamePastel ? PastelBackgroundColor : Colors.White;
+    }
+
+    private static readonly Color ClassicBackgroundColor = Color.FromRgb(236, 233, 216);
+    private static readonly Color PastelBackgroundColor = Color.FromRgb(240, 235, 255);
 
     public static Color GetDarkThemeForegroundColor()
     {

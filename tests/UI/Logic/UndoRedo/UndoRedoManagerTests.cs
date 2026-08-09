@@ -13,12 +13,12 @@ public class UndoRedoManagerTests
     private sealed class FakeClient : IUndoRedoClient
     {
         public int Hash { get; set; }
-        public bool Typing { get; set; }
+        public bool Editing { get; set; }
         public SubtitleLineViewModel[] Subtitles { get; set; } = [];
         public string? FileNameOriginal { get; set; }
 
         public int GetFastHash() => Hash;
-        public bool IsTyping() => Typing;
+        public bool IsUserEditing() => Editing;
         public UndoRedoItem MakeUndoRedoObject(string description)
         {
             var item = MakeItem(description, Hash, Subtitles);
@@ -41,7 +41,7 @@ public class UndoRedoManagerTests
             return 1;
         }
 
-        public bool IsTyping() => false;
+        public bool IsUserEditing() => false;
         public UndoRedoItem MakeUndoRedoObject(string description) => MakeItem(description, 1);
     }
 
@@ -558,9 +558,9 @@ public class UndoRedoManagerTests
     }
 
     [Fact]
-    public void CheckForChanges_DoesNotAddEntry_WhenIsTyping()
+    public void CheckForChanges_DoesNotAddEntry_WhenUserIsEditing()
     {
-        var client = new FakeClient { Hash = 42, Typing = true };
+        var client = new FakeClient { Hash = 42, Editing = true };
         var manager = new UndoRedoManager();
         manager.SetupChangeDetection(client, TimeSpan.FromHours(1));
         manager.StartChangeDetection();

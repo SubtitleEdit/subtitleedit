@@ -8,7 +8,7 @@ namespace Nikse.SubtitleEdit.Logic;
 
 public interface IMergeManager
 {
-    Subtitle MergeSelectedLines(Subtitle subtitle, int[] selectedIndices, MergeManager.BreakMode breakMode = MergeManager.BreakMode.Normal);
-    void MergeSelectedLines(ObservableCollection<SubtitleLineViewModel> subtitles, List<SubtitleLineViewModel> subtitleLineViewModels, BreakMode breakMode = BreakMode.Normal);
+    Subtitle MergeSelectedLines(Subtitle subtitle, int[] selectedIndices, MergeManager.BreakMode breakMode = MergeManager.BreakMode.Normal, bool keepEndTime = false);
+    void MergeSelectedLines(ObservableCollection<SubtitleLineViewModel> subtitles, List<SubtitleLineViewModel> subtitleLineViewModels, BreakMode breakMode = BreakMode.Normal, bool keepEndTime = false);
     void MergeSelectedLinesAsDialog(ObservableCollection<SubtitleLineViewModel> subtitles, List<SubtitleLineViewModel> selectedItems);
 }

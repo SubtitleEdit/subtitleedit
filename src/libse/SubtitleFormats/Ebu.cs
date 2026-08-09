@@ -518,48 +518,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     }
                 }
 
-                // convert text to bytes
-                var bytes = encoding.GetBytes(TextField);
-
-                // some fixes for bytes
-                if (bytes.Length == TextField.Length)
-                {
-                    for (var i = 0; i < bytes.Length; i++)
-                    {
-                        if (TextField[i] == '#')
-                        {
-                            bytes[i] = 0x23;
-                        }
-                        else if (TextField[i] == 'Đ')
-                        {
-                            bytes[i] = 0xe2;
-                        }
-                        else if (TextField[i] == '–') // em dash
-                        {
-                            bytes[i] = 0xd0;
-                        }
-                    }
-                }
-
-                // compare bytes with byte only implementation
-                if (bytes.Length == textBytes.Count)
-                {
-                    for (var idx = 0; idx < textBytes.Count; idx++)
-                    {
-                        if (bytes[idx] != textBytes[idx])
-                        {
-                            SeLogger.Error("EBU STL ENCODING DIFF: " + TextField);
-                            break;
-                        }
-                    }
-                }
-                else
-                {
-                    SeLogger.Error("EBU STL ENCODING DIFF LENGTH: " + TextField);
-                }
-
-                bytes = textBytes.ToArray(); //TODO: we use new byte list - remove old code
-
+                var bytes = textBytes.ToArray();
 
                 for (var i = 0; i < 112; i++)
                 {

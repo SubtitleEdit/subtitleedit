@@ -39,7 +39,10 @@ public class MiddleEllipsisConverter : IValueConverter
         var keep = maxLength - Ellipsis.Length;
         var front = (keep + 1) / 2;
         var back = keep - front;
-        return s[..front] + Ellipsis + s[^back..];
+
+        // Concat the three spans in one go - "s[..front] + Ellipsis + s[^back..]" cut two
+        // intermediate strings first and then threw them away.
+        return string.Concat(s.AsSpan(0, front), Ellipsis, s.AsSpan(s.Length - back));
     }
 
     public object ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)

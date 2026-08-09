@@ -113,17 +113,25 @@ public partial class SubtitleLineViewModel : ObservableObject
 
     public SubtitleLineViewModel(SubtitleLineViewModel p, bool generateNewId = false)
     {
-        Text = p.Text;
-        OriginalText = p.OriginalText;
-        StartTime = p.StartTime;
-        EndTime = p.EndTime;
-        UpdateDuration();
+        // The observable properties are written as backing fields, not through their setters.
+        // Nothing can be subscribed to an object still inside its own constructor, so every
+        // notification the setters raise is discarded - but ObservableObject allocates a
+        // PropertyChanging/PropertyChangedEventArgs for each one anyway, and the Text and
+        // StartTime/EndTime setters fan out to a dozen more raises via their partial hooks.
+        // That was ~40 dead allocations per line, and undo snapshots this whole collection
+        // (issue #13234). The hooks are notification-only apart from UpdateDuration, which is
+        // what _duration is set to below.
+        _text = p.Text;
+        _originalText = p.OriginalText;
+        _startTime = p.StartTime;
+        _endTime = p.EndTime;
+        _duration = p.EndTime - p.StartTime;
+        _style = p.Style;
+        _actor = p.Actor;
+        _layer = p.Layer;
+        _number = p.Number;
         Language = p.Language;
         Region = p.Region;
-        Style = p.Style;
-        Actor = p.Actor;
-        Layer = p.Layer;
-        Number = p.Number;
         Extra = p.Extra;
         Effect = p.Effect;
         IsComment = p.IsComment;
@@ -132,7 +140,7 @@ public partial class SubtitleLineViewModel : ObservableObject
         MarginV = p.MarginV;
         NewSection = p.NewSection;
         Forced = p.Forced;
-        Bookmark = p.Bookmark;
+        _bookmark = p.Bookmark;
 
         Id = generateNewId ? Guid.NewGuid() : p.Id;
 
@@ -180,7 +188,10 @@ public partial class SubtitleLineViewModel : ObservableObject
             Number = Number,
             StartTime = new TimeCode(StartTime),
             EndTime = new TimeCode(EndTime),
-            Text = Text,
+            // TrimEnd: the edit text box is bound raw, so a trailing Enter lives in Text
+            // until the row loses selection - it must never reach saved files or tools
+            // (SE4 kept the same invariant by trimming in the TextChanged handler) - #13389.
+            Text = Text.TrimEnd(),
             Actor = Actor,
             Style = Style,
             Language = Language,
@@ -211,7 +222,7 @@ public partial class SubtitleLineViewModel : ObservableObject
             Number = Number,
             StartTime = new TimeCode(StartTime),
             EndTime = new TimeCode(EndTime),
-            Text = OriginalText,
+            Text = OriginalText.TrimEnd(),
             Actor = Actor,
             Style = Style,
             Language = Language,
@@ -236,21 +247,81 @@ public partial class SubtitleLineViewModel : ObservableObject
     }
 
     // Read-time memo for the html-stripped, line-split text: the pixel width column, the text
-    // error verdict and GetErrors all need it, and each used to strip and split the text again -
-    // three times per line for a single error scan. Keyed on the text instance like the memos
-    // below. The returned list is shared, so callers must only read it.
+    // error verdict, GetErrors and the edit box's line-length panel all need it, and each used
+    // to strip and split the text again - three times per line for a single error scan. Keyed
+    // on the text instance like the memos below. The returned string/list are shared, so
+    // callers must only read them.
     private string? _strippedLinesCacheText;
+    private string? _strippedTextCacheValue;
     private List<string>? _strippedLinesCacheValue;
 
-    private List<string> GetStrippedLines()
+    private void EnsureStrippedCache()
     {
         if (_strippedLinesCacheValue == null || !ReferenceEquals(_strippedLinesCacheText, Text))
         {
-            _strippedLinesCacheValue = SubtitleTextInfoHelper.StripHtml(Text).SplitToLines();
+            _strippedTextCacheValue = SubtitleTextInfoHelper.StripHtml(Text);
+            _strippedLinesCacheValue = _strippedTextCacheValue.SplitToLines();
             _strippedLinesCacheText = Text;
         }
+    }
 
-        return _strippedLinesCacheValue;
+    internal string GetStrippedText()
+    {
+        EnsureStrippedCache();
+        return _strippedTextCacheValue!;
+    }
+
+    internal List<string> GetStrippedLines()
+    {
+        EnsureStrippedCache();
+        return _strippedLinesCacheValue!;
+    }
+
+    // Read-time memos for the two WebVTT grid columns below, keyed on the text instance like
+    // the memos around them - both parse the text, and a cell binding re-reads its value on
+    // every repaint.
+    private string? _webVttStyleCacheText;
+    private string? _webVttStyleCacheValue;
+    private string? _webVttVoiceCacheText;
+    private string? _webVttVoiceCacheValue;
+
+    /// <summary>
+    /// The WebVTT cue classes of this line ("&lt;c.loud.red&gt;" shows as "loud, red"), for the
+    /// grid's Style column in WebVTT. WebVTT keeps them inside the cue text rather than in a
+    /// field of its own, so unlike the ASSA style this is derived from <see cref="Text"/>.
+    /// </summary>
+    public string WebVttStyle
+    {
+        get
+        {
+            if (!ReferenceEquals(_webVttStyleCacheText, Text) || _webVttStyleCacheValue == null)
+            {
+                var styles = WebVttHelper.GetParagraphStyles(Text);
+                _webVttStyleCacheValue = string.Join(", ", styles.Select(p => p.TrimStart('.')));
+                _webVttStyleCacheText = Text;
+            }
+
+            return _webVttStyleCacheValue;
+        }
+    }
+
+    /// <summary>
+    /// The WebVTT voice of this line (the "&lt;v Name&gt;" tag), for the grid's Voice column -
+    /// WebVTT's counterpart of the ASSA actor. Derived from <see cref="Text"/>, see
+    /// <see cref="WebVttStyle"/>.
+    /// </summary>
+    public string WebVttVoice
+    {
+        get
+        {
+            if (!ReferenceEquals(_webVttVoiceCacheText, Text) || _webVttVoiceCacheValue == null)
+            {
+                _webVttVoiceCacheValue = WebVTT.GetVoice(Text);
+                _webVttVoiceCacheText = Text;
+            }
+
+            return _webVttVoiceCacheValue;
+        }
     }
 
     // Read-time memo, see CharactersPerSecond below: the pixel-width column binding re-reads this
@@ -792,11 +863,38 @@ public partial class SubtitleLineViewModel : ObservableObject
         OnPropertyChanged(nameof(WpmBackgroundBrush));
         OnPropertyChanged(nameof(PixelWidth));
         OnPropertyChanged(nameof(AccessibleErrorText));
+        // WebVTT keeps the cue classes and the voice inside the text, so those two columns
+        // change with it.
+        OnPropertyChanged(nameof(WebVttStyle));
+        OnPropertyChanged(nameof(WebVttVoice));
     }
 
     public void RefreshText()
     {
         OnPropertyChanged(nameof(Text));
+    }
+
+    /// <summary>
+    /// Removes trailing whitespace - typically an empty line left by pressing Enter at the
+    /// end of the text - from <see cref="Text"/> and <see cref="OriginalText"/>. Called when
+    /// the row loses selection, so the line count/CPS shown in the grid match what
+    /// <see cref="ToParagraph"/> commits (#13389). Not safe to run while the row is still
+    /// bound to the edit text box: the TwoWay binding would push the trimmed value back and
+    /// delete a newline the user just typed.
+    /// </summary>
+    public void TrimTrailingTextWhitespace()
+    {
+        var trimmed = Text.TrimEnd();
+        if (trimmed.Length != Text.Length)
+        {
+            Text = trimmed;
+        }
+
+        var trimmedOriginal = OriginalText.TrimEnd();
+        if (trimmedOriginal.Length != OriginalText.Length)
+        {
+            OriginalText = trimmedOriginal;
+        }
     }
 
     /// <summary>

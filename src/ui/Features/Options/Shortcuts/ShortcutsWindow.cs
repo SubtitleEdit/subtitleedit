@@ -134,6 +134,10 @@ public class ShortcutsWindow : Window
                     VerticalAlignment = VerticalAlignment.Center,
                 };
                 icon.Bind(Attached.IconProperty, new Binding(nameof(ShortcutGroupTile.IconName)));
+                // Keep the glyph white on the colored square in the dark theme too - the
+                // class works no matter when the data-template binding materializes the
+                // Icon (#12717).
+                icon.Classes.Add(UiTheme.IconOnAccentClassName);
 
                 var glyph = new Border
                 {

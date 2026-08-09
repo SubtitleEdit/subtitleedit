@@ -428,7 +428,7 @@ public class AutoTranslateWindow : Window
         tableView.Columns.Add(new SeTableViewColumn
         {
             Header = Se.Language.General.Text,
-            Binding = new Binding(nameof(TranslateRow.Text)),
+            CellTemplate = TableViewExtras.MakeTextCellTemplate(nameof(TranslateRow.Text)),
             Width = new GridLength(1, GridUnitType.Star),
             CellTheme = UiUtil.TableViewCellTheme,
             HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
@@ -436,7 +436,7 @@ public class AutoTranslateWindow : Window
         tableView.Columns.Add(new SeTableViewColumn
         {
             Header = Se.Language.General.Translation,
-            Binding = new Binding(nameof(TranslateRow.TranslatedText)),
+            CellTemplate = TableViewExtras.MakeTextCellTemplate(nameof(TranslateRow.TranslatedText)),
             Width = new GridLength(1, GridUnitType.Star),
             CellTheme = UiUtil.TableViewCellTheme,
             HeaderTheme = UiUtil.TableViewColumnHeaderTheme,

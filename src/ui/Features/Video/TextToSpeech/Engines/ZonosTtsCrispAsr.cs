@@ -342,7 +342,7 @@ public class ZonosTtsCrispAsr : ITtsEngine
 
         await EnsureServerRunningAsync(zonosVoice.FilePath, cancellationToken);
 
-        var outputFileName = Path.Combine(GetSetFolder(), Guid.NewGuid() + ".wav");
+        var outputFileName = Path.Combine(TtsOutputFolder.Resolve(outputFolder, GetSetFolder), Guid.NewGuid() + ".wav");
         var inputText = text;
 
         // OpenAI-compatible /v1/audio/speech payload. Zonos transcribes the reference internally

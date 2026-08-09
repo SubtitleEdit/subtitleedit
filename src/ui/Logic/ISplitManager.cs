@@ -1,4 +1,5 @@
 ﻿using Nikse.SubtitleEdit.Core.Common;
+using Nikse.SubtitleEdit.Core.Enums;
 using Nikse.SubtitleEdit.Features.Main;
 using Nikse.SubtitleEdit.Logic.Config;
 using System;
@@ -124,6 +125,23 @@ public class SplitManager : ISplitManager
             {
                 subtitle.Text = text;
                 newSubtitle.Text = string.Empty;
+            }
+        }
+
+        // SE 4 parity (#12195): "Split line at cursor" applies the configured continuation
+        // style (e.g. "Ellipses (trailing only)") to the halves - a trailing ellipsis on
+        // the first line, and a leading marker on the second for leading styles - instead
+        // of a clean cut.
+        if (!string.IsNullOrWhiteSpace(subtitle.Text)
+            && !string.IsNullOrWhiteSpace(newSubtitle.Text)
+            && Enum.TryParse<ContinuationStyle>(Se.Settings.General.ContinuationStyle, out var continuationStyle)
+            && continuationStyle != ContinuationStyle.None)
+        {
+            var continuationProfile = ContinuationUtilities.GetContinuationProfile(continuationStyle);
+            if (ContinuationUtilities.ShouldAddSuffix(subtitle.Text, continuationProfile))
+            {
+                subtitle.Text = ContinuationUtilities.AddSuffixIfNeeded(subtitle.Text, continuationProfile, false);
+                newSubtitle.Text = ContinuationUtilities.AddPrefixIfNeeded(newSubtitle.Text, continuationProfile, false);
             }
         }
 

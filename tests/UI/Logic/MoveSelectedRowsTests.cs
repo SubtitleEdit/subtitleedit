@@ -14,8 +14,22 @@ namespace UITests.Logic;
 /// TableView really ends up selecting the moved rows, and that SelectedItem - which the
 /// view models bind their "current style" to - still points at the anchor row afterwards.
 /// </summary>
-public class MoveSelectedRowsTests
+public class MoveSelectedRowsTests : IDisposable
 {
+    // Every window opened by a test is closed again in Dispose: if a test stops early, an
+    // unclosed window would outlive the test and race with the headless session teardown.
+    private readonly List<Window> _windows = new();
+
+    public void Dispose()
+    {
+        foreach (var window in _windows)
+        {
+            window.Close();
+        }
+
+        _windows.Clear();
+    }
+
     private sealed class Row
     {
         public Row(string name) => Name = name;
@@ -25,7 +39,7 @@ public class MoveSelectedRowsTests
         public override string ToString() => Name;
     }
 
-    private static (TableView Grid, ObservableCollection<Row> Items) MakeGrid()
+    private (TableView Grid, ObservableCollection<Row> Items) MakeGrid()
     {
         var items = new ObservableCollection<Row>(
             new[] { "a", "b", "c", "d", "e" }.Select(n => new Row(n)));
@@ -35,6 +49,7 @@ public class MoveSelectedRowsTests
         grid.ItemsSource = items;
 
         var window = new Window { Content = grid, Width = 400, Height = 300 };
+        _windows.Add(window);
         window.Show();
         window.UpdateLayout();
         Dispatcher.UIThread.RunJobs();

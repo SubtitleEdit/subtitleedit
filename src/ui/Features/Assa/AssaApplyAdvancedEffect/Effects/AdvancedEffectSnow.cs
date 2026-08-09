@@ -33,13 +33,13 @@ public class AdvancedEffectSnow : IAdvancedEffectDisplay
         var globalEnd = subtitles.Max(s => s.EndTime);
         double totalVideoMs = (globalEnd - globalStart).TotalMilliseconds;
 
-        for (int i = 0; i < FlakeCount; i++)
+        for (int i = 0; i < FlakeCount && result.Count < AdvancedEffectUtil.MaxGeneratedEvents; i++)
         {
             // INITIAL DELAY: This creates the "start slow" effect.
             // Higher index flakes start much later in the video.
             double currentTimeMs = rng.Next(0, 5000) + (i * 20);
 
-            while (currentTimeMs < totalVideoMs)
+            while (currentTimeMs < totalVideoMs && result.Count < AdvancedEffectUtil.MaxGeneratedEvents)
             {
                 var flake = new SubtitleLineViewModel();
 
@@ -92,9 +92,9 @@ public class AdvancedEffectSnow : IAdvancedEffectDisplay
 
                 // GLOW: white border (\bord + \3c) blurred outward creates a soft luminous halo
                 string hexAlpha = alpha.ToString("X2");
-                string tags = $@"\\an5\\bord{glowBorder:F1}\\shad0\\3c&HFFFFFF&\\blur{glowBlur:F1}\\1c&HFFFFFF&\\alpha&H{hexAlpha}&\\fad(1200,1200)" +
-                              $@"\\fscx{size}\\fscy{size}\\frz{startRotation}\\t(0,{fallDuration},\\frz{endRotation})" +
-                              $@"\\move({startX},-50,{endX},{screenHeight + 50})";
+                string tags = $@"\an5\bord{AdvancedEffectUtil.Tag(glowBorder)}\shad0\3c&HFFFFFF&\blur{AdvancedEffectUtil.Tag(glowBlur)}\1c&HFFFFFF&\alpha&H{hexAlpha}&\fad(1200,1200)" +
+                              $@"\fscx{size}\fscy{size}\frz{startRotation}\t(0,{fallDuration},\frz{endRotation})" +
+                              $@"\move({startX},-50,{endX},{screenHeight + 50})";
 
                 flake.Text = "{" + tags + "}•";
                 result.Add(flake);
@@ -103,7 +103,7 @@ public class AdvancedEffectSnow : IAdvancedEffectDisplay
             }
         }
 
-        result.AddRange(subtitles);
+        result.AddRange(subtitles.Select(AdvancedEffectUtil.PassThrough));
         return result;
     }
 }

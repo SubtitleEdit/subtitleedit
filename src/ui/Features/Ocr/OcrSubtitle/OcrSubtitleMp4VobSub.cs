@@ -22,7 +22,8 @@ public class OcrSubtitleMp4VobSub : IOcrSubtitle
 
     public SKBitmap GetBitmap(int index)
     {
-        return _mp4SubtitleTrack.Mdia.Minf.Stbl.SubPictures[index].GetBitmap(null, SKColors.Transparent, SKColors.Black, SKColors.White, SKColors.Black, false);
+        var stbl = _mp4SubtitleTrack.Mdia.Minf.Stbl;
+        return stbl.SubPictures[index].GetBitmap(stbl.VobSubPalette, SKColors.Transparent, SKColors.Black, SKColors.White, SKColors.Black, false);
     }
 
     public TimeSpan GetStartTime(int index)

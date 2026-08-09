@@ -48,11 +48,19 @@ namespace Nikse.SubtitleEdit.Features.Video.TextToSpeech.Engines;
 ///   crispasr --server --backend omnivoice -m omnivoice-q4_k.gguf \
 ///       --codec-model omnivoice-tokenizer-f16.gguf --host 127.0.0.1 --port N \
 ///       [--voice reference.wav --ref-text "transcript"]
-/// then POST /v1/audio/speech with {"input": ..., "response_format": "wav", "speed": x}.
+/// then POST /v1/audio/speech with {"input": ..., "response_format": "wav", "speed": x,
+/// "language": id}.
 /// Confirmed on crispasr 0.8.25: the reference comes from the startup <c>--voice</c> flag (the
 /// per-request log reports <c>voice='&lt;startup&gt;'</c>), so the server is torn down and
 /// restarted when the selected voice or ref-text changes — the same shape the other cloning
-/// CrispASR engines settled on after #12757.
+/// CrispASR engines settled on after #12757. The target language is the opposite case: a
+/// per-request field, applied without a restart.
+///
+/// ⚠ Honouring <c>language</c> per request needs a crispasr build newer than the pinned v0.8.25.
+/// On v0.8.25 the CLI adapter applies the language once at startup only, so the field is parsed
+/// and ignored and every line stays language-agnostic (#13273). Sending it is harmless there —
+/// the IDs SE offers are the model's own — and it starts working the moment
+/// <see cref="Logic.Download.CrispAsrDownloadService"/> is bumped past v0.8.25.
 /// </summary>
 public class OmniVoiceCrispAsr : ITtsEngine
 {
@@ -401,7 +409,7 @@ public class OmniVoiceCrispAsr : ITtsEngine
         var modelKey = ResolveModelKey(model);
         await EnsureServerRunningAsync(modelKey, voicePath, refText, cancellationToken);
 
-        var outputFileName = Path.Combine(GetSetFolder(), Guid.NewGuid() + ".wav");
+        var outputFileName = Path.Combine(TtsOutputFolder.Resolve(outputFolder, GetSetFolder), Guid.NewGuid() + ".wav");
 
         var speed = Math.Clamp(Se.Settings.Video.TextToSpeech.OmniVoiceCrispAsrSpeed, 0.25, 4.0);
 
@@ -423,9 +431,19 @@ public class OmniVoiceCrispAsr : ITtsEngine
             CrispAsrTtsProvenance.AddSpeechAttestations(payload);
         }
 
+        // Target language (#13273). Unlike voice/ref-text this is a per-request field, so it needs
+        // no server restart — which is exactly why it has to travel on the payload: SE keeps one
+        // server for the whole session, so a startup flag could never follow a combo change after
+        // the first line. Auto (empty) sends no field and leaves the model language-agnostic.
+        var languageArg = OmniVoiceLanguages.ResolveLanguageArg(language);
+        if (!string.IsNullOrEmpty(languageArg))
+        {
+            payload["language"] = languageArg;
+        }
+
         var body = JsonSerializer.Serialize(payload);
         using var content = new StringContent(body, Encoding.UTF8, "application/json");
-        Se.WriteToolsLog($"OmniVoice (CrispASR): POST {ServerBaseUrl}/v1/audio/speech (voice={omniVoice}, refTextLen={refText.Length}, textLen={text.Length})");
+        Se.WriteToolsLog($"OmniVoice (CrispASR): POST {ServerBaseUrl}/v1/audio/speech (voice={omniVoice}, refTextLen={refText.Length}, textLen={text.Length}, language={(string.IsNullOrEmpty(languageArg) ? "(auto)" : languageArg)})");
 
         HttpResponseMessage response;
         try

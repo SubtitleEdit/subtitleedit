@@ -49,6 +49,29 @@ public class CopyPasteTranslatorTests
     }
 
     [Fact]
+    public void GetTranslationResult_KeepsAllConsecutiveAssaTagGroups()
+    {
+        // Reporter's ASSA lines carry several adjacent {\...} groups (e.g.
+        // {\pos(960,480)}{\fs-1.5}{\fs75}{\fscx120}{\fsc110}{\fad(0,0)}{\bord0});
+        // SetTagsAndReturnTrimmed must strip ALL of them into the formatting
+        // (not only the first), so the clipboard text is clean and the
+        // re-applied translation keeps every group (#10627).
+        var paragraphs = MakeParagraphs(
+            "{\\pos(960,480)}{\\fs75}{\\bord0}The World Of Sword And Magic",
+            "This is the second line.");
+        var translator = new CopyPasteTranslator(paragraphs, Separator);
+
+        var blocks = translator.BuildBlocks(60, string.Empty, 0);
+        Assert.Single(blocks);
+        Assert.DoesNotContain("{", blocks[0].TargetText);
+
+        var result = translator.GetTranslationResult(string.Empty, blocks[0].TargetText, blocks[0]);
+        Assert.Equal(2, result.Count);
+        Assert.StartsWith("{\\pos(960,480)}{\\fs75}{\\bord0}", result[0]);
+        Assert.Equal("This is the second line.", result[1]);
+    }
+
+    [Fact]
     public void GetTranslationResult_SecondBlock_IsNotReplacedByFirstBlocksMusicNotes()
     {
         var paragraphs = MakeParagraphs(

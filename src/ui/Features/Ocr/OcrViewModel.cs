@@ -304,7 +304,10 @@ public partial class OcrViewModel : ObservableObject
             GoogleVisionApiKey = ocr.GoogleVisionApiKey;
             MistralApiKey = ocr.MistralApiKey;
             SelectedGoogleVisionLanguage = GoogleVisionLanguages.FirstOrDefault(p => p.Code == ocr.GoogleVisionLanguage);
-            SelectedPaddleOcrLanguage = PaddleOcrLanguages.FirstOrDefault(p => p.Code == Se.Settings.Ocr.PaddleOcrLastLanguage) ?? PaddleOcrLanguages.First();
+            var paddleOcrLastLanguage = PaddleOcr.NormalizeLanguageCode(Se.Settings.Ocr.PaddleOcrLastLanguage);
+            SelectedPaddleOcrLanguage = PaddleOcrLanguages.FirstOrDefault(p => p.Code == paddleOcrLastLanguage) ??
+                                        PaddleOcrLanguages.FirstOrDefault(p => p.Code == "en") ??
+                                        PaddleOcrLanguages.First();
             SelectedGoogleLensLanguage = GoogleLensLanguages.FirstOrDefault(p => p.Code == Se.Settings.Ocr.GoogleLensOcrLastLanguage) ?? GoogleLensLanguages.First();
             if (!string.IsNullOrEmpty(ocr.TextBoxFontName))
             {
@@ -1278,6 +1281,28 @@ public partial class OcrViewModel : ObservableObject
     }
 
     /// <summary>
+    /// Re-downloads the CrispEmbed engine binaries, re-asking which hardware build to use. The
+    /// CPU/Vulkan/CUDA choice is otherwise only offered on first install, which left anyone who
+    /// picked CPU with no way back to a GPU build (issue #13400). Downloaded models are kept.
+    /// </summary>
+    [RelayCommand]
+    private async Task ReDownloadCrispEmbedEngine()
+    {
+        if (Window == null)
+        {
+            return;
+        }
+
+        await CrispEmbedDownloadHelper.DownloadEngineAsync(
+            Window, _windowService,
+            onEngineDownloadClosed: () =>
+            {
+                _isCtrlDown = false;
+                RefreshEngineCombo?.Invoke();
+            });
+    }
+
+    /// <summary>
     /// Makes sure the CrispEmbed engine binaries and the selected model are on disk, offering
     /// downloads for anything missing - the OCR-side analog of the CrispASR engine/model
     /// download flow in the speech-to-text window.
@@ -1289,110 +1314,18 @@ public partial class OcrViewModel : ObservableObject
             return false;
         }
 
-        if (!CrispEmbedEngine.IsEngineInstalled())
-        {
-            string variant;
-            if (Configuration.IsRunningOnWindows)
+        return await CrispEmbedDownloadHelper.EnsureReadyAsync(
+            Window, _windowService, backend, model.Model, forceModelDownload,
+            onEngineDownloadClosed: () =>
             {
-                var answer = await MessageBox.Show(
-                    Window,
-                    "Download CrispEmbed?",
-                    $"{Environment.NewLine}\"CrispEmbed\" requires downloading the CrispEmbed engine.{Environment.NewLine}{Environment.NewLine}Download and use CrispEmbed?",
-                    MessageBoxButtons.Cancel,
-                    MessageBoxIcon.Question,
-                    "CPU",
-                    "Vulkan",
-                    "CUDA");
-
-                if (answer == MessageBoxResult.Cancel)
-                {
-                    return false;
-                }
-
-                variant = answer switch
-                {
-                    MessageBoxResult.Custom1 => "cpu",
-                    MessageBoxResult.Custom3 => "cuda",
-                    _ => "vulkan",
-                };
-            }
-            else if (Configuration.IsRunningOnLinux && RuntimeInformation.ProcessArchitecture != Architecture.Arm64)
+                _isCtrlDown = false;
+                RefreshEngineCombo?.Invoke();
+            },
+            onModelDownloadClosed: () =>
             {
-                var answer = await MessageBox.Show(
-                    Window,
-                    "Download CrispEmbed?",
-                    $"{Environment.NewLine}\"CrispEmbed\" requires downloading the CrispEmbed engine.{Environment.NewLine}{Environment.NewLine}Download and use CrispEmbed?",
-                    MessageBoxButtons.Cancel,
-                    MessageBoxIcon.Question,
-                    "CPU",
-                    "GPU CUDA");
-
-                if (answer == MessageBoxResult.Cancel)
-                {
-                    return false;
-                }
-
-                variant = answer == MessageBoxResult.Custom2 ? "cuda" : string.Empty;
-            }
-            else
-            {
-                var answer = await MessageBox.Show(
-                    Window,
-                    "Download CrispEmbed?",
-                    $"{Environment.NewLine}\"CrispEmbed\" requires downloading the CrispEmbed engine ({CrispEmbedEngine.DownloadSizeText}).{Environment.NewLine}{Environment.NewLine}Download and use CrispEmbed?",
-                    MessageBoxButtons.YesNoCancel,
-                    MessageBoxIcon.Question);
-
-                if (answer != MessageBoxResult.Yes)
-                {
-                    return false;
-                }
-
-                variant = string.Empty;
-            }
-
-            var engineResult = await _windowService.ShowDialogAsync<DownloadCrispEmbedWindow, DownloadCrispEmbedViewModel>(Window,
-                vm => vm.InitializeEngine(variant));
-
-            _isCtrlDown = false;
-            RefreshEngineCombo?.Invoke();
-
-            if (!engineResult.OkPressed)
-            {
-                return false;
-            }
-        }
-
-        if (forceModelDownload || !backend.IsModelInstalled(model.Model))
-        {
-            if (!forceModelDownload)
-            {
-                var answer = await MessageBox.Show(
-                    Window,
-                    "Download model?",
-                    $"{Environment.NewLine}Download the model \"{model.Model.Name}\" ({model.Model.Size})?",
-                    MessageBoxButtons.YesNoCancel,
-                    MessageBoxIcon.Question);
-
-                if (answer != MessageBoxResult.Yes)
-                {
-                    return false;
-                }
-            }
-
-            var modelResult = await _windowService.ShowDialogAsync<DownloadCrispEmbedWindow, DownloadCrispEmbedViewModel>(Window,
-                vm => vm.InitializeModel(backend, model.Model));
-
-            _isCtrlDown = false;
-            RefreshCrispEmbedModelCombo?.Invoke();
-
-            if (!modelResult.OkPressed)
-            {
-                return false;
-            }
-        }
-
-        return true;
+                _isCtrlDown = false;
+                RefreshCrispEmbedModelCombo?.Invoke();
+            });
     }
 
     [RelayCommand]
@@ -3774,6 +3707,29 @@ public partial class OcrViewModel : ObservableObject
         public OcrFixLineResult OcrFixLineResult { get; set; } = new OcrFixLineResult();
     }
 
+    // The auto-break language comes from the selected spell check dictionary (used for the
+    // do-not-break-after list). Mapping dictionary name to a two-letter code involves culture
+    // lookups, so memoize it - OcrFixLine runs once per OCR'ed line.
+    private SpellCheckDictionaryDisplay? _autoBreakLanguageSource;
+    private string _autoBreakLanguage = string.Empty;
+
+    private string GetAutoBreakLanguage()
+    {
+        var dictionary = SelectedDictionary;
+        if (dictionary == null || dictionary.Name == GetDictionaryNameNone())
+        {
+            return string.Empty;
+        }
+
+        if (!ReferenceEquals(dictionary, _autoBreakLanguageSource))
+        {
+            _autoBreakLanguageSource = dictionary;
+            _autoBreakLanguage = SpellCheckDictionaryDisplay.GetTwoLetterLanguageCode(dictionary);
+        }
+
+        return _autoBreakLanguage;
+    }
+
     private OcrFixLineResultTemp OcrFixLine(int i, OcrSubtitleItem item)
     {
         var result = new OcrFixLineResultTemp();
@@ -3781,7 +3737,7 @@ public partial class OcrViewModel : ObservableObject
         // The checkbox promises "auto-break if more than X lines", so leave shorter results alone.
         if (DoAutoBreak && Utilities.GetNumberOfLines(item.Text) > Se.Settings.General.MaxNumberOfLines)
         {
-            item.Text = Utilities.AutoBreakLine(item.Text);
+            item.Text = Utilities.AutoBreakLine(item.Text, GetAutoBreakLanguage());
         }
 
         if (SelectedDictionary != null &&
@@ -3873,7 +3829,7 @@ public partial class OcrViewModel : ObservableObject
         // The checkbox promises "auto-break if more than X lines", so leave shorter results alone.
         if (DoAutoBreak && Utilities.GetNumberOfLines(item.Text) > Se.Settings.General.MaxNumberOfLines)
         {
-            item.Text = Utilities.AutoBreakLine(item.Text);
+            item.Text = Utilities.AutoBreakLine(item.Text, GetAutoBreakLanguage());
         }
 
         var unknownWords = new List<UnknownWordItem>();
@@ -4061,9 +4017,13 @@ public partial class OcrViewModel : ObservableObject
     private void RunOllamaOcr(List<int> selectedIndices, CancellationToken cancellationToken)
     {
         var ollamaOcr = new OllamaOcr(Se.Settings.Ocr.OllamaOcrTimeoutMinutes);
+        var url = OllamaUrl;
+        var model = OllamaModel;
 
         _ = Task.Run(async () =>
         {
+            var processedCount = 0;
+            var producedAnyText = false;
             try
             {
                 for (var processedIndex = 0; processedIndex < selectedIndices.Count; processedIndex++)
@@ -4081,20 +4041,65 @@ public partial class OcrViewModel : ObservableObject
 
                     SelectAndScrollToRow(i);
 
-                    var text = await ollamaOcr.Ocr(bitmap, OllamaUrl, OllamaModel, SelectedOllamaLanguage ?? "English", cancellationToken);
+                    var text = await ollamaOcr.Ocr(bitmap, url, model, SelectedOllamaLanguage ?? "English", cancellationToken);
+
+                    // Surface a real failure (Ollama not running, model not pulled, out of memory)
+                    // instead of silently filling the grid with blank lines.
+                    if (string.IsNullOrEmpty(text) && !string.IsNullOrEmpty(ollamaOcr.Error))
+                    {
+                        await ShowOllamaErrorAsync(ollamaOcr.Error, url, model);
+                        return;
+                    }
+
+                    processedCount++;
+                    if (!string.IsNullOrWhiteSpace(text))
+                    {
+                        producedAnyText = true;
+                    }
+
                     item.Text = text;
 
                     OcrFixLineAndSetText(i, item);
                 }
+
+                if (processedCount >= 1 && !producedAnyText && !cancellationToken.IsCancellationRequested)
+                {
+                    await ShowOllamaErrorAsync(
+                        "Ollama returned no text for " +
+                        (processedCount == 1 ? "the line." : "any of the " + processedCount + " lines.") + Environment.NewLine +
+                        "The model may not suit subtitle images, or the selected language may be wrong.",
+                        url, model);
+                }
             }
             catch (OperationCanceledException)
             {
+            }
+            catch (Exception ex)
+            {
+                SeLogger.Error(ex, "Error running Ollama OCR");
+                await ShowOllamaErrorAsync(ollamaOcr.Error is { Length: > 0 } e ? e : ex.Message, url, model);
             }
             finally
             {
                 PauseOcr();
             }
         });
+    }
+
+    private async Task ShowOllamaErrorAsync(string error, string url, string model)
+    {
+        if (Window == null)
+        {
+            return;
+        }
+
+        await Dispatcher.UIThread.InvokeAsync(async () =>
+            await MessageBox.Show(
+                Window!,
+                Se.Language.General.Error,
+                "Ollama OCR failed (model \"" + model + "\" at " + url + "):" + Environment.NewLine + Environment.NewLine + error,
+                MessageBoxButtons.OK,
+                MessageBoxIcon.Error));
     }
 
     private void RunLlamaCppOcr(List<int> selectedIndices, CancellationToken cancellationToken)
@@ -4173,21 +4178,29 @@ public partial class OcrViewModel : ObservableObject
             try
             {
                 ProgressText = "Loading CrispEmbed model...";
-                var started = await engine.StartServerAsync(
-                    CrispEmbedEngine.GetServerExecutable(),
-                    backend.GetModelPath(model.Model),
-                    cancellationToken);
+
+                // PP-OCRv6 is a detector+recognizer pair driven through the CLI; the VLM backends
+                // load once into crispembed-server.
+                var started = backend.UsesTextDetector
+                    ? engine.StartCliPipeline(
+                        CrispEmbedEngine.GetCliExecutable(),
+                        backend.GetModelPath(model.Model),
+                        backend.GetDetectorPath(model.Model))
+                    : await engine.StartServerAsync(
+                        CrispEmbedEngine.GetServerExecutable(),
+                        backend.GetModelPath(model.Model),
+                        cancellationToken);
 
                 if (!started)
                 {
                     var error = engine.Error;
-                    SeLogger.Error("CrispEmbed server failed to start: " + error);
+                    SeLogger.Error("CrispEmbed failed to start: " + error);
                     await Dispatcher.UIThread.InvokeAsync(async () =>
                     {
                         await MessageBox.Show(
                             Window!,
                             "CrispEmbed error",
-                            $"The CrispEmbed server could not be started:{Environment.NewLine}{Environment.NewLine}{error}",
+                            $"CrispEmbed could not be started:{Environment.NewLine}{Environment.NewLine}{error}",
                             MessageBoxButtons.OK,
                             MessageBoxIcon.Error);
                     });
@@ -4797,7 +4810,8 @@ public partial class OcrViewModel : ObservableObject
         {
             if (SelectedPaddleOcrLanguage == null)
             {
-                SelectedPaddleOcrLanguage = PaddleOcrLanguages.FirstOrDefault(p => p.Code == "eng") ??
+                SelectedPaddleOcrLanguage = PaddleOcrLanguages.FirstOrDefault(p => _sourceLanguageIso != null && p.Code == _sourceLanguageIso.TwoLetterCode) ??
+                                            PaddleOcrLanguages.FirstOrDefault(p => p.Code == "en") ??
                                             PaddleOcrLanguages.FirstOrDefault();
             }
         }

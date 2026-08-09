@@ -114,6 +114,11 @@ Format: Marked, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
                                             boldStyle
                                             ));
             }
+
+            // Style lookup is one probe per paragraph; a styled file carries hundreds of styles,
+            // so scanning the list linearly for each of them added up (same fix as [V4+ Styles]).
+            var styleSet = new HashSet<string>(styles);
+
             foreach (var p in subtitle.Paragraphs)
             {
                 var start = string.Format(timeCodeFormat, p.StartTime.Hours, p.StartTime.Minutes, p.StartTime.Seconds, p.StartTime.Milliseconds / 10);
@@ -149,7 +154,7 @@ Format: Marked, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
                     effect = p.Effect;
                 }
 
-                if (!string.IsNullOrEmpty(p.Extra) && isValidSsaHeader && styles.Contains(p.Extra))
+                if (!string.IsNullOrEmpty(p.Extra) && isValidSsaHeader && styleSet.Contains(p.Extra))
                 {
                     style = p.Extra;
                 }
@@ -177,7 +182,10 @@ Format: Marked, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
                 sb.AppendLine(subtitle.Footer);
             }
 
-            return sb.ToString().Trim() + Environment.NewLine;
+            // Trim inside the builder instead of "sb.ToString().Trim() + newline", which
+            // allocated the whole output twice more (same fix as [V4+ Styles]).
+            TrimBuilder(sb);
+            return sb.Append(Environment.NewLine).ToString();
         }
 
         private static SsaStyle GetDefaultStyle()
@@ -408,6 +416,21 @@ Format: Marked, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
             {
                 var line = lines[i1];
                 lineNumber++;
+                // An event line also starts the event section, so a header-less payload (the
+                // clipboard carries bare event lines) still parses. Runs before the header
+                // append below so the event line is parsed as an event rather than captured
+                // as header content; in a normal file [Events] has already set eventsStarted,
+                // so nothing changes there (#10476).
+                if (!eventsStarted && !string.IsNullOrEmpty(line) &&
+                    (line.TrimStart().StartsWith("dialogue:", StringComparison.OrdinalIgnoreCase) ||
+                     line.TrimStart().StartsWith("dialog:", StringComparison.OrdinalIgnoreCase) ||
+                     line.TrimStart().StartsWith("comment:", StringComparison.OrdinalIgnoreCase)))
+                {
+                    eventsStarted = true;
+                    fontsStarted = false;
+                    graphicsStarted = false;
+                }
+
                 if (!eventsStarted)
                 {
                     header.AppendLine(line);

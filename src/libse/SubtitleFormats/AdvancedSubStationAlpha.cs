@@ -128,7 +128,12 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text"
         public override string ToText(Subtitle subtitle, string title)
         {
             var fromTtml = false;
-            var header = $@"[Script Info]
+
+            // Built on demand: DefaultStyle allocates and serializes a fresh SsaStyle on every
+            // get, and subtitles that already carry a valid ASSA header (every save of an .ass
+            // file and every mpv preview refresh) never use this fallback template.
+            string headerTemplate = null;
+            string HeaderTemplate() => headerTemplate ??= $@"[Script Info]
 ; This is an Advanced Sub Station Alpha v4+ script.
 Title: {{0}}
 ScriptType: v4.00+" +
@@ -143,18 +148,23 @@ $@"
 [Events]
 Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text";
 
-            var sb = new StringBuilder();
+            // Pre-size: header + roughly one "Dialogue:" prefix, timecodes, style/margins and
+            // text per paragraph. Growing from the 16-char default instead re-copies the whole
+            // multi-hundred-KB buffer on every doubling.
+            var sb = new StringBuilder((subtitle.Header?.Length ?? 1024) + subtitle.Paragraphs.Count * 100);
             var isValidAssHeader = !string.IsNullOrEmpty(subtitle.Header) && subtitle.Header.Contains("[V4+ Styles]");
             var styles = new List<string>();
             if (isValidAssHeader)
             {
-                sb.AppendLine(subtitle.Header.Trim());
+                // Trim via span: Header.Trim() re-allocated the whole (possibly multi-KB)
+                // header on every save and every mpv preview refresh.
+                sb.Append(subtitle.Header.AsSpan().Trim()).AppendLine();
                 sb.AppendLine("Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text");
                 styles = GetStylesFromHeader(subtitle.Header);
             }
             else if (!string.IsNullOrEmpty(subtitle.Header) && subtitle.Header.Contains("[V4 Styles]"))
             {
-                LoadStylesFromSubstationAlpha(subtitle, title, header, HeaderNoStyles, sb);
+                LoadStylesFromSubstationAlpha(subtitle, title, HeaderTemplate(), HeaderNoStyles, sb);
                 isValidAssHeader = !string.IsNullOrEmpty(subtitle.Header) && subtitle.Header.Contains("[V4+ Styles]");
                 if (isValidAssHeader)
                 {
@@ -163,7 +173,7 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text"
             }
             else if (subtitle.Header != null && subtitle.Header.Contains("http://www.w3.org/ns/ttml"))
             {
-                LoadStylesFromTimedText10(subtitle, title, header, HeaderNoStyles, sb);
+                LoadStylesFromTimedText10(subtitle, title, HeaderTemplate(), HeaderNoStyles, sb);
                 fromTtml = true;
                 isValidAssHeader = !string.IsNullOrEmpty(subtitle.Header) && subtitle.Header.Contains("[V4+ Styles]");
                 if (isValidAssHeader)
@@ -173,7 +183,7 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text"
             }
             else if (subtitle.Header != null && subtitle.Header.Contains("http://www.w3.org/2006/10/ttaf1"))
             {
-                LoadStylesFromTimedTextTimedDraft2006Oct(subtitle, title, header, HeaderNoStyles, sb);
+                LoadStylesFromTimedTextTimedDraft2006Oct(subtitle, title, HeaderTemplate(), HeaderNoStyles, sb);
                 fromTtml = true;
                 isValidAssHeader = !string.IsNullOrEmpty(subtitle.Header) && subtitle.Header.Contains("[V4+ Styles]");
                 if (isValidAssHeader)
@@ -185,13 +195,13 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text"
             {
                 subtitle = WebVttToAssa.Convert(subtitle, new SsaStyle(), 0, 0);
                 isValidAssHeader = !string.IsNullOrEmpty(subtitle.Header) && subtitle.Header.Contains("[V4+ Styles]");
+                var webVttHeader = isValidAssHeader ? subtitle.Header : HeaderTemplate();
                 if (isValidAssHeader)
                 {
                     styles = GetStylesFromHeader(subtitle.Header);
-                    header = subtitle.Header;
                 }
 
-                sb.AppendFormat(header, title).AppendLine();
+                sb.AppendFormat(webVttHeader, title).AppendLine();
 
                 if (!sb.ToString().Contains("Format: Layer"))
                 {
@@ -200,8 +210,8 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text"
             }
             else
             {
-                sb.AppendFormat(header, title).AppendLine();
-                styles = GetStylesFromHeader(header);
+                sb.AppendFormat(HeaderTemplate(), title).AppendLine();
+                styles = GetStylesFromHeader(HeaderTemplate());
             }
 
             // List.Contains is a linear scan and runs up to three times per paragraph below;
@@ -261,7 +271,6 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text"
                     effect = p.Effect;
                 }
 
-                var text = p.Text.Replace(Environment.NewLine, "\\N");
                 // Layout: "(Dialogue|Comment): {layer},{start},{end},{style},{actor},{marginL},{marginR},{marginV},{effect},{text}".
                 // Appending directly skips AppendFormat's per-call format parsing, the object[10]
                 // and the boxed layer, plus the two intermediate time-code strings.
@@ -275,7 +284,21 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text"
                 sb.Append(marginR).Append(',');
                 sb.Append(marginV).Append(',');
                 sb.Append(effect).Append(',');
-                sb.Append(FormatText(text)).AppendLine();
+                if (p.Text.Contains('<'))
+                {
+                    // Rare path (HTML-style tags present): keep the original order -
+                    // newline replace first, then tag conversion.
+                    sb.Append(FormatText(p.Text.Replace(Environment.NewLine, "\\N")));
+                }
+                else
+                {
+                    // Common path: append span chunks around the newlines instead of
+                    // allocating an intermediate Replace string per line (FormatText is
+                    // an identity function without '<').
+                    AppendTextWithAssaNewLines(sb, p.Text);
+                }
+
+                sb.AppendLine();
             }
 
             if (!string.IsNullOrEmpty(subtitle.Footer) &&
@@ -312,6 +335,24 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text"
             sb.Append('.');
             AppendNumber(sb, fragment, 2);
             return sb;
+        }
+
+        // Appends the text with Environment.NewLine replaced by "\N", matching
+        // string.Replace's left-to-right non-overlapping semantics without the
+        // intermediate string allocation.
+        private static void AppendTextWithAssaNewLines(StringBuilder sb, string text)
+        {
+            var span = text.AsSpan();
+            var newLine = Environment.NewLine.AsSpan();
+            var index = span.IndexOf(newLine, StringComparison.Ordinal);
+            while (index >= 0)
+            {
+                sb.Append(span[..index]).Append('\\').Append('N');
+                span = span[(index + newLine.Length)..];
+                index = span.IndexOf(newLine, StringComparison.Ordinal);
+            }
+
+            sb.Append(span);
         }
 
         // Matches "{0:00}"-style formatting: sign first, then the absolute value padded with
@@ -391,7 +432,7 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text"
                 return DefaultHeader;
             }
 
-            var styles = new List<SsaStyle>();
+            var styles = new List<SsaStyle>(stylesContent.Count);
             foreach (var styleAsString in stylesContent)
             {
                 styles.Add(SsaStyle.FromRawSsa(header, styleAsString));
@@ -984,22 +1025,50 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text"
 
         public static List<SsaStyle> GetSsaStylesFromHeader(string header)
         {
-            var styles = new List<SsaStyle>();
-            foreach (var styleName in GetStylesFromHeader(header))
+            var styleNames = GetStylesFromHeader(header);
+            var styles = new List<SsaStyle>(styleNames.Count);
+            foreach (var styleName in styleNames)
             {
                 styles.Add(GetSsaStyle(styleName, header));
             }
             return styles;
         }
 
+        // Single-entry memo for GetStylesFromHeader, keyed on the header string instance (the
+        // same immutable header is passed repeatedly: every save and every video preview
+        // refresh re-parses it otherwise). Immutable holder swapped by reference, so the
+        // lookup is thread-safe without locking - same pattern as CalcFactory.
+        private sealed class StylesFromHeaderCache
+        {
+            public readonly string Header;
+            public readonly List<string> Styles;
+
+            public StylesFromHeaderCache(string header, List<string> styles)
+            {
+                Header = header;
+                Styles = styles;
+            }
+        }
+
+        private static volatile StylesFromHeaderCache _stylesFromHeaderCache;
+
         public static List<string> GetStylesFromHeader(string headerLines)
         {
-            var list = new List<string>();
-
             if (headerLines == null)
             {
                 headerLines = DefaultStyle;
             }
+
+            // Key on the caller's instance (before the TTML rewrite below). Callers may mutate
+            // the returned list, so the cached list stays private and every hit returns a copy.
+            var key = headerLines;
+            var cached = _stylesFromHeaderCache;
+            if (cached != null && ReferenceEquals(cached.Header, key))
+            {
+                return new List<string>(cached.Styles);
+            }
+
+            var list = new List<string>();
 
             if (headerLines.Contains("http://www.w3.org/ns/ttml"))
             {
@@ -1020,6 +1089,7 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text"
                 }
             }
 
+            _stylesFromHeaderCache = new StylesFromHeaderCache(key, new List<string>(list));
             return list;
         }
 
@@ -1592,22 +1662,31 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text"
                 lineNumber++;
                 var trimmedLine = line.Trim();
 
+                if (string.IsNullOrWhiteSpace(line) || trimmedLine.StartsWith(';'))
+                {
+                    // skip empty and comment lines
+                }
+                else if (trimmedLine.StartsWith("dialog:", StringComparison.OrdinalIgnoreCase) ||
+                         trimmedLine.StartsWith("dialogue:", StringComparison.OrdinalIgnoreCase) ||
+                         trimmedLine.StartsWith("comment:", StringComparison.OrdinalIgnoreCase))
+                {
+                    // "Comment:" also starts the event section: a header-less payload (the
+                    // clipboard carries bare event lines) can begin with a commented event,
+                    // and without this those lines never reach the event parser (#10476).
+                    //
+                    // Runs before the header append below so an event line is never captured
+                    // as header content - in a normal file the [Events] section header has
+                    // already set eventsStarted, so nothing changes there.
+                    eventsStarted = true;
+                    fontsStarted = false;
+                    graphicsStarted = false;
+                }
+
                 if (!eventsStarted && !fontsStarted && !graphicsStarted &&
                     !trimmedLine.Equals("[fonts]", StringComparison.InvariantCultureIgnoreCase) &&
                     !trimmedLine.Equals("[graphics]", StringComparison.InvariantCultureIgnoreCase))
                 {
                     header.AppendLine(line);
-                }
-
-                if (string.IsNullOrWhiteSpace(line) || trimmedLine.StartsWith(';'))
-                {
-                    // skip empty and comment lines
-                }
-                else if (trimmedLine.StartsWith("dialog:", StringComparison.OrdinalIgnoreCase) || trimmedLine.StartsWith("dialogue:", StringComparison.OrdinalIgnoreCase))
-                {
-                    eventsStarted = true;
-                    fontsStarted = false;
-                    graphicsStarted = false;
                 }
 
                 if (trimmedLine.Equals("[events]", StringComparison.OrdinalIgnoreCase))

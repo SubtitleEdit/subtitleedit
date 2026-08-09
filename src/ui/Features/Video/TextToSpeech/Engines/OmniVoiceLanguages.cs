@@ -1,12 +1,28 @@
+using Nikse.SubtitleEdit.Logic.Config;
+using System;
+using System.Linq;
+
 namespace Nikse.SubtitleEdit.Features.Video.TextToSpeech.Engines;
 
-// Auto-generated from omnivoice.cpp/src/lang-map.h (646 entries).
-// omnivoice-tts accepts either the ISO ID (the second column) or the
-// English language name (case-insensitive). We send the ISO ID so the
-// command-line stays compact and locale-independent.
+/// <summary>
+/// The 646 languages OmniVoice knows, plus an "Auto" entry that leaves the choice to the model.
+///
+/// Both OmniVoice engines take the ISO ID (the <see cref="Catalog"/> second column) rather than
+/// the English name — the model accepts either, but the ID keeps the command line compact and
+/// locale-independent. <see cref="OmniVoiceTtsCpp"/> passes it as <c>--lang</c>;
+/// <see cref="OmniVoiceCrispAsr"/> sends it as the per-request <c>language</c> field of
+/// <c>/v1/audio/speech</c>.
+///
+/// The IDs are ISO 639-3 *individual* languages, so a few familiar macrolanguage codes are absent
+/// by design and not gaps in the list: there is no <c>ar</c>, for instance — Arabic is <c>arb</c>
+/// (Standard), <c>arz</c> (Egyptian), <c>ary</c> (Moroccan) and some twenty more.
+/// </summary>
 internal static class OmniVoiceLanguages
 {
-    public static readonly TtsLanguage[] All = new TtsLanguage[]
+    // Auto-generated from omnivoice.cpp/src/lang-map.h (646 entries).
+    // Kept private and verbatim so it can be regenerated wholesale; the "Auto" entry that leads
+    // the user-facing list is added by All below rather than edited into this block.
+    private static readonly TtsLanguage[] Catalog = new TtsLanguage[]
     {
         new("Abadi", "kbt"),
         new("Abkhazian", "ab"),
@@ -655,5 +671,85 @@ internal static class OmniVoiceLanguages
         new("Zulu", "zu"),
         new("Ömie", "aom"),
     };
+
+    /// <summary>
+    /// Code for the "Auto" entry — an empty code means no language is sent and the model picks
+    /// for itself (language-agnostic synthesis), which is what both engines did before the
+    /// language selection was wired up.
+    /// </summary>
+    public const string AutoCode = "";
+
+    public static readonly TtsLanguage Auto = new("Auto", AutoCode);
+
+    /// <summary>
+    /// "Auto" first, then the 646 generated entries in their existing order. Auto leads so a
+    /// combo that falls back to its first entry preserves the old no-language behaviour instead
+    /// of conditioning every line on "Abadi", the first entry alphabetically.
+    ///
+    /// Declared after <see cref="Catalog"/> on purpose: static field initializers run in textual
+    /// order, so moving this above the catalog would copy a null array.
+    /// </summary>
+    public static readonly TtsLanguage[] All = BuildAll();
+
+    private static TtsLanguage[] BuildAll()
+    {
+        var result = new TtsLanguage[Catalog.Length + 1];
+        result[0] = Auto;
+        Array.Copy(Catalog, 0, result, 1, Catalog.Length);
+        return result;
+    }
+
+    /// <summary>
+    /// The value to send as the OmniVoice (CrispASR) request's <c>language</c> field for
+    /// <paramref name="language"/>, or an empty string when no field should be sent (Auto, an
+    /// unknown entry, or nothing selected).
+    /// </summary>
+    public static string ResolveLanguageArg(TtsLanguage? language)
+    {
+        // A null language means the CALLER had none to hand over, which is not the same as the
+        // user picking "Auto". The cast dialog's voice-test button and every cross-engine cast
+        // row pass null on purpose ("engines fall back to their own saved defaults"), so without
+        // this fallback those paths would silently ignore the language the user did pick — the
+        // same hole CosyVoice3 had in #13272.
+        if (language == null)
+        {
+            return ResolveSavedLanguageArg();
+        }
+
+        var code = language.Code;
+        if (string.IsNullOrWhiteSpace(code))
+        {
+            return string.Empty;
+        }
+
+        // Guard against a language object left over from another engine (the view model can hold
+        // one while switching engines): only IDs this engine actually advertises are passed on.
+        // Unknown values are not fatal server-side — crispasr logs "language 'de-DE' is not one of
+        // the model's 646 language IDs" and falls back to language-agnostic — but dropping them
+        // here keeps the request honest.
+        return IsSupported(code) ? code : string.Empty;
+    }
+
+    /// <summary>
+    /// The language ID behind the pick saved by the main TTS window for the CrispASR engine, or
+    /// an empty string when nothing is saved / the saved entry is "Auto". The setting stores the
+    /// DISPLAY NAME, which is how <c>TextToSpeechViewModel</c> writes and restores it.
+    /// </summary>
+    public static string ResolveSavedLanguageArg()
+    {
+        var savedName = Se.Settings.Video.TextToSpeech.OmniVoiceCrispAsrLanguage;
+        if (string.IsNullOrWhiteSpace(savedName))
+        {
+            return string.Empty;
+        }
+
+        return All.FirstOrDefault(l => string.Equals(l.Name, savedName, StringComparison.OrdinalIgnoreCase))?.Code
+               ?? string.Empty;
+    }
+
+    /// <summary>True when <paramref name="code"/> is one of the model's 646 language IDs.</summary>
+    public static bool IsSupported(string? code) =>
+        !string.IsNullOrWhiteSpace(code)
+        && Catalog.Any(l => string.Equals(l.Code, code, StringComparison.OrdinalIgnoreCase));
 }
 

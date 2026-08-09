@@ -19,8 +19,22 @@ public partial class ProbeViewModel : ObservableObject
     [ObservableProperty] private string? _selected;
 }
 
-public class TableViewBindSelectedItemTests
+public class TableViewBindSelectedItemTests : IDisposable
 {
+    // Every window opened by a test is closed again in Dispose: if a test stops early, an
+    // unclosed window would outlive the test and race with the headless session teardown.
+    private readonly List<Window> _windows = new();
+
+    public void Dispose()
+    {
+        foreach (var window in _windows)
+        {
+            window.Close();
+        }
+
+        _windows.Clear();
+    }
+
     private static TableView MakeGrid(params string[] items)
     {
         var grid = TableViewExtras.MakeTableView(multiSelect: false);
@@ -29,9 +43,10 @@ public class TableViewBindSelectedItemTests
         return grid;
     }
 
-    private static void Show(TableView grid)
+    private void Show(TableView grid)
     {
         var window = new Window { Content = grid };
+        _windows.Add(window);
         window.Show();
         Dispatcher.UIThread.RunJobs();
         window.UpdateLayout();

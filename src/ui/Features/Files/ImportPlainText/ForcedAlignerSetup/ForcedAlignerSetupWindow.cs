@@ -38,6 +38,8 @@ public class ForcedAlignerSetupWindow : Window
             VerticalAlignment = VerticalAlignment.Center,
         };
         Attached.SetIcon(introIcon, IconNames.Waveform);
+        // Keep the glyph white on the colored square in the dark theme too (#12717).
+        introIcon.Classes.Add(UiTheme.IconOnAccentClassName);
 
         var introGlyph = new Border
         {

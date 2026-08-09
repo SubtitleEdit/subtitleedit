@@ -26,33 +26,39 @@ public class AdvancedEffectSlideInLeft : IAdvancedEffectDisplay
             return result;
         }
 
-        int cx = width / 2;
-        int cy = height - 60;
+        int w = width > 0 ? width : 1280;
+        int h = height > 0 ? height : 720;
+        int cx = w / 2;
+        int cy = h - 60;
 
         foreach (var sub in subtitles)
         {
             int durationMs = (int)sub.Duration.TotalMilliseconds;
-            int slideMs = (int)Math.Min(400, durationMs / 3.0);
+            int slideMs = Math.Max(0, (int)Math.Min(400, durationMs / 3.0));
+
+            // Existing \pos/\move/\an in the source line would conflict with the generated
+            // positioning (\pos and \move are mutually exclusive, the last \an wins)
+            var text = AdvancedEffectUtil.RemovePositionTags(sub.Text);
 
             // Slide in from left
             var inSub = new SubtitleLineViewModel(sub, generateNewId: true);
             inSub.StartTime = sub.StartTime;
             inSub.EndTime = sub.StartTime + TimeSpan.FromMilliseconds(slideMs);
-            inSub.Text = $"{{\\an2\\move(-{width},{cy},{cx},{cy},0,{slideMs})}}" + sub.Text;
+            inSub.Text = $"{{\\an2\\move(-{w},{cy},{cx},{cy},0,{slideMs})}}" + text;
             result.Add(inSub);
 
             // Hold at centre
             var holdSub = new SubtitleLineViewModel(sub, generateNewId: true);
             holdSub.StartTime = sub.StartTime + TimeSpan.FromMilliseconds(slideMs);
             holdSub.EndTime = sub.EndTime - TimeSpan.FromMilliseconds(slideMs);
-            holdSub.Text = $"{{\\an2\\pos({cx},{cy})}}" + sub.Text;
+            holdSub.Text = $"{{\\an2\\pos({cx},{cy})}}" + text;
             result.Add(holdSub);
 
             // Slide out to left
             var outSub = new SubtitleLineViewModel(sub, generateNewId: true);
             outSub.StartTime = sub.EndTime - TimeSpan.FromMilliseconds(slideMs);
             outSub.EndTime = sub.EndTime;
-            outSub.Text = $"{{\\an2\\move({cx},{cy},-{width},{cy},0,{slideMs})}}" + sub.Text;
+            outSub.Text = $"{{\\an2\\move({cx},{cy},-{w},{cy},0,{slideMs})}}" + text;
             result.Add(outSub);
         }
 

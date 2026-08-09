@@ -21,6 +21,7 @@ public class SeLanguage
     public LanguageMain Main { get; set; } = new();
     public LanguageFile File { get; set; } = new();
     public LanguageEdit Edit { get; set; } = new();
+    public LanguageSourceView SourceView { get; set; } = new();
     public LanguageTools Tools { get; set; } = new();
     public LanguageSpellCheck SpellCheck { get; set; } = new();
     public LanguageVideo Video { get; set; } = new();

@@ -25,7 +25,17 @@ public class BinaryOcrBitmap
     public int Y { get; set; }
     public int NumberOfColoredPixels { get; set; }
     public uint Hash { get; set; }
-    public byte[] Colors { get; set; } = [];
+
+    private byte[] _colors = [];
+    public byte[] Colors
+    {
+        get => _colors;
+        set
+        {
+            _colors = value;
+            InvalidateLineCaches();
+        }
+    }
     public bool Italic { get; set; }
     public int ExpandCount { get; set; }
     public bool LoadedOk { get; }
@@ -214,6 +224,67 @@ public class BinaryOcrBitmap
     public void SetPixel(int x, int y)
     {
         Colors[Width * y + x] = 1;
+        InvalidateLineCaches();
+    }
+
+    // Cached row/column occupancy used by the shape predicates below - several of
+    // them run on the same unmatched glyph during nOCR matching, so the scans are
+    // computed once and reused. Any pixel mutation must call InvalidateLineCaches.
+    private bool[]? _transparentHorLines;
+    private bool[]? _transparentVerLines;
+
+    private void InvalidateLineCaches()
+    {
+        _transparentHorLines = null;
+        _transparentVerLines = null;
+    }
+
+    private bool[] GetTransparentHorLines()
+    {
+        var lines = _transparentHorLines;
+        if (lines == null)
+        {
+            lines = new bool[Height];
+            for (int y = 0; y < Height; y++)
+            {
+                lines[y] = true;
+                for (int x = 0; x < Width; x++)
+                {
+                    if (GetPixel(x, y) != 0)
+                    {
+                        lines[y] = false;
+                        break;
+                    }
+                }
+            }
+            _transparentHorLines = lines;
+        }
+
+        return lines;
+    }
+
+    private bool[] GetTransparentVerLines()
+    {
+        var lines = _transparentVerLines;
+        if (lines == null)
+        {
+            lines = new bool[Width];
+            for (int x = 0; x < Width; x++)
+            {
+                lines[x] = true;
+                for (int y = 0; y < Height; y++)
+                {
+                    if (GetPixel(x, y) != 0)
+                    {
+                        lines[x] = false;
+                        break;
+                    }
+                }
+            }
+            _transparentVerLines = lines;
+        }
+
+        return lines;
     }
 
     public SKBitmap ToSKBitmap()
@@ -405,19 +476,7 @@ public class BinaryOcrBitmap
             }
         }
 
-        var transparentHorLines = new bool[Height];
-        for (int y = 0; y < Height; y++)
-        {
-            transparentHorLines[y] = true;
-            for (int x = 0; x < Width; x++)
-            {
-                if (GetPixel(x, y) != 0)
-                {
-                    transparentHorLines[y] = false;
-                    break;
-                }
-            }
-        }
+        var transparentHorLines = GetTransparentHorLines();
         if (transparentHorLines[0] || transparentHorLines[1])
         {
             return false;
@@ -453,19 +512,7 @@ public class BinaryOcrBitmap
             return false;
         }
 
-        var transparentHorLines = new bool[Height];
-        for (int y = 0; y < Height; y++)
-        {
-            transparentHorLines[y] = true;
-            for (int x = 0; x < Width; x++)
-            {
-                if (GetPixel(x, y) != 0)
-                {
-                    transparentHorLines[y] = false;
-                    break;
-                }
-            }
-        }
+        var transparentHorLines = GetTransparentHorLines();
 
         // top should be filled
         if (transparentHorLines[0] || transparentHorLines[1])
@@ -532,19 +579,7 @@ public class BinaryOcrBitmap
             return false;
         }
 
-        var transparentHorLines = new bool[Height];
-        for (int y = 0; y < Height; y++)
-        {
-            transparentHorLines[y] = true;
-            for (int x = 0; x < Width; x++)
-            {
-                if (GetPixel(x, y) != 0)
-                {
-                    transparentHorLines[y] = false;
-                    break;
-                }
-            }
-        }
+        var transparentHorLines = GetTransparentHorLines();
         if (transparentHorLines[0] || transparentHorLines[1] || transparentHorLines[2])
         {
             return false;
@@ -582,19 +617,7 @@ public class BinaryOcrBitmap
             return false;
         }
 
-        var transparentHorLines = new bool[Height];
-        for (int y = 0; y < Height; y++)
-        {
-            transparentHorLines[y] = true;
-            for (int x = 0; x < Width; x++)
-            {
-                if (GetPixel(x, y) != 0)
-                {
-                    transparentHorLines[y] = false;
-                    break;
-                }
-            }
-        }
+        var transparentHorLines = GetTransparentHorLines();
         for (int i = 0; i < transparentHorLines.Length; i++)
         {
             if (transparentHorLines[i])
@@ -603,19 +626,7 @@ public class BinaryOcrBitmap
             }
         }
 
-        var transparentVerLines = new bool[Width];
-        for (int x = 0; x < Width; x++)
-        {
-            transparentVerLines[x] = true;
-            for (int y = 0; y < Height; y++)
-            {
-                if (GetPixel(x, y) != 0)
-                {
-                    transparentVerLines[x] = false;
-                    break;
-                }
-            }
-        }
+        var transparentVerLines = GetTransparentVerLines();
         for (int i = 0; i < transparentVerLines.Length; i++)
         {
             if (transparentVerLines[i])
@@ -639,19 +650,7 @@ public class BinaryOcrBitmap
             return false;
         }
 
-        var transparentHorLines = new bool[Height];
-        for (int y = 0; y < Height; y++)
-        {
-            transparentHorLines[y] = true;
-            for (int x = 0; x < Width; x++)
-            {
-                if (GetPixel(x, y) != 0)
-                {
-                    transparentHorLines[y] = false;
-                    break;
-                }
-            }
-        }
+        var transparentHorLines = GetTransparentHorLines();
         if (transparentHorLines[Height - 1] || transparentHorLines[Height - 2])
         {
             return false;
@@ -683,19 +682,7 @@ public class BinaryOcrBitmap
             return false;
         }
 
-        var transparentHorLines = new bool[Height];
-        for (int y = 0; y < Height; y++)
-        {
-            transparentHorLines[y] = true;
-            for (int x = 0; x < Width; x++)
-            {
-                if (GetPixel(x, y) != 0)
-                {
-                    transparentHorLines[y] = false;
-                    break;
-                }
-            }
-        }
+        var transparentHorLines = GetTransparentHorLines();
         for (int i = 0; i < transparentHorLines.Length; i++)
         {
             if (transparentHorLines[i])
@@ -734,19 +721,7 @@ public class BinaryOcrBitmap
             return false;
         }
 
-        var transparentHorLines = new bool[Height];
-        for (int y = 0; y < Height; y++)
-        {
-            transparentHorLines[y] = true;
-            for (int x = 0; x < Width; x++)
-            {
-                if (GetPixel(x, y) != 0)
-                {
-                    transparentHorLines[y] = false;
-                    break;
-                }
-            }
-        }
+        var transparentHorLines = GetTransparentHorLines();
         for (int i = 0; i < transparentHorLines.Length; i++)
         {
             if (transparentHorLines[i])
@@ -755,19 +730,7 @@ public class BinaryOcrBitmap
             }
         }
 
-        var transparentVerLines = new bool[Width];
-        for (int x = 0; x < Width; x++)
-        {
-            transparentVerLines[x] = true;
-            for (int y = 0; y < Height; y++)
-            {
-                if (GetPixel(x, y) != 0)
-                {
-                    transparentVerLines[x] = false;
-                    break;
-                }
-            }
-        }
+        var transparentVerLines = GetTransparentVerLines();
         for (int i = 0; i < transparentVerLines.Length; i++)
         {
             if (transparentVerLines[i])
@@ -817,19 +780,7 @@ public class BinaryOcrBitmap
             return false;
         }
 
-        var transparentHorLines = new bool[Height];
-        for (int y = 0; y < Height; y++)
-        {
-            transparentHorLines[y] = true;
-            for (int x = 0; x < Width; x++)
-            {
-                if (GetPixel(x, y) != 0)
-                {
-                    transparentHorLines[y] = false;
-                    break;
-                }
-            }
-        }
+        var transparentHorLines = GetTransparentHorLines();
         for (int i = 0; i < transparentHorLines.Length; i++)
         {
             if (transparentHorLines[i])
@@ -838,19 +789,7 @@ public class BinaryOcrBitmap
             }
         }
 
-        var transparentVerLines = new bool[Width];
-        for (int x = 0; x < Width; x++)
-        {
-            transparentVerLines[x] = true;
-            for (int y = 0; y < Height; y++)
-            {
-                if (GetPixel(x, y) != 0)
-                {
-                    transparentVerLines[x] = false;
-                    break;
-                }
-            }
-        }
+        var transparentVerLines = GetTransparentVerLines();
         for (int i = 0; i < transparentVerLines.Length; i++)
         {
             if (transparentVerLines[i])

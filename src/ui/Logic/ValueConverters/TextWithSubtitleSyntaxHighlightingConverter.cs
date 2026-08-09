@@ -9,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Text;
 using System.Text.RegularExpressions;
 using Nikse.SubtitleEdit.UiLogic.SpellCheck;
 
@@ -59,6 +60,35 @@ public class TextWithSubtitleSyntaxHighlightingConverter : IValueConverter
 
     private static readonly TextDecorationCollection MisspelledDecorations = new() { MisspelledDecoration };
 
+    // Colors parsed out of the subtitle itself (ASSA \c tags, <font color=...>) are arbitrary, so
+    // there is nothing worth caching - but an immutable brush is a plain object where
+    // SolidColorBrush is an AvaloniaObject that drags a property store along for a fixed color.
+    private static ImmutableSolidColorBrush CreateBrush(Color color) => new(color);
+
+    // <font face="..."> and \fnName repeat the same handful of names down a whole file, and
+    // constructing a FontFamily parses the name every time.
+    private static readonly Dictionary<string, FontFamily> FontFamilyCache = new(StringComparer.Ordinal);
+    private const int FontFamilyCacheLimit = 64;
+
+    private static FontFamily GetFontFamily(string name)
+    {
+        if (FontFamilyCache.TryGetValue(name, out var fontFamily))
+        {
+            return fontFamily;
+        }
+
+        fontFamily = new FontFamily(name);
+        if (FontFamilyCache.Count < FontFamilyCacheLimit)
+        {
+            FontFamilyCache[name] = fontFamily;
+        }
+
+        return fontFamily;
+    }
+
+    // The characters that end an HTML tag name - a literal array here would be allocated per tag.
+    private static readonly char[] TagNameDelimiters = { ' ', '\t', '\r', '\n' };
+
     public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
         if (value is not string str || string.IsNullOrEmpty(str))
@@ -72,35 +102,48 @@ public class TextWithSubtitleSyntaxHighlightingConverter : IValueConverter
             str = str.Substring(0, 197).TrimEnd() + "...";
         }
 
-        if (Se.Settings.Appearance.SubtitleGridFormattingType == (int)SubtitleGridFormattingTypes.ShowFormatting)
+        var formattingType = Se.Settings.Appearance.SubtitleGridFormattingType;
+        if (formattingType == (int)SubtitleGridFormattingTypes.ShowFormatting)
         {
             var lines = MakeShowFormatting(str);
             return SpellCheckLines(lines);
         }
 
-        if (Se.Settings.Appearance.SubtitleGridFormattingType == (int)SubtitleGridFormattingTypes.ShowTags)
+        if (formattingType == (int)SubtitleGridFormattingTypes.ShowTags)
         {
             var lines = MakeShowTags(str);
             return SpellCheckLines(lines);
         }
 
-        // No formatting (default)
+        // No formatting (default) - walk the line breaks directly instead of SplitToLines(),
+        // which builds a List plus one string per line only to hand each one to a Run.
         var inlines = new InlineCollection();
-        var firstLine = true;
-        foreach (var line in str.SplitToLines())
+        var lineStart = 0;
+        var i = 0;
+        while (i < str.Length)
         {
-            if (!firstLine)
+            var c = str[i];
+            if (c != '\r' && c != '\n' && c != '\u2028')
             {
-                AppendLineSeparator(inlines);
+                i++;
+                continue;
             }
 
-            if (line.Length > 0)
+            if (i > lineStart)
             {
-                inlines.Add(new Run(line));
+                inlines.Add(new Run(str.Substring(lineStart, i - lineStart)));
             }
 
-            firstLine = false;
+            i += c == '\r' && i + 1 < str.Length && str[i + 1] == '\n' ? 2 : 1;
+            lineStart = i;
+            AppendLineSeparator(inlines);
         }
+
+        if (lineStart < str.Length)
+        {
+            inlines.Add(new Run(lineStart == 0 ? str : str.Substring(lineStart)));
+        }
+
         return SpellCheckLines(inlines);
     }
 
@@ -359,9 +402,85 @@ public class TextWithSubtitleSyntaxHighlightingConverter : IValueConverter
         return false;
     }
 
+    /// <summary>
+    /// Collects markup into as few <see cref="Run"/>s as possible. Neighbouring characters that
+    /// share a foreground render identically whether they sit in one run or in ten, and a Run is
+    /// an AvaloniaObject - the number of runs, not the string work, is what a cell repaint costs.
+    /// Text is appended straight out of the source string, so the per-token substrings are gone
+    /// as well.
+    /// </summary>
+    private sealed class InlineBuilder
+    {
+        private readonly InlineCollection _inlines = new();
+        private readonly StringBuilder _pending = new(64);
+        private IBrush? _pendingBrush;
+
+        public void Append(char c, IBrush? brush)
+        {
+            StartSegment(brush);
+            _pending.Append(c);
+        }
+
+        public void Append(string text, IBrush? brush)
+        {
+            StartSegment(brush);
+            _pending.Append(text);
+        }
+
+        public void Append(string source, int start, int length, IBrush? brush)
+        {
+            if (length <= 0)
+            {
+                return;
+            }
+
+            StartSegment(brush);
+            _pending.Append(source, start, length);
+        }
+
+        public void AddLineBreak()
+        {
+            Flush();
+            _inlines.Add(new LineBreak());
+        }
+
+        public InlineCollection Build()
+        {
+            Flush();
+            return _inlines;
+        }
+
+        private void StartSegment(IBrush? brush)
+        {
+            if (_pending.Length > 0 && !ReferenceEquals(brush, _pendingBrush))
+            {
+                Flush();
+            }
+
+            _pendingBrush = brush;
+        }
+
+        private void Flush()
+        {
+            if (_pending.Length == 0)
+            {
+                return;
+            }
+
+            var run = new Run(_pending.ToString());
+            if (_pendingBrush != null)
+            {
+                run.Foreground = _pendingBrush;
+            }
+
+            _inlines.Add(run);
+            _pending.Clear();
+        }
+    }
+
     private static InlineCollection MakeShowTags(string str)
     {
-        var inlines = new InlineCollection();
+        var builder = new InlineBuilder();
         var i = 0;
         while (i < str.Length)
         {
@@ -375,7 +494,7 @@ public class TextWithSubtitleSyntaxHighlightingConverter : IValueConverter
                 if (tagEnd != -1)
                 {
                     // Add opening brace
-                    inlines.Add(new Run("{") { Foreground = CharsBrush });
+                    builder.Append('{', CharsBrush);
 
                     // Process all tags within the braces (separated by backslashes)
                     var currentPos = i + 1;
@@ -388,7 +507,7 @@ public class TextWithSubtitleSyntaxHighlightingConverter : IValueConverter
                         }
 
                         // Add the backslash
-                        inlines.Add(new Run("\\") { Foreground = CharsBrush });
+                        builder.Append('\\', CharsBrush);
 
                         // Find where this tag ends (next backslash or closing brace)
                         var nextBackslash = str.IndexOf('\\', currentPos + 1);
@@ -398,44 +517,34 @@ public class TextWithSubtitleSyntaxHighlightingConverter : IValueConverter
                         var tagNameEnd = SubtitleSyntaxTokenizer.GetAssTagNameEnd(str, tagNameStart, thisTagEnd);
 
                         // Add tag name
-                        if (tagNameEnd > tagNameStart)
-                        {
-                            inlines.Add(new Run(str.Substring(tagNameStart, tagNameEnd - tagNameStart))
-                            {
-                                Foreground = ElementBrush
-                            });
-                        }
+                        builder.Append(str, tagNameStart, tagNameEnd - tagNameStart, ElementBrush);
 
                         // Add tag value/parameters (e.g., "1", "Arial", "&HFFFFFF&")
                         if (tagNameEnd < thisTagEnd)
                         {
-                            var tagName = str.Substring(tagNameStart, tagNameEnd - tagNameStart);
-                            var tagValue = str.Substring(tagNameEnd, thisTagEnd - tagNameEnd);
-
                             Color? assColor = null;
-                            if (SubtitleSyntaxTokenizer.IsAssColorTag(tagName))
+                            if (SubtitleSyntaxTokenizer.IsAssColorTag(str.AsSpan(tagNameStart, tagNameEnd - tagNameStart)))
                             {
-                                assColor = SubtitleSyntaxTokenizer.TryParseAssColor(tagValue);
+                                // Only the color tags need the value as a string
+                                assColor = SubtitleSyntaxTokenizer.TryParseAssColor(str.Substring(tagNameEnd, thisTagEnd - tagNameEnd));
                             }
 
-                            inlines.Add(new Run(tagValue)
-                            {
-                                Foreground = assColor.HasValue ? new SolidColorBrush(assColor.Value) : ValuesBrush
-                            });
+                            builder.Append(str, tagNameEnd, thisTagEnd - tagNameEnd,
+                                assColor.HasValue ? CreateBrush(assColor.Value) : ValuesBrush);
                         }
 
                         currentPos = thisTagEnd;
                     }
 
                     // Add closing brace
-                    inlines.Add(new Run("}") { Foreground = CharsBrush });
+                    builder.Append('}', CharsBrush);
                     i = tagEnd + 1;
                     continue;
                 }
                 else
                 {
                     // Malformed ASS/SSA tag - treat as regular text
-                    inlines.Add(new Run(c.ToString()));
+                    builder.Append(c, null);
                     i++;
                     continue;
                 }
@@ -446,10 +555,7 @@ public class TextWithSubtitleSyntaxHighlightingConverter : IValueConverter
             {
                 var commentEnd = str.IndexOf("-->", i + 4, StringComparison.Ordinal);
                 var commentLength = commentEnd != -1 ? commentEnd + 3 - i : str.Length - i;
-                inlines.Add(new Run(str.Substring(i, commentLength))
-                {
-                    Foreground = CommentBrush
-                });
+                builder.Append(str, i, commentLength, CommentBrush);
                 i += commentLength;
                 continue;
             }
@@ -460,22 +566,21 @@ public class TextWithSubtitleSyntaxHighlightingConverter : IValueConverter
                 var tagEnd = str.IndexOf('>', i + 1);
                 if (tagEnd != -1)
                 {
-                    var tagContent = str.Substring(i, tagEnd - i + 1);
-                    ParseHtmlTag(inlines, tagContent);
+                    ParseHtmlTag(builder, str, i, tagEnd);
                     i = tagEnd + 1;
                     continue;
                 }
                 else
                 {
                     // Malformed HTML tag - treat as regular text
-                    inlines.Add(new Run(c.ToString()));
+                    builder.Append(c, null);
                     i++;
                     continue;
                 }
             }
 
             // Handle line breaks
-            if (AppendLineBreak(inlines, c, c2, ref i))
+            if (AppendLineBreak(builder, c, c2, ref i))
             {
                 continue;
             }
@@ -489,17 +594,17 @@ public class TextWithSubtitleSyntaxHighlightingConverter : IValueConverter
 
             if (i > textStart)
             {
-                inlines.Add(new Run(str.Substring(textStart, i - textStart)));
+                builder.Append(str, textStart, i - textStart, null);
             }
             else
             {
                 // Safety: if we didn't match any condition and haven't advanced, treat as regular character
-                inlines.Add(new Run(str[i].ToString()));
+                builder.Append(str[i], null);
                 i++;
             }
         }
 
-        return inlines;
+        return builder.Build();
     }
 
     private static InlineCollection MakeShowFormatting(string str)
@@ -525,8 +630,7 @@ public class TextWithSubtitleSyntaxHighlightingConverter : IValueConverter
                 var tagEnd = str.IndexOf('}', i + 2);
                 if (tagEnd != -1 && tagEnd - i < 500) // Limit tag length to prevent malicious input
                 {
-                    var tagContent = str.Substring(i + 1, tagEnd - i - 1); // Content between { and }
-                    ParseAssaTags(tagContent, state);
+                    ParseAssaTags(str, i + 1, tagEnd, state); // Content between { and }
                     i = tagEnd + 1;
                     continue;
                 }
@@ -557,8 +661,13 @@ public class TextWithSubtitleSyntaxHighlightingConverter : IValueConverter
                 var tagEnd = str.IndexOf('>', i + 1);
                 if (tagEnd != -1 && tagEnd - i < 500) // Limit tag length
                 {
-                    var tagContent = str.Substring(i + 1, tagEnd - i - 1).Trim();
-                    if (string.IsNullOrEmpty(tagContent))
+                    // Tracked as indexes into str: the tag name is only compared, so it never
+                    // needs to be cut out and lower-cased, and only <font> needs its content
+                    // as a string.
+                    var contentStart = i + 1;
+                    var contentEnd = tagEnd;
+                    TrimRange(str, ref contentStart, ref contentEnd);
+                    if (contentEnd <= contentStart)
                     {
                         // Empty tag - treat as regular text
                         var run = CreateFormattedRun(c.ToString(), state);
@@ -567,53 +676,60 @@ public class TextWithSubtitleSyntaxHighlightingConverter : IValueConverter
                         continue;
                     }
 
-                    var isClosingTag = tagContent.StartsWith('/');
+                    var isClosingTag = str[contentStart] == '/';
                     if (isClosingTag)
                     {
-                        tagContent = tagContent.Substring(1).Trim();
+                        contentStart++;
+                        TrimRange(str, ref contentStart, ref contentEnd);
                     }
 
-                    var tagNameEnd = tagContent.IndexOfAny(new[] { ' ', '\t', '\r', '\n' });
-                    var tagName = (tagNameEnd > 0 ? tagContent.Substring(0, tagNameEnd) : tagContent).ToLowerInvariant();
+                    var tagNameEnd = contentEnd > contentStart
+                        ? str.IndexOfAny(TagNameDelimiters, contentStart, contentEnd - contentStart)
+                        : -1;
+                    var tagName = str.AsSpan(
+                        contentStart,
+                        (tagNameEnd > contentStart ? tagNameEnd : contentEnd) - contentStart);
 
                     if (isClosingTag)
                     {
                         // Handle closing tags
-                        switch (tagName)
+                        if (tagName.Equals("i", StringComparison.OrdinalIgnoreCase))
                         {
-                            case "i":
-                                state.Italic = false;
-                                break;
-                            case "b":
-                                state.Bold = false;
-                                break;
-                            case "u":
-                                state.Underline = false;
-                                break;
-                            case "font":
-                                state.Color = null;
-                                state.FontName = null;
-                                state.FontSize = null;
-                                break;
+                            state.Italic = false;
+                        }
+                        else if (tagName.Equals("b", StringComparison.OrdinalIgnoreCase))
+                        {
+                            state.Bold = false;
+                        }
+                        else if (tagName.Equals("u", StringComparison.OrdinalIgnoreCase))
+                        {
+                            state.Underline = false;
+                        }
+                        else if (tagName.Equals("font", StringComparison.OrdinalIgnoreCase))
+                        {
+                            state.Color = null;
+                            state.FontName = null;
+                            state.FontSize = null;
                         }
                     }
                     else
                     {
                         // Handle opening tags
-                        switch (tagName)
+                        if (tagName.Equals("i", StringComparison.OrdinalIgnoreCase))
                         {
-                            case "i":
-                                state.Italic = true;
-                                break;
-                            case "b":
-                                state.Bold = true;
-                                break;
-                            case "u":
-                                state.Underline = true;
-                                break;
-                            case "font":
-                                ParseFontTag(tagContent, state);
-                                break;
+                            state.Italic = true;
+                        }
+                        else if (tagName.Equals("b", StringComparison.OrdinalIgnoreCase))
+                        {
+                            state.Bold = true;
+                        }
+                        else if (tagName.Equals("u", StringComparison.OrdinalIgnoreCase))
+                        {
+                            state.Underline = true;
+                        }
+                        else if (tagName.Equals("font", StringComparison.OrdinalIgnoreCase))
+                        {
+                            ParseFontTag(str.Substring(contentStart, contentEnd - contentStart), state);
                         }
                     }
                     i = tagEnd + 1;
@@ -676,6 +792,22 @@ public class TextWithSubtitleSyntaxHighlightingConverter : IValueConverter
         return inlines;
     }
 
+    /// <summary>
+    /// Narrows [start, end) to the same range String.Trim() would keep.
+    /// </summary>
+    private static void TrimRange(string source, ref int start, ref int end)
+    {
+        while (start < end && char.IsWhiteSpace(source[start]))
+        {
+            start++;
+        }
+
+        while (end > start && char.IsWhiteSpace(source[end - 1]))
+        {
+            end--;
+        }
+    }
+
     private static Run CreateFormattedRun(string text, FormattingState state)
     {
         var run = new Run(text);
@@ -701,13 +833,13 @@ public class TextWithSubtitleSyntaxHighlightingConverter : IValueConverter
         // Apply color
         if (state.Color.HasValue)
         {
-            run.Foreground = new SolidColorBrush(state.Color.Value);
+            run.Foreground = CreateBrush(state.Color.Value);
         }
 
         // Apply font name
         if (!string.IsNullOrEmpty(state.FontName))
         {
-            run.FontFamily = new FontFamily(state.FontName);
+            run.FontFamily = GetFontFamily(state.FontName);
         }
 
         // Apply font size
@@ -731,8 +863,12 @@ public class TextWithSubtitleSyntaxHighlightingConverter : IValueConverter
 
         try
         {
+            // Every Match allocates, and a <font> tag almost never carries all three attributes -
+            // a plain substring probe first tells us whether the pattern can match at all.
             // Parse color attribute
-            var colorMatch = FontColorRegex.Match(tagContent);
+            var colorMatch = tagContent.Contains("color", StringComparison.OrdinalIgnoreCase)
+                ? FontColorRegex.Match(tagContent)
+                : Match.Empty;
             if (colorMatch.Success)
             {
                 var colorValue = colorMatch.Groups[1].Value;
@@ -751,7 +887,9 @@ public class TextWithSubtitleSyntaxHighlightingConverter : IValueConverter
             }
 
             // Parse face (font name) attribute
-            var faceMatch = FontFaceRegex.Match(tagContent);
+            var faceMatch = tagContent.Contains("face", StringComparison.OrdinalIgnoreCase)
+                ? FontFaceRegex.Match(tagContent)
+                : Match.Empty;
             if (faceMatch.Success)
             {
                 var fontName = faceMatch.Groups[1].Value.Trim();
@@ -762,7 +900,9 @@ public class TextWithSubtitleSyntaxHighlightingConverter : IValueConverter
             }
 
             // Parse size attribute
-            var sizeMatch = FontSizeRegex.Match(tagContent);
+            var sizeMatch = tagContent.Contains("size", StringComparison.OrdinalIgnoreCase)
+                ? FontSizeRegex.Match(tagContent)
+                : Match.Empty;
             if (sizeMatch.Success && double.TryParse(sizeMatch.Groups[1].Value, out var size))
             {
                 state.FontSize = size;
@@ -778,24 +918,54 @@ public class TextWithSubtitleSyntaxHighlightingConverter : IValueConverter
         }
     }
 
-    private static void ParseAssaTags(string tagContent, FormattingState state)
+    /// <summary>
+    /// Applies the ASSA override tags in source[start..end) to <paramref name="state"/>. Indexes
+    /// plus spans instead of Split + Trim + Substring: this runs for every ASSA tag block of
+    /// every visible row on every repaint, and only a font name ends up as a string.
+    /// </summary>
+    private static void ParseAssaTags(string source, int start, int end, FormattingState state)
     {
-        if (string.IsNullOrEmpty(tagContent) || tagContent.Length > 500)
+        var length = end - start;
+        if (length <= 0 || length > 500)
         {
             return; // Skip empty or excessively long tag content
         }
 
-        // Split by backslash to get individual tags
-        var tags = tagContent.Split('\\', StringSplitOptions.RemoveEmptyEntries);
+        var content = source.AsSpan(start, length);
+
+        // A block can carry more than one primary color - a static color plus the destination
+        // of a \t(...) fade transition ({\c&HFFFFFF&\t(20,1000,0.9,\c&H29F2FF&)}, #10955).
+        // Collect them all and pick the most visible one against the grid background at the
+        // end of the block instead of letting the textually last tag win.
+        Span<Color> colorCandidates = stackalloc Color[MaxColorCandidates];
+        var colorCandidateCount = 0;
+        var sawColorTag = false;
+
+        // Set by a \t(...) animation in this block. Only then can two primary colors both be
+        // "current" (the static one and the transition's destination); without a transition,
+        // consecutive color tags are plain overrides and the last one wins.
+        var sawTransitionTag = false;
 
         // Limit number of tags to prevent excessive processing
-        var maxTags = Math.Min(tags.Length, 50);
+        const int maxTags = 50;
+        var handled = 0;
+        var pos = 0;
 
-        for (var i = 0; i < maxTags; i++)
+        while (pos < content.Length && handled < maxTags)
         {
-            var tag = tags[i];
-            var trimmedTag = tag.Trim();
-            if (string.IsNullOrEmpty(trimmedTag) || trimmedTag.Length > 100)
+            var next = content.Slice(pos).IndexOf('\\');
+            var segment = next < 0 ? content.Slice(pos) : content.Slice(pos, next);
+            pos = next < 0 ? content.Length : pos + next + 1;
+
+            if (segment.Length == 0)
+            {
+                continue; // Split(RemoveEmptyEntries) dropped these before they were counted
+            }
+
+            handled++;
+
+            var trimmedTag = segment.Trim();
+            if (trimmedTag.Length == 0 || trimmedTag.Length > 100)
             {
                 continue; // Skip empty or excessively long individual tags
             }
@@ -807,6 +977,17 @@ public class TextWithSubtitleSyntaxHighlightingConverter : IValueConverter
             if (firstChar == 'r' && tagLen == 1)
             {
                 state.Reset();
+                colorCandidateCount = 0;
+                sawColorTag = false;
+                sawTransitionTag = false;
+                continue;
+            }
+
+            // Animation: \t(...) - the tags splitter cuts on '\', so the transition's own
+            // color arrives as a later segment; just note that a transition is in play.
+            if (firstChar == 't' && tagLen > 1 && trimmedTag[1] == '(')
+            {
+                sawTransitionTag = true;
                 continue;
             }
 
@@ -820,12 +1001,12 @@ public class TextWithSubtitleSyntaxHighlightingConverter : IValueConverter
             // Bold: \b1 or \b0 (can also be \b700 for weight)
             if (firstChar == 'b' && tagLen >= 2 && char.IsDigit(trimmedTag[1]))
             {
-                var value = trimmedTag.Substring(1);
-                if (value == "0")
+                var value = trimmedTag.Slice(1);
+                if (value.Length == 1 && value[0] == '0')
                 {
                     state.Bold = false;
                 }
-                else if (value == "1")
+                else if (value.Length == 1 && value[0] == '1')
                 {
                     state.Bold = true;
                 }
@@ -846,10 +1027,10 @@ public class TextWithSubtitleSyntaxHighlightingConverter : IValueConverter
             // Font name: \fnFontName
             if (tagLen > 2 && firstChar == 'f' && trimmedTag[1] == 'n')
             {
-                var fontName = trimmedTag.Substring(2).Trim();
+                var fontName = trimmedTag.Slice(2).Trim();
                 if (fontName.Length > 0 && fontName.Length <= 100)
                 {
-                    state.FontName = fontName;
+                    state.FontName = fontName.ToString();
                 }
                 continue;
             }
@@ -857,7 +1038,7 @@ public class TextWithSubtitleSyntaxHighlightingConverter : IValueConverter
             // Font size: \fs20
             if (tagLen > 2 && firstChar == 'f' && trimmedTag[1] == 's')
             {
-                var sizeStr = trimmedTag.Substring(2);
+                var sizeStr = trimmedTag.Slice(2);
                 if (sizeStr.Length <= 4 && double.TryParse(sizeStr, NumberStyles.Any, CultureInfo.InvariantCulture, out var size))
                 {
                     state.FontSize = size;
@@ -872,11 +1053,17 @@ public class TextWithSubtitleSyntaxHighlightingConverter : IValueConverter
                 {
                     // \c without value resets the color
                     state.Color = null;
+                    colorCandidateCount = 0;
+                    sawColorTag = false;
                 }
                 else
                 {
-                    var colorStr = trimmedTag.Substring(1);
-                    state.Color = ParseAssaColor(colorStr);
+                    sawColorTag = true;
+                    var color = ParseAssaColor(trimmedTag.Slice(1));
+                    if (color.HasValue && colorCandidateCount < colorCandidates.Length)
+                    {
+                        colorCandidates[colorCandidateCount++] = color.Value;
+                    }
                 }
                 continue;
             }
@@ -887,56 +1074,195 @@ public class TextWithSubtitleSyntaxHighlightingConverter : IValueConverter
                 // For numbered color tags, we only handle primary (1c) for text color
                 if (firstChar == '1')
                 {
-                    var colorStr = trimmedTag.Substring(2);
-                    state.Color = ParseAssaColor(colorStr);
+                    sawColorTag = true;
+                    var color = ParseAssaColor(trimmedTag.Slice(2));
+                    if (color.HasValue && colorCandidateCount < colorCandidates.Length)
+                    {
+                        colorCandidates[colorCandidateCount++] = color.Value;
+                    }
                 }
             }
         }
+
+        if (colorCandidateCount > 1 && sawTransitionTag)
+        {
+            // Static color plus a \t(...) fade destination: the grid can only show one, so show
+            // the one with the best contrast against the grid background - or none when even
+            // the best would be near-invisible (#10955).
+            state.Color = PickMostVisibleColor(colorCandidates.Slice(0, colorCandidateCount));
+        }
+        else if (colorCandidateCount > 0)
+        {
+            // No transition involved, so ASSA's last-wins rule applies: consecutive static
+            // color tags resolve to the last one, matching libass and the video preview. The
+            // visibility guard deliberately does not apply here - a single explicit color is
+            // shown as authored even when it has little contrast.
+            state.Color = colorCandidates[colorCandidateCount - 1];
+        }
+        else if (sawColorTag)
+        {
+            // A color tag whose value did not parse resets the color, same as before candidate
+            // collection was introduced ({\c&HFFFFFF&}a{\c&HZZZZZZ&}b leaves "b" unset).
+            state.Color = null;
+        }
     }
 
-    private static Color? ParseAssaColor(string colorStr)
+    private const int MaxColorCandidates = 8;
+
+    // Below this WCAG contrast ratio a color is treated as unusable against the grid
+    // background (pure white on white is 1.0; white on the default dark background is ~17).
+    private const double MinimumVisibleContrast = 1.3;
+
+    /// <summary>
+    /// Test hook: the grid background normally follows the active theme, which headless unit
+    /// tests do not set up consistently.
+    /// </summary>
+    internal static Func<Color>? GridBackgroundOverride { get; set; }
+
+    private static Color GetGridBackgroundColor()
     {
-        if (string.IsNullOrEmpty(colorStr) || colorStr.Length > 20)
+        var backgroundOverride = GridBackgroundOverride;
+        if (backgroundOverride != null)
+        {
+            return backgroundOverride();
+        }
+
+        // Not just white for "not dark": SE also ships the Classic (gray) and Pastel
+        // (lavender) light themes, and contrast has to be measured against the real
+        // background. Also swallows a malformed DarkModeBackgroundColor rather than
+        // letting it throw out of IValueConverter.Convert.
+        return UiTheme.GetThemeBackgroundColor();
+    }
+
+    private static Color? PickMostVisibleColor(ReadOnlySpan<Color> candidates)
+    {
+        var background = GetGridBackgroundColor();
+        var backgroundLuminance = RelativeLuminance(background);
+
+        Color? best = null;
+        var bestContrast = 0.0;
+        foreach (var candidate in candidates)
+        {
+            var luminance = RelativeLuminance(CompositeOver(candidate, background));
+            var contrast = ContrastRatio(luminance, backgroundLuminance);
+
+            // ">=" so that on equal contrast the later tag wins - for a fade that is the
+            // transition's destination color, the most logical of the two to show.
+            if (contrast >= bestContrast)
+            {
+                best = candidate;
+                bestContrast = contrast;
+            }
+        }
+
+        return bestContrast >= MinimumVisibleContrast ? best : null;
+    }
+
+    /// <summary>
+    /// Composites a (possibly semi-transparent) color over the given background.
+    /// </summary>
+    private static Color CompositeOver(Color color, Color background)
+    {
+        if (color.A == byte.MaxValue)
+        {
+            return color;
+        }
+
+        var alpha = color.A / 255.0;
+        return Color.FromRgb(
+            (byte)Math.Round(color.R * alpha + background.R * (1 - alpha)),
+            (byte)Math.Round(color.G * alpha + background.G * (1 - alpha)),
+            (byte)Math.Round(color.B * alpha + background.B * (1 - alpha)));
+    }
+
+    /// <summary>
+    /// WCAG relative luminance (0 = black, 1 = white).
+    /// </summary>
+    private static double RelativeLuminance(Color color)
+    {
+        return 0.2126 * Linearize(color.R) + 0.7152 * Linearize(color.G) + 0.0722 * Linearize(color.B);
+
+        static double Linearize(byte value)
+        {
+            var channel = value / 255.0;
+            return channel <= 0.04045 ? channel / 12.92 : Math.Pow((channel + 0.055) / 1.055, 2.4);
+        }
+    }
+
+    /// <summary>
+    /// WCAG contrast ratio between two relative luminances (1 = identical, 21 = black/white).
+    /// </summary>
+    private static double ContrastRatio(double luminance1, double luminance2)
+    {
+        var lighter = Math.Max(luminance1, luminance2);
+        var darker = Math.Min(luminance1, luminance2);
+        return (lighter + 0.05) / (darker + 0.05);
+    }
+
+    private static Color? ParseAssaColor(ReadOnlySpan<char> colorStr)
+    {
+        if (colorStr.Length == 0 || colorStr.Length > 20)
         {
             return null; // Skip empty or excessively long color strings
         }
 
+        // Inside a \t(...) transition the color tag is followed by the transition's closing
+        // paren, which lands on the color fragment when the block is split on '\'
+        // ({\c&HFFFFFF&\t(20,1000,\c&H29F2FF&)} - #10955); trim it so the color still parses.
+        colorStr = colorStr.TrimEnd(')');
+
+        // ASSA colors are in format &HAABBGGRR& or &HBBGGRR& (BGR order, not RGB)
+        colorStr = colorStr.Trim("&Hh".AsSpan());
+
+        if (colorStr.Length < 6 || colorStr.Length > 8)
+        {
+            return null; // Invalid length
+        }
+
+        // ASSA format: [AA]BBGGRR - the color bytes are always the last six characters, and a
+        // six-character value is the same as one padded with an alpha of 00 (= fully opaque).
+        var rgb = colorStr.Slice(colorStr.Length - 6);
+        if (!TryParseHexByte(rgb.Slice(0, 2), out var blue) ||
+            !TryParseHexByte(rgb.Slice(2, 2), out var green) ||
+            !TryParseHexByte(rgb.Slice(4, 2), out var red))
+        {
+            return null;
+        }
+
+        byte alpha = 255;
+        if (colorStr.Length >= 8)
+        {
+            if (!TryParseHexByte(colorStr.Slice(0, 2), out var alphaValue))
+            {
+                return null;
+            }
+
+            alpha = (byte)(255 - alphaValue); // ASSA alpha is inverted (0 = opaque, 255 = transparent)
+        }
+
+        return Color.FromArgb(alpha, red, green, blue);
+    }
+
+    private static bool TryParseHexByte(ReadOnlySpan<char> hex, out byte value)
+    {
+        if (byte.TryParse(hex, NumberStyles.AllowHexSpecifier, CultureInfo.InvariantCulture, out value))
+        {
+            return true;
+        }
+
+        // Convert.ToByte(s, 16) - what this used to be - also accepts shapes byte.TryParse
+        // rejects, e.g. a leading sign ("+1") or an "0x" prefix. Malformed color values are rare
+        // enough that reproducing them through the old, allocating path costs nothing in practice.
         try
         {
-            // ASSA colors are in format &HAABBGGRR& or &HBBGGRR& (BGR order, not RGB)
-            colorStr = colorStr.Trim('&', 'H', 'h');
-
-            if (string.IsNullOrEmpty(colorStr) || colorStr.Length < 6 || colorStr.Length > 8)
-            {
-                return null; // Invalid length
-            }
-
-            // Pad to 8 characters if needed (add alpha)
-            if (colorStr.Length == 6)
-            {
-                colorStr = "00" + colorStr; // Add alpha = 0 (fully opaque in ASSA)
-            }
-
-            // ASSA format: AABBGGRR
-            var blue = System.Convert.ToByte(colorStr.Substring(colorStr.Length - 6, 2), 16);
-            var green = System.Convert.ToByte(colorStr.Substring(colorStr.Length - 4, 2), 16);
-            var red = System.Convert.ToByte(colorStr.Substring(colorStr.Length - 2, 2), 16);
-            byte alpha = 255;
-
-            if (colorStr.Length >= 8)
-            {
-                var alphaValue = System.Convert.ToByte(colorStr.Substring(0, 2), 16);
-                alpha = (byte)(255 - alphaValue); // ASSA alpha is inverted (0 = opaque, 255 = transparent)
-            }
-
-            return Color.FromArgb(alpha, red, green, blue);
+            value = System.Convert.ToByte(hex.ToString(), 16);
+            return true;
         }
         catch
         {
-            // Ignore parsing errors
+            value = 0;
+            return false;
         }
-
-        return null;
     }
 
     private class FormattingState
@@ -959,155 +1285,181 @@ public class TextWithSubtitleSyntaxHighlightingConverter : IValueConverter
         }
     }
 
-    private static void ParseHtmlTag(InlineCollection inlines, string tagContent)
+    /// <summary>
+    /// Renders the tag between <paramref name="start"/> (the '&lt;') and <paramref name="end"/>
+    /// (the '&gt;'). Works on indexes into the source string so nothing between them has to be
+    /// copied out first.
+    /// </summary>
+    private static void ParseHtmlTag(InlineBuilder builder, string source, int start, int end)
     {
         // Add opening <
-        inlines.Add(new Run("<") { Foreground = CharsBrush });
+        builder.Append('<', CharsBrush);
 
-        var content = tagContent.Substring(1, tagContent.Length - 2); // Remove < and >
-        var isClosingTag = content.StartsWith('/');
-        if (isClosingTag)
+        var contentStart = start + 1; // just after <
+        var contentEnd = end;         // exclusive, i.e. just before >
+
+        if (contentStart < contentEnd && source[contentStart] == '/')
         {
-            inlines.Add(new Run("/") { Foreground = CharsBrush });
-            content = content.Substring(1);
+            builder.Append('/', CharsBrush);
+            contentStart++;
         }
 
-        var isSelfClosing = content.EndsWith('/');
+        var isSelfClosing = contentEnd > contentStart && source[contentEnd - 1] == '/';
         if (isSelfClosing)
         {
-            content = content.Substring(0, content.Length - 1).TrimEnd();
+            contentEnd--;
+            while (contentEnd > contentStart && char.IsWhiteSpace(source[contentEnd - 1]))
+            {
+                contentEnd--;
+            }
         }
 
         // Find element name
-        var spaceIndex = content.IndexOf(' ');
-        var elementName = spaceIndex > 0 ? content.Substring(0, spaceIndex) : content;
+        var spaceIndex = contentEnd > contentStart
+            ? source.IndexOf(' ', contentStart, contentEnd - contentStart)
+            : -1;
+        var elementNameEnd = spaceIndex > contentStart ? spaceIndex : contentEnd;
 
         // Add element name
-        inlines.Add(new Run(elementName) { Foreground = ElementBrush });
+        builder.Append(source, contentStart, elementNameEnd - contentStart, ElementBrush);
 
         // Parse attributes if any
-        if (spaceIndex > 0)
+        if (spaceIndex > contentStart)
         {
-            var attributesPart = content.Substring(spaceIndex);
-            ParseHtmlAttributes(inlines, attributesPart);
+            ParseHtmlAttributes(builder, source, spaceIndex, contentEnd);
         }
 
         // Add self-closing /
         if (isSelfClosing)
         {
-            inlines.Add(new Run(" /") { Foreground = CharsBrush });
+            builder.Append(" /", CharsBrush);
         }
 
         // Add closing >
-        inlines.Add(new Run(">") { Foreground = CharsBrush });
+        builder.Append('>', CharsBrush);
     }
 
-    private static void ParseHtmlAttributes(InlineCollection inlines, string attributesPart)
+    private static void ParseHtmlAttributes(InlineBuilder builder, string source, int start, int end)
     {
-        int i = 0;
-        while (i < attributesPart.Length)
+        var i = start;
+        while (i < end)
         {
-            // Skip whitespace
-            while (i < attributesPart.Length && char.IsWhiteSpace(attributesPart[i]))
-            {
-                inlines.Add(new Run(attributesPart[i].ToString()));
-                i++;
-            }
-
-            if (i >= attributesPart.Length)
+            // Skip whitespace - one segment for the whole stretch instead of one per space
+            i = AppendWhitespace(builder, source, i, end);
+            if (i >= end)
             {
                 break;
             }
 
             // Read attribute name
             var attrStart = i;
-            while (i < attributesPart.Length && (char.IsLetterOrDigit(attributesPart[i]) || attributesPart[i] == '-' || attributesPart[i] == '_'))
+            while (i < end && (char.IsLetterOrDigit(source[i]) || source[i] == '-' || source[i] == '_'))
             {
                 i++;
             }
 
-            var attributeName = string.Empty;
-            if (i > attrStart)
+            var attributeNameLength = i - attrStart;
+            if (attributeNameLength > 0)
             {
-                attributeName = attributesPart.Substring(attrStart, i - attrStart);
-                inlines.Add(new Run(attributeName)
-                {
-                    Foreground = AttributeBrush
-                });
+                builder.Append(source, attrStart, attributeNameLength, AttributeBrush);
             }
-            else if (i < attributesPart.Length)
+            else if (i < end)
             {
                 // Unexpected character - add it and move on to prevent infinite loop
-                inlines.Add(new Run(attributesPart[i].ToString()));
+                builder.Append(source[i], null);
                 i++;
             }
 
             // Skip whitespace
-            while (i < attributesPart.Length && char.IsWhiteSpace(attributesPart[i]))
-            {
-                inlines.Add(new Run(attributesPart[i].ToString()));
-                i++;
-            }
+            i = AppendWhitespace(builder, source, i, end);
 
             // Check for =
-            if (i < attributesPart.Length && attributesPart[i] == '=')
+            if (i >= end || source[i] != '=')
             {
-                inlines.Add(new Run("=") { Foreground = CharsBrush });
+                continue;
+            }
+
+            builder.Append('=', CharsBrush);
+            i++;
+
+            // Skip whitespace
+            i = AppendWhitespace(builder, source, i, end);
+
+            // Read attribute value (quoted)
+            if (i >= end || (source[i] != '"' && source[i] != '\''))
+            {
+                continue;
+            }
+
+            var quote = source[i];
+            builder.Append(quote, CharsBrush);
+            i++;
+
+            var valueStart = i;
+            while (i < end && source[i] != quote)
+            {
                 i++;
+            }
 
-                // Skip whitespace
-                while (i < attributesPart.Length && char.IsWhiteSpace(attributesPart[i]))
+            if (i > valueStart)
+            {
+                // Check if this is a color attribute and try to parse the actual color
+                IBrush valueBrush;
+                if (source.AsSpan(attrStart, attributeNameLength).Equals("color", StringComparison.OrdinalIgnoreCase))
                 {
-                    inlines.Add(new Run(attributesPart[i].ToString()));
-                    i++;
+                    var parsedColor = SubtitleSyntaxTokenizer.TryParseColor(source.Substring(valueStart, i - valueStart));
+                    valueBrush = parsedColor.HasValue
+                        ? CreateBrush(parsedColor.Value)
+                        : ValuesBrush;
+                }
+                else
+                {
+                    var hasColon = source.AsSpan(valueStart, i - valueStart).IndexOf(':') >= 0;
+                    valueBrush = hasColon ? StyleBrush : ValuesBrush;
                 }
 
-                // Read attribute value (quoted)
-                if (i < attributesPart.Length && (attributesPart[i] == '"' || attributesPart[i] == '\''))
-                {
-                    var quote = attributesPart[i];
-                    inlines.Add(new Run(quote.ToString()) { Foreground = CharsBrush });
-                    i++;
+                builder.Append(source, valueStart, i - valueStart, valueBrush);
+            }
 
-                    var valueStart = i;
-                    while (i < attributesPart.Length && attributesPart[i] != quote)
-                    {
-                        i++;
-                    }
-
-                    if (i > valueStart)
-                    {
-                        var value = attributesPart.Substring(valueStart, i - valueStart);
-
-                        // Check if this is a color attribute and try to parse the actual color
-                        IBrush valueBrush;
-                        if (attributeName.Equals("color", StringComparison.OrdinalIgnoreCase))
-                        {
-                            var parsedColor = SubtitleSyntaxTokenizer.TryParseColor(value);
-                            valueBrush = parsedColor.HasValue
-                                ? new SolidColorBrush(parsedColor.Value)
-                                : ValuesBrush;
-                        }
-                        else
-                        {
-                            var hasColon = value.Contains(':');
-                            valueBrush = hasColon ? StyleBrush : ValuesBrush;
-                        }
-
-                        inlines.Add(new Run(value)
-                        {
-                            Foreground = valueBrush
-                        });
-                    }
-
-                    if (i < attributesPart.Length)
-                    {
-                        inlines.Add(new Run(quote.ToString()) { Foreground = CharsBrush });
-                        i++;
-                    }
-                }
+            if (i < end)
+            {
+                builder.Append(quote, CharsBrush);
+                i++;
             }
         }
+    }
+
+    private static int AppendWhitespace(InlineBuilder builder, string source, int i, int end)
+    {
+        var whitespaceStart = i;
+        while (i < end && char.IsWhiteSpace(source[i]))
+        {
+            i++;
+        }
+
+        builder.Append(source, whitespaceStart, i - whitespaceStart, null);
+        return i;
+    }
+
+    private static bool AppendLineBreak(InlineBuilder builder, char c, char c2, ref int i)
+    {
+        if (c != '\n' && c != '\r' && c != '\u2028')
+        {
+            return false;
+        }
+
+        var separator = GetLineSeparator();
+        if (separator == null)
+        {
+            builder.AddLineBreak();
+        }
+        else
+        {
+            builder.Append(separator, AttributeBrush);
+        }
+
+        i += c == '\r' && c2 == '\n' ? 2 : 1;
+        return true;
     }
 
     private static bool AppendLineBreak(InlineCollection inlines, char c, char c2, ref int i)
@@ -1124,23 +1476,33 @@ public class TextWithSubtitleSyntaxHighlightingConverter : IValueConverter
 
     private static void AppendLineSeparator(InlineCollection inlines)
     {
-        if (Se.Settings.Appearance.SubtitleGridTextSingleLine)
+        var separator = GetLineSeparator();
+        if (separator == null)
         {
-            var separator = Se.Settings.Appearance.SubtitleGridTextSingleLineSeparator;
-            if (string.IsNullOrEmpty(separator))
-            {
-                separator = " ";
-            }
-
-            // Add the separator as literal text so markup-like separators (e.g. "<br />")
-            // are shown verbatim instead of being parsed away by the formatter. Render it in the
-            // soft blue accent (AttributeBrush) - a mid-tone that reads on both light and dark
-            // themes - so the separator stands out clearly from the actual subtitle text.
-            inlines.Add(new Run(separator) { Foreground = AttributeBrush });
+            inlines.Add(new LineBreak());
             return;
         }
 
-        inlines.Add(new LineBreak());
+        inlines.Add(new Run(separator) { Foreground = AttributeBrush });
+    }
+
+    /// <summary>
+    /// The text a line break renders as in single-line mode, or null for a real line break.
+    /// The separator is added as literal text so markup-like separators (e.g. "&lt;br /&gt;") are
+    /// shown verbatim instead of being parsed away by the formatter. It is rendered in the soft
+    /// blue accent (AttributeBrush) - a mid-tone that reads on both light and dark themes - so it
+    /// stands out clearly from the actual subtitle text.
+    /// </summary>
+    private static string? GetLineSeparator()
+    {
+        var appearance = Se.Settings.Appearance;
+        if (!appearance.SubtitleGridTextSingleLine)
+        {
+            return null;
+        }
+
+        var separator = appearance.SubtitleGridTextSingleLineSeparator;
+        return string.IsNullOrEmpty(separator) ? " " : separator;
     }
 
     public object ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)

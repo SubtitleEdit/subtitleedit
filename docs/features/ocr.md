@@ -56,8 +56,10 @@ Local LLM-based OCR using a llama.cpp-compatible server.
 
 ### CrispEmbed
 Local OCR engine with multiple model backends (free/open source).
-- Backends: **GLM-OCR**, **GOT-OCR2**, and **Qwen3-VL-2B**
-- Each backend offers a smaller `q4_k` and a higher-quality `q8_0` model (from about 445 MB for GOT-OCR2 q4_k up to about 2.3 GB for Qwen3-VL-2B q8_0)
+- Backends: **PP-OCRv6**, **GLM-OCR**, **GOT-OCR2**, **Qwen3-VL-2B**, and **DeepSeek-OCR-2**
+- **PP-OCRv6** is a text detector plus recognizer rather than a vision language model, so it needs only two small files (about 79 MB in total) and is the quickest way to get started
+- **DeepSeek-OCR-2** is the most accurate backend on subtitle-style images; it ships a single `q4_k` model of about 2.31 GB
+- **GLM-OCR**, **GOT-OCR2** and **Qwen3-VL-2B** each offer a smaller `q4_k` and a higher-quality `q8_0` model (from about 445 MB for GOT-OCR2 q4_k up to about 2.29 GB for Qwen3-VL-2B q8_0)
 - The engine and models are downloaded from the OCR window on first use
 
 ### Mistral OCR
@@ -145,6 +147,25 @@ When the OCR engine encounters uncertain characters, you can:
 - Choose from suggested alternatives
 - Type the correct text
 - Add to the OCR fix dictionary for automatic correction
+
+### What is remembered
+
+Some of the choices in the unknown-word prompt are saved to disk and reused on later
+OCR runs; others only last as long as the OCR window is open.
+
+| Choice | Remembered? | Stored in |
+|---|---|---|
+| **Change all** | Yes | `{language}_OCRFixReplaceList.xml` |
+| **Add to names list** | Yes | `{language}_names.xml` |
+| **Add to user dictionary** | Yes | `{language}_user.xml` |
+| **Skip once** | No | — |
+| **Skip all** | No — current OCR session only | — |
+
+**"Skip all" is deliberately temporary.** It silences a word for the rest of the current
+OCR session and is forgotten when the OCR window closes, so a mis-click never has lasting
+consequences. If you want a word to be accepted permanently, use **Add to user
+dictionary** (or **Add to names list** for proper nouns) instead, and use **Change all**
+for a correction that should be applied automatically from now on.
 
 ## OCR Fix Replacement Lists
 

@@ -382,8 +382,18 @@ public class ExportImageBasedWindow : Window
         // column 3
         var checkBoxBold = UiUtil.MakeCheckBox(Se.Language.General.Bold, vm, nameof(vm.IsBold));
         checkBoxBold.IsCheckedChanged += vm.CheckBoxChanged;
-        grid.Add(checkBoxBold, 0, 5);
-        
+        var checkBoxRightToLeft = UiUtil.MakeCheckBox(Se.Language.General.RightToLeft, vm, nameof(vm.IsRightToLeft));
+        checkBoxRightToLeft.IsCheckedChanged += vm.CheckBoxChanged;
+        var panelBoldAndRightToLeft = new StackPanel
+        {
+            Orientation = Orientation.Horizontal,
+            Spacing = 10,
+            VerticalAlignment = VerticalAlignment.Center,
+            Children = { checkBoxBold, checkBoxRightToLeft }
+        };
+        grid.Add(panelBoldAndRightToLeft, 0, 5);
+
+
         var labelOutlineWidth = UiUtil.MakeLabel(Se.Language.General.OutlineWidth);
         var comboBoxOutlineWidth = UiUtil.MakeComboBox(vm.OutlineWidths, vm, nameof(vm.SelectedOutlineWidth));
         comboBoxOutlineWidth.SelectionChanged += vm.ComboChanged;
@@ -431,9 +441,11 @@ public class ExportImageBasedWindow : Window
         grid.Add(labelBoxType, 5, 4);
         grid.Add(comboBoxBoxType, 5, 5);
         
-        var checkBoxRightToLeft = UiUtil.MakeCheckBox(Se.Language.General.RightToLeft, vm, nameof(vm.IsRightToLeft));
-        checkBoxRightToLeft.IsCheckedChanged += vm.CheckBoxChanged;
-        grid.Add(checkBoxRightToLeft, 6, 5);
+        var labelFrameRate = UiUtil.MakeLabel(Se.Language.General.FrameRate);
+        var comboBoxFrameRate = UiUtil.MakeComboBox(vm.FrameRates, vm, nameof(vm.SelectedFrameRate));
+        comboBoxFrameRate.SelectionChanged += vm.ComboChanged;
+        grid.Add(labelFrameRate, 6, 4);
+        grid.Add(comboBoxFrameRate, 6, 5);
 
         return UiUtil.MakeBorderForControl(grid);
     }

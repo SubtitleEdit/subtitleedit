@@ -314,6 +314,10 @@ public class InitWaveform
             // on the control's initial flyout, which this replaces on every layout rebuild.
             flyout.Closed += (_, _) => vm.RestoreFocusIfLost();
 
+            // With the video player undocked (and topmost), the docked waveform's context
+            // menu could still be covered by it (#13325).
+            WindowService.SuspendUndockedTopmostWhileOpen(flyout);
+
             vm.AudioVisualizer.MenuFlyout = flyout;
         }
 

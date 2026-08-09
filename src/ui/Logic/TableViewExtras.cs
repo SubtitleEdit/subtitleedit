@@ -273,12 +273,62 @@ public static class TableViewExtras
 
         UiUtil.ApplyTableViewRowStyle(tableView);
 
+        // SelectionMode.AlwaysSelected picks row 0 the moment ItemsSource is assigned, but that
+        // pick only reaches the internal selection model (and SelectedItem/SelectedIndex) - the
+        // SelectedItems collection stays empty and no SelectionChanged is raised. Repair it
+        // (#13230), see SyncSelectedItemsWithSelection.
+        tableView.PropertyChanged += (_, e) =>
+        {
+            if (e.Property == ItemsControl.ItemsSourceProperty)
+            {
+                SyncSelectedItemsWithSelection(tableView);
+            }
+        };
+
         // Home/End/PageUp/PageDown (and Ctrl+Home/End) list navigation in every grid (#13194).
         // Handlers attached earlier in the routing path (window-level tunnel handlers, shortcut
         // dispatch) still win; this is the fallback when nothing else handled the key.
         AttachListNavigation(tableView);
 
         return tableView;
+    }
+
+    /// <summary>
+    /// Puts the rows the control considers selected into its <see cref="SelectingItemsControl.SelectedItems"/>
+    /// collection when that collection is empty but the selection model is not.
+    /// <para>
+    /// <see cref="SelectionMode.AlwaysSelected"/> selects row 0 as soon as ItemsSource is assigned
+    /// to a populated collection. That selection reaches the selection model - the row is drawn
+    /// highlighted and SelectedItem/SelectedIndex point at it - but SelectedItems is left empty and
+    /// no SelectionChanged is raised, and neither a layout pass nor a Selection.Clear()/Select(0)
+    /// repairs it; only moving the selection to a different row does. Everything in Subtitle Edit
+    /// reads the selection through SelectedItems, so the grid showed row 1 highlighted while the
+    /// app saw nothing selected: the edit box, Show and Duration went blank the moment anything
+    /// re-read the selection, and a shift-selection starting at row 1 silently left row 1 out of
+    /// every operation (issue #13230).
+    /// </para>
+    /// </summary>
+    public static void SyncSelectedItemsWithSelection(TableView tableView)
+    {
+        var selectedItems = tableView.SelectedItems;
+        if (selectedItems == null || selectedItems.Count > 0)
+        {
+            return;
+        }
+
+        var selection = tableView.Selection;
+        if (selection.Count == 0)
+        {
+            return;
+        }
+
+        foreach (var item in selection.SelectedItems)
+        {
+            if (item != null)
+            {
+                selectedItems.Add(item);
+            }
+        }
     }
 
     /// <summary>

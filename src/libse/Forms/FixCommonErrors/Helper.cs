@@ -321,7 +321,18 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
         {
             if (string.IsNullOrEmpty(prevText) || prevText.Length < 3)
             {
-                return true;
+                // One- and two-character lines that are paragraph markers (dash, music note,
+                // "--") or end in punctuation still end a paragraph - but a short line ending
+                // in a letter or digit ("u", "Ja") continues the same sentence, matching what
+                // the full check below decides for longer lines, and must not trigger
+                // capitalization of the next line (#12227).
+                var trimmed = prevText?.TrimEnd();
+                if (string.IsNullOrEmpty(trimmed))
+                {
+                    return true;
+                }
+
+                return !char.IsLetterOrDigit(trimmed[trimmed.Length - 1]);
             }
 
             prevText = prevText.Replace("♪", string.Empty).Replace("♫", string.Empty).Trim();
@@ -394,7 +405,8 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
             else if (text.StartsWith("<font ", StringComparison.Ordinal))
             {
                 var prev = subtitle.GetParagraphOrDefault(i - 1);
-                if (prev == null || !HtmlUtil.RemoveHtmlTags(prev.Text).TrimEnd().EndsWith('-') || HtmlUtil.RemoveHtmlTags(prev.Text).TrimEnd().EndsWith("--", StringComparison.Ordinal))
+                var prevNoTags = prev == null ? null : HtmlUtil.RemoveHtmlTags(prev.Text).TrimEnd();
+                if (prevNoTags == null || !prevNoTags.EndsWith('-') || prevNoTags.EndsWith("--", StringComparison.Ordinal))
                 {
                     var st = new StrippableText(text);
                     if (st.Pre.EndsWith('-') || st.Pre.EndsWith("- ", StringComparison.Ordinal))
@@ -410,10 +422,23 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
         private static string FixDash(Subtitle subtitle, int i, string text, string dash)
         {
             var prev = subtitle.GetParagraphOrDefault(i - 1);
-            if (prev == null || !HtmlUtil.RemoveHtmlTags(prev.Text).TrimEnd().EndsWith(dash, StringComparison.Ordinal) || HtmlUtil.RemoveHtmlTags(prev.Text).TrimEnd().EndsWith(dash + dash, StringComparison.Ordinal))
+            // RemoveHtmlTags strips SSA tags too, so it is not free - run it once per call
+            // instead of twice (this is asked for every paragraph by the dash rules).
+            var prevNoTags = prev == null ? null : HtmlUtil.RemoveHtmlTags(prev.Text).TrimEnd();
+            if (prevNoTags == null || !prevNoTags.EndsWith(dash, StringComparison.Ordinal) || prevNoTags.EndsWith(dash + dash, StringComparison.Ordinal))
             {
                 var noTagLines = HtmlUtil.RemoveHtmlTags(text, true).SplitToLines();
-                var startHyphenCount = noTagLines.Count(line => line.TrimStart().StartsWith(dash, StringComparison.Ordinal));
+                // Counting at most three lines - the LINQ form allocated a closure, a delegate
+                // and a TrimStart() string per line, per paragraph.
+                var startHyphenCount = 0;
+                foreach (var line in noTagLines)
+                {
+                    if (line.AsSpan().TrimStart().StartsWith(dash.AsSpan(), StringComparison.Ordinal))
+                    {
+                        startHyphenCount++;
+                    }
+                }
+
                 if (startHyphenCount == 1)
                 {
                     var remove = true;

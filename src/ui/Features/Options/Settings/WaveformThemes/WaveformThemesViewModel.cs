@@ -124,7 +124,7 @@ public partial class WaveformThemesViewModel : ObservableObject
         var vm = new PromptTextBoxViewModel();
         vm.Initialize("Save custom theme", $"Custom {_customThemeCount}", 200, 30, returnSubmits: true);
         var promptWindow = new PromptTextBoxWindow(vm);
-        await promptWindow.ShowDialog(Window);
+        await WindowService.ShowModalAsync(Window, promptWindow);
 
         if (!vm.OkPressed || string.IsNullOrWhiteSpace(vm.Text))
         {

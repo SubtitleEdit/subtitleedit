@@ -5,6 +5,7 @@ using Nikse.SubtitleEdit.Core.Interfaces;
 using Nikse.SubtitleEdit.UiLogic.Ocr.FixEngine;
 using Nikse.SubtitleEdit.UiLogic.SpellCheck;
 using SkiaSharp;
+using System.Collections.Concurrent;
 using System.Globalization;
 
 namespace SeConv.Core;
@@ -31,6 +32,9 @@ internal static class FixCommonErrorsRunner
     internal const string OcrFixRuleId = "FixCommonOcrErrors";
 
     private static readonly IReadOnlyList<(string Id, Func<IFixCommonError> Factory)> Rules = BuildRules();
+    // Dictionary paths are case-sensitive on Linux. Prefer an occasional duplicate cache entry
+    // on Windows over returning another directory's names list on a case-sensitive file system.
+    private static readonly ConcurrentDictionary<string, HashSet<string>> NamesByFolderAndLanguage = new(StringComparer.Ordinal);
 
     public static IReadOnlyList<string> AvailableRuleIds { get; } =
         Rules.Select(r => r.Id).Append(OcrFixRuleId).ToArray();
@@ -149,6 +153,11 @@ internal static class FixCommonErrorsRunner
             // Without this the uppercase-after-period rules treat every abbreviation period as a
             // sentence ending, e.g. Dutch "dhr. de vries" -> "dhr. De vries" (#13082).
             Abbreviations = AbbreviationList.Load(SpellCheckConfig.DictionariesFolder(), language),
+
+            // Same names-list backing as the GUI dialog (which loads it since #13085): without it
+            // IsName() always returns false, so "Add missing period" adds a period before
+            // always-uppercase names like "Roemenië" on the next line (#12286).
+            Names = LoadNames(language),
         };
 
         // Fix Common Errors is not idempotent in a single pass: one rule can create a
@@ -177,6 +186,16 @@ internal static class FixCommonErrorsRunner
         {
             RunOcrFix(subtitle, language);
         }
+    }
+
+    private static HashSet<string> LoadNames(string language)
+    {
+        var folder = SpellCheckConfig.DictionariesFolder();
+        var normalizedFolder = string.IsNullOrEmpty(folder) ? string.Empty : Path.GetFullPath(folder);
+        var key = normalizedFolder + "\0" + language;
+        return NamesByFolderAndLanguage.GetOrAdd(
+            key,
+            _ => new NameList(folder, language, false, string.Empty).GetNames());
     }
 
     /// <summary>

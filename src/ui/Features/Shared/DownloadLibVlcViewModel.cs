@@ -7,6 +7,7 @@ using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Logic.Download;
 using Nikse.SubtitleEdit.Logic.SevenZipExtractor;
+using Nikse.SubtitleEdit.Logic.VideoPlayers.LibMpvDynamic;
 using System;
 using System.Globalization;
 using System.IO;
@@ -170,6 +171,50 @@ public partial class DownloadLibVlcViewModel : ObservableObject, IClosingCleanup
     }
 
     public void StartDownload()
+    {
+        // Probing/loading libVLC takes a moment - keep the UI thread responsive, like
+        // SettingsViewModel.SetLibVlcStatus does (#13222, review follow-up).
+        Task.Run(() =>
+        {
+            using var player = new LibVlcDynamicPlayer();
+            return player.CanLoad();
+        }).ContinueWith(t =>
+        {
+            if (t.Exception != null)
+            {
+                Se.LogError(t.Exception);
+            }
+
+            Dispatcher.UIThread.Post(() =>
+            {
+                // The user can cancel while the probe is still running (it walks the VLC
+                // install directory and can take seconds). Close() is itself posted, so this
+                // continuation can be queued behind it - bail out rather than reporting
+                // success or kicking off a download on a dialog that is already gone.
+                if (_done || _cancellationTokenSource == null || _cancellationTokenSource.IsCancellationRequested)
+                {
+                    return;
+                }
+
+                // Only skip the download on a clean, positive probe - a faulted probe (broken
+                // libVLC install) must fall through to the download, not leave the dialog
+                // stuck with an unobserved exception (review follow-up).
+                if (t.Status == TaskStatus.RanToCompletion && t.Result)
+                {
+                    // libVLC is already available (bundled with the app, a previous
+                    // download, or a VLC installation) - complete right away instead of
+                    // downloading the full VLC package again (#13222).
+                    OkPressed = true;
+                    Close();
+                    return;
+                }
+
+                StartDownloadCore();
+            });
+        });
+    }
+
+    private void StartDownloadCore()
     {
         var downloadProgress = new Progress<float>(number =>
         {

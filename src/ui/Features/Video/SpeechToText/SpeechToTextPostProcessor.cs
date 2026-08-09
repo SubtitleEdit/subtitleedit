@@ -138,9 +138,9 @@ namespace Nikse.SubtitleEdit.Features.Video.SpeechToText
             return postProcessed;
         }
 
-        private static bool IsNonStandardLineTerminationLanguage(string language)
+        internal static bool IsNonStandardLineTerminationLanguage(string language)
         {
-            return language is "jp" or "ja" or "cn" or "yue";
+            return language is "jp" or "ja" or "zh" or "cn" or "yue";
         }
 
         public Subtitle Fix(Subtitle subtitle, bool usePostProcessing, bool addPeriods, bool mergeLines, bool fixCasing, bool fixShortDuration, bool splitLines, Engine engine)

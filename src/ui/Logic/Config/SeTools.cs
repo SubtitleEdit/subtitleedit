@@ -30,6 +30,8 @@ public class SeTools
     public string GroqPrompt { get; set; }
     public string OpenRouterPrompt { get; set; }
     public string NvidiaPrompt { get; set; }
+    public bool MergeKeepEndTime { get; set; }
+    public bool MergeKeepEndTimeOnlyAssa { get; set; } = true;
     public bool JoinKeepTimeCodes { get; set; }
     public int JoinAppendMilliseconds { get; set; }
     public bool BinEditAppendKeepTimeCodes { get; set; }
@@ -154,6 +156,8 @@ public class SeTools
     public bool AutoBreakDashEarly { get; set; } = true;
     public bool AutoBreakUsePixelWidth { get; set; } = true;
     public bool AutoBreakPreferBottomHeavy { get; set; } = true;
+    public double AutoBreakPreferBottomPercent { get; set; } = 5;
+    public bool UseNoLineBreakAfter { get; set; } = false;
     public bool SpellCheckEnglishTreatInApostropheAsIng { get; set; } = true;
     public bool WriteToolsLog { get; set; } = false;
 

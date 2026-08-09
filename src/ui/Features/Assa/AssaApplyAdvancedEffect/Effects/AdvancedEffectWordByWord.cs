@@ -30,14 +30,14 @@ public class AdvancedEffectWordByWord : IAdvancedEffectDisplay
 
             if (string.IsNullOrWhiteSpace(cleanText))
             {
-                result.Add(subtitle);
+                result.Add(AdvancedEffectUtil.PassThrough(subtitle));
                 continue;
             }
 
             var words = cleanText.Split(' ', StringSplitOptions.RemoveEmptyEntries);
             if (words.Length <= 1)
             {
-                result.Add(subtitle);
+                result.Add(AdvancedEffectUtil.PassThrough(subtitle));
                 continue;
             }
 

@@ -51,7 +51,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             _errorCount = 0;
             foreach (string line in lines)
             {
-                if (RegexTimeCodes.Match(line).Success)
+                if (RegexTimeCodes.IsMatch(line))
                 {
                     string[] parts = line.Split(new[] { ' ' }, StringSplitOptions.None);
                     var p = new Paragraph();

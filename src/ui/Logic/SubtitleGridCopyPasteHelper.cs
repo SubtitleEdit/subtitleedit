@@ -22,7 +22,7 @@ internal static class SubtitleGridCopyPasteHelper
             subtitle.Paragraphs.Add(item.ToParagraph(subtitleFormat));
         }
 
-        var text = subtitleFormat.ToText(subtitle, string.Empty);
+        var text = GetClipboardText(subtitleFormat, subtitle);
         await ClipboardHelper.SetTextAsync(window, text);
     }
 
@@ -36,13 +36,66 @@ internal static class SubtitleGridCopyPasteHelper
             subtitle.Paragraphs.Add(item.ToParagraph(subtitleFormat));
         }
 
-        var text = subtitleFormat.ToText(subtitle, string.Empty);
+        var text = GetClipboardText(subtitleFormat, subtitle);
         await ClipboardHelper.SetTextAsync(window, text);
 
         foreach (var item in selectedItems)
         {
             subtitles.Remove(item);
         }
+    }
+
+    // When copying ASSA/SSA lines, only the event lines ("Dialogue:"/"Comment:") belong on the
+    // clipboard: Aegisub's paste interprets every other clipboard line (the [Script Info] /
+    // [V4+ Styles] file header) as a plain-text subtitle line, so the file headers would be
+    // pasted as fake subtitle lines (issue #10476). Aegisub's own copy puts only the entry
+    // data on the clipboard, so match that; SE's paste parses the bare event lines back into
+    // paragraphs, so the SE-to-SE round-trip keeps working.
+    internal static string GetClipboardText(SubtitleFormat subtitleFormat, Subtitle subtitle)
+    {
+        var text = subtitleFormat.ToText(subtitle, string.Empty);
+        if (subtitleFormat is AdvancedSubStationAlpha or SubStationAlpha)
+        {
+            var lines = text.SplitToLines();
+            var firstEventIndex = -1;
+            for (var i = 0; i < lines.Count; i++)
+            {
+                var trimmed = lines[i].TrimStart();
+                if (trimmed.StartsWith("Dialogue:", StringComparison.OrdinalIgnoreCase) ||
+                    trimmed.StartsWith("Comment:", StringComparison.OrdinalIgnoreCase))
+                {
+                    firstEventIndex = i;
+                    break;
+                }
+            }
+
+            if (firstEventIndex > 0)
+            {
+                // Stop at the first section that follows the events: ToText appends the
+                // subtitle footer ([Fonts] / [Graphics] / [Aegisub Extradata], including the
+                // embedded font payload) after the event lines, and that would be pasted as
+                // fake subtitle lines just like the header was (#10476).
+                var endIndex = lines.Count;
+                for (var i = firstEventIndex; i < lines.Count; i++)
+                {
+                    if (lines[i].TrimStart().StartsWith('['))
+                    {
+                        endIndex = i;
+                        break;
+                    }
+                }
+
+                var eventLines = lines.GetRange(firstEventIndex, endIndex - firstEventIndex);
+                while (eventLines.Count > 0 && string.IsNullOrWhiteSpace(eventLines[eventLines.Count - 1]))
+                {
+                    eventLines.RemoveAt(eventLines.Count - 1);
+                }
+
+                text = string.Join(Environment.NewLine, eventLines);
+            }
+        }
+
+        return text;
     }
 
     internal static async Task Paste(Window window, ObservableCollection<SubtitleLineViewModel> subtitles, int index, SubtitleFormat subtitleFormat)

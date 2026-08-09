@@ -731,7 +731,12 @@ namespace Nikse.SubtitleEdit.Controls.VideoPlayer
             Dispatcher.UIThread.Invoke(() => { _iconVolume.Value = isMuted ? "fa-solid fa-volume-xmark" : "fa-solid fa-volume-up"; });
         }
 
-        internal async Task Open(string videoFileName)
+        /// <param name="startPositionSeconds">
+        /// Where the video should already be when it comes up. Callers that restore a position
+        /// (session restore, fullscreen, undock) pass it here instead of seeking afterwards:
+        /// a later seek leaves the player showing 0:00 for a moment and then jumping (#13329).
+        /// </param>
+        internal async Task Open(string videoFileName, double startPositionSeconds = 0)
         {
             if (IsDisposed)
             {
@@ -745,7 +750,7 @@ namespace Nikse.SubtitleEdit.Controls.VideoPlayer
             SetPositionDisplayOnly(0);
             Duration = 0;
 
-            await _videoPlayerInstance.LoadFile(videoFileName);
+            await _videoPlayerInstance.LoadFile(videoFileName, startPositionSeconds);
 
             // The control may have been torn down while LoadFile was awaiting (fullscreen
             // closed mid-open, a second layout rebuild). Starting the position timer then

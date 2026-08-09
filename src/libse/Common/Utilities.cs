@@ -264,12 +264,41 @@ namespace Nikse.SubtitleEdit.Core.Common
             var head = s.AsSpan(0, index);
             if (Configuration.Settings.Tools.UseNoLineBreakAfter)
             {
-                var s2 = s.Substring(0, index); // the list matches with Regex/EndsWith, which need a string
-                foreach (NoBreakAfterItem ending in NoBreakAfterList(language))
+                var noBreakAfter = GetNoBreakAfterListInfo(language);
+
+                // The list matches with EndsWith, which works on the span - only a regex entry
+                // needs the substring, and none of the shipped lists have one.
+                var s2 = noBreakAfter.HasRegex ? s.Substring(0, index) : null;
+                foreach (var ending in noBreakAfter.Items)
                 {
-                    if (ending.IsMatch(s2))
+                    if (s2 == null ? ending.IsMatch(head) : ending.IsMatch(s2))
                     {
                         return false;
+                    }
+                }
+
+                // A multi-word entry (e.g. "SORT OF") means the whole phrase must stay together,
+                // so also forbid a break between its words - otherwise the line could still be
+                // split right before the last word of the phrase (issue #9631). Only 2 of the 33
+                // shipped lists have such an entry, so the whole second pass is normally skipped.
+                if (noBreakAfter.MultiWordItems != null)
+                {
+                    var nextSpaceIndex = s.IndexOf(' ', index + 1);
+                    if (nextSpaceIndex < 0)
+                    {
+                        nextSpaceIndex = s.Length;
+                    }
+
+                    if (nextSpaceIndex > index + 1)
+                    {
+                        var s3 = s.AsSpan(0, nextSpaceIndex);
+                        foreach (var ending in noBreakAfter.MultiWordItems)
+                        {
+                            if (ending.IsMatch(s3))
+                            {
+                                return false;
+                            }
+                        }
                     }
                 }
             }
@@ -307,17 +336,18 @@ namespace Nikse.SubtitleEdit.Core.Common
         }
 
         private static string _lastNoBreakAfterListLanguage;
-        private static List<NoBreakAfterItem> _lastNoBreakAfterList = new List<NoBreakAfterItem>();
-
-        // CanBreak asks for this once per candidate break point, and AutoBreakLine(text) passes no
-        // language at all, so the "no language" case must not allocate a list every time.
-        private static readonly List<NoBreakAfterItem> EmptyNoBreakAfterList = new List<NoBreakAfterItem>();
+        private static NoBreakAfterListInfo _lastNoBreakAfterList = NoBreakAfterListInfo.Empty;
 
         internal static IEnumerable<NoBreakAfterItem> NoBreakAfterList(string languageName)
         {
+            return GetNoBreakAfterListInfo(languageName).Items;
+        }
+
+        internal static NoBreakAfterListInfo GetNoBreakAfterListInfo(string languageName)
+        {
             if (string.IsNullOrEmpty(languageName))
             {
-                return EmptyNoBreakAfterList;
+                return NoBreakAfterListInfo.Empty;
             }
 
             if (languageName == _lastNoBreakAfterListLanguage)
@@ -325,7 +355,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                 return _lastNoBreakAfterList;
             }
 
-            _lastNoBreakAfterList = new List<NoBreakAfterItem>();
+            var items = new List<NoBreakAfterItem>();
 
             //load words via xml
             string noBreakAfterFileName = DictionaryFolder + languageName + "_NoBreakAfterList.xml";
@@ -340,15 +370,17 @@ namespace Nikse.SubtitleEdit.Core.Common
                         if (node.Attributes?["RegEx"] != null && node.Attributes["RegEx"].InnerText.Equals("true", StringComparison.OrdinalIgnoreCase))
                         {
                             var r = new Regex(node.InnerText, RegexOptions.Compiled);
-                            _lastNoBreakAfterList.Add(new NoBreakAfterItem(r, node.InnerText));
+                            items.Add(new NoBreakAfterItem(r, node.InnerText));
                         }
                         else
                         {
-                            _lastNoBreakAfterList.Add(new NoBreakAfterItem(node.InnerText.TrimStart()));
+                            items.Add(new NoBreakAfterItem(node.InnerText.TrimStart()));
                         }
                     }
                 }
             }
+
+            _lastNoBreakAfterList = new NoBreakAfterListInfo(items);
             _lastNoBreakAfterListLanguage = languageName;
 
             return _lastNoBreakAfterList;
@@ -454,9 +486,8 @@ namespace Nikse.SubtitleEdit.Core.Common
                         foreach (var item in list)
                         {
                             index += item;
-                            if (htmlTags.ContainsKey(index))
+                            if (htmlTags.TryGetValue(index, out var v))
                             {
-                                var v = htmlTags[index];
                                 if (v.StartsWith("</", StringComparison.Ordinal))
                                 {
                                     v = Environment.NewLine + v;
@@ -829,15 +860,17 @@ namespace Nikse.SubtitleEdit.Core.Common
                 int six = 0;
                 foreach (var letter in s)
                 {
-                    if (Environment.NewLine.Contains(letter))
+                    if (letter == '\r' || letter == '\n')
                     {
                         sb.Append(letter);
                     }
                     else
                     {
-                        if (htmlTags.ContainsKey(six))
+                        // One probe per character instead of two - auto-break runs this per line
+                        // on every split/merge, and per keystroke with auto-break while typing.
+                        if (htmlTags.TryGetValue(six, out var tag))
                         {
-                            sb.Append(htmlTags[six]);
+                            sb.Append(tag);
                         }
                         sb.Append(letter);
                         six++;
@@ -846,15 +879,48 @@ namespace Nikse.SubtitleEdit.Core.Common
 
                 for (int i = 0; i < 15; i++)
                 {
-                    if (htmlTags.ContainsKey(six + i))
+                    if (htmlTags.TryGetValue(six + i, out var tag))
                     {
-                        sb.Append(htmlTags[six + i]);
+                        sb.Append(tag);
                     }
                 }
 
                 return sb.ToString();
             }
             return s;
+        }
+
+        /// <summary>
+        /// Same answer as <c>s == s.ToUpperInvariant()</c>, without allocating the uppercased
+        /// copy. The hearing-impaired and casing rules ask this several times per subtitle line.
+        /// </summary>
+        public static bool IsAllUppercase(string s)
+        {
+            for (var i = 0; i < s.Length; i++)
+            {
+                if (char.ToUpperInvariant(s[i]) != s[i])
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+        /// <summary>
+        /// Same answer as <c>s != s.ToLowerInvariant()</c>, without allocating the lowercased copy.
+        /// </summary>
+        public static bool HasUppercase(string s)
+        {
+            for (var i = 0; i < s.Length; i++)
+            {
+                if (char.ToLowerInvariant(s[i]) != s[i])
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
 
         public static string UnbreakLine(string text)
@@ -1762,17 +1828,19 @@ namespace Nikse.SubtitleEdit.Core.Common
 
         internal static string ReverseString(string s)
         {
-            int len = s.Length;
-            if (len <= 1)
+            if (s.Length <= 1)
             {
                 return s;
             }
-            var chars = new char[len];
-            for (int i = 0; i < len; i++)
+
+            return string.Create(s.Length, s, (span, src) =>
             {
-                chars[i] = s[len - i - 1];
-            }
-            return new string(chars);
+                int len = span.Length;
+                for (int i = 0; i < len; i++)
+                {
+                    span[i] = src[len - i - 1];
+                }
+            });
         }
 
         private static string ReverseParenthesis(string s)
@@ -1781,29 +1849,30 @@ namespace Nikse.SubtitleEdit.Core.Common
             {
                 return s;
             }
-            int len = s.Length;
-            var chars = new char[len];
-            for (int i = 0; i < len; i++)
+            return string.Create(s.Length, s, (span, src) =>
             {
-                char ch = s[i];
-                switch (ch)
+                for (int i = 0; i < span.Length; i++)
                 {
-                    case '(':
-                        ch = ')';
-                        break;
-                    case ')':
-                        ch = '(';
-                        break;
-                    case '[':
-                        ch = ']';
-                        break;
-                    case ']':
-                        ch = '[';
-                        break;
+                    char ch = src[i];
+                    switch (ch)
+                    {
+                        case '(':
+                            ch = ')';
+                            break;
+                        case ')':
+                            ch = '(';
+                            break;
+                        case '[':
+                            ch = ']';
+                            break;
+                        case ']':
+                            ch = '[';
+                            break;
+                    }
+
+                    span[i] = ch;
                 }
-                chars[i] = ch;
-            }
-            return new string(chars);
+            });
         }
 
         public static string FixEnglishTextInRightToLeftLanguage(string text, string reverseChars)
@@ -2602,7 +2671,8 @@ namespace Nikse.SubtitleEdit.Core.Common
                 text = text.Replace(" ,", ",");
             }
 
-            if (language != "nl")
+            // " 's " is an English possessive fix - Dutch keeps it as a separate word ("'s avonds", issue #12144)
+            if (language == "en")
             {
                 while (text.Contains(" 's "))
                 {
@@ -3250,11 +3320,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                 subtitle.Header = subtitle.Header.Trim() + Environment.NewLine;
             }
 
-            lines = new List<string>();
-            foreach (string l in subtitle.Header.Trim().SplitToLines())
-            {
-                lines.Add(l);
-            }
+            lines = subtitle.Header.Trim().SplitToLines();
 
             const string timeCodeFormat = "{0}:{1:00}:{2:00}.{3:00}"; // h:mm:ss.cc
             foreach (var mp in sub)

@@ -21,17 +21,32 @@ namespace UITests.Features.Main;
 /// where subtitle order gets restored - see issue #13173, where "Copy (text only)" put the lines
 /// on the clipboard out of order after a reverse selection.
 /// </summary>
-public class SubtitleGridSelectionOrderTests
+public class SubtitleGridSelectionOrderTests : IDisposable
 {
     private const int LineCount = 20;
 
-    private static (Window Window, MainViewModel Vm, TableView Grid) ShowMainWindowWithLines()
+    // Every window opened by a test is closed again in Dispose: if a test stops early, an
+    // unclosed window would outlive the test and race with the headless session teardown.
+    private readonly List<Window> _windows = new();
+
+    public void Dispose()
+    {
+        foreach (var window in _windows)
+        {
+            window.Close();
+        }
+
+        _windows.Clear();
+    }
+
+    private (Window Window, MainViewModel Vm, TableView Grid) ShowMainWindowWithLines()
     {
         var services = new ServiceCollection();
         services.AddSubtitleEditServices();
         Locator.Services = services.BuildServiceProvider();
 
         var window = new Window { Width = 1400, Height = 900 };
+        _windows.Add(window);
         MainView.NextHostWindow = window;
         var view = new MainView();
         window.Content = view;

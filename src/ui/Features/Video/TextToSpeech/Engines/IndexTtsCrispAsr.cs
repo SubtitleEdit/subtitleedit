@@ -363,7 +363,7 @@ public class IndexTtsCrispAsr : ITtsEngine
         var modelKey = ResolveModelKey(model);
         await EnsureServerRunningAsync(modelKey, indexVoice.FilePath, cancellationToken);
 
-        var outputFileName = Path.Combine(GetSetFolder(), Guid.NewGuid() + ".wav");
+        var outputFileName = Path.Combine(TtsOutputFolder.Resolve(outputFolder, GetSetFolder), Guid.NewGuid() + ".wav");
         var inputText = text;
 
         // OpenAI-compatible /v1/audio/speech payload. CrispASR's indextts backend uses:

@@ -27,6 +27,7 @@ using Nikse.SubtitleEdit.Features.Files.FormatProperties.ItunesTimedTextProperti
 using Nikse.SubtitleEdit.Features.Files.FormatProperties.TimedText10Properties;
 using Nikse.SubtitleEdit.Features.Files.FormatProperties.TimedTextImsc11Properties;
 using Nikse.SubtitleEdit.Features.Files.FormatProperties.WebVttProperties;
+using Nikse.SubtitleEdit.Features.WebVtt;
 using Nikse.SubtitleEdit.Features.Files.ImportImages;
 using Nikse.SubtitleEdit.Features.Files.ImportCsvXlsxCustomColumns;
 using Nikse.SubtitleEdit.Features.Files.ImportPlainText;
@@ -45,6 +46,7 @@ using Nikse.SubtitleEdit.Features.Ocr.Download;
 using Nikse.SubtitleEdit.Features.Ocr.FixEngine;
 using Nikse.SubtitleEdit.Features.Ocr.NOcr;
 using Nikse.SubtitleEdit.Features.Ocr.VobSubColorChooser;
+using Nikse.SubtitleEdit.Features.Options.DoNotBreakAfterList;
 using Nikse.SubtitleEdit.Features.Options.Language;
 using Nikse.SubtitleEdit.Features.Options.Plugins;
 using Nikse.SubtitleEdit.Features.Options.Settings;
@@ -263,6 +265,7 @@ public static class DependencyInjectionExtensions
         collection.AddHttpClient<ITesseractDownloadService, TesseractDownloadService>();
         collection.AddHttpClient<IWhisperDownloadService, WhisperDownloadService>();
         collection.AddHttpClient<IYtDlpDownloadService, YtDlpDownloadService>();
+        collection.AddHttpClient<IUpdateCheckService, UpdateCheckService>();
         collection.AddHttpClient<ILlamaCppDownloadService, LlamaCppDownloadService>();
         collection.AddHttpClient<IQwen3AsrCppDownloadService, Qwen3AsrCppDownloadService>();
         collection.AddHttpClient<IQwen3TtsCppDownloadService, Qwen3TtsCppDownloadService>();
@@ -351,7 +354,7 @@ public static class DependencyInjectionExtensions
         collection.AddTransient<ConvertActorsViewModel>();
         collection.AddTransient<ChangeFrameRateViewModel>();
         collection.AddTransient<ChangeSpeedViewModel>();
-        collection.AddHttpClient<CheckForUpdatesViewModel>();
+        collection.AddTransient<CheckForUpdatesViewModel>();
         collection.AddTransient<ColorPickerViewModel>();
         collection.AddTransient<ColumnPasteViewModel>();
         collection.AddTransient<CompareViewModel>();
@@ -472,6 +475,7 @@ public static class DependencyInjectionExtensions
         collection.AddTransient<PickOllamaModelViewModel>();
         collection.AddTransient<PickRuleProfileViewModel>();
         collection.AddTransient<PickLanguageViewModel>();
+        collection.AddTransient<DoNotBreakAfterListViewModel>();
         collection.AddTransient<PickSpellCheckDictionaryViewModel>();
         collection.AddTransient<PickSubtitleFormatViewModel>();
         collection.AddTransient<PickTsTrackViewModel>();
@@ -538,6 +542,8 @@ public static class DependencyInjectionExtensions
         collection.AddTransient<WaveformThemesViewModel>();
         collection.AddTransient<WaveformToolbarItemsViewModel>();
         collection.AddTransient<WebVttPropertiesViewModel>();
+        collection.AddTransient<WebVttStylesViewModel>();
+        collection.AddTransient<WebVttStylePickerViewModel>();
         collection.AddTransient<SpeechToTextAdvancedViewModel>();
         collection.AddTransient<SpeechToTextPostProcessingViewModel>();
         collection.AddTransient<WordListsViewModel>();

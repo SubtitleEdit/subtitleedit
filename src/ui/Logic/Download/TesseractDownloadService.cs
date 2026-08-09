@@ -17,7 +17,6 @@ public class TesseractDownloadService : ITesseractDownloadService
 {
     private readonly HttpClient _httpClient;
     private const string WindowsUrl = "https://github.com/SubtitleEdit/support-files/releases/download/tesseract550/Tesseract550.zip";
-    private const string MacUrl = "https://github.com/SubtitleEdit/support-files/releases/download/tesseract550/Tesseract550.zip"; //TODO:
     private readonly IZipUnpacker _zipUnpacker;
 
     public TesseractDownloadService(HttpClient httpClient, IZipUnpacker zipUnpacker)
@@ -33,11 +32,8 @@ public class TesseractDownloadService : ITesseractDownloadService
             return WindowsUrl;
         }
 
-        if (OperatingSystem.IsMacOS())
-        {
-            return MacUrl;
-        }
-
+        // macOS/Linux use a package-manager install ("brew install tesseract" /
+        // "apt install tesseract-ocr") - see OcrViewModel.CheckAndDownloadTesseract.
         throw new PlatformNotSupportedException();
     }
 

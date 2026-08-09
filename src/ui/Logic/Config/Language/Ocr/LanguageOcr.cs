@@ -122,6 +122,8 @@ public class LanguageOcr
     public string LlamaCppDownloadEngineAndModelPrompt { get; set; }
     public string LlamaCppDownloadEnginePrompt { get; set; }
     public string LlamaCppDownloadModelPrompt { get; set; }
+    public string CrispEmbedNotDownloaded { get; set; }
+    public string CrispEmbedReturnedNoText { get; set; }
 
     public LanguageOcr()
     {
@@ -246,5 +248,7 @@ public class LanguageOcr
         LlamaCppDownloadEngineAndModelPrompt = "llama.cpp requires the llama-server engine and the selected OCR model to be downloaded. Download now?";
         LlamaCppDownloadEnginePrompt = "llama.cpp requires the llama-server engine to be downloaded. Download now?";
         LlamaCppDownloadModelPrompt = "llama.cpp requires the selected OCR model to be downloaded. Download now?";
+        CrispEmbedNotDownloaded = "CrispEmbed engine/model not downloaded - download via batch convert settings";
+        CrispEmbedReturnedNoText = "CrispEmbed returned no text - check the model";
     }
 }

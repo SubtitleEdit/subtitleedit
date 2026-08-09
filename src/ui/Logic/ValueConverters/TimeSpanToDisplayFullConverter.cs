@@ -11,6 +11,12 @@ public class TimeSpanToDisplayFullConverter : IValueConverter
 {
     public static readonly TimeSpanToDisplayFullConverter Instance = new();
 
+    // Reused to avoid per-call TimeCode allocations (expected to be used from the UI thread only).
+    private readonly TimeCode _formattingTimeCode = new();
+    private const string ZeroFrameMode = "00:00:00.00";
+    private const string ZeroTime = "00:00:00,000";
+    private static readonly char[] SplitChars = ['.', ':', ';', ','];
+
     public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
         if (value is TimeSpan ts)
@@ -20,64 +26,42 @@ public class TimeSpanToDisplayFullConverter : IValueConverter
                 ts = ts.Add(TimeSpan.FromMilliseconds(Se.Settings.General.CurrentVideoOffsetInMs));
             }
 
+            _formattingTimeCode.TimeSpan = ts;
+
             if (Se.Settings.General.UseFrameMode)
             {
-                var resultFrames = new TimeCode(ts).ToHHMMSSFF();
-                return resultFrames;
+                return _formattingTimeCode.ToHHMMSSFF();
             }
 
-            var result = new TimeCode(ts).ToString();
-            return result;
+            return _formattingTimeCode.ToString();
         }
 
-        if (Se.Settings.General.UseFrameMode)
-        {
-            return "00:00:00.00";
-        }
-
-        return "00:00:00,000";
+        return Se.Settings.General.UseFrameMode ? ZeroFrameMode : ZeroTime;
     }
 
     public object ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
         if (value is string s)
         {
-            var parts = s.Split('.', ':', ';', ',');
-            if (Se.Settings.General.UseFrameMode)
+            var span = s.AsSpan();
+            var enumerator = span.SplitAny(SplitChars);
+            if (enumerator.MoveNext() && int.TryParse(span[enumerator.Current], out var hours) &&
+                enumerator.MoveNext() && int.TryParse(span[enumerator.Current], out var minutes) &&
+                enumerator.MoveNext() && int.TryParse(span[enumerator.Current], out var seconds) &&
+                enumerator.MoveNext() && int.TryParse(span[enumerator.Current], out var millisecondsOrFrames) &&
+                !enumerator.MoveNext())
             {
-                if (parts.Length == 4 &&
-                    int.TryParse(parts[0], out int hours) &&
-                    int.TryParse(parts[1], out int minutes) &&
-                    int.TryParse(parts[2], out int seconds) &&
-                    int.TryParse(parts[3], out int frames))
+                var milliseconds = Se.Settings.General.UseFrameMode
+                    ? SubtitleFormat.FramesToMillisecondsMax999(millisecondsOrFrames)
+                    : millisecondsOrFrames;
+                var result = new TimeSpan(0, hours, minutes, seconds, milliseconds);
+
+                if (Se.Settings.General.CurrentVideoOffsetInMs != 0)
                 {
-                    var result = new TimeSpan(0, hours, minutes, seconds, SubtitleFormat.FramesToMillisecondsMax999(frames));
-
-                    if (Se.Settings.General.CurrentVideoOffsetInMs != 0)
-                    {
-                        result = result.Add(TimeSpan.FromMilliseconds(-Se.Settings.General.CurrentVideoOffsetInMs));
-                    }
-
-                    return result;
+                    result = result.Add(TimeSpan.FromMilliseconds(-Se.Settings.General.CurrentVideoOffsetInMs));
                 }
-            }
-            else
-            {
-                if (parts.Length == 4 &&
-                    int.TryParse(parts[0], out int hours) &&
-                    int.TryParse(parts[1], out int minutes) &&
-                    int.TryParse(parts[2], out int seconds) &&
-                    int.TryParse(parts[3], out int ms))
-                {
-                    var result = new TimeSpan(0, hours, minutes, seconds, ms);
 
-                    if (Se.Settings.General.CurrentVideoOffsetInMs != 0)
-                    {
-                        result = result.Add(TimeSpan.FromMilliseconds(-Se.Settings.General.CurrentVideoOffsetInMs));
-                    }
-
-                    return result;
-                }
+                return result;
             }
         }
 

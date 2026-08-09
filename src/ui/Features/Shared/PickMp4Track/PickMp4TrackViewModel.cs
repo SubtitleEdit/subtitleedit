@@ -61,13 +61,34 @@ public partial class PickMp4TrackViewModel : ObservableObject
         WindowTitle = $"Pick MP4 track - {fileName}";
         foreach (var track in _mp4Tracks)
         {
+            // A trak box without an mdia child carries no media information at all;
+            // Mp4Parser.GetSubtitleTracks() already drops those, but the callers are
+            // free to hand us any track list.
+            var mdia = track.Mdia;
+            if (mdia == null)
+            {
+                continue;
+            }
+
+            // mdia.Name is the Box.Name of the last parsed child box (typically "minf"),
+            // so it must not be shown as the track name - the track language from the
+            // media header (mdhd) is what identifies the track. LanguageString maps an
+            // unknown/unset code to the literal "Any", so that cannot drive the fallback:
+            // an unlabeled track (the common ffmpeg/MP4Box output) shows the handler name
+            // from hdlr, or the handler type when that is blank (review follow-up, #13225).
+            var language = mdia.Mdhd?.LanguageString;
+            if (string.IsNullOrEmpty(language) || language == "Any")
+            {
+                language = string.IsNullOrEmpty(mdia.HandlerName) ? mdia.HandlerType : mdia.HandlerName;
+            }
+
             var display = new Mp4TrackInfoDisplay
             {
-                HandlerType = track.Mdia.HandlerType,
-                Name = track.Mdia.Name,
-                StartPosition = track.Mdia.StartPosition,
-                IsVobSubSubtitle = track.Mdia.IsVobSubSubtitle,
-                Duration = LastCueEnd(track.Mdia?.Minf?.Stbl?.GetParagraphs()),
+                HandlerType = mdia.HandlerType,
+                Name = language,
+                StartPosition = mdia.StartPosition,
+                IsVobSubSubtitle = mdia.IsVobSubSubtitle,
+                Duration = LastCueEnd(mdia.Minf?.Stbl?.GetParagraphs()),
                 Track = track,
             };
             Tracks.Add(display);
@@ -148,6 +169,7 @@ public partial class PickMp4TrackViewModel : ObservableObject
 
             var paragraphs = track.Mdia.Minf.Stbl.GetParagraphs();
             var subPictures = track.Mdia.Minf.Stbl.SubPictures;
+            var palette = track.Mdia.Minf.Stbl.VobSubPalette;
             var count = Math.Min(paragraphs.Count, subPictures.Count);
             if (count == 0)
             {
@@ -176,7 +198,7 @@ public partial class PickMp4TrackViewModel : ObservableObject
                 var paragraph = paragraphs[i];
                 exportHandler.WriteParagraph(new ImageParameter
                 {
-                    Bitmap = subPicture.GetBitmap(null, SKColors.Transparent, SKColors.Black, SKColors.White, SKColors.Black, false),
+                    Bitmap = subPicture.GetBitmap(palette, SKColors.Transparent, SKColors.Black, SKColors.White, SKColors.Black, false),
                     StartTime = TimeSpan.FromMilliseconds(paragraph.StartTime.TotalMilliseconds),
                     EndTime = TimeSpan.FromMilliseconds(paragraph.EndTime.TotalMilliseconds),
                     ScreenWidth = screenWidth,
@@ -268,7 +290,7 @@ public partial class PickMp4TrackViewModel : ObservableObject
 
             if (selectedTrack.IsVobSubSubtitle && selectedTrack.Track is { } trackinfo)
             {
-                cue.Image = new Image { Source = trackinfo.Mdia.Minf.Stbl.SubPictures[i - 1].GetBitmap(null, SKColors.Transparent, SKColors.Black, SKColors.White, SKColors.Black, false).ToAvaloniaBitmap() };
+                cue.Image = new Image { Source = trackinfo.Mdia.Minf.Stbl.SubPictures[i - 1].GetBitmap(trackinfo.Mdia.Minf.Stbl.VobSubPalette, SKColors.Transparent, SKColors.Black, SKColors.White, SKColors.Black, false).ToAvaloniaBitmap() };
             }
             else
             {

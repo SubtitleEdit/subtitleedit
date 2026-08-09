@@ -54,6 +54,14 @@ public class SeWaveform
     public bool SnapToFrames { get; set; }
     public bool ShotChangesAutoGenerate { get; set; }
     public int SnapToShotChangesPixels { get; set; }
+
+    // Search radius (in seconds) used by "Snap selected lines to nearest shot change". A shot change
+    // further away than this from the cue is left alone. The end cue gets a wider radius than the
+    // start cue; when both cues resolve to the same shot change the end cue is retried with the
+    // narrower "same shot" radius.
+    public double SnapToShotChangeStartMaxSeconds { get; set; }
+    public double SnapToShotChangeEndMaxSeconds { get; set; }
+    public double SnapToShotChangeSameShotEndMaxSeconds { get; set; }
     public bool FocusOnMouseOver { get; set; }
     public bool GuessTimeCodeStartFromBeginning { get; set; }
     public int GuessTimeCodeScanBlockSize { get; set; }
@@ -122,6 +130,9 @@ public class SeWaveform
         SnapToShotChanges = true;
         SnapToFrames = false;
         ShotChangesAutoGenerate = false;
+        SnapToShotChangeStartMaxSeconds = 1.0;
+        SnapToShotChangeEndMaxSeconds = 1.5;
+        SnapToShotChangeSameShotEndMaxSeconds = 0.5;
 
         SpectrogramStyle = nameof(SeSpectrogramStyle.Classic);
         LastDisplayMode = nameof(WaveformDisplayMode.OnlyWaveform);

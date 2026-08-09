@@ -213,6 +213,24 @@ public class SyntaxTextEditor : Decorator
 
     public void BringCaretIntoView() => _view.BringCaretIntoView();
 
+    /// <summary>Moves the lines the selection touches one line up (-1) or down (+1).</summary>
+    public void MoveSelectedLines(int lineDelta) => _view.MoveSelectedLines(lineDelta);
+
+    public void DuplicateSelectedLines() => _view.DuplicateSelectedLines();
+
+    public void DeleteSelectedLines() => _view.DeleteSelectedLines();
+
+    public void DeleteWordLeft() => _view.DeleteWordLeft();
+
+    public void DeleteWordRight() => _view.DeleteWordRight();
+
+    /// <summary>Replaces the whole text as one undoable edit - see the note on the view.</summary>
+    public void ReplaceAllText(string newText) => _view.ReplaceAllText(newText);
+
+    public bool CanUndo => _view.CanUndo;
+
+    public bool CanRedo => _view.CanRedo;
+
     protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
     {
         base.OnPropertyChanged(change);

@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Nikse.SubtitleEdit.Core.Common;
+using Nikse.SubtitleEdit.Logic.Config;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -61,7 +63,17 @@ internal static class CosyVoice3Languages
     /// </summary>
     public static string ResolveLanguageArg(TtsLanguage? language)
     {
-        var code = language?.Code;
+        // A null language means the CALLER had none to hand over, which is not the same as the
+        // user picking "Auto". The cast dialog's voice-test button and every cross-engine cast
+        // row pass null on purpose ("engines fall back to their own saved defaults"), so without
+        // this fallback the request went out with no `language` field and the clone kept the
+        // reference's accent on exactly the dubbing path the target language exists for (#13272).
+        if (language == null)
+        {
+            return ResolveSavedLanguageArg();
+        }
+
+        var code = language.Code;
         if (string.IsNullOrWhiteSpace(code))
         {
             return string.Empty;
@@ -69,8 +81,80 @@ internal static class CosyVoice3Languages
 
         // Guard against a language object left over from another engine (the view model can hold
         // one while switching engines): only values this engine actually advertises are passed on.
-        return All.Any(l => string.Equals(l.Code, code, StringComparison.OrdinalIgnoreCase))
-            ? code
-            : string.Empty;
+        return IsSupported(code) ? code : string.Empty;
+    }
+
+    /// <summary>
+    /// The language code behind the pick saved by the main TTS window, or an empty string when
+    /// nothing is saved / the saved entry is "Auto". The setting stores the DISPLAY NAME, which
+    /// is how <c>TextToSpeechViewModel</c> writes and restores it.
+    /// </summary>
+    public static string ResolveSavedLanguageArg()
+    {
+        var savedName = Se.Settings.Video.TextToSpeech.CosyVoice3CrispAsrLanguage;
+        if (string.IsNullOrWhiteSpace(savedName))
+        {
+            return string.Empty;
+        }
+
+        return All.FirstOrDefault(l => string.Equals(l.Name, savedName, StringComparison.OrdinalIgnoreCase))?.Code
+               ?? string.Empty;
+    }
+
+    /// <summary>True when <paramref name="code"/> is one of the nine languages CosyVoice3 knows.</summary>
+    public static bool IsSupported(string? code) =>
+        !string.IsNullOrWhiteSpace(code)
+        && All.Any(l => !string.IsNullOrEmpty(l.Code) && string.Equals(l.Code, code, StringComparison.OrdinalIgnoreCase));
+
+    /// <summary>
+    /// The language of a cloning reference, resolved the way the backend documents it: the
+    /// explicit "Reference language" pick from the settings window first, then a best-effort
+    /// detection over the reference transcript.
+    /// </summary>
+    /// <remarks>
+    /// The backend only goes cross-lingual once it knows BOTH the target and the reference
+    /// language, and its own reference detection declines on short or Latin-script transcripts —
+    /// which is every en→de / en→fr / en→ru pair a dubbing workflow actually asks for. Detecting
+    /// SE-side means a user who imported an English reference and asked for German gets
+    /// cross-lingual synthesis without first finding a combo box in an engine settings window.
+    /// The explicit pick still wins, and a detection outside CosyVoice3's nine languages is
+    /// discarded rather than sent (the backend would reject it).
+    /// </remarks>
+    public static string ResolveSourceLanguageArg(string? refText)
+    {
+        var configured = (Se.Settings.Video.TextToSpeech.CosyVoice3CrispAsrSourceLanguage ?? string.Empty).Trim();
+        if (IsSupported(configured))
+        {
+            return configured;
+        }
+
+        return DetectSourceLanguage(refText);
+    }
+
+    /// <summary>
+    /// Best-effort language of <paramref name="refText"/>, or an empty string when it cannot be
+    /// determined or is not one of CosyVoice3's nine languages. Uses the same detector the rest
+    /// of SE uses for subtitle language (function words first, then writing system).
+    /// </summary>
+    public static string DetectSourceLanguage(string? refText)
+    {
+        if (string.IsNullOrWhiteSpace(refText))
+        {
+            return string.Empty;
+        }
+
+        try
+        {
+            var subtitle = new Subtitle();
+            subtitle.Paragraphs.Add(new Paragraph(refText, 0, 0));
+            var detected = LanguageAutoDetect.AutoDetectGoogleLanguageOrNull(subtitle);
+            return IsSupported(detected) ? detected! : string.Empty;
+        }
+        catch
+        {
+            // Detection is an optimization - a failure just means we send no source_lang and the
+            // backend falls back to its own (declining) detection.
+            return string.Empty;
+        }
     }
 }

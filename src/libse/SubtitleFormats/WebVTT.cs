@@ -143,41 +143,64 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         internal static string GetPositionInfoFromAssTag(Paragraph p)
         {
             string positionInfo;
+            string currentTag = null;
             if (p.Text.StartsWith("{\\an1", StringComparison.Ordinal))
             {
                 positionInfo = Configuration.Settings.SubtitleSettings.WebVttCueAn1;
+                currentTag = "{\\an1}";
             }
             else if (p.Text.StartsWith("{\\an3", StringComparison.Ordinal))
             {
                 positionInfo = Configuration.Settings.SubtitleSettings.WebVttCueAn3;
+                currentTag = "{\\an3}";
             }
             else if (p.Text.StartsWith("{\\an4", StringComparison.Ordinal))
             {
                 positionInfo = Configuration.Settings.SubtitleSettings.WebVttCueAn4;
+                currentTag = "{\\an4}";
             }
             else if (p.Text.StartsWith("{\\an5", StringComparison.Ordinal))
             {
                 positionInfo = Configuration.Settings.SubtitleSettings.WebVttCueAn5;
+                currentTag = "{\\an5}";
             }
             else if (p.Text.StartsWith("{\\an6", StringComparison.Ordinal))
             {
                 positionInfo = Configuration.Settings.SubtitleSettings.WebVttCueAn6;
+                currentTag = "{\\an6}";
             }
             else if (p.Text.StartsWith("{\\an7", StringComparison.Ordinal))
             {
                 positionInfo = Configuration.Settings.SubtitleSettings.WebVttCueAn7;
+                currentTag = "{\\an7}";
             }
             else if (p.Text.StartsWith("{\\an8", StringComparison.Ordinal))
             {
                 positionInfo = Configuration.Settings.SubtitleSettings.WebVttCueAn8;
+                currentTag = "{\\an8}";
             }
             else if (p.Text.StartsWith("{\\an9", StringComparison.Ordinal))
             {
                 positionInfo = Configuration.Settings.SubtitleSettings.WebVttCueAn9;
+                currentTag = "{\\an9}";
             }
             else
             {
                 positionInfo = Configuration.Settings.SubtitleSettings.WebVttCueAn2;
+            }
+
+            // The raw cue settings captured at load ("line:72.69% align:left position:44.90% size:10.21%")
+            // are exact, while the WebVttCueAnX settings are coarse 3x3-grid defaults. Re-emit the raw
+            // settings when they are still consistent with the current alignment tag (i.e. the user has
+            // not changed the alignment since load), so line%/position% are not lost or grid-locked (#10209).
+            if (!string.IsNullOrEmpty(p.Style) &&
+                !string.IsNullOrEmpty(GetPositionInfoRaw(p.Style)) &&
+                GetPositionInfo(p.Style) == (currentTag ?? string.Empty))
+            {
+                // "region:" is written separately by the caller, so drop it here - otherwise a
+                // cue that listed it after the other settings ("line:10% region:r1") is saved
+                // with the region twice.
+                positionInfo = RemoveCueSetting(p.Style, "region:").Trim();
             }
 
             return (" " + positionInfo).TrimEnd();
@@ -675,6 +698,28 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             return region;
         }
 
+        /// <summary>
+        /// Removes a "name:value" cue setting (and its trailing space) from a raw cue settings
+        /// string, leaving the other settings untouched.
+        /// </summary>
+        internal static string RemoveCueSetting(string s, string tag)
+        {
+            if (string.IsNullOrEmpty(s))
+            {
+                return s;
+            }
+
+            var pos = s.IndexOf(tag, StringComparison.Ordinal);
+            if (pos < 0)
+            {
+                return s;
+            }
+
+            var end = s.IndexOf(' ', pos);
+            var result = end < 0 ? s.Remove(pos) : s.Remove(pos, end - pos + 1);
+            return result.Trim();
+        }
+
         private static string GetTag(string s, string tag)
         {
             if (s == null)
@@ -1111,32 +1156,65 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             {
                 foreach (var p in subtitle.Paragraphs)
                 {
-                    var s = p.Text;
-                    var startIndex = s.IndexOf("<v ", StringComparison.Ordinal);
-                    while (startIndex >= 0)
+                    foreach (var voice in GetVoices(p.Text))
                     {
-                        var endIndex = s.IndexOf('>', startIndex);
-                        if (endIndex > startIndex)
+                        if (!list.Contains(voice))
                         {
-                            var voice = s.Substring(startIndex + 2, endIndex - startIndex - 2).Trim();
-                            if (!list.Contains(voice))
-                            {
-                                list.Add(voice);
-                            }
-                        }
-
-                        if (startIndex == s.Length - 1)
-                        {
-                            startIndex = -1;
-                        }
-                        else
-                        {
-                            startIndex = s.IndexOf("<v ", startIndex + 1, StringComparison.Ordinal);
+                            list.Add(voice);
                         }
                     }
                 }
             }
             return list;
+        }
+
+        /// <summary>
+        /// The names of the "&lt;v Name&gt;" voice tags in a single cue text, in the order they
+        /// appear and without duplicates.
+        /// </summary>
+        public static List<string> GetVoices(string text)
+        {
+            var list = new List<string>();
+            if (string.IsNullOrEmpty(text))
+            {
+                return list;
+            }
+
+            var startIndex = text.IndexOf("<v ", StringComparison.Ordinal);
+            while (startIndex >= 0)
+            {
+                var endIndex = text.IndexOf('>', startIndex);
+                if (endIndex > startIndex)
+                {
+                    var voice = text.Substring(startIndex + 2, endIndex - startIndex - 2).Trim();
+                    if (!list.Contains(voice))
+                    {
+                        list.Add(voice);
+                    }
+                }
+
+                if (startIndex == text.Length - 1)
+                {
+                    startIndex = -1;
+                }
+                else
+                {
+                    startIndex = text.IndexOf("<v ", startIndex + 1, StringComparison.Ordinal);
+                }
+            }
+
+            return list;
+        }
+
+        /// <summary>
+        /// The first "&lt;v Name&gt;" voice of a cue text, or an empty string when it has none.
+        /// This is WebVTT's counterpart of the actor of an ASSA line - it lives inside the cue
+        /// text instead of in a field of its own.
+        /// </summary>
+        public static string GetVoice(string text)
+        {
+            var voices = GetVoices(text);
+            return voices.Count > 0 ? voices[0] : string.Empty;
         }
 
         public static string RemoveTag(string tag, string text)

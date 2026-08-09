@@ -182,7 +182,9 @@ public partial class VideoPlayerUndockedViewModel : ObservableObject
             Dispatcher.UIThread.Post(async () =>
             {
                 await Task.Delay(100);
-                await videoPlayerControl.Open(_originalVideoFileName);
+                // Open where the docked player was - seeking only afterwards shows the start of
+                // the video for a moment and then jumps (issue #13329).
+                await videoPlayerControl.Open(_originalVideoFileName, _originalPosition);
                 await Task.Delay(100);
                 await videoPlayerControl.WaitForPlayersReadyAsync();
                 await Task.Delay(100);
@@ -219,7 +221,14 @@ public partial class VideoPlayerUndockedViewModel : ObservableObject
                         Math.Abs(cursorPos.Value.Y - _lastCursorPosition.Y) > mouseMovementMinPixels)
                     {
                         _lastCursorPosition = cursorPos.Value;
-                        VideoPlayerControl.NotifyUserActivity();
+
+                        // Only movement over this window counts - the poll is desktop-wide,
+                        // so mouse movement in another app or on another monitor must not
+                        // bring the controls back up (issue #13207).
+                        if (CursorPositionHelper.IsCursorOverWindow(Window, cursorPos.Value))
+                        {
+                            VideoPlayerControl.NotifyUserActivity();
+                        }
                     }
                 }
             }

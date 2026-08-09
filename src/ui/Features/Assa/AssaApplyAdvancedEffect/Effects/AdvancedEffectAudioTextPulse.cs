@@ -35,13 +35,12 @@ public class AdvancedEffectAudioTextPulse : IAdvancedEffectDisplay
         {
             var cleanText = Utilities.RemoveSsaTags(sub.Text)
                 .Replace("\r\n", "\\N").Replace("\r", "\\N").Replace("\n", "\\N").Trim();
-            if (string.IsNullOrEmpty(cleanText))
+            double durationMs = sub.Duration.TotalMilliseconds;
+            if (string.IsNullOrEmpty(cleanText) || durationMs <= 0)
             {
-                result.Add(sub);
+                result.Add(AdvancedEffectUtil.PassThrough(sub));
                 continue;
             }
-
-            double durationMs = sub.Duration.TotalMilliseconds;
 
             // Normalise against the loudest peak in the neighbourhood of this subtitle
             double localPeak = ComputeLocalPeak(wavePeaks,
@@ -92,7 +91,7 @@ public class AdvancedEffectAudioTextPulse : IAdvancedEffectDisplay
                 var frame = new SubtitleLineViewModel(sub, generateNewId: true);
                 frame.StartTime = sub.StartTime.Add(TimeSpan.FromMilliseconds(t));
                 frame.EndTime = sub.StartTime.Add(TimeSpan.FromMilliseconds(Math.Min(t + frameMs, durationMs)));
-                frame.Text = $"{{\\an2\\1c&HFFFFFF&\\3c{glowColor}\\bord{bord:F1}\\blur{blur:F1}\\shad0\\fscx{scale}\\fscy{scale}}}" + cleanText;
+                frame.Text = $"{{\\an2\\1c&HFFFFFF&\\3c{glowColor}\\bord{AdvancedEffectUtil.Tag(bord)}\\blur{AdvancedEffectUtil.Tag(blur)}\\shad0\\fscx{scale}\\fscy{scale}}}" + cleanText;
                 result.Add(frame);
             }
         }
