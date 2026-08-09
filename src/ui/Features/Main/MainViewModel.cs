@@ -23593,14 +23593,15 @@ public partial class MainViewModel :
                         if (p == null)
                         {
                             PauseVideoAndFreezePlayhead(vp);
-                            vp.Position = _playSelectionItem.EndSeconds;
-                            PinPlayheadTo(_playSelectionItem.EndSeconds);
+                            var stopPosition = Math.Max(0.0, _playSelectionItem.EndSeconds - 0.07);
+                            vp.Position = stopPosition;
+                            PinPlayheadTo(stopPosition);
 
                             // Stopping here is not a user scrub: without this the "center also while paused"
                             // branch below sees the play-head jump (its baseline is still where playback
                             // started) and re-selects the line under the play-head - the next line, since the
                             // stop lands on the shared start/end boundary (#13331).
-                            _pausedSelectLastSeconds = _playSelectionItem.EndSeconds;
+                            _pausedSelectLastSeconds = stopPosition;
                             ResetPlaySelection();
                         }
                         else

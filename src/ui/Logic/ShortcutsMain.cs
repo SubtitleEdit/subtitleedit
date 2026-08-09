@@ -921,6 +921,8 @@ public static class ShortcutsMain
             new(nameof(vm.CommandFileSaveCommand), [cmd, "S"], ShortcutCategory.General),
             new(nameof(vm.TogglePlayPauseCommand), [nameof(Avalonia.Input.Key.Space)], ShortcutCategory.General),
             new(nameof(vm.TogglePlayPause2Command), [cmd, nameof(Avalonia.Input.Key.Space)], ShortcutCategory.General),
+            new(nameof(vm.PlayNextAndStopCommand), [cmd, "Down"], ShortcutCategory.General),
+            new(nameof(vm.PlayPreviousAndStopCommand), [cmd, "Up"], ShortcutCategory.General),
             new(nameof(vm.VideoOneSecondBackCommand), [nameof(Avalonia.Input.Key.Left)], ShortcutCategory.General),
             new(nameof(vm.VideoOneSecondForwardCommand), [nameof(Avalonia.Input.Key.Right)], ShortcutCategory.General),
             new(nameof(vm.ShowHelpCommand), [nameof(Avalonia.Input.Key.F1)], ShortcutCategory.General),
