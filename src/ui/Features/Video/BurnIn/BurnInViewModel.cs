@@ -497,6 +497,10 @@ public partial class BurnInViewModel : ObservableObject
                 jobItem.TotalFrames = (long)Math.Round(jobItem.TotalSeconds * 25.0);
             }
         }
+        // Batch job items survive between Generate clicks, and SetTargetBitRate stores its
+        // computed rate here - stale, it would turn a later quality-based run into a silent
+        // "-b:v <old rate>" encode with the quality flag dropped.
+        jobItem.VideoBitRate = string.Empty;
         jobItem.UseTargetFileSize = UseTargetFileSize;
         // Resolve the per-file target (MB): "match source" derives it from each input file's own
         // size (so a batch of differently-sized videos keeps each output near its source), otherwise
@@ -533,22 +537,28 @@ public partial class BurnInViewModel : ObservableObject
         }
         else
         {
-            if (jobItem.UseTargetFileSize)
-            {
-                // VideoToolbox accepts -pass but writes an empty stats file, so pass 1 only
-                // doubles the encode time. Hit the target with single-pass average bit rate
-                // instead (#13401).
-                if (!SetTargetBitRate(jobItem))
-                {
-                    return;
-                }
-            }
+            // VideoToolbox accepts -pass but writes an empty stats file, so pass 1 only
+            // doubles the encode time. Hit the target with single-pass average bit rate
+            // instead (#13401).
+            result = !jobItem.UseTargetFileSize || SetTargetBitRate(jobItem);
 
-            result = await RunOnePassEncoding(jobItem);
             if (result)
             {
-                _timerGenerate.Start();
+                result = await RunOnePassEncoding(jobItem);
+                if (result)
+                {
+                    _timerGenerate.Start();
+                }
             }
+        }
+
+        if (!result)
+        {
+            // No process and no timer running: nothing would ever consume _doAbort or reset the
+            // generating state, leaving the dialog stuck with a dead Cancel button.
+            jobItem.Status = Se.Language.General.Error;
+            IsGenerating = false;
+            ProgressValue = 0;
         }
     }
 
