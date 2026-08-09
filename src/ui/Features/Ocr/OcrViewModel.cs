@@ -1281,6 +1281,28 @@ public partial class OcrViewModel : ObservableObject
     }
 
     /// <summary>
+    /// Re-downloads the CrispEmbed engine binaries, re-asking which hardware build to use. The
+    /// CPU/Vulkan/CUDA choice is otherwise only offered on first install, which left anyone who
+    /// picked CPU with no way back to a GPU build (issue #13400). Downloaded models are kept.
+    /// </summary>
+    [RelayCommand]
+    private async Task ReDownloadCrispEmbedEngine()
+    {
+        if (Window == null)
+        {
+            return;
+        }
+
+        await CrispEmbedDownloadHelper.DownloadEngineAsync(
+            Window, _windowService,
+            onEngineDownloadClosed: () =>
+            {
+                _isCtrlDown = false;
+                RefreshEngineCombo?.Invoke();
+            });
+    }
+
+    /// <summary>
     /// Makes sure the CrispEmbed engine binaries and the selected model are on disk, offering
     /// downloads for anything missing - the OCR-side analog of the CrispASR engine/model
     /// download flow in the speech-to-text window.
