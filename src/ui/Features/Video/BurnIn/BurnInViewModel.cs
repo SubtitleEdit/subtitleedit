@@ -523,7 +523,7 @@ public partial class BurnInViewModel : ObservableObject
         });
 
         bool result;
-        if (jobItem.UseTargetFileSize)
+        if (jobItem.UseTargetFileSize && !IsVideoToolboxEncoder(SelectedVideoEncoding?.Codec))
         {
             result = await RunTwoPassEncoding(jobItem);
             if (result)
@@ -533,6 +533,17 @@ public partial class BurnInViewModel : ObservableObject
         }
         else
         {
+            if (jobItem.UseTargetFileSize)
+            {
+                // VideoToolbox accepts -pass but writes an empty stats file, so pass 1 only
+                // doubles the encode time. Hit the target with single-pass average bit rate
+                // instead (#13401).
+                if (!SetTargetBitRate(jobItem))
+                {
+                    return;
+                }
+            }
+
             result = await RunOnePassEncoding(jobItem);
             if (result)
             {
@@ -541,7 +552,21 @@ public partial class BurnInViewModel : ObservableObject
         }
     }
 
-    private async Task<bool> RunTwoPassEncoding(BurnInJobItem jobItem)
+    /// <summary>
+    /// VideoToolbox has no working two-pass mode: ffmpeg accepts -pass but the encoder writes
+    /// no statistics, so the analyze pass is pure wasted time. These encodes target a file size
+    /// with a single-pass average bit rate instead (#13401).
+    /// </summary>
+    internal static bool IsVideoToolboxEncoder(string? codec)
+    {
+        return !string.IsNullOrEmpty(codec) && codec.EndsWith("_videotoolbox", StringComparison.Ordinal);
+    }
+
+    /// <summary>
+    /// Computes the bit rate needed to hit the requested file size and stores it on the job.
+    /// Returns false (and tells the user) when the target is too small to encode.
+    /// </summary>
+    private bool SetTargetBitRate(BurnInJobItem jobItem)
     {
         var bitRate = GetVideoBitRate(jobItem);
         jobItem.VideoBitRate = bitRate.ToString(CultureInfo.InvariantCulture) + "k";
@@ -555,6 +580,16 @@ public partial class BurnInViewModel : ObservableObject
                     $"Bit rate too low: {bitRate}k",
                     MessageBoxButtons.OK);
             });
+            return false;
+        }
+
+        return true;
+    }
+
+    private async Task<bool> RunTwoPassEncoding(BurnInJobItem jobItem)
+    {
+        if (!SetTargetBitRate(jobItem))
+        {
             return false;
         }
 
