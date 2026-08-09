@@ -159,7 +159,15 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text"
                 // Trim via span: Header.Trim() re-allocated the whole (possibly multi-KB)
                 // header on every save and every mpv preview refresh.
                 sb.Append(subtitle.Header.AsSpan().Trim()).AppendLine();
-                sb.AppendLine("Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text");
+
+                // Most headers end at "[Events]", but some (e.g. HeaderNoStyles) already carry
+                // the events format line - appending another gave a duplicate "Format:" line.
+                var eventsIndex = subtitle.Header.LastIndexOf("[Events]", StringComparison.Ordinal);
+                if (eventsIndex < 0 || subtitle.Header.IndexOf("Format:", eventsIndex, StringComparison.Ordinal) < 0)
+                {
+                    sb.AppendLine("Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text");
+                }
+
                 styles = GetStylesFromHeader(subtitle.Header);
             }
             else if (!string.IsNullOrEmpty(subtitle.Header) && subtitle.Header.Contains("[V4 Styles]"))
