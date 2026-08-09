@@ -122,6 +122,14 @@ public partial class FixNamesViewModel : ObservableObject, IClosingCleanup
             }
         }
 
+        foreach (var item in names)
+        {
+            // Single notification point: checkbox clicks, the space toggle and
+            // select-all/invert all go through IsChecked, so no call site can
+            // forget to refresh the preview.
+            item.PropertyChanged += (_, _) => RequestPreview();
+        }
+
         Names.Clear();
         Names.AddRange(names);
     }
@@ -134,31 +142,42 @@ public partial class FixNamesViewModel : ObservableObject, IClosingCleanup
     }
 
     private CancellationTokenSource? _cancellationTokenSource;
+    private bool _isClosing;
 
-    [RelayCommand]
-    private void FixNameItemChanged(FixNameItem item)
+    private void RequestPreview(int delayMilliseconds = 500)
     {
-        RequestPreview();
-    }
+        if (_isClosing)
+        {
+            return;
+        }
 
-    internal void RequestPreview()
-    {
         _cancellationTokenSource?.Cancel();
         _cancellationTokenSource?.Dispose();
         _cancellationTokenSource = new CancellationTokenSource();
-        _ = DebouncedPreviewAsync(_cancellationTokenSource.Token);
+        _ = DebouncedPreviewAsync(delayMilliseconds, _cancellationTokenSource.Token);
     }
 
-    private async Task DebouncedPreviewAsync(CancellationToken token)
+    private async Task DebouncedPreviewAsync(int delayMilliseconds, CancellationToken token)
     {
         try
         {
-            await Task.Delay(500, token).ConfigureAwait(false);
-            GeneratePreview();
+            await Task.Delay(delayMilliseconds, token).ConfigureAwait(false);
+
+            // Snapshot on the UI thread - FindAllNames mutates Names there, so the
+            // background computation below must not enumerate the live collection.
+            var activeNames = await Dispatcher.UIThread.InvokeAsync(() =>
+                Names.Where(n => n.IsChecked).Select(n => n.Name).ToArray());
+            token.ThrowIfCancellationRequested();
+
+            GeneratePreview(activeNames);
         }
         catch (OperationCanceledException)
         {
             // Superseded by a newer request, or the window closed.
+        }
+        catch (Exception exception)
+        {
+            Se.LogError(exception, "Fix names preview failed");
         }
     }
 
@@ -166,28 +185,26 @@ public partial class FixNamesViewModel : ObservableObject, IClosingCleanup
     {
         // Null out so a repeated Closed callback (or a late RequestPreview) never
         // touches the disposed source.
+        _isClosing = true;
         _cancellationTokenSource?.Cancel();
         _cancellationTokenSource?.Dispose();
         _cancellationTokenSource = null;
     }
 
-    private void GeneratePreview()
+    private void GeneratePreview(string[] activeNames)
     {
         var hits = new List<FixNameHitItem>();
 
         // reusable array
         var processingNames = new string[1];
 
-        // filter out non-active name to avoid extra processing
-        var activeNameItems = Names.Where(n => n.IsChecked).ToArray();
-
         foreach (var p in _subtitle.Paragraphs)
         {
             var text = p.Text;
-            foreach (var item in activeNameItems)
+            foreach (var name in activeNames)
             {
                 // no extra processing if paragraph doesn't contain name
-                if (!text.Contains(item.Name, StringComparison.OrdinalIgnoreCase))
+                if (!text.Contains(name, StringComparison.OrdinalIgnoreCase))
                 {
                     continue;
                 }
@@ -198,7 +215,7 @@ public partial class FixNamesViewModel : ObservableObject, IClosingCleanup
                 if (textNoTags != textNoTags.ToUpperInvariant())
                 {
                     var st = new StrippableText(text);
-                    processingNames[0] = item.Name;
+                    processingNames[0] = name;
                     st.FixCasing(processingNames, true, false, false, string.Empty);
                     text = st.MergedString;
                 }
@@ -222,10 +239,8 @@ public partial class FixNamesViewModel : ObservableObject, IClosingCleanup
     {
         foreach (var name in Names)
         {
-            name.IsChecked = true;
+            name.IsChecked = true; // PropertyChanged requests the preview
         }
-
-        GeneratePreview();
     }
 
     [RelayCommand]
@@ -233,10 +248,8 @@ public partial class FixNamesViewModel : ObservableObject, IClosingCleanup
     {
         foreach (var name in Names)
         {
-            name.IsChecked = !name.IsChecked;
+            name.IsChecked = !name.IsChecked; // PropertyChanged requests the preview
         }
-
-        GeneratePreview();
     }
 
     [RelayCommand]
@@ -297,7 +310,7 @@ public partial class FixNamesViewModel : ObservableObject, IClosingCleanup
     public void AddExtraName()
     {
         FindAllNames();
-        GeneratePreview();
+        RequestPreview(0);
     }
 
     internal void OnKeyDown(KeyEventArgs e)
@@ -326,6 +339,6 @@ public partial class FixNamesViewModel : ObservableObject, IClosingCleanup
 
         ExtraNames = Se.Settings.Tools.ChangeCasing.ExtraNames;
         FindAllNames();
-        GeneratePreview();
+        RequestPreview(0);
     }
 }

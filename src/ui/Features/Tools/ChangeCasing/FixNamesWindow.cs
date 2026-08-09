@@ -3,10 +3,14 @@ using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
 using Avalonia.Controls.Templates;
 using Avalonia.Data;
+using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Media;
+using Avalonia.Threading;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
+using System;
+using System.Linq;
 
 namespace Nikse.SubtitleEdit.Features.Tools.ChangeCasing;
 
@@ -128,20 +132,15 @@ public class FixNamesWindow : Window
             Header = Se.Language.General.Enabled,
             CellTheme = UiUtil.TableViewNoPaddingCellTheme,
             HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
-            CellTemplate = new FuncDataTemplate<FixNameItem>((item, _) => new Border
+            CellTemplate = new FuncDataTemplate<FixNameItem>(static (item, _) =>
+            new Border
             {
                 Background = Brushes.Transparent, // Prevents highlighting
                 Padding = new Thickness(4),
                 Child = new CheckBox
                 {
                     Focusable = false,
-                    [!ToggleButton.IsCheckedProperty] = new Binding(nameof(FixNameItem.IsChecked))
-                    {
-                        Mode = BindingMode.TwoWay,
-                        UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged,
-                    },
-                    Command = vm.FixNameItemChangedCommand,
-                    CommandParameter = item,
+                    [!ToggleButton.IsCheckedProperty] = new Binding(nameof(FixNameItem.IsChecked)),
                     HorizontalAlignment = Avalonia.Layout.HorizontalAlignment.Center,
                 }
             }),
@@ -158,11 +157,8 @@ public class FixNamesWindow : Window
             HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
         });
 
-        TableViewExtras.AddSpaceToggle<FixNameItem>(dataGrid, item => item.IsChecked, (item, v) =>
-        {
-            item.IsChecked = v;
-            vm.RequestPreview();
-        });
+        TableViewExtras.AddSpaceToggle<FixNameItem>(dataGrid,
+            item => item.IsChecked, (item, v) => item.IsChecked = v);
 
         var flyout = new MenuFlyout();
         flyout.Items.Add(new MenuItem { Header = Se.Language.General.SelectAll, Command = vm.NamesSelectAllCommand });
