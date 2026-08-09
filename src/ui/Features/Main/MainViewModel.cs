@@ -1094,6 +1094,11 @@ public partial class MainViewModel :
                 // (discussion #11744).
                 ReapplyPlaybackSpeed();
 
+                // The subtitle is state the fresh player starts over with too, and the refresh
+                // armed above may well have run before its mpv core was up. Arm it again now
+                // that the player is really playing (same reasoning as fullscreen, #13407).
+                RefreshSubtitlePreview();
+
                 if (savedAudioTrack != null && vp.VideoPlayer is LibMpvDynamicPlayer mpv)
                 {
                     mpv.SetAudioTrack(savedAudioTrack.Id);
@@ -13497,26 +13502,28 @@ public partial class MainViewModel :
                 dockedMpv.SetSubtitleVisibility(_mpvReloader.SubtitlesVisible);
             }
 
+            // And the subtitle itself: entering fullscreen reset the reloader, which deleted
+            // the temp file behind the docked player's still-loaded subtitle - so it can only
+            // show the pre-fullscreen text and cannot even be sub-reloaded. Re-arm the preview
+            // so the docked player gets a fresh push (#13407).
+            RefreshSubtitlePreview();
+
             Dispatcher.UIThread.Post(() => TableViewExtras.FocusRow(SubtitleGrid));
-        }, toggleKeys, showMediaInfoKeys, showMediaInformationOwnedBy, extraBindings, ReapplySelectedAudioTrack);
+        }, toggleKeys, showMediaInfoKeys, showMediaInformationOwnedBy, extraBindings, readyPlayer =>
+        {
+            // Runs once the fullscreen player has actually opened the file (see the window's
+            // Loaded handler). Both of these re-apply state a brand new mpv instance starts
+            // over with, and both have to wait for that point:
+            ReapplySelectedAudioTrack(readyPlayer); // the selected audio track (#12844)
+            RefreshSubtitlePreview();               // and the subtitle itself (#13407)
+        });
         fullScreenWindow.Show(Window!);
         _shortcutManager.ClearKeys();
 
-        var vp = GetVideoPlayerControl();
-        if (vp != null)
-        {
-            if (vp.VideoPlayer is LibMpvDynamicPlayer mpv)
-            {
-                _mpvReloader.Reset();
-                _mpvReloader.RefreshMpv(mpv, GetUpdateSubtitle(), _subtitleSecondary, SelectedSubtitleFormat);
-            }
-            else if (vp.VideoPlayer is LibVlcDynamicPlayer vlc)
-            {
-                _vlcReloader.Reset();
-                _vlcReloader.RefreshVlc(vlc, GetUpdateSubtitle(), _subtitleSecondary, SelectedSubtitleFormat);
-            }
-        }
-
+        // Only arms the preview - the push happens on the next timer tick and is retried until
+        // the new player takes it. Pushing right here (as this used to) cannot work: the
+        // fullscreen mpv core is initialized lazily by its rendering surface and has not even
+        // loaded the video yet, so mpv rejected the sub-add and nothing tried again (#13407).
         RefreshSubtitlePreview();
     }
 
@@ -23768,8 +23775,12 @@ public partial class MainViewModel :
             return;
         }
 
+        // No player, or a player with no video: there is nothing to draw a subtitle on. The dirty
+        // flag stays set (and VideoOpenFile re-arms it anyway), so opening a video pushes right
+        // away - while a rejected push is not retried against a player that has no file, which
+        // would rewrite the temp subtitle file every 400 ms for the rest of the session.
         var vp = GetVideoPlayerControl();
-        if (vp == null)
+        if (vp == null || string.IsNullOrEmpty(_videoFileName))
         {
             return;
         }
@@ -23800,27 +23811,45 @@ public partial class MainViewModel :
                 subtitle.Paragraphs.RemoveAll(p => !_visibleLayers!.Contains(p.Layer));
             }
 
-            _ = RunPreviewRefresh(() => _vlcReloader.RefreshVlc(vlc, subtitle, _subtitleSecondary, SelectedSubtitleFormat));
+            _ = RunPreviewRefresh(async () =>
+            {
+                await _vlcReloader.RefreshVlc(vlc, subtitle, _subtitleSecondary, SelectedSubtitleFormat);
+                return true;
+            });
         }
     }
 
-    private async Task RunPreviewRefresh(Func<Task> refresh)
+    /// <param name="refresh">
+    /// Pushes the subtitle to the player and answers whether it arrived. A false - mpv rejecting
+    /// sub-add because the freshly created player is not playing yet - is retried, not swallowed:
+    /// nothing else re-pushes during plain playback, so one lost push left fullscreen without
+    /// subtitles for the whole session (issue #13407).
+    /// </param>
+    private async Task RunPreviewRefresh(Func<Task<bool>> refresh)
     {
         _mpvPreviewRefreshBusy = true;
         try
         {
-            await refresh();
+            if (!await refresh())
+            {
+                RetryPreviewRefreshLater();
+            }
         }
         catch (Exception exception)
         {
             Se.LogError(exception, "Video preview subtitle refresh failed");
-            _mpvPreviewDirty = true; // retry on a later tick
-            _previewRetryNotBeforeMs = Environment.TickCount64 + 400;
+            RetryPreviewRefreshLater();
         }
         finally
         {
             _mpvPreviewRefreshBusy = false;
         }
+    }
+
+    private void RetryPreviewRefreshLater()
+    {
+        _mpvPreviewDirty = true; // retry on a later tick
+        _previewRetryNotBeforeMs = Environment.TickCount64 + 400;
     }
 
     // Auto-save (saves the actual open file) state. Debounced: we only write once edits have
