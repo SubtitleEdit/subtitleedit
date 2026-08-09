@@ -6536,6 +6536,13 @@ public partial class MainViewModel :
 
         Dispatcher.UIThread.Post(() =>
         {
+            // Rebuilding the undocked windows below ends in ShowIndependentWindow, which does
+            // Show() + Focus() - so it takes foreground. Settings -> Apply reaches here through
+            // ApplySettings while its own dialog is still open, which left that dialog visible
+            // but deactivated and an undocked window in front of it (#13398). Remember a
+            // foreground dialog now and hand activation back once both windows exist.
+            var windowToReactivate = GetActiveWindowOtherThanMainAndUndocked();
+
             AreVideoControlsUndocked = true;
 
             var position = vp.Position;
@@ -6589,7 +6596,49 @@ public partial class MainViewModel :
             }
 
             RefreshSubtitlePreview();
+
+            if (windowToReactivate != null)
+            {
+                // Background priority so the two Show()/Focus() calls above have settled.
+                Dispatcher.UIThread.Post(() =>
+                {
+                    if (windowToReactivate.IsVisible && !windowToReactivate.IsActive)
+                    {
+                        windowToReactivate.Activate();
+                    }
+                }, DispatcherPriority.Background);
+            }
         });
+    }
+
+    /// <summary>
+    /// The active window when it is neither the main window nor one of the undocked tool
+    /// windows - i.e. a dialog sitting in front. Used to give foreground back to a dialog that
+    /// triggered a rebuild of the undocked windows (#13398). The undocked windows are excluded
+    /// because they are closed and re-created by that rebuild.
+    /// </summary>
+    private Window? GetActiveWindowOtherThanMainAndUndocked()
+    {
+        if (Application.Current?.ApplicationLifetime is not IClassicDesktopStyleApplicationLifetime desktop)
+        {
+            return null;
+        }
+
+        var videoWindow = _videoPlayerUndockedViewModel?.Window;
+        var waveformWindow = _audioVisualizerUndockedViewModel?.Window;
+
+        foreach (var window in desktop.Windows)
+        {
+            if (window.IsActive &&
+                !ReferenceEquals(window, Window) &&
+                !ReferenceEquals(window, videoWindow) &&
+                !ReferenceEquals(window, waveformWindow))
+            {
+                return window;
+            }
+        }
+
+        return null;
     }
 
     /// <summary>
