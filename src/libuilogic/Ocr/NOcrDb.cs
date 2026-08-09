@@ -245,7 +245,7 @@ public class NOcrDb
             var oc = OcrCharactersExpanded[i];
             if (oc.ExpandCount > 1 && oc.Width > w && targetItem.X + oc.Width < nikseBitmap.Width &&
                 oc.LinesForeground.Count + oc.LinesBackground.Count >= MinLinesForExpandedMatch &&
-                IsExpandedLineMatch(oc, targetItem, nikseBitmap, scaled: false))
+                IsExpandedLineMatch(oc, targetItem, nikseBitmap))
             {
                 var size = GetTotalSize(listIndex, list, oc.ExpandCount);
                 if (Math.Abs(size.X - oc.Width) < 3 && Math.Abs(size.Y - oc.Height) < 3)
@@ -259,13 +259,18 @@ public class NOcrDb
         {
             var oc = OcrCharactersExpanded[i];
             if (oc.ExpandCount > 1 && oc.Width > w && targetItem.X + oc.Width < nikseBitmap.Width &&
-                oc.LinesForeground.Count + oc.LinesBackground.Count >= MinLinesForExpandedMatch &&
-                IsExpandedLineMatch(oc, targetItem, nikseBitmap, scaled: true))
+                oc.LinesForeground.Count + oc.LinesBackground.Count >= MinLinesForExpandedMatch)
             {
                 var size = GetTotalSize(listIndex, list, oc.ExpandCount);
+                if (size.X <= 0 || size.Y <= 0)
+                {
+                    continue;
+                }
+
                 var heightToWidthPercent = size.Y * 100.0 / size.X;
                 if (Math.Abs(heightToWidthPercent - oc.HeightToWidthPercent) < 15 &&
-                    Math.Abs(size.X - oc.Width) < 25 && Math.Abs(size.Y - oc.Height) < 20)
+                    Math.Abs(size.X - oc.Width) < 25 && Math.Abs(size.Y - oc.Height) < 20 &&
+                    IsExpandedLineMatchScaled(oc, targetItem, nikseBitmap, size.X, size.Y))
                 {
                     return oc;
                 }
@@ -275,12 +280,66 @@ public class NOcrDb
         return null;
     }
 
-    private static bool IsExpandedLineMatch(NOcrChar oc, ImageSplitterItem2 targetItem, NikseBitmap2 nikseBitmap, bool scaled)
+    /// <summary>
+    /// Scaled expanded match against the actual bounding box of the target group. The old
+    /// "scaled" pass walked the character's lines at the character's own size, so an expanded
+    /// glyph (e.g. a two-part quote) rendered at a different size than it was trained at could
+    /// essentially never match; the single-part fallback then turned every cross-size " into '.
+    /// A small area-scaled error budget absorbs antialiasing differences.
+    /// </summary>
+    private static bool IsExpandedLineMatchScaled(NOcrChar oc, ImageSplitterItem2 targetItem, NikseBitmap2 nikseBitmap, int targetWidth, int targetHeight)
+    {
+        var errorsAllowed = Math.Max(4, targetWidth * targetHeight / 16);
+        var errors = 0;
+        var scaledMarginTop = (int)Math.Round(oc.MarginTop * targetHeight / (double)Math.Max(1, oc.Height), MidpointRounding.AwayFromZero);
+        var originY = targetItem.Y - scaledMarginTop;
+
+        foreach (var op in oc.LinesForeground)
+        {
+            foreach (var point in op.ScaledWalkPoints(oc, targetWidth, targetHeight))
+            {
+                var p = new OcrPoint(point.X + targetItem.X, point.Y + originY);
+                // Out-of-bounds foreground points can't be on text - count them as errors.
+                if (p.X < 0 || p.Y < 0 || p.X >= nikseBitmap.Width || p.Y >= nikseBitmap.Height ||
+                    nikseBitmap.GetAlpha(p.X, p.Y) <= 150)
+                {
+                    if (++errors > errorsAllowed)
+                    {
+                        return false;
+                    }
+                }
+            }
+        }
+
+        foreach (var op in oc.LinesBackground)
+        {
+            foreach (var point in op.ScaledWalkPoints(oc, targetWidth, targetHeight))
+            {
+                var p = new OcrPoint(point.X + targetItem.X, point.Y + originY);
+                // Out-of-bounds background points are definitionally "not on text" - fine.
+                if (p.X < 0 || p.Y < 0 || p.X >= nikseBitmap.Width || p.Y >= nikseBitmap.Height)
+                {
+                    continue;
+                }
+
+                if (nikseBitmap.GetAlpha(p.X, p.Y) > 150)
+                {
+                    if (++errors > errorsAllowed)
+                    {
+                        return false;
+                    }
+                }
+            }
+        }
+
+        return true;
+    }
+
+    private static bool IsExpandedLineMatch(NOcrChar oc, ImageSplitterItem2 targetItem, NikseBitmap2 nikseBitmap)
     {
         foreach (var op in oc.LinesForeground)
         {
-            var points = scaled ? op.ScaledWalkPoints(oc, oc.Width, oc.Height - 1) : op.WalkPoints();
-            foreach (var point in points)
+            foreach (var point in op.WalkPoints())
             {
                 var p = new OcrPoint(point.X + targetItem.X, point.Y + targetItem.Y - oc.MarginTop);
                 // A foreground line point that falls outside the parent bitmap can't possibly be
@@ -301,8 +360,7 @@ public class NOcrDb
 
         foreach (var op in oc.LinesBackground)
         {
-            var points = scaled ? op.ScaledWalkPoints(oc, oc.Width, oc.Height - 1) : op.WalkPoints();
-            foreach (var point in points)
+            foreach (var point in op.WalkPoints())
             {
                 var p = new OcrPoint(point.X + targetItem.X, point.Y + targetItem.Y - oc.MarginTop);
                 // For background lines, points that fall outside the bitmap are definitionally
@@ -488,6 +546,13 @@ public class NOcrDb
 
         var heightToWidthPercent = bitmap.Height * 100.0 / bitmap.Width;
 
+        // Scale the loose passes' error budgets with the glyph's pixel area: 20 wrong pixels is
+        // nothing on a 25x35 letter but lets a ~50-pixel apostrophe, dash or dot match almost
+        // anything (e.g. "-" was claimed by "." in the last-ditch pass). One error per 8 pixels
+        // of area leaves normal letters unaffected and only tightens tiny glyphs; the floor of 8
+        // keeps cross-size matching of small glyphs possible.
+        var areaErrorCap = Math.Max(8, bitmap.Width * bitmap.Height / 8);
+
         foreach (var pass in MatchPasses)
         {
             if (pass.RequireDeepSeek && !deepSeek)
@@ -522,7 +587,15 @@ public class NOcrDb
                     continue;
                 }
 
-                var budget = Math.Min(errorsAllowed, bestErrors - 1);
+                // Sensitive characters (O/o/0, quotes, dashes, ...) get a tighter budget within
+                // the same pass instead of being deferred to a later pass: excluding them
+                // entirely let non-sensitive lookalikes (Q, C, .) claim their glyphs at up to
+                // 20 errors before the sensitive candidate was ever considered.
+                var candidateAllowed = oc.IsSensitive && pass.ErrorsAllowedSensitive != null
+                    ? pass.ErrorsAllowedSensitive(maxWrongPixels)
+                    : errorsAllowed;
+
+                var budget = Math.Min(Math.Min(candidateAllowed, areaErrorCap), bestErrors - 1);
                 if (TryCountErrors(bitmap, oc, budget, out var errors))
                 {
                     best = oc;
@@ -543,12 +616,40 @@ public class NOcrDb
         return null;
     }
 
+    // Below this pixel area a glyph is a "small glyph" (dot, comma, dash, apostrophe, ...):
+    // pixel evidence barely discriminates solid blobs, so shape gating must come from the
+    // aspect ratio instead.
+    private const int SmallGlyphAreaLimit = 150;
+    private const double SmallGlyphMaxAspectRatio = 2.0;
+
     private static bool PassFilter(NikseBitmap2 bitmap, double heightToWidthPercent, NOcrChar oc, int topMargin, in MatchPass pass)
     {
-        if (pass.AspectMaxDelta != int.MaxValue &&
-            Math.Abs(heightToWidthPercent - oc.HeightToWidthPercent) >= pass.AspectMaxDelta)
+        if (bitmap.Width * bitmap.Height < SmallGlyphAreaLimit)
         {
-            return false;
+            // Small glyphs: absolute h/w% deltas are useless here - a dot (aspect ~100) vs a
+            // dash (~40) differ by 60 points while two apostrophes can differ by 100+ points,
+            // and the wide passes have no aspect gate at all (which let "." claim "-" through
+            // the 8px size-tolerance pass on 0 pixel errors, since a solid blob's lines all hit
+            // a solid dash). Compare aspect as a ratio instead, in every pass.
+            var big = Math.Max(heightToWidthPercent, oc.HeightToWidthPercent);
+            var small = Math.Min(heightToWidthPercent, oc.HeightToWidthPercent);
+            if (small <= 0 || big / small > SmallGlyphMaxAspectRatio)
+            {
+                return false;
+            }
+        }
+        else
+        {
+            // Sensitive characters may use their own (typically looser) aspect gate - O/o/0
+            // vary more in aspect between fonts than their pixel shapes suggest.
+            var aspectMaxDelta = oc.IsSensitive && pass.AspectMaxDeltaSensitive != 0
+                ? pass.AspectMaxDeltaSensitive
+                : pass.AspectMaxDelta;
+            if (aspectMaxDelta != int.MaxValue &&
+                Math.Abs(heightToWidthPercent - oc.HeightToWidthPercent) >= aspectMaxDelta)
+            {
+                return false;
+            }
         }
 
         if (pass.SizeMaxDelta != int.MaxValue &&
@@ -598,6 +699,8 @@ public class NOcrDb
         public int MinLineCount { get; init; }       // 0 = no line-count check
         public SensitivityFilter Sensitivity { get; init; }
         public Func<int, int> ErrorsAllowed { get; init; }
+        public Func<int, int>? ErrorsAllowedSensitive { get; init; } // budget for IsSensitive candidates (null = same as ErrorsAllowed)
+        public int AspectMaxDeltaSensitive { get; init; }            // aspect gate for IsSensitive candidates (0 = same as AspectMaxDelta)
     }
 
     private static readonly Func<int, int> ErrorsZero = _ => 0;
@@ -637,21 +740,17 @@ public class NOcrDb
             AspectMaxDelta = 20, SizeMaxDelta = int.MaxValue, MarginTopMaxDelta = 15,
             ErrorsAllowed = ErrorsCappedAtThree,
         },
-        // wide tolerance for not-sensitive chars, requires many lines, errors capped at 20
+        // wide tolerance, requires many lines, errors capped at 20 - sensitive chars (O, o, 0,
+        // quotes, dashes, ...) compete in the SAME ranking with a tighter budget (10) and a
+        // looser aspect gate (30). They used to run in a separate later pass, which let
+        // non-sensitive lookalikes (Q, C, .) claim their glyphs unopposed at up to 20 errors.
         new MatchPass
         {
             MinAllowance = 10,
             AspectMaxDelta = 20, SizeMaxDelta = int.MaxValue, MarginTopMaxDelta = 15,
-            MinLineCount = 41, Sensitivity = SensitivityFilter.NotSensitive,
+            MinLineCount = 41,
             ErrorsAllowed = ErrorsCappedAtTwenty,
-        },
-        // looser aspect for sensitive chars (O, o, 0, ...), 10 errors
-        new MatchPass
-        {
-            MinAllowance = 10,
-            AspectMaxDelta = 30, SizeMaxDelta = int.MaxValue, MarginTopMaxDelta = 15,
-            MinLineCount = 41, Sensitivity = SensitivityFilter.OnlySensitive,
-            ErrorsAllowed = ErrorsTen,
+            AspectMaxDeltaSensitive = 30,
         },
         // deepSeek: very wide aspect, requires lots of lines, errors as requested
         new MatchPass
