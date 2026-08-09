@@ -174,6 +174,58 @@ public partial class PickMatroskaTrackViewModel : ObservableObject
             Utilities.ParseMatroskaTextSt(trackInfo, subtitles, subtitle);
             await WriteTextSubtitleFile(Window, trackInfo, subtitles, new SubRip());
         }
+        else if (trackInfo.CodecId.Equals(MatroskaTrackType.VobSub, StringComparison.OrdinalIgnoreCase) && subtitles != null)
+        {
+            var packs = MatroskaImageSubtitleExtractor.ExtractVobSub(trackInfo, subtitles, out var idx);
+            if (packs.Count == 0)
+            {
+                return;
+            }
+
+            var suggestedFileName = Utilities.GetPathAndFileNameWithoutExtension(_fileName);
+            var fileName = await _fileHelper.PickSaveSubtitleFile(Window, ".sub", suggestedFileName, Se.Language.General.SaveFileAsTitle);
+            if (string.IsNullOrEmpty(fileName))
+            {
+                return;
+            }
+
+            var screenSize = packs[0].GetScreenSize();
+            var screenWidth = (int)Math.Round(screenSize.Width, MidpointRounding.AwayFromZero);
+            var screenHeight = (int)Math.Round(screenSize.Height, MidpointRounding.AwayFromZero);
+            var exportHandler = new ExportHandlerVobSub();
+            exportHandler.WriteHeader(fileName, new ImageParameter
+            {
+                ScreenWidth = screenWidth,
+                ScreenHeight = screenHeight,
+            });
+
+            for (var i = 0; i < packs.Count; i++)
+            {
+                var pack = packs[i];
+                if (idx != null)
+                {
+                    pack.Palette = idx.Palette;
+                }
+
+                using var packBitmap = pack.GetBitmap();
+                var position = pack.GetPosition();
+                exportHandler.WriteParagraph(new ImageParameter
+                {
+                    Bitmap = packBitmap,
+                    StartTime = pack.StartTime,
+                    EndTime = pack.EndTime,
+                    ScreenWidth = screenWidth,
+                    ScreenHeight = screenHeight,
+                    Index = i + 1,
+                    OverridePosition = new SKPointI(position.Left, position.Top),
+                });
+            }
+
+            exportHandler.WriteFooter();
+
+            _ = await _windowService.ShowDialogAsync<PromptFileSavedWindow, PromptFileSavedViewModel>(Window,
+                vm => { vm.Initialize(Se.Language.General.SubtitleFileSaved, string.Format(Se.Language.General.SubtitleFileSavedToX, fileName), fileName, true, true); });
+        }
         else
         {
             await MessageBox.Show(Window, Se.Language.General.Error, "Format not supported: " + trackInfo.CodecId);
@@ -387,6 +439,45 @@ public partial class PickMatroskaTrackViewModel : ObservableObject
                     Show = item.StartTime.TimeSpan,
                     Duration = TimeSpan.FromMilliseconds(item.EndTime.TotalMilliseconds - item.StartTime.TotalMilliseconds),
                     Text = item.Text,
+                });
+            }
+        }
+        else if (trackInfo.CodecId.Equals(MatroskaTrackType.VobSub, StringComparison.OrdinalIgnoreCase))
+        {
+            var packs = MatroskaImageSubtitleExtractor.ExtractVobSub(trackInfo, subtitles, out var idx);
+            count = packs.Count;
+            for (var i = 0; i < 20 && i < packs.Count; i++)
+            {
+                var pack = packs[i];
+                if (idx != null)
+                {
+                    pack.Palette = idx.Palette;
+                }
+
+                using var packBitmap = pack.GetBitmap();
+                cues.Add(new PreviewCueData
+                {
+                    Number = i + 1,
+                    Show = pack.StartTime,
+                    Duration = pack.EndTime - pack.StartTime,
+                    Image = packBitmap.ToAvaloniaBitmap(),
+                });
+            }
+        }
+        else if (trackInfo.CodecId.Equals(MatroskaTrackType.Dvb, StringComparison.OrdinalIgnoreCase))
+        {
+            var (dvbSubtitle, dvbImages) = MatroskaImageSubtitleExtractor.ExtractDvb(trackInfo, subtitles);
+            count = dvbImages.Count;
+            for (var i = 0; i < 20 && i < dvbImages.Count; i++)
+            {
+                var item = dvbSubtitle.Paragraphs[i];
+                using var pesBitmap = dvbImages[i].GetImageFull();
+                cues.Add(new PreviewCueData
+                {
+                    Number = i + 1,
+                    Show = item.StartTime.TimeSpan,
+                    Duration = TimeSpan.FromMilliseconds(item.EndTime.TotalMilliseconds - item.StartTime.TotalMilliseconds),
+                    Image = pesBitmap.ToAvaloniaBitmap(),
                 });
             }
         }
