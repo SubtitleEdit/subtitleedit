@@ -12,7 +12,7 @@ public class DoubleToOneDecimalHideMaxConverter : IValueConverter
     {
         if (value is double d)
         {
-            if (d == double.MaxValue || double.IsNaN(d))
+            if (Math.Abs(d - double.MaxValue) < 0.01 || double.IsNaN(d))
             {
                 return string.Empty;
             }
