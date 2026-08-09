@@ -750,6 +750,7 @@ public class NOcrDb
             AspectMaxDelta = 20, SizeMaxDelta = int.MaxValue, MarginTopMaxDelta = 15,
             MinLineCount = 41,
             ErrorsAllowed = ErrorsCappedAtTwenty,
+            ErrorsAllowedSensitive = ErrorsTen,
             AspectMaxDeltaSensitive = 30,
         },
         // deepSeek: very wide aspect, requires lots of lines, errors as requested
