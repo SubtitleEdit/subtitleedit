@@ -22852,6 +22852,7 @@ public partial class MainViewModel :
     private void SubtitleGridSelectionChanged(List<SubtitleLineViewModel>? alreadyOrderedSelection = null)
     {
         var selectedItems = alreadyOrderedSelection ?? SubtitleGridSelectedItems;
+        var outgoing = SelectedSubtitle;
         EditTextBox.ClearSelection();
         EditTextBoxOriginal.ClearSelection();
         ResetPlaySelection();
@@ -22862,6 +22863,7 @@ public partial class MainViewModel :
             SelectedSubtitle = null;
             SelectedSubtitleIndex = null;
             _selectedSubtitles = null;
+            outgoing?.TrimTrailingTextWhitespace();
             StatusTextRight = string.Empty;
             EditTextCharactersPerSecond = string.Empty;
             EditTextCharactersPerSecondBackground = Brushes.Transparent;
@@ -22911,6 +22913,7 @@ public partial class MainViewModel :
             SelectedSubtitle = null;
             SelectedSubtitleIndex = null;
             StatusTextRight = string.Empty;
+            outgoing?.TrimTrailingTextWhitespace();
             return;
         }
 
@@ -22932,6 +22935,14 @@ public partial class MainViewModel :
         finally
         {
             _subtitleGridSelectionChangedSkip = false;
+        }
+
+        // The row that lost selection is committed: drop any trailing empty line the user
+        // typed (#13389). Runs after SelectedSubtitle is reassigned, so the edit text box is
+        // already bound to the new row and the trim cannot eat a newline mid-edit.
+        if (rowChanged)
+        {
+            outgoing?.TrimTrailingTextWhitespace();
         }
 
         // Same caret reset as SelectAndScrollToRow (#12707): Avalonia keeps the caret index when
