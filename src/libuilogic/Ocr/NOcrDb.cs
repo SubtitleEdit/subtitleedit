@@ -507,6 +507,14 @@ public class NOcrDb
 
             var errorsAllowed = pass.ErrorsAllowed(maxWrongPixels);
 
+            // Best-match within the pass: the first candidate that fits the error budget used to
+            // win outright, so with generous budgets a mediocre early entry beat a near-perfect
+            // later one. Now the candidate with the fewest wrong pixels wins; ties keep list
+            // order (newest first), so a user's just-added character still takes precedence over
+            // an equally-good older one. The counting loop shrinks its budget to "current best
+            // minus one", so each candidate aborts as soon as it can no longer win.
+            NOcrChar? best = null;
+            var bestErrors = int.MaxValue;
             foreach (var oc in OcrCharacters)
             {
                 if (!PassFilter(bitmap, heightToWidthPercent, oc, topMargin, pass))
@@ -514,10 +522,21 @@ public class NOcrDb
                     continue;
                 }
 
-                if (IsMatch(bitmap, oc, errorsAllowed))
+                var budget = Math.Min(errorsAllowed, bestErrors - 1);
+                if (TryCountErrors(bitmap, oc, budget, out var errors))
                 {
-                    return oc;
+                    best = oc;
+                    bestErrors = errors;
+                    if (errors == 0)
+                    {
+                        break;
+                    }
                 }
+            }
+
+            if (best != null)
+            {
+                return best;
             }
         }
 
@@ -655,6 +674,69 @@ public class NOcrDb
             ErrorsAllowed = ErrorsAsRequestedDoubled,
         },
     };
+
+    /// <summary>
+    /// Like <see cref="IsMatch"/> but reports how many pixels disagreed, so callers can rank
+    /// candidates that all fit the budget. Returns false (and an unspecified count) as soon as
+    /// the budget is exceeded.
+    /// </summary>
+    private static bool TryCountErrors(NikseBitmap2 bitmap, NOcrChar oc, int errorsAllowed, out int errors)
+    {
+        errors = 0;
+        if (errorsAllowed < 0)
+        {
+            return false;
+        }
+
+        // Same zero-line guard as IsMatch: an entry with no lines would "match" anything.
+        if (oc.LinesForeground.Count + oc.LinesBackground.Count < MinLinesForSingleMatch)
+        {
+            return false;
+        }
+
+        var width = bitmap.Width;
+        var height = bitmap.Height;
+        var pixelData = bitmap.GetPixelData();
+        var widthX4 = width * 4;
+
+        foreach (var op in oc.LinesForeground)
+        {
+            foreach (var point in op.ScaledWalkPoints(oc, width, height))
+            {
+                if ((uint)point.X < (uint)width && (uint)point.Y < (uint)height)
+                {
+                    var a = pixelData[point.X * 4 + point.Y * widthX4 + 3];
+                    if (a <= 150)
+                    {
+                        if (++errors > errorsAllowed)
+                        {
+                            return false;
+                        }
+                    }
+                }
+            }
+        }
+
+        foreach (var op in oc.LinesBackground)
+        {
+            foreach (var point in op.ScaledWalkPoints(oc, width, height))
+            {
+                if ((uint)point.X < (uint)width && (uint)point.Y < (uint)height)
+                {
+                    var a = pixelData[point.X * 4 + point.Y * widthX4 + 3];
+                    if (a > 150)
+                    {
+                        if (++errors > errorsAllowed)
+                        {
+                            return false;
+                        }
+                    }
+                }
+            }
+        }
+
+        return true;
+    }
 
     public static bool IsMatch(NikseBitmap2 bitmap, NOcrChar oc, int errorsAllowed)
     {
