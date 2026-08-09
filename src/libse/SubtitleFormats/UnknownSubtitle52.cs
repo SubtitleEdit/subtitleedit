@@ -93,7 +93,7 @@ FILE_INFO_END";
             {
                 try
                 {
-                    if (RegexTimeCodes.Match(line).Success)
+                    if (RegexTimeCodes.IsMatch(line))
                     {
                         started = true;
                         if (p != null)

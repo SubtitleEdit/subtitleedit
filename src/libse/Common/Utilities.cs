@@ -486,9 +486,8 @@ namespace Nikse.SubtitleEdit.Core.Common
                         foreach (var item in list)
                         {
                             index += item;
-                            if (htmlTags.ContainsKey(index))
+                            if (htmlTags.TryGetValue(index, out var v))
                             {
-                                var v = htmlTags[index];
                                 if (v.StartsWith("</", StringComparison.Ordinal))
                                 {
                                     v = Environment.NewLine + v;
@@ -861,15 +860,17 @@ namespace Nikse.SubtitleEdit.Core.Common
                 int six = 0;
                 foreach (var letter in s)
                 {
-                    if (Environment.NewLine.Contains(letter))
+                    if (letter == '\r' || letter == '\n')
                     {
                         sb.Append(letter);
                     }
                     else
                     {
-                        if (htmlTags.ContainsKey(six))
+                        // One probe per character instead of two - auto-break runs this per line
+                        // on every split/merge, and per keystroke with auto-break while typing.
+                        if (htmlTags.TryGetValue(six, out var tag))
                         {
-                            sb.Append(htmlTags[six]);
+                            sb.Append(tag);
                         }
                         sb.Append(letter);
                         six++;
@@ -878,15 +879,48 @@ namespace Nikse.SubtitleEdit.Core.Common
 
                 for (int i = 0; i < 15; i++)
                 {
-                    if (htmlTags.ContainsKey(six + i))
+                    if (htmlTags.TryGetValue(six + i, out var tag))
                     {
-                        sb.Append(htmlTags[six + i]);
+                        sb.Append(tag);
                     }
                 }
 
                 return sb.ToString();
             }
             return s;
+        }
+
+        /// <summary>
+        /// Same answer as <c>s == s.ToUpperInvariant()</c>, without allocating the uppercased
+        /// copy. The hearing-impaired and casing rules ask this several times per subtitle line.
+        /// </summary>
+        public static bool IsAllUppercase(string s)
+        {
+            for (var i = 0; i < s.Length; i++)
+            {
+                if (char.ToUpperInvariant(s[i]) != s[i])
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+        /// <summary>
+        /// Same answer as <c>s != s.ToLowerInvariant()</c>, without allocating the lowercased copy.
+        /// </summary>
+        public static bool HasUppercase(string s)
+        {
+            for (var i = 0; i < s.Length; i++)
+            {
+                if (char.ToLowerInvariant(s[i]) != s[i])
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
 
         public static string UnbreakLine(string text)
@@ -3276,11 +3310,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                 subtitle.Header = subtitle.Header.Trim() + Environment.NewLine;
             }
 
-            lines = new List<string>();
-            foreach (string l in subtitle.Header.Trim().SplitToLines())
-            {
-                lines.Add(l);
-            }
+            lines = subtitle.Header.Trim().SplitToLines();
 
             const string timeCodeFormat = "{0}:{1:00}:{2:00}.{3:00}"; // h:mm:ss.cc
             foreach (var mp in sub)

@@ -216,7 +216,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     idx += 29;
                 }
 
-                UserStyles = new List<UserStyle>();
+                UserStyles = new List<UserStyle>(NumberOfUserStyles);
                 for (int j = 0; j < NumberOfUserStyles; j++)
                 {
                     var us = new UserStyle

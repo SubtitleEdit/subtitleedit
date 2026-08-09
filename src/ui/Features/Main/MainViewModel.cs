@@ -1,6 +1,7 @@
 using Nikse.SubtitleEdit.UiLogic.Export;
 using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Controls.Primitives;
 using Avalonia.Data;
 using Avalonia.Input;
@@ -228,6 +229,9 @@ public partial class MainViewModel :
     [ObservableProperty] private string _statusTextLeft;
     [ObservableProperty] private string _statusTextRight;
 
+    [ObservableProperty] private bool _isUpdateAvailable;
+    [ObservableProperty] private string _updateAvailableText = string.Empty;
+
     [ObservableProperty] private bool _isWaveformToolbarVisible;
     [ObservableProperty] private bool _isSubtitleGridFlyoutHeaderVisible;
     [ObservableProperty] private bool _isSubtitleGridDataMenuVisible;
@@ -382,6 +386,7 @@ public partial class MainViewModel :
     FindViewModel? _findViewModel;
     Control? _findPreviousFocus;
     Control? _focusBeforeMainMenu;
+    Control? _focusBeforeWindowDeactivated;
     bool _altClosesMainMenuOnKeyUp;
     readonly AltMenuActivationGuard _altMenuActivationGuard = new();
     bool _findClosingProgrammatically;
@@ -514,6 +519,7 @@ public partial class MainViewModel :
     private readonly IPluginCatalog _pluginCatalog;
     private readonly IPluginRunner _pluginRunner;
     private readonly IYtDlpDownloadService _ytDlpDownloadService;
+    private readonly IUpdateCheckService _updateCheckService;
 
     private bool IsEmpty => Subtitles.Count == 0 || (Subtitles.Count == 1 && string.IsNullOrEmpty(Subtitles[0].Text));
 
@@ -596,7 +602,8 @@ public partial class MainViewModel :
         IPasteFromClipboardHelper pasteFromClipboardHelper,
         IPluginCatalog pluginCatalog,
         IPluginRunner pluginRunner,
-        IYtDlpDownloadService ytDlpDownloadService)
+        IYtDlpDownloadService ytDlpDownloadService,
+        IUpdateCheckService updateCheckService)
     {
         _fileHelper = fileHelper;
         _folderHelper = folderHelper;
@@ -620,6 +627,7 @@ public partial class MainViewModel :
         _pluginCatalog = pluginCatalog;
         _pluginRunner = pluginRunner;
         _ytDlpDownloadService = ytDlpDownloadService;
+        _updateCheckService = updateCheckService;
 
         _loading = true;
         EditText = string.Empty;
@@ -808,6 +816,47 @@ public partial class MainViewModel :
             _dropDownFormatsSearchText = string.Empty;
             _dropDownFormatsSearchTimer.Stop();
         };
+
+        StartCheckForUpdates();
+    }
+
+    private void StartCheckForUpdates()
+    {
+        if (!Se.Settings.General.CheckForUpdatesOnStartup || UpdateCheckService.IsStoreManagedInstall)
+        {
+            return;
+        }
+
+        // Only in the real desktop app - headless unit tests also build this
+        // view model and must not hit the network.
+        if (Application.Current?.ApplicationLifetime is not ClassicDesktopStyleApplicationLifetime)
+        {
+            return;
+        }
+
+        _ = Task.Run(async () =>
+        {
+            // Delayed well past startup so the check never competes with the UI
+            // coming up; a newer version just lights up the status bar indicator.
+            await Task.Delay(TimeSpan.FromSeconds(15));
+
+            try
+            {
+                var result = await _updateCheckService.CheckForUpdates();
+                if (result.IsNewVersionAvailable)
+                {
+                    Dispatcher.UIThread.Post(() =>
+                    {
+                        UpdateAvailableText = string.Format(Se.Language.Help.CheckForUpdatesNewVersionAvailable, result.LatestVersion);
+                        IsUpdateAvailable = true;
+                    });
+                }
+            }
+            catch
+            {
+                // Offline or GitHub unreachable - stay silent and try again next start.
+            }
+        });
     }
 
     private void FirstLoad()
@@ -6487,6 +6536,13 @@ public partial class MainViewModel :
 
         Dispatcher.UIThread.Post(() =>
         {
+            // Rebuilding the undocked windows below ends in ShowIndependentWindow, which does
+            // Show() + Focus() - so it takes foreground. Settings -> Apply reaches here through
+            // ApplySettings while its own dialog is still open, which left that dialog visible
+            // but deactivated and an undocked window in front of it (#13398). Remember a
+            // foreground dialog now and hand activation back once both windows exist.
+            var windowToReactivate = GetActiveWindowOtherThanMainAndUndocked();
+
             AreVideoControlsUndocked = true;
 
             var position = vp.Position;
@@ -6540,7 +6596,49 @@ public partial class MainViewModel :
             }
 
             RefreshSubtitlePreview();
+
+            if (windowToReactivate != null)
+            {
+                // Background priority so the two Show()/Focus() calls above have settled.
+                Dispatcher.UIThread.Post(() =>
+                {
+                    if (windowToReactivate.IsVisible && !windowToReactivate.IsActive)
+                    {
+                        windowToReactivate.Activate();
+                    }
+                }, DispatcherPriority.Background);
+            }
         });
+    }
+
+    /// <summary>
+    /// The active window when it is neither the main window nor one of the undocked tool
+    /// windows - i.e. a dialog sitting in front. Used to give foreground back to a dialog that
+    /// triggered a rebuild of the undocked windows (#13398). The undocked windows are excluded
+    /// because they are closed and re-created by that rebuild.
+    /// </summary>
+    private Window? GetActiveWindowOtherThanMainAndUndocked()
+    {
+        if (Application.Current?.ApplicationLifetime is not IClassicDesktopStyleApplicationLifetime desktop)
+        {
+            return null;
+        }
+
+        var videoWindow = _videoPlayerUndockedViewModel?.Window;
+        var waveformWindow = _audioVisualizerUndockedViewModel?.Window;
+
+        foreach (var window in desktop.Windows)
+        {
+            if (window.IsActive &&
+                !ReferenceEquals(window, Window) &&
+                !ReferenceEquals(window, videoWindow) &&
+                !ReferenceEquals(window, waveformWindow))
+            {
+                return window;
+            }
+        }
+
+        return null;
     }
 
     /// <summary>
@@ -21670,6 +21768,10 @@ public partial class MainViewModel :
     /// </summary>
     internal void OnWindowDeactivated(object? sender, EventArgs e)
     {
+        // Remember where the caret was so re-activation can put it back (see OnWindowActivated).
+        // Captured before the cleanup below, which can move focus itself.
+        _focusBeforeWindowDeactivated = GetRestorableFocusedControl();
+
         // Avalonia's AccessKeyHandler must not be left mid-Alt-gesture either: a modal opened
         // while Alt was held (Alt, O, ... reaching the Shortcuts window) eats the physical Alt
         // release, and the stranded "ignore the next Alt up" state makes the next bare Alt press
@@ -21693,6 +21795,78 @@ public partial class MainViewModel :
         {
             DeactivateMainMenu();
         }
+    }
+
+    /// <summary>
+    /// Restores keyboard focus to the control that had it before the window lost activation.
+    ///
+    /// Another application taking focus and handing it straight back - a global hotkey from a
+    /// clipboard manager, a launcher, a notification - leaves Avalonia without a focus target, and
+    /// focus then lands on the first focusable element in the window: the menu bar. The user sees
+    /// "File" highlighted, the caret gone from the subtitle text box, and every following key
+    /// swallowed by the menu (OnKeyDownHandler bails while IsMainMenuFocused). SE4 kept the caret
+    /// where it was, so do the same (#13371).
+    ///
+    /// Deferred, and only applied when focus is genuinely nowhere useful, so re-activating by
+    /// clicking a control keeps whatever the click focused.
+    /// </summary>
+    internal void OnWindowActivated(object? sender, EventArgs e)
+    {
+        var previous = _focusBeforeWindowDeactivated;
+        _focusBeforeWindowDeactivated = null;
+
+        Dispatcher.UIThread.Post(() =>
+        {
+            if (Window is not { IsActive: true })
+            {
+                return;
+            }
+
+            if (WindowService.IsModalDialogOpen)
+            {
+                // A modal dialog is open, so this window is input-disabled and must not pull
+                // keyboard focus back to itself - that is exactly the "dialog drawn on top but
+                // keys land in the main window" state of #13405. WindowService's modal
+                // foreground enforcement hands activation to the dialog instead.
+                return;
+            }
+
+            if (GetRestorableFocusedControl() != null)
+            {
+                return; // focus landed somewhere real (e.g. the user clicked a control) - leave it
+            }
+
+            if (previous != null && TopLevel.GetTopLevel(previous) != null)
+            {
+                previous.Focus();
+                return;
+            }
+
+            SubtitleGrid?.Focus();
+        });
+    }
+
+    /// <summary>
+    /// The focused control, when it is a real, on-screen one worth returning to later. Null for the
+    /// bare window, for a control detached from the visual tree (how a closed popup's menu item
+    /// looks while it still holds focus) and for the main menu bar - focus sitting on the menu is
+    /// exactly the state <see cref="OnWindowActivated"/> exists to undo.
+    /// </summary>
+    private Control? GetRestorableFocusedControl()
+    {
+        if (Window?.FocusManager?.GetFocusedElement() is not Control focused ||
+            focused == Window ||
+            TopLevel.GetTopLevel(focused) == null)
+        {
+            return null;
+        }
+
+        if (focused is MenuItem || IsWithinMainMenu(focused))
+        {
+            return null;
+        }
+
+        return focused;
     }
 
     /// <summary>
@@ -22784,6 +22958,7 @@ public partial class MainViewModel :
     private void SubtitleGridSelectionChanged(List<SubtitleLineViewModel>? alreadyOrderedSelection = null)
     {
         var selectedItems = alreadyOrderedSelection ?? SubtitleGridSelectedItems;
+        var outgoing = SelectedSubtitle;
         EditTextBox.ClearSelection();
         EditTextBoxOriginal.ClearSelection();
         ResetPlaySelection();
@@ -22794,6 +22969,7 @@ public partial class MainViewModel :
             SelectedSubtitle = null;
             SelectedSubtitleIndex = null;
             _selectedSubtitles = null;
+            outgoing?.TrimTrailingTextWhitespace();
             StatusTextRight = string.Empty;
             EditTextCharactersPerSecond = string.Empty;
             EditTextCharactersPerSecondBackground = Brushes.Transparent;
@@ -22843,6 +23019,7 @@ public partial class MainViewModel :
             SelectedSubtitle = null;
             SelectedSubtitleIndex = null;
             StatusTextRight = string.Empty;
+            outgoing?.TrimTrailingTextWhitespace();
             return;
         }
 
@@ -22853,6 +23030,8 @@ public partial class MainViewModel :
             return;
         }
 
+        var rowChanged = !ReferenceEquals(item, SelectedSubtitle);
+
         try
         {
             _subtitleGridSelectionChangedSkip = true;
@@ -22862,6 +23041,27 @@ public partial class MainViewModel :
         finally
         {
             _subtitleGridSelectionChangedSkip = false;
+        }
+
+        // The row that lost selection is committed: drop any trailing empty line the user
+        // typed (#13389). Runs after SelectedSubtitle is reassigned, so the edit text box is
+        // already bound to the new row and the trim cannot eat a newline mid-edit.
+        if (rowChanged)
+        {
+            outgoing?.TrimTrailingTextWhitespace();
+        }
+
+        // Same caret reset as SelectAndScrollToRow (#12707): Avalonia keeps the caret index when
+        // the bound text changes, so a new line inherited the previous line's clamped offset.
+        // SelectAndScrollToRow only covers the commanded jumps - plain grid navigation (arrow
+        // keys, mouse) comes through here instead and kept the stale caret (#13371). Must run
+        // after SelectedSubtitle is assigned, so the TwoWay Text binding has already updated.
+        // Callers that place the caret themselves set the row first, so they either see
+        // rowChanged false here, or run after this synchronous handler and win anyway.
+        if (rowChanged)
+        {
+            EditTextBox.CaretIndex = 0;
+            EditTextBoxOriginal.CaretIndex = 0;
         }
 
         MakeSubtitleTextInfo(item.Text, item);

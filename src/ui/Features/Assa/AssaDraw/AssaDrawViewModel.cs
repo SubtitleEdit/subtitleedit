@@ -479,7 +479,7 @@ public partial class AssaDrawViewModel : ObservableObject
 
         var vm = new PickLayerViewModel { Layer = currentLayer };
         var pickLayerWindow = new PickLayerWindow(vm);
-        await pickLayerWindow.ShowDialog(Window);
+        await WindowService.ShowModalAsync(Window, pickLayerWindow);
 
         if (!vm.OkPressed || vm.Layer == currentLayer)
         {

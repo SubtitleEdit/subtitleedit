@@ -358,6 +358,14 @@ public class OcrWindow : Window
                 UiUtil.MakeLabel<OcrViewModel>(Se.Language.General.Model, vm => vm.IsCrispEmbedVisible),
                 comboBoxCrispEmbedModels,
                 UiUtil.MakeButton(vm.DownloadCrispEmbedCommand, IconNames.Download, Se.Language.General.Download)
+                    .WithMarginRight(5)
+                    .BindIsVisible(vm, nameof(vm.IsCrispEmbedVisible))
+                    .BindIsEnabled(vm, nameof(OcrViewModel.IsOcrRunning), new InverseBooleanConverter()),
+                // Separate from the download button above, which fetches the selected *model*:
+                // this one re-fetches the engine binaries and re-asks CPU/Vulkan/CUDA, the only
+                // way to change hardware build after the first install (issue #13400).
+                UiUtil.MakeButton(vm.ReDownloadCrispEmbedEngineCommand, IconNames.CloudDownload,
+                        string.Format(Se.Language.General.ReDownloadX, CrispEmbedEngine.StaticName))
                     .WithMarginRight(10)
                     .BindIsVisible(vm, nameof(vm.IsCrispEmbedVisible))
                     .BindIsEnabled(vm, nameof(OcrViewModel.IsOcrRunning), new InverseBooleanConverter()),

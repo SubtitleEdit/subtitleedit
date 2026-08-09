@@ -106,6 +106,37 @@ public static class InitFooter
             VerticalAlignment = VerticalAlignment.Center,
             Children =
             {
+                new Button
+                {
+                    Content = new StackPanel
+                    {
+                        Orientation = Orientation.Horizontal,
+                        Spacing = 4,
+                        VerticalAlignment = VerticalAlignment.Center,
+                        Children =
+                        {
+                            new Icon
+                            {
+                                Value = IconNames.CloudDownload,
+                                FontSize = 18,
+                                VerticalAlignment = VerticalAlignment.Center,
+                            },
+                            UiUtil.MakeLabel().WithBindText(vm, vm => vm.UpdateAvailableText),
+                        },
+                    },
+                    [AutomationProperties.NameProperty] = Se.Language.Help.CheckForUpdates,
+                    [!Visual.IsVisibleProperty] = new Binding(nameof(vm.IsUpdateAvailable)),
+                    [!Button.CommandProperty] = new Binding(nameof(vm.ShowCheckForUpdatesCommand)),
+
+                    // Transparent, not null, so the whole button (not just the glyph strokes)
+                    // is hit-testable.
+                    Background = Brushes.Transparent,
+                    BorderBrush = null,
+                    Padding = new Thickness(4, 2, 4, 2),
+                    Margin = new Thickness(0, 0, 15, 0),
+                    VerticalAlignment = VerticalAlignment.Center,
+                },
+
                 new Icon
                 {
                     Value = IconNames.LockClock,

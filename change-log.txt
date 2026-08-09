@@ -3,6 +3,24 @@ Subtitle Edit Changelog
 
 -----------------------------------------------------------------------------------------------------
 
+v5.2.0-beta8 (9th of August 2026)
+
+* Add Apple VideoToolbox hardware encoders to "Burn-in" on macOS (and only list encoders available on the OS)
+* Add "Go to next empty line" shortcut (SE 4 parity) - thx Surlime
+* Add frame rate to the export images window (fixes wrong BDN/XML fps)
+* Add update check settings (stable/beta channel) and a passive update notification at startup - thx korsosattila73
+* Fix rule profiles not applying the minimum/maximum duration limits
+* Fix rule profiles losing the custom continuation style on save/load, and one bad profile breaking the whole list
+* Fix dialogs, popups and Alt+letter menus hiding behind undocked tool windows - thx GrampaWildWilly
+* Fix lost focus after window activation loss and caret position when navigating the grid - thx St0rmXtr00per
+* Fix crash in ElevenLabs text to speech preview - thx cvrle77
+* Fix bold "Line length" label after switching layouts - thx Davanix
+* Fix "Remove text for HI" reporting a trailing empty line as a change - thx Davanix
+* Tag all HEVC burn-in output for QuickTime/Apple compatibility (hvc1)
+* Minor performance improvements in OCR and list handling - thx ivandrofly
+
+-----------------------------------------------------------------------------------------------------
+
 v5.2.0-beta7 (8th of August 2026)
 
 * WebVTT: bring back the style manager, voices and the browser preview from SE 4

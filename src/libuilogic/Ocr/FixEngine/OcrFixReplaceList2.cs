@@ -31,12 +31,21 @@ namespace Nikse.SubtitleEdit.UiLogic.Ocr.FixEngine
 
         private const string ReplaceListFileNamePostFix = "_OCRFixReplaceList.xml";
 
+        // These are probed once per OCR'd word, so keep them off the per-call path:
+        // the arrays used to be allocated inline and the Greek check re-concatenated the
+        // file-name suffix and rescanned the whole path every time.
+        private static readonly char[] Digits2To9 = { '2', '3', '4', '5', '6', '7', '8', '9' };
+        private static readonly char[] Digits1To9 = { '1', '2', '3', '4', '5', '6', '7', '8', '9' };
+        private readonly bool _isGreekReplaceList;
+
         public string ErrorMessage { get; set; }
 
         public OcrFixReplaceList2(string replaceListXmlFileName)
         {
             ErrorMessage = string.Empty;
             _replaceListXmlFileName = replaceListXmlFileName;
+            _isGreekReplaceList = replaceListXmlFileName != null &&
+                                  replaceListXmlFileName.Contains("\\ell" + ReplaceListFileNamePostFix);
             WordReplaceList = new Dictionary<string, string>();
             PartialLineWordBoundaryReplaceList = new Dictionary<string, string>();
             _partialLineAlwaysReplaceList = new Dictionary<string, string>();
@@ -601,7 +610,7 @@ namespace Nikse.SubtitleEdit.UiLogic.Ocr.FixEngine
                 word = word.Replace("ﬂ", "fl");
                 word = word.Replace("ﬃ", "ffi");
                 word = word.Replace("ﬄ", "ffl");
-                if (!_replaceListXmlFileName.Contains("\\ell" + ReplaceListFileNamePostFix))
+                if (!_isGreekReplaceList)
                 {
                     word = word.Replace('ν', 'v'); // first 'v' is U+03BD GREEK SMALL LETTER NU
                 }
@@ -739,27 +748,29 @@ namespace Nikse.SubtitleEdit.UiLogic.Ocr.FixEngine
                 return false;
             }
 
-            if (WordReplaceList.ContainsKey(pre + word + post))
+            // One hash probe per candidate key, and each key built once. This runs for every
+            // word of every OCR'd line, twice per word when the hardcoded rules retry.
+            if (WordReplaceList.TryGetValue(pre + word + post, out var replacement))
             {
-                result = WordReplaceList[pre + word + post];
+                result = replacement;
                 return true;
             }
 
-            if (WordReplaceList.ContainsKey(pre + word))
+            if (WordReplaceList.TryGetValue(pre + word, out replacement))
             {
-                result = WordReplaceList[pre + word] + post;
+                result = replacement + post;
                 return true;
             }
 
-            if (WordReplaceList.ContainsKey(word + post))
+            if (WordReplaceList.TryGetValue(word + post, out replacement))
             {
-                result = pre + WordReplaceList[word + post];
+                result = pre + replacement;
                 return true;
             }
 
-            if (WordReplaceList.ContainsKey(word))
+            if (WordReplaceList.TryGetValue(word, out replacement))
             {
-                result = pre + WordReplaceList[word] + post;
+                result = pre + replacement + post;
                 return true;
             }
 
@@ -793,7 +804,7 @@ namespace Nikse.SubtitleEdit.UiLogic.Ocr.FixEngine
                 return word;
             }
 
-            if (word.Contains(new[] { '2', '3', '4', '5', '6', '7', '8', '9' }))
+            if (word.Contains(Digits2To9))
             {
                 return word;
             }
@@ -841,7 +852,7 @@ namespace Nikse.SubtitleEdit.UiLogic.Ocr.FixEngine
                 return word;
             }
 
-            if (word.Contains(new[] { '1', '2', '3', '4', '5', '6', '7', '8', '9' }) ||
+            if (word.Contains(Digits1To9) ||
                 word.EndsWith("a.m", StringComparison.Ordinal) ||
                 word.EndsWith("p.m", StringComparison.Ordinal) ||
                 word.EndsWith("am", StringComparison.Ordinal) ||

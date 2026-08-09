@@ -105,7 +105,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             {
                 if (!string.IsNullOrWhiteSpace(line) && line[0] != '$')
                 {
-                    if (RegexTimeCodes.Match(line).Success)
+                    if (RegexTimeCodes.IsMatch(line))
                     {
                         string[] threePart = line.Split(new[] { "\t,\t" }, StringSplitOptions.None);
                         var p = new Paragraph();

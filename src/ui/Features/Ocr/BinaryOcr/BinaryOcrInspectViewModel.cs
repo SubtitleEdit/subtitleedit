@@ -262,7 +262,7 @@ public partial class BinaryOcrInspectViewModel : ObservableObject
         addVm.Initialize(_nBmp, _ocrSubtitleItem, _letters, LetterIndex, _db, _maxWrongPixels,
             _binaryOcrAddHistoryManager, false, false);
         var addWindow = new BinaryOcrCharacterAddWindow(addVm);
-        await addWindow.ShowDialog(Window!);
+        await WindowService.ShowModalAsync(Window!, addWindow);
 
         if (addVm.OkPressed && addVm.BinaryOcrBitmap != null)
         {

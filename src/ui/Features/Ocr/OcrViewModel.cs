@@ -304,7 +304,10 @@ public partial class OcrViewModel : ObservableObject
             GoogleVisionApiKey = ocr.GoogleVisionApiKey;
             MistralApiKey = ocr.MistralApiKey;
             SelectedGoogleVisionLanguage = GoogleVisionLanguages.FirstOrDefault(p => p.Code == ocr.GoogleVisionLanguage);
-            SelectedPaddleOcrLanguage = PaddleOcrLanguages.FirstOrDefault(p => p.Code == Se.Settings.Ocr.PaddleOcrLastLanguage) ?? PaddleOcrLanguages.First();
+            var paddleOcrLastLanguage = PaddleOcr.NormalizeLanguageCode(Se.Settings.Ocr.PaddleOcrLastLanguage);
+            SelectedPaddleOcrLanguage = PaddleOcrLanguages.FirstOrDefault(p => p.Code == paddleOcrLastLanguage) ??
+                                        PaddleOcrLanguages.FirstOrDefault(p => p.Code == "en") ??
+                                        PaddleOcrLanguages.First();
             SelectedGoogleLensLanguage = GoogleLensLanguages.FirstOrDefault(p => p.Code == Se.Settings.Ocr.GoogleLensOcrLastLanguage) ?? GoogleLensLanguages.First();
             if (!string.IsNullOrEmpty(ocr.TextBoxFontName))
             {
@@ -1275,6 +1278,28 @@ public partial class OcrViewModel : ObservableObject
         }
 
         await EnsureCrispEmbedReady(forceModelDownload: true);
+    }
+
+    /// <summary>
+    /// Re-downloads the CrispEmbed engine binaries, re-asking which hardware build to use. The
+    /// CPU/Vulkan/CUDA choice is otherwise only offered on first install, which left anyone who
+    /// picked CPU with no way back to a GPU build (issue #13400). Downloaded models are kept.
+    /// </summary>
+    [RelayCommand]
+    private async Task ReDownloadCrispEmbedEngine()
+    {
+        if (Window == null)
+        {
+            return;
+        }
+
+        await CrispEmbedDownloadHelper.DownloadEngineAsync(
+            Window, _windowService,
+            onEngineDownloadClosed: () =>
+            {
+                _isCtrlDown = false;
+                RefreshEngineCombo?.Invoke();
+            });
     }
 
     /// <summary>
@@ -4785,7 +4810,8 @@ public partial class OcrViewModel : ObservableObject
         {
             if (SelectedPaddleOcrLanguage == null)
             {
-                SelectedPaddleOcrLanguage = PaddleOcrLanguages.FirstOrDefault(p => p.Code == "eng") ??
+                SelectedPaddleOcrLanguage = PaddleOcrLanguages.FirstOrDefault(p => _sourceLanguageIso != null && p.Code == _sourceLanguageIso.TwoLetterCode) ??
+                                            PaddleOcrLanguages.FirstOrDefault(p => p.Code == "en") ??
                                             PaddleOcrLanguages.FirstOrDefault();
             }
         }
