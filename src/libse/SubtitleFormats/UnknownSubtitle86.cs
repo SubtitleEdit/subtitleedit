@@ -33,7 +33,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             {
                 bool success = false;
                 string s = line.TrimStart();
-                if (s.StartsWith('[') && RegexTimeCodes.Match(s).Success)
+                if (s.StartsWith('[') && RegexTimeCodes.IsMatch(s))
                 {
                     try
                     {

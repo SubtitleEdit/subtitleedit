@@ -43,7 +43,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             foreach (var line in lines)
             {
                 var s = line.Trim();
-                if (RegexTimeCodes.Match(s).Success)
+                if (RegexTimeCodes.IsMatch(s))
                 {
                     var arr = s.Substring(0, 7).Split(':');
                     if (arr.Length == 3 &&

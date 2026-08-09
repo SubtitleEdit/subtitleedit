@@ -124,7 +124,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             char[] splitChars = { ':', '.' };
             foreach (var line in lines)
             {
-                if (line.StartsWith('[') && RegexTimeCodes.Match(line).Success)
+                if (line.StartsWith('[') && RegexTimeCodes.IsMatch(line))
                 {
                     var s = line.Substring(1, 8);
                     var parts = s.Split(splitChars, StringSplitOptions.RemoveEmptyEntries);
@@ -257,7 +257,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             for (var i = 0; i < max; i++)
             {
                 var p = subtitle.Paragraphs[i];
-                while (RegexTimeCodes.Match(p.Text).Success)
+                while (RegexTimeCodes.IsMatch(p.Text))
                 {
                     var s = p.Text.Substring(1, 8);
                     p.Text = p.Text.Remove(0, 10).Trim();
