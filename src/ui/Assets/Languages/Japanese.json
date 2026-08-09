@@ -897,6 +897,7 @@
       "assaAttachmentsHint": "ASS形式の添付ファイル",
       "assaDrawHint": "ASS形式の図形描画",
       "ssaStylesHint": "SSA スタイル",
+      "webVttStylesHint": "WebVTTスタイルマネージャー",
       "ssaPropertiesHint": "SSA プロパティ",
       "ssaAttachmentsHint": "SSA 添付ファイル"
     },
@@ -1277,6 +1278,21 @@
       "zPositionHelp": "正の値で文字が奥へ移動し、負の値で手前へ移動します。Z位置が 0 の場合は 2D 表示になります。",
       "export": "書き出し"
     },
+    "webVtt": {
+      "setStylesForSelectedLinesTitle": "選択した行にWebVTTスタイルを設定",
+      "voice": "ボイス",
+      "showVoiceColumn": "「ボイス」列を表示",
+      "voices": "ボイス",
+      "newVoiceDotDotDot": "新しいボイス...",
+      "removeVoices": "ボイスを削除",
+      "voiceName": "ボイス名",
+      "browserPreview": "ブラウザプレビュー",
+      "importStylesTitle": "WebVTTスタイルをインポート",
+      "exportStylesTitle": "WebVTTスタイルをエクスポート",
+      "openStyleFileTitle": "スタイルのインポート元となるWebVTTファイルを開く",
+      "noStylesToImport": "選択したファイルにスタイルが見つかりません",
+      "duplicateStyleNamesX": "重複するスタイル名: {0}"
+    },
     "compare": "比較",
     "previousDifference": "前の差分",
     "nextDifference": "次の差分",
@@ -1383,6 +1399,21 @@
     "restoreSelected": "指定した部分だけ戻す",
     "noSubtitleSelected": "字幕が選択されていません",
     "pleaseSelectExactlyOneSubtitle": "字幕を1つだけ選択してください"
+  },
+  "sourceView": {
+    "discardChangesTitle": "変更を破棄しますか？",
+    "discardChanges": "元のテキストが変更されています。\r\n変更を破棄しますか？",
+    "xLinesYSubtitles": "{0}行、{1}字幕",
+    "xLinesYSubtitlesZErrors": "{0}行、{1}字幕、{2}件のエラー",
+    "couldNotParseAsX": "{0}として解析できませんでした",
+    "selectedXCharactersYLines": "選択: {0}文字、{1}行",
+    "replacedXOccurrences": "{0}件を置換しました",
+    "invalidRegularExpression": "正規表現が無効です",
+    "moveLineUp": "行を上へ移動",
+    "moveLineDown": "行を下へ移動",
+    "duplicateLine": "行を複製",
+    "deleteLine": "行を削除",
+    "closeSearch": "検索を閉じる"
   },
   "tools": {
     "aiReview": {
@@ -1557,6 +1588,8 @@
       "fixMinDurationMs": "最小表示時間（ms）を適用",
       "doNotGoPastShotChange": "ショット変更を超えない",
       "fixMaxDurationMs": "最大表示時間（ms）を適用",
+      "minimumDurationMilliseconds": "最小表示時間（ミリ秒）:",
+      "maximumDurationMilliseconds": "最大表示時間（ミリ秒）:",
       "maxDurationShouldBeHigherThanMinDuration": "最大表示時間は最小表示時間より大きくする必要があります",
       "changedDurationFromXToYCommentZ": "表示時間を {0} から {1} に変更 {2}",
       "onlyPartialFixed": "（一部のみ修正）",
@@ -1591,7 +1624,11 @@
       "noReasonNote": "プロファイル規則により調整",
       "previousChange": "前の変更",
       "nextChange": "次の変更",
-      "editProfile": "プロファイルを編集..."
+      "editProfile": "プロファイルを編集...",
+      "batchSnapToShotChanges": "ショットの切り替わりに字幕を合わせる（利用可能な場合）",
+      "batchFrameRateFromVideo": "字幕ファイルと同名の動画ファイルのフレームレートを使用",
+      "batchFrameRateFixed": "固定フレームレートを使用",
+      "batchInfo": "ショットの切り替わりは、字幕ファイルと同名の動画ファイルが見つかった場合、そのファイルから読み取られます。"
     },
     "beautifyTimeCodesProfile": {
       "title": "表示タイミングプロファイルを編集",
@@ -2011,7 +2048,9 @@
       "changeUnderlineToColor": "下線の色を変更",
       "engineSettings": "Speech-to-text エンジン設定",
       "engineSettingsSubtitle": "Speech-to-text エンジン",
-      "backendAndUpdateStatus": "バックエンドと更新状態"
+      "backendAndUpdateStatus": "バックエンドと更新状態",
+      "addLanguageCodeToFileName": "ファイル名に言語コードを追加",
+      "addLanguageCodeToFileNameHint": "生成される字幕を「video.srt」ではなく「video.en.srt」のような名前にします"
     },
     "textToSpeech": {
       "title": "テキスト読み上げ",
@@ -2431,6 +2470,8 @@
       "autoBreakDashEarly": "ダッシュ（会話）で早めに自動改行",
       "autoBreakUsePixelWidth": "ピクセル幅で自動改行",
       "autoBreakPreferBottomHeavy": "下段を長めにして自動改行]",
+      "autoBreakPreferBottomPercent": "自動改行: 下段を多くする割合",
+      "useDoNotBreakAfterList": "改行禁止文字リストを使用",
       "newEmptyDefaultMs": "新しい字幕のデフォルト表示時間 (ms)",
       "timeCodeUpDownStepMs": "時間増減幅 (ms)",
       "promptBeforeDelete": "削除前に確認メッセージを表示する",
@@ -2521,6 +2562,8 @@
       "spellCheckEnglishTreatInApostropheAsIng": "スペルチェック：'in'で終わる単語を'ing'として扱う（英語のみ）",
       "goToLineNumberSetsVideoPosition": "行番号ジャンプした時に動画位置も合わせる",
       "adjustAllTimesRememberLineSelectionChoice": "行の選択を維持しつつ 全ての時間を調整する",
+      "mergeKeepEndTime": "行を結合: 終了時間を保持（次の字幕との重なりを許可）",
+      "mergeKeepEndTimeOnlyAssa": "行を結合: 終了時間を保持（Advanced Sub Station Alphaのみ）",
       "filesAndLogs": "ファイルとログ",
       "showErrorLogFile": "エラーログファイルを表示する",
       "showToolsLogFile": "ツールのログファイルを表示", 
@@ -2592,9 +2635,13 @@
       "gridGoToSubtitleAndPlay": "字幕行に移動して再生",
       "gridGoToSubtitleAndPauseAndFocusTextBox": "字幕行に移動してテキストボックスにフォーカス",
       "gridGoToSubtitleAndPlayAndFocusTextBox": "字幕行に移動して再生し、テキストボックスにフォーカス",
-      "subtitleGridFormattingNone": "タグ表示",
-      "subtitleGridFormattingShowFormatting": "字幕のみ表示",
-      "subtitleGridFormattingShowTags": "タグを色表示",
+      "subtitleListActionVideoGoToPositionAndPlayCurrentAndPause": "ビデオ位置へ移動し、現在の字幕を再生して一時停止",
+      "subtitleListActionVideoGoToPositionMinus1SecAndPause": "ビデオ位置の1秒前へ移動して一時停止",
+      "subtitleListActionVideoGoToPositionMinusHalfSecAndPause": "ビデオ位置の0.5秒前へ移動して一時停止",
+      "subtitleListActionVideoGoToPositionMinus1SecAndPlay": "ビデオ位置の1秒前へ移動して再生",
+      "subtitleGridFormattingNone": "書式なし",
+      "subtitleGridFormattingShowFormatting": "書式を表示",
+      "subtitleGridFormattingShowTags": "タグを表示",
       "waveformParagraphBackgroundColor": "字幕行の背景色",
       "waveformParagraphSelectedBackgroundColor": "選択された字幕行の背景色",
       "waveformAllowOverlap": "重複を許可 (移動/サイズ変更時)",
