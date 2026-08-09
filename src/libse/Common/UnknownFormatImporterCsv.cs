@@ -161,7 +161,12 @@ namespace Nikse.SubtitleEdit.Core.Common
 
         private double[] GetGaps(string[] strings)
         {
-            var gaps = new List<double>();
+            if (strings == null || strings.Length < 2)
+            {
+                return Array.Empty<double>();
+            }
+
+            var gaps = new List<double>(strings.Length - 1);
             for (var i = 1; i < strings.Length; i++)
             {
                 var start = TimeCode.ParseToMilliseconds(strings[i - 1]);

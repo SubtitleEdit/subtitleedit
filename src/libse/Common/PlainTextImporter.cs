@@ -287,7 +287,7 @@
             public List<string> SplitToFour(string text)
             {
                 var lines = Utilities.AutoBreakLinePrivate(text.Trim(), _singleLineMaxLength, Configuration.Settings.General.MergeLinesShorterThan, _language, true).SplitToLines();
-                var list = new List<string>();
+                var list = new List<string>(lines.Count);
                 foreach (var line in lines)
                 {
                     list.Add(Utilities.AutoBreakLinePrivate(line, _singleLineMaxLength, Configuration.Settings.General.MergeLinesShorterThan, _language, true));

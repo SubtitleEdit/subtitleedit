@@ -3286,11 +3286,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                 subtitle.Header = subtitle.Header.Trim() + Environment.NewLine;
             }
 
-            lines = new List<string>();
-            foreach (string l in subtitle.Header.Trim().SplitToLines())
-            {
-                lines.Add(l);
-            }
+            lines = subtitle.Header.Trim().SplitToLines();
 
             const string timeCodeFormat = "{0}:{1:00}:{2:00}.{3:00}"; // h:mm:ss.cc
             foreach (var mp in sub)

@@ -432,7 +432,7 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text"
                 return DefaultHeader;
             }
 
-            var styles = new List<SsaStyle>();
+            var styles = new List<SsaStyle>(stylesContent.Count);
             foreach (var styleAsString in stylesContent)
             {
                 styles.Add(SsaStyle.FromRawSsa(header, styleAsString));
@@ -1025,8 +1025,9 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text"
 
         public static List<SsaStyle> GetSsaStylesFromHeader(string header)
         {
-            var styles = new List<SsaStyle>();
-            foreach (var styleName in GetStylesFromHeader(header))
+            var styleNames = GetStylesFromHeader(header);
+            var styles = new List<SsaStyle>(styleNames.Count);
+            foreach (var styleName in styleNames)
             {
                 styles.Add(GetSsaStyle(styleName, header));
             }
