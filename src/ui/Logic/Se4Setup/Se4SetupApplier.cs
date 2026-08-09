@@ -44,6 +44,8 @@ public static class Se4SetupApplier
         ApplyClassicTheme();
         ApplyToolbarAndEditBox();
         ApplyWaveformColors();
+        ApplyWaveformToolbar();
+        ApplySelectCurrentLineWhilePlaying(vm);
 
         Se.SaveSettings();
         return result;
@@ -181,5 +183,67 @@ public static class Se4SetupApplier
         // SE 4 drew classic (non-fancy) waveforms with vertical grid lines.
         w.DrawGridLines = true;
         w.WaveformDrawStyle = Controls.AudioVisualizerControl.WaveformDrawStyle.Classic.ToString();
+    }
+
+    // SE 4 had two control areas around the waveform:
+    //   * the waveform's own little toolbar below it (zoom out / zoom / zoom in,
+    //     play + pause, lock center, playback rate), and
+    //   * the "Translate/Create/Adjust" box to the LEFT of the waveform, whose
+    //     Translate tab held the "<< Previous", "Play current", "Pause" and
+    //     "Next >>" buttons and whose Create/Adjust tabs held insert-new,
+    //     set start, set end and set-start-and-offset-the-rest.
+    // SE 5 has a single waveform toolbar, so lay it out in that order: the SE 4
+    // play/pause toggle, then the four Translate-tab buttons, then the
+    // Create/Adjust actions, then the waveform toolbar's own zoom/position/rate/
+    // lock-center controls. Everything with no SE 4 counterpart is hidden.
+    private static readonly SeWaveformToolbarItemType[] Se4ToolbarOrder =
+    [
+        SeWaveformToolbarItemType.Play,                     // SE 4 waveform toolbar play/pause
+        SeWaveformToolbarItemType.TextPrevious,             // "<< Previous"
+        SeWaveformToolbarItemType.TextPlay,                 // "Play current"
+        SeWaveformToolbarItemType.TextPause,                // "Pause"
+        SeWaveformToolbarItemType.TextNext,                 // "Next >>"
+        SeWaveformToolbarItemType.New,                      // Create tab: insert new at video position
+        SeWaveformToolbarItemType.SetStart,                 // Create tab: set start
+        SeWaveformToolbarItemType.SetEnd,                   // Create tab: set end
+        SeWaveformToolbarItemType.SetStartAndOffsetTheRest, // Adjust tab: set start and offset the rest
+        SeWaveformToolbarItemType.HorizontalZoom,           // SE 4 waveform toolbar zoom combo
+        SeWaveformToolbarItemType.VideoPositionSlider,      // SE 4 trackBarWaveformPosition
+        SeWaveformToolbarItemType.AudioTrackPicker,         // only rendered for multi-track videos
+        SeWaveformToolbarItemType.PlaybackSpeed,            // SE 4 play-rate split button
+        SeWaveformToolbarItemType.AutoSelectOnPlay,         // SE 4 checkBoxSyncListViewWithVideoWhilePlaying
+        SeWaveformToolbarItemType.Center,                   // SE 4 "lock center" toggle
+        SeWaveformToolbarItemType.More,                     // kept so the toolbar can be reconfigured
+    ];
+
+    // "Select current subtitle while playing" - SE 4 had it as a checkbox sitting right
+    // above the waveform (checkBoxSyncListViewWithVideoWhilePlaying); in SE 5 it is the
+    // AutoSelectOnPlay toggle in the waveform toolbar, turned on here so the SE 4 setup
+    // arrives with it enabled. MainViewModel keeps its own observable copy of the setting
+    // and writes that back on exit, so both have to be set or this value is lost again.
+    private static void ApplySelectCurrentLineWhilePlaying(MainViewModel vm)
+    {
+        Se.Settings.General.SelectCurrentSubtitleWhilePlaying = true;
+        vm.SelectCurrentSubtitleWhilePlaying = true;
+    }
+
+    internal static void ApplyWaveformToolbar()
+    {
+        var w = Se.Settings.Waveform;
+        w.ShowToolbar = true;
+
+        // Settings written by an older version can be missing item types entirely.
+        w.EnsureAllToolbarItems();
+
+        foreach (var item in w.ToolbarItems)
+        {
+            var index = System.Array.IndexOf(Se4ToolbarOrder, item.Type);
+            item.IsVisible = index >= 0;
+            if (index >= 0)
+            {
+                // Same 10, 20, 30, ... spacing the "Configure toolbar items" dialog writes.
+                item.SortOrder = (index + 1) * 10;
+            }
+        }
     }
 }
