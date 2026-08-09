@@ -376,18 +376,11 @@ public class MessageBox : Window
     {
         var msgBox = new MessageBox(title, message, buttons, icon, custom1, custom2, custom3, custom4);
 
-        // Keep the message box above undocked tool windows (audio visualizer / video player),
-        // which float on top of the main window via KeepTopmostWhileOwnerActive. Without this the
-        // message box opens behind them in undocked mode. (#12268)
-        WindowService.KeepTopmostWhileOwnerActive(msgBox, owner);
-
-        // Drop the undocked windows' topmost for the dialog's lifetime and make sure the
-        // message box really gets OS activation - without this it was drawn on top but never
-        // activated on Windows in undocked mode: gray buttons, no keyboard focus (#13325).
-        using var undockedSuspension = WindowService.SuspendUndockedTopmost();
-        WindowService.ActivateWhenOpened(msgBox);
-
-        return await msgBox.ShowDialog<MessageBoxResult>(owner);
+        // The shared modal plumbing: kept above the undocked tool windows (#12268), undocked
+        // topmost suspended, and OS activation enforced while open - without the latter the box
+        // was drawn on top but never activated on Windows in undocked mode: gray buttons, no
+        // keyboard focus (#13325/#13405).
+        return await WindowService.ShowModalAsync<MessageBoxResult>(owner, msgBox);
     }
 
     protected override void OnKeyDown(KeyEventArgs e)

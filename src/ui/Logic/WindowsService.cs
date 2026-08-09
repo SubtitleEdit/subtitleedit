@@ -167,18 +167,7 @@ namespace Nikse.SubtitleEdit.Logic
             ApplyRightToLeftSettings(window);
             UiTheme.ApplyScaleToWindow(window);
 
-            // Keep the dialog above undocked tool windows (audio visualizer / video player), which
-            // float on top of the main window via the same helper. Without this the dialog opens
-            // behind them in undocked mode. (#11971)
-            KeepTopmostWhileOwnerActive(window, owner);
-
-            // Drop the undocked windows' topmost for the dialog's lifetime and make sure the
-            // dialog really gets OS activation, not just top-of-z-order drawing (#13325).
-            using var undockedSuspension = SuspendUndockedTopmost();
-            ActivateWhenOpened(window);
-
-            await YieldForPendingFlyoutDismissAsync();
-            await window.ShowDialog(owner);
+            await ShowModalAsync(owner, window);
 
             return window;
         }
@@ -207,20 +196,56 @@ namespace Nikse.SubtitleEdit.Logic
             ApplyRightToLeftSettings(window);
             UiTheme.ApplyScaleToWindow(window);
 
+            await ShowModalAsync(owner, window);
+
+            return viewModel;
+        }
+
+        /// <summary>
+        /// Shows an already-constructed window as a modal dialog with the shared foreground
+        /// handling every modal in SE needs: kept above the undocked tool windows (#11971),
+        /// undocked topmost suspended for its lifetime (#13325), and foreground enforced while it
+        /// is open (#13405). Use this instead of calling <see cref="Window.ShowDialog(Window)"/>
+        /// directly - a bare ShowDialog is how dialogs end up drawn on top but never activated.
+        /// </summary>
+        public static Task ShowModalAsync(Window owner, Window dialog)
+        {
+            return RunModalAsync(owner, dialog, () => dialog.ShowDialog(owner));
+        }
+
+        /// <summary>
+        /// Same as <see cref="ShowModalAsync(Window, Window)"/> for dialogs closed with a result.
+        /// </summary>
+        public static async Task<TResult> ShowModalAsync<TResult>(Window owner, Window dialog)
+        {
+            TResult result = default!;
+            await RunModalAsync(owner, dialog, async () => result = await dialog.ShowDialog<TResult>(owner));
+            return result;
+        }
+
+        private static async Task RunModalAsync(Window owner, Window dialog, Func<Task> showDialog)
+        {
             // Keep the dialog above undocked tool windows (audio visualizer / video player), which
             // float on top of the main window via the same helper. Without this the dialog opens
             // behind them in undocked mode. (#11971)
-            KeepTopmostWhileOwnerActive(window, owner);
+            KeepTopmostWhileOwnerActive(dialog, owner);
 
-            // Drop the undocked windows' topmost for the dialog's lifetime and make sure the
-            // dialog really gets OS activation, not just top-of-z-order drawing (#13325).
+            // Drop the undocked windows' topmost for the dialog's lifetime and keep OS activation
+            // on the dialog, not just top-of-z-order drawing (#13325/#13405).
             using var undockedSuspension = SuspendUndockedTopmost();
-            ActivateWhenOpened(window);
+            var foregroundEnforcement = EnforceModalForegroundWhileOpen(dialog, owner);
 
-            await YieldForPendingFlyoutDismissAsync();
-            await window.ShowDialog(owner);
-
-            return viewModel;
+            _openModalCount++;
+            try
+            {
+                await YieldForPendingFlyoutDismissAsync();
+                await showDialog();
+            }
+            finally
+            {
+                _openModalCount--;
+                foregroundEnforcement.Dispose();
+            }
         }
 
         // When a dialog is launched from a context menu item, the command runs synchronously while the
@@ -326,22 +351,108 @@ namespace Nikse.SubtitleEdit.Logic
             };
         }
 
+        // Every open modal shown through this service (dialogs and message boxes) counts here.
+        // While a modal is open its owner is input-disabled, so any code path that would give the
+        // owner keyboard focus is wrong by definition - the main window consults this before
+        // pulling the caret back on re-activation (#13405).
+        private static int _openModalCount;
+
         /// <summary>
-        /// Explicitly activates <paramref name="window"/> once it has opened, in case the OS
-        /// left foreground/keyboard focus on another window during the open (seen on Windows in
-        /// undocked mode, where the dialog was drawn on top but never activated - gray buttons,
-        /// no keyboard focus - #13325). Posted at Background priority so pending activation and
-        /// topmost changes settle first; a no-op when the window is already active.
+        /// True while any modal dialog shown through <see cref="ShowModalAsync(Window, Window)"/>
+        /// (which includes every ShowDialogAsync call and <see cref="Features.Shared.MessageBox"/>)
+        /// is open.
         /// </summary>
-        public static void ActivateWhenOpened(Window window)
+        public static bool IsModalDialogOpen => _openModalCount > 0;
+
+        /// <summary>
+        /// Test hook: clears the open-modal count left behind by tests that tore a dialog down
+        /// without completing its ShowDialog task.
+        /// </summary>
+        internal static void ResetOpenModalsForTests()
         {
-            window.Opened += (_, _) => Dispatcher.UIThread.Post(() =>
+            _openModalCount = 0;
+        }
+
+        /// <summary>
+        /// Keeps OS activation on <paramref name="dialog"/> for as long as it is open.
+        ///
+        /// A modal's owner is input-disabled, yet Windows happily leaves (or puts) keyboard focus
+        /// on it: the open-time topmost churn in undocked mode (#13325), a rebuild of the undocked
+        /// windows (#13398), or a modal opening right as the previous one closes (#13405) all end
+        /// in the same state - the dialog drawn on top, gray buttons, and every key landing in the
+        /// window underneath. A one-shot activation at open time only wins when the steal has
+        /// already happened, so instead enforce the invariant for the dialog's lifetime: whenever
+        /// the owner ends up active while the dialog is open, hand activation to the dialog. The
+        /// owner.IsActive guard scopes this to the unambiguously broken state - it never yanks
+        /// foreground from other applications or from the (independent, enabled) undocked tool
+        /// windows.
+        /// </summary>
+        private static IDisposable EnforceModalForegroundWhileOpen(Window dialog, Window owner)
+        {
+            var disposed = false;
+
+            void BounceToDialog()
             {
-                if (window.IsVisible && !window.IsActive)
+                if (!disposed && owner.IsActive && !dialog.IsActive && !dialog.IsClosing())
                 {
-                    window.Activate();
+                    dialog.Activate();
                 }
-            }, DispatcherPriority.Background);
+            }
+
+            void OnActivationChanged(object? sender, EventArgs e)
+            {
+                // Deferred so IsActive has settled on both windows (Deactivated of one window can
+                // fire before Activated of the other).
+                Dispatcher.UIThread.Post(BounceToDialog, DispatcherPriority.Background);
+            }
+
+            void OnOpened(object? sender, EventArgs e)
+            {
+                // The unconditional one-shot from #13325: when no SE window kept activation (the
+                // user is in another application), Activate() still requests attention there.
+                Dispatcher.UIThread.Post(() =>
+                {
+                    if (!disposed && dialog.IsVisible && !dialog.IsActive)
+                    {
+                        dialog.Activate();
+                    }
+                }, DispatcherPriority.Background);
+
+                // The open-time churn can leave the dialog inactive without any activation event
+                // ever firing afterwards (the owner never lost activation, so nothing changes) -
+                // re-check on short timers as well. Guarded by owner.IsActive, so they are no-ops
+                // in every healthy state.
+                DispatcherTimer.RunOnce(BounceToDialog, TimeSpan.FromMilliseconds(150));
+                DispatcherTimer.RunOnce(BounceToDialog, TimeSpan.FromMilliseconds(450));
+            }
+
+            owner.Activated += OnActivationChanged;
+            dialog.Deactivated += OnActivationChanged;
+            dialog.Opened += OnOpened;
+
+            return new ActionDisposable(() =>
+            {
+                disposed = true;
+                owner.Activated -= OnActivationChanged;
+                dialog.Deactivated -= OnActivationChanged;
+                dialog.Opened -= OnOpened;
+            });
+        }
+
+        private sealed class ActionDisposable : IDisposable
+        {
+            private Action? _dispose;
+
+            public ActionDisposable(Action dispose)
+            {
+                _dispose = dispose;
+            }
+
+            public void Dispose()
+            {
+                _dispose?.Invoke();
+                _dispose = null;
+            }
         }
 
         /// <summary>

@@ -21822,6 +21822,15 @@ public partial class MainViewModel :
                 return;
             }
 
+            if (WindowService.IsModalDialogOpen)
+            {
+                // A modal dialog is open, so this window is input-disabled and must not pull
+                // keyboard focus back to itself - that is exactly the "dialog drawn on top but
+                // keys land in the main window" state of #13405. WindowService's modal
+                // foreground enforcement hands activation to the dialog instead.
+                return;
+            }
+
             if (GetRestorableFocusedControl() != null)
             {
                 return; // focus landed somewhere real (e.g. the user clicked a control) - leave it
