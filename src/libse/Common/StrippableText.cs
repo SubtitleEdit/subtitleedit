@@ -200,6 +200,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                             lower = StrippedText.ToLowerInvariant();
                         }
                     }
+
                     if (start + 3 > lower.Length)
                     {
                         start = lower.Length + 1;
@@ -218,29 +219,26 @@ namespace Nikse.SubtitleEdit.Core.Common
             }
         }
 
-        private void ReplacAssaTagsRemove(List<string> replaceIds, List<string> replaceNames, List<string> originalNames)
+        private void ReplaceNamesWithIds(List<string> replaceIds, List<string> replaceNames, List<string> originalNames)
         {
             int idName = 1000;
-            var idx = 0;
-            while (StrippedText.IndexOf("{", idx) >= 0 && StrippedText.IndexOf('}', idx) > 0)
+            var openIndex = StrippedText.IndexOf('{');
+            while (openIndex >= 0)
             {
-                var start = StrippedText.IndexOf("{", idx);
-                var end = StrippedText.IndexOf("}", idx);
-                if (end < start)
+                var closeIndex = StrippedText.IndexOf('}', openIndex + 1);
+
+                if (closeIndex < openIndex)
                 {
                     return;
                 }
 
-                var tag = StrippedText.Substring(start, end - start + 1);
-                StrippedText = StrippedText.Remove(start, tag.Length);
-                StrippedText = StrippedText.Insert(start, GetAndInsertNextId(replaceIds, replaceNames, tag, idName++));
-                originalNames.Add(tag);
+                string name = StrippedText.Substring(openIndex, closeIndex - openIndex + 1);
+                StrippedText = StrippedText.Remove(openIndex, name.Length);
+                string genId = GetAndInsertNextId(replaceIds, replaceNames, name, idName++);
+                StrippedText = StrippedText.Insert(openIndex, genId);
+                originalNames.Add(name);
 
-                idx = end + 1;
-                if (idx >= StrippedText.Length)
-                {
-                    return;
-                }   
+                openIndex = StrippedText.IndexOf('{', openIndex + genId.Length);
             }
         }
 
@@ -259,7 +257,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             var replaceNames = new List<string>();
             var originalNames = new List<string>();
             ReplaceNames1Remove(nameList, replaceIds, replaceNames, originalNames);
-            ReplacAssaTagsRemove(replaceIds, replaceNames, originalNames);
+            ReplaceNamesWithIds(replaceIds, replaceNames, originalNames);
 
             if (checkLastLine && ShouldStartWithUpperCase(lastLine, millisecondsFromLast))
             {
