@@ -23600,14 +23600,23 @@ public partial class MainViewModel :
                         if (p == null)
                         {
                             PauseVideoAndFreezePlayhead(vp);
-                            vp.Position = _playSelectionItem.EndSeconds;
-                            PinPlayheadTo(_playSelectionItem.EndSeconds);
+
+                            // Park on the line's last visible frame, not the exact end time: mpv renders
+                            // the sub track itself and hides the line at its end time, so an exact-end stop
+                            // shows a blank frame - or the *next* line on a shared boundary - instead of the
+                            // line that was just played (#13429).
+                            var fps = Se.Settings.General.CurrentFrameRate;
+                            var frameSeconds = fps >= 10 ? 1.0 / fps : 0.04;
+                            var stopSeconds = Math.Max(_playSelectionItem.GetCurrentStartSeconds(),
+                                _playSelectionItem.EndSeconds - frameSeconds);
+
+                            vp.Position = stopSeconds;
+                            PinPlayheadTo(stopSeconds);
 
                             // Stopping here is not a user scrub: without this the "center also while paused"
                             // branch below sees the play-head jump (its baseline is still where playback
-                            // started) and re-selects the line under the play-head - the next line, since the
-                            // stop lands on the shared start/end boundary (#13331).
-                            _pausedSelectLastSeconds = _playSelectionItem.EndSeconds;
+                            // started) and re-selects the line under the play-head (#13331).
+                            _pausedSelectLastSeconds = stopSeconds;
                             ResetPlaySelection();
                         }
                         else
