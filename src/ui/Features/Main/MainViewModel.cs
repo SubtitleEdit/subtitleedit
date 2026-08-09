@@ -1315,6 +1315,13 @@ public partial class MainViewModel :
             return;
         }
 
+        // SE 4 parity: both its "Pause" button (next to Previous/Play current/Next) and its
+        // VideoPause shortcut called ResetPlaySelection() before pausing, so resuming plays on
+        // instead of stopping again at the end of the line that was playing - or, with repeat
+        // on, looping it forever. TogglePlayPause deliberately keeps the selection: that one
+        // is the plain player play/pause, which did not reset it in SE 4 either.
+        ResetPlaySelection();
+
         if (vp.VideoPlayer.IsPlaying)
         {
             RequestPausePlayheadFreeze();
