@@ -1564,6 +1564,14 @@ namespace Nikse.SubtitleEdit.Core.Common
             return count;
         }
 
+        /// <summary>
+        /// True if <paramref name="text"/> starts with <paramref name="startTag"/> and ends with
+        /// <paramref name="endTag"/>, ignoring leading dialog dashes/dots/spaces and trailing
+        /// punctuation ('.', '!', '?', '-') and spaces.
+        /// The skipped characters must not overlap the tags: <paramref name="startTag"/> must not
+        /// begin with ' ', '.' or '-', and <paramref name="endTag"/> must not end with
+        /// ' ', '.', '!', '?' or '-' (always true for HTML tags like "&lt;i&gt;").
+        /// </summary>
         public static bool StartsAndEndsWithTag(string text, string startTag, string endTag)
         {
             if (string.IsNullOrWhiteSpace(text))
@@ -1576,9 +1584,8 @@ namespace Nikse.SubtitleEdit.Core.Common
                 return false;
             }
 
-            int startIndex = 0;
-            int len = text.Length;
-            while (startIndex < len && (text[startIndex] == ' ' || text[startIndex] == '.' || text[startIndex] == '-'))
+            var startIndex = 0;
+            while (startIndex < text.Length && (text[startIndex] == ' ' || text[startIndex] == '.' || text[startIndex] == '-'))
             {
                 startIndex++;
             }
@@ -1588,8 +1595,8 @@ namespace Nikse.SubtitleEdit.Core.Common
                 return false;
             }
 
-            int endIndex = text.Length - 1;
-            while (endIndex >= 0 && (text[endIndex] == '.' || text[endIndex] == '!' || text[endIndex] == '?' || text[endIndex] == '-' || text[endIndex] == ' '))
+            var endIndex = text.Length - 1;
+            while (endIndex >= startIndex && (text[endIndex] == '.' || text[endIndex] == '!' || text[endIndex] == '?' || text[endIndex] == '-' || text[endIndex] == ' '))
             {
                 endIndex--;
             }
