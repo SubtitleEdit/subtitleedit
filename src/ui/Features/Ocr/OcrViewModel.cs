@@ -3607,7 +3607,7 @@ public partial class OcrViewModel : ObservableObject
 
                     var suggestions = _ocrFixEngine.GetSpellCheckSuggestions(unknownWord.Word.FixedWord);
                     var result = await _windowService.ShowDialogAsync<PromptUnknownWordWindow, PromptUnknownWordViewModel>(Window!,
-                        vm => { vm.Initialize(item.GetBitmap(), item.Text, unknownWord, suggestions); });
+                        vm => { vm.Initialize(item.GetBitmapCropped(), item.Text, unknownWord, suggestions); });
 
                     if (result.ChangeWholeTextPressed)
                     {
