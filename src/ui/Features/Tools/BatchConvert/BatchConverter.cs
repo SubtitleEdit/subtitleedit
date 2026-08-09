@@ -568,31 +568,7 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
 
     internal static List<VobSubMergedPack> LoadVobSubFromMatroska(MatroskaTrackInfo matroskaSubtitleInfo, MatroskaFile matroska, out Core.VobSub.Idx? idx)
     {
-        var mergedVobSubPacks = new List<VobSubMergedPack>();
-        if (matroskaSubtitleInfo.ContentEncodingType == 1)
-        {
-            idx = null;
-            return mergedVobSubPacks;
-        }
-
-        var sub = matroska.GetSubtitle(matroskaSubtitleInfo.TrackNumber, null);
-        idx = new Core.VobSub.Idx(matroskaSubtitleInfo.GetCodecPrivate().SplitToLines());
-        foreach (var p in sub)
-        {
-            mergedVobSubPacks.Add(new VobSubMergedPack(p.GetData(matroskaSubtitleInfo), TimeSpan.FromMilliseconds(p.Start), 32, null));
-            if (mergedVobSubPacks.Count > 0)
-            {
-                mergedVobSubPacks[mergedVobSubPacks.Count - 1].EndTime = TimeSpan.FromMilliseconds(p.End);
-            }
-
-            // fix overlapping (some versions of Handbrake makes overlapping time codes - thx Hawke)
-            if (mergedVobSubPacks.Count > 1 && mergedVobSubPacks[mergedVobSubPacks.Count - 2].EndTime > mergedVobSubPacks[mergedVobSubPacks.Count - 1].StartTime)
-            {
-                mergedVobSubPacks[mergedVobSubPacks.Count - 2].EndTime = TimeSpan.FromMilliseconds(mergedVobSubPacks[mergedVobSubPacks.Count - 1].StartTime.TotalMilliseconds - 1);
-            }
-        }
-
-        return mergedVobSubPacks;
+        return MatroskaImageSubtitleExtractor.ExtractVobSub(matroskaSubtitleInfo, matroska, out idx);
     }
 
 
