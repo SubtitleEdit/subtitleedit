@@ -37,6 +37,80 @@ public class NOcrDb
 
     private readonly Lock _lock = new();
 
+    // Subtitle lines repeat the same glyph bitmaps over and over, so cache match results per
+    // exact pixel content. Unmatched glyphs benefit the most: a "no match" previously re-ran the
+    // whole pass cascade against the full database for every occurrence. The cache is cleared on
+    // any mutation (Add/Remove/Load) and on Save, because the edit dialogs mutate the character
+    // lists/lines directly and always call Save afterwards.
+    private readonly Dictionary<MatchCacheKey, MatchCacheEntry> _matchCache = new();
+    private const int MatchCacheMaxEntries = 5000;
+
+    // Exact-match candidates bucketed by (width, height) so the exact pass doesn't scan the
+    // whole single-character list per glyph. Rebuilt lazily after mutations; insertion order is
+    // preserved within a bucket so the first-match-wins semantics are unchanged.
+    private Dictionary<long, List<NOcrChar>>? _exactSizeIndex;
+
+    private sealed class MatchCacheEntry
+    {
+        public NOcrChar? ExactMatch;
+        public NOcrChar? SingleMatch;
+    }
+
+    private readonly struct MatchCacheKey : IEquatable<MatchCacheKey>
+    {
+        private readonly byte[] _pixels;
+        private readonly int _width;
+        private readonly int _topMargin;
+        private readonly int _maxWrongPixels;
+        private readonly bool _deepSeek;
+        private readonly bool _lastDitch;
+        private readonly int _hashCode;
+
+        public MatchCacheKey(NikseBitmap2 bitmap, int topMargin, bool deepSeek, int maxWrongPixels, bool lastDitch)
+        {
+            _pixels = bitmap.GetPixelData().ToArray();
+            _width = bitmap.Width;
+            _topMargin = topMargin;
+            _maxWrongPixels = maxWrongPixels;
+            _deepSeek = deepSeek;
+            _lastDitch = lastDitch;
+
+            // FNV-1a over the pixel bytes plus the match parameters.
+            var hash = unchecked((int)2166136261);
+            foreach (var b in _pixels)
+            {
+                hash = unchecked((hash ^ b) * 16777619);
+            }
+
+            hash = unchecked((hash ^ _width) * 16777619);
+            hash = unchecked((hash ^ _topMargin) * 16777619);
+            hash = unchecked((hash ^ _maxWrongPixels) * 16777619);
+            hash = unchecked((hash ^ (_deepSeek ? 1 : 0) ^ (_lastDitch ? 2 : 0)) * 16777619);
+            _hashCode = hash;
+        }
+
+        public bool Equals(MatchCacheKey other)
+        {
+            return _hashCode == other._hashCode &&
+                   _width == other._width &&
+                   _topMargin == other._topMargin &&
+                   _maxWrongPixels == other._maxWrongPixels &&
+                   _deepSeek == other._deepSeek &&
+                   _lastDitch == other._lastDitch &&
+                   _pixels.AsSpan().SequenceEqual(other._pixels);
+        }
+
+        public override bool Equals(object? obj) => obj is MatchCacheKey other && Equals(other);
+
+        public override int GetHashCode() => _hashCode;
+    }
+
+    private void InvalidateCaches()
+    {
+        _matchCache.Clear();
+        _exactSizeIndex = null;
+    }
+
     public void Save()
     {
         lock (_lock)
@@ -60,6 +134,10 @@ public class NOcrDb
             }
 
             File.Move(tempFileName, FileName, overwrite: true);
+
+            // The edit dialogs mutate OcrCharacters/character lines directly and then call
+            // Save, so treat Save as a mutation barrier for the caches.
+            InvalidateCaches();
         }
     }
 
@@ -74,6 +152,7 @@ public class NOcrDb
             {
                 OcrCharacters = list;
                 OcrCharactersExpanded = listExpanded;
+                InvalidateCaches();
                 return;
             }
 
@@ -115,6 +194,7 @@ public class NOcrDb
 
             OcrCharacters = list;
             OcrCharactersExpanded = listExpanded;
+            InvalidateCaches();
         }
     }
 
@@ -130,6 +210,8 @@ public class NOcrDb
             {
                 OcrCharacters.Insert(0, ocrChar);
             }
+
+            InvalidateCaches();
         }
     }
 
@@ -145,6 +227,8 @@ public class NOcrDb
             {
                 OcrCharacters.Remove(ocrChar);
             }
+
+            InvalidateCaches();
         }
     }
 
@@ -290,36 +374,101 @@ public class NOcrDb
             return null;
         }
 
+        var key = new MatchCacheKey(item.NikseBitmap, topMargin, deepSeek, maxWrongPixels, lastDitch);
+        MatchCacheEntry? cached;
+        lock (_lock)
+        {
+            _matchCache.TryGetValue(key, out cached);
+        }
+
+        if (cached != null)
+        {
+            if (cached.ExactMatch != null)
+            {
+                return cached.ExactMatch;
+            }
+
+            // The expanded scan depends on the neighboring splitter items and the parent
+            // bitmap, so it can't be cached per glyph bitmap - always evaluate it live.
+            return GetMatchExpanded(parentBitmap, item, list.IndexOf(item), list) ?? cached.SingleMatch;
+        }
+
         // A perfect single match (exact size, 0 errors) means the user has explicitly added an
         // entry for this bitmap, so prefer it over a possibly-greedy expanded match.
         var exactSingle = GetExactMatchSingle(item.NikseBitmap, topMargin);
         if (exactSingle != null)
         {
+            CacheMatch(key, new MatchCacheEntry { ExactMatch = exactSingle });
             return exactSingle;
         }
 
         var expandedResult = GetMatchExpanded(parentBitmap, item, list.IndexOf(item), list);
         if (expandedResult != null)
         {
+            // Nothing cached: the single-match result was never computed, and the expanded
+            // result must not be cached (see above).
             return expandedResult;
         }
 
         // skipExactCheck: the exact scan already ran (and missed) above - without the flag,
         // GetMatchSingle re-scanned the whole single-character list a second time for every
         // glyph that wasn't an exact match.
-        return GetMatchSingle(item.NikseBitmap, topMargin, deepSeek, maxWrongPixels, lastDitch, skipExactCheck: true);
+        var single = GetMatchSingle(item.NikseBitmap, topMargin, deepSeek, maxWrongPixels, lastDitch, skipExactCheck: true);
+        CacheMatch(key, new MatchCacheEntry { SingleMatch = single });
+        return single;
+    }
+
+    private void CacheMatch(MatchCacheKey key, MatchCacheEntry entry)
+    {
+        lock (_lock)
+        {
+            if (_matchCache.Count >= MatchCacheMaxEntries)
+            {
+                _matchCache.Clear();
+            }
+
+            _matchCache[key] = entry;
+        }
     }
 
     private NOcrChar? GetExactMatchSingle(NikseBitmap2 bitmap, int topMargin)
     {
-        foreach (var oc in OcrCharacters)
+        var index = _exactSizeIndex;
+        if (index == null)
         {
-            if (bitmap.Width == oc.Width && bitmap.Height == oc.Height && Math.Abs(oc.MarginTop - topMargin) < 5)
+            lock (_lock)
             {
-                if (IsMatch(bitmap, oc, 0))
+                index = _exactSizeIndex;
+                if (index == null)
                 {
-                    return oc;
+                    index = new Dictionary<long, List<NOcrChar>>();
+                    foreach (var oc in OcrCharacters)
+                    {
+                        var k = ((long)oc.Width << 32) | (uint)oc.Height;
+                        if (!index.TryGetValue(k, out var bucket))
+                        {
+                            bucket = new List<NOcrChar>();
+                            index[k] = bucket;
+                        }
+
+                        bucket.Add(oc);
+                    }
+
+                    _exactSizeIndex = index;
                 }
+            }
+        }
+
+        if (!index.TryGetValue(((long)bitmap.Width << 32) | (uint)bitmap.Height, out var candidates))
+        {
+            return null;
+        }
+
+        foreach (var oc in candidates)
+        {
+            if (Math.Abs(oc.MarginTop - topMargin) < 5 && IsMatch(bitmap, oc, 0))
+            {
+                return oc;
             }
         }
 
