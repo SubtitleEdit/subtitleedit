@@ -4,27 +4,19 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
-using System;
-using System.Net.Http;
-using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace Nikse.SubtitleEdit.Features.Help.CheckForUpdates;
 
 public partial class CheckForUpdatesViewModel : ObservableObject
 {
-    private const string ChangeLogUrl1 = "https://raw.githubusercontent.com/SubtitleEdit/subtitleedit/refs/heads/main/change-log.txt";
-    private const string ChangeLogUrl2 = "https://raw.githubusercontent.com/SubtitleEdit/subtitleedit/refs/heads/main/Changelog.txt";
-    private const string ChangeLogUrl3 = "https://raw.githubusercontent.com/SubtitleEdit/subtitleedit/refs/heads/main/ChangeLog.txt";
     private const string ReleasesUrl = "https://github.com/SubtitleEdit/subtitleedit/releases";
-    private static readonly Regex UnreleasedChangeLogRegex = new(@"(x(th|st) \w+ \d+|TBD)", RegexOptions.Compiled);
 
-    private readonly HttpClient _httpClient;
+    private readonly IUpdateCheckService _updateCheckService;
 
-    public CheckForUpdatesViewModel(HttpClient httpClient)
+    public CheckForUpdatesViewModel(IUpdateCheckService updateCheckService)
     {
-        _httpClient = httpClient;
-        _httpClient.Timeout = TimeSpan.FromSeconds(15);
+        _updateCheckService = updateCheckService;
     }
 
     public Window? Window { get; set; }
@@ -42,35 +34,18 @@ public partial class CheckForUpdatesViewModel : ObservableObject
 
         try
         {
-            string content;
-            try
-            {
-                content = await _httpClient.GetStringAsync(ChangeLogUrl1);
-            }
-            catch
-            {
-                try
-                {
-                    content = await _httpClient.GetStringAsync(ChangeLogUrl2);
-                }
-                catch
-                {
-                    content = await _httpClient.GetStringAsync(ChangeLogUrl3);
-                }
-            }
+            var result = await _updateCheckService.CheckForUpdates();
+            ChangeLogText = result.ChangeLogText;
 
-            ChangeLogText = ParseLatestChangeLog(content);
-            var latestVersion = ParseLatestVersion(ChangeLogText);
-
-            if (string.IsNullOrEmpty(latestVersion))
+            if (string.IsNullOrEmpty(result.LatestVersion))
             {
                 StatusText = Se.Language.Help.CheckForUpdatesUnableToCheck;
                 return;
             }
 
-            if (IsNewerThanCurrent(latestVersion))
+            if (result.IsNewVersionAvailable)
             {
-                StatusText = string.Format(Se.Language.Help.CheckForUpdatesNewVersionAvailable, latestVersion);
+                StatusText = string.Format(Se.Language.Help.CheckForUpdatesNewVersionAvailable, result.LatestVersion);
                 IsDownloadLinkVisible = true;
             }
             else
@@ -82,44 +57,6 @@ public partial class CheckForUpdatesViewModel : ObservableObject
         {
             StatusText = Se.Language.Help.CheckForUpdatesUnableToCheck;
         }
-    }
-
-    internal static bool IsNewerThanCurrent(string latestVersion)
-    {
-        try
-        {
-            return new SemanticVersion(latestVersion).IsGreaterThan(new SemanticVersion(Se.Version));
-        }
-        catch (ArgumentException)
-        {
-            // unparsable version - only offer the download when it differs from what we run
-            return !string.Equals(latestVersion, Se.Version, StringComparison.OrdinalIgnoreCase);
-        }
-    }
-
-    private static string ParseLatestVersion(string changeLogContent)
-    {
-        var match = Regex.Match(changeLogContent, @"^(v[\d.]+(?:-\w+)?)\s*\(", RegexOptions.Multiline);
-        return match.Success ? match.Groups[1].Value : string.Empty;
-    }
-
-    private static string ParseLatestChangeLog(string changeLogContent)
-    {
-        const string releaseSeparator = "-----------------------------------------------------------------------------------------------------";
-        foreach (var block in changeLogContent.Split(releaseSeparator))
-        {
-            var changeLog = block.Trim();
-            if (changeLog.Length == 0 ||
-                string.IsNullOrEmpty(ParseLatestVersion(changeLog)) || // file title or other block without a version header
-                UnreleasedChangeLogRegex.IsMatch(changeLog)) // unreleased draft entry
-            {
-                continue;
-            }
-
-            return changeLog;
-        }
-
-        return changeLogContent.Trim();
     }
 
     [RelayCommand]

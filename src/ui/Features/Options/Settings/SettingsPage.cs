@@ -11,6 +11,7 @@ using Avalonia.Media;
 using Avalonia.Platform;
 using Avalonia.Threading;
 using CommunityToolkit.Mvvm.Input;
+using Nikse.SubtitleEdit.Features.Help.CheckForUpdates;
 using Nikse.SubtitleEdit.Features.Shared.PickLanguage;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
@@ -836,6 +837,26 @@ public class SettingsPage : UserControl
                 return textBox;
             }),
         ]));
+
+        var updateItems = new List<SettingsItem>();
+        if (!UpdateCheckService.IsStoreManagedInstall)
+        {
+            // Store-managed installs (Flatpak) update through the store, so the startup check is hidden there.
+            updateItems.Add(MakeCheckboxSetting(Se.Language.Options.Settings.CheckForUpdatesOnStartup, nameof(_vm.CheckForUpdatesOnStartup)));
+        }
+
+        updateItems.Add(new SettingsItem(Se.Language.Options.Settings.CheckForUpdatesChannel, () => new ComboBox
+        {
+            MinWidth = 200,
+            DataContext = _vm,
+            [!ItemsControl.ItemsSourceProperty] = new Binding(nameof(_vm.UpdateChannels)),
+            [!SelectingItemsControl.SelectedItemProperty] = new Binding(nameof(_vm.SelectedUpdateChannel))
+            {
+                Mode = BindingMode.TwoWay,
+            }
+        }));
+
+        sections.Add(new SettingsSection(Se.Language.Options.Settings.Updates, IconNames.CloudDownload, "#d0a24e", updateItems));
 
         if (OperatingSystem.IsWindows())
         {
