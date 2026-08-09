@@ -287,10 +287,11 @@ public class CrispEmbedOcr : IDisposable
         };
 
         // v0.17.7 made the PP-OCRv6 detector CUDA-resident, which left the scalar path everyone
-        // else runs (Metal, CPU) ~21% slower than v0.17.6 - measured over 12 interleaved A/B
-        // pairs on Apple Silicon, every pair slower. The release ships the recovery as an
-        // opt-in gate: with it on, the same corpus is back within ~4% of v0.17.6 and the text,
-        // region count and mean confidence are identical on all ten images (2026-08-09).
+        // else runs (Metal, CPU) ~18% slower than v0.17.6 on a ten-image subtitle corpus, and
+        // slower on all 12 pairs of an interleaved A/B run. The release ships the recovery as an
+        // opt-in gate; it takes back about two thirds of that (+18.1% -> +5.6%) with the text,
+        // region count and mean confidence identical on all ten images. Reported upstream as
+        // CrispStrobe/CrispEmbed#45 - drop this if the gate ever defaults on (2026-08-09).
         process.StartInfo.Environment["CRISPEMBED_CONV2D_MK"] = "1";
 
         process.Start();
