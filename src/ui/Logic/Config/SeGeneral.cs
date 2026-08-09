@@ -99,6 +99,11 @@ public class SeGeneral
     public bool ProxyUseDefaultCredentials { get; set; }
     public string ProxyBypassList { get; set; }
 
+    public bool CheckForUpdatesOnStartup { get; set; } = true;
+
+    // "Stable", "Beta" or empty = auto (users on a beta build get beta updates, stable users stable only)
+    public string CheckForUpdatesChannel { get; set; } = string.Empty;
+
     public bool ShowColumnStartTime { get; set; }
     public bool ShowColumnEndTime { get; set; }
     public bool ShowColumnGap { get; set; }

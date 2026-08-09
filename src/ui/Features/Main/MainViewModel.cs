@@ -1,6 +1,7 @@
 using Nikse.SubtitleEdit.UiLogic.Export;
 using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Controls.Primitives;
 using Avalonia.Data;
 using Avalonia.Input;
@@ -227,6 +228,9 @@ public partial class MainViewModel :
 
     [ObservableProperty] private string _statusTextLeft;
     [ObservableProperty] private string _statusTextRight;
+
+    [ObservableProperty] private bool _isUpdateAvailable;
+    [ObservableProperty] private string _updateAvailableText = string.Empty;
 
     [ObservableProperty] private bool _isWaveformToolbarVisible;
     [ObservableProperty] private bool _isSubtitleGridFlyoutHeaderVisible;
@@ -515,6 +519,7 @@ public partial class MainViewModel :
     private readonly IPluginCatalog _pluginCatalog;
     private readonly IPluginRunner _pluginRunner;
     private readonly IYtDlpDownloadService _ytDlpDownloadService;
+    private readonly IUpdateCheckService _updateCheckService;
 
     private bool IsEmpty => Subtitles.Count == 0 || (Subtitles.Count == 1 && string.IsNullOrEmpty(Subtitles[0].Text));
 
@@ -597,7 +602,8 @@ public partial class MainViewModel :
         IPasteFromClipboardHelper pasteFromClipboardHelper,
         IPluginCatalog pluginCatalog,
         IPluginRunner pluginRunner,
-        IYtDlpDownloadService ytDlpDownloadService)
+        IYtDlpDownloadService ytDlpDownloadService,
+        IUpdateCheckService updateCheckService)
     {
         _fileHelper = fileHelper;
         _folderHelper = folderHelper;
@@ -621,6 +627,7 @@ public partial class MainViewModel :
         _pluginCatalog = pluginCatalog;
         _pluginRunner = pluginRunner;
         _ytDlpDownloadService = ytDlpDownloadService;
+        _updateCheckService = updateCheckService;
 
         _loading = true;
         EditText = string.Empty;
@@ -809,6 +816,47 @@ public partial class MainViewModel :
             _dropDownFormatsSearchText = string.Empty;
             _dropDownFormatsSearchTimer.Stop();
         };
+
+        StartCheckForUpdates();
+    }
+
+    private void StartCheckForUpdates()
+    {
+        if (!Se.Settings.General.CheckForUpdatesOnStartup || UpdateCheckService.IsStoreManagedInstall)
+        {
+            return;
+        }
+
+        // Only in the real desktop app - headless unit tests also build this
+        // view model and must not hit the network.
+        if (Application.Current?.ApplicationLifetime is not ClassicDesktopStyleApplicationLifetime)
+        {
+            return;
+        }
+
+        _ = Task.Run(async () =>
+        {
+            // Delayed well past startup so the check never competes with the UI
+            // coming up; a newer version just lights up the status bar indicator.
+            await Task.Delay(TimeSpan.FromSeconds(15));
+
+            try
+            {
+                var result = await _updateCheckService.CheckForUpdates();
+                if (result.IsNewVersionAvailable)
+                {
+                    Dispatcher.UIThread.Post(() =>
+                    {
+                        UpdateAvailableText = string.Format(Se.Language.Help.CheckForUpdatesNewVersionAvailable, result.LatestVersion);
+                        IsUpdateAvailable = true;
+                    });
+                }
+            }
+            catch
+            {
+                // Offline or GitHub unreachable - stay silent and try again next start.
+            }
+        });
     }
 
     private void FirstLoad()

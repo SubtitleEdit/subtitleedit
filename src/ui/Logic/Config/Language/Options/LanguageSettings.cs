@@ -169,6 +169,13 @@ public class LanguageSettings
     public string ProxyBypassList { get; set; }
     public string ProxyBypassListHint { get; set; }
 
+    // Updates
+    public string Updates { get; set; }
+    public string CheckForUpdatesOnStartup { get; set; }
+    public string CheckForUpdatesChannel { get; set; }
+    public string CheckForUpdatesChannelStable { get; set; }
+    public string CheckForUpdatesChannelStableAndBeta { get; set; }
+
     public string DefaultFormat { get; set; }
     public string DefaultSaveAsFormat { get; set; }
     public string FavoriteSubtitleFormats { get; set; }
@@ -478,6 +485,13 @@ public class LanguageSettings
         ProxyUseSystemCredentials = "Use system credentials";
         ProxyBypassList = "Bypass proxy for";
         ProxyBypassListHint = "Semicolon separated host names that connect directly, e.g. \"internal.company.com;example.org\"";
+
+        // Updates
+        Updates = "Updates";
+        CheckForUpdatesOnStartup = "Check for updates when the app starts";
+        CheckForUpdatesChannel = "Notify about";
+        CheckForUpdatesChannelStable = "Stable versions only";
+        CheckForUpdatesChannelStableAndBeta = "Stable and beta versions";
 
         ShowStopButton = "Show stop button";
         ShowFullscreenButton = "Show full-screen button";
