@@ -971,7 +971,8 @@ public partial class VideoOcrViewModel : ObservableObject
         var settings = Se.Settings.Video.VideoOcr;
         SelectedEngine = Engines.FirstOrDefault(p => p.EngineType.ToString() == settings.Engine) ?? Engines[0];
         OnSelectedEngineChanged(SelectedEngine);
-        SelectedPaddleLanguage = PaddleLanguages.FirstOrDefault(p => p.Code == settings.PaddleLanguage) ??
+        var paddleLanguage = PaddleOcr.NormalizeLanguageCode(settings.PaddleLanguage);
+        SelectedPaddleLanguage = PaddleLanguages.FirstOrDefault(p => p.Code == paddleLanguage) ??
                                  PaddleLanguages.FirstOrDefault(p => p.Code == "en");
         OllamaUrl = settings.OllamaUrl;
         OllamaModel = settings.OllamaModel;

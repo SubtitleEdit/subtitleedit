@@ -428,8 +428,10 @@ public partial class BatchConvertSettingsViewModel : ObservableObject
 
         if (ocrEngine == "PaddleOCR")
         {
-            SelectedPaddleOcrLanguage = PaddleOcrLanguages
-                .FirstOrDefault(p => p.Code == Se.Settings.Tools.BatchConvert.PaddleLanguage) ?? PaddleOcrLanguages.FirstOrDefault();
+            var paddleLanguage = PaddleOcr.NormalizeLanguageCode(Se.Settings.Tools.BatchConvert.PaddleLanguage);
+            SelectedPaddleOcrLanguage = PaddleOcrLanguages.FirstOrDefault(p => p.Code == paddleLanguage) ??
+                                        PaddleOcrLanguages.FirstOrDefault(p => p.Code == "en") ??
+                                        PaddleOcrLanguages.FirstOrDefault();
         }
 
         if (ocrEngine == "BinaryOcr")
