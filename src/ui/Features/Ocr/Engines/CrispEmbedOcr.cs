@@ -288,12 +288,12 @@ public class CrispEmbedOcr : IDisposable
 
         // v0.17.7's n_threads audit made the PP-OCRv6 detector honor the CLI's -t 1 default where
         // it previously ran at ggml's 4-thread default, costing ~18% wall clock on the scalar
-        // (Metal/CPU) path; "-t 4" above restores it and stays correct after the upstream fix,
-        // since an explicit -t always wins over the fixed min(4, cores) default. The env gate is
-        // a separate, thread-independent win on the recognizer's scalar convs; upstream flips it
-        // default-on for the recognizer after this report, and the env keeps precedence, so
-        // setting it stays harmless. Both diagnosed in CrispStrobe/CrispEmbed#45 (2026-08-09);
-        // output is byte-identical in every arm. Drop both once the pin moves past v0.17.7.
+        // (Metal/CPU) path. v0.17.8 fixed both sides (min(4, cores) thread default, recognizer mk
+        // kernel default-on), but IsEngineInstalled() is a presence check - a lingering v0.17.7
+        // binary is never re-downloaded - so "-t 4" and the env gate stay to keep those installs
+        // fast. Both are no-ops on v0.17.8 by design: an explicit -t wins over the fixed default,
+        // and the env matches the new recognizer default. Diagnosed in CrispStrobe/CrispEmbed#45
+        // (2026-08-09); output is byte-identical in every arm.
         process.StartInfo.Environment["CRISPEMBED_CONV2D_MK"] = "1";
 
         process.Start();
