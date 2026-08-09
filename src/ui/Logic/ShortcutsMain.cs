@@ -921,8 +921,6 @@ public static class ShortcutsMain
             new(nameof(vm.CommandFileSaveCommand), [cmd, "S"], ShortcutCategory.General),
             new(nameof(vm.TogglePlayPauseCommand), [nameof(Avalonia.Input.Key.Space)], ShortcutCategory.General),
             new(nameof(vm.TogglePlayPause2Command), [cmd, nameof(Avalonia.Input.Key.Space)], ShortcutCategory.General),
-            new(nameof(vm.PlayNextAndStopCommand), [cmd, "Down"], ShortcutCategory.General),
-            new(nameof(vm.PlayPreviousAndStopCommand), [cmd, "Up"], ShortcutCategory.General),
             new(nameof(vm.VideoOneSecondBackCommand), [nameof(Avalonia.Input.Key.Left)], ShortcutCategory.General),
             new(nameof(vm.VideoOneSecondForwardCommand), [nameof(Avalonia.Input.Key.Right)], ShortcutCategory.General),
             new(nameof(vm.ShowHelpCommand), [nameof(Avalonia.Input.Key.F1)], ShortcutCategory.General),
@@ -990,7 +988,8 @@ public static class ShortcutsMain
             new(nameof(vm.VideoFullScreenCommand), ["Alt", nameof(Avalonia.Input.Key.Return)], ShortcutCategory.General),
             new(nameof(vm.WaveformVerticalZoomInCommand), ["Shift", nameof(Avalonia.Input.Key.Add)], ShortcutCategory.General),
             new(nameof(vm.WaveformVerticalZoomOutCommand), ["Shift", nameof(Avalonia.Input.Key.Subtract)], ShortcutCategory.General),
-            new(nameof(vm.PauseCommand), [cmd, "Alt", nameof(Avalonia.Input.Key.P)], ShortcutCategory.General),
+            new(nameof(vm.PlayNextAndStopCommand), [cmd, nameof(Avalonia.Input.Key.Down)], ShortcutCategory.General),
+            new(nameof(vm.PlayPreviousAndStopCommand), [cmd, nameof(Avalonia.Input.Key.Up)], ShortcutCategory.General),
             new(nameof(vm.SetupLikeSe4Command), [cmd, nameof(Avalonia.Input.Key.D4)], ShortcutCategory.General),
         ];
     }
