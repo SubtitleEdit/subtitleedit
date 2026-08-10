@@ -1,5 +1,6 @@
 ﻿using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
+using Nikse.SubtitleEdit.UiLogic.Http;
 using Nikse.SubtitleEdit.UiLogic.Translate;
 using System;
 using System.Collections.Generic;
@@ -25,7 +26,7 @@ namespace Nikse.SubtitleEdit.UiLogic.AutoTranslate
         public void Initialize()
         {
             _httpClient?.Dispose();
-            _httpClient = new HttpClient();
+            _httpClient = HttpClientFactoryWithProxy.CreateHttpClientWithProxy();
             _httpClient.DefaultRequestHeaders.TryAddWithoutValidation("Content-Type", "application/json");
             _httpClient.DefaultRequestHeaders.TryAddWithoutValidation("accept", "application/json");
             // The endpoint is a relative URI against BaseAddress, and .NET drops the base's
