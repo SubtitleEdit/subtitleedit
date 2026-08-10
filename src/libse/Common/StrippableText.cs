@@ -218,29 +218,31 @@ namespace Nikse.SubtitleEdit.Core.Common
             }
         }
 
-        private void ReplacAssaTagsRemove(List<string> replaceIds, List<string> replaceNames, List<string> originalNames)
+        private void ReplaceAssaTagsRemove(List<string> replaceIds, List<string> replaceNames, List<string> originalNames)
         {
             int idName = 1000;
-            var idx = 0;
-            while (StrippedText.IndexOf("{", idx) >= 0 && StrippedText.IndexOf('}', idx) > 0)
+            var openIndex = StrippedText.IndexOf('{');
+            while (openIndex >= 0)
             {
-                var start = StrippedText.IndexOf("{", idx);
-                var end = StrippedText.IndexOf("}", idx);
-                if (end < start)
+                // Pair each "{" with the first "}" after it - searching both from the same start
+                // index made a stray "}" (as in "a} b {\i1}") look like an unbalanced tag and
+                // abort the scan, leaving the real tags unprotected.
+                var closeIndex = StrippedText.IndexOf('}', openIndex + 1);
+                if (closeIndex < 0)
                 {
                     return;
                 }
 
-                var tag = StrippedText.Substring(start, end - start + 1);
-                StrippedText = StrippedText.Remove(start, tag.Length);
-                StrippedText = StrippedText.Insert(start, GetAndInsertNextId(replaceIds, replaceNames, tag, idName++));
+                var tag = StrippedText.Substring(openIndex, closeIndex - openIndex + 1);
+                StrippedText = StrippedText.Remove(openIndex, tag.Length);
+                var id = GetAndInsertNextId(replaceIds, replaceNames, tag, idName++);
+                StrippedText = StrippedText.Insert(openIndex, id);
                 originalNames.Add(tag);
 
-                idx = end + 1;
-                if (idx >= StrippedText.Length)
-                {
-                    return;
-                }   
+                // Resume after the inserted id - "closeIndex + 1" was an index into the string
+                // as it looked before the replacement, so any tag longer than the id skipped
+                // the following tags.
+                openIndex = StrippedText.IndexOf('{', openIndex + id.Length);
             }
         }
 
@@ -259,7 +261,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             var replaceNames = new List<string>();
             var originalNames = new List<string>();
             ReplaceNames1Remove(nameList, replaceIds, replaceNames, originalNames);
-            ReplacAssaTagsRemove(replaceIds, replaceNames, originalNames);
+            ReplaceAssaTagsRemove(replaceIds, replaceNames, originalNames);
 
             if (checkLastLine && ShouldStartWithUpperCase(lastLine, millisecondsFromLast))
             {
