@@ -54,6 +54,39 @@ public class ChatterboxTtsCppDownloadService : IChatterboxTtsCppDownloadService
     public static string GetBackendName(string? modelKey) =>
         ResolveModelKey(modelKey) == ModelKeyTurbo ? "chatterbox-turbo" : "chatterbox";
 
+    // cstr/chatterbox-GGUF was rebuilt IN PLACE around 2026-06-18: the same file names went
+    // from the English-only v1 weights (T3 text vocab 704) to the multilingual weights
+    // (text vocab 2454, with the [de]/[fr]/... language tokens the `language` request field
+    // needs). Anyone who downloaded before the rebuild still has the English-only files and a
+    // bare File.Exists check would keep them forever — language selection then changes nothing
+    // and non-English text comes out as accented gibberish. These are the exact byte sizes of
+    // the legacy files, used to force a re-download; the Turbo repo was not part of the rebuild.
+    private const long LegacyBaseT3Size = 630_177_120;
+    private const long LegacyBaseS3GenSize = 358_278_528;
+
+    /// <summary>
+    /// True when <paramref name="path"/> is one of the pre-multilingual (English-only) Base
+    /// GGUFs, identified by exact byte size. Such a file works for English synthesis but lacks
+    /// the language tokens, so it is treated as not installed to trigger a re-download.
+    /// </summary>
+    public static bool IsLegacyEnglishOnlyModel(string path)
+    {
+        try
+        {
+            if (!File.Exists(path))
+            {
+                return false;
+            }
+
+            var length = new FileInfo(path).Length;
+            return length == LegacyBaseT3Size || length == LegacyBaseS3GenSize;
+        }
+        catch
+        {
+            return false;
+        }
+    }
+
     public ChatterboxTtsCppDownloadService(HttpClient httpClient)
     {
         _httpClient = httpClient;
@@ -69,8 +102,8 @@ public class ChatterboxTtsCppDownloadService : IChatterboxTtsCppDownloadService
 
         var t3Path = Path.Combine(modelsFolder, t3FileName);
         var s3genPath = Path.Combine(modelsFolder, s3genFileName);
-        var needT3 = !File.Exists(t3Path);
-        var needS3Gen = !File.Exists(s3genPath);
+        var needT3 = !File.Exists(t3Path) || IsLegacyEnglishOnlyModel(t3Path);
+        var needS3Gen = !File.Exists(s3genPath) || IsLegacyEnglishOnlyModel(s3genPath);
         var total = (needT3 ? 1 : 0) + (needS3Gen ? 1 : 0);
         var step = 0;
 
