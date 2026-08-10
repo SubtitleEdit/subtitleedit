@@ -182,26 +182,59 @@ namespace Nikse.SubtitleEdit.Core.Common
 
         public static int CountWords(this string source)
         {
-            // Called per line on grid repaints (words-per-minute) - count boundaries directly
-            // instead of allocating a separator array plus one substring per word.
-            var text = HtmlUtil.RemoveHtmlTags(source, true);
             var count = 0;
-            var inWord = false;
-            for (var i = 0; i < text.Length; i++)
+            var l = 0;
+            var len = source.Length;
+            for (int r = 0; r < len; r++)
             {
-                var ch = text[i];
-                if (ch == ' ' || ch == '\n' || ch == '\r')
+                if (source[r] == '<' || source[r] == '{')
                 {
-                    inWord = false;
+                    if (CountWord(source, l, r))
+                    {
+                        count++;
+                    }
+
+                    l = r;
                 }
-                else if (!inWord)
+                else if ((source[r] == '>' && source[l] == '<') || (source[r] == '}' && source[l] == '{'))
                 {
-                    inWord = true;
-                    count++;
+                    l = r + 1;
+                }
+                else if (!(source[l] == '<' || source[l] == '{') &&
+                         (source[r] == ' ' || source[r] == '\n' || source[r] == '\r' || source[r] == '\t'))
+                {
+                    if (CountWord(source, l, r))
+                    {
+                        count++;
+                    }
+
+                    l = r + 1;
                 }
             }
 
+            // last word runs to the end of the string; skip if inside an unclosed tag
+            if (l < len && source[l] != '<' && source[l] != '{' && CountWord(source, l, len))
+            {
+                count++;
+            }
+
             return count;
+
+            static bool CountWord(string source, int l, int r)
+            {
+                // for things like: "Foo  bar"
+                if (r - l > 1 && !(source[l] == '\n' || source[l] == '\r' || source[l] == '\t' || source[l] == ' '))
+                {
+                    return true;
+                }
+
+                if (r - l == 1 && char.IsLetterOrDigit(source[l])) // we dont want to count symbols like dash etc
+                {
+                    return true;
+                }
+
+                return false;
+            }
         }
 
         // http://www.codeproject.com/Articles/43726/Optimizing-string-operations-in-C
