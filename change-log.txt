@@ -3,6 +3,36 @@ Subtitle Edit Changelog
 
 -----------------------------------------------------------------------------------------------------
 
+v5.2.0-beta9 (10th of August 2026)
+
+* Add image subtitle preview and VobSub export to the Matroska track chooser
+* Add "Train nOCR" from SE 4, and speed up nOCR matching with a result cache
+* Make "Set up like Subtitle Edit 4" also arrange the waveform toolbar like SE 4
+* Default to the h264_videotoolbox hardware encoder for burn-in on macOS
+* Improve nOCR matching of small and sensitive characters (O/o/0, quotes, dashes)
+* Stop "play selection" on the line's last visible frame instead of overshooting
+* Sync the Paddle OCR language list with PaddleOCR 3.4 and the bundled models
+* Let the CrispEmbed OCR hardware build be re-picked after the first install
+* Fix target file size when burning in with VideoToolbox encoders - thx luisblop
+* Fix burn-in re-runs reusing the previous run's bit rate, and a stuck dialog when the bit rate was too low
+* Fix subtitles intermittently missing in fullscreen playback - thx Davanix
+* Fix secondary subtitle showing tiny or huge in the video player, and preview flicker - thx GrampaWildWilly
+* Fix lost window focus after applying settings with undocked windows - thx GrampaWildWilly
+* Fix modal dialogs dropping behind other windows - thx GrampaWildWilly
+* Fix "Fix names" preview races and make the preview update instantly - thx ivandrofly
+* Fix ASSA output writing a mismatched events Format line for files from MKV
+* Fix OCR scrolling away from the selected line when stopping OCR
+* Fix spell check source image preview showing a large transparent area
+* Fix 22 broken format string placeholders in the Bulgarian translation
+* Update CrispEmbed OCR to v0.17.8
+* Update Russian translation - thx jekovcar
+* Update Bulgarian translation - thx jekovcar
+* Update Korean translation - thx 12si27
+* Update Japanese translation - thx hisui3393
+* Minor performance improvements in text processing - thx ivandrofly
+
+-----------------------------------------------------------------------------------------------------
+
 v5.2.0-beta8 (9th of August 2026)
 
 * Add Apple VideoToolbox hardware encoders to "Burn-in" on macOS (and only list encoders available on the OS)
