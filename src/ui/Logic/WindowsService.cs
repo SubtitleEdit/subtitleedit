@@ -1,8 +1,13 @@
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
+using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
+using Avalonia.Input;
+using Avalonia.Interactivity;
 using Avalonia.Threading;
+using Avalonia.VisualTree;
 using Microsoft.Extensions.DependencyInjection;
 using Nikse.SubtitleEdit.Features.Main.MainHelpers;
 using Nikse.SubtitleEdit.Features.Options.Settings;
@@ -371,6 +376,7 @@ namespace Nikse.SubtitleEdit.Logic
         internal static void ResetOpenModalsForTests()
         {
             _openModalCount = 0;
+            _modalFrames.Clear();
         }
 
         /// <summary>
@@ -386,10 +392,23 @@ namespace Nikse.SubtitleEdit.Logic
         /// owner.IsActive guard scopes this to the unambiguously broken state - it never yanks
         /// foreground from other applications or from the (independent, enabled) undocked tool
         /// windows.
+        ///
+        /// OS activation is only half of the invariant. Avalonia routes every key press to its
+        /// single app-global focused element, no matter which window the OS delivered the key to
+        /// (KeyboardDevice.ProcessRawEvent). So a deferred Focus() call into the owner - the menu
+        /// bar's post-close focus restore, a posted grid-focus after an edit - lands after the
+        /// dialog opened and silently re-routes the keyboard into the disabled owner while the
+        /// dialog stays OS-active with an active-looking title bar: Esc is dead and Tab visibly
+        /// walks the window underneath, with no hint at all (#13405 beta-9 feedback). Activation
+        /// events never fire for this state, so it is also enforced directly: focus landing on the
+        /// owner while the dialog is open is handed straight back to the dialog, and the key that
+        /// slipped through is swallowed rather than delivered to the input-disabled owner.
         /// </summary>
         private static IDisposable EnforceModalForegroundWhileOpen(Window dialog, Window owner)
         {
             var disposed = false;
+            var frame = new ModalFrame(dialog, owner);
+            _modalFrames.Add(frame);
 
             void BounceToDialog()
             {
@@ -426,17 +445,155 @@ namespace Nikse.SubtitleEdit.Logic
                 DispatcherTimer.RunOnce(BounceToDialog, TimeSpan.FromMilliseconds(450));
             }
 
+            void OnDialogGotFocus(object? sender, FocusChangedEventArgs e)
+            {
+                // Remember where the keyboard focus lives inside the dialog, so a reclaim can
+                // put it back exactly where it was instead of on the first focusable control.
+                if (e.Source is InputElement element && element != dialog &&
+                    TopLevel.GetTopLevel(element) == dialog)
+                {
+                    frame.LastDialogFocus = element;
+                }
+            }
+
+            void OnOwnerGotFocus(object? sender, FocusChangedEventArgs e)
+            {
+                if (disposed || !dialog.IsVisible || dialog.IsClosing())
+                {
+                    return; // before open / during close, focus in the owner is legitimate
+                }
+
+                // Deferred so an immediately-following focus change (the dialog taking focus
+                // itself) wins without a fight; the reclaim re-checks the state when it runs.
+                Dispatcher.UIThread.Post(ReclaimKeyboardFocusFromDisabledOwner, DispatcherPriority.Background);
+            }
+
+            void OnOwnerKeyInput(object? sender, RoutedEventArgs e)
+            {
+                if (disposed || !dialog.IsVisible || dialog.IsClosing())
+                {
+                    return;
+                }
+
+                // A key reaching the input-disabled owner is always wrong - swallow it (better a
+                // dead keystroke than one editing the subtitle underneath the dialog) and repair.
+                e.Handled = true;
+                Dispatcher.UIThread.Post(ReclaimKeyboardFocusFromDisabledOwner, DispatcherPriority.Background);
+            }
+
             owner.Activated += OnActivationChanged;
             dialog.Deactivated += OnActivationChanged;
             dialog.Opened += OnOpened;
+            // handledEventsToo: a control marking GotFocus handled must not hide the steal.
+            dialog.AddHandler(InputElement.GotFocusEvent, OnDialogGotFocus, RoutingStrategies.Bubble, handledEventsToo: true);
+            owner.AddHandler(InputElement.GotFocusEvent, OnOwnerGotFocus, RoutingStrategies.Bubble, handledEventsToo: true);
+            // Tunnel: run before the owner's own handlers (shortcut manager, text boxes) see the key.
+            owner.AddHandler(InputElement.KeyDownEvent, OnOwnerKeyInput, RoutingStrategies.Tunnel);
+            owner.AddHandler(InputElement.TextInputEvent, OnOwnerKeyInput, RoutingStrategies.Tunnel);
 
             return new ActionDisposable(() =>
             {
                 disposed = true;
+                _modalFrames.Remove(frame);
                 owner.Activated -= OnActivationChanged;
                 dialog.Deactivated -= OnActivationChanged;
                 dialog.Opened -= OnOpened;
+                dialog.RemoveHandler(InputElement.GotFocusEvent, OnDialogGotFocus);
+                owner.RemoveHandler(InputElement.GotFocusEvent, OnOwnerGotFocus);
+                owner.RemoveHandler(InputElement.KeyDownEvent, OnOwnerKeyInput);
+                owner.RemoveHandler(InputElement.TextInputEvent, OnOwnerKeyInput);
             });
+        }
+
+        // The open modals in open order - the last entry is the top-most dialog, the only window
+        // that may hold keyboard focus. The owners in this list (which include the lower dialogs
+        // of a nested chain) are exactly the input-disabled windows; independent enabled windows
+        // (undocked video player / audio visualizer) are never in it.
+        private static readonly List<ModalFrame> _modalFrames = new();
+
+        private sealed class ModalFrame
+        {
+            public ModalFrame(Window dialog, Window owner)
+            {
+                Dialog = dialog;
+                Owner = owner;
+            }
+
+            public Window Dialog { get; }
+            public Window Owner { get; }
+            public IInputElement? LastDialogFocus { get; set; }
+        }
+
+        /// <summary>
+        /// Moves the app-global keyboard focus back into the top-most open modal when it has ended
+        /// up in one of the input-disabled windows below it (or nowhere useful at all). No-op when
+        /// focus is already in the dialog or in an independent, enabled window.
+        /// </summary>
+        private static void ReclaimKeyboardFocusFromDisabledOwner()
+        {
+            if (_modalFrames.Count == 0)
+            {
+                return;
+            }
+
+            var frame = _modalFrames[^1];
+            var dialog = frame.Dialog;
+            if (!dialog.IsVisible || dialog.IsClosing())
+            {
+                return;
+            }
+
+            var focusedTopLevel = dialog.FocusManager?.GetFocusedElement() is Visual focusedVisual
+                ? TopLevel.GetTopLevel(focusedVisual)
+                : null;
+            if (focusedTopLevel == dialog)
+            {
+                return; // healthy
+            }
+
+            if (focusedTopLevel != null && !IsDisabledByOpenModal(focusedTopLevel))
+            {
+                return; // focus is in an enabled window (e.g. the undocked video player) - legitimate
+            }
+
+            // Focus is in a disabled owner, on a detached control (a closed popup's item), or
+            // nowhere: the dialog is the only right place for it while it is open. Prefer the
+            // control that last held the caret; fall back to the first focusable control when it
+            // cannot take focus anymore (hidden page, disabled button).
+            if (frame.LastDialogFocus is InputElement last &&
+                TopLevel.GetTopLevel(last) == dialog &&
+                last.Focus())
+            {
+                return;
+            }
+
+            (FindFirstFocusable(dialog) as InputElement)?.Focus();
+        }
+
+        private static IInputElement? FindFirstFocusable(Visual root)
+        {
+            foreach (var visual in root.GetVisualDescendants())
+            {
+                if (visual is InputElement { Focusable: true, IsEffectivelyEnabled: true, IsEffectivelyVisible: true } element)
+                {
+                    return element;
+                }
+            }
+
+            return null;
+        }
+
+        private static bool IsDisabledByOpenModal(TopLevel topLevel)
+        {
+            foreach (var frame in _modalFrames)
+            {
+                if (frame.Owner == topLevel)
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
 
         private sealed class ActionDisposable : IDisposable
