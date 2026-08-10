@@ -191,8 +191,9 @@ public static class InitNativeMacMenu
             v => !v.ShowColumnOriginalText, nameof(MainViewModel.ShowColumnOriginalText)));
         fileItems.Items.Add(Conditional(Clean(l.CloseOriginal), v => v.FileCloseOriginalCommand,
             v => v.ShowColumnOriginalText, nameof(MainViewModel.ShowColumnOriginalText)));
+        // Hidden for a read-only original - see the same item in InitMenu (issue #13449).
         fileItems.Items.Add(Conditional(Clean(l.CloseTranslation), v => v.FileCloseTranslationCommand,
-            v => v.ShowColumnOriginalText, nameof(MainViewModel.ShowColumnOriginalText)));
+            v => v.CanEditOriginal, nameof(MainViewModel.CanEditOriginal)));
 
         state.ReopenItem = new NativeMenuItem(Clean(l.Reopen)) { Menu = new NativeMenu() };
         fileItems.Items.Add(state.ReopenItem);

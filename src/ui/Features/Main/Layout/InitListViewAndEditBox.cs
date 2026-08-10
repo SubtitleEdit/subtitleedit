@@ -166,6 +166,10 @@ public static partial class InitListViewAndEditBox
         TableViewExtras.BindRowProperty(vm.SubtitleGrid, Visual.IsVisibleProperty,
             new Binding(nameof(SubtitleLineViewModel.IsHidden)) { Converter = inverseBooleanConverter });
 
+        // Dim reference-only rows so they are visibly not part of the working subtitle (#13449).
+        TableViewExtras.BindRowProperty(vm.SubtitleGrid, Visual.OpacityProperty,
+            new Binding(nameof(SubtitleLineViewModel.IsReferenceOnly)) { Converter = new ReferenceOnlyRowOpacityConverter() });
+
         // Expose "number: text, start - end, duration" as the row's accessible name so
         // screen readers announce the full row like SE4's list view did (issues #13015,
         // #12087). Text stays right after the number so browsing by content is fast; the
@@ -220,7 +224,9 @@ public static partial class InitListViewAndEditBox
                             IsHitTestVisible = false,
                             [!Visual.OpacityProperty] = new Binding(nameof(SubtitleLineViewModel.Bookmark)) { Converter = nullToOpacityConverter },
                          },
-                         UiUtil.MakeLabel().WithBindText(value, new Binding(nameof(SubtitleLineViewModel.Number)))
+                         // NumberDisplay, not Number: a reference-only row is not part of the
+                         // working subtitle and shows no number (#13449).
+                         UiUtil.MakeLabel().WithBindText(value, new Binding(nameof(SubtitleLineViewModel.NumberDisplay)))
                     }
                 })
         });
@@ -1312,7 +1318,7 @@ public static partial class InitListViewAndEditBox
         {
             ToolTip.SetTip(timeCodeUpDown, Se.Language.General.Show);
         }
-        timeCodeUpDown.Bind(TimeCodeUpDown.IsEnabledProperty, new Binding(nameof(vm.LockTimeCodes)) { Mode = BindingMode.TwoWay, Converter = inverseBooleanConverter });
+        timeCodeUpDown.Bind(TimeCodeUpDown.IsEnabledProperty, new Binding(nameof(vm.AreTimeCodesEditable)) { Mode = BindingMode.OneWay });
         startTimePanel.Children.Add(timeCodeUpDown);
         timeCodeUpDown.ValueChanged += vm.StartTimeChanged;
         timeControlsPanel.Children.Add(startTimePanel);
@@ -1344,7 +1350,7 @@ public static partial class InitListViewAndEditBox
         {
             ToolTip.SetTip(endCodeUpDown, Se.Language.General.Hide);
         }
-        endCodeUpDown.Bind(TimeCodeUpDown.IsEnabledProperty, new Binding(nameof(vm.LockTimeCodes)) { Mode = BindingMode.TwoWay, Converter = inverseBooleanConverter });
+        endCodeUpDown.Bind(TimeCodeUpDown.IsEnabledProperty, new Binding(nameof(vm.AreTimeCodesEditable)) { Mode = BindingMode.OneWay });
         endTimePanel.Children.Add(endCodeUpDown);
         endCodeUpDown.ValueChanged += vm.EndTimeChanged;
         timeControlsPanel.Children.Add(endTimePanel);
@@ -1376,7 +1382,7 @@ public static partial class InitListViewAndEditBox
         {
             ToolTip.SetTip(durationUpDown, Se.Language.General.Duration);
         }
-        durationUpDown.Bind(SecondsUpDown.IsEnabledProperty, new Binding(nameof(vm.LockTimeCodes)) { Mode = BindingMode.TwoWay, Converter = inverseBooleanConverter });
+        durationUpDown.Bind(SecondsUpDown.IsEnabledProperty, new Binding(nameof(vm.AreTimeCodesEditable)) { Mode = BindingMode.OneWay });
         durationUpDown.ValueChanged += (_, _) => vm.DurationChanged();
         durationPanel.Children.Add(durationUpDown);
         timeControlsPanel.Children.Add(durationPanel);
@@ -1690,11 +1696,17 @@ public static partial class InitListViewAndEditBox
         // translation mode (original text)
         var textLabelOriginal = new TextBlock
         {
-            Text = Se.Language.General.OriginalText,
             FontWeight = FontWeight.Bold,
             Margin = new Thickness(3, 0, 0, 0),
         };
         textEditGrid.Add(textLabelOriginal, 0, 1);
+        // The label doubles as the read-only indicator - it says "Original text (read-only)"
+        // when the original was opened as a reference (issue #13449).
+        textLabelOriginal.Bind(TextBlock.TextProperty, new Binding(nameof(vm.OriginalTextLabel))
+        {
+            Mode = BindingMode.OneWay,
+            Source = vm
+        });
         textLabelOriginal.Bind(Visual.IsVisibleProperty, new Binding(nameof(vm.ShowColumnOriginalText))
         {
             Mode = BindingMode.OneWay,
@@ -1930,6 +1942,13 @@ public static partial class InitListViewAndEditBox
         };
         textBox[AutomationProperties.NameProperty] = Se.Language.General.Text;
 
+        // A reference-only row has no translation text to edit - typing would make it a real line.
+        textBox.Bind(TextBox.IsReadOnlyProperty, new Binding(nameof(vm.IsSelectedLineReferenceOnly))
+        {
+            Mode = BindingMode.OneWay,
+            Source = vm
+        });
+
         textBox.TextChanged += vm.SubtitleTextChanged;
         textBox.GotFocus += (_, _) => vm.SubtitleTextBoxGotFocus();
         textBox.AddHandler(InputElement.PointerPressedEvent, (_, e) => vm.StoreTextEditorPointerArgs(e), RoutingStrategies.Tunnel);
@@ -2021,6 +2040,13 @@ public static partial class InitListViewAndEditBox
         {
             Mode = BindingMode.TwoWay
         };
+
+        // An original opened as a read-only reference must not be typed into (issue #13449).
+        textBox.Bind(TextBox.IsReadOnlyProperty, new Binding(nameof(vm.IsOriginalReadOnly))
+        {
+            Mode = BindingMode.OneWay,
+            Source = vm
+        });
 
         SetupMacContextMenuForTextBox(textBox, vm);
         MainHelpers.RightToLeftHelper.FollowContentDirection(textBox);

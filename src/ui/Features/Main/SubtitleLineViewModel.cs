@@ -8,6 +8,7 @@ using SkiaSharp;
 using SkiaSharp.HarfBuzz;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 
@@ -16,7 +17,24 @@ namespace Nikse.SubtitleEdit.Features.Main;
 public partial class SubtitleLineViewModel : ObservableObject
 {
     [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(NumberDisplay))]
     private int _number;
+
+    /// <summary>
+    /// A display-only row: it exists so that a line in the read-only reference original that has no
+    /// counterpart in the working subtitle is still visible in the grid, side by side with the rest
+    /// (issue #13449). It is never part of the working subtitle - it is filtered out of
+    /// <see cref="MainViewModel.GetUpdateSubtitle"/> (so it can never be saved), out of the change
+    /// hash, out of numbering and out of the waveform. Only <see cref="OriginalText"/> and the time
+    /// codes carry data; <see cref="Text"/> stays empty and cannot be typed into.
+    /// </summary>
+    public bool IsReferenceOnly { get; set; }
+
+    /// <summary>
+    /// The number column's text: blank for a reference-only row, which has no number because it is
+    /// not part of the working subtitle.
+    /// </summary>
+    public string NumberDisplay => IsReferenceOnly ? string.Empty : Number.ToString(CultureInfo.InvariantCulture);
 
     [ObservableProperty]
     private string? _bookmark;
@@ -141,6 +159,7 @@ public partial class SubtitleLineViewModel : ObservableObject
         NewSection = p.NewSection;
         Forced = p.Forced;
         _bookmark = p.Bookmark;
+        IsReferenceOnly = p.IsReferenceOnly;
 
         Id = generateNewId ? Guid.NewGuid() : p.Id;
 

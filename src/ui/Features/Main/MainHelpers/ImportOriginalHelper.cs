@@ -1,21 +1,45 @@
-﻿using Google.Api.Gax.ResourceNames;
-using Nikse.SubtitleEdit.Core.Common;
+﻿using Nikse.SubtitleEdit.Core.Common;
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
 namespace Nikse.SubtitleEdit.Features.Main.MainHelpers;
 
 public static class ImportOriginalHelper
 {
+    /// <summary>
+    /// The result of aligning an original subtitle with the working subtitle by time code.
+    /// </summary>
+    /// <param name="Projection">
+    /// One paragraph per working row - the matched original line, or an empty paragraph with the
+    /// working row's timings when nothing matched. This is what the original text column shows.
+    /// </param>
+    /// <param name="Unmatched">
+    /// The original paragraphs no working row matched, in file order. These are the lines that used
+    /// to be dropped silently; a read-only reference shows them as reference-only rows (#13449).
+    /// </param>
+    internal record OriginalMatch(Subtitle Projection, List<Paragraph> Unmatched);
+
     internal static Subtitle GetMatchingOriginalLines(ObservableCollection<SubtitleLineViewModel> current, Subtitle original)
     {
+        return MatchOriginalLines(current, original).Projection;
+    }
+
+    internal static OriginalMatch MatchOriginalLines(ObservableCollection<SubtitleLineViewModel> current, Subtitle original)
+    {
         var newOriginal = new Subtitle();
+
+        // Tracked by index, not by paragraph identity: two original lines can carry the same text and
+        // timings, and each must be accounted for separately.
+        var used = new bool[original.Paragraphs.Count];
+
         foreach (var line in current)
         {
-            var originalLine = FindOriginalLine(line, original);
-            if (originalLine != null)
+            var index = FindOriginalLineIndex(line, original);
+            if (index >= 0)
             {
-                newOriginal.Paragraphs.Add(originalLine);
+                newOriginal.Paragraphs.Add(original.Paragraphs[index]);
+                used[index] = true;
             }
             else
             {
@@ -29,46 +53,58 @@ public static class ImportOriginalHelper
             }
         }
 
-        return newOriginal;
+        var unmatched = new List<Paragraph>();
+        for (var i = 0; i < original.Paragraphs.Count; i++)
+        {
+            if (!used[i])
+            {
+                unmatched.Add(original.Paragraphs[i]);
+            }
+        }
+
+        return new OriginalMatch(newOriginal, unmatched);
     }
 
-    private static Paragraph? FindOriginalLine(SubtitleLineViewModel line, Subtitle original)
+    private static int FindOriginalLineIndex(SubtitleLineViewModel line, Subtitle original)
     {
-        foreach (var originalLine in original.Paragraphs)
+        for (var i = 0; i < original.Paragraphs.Count; i++)
         {
+            var originalLine = original.Paragraphs[i];
             if (line.StartTime.TotalMilliseconds == originalLine.StartTime.TotalMilliseconds &&
                 line.EndTime.TotalMilliseconds == originalLine.EndTime.TotalMilliseconds)
             {
-                return originalLine;
+                return i;
             }
         }
 
         // try with some tolerance
-        foreach (var originalLine in original.Paragraphs)
+        for (var i = 0; i < original.Paragraphs.Count; i++)
         {
+            var originalLine = original.Paragraphs[i];
             if (Math.Abs(line.StartTime.TotalMilliseconds - originalLine.StartTime.TotalMilliseconds) < 250 &&
                 Math.Abs(line.EndTime.TotalMilliseconds - originalLine.EndTime.TotalMilliseconds) < 500)
             {
-                return originalLine;
+                return i;
             }
         }
 
         // try with middle time only
         var lineMiddle = (line.StartTime.TotalMilliseconds + line.EndTime.TotalMilliseconds) / 2.0;
-        foreach (var originalLine in original.Paragraphs)
+        for (var i = 0; i < original.Paragraphs.Count; i++)
         {
+            var originalLine = original.Paragraphs[i];
             if (originalLine.StartTime.TotalMilliseconds <= lineMiddle && originalLine.EndTime.TotalMilliseconds >= lineMiddle)
             {
-                return originalLine;
+                return i;
             }
 
             var originalMiddle = (originalLine.StartTime.TotalMilliseconds + originalLine.EndTime.TotalMilliseconds) / 2.0;
             if (line.StartTime.TotalMilliseconds <= originalMiddle && line.EndTime.TotalMilliseconds >= originalMiddle)
             {
-                return originalLine;
+                return i;
             }
         }
 
-        return null;
+        return -1;
     }
 }
