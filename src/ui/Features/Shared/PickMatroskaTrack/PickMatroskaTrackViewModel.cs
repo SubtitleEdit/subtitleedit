@@ -20,6 +20,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -381,7 +382,7 @@ public partial class PickMatroskaTrackViewModel : ObservableObject
                     });
                 }
 
-                SubtitleCountText = string.Format(Se.Language.File.Import.NumberOfSubtitlesX, preview.Count);
+                SubtitleCountText = FormatSubtitleCount(preview.Count, preview.ForcedCount);
             }
             catch (Exception exception)
             {
@@ -408,13 +409,14 @@ public partial class PickMatroskaTrackViewModel : ObservableObject
     {
         var cues = new List<PreviewCueData>();
         var count = 0;
+        int? forcedCount = null;
 
         MatroskaFile.LoadMatroskaCallback? callback =
             pleaseWaitVm != null ? (position, total) => pleaseWaitVm.ReportProgress(position, total) : null;
         var subtitles = matroskaFile.GetSubtitle(trackInfo.TrackNumber, callback);
         if (subtitles == null)
         {
-            return new PreviewResult(0, cues);
+            return new PreviewResult(0, null, cues);
         }
 
         if (trackInfo.CodecId is MatroskaTrackType.SubRip
@@ -440,6 +442,7 @@ public partial class PickMatroskaTrackViewModel : ObservableObject
         {
             var pcsData = BluRaySupParser.ParseBluRaySupFromMatroska(trackInfo, matroskaFile);
             count = pcsData.Count;
+            forcedCount = pcsData.Count(p => p.IsForced);
             for (var i = 0; i < 20 && i < pcsData.Count; i++)
             {
                 var item = pcsData[i];
@@ -474,6 +477,7 @@ public partial class PickMatroskaTrackViewModel : ObservableObject
         {
             var packs = MatroskaImageSubtitleExtractor.ExtractVobSub(trackInfo, subtitles, out var idx);
             count = packs.Count;
+            forcedCount = packs.Count(p => p.IsForced);
             for (var i = 0; i < 20 && i < packs.Count; i++)
             {
                 var pack = packs[i];
@@ -510,10 +514,24 @@ public partial class PickMatroskaTrackViewModel : ObservableObject
             }
         }
 
-        return new PreviewResult(count, cues);
+        return new PreviewResult(count, forcedCount, cues);
     }
 
-    private sealed record PreviewResult(int Count, List<PreviewCueData> Cues);
+    /// <summary>
+    /// The count line below the preview. Image-based tracks carry a per-cue forced flag, so the
+    /// number of forced cues is shown too - a movie can hold several tracks in the same language
+    /// where only one is the forced/signs track, and until now the only way to tell them apart was
+    /// to open each one (#13453). Text tracks have no such flag, so they get the plain count.
+    /// </summary>
+    internal static string FormatSubtitleCount(int count, int? forcedCount)
+    {
+        return forcedCount.HasValue
+            ? string.Format(Se.Language.File.Import.NumberOfSubtitlesXForcedY, count, forcedCount.Value)
+            : string.Format(Se.Language.File.Import.NumberOfSubtitlesX, count);
+    }
+
+    /// <summary><see cref="ForcedCount"/> is null for formats without a forced flag.</summary>
+    private sealed record PreviewResult(int Count, int? ForcedCount, List<PreviewCueData> Cues);
 
     private sealed class PreviewCueData
     {

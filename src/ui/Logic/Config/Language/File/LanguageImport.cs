@@ -30,6 +30,7 @@ public class LanguageImport
     public string MergeShortLines { get; set; }
     public string Fixed { get; set; }
     public string NumberOfSubtitlesX { get; set; }
+    public string NumberOfSubtitlesXForcedY { get; set; }
     public string GapMs { get; set; }
     public string UseFixedDuration { get; set; }
     public string FixedDurationMs { get; set; }
@@ -75,6 +76,7 @@ Rules:
         MergeShortLines = "Merge short lines";
         Fixed = "Fixed";
         NumberOfSubtitlesX = "Number of subtitles: {0}";
+        NumberOfSubtitlesXForcedY = "Number of subtitles: {0} ({1} forced)";
         GapMs = "Gap (ms)";
         UseFixedDuration = "Use fixed duration";
         FixedDurationMs = "Fixed duration (ms)";
