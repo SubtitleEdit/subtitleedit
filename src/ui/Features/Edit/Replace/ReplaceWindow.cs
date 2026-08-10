@@ -134,6 +134,26 @@ public class ReplaceWindow : Window
             }
         };
 
+        // Only relevant while an editable original text column is on screen, so the whole block
+        // stays hidden the rest of the time instead of offering choices with no effect.
+        var panelScope = new StackPanel
+        {
+            Orientation = Orientation.Vertical,
+            VerticalAlignment = VerticalAlignment.Center,
+            Margin = new Thickness(0, 10, 0, 0),
+            Children =
+            {
+                new TextBlock
+                {
+                    Text = Se.Language.Edit.Find.ReplaceIn,
+                    VerticalAlignment = VerticalAlignment.Center,
+                    Margin = new Thickness(0, 0, 0, 3),
+                },
+                UiUtil.MakeComboBox(vm.Scopes, vm, nameof(vm.SelectedScope)).WithMinWidth(200),
+            },
+            [!Visual.IsVisibleProperty] = new Binding(nameof(vm.IsScopeVisible)) { Source = vm },
+        };
+
         var buttonFindNext = UiUtil.MakeButton(Se.Language.Edit.Find.FindNext, vm.FindNextCommand)
             .WithLeftAlignment()
             .WithMinWidth(150)
@@ -179,6 +199,7 @@ public class ReplaceWindow : Window
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
             },
             ColumnDefinitions =
             {
@@ -194,7 +215,8 @@ public class ReplaceWindow : Window
         grid.Add(panelFind, 0, 0);
         grid.Add(panelReplace, 1, 0);
         grid.Add(panelFindTypes, 2, 0);
-        grid.Add(panelButtons, 0, 1, 3, 1);
+        grid.Add(panelScope, 3, 0);
+        grid.Add(panelButtons, 0, 1, 4, 1);
 
         Content = grid;
 

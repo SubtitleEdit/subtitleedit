@@ -12331,7 +12331,7 @@ public partial class MainViewModel :
 
         if (_replaceViewModel != null)
         {
-            _replaceViewModel.RefreshSubtitles(subs, origs);
+            _replaceViewModel.RefreshSubtitles(subs, origs, CanEditOriginal);
         }
     }
 
@@ -12350,6 +12350,12 @@ public partial class MainViewModel :
             var currentLineIndex = Subtitles.IndexOf(selectedSubtitle);
             var subs = Subtitles.Select(p => p.Text).ToList();
             var origs = GetOriginalTextsForFind();
+
+            // The find window has no scope picker and always covers both columns, so it also clears
+            // a scope the replace window left behind (SE 4's find dialog built a fresh helper with
+            // both flags set for the same reason).
+            _findService.CurrentScope = FindScope.TextAndOriginal;
+
             var startInOriginal = IsFindPositionInOriginal();
             var startTextBox = GetFindTextBox(startInOriginal);
             _findService.Initialize(subs, SelectedSubtitleIndex ?? 0, result.WholeWord, result.FindMode, origs);
@@ -12512,12 +12518,19 @@ public partial class MainViewModel :
     /// <summary>
     /// Which column a find should continue from: the focused text box if one has focus
     /// (find/replace windows do not take focus from it), otherwise the column of the last match.
+    /// A single-column scope decides it outright - continuing from the caret of a column that is
+    /// not being searched would start the excluded column's offset in the searched one.
     /// </summary>
     private bool IsFindPositionInOriginal()
     {
-        if (!ShowColumnOriginalText)
+        if (!ShowColumnOriginalText || _findService.CurrentScope == FindScope.TextOnly)
         {
             return false;
+        }
+
+        if (_findService.CurrentScope == FindScope.OriginalOnly)
+        {
+            return true;
         }
 
         if (EditTextBoxOriginal.IsFocused)
@@ -12632,7 +12645,7 @@ public partial class MainViewModel :
                 selectedText = _findService.SearchText;
             }
 
-            vm.InitializeFindData(_findService, subs, selectedText, this, origs);
+            vm.InitializeFindData(_findService, subs, selectedText, this, origs, CanEditOriginal);
             if (!string.IsNullOrEmpty(findSearchText))
             {
                 vm.SearchText = findSearchText;
@@ -12776,6 +12789,9 @@ public partial class MainViewModel :
             var savedFoundIndex = _findService.CurrentTextIndex;
             var savedFoundText = _findService.CurrentTextFound;
             var savedFoundInOriginal = _findService.CurrentMatchInOriginal;
+
+            // Set before the position is worked out - IsFindPositionInOriginal follows the scope.
+            _findService.CurrentScope = CanEditOriginal ? result.EffectiveScope : FindScope.TextAndOriginal;
 
             var startInOriginal = IsFindPositionInOriginal();
             var startTextBox = GetFindTextBox(startInOriginal);
