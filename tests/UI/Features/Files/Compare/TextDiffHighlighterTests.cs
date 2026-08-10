@@ -1,4 +1,5 @@
 using Avalonia.Controls.Documents;
+using Avalonia.Media;
 using Nikse.SubtitleEdit.Features.Files.Compare;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,8 +9,21 @@ namespace UITests.Features.Files.Compare;
 
 public class TextDiffHighlighterTests
 {
+    // "He goes home" and "He went home". The verb differs only in its last two letters, and
+    // Persian writes it with a zero width non-joiner inside the word, so a character level
+    // diff cuts the word in two - which breaks the cursive joining when each half is shaped
+    // as its own run (#13435).
+    private const string PersianGoesHome = "او به خانه می‌رود";
+    private const string PersianWentHome = "او به خانه می‌رفت";
+    private const string PersianCommonPart = "او به خانه ";
+    private const string PersianGoesVerb = "می‌رود";
+    private const string PersianWentVerb = "می‌رفت";
+
     private static string JoinRuns(InlineCollection? inlines)
         => string.Concat(inlines!.Cast<Run>().Select(r => r.Text));
+
+    private static string[] RunTexts(InlineCollection? inlines)
+        => inlines!.Cast<Run>().Select(r => r.Text!).ToArray();
 
     [Fact]
     public void CompareReplacement_CrLfBeforeVsLfAfter_NormalizesInsteadOfDiffingTheCr()
@@ -76,6 +90,108 @@ public class TextDiffHighlighterTests
             Assert.True(middleCommon2[i - 1].start <= middleCommon2[i].start,
                 $"middleCommon2[{i - 1}].start ({middleCommon2[i - 1].start}) " +
                 $"must be <= middleCommon2[{i}].start ({middleCommon2[i].start})");
+        }
+    }
+
+    [Fact]
+    public void Compare_RightToLeftText_BothSidesFlowRightToLeft()
+    {
+        // A left to right text block lays its runs out left to right, so the chunks of a Persian
+        // line come out in reverse reading order - the line reads backwards (#13435).
+        var (left, right) = TextDiffHighlighter.Compare(PersianGoesHome, PersianWentHome);
+
+        Assert.Equal(FlowDirection.RightToLeft, left.FlowDirection);
+        Assert.Equal(FlowDirection.RightToLeft, right.FlowDirection);
+    }
+
+    [Fact]
+    public void Compare_LeftToRightText_BothSidesFlowLeftToRight()
+    {
+        var (left, right) = TextDiffHighlighter.Compare("Hello there", "Hello world");
+
+        Assert.Equal(FlowDirection.LeftToRight, left.FlowDirection);
+        Assert.Equal(FlowDirection.LeftToRight, right.FlowDirection);
+    }
+
+    [Fact]
+    public void Compare_RightToLeftAgainstLeftToRight_EachSideFollowsItsOwnContent()
+    {
+        // An untranslated original next to a Persian translation: the two columns do not have
+        // to agree on a direction.
+        var (left, right) = TextDiffHighlighter.Compare("He goes home", PersianGoesHome);
+
+        Assert.Equal(FlowDirection.LeftToRight, left.FlowDirection);
+        Assert.Equal(FlowDirection.RightToLeft, right.FlowDirection);
+    }
+
+    [Fact]
+    public void CompareReplacement_RightToLeftText_BothSidesFlowRightToLeft()
+    {
+        var (before, after) = TextDiffHighlighter.CompareReplacement(PersianGoesHome, PersianWentHome);
+
+        Assert.Equal(FlowDirection.RightToLeft, before.FlowDirection);
+        Assert.Equal(FlowDirection.RightToLeft, after.FlowDirection);
+    }
+
+    [Fact]
+    public void Compare_RightToLeftText_DifferenceCoversTheWholeWord()
+    {
+        // The verbs share everything up to and including the "ر", so a character level diff
+        // splits the word: Avalonia shapes each run on its own and the halves fall back to
+        // isolated letter forms. The difference has to grow out to the word boundaries.
+        var (left, right) = TextDiffHighlighter.Compare(PersianGoesHome, PersianWentHome);
+
+        Assert.Equal(new[] { PersianCommonPart, PersianGoesVerb }, RunTexts(left.Inlines));
+        Assert.Equal(new[] { PersianCommonPart, PersianWentVerb }, RunTexts(right.Inlines));
+    }
+
+    [Fact]
+    public void Compare_RightToLeftText_NoRunEndsInsideAWord()
+    {
+        var (left, right) = TextDiffHighlighter.Compare(
+            "سلام دنیا، حال شما چطور است؟",
+            "سلام دنیای زیبا، حال شما چطور بود؟");
+
+        AssertNoRunSplitsAWord(left.Inlines);
+        AssertNoRunSplitsAWord(right.Inlines);
+    }
+
+    [Fact]
+    public void Compare_RightToLeftText_RunsStillCoverTheWholeText()
+    {
+        var (left, right) = TextDiffHighlighter.Compare(
+            "سلام دنیا، حال شما چطور است؟",
+            "سلام دنیای زیبا، حال شما چطور بود؟");
+
+        Assert.Equal("سلام دنیا، حال شما چطور است؟", JoinRuns(left.Inlines));
+        Assert.Equal("سلام دنیای زیبا، حال شما چطور بود؟", JoinRuns(right.Inlines));
+    }
+
+    [Fact]
+    public void Compare_LeftToRightText_KeepsCharacterLevelGranularity()
+    {
+        // Word snapping is only for cursive right to left scripts; Latin text keeps the finer
+        // "colo[u]r" style highlighting it has always had.
+        var (left, _) = TextDiffHighlighter.Compare("colour", "color");
+
+        Assert.Equal(new[] { "colo", "u", "r" }, RunTexts(left.Inlines));
+    }
+
+    private static void AssertNoRunSplitsAWord(InlineCollection? inlines)
+    {
+        var isWordChar = typeof(TextDiffHighlighter).GetMethod(
+            "IsWordChar", BindingFlags.NonPublic | BindingFlags.Static)!;
+
+        var runs = inlines!.Cast<Run>().Select(r => r.Text!).ToArray();
+        for (var i = 1; i < runs.Length; i++)
+        {
+            var lastOfPrevious = runs[i - 1][^1];
+            var firstOfCurrent = runs[i][0];
+            var splitsWord = (bool)isWordChar.Invoke(null, [lastOfPrevious])!
+                             && (bool)isWordChar.Invoke(null, [firstOfCurrent])!;
+
+            Assert.False(splitsWord,
+                $"Run boundary {i} splits a word: '{runs[i - 1]}' | '{runs[i]}'");
         }
     }
 }

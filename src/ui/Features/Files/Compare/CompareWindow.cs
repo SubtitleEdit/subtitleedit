@@ -101,9 +101,9 @@ public class CompareWindow : Window
         };
 
         // color legend for the difference highlighting
-        panelDisplayType.Children.Add(MakeLegendSwatch(Color.FromArgb(255, 255, 235, 233), Se.Language.File.CompareOnlyInOneFile));
-        panelDisplayType.Children.Add(MakeLegendSwatch(Color.FromArgb(255, 230, 255, 237), Se.Language.File.CompareTextOrTimeDifference));
-        panelDisplayType.Children.Add(MakeLegendSwatch(Color.FromArgb(255, 255, 248, 220), Se.Language.File.CompareNumberDifference));
+        panelDisplayType.Children.Add(MakeLegendSwatch(CompareColors.OnlyInOneFile, Se.Language.File.CompareOnlyInOneFile));
+        panelDisplayType.Children.Add(MakeLegendSwatch(CompareColors.TextOrTimeDifference, Se.Language.File.CompareTextOrTimeDifference));
+        panelDisplayType.Children.Add(MakeLegendSwatch(CompareColors.NumberDifference, Se.Language.File.CompareNumberDifference));
         grid.Add(panelDisplayType, 3, 0, 1, 2);
 
         // buttons
@@ -151,11 +151,6 @@ public class CompareWindow : Window
 
         Closing += delegate { UiUtil.SaveWindowPosition(this); };
         Loaded += delegate { UiUtil.RestoreWindowPosition(this); };
-    }
-
-    private Control MakeSubtitlesView(ObservableCollection<CompareItem> leftSubtitles, string v, object fileGridOnDragOverLeft, object fileGridOnDropLeft)
-    {
-        throw new NotImplementedException();
     }
 
     private static Control MakeLegendSwatch(Color color, string label)
