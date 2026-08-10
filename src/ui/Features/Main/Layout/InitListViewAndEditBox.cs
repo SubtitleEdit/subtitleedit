@@ -1690,11 +1690,17 @@ public static partial class InitListViewAndEditBox
         // translation mode (original text)
         var textLabelOriginal = new TextBlock
         {
-            Text = Se.Language.General.OriginalText,
             FontWeight = FontWeight.Bold,
             Margin = new Thickness(3, 0, 0, 0),
         };
         textEditGrid.Add(textLabelOriginal, 0, 1);
+        // The label doubles as the read-only indicator - it says "Original text (read-only)"
+        // when the original was opened as a reference (issue #13449).
+        textLabelOriginal.Bind(TextBlock.TextProperty, new Binding(nameof(vm.OriginalTextLabel))
+        {
+            Mode = BindingMode.OneWay,
+            Source = vm
+        });
         textLabelOriginal.Bind(Visual.IsVisibleProperty, new Binding(nameof(vm.ShowColumnOriginalText))
         {
             Mode = BindingMode.OneWay,
@@ -2021,6 +2027,13 @@ public static partial class InitListViewAndEditBox
         {
             Mode = BindingMode.TwoWay
         };
+
+        // An original opened as a read-only reference must not be typed into (issue #13449).
+        textBox.Bind(TextBox.IsReadOnlyProperty, new Binding(nameof(vm.IsOriginalReadOnly))
+        {
+            Mode = BindingMode.OneWay,
+            Source = vm
+        });
 
         SetupMacContextMenuForTextBox(textBox, vm);
         MainHelpers.RightToLeftHelper.FollowContentDirection(textBox);

@@ -238,7 +238,28 @@ public partial class MainViewModel :
     [ObservableProperty] private bool _isMergeWithNextOrPreviousVisible;
     [ObservableProperty] private bool _isInsertLineNoSelectionVisible;
     [ObservableProperty] private bool _isInsertSubtitleFileAfterLineVisible;
-    [ObservableProperty] private bool _showColumnOriginalText;
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(CanEditOriginal))]
+    private bool _showColumnOriginalText;
+
+    /// <summary>
+    /// The original subtitle was opened as a read-only reference: it does not line up 1:1 with the
+    /// working subtitle, so it is shown side by side but never edited and never written back. The
+    /// file on disk stays exactly as the user left it - issue #13449, where a mismatching original
+    /// was silently truncated to the matching lines and then saved over the user's file.
+    /// </summary>
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(CanEditOriginal))]
+    [NotifyPropertyChangedFor(nameof(OriginalTextLabel))]
+    private bool _isOriginalReadOnly;
+
+    /// <summary>Whether the original text column may be written to (see <see cref="IsOriginalReadOnly"/>).</summary>
+    public bool CanEditOriginal => ShowColumnOriginalText && !IsOriginalReadOnly;
+
+    public string OriginalTextLabel => IsOriginalReadOnly
+        ? Se.Language.Main.OriginalTextReadOnly
+        : Se.Language.General.OriginalText;
+
     [ObservableProperty] private bool _showColumnStartTime;
     [ObservableProperty] private bool _showColumnEndTime;
     [ObservableProperty] private bool _showColumnGap;
@@ -2260,6 +2281,7 @@ public partial class MainViewModel :
         ClearSecondarySubtitle();
         IsSmpteTimingEnabled = false;
         ShowColumnOriginalText = false;
+        IsOriginalReadOnly = false;
         _subtitle.Paragraphs.Clear();
         Subtitles.Clear();
         Se.Settings.General.CurrentVideoIsSmpte = false;
@@ -2428,33 +2450,54 @@ public partial class MainViewModel :
         }
         else
         {
-            var msg = string.Format(Se.Language.Main.OpenOriginalDifferentNumberOfSubtitlesXY, subtitle.Paragraphs.Count, Subtitles.Count);
-            await MessageBox.Show(Window!, Se.Language.General.Information, msg, MessageBoxButtons.OK, MessageBoxIcon.Error);
-
+            // The original does not line up 1:1 with the working subtitle. SE5 stores the original
+            // as a column of the working row, so the only way to "import" it is to throw away the
+            // lines that have no counterpart - and the truncated result then gets written back over
+            // the user's file by the next (auto-)save. Offer the read-only reference instead, which
+            // keeps the file intact and never saves it (issue #13449).
             var newOriginal = ImportOriginalHelper.GetMatchingOriginalLines(Subtitles, subtitle);
             var originalWithTextCount = newOriginal.Paragraphs.Count(p => !string.IsNullOrEmpty(p.Text));
-            if (originalWithTextCount > 0)
+
+            var msg = string.Format(Se.Language.Main.OpenOriginalDifferentNumberOfSubtitlesXY, subtitle.Paragraphs.Count, Subtitles.Count) +
+                      Environment.NewLine + Environment.NewLine +
+                      string.Format(Se.Language.Main.OpenOriginalAsReadOnlyReferenceQuestion, originalWithTextCount);
+            var answer = await MessageBox.Show(Window!, Se.Language.General.Information, msg, MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
+
+            if (answer == MessageBoxResult.Yes)
             {
-                msg = string.Format(Se.Language.Main.ImportXMatchingOriginalLines, originalWithTextCount);
-                var answer = await MessageBox.Show(Window!, string.Empty, msg, MessageBoxButtons.YesNo, MessageBoxIcon.Question);
-                if (answer == MessageBoxResult.Yes)
-                {
-                    ImportOriginalSubtitle(selectedIndex, fileName, newOriginal);
-                    return true;
-                }
+                ImportOriginalSubtitle(selectedIndex, fileName, subtitle, newOriginal, isReadOnly: true);
+                return true;
+            }
+
+            if (answer == MessageBoxResult.No && originalWithTextCount > 0)
+            {
+                ImportOriginalSubtitle(selectedIndex, fileName, newOriginal);
+                return true;
             }
         }
 
         return false;
     }
 
-    private void ImportOriginalSubtitle(int selectedIndex, string fileName, Subtitle subtitle)
+    /// <summary>
+    /// Shows <paramref name="subtitle"/> in the original text column.
+    /// </summary>
+    /// <param name="displayOriginal">
+    /// The per-row texts to display, one paragraph per working row. Null when
+    /// <paramref name="subtitle"/> already lines up 1:1 and can be used directly. When the original
+    /// is a read-only reference this is the time-matched projection, while
+    /// <paramref name="subtitle"/> stays the complete, untouched file.
+    /// </param>
+    private void ImportOriginalSubtitle(int selectedIndex, string fileName, Subtitle subtitle, Subtitle? displayOriginal = null, bool isReadOnly = false)
     {
         _subtitleOriginal = subtitle;
         _subtitleFileNameOriginal = fileName;
-        for (var i = 0; i < Subtitles.Count; i++)
+        IsOriginalReadOnly = isReadOnly;
+
+        var rowTexts = displayOriginal ?? subtitle;
+        for (var i = 0; i < Subtitles.Count && i < rowTexts.Paragraphs.Count; i++)
         {
-            Subtitles[i].OriginalText = subtitle.Paragraphs[i].Text;
+            Subtitles[i].OriginalText = rowTexts.Paragraphs[i].Text;
         }
 
         _changeSubtitleHashOriginal = GetFastHashOriginal();
@@ -2527,6 +2570,15 @@ public partial class MainViewModel :
     {
         if (!ShowColumnOriginalText)
         {
+            return;
+        }
+
+        // "Remove translation" promotes the original to the working subtitle - which would then be
+        // saved from the row projection, over the reference file. Not allowed for a read-only original.
+        if (IsOriginalReadOnly)
+        {
+            ShowStatus(Se.Language.Main.OriginalIsReadOnlyReference);
+            _shortcutManager.ClearKeys();
             return;
         }
 
@@ -5365,6 +5417,7 @@ public partial class MainViewModel :
         _subtitleFileName = null;
         _converted = true;
         _shortcutManager.ClearKeys();
+        IsOriginalReadOnly = false; // a translation made here always lines up 1:1 with its original
         ShowColumnOriginalText = true;
         AutoFitColumns();
         ShowStatus(Se.Language.Main.CreatedEmptyTranslation);
@@ -5406,6 +5459,13 @@ public partial class MainViewModel :
         var selectedItems = SubtitleGridSelectedItems.Cast<SubtitleLineViewModel>().ToList();
         if (Window == null || selectedItems.Count == 0 || !ShowColumnOriginalText)
         {
+            return;
+        }
+
+        if (IsOriginalReadOnly)
+        {
+            ShowStatus(Se.Language.Main.OriginalIsReadOnlyReference);
+            _shortcutManager.ClearKeys();
             return;
         }
 
@@ -9092,6 +9152,7 @@ public partial class MainViewModel :
         }
 
         _converted = true;
+        IsOriginalReadOnly = false; // the translation was made from the current rows, so it lines up 1:1
         ShowColumnOriginalText = true;
         AutoFitColumns();
         _updateAudioVisualizer = true;
@@ -9192,6 +9253,7 @@ public partial class MainViewModel :
         _subtitleOriginal ??= new Subtitle();
         _subtitleOriginal.OriginalFormat = _subtitle.OriginalFormat ?? SelectedSubtitleFormat;
         _subtitleFileName = string.Empty;
+        IsOriginalReadOnly = false; // the translation was made from the current rows, so it lines up 1:1
         ShowColumnOriginalText = true;
         AutoFitColumns();
         _updateAudioVisualizer = true;
@@ -10910,7 +10972,7 @@ public partial class MainViewModel :
             // Keep the translation/original column in sync so the two views
             // don't drift apart — matches what MergeManager.MergeSelectedLinesAsDialog
             // already does for OriginalText.
-            if (!string.IsNullOrEmpty(item.OriginalText))
+            if (CanEditOriginal && !string.IsNullOrEmpty(item.OriginalText))
             {
                 item.OriginalText = hasStartDash
                     ? RemoveDialogDashes(item.OriginalText)
@@ -12119,6 +12181,16 @@ public partial class MainViewModel :
     }
 
     /// <summary>
+    /// Same as <see cref="GetOriginalTextsForFind"/>, but null for a read-only original: replace
+    /// writes its result back into the column, which is not allowed for a reference file. Searching
+    /// the reference still works - only replacing in it is off.
+    /// </summary>
+    private List<string>? GetOriginalTextsForReplace()
+    {
+        return CanEditOriginal ? GetOriginalTextsForFind() : null;
+    }
+
+    /// <summary>
     /// Which column a find should continue from: the focused text box if one has focus
     /// (find/replace windows do not take focus from it), otherwise the column of the last match.
     /// </summary>
@@ -12222,7 +12294,7 @@ public partial class MainViewModel :
 
         _replacePreviousFocus = Window?.FocusManager?.GetFocusedElement() as Control;
         var subs = Subtitles.Select(p => p.Text).ToList();
-        var origs = GetOriginalTextsForFind();
+        var origs = GetOriginalTextsForReplace();
         var result = _windowService.ShowWindow<ReplaceWindow, ReplaceViewModel>(Window!, (window, vm) =>
         {
             WindowService.KeepTopmostWhileOwnerActive(window, Window!);
@@ -12374,7 +12446,7 @@ public partial class MainViewModel :
         {
             var currentLineIndex = Subtitles.IndexOf(selectedSubtitle);
             var subs = Subtitles.Select(p => p.Text).ToList();
-            var origs = GetOriginalTextsForFind();
+            var origs = GetOriginalTextsForReplace();
 
             // Save the previous find result before Initialize wipes it. The
             // replace path uses these — not the EditTextBox selection — to
@@ -15044,8 +15116,9 @@ public partial class MainViewModel :
         }
 
         // Operate on whichever text box has focus (original when the original column
-        // is focused, otherwise the main/translation text).
-        var isOriginal = EditTextBoxOriginal.IsFocused;
+        // is focused, otherwise the main/translation text). A read-only original can still
+        // hold focus, but it must never be rewritten.
+        var isOriginal = EditTextBoxOriginal.IsFocused && CanEditOriginal;
         var textBox = isOriginal ? EditTextBoxOriginal : EditTextBox;
         var currentText = (isOriginal ? s.OriginalText : s.Text) ?? string.Empty;
 
@@ -18424,7 +18497,7 @@ public partial class MainViewModel :
     public bool HasChanges()
     {
         var hasChanges = !IsEmpty && _changeSubtitleHash != GetFastHash();
-        if (!hasChanges && ShowColumnOriginalText)
+        if (!hasChanges && CanEditOriginal)
         {
             hasChanges = _changeSubtitleHashOriginal != GetFastHashOriginal();
         }
@@ -18456,7 +18529,8 @@ public partial class MainViewModel :
 
     private async Task<bool> ContinueNewOrExitOriginal()
     {
-        if (!ShowColumnOriginalText)
+        // A read-only reference has nothing to save, so never prompt for it.
+        if (!CanEditOriginal)
         {
             return true;
         }
@@ -18682,6 +18756,19 @@ public partial class MainViewModel :
 
     private async Task<bool> SaveSubtitleOriginal(bool isAutoSave = false)
     {
+        // A read-only reference is never written back - the row projection it is displayed through
+        // does not contain the lines that have no counterpart, so saving it would truncate the
+        // user's file (issue #13449).
+        if (IsOriginalReadOnly)
+        {
+            if (!isAutoSave)
+            {
+                ShowStatus(Se.Language.Main.OriginalIsReadOnlyNotSaved);
+            }
+
+            return false;
+        }
+
         if (Subtitles == null || !Subtitles.Any())
         {
             if (!isAutoSave)
@@ -18981,6 +19068,14 @@ public partial class MainViewModel :
 
     private async Task<bool> SaveSubtitleOriginalAs()
     {
+        // Same reason as SaveSubtitleOriginal: what would be written is the row projection, not the
+        // reference file, so "Save original as" would quietly produce a truncated copy.
+        if (IsOriginalReadOnly)
+        {
+            ShowStatus(Se.Language.Main.OriginalIsReadOnlyNotSaved);
+            return false;
+        }
+
         var newFileName = "New" + SelectedSubtitleFormat.Extension;
         if (!string.IsNullOrEmpty(_subtitleFileNameOriginal))
         {
@@ -21444,6 +21539,11 @@ public partial class MainViewModel :
     /// </summary>
     private void ReplaceSubtitleGridWord(SubtitleLineViewModel line, bool isOriginal, string word, string suggestion)
     {
+        if (isOriginal && !CanEditOriginal)
+        {
+            return;
+        }
+
         // Split the current text: the line may have been edited since the menu was opened
         var text = isOriginal ? line.OriginalText : line.Text;
         if (string.IsNullOrEmpty(text))
@@ -23899,7 +23999,7 @@ public partial class MainViewModel :
             return;
         }
 
-        var originalDirty = ShowColumnOriginalText &&
+        var originalDirty = CanEditOriginal &&
                             !string.IsNullOrEmpty(_subtitleFileNameOriginal) &&
                             _changeSubtitleHashOriginal != originalHash;
         var mainDirty = mainHash != _changeSubtitleHash;
