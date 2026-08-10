@@ -461,4 +461,25 @@ public class StringExtensionsTest
         Assert.True("foobar;".HasSentenceEnding(greekCultureTwoLetter));
     }
 
+    [Theory]
+    [InlineData("", 0)]
+    [InlineData("Hello there, how are you?", 5)]
+    [InlineData("<i>Hello there,</i> how are you?", 5)]
+    [InlineData("{\\an8}Hello there, how are you?", 5)]
+    [InlineData("Hello there,\r\nhow are you today my friend?", 8)]
+    [InlineData("Foo  bar", 2)]
+    [InlineData("foo\tbar\tbaz", 3)]
+    [InlineData("foo - bar", 2)] // a lone dash is not a word
+    [InlineData("<i></i>", 0)]
+    [InlineData("{\\i1}{\\i0}", 0)]
+    [InlineData("<font color=\"red\">Wow!</font> {\\i1}nice{\\i0} one", 3)]
+    [InlineData("Word", 1)]
+    [InlineData("I", 1)]
+    [InlineData("Chapter 5", 2)] // single-character word at end of string
+    [InlineData("foo -", 1)]
+    public void CountWordsTest(string input, int expected)
+    {
+        Assert.Equal(expected, input.CountWords());
+    }
+
 }
