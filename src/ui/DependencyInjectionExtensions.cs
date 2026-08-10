@@ -176,6 +176,7 @@ using Nikse.SubtitleEdit.Logic.Download;
 using Nikse.SubtitleEdit.Logic.Initializers;
 using Nikse.SubtitleEdit.Logic.Media;
 using Nikse.SubtitleEdit.Logic.Plugins;
+using Nikse.SubtitleEdit.UiLogic.Http;
 using Nikse.SubtitleEdit.UiLogic.Ocr;
 using Nikse.SubtitleEdit.Logic.Ocr;
 using Nikse.SubtitleEdit.Logic.Ocr.GoogleLens;
@@ -226,7 +227,7 @@ public static class DependencyInjectionExtensions
         collection.AddTransient<ICasingToggler, CasingToggler>();
         collection.AddTransient<IChatLlmDownloadService, ChatLlmDownloadService>();
         collection.AddTransient<IColorService, ColorService>();
-        collection.AddHttpClient<ICrispAsrDownloadService, CrispAsrDownloadService>();
+        collection.AddHttpClientWithProxy<ICrispAsrDownloadService, CrispAsrDownloadService>();
         collection.AddTransient<IDictionaryInitializer, DictionaryInitializer>();
         collection.AddTransient<IFindService, FindService>();
         collection.AddTransient<IFontNameService, FontNameService>();
@@ -256,32 +257,32 @@ public static class DependencyInjectionExtensions
         collection.AddTransient<IZipUnpacker, ZipUnpacker>();
 
         // Download services
-        collection.AddHttpClient<IFfmpegDownloadService, FfmpegDownloadService>();
-        collection.AddHttpClient<ILibMpvDownloadService, LibMpvDownloadService>();
-        collection.AddHttpClient<ILibVlcDownloadService, LibVlcDownloadService>();
-        collection.AddHttpClient<IPaddleOcrDownloadService, PaddleOcrDownloadService>();
-        collection.AddHttpClient<ICrispEmbedDownloadService, CrispEmbedDownloadService>();
-        collection.AddHttpClient<ISpellCheckDictionaryDownloadService, SpellCheckDictionaryDownloadService>();
-        collection.AddHttpClient<ITesseractDownloadService, TesseractDownloadService>();
-        collection.AddHttpClient<IWhisperDownloadService, WhisperDownloadService>();
-        collection.AddHttpClient<IYtDlpDownloadService, YtDlpDownloadService>();
-        collection.AddHttpClient<IUpdateCheckService, UpdateCheckService>();
-        collection.AddHttpClient<ILlamaCppDownloadService, LlamaCppDownloadService>();
-        collection.AddHttpClient<IQwen3AsrCppDownloadService, Qwen3AsrCppDownloadService>();
-        collection.AddHttpClient<IQwen3TtsCppDownloadService, Qwen3TtsCppDownloadService>();
-        collection.AddHttpClient<IQwen3TtsCrispAsrDownloadService, Qwen3TtsCrispAsrDownloadService>();
-        collection.AddHttpClient<IVibeVoiceCrispAsrDownloadService, VibeVoiceCrispAsrDownloadService>();
-        collection.AddHttpClient<IIndexTtsCrispAsrDownloadService, IndexTtsCrispAsrDownloadService>();
-        collection.AddHttpClient<ICosyVoice3CrispAsrDownloadService, CosyVoice3CrispAsrDownloadService>();
-        collection.AddHttpClient<IF5TtsCrispAsrDownloadService, F5TtsCrispAsrDownloadService>();
-        collection.AddHttpClient<IOmniVoiceCrispAsrDownloadService, OmniVoiceCrispAsrDownloadService>();
-        collection.AddHttpClient<IVoxCPM2CrispAsrDownloadService, VoxCPM2CrispAsrDownloadService>();
-        collection.AddHttpClient<IMossTtsCrispAsrDownloadService, MossTtsCrispAsrDownloadService>();
-        collection.AddHttpClient<IZonosTtsCrispAsrDownloadService, ZonosTtsCrispAsrDownloadService>();
-        collection.AddHttpClient<IKokoroTtsCppDownloadService, KokoroTtsCppDownloadService>();
-        collection.AddHttpClient<IChatterboxTtsCppDownloadService, ChatterboxTtsCppDownloadService>();
-        collection.AddHttpClient<IOmniVoiceDownloadService, OmniVoiceDownloadService>();
-        collection.AddHttpClient<IPluginDownloadService, PluginDownloadService>();
+        collection.AddHttpClientWithProxy<IFfmpegDownloadService, FfmpegDownloadService>();
+        collection.AddHttpClientWithProxy<ILibMpvDownloadService, LibMpvDownloadService>();
+        collection.AddHttpClientWithProxy<ILibVlcDownloadService, LibVlcDownloadService>();
+        collection.AddHttpClientWithProxy<IPaddleOcrDownloadService, PaddleOcrDownloadService>();
+        collection.AddHttpClientWithProxy<ICrispEmbedDownloadService, CrispEmbedDownloadService>();
+        collection.AddHttpClientWithProxy<ISpellCheckDictionaryDownloadService, SpellCheckDictionaryDownloadService>();
+        collection.AddHttpClientWithProxy<ITesseractDownloadService, TesseractDownloadService>();
+        collection.AddHttpClientWithProxy<IWhisperDownloadService, WhisperDownloadService>();
+        collection.AddHttpClientWithProxy<IYtDlpDownloadService, YtDlpDownloadService>();
+        collection.AddHttpClientWithProxy<IUpdateCheckService, UpdateCheckService>();
+        collection.AddHttpClientWithProxy<ILlamaCppDownloadService, LlamaCppDownloadService>();
+        collection.AddHttpClientWithProxy<IQwen3AsrCppDownloadService, Qwen3AsrCppDownloadService>();
+        collection.AddHttpClientWithProxy<IQwen3TtsCppDownloadService, Qwen3TtsCppDownloadService>();
+        collection.AddHttpClientWithProxy<IQwen3TtsCrispAsrDownloadService, Qwen3TtsCrispAsrDownloadService>();
+        collection.AddHttpClientWithProxy<IVibeVoiceCrispAsrDownloadService, VibeVoiceCrispAsrDownloadService>();
+        collection.AddHttpClientWithProxy<IIndexTtsCrispAsrDownloadService, IndexTtsCrispAsrDownloadService>();
+        collection.AddHttpClientWithProxy<ICosyVoice3CrispAsrDownloadService, CosyVoice3CrispAsrDownloadService>();
+        collection.AddHttpClientWithProxy<IF5TtsCrispAsrDownloadService, F5TtsCrispAsrDownloadService>();
+        collection.AddHttpClientWithProxy<IOmniVoiceCrispAsrDownloadService, OmniVoiceCrispAsrDownloadService>();
+        collection.AddHttpClientWithProxy<IVoxCPM2CrispAsrDownloadService, VoxCPM2CrispAsrDownloadService>();
+        collection.AddHttpClientWithProxy<IMossTtsCrispAsrDownloadService, MossTtsCrispAsrDownloadService>();
+        collection.AddHttpClientWithProxy<IZonosTtsCrispAsrDownloadService, ZonosTtsCrispAsrDownloadService>();
+        collection.AddHttpClientWithProxy<IKokoroTtsCppDownloadService, KokoroTtsCppDownloadService>();
+        collection.AddHttpClientWithProxy<IChatterboxTtsCppDownloadService, ChatterboxTtsCppDownloadService>();
+        collection.AddHttpClientWithProxy<IOmniVoiceDownloadService, OmniVoiceDownloadService>();
+        collection.AddHttpClientWithProxy<IPluginDownloadService, PluginDownloadService>();
 
         // Window view models
         collection.AddTransient<AdvancedTtsSettingsViewModel>();
@@ -548,5 +549,18 @@ public static class DependencyInjectionExtensions
         collection.AddTransient<SpeechToTextAdvancedViewModel>();
         collection.AddTransient<SpeechToTextPostProcessingViewModel>();
         collection.AddTransient<WordListsViewModel>();
+    }
+
+    /// <summary>
+    /// Like AddHttpClient, but the client honors the proxy configured in SE's settings
+    /// (plus the loopback/bypass-list rules) - the default handler only picks up the
+    /// system/environment proxy, so a proxy entered in SE's own settings was ignored.
+    /// </summary>
+    private static void AddHttpClientWithProxy<TClient, TImplementation>(this IServiceCollection collection)
+        where TClient : class
+        where TImplementation : class, TClient
+    {
+        collection.AddHttpClient<TClient, TImplementation>()
+            .ConfigurePrimaryHttpMessageHandler(() => HttpClientFactoryWithProxy.CreateHandler());
     }
 }

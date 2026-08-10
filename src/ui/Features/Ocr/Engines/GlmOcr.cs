@@ -1,6 +1,7 @@
 using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
+using Nikse.SubtitleEdit.UiLogic.Http;
 using SkiaSharp;
 using System;
 using System.IO;
@@ -28,7 +29,7 @@ public class GlmOcr
     public GlmOcr(string apiKey, int timeoutMinutes = 5)
     {
         Error = string.Empty;
-        _httpClient = new HttpClient();
+        _httpClient = HttpClientFactoryWithProxy.CreateHttpClientWithProxy();
         _httpClient.DefaultRequestHeaders.TryAddWithoutValidation("accept", "application/json");
         if (!string.IsNullOrWhiteSpace(apiKey))
         {
