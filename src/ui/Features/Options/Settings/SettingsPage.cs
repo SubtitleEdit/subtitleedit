@@ -802,6 +802,7 @@ public class SettingsPage : UserControl
             MakeCheckboxSetting(Se.Language.Options.Settings.ShowToolbarSaveAs, nameof(_vm.ShowToolbarSaveAs)),
             MakeCheckboxSetting(Se.Language.Options.Settings.ShowToolbarFind, nameof(_vm.ShowToolbarFind)),
             MakeCheckboxSetting(Se.Language.Options.Settings.ShowToolbarReplace, nameof(_vm.ShowToolbarReplace)),
+            MakeCheckboxSetting(Se.Language.Options.Settings.ShowToolbarMultipleReplace, nameof(_vm.ShowToolbarMultipleReplace)),
             MakeCheckboxSetting(Se.Language.Options.Settings.ShowToolbarSpellCheck, nameof(_vm.ShowToolbarSpellCheck)),
             MakeCheckboxSetting(Se.Language.Options.Settings.ShowToolbarFixCommonErrors, nameof(_vm.ShowToolbarFixCommonErrors)),
             MakeCheckboxSetting(Se.Language.Options.Settings.ShowToolbarRemoveTextForHi, nameof(_vm.ShowToolbarRemoveTextForHi)),

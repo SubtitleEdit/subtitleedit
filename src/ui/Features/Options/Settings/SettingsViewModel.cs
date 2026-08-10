@@ -206,6 +206,7 @@ public partial class SettingsViewModel : ObservableObject
     [ObservableProperty] private bool _showToolbarSaveAs;
     [ObservableProperty] private bool _showToolbarFind;
     [ObservableProperty] private bool _showToolbarReplace;
+    [ObservableProperty] private bool _showToolbarMultipleReplace;
     [ObservableProperty] private bool _showToolbarSpellCheck;
     [ObservableProperty] private bool _showToolbarFixCommonErrors;
     [ObservableProperty] private bool _showToolbarRemoveTextForHi;
@@ -845,6 +846,7 @@ public partial class SettingsViewModel : ObservableObject
         ShowToolbarSaveAs = appearance.ToolbarShowSaveAs;
         ShowToolbarFind = appearance.ToolbarShowFind;
         ShowToolbarReplace = appearance.ToolbarShowReplace;
+        ShowToolbarMultipleReplace = appearance.ToolbarShowMultipleReplace;
         ShowToolbarSpellCheck = appearance.ToolbarShowSpellCheck;
         ShowToolbarFixCommonErrors = appearance.ToolbarShowFixCommonErrors;
         ShowToolbarRemoveTextForHi = appearance.ToolbarShowRemoveTextForHi;
@@ -1679,6 +1681,7 @@ public partial class SettingsViewModel : ObservableObject
         appearance.ToolbarShowSaveAs = ShowToolbarSaveAs;
         appearance.ToolbarShowFind = ShowToolbarFind;
         appearance.ToolbarShowReplace = ShowToolbarReplace;
+        appearance.ToolbarShowMultipleReplace = ShowToolbarMultipleReplace;
         appearance.ToolbarShowSpellCheck = ShowToolbarSpellCheck;
         appearance.ToolbarShowFixCommonErrors = ShowToolbarFixCommonErrors;
         appearance.ToolbarShowRemoveTextForHi = ShowToolbarRemoveTextForHi;

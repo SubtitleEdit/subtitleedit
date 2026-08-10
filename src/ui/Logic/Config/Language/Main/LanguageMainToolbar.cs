@@ -9,6 +9,7 @@ public class LanguageMainToolbar
     public string SaveAsHint { get; set; }
     public string FindHint { get; set; }
     public string ReplaceHint { get; set; }
+    public string MultipleReplaceHint { get; set; }
     public string SpellCheckHint { get; set; }
     public string FixCommonErrorsHint { get; set; }
     public string RemoveTextForHiHint { get; set; }
@@ -42,6 +43,7 @@ public class LanguageMainToolbar
         SaveAsHint = "Save subtitle with a new name {0}";
         FindHint = "Find text in subtitles {0}";
         ReplaceHint = "Find and replace text {0}";
+        MultipleReplaceHint = "Multiple replace {0}";
         SpellCheckHint = "Check subtitles for spelling errors {0}";
         FixCommonErrorsHint = "Fix common subtitle errors {0}";
         RemoveTextForHiHint = "Remove text for hearing impaired {0}";
