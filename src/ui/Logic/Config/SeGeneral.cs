@@ -65,6 +65,13 @@ public class SeGeneral
     public int TimeCodeUpDownStepMs { get; set; }
     public bool PromptBeforeDelete { get; set; }
     public bool LockTimeCodes { get; set; }
+
+    /// <summary>
+    /// SE4 parity: whether an original subtitle imported as matching lines only may be edited (and
+    /// therefore saved back over its file). Off means it is shown read-only, which is what protects
+    /// the lines that were dropped as non-matching (#13449). Remembered from the import prompt.
+    /// </summary>
+    public bool AllowEditOfOriginalSubtitle { get; set; }
     public bool RememberPositionAndSize { get; set; }
     public bool UndockVideoControls { get; set; }
     public List<SeWindowPosition> WindowPositions { get; set; } = new List<SeWindowPosition>();

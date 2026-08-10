@@ -93,6 +93,7 @@ using Nikse.SubtitleEdit.Features.Shared.PickMp4Track;
 using Nikse.SubtitleEdit.Features.Shared.PickRuleProfile;
 using Nikse.SubtitleEdit.Features.Shared.PickSpellCheckDictionary;
 using Nikse.SubtitleEdit.Features.Shared.PickSubtitleFormat;
+using Nikse.SubtitleEdit.Features.Shared.PromptCheckBox;
 using Nikse.SubtitleEdit.Features.Shared.PickTsTrack;
 using Nikse.SubtitleEdit.Features.Shared.PickVobSubLanguage;
 using Nikse.SubtitleEdit.Features.Shared.PromptFileSaved;
@@ -203,6 +204,7 @@ public partial class MainViewModel :
     [ObservableProperty] private ObservableCollection<SubtitleLineViewModel> _subtitles;
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(IsSelectedLineReferenceOnly))]
+    [NotifyPropertyChangedFor(nameof(AreTimeCodesEditable))]
     private SubtitleLineViewModel? _selectedSubtitle;
 
     /// <summary>
@@ -283,7 +285,15 @@ public partial class MainViewModel :
     [ObservableProperty] private bool _showUpDownDuration;
     [ObservableProperty] private bool _showUpDownLabels;
     [ObservableProperty] private bool _isColumnLayerVisible;
-    [ObservableProperty] private bool _lockTimeCodes;
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(AreTimeCodesEditable))]
+    private bool _lockTimeCodes;
+
+    /// <summary>
+    /// Whether the show/hide/duration editors accept input: not while time codes are locked, and not
+    /// on a display-only reference row, whose timings belong to the reference file (#13449).
+    /// </summary>
+    public bool AreTimeCodesEditable => !LockTimeCodes && !IsSelectedLineReferenceOnly;
     [ObservableProperty] private bool _areVideoControlsUndocked;
     [ObservableProperty] private bool _isFormatAssa;
     [ObservableProperty] private bool _isFormatSsa;
@@ -351,7 +361,21 @@ public partial class MainViewModel :
     /// Building this walks the whole subtitle list, so read it into a local instead of touching it
     /// repeatedly, and use <see cref="SubtitleGridSelectedCount"/> when only the count is needed.
     /// </summary>
-    public List<SubtitleLineViewModel> SubtitleGridSelectedItems => GetSelectedSubtitlesInOrder();
+    /// <remarks>
+    /// Display-only reference rows are filtered out: they are not lines of the working subtitle, so
+    /// no command may edit, retime, delete, merge or export them (#13449). The few places that must
+    /// see the raw selection - the selection machinery itself, and copying the reference text - use
+    /// <see cref="SubtitleGridSelectedItemsWithReference"/>. Filtering here rather than at ~50 call
+    /// sites means a command that is added later is safe by default.
+    /// </remarks>
+    public List<SubtitleLineViewModel> SubtitleGridSelectedItems => GetSelectedSubtitlesInOrder(includeReferenceOnly: false);
+
+    /// <summary>
+    /// The selection exactly as the grid has it, display-only reference rows included. Only for the
+    /// selection machinery (which drives the focused row and the edit boxes, and so must follow the
+    /// user onto a reference row) and for reading reference text - never for editing.
+    /// </summary>
+    public List<SubtitleLineViewModel> SubtitleGridSelectedItemsWithReference => GetSelectedSubtitlesInOrder(includeReferenceOnly: true);
 
     /// <summary>
     /// Number of selected rows. Ordering the rows costs a pass over every subtitle, which callers
@@ -359,7 +383,7 @@ public partial class MainViewModel :
     /// </summary>
     public int SubtitleGridSelectedCount => SubtitleGrid.SelectedItems?.Count ?? 0;
 
-    private List<SubtitleLineViewModel> GetSelectedSubtitlesInOrder()
+    private List<SubtitleLineViewModel> GetSelectedSubtitlesInOrder(bool includeReferenceOnly)
     {
         var selected = SubtitleGrid.SelectedItems;
         var count = selected?.Count ?? 0;
@@ -371,7 +395,10 @@ public partial class MainViewModel :
         if (count == 1)
         {
             // Single selection is the common case (every arrow key lands here) - no ordering needed.
-            return new List<SubtitleLineViewModel>(1) { (SubtitleLineViewModel)selected![0]! };
+            var single = (SubtitleLineViewModel)selected![0]!;
+            return !includeReferenceOnly && single.IsReferenceOnly
+                ? new List<SubtitleLineViewModel>()
+                : new List<SubtitleLineViewModel>(1) { single };
         }
 
         // One pass over the subtitles rather than IndexOf per selected row, which would be
@@ -382,12 +409,20 @@ public partial class MainViewModel :
             wanted.Add((SubtitleLineViewModel)selected![i]!);
         }
 
+        var found = 0;
         var ordered = new List<SubtitleLineViewModel>(count);
-        for (var i = 0; i < Subtitles.Count && ordered.Count < wanted.Count; i++)
+        for (var i = 0; i < Subtitles.Count && found < wanted.Count; i++)
         {
-            if (wanted.Contains(Subtitles[i]))
+            var line = Subtitles[i];
+            if (!wanted.Contains(line))
             {
-                ordered.Add(Subtitles[i]);
+                continue;
+            }
+
+            found++;
+            if (includeReferenceOnly || !line.IsReferenceOnly)
+            {
+                ordered.Add(line);
             }
         }
 
@@ -2485,7 +2520,32 @@ public partial class MainViewModel :
 
             if (answer == MessageBoxResult.No && originalWithTextCount > 0)
             {
-                ImportOriginalSubtitle(selectedIndex, fileName, match.Projection);
+                // The old SE mode: only the matching lines are shown. Spell out what that costs, and
+                // offer SE4's "Allow edit of original subtitle" - with it off (the default) the
+                // original is read-only, so the lines that were left out cannot be saved away.
+                var prompt = await ShowDialogAsync<PromptCheckBoxWindow, PromptCheckBoxViewModel>(vm =>
+                {
+                    vm.Initialize(
+                        Se.Language.Main.ImportMatchingOriginalLinesTitle,
+                        Se.Language.Main.AllowEditOfOriginalSubtitle,
+                        Se.Settings.General.AllowEditOfOriginalSubtitle,
+                        string.Format(
+                            Se.Language.Main.ImportMatchingOriginalLinesInfo,
+                            originalWithTextCount,
+                            match.Unmatched.Count,
+                            Path.GetFileName(fileName)));
+                });
+
+                if (!prompt.OkPressed)
+                {
+                    return false;
+                }
+
+                Se.Settings.General.AllowEditOfOriginalSubtitle = prompt.IsChecked;
+
+                // No match passed: this mode deliberately shows the matching lines only, with no
+                // reference-only rows for the rest.
+                ImportOriginalSubtitle(selectedIndex, fileName, match.Projection, isReadOnly: !prompt.IsChecked);
                 return true;
             }
         }
@@ -2602,6 +2662,36 @@ public partial class MainViewModel :
 
         _changeSubtitleHashOriginal = GetFastHashOriginal();
         _referenceMappingDirty = false;
+    }
+
+    /// <summary>
+    /// Runs <paramref name="action"/> with the display-only reference rows pulled out of the grid,
+    /// then re-derives them.
+    ///
+    /// Structural commands walk Subtitles by index and assume every row is a line of the working
+    /// subtitle - merge in particular requires the selected rows to sit at consecutive indexes, so a
+    /// reference row between two translated lines silently blocked the merge, and merging into a
+    /// reference row would have swallowed it and stretched the surviving line over its span. Taking
+    /// the reference rows out for the duration means none of those commands has to know that the
+    /// reference exists (#13449).
+    /// </summary>
+    private void WithoutReferenceOnlyRows(Action action)
+    {
+        if (!IsOriginalReadOnly)
+        {
+            action();
+            return;
+        }
+
+        RemoveReferenceOnlyRows();
+        try
+        {
+            action();
+        }
+        finally
+        {
+            ReapplyReadOnlyReference();
+        }
     }
 
     /// <summary>Drops every display-only reference row, leaving the working subtitle behind.</summary>
@@ -5656,7 +5746,9 @@ public partial class MainViewModel :
     [RelayCommand]
     private async Task CopyTextFromOriginalToClipboard()
     {
-        var selectedItems = SubtitleGridSelectedItems.Cast<SubtitleLineViewModel>().ToList();
+        // With reference: this reads the original column, so a reference-only row is exactly what
+        // the user wants to copy here - it is the reference line they cannot get at otherwise.
+        var selectedItems = SubtitleGridSelectedItemsWithReference;
         if (Window == null || selectedItems.Count == 0 || !ShowColumnOriginalText)
         {
             return;
@@ -10993,7 +11085,7 @@ public partial class MainViewModel :
     {
         RunWithoutChangeDetection(() =>
         {
-            MergeLineBefore();
+            WithoutReferenceOnlyRows(MergeLineBefore);
         });
     }
 
@@ -11002,7 +11094,7 @@ public partial class MainViewModel :
     {
         RunWithoutChangeDetection(() =>
         {
-            MergeLineAfter();
+            WithoutReferenceOnlyRows(MergeLineAfter);
         });
     }
 
@@ -11011,7 +11103,7 @@ public partial class MainViewModel :
     {
         RunWithoutChangeDetection(() =>
         {
-            MergeLineBeforeKeepBreaks();
+            WithoutReferenceOnlyRows(MergeLineBeforeKeepBreaks);
         });
     }
 
@@ -11020,7 +11112,7 @@ public partial class MainViewModel :
     {
         RunWithoutChangeDetection(() =>
         {
-            MergeLineAfterKeepBreaks();
+            WithoutReferenceOnlyRows(MergeLineAfterKeepBreaks);
         });
     }
 
@@ -11331,31 +11423,31 @@ public partial class MainViewModel :
     [RelayCommand]
     private void MergeSelectedLines()
     {
-        MergeLinesSelected();
+        WithoutReferenceOnlyRows(() => MergeLinesSelected());
     }
 
     [RelayCommand]
     private void MergeSelectedLinesDialog()
     {
-        MergeLinesSelectedAsDialog();
+        WithoutReferenceOnlyRows(MergeLinesSelectedAsDialog);
     }
 
     [RelayCommand]
     private void MergeSelectedLinesBilingual()
     {
-        MergeLinesSelectedBilingual();
+        WithoutReferenceOnlyRows(MergeLinesSelectedBilingual);
     }
 
     [RelayCommand]
     private void MergeSelectedLinesAndUnbreak()
     {
-        MergeLinesSelected(MergeManager.BreakMode.Unbreak);
+        WithoutReferenceOnlyRows(() => MergeLinesSelected(MergeManager.BreakMode.Unbreak));
     }
 
     [RelayCommand]
     private void MergeSelectedLinesAndUnbreakCjk()
     {
-        MergeLinesSelected(MergeManager.BreakMode.UnbreakNoSpace);
+        WithoutReferenceOnlyRows(() => MergeLinesSelected(MergeManager.BreakMode.UnbreakNoSpace));
     }
 
     [RelayCommand]
@@ -15225,19 +15317,19 @@ public partial class MainViewModel :
     [RelayCommand]
     private void MoveTextFromCursorToNextAndGoToNext()
     {
-        MoveTextFromCursorToNext(play: false);
+        WithoutReferenceOnlyRows(() => MoveTextFromCursorToNext(play: false));
     }
 
     [RelayCommand]
     private void MoveTextFromCursorToNextAndGoToNextAndPlay()
     {
-        MoveTextFromCursorToNext(play: true);
+        WithoutReferenceOnlyRows(() => MoveTextFromCursorToNext(play: true));
     }
 
     private void MoveTextFromCursorToNext(bool play)
     {
         var s = SelectedSubtitle;
-        if (s == null)
+        if (s == null || s.IsReferenceOnly)
         {
             return;
         }
@@ -16134,6 +16226,12 @@ public partial class MainViewModel :
             return;
         }
 
+        // A display-only reference row has no line to split (#13449).
+        if (s.IsReferenceOnly)
+        {
+            return;
+        }
+
         var language = LanguageAutoDetect.AutoDetectGoogleLanguage(GetUpdateSubtitle());
         RunWithoutChangeDetection(() =>
         {
@@ -16533,7 +16631,9 @@ public partial class MainViewModel :
         }
 
         // Store currently selected items
-        var selectedItems = new HashSet<SubtitleLineViewModel>(SubtitleGridSelectedItems);
+        // With reference: inverting works on rows as displayed, so a selected reference row
+        // must count as selected and end up deselected.
+        var selectedItems = new HashSet<SubtitleLineViewModel>(SubtitleGridSelectedItemsWithReference);
 
         // Inverting a small selection on a large file selects almost every row, so
         // apply via the detach/reattach helper to avoid the per-row hang (#11529).
@@ -23101,7 +23201,8 @@ public partial class MainViewModel :
 
         if (_shiftSelectAnchorIndex < 0)
         {
-            var selectedInOrder = SubtitleGridSelectedItems;
+            // With reference: shift-arrow selection walks rows as they appear in the grid.
+            var selectedInOrder = SubtitleGridSelectedItemsWithReference;
             var anchor = SelectedSubtitleIndex ?? (selectedInOrder.Count > 0
                 ? Subtitles.IndexOf(selectedInOrder[0])
                 : -1);
@@ -23196,7 +23297,9 @@ public partial class MainViewModel :
             _shiftSelectCurrentIndex = -1;
         }
 
-        var selectedItems = SubtitleGridSelectedItems;
+        // With reference: a lone selected reference row is still a selection, and must not be
+        // mistaken for "the user deselected everything" below.
+        var selectedItems = SubtitleGridSelectedItemsWithReference;
 
         // If user is trying to deselect the last selected item
         if (selectedItems.Count == 0 && e.AddedItems.Count == 0 && e.RemovedItems.Count == 1)
@@ -23248,7 +23351,9 @@ public partial class MainViewModel :
 
     private void SubtitleGridSelectionChanged(List<SubtitleLineViewModel>? alreadyOrderedSelection = null)
     {
-        var selectedItems = alreadyOrderedSelection ?? SubtitleGridSelectedItems;
+        // With reference: the focused row and the edit boxes must follow the user onto a
+        // reference-only row so its text can be read (it is shown read-only there).
+        var selectedItems = alreadyOrderedSelection ?? SubtitleGridSelectedItemsWithReference;
         var outgoing = SelectedSubtitle;
         EditTextBox.ClearSelection();
         EditTextBoxOriginal.ClearSelection();

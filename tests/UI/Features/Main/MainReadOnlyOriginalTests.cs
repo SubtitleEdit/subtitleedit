@@ -233,6 +233,80 @@ public class MainReadOnlyOriginalTests
         }
     }
 
+    /// <summary>
+    /// The old SE mode with "Allow edit of original subtitle" left off: the matching lines are shown,
+    /// there are no reference-only rows, and the original still cannot be written back.
+    /// </summary>
+    [AvaloniaFact]
+    public void ImportMatchingLinesOnly_ReadOnly_HasNoReferenceRowsAndIsNotSaveable()
+    {
+        var (window, vm) = CreateMainViewModel();
+        try
+        {
+            AddLine(vm, "Translated one", string.Empty, 0, 2000);
+            AddLine(vm, "Translated two", string.Empty, 4000, 6000);
+
+            var match = ImportOriginalHelper.MatchOriginalLines(vm.Subtitles, BuildSampleReference());
+            InvokeImportOriginalSubtitle(vm, "reference.srt", match.Projection, match: null, isReadOnly: true);
+
+            Assert.True(vm.IsOriginalReadOnly);
+            Assert.False(vm.CanEditOriginal);
+            Assert.Equal(2, vm.Subtitles.Count);
+            Assert.DoesNotContain(vm.Subtitles, p => p.IsReferenceOnly);
+            Assert.Equal("Reference one", vm.Subtitles[0].OriginalText);
+            Assert.Equal("Reference two", vm.Subtitles[1].OriginalText);
+        }
+        finally
+        {
+            CloseWindow(window, vm);
+        }
+    }
+
+    [AvaloniaFact]
+    public void ReferenceOnlyRows_AreNotReturnedAsSelectedItems()
+    {
+        var (window, vm) = CreateMainViewModel();
+        try
+        {
+            ImportSampleReference(vm);
+
+            vm.SubtitleGrid.SelectedItems!.Clear();
+            foreach (var line in vm.Subtitles)
+            {
+                vm.SubtitleGrid.SelectedItems!.Add(line);
+            }
+
+            // Commands see only the working lines; the selection machinery still sees all three.
+            Assert.Equal(2, vm.SubtitleGridSelectedItems.Count);
+            Assert.DoesNotContain(vm.SubtitleGridSelectedItems, p => p.IsReferenceOnly);
+            Assert.Equal(3, vm.SubtitleGridSelectedItemsWithReference.Count);
+        }
+        finally
+        {
+            CloseWindow(window, vm);
+        }
+    }
+
+    [AvaloniaFact]
+    public void ReferenceOnlyRow_SelectedAlone_IsNotReturnedAsASelectedItem()
+    {
+        var (window, vm) = CreateMainViewModel();
+        try
+        {
+            ImportSampleReference(vm);
+
+            vm.SubtitleGrid.SelectedItems!.Clear();
+            vm.SubtitleGrid.SelectedItems!.Add(vm.Subtitles[1]);
+
+            Assert.Empty(vm.SubtitleGridSelectedItems);
+            Assert.Single(vm.SubtitleGridSelectedItemsWithReference);
+        }
+        finally
+        {
+            CloseWindow(window, vm);
+        }
+    }
+
     [AvaloniaFact]
     public void CloseOriginal_RemovesTheReferenceOnlyRows()
     {
@@ -338,7 +412,7 @@ public class MainReadOnlyOriginalTests
     }
 
     private static void InvokeImportOriginalSubtitle(
-        MainViewModel vm, string fileName, Subtitle subtitle, ImportOriginalHelper.OriginalMatch match, bool isReadOnly)
+        MainViewModel vm, string fileName, Subtitle subtitle, ImportOriginalHelper.OriginalMatch? match, bool isReadOnly)
     {
         var method = typeof(MainViewModel).GetMethod(
                          "ImportOriginalSubtitle", BindingFlags.Instance | BindingFlags.NonPublic)

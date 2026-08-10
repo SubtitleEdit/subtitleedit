@@ -94,6 +94,9 @@ public class LanguageMain
     public string OriginalTextReadOnly { get; set; }
     public string OriginalIsReadOnlyNotSaved { get; set; }
     public string OriginalIsReadOnlyReference { get; set; }
+    public string ImportMatchingOriginalLinesTitle { get; set; }
+    public string ImportMatchingOriginalLinesInfo { get; set; }
+    public string AllowEditOfOriginalSubtitle { get; set; }
     public string VideoOpenedChangeLayoutQuestion { get; set; }
     public string SortedByStartTime { get; set; }
     public string SortedByEndTime { get; set; }
@@ -226,6 +229,9 @@ public class LanguageMain
         OriginalTextReadOnly = "Original text (read-only)";
         OriginalIsReadOnlyNotSaved = "The original subtitle is a read-only reference and was not saved";
         OriginalIsReadOnlyReference = "The original subtitle is open as a read-only reference";
+        ImportMatchingOriginalLinesTitle = "Import matching original lines";
+        ImportMatchingOriginalLinesInfo = "Only the {0} original lines that line up with the current subtitle will be shown.\n\nThe other {1} lines of \"{2}\" are not kept in this mode. They stay in the file as long as the original is read-only - but if you allow editing below and later save the original, they are lost.";
+        AllowEditOfOriginalSubtitle = "Allow edit of original subtitle";
         VideoOpenedChangeLayoutQuestion = "A video file has been opened.\n\nDo you want to change the layout to show the video panel?";
         SortedByStartTime = "Sorted by \"Show\" time";
         SortedByEndTime = "Sorted by \"Hide\" time";

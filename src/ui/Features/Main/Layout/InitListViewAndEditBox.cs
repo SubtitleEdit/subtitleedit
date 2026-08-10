@@ -1318,7 +1318,7 @@ public static partial class InitListViewAndEditBox
         {
             ToolTip.SetTip(timeCodeUpDown, Se.Language.General.Show);
         }
-        timeCodeUpDown.Bind(TimeCodeUpDown.IsEnabledProperty, new Binding(nameof(vm.LockTimeCodes)) { Mode = BindingMode.TwoWay, Converter = inverseBooleanConverter });
+        timeCodeUpDown.Bind(TimeCodeUpDown.IsEnabledProperty, new Binding(nameof(vm.AreTimeCodesEditable)) { Mode = BindingMode.OneWay });
         startTimePanel.Children.Add(timeCodeUpDown);
         timeCodeUpDown.ValueChanged += vm.StartTimeChanged;
         timeControlsPanel.Children.Add(startTimePanel);
@@ -1350,7 +1350,7 @@ public static partial class InitListViewAndEditBox
         {
             ToolTip.SetTip(endCodeUpDown, Se.Language.General.Hide);
         }
-        endCodeUpDown.Bind(TimeCodeUpDown.IsEnabledProperty, new Binding(nameof(vm.LockTimeCodes)) { Mode = BindingMode.TwoWay, Converter = inverseBooleanConverter });
+        endCodeUpDown.Bind(TimeCodeUpDown.IsEnabledProperty, new Binding(nameof(vm.AreTimeCodesEditable)) { Mode = BindingMode.OneWay });
         endTimePanel.Children.Add(endCodeUpDown);
         endCodeUpDown.ValueChanged += vm.EndTimeChanged;
         timeControlsPanel.Children.Add(endTimePanel);
@@ -1382,7 +1382,7 @@ public static partial class InitListViewAndEditBox
         {
             ToolTip.SetTip(durationUpDown, Se.Language.General.Duration);
         }
-        durationUpDown.Bind(SecondsUpDown.IsEnabledProperty, new Binding(nameof(vm.LockTimeCodes)) { Mode = BindingMode.TwoWay, Converter = inverseBooleanConverter });
+        durationUpDown.Bind(SecondsUpDown.IsEnabledProperty, new Binding(nameof(vm.AreTimeCodesEditable)) { Mode = BindingMode.OneWay });
         durationUpDown.ValueChanged += (_, _) => vm.DurationChanged();
         durationPanel.Children.Add(durationUpDown);
         timeControlsPanel.Children.Add(durationPanel);
