@@ -290,6 +290,7 @@ public partial class BatchConvertViewModel : ObservableObject, IClosingCleanup
         {
             BatchConverter.FormatAyato,
             BatchConverter.FormatBdnXml,
+            BatchConverter.FormatBdnXml8Bit,
             BatchConverter.FormatBluRaySup,
             BatchConverter.FormatCavena890,
             BatchConverter.FormatCustomTextFormat,
@@ -426,6 +427,7 @@ public partial class BatchConvertViewModel : ObservableObject, IClosingCleanup
         _targetFormatsWithSettings = new List<string>
         {
             BatchConverter.FormatBdnXml,
+            BatchConverter.FormatBdnXml8Bit,
             BatchConverter.FormatBluRaySup,
             BatchConverter.FormatCustomTextFormat,
             BatchConverter.FormatDostImage,
@@ -1584,6 +1586,10 @@ public partial class BatchConvertViewModel : ObservableObject, IClosingCleanup
         {
             exportHandler = new ExportHandlerBdnXml();
         }
+        else if (targetFormat == BatchConverter.FormatBdnXml8Bit)
+        {
+            exportHandler = new ExportHandlerBdnXml(true);
+        }
         else if (targetFormat == BatchConverter.FormatBluRaySup)
         {
             exportHandler = new ExportHandlerBluRaySup();
@@ -1734,6 +1740,7 @@ public partial class BatchConvertViewModel : ObservableObject, IClosingCleanup
             new(BatchConverter.FormatBluRaySup, null),
             new(BatchConverter.FormatVobSub, null),
             new(BatchConverter.FormatBdnXml, null),
+            new(BatchConverter.FormatBdnXml8Bit, null),
             new(BatchConverter.FormatDostImage, null),
             new(BatchConverter.FormatFcpImage, null),
             new(BatchConverter.FormatDCinemaInterop, null),

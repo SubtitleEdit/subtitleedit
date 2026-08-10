@@ -48,6 +48,7 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
 {
     public static readonly string FormatAyato = new Ayato().Name;
     public const string FormatBdnXml = "BDN-XML";
+    public const string FormatBdnXml8Bit = "BDN-XML 8-bit";
     public const string FormatBluRaySup = "Blu-ray sup";
     public static readonly string FormatCavena890 = new Cavena890().Name;
     public const string FormatDCinemaInterop = "D-Cinema interop/png";
@@ -1565,6 +1566,12 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
         if (_config.TargetFormatName == FormatBdnXml)
         {
             exportHandler = new ExportHandlerBdnXml();
+            extension = string.Empty; // folder
+        }
+
+        if (_config.TargetFormatName == FormatBdnXml8Bit)
+        {
+            exportHandler = new ExportHandlerBdnXml(true);
             extension = string.Empty; // folder
         }
 

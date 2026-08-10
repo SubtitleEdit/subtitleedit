@@ -940,6 +940,12 @@ public partial class BinaryEditViewModel : ObservableObject
     }
 
     [RelayCommand]
+    private async Task ExportBdnXml8Bit()
+    {
+        await DoExport(new ExportHandlerBdnXml(true), string.Empty, false);
+    }
+
+    [RelayCommand]
     private async Task ExportVobSub()
     {
         await DoExport(new ExportHandlerVobSub(), ".sub");
