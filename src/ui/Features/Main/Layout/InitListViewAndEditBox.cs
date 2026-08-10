@@ -166,6 +166,10 @@ public static partial class InitListViewAndEditBox
         TableViewExtras.BindRowProperty(vm.SubtitleGrid, Visual.IsVisibleProperty,
             new Binding(nameof(SubtitleLineViewModel.IsHidden)) { Converter = inverseBooleanConverter });
 
+        // Dim reference-only rows so they are visibly not part of the working subtitle (#13449).
+        TableViewExtras.BindRowProperty(vm.SubtitleGrid, Visual.OpacityProperty,
+            new Binding(nameof(SubtitleLineViewModel.IsReferenceOnly)) { Converter = new ReferenceOnlyRowOpacityConverter() });
+
         // Expose "number: text, start - end, duration" as the row's accessible name so
         // screen readers announce the full row like SE4's list view did (issues #13015,
         // #12087). Text stays right after the number so browsing by content is fast; the
@@ -220,7 +224,9 @@ public static partial class InitListViewAndEditBox
                             IsHitTestVisible = false,
                             [!Visual.OpacityProperty] = new Binding(nameof(SubtitleLineViewModel.Bookmark)) { Converter = nullToOpacityConverter },
                          },
-                         UiUtil.MakeLabel().WithBindText(value, new Binding(nameof(SubtitleLineViewModel.Number)))
+                         // NumberDisplay, not Number: a reference-only row is not part of the
+                         // working subtitle and shows no number (#13449).
+                         UiUtil.MakeLabel().WithBindText(value, new Binding(nameof(SubtitleLineViewModel.NumberDisplay)))
                     }
                 })
         });
@@ -1935,6 +1941,13 @@ public static partial class InitListViewAndEditBox
             Mode = BindingMode.TwoWay
         };
         textBox[AutomationProperties.NameProperty] = Se.Language.General.Text;
+
+        // A reference-only row has no translation text to edit - typing would make it a real line.
+        textBox.Bind(TextBox.IsReadOnlyProperty, new Binding(nameof(vm.IsSelectedLineReferenceOnly))
+        {
+            Mode = BindingMode.OneWay,
+            Source = vm
+        });
 
         textBox.TextChanged += vm.SubtitleTextChanged;
         textBox.GotFocus += (_, _) => vm.SubtitleTextBoxGotFocus();

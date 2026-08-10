@@ -201,7 +201,15 @@ public partial class MainViewModel :
     IApplyWebVttStyles
 {
     [ObservableProperty] private ObservableCollection<SubtitleLineViewModel> _subtitles;
-    [ObservableProperty] private SubtitleLineViewModel? _selectedSubtitle;
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(IsSelectedLineReferenceOnly))]
+    private SubtitleLineViewModel? _selectedSubtitle;
+
+    /// <summary>
+    /// True while a display-only reference row is selected. The main text box binds its read-only
+    /// state to this - typing into such a row would turn it into a real subtitle line (#13449).
+    /// </summary>
+    public bool IsSelectedLineReferenceOnly => SelectedSubtitle?.IsReferenceOnly == true;
     private List<SubtitleLineViewModel>? _selectedSubtitles;
     [ObservableProperty] private int? _selectedSubtitleIndex;
 
@@ -458,6 +466,12 @@ public partial class MainViewModel :
     // Dirty tracking for _waveformSubtitleBuffer - see the rebuild block in the position
     // timer tick. Starts dirty so the first tick after startup always builds the buffer.
     private bool _waveformSubtitleBufferDirty = true;
+
+    // The read-only reference's grid projection needs re-matching (rows added/removed/retimed).
+    // Only ever set while a read-only reference is loaded; re-entrancy guard for the re-map itself,
+    // which mutates Subtitles and would otherwise mark itself dirty forever.
+    private bool _referenceMappingDirty;
+    private bool _reapplyingReadOnlyReference;
     private bool _waveformBufferNoLayers;
     private HashSet<int>? _waveformBufferVisibleLayers;
     private DispatcherTimer _positionTimer = new();
@@ -2455,8 +2469,8 @@ public partial class MainViewModel :
             // lines that have no counterpart - and the truncated result then gets written back over
             // the user's file by the next (auto-)save. Offer the read-only reference instead, which
             // keeps the file intact and never saves it (issue #13449).
-            var newOriginal = ImportOriginalHelper.GetMatchingOriginalLines(Subtitles, subtitle);
-            var originalWithTextCount = newOriginal.Paragraphs.Count(p => !string.IsNullOrEmpty(p.Text));
+            var match = ImportOriginalHelper.MatchOriginalLines(Subtitles, subtitle);
+            var originalWithTextCount = match.Projection.Paragraphs.Count(p => !string.IsNullOrEmpty(p.Text));
 
             var msg = string.Format(Se.Language.Main.OpenOriginalDifferentNumberOfSubtitlesXY, subtitle.Paragraphs.Count, Subtitles.Count) +
                       Environment.NewLine + Environment.NewLine +
@@ -2465,13 +2479,13 @@ public partial class MainViewModel :
 
             if (answer == MessageBoxResult.Yes)
             {
-                ImportOriginalSubtitle(selectedIndex, fileName, subtitle, newOriginal, isReadOnly: true);
+                ImportOriginalSubtitle(selectedIndex, fileName, subtitle, match, isReadOnly: true);
                 return true;
             }
 
             if (answer == MessageBoxResult.No && originalWithTextCount > 0)
             {
-                ImportOriginalSubtitle(selectedIndex, fileName, newOriginal);
+                ImportOriginalSubtitle(selectedIndex, fileName, match.Projection);
                 return true;
             }
         }
@@ -2482,22 +2496,29 @@ public partial class MainViewModel :
     /// <summary>
     /// Shows <paramref name="subtitle"/> in the original text column.
     /// </summary>
-    /// <param name="displayOriginal">
-    /// The per-row texts to display, one paragraph per working row. Null when
-    /// <paramref name="subtitle"/> already lines up 1:1 and can be used directly. When the original
-    /// is a read-only reference this is the time-matched projection, while
-    /// <paramref name="subtitle"/> stays the complete, untouched file.
+    /// <param name="match">
+    /// The time alignment against the working rows. Null when <paramref name="subtitle"/> already
+    /// lines up 1:1 and can be used row for row. When the original is a read-only reference, its
+    /// projection fills the original column and its unmatched lines become reference-only rows,
+    /// while <paramref name="subtitle"/> stays the complete, untouched file.
     /// </param>
-    private void ImportOriginalSubtitle(int selectedIndex, string fileName, Subtitle subtitle, Subtitle? displayOriginal = null, bool isReadOnly = false)
+    private void ImportOriginalSubtitle(int selectedIndex, string fileName, Subtitle subtitle, ImportOriginalHelper.OriginalMatch? match = null, bool isReadOnly = false)
     {
+        RemoveReferenceOnlyRows();
+
         _subtitleOriginal = subtitle;
         _subtitleFileNameOriginal = fileName;
         IsOriginalReadOnly = isReadOnly;
 
-        var rowTexts = displayOriginal ?? subtitle;
+        var rowTexts = match?.Projection ?? subtitle;
         for (var i = 0; i < Subtitles.Count && i < rowTexts.Paragraphs.Count; i++)
         {
             Subtitles[i].OriginalText = rowTexts.Paragraphs[i].Text;
+        }
+
+        if (isReadOnly && match != null)
+        {
+            InsertReferenceOnlyRows(match.Unmatched);
         }
 
         _changeSubtitleHashOriginal = GetFastHashOriginal();
@@ -2506,6 +2527,101 @@ public partial class MainViewModel :
         AutoFitColumns();
         SelectAndScrollToRow(selectedIndex);
         AddToRecentFiles(true);
+    }
+
+    /// <summary>
+    /// Adds a display-only row for each reference line that no working row matched, placed in start
+    /// time order so the missing section reads in place next to the translation (issue #13449).
+    /// These rows are never part of the working subtitle - see <see cref="SubtitleLineViewModel.IsReferenceOnly"/>.
+    /// </summary>
+    private void InsertReferenceOnlyRows(IReadOnlyList<Paragraph> unmatched)
+    {
+        if (unmatched.Count == 0)
+        {
+            return;
+        }
+
+        // The unmatched lines arrive in file order, so a single cursor over Subtitles is enough.
+        var insertAt = 0;
+        foreach (var p in unmatched)
+        {
+            while (insertAt < Subtitles.Count &&
+                   Subtitles[insertAt].StartTime.TotalMilliseconds <= p.StartTime.TotalMilliseconds)
+            {
+                insertAt++;
+            }
+
+            Subtitles.Insert(insertAt, new SubtitleLineViewModel
+            {
+                IsReferenceOnly = true,
+                Text = string.Empty,
+                OriginalText = p.Text,
+                StartTime = TimeSpan.FromMilliseconds(p.StartTime.TotalMilliseconds),
+                EndTime = TimeSpan.FromMilliseconds(p.EndTime.TotalMilliseconds),
+            });
+
+            insertAt++;
+        }
+
+        Renumber();
+        _updateAudioVisualizer = true;
+    }
+
+    /// <summary>
+    /// Re-derives everything the read-only reference contributes to the grid - the original column
+    /// texts and the reference-only rows - by matching the reference file against the current rows
+    /// again. Both are a projection of the reference, so they go stale whenever the working rows are
+    /// merged, split, retimed or rebuilt wholesale (#13449).
+    /// </summary>
+    private void ReapplyReadOnlyReference()
+    {
+        _referenceMappingDirty = false;
+
+        if (!IsOriginalReadOnly || _subtitleOriginal == null || _subtitleOriginal.Paragraphs.Count == 0)
+        {
+            return;
+        }
+
+        _reapplyingReadOnlyReference = true;
+        try
+        {
+            RemoveReferenceOnlyRows();
+
+            var match = ImportOriginalHelper.MatchOriginalLines(Subtitles, _subtitleOriginal);
+            for (var i = 0; i < Subtitles.Count && i < match.Projection.Paragraphs.Count; i++)
+            {
+                Subtitles[i].OriginalText = match.Projection.Paragraphs[i].Text;
+            }
+
+            InsertReferenceOnlyRows(match.Unmatched);
+        }
+        finally
+        {
+            _reapplyingReadOnlyReference = false;
+        }
+
+        _changeSubtitleHashOriginal = GetFastHashOriginal();
+        _referenceMappingDirty = false;
+    }
+
+    /// <summary>Drops every display-only reference row, leaving the working subtitle behind.</summary>
+    private void RemoveReferenceOnlyRows()
+    {
+        var removed = false;
+        for (var i = Subtitles.Count - 1; i >= 0; i--)
+        {
+            if (Subtitles[i].IsReferenceOnly)
+            {
+                Subtitles.RemoveAt(i);
+                removed = true;
+            }
+        }
+
+        if (removed)
+        {
+            Renumber();
+            _updateAudioVisualizer = true;
+        }
     }
 
     /// <summary>
@@ -2530,6 +2646,23 @@ public partial class MainViewModel :
     [RelayCommand]
     private void FileCloseOriginal()
     {
+        if (IsOriginalReadOnly)
+        {
+            // A read-only reference is closed for good rather than just hidden: its reference-only
+            // rows have no meaning without it, and leaving them behind would show blank rows.
+            RemoveReferenceOnlyRows();
+            _subtitleOriginal = new Subtitle();
+            _subtitleFileNameOriginal = string.Empty;
+            IsOriginalReadOnly = false;
+
+            foreach (var line in Subtitles)
+            {
+                line.OriginalText = string.Empty;
+            }
+
+            _changeSubtitleHashOriginal = GetFastHashOriginal();
+        }
+
         ShowColumnOriginalText = false;
         AutoFitColumns();
         _shortcutManager.ClearKeys();
@@ -18830,6 +18963,13 @@ public partial class MainViewModel :
         _subtitle.Paragraphs.Clear();
         foreach (var line in Subtitles)
         {
+            // Reference-only rows belong to the read-only original, not to the working subtitle.
+            // This is the single gate that keeps them out of every save and every tool (#13449).
+            if (line.IsReferenceOnly)
+            {
+                continue;
+            }
+
             var p = line.ToParagraph(SelectedSubtitleFormat);
             _subtitle.Paragraphs.Add(p);
         }
@@ -18846,6 +18986,11 @@ public partial class MainViewModel :
         _subtitleOriginal.Paragraphs.Clear();
         foreach (var line in Subtitles)
         {
+            if (line.IsReferenceOnly)
+            {
+                continue;
+            }
+
             var p = line.ToParagraphOriginal(originalFormat);
             _subtitleOriginal.Paragraphs.Add(p);
         }
@@ -18993,9 +19138,18 @@ public partial class MainViewModel :
         if (previousFormat != null && previousFormat.Name != saveAsResult.SubtitleFormat.Name)
         {
             _subtitle = GetUpdateSubtitle();
-            _subtitleOriginal = GetUpdateSubtitleOriginal();
+
+            // A read-only reference must not be rebuilt from the rows - the rows only hold its
+            // time-matched projection, so that would drop the lines with no counterpart (#13449).
+            // It is re-applied to the fresh rows below instead.
+            if (!IsOriginalReadOnly)
+            {
+                _subtitleOriginal = GetUpdateSubtitleOriginal();
+            }
+
             previousFormat.RemoveNativeFormatting(_subtitle, saveAsResult.SubtitleFormat);
-            SetSubtitles(_subtitle, _subtitleOriginal);
+            SetSubtitles(_subtitle, IsOriginalReadOnly ? null : _subtitleOriginal);
+            ReapplyReadOnlyReference();
         }
 
         SetSubtitleFormat(saveAsResult.SubtitleFormat);
@@ -20516,6 +20670,13 @@ public partial class MainViewModel :
             {
                 var p = Subtitles[i];
 
+                // Reference-only rows are not saved, so they must not make the file look dirty -
+                // otherwise opening a reference alone would trigger auto-save (#13449).
+                if (p.IsReferenceOnly)
+                {
+                    continue;
+                }
+
                 hash = hash * 23 + p.Number;
                 hash = hash * 23 + p.StartTime.TotalMilliseconds.GetHashCode();
                 hash = hash * 23 + p.EndTime.TotalMilliseconds.GetHashCode();
@@ -20791,9 +20952,18 @@ public partial class MainViewModel :
 
     private void Renumber()
     {
+        // Reference-only rows are not part of the working subtitle, so they take no number - the
+        // remaining numbers must stay the ones the saved file will have (#13449).
+        var number = 0;
         for (var index = 0; index < Subtitles.Count; index++)
         {
-            Subtitles[index].Number = index + 1;
+            var line = Subtitles[index];
+            if (line.IsReferenceOnly)
+            {
+                continue;
+            }
+
+            line.Number = ++number;
         }
 
         _updateAudioVisualizer = true;
@@ -23256,6 +23426,11 @@ public partial class MainViewModel :
     {
         _mpvPreviewDirty = true;
         _waveformSubtitleBufferDirty = true;
+        if (IsOriginalReadOnly && !_reapplyingReadOnlyReference)
+        {
+            _referenceMappingDirty = true;
+        }
+
         if (e.NewItems != null)
             foreach (SubtitleLineViewModel item in e.NewItems)
                 item.PropertyChanged += OnSubtitleItemChangedForMpv;
@@ -23271,6 +23446,12 @@ public partial class MainViewModel :
             _mpvPreviewDirty = true;
             // A start-time change can reorder the buffer, so it must be rebuilt and re-sorted.
             _waveformSubtitleBufferDirty = true;
+
+            // Retiming a row can move it onto (or off) a different reference line.
+            if (IsOriginalReadOnly && !_reapplyingReadOnlyReference)
+            {
+                _referenceMappingDirty = true;
+            }
         }
         else if (e.PropertyName is nameof(SubtitleLineViewModel.Text)
             or nameof(SubtitleLineViewModel.EndTime))
@@ -23612,11 +23793,17 @@ public partial class MainViewModel :
                     {
                         subtitle.Capacity = Subtitles.Count;
                     }
+                    // Reference-only rows are display rows in the grid; they are not lines of the
+                    // working subtitle and must not be drawn or draggable on the waveform (#13449).
                     if (noLayers)
                     {
                         for (var i = 0; i < Subtitles.Count; i++)
                         {
-                            subtitle.Add(Subtitles[i]);
+                            var p = Subtitles[i];
+                            if (!p.IsReferenceOnly)
+                            {
+                                subtitle.Add(p);
+                            }
                         }
                     }
                     else
@@ -23625,7 +23812,7 @@ public partial class MainViewModel :
                         for (var i = 0; i < Subtitles.Count; i++)
                         {
                             var p = Subtitles[i];
-                            if (layerSet.Contains(p.Layer))
+                            if (!p.IsReferenceOnly && layerSet.Contains(p.Layer))
                             {
                                 subtitle.Add(p);
                             }
@@ -23839,6 +24026,14 @@ public partial class MainViewModel :
         _slowTimer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(400) };
         _slowTimer.Tick += (s, e) =>
         {
+            // Re-match the read-only reference against the rows once the edit that invalidated it has
+            // settled. Deliberately debounced here rather than run per edit: matching is O(n*m) over
+            // both files, and a burst of deletes would otherwise pay for it on every single row.
+            if (_referenceMappingDirty && !IsUserEditing())
+            {
+                ReapplyReadOnlyReference();
+            }
+
             // GetFastHash()/GetFastHashOriginal() are O(n) over all lines. Compute them once per tick
             // and share with both the title dirty-star and auto-save so auto-save adds no extra passes.
             var mainHash = GetFastHash();
@@ -25118,7 +25313,12 @@ public partial class MainViewModel :
             if (oldFormat != null && format != null)
             {
                 _subtitle = GetUpdateSubtitle();
-                _subtitleOriginal = GetUpdateSubtitleOriginal();
+
+                // See the same guard in the "Save as" format conversion (#13449).
+                if (!IsOriginalReadOnly)
+                {
+                    _subtitleOriginal = GetUpdateSubtitleOriginal();
+                }
 
                 oldFormat.RemoveNativeFormatting(_subtitle, format);
 
@@ -25162,7 +25362,8 @@ public partial class MainViewModel :
                     SetAssaResolution(true);
                 }
 
-                SetSubtitles(_subtitle, _subtitleOriginal);
+                SetSubtitles(_subtitle, IsOriginalReadOnly ? null : _subtitleOriginal);
+                ReapplyReadOnlyReference();
             }
         }
 
