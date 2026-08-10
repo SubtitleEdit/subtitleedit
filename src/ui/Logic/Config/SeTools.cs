@@ -156,6 +156,8 @@ public class SeTools
     public bool AutoBreakDashEarly { get; set; } = true;
     public bool AutoBreakUsePixelWidth { get; set; } = true;
     public bool AutoBreakPreferBottomHeavy { get; set; } = true;
+    public double AutoBreakPreferBottomPercent { get; set; } = 5;
+    public bool UseNoLineBreakAfter { get; set; } = false;
     public bool SpellCheckEnglishTreatInApostropheAsIng { get; set; } = true;
     public bool WriteToolsLog { get; set; } = false;
 

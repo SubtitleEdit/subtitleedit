@@ -122,7 +122,7 @@ public class EdgeTts : ITtsEngine
             throw new ArgumentException("Voice is not an EdgeTtsVoice");
         }
 
-        var folder = GetSetEdgeTtsFolder();
+        var folder = TtsOutputFolder.Resolve(outputFolder, GetSetEdgeTtsFolder);
         var fileName = Path.Combine(folder, Guid.NewGuid() + ".mp3");
         var escapedText = EscapeQuotedArgValue(text);
         var escapedVoice = EscapeQuotedArgValue(edgeVoice.Name);

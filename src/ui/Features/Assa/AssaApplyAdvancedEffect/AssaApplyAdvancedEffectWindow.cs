@@ -117,6 +117,13 @@ public class AssaApplyAdvancedEffectWindow : Window
                     settingsStack.Children.Add(inactiveColorRow);
                     panel.Children.Add(settingsStack);
                 }
+                else if (item is AdvancedEffectLowerThird lowerThirdItem)
+                {
+                    var row = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 8, Margin = new Thickness(0, 6, 0, 0) };
+                    row.Children.Add(new TextBlock { Text = Se.Language.Assa.AdvancedEffectLowerThirdAccentColor, VerticalAlignment = VerticalAlignment.Center, FontSize = 12 });
+                    row.Children.Add(UiUtil.MakeColorPickerButton(lowerThirdItem, nameof(AdvancedEffectLowerThird.AccentColor), false));
+                    panel.Children.Add(row);
+                }
                 else if (item is AdvancedEffectWordSpacing wordSpacingItem)
                 {
                     var row = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 8, Margin = new Thickness(0, 6, 0, 0) };

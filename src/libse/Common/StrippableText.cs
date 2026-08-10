@@ -6,6 +6,36 @@ namespace Nikse.SubtitleEdit.Core.Common
 {
     public class StrippableText
     {
+        /// <summary>
+        /// Characters allowed to follow a name. Built once - the name loop below tested this
+        /// per candidate match, and concatenating the literal with Environment.NewLine there
+        /// allocated a fresh string every time.
+        /// </summary>
+        private static readonly string NameEndChars = @" ,.!?:;')]- <”""" + Environment.NewLine;
+
+        /// <summary>
+        /// Suffix test that does not copy the whole builder - the casing loop below asks this
+        /// once per character, and sb.ToString() there allocated the accumulated line each time.
+        /// </summary>
+        private static bool EndsWith(StringBuilder sb, string value)
+        {
+            if (sb.Length < value.Length)
+            {
+                return false;
+            }
+
+            var offset = sb.Length - value.Length;
+            for (var i = 0; i < value.Length; i++)
+            {
+                if (sb[offset + i] != value[i])
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
         public string Pre { get; set; }
         public string Post { get; set; }
         public string StrippedText { get; set; }
@@ -138,14 +168,16 @@ namespace Nikse.SubtitleEdit.Core.Common
             int idName = 0;
             foreach (string name in nameList)
             {
-                int start = lower.IndexOf(name.ToLowerInvariant(), StringComparison.Ordinal);
+                // "lower" is already lower case, so an ignore-case search finds the same
+                // positions as the lower-cased name did - without allocating one string per name.
+                int start = lower.IndexOf(name, StringComparison.OrdinalIgnoreCase);
                 while (start >= 0 && start < lower.Length)
                 {
                     bool startOk = (start == 0) || (lower[start - 1] == ' ') || (lower[start - 1] == '-') ||
                                    (lower[start - 1] == '"') || (lower[start - 1] == '\'') || (lower[start - 1] == '>') || (lower[start - 1] == '[') || (lower[start - 1] == '“') ||
                                    Environment.NewLine.EndsWith(lower[start - 1]);
 
-                    if (startOk && string.CompareOrdinal(name, "Don") == 0 && lower.Substring(start).StartsWith("don't", StringComparison.Ordinal))
+                    if (startOk && string.CompareOrdinal(name, "Don") == 0 && lower.AsSpan(start).StartsWith("don't".AsSpan(), StringComparison.Ordinal))
                     {
                         startOk = false;
                     }
@@ -156,7 +188,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                         bool endOk = end <= lower.Length;
                         if (endOk)
                         {
-                            endOk = end == lower.Length || (@" ,.!?:;')]- <”""" + Environment.NewLine).Contains(lower[end]);
+                            endOk = end == lower.Length || NameEndChars.Contains(lower[end]);
                         }
 
                         if (endOk && StrippedText.Length >= start + name.Length)
@@ -186,29 +218,31 @@ namespace Nikse.SubtitleEdit.Core.Common
             }
         }
 
-        private void ReplacAssaTagsRemove(List<string> replaceIds, List<string> replaceNames, List<string> originalNames)
+        private void ReplaceAssaTagsRemove(List<string> replaceIds, List<string> replaceNames, List<string> originalNames)
         {
             int idName = 1000;
-            var idx = 0;
-            while (StrippedText.IndexOf("{", idx) >= 0 && StrippedText.IndexOf('}', idx) > 0)
+            var openIndex = StrippedText.IndexOf('{');
+            while (openIndex >= 0)
             {
-                var start = StrippedText.IndexOf("{", idx);
-                var end = StrippedText.IndexOf("}", idx);
-                if (end < start)
+                // Pair each "{" with the first "}" after it - searching both from the same start
+                // index made a stray "}" (as in "a} b {\i1}") look like an unbalanced tag and
+                // abort the scan, leaving the real tags unprotected.
+                var closeIndex = StrippedText.IndexOf('}', openIndex + 1);
+                if (closeIndex < 0)
                 {
                     return;
                 }
 
-                var tag = StrippedText.Substring(start, end - start + 1);
-                StrippedText = StrippedText.Remove(start, tag.Length);
-                StrippedText = StrippedText.Insert(start, GetAndInsertNextId(replaceIds, replaceNames, tag, idName++));
+                var tag = StrippedText.Substring(openIndex, closeIndex - openIndex + 1);
+                StrippedText = StrippedText.Remove(openIndex, tag.Length);
+                var id = GetAndInsertNextId(replaceIds, replaceNames, tag, idName++);
+                StrippedText = StrippedText.Insert(openIndex, id);
                 originalNames.Add(tag);
 
-                idx = end + 1;
-                if (idx >= StrippedText.Length)
-                {
-                    return;
-                }   
+                // Resume after the inserted id - "closeIndex + 1" was an index into the string
+                // as it looked before the replacement, so any tag longer than the id skipped
+                // the following tags.
+                openIndex = StrippedText.IndexOf('{', openIndex + id.Length);
             }
         }
 
@@ -227,7 +261,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             var replaceNames = new List<string>();
             var originalNames = new List<string>();
             ReplaceNames1Remove(nameList, replaceIds, replaceNames, originalNames);
-            ReplacAssaTagsRemove(replaceIds, replaceNames, originalNames);
+            ReplaceAssaTagsRemove(replaceIds, replaceNames, originalNames);
 
             if (checkLastLine && ShouldStartWithUpperCase(lastLine, millisecondsFromLast))
             {
@@ -268,7 +302,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                         {
                             sb.Append(s);
                         }
-                        else if ((sb.EndsWith('<') || sb.ToString().EndsWith("</", StringComparison.Ordinal)) && i + 1 < StrippedText.Length && StrippedText[i + 1] == '>')
+                        else if ((sb.EndsWith('<') || EndsWith(sb, "</")) && i + 1 < StrippedText.Length && StrippedText[i + 1] == '>')
                         { // tags
                             sb.Append(s);
                         }
@@ -276,7 +310,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                         { // tags
                             sb.Append(s);
                         }
-                        else if (sb.ToString().EndsWith("... ", StringComparison.Ordinal))
+                        else if (EndsWith(sb, "... "))
                         {
                             sb.Append(s);
                             lastWasBreak = false;

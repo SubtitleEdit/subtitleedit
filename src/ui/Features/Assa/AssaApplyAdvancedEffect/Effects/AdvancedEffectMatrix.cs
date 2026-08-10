@@ -56,7 +56,7 @@ public class AdvancedEffectMatrix : IAdvancedEffectDisplay
             int colX = col * colW + colW / 2;
             double streamStart = rng.Next(0, (int)(totalVideoMs * 0.25)) + col * 25;
 
-            while (streamStart < totalVideoMs)
+            while (streamStart < totalVideoMs && result.Count < AdvancedEffectUtil.MaxGeneratedEvents)
             {
                 int streamLen = rng.Next(8, 18);
                 int fallDur = rng.Next(1200, 3500);
@@ -93,7 +93,7 @@ public class AdvancedEffectMatrix : IAdvancedEffectDisplay
                         float pos = (float)j / (streamLen - 1); // 0 = head … 1 = tail
                         color = pos < 0.35f ? BrightGreen : pos < 0.65f ? MidGreen : DarkGreen;
                         float trailBlur = Math.Max(1.0f, 3.0f - pos * 2.0f);
-                        extra = $"\\blur{trailBlur:F1}\\bord0";
+                        extra = $"\\blur{AdvancedEffectUtil.Tag(trailBlur)}\\bord0";
                         alpha = Math.Min(0xD0, (int)(pos * 200));
                     }
 
@@ -126,7 +126,7 @@ public class AdvancedEffectMatrix : IAdvancedEffectDisplay
                 .Replace("\r\n", " ").Replace("\r", " ").Replace("\n", " ").Trim();
             if (string.IsNullOrEmpty(cleanText))
             {
-                result.Add(sub);
+                result.Add(AdvancedEffectUtil.PassThrough(sub));
                 continue;
             }
 
@@ -171,9 +171,17 @@ public class AdvancedEffectMatrix : IAdvancedEffectDisplay
                 var falling = new SubtitleLineViewModel(sub, generateNewId: true);
                 falling.StartTime = sub.StartTime.Add(TimeSpan.FromMilliseconds(-preRollMs));
                 falling.EndTime = sub.StartTime.Add(TimeSpan.FromMilliseconds(charRevealMs - preRollMs));
+                if (falling.StartTime < TimeSpan.Zero)
+                {
+                    // The pre-roll must not produce negative timestamps for subtitles near t=0
+                    falling.StartTime = TimeSpan.Zero;
+                }
                 falling.Text = $"{{\\an5\\1c{BrightGreen}\\blur3\\bord0\\shad0\\fs{fs}" +
                                $"\\move({charX},-20,{charX},{revealY})}}" + scrambled[i];
-                result.Add(falling);
+                if (falling.EndTime > falling.StartTime)
+                {
+                    result.Add(falling);
+                }
 
                 // Part 2: actual char falls from revealY down to restY (with flash on reveal)
                 int restY = (int)(h * 0.88); // resting line — near bottom, subtitle-style
@@ -185,20 +193,28 @@ public class AdvancedEffectMatrix : IAdvancedEffectDisplay
                     var revealed = new SubtitleLineViewModel(sub, generateNewId: true);
                     revealed.StartTime = sub.StartTime.Add(TimeSpan.FromMilliseconds(charRevealMs - preRollMs));
                     revealed.EndTime = sub.StartTime; // arrives at restY exactly at subtitle start time
+                    if (revealed.StartTime < TimeSpan.Zero)
+                    {
+                        revealed.StartTime = TimeSpan.Zero;
+                    }
                     int flashDur = Math.Min(300, (int)fallToRestMs);
                     revealed.Text = $"{{\\an5\\1c{HeadColor}\\blur3\\bord1\\shad0\\fs{fs}" +
                                     $"\\t(0,{flashDur},\\1c&HFFFFFF&\\blur1)" +
                                     $"\\move({charX},{revealY},{charX},{restY})}}" + chars[i];
-                    result.Add(revealed);
+                    if (revealed.EndTime > revealed.StartTime)
+                    {
+                        result.Add(revealed);
+                    }
                 }
 
                 // Part 3: char rests at restY until subtitle ends so the text is readable
-                if (restStartMs < fallDuration)
+                // (capped at the next subtitle's start so overlapping text never doubles up)
+                double restMs = Math.Min(fallDuration, nextSubOffsetMs);
+                if (restStartMs < fallDuration && restMs > 0)
                 {
                     var resting = new SubtitleLineViewModel(sub, generateNewId: true);
                     resting.StartTime = sub.StartTime; // all chars land at restY at subtitle start time
-                    resting.EndTime = sub.StartTime.Add(TimeSpan.FromMilliseconds(
-                        Math.Min(2000, nextSubOffsetMs)));
+                    resting.EndTime = sub.StartTime.Add(TimeSpan.FromMilliseconds(restMs));
                     resting.Text = $"{{\\an5\\pos({charX},{restY})\\1c&HFFFFFF&\\blur0.5\\bord1\\shad0\\fs{fs}}}" + chars[i];
                     result.Add(resting);
                 }

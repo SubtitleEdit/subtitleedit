@@ -24,7 +24,7 @@ namespace Nikse.SubtitleEdit.Core.Common.TextEffect
             // the gaps must be 0 to avoid flickering
             const double gapBetweenSentences = 0;
 
-            var animations = new List<Paragraph>();
+            var animations = new List<Paragraph>(result.Length);
             for (var i = 0; i < result.Length; i++)
             {
                 var startTime = new TimeCode(baseStartTime + i * durationPerSentence);

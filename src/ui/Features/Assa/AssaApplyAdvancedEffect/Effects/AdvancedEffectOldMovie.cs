@@ -34,10 +34,10 @@ public class AdvancedEffectOldMovie : IAdvancedEffectDisplay
 
         // --- 1. HEAVY FILM NOISE (GRAIN) ---
         // High particle count (40) with very short lifespans (33ms = 30fps)
-        for (int i = 0; i < 40; i++)
+        for (int i = 0; i < 40 && result.Count < AdvancedEffectUtil.MaxGeneratedEvents; i++)
         {
             double currentTimeMs = rng.Next(0, 1000);
-            while (currentTimeMs < totalMs)
+            while (currentTimeMs < totalMs && result.Count < AdvancedEffectUtil.MaxGeneratedEvents)
             {
                 var grain = new SubtitleLineViewModel(); // Using requested constructor
                 int life = 33;
@@ -57,10 +57,10 @@ public class AdvancedEffectOldMovie : IAdvancedEffectDisplay
         }
 
         // --- 2. IMPERFECT/BROKEN SCRATCHES ---
-        for (int i = 0; i < 6; i++)
+        for (int i = 0; i < 6 && result.Count < AdvancedEffectUtil.MaxGeneratedEvents; i++)
         {
             double currentTimeMs = rng.Next(0, 5000);
-            while (currentTimeMs < totalMs)
+            while (currentTimeMs < totalMs && result.Count < AdvancedEffectUtil.MaxGeneratedEvents)
             {
                 var scratch = new SubtitleLineViewModel();
                 int life = rng.Next(50, 150);
@@ -69,7 +69,6 @@ public class AdvancedEffectOldMovie : IAdvancedEffectDisplay
 
                 int x = rng.Next(50, w - 50);
                 int startY = rng.Next(-100, h / 2);
-                int endY = startY + rng.Next(h / 2, h + 200);
 
                 // Slightly crooked vertical line
                 string sDraw = $"m 0 0 l 1 0 l {rng.Next(0, 3)} {h} l {rng.Next(-2, 1)} {h}";
@@ -82,7 +81,7 @@ public class AdvancedEffectOldMovie : IAdvancedEffectDisplay
 
         // --- 3. SLOW GATE FLICKER ---
         double flickerTime = 0;
-        while (flickerTime < totalMs)
+        while (flickerTime < totalMs && result.Count < AdvancedEffectUtil.MaxGeneratedEvents)
         {
             var flicker = new SubtitleLineViewModel();
             int life = rng.Next(180, 400);
@@ -97,12 +96,17 @@ public class AdvancedEffectOldMovie : IAdvancedEffectDisplay
         }
 
         // --- 4. VIGNETTE ---
+        // The inner rectangle must be wound opposite to the outer one (counter-clockwise)
+        // so the nonzero fill rule cuts it out as a hole; wound the same way, the drawing
+        // would fill the whole screen and dim the entire video.
         var vignette = new SubtitleLineViewModel() { StartTime = globalStart, EndTime = globalEnd };
-        string vDraw = $"m 0 0 l {w} 0 l {w} {h} l 0 {h} l 0 0 m 180 180 l {w - 180} 180 l {w - 180} {h - 180} l 180 {h - 180} l 180 180";
+        int inset = Math.Min(180, Math.Min(w, h) / 4);
+        string vDraw = $"m 0 0 l {w} 0 l {w} {h} l 0 {h} " +
+                       $"m {inset} {inset} l {inset} {h - inset} l {w - inset} {h - inset} l {w - inset} {inset}";
         vignette.Text = "{\\p1\\an7\\pos(0,0)\\bord0\\shad0\\1c&H000000&\\alpha&HA0&\\be90}" + vDraw;
         result.Add(vignette);
 
-        result.AddRange(subtitles);
+        result.AddRange(subtitles.Select(AdvancedEffectUtil.PassThrough));
         return result;
     }
 }

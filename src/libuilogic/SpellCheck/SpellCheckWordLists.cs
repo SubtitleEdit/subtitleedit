@@ -278,14 +278,13 @@ public class SpellCheckWordLists
             next = Utilities.NormalizeUserDictionaryWord(words[index + 1].Text);
         }
 
+        // Both phrases are the same for every entry in the list - building them inside the
+        // loop allocated two strings per user phrase, per word checked.
+        var withNext = current + " " + next;
+        var withPrev = prev + " " + current;
         foreach (string userPhrase in _userPhraseList)
         {
-            if (userPhrase == current + " " + next)
-            {
-                return true;
-            }
-
-            if (userPhrase == prev + " " + current)
+            if (userPhrase == withNext || userPhrase == withPrev)
             {
                 return true;
             }

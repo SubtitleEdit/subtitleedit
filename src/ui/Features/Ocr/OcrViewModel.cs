@@ -304,7 +304,10 @@ public partial class OcrViewModel : ObservableObject
             GoogleVisionApiKey = ocr.GoogleVisionApiKey;
             MistralApiKey = ocr.MistralApiKey;
             SelectedGoogleVisionLanguage = GoogleVisionLanguages.FirstOrDefault(p => p.Code == ocr.GoogleVisionLanguage);
-            SelectedPaddleOcrLanguage = PaddleOcrLanguages.FirstOrDefault(p => p.Code == Se.Settings.Ocr.PaddleOcrLastLanguage) ?? PaddleOcrLanguages.First();
+            var paddleOcrLastLanguage = PaddleOcr.NormalizeLanguageCode(Se.Settings.Ocr.PaddleOcrLastLanguage);
+            SelectedPaddleOcrLanguage = PaddleOcrLanguages.FirstOrDefault(p => p.Code == paddleOcrLastLanguage) ??
+                                        PaddleOcrLanguages.FirstOrDefault(p => p.Code == "en") ??
+                                        PaddleOcrLanguages.First();
             SelectedGoogleLensLanguage = GoogleLensLanguages.FirstOrDefault(p => p.Code == Se.Settings.Ocr.GoogleLensOcrLastLanguage) ?? GoogleLensLanguages.First();
             if (!string.IsNullOrEmpty(ocr.TextBoxFontName))
             {
@@ -1278,6 +1281,28 @@ public partial class OcrViewModel : ObservableObject
     }
 
     /// <summary>
+    /// Re-downloads the CrispEmbed engine binaries, re-asking which hardware build to use. The
+    /// CPU/Vulkan/CUDA choice is otherwise only offered on first install, which left anyone who
+    /// picked CPU with no way back to a GPU build (issue #13400). Downloaded models are kept.
+    /// </summary>
+    [RelayCommand]
+    private async Task ReDownloadCrispEmbedEngine()
+    {
+        if (Window == null)
+        {
+            return;
+        }
+
+        await CrispEmbedDownloadHelper.DownloadEngineAsync(
+            Window, _windowService,
+            onEngineDownloadClosed: () =>
+            {
+                _isCtrlDown = false;
+                RefreshEngineCombo?.Invoke();
+            });
+    }
+
+    /// <summary>
     /// Makes sure the CrispEmbed engine binaries and the selected model are on disk, offering
     /// downloads for anything missing - the OCR-side analog of the CrispASR engine/model
     /// download flow in the speech-to-text window.
@@ -1528,6 +1553,24 @@ public partial class OcrViewModel : ObservableObject
                 NOcrDatabases.Clear();
                 NOcrDatabases.AddRange(sortedList);
                 SelectedNOcrDatabase = newResult.DatabaseName;
+            }
+
+            return;
+        }
+
+        if (result.TrainPressed)
+        {
+            var trainResult = await _windowService.ShowDialogAsync<NOcrTrainWindow, NOcrTrainViewModel>(Window!, _ => { });
+            _isCtrlDown = false;
+            if (trainResult.TrainedDatabaseName != null)
+            {
+                NOcrDatabases.Clear();
+                foreach (var s in NOcrDb.GetDatabases(Se.OcrFolder).OrderBy(p => p))
+                {
+                    NOcrDatabases.Add(s);
+                }
+
+                SelectedNOcrDatabase = trainResult.TrainedDatabaseName;
             }
 
             return;
@@ -3564,7 +3607,7 @@ public partial class OcrViewModel : ObservableObject
 
                     var suggestions = _ocrFixEngine.GetSpellCheckSuggestions(unknownWord.Word.FixedWord);
                     var result = await _windowService.ShowDialogAsync<PromptUnknownWordWindow, PromptUnknownWordViewModel>(Window!,
-                        vm => { vm.Initialize(item.GetBitmap(), item.Text, unknownWord, suggestions); });
+                        vm => { vm.Initialize(item.GetBitmapCropped(), item.Text, unknownWord, suggestions); });
 
                     if (result.ChangeWholeTextPressed)
                     {
@@ -3682,6 +3725,29 @@ public partial class OcrViewModel : ObservableObject
         public OcrFixLineResult OcrFixLineResult { get; set; } = new OcrFixLineResult();
     }
 
+    // The auto-break language comes from the selected spell check dictionary (used for the
+    // do-not-break-after list). Mapping dictionary name to a two-letter code involves culture
+    // lookups, so memoize it - OcrFixLine runs once per OCR'ed line.
+    private SpellCheckDictionaryDisplay? _autoBreakLanguageSource;
+    private string _autoBreakLanguage = string.Empty;
+
+    private string GetAutoBreakLanguage()
+    {
+        var dictionary = SelectedDictionary;
+        if (dictionary == null || dictionary.Name == GetDictionaryNameNone())
+        {
+            return string.Empty;
+        }
+
+        if (!ReferenceEquals(dictionary, _autoBreakLanguageSource))
+        {
+            _autoBreakLanguageSource = dictionary;
+            _autoBreakLanguage = SpellCheckDictionaryDisplay.GetTwoLetterLanguageCode(dictionary);
+        }
+
+        return _autoBreakLanguage;
+    }
+
     private OcrFixLineResultTemp OcrFixLine(int i, OcrSubtitleItem item)
     {
         var result = new OcrFixLineResultTemp();
@@ -3689,7 +3755,7 @@ public partial class OcrViewModel : ObservableObject
         // The checkbox promises "auto-break if more than X lines", so leave shorter results alone.
         if (DoAutoBreak && Utilities.GetNumberOfLines(item.Text) > Se.Settings.General.MaxNumberOfLines)
         {
-            item.Text = Utilities.AutoBreakLine(item.Text);
+            item.Text = Utilities.AutoBreakLine(item.Text, GetAutoBreakLanguage());
         }
 
         if (SelectedDictionary != null &&
@@ -3781,7 +3847,7 @@ public partial class OcrViewModel : ObservableObject
         // The checkbox promises "auto-break if more than X lines", so leave shorter results alone.
         if (DoAutoBreak && Utilities.GetNumberOfLines(item.Text) > Se.Settings.General.MaxNumberOfLines)
         {
-            item.Text = Utilities.AutoBreakLine(item.Text);
+            item.Text = Utilities.AutoBreakLine(item.Text, GetAutoBreakLanguage());
         }
 
         var unknownWords = new List<UnknownWordItem>();
@@ -4558,6 +4624,35 @@ public partial class OcrViewModel : ObservableObject
         }, DispatcherPriority.Background);
     }
 
+    partial void OnIsOcrRunningChanged(bool value)
+    {
+        if (value)
+        {
+            return;
+        }
+
+        // When OCR stops, the last per-line scroll may have run before that row's
+        // text/image finished layout, leaving the selected row just outside the
+        // viewport. ContextIdle runs below Background, i.e. after any pending
+        // SelectAndScrollToRow work and the layout passes it triggers; the second
+        // pass corrects drift from rows realized at estimated heights.
+        Dispatcher.UIThread.Post(() =>
+        {
+            ScrollSelectedRowIntoView();
+            Dispatcher.UIThread.Post(ScrollSelectedRowIntoView, DispatcherPriority.ContextIdle);
+        }, DispatcherPriority.ContextIdle);
+    }
+
+    private void ScrollSelectedRowIntoView()
+    {
+        var selected = SelectedOcrSubtitleItem;
+        var index = selected != null ? OcrSubtitleItems.IndexOf(selected) : -1;
+        if (index >= 0)
+        {
+            SubtitleGrid.ScrollIntoView(index);
+        }
+    }
+
     private void SetOcrSubtitleItems()
     {
         _allOcrSubtitleItems = _ocrSubtitle!.MakeOcrSubtitleItems();
@@ -4762,7 +4857,8 @@ public partial class OcrViewModel : ObservableObject
         {
             if (SelectedPaddleOcrLanguage == null)
             {
-                SelectedPaddleOcrLanguage = PaddleOcrLanguages.FirstOrDefault(p => p.Code == "eng") ??
+                SelectedPaddleOcrLanguage = PaddleOcrLanguages.FirstOrDefault(p => _sourceLanguageIso != null && p.Code == _sourceLanguageIso.TwoLetterCode) ??
+                                            PaddleOcrLanguages.FirstOrDefault(p => p.Code == "en") ??
                                             PaddleOcrLanguages.FirstOrDefault();
             }
         }

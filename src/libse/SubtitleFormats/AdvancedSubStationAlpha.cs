@@ -156,8 +156,23 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text"
             var styles = new List<string>();
             if (isValidAssHeader)
             {
-                sb.AppendLine(subtitle.Header.Trim());
-                sb.AppendLine("Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text");
+                // Trim via span: Header.Trim() re-allocated the whole (possibly multi-KB)
+                // header on every save and every mpv preview refresh.
+                sb.Append(subtitle.Header.AsSpan().Trim()).AppendLine();
+
+                // Most headers end at "[Events]", but some (e.g. HeaderNoStyles) already carry
+                // the events format line - appending another gave a duplicate "Format:" line.
+                // Only the exact standard line may be skipped: Dialogue lines are always written
+                // in the standard field order, so a nonstandard Format line (an MKV CodecPrivate
+                // is kept verbatim in the header) must still be overridden by appending the
+                // standard one after it - the last Format line wins when parsing.
+                const string eventsFormatLine = "Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text";
+                var eventsIndex = subtitle.Header.LastIndexOf("[Events]", StringComparison.Ordinal);
+                if (eventsIndex < 0 || subtitle.Header.IndexOf(eventsFormatLine, eventsIndex, StringComparison.Ordinal) < 0)
+                {
+                    sb.AppendLine(eventsFormatLine);
+                }
+
                 styles = GetStylesFromHeader(subtitle.Header);
             }
             else if (!string.IsNullOrEmpty(subtitle.Header) && subtitle.Header.Contains("[V4 Styles]"))
@@ -269,7 +284,6 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text"
                     effect = p.Effect;
                 }
 
-                var text = p.Text.Replace(Environment.NewLine, "\\N");
                 // Layout: "(Dialogue|Comment): {layer},{start},{end},{style},{actor},{marginL},{marginR},{marginV},{effect},{text}".
                 // Appending directly skips AppendFormat's per-call format parsing, the object[10]
                 // and the boxed layer, plus the two intermediate time-code strings.
@@ -283,7 +297,21 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text"
                 sb.Append(marginR).Append(',');
                 sb.Append(marginV).Append(',');
                 sb.Append(effect).Append(',');
-                sb.Append(FormatText(text)).AppendLine();
+                if (p.Text.Contains('<'))
+                {
+                    // Rare path (HTML-style tags present): keep the original order -
+                    // newline replace first, then tag conversion.
+                    sb.Append(FormatText(p.Text.Replace(Environment.NewLine, "\\N")));
+                }
+                else
+                {
+                    // Common path: append span chunks around the newlines instead of
+                    // allocating an intermediate Replace string per line (FormatText is
+                    // an identity function without '<').
+                    AppendTextWithAssaNewLines(sb, p.Text);
+                }
+
+                sb.AppendLine();
             }
 
             if (!string.IsNullOrEmpty(subtitle.Footer) &&
@@ -320,6 +348,24 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text"
             sb.Append('.');
             AppendNumber(sb, fragment, 2);
             return sb;
+        }
+
+        // Appends the text with Environment.NewLine replaced by "\N", matching
+        // string.Replace's left-to-right non-overlapping semantics without the
+        // intermediate string allocation.
+        private static void AppendTextWithAssaNewLines(StringBuilder sb, string text)
+        {
+            var span = text.AsSpan();
+            var newLine = Environment.NewLine.AsSpan();
+            var index = span.IndexOf(newLine, StringComparison.Ordinal);
+            while (index >= 0)
+            {
+                sb.Append(span[..index]).Append('\\').Append('N');
+                span = span[(index + newLine.Length)..];
+                index = span.IndexOf(newLine, StringComparison.Ordinal);
+            }
+
+            sb.Append(span);
         }
 
         // Matches "{0:00}"-style formatting: sign first, then the absolute value padded with
@@ -399,7 +445,7 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text"
                 return DefaultHeader;
             }
 
-            var styles = new List<SsaStyle>();
+            var styles = new List<SsaStyle>(stylesContent.Count);
             foreach (var styleAsString in stylesContent)
             {
                 styles.Add(SsaStyle.FromRawSsa(header, styleAsString));
@@ -992,8 +1038,9 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text"
 
         public static List<SsaStyle> GetSsaStylesFromHeader(string header)
         {
-            var styles = new List<SsaStyle>();
-            foreach (var styleName in GetStylesFromHeader(header))
+            var styleNames = GetStylesFromHeader(header);
+            var styles = new List<SsaStyle>(styleNames.Count);
+            foreach (var styleName in styleNames)
             {
                 styles.Add(GetSsaStyle(styleName, header));
             }

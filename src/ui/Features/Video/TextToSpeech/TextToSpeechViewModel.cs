@@ -422,6 +422,7 @@ public partial class TextToSpeechViewModel : ObservableObject
         else if (SelectedEngine is OmniVoiceCrispAsr)
         {
             Se.Settings.Video.TextToSpeech.OmniVoiceCrispAsrModel = SelectedModel ?? OmniVoiceCrispAsr.DefaultModelKey;
+            Se.Settings.Video.TextToSpeech.OmniVoiceCrispAsrLanguage = SelectedLanguage?.Name ?? string.Empty;
         }
         else if (SelectedEngine is MossTtsCrispAsr)
         {
@@ -2096,6 +2097,11 @@ public partial class TextToSpeechViewModel : ObservableObject
         IsNotGenerating = true;
         ProgressOpacity = 0;
         OkPressed = true;
+
+        // Tear the preview player down here, before the window starts closing, so libmpv's
+        // native teardown is never concurrent with Avalonia's window teardown (#13376).
+        DisposePreviewPlayer();
+
         Close();
     }
 
@@ -2157,22 +2163,68 @@ public partial class TextToSpeechViewModel : ObservableObject
         }
     }
 
-    private async Task PlayAudio(string fileName)
+    /// <summary>
+    /// Drops the voice-preview player and destroys its mpv core on a worker thread.
+    /// <para>
+    /// <c>mpv_terminate_destroy</c> blocks until every mpv worker has exited and runs libmpv's
+    /// native win32/audio deinit, so it must not run on the UI thread while a window is closing:
+    /// doing it inline in <c>OnClosing</c> left <c>Window.CloseInternal()</c> to make its next COM
+    /// call (<c>IFrameworkInputPane.Unadvise</c>) into an apartment libmpv's teardown had already
+    /// disturbed - an access violation no catch block can intercept (#13376, same crash reported
+    /// as #12626). Same reasoning as <c>VideoPlayerControl.CloseAndDisposePlayer</c> (#11176).
+    /// </para>
+    /// Safe to call more than once - the second call finds no player and does nothing.
+    /// </summary>
+    private void DisposePreviewPlayer()
     {
+        LibMpvDynamicPlayer? player;
         lock (_playLock)
         {
-            _mpvContext?.Stop();
-            _mpvContext?.Dispose();
+            player = _mpvContext;
+            _mpvContext = null;
+        }
 
-            _mpvContext = new LibMpvDynamicPlayer();
-            _mpvContext.LoadLib(); // core not initialized"
-            var err = _mpvContext.Initialize();
+        if (player == null)
+        {
+            return;
+        }
+
+        Se.WriteToolsLog("TTS window: disposing audio preview player (mpv) on worker thread");
+        Task.Run(() =>
+        {
+            try
+            {
+                // Stop first so the core tears down from an idle state instead of mid-playback.
+                player.Stop();
+                player.Dispose();
+            }
+            catch (Exception ex)
+            {
+                SeLogger.Error(ex, "TTS window: disposing the audio preview player failed");
+            }
+        });
+    }
+
+    private async Task PlayAudio(string fileName)
+    {
+        DisposePreviewPlayer();
+
+        LibMpvDynamicPlayer player;
+        lock (_playLock)
+        {
+            player = new LibMpvDynamicPlayer();
+            player.LoadLib(); // core not initialized"
+            var err = player.Initialize();
             if (err < 0)
             {
-                throw new InvalidOperationException($"Failed to initialize mpv: {_mpvContext.GetErrorString(err)}");
+                throw new InvalidOperationException($"Failed to initialize mpv: {player.GetErrorString(err)}");
             }
+
+            _mpvContext = player;
         }
-        await _mpvContext.LoadAudio(fileName);
+
+        // Through the local: a close running now can null the field out from under us.
+        await player.LoadAudio(fileName);
     }
 
     private async Task<bool> IsEngineInstalled(ITtsEngine engine)
@@ -3333,14 +3385,17 @@ public partial class TextToSpeechViewModel : ObservableObject
                     Languages.Add(language);
                 }
 
-                // OmniVoice has 646 alphabetically-sorted languages; the first entry ("Abadi") is
-                // a useless default. Default to English so the engine is usable out of the box.
+                // OmniVoice has 646 alphabetically-sorted languages behind its "Auto" entry;
+                // falling through to the first *language* ("Abadi") would be a useless default,
+                // so omnivoice-tts asks for English explicitly and stays usable out of the box.
                 // The CrispASR cloning engines restore the saved pick (their lists lead with
                 // "Auto", which is also the right fallback - it reproduces the
                 // pre-language-selection behaviour).
                 SelectedLanguage = engine switch
                 {
                     OmniVoiceTtsCpp => Languages.FirstOrDefault(l => l.Code == "en") ?? Languages.FirstOrDefault(),
+                    OmniVoiceCrispAsr => Languages.FirstOrDefault(l => l.Name == Se.Settings.Video.TextToSpeech.OmniVoiceCrispAsrLanguage)
+                                         ?? Languages.FirstOrDefault(),
                     MossTtsCrispAsr => Languages.FirstOrDefault(l => l.Name == Se.Settings.Video.TextToSpeech.MossTtsCrispAsrLanguage)
                                        ?? Languages.FirstOrDefault(),
                     CosyVoice3CrispAsr => Languages.FirstOrDefault(l => l.Name == Se.Settings.Video.TextToSpeech.CosyVoice3CrispAsrLanguage)
@@ -3606,21 +3661,12 @@ public partial class TextToSpeechViewModel : ObservableObject
             SeLogger.Error(ex, "TTS window close: stopping the playback timer failed");
         }
 
+        // Only present when Test voice played a clip, and normally already gone: OK disposes it
+        // before the close starts. This covers the paths that close without OK (Cancel, Escape,
+        // title bar). Never dispose it inline here - see DisposePreviewPlayer (#13376).
         try
         {
-            lock (_playLock)
-            {
-                if (_mpvContext != null)
-                {
-                    // Only used when Test voice played a clip. Stop before Dispose so libmpv
-                    // tears down from an idle state instead of mid-playback - this dispose is
-                    // the prime native-crash suspect in #12626.
-                    Se.WriteToolsLog("TTS window: disposing audio preview player (mpv)");
-                    _mpvContext.Stop();
-                    _mpvContext.Dispose();
-                    _mpvContext = null;
-                }
-            }
+            DisposePreviewPlayer();
         }
         catch (Exception ex)
         {

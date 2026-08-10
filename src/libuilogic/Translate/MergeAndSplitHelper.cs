@@ -446,6 +446,12 @@ public static partial class MergeAndSplitHelper
         public TranslateRow PreviousRow { get; set; }
         public int StartIndex { get; }
 
+        // Memo for ExceedsMaxSize: result.Text gets a new string identity whenever a row is
+        // merged in, so its URL-encoded length is recomputed only then - not per visited row,
+        // which re-encoded the whole accumulated text every iteration (O(N^2) over a run).
+        public string? EncodedLengthTextRef { get; set; }
+        public int EncodedLengthValue { get; set; }
+
         public MergeContext(TranslateRow[] sourceSubtitle, int index)
         {
             StartIndex = index;
@@ -482,10 +488,43 @@ public static partial class MergeAndSplitHelper
         }
     }
 
+    // Same count as Utilities.CountTagInText(builder.ToString(), c) without materializing the
+    // whole accumulated text into a fresh string per merged row.
+    private static int CountChar(StringBuilder builder, char c)
+    {
+        var count = 0;
+        foreach (var chunk in builder.GetChunks())
+        {
+            foreach (var ch in chunk.Span)
+            {
+                if (ch == c)
+                {
+                    count++;
+                }
+            }
+        }
+
+        return count;
+    }
+
+    private static readonly int NewLineUrlEncodeLength = Utilities.UrlEncodeLength(Environment.NewLine);
+
     private static bool ExceedsMaxSize(MergeResult result, MergeContext context, TranslateRow currentRow, int maxTextSize)
     {
-        return context.CurrentItem != null &&
-               Utilities.UrlEncodeLength(result.Text + Environment.NewLine + currentRow.Text) > maxTextSize;
+        if (context.CurrentItem == null)
+        {
+            return false;
+        }
+
+        // UrlEncodeLength is a per-char sum, so summing the parts equals encoding the
+        // concatenation without building the throwaway "accumulated + row" string.
+        if (!ReferenceEquals(context.EncodedLengthTextRef, result.Text))
+        {
+            context.EncodedLengthTextRef = result.Text;
+            context.EncodedLengthValue = Utilities.UrlEncodeLength(result.Text);
+        }
+
+        return context.EncodedLengthValue + NewLineUrlEncodeLength + Utilities.UrlEncodeLength(currentRow.Text) > maxTextSize;
     }
 
     private static bool ProcessRow(MergeResult result, MergeContext context, TranslateRow currentRow, int rowIndex, bool noSentenceEndingSource)
@@ -551,7 +590,7 @@ public static partial class MergeAndSplitHelper
             context.CurrentItem.TextIndexStart = result.Text.Length;
             context.CurrentItem.TextIndexEnd = result.Text.Length;
             context.CurrentItem.EndChar = endChar;
-            context.CurrentItem.EndCharOccurrences = Utilities.CountTagInText(context.TextBuilder.ToString(), endChar);
+            context.CurrentItem.EndCharOccurrences = CountChar(context.TextBuilder, endChar);
             result.MergeResultItems.Add(context.CurrentItem);
         }
 
@@ -582,7 +621,7 @@ public static partial class MergeAndSplitHelper
             {
                 var endChar = result.Text[^1];
                 context.CurrentItem.EndChar = endChar;
-                context.CurrentItem.EndCharOccurrences = Utilities.CountTagInText(context.TextBuilder.ToString(), endChar);
+                context.CurrentItem.EndCharOccurrences = CountChar(context.TextBuilder, endChar);
                 context.CurrentItem.TextIndexEnd = result.Text.Length;
             }
 
@@ -642,7 +681,7 @@ public static partial class MergeAndSplitHelper
             {
                 var endChar = result.Text[^1];
                 context.CurrentItem.EndChar = endChar;
-                context.CurrentItem.EndCharOccurrences = Utilities.CountTagInText(context.TextBuilder.ToString(), endChar);
+                context.CurrentItem.EndCharOccurrences = CountChar(context.TextBuilder, endChar);
             }
         }
 

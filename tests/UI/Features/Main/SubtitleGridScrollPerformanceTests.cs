@@ -1,5 +1,6 @@
 using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Controls.Primitives;
 using Avalonia.Headless;
 using Avalonia.Headless.XUnit;
 using Avalonia.Input;
@@ -53,7 +54,8 @@ public class SubtitleGridScrollPerformanceTests : IDisposable
         _output = output;
     }
 
-    private (Window Window, MainViewModel Vm, TableView Grid, ScrollViewer ScrollViewer) ShowMainWindowWithLines()
+    private (Window Window, MainViewModel Vm, TableView Grid, ScrollViewer ScrollViewer) ShowMainWindowWithLines(
+        int lineCount = LineCount, Func<int, string>? lineFactory = null)
     {
         var services = new ServiceCollection();
         services.AddSubtitleEditServices();
@@ -69,11 +71,12 @@ public class SubtitleGridScrollPerformanceTests : IDisposable
         window.UpdateLayout();
 
         var vm = (MainViewModel)view.DataContext!;
-        for (var i = 0; i < LineCount; i++)
+        for (var i = 0; i < lineCount; i++)
         {
             // Every third line is two lines tall - variable row heights are what makes the
             // panel's average-height estimate drift in the first place.
-            var text = $"Line {i} of the test subtitle" + (i % 3 == 0 ? Environment.NewLine + "second line here" : string.Empty);
+            var text = lineFactory?.Invoke(i)
+                       ?? $"Line {i} of the test subtitle" + (i % 3 == 0 ? Environment.NewLine + "second line here" : string.Empty);
             vm.Subtitles.Add(new SubtitleLineViewModel(new Paragraph(text, i * 2000, i * 2000 + 1500), null!) { Number = i + 1 });
         }
 
@@ -93,6 +96,104 @@ public class SubtitleGridScrollPerformanceTests : IDisposable
         {
             Dispatcher.UIThread.RunJobs();
             window.UpdateLayout();
+        }
+    }
+
+    private static void Drag(GridSplitter splitter, double verticalChange)
+    {
+        splitter.RaiseEvent(new VectorEventArgs
+        {
+            RoutedEvent = Thumb.DragStartedEvent,
+            Vector = default,
+        });
+        splitter.RaiseEvent(new VectorEventArgs
+        {
+            RoutedEvent = Thumb.DragDeltaEvent,
+            Vector = new Vector(0, verticalChange),
+        });
+        splitter.RaiseEvent(new VectorEventArgs
+        {
+            RoutedEvent = Thumb.DragCompletedEvent,
+            Vector = new Vector(0, verticalChange),
+        });
+    }
+
+    [AvaloniaFact]
+    public void EditBoxSplitter_DragResizesEditSectionAndPreservesMinimumHeight()
+    {
+        var (window, _, _, _) = ShowMainWindowWithLines(0);
+
+        try
+        {
+            var splitter = Assert.Single(window.GetVisualDescendants().OfType<GridSplitter>(), s =>
+                Grid.GetRow(s) == 1 &&
+                s.VerticalAlignment == Avalonia.Layout.VerticalAlignment.Top &&
+                s.Parent is Grid { RowDefinitions.Count: 2 });
+            var mainGrid = Assert.IsType<Grid>(splitter.Parent);
+            var editGrid = Assert.Single(mainGrid.Children.OfType<Grid>(), g => Grid.GetRow(g) == 1);
+            var initialHeight = editGrid.Bounds.Height;
+
+            Drag(splitter, -120);
+            Settle(window);
+            var grownHeight = editGrid.Bounds.Height;
+
+            Assert.True(grownHeight > initialHeight,
+                $"Dragging up should grow editGrid (initial={initialHeight:F1}, grown={grownHeight:F1})");
+
+            Drag(splitter, window.Bounds.Height);
+            Settle(window);
+            var minimumHeight = editGrid.Bounds.Height;
+
+            Assert.True(minimumHeight < grownHeight,
+                $"Dragging down should shrink editGrid (grown={grownHeight:F1}, shrunk={minimumHeight:F1})");
+
+            var textBoxMinimum = editGrid.GetVisualDescendants()
+                .OfType<TextBox>()
+                .Max(p => p.MinHeight);
+            Assert.True(minimumHeight >= textBoxMinimum,
+                $"Dragging must not make editGrid smaller than its text boxes " +
+                $"(grid={minimumHeight:F1}, text box minimum={textBoxMinimum:F1})");
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaFact]
+    public void EditBoxSplitter_AtMinimum_TextBoxDoesNotOverflowTheLabelRow()
+    {
+        // The edit section is "Auto,*,Auto": the "Text" header and the "Line length /
+        // Total chars" panel sit above and below the box. The section floor has to cover all
+        // three - sized to the box alone, the box (which cannot shrink past its own MinHeight)
+        // overflows its row and draws over the labels underneath (#10271).
+        var (window, _, _, _) = ShowMainWindowWithLines(0);
+
+        try
+        {
+            var splitter = Assert.Single(window.GetVisualDescendants().OfType<GridSplitter>(), s =>
+                Grid.GetRow(s) == 1 &&
+                s.VerticalAlignment == Avalonia.Layout.VerticalAlignment.Top &&
+                s.Parent is Grid { RowDefinitions.Count: 2 });
+            var textEditGrid = window.GetVisualDescendants().OfType<Grid>()
+                .First(g => g.Name == "SubtitleTextEditGrid");
+
+            Drag(splitter, window.Bounds.Height);
+            Settle(window);
+
+            var textBox = textEditGrid.GetVisualDescendants().OfType<TextBox>().First();
+            var textBoxRowBottom = textEditGrid.RowDefinitions[0].ActualHeight +
+                                   textEditGrid.RowDefinitions[1].ActualHeight;
+
+            Assert.True(textBox.Bounds.Bottom <= textBoxRowBottom + 0.5,
+                $"Text box overflows its row and covers the length labels " +
+                $"(box bottom={textBox.Bounds.Bottom:F1}, row bottom={textBoxRowBottom:F1})");
+            Assert.True(textEditGrid.RowDefinitions[2].ActualHeight > 0,
+                "The length-label row collapsed to zero at the minimum section height");
+        }
+        finally
+        {
+            window.Close();
         }
     }
 
@@ -140,6 +241,64 @@ public class SubtitleGridScrollPerformanceTests : IDisposable
                               $"offset={scrollViewer.Offset.Y:F0} extent={scrollViewer.Extent.Height:F0}");
             Assert.Equal(0, grid.SelectedIndex);
             Assert.True(home <= MaxRealizedPerJump, $"Home realized {home} rows in round {round}");
+        }
+
+        window.Close();
+    }
+
+    /// <summary>
+    /// End followed by Home must land with row 0 at the very top - no blank space above it.
+    /// When ScrollIntoView has to place an unrealized row 0 it estimates its offset from the
+    /// average row height, and with irregular row heights the estimate lands below the extent
+    /// origin: the scrollbar sits at the top while the first rows are drawn at the bottom of
+    /// the viewport with a blank area above them (#13428). The row heights here are aperiodic
+    /// on purpose - a regular pattern averages out and rarely drifts far enough to reproduce.
+    /// </summary>
+    [AvaloniaFact]
+    public void Home_AfterEnd_LeavesNoBlankSpaceAboveTheFirstRow()
+    {
+        var (window, _, grid, scrollViewer) = ShowMainWindowWithLines(lineFactory: i =>
+        {
+            // 1-3 text lines per row, mixed aperiodically (Knuth multiplicative hash).
+            var lines = 1 + (int)(unchecked((uint)i * 2654435761u) % 3);
+            return string.Join(Environment.NewLine,
+                Enumerable.Range(0, lines).Select(l => $"Line {i}.{l} of the test subtitle"));
+        });
+
+        grid.SelectedIndex = 0;
+        Dispatcher.UIThread.RunJobs();
+
+        void Press(PhysicalKey key)
+        {
+            // Same focus pinning as HomeAndEnd_RealizeOnlyAViewportOfRows: what this test
+            // measures is where the rows land, not how Avalonia routes keys.
+            TableViewExtras.FocusRow(grid);
+            Dispatcher.UIThread.RunJobs();
+            window.KeyPressQwerty(key, RawInputModifiers.None);
+            Settle(window);
+        }
+
+        for (var round = 0; round < 10; round++)
+        {
+            Press(PhysicalKey.End);
+            Assert.Equal(LineCount - 1, grid.SelectedIndex);
+
+            Press(PhysicalKey.Home);
+            Assert.Equal(0, grid.SelectedIndex);
+
+            var first = grid.ContainerFromIndex(0);
+            Assert.NotNull(first);
+
+            // Bounds is relative to the virtualizing panel (the scrolled content): row 0
+            // arranged at anything above 0 is phantom blank space. The ScrollViewer is not
+            // a usable reference point - the column header scrolls inside it, sitting
+            // between the viewport top and row 0 even in the healthy state.
+            var gap = first!.Bounds.Y;
+            _output.WriteLine($"round {round}: offset={scrollViewer.Offset.Y:F1} row0PanelY={gap:F1}");
+            Assert.True(scrollViewer.Offset.Y < 0.5,
+                $"round {round}: scroll offset {scrollViewer.Offset.Y:F1} did not land at the top");
+            Assert.True(gap < 0.5,
+                $"round {round}: {gap:F1}px of blank space above row 0");
         }
 
         window.Close();

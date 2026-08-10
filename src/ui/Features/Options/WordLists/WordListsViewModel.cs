@@ -453,7 +453,9 @@ public partial class WordListsViewModel : ObservableObject
         if (e.Key == Key.Enter)
         {
             e.Handled = true;
-            using var _ = AddName();
+            // Fire-and-forget discard: "using var" would call Task.Dispose when this handler
+            // returns, which throws while the task is still awaiting a message box.
+            _ = AddName();
         }
     }
 
@@ -462,8 +464,7 @@ public partial class WordListsViewModel : ObservableObject
         if (e.Key == Key.Enter)
         {
             e.Handled = true;
-            using var _ = AddWord();
-            using var _1 = AddName();
+            _ = AddWord();
         }
     }
 
@@ -472,7 +473,7 @@ public partial class WordListsViewModel : ObservableObject
         if (e.Key == Key.Enter)
         {
             e.Handled = true;
-            using var _ = AddOcrFix();
+            _ = AddOcrFix();
         }
     }
 }

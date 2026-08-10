@@ -49,6 +49,7 @@ public class LanguageGeneral
     public string Backward { get; set; }
     public string BatchMode { get; set; }
     public string BdnXml { get; set; }
+    public string BdnXml8Bit { get; set; }
     public string Before { get; set; }
     public string Beginning { get; set; }
     public string BluRaySup { get; set; }
@@ -789,6 +790,7 @@ public class LanguageGeneral
         Backward = "Backward";
         BatchMode = "Batch mode";
         BdnXml = "BDN/xml";
+        BdnXml8Bit = "BDN/xml 8-bit";
         Before = "Before";
         Beginning = "Beginning";
         BluRaySup = "Blu-ray (sup)";

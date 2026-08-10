@@ -22,6 +22,7 @@ public static class AdvancedEffectDisplayFactory
         {
             new AdvancedEffectAudioTextPulse(),
             new AdvancedEffectBounceIn(),
+            new AdvancedEffectCinematicTitle(),
             new AdvancedEffectConfetti(),
             new AdvancedEffectEndCreditsScroll(),
             new AdvancedEffectFadeIn(),
@@ -32,6 +33,7 @@ public static class AdvancedEffectDisplayFactory
             new AdvancedEffectGlitch(),
             new AdvancedEffectHearts(),
             new AdvancedEffectKaraoke(),
+            new AdvancedEffectLowerThird(),
             new AdvancedEffectMatrix(),
             new AdvancedEffectNeonBurst(),
             new AdvancedEffectOldMovie(),
@@ -51,6 +53,7 @@ public static class AdvancedEffectDisplayFactory
             new AdvancedEffectWave(),
             new AdvancedEffectWaveBlue(),
             new AdvancedEffectWordByWord(),
+            new AdvancedEffectWordFlip3D(),
             new AdvancedEffectWordSpacing(),
         }.OrderBy(p => p.Name).ToList();
     }

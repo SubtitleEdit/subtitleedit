@@ -33,18 +33,19 @@ public class AdvancedEffectFireflies : IAdvancedEffectDisplay
 
         Random rng = new Random(subtitles[0].Text.GetHashCode());
 
-        int w = width > 0 ? width : 1280;
-        int h = height > 0 ? height : 720;
+        // The 40 px screen-edge margins below need at least ~80 px in each direction
+        int w = width > 80 ? width : 1280;
+        int h = height > 80 ? height : 720;
 
         var globalStart = subtitles.Min(s => s.StartTime);
         var globalEnd = subtitles.Max(s => s.EndTime);
         double totalVideoMs = (globalEnd - globalStart).TotalMilliseconds;
 
-        for (int i = 0; i < FireflyCount; i++)
+        for (int i = 0; i < FireflyCount && result.Count < AdvancedEffectUtil.MaxGeneratedEvents; i++)
         {
             double currentTimeMs = rng.Next(0, 3000) + (i * 30);
 
-            while (currentTimeMs < totalVideoMs)
+            while (currentTimeMs < totalVideoMs && result.Count < AdvancedEffectUtil.MaxGeneratedEvents)
             {
                 var fly = new SubtitleLineViewModel();
 
@@ -100,7 +101,7 @@ public class AdvancedEffectFireflies : IAdvancedEffectDisplay
                 int minBlur = (int)(glowBlur * 0.6);
 
                 string tags =
-                    $"\\an5\\bord{glowBorder:F1}\\shad0\\3c&H00FFFF&\\blur{(int)glowBlur}" +
+                    $"\\an5\\bord{AdvancedEffectUtil.Tag(glowBorder)}\\shad0\\3c&H00FFFF&\\blur{(int)glowBlur}" +
                     $"\\1c{color}\\alpha&H{hexAlpha}&\\fad({fadeDur},{fadeDur})" +
                     $"\\fscx{size}\\fscy{size}" +
                     $"\\move({startX},{startY},{endX},{endY})" +
@@ -114,7 +115,7 @@ public class AdvancedEffectFireflies : IAdvancedEffectDisplay
             }
         }
 
-        result.AddRange(subtitles);
+        result.AddRange(subtitles.Select(AdvancedEffectUtil.PassThrough));
         return result;
     }
 }

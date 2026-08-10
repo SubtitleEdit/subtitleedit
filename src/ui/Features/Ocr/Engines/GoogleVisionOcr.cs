@@ -1,4 +1,5 @@
 ﻿using Nikse.SubtitleEdit.Core.Common;
+using Nikse.SubtitleEdit.UiLogic.Http;
 using Nikse.SubtitleEdit.UiLogic.Ocr;
 using Nikse.SubtitleEdit.UiLogic.Ocr.Service;
 using Nikse.SubtitleEdit.Logic;
@@ -26,7 +27,7 @@ public class GoogleVisionOcr
 
     public GoogleVisionOcr()
     {
-        _httpClient = new HttpClient();
+        _httpClient = HttpClientFactoryWithProxy.CreateHttpClientWithProxy();
         _httpClient.BaseAddress = new Uri("https://vision.googleapis.com/v1/images:annotate");
         _httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
     }

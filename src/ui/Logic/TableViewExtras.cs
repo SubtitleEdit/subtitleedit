@@ -720,6 +720,14 @@ public static class TableViewExtras
             if (scrollViewer.Offset.Y > 0.5)
             {
                 scrollViewer.Offset = new Vector(scrollViewer.Offset.X, 0);
+
+                // Realize the top rows before the caller's ScrollIntoView runs. Without this
+                // the panel is still laid out for the old position, and ScrollIntoView has to
+                // place row 0 at an offset estimated from the average row height - with
+                // variable-height rows that estimate can land below the extent origin, which
+                // shows as blank space above the first row after End followed by Home (#13428).
+                // From a realized offset of 0 there is nothing to estimate: index 0 sits at 0.
+                tableView.UpdateLayout();
             }
 
             return;
@@ -811,13 +819,17 @@ public static class TableViewExtras
     {
         Dispatcher.UIThread.Post(() =>
         {
-            if (tableView.ContainerFromItem(item) is not { } row || row.Bounds.Height <= 0)
+            var scrollViewer = tableView.GetVisualDescendants().OfType<ScrollViewer>().FirstOrDefault();
+            if (scrollViewer == null || scrollViewer.Viewport.Height <= 0)
             {
                 return;
             }
 
-            var scrollViewer = tableView.GetVisualDescendants().OfType<ScrollViewer>().FirstOrDefault();
-            if (scrollViewer == null || scrollViewer.Viewport.Height <= 0)
+            // The repair can recycle and re-realize containers, so it runs before the
+            // target row's container is looked up.
+            RepairTopAnchor(tableView, scrollViewer);
+
+            if (tableView.ContainerFromItem(item) is not { } row || row.Bounds.Height <= 0)
             {
                 return;
             }
@@ -844,6 +856,46 @@ public static class TableViewExtras
 
             scrollViewer.Offset = new Vector(offset.X, newY);
         }, DispatcherPriority.Loaded);
+    }
+
+    /// <summary>
+    /// Repairs a mis-anchored virtualizing panel: after a long jump towards the top the panel
+    /// can end up with row 0 realized at a position estimated from the average row height
+    /// instead of at the extent origin, leaving blank space above the first row while the
+    /// scrollbar sits at the top (#13428). The blank space is part of the panel's own position
+    /// estimate, so no offset change can remove it; what removes it is what users found by
+    /// hand - scrolling away and back. Do exactly that, synchronously and invisibly: move the
+    /// viewport far enough down that row 0 is recycled, then return to the top, and the panel
+    /// re-anchors index 0 at position 0.
+    /// </summary>
+    private static void RepairTopAnchor(TableView tableView, ScrollViewer scrollViewer)
+    {
+        if (tableView.ContainerFromIndex(0) is not { } first || first.Bounds.Height <= 0)
+        {
+            return;
+        }
+
+        // Row 0's arranged position inside the virtualizing panel - anything above ~0 is
+        // phantom space. Bounds is relative to the panel (the scrolled content), so the
+        // column header sitting above the rows inside the ScrollViewer does not count.
+        var gap = first.Bounds.Y;
+        if (gap < 0.5)
+        {
+            return;
+        }
+
+        var away = Math.Min(scrollViewer.Extent.Height - scrollViewer.Viewport.Height,
+            gap + first.Bounds.Height + 2 * scrollViewer.Viewport.Height);
+        if (away <= 0.5)
+        {
+            return;
+        }
+
+        var offsetX = scrollViewer.Offset.X;
+        scrollViewer.Offset = new Vector(offsetX, away);
+        tableView.UpdateLayout();
+        scrollViewer.Offset = new Vector(offsetX, 0);
+        tableView.UpdateLayout();
     }
 
     /// <summary>

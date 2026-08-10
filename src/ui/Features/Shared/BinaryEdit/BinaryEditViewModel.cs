@@ -870,7 +870,7 @@ public partial class BinaryEditViewModel : ObservableObject
                 return pcsData.Count == 0 ? null : new OcrSubtitleMkvBluRay(selectedTrack, pcsData);
             }
 
-            if (selectedTrack.CodecId.Equals("S_VOBSUB", StringComparison.OrdinalIgnoreCase))
+            if (selectedTrack.CodecId.Equals(MatroskaTrackType.VobSub, StringComparison.OrdinalIgnoreCase))
             {
                 if (selectedTrack.ContentEncodingType == 1)
                 {
@@ -880,13 +880,13 @@ public partial class BinaryEditViewModel : ObservableObject
                     return null;
                 }
 
-                var (mergedPacks, palette) = ExtractMkvVobSub(selectedTrack, matroska);
-                return mergedPacks.Count == 0 ? null : new OcrSubtitleVobSub(mergedPacks, palette);
+                var mergedPacks = MatroskaImageSubtitleExtractor.ExtractVobSub(selectedTrack, matroska, out var idx);
+                return mergedPacks.Count == 0 ? null : new OcrSubtitleVobSub(mergedPacks, idx?.Palette);
             }
 
-            if (selectedTrack.CodecId.Equals("S_DVBSUB", StringComparison.OrdinalIgnoreCase))
+            if (selectedTrack.CodecId.Equals(MatroskaTrackType.Dvb, StringComparison.OrdinalIgnoreCase))
             {
-                var (subtitle, subtitleImages) = ExtractMkvDvb(selectedTrack, matroska);
+                var (subtitle, subtitleImages) = MatroskaImageSubtitleExtractor.ExtractDvb(selectedTrack, matroska);
                 return subtitleImages.Count == 0 ? null : new OcrSubtitleMkvDvb(selectedTrack, subtitle, subtitleImages);
             }
 
@@ -901,127 +901,8 @@ public partial class BinaryEditViewModel : ObservableObject
     private static bool IsImageBasedMatroskaTrack(MatroskaTrackInfo track)
     {
         return track.CodecId.Equals(MatroskaTrackType.BluRay, StringComparison.OrdinalIgnoreCase)
-            || track.CodecId.Equals("S_VOBSUB", StringComparison.OrdinalIgnoreCase)
-            || track.CodecId.Equals("S_DVBSUB", StringComparison.OrdinalIgnoreCase);
-    }
-
-    private static (List<VobSubMergedPack> mergedPacks, List<SKColor>? palette) ExtractMkvVobSub(
-        MatroskaTrackInfo track, MatroskaFile matroska)
-    {
-        var sub = matroska.GetSubtitle(track.TrackNumber, null);
-        var idx = new Idx(track.GetCodecPrivate().SplitToLines());
-        var mergedVobSubPacks = new List<VobSubMergedPack>();
-
-        foreach (var p in sub)
-        {
-            mergedVobSubPacks.Add(new VobSubMergedPack(p.GetData(track), TimeSpan.FromMilliseconds(p.Start), 32, null));
-            mergedVobSubPacks[mergedVobSubPacks.Count - 1].EndTime = TimeSpan.FromMilliseconds(p.End);
-
-            // fix overlapping (some Handbrake versions produce overlapping timecodes)
-            if (mergedVobSubPacks.Count > 1 &&
-                mergedVobSubPacks[mergedVobSubPacks.Count - 2].EndTime > mergedVobSubPacks[mergedVobSubPacks.Count - 1].StartTime)
-            {
-                mergedVobSubPacks[mergedVobSubPacks.Count - 2].EndTime =
-                    TimeSpan.FromMilliseconds(mergedVobSubPacks[mergedVobSubPacks.Count - 1].StartTime.TotalMilliseconds - 1);
-            }
-        }
-
-        for (var i = mergedVobSubPacks.Count - 1; i >= 0; i--)
-        {
-            if (mergedVobSubPacks[i].SubPicture.SubPictureDateSize <= 2)
-            {
-                mergedVobSubPacks.RemoveAt(i);
-            }
-            else if (mergedVobSubPacks[i].SubPicture.SubPictureDateSize <= 67 &&
-                     mergedVobSubPacks[i].SubPicture.Delay.TotalMilliseconds < 35)
-            {
-                mergedVobSubPacks.RemoveAt(i);
-            }
-        }
-
-        return (mergedVobSubPacks, idx.Palette);
-    }
-
-    private static (Subtitle subtitle, List<DvbSubPes> subtitleImages) ExtractMkvDvb(
-        MatroskaTrackInfo track, MatroskaFile matroska)
-    {
-        var sub = matroska.GetSubtitle(track.TrackNumber, null);
-        var subtitleImages = new List<DvbSubPes>();
-        var subtitle = new Subtitle();
-
-        for (var index = 0; index < sub.Count; index++)
-        {
-            try
-            {
-                var msub = sub[index];
-                DvbSubPes? pes = null;
-                var data = msub.GetData(track);
-                if (data != null && data.Length > 9 && data[0] == 15 &&
-                    data[1] >= SubtitleSegment.PageCompositionSegment &&
-                    data[1] <= SubtitleSegment.DisplayDefinitionSegment)
-                {
-                    var buffer = new byte[data.Length + 3];
-                    Buffer.BlockCopy(data, 0, buffer, 2, data.Length);
-                    buffer[0] = 32;
-                    buffer[1] = 0;
-                    buffer[buffer.Length - 1] = 255;
-                    pes = new DvbSubPes(0, buffer);
-                }
-                else if (VobSubParser.IsMpeg2PackHeader(data))
-                {
-                    pes = new DvbSubPes(data, Mpeg2Header.Length);
-                }
-                else if (VobSubParser.IsPrivateStream1(data, 0))
-                {
-                    pes = new DvbSubPes(data, 0);
-                }
-                else if (data!.Length > 9 && data[0] == 32 && data[1] == 0 && data[2] == 14 && data[3] == 16)
-                {
-                    pes = new DvbSubPes(0, data);
-                }
-
-                if (pes == null && subtitle.Paragraphs.Count > 0)
-                {
-                    var last = subtitle.Paragraphs[subtitle.Paragraphs.Count - 1];
-                    if (last.DurationTotalMilliseconds < 100)
-                    {
-                        last.EndTime.TotalMilliseconds = msub.Start;
-                        if (last.DurationTotalMilliseconds > Se.Settings.General.SubtitleMaximumDisplayMilliseconds)
-                        {
-                            last.EndTime.TotalMilliseconds = last.StartTime.TotalMilliseconds + 3000;
-                        }
-                    }
-                }
-
-                if (pes != null && pes.PageCompositions != null && pes.PageCompositions.Any(p => p.Regions.Count > 0))
-                {
-                    subtitleImages.Add(pes);
-                    subtitle.Paragraphs.Add(new Paragraph(string.Empty, msub.Start, msub.End));
-                }
-            }
-            catch
-            {
-                // continue
-            }
-        }
-
-        for (var index = 0; index < subtitle.Paragraphs.Count; index++)
-        {
-            var p = subtitle.Paragraphs[index];
-            if (p.DurationTotalMilliseconds < 200)
-            {
-                p.EndTime.TotalMilliseconds = p.StartTime.TotalMilliseconds + 3000;
-            }
-
-            var next = subtitle.GetParagraphOrDefault(index + 1);
-            if (next != null && next.StartTime.TotalMilliseconds < p.EndTime.TotalMilliseconds)
-            {
-                p.EndTime.TotalMilliseconds = next.StartTime.TotalMilliseconds -
-                                              Se.Settings.General.MinimumBetweenLines.GetMilliseconds();
-            }
-        }
-
-        return (subtitle, subtitleImages);
+            || track.CodecId.Equals(MatroskaTrackType.VobSub, StringComparison.OrdinalIgnoreCase)
+            || track.CodecId.Equals(MatroskaTrackType.Dvb, StringComparison.OrdinalIgnoreCase);
     }
 
     private string? TryGetVideoFileName(string fileName)
@@ -1056,6 +937,12 @@ public partial class BinaryEditViewModel : ObservableObject
     private async Task ExportBdnXml()
     {
         await DoExport(new ExportHandlerBdnXml(), string.Empty, false);
+    }
+
+    [RelayCommand]
+    private async Task ExportBdnXml8Bit()
+    {
+        await DoExport(new ExportHandlerBdnXml(true), string.Empty, false);
     }
 
     [RelayCommand]

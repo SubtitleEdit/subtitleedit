@@ -95,16 +95,31 @@ public class FixNetflixErrorsWindow : Window
     private Border MakeSettingsView(FixNetflixErrorsViewModel vm)
     {
         _comboBoxLanguage = UiUtil.MakeComboBox(vm.Languages, vm, nameof(vm.SelectedLanguage));
-        var panelTop = new StackPanel
+        var panelLanguage = new StackPanel
         {
             Orientation = Orientation.Horizontal,
             VerticalAlignment = VerticalAlignment.Center,
             HorizontalAlignment = HorizontalAlignment.Left,
-            Margin = new Thickness(8),
             Children =
             {
                 UiUtil.MakeTextBlock(Se.Language.General.Language).WithMarginRight(5),
                 _comboBoxLanguage
+            }
+        };
+
+        // Netflix allows higher reading speeds for SDH and requires lower ones for
+        // children's programs, so both change which limits the checks run against.
+        var panelTop = new StackPanel
+        {
+            Orientation = Orientation.Vertical,
+            HorizontalAlignment = HorizontalAlignment.Left,
+            Margin = new Thickness(8),
+            Spacing = 4,
+            Children =
+            {
+                panelLanguage,
+                UiUtil.MakeCheckBox(Se.Language.Tools.NetflixCheckAndFix.ChildrensProgram, vm, nameof(vm.IsChildrenProgram)),
+                UiUtil.MakeCheckBox(Se.Language.Tools.NetflixCheckAndFix.Sdh, vm, nameof(vm.IsSdh)),
             }
         };
 

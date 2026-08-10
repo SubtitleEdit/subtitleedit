@@ -19,6 +19,7 @@ using Optris.Icons.Avalonia.FontAwesome;
 using Optris.Icons.Avalonia.MaterialDesign;
 using System;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using Nikse.SubtitleEdit.UiLogic.SpellCheck;
 
@@ -38,6 +39,10 @@ namespace Nikse.SubtitleEdit
             // Must run before any SkiaSharp.HarfBuzz use so the bundled libHarfBuzzSharp
             // deep-binds its own hb_* symbols and doesn't crash the export shaper on Linux (#11864).
             Nikse.SubtitleEdit.UiLogic.HarfBuzzNativeFix.Apply();
+
+            // Must run before Avalonia initializes its X11 backend (which reads these
+            // environment variables both from managed code and through native getenv).
+            ApplyLinuxDeadKeyInputFix();
 
             try
             {
@@ -165,7 +170,15 @@ namespace Nikse.SubtitleEdit
                 appBuilder = appBuilder
                     .With(new X11PlatformOptions
                     {
-                        RenderingMode = new[] { X11RenderingMode.Glx, X11RenderingMode.Egl }
+                        RenderingMode = new[] { X11RenderingMode.Glx, X11RenderingMode.Egl },
+
+                        // Required for dead-key composition on Linux: without it Avalonia opens
+                        // neither an input method nor XIM for European locales, so dead keys type
+                        // nothing (issues #13333, #12334, #10618). Which input path is then used is
+                        // steered by ApplyLinuxDeadKeyInputFix above: non-CJK locales get XIM with
+                        // libX11's local compose (reliable), CJK locales keep the ibus/fcitx D-Bus
+                        // route. Users can still opt out with AVALONIA_IM_MODULE=none.
+                        EnableIme = true,
                     })
                     .With(new AvaloniaNativePlatformOptions
                     {
@@ -226,6 +239,49 @@ namespace Nikse.SubtitleEdit
                 Se.LogError(exception, "Critical error during application startup");
                 Environment.Exit(1);
             }
+        }
+
+        [DllImport("libc", SetLastError = true)]
+        private static extern int setenv(string name, string value, int overwrite);
+
+        /// <summary>
+        /// Makes dead-key accents (á, ê, õ, ...) work on Linux. Avalonia's ibus D-Bus client
+        /// (enabled via EnableIme below) races key events against ibus and loses: the dead key
+        /// and the following letter are both swallowed before they reach the app, so no app-level
+        /// fallback can recover them (issues #13333, #12334, #10618; verified against a
+        /// Xvfb + ibus test rig - see PR). Instead, for non-CJK locales, steer Avalonia to XIM
+        /// with libX11's built-in "local" input method, which composes dead keys client-side and
+        /// needs no input-method daemon at all. CJK locales are left untouched so Chinese/
+        /// Japanese/Korean input keeps the ibus/fcitx D-Bus route, and setting AVALONIA_IM_MODULE
+        /// to anything skips this entirely.
+        /// </summary>
+        private static void ApplyLinuxDeadKeyInputFix()
+        {
+            if (!OperatingSystem.IsLinux())
+            {
+                return;
+            }
+
+            if (!string.IsNullOrEmpty(Environment.GetEnvironmentVariable("AVALONIA_IM_MODULE")))
+            {
+                return; // explicit user choice wins
+            }
+
+            var lang = Environment.GetEnvironmentVariable("LANG") ?? string.Empty;
+            if (lang.Contains("zh") || lang.Contains("ja") || lang.Contains("ko"))
+            {
+                return; // keep the real input method for CJK text entry
+            }
+
+            // Avalonia picks its input path from the managed environment: clearing the IM-module
+            // variables makes its D-Bus IME detection fall through, and "@im=local" makes its
+            // ShouldUseXim check pass. libX11 reads XMODIFIERS through native getenv when XOpenIM
+            // runs, and managed SetEnvironmentVariable never reaches the native environment, so
+            // the value must also be set via libc setenv - before Avalonia loads libX11.
+            Environment.SetEnvironmentVariable("GTK_IM_MODULE", null);
+            Environment.SetEnvironmentVariable("QT_IM_MODULE", null);
+            Environment.SetEnvironmentVariable("XMODIFIERS", "@im=local");
+            setenv("XMODIFIERS", "@im=local", 1);
         }
 
         private static void ConfigureApplication(AppBuilder b, ClassicDesktopStyleApplicationLifetime lifetime)

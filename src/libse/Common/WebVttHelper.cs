@@ -23,6 +23,8 @@ namespace Nikse.SubtitleEdit.Core.Common
         private static readonly Regex PropertiesRegex = new Regex("{[ \\.\\p{L}\\d:#\\s,_;:\\-\\(\\)]+}", RegexOptions.Compiled);
 #endif
 
+        private static readonly Regex CueClassRegex = new Regex(@"<c\.[\.a-zA-Z\d#_-]+>", RegexOptions.Compiled);
+
         public static List<WebVttStyle> GetStyles(string header)
         {
             if (string.IsNullOrEmpty(header))
@@ -148,6 +150,10 @@ namespace Nikse.SubtitleEdit.Core.Common
             {
                 webVttStyle.FontName = value;
             }
+            else if (name == "font-size")
+            {
+                SetFontSize(webVttStyle, value);
+            }
             else if (name == "font-style")
             {
                 SetFontStyle(webVttStyle, value);
@@ -255,6 +261,26 @@ namespace Nikse.SubtitleEdit.Core.Common
             }
         }
 
+        /// <summary>
+        /// Reads a <c>font-size</c> declaration. Only absolute pixel sizes are taken - a relative
+        /// size (em/rem/%/"larger") has no fixed pixel value, and <see cref="WebVttStyle.FontSize"/>
+        /// has nothing to express it with, so those are left unset rather than guessed at.
+        /// </summary>
+        private static void SetFontSize(WebVttStyle webVttStyle, string value)
+        {
+            var s = value.Trim();
+            if (s.EndsWith("px", StringComparison.OrdinalIgnoreCase))
+            {
+                s = s.Substring(0, s.Length - 2).Trim();
+            }
+
+            // Anything left with a unit on it ("1.5em", "120%") fails to parse and is skipped.
+            if (decimal.TryParse(s, NumberStyles.Number, CultureInfo.InvariantCulture, out var number) && number > 0)
+            {
+                webVttStyle.FontSize = number;
+            }
+        }
+
         private static void SetFontStyle(WebVttStyle webVttStyle, string value)
         {
             if (value == "italic" || value == "oblique")
@@ -295,7 +321,13 @@ namespace Nikse.SubtitleEdit.Core.Common
                 return;
             }
 
-            if (int.TryParse(arr[1].Replace("px", string.Empty), out var number))
+            // CSS lengths may be fractional ("1.5px"), and the writer round-trips whatever the
+            // user picked, so parse invariant decimals rather than integers only.
+            if (decimal.TryParse(
+                    arr[1].Replace("px", string.Empty),
+                    NumberStyles.Number,
+                    CultureInfo.InvariantCulture,
+                    out var number))
             {
                 webVttStyle.ShadowColor = color;
                 webVttStyle.ShadowWidth = number;
@@ -407,9 +439,12 @@ namespace Nikse.SubtitleEdit.Core.Common
 
             if (style.ShadowColor.HasValue && style.ShadowWidth.HasValue && style.ShadowWidth > 0)
             {
+                // "#101010 3px" - one space, no space before "px", which is what SetTextShadow
+                // reads back. A missing $ used to emit the interpolation itself here, so the
+                // shadow was written as unparsable CSS and lost on the next read.
                 var colorString = Utilities.ColorToHexWithTransparency(style.ShadowColor.Value);
-                var widthString = "{style.ShadowWidth.Value.ToString(CultureInfo.InvariantCulture)} px";
-                sb.Append($"text-shadow: {colorString} {widthString}");
+                var widthString = style.ShadowWidth.Value.ToString(CultureInfo.InvariantCulture);
+                sb.Append($"text-shadow: {colorString} {widthString}px; ");
             }
 
             return sb.ToString().TrimEnd(' ', ';');
@@ -522,19 +557,30 @@ namespace Nikse.SubtitleEdit.Core.Common
 
         public static List<string> GetParagraphStyles(Paragraph paragraph)
         {
+            return paragraph == null ? new List<string>() : GetParagraphStyles(paragraph.Text);
+        }
+
+        /// <summary>
+        /// The cue class names used in a cue text ("&lt;c.loud.red&gt;" gives ".loud" and ".red"),
+        /// in the order they appear and without duplicates.
+        /// </summary>
+        public static List<string> GetParagraphStyles(string text)
+        {
             var list = new List<string>();
-            if (paragraph == null || string.IsNullOrEmpty(paragraph.Text))
+            if (string.IsNullOrEmpty(text))
             {
                 return list;
             }
 
-            var regex = new Regex(@"<c\.[\.a-zA-Z\d#_-]+>");
-            foreach (Match match in regex.Matches(paragraph.Text))
+            foreach (Match match in CueClassRegex.Matches(text))
             {
                 var styles = match.Value.Remove(0, 3).Trim('>', ' ').Split('.');
                 foreach (var styleName in styles)
                 {
-                    if (!string.IsNullOrEmpty(styleName) && !list.Contains(styleName))
+                    // The list holds the names with their leading dot, so the duplicate check
+                    // has to use the same spelling - without it a class used by two separate
+                    // "<c.x>" tags in one cue was listed twice.
+                    if (!string.IsNullOrEmpty(styleName) && !list.Contains("." + styleName))
                     {
                         list.Add("." + styleName);
                     }
@@ -552,12 +598,11 @@ namespace Nikse.SubtitleEdit.Core.Common
             }
 
             var text = p.Text;
-            var regex = new Regex(@"<c\.[\.a-zA-Z\d#_-]+>");
-            var match = regex.Match(text);
+            var match = CueClassRegex.Match(text);
             while (match.Success)
             {
                 text = text.Remove(match.Index, match.Value.Length);
-                match = regex.Match(text);
+                match = CueClassRegex.Match(text);
             }
 
             text = text.Replace("</c>", string.Empty);

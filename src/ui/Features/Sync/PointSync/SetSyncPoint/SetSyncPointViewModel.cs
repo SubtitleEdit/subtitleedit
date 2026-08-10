@@ -16,6 +16,7 @@ using Nikse.SubtitleEdit.Logic.VideoPlayers;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Nikse.SubtitleEdit.UiLogic.Media;
@@ -27,6 +28,14 @@ public partial class SetSyncPointViewModel : ObservableObject
     [ObservableProperty] private ObservableCollection<SubtitleDisplayItem> _paragraphs;
     [ObservableProperty] private int _selectedParagraphIndex = -1;
     [ObservableProperty] private bool _isAudioVisualizerVisible;
+
+    /// <summary>
+    /// Whether the dialog shows its video half at all. With no video there is nothing to scrub, so
+    /// the player, the waveform and the playback buttons come off and the dialog is just the line
+    /// picker and the sync point time code (issue #13341).
+    /// </summary>
+    [ObservableProperty] private bool _isVideoVisible;
+
     [ObservableProperty] private string _title;
     [ObservableProperty] private string _videoInfo;
     [ObservableProperty] private TimeSpan _syncPointTimeCode;
@@ -34,12 +43,21 @@ public partial class SetSyncPointViewModel : ObservableObject
     public Window? Window { get; set; }
     public bool OkPressed { get; private set; }
     public double SyncPosition { get; private set; }
+
+    /// <summary>
+    /// The video in use when the dialog closed - either the one passed in, one found next to the
+    /// subtitle file, or one the user opened here. The caller adopts it so the next sync point
+    /// (and the main window) reuse it.
+    /// </summary>
+    public string VideoFileName { get; private set; }
+
     public VideoPlayerControl VideoPlayerControl { get; set; }
     public AudioVisualizer AudioVisualizer { get; set; }
     public ComboBox ComboBoxSubtitle { get; set; }
     public TimeCodeUpDown TimeCodeUpDownSyncPoint { get; set; }
 
     private readonly IWindowService _windowService;
+    private readonly IFileHelper _fileHelper;
 
     private string? _videoFileName;
     private DispatcherTimer _positionTimer = new DispatcherTimer();
@@ -48,12 +66,14 @@ public partial class SetSyncPointViewModel : ObservableObject
     private bool _updateTimeCodeFromVideo;
     private bool _timeCodeUpDownFocused;
 
-    public SetSyncPointViewModel(IWindowService windowService)
+    public SetSyncPointViewModel(IWindowService windowService, IFileHelper fileHelper)
     {
         _windowService = windowService;
+        _fileHelper = fileHelper;
 
         Title = string.Empty;
         VideoInfo = string.Empty;
+        VideoFileName = string.Empty;
         _videoFileName = string.Empty;
         VideoPlayerControl = new VideoPlayerControl(new EmptyVideoPlayer());
         AudioVisualizer = new AudioVisualizer();
@@ -72,19 +92,50 @@ public partial class SetSyncPointViewModel : ObservableObject
         string? subtitleFileName,
         AudioVisualizer? audioVisualizer)
     {
-        SetVideoInFo(videoFileName);
         Paragraphs = new ObservableCollection<SubtitleDisplayItem>(paragraphs.Select(p => new SubtitleDisplayItem(p)));
-        _videoFileName = videoFileName;
         _subtitleLines = paragraphs;
+
+        // Only a video the caller already had, or one the user picks here, is reported back - a
+        // video merely found on disk must not travel up and open in the main window, which would
+        // walk over the "auto open video file" setting.
+        VideoFileName = videoFileName ?? string.Empty;
+
+        // No video handed down from the main window - look for one next to the subtitle file, the
+        // way the old "Set sync point" did. Failing that the dialog still works: the time code can
+        // be typed, and "Open video file..." is there to pick one.
+        if (string.IsNullOrEmpty(videoFileName) &&
+            !string.IsNullOrEmpty(subtitleFileName) &&
+            FindVideoFileName.TryFindVideoFileName(subtitleFileName, out var foundVideoFileName))
+        {
+            videoFileName = foundVideoFileName;
+        }
+
+        _videoFileName = videoFileName;
+        IsVideoVisible = HasVideo;
+        SetVideoInFo(videoFileName);
+
+        // Seed the sync point with the line's own start time - a video, when there is one, takes
+        // over from here (OnLoaded). Without this the box would sit at 00:00:00.000 with no video,
+        // which reads as a broken dialog (issue #13341).
+        if (selectedSubtitle != null)
+        {
+            SyncPointTimeCode = selectedSubtitle.StartTime;
+        }
+        else if (paragraphs.Count > 0)
+        {
+            SyncPointTimeCode = paragraphs[0].StartTime;
+        }
 
         Dispatcher.UIThread.Post(() =>
         {
-            if (!string.IsNullOrEmpty(videoFileName))
+            if (!string.IsNullOrEmpty(_videoFileName))
             {
-                _ = VideoPlayerControl.Open(videoFileName);
+                _ = VideoPlayerControl.Open(_videoFileName);
             }
 
-            if (audioVisualizer != null)
+            // An audio visualizer without peaks is just an empty box - only show it when the main
+            // window actually has a waveform to lend us.
+            if (audioVisualizer?.WavePeaks != null)
             {
                 AudioVisualizer.WavePeaks = audioVisualizer.WavePeaks;
                 IsAudioVisualizerVisible = true;
@@ -139,8 +190,10 @@ public partial class SetSyncPointViewModel : ObservableObject
 
             // Follow the video position - but leave the time code alone while the user is typing
             // in it (a running video moves on its own, so then the box should still follow).
+            // With no video there is nothing to follow and the box is the only input, so the
+            // player must not be allowed to reset it to zero (issue #13341).
             var isEditingTimeCode = TimeCodeUpDownSyncPoint.IsKeyboardFocusWithin && !VideoPlayerControl.IsPlaying;
-            if (!isEditingTimeCode)
+            if (!isEditingTimeCode && HasVideo)
             {
                 UpdateTimeCodeFromVideoPosition();
             }
@@ -194,13 +247,31 @@ public partial class SetSyncPointViewModel : ObservableObject
         }
     }
 
+    private bool HasVideo => !string.IsNullOrEmpty(_videoFileName);
+
+    /// <summary>
+    /// Where the sync point currently sits. The video owns this while one is loaded; otherwise
+    /// the time code box does, so the nudge buttons keep working without a video.
+    /// </summary>
+    private double CurrentPositionSeconds => HasVideo
+        ? VideoPlayerControl.Position
+        : SyncPointTimeCode.TotalSeconds;
+
     /// <summary>
     /// Single entry point for moving the video - keeps the sync point time code box in sync
     /// with the video position, also while the box has focus (where the timer leaves it alone).
+    /// With no video the box is authoritative, so it is set directly instead.
     /// </summary>
     private void SetVideoPosition(double seconds)
     {
-        VideoPlayerControl.Position = Math.Max(0, seconds);
+        seconds = Math.Max(0, seconds);
+        if (!HasVideo)
+        {
+            SyncPointTimeCode = TimeSpan.FromSeconds(seconds);
+            return;
+        }
+
+        VideoPlayerControl.Position = seconds;
         UpdateTimeCodeFromVideoPosition();
         _updateAudioVisualizer = true;
     }
@@ -220,7 +291,7 @@ public partial class SetSyncPointViewModel : ObservableObject
 
     partial void OnSyncPointTimeCodeChanged(TimeSpan value)
     {
-        if (_updateTimeCodeFromVideo)
+        if (_updateTimeCodeFromVideo || !HasVideo)
         {
             return;
         }
@@ -233,30 +304,35 @@ public partial class SetSyncPointViewModel : ObservableObject
     [RelayCommand]
     private void LeftOneSecondBack()
     {
-        SetVideoPosition(VideoPlayerControl.Position - 1);
+        SetVideoPosition(CurrentPositionSeconds - 1);
     }
 
     [RelayCommand]
     private void LeftOneSecondForward()
     {
-        SetVideoPosition(VideoPlayerControl.Position + 1);
+        SetVideoPosition(CurrentPositionSeconds + 1);
     }
 
     [RelayCommand]
     private void LeftHalfSecondBack()
     {
-        SetVideoPosition(VideoPlayerControl.Position - 0.5);
+        SetVideoPosition(CurrentPositionSeconds - 0.5);
     }
 
     [RelayCommand]
     private void LeftHalfSecondForward()
     {
-        SetVideoPosition(VideoPlayerControl.Position + 0.5);
+        SetVideoPosition(CurrentPositionSeconds + 0.5);
     }
 
     [RelayCommand]
     private async Task PlayTwoSecondsAndBackLeft()
     {
+        if (!HasVideo)
+        {
+            return;
+        }
+
         await PlayAndBack(VideoPlayerControl, 2000);
         UpdateTimeCodeFromVideoPosition();
         _updateAudioVisualizer = true;
@@ -265,6 +341,44 @@ public partial class SetSyncPointViewModel : ObservableObject
     private void CenterWaveform(VideoPlayerControl videoPlayerControl, AudioVisualizer audioVisualizer)
     {
         audioVisualizer.StartPositionSeconds = Math.Max(0, videoPlayerControl.Position - 0.5);
+    }
+
+    /// <summary>
+    /// Opens a video from inside the dialog, so entering point sync without one is not a dead end
+    /// (issue #13341). The caller adopts <see cref="VideoFileName"/> when the dialog closes.
+    /// </summary>
+    [RelayCommand]
+    private async Task OpenVideoFile()
+    {
+        if (Window == null)
+        {
+            return;
+        }
+
+        var fileName = await _fileHelper.PickOpenVideoFile(Window, Se.Language.General.OpenVideoFileTitle);
+        if (string.IsNullOrEmpty(fileName) || !File.Exists(fileName))
+        {
+            return;
+        }
+
+        var syncPoint = SyncPointTimeCode;
+        VideoFileName = fileName;
+        SetVideoInFo(fileName);
+
+        // Open at the time code the user already had, rather than snapping the sync point back to
+        // the start of the newly opened file. It has to be passed to Open: the position slider is
+        // clamped to Duration, which is only polled once the player is running, so seeking right
+        // after the open would land at zero.
+        await VideoPlayerControl.Open(fileName, Math.Max(0, syncPoint.TotalSeconds));
+        await VideoPlayerControl.WaitForPlayersReadyAsync();
+
+        // Only now does the player own the sync point - handing it over any earlier would let the
+        // timer copy the still-zero position into the time code while the file is loading.
+        _videoFileName = fileName;
+        IsVideoVisible = true;
+        UpdateTimeCodeFromVideoPosition();
+        CenterWaveform(VideoPlayerControl, AudioVisualizer);
+        _updateAudioVisualizer = true;
     }
 
     [RelayCommand]
@@ -294,7 +408,9 @@ public partial class SetSyncPointViewModel : ObservableObject
     [RelayCommand]
     private void Ok()
     {
-        SyncPosition = VideoPlayerControl.Position;
+        // The time code box is the result, not the player - the player is only one of the ways to
+        // drive it, and there may not be one at all (issue #13341).
+        SyncPosition = Math.Max(0, SyncPointTimeCode.TotalSeconds);
         OkPressed = true;
         Window?.Close();
     }
@@ -352,12 +468,12 @@ public partial class SetSyncPointViewModel : ObservableObject
     {
         UiUtil.RestoreWindowPosition(Window);
 
-        if (string.IsNullOrEmpty(_videoFileName))
+        // Only the video needs waiting for - the sync point still has to be seeded from the
+        // selected line when there is none, or it would stay at zero (issue #13341).
+        if (HasVideo)
         {
-            return;
+            await VideoPlayerControl.WaitForPlayersReadyAsync();
         }
-
-        await VideoPlayerControl.WaitForPlayersReadyAsync();
 
         Dispatcher.UIThread.Post(() =>
         {
@@ -386,27 +502,30 @@ public partial class SetSyncPointViewModel : ObservableObject
         if (e.Key == Key.Space || (e.Key == Key.P && e.KeyModifiers.HasFlag(KeyModifiers.Control)))
         {
             e.Handled = true;
-            VideoPlayerControl.TogglePlayPause();
+            if (HasVideo)
+            {
+                VideoPlayerControl.TogglePlayPause();
+            }
         }
         else if (e.Key == Key.Left && e.KeyModifiers.HasFlag(KeyModifiers.Control))
         {
             e.Handled = true;
-            SetVideoPosition(VideoPlayerControl.Position - 1);
+            SetVideoPosition(CurrentPositionSeconds - 1);
         }
         else if (e.Key == Key.Right && e.KeyModifiers.HasFlag(KeyModifiers.Control))
         {
             e.Handled = true;
-            SetVideoPosition(VideoPlayerControl.Position + 1);
+            SetVideoPosition(CurrentPositionSeconds + 1);
         }
         else if (e.Key == Key.Left && e.KeyModifiers.HasFlag(KeyModifiers.Alt))
         {
             e.Handled = true;
-            SetVideoPosition(VideoPlayerControl.Position - 0.5);
+            SetVideoPosition(CurrentPositionSeconds - 0.5);
         }
         else if (e.Key == Key.Right && e.KeyModifiers.HasFlag(KeyModifiers.Alt))
         {
             e.Handled = true;
-            SetVideoPosition(VideoPlayerControl.Position + 0.5);
+            SetVideoPosition(CurrentPositionSeconds + 0.5);
         }
     }
 

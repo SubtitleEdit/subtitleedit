@@ -19,6 +19,38 @@ namespace Nikse.SubtitleEdit.Core.Forms
         private IList<string> _interjections;
         private IList<string> _interjectionsSkipIfStartsWith;
 
+        // RemoveLineIfAllUppercase runs once per subtitle line and rebuilt this set from the
+        // settings every time. Cached against the list instance it was built from, so a
+        // settings change still takes effect.
+        private HashSet<string> _uppercaseWhitelist;
+        private List<string> _uppercaseWhitelistSource;
+
+        private HashSet<string> GetUppercaseWhitelist()
+        {
+            var source = Settings.UppercaseWhitelist;
+            if (_uppercaseWhitelist != null && ReferenceEquals(_uppercaseWhitelistSource, source))
+            {
+                return _uppercaseWhitelist;
+            }
+
+            var whitelist = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+            if (source != null)
+            {
+                foreach (var w in source)
+                {
+                    var trimmedWord = w.Trim();
+                    if (trimmedWord.Length > 0)
+                    {
+                        whitelist.Add(trimmedWord);
+                    }
+                }
+            }
+
+            _uppercaseWhitelistSource = source;
+            _uppercaseWhitelist = whitelist;
+            return whitelist;
+        }
+
         public RemoveTextForHI(RemoveTextForHISettings removeTextForHISettings)
         {
             Settings = removeTextForHISettings;
@@ -101,7 +133,7 @@ namespace Nikse.SubtitleEdit.Core.Forms
             // House 7x01 line 52: and she would like you to do three things:
             // Okay or remove???
             var noTagText = HtmlUtil.RemoveHtmlTags(text);
-            if (noTagText.Length > 10 && noTagText.IndexOf(':') == noTagText.Length - 1 && noTagText != noTagText.ToUpperInvariant())
+            if (noTagText.Length > 10 && noTagText.IndexOf(':') == noTagText.Length - 1 && !Utilities.IsAllUppercase(noTagText))
             {
                 return preAssTag + text;
             }
@@ -135,7 +167,7 @@ namespace Nikse.SubtitleEdit.Core.Forms
                 {
                     var pre = line.Substring(0, indexOfColon);
                     var noTagPre = HtmlUtil.RemoveHtmlTags(pre, true);
-                    if (Settings.RemoveTextBeforeColonOnlyUppercase && noTagPre != noTagPre.ToUpperInvariant())
+                    if (Settings.RemoveTextBeforeColonOnlyUppercase && !Utilities.IsAllUppercase(noTagPre))
                     {
                         var remove = true;
                         newText = RemovePartialBeforeColon(line, indexOfColon, newText, count, ref removedInFirstLine, ref removedInSecondLine, ref remove);
@@ -151,7 +183,7 @@ namespace Nikse.SubtitleEdit.Core.Forms
                                 if (indexOf > 0 && indexOf < indexOfColon)
                                 {
                                     var toRemove = s.Substring(indexOf + 1, indexOfColon - indexOf).Trim();
-                                    if (toRemove.Length > 1 && toRemove == toRemove.ToUpperInvariant())
+                                    if (toRemove.Length > 1 && Utilities.IsAllUppercase(toRemove))
                                     {
                                         s = s.Remove(indexOf + 1, indexOfColon - indexOf);
                                         s = s.Insert(indexOf + 1, " -");
@@ -176,7 +208,7 @@ namespace Nikse.SubtitleEdit.Core.Forms
                         {
                             if (count == 1 && newText.Length > 1 && removedInFirstLine &&
                                 !".?!♪♫".Contains(newTextNoHtml[newTextNoHtml.Length - 1]) && newText.LineEndsWithHtmlTag(true) &&
-                                line != line.ToUpperInvariant())
+                                !Utilities.IsAllUppercase(line))
                             {
                                 newText += Environment.NewLine;
                                 if (pre.Contains("<i>") && line.Contains("</i>") && !line.Contains("<i>"))
@@ -206,7 +238,7 @@ namespace Nikse.SubtitleEdit.Core.Forms
                             }
                             else if (count == 1 && newTextNoHtml.Length > 1 && indexOfColon > 15 && line.Substring(0, indexOfColon).Contains(' ') &&
                                      !".?!♪♫".Contains(newTextNoHtml[newTextNoHtml.Length - 1]) && newText.LineEndsWithHtmlTag(true) &&
-                                     line != line.ToUpperInvariant())
+                                     !Utilities.IsAllUppercase(line))
                             {
                                 newText += Environment.NewLine;
                                 if (pre.Contains("<i>") && line.Contains("</i>") && !line.Contains("<i>"))
@@ -300,13 +332,13 @@ namespace Nikse.SubtitleEdit.Core.Forms
                                                 content = content.Remove(0, "</b>".Length);
                                             }
 
-                                            if (count == 0 && !string.IsNullOrEmpty(content) && content[0].ToString() != content[0].ToString().ToUpperInvariant())
+                                            if (count == 0 && !string.IsNullOrEmpty(content) && char.ToUpperInvariant(content[0]) != content[0])
                                             {
-                                                content = content[0].ToString().ToUpperInvariant() + content.Remove(0, 1);
+                                                content = char.ToUpperInvariant(content[0]) + content.Remove(0, 1);
                                             }
-                                            else if (count == 1 && !string.IsNullOrEmpty(content) && content[0].ToString() != content[0].ToString().ToUpperInvariant())
+                                            else if (count == 1 && !string.IsNullOrEmpty(content) && char.ToUpperInvariant(content[0]) != content[0])
                                             {
-                                                content = content[0].ToString().ToUpperInvariant() + content.Remove(0, 1);
+                                                content = char.ToUpperInvariant(content[0]) + content.Remove(0, 1);
                                             }
 
                                             newText += Environment.NewLine;
@@ -400,7 +432,7 @@ namespace Nikse.SubtitleEdit.Core.Forms
                                             else
                                             {
                                                 var toColonWord = line.Substring(0, indexOfColon);
-                                                if (toColonWord == toColonWord.ToUpperInvariant() && line != line.ToUpperInvariant())
+                                                if (Utilities.IsAllUppercase(toColonWord) && !Utilities.IsAllUppercase(line))
                                                 {
                                                     indexOf = indexOfColon;
                                                 }
@@ -459,7 +491,7 @@ namespace Nikse.SubtitleEdit.Core.Forms
                                     var colonIndex = s2.IndexOf(':');
                                     var start = s2.Substring(0, colonIndex);
 
-                                    if (!Settings.RemoveTextBeforeColonOnlyUppercase || start == start.ToUpperInvariant())
+                                    if (!Settings.RemoveTextBeforeColonOnlyUppercase || Utilities.IsAllUppercase(start))
                                     {
                                         var endIndex = start.LastIndexOfAny(endChars);
                                         if (colonIndex > 0 && colonIndex < s2.Length - 1)
@@ -760,7 +792,7 @@ namespace Nikse.SubtitleEdit.Core.Forms
                     var partialRemove = false;
                     if (Settings.RemoveTextBeforeColonOnlyUppercase)
                     {
-                        if (s == s.ToUpperInvariant())
+                        if (Utilities.IsAllUppercase(s))
                         {
                             partialRemove = true;
                         }
@@ -1550,18 +1582,7 @@ namespace Nikse.SubtitleEdit.Core.Forms
                 return text;
             }
 
-            var whitelist = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
-            if (Settings.UppercaseWhitelist != null)
-            {
-                foreach (var w in Settings.UppercaseWhitelist)
-                {
-                    var trimmedWord = w.Trim();
-                    if (trimmedWord.Length > 0)
-                    {
-                        whitelist.Add(trimmedWord);
-                    }
-                }
-            }
+            var whitelist = GetUppercaseWhitelist();
 
             var sb = new StringBuilder();
             char[] endTrimChars = { '.', '!', '?', ':' };
@@ -1569,7 +1590,7 @@ namespace Nikse.SubtitleEdit.Core.Forms
             foreach (var line in text.SplitToLines())
             {
                 var lineNoHtml = HtmlUtil.RemoveHtmlTags(line, true);
-                if (lineNoHtml == lineNoHtml.ToUpperInvariant() && lineNoHtml != lineNoHtml.ToLowerInvariant())
+                if (Utilities.IsAllUppercase(lineNoHtml) && Utilities.HasUppercase(lineNoHtml))
                 {
                     var temp = lineNoHtml.TrimEnd(endTrimChars).Trim().Trim(trimChars);
                     // Single-letter lines (e.g. "I") are always kept; otherwise keep only the

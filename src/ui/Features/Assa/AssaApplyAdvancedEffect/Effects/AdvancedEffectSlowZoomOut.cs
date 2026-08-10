@@ -6,8 +6,8 @@ using System.Collections.Generic;
 namespace Nikse.SubtitleEdit.Features.Assa.AssaApplyAdvancedEffect.Effects;
 
 /// <summary>
-/// Slow zoom-out: each subtitle starts at a large scale (derived from the style font size)
-/// and smoothly eases down to 100% over the full subtitle duration.
+/// Slow zoom-out: each subtitle starts at 110% scale and smoothly eases down to 100%
+/// over the full subtitle duration.
 /// </summary>
 public class AdvancedEffectSlowZoomOut : IAdvancedEffectDisplay
 {

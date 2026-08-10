@@ -314,6 +314,10 @@ public class InitWaveform
             // on the control's initial flyout, which this replaces on every layout rebuild.
             flyout.Closed += (_, _) => vm.RestoreFocusIfLost();
 
+            // With the video player undocked (and topmost), the docked waveform's context
+            // menu could still be covered by it (#13325).
+            WindowService.SuspendUndockedTopmostWhileOpen(flyout);
+
             vm.AudioVisualizer.MenuFlyout = flyout;
         }
 
@@ -391,7 +395,9 @@ public class InitWaveform
         var settingTextPlay = GetToolbarSettingFor(SeWaveformToolbarItemType.TextPlay);
         var buttonTextPlay = new NonSpaceButton
         {
-            Content = Se.Language.General.Play,
+            // "Play current" like SE 4's Translate tab - "Play" alone reads as the plain
+            // play/pause button next to it, which is a different action.
+            Content = Se.Language.General.PlayCurrent,
             Margin = new Thickness(settingTextPlay.LeftMargin, 0, settingTextPlay.RightMargin, 0),
             FontSize = settingTextPlay.FontSize,
             VerticalAlignment = VerticalAlignment.Center,

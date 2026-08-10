@@ -31,8 +31,9 @@ namespace Nikse.SubtitleEdit.Core.Forms
         {
             OnlyIfInSeparateLine = Configuration.Settings.RemoveTextForHearingImpaired.RemoveTextBetweenOnlySeparateLines;
             RemoveIfAllUppercase = Configuration.Settings.RemoveTextForHearingImpaired.RemoveIfAllUppercase;
-            UppercaseWhitelist = new List<string>();
-            foreach (var item in (Configuration.Settings.RemoveTextForHearingImpaired.RemoveIfAllUppercaseWhitelist ?? string.Empty).Split(new[] { ',', ';' }, StringSplitOptions.RemoveEmptyEntries))
+            var uppercaseWhitelistItems = (Configuration.Settings.RemoveTextForHearingImpaired.RemoveIfAllUppercaseWhitelist ?? string.Empty).Split(new[] { ',', ';' }, StringSplitOptions.RemoveEmptyEntries);
+            UppercaseWhitelist = new List<string>(uppercaseWhitelistItems.Length);
+            foreach (var item in uppercaseWhitelistItems)
             {
                 UppercaseWhitelist.Add(item.Trim());
             }
@@ -40,8 +41,9 @@ namespace Nikse.SubtitleEdit.Core.Forms
             RemoveTextBeforeColonOnlyUppercase = Configuration.Settings.RemoveTextForHearingImpaired.RemoveTextBeforeColonOnlyIfUppercase;
             ColonSeparateLine = Configuration.Settings.RemoveTextForHearingImpaired.RemoveTextBeforeColonOnlyOnSeparateLine;
             RemoveWhereContains = Configuration.Settings.RemoveTextForHearingImpaired.RemoveIfContains;
-            RemoveIfTextContains = new List<string>();
-            foreach (var item in Configuration.Settings.RemoveTextForHearingImpaired.RemoveIfContainsText.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
+            var removeIfContainsItems = Configuration.Settings.RemoveTextForHearingImpaired.RemoveIfContainsText.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+            RemoveIfTextContains = new List<string>(removeIfContainsItems.Length);
+            foreach (var item in removeIfContainsItems)
             {
                 RemoveIfTextContains.Add(item.Trim());
             }

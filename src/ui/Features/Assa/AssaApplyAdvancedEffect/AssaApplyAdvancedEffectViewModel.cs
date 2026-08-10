@@ -130,6 +130,12 @@ public partial class AssaApplyAdvancedEffectViewModel : ObservableObject
                 }
                 i--;
             }
+
+            if (SelectedOverrideTag == null || !OverrideTags.Contains(SelectedOverrideTag))
+            {
+                // The constructor's default selection may just have been removed
+                SelectedOverrideTag = OverrideTags.FirstOrDefault();
+            }
         }
 
         if (selectedParagraphs.Count > 1)
@@ -258,8 +264,12 @@ public partial class AssaApplyAdvancedEffectViewModel : ObservableObject
             result.Paragraphs.Add(line.ToParagraph(_assaFormat));
         }
 
-        result.Paragraphs.Sort((a, b) =>
-            a.StartTime.TotalMilliseconds.CompareTo(b.StartTime.TotalMilliseconds));
+        // OrderBy is a stable sort: several effects emit overlay + text events with the same
+        // start time and rely on their emit order for z-ordering (List.Sort is unstable and
+        // could swap them).
+        var sorted = result.Paragraphs.OrderBy(p => p.StartTime.TotalMilliseconds).ToList();
+        result.Paragraphs.Clear();
+        result.Paragraphs.AddRange(sorted);
 
         return result;
     }
@@ -281,9 +291,10 @@ public partial class AssaApplyAdvancedEffectViewModel : ObservableObject
     [RelayCommand]
     private async Task PlayAndBack()
     {
-        if (SelectedParagraphIndex <= 0)
+        if (SelectedParagraphIndex < 0)
         {
             await PlayAndBack(VideoPlayerControl, 3000);
+            return;
         }
 
         var selected = Paragraphs[SelectedParagraphIndex];
@@ -368,7 +379,7 @@ public partial class AssaApplyAdvancedEffectViewModel : ObservableObject
 
     internal void ComboBoxParagraphsChanged(object? sender, SelectionChangedEventArgs e)
     {
-        if (SelectedParagraphIndex <= 0)
+        if (SelectedParagraphIndex < 0)
         {
             return;
         }

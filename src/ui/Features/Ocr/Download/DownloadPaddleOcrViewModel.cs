@@ -7,6 +7,7 @@ using Nikse.SubtitleEdit.Features.Shared;
 using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Logic.Download;
 using Nikse.SubtitleEdit.Logic.SevenZipExtractor;
+using Nikse.SubtitleEdit.UiLogic.Http;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -97,7 +98,7 @@ public partial class DownloadPaddleOcrViewModel : ObservableObject, IClosingClea
                         ProgressText = $"Starting download {_downloadTaskIndex + 1} of {_downloadTaskUrls.Count}...";
                         var url = _downloadTaskUrls[_downloadTaskIndex];
                         var fileName = Path.Combine(_tempFolder, Path.GetFileName(url));
-                        _downloadTask = DownloadHelper.DownloadFileAsync(new HttpClient(), url, fileName, new Progress<float>(number =>
+                        _downloadTask = DownloadHelper.DownloadFileAsync(HttpClientFactoryWithProxy.CreateHttpClientWithProxy(), url, fileName, new Progress<float>(number =>
                         {
                             var percentage = (int)Math.Round(number * 100.0, MidpointRounding.AwayFromZero);
                             var pctString = percentage.ToString(CultureInfo.InvariantCulture);
@@ -280,28 +281,28 @@ public partial class DownloadPaddleOcrViewModel : ObservableObject, IClosingClea
             _downloadTaskUrls.AddRange(PaddleOcr.UrlsSupportFiles);
             var url = _downloadTaskUrls[_downloadTaskIndex];
             var fileName = Path.Combine(_tempFolder, Path.GetFileName(url));
-            _downloadTask = DownloadHelper.DownloadFileAsync(new HttpClient(), url, fileName, downloadProgress, _cancellationTokenSource.Token);
+            _downloadTask = DownloadHelper.DownloadFileAsync(HttpClientFactoryWithProxy.CreateHttpClientWithProxy(), url, fileName, downloadProgress, _cancellationTokenSource.Token);
         }
         else if (_downloadType == PaddleOcrDownloadType.EngineGpu11)
         {
             _downloadTaskUrls.AddRange(PaddleOcr.UrlsWindowsGpuCuda11);
             var url = _downloadTaskUrls[_downloadTaskIndex];
             var fileName = Path.Combine(_tempFolder, Path.GetFileName(url));
-            _downloadTask = DownloadHelper.DownloadFileAsync(new HttpClient(), url, fileName, downloadProgress, _cancellationTokenSource.Token);
+            _downloadTask = DownloadHelper.DownloadFileAsync(HttpClientFactoryWithProxy.CreateHttpClientWithProxy(), url, fileName, downloadProgress, _cancellationTokenSource.Token);
         }
         else if (_downloadType == PaddleOcrDownloadType.EngineGpu12)
         {
             _downloadTaskUrls.AddRange(PaddleOcr.UrlsWindowsGpuCuda12);
             var url = _downloadTaskUrls[_downloadTaskIndex];
             var fileName = Path.Combine(_tempFolder, Path.GetFileName(url));
-            _downloadTask = DownloadHelper.DownloadFileAsync(new HttpClient(), url, fileName, downloadProgress, _cancellationTokenSource.Token);
+            _downloadTask = DownloadHelper.DownloadFileAsync(HttpClientFactoryWithProxy.CreateHttpClientWithProxy(), url, fileName, downloadProgress, _cancellationTokenSource.Token);
         }
         else if (_downloadType == PaddleOcrDownloadType.EngineCpu)
         {
             _downloadTaskUrls.AddRange(PaddleOcr.UrlsWindowsCpu);
             var url = _downloadTaskUrls[_downloadTaskIndex];
             var fileName = Path.Combine(_tempFolder, Path.GetFileName(url));
-            _downloadTask = DownloadHelper.DownloadFileAsync(new HttpClient(), url, fileName, downloadProgress,
+            _downloadTask = DownloadHelper.DownloadFileAsync(HttpClientFactoryWithProxy.CreateHttpClientWithProxy(), url, fileName, downloadProgress,
                 _cancellationTokenSource.Token);
         }
         else if (_downloadType == PaddleOcrDownloadType.EngineGpuLinux)
@@ -309,14 +310,14 @@ public partial class DownloadPaddleOcrViewModel : ObservableObject, IClosingClea
             _downloadTaskUrls.AddRange(PaddleOcr.UrlsLinuxGpu);
             var url = _downloadTaskUrls[_downloadTaskIndex];
             var fileName = Path.Combine(_tempFolder, Path.GetFileName(url));
-            _downloadTask = DownloadHelper.DownloadFileAsync(new HttpClient(), url, fileName, downloadProgress, _cancellationTokenSource.Token);
+            _downloadTask = DownloadHelper.DownloadFileAsync(HttpClientFactoryWithProxy.CreateHttpClientWithProxy(), url, fileName, downloadProgress, _cancellationTokenSource.Token);
         }            
         else if (_downloadType == PaddleOcrDownloadType.EngineCpuLinux)
         {
             _downloadTaskUrls.AddRange(PaddleOcr.UrlsLinuxCpu);
             var url = _downloadTaskUrls[_downloadTaskIndex];
             var fileName = Path.Combine(_tempFolder, Path.GetFileName(url));
-            _downloadTask = DownloadHelper.DownloadFileAsync(new HttpClient(), url, fileName, downloadProgress, _cancellationTokenSource.Token);
+            _downloadTask = DownloadHelper.DownloadFileAsync(HttpClientFactoryWithProxy.CreateHttpClientWithProxy(), url, fileName, downloadProgress, _cancellationTokenSource.Token);
         }         
         else
         {

@@ -235,7 +235,7 @@ public class KokoroTtsCpp : ITtsEngine
 
         await EnsureServerRunningAsync(cancellationToken);
 
-        var outputFileName = Path.Combine(GetSetFolder(), Guid.NewGuid() + ".wav");
+        var outputFileName = Path.Combine(TtsOutputFolder.Resolve(outputFolder, GetSetFolder), Guid.NewGuid() + ".wav");
         var inputText = text;
         var voiceName = string.IsNullOrEmpty(kokoroVoice.Voice) ? DefaultVoice : kokoroVoice.Voice;
 

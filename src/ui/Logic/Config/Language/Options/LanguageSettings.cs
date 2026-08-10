@@ -87,6 +87,8 @@ public class LanguageSettings
     public string AutoBreakDashEarly { get; set; }
     public string AutoBreakUsePixelWidth { get; set; }
     public string AutoBreakPreferBottomHeavy { get; set; }
+    public string AutoBreakPreferBottomPercent { get; set; }
+    public string UseDoNotBreakAfterList { get; set; }
     public string NewEmptyDefaultMs { get; set; }
     public string TimeCodeUpDownStepMs { get; set; }
     public string PromptBeforeDelete { get; set; }
@@ -166,6 +168,13 @@ public class LanguageSettings
     public string ProxyUseSystemCredentials { get; set; }
     public string ProxyBypassList { get; set; }
     public string ProxyBypassListHint { get; set; }
+
+    // Updates
+    public string Updates { get; set; }
+    public string CheckForUpdatesOnStartup { get; set; }
+    public string CheckForUpdatesChannel { get; set; }
+    public string CheckForUpdatesChannelStable { get; set; }
+    public string CheckForUpdatesChannelStableAndBeta { get; set; }
 
     public string DefaultFormat { get; set; }
     public string DefaultSaveAsFormat { get; set; }
@@ -257,6 +266,10 @@ public class LanguageSettings
     public string GridGoToSubtitleAndPlay { get; set; }
     public string GridGoToSubtitleAndPauseAndFocusTextBox { get; set; }
     public string GridGoToSubtitleAndPlayAndFocusTextBox { get; set; }
+    public string SubtitleListActionVideoGoToPositionAndPlayCurrentAndPause { get; set; }
+    public string SubtitleListActionVideoGoToPositionMinus1SecAndPause { get; set; }
+    public string SubtitleListActionVideoGoToPositionMinusHalfSecAndPause { get; set; }
+    public string SubtitleListActionVideoGoToPositionMinus1SecAndPlay { get; set; }
     public string SubtitleGridFormattingNone { get; set; }
     public string SubtitleGridFormattingShowFormatting { get; set; }
     public string SubtitleGridFormattingShowTags { get; set; }
@@ -390,6 +403,8 @@ public class LanguageSettings
         AutoBreakDashEarly = "Auto-break early for dash (dialogs)";
         AutoBreakUsePixelWidth = "Auto-break by pixel width";
         AutoBreakPreferBottomHeavy = "Auto-break prefer bottom heavy";
+        AutoBreakPreferBottomPercent = "Auto-break bottom heavy percentage";
+        UseDoNotBreakAfterList = "Use do-not-break-after list";
         NewEmptyDefaultMs = "Default new subtitle duration (ms)";
         TimeCodeUpDownStepMs = "Time up/down increment (ms)";
         PromptBeforeDelete = "Prompt before delete";
@@ -470,6 +485,13 @@ public class LanguageSettings
         ProxyUseSystemCredentials = "Use system credentials";
         ProxyBypassList = "Bypass proxy for";
         ProxyBypassListHint = "Semicolon separated host names that connect directly, e.g. \"internal.company.com;example.org\"";
+
+        // Updates
+        Updates = "Updates";
+        CheckForUpdatesOnStartup = "Check for updates when the app starts";
+        CheckForUpdatesChannel = "Notify about";
+        CheckForUpdatesChannelStable = "Stable versions only";
+        CheckForUpdatesChannelStableAndBeta = "Stable and beta versions";
 
         ShowStopButton = "Show stop button";
         ShowFullscreenButton = "Show full-screen button";
@@ -559,6 +581,10 @@ public class LanguageSettings
         GridGoToSubtitleAndPlay = "Go to subtitle and play";
         GridGoToSubtitleAndPauseAndFocusTextBox = "Go to subtitle and pause and focus text box";
         GridGoToSubtitleAndPlayAndFocusTextBox = "Go to subtitle and play and focus text box";
+        SubtitleListActionVideoGoToPositionAndPlayCurrentAndPause = "Go to video position, play current, and pause";
+        SubtitleListActionVideoGoToPositionMinus1SecAndPause = "Go to video position - 1 s and pause";
+        SubtitleListActionVideoGoToPositionMinusHalfSecAndPause = "Go to video position - 0.5 s and pause";
+        SubtitleListActionVideoGoToPositionMinus1SecAndPlay = "Go to video position - 1 s and play";
         SubtitleGridFormattingNone = "No formatting";
         SubtitleGridFormattingShowFormatting = "Show formatting";
         SubtitleGridFormattingShowTags = "Show tags";

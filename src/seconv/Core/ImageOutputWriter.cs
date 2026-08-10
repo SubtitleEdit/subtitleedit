@@ -24,6 +24,10 @@ internal static class ImageOutputWriter
                 => new ExportHandlerVobSub(),
             var x when x.Equals("BDN-XML", StringComparison.OrdinalIgnoreCase) || x.Equals("BdnXml", StringComparison.OrdinalIgnoreCase)
                 => new ExportHandlerBdnXml(),
+            // Same output, but with 8-bit palette-indexed PNGs - what Blu-ray authoring
+            // tools expect (issue #13452).
+            var x when x.Equals("BDN-XML 8-bit", StringComparison.OrdinalIgnoreCase) || x.Equals("BdnXml8Bit", StringComparison.OrdinalIgnoreCase)
+                => new ExportHandlerBdnXml(true),
             var x when x.Equals("DOST/image", StringComparison.OrdinalIgnoreCase) || x.Equals("Dost", StringComparison.OrdinalIgnoreCase)
                 => new ExportHandlerDost(),
             var x when x.Equals("FCP/image", StringComparison.OrdinalIgnoreCase) || x.Equals("FcpImage", StringComparison.OrdinalIgnoreCase)

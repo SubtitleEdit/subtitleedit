@@ -348,8 +348,26 @@ public static class InitToolbar
             ssaSeparator.DataContext = vm;
             ssaSeparator.Bind(Visual.IsVisibleProperty, new Binding(nameof(vm.IsFormatSsa)) { Mode = BindingMode.TwoWay });
 
+            var webVttSeparator = MakeSeparator();
+            stackPanelLeft.Children.Add(webVttSeparator);
+            webVttSeparator.DataContext = vm;
+            webVttSeparator.Bind(Visual.IsVisibleProperty, new Binding(nameof(vm.IsFormatWebVtt)) { Mode = BindingMode.TwoWay });
+
             isLastSeparator = true;
         }
+
+        stackPanelLeft.Children.Add(new Button
+        {
+            Content = MakeImage("AssaStyle"),
+            Command = vm.ShowWebVttStylesCommand,
+            Background = Brushes.Transparent,
+            [AutomationProperties.NameProperty] = languageHints.WebVttStylesHint,
+            [ToolTip.TipProperty] = UiUtil.MakeToolTip(languageHints.WebVttStylesHint, shortcuts, nameof(vm.ShowWebVttStylesCommand)),
+            [!Visual.IsVisibleProperty] = new Binding(nameof(vm.IsFormatWebVtt))
+            {
+                Source = vm,
+            },
+        });
 
         stackPanelLeft.Children.Add(new Button
         {

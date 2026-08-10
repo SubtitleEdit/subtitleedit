@@ -48,6 +48,7 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
 {
     public static readonly string FormatAyato = new Ayato().Name;
     public const string FormatBdnXml = "BDN-XML";
+    public const string FormatBdnXml8Bit = "BDN-XML 8-bit";
     public const string FormatBluRaySup = "Blu-ray sup";
     public static readonly string FormatCavena890 = new Cavena890().Name;
     public const string FormatDCinemaInterop = "D-Cinema interop/png";
@@ -321,15 +322,27 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
             }
             else if (Se.Settings.Tools.BatchConvert.OcrEngine.Equals("Ollama", StringComparison.OrdinalIgnoreCase))
             {
-                await RunOllamaOcr(imageSubtitle, item, cancellationToken);
+                // A false return means the runner already set a terminal status (engine not
+                // downloaded, startup failure, cancelled, every line blank) - stop here so the
+                // save path below cannot overwrite it with "Converted" or a generic error.
+                if (!await RunOllamaOcr(imageSubtitle, item, cancellationToken))
+                {
+                    return;
+                }
             }
             else if (Se.Settings.Tools.BatchConvert.OcrEngine.Equals("llama.cpp", StringComparison.OrdinalIgnoreCase))
             {
-                await RunLlamaCppOcr(imageSubtitle, item, cancellationToken);
+                if (!await RunLlamaCppOcr(imageSubtitle, item, cancellationToken))
+                {
+                    return;
+                }
             }
             else if (Se.Settings.Tools.BatchConvert.OcrEngine.Equals(CrispEmbedEngine.StaticName, StringComparison.OrdinalIgnoreCase))
             {
-                await RunCrispEmbedOcr(imageSubtitle, item, cancellationToken);
+                if (!await RunCrispEmbedOcr(imageSubtitle, item, cancellationToken))
+                {
+                    return;
+                }
             }
             else
             {
@@ -556,31 +569,7 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
 
     internal static List<VobSubMergedPack> LoadVobSubFromMatroska(MatroskaTrackInfo matroskaSubtitleInfo, MatroskaFile matroska, out Core.VobSub.Idx? idx)
     {
-        var mergedVobSubPacks = new List<VobSubMergedPack>();
-        if (matroskaSubtitleInfo.ContentEncodingType == 1)
-        {
-            idx = null;
-            return mergedVobSubPacks;
-        }
-
-        var sub = matroska.GetSubtitle(matroskaSubtitleInfo.TrackNumber, null);
-        idx = new Core.VobSub.Idx(matroskaSubtitleInfo.GetCodecPrivate().SplitToLines());
-        foreach (var p in sub)
-        {
-            mergedVobSubPacks.Add(new VobSubMergedPack(p.GetData(matroskaSubtitleInfo), TimeSpan.FromMilliseconds(p.Start), 32, null));
-            if (mergedVobSubPacks.Count > 0)
-            {
-                mergedVobSubPacks[mergedVobSubPacks.Count - 1].EndTime = TimeSpan.FromMilliseconds(p.End);
-            }
-
-            // fix overlapping (some versions of Handbrake makes overlapping time codes - thx Hawke)
-            if (mergedVobSubPacks.Count > 1 && mergedVobSubPacks[mergedVobSubPacks.Count - 2].EndTime > mergedVobSubPacks[mergedVobSubPacks.Count - 1].StartTime)
-            {
-                mergedVobSubPacks[mergedVobSubPacks.Count - 2].EndTime = TimeSpan.FromMilliseconds(mergedVobSubPacks[mergedVobSubPacks.Count - 1].StartTime.TotalMilliseconds - 1);
-            }
-        }
-
-        return mergedVobSubPacks;
+        return MatroskaImageSubtitleExtractor.ExtractVobSub(matroskaSubtitleInfo, matroska, out idx);
     }
 
 
@@ -1276,7 +1265,12 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
         }
     }
     
-    private async Task RunOllamaOcr(IOcrSubtitle imageSubtitles, BatchConvertItem item, CancellationToken cancellationToken)
+    /// <returns>
+    /// True when the item should continue through convert functions and save; false when the
+    /// runner already set a terminal status (not downloaded, startup failure, cancelled, every
+    /// line blank) that the save path must not overwrite.
+    /// </returns>
+    private async Task<bool> RunOllamaOcr(IOcrSubtitle imageSubtitles, BatchConvertItem item, CancellationToken cancellationToken)
     {
         var ollamaOcr = new OllamaOcr();
         var url = Se.Settings.Ocr.OllamaUrl;
@@ -1309,10 +1303,14 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
             item.Subtitle.Paragraphs.All(p => string.IsNullOrWhiteSpace(p.Text)))
         {
             item.Status = Se.Language.Ocr.OllamaModelLikelyWrong;
+            return false;
         }
+
+        return !cancelled;
     }
 
-    private async Task RunLlamaCppOcr(IOcrSubtitle imageSubtitles, BatchConvertItem item, CancellationToken cancellationToken)
+    /// <inheritdoc cref="RunOllamaOcr"/>
+    private async Task<bool> RunLlamaCppOcr(IOcrSubtitle imageSubtitles, BatchConvertItem item, CancellationToken cancellationToken)
     {
         // Curated OCR model from settings (picked in batch convert settings / the OCR window).
         // The batch run never downloads - the settings dialog prompts for that on OK.
@@ -1321,7 +1319,7 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
         if (model == null || !LlamaCppServerManager.IsEngineInstalled() || !LlamaCppServerManager.IsModelInstalled(model))
         {
             item.Status = Se.Language.Ocr.LlamaCppNotDownloaded;
-            return;
+            return false;
         }
 
         try
@@ -1332,7 +1330,7 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
         catch (Exception ex)
         {
             item.Status = string.Format(Se.Language.General.ErrorX, ex.Message);
-            return;
+            return false;
         }
 
         var engine = new LlamaCppOcr(Se.Settings.Ocr.LlamaCppOcrTimeoutMinutes);
@@ -1366,10 +1364,14 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
             item.Subtitle.Paragraphs.All(p => string.IsNullOrWhiteSpace(p.Text)))
         {
             item.Status = Se.Language.Ocr.LlamaCppReturnedNoText;
+            return false;
         }
+
+        return !cancelled;
     }
 
-    private async Task RunCrispEmbedOcr(IOcrSubtitle imageSubtitles, BatchConvertItem item, CancellationToken cancellationToken)
+    /// <inheritdoc cref="RunOllamaOcr"/>
+    private async Task<bool> RunCrispEmbedOcr(IOcrSubtitle imageSubtitles, BatchConvertItem item, CancellationToken cancellationToken)
     {
         // Backend/model picked in batch convert settings (shared with the OCR window). The batch
         // run never downloads - the settings dialog prompts for that on OK.
@@ -1379,7 +1381,7 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
         if (backend == null || model == null || !CrispEmbedEngine.IsEngineInstalled() || !backend.IsModelInstalled(model))
         {
             item.Status = Se.Language.Ocr.CrispEmbedNotDownloaded;
-            return;
+            return false;
         }
 
         using var engine = new CrispEmbedOcr(Se.Settings.Ocr.CrispEmbedOcrTimeoutMinutes);
@@ -1403,13 +1405,13 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
         catch (OperationCanceledException)
         {
             item.Status = Se.Language.General.Cancelled;
-            return;
+            return false;
         }
 
         if (!started)
         {
             item.Status = string.Format(Se.Language.General.ErrorX, engine.Error);
-            return;
+            return false;
         }
 
         item.Subtitle = new Subtitle();
@@ -1428,7 +1430,7 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
             catch (OperationCanceledException)
             {
                 item.Status = Se.Language.General.Cancelled;
-                return;
+                return false;
             }
 
             var p = new Paragraph(text, imageSubtitles.GetStartTime(i).TotalMilliseconds, imageSubtitles.GetEndTime(i).TotalMilliseconds);
@@ -1448,7 +1450,10 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
             item.Subtitle.Paragraphs.All(p => string.IsNullOrWhiteSpace(p.Text)))
         {
             item.Status = Se.Language.Ocr.CrispEmbedReturnedNoText;
+            return false;
         }
+
+        return !cancelled;
     }
 
     /// <summary>
@@ -1561,6 +1566,12 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
         if (_config.TargetFormatName == FormatBdnXml)
         {
             exportHandler = new ExportHandlerBdnXml();
+            extension = string.Empty; // folder
+        }
+
+        if (_config.TargetFormatName == FormatBdnXml8Bit)
+        {
+            exportHandler = new ExportHandlerBdnXml(true);
             extension = string.Empty; // folder
         }
 
@@ -2100,7 +2111,10 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
         subtitle.Paragraphs.Clear();
         foreach (var sv in subtitlesFixed)
         {
-            subtitle.Paragraphs.Add(sv.ToParagraph());
+            // Pass the format: a bare ToParagraph leaves Paragraph.Extra empty, and the ASSA
+            // writer reads the Dialogue style column from Extra - every line in a styled file
+            // would fall back to the first style in the header.
+            subtitle.Paragraphs.Add(sv.ToParagraph(subtitle.OriginalFormat));
         }
 
         return subtitle;

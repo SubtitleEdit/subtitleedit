@@ -32,6 +32,7 @@ namespace Nikse.SubtitleEdit.UiLogic.AutoTranslate
             // High-Reasoning & Multilingual (The Leaders)
             "openai/gpt-5.6-sol",                       // OpenAI flagship for complex professional work
             "openai/gpt-5.5",                           // Previous-gen flagship general-purpose translator
+            "anthropic/claude-opus-5",                  // Current Anthropic flagship for nuanced translation
             "anthropic/claude-opus-4.8",                // Exceptional nuance and formal tone preservation
             "anthropic/claude-sonnet-5",                // Strong balance of quality and cost
             "google/gemini-3.1-pro-preview",            // Massive context for translating whole books
@@ -42,7 +43,8 @@ namespace Nikse.SubtitleEdit.UiLogic.AutoTranslate
             // Efficient / Fast Translation
             "openai/gpt-5.6-terra",                     // Balanced intelligence and cost
             "openai/gpt-5.6-luna",                      // Cost-optimized, high-volume
-            "google/gemini-3.5-flash",                  // Google's most intelligent flash model
+            "google/gemini-3.6-flash",                  // Google's newest flash model, cheaper and smarter
+            "google/gemini-3.5-flash",                  // Strong previous-gen flash model
             "google/gemini-3.1-flash-lite",             // Speed-optimized multimodal
             "anthropic/claude-haiku-4.5",               // Fast Anthropic option
             "deepseek/deepseek-v4-flash",               // Low-latency DeepSeek

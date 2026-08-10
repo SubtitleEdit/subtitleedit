@@ -25,14 +25,16 @@ public partial class FindService : IFindService
     // ReplaceAll/Count/FindAll call into regex mode once per line; caching the last-built Regex
     // avoids recompiling the same pattern for every line in the subtitle.
     private string? _cachedRegexPattern;
+    private RegexOptions _cachedRegexOptions;
     private Regex? _cachedRegex;
 
-    private Regex GetCachedRegex(string pattern)
+    private Regex GetCachedRegex(string pattern, RegexOptions options = RegexOptions.None)
     {
-        if (_cachedRegex == null || _cachedRegexPattern != pattern)
+        if (_cachedRegex == null || _cachedRegexPattern != pattern || _cachedRegexOptions != options)
         {
-            _cachedRegex = new Regex(pattern);
+            _cachedRegex = new Regex(pattern, options);
             _cachedRegexPattern = pattern;
+            _cachedRegexOptions = options;
         }
 
         return _cachedRegex;
@@ -567,7 +569,7 @@ public partial class FindService : IFindService
 
         try
         {
-            var regex = new Regex(pattern, options);
+            var regex = GetCachedRegex(pattern, options);
 
             if (startIndex > 0 && maxReplacements == 1)
             {
@@ -613,7 +615,7 @@ public partial class FindService : IFindService
 
             try
             {
-                var match = Regex.Match(searchLine, pattern, options);
+                var match = GetCachedRegex(pattern, options).Match(searchLine);
                 if (match.Success)
                 {
                     return (true, startIndex + match.Index, match.Value);
@@ -647,7 +649,7 @@ public partial class FindService : IFindService
 
             try
             {
-                var matches = Regex.Matches(searchLine, pattern, options);
+                var matches = GetCachedRegex(pattern, options).Matches(searchLine);
                 if (matches.Count > 0)
                 {
                     var lastMatch = matches[matches.Count - 1];
@@ -678,7 +680,7 @@ public partial class FindService : IFindService
             var searchLine = startIndex > 0 ? line.Substring(startIndex) : line;
             var originalLength = searchLine.Length;
             searchLine = NormalizeLineEndingsForRegex(searchLine, out var indexMap);
-            var match = Regex.Match(searchLine, RegexUtils.FixNewLine(searchText));
+            var match = GetCachedRegex(RegexUtils.FixNewLine(searchText)).Match(searchLine);
 
             if (match.Success)
             {
@@ -703,7 +705,7 @@ public partial class FindService : IFindService
 
             // Advance by 1 after each match so overlapping matches are found
             // (e.g. two long lines sharing the \n between them).
-            var regex = new Regex(RegexUtils.FixNewLine(searchText));
+            var regex = GetCachedRegex(RegexUtils.FixNewLine(searchText));
             Match? lastMatch = null;
             var pos = 0;
             while (pos < searchLine.Length)
@@ -740,7 +742,7 @@ public partial class FindService : IFindService
                 try
                 {
                     var searchLine = NormalizeLineEndingsForRegex(line);
-                    return Regex.Matches(searchLine, RegexUtils.FixNewLine(searchText)).Count;
+                    return GetCachedRegex(RegexUtils.FixNewLine(searchText)).Matches(searchLine).Count;
                 }
                 catch (ArgumentException)
                 {
@@ -768,7 +770,7 @@ public partial class FindService : IFindService
                 try
                 {
                     var searchLine = NormalizeLineEndingsForRegex(line, out var indexMap);
-                    var regexMatches = Regex.Matches(searchLine, RegexUtils.FixNewLine(searchText));
+                    var regexMatches = GetCachedRegex(RegexUtils.FixNewLine(searchText)).Matches(searchLine);
                     foreach (Match match in regexMatches)
                     {
                         matches.Add(new FindMatch(MapNormalizedIndex(indexMap, match.Index, line.Length), match.Value));
@@ -792,7 +794,7 @@ public partial class FindService : IFindService
 
                     try
                     {
-                        var regexMatches = Regex.Matches(line, pattern, options);
+                        var regexMatches = GetCachedRegex(pattern, options).Matches(line);
                         foreach (Match match in regexMatches)
                         {
                             matches.Add(new FindMatch(match.Index, match.Value));
@@ -824,8 +826,14 @@ public partial class FindService : IFindService
         return matches;
     }
 
-    private static int MapNormalizedIndex(List<int> indexMap, int normalizedIndex, int originalLength)
+    // A null indexMap means the line had no '\r', i.e. normalization was the identity mapping.
+    private static int MapNormalizedIndex(List<int>? indexMap, int normalizedIndex, int originalLength)
     {
+        if (indexMap == null)
+        {
+            return normalizedIndex < originalLength ? normalizedIndex : originalLength;
+        }
+
         return normalizedIndex < indexMap.Count ? indexMap[normalizedIndex] : originalLength;
     }
 
@@ -856,19 +864,17 @@ public partial class FindService : IFindService
         return normalized.ToString();
     }
 
-    private static string NormalizeLineEndingsForRegex(string line, out List<int> indexMap)
+    private static string NormalizeLineEndingsForRegex(string line, out List<int>? indexMap)
     {
-        indexMap = new List<int>(line.Length);
-
         if (!line.Contains('\r'))
         {
-            for (var i = 0; i < line.Length; i++)
-            {
-                indexMap.Add(i);
-            }
-
+            // The common case: nothing to normalize, so the mapping is the identity - a null
+            // map signals that to MapNormalizedIndex without allocating a per-line List.
+            indexMap = null;
             return line;
         }
+
+        indexMap = new List<int>(line.Length);
 
         var normalized = new StringBuilder(line.Length);
         for (var i = 0; i < line.Length; i++)

@@ -231,6 +231,7 @@ public static class InitNativeMacMenu
         var exportItems = new NativeMenu();
         exportItems.Items.Add(Item(Se.Language.General.BluRaySup, v => v.ExportBluRaySupCommand));
         exportItems.Items.Add(Item(Se.Language.General.BdnXml, v => v.ExportBdnXmlCommand));
+        exportItems.Items.Add(Item(Se.Language.General.BdnXml8Bit, v => v.ExportBdnXml8BitCommand));
         exportItems.Items.Add(Item(new CapMakerPlus().Name, v => v.ExportCapMakerPlusCommand));
         exportItems.Items.Add(Item(CheetahCaption.NameOfFormat, v => v.ExportCheetahCaptionCommand));
         exportItems.Items.Add(Item(CheetahCaptionOld.NameOfFormat, v => v.ExportCheetahCaptionOldCommand));

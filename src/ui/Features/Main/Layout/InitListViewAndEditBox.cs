@@ -23,6 +23,18 @@ namespace Nikse.SubtitleEdit.Features.Main.Layout;
 
 public static partial class InitListViewAndEditBox
 {
+    // The text box's own floor - unchanged, so the default layout looks exactly as before.
+    private const double SubtitleTextBoxMinimumHeight = 92;
+    // Starting floor for the edit section, replaced by a measured value on first layout (see
+    // TrackEditSectionMinimumHeight). textEditGrid is "Auto,*,Auto": the "Text" header and the
+    // "Line length / Total chars" panel sit above and below the box, and the floor has to cover
+    // all three - sized to the box alone, the box (which cannot shrink past its own MinHeight)
+    // overflows its row and draws over the labels underneath (#10271).
+    private const double EditGridMinimumHeight = SubtitleTextBoxMinimumHeight;
+    private const double EditGridMargin = 10;
+    // The subtitle grid row is Star, so without a floor the splitter can drag it away to
+    // nothing and there is no handle left to drag back (#10271).
+    private const double SubtitleGridMinimumHeight = 45;
 
     public static Grid MakeLayoutListViewAndEditBox(MainView mainPage, MainViewModel vm)
     {
@@ -54,7 +66,13 @@ public static partial class InitListViewAndEditBox
 
         var mainGrid = new Grid
         {
-            RowDefinitions = new RowDefinitions("*,Auto"),
+            RowDefinitions =
+            {
+                new RowDefinition(GridLength.Star) { MinHeight = SubtitleGridMinimumHeight },
+                // GridSplitter constrains the row definition, so include editGrid's outer
+                // margin to preserve the text box's 92 px minimum at the drag limit.
+                new RowDefinition(GridLength.Auto) { MinHeight = EditGridMinimumHeight + EditGridMargin * 2 },
+            },
         };
 
         // TableView (Avalonia 12.1) pilot #3, after Show history (#12704) and the OCR grid
@@ -399,12 +417,34 @@ public static partial class InitListViewAndEditBox
             Converter = booleanAndConverter,
             Bindings =
             {
-                new Binding(nameof(vm.HasFormatStyle)) { Source = vm, Mode = BindingMode.OneWay },
+                new Binding(nameof(vm.IsFormatAssaOrSsa)) { Source = vm, Mode = BindingMode.OneWay },
                 new Binding(nameof(vm.ShowColumnStyle)) { Source = vm, Mode = BindingMode.OneWay }
             }
         };
         styleColumn.Bind(SeTableViewColumn.IsVisibleProperty, styleColumnMultiBinding);
         columnManager.Add(styleColumn);
+
+        // WebVTT has styles too, but as cue classes inside the cue text instead of a field on
+        // the line - so it needs a column of its own, shown in place of the ASSA one.
+        var webVttStyleColumn = new SeTableViewColumn
+        {
+            Header = Se.Language.General.Style,
+            Tag = SubtitleGridColumnKeys.WebVttStyle,
+            Binding = new Binding(nameof(SubtitleLineViewModel.WebVttStyle)) { Mode = BindingMode.OneWay },
+            Width = new GridLength(120),
+            CellTheme = UiUtil.TableViewCellTheme,
+            HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
+        };
+        webVttStyleColumn.Bind(SeTableViewColumn.IsVisibleProperty, new MultiBinding
+        {
+            Converter = booleanAndConverter,
+            Bindings =
+            {
+                new Binding(nameof(vm.IsFormatWebVtt)) { Source = vm, Mode = BindingMode.OneWay },
+                new Binding(nameof(vm.ShowColumnStyle)) { Source = vm, Mode = BindingMode.OneWay }
+            }
+        });
+        columnManager.Add(webVttStyleColumn);
 
         var columnGap = new SeTableViewColumn
         {
@@ -449,10 +489,36 @@ public static partial class InitListViewAndEditBox
             HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
         };
         columnManager.Add(actorColumn);
-        actorColumn.Bind(SeTableViewColumn.IsVisibleProperty, new Binding(nameof(vm.ShowColumnActor))
+        actorColumn.Bind(SeTableViewColumn.IsVisibleProperty, new MultiBinding
         {
-            Mode = BindingMode.OneWay,
-            Source = vm,
+            Converter = booleanAndConverter,
+            Bindings =
+            {
+                new Binding(nameof(vm.IsFormatWebVtt)) { Source = vm, Mode = BindingMode.OneWay, Converter = inverseBooleanConverter },
+                new Binding(nameof(vm.ShowColumnActor)) { Source = vm, Mode = BindingMode.OneWay },
+            }
+        });
+
+        // WebVTT's counterpart of the actor is the "<v Name>" voice inside the cue text; it
+        // replaces the Actor column while a WebVTT file is open, sharing its show/hide toggle.
+        var webVttVoiceColumn = new SeTableViewColumn
+        {
+            Header = Se.Language.File.WebVtt.Voice,
+            Tag = SubtitleGridColumnKeys.WebVttVoice,
+            Binding = new Binding(nameof(SubtitleLineViewModel.WebVttVoice)) { Mode = BindingMode.OneWay },
+            Width = new GridLength(120),
+            CellTheme = UiUtil.TableViewCellTheme,
+            HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
+        };
+        columnManager.Add(webVttVoiceColumn);
+        webVttVoiceColumn.Bind(SeTableViewColumn.IsVisibleProperty, new MultiBinding
+        {
+            Converter = booleanAndConverter,
+            Bindings =
+            {
+                new Binding(nameof(vm.IsFormatWebVtt)) { Source = vm, Mode = BindingMode.OneWay },
+                new Binding(nameof(vm.ShowColumnActor)) { Source = vm, Mode = BindingMode.OneWay },
+            }
         });
 
         var cpsColumn = new SeTableViewColumn
@@ -612,6 +678,38 @@ public static partial class InitListViewAndEditBox
         sepAssa.Bind(Visual.IsVisibleProperty, new Binding(nameof(vm.AreAssaContentMenuItemsVisible)));
         flyout.Items.Add(sepAssa);
 
+        // WebVTT counterpart of the ASSA styles/actors block: cue classes and <v> voices.
+        var webVttStylesMenuItem = new MenuItem
+        {
+            Header = Se.Language.General.Styles,
+            DataContext = vm,
+            Command = vm.SetWebVttStylesForSelectedLinesCommand,
+        };
+        webVttStylesMenuItem.Bind(Visual.IsVisibleProperty, new Binding(nameof(vm.AreWebVttContentMenuItemsVisible)) { Mode = BindingMode.TwoWay });
+        flyout.Items.Add(webVttStylesMenuItem);
+
+        var webVttVoicesMenuItem = new MenuItem
+        {
+            Header = Se.Language.File.WebVtt.Voices,
+            DataContext = vm,
+        };
+        webVttVoicesMenuItem.Bind(Visual.IsVisibleProperty, new Binding(nameof(vm.AreWebVttContentMenuItemsVisible)) { Mode = BindingMode.TwoWay });
+        flyout.Items.Add(webVttVoicesMenuItem);
+        vm.MenuItemWebVttVoices = webVttVoicesMenuItem;
+
+        var webVttBrowserPreviewMenuItem = new MenuItem
+        {
+            Header = Se.Language.File.WebVtt.BrowserPreview,
+            DataContext = vm,
+            Command = vm.ShowWebVttBrowserPreviewCommand,
+        };
+        webVttBrowserPreviewMenuItem.Bind(Visual.IsVisibleProperty, new Binding(nameof(vm.IsWebVttBrowserPreviewVisible)) { Mode = BindingMode.TwoWay });
+        flyout.Items.Add(webVttBrowserPreviewMenuItem);
+
+        var sepWebVtt = new Separator { DataContext = vm };
+        sepWebVtt.Bind(Visual.IsVisibleProperty, new Binding(nameof(vm.AreWebVttContentMenuItemsVisible)));
+        flyout.Items.Add(sepWebVtt);
+
         var showStartTimeMenuItem = new MenuItem
         {
             Header = Se.Language.General.ShowStartColumn,
@@ -699,7 +797,8 @@ public static partial class InitListViewAndEditBox
 
         var showActorMenuItem = new MenuItem
         {
-            Header = Se.Language.General.ShowActorColumn,
+            // "Actor" for most formats, "Voice" for WebVTT - the two columns share this toggle.
+            [!MenuItem.HeaderProperty] = new Binding(nameof(vm.ShowActorColumnMenuHeader)),
             Command = vm.ToggleShowColumnActorCommand,
             DataContext = vm,
             Icon = new Icon
@@ -1152,6 +1251,9 @@ public static partial class InitListViewAndEditBox
 
         // Set the ContextFlyout on the drop host so right-clicks on empty space also show the menu
         dropHost.ContextFlyout = flyout;
+        // In undocked mode the tool windows are topmost while SE is active (#11971), which
+        // covers this context menu and its cascaded submenus (#13325).
+        WindowService.SuspendUndockedTopmostWhileOpen(flyout);
         dropHost.AddHandler(InputElement.PointerPressedEvent, vm.SubtitleGrid_PointerPressed, RoutingStrategies.Tunnel, handledEventsToo: true);
         dropHost.AddHandler(InputElement.PointerReleasedEvent, vm.SubtitleGrid_PointerReleased, RoutingStrategies.Tunnel, handledEventsToo: true);
         dropHost.AddHandler(InputElement.PointerMovedEvent, vm.SubtitleGrid_PointerMoved, RoutingStrategies.Tunnel, handledEventsToo: true);
@@ -1159,9 +1261,13 @@ public static partial class InitListViewAndEditBox
         // Edit area - restructured with time controls on left, multiline text on right
         var editGrid = new Grid
         {
-            Margin = new Thickness(10),
+            Margin = new Thickness(EditGridMargin),
+            MinHeight = EditGridMinimumHeight,
             ColumnDefinitions = new ColumnDefinitions("Auto, *"), // Two columns: left for time controls, right for text
-            RowDefinitions = new RowDefinitions("Auto")
+            // Star so the section grows when the user drags the splitter above it (#10271):
+            // with Auto, the extra pixel height from the splitter only added dead space below
+            // the fixed-height text box.
+            RowDefinitions = new RowDefinitions("*")
         };
 
         // Left panel for time controls
@@ -1464,6 +1570,8 @@ public static partial class InitListViewAndEditBox
         };
         textEditor.ContextFlyout = flyoutTextBox;
         flyoutTextBox.Opening += vm.TextBoxContextOpening;
+        // Keep the undocked tool windows from covering the text box context menu (#13325).
+        WindowService.SuspendUndockedTopmostWhileOpen(flyoutTextBox);
 
         var cutMenuItem = new MenuItem { Header = Se.Language.General.Cut };
         cutMenuItem.Command = vm.TextBoxCutCommand;
@@ -1660,14 +1768,8 @@ public static partial class InitListViewAndEditBox
             Mode = BindingMode.OneWay,
             Source = vm
         });
-        // add label to panelSingleLineLengthsOriginal
-        var singleLineLengthLabel = new TextBlock
-        {
-            Text = Se.Language.Main.SingleLineLength,
-            FontWeight = FontWeight.Bold,
-            Margin = new Thickness(0, 0, 5, 0)
-        };
-        panelSingleLineLengthsOriginal.Children.Add(singleLineLengthLabel);
+        // no seed label here - SubtitleTextInfoHelper.FillLineLengthPanel writes the
+        // "Single line length" label into index 0 itself (and reuses the text blocks)
 
         var buttonPanel = new StackPanel
         {
@@ -1720,6 +1822,25 @@ public static partial class InitListViewAndEditBox
         Grid.SetRow(editGrid, 1);
         mainGrid.Children.Add(editGrid);
 
+        // GridSplitter overlaying the boundary between the subtitle grid (row 0) and the
+        // edit box (row 1) so the text box section can be resized vertically, like SE4
+        // (#10271). The splitter lives in the edit box's own row (no extra row - an extra
+        // row would shrink the grid viewport and break the grid scroll perf tests); with
+        // VerticalAlignment.Top it resizes the row above (grid, Star) and its own row
+        // (edit box, Auto -> becomes Pixel once the user drags). The negative top margin
+        // centers the 4 px strip on the boundary.
+        var editBoxSplitter = new GridSplitter
+        {
+            Height = UiUtil.SplitterWidthOrHeight,
+            HorizontalAlignment = HorizontalAlignment.Stretch,
+            VerticalAlignment = VerticalAlignment.Top,
+            Margin = new Thickness(0, -UiUtil.SplitterWidthOrHeight / 2.0, 0, 0)
+        };
+        Grid.SetRow(editBoxSplitter, 1);
+        mainGrid.Children.Add(editBoxSplitter);
+
+        TrackEditSectionMinimumHeight(mainGrid, textEditGrid);
+
 
         textEditGrid.ColumnDefinitions[1].Bind(ColumnDefinition.WidthProperty, new Binding(nameof(vm.ShowColumnOriginalText))
         {
@@ -1742,8 +1863,10 @@ public static partial class InitListViewAndEditBox
         public const string Text = "Text";
         public const string OriginalText = "OriginalText";
         public const string Style = "Style";
+        public const string WebVttStyle = "WebVttStyle";
         public const string Gap = "Gap";
         public const string Actor = "Actor";
+        public const string WebVttVoice = "WebVttVoice";
         public const string Cps = "Cps";
         public const string Wpm = "Wpm";
         public const string PixelWidth = "PixelWidth";
@@ -1822,6 +1945,44 @@ public static partial class InitListViewAndEditBox
     /// Makes the subtitle edit text box - a <see cref="SyntaxHighlightingTextBox"/> when
     /// "Color tags" is on, else a normal TextBox.
     /// </summary>
+
+    /// <summary>
+    /// Keeps the edit section's drag floor equal to what the section actually needs: the text
+    /// box's own minimum plus the "Text" header and the "Line length / Total chars" panel that
+    /// sit above and below it. Those two rows are Auto, so their height follows the UI font -
+    /// a hard-coded allowance goes stale as soon as the font size changes, and if it is too
+    /// small the text box (which cannot shrink past its MinHeight) overflows its row and draws
+    /// over the labels (#10271). Measured rather than stored: this is a derived layout fact,
+    /// not something a user should configure.
+    /// </summary>
+    private static void TrackEditSectionMinimumHeight(Grid mainGrid, Grid textEditGrid)
+    {
+        textEditGrid.LayoutUpdated += (_, _) =>
+        {
+            if (textEditGrid.RowDefinitions.Count < 3)
+            {
+                return;
+            }
+
+            var labelRows = textEditGrid.RowDefinitions[0].ActualHeight +
+                            textEditGrid.RowDefinitions[2].ActualHeight;
+            if (labelRows <= 0)
+            {
+                return;
+            }
+
+            var needed = SubtitleTextBoxMinimumHeight + labelRows + EditGridMargin * 2;
+            var row = mainGrid.RowDefinitions[1];
+
+            // Only react to a real change - assigning MinHeight re-triggers layout, so an
+            // unconditional write here would spin.
+            if (Math.Abs(row.MinHeight - needed) > 0.5)
+            {
+                row.MinHeight = needed;
+            }
+        };
+    }
+
     private static TextBox MakeSubtitleTextBox()
     {
         var appearance = Se.Settings.Appearance;
@@ -1832,8 +1993,9 @@ public static partial class InitListViewAndEditBox
 
         textBox.AcceptsReturn = true;
         textBox.TextWrapping = TextWrapping.Wrap;
-        textBox.MinHeight = 92;
-        textBox.Height = 92;
+        // MinHeight keeps the default layout; no fixed Height so the text box grows with the
+        // resizable edit section (#10271).
+        textBox.MinHeight = SubtitleTextBoxMinimumHeight;
         textBox.FontSize = appearance.SubtitleTextBoxFontSize;
         textBox.FontWeight = appearance.SubtitleTextBoxFontBold ? FontWeight.Bold : FontWeight.Normal;
         textBox.IsUndoEnabled = false;

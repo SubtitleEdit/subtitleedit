@@ -197,7 +197,7 @@ public class AdvancedEffectConfetti : IAdvancedEffectDisplay
                 result.Add(piece);
             }
 
-            result.Add(sub);
+            result.Add(AdvancedEffectUtil.PassThrough(sub));
         }
 
         return result;

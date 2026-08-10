@@ -91,6 +91,22 @@ public class HtmlUtilTest
     }
 
     [Fact]
+    public void FixInvalidItalicTagsMergesAcrossLeadingEllipsis()
+    {
+        // StartsAndEndsWithTag now accepts a leading "..." without a dialog dash,
+        // so two fully italic lines merge into one italic block.
+        string s = "...<i>I was going</i>" + Environment.NewLine + "<i>to tell you.</i>";
+        Assert.Equal("<i>...I was going" + Environment.NewLine + "to tell you.</i>", HtmlUtil.FixInvalidItalicTags(s));
+    }
+
+    [Fact]
+    public void FixInvalidItalicTagsMergesAcrossTrailingPunctuationRun()
+    {
+        string s = "<i>Hello</i>?!" + Environment.NewLine + "<i>Bye</i>";
+        Assert.Equal("<i>Hello?!" + Environment.NewLine + "Bye</i>", HtmlUtil.FixInvalidItalicTags(s));
+    }
+
+    [Fact]
     public void FixInvalidItalicTagsDanglingStartTagAtEnd()
     {
         const string s = "<i>a</i><i>";

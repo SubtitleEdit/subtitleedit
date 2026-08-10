@@ -307,44 +307,19 @@ public static class TextDiffHighlighter
         var used1 = new bool[s1.Length];
         var used2 = new bool[s2.Length];
 
+        // Both selection routines pick the exact same cell (longest unused run; ties keep the
+        // smallest (i, j) in row-major order, like the original scan did). The per-cell walk
+        // has the lower constant on short texts but re-walks whole runs, which goes cubic on
+        // long repetitive text (a freeze in the Compare window / Multiple Replace preview);
+        // the anti-diagonal scan is O(n*m) per round, so it takes over above the threshold.
+        var useDiagonalScan = (long)s1.Length * s2.Length >= 10_000;
+
         // Find multiple common substrings
         while (true)
         {
-            int maxLen = 0;
-            int maxPos1 = 0;
-            int maxPos2 = 0;
-
-            // Build LCS table for unused parts
-            for (int i = 0; i < s1.Length; i++)
-            {
-                if (used1[i])
-                {
-                    continue;
-                }
-
-                for (int j = 0; j < s2.Length; j++)
-                {
-                    if (used2[j])
-                    {
-                        continue;
-                    }
-
-                    int len = 0;
-                    while (i + len < s1.Length && j + len < s2.Length &&
-                           !used1[i + len] && !used2[j + len] &&
-                           s1[i + len] == s2[j + len])
-                    {
-                        len++;
-                    }
-
-                    if (len > maxLen)
-                    {
-                        maxLen = len;
-                        maxPos1 = i;
-                        maxPos2 = j;
-                    }
-                }
-            }
+            var (maxLen, maxPos1, maxPos2) = useDiagonalScan
+                ? FindLongestUnusedRunByDiagonals(s1, s2, used1, used2)
+                : FindLongestUnusedRunByWalk(s1, s2, used1, used2);
 
             // If no common substring found or too short, stop
             if (maxLen < minLength)
@@ -366,5 +341,88 @@ public static class TextDiffHighlighter
         result.Sort((a, b) => a.pos1.CompareTo(b.pos1));
 
         return result;
+    }
+
+    private static (int maxLen, int maxPos1, int maxPos2) FindLongestUnusedRunByWalk(string s1, string s2, bool[] used1, bool[] used2)
+    {
+        int maxLen = 0;
+        int maxPos1 = 0;
+        int maxPos2 = 0;
+
+        for (int i = 0; i < s1.Length; i++)
+        {
+            if (used1[i])
+            {
+                continue;
+            }
+
+            for (int j = 0; j < s2.Length; j++)
+            {
+                if (used2[j])
+                {
+                    continue;
+                }
+
+                int len = 0;
+                while (i + len < s1.Length && j + len < s2.Length &&
+                       !used1[i + len] && !used2[j + len] &&
+                       s1[i + len] == s2[j + len])
+                {
+                    len++;
+                }
+
+                if (len > maxLen)
+                {
+                    maxLen = len;
+                    maxPos1 = i;
+                    maxPos2 = j;
+                }
+            }
+        }
+
+        return (maxLen, maxPos1, maxPos2);
+    }
+
+    private static (int maxLen, int maxPos1, int maxPos2) FindLongestUnusedRunByDiagonals(string s1, string s2, bool[] used1, bool[] used2)
+    {
+        int maxLen = 0;
+        int maxPos1 = 0;
+        int maxPos2 = 0;
+
+        // Walking each anti-diagonal backward, the run length starting at (i, j) is just the
+        // run below-right plus one - no per-cell re-walk, no table. The explicit tie-break
+        // compensates for the diagonal visiting order.
+        void WalkDiagonal(int startI, int startJ)
+        {
+            var steps = Math.Min(s1.Length - startI, s2.Length - startJ);
+            var below = 0; // run length starting at (i + 1, j + 1)
+            for (var t = steps - 1; t >= 0; t--)
+            {
+                int i = startI + t;
+                int j = startJ + t;
+                var run = !used1[i] && !used2[j] && s1[i] == s2[j] ? below + 1 : 0;
+                below = run;
+
+                if (run > maxLen ||
+                    (run == maxLen && run > 0 && (i < maxPos1 || (i == maxPos1 && j < maxPos2))))
+                {
+                    maxLen = run;
+                    maxPos1 = i;
+                    maxPos2 = j;
+                }
+            }
+        }
+
+        for (int startI = 0; startI < s1.Length; startI++)
+        {
+            WalkDiagonal(startI, 0);
+        }
+
+        for (int startJ = 1; startJ < s2.Length; startJ++)
+        {
+            WalkDiagonal(0, startJ);
+        }
+
+        return (maxLen, maxPos1, maxPos2);
     }
 }

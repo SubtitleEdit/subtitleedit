@@ -2,6 +2,7 @@ using System.Net.Http;
 using System.Net;
 
 using Nikse.SubtitleEdit.Core.Common;
+using Nikse.SubtitleEdit.Core.Settings;
 
 namespace Nikse.SubtitleEdit.UiLogic.Http
 {
@@ -9,37 +10,47 @@ namespace Nikse.SubtitleEdit.UiLogic.Http
     {
         public static HttpClient CreateHttpClientWithProxy()
         {
-            var proxySettings = Configuration.Settings.Proxy;
-            var proxyAddress = proxySettings.ProxyAddress;
-            if (string.IsNullOrEmpty(proxyAddress))
+            return new HttpClient(CreateHandler());
+        }
+
+        public static HttpClientHandler CreateHandler()
+        {
+            return CreateHandler(Configuration.Settings.Proxy);
+        }
+
+        public static HttpClientHandler CreateHandler(ProxySettings proxySettings)
+        {
+            var handler = new HttpClientHandler();
+
+            if (string.IsNullOrEmpty(proxySettings.ProxyAddress))
             {
+                // No proxy configured in SE - requests still go through the system/environment
+                // proxy, so the loopback + bypass-list behavior must apply there too.
                 var systemProxy = HttpClient.DefaultProxy;
-                if (systemProxy == null)
+                if (systemProxy != null)
                 {
-                    return new HttpClient();
+                    handler.UseProxy = true;
+                    handler.Proxy = new BypassingWebProxy(systemProxy, proxySettings.BypassList);
                 }
 
-                var defaultHandler = new HttpClientHandler
+                if (proxySettings.UseDefaultCredentials)
                 {
-                    UseProxy = true,
-                    Proxy = new BypassingWebProxy(systemProxy, proxySettings.BypassList),
-                };
+                    handler.Credentials = CredentialCache.DefaultNetworkCredentials;
+                }
 
-                return new HttpClient(defaultHandler);
+                return handler;
             }
 
-            var handler = new HttpClientHandler();
-            var proxy = new WebProxy(proxyAddress);
+            var proxy = new WebProxy(proxySettings.ProxyAddress);
 
-            var userName = proxySettings.UserName;
-            var password = proxySettings.DecodePassword();
-            var domain = proxySettings.Domain;
-
-            if (!proxySettings.UseDefaultCredentials && !string.IsNullOrEmpty(userName))
+            if (!proxySettings.UseDefaultCredentials && !string.IsNullOrEmpty(proxySettings.UserName))
             {
-                proxy.Credentials = string.IsNullOrEmpty(domain)
-                    ? new NetworkCredential(userName, password)
-                    : new NetworkCredential(userName, password, domain);
+                // Credentials go on the proxy itself - a CredentialCache would need
+                // ProxySettings.AuthType, which nothing ever sets, and
+                // CredentialCache.Add throws on a null auth type.
+                proxy.Credentials = string.IsNullOrWhiteSpace(proxySettings.Domain)
+                    ? new NetworkCredential(proxySettings.UserName, proxySettings.DecodePassword())
+                    : new NetworkCredential(proxySettings.UserName, proxySettings.DecodePassword(), proxySettings.Domain);
             }
             else
             {
@@ -49,7 +60,7 @@ namespace Nikse.SubtitleEdit.UiLogic.Http
             handler.UseProxy = true;
             handler.Proxy = new BypassingWebProxy(proxy, proxySettings.BypassList);
 
-            return new HttpClient(handler);
+            return handler;
         }
     }
 }

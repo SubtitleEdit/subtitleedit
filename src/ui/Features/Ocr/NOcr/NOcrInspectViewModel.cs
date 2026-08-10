@@ -289,7 +289,7 @@ public partial class NOcrInspectViewModel : ObservableObject
         addVm.ShowAbort = false;
         addVm.ShowCancel = true;
         var addWindow = new NOcrCharacterAddWindow(addVm);
-        await addWindow.ShowDialog(Window!);
+        await WindowService.ShowModalAsync(Window!, addWindow);
 
         if (addVm.OkPressed)
         {
@@ -304,7 +304,7 @@ public partial class NOcrInspectViewModel : ObservableObject
             var historyVm = new NOcrCharacterHistoryViewModel();
             historyVm.Initialize(_nOcrDb, _nOcrAddHistoryManager);
             var historyWindow = new NOcrCharacterHistoryWindow(historyVm);
-            await historyWindow.ShowDialog(Window!);
+            await WindowService.ShowModalAsync(Window!, historyWindow);
         }
     }
 
