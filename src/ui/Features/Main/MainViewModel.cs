@@ -2540,7 +2540,9 @@ public partial class MainViewModel :
                 return false;
             }
 
+            // Both choices are remembered, so the next mismatching original opens the way this one did.
             Se.Settings.General.AllowEditOfOriginalSubtitle = prompt.AllowEditOfOriginal;
+            Se.Settings.General.ShowOriginalNonMatchingLines = prompt.ShowAllOriginalLines;
             var isReadOnly = !prompt.AllowEditOfOriginal;
 
             if (prompt.ShowAllOriginalLines)

@@ -75,7 +75,6 @@ public partial class OpenOriginalMismatchViewModel : ObservableObject
         _showMatchingLinesOnlyText = string.Empty;
         _showMatchingLinesOnlyHint = string.Empty;
         _showMatchingLinesOnlyNote = string.Empty;
-        _showAllOriginalLines = true;
     }
 
     internal void Initialize(int originalLineCount, int currentLineCount, int matchingCount, int nonMatchingCount)
@@ -93,7 +92,9 @@ public partial class OpenOriginalMismatchViewModel : ObservableObject
         ShowMatchingLinesOnlyHint = string.Format(language.ShowMatchingOriginalLinesHint, nonMatchingCount);
         ShowMatchingLinesOnlyNote = language.ShowMatchingOriginalLinesNote;
 
-        ShowAllOriginalLines = true;
+        // Both choices are remembered from last time; the first time round that means the plain
+        // side-by-side view, with the original read-only.
+        ShowAllOriginalLines = Se.Settings.General.ShowOriginalNonMatchingLines;
         AllowEditOfOriginal = Se.Settings.General.AllowEditOfOriginalSubtitle;
         OnPropertyChanged(nameof(AllowEditHint));
     }

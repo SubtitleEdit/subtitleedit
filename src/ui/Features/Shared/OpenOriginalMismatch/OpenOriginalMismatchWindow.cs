@@ -33,15 +33,7 @@ public class OpenOriginalMismatchWindow : Window
 
         var header = MakeHeader(vm);
 
-        var cardAll = MakeModeCard(
-            IconNames.ViewSplitVertical,
-            nameof(vm.ShowAllOriginalLinesText),
-            nameof(vm.ShowAllOriginalLinesHint),
-            nameof(vm.ShowAllOriginalLines),
-            IconNames.LockClock,
-            nameof(vm.ShowAllOriginalLinesNote),
-            out var radioAll);
-
+        // Matching-lines-only first: it is the plain side-by-side view and the default.
         var cardMatching = MakeModeCard(
             IconNames.Filter,
             nameof(vm.ShowMatchingLinesOnlyText),
@@ -49,6 +41,15 @@ public class OpenOriginalMismatchWindow : Window
             nameof(vm.ShowMatchingLinesOnly),
             IconNames.Alert,
             nameof(vm.ShowMatchingLinesOnlyNote),
+            out var radioMatching);
+
+        var cardAll = MakeModeCard(
+            IconNames.ViewSplitVertical,
+            nameof(vm.ShowAllOriginalLinesText),
+            nameof(vm.ShowAllOriginalLinesHint),
+            nameof(vm.ShowAllOriginalLines),
+            IconNames.LockClock,
+            nameof(vm.ShowAllOriginalLinesNote),
             out _);
 
         var checkBoxAllowEdit = new CheckBox
@@ -101,15 +102,15 @@ public class OpenOriginalMismatchWindow : Window
             Children =
             {
                 header,
-                cardAll,
                 cardMatching,
+                cardAll,
                 allowEditRow,
                 allowEditHint,
                 buttonPanel,
             },
         };
 
-        Activated += delegate { radioAll.Focus(); }; // hack to make OnKeyDown work
+        Activated += delegate { radioMatching.Focus(); }; // hack to make OnKeyDown work
         KeyDown += (_, e) => vm.OnKeyDown(e);
     }
 
