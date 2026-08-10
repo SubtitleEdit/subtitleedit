@@ -4,8 +4,10 @@ using Avalonia.Layout;
 using Avalonia.Media;
 using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Logic;
+using Nikse.SubtitleEdit.Logic.ValueConverters;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 
 namespace Nikse.SubtitleEdit.Features.Files.Compare;
 
@@ -78,13 +80,27 @@ public static class TextDiffHighlighter
         return string.Join("\n", text.SplitToLines());
     }
 
+    // A text block laid out left to right places its runs left to right, so the chunks of a
+    // right to left line come out in reverse reading order - the line reads backwards even
+    // though each chunk on its own is fine. Each side follows its own content, so an Arabic
+    // line still compares against a Latin one (#13435).
+    private static TextBlock MakeTextBlock(string text)
+    {
+        return new TextBlock
+        {
+            TextWrapping = TextWrapping.Wrap,
+            VerticalAlignment = VerticalAlignment.Center,
+            FlowDirection = TextToFlowDirectionConverter.GetFlowDirection(text),
+        };
+    }
+
     public static (TextBlock left, TextBlock right) Compare(string text1, string text2)
     {
         text1 = NormalizeNewLines(text1);
         text2 = NormalizeNewLines(text2);
 
-        var left = new TextBlock { TextWrapping = TextWrapping.Wrap, VerticalAlignment = VerticalAlignment.Center };
-        var right = new TextBlock { TextWrapping = TextWrapping.Wrap, VerticalAlignment = VerticalAlignment.Center };
+        var left = MakeTextBlock(text1);
+        var right = MakeTextBlock(text2);
 
         if (left.Inlines == null || right.Inlines == null)
         {
@@ -143,8 +159,8 @@ public static class TextDiffHighlighter
         text1 = NormalizeNewLines(text1);
         text2 = NormalizeNewLines(text2);
 
-        var before = new TextBlock { TextWrapping = TextWrapping.Wrap, VerticalAlignment = VerticalAlignment.Center };
-        var after = new TextBlock { TextWrapping = TextWrapping.Wrap, VerticalAlignment = VerticalAlignment.Center };
+        var before = MakeTextBlock(text1);
+        var after = MakeTextBlock(text2);
 
         if (before.Inlines == null || after.Inlines == null)
         {
@@ -187,63 +203,117 @@ public static class TextDiffHighlighter
     private static void BuildDiffRuns(TextBlock textBlock, string text, int commonStart, int commonEnd,
         List<(int start, int length)> middleCommon, bool hasDifferences, IBrush diffForeground, IBrush diffBackground)
     {
-        int currentPos = 0;
+        // Mark which characters differ first, then emit one run per stretch. Going through a
+        // mask instead of straight to runs is what lets the boundaries be moved (see
+        // SnapToWordBoundaries) before anything is rendered.
+        var isDiff = BuildDiffMask(text, commonStart, commonEnd, middleCommon);
 
-        // Add prefix if common
-        if (commonStart > 0)
+        if (LanguageAutoDetect.ContainsRightToLeftLetter(text))
         {
-            textBlock.Inlines!.Add(new Run(text.Substring(0, commonStart))
-            {
-                Background = hasDifferences ? GetDiffBackgroundColor() : null
-            });
-            currentPos = commonStart;
+            SnapToWordBoundaries(text, isDiff);
         }
 
-        // Add middle parts (mix of common and different)
-        int middleEnd = text.Length - commonEnd;
-        if (middleCommon.Count > 0)
+        var commonBackground = hasDifferences ? GetDiffBackgroundColor() : null;
+
+        var pos = 0;
+        while (pos < text.Length)
         {
-            foreach (var (start, length) in middleCommon)
+            var diff = isDiff[pos];
+            var end = pos + 1;
+            while (end < text.Length && isDiff[end] == diff)
             {
-                // Add different part before this common part
-                if (start > currentPos)
+                end++;
+            }
+
+            textBlock.Inlines!.Add(new Run(text.Substring(pos, end - pos))
+            {
+                Foreground = diff ? diffForeground : null,
+                Background = diff ? diffBackground : commonBackground,
+            });
+
+            pos = end;
+        }
+    }
+
+    private static bool[] BuildDiffMask(string text, int commonStart, int commonEnd, List<(int start, int length)> middleCommon)
+    {
+        var isDiff = new bool[text.Length];
+        var currentPos = Math.Clamp(commonStart, 0, text.Length);
+        var middleEnd = Math.Clamp(text.Length - commonEnd, 0, text.Length);
+
+        foreach (var (start, length) in middleCommon)
+        {
+            var commonPartStart = Math.Clamp(start, 0, text.Length);
+            for (var i = currentPos; i < commonPartStart; i++)
+            {
+                isDiff[i] = true;
+            }
+
+            currentPos = Math.Clamp(commonPartStart + length, 0, text.Length);
+        }
+
+        for (var i = currentPos; i < middleEnd; i++)
+        {
+            isDiff[i] = true;
+        }
+
+        return isDiff;
+    }
+
+    /// <summary>
+    /// Grows every difference to cover whole words. Arabic script letters join up and Avalonia
+    /// shapes each run on its own, so a boundary inside a word forces the two halves into
+    /// isolated letter forms - a Persian word comes out as loose, unconnected letters (#13435).
+    /// Only applied to text holding right to left letters, so left to right diffs keep their
+    /// finer character level granularity.
+    /// </summary>
+    private static void SnapToWordBoundaries(string text, bool[] isDiff)
+    {
+        var i = 0;
+        while (i < text.Length)
+        {
+            if (!IsWordChar(text[i]))
+            {
+                i++;
+                continue;
+            }
+
+            var wordStart = i;
+            while (i < text.Length && IsWordChar(text[i]))
+            {
+                i++;
+            }
+
+            var wordHasDifference = false;
+            for (var j = wordStart; j < i; j++)
+            {
+                if (isDiff[j])
                 {
-                    textBlock.Inlines!.Add(new Run(text.Substring(currentPos, start - currentPos))
-                    {
-                        Foreground = diffForeground,
-                        Background = diffBackground
-                    });
+                    wordHasDifference = true;
+                    break;
                 }
+            }
 
-                // Add common part
-                textBlock.Inlines!.Add(new Run(text.Substring(start, length))
-                {
-                    Background = GetDiffBackgroundColor()
-                });
+            if (!wordHasDifference)
+            {
+                continue;
+            }
 
-                currentPos = start + length;
+            for (var j = wordStart; j < i; j++)
+            {
+                isDiff[j] = true;
             }
         }
+    }
 
-        // Add remaining different part in the middle
-        if (currentPos < middleEnd)
-        {
-            textBlock.Inlines!.Add(new Run(text.Substring(currentPos, middleEnd - currentPos))
-            {
-                Foreground = diffForeground,
-                Background = diffBackground
-            });
-            currentPos = middleEnd;
-        }
-
-        // Add suffix if common
-        if (commonEnd > 0)
-        {
-            textBlock.Inlines!.Add(new Run(text.Substring(text.Length - commonEnd))
-            {
-                Background = hasDifferences ? GetDiffBackgroundColor() : null
-            });
-        }
+    private static bool IsWordChar(char c)
+    {
+        // Zero width non-joiner and joiner sit inside Persian words (می‌رود), and Arabic
+        // diacritics are non spacing marks - both belong to the word they are written in.
+        return char.IsLetterOrDigit(c)
+               || c == '\u200c'
+               || c == '\u200d'
+               || CharUnicodeInfo.GetUnicodeCategory(c) == UnicodeCategory.NonSpacingMark;
     }
 
     private static (int commonStart, int commonEnd, List<(int start, int length)> middleCommon1, List<(int start, int length)> middleCommon2) FindCommonParts(string text1, string text2)
