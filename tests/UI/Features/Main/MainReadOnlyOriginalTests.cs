@@ -307,6 +307,123 @@ public class MainReadOnlyOriginalTests
         }
     }
 
+    /// <summary>
+    /// Time codes are locked while the original's non-matching lines are shown: those rows are placed
+    /// by matching on time, so retiming a working line would shuffle them around under the user.
+    /// </summary>
+    [AvaloniaFact]
+    public void ShowingNonMatchingOriginalLines_LocksTimeCodes()
+    {
+        var (window, vm) = CreateMainViewModel();
+        try
+        {
+            Assert.False(vm.AreTimeCodesLocked);
+
+            ImportSampleReference(vm);
+
+            Assert.True(vm.IsShowingOriginalNonMatchingLines);
+            Assert.True(vm.AreTimeCodesLocked);
+            Assert.False(vm.AreTimeCodesEditable);
+            Assert.False(vm.LockTimeCodes); // the user's own lock setting is untouched
+
+            InvokeFileCloseOriginal(vm);
+
+            Assert.False(vm.AreTimeCodesLocked);
+        }
+        finally
+        {
+            CloseWindow(window, vm);
+        }
+    }
+
+    /// <summary>
+    /// With the non-matching lines on screen the grid holds every original line exactly once, so an
+    /// editable original round-trips - which is what makes "allow edit" safe in this mode.
+    /// </summary>
+    [AvaloniaFact]
+    public void EditableOriginal_WithNonMatchingLinesShown_SavesEveryOriginalLine()
+    {
+        var (window, vm) = CreateMainViewModel();
+        try
+        {
+            AddLine(vm, "Translated one", string.Empty, 0, 2000);
+            AddLine(vm, "Translated two", string.Empty, 4000, 6000);
+
+            var reference = BuildSampleReference();
+            var match = ImportOriginalHelper.MatchOriginalLines(vm.Subtitles, reference);
+            InvokeImportOriginalSubtitle(vm, "reference.srt", reference, match, isReadOnly: false);
+
+            Assert.True(vm.CanEditOriginal);
+            Assert.True(vm.IsShowingOriginalNonMatchingLines);
+
+            // Edit the line that only exists in the original.
+            vm.Subtitles[1].OriginalText = "Edited reference-only line";
+
+            var saved = vm.GetUpdateSubtitleOriginal();
+
+            Assert.Equal(3, saved.Paragraphs.Count);
+            Assert.Equal("Reference one", saved.Paragraphs[0].Text);
+            Assert.Equal("Edited reference-only line", saved.Paragraphs[1].Text);
+            Assert.Equal("Reference two", saved.Paragraphs[2].Text);
+
+            // ...and the working subtitle is still just the two translated lines.
+            Assert.Equal(2, vm.GetUpdateSubtitle().Paragraphs.Count);
+        }
+        finally
+        {
+            CloseWindow(window, vm);
+        }
+    }
+
+    /// <summary>An edit to a display-only row must survive the re-match that follows a row change.</summary>
+    [AvaloniaFact]
+    public void EditableOriginal_ReapplyAfterRowChange_KeepsEditsToNonMatchingLines()
+    {
+        var (window, vm) = CreateMainViewModel();
+        try
+        {
+            AddLine(vm, "Translated one", string.Empty, 0, 2000);
+            AddLine(vm, "Translated two", string.Empty, 4000, 6000);
+
+            var reference = BuildSampleReference();
+            var match = ImportOriginalHelper.MatchOriginalLines(vm.Subtitles, reference);
+            InvokeImportOriginalSubtitle(vm, "reference.srt", reference, match, isReadOnly: false);
+
+            vm.Subtitles[1].OriginalText = "Edited reference-only line";
+
+            InvokeReapplyReadOnlyReference(vm);
+
+            var referenceRow = Assert.Single(vm.Subtitles, p => p.IsReferenceOnly);
+            Assert.Equal("Edited reference-only line", referenceRow.OriginalText);
+        }
+        finally
+        {
+            CloseWindow(window, vm);
+        }
+    }
+
+    /// <summary>The read-only original is authoritative: the file's text wins over any stray edit.</summary>
+    [AvaloniaFact]
+    public void ReadOnlyOriginal_ReapplyAfterRowChange_RestoresTheFilesText()
+    {
+        var (window, vm) = CreateMainViewModel();
+        try
+        {
+            ImportSampleReference(vm);
+
+            vm.Subtitles[1].OriginalText = "Tampered";
+
+            InvokeReapplyReadOnlyReference(vm);
+
+            var referenceRow = Assert.Single(vm.Subtitles, p => p.IsReferenceOnly);
+            Assert.Equal("Reference only - no translation", referenceRow.OriginalText);
+        }
+        finally
+        {
+            CloseWindow(window, vm);
+        }
+    }
+
     [AvaloniaFact]
     public void CloseOriginal_RemovesTheReferenceOnlyRows()
     {
@@ -424,10 +541,10 @@ public class MainReadOnlyOriginalTests
     private static void InvokeReapplyReadOnlyReference(MainViewModel vm)
     {
         var method = typeof(MainViewModel).GetMethod(
-                         "ReapplyReadOnlyReference", BindingFlags.Instance | BindingFlags.NonPublic)
-                     ?? throw new InvalidOperationException("ReapplyReadOnlyReference not found");
+                         "ReapplyOriginalReference", BindingFlags.Instance | BindingFlags.NonPublic)
+                     ?? throw new InvalidOperationException("ReapplyOriginalReference not found");
 
-        method.Invoke(vm, null);
+        method.Invoke(vm, new object?[] { true });
     }
 
     private static void InvokeFileCloseOriginal(MainViewModel vm)

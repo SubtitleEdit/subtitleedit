@@ -19,14 +19,6 @@ public class PromptCheckBoxWindow : Window
         vm.Window = this;
         DataContext = vm;
 
-        var infoText = new TextBlock
-        {
-            TextWrapping = Avalonia.Media.TextWrapping.Wrap,
-            MaxWidth = 460,
-            [!TextBlock.TextProperty] = new Binding(nameof(vm.InfoText)),
-            [!Visual.IsVisibleProperty] = new Binding(nameof(vm.HasInfoText)),
-        };
-
         var checkBox = new CheckBox
         {
             Margin = new Thickness(0, 0, 10, 0),
@@ -43,7 +35,6 @@ public class PromptCheckBoxWindow : Window
         {
             RowDefinitions =
             {
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
             },
@@ -55,9 +46,8 @@ public class PromptCheckBoxWindow : Window
             RowSpacing = 10,
         };
 
-        grid.Add(infoText, 0);
-        grid.Add(checkBox, 1);
-        grid.Add(buttonPanel, 2);
+        grid.Add(checkBox, 0);
+        grid.Add(buttonPanel, 1);
 
         Content = grid;
 

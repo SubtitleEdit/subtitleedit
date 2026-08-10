@@ -92,8 +92,8 @@ using Nikse.SubtitleEdit.Features.Shared.PickMatroskaTrack;
 using Nikse.SubtitleEdit.Features.Shared.PickMp4Track;
 using Nikse.SubtitleEdit.Features.Shared.PickRuleProfile;
 using Nikse.SubtitleEdit.Features.Shared.PickSpellCheckDictionary;
+using Nikse.SubtitleEdit.Features.Shared.OpenOriginalMismatch;
 using Nikse.SubtitleEdit.Features.Shared.PickSubtitleFormat;
-using Nikse.SubtitleEdit.Features.Shared.PromptCheckBox;
 using Nikse.SubtitleEdit.Features.Shared.PickTsTrack;
 using Nikse.SubtitleEdit.Features.Shared.PickVobSubLanguage;
 using Nikse.SubtitleEdit.Features.Shared.PromptFileSaved;
@@ -253,15 +253,27 @@ public partial class MainViewModel :
     private bool _showColumnOriginalText;
 
     /// <summary>
-    /// The original subtitle was opened as a read-only reference: it does not line up 1:1 with the
-    /// working subtitle, so it is shown side by side but never edited and never written back. The
-    /// file on disk stays exactly as the user left it - issue #13449, where a mismatching original
-    /// was silently truncated to the matching lines and then saved over the user's file.
+    /// The original subtitle is shown but never edited and never written back, so the file on disk
+    /// stays exactly as the user left it - issue #13449, where a mismatching original was silently
+    /// truncated to the matching lines and then saved over the user's file. Set from the import
+    /// prompt's "Allow edit of original subtitle" check box.
     /// </summary>
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(CanEditOriginal))]
     [NotifyPropertyChangedFor(nameof(OriginalTextLabel))]
     private bool _isOriginalReadOnly;
+
+    /// <summary>
+    /// The original's lines that have no counterpart in the working subtitle are shown as
+    /// display-only rows. Independent of <see cref="IsOriginalReadOnly"/>: with these rows on screen
+    /// the grid holds every line of the original exactly once, so editing and saving the original is
+    /// lossless - which is why it may be combined with "Allow edit of original subtitle". Time codes
+    /// are locked while it is on, see <see cref="AreTimeCodesLocked"/>.
+    /// </summary>
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(AreTimeCodesEditable))]
+    [NotifyPropertyChangedFor(nameof(AreTimeCodesLocked))]
+    private bool _isShowingOriginalNonMatchingLines;
 
     /// <summary>Whether the original text column may be written to (see <see cref="IsOriginalReadOnly"/>).</summary>
     public bool CanEditOriginal => ShowColumnOriginalText && !IsOriginalReadOnly;
@@ -287,13 +299,23 @@ public partial class MainViewModel :
     [ObservableProperty] private bool _isColumnLayerVisible;
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(AreTimeCodesEditable))]
+    [NotifyPropertyChangedFor(nameof(AreTimeCodesLocked))]
     private bool _lockTimeCodes;
 
     /// <summary>
-    /// Whether the show/hide/duration editors accept input: not while time codes are locked, and not
-    /// on a display-only reference row, whose timings belong to the reference file (#13449).
+    /// Whether time codes may be changed at all right now. Either the user locked them, or the
+    /// original's non-matching lines are on screen: those rows are placed by matching the original
+    /// against the working lines by time, so retiming a working line would re-match it onto a
+    /// different original line and shuffle the extra rows around under the user (#13449). The mode
+    /// is for reading the original alongside the translation, not for retiming.
     /// </summary>
-    public bool AreTimeCodesEditable => !LockTimeCodes && !IsSelectedLineReferenceOnly;
+    public bool AreTimeCodesLocked => LockTimeCodes || IsShowingOriginalNonMatchingLines;
+
+    /// <summary>
+    /// Whether the show/hide/duration editors accept input: not while time codes are locked, and not
+    /// on a display-only reference row, whose timings belong to the original file (#13449).
+    /// </summary>
+    public bool AreTimeCodesEditable => !AreTimeCodesLocked && !IsSelectedLineReferenceOnly;
     [ObservableProperty] private bool _areVideoControlsUndocked;
     [ObservableProperty] private bool _isFormatAssa;
     [ObservableProperty] private bool _isFormatSsa;
@@ -1484,7 +1506,7 @@ public partial class MainViewModel :
         Se.Settings.General.LockTimeCodes = LockTimeCodes;
         if (AudioVisualizer != null)
         {
-            AudioVisualizer.IsReadOnly = LockTimeCodes;
+            AudioVisualizer.IsReadOnly = AreTimeCodesLocked;
         }
     }
 
@@ -2331,6 +2353,7 @@ public partial class MainViewModel :
         IsSmpteTimingEnabled = false;
         ShowColumnOriginalText = false;
         IsOriginalReadOnly = false;
+        IsShowingOriginalNonMatchingLines = false;
         _subtitle.Paragraphs.Clear();
         Subtitles.Clear();
         Se.Settings.General.CurrentVideoIsSmpte = false;
@@ -2499,53 +2522,39 @@ public partial class MainViewModel :
         }
         else
         {
-            // The original does not line up 1:1 with the working subtitle. SE5 stores the original
-            // as a column of the working row, so the only way to "import" it is to throw away the
-            // lines that have no counterpart - and the truncated result then gets written back over
-            // the user's file by the next (auto-)save. Offer the read-only reference instead, which
-            // keeps the file intact and never saves it (issue #13449).
+            // The original does not line up 1:1 with the working subtitle. SE5 stores the original as
+            // a column of the working row, so the old "import the matching lines" threw away every
+            // line without a counterpart - and the truncated result was then written back over the
+            // user's file by the next (auto-)save. Ask what to show, and whether it may be edited
+            // (issue #13449).
             var match = ImportOriginalHelper.MatchOriginalLines(Subtitles, subtitle);
             var originalWithTextCount = match.Projection.Paragraphs.Count(p => !string.IsNullOrEmpty(p.Text));
 
-            var msg = string.Format(Se.Language.Main.OpenOriginalDifferentNumberOfSubtitlesXY, subtitle.Paragraphs.Count, Subtitles.Count) +
-                      Environment.NewLine + Environment.NewLine +
-                      string.Format(Se.Language.Main.OpenOriginalAsReadOnlyReferenceQuestion, originalWithTextCount);
-            var answer = await MessageBox.Show(Window!, Se.Language.General.Information, msg, MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
-
-            if (answer == MessageBoxResult.Yes)
+            var prompt = await ShowDialogAsync<OpenOriginalMismatchWindow, OpenOriginalMismatchViewModel>(vm =>
             {
-                ImportOriginalSubtitle(selectedIndex, fileName, subtitle, match, isReadOnly: true);
+                vm.Initialize(subtitle.Paragraphs.Count, Subtitles.Count, originalWithTextCount, match.Unmatched.Count);
+            });
+
+            if (!prompt.OkPressed)
+            {
+                return false;
+            }
+
+            Se.Settings.General.AllowEditOfOriginalSubtitle = prompt.AllowEditOfOriginal;
+            var isReadOnly = !prompt.AllowEditOfOriginal;
+
+            if (prompt.ShowAllOriginalLines)
+            {
+                // The whole original: matched lines in their working row, the rest as display-only
+                // rows. Nothing of it is dropped, so editing it stays lossless.
+                ImportOriginalSubtitle(selectedIndex, fileName, subtitle, match, isReadOnly);
                 return true;
             }
 
-            if (answer == MessageBoxResult.No && originalWithTextCount > 0)
+            if (originalWithTextCount > 0)
             {
-                // The old SE mode: only the matching lines are shown. Spell out what that costs, and
-                // offer SE4's "Allow edit of original subtitle" - with it off (the default) the
-                // original is read-only, so the lines that were left out cannot be saved away.
-                var prompt = await ShowDialogAsync<PromptCheckBoxWindow, PromptCheckBoxViewModel>(vm =>
-                {
-                    vm.Initialize(
-                        Se.Language.Main.ImportMatchingOriginalLinesTitle,
-                        Se.Language.Main.AllowEditOfOriginalSubtitle,
-                        Se.Settings.General.AllowEditOfOriginalSubtitle,
-                        string.Format(
-                            Se.Language.Main.ImportMatchingOriginalLinesInfo,
-                            originalWithTextCount,
-                            match.Unmatched.Count,
-                            Path.GetFileName(fileName)));
-                });
-
-                if (!prompt.OkPressed)
-                {
-                    return false;
-                }
-
-                Se.Settings.General.AllowEditOfOriginalSubtitle = prompt.IsChecked;
-
-                // No match passed: this mode deliberately shows the matching lines only, with no
-                // reference-only rows for the rest.
-                ImportOriginalSubtitle(selectedIndex, fileName, match.Projection, isReadOnly: !prompt.IsChecked);
+                // The old SE mode: the matching lines only, with no rows for the rest.
+                ImportOriginalSubtitle(selectedIndex, fileName, match.Projection, isReadOnly: isReadOnly);
                 return true;
             }
         }
@@ -2558,9 +2567,9 @@ public partial class MainViewModel :
     /// </summary>
     /// <param name="match">
     /// The time alignment against the working rows. Null when <paramref name="subtitle"/> already
-    /// lines up 1:1 and can be used row for row. When the original is a read-only reference, its
-    /// projection fills the original column and its unmatched lines become reference-only rows,
-    /// while <paramref name="subtitle"/> stays the complete, untouched file.
+    /// lines up 1:1 and can be used row for row, or when the user asked for the matching lines only.
+    /// When given, its projection fills the original column and its unmatched lines become
+    /// display-only rows, while <paramref name="subtitle"/> stays the complete original.
     /// </param>
     private void ImportOriginalSubtitle(int selectedIndex, string fileName, Subtitle subtitle, ImportOriginalHelper.OriginalMatch? match = null, bool isReadOnly = false)
     {
@@ -2569,6 +2578,7 @@ public partial class MainViewModel :
         _subtitleOriginal = subtitle;
         _subtitleFileNameOriginal = fileName;
         IsOriginalReadOnly = isReadOnly;
+        IsShowingOriginalNonMatchingLines = match is { Unmatched.Count: > 0 };
 
         var rowTexts = match?.Projection ?? subtitle;
         for (var i = 0; i < Subtitles.Count && i < rowTexts.Paragraphs.Count; i++)
@@ -2576,7 +2586,7 @@ public partial class MainViewModel :
             Subtitles[i].OriginalText = rowTexts.Paragraphs[i].Text;
         }
 
-        if (isReadOnly && match != null)
+        if (match != null)
         {
             InsertReferenceOnlyRows(match.Unmatched);
         }
@@ -2628,18 +2638,29 @@ public partial class MainViewModel :
     }
 
     /// <summary>
-    /// Re-derives everything the read-only reference contributes to the grid - the original column
-    /// texts and the reference-only rows - by matching the reference file against the current rows
-    /// again. Both are a projection of the reference, so they go stale whenever the working rows are
-    /// merged, split, retimed or rebuilt wholesale (#13449).
+    /// Re-derives what the original contributes to the grid - the original column texts and the
+    /// display-only rows for its non-matching lines - by matching the original against the current
+    /// rows again. Both are a projection, so they go stale whenever the working rows are merged,
+    /// split, deleted or rebuilt wholesale (#13449).
     /// </summary>
-    private void ReapplyReadOnlyReference()
+    /// <param name="capture">
+    /// Whether to fold the rows' current original text back into the original first. Needed when the
+    /// original is editable, or the user's edits would be overwritten by the file's text; pass false
+    /// when the caller already captured (the display-only rows are gone by then and their text would
+    /// be lost from the capture).
+    /// </param>
+    private void ReapplyOriginalReference(bool capture = true)
     {
         _referenceMappingDirty = false;
 
-        if (!IsOriginalReadOnly || _subtitleOriginal == null || _subtitleOriginal.Paragraphs.Count == 0)
+        if (!IsShowingOriginalNonMatchingLines || _subtitleOriginal == null || _subtitleOriginal.Paragraphs.Count == 0)
         {
             return;
+        }
+
+        if (capture)
+        {
+            CaptureOriginalFromRows();
         }
 
         _reapplyingReadOnlyReference = true;
@@ -2677,12 +2698,14 @@ public partial class MainViewModel :
     /// </summary>
     private void WithoutReferenceOnlyRows(Action action)
     {
-        if (!IsOriginalReadOnly)
+        if (!IsShowingOriginalNonMatchingLines)
         {
             action();
             return;
         }
 
+        // Capture before the rows go: an editable original keeps its non-matching lines only in them.
+        CaptureOriginalFromRows();
         RemoveReferenceOnlyRows();
         try
         {
@@ -2690,8 +2713,36 @@ public partial class MainViewModel :
         }
         finally
         {
-            ReapplyReadOnlyReference();
+            ReapplyOriginalReference(capture: false);
         }
+    }
+
+    /// <summary>
+    /// Folds the grid's original column - display-only rows included - back into the original
+    /// subtitle, so the original reflects the user's edits before it is re-matched or saved. A
+    /// read-only original is never edited, so the file stays authoritative and nothing is captured.
+    /// </summary>
+    private void CaptureOriginalFromRows()
+    {
+        if (IsOriginalReadOnly || _subtitleOriginal == null)
+        {
+            return;
+        }
+
+        // Every original line lives in exactly one row here: matched ones in their working row, the
+        // rest in the display-only rows - so this round-trips the whole original.
+        var format = _subtitleOriginal.OriginalFormat ?? SelectedSubtitleFormat;
+        var captured = new Subtitle(_subtitleOriginal);
+        captured.Paragraphs.Clear();
+        foreach (var line in Subtitles)
+        {
+            if (line.IsReferenceOnly || !string.IsNullOrEmpty(line.OriginalText))
+            {
+                captured.Paragraphs.Add(line.ToParagraphOriginal(format));
+            }
+        }
+
+        _subtitleOriginal = captured;
     }
 
     /// <summary>Drops every display-only reference row, leaving the working subtitle behind.</summary>
@@ -2736,14 +2787,15 @@ public partial class MainViewModel :
     [RelayCommand]
     private void FileCloseOriginal()
     {
-        if (IsOriginalReadOnly)
+        if (IsOriginalReadOnly || IsShowingOriginalNonMatchingLines)
         {
-            // A read-only reference is closed for good rather than just hidden: its reference-only
-            // rows have no meaning without it, and leaving them behind would show blank rows.
+            // Closed for good rather than just hidden: the display-only rows have no meaning without
+            // the original, and leaving them behind would show blank rows in the grid.
             RemoveReferenceOnlyRows();
             _subtitleOriginal = new Subtitle();
             _subtitleFileNameOriginal = string.Empty;
             IsOriginalReadOnly = false;
+            IsShowingOriginalNonMatchingLines = false;
 
             foreach (var line in Subtitles)
             {
@@ -5641,6 +5693,7 @@ public partial class MainViewModel :
         _converted = true;
         _shortcutManager.ClearKeys();
         IsOriginalReadOnly = false; // a translation made here always lines up 1:1 with its original
+        IsShowingOriginalNonMatchingLines = false;
         ShowColumnOriginalText = true;
         AutoFitColumns();
         ShowStatus(Se.Language.Main.CreatedEmptyTranslation);
@@ -9378,6 +9431,7 @@ public partial class MainViewModel :
 
         _converted = true;
         IsOriginalReadOnly = false; // the translation was made from the current rows, so it lines up 1:1
+        IsShowingOriginalNonMatchingLines = false;
         ShowColumnOriginalText = true;
         AutoFitColumns();
         _updateAudioVisualizer = true;
@@ -9479,6 +9533,7 @@ public partial class MainViewModel :
         _subtitleOriginal.OriginalFormat = _subtitle.OriginalFormat ?? SelectedSubtitleFormat;
         _subtitleFileName = string.Empty;
         IsOriginalReadOnly = false; // the translation was made from the current rows, so it lines up 1:1
+        IsShowingOriginalNonMatchingLines = false;
         ShowColumnOriginalText = true;
         AutoFitColumns();
         _updateAudioVisualizer = true;
@@ -10149,7 +10204,7 @@ public partial class MainViewModel :
             AudioVisualizer.ParagraphSelectedBackground = Se.Settings.Waveform.ParagraphSelectedBackground.FromHexToColor();
             AudioVisualizer.InvertMouseWheel = Se.Settings.Waveform.InvertMouseWheel;
             AudioVisualizer.UpdateTheme();
-            AudioVisualizer.IsReadOnly = LockTimeCodes;
+            AudioVisualizer.IsReadOnly = AreTimeCodesLocked;
             AudioVisualizer.WaveformDrawStyle = InitWaveform.GetWaveformDrawStyle(Se.Settings.Waveform.WaveformDrawStyle);
             AudioVisualizer.MinGapSeconds = Se.Settings.General.MinimumBetweenLines.GetMilliseconds() / 1000.0;
             AudioVisualizer.WaveformHeightPercentage = Se.Settings.Waveform.SpectrogramCombinedWaveformHeight;
@@ -11282,7 +11337,7 @@ public partial class MainViewModel :
     private void MoveStartByFrames(int frames, bool keepGapPrevIfClose)
     {
         var s = SelectedSubtitle;
-        if (s == null || LockTimeCodes)
+        if (s == null || AreTimeCodesLocked)
         {
             return;
         }
@@ -11338,7 +11393,7 @@ public partial class MainViewModel :
     private void MoveEndByFrames(int frames, bool keepGapNextIfClose)
     {
         var s = SelectedSubtitle;
-        if (s == null || LockTimeCodes)
+        if (s == null || AreTimeCodesLocked)
         {
             return;
         }
@@ -14651,7 +14706,7 @@ public partial class MainViewModel :
     {
         var s = SelectedSubtitle;
         var vp = GetVideoPlayerControl();
-        if (s == null || vp == null || LockTimeCodes)
+        if (s == null || vp == null || AreTimeCodesLocked)
         {
             return;
         }
@@ -14684,7 +14739,7 @@ public partial class MainViewModel :
     {
         var s = SelectedSubtitle;
         var vp = GetVideoPlayerControl();
-        if (s == null || vp == null || LockTimeCodes)
+        if (s == null || vp == null || AreTimeCodesLocked)
         {
             return;
         }
@@ -14723,7 +14778,7 @@ public partial class MainViewModel :
     {
         var s = SelectedSubtitle;
         var vp = GetVideoPlayerControl();
-        if (s == null || vp == null || LockTimeCodes)
+        if (s == null || vp == null || AreTimeCodesLocked)
         {
             return;
         }
@@ -14760,7 +14815,7 @@ public partial class MainViewModel :
         // from WaveformSetEndAndGoToNext.
         var s = SelectedSubtitle;
         var vp = GetVideoPlayerControl();
-        if (s == null || vp == null || LockTimeCodes)
+        if (s == null || vp == null || AreTimeCodesLocked)
         {
             return;
         }
@@ -14799,7 +14854,7 @@ public partial class MainViewModel :
     {
         var s = SelectedSubtitle;
         var vp = GetVideoPlayerControl();
-        if (s == null || vp == null || LockTimeCodes)
+        if (s == null || vp == null || AreTimeCodesLocked)
         {
             return;
         }
@@ -14830,7 +14885,7 @@ public partial class MainViewModel :
     {
         var s = SelectedSubtitle;
         var vp = GetVideoPlayerControl();
-        if (s == null || vp == null || LockTimeCodes)
+        if (s == null || vp == null || AreTimeCodesLocked)
         {
             return;
         }
@@ -14862,7 +14917,7 @@ public partial class MainViewModel :
     {
         var s = SelectedSubtitle;
         var vp = GetVideoPlayerControl();
-        if (s == null || vp == null || LockTimeCodes)
+        if (s == null || vp == null || AreTimeCodesLocked)
         {
             return;
         }
@@ -14901,7 +14956,7 @@ public partial class MainViewModel :
     {
         var s = SelectedSubtitle;
         var vp = GetVideoPlayerControl();
-        if (s == null || vp == null || AudioVisualizer == null || LockTimeCodes)
+        if (s == null || vp == null || AudioVisualizer == null || AreTimeCodesLocked)
         {
             return;
         }
@@ -14948,7 +15003,7 @@ public partial class MainViewModel :
     {
         var s = SelectedSubtitle;
         var vp = GetVideoPlayerControl();
-        if (s == null || AudioVisualizer?.WavePeaks == null || vp == null || LockTimeCodes)
+        if (s == null || AudioVisualizer?.WavePeaks == null || vp == null || AreTimeCodesLocked)
         {
             return;
         }
@@ -14979,7 +15034,7 @@ public partial class MainViewModel :
     {
         var s = SelectedSubtitle;
         var vp = GetVideoPlayerControl();
-        if (s == null || AudioVisualizer?.WavePeaks == null || vp == null || LockTimeCodes)
+        if (s == null || AudioVisualizer?.WavePeaks == null || vp == null || AreTimeCodesLocked)
         {
             return;
         }
@@ -15012,7 +15067,7 @@ public partial class MainViewModel :
     {
         var s = SelectedSubtitle;
         var vp = GetVideoPlayerControl();
-        if (s == null || AudioVisualizer?.WavePeaks == null || vp == null || LockTimeCodes)
+        if (s == null || AudioVisualizer?.WavePeaks == null || vp == null || AreTimeCodesLocked)
         {
             return;
         }
@@ -15746,7 +15801,7 @@ public partial class MainViewModel :
     private void ExtendSelectedToPrevious()
     {
         var selectedItems = _selectedSubtitles?.ToList() ?? [];
-        if (selectedItems.Count == 0 || LockTimeCodes)
+        if (selectedItems.Count == 0 || AreTimeCodesLocked)
         {
             return;
         }
@@ -15770,7 +15825,7 @@ public partial class MainViewModel :
     private void ExtendSelectedToNext()
     {
         var selectedItems = _selectedSubtitles?.ToList() ?? [];
-        if (selectedItems.Count == 0 || LockTimeCodes)
+        if (selectedItems.Count == 0 || AreTimeCodesLocked)
         {
             return;
         }
@@ -15801,7 +15856,7 @@ public partial class MainViewModel :
     {
         var s = SelectedSubtitle;
         var idx = SelectedSubtitleIndex;
-        if (s == null || idx == null || idx == 0 || LockTimeCodes)
+        if (s == null || idx == null || idx == 0 || AreTimeCodesLocked)
         {
             return;
         }
@@ -15816,7 +15871,7 @@ public partial class MainViewModel :
     {
         var s = SelectedSubtitle;
         var idx = SelectedSubtitleIndex;
-        if (s == null || idx == null || idx >= Subtitles.Count - 1 || LockTimeCodes)
+        if (s == null || idx == null || idx >= Subtitles.Count - 1 || AreTimeCodesLocked)
         {
             return;
         }
@@ -19086,13 +19141,21 @@ public partial class MainViewModel :
         _subtitleOriginal.Paragraphs.Clear();
         foreach (var line in Subtitles)
         {
-            if (line.IsReferenceOnly)
+            // With the original's non-matching lines on screen, the display-only rows ARE original
+            // lines - they hold the ones with no counterpart here - so they must be written, and
+            // working rows that matched nothing contribute no original line. Including the former is
+            // what makes saving an editable original lossless (#13449).
+            //
+            // In the ordinary 1:1 translation mode every row maps to one original line, empty ones
+            // included: dropping those would shift the whole file against the translation.
+            if (IsShowingOriginalNonMatchingLines &&
+                !line.IsReferenceOnly &&
+                string.IsNullOrEmpty(line.OriginalText))
             {
                 continue;
             }
 
-            var p = line.ToParagraphOriginal(originalFormat);
-            _subtitleOriginal.Paragraphs.Add(p);
+            _subtitleOriginal.Paragraphs.Add(line.ToParagraphOriginal(originalFormat));
         }
 
         return _subtitleOriginal;
@@ -19242,14 +19305,14 @@ public partial class MainViewModel :
             // A read-only reference must not be rebuilt from the rows - the rows only hold its
             // time-matched projection, so that would drop the lines with no counterpart (#13449).
             // It is re-applied to the fresh rows below instead.
-            if (!IsOriginalReadOnly)
+            if (!IsOriginalReadOnly && !IsShowingOriginalNonMatchingLines)
             {
                 _subtitleOriginal = GetUpdateSubtitleOriginal();
             }
 
             previousFormat.RemoveNativeFormatting(_subtitle, saveAsResult.SubtitleFormat);
-            SetSubtitles(_subtitle, IsOriginalReadOnly ? null : _subtitleOriginal);
-            ReapplyReadOnlyReference();
+            SetSubtitles(_subtitle, IsOriginalReadOnly || IsShowingOriginalNonMatchingLines ? null : _subtitleOriginal);
+            ReapplyOriginalReference();
         }
 
         SetSubtitleFormat(saveAsResult.SubtitleFormat);
@@ -19632,7 +19695,7 @@ public partial class MainViewModel :
 
         if (AudioVisualizer != null)
         {
-            AudioVisualizer.IsReadOnly = LockTimeCodes;
+            AudioVisualizer.IsReadOnly = AreTimeCodesLocked;
         }
 
         if (Program.FileOpenedViaActivation &&
@@ -23531,7 +23594,7 @@ public partial class MainViewModel :
     {
         _mpvPreviewDirty = true;
         _waveformSubtitleBufferDirty = true;
-        if (IsOriginalReadOnly && !_reapplyingReadOnlyReference)
+        if (IsShowingOriginalNonMatchingLines && !_reapplyingReadOnlyReference)
         {
             _referenceMappingDirty = true;
         }
@@ -23553,7 +23616,7 @@ public partial class MainViewModel :
             _waveformSubtitleBufferDirty = true;
 
             // Retiming a row can move it onto (or off) a different reference line.
-            if (IsOriginalReadOnly && !_reapplyingReadOnlyReference)
+            if (IsShowingOriginalNonMatchingLines && !_reapplyingReadOnlyReference)
             {
                 _referenceMappingDirty = true;
             }
@@ -24136,7 +24199,7 @@ public partial class MainViewModel :
             // both files, and a burst of deletes would otherwise pay for it on every single row.
             if (_referenceMappingDirty && !IsUserEditing())
             {
-                ReapplyReadOnlyReference();
+                ReapplyOriginalReference();
             }
 
             // GetFastHash()/GetFastHashOriginal() are O(n) over all lines. Compute them once per tick
@@ -25420,7 +25483,7 @@ public partial class MainViewModel :
                 _subtitle = GetUpdateSubtitle();
 
                 // See the same guard in the "Save as" format conversion (#13449).
-                if (!IsOriginalReadOnly)
+                if (!IsOriginalReadOnly && !IsShowingOriginalNonMatchingLines)
                 {
                     _subtitleOriginal = GetUpdateSubtitleOriginal();
                 }
@@ -25467,8 +25530,8 @@ public partial class MainViewModel :
                     SetAssaResolution(true);
                 }
 
-                SetSubtitles(_subtitle, IsOriginalReadOnly ? null : _subtitleOriginal);
-                ReapplyReadOnlyReference();
+                SetSubtitles(_subtitle, IsOriginalReadOnly || IsShowingOriginalNonMatchingLines ? null : _subtitleOriginal);
+                ReapplyOriginalReference();
             }
         }
 
@@ -25907,7 +25970,7 @@ public partial class MainViewModel :
     internal void AudioVisualizerSetStartAndOffsetTheRest(object sender, AudioVisualizer.PositionEventArgs e)
     {
         var s = SelectedSubtitle;
-        if (s == null || LockTimeCodes)
+        if (s == null || AreTimeCodesLocked)
         {
             return;
         }

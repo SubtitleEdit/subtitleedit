@@ -11,13 +11,6 @@ public partial class PromptCheckBoxViewModel : ObservableObject
     [ObservableProperty] private string _checkBoxText;
     [ObservableProperty] private bool _isChecked;
 
-    /// <summary>Optional explanatory text shown above the check box; the block is hidden when empty.</summary>
-    [ObservableProperty]
-    [NotifyPropertyChangedFor(nameof(HasInfoText))]
-    private string _infoText;
-
-    public bool HasInfoText => !string.IsNullOrEmpty(InfoText);
-
     public Window? Window { get; set; }
 
     public bool OkPressed { get; private set; }
@@ -26,15 +19,13 @@ public partial class PromptCheckBoxViewModel : ObservableObject
     {
         Title = string.Empty;
         CheckBoxText = string.Empty;
-        InfoText = string.Empty;
     }
 
-    internal void Initialize(string title, string checkBoxText, bool isChecked, string infoText = "")
+    internal void Initialize(string title, string checkBoxText, bool isChecked)
     {
         Title = title;
         CheckBoxText = checkBoxText;
         IsChecked = isChecked;
-        InfoText = infoText;
     }
 
     [RelayCommand]
