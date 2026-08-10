@@ -680,6 +680,7 @@ public class LanguageGeneral
     public string PixelWidth { get; set; }
     public string Wpm { get; set; }
     public string XFiles { get; set; }
+    public string XOfYFiles { get; set; }
     public string XFilesConvertedInY { get; set; }
     public string XNoLinesUpdated { get; set; }
     public string XNotFound { get; set; }
@@ -1419,6 +1420,7 @@ public class LanguageGeneral
         PixelWidth = "Pixel width";
         Wpm = "Words/min";
         XFiles = "{0:#,###,##0} files";
+        XOfYFiles = "{0:#,###,##0} of {1:#,###,##0} files";
         XFilesConvertedInY = "{0:#,###,##0} files converted in {1}";
         XNoLinesUpdated = "{0}: no line(s) updated";
         XNotFound = "\"{0}\" not found";

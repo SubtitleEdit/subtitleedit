@@ -493,22 +493,34 @@ public partial class BatchConvertViewModel : ObservableObject, IClosingCleanup
                 BatchItems.Add(item);
             }
         }
+
+        MakeBatchItemsInfo();
     }
 
     private bool PassesFilter(BatchConvertItem item)
     {
-        if (SelectedFilterItem == Se.Language.Tools.BatchConvert.FileNameContainsDotDotDot && !string.IsNullOrEmpty(FilterText))
+        if (!IsFilterActive)
+        {
+            return true;
+        }
+
+        if (SelectedFilterItem == Se.Language.Tools.BatchConvert.FileNameContainsDotDotDot)
         {
             return item.FileName.Contains(FilterText, StringComparison.InvariantCultureIgnoreCase);
         }
 
-        if (SelectedFilterItem == Se.Language.Tools.BatchConvert.TrackLanguageContainsDotDotDot && !string.IsNullOrEmpty(FilterText))
+        if (SelectedFilterItem == Se.Language.Tools.BatchConvert.TrackLanguageContainsDotDotDot)
         {
             return item.Format.Contains(FilterText, StringComparison.InvariantCultureIgnoreCase);
         }
 
         return true;
     }
+
+    private bool IsFilterActive =>
+        !string.IsNullOrEmpty(FilterText) &&
+        (SelectedFilterItem == Se.Language.Tools.BatchConvert.FileNameContainsDotDotDot ||
+         SelectedFilterItem == Se.Language.Tools.BatchConvert.TrackLanguageContainsDotDotDot);
 
     // Appends just-parsed items to the visible grid (respecting the active filter) so files show
     // up incrementally as they load. Must run on the UI thread.
@@ -1951,17 +1963,25 @@ public partial class BatchConvertViewModel : ObservableObject, IClosingCleanup
 
     private void MakeBatchItemsInfo()
     {
-        if (BatchItems.Count == 0)
+        var total = _allBatchItems.Count;
+        var shown = BatchItems.Count;
+
+        if (total == 0)
         {
             BatchItemsInfo = string.Empty;
         }
-        else if (BatchItems.Count == 1)
+        else if (IsFilterActive)
+        {
+            // With a filter on, only the visible files get converted - show that count next to the total.
+            BatchItemsInfo = string.Format(Se.Language.General.XOfYFiles, shown, total);
+        }
+        else if (total == 1)
         {
             BatchItemsInfo = Se.Language.General.OneFile;
         }
         else
         {
-            BatchItemsInfo = string.Format(Se.Language.General.XFiles, BatchItems.Count);
+            BatchItemsInfo = string.Format(Se.Language.General.XFiles, total);
         }
     }
 
