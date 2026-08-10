@@ -4624,6 +4624,35 @@ public partial class OcrViewModel : ObservableObject
         }, DispatcherPriority.Background);
     }
 
+    partial void OnIsOcrRunningChanged(bool value)
+    {
+        if (value)
+        {
+            return;
+        }
+
+        // When OCR stops, the last per-line scroll may have run before that row's
+        // text/image finished layout, leaving the selected row just outside the
+        // viewport. ContextIdle runs below Background, i.e. after any pending
+        // SelectAndScrollToRow work and the layout passes it triggers; the second
+        // pass corrects drift from rows realized at estimated heights.
+        Dispatcher.UIThread.Post(() =>
+        {
+            ScrollSelectedRowIntoView();
+            Dispatcher.UIThread.Post(ScrollSelectedRowIntoView, DispatcherPriority.ContextIdle);
+        }, DispatcherPriority.ContextIdle);
+    }
+
+    private void ScrollSelectedRowIntoView()
+    {
+        var selected = SelectedOcrSubtitleItem;
+        var index = selected != null ? OcrSubtitleItems.IndexOf(selected) : -1;
+        if (index >= 0)
+        {
+            SubtitleGrid.ScrollIntoView(index);
+        }
+    }
+
     private void SetOcrSubtitleItems()
     {
         _allOcrSubtitleItems = _ocrSubtitle!.MakeOcrSubtitleItems();
