@@ -1399,7 +1399,9 @@ public partial class BurnInViewModel : ObservableObject
         FontMarginVertical = (int)settings.NonAssaMarginVertical;
         SelectedFontBoxType = FontBoxTypes.FirstOrDefault(p => (int)p.BoxType == settings.NonAssaBoxType) ?? FontBoxTypes[0];
 
-        SelectedVideoEncoding = VideoEncodings.FirstOrDefault(p => p.Codec == settings.Encoding) ?? VideoEncodings[0];
+        SelectedVideoEncoding = VideoEncodings.FirstOrDefault(p => p.Codec == settings.Encoding)
+                                ?? VideoEncodings.FirstOrDefault(p => p.Codec == SeVideoBurnIn.DefaultEncoding)
+                                ?? VideoEncodings[0];
         SelectedVideoPixelFormat = VideoPixelFormats.FirstOrDefault(p => p.Codec == settings.PixelFormat) ?? VideoPixelFormats[0];
         FillPreset(SelectedVideoEncoding.Codec);
         FillCrf(SelectedVideoEncoding.Codec);
