@@ -1,6 +1,8 @@
 using Avalonia.Controls;
+using Avalonia.Controls.Primitives;
 using Avalonia.Controls.Templates;
 using Avalonia.Data;
+using Avalonia.Data.Converters;
 using Avalonia.Layout;
 using Avalonia.Media;
 using Nikse.SubtitleEdit.Logic;
@@ -41,17 +43,29 @@ public class NOcrTrainWindow : Window
             RowSpacing = 10,
         };
 
-        // Fonts (checkbox list, each rendered in its own typeface)
+        // Fonts (checkbox list, each rendered in its own typeface).
+        // The template must bind everything (no use of the build parameter): the virtualized
+        // ListBox recycles containers with a null item, and reuses them for other items where
+        // static values would go stale. Uniform row height keeps scroll extent estimation sane
+        // despite wildly varying font line heights.
+        var fontNameToFontFamily = new FuncValueConverter<string?, FontFamily>(name =>
+            string.IsNullOrWhiteSpace(name) ? FontFamily.Default : new FontFamily(name));
         var fontsListBox = new ListBox
         {
             Height = 260,
             ItemsSource = vm.Fonts,
-            ItemTemplate = new FuncDataTemplate<NOcrTrainFontItem>((item, _) => new CheckBox
+            ItemTemplate = new FuncDataTemplate<NOcrTrainFontItem>((_, _) => new CheckBox
             {
                 [!CheckBox.IsCheckedProperty] = new Binding(nameof(NOcrTrainFontItem.IsSelected)),
-                Content = item.Name,
-                FontFamily = new FontFamily(item.Name),
-            }),
+                [!ContentControl.ContentProperty] = new Binding(nameof(NOcrTrainFontItem.Name)),
+                [!TemplatedControl.FontFamilyProperty] = new Binding(nameof(NOcrTrainFontItem.Name))
+                {
+                    Converter = fontNameToFontFamily,
+                },
+                Height = 26,
+                VerticalContentAlignment = VerticalAlignment.Center,
+                ClipToBounds = true,
+            }, supportsRecycling: true),
         };
         var fontsPanel = new StackPanel { Orientation = Orientation.Vertical, Spacing = 4 };
         fontsPanel.Children.Add(UiUtil.MakeLabel(Se.Language.General.Fonts));
