@@ -271,7 +271,7 @@ public class CrispEmbedOcr : IDisposable
     private async Task<string> OcrViaCliPipeline(string imageFileName, CancellationToken cancellationToken)
     {
         var arguments = $"--ocr-pipeline \"{imageFileName}\" --ocr-engine ppocrv6 " +
-                        $"--ocr-det \"{_cliDetectorModel}\" --ocr-rec \"{_cliRecognizerModel}\" --json";
+                        $"--ocr-det \"{_cliDetectorModel}\" --ocr-rec \"{_cliRecognizerModel}\" -t 4 --json";
 
         using var process = new Process
         {
@@ -285,6 +285,16 @@ public class CrispEmbedOcr : IDisposable
                 WorkingDirectory = Path.GetDirectoryName(_cliExecutable),
             },
         };
+
+        // v0.17.7's n_threads audit made the PP-OCRv6 detector honor the CLI's -t 1 default where
+        // it previously ran at ggml's 4-thread default, costing ~18% wall clock on the scalar
+        // (Metal/CPU) path. v0.17.8 fixed both sides (min(4, cores) thread default, recognizer mk
+        // kernel default-on), but IsEngineInstalled() is a presence check - a lingering v0.17.7
+        // binary is never re-downloaded - so "-t 4" and the env gate stay to keep those installs
+        // fast. Both are no-ops on v0.17.8 by design: an explicit -t wins over the fixed default,
+        // and the env matches the new recognizer default. Diagnosed in CrispStrobe/CrispEmbed#45
+        // (2026-08-09); output is byte-identical in every arm.
+        process.StartInfo.Environment["CRISPEMBED_CONV2D_MK"] = "1";
 
         process.Start();
 

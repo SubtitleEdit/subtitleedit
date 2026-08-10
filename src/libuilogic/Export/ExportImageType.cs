@@ -3,6 +3,7 @@ namespace Nikse.SubtitleEdit.UiLogic.Export;
 public enum ExportImageType
 {
     BdnXml,
+    BdnXml8Bit,
     BluRaySup,
     DCinemaPng,
     Dost,

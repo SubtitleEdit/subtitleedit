@@ -321,6 +321,7 @@ public static class Se4ShortcutsImporter
         ["GeneralGoToPrevSubtitle"] = nameof(MainViewModel.GoToPreviousLineCommand),
         ["GeneralGoToNextBookmark"] = nameof(MainViewModel.GoToNextBookmarkCommand),
         ["GeneralGoToPreviousBookmark"] = nameof(MainViewModel.GoToPreviousBookmarkCommand),
+        ["GeneralGoToNextEmptyLine"] = nameof(MainViewModel.GoToNextEmptyLineCommand),
         ["GeneralToggleBookmarksWithText"] = nameof(MainViewModel.AddOrEditBookmarkCommand),
         ["GeneralToggleBookmarks"] = nameof(MainViewModel.ToggleBookmarkSelectedLinesNoTextCommand),
         ["GeneralEditBookmarks"] = nameof(MainViewModel.ListBookmarksCommand),

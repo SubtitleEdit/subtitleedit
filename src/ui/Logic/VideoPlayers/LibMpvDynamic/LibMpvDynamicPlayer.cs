@@ -1054,6 +1054,13 @@ public sealed class LibMpvDynamicPlayer : IDisposable, IVideoPlayer
         DoMpvCommand("set", "pause", "yes");
         _pausedValue = null;
 
+        // Before loadfile, not after: mpv applies "sid" when the file loads, and setting it
+        // afterwards left a window in which an external subtitle pushed by MpvReloader was added
+        // and selected, only to be deselected again a moment later - added but never drawn
+        // (issue #13407). Set here it does the same job (no embedded subtitle track is picked)
+        // without ever undoing a sub-add that got in first.
+        SetOptionString("sid", "no");
+
         var err = await Task.Run(() => DoMpvCommand("loadfile", path));
         if (_disposed)
         {
@@ -1070,7 +1077,6 @@ public sealed class LibMpvDynamicPlayer : IDisposable, IVideoPlayer
         // hook it was meant to help. The path is handed to ytdl_hook before mpv_initialize now.
 
         SetOptionString("keep-open", "always");
-        SetOptionString("sid", "no");
 
         SetOptionString("hr-seek", "yes");
         SetOptionString("rebase-start-time", "no");
@@ -1916,9 +1922,18 @@ public sealed class LibMpvDynamicPlayer : IDisposable, IVideoPlayer
         }
     }
 
-    public void SubRemove()
+    /// <summary>
+    /// mpv's result for the sub-* commands: 0 or higher when the command was applied, negative
+    /// when it was not. Callers that push a subtitle into a player they just created (fullscreen,
+    /// undock, layout rebuild) must check this and retry: the core is initialized lazily by the
+    /// rendering surface, and "sub-add" is one of mpv's playback-only commands, so a push that
+    /// arrives before the core is up - or before "loadfile" has actually started playback - is
+    /// rejected. Ignoring that left the video with no subtitles for the rest of the session,
+    /// because nothing pushes again until an edit dirties the preview (issue #13407).
+    /// </summary>
+    public int SubRemove()
     {
-        DoMpvCommand("sub-remove");
+        return DoSubtitleCommand("sub-remove");
     }
 
     public void SetSubtitleVisibility(bool visible)
@@ -1926,15 +1941,32 @@ public sealed class LibMpvDynamicPlayer : IDisposable, IVideoPlayer
         DoMpvCommand("set", "sub-visibility", visible ? "yes" : "no");
     }
 
-    public void SubReload()
+    /// <inheritdoc cref="SubRemove"/>
+    public int SubReload()
     {
-        DoMpvCommand("sub-reload");
+        return DoSubtitleCommand("sub-reload");
     }
 
-    public void SubAdd(string fileName)
+    /// <inheritdoc cref="SubRemove"/>
+    public int SubAdd(string fileName)
     {
-        DoMpvCommand("sub-add", fileName, "select");
+        return DoSubtitleCommand("sub-add", fileName, "select");
     }
+
+    private int DoSubtitleCommand(params string[] args)
+    {
+        // DoMpvCommand answers 0 - mpv's "success" - when there is no core to talk to at all,
+        // which would read as an applied subtitle. Report the same "not initialized" mpv itself
+        // uses so the caller retries instead.
+        if (_mpv == IntPtr.Zero || !_coreInitialized)
+        {
+            return MpvErrorUninitialized;
+        }
+
+        return DoMpvCommand(args);
+    }
+
+    private const int MpvErrorUninitialized = -3; // MPV_ERROR_UNINITIALIZED in mpv's client.h
 
     public string VersionNumber
     {

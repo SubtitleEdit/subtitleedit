@@ -13,7 +13,7 @@ namespace Nikse.SubtitleEdit.Features.Video.SpeechToText.Engines;
 ///
 /// The <c>e2e</c> heads emit punctuation and capitalisation natively, which is what subtitles
 /// want — the plain character-level heads return a bare lowercase transcript. Verified against
-/// the pinned v0.8.25 binary on Apple M4 / Metal with `say -v Milena` audio:
+/// the v0.8.25 binary on Apple M4 / Metal with `say -v Milena` audio:
 ///   e2e-rnnt-q8_0 → "Привет." / "Это тест распознавания" / "русской речи." (27x realtime)
 ///   ctc-q4_k      → "привет это тест распознавания русской речи" (no case, no punctuation)
 /// so the e2e revisions are listed first and RNN-T is the registry default upstream picks.

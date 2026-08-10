@@ -2,6 +2,11 @@
 {
     public  class CalcNoSpaceCpsOnly : ICalcLength
     {
+        // Both are stateless; CalcFactory memoizes the strategy lookup, so allocating a fresh
+        // one per call - on every grid repaint and keystroke - threw that away.
+        private static readonly CalcNoSpace NoSpace = new CalcNoSpace();
+        private static readonly CalcAll All = new CalcAll();
+
         /// <summary>
         /// Calculate all text excluding space (tags are not counted).
         /// </summary>
@@ -9,10 +14,10 @@
         {
             if (forCps)
             {
-                return new CalcNoSpace().CountCharacters(text, true);
+                return NoSpace.CountCharacters(text, true);
             }
 
-            return new CalcAll().CountCharacters(text, false);
+            return All.CountCharacters(text, false);
         }
     }
 }

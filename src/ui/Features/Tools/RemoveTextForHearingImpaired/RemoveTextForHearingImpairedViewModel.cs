@@ -284,7 +284,10 @@ public partial class RemoveTextForHearingImpairedViewModel : ObservableObject
             var p = _subtitle.Paragraphs[index];
             _removeTextForHiLib.WarningIndex = index - 1;
             var newText = _removeTextForHiLib.RemoveTextFromHearImpaired(p.Text, _subtitle, index, twoLetterIsoLanguageName);
-            if (p.Text.RemoveChar(' ') != newText.RemoveChar(' '))
+            // Trim before comparing: RemoveTextFromHearImpaired rebuilds the text and drops
+            // e.g. a trailing empty line, which would otherwise list a "fix" whose before and
+            // after render identically (#13389).
+            if (p.Text.Trim().RemoveChar(' ') != newText.Trim().RemoveChar(' '))
             {
                 var apply = true;
                 var oldItem = Fixes.FirstOrDefault(f => f.Index == index);

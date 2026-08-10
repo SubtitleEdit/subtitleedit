@@ -674,7 +674,7 @@ public class SsaStylesWindow : Window
             };
             pickerVm.Initialize(SsaStylesViewModel.WithoutAlpha(currentColor));
             var pickerWindow = new ColorPickerWindow(pickerVm);
-            await pickerWindow.ShowDialog(window);
+            await WindowService.ShowModalAsync(window, pickerWindow);
 
             if (pickerVm.OkPressed)
             {

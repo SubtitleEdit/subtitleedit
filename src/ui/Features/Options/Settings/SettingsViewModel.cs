@@ -14,6 +14,7 @@ using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.Enums;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using Nikse.SubtitleEdit.Features.Assa;
+using Nikse.SubtitleEdit.Features.Help.CheckForUpdates;
 using Nikse.SubtitleEdit.Features.Main;
 using Nikse.SubtitleEdit.Features.Options.DoNotBreakAfterList;
 using Nikse.SubtitleEdit.Features.Options.Settings.SyntaxColorTooWideSettings;
@@ -284,6 +285,10 @@ public partial class SettingsViewModel : ObservableObject
     [ObservableProperty] private string _proxyDomain = string.Empty;
     [ObservableProperty] private bool _proxyUseDefaultCredentials;
     [ObservableProperty] private string _proxyBypassList = string.Empty;
+    [ObservableProperty] private bool _checkForUpdatesOnStartup;
+    [ObservableProperty] private ObservableCollection<string> _updateChannels;
+    [ObservableProperty] private string _selectedUpdateChannel;
+    private string _loadedUpdateChannel = string.Empty;
     [ObservableProperty] private int _waveformTextFontSize;
     [ObservableProperty] private bool _waveformTextFontBold;
     [ObservableProperty] private Color _waveformTextColor;
@@ -445,6 +450,13 @@ public partial class SettingsViewModel : ObservableObject
         MpvPreviewFontAlignments = new ObservableCollection<AlignmentItem>(AlignmentItem.Alignments);
         MpvPreviewSelectedFontAlignment = MpvPreviewFontAlignments[7];
         LibVlcStatus = string.Empty;
+
+        UpdateChannels =
+        [
+            Se.Language.Options.Settings.CheckForUpdatesChannelStable,
+            Se.Language.Options.Settings.CheckForUpdatesChannelStableAndBeta,
+        ];
+        SelectedUpdateChannel = UpdateChannels[0];
 
         Themes = [Se.Language.General.System, Se.Language.General.Light, Se.Language.General.Dark, Se.Language.General.Classic, "Pastel"];
         SelectedTheme = Themes[0];
@@ -1031,6 +1043,11 @@ public partial class SettingsViewModel : ObservableObject
         ProxyDomain = Se.Settings.General.ProxyDomain ?? string.Empty;
         ProxyUseDefaultCredentials = Se.Settings.General.ProxyUseDefaultCredentials;
         ProxyBypassList = Se.Settings.General.ProxyBypassList ?? string.Empty;
+        CheckForUpdatesOnStartup = Se.Settings.General.CheckForUpdatesOnStartup;
+        SelectedUpdateChannel = UpdateCheckService.IncludePrereleases()
+            ? Se.Language.Options.Settings.CheckForUpdatesChannelStableAndBeta
+            : Se.Language.Options.Settings.CheckForUpdatesChannelStable;
+        _loadedUpdateChannel = SelectedUpdateChannel;
         SetFfmpegStatus();
         SetLibMpvStatus();
         SetLibVlcStatus();
@@ -1837,6 +1854,15 @@ public partial class SettingsViewModel : ObservableObject
         general.ProxyDomain = ProxyDomain;
         general.ProxyUseDefaultCredentials = ProxyUseDefaultCredentials;
         general.ProxyBypassList = ProxyBypassList;
+        general.CheckForUpdatesOnStartup = CheckForUpdatesOnStartup;
+        if (SelectedUpdateChannel != _loadedUpdateChannel)
+        {
+            // Only an actual change is stored, so an untouched dropdown keeps the
+            // "auto" default (beta users follow betas, stable users stable only).
+            general.CheckForUpdatesChannel = SelectedUpdateChannel == Se.Language.Options.Settings.CheckForUpdatesChannelStableAndBeta
+                ? UpdateCheckService.ChannelBeta
+                : UpdateCheckService.ChannelStable;
+        }
 
         general.CurrentProfile = SelectedProfile;
         general.Profiles.Clear();

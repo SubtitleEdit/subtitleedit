@@ -18,6 +18,7 @@ public static class InitNativeMacMenuBinaryEdit
         var exportMenu = new NativeMenu();
         Add(exportMenu, Se.Language.General.BluRaySup, vm.ExportBluRaySupCommand);
         Add(exportMenu, Se.Language.General.BdnXml, vm.ExportBdnXmlCommand);
+        Add(exportMenu, Se.Language.General.BdnXml8Bit, vm.ExportBdnXml8BitCommand);
         Add(exportMenu, Se.Language.File.Export.TitleExportImscImage, vm.ExportImscImageCommand);
         Add(exportMenu, Se.Language.File.Export.TitleExportDostPng, vm.ExportDostPngCommand);
         Add(exportMenu, Se.Language.File.Export.TitleExportFcpImage, vm.ExportFcpPngCommand);

@@ -2308,7 +2308,7 @@ public static class UiUtil
             vm.Initialize(currentColor);
             vm.ShowAlpha = showAlpha;
             var pickerWindow = new ColorPickerWindow(vm);
-            await pickerWindow.ShowDialog(window);
+            await WindowService.ShowModalAsync(window, pickerWindow);
 
             if (vm.OkPressed)
             {

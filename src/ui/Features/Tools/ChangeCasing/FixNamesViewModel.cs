@@ -14,6 +14,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace Nikse.SubtitleEdit.Features.Tools.ChangeCasing;
 
@@ -37,47 +38,20 @@ public partial class FixNamesViewModel : ObservableObject, IClosingCleanup
     private const string SuffixChars = " ,.!?:;…')]<-\"\r\n";
     private static readonly string[] CommonWords = ["US", "Lane", "Bill", "Rose"];
     private readonly HashSet<string> _usedNames;
-    private string _oldNames;
-    private readonly System.Timers.Timer _previewTimer;
-    private bool _loading;
-    private readonly Lock _lock = new();
 
     public FixNamesViewModel()
     {
         Names = new ObservableCollection<FixNameItem>();
         Hits = new ObservableCollection<FixNameHitItem>();
 
-        _loading = true;
         _nameListInclMulti = new List<string>();
         _language = "en_US";
         _subtitleBefore = new Subtitle();
         _subtitle = new Subtitle();
         _usedNames = new HashSet<string>();
         ExtraNames = string.Empty;
-        _oldNames = string.Empty;
         Info = string.Empty;
         Subtitle = new Subtitle();
-
-        _previewTimer = new System.Timers.Timer(500);
-        _previewTimer.Elapsed += PreviewTimerElapsed;
-    }
-
-    private void PreviewTimerElapsed(object? sender, System.Timers.ElapsedEventArgs e)
-    {
-        var namesString = string.Join(' ', Names.Where(p => p.IsChecked).Select(p => p.Name));
-        if (namesString != _oldNames && !_loading)
-        {
-            lock (_lock)
-            {
-                GeneratePreview();
-                _oldNames = namesString;
-            }
-        }
-    }
-
-    public void OnClosingCleanup()
-    {
-        _previewTimer.StopAndDispose(PreviewTimerElapsed);
     }
 
     internal void Initialize(Subtitle subtitle)
@@ -85,8 +59,6 @@ public partial class FixNamesViewModel : ObservableObject, IClosingCleanup
         subtitle.Renumber();
         _subtitle = new Subtitle(subtitle);
         _subtitleBefore = subtitle;
-        _oldNames = string.Empty;
-
         _language = LanguageAutoDetect.AutoDetectGoogleLanguage(_subtitle);
         if (string.IsNullOrEmpty(_language))
         {
@@ -150,6 +122,14 @@ public partial class FixNamesViewModel : ObservableObject, IClosingCleanup
             }
         }
 
+        foreach (var item in names)
+        {
+            // Single notification point: checkbox clicks, the space toggle and
+            // select-all/invert all go through IsChecked, so no call site can
+            // forget to refresh the preview.
+            item.PropertyChanged += (_, _) => RequestPreview();
+        }
+
         Names.Clear();
         Names.AddRange(names);
     }
@@ -161,23 +141,74 @@ public partial class FixNamesViewModel : ObservableObject, IClosingCleanup
                && (afterNameIndex == text.Length || SuffixChars.Contains(text[afterNameIndex]));
     }
 
-    private void GeneratePreview()
+    private CancellationTokenSource? _cancellationTokenSource;
+    private bool _isClosing;
+    private bool _previewPending;
+    private bool _suppressPreviewRequests;
+    private Task _previewTask = Task.CompletedTask;
+
+    private void RequestPreview(int delayMilliseconds = 500)
+    {
+        if (_isClosing || _suppressPreviewRequests)
+        {
+            return;
+        }
+
+        _cancellationTokenSource?.Cancel();
+        _cancellationTokenSource?.Dispose();
+        _cancellationTokenSource = new CancellationTokenSource();
+        _previewPending = true;
+        _previewTask = DebouncedPreviewAsync(delayMilliseconds, _cancellationTokenSource.Token);
+    }
+
+    private async Task DebouncedPreviewAsync(int delayMilliseconds, CancellationToken token)
+    {
+        try
+        {
+            await Task.Delay(delayMilliseconds, token).ConfigureAwait(false);
+
+            // Snapshot on the UI thread - FindAllNames mutates Names there, so the
+            // background computation below must not enumerate the live collection.
+            var activeNames = await Dispatcher.UIThread.InvokeAsync(() =>
+                Names.Where(n => n.IsChecked).Select(n => n.Name).ToArray());
+            token.ThrowIfCancellationRequested();
+
+            GeneratePreview(activeNames, token);
+        }
+        catch (OperationCanceledException)
+        {
+            // Superseded by a newer request, or the window closed.
+        }
+        catch (Exception exception)
+        {
+            Se.LogError(exception, "Fix names preview failed");
+        }
+    }
+
+    public void OnClosingCleanup()
+    {
+        // Null out so a repeated Closed callback (or a late RequestPreview) never
+        // touches the disposed source.
+        _isClosing = true;
+        _cancellationTokenSource?.Cancel();
+        _cancellationTokenSource?.Dispose();
+        _cancellationTokenSource = null;
+    }
+
+    private void GeneratePreview(string[] activeNames, CancellationToken token)
     {
         var hits = new List<FixNameHitItem>();
 
         // reusable array
         var processingNames = new string[1];
 
-        // filter out non-active name to avoid extra processing
-        var activeNameItems = Names.Where(n => n.IsChecked).ToArray();
-
         foreach (var p in _subtitle.Paragraphs)
         {
             var text = p.Text;
-            foreach (var item in activeNameItems)
+            foreach (var name in activeNames)
             {
                 // no extra processing if paragraph doesn't contain name
-                if (!text.Contains(item.Name, StringComparison.OrdinalIgnoreCase))
+                if (!text.Contains(name, StringComparison.OrdinalIgnoreCase))
                 {
                     continue;
                 }
@@ -188,7 +219,7 @@ public partial class FixNamesViewModel : ObservableObject, IClosingCleanup
                 if (textNoTags != textNoTags.ToUpperInvariant())
                 {
                     var st = new StrippableText(text);
-                    processingNames[0] = item.Name;
+                    processingNames[0] = name;
                     st.FixCasing(processingNames, true, false, false, string.Empty);
                     text = st.MergedString;
                 }
@@ -202,27 +233,51 @@ public partial class FixNamesViewModel : ObservableObject, IClosingCleanup
 
         Dispatcher.UIThread.Invoke(() =>
         {
+            // Cancellation happens on the UI thread, so checking here (not before the Invoke)
+            // guarantees a superseded computation - one that was already past the earlier token
+            // check when a newer request cancelled it - can never overwrite the newer result.
+            if (token.IsCancellationRequested)
+            {
+                return;
+            }
+
             Hits.Clear();
             Hits.AddRange(hits);
+            _previewPending = false;
         });
     }
 
     [RelayCommand]
     public void NamesSelectAll()
     {
-        foreach (var name in Names)
-        {
-            name.IsChecked = true;
-        }
+        SetAllNames(_ => true);
     }
 
     [RelayCommand]
     public void NamesInvertSelection()
     {
-        foreach (var name in Names)
+        SetAllNames(name => !name.IsChecked);
+    }
+
+    private void SetAllNames(Func<FixNameItem, bool> getValue)
+    {
+        // Each IsChecked change fires the PropertyChanged handler; suppress those
+        // per-item requests during the bulk update and issue one immediate one,
+        // so a whole-list toggle doesn't sit through the 500 ms debounce.
+        _suppressPreviewRequests = true;
+        try
         {
-            name.IsChecked = !name.IsChecked;
+            foreach (var name in Names)
+            {
+                name.IsChecked = getValue(name);
+            }
         }
+        finally
+        {
+            _suppressPreviewRequests = false;
+        }
+
+        RequestPreview(0);
     }
 
     [RelayCommand]
@@ -244,8 +299,17 @@ public partial class FixNamesViewModel : ObservableObject, IClosingCleanup
     }
 
     [RelayCommand]
-    private void Ok()
+    private async Task Ok()
     {
+        // A preview may still be pending (the 500 ms debounce, or a computation in flight), so
+        // Hits can lag behind the checkboxes - applying it would use fixes for names the user
+        // just deselected. Flush with a zero-delay preview and wait for it before committing.
+        if (_previewPending)
+        {
+            RequestPreview(0);
+            await _previewTask;
+        }
+
         Subtitle = new Subtitle(_subtitle, false);
 
         foreach (var hit in Hits)
@@ -266,6 +330,7 @@ public partial class FixNamesViewModel : ObservableObject, IClosingCleanup
                 noOfLinesChanged++;
             }
         }
+
         Info = $"Change casing - lines changed: {noOfLinesChanged}";
 
         OkPressed = true;
@@ -281,9 +346,8 @@ public partial class FixNamesViewModel : ObservableObject, IClosingCleanup
     [RelayCommand]
     public void AddExtraName()
     {
-        _loading = true;
         FindAllNames();
-        _loading = false;
+        RequestPreview(0);
     }
 
     internal void OnKeyDown(KeyEventArgs e)
@@ -312,8 +376,6 @@ public partial class FixNamesViewModel : ObservableObject, IClosingCleanup
 
         ExtraNames = Se.Settings.Tools.ChangeCasing.ExtraNames;
         FindAllNames();
-        GeneratePreview();
-        _previewTimer.Start();
-        _loading = false;
+        RequestPreview(0);
     }
 }

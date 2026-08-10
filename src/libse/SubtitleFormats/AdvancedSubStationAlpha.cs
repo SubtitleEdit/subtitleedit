@@ -159,7 +159,20 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text"
                 // Trim via span: Header.Trim() re-allocated the whole (possibly multi-KB)
                 // header on every save and every mpv preview refresh.
                 sb.Append(subtitle.Header.AsSpan().Trim()).AppendLine();
-                sb.AppendLine("Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text");
+
+                // Most headers end at "[Events]", but some (e.g. HeaderNoStyles) already carry
+                // the events format line - appending another gave a duplicate "Format:" line.
+                // Only the exact standard line may be skipped: Dialogue lines are always written
+                // in the standard field order, so a nonstandard Format line (an MKV CodecPrivate
+                // is kept verbatim in the header) must still be overridden by appending the
+                // standard one after it - the last Format line wins when parsing.
+                const string eventsFormatLine = "Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text";
+                var eventsIndex = subtitle.Header.LastIndexOf("[Events]", StringComparison.Ordinal);
+                if (eventsIndex < 0 || subtitle.Header.IndexOf(eventsFormatLine, eventsIndex, StringComparison.Ordinal) < 0)
+                {
+                    sb.AppendLine(eventsFormatLine);
+                }
+
                 styles = GetStylesFromHeader(subtitle.Header);
             }
             else if (!string.IsNullOrEmpty(subtitle.Header) && subtitle.Header.Contains("[V4 Styles]"))
@@ -432,7 +445,7 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text"
                 return DefaultHeader;
             }
 
-            var styles = new List<SsaStyle>();
+            var styles = new List<SsaStyle>(stylesContent.Count);
             foreach (var styleAsString in stylesContent)
             {
                 styles.Add(SsaStyle.FromRawSsa(header, styleAsString));
@@ -1025,8 +1038,9 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text"
 
         public static List<SsaStyle> GetSsaStylesFromHeader(string header)
         {
-            var styles = new List<SsaStyle>();
-            foreach (var styleName in GetStylesFromHeader(header))
+            var styleNames = GetStylesFromHeader(header);
+            var styles = new List<SsaStyle>(styleNames.Count);
+            foreach (var styleName in styleNames)
             {
                 styles.Add(GetSsaStyle(styleName, header));
             }

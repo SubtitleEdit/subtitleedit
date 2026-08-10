@@ -265,6 +265,7 @@ public static class DependencyInjectionExtensions
         collection.AddHttpClient<ITesseractDownloadService, TesseractDownloadService>();
         collection.AddHttpClient<IWhisperDownloadService, WhisperDownloadService>();
         collection.AddHttpClient<IYtDlpDownloadService, YtDlpDownloadService>();
+        collection.AddHttpClient<IUpdateCheckService, UpdateCheckService>();
         collection.AddHttpClient<ILlamaCppDownloadService, LlamaCppDownloadService>();
         collection.AddHttpClient<IQwen3AsrCppDownloadService, Qwen3AsrCppDownloadService>();
         collection.AddHttpClient<IQwen3TtsCppDownloadService, Qwen3TtsCppDownloadService>();
@@ -353,7 +354,7 @@ public static class DependencyInjectionExtensions
         collection.AddTransient<ConvertActorsViewModel>();
         collection.AddTransient<ChangeFrameRateViewModel>();
         collection.AddTransient<ChangeSpeedViewModel>();
-        collection.AddHttpClient<CheckForUpdatesViewModel>();
+        collection.AddTransient<CheckForUpdatesViewModel>();
         collection.AddTransient<ColorPickerViewModel>();
         collection.AddTransient<ColumnPasteViewModel>();
         collection.AddTransient<CompareViewModel>();
@@ -441,6 +442,7 @@ public static class DependencyInjectionExtensions
         collection.AddTransient<NOcrDbNewViewModel>();
         collection.AddTransient<NOcrInspectViewModel>();
         collection.AddTransient<NOcrSettingsViewModel>();
+        collection.AddTransient<NOcrTrainViewModel>();
         collection.AddTransient<LlamaCppOcrSettingsViewModel>();
         collection.AddTransient<LlamaCppEngineSettingsViewModel>();
         collection.AddTransient<Features.Translate.LlamaCppAdvanced.LlamaCppAdvancedSettingsViewModel>();
