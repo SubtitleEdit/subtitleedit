@@ -95,6 +95,7 @@ public class BatchConvertConfig
         TargetFormatName == BatchConverter.FormatVobSub ||
         TargetFormatName == BatchConverter.FormatDostImage ||
         TargetFormatName == BatchConverter.FormatBdnXml ||
+        TargetFormatName == BatchConverter.FormatBdnXml8Bit ||
         TargetFormatName == BatchConverter.FormatFcpImage ||
         TargetFormatName == BatchConverter.FormatImagesWithTimeCodesInFileName;
 

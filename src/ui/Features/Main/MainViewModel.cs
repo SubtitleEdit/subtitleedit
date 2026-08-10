@@ -3047,6 +3047,36 @@ public partial class MainViewModel :
         }
     }
 
+    /// <summary>
+    /// Same as <see cref="ExportBdnXml"/>, but the images are 8-bit palette-indexed PNGs -
+    /// what Blu-ray authoring tools want (issue #13452).
+    /// </summary>
+    [RelayCommand]
+    private async Task ExportBdnXml8Bit()
+    {
+        if (Window == null)
+        {
+            return;
+        }
+
+        if (IsEmpty)
+        {
+            ShowSubtitleNotLoadedMessage();
+            return;
+        }
+
+        IExportHandler exportHandler = new ExportHandlerBdnXml(true);
+        var result = await ShowDialogAsync<ExportImageBasedWindow, ExportImageBasedViewModel>(vm =>
+        {
+            vm.Initialize(exportHandler, Subtitles, _subtitleFileName, _videoFileName);
+        });
+
+        if (!result.OkPressed)
+        {
+            return;
+        }
+    }
+
     [RelayCommand]
     private async Task ExportImscImage()
     {

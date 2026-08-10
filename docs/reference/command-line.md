@@ -575,6 +575,7 @@ The CLI rule IDs match the check-box rules in the desktop app's *Fix Common Erro
 | `bluraysup`, `sup` | Blu-Ray sup — image |
 | `vobsub` | VobSub — image |
 | `bdnxml`, `bdn-xml` | BDN-XML — image (folder of PNGs + index.xml) |
+| `bdnxml8bit`, `bdn-xml8-bit` | BDN-XML with 8-bit palette-indexed PNGs — image |
 | `dost`, `dostimage` | DOST/image |
 | `fcpimage`, `fcp` | FCP/image |
 | `dcinemainterop` | D-Cinema interop/png |
