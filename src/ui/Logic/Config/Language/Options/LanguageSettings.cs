@@ -145,6 +145,7 @@ public class LanguageSettings
     public string ShowToolbarSaveAs { get; set; }
     public string ShowToolbarFind { get; set; }
     public string ShowToolbarReplace { get; set; }
+    public string ShowToolbarMultipleReplace { get; set; }
     public string ShowToolbarSpellCheck { get; set; }
     public string ShowToolbarFixCommonErrors { get; set; }
     public string ShowToolbarRemoveTextForHi { get; set; }
@@ -462,6 +463,7 @@ public class LanguageSettings
         ShowToolbarSaveAs = "Show save as icon";
         ShowToolbarFind = "Show find icon";
         ShowToolbarReplace = "Show replace icon";
+        ShowToolbarMultipleReplace = "Show multiple replace icon";
         ShowToolbarSpellCheck = "Show spell check icon";
         ShowToolbarFixCommonErrors = "Show fix common errors icon";
         ShowToolbarRemoveTextForHi = "Show remove text for hearing impaired icon";

@@ -153,6 +153,19 @@ public static class InitToolbar
             isLastSeparator = false;
         }
 
+        if (appearance.ToolbarShowMultipleReplace)
+        {
+            stackPanelLeft.Children.Add(new Button
+            {
+                Content = MakeImage("MultipleReplace"),
+                Command = vm.ShowMultipleReplaceCommand,
+                Background = Brushes.Transparent,
+                [AutomationProperties.NameProperty] = languageHints.MultipleReplaceHint,
+                [ToolTip.TipProperty] = UiUtil.MakeToolTip(languageHints.MultipleReplaceHint, shortcuts, nameof(vm.ShowMultipleReplaceCommand)),
+            });
+            isLastSeparator = false;
+        }
+
 
         if (!isLastSeparator)
         {
