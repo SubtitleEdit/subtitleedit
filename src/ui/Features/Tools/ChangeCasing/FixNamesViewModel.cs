@@ -144,11 +144,12 @@ public partial class FixNamesViewModel : ObservableObject, IClosingCleanup
     private CancellationTokenSource? _cancellationTokenSource;
     private bool _isClosing;
     private bool _previewPending;
+    private bool _suppressPreviewRequests;
     private Task _previewTask = Task.CompletedTask;
 
     private void RequestPreview(int delayMilliseconds = 500)
     {
-        if (_isClosing)
+        if (_isClosing || _suppressPreviewRequests)
         {
             return;
         }
@@ -249,19 +250,34 @@ public partial class FixNamesViewModel : ObservableObject, IClosingCleanup
     [RelayCommand]
     public void NamesSelectAll()
     {
-        foreach (var name in Names)
-        {
-            name.IsChecked = true; // PropertyChanged requests the preview
-        }
+        SetAllNames(_ => true);
     }
 
     [RelayCommand]
     public void NamesInvertSelection()
     {
-        foreach (var name in Names)
+        SetAllNames(name => !name.IsChecked);
+    }
+
+    private void SetAllNames(Func<FixNameItem, bool> getValue)
+    {
+        // Each IsChecked change fires the PropertyChanged handler; suppress those
+        // per-item requests during the bulk update and issue one immediate one,
+        // so a whole-list toggle doesn't sit through the 500 ms debounce.
+        _suppressPreviewRequests = true;
+        try
         {
-            name.IsChecked = !name.IsChecked; // PropertyChanged requests the preview
+            foreach (var name in Names)
+            {
+                name.IsChecked = getValue(name);
+            }
         }
+        finally
+        {
+            _suppressPreviewRequests = false;
+        }
+
+        RequestPreview(0);
     }
 
     [RelayCommand]
