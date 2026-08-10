@@ -2265,6 +2265,13 @@ public partial class MainViewModel :
             NewLine = "\n",
         });
 
+        // Same reason, for the line breaks *inside* the strings: several language classes build their
+        // text with Environment.NewLine, so the same class yields "\r\n" on Windows and "\n" elsewhere
+        // and the file flip-flopped with whoever regenerated it last. Normalize to "\n" here rather
+        // than chase every class - this is the one place the file is written. Only escaped CRLF in
+        // string values matches; a literal backslash-r in the text is escaped as "\\r" and is left be.
+        json = json.Replace("\\r\\n", "\\n");
+
         var currentDirectory = Directory.GetCurrentDirectory();
         var fileName = Path.Combine(currentDirectory, "English.json");
         await File.WriteAllTextAsync(fileName, json, Encoding.UTF8);
