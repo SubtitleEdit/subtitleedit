@@ -29,12 +29,14 @@ namespace Nikse.SubtitleEdit.Features.Video.TextToSpeech.Engines;
 /// Chatterbox has one baked default voice; "voices" listed beyond Default come from
 /// WAVs imported via <see cref="ImportVoice"/>. The full reference-WAV path is sent per-request
 /// as the `voice` field — runtime WAV cloning is wired upstream in CrispASR's chatterbox backend.
+/// The Base model is the multilingual build (23 languages via <see cref="ChatterboxLanguages"/>,
+/// sent as the per-request `language` field); Turbo is English-only.
 /// </summary>
 public class ChatterboxTtsCpp : ITtsEngine
 {
     public string Name => "Chatterbox TTS (CrispASR)";
     public string Description => "via CrispASR (Base or Turbo model + voice cloning)";
-    public bool HasLanguageParameter => false;
+    public bool HasLanguageParameter => true;
     public bool HasApiKey => false;
     public bool HasRegion => false;
     public bool HasModel => true;
@@ -255,8 +257,18 @@ public class ChatterboxTtsCpp : ITtsEngine
     public static string GetS3GenModelPath(string? modelKey = null) =>
         Path.Combine(GetSetModelsFolder(), ChatterboxTtsCppDownloadService.GetS3GenFileName(ResolveModelKey(modelKey)));
 
-    public static bool AreModelsInstalled(string? modelKey = null) =>
-        File.Exists(GetT3ModelPath(modelKey)) && File.Exists(GetS3GenModelPath(modelKey));
+    // Legacy pre-multilingual Base GGUFs (English-only T3, downloaded before upstream's
+    // 2026-06-18 in-place rebuild of cstr/chatterbox-GGUF) count as NOT installed so the
+    // normal "Download models?" prompt re-fetches the multilingual files — without this,
+    // picking a language changes nothing for those users and there is no visible reason why.
+    public static bool AreModelsInstalled(string? modelKey = null)
+    {
+        var t3Path = GetT3ModelPath(modelKey);
+        var s3genPath = GetS3GenModelPath(modelKey);
+        return File.Exists(t3Path) && File.Exists(s3genPath)
+            && !ChatterboxTtsCppDownloadService.IsLegacyEnglishOnlyModel(t3Path)
+            && !ChatterboxTtsCppDownloadService.IsLegacyEnglishOnlyModel(s3genPath);
+    }
 
     public Task<Voice[]> GetVoices(string language)
     {
@@ -281,7 +293,15 @@ public class ChatterboxTtsCpp : ITtsEngine
 
     public Task<string[]> GetModels() => Task.FromResult(new[] { ModelKeyBase, ModelKeyTurbo });
 
-    public Task<TtsLanguage[]> GetLanguages(Voice voice, string? model) => Task.FromResult(Array.Empty<TtsLanguage>());
+    /// <summary>
+    /// The multilingual Base model takes a per-request language (23 languages, "[xx]" prompt
+    /// token server-side); Turbo is an English-only distillation, so it gets "Auto" alone
+    /// rather than an empty combo.
+    /// </summary>
+    public Task<TtsLanguage[]> GetLanguages(Voice voice, string? model) =>
+        Task.FromResult(ResolveModelKey(model) == ModelKeyTurbo
+            ? new[] { ChatterboxLanguages.Auto }
+            : ChatterboxLanguages.All);
 
     public Task<Voice[]> RefreshVoices(string language, CancellationToken cancellationToken)
     {
@@ -302,16 +322,24 @@ public class ChatterboxTtsCpp : ITtsEngine
             throw new ArgumentException("Voice is not a ChatterboxVoice");
         }
 
-        await EnsureServerRunningAsync(ResolveModelKey(model), cancellationToken);
+        var modelKey = ResolveModelKey(model);
+        await EnsureServerRunningAsync(modelKey, cancellationToken);
 
         var outputFileName = Path.Combine(TtsOutputFolder.Resolve(outputFolder, GetSetFolder), Guid.NewGuid() + ".wav");
         var inputText = text;
 
-        var payload = BuildSpeakPayload(inputText, chatterboxVoice.FilePath);
+        // Multilingual language selection (#13273-adjacent): a per-request field the server
+        // turns into the [xx] prompt token. Only the Base model is multilingual — Turbo is an
+        // English-only distillation, so no field is sent for it regardless of the pick.
+        var languageArg = modelKey == ModelKeyTurbo
+            ? string.Empty
+            : ChatterboxLanguages.ResolveLanguageArg(language);
+
+        var payload = BuildSpeakPayload(inputText, chatterboxVoice.FilePath, languageArg);
 
         var body = JsonSerializer.Serialize(payload);
         using var content = new StringContent(body, Encoding.UTF8, "application/json");
-        Se.WriteToolsLog($"Chatterbox TTS: POST {ServerBaseUrl}/v1/audio/speech (voice={chatterboxVoice}, model={ResolveModelKey(model)}, textLen={text.Length})");
+        Se.WriteToolsLog($"Chatterbox TTS: POST {ServerBaseUrl}/v1/audio/speech (voice={chatterboxVoice}, model={modelKey}, textLen={text.Length}, language={(string.IsNullOrEmpty(languageArg) ? "(auto)" : languageArg)})");
         HttpResponseMessage response;
         try
         {
@@ -392,13 +420,18 @@ public class ChatterboxTtsCpp : ITtsEngine
     /// the one SE engine that hard-requires the attestations. An empty path falls back to the
     /// model's baked default voice, which is not cloning and needs no attestation.
     /// </remarks>
-    internal static Dictionary<string, object> BuildSpeakPayload(string inputText, string? voiceFilePath)
+    internal static Dictionary<string, object> BuildSpeakPayload(string inputText, string? voiceFilePath, string? languageCode = null)
     {
         var payload = new Dictionary<string, object>
         {
             ["input"] = inputText,
             ["response_format"] = "wav",
         };
+
+        if (!string.IsNullOrEmpty(languageCode))
+        {
+            payload["language"] = languageCode;
+        }
 
         if (!string.IsNullOrEmpty(voiceFilePath))
         {

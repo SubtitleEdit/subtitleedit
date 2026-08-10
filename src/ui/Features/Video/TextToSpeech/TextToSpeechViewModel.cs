@@ -436,6 +436,7 @@ public partial class TextToSpeechViewModel : ObservableObject
         else if (SelectedEngine is ChatterboxTtsCpp)
         {
             Se.Settings.Video.TextToSpeech.ChatterboxModel = SelectedModel ?? ChatterboxTtsCpp.DefaultModelKey;
+            Se.Settings.Video.TextToSpeech.ChatterboxCrispAsrLanguage = SelectedLanguage?.Name ?? string.Empty;
         }
         else if (SelectedEngine is KokoroTtsCpp)
         {
@@ -3401,6 +3402,8 @@ public partial class TextToSpeechViewModel : ObservableObject
                     CosyVoice3CrispAsr => Languages.FirstOrDefault(l => l.Name == Se.Settings.Video.TextToSpeech.CosyVoice3CrispAsrLanguage)
                                           ?? Languages.FirstOrDefault(),
                     Qwen3TtsCrispAsr => Languages.FirstOrDefault(l => l.Name == Se.Settings.Video.TextToSpeech.Qwen3TtsCrispAsrLanguage)
+                                        ?? Languages.FirstOrDefault(),
+                    ChatterboxTtsCpp => Languages.FirstOrDefault(l => l.Name == Se.Settings.Video.TextToSpeech.ChatterboxCrispAsrLanguage)
                                         ?? Languages.FirstOrDefault(),
                     _ => Languages.FirstOrDefault(),
                 };

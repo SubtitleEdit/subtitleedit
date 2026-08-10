@@ -1,3 +1,4 @@
+using Nikse.SubtitleEdit.Features.Video.TextToSpeech;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.Engines;
 
 namespace UITests.Features.Video.TextToSpeech.Engines;
@@ -66,5 +67,91 @@ public class ChatterboxTtsCppTests
         Assert.False(payload.ContainsKey("consent_attestation"));
         Assert.False(payload.ContainsKey("marking_attestation"));
         Assert.Equal("hello", payload["input"]);
+    }
+
+    [Fact]
+    public void BuildSpeakPayload_WithLanguage_SendsLanguageField()
+    {
+        var payload = ChatterboxTtsCpp.BuildSpeakPayload("bonjour", string.Empty, "fr");
+
+        Assert.Equal("fr", payload["language"]);
+    }
+
+    [Fact]
+    public void BuildSpeakPayload_WithoutLanguage_SendsNoLanguageField()
+    {
+        // No language (Auto, or the Turbo model) must keep the payload identical to the
+        // pre-multilingual behaviour — the server treats a missing field as language-agnostic.
+        var payload = ChatterboxTtsCpp.BuildSpeakPayload("hello", string.Empty);
+
+        Assert.False(payload.ContainsKey("language"));
+    }
+
+    [Fact]
+    public void Languages_LeadWithAutoThenTheTwentyThreeSupportedLanguages()
+    {
+        // "Auto" first so a combo falling back to its first entry reproduces the
+        // pre-language-selection behaviour (no field sent).
+        var all = ChatterboxLanguages.All;
+
+        Assert.Equal(24, all.Length);
+        Assert.Equal("Auto", all[0].Name);
+        Assert.Equal(string.Empty, all[0].Code);
+    }
+
+    [Theory]
+    [InlineData("French", "fr")]
+    [InlineData("German", "de")]
+    [InlineData("Chinese", "zh")]
+    public void Languages_ResolveToIsoCode(string displayName, string expectedArg)
+    {
+        var language = ChatterboxLanguages.All.Single(l => l.Name == displayName);
+
+        Assert.Equal(expectedArg, ChatterboxLanguages.ResolveLanguageArg(language));
+    }
+
+    [Fact]
+    public void Languages_AutoResolvesToEmpty()
+    {
+        Assert.Equal(string.Empty, ChatterboxLanguages.ResolveLanguageArg(ChatterboxLanguages.Auto));
+    }
+
+    [Fact]
+    public void Languages_ForeignEngineCodeIsDropped()
+    {
+        // A language object left over from another engine (e.g. OmniVoice's ISO 639-3 ids)
+        // must not leak onto the wire.
+        var foreign = new TtsLanguage("Standard Arabic", "arb");
+
+        Assert.Equal(string.Empty, ChatterboxLanguages.ResolveLanguageArg(foreign));
+    }
+
+    [Fact]
+    public void LegacyEnglishOnlyGguf_IsDetectedBySize()
+    {
+        // cstr/chatterbox-GGUF was rebuilt in place with multilingual weights; the legacy
+        // English-only files are recognised by exact byte size so they get re-downloaded.
+        // SetLength is metadata-only, so no 630 MB is actually written.
+        var path = Path.Combine(Path.GetTempPath(), $"chatterbox-legacy-test-{Guid.NewGuid():N}.gguf");
+        try
+        {
+            using (var fs = new FileStream(path, FileMode.CreateNew, FileAccess.Write))
+            {
+                fs.SetLength(630_177_120);
+            }
+
+            Assert.True(Nikse.SubtitleEdit.Logic.Download.ChatterboxTtsCppDownloadService.IsLegacyEnglishOnlyModel(path));
+
+            using (var fs = new FileStream(path, FileMode.Create, FileAccess.Write))
+            {
+                fs.SetLength(639_285_952); // the current multilingual T3 — must NOT be flagged
+            }
+
+            Assert.False(Nikse.SubtitleEdit.Logic.Download.ChatterboxTtsCppDownloadService.IsLegacyEnglishOnlyModel(path));
+        }
+        finally
+        {
+            File.Delete(path);
+        }
     }
 }
