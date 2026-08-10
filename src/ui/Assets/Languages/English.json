@@ -49,6 +49,7 @@
     "backward": "Backward",
     "batchMode": "Batch mode",
     "bdnXml": "BDN/xml",
+    "bdnXml8Bit": "BDN/xml 8-bit",
     "before": "Before",
     "beginning": "Beginning",
     "bluRaySup": "Blu-ray (sup)",
@@ -679,6 +680,7 @@
     "pixelWidth": "Pixel width",
     "wpm": "Words/min",
     "xFiles": "{0:#,###,##0} files",
+    "xOfYFiles": "{0:#,###,##0} of {1:#,###,##0} files",
     "xFilesConvertedInY": "{0:#,###,##0} files converted in {1}",
     "xNoLinesUpdated": "{0}: no line(s) updated",
     "xNotFound": "\"{0}\" not found",
@@ -1131,6 +1133,7 @@
       "mergeShortLines": "Merge short lines",
       "fixed": "Fixed",
       "numberOfSubtitlesX": "Number of subtitles: {0}",
+      "numberOfSubtitlesXForcedY": "Number of subtitles: {0} ({1} forced)",
       "gapMs": "Gap (ms)",
       "useFixedDuration": "Use fixed duration",
       "fixedDurationMs": "Fixed duration (ms)",
@@ -1390,7 +1393,11 @@
       "findNext": "_Find next",
       "replaceAndFindNext": "_Replace & find next",
       "replaceAll": "Replace _all",
-      "replaceTextWatermark": "Replace with..."
+      "replaceTextWatermark": "Replace with...",
+      "replaceIn": "Replace/search in",
+      "replaceInTextAndOriginal": "Text and original text",
+      "replaceInTextOnly": "Text only",
+      "replaceInOriginalOnly": "Original text only"
     },
     "regularExpressionContextMenu": {
       "wordBoundary": "Word boundary (\\b)",

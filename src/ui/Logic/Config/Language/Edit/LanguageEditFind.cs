@@ -9,6 +9,10 @@ public class LanguageEditFind
     public string ReplaceAndFindNext { get; set; }
     public string ReplaceAll { get; set; }
     public string ReplaceTextWatermark { get; set; }
+    public string ReplaceIn { get; set; }
+    public string ReplaceInTextAndOriginal { get; set; }
+    public string ReplaceInTextOnly { get; set; }
+    public string ReplaceInOriginalOnly { get; set; }
 
     public LanguageEditFind()
     {
@@ -19,5 +23,9 @@ public class LanguageEditFind
         FindNext = "_Find next";
         ReplaceAndFindNext = "_Replace & find next";
         ReplaceAll = "Replace _all";
+        ReplaceIn = "Replace/search in";
+        ReplaceInTextAndOriginal = "Text and original text";
+        ReplaceInTextOnly = "Text only";
+        ReplaceInOriginalOnly = "Original text only";
     }
 }

@@ -16,6 +16,10 @@ public partial class FindService : IFindService
     public bool CurrentMatchInOriginal { get; set; }
     public bool WholeWord { get; set; }
     public FindMode CurrentFindMode { get; set; } = FindMode.CaseInsensitive;
+    public FindScope CurrentScope { get; set; } = FindScope.TextAndOriginal;
+
+    private bool IncludeText => CurrentScope != FindScope.OriginalOnly;
+    private bool IncludeOriginal => CurrentScope != FindScope.TextOnly;
 
     private List<string> _textLines = new List<string>();
     private List<string>? _originalTextLines;
@@ -133,11 +137,13 @@ public partial class FindService : IFindService
     }
 
     /// <summary>
-    /// Original text of a line, or null when no original subtitle is loaded.
+    /// Original text of a line, or null when no original subtitle is loaded or the current scope
+    /// leaves the original column out. Returning null here is what makes every column-advance
+    /// step treat the original as absent, so the scope needs no further handling in them.
     /// </summary>
     private string? GetOriginalLine(int lineIndex)
     {
-        if (_originalTextLines == null || lineIndex < 0 || lineIndex >= _originalTextLines.Count)
+        if (_originalTextLines == null || !IncludeOriginal || lineIndex < 0 || lineIndex >= _originalTextLines.Count)
         {
             return null;
         }
@@ -212,7 +218,7 @@ public partial class FindService : IFindService
         return CurrentLineNumber;
     }
 
-    public int Count(string searchText, IReadOnlyList<string> textLines, bool wholeWord, FindMode findMode, IReadOnlyList<string>? originalTextLines = null)
+    public int Count(string searchText, IReadOnlyList<string> textLines, bool wholeWord, FindMode findMode, IReadOnlyList<string>? originalTextLines = null, FindScope scope = FindScope.TextAndOriginal)
     {
         if (string.IsNullOrEmpty(searchText) || textLines == null || textLines.Count == 0)
         {
@@ -220,12 +226,15 @@ public partial class FindService : IFindService
         }
 
         var total = 0;
-        foreach (var line in textLines)
+        if (scope != FindScope.OriginalOnly)
         {
-            total += CountMatchesInLine(line, searchText, wholeWord, findMode);
+            foreach (var line in textLines)
+            {
+                total += CountMatchesInLine(line, searchText, wholeWord, findMode);
+            }
         }
 
-        if (originalTextLines != null)
+        if (originalTextLines != null && scope != FindScope.TextOnly)
         {
             foreach (var line in originalTextLines)
             {
@@ -266,17 +275,20 @@ public partial class FindService : IFindService
 
         int totalReplacements = 0;
 
-        for (int lineIndex = 0; lineIndex < _textLines.Count; lineIndex++)
+        if (IncludeText)
         {
-            var replacedText = ReplaceInLine(_textLines[lineIndex], searchText, replaceText);
-            if (replacedText.replaced)
+            for (int lineIndex = 0; lineIndex < _textLines.Count; lineIndex++)
             {
-                _textLines[lineIndex] = replacedText.newText;
-                totalReplacements += replacedText.replacementCount;
+                var replacedText = ReplaceInLine(_textLines[lineIndex], searchText, replaceText);
+                if (replacedText.replaced)
+                {
+                    _textLines[lineIndex] = replacedText.newText;
+                    totalReplacements += replacedText.replacementCount;
+                }
             }
         }
 
-        if (_originalTextLines != null)
+        if (_originalTextLines != null && IncludeOriginal)
         {
             for (int lineIndex = 0; lineIndex < _originalTextLines.Count; lineIndex++)
             {
@@ -350,7 +362,7 @@ public partial class FindService : IFindService
             var first = i == startLineIndex;
             var textIndex = first ? startTextIndex : 0;
 
-            if (!(first && startInOriginal))
+            if (IncludeText && !(first && startInOriginal))
             {
                 var match = FindInLine(_textLines[i], searchText, textIndex);
                 if (match.found)
@@ -398,11 +410,14 @@ public partial class FindService : IFindService
                 }
             }
 
-            var mainTextIndex = first && !startInOriginal ? startTextIndex : _textLines[i].Length - 1;
-            var mainMatch = FindInLineReverse(_textLines[i], searchText, mainTextIndex);
-            if (mainMatch.found)
+            if (IncludeText)
             {
-                return (i, mainMatch.index, mainMatch.foundText, false);
+                var mainTextIndex = first && !startInOriginal ? startTextIndex : _textLines[i].Length - 1;
+                var mainMatch = FindInLineReverse(_textLines[i], searchText, mainTextIndex);
+                if (mainMatch.found)
+                {
+                    return (i, mainMatch.index, mainMatch.foundText, false);
+                }
             }
         }
 
