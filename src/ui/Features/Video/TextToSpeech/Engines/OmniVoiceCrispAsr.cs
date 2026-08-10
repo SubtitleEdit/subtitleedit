@@ -35,7 +35,7 @@ namespace Nikse.SubtitleEdit.Features.Video.TextToSpeech.Engines;
 /// per quantizer), so encoding a *reference* voice yields garbage codes and the clone comes out
 /// as noise. Worse, crispasr caches the encoded reference by audio content, so once a q8_0 run
 /// has poisoned the cache a later F16 run reuses the bad codes. SE therefore only ever ships
-/// and passes the F16 tokenizer. Verified against the pinned v0.8.25 binary on Apple M4 / Metal
+/// and passes the F16 tokenizer. Verified against the v0.8.25 binary on Apple M4 / Metal
 /// by median-F0 comparison of reference vs clone:
 ///   female ref 191.5 Hz → clone 190.6 Hz, male ref 110.2 Hz → clone 111.8 Hz (both intelligible)
 ///   same run with the q8_0 tokenizer → 481 Hz, transcribes to "I." (noise)
@@ -56,11 +56,11 @@ namespace Nikse.SubtitleEdit.Features.Video.TextToSpeech.Engines;
 /// CrispASR engines settled on after #12757. The target language is the opposite case: a
 /// per-request field, applied without a restart.
 ///
-/// ⚠ Honouring <c>language</c> per request needs a crispasr build newer than the pinned v0.8.25.
-/// On v0.8.25 the CLI adapter applies the language once at startup only, so the field is parsed
-/// and ignored and every line stays language-agnostic (#13273). Sending it is harmless there —
-/// the IDs SE offers are the model's own — and it starts working the moment
-/// <see cref="Logic.Download.CrispAsrDownloadService"/> is bumped past v0.8.25.
+/// Honouring <c>language</c> per request needs v0.8.26 or newer, which the pin
+/// (<see cref="Logic.Download.CrispAsrDownloadService"/>, now v0.8.27) satisfies. On the older
+/// v0.8.25 the CLI adapter applied the language once at startup only, so the field was parsed and
+/// ignored and every line stayed language-agnostic (#13273); sending it there is harmless, since
+/// the IDs SE offers are the model's own, so an install predating the bump degrades quietly.
 /// </summary>
 public class OmniVoiceCrispAsr : ITtsEngine
 {

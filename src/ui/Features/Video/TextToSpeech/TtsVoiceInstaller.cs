@@ -142,18 +142,19 @@ public static class TtsVoiceInstaller
 
     /// <summary>
     /// Ensures the CrispASR runtime that OmniVoice TTS (CrispASR) runs on is installed.
-    /// The omnivoice backend has shipped since well before the pinned build, so the note only
-    /// names the version SE itself pins.
+    /// The omnivoice backend itself has shipped since well before the pinned build, but the
+    /// per-request target language SE sends is only honoured from v0.8.26 — on anything older the
+    /// field is parsed and ignored (#13273) — so the note names that floor.
     /// </summary>
     public static Task<bool> EnsureCrispAsrForOmniVoice(Window? window, IWindowService windowService, bool forceRedownload)
         => EnsureCrispAsrAsync(window, windowService, forceRedownload,
             engineDisplayName: "OmniVoice TTS (CrispASR)",
             extraCapabilityCheck: null,
-            minVersionNote: "v0.8.25 or newer");
+            minVersionNote: "v0.8.26 or newer");
 
     /// <summary>
     /// Ensures the CrispASR runtime that MOSS-TTS (CrispASR) runs on is installed.
-    /// The moss-tts backend ships in CrispASR v0.8.13 and newer (SE pins v0.8.25).
+    /// The moss-tts backend ships in CrispASR v0.8.13 and newer (SE pins v0.8.27).
     /// </summary>
     public static Task<bool> EnsureCrispAsrForMossTts(Window? window, IWindowService windowService, bool forceRedownload)
         => EnsureCrispAsrAsync(window, windowService, forceRedownload,
