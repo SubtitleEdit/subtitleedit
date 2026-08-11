@@ -279,6 +279,7 @@ public class MultipleReplaceWindow : Window
         vm.RulesTreeView = treeView;
         treeView.SelectionChanged += vm.RulesTreeView_SelectionChanged;
         treeView.KeyDown += vm.RulesTreeView_KeyDown;
+        treeView.AddHandler(InputElement.KeyDownEvent, vm.RulesTreeView_PreviewKeyDown, RoutingStrategies.Tunnel);
         treeView.DoubleTapped += (_, e) => vm.TreeViewDoubleTapped(e);
         treeView.AddHandler(InputElement.PointerReleasedEvent, (_, e) =>
         {
