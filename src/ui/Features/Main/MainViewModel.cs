@@ -12311,7 +12311,11 @@ public partial class MainViewModel :
             if ((string.IsNullOrEmpty(selectedText) || string.Equals(selectedText, _findService.CurrentTextFound, _findService.CurrentFindMode == FindMode.CaseInsensitive ? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal))
                 && !string.IsNullOrEmpty(_findService.SearchText))
             {
-                selectedText = _findService.SearchText;
+                selectedText = _findService.SearchText; // last search pattern - may have significant edge spaces
+            }
+            else
+            {
+                selectedText = selectedText.Trim();
             }
 
             vm.InitializeFindData(_findService, subs, selectedText, this, origs);
