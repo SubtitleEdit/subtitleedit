@@ -69,6 +69,22 @@ public class HttpClientFactoryWithProxyTests
     }
 
     [Fact]
+    public void CreateHandler_NoProxyAddress_DefaultCredentialsAnswerProxyAuthOnly()
+    {
+        var handler = HttpClientFactoryWithProxy.CreateHandler(new ProxySettings
+        {
+            ProxyAddress = string.Empty,
+            UseDefaultCredentials = true,
+        });
+
+        // The machine's credentials answer the proxy's 407 challenge. They must not land on
+        // Credentials, which answers 401s from the target servers themselves - that would offer
+        // the user's domain credentials to any external host.
+        Assert.Same(CredentialCache.DefaultNetworkCredentials, handler.DefaultProxyCredentials);
+        Assert.Null(handler.Credentials);
+    }
+
+    [Fact]
     public void CreateHandler_NoProxyAddress_StillAppliesBypassListToSystemProxy()
     {
         var handler = HttpClientFactoryWithProxy.CreateHandler(new ProxySettings

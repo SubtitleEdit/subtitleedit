@@ -60,7 +60,10 @@ public class SeVideoBurnIn
         FontFactor = 0.52;
         Encoding = DefaultEncoding;
         Preset = "medium";
-        Crf = "23";
+        // 23 is the right default for libx264 CRF (0-51, lower is better), but the macOS default
+        // encoder is VideoToolbox, whose quality scale is 1-100 with higher being better - and on
+        // Intel Macs "-q:v" fails outright. Its quality stays unset so ffmpeg picks a bitrate.
+        Crf = DefaultEncoding == "libx264" ? "23" : string.Empty;
         Tune = "film";
         AudioEncoding = "copy";
         AudioForceStereo = true;

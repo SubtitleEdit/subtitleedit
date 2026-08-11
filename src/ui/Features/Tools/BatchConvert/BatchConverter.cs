@@ -1511,6 +1511,8 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
             return;
         }
 
+        var profile = GetExportImagesProfile();
+
         var imageParameters = new List<ImageParameter>();
         for (var i = 0; i < imageSubtitle.Count; i++)
         {
@@ -1539,6 +1541,12 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
                 BottomTopMargin = 0,
                 LeftRightMargin = 0,
                 Bitmap = ApplyImageAdjustments(imageSubtitle.GetBitmap(i)),
+                // The export handlers read these off the parameters: FCP/BDN take their
+                // timecode frame rate from here (falling back to a 25/23.976 default), and
+                // FCP/Blu-ray render onto a frame-sized canvas when full frame is on.
+                FramesPerSecond = profile.FramesPerSecond,
+                IsFullFrame = profile.IsFullFrame,
+                FullFrameBackgroundColor = profile.FullFrameBackgroundColor.FromHexToColor().ToSKColor(),
             };
             var position = imageSubtitle.GetPosition(i);
             if (position.X >= 0 && position.Y >= 0)
@@ -1691,18 +1699,17 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
         }
     }
 
+    /// <summary>The export-images profile the target-format settings dialog edits and saves.</summary>
+    private static SeExportImagesProfile GetExportImagesProfile()
+    {
+        return Se.Settings.File.ExportImages.Profiles.FirstOrDefault(p => p.ProfileName == Se.Settings.File.ExportImages.LastProfileName)
+               ?? Se.Settings.File.ExportImages.Profiles.FirstOrDefault()
+               ?? new SeExportImagesProfile();
+    }
+
     private IOcrSubtitle? CreateImageSubtitles(BatchConvertItem item)
     {
-        var profile = Se.Settings.File.ExportImages.Profiles.FirstOrDefault(p => p.ProfileName == Se.Settings.File.ExportImages.LastProfileName);
-        if (profile == null)
-        {
-            profile = Se.Settings.File.ExportImages.Profiles.FirstOrDefault();
-        }
-
-        if (profile == null)
-        {
-            profile = new SeExportImagesProfile();
-        }
+        var profile = GetExportImagesProfile();
 
         if (item.Subtitle == null)
         {
@@ -1742,6 +1749,12 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
                 ScreenHeight = profile.ScreenHeight,
                 BottomTopMargin = profile.BottomTopMargin,
                 LeftRightMargin = profile.LeftRightMargin,
+                // The export handlers read these off the parameters: FCP/BDN take their
+                // timecode frame rate from here (falling back to a 25/23.976 default), and
+                // FCP/Blu-ray render onto a frame-sized canvas when full frame is on.
+                FramesPerSecond = profile.FramesPerSecond,
+                IsFullFrame = profile.IsFullFrame,
+                FullFrameBackgroundColor = profile.FullFrameBackgroundColor.FromHexToColor().ToSKColor(),
             };
 
             imageParameter.Bitmap = ExportImageBasedViewModel.GenerateBitmap(imageParameter);
