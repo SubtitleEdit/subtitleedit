@@ -248,9 +248,18 @@ public static class TableViewScrollBarBehavior
     /// Returns the scroll bar, its track and the press's track-relative Y for a genuine
     /// trough press, or false for presses elsewhere in the grid (rows, headers), outside the
     /// track (the line step arrows), on the thumb itself (which begins a normal drag), on a
-    /// scroll bar that is not the grid's own vertical one (the horizontal bar, or one of a
-    /// control hosted inside a cell), or when there is nothing to scroll. Shared by the
-    /// shift+click jump and the hold paging so both agree on what counts as the trough.
+    /// horizontal scroll bar, or when there is nothing to scroll. Shared by the shift+click
+    /// jump and the hold paging so both agree on what counts as the trough.
+    ///
+    /// Any vertical scroll bar inside the grid counts, not just the grid's own: a scrollable
+    /// control hosted in a cell has the same runaway trough repeat (it is Fluent's ScrollBar,
+    /// not anything the grid does), so it is paged the same way - the bar the press landed on
+    /// is the one that pages. A nested TableView keeps its own scroll bar: the outer grid's
+    /// handler sees the inner grid as the nearest TableView ancestor and bows out.
+    ///
+    /// Horizontal bars keep the native (runaway) repeat, as they did for the DataGrid. If that
+    /// is ever reported for a wide grid, the fix is this same path without the orientation
+    /// check, with the thumb comparison on X instead of Y.
     /// </summary>
     private static bool TryGetTroughPress(TableView tableView, PointerEventArgs e, out ScrollBar scrollBar, out Track track, out double posY, out bool isBelowThumb)
     {

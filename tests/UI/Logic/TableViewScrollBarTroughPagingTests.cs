@@ -5,6 +5,7 @@ using Avalonia.Headless;
 using Avalonia.Headless.XUnit;
 using Avalonia.Input;
 using Avalonia.Layout;
+using Avalonia.Markup.Xaml;
 using Avalonia.Styling;
 using Avalonia.VisualTree;
 using Nikse.SubtitleEdit.Logic;
@@ -37,7 +38,12 @@ public class TableViewScrollBarTroughPagingTests : IDisposable
 
     private sealed record Row(int Number, string Text);
 
-    private (Window window, TableView grid, ScrollBar scrollBar) BuildShownGrid()
+    /// <param name="viaAppStyles">
+    /// Enable the behavior the way the app does - the TableView style in Styles.axaml - instead
+    /// of setting the attached property on the grid. The wiring is what the DataGrid retirement
+    /// dropped, so a selector or property rename must fail a test rather than ship silently.
+    /// </param>
+    private (Window window, TableView grid, ScrollBar scrollBar) BuildShownGrid(bool viaAppStyles = false)
     {
         var grid = new TableView
         {
@@ -48,9 +54,16 @@ public class TableViewScrollBarTroughPagingTests : IDisposable
                 new TableViewColumn { Header = "Text", Binding = new Avalonia.Data.Binding(nameof(Row.Text)) },
             },
         };
-        TableViewScrollBarBehavior.SetEnableTroughPaging(grid, true);
+        if (!viaAppStyles)
+        {
+            TableViewScrollBarBehavior.SetEnableTroughPaging(grid, true);
+        }
 
         var window = new Window { Content = grid, Width = 400, Height = 300 };
+        if (viaAppStyles)
+        {
+            window.Styles.Add((Styles)AvaloniaXamlLoader.Load(new Uri("avares://SubtitleEdit/Styles.axaml")));
+        }
 
         // The app keeps scroll bars always expanded (UiTheme.ApplyScrollBarStyle, except on
         // macOS set to auto-hide); do the same here so the trough is hit-testable without the
@@ -103,6 +116,31 @@ public class TableViewScrollBarTroughPagingTests : IDisposable
     {
         var track = TrackOf(scrollBar);
         return track.Thumb!.Bounds.Bottom >= window.TranslatePoint(windowPoint, track)!.Value.Y;
+    }
+
+    /// <summary>
+    /// The behavior only reaches users through the TableView style in Styles.axaml, and that
+    /// wiring - not the behavior - is what went missing with the DataGrid. Every other test here
+    /// sets the attached property by hand, so without this one a renamed property or a selector
+    /// that stops matching would leave the whole file green and the grids unfixed.
+    /// </summary>
+    [AvaloniaFact]
+    public void StylesAxaml_EnablesTroughPagingOnEveryGrid()
+    {
+        var (window, grid, scrollBar) = BuildShownGrid(viaAppStyles: true);
+
+        Assert.True(TableViewScrollBarBehavior.GetEnableTroughPaging(grid),
+            "the TableView style in Styles.axaml no longer sets EnableTroughPaging");
+
+        var point = TroughPointBelowThumb(window, scrollBar);
+        window.MouseDown(point, MouseButton.Left);
+        Repeat(window, grid, 50);
+
+        Assert.True(scrollBar.Value > 0, "a trough press on a style-wired grid did not page");
+        Assert.True(scrollBar.Value < scrollBar.Maximum,
+            $"paging ran past the pointer to the end ({scrollBar.Value} of {scrollBar.Maximum})");
+
+        window.MouseUp(point, MouseButton.Left);
     }
 
     [AvaloniaFact]
