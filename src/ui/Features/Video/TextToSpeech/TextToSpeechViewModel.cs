@@ -436,7 +436,13 @@ public partial class TextToSpeechViewModel : ObservableObject
         else if (SelectedEngine is ChatterboxTtsCpp)
         {
             Se.Settings.Video.TextToSpeech.ChatterboxModel = SelectedModel ?? ChatterboxTtsCpp.DefaultModelKey;
-            Se.Settings.Video.TextToSpeech.ChatterboxCrispAsrLanguage = SelectedLanguage?.Name ?? string.Empty;
+
+            // Turbo is English-only and offers just "Auto" - saving that would discard the
+            // language the user picked for the multilingual Base model.
+            if (ChatterboxTtsCpp.ResolveModelKey(SelectedModel) != ChatterboxTtsCpp.ModelKeyTurbo)
+            {
+                Se.Settings.Video.TextToSpeech.ChatterboxCrispAsrLanguage = SelectedLanguage?.Name ?? string.Empty;
+            }
         }
         else if (SelectedEngine is KokoroTtsCpp)
         {
@@ -3759,7 +3765,9 @@ public partial class TextToSpeechViewModel : ObservableObject
                                    ?? Languages.FirstOrDefault(p => p.Name == Se.Settings.Video.TextToSpeech.ElevenLabsLanguage);
                 if (SelectedLanguage == null)
                 {
-                    SelectedLanguage = Languages.FirstOrDefault(p => p.Code == "en");
+                    // Fall back to the list's first entry so the combo is never left empty -
+                    // Chatterbox Turbo, for example, offers only "Auto", whose code is not "en".
+                    SelectedLanguage = Languages.FirstOrDefault(p => p.Code == "en") ?? Languages.FirstOrDefault();
                 }
             }
         });

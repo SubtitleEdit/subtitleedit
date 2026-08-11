@@ -24,6 +24,17 @@ public class AiReviewClientTests
         "{ \"error\": { \"message\": \"Rate limit reached for gpt-5.6-luna, please try again later.\", " +
         "\"type\": \"requests\", \"code\": \"rate_limit_exceeded\" } }";
 
+    // An error body that echoes the submitted request: it contains both parameter names and the
+    // word "invalid" - but about the API key, far away from either parameter, so it must not be
+    // read as a parameter rejection.
+    private const string EchoedRequestError =
+        "{ \"request\": { \"model\": \"gpt-5.6-luna\", \"temperature\": 0, \"stream\": false, " +
+        "\"response_format\": { \"type\": \"json_object\" }, \"messages\": [ { \"role\": \"system\", " +
+        "\"content\": \"You review subtitles for grammar, casing and punctuation problems and reply " +
+        "with a json object listing each line number and the corrected text, leaving correct lines " +
+        "out of the reply entirely so the caller can apply the fixes one by one.\" } ] }, " +
+        "\"error\": { \"message\": \"invalid api key\", \"code\": 401 } }";
+
     private const string Reply = "{ \"choices\": [ { \"message\": { \"content\": \"all good\" } } ] }";
 
     [Fact]
@@ -52,6 +63,8 @@ public class AiReviewClientTests
     [InlineData(ResponseFormatError, "temperature", false)]
     [InlineData(RateLimitError, "temperature", false)]
     [InlineData(RateLimitError, "response_format", false)]
+    [InlineData(EchoedRequestError, "temperature", false)]
+    [InlineData(EchoedRequestError, "response_format", false)]
     [InlineData("", "temperature", false)]
     public void IsUnsupportedParameter_OnlyMatchesParameterRejections(string body, string parameterName, bool expected)
     {

@@ -488,7 +488,10 @@ namespace Nikse.SubtitleEdit.Logic
             dialog.AddHandler(InputElement.GotFocusEvent, OnDialogGotFocus, RoutingStrategies.Bubble, handledEventsToo: true);
             owner.AddHandler(InputElement.GotFocusEvent, OnOwnerGotFocus, RoutingStrategies.Bubble, handledEventsToo: true);
             // Tunnel: run before the owner's own handlers (shortcut manager, text boxes) see the key.
+            // Key-up included: the AccessKeyHandler arms on Alt key-down but opens the menu bar on
+            // the key-up, so letting the release through would pop the disabled owner's menu.
             owner.AddHandler(InputElement.KeyDownEvent, OnOwnerKeyInput, RoutingStrategies.Tunnel);
+            owner.AddHandler(InputElement.KeyUpEvent, OnOwnerKeyInput, RoutingStrategies.Tunnel);
             owner.AddHandler(InputElement.TextInputEvent, OnOwnerKeyInput, RoutingStrategies.Tunnel);
 
             return new ActionDisposable(() =>
@@ -501,6 +504,7 @@ namespace Nikse.SubtitleEdit.Logic
                 dialog.RemoveHandler(InputElement.GotFocusEvent, OnDialogGotFocus);
                 owner.RemoveHandler(InputElement.GotFocusEvent, OnOwnerGotFocus);
                 owner.RemoveHandler(InputElement.KeyDownEvent, OnOwnerKeyInput);
+                owner.RemoveHandler(InputElement.KeyUpEvent, OnOwnerKeyInput);
                 owner.RemoveHandler(InputElement.TextInputEvent, OnOwnerKeyInput);
             });
         }

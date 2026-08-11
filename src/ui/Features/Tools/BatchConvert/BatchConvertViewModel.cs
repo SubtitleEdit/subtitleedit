@@ -1683,6 +1683,7 @@ public partial class BatchConvertViewModel : ObservableObject, IClosingCleanup
                     var added = AddFile(fileName);
                     Dispatcher.UIThread.Post(() =>
                     {
+                        _allBatchItems.AddRange(added);
                         AddFilteredItems(added);
                         AddingFilesProgressValue = current;
                         MakeBatchItemsInfo();
@@ -1790,9 +1791,10 @@ public partial class BatchConvertViewModel : ObservableObject, IClosingCleanup
         }
     }
 
-    // Parses a file and appends the resulting item(s) to _allBatchItems only (no UI-bound
-    // collection touched), so it is safe to call from a background thread. Returns the items
-    // added for this file; callers add them to the visible BatchItems on the UI thread.
+    // Parses a file and returns the resulting item(s) without touching any shared collection,
+    // so it is safe to call from a background thread. Callers append the returned items to
+    // _allBatchItems and the visible BatchItems on the UI thread - _allBatchItems is read there
+    // (filtering, the info label), so mutating it from the parse thread would race those reads.
     private List<BatchConvertItem> AddFile(string fileName)
     {
         var added = new List<BatchConvertItem>();
@@ -1858,7 +1860,6 @@ public partial class BatchConvertViewModel : ObservableObject, IClosingCleanup
                             var matroskaBatchItem = new BatchConvertItem(fileName, fileInfo.Length, format, subtitle);
                             matroskaBatchItem.LanguageCode = track.Language;
                             matroskaBatchItem.TrackNumber = track.TrackNumber.ToString(CultureInfo.InvariantCulture);
-                            _allBatchItems.Add(matroskaBatchItem);
                             added.Add(matroskaBatchItem);
                         }
                     }
@@ -1883,7 +1884,6 @@ public partial class BatchConvertViewModel : ObservableObject, IClosingCleanup
                 mp4Files.Add(name);
                 var mp4BatchItem = new BatchConvertItem(fileName, fileInfo.Length, name, subtitle);
                 mp4BatchItem.LanguageCode = mp4Parser.VttcLanguage;
-                _allBatchItems.Add(mp4BatchItem);
                 added.Add(mp4BatchItem);
             }
 
@@ -1895,8 +1895,7 @@ public partial class BatchConvertViewModel : ObservableObject, IClosingCleanup
                     mp4Files.Add(name);
                     var mp4BatchItem = new BatchConvertItem(fileName, fileInfo.Length, name, subtitle);
                     mp4BatchItem.LanguageCode = track.Mdia.Mdhd.Iso639ThreeLetterCode ?? track.Mdia.Mdhd.LanguageString;
-                    _allBatchItems.Add(mp4BatchItem);
-                    added.Add(mp4BatchItem);
+                        added.Add(mp4BatchItem);
                 }
             }
 
@@ -1912,7 +1911,6 @@ public partial class BatchConvertViewModel : ObservableObject, IClosingCleanup
         {
             format = "Transport Stream";
             var tsBatchItem = new BatchConvertItem(fileName, fileInfo.Length, format, subtitle);
-            _allBatchItems.Add(tsBatchItem);
             added.Add(tsBatchItem);
             return added;
         }
@@ -1951,7 +1949,6 @@ public partial class BatchConvertViewModel : ObservableObject, IClosingCleanup
         }
 
         var batchItem = new BatchConvertItem(fileName, fileInfo.Length, format, subtitle);
-        _allBatchItems.Add(batchItem);
         added.Add(batchItem);
         return added;
     }
