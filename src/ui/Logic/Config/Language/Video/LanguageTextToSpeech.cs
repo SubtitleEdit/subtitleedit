@@ -35,6 +35,7 @@ public class LanguageTextToSpeech
     public string ImportVoiceDotDotDot { get; set; }
     public string VoiceImportSuccessTitle { get; set; }
     public string VoiceXImported { get; set; }
+    public string VoiceXCouldNotBeImported { get; set; }
     public string ImportPiperVoiceTitle { get; set; }
     public string PiperVoiceConfigMissingTitle { get; set; }
     public string PiperVoiceConfigMissingMessage { get; set; }
@@ -140,6 +141,7 @@ public class LanguageTextToSpeech
         ImportVoiceDotDotDot = "Import voice...";
         VoiceImportSuccessTitle = "Voice imported";
         VoiceXImported = "Voice '{0}' imported successfully";
+        VoiceXCouldNotBeImported = "Voice '{0}' could not be imported - see the log for details";
         ImportPiperVoiceTitle = "Open Piper voice model (.onnx)";
         PiperVoiceConfigMissingTitle = "Config file missing";
         PiperVoiceConfigMissingMessage = "A Piper voice needs its config file next to the model file: {0}";
