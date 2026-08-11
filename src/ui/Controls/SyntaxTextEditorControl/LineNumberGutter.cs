@@ -4,6 +4,7 @@ using Avalonia.Controls.Documents;
 using Avalonia.Media;
 using Avalonia.Media.TextFormatting;
 using System;
+using System.Collections.Generic;
 using System.Globalization;
 
 namespace Nikse.SubtitleEdit.Controls.SyntaxTextEditorControl;
@@ -50,6 +51,17 @@ public class LineNumberGutter : Control
     private double _digitWidth;
     private double _measuredFontSize;
     private FontFamily? _measuredFontFamily;
+
+    // One shaped layout per line number, kept across frames. Scrolling or typing repaints the
+    // whole gutter, and shaping a TextLayout per visible line per frame was ~40 short-lived
+    // layouts every frame - the numbers themselves never change, only which ones are visible.
+    // Dropped whenever anything the layouts were built with changes (font metrics, brush).
+    private readonly Dictionary<int, TextLayout> _lineLayouts = new();
+    private IBrush? _layoutForeground;
+
+    // Enough for any realistic viewport; a font-size change while scrolled deep into a huge file
+    // could otherwise keep stale entries around for lines that are no longer visible.
+    private const int MaxCachedLayouts = 512;
 
     static LineNumberGutter()
     {
@@ -122,6 +134,7 @@ public class LineNumberGutter : Control
         _measuredFontFamily = FontFamily;
         _measuredFontSize = FontSize;
         _typeface = new Typeface(FontFamily);
+        _lineLayouts.Clear();
 
         // Digits are the same width in the fonts used here, and close enough elsewhere: the
         // gutter is sized from the widest digit so the numbers never clip.
@@ -140,6 +153,23 @@ public class LineNumberGutter : Control
         EnsureFontMetrics();
         var digits = Math.Max(2, LineCount.ToString(CultureInfo.InvariantCulture).Length);
         return new Size(Math.Ceiling(digits * _digitWidth + PaddingLeft + PaddingRight), 0);
+    }
+
+    private TextLayout GetLineLayout(int line, IBrush foreground)
+    {
+        if (_lineLayouts.TryGetValue(line, out var layout))
+        {
+            return layout;
+        }
+
+        if (_lineLayouts.Count >= MaxCachedLayouts)
+        {
+            _lineLayouts.Clear();
+        }
+
+        layout = new TextLayout((line + 1).ToString(CultureInfo.InvariantCulture), _typeface, FontSize, foreground);
+        _lineLayouts[line] = layout;
+        return layout;
     }
 
     public override void Render(DrawingContext context)
@@ -165,6 +195,12 @@ public class LineNumberGutter : Control
         EnsureFontMetrics();
 
         var foreground = Foreground ?? Brushes.Gray;
+        if (!ReferenceEquals(foreground, _layoutForeground))
+        {
+            _layoutForeground = foreground;
+            _lineLayouts.Clear();
+        }
+
         var firstLine = Math.Max(0, (int)(VerticalOffset / lineHeight));
         var lastLine = Math.Min(LineCount - 1, (int)((VerticalOffset + height) / lineHeight));
         var currentLine = CurrentLine;
@@ -176,8 +212,7 @@ public class LineNumberGutter : Control
             for (var line = firstLine; line <= lastLine; line++)
             {
                 var y = line * lineHeight - VerticalOffset;
-                var text = (line + 1).ToString(CultureInfo.InvariantCulture);
-                var layout = new TextLayout(text, _typeface, FontSize, foreground);
+                var layout = GetLineLayout(line, foreground);
 
                 // Right aligned, like every other editor gutter.
                 var x = width - PaddingRight - layout.WidthIncludingTrailingWhitespace;
