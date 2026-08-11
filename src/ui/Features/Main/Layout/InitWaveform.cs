@@ -826,6 +826,8 @@ public class InitWaveform
         var flyoutMore = new MenuFlyout();
         buttonMore.Flyout = flyoutMore;
         buttonMore.Click += (s, e) => flyoutMore.ShowAt(buttonMore, true);
+        // With the video player undocked (and topmost), it could cover this menu (#13493).
+        WindowService.SuspendUndockedTopmostWhileOpen(flyoutMore);
         var menuItemResetZoom = new MenuItem
         {
             Header = string.Format(languageHints.ResetZoomAndSpeed, UiUtil.MakeShortcutsString(shortcuts, nameof(vm.ResetWaveformZoomAndSpeedCommand))),
