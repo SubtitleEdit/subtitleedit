@@ -17,7 +17,8 @@ namespace Nikse.SubtitleEdit.Core.Common
     ///
     /// This pass rebuilds a crisp black-on-white bitmap from plane topology: transparent
     /// pixels are the background, and of the opaque colours the one that is most *interior*
-    /// — the smallest fraction of its pixels bordering the transparent background — is the
+    /// — the lowest background adjacency per pixel (background-facing pixel sides divided
+    /// by pixel count, Laplace-smoothed) — is the
     /// glyph fill (kept as black); every other opaque colour (the outline / anti-alias
     /// tiers, which by construction wrap the fill and face the background) collapses into
     /// the white background. The result is a clean binary mask that OCR engines recognise
@@ -43,10 +44,12 @@ namespace Nikse.SubtitleEdit.Core.Common
             var height = source.Height;
             var result = new SKBitmap(new SKImageInfo(width, height, SKColorType.Rgba8888, SKAlphaType.Opaque));
 
-            // Tally every opaque colour and how many of its pixels touch the transparent
-            // background (4-neighbourhood; the bitmap edge counts as background). Key on RGB
-            // only (alpha already gates the background) so anti-aliasing tiers that share a
-            // hue but differ in coverage still merge.
+            // Tally every opaque colour: its pixel count, and its background adjacency as the
+            // number of background-facing sides (0–4) per pixel (4-neighbourhood; the bitmap
+            // edge counts as background). Counting sides rather than pixels makes one-pixel-thin
+            // outline runs — background on both flanks — score double, separating them further
+            // from the compact fill. Key on RGB only (alpha already gates the background) so
+            // anti-aliasing tiers that share a hue but differ in coverage still merge.
             var counts = new Dictionary<uint, int>();
             var borderCounts = new Dictionary<uint, int>();
             for (var y = 0; y < height; y++)
@@ -61,14 +64,14 @@ namespace Nikse.SubtitleEdit.Core.Common
                     var key = (uint)((c.Red << 16) | (c.Green << 8) | c.Blue);
                     counts[key] = counts.TryGetValue(key, out var n) ? n + 1 : 1;
 
-                    var touchesBackground =
-                        x == 0 || source.GetPixel(x - 1, y).Alpha < alphaThreshold ||
-                        x == width - 1 || source.GetPixel(x + 1, y).Alpha < alphaThreshold ||
-                        y == 0 || source.GetPixel(x, y - 1).Alpha < alphaThreshold ||
-                        y == height - 1 || source.GetPixel(x, y + 1).Alpha < alphaThreshold;
-                    if (touchesBackground)
+                    var nb = 0;
+                    if (x == 0 || source.GetPixel(x - 1, y).Alpha < alphaThreshold) { nb++; }
+                    if (x == width - 1 || source.GetPixel(x + 1, y).Alpha < alphaThreshold) { nb++; }
+                    if (y == 0 || source.GetPixel(x, y - 1).Alpha < alphaThreshold) { nb++; }
+                    if (y == height - 1 || source.GetPixel(x, y + 1).Alpha < alphaThreshold) { nb++; }
+                    if (nb > 0)
                     {
-                        borderCounts[key] = borderCounts.TryGetValue(key, out var b) ? b + 1 : 1;
+                        borderCounts[key] = borderCounts.TryGetValue(key, out var b) ? b + nb : nb;
                     }
                 }
             }
@@ -82,18 +85,24 @@ namespace Nikse.SubtitleEdit.Core.Common
                 return result;
             }
 
-            // The glyph fill is the most interior plane: lowest share of its pixels facing
-            // the transparent background. The outline faces the background on (at least) its
-            // outer edge, and the anti-alias tier is the boundary itself, so both score
-            // higher. Planes too small to be the text body (speckle, stray anti-alias
-            // colours) are ignored unless nothing bigger exists. Ties resolve to the lowest
-            // colour key so the output is deterministic regardless of dictionary order.
+            // The glyph fill is the most interior plane: lowest background adjacency per
+            // pixel. The outline faces the background on (at least) its outer edge, and the
+            // anti-alias tier is the boundary itself, so both score higher. Planes too small
+            // to be the text body (speckle, stray anti-alias colours) are ignored unless
+            // nothing bigger exists. The floor sits at 8 pixels, not higher: very short text
+            // in a thin font (".", "..") can leave the fill plane under 16 pixels while the
+            // outline clears it, and a floor that excludes only the fill hands the frame to
+            // the outline (PR #13481). The cost is that an 8–15 px fully-enclosed speckle
+            // plane may now compete — accepted, since a colour that exists *only* inside a
+            // cavity does not occur in normally-authored 4-colour subpictures. Ties resolve
+            // to the lowest colour key so the output is deterministic regardless of
+            // dictionary order.
             var opaqueTotal = 0;
             foreach (var kv in counts)
             {
                 opaqueTotal += kv.Value;
             }
-            var minPlane = Math.Max(16, opaqueTotal / 20);
+            var minPlane = Math.Max(8, opaqueTotal / 20);
 
             var foreground = 0u;
             var bestRatio = double.MaxValue;
@@ -105,7 +114,12 @@ namespace Nikse.SubtitleEdit.Core.Common
                     continue;
                 }
                 considered++;
-                var ratio = borderCounts.TryGetValue(kv.Key, out var b) ? (double)b / kv.Value : 0.0;
+                // A plane that never touches the background (the anti-alias tier trapped
+                // between fill and outline, e.g. bridging an i-dot gap) would score a flat
+                // 0.0 and tie with a fully-outlined fill, letting the colour-key tie-break
+                // pick the wrong plane. Laplace smoothing (+1) turns that tie into a size
+                // contest the larger text body wins.
+                var ratio = (borderCounts.TryGetValue(kv.Key, out var b) ? b + 1.0 : 1.0) / (kv.Value + 1);
                 if (ratio < bestRatio || (Math.Abs(ratio - bestRatio) < 0.0001 && kv.Key < foreground))
                 {
                     bestRatio = ratio;
