@@ -4,6 +4,7 @@ using System.Buffers;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
 
@@ -180,28 +181,151 @@ namespace Nikse.SubtitleEdit.Core.Common
             return lines;
         }
 
+        /// <summary>
+        /// Number of words in <paramref name="source"/>, ignoring markup.
+        /// </summary>
+        /// <remarks>
+        /// Called per line on grid repaints (words-per-minute) and once per paragraph by the
+        /// statistics window, so it works directly on the source string: no tag stripping into a
+        /// temporary string, no split array, no allocation at all.
+        /// <para>
+        /// Word rules: whitespace separates words, and so do the ASSA escapes <c>\N</c>,
+        /// <c>\n</c> and <c>\h</c>. <c>&lt;tag&gt;</c> and <c>{tag}</c> blocks are skipped without
+        /// splitting the word around them (<c>"wo&lt;i&gt;r&lt;/i&gt;d"</c> is one word). A token
+        /// only counts as a word when it holds at least one letter or digit, so lone dashes,
+        /// music notes and ellipses are not words.
+        /// </para>
+        /// </remarks>
         public static int CountWords(this string source)
         {
-            // Called per line on grid repaints (words-per-minute) - count boundaries directly
-            // instead of allocating a separator array plus one substring per word.
-            var text = HtmlUtil.RemoveHtmlTags(source, true);
-            var count = 0;
-            var inWord = false;
-            for (var i = 0; i < text.Length; i++)
+            var span = source.AsSpan();
+
+            // Lines without markup - the common case - never need the tag-aware loop below.
+            if (span.IndexOfAny('<', '{', '\\') < 0)
             {
-                var ch = text[i];
-                if (ch == ' ' || ch == '\n' || ch == '\r')
+                var count = 0;
+                var state = WordStateNone;
+                foreach (var ch in span)
                 {
-                    inWord = false;
+                    if (ch <= ' ')
+                    {
+                        count += state >> 1;
+                        state = WordStateNone;
+                    }
+                    else if (state != WordStateWord)
+                    {
+                        state = IsWordChar(ch) ? WordStateWord : WordStateSymbolsOnly;
+                    }
                 }
-                else if (!inWord)
-                {
-                    inWord = true;
-                    count++;
-                }
+
+                return count + (state >> 1);
             }
 
-            return count;
+            return CountWordsWithTags(span);
+        }
+
+        // Word state, kept as an int so that ending a word can add "state >> 1" branch-free.
+        private const int WordStateNone = 0;
+        private const int WordStateSymbolsOnly = 1;
+        private const int WordStateWord = 2;
+
+        private static int CountWordsWithTags(ReadOnlySpan<char> span)
+        {
+            var count = 0;
+            var state = WordStateNone;
+
+            // Once the line has no '>' (or '}') left, no later '<' (or '{') can open a tag either,
+            // so a line like "a<b<c<d" scans forward once instead of once per bracket.
+            var noTagEnd = false;
+            var noBraceEnd = false;
+
+            for (var i = 0; i < span.Length; i++)
+            {
+                var ch = span[i];
+                if (ch > ' ' && ch != '<' && ch != '{' && ch != '\\')
+                {
+                    if (state != WordStateWord)
+                    {
+                        state = IsWordChar(ch) ? WordStateWord : WordStateSymbolsOnly;
+                    }
+
+                    continue;
+                }
+
+                if (ch == '<' || ch == '{')
+                {
+                    // Tags do not break a word: "wo<i>r</i>d" is one word.
+                    if (ch == '{')
+                    {
+                        if (!noBraceEnd)
+                        {
+                            var end = span.Slice(i).IndexOf('}');
+                            if (end >= 0)
+                            {
+                                i += end;
+                                continue;
+                            }
+
+                            noBraceEnd = true;
+                        }
+                    }
+                    // Only "<x..." and "</x..." open a tag - "5 < 6" has to stay plain text.
+                    else if (!noTagEnd && i + 1 < span.Length &&
+                             (span[i + 1] == '/' || char.IsLetter(span[i + 1])))
+                    {
+                        var end = span.Slice(i).IndexOf('>');
+                        if (end >= 0)
+                        {
+                            i += end;
+                            continue;
+                        }
+
+                        noTagEnd = true;
+                    }
+
+                    // A stray '<' or '{' - not a tag, so it is part of the word.
+                    if (state == WordStateNone)
+                    {
+                        state = WordStateSymbolsOnly;
+                    }
+
+                    continue;
+                }
+
+                if (ch == '\\')
+                {
+                    var next = i + 1 < span.Length ? span[i + 1] : '\0';
+                    if (next != 'N' && next != 'n' && next != 'h')
+                    {
+                        if (state == WordStateNone)
+                        {
+                            state = WordStateSymbolsOnly;
+                        }
+
+                        continue;
+                    }
+
+                    // ASSA line break (\N, \n) or hard space (\h).
+                    i++;
+                }
+
+                count += state >> 1;
+                state = WordStateNone;
+            }
+
+            return count + (state >> 1);
+        }
+
+        /// <summary>Letter or digit, with an inline path for ASCII (nearly all subtitle text).</summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private static bool IsWordChar(char ch)
+        {
+            if ((uint)((ch | 0x20) - 'a') <= 'z' - 'a' || (uint)(ch - '0') <= 9)
+            {
+                return true;
+            }
+
+            return ch > 127 && char.IsLetterOrDigit(ch);
         }
 
         // http://www.codeproject.com/Articles/43726/Optimizing-string-operations-in-C

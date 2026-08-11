@@ -461,4 +461,57 @@ public class StringExtensionsTest
         Assert.True("foobar;".HasSentenceEnding(greekCultureTwoLetter));
     }
 
+    [Theory]
+    // plain text
+    [InlineData("", 0)]
+    [InlineData(" ", 0)]
+    [InlineData("Word", 1)]
+    [InlineData("I", 1)]
+    [InlineData("Chapter 5", 2)]
+    [InlineData("Hello there, how are you?", 5)]
+    [InlineData("Foo  bar", 2)]
+    [InlineData("Hello there,\r\nhow are you today my friend?", 8)]
+    [InlineData("Über straße 42", 3)]
+    [InlineData("日本語 テスト", 2)]
+    // tabs separate words
+    [InlineData("foo\tbar\tbaz", 3)]
+    [InlineData("one   \t  two", 2)]
+    // a token needs a letter or a digit to be a word
+    [InlineData("foo - bar", 2)]
+    [InlineData("foo -", 1)]
+    [InlineData("...", 0)]
+    [InlineData("♪♪", 0)]
+    [InlineData("♪ La la la ♪", 3)]
+    [InlineData("- What are you doing in there?\r\n- Nothing much, really.", 9)]
+    [InlineData("-Hello there!", 2)]
+    [InlineData("he said \"no\" -- twice", 4)]
+    // html and ASSA tags
+    [InlineData("<i>Hello there,</i> how are you?", 5)]
+    [InlineData("{\\an8}Hello there, how are you?", 5)]
+    [InlineData("<font color=\"red\">Wow!</font> {\\i1}nice{\\i0} one", 3)]
+    [InlineData("<i></i>", 0)]
+    [InlineData("{\\i1}{\\i0}", 0)]
+    [InlineData("<i>a</i>", 1)]
+    [InlineData("<v Roger>Hello there", 2)]
+    [InlineData("<00:00:01.000><c>Karaoke</c> word", 2)]
+    // a tag inside a word does not split it
+    [InlineData("wo<i>r</i>d", 1)]
+    [InlineData("<i>a<b>c</b>d</i> e", 2)]
+    // unclosed or non-tag brackets are plain text, not a tag that swallows the rest
+    [InlineData("<i>unclosed", 1)]
+    [InlineData("{unclosed", 1)]
+    [InlineData("a < b", 2)]
+    [InlineData("5 < 6 and 7 > 3", 5)]
+    [InlineData("<", 0)]
+    [InlineData("a<", 1)]
+    // ASSA escapes
+    [InlineData("line one\\Nline two", 4)]
+    [InlineData("hard\\hspace", 2)]
+    [InlineData("\\N", 0)]
+    [InlineData("C:\\temp\\file", 1)]
+    public void CountWordsTest(string input, int expected)
+    {
+        Assert.Equal(expected, input.CountWords());
+    }
+
 }

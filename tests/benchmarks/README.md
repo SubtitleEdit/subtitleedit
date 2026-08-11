@@ -30,6 +30,7 @@ Reports land in `tests/benchmarks/BenchmarkDotNet.Artifacts/results/` (gitignore
 | `WaveformBufferBenchmarks` | The 50 ms position timer's refill of the waveform's subtitle buffer. |
 | `AudioVisualizerRenderBenchmarks` | One full playback frame of the real `AudioVisualizer.Render` (headless, real Skia, record-only): static view vs center-mode scrolling vs a forced geometry rebuild. |
 | `TextMeasurerBenchmarks` | The per-line text measurement the statistics window and batch convert run over every line of a subtitle. |
+| `CountWordsBenchmarks` | `CountWords` per line (words-per-minute column) and over a whole subtitle (statistics window). Set `SE_BENCH_SUBTITLE` to run the whole-file case over a real subtitle file. |
 | `SubtitleImageAdjusterBenchmarks` | The full-frame pixel adjustments the binary-edit dialogs run on every debounced slider tick (brightness/contrast/gamma, alpha, colorize). |
 | `FixCommonErrorsAllowFixBenchmarks` | One apply pass worth of `AllowFix` probes - what every libse fix rule asks once per paragraph during "Apply selected fixes". |
 | `ModifySelectionRuleBenchmarks` | One 250 ms preview-timer tick of the modify-selection window: the selected rule evaluated against every line (regex, line-count and style rules). |
