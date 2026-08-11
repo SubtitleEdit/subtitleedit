@@ -56,6 +56,14 @@ public partial class MultipleReplaceViewModel : ObservableObject
     private readonly Timer _timerReplace;
     private bool _dirty;
 
+    // Subtitle Edit 4 used Ctrl+Up/Down/Home/End for the four move commands on both the rules
+    // and the groups list (#13523). Ctrl+Up/Down is Mission Control on macOS, so show Cmd there.
+    private static readonly KeyModifiers MoveModifier = OperatingSystem.IsMacOS() ? KeyModifiers.Meta : KeyModifiers.Control;
+    private static readonly KeyGesture MoveUpGesture = new(Key.Up, MoveModifier);
+    private static readonly KeyGesture MoveDownGesture = new(Key.Down, MoveModifier);
+    private static readonly KeyGesture MoveToTopGesture = new(Key.Home, MoveModifier);
+    private static readonly KeyGesture MoveToBottomGesture = new(Key.End, MoveModifier);
+
     public MultipleReplaceViewModel(IWindowService windowService, IFileHelper fileHelper)
     {
         _windowService = windowService;
@@ -331,13 +339,29 @@ public partial class MultipleReplaceViewModel : ObservableObject
                 {
                     Header = Se.Language.General.MoveUp,
                     Command = CategoryMoveUpCommand,
-                    CommandParameter = node
+                    CommandParameter = node,
+                    InputGesture = MoveUpGesture,
                 },
                 new MenuItem
                 {
                     Header = Se.Language.General.MoveDown,
                     Command = CategoryMoveDownCommand,
-                    CommandParameter = node
+                    CommandParameter = node,
+                    InputGesture = MoveDownGesture,
+                },
+                new MenuItem
+                {
+                    Header = Se.Language.General.MoveToTop,
+                    Command = CategoryMoveToTopCommand,
+                    CommandParameter = node,
+                    InputGesture = MoveToTopGesture,
+                },
+                new MenuItem
+                {
+                    Header = Se.Language.General.MoveToBottom,
+                    Command = CategoryMoveToBottomCommand,
+                    CommandParameter = node,
+                    InputGesture = MoveToBottomGesture,
                 },
                 new Separator(),
                 new MenuItem
@@ -651,36 +675,25 @@ public partial class MultipleReplaceViewModel : ObservableObject
     }
 
     [RelayCommand]
-    private void CategoryMoveUp(RuleTreeNode? node)
-    {
-        if (node == null)
-        {
-            return;
-        }
-
-        var index = Nodes.IndexOf(node);
-        if (index > 0)
-        {
-            Nodes.Move(index, index - 1);
-            _dirty = true;
-        }
-    }
+    private void CategoryMoveUp(RuleTreeNode? node) => MoveCategory(node, ListMoveDirection.Up);
 
     [RelayCommand]
-    private void CategoryMoveDown(RuleTreeNode? node)
+    private void CategoryMoveDown(RuleTreeNode? node) => MoveCategory(node, ListMoveDirection.Down);
+
+    [RelayCommand]
+    private void CategoryMoveToTop(RuleTreeNode? node) => MoveCategory(node, ListMoveDirection.Top);
+
+    [RelayCommand]
+    private void CategoryMoveToBottom(RuleTreeNode? node) => MoveCategory(node, ListMoveDirection.Bottom);
+
+    private void MoveCategory(RuleTreeNode? node, ListMoveDirection direction)
     {
-        if (node == null)
+        if (node == null || !node.IsCategory)
         {
             return;
         }
 
-        var index = Nodes.IndexOf(node);
-        if (index < Nodes.Count - 1)
-        {
-            Nodes.Move(index, index + 1);
-        }
-
-        _dirty = true;
+        MoveNodeIn(Nodes, node, direction);
     }
 
     [RelayCommand]
@@ -725,13 +738,29 @@ public partial class MultipleReplaceViewModel : ObservableObject
                 {
                     Header = Se.Language.General.MoveUp,
                     Command = NodeMoveUpCommand,
-                    CommandParameter = node
+                    CommandParameter = node,
+                    InputGesture = MoveUpGesture,
                 },
                 new MenuItem
                 {
                     Header = Se.Language.General.MoveDown,
                     Command = NodeMoveDownCommand,
-                    CommandParameter = node
+                    CommandParameter = node,
+                    InputGesture = MoveDownGesture,
+                },
+                new MenuItem
+                {
+                    Header = Se.Language.General.MoveToTop,
+                    Command = NodeMoveToTopCommand,
+                    CommandParameter = node,
+                    InputGesture = MoveToTopGesture,
+                },
+                new MenuItem
+                {
+                    Header = Se.Language.General.MoveToBottom,
+                    Command = NodeMoveToBottomCommand,
+                    CommandParameter = node,
+                    InputGesture = MoveToBottomGesture,
                 },
                 new Separator(),
                 new MenuItem
@@ -883,37 +912,58 @@ public partial class MultipleReplaceViewModel : ObservableObject
     }
 
     [RelayCommand]
-    private void NodeMoveUp(RuleTreeNode? node)
-    {
-        if (node == null || node.Parent == null || node.Parent.SubNodes == null)
-        {
-            return;
-        }
-
-        var nodes = node.Parent.SubNodes;
-        var index = nodes.IndexOf(node);
-        if (index > 0)
-        {
-            nodes.Move(index, index - 1);
-            _dirty = true;
-        }
-    }
+    private void NodeMoveUp(RuleTreeNode? node) => MoveRule(node, ListMoveDirection.Up);
 
     [RelayCommand]
-    private void NodeMoveDown(RuleTreeNode? node)
+    private void NodeMoveDown(RuleTreeNode? node) => MoveRule(node, ListMoveDirection.Down);
+
+    [RelayCommand]
+    private void NodeMoveToTop(RuleTreeNode? node) => MoveRule(node, ListMoveDirection.Top);
+
+    [RelayCommand]
+    private void NodeMoveToBottom(RuleTreeNode? node) => MoveRule(node, ListMoveDirection.Bottom);
+
+    private void MoveRule(RuleTreeNode? node, ListMoveDirection direction)
     {
-        if (node == null || node.Parent == null || node.Parent.SubNodes == null)
+        if (node == null || node.IsCategory || node.Parent?.SubNodes == null)
         {
             return;
         }
 
-        var nodes = node.Parent.SubNodes;
+        MoveNodeIn(node.Parent.SubNodes, node, direction);
+    }
+
+    /// <summary>
+    /// Reorders a single node inside the collection it lives in and keeps it selected and
+    /// focused afterwards - <see cref="ObservableCollection{T}.Move"/> rebuilds the tree
+    /// container, which otherwise drops both.
+    /// </summary>
+    private void MoveNodeIn(ObservableCollection<RuleTreeNode> nodes, RuleTreeNode node, ListMoveDirection direction)
+    {
         var index = nodes.IndexOf(node);
-        if (index < nodes.Count - 1)
+        if (index < 0)
         {
-            nodes.Move(index, index + 1);
-            _dirty = true;
+            return;
         }
+
+        ListReorder.Move(nodes, new[] { index }, direction);
+
+        if (nodes.IndexOf(node) == index)
+        {
+            return; // already at the edge - nothing moved, so the rules are unchanged
+        }
+
+        _dirty = true;
+        SelectedNode = node;
+        Dispatcher.UIThread.Post(() =>
+        {
+            SelectedNode = node;
+            if (RulesTreeView.ContainerFromItem(node) is TreeViewItem container)
+            {
+                container.BringIntoView();
+                container.Focus(NavigationMethod.Directional);
+            }
+        }, DispatcherPriority.Input);
     }
 
     internal void OnKeyDown(object? sender, KeyEventArgs e)
@@ -1020,6 +1070,49 @@ public partial class MultipleReplaceViewModel : ObservableObject
                 }
             }, DispatcherPriority.Input);
         }, DispatcherPriority.Background);
+    }
+
+    /// <summary>
+    /// Ctrl/Cmd + Up/Down/Home/End reorders the selected rule or category. This has to tunnel:
+    /// the list box inside the tree view handles Ctrl+Arrow itself (move focus, keep selection),
+    /// so a bubbling handler never sees it.
+    /// </summary>
+    internal void RulesTreeView_PreviewKeyDown(object? sender, KeyEventArgs e)
+    {
+        if (e.KeyModifiers is not (KeyModifiers.Control or KeyModifiers.Meta))
+        {
+            return;
+        }
+
+        var direction = e.Key switch
+        {
+            Key.Up => (ListMoveDirection?)ListMoveDirection.Up,
+            Key.Down => ListMoveDirection.Down,
+            Key.Home => ListMoveDirection.Top,
+            Key.End => ListMoveDirection.Bottom,
+            _ => null,
+        };
+
+        if (direction == null)
+        {
+            return;
+        }
+
+        var node = SelectedNode;
+        if (node == null)
+        {
+            return;
+        }
+
+        e.Handled = true;
+        if (node.IsCategory)
+        {
+            MoveCategory(node, direction.Value);
+        }
+        else
+        {
+            MoveRule(node, direction.Value);
+        }
     }
 
     internal async void RulesTreeView_KeyDown(object? sender, KeyEventArgs e)
