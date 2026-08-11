@@ -62,6 +62,7 @@ public class SubtitleOpenFirstRowDeleteTests : IDisposable
         window.UpdateLayout();
 
         var vm = (MainViewModel)view.DataContext!;
+        window.SuppressSaveChangesPromptOnClose(vm);
         return (window, vm);
     }
 
