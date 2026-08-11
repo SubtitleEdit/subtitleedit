@@ -84,7 +84,8 @@ internal static class HelpDisplay
         ShowParameter("--merge-same-time-codes", "Merge entries with same time codes");
         ShowParameter("--merge-short-lines", "Merge short lines");
         ShowParameter("--redo-casing", "Redo text casing");
-        ShowParameter("--remove-formatting", "Remove formatting tags");
+        ShowParameter("--remove-formatting", "Remove all formatting tags");
+        ShowParameter("--remove-formatting-rules:<list>", "Formatting-removal rule IDs (csv); supports 'all,-RuleId'. List: seconv list-rf-rules");
         ShowParameter("--remove-line-breaks", "Remove line breaks");
         ShowParameter("--remove-text-for-hi", "Remove text for hearing impaired");
         ShowParameter("--remove-unicode-control-chars", "Remove Unicode control characters");
@@ -99,6 +100,7 @@ internal static class HelpDisplay
         ShowParameter("list-pac-codepages", "List PAC code pages (--pac-codepage values)");
         ShowParameter("list-ocr-engines", "List OCR engines + installation status");
         ShowParameter("list-fce-rules", "List FixCommonErrors rule IDs");
+        ShowParameter("list-rf-rules", "List remove-formatting rule IDs");
         ShowParameter("dump-settings", "Print a full --settings JSON with libse defaults (redirect to a file)");
         ShowParameter("info <file>", "Print format / encoding / duration / language info");
         ShowParameter("lint <pattern>", "Validate subtitle(s); exit 1 if any issues found");

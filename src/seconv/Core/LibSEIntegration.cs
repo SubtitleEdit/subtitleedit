@@ -564,12 +564,15 @@ internal static class LibSEIntegration
     /// <c>null</c> or empty to run all FCE rules.
     /// <paramref name="fixCommonErrorsLanguage"/> forces the language used for FCE gating /
     /// OCR-fix (from <c>--fce-language</c>); pass <c>null</c> to auto-detect from content.
+    /// <paramref name="removeFormattingRules"/> is consulted only when <c>removeformatting</c>
+    /// is in the operation list — pass <c>null</c> to strip every tag wholesale.
     /// </summary>
     public static void ApplyOperations(
         Subtitle subtitle,
         List<string> operations,
         IReadOnlyList<string>? fixCommonErrorsRules = null,
-        string? fixCommonErrorsLanguage = null)
+        string? fixCommonErrorsLanguage = null,
+        IReadOnlyList<string>? removeFormattingRules = null)
     {
         if (subtitle == null || operations == null || operations.Count == 0)
         {
@@ -578,7 +581,7 @@ internal static class LibSEIntegration
 
         foreach (var operation in operations)
         {
-            ApplyOperation(subtitle, operation, fixCommonErrorsRules, fixCommonErrorsLanguage);
+            ApplyOperation(subtitle, operation, fixCommonErrorsRules, fixCommonErrorsLanguage, removeFormattingRules);
         }
     }
 
@@ -586,7 +589,8 @@ internal static class LibSEIntegration
         Subtitle subtitle,
         string operation,
         IReadOnlyList<string>? fixCommonErrorsRules,
-        string? fixCommonErrorsLanguage)
+        string? fixCommonErrorsLanguage,
+        IReadOnlyList<string>? removeFormattingRules)
     {
         switch (operation.ToLowerInvariant())
         {
@@ -685,7 +689,7 @@ internal static class LibSEIntegration
                 break;
 
             case "removeformatting":
-                RemoveFormatting(subtitle);
+                RemoveFormattingRunner.Run(subtitle, removeFormattingRules);
                 break;
 
             case "removelinebreaks":
@@ -749,14 +753,6 @@ internal static class LibSEIntegration
             default:
                 // Unknown operation - ignore or log warning
                 break;
-        }
-    }
-
-    private static void RemoveFormatting(Subtitle subtitle)
-    {
-        foreach (var p in subtitle.Paragraphs)
-        {
-            p.Text = HtmlUtil.RemoveHtmlTags(p.Text, true);
         }
     }
 
