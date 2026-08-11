@@ -880,6 +880,7 @@
       "saveAsHint": "Save subtitle with a new name {0}",
       "findHint": "Find text in subtitles {0}",
       "replaceHint": "Find and replace text {0}",
+      "multipleReplaceHint": "Multiple replace {0}",
       "spellCheckHint": "Check subtitles for spelling errors {0}",
       "fixCommonErrorsHint": "Fix common subtitle errors {0}",
       "removeTextForHiHint": "Remove text for hearing impaired {0}",
@@ -1184,7 +1185,9 @@
       "addLineBetweenSubtitles": "Add line between subtitles",
       "titleExportDCinemaInteropPng": "D-Cinema interop/png",
       "titleExportDCinemaSmpte2014Png": "D-Cinema SMPTE 2014/png",
-      "imageBasedSubtitleSaved": "Image-based subtitle saved"
+      "imageBasedSubtitleSaved": "Image-based subtitle saved",
+      "fullFrameImage": "Full frame image",
+      "fullFrameImageHint": "Make each image the size of the video frame, with the subtitle in its place"
     },
     "statistics": {
       "title": "Statistics",
@@ -2549,6 +2552,7 @@
       "showToolbarSaveAs": "Show save as icon",
       "showToolbarFind": "Show find icon",
       "showToolbarReplace": "Show replace icon",
+      "showToolbarMultipleReplace": "Show multiple replace icon",
       "showToolbarSpellCheck": "Show spell check icon",
       "showToolbarFixCommonErrors": "Show fix common errors icon",
       "showToolbarRemoveTextForHi": "Show remove text for hearing impaired icon",

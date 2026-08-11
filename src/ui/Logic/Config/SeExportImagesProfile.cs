@@ -33,6 +33,7 @@ public class SeExportImagesProfile
     public string Error { get; set; }
     public bool IsForced { get; set; }
     public bool IsFullFrame { get; set; }
+    public string FullFrameBackgroundColor { get; set; }
     public double FramesPerSecond { get; set; }
     public int PaddingLeftRight { get; set; }
     public int PaddingTopBottom { get; set; }
@@ -56,6 +57,9 @@ public class SeExportImagesProfile
         ShadowColor = SKColors.Black.ToHex(true);
         ShadowWidth = 2;
         BackgroundColor = new SKColor(0, 0, 0, 180).ToHex(true);
+        // Transparent: a full frame image should only pad the subtitle out to the frame size,
+        // so it can go on a track above the video.
+        FullFrameBackgroundColor = SKColors.Transparent.ToHex(true);
         BackgroundCornerRadius = 0;
         ScreenWidth = 1920;
         ScreenHeight = 1080;

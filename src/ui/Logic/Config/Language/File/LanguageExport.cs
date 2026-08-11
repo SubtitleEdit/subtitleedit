@@ -41,6 +41,8 @@ public class LanguageExport
     public string TitleExportDCinemaInteropPng { get; set; }
     public string TitleExportDCinemaSmpte2014Png { get; set; }
     public string ImageBasedSubtitleSaved { get; set; }
+    public string FullFrameImage { get; set; }
+    public string FullFrameImageHint { get; set; }
 
     public LanguageExport()
     {
@@ -83,5 +85,7 @@ public class LanguageExport
         TitleExportDCinemaInteropPng = "D-Cinema interop/png";
         TitleExportDCinemaSmpte2014Png = "D-Cinema SMPTE 2014/png";
         ImageBasedSubtitleSaved = "Image-based subtitle saved";
+        FullFrameImage = "Full frame image";
+        FullFrameImageHint = "Make each image the size of the video frame, with the subtitle in its place";
     }
 }
