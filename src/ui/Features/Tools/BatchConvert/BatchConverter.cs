@@ -1511,6 +1511,8 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
             return;
         }
 
+        var profile = GetExportImagesProfile();
+
         var imageParameters = new List<ImageParameter>();
         for (var i = 0; i < imageSubtitle.Count; i++)
         {
@@ -1539,6 +1541,12 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
                 BottomTopMargin = 0,
                 LeftRightMargin = 0,
                 Bitmap = ApplyImageAdjustments(imageSubtitle.GetBitmap(i)),
+                // The export handlers read these off the parameters: FCP/BDN take their
+                // timecode frame rate from here (falling back to a 25/23.976 default), and
+                // FCP/Blu-ray render onto a frame-sized canvas when full frame is on.
+                FramesPerSecond = profile.FramesPerSecond,
+                IsFullFrame = profile.IsFullFrame,
+                FullFrameBackgroundColor = profile.FullFrameBackgroundColor.FromHexToColor().ToSKColor(),
             };
             var position = imageSubtitle.GetPosition(i);
             if (position.X >= 0 && position.Y >= 0)
@@ -1691,18 +1699,17 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
         }
     }
 
+    /// <summary>The export-images profile the target-format settings dialog edits and saves.</summary>
+    private static SeExportImagesProfile GetExportImagesProfile()
+    {
+        return Se.Settings.File.ExportImages.Profiles.FirstOrDefault(p => p.ProfileName == Se.Settings.File.ExportImages.LastProfileName)
+               ?? Se.Settings.File.ExportImages.Profiles.FirstOrDefault()
+               ?? new SeExportImagesProfile();
+    }
+
     private IOcrSubtitle? CreateImageSubtitles(BatchConvertItem item)
     {
-        var profile = Se.Settings.File.ExportImages.Profiles.FirstOrDefault(p => p.ProfileName == Se.Settings.File.ExportImages.LastProfileName);
-        if (profile == null)
-        {
-            profile = Se.Settings.File.ExportImages.Profiles.FirstOrDefault();
-        }
-
-        if (profile == null)
-        {
-            profile = new SeExportImagesProfile();
-        }
+        var profile = GetExportImagesProfile();
 
         if (item.Subtitle == null)
         {
@@ -1742,6 +1749,12 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
                 ScreenHeight = profile.ScreenHeight,
                 BottomTopMargin = profile.BottomTopMargin,
                 LeftRightMargin = profile.LeftRightMargin,
+                // The export handlers read these off the parameters: FCP/BDN take their
+                // timecode frame rate from here (falling back to a 25/23.976 default), and
+                // FCP/Blu-ray render onto a frame-sized canvas when full frame is on.
+                FramesPerSecond = profile.FramesPerSecond,
+                IsFullFrame = profile.IsFullFrame,
+                FullFrameBackgroundColor = profile.FullFrameBackgroundColor.FromHexToColor().ToSKColor(),
             };
 
             imageParameter.Bitmap = ExportImageBasedViewModel.GenerateBitmap(imageParameter);
@@ -1897,63 +1910,19 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
             return subtitle;
         }
 
+        var s = _config.RemoveFormatting;
+        var types = RemoveFormattingType.None;
+        if (s.RemoveAll) { types |= RemoveFormattingType.All; }
+        if (s.RemoveItalic) { types |= RemoveFormattingType.Italic; }
+        if (s.RemoveBold) { types |= RemoveFormattingType.Bold; }
+        if (s.RemoveUnderline) { types |= RemoveFormattingType.Underline; }
+        if (s.RemoveColor) { types |= RemoveFormattingType.Color; }
+        if (s.RemoveFontName) { types |= RemoveFormattingType.FontName; }
+        if (s.RemoveAlignment) { types |= RemoveFormattingType.Alignment; }
+
         foreach (var p in subtitle.Paragraphs)
         {
-            if (_config.RemoveFormatting.RemoveAll)
-            {
-                p.Text = HtmlUtil.RemoveHtmlTags(p.Text, true);
-            }
-            else
-            {
-                if (_config.RemoveFormatting.RemoveItalic)
-                {
-                    p.Text = HtmlUtil.RemoveOpenCloseTags(p.Text, HtmlUtil.TagItalic);
-                    p.Text = p.Text
-                        .Replace("{\\i}", string.Empty)
-                        .Replace("{\\i0}", string.Empty)
-                        .Replace("{\\i1}", string.Empty);
-                }
-
-                if (_config.RemoveFormatting.RemoveBold)
-                {
-                    p.Text = HtmlUtil.RemoveOpenCloseTags(p.Text, HtmlUtil.TagBold);
-                    p.Text = p.Text
-                        .Replace("{\\b}", string.Empty)
-                        .Replace("{\\b0}", string.Empty)
-                        .Replace("{\\b1}", string.Empty);
-                }
-
-                if (_config.RemoveFormatting.RemoveUnderline)
-                {
-                    p.Text = HtmlUtil.RemoveOpenCloseTags(p.Text, HtmlUtil.TagUnderline);
-                    p.Text = p.Text
-                        .Replace("{\\u}", string.Empty)
-                        .Replace("{\\u0}", string.Empty)
-                        .Replace("{\\u1}", string.Empty);
-                }
-
-                if (_config.RemoveFormatting.RemoveColor)
-                {
-                    p.Text = HtmlUtil.RemoveColorTags(p.Text);
-                    if (p.Text.Contains("\\c") || p.Text.Contains("\\1c"))
-                    {
-                        p.Text = HtmlUtil.RemoveAssaColor(p.Text);
-                    }
-                }
-
-                if (_config.RemoveFormatting.RemoveFontName)
-                {
-                    p.Text = HtmlUtil.RemoveFontName(p.Text);
-                }
-
-                if (_config.RemoveFormatting.RemoveAlignment)
-                {
-                    if (p.Text.Contains('{'))
-                    {
-                        p.Text = HtmlUtil.RemoveAssAlignmentTags(p.Text);
-                    }
-                }
-            }
+            p.Text = RemoveFormattingUtil.Remove(p.Text, types);
         }
 
         return subtitle;

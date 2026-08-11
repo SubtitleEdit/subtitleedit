@@ -50,6 +50,7 @@ public class PlayheadSyncFocusTests : IDisposable
         window.UpdateLayout();
 
         var vm = (MainViewModel)view.DataContext!;
+        window.SuppressSaveChangesPromptOnClose(vm);
         vm.Menu.IsVisible = true;
 
         for (var i = 0; i < lineCount; i++)

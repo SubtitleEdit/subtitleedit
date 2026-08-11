@@ -3,6 +3,34 @@ Subtitle Edit Changelog
 
 -----------------------------------------------------------------------------------------------------
 
+v5.2.0-beta10 (11th of August 2026)
+
+* Add "BDN/xml 8-bit" export with palette-indexed PNGs
+* Add "Multiple replace" to the toolbar
+* Add 23-language selection to Chatterbox TTS (and re-download of the English-only models)
+* Bring back the "Full frame image" option when exporting images
+* Open a non-matching original as a read-only reference instead of dropping lines - thx bichitoxxx
+* Let the replace window pick which columns to search - thx jugorakita-creator
+* Honor the Subtitle Edit proxy settings in downloads, update check, and cloud OCR
+* Show the number of forced cues in the Matroska track picker
+* Show the filtered file count in batch convert
+* Improve VobSub color isolation for letters like "i", "j" and umlauts - thx tekk42
+* Fix wrong burn-in quality with the VideoToolbox encoders on new installs (macOS)
+* Fix Persian/RTL text and dark theme highlighting in the compare window - thx saeead
+* Fix keyboard focus being stolen from an open modal dialog - thx GrampaWildWilly
+* Fix AI review failing with engines that reject some request parameters - thx joseacuna80
+* Fix blank space above the first line after End followed by Home
+* Fix wrong uppercasing after ASSA tags in "Fix casing" - thx ivandrofly
+* Update CrispASR to v0.8.28
+* Update Japanese translation - thx hisui3393
+* Update Korean translation - thx 12si27
+* Update Traditional Chinese translation - thx love80312
+* Update Turkish translation - thx bilimiyorum
+* Update Russian translation - thx jekovcar
+* Update Bulgarian translation - thx jekovcar
+
+-----------------------------------------------------------------------------------------------------
+
 v5.2.0-beta9 (10th of August 2026)
 
 * Add image subtitle preview and VobSub export to the Matroska track chooser

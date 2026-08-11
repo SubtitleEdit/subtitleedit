@@ -92,6 +92,7 @@ using Nikse.SubtitleEdit.Features.Shared.PickMatroskaTrack;
 using Nikse.SubtitleEdit.Features.Shared.PickMp4Track;
 using Nikse.SubtitleEdit.Features.Shared.PickRuleProfile;
 using Nikse.SubtitleEdit.Features.Shared.PickSpellCheckDictionary;
+using Nikse.SubtitleEdit.Features.Shared.OpenOriginalMismatch;
 using Nikse.SubtitleEdit.Features.Shared.PickSubtitleFormat;
 using Nikse.SubtitleEdit.Features.Shared.PickTsTrack;
 using Nikse.SubtitleEdit.Features.Shared.PickVobSubLanguage;
@@ -202,7 +203,16 @@ public partial class MainViewModel :
     IApplyWebVttStyles
 {
     [ObservableProperty] private ObservableCollection<SubtitleLineViewModel> _subtitles;
-    [ObservableProperty] private SubtitleLineViewModel? _selectedSubtitle;
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(IsSelectedLineReferenceOnly))]
+    [NotifyPropertyChangedFor(nameof(AreTimeCodesEditable))]
+    private SubtitleLineViewModel? _selectedSubtitle;
+
+    /// <summary>
+    /// True while a display-only reference row is selected. The main text box binds its read-only
+    /// state to this - typing into such a row would turn it into a real subtitle line (#13449).
+    /// </summary>
+    public bool IsSelectedLineReferenceOnly => SelectedSubtitle?.IsReferenceOnly == true;
     private List<SubtitleLineViewModel>? _selectedSubtitles;
     [ObservableProperty] private int? _selectedSubtitleIndex;
 
@@ -239,7 +249,40 @@ public partial class MainViewModel :
     [ObservableProperty] private bool _isMergeWithNextOrPreviousVisible;
     [ObservableProperty] private bool _isInsertLineNoSelectionVisible;
     [ObservableProperty] private bool _isInsertSubtitleFileAfterLineVisible;
-    [ObservableProperty] private bool _showColumnOriginalText;
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(CanEditOriginal))]
+    private bool _showColumnOriginalText;
+
+    /// <summary>
+    /// The original subtitle is shown but never edited and never written back, so the file on disk
+    /// stays exactly as the user left it - issue #13449, where a mismatching original was silently
+    /// truncated to the matching lines and then saved over the user's file. Set from the import
+    /// prompt's "Allow edit of original subtitle" check box.
+    /// </summary>
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(CanEditOriginal))]
+    [NotifyPropertyChangedFor(nameof(OriginalTextLabel))]
+    private bool _isOriginalReadOnly;
+
+    /// <summary>
+    /// The original's lines that have no counterpart in the working subtitle are shown as
+    /// display-only rows. Independent of <see cref="IsOriginalReadOnly"/>: with these rows on screen
+    /// the grid holds every line of the original exactly once, so editing and saving the original is
+    /// lossless - which is why it may be combined with "Allow edit of original subtitle". Time codes
+    /// are locked while it is on, see <see cref="AreTimeCodesLocked"/>.
+    /// </summary>
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(AreTimeCodesEditable))]
+    [NotifyPropertyChangedFor(nameof(AreTimeCodesLocked))]
+    private bool _isShowingOriginalNonMatchingLines;
+
+    /// <summary>Whether the original text column may be written to (see <see cref="IsOriginalReadOnly"/>).</summary>
+    public bool CanEditOriginal => ShowColumnOriginalText && !IsOriginalReadOnly;
+
+    public string OriginalTextLabel => IsOriginalReadOnly
+        ? Se.Language.Main.OriginalTextReadOnly
+        : Se.Language.General.OriginalText;
+
     [ObservableProperty] private bool _showColumnStartTime;
     [ObservableProperty] private bool _showColumnEndTime;
     [ObservableProperty] private bool _showColumnGap;
@@ -255,7 +298,25 @@ public partial class MainViewModel :
     [ObservableProperty] private bool _showUpDownDuration;
     [ObservableProperty] private bool _showUpDownLabels;
     [ObservableProperty] private bool _isColumnLayerVisible;
-    [ObservableProperty] private bool _lockTimeCodes;
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(AreTimeCodesEditable))]
+    [NotifyPropertyChangedFor(nameof(AreTimeCodesLocked))]
+    private bool _lockTimeCodes;
+
+    /// <summary>
+    /// Whether time codes may be changed at all right now. Either the user locked them, or the
+    /// original's non-matching lines are on screen: those rows are placed by matching the original
+    /// against the working lines by time, so retiming a working line would re-match it onto a
+    /// different original line and shuffle the extra rows around under the user (#13449). The mode
+    /// is for reading the original alongside the translation, not for retiming.
+    /// </summary>
+    public bool AreTimeCodesLocked => LockTimeCodes || IsShowingOriginalNonMatchingLines;
+
+    /// <summary>
+    /// Whether the show/hide/duration editors accept input: not while time codes are locked, and not
+    /// on a display-only reference row, whose timings belong to the original file (#13449).
+    /// </summary>
+    public bool AreTimeCodesEditable => !AreTimeCodesLocked && !IsSelectedLineReferenceOnly;
     [ObservableProperty] private bool _areVideoControlsUndocked;
     [ObservableProperty] private bool _isFormatAssa;
     [ObservableProperty] private bool _isFormatSsa;
@@ -323,7 +384,21 @@ public partial class MainViewModel :
     /// Building this walks the whole subtitle list, so read it into a local instead of touching it
     /// repeatedly, and use <see cref="SubtitleGridSelectedCount"/> when only the count is needed.
     /// </summary>
-    public List<SubtitleLineViewModel> SubtitleGridSelectedItems => GetSelectedSubtitlesInOrder();
+    /// <remarks>
+    /// Display-only reference rows are filtered out: they are not lines of the working subtitle, so
+    /// no command may edit, retime, delete, merge or export them (#13449). The few places that must
+    /// see the raw selection - the selection machinery itself, and copying the reference text - use
+    /// <see cref="SubtitleGridSelectedItemsWithReference"/>. Filtering here rather than at ~50 call
+    /// sites means a command that is added later is safe by default.
+    /// </remarks>
+    public List<SubtitleLineViewModel> SubtitleGridSelectedItems => GetSelectedSubtitlesInOrder(includeReferenceOnly: false);
+
+    /// <summary>
+    /// The selection exactly as the grid has it, display-only reference rows included. Only for the
+    /// selection machinery (which drives the focused row and the edit boxes, and so must follow the
+    /// user onto a reference row) and for reading reference text - never for editing.
+    /// </summary>
+    public List<SubtitleLineViewModel> SubtitleGridSelectedItemsWithReference => GetSelectedSubtitlesInOrder(includeReferenceOnly: true);
 
     /// <summary>
     /// Number of selected rows. Ordering the rows costs a pass over every subtitle, which callers
@@ -331,7 +406,7 @@ public partial class MainViewModel :
     /// </summary>
     public int SubtitleGridSelectedCount => SubtitleGrid.SelectedItems?.Count ?? 0;
 
-    private List<SubtitleLineViewModel> GetSelectedSubtitlesInOrder()
+    private List<SubtitleLineViewModel> GetSelectedSubtitlesInOrder(bool includeReferenceOnly)
     {
         var selected = SubtitleGrid.SelectedItems;
         var count = selected?.Count ?? 0;
@@ -343,7 +418,10 @@ public partial class MainViewModel :
         if (count == 1)
         {
             // Single selection is the common case (every arrow key lands here) - no ordering needed.
-            return new List<SubtitleLineViewModel>(1) { (SubtitleLineViewModel)selected![0]! };
+            var single = (SubtitleLineViewModel)selected![0]!;
+            return !includeReferenceOnly && single.IsReferenceOnly
+                ? new List<SubtitleLineViewModel>()
+                : new List<SubtitleLineViewModel>(1) { single };
         }
 
         // One pass over the subtitles rather than IndexOf per selected row, which would be
@@ -354,12 +432,20 @@ public partial class MainViewModel :
             wanted.Add((SubtitleLineViewModel)selected![i]!);
         }
 
+        var found = 0;
         var ordered = new List<SubtitleLineViewModel>(count);
-        for (var i = 0; i < Subtitles.Count && ordered.Count < wanted.Count; i++)
+        for (var i = 0; i < Subtitles.Count && found < wanted.Count; i++)
         {
-            if (wanted.Contains(Subtitles[i]))
+            var line = Subtitles[i];
+            if (!wanted.Contains(line))
             {
-                ordered.Add(Subtitles[i]);
+                continue;
+            }
+
+            found++;
+            if (includeReferenceOnly || !line.IsReferenceOnly)
+            {
+                ordered.Add(line);
             }
         }
 
@@ -438,6 +524,12 @@ public partial class MainViewModel :
     // Dirty tracking for _waveformSubtitleBuffer - see the rebuild block in the position
     // timer tick. Starts dirty so the first tick after startup always builds the buffer.
     private bool _waveformSubtitleBufferDirty = true;
+
+    // The read-only reference's grid projection needs re-matching (rows added/removed/retimed).
+    // Only ever set while a read-only reference is loaded; re-entrancy guard for the re-map itself,
+    // which mutates Subtitles and would otherwise mark itself dirty forever.
+    private bool _referenceMappingDirty;
+    private bool _reapplyingReadOnlyReference;
     private bool _waveformBufferNoLayers;
     private HashSet<int>? _waveformBufferVisibleLayers;
     private DispatcherTimer _positionTimer = new();
@@ -1415,7 +1507,18 @@ public partial class MainViewModel :
         Se.Settings.General.LockTimeCodes = LockTimeCodes;
         if (AudioVisualizer != null)
         {
-            AudioVisualizer.IsReadOnly = LockTimeCodes;
+            AudioVisualizer.IsReadOnly = AreTimeCodesLocked;
+        }
+    }
+
+    // AreTimeCodesLocked follows this mode, and the waveform enforces the lock through its own
+    // IsReadOnly - it must follow too, or dragging a paragraph edge would retime lines the lock
+    // exists to protect.
+    partial void OnIsShowingOriginalNonMatchingLinesChanged(bool value)
+    {
+        if (AudioVisualizer != null)
+        {
+            AudioVisualizer.IsReadOnly = AreTimeCodesLocked;
         }
     }
 
@@ -2174,6 +2277,13 @@ public partial class MainViewModel :
             NewLine = "\n",
         });
 
+        // Same reason, for the line breaks *inside* the strings: several language classes build their
+        // text with Environment.NewLine, so the same class yields "\r\n" on Windows and "\n" elsewhere
+        // and the file flip-flopped with whoever regenerated it last. Normalize to "\n" here rather
+        // than chase every class - this is the one place the file is written. Only escaped CRLF in
+        // string values matches; a literal backslash-r in the text is escaped as "\\r" and is left be.
+        json = json.Replace("\\r\\n", "\\n");
+
         var currentDirectory = Directory.GetCurrentDirectory();
         var fileName = Path.Combine(currentDirectory, "English.json");
         await File.WriteAllTextAsync(fileName, json, Encoding.UTF8);
@@ -2261,6 +2371,8 @@ public partial class MainViewModel :
         ClearSecondarySubtitle();
         IsSmpteTimingEnabled = false;
         ShowColumnOriginalText = false;
+        IsOriginalReadOnly = false;
+        IsShowingOriginalNonMatchingLines = false;
         _subtitle.Paragraphs.Clear();
         Subtitles.Clear();
         Se.Settings.General.CurrentVideoIsSmpte = false;
@@ -2304,6 +2416,10 @@ public partial class MainViewModel :
         _subtitleOriginal = new Subtitle();
         _changeSubtitleHashOriginal = GetFastHashOriginal();
         _saveAsFileNameSuggestion = null;
+
+        // A remembered original-only scope would make every find come up empty now that there is
+        // no original column to search.
+        _findService.CurrentScope = FindScope.TextAndOriginal;
 
         _visibleLayers = null;
         ShowLayerFilterIcon = false;
@@ -2429,33 +2545,75 @@ public partial class MainViewModel :
         }
         else
         {
-            var msg = string.Format(Se.Language.Main.OpenOriginalDifferentNumberOfSubtitlesXY, subtitle.Paragraphs.Count, Subtitles.Count);
-            await MessageBox.Show(Window!, Se.Language.General.Information, msg, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            // The original does not line up 1:1 with the working subtitle. SE5 stores the original as
+            // a column of the working row, so the old "import the matching lines" threw away every
+            // line without a counterpart - and the truncated result was then written back over the
+            // user's file by the next (auto-)save. Ask what to show, and whether it may be edited
+            // (issue #13449).
+            var match = ImportOriginalHelper.MatchOriginalLines(Subtitles, subtitle);
+            var originalWithTextCount = match.Projection.Paragraphs.Count(p => !string.IsNullOrEmpty(p.Text));
 
-            var newOriginal = ImportOriginalHelper.GetMatchingOriginalLines(Subtitles, subtitle);
-            var originalWithTextCount = newOriginal.Paragraphs.Count(p => !string.IsNullOrEmpty(p.Text));
+            var prompt = await ShowDialogAsync<OpenOriginalMismatchWindow, OpenOriginalMismatchViewModel>(vm =>
+            {
+                vm.Initialize(subtitle.Paragraphs.Count, Subtitles.Count, originalWithTextCount, match.Unmatched.Count);
+            });
+
+            if (!prompt.OkPressed)
+            {
+                return false;
+            }
+
+            // Both choices are remembered, so the next mismatching original opens the way this one did.
+            Se.Settings.General.AllowEditOfOriginalSubtitle = prompt.AllowEditOfOriginal;
+            Se.Settings.General.ShowOriginalNonMatchingLines = prompt.ShowAllOriginalLines;
+            var isReadOnly = !prompt.AllowEditOfOriginal;
+
+            if (prompt.ShowAllOriginalLines)
+            {
+                // The whole original: matched lines in their working row, the rest as display-only
+                // rows. Nothing of it is dropped, so editing it stays lossless.
+                ImportOriginalSubtitle(selectedIndex, fileName, subtitle, match, isReadOnly);
+                return true;
+            }
+
             if (originalWithTextCount > 0)
             {
-                msg = string.Format(Se.Language.Main.ImportXMatchingOriginalLines, originalWithTextCount);
-                var answer = await MessageBox.Show(Window!, string.Empty, msg, MessageBoxButtons.YesNo, MessageBoxIcon.Question);
-                if (answer == MessageBoxResult.Yes)
-                {
-                    ImportOriginalSubtitle(selectedIndex, fileName, newOriginal);
-                    return true;
-                }
+                // The old SE mode: the matching lines only, with no rows for the rest.
+                ImportOriginalSubtitle(selectedIndex, fileName, match.Projection, isReadOnly: isReadOnly);
+                return true;
             }
         }
 
         return false;
     }
 
-    private void ImportOriginalSubtitle(int selectedIndex, string fileName, Subtitle subtitle)
+    /// <summary>
+    /// Shows <paramref name="subtitle"/> in the original text column.
+    /// </summary>
+    /// <param name="match">
+    /// The time alignment against the working rows. Null when <paramref name="subtitle"/> already
+    /// lines up 1:1 and can be used row for row, or when the user asked for the matching lines only.
+    /// When given, its projection fills the original column and its unmatched lines become
+    /// display-only rows, while <paramref name="subtitle"/> stays the complete original.
+    /// </param>
+    private void ImportOriginalSubtitle(int selectedIndex, string fileName, Subtitle subtitle, ImportOriginalHelper.OriginalMatch? match = null, bool isReadOnly = false)
     {
+        RemoveReferenceOnlyRows();
+
         _subtitleOriginal = subtitle;
         _subtitleFileNameOriginal = fileName;
-        for (var i = 0; i < Subtitles.Count; i++)
+        IsOriginalReadOnly = isReadOnly;
+        IsShowingOriginalNonMatchingLines = match is { Unmatched.Count: > 0 };
+
+        var rowTexts = match?.Projection ?? subtitle;
+        for (var i = 0; i < Subtitles.Count && i < rowTexts.Paragraphs.Count; i++)
         {
-            Subtitles[i].OriginalText = subtitle.Paragraphs[i].Text;
+            Subtitles[i].OriginalText = rowTexts.Paragraphs[i].Text;
+        }
+
+        if (match != null)
+        {
+            InsertReferenceOnlyRows(match.Unmatched);
         }
 
         _changeSubtitleHashOriginal = GetFastHashOriginal();
@@ -2464,6 +2622,183 @@ public partial class MainViewModel :
         AutoFitColumns();
         SelectAndScrollToRow(selectedIndex);
         AddToRecentFiles(true);
+    }
+
+    /// <summary>
+    /// Adds a display-only row for each reference line that no working row matched, placed in start
+    /// time order so the missing section reads in place next to the translation (issue #13449).
+    /// These rows are never part of the working subtitle - see <see cref="SubtitleLineViewModel.IsReferenceOnly"/>.
+    /// </summary>
+    private void InsertReferenceOnlyRows(IReadOnlyList<Paragraph> unmatched)
+    {
+        if (unmatched.Count == 0)
+        {
+            return;
+        }
+
+        // The unmatched lines arrive in file order, so a single cursor over Subtitles is enough.
+        var insertAt = 0;
+        foreach (var p in unmatched)
+        {
+            while (insertAt < Subtitles.Count &&
+                   Subtitles[insertAt].StartTime.TotalMilliseconds <= p.StartTime.TotalMilliseconds)
+            {
+                insertAt++;
+            }
+
+            Subtitles.Insert(insertAt, new SubtitleLineViewModel
+            {
+                IsReferenceOnly = true,
+                Text = string.Empty,
+                OriginalText = p.Text,
+                StartTime = TimeSpan.FromMilliseconds(p.StartTime.TotalMilliseconds),
+                EndTime = TimeSpan.FromMilliseconds(p.EndTime.TotalMilliseconds),
+            });
+
+            insertAt++;
+        }
+
+        Renumber();
+        _updateAudioVisualizer = true;
+    }
+
+    /// <summary>
+    /// Re-derives what the original contributes to the grid - the original column texts and the
+    /// display-only rows for its non-matching lines - by matching the original against the current
+    /// rows again. Both are a projection, so they go stale whenever the working rows are merged,
+    /// split, deleted or rebuilt wholesale (#13449).
+    /// </summary>
+    /// <param name="capture">
+    /// Whether to fold the rows' current original text back into the original first. Needed when the
+    /// original is editable, or the user's edits would be overwritten by the file's text; pass false
+    /// when the caller already captured (the display-only rows are gone by then and their text would
+    /// be lost from the capture).
+    /// </param>
+    private void ReapplyOriginalReference(bool capture = true)
+    {
+        _referenceMappingDirty = false;
+
+        if (!IsShowingOriginalNonMatchingLines || _subtitleOriginal == null || _subtitleOriginal.Paragraphs.Count == 0)
+        {
+            return;
+        }
+
+        // The baseline hash covers the rows, so the remap below shifts it even when the original's
+        // content is untouched. Rebaseline afterwards only when the original was clean going in -
+        // an already-dirty original must stay dirty, or its unsaved edits would no longer count as
+        // changes and the app would close without offering to save them. A read-only original has
+        // nothing to save, so it always rebaselines.
+        var wasDirty = !IsOriginalReadOnly && _changeSubtitleHashOriginal != GetFastHashOriginal();
+
+        if (capture)
+        {
+            CaptureOriginalFromRows();
+        }
+
+        _reapplyingReadOnlyReference = true;
+        try
+        {
+            RemoveReferenceOnlyRows();
+
+            var match = ImportOriginalHelper.MatchOriginalLines(Subtitles, _subtitleOriginal);
+            for (var i = 0; i < Subtitles.Count && i < match.Projection.Paragraphs.Count; i++)
+            {
+                Subtitles[i].OriginalText = match.Projection.Paragraphs[i].Text;
+            }
+
+            InsertReferenceOnlyRows(match.Unmatched);
+        }
+        finally
+        {
+            _reapplyingReadOnlyReference = false;
+        }
+
+        if (!wasDirty)
+        {
+            _changeSubtitleHashOriginal = GetFastHashOriginal();
+        }
+
+        _referenceMappingDirty = false;
+    }
+
+    /// <summary>
+    /// Runs <paramref name="action"/> with the display-only reference rows pulled out of the grid,
+    /// then re-derives them.
+    ///
+    /// Structural commands walk Subtitles by index and assume every row is a line of the working
+    /// subtitle - merge in particular requires the selected rows to sit at consecutive indexes, so a
+    /// reference row between two translated lines silently blocked the merge, and merging into a
+    /// reference row would have swallowed it and stretched the surviving line over its span. Taking
+    /// the reference rows out for the duration means none of those commands has to know that the
+    /// reference exists (#13449).
+    /// </summary>
+    private void WithoutReferenceOnlyRows(Action action)
+    {
+        if (!IsShowingOriginalNonMatchingLines)
+        {
+            action();
+            return;
+        }
+
+        // Capture before the rows go: an editable original keeps its non-matching lines only in them.
+        CaptureOriginalFromRows();
+        RemoveReferenceOnlyRows();
+        try
+        {
+            action();
+        }
+        finally
+        {
+            ReapplyOriginalReference(capture: false);
+        }
+    }
+
+    /// <summary>
+    /// Folds the grid's original column - display-only rows included - back into the original
+    /// subtitle, so the original reflects the user's edits before it is re-matched or saved. A
+    /// read-only original is never edited, so the file stays authoritative and nothing is captured.
+    /// </summary>
+    private void CaptureOriginalFromRows()
+    {
+        if (IsOriginalReadOnly || _subtitleOriginal == null)
+        {
+            return;
+        }
+
+        // Every original line lives in exactly one row here: matched ones in their working row, the
+        // rest in the display-only rows - so this round-trips the whole original.
+        var format = _subtitleOriginal.OriginalFormat ?? SelectedSubtitleFormat;
+        var captured = new Subtitle(_subtitleOriginal);
+        captured.Paragraphs.Clear();
+        foreach (var line in Subtitles)
+        {
+            if (line.IsReferenceOnly || !string.IsNullOrEmpty(line.OriginalText))
+            {
+                captured.Paragraphs.Add(line.ToParagraphOriginal(format));
+            }
+        }
+
+        _subtitleOriginal = captured;
+    }
+
+    /// <summary>Drops every display-only reference row, leaving the working subtitle behind.</summary>
+    private void RemoveReferenceOnlyRows()
+    {
+        var removed = false;
+        for (var i = Subtitles.Count - 1; i >= 0; i--)
+        {
+            if (Subtitles[i].IsReferenceOnly)
+            {
+                Subtitles.RemoveAt(i);
+                removed = true;
+            }
+        }
+
+        if (removed)
+        {
+            Renumber();
+            _updateAudioVisualizer = true;
+        }
     }
 
     /// <summary>
@@ -2488,6 +2823,28 @@ public partial class MainViewModel :
     [RelayCommand]
     private void FileCloseOriginal()
     {
+        if (IsOriginalReadOnly || IsShowingOriginalNonMatchingLines)
+        {
+            // Closed for good rather than just hidden: the display-only rows have no meaning without
+            // the original, and leaving them behind would show blank rows in the grid.
+            RemoveReferenceOnlyRows();
+            _subtitleOriginal = new Subtitle();
+            _subtitleFileNameOriginal = string.Empty;
+            IsOriginalReadOnly = false;
+            IsShowingOriginalNonMatchingLines = false;
+
+            foreach (var line in Subtitles)
+            {
+                line.OriginalText = string.Empty;
+            }
+
+            _changeSubtitleHashOriginal = GetFastHashOriginal();
+        }
+
+        // A remembered original-only scope would make every find come up empty now that the
+        // original is gone.
+        _findService.CurrentScope = FindScope.TextAndOriginal;
+
         ShowColumnOriginalText = false;
         AutoFitColumns();
         _shortcutManager.ClearKeys();
@@ -2531,6 +2888,15 @@ public partial class MainViewModel :
             return;
         }
 
+        // "Remove translation" promotes the original to the working subtitle - which would then be
+        // saved from the row projection, over the reference file. Not allowed for a read-only original.
+        if (IsOriginalReadOnly)
+        {
+            ShowStatus(Se.Language.Main.OriginalIsReadOnlyReference);
+            _shortcutManager.ClearKeys();
+            return;
+        }
+
         if (_changeSubtitleHash != GetFastHash() && !IsEmpty)
         {
             var name = string.IsNullOrEmpty(_subtitleFileName) ? Se.Language.General.Untitled : _subtitleFileName;
@@ -2545,6 +2911,21 @@ public partial class MainViewModel :
         {
             subtitle.Text = subtitle.OriginalText;
             subtitle.OriginalText = string.Empty;
+
+            // A display-only reference row carries a line of the original, so the promotion turns
+            // it into an ordinary line - left flagged, it would be dropped from every save by
+            // GetUpdateSubtitle and keep its dimmed, read-only appearance.
+            subtitle.IsReferenceOnly = false;
+        }
+
+        if (IsShowingOriginalNonMatchingLines)
+        {
+            // The mode (and its time-code lock) is over: the original is now the working subtitle.
+            // Rebuild the rows so the promoted reference rows lose their dimmed look and take a
+            // number - IsReferenceOnly is not observable, so in-place edits would not re-render.
+            IsShowingOriginalNonMatchingLines = false;
+            _subtitle = GetUpdateSubtitle();
+            SetSubtitles(_subtitle, null);
         }
 
         _subtitleFileName = _subtitleFileNameOriginal;
@@ -2552,6 +2933,11 @@ public partial class MainViewModel :
         _subtitleOriginal = new Subtitle();
         _changeSubtitleHash = GetFastHash();
         _changeSubtitleHashOriginal = GetFastHashOriginal();
+
+        // A remembered original-only scope would make every find come up empty now that the
+        // original is gone.
+        _findService.CurrentScope = FindScope.TextAndOriginal;
+
         ShowColumnOriginalText = false;
         AutoFitColumns();
         _shortcutManager.ClearKeys();
@@ -5396,6 +5782,8 @@ public partial class MainViewModel :
         _subtitleFileName = null;
         _converted = true;
         _shortcutManager.ClearKeys();
+        IsOriginalReadOnly = false; // a translation made here always lines up 1:1 with its original
+        IsShowingOriginalNonMatchingLines = false;
         ShowColumnOriginalText = true;
         AutoFitColumns();
         ShowStatus(Se.Language.Main.CreatedEmptyTranslation);
@@ -5437,6 +5825,13 @@ public partial class MainViewModel :
         var selectedItems = SubtitleGridSelectedItems.Cast<SubtitleLineViewModel>().ToList();
         if (Window == null || selectedItems.Count == 0 || !ShowColumnOriginalText)
         {
+            return;
+        }
+
+        if (IsOriginalReadOnly)
+        {
+            ShowStatus(Se.Language.Main.OriginalIsReadOnlyReference);
+            _shortcutManager.ClearKeys();
             return;
         }
 
@@ -5494,7 +5889,9 @@ public partial class MainViewModel :
     [RelayCommand]
     private async Task CopyTextFromOriginalToClipboard()
     {
-        var selectedItems = SubtitleGridSelectedItems.Cast<SubtitleLineViewModel>().ToList();
+        // With reference: this reads the original column, so a reference-only row is exactly what
+        // the user wants to copy here - it is the reference line they cannot get at otherwise.
+        var selectedItems = SubtitleGridSelectedItemsWithReference;
         if (Window == null || selectedItems.Count == 0 || !ShowColumnOriginalText)
         {
             return;
@@ -9158,6 +9555,8 @@ public partial class MainViewModel :
         }
 
         _converted = true;
+        IsOriginalReadOnly = false; // the translation was made from the current rows, so it lines up 1:1
+        IsShowingOriginalNonMatchingLines = false;
         ShowColumnOriginalText = true;
         AutoFitColumns();
         _updateAudioVisualizer = true;
@@ -9258,6 +9657,8 @@ public partial class MainViewModel :
         _subtitleOriginal ??= new Subtitle();
         _subtitleOriginal.OriginalFormat = _subtitle.OriginalFormat ?? SelectedSubtitleFormat;
         _subtitleFileName = string.Empty;
+        IsOriginalReadOnly = false; // the translation was made from the current rows, so it lines up 1:1
+        IsShowingOriginalNonMatchingLines = false;
         ShowColumnOriginalText = true;
         AutoFitColumns();
         _updateAudioVisualizer = true;
@@ -9928,7 +10329,7 @@ public partial class MainViewModel :
             AudioVisualizer.ParagraphSelectedBackground = Se.Settings.Waveform.ParagraphSelectedBackground.FromHexToColor();
             AudioVisualizer.InvertMouseWheel = Se.Settings.Waveform.InvertMouseWheel;
             AudioVisualizer.UpdateTheme();
-            AudioVisualizer.IsReadOnly = LockTimeCodes;
+            AudioVisualizer.IsReadOnly = AreTimeCodesLocked;
             AudioVisualizer.WaveformDrawStyle = InitWaveform.GetWaveformDrawStyle(Se.Settings.Waveform.WaveformDrawStyle);
             AudioVisualizer.MinGapSeconds = Se.Settings.General.MinimumBetweenLines.GetMilliseconds() / 1000.0;
             AudioVisualizer.WaveformHeightPercentage = Se.Settings.Waveform.SpectrogramCombinedWaveformHeight;
@@ -10864,7 +11265,7 @@ public partial class MainViewModel :
     {
         RunWithoutChangeDetection(() =>
         {
-            MergeLineBefore();
+            WithoutReferenceOnlyRows(MergeLineBefore);
         });
     }
 
@@ -10873,7 +11274,7 @@ public partial class MainViewModel :
     {
         RunWithoutChangeDetection(() =>
         {
-            MergeLineAfter();
+            WithoutReferenceOnlyRows(MergeLineAfter);
         });
     }
 
@@ -10882,7 +11283,7 @@ public partial class MainViewModel :
     {
         RunWithoutChangeDetection(() =>
         {
-            MergeLineBeforeKeepBreaks();
+            WithoutReferenceOnlyRows(MergeLineBeforeKeepBreaks);
         });
     }
 
@@ -10891,7 +11292,7 @@ public partial class MainViewModel :
     {
         RunWithoutChangeDetection(() =>
         {
-            MergeLineAfterKeepBreaks();
+            WithoutReferenceOnlyRows(MergeLineAfterKeepBreaks);
         });
     }
 
@@ -10976,7 +11377,7 @@ public partial class MainViewModel :
             // Keep the translation/original column in sync so the two views
             // don't drift apart — matches what MergeManager.MergeSelectedLinesAsDialog
             // already does for OriginalText.
-            if (!string.IsNullOrEmpty(item.OriginalText))
+            if (CanEditOriginal && !string.IsNullOrEmpty(item.OriginalText))
             {
                 item.OriginalText = hasStartDash
                     ? RemoveDialogDashes(item.OriginalText)
@@ -11061,7 +11462,7 @@ public partial class MainViewModel :
     private void MoveStartByFrames(int frames, bool keepGapPrevIfClose)
     {
         var s = SelectedSubtitle;
-        if (s == null || LockTimeCodes)
+        if (s == null || AreTimeCodesLocked)
         {
             return;
         }
@@ -11117,7 +11518,7 @@ public partial class MainViewModel :
     private void MoveEndByFrames(int frames, bool keepGapNextIfClose)
     {
         var s = SelectedSubtitle;
-        if (s == null || LockTimeCodes)
+        if (s == null || AreTimeCodesLocked)
         {
             return;
         }
@@ -11202,31 +11603,31 @@ public partial class MainViewModel :
     [RelayCommand]
     private void MergeSelectedLines()
     {
-        MergeLinesSelected();
+        WithoutReferenceOnlyRows(() => MergeLinesSelected());
     }
 
     [RelayCommand]
     private void MergeSelectedLinesDialog()
     {
-        MergeLinesSelectedAsDialog();
+        WithoutReferenceOnlyRows(MergeLinesSelectedAsDialog);
     }
 
     [RelayCommand]
     private void MergeSelectedLinesBilingual()
     {
-        MergeLinesSelectedBilingual();
+        WithoutReferenceOnlyRows(MergeLinesSelectedBilingual);
     }
 
     [RelayCommand]
     private void MergeSelectedLinesAndUnbreak()
     {
-        MergeLinesSelected(MergeManager.BreakMode.Unbreak);
+        WithoutReferenceOnlyRows(() => MergeLinesSelected(MergeManager.BreakMode.Unbreak));
     }
 
     [RelayCommand]
     private void MergeSelectedLinesAndUnbreakCjk()
     {
-        MergeLinesSelected(MergeManager.BreakMode.UnbreakNoSpace);
+        WithoutReferenceOnlyRows(() => MergeLinesSelected(MergeManager.BreakMode.UnbreakNoSpace));
     }
 
     [RelayCommand]
@@ -11946,7 +12347,11 @@ public partial class MainViewModel :
             if ((string.IsNullOrEmpty(selectedText) || string.Equals(selectedText, _findService.CurrentTextFound, _findService.CurrentFindMode == FindMode.CaseInsensitive ? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal))
                 && !string.IsNullOrEmpty(_findService.SearchText))
             {
-                selectedText = _findService.SearchText;
+                selectedText = _findService.SearchText; // last search pattern - may have significant edge spaces
+            }
+            else
+            {
+                selectedText = selectedText.Trim();
             }
 
             vm.InitializeFindData(_findService, subs, selectedText, this, origs);
@@ -12016,7 +12421,10 @@ public partial class MainViewModel :
 
         if (_replaceViewModel != null)
         {
-            _replaceViewModel.RefreshSubtitles(subs, origs);
+            // The replace window's Count must agree with its Find next/Replace all, which go
+            // through HandleReplaceResult and never touch a read-only original - handing it the
+            // for-find texts would count matches that replace then cannot find.
+            _replaceViewModel.RefreshSubtitles(subs, GetOriginalTextsForReplace(), CanEditOriginal);
         }
     }
 
@@ -12035,6 +12443,12 @@ public partial class MainViewModel :
             var currentLineIndex = Subtitles.IndexOf(selectedSubtitle);
             var subs = Subtitles.Select(p => p.Text).ToList();
             var origs = GetOriginalTextsForFind();
+
+            // The find window has no scope picker and always covers both columns, so it also clears
+            // a scope the replace window left behind (SE 4's find dialog built a fresh helper with
+            // both flags set for the same reason).
+            _findService.CurrentScope = FindScope.TextAndOriginal;
+
             var startInOriginal = IsFindPositionInOriginal();
             var startTextBox = GetFindTextBox(startInOriginal);
             _findService.Initialize(subs, SelectedSubtitleIndex ?? 0, result.WholeWord, result.FindMode, origs);
@@ -12185,14 +12599,31 @@ public partial class MainViewModel :
     }
 
     /// <summary>
+    /// Same as <see cref="GetOriginalTextsForFind"/>, but null for a read-only original: replace
+    /// writes its result back into the column, which is not allowed for a reference file. Searching
+    /// the reference still works - only replacing in it is off.
+    /// </summary>
+    private List<string>? GetOriginalTextsForReplace()
+    {
+        return CanEditOriginal ? GetOriginalTextsForFind() : null;
+    }
+
+    /// <summary>
     /// Which column a find should continue from: the focused text box if one has focus
     /// (find/replace windows do not take focus from it), otherwise the column of the last match.
+    /// A single-column scope decides it outright - continuing from the caret of a column that is
+    /// not being searched would start the excluded column's offset in the searched one.
     /// </summary>
     private bool IsFindPositionInOriginal()
     {
-        if (!ShowColumnOriginalText)
+        if (!ShowColumnOriginalText || _findService.CurrentScope == FindScope.TextOnly)
         {
             return false;
+        }
+
+        if (_findService.CurrentScope == FindScope.OriginalOnly)
+        {
+            return true;
         }
 
         if (EditTextBoxOriginal.IsFocused)
@@ -12288,7 +12719,7 @@ public partial class MainViewModel :
 
         _replacePreviousFocus = Window?.FocusManager?.GetFocusedElement() as Control;
         var subs = Subtitles.Select(p => p.Text).ToList();
-        var origs = GetOriginalTextsForFind();
+        var origs = GetOriginalTextsForReplace();
         var result = _windowService.ShowWindow<ReplaceWindow, ReplaceViewModel>(Window!, (window, vm) =>
         {
             WindowService.KeepTopmostWhileOwnerActive(window, Window!);
@@ -12307,7 +12738,7 @@ public partial class MainViewModel :
                 selectedText = _findService.SearchText;
             }
 
-            vm.InitializeFindData(_findService, subs, selectedText, this, origs);
+            vm.InitializeFindData(_findService, subs, selectedText, this, origs, CanEditOriginal);
             if (!string.IsNullOrEmpty(findSearchText))
             {
                 vm.SearchText = findSearchText;
@@ -12440,7 +12871,7 @@ public partial class MainViewModel :
         {
             var currentLineIndex = Subtitles.IndexOf(selectedSubtitle);
             var subs = Subtitles.Select(p => p.Text).ToList();
-            var origs = GetOriginalTextsForFind();
+            var origs = GetOriginalTextsForReplace();
 
             // Save the previous find result before Initialize wipes it. The
             // replace path uses these — not the EditTextBox selection — to
@@ -12451,6 +12882,9 @@ public partial class MainViewModel :
             var savedFoundIndex = _findService.CurrentTextIndex;
             var savedFoundText = _findService.CurrentTextFound;
             var savedFoundInOriginal = _findService.CurrentMatchInOriginal;
+
+            // Set before the position is worked out - IsFindPositionInOriginal follows the scope.
+            _findService.CurrentScope = CanEditOriginal ? result.EffectiveScope : FindScope.TextAndOriginal;
 
             var startInOriginal = IsFindPositionInOriginal();
             var startTextBox = GetFindTextBox(startInOriginal);
@@ -12599,25 +13033,34 @@ public partial class MainViewModel :
             return;
         }
 
+        // The dialog talks in the displayed line numbers, which skip the display-only reference
+        // rows - so they are not grid indexes when such rows are interleaved, and the entered
+        // number must be looked up by row number, not used as an index.
+        var lineCount = Subtitles.Count(p => !p.IsReferenceOnly);
+
         var viewModel = await ShowDialogAsync<GoToLineNumberWindow, GoToLineNumberViewModel>(vm =>
         {
             var idx = 1;
             if (SelectedSubtitle != null)
             {
-                idx = Subtitles.IndexOf(SelectedSubtitle) + 1;
+                idx = SelectedSubtitle.Number > 0
+                    ? SelectedSubtitle.Number
+                    : Subtitles.IndexOf(SelectedSubtitle) + 1;
             }
 
-            vm.Initialize(idx, Subtitles.Count);
+            vm.Initialize(idx, lineCount);
         });
 
-        if (viewModel is { OkPressed: true, LineNumber: >= 0 } && viewModel.LineNumber <= Subtitles.Count)
+        if (viewModel is { OkPressed: true, LineNumber: >= 0 } && viewModel.LineNumber <= lineCount)
         {
             var no = (int)viewModel.LineNumber;
-            SelectAndScrollToRow(no - 1);
+            var row = Subtitles.FirstOrDefault(p => !p.IsReferenceOnly && p.Number == no);
+            var index = row != null ? Subtitles.IndexOf(row) : no - 1;
+            SelectAndScrollToRow(index);
             var vp = GetVideoPlayerControl();
             if (Se.Settings.Tools.GoToLineNumberAlsoSetVideoPosition && !string.IsNullOrEmpty(_videoFileName) && vp != null)
             {
-                var s = Subtitles.GetOrNull(no - 1);
+                var s = Subtitles.GetOrNull(index);
                 if (s != null)
                 {
                     vp.Position = s.StartTime.TotalSeconds;
@@ -14420,7 +14863,7 @@ public partial class MainViewModel :
     {
         var s = SelectedSubtitle;
         var vp = GetVideoPlayerControl();
-        if (s == null || vp == null || LockTimeCodes)
+        if (s == null || vp == null || AreTimeCodesLocked)
         {
             return;
         }
@@ -14453,7 +14896,7 @@ public partial class MainViewModel :
     {
         var s = SelectedSubtitle;
         var vp = GetVideoPlayerControl();
-        if (s == null || vp == null || LockTimeCodes)
+        if (s == null || vp == null || AreTimeCodesLocked)
         {
             return;
         }
@@ -14492,7 +14935,7 @@ public partial class MainViewModel :
     {
         var s = SelectedSubtitle;
         var vp = GetVideoPlayerControl();
-        if (s == null || vp == null || LockTimeCodes)
+        if (s == null || vp == null || AreTimeCodesLocked)
         {
             return;
         }
@@ -14529,7 +14972,7 @@ public partial class MainViewModel :
         // from WaveformSetEndAndGoToNext.
         var s = SelectedSubtitle;
         var vp = GetVideoPlayerControl();
-        if (s == null || vp == null || LockTimeCodes)
+        if (s == null || vp == null || AreTimeCodesLocked)
         {
             return;
         }
@@ -14568,7 +15011,7 @@ public partial class MainViewModel :
     {
         var s = SelectedSubtitle;
         var vp = GetVideoPlayerControl();
-        if (s == null || vp == null || LockTimeCodes)
+        if (s == null || vp == null || AreTimeCodesLocked)
         {
             return;
         }
@@ -14599,7 +15042,7 @@ public partial class MainViewModel :
     {
         var s = SelectedSubtitle;
         var vp = GetVideoPlayerControl();
-        if (s == null || vp == null || LockTimeCodes)
+        if (s == null || vp == null || AreTimeCodesLocked)
         {
             return;
         }
@@ -14631,7 +15074,7 @@ public partial class MainViewModel :
     {
         var s = SelectedSubtitle;
         var vp = GetVideoPlayerControl();
-        if (s == null || vp == null || LockTimeCodes)
+        if (s == null || vp == null || AreTimeCodesLocked)
         {
             return;
         }
@@ -14670,7 +15113,7 @@ public partial class MainViewModel :
     {
         var s = SelectedSubtitle;
         var vp = GetVideoPlayerControl();
-        if (s == null || vp == null || AudioVisualizer == null || LockTimeCodes)
+        if (s == null || vp == null || AudioVisualizer == null || AreTimeCodesLocked)
         {
             return;
         }
@@ -14717,7 +15160,7 @@ public partial class MainViewModel :
     {
         var s = SelectedSubtitle;
         var vp = GetVideoPlayerControl();
-        if (s == null || AudioVisualizer?.WavePeaks == null || vp == null || LockTimeCodes)
+        if (s == null || AudioVisualizer?.WavePeaks == null || vp == null || AreTimeCodesLocked)
         {
             return;
         }
@@ -14748,7 +15191,7 @@ public partial class MainViewModel :
     {
         var s = SelectedSubtitle;
         var vp = GetVideoPlayerControl();
-        if (s == null || AudioVisualizer?.WavePeaks == null || vp == null || LockTimeCodes)
+        if (s == null || AudioVisualizer?.WavePeaks == null || vp == null || AreTimeCodesLocked)
         {
             return;
         }
@@ -14781,7 +15224,7 @@ public partial class MainViewModel :
     {
         var s = SelectedSubtitle;
         var vp = GetVideoPlayerControl();
-        if (s == null || AudioVisualizer?.WavePeaks == null || vp == null || LockTimeCodes)
+        if (s == null || AudioVisualizer?.WavePeaks == null || vp == null || AreTimeCodesLocked)
         {
             return;
         }
@@ -15086,19 +15529,19 @@ public partial class MainViewModel :
     [RelayCommand]
     private void MoveTextFromCursorToNextAndGoToNext()
     {
-        MoveTextFromCursorToNext(play: false);
+        WithoutReferenceOnlyRows(() => MoveTextFromCursorToNext(play: false));
     }
 
     [RelayCommand]
     private void MoveTextFromCursorToNextAndGoToNextAndPlay()
     {
-        MoveTextFromCursorToNext(play: true);
+        WithoutReferenceOnlyRows(() => MoveTextFromCursorToNext(play: true));
     }
 
     private void MoveTextFromCursorToNext(bool play)
     {
         var s = SelectedSubtitle;
-        if (s == null)
+        if (s == null || s.IsReferenceOnly)
         {
             return;
         }
@@ -15110,8 +15553,9 @@ public partial class MainViewModel :
         }
 
         // Operate on whichever text box has focus (original when the original column
-        // is focused, otherwise the main/translation text).
-        var isOriginal = EditTextBoxOriginal.IsFocused;
+        // is focused, otherwise the main/translation text). A read-only original can still
+        // hold focus, but it must never be rewritten.
+        var isOriginal = EditTextBoxOriginal.IsFocused && CanEditOriginal;
         var textBox = isOriginal ? EditTextBoxOriginal : EditTextBox;
         var currentText = (isOriginal ? s.OriginalText : s.Text) ?? string.Empty;
 
@@ -15514,7 +15958,7 @@ public partial class MainViewModel :
     private void ExtendSelectedToPrevious()
     {
         var selectedItems = _selectedSubtitles?.ToList() ?? [];
-        if (selectedItems.Count == 0 || LockTimeCodes)
+        if (selectedItems.Count == 0 || AreTimeCodesLocked)
         {
             return;
         }
@@ -15538,7 +15982,7 @@ public partial class MainViewModel :
     private void ExtendSelectedToNext()
     {
         var selectedItems = _selectedSubtitles?.ToList() ?? [];
-        if (selectedItems.Count == 0 || LockTimeCodes)
+        if (selectedItems.Count == 0 || AreTimeCodesLocked)
         {
             return;
         }
@@ -15569,7 +16013,7 @@ public partial class MainViewModel :
     {
         var s = SelectedSubtitle;
         var idx = SelectedSubtitleIndex;
-        if (s == null || idx == null || idx == 0 || LockTimeCodes)
+        if (s == null || idx == null || idx == 0 || AreTimeCodesLocked)
         {
             return;
         }
@@ -15584,7 +16028,7 @@ public partial class MainViewModel :
     {
         var s = SelectedSubtitle;
         var idx = SelectedSubtitleIndex;
-        if (s == null || idx == null || idx >= Subtitles.Count - 1 || LockTimeCodes)
+        if (s == null || idx == null || idx >= Subtitles.Count - 1 || AreTimeCodesLocked)
         {
             return;
         }
@@ -15994,6 +16438,12 @@ public partial class MainViewModel :
             return;
         }
 
+        // A display-only reference row has no line to split (#13449).
+        if (s.IsReferenceOnly)
+        {
+            return;
+        }
+
         var language = LanguageAutoDetect.AutoDetectGoogleLanguage(GetUpdateSubtitle());
         RunWithoutChangeDetection(() =>
         {
@@ -16393,7 +16843,9 @@ public partial class MainViewModel :
         }
 
         // Store currently selected items
-        var selectedItems = new HashSet<SubtitleLineViewModel>(SubtitleGridSelectedItems);
+        // With reference: inverting works on rows as displayed, so a selected reference row
+        // must count as selected and end up deselected.
+        var selectedItems = new HashSet<SubtitleLineViewModel>(SubtitleGridSelectedItemsWithReference);
 
         // Inverting a small selection on a large file selects almost every row, so
         // apply via the detach/reattach helper to avoid the per-row hang (#11529).
@@ -18490,7 +18942,7 @@ public partial class MainViewModel :
     public bool HasChanges()
     {
         var hasChanges = !IsEmpty && _changeSubtitleHash != GetFastHash();
-        if (!hasChanges && ShowColumnOriginalText)
+        if (!hasChanges && CanEditOriginal)
         {
             hasChanges = _changeSubtitleHashOriginal != GetFastHashOriginal();
         }
@@ -18522,7 +18974,8 @@ public partial class MainViewModel :
 
     private async Task<bool> ContinueNewOrExitOriginal()
     {
-        if (!ShowColumnOriginalText)
+        // A read-only reference has nothing to save, so never prompt for it.
+        if (!CanEditOriginal)
         {
             return true;
         }
@@ -18748,6 +19201,19 @@ public partial class MainViewModel :
 
     private async Task<bool> SaveSubtitleOriginal(bool isAutoSave = false)
     {
+        // A read-only reference is never written back - the row projection it is displayed through
+        // does not contain the lines that have no counterpart, so saving it would truncate the
+        // user's file (issue #13449).
+        if (IsOriginalReadOnly)
+        {
+            if (!isAutoSave)
+            {
+                ShowStatus(Se.Language.Main.OriginalIsReadOnlyNotSaved);
+            }
+
+            return false;
+        }
+
         if (Subtitles == null || !Subtitles.Any())
         {
             if (!isAutoSave)
@@ -18809,6 +19275,13 @@ public partial class MainViewModel :
         _subtitle.Paragraphs.Clear();
         foreach (var line in Subtitles)
         {
+            // Reference-only rows belong to the read-only original, not to the working subtitle.
+            // This is the single gate that keeps them out of every save and every tool (#13449).
+            if (line.IsReferenceOnly)
+            {
+                continue;
+            }
+
             var p = line.ToParagraph(SelectedSubtitleFormat);
             _subtitle.Paragraphs.Add(p);
         }
@@ -18825,8 +19298,21 @@ public partial class MainViewModel :
         _subtitleOriginal.Paragraphs.Clear();
         foreach (var line in Subtitles)
         {
-            var p = line.ToParagraphOriginal(originalFormat);
-            _subtitleOriginal.Paragraphs.Add(p);
+            // With the original's non-matching lines on screen, the display-only rows ARE original
+            // lines - they hold the ones with no counterpart here - so they must be written, and
+            // working rows that matched nothing contribute no original line. Including the former is
+            // what makes saving an editable original lossless (#13449).
+            //
+            // In the ordinary 1:1 translation mode every row maps to one original line, empty ones
+            // included: dropping those would shift the whole file against the translation.
+            if (IsShowingOriginalNonMatchingLines &&
+                !line.IsReferenceOnly &&
+                string.IsNullOrEmpty(line.OriginalText))
+            {
+                continue;
+            }
+
+            _subtitleOriginal.Paragraphs.Add(line.ToParagraphOriginal(originalFormat));
         }
 
         return _subtitleOriginal;
@@ -18972,9 +19458,27 @@ public partial class MainViewModel :
         if (previousFormat != null && previousFormat.Name != saveAsResult.SubtitleFormat.Name)
         {
             _subtitle = GetUpdateSubtitle();
-            _subtitleOriginal = GetUpdateSubtitleOriginal();
+
+            // A read-only reference must not be rebuilt from the rows - the rows only hold its
+            // time-matched projection, so that would drop the lines with no counterpart (#13449).
+            // It is re-applied to the fresh rows below instead.
+            if (!IsOriginalReadOnly && !IsShowingOriginalNonMatchingLines)
+            {
+                _subtitleOriginal = GetUpdateSubtitleOriginal();
+            }
+
             previousFormat.RemoveNativeFormatting(_subtitle, saveAsResult.SubtitleFormat);
-            SetSubtitles(_subtitle, _subtitleOriginal);
+
+            // Same as the format-change handler: fold an editable original back from the rows
+            // before the rebuild blanks them, or the capture inside the re-apply would rebuild
+            // the original from empty rows.
+            if (IsShowingOriginalNonMatchingLines)
+            {
+                CaptureOriginalFromRows();
+            }
+
+            SetSubtitles(_subtitle, IsOriginalReadOnly || IsShowingOriginalNonMatchingLines ? null : _subtitleOriginal);
+            ReapplyOriginalReference(capture: false);
         }
 
         SetSubtitleFormat(saveAsResult.SubtitleFormat);
@@ -19047,6 +19551,14 @@ public partial class MainViewModel :
 
     private async Task<bool> SaveSubtitleOriginalAs()
     {
+        // Same reason as SaveSubtitleOriginal: what would be written is the row projection, not the
+        // reference file, so "Save original as" would quietly produce a truncated copy.
+        if (IsOriginalReadOnly)
+        {
+            ShowStatus(Se.Language.Main.OriginalIsReadOnlyNotSaved);
+            return false;
+        }
+
         var newFileName = "New" + SelectedSubtitleFormat.Extension;
         if (!string.IsNullOrEmpty(_subtitleFileNameOriginal))
         {
@@ -19349,7 +19861,7 @@ public partial class MainViewModel :
 
         if (AudioVisualizer != null)
         {
-            AudioVisualizer.IsReadOnly = LockTimeCodes;
+            AudioVisualizer.IsReadOnly = AreTimeCodesLocked;
         }
 
         if (Program.FileOpenedViaActivation &&
@@ -19493,8 +20005,13 @@ public partial class MainViewModel :
             {
                 if (Window != null)
                 {
-                    Window.Activate();
-                    TableViewExtras.FocusRow(SubtitleGrid);
+                    // Only claim focus when the main window still holds it - this runs a
+                    // second after startup, and activating here would pull SE back over
+                    // another application the user switched to while SE was loading.
+                    if (Window.IsActive)
+                    {
+                        TableViewExtras.FocusRow(SubtitleGrid);
+                    }
 
                     SurroundWith1Text = string.Format(Se.Language.Options.Shortcuts.SurroundWithXY, Se.Settings.Surround1Left, Se.Settings.Surround1Right);
                     SurroundWith2Text = string.Format(Se.Language.Options.Shortcuts.SurroundWithXY, Se.Settings.Surround2Left, Se.Settings.Surround2Right);
@@ -20487,6 +21004,13 @@ public partial class MainViewModel :
             {
                 var p = Subtitles[i];
 
+                // Reference-only rows are not saved, so they must not make the file look dirty -
+                // otherwise opening a reference alone would trigger auto-save (#13449).
+                if (p.IsReferenceOnly)
+                {
+                    continue;
+                }
+
                 hash = hash * 23 + p.Number;
                 hash = hash * 23 + p.StartTime.TotalMilliseconds.GetHashCode();
                 hash = hash * 23 + p.EndTime.TotalMilliseconds.GetHashCode();
@@ -20545,7 +21069,10 @@ public partial class MainViewModel :
 
     private async Task DeleteSelectedItems()
     {
-        var selectedItems = _selectedSubtitles?.ToList() ?? [];
+        // The selection may span display-only reference rows (they are selectable so their text
+        // can be read), but they belong to the original, not the working subtitle - deleting one
+        // would permanently drop that line from an editable original on the next capture.
+        var selectedItems = _selectedSubtitles?.Where(p => !p.IsReferenceOnly).ToList() ?? [];
         if (selectedItems.Count == 0)
         {
             return;
@@ -20762,9 +21289,18 @@ public partial class MainViewModel :
 
     private void Renumber()
     {
+        // Reference-only rows are not part of the working subtitle, so they take no number - the
+        // remaining numbers must stay the ones the saved file will have (#13449).
+        var number = 0;
         for (var index = 0; index < Subtitles.Count; index++)
         {
-            Subtitles[index].Number = index + 1;
+            var line = Subtitles[index];
+            if (line.IsReferenceOnly)
+            {
+                continue;
+            }
+
+            line.Number = ++number;
         }
 
         _updateAudioVisualizer = true;
@@ -21510,6 +22046,11 @@ public partial class MainViewModel :
     /// </summary>
     private void ReplaceSubtitleGridWord(SubtitleLineViewModel line, bool isOriginal, string word, string suggestion)
     {
+        if (isOriginal && !CanEditOriginal)
+        {
+            return;
+        }
+
         // Split the current text: the line may have been edited since the menu was opened
         var text = isOriginal ? line.OriginalText : line.Text;
         if (string.IsNullOrEmpty(text))
@@ -22897,7 +23438,8 @@ public partial class MainViewModel :
 
         if (_shiftSelectAnchorIndex < 0)
         {
-            var selectedInOrder = SubtitleGridSelectedItems;
+            // With reference: shift-arrow selection walks rows as they appear in the grid.
+            var selectedInOrder = SubtitleGridSelectedItemsWithReference;
             var anchor = SelectedSubtitleIndex ?? (selectedInOrder.Count > 0
                 ? Subtitles.IndexOf(selectedInOrder[0])
                 : -1);
@@ -22992,7 +23534,9 @@ public partial class MainViewModel :
             _shiftSelectCurrentIndex = -1;
         }
 
-        var selectedItems = SubtitleGridSelectedItems;
+        // With reference: a lone selected reference row is still a selection, and must not be
+        // mistaken for "the user deselected everything" below.
+        var selectedItems = SubtitleGridSelectedItemsWithReference;
 
         // If user is trying to deselect the last selected item
         if (selectedItems.Count == 0 && e.AddedItems.Count == 0 && e.RemovedItems.Count == 1)
@@ -23044,7 +23588,9 @@ public partial class MainViewModel :
 
     private void SubtitleGridSelectionChanged(List<SubtitleLineViewModel>? alreadyOrderedSelection = null)
     {
-        var selectedItems = alreadyOrderedSelection ?? SubtitleGridSelectedItems;
+        // With reference: the focused row and the edit boxes must follow the user onto a
+        // reference-only row so its text can be read (it is shown read-only there).
+        var selectedItems = alreadyOrderedSelection ?? SubtitleGridSelectedItemsWithReference;
         var outgoing = SelectedSubtitle;
         EditTextBox.ClearSelection();
         EditTextBoxOriginal.ClearSelection();
@@ -23222,6 +23768,11 @@ public partial class MainViewModel :
     {
         _mpvPreviewDirty = true;
         _waveformSubtitleBufferDirty = true;
+        if (IsShowingOriginalNonMatchingLines && !_reapplyingReadOnlyReference)
+        {
+            _referenceMappingDirty = true;
+        }
+
         if (e.NewItems != null)
             foreach (SubtitleLineViewModel item in e.NewItems)
                 item.PropertyChanged += OnSubtitleItemChangedForMpv;
@@ -23237,6 +23788,12 @@ public partial class MainViewModel :
             _mpvPreviewDirty = true;
             // A start-time change can reorder the buffer, so it must be rebuilt and re-sorted.
             _waveformSubtitleBufferDirty = true;
+
+            // Retiming a row can move it onto (or off) a different reference line.
+            if (IsShowingOriginalNonMatchingLines && !_reapplyingReadOnlyReference)
+            {
+                _referenceMappingDirty = true;
+            }
         }
         else if (e.PropertyName is nameof(SubtitleLineViewModel.Text)
             or nameof(SubtitleLineViewModel.EndTime))
@@ -23578,11 +24135,17 @@ public partial class MainViewModel :
                     {
                         subtitle.Capacity = Subtitles.Count;
                     }
+                    // Reference-only rows are display rows in the grid; they are not lines of the
+                    // working subtitle and must not be drawn or draggable on the waveform (#13449).
                     if (noLayers)
                     {
                         for (var i = 0; i < Subtitles.Count; i++)
                         {
-                            subtitle.Add(Subtitles[i]);
+                            var p = Subtitles[i];
+                            if (!p.IsReferenceOnly)
+                            {
+                                subtitle.Add(p);
+                            }
                         }
                     }
                     else
@@ -23591,7 +24154,7 @@ public partial class MainViewModel :
                         for (var i = 0; i < Subtitles.Count; i++)
                         {
                             var p = Subtitles[i];
-                            if (layerSet.Contains(p.Layer))
+                            if (!p.IsReferenceOnly && layerSet.Contains(p.Layer))
                             {
                                 subtitle.Add(p);
                             }
@@ -23805,6 +24368,14 @@ public partial class MainViewModel :
         _slowTimer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(400) };
         _slowTimer.Tick += (s, e) =>
         {
+            // Re-match the read-only reference against the rows once the edit that invalidated it has
+            // settled. Deliberately debounced here rather than run per edit: matching is O(n*m) over
+            // both files, and a burst of deletes would otherwise pay for it on every single row.
+            if (_referenceMappingDirty && !IsUserEditing())
+            {
+                ReapplyOriginalReference();
+            }
+
             // GetFastHash()/GetFastHashOriginal() are O(n) over all lines. Compute them once per tick
             // and share with both the title dirty-star and auto-save so auto-save adds no extra passes.
             var mainHash = GetFastHash();
@@ -23965,7 +24536,7 @@ public partial class MainViewModel :
             return;
         }
 
-        var originalDirty = ShowColumnOriginalText &&
+        var originalDirty = CanEditOriginal &&
                             !string.IsNullOrEmpty(_subtitleFileNameOriginal) &&
                             _changeSubtitleHashOriginal != originalHash;
         var mainDirty = mainHash != _changeSubtitleHash;
@@ -24237,17 +24808,22 @@ public partial class MainViewModel :
             }
 
             var settings = OpenAiSttService.GetSettingsFromConfiguration();
-            progressViewModel = new TranscriptionProgressViewModel();
-            progressViewModel.StatusText = Se.Language.Video.AudioToText.Transcribing;
-            progressViewModel.ServerUrl = settings.EndpointUrl;
-            progressViewModel.ModelName = string.IsNullOrEmpty(settings.Model) ? Se.Language.General.TranscriptionProgressModelAuto : settings.Model;
 
             var ownerWindow = Window!;
-            await Dispatcher.UIThread.InvokeAsync(() =>
-            {
-                progressWindow = new TranscriptionProgressWindow(progressViewModel);
-                progressWindow.Show(ownerWindow);
-            });
+            progressViewModel = await Dispatcher.UIThread.InvokeAsync(() =>
+                _windowService.ShowWindow<TranscriptionProgressWindow, TranscriptionProgressViewModel>(ownerWindow, (window, vm) =>
+                {
+                    // The configure callback runs before Show(), so the texts are set for the
+                    // first frame and the topmost handling is wired before the window is up.
+                    vm.StatusText = Se.Language.Video.AudioToText.Transcribing;
+                    vm.ServerUrl = settings.EndpointUrl;
+                    vm.ModelName = string.IsNullOrEmpty(settings.Model) ? Se.Language.General.TranscriptionProgressModelAuto : settings.Model;
+
+                    // Above the main window while SE is active, but never above other
+                    // applications the user switches to during the transcription (#11243).
+                    WindowService.KeepTopmostWhileOwnerActive(window, ownerWindow);
+                    progressWindow = window;
+                }));
 
             var service = new OpenAiSttService(settings);
 
@@ -25084,7 +25660,12 @@ public partial class MainViewModel :
             if (oldFormat != null && format != null)
             {
                 _subtitle = GetUpdateSubtitle();
-                _subtitleOriginal = GetUpdateSubtitleOriginal();
+
+                // See the same guard in the "Save as" format conversion (#13449).
+                if (!IsOriginalReadOnly && !IsShowingOriginalNonMatchingLines)
+                {
+                    _subtitleOriginal = GetUpdateSubtitleOriginal();
+                }
 
                 oldFormat.RemoveNativeFormatting(_subtitle, format);
 
@@ -25128,7 +25709,16 @@ public partial class MainViewModel :
                     SetAssaResolution(true);
                 }
 
-                SetSubtitles(_subtitle, _subtitleOriginal);
+                // The rebuild below blanks the original column and drops the reference rows, so an
+                // editable original must be folded back from the rows while they still hold it -
+                // capturing after the rebuild would rebuild the original from empty rows.
+                if (IsShowingOriginalNonMatchingLines)
+                {
+                    CaptureOriginalFromRows();
+                }
+
+                SetSubtitles(_subtitle, IsOriginalReadOnly || IsShowingOriginalNonMatchingLines ? null : _subtitleOriginal);
+                ReapplyOriginalReference(capture: false);
             }
         }
 
@@ -25567,7 +26157,7 @@ public partial class MainViewModel :
     internal void AudioVisualizerSetStartAndOffsetTheRest(object sender, AudioVisualizer.PositionEventArgs e)
     {
         var s = SelectedSubtitle;
-        if (s == null || LockTimeCodes)
+        if (s == null || AreTimeCodesLocked)
         {
             return;
         }

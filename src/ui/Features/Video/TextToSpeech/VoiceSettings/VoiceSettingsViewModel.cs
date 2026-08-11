@@ -286,12 +286,21 @@ public partial class VoiceSettingsViewModel : ObservableObject
             ok = _engine.ImportVoice(fileName);
         }
 
-        if (ok)
+        var importedFileName = Path.GetFileName(fileName);
+        if (!ok)
         {
-            var fileNameOnly = Path.GetFileName(fileName);
-            await MessageBox.Show(Window, Se.Language.Video.TextToSpeech.VoiceImportSuccessTitle, string.Format(Se.Language.Video.TextToSpeech.VoiceXImported, fileNameOnly));
-            RefreshVoices = true;
+            // Without this the dialog just closed with nothing to show for it, which reads as
+            // "imported" - and users then copy the file into the voices folder by hand instead,
+            // bypassing the conversion every cloning engine does on import (#13508).
+            await MessageBox.Show(
+                Window,
+                Se.Language.General.Error,
+                string.Format(Se.Language.Video.TextToSpeech.VoiceXCouldNotBeImported, importedFileName));
+            return;
         }
+
+        await MessageBox.Show(Window, Se.Language.Video.TextToSpeech.VoiceImportSuccessTitle, string.Format(Se.Language.Video.TextToSpeech.VoiceXImported, importedFileName));
+        RefreshVoices = true;
     }
 
     internal void OnDragOver(object? sender, DragEventArgs e)

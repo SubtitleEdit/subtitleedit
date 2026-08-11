@@ -60,9 +60,14 @@ public partial class CompareItem : ObservableObject
         StartTimeBackgroundBrush = new SolidColorBrush(Colors.Transparent);
         EndTimeBackgroundBrush = new SolidColorBrush(Colors.Transparent);
         TextBackgroundBrush = new SolidColorBrush(Colors.Transparent);
+
+        // Right to left text needs the paragraph direction of its content, or the line reads
+        // backwards - the same rule the subtitle grid applies through TextToFlowDirectionConverter (#13435).
+        var label = UiUtil.MakeLabel(line.Text);
+        label.FlowDirection = TextToFlowDirectionConverter.GetFlowDirection(line.Text);
         TextPanel = new StackPanel
         {
-            Children = { UiUtil.MakeLabel(line.Text) }
+            Children = { label }
         };
     }
 }

@@ -330,11 +330,35 @@ namespace Nikse.SubtitleEdit.Logic
         /// Keeps the undocked tool windows non-topmost while <paramref name="flyout"/> is open,
         /// so its popup (a plain non-topmost native window) is not covered by them in undocked
         /// mode (#13325). Cascaded submenus are covered too: they belong to the same open flyout.
+        ///
+        /// The suspension is keyed to Opening, not Opened: Opened fires after the popup's
+        /// native window is already on screen, and on Windows demoting a topmost window
+        /// (SetWindowPos HWND_NOTOPMOST) re-inserts it at the top of the non-topmost band -
+        /// above the popup it was supposed to uncover, so the tool windows kept covering the
+        /// grid's context menu (#13493). At Opening the popup does not exist yet; it is
+        /// created right after, on top of the just-demoted tool windows. The main menu never
+        /// had this problem because Menu.Opened fires before any drop-down popup opens.
         /// </summary>
-        public static void SuspendUndockedTopmostWhileOpen(FlyoutBase flyout)
+        public static void SuspendUndockedTopmostWhileOpen(PopupFlyoutBase flyout)
         {
             IDisposable? suspension = null;
-            flyout.Opened += (_, _) => suspension ??= SuspendUndockedTopmost();
+            flyout.Opening += (_, _) =>
+            {
+                suspension ??= SuspendUndockedTopmost();
+
+                // A subclass can cancel the open in OnOpening after the event has been raised;
+                // Closed then never fires and the suspension would leak, leaving the tool
+                // windows permanently non-topmost. No SE flyout cancels today - this is a
+                // cheap backstop.
+                Dispatcher.UIThread.Post(() =>
+                {
+                    if (!flyout.IsOpen)
+                    {
+                        suspension?.Dispose();
+                        suspension = null;
+                    }
+                }, DispatcherPriority.Background);
+            };
             flyout.Closed += (_, _) =>
             {
                 suspension?.Dispose();
@@ -343,7 +367,9 @@ namespace Nikse.SubtitleEdit.Logic
         }
 
         /// <summary>
-        /// Same as <see cref="SuspendUndockedTopmostWhileOpen(FlyoutBase)"/> for the main menu bar.
+        /// Same as <see cref="SuspendUndockedTopmostWhileOpen(PopupFlyoutBase)"/> for the main
+        /// menu bar. Opened is early enough here: MenuBase raises it when the bar opens,
+        /// before any drop-down popup window is created.
         /// </summary>
         public static void SuspendUndockedTopmostWhileOpen(MenuBase menu)
         {
@@ -488,7 +514,10 @@ namespace Nikse.SubtitleEdit.Logic
             dialog.AddHandler(InputElement.GotFocusEvent, OnDialogGotFocus, RoutingStrategies.Bubble, handledEventsToo: true);
             owner.AddHandler(InputElement.GotFocusEvent, OnOwnerGotFocus, RoutingStrategies.Bubble, handledEventsToo: true);
             // Tunnel: run before the owner's own handlers (shortcut manager, text boxes) see the key.
+            // Key-up included: the AccessKeyHandler arms on Alt key-down but opens the menu bar on
+            // the key-up, so letting the release through would pop the disabled owner's menu.
             owner.AddHandler(InputElement.KeyDownEvent, OnOwnerKeyInput, RoutingStrategies.Tunnel);
+            owner.AddHandler(InputElement.KeyUpEvent, OnOwnerKeyInput, RoutingStrategies.Tunnel);
             owner.AddHandler(InputElement.TextInputEvent, OnOwnerKeyInput, RoutingStrategies.Tunnel);
 
             return new ActionDisposable(() =>
@@ -501,6 +530,7 @@ namespace Nikse.SubtitleEdit.Logic
                 dialog.RemoveHandler(InputElement.GotFocusEvent, OnDialogGotFocus);
                 owner.RemoveHandler(InputElement.GotFocusEvent, OnOwnerGotFocus);
                 owner.RemoveHandler(InputElement.KeyDownEvent, OnOwnerKeyInput);
+                owner.RemoveHandler(InputElement.KeyUpEvent, OnOwnerKeyInput);
                 owner.RemoveHandler(InputElement.TextInputEvent, OnOwnerKeyInput);
             });
         }

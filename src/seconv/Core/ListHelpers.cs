@@ -108,6 +108,38 @@ internal static class ListHelpers
             "  [dim]--fix-common-errors-rules:FixSpanishInvertedQuestionAndExclamationMarks --fce-language:es[/]  [dim]# force a named gated rule[/]");
     }
 
+    public static void PrintRemoveFormattingRules()
+    {
+        AnsiConsole.MarkupLine("[bold cyan]Remove-formatting rule IDs (pass via --remove-formatting-rules)[/]");
+        AnsiConsole.WriteLine();
+        var table = new Table().Border(TableBorder.Rounded);
+        table.AddColumn("[yellow]Rule ID[/]");
+        table.AddColumn("[yellow]GUI equivalent[/]");
+
+        foreach (var id in RemoveFormattingRunner.AvailableRuleIds)
+        {
+            // GUI equivalent: the checkbox label in the desktop batch convert "Remove
+            // formatting" function, so users who prototyped in the GUI can find the
+            // matching CLI ID (#13518).
+            var gui = RemoveFormattingRunner.GuiLabels.TryGetValue(id, out var label)
+                ? $"[cyan]{label.EscapeMarkup()}[/]"
+                : "[dim]—[/]";
+            table.AddRow($"[green]{id}[/]", gui);
+        }
+
+        AnsiConsole.Write(table);
+        AnsiConsole.MarkupLine(
+            "\n[dim]The GUI equivalent is the checkbox label in the desktop batch convert 'Remove formatting' function.[/]\n" +
+            "[dim]Note: bare[/] [green]--remove-formatting[/] [dim]strips every tag wholesale (GUI: 'Remove all formatting'),[/]\n" +
+            "[dim]which is broader than[/] [green]--remove-formatting-rules:all[/] [dim]- the union of the rules above.[/]\n" +
+            "[dim]Tags no rule covers, e.g. positioning like {\\pos(..)}, only go away with the bare flag.[/]");
+        AnsiConsole.MarkupLine(
+            "\n[dim]Examples:[/]\n" +
+            "  [dim]--remove-formatting[/]                                  [dim]# remove every tag[/]\n" +
+            "  [dim]--remove-formatting-rules:RemoveItalic,RemoveBold[/]    [dim]# only these two[/]\n" +
+            "  [dim]--remove-formatting-rules:all,-RemoveColor[/]           [dim]# every named rule except colors[/]");
+    }
+
     public static void PrintOcrEngines()
     {
         AnsiConsole.MarkupLine("[bold cyan]OCR engines (pass via --ocr-engine)[/]");

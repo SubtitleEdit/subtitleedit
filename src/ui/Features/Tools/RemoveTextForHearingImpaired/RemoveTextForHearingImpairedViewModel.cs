@@ -237,6 +237,68 @@ public partial class RemoveTextForHearingImpairedViewModel : ObservableObject
     }
 
     [RelayCommand]
+    private void SelectAllFixes()
+    {
+        foreach (var fix in Fixes)
+        {
+            fix.Apply = true;
+        }
+    }
+
+    [RelayCommand]
+    private void SelectNoFixes()
+    {
+        foreach (var fix in Fixes)
+        {
+            fix.Apply = false;
+        }
+    }
+
+    [RelayCommand]
+    private void InvertFixesSelection()
+    {
+        foreach (var fix in Fixes)
+        {
+            fix.Apply = !fix.Apply;
+        }
+    }
+
+    /// <summary>
+    /// The gestures advertised by the fixes grid context menu (#13496): tick all, untick all
+    /// and invert the "Apply" column. Called both from the window (focus sits on a button) and
+    /// from a tunneling handler on the grid, which would otherwise swallow Ctrl+A as
+    /// "select all rows".
+    /// </summary>
+    internal bool HandleFixesSelectionKey(KeyEventArgs e)
+    {
+        var isCommand = e.KeyModifiers.HasFlag(KeyModifiers.Control) || e.KeyModifiers.HasFlag(KeyModifiers.Meta);
+        if (!isCommand || e.KeyModifiers.HasFlag(KeyModifiers.Alt))
+        {
+            return false;
+        }
+
+        var isShift = e.KeyModifiers.HasFlag(KeyModifiers.Shift);
+        if (e.Key == Key.A && !isShift)
+        {
+            SelectAllFixes();
+        }
+        else if (e.Key == Key.D && !isShift)
+        {
+            SelectNoFixes();
+        }
+        else if (e.Key == Key.I && isShift)
+        {
+            InvertFixesSelection();
+        }
+        else
+        {
+            return false;
+        }
+
+        return true;
+    }
+
+    [RelayCommand]
     private async Task EditInterjections()
     {
         await _windowService.ShowDialogAsync<InterjectionsWindow, InterjectionsViewModel>(Window!, vm => 
@@ -367,6 +429,10 @@ public partial class RemoveTextForHearingImpairedViewModel : ObservableObject
         {
             e.Handled = true;
             UiUtil.ShowHelp("features/remove-text-hi");
+        }
+        else if (HandleFixesSelectionKey(e))
+        {
+            e.Handled = true;
         }
     }
 

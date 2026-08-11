@@ -71,6 +71,7 @@ public class SubtitleGridScrollPerformanceTests : IDisposable
         window.UpdateLayout();
 
         var vm = (MainViewModel)view.DataContext!;
+        window.SuppressSaveChangesPromptOnClose(vm);
         for (var i = 0; i < lineCount; i++)
         {
             // Every third line is two lines tall - variable row heights are what makes the

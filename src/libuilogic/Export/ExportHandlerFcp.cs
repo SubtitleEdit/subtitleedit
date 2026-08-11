@@ -1,5 +1,6 @@
 using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
+using SkiaSharp;
 using System.Globalization;
 using System.Text;
 
@@ -34,6 +35,14 @@ public class ExportHandlerFcp : IExportHandler
         _imagesSavedCount = 0;
         _width = imageParameter.ScreenWidth;
         _height = imageParameter.ScreenHeight;
+
+        // Nothing sets the FrameRate property, so the chosen frame rate only ever reached this
+        // handler through the image parameters - and every time code in the xmeml was written at
+        // the 25 fps default. Take it from the parameters, like the BDN XML handler does.
+        if (imageParameter.FramesPerSecond > 0)
+        {
+            FrameRate = imageParameter.FramesPerSecond;
+        }
     }
 
     public void CreateParagraph(ImageParameter param)
@@ -68,7 +77,7 @@ public class ExportHandlerFcp : IExportHandler
             <out>[OUT]</out>
             <start>[START]</start>
             <end>[END]</end>
-            <pixelaspectratio>" + param.ScreenWidth + "x" + param.ScreenHeight + @"</pixelaspectratio>
+            <pixelaspectratio>square</pixelaspectratio>
             <stillframe>TRUE</stillframe>
             <anamorphic>FALSE</anamorphic>
             <alphatype>straight</alphatype>
@@ -100,106 +109,24 @@ public class ExportHandlerFcp : IExportHandler
             <fielddominance>none</fielddominance>
           </clipitem>";
 
-        var outBitmap = param.Bitmap;
-        //if (checkBoxFullFrameImage.Checked)
-        //{
-        //    var nbmp = new NikseBitmap(param.Bitmap);
-        //    nbmp.ReplaceTransparentWith(panelFullFrameBackground.BackColor);
-        //    using (var bmp = nbmp.GetBitmap())
-        //    {
-        //        int top = param.ScreenHeight - (param.Bitmap.Height + param.BottomMargin);
-        //        int left = (param.ScreenWidth - param.Bitmap.Width) / 2;
+        // "Full frame" writes the subtitle onto a frame-sized image, so every png can be dropped
+        // on the timeline at 0,0 and still land where Subtitle Edit placed it.
+        SKBitmap? fullFrameBitmap = null;
+        if (param.IsFullFrame)
+        {
+            fullFrameBitmap = FullFrameImage.Create(param);
+        }
 
-        //        var b = new NikseBitmap(param.ScreenWidth, param.ScreenHeight);
-        //        {
-        //            b.Fill(panelFullFrameBackground.BackColor);
-        //            outBitmap = b.GetBitmap();
-        //            {
-        //                if (param.Alignment == ContentAlignment.BottomLeft || param.Alignment == ContentAlignment.MiddleLeft || param.Alignment == ContentAlignment.TopLeft)
-        //                {
-        //                    left = param.LeftMargin;
-        //                }
-        //                else if (param.Alignment == ContentAlignment.BottomRight || param.Alignment == ContentAlignment.MiddleRight || param.Alignment == ContentAlignment.TopRight)
-        //                {
-        //                    left = param.ScreenWidth - param.Bitmap.Width - param.RightMargin;
-        //                }
+        try
+        {
+            File.WriteAllBytes(targetImageFileName, (fullFrameBitmap ?? param.Bitmap).ToPngArray());
+        }
+        finally
+        {
+            fullFrameBitmap?.Dispose();
+        }
 
-        //                if (param.Alignment == ContentAlignment.TopLeft || param.Alignment == ContentAlignment.TopCenter || param.Alignment == ContentAlignment.TopRight)
-        //                {
-        //                    top = param.BottomMargin;
-        //                }
-
-        //                if (param.Alignment == ContentAlignment.MiddleLeft || param.Alignment == ContentAlignment.MiddleCenter || param.Alignment == ContentAlignment.MiddleRight)
-        //                {
-        //                    top = (param.ScreenHeight - param.Bitmap.Height) / 2;
-        //                }
-
-        //                if (param.OverridePosition.HasValue &&
-        //                    param.OverridePosition.Value.X >= 0 && param.OverridePosition.Value.X < param.Bitmap.Width &&
-        //                    param.OverridePosition.Value.Y >= 0 && param.OverridePosition.Value.Y < param.Bitmap.Height)
-        //                {
-        //                    left = param.OverridePosition.Value.X;
-        //                    top = param.OverridePosition.Value.Y;
-        //                }
-
-        //                using (var g = Graphics.FromImage(outBitmap))
-        //                {
-        //                    g.DrawImage(bmp, left, top);
-        //                    g.Dispose();
-        //                }
-        //            }
-        //        }
-        //    }
-        //}
-
-
-        File.WriteAllBytes(targetImageFileName, param.Bitmap.ToPngArray());
-
-        //if (comboBoxImageFormat.Text == "8-bit png")
-        //{
-        //    foreach (var encoder in ImageCodecInfo.GetImageEncoders())
-        //    {
-        //        if (encoder.FormatID == ImageFormat.Png.Guid)
-        //        {
-        //            var parameters = new EncoderParameters();
-        //            parameters.Param[0] = new EncoderParameter(System.Drawing.Imaging.Encoder.ColorDepth, 8);
-
-        //            var nbmp = new NikseBitmap(outBitmap);
-        //            var b = nbmp.ConvertTo8BitsPerPixel();
-        //            b.Save(targetImageFileName, encoder, parameters);
-        //            b.Dispose();
-
-        //            break;
-        //        }
-        //    }
-        //}
-        //else
-        //{
-        //    SaveImage(outBitmap, targetImageFileName, ImageFormat);
-        //}
-
-        var timeBase = 25;
-        var ntsc = "FALSE";
-        //if (comboBoxLanguage.SelectedItem.ToString().Equals("NTSC", StringComparison.Ordinal))
-        //{
-        //    ntsc = "TRUE";
-        //}
-
-        //if (Math.Abs(param.FramesPerSeconds - 29.97) < 0.01)
-        //{
-        //    timeBase = 30;
-        //    ntsc = "TRUE";
-        //}
-        //else if (Math.Abs(param.FramesPerSeconds - 23.976) < 0.01)
-        //{
-        //    timeBase = 24;
-        //    ntsc = "TRUE";
-        //}
-        //else if (Math.Abs(param.FramesPerSeconds - 59.94) < 0.01)
-        //{
-        //    timeBase = 60;
-        //    ntsc = "TRUE";
-        //}
+        var (timeBase, ntsc) = GetTimeBaseAndNtsc();
 
         var duration = SubtitleFormat.MillisecondsToFrames(param.EndTime.TotalMilliseconds - param.StartTime.TotalMilliseconds, FrameRate);
         var start = SubtitleFormat.MillisecondsToFrames(param.StartTime.TotalMilliseconds, FrameRate);
@@ -231,18 +158,18 @@ public class ExportHandlerFcp : IExportHandler
                    "    <name>" + System.Security.SecurityElement.Escape(_prefix) + @"</name>
     <duration>" + duration.ToString(CultureInfo.InvariantCulture) + @"</duration>
     <rate>
-      <ntsc>FALSE</ntsc>
-      <timebase>25</timebase>
+      <ntsc>[NTSC]</ntsc>
+      <timebase>[TIMEBASE]</timebase>
     </rate>
     <timecode>
       <rate>
-        <ntsc>FALSE</ntsc>
-        <timebase>25</timebase>
+        <ntsc>[NTSC]</ntsc>
+        <timebase>[TIMEBASE]</timebase>
       </rate>
       <string>00:00:00:00</string>
       <frame>0</frame>
       <source>source</source>
-      <displayformat>NDF</displayformat>
+      <displayformat>[DISPLAYFORMAT]</displayformat>
     </timecode>
     <in>0</in>
     <out>[OUT]</out>
@@ -251,11 +178,11 @@ public class ExportHandlerFcp : IExportHandler
         <format>
           <samplecharacteristics>
             <rate>
-              <timebase>25</timebase>
-              <ntsc>FALSE</ntsc>
+              <timebase>[TIMEBASE]</timebase>
+              <ntsc>[NTSC]</ntsc>
             </rate>
-            <width>1920</width>
-            <height>1080</height>
+            <width>[WIDTH]</width>
+            <height>[HEIGHT]</height>
             <anamorphic>FALSE</anamorphic>
             <pixelaspectratio>square</pixelaspectratio>
             <fielddominance>none</fielddominance>
@@ -297,43 +224,30 @@ public class ExportHandlerFcp : IExportHandler
     <ismasterclip>FALSE</ismasterclip>
   </sequence>
 </xmeml>";
-        if (FrameRate == 29.97)
-        {
-            s = s.Replace("<displayformat>NDF</displayformat>", "<displayformat>DF</displayformat>"); //Non Drop Frame or Drop Frame
-            s = s.Replace("<timebase>25</timebase>", "<timebase>30</timebase>");
-            s = s.Replace("<ntsc>FALSE</ntsc>", "<ntsc>TRUE</ntsc>");
-        }
-        else if (FrameRate == 23.976)
-        {
-            s = s.Replace("<displayformat>NDF</displayformat>", "<displayformat>DF</displayformat>"); //Non Drop Frame or Drop Frame
-            s = s.Replace("<timebase>25</timebase>", "<timebase>24</timebase>");
-            s = s.Replace("<ntsc>FALSE</ntsc>", "<ntsc>TRUE</ntsc>");
-        }
-        else if (FrameRate == 59.94)
-        {
-            s = s.Replace("<displayformat>NDF</displayformat>", "<displayformat>DF</displayformat>"); //Non Drop Frame or Drop Frame
-            s = s.Replace("<timebase>25</timebase>", "<timebase>60</timebase>");
-            s = s.Replace("<ntsc>FALSE</ntsc>", "<ntsc>TRUE</ntsc>");
-        }
-        else
-        {
-            s = s.Replace("<timebase>25</timebase>", "<timebase>" + FrameRate.ToString(CultureInfo.InvariantCulture) + "</timebase>");
-        }
+        // The clip items in _sb already have their own placeholders filled in, so these only
+        // reach the sequence around them - the old code replaced whole "<timebase>25</timebase>"
+        // elements, which reached into the clip items too.
+        var (timeBase, ntsc) = GetTimeBaseAndNtsc();
+        s = s.Replace("[TIMEBASE]", timeBase.ToString(CultureInfo.InvariantCulture));
+        s = s.Replace("[NTSC]", ntsc);
+        s = s.Replace("[DISPLAYFORMAT]", ntsc == "TRUE" ? "DF" : "NDF"); //Non Drop Frame or Drop Frame
 
+        // The sequence was hardcoded to 1920x1080 no matter which resolution was exported.
+        s = s.Replace("[WIDTH]", _width.ToString(CultureInfo.InvariantCulture));
+        s = s.Replace("[HEIGHT]", _height.ToString(CultureInfo.InvariantCulture));
+
+        var sequenceEnd = 0;
         if (_imagesSavedCount > 0)
         {
-            var end = SubtitleFormat.MillisecondsToFrames(_endTime.TotalMilliseconds, FrameRate);
-            end++;
-            s = s.Replace("[OUT]", end.ToString(CultureInfo.InvariantCulture));
+            sequenceEnd = SubtitleFormat.MillisecondsToFrames(_endTime.TotalMilliseconds, FrameRate) + 1;
         }
+
+        s = s.Replace("[OUT]", sequenceEnd.ToString(CultureInfo.InvariantCulture));
 
         //if (comboBoxLanguage.Text == "NTSC")
         //{
         //    s = s.Replace("<ntsc>FALSE</ntsc>", "<ntsc>TRUE</ntsc>");
         //}
-
-        s = s.Replace("<width>1920</width>", "<width>" + _width.ToString(CultureInfo.InvariantCulture) + "</width>");
-        s = s.Replace("<height>1080</height>", "<height>" + _height.ToString(CultureInfo.InvariantCulture) + "</height>");
 
         //if (comboBoxImageFormat.Text.Contains("8-bit"))
         //{
@@ -342,5 +256,29 @@ public class ExportHandlerFcp : IExportHandler
 
         var fileName = Path.Combine(_folderName, "fcpxml_export.xml");
         File.WriteAllText(fileName, s);
+    }
+
+    /// <summary>
+    /// The xmeml time base (a whole number of frames per second) and NTSC flag for
+    /// <see cref="FrameRate"/> - 29.97 is the 30 time base with NTSC pull-down, and so on.
+    /// </summary>
+    private (int TimeBase, string Ntsc) GetTimeBaseAndNtsc()
+    {
+        if (Math.Abs(FrameRate - 29.97) < 0.01)
+        {
+            return (30, "TRUE");
+        }
+
+        if (Math.Abs(FrameRate - 23.976) < 0.01)
+        {
+            return (24, "TRUE");
+        }
+
+        if (Math.Abs(FrameRate - 59.94) < 0.01)
+        {
+            return (60, "TRUE");
+        }
+
+        return ((int)Math.Round(FrameRate, MidpointRounding.AwayFromZero), "FALSE");
     }
 }

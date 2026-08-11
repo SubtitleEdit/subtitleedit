@@ -142,7 +142,9 @@ public static class InitFooter
                     Value = IconNames.LockClock,
                     FontSize = 20,
                     [ToolTip.TipProperty] = Se.Language.General.LockTimeCodes,
-                    [!Visual.IsVisibleProperty] = new Binding(nameof(vm.LockTimeCodes)),
+                    // The effective lock, so the padlock also shows while the original's
+                    // non-matching lines are on screen (#13449).
+                    [!Visual.IsVisibleProperty] = new Binding(nameof(vm.AreTimeCodesLocked)),
                     Margin = new Thickness(0, 0, 15, 0),
                 },
 

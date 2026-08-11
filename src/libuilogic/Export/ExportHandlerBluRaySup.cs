@@ -1,5 +1,4 @@
 using Nikse.SubtitleEdit.Core.BluRaySup;
-using Nikse.SubtitleEdit.Core.Common;
 
 namespace Nikse.SubtitleEdit.UiLogic.Export;
 
@@ -49,54 +48,10 @@ public class ExportHandlerBluRaySup : IExportHandler
         };
         if (param.IsFullFrame)
         {
-            var nbmp = new NikseBitmap(param.Bitmap);
-            nbmp.ReplaceTransparentWith(param.BackgroundColor);
-            using (var bmp = nbmp.GetBitmap())
-            {
-                var top = param.ScreenHeight - (param.Bitmap.Height + param.BottomTopMargin);
-                var left = (param.ScreenWidth - param.Bitmap.Width) / 2;
-
-                var b = new NikseBitmap(param.ScreenWidth, param.ScreenHeight);
-                {
-                    b.Fill(param.BackgroundColor);
-                    using (var fullSize = b.GetBitmap())
-                    {
-                        if (param.Alignment == ExportAlignment.BottomLeft || param.Alignment == ExportAlignment.MiddleLeft || param.Alignment == ExportAlignment.TopLeft)
-                        {
-                            left = param.LeftRightMargin;
-                        }
-                        else if (param.Alignment == ExportAlignment.BottomRight || param.Alignment == ExportAlignment.MiddleRight || param.Alignment == ExportAlignment.TopRight)
-                        {
-                            left = param.ScreenWidth - param.Bitmap.Width - param.LeftRightMargin;
-                        }
-
-                        if (param.Alignment == ExportAlignment.TopLeft || param.Alignment == ExportAlignment.TopCenter || param.Alignment == ExportAlignment.TopRight)
-                        {
-                            top = param.BottomTopMargin;
-                        }
-
-                        if (param.Alignment == ExportAlignment.MiddleLeft || param.Alignment == ExportAlignment.MiddleCenter || param.Alignment == ExportAlignment.MiddleRight)
-                        {
-                            top = param.ScreenHeight - (param.Bitmap.Height / 2);
-                        }
-
-                        if (param.OverridePosition != null &&
-                            param.OverridePosition.Value.X >= 0 && param.OverridePosition.Value.X < param.ScreenWidth &&
-                            param.OverridePosition.Value.Y >= 0 && param.OverridePosition.Value.Y < param.ScreenHeight)
-                        {
-                            left = param.OverridePosition.Value.X;
-                            top = param.OverridePosition.Value.Y;
-                        }
-
-                        //using (var g = Graphics.FromImage(fullSize))
-                        //{
-                        //    g.DrawImage(bmp, left, top);
-                        //    g.Dispose();
-                        //}
-                        param.Buffer = BluRaySupPicture.CreateSupFrame(brSub, fullSize, param.FontColor, param.FramesPerSecond, 0, 0, BluRayContentAlignment.BottomCenter);
-                    }
-                }
-            }
+            // The image already covers the frame, so it goes in at 0,0 with no margins - the
+            // alignment and margins were used to place the text inside it.
+            using var fullSize = FullFrameImage.Create(param);
+            param.Buffer = BluRaySupPicture.CreateSupFrame(brSub, fullSize, param.FontColor, param.FramesPerSecond, 0, 0, BluRayContentAlignment.BottomCenter);
         }
         else
         {

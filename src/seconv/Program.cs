@@ -77,6 +77,12 @@ internal class Program
                 ListHelpers.PrintFixCommonErrorsRules();
                 return 0;
             }
+            if (first.Equals("list-rf-rules", StringComparison.OrdinalIgnoreCase) ||
+                first.Equals("list-remove-formatting-rules", StringComparison.OrdinalIgnoreCase))
+            {
+                ListHelpers.PrintRemoveFormattingRules();
+                return 0;
+            }
             if (first.Equals("dump-settings", StringComparison.OrdinalIgnoreCase) ||
                 first.Equals("default-settings", StringComparison.OrdinalIgnoreCase))
             {

@@ -46,7 +46,13 @@ Find and replace text in the subtitle.
 - **Menu:** Edit → Replace
 - **Shortcut:** `Ctrl+H`
 
-With an original subtitle loaded, replace works on both the text and the original text (same as Find).
+With an editable original subtitle loaded, a **Replace/search in** drop-down appears with three choices:
+
+- **Text and original text** - both columns (the default, and what Find always does)
+- **Text only** - leave the original subtitle alone
+- **Original text only** - only change the original subtitle
+
+The choice is remembered between sessions. It also applies to `F3` / `Shift+F3` until the Find window is used again, which always searches both columns. The drop-down is hidden when there is no original subtitle, or when the original is opened as a read-only reference - a read-only original is never written to.
 
 <!-- Screenshot: Replace window -->
 ![Replace](../screenshots/replace.png)

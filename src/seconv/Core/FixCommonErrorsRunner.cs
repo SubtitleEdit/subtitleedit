@@ -354,72 +354,8 @@ internal static class FixCommonErrorsRunner
     /// Matching is case-insensitive. Throws <see cref="ArgumentException"/> for unknown IDs.
     /// Returned IDs are in canonical order.
     /// </summary>
-    public static IReadOnlyList<string> ResolveRuleIds(string? spec)
-    {
-        if (string.IsNullOrWhiteSpace(spec))
-        {
-            return AvailableRuleIds;
-        }
-
-        var available = new HashSet<string>(AvailableRuleIds, StringComparer.OrdinalIgnoreCase);
-        var tokens = spec.Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
-
-        var hasPositive = tokens.Any(t => !t.StartsWith('-'));
-        var selected = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
-
-        // Negation-only specs ("-FixCommas,-FixDanishLetterI") imply a leading "all".
-        if (!hasPositive)
-        {
-            foreach (var a in AvailableRuleIds)
-            {
-                selected.Add(a);
-            }
-        }
-
-        foreach (var raw in tokens)
-        {
-            var negate = raw.StartsWith('-');
-            var id = negate ? raw[1..].Trim() : raw;
-
-            if (string.IsNullOrEmpty(id))
-            {
-                continue;
-            }
-
-            if (id.Equals("all", StringComparison.OrdinalIgnoreCase))
-            {
-                if (negate)
-                {
-                    selected.Clear();
-                }
-                else
-                {
-                    foreach (var a in AvailableRuleIds)
-                    {
-                        selected.Add(a);
-                    }
-                }
-                continue;
-            }
-
-            if (!available.Contains(id))
-            {
-                throw new ArgumentException(
-                    $"Unknown FixCommonErrors rule '{id}'. Run 'seconv list-fce-rules' to see available IDs.");
-            }
-
-            if (negate)
-            {
-                selected.Remove(id);
-            }
-            else
-            {
-                selected.Add(id);
-            }
-        }
-
-        return AvailableRuleIds.Where(selected.Contains).ToArray();
-    }
+    public static IReadOnlyList<string> ResolveRuleIds(string? spec) =>
+        RuleIdSpec.Resolve(spec, AvailableRuleIds, "FixCommonErrors", "list-fce-rules");
 
     /// <summary>
     /// Canonical rule list. Order here defines execution order. <c>FixCommonOcrErrors</c>

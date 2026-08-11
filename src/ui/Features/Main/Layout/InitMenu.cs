@@ -108,7 +108,9 @@ public static class InitMenu
                 {
                     Header = l.CloseTranslation,
                     Command = vm.FileCloseTranslationCommand,
-                    [!MenuItem.IsVisibleProperty] = new Binding(nameof(vm.ShowColumnOriginalText))
+                    // Hidden for a read-only original: promoting a reference file to the working
+                    // subtitle would save a truncated copy over it (issue #13449).
+                    [!MenuItem.IsVisibleProperty] = new Binding(nameof(vm.CanEditOriginal))
                 },
                 vm.MenuReopen,
                 new MenuItem

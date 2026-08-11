@@ -31,7 +31,7 @@ Generate speech audio from subtitle text using various TTS engines.
 - **Kokoro TTS** — Local downloadable Kokoro TTS server and models
 - **OmniVoice TTS** — Local CPU TTS with voice cloning and many languages
 - **Qwen3 TTS (CrispASR)** — Local Qwen3 TTS running through the CrispASR runtime (VoiceDesign, CustomVoice, and Voice clone 1.7B models)
-- **Chatterbox TTS (CrispASR)** — Chatterbox TTS via the CrispASR runtime, with voice cloning (Base or Turbo model)
+- **Chatterbox TTS (CrispASR)** — Chatterbox TTS via the CrispASR runtime, with voice cloning (multilingual Base or English-only Turbo model)
 
 Local downloadable engines are installed into the Subtitle Edit data folder when you accept the download prompt.
 
@@ -60,6 +60,8 @@ Qwen3 TTS runs through the CrispASR runtime and shares the `CrispASR/models` dir
 Chatterbox TTS runs through the CrispASR runtime (shared with the speech-to-text feature) and supports voice cloning.
 
 - Available model choices are **Base** and **Turbo**.
+- The **Base** model is multilingual: pick one of its 23 languages (Arabic, Chinese, Danish, Dutch, English, Finnish, French, German, Greek, Hebrew, Hindi, Italian, Japanese, Korean, Malay, Norwegian, Polish, Portuguese, Russian, Spanish, Swahili, Swedish, Turkish) in the language dropdown. **Auto** sends no language and lets the model guess — non-English text usually comes out with an English accent that way, so picking the language explicitly is recommended. **Turbo** is an English-only distillation and has no language choice.
+- If the models were downloaded before the multilingual release, Subtitle Edit will prompt to download them again — the older files are English-only and ignore the language selection.
 - Imported reference WAV voices are sent as the per-request voice for runtime cloning.
 
 ### Kokoro TTS

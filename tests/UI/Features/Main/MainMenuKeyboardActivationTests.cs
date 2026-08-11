@@ -56,6 +56,7 @@ public class MainMenuKeyboardActivationTests : IDisposable
         window.UpdateLayout();
 
         var vm = (MainViewModel)view.DataContext!;
+        window.SuppressSaveChangesPromptOnClose(vm);
 
         // On macOS the in-window menu is hidden in favor of the native menu bar; these tests
         // exercise the in-window menu (the Windows/Linux path), so show it regardless of the

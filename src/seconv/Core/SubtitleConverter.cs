@@ -745,7 +745,8 @@ internal class SubtitleConverter
                 subtitle,
                 options.Operations,
                 options.FixCommonErrorsRules,
-                options.FixCommonErrorsLanguage);
+                options.FixCommonErrorsLanguage,
+                options.RemoveFormattingRules);
         }
 
         if (options.BridgeGapsMaxMs.HasValue && options.BridgeGapsMaxMs.Value > 0)
@@ -878,6 +879,13 @@ internal record class ConversionOptions
     /// code, or English name (see <see cref="FixCommonErrorsRunner.NormalizeLanguageOverride"/>).
     /// </summary>
     public string? FixCommonErrorsLanguage { get; init; }
+
+    /// <summary>
+    /// Optional formatting-removal rule selection (from <c>--remove-formatting-rules</c>).
+    /// Null = bare <c>--remove-formatting</c> = strip every tag wholesale. Resolve via
+    /// <see cref="RemoveFormattingRunner.ResolveRuleIds"/>.
+    /// </summary>
+    public IReadOnlyList<string>? RemoveFormattingRules { get; init; }
     public int? DeleteFirst { get; init; }
     public int? DeleteLast { get; init; }
     public string? DeleteContains { get; init; }

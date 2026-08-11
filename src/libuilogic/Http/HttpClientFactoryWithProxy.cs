@@ -35,7 +35,11 @@ namespace Nikse.SubtitleEdit.UiLogic.Http
 
                 if (proxySettings.UseDefaultCredentials)
                 {
-                    handler.Credentials = CredentialCache.DefaultNetworkCredentials;
+                    // These answer the proxy's 407 challenge. Handler.Credentials would instead
+                    // answer 401s from the target servers themselves - offering the machine's
+                    // credentials to any external host - while the authenticating proxy the user
+                    // configured this for would still be refused.
+                    handler.DefaultProxyCredentials = CredentialCache.DefaultNetworkCredentials;
                 }
 
                 return handler;
