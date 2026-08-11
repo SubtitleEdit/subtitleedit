@@ -357,6 +357,10 @@ internal sealed class ConvertCommand : AsyncCommand<ConvertCommand.Settings>
         [Description("Remove formatting")]
         public bool RemoveFormatting { get; init; }
 
+        [CommandOption("--remove-formatting-rules|--RemoveFormattingRules")]
+        [Description("Comma-separated formatting-removal rule IDs (or 'all,-RuleId' to subtract); implies --remove-formatting. See: seconv list-rf-rules")]
+        public string? RemoveFormattingRules { get; init; }
+
         [CommandOption("--remove-line-breaks|--RemoveLineBreaks")]
         [Description("Remove line breaks")]
         public bool RemoveLineBreaks { get; init; }
@@ -558,6 +562,25 @@ internal sealed class ConvertCommand : AsyncCommand<ConvertCommand.Settings>
                 }
             }
 
+            // Resolve remove-formatting rule selection. Passing --RemoveFormattingRules implicitly
+            // enables --RemoveFormatting. Null = bare flag = remove every tag wholesale
+            // (HtmlUtil.RemoveHtmlTags, pre-#13518 behaviour) - broader than 'all', which is
+            // the union of the named rules and leaves e.g. {\pos(..)} alone.
+            IReadOnlyList<string>? removeFormattingRules = null;
+            var removeFormattingRequested = settings.RemoveFormatting || !string.IsNullOrWhiteSpace(settings.RemoveFormattingRules);
+            if (!string.IsNullOrWhiteSpace(settings.RemoveFormattingRules))
+            {
+                try
+                {
+                    removeFormattingRules = RemoveFormattingRunner.ResolveRuleIds(settings.RemoveFormattingRules);
+                }
+                catch (ArgumentException ex)
+                {
+                    AnsiConsole.MarkupLineInterpolated($"[red]Error: {ex.Message}[/]");
+                    return 1;
+                }
+            }
+
             // Build operations list. Operations run in the order the user typed them and
             // repeat for each occurrence (SE4 parity) - e.g. "--fix-common-errors" twice
             // runs two FCE passes. Spectre collapses repeated flags, so the order/count is
@@ -565,7 +588,7 @@ internal sealed class ConvertCommand : AsyncCommand<ConvertCommand.Settings>
             List<string> operations;
             if (RawArgs.Length > 0)
             {
-                operations = OperationOrderParser.BuildOperations(RawArgs, fceRequested);
+                operations = OperationOrderParser.BuildOperations(RawArgs, fceRequested, removeFormattingRequested);
             }
             else
             {
@@ -580,7 +603,7 @@ internal sealed class ConvertCommand : AsyncCommand<ConvertCommand.Settings>
                 if (settings.MergeSameTimeCodes) operations.Add("MergeSameTimeCodes");
                 if (settings.MergeShortLines) operations.Add("MergeShortLines");
                 if (settings.RedoCasing) operations.Add("RedoCasing");
-                if (settings.RemoveFormatting) operations.Add("RemoveFormatting");
+                if (removeFormattingRequested) operations.Add("RemoveFormatting");
                 if (settings.RemoveLineBreaks) operations.Add("RemoveLineBreaks");
                 if (settings.RemoveTextForHI) operations.Add("RemoveTextForHI");
                 if (settings.RemoveUnicodeControlChars) operations.Add("RemoveUnicodeControlChars");
@@ -656,6 +679,7 @@ internal sealed class ConvertCommand : AsyncCommand<ConvertCommand.Settings>
                 Operations = operations,
                 FixCommonErrorsRules = fceRules,
                 FixCommonErrorsLanguage = settings.FixCommonErrorsLanguage,
+                RemoveFormattingRules = removeFormattingRules,
                 DeleteFirst = settings.DeleteFirst,
                 DeleteLast = settings.DeleteLast,
                 DeleteContains = settings.DeleteContains,

@@ -73,6 +73,7 @@ seconv list-encodings       # list text encodings
 seconv list-pac-codepages   # list PAC code pages
 seconv list-ocr-engines     # list OCR engines + installation status
 seconv list-fce-rules       # list FixCommonErrors rule IDs
+seconv list-rf-rules        # list remove-formatting rule IDs
 seconv dump-settings        # print a full --settings JSON with libse defaults
 seconv info <file>          # print format/encoding/duration/language for a file
 seconv lint <pattern>       # validate subtitle(s); exit 1 if issues found
@@ -465,7 +466,8 @@ Operations run after the structural transforms (offset, fps, renumber, adjust-du
 | `--merge-same-time-codes` | Merge entries with same time codes |
 | `--merge-short-lines` | Merge short lines |
 | `--redo-casing` | Redo text casing |
-| `--remove-formatting` | Remove formatting tags |
+| `--remove-formatting` | Remove **all** formatting tags |
+| `--remove-formatting-rules:<list>` | Remove only some kinds of formatting (CSV; supports `all,-RuleId`) |
 | `--remove-line-breaks` | Remove line breaks |
 | `--remove-text-for-hi` | Remove text for hearing impaired |
 | `--remove-unicode-control-chars` | Remove Unicode control characters |
@@ -554,6 +556,38 @@ The CLI rule IDs match the check-box rules in the desktop app's *Fix Common Erro
 | `RemoveDialogFirstLineInNonDialogs` | Remove start dash in first line for non-dialogs | — |
 | `RemoveSpaceBetweenNumbers` | Remove space between numbers | — |
 | `FixCommonOcrErrors` | Fix common OCR errors (using OCR replace list) | — |
+
+### Remove-formatting rule selection
+
+`--remove-formatting` (no value) strips **every** tag — HTML plus SSA/ASSA override blocks. Pass `--remove-formatting-rules:<list>` to remove only some kinds of formatting; supplying that option implies `--remove-formatting`.
+
+```bash
+seconv movie.ass subrip --remove-formatting                              # remove every tag
+seconv movie.ass subrip --remove-formatting-rules:RemoveItalic,RemoveBold
+seconv movie.ass subrip --remove-formatting-rules:all,-RemoveColor       # every named rule except colors
+seconv list-rf-rules                                                     # show rule IDs
+```
+
+**`all` is narrower than the bare flag.** The bare `--remove-formatting` removes tags wholesale, including ones no named rule covers — positioning (`{\pos(..)}`), fades, karaoke timing, and any other ASSA override. `--remove-formatting-rules:all` is the *union of the six named rules*, so those tags survive it:
+
+```bash
+# "{\pos(10,20)}<i>Hi</i>"
+seconv in.ass subrip --remove-formatting                     # -> "Hi"
+seconv in.ass subrip --remove-formatting-rules:all           # -> "{\pos(10,20)}Hi"
+```
+
+This mirrors the desktop app, where batch convert's *Remove formatting* function has a separate *Remove all formatting* check box above the six per-kind ones.
+
+#### Rule ID ↔ GUI equivalent
+
+| Rule ID | GUI equivalent | Removes |
+|---|---|---|
+| `RemoveItalic` | Remove italic | `<i>`, `{\i0}`, `{\i1}` |
+| `RemoveBold` | Remove bold | `<b>`, `{\b0}`, `{\b1}` |
+| `RemoveUnderline` | Remove underline | `<u>`, `{\u0}`, `{\u1}` |
+| `RemoveFontName` | Remove font name | `<font face="..">`, `{\fnArial}` |
+| `RemoveAlignment` | Remove alignment | `{\an1}`–`{\an9}`, `{\a1}`–`{\a9}` |
+| `RemoveColor` | Remove color | `<font color="..">`, `{\c&H..&}`, `{\1c&H..&}` |
 
 ## Output format aliases
 

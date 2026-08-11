@@ -1910,63 +1910,19 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
             return subtitle;
         }
 
+        var s = _config.RemoveFormatting;
+        var types = RemoveFormattingType.None;
+        if (s.RemoveAll) { types |= RemoveFormattingType.All; }
+        if (s.RemoveItalic) { types |= RemoveFormattingType.Italic; }
+        if (s.RemoveBold) { types |= RemoveFormattingType.Bold; }
+        if (s.RemoveUnderline) { types |= RemoveFormattingType.Underline; }
+        if (s.RemoveColor) { types |= RemoveFormattingType.Color; }
+        if (s.RemoveFontName) { types |= RemoveFormattingType.FontName; }
+        if (s.RemoveAlignment) { types |= RemoveFormattingType.Alignment; }
+
         foreach (var p in subtitle.Paragraphs)
         {
-            if (_config.RemoveFormatting.RemoveAll)
-            {
-                p.Text = HtmlUtil.RemoveHtmlTags(p.Text, true);
-            }
-            else
-            {
-                if (_config.RemoveFormatting.RemoveItalic)
-                {
-                    p.Text = HtmlUtil.RemoveOpenCloseTags(p.Text, HtmlUtil.TagItalic);
-                    p.Text = p.Text
-                        .Replace("{\\i}", string.Empty)
-                        .Replace("{\\i0}", string.Empty)
-                        .Replace("{\\i1}", string.Empty);
-                }
-
-                if (_config.RemoveFormatting.RemoveBold)
-                {
-                    p.Text = HtmlUtil.RemoveOpenCloseTags(p.Text, HtmlUtil.TagBold);
-                    p.Text = p.Text
-                        .Replace("{\\b}", string.Empty)
-                        .Replace("{\\b0}", string.Empty)
-                        .Replace("{\\b1}", string.Empty);
-                }
-
-                if (_config.RemoveFormatting.RemoveUnderline)
-                {
-                    p.Text = HtmlUtil.RemoveOpenCloseTags(p.Text, HtmlUtil.TagUnderline);
-                    p.Text = p.Text
-                        .Replace("{\\u}", string.Empty)
-                        .Replace("{\\u0}", string.Empty)
-                        .Replace("{\\u1}", string.Empty);
-                }
-
-                if (_config.RemoveFormatting.RemoveColor)
-                {
-                    p.Text = HtmlUtil.RemoveColorTags(p.Text);
-                    if (p.Text.Contains("\\c") || p.Text.Contains("\\1c"))
-                    {
-                        p.Text = HtmlUtil.RemoveAssaColor(p.Text);
-                    }
-                }
-
-                if (_config.RemoveFormatting.RemoveFontName)
-                {
-                    p.Text = HtmlUtil.RemoveFontName(p.Text);
-                }
-
-                if (_config.RemoveFormatting.RemoveAlignment)
-                {
-                    if (p.Text.Contains('{'))
-                    {
-                        p.Text = HtmlUtil.RemoveAssAlignmentTags(p.Text);
-                    }
-                }
-            }
+            p.Text = RemoveFormattingUtil.Remove(p.Text, types);
         }
 
         return subtitle;
