@@ -67,6 +67,9 @@ public class SeTools
     public bool GoToFirstAndLastLineAlsoSetVideoPosition { get; set; }
     public bool SplitRebalanceLongLinesSplit { get; set; }
     public bool SplitRebalanceLongLinesRebalance { get; set; }
+    public int SplitRebalanceLongLinesSingleLineMaxLength { get; set; }
+    public int SplitRebalanceLongLinesMaxNumberOfLines { get; set; }
+    public int SplitRebalanceLongLinesUnbreakShorterThan { get; set; }
     public string UnicodeSymbolsToInsert { get; set; }
     public string MusicSymbol { get; set; }
     public string MusicSymbolReplace { get; set; }
