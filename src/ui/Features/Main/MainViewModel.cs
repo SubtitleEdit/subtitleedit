@@ -24772,20 +24772,22 @@ public partial class MainViewModel :
             }
 
             var settings = OpenAiSttService.GetSettingsFromConfiguration();
-            progressViewModel = new TranscriptionProgressViewModel();
-            progressViewModel.StatusText = Se.Language.Video.AudioToText.Transcribing;
-            progressViewModel.ServerUrl = settings.EndpointUrl;
-            progressViewModel.ModelName = string.IsNullOrEmpty(settings.Model) ? Se.Language.General.TranscriptionProgressModelAuto : settings.Model;
 
             var ownerWindow = Window!;
-            await Dispatcher.UIThread.InvokeAsync(() =>
-            {
-                progressWindow = new TranscriptionProgressWindow(progressViewModel);
-                // Above the main window while SE is active, but never above other
-                // applications the user switches to during the transcription (#11243).
-                WindowService.KeepTopmostWhileOwnerActive(progressWindow, ownerWindow);
-                progressWindow.Show(ownerWindow);
-            });
+            progressViewModel = await Dispatcher.UIThread.InvokeAsync(() =>
+                _windowService.ShowWindow<TranscriptionProgressWindow, TranscriptionProgressViewModel>(ownerWindow, (window, vm) =>
+                {
+                    // The configure callback runs before Show(), so the texts are set for the
+                    // first frame and the topmost handling is wired before the window is up.
+                    vm.StatusText = Se.Language.Video.AudioToText.Transcribing;
+                    vm.ServerUrl = settings.EndpointUrl;
+                    vm.ModelName = string.IsNullOrEmpty(settings.Model) ? Se.Language.General.TranscriptionProgressModelAuto : settings.Model;
+
+                    // Above the main window while SE is active, but never above other
+                    // applications the user switches to during the transcription (#11243).
+                    WindowService.KeepTopmostWhileOwnerActive(window, ownerWindow);
+                    progressWindow = window;
+                }));
 
             var service = new OpenAiSttService(settings);
 

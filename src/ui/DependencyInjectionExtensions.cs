@@ -166,6 +166,7 @@ using Nikse.SubtitleEdit.Features.Video.TextToSpeech.OmniVoiceCrispAsrSettings;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.VoxCPM2CrispAsrSettings;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.MossTtsCrispAsrSettings;
 using Nikse.SubtitleEdit.Features.Video.SpeechToText.EngineSettings;
+using Nikse.SubtitleEdit.Features.Video.SpeechToText.OpenAiCompatible;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.EncodingSettings;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.ReviewSpeech;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.VoiceSettings;
@@ -534,6 +535,7 @@ public static class DependencyInjectionExtensions
         collection.AddTransient<TimedText10PropertiesViewModel>();
         collection.AddTransient<TimedTextImsc11PropertiesViewModel>();
         collection.AddTransient<TmpegEncXmlPropertiesViewModel>();
+        collection.AddTransient<TranscriptionProgressViewModel>();
         collection.AddTransient<TranslateSettingsViewModel>();
         collection.AddTransient<TranslationErrorViewModel>();
         collection.AddTransient<TransparentSettingsViewModel>();
