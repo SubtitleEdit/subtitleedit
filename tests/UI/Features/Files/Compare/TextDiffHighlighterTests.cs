@@ -1,3 +1,4 @@
+using Avalonia;
 using Avalonia.Controls.Documents;
 using Avalonia.Media;
 using Nikse.SubtitleEdit.Features.Files.Compare;
@@ -175,6 +176,35 @@ public class TextDiffHighlighterTests
         var (left, _) = TextDiffHighlighter.Compare("colour", "color");
 
         Assert.Equal(new[] { "colo", "u", "r" }, RunTexts(left.Inlines));
+    }
+
+    [Fact]
+    public void Compare_UnchangedRuns_DoNotOverrideTheInheritedForeground()
+    {
+        // Assigning Foreground = null is not the same as leaving it alone: a local null value
+        // overrides the foreground inherited from the theme, and Avalonia draws a run with a
+        // null brush as nothing at all. That made every unchanged stretch of text invisible in
+        // the diff previews (Fix common errors, Compare, Multiple replace) in 5.2.0-beta10 (#13501).
+        var (left, right) = TextDiffHighlighter.Compare("Goodbye cruel world", "Goodbye kind world");
+        var (before, after) = TextDiffHighlighter.CompareReplacement("Goodbye cruel world", "Goodbye kind world");
+
+        foreach (var inlines in new[] { left.Inlines, right.Inlines, before.Inlines, after.Inlines })
+        {
+            var runs = inlines!.Cast<Run>().ToArray();
+            Assert.True(runs.Length > 1); // the diff must produce both changed and unchanged runs
+
+            foreach (var run in runs)
+            {
+                if (run.Foreground == null)
+                {
+                    Assert.False(run.IsSet(TextElement.ForegroundProperty),
+                        $"Unchanged run '{run.Text}' has a local null Foreground, which renders it invisible");
+                }
+            }
+
+            Assert.Contains(runs, r => !r.IsSet(TextElement.ForegroundProperty));
+            Assert.Contains(runs, r => r.Foreground != null);
+        }
     }
 
     private static void AssertNoRunSplitsAWord(InlineCollection? inlines)
