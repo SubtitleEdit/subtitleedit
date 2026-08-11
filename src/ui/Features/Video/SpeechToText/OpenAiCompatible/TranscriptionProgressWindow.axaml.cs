@@ -30,7 +30,6 @@ public class TranscriptionProgressWindow : Window
         Width = 500;
         Height = 450;
         WindowStartupLocation = WindowStartupLocation.CenterOwner;
-        Topmost = true;
         CanResize = false;
 
         var connectionInfoText = new TextBlock
