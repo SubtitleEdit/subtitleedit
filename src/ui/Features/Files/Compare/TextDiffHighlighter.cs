@@ -225,11 +225,20 @@ public static class TextDiffHighlighter
                 end++;
             }
 
-            textBlock.Inlines!.Add(new Run(text.Substring(pos, end - pos))
+            // Unchanged runs must leave Foreground alone: assigning null sets a local value
+            // that overrides the inherited theme foreground, and a run with a null brush is
+            // drawn as nothing - only the highlighted chunks were visible (#13501).
+            var run = new Run(text.Substring(pos, end - pos))
             {
-                Foreground = diff ? diffForeground : null,
                 Background = diff ? diffBackground : commonBackground,
-            });
+            };
+
+            if (diff)
+            {
+                run.Foreground = diffForeground;
+            }
+
+            textBlock.Inlines!.Add(run);
 
             pos = end;
         }
