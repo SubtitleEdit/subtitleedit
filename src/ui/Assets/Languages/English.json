@@ -2108,6 +2108,7 @@
       "importVoiceDotDotDot": "Import voice...",
       "voiceImportSuccessTitle": "Voice imported",
       "voiceXImported": "Voice '{0}' imported successfully",
+      "voiceXCouldNotBeImported": "Voice '{0}' could not be imported - see the log for details",
       "importPiperVoiceTitle": "Open Piper voice model (.onnx)",
       "piperVoiceConfigMissingTitle": "Config file missing",
       "piperVoiceConfigMissingMessage": "A Piper voice needs its config file next to the model file: {0}",
