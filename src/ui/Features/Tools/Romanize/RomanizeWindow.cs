@@ -1,5 +1,6 @@
 using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Controls.Documents;
 using Avalonia.Controls.Templates;
 using Avalonia.Data;
 using Avalonia.Layout;
@@ -9,6 +10,7 @@ using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 
 using System;
+using System.Linq;
 
 namespace Nikse.SubtitleEdit.Features.Tools.Romanize;
 
@@ -79,7 +81,7 @@ public class RomanizeWindow : Window
                 {
                     ItemSpacing = 8,
                     Orientation = Orientation.Horizontal,
-                    Children =
+                    Children = 
                     {
                         new CheckBox
                         {
@@ -120,31 +122,14 @@ public class RomanizeWindow : Window
                     Orientation = Orientation.Horizontal,
                     Children =
                     {
-                        new CheckBox
-                        {
-                            Content = Se.Language.General.All,
-                            
-                            [!CheckBox.IsCheckedProperty] = new Binding(nameof(RomanizeViewModel.Romanize))
-                        },
-                        new CheckBox
-                        {
-                            Content = Se.Language.Tools.Romanize.Korean,
-                            
-                            [!CheckBox.IsCheckedProperty] = new Binding(nameof(RomanizeViewModel.RomanizeKorean))
-                        },
-                        new CheckBox
-                        {
-                            Content = Se.Language.Tools.Romanize.Japanese,
-                            
-                            [!CheckBox.IsCheckedProperty] = new Binding(nameof(RomanizeViewModel.RomanizeJapanese))
-                        },
-                        new CheckBox
-                        {
-                            Content = Se.Language.Tools.Romanize.Russian,
-                            
-                            [!CheckBox.IsCheckedProperty] = new Binding(nameof(RomanizeViewModel.RomanizeRussian))
-                        },
-                    }
+                        MakeLanguagesCheckBox(Se.Language.General.All, null, new Binding(nameof(RomanizeViewModel.Romanize))),
+                        MakeLanguagesCheckBox(Se.Language.Tools.Romanize.GeezOriginal, Se.Language.Tools.Romanize.GeezRomanized, new Binding(nameof(RomanizeViewModel.RomanizeGeez))),
+                        MakeLanguagesCheckBox(Se.Language.Tools.Romanize.CyrillicOriginal, Se.Language.Tools.Romanize.CyrillicRomanized, new Binding(nameof(RomanizeViewModel.RomanizeCyrillic))),
+                        MakeLanguagesCheckBox(Se.Language.Tools.Romanize.DevanagariOriginal, Se.Language.Tools.Romanize.DevanagariRomanized, new Binding(nameof(RomanizeViewModel.RomanizeDevanagari))),
+                        MakeLanguagesCheckBox(Se.Language.Tools.Romanize.GreekOriginal, Se.Language.Tools.Romanize.GreekRomanized, new Binding(nameof(RomanizeViewModel.RomanizeGreek))),
+                        MakeLanguagesCheckBox(Se.Language.Tools.Romanize.HangulOriginal, Se.Language.Tools.Romanize.HangulRomanized, new Binding(nameof(RomanizeViewModel.RomanizeHangul))),
+                        MakeLanguagesCheckBox(Se.Language.Tools.Romanize.KanaOriginal, Se.Language.Tools.Romanize.KanaRomanized, new Binding(nameof(RomanizeViewModel.RomanizeKana))),
+                    },
                 }
             }
         };
@@ -265,7 +250,7 @@ public class RomanizeWindow : Window
                     Background = Brushes.Transparent, 
                     BorderBrush = Brushes.Transparent, 
 
-                    [!TextBox.TextProperty] = new Binding(nameof(RomanizeSubtitleLineItem.Text)),
+                    [!TextBox.TextProperty] = new Binding(nameof(RomanizeSubtitleLineItem.TextOutput)),
                 }),
                 Header = Se.Language.General.Romanized,
                 HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
@@ -274,5 +259,23 @@ public class RomanizeWindow : Window
         ];
 
         return dataGrid;
+    }
+
+    private static CheckBox MakeLanguagesCheckBox(string content, string? content2, Binding ischeckedproperty)
+    {
+        return new CheckBox
+        {
+            Margin = content2 is null ? new Thickness(0, 0, 16, 0) : default,
+            Content = new TextBlock
+            {
+                Inlines = content2 is null ? [ new Run(content) { FontWeight = FontWeight.ExtraBold, }, ] : 
+                [
+                    new Run(string.Format("{0} ", content)) { FontWeight = FontWeight.Bold, },
+                    new Run(string.Format("({0})", content2)) { FontWeight = FontWeight.Normal },
+                ],
+            },
+
+            [!CheckBox.IsCheckedProperty] = ischeckedproperty
+        };
     }
 }

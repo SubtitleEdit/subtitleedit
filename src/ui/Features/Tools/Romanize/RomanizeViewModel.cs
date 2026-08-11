@@ -1,18 +1,17 @@
 using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Threading;
+
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using Google.Protobuf.WellKnownTypes;
+
 using Nikse.SubtitleEdit.Core.Romanize;
 using Nikse.SubtitleEdit.Features.Main;
 using Nikse.SubtitleEdit.Logic;
-using Nikse.SubtitleEdit.Logic.Config;
 
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Globalization;
 using System.Linq;
 
 namespace Nikse.SubtitleEdit.Features.Tools.Romanize;
@@ -20,14 +19,44 @@ namespace Nikse.SubtitleEdit.Features.Tools.Romanize;
 public partial class RomanizeViewModel : ObservableObject
 {
     [ObservableProperty] private bool _romanize = true;
-    [ObservableProperty] private bool _romanizeKorean = true;
-    [ObservableProperty] private bool _romanizeJapanese = true;
-    [ObservableProperty] private bool _romanizeRussian = true;
+    [ObservableProperty] private bool _romanizeCyrillic = true;
+    [ObservableProperty] private bool _romanizeDevanagari = true;
+    [ObservableProperty] private bool _romanizeGeez = true;
+    [ObservableProperty] private bool _romanizeGreek = true;
+    [ObservableProperty] private bool _romanizeHangul = true;
+    [ObservableProperty] private bool _romanizeKana = true;
     [ObservableProperty] private bool? _subtitleItemsMerged;
     [ObservableProperty] private RomanizedLinePositions? _subtitleItemsRomanizedLinePosition;
     [ObservableProperty] private ObservableCollection<RomanizeSubtitleLineItem> _subtitleItems;
 
     protected bool _updatingRomanizeFlags = false;
+    protected void UpdateFlags() 
+    {
+        _updatingRomanizeFlags = true;
+        
+        RomanizeCyrillic =
+        RomanizeDevanagari =
+        RomanizeGeez =
+        RomanizeGreek =
+        RomanizeHangul =
+        RomanizeKana = Romanize;
+
+        _updatingRomanizeFlags = false;
+    }
+    protected void UpdateGlobal()
+    {
+        _updatingRomanizeFlags = true;
+
+        Romanize =
+            RomanizeCyrillic &&
+            RomanizeDevanagari &&
+            RomanizeGeez &&
+            RomanizeGreek &&
+            RomanizeHangul &&
+            RomanizeKana;
+
+        _updatingRomanizeFlags = false;
+    }
 
     public List<SubtitleLineViewModel> Subtitles { get; }
 
@@ -52,20 +81,18 @@ public partial class RomanizeViewModel : ObservableObject
 
         switch (e.PropertyName)
         {
-            case nameof(Romanize):
-                if (_updatingRomanizeFlags) break;
-                _updatingRomanizeFlags = true;
-                RomanizeKorean = RomanizeJapanese = RomanizeRussian = Romanize;
-                _updatingRomanizeFlags = false;
+            case nameof(Romanize) when _updatingRomanizeFlags is false:
+                UpdateFlags();
                 RomanizeAll();
                 break;
-            case nameof(RomanizeJapanese):
-            case nameof(RomanizeKorean):
-            case nameof(RomanizeRussian):
-                if (_updatingRomanizeFlags) break;
-                _updatingRomanizeFlags = true;
-                Romanize = RomanizeKorean && RomanizeJapanese && RomanizeRussian;
-                _updatingRomanizeFlags = false;
+            case 
+            nameof(RomanizeDevanagari) or 
+            nameof(RomanizeKana) or
+            nameof(RomanizeGeez) or
+            nameof(RomanizeGreek) or
+            nameof(RomanizeHangul) or
+            nameof(RomanizeCyrillic) when _updatingRomanizeFlags is false:
+                UpdateGlobal();
                 RomanizeAll();
                 break;
 
@@ -119,7 +146,7 @@ public partial class RomanizeViewModel : ObservableObject
                 TextRomanized = TextRomanize(subtitle.Text),
             };
 
-            item.Text = previous is null ? item.TextRomanized : TextAlter(item.TextOriginal, item.TextRomanized, item.Merged, item.RomanizedLinePosition);
+            item.TextOutput = previous is null ? item.TextRomanized : TextAlter(item.TextOriginal, item.TextRomanized, item.Merged, item.RomanizedLinePosition);
 
             return item;
         })];
@@ -147,7 +174,7 @@ public partial class RomanizeViewModel : ObservableObject
             TextRomanized = TextRomanize(Subtitles[index].Text),
         };
 
-        subtitle.Text = TextAlter(subtitle.TextOriginal, subtitle.TextRomanized, subtitle.Merged, subtitle.RomanizedLinePosition);
+        subtitle.TextOutput = TextAlter(subtitle.TextOriginal, subtitle.TextRomanized, subtitle.Merged, subtitle.RomanizedLinePosition);
 
         Dispatcher.UIThread.Post(() =>
         {
@@ -173,13 +200,16 @@ public partial class RomanizeViewModel : ObservableObject
     }
     internal string TextRomanize(string text)
     {
-        return IRomanizer.RomanizeText(text, new CultureInfo?[]
+        return IRomanizer.RomanizeText(text, new RomanizerLanguages?[]
         {
-            RomanizeJapanese ? JapaneseRomanizer.Culture : null,
-            RomanizeKorean ? KoreanRomanizer.Culture : null,
-            RomanizeRussian ? RussianRomanizer.Culture : null,
+            RomanizeCyrillic ? RomanizerLanguages.Cyrillic : null,
+            RomanizeDevanagari ? RomanizerLanguages.Devanagari : null,
+            RomanizeGeez ? RomanizerLanguages.Geez : null,
+            RomanizeGreek ? RomanizerLanguages.Greek : null,
+            RomanizeHangul ? RomanizerLanguages.Hangul : null,
+            RomanizeKana ? RomanizerLanguages.Kana : null,
 
-        }.OfType<CultureInfo>());
+        }.OfType<RomanizerLanguages>());
     }
     internal string TextAlter(string original, string romanized, bool merge, RomanizedLinePositions position)
     {

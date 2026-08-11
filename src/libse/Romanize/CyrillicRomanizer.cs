@@ -11,12 +11,10 @@ namespace Nikse.SubtitleEdit.Core.Romanize
     /// This implementation preserves basic case and applies a simple rule for
     /// "е"/"Е" romanization at word boundaries.
     /// </summary>
-    public class RussianRomanizer : IRomanizer
+    public class CyrillicRomanizer : IRomanizer
     {
         public const char CharLowerBound = '\u0400';
         public const char CharUpperBound = '\u04FF';
-
-        public static readonly CultureInfo Culture = CultureInfo.GetCultureInfo("ru");
 
         private static readonly Dictionary<char, string> BaseMap = new Dictionary<char, string>
         {
@@ -104,8 +102,7 @@ namespace Nikse.SubtitleEdit.Core.Romanize
             return false;
         }
 
-        CultureInfo IRomanizer.Culture { get; } = Culture;
-        RomanizerLanguages IRomanizer.Language { get; } = RomanizerLanguages.Russian;
+        RomanizerLanguages IRomanizer.Language { get; } = RomanizerLanguages.Cyrillic;
 
         public bool IsValid(char chr)
         {

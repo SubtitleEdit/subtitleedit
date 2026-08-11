@@ -10,14 +10,12 @@ namespace Nikse.SubtitleEdit.Core.Romanize
     /// Converts Hiragana and Katakana text to a simple Hepburn-style romaji.
     /// This is an approximation intended for subtitle readability.
     /// </summary>
-    public class JapaneseRomanizer : IRomanizer
+    public class KanaRomanizer : IRomanizer
     {
         public const char CharLowerBound1 = '\u3040';
         public const char CharUpperBound1 = '\u30FF';
         public const char CharLowerBound2 = '\u30A0';
         public const char CharUpperBound2 = '\u30FF';
-
-        public static readonly CultureInfo Culture = CultureInfo.GetCultureInfo("jp");
 
         private static readonly Dictionary<string, string> KanaDigraphs = new Dictionary<string, string>(StringComparer.Ordinal)
         {
@@ -284,8 +282,7 @@ namespace Nikse.SubtitleEdit.Core.Romanize
             return KanaMap.TryGetValue(ch, out romanized);
         }
 
-        CultureInfo IRomanizer.Culture { get; } = Culture;
-        RomanizerLanguages IRomanizer.Language { get; } = RomanizerLanguages.Japanese;
+        RomanizerLanguages IRomanizer.Language { get; } = RomanizerLanguages.Kana;
 
         public bool IsValid(char chr)
         {

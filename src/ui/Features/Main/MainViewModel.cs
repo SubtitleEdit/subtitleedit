@@ -6159,7 +6159,7 @@ public partial class MainViewModel :
             if (result.SubtitleItems[index].LineNumber != subtitle.Number)
                 throw new InvalidOperationException("This should not happen");
 
-            subtitle.Text = result.SubtitleItems[index].Text ?? result.SubtitleItems[index].TextRomanized ?? subtitle.Text;
+            subtitle.Text = result.SubtitleItems[index].TextOutput ?? result.SubtitleItems[index].TextRomanized ?? subtitle.Text;
 
             return subtitle;
         })]);

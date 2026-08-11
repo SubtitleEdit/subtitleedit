@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
 using System.Text;
 
@@ -31,12 +30,10 @@ namespace Nikse.SubtitleEdit.Core.Romanize
     /// This is more than sufficient for subtitle readability; for publication-
     /// grade romanization, route through a dedicated linguistic service instead.
     /// </summary>
-    public class KoreanRomanizer : IRomanizer
+    public class HangulRomanizer : IRomanizer
     {
         public const char CharLowerBound = '\uAC00';
         public const char CharUpperBound = '\uD7A3';
-
-        public static readonly CultureInfo Culture = CultureInfo.GetCultureInfo("ko");
 
         private class Syllable
         {
@@ -151,8 +148,7 @@ namespace Nikse.SubtitleEdit.Core.Romanize
             return sb.ToString();
         }
 
-        CultureInfo IRomanizer.Culture { get; } = Culture;
-        RomanizerLanguages IRomanizer.Language { get; } = RomanizerLanguages.Korean;
+        RomanizerLanguages IRomanizer.Language { get; } = RomanizerLanguages.Hangul;
 
         public bool IsValid(char chr)
         {
