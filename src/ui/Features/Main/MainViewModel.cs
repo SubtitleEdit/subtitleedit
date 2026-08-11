@@ -19969,8 +19969,13 @@ public partial class MainViewModel :
             {
                 if (Window != null)
                 {
-                    Window.Activate();
-                    TableViewExtras.FocusRow(SubtitleGrid);
+                    // Only claim focus when the main window still holds it - this runs a
+                    // second after startup, and activating here would pull SE back over
+                    // another application the user switched to while SE was loading.
+                    if (Window.IsActive)
+                    {
+                        TableViewExtras.FocusRow(SubtitleGrid);
+                    }
 
                     SurroundWith1Text = string.Format(Se.Language.Options.Shortcuts.SurroundWithXY, Se.Settings.Surround1Left, Se.Settings.Surround1Right);
                     SurroundWith2Text = string.Format(Se.Language.Options.Shortcuts.SurroundWithXY, Se.Settings.Surround2Left, Se.Settings.Surround2Right);
@@ -24776,6 +24781,9 @@ public partial class MainViewModel :
             await Dispatcher.UIThread.InvokeAsync(() =>
             {
                 progressWindow = new TranscriptionProgressWindow(progressViewModel);
+                // Above the main window while SE is active, but never above other
+                // applications the user switches to during the transcription (#11243).
+                WindowService.KeepTopmostWhileOwnerActive(progressWindow, ownerWindow);
                 progressWindow.Show(ownerWindow);
             });
 
