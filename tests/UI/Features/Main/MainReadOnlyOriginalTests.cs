@@ -8,6 +8,7 @@ using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Features.Main;
 using Nikse.SubtitleEdit.Features.Main.MainHelpers;
 using Nikse.SubtitleEdit.Logic;
+using Nikse.SubtitleEdit.Logic.Config;
 
 namespace UITests.Features.Main;
 
@@ -447,6 +448,186 @@ public class MainReadOnlyOriginalTests
     }
 
     /// <summary>
+    /// The re-match that follows a row change may only rebaseline a clean original - an original
+    /// with unsaved edits must still count as changed afterwards, or the edits would be lost on
+    /// exit without a save prompt.
+    /// </summary>
+    [AvaloniaFact]
+    public void EditableOriginal_ReapplyAfterRowChange_KeepsUnsavedEditsCountingAsChanges()
+    {
+        var (window, vm) = CreateMainViewModel();
+        try
+        {
+            AddLine(vm, "Translated one", string.Empty, 0, 2000);
+            AddLine(vm, "Translated two", string.Empty, 4000, 6000);
+
+            var reference = BuildSampleReference();
+            var match = ImportOriginalHelper.MatchOriginalLines(vm.Subtitles, reference);
+            InvokeImportOriginalSubtitle(vm, "reference.srt", reference, match, isReadOnly: false);
+            SetPrivateField(vm, "_changeSubtitleHash", vm.GetFastHash());
+            Assert.False(vm.HasChanges());
+
+            vm.Subtitles[0].OriginalText = "Edited original line";
+            Assert.True(vm.HasChanges());
+
+            InvokeReapplyReadOnlyReference(vm);
+
+            Assert.True(vm.HasChanges());
+        }
+        finally
+        {
+            CloseWindow(window, vm);
+        }
+    }
+
+    /// <summary>...while a clean original stays clean across the re-match's row shuffling.</summary>
+    [AvaloniaFact]
+    public void EditableOriginal_ReapplyAfterRowChange_KeepsACleanOriginalClean()
+    {
+        var (window, vm) = CreateMainViewModel();
+        try
+        {
+            AddLine(vm, "Translated one", string.Empty, 0, 2000);
+            AddLine(vm, "Translated two", string.Empty, 4000, 6000);
+
+            var reference = BuildSampleReference();
+            var match = ImportOriginalHelper.MatchOriginalLines(vm.Subtitles, reference);
+            InvokeImportOriginalSubtitle(vm, "reference.srt", reference, match, isReadOnly: false);
+            SetPrivateField(vm, "_changeSubtitleHash", vm.GetFastHash());
+
+            InvokeReapplyReadOnlyReference(vm);
+
+            Assert.False(vm.HasChanges());
+        }
+        finally
+        {
+            CloseWindow(window, vm);
+        }
+    }
+
+    /// <summary>
+    /// "Remove translation" promotes the original to the working subtitle. With the non-matching
+    /// lines on screen, the display-only rows carry original lines too - so they must become
+    /// ordinary, numbered, saveable lines, and the mode (with its time-code lock) must end.
+    /// </summary>
+    [AvaloniaFact]
+    public async Task EditableOriginal_RemoveTranslation_PromotesTheReferenceOnlyRows()
+    {
+        var (window, vm) = CreateMainViewModel();
+        try
+        {
+            AddLine(vm, "Translated one", string.Empty, 0, 2000);
+            AddLine(vm, "Translated two", string.Empty, 4000, 6000);
+
+            var reference = BuildSampleReference();
+            var match = ImportOriginalHelper.MatchOriginalLines(vm.Subtitles, reference);
+            InvokeImportOriginalSubtitle(vm, "reference.srt", reference, match, isReadOnly: false);
+            SetPrivateField(vm, "_changeSubtitleHash", vm.GetFastHash());
+
+            await InvokeFileCloseTranslation(vm);
+
+            Assert.False(vm.IsShowingOriginalNonMatchingLines);
+            Assert.False(vm.AreTimeCodesLocked);
+            Assert.DoesNotContain(vm.Subtitles, p => p.IsReferenceOnly);
+
+            var saved = vm.GetUpdateSubtitle();
+            Assert.Equal(3, saved.Paragraphs.Count);
+            Assert.Equal("Reference one", saved.Paragraphs[0].Text);
+            Assert.Equal("Reference only - no translation", saved.Paragraphs[1].Text);
+            Assert.Equal("Reference two", saved.Paragraphs[2].Text);
+        }
+        finally
+        {
+            CloseWindow(window, vm);
+        }
+    }
+
+    /// <summary>
+    /// The Delete command must skip reference-only rows in the selection: they belong to the
+    /// original, and deleting one from an editable original would drop the line for good on the
+    /// next capture.
+    /// </summary>
+    [AvaloniaFact]
+    public async Task DeleteSelectedItems_SkipsReferenceOnlyRows()
+    {
+        var (window, vm) = CreateMainViewModel();
+        var promptBeforeDelete = Se.Settings.General.PromptBeforeDelete;
+        Se.Settings.General.PromptBeforeDelete = false;
+        try
+        {
+            ImportSampleReference(vm);
+            var referenceRow = Assert.Single(vm.Subtitles, p => p.IsReferenceOnly);
+
+            SetPrivateField(vm, "_selectedSubtitles",
+                new List<SubtitleLineViewModel> { referenceRow, vm.Subtitles[0] });
+
+            await InvokeDeleteSelectedItems(vm);
+
+            Assert.Contains(referenceRow, vm.Subtitles);
+            Assert.DoesNotContain(vm.Subtitles, p => p.Text == "Translated one");
+        }
+        finally
+        {
+            Se.Settings.General.PromptBeforeDelete = promptBeforeDelete;
+            CloseWindow(window, vm);
+        }
+    }
+
+    /// <summary>
+    /// The waveform enforces the time-code lock through its own IsReadOnly, so it must follow the
+    /// lock that showing/closing the non-matching lines toggles.
+    /// </summary>
+    [AvaloniaFact]
+    public void ShowingNonMatchingOriginalLines_MakesTheWaveformReadOnly()
+    {
+        var (window, vm) = CreateMainViewModel();
+        try
+        {
+            if (vm.AudioVisualizer == null)
+            {
+                return; // no waveform in this headless setup - nothing to verify
+            }
+
+            Assert.False(vm.AudioVisualizer.IsReadOnly);
+
+            ImportSampleReference(vm);
+            Assert.True(vm.AudioVisualizer.IsReadOnly);
+
+            InvokeFileCloseOriginal(vm);
+            Assert.False(vm.AudioVisualizer.IsReadOnly);
+        }
+        finally
+        {
+            CloseWindow(window, vm);
+        }
+    }
+
+    /// <summary>
+    /// A remembered "original text only" find scope must not survive the original going away, or
+    /// every find afterwards searches nothing and comes up empty.
+    /// </summary>
+    [AvaloniaFact]
+    public void CloseOriginal_ResetsAnOriginalOnlyFindScope()
+    {
+        var (window, vm) = CreateMainViewModel();
+        try
+        {
+            ImportSampleReference(vm);
+
+            var findService = (IFindService)GetField("_findService").GetValue(vm)!;
+            findService.CurrentScope = FindService.FindScope.OriginalOnly;
+
+            InvokeFileCloseOriginal(vm);
+
+            Assert.Equal(FindService.FindScope.TextAndOriginal, findService.CurrentScope);
+        }
+        finally
+        {
+            CloseWindow(window, vm);
+        }
+    }
+
+    /// <summary>
     /// Working subtitle: two translated lines with a gap. Reference: the same two plus a line in the
     /// gap that the translation never got - the case from issue #13449.
     /// </summary>
@@ -554,6 +735,24 @@ public class MainReadOnlyOriginalTests
                      ?? throw new InvalidOperationException("FileCloseOriginal not found");
 
         method.Invoke(vm, null);
+    }
+
+    private static async Task InvokeFileCloseTranslation(MainViewModel vm)
+    {
+        var method = typeof(MainViewModel).GetMethod(
+                         "FileCloseTranslation", BindingFlags.Instance | BindingFlags.NonPublic)
+                     ?? throw new InvalidOperationException("FileCloseTranslation not found");
+
+        await (Task)method.Invoke(vm, null)!;
+    }
+
+    private static async Task InvokeDeleteSelectedItems(MainViewModel vm)
+    {
+        var method = typeof(MainViewModel).GetMethod(
+                         "DeleteSelectedItems", BindingFlags.Instance | BindingFlags.NonPublic)
+                     ?? throw new InvalidOperationException("DeleteSelectedItems not found");
+
+        await (Task)method.Invoke(vm, null)!;
     }
 
     private static void SetPrivateField(MainViewModel vm, string name, object value)

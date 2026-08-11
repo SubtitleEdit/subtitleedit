@@ -1510,6 +1510,17 @@ public partial class MainViewModel :
         }
     }
 
+    // AreTimeCodesLocked follows this mode, and the waveform enforces the lock through its own
+    // IsReadOnly - it must follow too, or dragging a paragraph edge would retime lines the lock
+    // exists to protect.
+    partial void OnIsShowingOriginalNonMatchingLinesChanged(bool value)
+    {
+        if (AudioVisualizer != null)
+        {
+            AudioVisualizer.IsReadOnly = AreTimeCodesLocked;
+        }
+    }
+
     [RelayCommand]
     private async Task ShowHelp()
     {
@@ -2405,6 +2416,10 @@ public partial class MainViewModel :
         _changeSubtitleHashOriginal = GetFastHashOriginal();
         _saveAsFileNameSuggestion = null;
 
+        // A remembered original-only scope would make every find come up empty now that there is
+        // no original column to search.
+        _findService.CurrentScope = FindScope.TextAndOriginal;
+
         _visibleLayers = null;
         ShowLayerFilterIcon = false;
 
@@ -2667,6 +2682,13 @@ public partial class MainViewModel :
             return;
         }
 
+        // The baseline hash covers the rows, so the remap below shifts it even when the original's
+        // content is untouched. Rebaseline afterwards only when the original was clean going in -
+        // an already-dirty original must stay dirty, or its unsaved edits would no longer count as
+        // changes and the app would close without offering to save them. A read-only original has
+        // nothing to save, so it always rebaselines.
+        var wasDirty = !IsOriginalReadOnly && _changeSubtitleHashOriginal != GetFastHashOriginal();
+
         if (capture)
         {
             CaptureOriginalFromRows();
@@ -2690,7 +2712,11 @@ public partial class MainViewModel :
             _reapplyingReadOnlyReference = false;
         }
 
-        _changeSubtitleHashOriginal = GetFastHashOriginal();
+        if (!wasDirty)
+        {
+            _changeSubtitleHashOriginal = GetFastHashOriginal();
+        }
+
         _referenceMappingDirty = false;
     }
 
@@ -2814,6 +2840,10 @@ public partial class MainViewModel :
             _changeSubtitleHashOriginal = GetFastHashOriginal();
         }
 
+        // A remembered original-only scope would make every find come up empty now that the
+        // original is gone.
+        _findService.CurrentScope = FindScope.TextAndOriginal;
+
         ShowColumnOriginalText = false;
         AutoFitColumns();
         _shortcutManager.ClearKeys();
@@ -2880,6 +2910,21 @@ public partial class MainViewModel :
         {
             subtitle.Text = subtitle.OriginalText;
             subtitle.OriginalText = string.Empty;
+
+            // A display-only reference row carries a line of the original, so the promotion turns
+            // it into an ordinary line - left flagged, it would be dropped from every save by
+            // GetUpdateSubtitle and keep its dimmed, read-only appearance.
+            subtitle.IsReferenceOnly = false;
+        }
+
+        if (IsShowingOriginalNonMatchingLines)
+        {
+            // The mode (and its time-code lock) is over: the original is now the working subtitle.
+            // Rebuild the rows so the promoted reference rows lose their dimmed look and take a
+            // number - IsReferenceOnly is not observable, so in-place edits would not re-render.
+            IsShowingOriginalNonMatchingLines = false;
+            _subtitle = GetUpdateSubtitle();
+            SetSubtitles(_subtitle, null);
         }
 
         _subtitleFileName = _subtitleFileNameOriginal;
@@ -2887,6 +2932,11 @@ public partial class MainViewModel :
         _subtitleOriginal = new Subtitle();
         _changeSubtitleHash = GetFastHash();
         _changeSubtitleHashOriginal = GetFastHashOriginal();
+
+        // A remembered original-only scope would make every find come up empty now that the
+        // original is gone.
+        _findService.CurrentScope = FindScope.TextAndOriginal;
+
         ShowColumnOriginalText = false;
         AutoFitColumns();
         _shortcutManager.ClearKeys();
@@ -12331,7 +12381,10 @@ public partial class MainViewModel :
 
         if (_replaceViewModel != null)
         {
-            _replaceViewModel.RefreshSubtitles(subs, origs, CanEditOriginal);
+            // The replace window's Count must agree with its Find next/Replace all, which go
+            // through HandleReplaceResult and never touch a read-only original - handing it the
+            // for-find texts would count matches that replace then cannot find.
+            _replaceViewModel.RefreshSubtitles(subs, GetOriginalTextsForReplace(), CanEditOriginal);
         }
     }
 
@@ -12940,25 +12993,34 @@ public partial class MainViewModel :
             return;
         }
 
+        // The dialog talks in the displayed line numbers, which skip the display-only reference
+        // rows - so they are not grid indexes when such rows are interleaved, and the entered
+        // number must be looked up by row number, not used as an index.
+        var lineCount = Subtitles.Count(p => !p.IsReferenceOnly);
+
         var viewModel = await ShowDialogAsync<GoToLineNumberWindow, GoToLineNumberViewModel>(vm =>
         {
             var idx = 1;
             if (SelectedSubtitle != null)
             {
-                idx = Subtitles.IndexOf(SelectedSubtitle) + 1;
+                idx = SelectedSubtitle.Number > 0
+                    ? SelectedSubtitle.Number
+                    : Subtitles.IndexOf(SelectedSubtitle) + 1;
             }
 
-            vm.Initialize(idx, Subtitles.Count);
+            vm.Initialize(idx, lineCount);
         });
 
-        if (viewModel is { OkPressed: true, LineNumber: >= 0 } && viewModel.LineNumber <= Subtitles.Count)
+        if (viewModel is { OkPressed: true, LineNumber: >= 0 } && viewModel.LineNumber <= lineCount)
         {
             var no = (int)viewModel.LineNumber;
-            SelectAndScrollToRow(no - 1);
+            var row = Subtitles.FirstOrDefault(p => !p.IsReferenceOnly && p.Number == no);
+            var index = row != null ? Subtitles.IndexOf(row) : no - 1;
+            SelectAndScrollToRow(index);
             var vp = GetVideoPlayerControl();
             if (Se.Settings.Tools.GoToLineNumberAlsoSetVideoPosition && !string.IsNullOrEmpty(_videoFileName) && vp != null)
             {
-                var s = Subtitles.GetOrNull(no - 1);
+                var s = Subtitles.GetOrNull(index);
                 if (s != null)
                 {
                     vp.Position = s.StartTime.TotalSeconds;
@@ -19366,8 +19428,17 @@ public partial class MainViewModel :
             }
 
             previousFormat.RemoveNativeFormatting(_subtitle, saveAsResult.SubtitleFormat);
+
+            // Same as the format-change handler: fold an editable original back from the rows
+            // before the rebuild blanks them, or the capture inside the re-apply would rebuild
+            // the original from empty rows.
+            if (IsShowingOriginalNonMatchingLines)
+            {
+                CaptureOriginalFromRows();
+            }
+
             SetSubtitles(_subtitle, IsOriginalReadOnly || IsShowingOriginalNonMatchingLines ? null : _subtitleOriginal);
-            ReapplyOriginalReference();
+            ReapplyOriginalReference(capture: false);
         }
 
         SetSubtitleFormat(saveAsResult.SubtitleFormat);
@@ -20953,7 +21024,10 @@ public partial class MainViewModel :
 
     private async Task DeleteSelectedItems()
     {
-        var selectedItems = _selectedSubtitles?.ToList() ?? [];
+        // The selection may span display-only reference rows (they are selectable so their text
+        // can be read), but they belong to the original, not the working subtitle - deleting one
+        // would permanently drop that line from an editable original on the next capture.
+        var selectedItems = _selectedSubtitles?.Where(p => !p.IsReferenceOnly).ToList() ?? [];
         if (selectedItems.Count == 0)
         {
             return;
@@ -25585,8 +25659,16 @@ public partial class MainViewModel :
                     SetAssaResolution(true);
                 }
 
+                // The rebuild below blanks the original column and drops the reference rows, so an
+                // editable original must be folded back from the rows while they still hold it -
+                // capturing after the rebuild would rebuild the original from empty rows.
+                if (IsShowingOriginalNonMatchingLines)
+                {
+                    CaptureOriginalFromRows();
+                }
+
                 SetSubtitles(_subtitle, IsOriginalReadOnly || IsShowingOriginalNonMatchingLines ? null : _subtitleOriginal);
-                ReapplyOriginalReference();
+                ReapplyOriginalReference(capture: false);
             }
         }
 
