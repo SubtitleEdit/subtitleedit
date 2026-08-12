@@ -178,7 +178,6 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
-using System.Text.Encodings.Web;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Text.RegularExpressions;
@@ -2267,24 +2266,7 @@ public partial class MainViewModel :
             return;
         }
 
-        var json = JsonSerializer.Serialize(Se.Language, new JsonSerializerOptions
-        {
-            WriteIndented = true,
-            PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
-            Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
-
-            // English.json is the base every translation is generated from, so it must not depend on
-            // who saved it: WriteIndented defaults to Environment.NewLine, which gives CRLF on Windows
-            // and LF elsewhere, turning a re-save into a whole-file diff with no real change in it.
-            NewLine = "\n",
-        });
-
-        // Same reason, for the line breaks *inside* the strings: several language classes build their
-        // text with Environment.NewLine, so the same class yields "\r\n" on Windows and "\n" elsewhere
-        // and the file flip-flopped with whoever regenerated it last. Normalize to "\n" here rather
-        // than chase every class - this is the one place the file is written. Only escaped CRLF in
-        // string values matches; a literal backslash-r in the text is escaped as "\\r" and is left be.
-        json = json.Replace("\\r\\n", "\\n");
+        var json = SeLanguage.ToJson(Se.Language);
 
         var currentDirectory = Directory.GetCurrentDirectory();
         var fileName = Path.Combine(currentDirectory, "English.json");
