@@ -396,6 +396,7 @@ public class LanguageGeneral
     public string StartServer { get; set; }
     public string StopServer { get; set; }
     public string PickOutputFolder { get; set; }
+    public string PleaseSelectOutputFolder { get; set; }
     public string PickResolutionFromCurrentVideo { get; set; }
     public string PickResolutionFromVideoDotDotDot { get; set; }
     public string PickSubtitleFile { get; set; }
@@ -1136,6 +1137,7 @@ public class LanguageGeneral
         StartServer = "Start server";
         StopServer = "Stop server";
         PickOutputFolder = "Pick output folder";
+        PleaseSelectOutputFolder = "Please select an output folder";
         PickResolutionFromCurrentVideo = "Pick resolution from current video";
         PickResolutionFromVideoDotDotDot = "Pick resolution from video...";
         PickSubtitleFile = "Pick subtitle file...";

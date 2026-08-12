@@ -93,6 +93,12 @@ public partial class VideoOcrViewModel : ObservableObject
     private bool _previewLoading;
     private bool _previewLoadQueued;
 
+    // The CrispEmbed model the user picked this session, so coming back to a backend re-selects
+    // it. Held here rather than in Se.Settings so browsing the list does not change the saved
+    // choice - see OnSelectedCrispEmbedModelChanged. Empty until they pick one, and the saved
+    // model is the preference until then.
+    private string _lastCrispEmbedModelName = string.Empty;
+
     private static readonly Regex FrameFinderRegex = new(@"[Ff]rame=\s*\d+", RegexOptions.Compiled);
 
     private readonly IWindowService _windowService;
@@ -242,14 +248,17 @@ public partial class VideoOcrViewModel : ObservableObject
             return;
         }
 
-        Se.Settings.Video.VideoOcr.CrispEmbedBackend = value.Name;
-
         foreach (var model in value.Models)
         {
             CrispEmbedModels.Add(new CrispEmbedModelDisplay { Backend = value, Model = model });
         }
 
-        SelectedCrispEmbedModel = CrispEmbedModels.FirstOrDefault(p => p.Model.Name == Se.Settings.Video.VideoOcr.CrispEmbedModel)
+        // The model the user last picked this session, or the saved one until they pick something.
+        var preferred = string.IsNullOrEmpty(_lastCrispEmbedModelName)
+            ? Se.Settings.Video.VideoOcr.CrispEmbedModel
+            : _lastCrispEmbedModelName;
+
+        SelectedCrispEmbedModel = CrispEmbedModels.FirstOrDefault(p => p.Model.Name == preferred)
                                   ?? CrispEmbedModels.FirstOrDefault(p => value.IsModelInstalled(p.Model))
                                   ?? CrispEmbedModels.FirstOrDefault();
     }
@@ -261,7 +270,10 @@ public partial class VideoOcrViewModel : ObservableObject
             return;
         }
 
-        Se.Settings.Video.VideoOcr.CrispEmbedModel = value.Model.Name;
+        // Remembered in the view model, not written straight to Se.Settings: browsing the backend
+        // list changed the saved engine and model even when the window was cancelled. SaveSettings
+        // persists the final choice on OK.
+        _lastCrispEmbedModelName = value.Model.Name;
     }
 
     [RelayCommand]
@@ -320,15 +332,9 @@ public partial class VideoOcrViewModel : ObservableObject
             onModelDownloadClosed: () => (Window as VideoOcrWindow)?.RefreshDownloadDots());
     }
 
-    partial void OnSelectedLlamaCppModelChanged(LlamaCppModelDisplay? value)
-    {
-        if (value == null)
-        {
-            return;
-        }
-
-        Se.Settings.Video.VideoOcr.LlamaCppModel = LlamaCppServerManager.GetModelPath(value.Model.FileName);
-    }
+    // No OnSelectedLlamaCppModelChanged: it used to write Se.Settings.Video.VideoOcr.LlamaCppModel
+    // straight away, so browsing the model list changed the saved choice even when the window was
+    // cancelled. SaveSettings persists the selected model when the window is accepted.
 
     private void UpdateLlamaCppServerButtonText()
     {

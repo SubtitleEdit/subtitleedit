@@ -32,11 +32,11 @@ public class SettingsPersistenceTests
     public void ApplyMinGap_RemembersTheGap()
     {
         using var _ = new SettingsScope(
-            "Tools.ApplyMinGapMsOrFrames",
+            "Tools.ApplyMinGapMilliseconds",
             "General.MinimumBetweenLines.Milliseconds",
             "General.UseFrameMode");
 
-        Se.Settings.Tools.ApplyMinGapMsOrFrames = 0;
+        Se.Settings.Tools.ApplyMinGapMilliseconds = 0;
         Se.Settings.General.MinimumBetweenLines.Milliseconds = 24;
         Se.Settings.General.UseFrameMode = false;
 
@@ -53,6 +53,53 @@ public class SettingsPersistenceTests
 
         // The dialog keeps its own copy - the app-wide default is left alone.
         Assert.Equal(24, Se.Settings.General.MinimumBetweenLines.Milliseconds);
+    }
+
+    /// <summary>
+    /// The gap box holds frames in frame mode and milliseconds otherwise. Keeping both in one
+    /// settings key meant a gap saved as 120 ms reopened as 120 frames (five seconds at 24 fps)
+    /// once the user switched the time format.
+    /// </summary>
+    [Fact]
+    public void ApplyMinGap_KeepsMillisecondsAndFramesApart()
+    {
+        using var _ = new SettingsScope(
+            "Tools.ApplyMinGapMilliseconds",
+            "Tools.ApplyMinGapFrames",
+            "General.MinimumBetweenLines.Milliseconds",
+            "General.MinimumBetweenLines.Frames",
+            "General.UseFrameMode");
+
+        Se.Settings.Tools.ApplyMinGapMilliseconds = 0;
+        Se.Settings.Tools.ApplyMinGapFrames = 0;
+        Se.Settings.General.MinimumBetweenLines.Milliseconds = 24;
+        Se.Settings.General.MinimumBetweenLines.Frames = 2;
+
+        Se.Settings.General.UseFrameMode = false;
+        var msVm = new ApplyMinGapViewModel();
+        Invoke(msVm, "LoadSettings");
+        Set(msVm, "MinGapMsOrFrames", 120);
+        Invoke(msVm, "SaveSettings");
+
+        // Switching to frame mode must not read the 120 back as a frame count.
+        Se.Settings.General.UseFrameMode = true;
+        var frameVm = new ApplyMinGapViewModel();
+        Invoke(frameVm, "LoadSettings");
+        Assert.Equal(2, Get(frameVm, "MinGapMsOrFrames")); // the general frame default
+
+        Set(frameVm, "MinGapMsOrFrames", 3);
+        Invoke(frameVm, "SaveSettings");
+
+        // ...and back again: each unit remembers its own last value.
+        Se.Settings.General.UseFrameMode = false;
+        var backToMs = new ApplyMinGapViewModel();
+        Invoke(backToMs, "LoadSettings");
+        Assert.Equal(120, Get(backToMs, "MinGapMsOrFrames"));
+
+        Se.Settings.General.UseFrameMode = true;
+        var backToFrames = new ApplyMinGapViewModel();
+        Invoke(backToFrames, "LoadSettings");
+        Assert.Equal(3, Get(backToFrames, "MinGapMsOrFrames"));
     }
 
     [Fact]

@@ -107,14 +107,22 @@ public static class VideoOcrLineBuilder
             if (line.Length == 0 ||
                 line.StartsWith("```", StringComparison.Ordinal) ||
                 line.StartsWith("You are an OCR engine", StringComparison.OrdinalIgnoreCase) ||
-                line == lastLine ||
                 !line.Any(char.IsLetterOrDigit))
             {
                 continue;
             }
 
+            // Strip before the repeat check, not after: a model that emits the same line twice
+            // and emphasises only the second one ("Hello" then "**Hello**") got past a check on
+            // the raw text and produced a subtitle with the line in it twice.
+            line = StripMarkdownEmphasis(line);
+            if (line == lastLine)
+            {
+                continue;
+            }
+
             lastLine = line;
-            kept.Add(StripMarkdownEmphasis(line));
+            kept.Add(line);
 
             if (kept.Count >= 4) // a subtitle is at most a few short lines
             {

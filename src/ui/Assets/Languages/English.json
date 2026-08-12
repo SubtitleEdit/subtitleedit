@@ -396,6 +396,7 @@
     "startServer": "Start server",
     "stopServer": "Stop server",
     "pickOutputFolder": "Pick output folder",
+    "pleaseSelectOutputFolder": "Please select an output folder",
     "pickResolutionFromCurrentVideo": "Pick resolution from current video",
     "pickResolutionFromVideoDotDotDot": "Pick resolution from video...",
     "pickSubtitleFile": "Pick subtitle file...",

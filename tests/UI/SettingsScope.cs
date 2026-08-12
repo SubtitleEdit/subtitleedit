@@ -14,7 +14,7 @@ namespace UITests;
 /// back to.
 ///
 /// Paths are the dotted names below <c>Se.Settings</c>, e.g. "General.MaxNumberOfLines" or
-/// "Tools.ApplyMinGapMsOrFrames".
+/// "Tools.ApplyMinGapMilliseconds".
 /// </summary>
 internal sealed class SettingsScope : IDisposable
 {

@@ -78,7 +78,11 @@ public class SeTools
     public int MergeShortLinesMaxNumberOfLines { get; set; }
     public int ApplyDurationLimitsMinDurationMs { get; set; }
     public int ApplyDurationLimitsMaxDurationMs { get; set; }
-    public int ApplyMinGapMsOrFrames { get; set; }
+
+    // Two keys, not one: the Apply minimum gap box holds frames in frame mode and milliseconds
+    // otherwise, so a single number came back in the wrong unit after a time-format switch.
+    public int ApplyMinGapMilliseconds { get; set; }
+    public int ApplyMinGapFrames { get; set; }
     public string UnicodeSymbolsToInsert { get; set; }
     public string MusicSymbol { get; set; }
     public string MusicSymbolReplace { get; set; }

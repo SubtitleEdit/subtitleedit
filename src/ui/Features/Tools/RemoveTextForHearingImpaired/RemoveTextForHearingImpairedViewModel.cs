@@ -18,7 +18,7 @@ using System.Timers;
 
 namespace Nikse.SubtitleEdit.Features.Tools.RemoveTextForHearingImpaired;
 
-public partial class RemoveTextForHearingImpairedViewModel : ObservableObject
+public partial class RemoveTextForHearingImpairedViewModel : ObservableObject, IClosingCleanup
 {
     public class LanguageItem
     {
@@ -83,6 +83,7 @@ public partial class RemoveTextForHearingImpairedViewModel : ObservableObject
     private Subtitle _subtitle;
     private RemoveTextForHI? _removeTextForHiLib;
     private readonly Timer _timer;
+    private volatile bool _isClosing;
     private readonly IWindowService _windowService;
     private Action<Subtitle>? _applyCallback;
 
@@ -309,6 +310,11 @@ public partial class RemoveTextForHearingImpairedViewModel : ObservableObject
 
     private void TimerElapsed(object? sender, ElapsedEventArgs e)
     {
+        if (_isClosing)
+        {
+            return;
+        }
+
         _timer.Stop();
 
         try
@@ -320,7 +326,26 @@ public partial class RemoveTextForHearingImpairedViewModel : ObservableObject
             return;
         }
 
-        _timer.Start();
+        // Guard the restart: OnClosingCleanup may have disposed the timer while this handler ran,
+        // and Start() on a disposed timer throws ObjectDisposedException (no longer swallowed on
+        // modern .NET), crashing the app from a thread-pool thread. (#12739)
+        if (!_isClosing)
+        {
+            _timer.Start();
+        }
+    }
+
+    /// <summary>
+    /// Runs on every close path via the central hook in <see cref="UiUtil.InitializeWindow"/>.
+    /// Without it the 500 ms preview timer went on ticking for the rest of the session -
+    /// regenerating the whole fix list on the UI thread over a closed window's subtitle - and a
+    /// fresh timer was added every time the dialog was opened, from the tools menu and from batch
+    /// convert alike.
+    /// </summary>
+    public void OnClosingCleanup()
+    {
+        _isClosing = true;
+        _timer.StopAndDispose(TimerElapsed);
     }
 
     private void GeneratePreview()
