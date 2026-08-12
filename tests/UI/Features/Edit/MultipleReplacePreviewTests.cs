@@ -12,6 +12,7 @@ using Nikse.SubtitleEdit.Features.Options.Settings;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Logic.Media;
+using Optris.Icons.Avalonia;
 using System;
 using System.Linq;
 using System.Reflection;
@@ -272,10 +273,16 @@ public class MultipleReplacePreviewTests
         Assert.True(inactive.HasError);
     }
 
-    // The marker is a control in the tree, not just a view model flag.
-    [AvaloniaFact]
-    public void BrokenRegexRule_ShowsAWarningInTheTree()
+    // The marker is a control in the tree, not just a view model flag. The message rides on a
+    // tooltip, so it follows the "show hints" setting like every other tip in the app - but the
+    // icon itself has to be there either way, otherwise a broken rule looks like a working one.
+    [AvaloniaTheory]
+    [InlineData(true)]
+    [InlineData(false)]
+    public void BrokenRegexRule_ShowsAWarningInTheTree(bool showHints)
     {
+        var oldShowHints = Se.Settings.Appearance.ShowHints;
+        Se.Settings.Appearance.ShowHints = showHints;
         var vm = NewViewModel();
         var category = AddCategory(vm, "c1");
         var regexRule = AddRule(category, "(", string.Empty, MultipleReplaceType.RegularExpression);
@@ -290,14 +297,16 @@ public class MultipleReplacePreviewTests
             Assert.True(regexRule.HasError);
             var marker = vm.RulesTreeView.GetVisualDescendants()
                 .OfType<Label>()
-                .FirstOrDefault(l => Equals(ToolTip.GetTip(l), regexRule.ErrorMessage));
+                .FirstOrDefault(l => Attached.GetIcon(l) == IconNames.Alert);
 
             Assert.NotNull(marker);
             Assert.True(marker!.IsVisible);
+            Assert.Equal(showHints ? regexRule.ErrorMessage : null, ToolTip.GetTip(marker));
         }
         finally
         {
             window.Close();
+            Se.Settings.Appearance.ShowHints = oldShowHints;
         }
     }
 

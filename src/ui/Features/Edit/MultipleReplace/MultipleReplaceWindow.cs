@@ -231,7 +231,10 @@ public class MultipleReplaceWindow : Window
             };
             Attached.SetIcon(labelError, IconNames.Alert);
             labelError.Bind(Visual.IsVisibleProperty, new Binding(nameof(RuleTreeNode.HasError)) { Source = node });
-            labelError.Bind(ToolTip.TipProperty, new Binding(nameof(RuleTreeNode.ErrorMessage)) { Source = node });
+            if (Se.Settings.Appearance.ShowHints)
+            {
+                labelError.Bind(ToolTip.TipProperty, new Binding(nameof(RuleTreeNode.ErrorMessage)) { Source = node });
+            }
 
             var buttonActions = new Button
             {
