@@ -306,7 +306,8 @@ public partial class ExportPlainTextViewModel : ObservableObject, IClosingCleanu
     [RelayCommand]
     private void Cancel()
     {
-        SaveSettings();
+        // No SaveSettings: cancelling has to leave the options as they were, the way Escape
+        // already did - so the two ways out of the dialog no longer disagree.
         Window?.Close();
     }
 

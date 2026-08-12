@@ -70,6 +70,15 @@ public class SeTools
     public int SplitRebalanceLongLinesSingleLineMaxLength { get; set; }
     public int SplitRebalanceLongLinesMaxNumberOfLines { get; set; }
     public int SplitRebalanceLongLinesUnbreakShorterThan { get; set; }
+
+    // Per-dialog copies of the general defaults, so a one-off run does not rewrite the app-wide
+    // setting - and the dialog still opens on what it was last used with. 0 means "not saved yet";
+    // every one of these is >= 1 in the UI. Same shape as the split/rebalance keys above (#13514).
+    public int MergeShortLinesSingleLineMaxLength { get; set; }
+    public int MergeShortLinesMaxNumberOfLines { get; set; }
+    public int ApplyDurationLimitsMinDurationMs { get; set; }
+    public int ApplyDurationLimitsMaxDurationMs { get; set; }
+    public int ApplyMinGapMsOrFrames { get; set; }
     public string UnicodeSymbolsToInsert { get; set; }
     public string MusicSymbol { get; set; }
     public string MusicSymbolReplace { get; set; }
