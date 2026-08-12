@@ -96,6 +96,20 @@ public class BatchConverterMultipleReplaceRegexTests
         Assert.Equal("The color is red.", text);
     }
 
+    // A skipped rule is only useful in the log if the log says which rule. RuleInfo is
+    // "category: description", and the description is optional and not unique, so the pattern -
+    // the one thing that identifies the rule in the user's list - has to be in there.
+    [Theory]
+    [InlineData("cat: strip dashes", "rule '(a+)+b' (cat: strip dashes)")]
+    [InlineData("cat: ", "rule '(a+)+b' (cat)")]
+    [InlineData("", "rule '(a+)+b'")]
+    public void DescribeRule_AlwaysNamesThePattern(string ruleInfo, string expected)
+    {
+        var expression = new ReplaceExpression("(a+)+b", "x", ReplaceExpression.SearchTypeRegularExpression, ruleInfo);
+
+        Assert.Equal(expected, BatchConverter.DescribeRule(expression));
+    }
+
     [Fact]
     public async Task CatastrophicPattern_GivesUpAndLeavesTheRestOfTheRulesWorking()
     {

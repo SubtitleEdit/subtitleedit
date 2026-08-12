@@ -1870,7 +1870,7 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
                     {
                         // Leave the line alone rather than the whole batch: the timeout already
                         // cost five seconds here and every remaining line would cost the same.
-                        SeLogger.Error($"Batch convert, multiple replace: rule '{item.RuleInfo}' timed out on line {i + 1} - skipping it for the rest of this file");
+                        SeLogger.Error($"Batch convert, multiple replace: {DescribeRule(item)} timed out on line {i + 1} - skipping it for the rest of this file");
                         timedOut.Add(item.FindWhat);
                     }
                 }
@@ -1937,6 +1937,21 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
         }
 
         return replaceExpressions;
+    }
+
+    /// <summary>
+    /// A rule named so the log pinpoints it. RuleInfo is "category: description" and a description
+    /// is optional - and not unique when it is there - so the pattern is what actually identifies
+    /// the rule in the user's list.
+    /// </summary>
+    internal static string DescribeRule(ReplaceExpression item)
+    {
+        var info = (item.RuleInfo ?? string.Empty).TrimEnd();
+        info = info.TrimEnd(':').TrimEnd();
+
+        return string.IsNullOrEmpty(info)
+            ? $"rule '{item.FindWhat}'"
+            : $"rule '{item.FindWhat}' ({info})";
     }
 
     private Subtitle RemoveFormatting(Subtitle subtitle)

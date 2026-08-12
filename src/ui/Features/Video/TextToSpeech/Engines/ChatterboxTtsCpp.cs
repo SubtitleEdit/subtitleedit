@@ -890,9 +890,10 @@ public class ChatterboxTtsCpp : ITtsEngine
     /// the conversion only ever runs once per file.
     /// </summary>
     /// <returns>
-    /// false only when there is a reference that needs converting and the conversion failed. No
-    /// reference at all (the baked default voice) and a reference that has gone missing are both
-    /// the server's business, not a conversion failure.
+    /// false only when there is a reference that needs converting and the conversion failed -
+    /// on this call, or on an earlier one against the same file contents. No reference at all
+    /// (the baked default voice) and a reference that has gone missing are both the server's
+    /// business, not a conversion failure.
     /// </returns>
     internal static bool EnsureCloneReferenceIsUsable(string? voiceFilePath)
     {
@@ -902,17 +903,45 @@ public class ChatterboxTtsCpp : ITtsEngine
             return true;
         }
 
+        FileStamp stamp;
+        try
+        {
+            var info = new FileInfo(voiceFilePath);
+            if (!info.Exists)
+            {
+                // A reference that has gone missing is the server's business, not a conversion
+                // failure.
+                return true;
+            }
+
+            stamp = new FileStamp(info.LastWriteTimeUtc.Ticks, info.Length);
+        }
+        catch (Exception exception)
+        {
+            Se.WriteToolsLog($"Chatterbox TTS: could not stat the reference voice \"{voiceFilePath}\" ({exception.Message}) - sending it as it is");
+            return true;
+        }
+
         // This runs per line, so a repair that cannot succeed - no ffmpeg on the machine, a WAV
         // ffmpeg will not decode - must be attempted once, not once for every line of the
         // subtitle. Checked ahead of the header read as well: that read logs when it fails, and
         // a tools-log entry per line is its own kind of runaway. A repair that succeeds needs no
         // guard at all - the file then passes the header check below and never comes back here.
-        if (FailedCloneReferenceRepairs.ContainsKey(voiceFilePath))
+        //
+        // Keyed on the file's stamp, not its path alone: the voices folder is documented and the
+        // user may well fix the WAV in place while the session is running, and a path-only guard
+        // would keep refusing the repaired file until restart.
+        if (FailedCloneReferenceRepairs.TryGetValue(voiceFilePath, out var failedStamp))
         {
-            return false;
+            if (failedStamp == stamp)
+            {
+                return false;
+            }
+
+            FailedCloneReferenceRepairs.TryRemove(voiceFilePath, out _);
         }
 
-        if (!File.Exists(voiceFilePath) || IsCloneReadyReferenceWav(voiceFilePath))
+        if (IsCloneReadyReferenceWav(voiceFilePath))
         {
             return true;
         }
@@ -925,17 +954,21 @@ public class ChatterboxTtsCpp : ITtsEngine
             return true;
         }
 
-        FailedCloneReferenceRepairs[voiceFilePath] = 0;
+        // The conversion writes a temp file and only moves it on success, so a failure leaves the
+        // reference exactly as it was - the stamp read above still describes it.
+        FailedCloneReferenceRepairs[voiceFilePath] = stamp;
         return false;
     }
 
+    /// <summary>Last write time and length, enough to tell a replaced reference WAV from the old one.</summary>
+    private readonly record struct FileStamp(long Ticks, long Length);
+
     /// <summary>
-    /// Reference WAVs whose in-place repair has already been tried and failed, so it is not
-    /// retried for every remaining line. Re-import of the voice goes through
-    /// <see cref="ImportVoice"/>, which writes a new file name, so a fixed voice is never
-    /// held back by a stale entry here.
+    /// Reference WAVs whose in-place repair has already been tried and failed, against the file
+    /// contents that failed, so it is not retried for every remaining line - but a file the user
+    /// replaces or repairs mid-session gets a fresh attempt.
     /// </summary>
-    private static readonly ConcurrentDictionary<string, byte> FailedCloneReferenceRepairs =
+    private static readonly ConcurrentDictionary<string, FileStamp> FailedCloneReferenceRepairs =
         new(StringComparer.OrdinalIgnoreCase);
 
     /// <summary>
