@@ -19,7 +19,7 @@ public class SplitBreakLongLinesWindow : Window
     public SplitBreakLongLinesWindow(SplitBreakLongLinesViewModel vm)
     {
         UiUtil.InitializeWindow(this, GetType().Name);
-        Title = Se.Language.Tools.SplitBreakLongLines.Title;
+        Title = UiUtil.MakeWindowTitle(Se.Language.Tools.SplitBreakLongLines.Title);
         CanResize = true;
         Width = 900;
         Height = 800;

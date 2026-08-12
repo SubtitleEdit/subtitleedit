@@ -17,7 +17,7 @@ public class AdjustDurationWindow : Window
     public AdjustDurationWindow(AdjustDurationViewModel vm)
     {
         UiUtil.InitializeWindow(this, GetType().Name);
-        Title = Se.Language.Tools.AdjustDurations.Title;
+        Title = UiUtil.MakeWindowTitle(Se.Language.Tools.AdjustDurations.Title);
         SizeToContent = SizeToContent.WidthAndHeight;
         CanResize = false;
         vm.Window = this;

@@ -14,7 +14,7 @@ public class BeautifyTimeCodesWindow : Window
     public BeautifyTimeCodesWindow(BeautifyTimeCodesViewModel vm)
     {
         UiUtil.InitializeWindow(this, GetType().Name);
-        Title = Se.Language.Tools.BeautifyTimeCodes.Title;
+        Title = UiUtil.MakeWindowTitle(Se.Language.Tools.BeautifyTimeCodes.Title);
         CanResize = true;
         Width = 1100;
         Height = 600;

@@ -30,6 +30,7 @@ public class LanguageFile
     public string SaveCompareHtmlTitle { get; set; }
     public string PickMatroskaTrackX { get; set; }
     public string PickTransportStreamTrackX { get; set; }
+    public string PickMp4TrackX { get; set; }
     public string RosettaProperties { get; set; }
     public string RosettaFontSize { get; set; }
     public string XProperties { get; set; }
@@ -54,6 +55,7 @@ public class LanguageFile
         SaveCompareHtmlTitle = "Save compare HTML file";
         PickMatroskaTrackX = "Pick Matroska track - {0}";
         PickTransportStreamTrackX = "Pick transport stream track - {0}";
+        PickMp4TrackX = "Pick MP4 track - {0}";
         RosettaProperties = "Timed Text Rosetta IMSC properties";
         RosettaFontSize = "Font size (row height)";
         XProperties = "{0} properties";

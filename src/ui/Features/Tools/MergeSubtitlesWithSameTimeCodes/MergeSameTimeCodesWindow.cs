@@ -23,7 +23,7 @@ public class MergeSameTimeCodesWindow : Window
     public MergeSameTimeCodesWindow(MergeSameTimeCodesViewModel vm)
     {
         UiUtil.InitializeWindow(this, GetType().Name);
-        Title = Se.Language.General.MergeLinesWithSameTimeCodes;
+        Title = UiUtil.MakeWindowTitle(Se.Language.General.MergeLinesWithSameTimeCodes);
         CanResize = true;
         Width = 800;
         Height = 750;
