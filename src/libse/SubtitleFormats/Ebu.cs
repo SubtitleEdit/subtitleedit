@@ -1458,7 +1458,23 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 }
 
                 var text = p.Text.Trim(Utilities.NewLineChars);
-                if (text.StartsWith("{\\an7}", StringComparison.Ordinal) || text.StartsWith("{\\an8}", StringComparison.Ordinal) || text.StartsWith("{\\an9}", StringComparison.Ordinal))
+
+var teletextPosition = -1;
+var isTeletext =
+    header.DisplayStandardCode == "1" ||
+    header.DisplayStandardCode == "2";
+
+var hasTeletextPosition =
+    isTeletext &&
+    int.TryParse(p.MarginV, out teletextPosition) &&
+    teletextPosition >= 0 &&
+    teletextPosition <= 22;
+
+if (hasTeletextPosition)
+{
+    tti.VerticalPosition = (byte)teletextPosition;
+}
+                else if (text.StartsWith("{\\an7}", StringComparison.Ordinal) || text.StartsWith("{\\an8}", StringComparison.Ordinal) || text.StartsWith("{\\an9}", StringComparison.Ordinal))
                 {
                     tti.VerticalPosition = (byte)Configuration.Settings.SubtitleSettings.EbuStlMarginTop; // top (vertical)
                     if (header.DisplayStandardCode == "1" || header.DisplayStandardCode == "2") // teletext

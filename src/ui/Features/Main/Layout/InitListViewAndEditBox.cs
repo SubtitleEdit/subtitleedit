@@ -379,7 +379,23 @@ public static partial class InitListViewAndEditBox
                 var textBlock = new TextBlock
                 {
                     VerticalAlignment = VerticalAlignment.Center,
-
+                    HorizontalAlignment = HorizontalAlignment.Stretch,
+[!TextBlock.TextAlignmentProperty] = new MultiBinding
+{
+    Converter = TeletextAlignmentPreviewConverter.Instance,
+    Bindings =
+    {
+        new Binding(nameof(vm.TeletextAlignmentPreview))
+        {
+            Source = vm,
+            Mode = BindingMode.OneWay
+        },
+        new Binding(nameof(SubtitleLineViewModel.TeletextTextAlignment))
+        {
+            Mode = BindingMode.OneWay
+        },
+    },
+},
                     // Lets the subtitle grid context menu find the word under the pointer (live spell check)
                     Tag = SubtitleGridColumnKeys.Text,
                     [!TextBlock.InlinesProperty] = new Binding(nameof(SubtitleLineViewModel.Text)) { Converter = syntaxHighlightingConverter, Mode = BindingMode.OneWay },

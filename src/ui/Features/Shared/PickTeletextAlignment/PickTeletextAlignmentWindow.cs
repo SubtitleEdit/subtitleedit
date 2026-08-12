@@ -55,7 +55,18 @@ public class PickTeletextAlignmentWindow : Window
             {
                 Mode = BindingMode.TwoWay
             });
+var previewCheckBox = new CheckBox
+{
+    Content = "Vorschau",
+};
 
+previewCheckBox.Bind(
+    CheckBox.IsCheckedProperty,
+    new Binding(nameof(vm.Preview))
+    {
+        Mode = BindingMode.TwoWay
+    });
+    
         var okButton = UiUtil.MakeButton("OK", vm.OkCommand).WithMinWidth(100);
         var cancelButton = UiUtil.MakeButton("Cancel", vm.CancelCommand).WithMinWidth(100);
 
@@ -63,6 +74,7 @@ public class PickTeletextAlignmentWindow : Window
         {
             RowDefinitions =
             {
+                new RowDefinition(GridLength.Auto),
                 new RowDefinition(GridLength.Auto),
                 new RowDefinition(GridLength.Auto),
                 new RowDefinition(GridLength.Auto),
@@ -83,6 +95,8 @@ public class PickTeletextAlignmentWindow : Window
         grid.Add(alignmentLabel, 1, 0);
         grid.Add(alignmentBox, 1, 1);
 
+        grid.Add(previewCheckBox, 2, 1);
+
         var buttonPanel = new StackPanel
         {
             Orientation = Orientation.Horizontal,
@@ -93,7 +107,7 @@ public class PickTeletextAlignmentWindow : Window
         buttonPanel.Children.Add(okButton);
         buttonPanel.Children.Add(cancelButton);
 
-        grid.Add(buttonPanel, 2, 1);
+        grid.Add(buttonPanel, 3, 1);
 
         Content = grid;
 

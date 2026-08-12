@@ -286,6 +286,25 @@ public partial class ExportEbuStlViewModel : ObservableObject
             SelectedBottomAlignment = 2;
             SelectedRowsAddByNewLine = 2;
 
+            if (!string.IsNullOrEmpty(_subtitle.Header) &&
+    _subtitle.Header.Length == 1024 &&
+    (_subtitle.Header.Contains("STL24") ||
+     _subtitle.Header.Contains("STL25") ||
+     _subtitle.Header.Contains("STL29") ||
+     _subtitle.Header.Contains("STL30")))
+{
+    try
+    {
+        var encoding = Ebu.GetEncoding(_subtitle.Header.Substring(0, 3));
+        _header = Ebu.ReadHeader(encoding.GetBytes(_subtitle.Header));
+        FillFromHeader(_header);
+    }
+    catch
+    {
+        // Falls der vorhandene Header ungültig ist,
+        // bleiben die normalen Standardwerte aktiv.
+    }
+}
             CheckErrors(_subtitle);
         });
     }

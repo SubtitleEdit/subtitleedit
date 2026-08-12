@@ -63,6 +63,7 @@ public partial class SubtitleLineViewModel : ObservableObject
 
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(TeletextDisplay))]
+    [NotifyPropertyChangedFor(nameof(TeletextTextAlignment))]
     private string _text;
 
     [ObservableProperty]
@@ -149,6 +150,29 @@ return $"{warning}{line} {alignment}";
 }
 
 // HIER direkt dahinter:
+public TextAlignment TeletextTextAlignment
+{
+    get
+    {
+        var text = Text ?? string.Empty;
+
+        if (text.StartsWith("{\\an1}") ||
+            text.StartsWith("{\\an4}") ||
+            text.StartsWith("{\\an7}"))
+        {
+            return TextAlignment.Left;
+        }
+
+        if (text.StartsWith("{\\an3}") ||
+            text.StartsWith("{\\an6}") ||
+            text.StartsWith("{\\an9}"))
+        {
+            return TextAlignment.Right;
+        }
+
+        return TextAlignment.Center;
+    }
+}
 public void RefreshTeletextDisplay()
 {
     OnPropertyChanged(nameof(TeletextDisplay));

@@ -18,6 +18,9 @@ public partial class PickTeletextAlignmentViewModel : ObservableObject
     [ObservableProperty]
     private string horizontalAlignment = "Center";
 
+    [ObservableProperty]
+private bool preview;
+
     [RelayCommand]
     private void Ok()
     {
@@ -33,8 +36,10 @@ public partial class PickTeletextAlignmentViewModel : ObservableObject
 
 
 // NEU: aktuelle Teletext-Zeile des Untertitels einlesen
-internal void Initialize(SubtitleLineViewModel? selectedSubtitle)
+internal void Initialize(SubtitleLineViewModel? selectedSubtitle, bool preview)
 {
+     Preview = preview;
+     
     if (selectedSubtitle == null)
     {
         TeletextLine = 23;

@@ -375,6 +375,8 @@ public partial class MainViewModel :
     [ObservableProperty] private ObservableCollection<string> _videoSeekAmounts;
     [ObservableProperty] private string _selectedVideoSeekAmount;
     [ObservableProperty] private bool _showWaveformDisplayModeSeparator;
+    [ObservableProperty]
+private bool _teletextAlignmentPreview;
     [ObservableProperty] private bool _showWaveformOnlyWaveform;
     [ObservableProperty] private bool _showWaveformOnlySpectrogram;
     [ObservableProperty] private bool _showWaveformWaveformAndSpectrogram;
@@ -12905,10 +12907,12 @@ private async Task ShowTeletextAlignmentPicker()
     var selectedItems = SubtitleGridSelectedItems;
 
     var result = await ShowDialogAsync<PickTeletextAlignmentWindow, PickTeletextAlignmentViewModel>(
-        vm => vm.Initialize(selected));
+        vm => vm.Initialize(selected, TeletextAlignmentPreview));
 
     if (result.OkPressed)
 {
+    TeletextAlignmentPreview = result.Preview;
+    
     var marginV = (result.TeletextLine - 1).ToString();
 
     foreach (var item in selectedItems)
