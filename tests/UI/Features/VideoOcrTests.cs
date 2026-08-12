@@ -17,6 +17,19 @@ public class VideoOcrTests
         };
     }
 
+    [Theory]
+    // DeepSeek-OCR-2 wraps text it reads as emphasised; the markers must not reach the subtitle.
+    [InlineData("It was **built** back in 1948.", "It was built back in 1948.")]
+    [InlineData("**Meet me at the station tonight.**", "Meet me at the station tonight.")]
+    [InlineData("__Hello__ world", "Hello world")]
+    // Censoring asterisks are not emphasis - leave them exactly as read.
+    [InlineData("What the f*** was that?", "What the f*** was that?")]
+    [InlineData("A * B * C", "A * B * C")]
+    public void CleanOcrResult_StripsMarkdownEmphasis_ButKeepsLoneAsterisks(string raw, string expected)
+    {
+        Assert.Equal(expected, VideoOcrLineBuilder.CleanOcrResult(raw));
+    }
+
     [Fact]
     public void Build_SimilarConsecutiveTexts_MergedIntoOneLine()
     {

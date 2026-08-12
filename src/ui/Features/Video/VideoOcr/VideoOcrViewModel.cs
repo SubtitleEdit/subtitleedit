@@ -38,6 +38,7 @@ public partial class VideoOcrViewModel : ObservableObject
     [ObservableProperty] private bool _isOllamaEngine;
     [ObservableProperty] private bool _isGlmEngine;
     [ObservableProperty] private bool _isLlamaCppEngine;
+    [ObservableProperty] private bool _isCrispEmbedEngine;
     [ObservableProperty] private ObservableCollection<OcrLanguage2> _paddleLanguages;
     [ObservableProperty] private OcrLanguage2? _selectedPaddleLanguage;
     [ObservableProperty] private string _ollamaUrl;
@@ -51,6 +52,10 @@ public partial class VideoOcrViewModel : ObservableObject
     [ObservableProperty] private LlamaCppModelDisplay? _selectedLlamaCppModel;
     [ObservableProperty] private string _llamaCppLanguage;
     [ObservableProperty] private string _llamaCppServerButtonText;
+    [ObservableProperty] private ObservableCollection<CrispEmbedBackend> _crispEmbedBackends;
+    [ObservableProperty] private CrispEmbedBackend? _selectedCrispEmbedBackend;
+    [ObservableProperty] private ObservableCollection<CrispEmbedModelDisplay> _crispEmbedModels;
+    [ObservableProperty] private CrispEmbedModelDisplay? _selectedCrispEmbedModel;
     [ObservableProperty] private int _framesPerSecond;
     [ObservableProperty] private int _brightnessMinimum;
     [ObservableProperty] private int _textSimilarityPercent;
@@ -111,6 +116,8 @@ public partial class VideoOcrViewModel : ObservableObject
         LlamaCppModels = new ObservableCollection<LlamaCppModelDisplay>();
         LlamaCppLanguage = string.Empty;
         LlamaCppServerButtonText = Se.Language.General.StartServer;
+        CrispEmbedBackends = new ObservableCollection<CrispEmbedBackend>(CrispEmbedEngine.GetBackends());
+        CrispEmbedModels = new ObservableCollection<CrispEmbedModelDisplay>();
         ProgressText = string.Empty;
         PreviewPositionText = string.Empty;
         ScanAreaText = string.Empty;
@@ -204,12 +211,107 @@ public partial class VideoOcrViewModel : ObservableObject
         IsOllamaEngine = value.EngineType == OcrEngineType.Ollama;
         IsGlmEngine = value.EngineType == OcrEngineType.Glm;
         IsLlamaCppEngine = value.EngineType == OcrEngineType.LlamaCpp;
+        IsCrispEmbedEngine = value.EngineType == OcrEngineType.CrispEmbed;
 
         if (IsLlamaCppEngine && LlamaCppModels.Count == 0)
         {
             var savedModelName = Path.GetFileName(Se.Settings.Video.VideoOcr.LlamaCppModel);
             SelectedLlamaCppModel = LlamaCppDownloadHelper.PopulateModels(LlamaCppModels, LlamaCppServerManager.OcrModels, savedModelName);
         }
+
+        if (IsCrispEmbedEngine && SelectedCrispEmbedBackend == null)
+        {
+            SelectedCrispEmbedBackend =
+                CrispEmbedBackends.FirstOrDefault(p => p.Name == Se.Settings.Video.VideoOcr.CrispEmbedBackend)
+                ?? CrispEmbedBackends.FirstOrDefault();
+        }
+    }
+
+    partial void OnSelectedCrispEmbedBackendChanged(CrispEmbedBackend? value)
+    {
+        CrispEmbedModels.Clear();
+        if (value == null)
+        {
+            SelectedCrispEmbedModel = null;
+            return;
+        }
+
+        Se.Settings.Video.VideoOcr.CrispEmbedBackend = value.Name;
+
+        foreach (var model in value.Models)
+        {
+            CrispEmbedModels.Add(new CrispEmbedModelDisplay { Backend = value, Model = model });
+        }
+
+        SelectedCrispEmbedModel = CrispEmbedModels.FirstOrDefault(p => p.Model.Name == Se.Settings.Video.VideoOcr.CrispEmbedModel)
+                                  ?? CrispEmbedModels.FirstOrDefault(p => value.IsModelInstalled(p.Model))
+                                  ?? CrispEmbedModels.FirstOrDefault();
+    }
+
+    partial void OnSelectedCrispEmbedModelChanged(CrispEmbedModelDisplay? value)
+    {
+        if (value == null)
+        {
+            return;
+        }
+
+        Se.Settings.Video.VideoOcr.CrispEmbedModel = value.Model.Name;
+    }
+
+    [RelayCommand]
+    private async Task DownloadCrispEmbed()
+    {
+        if (Window == null || SelectedCrispEmbedBackend is not { } backend || SelectedCrispEmbedModel is not { } model)
+        {
+            return;
+        }
+
+        if (backend.IsModelInstalled(model.Model))
+        {
+            var answer = await MessageBox.Show(
+                Window,
+                Se.Language.General.Download,
+                string.Format(Se.Language.Translate.XIsAlreadyDownloadedReDownload, model.Model.Name),
+                MessageBoxButtons.YesNo,
+                MessageBoxIcon.Question);
+
+            if (answer != MessageBoxResult.Yes)
+            {
+                return;
+            }
+        }
+
+        await EnsureCrispEmbedReady(forceModelDownload: true);
+    }
+
+    /// <summary>
+    /// Re-downloads the CrispEmbed engine binaries, re-asking which hardware build to use - the
+    /// CPU/Vulkan/CUDA choice is otherwise only offered on first install (issue #13400).
+    /// </summary>
+    [RelayCommand]
+    private async Task ReDownloadCrispEmbedEngine()
+    {
+        if (Window == null)
+        {
+            return;
+        }
+
+        await CrispEmbedDownloadHelper.DownloadEngineAsync(
+            Window, _windowService,
+            onEngineDownloadClosed: () => (Window as VideoOcrWindow)?.RefreshDownloadDots());
+    }
+
+    private async Task<bool> EnsureCrispEmbedReady(bool forceModelDownload = false)
+    {
+        if (Window == null || SelectedCrispEmbedBackend is not { } backend || SelectedCrispEmbedModel is not { } model)
+        {
+            return false;
+        }
+
+        return await CrispEmbedDownloadHelper.EnsureReadyAsync(
+            Window, _windowService, backend, model.Model, forceModelDownload,
+            onEngineDownloadClosed: () => (Window as VideoOcrWindow)?.RefreshDownloadDots(),
+            onModelDownloadClosed: () => (Window as VideoOcrWindow)?.RefreshDownloadDots());
     }
 
     partial void OnSelectedLlamaCppModelChanged(LlamaCppModelDisplay? value)
@@ -883,6 +985,49 @@ public partial class VideoOcrViewModel : ObservableObject
                     llamaCppOcr.Ocr(bitmap, url, modelName, LlamaCppLanguage, prompt, cancellationToken)),
                 () => llamaCppOcr.Error, reportProgress, addPreviewLine, cancellationToken);
         }
+        else if (engineType == OcrEngineType.CrispEmbed)
+        {
+            await OcrGroupsWithCrispEmbed(ocrGroups, reportProgress, addPreviewLine, cancellationToken);
+        }
+    }
+
+    /// <summary>
+    /// Runs the frame groups through CrispEmbed. The VLM backends load the GGUF into one
+    /// crispembed-server instance that stays up for the whole scan - a video produces hundreds of
+    /// groups and the model load alone is seconds, so starting a server per frame would be
+    /// unusable. PP-OCRv6 is a detector+recognizer pair driven through the CLI instead, one
+    /// invocation per frame, which is what <see cref="CrispEmbedOcr"/> expects.
+    /// </summary>
+    private async Task OcrGroupsWithCrispEmbed(
+        List<VideoOcrFrameGroup> ocrGroups,
+        Action reportProgress,
+        Action<VideoOcrFrameGroup> addPreviewLine,
+        CancellationToken cancellationToken)
+    {
+        if (SelectedCrispEmbedBackend is not { } backend || SelectedCrispEmbedModel is not { } model)
+        {
+            throw new Exception(Se.Language.Ocr.CrispEmbedNotDownloaded);
+        }
+
+        using var engine = new CrispEmbedOcr(Se.Settings.Ocr.CrispEmbedOcrTimeoutMinutes);
+
+        var started = backend.UsesTextDetector
+            ? engine.StartCliPipeline(
+                CrispEmbedEngine.GetCliExecutable(),
+                backend.GetModelPath(model.Model),
+                backend.GetDetectorPath(model.Model))
+            : await engine.StartServerAsync(
+                CrispEmbedEngine.GetServerExecutable(),
+                backend.GetModelPath(model.Model),
+                cancellationToken);
+
+        if (!started)
+        {
+            throw new Exception(engine.Error);
+        }
+
+        await RunLlmOcr(ocrGroups, group => OcrWithBitmap(group, bitmap => engine.Ocr(bitmap, cancellationToken)),
+            () => engine.Error, reportProgress, addPreviewLine, cancellationToken);
     }
 
     private static async Task<string> OcrWithBitmap(VideoOcrFrameGroup group, Func<SKBitmap, Task<string>> ocr)
@@ -950,6 +1095,11 @@ public partial class VideoOcrViewModel : ObservableObject
             return await EnsureLlamaCppReady();
         }
 
+        if (engineType == OcrEngineType.CrispEmbed)
+        {
+            return await EnsureCrispEmbedReady();
+        }
+
         return true;
     }
 
@@ -1007,6 +1157,8 @@ public partial class VideoOcrViewModel : ObservableObject
             settings.LlamaCppModel = LlamaCppServerManager.GetModelPath(SelectedLlamaCppModel.Model.FileName);
         }
         settings.LlamaCppLanguage = LlamaCppLanguage;
+        settings.CrispEmbedBackend = SelectedCrispEmbedBackend?.Name ?? settings.CrispEmbedBackend;
+        settings.CrispEmbedModel = SelectedCrispEmbedModel?.Model.Name ?? settings.CrispEmbedModel;
         settings.FramesPerSecond = FramesPerSecond;
         settings.BrightnessMinimum = BrightnessMinimum;
         settings.TextSimilarityPercent = TextSimilarityPercent;
