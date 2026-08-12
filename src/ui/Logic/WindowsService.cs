@@ -156,8 +156,12 @@ namespace Nikse.SubtitleEdit.Logic
             ApplyRightToLeftSettings(window);
             UiTheme.ApplyScaleToWindow(window);
 
+            // Show without activating: the callers are the undocked video/waveform tool windows,
+            // and taking the foreground from the window the user is in - the main window during
+            // startup (#13569), or a dialog whose Apply rebuilt the layout (#13398) - is never
+            // wanted. They stay on top via KeepTopmostWhileOwnerActive, not via focus.
+            window.ShowActivated = false;
             window.Show();
-            window.Focus();
 
             return viewModel;
         }
