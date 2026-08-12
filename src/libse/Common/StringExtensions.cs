@@ -783,52 +783,123 @@ namespace Nikse.SubtitleEdit.Core.Common
 
         public static string RemoveChar(this string value, char charToRemove)
         {
-            char[] array = new char[value.Length];
-            int arrayIndex = 0;
-            for (int i = 0; i < value.Length; i++)
+            var count = 0;
+            for (var i = 0; i < value.Length; i++)
             {
-                char ch = value[i];
-                if (ch != charToRemove)
+                if (value[i] == charToRemove)
                 {
-                    array[arrayIndex++] = ch;
+                    count++;
                 }
             }
 
-            return new string(array, 0, arrayIndex);
+            if (count == 0)
+            {
+                return value;
+            }
+
+            return string.Create(value.Length - count, (value, charToRemove), (s, state) =>
+            {
+                int index = 0;
+                foreach (var ch in state.value)
+                {
+                    if (ch != state.charToRemove)
+                    {
+                        s[index++] = ch;
+                    }
+                }
+            });
         }
 
         public static string RemoveChar(this string value, char charToRemove, char charToRemove2)
         {
-            char[] array = new char[value.Length];
-            int arrayIndex = 0;
-            for (int i = 0; i < value.Length; i++)
+            var count = 0;
+            for (var i = 0; i < value.Length; i++)
             {
-                char ch = value[i];
-                if (ch != charToRemove && ch != charToRemove2)
+                if (value[i] == charToRemove || value[i] == charToRemove2)
                 {
-                    array[arrayIndex++] = ch;
+                    count++;
                 }
             }
 
-            return new string(array, 0, arrayIndex);
+            if (count == 0)
+            {
+                return value;
+            }
+
+            return string.Create(value.Length - count, (value, charToRemove, charToRemove2), (chars, state) =>
+            {
+                var index = 0;
+                foreach (var ch in state.value)
+                {
+                    if (ch != state.charToRemove && ch != state.charToRemove2)
+                    {
+                        chars[index++] = ch;
+                    }
+                }
+            });
         }
 
+#if NET10_0_OR_GREATER
+        private ref struct RemoveCharContext
+        {
+            public ReadOnlySpan<char> CharsToRemove { get; set; }
+            public string Value { get; set; }
+        }
+#endif
+
+#if NET10_0_OR_GREATER
+        public static string RemoveChar(this string value, params ReadOnlySpan<char> charsToRemove)
+#else
         public static string RemoveChar(this string value, params char[] charsToRemove)
+#endif
         {
             // Callers pass a handful of literal chars (3-13), so a vectorized linear probe
             // beats allocating and hashing a HashSet per call.
-            char[] array = new char[value.Length];
-            int arrayIndex = 0;
-            for (int i = 0; i < value.Length; i++)
+            
+            var count = 0;
+            for (var i = 0; i < value.Length; i++)
             {
-                char ch = value[i];
-                if (Array.IndexOf(charsToRemove, ch) < 0)
+                if (charsToRemove.Contains(value[i]))
                 {
-                    array[arrayIndex++] = ch;
+                    count++;
                 }
             }
 
-            return new string(array, 0, arrayIndex);
+            if (count == 0)
+            {
+                return value;
+            }
+
+#if NET10_0_OR_GREATER
+            var context = new RemoveCharContext
+            {
+                Value = value,
+                CharsToRemove = charsToRemove
+            };
+            return string.Create(value.Length - count, context, (s, context) =>
+            {
+                int index = 0;
+                foreach (var ch in context.Value)
+                {
+                    if (!context.CharsToRemove.Contains(ch))
+                    {
+                        s[index++] = ch;
+                    }
+                }
+            });
+#else
+            return string.Create(value.Length - count, (value, charsToRemove), (s, state) =>
+            {
+                int index = 0;
+                foreach (var ch in state.value)
+                {
+                    if (Array.IndexOf(state.charsToRemove, ch) < 0)
+                    {
+                        s[index++] = ch;
+                    }
+                }
+            });
+#endif
         }
 
         /// <summary>
