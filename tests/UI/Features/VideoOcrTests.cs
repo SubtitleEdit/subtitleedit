@@ -30,6 +30,20 @@ public class VideoOcrTests
         Assert.Equal(expected, VideoOcrLineBuilder.CleanOcrResult(raw));
     }
 
+    /// <summary>
+    /// The repeat check has to run on the stripped text: a model that emits the same line twice
+    /// and emphasises only one of them got past a check on the raw text, and the subtitle came
+    /// out with the line in it twice.
+    /// </summary>
+    [Theory]
+    [InlineData("Hello\n**Hello**")]
+    [InlineData("**Hello**\nHello")]
+    [InlineData("__Hello__\nHello")]
+    public void CleanOcrResult_RepeatedLine_IsDroppedEvenWhenOnlyOneIsEmphasised(string raw)
+    {
+        Assert.Equal("Hello", VideoOcrLineBuilder.CleanOcrResult(raw));
+    }
+
     [Fact]
     public void Build_SimilarConsecutiveTexts_MergedIntoOneLine()
     {

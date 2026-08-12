@@ -3106,12 +3106,49 @@ public static class UiUtil
     /// </summary>
     internal static Func<string?>? CurrentSubtitleFileNameProvider { get; set; }
 
+    private static int _subtitleFileNameInTitleSuppressions;
+
+    /// <summary>
+    /// Suppresses the file-name suffix for the dialogs opened inside the returned scope. Batch
+    /// convert reuses main-window dialogs as settings editors over a whole list of files - naming
+    /// the main window's subtitle in their title bar claims a file they have nothing to do with.
+    /// Keep the scope around the call that opens the dialog: the window is constructed
+    /// synchronously inside <c>ShowDialogAsync</c>, and the title is built in its constructor.
+    /// </summary>
+    internal static IDisposable SuppressSubtitleFileNameInTitle()
+    {
+        _subtitleFileNameInTitleSuppressions++;
+        return new TitleSuppression();
+    }
+
+    private sealed class TitleSuppression : IDisposable
+    {
+        private bool _disposed;
+
+        public void Dispose()
+        {
+            if (_disposed)
+            {
+                return;
+            }
+
+            _disposed = true;
+            _subtitleFileNameInTitleSuppressions--;
+        }
+    }
+
     /// <summary>
     /// Window title with the current subtitle file name appended, e.g. "Auto-translate - my movie.srt".
-    /// The plain title is returned unchanged when no subtitle file is open.
+    /// The plain title is returned unchanged when no subtitle file is open, and inside a
+    /// <see cref="SuppressSubtitleFileNameInTitle"/> scope.
     /// </summary>
     internal static string MakeWindowTitle(string title)
     {
+        if (_subtitleFileNameInTitleSuppressions > 0)
+        {
+            return title;
+        }
+
         var fileName = CurrentSubtitleFileNameProvider?.Invoke();
         if (string.IsNullOrEmpty(fileName))
         {

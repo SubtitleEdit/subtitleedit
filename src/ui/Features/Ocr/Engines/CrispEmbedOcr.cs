@@ -231,6 +231,15 @@ public class CrispEmbedOcr : IDisposable
         }
         catch (Exception ex)
         {
+            // Record it so the caller can tell a real failure apart from a textless image: the
+            // OCR loops fail fast on a non-empty Error and otherwise grind through the whole
+            // video only to report "no subtitles found". A non-success HTTP status has already
+            // stored the (more informative) response body in Error.
+            if (string.IsNullOrEmpty(Error))
+            {
+                Error = ex.Message;
+            }
+
             SeLogger.Error(ex, "Error calling CrispEmbed for OCR");
             return string.Empty;
         }

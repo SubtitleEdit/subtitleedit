@@ -14,7 +14,7 @@ using System.Threading.Tasks;
 
 namespace Nikse.SubtitleEdit.Features.Shared.BinaryEdit.BinaryResizeImages;
 
-public partial class BinaryResizeImagesViewModel : ObservableObject, IDisposable
+public partial class BinaryResizeImagesViewModel : ObservableObject, IDisposable, IClosingCleanup
 {
     [ObservableProperty] private int _percentage;
     [ObservableProperty] private Bitmap? _previewBitmap;
@@ -179,6 +179,16 @@ public partial class BinaryResizeImagesViewModel : ObservableObject, IDisposable
             e.Handled = true;
             Window?.Close();
         }
+    }
+
+    /// <summary>
+    /// Nothing called <see cref="Dispose"/>: the central close hook in
+    /// <see cref="UiUtil.InitializeWindow"/> only honors <see cref="IClosingCleanup"/>, so the
+    /// preview bitmap was leaked on every visit to this dialog.
+    /// </summary>
+    public void OnClosingCleanup()
+    {
+        Dispose();
     }
 
     public void Dispose()

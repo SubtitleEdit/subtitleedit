@@ -938,6 +938,9 @@ public partial class BatchConvertViewModel : ObservableObject, IClosingCleanup
     [RelayCommand]
     private async Task ShowRemoveTextForHearingImpairedSettings()
     {
+        // A settings editor for the whole batch, not for the subtitle open in the main window -
+        // so keep that file name out of its title bar.
+        using var titleScope = UiUtil.SuppressSubtitleFileNameInTitle();
         _ = await _windowService
             .ShowDialogAsync<RemoveTextForHearingImpairedWindow, RemoveTextForHearingImpairedViewModel>(
                 Window!, vm => { vm.Initialize(new Subtitle()); });

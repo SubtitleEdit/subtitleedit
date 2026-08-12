@@ -49,7 +49,7 @@ public partial class BurnInSettingsViewModel : ObservableObject
         if (UseOutputFolder && string.IsNullOrWhiteSpace(OutputFolder))
         {
             await MessageBox.Show(Window!, "Error",
-                "Please select output folder", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                Se.Language.General.PleaseSelectOutputFolder, MessageBoxButtons.OK, MessageBoxIcon.Error);
             return;
         }
 
@@ -61,7 +61,7 @@ public partial class BurnInSettingsViewModel : ObservableObject
     [RelayCommand]
     private async Task BrowseOutputFolder()
     {
-        var folder = await _folderHelper.PickFolderAsync(Window!, "Select output folder");
+        var folder = await _folderHelper.PickFolderAsync(Window!, Se.Language.General.PickOutputFolder);
         if (!string.IsNullOrEmpty(folder))
         {
             OutputFolder = folder;

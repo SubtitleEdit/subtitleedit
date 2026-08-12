@@ -15,7 +15,7 @@ using System.Threading.Tasks;
 
 namespace Nikse.SubtitleEdit.Features.Shared.BinaryEdit.BinaryAdjustBrightness;
 
-public partial class BinaryAdjustBrightnessViewModel : ObservableObject, IDisposable
+public partial class BinaryAdjustBrightnessViewModel : ObservableObject, IDisposable, IClosingCleanup
 {
     [ObservableProperty] private double _brightness;
     [ObservableProperty] private double _contrast;
@@ -164,6 +164,16 @@ public partial class BinaryAdjustBrightnessViewModel : ObservableObject, IDispos
             e.Handled = true;
             Window?.Close();
         }
+    }
+
+    /// <summary>
+    /// Nothing called <see cref="Dispose"/>: the central close hook in
+    /// <see cref="UiUtil.InitializeWindow"/> only honors <see cref="IClosingCleanup"/>, so the
+    /// preview bitmap was leaked on every visit to this dialog.
+    /// </summary>
+    public void OnClosingCleanup()
+    {
+        Dispose();
     }
 
     public void Dispose()

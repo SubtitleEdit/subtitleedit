@@ -1,3 +1,4 @@
+using Avalonia.Controls;
 using Avalonia.Headless.XUnit;
 using Avalonia.Input;
 using Nikse.SubtitleEdit.Features.Edit.MultipleReplace;
@@ -148,5 +149,38 @@ public class CategoryPickerTests
 
         Assert.False(SendKey(vm, Key.A, KeyModifiers.Control | KeyModifiers.Alt));
         Assert.Equal("c2", Ticked(vm));
+    }
+
+    /// <summary>
+    /// The select-all/none/invert bar and the OK/Cancel bar shared one grid cell (the button bar
+    /// spanning both columns), so they only stayed apart because one is left- and the other
+    /// right-aligned - a locale with longer button labels draws them on top of each other.
+    /// </summary>
+    [AvaloniaFact]
+    public void SelectionButtonsAndButtonBar_DoNotShareACell()
+    {
+        var vm = new CategoryPickerViewModel();
+        var categories = BuildCategories(3);
+        vm.InitializeForExport(categories, categories[0]);
+
+        var window = new CategoryPickerWindow(vm);
+        var grid = Assert.IsType<Grid>(window.Content);
+
+        var cells = grid.Children
+            .Select(c => (Row: Grid.GetRow(c), Column: Grid.GetColumn(c),
+                          ColumnSpan: Grid.GetColumnSpan(c), Control: c))
+            .ToList();
+
+        foreach (var a in cells)
+        {
+            foreach (var b in cells.Where(x => !ReferenceEquals(x.Control, a.Control)))
+            {
+                var overlaps = a.Row == b.Row &&
+                               a.Column < b.Column + b.ColumnSpan &&
+                               b.Column < a.Column + a.ColumnSpan;
+                Assert.False(overlaps,
+                    $"{a.Control.GetType().Name} and {b.Control.GetType().Name} occupy the same cell");
+            }
+        }
     }
 }

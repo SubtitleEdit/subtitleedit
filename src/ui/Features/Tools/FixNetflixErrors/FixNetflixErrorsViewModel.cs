@@ -23,7 +23,7 @@ using Nikse.SubtitleEdit.UiLogic.Media;
 
 namespace Nikse.SubtitleEdit.Features.Tools.FixNetflixErrors;
 
-public partial class FixNetflixErrorsViewModel : ObservableObject
+public partial class FixNetflixErrorsViewModel : ObservableObject, IClosingCleanup
 {
     public class LanguageItem
     {
@@ -72,6 +72,7 @@ public partial class FixNetflixErrorsViewModel : ObservableObject
     private Subtitle _subtitle;
     private string _videoFileName;
     private readonly Timer _timer;
+    private volatile bool _isClosing;
     private bool _dirty;
     private readonly List<Paragraph> _edited;
 
@@ -230,6 +231,11 @@ public partial class FixNetflixErrorsViewModel : ObservableObject
 
     private void TimerElapsed(object? sender, ElapsedEventArgs e)
     {
+        if (_isClosing)
+        {
+            return;
+        }
+
         _timer.Stop();
 
         try
@@ -245,7 +251,24 @@ public partial class FixNetflixErrorsViewModel : ObservableObject
             return;
         }
 
-        _timer.Start();
+        // Guard the restart: OnClosingCleanup may have disposed the timer while this handler ran,
+        // and Start() on a disposed timer throws ObjectDisposedException (no longer swallowed on
+        // modern .NET), crashing the app from a thread-pool thread. (#12739)
+        if (!_isClosing)
+        {
+            _timer.Start();
+        }
+    }
+
+    /// <summary>
+    /// Runs on every close path via the central hook in <see cref="UiUtil.InitializeWindow"/>.
+    /// Without it the preview timer kept ticking - and the view model, its subtitle and the closed
+    /// window's fix list stayed alive with it - for the rest of the session, once per dialog open.
+    /// </summary>
+    public void OnClosingCleanup()
+    {
+        _isClosing = true;
+        _timer.StopAndDispose(TimerElapsed);
     }
 
     private void GeneratePreview()

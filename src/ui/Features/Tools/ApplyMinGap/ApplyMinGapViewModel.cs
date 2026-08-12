@@ -140,19 +140,34 @@ public partial class ApplyMinGapViewModel : ObservableObject, IClosingCleanup
 
     private void LoadSettings()
     {
-        // 0 means "not saved yet" - fall back to the general minimum-gap setting, which is what
-        // the dialog used to open on every time because nothing here was ever written back.
-        var saved = Se.Settings.Tools.ApplyMinGapMsOrFrames;
-        MinGapMsOrFrames = saved > 0
-            ? saved
-            : Se.Settings.General.UseFrameMode
-                ? Se.Settings.General.MinimumBetweenLines.Frames
-                : Se.Settings.General.MinimumBetweenLines.Milliseconds;
+        // Kept per unit: the box holds frames in frame mode and milliseconds otherwise, so one
+        // shared number meant a gap saved as 10 ms came back as 10 frames (~400 ms) after the
+        // user switched the time format. 0 means "not saved yet" - fall back to the general
+        // minimum-gap setting, which is what the dialog used to open on every time because
+        // nothing here was ever written back.
+        if (Se.Settings.General.UseFrameMode)
+        {
+            var savedFrames = Se.Settings.Tools.ApplyMinGapFrames;
+            MinGapMsOrFrames = savedFrames > 0 ? savedFrames : Se.Settings.General.MinimumBetweenLines.Frames;
+        }
+        else
+        {
+            var savedMs = Se.Settings.Tools.ApplyMinGapMilliseconds;
+            MinGapMsOrFrames = savedMs > 0 ? savedMs : Se.Settings.General.MinimumBetweenLines.Milliseconds;
+        }
     }
 
     private void SaveSettings()
     {
-        Se.Settings.Tools.ApplyMinGapMsOrFrames = MinGapMsOrFrames;
+        if (Se.Settings.General.UseFrameMode)
+        {
+            Se.Settings.Tools.ApplyMinGapFrames = MinGapMsOrFrames;
+        }
+        else
+        {
+            Se.Settings.Tools.ApplyMinGapMilliseconds = MinGapMsOrFrames;
+        }
+
         Se.SaveSettings();
     }
 

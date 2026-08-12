@@ -5,6 +5,7 @@ using Nikse.SubtitleEdit.Features.Ocr.Engines;
 using Nikse.SubtitleEdit.Features.Video.VideoOcr;
 using Nikse.SubtitleEdit.Logic.Config;
 using System.Linq;
+using System.Reflection;
 
 namespace UITests.Features.Video.VideoOcr;
 
@@ -74,8 +75,13 @@ public class VideoOcrViewModelCrispEmbedTests
             Assert.All(viewModel.CrispEmbedModels, m => Assert.Equal(otherBackend, m.Backend));
             Assert.NotNull(viewModel.SelectedCrispEmbedModel);
 
-            // Selecting a backend/model must land in the Video OCR settings, not the OCR window's.
+            // Browsing the combos must not touch the saved choice - the window may still be
+            // cancelled. It lands in the Video OCR settings (not the OCR window's) on save.
+            Assert.Equal("GLM-OCR", settings.CrispEmbedBackend);
+
+            Invoke(viewModel, "SaveSettings");
             Assert.Equal("GOT-OCR2", settings.CrispEmbedBackend);
+            Assert.Equal(viewModel.SelectedCrispEmbedModel?.Model.Name, settings.CrispEmbedModel);
         }
         finally
         {
@@ -112,6 +118,10 @@ public class VideoOcrViewModelCrispEmbedTests
             Se.Settings.Ocr.CrispEmbedBackend = savedOcrBackend;
         }
     }
+
+    private static void Invoke(object viewModel, string method) =>
+        viewModel.GetType().GetMethod(method, BindingFlags.Instance | BindingFlags.NonPublic)!
+            .Invoke(viewModel, null);
 
     private static VideoOcrViewModel MakeViewModel()
     {
