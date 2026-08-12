@@ -62,6 +62,7 @@ public partial class SubtitleLineViewModel : ObservableObject
     private TimeSpan _duration;
 
     [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(TeletextDisplay))]
     private string _text;
 
     [ObservableProperty]
@@ -133,7 +134,17 @@ public partial class SubtitleLineViewModel : ObservableObject
             alignment = "R";
         }
 
-        return $"{line} {alignment}";
+        var hasColor = text.Contains("<font color=", StringComparison.OrdinalIgnoreCase);
+var maxCharacters = hasColor ? 36 : 37;
+
+var cleanText = HtmlUtil.RemoveHtmlTags(text, true);
+var textLines = cleanText.SplitToLines();
+
+var tooLong = textLines.Any(textLine => textLine.Length > maxCharacters);
+
+var warning = tooLong ? "⚠ " : string.Empty;
+
+return $"{warning}{line} {alignment}";
     }
 }
 
