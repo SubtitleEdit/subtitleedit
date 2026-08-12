@@ -8,6 +8,8 @@ public class LanguageMultipleReplace
     public string NewCategory { get; set; }
     public string CategoryName { get; set; }
     public string ExportReplaceRules { get; set; }
+    public string ImportReplaceRules { get; set; }
+    public string NoCategoriesSelected { get; set; }
     public string AppliedRules { get; set; }
     public string FindRule { get; set; }
     public string XLinesAffected { get; set; }
@@ -25,6 +27,8 @@ public class LanguageMultipleReplace
         NewCategory = "New category";
         CategoryName = "Category name";
         ExportReplaceRules = "Export rules";
+        ImportReplaceRules = "Import rules";
+        NoCategoriesSelected = "No rule categories selected";
         AppliedRules = "Applied rules";
         FindRule = "Find rule";
         XLinesAffected = "{0:#,##0} lines affected";
