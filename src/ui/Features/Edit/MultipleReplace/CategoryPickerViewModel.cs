@@ -128,23 +128,35 @@ public partial class CategoryPickerViewModel : ObservableObject
         {
             e.Handled = true;
             Window?.Close();
+            return;
         }
-        else if (e.Key == Key.A && (e.KeyModifiers & (KeyModifiers.Control | KeyModifiers.Meta)) != 0)
+
+        // Ctrl/Cmd + A / D / Shift+I, the same three gestures the other tick-a-column lists use
+        // (see RemoveTextForHearingImpairedViewModel.HandleFixesSelectionKey).
+        var isCommand = e.KeyModifiers.HasFlag(KeyModifiers.Control) || e.KeyModifiers.HasFlag(KeyModifiers.Meta);
+        if (!isCommand || e.KeyModifiers.HasFlag(KeyModifiers.Alt))
         {
-            e.Handled = true;
-            if ((e.KeyModifiers & KeyModifiers.Shift) != 0)
-            {
-                SelectNone();
-            }
-            else
-            {
-                SelectAll();
-            }
+            return;
         }
-        else if (e.Key == Key.I && (e.KeyModifiers & KeyModifiers.Shift) != 0)
+
+        var isShift = e.KeyModifiers.HasFlag(KeyModifiers.Shift);
+        if (e.Key == Key.A && !isShift)
         {
-            e.Handled = true;
+            SelectAll();
+        }
+        else if (e.Key == Key.D && !isShift)
+        {
+            SelectNone();
+        }
+        else if (e.Key == Key.I && isShift)
+        {
             InvertSelection();
         }
+        else
+        {
+            return;
+        }
+
+        e.Handled = true;
     }
 }

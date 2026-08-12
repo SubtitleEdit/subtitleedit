@@ -1390,7 +1390,8 @@
       "deleteRuleConfirm": "Delete rule '{0}'?",
       "findWhat": "Find what",
       "descriptionOptional": "Description (optional)",
-      "invalidRegularExpressionX": "Invalid regular expression: {0}"
+      "invalidRegularExpressionX": "Invalid regular expression: {0}",
+      "regularExpressionTooSlowX": "Regular expression gave up after {0} seconds - the rule is skipped, try a simpler pattern"
     },
     "find": {
       "searchTextWatermark": "Search text...",
@@ -1434,6 +1435,7 @@
     "selectedXCharactersYLines": "Selected: {0} characters in {1} line(s)",
     "replacedXOccurrences": "Replaced {0} occurrence(s)",
     "invalidRegularExpression": "Invalid regular expression",
+    "regularExpressionTooSlowX": "Regular expression gave up after {0} seconds - try a simpler pattern",
     "moveLineUp": "Move line up",
     "moveLineDown": "Move line down",
     "duplicateLine": "Duplicate line",

@@ -54,7 +54,11 @@ public partial class MultipleReplaceViewModel : ObservableObject
     private readonly IFileHelper _fileHelper;
     private Subtitle _subtitle;
     private readonly ConcurrentDictionary<string, Regex> _compiledRegExList;
-    private readonly ConcurrentDictionary<string, string> _invalidRegExList;
+
+    // Pattern -> why it cannot run, or null when it is fine. Every regular expression rule is
+    // checked so a broken one is marked even in an unticked category, so this must not be the
+    // compiled cache: see GetRegexError.
+    private readonly ConcurrentDictionary<string, string?> _regExErrors;
     private readonly Timer _timerReplace;
     private readonly object _previewLock = new();
     private volatile bool _dirty;
@@ -80,7 +84,7 @@ public partial class MultipleReplaceViewModel : ObservableObject
         IsMultipleReplaceDotDotDotButtonsVisible = Se.Settings.Tools.MultipleReplaceShowDotDotDotButtons;
 
         _compiledRegExList = new ConcurrentDictionary<string, Regex>();
-        _invalidRegExList = new ConcurrentDictionary<string, string>();
+        _regExErrors = new ConcurrentDictionary<string, string?>();
 
         _timerReplace = new Timer();
         _timerReplace.Interval = 250;
@@ -1296,6 +1300,10 @@ public partial class MultipleReplaceViewModel : ObservableObject
         FixedSubtitle = new Subtitle(_subtitle, false);
         TotalReplaced = 0;
         var fixes = new List<MultipleReplaceFix>();
+
+        // Patterns the match timeout stopped part way through this pass - see the catch below.
+        HashSet<string>? retiredThisPass = null;
+
         for (var i = 0; i < _subtitle.Paragraphs.Count; i++)
         {
             var p = _subtitle.Paragraphs[i];
@@ -1317,19 +1325,35 @@ public partial class MultipleReplaceViewModel : ObservableObject
                 }
                 else if (item.SearchType == ReplaceExpression.SearchRegEx)
                 {
-                    if (!_compiledRegExList.TryGetValue(item.FindWhat, out var r))
+                    // retiredThisPass is null until something times out, so this costs a null
+                    // check per rule per line in the normal case. It is needed because the
+                    // expression list was built before the timeout, and without it every
+                    // remaining line would pay the five seconds again.
+                    if (retiredThisPass?.Contains(item.FindWhat) == true ||
+                        !TryGetRunnableRegex(item.FindWhat, out var r))
                     {
                         continue;
                     }
 
-                    // Match against line-feed-normalized text so a pattern's \n line break matches even
-                    // when the paragraph text uses \r\n (the pattern is FixNewLine'd to \n) (#11956).
-                    if (r.IsMatch(string.Join("\n", newText.SplitToLines())))
+                    try
                     {
-                        hit = true;
-                        ruleInfo = string.IsNullOrEmpty(ruleInfo) ? item.RuleInfo : $"{ruleInfo} + {item.RuleInfo}";
-                        ruleHits.Add(item);
-                        newText = RegexUtils.ReplaceNewLineSafe(r, newText, item.ReplaceWith);
+                        // Match against line-feed-normalized text so a pattern's \n line break matches even
+                        // when the paragraph text uses \r\n (the pattern is FixNewLine'd to \n) (#11956).
+                        if (r.IsMatch(string.Join("\n", newText.SplitToLines())))
+                        {
+                            var replaced = RegexUtils.ReplaceNewLineSafe(r, newText, item.ReplaceWith);
+                            hit = true;
+                            ruleInfo = string.IsNullOrEmpty(ruleInfo) ? item.RuleInfo : $"{ruleInfo} + {item.RuleInfo}";
+                            ruleHits.Add(item);
+                            newText = replaced;
+                        }
+                    }
+                    catch (RegexMatchTimeoutException)
+                    {
+                        // Five seconds on one line for a pattern that backtracks catastrophically
+                        // is already too much, so retire the rule rather than carrying on with it.
+                        (retiredThisPass ??= new HashSet<string>(StringComparer.Ordinal)).Add(item.FindWhat);
+                        RetireTimedOutRegex(item.FindWhat);
                     }
                 }
                 else
@@ -1419,32 +1443,65 @@ public partial class MultipleReplaceViewModel : ObservableObject
     }
 
     /// <summary>
-    /// Null when the pattern compiles. A pattern that does not is skipped rather than allowed to
-    /// take the whole preview down with it (#13534) - the rule is marked in the tree instead.
+    /// Null when the pattern is usable. A pattern that will not compile - or that has already been
+    /// stopped by the match timeout - is skipped rather than allowed to take the whole preview down
+    /// with it (#13534); the rule is marked in the tree instead.
     /// </summary>
     private string? GetRegexError(string findWhat)
     {
-        if (_compiledRegExList.ContainsKey(findWhat))
+        // Deliberately NOT RegexOptions.Compiled: every regular expression rule is validated,
+        // including the ones in unticked categories that never run, and compiling emits IL that
+        // is never reclaimed. The runnable regex is built lazily in TryGetRunnableRegex instead.
+        return _regExErrors.GetOrAdd(findWhat, static pattern =>
         {
-            return null;
-        }
+            try
+            {
+                _ = new Regex(pattern, RegexOptions.Multiline, RegexUtils.UserPatternMatchTimeout);
+                return null;
+            }
+            catch (ArgumentException exception)
+            {
+                return string.Format(Se.Language.Edit.MultipleReplace.InvalidRegularExpressionX, exception.Message);
+            }
+        });
+    }
 
-        if (_invalidRegExList.TryGetValue(findWhat, out var known))
+    /// <summary>
+    /// The regex a rule actually runs with, built on first use. Carries the match timeout: without
+    /// it a pattern with catastrophic backtracking holds <see cref="_previewLock"/> forever - and
+    /// with it the UI thread, which waits on the same lock in "Ok" and "Apply".
+    /// </summary>
+    private bool TryGetRunnableRegex(string findWhat, out Regex regex)
+    {
+        if (_compiledRegExList.TryGetValue(findWhat, out regex!))
         {
-            return known;
+            return true;
         }
 
         try
         {
-            _compiledRegExList[findWhat] = new Regex(findWhat, RegexOptions.Compiled | RegexOptions.Multiline);
-            return null;
+            regex = new Regex(findWhat, RegexOptions.Compiled | RegexOptions.Multiline, RegexUtils.UserPatternMatchTimeout);
+            _compiledRegExList[findWhat] = regex;
+            return true;
         }
-        catch (ArgumentException exception)
+        catch (ArgumentException)
         {
-            var message = string.Format(Se.Language.Edit.MultipleReplace.InvalidRegularExpressionX, exception.Message);
-            _invalidRegExList[findWhat] = message;
-            return message;
+            regex = null!;
+            return false;
         }
+    }
+
+    /// <summary>
+    /// Retires a pattern the match timeout stopped. Recording it as an error means the next pass
+    /// leaves the rule out and marks it in the tree, so a rule that is too slow to run says so
+    /// rather than looking like a rule that simply matches nothing.
+    /// </summary>
+    private void RetireTimedOutRegex(string findWhat)
+    {
+        _regExErrors[findWhat] = string.Format(
+            Se.Language.Edit.MultipleReplace.RegularExpressionTooSlowX,
+            RegexUtils.UserPatternMatchTimeout.TotalSeconds);
+        _dirty = true;
     }
 
     private void ReportRuleErrors(List<(RuleTreeNode Rule, string? Message)> errors)

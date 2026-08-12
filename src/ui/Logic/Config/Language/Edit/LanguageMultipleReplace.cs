@@ -18,6 +18,7 @@ public class LanguageMultipleReplace
     public string FindWhat { get; set; }
     public string DescriptionOptional { get; set; }
     public string InvalidRegularExpressionX { get; set; }
+    public string RegularExpressionTooSlowX { get; set; }
 
     public LanguageMultipleReplace()
     {
@@ -37,5 +38,6 @@ public class LanguageMultipleReplace
         FindWhat = "Find what";
         DescriptionOptional = "Description (optional)";
         InvalidRegularExpressionX = "Invalid regular expression: {0}";
+        RegularExpressionTooSlowX = "Regular expression gave up after {0} seconds - the rule is skipped, try a simpler pattern";
     }
 }
