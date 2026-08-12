@@ -1,6 +1,6 @@
 ﻿{
   "title": "Subtitle Edit",
-  "version": "v5.2.0-beta10",
+  "version": "v5.2.0-beta11",
   "translatedBy": "",
   "cultureName": "en-US",
   "general": {
@@ -1329,6 +1329,7 @@
     "saveCompareHtmlTitle": "Save compare HTML file",
     "pickMatroskaTrackX": "Pick Matroska track - {0}",
     "pickTransportStreamTrackX": "Pick transport stream track - {0}",
+    "pickMp4TrackX": "Pick MP4 track - {0}",
     "rosettaProperties": "Timed Text Rosetta IMSC properties",
     "rosettaFontSize": "Font size (row height)",
     "xProperties": "{0} properties"
