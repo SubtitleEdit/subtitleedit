@@ -1,5 +1,6 @@
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.Engines;
+using Nikse.SubtitleEdit.Logic.Download;
 
 namespace UITests.Features.Video.TextToSpeech.Engines;
 
@@ -270,6 +271,85 @@ public class ChatterboxTtsCppTests
             }
 
             Assert.False(Nikse.SubtitleEdit.Logic.Download.ChatterboxTtsCppDownloadService.IsLegacyEnglishOnlyModel(path));
+        }
+        finally
+        {
+            File.Delete(path);
+        }
+    }
+
+    [Theory]
+    [InlineData("Base", "chatterbox-t3-q8_0.gguf", "chatterbox-s3gen-q8_0.gguf", "chatterbox")]
+    [InlineData("Base F16", "chatterbox-t3-f16.gguf", "chatterbox-s3gen-f16.gguf", "chatterbox")]
+    [InlineData("Base Q4_K", "chatterbox-t3-q4_k.gguf", "chatterbox-s3gen-q4_k.gguf", "chatterbox")]
+    [InlineData("Turbo", "chatterbox-turbo-t3-q8_0.gguf", "chatterbox-turbo-s3gen-q8_0.gguf", "chatterbox-turbo")]
+    public void EachModelKey_MapsToItsOwnGgufPairAndBackend(string modelKey, string t3, string s3gen, string backend)
+    {
+        // The Base quantizations are the same weights at different precision, so they all run
+        // on the plain chatterbox backend - only Turbo is a separate backend.
+        Assert.Equal(t3, ChatterboxTtsCppDownloadService.GetT3FileName(modelKey));
+        Assert.Equal(s3gen, ChatterboxTtsCppDownloadService.GetS3GenFileName(modelKey));
+        Assert.Equal(backend, ChatterboxTtsCppDownloadService.GetBackendName(modelKey));
+    }
+
+    [Theory]
+    [InlineData("base f16", "Base F16")]
+    [InlineData("BASE Q4_K", "Base Q4_K")]
+    [InlineData("turbo", "Turbo")]
+    [InlineData("Base", "Base")]
+    [InlineData("", "Base")]
+    [InlineData(null, "Base")]
+    [InlineData("something removed in a later release", "Base")]
+    public void ResolveModelKey_IsCaseInsensitiveAndFallsBackToBase(string? saved, string expected)
+    {
+        // A settings file written by a newer/older SE must not leave the engine with a model
+        // key it cannot map to files - unknown keys degrade to the default Base pair.
+        Assert.Equal(expected, ChatterboxTtsCppDownloadService.ResolveModelKey(saved));
+    }
+
+    [Fact]
+    public void AllModelKeys_AreDistinctAndResolveToThemselves()
+    {
+        var keys = ChatterboxTtsCppDownloadService.GetAllModelKeys();
+
+        Assert.Equal(keys.Length, keys.Distinct().Count());
+        Assert.All(keys, k => Assert.Equal(k, ChatterboxTtsCppDownloadService.ResolveModelKey(k)));
+
+        // Every key needs its own file pair, or one model would silently overwrite another's
+        // download in the shared models folder.
+        var files = keys.SelectMany(k => new[]
+        {
+            ChatterboxTtsCppDownloadService.GetT3FileName(k),
+            ChatterboxTtsCppDownloadService.GetS3GenFileName(k),
+        }).ToList();
+        Assert.Equal(files.Count, files.Distinct().Count());
+    }
+
+    [Fact]
+    public void LegacySizeCheck_DoesNotFlagTheF16OrQ4KPair()
+    {
+        // The legacy English-only sizes are q8_0-specific. If a newly published quantization
+        // ever matched one of them byte-for-byte it would be re-downloaded forever.
+        long[] currentSizes =
+        {
+            1_138_156_192, // chatterbox-t3-f16.gguf
+            649_353_632,   // chatterbox-s3gen-f16.gguf
+            382_171_840,   // chatterbox-t3-q4_k.gguf
+            254_658_880,   // chatterbox-s3gen-q4_k.gguf
+        };
+
+        var path = Path.Combine(Path.GetTempPath(), $"chatterbox-quant-test-{Guid.NewGuid():N}.gguf");
+        try
+        {
+            foreach (var size in currentSizes)
+            {
+                using (var fs = new FileStream(path, FileMode.Create, FileAccess.Write))
+                {
+                    fs.SetLength(size); // metadata-only, nothing is written
+                }
+
+                Assert.False(ChatterboxTtsCppDownloadService.IsLegacyEnglishOnlyModel(path));
+            }
         }
         finally
         {
