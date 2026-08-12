@@ -1,6 +1,6 @@
 ﻿{
   "title": "Subtitle Edit",
-  "version": "v5.2.0-beta9",
+  "version": "v5.2.0-beta10",
   "translatedBy": "",
   "cultureName": "en-US",
   "general": {
@@ -1387,7 +1387,8 @@
       "deleteCategoryConfirm": "Delete category '{0}'?",
       "deleteRuleConfirm": "Delete rule '{0}'?",
       "findWhat": "Find what",
-      "descriptionOptional": "Description (optional)"
+      "descriptionOptional": "Description (optional)",
+      "invalidRegularExpressionX": "Invalid regular expression: {0}"
     },
     "find": {
       "searchTextWatermark": "Search text...",
