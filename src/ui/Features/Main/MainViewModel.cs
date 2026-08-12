@@ -6967,11 +6967,12 @@ public partial class MainViewModel :
 
         Dispatcher.UIThread.Post(() =>
         {
-            // Rebuilding the undocked windows below ends in ShowIndependentWindow, which does
-            // Show() + Focus() - so it takes foreground. Settings -> Apply reaches here through
-            // ApplySettings while its own dialog is still open, which left that dialog visible
-            // but deactivated and an undocked window in front of it (#13398). Remember a
-            // foreground dialog now and hand activation back once both windows exist.
+            // Rebuilding the undocked windows below ends in ShowIndependentWindow. It shows
+            // them without activating (ShowActivated = false), but window managers may ignore
+            // that hint: Settings -> Apply reaches here through ApplySettings while its own
+            // dialog is still open, and an activated undocked window left that dialog visible
+            // but deactivated (#13398). Remember a foreground dialog now and hand activation
+            // back once both windows exist.
             var windowToReactivate = GetActiveWindowOtherThanMainAndUndocked();
 
             AreVideoControlsUndocked = true;
@@ -7070,6 +7071,18 @@ public partial class MainViewModel :
         }
 
         return null;
+    }
+
+    /// <summary>
+    /// Whether one of the undocked video/waveform tool windows is the active window. A second
+    /// into startup that means their creation took the foreground from the main window - the
+    /// case to correct (#13569) - as opposed to "the user switched to another application" or
+    /// "a dialog is in front", which must both be left alone.
+    /// </summary>
+    private bool IsUndockedWindowActive()
+    {
+        return _videoPlayerUndockedViewModel?.Window?.IsActive == true ||
+               _audioVisualizerUndockedViewModel?.Window?.IsActive == true;
     }
 
     /// <summary>
@@ -19954,11 +19967,26 @@ public partial class MainViewModel :
             {
                 if (Window != null)
                 {
-                    // Only claim focus when the main window still holds it - this runs a
-                    // second after startup, and activating here would pull SE back over
+                    // Only claim focus while SE itself still holds the foreground - this runs a
+                    // second after startup, and activating unconditionally would pull SE back over
                     // another application the user switched to while SE was loading.
+                    //
+                    // Undocked mode is the exception: the video and waveform windows created during
+                    // startup could end up in the foreground instead of the main window (#13569).
+                    // ShowIndependentWindow no longer activates them, so this is a fallback for
+                    // window managers that ignore ShowActivated - scoped to the two undocked
+                    // windows so a dialog (or any window the user focused on purpose) keeps the
+                    // foreground, and skipped while a modal dialog is open (#13405) or the main
+                    // window is minimized, where Activate() would misfire.
                     if (Window.IsActive)
                     {
+                        TableViewExtras.FocusRow(SubtitleGrid);
+                    }
+                    else if (IsUndockedWindowActive() &&
+                             !WindowService.IsModalDialogOpen &&
+                             Window.WindowState != WindowState.Minimized)
+                    {
+                        Window.Activate();
                         TableViewExtras.FocusRow(SubtitleGrid);
                     }
 
