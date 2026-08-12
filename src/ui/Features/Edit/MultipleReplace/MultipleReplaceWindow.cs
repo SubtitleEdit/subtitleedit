@@ -409,7 +409,9 @@ public class MultipleReplaceWindow : Window
         // No header sorting (the DataGrid's CanUserSortColumns is not carried over):
         // this is a fix preview in subtitle order, and the replace rules themselves run
         // in list order - reordering the backing collection would scramble the preview.
-        var dataGrid = TableViewExtras.MakeTableView(multiSelect: false);
+        // Multi-select so a range picked with Shift+click can have its "Apply" checkbox flipped
+        // in one go with Space (#13502); the fix detail panel below still follows SelectedItem.
+        var dataGrid = TableViewExtras.MakeTableView();
         dataGrid.DataContext = vm;
         dataGrid.ItemsSource = vm.Fixes;
         dataGrid.Columns.AddRange(new TableViewColumn[]
@@ -477,6 +479,21 @@ public class MultipleReplaceWindow : Window
             },
         });
         dataGrid.Bind(TableView.SelectedItemProperty, new Binding(nameof(vm.SelectedFix)) { Source = vm });
+
+        TableViewExtras.AddSpaceToggle<MultipleReplaceFix>(dataGrid,
+            item => item.Apply, (item, v) => item.Apply = v);
+
+        dataGrid.ContextMenu = MakeFixesContextMenu(vm);
+
+        // Tunneling: the TableView (a ListBox) would otherwise take Ctrl+A as "select all rows",
+        // and the window's key handler takes Ctrl+D as "duplicate rule" (#13502).
+        dataGrid.AddHandler(InputElement.KeyDownEvent, (object? _, KeyEventArgs e) =>
+        {
+            if (vm.HandleFixesSelectionKey(e))
+            {
+                e.Handled = true;
+            }
+        }, RoutingStrategies.Tunnel);
 
         var hitsItemsControl = new ItemsControl
         {
@@ -614,5 +631,40 @@ public class MultipleReplaceWindow : Window
         };
 
         return border;
+    }
+
+    // A preview with one row per changed line is far too long to untick by hand, so offer
+    // tick all / untick all / invert with the gestures the sibling lists advertise (#13502).
+    private static ContextMenu MakeFixesContextMenu(MultipleReplaceViewModel vm)
+    {
+        var commandModifier = System.OperatingSystem.IsMacOS() ? KeyModifiers.Meta : KeyModifiers.Control;
+
+        return new ContextMenu
+        {
+            Items =
+            {
+                new Avalonia.Controls.MenuItem
+                {
+                    Header = Se.Language.General.SelectAll,
+                    DataContext = vm,
+                    Command = vm.SelectAllFixesCommand,
+                    InputGesture = new KeyGesture(Key.A, commandModifier),
+                },
+                new Avalonia.Controls.MenuItem
+                {
+                    Header = Se.Language.General.SelectNone,
+                    DataContext = vm,
+                    Command = vm.SelectNoFixesCommand,
+                    InputGesture = new KeyGesture(Key.D, commandModifier),
+                },
+                new Avalonia.Controls.MenuItem
+                {
+                    Header = Se.Language.General.InvertSelection,
+                    DataContext = vm,
+                    Command = vm.InvertFixesSelectionCommand,
+                    InputGesture = new KeyGesture(Key.I, commandModifier | KeyModifiers.Shift),
+                },
+            },
+        };
     }
 }
