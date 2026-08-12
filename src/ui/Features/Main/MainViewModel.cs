@@ -7073,6 +7073,29 @@ public partial class MainViewModel :
     }
 
     /// <summary>
+    /// Whether SE itself holds the foreground, i.e. any of its windows is the active one. Tells
+    /// "the user switched to another application" apart from "another SE window is in front of the
+    /// main one" - cases that need opposite answers when startup claims the foreground (#13569).
+    /// </summary>
+    private static bool IsAnyApplicationWindowActive()
+    {
+        if (Application.Current?.ApplicationLifetime is not IClassicDesktopStyleApplicationLifetime desktop)
+        {
+            return false;
+        }
+
+        foreach (var window in desktop.Windows)
+        {
+            if (window.IsActive)
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /// <summary>
     /// Suppress (or restore) the undocked tool windows' topmost state. They float above the
     /// main window while SE is active (KeepTopmostWhileOwnerActive, #11971), which also puts
     /// them above the main window's popups and above modal dialogs. Registered with
@@ -19954,11 +19977,21 @@ public partial class MainViewModel :
             {
                 if (Window != null)
                 {
-                    // Only claim focus when the main window still holds it - this runs a
-                    // second after startup, and activating here would pull SE back over
+                    // Only claim focus while SE itself still holds the foreground - this runs a
+                    // second after startup, and activating unconditionally would pull SE back over
                     // another application the user switched to while SE was loading.
+                    //
+                    // Undocked mode needs the Activate() though: the video and waveform windows are
+                    // created during startup and ShowIndependentWindow does Show() + Focus(), so one
+                    // of them, not the main window, ends up in the foreground. Dropping the old
+                    // unconditional Activate() left it there (#13569).
                     if (Window.IsActive)
                     {
+                        TableViewExtras.FocusRow(SubtitleGrid);
+                    }
+                    else if (IsAnyApplicationWindowActive())
+                    {
+                        Window.Activate();
                         TableViewExtras.FocusRow(SubtitleGrid);
                     }
 
