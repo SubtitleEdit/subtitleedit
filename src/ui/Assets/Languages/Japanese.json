@@ -1381,13 +1381,16 @@
       "newCategory": "新規カテゴリ",
       "categoryName": "カテゴリ名",
       "exportReplaceRules": "ルールをエクスポート",
+      "importReplaceRules": "ルールをインポート",
+      "noCategoriesSelected": "ルールカテゴリが選択されていません",
       "appliedRules": "適用ルール",
       "findRule": "ルールを検索",
       "xLinesAffected": "{0:#,##0}行に適用",
       "deleteCategoryConfirm": "カテゴリ「{0}」を削除しますか？",
       "deleteRuleConfirm": "ルール「{0}」を削除しますか？",
       "findWhat": "検索文字列",
-      "descriptionOptional": "説明（任意）"
+      "descriptionOptional": "説明（任意）",
+      "invalidRegularExpressionX": "正規表現が無効です: {0}"
     },
     "find": {
       "searchTextWatermark": "検索中...",
@@ -2108,6 +2111,7 @@
       "importVoiceDotDotDot": "音声をインポート中...",
       "voiceImportSuccessTitle": "音声のインポート完了",
       "voiceXImported": "音声「{0}」を正常にインポートしました",
+      "voiceXCouldNotBeImported": "音声「{0}」をインポートできませんでした - 詳細はログを確認してください",
       "importPiperVoiceTitle": "Piper音声モデル（.onnx）を開く",
       "piperVoiceConfigMissingTitle": "設定ファイルがありません",
       "piperVoiceConfigMissingMessage": "Piper音声モデルには、モデルファイルと同じフォルダーに設定ファイルが必要です: {0}",
