@@ -203,6 +203,17 @@ public class VideoOcrWindow : Window
         panel.Children.Add(MakeHeader(Se.Language.Video.VideoOcr.Engine, isFirst: true));
         panel.Children.Add(comboEngine);
 
+        // What the selected engine actually is - each engine carries a one-line description
+        // (local vs cloud, what it needs installed) that had no home in the window until now.
+        var engineDescription = new TextBlock
+        {
+            Opacity = 0.7,
+            TextWrapping = TextWrapping.Wrap,
+            Margin = new Thickness(0, 2, 0, 4),
+        };
+        engineDescription.Bind(TextBlock.TextProperty, new Binding(nameof(vm.SelectedEngineDescription)) { Source = vm });
+        panel.Children.Add(engineDescription);
+
         // Paddle OCR settings
         var paddlePanel = new StackPanel { Orientation = Orientation.Vertical, Spacing = 4 };
         paddlePanel.Children.Add(UiUtil.MakeLabel(Se.Language.General.Language));

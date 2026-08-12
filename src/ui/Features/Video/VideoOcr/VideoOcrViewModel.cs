@@ -39,6 +39,7 @@ public partial class VideoOcrViewModel : ObservableObject
     [ObservableProperty] private bool _isGlmEngine;
     [ObservableProperty] private bool _isLlamaCppEngine;
     [ObservableProperty] private bool _isCrispEmbedEngine;
+    [ObservableProperty] private string _selectedEngineDescription;
     [ObservableProperty] private ObservableCollection<OcrLanguage2> _paddleLanguages;
     [ObservableProperty] private OcrLanguage2? _selectedPaddleLanguage;
     [ObservableProperty] private string _ollamaUrl;
@@ -121,6 +122,10 @@ public partial class VideoOcrViewModel : ObservableObject
         ProgressText = string.Empty;
         PreviewPositionText = string.Empty;
         ScanAreaText = string.Empty;
+
+        // LoadSettings re-selects the saved engine below, which fills this in via
+        // OnSelectedEngineChanged - this is only the non-nullable seed.
+        SelectedEngineDescription = string.Empty;
 
         // One-shot debounce for preview loading: restarted on every slider change.
         _previewTimer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(300) };
@@ -212,6 +217,7 @@ public partial class VideoOcrViewModel : ObservableObject
         IsGlmEngine = value.EngineType == OcrEngineType.Glm;
         IsLlamaCppEngine = value.EngineType == OcrEngineType.LlamaCpp;
         IsCrispEmbedEngine = value.EngineType == OcrEngineType.CrispEmbed;
+        SelectedEngineDescription = value.Description;
 
         if (IsLlamaCppEngine && LlamaCppModels.Count == 0)
         {
