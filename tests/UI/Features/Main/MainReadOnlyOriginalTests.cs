@@ -628,6 +628,50 @@ public class MainReadOnlyOriginalTests
     }
 
     /// <summary>
+    /// The replace window can narrow the scope to one column, and it leaves that on the shared find
+    /// service. The find window clears it on the way in, but the find next / find previous shortcuts
+    /// reach the service without opening a window - so they used to inherit it, and after a
+    /// "replace in original only" every F3 quietly stopped searching the translation column, with
+    /// nothing on screen to say why.
+    /// </summary>
+    [AvaloniaTheory]
+    [InlineData(true)]
+    [InlineData(false)]
+    public void FindNextAndPrevious_ClearAScopeTheReplaceWindowLeftBehind(bool forward)
+    {
+        var (window, vm) = CreateMainViewModel();
+        try
+        {
+            AddLine(vm, "alpha one", "reference one", 0, 2000);
+            AddLine(vm, "alpha two", "reference two", 2000, 4000);
+            vm.ShowColumnOriginalText = true;
+            vm.SelectedSubtitle = vm.Subtitles[forward ? 0 : 1];
+            Dispatcher.UIThread.RunJobs();
+
+            var findService = (IFindService)GetField("_findService").GetValue(vm)!;
+            findService.SearchText = "alpha";
+            findService.CurrentScope = FindService.FindScope.OriginalOnly;
+
+            if (forward)
+            {
+                vm.FindNextCommand.Execute(null);
+            }
+            else
+            {
+                vm.FindPreviousCommand.Execute(null);
+            }
+
+            Dispatcher.UIThread.RunJobs();
+
+            Assert.Equal(FindService.FindScope.TextAndOriginal, findService.CurrentScope);
+        }
+        finally
+        {
+            CloseWindow(window, vm);
+        }
+    }
+
+    /// <summary>
     /// Working subtitle: two translated lines with a gap. Reference: the same two plus a line in the
     /// gap that the translation never got - the case from issue #13449.
     /// </summary>

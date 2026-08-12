@@ -19,8 +19,11 @@ public interface IFindService
     FindMode CurrentFindMode { get; set; }
 
     /// <summary>
-    /// Which columns the next find/replace covers. Sticky, so a find-next after the replace window
-    /// set it keeps the same scope; the find window resets it to <see cref="FindScope.TextAndOriginal"/>.
+    /// Which columns the next find/replace covers. Only the replace window narrows it, and it sets
+    /// it again on every action, so the scope lives for one replace window session: finding always
+    /// covers both columns and resets this on the way in - the find window, and the find next /
+    /// find previous shortcuts, which reach the service without opening a window. A find that
+    /// silently skipped a column would have nothing on screen to say so.
     /// </summary>
     FindScope CurrentScope { get; set; }
 
