@@ -3,6 +3,31 @@ Subtitle Edit Changelog
 
 -----------------------------------------------------------------------------------------------------
 
+v5.2.0-beta11 (12th of August 2026)
+
+* Add import/export of selected rule categories to "Multiple replace" - thx KaDeeKe
+* Add move up/down/to top/to bottom shortcuts to "Multiple replace" - thx KaDeeKe
+* Add select all/none/invert to the "Remove text for hearing impaired" preview list - thx fraternl
+* Add rule selection to seconv --remove-formatting - thx Hlsgs
+* Show the whole rule while editing it in "Multiple replace" - thx KaDeeKe
+* Show the subtitle file name in dialog title bars
+* Give user-entered regular expressions a match timeout, and mark broken rules in "Multiple replace" - thx KaDeeKe
+* Fix "Multiple replace" preview freezing after a failed rule - thx KaDeeKe
+* Fix split/rebalance long lines forgetting its settings - thx cvrle77
+* Fix the scroll bar trough paging past the cursor in the subtitle grid - thx ivandrofly
+* Fix context menu hiding behind the undocked audio visualizer - thx GrampaWildWilly
+* Fix unchanged text being invisible in the diff previews - thx fraternl
+* Fix the find window trimming edge spaces from the restored search pattern - thx nms42
+* Fix Chatterbox failing on reference voices that are not 24 kHz mono - thx subof
+* Fix Subtitle Edit staying in front of other applications during transcription and at startup
+* Update Japanese translation - thx hisui3393
+* Update Russian translation - thx jekovcar
+* Update Bulgarian translation - thx jekovcar
+* Update Polish translation - thx potplayer-fanpack
+* Minor performance improvements in name lists, grid rendering and the waveform
+
+-----------------------------------------------------------------------------------------------------
+
 v5.2.0-beta10 (11th of August 2026)
 
 * Add "BDN/xml 8-bit" export with palette-indexed PNGs
