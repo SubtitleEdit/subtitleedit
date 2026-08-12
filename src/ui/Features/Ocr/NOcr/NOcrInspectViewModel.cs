@@ -1,4 +1,4 @@
-﻿using Avalonia;
+using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Interactivity;
@@ -160,8 +160,19 @@ public partial class NOcrInspectViewModel : ObservableObject
     private void Ok()
     {
         NOcrChar.Text = NewText;
+        SaveSettings();
         OkPressed = true;
         Close();
+    }
+
+    /// <summary>
+    /// The same control in the "add character" window persists this; here it was read on open and
+    /// never written, so changing it only lasted until the window closed.
+    /// </summary>
+    private void SaveSettings()
+    {
+        Se.Settings.Ocr.NOcrNoOfLinesToAutoDraw = SelectedNoOfLinesToAutoDraw;
+        Se.SaveSettings();
     }
 
     [RelayCommand]

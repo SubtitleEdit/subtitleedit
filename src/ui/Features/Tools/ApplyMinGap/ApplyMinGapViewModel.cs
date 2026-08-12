@@ -140,13 +140,19 @@ public partial class ApplyMinGapViewModel : ObservableObject, IClosingCleanup
 
     private void LoadSettings()
     {
-        MinGapMsOrFrames = Se.Settings.General.UseFrameMode
-            ? Se.Settings.General.MinimumBetweenLines.Frames
-            : Se.Settings.General.MinimumBetweenLines.Milliseconds;
+        // 0 means "not saved yet" - fall back to the general minimum-gap setting, which is what
+        // the dialog used to open on every time because nothing here was ever written back.
+        var saved = Se.Settings.Tools.ApplyMinGapMsOrFrames;
+        MinGapMsOrFrames = saved > 0
+            ? saved
+            : Se.Settings.General.UseFrameMode
+                ? Se.Settings.General.MinimumBetweenLines.Frames
+                : Se.Settings.General.MinimumBetweenLines.Milliseconds;
     }
 
     private void SaveSettings()
     {
+        Se.Settings.Tools.ApplyMinGapMsOrFrames = MinGapMsOrFrames;
         Se.SaveSettings();
     }
 

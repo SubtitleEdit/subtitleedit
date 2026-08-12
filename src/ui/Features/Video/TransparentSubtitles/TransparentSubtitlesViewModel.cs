@@ -711,20 +711,32 @@ public partial class TransparentSubtitlesViewModel : ObservableObject
         var nameNoExt = Path.GetFileNameWithoutExtension(videoFileName);
         var ext = SelectedVideoExtension;
         var suffix = Se.Settings.Video.BurnIn.BurnInSuffix;
+
+        // This dialog's own output folder, not burn-in's. The settings window has always written
+        // Video.Transparent.OutputFolder / UseOutputFolder, but nothing read them - so whatever
+        // folder was picked here had no effect and the files went to the burn-in folder instead.
+        var transparent = Se.Settings.Video.Transparent;
+
+        // Directory.Exists belongs in the condition itself, not only at the first use: the
+        // collision loop below picks the folder again, and testing it in one place but not the
+        // other builds "<missing folder>/name_2.mp4" for the second file of a run and fails at
+        // write time. Falling back to the source folder is what the first check already does.
+        var useOutputFolder = transparent.UseOutputFolder &&
+                              !string.IsNullOrEmpty(transparent.OutputFolder) &&
+                              Directory.Exists(transparent.OutputFolder);
+
         var fileName = Path.Combine(Path.GetDirectoryName(videoFileName)!, nameNoExt + suffix + ext);
-        if (Se.Settings.Video.BurnIn.UseOutputFolder &&
-            !string.IsNullOrEmpty(Se.Settings.Video.BurnIn.OutputFolder) &&
-            Directory.Exists(Se.Settings.Video.BurnIn.OutputFolder))
+        if (useOutputFolder)
         {
-            fileName = Path.Combine(Se.Settings.Video.BurnIn.OutputFolder, nameNoExt + suffix + ext);
+            fileName = Path.Combine(transparent.OutputFolder, nameNoExt + suffix + ext);
         }
 
         var i = 2;
         while (File.Exists(fileName))
         {
-            if (Se.Settings.Video.BurnIn.UseOutputFolder && !string.IsNullOrEmpty(Se.Settings.Video.BurnIn.OutputFolder))
+            if (useOutputFolder)
             {
-                fileName = Path.Combine(Se.Settings.Video.BurnIn.OutputFolder, $"{nameNoExt}{suffix}_{i}{ext}");
+                fileName = Path.Combine(transparent.OutputFolder, $"{nameNoExt}{suffix}_{i}{ext}");
             }
             else
             {
@@ -798,7 +810,7 @@ public partial class TransparentSubtitlesViewModel : ObservableObject
     [RelayCommand]
     private async Task OpenOutputFolder()
     {
-        await _folderHelper.OpenFolder(Window!, Se.Settings.Video.BurnIn.OutputFolder);
+        await _folderHelper.OpenFolder(Window!, Se.Settings.Video.Transparent.OutputFolder);
     }
 
     [RelayCommand]

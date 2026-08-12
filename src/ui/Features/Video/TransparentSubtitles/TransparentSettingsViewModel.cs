@@ -33,7 +33,9 @@ public partial class TransparentSettingsViewModel : ObservableObject
     {
         UseSourceFolder = !Se.Settings.Video.Transparent.UseOutputFolder; 
         UseOutputFolder = Se.Settings.Video.Transparent.UseOutputFolder;
-        OutputFolder = Se.Settings.Video.BurnIn.OutputFolder;
+        // This dialog's own folder - it saves to Video.Transparent.OutputFolder below, so loading
+        // burn-in's showed the wrong folder back and hid the fact that the saved one was unused.
+        OutputFolder = Se.Settings.Video.Transparent.OutputFolder;
     }
 
     private void SaveSettings()

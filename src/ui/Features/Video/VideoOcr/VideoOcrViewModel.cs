@@ -859,7 +859,7 @@ public partial class VideoOcrViewModel : ObservableObject
         }
         else if (engineType == OcrEngineType.Ollama)
         {
-            var ollamaOcr = new OllamaOcr(Se.Settings.Ocr.OllamaOcrTimeoutMinutes);
+            using var ollamaOcr = new OllamaOcr(Se.Settings.Ocr.OllamaOcrTimeoutMinutes);
             await RunLlmOcr(ocrGroups, group => OcrWithBitmap(group, bitmap =>
                     ollamaOcr.Ocr(bitmap, OllamaUrl, OllamaModel, OllamaLanguage, cancellationToken)),
                 () => ollamaOcr.Error, reportProgress, addPreviewLine, cancellationToken);
@@ -873,7 +873,7 @@ public partial class VideoOcrViewModel : ObservableObject
         }
         else if (engineType == OcrEngineType.LlamaCpp)
         {
-            var llamaCppOcr = new LlamaCppOcr(Se.Settings.Ocr.LlamaCppOcrTimeoutMinutes);
+            using var llamaCppOcr = new LlamaCppOcr(Se.Settings.Ocr.LlamaCppOcrTimeoutMinutes);
             var url = LlamaCppServerManager.ApiUrl;
             var modelName = SelectedLlamaCppModel?.Model.FileName is { } fileName
                 ? Path.GetFileNameWithoutExtension(fileName)

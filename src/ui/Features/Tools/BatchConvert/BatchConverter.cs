@@ -1,4 +1,4 @@
-﻿using Avalonia.Skia;
+using Avalonia.Skia;
 using Nikse.SubtitleEdit.UiLogic.Export;
 using Nikse.SubtitleEdit.Core.BluRaySup;
 using Nikse.SubtitleEdit.Features.Assa.ResolutionResampler;
@@ -1272,7 +1272,7 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
     /// </returns>
     private async Task<bool> RunOllamaOcr(IOcrSubtitle imageSubtitles, BatchConvertItem item, CancellationToken cancellationToken)
     {
-        var ollamaOcr = new OllamaOcr();
+        using var ollamaOcr = new OllamaOcr();
         var url = Se.Settings.Ocr.OllamaUrl;
         var model = Se.Settings.Ocr.OllamaModel;
         var language = Se.Settings.Ocr.OllamaLanguage;
@@ -1333,7 +1333,7 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
             return false;
         }
 
-        var engine = new LlamaCppOcr(Se.Settings.Ocr.LlamaCppOcrTimeoutMinutes);
+        using var engine = new LlamaCppOcr(Se.Settings.Ocr.LlamaCppOcrTimeoutMinutes);
         var url = LlamaCppServerManager.ApiUrl;
         var modelName = Path.GetFileNameWithoutExtension(model.FileName);
         var language = Se.Settings.Ocr.OllamaLanguage;
