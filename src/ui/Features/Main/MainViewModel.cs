@@ -88,6 +88,7 @@ using Nikse.SubtitleEdit.Features.Shared.GetAudioClips;
 using Nikse.SubtitleEdit.Features.Shared.GoToLineNumber;
 using Nikse.SubtitleEdit.Features.Shared.MediaInfoView;
 using Nikse.SubtitleEdit.Features.Shared.PickAlignment;
+using Nikse.SubtitleEdit.Features.Shared.PickTeletextAlignment;
 using Nikse.SubtitleEdit.Features.Shared.PickFontName;
 using Nikse.SubtitleEdit.Features.Shared.PickLayer;
 using Nikse.SubtitleEdit.Features.Shared.PickLayerFilter;
@@ -12872,23 +12873,36 @@ public partial class MainViewModel :
     }
 
     [RelayCommand]
-    private async Task ShowAlignmentPicker()
+private async Task ShowAlignmentPicker()
+{
+    var selected = SelectedSubtitle;
+    if (selected == null)
     {
-        var selected = SelectedSubtitle;
-        if (selected == null)
-        {
-            return;
-        }
-
-        var result = await ShowDialogAsync<PickAlignmentWindow, PickAlignmentViewModel>(vm => { vm.Initialize(selected, SubtitleGridSelectedCount); });
-
-        if (result.OkPressed)
-        {
-            SetAlignmentToSelected(result.Alignment);
-            _updateAudioVisualizer = true;
-        }
+        return;
     }
 
+    var result = await ShowDialogAsync<PickAlignmentWindow, PickAlignmentViewModel>(vm =>
+    {
+        vm.Initialize(selected, SubtitleGridSelectedCount);
+    });
+
+    if (result.OkPressed)
+    {
+        SetAlignmentToSelected(result.Alignment);
+        _updateAudioVisualizer = true;
+    }
+}
+
+[RelayCommand]
+private async Task ShowTeletextAlignmentPicker()
+{
+    var result = await ShowDialogAsync<PickTeletextAlignmentWindow, PickTeletextAlignmentViewModel>();
+
+    if (result.OkPressed)
+    {
+        // Teletext-Position wird im nächsten Schritt angewendet.
+    }
+}
     [RelayCommand]
     private void DoAlignmentAn1()
     {

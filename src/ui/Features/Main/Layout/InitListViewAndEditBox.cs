@@ -1090,6 +1090,7 @@ public static partial class InitListViewAndEditBox
         var teletextAlignmentMenuItem = new MenuItem
 {
     Header = "Teletext alignment...",
+    Command = vm.ShowTeletextAlignmentPickerCommand,
     DataContext = vm,
 };
 teletextAlignmentMenuItem.Bind(
