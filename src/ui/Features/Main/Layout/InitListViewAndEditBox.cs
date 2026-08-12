@@ -337,7 +337,29 @@ public static partial class InitListViewAndEditBox
             Mode = BindingMode.OneWay,
             Source = vm,
         });
+        columnManager.Add(new SeTableViewColumn
+{
+    Header = "TT",
+    Tag = SubtitleGridColumnKeys.Teletext,
+    Width = new GridLength(70),
+    MinWidth = 60,
+    CellTheme = UiUtil.TableViewNoPaddingCellTheme,
+    HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
+    CellTemplate = new FuncDataTemplate<SubtitleLineViewModel>((value, nameScope) =>
+    {
+        var textBlock = new TextBlock
+        {
+            VerticalAlignment = VerticalAlignment.Center,
+            HorizontalAlignment = HorizontalAlignment.Center,
+            [!TextBlock.TextProperty] = new Binding(nameof(SubtitleLineViewModel.TeletextDisplay))
+{
+    Mode = BindingMode.OneWay
+},
+        };
 
+        return textBlock;
+    }),
+});
         columnManager.Add(new SeTableViewColumn
         {
             Header = Se.Language.General.Text,
@@ -1886,12 +1908,43 @@ flyout.Items.Add(teletextAlignmentMenuItem);
 
     // Stable keys (DataGridColumn.Tag) used to snapshot/restore subtitle grid column
     // widths across restarts. Headers are localized, so they can't be used as keys (#11415).
+    private static string GetTeletextDisplay(SubtitleLineViewModel value)
+{
+    var line = 23;
+
+    if (int.TryParse(value.MarginV, out var ebuLine) &&
+        ebuLine >= 0 &&
+        ebuLine <= 22)
+    {
+        line = ebuLine + 1;
+    }
+
+    var text = value.Text ?? string.Empty;
+
+    var alignment = "C";
+
+    if (text.StartsWith("{\\an1}") ||
+        text.StartsWith("{\\an4}") ||
+        text.StartsWith("{\\an7}"))
+    {
+        alignment = "L";
+    }
+    else if (text.StartsWith("{\\an3}") ||
+             text.StartsWith("{\\an6}") ||
+             text.StartsWith("{\\an9}"))
+    {
+        alignment = "R";
+    }
+
+    return $"{line} {alignment}";
+}
     internal static class SubtitleGridColumnKeys
     {
         public const string Number = "Number";
         public const string Start = "Start";
         public const string End = "End";
         public const string Duration = "Duration";
+        public const string Teletext = "Teletext";
         public const string Text = "Text";
         public const string OriginalText = "OriginalText";
         public const string Style = "Style";

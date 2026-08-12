@@ -104,6 +104,45 @@ public partial class SubtitleLineViewModel : ObservableObject
     public string MarginL { get; set; }
     public string MarginR { get; set; }
     public string MarginV { get; set; }
+    public string TeletextDisplay
+{
+    get
+    {
+        var line = 23;
+
+        if (int.TryParse(MarginV, out var ebuLine) &&
+            ebuLine >= 0 &&
+            ebuLine <= 22)
+        {
+            line = ebuLine + 1;
+        }
+
+        var text = Text ?? string.Empty;
+        var alignment = "C";
+
+        if (text.StartsWith("{\\an1}") ||
+            text.StartsWith("{\\an4}") ||
+            text.StartsWith("{\\an7}"))
+        {
+            alignment = "L";
+        }
+        else if (text.StartsWith("{\\an3}") ||
+                 text.StartsWith("{\\an6}") ||
+                 text.StartsWith("{\\an9}"))
+        {
+            alignment = "R";
+        }
+
+        return $"{line} {alignment}";
+    }
+}
+
+// HIER direkt dahinter:
+public void RefreshTeletextDisplay()
+{
+    OnPropertyChanged(nameof(TeletextDisplay));
+}
+
     public bool NewSection { get; set; }
     public bool Forced { get; set; }
     public Guid Id { get; set; }
