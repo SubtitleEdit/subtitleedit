@@ -216,6 +216,23 @@ public class MultipleReplaceWindow : Window
             labelIcon.Margin = new Thickness(5, 0, 2, 0);
             labelIcon.Padding = new Thickness(0);
 
+            // A rule the preview cannot run - today only a regular expression that will not
+            // compile. It is skipped silently otherwise, which reads as a rule that just does
+            // nothing (#13534).
+            var labelError = new Label
+            {
+                Foreground = new SolidColorBrush(UiTheme.IsDarkThemeEnabled()
+                    ? Color.FromRgb(255, 100, 100)
+                    : Color.FromRgb(183, 28, 28)),
+                VerticalAlignment = VerticalAlignment.Center,
+                VerticalContentAlignment = VerticalAlignment.Center,
+                Margin = new Thickness(0, 0, 4, 0),
+                Padding = new Thickness(0),
+            };
+            Attached.SetIcon(labelError, IconNames.Alert);
+            labelError.Bind(Visual.IsVisibleProperty, new Binding(nameof(RuleTreeNode.HasError)) { Source = node });
+            labelError.Bind(ToolTip.TipProperty, new Binding(nameof(RuleTreeNode.ErrorMessage)) { Source = node });
+
             var buttonActions = new Button
             {
                 HorizontalAlignment = HorizontalAlignment.Left,
@@ -246,6 +263,7 @@ public class MultipleReplaceWindow : Window
                 Margin = new Thickness(0, 0, 0, 0),
                 Children =
                 {
+                    labelError,
                     labelIcon,
                     labelFind,
                     labelSeparator,

@@ -54,6 +54,7 @@ public partial class MultipleReplaceViewModel : ObservableObject
     private readonly IFileHelper _fileHelper;
     private Subtitle _subtitle;
     private readonly ConcurrentDictionary<string, Regex> _compiledRegExList;
+    private readonly ConcurrentDictionary<string, string> _invalidRegExList;
     private readonly Timer _timerReplace;
     private readonly object _previewLock = new();
     private volatile bool _dirty;
@@ -79,6 +80,7 @@ public partial class MultipleReplaceViewModel : ObservableObject
         IsMultipleReplaceDotDotDotButtonsVisible = Se.Settings.Tools.MultipleReplaceShowDotDotDotButtons;
 
         _compiledRegExList = new ConcurrentDictionary<string, Regex>();
+        _invalidRegExList = new ConcurrentDictionary<string, string>();
 
         _timerReplace = new Timer();
         _timerReplace.Interval = 250;
@@ -1351,34 +1353,32 @@ public partial class MultipleReplaceViewModel : ObservableObject
     private List<ReplaceExpression> BuildReplaceExpressions()
     {
         var replaceExpressions = new List<ReplaceExpression>();
+        var errors = new List<(RuleTreeNode Rule, string? Message)>();
+
         foreach (var group in SnapshotRules())
         {
             var rules = group.Rules;
             for (var ruleNumber = 1; ruleNumber <= rules.Count; ruleNumber++)
             {
                 var rule = rules[ruleNumber - 1];
-                if (!rule.IsActive)
-                {
-                    continue;
-                }
-
-                var findWhat = rule.Find;
-                if (string.IsNullOrEmpty(findWhat)) // allow space or spaces
-                {
-                    continue;
-                }
-
                 var isRegex = rule.SearchType == ReplaceExpression.SearchTypeRegularExpression;
-                var replaceWith = isRegex ? RegexUtils.FixNewLine(rule.ReplaceWith) : rule.ReplaceWith;
-                findWhat = isRegex ? RegexUtils.FixNewLine(findWhat) : findWhat;
-
-                if (isRegex && !TryCompileRegex(findWhat))
+                var findWhat = rule.Find;
+                if (!string.IsNullOrEmpty(findWhat) && isRegex) // allow space or spaces
                 {
-                    // Half-typed or malformed pattern - skip this one rule. Letting the exception
-                    // out killed the whole preview instead (#13534).
+                    findWhat = RegexUtils.FixNewLine(findWhat);
+                }
+
+                // Every regular expression is checked, whether or not it runs, so that a rule
+                // sitting in an unticked category is still flagged as broken in the tree.
+                var error = isRegex && !string.IsNullOrEmpty(findWhat) ? GetRegexError(findWhat) : null;
+                errors.Add((rule, error));
+
+                if (error != null || !group.IsActive || !rule.IsActive || string.IsNullOrEmpty(findWhat))
+                {
                     continue;
                 }
 
+                var replaceWith = isRegex ? RegexUtils.FixNewLine(rule.ReplaceWith) : rule.ReplaceWith;
                 var ruleInfo = string.IsNullOrEmpty(rule.Description)
                     ? $"Group name: {group.CategoryName} - Rule number: {ruleNumber}"
                     : $"Group name: {group.CategoryName} - Rule number: {ruleNumber}. {rule.Description}";
@@ -1388,37 +1388,66 @@ public partial class MultipleReplaceViewModel : ObservableObject
             }
         }
 
+        ReportRuleErrors(errors);
+
         return replaceExpressions;
     }
 
-    private bool TryCompileRegex(string findWhat)
+    /// <summary>
+    /// Null when the pattern compiles. A pattern that does not is skipped rather than allowed to
+    /// take the whole preview down with it (#13534) - the rule is marked in the tree instead.
+    /// </summary>
+    private string? GetRegexError(string findWhat)
     {
         if (_compiledRegExList.ContainsKey(findWhat))
         {
-            return true;
+            return null;
+        }
+
+        if (_invalidRegExList.TryGetValue(findWhat, out var known))
+        {
+            return known;
         }
 
         try
         {
             _compiledRegExList[findWhat] = new Regex(findWhat, RegexOptions.Compiled | RegexOptions.Multiline);
-            return true;
+            return null;
         }
-        catch (ArgumentException)
+        catch (ArgumentException exception)
         {
-            return false;
+            var message = string.Format(Se.Language.Edit.MultipleReplace.InvalidRegularExpressionX, exception.Message);
+            _invalidRegExList[findWhat] = message;
+            return message;
         }
+    }
+
+    private void ReportRuleErrors(List<(RuleTreeNode Rule, string? Message)> errors)
+    {
+        if (errors.All(e => e.Message == e.Rule.ErrorMessage))
+        {
+            return;
+        }
+
+        Dispatcher.UIThread.Post(() =>
+        {
+            foreach (var (rule, message) in errors)
+            {
+                rule.ErrorMessage = message;
+            }
+        });
     }
 
     /// <summary>
     /// The rule tree is owned by the UI thread but the preview runs on a timer thread, so copy the
-    /// active groups and their rules over there - iterating the live collections could throw
-    /// "collection was modified" mid-edit, which took the whole preview down with it (#13534).
+    /// groups and their rules over there - iterating the live collections could throw "collection
+    /// was modified" mid-edit, which took the whole preview down with it (#13534).
     /// </summary>
-    private List<(string CategoryName, List<RuleTreeNode> Rules)> SnapshotRules()
+    private List<(string CategoryName, bool IsActive, List<RuleTreeNode> Rules)> SnapshotRules()
     {
         return Dispatcher.UIThread.Invoke(() => Nodes
-            .Where(p => p.IsActive && p.SubNodes != null)
-            .Select(p => (p.CategoryName, Rules: p.SubNodes!.ToList()))
+            .Where(p => p.SubNodes != null)
+            .Select(p => (p.CategoryName, p.IsActive, Rules: p.SubNodes!.ToList()))
             .ToList());
     }
 

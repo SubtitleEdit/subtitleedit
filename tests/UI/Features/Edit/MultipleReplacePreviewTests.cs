@@ -228,6 +228,79 @@ public class MultipleReplacePreviewTests
         Assert.Equal("cc", vm.Fixes[0].After);
     }
 
+    // A rule that is skipped silently reads as a rule that simply does nothing, so the tree marks
+    // it - and clears the mark once the pattern compiles again.
+    [AvaloniaFact]
+    public void BrokenRegexRule_IsMarkedInTheTreeUntilItCompiles()
+    {
+        var vm = NewViewModel();
+        var category = AddCategory(vm, "c1");
+        var good = AddRule(category, "colour", "color", MultipleReplaceType.CaseInsensitive);
+        var regexRule = AddRule(category, "(", string.Empty, MultipleReplaceType.RegularExpression);
+        vm.Initialize(OneLine("The colour is red."));
+
+        Settle();
+
+        Assert.True(regexRule.HasError);
+        Assert.Contains("Invalid regular expression", regexRule.ErrorMessage);
+        Assert.False(good.HasError);
+
+        regexRule.Find = "(red|green)";
+        vm.RuleTextChanged(null, null!);
+        Settle();
+
+        Assert.False(regexRule.HasError);
+        Assert.Null(regexRule.ErrorMessage);
+    }
+
+    // Rules in an unticked category never run, but the user still wants to see that one of them
+    // is broken.
+    [AvaloniaFact]
+    public void BrokenRegexRule_IsMarkedEvenInAnUntickedCategory()
+    {
+        var vm = NewViewModel();
+        var off = AddCategory(vm, "off");
+        off.IsActive = false;
+        var broken = AddRule(off, "(", string.Empty, MultipleReplaceType.RegularExpression);
+        var inactive = AddRule(off, "[", string.Empty, MultipleReplaceType.RegularExpression);
+        inactive.IsActive = false;
+        vm.Initialize(OneLine("The colour is red."));
+
+        Settle();
+
+        Assert.True(broken.HasError);
+        Assert.True(inactive.HasError);
+    }
+
+    // The marker is a control in the tree, not just a view model flag.
+    [AvaloniaFact]
+    public void BrokenRegexRule_ShowsAWarningInTheTree()
+    {
+        var vm = NewViewModel();
+        var category = AddCategory(vm, "c1");
+        var regexRule = AddRule(category, "(", string.Empty, MultipleReplaceType.RegularExpression);
+        vm.Initialize(OneLine("The colour is red."));
+        var window = new MultipleReplaceWindow(vm);
+        try
+        {
+            window.Show();
+            vm.ExpandAllCommand.Execute(null);
+            Settle();
+
+            Assert.True(regexRule.HasError);
+            var marker = vm.RulesTreeView.GetVisualDescendants()
+                .OfType<Label>()
+                .FirstOrDefault(l => Equals(ToolTip.GetTip(l), regexRule.ErrorMessage));
+
+            Assert.NotNull(marker);
+            Assert.True(marker!.IsVisible);
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
     // "Ok" and "Apply" generate the preview synchronously on the UI thread, which is also the
     // thread the rule snapshot is taken on - that has to run inline instead of waiting on itself.
     [AvaloniaFact]

@@ -15,6 +15,7 @@ public class LanguageMultipleReplace
     public string DeleteRuleConfirm { get; set; }
     public string FindWhat { get; set; }
     public string DescriptionOptional { get; set; }
+    public string InvalidRegularExpressionX { get; set; }
 
     public LanguageMultipleReplace()
     {
@@ -31,5 +32,6 @@ public class LanguageMultipleReplace
         DeleteRuleConfirm = "Delete rule '{0}'?";
         FindWhat = "Find what";
         DescriptionOptional = "Description (optional)";
+        InvalidRegularExpressionX = "Invalid regular expression: {0}";
     }
 }

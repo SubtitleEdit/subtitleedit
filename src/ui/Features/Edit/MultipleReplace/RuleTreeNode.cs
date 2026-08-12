@@ -17,6 +17,16 @@ public partial class RuleTreeNode : ObservableObject
     [ObservableProperty] private bool _isSelected;
     [ObservableProperty] private bool _isExpanded;
 
+    /// <summary>
+    /// Why this rule cannot run - currently only a regular expression that will not compile.
+    /// Set by the preview, shown as a warning marker on the row.
+    /// </summary>
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(HasError))]
+    private string? _errorMessage;
+
+    public bool HasError => !string.IsNullOrEmpty(ErrorMessage);
+
     private MultipleReplaceType _type;
     public MultipleReplaceType Type
     {
