@@ -2,6 +2,7 @@ using Avalonia.Controls;
 using Avalonia.Input;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using Nikse.SubtitleEdit.Features.Main;
 
 namespace Nikse.SubtitleEdit.Features.Shared.PickTeletextAlignment;
 
@@ -30,12 +31,36 @@ public partial class PickTeletextAlignmentViewModel : ObservableObject
         Window?.Close();
     }
 
-    internal void OnKeyDown(KeyEventArgs e)
+
+// NEU: aktuelle Teletext-Zeile des Untertitels einlesen
+internal void Initialize(SubtitleLineViewModel? selectedSubtitle)
+{
+    if (selectedSubtitle == null)
     {
-        if (e.Key == Key.Escape)
-        {
-            e.Handled = true;
-            Window?.Close();
-        }
+        TeletextLine = 23;
+        return;
     }
+
+    if (int.TryParse(selectedSubtitle.MarginV, out var line) &&
+        line >= 0 &&
+        line <= 22)
+    {
+        // EBU STL zählt die Zeilen von 0 bis 22.
+        // Für den Benutzer zeigen wir 1 bis 23 an.
+        TeletextLine = line + 1;
+    }
+    else
+    {
+        TeletextLine = 23;
+    }
+}
+
+internal void OnKeyDown(KeyEventArgs e)
+{
+    if (e.Key == Key.Escape)
+    {
+        e.Handled = true;
+        Window?.Close();
+    }
+}
 }

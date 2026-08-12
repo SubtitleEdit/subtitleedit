@@ -12896,11 +12896,25 @@ private async Task ShowAlignmentPicker()
 [RelayCommand]
 private async Task ShowTeletextAlignmentPicker()
 {
-    var result = await ShowDialogAsync<PickTeletextAlignmentWindow, PickTeletextAlignmentViewModel>();
+    var selected = SelectedSubtitle;
+    if (selected == null)
+    {
+        return;
+    }
+
+    var selectedItems = SubtitleGridSelectedItems;
+
+    var result = await ShowDialogAsync<PickTeletextAlignmentWindow, PickTeletextAlignmentViewModel>(
+        vm => vm.Initialize(selected));
 
     if (result.OkPressed)
     {
-        // Teletext-Position wird im nächsten Schritt angewendet.
+        var marginV = (result.TeletextLine - 1).ToString();
+
+        foreach (var item in selectedItems)
+        {
+            item.MarginV = marginV;
+        }
     }
 }
     [RelayCommand]
