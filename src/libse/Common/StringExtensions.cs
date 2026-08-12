@@ -126,57 +126,39 @@ namespace Nikse.SubtitleEdit.Core.Common
         public static List<string> SplitToLines(this string s, int max)
         {
             //original non-optimized version: return source.Replace("\r\r\n", "\n").Replace("\r\n", "\n").Replace('\r', '\n').Replace('\u2028', '\n').Split('\n');
-
-            var lines = new List<string>();
-            var start = 0;
-            var i = 0;
+            // See https://github.com/SubtitleEdit/subtitleedit/issues/8854 - "\r\r\n" is
+            // deliberately two line breaks (following how VS Code opens such files).
+            // Line breaks are sparse, so hop between them with vectorized IndexOfAny
+            // instead of testing every char.
 
             if (s.Length < max)
             {
                 max = s.Length;
             }
 
-            while (i < max)
+            var lines = new List<string>();
+            var span = s.AsSpan(0, max);
+            var start = 0;
+            var pos = 0;
+            while (true)
             {
-                var ch = s[i];
-                if (ch == '\r')
+                var idx = span.Slice(pos).IndexOfAny('\r', '\n', '\u2028');
+                if (idx < 0)
                 {
-                    // See https://github.com/SubtitleEdit/subtitleedit/issues/8854
-                    // SE now tries to follow how VS code opens text file
-                    //if (i < max - 2 && s[i + 1] == '\r' && s[i + 2] == '\n') // \r\r\n
-                    //{
-                    //    lines.Add(s.Substring(start, i - start));
-                    //    i += 3;
-                    //    start = i;
-                    //    continue;
-                    //}
-
-                    if (i < max - 1 && s[i + 1] == '\n') // \r\n
-                    {
-                        lines.Add(s.Substring(start, i - start));
-                        i += 2;
-                        start = i;
-                        continue;
-                    }
-
-                    lines.Add(s.Substring(start, i - start));
-                    i++;
-                    start = i;
-                    continue;
+                    break;
                 }
 
-                if (ch == '\n' || ch == '\u2028')
+                var i = pos + idx;
+                lines.Add(s.Substring(start, i - start));
+                if (span[i] == '\r' && i + 1 < max && span[i + 1] == '\n') // \r\n
                 {
-                    lines.Add(s.Substring(start, i - start));
                     i++;
-                    start = i;
-                    continue;
                 }
 
-                i++;
+                pos = start = i + 1;
             }
 
-            lines.Add(s.Substring(start, i - start));
+            lines.Add(start == 0 && max == s.Length ? s : s.Substring(start, max - start));
             return lines;
         }
 
@@ -485,19 +467,51 @@ namespace Nikse.SubtitleEdit.Core.Common
 
         public static string RemoveControlCharacters(this string s)
         {
-            var max = s.Length;
-            var newStr = new char[max];
-            var newIdx = 0;
-            for (int index = 0; index < max; index++)
+            // char.IsControl matches exactly U+0000-U+001F and U+007F-U+009F; almost all
+            // input has none, so return the original instance without allocating.
+            var span = s.AsSpan();
+#if NET8_0_OR_GREATER
+            if (!span.ContainsAnyInRange('\u0000', '\u001F') && !span.ContainsAnyInRange('\u007F', '\u009F'))
             {
-                var ch = s[index];
-                if (!char.IsControl(ch))
+                return s;
+            }
+#else
+            var hasControl = false;
+            foreach (var c in span)
+            {
+                if (char.IsControl(c))
                 {
-                    newStr[newIdx++] = ch;
+                    hasControl = true;
+                    break;
                 }
             }
 
-            return new string(newStr, 0, newIdx);
+            if (!hasControl)
+            {
+                return s;
+            }
+#endif
+
+            var count = 0;
+            foreach (var ch in span)
+            {
+                if (char.IsControl(ch))
+                {
+                    count++;
+                }
+            }
+
+            return string.Create(s.Length - count, s, (chars, state) =>
+            {
+                var index = 0;
+                foreach (var ch in state)
+                {
+                    if (!char.IsControl(ch))
+                    {
+                        chars[index++] = ch;
+                    }
+                }
+            });
         }
 
         public static bool IsOnlyControlCharactersOrWhiteSpace(this string s)
@@ -543,12 +557,30 @@ namespace Nikse.SubtitleEdit.Core.Common
 
         public static string CapitalizeFirstLetter(this string s, CultureInfo ci = null)
         {
-            var si = new StringInfo(s);
             if (ci == null)
             {
                 ci = CultureInfo.CurrentCulture;
             }
 
+            if (s.Length > 0 && s[0] < 0x80)
+            {
+                // ASCII first char: it cannot be part of a surrogate pair or carry combining
+                // marks, so the StringInfo text-element machinery (which allocates heavily)
+                // is not needed.
+                var up = char.ToUpper(s[0], ci);
+                if (up == s[0])
+                {
+                    return s;
+                }
+
+                return string.Create(s.Length, (s, up), (chars, state) =>
+                {
+                    chars[0] = state.up;
+                    state.s.AsSpan(1).CopyTo(chars.Slice(1));
+                });
+            }
+
+            var si = new StringInfo(s);
             if (si.LengthInTextElements > 0)
             {
                 s = si.SubstringByTextElements(0, 1).ToUpper(ci);
@@ -977,15 +1009,30 @@ namespace Nikse.SubtitleEdit.Core.Common
             return value.HasSentenceEnding(string.Empty);
         }
 
-        private static readonly HashSet<char> NeutralSentenceEndingChars = new HashSet<char>
+        private static bool IsNeutralSentenceEndingChar(char c)
         {
-            '.', '!', '?', ']', ')', '…', '♪', '؟', '。', '？'
-        };
+            switch (c)
+            {
+                case '.':
+                case '!':
+                case '?':
+                case ']':
+                case ')':
+                case '…':
+                case '♪':
+                case '؟':
+                case '。':
+                case '？':
+                    return true;
+                default:
+                    return false;
+            }
+        }
 
-        private static readonly HashSet<char> GreekSentenceEndingChars = new HashSet<char>
+        private static bool IsGreekSentenceEndingChar(char c)
         {
-            '\u037E', ';'
-        };
+            return c == '\u037E' || c == ';';
+        }
 
         public static bool HasSentenceEnding(this string value, string twoLetterLanguageCode)
         {
@@ -1048,7 +1095,7 @@ namespace Nikse.SubtitleEdit.Core.Common
 
             // evaluate culture type
             var isCultureNeutral = twoLetterLanguageCode == null || twoLetterLanguageCode.Equals("el", StringComparison.OrdinalIgnoreCase) == false;
-            return NeutralSentenceEndingChars.Contains(charAtIndex) || (!isCultureNeutral && GreekSentenceEndingChars.Contains(charAtIndex));
+            return IsNeutralSentenceEndingChar(charAtIndex) || (!isCultureNeutral && IsGreekSentenceEndingChar(charAtIndex));
         }
 
         public static string NormalizeUnicode(this string input, Encoding encoding)
