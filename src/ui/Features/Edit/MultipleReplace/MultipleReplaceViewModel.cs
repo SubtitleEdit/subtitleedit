@@ -14,6 +14,7 @@ using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Logic.Media;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -52,9 +53,11 @@ public partial class MultipleReplaceViewModel : ObservableObject
     private readonly IWindowService _windowService;
     private readonly IFileHelper _fileHelper;
     private Subtitle _subtitle;
-    private readonly Dictionary<string, Regex> _compiledRegExList;
+    private readonly ConcurrentDictionary<string, Regex> _compiledRegExList;
     private readonly Timer _timerReplace;
-    private bool _dirty;
+    private readonly object _previewLock = new();
+    private volatile bool _dirty;
+    private volatile bool _closed;
 
     // Subtitle Edit 4 used Ctrl+Up/Down/Home/End for the four move commands on both the rules
     // and the groups list (#13523). Ctrl+Up/Down is Mission Control on macOS, so show Cmd there.
@@ -75,7 +78,7 @@ public partial class MultipleReplaceViewModel : ObservableObject
         RulesTreeView = new TreeView();
         IsMultipleReplaceDotDotDotButtonsVisible = Se.Settings.Tools.MultipleReplaceShowDotDotDotButtons;
 
-        _compiledRegExList = new Dictionary<string, Regex>();
+        _compiledRegExList = new ConcurrentDictionary<string, Regex>();
 
         _timerReplace = new Timer();
         _timerReplace.Interval = 250;
@@ -143,15 +146,32 @@ public partial class MultipleReplaceViewModel : ObservableObject
 
     private void TimerReplaceElapsed(object? sender, ElapsedEventArgs e)
     {
-        if (!_dirty)
+        if (!_dirty || _closed)
         {
             return;
         }
 
         _timerReplace.Stop();
         _dirty = false;
-        GeneratePreview();
-        _timerReplace.Start();
+        try
+        {
+            GeneratePreview();
+        }
+        catch (Exception exception)
+        {
+            // The timer is stopped while generating, so an escaping exception used to leave it
+            // stopped for good - the preview then silently froze for the rest of the session and
+            // no rule or category tick ever changed it again (#13534). Retry on the next tick.
+            _dirty = true;
+            SeLogger.Error(exception, "Multiple replace: unable to generate preview");
+        }
+        finally
+        {
+            if (!_closed)
+            {
+                _timerReplace.Start();
+            }
+        }
     }
 
     public void Initialize(Subtitle subtitle)
@@ -167,7 +187,6 @@ public partial class MultipleReplaceViewModel : ObservableObject
                 if (item.DataContext is RuleTreeNode node && node.IsCategory)
                 {
                     item.IsExpanded = node.IsExpanded;
-                    break;
                 }
             }
         });
@@ -1233,9 +1252,22 @@ public partial class MultipleReplaceViewModel : ObservableObject
 
     private void GeneratePreview()
     {
+        // Snapshot outside the lock: it hops to the UI thread, and "Ok"/"Apply" call this from
+        // there while the timer thread may already hold the lock.
+        var replaceExpressions = BuildReplaceExpressions();
+
+        lock (_previewLock)
+        {
+            GeneratePreview(replaceExpressions);
+        }
+    }
+
+    // "Ok" and "Apply" generate on the UI thread while the preview timer generates on its own
+    // thread; both write FixedSubtitle and TotalReplaced, so only one may run at a time.
+    private void GeneratePreview(List<ReplaceExpression> replaceExpressions)
+    {
         FixedSubtitle = new Subtitle(_subtitle, false);
         TotalReplaced = 0;
-        var replaceExpressions = BuildReplaceExpressions();
         var fixes = new List<MultipleReplaceFix>();
         for (var i = 0; i < _subtitle.Paragraphs.Count; i++)
         {
@@ -1258,7 +1290,11 @@ public partial class MultipleReplaceViewModel : ObservableObject
                 }
                 else if (item.SearchType == ReplaceExpression.SearchRegEx)
                 {
-                    var r = _compiledRegExList[item.FindWhat];
+                    if (!_compiledRegExList.TryGetValue(item.FindWhat, out var r))
+                    {
+                        continue;
+                    }
+
                     // Match against line-feed-normalized text so a pattern's \n line break matches even
                     // when the paragraph text uses \r\n (the pattern is FixNewLine'd to \n) (#11956).
                     if (r.IsMatch(string.Join("\n", newText.SplitToLines())))
@@ -1312,37 +1348,78 @@ public partial class MultipleReplaceViewModel : ObservableObject
         });
     }
 
-    private HashSet<ReplaceExpression> BuildReplaceExpressions()
+    private List<ReplaceExpression> BuildReplaceExpressions()
     {
-        var replaceExpressions = new HashSet<ReplaceExpression>();
-        foreach (var group in Nodes.Where(p => p.IsActive && p.SubNodes != null))
+        var replaceExpressions = new List<ReplaceExpression>();
+        foreach (var group in SnapshotRules())
         {
-            foreach (var rule in group.SubNodes!.Where(p => p.IsActive))
+            var rules = group.Rules;
+            for (var ruleNumber = 1; ruleNumber <= rules.Count; ruleNumber++)
             {
-                var findWhat = rule.Find;
-                if (!string.IsNullOrEmpty(findWhat)) // allow space or spaces
+                var rule = rules[ruleNumber - 1];
+                if (!rule.IsActive)
                 {
-                    var isRegex = rule.SearchType == ReplaceExpression.SearchTypeRegularExpression;
-                    var replaceWith = isRegex ? RegexUtils.FixNewLine(rule.ReplaceWith) : rule.ReplaceWith;
-                    findWhat = isRegex ? RegexUtils.FixNewLine(findWhat) : findWhat;
-                    if (group.SubNodes != null)
-                    {
-                        var ruleInfo = string.IsNullOrEmpty(rule.Description)
-                            ? $"Group name: {group.CategoryName} - Rule number: {group.SubNodes.IndexOf(rule) + 1}"
-                            : $"Group name: {group.CategoryName} - Rule number: {group.SubNodes.IndexOf(rule) + 1}. {rule.Description}";
-                        var mpi = new ReplaceExpression(findWhat, replaceWith, rule.SearchType, ruleInfo);
-                        mpi.RuleTreeNode = rule;
-                        replaceExpressions.Add(mpi);
-                        if (mpi.SearchType == ReplaceExpression.SearchRegEx && !_compiledRegExList.ContainsKey(findWhat))
-                        {
-                            _compiledRegExList.Add(findWhat, new Regex(findWhat, RegexOptions.Compiled | RegexOptions.Multiline));
-                        }
-                    }
+                    continue;
                 }
+
+                var findWhat = rule.Find;
+                if (string.IsNullOrEmpty(findWhat)) // allow space or spaces
+                {
+                    continue;
+                }
+
+                var isRegex = rule.SearchType == ReplaceExpression.SearchTypeRegularExpression;
+                var replaceWith = isRegex ? RegexUtils.FixNewLine(rule.ReplaceWith) : rule.ReplaceWith;
+                findWhat = isRegex ? RegexUtils.FixNewLine(findWhat) : findWhat;
+
+                if (isRegex && !TryCompileRegex(findWhat))
+                {
+                    // Half-typed or malformed pattern - skip this one rule. Letting the exception
+                    // out killed the whole preview instead (#13534).
+                    continue;
+                }
+
+                var ruleInfo = string.IsNullOrEmpty(rule.Description)
+                    ? $"Group name: {group.CategoryName} - Rule number: {ruleNumber}"
+                    : $"Group name: {group.CategoryName} - Rule number: {ruleNumber}. {rule.Description}";
+                var mpi = new ReplaceExpression(findWhat, replaceWith, rule.SearchType, ruleInfo);
+                mpi.RuleTreeNode = rule;
+                replaceExpressions.Add(mpi);
             }
         }
 
         return replaceExpressions;
+    }
+
+    private bool TryCompileRegex(string findWhat)
+    {
+        if (_compiledRegExList.ContainsKey(findWhat))
+        {
+            return true;
+        }
+
+        try
+        {
+            _compiledRegExList[findWhat] = new Regex(findWhat, RegexOptions.Compiled | RegexOptions.Multiline);
+            return true;
+        }
+        catch (ArgumentException)
+        {
+            return false;
+        }
+    }
+
+    /// <summary>
+    /// The rule tree is owned by the UI thread but the preview runs on a timer thread, so copy the
+    /// active groups and their rules over there - iterating the live collections could throw
+    /// "collection was modified" mid-edit, which took the whole preview down with it (#13534).
+    /// </summary>
+    private List<(string CategoryName, List<RuleTreeNode> Rules)> SnapshotRules()
+    {
+        return Dispatcher.UIThread.Invoke(() => Nodes
+            .Where(p => p.IsActive && p.SubNodes != null)
+            .Select(p => (p.CategoryName, Rules: p.SubNodes!.ToList()))
+            .ToList());
     }
 
     public void RulesTreeView_SelectionChanged(object? sender, SelectionChangedEventArgs e)
@@ -1381,6 +1458,13 @@ public partial class MultipleReplaceViewModel : ObservableObject
 
     internal void OnClosing()
     {
+        // The view model is transient, so without this every visit to the dialog leaves another
+        // preview timer ticking for the rest of the process lifetime.
+        _closed = true;
+        _timerReplace.Stop();
+        _timerReplace.Elapsed -= TimerReplaceElapsed;
+        _timerReplace.Dispose();
+
         SaveSettings();
         UiUtil.SaveWindowPosition(Window);
     }
