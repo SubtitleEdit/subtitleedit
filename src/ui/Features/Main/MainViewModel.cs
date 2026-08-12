@@ -12393,7 +12393,10 @@ public partial class MainViewModel :
             var subs = Subtitles.Select(p => p.Text).ToList();
             var origs = GetOriginalTextsForFind();
 
-            ResetFindScopeToBothColumns();
+            // The find window has no scope picker and always covers both columns, so it also clears
+            // a scope the replace window left behind (SE 4's find dialog built a fresh helper with
+            // both flags set for the same reason).
+            _findService.CurrentScope = FindScope.TextAndOriginal;
 
             var startInOriginal = IsFindPositionInOriginal();
             var startTextBox = GetFindTextBox(startInOriginal);
@@ -12457,10 +12460,6 @@ public partial class MainViewModel :
 
         var subs = Subtitles.Select(p => p.Text).ToList();
         var origs = GetOriginalTextsForFind();
-
-        // Before IsFindPositionInOriginal, which follows the scope - see HandleFindResult.
-        ResetFindScopeToBothColumns();
-
         var startInOriginal = IsFindPositionInOriginal();
         var currentLineIndex = Subtitles.IndexOf(selectedSubtitle);
         var currentCharIndex = GetFindTextBox(startInOriginal).SelectionEnd;
@@ -12508,10 +12507,6 @@ public partial class MainViewModel :
 
         var subs = Subtitles.Select(p => p.Text).ToList();
         var origs = GetOriginalTextsForFind();
-
-        // Before IsFindPositionInOriginal, which follows the scope - see HandleFindResult.
-        ResetFindScopeToBothColumns();
-
         var startInOriginal = IsFindPositionInOriginal();
         var currentLineIndex = Subtitles.IndexOf(selectedSubtitle);
         var idx = _findService.FindPrevious(_findService.SearchText, subs, currentLineIndex, GetFindTextBox(startInOriginal).SelectionStart - 1, origs, startInOriginal);
@@ -12560,21 +12555,6 @@ public partial class MainViewModel :
     private List<string>? GetOriginalTextsForReplace()
     {
         return CanEditOriginal ? GetOriginalTextsForFind() : null;
-    }
-
-    /// <summary>
-    /// Puts the find service back to searching both columns. Finding always covers both - only the
-    /// replace window can narrow it, and it does that by leaving the scope on the shared service
-    /// (SE 4's find dialog built a fresh helper with both flags set for the same reason). So every
-    /// way into a find has to clear what a replace left behind: the find window, and the find
-    /// next / find previous shortcuts, which reach the service without opening any window.
-    ///
-    /// Call before <see cref="IsFindPositionInOriginal"/>, which follows the scope - a stale one
-    /// would also start the search from the wrong column's caret.
-    /// </summary>
-    private void ResetFindScopeToBothColumns()
-    {
-        _findService.CurrentScope = FindScope.TextAndOriginal;
     }
 
     /// <summary>
