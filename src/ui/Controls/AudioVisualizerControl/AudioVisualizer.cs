@@ -1827,13 +1827,7 @@ public class AudioVisualizer : Control
 
             if (WavePeaks == null && ShowClickToGenerateHint && !string.IsNullOrEmpty(ClickToGenerateText))
             {
-                var hint = new FormattedText(
-                    ClickToGenerateText,
-                    CultureInfo.CurrentCulture,
-                    FlowDirection.LeftToRight,
-                    Typeface.Default,
-                    14,
-                    Brushes.Gainsboro);
+                var hint = GetClickToGenerateHintText();
                 context.DrawText(hint, new Point((width - hint.Width) / 2, (height - hint.Height) / 2));
             }
 
@@ -1842,6 +1836,31 @@ public class AudioVisualizer : Control
                 context.DrawRectangle(null, _paintPenSelected, boundsRect);
             }
         }
+    }
+
+    // The "click to generate" hint is drawn while a video is loaded but its waveform has not been
+    // generated yet - and CurrentVideoPositionSeconds is an AffectsRender property the ~60 fps
+    // cursor timer writes on every tick, so that state renders at full frame rate. Shaping the
+    // hint per frame was a FormattedText (and a full text layout) 60 times a second for a string
+    // that only changes with the UI language.
+    private FormattedText? _clickToGenerateHintText;
+    private string? _clickToGenerateHintSource;
+
+    private FormattedText GetClickToGenerateHintText()
+    {
+        if (_clickToGenerateHintText == null || !ReferenceEquals(_clickToGenerateHintSource, ClickToGenerateText))
+        {
+            _clickToGenerateHintSource = ClickToGenerateText;
+            _clickToGenerateHintText = new FormattedText(
+                ClickToGenerateText,
+                CultureInfo.CurrentCulture,
+                FlowDirection.LeftToRight,
+                Typeface.Default,
+                14,
+                Brushes.Gainsboro);
+        }
+
+        return _clickToGenerateHintText;
     }
 
     private void DrawSpectrogram(DrawingContext context, ref RenderContext renderCtx)

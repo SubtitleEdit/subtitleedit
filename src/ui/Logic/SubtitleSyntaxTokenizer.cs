@@ -180,9 +180,20 @@ public static class SubtitleSyntaxTokenizer
         { "yellowgreen", Color.FromRgb(154, 205, 50) }
     };
 
+    // Both colour parsers run per colour tag, per visible row, on every grid repaint - and again
+    // per keystroke for the edit box, which tokenizes its visible lines. Parsing a "#RRGGBB"
+    // used to allocate six strings on the way (the caller's substring, Trim, the part after '#'
+    // and one two-char string per channel) plus a Convert.ToByte per channel; the span overloads
+    // below allocate nothing. The string overloads are kept for callers that already hold one.
+    private static readonly Dictionary<string, Color>.AlternateLookup<ReadOnlySpan<char>> NamedColorsBySpan =
+        NamedColors.GetAlternateLookup<ReadOnlySpan<char>>();
+
     internal static Color? TryParseColor(string colorValue)
+        => colorValue == null ? null : TryParseColor(colorValue.AsSpan());
+
+    internal static Color? TryParseColor(ReadOnlySpan<char> colorValue)
     {
-        if (string.IsNullOrWhiteSpace(colorValue))
+        if (colorValue.IsWhiteSpace())
         {
             return null;
         }
@@ -190,45 +201,45 @@ public static class SubtitleSyntaxTokenizer
         colorValue = colorValue.Trim();
 
         // Check named colors
-        if (NamedColors.TryGetValue(colorValue, out var namedColor))
+        if (NamedColorsBySpan.TryGetValue(colorValue, out var namedColor))
         {
             return namedColor;
         }
 
         // Check hex colors
-        if (colorValue.StartsWith('#'))
+        if (colorValue.Length > 0 && colorValue[0] == '#')
         {
             var hex = colorValue[1..];
-            try
+            if (hex.Length == 3)
             {
-                if (hex.Length == 3)
+                // Short hex format: #RGB -> #RRGGBB
+                if (TryParseHexDigit(hex[0], out var r) &&
+                    TryParseHexDigit(hex[1], out var g) &&
+                    TryParseHexDigit(hex[2], out var b))
                 {
-                    // Short hex format: #RGB -> #RRGGBB
-                    var r = Convert.ToByte(new string(hex[0], 2), 16);
-                    var g = Convert.ToByte(new string(hex[1], 2), 16);
-                    var b = Convert.ToByte(new string(hex[2], 2), 16);
-                    return Color.FromRgb(r, g, b);
+                    // What Convert.ToByte(new string(digit, 2), 16) produced: the digit doubled.
+                    return Color.FromRgb((byte)(r * 17), (byte)(g * 17), (byte)(b * 17));
                 }
-                else if (hex.Length == 6)
+            }
+            else if (hex.Length == 6)
+            {
+                // Standard hex format: #RRGGBB
+                if (TryParseHexByte(hex[..2], out var r) &&
+                    TryParseHexByte(hex[2..4], out var g) &&
+                    TryParseHexByte(hex[4..6], out var b))
                 {
-                    // Standard hex format: #RRGGBB
-                    var r = Convert.ToByte(hex[..2], 16);
-                    var g = Convert.ToByte(hex[2..4], 16);
-                    var b = Convert.ToByte(hex[4..6], 16);
-                    return Color.FromRgb(r, g, b);
-                }
-                else if (hex.Length == 8)
-                {
-                    // Hex with alpha: #AARRGGBB or #RRGGBBAA
-                    var r = Convert.ToByte(hex[2..4], 16);
-                    var g = Convert.ToByte(hex[4..6], 16);
-                    var b = Convert.ToByte(hex[6..8], 16);
                     return Color.FromRgb(r, g, b);
                 }
             }
-            catch
+            else if (hex.Length == 8)
             {
-                return null;
+                // Hex with alpha: #AARRGGBB or #RRGGBBAA
+                if (TryParseHexByte(hex[2..4], out var r) &&
+                    TryParseHexByte(hex[4..6], out var g) &&
+                    TryParseHexByte(hex[6..8], out var b))
+                {
+                    return Color.FromRgb(r, g, b);
+                }
             }
         }
 
@@ -236,8 +247,11 @@ public static class SubtitleSyntaxTokenizer
     }
 
     internal static Color? TryParseAssColor(string colorValue)
+        => colorValue == null ? null : TryParseAssColor(colorValue.AsSpan());
+
+    internal static Color? TryParseAssColor(ReadOnlySpan<char> colorValue)
     {
-        if (string.IsNullOrWhiteSpace(colorValue))
+        if (colorValue.IsWhiteSpace())
         {
             return null;
         }
@@ -245,35 +259,74 @@ public static class SubtitleSyntaxTokenizer
         colorValue = colorValue.Trim();
 
         // ASS/SSA color format: &HBBGGRR& or &HAABBGGRR&
-        if (colorValue.StartsWith("&H", StringComparison.OrdinalIgnoreCase) && colorValue.EndsWith('&'))
+        if (colorValue.StartsWith("&H", StringComparison.OrdinalIgnoreCase) && colorValue.EndsWith("&"))
         {
-            var hex = colorValue.Substring(2, colorValue.Length - 3);
-            try
+            var hex = colorValue.Slice(2, colorValue.Length - 3);
+            if (hex.Length == 6)
             {
-                if (hex.Length == 6)
+                // Format: &HBBGGRR& (BGR format)
+                if (TryParseHexByte(hex[..2], out var b) &&
+                    TryParseHexByte(hex[2..4], out var g) &&
+                    TryParseHexByte(hex[4..6], out var r))
                 {
-                    // Format: &HBBGGRR& (BGR format)
-                    var b = Convert.ToByte(hex[..2], 16);
-                    var g = Convert.ToByte(hex[2..4], 16);
-                    var r = Convert.ToByte(hex[4..6], 16);
-                    return Color.FromRgb(r, g, b);
-                }
-                else if (hex.Length == 8)
-                {
-                    // Format: &HAABBGGRR& (ABGR format)
-                    var b = Convert.ToByte(hex[2..4], 16);
-                    var g = Convert.ToByte(hex[4..6], 16);
-                    var r = Convert.ToByte(hex[6..8], 16);
                     return Color.FromRgb(r, g, b);
                 }
             }
-            catch
+            else if (hex.Length == 8)
             {
-                return null;
+                // Format: &HAABBGGRR& (ABGR format)
+                if (TryParseHexByte(hex[2..4], out var b) &&
+                    TryParseHexByte(hex[4..6], out var g) &&
+                    TryParseHexByte(hex[6..8], out var r))
+                {
+                    return Color.FromRgb(r, g, b);
+                }
             }
         }
 
         return null;
+    }
+
+    // Exact Convert.ToByte(s, 16) parity for the two-character slices above, which is what the
+    // string version called. Its accepted grammar for two characters is two hex digits, or a
+    // leading '+' and one hex digit ("+f" is 15) - and notably NOT surrounding white space, so
+    // byte.TryParse with NumberStyles.HexNumber is *not* a drop-in replacement: it would accept
+    // "#ff 800" and "&H00 F00&", which the old parser rejected (caught by the equivalence test).
+    private static bool TryParseHexByte(ReadOnlySpan<char> hex, out byte value)
+    {
+        value = 0;
+        if (hex.Length != 2)
+        {
+            return false;
+        }
+
+        if (hex[0] == '+')
+        {
+            if (!TryParseHexDigit(hex[1], out var only))
+            {
+                return false;
+            }
+
+            value = (byte)only;
+            return true;
+        }
+
+        if (!TryParseHexDigit(hex[0], out var high) || !TryParseHexDigit(hex[1], out var low))
+        {
+            return false;
+        }
+
+        value = (byte)((high << 4) | low);
+        return true;
+    }
+
+    private static bool TryParseHexDigit(char c, out int value)
+    {
+        if (c >= '0' && c <= '9') { value = c - '0'; return true; }
+        if (c >= 'a' && c <= 'f') { value = c - 'a' + 10; return true; }
+        if (c >= 'A' && c <= 'F') { value = c - 'A' + 10; return true; }
+        value = 0;
+        return false;
     }
 
     /// <summary>
@@ -297,10 +350,6 @@ public static class SubtitleSyntaxTokenizer
         return tagNameEnd;
     }
 
-    /// <summary>
-    /// True for the ASS/SSA color tags whose value is rendered in its actual color
-    /// (c, 1c, 2c, 3c, 4c).
-    /// </summary>
     internal static bool IsAssColorTag(ReadOnlySpan<char> tagName)
     {
         return tagName.Equals("c", StringComparison.OrdinalIgnoreCase) ||
@@ -384,7 +433,7 @@ public static class SubtitleSyntaxTokenizer
                             Color? assColor = null;
                             if (IsAssColorTag(tagName))
                             {
-                                assColor = TryParseAssColor(text[tagNameEnd..thisTagEnd]);
+                                assColor = TryParseAssColor(text.AsSpan(tagNameEnd, thisTagEnd - tagNameEnd));
                             }
 
                             Add(tagNameEnd, thisTagEnd, assColor ?? valuesColor);
@@ -510,7 +559,7 @@ public static class SubtitleSyntaxTokenizer
                 // Check if this is a color attribute
                 if (lastAttributeIsColor && !valueContent.IsEmpty)
                 {
-                    valueColor = TryParseColor(valueContent.ToString());
+                    valueColor = TryParseColor(valueContent);
                 }
 
                 // If not a color attribute or color parsing failed, use default logic
