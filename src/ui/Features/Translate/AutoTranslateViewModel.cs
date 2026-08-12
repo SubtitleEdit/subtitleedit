@@ -595,6 +595,14 @@ public partial class AutoTranslateViewModel : ObservableObject
         Se.Settings.AutoTranslate.PapagoApiKeyId = Configuration.Settings.Tools.AutoTranslatePapagoApiKeyId;
         Se.Settings.AutoTranslate.PapagoApiKey = Configuration.Settings.Tools.AutoTranslatePapagoApiKey;
 
+        // Perplexity was the only engine missing from this block, so its API key, model and URL
+        // were read from Se.Settings on open but only ever written to the libse-side settings -
+        // and lost on restart.
+        Se.Settings.AutoTranslate.PerplexityApiKey = Configuration.Settings.Tools.PerplexityApiKey;
+        Se.Settings.AutoTranslate.PerplexityUrl = Configuration.Settings.Tools.PerplexityUrl;
+        Se.Settings.AutoTranslate.PerplexityModel = Configuration.Settings.Tools.PerplexityModel;
+        Se.Settings.AutoTranslate.PerplexityPrompt = Configuration.Settings.Tools.PerplexityPrompt;
+
         Se.SaveSettings();
     }
 
