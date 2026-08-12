@@ -1,4 +1,4 @@
-﻿using Nikse.SubtitleEdit.Core.Common;
+using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Logic;
 using SkiaSharp;
 using System;
@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace Nikse.SubtitleEdit.Features.Ocr.Engines;
 
-public class LlamaCppOcr
+public class LlamaCppOcr : IDisposable
 {
     private readonly HttpClient _httpClient;
 
@@ -126,5 +126,15 @@ public class LlamaCppOcr
         }
 
         return squareBitmap;
+    }
+
+    /// <summary>
+    /// A new engine (and so a new HttpClient, handler and connection pool) is built per OCR run
+    /// from several call sites; without disposal those pile up and eventually exhaust sockets.
+    /// </summary>
+    public void Dispose()
+    {
+        _httpClient.Dispose();
+        GC.SuppressFinalize(this);
     }
 }

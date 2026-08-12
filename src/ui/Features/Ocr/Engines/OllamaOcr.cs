@@ -1,6 +1,7 @@
-﻿using Nikse.SubtitleEdit.Core.Common;
+using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
+using Nikse.SubtitleEdit.UiLogic.Http;
 using SkiaSharp;
 using System;
 using System.Collections.Generic;
@@ -14,7 +15,7 @@ using System.Threading.Tasks;
 
 namespace Nikse.SubtitleEdit.Features.Ocr.Engines;
 
-public class OllamaOcr
+public class OllamaOcr : IDisposable
 {
     // glm-ocr and similar are "thinking" models that, left unchecked, emit reasoning, markdown
     // fences and the same line over and over. We disable thinking, use a strict prompt, cap the
@@ -29,7 +30,9 @@ public class OllamaOcr
     public OllamaOcr(int timeoutMinutes = 5)
     {
         Error = string.Empty;
-        _httpClient = new HttpClient();
+        // Through the proxy factory: unlike the llama.cpp / CrispEmbed servers SE spawns on
+        // loopback, the Ollama host is a user setting and may well be another machine.
+        _httpClient = new HttpClient(HttpClientFactoryWithProxy.CreateHandler());
         _httpClient.DefaultRequestHeaders.TryAddWithoutValidation("accept", "application/json");
         _httpClient.Timeout = TimeSpan.FromMinutes(Math.Max(1, timeoutMinutes));
     }
@@ -191,5 +194,15 @@ public class OllamaOcr
         }
 
         return squareBitmap;
+    }
+
+    /// <summary>
+    /// A new engine (and so a new HttpClient, handler and connection pool) is built per OCR run
+    /// from several call sites; without disposal those pile up and eventually exhaust sockets.
+    /// </summary>
+    public void Dispose()
+    {
+        _httpClient.Dispose();
+        GC.SuppressFinalize(this);
     }
 }

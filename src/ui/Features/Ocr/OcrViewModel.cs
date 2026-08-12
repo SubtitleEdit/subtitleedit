@@ -4034,7 +4034,7 @@ public partial class OcrViewModel : ObservableObject
 
     private void RunOllamaOcr(List<int> selectedIndices, CancellationToken cancellationToken)
     {
-        var ollamaOcr = new OllamaOcr(Se.Settings.Ocr.OllamaOcrTimeoutMinutes);
+        using var ollamaOcr = new OllamaOcr(Se.Settings.Ocr.OllamaOcrTimeoutMinutes);
         var url = OllamaUrl;
         var model = OllamaModel;
 
@@ -4122,7 +4122,7 @@ public partial class OcrViewModel : ObservableObject
 
     private void RunLlamaCppOcr(List<int> selectedIndices, CancellationToken cancellationToken)
     {
-        var engine = new LlamaCppOcr(Se.Settings.Ocr.LlamaCppOcrTimeoutMinutes);
+        using var engine = new LlamaCppOcr(Se.Settings.Ocr.LlamaCppOcrTimeoutMinutes);
         var selectedModel = SelectedLlamaCppOcrModel?.Model;
         var prompt = Se.Settings.Ocr.LlamaCppOcrPrompt;
 
