@@ -323,6 +323,69 @@ public partial class MultipleReplaceViewModel : ObservableObject
     }
 
     [RelayCommand]
+    private void SelectAllFixes()
+    {
+        foreach (var fix in Fixes)
+        {
+            fix.Apply = true;
+        }
+    }
+
+    [RelayCommand]
+    private void SelectNoFixes()
+    {
+        foreach (var fix in Fixes)
+        {
+            fix.Apply = false;
+        }
+    }
+
+    [RelayCommand]
+    private void InvertFixesSelection()
+    {
+        foreach (var fix in Fixes)
+        {
+            fix.Apply = !fix.Apply;
+        }
+    }
+
+    /// <summary>
+    /// The gestures advertised by the fixes grid context menu (#13502): tick all, untick all and
+    /// invert the "Apply" column, the same set Remove text for hearing impaired and the rule
+    /// category picker use. Called from a tunneling handler on the grid, which has to run before
+    /// the TableView turns Ctrl+A into "select all rows" - and before the window's own key
+    /// handler, where Ctrl+D means "duplicate rule".
+    /// </summary>
+    internal bool HandleFixesSelectionKey(KeyEventArgs e)
+    {
+        var isCommand = e.KeyModifiers.HasFlag(KeyModifiers.Control) || e.KeyModifiers.HasFlag(KeyModifiers.Meta);
+        if (!isCommand || e.KeyModifiers.HasFlag(KeyModifiers.Alt))
+        {
+            return false;
+        }
+
+        var isShift = e.KeyModifiers.HasFlag(KeyModifiers.Shift);
+        if (e.Key == Key.A && !isShift)
+        {
+            SelectAllFixes();
+        }
+        else if (e.Key == Key.D && !isShift)
+        {
+            SelectNoFixes();
+        }
+        else if (e.Key == Key.I && isShift)
+        {
+            InvertFixesSelection();
+        }
+        else
+        {
+            return false;
+        }
+
+        return true;
+    }
+
+    [RelayCommand]
     private void Cancel()
     {
         Window?.Close();
