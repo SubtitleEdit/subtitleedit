@@ -20928,8 +20928,11 @@ public partial class MainViewModel :
                 hash = hash * 23 + p.Number;
                 hash = hash * 23 + p.StartTime.TotalMilliseconds.GetHashCode();
                 hash = hash * 23 + p.EndTime.TotalMilliseconds.GetHashCode();
-                hash = hash * 23 + (p.Text?.GetHashCode() ?? 0);
-                hash = hash * 23 + (p.OriginalText?.GetHashCode() ?? 0);
+                // TextHash/OriginalTextHash are GetHashCode() memoized on the string instance -
+                // see the comment on them: this loop runs several times a second over the whole
+                // file and string.GetHashCode is a full pass over the characters every call.
+                hash = hash * 23 + p.TextHash;
+                hash = hash * 23 + p.OriginalTextHash;
                 hash = hash * 23 + (p.Style?.GetHashCode() ?? 0);
                 hash = hash * 23 + (p.Extra?.GetHashCode() ?? 0);
                 hash = hash * 23 + (p.Actor?.GetHashCode() ?? 0);
@@ -20984,7 +20987,7 @@ public partial class MainViewModel :
 
                 if (p.Text != null)
                 {
-                    hash = hash * 23 + p.Text.GetHashCode();
+                    hash = hash * 23 + p.TextHash; // memoized GetHashCode, see SubtitleLineViewModel
                 }
 
                 hash = hash * 23 + (p.Style?.GetHashCode() ?? 0);
@@ -21021,7 +21024,7 @@ public partial class MainViewModel :
 
                 if (p.OriginalText != null)
                 {
-                    hash = hash * 23 + p.OriginalText.GetHashCode();
+                    hash = hash * 23 + p.OriginalTextHash; // memoized GetHashCode
                 }
 
                 hash = hash * 23 + (p.Style?.GetHashCode() ?? 0);

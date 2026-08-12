@@ -2,6 +2,8 @@
 using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Media;
+using Avalonia.Media.Imaging;
+using Avalonia.Platform;
 using Avalonia.Threading;
 using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Features.Main;
@@ -1844,6 +1846,21 @@ public class AudioVisualizer : Control
         }
     }
 
+    // Anchored spectrogram cache, the same scheme the waveform/timeline/grid-line caches use (see
+    // DrawWaveForm), and the last per-frame rebuild in this control. Composing the visible window
+    // meant a fresh SKBitmap plus a fresh WriteableBitmap of ~1 MB each and a full per-pixel walk
+    // between them on **every** ~60 fps frame - two large-object allocations per frame, so the
+    // spectrogram alone cost more than the whole rest of the render and forced a gen2 collection
+    // every few frames. Now the composed window is built once per 256-column block (~1.5 s of
+    // audio at default zoom) into buffers that are reused across rebuilds, and a view scrolling
+    // inside the block is just a translated destination rectangle.
+    private const int SpectrogramCacheBlockColumns = 256;
+    private SKBitmap? _spectrogramCacheSource;
+    private WriteableBitmap? _spectrogramCacheBitmap;
+    private SpectrogramData2? _spectrogramCacheData;
+    private int _spectrogramCacheAnchorColumn = -1;
+    private int _spectrogramCacheColumns;
+
     private void DrawSpectrogram(DrawingContext context, ref RenderContext renderCtx)
     {
         if (_spectrogram == null || _displayMode == WaveformDisplayMode.OnlyWaveform)
@@ -1864,34 +1881,118 @@ public class AudioVisualizer : Control
             return;
         }
 
-        // Create a combined bitmap using SkiaSharp
-        using var skBitmapCombined = new SKBitmap(width, _spectrogram.FftSize / 2);
-        using var skCanvas = new SKCanvas(skBitmapCombined);
-
         var left = (int)Math.Round(StartPositionSeconds / _spectrogram.SampleDuration);
-        var offset = 0;
-        var imageIndex = left / _spectrogram.ImageWidth;
 
-        while (offset < width && imageIndex < _spectrogram.Images.Count)
+        // Build for the block boundary at or before the visible window and one block of padding,
+        // so any view starting inside the block is fully covered: left - anchor is in
+        // [0, block) and the window ends at left + width <= anchor + width + block.
+        var anchorColumn = (int)(Math.Floor(left / (double)SpectrogramCacheBlockColumns) * SpectrogramCacheBlockColumns);
+        var cacheColumns = width + SpectrogramCacheBlockColumns;
+        var cacheHeight = _spectrogram.FftSize / 2;
+        if (cacheHeight <= 0)
         {
-            var x = (left + offset) % _spectrogram.ImageWidth;
-            var w = Math.Min(_spectrogram.ImageWidth - x, width - offset);
-
-            // Draw part of the spectrogram image
-            var sourceRect = new SKRect(x, 0, x + w, skBitmapCombined.Height);
-            var destRect = new SKRect(offset, 0, offset + w, skBitmapCombined.Height);
-            skCanvas.DrawBitmap(_spectrogram.Images[imageIndex], sourceRect, destRect);
-
-            offset += w;
-            imageIndex++;
+            return;
         }
 
-        // Convert SKBitmap to Avalonia Bitmap and draw it
-        var displayHeight = height;
-        using var avaloniaBitmap = skBitmapCombined.ToAvaloniaBitmap();
+        var bitmap = _spectrogramCacheBitmap;
+        if (bitmap == null ||
+            !ReferenceEquals(_spectrogramCacheData, _spectrogram) ||
+            _spectrogramCacheAnchorColumn != anchorColumn ||
+            _spectrogramCacheColumns != cacheColumns ||
+            _spectrogramCacheSource?.Height != cacheHeight)
+        {
+            bitmap = BuildSpectrogramCache(anchorColumn, cacheColumns, cacheHeight);
+            if (bitmap == null)
+            {
+                return;
+            }
+        }
 
-        var destRectangle = new Rect(0, renderCtx.Height - displayHeight, renderCtx.Width, displayHeight);
-        context.DrawImage(avaloniaBitmap, destRectangle);
+        // The cached window starts at anchorColumn, so it is drawn shifted left by the columns
+        // between it and the view. Same pixels per column as before (the visible width columns
+        // still span exactly renderCtx.Width), just extended past both edges and clipped.
+        var pixelsPerColumn = renderCtx.Width / width;
+        var destRectangle = new Rect(
+            (anchorColumn - left) * pixelsPerColumn,
+            renderCtx.Height - height,
+            cacheColumns * pixelsPerColumn,
+            height);
+        context.DrawImage(bitmap, destRectangle);
+    }
+
+    private WriteableBitmap? BuildSpectrogramCache(int anchorColumn, int cacheColumns, int cacheHeight)
+    {
+        var spectrogram = _spectrogram;
+        if (spectrogram == null)
+        {
+            return null;
+        }
+
+        if (_spectrogramCacheSource == null ||
+            _spectrogramCacheSource.Width != cacheColumns ||
+            _spectrogramCacheSource.Height != cacheHeight)
+        {
+            _spectrogramCacheSource?.Dispose();
+            _spectrogramCacheSource = new SKBitmap(cacheColumns, cacheHeight);
+
+            _spectrogramCacheBitmap?.Dispose();
+            _spectrogramCacheBitmap = new WriteableBitmap(
+                new PixelSize(cacheColumns, cacheHeight),
+                new Vector(96, 96),
+                PixelFormat.Bgra8888,
+                AlphaFormat.Premul);
+        }
+
+        var skBitmapCombined = _spectrogramCacheSource;
+        using (var skCanvas = new SKCanvas(skBitmapCombined))
+        {
+            // Past the end of the audio there is no image to blit, so clear first - the buffer
+            // is reused and would otherwise still hold the previous block's pixels there.
+            skCanvas.Clear(SKColors.Transparent);
+
+            var offset = 0;
+            var imageIndex = anchorColumn / spectrogram.ImageWidth;
+            while (offset < cacheColumns && imageIndex < spectrogram.Images.Count)
+            {
+                var x = (anchorColumn + offset) % spectrogram.ImageWidth;
+                var w = Math.Min(spectrogram.ImageWidth - x, cacheColumns - offset);
+
+                // Draw part of the spectrogram image
+                var sourceRect = new SKRect(x, 0, x + w, cacheHeight);
+                var destRect = new SKRect(offset, 0, offset + w, cacheHeight);
+                skCanvas.DrawBitmap(spectrogram.Images[imageIndex], sourceRect, destRect);
+
+                offset += w;
+                imageIndex++;
+            }
+        }
+
+        skBitmapCombined.CopyToAvaloniaBitmap(_spectrogramCacheBitmap!);
+
+        _spectrogramCacheData = spectrogram;
+        _spectrogramCacheAnchorColumn = anchorColumn;
+        _spectrogramCacheColumns = cacheColumns;
+        return _spectrogramCacheBitmap;
+    }
+
+    /// <param name="releaseBuffers">
+    /// Also free the two cache surfaces (a few MB together). Wanted when the spectrogram is
+    /// being replaced or dropped; not when only its pixels became stale (a theme change), where
+    /// the next rebuild reuses them.
+    /// </param>
+    private void InvalidateSpectrogramCache(bool releaseBuffers = false)
+    {
+        _spectrogramCacheData = null;
+        _spectrogramCacheAnchorColumn = -1;
+        _spectrogramCacheColumns = 0;
+
+        if (releaseBuffers)
+        {
+            _spectrogramCacheSource?.Dispose();
+            _spectrogramCacheSource = null;
+            _spectrogramCacheBitmap?.Dispose();
+            _spectrogramCacheBitmap = null;
+        }
     }
 
     // Pooled buffers and FormattedText cache for the timeline ruler.
@@ -3487,6 +3588,10 @@ public class AudioVisualizer : Control
 
     internal void SetSpectrogram(SpectrogramData2? spectrogram)
     {
+        // The block cache holds pixels blitted from the outgoing spectrogram's images, and its
+        // key is that instance - drop it before the images are disposed.
+        InvalidateSpectrogramCache(releaseBuffers: true);
+
         if (_spectrogram != null)
         {
             _spectrogram.Dispose();
@@ -3891,6 +3996,7 @@ public class AudioVisualizer : Control
         _waveformCacheValid = false;
         _gridLinesGeometry = null;
         _timeLineCacheValid = false;
+        InvalidateSpectrogramCache();
 
         _paintText = new SolidColorBrush(Se.Settings.Waveform.WaveformTextColor.FromHexToColor());
         _typeface = new Typeface(UiUtil.GetDefaultFontName(), FontStyle.Normal, Se.Settings.Waveform.WaveformTextFontBold ? FontWeight.Bold : FontWeight.Normal);

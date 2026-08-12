@@ -37,6 +37,10 @@ Reports land in `tests/benchmarks/BenchmarkDotNet.Artifacts/results/` (gitignore
 | `SyntaxHighlightingConverterBenchmarks` | The same repaint through the syntax highlighting converter - the most expensive per-row work in the grid - in all three formatting modes. |
 | `SmallConverterBenchmarks` | The handful of small converters a row goes through (boolean/null bindings, color swatches, ellipsis, batch convert status). |
 | `BrushCreationBenchmarks` | Why the converters hand out `ImmutableSolidColorBrush`: a `SolidColorBrush` is an AvaloniaObject with a property store, for a color that never changes. |
+| `SpectrogramRenderBenchmarks` | One playback frame of `AudioVisualizer.Render` with the spectrogram shown, static view vs center mode, against a waveform-only frame as the control. |
+| `ChangeDetectionHashBenchmarks` | The whole-file hash the dirty star, auto-save and undo change detection run about five times a second, on the UI thread. |
+| `UpdateGapsBenchmarks` | The 400 ms slow timer's whole-file gap refresh. |
+| `OneDecimalFormatBenchmarks` | The CPS/WPM cells' `ToString("0.0")` against the standard `"F1"` specifier. |
 
 Benchmarks that model a collection the app gets from Avalonia (e.g. `DataGrid.SelectedItems`)
 reproduce its interface surface rather than substituting a `List<T>` - `SelectedItems` only

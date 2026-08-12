@@ -296,6 +296,65 @@ public partial class SubtitleLineViewModel : ObservableObject
         return _strippedLinesCacheValue!;
     }
 
+    // Read-time memos for the change-detection hashes, keyed on the string instance like the
+    // memos around them. The dirty star, auto-save and undo change detection hash every line of
+    // the file about five times a second (a 333 ms undo timer and a 400 ms title/auto-save tick,
+    // each for the working text and the original), and .NET does not cache string.GetHashCode -
+    // every call is a full Marvin pass over the characters. A line's text is unchanged between
+    // practically all of those ticks, so the second and later hashes of the same instance are
+    // pure waste. Strings are immutable, so the same instance can only have the same hash.
+    private string? _textHashCacheText;
+    private int _textHashCacheValue;
+    private string? _originalTextHashCacheText;
+    private int _originalTextHashCacheValue;
+
+    /// <summary>
+    /// <c>Text.GetHashCode()</c>, memoized per string instance. Zero for a null text, which is
+    /// what the change-detection hashes substituted for it.
+    /// </summary>
+    internal int TextHash
+    {
+        get
+        {
+            var text = Text;
+            if (text == null)
+            {
+                return 0;
+            }
+
+            if (!ReferenceEquals(_textHashCacheText, text))
+            {
+                _textHashCacheValue = text.GetHashCode();
+                _textHashCacheText = text;
+            }
+
+            return _textHashCacheValue;
+        }
+    }
+
+    /// <summary>
+    /// <c>OriginalText.GetHashCode()</c>, memoized per string instance. See <see cref="TextHash"/>.
+    /// </summary>
+    internal int OriginalTextHash
+    {
+        get
+        {
+            var text = OriginalText;
+            if (text == null)
+            {
+                return 0;
+            }
+
+            if (!ReferenceEquals(_originalTextHashCacheText, text))
+            {
+                _originalTextHashCacheValue = text.GetHashCode();
+                _originalTextHashCacheText = text;
+            }
+
+            return _originalTextHashCacheValue;
+        }
+    }
+
     // Read-time memos for the two WebVTT grid columns below, keyed on the text instance like
     // the memos around them - both parse the text, and a cell binding re-reads its value on
     // every repaint.

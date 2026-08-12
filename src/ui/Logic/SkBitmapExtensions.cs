@@ -241,6 +241,41 @@ internal static class SkBitmapExtensions
             PixelFormat.Bgra8888,
             AlphaFormat.Premul);
 
+        WritePixels(skBitmap, bitmap);
+        return bitmap;
+    }
+
+    /// <summary>
+    /// Same conversion as <see cref="ToAvaloniaBitmap"/>, but into a bitmap the caller already
+    /// owns. For callers that redraw the same surface over and over (the waveform's spectrogram
+    /// block cache), so a rebuild does not allocate a large-object-heap sized bitmap each time.
+    /// The target must be Bgra8888/Premul and the same pixel size as the source.
+    /// </summary>
+    public static void CopyToAvaloniaBitmap(this SKBitmap skBitmap, WriteableBitmap target)
+    {
+        if (skBitmap.Width <= 0 || skBitmap.Height <= 0 ||
+            target.PixelSize.Width != skBitmap.Width || target.PixelSize.Height != skBitmap.Height)
+        {
+            return;
+        }
+
+        if (skBitmap.ColorType != SKColorType.Bgra8888)
+        {
+            using var converted = skBitmap.Copy(SKColorType.Bgra8888);
+            if (converted == null)
+            {
+                return;
+            }
+
+            WritePixels(converted, target);
+            return;
+        }
+
+        WritePixels(skBitmap, target);
+    }
+
+    private static void WritePixels(SKBitmap skBitmap, WriteableBitmap bitmap)
+    {
         using (var lockedBitmap = bitmap.Lock())
         {
             int width = skBitmap.Width;
@@ -295,8 +330,6 @@ internal static class SkBitmapExtensions
                 }
             }
         }
-
-        return bitmap;
     }
 
     // Original simple code for ToSkBitmap:
