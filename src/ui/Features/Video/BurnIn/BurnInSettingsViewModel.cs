@@ -48,7 +48,7 @@ public partial class BurnInSettingsViewModel : ObservableObject
     {
         if (UseOutputFolder && string.IsNullOrWhiteSpace(OutputFolder))
         {
-            await MessageBox.Show(Window!, "Error",
+            await MessageBox.Show(Window!, Se.Language.General.Error,
                 Se.Language.General.PleaseSelectOutputFolder, MessageBoxButtons.OK, MessageBoxIcon.Error);
             return;
         }
