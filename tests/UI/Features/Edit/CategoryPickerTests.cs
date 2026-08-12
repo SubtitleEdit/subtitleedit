@@ -79,12 +79,15 @@ public class CategoryPickerTests
         Assert.Equal("c1,c2,c4", Ticked(vm));
     }
 
+    // Ctrl/Cmd + A / D / Shift+I - the same three SE's other tick-a-column lists use, so the
+    // gestures mean the same wherever the user learned them (RemoveTextForHearingImpaired).
     [AvaloniaTheory]
     [InlineData(Key.A, KeyModifiers.Control, "c1,c2,c3")]
     [InlineData(Key.A, KeyModifiers.Meta, "c1,c2,c3")]
-    [InlineData(Key.A, KeyModifiers.Control | KeyModifiers.Shift, "")]
-    [InlineData(Key.A, KeyModifiers.Meta | KeyModifiers.Shift, "")]
-    [InlineData(Key.I, KeyModifiers.Shift, "c1,c3")]
+    [InlineData(Key.D, KeyModifiers.Control, "")]
+    [InlineData(Key.D, KeyModifiers.Meta, "")]
+    [InlineData(Key.I, KeyModifiers.Control | KeyModifiers.Shift, "c1,c3")]
+    [InlineData(Key.I, KeyModifiers.Meta | KeyModifiers.Shift, "c1,c3")]
     public void Shortcuts_ChangeTheSelection(Key key, KeyModifiers modifiers, string expected)
     {
         var vm = new CategoryPickerViewModel();
@@ -120,7 +123,7 @@ public class CategoryPickerTests
             : Se.Language.Edit.MultipleReplace.ExportReplaceRules, window.Title);
     }
 
-    // A bare "a" is a list type-ahead key, not select all.
+    // A bare "a" is a list type-ahead key, not select all - and a bare shift+I types a capital I.
     [AvaloniaFact]
     public void Shortcuts_IgnoreUnmodifiedKeys()
     {
@@ -130,6 +133,20 @@ public class CategoryPickerTests
 
         Assert.False(SendKey(vm, Key.A, KeyModifiers.None));
         Assert.False(SendKey(vm, Key.I, KeyModifiers.None));
+        Assert.False(SendKey(vm, Key.I, KeyModifiers.Shift));
+        Assert.False(SendKey(vm, Key.D, KeyModifiers.None));
+        Assert.Equal("c2", Ticked(vm));
+    }
+
+    // Alt is somebody else's shortcut (menu access keys), so it is not a near-miss of these.
+    [AvaloniaFact]
+    public void Shortcuts_IgnoreAltCombinations()
+    {
+        var vm = new CategoryPickerViewModel();
+        var categories = BuildCategories(3);
+        vm.InitializeForExport(categories, categories[1]);
+
+        Assert.False(SendKey(vm, Key.A, KeyModifiers.Control | KeyModifiers.Alt));
         Assert.Equal("c2", Ticked(vm));
     }
 }
