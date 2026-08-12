@@ -721,6 +721,9 @@ public partial class MainViewModel :
         _ytDlpDownloadService = ytDlpDownloadService;
         _updateCheckService = updateCheckService;
 
+        // Let dialogs show the current subtitle file name in their title bar - see UiUtil.MakeWindowTitle.
+        UiUtil.CurrentSubtitleFileNameProvider = () => _subtitleFileName;
+
         _loading = true;
         EditText = string.Empty;
         EditTextCharactersPerSecond = string.Empty;

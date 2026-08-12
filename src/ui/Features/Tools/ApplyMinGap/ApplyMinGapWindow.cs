@@ -15,7 +15,7 @@ public class ApplyMinGapWindow : Window
     public ApplyMinGapWindow(ApplyMinGapViewModel vm)
     {
         UiUtil.InitializeWindow(this, GetType().Name);
-        Title = Se.Language.Tools.ApplyMinGaps.Title;
+        Title = UiUtil.MakeWindowTitle(Se.Language.Tools.ApplyMinGaps.Title);
         CanResize = true;
         Width = 1000;
         Height = 800;

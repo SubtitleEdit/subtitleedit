@@ -20,7 +20,7 @@ public class MultipleReplaceWindow : Window
     public MultipleReplaceWindow(MultipleReplaceViewModel vm)
     {
         UiUtil.InitializeWindow(this, GetType().Name);
-        Title = Se.Language.General.MultipleReplace;
+        Title = UiUtil.MakeWindowTitle(Se.Language.General.MultipleReplace);
         Width = 1110;
         Height = 740;
         MinWidth = 850;

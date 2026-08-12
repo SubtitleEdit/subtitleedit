@@ -14,7 +14,7 @@ public class AdjustAllTimesWindow : Window
     public AdjustAllTimesWindow(AdjustAllTimesViewModel vm)
     {
         UiUtil.InitializeWindow(this, GetType().Name);
-        Title = Se.Language.Sync.AdjustAllTimes;
+        Title = UiUtil.MakeWindowTitle(Se.Language.Sync.AdjustAllTimes);
         SizeToContent = SizeToContent.WidthAndHeight;
         CanResize = false;
         vm.Window = this;

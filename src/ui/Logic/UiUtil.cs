@@ -3099,6 +3099,28 @@ public static class UiUtil
         return shortcutString;
     }
 
+    /// <summary>
+    /// Returns the file name of the subtitle currently open in the main window (empty when untitled).
+    /// Set once by the main view model so any dialog can put the file name in its title bar without
+    /// every view model having to take it as an extra Initialize parameter.
+    /// </summary>
+    internal static Func<string?>? CurrentSubtitleFileNameProvider { get; set; }
+
+    /// <summary>
+    /// Window title with the current subtitle file name appended, e.g. "Auto-translate - my movie.srt".
+    /// The plain title is returned unchanged when no subtitle file is open.
+    /// </summary>
+    internal static string MakeWindowTitle(string title)
+    {
+        var fileName = CurrentSubtitleFileNameProvider?.Invoke();
+        if (string.IsNullOrEmpty(fileName))
+        {
+            return title;
+        }
+
+        return title + " - " + System.IO.Path.GetFileName(fileName);
+    }
+
     internal static void InitializeWindow(Window window, string name)
     {
         window.Icon = GetSeIcon();

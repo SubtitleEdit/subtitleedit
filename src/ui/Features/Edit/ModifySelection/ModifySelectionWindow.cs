@@ -17,7 +17,7 @@ public class ModifySelectionWindow : Window
     public ModifySelectionWindow(ModifySelectionViewModel vm)
     {
         UiUtil.InitializeWindow(this, GetType().Name);
-        Title = Se.Language.Edit.ModifySelection.Title;
+        Title = UiUtil.MakeWindowTitle(Se.Language.Edit.ModifySelection.Title);
         CanResize = true;
         Width = 900;
         Height = 700;
