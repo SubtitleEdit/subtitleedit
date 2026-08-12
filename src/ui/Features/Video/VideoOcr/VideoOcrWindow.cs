@@ -334,7 +334,11 @@ public class VideoOcrWindow : Window
     {
         return StatusDots.ComboItemTemplate<VideoOcrEngineItem>(
             engine => engine.Name,
-            _ => null,
+            // CrispEmbed is the one engine here with a tracked local install, so show what it
+            // costs to download until it is on disk - same as the OCR window's engine combo.
+            engine => engine.EngineType == OcrEngineType.CrispEmbed && !CrispEmbedEngine.IsEngineInstalled()
+                ? CrispEmbedEngine.DownloadSizeText
+                : null,
             GetEngineDotStatus);
     }
 
