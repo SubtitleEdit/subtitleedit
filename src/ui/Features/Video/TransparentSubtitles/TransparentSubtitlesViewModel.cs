@@ -711,20 +711,25 @@ public partial class TransparentSubtitlesViewModel : ObservableObject
         var nameNoExt = Path.GetFileNameWithoutExtension(videoFileName);
         var ext = SelectedVideoExtension;
         var suffix = Se.Settings.Video.BurnIn.BurnInSuffix;
+
+        // This dialog's own output folder, not burn-in's. The settings window has always written
+        // Video.Transparent.OutputFolder / UseOutputFolder, but nothing read them - so whatever
+        // folder was picked here had no effect and the files went to the burn-in folder instead.
+        var transparent = Se.Settings.Video.Transparent;
+        var useOutputFolder = transparent.UseOutputFolder && !string.IsNullOrEmpty(transparent.OutputFolder);
+
         var fileName = Path.Combine(Path.GetDirectoryName(videoFileName)!, nameNoExt + suffix + ext);
-        if (Se.Settings.Video.BurnIn.UseOutputFolder &&
-            !string.IsNullOrEmpty(Se.Settings.Video.BurnIn.OutputFolder) &&
-            Directory.Exists(Se.Settings.Video.BurnIn.OutputFolder))
+        if (useOutputFolder && Directory.Exists(transparent.OutputFolder))
         {
-            fileName = Path.Combine(Se.Settings.Video.BurnIn.OutputFolder, nameNoExt + suffix + ext);
+            fileName = Path.Combine(transparent.OutputFolder, nameNoExt + suffix + ext);
         }
 
         var i = 2;
         while (File.Exists(fileName))
         {
-            if (Se.Settings.Video.BurnIn.UseOutputFolder && !string.IsNullOrEmpty(Se.Settings.Video.BurnIn.OutputFolder))
+            if (useOutputFolder)
             {
-                fileName = Path.Combine(Se.Settings.Video.BurnIn.OutputFolder, $"{nameNoExt}{suffix}_{i}{ext}");
+                fileName = Path.Combine(transparent.OutputFolder, $"{nameNoExt}{suffix}_{i}{ext}");
             }
             else
             {
@@ -798,7 +803,7 @@ public partial class TransparentSubtitlesViewModel : ObservableObject
     [RelayCommand]
     private async Task OpenOutputFolder()
     {
-        await _folderHelper.OpenFolder(Window!, Se.Settings.Video.BurnIn.OutputFolder);
+        await _folderHelper.OpenFolder(Window!, Se.Settings.Video.Transparent.OutputFolder);
     }
 
     [RelayCommand]
