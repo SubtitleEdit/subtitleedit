@@ -783,53 +783,180 @@ namespace Nikse.SubtitleEdit.Core.Common
 
         public static string RemoveChar(this string value, char charToRemove)
         {
-            char[] array = new char[value.Length];
-            int arrayIndex = 0;
-            for (int i = 0; i < value.Length; i++)
+#if NET10_0_OR_GREATER
+            var count = value.AsSpan().Count(charToRemove);
+#else
+            var count = 0;
+            for (var i = 0; i < value.Length; i++)
             {
-                char ch = value[i];
-                if (ch != charToRemove)
+                if (value[i] == charToRemove)
                 {
-                    array[arrayIndex++] = ch;
+                    count++;
                 }
             }
+#endif
+            if (count == 0)
+            {
+                return value;
+            }
 
-            return new string(array, 0, arrayIndex);
+            return string.Create(value.Length - count, (value, charToRemove), (chars, state) =>
+            {
+                var index = 0;
+                foreach (var ch in state.value)
+                {
+                    if (ch != state.charToRemove)
+                    {
+                        chars[index++] = ch;
+                    }
+                }
+            });
         }
 
         public static string RemoveChar(this string value, char charToRemove, char charToRemove2)
         {
-            char[] array = new char[value.Length];
-            int arrayIndex = 0;
-            for (int i = 0; i < value.Length; i++)
+            if (charToRemove == charToRemove2)
             {
-                char ch = value[i];
-                if (ch != charToRemove && ch != charToRemove2)
-                {
-                    array[arrayIndex++] = ch;
-                }
+                return value.RemoveChar(charToRemove);
             }
 
-            return new string(array, 0, arrayIndex);
+#if NET10_0_OR_GREATER
+            var span = value.AsSpan();
+            var count = span.Count(charToRemove) + span.Count(charToRemove2);
+#else
+            var count = 0;
+            for (var i = 0; i < value.Length; i++)
+            {
+                var ch = value[i];
+                if (ch == charToRemove || ch == charToRemove2)
+                {
+                    count++;
+                }
+            }
+#endif
+            if (count == 0)
+            {
+                return value;
+            }
+
+            return string.Create(value.Length - count, (value, charToRemove, charToRemove2), (chars, state) =>
+            {
+                var index = 0;
+                foreach (var ch in state.value)
+                {
+                    if (ch != state.charToRemove && ch != state.charToRemove2)
+                    {
+                        chars[index++] = ch;
+                    }
+                }
+            });
         }
 
+#if NET10_0_OR_GREATER
+        private ref struct RemoveCharContext
+        {
+            public string Value;
+            public ReadOnlySpan<char> CharsToRemove;
+            public int First;
+        }
+
+        public static string RemoveChar(this string value, params ReadOnlySpan<char> charsToRemove)
+        {
+            // Callers pass a handful of literal chars (3-13). Matches are sparse in subtitle
+            // text, so hopping between them with vectorized IndexOfAny and block-copying the
+            // clean stretches beats testing every char against the removal set.
+            var span = value.AsSpan();
+            var first = span.IndexOfAny(charsToRemove);
+            if (first < 0)
+            {
+                return value;
+            }
+
+            var count = 1;
+            var rest = span.Slice(first + 1);
+            while (true)
+            {
+                var i = rest.IndexOfAny(charsToRemove);
+                if (i < 0)
+                {
+                    break;
+                }
+
+                count++;
+                rest = rest.Slice(i + 1);
+            }
+
+            var context = new RemoveCharContext { Value = value, CharsToRemove = charsToRemove, First = first };
+            return string.Create(value.Length - count, context, (chars, state) =>
+            {
+                var src = state.Value.AsSpan();
+                src.Slice(0, state.First).CopyTo(chars);
+                var written = state.First;
+                src = src.Slice(state.First + 1);
+                while (true)
+                {
+                    var i = src.IndexOfAny(state.CharsToRemove);
+                    if (i < 0)
+                    {
+                        src.CopyTo(chars.Slice(written));
+                        return;
+                    }
+
+                    src.Slice(0, i).CopyTo(chars.Slice(written));
+                    written += i;
+                    src = src.Slice(i + 1);
+                }
+            });
+        }
+#else
         public static string RemoveChar(this string value, params char[] charsToRemove)
         {
-            // Callers pass a handful of literal chars (3-13), so a vectorized linear probe
-            // beats allocating and hashing a HashSet per call.
-            char[] array = new char[value.Length];
-            int arrayIndex = 0;
-            for (int i = 0; i < value.Length; i++)
+            // Callers pass a handful of literal chars (3-13). Matches are sparse in subtitle
+            // text, so hopping between them with IndexOfAny and block-copying the clean
+            // stretches beats testing every char against the removal set.
+            var span = value.AsSpan();
+            var first = span.IndexOfAny(charsToRemove);
+            if (first < 0)
             {
-                char ch = value[i];
-                if (Array.IndexOf(charsToRemove, ch) < 0)
-                {
-                    array[arrayIndex++] = ch;
-                }
+                return value;
             }
 
-            return new string(array, 0, arrayIndex);
+            var count = 1;
+            var rest = span.Slice(first + 1);
+            while (true)
+            {
+                var i = rest.IndexOfAny(charsToRemove);
+                if (i < 0)
+                {
+                    break;
+                }
+
+                count++;
+                rest = rest.Slice(i + 1);
+            }
+
+            return string.Create(value.Length - count, (value, charsToRemove, first), (chars, state) =>
+            {
+                var src = state.value.AsSpan();
+                src.Slice(0, state.first).CopyTo(chars);
+                var written = state.first;
+                src = src.Slice(state.first + 1);
+                while (true)
+                {
+                    var i = src.IndexOfAny<char>(state.charsToRemove);
+                    if (i < 0)
+                    {
+                        src.CopyTo(chars.Slice(written));
+                        return;
+                    }
+
+                    src.Slice(0, i).CopyTo(chars.Slice(written));
+                    written += i;
+                    src = src.Slice(i + 1);
+                }
+            });
         }
+#endif
 
         /// <summary>
         /// Count characters excl. white spaces, ssa-tags, html-tags, control-characters, normal spaces and
