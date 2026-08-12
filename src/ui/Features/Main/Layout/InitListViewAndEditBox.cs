@@ -1087,6 +1087,16 @@ public static partial class InitListViewAndEditBox
         };
         fontNameMenuItem.Bind(Visual.IsVisibleProperty, new Binding(nameof(vm.IsSubtitleGridDataMenuVisible)));
         flyout.Items.Add(fontNameMenuItem);
+        var teletextAlignmentMenuItem = new MenuItem
+{
+    Header = "Teletext alignment...",
+    DataContext = vm,
+};
+teletextAlignmentMenuItem.Bind(
+    Visual.IsVisibleProperty,
+    new Binding(nameof(vm.IsSubtitleGridDataMenuVisible))
+);
+flyout.Items.Add(teletextAlignmentMenuItem);
 
 
         var alignmentMenuItem = new MenuItem
