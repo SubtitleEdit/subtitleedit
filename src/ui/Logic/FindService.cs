@@ -36,7 +36,9 @@ public partial class FindService : IFindService
     {
         if (_cachedRegex == null || _cachedRegexPattern != pattern || _cachedRegexOptions != options)
         {
-            _cachedRegex = new Regex(pattern, options);
+            // Timeout so a pattern with catastrophic backtracking cannot hang the UI thread; every
+            // caller below treats RegexMatchTimeoutException like an invalid pattern - no match.
+            _cachedRegex = new Regex(pattern, options, RegexUtils.UserPatternMatchTimeout);
             _cachedRegexPattern = pattern;
             _cachedRegexOptions = options;
         }
@@ -534,7 +536,7 @@ public partial class FindService : IFindService
                 return (true, newText, totalReplacements);
             }
         }
-        catch (ArgumentException)
+        catch (Exception exception) when (exception is ArgumentException or RegexMatchTimeoutException)
         {
             return (false, line, 0);
         }
@@ -613,7 +615,7 @@ public partial class FindService : IFindService
                 return (newText != line, newText, totalReplacements);
             }
         }
-        catch (ArgumentException)
+        catch (Exception exception) when (exception is ArgumentException or RegexMatchTimeoutException)
         {
             return (false, line, 0);
         }
@@ -636,7 +638,7 @@ public partial class FindService : IFindService
                     return (true, startIndex + match.Index, match.Value);
                 }
             }
-            catch (ArgumentException)
+            catch (Exception exception) when (exception is ArgumentException or RegexMatchTimeoutException)
             {
                 return (false, -1, string.Empty);
             }
@@ -671,7 +673,7 @@ public partial class FindService : IFindService
                     return (true, lastMatch.Index, lastMatch.Value);
                 }
             }
-            catch (ArgumentException)
+            catch (Exception exception) when (exception is ArgumentException or RegexMatchTimeoutException)
             {
                 return (false, -1, string.Empty);
             }
@@ -702,7 +704,7 @@ public partial class FindService : IFindService
                 return (true, startIndex + MapNormalizedIndex(indexMap, match.Index, originalLength), match.Value);
             }
         }
-        catch (ArgumentException)
+        catch (Exception exception) when (exception is ArgumentException or RegexMatchTimeoutException)
         {
             return (false, -1, string.Empty);
         }
@@ -736,7 +738,7 @@ public partial class FindService : IFindService
                 return (true, MapNormalizedIndex(indexMap, lastMatch.Index, originalLength), lastMatch.Value);
             }
         }
-        catch (ArgumentException)
+        catch (Exception exception) when (exception is ArgumentException or RegexMatchTimeoutException)
         {
             return (false, -1, string.Empty);
         }
@@ -759,7 +761,7 @@ public partial class FindService : IFindService
                     var searchLine = NormalizeLineEndingsForRegex(line);
                     return GetCachedRegex(RegexUtils.FixNewLine(searchText)).Matches(searchLine).Count;
                 }
-                catch (ArgumentException)
+                catch (Exception exception) when (exception is ArgumentException or RegexMatchTimeoutException)
                 {
                     return 0;
                 }
@@ -791,7 +793,7 @@ public partial class FindService : IFindService
                         matches.Add(new FindMatch(MapNormalizedIndex(indexMap, match.Index, line.Length), match.Value));
                     }
                 }
-                catch (ArgumentException)
+                catch (Exception exception) when (exception is ArgumentException or RegexMatchTimeoutException)
                 {
                     // Invalid regex pattern
                 }
@@ -815,7 +817,7 @@ public partial class FindService : IFindService
                             matches.Add(new FindMatch(match.Index, match.Value));
                         }
                     }
-                    catch (ArgumentException)
+                    catch (Exception exception) when (exception is ArgumentException or RegexMatchTimeoutException)
                     {
                         // Invalid regex pattern
                     }

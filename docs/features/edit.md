@@ -34,6 +34,10 @@ Options:
 
 > **Matching a line break with a regular expression:** use `\n` between the words on the two lines (for example `ear\ntwice`). `\r\n` and `\r` are accepted too and are treated the same as `\n`, so a rule works regardless of how it was written or which platform created it.
 
+> **`^` and `$` in Find and Replace** match the start and the end of the whole subtitle text, so in a two-line subtitle `^-` only finds the dash on the first line. Write `(?m)` in front of the pattern - `(?m)^- ` - to make them match at every line break instead. (Multiple replace is the other way around, see below.)
+
+> **Slow patterns:** a pattern that has not finished with a single subtitle after five seconds is given up on and treated as no match for that subtitle, so an expression that backtracks forever - `(a+)+b` and friends - cannot lock up the program.
+
 > **Translator mode:** with an original subtitle loaded, both the text and the original text are searched. Within a line the text is searched first, then the original text, and the match is selected in the text box of the column it was found in.
 
 <!-- Screenshot: Find window -->
@@ -53,6 +57,8 @@ With an editable original subtitle loaded, a **Replace/search in** drop-down app
 - **Original text only** - only change the original subtitle
 
 The choice is remembered between sessions. It also applies to `F3` / `Shift+F3` until the Find window is used again, which always searches both columns. The drop-down is hidden when there is no original subtitle, or when the original is opened as a read-only reference - a read-only original is never written to.
+
+> **Replacement text:** group references work - `$1`, `$&`, `${name}` - and `\n` inserts a line break. Other backslash escapes are not expanded there: `\t` and `\u00A0` are inserted as those literal characters. To insert a special character, paste the character itself into the **Replace with** box. In the search pattern all .NET escapes work as usual, `\u00A0` included.
 
 <!-- Screenshot: Replace window -->
 ![Replace](../screenshots/replace.png)
@@ -84,6 +90,8 @@ Each rule has one of three match types, shown as an icon in the tree:
 | Case insensitive | Plain text match, ignores case |
 | Case sensitive | Plain text match, exact case |
 | Regular expression | Full .NET regex syntax. Use `\n` to match a line break between two lines (`\r\n` and `\r` are accepted too and treated as `\n`). |
+
+Unlike Find and Replace, regular expression rules here are matched in multiline mode: `^` and `$` match at the start and the end of *every* line, so `^- ` strips the dash from both lines of a two-line subtitle. Put `(?-m)` in front of the pattern to anchor to the whole subtitle text instead. The replacement text follows the same rules as in Replace above - `$1` and `\n` work, other backslash escapes do not.
 
 ### Managing categories
 

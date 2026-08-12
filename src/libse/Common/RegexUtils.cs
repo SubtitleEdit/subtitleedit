@@ -6,6 +6,14 @@ namespace Nikse.SubtitleEdit.Core.Common
 {
     public static partial class RegexUtils
     {
+        /// <summary>
+        /// Match timeout for user-entered regular expressions. A pattern with catastrophic backtracking
+        /// (e.g. "(a+)+b" on a long line without a "b") runs for practically forever, and as find/replace
+        /// matches on the UI thread that means a frozen program with no way out. SE 4 used the same five
+        /// seconds in its find/replace helper; callers treat the timeout as "no match".
+        /// </summary>
+        public static readonly TimeSpan UserPatternMatchTimeout = TimeSpan.FromSeconds(5);
+
         // Others classes may want to use this regex.
 #if NET7_0_OR_GREATER
         [GeneratedRegex(@"\bi\b")]

@@ -12770,7 +12770,7 @@ public partial class MainViewModel :
                 // failed and a \n replacement silently did nothing (#12484).
                 var normalizedLine = line.Replace("\r\n", "\n").Replace("\r", "\n");
                 var normalizedIndex = line.Substring(0, matchIndex).Replace("\r\n", "\n").Replace("\r", "\n").Length;
-                var regex = new Regex(RegexUtils.FixNewLine(result.SearchText));
+                var regex = new Regex(RegexUtils.FixNewLine(result.SearchText), RegexOptions.None, RegexUtils.UserPatternMatchTimeout);
                 var match = regex.Match(normalizedLine, normalizedIndex);
 
                 // Bail unless the match starts exactly at the recorded index AND
@@ -12790,7 +12790,7 @@ public partial class MainViewModel :
                 newLine = normalizedLine.Substring(0, normalizedIndex) + replaced + normalizedLine.Substring(normalizedIndex + match.Length);
                 return replaced.Length;
             }
-            catch (ArgumentException)
+            catch (Exception exception) when (exception is ArgumentException or RegexMatchTimeoutException)
             {
                 newLine = line;
                 return null;
