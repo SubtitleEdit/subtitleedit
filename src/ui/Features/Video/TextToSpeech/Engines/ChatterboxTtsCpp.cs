@@ -6,6 +6,7 @@ using Nikse.SubtitleEdit.Logic.Download;
 using Nikse.SubtitleEdit.Logic.Media;
 using Nikse.SubtitleEdit.UiLogic;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -901,6 +902,16 @@ public class ChatterboxTtsCpp : ITtsEngine
             return true;
         }
 
+        // This runs per line, so a repair that cannot succeed - no ffmpeg on the machine, a WAV
+        // ffmpeg will not decode - must be attempted once, not once for every line of the
+        // subtitle. Checked ahead of the header read as well: that read logs when it fails, and
+        // a tools-log entry per line is its own kind of runaway. A repair that succeeds needs no
+        // guard at all - the file then passes the header check below and never comes back here.
+        if (FailedCloneReferenceRepairs.ContainsKey(voiceFilePath))
+        {
+            return false;
+        }
+
         if (!File.Exists(voiceFilePath) || IsCloneReadyReferenceWav(voiceFilePath))
         {
             return true;
@@ -909,8 +920,23 @@ public class ChatterboxTtsCpp : ITtsEngine
         Se.WriteToolsLog($"Chatterbox TTS: reference voice \"{Path.GetFileName(voiceFilePath)}\" is not "
             + $"{CloneReferenceSampleRate / 1000} kHz mono - re-encoding it in place before synthesis");
 
-        return ConvertToCloneReferenceWav(voiceFilePath, voiceFilePath);
+        if (ConvertToCloneReferenceWav(voiceFilePath, voiceFilePath))
+        {
+            return true;
+        }
+
+        FailedCloneReferenceRepairs[voiceFilePath] = 0;
+        return false;
     }
+
+    /// <summary>
+    /// Reference WAVs whose in-place repair has already been tried and failed, so it is not
+    /// retried for every remaining line. Re-import of the voice goes through
+    /// <see cref="ImportVoice"/>, which writes a new file name, so a fixed voice is never
+    /// held back by a stale entry here.
+    /// </summary>
+    private static readonly ConcurrentDictionary<string, byte> FailedCloneReferenceRepairs =
+        new(StringComparer.OrdinalIgnoreCase);
 
     /// <summary>
     /// True when the WAV is exactly what the chatterbox backend clones from: 24 kHz mono,
