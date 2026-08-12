@@ -1381,6 +1381,8 @@
       "newCategory": "New category",
       "categoryName": "Category name",
       "exportReplaceRules": "Export rules",
+      "importReplaceRules": "Import rules",
+      "noCategoriesSelected": "No rule categories selected",
       "appliedRules": "Applied rules",
       "findRule": "Find rule",
       "xLinesAffected": "{0:#,##0} lines affected",

@@ -626,15 +626,40 @@ public partial class MultipleReplaceViewModel : ObservableObject
             return;
         }
 
-        foreach (var profile in imported)
+        // Let the user pick which of the categories in the file to bring in (#13529). A file with a
+        // single category has nothing to pick, so it goes straight in as before.
+        var toImport = imported;
+        if (imported.Count > 1)
+        {
+            var picked = await _windowService
+                .ShowDialogAsync<CategoryPickerWindow, CategoryPickerViewModel>(Window, vm =>
+                {
+                    vm.InitializeForImport(imported);
+                });
+
+            if (!picked.OkPressed)
+            {
+                return;
+            }
+
+            toImport = picked.Rules.Where(p => p.IsSelected).ToList();
+            if (toImport.Count == 0)
+            {
+                return;
+            }
+        }
+
+        foreach (var profile in toImport)
         {
             Nodes.Add(profile);
         }
 
+        _dirty = true;
+
         await MessageBox.Show(
             Window!,
             Se.Language.General.Information,
-            string.Format(Se.Language.Options.Settings.RuleProfilesImportedX, imported.Count),
+            string.Format(Se.Language.Options.Settings.RuleProfilesImportedX, toImport.Count),
             MessageBoxButtons.OK,
             MessageBoxIcon.Information);
     }
@@ -649,9 +674,9 @@ public partial class MultipleReplaceViewModel : ObservableObject
         }
 
         var result = await _windowService
-        .ShowDialogAsync<CategoryExportWindow, CategoryExportViewModel>(Window, vm =>
+        .ShowDialogAsync<CategoryPickerWindow, CategoryPickerViewModel>(Window, vm =>
         {
-            vm.Initialize(Nodes.ToList(), node);
+            vm.InitializeForExport(Nodes.ToList(), node);
         });
 
         if (!result.OkPressed)
