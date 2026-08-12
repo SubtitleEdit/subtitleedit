@@ -38,6 +38,7 @@ internal void Initialize(SubtitleLineViewModel? selectedSubtitle)
     if (selectedSubtitle == null)
     {
         TeletextLine = 23;
+        HorizontalAlignment = "Center";
         return;
     }
 
@@ -45,13 +46,30 @@ internal void Initialize(SubtitleLineViewModel? selectedSubtitle)
         line >= 0 &&
         line <= 22)
     {
-        // EBU STL zählt die Zeilen von 0 bis 22.
-        // Für den Benutzer zeigen wir 1 bis 23 an.
         TeletextLine = line + 1;
     }
     else
     {
         TeletextLine = 23;
+    }
+
+    var text = selectedSubtitle.Text ?? string.Empty;
+
+    if (text.StartsWith("{\\an1}") ||
+        text.StartsWith("{\\an4}") ||
+        text.StartsWith("{\\an7}"))
+    {
+        HorizontalAlignment = "Left";
+    }
+    else if (text.StartsWith("{\\an3}") ||
+             text.StartsWith("{\\an6}") ||
+             text.StartsWith("{\\an9}"))
+    {
+        HorizontalAlignment = "Right";
+    }
+    else
+    {
+        HorizontalAlignment = "Center";
     }
 }
 
