@@ -12,6 +12,10 @@ namespace UITests.Features;
 /// and they have to keep that in their own settings key, not by writing back over the app-wide
 /// default (#13514 established both halves for split/rebalance long lines). Three more dialogs had
 /// a <c>SaveSettings</c> that stored nothing at all, so every visit reset to the general default.
+///
+/// Every global these tests touch - the dialog's own key and the general default it falls back to -
+/// goes through <see cref="SettingsScope"/>, because Se.Settings is one instance shared by the
+/// whole run and a leaked value silently changes what later tests start from.
 /// </summary>
 public class SettingsPersistenceTests
 {
@@ -27,103 +31,92 @@ public class SettingsPersistenceTests
     [Fact]
     public void ApplyMinGap_RemembersTheGap()
     {
-        var before = Se.Settings.Tools.ApplyMinGapMsOrFrames;
-        try
-        {
-            Se.Settings.Tools.ApplyMinGapMsOrFrames = 0;
-            Se.Settings.General.MinimumBetweenLines.Milliseconds = 24;
-            Se.Settings.General.UseFrameMode = false;
+        using var _ = new SettingsScope(
+            "Tools.ApplyMinGapMsOrFrames",
+            "General.MinimumBetweenLines.Milliseconds",
+            "General.UseFrameMode");
 
-            var vm = new ApplyMinGapViewModel();
-            Invoke(vm, "LoadSettings");
-            Assert.Equal(24, Get(vm, "MinGapMsOrFrames")); // falls back to the general default
+        Se.Settings.Tools.ApplyMinGapMsOrFrames = 0;
+        Se.Settings.General.MinimumBetweenLines.Milliseconds = 24;
+        Se.Settings.General.UseFrameMode = false;
 
-            Set(vm, "MinGapMsOrFrames", 120);
-            Invoke(vm, "SaveSettings");
+        var vm = new ApplyMinGapViewModel();
+        Invoke(vm, "LoadSettings");
+        Assert.Equal(24, Get(vm, "MinGapMsOrFrames")); // falls back to the general default
 
-            var reopened = new ApplyMinGapViewModel();
-            Invoke(reopened, "LoadSettings");
-            Assert.Equal(120, Get(reopened, "MinGapMsOrFrames"));
+        Set(vm, "MinGapMsOrFrames", 120);
+        Invoke(vm, "SaveSettings");
 
-            // The dialog keeps its own copy - the app-wide default is left alone.
-            Assert.Equal(24, Se.Settings.General.MinimumBetweenLines.Milliseconds);
-        }
-        finally
-        {
-            Se.Settings.Tools.ApplyMinGapMsOrFrames = before;
-        }
+        var reopened = new ApplyMinGapViewModel();
+        Invoke(reopened, "LoadSettings");
+        Assert.Equal(120, Get(reopened, "MinGapMsOrFrames"));
+
+        // The dialog keeps its own copy - the app-wide default is left alone.
+        Assert.Equal(24, Se.Settings.General.MinimumBetweenLines.Milliseconds);
     }
 
     [Fact]
     public void MergeShortLines_RemembersMaxLengthAndMaxLines()
     {
-        var beforeLength = Se.Settings.Tools.MergeShortLinesSingleLineMaxLength;
-        var beforeLines = Se.Settings.Tools.MergeShortLinesMaxNumberOfLines;
-        try
-        {
-            Se.Settings.Tools.MergeShortLinesSingleLineMaxLength = 0;
-            Se.Settings.Tools.MergeShortLinesMaxNumberOfLines = 0;
-            Se.Settings.General.SubtitleLineMaximumLength = 43;
-            Se.Settings.General.MaxNumberOfLines = 2;
+        using var _ = new SettingsScope(
+            "Tools.MergeShortLinesSingleLineMaxLength",
+            "Tools.MergeShortLinesMaxNumberOfLines",
+            "General.SubtitleLineMaximumLength",
+            "General.MaxNumberOfLines");
 
-            var vm = new MergeShortLinesViewModel();
-            Invoke(vm, "LoadSettings");
-            Assert.Equal(43, Get(vm, "SingleLineMaxLength"));
-            Assert.Equal(2, Get(vm, "MaxNumberOfLines"));
+        Se.Settings.Tools.MergeShortLinesSingleLineMaxLength = 0;
+        Se.Settings.Tools.MergeShortLinesMaxNumberOfLines = 0;
+        Se.Settings.General.SubtitleLineMaximumLength = 43;
+        Se.Settings.General.MaxNumberOfLines = 2;
 
-            Set(vm, "SingleLineMaxLength", 37);
-            Set(vm, "MaxNumberOfLines", 3);
-            Invoke(vm, "SaveSettings");
+        var vm = new MergeShortLinesViewModel();
+        Invoke(vm, "LoadSettings");
+        Assert.Equal(43, Get(vm, "SingleLineMaxLength"));
+        Assert.Equal(2, Get(vm, "MaxNumberOfLines"));
 
-            var reopened = new MergeShortLinesViewModel();
-            Invoke(reopened, "LoadSettings");
-            Assert.Equal(37, Get(reopened, "SingleLineMaxLength"));
-            Assert.Equal(3, Get(reopened, "MaxNumberOfLines"));
+        Set(vm, "SingleLineMaxLength", 37);
+        Set(vm, "MaxNumberOfLines", 3);
+        Invoke(vm, "SaveSettings");
 
-            Assert.Equal(43, Se.Settings.General.SubtitleLineMaximumLength);
-            Assert.Equal(2, Se.Settings.General.MaxNumberOfLines);
-        }
-        finally
-        {
-            Se.Settings.Tools.MergeShortLinesSingleLineMaxLength = beforeLength;
-            Se.Settings.Tools.MergeShortLinesMaxNumberOfLines = beforeLines;
-        }
+        var reopened = new MergeShortLinesViewModel();
+        Invoke(reopened, "LoadSettings");
+        Assert.Equal(37, Get(reopened, "SingleLineMaxLength"));
+        Assert.Equal(3, Get(reopened, "MaxNumberOfLines"));
+
+        Assert.Equal(43, Se.Settings.General.SubtitleLineMaximumLength);
+        Assert.Equal(2, Se.Settings.General.MaxNumberOfLines);
     }
 
     [Fact]
     public void ApplyDurationLimits_RemembersMinAndMaxDuration()
     {
-        var beforeMin = Se.Settings.Tools.ApplyDurationLimitsMinDurationMs;
-        var beforeMax = Se.Settings.Tools.ApplyDurationLimitsMaxDurationMs;
-        try
-        {
-            Se.Settings.Tools.ApplyDurationLimitsMinDurationMs = 0;
-            Se.Settings.Tools.ApplyDurationLimitsMaxDurationMs = 0;
-            Se.Settings.General.SubtitleMinimumDisplayMilliseconds = 1000;
-            Se.Settings.General.SubtitleMaximumDisplayMilliseconds = 8000;
+        using var _ = new SettingsScope(
+            "Tools.ApplyDurationLimitsMinDurationMs",
+            "Tools.ApplyDurationLimitsMaxDurationMs",
+            "General.SubtitleMinimumDisplayMilliseconds",
+            "General.SubtitleMaximumDisplayMilliseconds");
 
-            var vm = new ApplyDurationLimitsViewModel();
-            Invoke(vm, "LoadSettings");
-            Assert.Equal(1000, Get(vm, "MinDurationMs"));
-            Assert.Equal(8000, Get(vm, "MaxDurationMs"));
+        Se.Settings.Tools.ApplyDurationLimitsMinDurationMs = 0;
+        Se.Settings.Tools.ApplyDurationLimitsMaxDurationMs = 0;
+        Se.Settings.General.SubtitleMinimumDisplayMilliseconds = 1000;
+        Se.Settings.General.SubtitleMaximumDisplayMilliseconds = 8000;
 
-            Set(vm, "MinDurationMs", 1200);
-            Set(vm, "MaxDurationMs", 6000);
-            Invoke(vm, "SaveSettings");
+        var vm = new ApplyDurationLimitsViewModel();
+        Invoke(vm, "LoadSettings");
+        Assert.Equal(1000, Get(vm, "MinDurationMs"));
+        Assert.Equal(8000, Get(vm, "MaxDurationMs"));
 
-            var reopened = new ApplyDurationLimitsViewModel();
-            Invoke(reopened, "LoadSettings");
-            Assert.Equal(1200, Get(reopened, "MinDurationMs"));
-            Assert.Equal(6000, Get(reopened, "MaxDurationMs"));
+        Set(vm, "MinDurationMs", 1200);
+        Set(vm, "MaxDurationMs", 6000);
+        Invoke(vm, "SaveSettings");
 
-            Assert.Equal(1000, Se.Settings.General.SubtitleMinimumDisplayMilliseconds);
-            Assert.Equal(8000, Se.Settings.General.SubtitleMaximumDisplayMilliseconds);
-        }
-        finally
-        {
-            Se.Settings.Tools.ApplyDurationLimitsMinDurationMs = beforeMin;
-            Se.Settings.Tools.ApplyDurationLimitsMaxDurationMs = beforeMax;
-        }
+        var reopened = new ApplyDurationLimitsViewModel();
+        Invoke(reopened, "LoadSettings");
+        Assert.Equal(1200, Get(reopened, "MinDurationMs"));
+        Assert.Equal(6000, Get(reopened, "MaxDurationMs"));
+
+        Assert.Equal(1000, Se.Settings.General.SubtitleMinimumDisplayMilliseconds);
+        Assert.Equal(8000, Se.Settings.General.SubtitleMaximumDisplayMilliseconds);
     }
 
     // Cancel has to leave the options alone - Escape in the same dialog already did, so the two
@@ -131,20 +124,14 @@ public class SettingsPersistenceTests
     [Fact]
     public void ExportPlainText_CancelDoesNotSaveSettings()
     {
-        var before = Se.Settings.File.ExportPlainText.ShowLineNumbers;
-        try
-        {
-            Se.Settings.File.ExportPlainText.ShowLineNumbers = false;
+        using var _ = new SettingsScope("File.ExportPlainText.ShowLineNumbers");
 
-            var vm = new ExportPlainTextViewModel(null!, null!);
-            Set(vm, "ShowLineNumbers", true);
-            vm.CancelCommand.Execute(null);
+        Se.Settings.File.ExportPlainText.ShowLineNumbers = false;
 
-            Assert.False(Se.Settings.File.ExportPlainText.ShowLineNumbers);
-        }
-        finally
-        {
-            Se.Settings.File.ExportPlainText.ShowLineNumbers = before;
-        }
+        var vm = new ExportPlainTextViewModel(null!, null!);
+        Set(vm, "ShowLineNumbers", true);
+        vm.CancelCommand.Execute(null);
+
+        Assert.False(Se.Settings.File.ExportPlainText.ShowLineNumbers);
     }
 }

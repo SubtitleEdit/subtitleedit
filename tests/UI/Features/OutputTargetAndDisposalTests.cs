@@ -25,28 +25,20 @@ public class OutputTargetAndDisposalTests
     [Fact]
     public void TransparentSettings_LoadsAndSavesItsOwnOutputFolder()
     {
-        var beforeTransparent = Se.Settings.Video.Transparent.OutputFolder;
-        var beforeBurnIn = Se.Settings.Video.BurnIn.OutputFolder;
-        try
-        {
-            Se.Settings.Video.Transparent.OutputFolder = "/tmp/transparent-out";
-            Se.Settings.Video.BurnIn.OutputFolder = "/tmp/burnin-out";
+        using var _ = new SettingsScope("Video.Transparent.OutputFolder", "Video.BurnIn.OutputFolder");
 
-            var vm = new TransparentSettingsViewModel(null!);
-            Invoke(vm, "LoadSettings");
-            Assert.Equal("/tmp/transparent-out", Get(vm, "OutputFolder"));
+        Se.Settings.Video.Transparent.OutputFolder = "/tmp/transparent-out";
+        Se.Settings.Video.BurnIn.OutputFolder = "/tmp/burnin-out";
 
-            Set(vm, "OutputFolder", "/tmp/changed");
-            Invoke(vm, "SaveSettings");
+        var vm = new TransparentSettingsViewModel(null!);
+        Invoke(vm, "LoadSettings");
+        Assert.Equal("/tmp/transparent-out", Get(vm, "OutputFolder"));
 
-            Assert.Equal("/tmp/changed", Se.Settings.Video.Transparent.OutputFolder);
-            Assert.Equal("/tmp/burnin-out", Se.Settings.Video.BurnIn.OutputFolder); // untouched
-        }
-        finally
-        {
-            Se.Settings.Video.Transparent.OutputFolder = beforeTransparent;
-            Se.Settings.Video.BurnIn.OutputFolder = beforeBurnIn;
-        }
+        Set(vm, "OutputFolder", "/tmp/changed");
+        Invoke(vm, "SaveSettings");
+
+        Assert.Equal("/tmp/changed", Se.Settings.Video.Transparent.OutputFolder);
+        Assert.Equal("/tmp/burnin-out", Se.Settings.Video.BurnIn.OutputFolder); // untouched
     }
 
     /// <summary>
@@ -56,49 +48,80 @@ public class OutputTargetAndDisposalTests
     [Fact]
     public void SplitSubtitle_ReopensOnTheLastUsedFormatAndEncoding()
     {
-        var beforeFormat = Se.Settings.Tools.SplitSubtitleFormat;
-        var beforeEncoding = Se.Settings.Tools.SplitSubtitleEncoding;
-        try
-        {
-            var first = new SplitSubtitleViewModel(null!, null!);
-            var otherFormat = first.Formats.Skip(3).First();
-            var otherEncoding = first.Encodings.Skip(2).First();
+        using var _ = new SettingsScope("Tools.SplitSubtitleFormat", "Tools.SplitSubtitleEncoding");
 
-            Se.Settings.Tools.SplitSubtitleFormat = otherFormat.Name;
-            Se.Settings.Tools.SplitSubtitleEncoding = otherEncoding.DisplayName;
+        var first = new SplitSubtitleViewModel(null!, null!);
+        var otherFormat = first.Formats.Skip(3).First();
+        var otherEncoding = first.Encodings.Skip(2).First();
 
-            var reopened = new SplitSubtitleViewModel(null!, null!);
+        Se.Settings.Tools.SplitSubtitleFormat = otherFormat.Name;
+        Se.Settings.Tools.SplitSubtitleEncoding = otherEncoding.DisplayName;
 
-            Assert.Equal(otherFormat.Name, reopened.SelectedSubtitleFormat?.Name);
-            Assert.Equal(otherEncoding.DisplayName, reopened.SelectedEncoding?.DisplayName);
-        }
-        finally
-        {
-            Se.Settings.Tools.SplitSubtitleFormat = beforeFormat;
-            Se.Settings.Tools.SplitSubtitleEncoding = beforeEncoding;
-        }
+        var reopened = new SplitSubtitleViewModel(null!, null!);
+
+        Assert.Equal(otherFormat.Name, reopened.SelectedSubtitleFormat?.Name);
+        Assert.Equal(otherEncoding.DisplayName, reopened.SelectedEncoding?.DisplayName);
     }
 
     // An unknown saved name must not leave the dialog with nothing selected.
     [Fact]
     public void SplitSubtitle_FallsBackWhenTheSavedNamesAreGone()
     {
-        var beforeFormat = Se.Settings.Tools.SplitSubtitleFormat;
-        var beforeEncoding = Se.Settings.Tools.SplitSubtitleEncoding;
+        using var _ = new SettingsScope("Tools.SplitSubtitleFormat", "Tools.SplitSubtitleEncoding");
+
+        Se.Settings.Tools.SplitSubtitleFormat = "no such format";
+        Se.Settings.Tools.SplitSubtitleEncoding = "no such encoding";
+
+        var vm = new SplitSubtitleViewModel(null!, null!);
+
+        Assert.Equal(vm.Formats[0].Name, vm.SelectedSubtitleFormat?.Name);
+        Assert.Equal(vm.Encodings[0].DisplayName, vm.SelectedEncoding?.DisplayName);
+    }
+
+    /// <summary>
+    /// The output folder is only usable if it exists, and that has to hold for the collision loop
+    /// too: testing Directory.Exists at the first use but not when resolving "_2", "_3", ... builds
+    /// a path into a missing directory for the second file of a run, which then fails at write time.
+    /// </summary>
+    [Theory]
+    [InlineData(false)] // first file
+    [InlineData(true)]  // name already taken, so the collision loop picks the folder again
+    public void TransparentSubtitles_MissingOutputFolder_FallsBackToTheSourceFolder(bool nameTaken)
+    {
+        using var _ = new SettingsScope(
+            "Video.Transparent.OutputFolder",
+            "Video.Transparent.UseOutputFolder",
+            "Video.BurnIn.BurnInSuffix");
+
+        var dir = Directory.CreateTempSubdirectory("se-transparent-output");
         try
         {
-            Se.Settings.Tools.SplitSubtitleFormat = "no such format";
-            Se.Settings.Tools.SplitSubtitleEncoding = "no such encoding";
+            var missing = Path.Combine(dir.FullName, "does", "not", "exist");
+            Se.Settings.Video.Transparent.UseOutputFolder = true;
+            Se.Settings.Video.Transparent.OutputFolder = missing;
+            Se.Settings.Video.BurnIn.BurnInSuffix = "_new";
 
-            var vm = new SplitSubtitleViewModel(null!, null!);
+            var videoFileName = Path.Combine(dir.FullName, "clip.mp4");
+            File.WriteAllText(videoFileName, string.Empty);
 
-            Assert.Equal(vm.Formats[0].Name, vm.SelectedSubtitleFormat?.Name);
-            Assert.Equal(vm.Encodings[0].DisplayName, vm.SelectedEncoding?.DisplayName);
+            var vm = new TransparentSubtitlesViewModel(null!, null!, null!);
+            var ext = (string)Get(vm, "SelectedVideoExtension")!;
+            if (nameTaken)
+            {
+                File.WriteAllText(Path.Combine(dir.FullName, "clip_new" + ext), string.Empty);
+            }
+
+            var method = typeof(TransparentSubtitlesViewModel)
+                .GetMethod("MakeOutputFileName", BindingFlags.Instance | BindingFlags.NonPublic)!;
+            var result = (string)method.Invoke(vm, new object[] { videoFileName })!;
+
+            Assert.False(result.StartsWith(missing, StringComparison.Ordinal),
+                $"resolved into the missing output folder: {result}");
+            Assert.Equal(dir.FullName, Path.GetDirectoryName(result));
         }
         finally
         {
-            Se.Settings.Tools.SplitSubtitleFormat = beforeFormat;
-            Se.Settings.Tools.SplitSubtitleEncoding = beforeEncoding;
+            dir.Delete(recursive: true);
         }
     }
 
