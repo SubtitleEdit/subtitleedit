@@ -8,6 +8,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 {
     public class RxMarker : SubtitleFormat
     {
+        private static readonly CharLookup TimeCodeChars = CharLookup.Create('0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '.', ':', ',');
+
         private static readonly Regex RegexTimeCode = new Regex(@"^Region \d+\t\d\d:\d\d:\d\d:\d\d\.\d\d\t\d\d:\d\d:\d\d:\d\d\.\d\d\t.+$", RegexOptions.Compiled);
 
         public override string Extension => ".txt";
@@ -74,7 +76,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         if (arr.Length >= 3)
                         {
                             var text = s.Remove(0, arr[0].Length + arr[1].Length + arr[2].Length + 2).Trim();
-                            if (string.IsNullOrWhiteSpace(text.RemoveChar('0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '.', ':', ',')))
+                            if (text.IsOnlyCharsOrWhiteSpace(TimeCodeChars))
                             {
                                 _errorCount++;
                             }

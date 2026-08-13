@@ -1542,6 +1542,14 @@ namespace Nikse.SubtitleEdit.Core.Common
         /// <returns>A new string with color tags removed.</returns>
         public static string RemoveColorTags(string input)
         {
+            // The loop below restarts the regex from index 0 after every hit and rebuilds the
+            // whole string twice per hit, so it is worth not entering it at all: the pattern can
+            // only match "COLOR=" or "color=", and most lines carry neither.
+            if (input.IndexOf("olor", StringComparison.OrdinalIgnoreCase) < 0)
+            {
+                return input.Trim();
+            }
+
             var r = ColorAttributeRegex;
             var s = input;
             var match = r.Match(s);
@@ -1662,11 +1670,48 @@ namespace Nikse.SubtitleEdit.Core.Common
         /// </summary>
         /// <param name="s">The input string from which to remove the alignment tags.</param>
         /// <returns>A new string without ASS and SSA alignment tags.</returns>
+        /// <summary>
+        /// True when <paramref name="s"/> can hold one of the alignment tags
+        /// <see cref="RemoveAssAlignmentTags"/> strips. Every one of its 45 patterns is an 'a'
+        /// directly after '\\' or '{', followed by 1-9 or by 'n' and 1-9, so one scan tells the
+        /// ASSA lines that carry an alignment tag from the far more common ones that only carry
+        /// \pos, \fad, \c and friends - which would otherwise pay all 45 Replace scans.
+        /// </summary>
+        private static bool HasAlignmentTag(string s)
+        {
+            for (var i = 1; i + 1 < s.Length; i++)
+            {
+                if (s[i] != 'a')
+                {
+                    continue;
+                }
+
+                var previous = s[i - 1];
+                if (previous != '\\' && previous != '{')
+                {
+                    continue;
+                }
+
+                var next = s[i + 1];
+                if (next >= '1' && next <= '9')
+                {
+                    return true;
+                }
+
+                if (next == 'n' && i + 2 < s.Length && s[i + 2] >= '1' && s[i + 2] <= '9')
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
         public static string RemoveAssAlignmentTags(string s)
         {
             // Every pattern below contains a backslash, so plain text (the common case in
             // batch convert) skips all 45 Replace scans.
-            if (s.IndexOf('\\') < 0)
+            if (s.IndexOf('\\') < 0 || !HasAlignmentTag(s))
             {
                 return s;
             }

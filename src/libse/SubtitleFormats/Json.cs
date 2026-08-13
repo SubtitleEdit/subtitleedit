@@ -228,9 +228,42 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             subtitle.Renumber();
         }
 
+        /// <summary>
+        /// Index of <paramref name="tag"/> wrapped in double or single quotes, double quotes
+        /// first - the same answer as the string[] overload of IndexOfAny this replaces, but
+        /// without building the two quoted needles and the array on every tag read.
+        /// </summary>
+        private static int IndexOfQuotedTag(string s, string tag)
+        {
+            var index = IndexOfQuoted(s, tag, '"');
+            return index >= 0 ? index : IndexOfQuoted(s, tag, '\'');
+        }
+
+        private static int IndexOfQuoted(string s, string tag, char quote)
+        {
+            var from = 0;
+            while (from < s.Length)
+            {
+                var index = s.IndexOf(tag, from, StringComparison.Ordinal);
+                if (index < 0 || index + tag.Length >= s.Length)
+                {
+                    return -1;
+                }
+
+                if (index > 0 && s[index - 1] == quote && s[index + tag.Length] == quote)
+                {
+                    return index - 1;
+                }
+
+                from = index + 1;
+            }
+
+            return -1;
+        }
+
         private static bool IsTagArray(string content, string tag)
         {
-            var startIndex = content.IndexOfAny(new[] { "\"" + tag + "\"", "'" + tag + "'" }, StringComparison.Ordinal);
+            var startIndex = IndexOfQuotedTag(content, tag);
             if (startIndex < 0)
             {
                 return false;
@@ -259,7 +292,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         public static string ReadTag(string s, string tag)
         {
-            var startIndex = s.IndexOfAny(new[] { "\"" + tag + "\"", "'" + tag + "'" }, StringComparison.Ordinal);
+            var startIndex = IndexOfQuotedTag(s, tag);
             if (startIndex < 0)
             {
                 return null;
@@ -323,7 +356,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         {
             var list = new List<string>();
 
-            var startIndex = s.IndexOfAny(new[] { "\"" + tag + "\"", "'" + tag + "'" }, StringComparison.Ordinal);
+            var startIndex = IndexOfQuotedTag(s, tag);
             if (startIndex < 0)
             {
                 return list;

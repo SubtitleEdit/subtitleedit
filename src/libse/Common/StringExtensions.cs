@@ -511,6 +511,18 @@ namespace Nikse.SubtitleEdit.Core.Common
             return false;
         }
 
+        /// <summary>
+        /// Same answer as <c>string.IsNullOrEmpty(value.RemoveChar(chars))</c>, without building
+        /// the stripped string. Prepare <paramref name="chars"/> once in a static field.
+        /// </summary>
+        public static bool IsOnlyChars(this string value, CharLookup chars) => chars.IsOnly(value);
+
+        /// <summary>
+        /// Same answer as <c>string.IsNullOrWhiteSpace(value.RemoveChar(chars))</c>, without
+        /// building the stripped string. Prepare <paramref name="chars"/> once in a static field.
+        /// </summary>
+        public static bool IsOnlyCharsOrWhiteSpace(this string value, CharLookup chars) => chars.IsOnlyOrWhiteSpace(value);
+
         public static bool ContainsUnicodeControlChars(this string s)
         {
 #if NET8_0_OR_GREATER

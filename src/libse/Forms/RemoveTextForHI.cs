@@ -8,6 +8,8 @@ namespace Nikse.SubtitleEdit.Core.Forms
 {
     public class RemoveTextForHI
     {
+        private static readonly CharLookup MusicSymbols = CharLookup.Create('\u266A', '\u266B');
+
         public RemoveTextForHISettings Settings { get; set; }
 
         public List<int> Warnings { get; set; }
@@ -1232,7 +1234,7 @@ namespace Nikse.SubtitleEdit.Core.Forms
 
             if (Settings.RemoveIfOnlyMusicSymbols)
             {
-                if (string.IsNullOrWhiteSpace(HtmlUtil.RemoveHtmlTags(text, true).RemoveChar('♪', '♫')))
+                if (HtmlUtil.RemoveHtmlTags(text, true).IsOnlyCharsOrWhiteSpace(MusicSymbols))
                 {
                     return string.Empty;
                 }
