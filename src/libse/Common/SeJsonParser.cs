@@ -28,7 +28,21 @@ namespace Nikse.SubtitleEdit.Core.Common
             }
         }
 
-        private readonly HashSet<char> _whiteSpace = new HashSet<char> { ' ', '\r', '\n', '\t' };
+        /// <summary>
+        /// White-space test for the parse loops below. This used to be a per-instance
+        /// <c>HashSet&lt;char&gt;</c> probed once per character of the document - a hash, a
+        /// bucket load and a comparison where four inlined compares do. Every auto-translate
+        /// and text-to-speech response goes through here, as do the JSON subtitle formats.
+        /// </summary>
+        private static bool IsWhiteSpace(char ch) => ch == ' ' || ch == '\r' || ch == '\n' || ch == '\t';
+
+        /// <summary>
+        /// The characters a JSON number can be made of. The parse loops used to ask
+        /// <c>"+-0123456789.Ee".IndexOf(ch)</c>, an ordinal search over a 15-character string
+        /// per digit; the range test plus five compares below is branch-predictable and inlines.
+        /// </summary>
+        private static bool IsNumberChar(char ch) =>
+            (ch >= '0' && ch <= '9') || ch == '+' || ch == '-' || ch == '.' || ch == 'E' || ch == 'e';
 
         public List<string> GetAllTagsByNameAsStrings(string content, string name)
         {
@@ -42,7 +56,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             while (i < max)
             {
                 var ch = content[i];
-                if (_whiteSpace.Contains(ch)) // ignore white space
+                if (IsWhiteSpace(ch)) // ignore white space
                 {
                     i++;
                 }
@@ -233,7 +247,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                     else if ("+-0123456789".IndexOf(ch) >= 0)
                     {
                         sb.Clear();
-                        while ("+-0123456789.Ee".IndexOf(content[i]) >= 0 && i < max)
+                        while (IsNumberChar(content[i]) && i < max)
                         {
                             sb.Append(content[i]);
                             i++;
@@ -334,7 +348,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             while (i < max)
             {
                 var ch = content[i];
-                if (_whiteSpace.Contains(ch)) // ignore white space
+                if (IsWhiteSpace(ch)) // ignore white space
                 {
                     i++;
                 }
@@ -526,7 +540,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                     else if ("+-0123456789".IndexOf(ch) >= 0)
                     {
                         sb.Clear();
-                        while (i < max && "+-0123456789.Ee".IndexOf(content[i]) >= 0)
+                        while (i < max && IsNumberChar(content[i]))
                         {
                             sb.Append(content[i]);
                             i++;
@@ -639,7 +653,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             while (i < max)
             {
                 var ch = content[i];
-                if (_whiteSpace.Contains(ch)) // ignore white space
+                if (IsWhiteSpace(ch)) // ignore white space
                 {
                     i++;
                 }
@@ -812,7 +826,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                     }
                     else if ("+-0123456789".IndexOf(ch) >= 0)
                     {
-                        while ("+-0123456789.Ee".IndexOf(content[i]) >= 0 && i < max)
+                        while (IsNumberChar(content[i]) && i < max)
                         {
                             i++;
                         }
@@ -934,7 +948,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             while (i < max)
             {
                 var ch = content[i];
-                if (_whiteSpace.Contains(ch)) // ignore white space
+                if (IsWhiteSpace(ch)) // ignore white space
                 {
                     i++;
                 }
@@ -1123,7 +1137,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                     else if ("+-0123456789".IndexOf(ch) >= 0)
                     {
                         sb.Clear();
-                        while ("+-0123456789.Ee".IndexOf(content[i]) >= 0 && i < max)
+                        while (IsNumberChar(content[i]) && i < max)
                         {
                             sb.Append(content[i]);
                             i++;
@@ -1236,7 +1250,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             while (i < max)
             {
                 var ch = content[i];
-                if (_whiteSpace.Contains(ch)) // ignore white space
+                if (IsWhiteSpace(ch)) // ignore white space
                 {
                     i++;
                 }
@@ -1456,7 +1470,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                     }
                     else if ("+-0123456789".IndexOf(ch) >= 0)
                     {
-                        while (i < max && "+-0123456789.Ee".IndexOf(content[i]) >= 0)
+                        while (i < max && IsNumberChar(content[i]))
                         {
                             i++;
                         }
