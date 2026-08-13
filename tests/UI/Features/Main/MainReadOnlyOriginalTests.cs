@@ -311,8 +311,8 @@ public class MainReadOnlyOriginalTests
     /// <summary>
     /// Showing the original's non-matching lines no longer locks time codes: each row keeps a
     /// sticky link to the original line it displays, so retiming cannot shuffle the reference
-    /// around under the user (#13594). Only a selected display-only row keeps its editors off -
-    /// its timings belong to the original file.
+    /// around under the user (#13594). Display-only rows included - nudging their timings is part
+    /// of adopting the line, and only the user's own lock disables the editors.
     /// </summary>
     [AvaloniaFact]
     public void ShowingNonMatchingOriginalLines_DoesNotLockTimeCodes()
@@ -328,12 +328,44 @@ public class MainReadOnlyOriginalTests
             Assert.False(vm.AreTimeCodesLocked);
             Assert.False(vm.LockTimeCodes);
 
-            // The show/hide/duration editors still refuse a display-only row.
             vm.SelectedSubtitle = vm.Subtitles.Single(p => p.IsReferenceOnly);
-            Assert.False(vm.AreTimeCodesEditable);
+            Assert.True(vm.AreTimeCodesEditable);
 
             vm.SelectedSubtitle = vm.Subtitles.First(p => !p.IsReferenceOnly);
             Assert.True(vm.AreTimeCodesEditable);
+        }
+        finally
+        {
+            CloseWindow(window, vm);
+        }
+    }
+
+    /// <summary>
+    /// Retiming a display-only row does not promote it - only typing text does - and the nudged
+    /// times survive the refresh: the file's text stays authoritative for a read-only reference,
+    /// its times deliberately do not (#13594).
+    /// </summary>
+    [AvaloniaFact]
+    public void RetimedReferenceOnlyRow_KeepsItsTimesAndStaysAReferenceRow()
+    {
+        var (window, vm) = CreateMainViewModel();
+        try
+        {
+            ImportSampleReference(vm);
+            var referenceRow = vm.Subtitles.Single(p => p.IsReferenceOnly);
+
+            referenceRow.SetTimes(TimeSpan.FromMilliseconds(2500), TimeSpan.FromMilliseconds(4500));
+
+            InvokeReapplyReadOnlyReference(vm);
+
+            var stillReference = Assert.Single(vm.Subtitles, p => p.IsReferenceOnly);
+            Assert.Same(referenceRow, stillReference);
+            Assert.Equal(TimeSpan.FromMilliseconds(2500), stillReference.StartTime);
+            Assert.Equal(TimeSpan.FromMilliseconds(4500), stillReference.EndTime);
+            Assert.Equal("Reference only - no translation", stillReference.OriginalText);
+
+            // Still not part of the working subtitle.
+            Assert.Equal(2, vm.GetUpdateSubtitle().Paragraphs.Count);
         }
         finally
         {

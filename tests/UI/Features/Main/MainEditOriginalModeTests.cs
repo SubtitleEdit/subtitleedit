@@ -93,27 +93,29 @@ public class MainEditOriginalModeTests
     }
 
     /// <summary>
-    /// In the mode, a display-only row's timings are editable - they are the original line's own,
-    /// and editing the original is the point. Outside the mode they stay off.
+    /// A display-only row's timings are editable in and out of the mode - only the user's own time
+    /// code lock disables the editors (#13594).
     /// </summary>
     [AvaloniaFact]
-    public void EditOriginalMode_MakesReferenceOnlyRowTimingsEditable()
+    public void ReferenceOnlyRowTimings_AreEditableRegardlessOfTheMode()
     {
         var (window, vm) = CreateMainViewModel();
+        var lockTimeCodes = vm.LockTimeCodes;
         try
         {
             ImportSampleReference(vm, isReadOnly: true);
             vm.SelectedSubtitle = vm.Subtitles.Single(p => p.IsReferenceOnly);
-            Assert.False(vm.AreTimeCodesEditable);
+            Assert.True(vm.AreTimeCodesEditable);
 
             InvokeToggleEditOriginalMode(vm);
             Assert.True(vm.AreTimeCodesEditable);
 
-            InvokeToggleEditOriginalMode(vm);
+            vm.LockTimeCodes = true;
             Assert.False(vm.AreTimeCodesEditable);
         }
         finally
         {
+            vm.LockTimeCodes = lockTimeCodes;
             CloseWindow(window, vm);
         }
     }
