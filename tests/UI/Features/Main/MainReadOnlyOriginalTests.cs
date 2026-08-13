@@ -865,7 +865,9 @@ public class MainReadOnlyOriginalTests
                          "FileCloseOriginal", BindingFlags.Instance | BindingFlags.NonPublic)
                      ?? throw new InvalidOperationException("FileCloseOriginal not found");
 
-        method.Invoke(vm, null);
+        // Async since the close can prompt to save an editable original; the paths these tests
+        // exercise never show the prompt, so the task completes synchronously.
+        ((Task)method.Invoke(vm, null)!).GetAwaiter().GetResult();
     }
 
     private static async Task InvokeFileCloseTranslation(MainViewModel vm)

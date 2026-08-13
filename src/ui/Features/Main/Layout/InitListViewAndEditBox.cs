@@ -1948,6 +1948,15 @@ public static partial class InitListViewAndEditBox
         // A reference-only row IS editable: typing the missing translation into it is how the line
         // is adopted from the reference - the first character promotes the row to an ordinary
         // working line (see MainViewModel.SubtitleTextChanged, #13594).
+        //
+        // In "Edit original" mode, though, the original is the file being worked on, so the
+        // working text box goes read-only to keep the two sides apart.
+        textBox.Bind(TextBox.IsReadOnlyProperty, new Binding(nameof(vm.IsEditOriginalMode))
+        {
+            Mode = BindingMode.OneWay,
+            Source = vm
+        });
+
         textBox.TextChanged += vm.SubtitleTextChanged;
         textBox.GotFocus += (_, _) => vm.SubtitleTextBoxGotFocus();
         textBox.AddHandler(InputElement.PointerPressedEvent, (_, e) => vm.StoreTextEditorPointerArgs(e), RoutingStrategies.Tunnel);

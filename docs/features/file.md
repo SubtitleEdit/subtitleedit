@@ -29,7 +29,11 @@ Open a subtitle file while keeping the currently loaded video.
 
 ### Open original subtitle
 
-Open a second subtitle file for translation mode (shown side by side).
+Open a second subtitle file for translation mode (shown side by side). See [Translation Mode](main-window.md#translation-mode) for how a file that does not line up 1:1 is handled.
+
+### Edit original subtitle
+
+Toggle "edit original" mode: the original subtitle (even one opened as a read-only reference) becomes the file being edited, and the working subtitle's text box goes read-only. See [Edit original mode](main-window.md#edit-original-mode).
 
 ## Save
 

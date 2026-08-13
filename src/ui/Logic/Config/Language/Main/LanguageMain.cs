@@ -90,6 +90,7 @@ public class LanguageMain
     public string TrimmedXLines { get; set; }
     public string OpenOriginalDifferentNumberOfSubtitlesXY { get; set; }
     public string OriginalTextReadOnly { get; set; }
+    public string OriginalTextEditMode { get; set; }
     public string OriginalIsReadOnlyNotSaved { get; set; }
     public string OriginalIsReadOnlyReference { get; set; }
     public string AllowEditOfOriginalSubtitle { get; set; }
@@ -230,6 +231,7 @@ public class LanguageMain
         TrimmedXLines = "Trimmed {0} subtitle lines";
         OpenOriginalDifferentNumberOfSubtitlesXY = "The original subtitle file does not have the same number of subtitles as the current subtitle file.\n\n• Original subtitles: {0}\n• Current subtitles: {1}";
         OriginalTextReadOnly = "Original text (read-only)";
+        OriginalTextEditMode = "Original text (edit mode)";
         OriginalIsReadOnlyNotSaved = "The original subtitle is a read-only reference and was not saved";
         OriginalIsReadOnlyReference = "The original subtitle is open as a read-only reference";
         AllowEditOfOriginalSubtitle = "Allow edit of original subtitle";
