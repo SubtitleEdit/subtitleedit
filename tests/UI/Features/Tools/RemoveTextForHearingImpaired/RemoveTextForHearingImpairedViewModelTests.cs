@@ -147,4 +147,42 @@ public class RemoveTextForHearingImpairedViewModelTests
         Assert.True(withShift.Handled);
         Assert.True(vm.Fixes[0].Apply);
     }
+
+    // #13591: the HI pass rebuilds the text with Environment.NewLine, so a paragraph holding a
+    // foreign line break must not be offered as a fix that renders exactly like the original.
+    [Theory]
+    [InlineData("\n")]
+    [InlineData("\r\n")]
+    [InlineData("\r")]
+    public void LineBreakOnlyDifference_IsNotAFix(string lineBreak)
+    {
+        const string first = "I told him to get lost,";
+        const string second = "and when he vanished with the light,";
+
+        Assert.False(RemoveTextForHearingImpairedViewModel.IsVisibleChange(
+            first + lineBreak + second,
+            first + Environment.NewLine + second));
+    }
+
+    [AvaloniaTheory]
+    [InlineData("\n")]
+    [InlineData("\r\n")]
+    public void PlainTextWithAnyLineBreak_GivesNoFixes(string lineBreak)
+    {
+        var vm = Resolve();
+        var sub = new Subtitle();
+        sub.Paragraphs.Add(new Paragraph(
+            "I told him to get lost," + lineBreak + "and when he vanished with the light,", 0, 3000));
+        vm.Initialize(sub, _ => { });
+
+        vm.GeneratePreview();
+
+        Assert.Empty(vm.Fixes);
+    }
+
+    [Fact]
+    public void RealChange_IsStillAFix()
+    {
+        Assert.True(RemoveTextForHearingImpairedViewModel.IsVisibleChange("[door slams]" + Environment.NewLine + "Hello", "Hello"));
+    }
 }

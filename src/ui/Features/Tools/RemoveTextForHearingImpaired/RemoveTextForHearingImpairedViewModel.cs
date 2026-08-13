@@ -348,7 +348,7 @@ public partial class RemoveTextForHearingImpairedViewModel : ObservableObject, I
         _timer.StopAndDispose(TimerElapsed);
     }
 
-    private void GeneratePreview()
+    internal void GeneratePreview()
     {
         if (_removeTextForHiLib == null)
         {
@@ -371,10 +371,7 @@ public partial class RemoveTextForHearingImpairedViewModel : ObservableObject, I
             var p = _subtitle.Paragraphs[index];
             _removeTextForHiLib.WarningIndex = index - 1;
             var newText = _removeTextForHiLib.RemoveTextFromHearImpaired(p.Text, _subtitle, index, twoLetterIsoLanguageName);
-            // Trim before comparing: RemoveTextFromHearImpaired rebuilds the text and drops
-            // e.g. a trailing empty line, which would otherwise list a "fix" whose before and
-            // after render identically (#13389).
-            if (p.Text.Trim().RemoveChar(' ') != newText.Trim().RemoveChar(' '))
+            if (IsVisibleChange(p.Text, newText))
             {
                 var apply = true;
                 var oldItem = Fixes.FirstOrDefault(f => f.Index == index);
@@ -408,6 +405,22 @@ public partial class RemoveTextForHearingImpairedViewModel : ObservableObject, I
 
         Fixes.Clear();
         Fixes.AddRange(newFixes);
+    }
+
+    /// <summary>
+    /// True when the HI pass changed something the user would actually see in the fix list.
+    /// Trailing white space is ignored: RemoveTextFromHearImpaired rebuilds the text and drops
+    /// e.g. a trailing empty line, which would otherwise list a "fix" whose before and after
+    /// render identically (#13389). Line breaks are compared normalized for the same reason -
+    /// the rebuilt text always uses <see cref="Environment.NewLine"/>, so a paragraph that came
+    /// in with a foreign line break (pasted from a LF file, say) would be listed unchanged
+    /// (#13591).
+    /// </summary>
+    internal static bool IsVisibleChange(string before, string after)
+    {
+        return Flatten(before) != Flatten(after);
+
+        static string Flatten(string text) => text.NormalizeLineBreaks().Trim().RemoveChar(' ');
     }
 
     public RemoveTextForHISettings GetSettings(Subtitle subtitle)
