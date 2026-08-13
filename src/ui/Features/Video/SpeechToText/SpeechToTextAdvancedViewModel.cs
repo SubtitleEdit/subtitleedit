@@ -69,7 +69,9 @@ public partial class SpeechToTextAdvancedViewModel : ObservableObject
     [RelayCommand]
     private void EnableWordLevelCpp()
     {
-        Parameters = "-owts true -ojf true";
+        // Both are switches, not key/value pairs - whisper-cli parses a following "true" as an
+        // input file name and then bails out with "input file not found 'true'".
+        Parameters = "-owts -ojf";
     }
 
     [RelayCommand]
