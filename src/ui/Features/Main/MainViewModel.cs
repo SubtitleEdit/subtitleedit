@@ -4282,6 +4282,17 @@ public partial class MainViewModel :
             return;
         }
 
+        if (Se.Settings.General.RemoveBlankLinesWhenOpening)
+        {
+            subtitle.RemoveEmptyLines();
+            if (subtitle.Paragraphs.Count == 0)
+            {
+                // Nothing left to insert - the file held blank lines only.
+                _shortcutManager.ClearKeys();
+                return;
+            }
+        }
+
         // Anchor the file at the right-clicked waveform position when opened from the waveform
         // context menu; the current video position is the fallback (SE4 behavior).
         var videoPosition = _waveformContextMenuSeconds ?? vp.Position;
@@ -4341,6 +4352,17 @@ public partial class MainViewModel :
                 MessageBoxButtons.OK, MessageBoxIcon.Error);
             _shortcutManager.ClearKeys();
             return;
+        }
+
+        if (Se.Settings.General.RemoveBlankLinesWhenOpening)
+        {
+            subtitle.RemoveEmptyLines();
+            if (subtitle.Paragraphs.Count == 0)
+            {
+                // Nothing left to insert - the file held blank lines only.
+                _shortcutManager.ClearKeys();
+                return;
+            }
         }
 
         // Keep the file's own time codes so pre-timed subtitles land at their real positions
@@ -13826,11 +13848,25 @@ public partial class MainViewModel :
     [RelayCommand]
     private void RemoveBlankLines()
     {
-        var blankLines = Subtitles.Where(s => string.IsNullOrWhiteSpace(s.Text)).ToList();
+        var count = RemoveBlankLinesFromGrid();
+        if (count > 0)
+        {
+            ShowStatus(string.Format(Se.Language.Main.RemovedXBlankLines, count));
+        }
+    }
+
+    /// <summary>
+    /// Drops every line without text from the grid and renumbers. Returns the number of lines removed.
+    /// Uses the same "blank" rule as <see cref="Subtitle.RemoveEmptyLines"/> so a line holding only
+    /// zero-width or other control characters counts as blank here too.
+    /// </summary>
+    private int RemoveBlankLinesFromGrid()
+    {
+        var blankLines = Subtitles.Where(s => s.Text.IsOnlyControlCharactersOrWhiteSpace()).ToList();
         var count = blankLines.Count;
         if (count == 0)
         {
-            return;
+            return 0;
         }
 
         foreach (var line in blankLines)
@@ -13841,7 +13877,7 @@ public partial class MainViewModel :
         Renumber();
         _updateAudioVisualizer = true;
 
-        ShowStatus(string.Format(Se.Language.Main.RemovedXBlankLines, count));
+        return count;
     }
 
     private SubtitleLineViewModel? _setEndAtKeyUpLine;
@@ -17510,6 +17546,16 @@ public partial class MainViewModel :
             _changeSubtitleHash = GetFastHash();
             ShowStatus(string.Format(Se.Language.General.SubtitleLoadedX, fileName));
             LoadBookmarks();
+
+            // SE 4 parity (#13588). This runs after LoadBookmarks because bookmarks are stored by
+            // line index, so they must be applied while the blank lines are still there. The hash is
+            // refreshed afterwards, again like SE 4, so the cleanup alone does not make a freshly
+            // opened file look edited.
+            if (Se.Settings.General.RemoveBlankLinesWhenOpening && RemoveBlankLinesFromGrid() > 0)
+            {
+                _subtitle.RemoveEmptyLines(); // keep the loaded subtitle in step with the grid
+                _changeSubtitleHash = GetFastHash();
+            }
 
             // Restore the last editing position when a file from the recent list is reopened
             // via Explorer/Finder double-click, File > Open, or drag & drop, like SE 4 did
