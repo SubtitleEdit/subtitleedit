@@ -330,7 +330,7 @@ If the original file does not have the same number of lines as the subtitle you 
 
 The dialog also offers an **Allow edit of original subtitle** check box. Left off (the default), the original is a read-only reference: it is never written to, and closing it leaves the file on disk exactly as it was. Both choices are remembered for the next time.
 
-The dimmed rows belong to the original, so they are not saved with your subtitle, and editing commands (delete, merge, export, …) skip them. To adopt a missing line into your subtitle, select it and simply type or paste the translation — the row immediately becomes a normal line, keeping the original line's timings. **Column → Copy text from original to current** in the grid's context menu does the same while also copying the original text over.
+The dimmed rows belong to the original, so they are not saved with your subtitle, and editing commands (delete, merge, export, …) skip them. To adopt a missing line into your subtitle, select it and simply type or paste the translation — the row immediately becomes a normal line, keeping its timings. **Column → Copy text from original to current** in the grid's context menu does the same while also copying the original text over. You can nudge a dimmed row's start/end/duration first (it stays a dimmed reference row until you type text into it), so an adopted line lands with exactly the timing you want.
 
 Each row remembers which original line it shows, so editing or retiming your own lines never re-shuffles the reference: the dimmed rows only slide to keep time order, and if you delete a row that had adopted a reference line, that line comes back as a dimmed row.
 
@@ -338,7 +338,7 @@ Each row remembers which original line it shows, so editing or retiming your own
 
 **File → Edit original subtitle** (visible while an original is open) switches which file you are editing:
 
-- The original's text becomes editable — including a reference that was opened read-only — and a selected dimmed row's timings can be changed (they belong to the original).
+- The original's text becomes editable — including a reference that was opened read-only.
 - The working subtitle's text box goes read-only while the mode is on, so the two sides can't be mixed up. The edit-box label reads *Original text (edit mode)*.
 - Changes to the original are tracked: `Ctrl+S` saves them, and closing the original (or the app) asks about unsaved changes.
 

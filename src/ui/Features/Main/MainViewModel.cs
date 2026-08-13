@@ -202,17 +202,7 @@ public partial class MainViewModel :
     IApplyWebVttStyles
 {
     [ObservableProperty] private ObservableCollection<SubtitleLineViewModel> _subtitles;
-    [ObservableProperty]
-    [NotifyPropertyChangedFor(nameof(IsSelectedLineReferenceOnly))]
-    [NotifyPropertyChangedFor(nameof(AreTimeCodesEditable))]
-    private SubtitleLineViewModel? _selectedSubtitle;
-
-    /// <summary>
-    /// True while a display-only reference row is selected. The show/hide/duration editors are off
-    /// for such a row (its timings belong to the original file); its text box, though, is open on
-    /// purpose - typing into it adopts the line into the working subtitle (#13594).
-    /// </summary>
-    public bool IsSelectedLineReferenceOnly => SelectedSubtitle?.IsReferenceOnly == true;
+    [ObservableProperty] private SubtitleLineViewModel? _selectedSubtitle;
     private List<SubtitleLineViewModel>? _selectedSubtitles;
     [ObservableProperty] private int? _selectedSubtitleIndex;
 
@@ -275,15 +265,13 @@ public partial class MainViewModel :
 
     /// <summary>
     /// "Edit original" mode (#13594): the original subtitle is the one being worked on - its text
-    /// is writable, a selected display-only row's timings are editable (they are that original
-    /// line's own), and the working subtitle's text box goes read-only so the two sides cannot be
+    /// is writable, and the working subtitle's text box goes read-only so the two sides cannot be
     /// mixed up. Entering makes a read-only original editable with a clean dirty baseline; leaving
     /// returns it to the state it was opened with, prompting to save (or discard) edits that would
     /// otherwise be frozen in a read-only reference. Toggled from the File menu while an original
     /// is open; see <see cref="ToggleEditOriginalMode"/>.
     /// </summary>
     [ObservableProperty]
-    [NotifyPropertyChangedFor(nameof(AreTimeCodesEditable))]
     [NotifyPropertyChangedFor(nameof(OriginalTextLabel))]
     private bool _isEditOriginalMode;
 
@@ -335,12 +323,13 @@ public partial class MainViewModel :
     public bool AreTimeCodesLocked => LockTimeCodes;
 
     /// <summary>
-    /// Whether the show/hide/duration editors accept input: not while time codes are locked, and
-    /// not on a display-only reference row, whose timings belong to the original file (#13449) -
-    /// unless "Edit original" mode is on, where editing that original line's timings is exactly
-    /// the point (#13594).
+    /// Whether the show/hide/duration editors accept input: only the user's own lock disables
+    /// them. A display-only reference row's editors are open too - nudging its timings before
+    /// typing the translation is part of adopting the line (#13594), the row stays a dimmed
+    /// reference row (only typing text promotes it), and a read-only reference file is still
+    /// never written, so nothing on disk can change.
     /// </summary>
-    public bool AreTimeCodesEditable => !AreTimeCodesLocked && (!IsSelectedLineReferenceOnly || IsEditOriginalMode);
+    public bool AreTimeCodesEditable => !AreTimeCodesLocked;
     [ObservableProperty] private bool _areVideoControlsUndocked;
     [ObservableProperty] private bool _isFormatAssa;
     [ObservableProperty] private bool _isFormatSsa;
@@ -2763,14 +2752,11 @@ public partial class MainViewModel :
                     used[index] = true;
                     if (IsOriginalReadOnly)
                     {
-                        var p = original.Paragraphs[index];
-                        row.OriginalText = p.Text;
-                        if (row.IsReferenceOnly)
-                        {
-                            row.SetTimes(
-                                TimeSpan.FromMilliseconds(p.StartTime.TotalMilliseconds),
-                                TimeSpan.FromMilliseconds(p.EndTime.TotalMilliseconds));
-                        }
+                        // The file's TEXT stays authoritative for a read-only reference. Its times
+                        // deliberately do not: a display-only row's timings may be nudged by the
+                        // user (part of adopting the line, #13594), and the file is never written
+                        // to either way.
+                        row.OriginalText = original.Paragraphs[index].Text;
                     }
                 }
                 else
@@ -25135,11 +25121,6 @@ public partial class MainViewModel :
     {
         row.IsReferenceOnly = false; // observable: the grid drops the dimming and shows the number
         Renumber();
-
-        // The selected row changed nature, so everything derived from "is a reference row selected".
-        OnPropertyChanged(nameof(IsSelectedLineReferenceOnly));
-        OnPropertyChanged(nameof(AreTimeCodesEditable));
-
         _updateAudioVisualizer = true;
     }
 
