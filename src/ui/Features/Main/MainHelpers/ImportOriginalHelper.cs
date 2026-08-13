@@ -20,11 +20,6 @@ public static class ImportOriginalHelper
     /// </param>
     internal record OriginalMatch(Subtitle Projection, List<Paragraph> Unmatched);
 
-    internal static Subtitle GetMatchingOriginalLines(ObservableCollection<SubtitleLineViewModel> current, Subtitle original)
-    {
-        return MatchOriginalLines(current, original).Projection;
-    }
-
     internal static OriginalMatch MatchOriginalLines(ObservableCollection<SubtitleLineViewModel> current, Subtitle original)
     {
         var newOriginal = new Subtitle();
@@ -43,14 +38,26 @@ public static class ImportOriginalHelper
         // need a global assignment; this only has to stop the same line being used twice.
         foreach (var line in current)
         {
-            var index = FindOriginalLineIndex(line, original, used);
+            // A leftover reference-only row (an original is being replaced by another) displays a
+            // line of the OLD original - it must not claim a line of the new one. It still emits an
+            // empty projection line to keep the projection index-aligned with the rows.
+            var index = line.IsReferenceOnly ? -1 : FindOriginalLineIndex(line, original, used);
             if (index >= 0)
             {
                 newOriginal.Paragraphs.Add(original.Paragraphs[index]);
                 used[index] = true;
+
+                // The row remembers which original line it displays, and the assignment then
+                // sticks - see SubtitleLineViewModel.ReferenceParagraphId (#13594).
+                line.ReferenceParagraphId = original.Paragraphs[index].Id;
             }
             else
             {
+                if (!line.IsReferenceOnly)
+                {
+                    line.ReferenceParagraphId = null;
+                }
+
                 var emptyLine = new Paragraph
                 {
                     StartTime = TimeCode.FromSeconds(line.StartTime.TotalSeconds),
@@ -78,7 +85,7 @@ public static class ImportOriginalHelper
     /// two rows. A row that finds only used lines gets an empty original, which is the truthful
     /// answer - it has no source line of its own.
     /// </param>
-    private static int FindOriginalLineIndex(SubtitleLineViewModel line, Subtitle original, bool[] used)
+    internal static int FindOriginalLineIndex(SubtitleLineViewModel line, Subtitle original, bool[] used)
     {
         for (var i = 0; i < original.Paragraphs.Count; i++)
         {

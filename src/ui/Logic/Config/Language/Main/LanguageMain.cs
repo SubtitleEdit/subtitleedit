@@ -235,7 +235,7 @@ public class LanguageMain
         AllowEditOfOriginalSubtitle = "Allow edit of original subtitle";
         ShowAllOriginalLinesX = "Show all original lines ({0} have no match here)";
         ShowAllOriginalLinesHint = "The lines with no match are shown as extra rows, so you can see what the translation is missing.";
-        ShowAllOriginalLinesNote = "Time codes cannot be changed while these rows are shown";
+        ShowAllOriginalLinesNote = "Type in an extra row to add that line to your subtitle";
         ShowMatchingOriginalLinesX = "Show only the {0} matching original lines";
         ShowMatchingOriginalLinesHint = "The other {0} original lines are not shown anywhere.";
         ShowMatchingOriginalLinesNote = "They stay in the file unless you save the original";
