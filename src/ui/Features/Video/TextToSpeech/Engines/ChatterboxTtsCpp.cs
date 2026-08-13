@@ -56,6 +56,8 @@ public class ChatterboxTtsCpp : ITtsEngine
     private const long MinimumUsableWavLength = 44;
 
     public const string ModelKeyBase = ChatterboxTtsCppDownloadService.ModelKeyBase;
+    public const string ModelKeyBaseF16 = ChatterboxTtsCppDownloadService.ModelKeyBaseF16;
+    public const string ModelKeyBaseQ4K = ChatterboxTtsCppDownloadService.ModelKeyBaseQ4K;
     public const string ModelKeyTurbo = ChatterboxTtsCppDownloadService.ModelKeyTurbo;
     public const string DefaultModelKey = ChatterboxTtsCppDownloadService.DefaultModelKey;
 
@@ -304,10 +306,20 @@ public class ChatterboxTtsCpp : ITtsEngine
 
     public Task<string[]> GetRegions() => Task.FromResult(Array.Empty<string>());
 
-    public Task<string[]> GetModels() => Task.FromResult(new[] { ModelKeyBase, ModelKeyTurbo });
+    /// <summary>
+    /// Base is the multilingual v3 pair in three quantizations — q8_0 (default), f16 and q4_k,
+    /// all the same weights at different precision — plus the separate Turbo distillation.
+    /// Measured 2026-08-12 on crispasr v0.8.28 (Apple M4), 27 runs over en/de/fr × 2 seeds ×
+    /// built-in and cloned voice: every quantization returned the prompt verbatim through a
+    /// parakeet-v3 ASR roundtrip and synthesis time was within noise of the others, so the
+    /// only real trade-off is download size and peak RSS (~2.2 GB f16 / ~1.6 GB q8_0 /
+    /// ~1.25 GB q4_k). q8_0 stays the default; f16 is offered for parity with upstream's
+    /// reference tier, not because it measured better.
+    /// </summary>
+    public Task<string[]> GetModels() => Task.FromResult(ChatterboxTtsCppDownloadService.GetAllModelKeys());
 
     /// <summary>
-    /// The multilingual Base model takes a per-request language (23 languages, "[xx]" prompt
+    /// The multilingual Base models take a per-request language (23 languages, "[xx]" prompt
     /// token server-side); Turbo is an English-only distillation, so it gets "Auto" alone
     /// rather than an empty combo.
     /// </summary>
