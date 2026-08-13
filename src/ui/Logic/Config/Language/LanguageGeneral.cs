@@ -630,6 +630,7 @@ public class LanguageGeneral
     public string UpdateAndClose { get; set; }
     public string UpdateAvailable { get; set; }
     public string UpdateDetails { get; set; }
+    public string UpdateX { get; set; }
     public string UpdatedBy { get; set; }
     public string UpToDate { get; set; }
     public string Url { get; set; }
@@ -1371,6 +1372,7 @@ public class LanguageGeneral
         UpdateAndClose = "Update and close";
         UpdateAvailable = "Update available";
         UpdateDetails = "Update details";
+        UpdateX = "Update {0}";
         UpdatedBy = "Updated by";
         UpToDate = "Up to date";
         Url = "URL";

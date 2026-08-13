@@ -6,6 +6,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Features.Ocr;
+using Nikse.SubtitleEdit.Features.Ocr.CrispEmbedSettings;
 using Nikse.SubtitleEdit.Features.Ocr.Download;
 using Nikse.SubtitleEdit.Features.Ocr.Engines;
 using Nikse.SubtitleEdit.Features.Shared;
@@ -276,50 +277,26 @@ public partial class VideoOcrViewModel : ObservableObject
         _lastCrispEmbedModelName = value.Model.Name;
     }
 
-    [RelayCommand]
-    private async Task DownloadCrispEmbed()
-    {
-        if (Window == null || SelectedCrispEmbedBackend is not { } backend || SelectedCrispEmbedModel is not { } model)
-        {
-            return;
-        }
-
-        if (backend.IsModelInstalled(model.Model))
-        {
-            var answer = await MessageBox.Show(
-                Window,
-                Se.Language.General.Download,
-                string.Format(Se.Language.Translate.XIsAlreadyDownloadedReDownload, model.Model.Name),
-                MessageBoxButtons.YesNo,
-                MessageBoxIcon.Question);
-
-            if (answer != MessageBoxResult.Yes)
-            {
-                return;
-            }
-        }
-
-        await EnsureCrispEmbedReady(forceModelDownload: true);
-    }
-
     /// <summary>
-    /// Re-downloads the CrispEmbed engine binaries, re-asking which hardware build to use - the
-    /// CPU/Vulkan/CUDA choice is otherwise only offered on first install (issue #13400).
+    /// Opens the CrispEmbed dialog: engine install state and hardware build, every backend's
+    /// models, and the (re-)download buttons for both. Re-downloading the engine there re-asks
+    /// CPU/Vulkan/CUDA, the only way to change hardware build after the first install (#13400).
     /// </summary>
     [RelayCommand]
-    private async Task ReDownloadCrispEmbedEngine()
+    private async Task ShowCrispEmbedSettings()
     {
         if (Window == null)
         {
             return;
         }
 
-        await CrispEmbedDownloadHelper.DownloadEngineAsync(
-            Window, _windowService,
-            onEngineDownloadClosed: () => (Window as VideoOcrWindow)?.RefreshDownloadDots());
+        await _windowService.ShowDialogAsync<CrispEmbedSettingsWindow, CrispEmbedSettingsViewModel>(
+            Window, vm => vm.Initialize());
+
+        (Window as VideoOcrWindow)?.RefreshDownloadDots();
     }
 
-    private async Task<bool> EnsureCrispEmbedReady(bool forceModelDownload = false)
+    private async Task<bool> EnsureCrispEmbedReady()
     {
         if (Window == null || SelectedCrispEmbedBackend is not { } backend || SelectedCrispEmbedModel is not { } model)
         {
@@ -327,7 +304,7 @@ public partial class VideoOcrViewModel : ObservableObject
         }
 
         return await CrispEmbedDownloadHelper.EnsureReadyAsync(
-            Window, _windowService, backend, model.Model, forceModelDownload,
+            Window, _windowService, backend, model.Model,
             onEngineDownloadClosed: () => (Window as VideoOcrWindow)?.RefreshDownloadDots(),
             onModelDownloadClosed: () => (Window as VideoOcrWindow)?.RefreshDownloadDots());
     }
