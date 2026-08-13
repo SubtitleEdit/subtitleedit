@@ -2023,6 +2023,10 @@ public static partial class InitListViewAndEditBox
         textBox.IsUndoEnabled = false;
         textBox.ClearSelectionOnLostFocus = false;
 
+        // Pasted text goes straight into the paragraph via the two-way binding, so its line
+        // breaks must be SE's own - see TextBoxPasteNormalizer (#13591).
+        TextBoxPasteNormalizer.NormalizeLineBreaksOnPaste(textBox);
+
         if (appearance.SubtitleTextBoxCenterText)
         {
             textBox.TextAlignment = TextAlignment.Center;

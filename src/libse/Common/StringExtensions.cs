@@ -124,6 +124,46 @@ namespace Nikse.SubtitleEdit.Core.Common
         public static List<string> SplitToLines(this string s) => s.SplitToLines(s.Length);
 
         /// <summary>
+        /// Rewrites every line break to <see cref="Environment.NewLine"/>, so text coming from
+        /// the outside (a paste, an API answer) uses the same line break as text SE builds
+        /// itself. The breaks recognized - and the "\r\r\n" as two breaks rule (#8854) - are the
+        /// ones <see cref="SplitToLines(string)"/> splits on, so a normalize-then-split round
+        /// trip keeps the same lines. The input is returned unchanged when it needs no rewrite.
+        /// </summary>
+        public static string NormalizeLineBreaks(this string s)
+        {
+            if (string.IsNullOrEmpty(s))
+            {
+                return s;
+            }
+
+            var index = s.AsSpan().IndexOfAny('\r', '\n', '\u2028');
+            if (index < 0)
+            {
+                return s;
+            }
+
+            var newLine = Environment.NewLine;
+            var sb = new StringBuilder(s.Length + 8);
+            var start = 0;
+            while (index >= 0)
+            {
+                sb.Append(s, start, index - start).Append(newLine);
+
+                start = index + 1;
+                if (s[index] == '\r' && start < s.Length && s[start] == '\n')
+                {
+                    start++;
+                }
+
+                var next = s.AsSpan(start).IndexOfAny('\r', '\n', '\u2028');
+                index = next < 0 ? -1 : start + next;
+            }
+
+            return sb.Append(s, start, s.Length - start).ToString();
+        }
+
+        /// <summary>
         /// Enumerates the lines of <paramref name="s"/> as spans, using the same line break rules
         /// as <see cref="SplitToLines(string)"/>. For callers that only look at each line instead
         /// of keeping it: no list and no string per line is allocated.
