@@ -1618,15 +1618,14 @@ namespace Nikse.SubtitleEdit.Core.Common
                 return true;
             }
 
-            for (int i = 0; i < _bitmapData.Length; i++)
+            // The (width, height, byte[]) constructor takes an external buffer, so equal
+            // dimensions do not by themselves guarantee equal buffer lengths.
+            if (_bitmapData.Length != bitmap._bitmapData.Length)
             {
-                if (_bitmapData[i] != bitmap._bitmapData[i])
-                {
-                    return false;
-                }
+                return false;
             }
 
-            return true;
+            return _bitmapData.AsSpan().SequenceEqual(bitmap._bitmapData);
         }
 
         public void SetTransparentTo(SKColor transparent)
