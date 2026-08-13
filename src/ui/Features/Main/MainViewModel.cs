@@ -24633,7 +24633,10 @@ public partial class MainViewModel :
                 else if (av != null && isPlaying &&
                          (mediaPlayerSeconds > av.EndPositionSeconds || mediaPlayerSeconds < av.StartPositionSeconds))
                 {
-                    av.SetPosition(startPos, subtitle, mediaPlayerSeconds, 0, _selectedSubtitles ?? []);
+                    // -1 like the other branches: passing an index here names the PRIMARY
+                    // selected paragraph, and 0 made this scroll-jump branch mark the file's
+                    // first line as selected in the waveform for one tick.
+                    av.SetPosition(startPos, subtitle, mediaPlayerSeconds, -1, _selectedSubtitles ?? []);
                 }
                 else if (av != null)
                 {

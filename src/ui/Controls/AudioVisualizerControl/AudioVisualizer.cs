@@ -344,6 +344,21 @@ public class AudioVisualizer : Control
     private SubtitleLineViewModel? _activeParagraphPrevious;
     private SubtitleLineViewModel? _activeParagraphNext;
     private Point _startPointerPosition;
+
+    // Absolute waveform time under the pointer when the drag started. Drag deltas are computed
+    // as (time under pointer now) - (this anchor), NOT as a pixel delta: when the view scrolls
+    // mid-drag (the position timer jumps the view a screen forward while the video plays, or the
+    // user wheel-scrolls without releasing), a pixel delta would freeze the dragged edge in time
+    // while it visually teleports away from the pointer, killing the SE4 workflow of extending a
+    // cue continuously through auto-scrolls (#13600). With an absolute anchor the scroll itself
+    // moves the dragged time along with the view, so the edge keeps tracking the pointer.
+    private double _startPointerSeconds;
+
+    // Last pointer X processed by an active drag; NaN forces the first move after a press
+    // through. Gaming mice report at up to 1000 Hz while the position only changes at device
+    // pixel granularity, so without this the whole drag pipeline (hit tests, snapping, time
+    // writes, invalidation) re-ran on floods of same-X moves (SE4 had the same guard).
+    private double _lastDragPointerX = double.NaN;
     private double _originalStartSeconds;
     private double _originalEndSeconds;
     private double _originalDurationSeconds;
@@ -967,6 +982,8 @@ public class AudioVisualizer : Control
         e.Handled = true;
         var point = e.GetPosition(this);
         _startPointerPosition = point;
+        _startPointerSeconds = RelativeXPositionToSeconds(point.X);
+        _lastDragPointerX = double.NaN;
 
         // No waveform yet and auto-generate is off: a click generates it on demand.
         if (WavePeaks == null && ShowClickToGenerateHint &&
@@ -1154,9 +1171,18 @@ public class AudioVisualizer : Control
         }
 
         var point = e.GetPosition(this);
-        var properties = e.GetCurrentPoint(this).Properties;
+
+        // Every drag mode below is X-driven, so a move that only changed Y (or a same-position
+        // report from a high-rate mouse) has nothing to do. See _lastDragPointerX.
+        if (_interactionMode != InteractionMode.None && point.X.Equals(_lastDragPointerX))
+        {
+            return;
+        }
+
+        _lastDragPointerX = point.X;
+
         var newP = NewSelectionParagraph;
-        if (_interactionMode == InteractionMode.New && newP != null && properties.IsLeftButtonPressed)
+        if (_interactionMode == InteractionMode.New && newP != null && e.GetCurrentPoint(this).Properties.IsLeftButtonPressed)
         {
             var seconds = RelativeXPositionToSeconds(point.X);
 
@@ -1216,7 +1242,13 @@ public class AudioVisualizer : Control
         }
 
         var deltaX = point.X - _startPointerPosition.X;
-        var deltaSeconds = RelativeXPositionToSeconds(deltaX);
+
+        // Absolute-time drag delta (SE4 parity, #13600): measured between the time now under the
+        // pointer and the time that was under it at press. With a static view this equals the
+        // pixel delta times seconds-per-pixel; when the view scrolls mid-drag it additionally
+        // carries the scroll, so the dragged edge keeps following the pointer (see
+        // _startPointerSeconds). deltaX stays pixel-based for the Or-mode direction slop below.
+        var dragDeltaSeconds = RelativeXPositionToSeconds(point.X) - _startPointerSeconds;
 
         if (_interactionMode == InteractionMode.ResizingLeftOr && _activeParagraphPrevious != null)
         {
@@ -1234,6 +1266,10 @@ public class AudioVisualizer : Control
                 _activeParagraph = _activeParagraphPrevious;
                 _originalStartSeconds = _activeParagraph.StartTime.TotalSeconds;
                 _originalEndSeconds = _activeParagraph.EndTime.TotalSeconds;
+                // The originals were just re-captured from the other paragraph, so the drag
+                // anchor must restart from the current pointer position too.
+                _startPointerSeconds = RelativeXPositionToSeconds(point.X);
+                dragDeltaSeconds = 0;
                 _interactionMode = InteractionMode.ResizingRight;
             }
         }
@@ -1253,6 +1289,9 @@ public class AudioVisualizer : Control
                 _activeParagraph = _activeParagraphNext;
                 _originalStartSeconds = _activeParagraph.StartTime.TotalSeconds;
                 _originalEndSeconds = _activeParagraph.EndTime.TotalSeconds;
+                // See the ResizingLeftOr branch above.
+                _startPointerSeconds = RelativeXPositionToSeconds(point.X);
+                dragDeltaSeconds = 0;
                 _interactionMode = InteractionMode.ResizingLeft;
             }
         }
@@ -1272,15 +1311,30 @@ public class AudioVisualizer : Control
 
         if (NewSelectionParagraph == _activeParagraph)
         {
-            previous = _displayableParagraphs.LastOrDefault(p => p.StartTime < _activeParagraph.StartTime);
-            next = _displayableParagraphs.FirstOrDefault(p => p.StartTime > _activeParagraph.EndTime);
+            // _displayableParagraphs is sorted by start time; walk it once instead of two LINQ
+            // scans with lambda allocations - this runs on every pointer move of the drag.
+            previous = null;
+            next = null;
+            for (var i = 0; i < _displayableParagraphs.Count; i++)
+            {
+                var p = _displayableParagraphs[i];
+                if (p.StartTime < _activeParagraph.StartTime)
+                {
+                    previous = p;
+                }
+                else if (p.StartTime > _activeParagraph.EndTime)
+                {
+                    next = p;
+                    break;
+                }
+            }
         }
 
         switch (_interactionMode)
         {
             case InteractionMode.Moving:
-                newStart = _originalStartSeconds + deltaSeconds - StartPositionSeconds;
-                newEnd = _originalEndSeconds + deltaSeconds - StartPositionSeconds;
+                newStart = _originalStartSeconds + dragDeltaSeconds;
+                newEnd = _originalEndSeconds + dragDeltaSeconds;
 
                 // Check if the paragraph already overlaps with neighbors
                 bool alreadyOverlapping = false;
@@ -1344,7 +1398,7 @@ public class AudioVisualizer : Control
                 // grabbed line so relative spacing is preserved, and the delta is clamped so
                 // the earliest selected line never moves before zero. Overlap with unselected
                 // neighbours is allowed - the user is repositioning the block as a whole.
-                var shift = SnapToFrame(_originalStartSeconds + deltaSeconds - StartPositionSeconds) - _originalStartSeconds;
+                var shift = SnapToFrame(_originalStartSeconds + dragDeltaSeconds) - _originalStartSeconds;
 
                 var minOriginalStart = double.MaxValue;
                 foreach (var item in _selectionMoveSnapshot)
@@ -1370,8 +1424,8 @@ public class AudioVisualizer : Control
                 break;
             }
             case InteractionMode.ResizeLeftAnd:
-                newStart = _originalStartSeconds + deltaSeconds - StartPositionSeconds;
-                var newPrevEnd = _originalPreviousEndSeconds + deltaSeconds - StartPositionSeconds;
+                newStart = _originalStartSeconds + dragDeltaSeconds;
+                var newPrevEnd = _originalPreviousEndSeconds + dragDeltaSeconds;
                 var snappedLeft = SnapToFrame(newStart);
                 newPrevEnd += snappedLeft - newStart;
                 newStart = snappedLeft;
@@ -1383,8 +1437,8 @@ public class AudioVisualizer : Control
 
                 break;
             case InteractionMode.ResizeRightAnd:
-                newEnd = _originalEndSeconds + deltaSeconds - StartPositionSeconds;
-                var newNextStart = _originalNextStartSeconds + deltaSeconds - StartPositionSeconds;
+                newEnd = _originalEndSeconds + dragDeltaSeconds;
+                var newNextStart = _originalNextStartSeconds + dragDeltaSeconds;
                 var snappedRight = SnapToFrame(newEnd);
                 newNextStart += snappedRight - newEnd;
                 newEnd = snappedRight;
@@ -1396,7 +1450,7 @@ public class AudioVisualizer : Control
 
                 break;
             case InteractionMode.ResizingLeft:
-                newStart = _originalStartSeconds + deltaSeconds - StartPositionSeconds;
+                newStart = _originalStartSeconds + dragDeltaSeconds;
 
                 if (newStart < 0)
                 {
@@ -1437,7 +1491,7 @@ public class AudioVisualizer : Control
 
                 break;
             case InteractionMode.ResizingRight:
-                newEnd = _originalEndSeconds + deltaSeconds - StartPositionSeconds;
+                newEnd = _originalEndSeconds + dragDeltaSeconds;
 
                 var snappedToShotRight = false;
                 if (SnapToShotChanges && !_isShiftDown)
@@ -2370,7 +2424,89 @@ public class AudioVisualizer : Control
                 context.DrawGeometry(null, draw.Pen, draw.Geometry);
             }
         }
+
+        if (WaveformDrawStyle == WaveformDrawStyle.Classic)
+        {
+            DrawClassicSelectionOverlay(context, ref renderCtx, offsetPixels);
+        }
     }
+
+    /// <summary>
+    /// Classic style's selected-line coloring: re-stroke the cached waveform geometry with the
+    /// selected pen, clipped to each selected line's visible region. The cached geometry itself
+    /// is selection-independent (see BuildWaveformCacheKey), so this is what keeps a drag of a
+    /// selected line from rebuilding the per-pixel waveform on every pointer move (#13600).
+    /// </summary>
+    private void DrawClassicSelectionOverlay(DrawingContext context, ref RenderContext renderCtx, double offsetPixels)
+    {
+        var selection = AllSelectedParagraphs;
+        if (selection.Count == 0 || _waveformCacheDraws.Count == 0)
+        {
+            return;
+        }
+
+        // Collect the visible selected regions and merge overlaps first: the selected pen is
+        // semi-transparent, so re-stroking an overlap twice would render it more opaque than
+        // the old per-column build (which assigned each column exactly once) ever did.
+        var intervals = _selectionOverlayIntervals;
+        intervals.Clear();
+        var startPositionSeconds = renderCtx.StartPositionSeconds;
+        var width = renderCtx.Width;
+        for (var i = 0; i < selection.Count; i++)
+        {
+            var p = selection[i];
+            double left = SecondsToXPositionOptimized(p.StartTime.TotalSeconds - startPositionSeconds, renderCtx.SampleRate, renderCtx.ZoomFactor);
+            double right = SecondsToXPositionOptimized(p.EndTime.TotalSeconds - startPositionSeconds, renderCtx.SampleRate, renderCtx.ZoomFactor);
+            if (right <= 0 || left >= width || right <= left)
+            {
+                continue;
+            }
+
+            intervals.Add((Math.Max(0, left), Math.Min(width, right)));
+        }
+
+        if (intervals.Count == 0)
+        {
+            return;
+        }
+
+        if (intervals.Count > 1)
+        {
+            intervals.Sort(static (a, b) => a.Left.CompareTo(b.Left));
+        }
+
+        var mergedLeft = intervals[0].Left;
+        var mergedRight = intervals[0].Right;
+        for (var i = 1; i <= intervals.Count; i++)
+        {
+            if (i < intervals.Count && intervals[i].Left <= mergedRight)
+            {
+                mergedRight = Math.Max(mergedRight, intervals[i].Right);
+                continue;
+            }
+
+            // The clip is in live view coordinates and is pushed before the translation, so it
+            // stays put while the translated (anchor-space) geometry scrolls under it.
+            var clipRect = new Rect(mergedLeft, 0, mergedRight - mergedLeft, renderCtx.Height);
+            using (context.PushClip(clipRect))
+            using (context.PushTransform(Matrix.CreateTranslation(-offsetPixels, 0)))
+            {
+                for (var j = 0; j < _waveformCacheDraws.Count; j++)
+                {
+                    context.DrawGeometry(null, _paintPenSelected, _waveformCacheDraws[j].Geometry);
+                }
+            }
+
+            if (i < intervals.Count)
+            {
+                mergedLeft = intervals[i].Left;
+                mergedRight = intervals[i].Right;
+            }
+        }
+    }
+
+    // Pooled buffer for DrawClassicSelectionOverlay's visible selected regions.
+    private readonly List<(double Left, double Right)> _selectionOverlayIntervals = new(16);
 
     private Pen GetCachedFancyWaveformPen(int colorKey, Color color)
     {
@@ -2605,7 +2741,6 @@ public class AudioVisualizer : Control
 
     private void BuildWaveFormClassic(double waveformHeight, double startPositionSeconds, double width, ref RenderContext renderCtx)
     {
-        var isSelectedHelper = _isSelectedHelper;
         var halfWaveformHeight = waveformHeight / 2;
         var div = renderCtx.SampleRate * renderCtx.ZoomFactor;
 
@@ -2628,12 +2763,12 @@ public class AudioVisualizer : Control
         var samplesPerPixel = renderCtx.SampleRate / div;
         var yScaleHalf = verticalZoomFactor / highestPeak * halfWaveformHeight;
 
-        isSelectedHelper.Reset(AllSelectedParagraphs, renderCtx.SampleRate, (int)startSample, (int)(startSample + width * samplesPerPixel));
-
-        var unselectedLines = _classicUnselectedLines;
-        var selectedLines = _classicSelectedLines;
-        unselectedLines.Clear();
-        selectedLines.Clear();
+        // All columns go into ONE geometry, deliberately ignoring the selection: the selected
+        // color is applied at draw time by re-stroking this geometry clipped to the selected
+        // regions (DrawClassicSelectionOverlay). That keeps the cached build independent of the
+        // selection, so dragging a selected line's times never re-runs this loop (#13600).
+        var lines = _classicLines;
+        lines.Clear();
 
         for (var x = 0; x < width; x++)
         {
@@ -2668,24 +2803,14 @@ public class AudioVisualizer : Control
                 yMin = yMax + 1;
             }
 
-            var line = new FancyLine(x, yMax, yMin);
-            if (isSelectedHelper.IsSelected(pos0))
-            {
-                selectedLines.Add(line);
-            }
-            else
-            {
-                unselectedLines.Add(line);
-            }
+            lines.Add(new FancyLine(x, yMax, yMin));
         }
 
-        AddLineBatchToCache(_paintWaveform, unselectedLines);
-        AddLineBatchToCache(_paintPenSelected, selectedLines);
+        AddLineBatchToCache(_paintWaveform, lines);
     }
 
-    // Pooled buffers for the classic waveform's two pens.
-    private readonly List<FancyLine> _classicUnselectedLines = new(2048);
-    private readonly List<FancyLine> _classicSelectedLines = new(2048);
+    // Pooled column buffer for the classic waveform.
+    private readonly List<FancyLine> _classicLines = new(2048);
 
     // Cached waveform draw ops. Building the waveform is a per-pixel CPU loop that allocates
     // geometry every render; doing it on every cursor tick (CurrentVideoPositionSeconds has
@@ -2765,13 +2890,24 @@ public class AudioVisualizer : Control
 
     private WaveformCacheKey BuildWaveformCacheKey(double waveformHeight, double anchorPixel, ref RenderContext renderCtx)
     {
+        // Classic style paints the selection as a clipped overlay at draw time (see
+        // DrawClassicSelectionOverlay), so its cached geometry does not depend on the selection
+        // at all - keeping the selection times out of the key is what lets a waveform drag of a
+        // selected line replay the cache instead of re-running the per-pixel build on every
+        // pointer move (#13600). The fancy style bakes selection into per-column colors, so it
+        // still keys (and rebuilds) on the selection.
         long selectionHash = 17;
-        var selection = AllSelectedParagraphs;
-        for (var i = 0; i < selection.Count; i++)
+        var selectionCount = 0;
+        if (WaveformDrawStyle != WaveformDrawStyle.Classic)
         {
-            var p = selection[i];
-            selectionHash = selectionHash * 31 + p.StartTime.Ticks;
-            selectionHash = selectionHash * 31 + p.EndTime.Ticks;
+            var selection = AllSelectedParagraphs;
+            selectionCount = selection.Count;
+            for (var i = 0; i < selection.Count; i++)
+            {
+                var p = selection[i];
+                selectionHash = selectionHash * 31 + p.StartTime.Ticks;
+                selectionHash = selectionHash * 31 + p.EndTime.Ticks;
+            }
         }
 
         return new WaveformCacheKey(
@@ -2788,7 +2924,7 @@ public class AudioVisualizer : Control
             ToKeyColor(WaveformColor),
             ToKeyColor(WaveformSelectedColor),
             ToKeyColor(WaveformFancyHighColor),
-            selection.Count,
+            selectionCount,
             selectionHash);
     }
 
@@ -3118,19 +3254,6 @@ public class AudioVisualizer : Control
 
         var currentPositionPos = SecondsToXPositionOptimized(renderCtx.CurrentVideoPositionSeconds - renderCtx.StartPositionSeconds, renderCtx.SampleRate, renderCtx.ZoomFactor);
 
-        var startPositionMilliseconds = renderCtx.StartPositionSeconds * 1000.0;
-        var endPositionMilliseconds = RelativeXPositionToSecondsOptimized(renderCtx.Width, renderCtx.SampleRate, renderCtx.StartPositionSeconds, renderCtx.ZoomFactor) * 1000.0;
-        _paragraphStartPositions.Clear();
-        _paragraphEndPositions.Clear();
-        foreach (var p in _displayableParagraphs)
-        {
-            if (p.EndTime.TotalMilliseconds >= startPositionMilliseconds && p.StartTime.TotalMilliseconds <= endPositionMilliseconds)
-            {
-                _paragraphStartPositions.Add(SecondsToXPositionOptimized(p.StartTime.TotalSeconds - renderCtx.StartPositionSeconds, renderCtx.SampleRate, renderCtx.ZoomFactor));
-                _paragraphEndPositions.Add(SecondsToXPositionOptimized(p.EndTime.TotalSeconds - renderCtx.StartPositionSeconds, renderCtx.SampleRate, renderCtx.ZoomFactor));
-            }
-        }
-
         // The list is sorted, so binary search the first shot change at/after the visible window
         // instead of walking all shot changes before it, and stop once past the right edge.
         var low = 0;
@@ -3145,6 +3268,27 @@ public class AudioVisualizer : Control
             else
             {
                 high = mid;
+            }
+        }
+
+        // Nothing visible? Then don't pay for the paragraph edge sets below - this runs on
+        // every ~60 fps render whenever the video has shot changes at all.
+        if (low >= _shotChanges.Count ||
+            SecondsToXPositionOptimized(_shotChanges[low] - renderCtx.StartPositionSeconds, renderCtx.SampleRate, renderCtx.ZoomFactor) >= renderCtx.Width)
+        {
+            return;
+        }
+
+        var startPositionMilliseconds = renderCtx.StartPositionSeconds * 1000.0;
+        var endPositionMilliseconds = RelativeXPositionToSecondsOptimized(renderCtx.Width, renderCtx.SampleRate, renderCtx.StartPositionSeconds, renderCtx.ZoomFactor) * 1000.0;
+        _paragraphStartPositions.Clear();
+        _paragraphEndPositions.Clear();
+        foreach (var p in _displayableParagraphs)
+        {
+            if (p.EndTime.TotalMilliseconds >= startPositionMilliseconds && p.StartTime.TotalMilliseconds <= endPositionMilliseconds)
+            {
+                _paragraphStartPositions.Add(SecondsToXPositionOptimized(p.StartTime.TotalSeconds - renderCtx.StartPositionSeconds, renderCtx.SampleRate, renderCtx.ZoomFactor));
+                _paragraphEndPositions.Add(SecondsToXPositionOptimized(p.EndTime.TotalSeconds - renderCtx.StartPositionSeconds, renderCtx.SampleRate, renderCtx.ZoomFactor));
             }
         }
 
