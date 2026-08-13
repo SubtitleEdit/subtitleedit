@@ -7,6 +7,7 @@
       dotnet run -c Release (project) tests/benchmarks/UiBenchmarks.csproj (filter) *
   -->
   <PropertyGroup>
+		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <OutputType>Exe</OutputType>
     <TargetFramework>net10.0</TargetFramework>
     <Nullable>enable</Nullable>

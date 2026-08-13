@@ -186,7 +186,7 @@ public partial class PaddleOcr
             : $"PP-OCRv5_{mode}_det";
     }
 
-    private static SKBitmap MakeTransparentBlack(SKBitmap bitmap)
+    internal static SKBitmap MakeTransparentBlack(SKBitmap bitmap)
     {
         if (bitmap == null)
         {
@@ -203,7 +203,37 @@ public partial class PaddleOcr
             canvas.DrawBitmap(bitmap, 0, 0);
         }
 
-        // Get all pixels at once
+        // Runs per subtitle image inside the batch-OCR parallel loop. The old
+        // `workingBitmap.Pixels` get/set pair allocated an SKColor[Width*Height] (8 MB for a
+        // full-HD frame) and copied the whole image twice; for the 32-bit color types this is
+        // an in-place pass over the raw pixel words instead (alpha is the top byte in both
+        // Rgba8888 and Bgra8888, and opaque black is 0xFF000000 in both).
+        if (workingBitmap.ColorType is SKColorType.Rgba8888 or SKColorType.Bgra8888 &&
+            workingBitmap.GetPixels() != IntPtr.Zero)
+        {
+            unsafe
+            {
+                var basePtr = (byte*)workingBitmap.GetPixels();
+                var stride = workingBitmap.RowBytes;
+                var width = workingBitmap.Width;
+                for (var y = 0; y < workingBitmap.Height; y++)
+                {
+                    var row = (uint*)(basePtr + y * stride);
+                    for (var x = 0; x < width; x++)
+                    {
+                        if (row[x] >> 24 < 100)
+                        {
+                            row[x] = 0xFF000000;
+                        }
+                    }
+                }
+            }
+
+            workingBitmap.NotifyPixelsChanged();
+            return workingBitmap;
+        }
+
+        // Fallback for exotic color types: the original Pixels-based version.
         var colors = workingBitmap.Pixels;
         var blackOpaque = new SKColor(0, 0, 0, 255);
 

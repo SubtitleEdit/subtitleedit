@@ -1053,6 +1053,13 @@ namespace Nikse.SubtitleEdit.Core.Common
             return _bitmapData[index];
         }
 
+        /// <summary>
+        /// Read-only view of the raw BGRA pixel buffer (4 bytes per pixel, row-major,
+        /// Width * 4 bytes per row) so whole-image scans can skip the per-pixel
+        /// <see cref="GetPixel(int,int)"/> SKColor construction.
+        /// </summary>
+        public ReadOnlySpan<byte> GetPixelData() => _bitmapData;
+
         public SKColor GetPixel(int x, int y)
         {
             _pixelAddress = (x * 4) + (y * _widthX4);

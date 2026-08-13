@@ -4,6 +4,7 @@ using Avalonia.Platform;
 using SkiaSharp;
 using System;
 using System.IO;
+using SimdVector = System.Numerics.Vector;
 
 namespace Nikse.SubtitleEdit.Logic;
 
@@ -261,6 +262,16 @@ internal static class SkBitmapExtensions
                     uint* srcRow = (uint*)(srcBase + (y * srcStride));
                     uint* dstRow = (uint*)(dstBase + (y * dstStride));
 
+                    if (sourceIsPremul)
+                    {
+                        // Premultiplied source rows reduce to "copy the word, but force a==0
+                        // pixels to fully-zero" (what the scalar branches below did). That is a
+                        // vectorizable select, and this path runs per render frame for the
+                        // spectrogram blit, so it matters at 60 fps.
+                        CopyPremulRow(new ReadOnlySpan<uint>(srcRow, width), new Span<uint>(dstRow, width));
+                        continue;
+                    }
+
                     for (var x = 0; x < width; x++)
                     {
                         uint pixel = srcRow[x];
@@ -273,10 +284,6 @@ internal static class SkBitmapExtensions
                         else if (a == 0)
                         {
                             dstRow[x] = 0; // Fully transparent
-                        }
-                        else if (sourceIsPremul)
-                        {
-                            dstRow[x] = pixel; // Already premultiplied, copy as-is
                         }
                         else
                         {
@@ -297,6 +304,35 @@ internal static class SkBitmapExtensions
         }
 
         return bitmap;
+    }
+
+    /// <summary>
+    /// Copies one row of premultiplied BGRA pixels, forcing fully transparent pixels (a == 0)
+    /// to all-zero exactly like the scalar per-pixel branches used to. In well-formed premul
+    /// data those pixels are already zero, so this is a memcpy with a cheap vector select on
+    /// the side rather than a per-pixel branch chain.
+    /// </summary>
+    internal static void CopyPremulRow(ReadOnlySpan<uint> src, Span<uint> dst)
+    {
+        var i = 0;
+        if (SimdVector.IsHardwareAccelerated && src.Length >= System.Numerics.Vector<uint>.Count)
+        {
+            var alphaMask = new System.Numerics.Vector<uint>(0xFF000000);
+            var lastBlockStart = src.Length - System.Numerics.Vector<uint>.Count;
+            for (; i <= lastBlockStart; i += System.Numerics.Vector<uint>.Count)
+            {
+                var v = new System.Numerics.Vector<uint>(src.Slice(i));
+                // Lanes with a == 0 become all-ones in the mask; clear those pixels entirely.
+                var transparent = SimdVector.Equals(SimdVector.BitwiseAnd(v, alphaMask), System.Numerics.Vector<uint>.Zero);
+                SimdVector.AndNot(v, transparent).CopyTo(dst.Slice(i));
+            }
+        }
+
+        for (; i < src.Length; i++)
+        {
+            var pixel = src[i];
+            dst[i] = (pixel & 0xFF000000) == 0 ? 0u : pixel;
+        }
     }
 
     // Original simple code for ToSkBitmap:
