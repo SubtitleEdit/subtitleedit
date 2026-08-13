@@ -219,7 +219,7 @@ public class AudioVisualizer : Control
     public Func<bool>? GetIsVideoPlaying { get; set; }
     public Color WaveformFancyHighColor { get; set; } = Colors.Orange;
 
-    private Color _paragraphBackground = Color.FromArgb(90, 70, 70, 70);
+    private Color _paragraphBackground = Color.FromArgb(140, 70, 70, 70);
 
     public Color ParagraphBackground
     {
@@ -231,7 +231,7 @@ public class AudioVisualizer : Control
         }
     }
 
-    private Color _paragraphSelectedBackground = Color.FromArgb(90, 70, 70, 70);
+    private Color _paragraphSelectedBackground = Color.FromArgb(140, 70, 70, 70);
 
     public Color ParagraphSelectedBackground
     {
@@ -313,8 +313,8 @@ public class AudioVisualizer : Control
 
     // Paragraph painting
     private IBrush _paintBackground = new SolidColorBrush(Color.FromArgb(90, 70, 70, 70));
-    private IBrush _paintParagraphBackground = new SolidColorBrush(Color.FromArgb(90, 70, 70, 70));
-    private IBrush _paintParagraphSelectedBackground = new SolidColorBrush(Color.FromArgb(90, 70, 70, 70));
+    private IBrush _paintParagraphBackground = new SolidColorBrush(Color.FromArgb(140, 70, 70, 70));
+    private IBrush _paintParagraphSelectedBackground = new SolidColorBrush(Color.FromArgb(140, 70, 70, 70));
     private Pen _paintLeft = new Pen(new SolidColorBrush(Color.FromArgb(60, 0, 255, 0)), 2);
     private Pen _paintRight = new Pen(new SolidColorBrush(Color.FromArgb(100, 255, 0, 0)), 2);
     private IBrush _paintText = new SolidColorBrush(Se.Settings.Waveform.WaveformTextColor.FromHexToColor());
