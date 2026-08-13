@@ -570,6 +570,19 @@ public partial class MainViewModel :
     private double _pausedCenterLastSeconds = -1;
     private double _pausedSelectLastSeconds = -1;
 
+    // Scrub-seek throttle for waveform-driven position changes (wheel scrubbing in center mode,
+    // wheel video-position stepping, edge drags with "set video position on move start/end").
+    // Those paths fire OnVideoPositionChanged once per input event - 30-60/s on a trackpad - and
+    // every mpv seek is a synchronous core command followed by an hr-seek decode restart. The
+    // playhead pin (PinPlayheadTo) is what actually keeps the cursor and the centered view glued
+    // to the input, and it is local and cheap, so it still runs per event; the real seek only
+    // needs to keep up at ~10/s, newest target wins, with a trailing seek (issued from the
+    // cursor timer) landing the final position. Single clicks pass through on the leading edge.
+    private const double ScrubSeekMinIntervalMs = 100;
+    private double? _scrubSeekPendingSeconds;
+    private long _scrubSeekPendingTs;
+    private long _scrubSeekLastIssuedTs;
+
     // The waveform position that was right-clicked when the waveform context menu opened -
     // used to anchor "Insert subtitle file at video position..." at the clicked spot.
     private double? _waveformContextMenuSeconds;
@@ -24761,6 +24774,29 @@ public partial class MainViewModel :
                 return;
             }
 
+            // Trailing edge of the scrub-seek throttle: land the newest deferred target once the
+            // interval since the last issued seek has passed (see AudioVisualizerOnVideoPositionChanged).
+            if (_scrubSeekPendingSeconds.HasValue)
+            {
+                var nowTs = Stopwatch.GetTimestamp();
+                if ((nowTs - _scrubSeekPendingTs) * 1000.0 / Stopwatch.Frequency > 1000)
+                {
+                    // In steady state a pending target is landed within ~2 ticks; one this old
+                    // means the timer was stopped or the video was closed mid-burst. Seeking a
+                    // freshly opened video to it would be wrong - just drop it.
+                    _scrubSeekPendingSeconds = null;
+                }
+                else if ((nowTs - _scrubSeekLastIssuedTs) * 1000.0 / Stopwatch.Frequency >= ScrubSeekMinIntervalMs)
+                {
+                    _scrubSeekLastIssuedTs = nowTs;
+                    var target = _scrubSeekPendingSeconds.Value;
+                    _scrubSeekPendingSeconds = null;
+                    vp.Position = target;
+                    // Re-pin so the arrive/timeout window counts from the seek that actually ran.
+                    PinPlayheadTo(target);
+                }
+            }
+
             // Always advance the estimate: the 50 ms _positionTimer reads _playheadEstimateSeconds as
             // its source of truth (SelectCurrentSubtitleWhilePlaying, play-selection end detection, the
             // auto-scroll branches), and some layouts have a video player but no waveform. Only the
@@ -25423,7 +25459,23 @@ public partial class MainViewModel :
         newPosition = Math.Max(0, newPosition);
         newPosition = Math.Min(vp.Duration, newPosition);
 
-        vp.Position = newPosition;
+        // Throttled: the pin below keeps the cursor/centered view exact per input event; the
+        // actual mpv seek is issued at most every ScrubSeekMinIntervalMs, and a deferred target
+        // is landed by the trailing check in the cursor timer. See the fields for the why.
+        var nowTs = Stopwatch.GetTimestamp();
+        var msSinceLastSeek = (nowTs - _scrubSeekLastIssuedTs) * 1000.0 / Stopwatch.Frequency;
+        if (msSinceLastSeek >= ScrubSeekMinIntervalMs)
+        {
+            _scrubSeekLastIssuedTs = nowTs;
+            _scrubSeekPendingSeconds = null;
+            vp.Position = newPosition;
+        }
+        else
+        {
+            _scrubSeekPendingSeconds = newPosition;
+            _scrubSeekPendingTs = nowTs;
+        }
+
         PinPlayheadTo(newPosition);
 
         _updateAudioVisualizer = true;
