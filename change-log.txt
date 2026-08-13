@@ -3,6 +3,39 @@ Subtitle Edit Changelog
 
 -----------------------------------------------------------------------------------------------------
 
+v5.2.0-beta12 (13th of August 2026)
+
+* Add CrispEmbed as an engine for "OCR burned-in subtitle", with its own settings dialog - thx tal-maker
+* Add Chatterbox Base in F16 and Q4_K alongside Q8_0 - thx subof
+* Add select all/none/invert to the "Multiple replace" preview list - thx Davanix
+* Show what each engine is in the "OCR burned-in subtitle" engine list
+* Remember the numbers and formats seven more tool dialogs ask for
+* Use the usual tick-all shortcuts in the "Multiple replace" rule category picker
+* Make the AI review window a little wider
+* Keep Google Lens OCR going when a single image fails instead of stopping the run - thx fartle
+* Fix crash when closing "Text to speech" after reviewing audio - thx cvrle77
+* Fix undocked video player being in front of the main window at startup - thx GrampaWildWilly
+* Fix "Multiple replace" freezing on a slow regular expression rule
+* Fix batch convert failing every file when one replace rule does not compile
+* Fix the same original line being shown on two rows when opening a non-matching original
+* Fix transparent subtitles ignoring the output folder picked in its own settings dialog
+* Fix Perplexity API key, model and URL being forgotten on restart
+* Fix "Apply minimum gap" mixing up frames and milliseconds
+* Fix "Export plain text" saving its settings when cancelled
+* Fix "OCR burned-in subtitle" repeating a line, and saving engine settings while browsing the lists
+* Fix "OCR burned-in subtitle" running to the end without reporting a broken CrispEmbed/llama.cpp server
+* Fix batch convert dialogs showing the main window's file name in the title bar
+* Fix hardcoded English in the transparent video, burn-in and batch convert output folder pickers
+* Fix Chatterbox retrying an impossible reference voice repair once per line
+* Fix timers and preview images left running after closing several dialogs
+* Update Japanese translation - thx hisui3393
+* Update Korean translation - thx 12si27
+* Update Chinese (Traditional) translation - thx love80312
+* Update French translation - thx Need74
+* Minor performance improvements in string handling
+
+-----------------------------------------------------------------------------------------------------
+
 v5.2.0-beta11 (12th of August 2026)
 
 * Add import/export of selected rule categories to "Multiple replace" - thx KaDeeKe
