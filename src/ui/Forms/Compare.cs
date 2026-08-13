@@ -518,7 +518,7 @@ namespace Nikse.SubtitleEdit.Forms
                                 subtitleListView2.SetBackgroundColor(index, ListViewGreen, subtitleListView2.ColumnIndexDuration);
                             }
                             // Text
-                            else if (IsTextDifferent(p1, p2))
+                            if (IsTextDifferent(p1, p2))
                             {
                                 subtitleListView1.SetBackgroundColor(index, ListViewGreen, subtitleListView1.ColumnIndexText);
                                 subtitleListView2.SetBackgroundColor(index, ListViewGreen, subtitleListView2.ColumnIndexText);
@@ -1445,14 +1445,18 @@ namespace Nikse.SubtitleEdit.Forms
 
                 var fileName = saveFile.FileName;
                 var sb = new StringBuilder();
+                var gridColor = "rgba(" + ForeColor.R + "," + ForeColor.G + "," + ForeColor.B + ",0.25)";
                 sb.AppendLine("<!DOCTYPE html>");
                 sb.AppendLine("<html>");
                 sb.AppendLine("  <head>");
                 sb.AppendLine("    <title>Subtitle Edit compare</title>");
-                sb.AppendLine("  </head>");
                 sb.AppendLine("  <style>");
-                sb.AppendLine("    td { font-family: Tahoma, Verdana, 'Noto Sans', Ubuntu; padding: 8px; }");
+                sb.AppendLine("    body { background-color: " + ColorTranslator.ToHtml(BackColor) + "; color: " + ColorTranslator.ToHtml(ForeColor) + "; }");
+                sb.AppendLine("    table { border-collapse: collapse; }");
+                sb.AppendLine("    td { background-color: " + ColorTranslator.ToHtml(subtitleListView1.BackColor) + "; border: 1px solid " + gridColor + "; color: " + ColorTranslator.ToHtml(subtitleListView1.ForeColor) + "; font-family: Tahoma, Verdana, 'Noto Sans', Ubuntu; padding: 8px; }");
+                sb.AppendLine("    td.separator { border: 0; background-color: " + ColorTranslator.ToHtml(BackColor) + "; }");
                 sb.AppendLine("  </style>");
+                sb.AppendLine("  </head>");
                 sb.AppendLine("  <body>");
                 sb.AppendLine("    <h1>Subtitle Edit compare</h1>");
                 sb.AppendLine("    <table>");
@@ -1475,7 +1479,7 @@ namespace Nikse.SubtitleEdit.Forms
                             sb.AppendLine("      <td" + GetHtmlBackgroundColor(subtitleListView1.Items[i].SubItems[subtitleListView1.ColumnIndexEnd]) + ">" + GetHtmlText(itemLeft, itemLeft.EndTime.ToDisplayString()) + "</td>");
                         }
                         sb.AppendLine("      <td" + GetHtmlBackgroundColor(subtitleListView1.Items[i].SubItems[subtitleListView1.ColumnIndexText]) + ">" + GetHtmlText(itemLeft, itemLeft.Text) + "</td>");
-                        sb.AppendLine("      <td>&nbsp;</td>");
+                        sb.AppendLine("      <td class='separator'>&nbsp;</td>");
                         sb.AppendLine("      <td" + GetHtmlBackgroundColor(subtitleListView2.Items[i].SubItems[0]) + ">" + GetHtmlText(itemRight, itemRight.Number.ToString()) + "</td>");
                         sb.AppendLine("      <td" + GetHtmlBackgroundColor(subtitleListView2.Items[i].SubItems[1]) + ">" + GetHtmlText(itemRight, itemRight.StartTime.ToDisplayString()) + "</td>");
                         if (subtitleListView2.ColumnIndexEnd >= 0)
@@ -1515,7 +1519,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private static string GetHtmlBackgroundColor(ListViewItem.ListViewSubItem item)
         {
-            if (item.BackColor == DefaultBackColor)
+            if (item.BackColor.IsEmpty || item.BackColor == Configuration.Settings.General.SubtitleBackgroundColor)
             {
                 return string.Empty;
             }
