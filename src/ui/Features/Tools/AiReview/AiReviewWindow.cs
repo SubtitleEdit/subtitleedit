@@ -19,9 +19,9 @@ public class AiReviewWindow : Window
     {
         UiUtil.InitializeWindow(this, GetType().Name);
         Title = UiUtil.MakeWindowTitle(Se.Language.Tools.AiReview.Title);
-        Width = 1024;
+        Width = 1200;
         Height = 720;
-        MinWidth = 800;
+        MinWidth = 900;
         MinHeight = 500;
         CanResize = true;
         vm.Window = this;
