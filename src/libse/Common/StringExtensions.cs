@@ -123,6 +123,58 @@ namespace Nikse.SubtitleEdit.Core.Common
 
         public static List<string> SplitToLines(this string s) => s.SplitToLines(s.Length);
 
+        /// <summary>
+        /// Enumerates the lines of <paramref name="s"/> as spans, using the same line break rules
+        /// as <see cref="SplitToLines(string)"/>. For callers that only look at each line instead
+        /// of keeping it: no list and no string per line is allocated.
+        /// </summary>
+        public static LineSpanEnumerator EnumerateSpanLines(this string s) => new LineSpanEnumerator(s.AsSpan());
+
+        public ref struct LineSpanEnumerator
+        {
+            private ReadOnlySpan<char> _remaining;
+            private bool _done;
+
+            public LineSpanEnumerator(ReadOnlySpan<char> span)
+            {
+                _remaining = span;
+                Current = default;
+                _done = false;
+            }
+
+            public ReadOnlySpan<char> Current { get; private set; }
+
+            public LineSpanEnumerator GetEnumerator() => this;
+
+            public bool MoveNext()
+            {
+                if (_done)
+                {
+                    return false;
+                }
+
+                var idx = _remaining.IndexOfAny('\r', '\n', '\u2028');
+                if (idx < 0)
+                {
+                    Current = _remaining;
+                    _done = true;
+                    return true;
+                }
+
+                Current = _remaining.Slice(0, idx);
+
+                // "\r\r\n" is deliberately two line breaks, same as SplitToLines.
+                var skip = idx + 1;
+                if (_remaining[idx] == '\r' && idx + 1 < _remaining.Length && _remaining[idx + 1] == '\n')
+                {
+                    skip++;
+                }
+
+                _remaining = _remaining.Slice(skip);
+                return true;
+            }
+        }
+
         public static List<string> SplitToLines(this string s, int max)
         {
             //original non-optimized version: return source.Replace("\r\r\n", "\n").Replace("\r\n", "\n").Replace('\r', '\n').Replace('\u2028', '\n').Split('\n');
@@ -426,43 +478,6 @@ namespace Nikse.SubtitleEdit.Core.Common
 #else
             return s.Contains(UnicodeControlChars);
 #endif
-        }
-
-        public static bool ContainsNonStandardNewLines(this string s)
-        {
-            if (Environment.NewLine == "\r\n")
-            {
-                var i = 0;
-                while (i < s.Length)
-                {
-                    var ch = s[i];
-                    if (ch == '\r')
-                    {
-                        if (i >= s.Length - 1 || s[i + 1] != '\n')
-                        {
-                            return true;
-                        }
-
-                        i++;
-                    }
-                    else if (ch == '\n')
-                    {
-                        return true;
-                    }
-
-                    i++;
-                }
-
-                return false;
-            }
-
-            if (Environment.NewLine == "\n")
-            {
-                return s.IndexOf('\r') >= 0;
-            }
-
-            s = s.Replace(Environment.NewLine, string.Empty);
-            return s.IndexOf('\n') >= 0 || s.IndexOf('\r') >= 0;
         }
 
         public static string RemoveControlCharacters(this string s)
@@ -1096,71 +1111,6 @@ namespace Nikse.SubtitleEdit.Core.Common
             // evaluate culture type
             var isCultureNeutral = twoLetterLanguageCode == null || twoLetterLanguageCode.Equals("el", StringComparison.OrdinalIgnoreCase) == false;
             return IsNeutralSentenceEndingChar(charAtIndex) || (!isCultureNeutral && IsGreekSentenceEndingChar(charAtIndex));
-        }
-
-        public static string NormalizeUnicode(this string input, Encoding encoding)
-        {
-            const char defHyphen = '-'; // - Hyphen-minus (\u002D) (Basic Latin)
-            const char defColon = ':'; // : Colon (\u003A) (Basic Latin)
-
-            var text = input;
-
-            bool hasSingleMusicNode = true;
-            if (encoding.GetString(encoding.GetBytes("♪")) != "♪")
-            {
-                text = text.Replace('♪', '#');
-                hasSingleMusicNode = false;
-            }
-
-            if (encoding.GetString(encoding.GetBytes("♫")) != "♫")
-            {
-                text = text.Replace('♫', hasSingleMusicNode ? '♪' : '#');
-            }
-
-            if (encoding.GetString(encoding.GetBytes("©")) != "©")
-            {
-                text = text.Replace("©", "(Copyright)");
-            }
-
-            if (encoding.GetString(encoding.GetBytes("®")) != "®")
-            {
-                text = text.Replace("®", "(Registered Trademark)");
-            }
-
-            if (encoding.GetString(encoding.GetBytes("…")) != "…")
-            {
-                text = text.Replace("…", "...");
-            }
-
-            // Hyphens
-            return text.Replace('\u2043', defHyphen) // ⁃ Hyphen bullet (\u2043)
-                .Replace('\u2010', defHyphen) // ‐ Hyphen (\u2010)
-                .Replace('\u2012', defHyphen) // ‒ Figure dash (\u2012)
-                .Replace('\u2013', defHyphen) // – En dash (\u2013)
-                .Replace('\u2014', defHyphen) // — Em dash (\u2014)
-                .Replace('\u2015', defHyphen) // ― Horizontal bar (\u2015)
-
-                // Colons:
-                .Replace('\u02F8', defColon) // ˸ Modifier Letter Raised Colon (\u02F8)
-                .Replace('\uFF1A', defColon) // ： Fullwidth Colon (\uFF1A)
-                .Replace('\uFE13', defColon) // ︓ Presentation Form for Vertical Colon (\uFE13)
-
-                // Others
-                .Replace("⇒", "=>")
-
-                // Spaces
-                .Replace('\u00A0', ' ') // No-Break Space
-                .Replace("\u200B", string.Empty) // Zero Width Space
-                .Replace("\uFEFF", string.Empty) // Zero Width No-Break Space
-
-                // Intellectual property
-                .Replace("\u2117", "(Sound-recording Copyright)") // ℗ sound-recording copyright
-                .Replace("\u2120", "(Service Mark)") // ℠ service mark
-                .Replace("\u2122", "(Trademark)") // ™ trademark
-
-                // RTL/LTR markers
-                .Replace("\u202B", string.Empty) // &rlm;
-                .Replace("\u202A", string.Empty); // &lmr;
         }
     }
 }

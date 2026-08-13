@@ -25283,12 +25283,26 @@ public partial class MainViewModel :
             var selectedItems = SubtitleGridSelectedItems.Cast<SubtitleLineViewModel>().ToList();
             if (selectedItems.Count > 0)
             {
-                var firstSelectedIndex = selectedItems.Min(p => Subtitles.IndexOf(p));
-                for (var i = firstSelectedIndex; i < Subtitles.Count; i++)
+                // One pass over the list instead of a linear IndexOf per selected line - with
+                // everything selected in a large file that was quadratic before a single time
+                // code got adjusted. Also no longer starts at -1 when a selected line is not
+                // in the list at all.
+                var selected = new HashSet<SubtitleLineViewModel>(selectedItems);
+                for (var i = 0; i < Subtitles.Count; i++)
                 {
-                    var p = Subtitles[i];
-                    p.SetStartTimeKeepDuration(p.StartTime + adjustment);
-                    p.UpdateDuration();
+                    if (!selected.Contains(Subtitles[i]))
+                    {
+                        continue;
+                    }
+
+                    for (var j = i; j < Subtitles.Count; j++)
+                    {
+                        var p = Subtitles[j];
+                        p.SetStartTimeKeepDuration(p.StartTime + adjustment);
+                        p.UpdateDuration();
+                    }
+
+                    break;
                 }
             }
         }

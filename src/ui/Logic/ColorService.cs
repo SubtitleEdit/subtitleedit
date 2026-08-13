@@ -20,6 +20,31 @@ public interface IColorService
 
 public class ColorService : IColorService
 {
+    // Parsing a WebVTT header splits the whole style block into lines and re-reads every
+    // "::cue(...)" rule. Set/remove color runs per selected line and asked for the styles up to
+    // five times per line, so colorizing a large selection re-parsed the same header thousands
+    // of times. Memo on the header instance: the only thing that changes it mid-batch is
+    // AddStyleToHeader, which produces a new string and so misses the memo exactly once.
+    // The returned list is only ever read - no WebVttHelper method mutates it.
+    private string? _cachedStylesHeader;
+    private List<WebVttStyle> _cachedStyles = new();
+
+    private static bool HasWebVttHeader(string header)
+    {
+        return !string.IsNullOrEmpty(header) && header.Contains("WEBVTT");
+    }
+
+    private List<WebVttStyle> GetWebVttStyles(string header)
+    {
+        if (!ReferenceEquals(header, _cachedStylesHeader))
+        {
+            _cachedStyles = WebVttHelper.GetStyles(header);
+            _cachedStylesHeader = header;
+        }
+
+        return _cachedStyles;
+    }
+
     public void RemoveColorTags(List<SubtitleLineViewModel> subtitles, Subtitle subtitle, SubtitleFormat subtitleFormat)
     {
         foreach (var p in subtitles)
@@ -28,11 +53,11 @@ public class ColorService : IColorService
         }
     }
 
-    private static void RemoveColorTags(SubtitleLineViewModel p, Subtitle subtitle, SubtitleFormat subtitleFormat)
+    private void RemoveColorTags(SubtitleLineViewModel p, Subtitle subtitle, SubtitleFormat subtitleFormat)
     {
         if (subtitleFormat is WebVTT or WebVTTFileWithLineNumber)
         {
-            var styles = WebVttHelper.GetStyles(subtitle.Header);
+            var styles = GetWebVttStyles(subtitle.Header);
             foreach (var style in styles)
             {
                 if (style.Color.HasValue &&
@@ -102,18 +127,21 @@ public class ColorService : IColorService
         {
             try
             {
-                var existingStyle = WebVttHelper.GetOnlyColorStyle(color.ToSKColor(), subtitle.Header);
-                if (existingStyle != null)
+                var hasWebVttHeader = HasWebVttHeader(subtitle.Header);
+                var styles = hasWebVttHeader ? GetWebVttStyles(subtitle.Header) : new List<WebVttStyle>();
+                var style = hasWebVttHeader ? WebVttHelper.GetOnlyColorStyle(color.ToSKColor(), styles) : null;
+                if (style == null)
                 {
-                    text = WebVttHelper.AddStyleToText(text, existingStyle, WebVttHelper.GetStyles(subtitle.Header));
-                    text = WebVttHelper.RemoveUnusedColorStylesFromText(text, subtitle.Header);
+                    style = WebVttHelper.AddStyleFromColor(color.ToSKColor());
+                    subtitle.Header = WebVttHelper.AddStyleToHeader(subtitle.Header, style);
+                    hasWebVttHeader = HasWebVttHeader(subtitle.Header);
+                    styles = GetWebVttStyles(subtitle.Header);
                 }
-                else
+
+                text = WebVttHelper.AddStyleToText(text, style, styles);
+                if (hasWebVttHeader && styles.Count > 1)
                 {
-                    var styleWithColor = WebVttHelper.AddStyleFromColor(color.ToSKColor());
-                    subtitle.Header = WebVttHelper.AddStyleToHeader(subtitle.Header, styleWithColor);
-                    text = WebVttHelper.AddStyleToText(text, styleWithColor, WebVttHelper.GetStyles(subtitle.Header));
-                    text = WebVttHelper.RemoveUnusedColorStylesFromText(text, subtitle.Header);
+                    text = WebVttHelper.RemoveUnusedColorStylesFromText(text, styles);
                 }
             }
             catch
@@ -192,7 +220,7 @@ public class ColorService : IColorService
         {
             try
             {
-                text = WebVttHelper.RemoveColorTag(text, color.ToSKColor(), WebVttHelper.GetStyles(subtitle.Header));
+                text = WebVttHelper.RemoveColorTag(text, color.ToSKColor(), GetWebVttStyles(subtitle.Header));
             }
             catch
             {

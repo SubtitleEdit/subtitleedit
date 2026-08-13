@@ -2690,6 +2690,33 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text"
             return sb.ToString();
         }
 
+        /// <summary>
+        /// Same test as the old <c>line.Trim().ToLowerInvariant().RemoveChar(' ').StartsWith("style:")</c>,
+        /// done in place so no lower-cased and no space-stripped copy of the line is allocated.
+        /// </summary>
+        private static bool StartsWithStyleColonIgnoringSpaces(ReadOnlySpan<char> trimmedLine)
+        {
+            const string prefix = "style:";
+            var matched = 0;
+            for (var i = 0; i < trimmedLine.Length && matched < prefix.Length; i++)
+            {
+                var ch = trimmedLine[i];
+                if (ch == ' ')
+                {
+                    continue;
+                }
+
+                if (char.ToLowerInvariant(ch) != prefix[matched])
+                {
+                    return false;
+                }
+
+                matched++;
+            }
+
+            return matched == prefix.Length;
+        }
+
         public static SsaStyle GetSsaStyle(string styleName, string header)
         {
             var style = new SsaStyle { Name = styleName };
@@ -2723,13 +2750,18 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text"
                 header = DefaultHeader;
             }
 
-            foreach (var line in header.SplitToLines())
+            // Called once per style name, and callers loop over every style in the header, so this
+            // used to be a quadratic walk that allocated a line list plus a trimmed, a lower-cased
+            // and a space-stripped copy of every header line on each pass. Dispatch on spans
+            // instead and only materialize the lines that actually are "Format:"/"Style:".
+            foreach (var lineSpan in header.EnumerateSpanLines())
             {
-                var s = line.Trim().ToLowerInvariant();
-                if (s.StartsWith("format:", StringComparison.Ordinal))
+                var trimmed = lineSpan.Trim();
+                if (trimmed.StartsWith("format:".AsSpan(), StringComparison.OrdinalIgnoreCase))
                 {
-                    if (line.Length > 10)
+                    if (lineSpan.Length > 10)
                     {
+                        var line = lineSpan.ToString();
                         var format = line.ToLowerInvariant().Substring(8).Split(',');
                         for (var i = 0; i < format.Length; i++)
                         {
@@ -2829,10 +2861,11 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text"
                         }
                     }
                 }
-                else if (s.RemoveChar(' ').StartsWith("style:", StringComparison.Ordinal))
+                else if (StartsWithStyleColonIgnoringSpaces(trimmed))
                 {
-                    if (line.Length > 10)
+                    if (lineSpan.Length > 10)
                     {
+                        var line = lineSpan.ToString();
                         style.RawLine = line;
                         var format = line.Substring(6).Split(',');
                         for (var i = 0; i < format.Length; i++)
