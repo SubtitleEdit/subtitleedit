@@ -1,6 +1,5 @@
 ﻿using SkiaSharp;
 using System;
-using System.Runtime.InteropServices;
 
 namespace Nikse.SubtitleEdit.Core.BluRaySup
 {
@@ -117,15 +116,15 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
                 // Get the total byte size of each image
                 var byteSize = pixmap1.RowBytes * bitmap.Height;
 
-                // Allocate byte arrays for the pixel data
-                var pixels1 = new byte[byteSize];
-                var pixels2 = new byte[byteSize];
+                // Compare the pixel buffers in place - no copy needed
+                var pixels1 = pixmap1.GetPixelSpan();
+                var pixels2 = pixmap2.GetPixelSpan();
+                if (pixels1.Length < byteSize || pixels2.Length < byteSize)
+                {
+                    return false;
+                }
 
-                // Copy raw pixel data into the byte arrays
-                Marshal.Copy(pixmap1.GetPixels(), pixels1, 0, byteSize);
-                Marshal.Copy(pixmap2.GetPixels(), pixels2, 0, byteSize);
-
-                return ByteArraysEqual(pixels1, pixels2);
+                return ByteArraysEqual(pixels1.Slice(0, byteSize), pixels2.Slice(0, byteSize));
             }
         }
 
