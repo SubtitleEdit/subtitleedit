@@ -1170,42 +1170,63 @@ namespace Nikse.SubtitleEdit.Core.Common
             var palette = new List<SKColor> { SKColors.Transparent };
             var pixels = new byte[Width * Height];
 
-            for (int y = 0; y < Height; y++)
-            {
-                for (int x = 0; x < Width; x++)
-                {
-                    var c = GetPixel(x, y);
-                    if (c.Alpha < 5)
-                    {
-                        pixels[y * Width + x] = 0;
-                    }
-                    else
-                    {
-                        int index = FindBestMatch(c, palette, out var maxDiff);
+            // Exact-colour shortcut past the linear palette scan. Only outcomes a later scan is
+            // bound to repeat are cached: FindBestMatch stops at the first entry closer than 4 and
+            // the palette only ever grows at the end, so such a hit can never be overtaken; a
+            // colour that was just appended is found by that same early stop from then on; and once
+            // the palette is full at 255 entries nothing more is added, so every result is frozen.
+            // None of those outcomes appends to the palette, so a hit cannot skip an insertion.
+            var seen = new Dictionary<uint, byte>();
+            var data = _bitmapData.AsSpan();
+            var packed = MemoryMarshal.Cast<byte, uint>(_bitmapData.AsSpan());
 
-                        if (index == -1 && palette.Count < 255)
-                        {
-                            index = palette.Count;
-                            palette.Add(c);
-                            pixels[y * Width + x] = (byte)index;
-                        }
-                        else if (palette.Count < 200 && maxDiff > 5)
-                        {
-                            index = palette.Count;
-                            palette.Add(c);
-                            pixels[y * Width + x] = (byte)index;
-                        }
-                        else if (palette.Count < 255 && maxDiff > 15)
-                        {
-                            index = palette.Count;
-                            palette.Add(c);
-                            pixels[y * Width + x] = (byte)index;
-                        }
-                        else if (index >= 0)
-                        {
-                            pixels[y * Width + x] = (byte)index;
-                        }
-                    }
+            for (int p = 0, i = 0; p < pixels.Length; p++, i += 4)
+            {
+                var alpha = data[i + 3];
+                if (alpha < 5)
+                {
+                    pixels[p] = 0;
+                    continue;
+                }
+
+                if (seen.TryGetValue(packed[p], out var known))
+                {
+                    pixels[p] = known;
+                    continue;
+                }
+
+                var c = new SKColor(data[i + 2], data[i + 1], data[i], alpha);
+                var index = FindBestMatch(c, palette, out var maxDiff);
+                byte value;
+                bool repeatable;
+                if (index == -1 && palette.Count < 255)
+                {
+                    value = (byte)palette.Count;
+                    palette.Add(c);
+                    repeatable = true;
+                }
+                else if (palette.Count < 200 && maxDiff > 5)
+                {
+                    value = (byte)palette.Count;
+                    palette.Add(c);
+                    repeatable = true;
+                }
+                else if (palette.Count < 255 && maxDiff > 15)
+                {
+                    value = (byte)palette.Count;
+                    palette.Add(c);
+                    repeatable = true;
+                }
+                else
+                {
+                    value = index >= 0 ? (byte)index : (byte)0;
+                    repeatable = maxDiff < 4 || palette.Count >= 255;
+                }
+
+                pixels[p] = value;
+                if (repeatable)
+                {
+                    seen[packed[p]] = value;
                 }
             }
 
