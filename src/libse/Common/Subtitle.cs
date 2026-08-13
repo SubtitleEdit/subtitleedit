@@ -646,38 +646,54 @@ namespace Nikse.SubtitleEdit.Core.Common
                 return -1;
             }
 
-            var index = Paragraphs.IndexOf(p);
+            var paragraphs = Paragraphs;
+            var index = paragraphs.IndexOf(p);
             if (index >= 0)
             {
                 return index;
             }
 
-            for (var i = 0; i < Paragraphs.Count; i++)
+            // The fallback scan below re-read p.Id / p.Number / p.Text and walked into
+            // p.StartTime / p.EndTime (both reference-typed TimeCode properties) several times
+            // per element. Read them once - only the list side varies inside the loop.
+            var id = p.Id;
+            var number = p.Number;
+            var text = p.Text;
+            var startMs = p.StartTime.TotalMilliseconds;
+            var endMs = p.EndTime.TotalMilliseconds;
+            var count = paragraphs.Count;
+            for (var i = 0; i < count; i++)
             {
-                if (p.Id == Paragraphs[i].Id)
+                var current = paragraphs[i];
+                if (id == current.Id)
                 {
                     return i;
                 }
 
-                if (i < Paragraphs.Count - 1 && p.Id == Paragraphs[i + 1].Id)
+                if (i < count - 1 && id == paragraphs[i + 1].Id)
                 {
                     return i + 1;
                 }
 
-                if (Math.Abs(p.StartTime.TotalMilliseconds - Paragraphs[i].StartTime.TotalMilliseconds) < 0.1 &&
-                    Math.Abs(p.EndTime.TotalMilliseconds - Paragraphs[i].EndTime.TotalMilliseconds) < 0.1)
+                var startMatches = Math.Abs(startMs - current.StartTime.TotalMilliseconds) < 0.1;
+                var endMatches = Math.Abs(endMs - current.EndTime.TotalMilliseconds) < 0.1;
+                if (startMatches && endMatches)
                 {
                     return i;
                 }
 
-                if (p.Number == Paragraphs[i].Number && (Math.Abs(p.StartTime.TotalMilliseconds - Paragraphs[i].StartTime.TotalMilliseconds) < 0.1 ||
-                    Math.Abs(p.EndTime.TotalMilliseconds - Paragraphs[i].EndTime.TotalMilliseconds) < 0.1))
+                if (!startMatches && !endMatches)
+                {
+                    // Neither of the two remaining checks can pass without a time match.
+                    continue;
+                }
+
+                if (number == current.Number)
                 {
                     return i;
                 }
 
-                if (p.Text == Paragraphs[i].Text && (Math.Abs(p.StartTime.TotalMilliseconds - Paragraphs[i].StartTime.TotalMilliseconds) < 0.1 ||
-                    Math.Abs(p.EndTime.TotalMilliseconds - Paragraphs[i].EndTime.TotalMilliseconds) < 0.1))
+                if (text == current.Text)
                 {
                     return i;
                 }

@@ -192,15 +192,6 @@ namespace Nikse.SubtitleEdit.Core.Common
             }
         }
 
-        public static Regex MakeWordSearchRegex(string word)
-        {
-            string s = word.Replace("\\", "\\\\");
-            s = s.Replace("*", "\\*");
-            s = s.Replace(".", "\\.");
-            s = s.Replace("?", "\\?");
-            return new Regex(@"\b" + s + @"\b", RegexOptions.Compiled);
-        }
-
         public static string BuildWholeWordPattern(string searchText)
         {
             var escaped = Regex.Escape(searchText);

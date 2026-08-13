@@ -13,6 +13,10 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
 
         private static readonly char[] ExpectedChars = { '.', '!', '?' };
 
+        // Bulgarian have "г." after years but the sentence continues with lowercase.
+        // Static so the pattern is not re-parsed for every fixed paragraph.
+        private static readonly Regex BulgarianYearRegex = new Regex(@"\d г\. \p{L}", RegexOptions.Compiled);
+
         public void Fix(Subtitle subtitle, IFixCallbacks callbacks)
         {
             string fixAction = Language.StartWithUppercaseLetterAfterPeriodInsideParagraph;
@@ -81,10 +85,8 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                         var isChecked = true;
                         if (callbacks.Language == "bg" && text.Contains("г. "))
                         {
-                            // Bulgarian have "г." after years but the sentence continues with lowercase
-                            var regex = new Regex(@"\d г\. \p{L}");
-                            var t1 = regex.Replace(oldText, string.Empty);
-                            var t2 = regex.Replace(text, string.Empty);
+                            var t1 = BulgarianYearRegex.Replace(oldText, string.Empty);
+                            var t2 = BulgarianYearRegex.Replace(text, string.Empty);
                             isChecked = t1 != t2;
                         }
                         callbacks.AddFixToListView(p, fixAction, oldText, p.Text, isChecked);

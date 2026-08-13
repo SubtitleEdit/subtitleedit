@@ -537,8 +537,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                 {
                     if (!text.Contains("." + style.Name.TrimStart('.') + ".") && !text.Contains("." + style.Name.TrimStart('.') + ">"))
                     {
-                        var regex = new Regex(@"<c\.[\.a-zA-Z\d#_-]+>");
-                        var match = regex.Match(text);
+                        var match = CueClassRegex.Match(text);
                         if (match.Success)
                         {
                             text = RemoveUnusedColorStylesFromText(text, webVttStyles);
@@ -646,8 +645,7 @@ namespace Nikse.SubtitleEdit.Core.Common
 
         public static string RemoveUnusedColorStylesFromText(string input, List<WebVttStyle> styles)
         {
-            var regex = new Regex(@"<c\.[\.a-zA-Z\d#_-]+>");
-            var match = regex.Match(input);
+            var match = CueClassRegex.Match(input);
             if (!match.Success)
             {
                 return input;
@@ -693,8 +691,17 @@ namespace Nikse.SubtitleEdit.Core.Common
                 return null;
             }
 
-            var styles = GetStyles(header);
-            if (styles.Count <= 1)
+            return GetOnlyColorStyle(color, GetStyles(header));
+        }
+
+        /// <summary>
+        /// Overload for callers that already parsed the header - parsing it is a full line split
+        /// of the whole style block, and the color tools ask for the same styles several times
+        /// per subtitle line.
+        /// </summary>
+        public static WebVttStyle GetOnlyColorStyle(SKColor color, List<WebVttStyle> styles)
+        {
+            if (styles == null || styles.Count <= 1)
             {
                 return null;
             }

@@ -29,6 +29,12 @@ namespace Nikse.SubtitleEdit.UiLogic.Ocr.FixEngine
         private List<Regex>? _replaceRegExes;
         private readonly string _replaceListXmlFileName;
 
+        // Every entry in these two lists used to cost a full substring scan of the line, for every
+        // line: 322 PartialLines plus 145 BeginLines for English. The signature below rules most
+        // of them out without touching the line again - see BigramSignature.
+        private ReplaceEntry[]? _partialLineEntries;
+        private ReplaceEntry[]? _beginLineEntries;
+
         private const string ReplaceListFileNamePostFix = "_OCRFixReplaceList.xml";
 
         // These are probed once per OCR'd word, so keep them off the per-call path:
@@ -312,6 +318,123 @@ namespace Nikse.SubtitleEdit.UiLogic.Ocr.FixEngine
             return false;
         }
 
+        /// <summary>
+        /// A replace-list entry plus the signature bit of its first character pair, so a line that
+        /// cannot possibly contain the key is recognised without searching it.
+        /// </summary>
+        private readonly struct ReplaceEntry
+        {
+            public readonly string From;
+            public readonly string To;
+
+            /// <summary>Signature bit of the key's first character pair, or -1 for one-char keys.</summary>
+            public readonly int Bit;
+
+            public ReplaceEntry(string from, string to)
+            {
+                From = from;
+                To = to;
+                Bit = from.Length >= 2 ? BigramSignature.BitIndex(from[0], from[1]) : -1;
+            }
+        }
+
+        /// <summary>
+        /// A 256 bit "which character pairs occur in this text" set. If a key's first character
+        /// pair is missing from the text, the key cannot be a substring of it, so the key can be
+        /// skipped - which keys actually get applied never changes, only how many are searched
+        /// for. Collisions and one-char keys just fall through to the real search, so a false
+        /// positive costs nothing but the scan that would have happened anyway.
+        /// </summary>
+        private readonly struct BigramSignature
+        {
+            private readonly ulong _w0;
+            private readonly ulong _w1;
+            private readonly ulong _w2;
+            private readonly ulong _w3;
+
+            private BigramSignature(ulong w0, ulong w1, ulong w2, ulong w3)
+            {
+                _w0 = w0;
+                _w1 = w1;
+                _w2 = w2;
+                _w3 = w3;
+            }
+
+            public static int BitIndex(char a, char b)
+            {
+                var h = a * 31 + b;
+                return (h ^ (h >> 8)) & 255;
+            }
+
+            public static BigramSignature FromText(string text)
+            {
+                ulong w0 = 0, w1 = 0, w2 = 0, w3 = 0;
+                for (var i = 0; i + 1 < text.Length; i++)
+                {
+                    var bit = BitIndex(text[i], text[i + 1]);
+
+                    // The shift count is masked to 6 bits, so 1UL << bit selects inside the word.
+                    switch (bit >> 6)
+                    {
+                        case 0: w0 |= 1UL << bit; break;
+                        case 1: w1 |= 1UL << bit; break;
+                        case 2: w2 |= 1UL << bit; break;
+                        default: w3 |= 1UL << bit; break;
+                    }
+                }
+
+                return new BigramSignature(w0, w1, w2, w3);
+            }
+
+            public bool MayContain(int bit)
+            {
+                if (bit < 0)
+                {
+                    return true; // one-char key - nothing to rule out on
+                }
+
+                switch (bit >> 6)
+                {
+                    case 0: return (_w0 & (1UL << bit)) != 0;
+                    case 1: return (_w1 & (1UL << bit)) != 0;
+                    case 2: return (_w2 & (1UL << bit)) != 0;
+                    default: return (_w3 & (1UL << bit)) != 0;
+                }
+            }
+        }
+
+        private static ReplaceEntry[] BuildEntries(Dictionary<string, string> list)
+        {
+            var entries = new ReplaceEntry[list.Count];
+            var i = 0;
+            foreach (var kv in list)
+            {
+                entries[i++] = new ReplaceEntry(kv.Key, kv.Value);
+            }
+
+            return entries;
+        }
+
+        private ReplaceEntry[] GetPartialLineEntries()
+        {
+            if (_partialLineEntries == null || _partialLineEntries.Length != PartialLineWordBoundaryReplaceList.Count)
+            {
+                _partialLineEntries = BuildEntries(PartialLineWordBoundaryReplaceList);
+            }
+
+            return _partialLineEntries;
+        }
+
+        private ReplaceEntry[] GetBeginLineEntries()
+        {
+            if (_beginLineEntries == null || _beginLineEntries.Length != _beginLineReplaceList.Count)
+            {
+                _beginLineEntries = BuildEntries(_beginLineReplaceList);
+            }
+
+            return _beginLineEntries;
+        }
+
         public string FixOcrErrorViaLineReplaceList(string input, Subtitle subtitle, int index, ISpellChecker spellCheckManager, List<string> wordsToIgnore, bool spelledOK)
         {
             // Whole fromLine - the dictionary's default comparer is the same ordinal equality
@@ -342,15 +465,22 @@ namespace Nikse.SubtitleEdit.UiLogic.Ocr.FixEngine
             // begin fromLine
             var lines = newText.SplitToLines();
             var sb = new StringBuilder(input.Length + 2);
+            var beginLineEntries = GetBeginLineEntries();
             foreach (var l in lines)
             {
                 var s = l;
-                foreach (var kv in _beginLineReplaceList)
+                var signature = BigramSignature.FromText(s);
+                foreach (var entry in beginLineEntries)
                 {
-                    var from = kv.Key;
+                    if (!signature.MayContain(entry.Bit))
+                    {
+                        continue;
+                    }
+
+                    var from = entry.From;
                     if (s.FastIndexOf(from) >= 0)
                     {
-                        var with = kv.Value;
+                        var with = entry.To;
                         if (s.StartsWith(from, StringComparison.Ordinal))
                         {
                             s = s.Remove(0, from.Length).Insert(0, with);
@@ -362,6 +492,10 @@ namespace Nikse.SubtitleEdit.UiLogic.Ocr.FixEngine
                         {
                             s = s.Replace("\"" + from, "\"" + with);
                         }
+
+                        // A replacement can introduce character pairs a later key needs, so the
+                        // signature has to follow the line. Only reached when a key actually hit.
+                        signature = BigramSignature.FromText(s);
                     }
                 }
                 sb.AppendLine(s);
@@ -391,11 +525,18 @@ namespace Nikse.SubtitleEdit.UiLogic.Ocr.FixEngine
             }
             newText += post;
 
-            foreach (var kv in PartialLineWordBoundaryReplaceList)
+            var partialLineSignature = BigramSignature.FromText(newText);
+            foreach (var entry in GetPartialLineEntries())
             {
-                if (newText.FastIndexOf(kv.Key) >= 0)
+                if (!partialLineSignature.MayContain(entry.Bit))
                 {
-                    newText = ReplaceWord(newText, kv.Key, kv.Value);
+                    continue;
+                }
+
+                if (newText.FastIndexOf(entry.From) >= 0)
+                {
+                    newText = ReplaceWord(newText, entry.From, entry.To);
+                    partialLineSignature = BigramSignature.FromText(newText);
                 }
             }
 
@@ -912,6 +1053,7 @@ namespace Nikse.SubtitleEdit.UiLogic.Ocr.FixEngine
                 if (DeletePartialLineFromWordList(word))
                 {
                     PartialLineWordBoundaryReplaceList.Remove(word);
+                    _partialLineEntries = null;
                     return true;
                 }
                 return false;
@@ -1070,6 +1212,7 @@ namespace Nikse.SubtitleEdit.UiLogic.Ocr.FixEngine
                     if (!PartialLineWordBoundaryReplaceList.ContainsKey(fromWord))
                     {
                         PartialLineWordBoundaryReplaceList.Add(fromWord, toWord);
+                        _partialLineEntries = null;
                     }
                     return true;
                 }

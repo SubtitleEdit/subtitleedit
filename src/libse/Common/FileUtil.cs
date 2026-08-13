@@ -8,7 +8,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
-using System.Text.RegularExpressions;
 
 namespace Nikse.SubtitleEdit.Core.Common
 {
@@ -743,25 +742,24 @@ namespace Nikse.SubtitleEdit.Core.Common
                 return numberCount < 5 && letterCount > 20;
             }
 
-            var numberPatternMatches = new Regex(@"\d+[.:,; -]\d+").Matches(s);
-            if (numberPatternMatches.Count > 30)
+            // These three checks used to build an uncompiled Regex each and materialize every
+            // single match over the whole file, only to compare the Count against a threshold.
+            // The counting scans below reproduce the same match semantics and stop as soon as
+            // the threshold is passed.
+            if (CountNumberPairs(s, 30) > 30)
             {
                 return false; // looks like time codes
             }
 
-            var largeBlocksOfLargeNumbers = new Regex(@"\d{3,8}").Matches(s);
-            if (largeBlocksOfLargeNumbers.Count > 30)
+            // Below 1000 characters the same count is judged against the lower limit, so only
+            // ever count up to whichever limit applies here.
+            var largeNumberBlockLimit = len < 1000 ? 10 : 30;
+            if (CountRunChunks(s, true, 3, 8, largeNumberBlockLimit) > largeNumberBlockLimit)
             {
                 return false; // looks like time codes
             }
 
-            if (len < 1000 && largeBlocksOfLargeNumbers.Count > 10)
-            {
-                return false; // looks like time codes
-            }
-
-            var partsWithMoreThan100CharsOfNonNumbers = new Regex(@"[^\d]{150,100000}").Matches(s);
-            if (partsWithMoreThan100CharsOfNonNumbers.Count > 10)
+            if (CountRunChunks(s, false, 150, 100000, 10) > 10)
             {
                 return true; // looks like text
             }
@@ -769,6 +767,103 @@ namespace Nikse.SubtitleEdit.Core.Common
             var numberThreshold = len * 0.015 + 25;
             var letterThreshold = len * 0.8;
             return numberCount < numberThreshold && letterCount > letterThreshold;
+        }
+
+        private static bool IsNumberSeparator(char ch)
+        {
+            return ch == '.' || ch == ':' || ch == ',' || ch == ';' || ch == ' ' || ch == '-';
+        }
+
+        /// <summary>
+        /// Same result as <c>new Regex(@"\d+[.:,; -]\d+").Matches(s).Count</c>, but stops
+        /// counting once <paramref name="limit"/> is passed.
+        /// </summary>
+        private static int CountNumberPairs(string s, int limit)
+        {
+            var count = 0;
+            var i = 0;
+            while (i < s.Length)
+            {
+                if (!char.IsDigit(s[i]))
+                {
+                    i++;
+                    continue;
+                }
+
+                var runEnd = i;
+                while (runEnd < s.Length && char.IsDigit(s[runEnd]))
+                {
+                    runEnd++;
+                }
+
+                // The leading \d+ is greedy and can only end where the digit run ends: anything
+                // shorter is followed by another digit rather than by a separator.
+                if (runEnd + 1 < s.Length && IsNumberSeparator(s[runEnd]) && char.IsDigit(s[runEnd + 1]))
+                {
+                    count++;
+                    if (count > limit)
+                    {
+                        return count;
+                    }
+
+                    // The trailing \d+ is greedy too, and matches do not overlap, so the whole
+                    // second number is consumed and cannot start the next match.
+                    i = runEnd + 1;
+                    while (i < s.Length && char.IsDigit(s[i]))
+                    {
+                        i++;
+                    }
+                }
+                else
+                {
+                    i = runEnd;
+                }
+            }
+
+            return count;
+        }
+
+        /// <summary>
+        /// Same result as <c>new Regex(@"\d{min,max}").Matches(s).Count</c> (or the negated
+        /// <c>[^\d]</c> variant when <paramref name="matchDigits"/> is false), but stops counting
+        /// once <paramref name="limit"/> is passed.
+        /// </summary>
+        private static int CountRunChunks(string s, bool matchDigits, int minLength, int maxLength, int limit)
+        {
+            var count = 0;
+            var i = 0;
+            while (i < s.Length)
+            {
+                if (char.IsDigit(s[i]) != matchDigits)
+                {
+                    i++;
+                    continue;
+                }
+
+                var runEnd = i;
+                while (runEnd < s.Length && char.IsDigit(s[runEnd]) == matchDigits)
+                {
+                    runEnd++;
+                }
+
+                // Greedy and non-overlapping: every match eats up to maxLength characters, and
+                // the tail of the run matches again only while it is still minLength long.
+                var remaining = runEnd - i;
+                while (remaining >= minLength)
+                {
+                    count++;
+                    if (count > limit)
+                    {
+                        return count;
+                    }
+
+                    remaining -= Math.Min(maxLength, remaining);
+                }
+
+                i = runEnd;
+            }
+
+            return count;
         }
 
         /// <summary>
