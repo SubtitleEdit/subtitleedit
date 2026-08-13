@@ -57,14 +57,6 @@ namespace Nikse.SubtitleEdit.Core.Common
         private static partial Regex NumberSeparatorNumberRegExGen();
         private static readonly Regex NumberSeparatorNumberRegEx = NumberSeparatorNumberRegExGen();
 
-        [GeneratedRegex("^\\d+$")]
-        private static partial Regex RegexIsNumberGen();
-        private static readonly Regex RegexIsNumber = RegexIsNumberGen();
-
-        [GeneratedRegex("^\\d+x\\d+$")]
-        private static partial Regex RegexIsEpisodeNumberGen();
-        private static readonly Regex RegexIsEpisodeNumber = RegexIsEpisodeNumberGen();
-
         [GeneratedRegex(@"(\d) (\.)")]
         private static partial Regex RegexNumberSpacePeriodGen();
         private static readonly Regex RegexNumberSpacePeriod = RegexNumberSpacePeriodGen();
@@ -94,8 +86,6 @@ namespace Nikse.SubtitleEdit.Core.Common
         private static readonly Regex RegexLetterSpacePeriodSpaceLetter = RegexLetterSpacePeriodSpaceLetterGen();
 #else
         private static readonly Regex NumberSeparatorNumberRegEx = new Regex(@"\b\d+[\.:;] \d+\b", RegexOptions.Compiled);
-        private static readonly Regex RegexIsNumber = new Regex("^\\d+$", RegexOptions.Compiled);
-        private static readonly Regex RegexIsEpisodeNumber = new Regex("^\\d+x\\d+$", RegexOptions.Compiled);
         private static readonly Regex RegexNumberSpacePeriod = new Regex(@"(\d) (\.)", RegexOptions.Compiled);
         private static readonly Regex RegexOrdinalSt = new Regex(@"(1) (st)\b", RegexOptions.Compiled);
         private static readonly Regex RegexOrdinalNd = new Regex(@"(2) (nd)\b", RegexOptions.Compiled);
@@ -126,20 +116,48 @@ namespace Nikse.SubtitleEdit.Core.Common
             return true;
         }
 
+        private static readonly char[] CurrencyAndPercentChars = { '$', '\u00A3', '\u00A5', '%', '*' };
+
+        /// <summary>
+        /// Same answer as the <c>^\d+$</c> and <c>^\d+x\d+$</c> regexes this used to run, without
+        /// the trimmed copy and without entering the regex engine. Two details are kept
+        /// deliberately: <c>\d</c> is <c>\p{Nd}</c>, i.e. <see cref="char.IsDigit(char)"/> and not
+        /// just '0'-'9', and .NET's <c>$</c> also matches immediately before a single trailing
+        /// line feed.
+        /// </summary>
         public static bool IsNumber(string s)
         {
-            s = s.Trim('$', '£', '¥', '%', '*');
-            if (RegexIsNumber.IsMatch(s))
+            var span = s.AsSpan().Trim(CurrencyAndPercentChars.AsSpan());
+            if (span.Length > 0 && span[span.Length - 1] == '\n')
             {
-                return true;
+                span = span.Slice(0, span.Length - 1);
             }
 
-            if (RegexIsEpisodeNumber.IsMatch(s))
+            if (span.Length == 0)
             {
-                return true;
+                return false;
             }
 
-            return false;
+            var separator = -1;
+            for (var i = 0; i < span.Length; i++)
+            {
+                if (char.IsDigit(span[i]))
+                {
+                    continue;
+                }
+
+                if (span[i] == 'x' && separator < 0)
+                {
+                    separator = i;
+                    continue;
+                }
+
+                return false;
+            }
+
+            // All digits: ^\d+$. Otherwise the only non-digit seen was a single 'x', which must
+            // have at least one digit on either side: ^\d+x\d+$.
+            return separator < 0 || (separator > 0 && separator < span.Length - 1);
         }
 
         public static SubtitleFormat GetSubtitleFormatByFriendlyName(string friendlyName)

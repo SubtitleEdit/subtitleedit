@@ -28,6 +28,8 @@ namespace Nikse.SubtitleEdit.Core.Forms
 
     public class RemoveInterjection
     {
+        private static readonly CharLookup SentenceEndingsAndDashes = CharLookup.Create('.', '?', '!', '-', '\u2014');
+
         // https://github.com/SubtitleEdit/subtitleedit/issues/1421 + https://github.com/SubtitleEdit/subtitleedit/issues/7563
 
         // Cache compiled `\bWORD\b` regexes keyed by interjection. Invoke() is called once per
@@ -600,13 +602,13 @@ namespace Nikse.SubtitleEdit.Core.Forms
 
             if (lines.Count == 2)
             {
-                if (string.IsNullOrWhiteSpace(lines[1].RemoveChar('.', '?', '!', '-', '—')))
+                if (lines[1].IsOnlyCharsOrWhiteSpace(SentenceEndingsAndDashes))
                 {
                     text = lines[0];
                     lines = text.SplitToLines();
                     lineIndexRemoved = 1;
                 }
-                else if (string.IsNullOrWhiteSpace(lines[0].RemoveChar('.', '?', '!', '-', '—')))
+                else if (lines[0].IsOnlyCharsOrWhiteSpace(SentenceEndingsAndDashes))
                 {
                     text = lines[1];
                     lines = text.SplitToLines();
