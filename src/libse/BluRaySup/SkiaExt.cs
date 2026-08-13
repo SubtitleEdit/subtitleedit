@@ -6,96 +6,55 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
 {
     public static class SkiaExt
     {
+        /// <summary>
+        /// Rows spanned by the first through the last row holding a non-transparent pixel; 0 when
+        /// the bitmap draws nothing.
+        /// </summary>
         public static int GetNonTransparentHeight(this SKBitmap bitmap)
         {
-            var startY = 0;
-            var transparentBottomPixels = 0;
-            for (var y = 0; y < bitmap.Height; y++)
-            {
-                var isLineTransparent = bitmap.IsLineTransparent(y);
-                if (startY == y && isLineTransparent)
-                {
-                    startY++;
-                    continue;
-                }
-
-                if (isLineTransparent)
-                {
-                    transparentBottomPixels++;
-                }
-                else
-                {
-                    transparentBottomPixels = 0;
-                }
-            }
-
-            return bitmap.Height - startY - transparentBottomPixels;
+            var bounds = bitmap.GetNonTransparentBoundsAnyFormat();
+            return bounds.IsEmpty ? 0 : bounds.Bottom - bounds.Top + 1;
         }
 
-        private static bool IsLineTransparent(this SKBitmap bitmap, int y)
-        {
-            // Validate y to ensure it's within the bounds of the bitmap
-            if (y < 0 || y >= bitmap.Height)
-            {
-                throw new ArgumentOutOfRangeException(nameof(y), "The row y is out of bounds.");
-            }
-
-            for (var x = 0; x < bitmap.Width; x++)
-            {
-                var color = bitmap.GetPixel(x, y);
-                if (color.Alpha != 0)
-                {
-                    return false;
-                }
-            }
-
-            return true;
-        }
-
+        /// <summary>
+        /// Columns spanned by the first through the last column holding a non-transparent pixel; 0
+        /// when the bitmap draws nothing.
+        /// </summary>
         public static int GetNonTransparentWidth(this SKBitmap bitmap)
         {
-            var startX = 0;
-            var transparentPixelsRight = 0;
-            for (var x = 0; x < bitmap.Width; x++)
-            {
-                var isLineTransparent = bitmap.IsVerticalLineTransparent(x);
-                if (startX == x && isLineTransparent)
-                {
-                    startX++;
-                    continue;
-                }
-
-                if (isLineTransparent)
-                {
-                    transparentPixelsRight++;
-                }
-                else
-                {
-                    transparentPixelsRight = 0;
-                }
-            }
-
-            return bitmap.Width - startX - transparentPixelsRight;
+            var bounds = bitmap.GetNonTransparentBoundsAnyFormat();
+            return bounds.IsEmpty ? 0 : bounds.Right - bounds.Left + 1;
         }
 
-        private static bool IsVerticalLineTransparent(this SKBitmap bitmap, int x)
+        /// <summary>
+        /// <see cref="GetNonTransparentBounds"/> takes alpha to be the fourth byte of a four-byte
+        /// pixel; any other layout has to go through GetPixel, which knows the color type.
+        /// </summary>
+        private static NonTransparentBounds GetNonTransparentBoundsAnyFormat(this SKBitmap bitmap)
         {
-            // Validate y to ensure it's within the bounds of the bitmap
-            if (x < 0 || x >= bitmap.Width)
+            if (bitmap.BytesPerPixel == 4)
             {
-                throw new ArgumentOutOfRangeException(nameof(x), "The column x is out of bounds.");
+                return bitmap.GetNonTransparentBounds();
             }
 
+            var bounds = new NonTransparentBounds { Top = bitmap.Height, Left = bitmap.Width, Right = -1, Bottom = -1 };
             for (var y = 0; y < bitmap.Height; y++)
             {
-                var color = bitmap.GetPixel(x, y);
-                if (color.Alpha != 0)
+                for (var x = 0; x < bitmap.Width; x++)
                 {
-                    return false;
+                    if (bitmap.GetPixel(x, y).Alpha == 0)
+                    {
+                        continue;
+                    }
+
+                    if (y < bounds.Top) { bounds.Top = y; }
+                    if (y > bounds.Bottom) { bounds.Bottom = y; }
+                    if (x < bounds.Left) { bounds.Left = x; }
+                    if (x > bounds.Right) { bounds.Right = x; }
                 }
             }
 
-            return true;
+            return bounds;
         }
 
         public static bool IsEqualTo(this SKBitmap bitmap, SKBitmap other)
