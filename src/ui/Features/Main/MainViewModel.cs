@@ -23027,13 +23027,13 @@ public partial class MainViewModel :
                     return;
                 }
 
-                if (keyEventArgs.Key == Key.Down && keyEventArgs.KeyModifiers == KeyModifiers.Shift && Subtitles.Count > 0)
+                if (keyEventArgs.Key == Key.Down && IsExtendSelectionChord(keyEventArgs) && Subtitles.Count > 0)
                 {
                     keyEventArgs.Handled = true;
                     HandleShiftArrowSelection(1);
                     return;
                 }
-                else if (keyEventArgs.Key == Key.Up && keyEventArgs.KeyModifiers == KeyModifiers.Shift && Subtitles.Count > 0)
+                else if (keyEventArgs.Key == Key.Up && IsExtendSelectionChord(keyEventArgs) && Subtitles.Count > 0)
                 {
                     keyEventArgs.Handled = true;
                     HandleShiftArrowSelection(-1);
@@ -23044,13 +23044,13 @@ public partial class MainViewModel :
                     _shiftSelectAnchorIndex = -1;
                     _shiftSelectCurrentIndex = -1;
                 }
-                else if (keyEventArgs.Key == Key.PageDown && keyEventArgs.KeyModifiers == KeyModifiers.Shift && Subtitles.Count > 0)
+                else if (keyEventArgs.Key == Key.PageDown && IsExtendSelectionChord(keyEventArgs) && Subtitles.Count > 0)
                 {
                     keyEventArgs.Handled = true;
                     HandleShiftArrowSelection(GetSubtitleGridPageStep(true));
                     return;
                 }
-                else if (keyEventArgs.Key == Key.PageUp && keyEventArgs.KeyModifiers == KeyModifiers.Shift && Subtitles.Count > 0)
+                else if (keyEventArgs.Key == Key.PageUp && IsExtendSelectionChord(keyEventArgs) && Subtitles.Count > 0)
                 {
                     keyEventArgs.Handled = true;
                     HandleShiftArrowSelection(GetSubtitleGridPageStep(false));
@@ -23068,13 +23068,13 @@ public partial class MainViewModel :
                     SelectAndScrollToRow(TableViewExtras.GetPageTarget(SubtitleGrid, current, keyEventArgs.Key == Key.PageDown));
                     return;
                 }
-                else if (keyEventArgs.Key == Key.Home && keyEventArgs.KeyModifiers == KeyModifiers.Shift && Subtitles.Count > 0)
+                else if (keyEventArgs.Key == Key.Home && IsExtendSelectionChord(keyEventArgs) && Subtitles.Count > 0)
                 {
                     keyEventArgs.Handled = true;
                     HandleShiftArrowSelection(-Subtitles.Count); // clamps to 0
                     return;
                 }
-                else if (keyEventArgs.Key == Key.End && keyEventArgs.KeyModifiers == KeyModifiers.Shift && Subtitles.Count > 0)
+                else if (keyEventArgs.Key == Key.End && IsExtendSelectionChord(keyEventArgs) && Subtitles.Count > 0)
                 {
                     keyEventArgs.Handled = true;
                     HandleShiftArrowSelection(Subtitles.Count); // clamps to Count - 1
@@ -23404,6 +23404,33 @@ public partial class MainViewModel :
         }
 
         SubtitleGridDragSelect?.OnPointerMoved(sender, e);
+    }
+
+    /// <summary>
+    /// True when the pressed chord should extend the grid selection: plain Shift, or
+    /// Ctrl+Shift (also Cmd+Shift on macOS), which desktop list controls treat as
+    /// "extend selection" too - e.g. Ctrl+Shift+End selects from the current row to
+    /// the last row, like SE 4's ListView and Windows Explorer. A user-assigned
+    /// shortcut on the Ctrl/Cmd chord wins, probed the same way as the bare-Return
+    /// case above (#12734); the plain Shift chords stay built-in.
+    /// </summary>
+    private bool IsExtendSelectionChord(KeyEventArgs keyEventArgs)
+    {
+        var modifiers = keyEventArgs.KeyModifiers;
+        if (modifiers == KeyModifiers.Shift)
+        {
+            return true;
+        }
+
+        if (modifiers != (KeyModifiers.Control | KeyModifiers.Shift) &&
+            !(OperatingSystem.IsMacOS() && modifiers == (KeyModifiers.Meta | KeyModifiers.Shift)))
+        {
+            return false;
+        }
+
+        return _shortcutManager.CheckShortcuts(keyEventArgs, CategorySubtitleGrid) == null &&
+               _shortcutManager.CheckShortcuts(keyEventArgs, CategorySubtitleGridAndTextBox) == null &&
+               _shortcutManager.CheckShortcuts(keyEventArgs, CategoryGeneralLower) == null;
     }
 
     private void HandleShiftArrowSelection(int direction)
