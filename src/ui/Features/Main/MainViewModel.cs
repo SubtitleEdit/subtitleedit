@@ -208,8 +208,9 @@ public partial class MainViewModel :
     private SubtitleLineViewModel? _selectedSubtitle;
 
     /// <summary>
-    /// True while a display-only reference row is selected. The main text box binds its read-only
-    /// state to this - typing into such a row would turn it into a real subtitle line (#13449).
+    /// True while a display-only reference row is selected. The show/hide/duration editors are off
+    /// for such a row (its timings belong to the original file); its text box, though, is open on
+    /// purpose - typing into it adopts the line into the working subtitle (#13594).
     /// </summary>
     public bool IsSelectedLineReferenceOnly => SelectedSubtitle?.IsReferenceOnly == true;
     private List<SubtitleLineViewModel>? _selectedSubtitles;
@@ -267,12 +268,9 @@ public partial class MainViewModel :
     /// The original's lines that have no counterpart in the working subtitle are shown as
     /// display-only rows. Independent of <see cref="IsOriginalReadOnly"/>: with these rows on screen
     /// the grid holds every line of the original exactly once, so editing and saving the original is
-    /// lossless - which is why it may be combined with "Allow edit of original subtitle". Time codes
-    /// are locked while it is on, see <see cref="AreTimeCodesLocked"/>.
+    /// lossless - which is why it may be combined with "Allow edit of original subtitle".
     /// </summary>
     [ObservableProperty]
-    [NotifyPropertyChangedFor(nameof(AreTimeCodesEditable))]
-    [NotifyPropertyChangedFor(nameof(AreTimeCodesLocked))]
     private bool _isShowingOriginalNonMatchingLines;
 
     /// <summary>Whether the original text column may be written to (see <see cref="IsOriginalReadOnly"/>).</summary>
@@ -303,13 +301,13 @@ public partial class MainViewModel :
     private bool _lockTimeCodes;
 
     /// <summary>
-    /// Whether time codes may be changed at all right now. Either the user locked them, or the
-    /// original's non-matching lines are on screen: those rows are placed by matching the original
-    /// against the working lines by time, so retiming a working line would re-match it onto a
-    /// different original line and shuffle the extra rows around under the user (#13449). The mode
-    /// is for reading the original alongside the translation, not for retiming.
+    /// Whether time codes may be changed at all right now - the user's own lock setting. The
+    /// original's non-matching lines being on screen no longer locks anything: each row remembers
+    /// which original line it displays (<see cref="SubtitleLineViewModel.ReferenceParagraphId"/>),
+    /// so retiming a working line cannot re-match it onto a different original line and shuffle
+    /// the extra rows around under the user (#13594).
     /// </summary>
-    public bool AreTimeCodesLocked => LockTimeCodes || IsShowingOriginalNonMatchingLines;
+    public bool AreTimeCodesLocked => LockTimeCodes;
 
     /// <summary>
     /// Whether the show/hide/duration editors accept input: not while time codes are locked, and not
@@ -1513,17 +1511,6 @@ public partial class MainViewModel :
         }
     }
 
-    // AreTimeCodesLocked follows this mode, and the waveform enforces the lock through its own
-    // IsReadOnly - it must follow too, or dragging a paragraph edge would retime lines the lock
-    // exists to protect.
-    partial void OnIsShowingOriginalNonMatchingLinesChanged(bool value)
-    {
-        if (AudioVisualizer != null)
-        {
-            AudioVisualizer.IsReadOnly = AreTimeCodesLocked;
-        }
-    }
-
     [RelayCommand]
     private async Task ShowHelp()
     {
@@ -2585,6 +2572,14 @@ public partial class MainViewModel :
     {
         RemoveReferenceOnlyRows();
 
+        // The caller's match may predate the removal above (opening an original while another was
+        // already showing reference rows), and matching stamps each row with the original line it
+        // displays - so re-derive it against the rows as they are now (#13594).
+        if (match != null)
+        {
+            match = ImportOriginalHelper.MatchOriginalLines(Subtitles, subtitle);
+        }
+
         _subtitleOriginal = subtitle;
         _subtitleFileNameOriginal = fileName;
         IsOriginalReadOnly = isReadOnly;
@@ -2594,6 +2589,11 @@ public partial class MainViewModel :
         for (var i = 0; i < Subtitles.Count && i < rowTexts.Paragraphs.Count; i++)
         {
             Subtitles[i].OriginalText = rowTexts.Paragraphs[i].Text;
+            if (match == null)
+            {
+                // 1:1 - row i displays original line i (a match stamps the rows itself).
+                Subtitles[i].ReferenceParagraphId = rowTexts.Paragraphs[i].Id;
+            }
         }
 
         if (match != null)
@@ -2638,6 +2638,7 @@ public partial class MainViewModel :
                 OriginalText = p.Text,
                 StartTime = TimeSpan.FromMilliseconds(p.StartTime.TotalMilliseconds),
                 EndTime = TimeSpan.FromMilliseconds(p.EndTime.TotalMilliseconds),
+                ReferenceParagraphId = p.Id,
             });
 
             insertAt++;
@@ -2648,16 +2649,28 @@ public partial class MainViewModel :
     }
 
     /// <summary>
-    /// Re-derives what the original contributes to the grid - the original column texts and the
-    /// display-only rows for its non-matching lines - by matching the original against the current
-    /// rows again. Both are a projection, so they go stale whenever the working rows are merged,
-    /// split, deleted or rebuilt wholesale (#13449).
+    /// Brings the original's contribution to the grid - the original column texts and the
+    /// display-only rows for its non-matching lines - back in step with the working rows, without
+    /// disturbing what already lines up. Each row remembers the original line it displays
+    /// (<see cref="SubtitleLineViewModel.ReferenceParagraphId"/>), and that assignment sticks:
+    /// this never re-matches an assigned row onto a different original line, so retiming or
+    /// editing rows cannot shuffle the reference around under the user (#13594). What it does do:
+    ///
+    /// - drop links to original lines that no longer exist, and duplicate links (a copied row);
+    /// - for a read-only original, re-sync the displayed text from the file's lines (the file is
+    ///   authoritative) and bring back a line whose displaying row was deleted as a new
+    ///   display-only row;
+    /// - match rows that display nothing yet against the still-unclaimed original lines - a no-op
+    ///   in the steady state, and the full time-code match after a wholesale grid rebuild (format
+    ///   conversion), where no row carries an assignment;
+    /// - glide the display-only rows back into start-time order after a retime, moving only the
+    ///   rows that are out of place.
     /// </summary>
     /// <param name="capture">
     /// Whether to fold the rows' current original text back into the original first. Needed when the
-    /// original is editable, or the user's edits would be overwritten by the file's text; pass false
-    /// when the caller already captured (the display-only rows are gone by then and their text would
-    /// be lost from the capture).
+    /// original is editable, or the user's edits would be overwritten on the next save; pass false
+    /// when the caller already captured (after a wholesale rebuild the rows no longer hold the
+    /// original's text, and capturing would rebuild the original from empty rows).
     /// </param>
     private void ReapplyOriginalReference(bool capture = true)
     {
@@ -2668,11 +2681,11 @@ public partial class MainViewModel :
             return;
         }
 
-        // The baseline hash covers the rows, so the remap below shifts it even when the original's
-        // content is untouched. Rebaseline afterwards only when the original was clean going in -
-        // an already-dirty original must stay dirty, or its unsaved edits would no longer count as
-        // changes and the app would close without offering to save them. A read-only original has
-        // nothing to save, so it always rebaselines.
+        // The baseline hash covers the rows, so the refresh below can shift it even when the
+        // original's content is untouched (rows brought back or reordered). Rebaseline afterwards
+        // only when the original was clean going in - an already-dirty original must stay dirty, or
+        // its unsaved edits would no longer count as changes and the app would close without
+        // offering to save them. A read-only original has nothing to save, so it always rebaselines.
         var wasDirty = !IsOriginalReadOnly && _changeSubtitleHashOriginal != GetFastHashOriginal();
 
         if (capture)
@@ -2680,18 +2693,96 @@ public partial class MainViewModel :
             CaptureOriginalFromRows();
         }
 
+        var original = _subtitleOriginal;
         _reapplyingReadOnlyReference = true;
         try
         {
-            RemoveReferenceOnlyRows();
-
-            var match = ImportOriginalHelper.MatchOriginalLines(Subtitles, _subtitleOriginal);
-            for (var i = 0; i < Subtitles.Count && i < match.Projection.Paragraphs.Count; i++)
+            // Which original line each id belongs to. Ids are unique per file; claimed lines are
+            // tracked by index so a (rare) id-less paragraph is handled like an unclaimed one.
+            var indexById = new Dictionary<Guid, int>(original.Paragraphs.Count);
+            for (var i = 0; i < original.Paragraphs.Count; i++)
             {
-                Subtitles[i].OriginalText = match.Projection.Paragraphs[i].Text;
+                if (original.Paragraphs[i].Id is { } id)
+                {
+                    indexById[id] = i;
+                }
             }
 
-            InsertReferenceOnlyRows(match.Unmatched);
+            var used = new bool[original.Paragraphs.Count];
+
+            // Pass 1: validate the sticky links. A row whose line vanished (or was already claimed
+            // by an earlier row - a duplicated row copies the link, and the first row wins) loses
+            // it; a display-only row in that state has nothing left to display. For a read-only
+            // original the file is authoritative, so re-sync the displayed text from its line.
+            for (var i = 0; i < Subtitles.Count; i++)
+            {
+                var row = Subtitles[i];
+                if (row.ReferenceParagraphId is not { } id)
+                {
+                    continue;
+                }
+
+                if (indexById.TryGetValue(id, out var index) && !used[index])
+                {
+                    used[index] = true;
+                    if (IsOriginalReadOnly)
+                    {
+                        var p = original.Paragraphs[index];
+                        row.OriginalText = p.Text;
+                        if (row.IsReferenceOnly)
+                        {
+                            row.SetTimes(
+                                TimeSpan.FromMilliseconds(p.StartTime.TotalMilliseconds),
+                                TimeSpan.FromMilliseconds(p.EndTime.TotalMilliseconds));
+                        }
+                    }
+                }
+                else
+                {
+                    row.ReferenceParagraphId = null;
+                    if (row.IsReferenceOnly)
+                    {
+                        Subtitles.RemoveAt(i);
+                        i--;
+                    }
+                }
+            }
+
+            // Pass 2: rows that display nothing yet claim still-unclaimed lines by time code. In
+            // the steady state every row is already linked and this does nothing; after a wholesale
+            // rebuild it is the full match.
+            foreach (var row in Subtitles)
+            {
+                if (row.IsReferenceOnly || row.ReferenceParagraphId != null)
+                {
+                    continue;
+                }
+
+                var index = ImportOriginalHelper.FindOriginalLineIndex(row, original, used);
+                if (index >= 0)
+                {
+                    used[index] = true;
+                    row.ReferenceParagraphId = original.Paragraphs[index].Id;
+                    row.OriginalText = original.Paragraphs[index].Text;
+                }
+            }
+
+            // Pass 3: every original line no row displays comes back as a display-only row.
+            List<Paragraph>? unmatched = null;
+            for (var i = 0; i < original.Paragraphs.Count; i++)
+            {
+                if (!used[i])
+                {
+                    (unmatched ??= new List<Paragraph>()).Add(original.Paragraphs[i]);
+                }
+            }
+
+            if (unmatched != null)
+            {
+                InsertReferenceOnlyRows(unmatched);
+            }
+
+            RepositionReferenceOnlyRows();
         }
         finally
         {
@@ -2704,6 +2795,79 @@ public partial class MainViewModel :
         }
 
         _referenceMappingDirty = false;
+    }
+
+    /// <summary>
+    /// Glides the display-only reference rows back into start-time order among the working rows
+    /// after a retime, touching nothing else: the working rows keep their relative order exactly,
+    /// and a reference row is only removed and re-inserted when it is actually out of place - in
+    /// the common case this method changes nothing at all (#13594).
+    /// </summary>
+    private void RepositionReferenceOnlyRows()
+    {
+        var referenceRows = Subtitles.Where(p => p.IsReferenceOnly).OrderBy(p => p.StartTime).ToList();
+        if (referenceRows.Count == 0)
+        {
+            return;
+        }
+
+        var workingRows = Subtitles.Where(p => !p.IsReferenceOnly).ToList();
+
+        // The desired order: working rows as they are, each reference row after the last working
+        // row that starts at or before it (same rule the initial insert uses).
+        var desired = new List<SubtitleLineViewModel>(Subtitles.Count);
+        var w = 0;
+        foreach (var referenceRow in referenceRows)
+        {
+            while (w < workingRows.Count && workingRows[w].StartTime <= referenceRow.StartTime)
+            {
+                desired.Add(workingRows[w]);
+                w++;
+            }
+
+            desired.Add(referenceRow);
+        }
+
+        while (w < workingRows.Count)
+        {
+            desired.Add(workingRows[w]);
+            w++;
+        }
+
+        // Only reference rows are ever removed and re-inserted: the working rows' relative order is
+        // identical in both sequences, so whenever a slot mismatches, either the row that belongs
+        // there is a reference row (pull it into place), or the row sitting there is a reference
+        // row that belongs further down (park it at the end; the loop places it when it reaches its
+        // own slot). Working rows never move, so the row the user is editing keeps its selection.
+        var moved = false;
+        for (var i = 0; i < desired.Count; i++)
+        {
+            if (ReferenceEquals(Subtitles[i], desired[i]))
+            {
+                continue;
+            }
+
+            moved = true;
+            if (desired[i].IsReferenceOnly)
+            {
+                var from = Subtitles.IndexOf(desired[i]);
+                Subtitles.RemoveAt(from);
+                Subtitles.Insert(i, desired[i]);
+            }
+            else
+            {
+                var blocking = Subtitles[i];
+                Subtitles.RemoveAt(i);
+                Subtitles.Add(blocking);
+                i--; // re-check this slot now that the squatter is gone
+            }
+        }
+
+        if (moved)
+        {
+            Renumber();
+            _updateAudioVisualizer = true;
+        }
     }
 
     /// <summary>
@@ -2727,13 +2891,46 @@ public partial class MainViewModel :
 
         // Capture before the rows go: an editable original keeps its non-matching lines only in them.
         CaptureOriginalFromRows();
-        RemoveReferenceOnlyRows();
+
+        // Detach the row instances rather than dropping them: they carry the user's edits (editable
+        // original) and their sticky link to the original line, and putting the same instances back
+        // means the reference does not visibly rebuild after every merge (#13594).
+        var detached = new List<SubtitleLineViewModel>();
+        for (var i = Subtitles.Count - 1; i >= 0; i--)
+        {
+            if (Subtitles[i].IsReferenceOnly)
+            {
+                detached.Add(Subtitles[i]);
+                Subtitles.RemoveAt(i);
+            }
+        }
+
+        detached.Reverse(); // back to grid order
+
         try
         {
             action();
         }
         finally
         {
+            var insertAt = 0;
+            foreach (var row in detached)
+            {
+                while (insertAt < Subtitles.Count &&
+                       Subtitles[insertAt].StartTime <= row.StartTime)
+                {
+                    insertAt++;
+                }
+
+                Subtitles.Insert(insertAt, row);
+                insertAt++;
+            }
+
+            Renumber();
+            _updateAudioVisualizer = true;
+
+            // The action may have deleted or merged rows that displayed original lines; the refresh
+            // brings those lines back (read-only) and re-syncs what is displayed.
             ReapplyOriginalReference(capture: false);
         }
     }
@@ -2759,7 +2956,12 @@ public partial class MainViewModel :
         {
             if (line.IsReferenceOnly || !string.IsNullOrEmpty(line.OriginalText))
             {
-                captured.Paragraphs.Add(line.ToParagraphOriginal(format));
+                var p = line.ToParagraphOriginal(format);
+                captured.Paragraphs.Add(p);
+
+                // The capture creates fresh paragraphs (fresh ids), so re-point the row's sticky
+                // link at the line it just produced, or every link would go stale at once (#13594).
+                line.ReferenceParagraphId = p.Id;
             }
         }
 
@@ -2821,6 +3023,7 @@ public partial class MainViewModel :
             foreach (var line in Subtitles)
             {
                 line.OriginalText = string.Empty;
+                line.ReferenceParagraphId = null;
             }
 
             _changeSubtitleHashOriginal = GetFastHashOriginal();
@@ -2901,6 +3104,7 @@ public partial class MainViewModel :
             // it into an ordinary line - left flagged, it would be dropped from every save by
             // GetUpdateSubtitle and keep its dimmed, read-only appearance.
             subtitle.IsReferenceOnly = false;
+            subtitle.ReferenceParagraphId = null; // the original it pointed into is gone
         }
 
         if (IsShowingOriginalNonMatchingLines)
@@ -5142,7 +5346,10 @@ public partial class MainViewModel :
     [RelayCommand]
     private async Task ColumnCopyTextFromOriginalToCurrent()
     {
-        var selectedItems = SubtitleGridSelectedItems.Cast<SubtitleLineViewModel>().ToList();
+        // With reference: copying the original text into the text column is exactly how a missing
+        // line is adopted from the reference, so display-only rows take part - and become ordinary
+        // working lines in the process (#13594).
+        var selectedItems = SubtitleGridSelectedItemsWithReference;
         if (!ShowColumnOriginalText || selectedItems.Count == 0)
         {
             return;
@@ -5152,6 +5359,10 @@ public partial class MainViewModel :
         foreach (var selectedItem in selectedItems)
         {
             selectedItem.Text = selectedItem.OriginalText;
+            if (selectedItem.IsReferenceOnly && !string.IsNullOrEmpty(selectedItem.Text))
+            {
+                PromoteReferenceOnlyRow(selectedItem);
+            }
         }
 
         _undoRedoManager.StartChangeDetection();
@@ -19327,7 +19538,12 @@ public partial class MainViewModel :
                 continue;
             }
 
-            _subtitleOriginal.Paragraphs.Add(line.ToParagraphOriginal(originalFormat));
+            var p = line.ToParagraphOriginal(originalFormat);
+            _subtitleOriginal.Paragraphs.Add(p);
+
+            // Fresh paragraphs mean fresh ids - keep the row's sticky link pointing at the line it
+            // just produced (see CaptureOriginalFromRows, #13594).
+            line.ReferenceParagraphId = p.Id;
         }
 
         return _subtitleOriginal;
@@ -23846,7 +24062,8 @@ public partial class MainViewModel :
             // A start-time change can reorder the buffer, so it must be rebuilt and re-sorted.
             _waveformSubtitleBufferDirty = true;
 
-            // Retiming a row can move it onto (or off) a different reference line.
+            // Retiming a row never re-matches it (the link is sticky), but the display-only
+            // reference rows may need to glide back into start-time order around it.
             if (IsShowingOriginalNonMatchingLines && !_reapplyingReadOnlyReference)
             {
                 _referenceMappingDirty = true;
@@ -24425,9 +24642,10 @@ public partial class MainViewModel :
         _slowTimer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(400) };
         _slowTimer.Tick += (s, e) =>
         {
-            // Re-match the read-only reference against the rows once the edit that invalidated it has
-            // settled. Deliberately debounced here rather than run per edit: matching is O(n*m) over
-            // both files, and a burst of deletes would otherwise pay for it on every single row.
+            // Refresh the reference projection (bring back lines whose row was deleted, glide the
+            // display-only rows into place) once the edit that invalidated it has settled.
+            // Deliberately debounced here rather than run per edit: a burst of deletes would
+            // otherwise pay for the refresh on every single row.
             if (_referenceMappingDirty && !IsUserEditing())
             {
                 ReapplyOriginalReference();
@@ -24728,7 +24946,33 @@ public partial class MainViewModel :
             return;
         }
 
+        // Typing (or pasting) into a display-only reference row is how a line the translation is
+        // missing gets added: the first character promotes the row to an ordinary working line, at
+        // the reference line's timings (#13594). The sticky link stays - the row still displays
+        // that original line, now side by side with its brand-new translation.
+        if (selectedSubtitle.IsReferenceOnly && !string.IsNullOrEmpty(selectedSubtitle.Text))
+        {
+            PromoteReferenceOnlyRow(selectedSubtitle);
+        }
+
         MakeSubtitleTextInfo(selectedSubtitle.Text, selectedSubtitle);
+        _updateAudioVisualizer = true;
+    }
+
+    /// <summary>
+    /// Turns a display-only reference row into an ordinary working line, keeping its timings and
+    /// its link to the original line it displays (#13594). From here on the row is saved with the
+    /// subtitle, takes a number, and its timings are the user's to edit.
+    /// </summary>
+    private void PromoteReferenceOnlyRow(SubtitleLineViewModel row)
+    {
+        row.IsReferenceOnly = false; // observable: the grid drops the dimming and shows the number
+        Renumber();
+
+        // The selected row changed nature, so everything derived from "is a reference row selected".
+        OnPropertyChanged(nameof(IsSelectedLineReferenceOnly));
+        OnPropertyChanged(nameof(AreTimeCodesEditable));
+
         _updateAudioVisualizer = true;
     }
 

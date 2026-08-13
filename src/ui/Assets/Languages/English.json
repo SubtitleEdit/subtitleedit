@@ -1,6 +1,6 @@
 ﻿{
   "title": "Subtitle Edit",
-  "version": "v5.2.0-beta11",
+  "version": "v5.2.0-beta12",
   "translatedBy": "",
   "cultureName": "en-US",
   "general": {
@@ -1022,7 +1022,7 @@
     "allowEditOfOriginalSubtitle": "Allow edit of original subtitle",
     "showAllOriginalLinesX": "Show all original lines ({0} have no match here)",
     "showAllOriginalLinesHint": "The lines with no match are shown as extra rows, so you can see what the translation is missing.",
-    "showAllOriginalLinesNote": "Time codes cannot be changed while these rows are shown",
+    "showAllOriginalLinesNote": "Type in an extra row to add that line to your subtitle",
     "showMatchingOriginalLinesX": "Show only the {0} matching original lines",
     "showMatchingOriginalLinesHint": "The other {0} original lines are not shown anywhere.",
     "showMatchingOriginalLinesNote": "They stay in the file unless you save the original",
@@ -1311,7 +1311,12 @@
       "exportStylesTitle": "Export WebVTT styles",
       "openStyleFileTitle": "Open WebVTT file to import styles from",
       "noStylesToImport": "No styles found in the chosen file",
-      "duplicateStyleNamesX": "Duplicate style names: {0}"
+      "duplicateStyleNamesX": "Duplicate style names: {0}",
+      "cueSettings": "Cue settings for alignment",
+      "cueSettingsHint": "Cue settings written when a line is aligned, e.g. \"line:20%\" for top-center",
+      "useXTimeStamp": "Use X-TIMESTAMP-MAP header value",
+      "mergeLines": "Merge lines with same text on load",
+      "mergeStyleTags": "Merge style tags"
     },
     "compare": "Compare",
     "previousDifference": "Previous difference",
@@ -2518,6 +2523,7 @@
       "autoBackupDeleteAfterDays": "Auto-backup retention (days)",
       "autoConvertToUtf8": "Auto-convert encoding to UTF-8 on open",
       "autoTrimWhiteSpace": "Auto-trim white-space",
+      "removeBlankLinesWhenOpening": "Remove blank lines when opening a subtitle",
       "defaultEncoding": "Default encoding",
       "colorDurationTooShort": "Color duration if too short",
       "colorDurationTooLong": "Color duration if too long",
