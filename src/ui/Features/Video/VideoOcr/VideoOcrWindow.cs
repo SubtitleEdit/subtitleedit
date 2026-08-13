@@ -200,8 +200,23 @@ public class VideoOcrWindow : Window
             Width = 350,
         };
 
+        // The engine picker, plus a settings button for the one engine here with something to
+        // configure: CrispEmbed's engine build and models are downloaded from that dialog.
+        var enginePanel = new StackPanel
+        {
+            Orientation = Orientation.Horizontal,
+            Spacing = 5,
+            Children =
+            {
+                comboEngine,
+                UiUtil.MakeButton(vm.ShowCrispEmbedSettingsCommand, IconNames.Settings,
+                        $"{CrispEmbedEngine.StaticName} - {Se.Language.General.Settings}")
+                    .WithBindIsVisible(nameof(vm.IsCrispEmbedEngine)),
+            },
+        };
+
         panel.Children.Add(MakeHeader(Se.Language.Video.VideoOcr.Engine, isFirst: true));
-        panel.Children.Add(comboEngine);
+        panel.Children.Add(enginePanel);
 
         // What the selected engine actually is - each engine carries a one-line description
         // (local vs cloud, what it needs installed) that had no home in the window until now.
@@ -272,11 +287,8 @@ public class VideoOcrWindow : Window
         crispEmbedPanel.Children.Add(UiUtil.MakeComboBox(vm.CrispEmbedBackends, vm, nameof(vm.SelectedCrispEmbedBackend)).WithWidth(330));
         crispEmbedPanel.Children.Add(UiUtil.MakeLabel(Se.Language.General.Model));
         crispEmbedPanel.Children.Add(comboCrispEmbedModel);
-        var crispEmbedButtons = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 5 };
-        crispEmbedButtons.Children.Add(UiUtil.MakeButton(vm.DownloadCrispEmbedCommand, IconNames.Download, Se.Language.General.Download));
-        crispEmbedButtons.Children.Add(UiUtil.MakeButton(vm.ReDownloadCrispEmbedEngineCommand, IconNames.CloudDownload,
-            string.Format(Se.Language.General.ReDownloadX, CrispEmbedEngine.StaticName)));
-        crispEmbedPanel.Children.Add(crispEmbedButtons);
+        // No download buttons here - engine build and model downloads live in the CrispEmbed
+        // settings dialog opened from the gear button next to the engine combo.
         crispEmbedPanel.Bind(StackPanel.IsVisibleProperty, new Binding(nameof(vm.IsCrispEmbedEngine)) { Source = vm });
         panel.Children.Add(crispEmbedPanel);
 
