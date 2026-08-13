@@ -2528,6 +2528,19 @@ namespace Nikse.SubtitleEdit.Core.Common
         private static readonly string RunQuoteNewLine = "\"" + Environment.NewLine;
 
         /// <summary>
+        /// The five characters <see cref="RemoveUnneededSpaces"/> drops or substitutes: the
+        /// zero-width space, the zero-width no-break space, the operating-system-command
+        /// control character, the tab and the no-break space.
+        /// </summary>
+        private static readonly char[] UnneededSpaceRewriteChars =
+            { '\u200B', '\uFEFF', '\u009D', '\t', '\u00A0' };
+
+#if NET8_0_OR_GREATER
+        private static readonly System.Buffers.SearchValues<char> UnneededSpaceRewriteCharsSearchValues =
+            System.Buffers.SearchValues.Create(UnneededSpaceRewriteChars);
+#endif
+
+        /// <summary>
         /// Remove unneeded spaces
         /// </summary>
         /// <param name="input">text string to remove unneeded spaces from</param>
@@ -2541,31 +2554,46 @@ namespace Nikse.SubtitleEdit.Core.Common
             const char operatingSystemCommand = '\u009D';
 
             var text = input.Trim();
-            var len = text.Length;
-            var count = 0;
-            var textChars = new char[len];
-            for (var i = 0; i < len; i++)
+
+            // The rewrite below allocated a char[] and a new string for every line, even
+            // though almost no line contains any of the five characters it exists to drop or
+            // substitute. One vectorized scan decides that, and lines without them keep the
+            // original instance. This method runs per paragraph in fix common errors, in the
+            // OCR fix engine and in batch convert.
+#if NET8_0_OR_GREATER
+            var needsNormalize = text.AsSpan().ContainsAny(UnneededSpaceRewriteCharsSearchValues);
+#else
+            var needsNormalize = text.AsSpan().IndexOfAny(UnneededSpaceRewriteChars) >= 0;
+#endif
+            if (needsNormalize)
             {
-                var ch = text[i];
-                switch (ch)
+                var len = text.Length;
+                var count = 0;
+                var textChars = new char[len];
+                for (var i = 0; i < len; i++)
                 {
-                    // Ignore: \u200B, \uFEFF and \u009D.
-                    case zeroWidthSpace:
-                    case zeroWidthNoBreakSpace:
-                    case operatingSystemCommand:
-                        break;
-                    // Replace: \t or \u00A0 with white-space.
-                    case '\t':
-                    case noBreakSpace:
-                        textChars[count++] = ' ';
-                        break;
-                    default:
-                        textChars[count++] = ch;
-                        break;
+                    var ch = text[i];
+                    switch (ch)
+                    {
+                        // Ignore: \u200B, \uFEFF and \u009D.
+                        case zeroWidthSpace:
+                        case zeroWidthNoBreakSpace:
+                        case operatingSystemCommand:
+                            break;
+                        // Replace: \t or \u00A0 with white-space.
+                        case '\t':
+                        case noBreakSpace:
+                            textChars[count++] = ' ';
+                            break;
+                        default:
+                            textChars[count++] = ch;
+                            break;
+                    }
                 }
+                // Construct new string from textChars.
+                text = new string(textChars, 0, count);
             }
-            // Construct new string from textChars.
-            text = new string(textChars, 0, count);
+
             text = text.FixExtraSpaces();
 
             if (text.EndsWith(' '))
@@ -2574,12 +2602,18 @@ namespace Nikse.SubtitleEdit.Core.Common
             }
 
             const string ellipses = "...";
-            text = text.Replace(". . ..", ellipses);
-            text = text.Replace(". ...", ellipses);
-            text = text.Replace(". .. .", ellipses);
-            text = text.Replace(". . .", ellipses);
-            text = text.Replace(". ..", ellipses);
-            text = text.Replace(".. .", ellipses);
+
+            // Every one of the six spaced-ellipsis spellings contains ". ", so a line without
+            // that pair cannot match any of them and skips six full scans.
+            if (text.Contains(". ", StringComparison.Ordinal))
+            {
+                text = text.Replace(". . ..", ellipses);
+                text = text.Replace(". ...", ellipses);
+                text = text.Replace(". .. .", ellipses);
+                text = text.Replace(". . .", ellipses);
+                text = text.Replace(". ..", ellipses);
+                text = text.Replace(".. .", ellipses);
+            }
 
             // Fix recursive: ...
             while (text.Contains("...."))
@@ -2587,12 +2621,17 @@ namespace Nikse.SubtitleEdit.Core.Common
                 text = text.Replace("....", ellipses);
             }
 
-            text = text.Replace(RunSpaceEllipsisNewLine, RunEllipsisNewLine);
-            text = text.Replace(RunNewLineEllipsisSpace, RunNewLineEllipsis);
-            text = text.Replace(RunNewLineItalicEllipsisSpace, RunNewLineItalicEllipsis);
-            text = text.Replace(RunNewLineDashEllipsisSpace, RunNewLineDashEllipsis);
-            text = text.Replace(RunNewLineItalicDashEllipsisSpace, RunNewLineItalicDashEllipsis);
-            text = text.Replace(RunNewLineDashEllipsisSpace, RunNewLineDashEllipsis);
+            // All six patterns embed Environment.NewLine, so a single-line text - which is
+            // most of a subtitle file - can skip the lot after one character scan.
+            if (text.Contains('\n'))
+            {
+                text = text.Replace(RunSpaceEllipsisNewLine, RunEllipsisNewLine);
+                text = text.Replace(RunNewLineEllipsisSpace, RunNewLineEllipsis);
+                text = text.Replace(RunNewLineItalicEllipsisSpace, RunNewLineItalicEllipsis);
+                text = text.Replace(RunNewLineDashEllipsisSpace, RunNewLineDashEllipsis);
+                text = text.Replace(RunNewLineItalicDashEllipsisSpace, RunNewLineItalicDashEllipsis);
+                text = text.Replace(RunNewLineDashEllipsisSpace, RunNewLineDashEllipsis);
+            }
 
             if (text.StartsWith("... ", StringComparison.Ordinal))
             {
@@ -2807,7 +2846,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             text = text.Trim();
             text = text.Replace(RunNewLineSpaceOnly, Environment.NewLine);
 
-            if (text.Contains("-") && text.Length > 2 && !text.StartsWith("--", StringComparison.Ordinal))
+            if (text.Contains('-') && text.Length > 2 && !text.StartsWith("--", StringComparison.Ordinal))
             {
                 var dialogHelper = new DialogSplitMerge { DialogStyle = Configuration.Settings.General.DialogStyle, ContinuationStyle = Configuration.Settings.General.ContinuationStyle };
                 text = dialogHelper.RemoveSpaces(text);

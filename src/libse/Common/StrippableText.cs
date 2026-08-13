@@ -61,7 +61,10 @@ namespace Nikse.SubtitleEdit.Core.Common
             var start = 0;
             var end = text.Length;
 
-            if (end > 0 && ("<{" + stripStartCharacters).Contains(text[0]))
+            // Test the two extra characters directly. Concatenating them onto the strip set
+            // allocated a fresh ~20-character string on every construction - and this type is
+            // constructed per paragraph by several fix-common-errors rules and by name casing.
+            if (end > 0 && (text[0] == '<' || text[0] == '{' || stripStartCharacters.Contains(text[0])))
             {
                 int beginStart;
                 do
@@ -94,7 +97,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                 while (start > beginStart);
             }
 
-            if (end > start && (">" + stripEndCharacters).Contains(text[end - 1]))
+            if (end > start && (text[end - 1] == '>' || stripEndCharacters.Contains(text[end - 1])))
             {
                 int beginEnd;
                 do

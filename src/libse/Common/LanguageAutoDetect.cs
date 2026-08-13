@@ -7,6 +7,7 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Text.RegularExpressions;
 
@@ -21,16 +22,38 @@ namespace Nikse.SubtitleEdit.Core.Common
         // scratch. The word lists are fixed for the app lifetime, so cache compiled instances.
         private static readonly ConcurrentDictionary<string, Regex> WordCountRegexCache = new ConcurrentDictionary<string, Regex>();
 
+        /// <summary>
+        /// The same regex again, keyed on the word-list array itself. Nearly every call site
+        /// passes one of the static AutoDetectWords* fields, so the array reference alone
+        /// identifies the pattern - and looking it up that way skips the string.Join plus
+        /// concat that built a fresh multi-kilobyte cache key on every probe (one detection
+        /// run does ~150 of them). Weak keys, so the handful of call sites that pass inline
+        /// words - which allocate a throwaway params array - cannot grow this without bound;
+        /// those still land on the pattern-keyed cache below and never recompile a regex.
+        /// </summary>
+        private static readonly ConditionalWeakTable<string[], Regex> WordListRegexCache = new ConditionalWeakTable<string[], Regex>();
+
         private static int GetCount(string text, params string[] words)
+        {
+            var regex = WordListRegexCache.GetValue(words, BuildWordCountRegex);
+#if NET7_0_OR_GREATER
+            // Count walks the matches without materializing a MatchCollection and a Match per
+            // hit - and a detection run over a whole file produces a lot of hits.
+            return regex.Count(text);
+#else
+            return regex.Matches(text).Count;
+#endif
+        }
+
+        private static Regex BuildWordCountRegex(string[] words)
         {
             // Case-insensitive so a keyword still matches when it falls at the start of a
             // sentence (capitalized). This matters most on short/single-line subtitles, where
             // a large share of words are sentence-initial and case-sensitive matching used to
             // miss them (e.g. "Você"/"Burada" not matching the lowercase list entries).
             var pattern = "\\b(" + string.Join("|", words) + ")\\b";
-            var regex = WordCountRegexCache.GetOrAdd(pattern, p =>
+            return WordCountRegexCache.GetOrAdd(pattern, p =>
                 new Regex(p, RegexOptions.CultureInvariant | RegexOptions.ExplicitCapture | RegexOptions.Compiled | RegexOptions.IgnoreCase));
-            return regex.Matches(text).Count;
         }
 
         private static int GetCountContains(string text, params string[] words)
@@ -39,7 +62,11 @@ namespace Nikse.SubtitleEdit.Core.Common
             foreach (var w in words)
             {
                 var regEx = WordCountRegexCache.GetOrAdd(w, p => new Regex(p, RegexOptions.Compiled));
+#if NET7_0_OR_GREATER
+                count += regEx.Count(text);
+#else
                 count += regEx.Matches(text).Count;
+#endif
             }
             return count;
         }
@@ -2177,8 +2204,40 @@ namespace Nikse.SubtitleEdit.Core.Common
             var hasSpanishUnique = ContainsAny(text, SpanishUniqueSet);
             var hasUrduUnique = ContainsAny(text, UrduUniqueSet);
 
-            // Count all special characters
+            // Count all special characters.
             var languageScores = new int[LanguageCodes.Length];
+#if NET8_0_OR_GREATER
+            // Almost every set is absent from any given file - a Latin-script subtitle hits
+            // none of the 16 non-Latin ones - but the loop below used to ask all 20 sets about
+            // every character, which is 20 non-inlinable Contains calls per character over the
+            // whole file. One vectorized IndexOfAny per set answers "is this script here at
+            // all" in a fraction of that, and only the sets that survive pay per character.
+            var textSpan = text.AsSpan();
+            Span<int> presentSets = stackalloc int[LetterSets.Length];
+            var presentCount = 0;
+            for (var i = 0; i < LetterSets.Length; i++)
+            {
+                if (textSpan.IndexOfAny(LetterSets[i]) >= 0)
+                {
+                    presentSets[presentCount++] = i;
+                }
+            }
+
+            if (presentCount > 0)
+            {
+                foreach (var c in text)
+                {
+                    for (var i = 0; i < presentCount; i++)
+                    {
+                        var index = presentSets[i];
+                        if (LetterSets[index].Contains(c))
+                        {
+                            languageScores[index]++;
+                        }
+                    }
+                }
+            }
+#else
             foreach (var c in text)
             {
                 for (var i = 0; i < LetterSets.Length; i++)
@@ -2189,6 +2248,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                     }
                 }
             }
+#endif
 
             // Apply unique character bonuses for disambiguation
             if (hasUrduUnique && languageScores[IndexUr] > 0)

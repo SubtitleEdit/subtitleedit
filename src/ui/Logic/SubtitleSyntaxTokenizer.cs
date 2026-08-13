@@ -367,6 +367,16 @@ public static class SubtitleSyntaxTokenizer
     /// </summary>
     public static List<ColoredRange> Tokenize(string text)
     {
+        // Plain text produces no ranges at all: an ASSA tag needs '{', an HTML tag needs '<',
+        // and every other branch below is only reachable once one of them has been seen. The
+        // grid tokenizes every visible row on each repaint and the edit box every keystroke,
+        // and most lines carry no markup - so one vectorized scan replaces the whole
+        // per-character walk (and the theme lookup StyleColor does).
+        if (string.IsNullOrEmpty(text) || text.AsSpan().IndexOfAny('{', '<') < 0)
+        {
+            return new List<ColoredRange>();
+        }
+
         var ranges = new List<ColoredRange>();
 
         // Snapshot the theme-dependent palette once per pass.
