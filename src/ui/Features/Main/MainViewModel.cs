@@ -273,12 +273,37 @@ public partial class MainViewModel :
     [ObservableProperty]
     private bool _isShowingOriginalNonMatchingLines;
 
+    /// <summary>
+    /// "Edit original" mode (#13594): the original subtitle is the one being worked on - its text
+    /// is writable, a selected display-only row's timings are editable (they are that original
+    /// line's own), and the working subtitle's text box goes read-only so the two sides cannot be
+    /// mixed up. Entering makes a read-only original editable with a clean dirty baseline; leaving
+    /// returns it to the state it was opened with, prompting to save (or discard) edits that would
+    /// otherwise be frozen in a read-only reference. Toggled from the File menu while an original
+    /// is open; see <see cref="ToggleEditOriginalMode"/>.
+    /// </summary>
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(AreTimeCodesEditable))]
+    [NotifyPropertyChangedFor(nameof(OriginalTextLabel))]
+    private bool _isEditOriginalMode;
+
+    /// <summary>Read-only state to return to when "Edit original" mode is left.</summary>
+    private bool _wasOriginalReadOnlyBeforeEditMode;
+
+    /// <summary>
+    /// The original as it was when "Edit original" mode was entered from a read-only reference, so
+    /// leaving with "don't save" can put the reference back exactly as the file has it.
+    /// </summary>
+    private Subtitle? _subtitleOriginalBeforeEditMode;
+
     /// <summary>Whether the original text column may be written to (see <see cref="IsOriginalReadOnly"/>).</summary>
     public bool CanEditOriginal => ShowColumnOriginalText && !IsOriginalReadOnly;
 
     public string OriginalTextLabel => IsOriginalReadOnly
         ? Se.Language.Main.OriginalTextReadOnly
-        : Se.Language.General.OriginalText;
+        : IsEditOriginalMode
+            ? Se.Language.Main.OriginalTextEditMode
+            : Se.Language.General.OriginalText;
 
     [ObservableProperty] private bool _showColumnStartTime;
     [ObservableProperty] private bool _showColumnEndTime;
@@ -310,10 +335,12 @@ public partial class MainViewModel :
     public bool AreTimeCodesLocked => LockTimeCodes;
 
     /// <summary>
-    /// Whether the show/hide/duration editors accept input: not while time codes are locked, and not
-    /// on a display-only reference row, whose timings belong to the original file (#13449).
+    /// Whether the show/hide/duration editors accept input: not while time codes are locked, and
+    /// not on a display-only reference row, whose timings belong to the original file (#13449) -
+    /// unless "Edit original" mode is on, where editing that original line's timings is exactly
+    /// the point (#13594).
     /// </summary>
-    public bool AreTimeCodesEditable => !AreTimeCodesLocked && !IsSelectedLineReferenceOnly;
+    public bool AreTimeCodesEditable => !AreTimeCodesLocked && (!IsSelectedLineReferenceOnly || IsEditOriginalMode);
     [ObservableProperty] private bool _areVideoControlsUndocked;
     [ObservableProperty] private bool _isFormatAssa;
     [ObservableProperty] private bool _isFormatSsa;
@@ -2478,6 +2505,13 @@ public partial class MainViewModel :
 
     private async Task<bool> SubtitleOpenOriginal(int selectedIndex, string fileName)
     {
+        // Replacing an editable original discards it - settle unsaved edits first (#13594).
+        if (!await ContinueNewOrExitOriginal())
+        {
+            _shortcutManager.ClearKeys();
+            return false;
+        }
+
         var subtitle = Subtitle.Parse(fileName);
         if (subtitle == null)
         {
@@ -2584,6 +2618,8 @@ public partial class MainViewModel :
         _subtitleFileNameOriginal = fileName;
         IsOriginalReadOnly = isReadOnly;
         IsShowingOriginalNonMatchingLines = match is { Unmatched.Count: > 0 };
+        IsEditOriginalMode = false; // a freshly opened original starts in the mode it was opened with
+        _subtitleOriginalBeforeEditMode = null;
 
         var rowTexts = match?.Projection ?? subtitle;
         for (var i = 0; i < Subtitles.Count && i < rowTexts.Paragraphs.Count; i++)
@@ -3007,11 +3043,134 @@ public partial class MainViewModel :
         ImportOriginalSubtitle(0, fileName, original);
     }
 
+    /// <summary>
+    /// SE4 parity ("Allow edit of original subtitle"), done as an explicit mode entered and left at
+    /// will while an original is open (#13594). Entering opens a read-only original for editing
+    /// (keeping the state to return to); leaving settles unsaved edits first when the original goes
+    /// back to being a read-only reference - saved, discarded (the file's content is restored), or
+    /// kept by staying in the mode.
+    /// </summary>
     [RelayCommand]
-    private void FileCloseOriginal()
+    private async Task ToggleEditOriginalMode()
     {
-        if (IsOriginalReadOnly || IsShowingOriginalNonMatchingLines)
+        if (!ShowColumnOriginalText || _subtitleOriginal == null || _subtitleOriginal.Paragraphs.Count == 0)
         {
+            _shortcutManager.ClearKeys();
+            return;
+        }
+
+        if (!IsEditOriginalMode)
+        {
+            _wasOriginalReadOnlyBeforeEditMode = IsOriginalReadOnly;
+            if (IsOriginalReadOnly)
+            {
+                // Keep the file's state aside so leaving with "don't save" can restore it (same
+                // ids, so the rows' sticky links stay valid), and start with a clean dirty
+                // baseline - the reference had nothing tracked while it was read-only.
+                _subtitleOriginalBeforeEditMode = new Subtitle(_subtitleOriginal, generateNewId: false);
+                IsOriginalReadOnly = false;
+                _changeSubtitleHashOriginal = GetFastHashOriginal();
+            }
+
+            IsEditOriginalMode = true;
+            _shortcutManager.ClearKeys();
+            return;
+        }
+
+        if (_wasOriginalReadOnlyBeforeEditMode)
+        {
+            // Back to a read-only reference: unsaved edits would be frozen on screen but never
+            // written, so they must be settled now.
+            if (_changeSubtitleHashOriginal != GetFastHashOriginal())
+            {
+                var name = string.IsNullOrEmpty(_subtitleFileNameOriginal)
+                    ? Se.Language.General.Untitled
+                    : _subtitleFileNameOriginal;
+                var promptText = string.Format(Se.Language.General.SaveChangesToXOriginal, name);
+                var dr = await MessageBox.Show(Window!, Se.Language.General.SaveChangesTitle, promptText,
+                    MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
+
+                if (dr == MessageBoxResult.Yes)
+                {
+                    // The save serializes from the rows (GetUpdateSubtitleOriginal), folding the
+                    // edits - display-only rows included - into the file.
+                    if (!await SaveCurrentSubtitleOriginal())
+                    {
+                        _shortcutManager.ClearKeys();
+                        return; // save failed or was cancelled - stay in the mode
+                    }
+                }
+                else if (dr == MessageBoxResult.No)
+                {
+                    DiscardOriginalEdits();
+                }
+                else
+                {
+                    _shortcutManager.ClearKeys();
+                    return; // cancel - stay in the mode
+                }
+            }
+
+            IsOriginalReadOnly = true;
+            _changeSubtitleHashOriginal = GetFastHashOriginal();
+        }
+
+        IsEditOriginalMode = false;
+        _subtitleOriginalBeforeEditMode = null;
+        _shortcutManager.ClearKeys();
+    }
+
+    /// <summary>
+    /// Restores the original kept aside at "Edit original" mode entry and re-derives everything
+    /// the grid shows of it, exactly like opening the file again - the working rows may have been
+    /// merged or retimed since, so the snapshot cannot simply be written over the rows.
+    /// </summary>
+    private void DiscardOriginalEdits()
+    {
+        if (_subtitleOriginalBeforeEditMode == null)
+        {
+            return;
+        }
+
+        _subtitleOriginal = _subtitleOriginalBeforeEditMode;
+
+        _reapplyingReadOnlyReference = true;
+        try
+        {
+            RemoveReferenceOnlyRows();
+            var match = ImportOriginalHelper.MatchOriginalLines(Subtitles, _subtitleOriginal);
+            for (var i = 0; i < Subtitles.Count && i < match.Projection.Paragraphs.Count; i++)
+            {
+                Subtitles[i].OriginalText = match.Projection.Paragraphs[i].Text;
+            }
+
+            if (IsShowingOriginalNonMatchingLines)
+            {
+                InsertReferenceOnlyRows(match.Unmatched);
+            }
+        }
+        finally
+        {
+            _reapplyingReadOnlyReference = false;
+        }
+
+        _referenceMappingDirty = false;
+    }
+
+    [RelayCommand]
+    private async Task FileCloseOriginal()
+    {
+        if (IsOriginalReadOnly || IsShowingOriginalNonMatchingLines || IsEditOriginalMode)
+        {
+            // An editable original with unsaved edits gets the save prompt before anything is torn
+            // down - this path discards the original for good, and closing used to throw such
+            // edits away silently (#13594). A read-only reference has nothing to save.
+            if (!await ContinueNewOrExitOriginal())
+            {
+                _shortcutManager.ClearKeys();
+                return;
+            }
+
             // Closed for good rather than just hidden: the display-only rows have no meaning without
             // the original, and leaving them behind would show blank rows in the grid.
             RemoveReferenceOnlyRows();
@@ -3019,6 +3178,8 @@ public partial class MainViewModel :
             _subtitleFileNameOriginal = string.Empty;
             IsOriginalReadOnly = false;
             IsShowingOriginalNonMatchingLines = false;
+            IsEditOriginalMode = false;
+            _subtitleOriginalBeforeEditMode = null;
 
             foreach (var line in Subtitles)
             {
@@ -3028,6 +3189,11 @@ public partial class MainViewModel :
 
             _changeSubtitleHashOriginal = GetFastHashOriginal();
         }
+
+        // The hide path (1:1 editable original) keeps the original loaded, but the mode makes no
+        // sense with its column gone. Entered-from-read-only originals never reach here - they go
+        // through the branch above.
+        IsEditOriginalMode = false;
 
         // A remembered original-only scope would make every find come up empty now that the
         // original is gone.
@@ -3109,14 +3275,15 @@ public partial class MainViewModel :
 
         if (IsShowingOriginalNonMatchingLines)
         {
-            // The mode (and its time-code lock) is over: the original is now the working subtitle.
-            // Rebuild the rows so the promoted reference rows lose their dimmed look and take a
-            // number - IsReferenceOnly is not observable, so in-place edits would not re-render.
+            // The mode is over: the original is now the working subtitle. Rebuild the rows so the
+            // promoted reference rows take a number and settle into their final rendering.
             IsShowingOriginalNonMatchingLines = false;
             _subtitle = GetUpdateSubtitle();
             SetSubtitles(_subtitle, null);
         }
 
+        IsEditOriginalMode = false; // there is no original left to edit
+        _subtitleOriginalBeforeEditMode = null;
         _subtitleFileName = _subtitleFileNameOriginal;
         _subtitleFileNameOriginal = string.Empty;
         _subtitleOriginal = new Subtitle();
