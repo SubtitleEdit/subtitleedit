@@ -1458,18 +1458,16 @@ public class AudioVisualizer : Control
                 }
 
                 var snappedToShotLeft = false;
-                if (SnapToShotChanges && !_isShiftDown)
+                if (SnapToShotChanges && !_isShiftDown && _shotChanges.Count > 0)
                 {
-                    var nearestShotChange = ShotChangesHelper.GetClosestShotChange(_shotChanges, TimeCode.FromSeconds(newStart));
-                    if (nearestShotChange != null)
+                    // ClosestTo directly (binary search) - GetClosestShotChange only wraps it
+                    // behind a TimeCode, which is a class, i.e. one allocation per pointer move.
+                    var nearest = _shotChanges.ClosestTo(newStart);
+                    var snapSeconds = GetInCueSnapSeconds();
+                    if (nearest != newStart && Math.Abs(newStart - nearest) < snapSeconds)
                     {
-                        var nearest = (double)nearestShotChange;
-                        var snapSeconds = GetInCueSnapSeconds();
-                        if (nearest != newStart && Math.Abs(newStart - nearest) < snapSeconds)
-                        {
-                            newStart = nearest;
-                            snappedToShotLeft = true;
-                        }
+                        newStart = nearest;
+                        snappedToShotLeft = true;
                     }
                 }
 
@@ -1494,22 +1492,19 @@ public class AudioVisualizer : Control
                 newEnd = _originalEndSeconds + dragDeltaSeconds;
 
                 var snappedToShotRight = false;
-                if (SnapToShotChanges && !_isShiftDown)
+                if (SnapToShotChanges && !_isShiftDown && _shotChanges.Count > 0)
                 {
                     // OUT cues conventionally land one frame BEFORE the shot change so they
                     // don't bleed visually onto the next shot.
                     var fps = Se.Settings.General.CurrentFrameRate;
                     var oneFrameSeconds = fps >= 1 ? 1.0 / fps : 0.0;
-                    var nearestShotChange = ShotChangesHelper.GetClosestShotChange(_shotChanges, TimeCode.FromSeconds(newEnd));
-                    if (nearestShotChange != null)
+                    // ClosestTo directly - see the ResizingLeft branch.
+                    var nearest = _shotChanges.ClosestTo(newEnd);
+                    var snapSeconds = GetOutCueSnapSeconds();
+                    if (nearest != newEnd && Math.Abs(newEnd - nearest + oneFrameSeconds) < snapSeconds)
                     {
-                        var nearest = (double)nearestShotChange;
-                        var snapSeconds = GetOutCueSnapSeconds();
-                        if (nearest != newEnd && Math.Abs(newEnd - nearest + oneFrameSeconds) < snapSeconds)
-                        {
-                            newEnd = nearest - oneFrameSeconds;
-                            snappedToShotRight = true;
-                        }
+                        newEnd = nearest - oneFrameSeconds;
+                        snappedToShotRight = true;
                     }
                 }
 
