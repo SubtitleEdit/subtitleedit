@@ -376,6 +376,9 @@ public class AiReviewWindow : Window
             Height = 6,
             VerticalAlignment = VerticalAlignment.Center,
             [!RangeBase.ValueProperty] = new Binding(nameof(vm.ProgressValue)),
+            // Only meaningful while a review is running - a full bar sitting under a
+            // finished review just looks stuck.
+            [!Visual.IsVisibleProperty] = new Binding(nameof(vm.IsReviewing)),
         };
         var statusText = MakeBoundTextBlock(nameof(vm.StatusText));
         statusText.VerticalAlignment = VerticalAlignment.Center;
