@@ -1176,6 +1176,10 @@ namespace Nikse.SubtitleEdit.Core.Common
             // colour that was just appended is found by that same early stop from then on; and once
             // the palette is full at 255 entries nothing more is added, so every result is frozen.
             // None of those outcomes appends to the palette, so a hit cannot skip an insertion.
+            // The cache is capped because a photographic source can hold millions of distinct
+            // colours: past the cap the linear scan simply runs again, so the only thing lost is
+            // the shortcut. Subtitle bitmaps stay far below it.
+            const int maxCachedColors = 1 << 16;
             var seen = new Dictionary<uint, byte>();
             var data = _bitmapData.AsSpan();
             var packed = MemoryMarshal.Cast<byte, uint>(_bitmapData.AsSpan());
@@ -1224,7 +1228,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                 }
 
                 pixels[p] = value;
-                if (repeatable)
+                if (repeatable && seen.Count < maxCachedColors)
                 {
                     seen[packed[p]] = value;
                 }
@@ -1721,18 +1725,24 @@ namespace Nikse.SubtitleEdit.Core.Common
         private static byte[] BuildScaleTable(decimal factor)
         {
             var table = new byte[256];
+
+            // The table covers every channel value, not only the ones the bitmap happens to hold,
+            // so a factor big enough to overflow the multiply or the int cast has to be clamped
+            // first. Nothing is lost by it: from 256 up every non-zero channel already saturates
+            // at 255, and any negative factor already floors at 0.
+            var scale = factor > 256m ? 256m : factor < 0m ? 0m : factor;
             if (factor > 1)
             {
                 for (var v = 0; v < table.Length; v++)
                 {
-                    table[v] = (byte)Math.Min(byte.MaxValue, (int)(v * factor));
+                    table[v] = (byte)Math.Min(byte.MaxValue, (int)(v * scale));
                 }
             }
             else
             {
                 for (var v = 0; v < table.Length; v++)
                 {
-                    table[v] = (byte)Math.Max(0, (int)(v * factor));
+                    table[v] = (byte)Math.Max(0, (int)(v * scale));
                 }
             }
 
