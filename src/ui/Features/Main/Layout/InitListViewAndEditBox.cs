@@ -108,6 +108,12 @@ public static partial class InitListViewAndEditBox
         vm.SubtitleGrid = subtitleGrid;
         vm.SubtitleGridDragSelect = new TableViewDragSelect(subtitleGrid, vm.ApplyDragSelectRange);
 
+        // Keep the view on the row being edited when a row changes height (#13619). Rows are
+        // one or two text lines, and the virtualizing panel re-estimates its pixel extent from
+        // the average realized row height - so breaking a line into two grew the estimate and
+        // scrolled the grid tens of rows away from the line the user was editing.
+        TableViewScrollAnchor.Attach(subtitleGrid);
+
         // hack to make drag and drop work on the grid - also on empty rows
         var dropHost = new Border
         {

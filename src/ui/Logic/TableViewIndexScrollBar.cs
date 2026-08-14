@@ -305,6 +305,10 @@ public sealed class TableViewIndexScrollBar : Grid
         }
 
         _applyingValue = true;
+        // Placing a row at the viewport top realizes rows as it goes, so the extent estimate
+        // moves under the loop below - an anchor restore in the middle of that would drag the
+        // view back to where the thumb just left (#13619).
+        using var anchorSuspended = TableViewScrollAnchor.GetFor(_tableView)?.Suspend();
         try
         {
             if (value <= 0.001)
