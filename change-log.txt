@@ -3,6 +3,24 @@ Subtitle Edit Changelog
 
 -----------------------------------------------------------------------------------------------------
 
+v5.2.0-beta13 (14th of August 2026)
+
+* Add an "Edit original" mode, and make the original reference rows editable in place - thx bichitoxxx
+* Add back the SE4 option to remove blank lines when opening a subtitle - thx Morv55555
+* Add Ctrl+Shift+End/Home and friends for extending the selection in the subtitle grid
+* Make WebVTT cue settings configurable again - thx apartmandairesi
+* Make the default waveform paragraph backgrounds more visible
+* Give the subtitle grid an index-mapped scroll bar so the thumb no longer jitters - thx St0rmXtr00per
+* Update the speech-to-text advanced parameter help to match the engine versions being downloaded
+* Fix waveform dragging not following the pointer through mid-drag scrolls - thx bichitoxxx
+* Fix "Remove text for hearing impaired" reporting pasted multi-line text as changed - thx Davanix
+* Fix slow reading of Matroska files on a network share - thx 1476523
+* Update Japanese translation - thx hisui3393
+* Update Polish translation - thx potplayer-fanpack
+* Minor performance improvements in waveform scrubbing, video loading, OCR and text handling - thx ivandrofly
+
+-----------------------------------------------------------------------------------------------------
+
 v5.2.0-beta12 (13th of August 2026)
 
 * Add CrispEmbed as an engine for "OCR burned-in subtitle", with its own settings dialog - thx tal-maker
