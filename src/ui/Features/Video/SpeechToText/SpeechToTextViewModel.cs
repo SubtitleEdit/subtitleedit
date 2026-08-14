@@ -1809,7 +1809,8 @@ public partial class SpeechToTextViewModel : ObservableObject
             var msg = $"Videos converted: " + convertedJobs;
             if (failed > 0)
             {
-                msg += Environment.NewLine + $"Videos failed: " + failed;
+                msg += Environment.NewLine + $"Videos failed: " + failed +
+                       Environment.NewLine + "Please check the tools log for details.";
             }
 
             _timerWhisper.Stop();
@@ -2472,10 +2473,26 @@ public partial class SpeechToTextViewModel : ObservableObject
                 // Tell the user - writing to the tools log only left the run looking
                 // frozen: the progress indicator stayed up and no dialog appeared (#13621).
                 var exitCode = _audioExtractProcess.ExitCode;
+                _audioExtractProcess = null;
+
+                if (IsBatchMode)
+                {
+                    // One unreadable file must not sink the whole batch: mark this job
+                    // failed and move on, exactly like a job whose engine produced no
+                    // text (MakeResult -> StartNext(null)). The closing summary reports
+                    // the failure count, so nothing is swallowed.
+                    if (_batchIndex >= 0 && _batchIndex < _jobItems.Count)
+                    {
+                        _jobItems[_batchIndex].Status = Se.Language.General.Error;
+                    }
+
+                    StartNext(null);
+                    return;
+                }
+
                 IsTranscribeEnabled = true;
                 HideProgressBar();
                 ProgressText = string.Empty;
-                _audioExtractProcess = null;
 
                 Dispatcher.UIThread.Post(async () =>
                 {
