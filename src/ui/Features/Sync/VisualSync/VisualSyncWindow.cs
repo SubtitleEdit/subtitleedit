@@ -23,12 +23,20 @@ public class VisualSyncWindow : Window
         DataContext = vm;
 
         var labelVideoInfo = UiUtil.MakeLabel(string.Empty).WithBindText(vm, nameof(vm.VideoInfo));
+
+        // Entering visual sync without a video used to be a dead end - two blank players and no
+        // way to load one from here. SE4 had the same button.
+        var buttonOpenVideo = UiUtil.MakeButton(Se.Language.General.OpenVideoFile, vm.OpenVideoFileCommand);
+
         var panelVideo = new StackPanel
         {
             Orientation = Orientation.Horizontal,
+            Spacing = 10,
+            VerticalAlignment = VerticalAlignment.Center,
             Children =
             {
-                labelVideoInfo
+                buttonOpenVideo,
+                labelVideoInfo,
             }
         };
 
@@ -51,6 +59,10 @@ public class VisualSyncWindow : Window
         vm.AudioVisualizerLeft.OnVideoPositionChanged += vm.AudioVisualizerLeftPositionChanged;
         vm.AudioVisualizerLeft.OnPrimarySingleClicked += vm.AudioVisualizerLeft_OnPrimarySingleClicked;
 
+        // IsAudioVisualizerVisible was set but never bound, so the waveform box was drawn as a
+        // grey slab whether or not the main window had any peaks to lend it.
+        vm.AudioVisualizerLeft.WithBindIsVisible(nameof(vm.IsAudioVisualizerVisible));
+
         vm.AudioVisualizerRight = new AudioVisualizer
         {
             Height = 80,
@@ -63,6 +75,7 @@ public class VisualSyncWindow : Window
         };
         vm.AudioVisualizerRight.OnVideoPositionChanged += vm.AudioVisualizerRightPositionChanged;
         vm.AudioVisualizerRight.OnPrimarySingleClicked += vm.AudioVisualizerRight_OnPrimarySingleClicked;
+        vm.AudioVisualizerRight.WithBindIsVisible(nameof(vm.IsAudioVisualizerVisible));
 
         var comboBoxLeft = UiUtil.MakeComboBoxBindText(vm.Paragraphs, vm, nameof(SubtitleDisplayItem.Text), nameof(vm.SelectedParagraphLeftIndex));
         comboBoxLeft.Width = double.NaN;
