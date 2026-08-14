@@ -557,6 +557,9 @@ namespace Nikse.SubtitleEdit.Core.Common
             }
         }
 
+        //Header Partition PackId
+        private static readonly byte[] MxfHeaderPartitionPackId = { 0x06, 0x0E, 0x2B, 0x34, 0x02, 0x05, 0x01, 0x01, 0x0D, 0x01, 0x02 };
+
         /// <summary>
         /// Checks if file is an MXF file
         /// </summary>
@@ -573,27 +576,10 @@ namespace Nikse.SubtitleEdit.Core.Common
                     return false;
                 }
 
-                for (int i = 0; i < count - 11; i++)
-                {
-                    //Header Partition PackId = 06 0E 2B 34 02 05 01 01 0D 01 02
-                    if (buffer[i + 00] == 0x06 &&
-                        buffer[i + 01] == 0x0E &&
-                        buffer[i + 02] == 0x2B &&
-                        buffer[i + 03] == 0x34 &&
-                        buffer[i + 04] == 0x02 &&
-                        buffer[i + 05] == 0x05 &&
-                        buffer[i + 06] == 0x01 &&
-                        buffer[i + 07] == 0x01 &&
-                        buffer[i + 08] == 0x0D &&
-                        buffer[i + 09] == 0x01 &&
-                        buffer[i + 10] == 0x02)
-                    {
-                        return true;
-                    }
-                }
+                // count - 1 keeps the search window the byte-at-a-time loop used: it tested
+                // start offsets up to count - 12, so the last byte it ever looked at was count - 2.
+                return buffer.AsSpan(0, count - 1).IndexOf(MxfHeaderPartitionPackId) >= 0;
             }
-
-            return false;
         }
 
         /// <summary>
