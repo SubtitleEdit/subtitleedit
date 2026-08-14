@@ -376,16 +376,25 @@ public partial class AiReviewViewModel : ObservableObject
                 var userContent = AiReviewProtocol.BuildUserContent(chunk);
                 var editableLines = chunk.Lines.ToDictionary(x => x.Number, x => x.Text);
 
+                // Guard decisions (remaps/drops) are always written - they are rare, small and
+                // the key evidence when a review pairs a correction with the wrong line. The
+                // full request/reply per chunk respects the tools-log setting.
+                var logGuard = (Action<string>)(s => Se.WriteToolsLog(s, true));
+
                 List<AiReviewChange>? changes = null;
                 try
                 {
+                    Se.WriteToolsLog($"AI review request (lines {chunk.Lines[0].Number}-{chunk.Lines[^1].Number}): {userContent}");
                     var reply = await ChatWithDelayAsync(userContent);
-                    changes = AiReviewProtocol.ParseChanges(reply, editableLines);
+                    Se.WriteToolsLog($"AI review reply (lines {chunk.Lines[0].Number}-{chunk.Lines[^1].Number}): {reply}");
+                    changes = AiReviewProtocol.ParseChanges(reply, editableLines, logGuard);
                     if (changes.Count == 0 && AiReviewProtocol.ExtractJsonObject(reply) == null)
                     {
                         // invalid reply - one retry for this chunk
+                        Se.WriteToolsLog($"AI review: no JSON in reply for lines {chunk.Lines[0].Number}-{chunk.Lines[^1].Number} - retrying once", true);
                         reply = await ChatWithDelayAsync(userContent);
-                        changes = AiReviewProtocol.ParseChanges(reply, editableLines);
+                        Se.WriteToolsLog($"AI review retry reply (lines {chunk.Lines[0].Number}-{chunk.Lines[^1].Number}): {reply}");
+                        changes = AiReviewProtocol.ParseChanges(reply, editableLines, logGuard);
                     }
 
                     consecutiveErrors = 0;
@@ -459,11 +468,16 @@ public partial class AiReviewViewModel : ObservableObject
 
         if (!AiReviewProtocol.TagsMatch(before, after))
         {
+            Se.WriteToolsLog($"AI review: dropped change for line {change.Number} - formatting tags were altered (\"{before}\" -> \"{after}\")", true);
             return; // the model touched formatting tags - not trustworthy, skip
         }
 
+        // A shifted model can copy from anywhere in its batch (a clean 3-line shift across a
+        // whole batch has been seen in the wild), so the copy-source window must cover the
+        // largest batch plus its read-only context lines - not just the closest neighbors.
+        var window = Math.Max(2, Se.Settings.Tools.AiReview.MaxLinesPerBatch) + 6;
         var neighbors = new List<string>();
-        for (var i = Math.Max(0, paragraphIndex - 2); i <= Math.Min(_subtitle.Paragraphs.Count - 1, paragraphIndex + 2); i++)
+        for (var i = Math.Max(0, paragraphIndex - window); i <= Math.Min(_subtitle.Paragraphs.Count - 1, paragraphIndex + window); i++)
         {
             if (i != paragraphIndex && !string.IsNullOrWhiteSpace(_subtitle.Paragraphs[i].Text))
             {
@@ -473,14 +487,24 @@ public partial class AiReviewViewModel : ObservableObject
 
         if (AiReviewProtocol.LooksMisaligned(before, after, neighbors))
         {
+            Se.WriteToolsLog($"AI review: dropped change for line {change.Number} - the \"correction\" is a copy of a nearby line (\"{before}\" -> \"{after}\")", true);
             return; // the "correction" is really a copy of a nearby line - misnumbered by the model
         }
 
         var l = Se.Language.Tools.AiReview;
         var ratio = after.Length / (double)Math.Max(1, before.Length);
-        var isWarning = ratio > 1.4 || ratio < 0.6;
+        var isMismatch = AiReviewProtocol.GetSimilarityPercent(before, after) < 50;
+        var isWarning = ratio > 1.4 || ratio < 0.6 || isMismatch;
         var reason = change.Reason;
-        if (isWarning)
+        if (isMismatch)
+        {
+            // A correction keeps most of its line - a "fix" that barely resembles the line is
+            // usually a misnumbered reply whose copy-source we could not pin down. Never
+            // pre-check those; applying one replaces the line with unrelated text.
+            reason = string.IsNullOrEmpty(reason) ? l.MismatchWarning : $"{l.MismatchWarning} - {reason}";
+            Se.WriteToolsLog($"AI review: flagged change for line {change.Number} - barely resembles the original (\"{before}\" -> \"{after}\")", true);
+        }
+        else if (isWarning)
         {
             reason = string.IsNullOrEmpty(reason) ? l.LargeChangeWarning : $"{l.LargeChangeWarning} - {reason}";
         }

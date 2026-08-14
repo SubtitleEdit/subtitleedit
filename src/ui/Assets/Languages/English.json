@@ -1,6 +1,6 @@
 ﻿{
   "title": "Subtitle Edit",
-  "version": "v5.2.0-beta12",
+  "version": "v5.2.0-beta13",
   "translatedBy": "",
   "cultureName": "en-US",
   "general": {
@@ -1475,6 +1475,7 @@
       "lineX": "Line {0}",
       "linesXToY": "Lines {0}-{1}",
       "largeChangeWarning": "Large change - looks like a rewrite, review carefully",
+      "mismatchWarning": "Does not resemble the original - may belong to a different line",
       "engineError": "The AI engine could not be reached: {0}"
     },
     "aiAssistant": {

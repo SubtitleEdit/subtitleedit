@@ -274,4 +274,85 @@ public class AiReviewTests
         Assert.NotNull(AiReviewProtocol.ExtractJsonObject("Sure! {\"changes\":[]} Hope that helps."));
         Assert.Null(AiReviewProtocol.ExtractJsonObject("No json here"));
     }
+
+    // A whole batch shifted by 3 lines, with the echo repeating the corrected text (so it
+    // carries no information) - the field failure behind the "Trouble Mum" screenshot: the
+    // suggestion for line 368 was really the correction of line 365, three lines back.
+    [Fact]
+    public void ParseChanges_ShiftedNumbersUselessEcho_RemappedByContent()
+    {
+        var lines = Lines(
+            (365, "Go! Did I bring her diapers?"),
+            (366, "I'm all set"),
+            (367, "You can pick Paolo up between 5:00 and 6:00 pm."),
+            (368, "I'm staying if you don't mind. I need to watch him."));
+        var reply = """
+            {"changes":[
+              {"n":368,"orig":"Go! Did I bring her diapers","text":"Go! Did I bring her diapers","reason":"x","category":"punctuation"},
+              {"n":369,"orig":"I'm all set.","text":"I'm all set.","reason":"x","category":"punctuation"},
+              {"n":371,"orig":"I'm staying, if you don't mind. I need to watch him.","text":"I'm staying, if you don't mind. I need to watch him.","reason":"x","category":"punctuation"}
+            ]}
+            """;
+
+        var changes = AiReviewProtocol.ParseChanges(reply, lines);
+
+        // 369/371 are not editable numbers and would have been dropped outright; the echo
+        // remap already rescues those. The dangerous one is 368: an editable number whose
+        // echo equals its text - it used to keep the wrong line. Content remap moves it to 365.
+        Assert.Contains(changes, c => c.Number == 365 && c.NewText == "Go! Did I bring her diapers");
+        Assert.DoesNotContain(changes, c => c.Number == 368);
+    }
+
+    [Fact]
+    public void ParseChanges_LegitCorrection_NotRemapped()
+    {
+        // A real correction resembles its own line - it must stay put even when another
+        // line in the batch is similar.
+        var lines = Lines(
+            (10, "We recieved it yesterday."),
+            (11, "We received it today."));
+        var reply = """{"changes":[{"n":10,"text":"We received it yesterday.","reason":"typo","category":"spelling"}]}""";
+
+        var changes = AiReviewProtocol.ParseChanges(reply, lines);
+
+        var change = Assert.Single(changes);
+        Assert.Equal(10, change.Number);
+    }
+
+    [Fact]
+    public void ParseChanges_ContentRemapAmbiguous_KeepsModelNumber()
+    {
+        // Two near-identical lines (song refrain) - remapping would be a guess, so the
+        // model's number is kept and the low own-similarity is flagged in the UI instead.
+        var lines = Lines(
+            (20, "Something completely different here."),
+            (21, "La la la, here we go again!"),
+            (22, "La la la, here we go again"));
+        var reply = """{"changes":[{"n":20,"text":"La la la, here we go again!","reason":"x","category":"punctuation"}]}""";
+
+        var changes = AiReviewProtocol.ParseChanges(reply, lines);
+
+        var change = Assert.Single(changes);
+        Assert.Equal(20, change.Number);
+    }
+
+    [Fact]
+    public void ParseChanges_ContentRemapTargetTaken_DropsDuplicate()
+    {
+        var lines = Lines(
+            (30, "Hello there, my old friend."),
+            (31, "Unrelated text on this line."));
+        var reply = """
+            {"changes":[
+              {"n":30,"text":"Hello there, my old friend!","reason":"x","category":"punctuation"},
+              {"n":31,"text":"Hello there, my old friend!","reason":"x","category":"punctuation"}
+            ]}
+            """;
+
+        var changes = AiReviewProtocol.ParseChanges(reply, lines);
+
+        // the second change remaps onto line 30, which already has one - dropped
+        var change = Assert.Single(changes);
+        Assert.Equal(30, change.Number);
+    }
 }

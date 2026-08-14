@@ -80,7 +80,7 @@ public static class AiReviewProtocol
     /// periodically shift their line numbers by one and would otherwise pair a correction with
     /// the wrong "before" line.
     /// </summary>
-    public static List<AiReviewChange> ParseChanges(string responseText, IReadOnlyDictionary<int, string> editableLines)
+    public static List<AiReviewChange> ParseChanges(string responseText, IReadOnlyDictionary<int, string> editableLines, Action<string>? log = null)
     {
         var changes = new List<AiReviewChange>();
         var json = ExtractJsonObject(responseText);
@@ -134,10 +134,30 @@ public static class AiReviewProtocol
             var orig = element.TryGetProperty("orig", out var origElement) && origElement.ValueKind == JsonValueKind.String
                 ? origElement.GetString() ?? string.Empty
                 : string.Empty;
+            var modelNumber = number;
             number = VerifyNumberAgainstEcho(number, orig, text, editableLines);
-            if (number < 0 || !usedNumbers.Add(number))
+            if (number < 0)
             {
-                continue; // echo matches no editable line, or that line already has a change
+                log?.Invoke($"AI review: dropped change for line {modelNumber} - the echoed original matches no line in the batch (echo: \"{orig}\")");
+                continue; // echo matches no editable line
+            }
+
+            if (number != modelNumber)
+            {
+                log?.Invoke($"AI review: remapped change from line {modelNumber} to {number} - the echoed original belongs to line {number}");
+            }
+
+            var echoNumber = number;
+            number = RemapByContent(number, text, editableLines);
+            if (number != echoNumber)
+            {
+                log?.Invoke($"AI review: remapped change from line {echoNumber} to {number} - the correction barely resembles line {echoNumber} but is a near-copy of line {number} (shifted line numbers)");
+            }
+
+            if (!usedNumbers.Add(number))
+            {
+                log?.Invoke($"AI review: dropped change for line {number} - that line already has a change");
+                continue; // that line already has a change
             }
 
             var reason = element.TryGetProperty("reason", out var reasonElement) && reasonElement.ValueKind == JsonValueKind.String
@@ -194,6 +214,40 @@ public static class AiReviewProtocol
         // no exact match anywhere; accept a near-exact echo of line "n" (models often normalize
         // quotes or dashes when copying), otherwise the change points at an unknown line - drop it
         return GetSimilarityPercent(orig, editableLines[number]) >= 90 ? number : -1;
+    }
+
+    /// <summary>
+    /// Content-based fallback for shifted line numbers when the echo failed to catch them -
+    /// small models often copy the corrected text into "orig", and an echo that repeats the
+    /// correction carries no information, so the (wrong) line number gets trusted. A real
+    /// correction keeps most of its line's characters, so a "correction" that barely resembles
+    /// line "n" but is a near-copy of exactly one other line in the batch almost certainly
+    /// belongs to that line: remap it there. Observed in the wild as a clean 3-line shift
+    /// across a whole batch. Ambiguous matches (near-duplicate lines, e.g. song refrains)
+    /// keep the model's number; the view model then flags the low similarity as a warning.
+    /// </summary>
+    private static int RemapByContent(int number, string text, IReadOnlyDictionary<int, string> editableLines)
+    {
+        if (GetSimilarityPercent(text, editableLines[number]) >= 50)
+        {
+            return number; // resembles its own line - a plausible correction
+        }
+
+        var match = -1;
+        foreach (var line in editableLines)
+        {
+            if (line.Key != number && GetSimilarityPercent(text, line.Value) >= 75)
+            {
+                if (match >= 0)
+                {
+                    return number; // ambiguous - leave it, the UI will flag it
+                }
+
+                match = line.Key;
+            }
+        }
+
+        return match >= 0 ? match : number;
     }
 
     /// <summary>
