@@ -791,6 +791,11 @@ public partial class SpeechToTextViewModel : ObservableObject
                     subtitle.Paragraphs.AddRange(resultTexts
                         .Select(p => new Paragraph(p.Text, (double)p.Start * 1000.0, (double)p.End * 1000.0)).ToList());
 
+                    // The result file is engine output and is not guaranteed to be
+                    // sorted or free of overlaps (issue #13548), so straighten the
+                    // timings out before post-processing merges anything.
+                    subtitle = SpeechToTextTimingFixer.SortAndRemoveOverlaps(subtitle);
+
                     var postProcessedSubtitle = PostProcess(subtitle);
 
                     if (_audioClips != null && ResultAudioClips.Count > 0)
@@ -809,8 +814,9 @@ public partial class SpeechToTextViewModel : ObservableObject
 
                 _outputText.Enqueue("Loading result from STDOUT");
                 var transcribedSubtitleFromStdOut = new Subtitle();
-                transcribedSubtitleFromStdOut.Paragraphs.AddRange(_resultList.OrderBy(p => p.Start)
+                transcribedSubtitleFromStdOut.Paragraphs.AddRange(_resultList
                     .Select(p => new Paragraph(p.Text, (double)p.Start * 1000.0, (double)p.End * 1000.0)).ToList());
+                transcribedSubtitleFromStdOut = SpeechToTextTimingFixer.SortAndRemoveOverlaps(transcribedSubtitleFromStdOut);
                 _loadedFromStdOut = transcribedSubtitleFromStdOut.Paragraphs.Count > 0;
                 await MakeResult(transcribedSubtitleFromStdOut);
             });
