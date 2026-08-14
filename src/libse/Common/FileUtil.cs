@@ -576,9 +576,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                     return false;
                 }
 
-                // count - 1 keeps the search window the byte-at-a-time loop used: it tested
-                // start offsets up to count - 12, so the last byte it ever looked at was count - 2.
-                return buffer.AsSpan(0, count - 1).IndexOf(MxfHeaderPartitionPackId) >= 0;
+                return buffer.AsSpan(0, count).IndexOf(MxfHeaderPartitionPackId) >= 0;
             }
         }
 
