@@ -2468,8 +2468,27 @@ public partial class SpeechToTextViewModel : ObservableObject
                                      "64-bit: " + Environment.Is64BitOperatingSystem + Environment.NewLine +
                                      "ffmpeg exit code: " + _audioExtractProcess.ExitCode + Environment.NewLine +
                                      "ffmpeg log: " + _ffmpegLog);
+
+                // Tell the user - writing to the tools log only left the run looking
+                // frozen: the progress indicator stayed up and no dialog appeared (#13621).
+                var exitCode = _audioExtractProcess.ExitCode;
                 IsTranscribeEnabled = true;
+                HideProgressBar();
+                ProgressText = string.Empty;
                 _audioExtractProcess = null;
+
+                Dispatcher.UIThread.Post(async () =>
+                {
+                    await MessageBox.Show(Window!, Se.Language.General.Error,
+                        $"Could not generate the audio file (ffmpeg exit code {exitCode})." +
+                        Environment.NewLine + "Please check the tools log for the ffmpeg output.");
+
+                    if (Window != null)
+                    {
+                        FileHelper.OpenFileWithDefaultProgram(Se.GetToolsLogFilePath());
+                    }
+                });
+
                 return;
             }
 
@@ -4378,10 +4397,17 @@ public partial class SpeechToTextViewModel : ObservableObject
             return null;
         }
 
+        // The trailing "?" makes the stream map optional (#13621, same fix as in
+        // WaveFileExtractor for #10835). The track index belongs to the video the user
+        // picked it from, but this method also runs on inputs that never had it: the
+        // already-demuxed "se_audioclip_*.wav" clips from "transcribe selected lines",
+        // and any unrelated file added in batch mode. Without the "?", "-map 0:1" on a
+        // single-stream wav aborts ffmpeg ("Stream map '0:1' matches no streams"); with
+        // it, ffmpeg falls back to automatic stream selection and picks the audio.
         var audioParameter = string.Empty;
         if (audioTrackNumber >= 0)
         {
-            audioParameter = $"-map 0:{audioTrackNumber}";
+            audioParameter = $"-map 0:{audioTrackNumber}?";
         }
 
         var fFmpegAudioTranscodeSettings = GetFfmpegTranscodeFormatString(audioFormat, _useCenterChannelOnly);
