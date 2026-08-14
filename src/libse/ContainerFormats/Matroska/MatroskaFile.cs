@@ -37,16 +37,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Matroska
         {
             Path = path;
 
-            // Subtitle/track extraction walks the entire cluster structure but only reads a
-            // tiny fraction of a (potentially multi-GB) file: it reads each block's small header
-            // and then seeks past the large video/audio payloads. A big read buffer is
-            // counter-productive here - because the forward skips are usually smaller than the
-            // buffer, FileStream keeps refilling contiguously and ends up pulling almost the
-            // whole file off disk. A small 4 KB (one page) buffer makes the skips fall outside
-            // the buffer so the skipped payloads are never read, cutting cold-open disk I/O by
-            // ~4x (e.g. ~700 MB -> ~175 MB on a 1 GB file) and open time several-fold.
-            // Memory-mapping was measured to be slower here (synchronous page-fault stalls).
-            _stream = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.ReadWrite, 4096);
+            _stream = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.ReadWrite, GetReadBufferSize(path));
 
             // read header
             var headerElement = ReadElement();
@@ -59,6 +50,66 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Matroska
                 {
                     IsValid = true; // matroska file must start with ebml header and segment
                 }
+            }
+        }
+
+        /// <summary>
+        /// Local disk: a small 4 KB (one page) buffer. Subtitle/track extraction walks the whole
+        /// cluster structure but only reads a tiny fraction of a (potentially multi-GB) file - each
+        /// block's small header, then a seek past the large video/audio payload. A big buffer is
+        /// counter-productive there: the forward skips are usually smaller than the buffer, so
+        /// FileStream keeps refilling contiguously and ends up pulling almost the whole file off
+        /// disk. One page makes the skips fall outside the buffer, cutting cold-open I/O ~4x
+        /// (~700 MB -> ~175 MB on a 1 GB file) and open time several-fold (#6772). Memory-mapping
+        /// was measured to be slower here (synchronous page-fault stalls).
+        /// </summary>
+        private const int LocalReadBufferSize = 4096;
+
+        /// <summary>
+        /// Network share: the 64 KB buffer used before #6772. Over SMB the cost is not bytes but
+        /// round-trips - every refill is a synchronous request over the wire - so the one-page
+        /// buffer that wins on local disk turns tens of thousands of small reads into as many
+        /// round-trips, and opening an MKV from a UNC path crawled while the same file on a local
+        /// disk opened instantly (#13609). SE 4 always used this size.
+        /// </summary>
+        private const int NetworkReadBufferSize = 65536;
+
+        private static int GetReadBufferSize(string path)
+        {
+            return IsNetworkPath(path) ? NetworkReadBufferSize : LocalReadBufferSize;
+        }
+
+        /// <summary>
+        /// True for a UNC path or a drive letter mapped to a network share. Anything that cannot be
+        /// determined counts as local, so an unknown path keeps the local-disk optimization.
+        /// </summary>
+        private static bool IsNetworkPath(string path)
+        {
+            try
+            {
+                if (string.IsNullOrEmpty(path))
+                {
+                    return false;
+                }
+
+                // \\server\share and the //server/share form .NET also accepts.
+                if (path.StartsWith("\\\\", StringComparison.Ordinal) || path.StartsWith("//", StringComparison.Ordinal))
+                {
+                    return true;
+                }
+
+                // Mapped network drives (Z: -> \\server\share) look local until asked.
+                var root = System.IO.Path.GetPathRoot(path);
+                if (string.IsNullOrEmpty(root) || root.Length < 2 || root[1] != ':')
+                {
+                    return false;
+                }
+
+                return new DriveInfo(root).DriveType == DriveType.Network;
+            }
+            catch
+            {
+                return false;
             }
         }
 
