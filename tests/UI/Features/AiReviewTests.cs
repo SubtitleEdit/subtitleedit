@@ -88,11 +88,16 @@ public class AiReviewTests
         Assert.Empty(chunks[^1].ContextAfter);
     }
 
+    private static Dictionary<int, string> Lines(params (int Number, string Text)[] lines)
+    {
+        return lines.ToDictionary(x => x.Number, x => x.Text);
+    }
+
     [Fact]
     public void ParseChanges_ValidReply_Parsed()
     {
         var reply = """{"changes":[{"n":12,"text":"We received it.","reason":"typo","category":"spelling"}]}""";
-        var changes = AiReviewProtocol.ParseChanges(reply, new HashSet<int> { 12 });
+        var changes = AiReviewProtocol.ParseChanges(reply, Lines((12, "We recieved it.")));
 
         var change = Assert.Single(changes);
         Assert.Equal(12, change.Number);
@@ -104,7 +109,7 @@ public class AiReviewTests
     public void ParseChanges_MarkdownFences_Parsed()
     {
         var reply = "Here you go:\n```json\n{\"changes\":[{\"n\":3,\"text\":\"Fixed.\",\"reason\":\"x\",\"category\":\"grammar\"}]}\n```";
-        var changes = AiReviewProtocol.ParseChanges(reply, new HashSet<int> { 3 });
+        var changes = AiReviewProtocol.ParseChanges(reply, Lines((3, "Fixxed.")));
 
         Assert.Single(changes);
         Assert.Equal(ReviewCategory.Grammar, changes[0].Category);
@@ -114,7 +119,7 @@ public class AiReviewTests
     public void ParseChanges_HallucinatedLineNumber_Skipped()
     {
         var reply = """{"changes":[{"n":99,"text":"Nope.","reason":"","category":"other"}]}""";
-        var changes = AiReviewProtocol.ParseChanges(reply, new HashSet<int> { 1, 2, 3 });
+        var changes = AiReviewProtocol.ParseChanges(reply, Lines((1, "One."), (2, "Two."), (3, "Three.")));
 
         Assert.Empty(changes);
     }
@@ -122,17 +127,136 @@ public class AiReviewTests
     [Fact]
     public void ParseChanges_InvalidJson_Empty()
     {
-        Assert.Empty(AiReviewProtocol.ParseChanges("I could not find any issues!", new HashSet<int> { 1 }));
-        Assert.Empty(AiReviewProtocol.ParseChanges(string.Empty, new HashSet<int> { 1 }));
+        Assert.Empty(AiReviewProtocol.ParseChanges("I could not find any issues!", Lines((1, "One."))));
+        Assert.Empty(AiReviewProtocol.ParseChanges(string.Empty, Lines((1, "One."))));
     }
 
     [Fact]
     public void ParseChanges_NewLinesNormalized()
     {
         var reply = """{"changes":[{"n":1,"text":"First line\nsecond line.","reason":"","category":"other"}]}""";
-        var changes = AiReviewProtocol.ParseChanges(reply, new HashSet<int> { 1 });
+        var changes = AiReviewProtocol.ParseChanges(reply, Lines((1, "Frst line\nsecond line.")));
 
         Assert.Contains(System.Environment.NewLine, changes[0].NewText);
+    }
+
+    [Fact]
+    public void ParseChanges_EchoConfirmsLineNumber_Kept()
+    {
+        var reply = """{"changes":[{"n":2,"orig":"We recieved it.","text":"We received it.","reason":"typo","category":"spelling"}]}""";
+        var changes = AiReviewProtocol.ParseChanges(reply, Lines((1, "Hello."), (2, "We recieved it.")));
+
+        var change = Assert.Single(changes);
+        Assert.Equal(2, change.Number);
+    }
+
+    [Fact]
+    public void ParseChanges_EchoBelongsToOtherLine_Remapped()
+    {
+        // the issue-13628 shape: the model corrected line 645 but labeled it n=644
+        var reply = """{"changes":[{"n":644,"orig":"Its really hot in there.","text":"It's really hot in there.","reason":"typo","category":"punctuation"}]}""";
+        var changes = AiReviewProtocol.ParseChanges(reply, Lines(
+            (644, "Whoa! Christmas Eve, that is..."),
+            (645, "Its really hot in there.")));
+
+        var change = Assert.Single(changes);
+        Assert.Equal(645, change.Number);
+        Assert.Equal("It's really hot in there.", change.NewText);
+    }
+
+    [Fact]
+    public void ParseChanges_EchoMatchesNoLine_Dropped()
+    {
+        var reply = """{"changes":[{"n":1,"orig":"Something entirely different was here.","text":"Something entirely different was there.","reason":"","category":"other"}]}""";
+        var changes = AiReviewProtocol.ParseChanges(reply, Lines((1, "Hello."), (2, "Goodbye.")));
+
+        Assert.Empty(changes);
+    }
+
+    [Fact]
+    public void ParseChanges_EchoAmbiguous_Dropped()
+    {
+        var reply = """{"changes":[{"n":1,"orig":"Yes.","text":"Yes!","reason":"","category":"punctuation"}]}""";
+        var changes = AiReviewProtocol.ParseChanges(reply, Lines((1, "No."), (2, "Yes."), (3, "Yes.")));
+
+        Assert.Empty(changes);
+    }
+
+    [Fact]
+    public void ParseChanges_EchoNearlyMatchesOwnLine_Kept()
+    {
+        // model normalized the curly apostrophe while copying - still clearly the same line
+        var reply = """{"changes":[{"n":1,"orig":"You're gonna like it here alot.","text":"You're going to like it here a lot.","reason":"","category":"grammar"}]}""";
+        var changes = AiReviewProtocol.ParseChanges(reply, Lines((1, "You’re gonna like it here alot.")));
+
+        var change = Assert.Single(changes);
+        Assert.Equal(1, change.Number);
+    }
+
+    [Fact]
+    public void ParseChanges_NoEcho_TrustsLineNumber()
+    {
+        var reply = """{"changes":[{"n":1,"text":"Fixed.","reason":"","category":"other"}]}""";
+        var changes = AiReviewProtocol.ParseChanges(reply, Lines((1, "Fixxed.")));
+
+        Assert.Single(changes);
+    }
+
+    [Fact]
+    public void ParseChanges_EchoRepeatsCorrectedText_TrustsLineNumber()
+    {
+        // a useless echo (orig == text) carries no information and must not drop the change
+        var reply = """{"changes":[{"n":1,"orig":"Fixed.","text":"Fixed.","reason":"","category":"other"}]}""";
+        var changes = AiReviewProtocol.ParseChanges(reply, Lines((1, "Fixxed.")));
+
+        var change = Assert.Single(changes);
+        Assert.Equal(1, change.Number);
+    }
+
+    [Fact]
+    public void ParseChanges_DuplicateLineNumber_FirstWins()
+    {
+        var reply = """{"changes":[{"n":1,"text":"First.","reason":"","category":"other"},{"n":1,"text":"Second.","reason":"","category":"other"}]}""";
+        var changes = AiReviewProtocol.ParseChanges(reply, Lines((1, "Frst.")));
+
+        var change = Assert.Single(changes);
+        Assert.Equal("First.", change.NewText);
+    }
+
+    [Fact]
+    public void LooksMisaligned_AfterIsCopyOfNeighbor_True()
+    {
+        // the issue-13628 screenshot: line 644's "After" was line 645's original text
+        Assert.True(AiReviewProtocol.LooksMisaligned(
+            "Whoa! Christmas Eve, that is...",
+            "It's really hot in there. Is that ammonia?",
+            new[] { "If I'm wrong, I'm really wrong.", "It's really hot in there. Is that ammonia?" }));
+    }
+
+    [Fact]
+    public void LooksMisaligned_AfterIsEditedNeighbor_True()
+    {
+        // the shifted correction: "After" is a lightly edited copy of the next line
+        Assert.True(AiReviewProtocol.LooksMisaligned(
+            "It's really hot in there. Is that ammonia?",
+            "Anyway, that's...",
+            new[] { "Whoa! Christmas Eve, that is...", "Anyway, that is..." }));
+    }
+
+    [Fact]
+    public void LooksMisaligned_LegitimateFix_False()
+    {
+        Assert.False(AiReviewProtocol.LooksMisaligned(
+            "If we were gonna catch it,\nwhat would we do?",
+            "If we were going to catch it,\nwhat would we do?",
+            new[] { "What the fudge, fudge?", "If I'm wrong, I'm really wrong." }));
+    }
+
+    [Fact]
+    public void LooksMisaligned_RepetitiveDialogue_False()
+    {
+        // a legit fix may equal a neighbor in repetitive dialogue - high own-similarity keeps it
+        Assert.False(AiReviewProtocol.LooksMisaligned("Yes", "Yes.", new[] { "Yes.", "No." }));
     }
 
     [Fact]
