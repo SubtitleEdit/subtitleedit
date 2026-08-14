@@ -374,18 +374,18 @@ public partial class AiReviewViewModel : ObservableObject
                 StatusText = string.Format(l.ReviewingLineXOfY, chunk.Lines[0].Number, _subtitle.Paragraphs.Count);
 
                 var userContent = AiReviewProtocol.BuildUserContent(chunk);
-                var editableNumbers = new HashSet<int>(chunk.Lines.Select(x => x.Number));
+                var editableLines = chunk.Lines.ToDictionary(x => x.Number, x => x.Text);
 
                 List<AiReviewChange>? changes = null;
                 try
                 {
                     var reply = await ChatWithDelayAsync(userContent);
-                    changes = AiReviewProtocol.ParseChanges(reply, editableNumbers);
+                    changes = AiReviewProtocol.ParseChanges(reply, editableLines);
                     if (changes.Count == 0 && AiReviewProtocol.ExtractJsonObject(reply) == null)
                     {
                         // invalid reply - one retry for this chunk
                         reply = await ChatWithDelayAsync(userContent);
-                        changes = AiReviewProtocol.ParseChanges(reply, editableNumbers);
+                        changes = AiReviewProtocol.ParseChanges(reply, editableLines);
                     }
 
                     consecutiveErrors = 0;
@@ -460,6 +460,20 @@ public partial class AiReviewViewModel : ObservableObject
         if (!AiReviewProtocol.TagsMatch(before, after))
         {
             return; // the model touched formatting tags - not trustworthy, skip
+        }
+
+        var neighbors = new List<string>();
+        for (var i = Math.Max(0, paragraphIndex - 2); i <= Math.Min(_subtitle.Paragraphs.Count - 1, paragraphIndex + 2); i++)
+        {
+            if (i != paragraphIndex && !string.IsNullOrWhiteSpace(_subtitle.Paragraphs[i].Text))
+            {
+                neighbors.Add(_subtitle.Paragraphs[i].Text);
+            }
+        }
+
+        if (AiReviewProtocol.LooksMisaligned(before, after, neighbors))
+        {
+            return; // the "correction" is really a copy of a nearby line - misnumbered by the model
         }
 
         var l = Se.Language.Tools.AiReview;
