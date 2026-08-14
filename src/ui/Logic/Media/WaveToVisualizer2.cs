@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Numerics;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Text;
@@ -260,15 +261,62 @@ public class WavePeakData2
 
     private void CalculateHighestPeak()
     {
-        HighestPeak = 0;
-        foreach (var peak in Peaks)
+        HighestPeak = CalculateHighestPeak(AsSpan());
+    }
+
+    /// <summary>
+    /// max(|Max|, |Min|) over all peaks. Runs in the constructor, i.e. on every peak load and
+    /// every peak generation - millions of peaks for a long video - so it works on the raw
+    /// shorts (a <see cref="WavePeak2"/> is exactly two shorts) with a SIMD min/max reduction
+    /// instead of enumerating through the IList indirection per peak.
+    /// </summary>
+    internal static int CalculateHighestPeak(ReadOnlySpan<WavePeak2> peaks)
+    {
+        var shorts = MemoryMarshal.Cast<WavePeak2, short>(peaks);
+        var highest = 0;
+        var i = 0;
+
+        if (Vector.IsHardwareAccelerated && shorts.Length >= Vector<short>.Count)
         {
-            int abs = peak.Abs;
-            if (abs > HighestPeak)
+            var maxVec = new Vector<short>(short.MinValue);
+            var minVec = new Vector<short>(short.MaxValue);
+            var lastBlockStart = shorts.Length - Vector<short>.Count;
+            for (; i <= lastBlockStart; i += Vector<short>.Count)
             {
-                HighestPeak = abs;
+                var v = new Vector<short>(shorts.Slice(i));
+                maxVec = Vector.Max(maxVec, v);
+                minVec = Vector.Min(minVec, v);
+            }
+
+            // Fold the lanes in int space: -(int)short.MinValue is 32768, matching what the
+            // scalar Math.Abs((int)value) produced before.
+            for (var lane = 0; lane < Vector<short>.Count; lane++)
+            {
+                int mx = maxVec[lane];
+                if (mx > highest)
+                {
+                    highest = mx;
+                }
+
+                int mn = -(int)minVec[lane];
+                if (mn > highest)
+                {
+                    highest = mn;
+                }
             }
         }
+
+        for (; i < shorts.Length; i++)
+        {
+            int v = shorts[i];
+            var abs = v >= 0 ? v : -v;
+            if (abs > highest)
+            {
+                highest = abs;
+            }
+        }
+
+        return highest;
     }
 
     public static WavePeakData2 FromDisk(string peakFileName)
@@ -587,89 +635,40 @@ public class WavePeakGenerator2 : IDisposable
             _stream.Seek(fileSampleOffset * Header.BlockAlign, SeekOrigin.Current);
         }
 
-        if (Header.BytesPerSample == 2 && Header.NumberOfChannels == 2) // optimized path for 16-bit stereo PCM
+        // Fast path for 16-bit stereo PCM (what SE's own ffmpeg extraction produces for the
+        // waveform) - a span cast instead of a delegate call per channel per sample. A matching
+        // mono fast path was benchmarked at 0.9x the delegate loop (the per-sample work is two
+        // stores either way and the delegate call site is monomorphic) and dropped; mono and
+        // 8/24/32-bit take the generic delegate loop.
+        var fast16Stereo = Header.BytesPerSample == 2 && Header.NumberOfChannels == 2;
+
+        while (fileSampleOffset < fileSampleCount)
         {
-            while (fileSampleOffset < fileSampleCount)
+            // calculate how many samples to skip at the beginning (for positive delays)
+            int startSkipSampleCount = 0;
+            if (fileSampleOffset < 0)
             {
-                // calculate how many samples to skip at the beginning (for positive delays)
-                int startSkipSampleCount = 0;
-                if (fileSampleOffset < 0)
-                {
-                    startSkipSampleCount = (int)Math.Min(-fileSampleOffset, chunkSampleCount);
-                    fileSampleOffset += startSkipSampleCount;
-                }
-
-                // calculate how many samples to read from the file
-                long fileSamplesRemaining = fileSampleCount - Math.Max(fileSampleOffset, 0);
-                int fileReadSampleCount = (int)Math.Min(fileSamplesRemaining, chunkSampleCount - startSkipSampleCount);
-
-                // read samples from the file
-                if (fileReadSampleCount > 0)
-                {
-                    int fileReadByteCount = fileReadSampleCount * Header.BlockAlign;
-                    _ = _stream.Read(data, 0, fileReadByteCount);
-                    fileSampleOffset += fileReadSampleCount;
-
-                    int chunkSampleOffset = 0;
-                    // Fast path for 16-bit PCM - avoid delegate overhead via direct span cast
-                    var shorts = MemoryMarshal.Cast<byte, short>(data.AsSpan(0, fileReadByteCount));
-                    int sIdx = 0;
-                    while (sIdx < shorts.Length)
-                    {
-                        short v1 = shorts[sIdx++];
-                        short v2 = shorts[sIdx++];
-
-                        float pos = 0, neg = 0;
-
-                        if (v1 < 0)
-                        {
-                            neg += v1;
-                        }
-                        else
-                        {
-                            pos += v1;
-                        }
-                        if (v2 < 0)
-                        {
-                            neg += v2;
-                        }
-                        else
-                        {
-                            pos += v2;
-                        }
-
-                        chunkSamples[chunkSampleOffset++] = neg * sampleAndChannelScale;
-                        chunkSamples[chunkSampleOffset++] = pos * sampleAndChannelScale;
-                    }
-                }
-
-                // calculate peaks
-                peaks.Add(CalculatePeak(chunkSamples, fileReadSampleCount * 2));
+                startSkipSampleCount = (int)Math.Min(-fileSampleOffset, chunkSampleCount);
+                fileSampleOffset += startSkipSampleCount;
             }
-        }
-        else
-        {
-            while (fileSampleOffset < fileSampleCount)
+
+            // calculate how many samples to read from the file
+            long fileSamplesRemaining = fileSampleCount - Math.Max(fileSampleOffset, 0);
+            int fileReadSampleCount = (int)Math.Min(fileSamplesRemaining, chunkSampleCount - startSkipSampleCount);
+
+            // read samples from the file
+            if (fileReadSampleCount > 0)
             {
-                // calculate how many samples to skip at the beginning (for positive delays)
-                int startSkipSampleCount = 0;
-                if (fileSampleOffset < 0)
+                int fileReadByteCount = fileReadSampleCount * Header.BlockAlign;
+                _ = _stream.Read(data, 0, fileReadByteCount);
+                fileSampleOffset += fileReadSampleCount;
+
+                if (fast16Stereo)
                 {
-                    startSkipSampleCount = (int)Math.Min(-fileSampleOffset, chunkSampleCount);
-                    fileSampleOffset += startSkipSampleCount;
+                    ConvertPeakChunk16BitStereo(MemoryMarshal.Cast<byte, short>(data.AsSpan(0, fileReadByteCount)), chunkSamples, sampleAndChannelScale);
                 }
-
-                // calculate how many samples to read from the file
-                long fileSamplesRemaining = fileSampleCount - Math.Max(fileSampleOffset, 0);
-                int fileReadSampleCount = (int)Math.Min(fileSamplesRemaining, chunkSampleCount - startSkipSampleCount);
-
-                // read samples from the file
-                if (fileReadSampleCount > 0)
+                else
                 {
-                    int fileReadByteCount = fileReadSampleCount * Header.BlockAlign;
-                    _ = _stream.Read(data, 0, fileReadByteCount);
-                    fileSampleOffset += fileReadSampleCount;
-
                     int chunkSampleOffset = 0;
                     int dataByteOffset = 0;
                     while (dataByteOffset < fileReadByteCount)
@@ -695,11 +694,10 @@ public class WavePeakGenerator2 : IDisposable
                         chunkSampleOffset++;
                     }
                 }
-
-                // calculate peaks
-                peaks.Add(CalculatePeak(chunkSamples, fileReadSampleCount * 2));
             }
 
+            // calculate peaks
+            peaks.Add(CalculatePeak(chunkSamples, fileReadSampleCount * 2));
         }
 
 
@@ -757,19 +755,106 @@ public class WavePeakGenerator2 : IDisposable
         return new WavePeakData2(peaksPerSecond, peaks);
     }
 
-    private static WavePeak2 CalculatePeak(float[] chunk, int count)
+    /// <summary>
+    /// One peak chunk's samples for 16-bit stereo PCM: per frame, the negative channel values
+    /// summed into an even slot and the positive ones into the following odd slot (that is the
+    /// contract <see cref="CalculatePeak"/> expects). Span-cast fast path - no per-sample
+    /// delegate dispatch.
+    /// </summary>
+    internal static void ConvertPeakChunk16BitStereo(ReadOnlySpan<short> samples, Span<float> chunkSamples, float scale)
+    {
+        var chunkSampleOffset = 0;
+        for (var sIdx = 0; sIdx + 1 < samples.Length; sIdx += 2)
+        {
+            short v1 = samples[sIdx];
+            short v2 = samples[sIdx + 1];
+
+            float pos = 0, neg = 0;
+
+            if (v1 < 0)
+            {
+                neg += v1;
+            }
+            else
+            {
+                pos += v1;
+            }
+
+            if (v2 < 0)
+            {
+                neg += v2;
+            }
+            else
+            {
+                pos += v2;
+            }
+
+            chunkSamples[chunkSampleOffset++] = neg * scale;
+            chunkSamples[chunkSampleOffset++] = pos * scale;
+        }
+    }
+
+    /// <summary>
+    /// One spectrogram chunk for 16-bit stereo PCM: channel-summed samples scaled to floats.
+    /// The int sum of two shorts is exact, and multiplying it by the double scale matches the
+    /// old double-accumulating delegate loop bit for bit.
+    /// </summary>
+    internal static void ConvertSpectrogramChunk16BitStereo(ReadOnlySpan<short> samples, Span<float> dst, double scale)
+    {
+        var d = 0;
+        for (var s = 0; s + 1 < samples.Length; s += 2)
+        {
+            dst[d++] = (float)((samples[s] + samples[s + 1]) * scale);
+        }
+    }
+
+    /// <summary>16-bit mono variant of <see cref="ConvertSpectrogramChunk16BitStereo"/>.</summary>
+    internal static void ConvertSpectrogramChunk16BitMono(ReadOnlySpan<short> samples, Span<float> dst, double scale)
+    {
+        for (var s = 0; s < samples.Length; s++)
+        {
+            dst[s] = (float)(samples[s] * scale);
+        }
+    }
+
+    internal static WavePeak2 CalculatePeak(float[] chunk, int count)
     {
         if (count == 0)
         {
             return new WavePeak2();
         }
 
-        float max = chunk[0];
-        float min = chunk[0];
+        // Runs once per peak, over every converted sample of the file (twice the sample count
+        // in float slots) during peak generation - a plain min/max reduction, so let SIMD eat
+        // it. Float min/max is order-independent for finite values, so the result is identical
+        // to the scalar loop.
+        var span = chunk.AsSpan(0, count);
+        float max = span[0];
+        float min = span[0];
+        var i = 0;
 
-        for (var i = 1; i < count; i++)
+        if (Vector.IsHardwareAccelerated && span.Length >= Vector<float>.Count)
         {
-            float value = chunk[i];
+            var maxVec = new Vector<float>(span[0]);
+            var minVec = maxVec;
+            var lastBlockStart = span.Length - Vector<float>.Count;
+            for (; i <= lastBlockStart; i += Vector<float>.Count)
+            {
+                var v = new Vector<float>(span.Slice(i));
+                maxVec = Vector.Max(maxVec, v);
+                minVec = Vector.Min(minVec, v);
+            }
+
+            for (var lane = 0; lane < Vector<float>.Count; lane++)
+            {
+                max = Math.Max(max, maxVec[lane]);
+                min = Math.Min(min, minVec[lane]);
+            }
+        }
+
+        for (; i < span.Length; i++)
+        {
+            float value = span[i];
             max = Math.Max(max, value);
             min = Math.Min(min, value);
         }
@@ -802,14 +887,13 @@ public class WavePeakGenerator2 : IDisposable
         int peakIndex = 0;
         if (Header.NumberOfChannels == 2)
         {
-            // max value in left channel, min value in right channel
-            int byteIndex = 0;
-            while (byteIndex < data.Length)
-            {
-                short max = (short)ReadValue16Bit(data, ref byteIndex);
-                short min = (short)ReadValue16Bit(data, ref byteIndex);
-                peaks[peakIndex++] = new WavePeak2(max, min);
-            }
+            // max value in left channel, min value in right channel - which is exactly the
+            // little-endian (Max, Min) short pair a WavePeak2 is, and exactly how
+            // WriteWaveformData wrote the file. So the whole load is one bulk cast + copy
+            // instead of two scalar reads per peak (runs on every video open with cached peaks).
+            var src = MemoryMarshal.Cast<byte, WavePeak2>(data.AsSpan(0, data.Length - data.Length % 4));
+            src.CopyTo(peaks);
+            peakIndex = src.Length;
         }
         else
         {
@@ -1006,16 +1090,34 @@ public class WavePeakGenerator2 : IDisposable
                 _ = _stream.Read(data, 0, fileReadByteCount);
                 fileSampleOffset += fileReadSampleCount;
 
-                int dataByteOffset = 0;
-                while (dataByteOffset < fileReadByteCount)
+                // 16-bit PCM fast paths, mirroring GeneratePeaks: this loop visits every sample
+                // of the extracted audio on first spectrogram build, and the delegate dispatch
+                // per channel per sample dominated it.
+                if (Header.BytesPerSample == 2 && Header.NumberOfChannels == 2)
                 {
-                    double value = 0D;
-                    for (int iChannel = 0; iChannel < Header.NumberOfChannels; iChannel++)
+                    var shorts = MemoryMarshal.Cast<byte, short>(data.AsSpan(0, fileReadByteCount));
+                    ConvertSpectrogramChunk16BitStereo(shorts, allSamples.AsSpan(allSamplesOffset, shorts.Length / 2), sampleAndChannelScale);
+                    allSamplesOffset += shorts.Length / 2;
+                }
+                else if (Header.BytesPerSample == 2 && Header.NumberOfChannels == 1)
+                {
+                    var shorts = MemoryMarshal.Cast<byte, short>(data.AsSpan(0, fileReadByteCount));
+                    ConvertSpectrogramChunk16BitMono(shorts, allSamples.AsSpan(allSamplesOffset, shorts.Length), sampleAndChannelScale);
+                    allSamplesOffset += shorts.Length;
+                }
+                else
+                {
+                    int dataByteOffset = 0;
+                    while (dataByteOffset < fileReadByteCount)
                     {
-                        value += readSampleDataValue(data, ref dataByteOffset);
+                        double value = 0D;
+                        for (int iChannel = 0; iChannel < Header.NumberOfChannels; iChannel++)
+                        {
+                            value += readSampleDataValue(data, ref dataByteOffset);
+                        }
+                        allSamples[allSamplesOffset] = (float)(value * sampleAndChannelScale);
+                        allSamplesOffset += 1;
                     }
-                    allSamples[allSamplesOffset] = (float)(value * sampleAndChannelScale);
-                    allSamplesOffset += 1;
                 }
             }
 
@@ -1033,6 +1135,7 @@ public class WavePeakGenerator2 : IDisposable
         }
 
         double sampleDuration = (double)fftSize / Header.SampleRate;
+
 
         // Save raw data to binary file
         if (!token.IsCancellationRequested)

@@ -1,4 +1,6 @@
 ﻿using SkiaSharp;
+using System;
+using System.Numerics;
 
 namespace Nikse.SubtitleEdit.Features.Ocr;
 
@@ -116,7 +118,7 @@ public class PreProcessingSettings
         return cropped;
     }
 
-    private static unsafe SKBitmap InvertColors(SKBitmap bitmap)
+    internal static unsafe SKBitmap InvertColors(SKBitmap bitmap)
     {
         var inverted = new SKBitmap(bitmap.Width, bitmap.Height);
 
@@ -124,23 +126,26 @@ public class PreProcessingSettings
         var dstPixels = (uint*)inverted.GetPixels().ToPointer();
         var totalPixels = bitmap.Width * bitmap.Height;
 
-        for (var i = 0; i < totalPixels; i++)
+        // "255 - c" per color byte with alpha untouched is exactly XOR with 0x00FFFFFF
+        // (alpha is the top byte in both 32-bit color types). Runs per OCR image and on
+        // every preprocessing-slider tweak, so let SIMD flip 8 pixels at a time.
+        var src = new ReadOnlySpan<uint>(srcPixels, totalPixels);
+        var dst = new Span<uint>(dstPixels, totalPixels);
+        var i = 0;
+
+        if (Vector.IsHardwareAccelerated && totalPixels >= Vector<uint>.Count)
         {
-            var pixel = srcPixels[i];
+            var invertMask = new Vector<uint>(0x00FFFFFF);
+            var lastBlockStart = totalPixels - Vector<uint>.Count;
+            for (; i <= lastBlockStart; i += Vector<uint>.Count)
+            {
+                Vector.Xor(new Vector<uint>(src.Slice(i)), invertMask).CopyTo(dst.Slice(i));
+            }
+        }
 
-            // Extract ARGB components
-            var a = (pixel >> 24) & 0xFF;
-            var r = (pixel >> 16) & 0xFF;
-            var g = (pixel >> 8) & 0xFF;
-            var b = pixel & 0xFF;
-
-            // Invert RGB, preserve alpha
-            r = 255 - r;
-            g = 255 - g;
-            b = 255 - b;
-
-            // Pack back into uint
-            dstPixels[i] = (a << 24) | (r << 16) | (g << 8) | b;
+        for (; i < totalPixels; i++)
+        {
+            dst[i] = src[i] ^ 0x00FFFFFF;
         }
 
         return inverted;
