@@ -6,6 +6,7 @@ using Nikse.SubtitleEdit.Logic.Download;
 using Nikse.SubtitleEdit.Logic.Media;
 using Nikse.SubtitleEdit.UiLogic;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -55,6 +56,8 @@ public class ChatterboxTtsCpp : ITtsEngine
     private const long MinimumUsableWavLength = 44;
 
     public const string ModelKeyBase = ChatterboxTtsCppDownloadService.ModelKeyBase;
+    public const string ModelKeyBaseF16 = ChatterboxTtsCppDownloadService.ModelKeyBaseF16;
+    public const string ModelKeyBaseQ4K = ChatterboxTtsCppDownloadService.ModelKeyBaseQ4K;
     public const string ModelKeyTurbo = ChatterboxTtsCppDownloadService.ModelKeyTurbo;
     public const string DefaultModelKey = ChatterboxTtsCppDownloadService.DefaultModelKey;
 
@@ -303,10 +306,20 @@ public class ChatterboxTtsCpp : ITtsEngine
 
     public Task<string[]> GetRegions() => Task.FromResult(Array.Empty<string>());
 
-    public Task<string[]> GetModels() => Task.FromResult(new[] { ModelKeyBase, ModelKeyTurbo });
+    /// <summary>
+    /// Base is the multilingual v3 pair in three quantizations — q8_0 (default), f16 and q4_k,
+    /// all the same weights at different precision — plus the separate Turbo distillation.
+    /// Measured 2026-08-12 on crispasr v0.8.28 (Apple M4), 27 runs over en/de/fr × 2 seeds ×
+    /// built-in and cloned voice: every quantization returned the prompt verbatim through a
+    /// parakeet-v3 ASR roundtrip and synthesis time was within noise of the others, so the
+    /// only real trade-off is download size and peak RSS (~2.2 GB f16 / ~1.6 GB q8_0 /
+    /// ~1.25 GB q4_k). q8_0 stays the default; f16 is offered for parity with upstream's
+    /// reference tier, not because it measured better.
+    /// </summary>
+    public Task<string[]> GetModels() => Task.FromResult(ChatterboxTtsCppDownloadService.GetAllModelKeys());
 
     /// <summary>
-    /// The multilingual Base model takes a per-request language (23 languages, "[xx]" prompt
+    /// The multilingual Base models take a per-request language (23 languages, "[xx]" prompt
     /// token server-side); Turbo is an English-only distillation, so it gets "Auto" alone
     /// rather than an empty combo.
     /// </summary>
@@ -889,9 +902,10 @@ public class ChatterboxTtsCpp : ITtsEngine
     /// the conversion only ever runs once per file.
     /// </summary>
     /// <returns>
-    /// false only when there is a reference that needs converting and the conversion failed. No
-    /// reference at all (the baked default voice) and a reference that has gone missing are both
-    /// the server's business, not a conversion failure.
+    /// false only when there is a reference that needs converting and the conversion failed -
+    /// on this call, or on an earlier one against the same file contents. No reference at all
+    /// (the baked default voice) and a reference that has gone missing are both the server's
+    /// business, not a conversion failure.
     /// </returns>
     internal static bool EnsureCloneReferenceIsUsable(string? voiceFilePath)
     {
@@ -901,7 +915,45 @@ public class ChatterboxTtsCpp : ITtsEngine
             return true;
         }
 
-        if (!File.Exists(voiceFilePath) || IsCloneReadyReferenceWav(voiceFilePath))
+        FileStamp stamp;
+        try
+        {
+            var info = new FileInfo(voiceFilePath);
+            if (!info.Exists)
+            {
+                // A reference that has gone missing is the server's business, not a conversion
+                // failure.
+                return true;
+            }
+
+            stamp = new FileStamp(info.LastWriteTimeUtc.Ticks, info.Length);
+        }
+        catch (Exception exception)
+        {
+            Se.WriteToolsLog($"Chatterbox TTS: could not stat the reference voice \"{voiceFilePath}\" ({exception.Message}) - sending it as it is");
+            return true;
+        }
+
+        // This runs per line, so a repair that cannot succeed - no ffmpeg on the machine, a WAV
+        // ffmpeg will not decode - must be attempted once, not once for every line of the
+        // subtitle. Checked ahead of the header read as well: that read logs when it fails, and
+        // a tools-log entry per line is its own kind of runaway. A repair that succeeds needs no
+        // guard at all - the file then passes the header check below and never comes back here.
+        //
+        // Keyed on the file's stamp, not its path alone: the voices folder is documented and the
+        // user may well fix the WAV in place while the session is running, and a path-only guard
+        // would keep refusing the repaired file until restart.
+        if (FailedCloneReferenceRepairs.TryGetValue(voiceFilePath, out var failedStamp))
+        {
+            if (failedStamp == stamp)
+            {
+                return false;
+            }
+
+            FailedCloneReferenceRepairs.TryRemove(voiceFilePath, out _);
+        }
+
+        if (IsCloneReadyReferenceWav(voiceFilePath))
         {
             return true;
         }
@@ -909,8 +961,27 @@ public class ChatterboxTtsCpp : ITtsEngine
         Se.WriteToolsLog($"Chatterbox TTS: reference voice \"{Path.GetFileName(voiceFilePath)}\" is not "
             + $"{CloneReferenceSampleRate / 1000} kHz mono - re-encoding it in place before synthesis");
 
-        return ConvertToCloneReferenceWav(voiceFilePath, voiceFilePath);
+        if (ConvertToCloneReferenceWav(voiceFilePath, voiceFilePath))
+        {
+            return true;
+        }
+
+        // The conversion writes a temp file and only moves it on success, so a failure leaves the
+        // reference exactly as it was - the stamp read above still describes it.
+        FailedCloneReferenceRepairs[voiceFilePath] = stamp;
+        return false;
     }
+
+    /// <summary>Last write time and length, enough to tell a replaced reference WAV from the old one.</summary>
+    private readonly record struct FileStamp(long Ticks, long Length);
+
+    /// <summary>
+    /// Reference WAVs whose in-place repair has already been tried and failed, against the file
+    /// contents that failed, so it is not retried for every remaining line - but a file the user
+    /// replaces or repairs mid-session gets a fresh attempt.
+    /// </summary>
+    private static readonly ConcurrentDictionary<string, FileStamp> FailedCloneReferenceRepairs =
+        new(StringComparer.OrdinalIgnoreCase);
 
     /// <summary>
     /// True when the WAV is exactly what the chatterbox backend clones from: 24 kHz mono,

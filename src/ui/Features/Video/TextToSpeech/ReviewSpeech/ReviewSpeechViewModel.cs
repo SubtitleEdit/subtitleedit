@@ -1836,6 +1836,47 @@ public partial class ReviewSpeechViewModel : ObservableObject
         }
     }
 
+    /// <summary>
+    /// Drops the playback player and destroys its mpv core on a worker thread.
+    /// <para>
+    /// <c>mpv_terminate_destroy</c> runs libmpv's native win32/audio deinit, which must not happen
+    /// on the UI thread while a window is closing: it leaves <c>Window.CloseInternal()</c> to make
+    /// its next COM call (<c>IFrameworkInputPane.Unadvise</c>) into an apartment libmpv's teardown
+    /// has already disturbed - an access violation no catch block can intercept. Same reasoning,
+    /// and same off-thread cure, as <c>TextToSpeechViewModel.DisposePreviewPlayer</c> (#13376) and
+    /// <c>VideoPlayerControl.CloseAndDisposePlayer</c> (#11176).
+    /// </para>
+    /// Safe to call more than once - the second call finds no player and does nothing.
+    /// </summary>
+    private void DisposePlayerOffThread()
+    {
+        LibMpvDynamicPlayer? player;
+        lock (_playLock)
+        {
+            player = _mpvContext;
+            _mpvContext = null;
+        }
+
+        if (player == null)
+        {
+            return;
+        }
+
+        Task.Run(() =>
+        {
+            try
+            {
+                // Stop first so the core tears down from an idle state instead of mid-playback.
+                player.Stop();
+                player.Dispose();
+            }
+            catch (Exception ex)
+            {
+                SeLogger.Error(ex, "ReviewSpeech: disposing the audio player failed");
+            }
+        });
+    }
+
     internal void OnClosing(WindowClosingEventArgs e)
     {
         // Title-bar X / Alt+F4 bypass the Escape guard, so a regenerate can still be in flight
@@ -1852,11 +1893,8 @@ public partial class ReviewSpeechViewModel : ObservableObject
         {
             try { _cancellationTokenSource.Dispose(); } catch (ObjectDisposedException) { }
         }
-        lock (_playLock)
-        {
-            _mpvContext?.Dispose();
-            _mpvContext = null;
-        }
+
+        DisposePlayerOffThread();
 
         // The waveform mirrors subscribe to PropertyChanged in Initialize so drags
         // on the visualizer write back into the per-row TtsStepResult. Detach now

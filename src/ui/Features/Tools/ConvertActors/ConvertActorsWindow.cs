@@ -18,7 +18,7 @@ public class ConvertActorsWindow : Window
     public ConvertActorsWindow(ConvertActorsViewModel vm)
     {
         UiUtil.InitializeWindow(this, GetType().Name);
-        Title = Se.Language.Tools.ConvertActors.Title;
+        Title = UiUtil.MakeWindowTitle(Se.Language.Tools.ConvertActors.Title);
         CanResize = true;
         Width = 1000;
         Height = 800;

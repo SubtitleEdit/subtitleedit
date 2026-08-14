@@ -27,7 +27,7 @@ public class TextToSpeechWindow : Window
     public TextToSpeechWindow(TextToSpeechViewModel vm)
     {
         UiUtil.InitializeWindow(this, GetType().Name);
-        Title = Se.Language.Video.TextToSpeech.Title;
+        Title = UiUtil.MakeWindowTitle(Se.Language.Video.TextToSpeech.Title);
         SizeToContent = SizeToContent.WidthAndHeight;
         CanResize = false;
 

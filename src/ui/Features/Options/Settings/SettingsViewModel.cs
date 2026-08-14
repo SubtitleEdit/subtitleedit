@@ -154,6 +154,7 @@ public partial class SettingsViewModel : ObservableObject
     [ObservableProperty] private bool _autoConvertToUtf8;
     [ObservableProperty] private bool _forceCrLfOnSave;
     [ObservableProperty] private bool _autoTrimWhiteSpace;
+    [ObservableProperty] private bool _removeBlankLinesWhenOpening;
 
     [ObservableProperty] private ObservableCollection<string> _subtitleEnterKeyActionTypes;
     [ObservableProperty] private string _selectedSubtitleEnterKeyActionType;
@@ -768,6 +769,7 @@ public partial class SettingsViewModel : ObservableObject
         AutoConvertToUtf8 = general.AutoConvertToUtf8;
         ForceCrLfOnSave = general.ForceCrLfOnSave;
         AutoTrimWhiteSpace = general.AutoTrimWhiteSpace;
+        RemoveBlankLinesWhenOpening = general.RemoveBlankLinesWhenOpening;
 
         SelectedDefaultSubtitleFormat = general.DefaultSubtitleFormat;
         if (!DefaultSubtitleFormats.Contains(SelectedDefaultSubtitleFormat))
@@ -1623,6 +1625,7 @@ public partial class SettingsViewModel : ObservableObject
         general.AutoConvertToUtf8 = AutoConvertToUtf8;
         general.ForceCrLfOnSave = ForceCrLfOnSave;
         general.AutoTrimWhiteSpace = AutoTrimWhiteSpace;
+        general.RemoveBlankLinesWhenOpening = RemoveBlankLinesWhenOpening;
 
         general.DefaultSubtitleFormat = SelectedDefaultSubtitleFormat;
         general.DefaultSaveAsFormat = SelectedSaveSubtitleFormat;

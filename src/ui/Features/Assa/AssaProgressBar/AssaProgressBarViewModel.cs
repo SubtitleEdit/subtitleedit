@@ -18,7 +18,7 @@ using Nikse.SubtitleEdit.Logic.VideoPlayers.LibMpvDynamic;
 
 namespace Nikse.SubtitleEdit.Features.Assa.AssaProgressBar;
 
-public partial class AssaProgressBarViewModel : ObservableObject
+public partial class AssaProgressBarViewModel : ObservableObject, IClosingCleanup
 {
     public Window? Window { get; internal set; }
     public bool OkPressed { get; private set; }
@@ -64,6 +64,7 @@ public partial class AssaProgressBarViewModel : ObservableObject
     private LibMpvDynamicPlayer? _mpvPlayer;
     private string _oldSubtitleText = string.Empty;
     private DispatcherTimer _positionTimer = new DispatcherTimer();
+    private bool _isClosing;
     private readonly SubtitleFormat _assaFormat = new AdvancedSubStationAlpha();
     private readonly string _tempSubtitleFileName;
     private bool _isSubtitleLoaded;
@@ -131,10 +132,14 @@ public partial class AssaProgressBarViewModel : ObservableObject
     
     private void StartTitleTimer()
     {
+        // Initialize can run more than once per view model, and the previous timer would otherwise
+        // keep ticking beside the new one.
+        _positionTimer.Stop();
+
         _positionTimer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(500) };
         _positionTimer.Tick += (s, e) =>
         {
-            if (_mpvPlayer == null)
+            if (_mpvPlayer == null || _isClosing)
             {
                 return;
             }
@@ -561,6 +566,41 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
         {
             Window?.Close();
         });
+    }
+
+    /// <summary>
+    /// Runs on every close path (buttons, Escape, title-bar X) via the central hook in
+    /// <see cref="UiUtil.InitializeWindow"/>. Without it the 500 ms preview timer went on ticking
+    /// for the rest of the session: re-rendering the progress bar, rewriting the temp subtitle and
+    /// calling SubReload on an mpv player whose window was already gone - and a fresh timer was
+    /// added every time the dialog was opened.
+    /// </summary>
+    public void OnClosingCleanup()
+    {
+        _isClosing = true;
+        _positionTimer.Stop();
+        _mpvPlayer = null;
+
+        try
+        {
+            VideoPlayerControl?.Close();
+        }
+        catch
+        {
+            // the player may already be gone
+        }
+
+        try
+        {
+            if (!string.IsNullOrEmpty(_tempSubtitleFileName) && File.Exists(_tempSubtitleFileName))
+            {
+                File.Delete(_tempSubtitleFileName);
+            }
+        }
+        catch
+        {
+            // best effort
+        }
     }
 
     internal void KeyDown(object? sender, KeyEventArgs e)

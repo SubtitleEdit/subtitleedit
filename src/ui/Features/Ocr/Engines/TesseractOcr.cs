@@ -5,6 +5,8 @@ using SkiaSharp;
 using System;
 using System.Diagnostics;
 using System.IO;
+using System.Numerics;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -207,7 +209,10 @@ public class TesseractOcr
 
     // Percentage of dark "ink" pixels in the preprocessed (black-on-white) image. ~0% means the
     // black/white conversion blanked the text (e.g. coloured subtitles), which yields empty OCR.
-    private static double GetInkPercent(NikseBitmap nbmp)
+    // Runs once per image on every Tesseract call; works on the raw BGRA words instead of
+    // constructing an SKColor per pixel: alpha > 0 is "any bit in the top byte", and
+    // r,g,b < 128 is "no 0x80 bit in the low three bytes" - one masked compare per pixel.
+    internal static double GetInkPercent(NikseBitmap nbmp)
     {
         long total = (long)nbmp.Width * nbmp.Height;
         if (total == 0)
@@ -215,16 +220,37 @@ public class TesseractOcr
             return 0;
         }
 
+        var pixels = MemoryMarshal.Cast<byte, uint>(nbmp.GetPixelData());
         long ink = 0;
-        for (var y = 0; y < nbmp.Height; y++)
+        var i = 0;
+
+        if (Vector.IsHardwareAccelerated && pixels.Length >= Vector<uint>.Count)
         {
-            for (var x = 0; x < nbmp.Width; x++)
+            var alphaMask = new Vector<uint>(0xFF000000);
+            var rgbHighBits = new Vector<uint>(0x00808080);
+            var counts = Vector<uint>.Zero;
+            var lastBlockStart = pixels.Length - Vector<uint>.Count;
+            for (; i <= lastBlockStart; i += Vector<uint>.Count)
             {
-                var c = nbmp.GetPixel(x, y);
-                if (c.Alpha > 0 && c.Red < 128 && c.Green < 128 && c.Blue < 128)
-                {
-                    ink++;
-                }
+                var p = new Vector<uint>(pixels.Slice(i));
+                var alphaNonZero = Vector.OnesComplement(Vector.Equals(Vector.BitwiseAnd(p, alphaMask), Vector<uint>.Zero));
+                var rgbDark = Vector.Equals(Vector.BitwiseAnd(p, rgbHighBits), Vector<uint>.Zero);
+                // Matching lanes are all-ones (i.e. uint.MaxValue = -1); subtracting adds 1.
+                counts -= Vector.BitwiseAnd(alphaNonZero, rgbDark);
+            }
+
+            for (var lane = 0; lane < Vector<uint>.Count; lane++)
+            {
+                ink += counts[lane];
+            }
+        }
+
+        for (; i < pixels.Length; i++)
+        {
+            var p = pixels[i];
+            if ((p & 0xFF000000) != 0 && (p & 0x00808080) == 0)
+            {
+                ink++;
             }
         }
 

@@ -13,6 +13,17 @@ namespace Nikse.SubtitleEdit.Core.Common
     public class UnknownFormatImporter
     {
         private static readonly char[] ExpectedSplitChars = { '.', ',', ';', ':' };
+
+        // Static: RegexOptions.Compiled emits IL on construction, so building these per call
+        // paid the compile cost every time and never amortized it.
+        private static readonly Regex NumbersRegex = new Regex(@"\d+", RegexOptions.Compiled);
+        private static readonly Regex TimeCodeWithHoursRegex = new Regex(@"\d+[:.,;]{1}\d\d[:.,;]{1}\d\d[:.,;]{1}\d+", RegexOptions.Compiled);
+        private static readonly Regex TimeCodeWithoutHoursRegex = new Regex(@"\d+[:.,;]{1}\d\d[:.,;]{1}\d+", RegexOptions.Compiled);
+        private static readonly Regex SpaceSeparatedTimeCodeWithHoursRegex = new Regex(@"\d+ {1}\d\d {1}\d\d {1}\d+", RegexOptions.Compiled);
+        private static readonly Regex SpaceSeparatedTimeCodeWithoutHoursRegex = new Regex(@"\d+  {1}\d\d {1}\d+", RegexOptions.Compiled);
+        private static readonly Regex SubRipLikeTimeCodeRegex = new Regex(@"\G\d+ \d+:\d+:\d+[.,:;]\d+ --> \d+:\d+:\d+[.,:;]\d+\b", RegexOptions.Compiled); // e.g.: 1 00:00:01.502 --> 00:00:03.604
+        private static readonly Regex LooseTimeCodeRegex = new Regex(@"\G(\d+: *)?\d+ *: *\d+[.,:;] *\d+ *-{0,3}> *(\d+: *)?\d+ *: *\d+[.,:;] *\d+\b", RegexOptions.Compiled); // e.g.: 1 00:00:01.502 --> 00:00:03.604
+
         public bool UseFrames { get; set; }
 
         public Subtitle AutoGuessImport(List<string> lines, string fileName)
@@ -186,7 +197,7 @@ namespace Nikse.SubtitleEdit.Core.Common
 
         private Subtitle ImportTimeCodesInFramesAndTextOnSameLine(List<string> lines)
         {
-            var regexTimeCodes1 = new Regex(@"\d+", RegexOptions.Compiled);
+            var regexTimeCodes1 = NumbersRegex;
             Paragraph p = null;
             var subtitle = new Subtitle();
             var sb = new StringBuilder();
@@ -434,8 +445,8 @@ namespace Nikse.SubtitleEdit.Core.Common
 
         private static Subtitle ImportTimeCodesAndTextOnSameLine(List<string> lines)
         {
-            var regexTimeCodes1 = new Regex(@"\d+[:.,;]{1}\d\d[:.,;]{1}\d\d[:.,;]{1}\d+", RegexOptions.Compiled);
-            var regexTimeCodes2 = new Regex(@"\d+[:.,;]{1}\d\d[:.,;]{1}\d+", RegexOptions.Compiled);
+            var regexTimeCodes1 = TimeCodeWithHoursRegex;
+            var regexTimeCodes2 = TimeCodeWithoutHoursRegex;
             Paragraph p = null;
             var subtitle = new Subtitle();
             var sb = new StringBuilder();
@@ -645,8 +656,8 @@ namespace Nikse.SubtitleEdit.Core.Common
 
         private static Subtitle ImportTimeCodesAndTextOnSameLineOnlySpaceAsSeparator(List<string> lines)
         {
-            var regexTimeCodes1 = new Regex(@"\d+ {1}\d\d {1}\d\d {1}\d+", RegexOptions.Compiled);
-            var regexTimeCodes2 = new Regex(@"\d+  {1}\d\d {1}\d+", RegexOptions.Compiled);
+            var regexTimeCodes1 = SpaceSeparatedTimeCodeWithHoursRegex;
+            var regexTimeCodes2 = SpaceSeparatedTimeCodeWithoutHoursRegex;
             Paragraph p = null;
             var subtitle = new Subtitle();
             var sb = new StringBuilder();
@@ -980,7 +991,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             // \G anchors at the startat position passed to Match(text, i) below - matching
             // in place instead of allocating text.Substring(i) per digit, which made this
             // loop O(n²) on large inputs with many numeric characters (issue #12683).
-            var regex = new Regex(@"\G\d+ \d+:\d+:\d+[.,:;]\d+ --> \d+:\d+:\d+[.,:;]\d+\b", RegexOptions.Compiled); // e.g.: 1 00:00:01.502 --> 00:00:03.604
+            var regex = SubRipLikeTimeCodeRegex;
             var subtitle = new Subtitle();
             int i = 0;
             var sb = new StringBuilder();
@@ -1052,7 +1063,7 @@ namespace Nikse.SubtitleEdit.Core.Common
         {
             // \G anchors at the startat position passed to Match(text, i) below - see
             // ImportSubtitleWithNoLineBreaks for why Substring(i) is not used here.
-            var regex = new Regex(@"\G(\d+: *)?\d+ *: *\d+[.,:;] *\d+ *-{0,3}> *(\d+: *)?\d+ *: *\d+[.,:;] *\d+\b", RegexOptions.Compiled); // e.g.: 1 00:00:01.502 --> 00:00:03.604
+            var regex = LooseTimeCodeRegex;
             var subtitle = new Subtitle();
             int i = 0;
             var sb = new StringBuilder();

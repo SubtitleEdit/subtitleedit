@@ -48,7 +48,7 @@ public class OpenOriginalMismatchWindow : Window
             nameof(vm.ShowAllOriginalLinesText),
             nameof(vm.ShowAllOriginalLinesHint),
             nameof(vm.ShowAllOriginalLines),
-            IconNames.LockClock,
+            IconNames.Pencil,
             nameof(vm.ShowAllOriginalLinesNote),
             out _);
 

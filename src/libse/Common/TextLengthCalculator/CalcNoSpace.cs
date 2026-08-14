@@ -11,6 +11,22 @@ namespace Nikse.SubtitleEdit.Core.Common.TextLengthCalculator
         {
             var s = HtmlUtil.RemoveHtmlTags(text, true);
 
+            // Fast path: both chars of the "\r\n" the probe lets through are controls and so
+            // are not counted here either way, matching the element != "\r\n" test below.
+            if (TextElements.AreAllSingleChar(s, out _))
+            {
+                var simpleLength = 0;
+                foreach (var c in s)
+                {
+                    if (!char.IsControl(c) && c != ' ')
+                    {
+                        simpleLength++;
+                    }
+                }
+
+                return simpleLength;
+            }
+
             const char zeroWidthSpace = '\u200B';
             const char zeroWidthNoBreakSpace = '\uFEFF';
             var length = 0;

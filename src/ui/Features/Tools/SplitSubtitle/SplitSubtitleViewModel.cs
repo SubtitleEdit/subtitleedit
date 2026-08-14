@@ -11,6 +11,7 @@ using Nikse.SubtitleEdit.Logic.Media;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.IO;
 using System.Text;
 using System.Threading.Tasks;
@@ -55,9 +56,14 @@ public partial class SplitSubtitleViewModel : ObservableObject, IClosingCleanup
 
         SplitItems = new ObservableCollection<SplitDisplayItem>();
         Formats = new ObservableCollection<SubtitleFormat>(SubtitleFormatHelper.GetSubtitleFormatsWithFavoritesAtTop());
-        SelectedSubtitleFormat = Formats[0];
+
+        // Both are written on OK but were never read back, so the dialog always reopened on the
+        // first entry in the list instead of what the user last split with.
+        SelectedSubtitleFormat = Formats.FirstOrDefault(p => p.Name == Se.Settings.Tools.SplitSubtitleFormat)
+                                 ?? Formats[0];
         Encodings = new ObservableCollection<TextEncoding>(EncodingHelper.GetEncodings());
-        SelectedEncoding = Encodings[0];
+        SelectedEncoding = Encodings.FirstOrDefault(p => p.DisplayName == Se.Settings.Tools.SplitSubtitleEncoding)
+                           ?? Encodings[0];
         OutputFolder = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
         SubtitleInfo = string.Empty;
         SplitByLines = true;

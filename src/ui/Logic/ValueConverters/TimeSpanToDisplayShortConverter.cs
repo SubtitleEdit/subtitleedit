@@ -16,15 +16,27 @@ public class TimeSpanToDisplayShortConverter : IValueConverter
     private const string ZeroFrameMode = "00.00";
     private const string ZeroTime = "00,000";
 
+    // The duration of every visible row goes through here twice per repaint - see
+    // TimeCodeDisplayCache.
+    private readonly TimeCodeDisplayCache _cache = new();
+
     public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
         var useFrameMode = Se.Settings.General.UseFrameMode;
         if (value is TimeSpan ts)
         {
+            if (_cache.TryGet(ts.Ticks, out var cached))
+            {
+                return cached;
+            }
+
             _formattingTimeCode.TimeSpan = ts;
-            return useFrameMode
+            var formatted = useFrameMode
                 ? _formattingTimeCode.ToShortStringHHMMSSFF()
                 : _formattingTimeCode.ToShortString();
+
+            _cache.Set(ts.Ticks, formatted);
+            return formatted;
         }
 
         return useFrameMode ? ZeroFrameMode : ZeroTime;

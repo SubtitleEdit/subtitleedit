@@ -15,6 +15,11 @@ public class LanguageWebVtt
     public string OpenStyleFileTitle { get; set; }
     public string NoStylesToImport { get; set; }
     public string DuplicateStyleNamesX { get; set; }
+    public string CueSettings { get; set; }
+    public string CueSettingsHint { get; set; }
+    public string UseXTimeStamp { get; set; }
+    public string MergeLines { get; set; }
+    public string MergeStyleTags { get; set; }
 
     public LanguageWebVtt()
     {
@@ -31,5 +36,10 @@ public class LanguageWebVtt
         OpenStyleFileTitle = "Open WebVTT file to import styles from";
         NoStylesToImport = "No styles found in the chosen file";
         DuplicateStyleNamesX = "Duplicate style names: {0}";
+        CueSettings = "Cue settings for alignment";
+        CueSettingsHint = "Cue settings written when a line is aligned, e.g. \"line:20%\" for top-center";
+        UseXTimeStamp = "Use X-TIMESTAMP-MAP header value";
+        MergeLines = "Merge lines with same text on load";
+        MergeStyleTags = "Merge style tags";
     }
 }

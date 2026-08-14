@@ -20,7 +20,7 @@ public class MultipleReplaceWindow : Window
     public MultipleReplaceWindow(MultipleReplaceViewModel vm)
     {
         UiUtil.InitializeWindow(this, GetType().Name);
-        Title = Se.Language.General.MultipleReplace;
+        Title = UiUtil.MakeWindowTitle(Se.Language.General.MultipleReplace);
         Width = 1110;
         Height = 740;
         MinWidth = 850;
@@ -216,6 +216,26 @@ public class MultipleReplaceWindow : Window
             labelIcon.Margin = new Thickness(5, 0, 2, 0);
             labelIcon.Padding = new Thickness(0);
 
+            // A rule the preview cannot run - today only a regular expression that will not
+            // compile. It is skipped silently otherwise, which reads as a rule that just does
+            // nothing (#13534).
+            var labelError = new Label
+            {
+                Foreground = new SolidColorBrush(UiTheme.IsDarkThemeEnabled()
+                    ? Color.FromRgb(255, 100, 100)
+                    : Color.FromRgb(183, 28, 28)),
+                VerticalAlignment = VerticalAlignment.Center,
+                VerticalContentAlignment = VerticalAlignment.Center,
+                Margin = new Thickness(0, 0, 4, 0),
+                Padding = new Thickness(0),
+            };
+            Attached.SetIcon(labelError, IconNames.Alert);
+            labelError.Bind(Visual.IsVisibleProperty, new Binding(nameof(RuleTreeNode.HasError)) { Source = node });
+            if (Se.Settings.Appearance.ShowHints)
+            {
+                labelError.Bind(ToolTip.TipProperty, new Binding(nameof(RuleTreeNode.ErrorMessage)) { Source = node });
+            }
+
             var buttonActions = new Button
             {
                 HorizontalAlignment = HorizontalAlignment.Left,
@@ -246,6 +266,7 @@ public class MultipleReplaceWindow : Window
                 Margin = new Thickness(0, 0, 0, 0),
                 Children =
                 {
+                    labelError,
                     labelIcon,
                     labelFind,
                     labelSeparator,
@@ -279,6 +300,7 @@ public class MultipleReplaceWindow : Window
         vm.RulesTreeView = treeView;
         treeView.SelectionChanged += vm.RulesTreeView_SelectionChanged;
         treeView.KeyDown += vm.RulesTreeView_KeyDown;
+        treeView.AddHandler(InputElement.KeyDownEvent, vm.RulesTreeView_PreviewKeyDown, RoutingStrategies.Tunnel);
         treeView.DoubleTapped += (_, e) => vm.TreeViewDoubleTapped(e);
         treeView.AddHandler(InputElement.PointerReleasedEvent, (_, e) =>
         {
@@ -387,7 +409,9 @@ public class MultipleReplaceWindow : Window
         // No header sorting (the DataGrid's CanUserSortColumns is not carried over):
         // this is a fix preview in subtitle order, and the replace rules themselves run
         // in list order - reordering the backing collection would scramble the preview.
-        var dataGrid = TableViewExtras.MakeTableView(multiSelect: false);
+        // Multi-select so a range picked with Shift+click can have its "Apply" checkbox flipped
+        // in one go with Space (#13502); the fix detail panel below still follows SelectedItem.
+        var dataGrid = TableViewExtras.MakeTableView();
         dataGrid.DataContext = vm;
         dataGrid.ItemsSource = vm.Fixes;
         dataGrid.Columns.AddRange(new TableViewColumn[]
@@ -455,6 +479,21 @@ public class MultipleReplaceWindow : Window
             },
         });
         dataGrid.Bind(TableView.SelectedItemProperty, new Binding(nameof(vm.SelectedFix)) { Source = vm });
+
+        TableViewExtras.AddSpaceToggle<MultipleReplaceFix>(dataGrid,
+            item => item.Apply, (item, v) => item.Apply = v);
+
+        dataGrid.ContextMenu = MakeFixesContextMenu(vm);
+
+        // Tunneling: the TableView (a ListBox) would otherwise take Ctrl+A as "select all rows",
+        // and the window's key handler takes Ctrl+D as "duplicate rule" (#13502).
+        dataGrid.AddHandler(InputElement.KeyDownEvent, (object? _, KeyEventArgs e) =>
+        {
+            if (vm.HandleFixesSelectionKey(e))
+            {
+                e.Handled = true;
+            }
+        }, RoutingStrategies.Tunnel);
 
         var hitsItemsControl = new ItemsControl
         {
@@ -592,5 +631,40 @@ public class MultipleReplaceWindow : Window
         };
 
         return border;
+    }
+
+    // A preview with one row per changed line is far too long to untick by hand, so offer
+    // tick all / untick all / invert with the gestures the sibling lists advertise (#13502).
+    private static ContextMenu MakeFixesContextMenu(MultipleReplaceViewModel vm)
+    {
+        var commandModifier = System.OperatingSystem.IsMacOS() ? KeyModifiers.Meta : KeyModifiers.Control;
+
+        return new ContextMenu
+        {
+            Items =
+            {
+                new Avalonia.Controls.MenuItem
+                {
+                    Header = Se.Language.General.SelectAll,
+                    DataContext = vm,
+                    Command = vm.SelectAllFixesCommand,
+                    InputGesture = new KeyGesture(Key.A, commandModifier),
+                },
+                new Avalonia.Controls.MenuItem
+                {
+                    Header = Se.Language.General.SelectNone,
+                    DataContext = vm,
+                    Command = vm.SelectNoFixesCommand,
+                    InputGesture = new KeyGesture(Key.D, commandModifier),
+                },
+                new Avalonia.Controls.MenuItem
+                {
+                    Header = Se.Language.General.InvertSelection,
+                    DataContext = vm,
+                    Command = vm.InvertFixesSelectionCommand,
+                    InputGesture = new KeyGesture(Key.I, commandModifier | KeyModifiers.Shift),
+                },
+            },
+        };
     }
 }

@@ -309,11 +309,13 @@ public class MainReadOnlyOriginalTests
     }
 
     /// <summary>
-    /// Time codes are locked while the original's non-matching lines are shown: those rows are placed
-    /// by matching on time, so retiming a working line would shuffle them around under the user.
+    /// Showing the original's non-matching lines no longer locks time codes: each row keeps a
+    /// sticky link to the original line it displays, so retiming cannot shuffle the reference
+    /// around under the user (#13594). Display-only rows included - nudging their timings is part
+    /// of adopting the line, and only the user's own lock disables the editors.
     /// </summary>
     [AvaloniaFact]
-    public void ShowingNonMatchingOriginalLines_LocksTimeCodes()
+    public void ShowingNonMatchingOriginalLines_DoesNotLockTimeCodes()
     {
         var (window, vm) = CreateMainViewModel();
         try
@@ -323,13 +325,177 @@ public class MainReadOnlyOriginalTests
             ImportSampleReference(vm);
 
             Assert.True(vm.IsShowingOriginalNonMatchingLines);
-            Assert.True(vm.AreTimeCodesLocked);
-            Assert.False(vm.AreTimeCodesEditable);
-            Assert.False(vm.LockTimeCodes); // the user's own lock setting is untouched
-
-            InvokeFileCloseOriginal(vm);
-
             Assert.False(vm.AreTimeCodesLocked);
+            Assert.False(vm.LockTimeCodes);
+
+            vm.SelectedSubtitle = vm.Subtitles.Single(p => p.IsReferenceOnly);
+            Assert.True(vm.AreTimeCodesEditable);
+
+            vm.SelectedSubtitle = vm.Subtitles.First(p => !p.IsReferenceOnly);
+            Assert.True(vm.AreTimeCodesEditable);
+        }
+        finally
+        {
+            CloseWindow(window, vm);
+        }
+    }
+
+    /// <summary>
+    /// Retiming a display-only row does not promote it - only typing text does - and the nudged
+    /// times survive the refresh: the file's text stays authoritative for a read-only reference,
+    /// its times deliberately do not (#13594).
+    /// </summary>
+    [AvaloniaFact]
+    public void RetimedReferenceOnlyRow_KeepsItsTimesAndStaysAReferenceRow()
+    {
+        var (window, vm) = CreateMainViewModel();
+        try
+        {
+            ImportSampleReference(vm);
+            var referenceRow = vm.Subtitles.Single(p => p.IsReferenceOnly);
+
+            referenceRow.SetTimes(TimeSpan.FromMilliseconds(2500), TimeSpan.FromMilliseconds(4500));
+
+            InvokeReapplyReadOnlyReference(vm);
+
+            var stillReference = Assert.Single(vm.Subtitles, p => p.IsReferenceOnly);
+            Assert.Same(referenceRow, stillReference);
+            Assert.Equal(TimeSpan.FromMilliseconds(2500), stillReference.StartTime);
+            Assert.Equal(TimeSpan.FromMilliseconds(4500), stillReference.EndTime);
+            Assert.Equal("Reference only - no translation", stillReference.OriginalText);
+
+            // Still not part of the working subtitle.
+            Assert.Equal(2, vm.GetUpdateSubtitle().Paragraphs.Count);
+        }
+        finally
+        {
+            CloseWindow(window, vm);
+        }
+    }
+
+    /// <summary>
+    /// The whole point of the sticky link (#13594): retiming a working line keeps the original
+    /// text it displays, even when the new timing overlaps a different original line - the old
+    /// time-based re-match would have swapped the texts around.
+    /// </summary>
+    [AvaloniaFact]
+    public void RetimedWorkingRow_KeepsItsOriginalLine()
+    {
+        var (window, vm) = CreateMainViewModel();
+        try
+        {
+            ImportSampleReference(vm);
+
+            // Retime "Translated one" (displays "Reference one", 0-2000) into the middle of the
+            // reference-only line's span (2000-4000).
+            var retimed = vm.Subtitles.Single(p => p.Text == "Translated one");
+            retimed.SetTimes(TimeSpan.FromMilliseconds(2200), TimeSpan.FromMilliseconds(3800));
+
+            InvokeReapplyReadOnlyReference(vm);
+
+            Assert.Equal("Reference one", retimed.OriginalText);
+            var referenceRow = Assert.Single(vm.Subtitles, p => p.IsReferenceOnly);
+            Assert.Equal("Reference only - no translation", referenceRow.OriginalText);
+            Assert.Equal(3, vm.Subtitles.Count);
+        }
+        finally
+        {
+            CloseWindow(window, vm);
+        }
+    }
+
+    /// <summary>
+    /// After a retime the display-only rows glide back into start-time order - and only they move;
+    /// the working rows keep their order and identity.
+    /// </summary>
+    [AvaloniaFact]
+    public void RetimedWorkingRow_MakesReferenceRowsGlideIntoPlace()
+    {
+        var (window, vm) = CreateMainViewModel();
+        try
+        {
+            ImportSampleReference(vm);
+
+            // "Translated two" (4000-6000) moves before the reference-only row (2000-4000).
+            var retimed = vm.Subtitles.Single(p => p.Text == "Translated two");
+            retimed.SetTimes(TimeSpan.FromMilliseconds(900), TimeSpan.FromMilliseconds(1900));
+
+            InvokeReapplyReadOnlyReference(vm);
+
+            Assert.Equal(
+                new[] { "Translated one", "Translated two", string.Empty },
+                vm.Subtitles.Select(p => p.Text));
+            Assert.True(vm.Subtitles[2].IsReferenceOnly);
+            Assert.Equal("Reference only - no translation", vm.Subtitles[2].OriginalText);
+        }
+        finally
+        {
+            CloseWindow(window, vm);
+        }
+    }
+
+    /// <summary>
+    /// Typing into a display-only row adopts the missing line: the row becomes an ordinary,
+    /// numbered, saveable working line at the reference line's timings (#13594).
+    /// </summary>
+    [AvaloniaFact]
+    public void TypingIntoReferenceOnlyRow_PromotesItToAWorkingLine()
+    {
+        var (window, vm) = CreateMainViewModel();
+        try
+        {
+            ImportSampleReference(vm);
+            var referenceRow = vm.Subtitles.Single(p => p.IsReferenceOnly);
+
+            vm.SelectedSubtitle = referenceRow;
+            referenceRow.Text = "Freshly typed translation";
+            vm.SubtitleTextChanged(null, null!);
+
+            Assert.False(referenceRow.IsReferenceOnly);
+            Assert.Equal(2, referenceRow.Number);
+            Assert.Equal(TimeSpan.FromMilliseconds(2000), referenceRow.StartTime);
+
+            var saved = vm.GetUpdateSubtitle();
+            Assert.Equal(3, saved.Paragraphs.Count);
+            Assert.Equal("Freshly typed translation", saved.Paragraphs[1].Text);
+
+            // The reference itself is untouched, and the refresh does not bring a duplicate row:
+            // the promoted row still displays that original line.
+            InvokeReapplyReadOnlyReference(vm);
+            Assert.Equal(3, vm.Subtitles.Count);
+            Assert.DoesNotContain(vm.Subtitles, p => p.IsReferenceOnly);
+            Assert.Equal("Reference only - no translation", referenceRow.OriginalText);
+        }
+        finally
+        {
+            CloseWindow(window, vm);
+        }
+    }
+
+    /// <summary>
+    /// Deleting a promoted row hands its original line back to the reference: the line reappears
+    /// as a display-only row on the next refresh, so nothing of the reference is ever lost.
+    /// </summary>
+    [AvaloniaFact]
+    public void DeletingAPromotedRow_BringsTheReferenceLineBack()
+    {
+        var (window, vm) = CreateMainViewModel();
+        try
+        {
+            ImportSampleReference(vm);
+            var referenceRow = vm.Subtitles.Single(p => p.IsReferenceOnly);
+
+            vm.SelectedSubtitle = referenceRow;
+            referenceRow.Text = "Typed then deleted";
+            vm.SubtitleTextChanged(null, null!);
+            Assert.False(referenceRow.IsReferenceOnly);
+
+            vm.Subtitles.Remove(referenceRow);
+            InvokeReapplyReadOnlyReference(vm);
+
+            var restored = Assert.Single(vm.Subtitles, p => p.IsReferenceOnly);
+            Assert.Equal("Reference only - no translation", restored.OriginalText);
+            Assert.Equal(3, vm.Subtitles.Count);
         }
         finally
         {
@@ -574,11 +740,11 @@ public class MainReadOnlyOriginalTests
     }
 
     /// <summary>
-    /// The waveform enforces the time-code lock through its own IsReadOnly, so it must follow the
-    /// lock that showing/closing the non-matching lines toggles.
+    /// The waveform stays editable while the non-matching lines are shown - the sticky links mean
+    /// dragging a paragraph edge cannot shuffle the reference rows onto other lines (#13594).
     /// </summary>
     [AvaloniaFact]
-    public void ShowingNonMatchingOriginalLines_MakesTheWaveformReadOnly()
+    public void ShowingNonMatchingOriginalLines_KeepsTheWaveformEditable()
     {
         var (window, vm) = CreateMainViewModel();
         try
@@ -591,9 +757,6 @@ public class MainReadOnlyOriginalTests
             Assert.False(vm.AudioVisualizer.IsReadOnly);
 
             ImportSampleReference(vm);
-            Assert.True(vm.AudioVisualizer.IsReadOnly);
-
-            InvokeFileCloseOriginal(vm);
             Assert.False(vm.AudioVisualizer.IsReadOnly);
         }
         finally
@@ -734,7 +897,9 @@ public class MainReadOnlyOriginalTests
                          "FileCloseOriginal", BindingFlags.Instance | BindingFlags.NonPublic)
                      ?? throw new InvalidOperationException("FileCloseOriginal not found");
 
-        method.Invoke(vm, null);
+        // Async since the close can prompt to save an editable original; the paths these tests
+        // exercise never show the prompt, so the task completes synchronously.
+        ((Task)method.Invoke(vm, null)!).GetAwaiter().GetResult();
     }
 
     private static async Task InvokeFileCloseTranslation(MainViewModel vm)

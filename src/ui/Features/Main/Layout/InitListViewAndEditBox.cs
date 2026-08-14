@@ -112,7 +112,10 @@ public static partial class InitListViewAndEditBox
         var dropHost = new Border
         {
             Background = Brushes.Transparent,
-            Child = vm.SubtitleGrid
+            // Index-mapped scrollbar (#13579): hides the grid's native pixel-mapped vertical
+            // bar and docks a row-index one beside it, so the thumb no longer jitters with
+            // the virtualization panel's extent re-estimates on variable-height rows.
+            Child = new TableViewIndexScrollBar(vm.SubtitleGrid)
         };
         vm.SubtitleGridDropHost = dropHost;
         DragDrop.SetAllowDrop(dropHost, true);
@@ -1942,8 +1945,13 @@ public static partial class InitListViewAndEditBox
         };
         textBox[AutomationProperties.NameProperty] = Se.Language.General.Text;
 
-        // A reference-only row has no translation text to edit - typing would make it a real line.
-        textBox.Bind(TextBox.IsReadOnlyProperty, new Binding(nameof(vm.IsSelectedLineReferenceOnly))
+        // A reference-only row IS editable: typing the missing translation into it is how the line
+        // is adopted from the reference - the first character promotes the row to an ordinary
+        // working line (see MainViewModel.SubtitleTextChanged, #13594).
+        //
+        // In "Edit original" mode, though, the original is the file being worked on, so the
+        // working text box goes read-only to keep the two sides apart.
+        textBox.Bind(TextBox.IsReadOnlyProperty, new Binding(nameof(vm.IsEditOriginalMode))
         {
             Mode = BindingMode.OneWay,
             Source = vm
@@ -2019,6 +2027,10 @@ public static partial class InitListViewAndEditBox
         textBox.FontWeight = appearance.SubtitleTextBoxFontBold ? FontWeight.Bold : FontWeight.Normal;
         textBox.IsUndoEnabled = false;
         textBox.ClearSelectionOnLostFocus = false;
+
+        // Pasted text goes straight into the paragraph via the two-way binding, so its line
+        // breaks must be SE's own - see TextBoxPasteNormalizer (#13591).
+        TextBoxPasteNormalizer.NormalizeLineBreaksOnPaste(textBox);
 
         if (appearance.SubtitleTextBoxCenterText)
         {

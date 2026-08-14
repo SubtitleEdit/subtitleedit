@@ -16,7 +16,8 @@ public partial class OpenOriginalMismatchViewModel : ObservableObject
 
     /// <summary>
     /// Show the original's non-matching lines as extra, display-only rows. The grid then holds the
-    /// whole original, which is why editing it stays lossless - at the price of locked time codes.
+    /// whole original, which is why editing it stays lossless. Typing into an extra row adopts
+    /// that line into the working subtitle (#13594).
     /// </summary>
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(ShowMatchingLinesOnly))]

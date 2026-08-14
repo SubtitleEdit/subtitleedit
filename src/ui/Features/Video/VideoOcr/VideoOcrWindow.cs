@@ -9,6 +9,7 @@ using Nikse.SubtitleEdit.Features.Ocr.Engines;
 using Nikse.SubtitleEdit.Features.Translate;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
+using Nikse.SubtitleEdit.Logic.Download;
 using Nikse.SubtitleEdit.Logic.LlamaCpp;
 using Nikse.SubtitleEdit.Logic.ValueConverters;
 using System.Linq;
@@ -20,6 +21,7 @@ public class VideoOcrWindow : Window
 {
     private ComboBox? _comboEngine;
     private ComboBox? _comboLlamaCppModel;
+    private ComboBox? _comboCrispEmbedModel;
 
     public VideoOcrWindow(VideoOcrViewModel vm)
     {
@@ -198,8 +200,34 @@ public class VideoOcrWindow : Window
             Width = 350,
         };
 
+        // The engine picker, plus a settings button for the one engine here with something to
+        // configure: CrispEmbed's engine build and models are downloaded from that dialog.
+        var enginePanel = new StackPanel
+        {
+            Orientation = Orientation.Horizontal,
+            Spacing = 5,
+            Children =
+            {
+                comboEngine,
+                UiUtil.MakeButton(vm.ShowCrispEmbedSettingsCommand, IconNames.Settings,
+                        $"{CrispEmbedEngine.StaticName} - {Se.Language.General.Settings}")
+                    .WithBindIsVisible(nameof(vm.IsCrispEmbedEngine)),
+            },
+        };
+
         panel.Children.Add(MakeHeader(Se.Language.Video.VideoOcr.Engine, isFirst: true));
-        panel.Children.Add(comboEngine);
+        panel.Children.Add(enginePanel);
+
+        // What the selected engine actually is - each engine carries a one-line description
+        // (local vs cloud, what it needs installed) that had no home in the window until now.
+        var engineDescription = new TextBlock
+        {
+            Opacity = 0.7,
+            TextWrapping = TextWrapping.Wrap,
+            Margin = new Thickness(0, 2, 0, 4),
+        };
+        engineDescription.Bind(TextBlock.TextProperty, new Binding(nameof(vm.SelectedEngineDescription)) { Source = vm });
+        panel.Children.Add(engineDescription);
 
         // Paddle OCR settings
         var paddlePanel = new StackPanel { Orientation = Orientation.Vertical, Spacing = 4 };
@@ -248,6 +276,21 @@ public class VideoOcrWindow : Window
         llamaCppPanel.Children.Add(UiUtil.MakeTextBox(330, vm, nameof(vm.LlamaCppLanguage)));
         llamaCppPanel.Bind(StackPanel.IsVisibleProperty, new Binding(nameof(vm.IsLlamaCppEngine)) { Source = vm });
         panel.Children.Add(llamaCppPanel);
+
+        // CrispEmbed settings
+        var comboCrispEmbedModel = UiUtil.MakeComboBox(vm.CrispEmbedModels, vm, nameof(vm.SelectedCrispEmbedModel)).WithWidth(330);
+        comboCrispEmbedModel.ItemTemplate = BuildCrispEmbedModelItemTemplate();
+        _comboCrispEmbedModel = comboCrispEmbedModel;
+
+        var crispEmbedPanel = new StackPanel { Orientation = Orientation.Vertical, Spacing = 4 };
+        crispEmbedPanel.Children.Add(UiUtil.MakeLabel(Se.Language.General.Backend));
+        crispEmbedPanel.Children.Add(UiUtil.MakeComboBox(vm.CrispEmbedBackends, vm, nameof(vm.SelectedCrispEmbedBackend)).WithWidth(330));
+        crispEmbedPanel.Children.Add(UiUtil.MakeLabel(Se.Language.General.Model));
+        crispEmbedPanel.Children.Add(comboCrispEmbedModel);
+        // No download buttons here - engine build and model downloads live in the CrispEmbed
+        // settings dialog opened from the gear button next to the engine combo.
+        crispEmbedPanel.Bind(StackPanel.IsVisibleProperty, new Binding(nameof(vm.IsCrispEmbedEngine)) { Source = vm });
+        panel.Children.Add(crispEmbedPanel);
 
         // Scan settings
         panel.Children.Add(MakeHeader(Se.Language.Video.VideoOcr.Scan));
@@ -300,6 +343,11 @@ public class VideoOcrWindow : Window
                     : DownloadDotStatus.NotInstalled;
             case OcrEngineType.LlamaCpp:
                 return StatusDots.From(LlamaCppServerManager.IsEngineInstalled(), LlamaCppUpdateStatus.GetEngineUpdateStatus());
+            case OcrEngineType.CrispEmbed:
+                return CrispEmbedEngine.IsEngineInstalled()
+                    // Installed: the cheap .installed.sha256 sidecar turns an outdated build amber.
+                    ? StatusDots.From(true, DownloadHashManager.GetSidecarStatus(CrispEmbedEngine.GetAndCreateFolder()))
+                    : DownloadDotStatus.NotInstalled;
             default:
                 return DownloadDotStatus.None;
         }
@@ -309,7 +357,11 @@ public class VideoOcrWindow : Window
     {
         return StatusDots.ComboItemTemplate<VideoOcrEngineItem>(
             engine => engine.Name,
-            _ => null,
+            // CrispEmbed is the one engine here with a tracked local install, so show what it
+            // costs to download until it is on disk - same as the OCR window's engine combo.
+            engine => engine.EngineType == OcrEngineType.CrispEmbed && !CrispEmbedEngine.IsEngineInstalled()
+                ? CrispEmbedEngine.DownloadSizeText
+                : null,
             GetEngineDotStatus);
     }
 
@@ -319,6 +371,16 @@ public class VideoOcrWindow : Window
             model => model.Model.DisplayName,
             model => model.Model.Size,
             model => model.IsInstalled ? DownloadDotStatus.UpToDate : DownloadDotStatus.NotInstalled);
+    }
+
+    private static Avalonia.Controls.Templates.FuncDataTemplate<CrispEmbedModelDisplay> BuildCrispEmbedModelItemTemplate()
+    {
+        return StatusDots.ComboItemTemplate<CrispEmbedModelDisplay>(
+            model => model.Model.Name,
+            model => model.Model.Size,
+            model => model.Backend.IsModelInstalled(model.Model)
+                ? DownloadDotStatus.UpToDate
+                : DownloadDotStatus.NotInstalled);
     }
 
     // Rebuilds the combo item templates so the install-status dots are re-evaluated - the dots are
@@ -332,6 +394,10 @@ public class VideoOcrWindow : Window
         if (_comboLlamaCppModel != null)
         {
             _comboLlamaCppModel.ItemTemplate = BuildLlamaCppModelItemTemplate();
+        }
+        if (_comboCrispEmbedModel != null)
+        {
+            _comboCrispEmbedModel.ItemTemplate = BuildCrispEmbedModelItemTemplate();
         }
     }
 

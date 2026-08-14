@@ -1,4 +1,5 @@
 using System;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Threading.Tasks;
 using Avalonia.Controls;
@@ -27,12 +28,6 @@ public partial class ChatterboxTtsSettingsViewModel : ObservableObject
     [ObservableProperty] private string _engineLabel = string.Empty;
     [ObservableProperty] private IBrush _engineBrush = Brushes.Gray;
     [ObservableProperty] private string _engineDownloadButtonText = string.Empty;
-    [ObservableProperty] private string _baseModelLabel = string.Empty;
-    [ObservableProperty] private IBrush _baseModelBrush = Brushes.Gray;
-    [ObservableProperty] private string _baseDownloadButtonText = string.Empty;
-    [ObservableProperty] private string _turboModelLabel = string.Empty;
-    [ObservableProperty] private IBrush _turboModelBrush = Brushes.Gray;
-    [ObservableProperty] private string _turboDownloadButtonText = string.Empty;
     [ObservableProperty] private string _modelsFolder = string.Empty;
     [ObservableProperty] private string _voicesFolder = string.Empty;
     [ObservableProperty] private bool _isEngineInstalled;
@@ -40,11 +35,31 @@ public partial class ChatterboxTtsSettingsViewModel : ObservableObject
     public Window? Window { get; set; }
     public bool OkPressed { get; private set; }
 
+    /// <summary>
+    /// The Base pair in its three quantizations plus Turbo, each with its own install state
+    /// and download button. Quantization names are technical identifiers, so they are appended
+    /// to the translated "Base model" label rather than translated themselves.
+    /// </summary>
+    public ObservableCollection<ChatterboxModelStatusViewModel> Models { get; } = new();
+
     public ChatterboxTtsSettingsViewModel(IWindowService windowService, IFolderHelper folderHelper)
     {
         _windowService = windowService;
         _folderHelper = folderHelper;
+
+        foreach (var key in ChatterboxTtsCppDownloadService.GetAllModelKeys())
+        {
+            Models.Add(new ChatterboxModelStatusViewModel(key, GetDisplayName(key), RedownloadModelsCore));
+        }
     }
+
+    private static string GetDisplayName(string modelKey) => modelKey switch
+    {
+        ChatterboxTtsCppDownloadService.ModelKeyBaseF16 => $"{Se.Language.Video.BaseModel} (F16)",
+        ChatterboxTtsCppDownloadService.ModelKeyBaseQ4K => $"{Se.Language.Video.BaseModel} (Q4_K)",
+        ChatterboxTtsCppDownloadService.ModelKeyTurbo => Se.Language.Video.TurboModel,
+        _ => $"{Se.Language.Video.BaseModel} (Q8_0)",
+    };
 
     public void Initialize()
     {
@@ -113,49 +128,22 @@ public partial class ChatterboxTtsSettingsViewModel : ObservableObject
             });
         }
 
-        var baseInstalled = ChatterboxTtsCpp.AreModelsInstalled(ChatterboxTtsCpp.ModelKeyBase);
-        ApplyModelStatus(
-            baseInstalled,
-            label => BaseModelLabel = label,
-            brush => BaseModelBrush = brush);
-        BaseDownloadButtonText = baseInstalled ? string.Format(Se.Language.General.ReDownloadX, "Base") : string.Format(Se.Language.General.DownloadX, "Base");
-
-        var turboInstalled = ChatterboxTtsCpp.AreModelsInstalled(ChatterboxTtsCpp.ModelKeyTurbo);
-        ApplyModelStatus(
-            turboInstalled,
-            label => TurboModelLabel = label,
-            brush => TurboModelBrush = brush);
-        TurboDownloadButtonText = turboInstalled ? string.Format(Se.Language.General.ReDownloadX, "Turbo") : string.Format(Se.Language.General.DownloadX, "Turbo");
-    }
-
-    private static void ApplyModelStatus(bool installed, Action<string> setLabel, Action<IBrush> setBrush)
-    {
-        if (installed)
+        foreach (var model in Models)
         {
-            setLabel(Se.Language.General.Installed);
-            setBrush(new SolidColorBrush(Color.FromRgb(0x4C, 0xAF, 0x50))); // green
-        }
-        else
-        {
-            setLabel(Se.Language.General.NotInstalled);
-            setBrush(new SolidColorBrush(Color.FromRgb(0x9E, 0x9E, 0x9E))); // grey
+            var installed = ChatterboxTtsCpp.AreModelsInstalled(model.ModelKey);
+            model.StatusLabel = installed ? Se.Language.General.Installed : Se.Language.General.NotInstalled;
+            model.StatusBrush = installed
+                ? new SolidColorBrush(Color.FromRgb(0x4C, 0xAF, 0x50))  // green
+                : new SolidColorBrush(Color.FromRgb(0x9E, 0x9E, 0x9E)); // grey
+            model.DownloadButtonText = installed
+                ? string.Format(Se.Language.General.ReDownloadX, model.ModelKey)
+                : string.Format(Se.Language.General.DownloadX, model.ModelKey);
         }
     }
 
-    [RelayCommand]
-    private async Task RedownloadBaseModels()
+    private async Task RedownloadModelsCore(string modelKey)
     {
-        await RedownloadModelsCore(ChatterboxTtsCpp.ModelKeyBase, "~990 MB");
-    }
-
-    [RelayCommand]
-    private async Task RedownloadTurboModels()
-    {
-        await RedownloadModelsCore(ChatterboxTtsCpp.ModelKeyTurbo, "~1 GB");
-    }
-
-    private async Task RedownloadModelsCore(string modelKey, string sizeText)
-    {
+        var sizeText = ChatterboxTtsCppDownloadService.GetDownloadSizeText(modelKey);
         if (Window == null)
         {
             return;

@@ -26,6 +26,7 @@ using System.Collections.Generic;
 using System.IO;
 using System;
 using System.Linq;
+using System.Runtime.InteropServices;
 
 public class BluRayPoint
 {
@@ -287,18 +288,18 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
                     count = maxCount;
                 }
 
-                var r = color.Red;
-                var g = color.Green;
-                var b = color.Blue;
-                var a = color.Alpha;
+                // Pack the four channel bytes in the order they would have been stored one at a
+                // time, then read them back as a uint, so the filled bytes come out identical on
+                // either endianness. idx is always a multiple of 4, so the cast covers the run.
+                Span<byte> pixel = stackalloc byte[4];
+                pixel[0] = color.Red;
+                pixel[1] = color.Green;
+                pixel[2] = color.Blue;
+                pixel[3] = color.Alpha;
 
-                for (var i = 0; i < count; i++)
-                {
-                    pixelSpan[idx++] = r;
-                    pixelSpan[idx++] = g;
-                    pixelSpan[idx++] = b;
-                    pixelSpan[idx++] = a;
-                }
+                MemoryMarshal.Cast<byte, uint>(pixelSpan)
+                    .Slice(idx / 4, count)
+                    .Fill(MemoryMarshal.Read<uint>(pixel));
             }
 
             // Optimized single pixel setter

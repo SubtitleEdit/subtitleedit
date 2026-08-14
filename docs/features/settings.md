@@ -51,6 +51,7 @@ Profiles store subtitle rules and limits. You can switch between profiles for di
 - **Auto-convert to UTF-8** — Automatically convert files to UTF-8
 - **Force CR+LF on save** — Use Windows-style line endings
 - **Auto-trim whitespace** — Remove trailing spaces
+- **Remove blank lines when opening a subtitle** — Drop lines without text when a subtitle file is opened or inserted. Off by default
 
 ## Tools
 

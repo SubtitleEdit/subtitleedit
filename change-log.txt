@@ -3,6 +3,82 @@ Subtitle Edit Changelog
 
 -----------------------------------------------------------------------------------------------------
 
+v5.2.0-beta13 (14th of August 2026)
+
+* Add an "Edit original" mode, and make the original reference rows editable in place - thx bichitoxxx
+* Add back the SE4 option to remove blank lines when opening a subtitle - thx Morv55555
+* Add Ctrl+Shift+End/Home and friends for extending the selection in the subtitle grid
+* Make WebVTT cue settings configurable again - thx apartmandairesi
+* Make the default waveform paragraph backgrounds more visible
+* Give the subtitle grid an index-mapped scroll bar so the thumb no longer jitters - thx St0rmXtr00per
+* Update the speech-to-text advanced parameter help to match the engine versions being downloaded
+* Fix waveform dragging not following the pointer through mid-drag scrolls - thx bichitoxxx
+* Fix "Remove text for hearing impaired" reporting pasted multi-line text as changed - thx Davanix
+* Fix slow reading of Matroska files on a network share - thx 1476523
+* Update Japanese translation - thx hisui3393
+* Update Polish translation - thx potplayer-fanpack
+* Minor performance improvements in waveform scrubbing, video loading, OCR and text handling - thx ivandrofly
+
+-----------------------------------------------------------------------------------------------------
+
+v5.2.0-beta12 (13th of August 2026)
+
+* Add CrispEmbed as an engine for "OCR burned-in subtitle", with its own settings dialog - thx tal-maker
+* Add Chatterbox Base in F16 and Q4_K alongside Q8_0 - thx subof
+* Add select all/none/invert to the "Multiple replace" preview list - thx Davanix
+* Show what each engine is in the "OCR burned-in subtitle" engine list
+* Remember the numbers and formats seven more tool dialogs ask for
+* Use the usual tick-all shortcuts in the "Multiple replace" rule category picker
+* Make the AI review window a little wider
+* Keep Google Lens OCR going when a single image fails instead of stopping the run - thx fartle
+* Fix crash when closing "Text to speech" after reviewing audio - thx cvrle77
+* Fix undocked video player being in front of the main window at startup - thx GrampaWildWilly
+* Fix "Multiple replace" freezing on a slow regular expression rule
+* Fix batch convert failing every file when one replace rule does not compile
+* Fix the same original line being shown on two rows when opening a non-matching original
+* Fix transparent subtitles ignoring the output folder picked in its own settings dialog
+* Fix Perplexity API key, model and URL being forgotten on restart
+* Fix "Apply minimum gap" mixing up frames and milliseconds
+* Fix "Export plain text" saving its settings when cancelled
+* Fix "OCR burned-in subtitle" repeating a line, and saving engine settings while browsing the lists
+* Fix "OCR burned-in subtitle" running to the end without reporting a broken CrispEmbed/llama.cpp server
+* Fix batch convert dialogs showing the main window's file name in the title bar
+* Fix hardcoded English in the transparent video, burn-in and batch convert output folder pickers
+* Fix Chatterbox retrying an impossible reference voice repair once per line
+* Fix timers and preview images left running after closing several dialogs
+* Update Japanese translation - thx hisui3393
+* Update Korean translation - thx 12si27
+* Update Chinese (Traditional) translation - thx love80312
+* Update French translation - thx Need74
+* Minor performance improvements in string handling
+
+-----------------------------------------------------------------------------------------------------
+
+v5.2.0-beta11 (12th of August 2026)
+
+* Add import/export of selected rule categories to "Multiple replace" - thx KaDeeKe
+* Add move up/down/to top/to bottom shortcuts to "Multiple replace" - thx KaDeeKe
+* Add select all/none/invert to the "Remove text for hearing impaired" preview list - thx fraternl
+* Add rule selection to seconv --remove-formatting - thx Hlsgs
+* Show the whole rule while editing it in "Multiple replace" - thx KaDeeKe
+* Show the subtitle file name in dialog title bars
+* Give user-entered regular expressions a match timeout, and mark broken rules in "Multiple replace" - thx KaDeeKe
+* Fix "Multiple replace" preview freezing after a failed rule - thx KaDeeKe
+* Fix split/rebalance long lines forgetting its settings - thx cvrle77
+* Fix the scroll bar trough paging past the cursor in the subtitle grid - thx ivandrofly
+* Fix context menu hiding behind the undocked audio visualizer - thx GrampaWildWilly
+* Fix unchanged text being invisible in the diff previews - thx fraternl
+* Fix the find window trimming edge spaces from the restored search pattern - thx nms42
+* Fix Chatterbox failing on reference voices that are not 24 kHz mono - thx subof
+* Fix Subtitle Edit staying in front of other applications during transcription and at startup
+* Update Japanese translation - thx hisui3393
+* Update Russian translation - thx jekovcar
+* Update Bulgarian translation - thx jekovcar
+* Update Polish translation - thx potplayer-fanpack
+* Minor performance improvements in name lists, grid rendering and the waveform
+
+-----------------------------------------------------------------------------------------------------
+
 v5.2.0-beta10 (11th of August 2026)
 
 * Add "BDN/xml 8-bit" export with palette-indexed PNGs
