@@ -74,12 +74,12 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                     if (temp.GetCharactersPerSecond() > Configuration.Settings.General.SubtitleMaximumCharactersPerSeconds)
                     {
                         var numberOfCharacters = (double)p.Text.CountCharacters(true);
-                        // Round up to a whole millisecond so the resulting cps ends up strictly
-                        // below the maximum (not exactly at it) and the extension is a real, whole-
-                        // millisecond change. Targeting the exact limit gives a sub-millisecond
-                        // extension that ToString() renders identically to the original (a phantom
-                        // "fix" that changes nothing) and that a whole-ms save discards, so the
-                        // error reappears on the next scan (#13617).
+                        // Round up to a whole millisecond so the resulting cps ends up at or below
+                        // the maximum and the extension is a real, whole-millisecond change.
+                        // Targeting the exact limit gives a sub-millisecond extension that
+                        // ToString() renders identically to the original (a phantom "fix" that
+                        // changes nothing) and that a whole-ms save discards, so the error
+                        // reappears on the next scan (#13617).
                         var maxDurationMilliseconds = Math.Ceiling(numberOfCharacters / Configuration.Settings.General.SubtitleMaximumCharactersPerSeconds * 1000.0);
                         temp.EndTime.TotalMilliseconds = p.StartTime.TotalMilliseconds + maxDurationMilliseconds;
                     }

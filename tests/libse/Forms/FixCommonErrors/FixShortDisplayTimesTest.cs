@@ -71,10 +71,10 @@ public class FixShortDisplayTimesTest
             // The end time moved by a whole millisecond (53,877 -> 53,878).
             Assert.Equal(53878, (int)fixed0.EndTime.TotalMilliseconds);
 
-            // cps is strictly below the maximum and stays there after whole-ms rounding (SRT save).
+            // cps is at or below the maximum and stays there after whole-ms rounding (SRT save).
             Assert.True(fixed0.GetCharactersPerSecond() <= 15.0);
-            var wholeMsDurationSeconds = (int)fixed0.EndTime.TotalMilliseconds - (int)fixed0.StartTime.TotalMilliseconds;
-            var cpsAfterSave = (double)fixed0.Text.CountCharacters(true) / (wholeMsDurationSeconds / 1000.0);
+            var wholeMsDuration = (int)fixed0.EndTime.TotalMilliseconds - (int)fixed0.StartTime.TotalMilliseconds;
+            var cpsAfterSave = (double)fixed0.Text.CountCharacters(true) / (wholeMsDuration / 1000.0);
             Assert.True(cpsAfterSave <= 15.0, $"cps after whole-ms save was {cpsAfterSave}");
         }
         finally
