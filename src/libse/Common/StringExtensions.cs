@@ -220,33 +220,8 @@ namespace Nikse.SubtitleEdit.Core.Common
             // instead of allocating a separator array plus one substring per word.
             var text = HtmlUtil.RemoveHtmlTags(source, true);
             var count = 0;
-            var max = text.Length;
-#if NET8_0_OR_GREATER
-            // Hop from each word start to the next separator instead of testing every char.
-            var span = text.AsSpan();
-            var i = 0;
-            while (i < max)
-            {
-                var wordStart = span.Slice(i).IndexOfAnyExcept(' ', '\n', '\r');
-                if (wordStart < 0)
-                {
-                    break;
-                }
-
-                count++;
-                i += wordStart;
-
-                var separator = span.Slice(i).IndexOfAny(' ', '\n', '\r');
-                if (separator < 0)
-                {
-                    break;
-                }
-
-                i += separator;
-            }
-#else
             var inWord = false;
-            for (var i = 0; i < max; i++)
+            for (var i = 0; i < text.Length; i++)
             {
                 var ch = text[i];
                 if (ch == ' ' || ch == '\n' || ch == '\r')
@@ -259,7 +234,6 @@ namespace Nikse.SubtitleEdit.Core.Common
                     count++;
                 }
             }
-#endif
 
             return count;
         }
