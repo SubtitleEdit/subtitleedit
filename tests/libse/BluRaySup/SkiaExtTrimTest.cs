@@ -1,3 +1,4 @@
+using System.Runtime.InteropServices;
 using Nikse.SubtitleEdit.Core.BluRaySup;
 using SkiaSharp;
 
@@ -131,5 +132,46 @@ public class SkiaExtTrimTest
         Assert.Equal(5, cropped.Height);
         Assert.Equal(255, cropped.GetPixel(2, 2).Alpha);
         Assert.Equal(0, cropped.GetPixel(0, 0).Alpha);
+    }
+
+    [Fact]
+    public void GetNonTransparentHeightAndWidth_SpanTheDrawnPixels()
+    {
+        using var bitmap = MakeBitmap(40, 20, (6, 3, 255), (31, 14, 255));
+
+        Assert.Equal(14 - 3 + 1, bitmap.GetNonTransparentHeight());
+        Assert.Equal(31 - 6 + 1, bitmap.GetNonTransparentWidth());
+    }
+
+    [Fact]
+    public void GetNonTransparentHeightAndWidth_FullyTransparentIsZero()
+    {
+        using var bitmap = MakeBitmap(33, 9);
+
+        Assert.Equal(0, bitmap.GetNonTransparentHeight());
+        Assert.Equal(0, bitmap.GetNonTransparentWidth());
+    }
+
+    // Rgb888x is four bytes per pixel but has no alpha channel: the fourth byte is padding that
+    // GetPixel ignores, so every pixel is opaque no matter what that byte holds. Reading it as
+    // alpha would call a bitmap with zeroed padding empty.
+    [Fact]
+    public void GetNonTransparentHeightAndWidth_Rgb888xHasNoAlphaByte()
+    {
+        using var bitmap = new SKBitmap(new SKImageInfo(6, 4, SKColorType.Rgb888x, SKAlphaType.Opaque));
+        var pixels = new byte[bitmap.ByteCount];
+        for (var i = 0; i < pixels.Length; i += 4)
+        {
+            pixels[i] = 200;     // R
+            pixels[i + 1] = 100; // G
+            pixels[i + 2] = 50;  // B
+            pixels[i + 3] = 0;   // padding, not alpha
+        }
+
+        Marshal.Copy(pixels, 0, bitmap.GetPixels(), pixels.Length);
+
+        Assert.Equal(255, bitmap.GetPixel(0, 0).Alpha);
+        Assert.Equal(4, bitmap.GetNonTransparentHeight());
+        Assert.Equal(6, bitmap.GetNonTransparentWidth());
     }
 }
