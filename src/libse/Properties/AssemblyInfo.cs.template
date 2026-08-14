@@ -26,3 +26,4 @@ using System.Runtime.InteropServices;
 
 // Make the internal types available in our testing assembly.
 [assembly: InternalsVisibleTo("Test")]
+[assembly: InternalsVisibleTo("LibSETests")]

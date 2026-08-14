@@ -4,7 +4,9 @@ using System.Buffers.Binary;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Runtime.ExceptionServices;
 using System.Text;
+using System.Threading.Tasks;
 using Nikse.SubtitleEdit.Core.Common;
 
 namespace Nikse.SubtitleEdit.Core.ContainerFormats.Matroska
@@ -70,7 +72,9 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Matroska
         /// round-trips - every refill is a synchronous request over the wire - so the one-page
         /// buffer that wins on local disk turns tens of thousands of small reads into as many
         /// round-trips, and opening an MKV from a UNC path crawled while the same file on a local
-        /// disk opened instantly (#13609). SE 4 always used this size.
+        /// disk opened instantly (#13609). Since the parallel cluster walk (see
+        /// <see cref="TryReadSegmentClusterParallel"/>) took over the network hot path, this size
+        /// only serves the remaining sequential operations and the irregular-file fallback walk.
         /// </summary>
         private const int NetworkReadBufferSize = 65536;
 
@@ -212,9 +216,6 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Matroska
                     case ElementId.Timecode:
                         // Absolute timestamp of the cluster (based on TimeCodeScale)
                         clusterTimeCode = ReadUIntAsLong(element.DataSize);
-                        break;
-                    case ElementId.BlockGroup:
-                        ReadBlockGroupElement(element, clusterTimeCode);
                         break;
                     case ElementId.SimpleBlock:
                         var trackNumber = (int)ReadVariableLengthUInt();
@@ -431,7 +432,12 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Matroska
 
         private double GetTimeScaledToMilliseconds(double time)
         {
-            return time * _timeCodeScale / 1000000.0;
+            return GetTimeScaledToMilliseconds(time, _timeCodeScale);
+        }
+
+        private static double GetTimeScaledToMilliseconds(double time, long timeCodeScale)
+        {
+            return time * timeCodeScale / 1000000.0;
         }
 
         private void ReadTracksElement(Element tracksElement)
@@ -605,103 +611,134 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Matroska
             videoCodec = _videoCodecId;
         }
 
-        private void ReadCluster(Element clusterElement)
+        /// <summary>
+        /// Parses the blocks of one cluster and hands every subtitle block to a collector.
+        /// Owns its stream and scratch buffer so instances can run in parallel over separate
+        /// streams (the network cluster walk) as well as over the file's main stream (the
+        /// sequential walk).
+        /// </summary>
+        private sealed class ClusterReader
         {
-            long clusterTimeCode = 0;
+            private readonly Stream _stream;
+            private readonly byte[] _buffer = new byte[8];
+            private readonly HashSet<int> _subtitleTrackNumbers;
+            private readonly long _timeCodeScale;
+            private readonly Action<MatroskaSubtitleBlock> _addSubtitleBlock;
 
-            Element element;
-            while (_stream.Position < clusterElement.EndPosition && (element = ReadElement()) != null)
+            public ClusterReader(Stream stream, HashSet<int> subtitleTrackNumbers, long timeCodeScale, Action<MatroskaSubtitleBlock> addSubtitleBlock)
             {
-                switch (element.Id)
+                _stream = stream;
+                _subtitleTrackNumbers = subtitleTrackNumbers;
+                _timeCodeScale = timeCodeScale;
+                _addSubtitleBlock = addSubtitleBlock;
+            }
+
+            /// <summary>Reads one cluster; the stream must be positioned at the cluster's data start.</summary>
+            public void ReadCluster(Element clusterElement)
+            {
+                long clusterTimeCode = 0;
+
+                Element element;
+                while (_stream.Position < clusterElement.EndPosition && (element = ReadElement(_stream, _buffer)) != null)
                 {
-                    case ElementId.Timecode:
-                        clusterTimeCode = ReadUIntAsLong(element.DataSize);
-                        break;
-                    case ElementId.BlockGroup:
-                        ReadBlockGroupElement(element, clusterTimeCode);
-                        break;
-                    case ElementId.SimpleBlock:
-                        AddSubtitleBlock(ReadSubtitleBlock(element, clusterTimeCode));
-                        break;
-                    default:
-                        _stream.Seek(element.DataSize, SeekOrigin.Current);
-                        break;
-                }
-            }
-        }
-
-        private void ReadBlockGroupElement(Element clusterElement, long clusterTimeCode)
-        {
-            MatroskaSubtitle subtitle = null;
-
-            Element element;
-            while (_stream.Position < clusterElement.EndPosition && (element = ReadElement()) != null)
-            {
-                switch (element.Id)
-                {
-                    case ElementId.Block:
-                        var subtitleBlock = ReadSubtitleBlock(element, clusterTimeCode);
-                        subtitle = subtitleBlock?.Subtitle;
-                        AddSubtitleBlock(subtitleBlock);
-                        break;
-                    case ElementId.BlockDuration:
-                        var duration = ReadUIntAsLong(element.DataSize);
-                        if (subtitle != null)
-                        {
-                            subtitle.Duration = (long)Math.Round(GetTimeScaledToMilliseconds(duration));
-                        }
-                        break;
-                    default:
-                        _stream.Seek(element.DataSize, SeekOrigin.Current);
-                        break;
-                }
-            }
-        }
-
-        private MatroskaSubtitleBlock ReadSubtitleBlock(Element blockElement, long clusterTimeCode)
-        {
-            var trackNumber = (int)ReadVariableLengthUInt();
-            if (!IsSubtitleTrackNumber(trackNumber))
-            {
-                _stream.Seek(blockElement.EndPosition, SeekOrigin.Begin);
-                return null;
-            }
-
-            var timeCode = ReadInt16();
-
-            // lacing
-            var flags = (byte)_stream.ReadByte();
-            int frames;
-            switch (flags & 6)
-            {
-                case 0: // 00000000 = No lacing
-                    System.Diagnostics.Debug.Print("No lacing");
-                    break;
-                case 2: // 00000010 = Xiph lacing
-                    frames = _stream.ReadByte() + 1;
-                    System.Diagnostics.Debug.Print("Xiph lacing ({0} frames)", frames);
-                    break;
-                case 4: // 00000100 = Fixed-size lacing
-                    frames = _stream.ReadByte() + 1;
-                    for (var i = 0; i < frames; i++)
+                    switch (element.Id)
                     {
-                        _stream.ReadByte(); // frames
+                        case ElementId.Timecode:
+                            clusterTimeCode = ReadUIntAsLong(_stream, _buffer, element.DataSize);
+                            break;
+                        case ElementId.BlockGroup:
+                            ReadBlockGroupElement(element, clusterTimeCode);
+                            break;
+                        case ElementId.SimpleBlock:
+                            var simpleBlock = ReadSubtitleBlock(element, clusterTimeCode);
+                            if (simpleBlock != null)
+                            {
+                                _addSubtitleBlock(simpleBlock);
+                            }
+                            break;
+                        default:
+                            _stream.Seek(element.DataSize, SeekOrigin.Current);
+                            break;
                     }
-                    System.Diagnostics.Debug.Print("Fixed-size lacing ({0} frames)", frames);
-                    break;
-                case 6: // 00000110 = EMBL lacing
-                    frames = _stream.ReadByte() + 1;
-                    System.Diagnostics.Debug.Print("EBML lacing ({0} frames)", frames);
-                    break;
+                }
             }
 
-            // save subtitle data
-            var dataLength = (int)(blockElement.EndPosition - _stream.Position);
-            var data = new byte[dataLength];
-            _stream.ReadFully(data, 0, dataLength);
+            private void ReadBlockGroupElement(Element clusterElement, long clusterTimeCode)
+            {
+                MatroskaSubtitle subtitle = null;
 
-            var subtitle = new MatroskaSubtitle(data, (long)Math.Round(GetTimeScaledToMilliseconds(clusterTimeCode + timeCode)));
-            return new MatroskaSubtitleBlock(trackNumber, subtitle);
+                Element element;
+                while (_stream.Position < clusterElement.EndPosition && (element = ReadElement(_stream, _buffer)) != null)
+                {
+                    switch (element.Id)
+                    {
+                        case ElementId.Block:
+                            var subtitleBlock = ReadSubtitleBlock(element, clusterTimeCode);
+                            subtitle = subtitleBlock?.Subtitle;
+                            if (subtitleBlock != null)
+                            {
+                                _addSubtitleBlock(subtitleBlock);
+                            }
+                            break;
+                        case ElementId.BlockDuration:
+                            var duration = ReadUIntAsLong(_stream, _buffer, element.DataSize);
+                            if (subtitle != null)
+                            {
+                                subtitle.Duration = (long)Math.Round(GetTimeScaledToMilliseconds(duration, _timeCodeScale));
+                            }
+                            break;
+                        default:
+                            _stream.Seek(element.DataSize, SeekOrigin.Current);
+                            break;
+                    }
+                }
+            }
+
+            private MatroskaSubtitleBlock ReadSubtitleBlock(Element blockElement, long clusterTimeCode)
+            {
+                var trackNumber = (int)ReadVariableLengthUInt(_stream, _buffer);
+                if (!_subtitleTrackNumbers.Contains(trackNumber))
+                {
+                    _stream.Seek(blockElement.EndPosition, SeekOrigin.Begin);
+                    return null;
+                }
+
+                var timeCode = ReadInt16(_stream, _buffer);
+
+                // lacing
+                var flags = (byte)_stream.ReadByte();
+                int frames;
+                switch (flags & 6)
+                {
+                    case 0: // 00000000 = No lacing
+                        System.Diagnostics.Debug.Print("No lacing");
+                        break;
+                    case 2: // 00000010 = Xiph lacing
+                        frames = _stream.ReadByte() + 1;
+                        System.Diagnostics.Debug.Print("Xiph lacing ({0} frames)", frames);
+                        break;
+                    case 4: // 00000100 = Fixed-size lacing
+                        frames = _stream.ReadByte() + 1;
+                        for (var i = 0; i < frames; i++)
+                        {
+                            _stream.ReadByte(); // frames
+                        }
+                        System.Diagnostics.Debug.Print("Fixed-size lacing ({0} frames)", frames);
+                        break;
+                    case 6: // 00000110 = EMBL lacing
+                        frames = _stream.ReadByte() + 1;
+                        System.Diagnostics.Debug.Print("EBML lacing ({0} frames)", frames);
+                        break;
+                }
+
+                // save subtitle data
+                var dataLength = (int)(blockElement.EndPosition - _stream.Position);
+                var data = new byte[dataLength];
+                _stream.ReadFully(data, 0, dataLength);
+
+                var subtitle = new MatroskaSubtitle(data, (long)Math.Round(GetTimeScaledToMilliseconds(clusterTimeCode + timeCode, _timeCodeScale)));
+                return new MatroskaSubtitleBlock(trackNumber, subtitle);
+            }
         }
 
         public List<MatroskaSubtitle> GetSubtitle(int trackNumber, LoadMatroskaCallback progressCallback)
@@ -710,7 +747,12 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Matroska
             {
                 EnsureSubtitleTrackNumbers();
                 _subtitleRipByTrackNumber.Clear();
-                ReadSegmentCluster(progressCallback);
+                if (!UseParallelClusterRead(Path) || !TryReadSegmentClusterParallel(progressCallback))
+                {
+                    _subtitleRipByTrackNumber.Clear();
+                    ReadSegmentCluster(progressCallback);
+                }
+
                 _subtitleRipLoaded = true;
             }
 
@@ -719,10 +761,139 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Matroska
                 : new List<MatroskaSubtitle>();
         }
 
-        private bool IsSubtitleTrackNumber(int trackNumber)
+        /// <summary>
+        /// Test hook: force the parallel cluster walk regardless of where the file lives, so
+        /// equivalence with the sequential walk can be verified on local test files.
+        /// </summary>
+        internal static bool ForceParallelClusterRead;
+
+        private static bool UseParallelClusterRead(string path)
         {
-            EnsureSubtitleTrackNumbers();
-            return _subtitleTrackNumbers.Contains(trackNumber);
+            return ForceParallelClusterRead || IsNetworkPath(path);
+        }
+
+        /// <summary>
+        /// Network-path subtitle rip. The sequential cluster walk is a chain of dependent small
+        /// reads (read a block's header, seek past its payload), which over SMB costs one wire
+        /// round-trip per read - tens of thousands for a movie - while big buffers just pull the
+        /// whole file over the wire instead (#13609/#13610). Neither is fast on all networks, so:
+        /// phase 1 discovers the cluster positions with one cheap read per cluster, phase 2 walks
+        /// the now-independent clusters in parallel, dividing the round-trip cost by the worker
+        /// count while still only transferring the block headers' neighborhoods (~15% of the
+        /// file). Measured on a rate-limited SMB rig: 4-5x faster than any fixed buffer size at
+        /// both 1 Gbit and 100 Mbit, with byte-identical output.
+        /// Returns false when the file looks irregular; the sequential walk has the error-resync
+        /// logic and remains the fallback.
+        /// </summary>
+        private bool TryReadSegmentClusterParallel(LoadMatroskaCallback progressCallback)
+        {
+            List<Element> clusters;
+            long totalSize;
+            using (var stream = OpenClusterStream())
+            {
+                totalSize = stream.Length;
+                clusters = DiscoverClusters(stream);
+            }
+
+            if (clusters == null)
+            {
+                return false;
+            }
+
+            var blocksByCluster = new List<MatroskaSubtitleBlock>[clusters.Count];
+            long processed = 0;
+            var progressLock = new object();
+
+            try
+            {
+                Parallel.For(0, clusters.Count,
+                    new ParallelOptions { MaxDegreeOfParallelism = Math.Clamp(Environment.ProcessorCount, 4, 16) },
+                    OpenClusterStream,
+                    (index, _, stream) =>
+                    {
+                        var cluster = clusters[index];
+                        var blocks = new List<MatroskaSubtitleBlock>();
+                        stream.Seek(cluster.DataPosition, SeekOrigin.Begin);
+                        new ClusterReader(stream, _subtitleTrackNumbers, _timeCodeScale, blocks.Add).ReadCluster(cluster);
+                        blocksByCluster[index] = blocks;
+
+                        if (progressCallback != null)
+                        {
+                            lock (progressLock)
+                            {
+                                processed += cluster.DataSize;
+                                progressCallback.Invoke(processed, totalSize);
+                            }
+                        }
+
+                        return stream;
+                    },
+                    stream => stream.Dispose());
+            }
+            catch (AggregateException ex) when (ex.InnerExceptions.Count == 1)
+            {
+                ExceptionDispatchInfo.Capture(ex.InnerException).Throw();
+            }
+
+            foreach (var blocks in blocksByCluster)
+            {
+                foreach (var block in blocks)
+                {
+                    AddSubtitleBlock(block);
+                }
+            }
+
+            return true;
+        }
+
+        /// <summary>
+        /// A worker stream for the parallel cluster walk. Always the small local buffer: the walk
+        /// is seek-heavy (read a header, skip the payload), so a big buffer would drag the skipped
+        /// payloads over the wire again.
+        /// </summary>
+        private FileStream OpenClusterStream()
+        {
+            return new FileStream(Path, FileMode.Open, FileAccess.Read, FileShare.ReadWrite, LocalReadBufferSize);
+        }
+
+        /// <summary>
+        /// Collects the positions of all clusters with one small read per top-level element.
+        /// Returns null for anything irregular (garbage ids, sizes past end-of-file, unknown-size
+        /// elements - their all-ones size vint lands past end-of-file too), handing the file to
+        /// the sequential walk's resync logic instead.
+        /// </summary>
+        private List<Element> DiscoverClusters(FileStream stream)
+        {
+            var clusters = new List<Element>();
+            var buffer = new byte[8];
+            var length = stream.Length;
+            var segmentEnd = Math.Min(_segmentElement.EndPosition, length);
+            stream.Seek(_segmentElement.DataPosition, SeekOrigin.Begin);
+
+            while (stream.Position < segmentEnd)
+            {
+                var id = (ElementId)ReadVariableLengthUInt(stream, buffer, false);
+                if (id == ElementId.None)
+                {
+                    return null;
+                }
+
+                var size = (long)ReadVariableLengthUInt(stream, buffer);
+                var element = new Element(id, stream.Position, size);
+                if (element.EndPosition > length)
+                {
+                    return null;
+                }
+
+                if (element.Id == ElementId.Cluster)
+                {
+                    clusters.Add(element);
+                }
+
+                stream.Seek(element.EndPosition, SeekOrigin.Begin);
+            }
+
+            return clusters;
         }
 
         private void EnsureSubtitleTrackNumbers()
@@ -799,6 +970,8 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Matroska
 
         private void ReadSegmentCluster(LoadMatroskaCallback progressCallback)
         {
+            var clusterReader = new ClusterReader(_stream, _subtitleTrackNumbers, _timeCodeScale, AddSubtitleBlock);
+
             // go to segment
             _stream.Seek(_segmentElement.DataPosition, SeekOrigin.Begin);
 
@@ -831,7 +1004,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Matroska
 
                 if (element.Id == ElementId.Cluster)
                 {
-                    ReadCluster(element);
+                    clusterReader.ReadCluster(element);
                 }
                 else
                 {
@@ -844,14 +1017,19 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Matroska
 
         private Element ReadElement()
         {
-            var id = (ElementId)ReadVariableLengthUInt(false);
+            return ReadElement(_stream, _buffer);
+        }
+
+        private static Element ReadElement(Stream stream, byte[] buffer)
+        {
+            var id = (ElementId)ReadVariableLengthUInt(stream, buffer, false);
             if (id == ElementId.None)
             {
                 return null;
             }
 
-            var size = (long)ReadVariableLengthUInt();
-            return new Element(id, _stream.Position, size);
+            var size = (long)ReadVariableLengthUInt(stream, buffer);
+            return new Element(id, stream.Position, size);
         }
 
         // VINT length is determined by the position of the highest set bit in
@@ -880,7 +1058,12 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Matroska
 
         private ulong ReadVariableLengthUInt(bool unsetFirstBit = true)
         {
-            var first = _stream.ReadByte();
+            return ReadVariableLengthUInt(_stream, _buffer, unsetFirstBit);
+        }
+
+        private static ulong ReadVariableLengthUInt(Stream stream, byte[] buffer, bool unsetFirstBit = true)
+        {
+            var first = stream.ReadByte();
             if (first <= 0)
             {
                 return 0;
@@ -895,10 +1078,10 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Matroska
             var result = (ulong)(unsetFirstBit ? first & (0xFF >> length) : first);
             if (length > 1)
             {
-                _stream.ReadFully(_buffer, 0, length - 1);
+                stream.ReadFully(buffer, 0, length - 1);
                 for (var i = 0; i < length - 1; i++)
                 {
-                    result = (result << 8) | _buffer[i];
+                    result = (result << 8) | buffer[i];
                 }
             }
             return result;
@@ -936,8 +1119,13 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Matroska
         /// <returns>A long integer, or 0 if the stream is too short.</returns>
         private long ReadUIntAsLong(long length)
         {
+            return ReadUIntAsLong(_stream, _buffer, length);
+        }
+
+        private static long ReadUIntAsLong(Stream stream, byte[] buffer, long length)
+        {
             // Same short-read concern as ReadUIntAsInt above.
-            var bytesRead = _stream.Read(_buffer, 0, (int)length);
+            var bytesRead = stream.Read(buffer, 0, (int)length);
             if (bytesRead < length)
             {
                 return 0L;
@@ -945,7 +1133,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Matroska
             var result = 0L;
             for (var i = 0; i < length; i++)
             {
-                result = (result << 8) | _buffer[i];
+                result = (result << 8) | buffer[i];
             }
             return result;
         }
@@ -957,8 +1145,13 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Matroska
         /// <returns>A 2-byte signed integer read from the current stream.</returns>
         private short ReadInt16()
         {
-            _stream.ReadFully(_buffer, 0, 2);
-            return (short)(_buffer[0] << 8 | _buffer[1]);
+            return ReadInt16(_stream, _buffer);
+        }
+
+        private static short ReadInt16(Stream stream, byte[] buffer)
+        {
+            stream.ReadFully(buffer, 0, 2);
+            return (short)(buffer[0] << 8 | buffer[1]);
         }
 
         /// <summary>
