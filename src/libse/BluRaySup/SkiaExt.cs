@@ -28,11 +28,15 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
 
         /// <summary>
         /// <see cref="GetNonTransparentBounds"/> takes alpha to be the fourth byte of a four-byte
-        /// pixel; any other layout has to go through GetPixel, which knows the color type.
+        /// pixel, which only holds for the two plain 8-bit-per-channel layouts: Rgb888x also has
+        /// four bytes but its fourth one is padding GetPixel ignores (it always reports alpha 255),
+        /// and the 1010102 types pack alpha into the top two bits. Any other layout — and a bitmap
+        /// with no pixel storage — has to go through GetPixel, which knows the color type.
         /// </summary>
         private static NonTransparentBounds GetNonTransparentBoundsAnyFormat(this SKBitmap bitmap)
         {
-            if (bitmap.BytesPerPixel == 4)
+            var alphaIsFourthByte = bitmap.ColorType == SKColorType.Bgra8888 || bitmap.ColorType == SKColorType.Rgba8888;
+            if (alphaIsFourthByte && bitmap.GetPixels() != IntPtr.Zero)
             {
                 return bitmap.GetNonTransparentBounds();
             }
