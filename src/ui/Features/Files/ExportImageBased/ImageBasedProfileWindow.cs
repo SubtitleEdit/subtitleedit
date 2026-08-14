@@ -109,7 +109,7 @@ public class ImageBasedProfileWindow : Window
         nameBox.KeyDown += vm.ProfileNameTextBoxOnKeyDown;
         editorGrid.Children.Add(nameBox);
         Grid.SetRow(nameBox, 1);
-        vm.ProfileNameTextBox = nameBox;
+        vm.FocusProfileName = () => Avalonia.Threading.Dispatcher.UIThread.Post(() => nameBox.Focus());
 
         var buttonRow = UiUtil.MakeButtonBar(
             UiUtil.MakeButtonOk(vm.OkCommand),
