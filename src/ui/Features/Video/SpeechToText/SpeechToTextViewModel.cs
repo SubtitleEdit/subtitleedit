@@ -179,9 +179,14 @@ public partial class SpeechToTextViewModel : ObservableObject
 
     private readonly Regex _pctWhisper = new(@"^\d+%\|", RegexOptions.Compiled);
     private readonly Regex _pctWhisperFaster = new(@"^\s*\d+%\s*\|", RegexOptions.Compiled);
+
+    // Sentence chunks with trailing terminator (+ closing quotes/brackets), or a
+    // final unterminated tail. Latin (. ! ?) and CJK (。！？…) terminators.
+    private static readonly Regex SentenceRegex =
+        new(@"[^.!?。！？…]*[.!?。！？…]+[""'”’)\]]*\s*|[^.!?。！？…]+$", RegexOptions.Compiled);
     private readonly System.Timers.Timer _timerWhisper = new();
     private Process _whisperProcess = new();
-    private Process? _audioExtractProcess = new();
+    private Process? _audioExtractProcess;
     private readonly System.Timers.Timer _timerAudioExtract = new();
     private Stopwatch _sw = new();
     private StringBuilder _ffmpegLog = new();
@@ -660,7 +665,7 @@ public partial class SpeechToTextViewModel : ObservableObject
                     partialSub.Paragraphs.AddRange(_resultList.OrderBy(p => p.Start)
                         .Select(p => new Paragraph(p.Text, (double)p.Start * 1000.0, (double)p.End * 1000.0)).ToList());
 
-                    if (partialSub.Paragraphs.Count > 0)
+                    if (!IsBatchMode && partialSub.Paragraphs.Count > 0)
                     {
                         var answer = await MessageBox.Show(
                             Window!,
@@ -677,6 +682,11 @@ public partial class SpeechToTextViewModel : ObservableObject
                             HideProgressBar();
                             return;
                         }
+
+                        // The user chose to keep the lines - clear the abort flag so
+                        // MakeResult delivers them like a completed run instead of
+                        // hitting its cancelled-branch, which discards the result.
+                        _abort = false;
                     }
 
                     await MakeResult(partialSub);
@@ -879,8 +889,17 @@ public partial class SpeechToTextViewModel : ObservableObject
         var start = text.IndexOf(tag);
         if (start < 0)
         {
+            // No transcription marker in the output - the engine failed. Stop here
+            // instead of chopping an arbitrary prefix off the log text and feeding
+            // the rest to the aligner step.
             LogToConsole($"Speech to text ({settings.WhisperChoice}) done in {_sw.Elapsed}{Environment.NewLine}");
             LogToConsole($"Speech to text: Could not find '{tag}' in text{Environment.NewLine}");
+            Dispatcher.UIThread.Post(() =>
+            {
+                ProgressValue = 100;
+                IsTranscribeEnabled = true;
+            });
+            return;
         }
 
         text = text.Remove(0, start + tag.Length);
@@ -895,41 +914,7 @@ public partial class SpeechToTextViewModel : ObservableObject
         var exe = chatLlm.GetExecutable();
         var chatLlmParams = $" -m \"{chatLlm.GetModelForCmdLine("qwen3-focedaligner-0.6b.bin")}\" --multimedia-file-tags {{{{ }}}} -p \"{{{{audio:{_audioFileName}}}}}{_chatLlmText}\"";
 
-        var p = new Process
-        {
-            StartInfo = new ProcessStartInfo(exe, chatLlmParams)
-            {
-                WindowStyle = ProcessWindowStyle.Hidden,
-                CreateNoWindow = true,
-                UseShellExecute = false,
-                WorkingDirectory = Path.GetDirectoryName(exe),
-            }
-        };
-
-        _whisperProcess = p;
-
-        var dataReceivedHandler = (DataReceivedEventHandler)OutputHandler;
-        if (dataReceivedHandler != null)
-        {
-            p.StartInfo.StandardOutputEncoding = Encoding.UTF8;
-            p.StartInfo.StandardErrorEncoding = Encoding.UTF8;
-            p.StartInfo.UseShellExecute = false;
-            p.StartInfo.RedirectStandardOutput = true;
-            p.StartInfo.RedirectStandardError = true;
-            p.OutputDataReceived += dataReceivedHandler;
-            p.ErrorDataReceived += dataReceivedHandler;
-        }
-
-#pragma warning disable CA1416
-        p.Start();
-#pragma warning restore CA1416
-
-
-        if (dataReceivedHandler != null)
-        {
-            p.BeginOutputReadLine();
-            p.BeginErrorReadLine();
-        }
+        _whisperProcess = StartEngineProcess(exe, chatLlmParams, OutputHandler);
 
         _timerWhisper.Start();
     }
@@ -1531,7 +1516,7 @@ public partial class SpeechToTextViewModel : ObservableObject
             return result;
         }
 
-        var matches = Regex.Matches(text.Trim(), @"[^.!?。！？…]*[.!?。！？…]+[""'”’)\]]*\s*|[^.!?。！？…]+$");
+        var matches = SentenceRegex.Matches(text.Trim());
         foreach (Match m in matches)
         {
             var sentence = m.Value.Trim();
@@ -1712,7 +1697,7 @@ public partial class SpeechToTextViewModel : ObservableObject
             for (var i = wordIndex; i < searchEnd; i++)
             {
                 var originalWord = words[i];
-                var cleanWord = originalWord.TrimEnd('.', '!', '?', ',').ToLowerInvariant();
+                var cleanWord = originalWord.TrimEnd('.', '!', '?', ',');
 
                 if (string.Equals(text, cleanWord, StringComparison.OrdinalIgnoreCase))
                 {
@@ -1773,7 +1758,7 @@ public partial class SpeechToTextViewModel : ObservableObject
         {
             ProgressValue = 0;
             _startTicks = 0;
-            _endSeconds = 0; ;
+            _endSeconds = 0;
             _showProgressPct = -1;
             _outputText.Clear();
             ConsoleLog = string.Empty;
@@ -1804,6 +1789,15 @@ public partial class SpeechToTextViewModel : ObservableObject
             });
 
             var startGenerateAudioFileOk = GenerateAudioFile(_videoFileName, _audioTrackNumber);
+            if (!startGenerateAudioFileOk)
+            {
+                // Nothing was started, so no timer will ever fire for this item -
+                // without this the batch just stalls with a frozen progress bar.
+                // Mark the item failed and move on; the closing summary reports it.
+                jobItem.Status = Se.Language.General.Error;
+                StartNext(null);
+            }
+
             return;
         }
 
@@ -2113,47 +2107,22 @@ public partial class SpeechToTextViewModel : ObservableObject
             process.Start();
 #pragma warning restore CA1416
 
-            while (!process.HasExited)
-            {
-                Task.Delay(100);
-            }
+            process.WaitForExit();
 
             // check for delay in matroska files
             var delayInMilliseconds = 0;
-            var audioTrackNames = new List<string>();
-            var mkvAudioTrackNumbers = new Dictionary<int, int>();
-            if (_videoFileName.ToLowerInvariant().EndsWith(".mkv", StringComparison.OrdinalIgnoreCase))
+            if (_videoFileName.EndsWith(".mkv", StringComparison.OrdinalIgnoreCase))
             {
                 try
                 {
-                    using (var matroska = new MatroskaFile(_videoFileName))
+                    using var matroska = new MatroskaFile(_videoFileName);
+                    if (matroska.IsValid)
                     {
-                        if (matroska.IsValid)
+                        var firstAudioTrack = matroska.GetTracks().FirstOrDefault(track => track.IsAudio);
+                        if (firstAudioTrack != null)
                         {
-                            foreach (var track in matroska.GetTracks())
-                            {
-                                if (track.IsAudio)
-                                {
-                                    if (track.CodecId != null && track.Language != null)
-                                    {
-                                        audioTrackNames.Add("#" + track.TrackNumber + ": " +
-                                                            track.CodecId.Replace("\0", string.Empty) + " - " +
-                                                            track.Language.Replace("\0", string.Empty));
-                                    }
-                                    else
-                                    {
-                                        audioTrackNames.Add("#" + track.TrackNumber);
-                                    }
-
-                                    mkvAudioTrackNumbers.Add(mkvAudioTrackNumbers.Count, track.TrackNumber);
-                                }
-                            }
-
-                            if (mkvAudioTrackNumbers.Count > 0)
-                            {
-                                delayInMilliseconds =
-                                    (int)matroska.GetAudioTrackDelayMilliseconds(mkvAudioTrackNumbers[0]);
-                            }
+                            delayInMilliseconds =
+                                (int)matroska.GetAudioTrackDelayMilliseconds(firstAudioTrack.TrackNumber);
                         }
                     }
                 }
@@ -2188,8 +2157,6 @@ public partial class SpeechToTextViewModel : ObservableObject
         ConcurrentQueue<string> outputText,
         List<string> filesToDelete)
     {
-        Task.Delay(500);
-
         var engine = GetEffectiveSelectedEngine();
 
         if (string.IsNullOrEmpty(waveFileName) && videoFileName.EndsWith(".wav", StringComparison.OrdinalIgnoreCase))
@@ -2382,18 +2349,19 @@ public partial class SpeechToTextViewModel : ObservableObject
 
         var anyLinesTranscribed = transcribedSubtitle != null && transcribedSubtitle.Paragraphs.Count > 0;
 
-        if (IsBatchMode)
-        {
-            StartNext(transcribedSubtitle);
-            return;
-        }
-        else if (_abort)
+        if (_abort)
         {
             // User cancelled mid-run. Leave the dialog open so they can adjust
             // settings and retry (or close it themselves) instead of yanking it
-            // out from under them.
+            // out from under them. Checked before the batch branch: cancelling a
+            // batch must stop the whole batch, not skip to the next item.
             IsTranscribeEnabled = true;
             HideProgressBar();
+        }
+        else if (IsBatchMode)
+        {
+            StartNext(transcribedSubtitle);
+            return;
         }
         else
         {
@@ -2674,58 +2642,12 @@ public partial class SpeechToTextViewModel : ObservableObject
         var crispVariant = "vulkan";
         if (engine is ICrispAsrEngine && Configuration.IsRunningOnWindows)
         {
-            var answer = await MessageBox.Show(
-                Window,
-                $"Download {CrispAsrEngine.StaticName}?",
-                $"{Environment.NewLine}\"{CrispAsrEngine.StaticName}\" requires downloading the CrispASR engine.{Environment.NewLine}{Environment.NewLine}Select a version to download:",
-                MessageBoxButtons.Cancel,
-                MessageBoxIcon.Question,
-                "CPU",
-                "Vulkan",
-                "CUDA");
-
-            if (answer == MessageBoxResult.None || answer == MessageBoxResult.Cancel)
+            var windowsVariant = await PromptCrispAsrWindowsVariantAsync(CrispAsrEngine.StaticName);
+            if (windowsVariant == null)
             {
                 return;
             }
-
-            crispVariant = answer switch
-            {
-                MessageBoxResult.Custom1 => "cpu",
-                MessageBoxResult.Custom3 => "cuda",
-                _ => "vulkan",
-            };
-
-            if (crispVariant == "cpu")
-            {
-                var cpuAnswer = await PromptCrispAsrCpuFlavorAsync();
-                if (cpuAnswer == null)
-                {
-                    return;
-                }
-                crispVariant = cpuAnswer;
-            }
-
-            if (crispVariant == "vulkan" && !VulkanHelper.IsInstalled())
-            {
-                var vulkanAnswer = await MessageBox.Show(
-                    Window,
-                    "Vulkan SDK may be required",
-                    $"The Vulkan version requires the Vulkan SDK to be installed.{Environment.NewLine}{Environment.NewLine}You can download it from:{Environment.NewLine}https://vulkan.lunarg.com/sdk/home{Environment.NewLine}{Environment.NewLine}Continue with Vulkan download?",
-                    MessageBoxButtons.YesNoCancel,
-                    MessageBoxIcon.Question);
-
-                if (vulkanAnswer == MessageBoxResult.No)
-                {
-                    UiUtil.OpenUrl("https://vulkan.lunarg.com/sdk/home");
-                    return;
-                }
-
-                if (vulkanAnswer != MessageBoxResult.Yes)
-                {
-                    return;
-                }
-            }
+            crispVariant = windowsVariant;
         }
         else if (engine is ICrispAsrEngine
                  && OperatingSystem.IsLinux()
@@ -2806,6 +2728,64 @@ public partial class SpeechToTextViewModel : ObservableObject
         }
 
         return useVulkan;
+    }
+
+    /// <summary>
+    /// Windows build prompt: CPU (with a standard/legacy follow-up), Vulkan (with a
+    /// Vulkan-SDK warning when none is detected) or CUDA. Returns the variant string
+    /// for the download dialog, or null when the user cancels.
+    /// </summary>
+    private async Task<string?> PromptCrispAsrWindowsVariantAsync(string engineName)
+    {
+        var answer = await MessageBox.Show(
+            Window!,
+            $"Download {engineName}?",
+            $"{Environment.NewLine}\"{engineName}\" requires downloading the CrispASR engine.{Environment.NewLine}{Environment.NewLine}Select a version to download:",
+            MessageBoxButtons.Cancel,
+            MessageBoxIcon.Question,
+            "CPU",
+            "Vulkan",
+            "CUDA");
+
+        if (answer == MessageBoxResult.None || answer == MessageBoxResult.Cancel)
+        {
+            return null;
+        }
+
+        var crispVariant = answer switch
+        {
+            MessageBoxResult.Custom1 => "cpu",
+            MessageBoxResult.Custom3 => "cuda",
+            _ => "vulkan",
+        };
+
+        if (crispVariant == "cpu")
+        {
+            return await PromptCrispAsrCpuFlavorAsync();
+        }
+
+        if (crispVariant == "vulkan" && !VulkanHelper.IsInstalled())
+        {
+            var vulkanAnswer = await MessageBox.Show(
+                Window!,
+                "Vulkan SDK may be required",
+                $"The Vulkan version requires the Vulkan SDK to be installed.{Environment.NewLine}{Environment.NewLine}You can download it from:{Environment.NewLine}https://vulkan.lunarg.com/sdk/home{Environment.NewLine}{Environment.NewLine}Continue with Vulkan download?",
+                MessageBoxButtons.YesNoCancel,
+                MessageBoxIcon.Question);
+
+            if (vulkanAnswer == MessageBoxResult.No)
+            {
+                UiUtil.OpenUrl("https://vulkan.lunarg.com/sdk/home");
+                return null;
+            }
+
+            if (vulkanAnswer != MessageBoxResult.Yes)
+            {
+                return null;
+            }
+        }
+
+        return crispVariant;
     }
 
     /// <summary>
@@ -2955,7 +2935,7 @@ public partial class SpeechToTextViewModel : ObservableObject
         try
         {
             // Process files on background thread
-            await Task.Run((Func<Task?>)(async () =>
+            await Task.Run(async () =>
             {
                 foreach (var fileName in fileNames)
                 {
@@ -2967,10 +2947,10 @@ public partial class SpeechToTextViewModel : ObservableObject
                     else
                     {
                         var batchItem = new SpeechToTextJobItem(fileName, string.Empty, mediaInfo);
-                        await Dispatcher.UIThread.InvokeAsync((Action)(() => BatchItems.Add(batchItem)));
+                        await Dispatcher.UIThread.InvokeAsync(() => BatchItems.Add(batchItem));
                     }
                 }
-            }));
+            });
         }
         finally
         {
@@ -2983,10 +2963,18 @@ public partial class SpeechToTextViewModel : ObservableObject
     [RelayCommand]
     private void Remove()
     {
-        if (SelectedBatchItem != null)
+        if (SelectedBatchItem == null)
         {
-            var idx = BatchItems.IndexOf(SelectedBatchItem);
-            BatchItems.Remove(SelectedBatchItem);
+            return;
+        }
+
+        var idx = BatchItems.IndexOf(SelectedBatchItem);
+        BatchItems.Remove(SelectedBatchItem);
+
+        // Keep a selection so repeated Remove clicks keep working down the list.
+        if (BatchItems.Count > 0)
+        {
+            SelectedBatchItem = BatchItems[Math.Min(idx, BatchItems.Count - 1)];
         }
     }
 
@@ -3003,7 +2991,7 @@ public partial class SpeechToTextViewModel : ObservableObject
             viewModal =>
             {
                 viewModal.Engines = Engines.ToList();
-                viewModal.EngineClickedCommand.Execute((ISpeechToTextEngine)SelectedEngine);
+                viewModal.EngineClickedCommand.Execute(SelectedEngine);
             });
 
         if (vm.OkPressed)
@@ -3129,6 +3117,47 @@ public partial class SpeechToTextViewModel : ObservableObject
         return baseEngine.GetModelForCmdLine(aligner.FileName);
     }
 
+    /// <summary>
+    /// Makes sure the forced-aligner model an engine needs for timestamps is on disk,
+    /// prompting for a download when it is missing. Returns false when the user
+    /// declines or cancels - the transcribe run must not start in that case.
+    /// </summary>
+    private async Task<bool> EnsureAlignerModelDownloadedAsync(ISpeechToTextEngine engine, WhisperModel modelAligner, string engineDisplayName)
+    {
+        if (engine.IsModelInstalled(modelAligner))
+        {
+            return true;
+        }
+
+        var answer = await MessageBox.Show(
+            Window!,
+            $"Download {modelAligner}?",
+            $"'{engineDisplayName}' requires a forced aligner to create timestamps.\nDownload and use {modelAligner.Name}?",
+            MessageBoxButtons.YesNoCancel,
+            MessageBoxIcon.Question);
+
+        if (answer != MessageBoxResult.Yes)
+        {
+            return false;
+        }
+
+        var displayModelAligner = new SpeechToTextModelDisplay
+        {
+            Model = modelAligner,
+            Display = modelAligner.Name + " (forced aligner for timestamps)",
+            Engine = engine,
+        };
+        var models = new ObservableCollection<SpeechToTextModelDisplay> { displayModelAligner };
+        var vm = await _windowService.ShowDialogAsync<DownloadSpeechToTextModelsWindow, DownloadSpeechToTextModelsViewModel>(
+            Window!, viewModel =>
+            {
+                viewModel.SetModels(models, engine, displayModelAligner);
+                viewModel.StartDownload();
+            });
+
+        return vm.OkPressed;
+    }
+
     [RelayCommand]
     private async Task Transcribe()
     {
@@ -3196,57 +3225,10 @@ public partial class SpeechToTextViewModel : ObservableObject
             {
                 if (engine is ICrispAsrEngine && Configuration.IsRunningOnWindows)
                 {
-                    var answer = await MessageBox.Show(
-                        Window!,
-                        $"Download {engine.Name}?",
-                        $"{Environment.NewLine}\"{engine.Name}\" requires downloading the CrispASR engine.{Environment.NewLine}{Environment.NewLine}Select a version to download:",
-                        MessageBoxButtons.Cancel,
-                        MessageBoxIcon.Question,
-                        "CPU",
-                        "Vulkan",
-                        "CUDA");
-
-                    if (answer == MessageBoxResult.None || answer == MessageBoxResult.Cancel)
+                    var crispVariant = await PromptCrispAsrWindowsVariantAsync(engine.Name);
+                    if (crispVariant == null)
                     {
                         return;
-                    }
-
-                    var crispVariant = answer switch
-                    {
-                        MessageBoxResult.Custom1 => "cpu",
-                        MessageBoxResult.Custom3 => "cuda",
-                        _ => "vulkan",
-                    };
-
-                    if (crispVariant == "cpu")
-                    {
-                        var cpuAnswer = await PromptCrispAsrCpuFlavorAsync();
-                        if (cpuAnswer == null)
-                        {
-                            return;
-                        }
-                        crispVariant = cpuAnswer;
-                    }
-
-                    if (crispVariant == "vulkan" && !VulkanHelper.IsInstalled())
-                    {
-                        var vulkanAnswer = await MessageBox.Show(
-                            Window!,
-                            "Vulkan SDK may be required",
-                            $"The Vulkan version requires the Vulkan SDK to be installed.{Environment.NewLine}{Environment.NewLine}You can download it from:{Environment.NewLine}https://vulkan.lunarg.com/sdk/home{Environment.NewLine}{Environment.NewLine}Continue with Vulkan download?",
-                            MessageBoxButtons.YesNoCancel,
-                            MessageBoxIcon.Question);
-
-                        if (vulkanAnswer == MessageBoxResult.No)
-                        {
-                            UiUtil.OpenUrl("https://vulkan.lunarg.com/sdk/home");
-                            return;
-                        }
-
-                        if (vulkanAnswer != MessageBoxResult.Yes)
-                        {
-                            return;
-                        }
                     }
 
                     var crispVm = await _windowService.ShowDialogAsync<DownloadSpeechToTextEngineWindow, DownloadSpeechToTextEngineViewModel>(
@@ -3352,173 +3334,25 @@ public partial class SpeechToTextViewModel : ObservableObject
                         viewModel.StartDownload();
                     });
 
-                RefreshDownloadStatus(vm.SelectedModel?.Model as WhisperModel);
+                RefreshDownloadStatus(vm.SelectedModel?.Model);
             }
 
-            if (engine is ChatLlmCppEngine chatLlm)
+            // Engines without native timestamps need a forced-aligner model on disk.
+            var alignerOk = engine switch
             {
-                var modelAligner = chatLlm.ForcedAlignerModel;
-                var displayModelAligner = new SpeechToTextModelDisplay
-                {
-                    Model = modelAligner,
-                    Display = modelAligner.Name + " (forced aligner for timestamps)",
-                    Engine = engine,
-                };
-                if (!engine.IsModelInstalled(modelAligner))
-                {
-                    var answer = await MessageBox.Show(
-                                    Window!,
-                                    $"Download {modelAligner}?",
-                                    $"'Chat LLM' requires a forced aligner to create timestamps.\nDownload and use {modelAligner.Name}?",
-                                    MessageBoxButtons.YesNoCancel,
-                                    MessageBoxIcon.Question);
-
-                    if (answer != MessageBoxResult.Yes)
-                    {
-                        return;
-                    }
-
-                    var models = new ObservableCollection<SpeechToTextModelDisplay>
-                {
-                    displayModelAligner
-                };
-                    var vm = await _windowService.ShowDialogAsync<DownloadSpeechToTextModelsWindow, DownloadSpeechToTextModelsViewModel>(
-                        Window!, viewModel =>
-                        {
-                            viewModel.SetModels(models, engine, displayModelAligner);
-                            viewModel.StartDownload();
-                        });
-
-                    if (!vm.OkPressed)
-                    {
-                        return;
-                    }
-                }
-            }
-
-            if (engine is Qwen3AsrCppEngine qwen3Asr)
+                ChatLlmCppEngine chatLlm =>
+                    await EnsureAlignerModelDownloadedAsync(engine, chatLlm.ForcedAlignerModel, "Chat LLM"),
+                Qwen3AsrCppEngine qwen3Asr =>
+                    await EnsureAlignerModelDownloadedAsync(engine, qwen3Asr.ForcedAlignerModel, "Qwen3 ASR CPP"),
+                CrispAsrQwen3 crispQwen3Engine when SelectedForcedAligner is null or { IsBuiltIn: true } =>
+                    await EnsureAlignerModelDownloadedAsync(engine, crispQwen3Engine.ForcedAlignerModel, "Crisp ASR Qwen3"),
+                CrispAsrMega crispMegaEngine when SelectedForcedAligner is null or { IsBuiltIn: true } =>
+                    await EnsureAlignerModelDownloadedAsync(engine, crispMegaEngine.ForcedAlignerModel, "Crisp ASR Mega"),
+                _ => true,
+            };
+            if (!alignerOk)
             {
-                var modelAligner = qwen3Asr.ForcedAlignerModel;
-                var displayModelAligner = new SpeechToTextModelDisplay
-                {
-                    Model = modelAligner,
-                    Display = modelAligner.Name + " (forced aligner for timestamps)",
-                    Engine = engine,
-                };
-                if (!engine.IsModelInstalled(modelAligner))
-                {
-                    var answer = await MessageBox.Show(
-                                    Window!,
-                                    $"Download {modelAligner}?",
-                                    $"'Qwen3 ASR CPP' requires a forced aligner to create timestamps.\nDownload and use {modelAligner.Name}?",
-                                    MessageBoxButtons.YesNoCancel,
-                                    MessageBoxIcon.Question);
-
-                    if (answer != MessageBoxResult.Yes)
-                    {
-                        return;
-                    }
-
-                    var models = new ObservableCollection<SpeechToTextModelDisplay>
-                {
-                    displayModelAligner
-                };
-                    var vm = await _windowService.ShowDialogAsync<DownloadSpeechToTextModelsWindow, DownloadSpeechToTextModelsViewModel>(
-                        Window!, viewModel =>
-                        {
-                            viewModel.SetModels(models, engine, displayModelAligner);
-                            viewModel.StartDownload();
-                        });
-
-                    if (!vm.OkPressed)
-                    {
-                        return;
-                    }
-                }
-            }
-
-            if (engine is CrispAsrQwen3 crispQwen3Engine
-                && (SelectedForcedAligner == null || SelectedForcedAligner.IsBuiltIn))
-            {
-                var modelAligner = crispQwen3Engine.ForcedAlignerModel;
-                var displayModelAligner = new SpeechToTextModelDisplay
-                {
-                    Model = modelAligner,
-                    Display = modelAligner.Name + " (forced aligner for timestamps)",
-                    Engine = engine,
-                };
-                if (!engine.IsModelInstalled(modelAligner))
-                {
-                    var answer = await MessageBox.Show(
-                                    Window!,
-                                    $"Download {modelAligner}?",
-                                    $"'Crisp ASR Qwen3' requires a forced aligner to create timestamps.\nDownload and use {modelAligner.Name}?",
-                                    MessageBoxButtons.YesNoCancel,
-                                    MessageBoxIcon.Question);
-
-                    if (answer != MessageBoxResult.Yes)
-                    {
-                        return;
-                    }
-
-                    var models = new ObservableCollection<SpeechToTextModelDisplay>
-                {
-                    displayModelAligner
-                };
-                    var vm = await _windowService.ShowDialogAsync<DownloadSpeechToTextModelsWindow, DownloadSpeechToTextModelsViewModel>(
-                        Window!, viewModel =>
-                        {
-                            viewModel.SetModels(models, engine, displayModelAligner);
-                            viewModel.StartDownload();
-                        });
-
-                    if (!vm.OkPressed)
-                    {
-                        return;
-                    }
-                }
-            }
-
-            if (engine is CrispAsrMega crispMegaEngine
-                && (SelectedForcedAligner == null || SelectedForcedAligner.IsBuiltIn))
-            {
-                var modelAligner = crispMegaEngine.ForcedAlignerModel;
-                var displayModelAligner = new SpeechToTextModelDisplay
-                {
-                    Model = modelAligner,
-                    Display = modelAligner.Name + " (forced aligner for timestamps)",
-                    Engine = engine,
-                };
-                if (!engine.IsModelInstalled(modelAligner))
-                {
-                    var answer = await MessageBox.Show(
-                                    Window!,
-                                    $"Download {modelAligner}?",
-                                    $"'Crisp ASR Mega' requires a forced aligner to create timestamps.\nDownload and use {modelAligner.Name}?",
-                                    MessageBoxButtons.YesNoCancel,
-                                    MessageBoxIcon.Question);
-
-                    if (answer != MessageBoxResult.Yes)
-                    {
-                        return;
-                    }
-
-                    var models = new ObservableCollection<SpeechToTextModelDisplay>
-                    {
-                        displayModelAligner
-                    };
-                    var vm = await _windowService.ShowDialogAsync<DownloadSpeechToTextModelsWindow, DownloadSpeechToTextModelsViewModel>(
-                        Window!, viewModel =>
-                        {
-                            viewModel.SetModels(models, engine, displayModelAligner);
-                            viewModel.StartDownload();
-                        });
-
-                    if (!vm.OkPressed)
-                    {
-                        return;
-                    }
-                }
+                return;
             }
 
             if (engine is ICrispAsrEngine crispAsrEngineForAligner
@@ -3638,7 +3472,6 @@ public partial class SpeechToTextViewModel : ObservableObject
         ProgressText = Se.Language.General.GeneratingAudioFile;
         _startTicks = DateTime.UtcNow.Ticks;
 
-        _batchIndex = 0;
         var startGenerateAudioFileOk = GenerateAudioFile(_videoFileName, _audioTrackNumber);
         if (!startGenerateAudioFileOk)
         {
@@ -3775,6 +3608,47 @@ public partial class SpeechToTextViewModel : ObservableObject
         return true;
     }
 
+    /// <summary>
+    /// Starts an engine executable with the standard hidden-window setup, wiring
+    /// stdout/stderr to <paramref name="dataReceivedHandler"/> when one is given.
+    /// The working directory is the executable's folder.
+    /// </summary>
+    private static Process StartEngineProcess(string executable, string arguments, DataReceivedEventHandler? dataReceivedHandler)
+    {
+        var p = new Process
+        {
+            StartInfo = new ProcessStartInfo(executable, arguments)
+            {
+                WindowStyle = ProcessWindowStyle.Hidden,
+                CreateNoWindow = true,
+                UseShellExecute = false,
+                WorkingDirectory = Path.GetDirectoryName(executable),
+            }
+        };
+
+        if (dataReceivedHandler != null)
+        {
+            p.StartInfo.StandardOutputEncoding = Encoding.UTF8;
+            p.StartInfo.StandardErrorEncoding = Encoding.UTF8;
+            p.StartInfo.RedirectStandardOutput = true;
+            p.StartInfo.RedirectStandardError = true;
+            p.OutputDataReceived += dataReceivedHandler;
+            p.ErrorDataReceived += dataReceivedHandler;
+        }
+
+#pragma warning disable CA1416
+        p.Start();
+#pragma warning restore CA1416
+
+        if (dataReceivedHandler != null)
+        {
+            p.BeginOutputReadLine();
+            p.BeginErrorReadLine();
+        }
+
+        return p;
+    }
+
     private Process GetWhisperProcess(
         ISpeechToTextEngine engine,
         string waveFileName,
@@ -3806,39 +3680,7 @@ public partial class SpeechToTextViewModel : ObservableObject
                 }
             }
 
-            var p = new Process
-            {
-                StartInfo = new ProcessStartInfo(exe, chatLlmParams)
-                {
-                    WindowStyle = ProcessWindowStyle.Hidden,
-                    CreateNoWindow = true,
-                    UseShellExecute = false,
-                    WorkingDirectory = Path.GetDirectoryName(exe),
-                }
-            };
-
-            if (dataReceivedHandler != null)
-            {
-                p.StartInfo.StandardOutputEncoding = Encoding.UTF8;
-                p.StartInfo.StandardErrorEncoding = Encoding.UTF8;
-                p.StartInfo.UseShellExecute = false;
-                p.StartInfo.RedirectStandardOutput = true;
-                p.StartInfo.RedirectStandardError = true;
-                p.OutputDataReceived += dataReceivedHandler;
-                p.ErrorDataReceived += dataReceivedHandler;
-            }
-
-#pragma warning disable CA1416
-            p.Start();
-#pragma warning restore CA1416
-
-            if (dataReceivedHandler != null)
-            {
-                p.BeginOutputReadLine();
-                p.BeginErrorReadLine();
-            }
-
-            return p;
+            return StartEngineProcess(exe, chatLlmParams, dataReceivedHandler);
         }
 
         if (engine is Qwen3AsrCppEngine qwen3Asr)
@@ -3853,39 +3695,7 @@ public partial class SpeechToTextViewModel : ObservableObject
                 ? $"-m \"{qwen3Asr.GetModelForCmdLine(model)}\" --aligner-model \"{qwen3Asr.GetModelForCmdLine(alignerModel.Name)}\" -f \"{waveFileName}\" --transcribe-align -o \"{_qwen3AsrOutputJsonPath}\""
                 : $"{qwen3ExtraArgs} -m \"{qwen3Asr.GetModelForCmdLine(model)}\" --aligner-model \"{qwen3Asr.GetModelForCmdLine(alignerModel.Name)}\" -f \"{waveFileName}\" --transcribe-align -o \"{_qwen3AsrOutputJsonPath}\"";
 
-            var p = new Process
-            {
-                StartInfo = new ProcessStartInfo(exe, qwen3Params)
-                {
-                    WindowStyle = ProcessWindowStyle.Hidden,
-                    CreateNoWindow = true,
-                    UseShellExecute = false,
-                    WorkingDirectory = Path.GetDirectoryName(exe),
-                }
-            };
-
-            if (dataReceivedHandler != null)
-            {
-                p.StartInfo.StandardOutputEncoding = Encoding.UTF8;
-                p.StartInfo.StandardErrorEncoding = Encoding.UTF8;
-                p.StartInfo.UseShellExecute = false;
-                p.StartInfo.RedirectStandardOutput = true;
-                p.StartInfo.RedirectStandardError = true;
-                p.OutputDataReceived += dataReceivedHandler;
-                p.ErrorDataReceived += dataReceivedHandler;
-            }
-
-#pragma warning disable CA1416
-            p.Start();
-#pragma warning restore CA1416
-
-            if (dataReceivedHandler != null)
-            {
-                p.BeginOutputReadLine();
-                p.BeginErrorReadLine();
-            }
-
-            return p;
+            return StartEngineProcess(exe, qwen3Params, dataReceivedHandler);
         }
 
         if (engine is ICrispAsrEngine crispAsrEngine)
@@ -3952,39 +3762,7 @@ public partial class SpeechToTextViewModel : ObservableObject
 
             Se.WriteToolsLog($"{exe} {crispParams}");
 
-            var p = new Process
-            {
-                StartInfo = new ProcessStartInfo(exe, crispParams)
-                {
-                    WindowStyle = ProcessWindowStyle.Hidden,
-                    CreateNoWindow = true,
-                    UseShellExecute = false,
-                    WorkingDirectory = Path.GetDirectoryName(exe),
-                }
-            };
-
-            if (dataReceivedHandler != null)
-            {
-                p.StartInfo.StandardOutputEncoding = Encoding.UTF8;
-                p.StartInfo.StandardErrorEncoding = Encoding.UTF8;
-                p.StartInfo.UseShellExecute = false;
-                p.StartInfo.RedirectStandardOutput = true;
-                p.StartInfo.RedirectStandardError = true;
-                p.OutputDataReceived += dataReceivedHandler;
-                p.ErrorDataReceived += dataReceivedHandler;
-            }
-
-#pragma warning disable CA1416
-            p.Start();
-#pragma warning restore CA1416
-
-            if (dataReceivedHandler != null)
-            {
-                p.BeginOutputReadLine();
-                p.BeginErrorReadLine();
-            }
-
-            return p;
+            return StartEngineProcess(exe, crispParams, dataReceivedHandler);
         }
 
         var settings = Se.Settings.Tools.AudioToText;
@@ -4079,17 +3857,6 @@ public partial class SpeechToTextViewModel : ObservableObject
             process.StartInfo.EnvironmentVariables["GGML_VULKAN_DEVICE"] = cppVulkanDevice;
         }
 
-        if (OperatingSystem.IsWindows())
-        {
-            if (!string.IsNullOrEmpty(Se.Settings.General.FfmpegPath) &&
-                process.StartInfo.EnvironmentVariables["Path"] != null)
-            {
-                process.StartInfo.EnvironmentVariables["Path"] =
-                    process.StartInfo.EnvironmentVariables["Path"]?.TrimEnd(';') + ";" +
-                    Path.GetDirectoryName(Se.Settings.General.FfmpegPath);
-            }
-        }
-
         var whisperFolder = engine.GetAndCreateWhisperFolder();
         if (!string.IsNullOrEmpty(whisperFolder))
         {
@@ -4104,9 +3871,16 @@ public partial class SpeechToTextViewModel : ObservableObject
             }
         }
 
-        if (OperatingSystem.IsWindows())
+        if (OperatingSystem.IsWindows() && process.StartInfo.EnvironmentVariables["Path"] != null)
         {
-            if (!string.IsNullOrEmpty(whisperFolder) && process.StartInfo.EnvironmentVariables["Path"] != null)
+            if (!string.IsNullOrEmpty(Se.Settings.General.FfmpegPath))
+            {
+                process.StartInfo.EnvironmentVariables["Path"] =
+                    process.StartInfo.EnvironmentVariables["Path"]?.TrimEnd(';') + ";" +
+                    Path.GetDirectoryName(Se.Settings.General.FfmpegPath);
+            }
+
+            if (!string.IsNullOrEmpty(whisperFolder))
             {
                 process.StartInfo.EnvironmentVariables["Path"] =
                     process.StartInfo.EnvironmentVariables["Path"]?.TrimEnd(';') + ";" + whisperFolder;
@@ -4223,7 +3997,7 @@ public partial class SpeechToTextViewModel : ObservableObject
 
         _audioExtractProcess.StartInfo.RedirectStandardError = true;
 #pragma warning disable CA1416
-        var started = _audioExtractProcess.Start();
+        _audioExtractProcess.Start();
 #pragma warning restore CA1416
 
         _audioExtractProcess.BeginErrorReadLine();
@@ -4283,41 +4057,13 @@ public partial class SpeechToTextViewModel : ObservableObject
         {
             if (_timeRegexShort.IsMatch(line))
             {
-                var start = line.Substring(1, 10);
-                var end = line.Substring(14, 10);
-                var text = line.Remove(0, 25).Trim();
-                var rt = new ResultText
-                {
-                    Start = GetSeconds(start),
-                    End = GetSeconds(end),
-                    Text = Utilities.AutoBreakLine(text, language.Code),
-                };
-
-                if (_showProgressPct < 0)
-                {
-                    _endSeconds = (double)rt.End;
-                }
-
-                _resultList.Add(rt);
+                // "[mm:ss.mmm --> mm:ss.mmm]  text"
+                AddResultTextFromLine(line, startIndex: 1, timeLength: 10, endIndex: 14, textIndex: 25, language.Code);
             }
             else if (_timeRegexLong.IsMatch(line))
             {
-                var start = line.Substring(1, 12);
-                var end = line.Substring(18, 12);
-                var text = line.Remove(0, 31).Trim();
-                var rt = new ResultText
-                {
-                    Start = GetSeconds(start),
-                    End = GetSeconds(end),
-                    Text = Utilities.AutoBreakLine(text, language.Code),
-                };
-
-                if (_showProgressPct < 0)
-                {
-                    _endSeconds = (double)rt.End;
-                }
-
-                _resultList.Add(rt);
+                // "[hh:mm:ss.mmm --> hh:mm:ss.mmm]  text"
+                AddResultTextFromLine(line, startIndex: 1, timeLength: 12, endIndex: 18, textIndex: 31, language.Code);
             }
             else if (line.StartsWith("whisper_full: progress =", StringComparison.OrdinalIgnoreCase))
             {
@@ -4372,6 +4118,28 @@ public partial class SpeechToTextViewModel : ObservableObject
                 }
             }
         }
+    }
+
+    /// <summary>
+    /// Parses one "[start --> end]  text" transcript line from engine output into
+    /// the running result list, and drives the progress estimate off the segment
+    /// end time when no explicit percentage is being streamed.
+    /// </summary>
+    private void AddResultTextFromLine(string line, int startIndex, int timeLength, int endIndex, int textIndex, string languageCode)
+    {
+        var rt = new ResultText
+        {
+            Start = GetSeconds(line.Substring(startIndex, timeLength)),
+            End = GetSeconds(line.Substring(endIndex, timeLength)),
+            Text = Utilities.AutoBreakLine(line.Remove(0, textIndex).Trim(), languageCode),
+        };
+
+        if (_showProgressPct < 0)
+        {
+            _endSeconds = (double)rt.End;
+        }
+
+        _resultList.Add(rt);
     }
 
     private void LogToConsole(string s, bool skipOutputText = false)
@@ -4492,7 +4260,9 @@ public partial class SpeechToTextViewModel : ObservableObject
         if (e.Key == Key.Escape)
         {
             e.Handled = true;
-            Window?.Close();
+            // Route through Cancel so Escape during a run aborts the run (like the
+            // Cancel button) instead of closing the window over a live engine process.
+            Cancel();
         }
         else if (UiUtil.IsHelp(e))
         {
@@ -4577,7 +4347,7 @@ public partial class SpeechToTextViewModel : ObservableObject
 
         if (Models.Count > 0)
         {
-            var model = Models.FirstOrDefault<SpeechToTextModelDisplay>(p => p.Model.Name == Se.Settings.Tools.AudioToText.WhisperModel);
+            var model = Models.FirstOrDefault(p => p.Model.Name == Se.Settings.Tools.AudioToText.WhisperModel);
             if (model != null)
             {
                 SelectedModel = model;
@@ -5019,8 +4789,46 @@ public partial class SpeechToTextViewModel : ObservableObject
     {
         _timerWhisper.StopAndDispose(OnTimerWhisperOnElapsed);
         _timerAudioExtract.StopAndDispose(OnTimerAudioExtractOnElapsed);
+
+        // With the timers gone nothing will ever reap a still-running engine or
+        // ffmpeg process - kill them so closing the window mid-run doesn't leave
+        // an orphan burning CPU in the background.
+        KillRunningProcesses();
+        _openAiCts?.Cancel();
+
         UiUtil.SaveWindowPosition(Window);
         Task.Run(() => { DeleteTempFiles(); });
+    }
+
+    private void KillRunningProcesses()
+    {
+        try
+        {
+            if (!_whisperProcess.HasExited)
+            {
+#pragma warning disable CA1416
+                _whisperProcess.Kill(true);
+#pragma warning restore CA1416
+            }
+        }
+        catch
+        {
+            // never started, already exited/disposed - nothing to reap
+        }
+
+        try
+        {
+            if (_audioExtractProcess is { HasExited: false })
+            {
+#pragma warning disable CA1416
+                _audioExtractProcess.Kill(true);
+#pragma warning restore CA1416
+            }
+        }
+        catch
+        {
+            // never started, already exited/disposed - nothing to reap
+        }
     }
 
     internal void WindowContextMenuOpening(object? sender, EventArgs e)
