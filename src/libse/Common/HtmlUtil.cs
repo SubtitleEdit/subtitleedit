@@ -565,21 +565,36 @@ namespace Nikse.SubtitleEdit.Core.Common
                 int arrayIndex = 0;
                 ReadOnlySpan<char> span = s.AsSpan();
 
+                // Hop from '<' to '<' and bulk-copy the stretch in between instead of
+                // testing every char - most of a subtitle line is plain text.
                 for (var i = 0; i < span.Length;)
                 {
-                    // If we hit an opening bracket, check if it's a target tag
-                    if (span[i] == '<')
+                    var rest = span.Slice(i);
+                    var tagStart = rest.IndexOf('<');
+                    if (tagStart < 0)
                     {
-                        if (TryGetTagLength(span.Slice(i), out int tagLength))
-                        {
-                            i += tagLength;
-                            continue;
-                        }
+                        rest.CopyTo(buffer.Slice(arrayIndex));
+                        arrayIndex += rest.Length;
+                        break;
                     }
 
-                    // Normal character processing
-                    buffer[arrayIndex++] = span[i];
-                    i++;
+                    if (tagStart > 0)
+                    {
+                        rest.Slice(0, tagStart).CopyTo(buffer.Slice(arrayIndex));
+                        arrayIndex += tagStart;
+                        i += tagStart;
+                    }
+
+                    if (TryGetTagLength(span.Slice(i), out int tagLength))
+                    {
+                        i += tagLength;
+                    }
+                    else
+                    {
+                        // A '<' that does not start a known tag is kept as-is
+                        buffer[arrayIndex++] = '<';
+                        i++;
+                    }
                 }
 
                 // Nothing was stripped (e.g. a stray '<' that is not a known tag);

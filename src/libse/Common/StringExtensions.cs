@@ -608,6 +608,36 @@ namespace Nikse.SubtitleEdit.Core.Common
         public static string RemoveControlCharactersButWhiteSpace(this string s)
         {
             var max = s.Length;
+
+            // The removed set is char.IsControl minus CR/LF/TAB, i.e. U+0000-U+0008,
+            // U+000B-U+000C, U+000E-U+001F and U+007F-U+009F; almost no line contains any
+            // of those, so return the original instance without allocating a copy.
+            var span = s.AsSpan();
+#if NET8_0_OR_GREATER
+            if (!span.ContainsAnyInRange('\u0000', '\u0008') &&
+                !span.ContainsAnyInRange('\u000B', '\u000C') &&
+                !span.ContainsAnyInRange('\u000E', '\u001F') &&
+                !span.ContainsAnyInRange('\u007F', '\u009F'))
+            {
+                return s;
+            }
+#else
+            var hasControl = false;
+            foreach (var c in span)
+            {
+                if (char.IsControl(c) && c != '\u000d' && c != '\u000a' && c != '\u0009')
+                {
+                    hasControl = true;
+                    break;
+                }
+            }
+
+            if (!hasControl)
+            {
+                return s;
+            }
+#endif
+
             var newStr = new char[max];
             var newIdx = 0;
             for (int index = 0; index < max; index++)

@@ -2025,34 +2025,52 @@ namespace Nikse.SubtitleEdit.Core.Common
             couldBeUtf8 = false;
             var utf8Count = 0;
             var i = 0;
-            while (i < buffer.Length - 3)
+            var max = buffer.Length - 3;
+            while (i < max)
             {
                 byte b = buffer[i];
-                if (b > 127)
+                if (b <= 127)
                 {
-                    if (b >= 194 && b <= 223 && buffer[i + 1] >= 128 && buffer[i + 1] <= 191)
-                    { // 2-byte sequence
-                        utf8Count++;
-                        i++;
-                    }
-                    else if (b >= 224 && b <= 239 && buffer[i + 1] >= 128 && buffer[i + 1] <= 191 &&
-                                                     buffer[i + 2] >= 128 && buffer[i + 2] <= 191)
-                    { // 3-byte sequence
-                        utf8Count++;
-                        i += 2;
-                    }
-                    else if (b >= 240 && b <= 244 && buffer[i + 1] >= 128 && buffer[i + 1] <= 191 &&
-                                                     buffer[i + 2] >= 128 && buffer[i + 2] <= 191 &&
-                                                     buffer[i + 3] >= 128 && buffer[i + 3] <= 191)
-                    { // 4-byte sequence
-                        utf8Count++;
-                        i += 3;
-                    }
-                    else
+                    // Called with up to 500 KB of a subtitle file, which is nearly all plain
+                    // ASCII - those bytes only advance the cursor, so jump straight to the
+                    // next byte that actually needs validating.
+#if NET8_0_OR_GREATER
+                    var next = buffer.AsSpan(i + 1).IndexOfAnyExceptInRange((byte)0, (byte)127);
+                    if (next < 0)
                     {
-                        return false;
+                        break;
                     }
+
+                    i += next + 1;
+#else
+                    i++;
+#endif
+                    continue;
                 }
+
+                if (b >= 194 && b <= 223 && buffer[i + 1] >= 128 && buffer[i + 1] <= 191)
+                { // 2-byte sequence
+                    utf8Count++;
+                    i++;
+                }
+                else if (b >= 224 && b <= 239 && buffer[i + 1] >= 128 && buffer[i + 1] <= 191 &&
+                                                 buffer[i + 2] >= 128 && buffer[i + 2] <= 191)
+                { // 3-byte sequence
+                    utf8Count++;
+                    i += 2;
+                }
+                else if (b >= 240 && b <= 244 && buffer[i + 1] >= 128 && buffer[i + 1] <= 191 &&
+                                                 buffer[i + 2] >= 128 && buffer[i + 2] <= 191 &&
+                                                 buffer[i + 3] >= 128 && buffer[i + 3] <= 191)
+                { // 4-byte sequence
+                    utf8Count++;
+                    i += 3;
+                }
+                else
+                {
+                    return false;
+                }
+
                 i++;
             }
 
