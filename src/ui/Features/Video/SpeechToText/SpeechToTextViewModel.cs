@@ -1809,7 +1809,8 @@ public partial class SpeechToTextViewModel : ObservableObject
             var msg = $"Videos converted: " + convertedJobs;
             if (failed > 0)
             {
-                msg += Environment.NewLine + $"Videos failed: " + failed;
+                msg += Environment.NewLine + $"Videos failed: " + failed +
+                       Environment.NewLine + "Please check the tools log for details.";
             }
 
             _timerWhisper.Stop();
@@ -2468,8 +2469,43 @@ public partial class SpeechToTextViewModel : ObservableObject
                                      "64-bit: " + Environment.Is64BitOperatingSystem + Environment.NewLine +
                                      "ffmpeg exit code: " + _audioExtractProcess.ExitCode + Environment.NewLine +
                                      "ffmpeg log: " + _ffmpegLog);
-                IsTranscribeEnabled = true;
+
+                // Tell the user - writing to the tools log only left the run looking
+                // frozen: the progress indicator stayed up and no dialog appeared (#13621).
+                var exitCode = _audioExtractProcess.ExitCode;
                 _audioExtractProcess = null;
+
+                if (IsBatchMode)
+                {
+                    // One unreadable file must not sink the whole batch: mark this job
+                    // failed and move on, exactly like a job whose engine produced no
+                    // text (MakeResult -> StartNext(null)). The closing summary reports
+                    // the failure count, so nothing is swallowed.
+                    if (_batchIndex >= 0 && _batchIndex < _jobItems.Count)
+                    {
+                        _jobItems[_batchIndex].Status = Se.Language.General.Error;
+                    }
+
+                    StartNext(null);
+                    return;
+                }
+
+                IsTranscribeEnabled = true;
+                HideProgressBar();
+                ProgressText = string.Empty;
+
+                Dispatcher.UIThread.Post(async () =>
+                {
+                    await MessageBox.Show(Window!, Se.Language.General.Error,
+                        $"Could not generate the audio file (ffmpeg exit code {exitCode})." +
+                        Environment.NewLine + "Please check the tools log for the ffmpeg output.");
+
+                    if (Window != null)
+                    {
+                        FileHelper.OpenFileWithDefaultProgram(Se.GetToolsLogFilePath());
+                    }
+                });
+
                 return;
             }
 
@@ -4378,10 +4414,17 @@ public partial class SpeechToTextViewModel : ObservableObject
             return null;
         }
 
+        // The trailing "?" makes the stream map optional (#13621, same fix as in
+        // WaveFileExtractor for #10835). The track index belongs to the video the user
+        // picked it from, but this method also runs on inputs that never had it: the
+        // already-demuxed "se_audioclip_*.wav" clips from "transcribe selected lines",
+        // and any unrelated file added in batch mode. Without the "?", "-map 0:1" on a
+        // single-stream wav aborts ffmpeg ("Stream map '0:1' matches no streams"); with
+        // it, ffmpeg falls back to automatic stream selection and picks the audio.
         var audioParameter = string.Empty;
         if (audioTrackNumber >= 0)
         {
-            audioParameter = $"-map 0:{audioTrackNumber}";
+            audioParameter = $"-map 0:{audioTrackNumber}?";
         }
 
         var fFmpegAudioTranscodeSettings = GetFfmpegTranscodeFormatString(audioFormat, _useCenterChannelOnly);
