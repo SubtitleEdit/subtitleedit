@@ -424,14 +424,11 @@ public static class MultipleReplaceLoader
                 }
                 else if (!string.IsNullOrEmpty(rule.FindWhat))
                 {
-                    // Normal = case-insensitive literal, matched through an escaped IgnoreCase
-                    // pattern. The '$' escaping (so the replacement is literal, with no $1/$&
-                    // expansion) is done here rather than per paragraph.
-                    compiled.Add(new CompiledRule(
-                        RuleKind.Literal,
-                        new Regex(Regex.Escape(rule.FindWhat), RegexOptions.Compiled | RegexOptions.IgnoreCase),
-                        rule.FindWhat,
-                        rule.ReplaceWith.Replace("$", "$$")));
+                    // Normal = case-insensitive literal, matched ordinally — the same comparison
+                    // the GUI's MultipleReplaceViewModel uses (IndexOf + Remove/Insert), so the
+                    // same rules file gives the same result in both. The empty check is load
+                    // bearing: string.Replace rejects an empty oldValue.
+                    compiled.Add(new CompiledRule(RuleKind.Literal, null, rule.FindWhat, rule.ReplaceWith));
                 }
             }
             catch
@@ -451,7 +448,7 @@ public static class MultipleReplaceLoader
                 {
                     RuleKind.CaseSensitive => newText.Replace(rule.Find, rule.Replace, StringComparison.Ordinal),
                     RuleKind.Regex => RegexUtils.ReplaceNewLineSafe(rule.Regex!, newText, rule.Replace),
-                    _ => rule.Regex!.Replace(newText, rule.Replace),
+                    _ => newText.Replace(rule.Find, rule.Replace, StringComparison.OrdinalIgnoreCase),
                 };
             }
 

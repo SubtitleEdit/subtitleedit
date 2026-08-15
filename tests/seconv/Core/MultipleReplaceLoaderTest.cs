@@ -1,4 +1,5 @@
 using Nikse.SubtitleEdit.Core.Common;
+using System.Globalization;
 using SeConv.Core;
 using Xunit;
 
@@ -150,5 +151,69 @@ public class MultipleReplaceLoaderTest : IDisposable
 
         Assert.Equal(1, Apply(BadRegexXml, ".xml"));
         Assert.Equal("the color [unclosed", _sub.Paragraphs[0].Text);
+    }
+
+    private const string IstanbulXml = """
+        <?xml version="1.0" encoding="utf-8"?>
+        <MultipleSearchAndReplaceGroups>
+          <Group>
+            <Name>Turkish</Name>
+            <IsActive>true</IsActive>
+            <Rules>
+              <Rule><Active>true</Active><FindWhat>istanbul</FindWhat><ReplaceWith>Constantinople</ReplaceWith><SearchType>Normal</SearchType></Rule>
+            </Rules>
+          </Group>
+        </MultipleSearchAndReplaceGroups>
+        """;
+
+    /// <summary>
+    /// A case-insensitive rule must match the same text on every machine. Matching through a
+    /// culture-sensitive RegexOptions.IgnoreCase made this depend on CurrentCulture: under
+    /// tr-TR, "I" lower-cases to "ı", so the plain-ASCII rule "istanbul" stopped matching the
+    /// plain-ASCII text "ISTANBUL" — the same rules file quietly produced different output for
+    /// a Turkish user. Ordinal matching (what the GUI uses) is locale-independent.
+    /// </summary>
+    [Theory]
+    [InlineData("en-US")]
+    [InlineData("tr-TR")]
+    [InlineData("de-DE")]
+    [InlineData("")] // invariant
+    public void CaseInsensitiveMatchingIsLocaleIndependent(string cultureName)
+    {
+        var previousCulture = CultureInfo.CurrentCulture;
+        try
+        {
+            CultureInfo.CurrentCulture = cultureName.Length == 0
+                ? CultureInfo.InvariantCulture
+                : new CultureInfo(cultureName);
+
+            _sub = new Subtitle();
+            _sub.Paragraphs.Add(new Paragraph("ISTANBUL", 0, 3000));
+            _sub.Paragraphs.Add(new Paragraph("Istanbul", 4000, 6000));
+            _sub.Paragraphs.Add(new Paragraph("istanbul", 7000, 9000));
+
+            Assert.Equal(3, Apply(IstanbulXml, ".xml"));
+            Assert.Equal("Constantinople", _sub.Paragraphs[0].Text);
+            Assert.Equal("Constantinople", _sub.Paragraphs[1].Text);
+            Assert.Equal("Constantinople", _sub.Paragraphs[2].Text);
+        }
+        finally
+        {
+            CultureInfo.CurrentCulture = previousCulture;
+        }
+    }
+
+    /// <summary>
+    /// Ordinal matching compares code points, so a dotted capital I (U+0130) is not an "i" —
+    /// matching the GUI, which walks IndexOf(..., OrdinalIgnoreCase).
+    /// </summary>
+    [Fact]
+    public void CaseInsensitiveMatchingIsOrdinalNotLinguistic()
+    {
+        _sub = new Subtitle();
+        _sub.Paragraphs.Add(new Paragraph("İstanbul", 0, 3000));
+
+        Assert.Equal(0, Apply(IstanbulXml, ".xml"));
+        Assert.Equal("İstanbul", _sub.Paragraphs[0].Text);
     }
 }
