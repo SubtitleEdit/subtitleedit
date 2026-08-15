@@ -296,11 +296,36 @@ public class AiReviewTests
 
         var changes = AiReviewProtocol.ParseChanges(reply, lines);
 
-        // 369/371 are not editable numbers and would have been dropped outright; the echo
-        // remap already rescues those. The dangerous one is 368: an editable number whose
-        // echo equals its text - it used to keep the wrong line. Content remap moves it to 365.
+        // 369/371 are not editable numbers and their echoes just repeat the corrected text,
+        // so they carry no information to rescue with - both drop. The dangerous one is 368:
+        // an editable number whose echo equals its text - it used to keep the wrong line.
+        // Content remap moves it to 365.
         Assert.Contains(changes, c => c.Number == 365 && c.NewText == "Go! Did I bring her diapers");
         Assert.DoesNotContain(changes, c => c.Number == 368);
+        Assert.DoesNotContain(changes, c => c.Number > 368);
+    }
+
+    // The other half of a batch-wide shift: the corrections for the last lines carry
+    // numbers past the end of the batch. When the echo names an editable line, the
+    // change must be remapped there, not dropped for being out of range.
+    [Fact]
+    public void ParseChanges_ShiftedPastBatchEnd_RescuedByEcho()
+    {
+        var lines = Lines(
+            (370, "What the fudge, fudge?"),
+            (371, "If I'm wrong, I'm really wrong."));
+        var reply = """
+            {"changes":[
+              {"n":373,"orig":"If I'm wrong, I'm really wrong.","text":"If I am wrong, I am really wrong.","reason":"x","category":"grammar"},
+              {"n":374,"orig":"Some hallucinated line.","text":"Some hallucinated line!","reason":"x","category":"punctuation"}
+            ]}
+            """;
+
+        var changes = AiReviewProtocol.ParseChanges(reply, lines);
+
+        var change = Assert.Single(changes);
+        Assert.Equal(371, change.Number);
+        Assert.Equal("If I am wrong, I am really wrong.", change.NewText);
     }
 
     [Fact]
