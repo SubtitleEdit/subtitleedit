@@ -246,7 +246,9 @@
     <Word from="ÿétrangle" to="s'étrangle" />
   </WholeWords>
   <PartialWordsAlways />
-  <PartialWords />
+  <PartialWords>
+    <WordPart from="i" to="l" />
+  </PartialWords>
   <WholeLines>
     <Line from="&quot;D'ac:c:ord.&quot;" to="&quot;D'accord.&quot;" />
     <Line from="“i QUÎ gagne, qui perd," to="ni qui gagne, qui perd," />
@@ -373,13 +375,16 @@
     <RegEx find="\bin([A-Z][a-zæøåöäéèàùâêîôûëïœç]+)\b" spellCheck="$1" replaceWith="in $1" />
 
   </RegularExpressionsIfSpelledCorrectly>
-  <PartialWords>
-    <WordPart from="i" to="l" />
-  </PartialWords>
   <RegularExpressionsIfSpelledCorrectly>
     <!-- Italic l misread as i (#13660): trailing i to l, double ii to ll.  -->
     <!-- Correct i-words are in the dictionary and protected by the gate.   -->
     <RegEx find="\b([A-ZÀÂÆÇÉÈÊËÎÏÔŒÙÛÜŸa-zàâæçéèêëîïôœùûüÿ][a-zàâæçéèêëîïôœùûüÿ]*)i\b" spellCheck="$1l" replaceWith="$1l" />
     <RegEx find="\b([A-ZÀÂÆÇÉÈÊËÎÏÔŒÙÛÜŸa-zàâæçéèêëîïôœùûüÿ][a-zàâæçéèêëîïôœùûüÿ]*)ii([a-zàâæçéèêëîïôœùûüÿ]*)\b" spellCheck="$1ll$2" replaceWith="$1ll$2" />
+
+    <!-- word-initial i to l (iove to love, iieber to lieber) -->
+    <RegEx find="\bi([a-zàâæçéèêëîïôœùûüÿ]{2,})\b" spellCheck="l$1" replaceWith="l$1" />
+
+    <!-- word-initial ii to ll (iiegar to llegar) -->
+    <RegEx find="\bii([a-zàâæçéèêëîïôœùûüÿ]+)\b" spellCheck="ll$1" replaceWith="ll$1" />
   </RegularExpressionsIfSpelledCorrectly>
 </OCRFixReplaceList>

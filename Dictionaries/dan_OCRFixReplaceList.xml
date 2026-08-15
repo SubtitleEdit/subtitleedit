@@ -789,5 +789,11 @@
     <!-- Correct i-words are in the dictionary and protected by the gate.   -->
     <RegEx find="\b([A-ZÆØÅa-zæøå][a-zæøå]*)i\b" spellCheck="$1l" replaceWith="$1l" />
     <RegEx find="\b([A-ZÆØÅa-zæøå][a-zæøå]*)ii([a-zæøå]*)\b" spellCheck="$1ll$2" replaceWith="$1ll$2" />
+
+    <!-- word-initial i to l (iove to love, iieber to lieber) -->
+    <RegEx find="\bi([a-zæøå]{2,})\b" spellCheck="l$1" replaceWith="l$1" />
+
+    <!-- word-initial ii to ll (iiegar to llegar) -->
+    <RegEx find="\bii([a-zæøå]+)\b" spellCheck="ll$1" replaceWith="ll$1" />
   </RegularExpressionsIfSpelledCorrectly>
 </OCRFixReplaceList>
