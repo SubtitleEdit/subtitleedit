@@ -83,6 +83,34 @@ public class BatchConvertScanFolderTests
     }
 
     [Fact]
+    public void ScanFolder_SymlinkCycle_TerminatesAndCollectsEachFileOnce()
+    {
+        var dir = MakeTree();
+        try
+        {
+            // A subfolder linking back to the root - without cycle detection the walk
+            // loops (and duplicates every file) until the user cancels.
+            try
+            {
+                Directory.CreateSymbolicLink(Path.Combine(dir.FullName, "season 2", "loop"), dir.FullName);
+            }
+            catch (Exception)
+            {
+                return; // symlinks unavailable (e.g. Windows without developer mode) - nothing to test
+            }
+
+            var found = Scan(dir.FullName, recursive: true).Select(Path.GetFileName).ToList();
+
+            Assert.Equal(3, found.Count);
+            Assert.Contains("three.vtt", found);
+        }
+        finally
+        {
+            dir.Delete(recursive: true);
+        }
+    }
+
+    [Fact]
     public void ScanFolder_MissingFolder_ReturnsNothingInsteadOfThrowing()
     {
         var missing = Path.Combine(Path.GetTempPath(), "se-scan-folder-does-not-exist-" + Guid.NewGuid().ToString("N"));
