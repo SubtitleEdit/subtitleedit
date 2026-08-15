@@ -165,6 +165,7 @@ public partial class OcrViewModel : ObservableObject
     // reflect the current on-disk state instead of the snapshot taken when first realised.
     public Action? RefreshEngineCombo { get; set; }
     public Action? RefreshCrispEmbedModelCombo { get; set; }
+    public Action? RefreshLlamaCppOcrModelCombo { get; set; }
 
     public MatroskaTrackInfo? SelectedMatroskaTrack { get; set; }
     public bool OkPressed { get; private set; }
@@ -1379,8 +1380,20 @@ public partial class OcrViewModel : ObservableObject
         if (downloaded != null)
         {
             var selectName = string.IsNullOrEmpty(downloaded) ? model?.FileName : downloaded;
+            RefreshLlamaCppOcrDots();
             SelectedLlamaCppOcrModel = LlamaCppDownloadHelper.PopulateModels(LlamaCppOcrModels, LlamaCppServerManager.OcrModels, selectName);
         }
+    }
+
+    /// <summary>
+    /// The install-status dots are one-off snapshots taken when a combo row is realised, so a
+    /// download only shows up once the templates are rebuilt: the llama-server binary may have
+    /// arrived with the model, which moves the engine dot too.
+    /// </summary>
+    private void RefreshLlamaCppOcrDots()
+    {
+        RefreshEngineCombo?.Invoke();
+        RefreshLlamaCppOcrModelCombo?.Invoke();
     }
 
     [RelayCommand]
@@ -1446,6 +1459,7 @@ public partial class OcrViewModel : ObservableObject
             }
 
             await LlamaCppDownloadHelper.DownloadAsync(Window, _windowService, model);
+            RefreshLlamaCppOcrDots();
             if (!LlamaCppServerManager.IsEngineInstalled() || !LlamaCppServerManager.IsModelInstalled(model))
             {
                 return false;
@@ -4034,7 +4048,10 @@ public partial class OcrViewModel : ObservableObject
 
     private void RunOllamaOcr(List<int> selectedIndices, CancellationToken cancellationToken)
     {
-        using var ollamaOcr = new OllamaOcr(Se.Settings.Ocr.OllamaOcrTimeoutMinutes);
+        // The engine belongs to the background task below, not to this method: a "using" here
+        // disposes the HttpClient the moment the task is started, so every request fails and the
+        // grid fills with blank lines.
+        var ollamaOcr = new OllamaOcr(Se.Settings.Ocr.OllamaOcrTimeoutMinutes);
         var url = OllamaUrl;
         var model = OllamaModel;
 
@@ -4099,6 +4116,7 @@ public partial class OcrViewModel : ObservableObject
             }
             finally
             {
+                ollamaOcr.Dispose();
                 PauseOcr();
             }
         });
@@ -4122,34 +4140,32 @@ public partial class OcrViewModel : ObservableObject
 
     private void RunLlamaCppOcr(List<int> selectedIndices, CancellationToken cancellationToken)
     {
-        using var engine = new LlamaCppOcr(Se.Settings.Ocr.LlamaCppOcrTimeoutMinutes);
+        // The engine belongs to the background task below, not to this method: a "using" here
+        // disposes the HttpClient the moment the task is started, so every request fails and the
+        // grid fills with blank lines (#13633).
+        var engine = new LlamaCppOcr(Se.Settings.Ocr.LlamaCppOcrTimeoutMinutes);
         var selectedModel = SelectedLlamaCppOcrModel?.Model;
         var prompt = Se.Settings.Ocr.LlamaCppOcrPrompt;
 
         _ = Task.Run(async () =>
         {
-            string url;
-            string modelName;
-            if (selectedModel != null)
-            {
-                var ready = await Dispatcher.UIThread.InvokeAsync(EnsureLlamaCppOcrReady);
-                if (!ready)
-                {
-                    PauseOcr();
-                    return;
-                }
-
-                url = LlamaCppServerManager.ApiUrl;
-                modelName = Path.GetFileNameWithoutExtension(selectedModel.FileName);
-            }
-            else
-            {
-                url = LlamaCppUrl;
-                modelName = "glmocr";
-            }
-
+            var url = LlamaCppUrl;
+            var modelName = "glmocr";
             try
             {
+                if (selectedModel != null)
+                {
+                    var ready = await Dispatcher.UIThread.InvokeAsync(EnsureLlamaCppOcrReady);
+                    if (!ready)
+                    {
+                        PauseOcr();
+                        return;
+                    }
+
+                    url = LlamaCppServerManager.ApiUrl;
+                    modelName = Path.GetFileNameWithoutExtension(selectedModel.FileName);
+                }
+
                 for (var processedIndex = 0; processedIndex < selectedIndices.Count; processedIndex++)
                 {
                     var i = selectedIndices[processedIndex];
@@ -4166,6 +4182,15 @@ public partial class OcrViewModel : ObservableObject
                     SelectAndScrollToRow(i);
 
                     var text = await engine.Ocr(bitmap, url, modelName, SelectedOllamaLanguage ?? "English", prompt, cancellationToken);
+
+                    // Surface a real failure (server gone, model not loaded, out of memory) instead
+                    // of silently filling the grid with blank lines.
+                    if (string.IsNullOrEmpty(text) && !string.IsNullOrEmpty(engine.Error))
+                    {
+                        await ShowLlamaCppErrorAsync(engine.Error, url, modelName);
+                        return;
+                    }
+
                     item.Text = text;
 
                     OcrFixLineAndSetText(i, item);
@@ -4174,11 +4199,33 @@ public partial class OcrViewModel : ObservableObject
             catch (OperationCanceledException)
             {
             }
+            catch (Exception ex)
+            {
+                SeLogger.Error(ex, "Error running llama.cpp OCR");
+                await ShowLlamaCppErrorAsync(engine.Error is { Length: > 0 } e ? e : ex.Message, url, modelName);
+            }
             finally
             {
+                engine.Dispose();
                 PauseOcr();
             }
         });
+    }
+
+    private async Task ShowLlamaCppErrorAsync(string error, string url, string model)
+    {
+        if (Window == null)
+        {
+            return;
+        }
+
+        await Dispatcher.UIThread.InvokeAsync(async () =>
+            await MessageBox.Show(
+                Window!,
+                Se.Language.General.Error,
+                "llama.cpp OCR failed (model \"" + model + "\" at " + url + "):" + Environment.NewLine + Environment.NewLine + error,
+                MessageBoxButtons.OK,
+                MessageBoxIcon.Error));
     }
 
     private void RunCrispEmbedOcr(List<int> selectedIndices, CancellationToken cancellationToken)

@@ -11,6 +11,7 @@ using Avalonia.Media;
 using Avalonia.Styling;
 using Nikse.SubtitleEdit.Features.Ocr.Engines;
 using Nikse.SubtitleEdit.Features.Ocr.FixEngine;
+using Nikse.SubtitleEdit.Features.Translate;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Logic.Download;
@@ -236,6 +237,14 @@ public class OcrWindow : Window
         comboBoxCrispEmbedModels.ItemTemplate = MakeCrispEmbedModelItemTemplate();
         vm.RefreshCrispEmbedModelCombo = () => comboBoxCrispEmbedModels.ItemTemplate = MakeCrispEmbedModelItemTemplate();
 
+        var comboBoxLlamaCppModels = UiUtil.MakeComboBox(vm.LlamaCppOcrModels, vm, nameof(vm.SelectedLlamaCppOcrModel),
+                nameof(vm.IsLlamaCppVisible))
+            .WithWidth(220)
+            .WithMarginRight(5)
+            .BindIsEnabled(vm, nameof(OcrViewModel.IsOcrRunning), new InverseBooleanConverter());
+        comboBoxLlamaCppModels.ItemTemplate = LlamaCppDownloadHelper.ModelItemTemplate();
+        vm.RefreshLlamaCppOcrModelCombo = () => comboBoxLlamaCppModels.ItemTemplate = LlamaCppDownloadHelper.ModelItemTemplate();
+
         var panel = new StackPanel
         {
             Orientation = Orientation.Horizontal,
@@ -331,11 +340,7 @@ public class OcrWindow : Window
                     .WithMarginRight(10)
                     .BindIsEnabled(vm, nameof(OcrViewModel.IsOcrRunning), new InverseBooleanConverter()),
                 UiUtil.MakeLabel<OcrViewModel>(Se.Language.General.Model, vm => vm.IsLlamaCppVisible),
-                UiUtil.MakeComboBox(vm.LlamaCppOcrModels, vm, nameof(vm.SelectedLlamaCppOcrModel),
-                        nameof(vm.IsLlamaCppVisible))
-                    .WithWidth(220)
-                    .WithMarginRight(5)
-                    .BindIsEnabled(vm, nameof(OcrViewModel.IsOcrRunning), new InverseBooleanConverter()),
+                comboBoxLlamaCppModels,
                 UiUtil.MakeButton(vm.DownloadLlamaCppOcrCommand, IconNames.Download, Se.Language.General.Download)
                     .WithMarginRight(5)
                     .BindIsVisible(vm, nameof(vm.IsLlamaCppVisible))
@@ -1146,9 +1151,10 @@ public class OcrWindow : Window
         return button;
     }
 
-    // Engine combo item template: CrispEmbed is the only OCR engine with a locally tracked
-    // install, so it gets the install-status dot (green = ready, amber = update available,
-    // grey = not downloaded yet) plus its download size; all other engines show no dot.
+    // Engine combo item template: CrispEmbed and llama.cpp are the OCR engines with a locally
+    // tracked install, so they get the install-status dot (green = ready, amber = update
+    // available, grey = not downloaded yet); CrispEmbed also shows its download size until it is
+    // on disk. Engines with nothing for us to download show no dot.
     private static FuncDataTemplate<OcrEngineItem> MakeOcrEngineItemTemplate()
     {
         return StatusDots.ComboItemTemplate<OcrEngineItem>(
@@ -1161,18 +1167,18 @@ public class OcrWindow : Window
 
     private static DownloadDotStatus GetOcrEngineDotStatus(OcrEngineItem engine)
     {
-        if (engine.EngineType != OcrEngineType.CrispEmbed)
+        switch (engine.EngineType)
         {
-            return DownloadDotStatus.None;
+            case OcrEngineType.LlamaCpp:
+                return LlamaCppDownloadHelper.GetEngineDotStatus();
+            case OcrEngineType.CrispEmbed:
+                return CrispEmbedEngine.IsEngineInstalled()
+                    // Installed: the cheap .installed.sha256 sidecar turns an outdated build amber.
+                    ? StatusDots.From(true, DownloadHashManager.GetSidecarStatus(CrispEmbedEngine.GetAndCreateFolder()))
+                    : DownloadDotStatus.NotInstalled;
+            default:
+                return DownloadDotStatus.None;
         }
-
-        if (!CrispEmbedEngine.IsEngineInstalled())
-        {
-            return DownloadDotStatus.NotInstalled;
-        }
-
-        // Installed: read the cheap .installed.sha256 sidecar so an outdated build shows amber.
-        return StatusDots.From(true, DownloadHashManager.GetSidecarStatus(CrispEmbedEngine.GetAndCreateFolder()));
     }
 
     // Model combo item template: a dot (green = downloaded, grey = not downloaded yet) plus the
