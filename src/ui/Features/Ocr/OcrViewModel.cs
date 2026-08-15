@@ -4214,8 +4214,11 @@ public partial class OcrViewModel : ObservableObject
 
     private async Task ShowLlamaCppErrorAsync(string error, string url, string model)
     {
-        if (Window == null)
+        if (Window == null || _isWindowClosed)
         {
+            // No window to parent the dialog - MessageBox.Show would throw inside the
+            // fire-and-forget OCR task. Keep the failure visible in the log instead.
+            SeLogger.Error("llama.cpp OCR failed (model \"" + model + "\" at " + url + "): " + error);
             return;
         }
 
@@ -4992,11 +4995,16 @@ public partial class OcrViewModel : ObservableObject
     }
 
     private bool _forceClose = false;
+    private bool _isWindowClosed = false;
 
     internal async void OnClosing(WindowClosingEventArgs e)
     {
         if (_forceClose || e.IsProgrammatic)
         {
+            // The engine loops only stop through this token: without cancelling here a
+            // close mid-run kept OCRing every remaining line against a closed window.
+            _isWindowClosed = true;
+            _cancellationTokenSource.Cancel();
             SaveSettings();
             UiUtil.SaveWindowPosition(Window);
             return;
@@ -5035,6 +5043,8 @@ public partial class OcrViewModel : ObservableObject
             return;
         }
 
+        _isWindowClosed = true;
+        _cancellationTokenSource.Cancel();
         SaveSettings();
         UiUtil.SaveWindowPosition(Window);
     }

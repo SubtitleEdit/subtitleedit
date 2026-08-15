@@ -46,6 +46,7 @@ public partial class VisualSyncViewModel : ObservableObject
     private readonly IFileHelper _fileHelper;
 
     private string? _videoFileName;
+    private string? _wavePeaksVideoFileName;
     private DispatcherTimer _positionTimer = new DispatcherTimer();
     private List<SubtitleLineViewModel> _subtitleLines = new List<SubtitleLineViewModel>();
     private bool _updateAudioVisualizer;
@@ -122,6 +123,7 @@ public partial class VisualSyncViewModel : ObservableObject
                 AudioVisualizerLeft.WavePeaks = audioVisualizer.WavePeaks;
                 AudioVisualizerRight.WavePeaks = audioVisualizer.WavePeaks;
                 IsAudioVisualizerVisible = true;
+                _wavePeaksVideoFileName = videoFileName;
             }
             StartTitleTimer();
             _updateAudioVisualizer = true;
@@ -599,6 +601,15 @@ public partial class VisualSyncViewModel : ObservableObject
 
         _videoFileName = fileName;
         SetVideoInFo(fileName);
+
+        // The lent waveform belongs to the video the dialog was opened with - keeping it
+        // under a different video would have the user syncing against the wrong peaks.
+        if (!string.Equals(fileName, _wavePeaksVideoFileName, StringComparison.OrdinalIgnoreCase))
+        {
+            AudioVisualizerLeft.WavePeaks = null;
+            AudioVisualizerRight.WavePeaks = null;
+            IsAudioVisualizerVisible = false;
+        }
 
         await OpenPlayersAsync(fileName, -1);
         await VideoPlayerControlLeft.WaitForPlayersReadyAsync();

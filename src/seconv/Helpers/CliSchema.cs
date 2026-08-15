@@ -81,7 +81,8 @@ internal static class CliSchema
         [property: JsonPropertyName("group")] string Group,
         [property: JsonPropertyName("description")] string Description,
         [property: JsonPropertyName("choices"), JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)] IReadOnlyList<string>? Choices,
-        [property: JsonPropertyName("discover"), JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)] string? Discover);
+        [property: JsonPropertyName("discover"), JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)] string? Discover,
+        [property: JsonIgnore] bool ValueOptional = false);
 
     private static IReadOnlyList<OptionInfo>? _options;
 
@@ -125,7 +126,10 @@ internal static class CliSchema
                 Group: isOperation ? "operation" : "option",
                 Description: ReadDescription(property),
                 Choices: Choices.TryGetValue(name, out var choices) ? choices : null,
-                Discover: DiscoveryCommands.TryGetValue(name, out var discover) ? discover : null));
+                Discover: DiscoveryCommands.TryGetValue(name, out var discover) ? discover : null,
+                // A bracketed placeholder ("--apply-min-gap [MS]") marks a Spectre
+                // FlagValue option whose value may be omitted entirely.
+                ValueOptional: template.Contains('[')));
         }
 
         return options;

@@ -120,11 +120,6 @@ public static class AiReviewProtocol
                 continue;
             }
 
-            if (!editableLines.ContainsKey(number))
-            {
-                continue; // hallucinated or context line
-            }
-
             var text = (textElement.GetString() ?? string.Empty).Replace("\r\n", "\n").Replace("\n", Environment.NewLine).Trim();
             if (text.Length == 0)
             {
@@ -138,8 +133,10 @@ public static class AiReviewProtocol
             number = VerifyNumberAgainstEcho(number, orig, text, editableLines);
             if (number < 0)
             {
-                log?.Invoke($"AI review: dropped change for line {modelNumber} - the echoed original matches no line in the batch (echo: \"{orig}\")");
-                continue; // echo matches no editable line
+                log?.Invoke(editableLines.ContainsKey(modelNumber)
+                    ? $"AI review: dropped change for line {modelNumber} - the echoed original does not identify a single line in the batch (echo: \"{orig}\")"
+                    : $"AI review: dropped change for line {modelNumber} - the line is outside the batch and the echo does not identify one (echo: \"{orig}\")");
+                continue; // no editable line to pin the change to
             }
 
             if (number != modelNumber)
@@ -177,16 +174,21 @@ public static class AiReviewProtocol
     /// Checks the model's echo of the original text against line <paramref name="number"/>.
     /// Returns the number to use for the change, or -1 when the change should be dropped.
     /// An echo that just repeats the corrected text carries no information and is ignored.
+    /// <paramref name="number"/> may point outside the batch (a shifted model pushes the
+    /// last lines' corrections past the end): the echo scan can still rescue those, so the
+    /// out-of-batch check happens here, after the echo is read, not before.
     /// </summary>
     private static int VerifyNumberAgainstEcho(int number, string orig, string text, IReadOnlyDictionary<int, string> editableLines)
     {
+        var known = editableLines.TryGetValue(number, out var numberText);
         var origKey = NormalizeForMatch(orig);
         if (origKey.Length == 0 || origKey == NormalizeForMatch(text))
         {
-            return number; // no usable echo - trust the model's line number
+            // No usable echo - trust the model's line number, if it names an editable line.
+            return known ? number : -1;
         }
 
-        if (origKey == NormalizeForMatch(editableLines[number]))
+        if (known && origKey == NormalizeForMatch(numberText!))
         {
             return number; // echo confirms the line number
         }
@@ -213,7 +215,7 @@ public static class AiReviewProtocol
 
         // no exact match anywhere; accept a near-exact echo of line "n" (models often normalize
         // quotes or dashes when copying), otherwise the change points at an unknown line - drop it
-        return GetSimilarityPercent(orig, editableLines[number]) >= 90 ? number : -1;
+        return known && GetSimilarityPercent(orig, numberText!) >= 90 ? number : -1;
     }
 
     /// <summary>

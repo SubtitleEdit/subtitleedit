@@ -1797,6 +1797,15 @@ public partial class BatchConvertViewModel : ObservableObject, IClosingCleanup
         var pending = new Stack<string>();
         pending.Push(folder);
 
+        // Directory symlinks/junctions can form cycles (a link pointing at an ancestor is
+        // common on network shares) - track each folder's resolved target so a cycle is
+        // walked once instead of looping until the user cancels.
+        var visited = new HashSet<string>(
+            OperatingSystem.IsLinux() ? StringComparer.Ordinal : StringComparer.OrdinalIgnoreCase)
+        {
+            ResolveFolderKey(folder),
+        };
+
         // Reporting every folder would flood the UI thread on a big tree - one update per ~100 ms
         // is enough for the user to see the scan is alive and where it is.
         var lastStatusUpdate = System.Diagnostics.Stopwatch.StartNew();
@@ -1832,7 +1841,10 @@ public partial class BatchConvertViewModel : ObservableObject, IClosingCleanup
                 {
                     foreach (var subFolder in Directory.EnumerateDirectories(currentFolder))
                     {
-                        pending.Push(subFolder);
+                        if (visited.Add(ResolveFolderKey(subFolder)))
+                        {
+                            pending.Push(subFolder);
+                        }
                     }
                 }
             }
@@ -1841,6 +1853,23 @@ public partial class BatchConvertViewModel : ObservableObject, IClosingCleanup
                 // unreadable folder (no permission, removed mid-scan, dead network share) - skip it
                 // and keep scanning the rest rather than failing the whole add
             }
+        }
+    }
+
+    /// <summary>
+    /// The path a folder actually points at: the final symlink/junction target for links, the
+    /// full path otherwise. Used to detect when two folders in a walk are the same directory.
+    /// </summary>
+    private static string ResolveFolderKey(string path)
+    {
+        try
+        {
+            return Directory.ResolveLinkTarget(path, returnFinalTarget: true)?.FullName
+                   ?? Path.GetFullPath(path);
+        }
+        catch
+        {
+            return path;
         }
     }
 
