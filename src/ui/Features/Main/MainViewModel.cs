@@ -2406,9 +2406,9 @@ public partial class MainViewModel :
         // (issue #12753). Import paths set _converted = true again *after* their ResetSubtitle() call.
         _converted = false;
         _subtitle = new Subtitle();
-        if (SelectedSubtitleFormat is AdvancedSubStationAlpha)
+        if (SelectedSubtitleFormat is AdvancedSubStationAlpha or SubStationAlpha)
         {
-            AssaStyleStorageHelper.ApplyDefaultStorageStyle(_subtitle);
+            AssaStyleStorageHelper.ApplyDefaultStorageStyle(_subtitle, SelectedSubtitleFormat);
         }
 
         _changeSubtitleHash = GetFastHash();
@@ -25256,18 +25256,18 @@ public partial class MainViewModel :
     }
 
     /// <summary>
-    /// Sets the style of a newly created ASSA paragraph to the default ASSA storage style (if any).
+    /// Sets the style of a newly created ASSA/SSA paragraph to the default storage style (if any).
     /// Used by insert paths that bypass <see cref="IInsertService"/> (e.g. typing the first line or
     /// inserting from a waveform selection).
     /// </summary>
     private void SetDefaultAssaStyleForNewParagraph(SubtitleLineViewModel newParagraph)
     {
-        if (SelectedSubtitleFormat is not AdvancedSubStationAlpha)
+        if (SelectedSubtitleFormat is not (AdvancedSubStationAlpha or SubStationAlpha))
         {
             return;
         }
 
-        newParagraph.Style = AssaStyleStorageHelper.GetStyleNameForNewParagraph(_subtitle);
+        newParagraph.Style = AssaStyleStorageHelper.GetStyleNameForNewParagraph(_subtitle, SelectedSubtitleFormat);
     }
 
     public void AudioVisualizerOnNewSelectionInsert(object sender, ParagraphEventArgs e)
@@ -26200,19 +26200,9 @@ public partial class MainViewModel :
                 Number = 1
             };
 
-            if (SelectedSubtitleFormat is AdvancedSubStationAlpha)
+            if (SelectedSubtitleFormat is AdvancedSubStationAlpha or SubStationAlpha)
             {
-                newSubtitle.Style = AssaStyleStorageHelper.GetStyleNameForNewParagraph(_subtitle);
-            }
-            else if (SelectedSubtitleFormat is SubStationAlpha)
-            {
-                if (string.IsNullOrEmpty(_subtitle.Header))
-                {
-                    _subtitle.Header = AdvancedSubStationAlpha.DefaultHeader;
-                }
-
-                var styles = AdvancedSubStationAlpha.GetStylesFromHeader(_subtitle.Header);
-                newSubtitle.Style = styles.Count > 0 ? styles[0] : "Default";
+                newSubtitle.Style = AssaStyleStorageHelper.GetStyleNameForNewParagraph(_subtitle, SelectedSubtitleFormat);
             }
 
             Subtitles.Add(newSubtitle);
@@ -26281,7 +26271,7 @@ public partial class MainViewModel :
 
                     if (oldFormat is SubStationAlpha)
                     {
-                        if (_subtitle.Header != null && !_subtitle.Header.Contains("[V4+ Styles]"))
+                        if (!string.IsNullOrEmpty(_subtitle.Header) && !_subtitle.Header.Contains("[V4+ Styles]"))
                         {
                             _subtitle.Header =
                                 AdvancedSubStationAlpha.GetHeaderAndStylesFromSubStationAlpha(_subtitle.Header);
@@ -26293,6 +26283,10 @@ public partial class MainViewModel :
                                 }
                             }
                         }
+                        else if (string.IsNullOrEmpty(_subtitle.Header))
+                        {
+                            AssaStyleStorageHelper.ApplyDefaultStorageStyle(_subtitle, format);
+                        }
                     }
                     else if (oldFormat is AdvancedSubStationAlpha && string.IsNullOrEmpty(_subtitle.Header))
                     {
@@ -26300,11 +26294,22 @@ public partial class MainViewModel :
                     }
                     else if (oldFormat is not AdvancedSubStationAlpha)
                     {
-                        // converting from a format without ASSA styles - use the default style from the storage styles (if any)
-                        AssaStyleStorageHelper.ApplyDefaultStorageStyle(_subtitle);
+                        // converting from a format without ASSA styles - use the default styles from the storage (if any)
+                        AssaStyleStorageHelper.ApplyDefaultStorageStyle(_subtitle, format);
                     }
 
                     SetAssaResolution(true);
+                }
+                else if (format is SubStationAlpha)
+                {
+                    // converting from a format without SSA/ASSA styles - use the default styles from
+                    // the SSA storage (if any); an ASSA source with a header keeps its own styles
+                    // (the header is converted on save)
+                    if (oldFormat is not (SubStationAlpha or AdvancedSubStationAlpha) ||
+                        string.IsNullOrEmpty(_subtitle.Header))
+                    {
+                        AssaStyleStorageHelper.ApplyDefaultStorageStyle(_subtitle, format);
+                    }
                 }
 
                 // The rebuild below blanks the original column and drops the reference rows, so an

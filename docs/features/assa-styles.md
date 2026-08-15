@@ -31,6 +31,7 @@ Manage Advanced SubStation Alpha (ASS/SSA) subtitle styles, including file style
 - **To apply a storage style to the current subtitle:** select it in the right panel, choose **Copy to file styles**, then assign that style to the relevant subtitle lines.
 - Copy styles between file and storage.
 - Set a style as the default for new subtitles (this only affects newly created/converted subtitles, not the current one).
+- **Default template:** when a new subtitle is created as ASSA, or an existing subtitle is converted to ASSA (via the format dropdown or *Save as*), the whole category of the default style is copied into the file — so a multi-style template (e.g. dialogue + signs) survives the conversion — and the lines start out on the default style. If no style is marked as default, the styles in the *Default* category are used. SubStation Alpha has its own separate storage styles (**SSA tools** → **Styles...**) that work the same way for conversions to SSA.
 
 ### Style Properties
 - **Font:** Name, size, bold, italic, underline, strikeout. The `...` button opens the font picker with two tabs — **Installed fonts** and **Collected fonts** (fonts gathered in Subtitle Edit's own `Fonts` folder inside the data folder) — the paperclip button picks a font from the subtitle's attachments, and the font button opens the **Font collector**, which shows the fonts the subtitle uses, whether they are available, and can copy them to a folder — including SE's `Fonts` folder. The font combo also lists the collected fonts.
