@@ -61,6 +61,30 @@ public class OcrFixReplaceListPartialWordGuessTests
     }
 
     [Fact]
+    public void EmptyPlaceholderSection_DoesNotShadowTheRealSection()
+    {
+        // fin/fra/hrb/hun/por/spa ship an empty <PartialWords /> placeholder BEFORE the real
+        // section; reading only the first section silently dropped every entry (same bug class
+        // as #13658, which fixed it for the regex list only).
+        var path = Path.Combine(Path.GetTempPath(), $"guesstest_{Guid.NewGuid():N}_OCRFixReplaceList.xml");
+        File.WriteAllText(path,
+            "<ReplaceList><PartialWords /><OtherStuff /><PartialWords><WordPart from=\"i\" to=\"l\" /></PartialWords></ReplaceList>");
+        OcrFixReplaceList2 replaceList;
+        try
+        {
+            replaceList = new OcrFixReplaceList2(path);
+        }
+        finally
+        {
+            File.Delete(path);
+        }
+
+        var guesses = replaceList.CreateGuessesFromLetters("viei", "fra").ToList();
+
+        Assert.Contains("viel", guesses);
+    }
+
+    [Fact]
     public void ExactDuplicatePairs_AreLoadedOnce()
     {
         var replaceList = MakeReplaceList(

@@ -173,6 +173,7 @@ public partial class OcrViewModel : ObservableObject
     public readonly List<SubtitleLineViewModel> OcredSubtitle;
 
     private IOcrSubtitle? _ocrSubtitle;
+    private OcrLineHeightTracker _lineHeightTracker = new();
     private List<OcrSubtitleItem> _allOcrSubtitleItems = new();
     private string _sourceFileName = string.Empty;
     private Iso639Dash2LanguageCode? _sourceLanguageIso;
@@ -1021,7 +1022,7 @@ public partial class OcrViewModel : ObservableObject
         nBmp.MakeTwoColor(200);
         nBmp.CropTop(0, new SKColor(0, 0, 0, 0));
         var letters =
-            NikseBitmapImageSplitter2.SplitBitmapToLettersNew(nBmp, SelectedNOcrPixelsAreSpace, false, true, 20, true);
+            NikseBitmapImageSplitter2.SplitBitmapToLettersNew(nBmp, SelectedNOcrPixelsAreSpace, false, true, _lineHeightTracker.GetMinLineHeight(), true, _lineHeightTracker.GetAverageLineHeight());
         var matches = new List<NOcrChar?>(new NOcrChar?[letters.Count]);
         var idx = 0;
         while (idx < letters.Count)
@@ -1074,7 +1075,7 @@ public partial class OcrViewModel : ObservableObject
         nBmp.MakeTwoColor(200);
         nBmp.CropTop(0, new SKColor(0, 0, 0, 0));
         var letters =
-            NikseBitmapImageSplitter2.SplitBitmapToLettersNew(nBmp, SelectedNOcrPixelsAreSpace, false, true, 20, true);
+            NikseBitmapImageSplitter2.SplitBitmapToLettersNew(nBmp, SelectedNOcrPixelsAreSpace, false, true, _lineHeightTracker.GetMinLineHeight(), true, _lineHeightTracker.GetAverageLineHeight());
         var matches = new List<BinaryOcrMatcher.CompareMatch?>();
         foreach (var splitterItem in letters)
         {
@@ -2999,14 +3000,16 @@ public partial class OcrViewModel : ObservableObject
             parentBitmap.MakeTwoColor(200);
             parentBitmap.CropTop(0, new SKColor(0, 0, 0, 0));
             var letters = NikseBitmapImageSplitter2.SplitBitmapToLettersNew(parentBitmap, SelectedNOcrPixelsAreSpace,
-                false, true, 20, true);
+                false, true, _lineHeightTracker.GetMinLineHeight(), true, _lineHeightTracker.GetAverageLineHeight());
+            _lineHeightTracker.Update(letters);
             var index = 0;
             while (index < letters.Count)
             {
                 var splitterItem = letters[index];
                 if (splitterItem.NikseBitmap != null)
                 {
-                    var match = _nOcrDb!.GetMatch(parentBitmap, letters, splitterItem, splitterItem.Top, true, SelectedNOcrMaxWrongPixels);
+                    var match = _nOcrDb!.GetMatch(parentBitmap, letters, splitterItem, splitterItem.Top, true, SelectedNOcrMaxWrongPixels,
+                        italicFactor: Se.Settings.Ocr.ItalicFactor);
                     if (match != null)
                     {
                         _nOcrCaseFixer.FixUppercaseLowercaseIssues(splitterItem, match);
@@ -3037,7 +3040,8 @@ public partial class OcrViewModel : ObservableObject
             parentBitmap.MakeTwoColor(200);
             parentBitmap.CropTop(0, new SKColor(0, 0, 0, 0));
             var letters = NikseBitmapImageSplitter2.SplitBitmapToLettersNew(parentBitmap, SelectedNOcrPixelsAreSpace,
-                false, true, 20, true);
+                false, true, _lineHeightTracker.GetMinLineHeight(), true, _lineHeightTracker.GetAverageLineHeight());
+            _lineHeightTracker.Update(letters);
             SelectedOcrSubtitleItem = item;
             var index = 0;
             var matches = new List<NOcrChar>();
@@ -3054,7 +3058,7 @@ public partial class OcrViewModel : ObservableObject
                 else
                 {
                     var match = _nOcrDb!.GetMatch(parentBitmap, letters, splitterItem, splitterItem.Top, true,
-                        SelectedNOcrMaxWrongPixels);
+                        SelectedNOcrMaxWrongPixels, italicFactor: Se.Settings.Ocr.ItalicFactor);
 
                     if (match == null && _nOcrFallbackBinaryOcrDb != null && _nOcrFallbackBinaryOcrMatcher != null)
                     {
@@ -3303,7 +3307,8 @@ public partial class OcrViewModel : ObservableObject
             var parentBitmap = new NikseBitmap2(bitmap);
             parentBitmap.MakeTwoColor(200);
             parentBitmap.CropTop(0, new SKColor(0, 0, 0, 0));
-            var letters = NikseBitmapImageSplitter2.SplitBitmapToLettersNew(parentBitmap, SelectedBinaryOcrPixelsAreSpace, false, true, 20, true);
+            var letters = NikseBitmapImageSplitter2.SplitBitmapToLettersNew(parentBitmap, SelectedBinaryOcrPixelsAreSpace, false, true, _lineHeightTracker.GetMinLineHeight(), true, _lineHeightTracker.GetAverageLineHeight());
+            _lineHeightTracker.Update(letters);
             SelectedOcrSubtitleItem = item;
             var index = 0;
             var matches = new List<BinaryOcrMatcher.CompareMatch>();
@@ -3324,7 +3329,8 @@ public partial class OcrViewModel : ObservableObject
 
                     if (match == null && _binaryOcrFallbackNOcrDb != null)
                     {
-                        var nMatch = _binaryOcrFallbackNOcrDb.GetMatch(parentBitmap, letters, splitterItem, splitterItem.Top, true, SelectedNOcrMaxWrongPixels, lastDitch: true);
+                        var nMatch = _binaryOcrFallbackNOcrDb.GetMatch(parentBitmap, letters, splitterItem, splitterItem.Top, true, SelectedNOcrMaxWrongPixels, lastDitch: true,
+                            italicFactor: Se.Settings.Ocr.ItalicFactor);
                         if (nMatch != null && !string.IsNullOrEmpty(nMatch.Text))
                         {
                             if (nMatch.ExpandCount > 0)
@@ -4666,6 +4672,13 @@ public partial class OcrViewModel : ObservableObject
         _allOcrSubtitleItems = _ocrSubtitle!.MakeOcrSubtitleItems();
         HasForcedSubtitles = _allOcrSubtitleItems.Any(p => p.IsForced);
         OcrSubtitleItems = new ObservableCollection<OcrSubtitleItem>(_allOcrSubtitleItems);
+
+        // New source, new glyph-height statistics (Blu-ray fonts are much larger than DVD's,
+        // so the pre-adaptation fallback differs - SE 4's 25 vs 12).
+        _lineHeightTracker = new OcrLineHeightTracker
+        {
+            FallbackMinLineHeight = _ocrSubtitle is OcrSubtitleBluRay or OcrSubtitleMkvBluRay ? 25 : 12,
+        };
     }
 
     partial void OnShowOnlyForcedChanged(bool value)
