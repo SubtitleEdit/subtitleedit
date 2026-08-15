@@ -113,6 +113,44 @@ public class HtmlUtilTest
         Assert.Equal("<i>a</i>", HtmlUtil.FixInvalidItalicTags(s));
     }
 
+    /// <summary>
+    /// A single stray "&lt;/i&gt;" plus a two-line text whose line break is the very last
+    /// character used to index past the end of the string: the second-line split hard-coded a
+    /// 2-character newline, which is one too many wherever Environment.NewLine is "\n"
+    /// (Linux, macOS). RemoveHtmlTags routes any text containing "&lt; " through here, so
+    /// ordinary malformed subtitle text threw ArgumentOutOfRangeException instead of being
+    /// cleaned. Inputs found by fuzzing RemoveHtmlTags.
+    /// </summary>
+    [Theory]
+    [InlineData("</ i>>< <u>\r\n")]
+    [InlineData("</ i><< u…\r\n")]
+    [InlineData("{\\pos(1,2)}</i>< \r\n")]
+    [InlineData("</i>< \r\n")]
+    [InlineData("< </i>\n")]
+    public void FixInvalidItalicTagsDoesNotThrowOnTrailingLineBreak(string source)
+    {
+        var exception = Record.Exception(() => HtmlUtil.FixInvalidItalicTags(source));
+        Assert.Null(exception);
+
+        var viaRemoveHtmlTags = Record.Exception(() => HtmlUtil.RemoveHtmlTags(source, true));
+        Assert.Null(viaRemoveHtmlTags);
+    }
+
+    /// <summary>
+    /// Stripping tags must never make a line longer — callers rely on it (seconv's linter skips
+    /// the strip entirely when the raw line already fits its length budget).
+    /// </summary>
+    [Theory]
+    [InlineData("</ i>>< <u>\r\n")]
+    [InlineData("<i>Hello</i>< ")]
+    [InlineData("< i>Hello")]
+    [InlineData("{\\an8}<i>Hello</i>")]
+    [InlineData("<v Bob>Hello</v>")]
+    public void RemoveHtmlTagsNeverLengthensInput(string source)
+    {
+        Assert.True(HtmlUtil.RemoveHtmlTags(source, true).Length <= source.Length);
+    }
+
     [Fact]
     public void FixInvalidItalicTagsDanglingStartTagKeepsCharBeforeTag()
     {

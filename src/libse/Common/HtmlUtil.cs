@@ -1065,7 +1065,13 @@ namespace Nikse.SubtitleEdit.Core.Common
                     if (newLineIndex > 0)
                     {
                         var firstLine = text.Substring(0, newLineIndex).Trim();
-                        var secondLine = text.Substring(newLineIndex + 2).Trim();
+                        // Skip the separator by its real length, not a hard-coded 2: on Linux and
+                        // macOS Environment.NewLine is "\n", so a text whose only line break was
+                        // the final character indexed one past the end and threw
+                        // ArgumentOutOfRangeException out of RemoveHtmlTags (which routes here for
+                        // any text containing "< "). Every sibling line in this method already
+                        // uses Environment.NewLine.Length; on Windows this is the same value 2.
+                        var secondLine = text.Substring(newLineIndex + Environment.NewLine.Length).Trim();
                         if (firstLine.EndsWith(endTag, StringComparison.Ordinal))
                         {
                             firstLine = beginTag + firstLine;
