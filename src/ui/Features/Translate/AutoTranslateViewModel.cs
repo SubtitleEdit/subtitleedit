@@ -221,6 +221,10 @@ public partial class AutoTranslateViewModel : ObservableObject
         Configuration.Settings.Tools.LmStudioModel = Se.Settings.AutoTranslate.LmStudioModel;
         Configuration.Settings.Tools.LmStudioPrompt = Se.Settings.AutoTranslate.LmStudioPrompt;
 
+        // Only the translate-settings dialog writes the llama.cpp prompt back, so without this the
+        // saved one is lost on the next start (a curated model's own prompt still takes precedence).
+        Configuration.Settings.Tools.LlamaCppPrompt = Se.Settings.AutoTranslate.LlamaCppPrompt;
+
         Configuration.Settings.Tools.GroqApiKey = Se.Settings.AutoTranslate.GroqApiKey;
         Configuration.Settings.Tools.GroqModel = Se.Settings.AutoTranslate.GroqModel;
         Configuration.Settings.Tools.GroqPrompt = Se.Settings.AutoTranslate.GroqPrompt;

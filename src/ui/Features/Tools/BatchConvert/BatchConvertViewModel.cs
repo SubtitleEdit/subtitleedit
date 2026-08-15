@@ -31,6 +31,7 @@ using Nikse.SubtitleEdit.Features.Tools.BatchConvert.BatchErrorList;
 using Nikse.SubtitleEdit.Features.Tools.FixCommonErrors;
 using Nikse.SubtitleEdit.Features.Tools.RemoveTextForHearingImpaired;
 using Nikse.SubtitleEdit.Features.Translate;
+using Nikse.SubtitleEdit.Features.Translate.LlamaCppAdvanced;
 using Nikse.SubtitleEdit.Logic.LlamaCpp;
 using Nikse.SubtitleEdit.Features.Video.SpeechToText;
 using Nikse.SubtitleEdit.Features.Video.SpeechToText.Engines;
@@ -167,6 +168,7 @@ public partial class BatchConvertViewModel : ObservableObject, IClosingCleanup
     [ObservableProperty] private ObservableCollection<SpeechToTextModelDisplay> _crispAsrModels = new();
     [ObservableProperty] private SpeechToTextModelDisplay? _selectedCrispAsrModel;
     [ObservableProperty] private bool _crispAsrModelComboIsVisible;
+    [ObservableProperty] private bool _llamaCppAdvancedButtonIsVisible;
 
     // Fix common errors
     [ObservableProperty] private FixCommonErrors.ProfileDisplayItem? _fixCommonErrorsProfile;
@@ -410,6 +412,7 @@ public partial class BatchConvertViewModel : ObservableObject, IClosingCleanup
             new LibreTranslate(),
             new LmStudioTranslate(),
             new LlamaCppTranslate(),
+            new LlamaCppAdvancedTranslate(),
             new NoLanguageLeftBehindServe(),
             new NoLanguageLeftBehindApi(),
             new DeepLTranslate(),
@@ -1319,7 +1322,8 @@ public partial class BatchConvertViewModel : ObservableObject, IClosingCleanup
             return true;
         }
 
-        if (!config.AutoTranslate.IsActive || config.AutoTranslate.Translator is not LlamaCppTranslate)
+        if (!config.AutoTranslate.IsActive ||
+            config.AutoTranslate.Translator is not (LlamaCppTranslate or LlamaCppAdvancedTranslate))
         {
             return true;
         }
@@ -2220,6 +2224,21 @@ public partial class BatchConvertViewModel : ObservableObject, IClosingCleanup
         }
     }
 
+    // Batch size, context history, synopsis/glossary/style and sampling for the advanced engine -
+    // the same window the Auto-translate window opens, editing the same shared settings.
+    [RelayCommand]
+    private async Task ShowLlamaCppAdvancedSettings()
+    {
+        if (Window == null)
+        {
+            return;
+        }
+
+        await _windowService.ShowDialogAsync<LlamaCppAdvancedSettingsWindow, LlamaCppAdvancedSettingsViewModel>(
+            Window,
+            vm => vm.Initialize());
+    }
+
     [RelayCommand]
     private async Task RemoveSelectedFiles()
     {
@@ -2654,7 +2673,7 @@ public partial class BatchConvertViewModel : ObservableObject, IClosingCleanup
             Configuration.Settings.Tools.LmStudioModel = AutoTranslateModel.Trim();
         }
 
-        if (engineType == typeof(LlamaCppTranslate))
+        if (engineType == typeof(LlamaCppTranslate) || engineType == typeof(LlamaCppAdvancedTranslate))
         {
             if (!string.IsNullOrEmpty(AutoTranslateUrl.Trim()))
             {
@@ -2839,6 +2858,10 @@ public partial class BatchConvertViewModel : ObservableObject, IClosingCleanup
         AutoTranslateModelIsVisible = engine is OllamaTranslate;
         CrispAsrModelComboIsVisible = engine is CrispAsrMadladTranslate;
 
+        // Batch size, context history and the synopsis/glossary/style prompt only exist on the
+        // advanced engine; they apply to local and remote llama-servers alike.
+        LlamaCppAdvancedButtonIsVisible = engine is LlamaCppAdvancedTranslate;
+
         if (engine is CrispAsrMadladTranslate)
         {
             AutoTranslateModel = string.Empty;
@@ -2882,7 +2905,7 @@ public partial class BatchConvertViewModel : ObservableObject, IClosingCleanup
             AutoTranslateApiKey = string.Empty;
             AutoTranslateApiKeyIsVisible = false;
         }
-        else if (engine is LlamaCppTranslate)
+        else if (engine is LlamaCppTranslate or LlamaCppAdvancedTranslate)
         {
             AutoTranslateModel = string.Empty;
             AutoTranslateModelBrowseIsVisible = false;
