@@ -1,5 +1,6 @@
 using Nikse.SubtitleEdit.Logic.Download;
 using System.IO;
+using System.Threading;
 using Nikse.SubtitleEdit.UiLogic;
 using Nikse.SubtitleEdit.UiLogic.LlamaCpp;
 
@@ -12,6 +13,13 @@ namespace Nikse.SubtitleEdit.Logic.LlamaCpp;
 /// </summary>
 public static class LlamaCppUpdateStatus
 {
+    // Hashing a few hundred MB of llama-server takes long enough to stutter a combo box that asks
+    // for the status every time a row is realised, so remember the answer for a given file. The
+    // identity is path + size + write time: a re-download changes at least one of them.
+    private static readonly Lock CacheLock = new Lock();
+    private static string? _cachedFileIdentity;
+    private static DownloadHashManager.UpdateStatus _cachedStatus;
+
     /// <summary>
     /// Returns the update status of the installed llama-server binary relative to the version
     /// pinned in <see cref="LlamaCppDownloadService"/>. The check hashes the executable on disk
@@ -37,8 +45,25 @@ public static class LlamaCppUpdateStatus
 
         try
         {
+            var info = new FileInfo(exe);
+            var identity = $"{info.FullName}|{info.Length}|{info.LastWriteTimeUtc.Ticks}|{key}";
+            lock (CacheLock)
+            {
+                if (_cachedFileIdentity == identity)
+                {
+                    return _cachedStatus;
+                }
+            }
+
             var hash = Sha256Util.ComputeSha256(exe);
-            return DownloadHashManager.GetStatus(key, hash);
+            var status = DownloadHashManager.GetStatus(key, hash);
+            lock (CacheLock)
+            {
+                _cachedFileIdentity = identity;
+                _cachedStatus = status;
+            }
+
+            return status;
         }
         catch
         {

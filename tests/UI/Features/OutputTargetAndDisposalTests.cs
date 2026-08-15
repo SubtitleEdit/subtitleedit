@@ -171,6 +171,32 @@ public class OutputTargetAndDisposalTests
     }
 
     /// <summary>
+    /// Disposing the engine while a run is still using it (the OCR window started the run in a
+    /// fire-and-forget task, so a "using" on the engine tore its HttpClient down immediately)
+    /// left every frame empty. The engine must at least report that as an error, so the loop
+    /// stops and says so instead of filling the grid with blank lines (#13633).
+    /// </summary>
+    [Fact]
+    public async Task OcrEngines_RecordAnErrorWhenUsedAfterDisposal()
+    {
+        using var bitmap = new SKBitmap(8, 8);
+
+        var llamaCpp = new LlamaCppOcr(1);
+        llamaCpp.Dispose();
+        var text = await llamaCpp.Ocr(bitmap, "http://127.0.0.1:1/v1/chat/completions", "m", "English", string.Empty, CancellationToken.None);
+
+        Assert.Equal(string.Empty, text);
+        Assert.False(string.IsNullOrEmpty(llamaCpp.Error));
+
+        var ollama = new OllamaOcr(1);
+        ollama.Dispose();
+        var ollamaText = await ollama.Ocr(bitmap, "http://127.0.0.1:1/api/chat", "m", "English", CancellationToken.None);
+
+        Assert.Equal(string.Empty, ollamaText);
+        Assert.False(string.IsNullOrEmpty(ollama.Error));
+    }
+
+    /// <summary>
     /// These dialogs own a preview timer (or a preview bitmap) that only the close hook in
     /// <c>UiUtil.InitializeWindow</c> can release - and that hook only knows
     /// <see cref="IClosingCleanup"/>. Implementing plain <see cref="IDisposable"/> was not enough:
