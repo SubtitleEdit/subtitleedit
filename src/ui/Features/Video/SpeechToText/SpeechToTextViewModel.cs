@@ -1031,7 +1031,11 @@ public partial class SpeechToTextViewModel : ObservableObject
             // qwen3-asr-cli can write raw control chars (e.g. a literal newline) inside JSON
             // string values, which strict System.Text.Json rejects ("'0x0A' is invalid within a
             // JSON string"). Escape those so a result is still produced (issue #11717).
-            var jsonText = JsonRepair.EscapeControlCharsInStrings(rawJson);
+            // Engines up to v0.1.7 also wrote locale-formatted timestamps on Windows with a
+            // comma-decimal regional format ("start": 1,840 — French/German/...); fixed at the
+            // source in v0.1.8, but repair it here too so installs that skip the engine update
+            // still get a result.
+            var jsonText = JsonRepair.FixCommaDecimalSeparators(JsonRepair.EscapeControlCharsInStrings(rawJson));
             var jsonDoc = JsonDocument.Parse(jsonText);
             var words = jsonDoc.RootElement.GetProperty("words");
 
