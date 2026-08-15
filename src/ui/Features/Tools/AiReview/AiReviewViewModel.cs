@@ -4,6 +4,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
+using Nikse.SubtitleEdit.Features.Main;
 using Nikse.SubtitleEdit.Features.Shared;
 using Nikse.SubtitleEdit.Features.Translate;
 using Nikse.SubtitleEdit.Features.Translate.LlamaCppEngineSettings;
@@ -40,7 +41,9 @@ public partial class AiReviewViewModel : ObservableObject
     [ObservableProperty] private string _languageDisplay;
     [ObservableProperty] private ObservableCollection<ReviewFilterChip> _filterChips;
     [ObservableProperty] private ObservableCollection<ReviewSuggestionItem> _suggestions;
-    [ObservableProperty] private ReviewSuggestionItem? _selectedSuggestion;
+    [ObservableProperty]
+    [NotifyCanExecuteChangedFor(nameof(PlayCurrentLineCommand))]
+    private ReviewSuggestionItem? _selectedSuggestion;
     [ObservableProperty] private bool _isReviewing;
     [ObservableProperty] private bool _isNotReviewing = true;
     [ObservableProperty] private double _progressValue;
@@ -51,6 +54,7 @@ public partial class AiReviewViewModel : ObservableObject
     [ObservableProperty] private string _applyButtonText;
     [ObservableProperty] private string _warningNoteText;
     [ObservableProperty] private bool _hasWarningNote;
+    [ObservableProperty] private bool _isPlayVisible;
 
     public Window? Window { get; set; }
     public bool OkPressed { get; private set; }
@@ -63,6 +67,12 @@ public partial class AiReviewViewModel : ObservableObject
     private string _languageCode = "en";
     private CancellationTokenSource _cancellationTokenSource = new();
     private bool _syncingSelection;
+
+    // Video preview hooks handed in by the caller - they drive the main window's video player.
+    // Null when no video is loaded; the play button is then hidden.
+    private Action<int>? _playLine;
+    private Action? _stopPlayback;
+    private bool _hasPlayed;
 
     public AiReviewViewModel(IWindowService windowService)
     {
@@ -104,9 +114,23 @@ public partial class AiReviewViewModel : ObservableObject
         UpdateEngineVisibility();
     }
 
-    public void Initialize(Subtitle subtitle, SubtitleFormat? subtitleFormat)
+    /// <summary>
+    /// Sets up the review. <paramref name="playLine"/> plays the line at a paragraph index of
+    /// <paramref name="subtitle"/> in the main video player and pauses at its end, so a suggested
+    /// fix can be checked against the audio before it is applied; pass null (no video loaded) to
+    /// hide the play button. <paramref name="stopPlayback"/> stops such a preview when the window
+    /// closes - only ever called when this window actually started playback.
+    /// </summary>
+    public void Initialize(
+        Subtitle subtitle,
+        SubtitleFormat? subtitleFormat,
+        Action<int>? playLine = null,
+        Action? stopPlayback = null)
     {
         _subtitle = subtitle;
+        _playLine = playLine;
+        _stopPlayback = stopPlayback;
+        IsPlayVisible = playLine != null;
         _languageCode = LanguageAutoDetect.AutoDetectGoogleLanguage(subtitle);
         LanguageDisplay = GetLanguageDisplayName(_languageCode);
     }
@@ -621,6 +645,30 @@ public partial class AiReviewViewModel : ObservableObject
         _cancellationTokenSource.Cancel();
     }
 
+    /// <summary>
+    /// Plays the subtitle line the selected suggestion belongs to in the main video player and
+    /// pauses at its end - the fastest way to judge whether a suggested fix is right.
+    /// </summary>
+    [RelayCommand(CanExecute = nameof(CanPlayCurrentLine))]
+    private void PlayCurrentLine()
+    {
+        var item = SelectedSuggestion;
+        if (item == null || _playLine == null)
+        {
+            return;
+        }
+
+        _hasPlayed = true;
+        _playLine(item.ParagraphIndex);
+    }
+
+    private bool CanPlayCurrentLine() => SelectedSuggestion != null;
+
+    internal void OnSuggestionsGridDoubleTapped()
+    {
+        PlayCurrentLine();
+    }
+
     [RelayCommand]
     private void SelectAll()
     {
@@ -733,11 +781,35 @@ public partial class AiReviewViewModel : ObservableObject
             e.Handled = true;
             UiUtil.ShowHelp("features/ai-review");
         }
+        else if (IsPlayVisible && MatchesPlayShortcut(e))
+        {
+            e.Handled = true;
+            PlayCurrentLine();
+        }
+    }
+
+    /// <summary>
+    /// True when the pressed keys match the user's main-window "play selected lines" (default F5)
+    /// or second play/pause (default Ctrl/Cmd+Space) binding. Bare Space is deliberately not
+    /// included: in this window it toggles the apply checkbox of the selected row.
+    /// </summary>
+    private static bool MatchesPlayShortcut(KeyEventArgs e)
+    {
+        return MainShortcutKeys.Matches(e, nameof(MainViewModel.PlaySelectedLinesWithoutLoopCommand), [nameof(Key.F5)]) ||
+               MainShortcutKeys.Matches(e, nameof(MainViewModel.TogglePlayPause2Command), [MainShortcutKeys.CtrlOrCmd, nameof(Key.Space)]);
     }
 
     internal void OnClosing()
     {
         _cancellationTokenSource.Cancel();
+
+        // Only stop what this window started - a video the user left playing before opening the
+        // review should keep playing.
+        if (_hasPlayed)
+        {
+            _stopPlayback?.Invoke();
+        }
+
         UiUtil.SaveWindowPosition(Window);
     }
 }
