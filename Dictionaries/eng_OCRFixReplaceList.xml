@@ -2855,6 +2855,7 @@
 		<WordPart from="¤" to="o" />
 		<WordPart from="vx/" to="w" />
 		<WordPart from="O" to="Q" />
+		<WordPart from="i" to="l" />
 	</PartialWords>
 	<WholeLines>
 		<!-- Whole lines - including -" etc -->
@@ -3416,5 +3417,11 @@
 		<RegEx find="\b([A-Z]+)l([A-Z]+)\b" spellCheck="$1I$2" replaceWith="$1I$2" />
 		<RegEx find="\b([A-Z][a-zæøåöääöéèàùâêîôûëï]{3,})I([a-zæøåöääöéèàùâêîôûëï]*)\b" spellCheck="$1l$2" replaceWith="$1l$2" />
 		<RegEx find="\b([A-Z][a-zæøåöääöéèàùâêîôûëï]{3,})I\b" spellCheck="$1l" replaceWith="$1l" />
+	</RegularExpressionsIfSpelledCorrectly>
+	<RegularExpressionsIfSpelledCorrectly>
+		<!-- Italic l misread as i (#13660): trailing i to l, double ii to ll.  -->
+		<!-- Correct i-words are in the dictionary and protected by the gate.   -->
+		<RegEx find="\b([A-Za-z][a-z]*)i\b" spellCheck="$1l" replaceWith="$1l" />
+		<RegEx find="\b([A-Za-z][a-z]*)ii([a-z]*)\b" spellCheck="$1ll$2" replaceWith="$1ll$2" />
 	</RegularExpressionsIfSpelledCorrectly>
 </OCRFixReplaceList>

@@ -6304,6 +6304,8 @@
     <Word from="vial" to="viel" />
     <Word from="Videoiiben/vachung" to="Videoüberwachung" />
     <Word from="Vie/e" to="Viele" />
+    <Word from="Viei" to="Viel" />
+    <Word from="viei" to="viel" />
     <Word from="Vieien" to="Vielen" />
     <Word from="vieiieicht" to="vielleicht" />
     <Word from="vielféltig" to="vielfältig" />
@@ -7025,6 +7027,7 @@
     <WordPart from="f" to="f " />
     <WordPart from="I" to="l" />
     <WordPart from="i" to="t" />
+    <WordPart from="i" to="l" />
     <WordPart from="ii" to="tt" />
     <WordPart from="ii" to="ü" />
     <WordPart from="IVI" to="M" />
@@ -7129,6 +7132,20 @@
 
     <!-- No standalone \bl\b → I rule: "l" is the German liter abbreviation  -->
     <!-- (2 l Milch), and an unconditional rule would corrupt it.            -->
+
+    <!-- ============================================================ -->
+    <!-- ITALIC l MISREAD AS i (#13660)                               -->
+    <!-- Slanted glyphs make binary image compare read l as i:       -->
+    <!--   viel → viei, soll → soii, wollen → woiien                 -->
+    <!-- Correct i-words (Juni/Taxi/Ski) are in the dictionary and   -->
+    <!-- protected by the already-spelled-correctly gate.            -->
+    <!-- ============================================================ -->
+
+    <!-- trailing i→l (viei → viel, Viei → Viel) -->
+    <RegEx find="\b([A-ZÄÖÜa-zäöüß][a-zäöüß]*)i\b" spellCheck="$1l" replaceWith="$1l" />
+
+    <!-- double ii→ll (soii → soll, woiien → wollen, Müii → Müll) -->
+    <RegEx find="\b([A-ZÄÖÜa-zäöüß][a-zäöüß]*)ii([a-zäöüß]*)\b" spellCheck="$1ll$2" replaceWith="$1ll$2" />
 
     <!-- ============================================================ -->
     <!-- GERMAN GENITIVE / APOSTROPHE                                 -->

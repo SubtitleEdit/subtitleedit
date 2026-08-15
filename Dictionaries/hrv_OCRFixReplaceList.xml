@@ -4120,6 +4120,7 @@
     <WordPart from="vx/" to="w" />
     <WordPart from=")/" to="y" />
     <WordPart from=")'" to="y" />
+    <WordPart from="i" to="l" />
 </PartialWords>
   <WholeLines />
   <PartialLinesAlways>
@@ -6356,4 +6357,10 @@
     <!-- Skraćenice bez razmaka -->
     <RegEx find="d\. o\.o\." replaceWith="d.o.o." />
   </RegularExpressions>
+  <RegularExpressionsIfSpelledCorrectly>
+    <!-- Italic l misread as i (#13660): trailing i to l, double ii to ll.  -->
+    <!-- Correct i-words are in the dictionary and protected by the gate.   -->
+    <RegEx find="\b([A-ZČĆĐŠŽa-zčćđšž][a-zčćđšž]*)i\b" spellCheck="$1l" replaceWith="$1l" />
+    <RegEx find="\b([A-ZČĆĐŠŽa-zčćđšž][a-zčćđšž]*)ii([a-zčćđšž]*)\b" spellCheck="$1ll$2" replaceWith="$1ll$2" />
+  </RegularExpressionsIfSpelledCorrectly>
 </OCRFixReplaceList>

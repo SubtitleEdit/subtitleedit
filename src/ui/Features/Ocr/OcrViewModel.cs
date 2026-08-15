@@ -3190,7 +3190,7 @@ public partial class OcrViewModel : ObservableObject
             if (ocrFixResultTemp.UnknownWords.Count > 0 && item.Text.Contains("<i>", StringComparison.Ordinal))
             {
                 var unItalicFactor = 0.33;
-                var text = GetTextWithMoreSpacesInItalic(ocrFixResultTemp.UnknownWords, matches, letters, parentBitmap, unItalicFactor, SelectedNOcrPixelsAreSpace);
+                var text = ItalicSpaceFixer.GetTextWithMoreSpacesInItalic(matches, letters, parentBitmap, unItalicFactor, SelectedNOcrPixelsAreSpace);
                 var unItalicItem = new OcrSubtitleItem(item, text);
                 var unItalicResultTemp = OcrFixLine(i, unItalicItem);
                 if (ocrFixResultTemp.UnknownWords.Count > unItalicResultTemp.UnknownWords.Count)
@@ -3253,104 +3253,6 @@ public partial class OcrViewModel : ObservableObject
         return matches;
     }
 
-    private static string GetTextWithMoreSpacesInItalic(
-        List<UnknownWordItem> unknownWords,
-        List<NOcrChar> matches,
-        List<ImageSplitterItem2> letters,
-        NikseBitmap2 parentBitmap,
-        double unItalicFactor,
-        int pixelsIsSpace)
-    {
-        // Clear all CouldBeSpaceBefore flags
-        foreach (var letter in letters)
-        {
-            letter.CouldBeSpaceBefore = false;
-        }
-
-        // Check for potential spaces in italic text
-        for (var i = 0; i < matches.Count - 1; i++)
-        {
-            var match = matches[i];
-            var matchNext = matches[i + 1];
-            if (!match.Italic || matchNext.Text == "," ||
-                string.IsNullOrWhiteSpace(match.Text) || string.IsNullOrWhiteSpace(matchNext.Text) ||
-                match.ImageSplitterItem == null || matchNext.ImageSplitterItem == null)
-            {
-                continue;
-            }
-
-            var blankVerticalLines = IsVerticalAngledLineTransparent(parentBitmap, match.ImageSplitterItem, matchNext.ImageSplitterItem, unItalicFactor);
-            if (match.Text == "f" || match.Text == "," || matchNext.Text.StartsWith('y') || matchNext.Text.StartsWith('j'))
-            {
-                blankVerticalLines++;
-            }
-
-            if (blankVerticalLines >= pixelsIsSpace)
-            {
-                matchNext.ImageSplitterItem.CouldBeSpaceBefore = true;
-            }
-        }
-
-        // Insert spaces where CouldBeSpaceBefore is true and previous match is italic
-        var j = 1;
-        while (j < matches.Count)
-        {
-            var match = matches[j];
-            var prevMatch = matches[j - 1];
-            if (match.ImageSplitterItem?.CouldBeSpaceBefore == true)
-            {
-                match.ImageSplitterItem.CouldBeSpaceBefore = false;
-                if (prevMatch.Italic)
-                {
-                    matches.Insert(j, new NOcrChar(" "));
-                    j++; // Skip the inserted space
-                }
-            }
-
-            j++;
-        }
-
-        return ItalicTextMerger.MergeWithItalicTags(matches).Trim();
-    }
-
-    private static int IsVerticalAngledLineTransparent(NikseBitmap2 parentBitmap, ImageSplitterItem2 match, ImageSplitterItem2 next, double unItalicFactor)
-    {
-        if (match.NikseBitmap == null || next.NikseBitmap == null)
-        {
-            return 0;
-        }
-
-        var blanks = 0;
-        var min = match.X + match.NikseBitmap.Width;
-        var max = next.X + next.NikseBitmap.Width / 2;
-        for (var startX = min; startX < max; startX++)
-        {
-            var lineBlank = true;
-            for (var y = match.Y; y < match.Y + match.NikseBitmap.Height; y++)
-            {
-                var x = startX - (y - match.Y) * unItalicFactor;
-                if (x >= 0 && x < parentBitmap.Width && y < parentBitmap.Height)
-                {
-                    var color = parentBitmap.GetPixel((int)Math.Round(x), y);
-                    if (color.Alpha != 0)
-                    {
-                        lineBlank = false;
-                        if (blanks > 0)
-                        {
-                            return blanks;
-                        }
-                    }
-                }
-            }
-
-            if (lineBlank)
-            {
-                blanks++;
-            }
-        }
-
-        return blanks;
-    }
 
     private void RunBinaryImageCompareOcr(List<int> selectedIndices, CancellationToken cancellationToken)
     {
@@ -3431,7 +3333,7 @@ public partial class OcrViewModel : ObservableObject
                             }
 
                             var text = _nOcrCaseFixer.FixUppercaseLowercaseIssues(splitterItem, nMatch);
-                            matches.Add(new BinaryOcrMatcher.CompareMatch(text, nMatch.Italic, nMatch.ExpandCount, "nOcrFallback"));
+                            matches.Add(new BinaryOcrMatcher.CompareMatch(text, nMatch.Italic, nMatch.ExpandCount, "nOcrFallback") { ImageSplitterItem = splitterItem });
                             index++;
                             continue;
                         }
@@ -3519,7 +3421,7 @@ public partial class OcrViewModel : ObservableObject
                     }
                     else
                     {
-                        matches.Add(new BinaryOcrMatcher.CompareMatch(match.Text, match.Italic, match.ExpandCount, match.Name));
+                        matches.Add(new BinaryOcrMatcher.CompareMatch(match.Text, match.Italic, match.ExpandCount, match.Name) { ImageSplitterItem = splitterItem });
                     }
                 }
 
@@ -3527,7 +3429,26 @@ public partial class OcrViewModel : ObservableObject
             }
 
             item.Text = ItalicTextMerger.MergeWithItalicTags(matches).Trim();
-            var unknownWords = OcrFixLineAndSetText(i, item);
+            var ocrFixResultTemp = OcrFixLine(i, item);
+            if (ocrFixResultTemp.UnknownWords.Count > 0 && item.Text.Contains("<i>", StringComparison.Ordinal))
+            {
+                // Italic glyphs lean over the word gaps, so the straight-column space
+                // detection undercounts them - re-measure along the italic slant and
+                // keep the extra spaces only if the dictionary likes the result better.
+                var unItalicFactor = 0.33;
+                var text = ItalicSpaceFixer.GetTextWithMoreSpacesInItalic(matches, letters, parentBitmap, unItalicFactor, SelectedBinaryOcrPixelsAreSpace);
+                var unItalicItem = new OcrSubtitleItem(item, text);
+                var unItalicResultTemp = OcrFixLine(i, unItalicItem);
+                if (ocrFixResultTemp.UnknownWords.Count > unItalicResultTemp.UnknownWords.Count)
+                {
+                    item.Text = unItalicItem.Text;
+                    item.FixResult = unItalicItem.FixResult;
+                    ocrFixResultTemp = unItalicResultTemp;
+                }
+            }
+
+            SetText(i, item, ocrFixResultTemp);
+            var unknownWords = ocrFixResultTemp.UnknownWords;
 
             _runOnceChars.Clear();
             _skipOnceChars.Clear();
