@@ -24,14 +24,21 @@ public sealed record LlamaCppModel(
     string? ChatTemplate = null,
     bool NoJinja = false,
     // Translation prompt this model was trained on ({0} = source language English name,
-    // {1} = target language English name); null = the user's generic llama.cpp prompt.
-    // Needed for Hy-MT2, which answers in Chinese when given the generic prompt.
+    // {1} = target language English name, optional {2} = the text to translate); null = the
+    // user's generic llama.cpp prompt. Needed for Hy-MT2, which answers in Chinese when given
+    // the generic prompt, and for MiLMMT-46, whose completion format embeds the text between
+    // a "{0}: " prefix and a trailing "{1}:" cue.
     string? PromptTemplate = null,
     // Model-recommended sampling; -1 = leave the server default.
     double Temperature = -1,
     double TopP = -1,
     int TopK = -1,
-    double RepeatPenalty = -1);
+    double RepeatPenalty = -1,
+    // Raw-completion translation model with no instruction training (MiLMMT-46): it can only
+    // continue its trained PromptTemplate. Excluded from the advanced engine's model list -
+    // its JSON batch protocol gets back well-formed JSON whose values are the untranslated
+    // source lines, which would be written to the grid as a "successful" batch.
+    bool CompletionOnly = false);
 
 /// <summary>
 /// Manages the local <c>llama-server</c> process used by the llama.cpp auto-translate and OCR
@@ -47,6 +54,14 @@ public static class LlamaCppServerManager
     // the other LLM engines.
     private const string HyMt2PromptTemplate =
         "Translate the following text into {1}. Keep line breaks exactly the same. Note that you should only output the translated result without any additional explanation:";
+
+    // MiLMMT-46's trained raw-completion format (with language English names). The text sits
+    // inside the template ({2}) and the trailing "{1}:" cue is mandatory - without it the model
+    // does not switch language and just echo-loops the source. Its GGUF chat template is a pure
+    // passthrough ("{{ message.content }}", no role markers), so the chat endpoint delivers
+    // this verbatim and no ChatTemplate/NoJinja override is wanted.
+    private const string MiLmMt46PromptTemplate =
+        "Translate this from {0} to {1}:\n{0}: {2}\n{1}:";
 
     public static readonly IReadOnlyList<LlamaCppModel> TranslateModels = new[]
     {
@@ -65,6 +80,23 @@ public static class LlamaCppServerManager
         new LlamaCppModel("TranslateGemma 12B (Q5_K_M)", "translategemma-12b-it-q5_k_m.gguf", "8.5 GB",
             "https://huggingface.co/NikolayKozloff/translategemma-12b-it-Q5_K_M-GGUF/resolve/main/translategemma-12b-it-q5_k_m.gguf",
             ChatTemplate: "gemma", NoJinja: true),
+
+        // MiLMMT-46 v1.0 (Xiaomi, 2026) - Gemma3-based translation-specialized models, 46
+        // languages including Danish/Norwegian/Swedish (the gap in Hy-MT2's coverage); the paper
+        // reports it ahead of TranslateGemma and Hy-MT 1.5. Temperature 0 matches the model
+        // card's greedy-decoding usage. CompletionOnly: see the record field - regular engine only.
+        new LlamaCppModel("MiLMMT-46 4B (Q4_K_M) - 46 languages incl. Nordic", "MiLMMT-46-4B-v1.0.Q4_K_M.gguf", "2.5 GB",
+            "https://huggingface.co/mradermacher/MiLMMT-46-4B-v1.0-GGUF/resolve/main/MiLMMT-46-4B-v1.0.Q4_K_M.gguf",
+            PromptTemplate: MiLmMt46PromptTemplate, Temperature: 0, CompletionOnly: true),
+        new LlamaCppModel("MiLMMT-46 4B (Q8_0) - 46 languages incl. Nordic", "MiLMMT-46-4B-v1.0.Q8_0.gguf", "4.1 GB",
+            "https://huggingface.co/mradermacher/MiLMMT-46-4B-v1.0-GGUF/resolve/main/MiLMMT-46-4B-v1.0.Q8_0.gguf",
+            PromptTemplate: MiLmMt46PromptTemplate, Temperature: 0, CompletionOnly: true),
+        new LlamaCppModel("MiLMMT-46 12B (Q4_K_M) - 46 languages incl. Nordic", "MiLMMT-46-12B-v1.0.Q4_K_M.gguf", "7.3 GB",
+            "https://huggingface.co/mradermacher/MiLMMT-46-12B-v1.0-GGUF/resolve/main/MiLMMT-46-12B-v1.0.Q4_K_M.gguf",
+            PromptTemplate: MiLmMt46PromptTemplate, Temperature: 0, CompletionOnly: true),
+        new LlamaCppModel("MiLMMT-46 12B (Q5_K_M) - 46 languages incl. Nordic", "MiLMMT-46-12B-v1.0.Q5_K_M.gguf", "8.4 GB",
+            "https://huggingface.co/mradermacher/MiLMMT-46-12B-v1.0-GGUF/resolve/main/MiLMMT-46-12B-v1.0.Q5_K_M.gguf",
+            PromptTemplate: MiLmMt46PromptTemplate, Temperature: 0, CompletionOnly: true),
 
         // Gemma 4 (Google, 2026) - 140+ languages, the strongest general model here for translation
         // into non-English targets. NOTE: unlike Gemma 2/3 this must use its own embedded Jinja
@@ -362,6 +394,44 @@ public static class LlamaCppServerManager
     }
 
     /// <summary>
+    /// Builds the <see cref="LlamaCppModel"/> for a non-curated <c>*.gguf</c> (dropped into the
+    /// models folder, or passed to seconv by path), inferring the same per-family settings the
+    /// curated entries carry: chat-template flags via <see cref="InferChatTemplate"/>, and for
+    /// MiLMMT quants the trained completion prompt, greedy sampling and the regular-engine-only
+    /// restriction - a self-supplied MiLMMT quant echo-loops the source under any other prompt.
+    /// <paramref name="fileNameOrPath"/> may be a bare file name or a full path (seconv).
+    /// </summary>
+    public static LlamaCppModel CreateCustomModel(string displayName, string fileNameOrPath, string size)
+    {
+        var name = Path.GetFileName(fileNameOrPath);
+        var (chatTemplate, noJinja) = InferChatTemplate(name);
+        var isMiLmMt = name.Contains("milmmt", StringComparison.OrdinalIgnoreCase);
+        return new LlamaCppModel(displayName, fileNameOrPath, size, Url: string.Empty,
+            ChatTemplate: chatTemplate, NoJinja: noJinja,
+            PromptTemplate: isMiLmMt ? MiLmMt46PromptTemplate : null,
+            Temperature: isMiLmMt ? 0 : -1,
+            CompletionOnly: isMiLmMt);
+    }
+
+    /// <summary>
+    /// Points the regular llama.cpp translate engine's per-model settings (trained-in prompt and
+    /// recommended sampling) at the given curated/custom model, or resets them for null (remote
+    /// server / unknown model). Must be called wherever a local translate run picks its model
+    /// (Auto-translate window, batch convert, seconv) - the values persist in settings, so a
+    /// stale prompt from a previously used model would otherwise leak into the next run, and for
+    /// completion-only models (MiLMMT-46) the wrong prompt does not just degrade output, it makes
+    /// the model echo the untranslated source.
+    /// </summary>
+    public static void ApplyTranslatePromptSettings(LlamaCppModel? model)
+    {
+        Configuration.Settings.Tools.LlamaCppModelPrompt = model?.PromptTemplate ?? string.Empty;
+        Configuration.Settings.Tools.LlamaCppModelTemperature = model?.Temperature ?? -1;
+        Configuration.Settings.Tools.LlamaCppModelTopP = model?.TopP ?? -1;
+        Configuration.Settings.Tools.LlamaCppModelTopK = model?.TopK ?? -1;
+        Configuration.Settings.Tools.LlamaCppModelRepeatPenalty = model?.RepeatPenalty ?? -1;
+    }
+
+    /// <summary>
     /// Returns the curated <see cref="TranslateModels"/> plus any other <c>*.gguf</c> the user has
     /// dropped into the llama.cpp models folder. Custom entries are emitted with an empty <c>Url</c>
     /// (no download needed - already on disk), the file name as <c>DisplayName</c>, a
@@ -415,9 +485,7 @@ public static class LlamaCppServerManager
                 }
 
                 var size = FormatFileSize(new FileInfo(path).Length);
-                var (chatTemplate, noJinja) = InferChatTemplate(name);
-                custom.Add(new LlamaCppModel(name, name, size, Url: string.Empty,
-                    ChatTemplate: chatTemplate, NoJinja: noJinja));
+                custom.Add(CreateCustomModel(name, name, size));
             }
         }
         catch

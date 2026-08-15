@@ -123,14 +123,21 @@ internal sealed class AutoTranslateRunner
     /// </summary>
     public async Task TranslateAsync(Subtitle subtitle, CancellationToken cancellationToken)
     {
-        if (_llamaCppModel != null && !LlamaCppServerManager.IsServerRunning)
+        if (_llamaCppModel != null)
         {
-            if (!_options.Quiet)
-            {
-                Console.WriteLine($"  Starting llama-server with model {Path.GetFileName(_llamaCppModel.FileName)} (stops at exit)...");
-            }
+            // The engine reads the per-model prompt/sampling (e.g. Hy-MT2's or MiLMMT-46's
+            // trained-in prompt) from settings, which nothing in a console run sets otherwise.
+            LlamaCppServerManager.ApplyTranslatePromptSettings(_llamaCppModel);
 
-            await LlamaCppServerManager.EnsureServerRunningAsync(_llamaCppModel, cancellationToken);
+            if (!LlamaCppServerManager.IsServerRunning)
+            {
+                if (!_options.Quiet)
+                {
+                    Console.WriteLine($"  Starting llama-server with model {Path.GetFileName(_llamaCppModel.FileName)} (stops at exit)...");
+                }
+
+                await LlamaCppServerManager.EnsureServerRunningAsync(_llamaCppModel, cancellationToken);
+            }
         }
 
         var sourceCode = _options.TranslateFrom;
@@ -220,9 +227,7 @@ internal sealed class AutoTranslateRunner
                 }
 
                 var fileName = Path.GetFileName(name);
-                var (chatTemplate, noJinja) = LlamaCppServerManager.InferChatTemplate(fileName);
-                return new LlamaCppModel(fileName, Path.GetFullPath(name), string.Empty, Url: string.Empty,
-                    ChatTemplate: chatTemplate, NoJinja: noJinja);
+                return LlamaCppServerManager.CreateCustomModel(fileName, Path.GetFullPath(name), string.Empty);
             }
 
             // Name: match curated + custom models in the models folder (with or without .gguf).
