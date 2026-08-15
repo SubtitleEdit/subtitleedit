@@ -2,18 +2,44 @@ using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using Spectre.Console;
 using System.Text;
 using Nikse.SubtitleEdit.UiLogic.LlamaCpp;
+using SeConv.Helpers;
 
 namespace SeConv.Core;
 
 /// <summary>
 /// CLI list helpers: <c>seconv list-encodings</c>, <c>seconv list-pac-codepages</c>,
 /// <c>seconv list-ocr-engines</c>. Each prints a formatted reference table to stdout
-/// and returns 0.
+/// and returns 0, or a machine-readable document when <c>--json</c> is passed.
+///
+/// These are the discovery commands a script or agent runs first, so every one of them
+/// accepts <c>--json</c>: the tables are hundreds of box-drawing lines that are expensive
+/// to parse and easy to misread. In JSON, the <c>id</c> field is always the exact token
+/// the corresponding option accepts.
 /// </summary>
 internal static class ListHelpers
 {
-    public static void PrintEncodings()
+    public static void PrintEncodings(bool json = false)
     {
+        var encodingList = Encoding.GetEncodings().OrderBy(e => e.CodePage).ToList();
+
+        if (json)
+        {
+            JsonOut.Write(new
+            {
+                encodings = encodingList.Select(e => new
+                {
+                    id = e.Name,
+                    codePage = e.CodePage,
+                    name = e.Name,
+                    displayName = e.DisplayName,
+                }),
+                total = encodingList.Count,
+                special = new[] { "utf-8", "utf-8-no-bom", "source" },
+                note = "Pass either the code page number or the name to --encoding. 'source' keeps the input file's detected encoding.",
+            });
+            return;
+        }
+
         AnsiConsole.MarkupLine("[bold cyan]Supported encodings (pass via --encoding)[/]");
         AnsiConsole.WriteLine();
         var table = new Table().Border(TableBorder.Rounded);
@@ -21,10 +47,7 @@ internal static class ListHelpers
         table.AddColumn("[green]Name[/]");
         table.AddColumn("[cyan]Description[/]");
 
-        var encodings = Encoding.GetEncodings()
-            .OrderBy(e => e.CodePage)
-            .ToList();
-        foreach (var info in encodings)
+        foreach (var info in encodingList)
         {
             table.AddRow(
                 info.CodePage.ToString(),
@@ -36,15 +59,8 @@ internal static class ListHelpers
         AnsiConsole.MarkupLine($"\n[dim]Pass either the code page number or the name. Special values: utf-8, utf-8-no-bom.[/]");
     }
 
-    public static void PrintPacCodepages()
+    public static void PrintPacCodepages(bool json = false)
     {
-        AnsiConsole.MarkupLine("[bold cyan]PAC code pages (pass via --pac-codepage)[/]");
-        AnsiConsole.WriteLine();
-        var table = new Table().Border(TableBorder.Rounded);
-        table.AddColumn("[yellow]ID[/]");
-        table.AddColumn("[green]Name[/]");
-        table.AddColumn("[cyan]Aliases[/]");
-
         (int id, string name, string aliases)[] rows =
         [
             (Pac.CodePageLatin, "Latin", "0"),
@@ -62,6 +78,30 @@ internal static class ListHelpers
             (Pac.CodePageLatinPortuguese, "LatinPortuguese", "Portuguese, 12"),
         ];
 
+        if (json)
+        {
+            JsonOut.Write(new
+            {
+                codePages = rows.Select(r => new
+                {
+                    id = r.name,
+                    pacId = r.id,
+                    name = r.name,
+                    aliases = r.aliases.Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries),
+                }),
+                total = rows.Length,
+                note = "Pass the name or any alias to --pac-codepage.",
+            });
+            return;
+        }
+
+        AnsiConsole.MarkupLine("[bold cyan]PAC code pages (pass via --pac-codepage)[/]");
+        AnsiConsole.WriteLine();
+        var table = new Table().Border(TableBorder.Rounded);
+        table.AddColumn("[yellow]ID[/]");
+        table.AddColumn("[green]Name[/]");
+        table.AddColumn("[cyan]Aliases[/]");
+
         foreach (var (id, name, aliases) in rows)
         {
             table.AddRow(id.ToString(), $"[green]{name}[/]", $"[cyan]{aliases}[/]");
@@ -70,8 +110,34 @@ internal static class ListHelpers
         AnsiConsole.Write(table);
     }
 
-    public static void PrintFixCommonErrorsRules()
+    public static void PrintFixCommonErrorsRules(bool json = false)
     {
+        var gates = FixCommonErrorsRunner.LanguageGates;
+        var guiLabels = FixCommonErrorsRunner.GuiLabels;
+
+        if (json)
+        {
+            JsonOut.Write(new
+            {
+                rules = FixCommonErrorsRunner.AvailableRuleIds.Select(id => new
+                {
+                    id,
+                    guiLabel = guiLabels.TryGetValue(id, out var label) ? label : null,
+                    languageGate = gates.TryGetValue(id, out var lang) ? lang : null,
+                }),
+                total = FixCommonErrorsRunner.AvailableRuleIds.Count,
+                syntax = new
+                {
+                    all = "--fix-common-errors",
+                    subset = "--fix-common-errors-rules:FixCommas,FixEllipsesStart",
+                    allExcept = "--fix-common-errors-rules:all,-FixDanishLetterI",
+                    forceLanguage = "--fce-language:es",
+                },
+                note = "A language-gated rule runs only when the subtitle's language matches (auto-detected, or forced with --fce-language). Naming a gated rule selects it but does not bypass the gate.",
+            });
+            return;
+        }
+
         AnsiConsole.MarkupLine("[bold cyan]FixCommonErrors rule IDs (pass via --fix-common-errors-rules)[/]");
         AnsiConsole.WriteLine();
         var table = new Table().Border(TableBorder.Rounded);
@@ -79,8 +145,6 @@ internal static class ListHelpers
         table.AddColumn("[yellow]GUI equivalent[/]");
         table.AddColumn("[yellow]Language gate[/]");
 
-        var gates = FixCommonErrorsRunner.LanguageGates;
-        var guiLabels = FixCommonErrorsRunner.GuiLabels;
         foreach (var id in FixCommonErrorsRunner.AvailableRuleIds)
         {
             // GUI equivalent: the checkbox label the desktop Fix Common Errors window shows for
@@ -108,8 +172,29 @@ internal static class ListHelpers
             "  [dim]--fix-common-errors-rules:FixSpanishInvertedQuestionAndExclamationMarks --fce-language:es[/]  [dim]# force a named gated rule[/]");
     }
 
-    public static void PrintRemoveFormattingRules()
+    public static void PrintRemoveFormattingRules(bool json = false)
     {
+        if (json)
+        {
+            JsonOut.Write(new
+            {
+                rules = RemoveFormattingRunner.AvailableRuleIds.Select(id => new
+                {
+                    id,
+                    guiLabel = RemoveFormattingRunner.GuiLabels.TryGetValue(id, out var label) ? label : null,
+                }),
+                total = RemoveFormattingRunner.AvailableRuleIds.Count,
+                syntax = new
+                {
+                    everyTag = "--remove-formatting",
+                    subset = "--remove-formatting-rules:RemoveItalic,RemoveBold",
+                    allExcept = "--remove-formatting-rules:all,-RemoveColor",
+                },
+                note = "Bare --remove-formatting strips every tag wholesale, which is broader than --remove-formatting-rules:all (the union of the rules above). Tags no rule covers, e.g. positioning like {\\pos(..)}, only go away with the bare flag.",
+            });
+            return;
+        }
+
         AnsiConsole.MarkupLine("[bold cyan]Remove-formatting rule IDs (pass via --remove-formatting-rules)[/]");
         AnsiConsole.WriteLine();
         var table = new Table().Border(TableBorder.Rounded);
@@ -140,8 +225,70 @@ internal static class ListHelpers
             "  [dim]--remove-formatting-rules:all,-RemoveColor[/]           [dim]# every named rule except colors[/]");
     }
 
-    public static void PrintOcrEngines()
+    public static void PrintOcrEngines(bool json = false)
     {
+        var tesseractInstalled = TesseractOcrEngine.Detect() is not null;
+        var paddleInstalled = PaddleOcrEngine.Detect() is not null;
+        var llamaCppInstalled = LlamaCppLocal.TryEnsureServerBinary();
+        var llamaCppModelCount = LlamaCppServerManager.OcrModels.Count(LlamaCppServerManager.IsModelInstalled);
+
+        if (json)
+        {
+            // 'ready' is the actionable field: whether this engine can run right now without
+            // further setup. nocr/binaryocr are in-process but need a database file, so they
+            // are only ready once --ocr-db points at one — which this command cannot know.
+            JsonOut.Write(new
+            {
+                engines = new object[]
+                {
+                    new
+                    {
+                        id = "tesseract", aliases = Array.Empty<string>(), type = "subprocess",
+                        isDefault = true, ready = tesseractInstalled,
+                        requires = "`tesseract` binary on PATH",
+                        options = new[] { "--ocr-language" },
+                    },
+                    new
+                    {
+                        id = "nocr", aliases = Array.Empty<string>(), type = "in-process",
+                        isDefault = false, ready = (bool?)null,
+                        requires = "--ocr-db pointing at a .nocr database (e.g. Latin.nocr, under Subtitle Edit's OCR folder)",
+                        options = new[] { "--ocr-db" },
+                    },
+                    new
+                    {
+                        id = "binaryocr", aliases = Array.Empty<string>(), type = "in-process",
+                        isDefault = false, ready = (bool?)null,
+                        requires = "--ocr-db pointing at a .db database (e.g. Latin.db, under Subtitle Edit's OCR folder)",
+                        options = new[] { "--ocr-db" },
+                    },
+                    new
+                    {
+                        id = "ollama", aliases = Array.Empty<string>(), type = "http",
+                        isDefault = false, ready = (bool?)null,
+                        requires = "A running Ollama instance with a vision model",
+                        options = new[] { "--ollama-url", "--ollama-model", "--ocr-language" },
+                    },
+                    new
+                    {
+                        id = "llamacpp", aliases = Array.Empty<string>(), type = "http",
+                        isDefault = false, ready = llamaCppInstalled && llamaCppModelCount > 0,
+                        requires = $"llama-server ({(llamaCppInstalled ? "installed" : "not found")}) plus an OCR model ({llamaCppModelCount} installed) — download via Subtitle Edit's OCR window, or point --ocr-url at a running server",
+                        options = new[] { "--ocr-model", "--ocr-url", "--ocr-language" },
+                    },
+                    new
+                    {
+                        id = "paddle", aliases = new[] { "paddleocr" }, type = "subprocess",
+                        isDefault = false, ready = paddleInstalled,
+                        requires = "`paddleocr` binary on PATH (`pip install paddleocr`)",
+                        options = new[] { "--ocr-language" },
+                    },
+                },
+                note = "Language codes differ per engine: Tesseract uses ISO 639-2 (eng, deu), Paddle uses short codes (en, de), Ollama and llama.cpp take a human-readable language name.",
+            });
+            return;
+        }
+
         AnsiConsole.MarkupLine("[bold cyan]OCR engines (pass via --ocr-engine)[/]");
         AnsiConsole.WriteLine();
         var table = new Table().Border(TableBorder.Rounded);
@@ -149,8 +296,8 @@ internal static class ListHelpers
         table.AddColumn("[green]Type[/]");
         table.AddColumn("[cyan]Requirements[/]");
 
-        var tesseract = TesseractOcrEngine.Detect() is not null ? "installed ✓" : "not on PATH";
-        var paddle = PaddleOcrEngine.Detect() is not null ? "installed ✓" : "not on PATH";
+        var tesseract = tesseractInstalled ? "installed ✓" : "not on PATH";
+        var paddle = paddleInstalled ? "installed ✓" : "not on PATH";
 
         table.AddRow(
             "[green]tesseract[/] (default)",
@@ -169,12 +316,11 @@ internal static class ListHelpers
             "HTTP",
             "Local Ollama with vision model. --ollama-url, --ollama-model");
 
-        var llamaCppServer = LlamaCppLocal.TryEnsureServerBinary() ? "installed ✓" : "not found";
-        var llamaCppModels = LlamaCppServerManager.OcrModels.Count(LlamaCppServerManager.IsModelInstalled);
+        var llamaCppServer = llamaCppInstalled ? "installed ✓" : "not found";
         table.AddRow(
             "[green]llamacpp[/]",
             "HTTP",
-            $"llama-server ({llamaCppServer}) + OCR model ({llamaCppModels} installed) — download via SE's OCR window, or --ocr-url. --ocr-model, --ocr-url");
+            $"llama-server ({llamaCppServer}) + OCR model ({llamaCppModelCount} installed) — download via SE's OCR window, or --ocr-url. --ocr-model, --ocr-url");
         table.AddRow(
             "[green]paddle[/] / [green]paddleocr[/]",
             "subprocess",
