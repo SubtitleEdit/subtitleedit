@@ -390,11 +390,7 @@ public partial class AutoTranslateViewModel : ObservableObject
             // unknown and a custom .gguf carries no template, so both fall back to the generic
             // prompt and server-default sampling.
             var curatedModel = LlamaCppUseRemoteServer ? null : SelectedLlamaCppModel?.Model;
-            Configuration.Settings.Tools.LlamaCppModelPrompt = curatedModel?.PromptTemplate ?? string.Empty;
-            Configuration.Settings.Tools.LlamaCppModelTemperature = curatedModel?.Temperature ?? -1;
-            Configuration.Settings.Tools.LlamaCppModelTopP = curatedModel?.TopP ?? -1;
-            Configuration.Settings.Tools.LlamaCppModelTopK = curatedModel?.TopK ?? -1;
-            Configuration.Settings.Tools.LlamaCppModelRepeatPenalty = curatedModel?.RepeatPenalty ?? -1;
+            LlamaCppServerManager.ApplyTranslatePromptSettings(curatedModel);
         }
 
         if (engineType == typeof(OllamaTranslate))
@@ -994,10 +990,24 @@ public partial class AutoTranslateViewModel : ObservableObject
         if (downloaded != null)
         {
             var selectName = string.IsNullOrEmpty(downloaded) ? model?.FileName : downloaded;
-            SelectedLlamaCppModel = LlamaCppDownloadHelper.PopulateModels(LlamaCppModels, LlamaCppServerManager.GetAllTranslateModels(), selectName);
+            SelectedLlamaCppModel = LlamaCppDownloadHelper.PopulateModels(LlamaCppModels, GetLlamaCppModelsForEngine(), selectName);
         }
 
         RefreshDownloadDots?.Invoke();
+    }
+
+    /// <summary>
+    /// The llama.cpp model list for the currently selected engine: everything for the regular
+    /// engine, but no completion-only models (MiLMMT-46) for the advanced engine - they cannot
+    /// follow its JSON batch protocol and reply with well-formed JSON holding the untranslated
+    /// source lines, which would land in the grid as a "successful" batch.
+    /// </summary>
+    private IReadOnlyList<LlamaCppModel> GetLlamaCppModelsForEngine()
+    {
+        var models = LlamaCppServerManager.GetAllTranslateModels();
+        return SelectedAutoTranslator is LlamaCppAdvancedTranslate
+            ? models.Where(m => !m.CompletionOnly).ToList()
+            : models;
     }
 
     /// <summary>
@@ -1105,7 +1115,7 @@ public partial class AutoTranslateViewModel : ObservableObject
             return false;
         }
 
-        SelectedLlamaCppModel = LlamaCppDownloadHelper.PopulateModels(LlamaCppModels, LlamaCppServerManager.GetAllTranslateModels(), model.FileName);
+        SelectedLlamaCppModel = LlamaCppDownloadHelper.PopulateModels(LlamaCppModels, GetLlamaCppModelsForEngine(), model.FileName);
         RefreshDownloadDots?.Invoke();
 
         try
@@ -1212,7 +1222,7 @@ public partial class AutoTranslateViewModel : ObservableObject
         if (downloaded != null)
         {
             var selectName = string.IsNullOrEmpty(downloaded) ? model?.FileName : downloaded;
-            SelectedLlamaCppModel = LlamaCppDownloadHelper.PopulateModels(LlamaCppModels, LlamaCppServerManager.GetAllTranslateModels(), selectName);
+            SelectedLlamaCppModel = LlamaCppDownloadHelper.PopulateModels(LlamaCppModels, GetLlamaCppModelsForEngine(), selectName);
         }
 
         RefreshDownloadDots?.Invoke();
@@ -2053,7 +2063,7 @@ public partial class AutoTranslateViewModel : ObservableObject
             LlamaCppModelComboIsVisible = true;
             LlamaCppButtonsAreVisible = true;
             var savedModelName = Path.GetFileName(Se.Settings.AutoTranslate.LlamaCppModel ?? string.Empty);
-            SelectedLlamaCppModel = LlamaCppDownloadHelper.PopulateModels(LlamaCppModels, LlamaCppServerManager.GetAllTranslateModels(), savedModelName);
+            SelectedLlamaCppModel = LlamaCppDownloadHelper.PopulateModels(LlamaCppModels, GetLlamaCppModelsForEngine(), savedModelName);
             UpdateLlamaCppServerButtonText();
             RefreshEngineUpdateButton();
 

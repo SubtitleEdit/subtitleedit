@@ -1350,6 +1350,11 @@ public partial class BatchConvertViewModel : ObservableObject, IClosingCleanup
             return true;
         }
 
+        // The engine reads the per-model prompt/sampling from settings; re-point them at the model
+        // picked here, since the last value persisted by the Auto-translate window may belong to a
+        // different model (completion-only models echo untranslated text under the wrong prompt).
+        LlamaCppServerManager.ApplyTranslatePromptSettings(model);
+
         // Auto-download the llama-server binary + model if missing (prompts).
         if (!await LlamaCppDownloadHelper.EnsureReadyAsync(Window, _windowService, model.FileName))
         {
