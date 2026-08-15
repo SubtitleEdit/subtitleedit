@@ -38,4 +38,38 @@ public class MatroskaFileTest
             }
         }
     }
+
+    /// <summary>
+    /// A file truncated mid-cluster (partial download, recording in progress) still declares the
+    /// full segment size in its header, so the cluster walk's end position lies beyond EOF. The
+    /// walk used to spin forever at EOF (id reads yield None, Seek(0) makes no progress) instead
+    /// of returning what it had - opening such a file hung SE at 100% CPU.
+    /// </summary>
+    [Fact]
+    public void TruncatedFileTerminates()
+    {
+        var path = Path.Combine(Directory.GetCurrentDirectory(), "Files", "sample_MKV_SRT.mkv");
+        var bytes = File.ReadAllBytes(path);
+        var tempFileName = Path.GetTempFileName();
+        try
+        {
+            // cut mid-file so the segment (and likely a cluster) extends past EOF
+            using (var fs = new FileStream(tempFileName, FileMode.Create, FileAccess.Write))
+            {
+                fs.Write(bytes, 0, bytes.Length * 6 / 10);
+            }
+
+            using var matroska = new MatroskaFile(tempFileName);
+            Assert.True(matroska.IsValid);
+
+            foreach (var track in matroska.GetTracks(subtitleOnly: true))
+            {
+                matroska.GetSubtitle(track.TrackNumber, null); // must terminate
+            }
+        }
+        finally
+        {
+            File.Delete(tempFileName);
+        }
+    }
 }

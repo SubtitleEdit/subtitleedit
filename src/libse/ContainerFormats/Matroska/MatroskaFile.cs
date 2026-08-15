@@ -839,23 +839,36 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Matroska
             {
                 var beforeReadElementIdPosition = _stream.Position;
                 var id = (ElementId)ReadVariableLengthUInt(false);
-                if (id == ElementId.None && beforeReadElementIdPosition + 1000 < _stream.Length)
+                if (id == ElementId.None)
                 {
-                    // Error mode: search for start of next cluster, will be very slow
-                    const int maxErrors = 5_000_000;
-                    var errors = 0;
-                    var max = _stream.Length;
-                    while (id != ElementId.Cluster && beforeReadElementIdPosition + 1000 < max)
+                    if (beforeReadElementIdPosition + 1000 < _stream.Length)
                     {
-                        errors++;
-                        if (errors > maxErrors)
+                        // Error mode: search for start of next cluster, will be very slow
+                        const int maxErrors = 5_000_000;
+                        var errors = 0;
+                        var max = _stream.Length;
+                        while (id != ElementId.Cluster && beforeReadElementIdPosition + 1000 < max)
                         {
-                            return; // we give up
-                        }
+                            errors++;
+                            if (errors > maxErrors)
+                            {
+                                return; // we give up
+                            }
 
-                        beforeReadElementIdPosition++;
-                        _stream.Seek(beforeReadElementIdPosition, SeekOrigin.Begin);
-                        id = (ElementId)ReadVariableLengthUInt(false);
+                            beforeReadElementIdPosition++;
+                            _stream.Seek(beforeReadElementIdPosition, SeekOrigin.Begin);
+                            id = (ElementId)ReadVariableLengthUInt(false);
+                        }
+                    }
+
+                    if (id == ElementId.None)
+                    {
+                        // At (or almost at) end of stream and no next element found. A file that
+                        // is truncated mid-cluster (partial download, in-progress recording)
+                        // declares a segment size far beyond the real file size, so the loop
+                        // condition alone never terminates: reads at EOF yield id None and size 0,
+                        // and Seek(0) makes no progress - SE would spin at 100% CPU forever here.
+                        return;
                     }
                 }
 
