@@ -4,9 +4,7 @@ using System.Buffers.Binary;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Runtime.ExceptionServices;
 using System.Text;
-using System.Threading.Tasks;
 using Nikse.SubtitleEdit.Core.Common;
 
 namespace Nikse.SubtitleEdit.Core.ContainerFormats.Matroska
@@ -68,15 +66,19 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Matroska
         private const int LocalReadBufferSize = 4096;
 
         /// <summary>
-        /// Network share: the 64 KB buffer used before #6772. Over SMB the cost is not bytes but
-        /// round-trips - every refill is a synchronous request over the wire - so the one-page
-        /// buffer that wins on local disk turns tens of thousands of small reads into as many
-        /// round-trips, and opening an MKV from a UNC path crawled while the same file on a local
-        /// disk opened instantly (#13609). Since the parallel cluster walk (see
-        /// <see cref="TryReadSegmentClusterParallel"/>) took over the network hot path, this size
-        /// only serves the remaining sequential operations and the irregular-file fallback walk.
+        /// Network share: a large buffer, i.e. the opposite of the local-disk choice above. Over
+        /// SMB the cost is not bytes but round-trips: every refill is a synchronous request over
+        /// the wire, and a seek-heavy walk defeats the read-ahead on both the client and the
+        /// server (on a NAS it also costs an array seek per read). The one-page buffer that wins
+        /// on local disk therefore turns tens of thousands of small reads into as many
+        /// round-trips, and an MKV on a UNC path crawled open while the same file on a local disk
+        /// opened instantly (#13609). Reading big and sequentially instead lets read-ahead
+        /// pipeline the transfer - measured on the reporter's share, ~900 MB streams in about 4 s
+        /// while the sparse walk over the same file took over two minutes.
+        /// 64 KB (#13610) already pulls ~80% of the file over the wire, so a larger buffer costs
+        /// almost no extra bytes while cutting the round-trip count proportionally.
         /// </summary>
-        private const int NetworkReadBufferSize = 65536;
+        private const int NetworkReadBufferSize = 1024 * 1024;
 
         private static int GetReadBufferSize(string path)
         {
@@ -613,9 +615,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Matroska
 
         /// <summary>
         /// Parses the blocks of one cluster and hands every subtitle block to a collector.
-        /// Owns its stream and scratch buffer so instances can run in parallel over separate
-        /// streams (the network cluster walk) as well as over the file's main stream (the
-        /// sequential walk).
+        /// Owns its stream and scratch buffer rather than reaching into the file's fields.
         /// </summary>
         private sealed class ClusterReader
         {
@@ -747,153 +747,13 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Matroska
             {
                 EnsureSubtitleTrackNumbers();
                 _subtitleRipByTrackNumber.Clear();
-                if (!UseParallelClusterRead(Path) || !TryReadSegmentClusterParallel(progressCallback))
-                {
-                    _subtitleRipByTrackNumber.Clear();
-                    ReadSegmentCluster(progressCallback);
-                }
-
+                ReadSegmentCluster(progressCallback);
                 _subtitleRipLoaded = true;
             }
 
             return _subtitleRipByTrackNumber.TryGetValue(trackNumber, out var subtitles)
                 ? subtitles
                 : new List<MatroskaSubtitle>();
-        }
-
-        /// <summary>
-        /// Test hook: force the parallel cluster walk regardless of where the file lives, so
-        /// equivalence with the sequential walk can be verified on local test files.
-        /// </summary>
-        internal static bool ForceParallelClusterRead;
-
-        private static bool UseParallelClusterRead(string path)
-        {
-            return ForceParallelClusterRead || IsNetworkPath(path);
-        }
-
-        /// <summary>
-        /// Network-path subtitle rip. The sequential cluster walk is a chain of dependent small
-        /// reads (read a block's header, seek past its payload), which over SMB costs one wire
-        /// round-trip per read - tens of thousands for a movie - while big buffers just pull the
-        /// whole file over the wire instead (#13609/#13610). Neither is fast on all networks, so:
-        /// phase 1 discovers the cluster positions with one cheap read per cluster, phase 2 walks
-        /// the now-independent clusters in parallel, dividing the round-trip cost by the worker
-        /// count while still only transferring the block headers' neighborhoods (~15% of the
-        /// file). Measured on a rate-limited SMB rig: 4-5x faster than any fixed buffer size at
-        /// both 1 Gbit and 100 Mbit, with byte-identical output.
-        /// Returns false when the file looks irregular; the sequential walk has the error-resync
-        /// logic and remains the fallback.
-        /// </summary>
-        private bool TryReadSegmentClusterParallel(LoadMatroskaCallback progressCallback)
-        {
-            List<Element> clusters;
-            long totalSize;
-            using (var stream = OpenClusterStream())
-            {
-                totalSize = stream.Length;
-                clusters = DiscoverClusters(stream);
-            }
-
-            if (clusters == null)
-            {
-                return false;
-            }
-
-            var blocksByCluster = new List<MatroskaSubtitleBlock>[clusters.Count];
-            long processed = 0;
-            var progressLock = new object();
-
-            try
-            {
-                Parallel.For(0, clusters.Count,
-                    new ParallelOptions { MaxDegreeOfParallelism = Math.Clamp(Environment.ProcessorCount, 4, 16) },
-                    OpenClusterStream,
-                    (index, _, stream) =>
-                    {
-                        var cluster = clusters[index];
-                        var blocks = new List<MatroskaSubtitleBlock>();
-                        stream.Seek(cluster.DataPosition, SeekOrigin.Begin);
-                        new ClusterReader(stream, _subtitleTrackNumbers, _timeCodeScale, blocks.Add).ReadCluster(cluster);
-                        blocksByCluster[index] = blocks;
-
-                        if (progressCallback != null)
-                        {
-                            lock (progressLock)
-                            {
-                                processed += cluster.DataSize;
-                                progressCallback.Invoke(processed, totalSize);
-                            }
-                        }
-
-                        return stream;
-                    },
-                    stream => stream.Dispose());
-            }
-            catch (AggregateException ex) when (ex.InnerExceptions.Count == 1)
-            {
-                ExceptionDispatchInfo.Capture(ex.InnerException).Throw();
-            }
-
-            foreach (var blocks in blocksByCluster)
-            {
-                foreach (var block in blocks)
-                {
-                    AddSubtitleBlock(block);
-                }
-            }
-
-            return true;
-        }
-
-        /// <summary>
-        /// A worker stream for the parallel cluster walk. Always the small local buffer: the walk
-        /// is seek-heavy (read a header, skip the payload), so a big buffer would drag the skipped
-        /// payloads over the wire again.
-        /// </summary>
-        private FileStream OpenClusterStream()
-        {
-            return new FileStream(Path, FileMode.Open, FileAccess.Read, FileShare.ReadWrite, LocalReadBufferSize);
-        }
-
-        /// <summary>
-        /// Collects the positions of all clusters with one small read per top-level element.
-        /// Returns null for anything irregular (garbage ids, sizes past end-of-file, unknown-size
-        /// elements - their all-ones size vint lands past end-of-file too), handing the file to
-        /// the sequential walk's resync logic instead.
-        /// </summary>
-        private List<Element> DiscoverClusters(FileStream stream)
-        {
-            var clusters = new List<Element>();
-            var buffer = new byte[8];
-            var length = stream.Length;
-            var segmentEnd = Math.Min(_segmentElement.EndPosition, length);
-            stream.Seek(_segmentElement.DataPosition, SeekOrigin.Begin);
-
-            while (stream.Position < segmentEnd)
-            {
-                var id = (ElementId)ReadVariableLengthUInt(stream, buffer, false);
-                if (id == ElementId.None)
-                {
-                    return null;
-                }
-
-                var size = (long)ReadVariableLengthUInt(stream, buffer);
-                var element = new Element(id, stream.Position, size);
-                if (element.EndPosition > length)
-                {
-                    return null;
-                }
-
-                if (element.Id == ElementId.Cluster)
-                {
-                    clusters.Add(element);
-                }
-
-                stream.Seek(element.EndPosition, SeekOrigin.Begin);
-            }
-
-            return clusters;
         }
 
         private void EnsureSubtitleTrackNumbers()
