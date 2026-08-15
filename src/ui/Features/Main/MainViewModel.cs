@@ -8731,6 +8731,7 @@ public partial class MainViewModel :
             InitializeWaveformDisplayMode();
 
             AudioVisualizer.ShotChanges = ShotChangesHelper.FromDisk(_videoFileName);
+            UpdateShotChangesListMenuItem();
             if (AudioVisualizer.ShotChanges.Count == 0)
             {
                 ExtractShotChanges(_videoFileName, _audioTrack?.FfIndex ?? -1);
@@ -8951,7 +8952,7 @@ public partial class MainViewModel :
         if (result.OkPressed && result.FfmpegLines.Count > 0)
         {
             AudioVisualizer.ShotChanges = result.FfmpegLines.Select(p => p.Seconds).ToList();
-            ShowShotChangesListMenuItem = AudioVisualizer.ShotChanges.Count > 0;
+            UpdateShotChangesListMenuItem();
             _updateAudioVisualizer = true;
             ShotChangesHelper.SaveShotChanges(_videoFileName, AudioVisualizer.ShotChanges, _audioTrack?.FfIndex ?? -1);
             ShowStatus(string.Format(Se.Language.Main.XShotChangedLoaded, AudioVisualizer.ShotChanges.Count));
@@ -8978,7 +8979,22 @@ public partial class MainViewModel :
 
         if (result.OKProssed && AudioVisualizer != null)
         {
-            AudioVisualizer.ShotChanges = result.ShotChanges.Select(p => p.Seconds).ToList();
+            var shotChanges = result.ShotChanges.Select(p => p.Seconds).ToList();
+            AudioVisualizer.ShotChanges = shotChanges;
+
+            // Deleting/clearing in the list must reach the disk too, or the removed shot
+            // changes are back the next time the video is opened.
+            if (!string.IsNullOrEmpty(_videoFileName))
+            {
+                if (shotChanges.Count == 0)
+                {
+                    ShotChangesHelper.DeleteShotChanges(_videoFileName, _audioTrack?.FfIndex ?? -1);
+                }
+                else
+                {
+                    ShotChangesHelper.SaveShotChanges(_videoFileName, shotChanges, _audioTrack?.FfIndex ?? -1);
+                }
+            }
         }
 
         if (result.GoToPressed && result.SelectedShotChange != null)
@@ -8986,7 +9002,7 @@ public partial class MainViewModel :
             vp.Position = result.SelectedShotChange.Seconds;
         }
 
-        ShowShotChangesListMenuItem = AudioVisualizer?.ShotChanges.Count > 0;
+        UpdateShotChangesListMenuItem();
         _updateAudioVisualizer = true;
     }
 
@@ -9019,8 +9035,17 @@ public partial class MainViewModel :
             ShotChangesHelper.SaveShotChanges(_videoFileName, list, _audioTrack?.FfIndex ?? -1);
         }
 
-        ShowShotChangesListMenuItem = AudioVisualizer?.ShotChanges.Count > 0;
+        UpdateShotChangesListMenuItem();
         _updateAudioVisualizer = true;
+    }
+
+    /// <summary>
+    /// The "List shot changes" menu item hides itself when there is nothing to list, so every path
+    /// that loads, generates, or removes shot changes must refresh it - not just the generate/import dialog.
+    /// </summary>
+    private void UpdateShotChangesListMenuItem()
+    {
+        ShowShotChangesListMenuItem = AudioVisualizer?.ShotChanges?.Count > 0;
     }
 
     [RelayCommand]
@@ -20668,6 +20693,7 @@ public partial class MainViewModel :
                     InitializeWaveformDisplayMode();
 
                     AudioVisualizer.ShotChanges = ShotChangesHelper.FromDisk(videoFileName);
+                    UpdateShotChangesListMenuItem();
                     if (AudioVisualizer.ShotChanges.Count == 0)
                     {
                         ExtractShotChanges(videoFileName, trackNumber);
@@ -21301,6 +21327,7 @@ public partial class MainViewModel :
                 if (!_videoOpenTokenSource.IsCancellationRequested && AudioVisualizer != null && AudioVisualizer.ShotChanges != null)
                 {
                     ShotChangesHelper.SaveShotChanges(videoFileName, AudioVisualizer.ShotChanges, audioTrackNumber);
+                    Dispatcher.UIThread.Post(UpdateShotChangesListMenuItem);
                 }
             });
         }
@@ -21358,6 +21385,7 @@ public partial class MainViewModel :
             AudioVisualizer.ShotChanges = new List<double>();
             AudioVisualizer.StartPositionSeconds = 0;
             AudioVisualizer.CurrentVideoPositionSeconds = 0;
+            UpdateShotChangesListMenuItem();
         }
     }
 
