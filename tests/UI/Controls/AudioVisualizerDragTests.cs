@@ -144,6 +144,100 @@ public class AudioVisualizerDragTests
         window.Close();
     }
 
+    /// <summary>Ages the "last pointer edit" stamp past the 500 ms grace, i.e. simulates half a
+    /// second of a held-down drag in which the time codes did not change.</summary>
+    private static void ExpirePointerEditGrace(AudioVisualizer av)
+    {
+        var field = typeof(AudioVisualizer).GetField("_lastPointerEditMs", BindingFlags.NonPublic | BindingFlags.Instance)!;
+        field.SetValue(av, Environment.TickCount64 - 5000);
+    }
+
+    [AvaloniaFact]
+    public void IsEditingWithPointer_StaysTrue_WhenDragPausesMidDrag_Issue13636()
+    {
+        // Undo change detection is suppressed for the whole drag, not just 500 ms after the last
+        // time-code-changing move. Holding still mid-drag (or fine-tuning inside one pixel column,
+        // where the same-X early return never stamps) used to reopen the window, and the next
+        // detection tick banked the half-finished times as an undo entry - so undo stepped back
+        // through the middle of the drag instead of to before it.
+        var (window, av, _) = Open(Line(1, 3));
+
+        window.MouseDown(new Point(378, 100), MouseButton.Left, RawInputModifiers.None);
+        window.MouseMove(new Point(478, 100), RawInputModifiers.LeftMouseButton);
+        Dispatcher.UIThread.RunJobs();
+        Assert.True(av.IsEditingWithPointer);
+
+        ExpirePointerEditGrace(av);
+        Assert.True(av.IsEditingWithPointer);
+
+        window.MouseUp(new Point(478, 100), MouseButton.Left, RawInputModifiers.None);
+        Dispatcher.UIThread.RunJobs();
+
+        // Released: only the 500 ms tail is left, and that one has been aged out - so the settled
+        // times are free to be snapshotted, once.
+        Assert.False(av.IsEditingWithPointer);
+
+        window.Close();
+    }
+
+    [AvaloniaFact]
+    public void IsEditingWithPointer_False_AfterEscapeCancelsDrag()
+    {
+        var (window, av, _) = Open(Line(1, 3));
+
+        window.MouseDown(new Point(378, 100), MouseButton.Left, RawInputModifiers.None);
+        window.MouseMove(new Point(478, 100), RawInputModifiers.LeftMouseButton);
+        Dispatcher.UIThread.RunJobs();
+
+        window.KeyPress(Key.Escape, RawInputModifiers.None, PhysicalKey.Escape, null);
+        Dispatcher.UIThread.RunJobs();
+        ExpirePointerEditGrace(av);
+
+        Assert.False(av.IsEditingWithPointer);
+
+        window.Close();
+    }
+
+    [AvaloniaFact]
+    public void IsEditingWithPointer_False_WhenPointerMovesWithNoButtonDown()
+    {
+        // Self-heal for a drag that never delivered a release: any later button-less move over the
+        // waveform clears the flag, so change detection can never stay switched off.
+        var (window, av, _) = Open(Line(1, 3));
+
+        window.MouseDown(new Point(378, 100), MouseButton.Left, RawInputModifiers.None);
+        window.MouseMove(new Point(478, 100), RawInputModifiers.LeftMouseButton);
+        Dispatcher.UIThread.RunJobs();
+        ExpirePointerEditGrace(av);
+        Assert.True(av.IsEditingWithPointer);
+
+        window.MouseMove(new Point(500, 100), RawInputModifiers.None);
+        Dispatcher.UIThread.RunJobs();
+        ExpirePointerEditGrace(av);
+
+        Assert.False(av.IsEditingWithPointer);
+
+        window.Close();
+    }
+
+    [AvaloniaFact]
+    public void IsEditingWithPointer_False_ForAPlainClick()
+    {
+        // A press that starts no drag (empty area click on a waveform with no line under it is a
+        // new-selection drag, so click the middle of the line and release without moving) must not
+        // suppress change detection at all.
+        var (window, av, _) = Open(Line(1, 3));
+
+        window.MouseDown(new Point(252, 100), MouseButton.Left, RawInputModifiers.None);
+        Assert.True(av.IsEditingWithPointer); // press established a Moving drag
+        window.MouseUp(new Point(252, 100), MouseButton.Left, RawInputModifiers.None);
+        Dispatcher.UIThread.RunJobs();
+
+        Assert.False(av.IsEditingWithPointer);
+
+        window.Close();
+    }
+
     private static Geometry FirstCachedWaveformGeometry(AudioVisualizer av)
     {
         var field = typeof(AudioVisualizer).GetField("_waveformCacheDraws", BindingFlags.NonPublic | BindingFlags.Instance)!;
