@@ -119,34 +119,76 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             nsmgr.AddNamespace("smpte", "http://www.smpte-ra.org/schemas/2052-1/2010/smpte-tt");
             nsmgr.AddNamespace("tt", "http://www.w3.org/ns/ttml");
             var images = xml.DocumentElement.SelectNodes("//smpte:image", nsmgr);
-            var bgImages = xml.DocumentElement.SelectNodes("//tt:div", nsmgr);
-            Paragraph last = null;
-            for (var i = 0; i < Math.Min(images.Count, bgImages.Count); i++)
+
+            // resolve smpte:backgroundImage="#id" fragment references against the
+            // <smpte:image xml:id="id"> elements - index pairing breaks as soon as the
+            // document has a wrapper <div> or reuses an image for several captions
+            var imagesById = new Dictionary<string, string>();
+            foreach (XmlNode image in images)
             {
-                var image = images[i];
-                var text = image.InnerText;
-
-                var bgImage = bgImages[i];
-                if (bgImage.Attributes?["begin"] != null && bgImage.Attributes["end"] != null)
+                var id = image.Attributes?["xml:id"]?.Value ?? image.Attributes?["id"]?.Value;
+                if (!string.IsNullOrEmpty(id) && !imagesById.ContainsKey(id))
                 {
-                    var p = new Paragraph { Text = text };
-
-                    // Time codes
-                    TimedText10.ExtractTimeCodes(bgImage, subtitle, out var begin, out var end);
-                    p.StartTime.TotalMilliseconds = begin.TotalMilliseconds;
-                    p.EndTime.TotalSeconds = end.TotalSeconds;
-
-                    if (last != null && last.Text == p.Text && Math.Abs(last.EndTime.TotalMilliseconds - p.EndTime.TotalMilliseconds) < 3000)
-                    {
-                        last.EndTime.TotalMilliseconds = p.EndTime.TotalMilliseconds;
-                    }
-                    else
-                    {
-                        subtitle.Paragraphs.Add(p);
-                    }
-
-                    last = p;
+                    imagesById.Add(id, image.InnerText.Trim());
                 }
+            }
+
+            Paragraph last = null;
+            var referencingNodes = xml.DocumentElement.SelectNodes("//*[@smpte:backgroundImage]", nsmgr);
+            var imageIndex = 0;
+            foreach (XmlNode node in referencingNodes)
+            {
+                if (node.Attributes?["begin"] == null || node.Attributes["end"] == null)
+                {
+                    continue;
+                }
+
+                // look the attribute up by namespace so any prefix binding works
+                var reference = node.Attributes["backgroundImage", "http://www.smpte-ra.org/schemas/2052-1/2010/smpte-tt"]?.Value ??
+                                node.Attributes["smpte:backgroundImage"]?.Value;
+                if (reference == null)
+                {
+                    continue;
+                }
+
+                string text;
+                if (reference.StartsWith('#') && imagesById.TryGetValue(reference.Substring(1), out var base64))
+                {
+                    text = base64;
+                }
+                else if (reference.StartsWith('#'))
+                {
+                    _errorCount++;
+                    continue;
+                }
+                else if (imageIndex < images.Count)
+                {
+                    // no fragment reference (or ids missing) - fall back to document order
+                    text = images[imageIndex].InnerText.Trim();
+                    imageIndex++;
+                }
+                else
+                {
+                    continue;
+                }
+
+                var p = new Paragraph { Text = text };
+
+                // Time codes
+                TimedText10.ExtractTimeCodes(node, subtitle, out var begin, out var end);
+                p.StartTime.TotalMilliseconds = begin.TotalMilliseconds;
+                p.EndTime.TotalSeconds = end.TotalSeconds;
+
+                if (last != null && last.Text == p.Text && Math.Abs(last.EndTime.TotalMilliseconds - p.EndTime.TotalMilliseconds) < 3000)
+                {
+                    last.EndTime.TotalMilliseconds = p.EndTime.TotalMilliseconds;
+                }
+                else
+                {
+                    subtitle.Paragraphs.Add(p);
+                }
+
+                last = p;
             }
 
             subtitle.Renumber();
