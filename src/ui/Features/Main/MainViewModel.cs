@@ -7208,10 +7208,17 @@ public partial class MainViewModel :
             return;
         }
 
+        // With a single audio track, toggling lands on the same track - don't reload the waveform.
+        var trackChanged = track.FfIndex != (_audioTrack?.FfIndex ?? -1);
         _audioTrack = track;
         var _ = Task.Run(LoadAudioTrackMenuItems);
 
         ShowStatus(string.Format(Se.Language.Main.AudioTrackIsNowX, track));
+
+        if (trackChanged)
+        {
+            ReloadWaveformForCurrentAudioTrack();
+        }
     }
 
     [RelayCommand]
@@ -7235,21 +7242,32 @@ public partial class MainViewModel :
             var _ = Task.Run(LoadAudioTrackMenuItems);
             ShowStatus(string.Format(Se.Language.Main.AudioTrackIsNowX, _audioTrack));
 
-            if (AudioVisualizer != null)
-            {
-                Dispatcher.UIThread.Post(() =>
-                {
-                    AudioVisualizer.WavePeaks = null;
-                    AudioVisualizer.ShotChanges = new List<double>();
-                });
-            }
-
-            _updateAudioVisualizer = true;
-
-            // Explicit track pick: show this track's waveform now - from cache if present, else
-            // extract it (regardless of the auto-generate-on-open setting).
-            LoadWaveformAndSpectrogram(_videoFileName, forceGenerate: true);
+            ReloadWaveformForCurrentAudioTrack();
         }
+    }
+
+    // After an audio-track switch, show the new track's waveform from cache, extract it if
+    // auto-generate is on, or fall back to the click-to-generate hint so the user decides -
+    // switching track must not start an extraction when auto-generate is off (#13665).
+    private void ReloadWaveformForCurrentAudioTrack()
+    {
+        if (string.IsNullOrEmpty(_videoFileName))
+        {
+            return;
+        }
+
+        if (AudioVisualizer != null)
+        {
+            Dispatcher.UIThread.Post(() =>
+            {
+                AudioVisualizer.WavePeaks = null;
+                AudioVisualizer.ShotChanges = new List<double>();
+            });
+        }
+
+        _updateAudioVisualizer = true;
+
+        LoadWaveformAndSpectrogram(_videoFileName);
     }
 
     // Set while the waveform toolbar's audio-track combo box is being repopulated/synced in code,
@@ -20645,10 +20663,7 @@ public partial class MainViewModel :
         });
     }
 
-    // forceGenerate: extract even when WaveformAutoGenerate (the auto-on-open preference) is off.
-    // Set for explicit user actions like picking an audio track, where showing that track's waveform
-    // is the whole point - if it isn't cached yet we extract it now (and cache it for next time).
-    private void LoadWaveformAndSpectrogram(string videoFileName, bool forceGenerate = false)
+    private void LoadWaveformAndSpectrogram(string videoFileName)
     {
         var trackNumber = _audioTrack?.FfIndex ?? -1;
         var peakWaveFileName = WavePeakGenerator2.GetPeakWaveFileName(videoFileName, trackNumber);
@@ -20660,10 +20675,10 @@ public partial class MainViewModel :
             AudioVisualizer.ClickToGenerateText = Se.Language.Main.ClickToGenerateWaveform;
         }
 
-        // On video open, WaveformAutoGenerate gates whether we auto-extract; cached peaks still load
-        // via the branch below either way. An explicit request (forceGenerate) always extracts a
-        // missing waveform - e.g. switching audio track in the waveform toolbar picker.
-        if (needToGenerate && (Se.Settings.Waveform.WaveformAutoGenerate || forceGenerate))
+        // WaveformAutoGenerate gates whether we auto-extract (on video open and on audio-track
+        // switch, #13665); cached peaks still load via the branch below either way. When it is
+        // off, the click-to-generate hint lets the user start extraction explicitly.
+        if (needToGenerate && Se.Settings.Waveform.WaveformAutoGenerate)
         {
             StartWaveformExtraction(videoFileName, trackNumber, peakWaveFileName, spectrogramFileName);
         }
