@@ -430,9 +430,20 @@ public class AudioVisualizer : Control
     /// PointerReleased cannot leave change detection switched off for the rest of the session.
     /// </para>
     /// </summary>
-    public bool IsEditingWithPointer =>
-        _pointerDragActive ||
-        (_lastPointerEditMs != 0 && Environment.TickCount64 - _lastPointerEditMs < 500);
+    public bool IsEditingWithPointer => _pointerDragActive || IsPointerEditSettling;
+
+    /// <summary>
+    /// The timestamp half of <see cref="IsEditingWithPointer"/> on its own: true for 500 ms after
+    /// the last pointer move that rewrote the time codes, whether or not the button is still down.
+    /// <para>
+    /// This is what the on-video preview settle uses. Its cost of acting mid-drag is one wasted
+    /// refresh, not a wrong undo stack, and pausing inside a drag is exactly when the user wants
+    /// to see the frame they are aiming at - so the preview keeps catching up during a held
+    /// pause instead of waiting for the release.
+    /// </para>
+    /// </summary>
+    public bool IsPointerEditSettling =>
+        _lastPointerEditMs != 0 && Environment.TickCount64 - _lastPointerEditMs < 500;
 
     public class PositionEventArgs : EventArgs
     {

@@ -170,6 +170,10 @@ public class AudioVisualizerDragTests
         ExpirePointerEditGrace(av);
         Assert.True(av.IsEditingWithPointer);
 
+        // The on-video preview settle keeps the plain 500 ms timing: a wasted refresh mid-drag is
+        // cheap, and a held pause is when the user wants to see the frame they are aiming at.
+        Assert.False(av.IsPointerEditSettling);
+
         window.MouseUp(new Point(478, 100), MouseButton.Left, RawInputModifiers.None);
         Dispatcher.UIThread.RunJobs();
 
