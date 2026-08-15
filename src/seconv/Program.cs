@@ -37,8 +37,21 @@ internal class Program
         // (e.g. `seconv *.srt sami`) when --format / -f is not supplied.
         args = TryInjectPositionalFormat(args);
 
-        // Handle /? and /help
-        if (args.Length == 0 || args.Contains("/?") || args.Contains("/help") || args.Contains("--help"))
+        var json = HasJsonFlag(args);
+
+        // --help-json before the plain help check: it prints the machine-readable schema and
+        // must not be swallowed by a looser "did the user ask for help" match.
+        if (args.Any(a => a.TrimStart('/', '-').Equals("help-json", StringComparison.OrdinalIgnoreCase)))
+        {
+            Console.Out.WriteLine(CliSchema.ToJson());
+            return 0;
+        }
+
+        // Handle /?, /help, --help and -h. All four render the same text: two different help
+        // outputs (the hand-written one and Spectre's generated one) gave callers two
+        // different pictures of the same tool.
+        if (args.Length == 0 || args.Contains("/?") || args.Contains("/help") ||
+            args.Contains("--help") || args.Contains("-h"))
         {
             HelpDisplay.ShowHelp();
             return 0;
@@ -50,7 +63,7 @@ internal class Program
                                  args[0].Equals("--formats", StringComparison.OrdinalIgnoreCase)))
         {
             var formatsCommand = new FormatsCommand();
-            return ((ICommand)formatsCommand).ExecuteAsync(null!, new FormatsCommand.Settings(), CancellationToken.None).GetAwaiter().GetResult();
+            return ((ICommand)formatsCommand).ExecuteAsync(null!, new FormatsCommand.Settings { Json = json }, CancellationToken.None).GetAwaiter().GetResult();
         }
 
         // List helpers
@@ -59,28 +72,28 @@ internal class Program
             var first = args[0].TrimStart('/').TrimStart('-');
             if (first.Equals("list-encodings", StringComparison.OrdinalIgnoreCase))
             {
-                ListHelpers.PrintEncodings();
+                ListHelpers.PrintEncodings(json);
                 return 0;
             }
             if (first.Equals("list-pac-codepages", StringComparison.OrdinalIgnoreCase))
             {
-                ListHelpers.PrintPacCodepages();
+                ListHelpers.PrintPacCodepages(json);
                 return 0;
             }
             if (first.Equals("list-ocr-engines", StringComparison.OrdinalIgnoreCase))
             {
-                ListHelpers.PrintOcrEngines();
+                ListHelpers.PrintOcrEngines(json);
                 return 0;
             }
             if (first.Equals("list-fce-rules", StringComparison.OrdinalIgnoreCase))
             {
-                ListHelpers.PrintFixCommonErrorsRules();
+                ListHelpers.PrintFixCommonErrorsRules(json);
                 return 0;
             }
             if (first.Equals("list-rf-rules", StringComparison.OrdinalIgnoreCase) ||
                 first.Equals("list-remove-formatting-rules", StringComparison.OrdinalIgnoreCase))
             {
-                ListHelpers.PrintRemoveFormattingRules();
+                ListHelpers.PrintRemoveFormattingRules(json);
                 return 0;
             }
             if (first.Equals("dump-settings", StringComparison.OrdinalIgnoreCase) ||
@@ -113,25 +126,172 @@ internal class Program
         var app = new CommandApp<ConvertCommand>();
         app.Configure(config =>
         {
-            config.SetApplicationName("SubtitleEdit");
-            config.SetApplicationVersion("5.0.0");
+            config.SetApplicationName("seconv");
+            config.SetApplicationVersion(CliSchema.Version);
 
             config.ValidateExamples();
+
+            // Without strict parsing an unrecognised option is silently dropped: a typo'd or
+            // invented flag produced a "conversion completed successfully" run, exit 0, and an
+            // output file that quietly lacked the requested operation. Failing loudly is the
+            // only way a caller can tell the two apart.
+            config.UseStrictParsing();
+
+            // Take over error rendering so parse failures exit 1 like every other failure
+            // (Spectre's own handler returns -1/255) and can be reported as JSON.
+            config.PropagateExceptions();
         });
 
         try
         {
             return app.Run(args);
         }
+        catch (CommandAppException ex)
+        {
+            return ReportUsageError(DescribeParseFailure(ex, args), json);
+        }
         catch (Exception ex)
         {
-            AnsiConsole.MarkupLineInterpolated($"[red]Fatal error: {ex.Message}[/]");
-            if (ex.InnerException != null)
-            {
-                AnsiConsole.MarkupLineInterpolated($"[red]  {ex.InnerException.Message}[/]");
-            }
-            return 1;
+            var message = ex.InnerException != null
+                ? $"{ex.Message}: {ex.InnerException.Message}"
+                : ex.Message;
+            return ReportUsageError($"Fatal error: {message}", json);
         }
+    }
+
+    /// <summary>
+    /// Prints a usage/parse failure and returns exit code 1. Under <c>--json</c> the error
+    /// goes out in the same envelope a failed conversion uses, so a caller parsing stdout
+    /// never has to handle a sudden switch to plain text.
+    /// </summary>
+    private static int ReportUsageError(string message, bool json)
+    {
+        if (json)
+        {
+            Console.Out.WriteLine(JsonOut.UsageError(message));
+        }
+        else
+        {
+            AnsiConsole.MarkupLineInterpolated($"[red]Error: {message}[/]");
+        }
+
+        return 1;
+    }
+
+    /// <summary>
+    /// Turns a Spectre parse exception into a message a caller can act on: names the offending
+    /// option, suggests the closest real one, and reports the expected type for a value that
+    /// failed to convert (Spectre's own text says "Failed to convert 'x' to Nullable`1").
+    /// </summary>
+    private static string DescribeParseFailure(CommandAppException ex, string[] args)
+    {
+        var unknown = FindUnknownOption(args);
+        if (unknown != null)
+        {
+            var suggestion = CliSchema.SuggestClosest(unknown);
+            var hint = suggestion != null
+                ? $" Did you mean '{suggestion}'?"
+                : " Run 'seconv --help' for the option list, or 'seconv --help-json' for a machine-readable one.";
+            return $"Unknown option '{unknown}'.{hint}";
+        }
+
+        var conversion = System.Text.RegularExpressions.Regex.Match(
+            ex.Message, @"Failed to convert '(?<value>.*)' to ");
+        if (conversion.Success)
+        {
+            var value = conversion.Groups["value"].Value;
+            var (option, type) = FindOptionCarrying(value, args);
+            if (option != null)
+            {
+                return $"Invalid value '{value}' for {option} (expected {type}).";
+            }
+
+            return $"Invalid value '{value}'.";
+        }
+
+        // Spectre renders its own multi-line diagnostic (with the caret pointer) into the
+        // message; keep only the first line so the JSON envelope stays a single string.
+        var firstLine = ex.Message.Split('\n', StringSplitOptions.RemoveEmptyEntries).FirstOrDefault();
+        return (firstLine ?? ex.Message).Trim();
+    }
+
+    /// <summary>
+    /// First option-looking token that is not a known option name or alias. Matching against
+    /// the schema rather than parsing Spectre's message keeps the reported token exactly as
+    /// the caller typed it.
+    /// </summary>
+    internal static string? FindUnknownOption(string[] args)
+    {
+        var known = new HashSet<string>(CliSchema.AllTokens, StringComparer.OrdinalIgnoreCase);
+
+        foreach (var arg in args)
+        {
+            if (!LooksLikeOption(arg))
+            {
+                continue;
+            }
+
+            // Strip an embedded value so --bogus:1 reports as --bogus.
+            var name = arg;
+            var cut = name.IndexOf('=');
+            var colon = name.IndexOf(':', 2);
+            if (colon >= 0 && (cut < 0 || colon < cut))
+            {
+                cut = colon;
+            }
+            if (cut > 0)
+            {
+                name = name[..cut];
+            }
+
+            if (!known.Contains(name) && !name.Equals("--help", StringComparison.OrdinalIgnoreCase))
+            {
+                return name;
+            }
+        }
+
+        return null;
+    }
+
+    /// <summary>
+    /// Locates the option whose value is <paramref name="value"/>, in either the
+    /// <c>--opt:value</c> / <c>--opt=value</c> or the <c>--opt value</c> form, and returns it
+    /// with the type the schema declares for it.
+    /// </summary>
+    private static (string? Option, string Type) FindOptionCarrying(string value, string[] args)
+    {
+        for (var i = 0; i < args.Length; i++)
+        {
+            var arg = args[i];
+            if (!LooksLikeOption(arg))
+            {
+                continue;
+            }
+
+            string? name = null;
+            var separator = arg.IndexOfAny(['=', ':'], 2);
+            if (separator > 0 && arg[(separator + 1)..] == value)
+            {
+                name = arg[..separator];
+            }
+            else if (i + 1 < args.Length && args[i + 1] == value)
+            {
+                name = arg;
+            }
+
+            if (name == null)
+            {
+                continue;
+            }
+
+            var option = CliSchema.Options.FirstOrDefault(o =>
+                o.Name.Equals(name, StringComparison.OrdinalIgnoreCase) ||
+                o.Aliases.Any(a => a.Equals(name, StringComparison.OrdinalIgnoreCase)));
+
+            return (name, option?.Type ?? "value");
+        }
+
+        return (null, "value");
     }
 
     /// <summary>
