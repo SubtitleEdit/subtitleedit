@@ -18,10 +18,10 @@ public class AiReviewWindow : Window
     public AiReviewWindow(AiReviewViewModel vm)
     {
         UiUtil.InitializeWindow(this, GetType().Name);
-        Title = Se.Language.Tools.AiReview.Title;
-        Width = 1024;
+        Title = UiUtil.MakeWindowTitle(Se.Language.Tools.AiReview.Title);
+        Width = 1200;
         Height = 720;
-        MinWidth = 800;
+        MinWidth = 900;
         MinHeight = 500;
         CanResize = true;
         vm.Window = this;
@@ -365,6 +365,7 @@ public class AiReviewWindow : Window
         dataGrid.Bind(TableView.SelectedItemProperty, new Binding(nameof(vm.SelectedSuggestion)));
         TableViewExtras.AddSpaceToggle<ReviewSuggestionItem>(dataGrid,
             item => item.IsSelected, (item, v) => item.IsSelected = v);
+        dataGrid.DoubleTapped += (_, _) => vm.OnSuggestionsGridDoubleTapped();
 
         var borderGrid = UiUtil.MakeBorderForControlNoPadding(dataGrid);
 
@@ -376,6 +377,9 @@ public class AiReviewWindow : Window
             Height = 6,
             VerticalAlignment = VerticalAlignment.Center,
             [!RangeBase.ValueProperty] = new Binding(nameof(vm.ProgressValue)),
+            // Only meaningful while a review is running - a full bar sitting under a
+            // finished review just looks stuck.
+            [!Visual.IsVisibleProperty] = new Binding(nameof(vm.IsReviewing)),
         };
         var statusText = MakeBoundTextBlock(nameof(vm.StatusText));
         statusText.VerticalAlignment = VerticalAlignment.Center;
@@ -425,12 +429,23 @@ public class AiReviewWindow : Window
         summaryText.VerticalAlignment = VerticalAlignment.Center;
         summaryText.Opacity = 0.8;
 
+        // Plays the selected suggestion's line in the main window's video player - hidden when no
+        // video is loaded (the view model gets no play hook then).
+        var buttonPlay = UiUtil.MakeButton(Se.Language.General.PlayCurrent, vm.PlayCurrentLineCommand)
+            .WithIconLeft("fa-solid fa-play");
+        buttonPlay.Bind(IsVisibleProperty, new Binding(nameof(vm.IsPlayVisible)));
+        if (Se.Settings.Appearance.ShowHints)
+        {
+            ToolTip.SetTip(buttonPlay, l.PlayCurrentLineHint);
+        }
+
         var leftButtons = new StackPanel
         {
             Orientation = Orientation.Horizontal,
             Spacing = 5,
             Children =
             {
+                buttonPlay.WithMarginRight(10),
                 summaryText.WithMarginRight(10),
                 UiUtil.MakeButton(Se.Language.General.SelectAll, vm.SelectAllCommand),
                 UiUtil.MakeButton(Se.Language.General.InvertSelection, vm.InvertSelectionCommand),

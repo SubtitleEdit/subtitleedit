@@ -34,6 +34,13 @@ public class VideoOcrEngineItem
         list.Add(new("Paddle OCR Python", OcrEngineType.PaddleOcrPython, "Local OCR engine via Python (requires \"pip install paddleocr\")"));
         list.Add(new("Ollama vision", OcrEngineType.Ollama, "Local vision model via Ollama - e.g. glm-ocr"));
         list.Add(new("llama.cpp", OcrEngineType.LlamaCpp, "Local vision model via llama.cpp (downloaded automatically)"));
+
+        if (CrispEmbedEngine.CanBeDownloaded())
+        {
+            list.Add(new(CrispEmbedEngine.StaticName, OcrEngineType.CrispEmbed,
+                "Local OCR engine with multiple model backends (downloaded automatically)"));
+        }
+
         list.Add(new("GLM API", OcrEngineType.Glm, "GLM vision model via Z.ai / bigmodel.cn API (requires API key)"));
 
         return list;

@@ -70,6 +70,19 @@ public class SeTools
     public int SplitRebalanceLongLinesSingleLineMaxLength { get; set; }
     public int SplitRebalanceLongLinesMaxNumberOfLines { get; set; }
     public int SplitRebalanceLongLinesUnbreakShorterThan { get; set; }
+
+    // Per-dialog copies of the general defaults, so a one-off run does not rewrite the app-wide
+    // setting - and the dialog still opens on what it was last used with. 0 means "not saved yet";
+    // every one of these is >= 1 in the UI. Same shape as the split/rebalance keys above (#13514).
+    public int MergeShortLinesSingleLineMaxLength { get; set; }
+    public int MergeShortLinesMaxNumberOfLines { get; set; }
+    public int ApplyDurationLimitsMinDurationMs { get; set; }
+    public int ApplyDurationLimitsMaxDurationMs { get; set; }
+
+    // Two keys, not one: the Apply minimum gap box holds frames in frame mode and milliseconds
+    // otherwise, so a single number came back in the wrong unit after a time-format switch.
+    public int ApplyMinGapMilliseconds { get; set; }
+    public int ApplyMinGapFrames { get; set; }
     public string UnicodeSymbolsToInsert { get; set; }
     public string MusicSymbol { get; set; }
     public string MusicSymbolReplace { get; set; }

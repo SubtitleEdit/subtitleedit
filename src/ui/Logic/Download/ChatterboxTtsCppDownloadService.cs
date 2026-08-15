@@ -16,40 +16,82 @@ public class ChatterboxTtsCppDownloadService : IChatterboxTtsCppDownloadService
     private readonly HttpClient _httpClient;
 
     // Chatterbox is a two-GGUF runtime: T3 AR talker + S3Gen flow-matching codec.
-    // We download the q8_0 variants directly so we can hand explicit paths to crispasr
-    // (its `-m auto` codec auto-discovery only finds *-s3gen-f16.gguf, not q8_0).
+    // We hand crispasr explicit paths for both halves rather than relying on its `-m auto`
+    // codec auto-discovery, which only finds *-s3gen-f16.gguf — that is also what lets the
+    // non-f16 quantizations below be offered at all.
     public const string ModelKeyBase = "Base";
+    public const string ModelKeyBaseF16 = "Base F16";
+    public const string ModelKeyBaseQ4K = "Base Q4_K";
     public const string ModelKeyTurbo = "Turbo";
     public const string DefaultModelKey = ModelKeyBase;
 
+    /// <summary>Model keys in the order the TTS model combo should list them.</summary>
+    public static string[] GetAllModelKeys() =>
+        new[] { ModelKeyBase, ModelKeyBaseF16, ModelKeyBaseQ4K, ModelKeyTurbo };
+
     public const string BaseT3FileName = "chatterbox-t3-q8_0.gguf";
     public const string BaseS3GenFileName = "chatterbox-s3gen-q8_0.gguf";
+    public const string BaseF16T3FileName = "chatterbox-t3-f16.gguf";
+    public const string BaseF16S3GenFileName = "chatterbox-s3gen-f16.gguf";
+    public const string BaseQ4KT3FileName = "chatterbox-t3-q4_k.gguf";
+    public const string BaseQ4KS3GenFileName = "chatterbox-s3gen-q4_k.gguf";
     public const string TurboT3FileName = "chatterbox-turbo-t3-q8_0.gguf";
     public const string TurboS3GenFileName = "chatterbox-turbo-s3gen-q8_0.gguf";
 
-    private const string BaseT3Url = "https://huggingface.co/cstr/chatterbox-GGUF/resolve/main/chatterbox-t3-q8_0.gguf";
-    private const string BaseS3GenUrl = "https://huggingface.co/cstr/chatterbox-GGUF/resolve/main/chatterbox-s3gen-q8_0.gguf";
-    private const string TurboT3Url = "https://huggingface.co/cstr/chatterbox-turbo-GGUF/resolve/main/chatterbox-turbo-t3-q8_0.gguf";
-    private const string TurboS3GenUrl = "https://huggingface.co/cstr/chatterbox-turbo-GGUF/resolve/main/chatterbox-turbo-s3gen-q8_0.gguf";
+    private const string BaseRepoUrl = "https://huggingface.co/cstr/chatterbox-GGUF/resolve/main";
+    private const string TurboRepoUrl = "https://huggingface.co/cstr/chatterbox-turbo-GGUF/resolve/main";
 
     // Back-compat aliases for callers that still want the Base file names without
     // resolving via ResolveModelKey.
     public const string T3ModelFileName = BaseT3FileName;
     public const string S3GenModelFileName = BaseS3GenFileName;
 
-    public static string ResolveModelKey(string? modelKey) =>
-        string.Equals(modelKey, ModelKeyTurbo, StringComparison.OrdinalIgnoreCase) ? ModelKeyTurbo : ModelKeyBase;
+    public static string ResolveModelKey(string? modelKey)
+    {
+        foreach (var key in GetAllModelKeys())
+        {
+            if (string.Equals(modelKey, key, StringComparison.OrdinalIgnoreCase))
+            {
+                return key;
+            }
+        }
 
-    public static string GetT3FileName(string? modelKey) =>
-        ResolveModelKey(modelKey) == ModelKeyTurbo ? TurboT3FileName : BaseT3FileName;
+        return ModelKeyBase;
+    }
 
-    public static string GetS3GenFileName(string? modelKey) =>
-        ResolveModelKey(modelKey) == ModelKeyTurbo ? TurboS3GenFileName : BaseS3GenFileName;
+    public static string GetT3FileName(string? modelKey) => ResolveModelKey(modelKey) switch
+    {
+        ModelKeyTurbo => TurboT3FileName,
+        ModelKeyBaseF16 => BaseF16T3FileName,
+        ModelKeyBaseQ4K => BaseQ4KT3FileName,
+        _ => BaseT3FileName,
+    };
+
+    public static string GetS3GenFileName(string? modelKey) => ResolveModelKey(modelKey) switch
+    {
+        ModelKeyTurbo => TurboS3GenFileName,
+        ModelKeyBaseF16 => BaseF16S3GenFileName,
+        ModelKeyBaseQ4K => BaseQ4KS3GenFileName,
+        _ => BaseS3GenFileName,
+    };
+
+    /// <summary>
+    /// Approximate on-disk size of the T3 + S3Gen pair, for the "download these now?" prompt.
+    /// Measured from the actual files on cstr/chatterbox-GGUF (2026-08-12).
+    /// </summary>
+    public static string GetDownloadSizeText(string? modelKey) => ResolveModelKey(modelKey) switch
+    {
+        ModelKeyTurbo => "~1 GB",
+        ModelKeyBaseF16 => "~1.8 GB",
+        ModelKeyBaseQ4K => "~640 MB",
+        _ => "~1 GB",
+    };
 
     /// <summary>
     /// CrispASR exposes Chatterbox Turbo as a *separate* backend (chatterbox-turbo) rather
     /// than as a -m switch on the chatterbox backend; passing Turbo GGUFs to the plain
-    /// chatterbox backend triggers an upstream ggml tensor read out of bounds crash.
+    /// chatterbox backend triggers an upstream ggml tensor read out of bounds crash. The
+    /// Base quantizations are all the same backend — only the GGUF paths differ.
     /// </summary>
     public static string GetBackendName(string? modelKey) =>
         ResolveModelKey(modelKey) == ModelKeyTurbo ? "chatterbox-turbo" : "chatterbox";
@@ -68,6 +110,8 @@ public class ChatterboxTtsCppDownloadService : IChatterboxTtsCppDownloadService
     /// True when <paramref name="path"/> is one of the pre-multilingual (English-only) Base
     /// GGUFs, identified by exact byte size. Such a file works for English synthesis but lacks
     /// the language tokens, so it is treated as not installed to trigger a re-download.
+    /// Only the q8_0 Base pair was ever shipped English-only; the f16 / q4_k pairs were
+    /// published after the rebuild and their sizes do not collide with these two.
     /// </summary>
     public static bool IsLegacyEnglishOnlyModel(string path)
     {
@@ -97,8 +141,9 @@ public class ChatterboxTtsCppDownloadService : IChatterboxTtsCppDownloadService
         var resolved = ResolveModelKey(modelKey);
         var t3FileName = GetT3FileName(resolved);
         var s3genFileName = GetS3GenFileName(resolved);
-        var t3Url = resolved == ModelKeyTurbo ? TurboT3Url : BaseT3Url;
-        var s3genUrl = resolved == ModelKeyTurbo ? TurboS3GenUrl : BaseS3GenUrl;
+        var repoUrl = resolved == ModelKeyTurbo ? TurboRepoUrl : BaseRepoUrl;
+        var t3Url = $"{repoUrl}/{t3FileName}";
+        var s3genUrl = $"{repoUrl}/{s3genFileName}";
 
         var t3Path = Path.Combine(modelsFolder, t3FileName);
         var s3genPath = Path.Combine(modelsFolder, s3genFileName);

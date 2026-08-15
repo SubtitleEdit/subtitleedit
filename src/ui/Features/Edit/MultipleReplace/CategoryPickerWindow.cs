@@ -1,5 +1,6 @@
 using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Controls.Primitives;
 using Avalonia.Controls.Templates;
 using Avalonia.Data;
 using Avalonia.Layout;
@@ -10,12 +11,12 @@ using Nikse.SubtitleEdit.Logic.Config;
 
 namespace Nikse.SubtitleEdit.Features.Edit.MultipleReplace;
 
-public class CategoryExportWindow : Window
+public class CategoryPickerWindow : Window
 {
-    public CategoryExportWindow(CategoryExportViewModel vm)
+    public CategoryPickerWindow(CategoryPickerViewModel vm)
     {
         UiUtil.InitializeWindow(this, GetType().Name);
-        Title = Se.Language.Edit.MultipleReplace.ExportReplaceRules;
+        Title = vm.Title; // export or import - the view model is initialized before this runs
         CanResize = true;
         Width = 1100;
         Height = 750;
@@ -23,6 +24,11 @@ public class CategoryExportWindow : Window
         MinHeight = 700;
         vm.Window = this;
         DataContext = vm;
+
+        var buttonSelectAll = UiUtil.MakeButton(Se.Language.General.SelectAll, vm.SelectAllCommand);
+        var buttonSelectNone = UiUtil.MakeButton(Se.Language.General.SelectNone, vm.SelectNoneCommand);
+        var buttonInvertSelection = UiUtil.MakeButton(Se.Language.General.InvertSelection, vm.InvertSelectionCommand);
+        var panelSelectionButtons = UiUtil.MakeHorizontalPanel(buttonSelectAll, buttonSelectNone, buttonInvertSelection);
 
         var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand);
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
@@ -47,8 +53,12 @@ public class CategoryExportWindow : Window
             HorizontalAlignment = HorizontalAlignment.Stretch,
         };
 
-        grid.Add(MakeDataGrid(vm, out var dataGrid), 0, 0);
-        grid.Add(panelButtons, 1, 0, 1, 2);
+        // The selection buttons and the OK/Cancel bar get a column each. Sharing one cell (with
+        // the button bar spanning both columns) only kept them apart because one is left- and the
+        // other right-aligned - in a locale with longer button labels they overlap.
+        grid.Add(MakeDataGrid(vm, out var dataGrid), 0, 0, 1, 2);
+        grid.Add(panelSelectionButtons, 1, 0);
+        grid.Add(panelButtons, 1, 1);
 
         Content = grid;
 
@@ -56,7 +66,7 @@ public class CategoryExportWindow : Window
         KeyDown += vm.KeyDown;
     }
 
-    private static Border MakeDataGrid(CategoryExportViewModel vm, out TableView tableView)
+    private static Border MakeDataGrid(CategoryPickerViewModel vm, out TableView tableView)
     {
         var grid = new Grid
         {
@@ -93,7 +103,8 @@ public class CategoryExportWindow : Window
                     Padding = new Thickness(4),
                     Child = new CheckBox
                     {
-                        [!CheckBox.IsCheckedProperty] = new Binding(nameof(RuleTreeNode.IsSelected)),
+                        Focusable = false, // the row keeps the focus, so Space toggles via AddSpaceToggle below
+                        [!ToggleButton.IsCheckedProperty] = new Binding(nameof(RuleTreeNode.IsSelected)),
                         HorizontalAlignment = HorizontalAlignment.Center
                     }
                 }),
@@ -111,6 +122,11 @@ public class CategoryExportWindow : Window
         });
         dataGrid.Bind(TableView.ItemsSourceProperty, new Binding(nameof(vm.Rules)) { Source = vm });
         dataGrid.Bind(TableView.SelectedItemProperty, new Binding(nameof(vm.SelectedRule)) { Source = vm });
+
+        // Space toggles the checkbox (tunnel handler, so it runs before the ListBox
+        // machinery can swallow the key).
+        TableViewExtras.AddSpaceToggle<RuleTreeNode>(dataGrid,
+            item => item.IsSelected, (item, v) => item.IsSelected = v);
 
         tableView = dataGrid;
 

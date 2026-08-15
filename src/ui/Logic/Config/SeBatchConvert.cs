@@ -109,6 +109,19 @@ public class SeBatchConvert
     public bool BeautifyTimeCodesUseFixedFrameRate { get; set; }
     public double BeautifyTimeCodesFixedFrameRate { get; set; }
 
+    public bool SnapTimeCodesToFramesUseFixedFrameRate { get; set; }
+    public double SnapTimeCodesToFramesFixedFrameRate { get; set; }
+
+    public bool ConvertColorsToDialogRemoveColorTags { get; set; }
+    public bool ConvertColorsToDialogAddNewLines { get; set; }
+    public bool ConvertColorsToDialogReBreakLines { get; set; }
+
+    /// <summary>
+    /// "Add folder" (and dropping a folder on the file list) also picks up files in subfolders.
+    /// Off by default - a recursive scan of a big tree or a network share can take a while.
+    /// </summary>
+    public bool ScanFolderRecursive { get; set; }
+
     public bool ImageAdjustBrightnessOn { get; set; }
     public double ImageAdjustBrightness { get; set; }
     public double ImageAdjustContrast { get; set; }
@@ -180,5 +193,9 @@ public class SeBatchConvert
 
         BeautifyTimeCodesSnapToShotChanges = true;
         BeautifyTimeCodesFixedFrameRate = 23.976;
+
+        SnapTimeCodesToFramesFixedFrameRate = 23.976;
+
+        ConvertColorsToDialogRemoveColorTags = true;
     }
 }

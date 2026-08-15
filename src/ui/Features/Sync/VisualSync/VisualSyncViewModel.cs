@@ -16,6 +16,7 @@ using Nikse.SubtitleEdit.Logic.VideoPlayers.LibMpvDynamic;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Nikse.SubtitleEdit.UiLogic.Media;
@@ -42,17 +43,20 @@ public partial class VisualSyncViewModel : ObservableObject
     public ComboBox ComboBoxRight { get; set; }
 
     private readonly IWindowService _windowService;
+    private readonly IFileHelper _fileHelper;
 
     private string? _videoFileName;
+    private string? _wavePeaksVideoFileName;
     private DispatcherTimer _positionTimer = new DispatcherTimer();
     private List<SubtitleLineViewModel> _subtitleLines = new List<SubtitleLineViewModel>();
     private bool _updateAudioVisualizer;
     private double _lastManualOffsetSeconds;
     private double _lastManualSpeedFactor = 1.0;
 
-    public VisualSyncViewModel(IWindowService windowService)
+    public VisualSyncViewModel(IWindowService windowService, IFileHelper fileHelper)
     {
         _windowService = windowService;
+        _fileHelper = fileHelper;
 
         Title = string.Empty;
         VideoInfo = string.Empty;
@@ -88,6 +92,18 @@ public partial class VisualSyncViewModel : ObservableObject
         AudioVisualizer? audioVisualizer,
         int audioTrackId = -1)
     {
+        // No video handed down from the main window - look for one next to the subtitle file, the
+        // way SE4's visual sync did. Failing that the dialog is not a dead end: "Open video file..."
+        // is there to pick one. The video stays local to this dialog either way - only time codes
+        // are reported back, so a video found on disk cannot walk over the "auto open video file"
+        // setting in the main window.
+        if (string.IsNullOrEmpty(videoFileName) &&
+            !string.IsNullOrEmpty(subtitleFileName) &&
+            FindVideoFileName.TryFindVideoFileName(subtitleFileName, out var foundVideoFileName))
+        {
+            videoFileName = foundVideoFileName;
+        }
+
         SetVideoInFo(videoFileName);
         Paragraphs = new ObservableCollection<SubtitleDisplayItem>(paragraphs.Select(p => new SubtitleDisplayItem(p)));
         _videoFileName = videoFileName;
@@ -100,11 +116,14 @@ public partial class VisualSyncViewModel : ObservableObject
                 _ = OpenPlayersAsync(videoFileName, audioTrackId);
             }
 
-            if (audioVisualizer != null)
+            // An audio visualizer without peaks is just an empty box - only show it when the main
+            // window actually has a waveform to lend us.
+            if (audioVisualizer?.WavePeaks != null)
             {
                 AudioVisualizerLeft.WavePeaks = audioVisualizer.WavePeaks;
                 AudioVisualizerRight.WavePeaks = audioVisualizer.WavePeaks;
                 IsAudioVisualizerVisible = true;
+                _wavePeaksVideoFileName = videoFileName;
             }
             StartTitleTimer();
             _updateAudioVisualizer = true;
@@ -538,14 +557,14 @@ public partial class VisualSyncViewModel : ObservableObject
     {
         UiUtil.RestoreWindowPosition(Window);
 
-        if (string.IsNullOrEmpty(_videoFileName))
+        // Only the video needs waiting for - the start/end scenes still have to be picked when
+        // there is none, so the combo boxes are not left empty while the user finds a video.
+        if (!string.IsNullOrEmpty(_videoFileName))
         {
-            return;
+            // Wait a bit for video players to finish opening the file (or until they report a duration)
+            await VideoPlayerControlLeft.WaitForPlayersReadyAsync();
+            await VideoPlayerControlRight.WaitForPlayersReadyAsync();
         }
-
-        // Wait a bit for video players to finish opening the file (or until they report a duration)
-        await VideoPlayerControlLeft.WaitForPlayersReadyAsync();
-        await VideoPlayerControlRight.WaitForPlayersReadyAsync();
 
         Dispatcher.UIThread.Post(() =>
         {
@@ -558,6 +577,51 @@ public partial class VisualSyncViewModel : ObservableObject
             SelectedParagraphRightIndex = Paragraphs.Count - 1;
             GoToLeftSubtitle();
             GoToRightSubtitle();
+        });
+    }
+
+    /// <summary>
+    /// Opens a video from inside the dialog, so entering visual sync without one is not a dead end
+    /// - SE4 offered the same button. The video stays local to this dialog; only time codes are
+    /// reported back.
+    /// </summary>
+    [RelayCommand]
+    private async Task OpenVideoFile()
+    {
+        if (Window == null)
+        {
+            return;
+        }
+
+        var fileName = await _fileHelper.PickOpenVideoFile(Window, Se.Language.General.OpenVideoFileTitle);
+        if (string.IsNullOrEmpty(fileName) || !File.Exists(fileName))
+        {
+            return;
+        }
+
+        _videoFileName = fileName;
+        SetVideoInFo(fileName);
+
+        // The lent waveform belongs to the video the dialog was opened with - keeping it
+        // under a different video would have the user syncing against the wrong peaks.
+        if (!string.Equals(fileName, _wavePeaksVideoFileName, StringComparison.OrdinalIgnoreCase))
+        {
+            AudioVisualizerLeft.WavePeaks = null;
+            AudioVisualizerRight.WavePeaks = null;
+            IsAudioVisualizerVisible = false;
+        }
+
+        await OpenPlayersAsync(fileName, -1);
+        await VideoPlayerControlLeft.WaitForPlayersReadyAsync();
+        await VideoPlayerControlRight.WaitForPlayersReadyAsync();
+
+        // Land the players on the scenes already picked in the combo boxes (OnLoaded seeds them
+        // to the first/last line even without a video), instead of both sitting at zero.
+        Dispatcher.UIThread.Post(() =>
+        {
+            GoToLeftSubtitle();
+            GoToRightSubtitle();
+            _updateAudioVisualizer = true;
         });
     }
 

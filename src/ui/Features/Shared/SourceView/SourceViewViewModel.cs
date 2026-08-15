@@ -376,13 +376,23 @@ public partial class SourceViewViewModel : ObservableObject, IClosingCleanup
         var options = MatchCase ? RegexOptions.None : RegexOptions.IgnoreCase;
         try
         {
-            return new Regex(pattern, options);
+            // Timeout so a pattern with catastrophic backtracking cannot hang the UI thread the
+            // search runs on; the three callers report the timeout as "no match" - see
+            // ReportRegexTooSlow.
+            return new Regex(pattern, options, RegexUtils.UserPatternMatchTimeout);
         }
         catch (ArgumentException)
         {
             FindStatus = Se.Language.SourceView.InvalidRegularExpression;
             return null;
         }
+    }
+
+    private void ReportRegexTooSlow()
+    {
+        FindStatus = string.Format(
+            Se.Language.SourceView.RegularExpressionTooSlowX,
+            RegexUtils.UserPatternMatchTimeout.TotalSeconds);
     }
 
     [RelayCommand]
@@ -426,9 +436,18 @@ public partial class SourceViewViewModel : ObservableObject, IClosingCleanup
             searchFrom++;
         }
 
-        var match = forward
-            ? FindForward(regex, text, searchFrom)
-            : FindBackward(regex, text, _editor.SelectionStart);
+        Match? match;
+        try
+        {
+            match = forward
+                ? FindForward(regex, text, searchFrom)
+                : FindBackward(regex, text, _editor.SelectionStart);
+        }
+        catch (RegexMatchTimeoutException)
+        {
+            ReportRegexTooSlow();
+            return false;
+        }
 
         if (match == null)
         {
@@ -500,15 +519,23 @@ public partial class SourceViewViewModel : ObservableObject, IClosingCleanup
         if (_editor.SelectionLength > 0)
         {
             var selected = _editor.SelectedText;
-            var match = regex.Match(selected);
-            if (match.Success && match.Index == 0 && match.Length == selected.Length)
+            try
             {
-                var replacement = UseRegularExpression
-                    ? match.Result(ReplaceText ?? string.Empty)
-                    : ReplaceText ?? string.Empty;
+                var match = regex.Match(selected);
+                if (match.Success && match.Index == 0 && match.Length == selected.Length)
+                {
+                    var replacement = UseRegularExpression
+                        ? match.Result(ReplaceText ?? string.Empty)
+                        : ReplaceText ?? string.Empty;
 
-                _editor.InsertText(replacement);
-                _editor.Select(_editor.CaretOffset, 0);
+                    _editor.InsertText(replacement);
+                    _editor.Select(_editor.CaretOffset, 0);
+                }
+            }
+            catch (RegexMatchTimeoutException)
+            {
+                ReportRegexTooSlow();
+                return;
             }
         }
 
@@ -530,22 +557,36 @@ public partial class SourceViewViewModel : ObservableObject, IClosingCleanup
         }
 
         var text = _editor.Text ?? string.Empty;
-        var count = regex.Count(text);
-        if (count == 0)
+        int count;
+        string replacedText;
+        try
         {
-            FindStatus = string.Format(Se.Language.General.XNotFound, SearchText);
+            count = regex.Count(text);
+            if (count == 0)
+            {
+                FindStatus = string.Format(Se.Language.General.XNotFound, SearchText);
+                return;
+            }
+
+            var replacement = UseRegularExpression
+                ? ReplaceText ?? string.Empty
+                : (ReplaceText ?? string.Empty).Replace("$", "$$"); // a literal replacement stays literal
+
+            replacedText = regex.Replace(text, replacement);
+        }
+        catch (RegexMatchTimeoutException)
+        {
+            // Nothing is written: a half-applied replace-all over the whole document would be
+            // worse than none at all.
+            ReportRegexTooSlow();
             return;
         }
-
-        var replacement = UseRegularExpression
-            ? ReplaceText ?? string.Empty
-            : (ReplaceText ?? string.Empty).Replace("$", "$$"); // a literal replacement stays literal
 
         var caretBefore = _editor.CaretOffset;
 
         // One edit for the whole document: one undo step, and the text never goes around the undo
         // stack the way assigning Text would.
-        _editor.ReplaceAllText(regex.Replace(text, replacement));
+        _editor.ReplaceAllText(replacedText);
 
         _editor.Select(Math.Min(caretBefore, _editor.Document.TextLength), 0);
         _editor.BringCaretIntoView();

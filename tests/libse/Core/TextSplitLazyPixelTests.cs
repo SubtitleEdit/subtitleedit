@@ -18,7 +18,7 @@ public class TextSplitLazyPixelTests : IDisposable
     }
 
     private static TextSplitResult Make(string line1, string line2)
-        => new TextSplitResult(new List<string> { line1, line2 });
+        => new TextSplitResult(new List<ReadOnlyMemory<char>> { line1.AsMemory(), line2.AsMemory() });
 
     [Fact]
     public void LengthPixels_IsMeasuredOnFirstRead()

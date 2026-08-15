@@ -133,7 +133,7 @@ wins over the menu activation.
 
 ## Fix Lists in Dialogs
 
-Dialogs that preview their changes in a list of checkboxes — [Remove text for hearing impaired](../features/remove-text-hi.md) — accept these in the list itself. They are fixed and not part of **Options** → **Shortcuts**.
+Dialogs that preview their changes in a list of checkboxes — [Remove text for hearing impaired](../features/remove-text-hi.md), [Multiple replace](../features/edit.md#choosing-which-fixes-to-apply) — accept these in the list itself. They are fixed and not part of **Options** → **Shortcuts**.
 
 | Shortcut | Action |
 |----------|--------|
@@ -142,4 +142,4 @@ Dialogs that preview their changes in a list of checkboxes — [Remove text for 
 | Ctrl+Shift+I | Invert selection |
 | Space | Toggle the checkbox of the highlighted rows |
 
-The same three actions sit in the list's right-click menu. Other tools with such a list (Fix common errors, Merge continuation lines, Remove unicode characters, Fix Netflix errors, AI review) put buttons below the list for the same job.
+The same three actions sit in the list's right-click menu. In Multiple replace they apply to the fixes preview on the right; the rules tree on the left keeps its own `Ctrl+D` (duplicate rule). Other tools with such a list (Fix common errors, Merge continuation lines, Remove unicode characters, Fix Netflix errors, AI review) put buttons below the list for the same job.

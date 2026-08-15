@@ -1813,7 +1813,7 @@ public partial class DownloadTtsViewModel : ObservableObject
     public void StartDownloadChatterboxModels(string? modelKey = null)
     {
         var resolved = ChatterboxTtsCppDownloadService.ResolveModelKey(modelKey);
-        var sizeText = resolved == ChatterboxTtsCppDownloadService.ModelKeyTurbo ? "~1 GB" : "~990 MB";
+        var sizeText = ChatterboxTtsCppDownloadService.GetDownloadSizeText(resolved);
         TitleText = string.Format(Se.Language.General.DownloadingX, $"Chatterbox TTS {resolved} models ({sizeText})");
 
         var downloadProgress = new Progress<float>(number =>

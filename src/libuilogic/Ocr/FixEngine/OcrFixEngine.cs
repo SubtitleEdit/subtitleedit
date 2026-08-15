@@ -380,6 +380,14 @@ public partial class OcrFixEngine : IOcrFixEngine, IDoSpell
                     }
                 }
 
+                if (w.Length > 4)
+                {
+                    // Substitute the replace list's <PartialWords> pairs (e.g. italic OCR often
+                    // reads 'l' as 'i': "viei" -> "viel"); a guess only wins if the dictionary
+                    // or names list below confirms it.
+                    guesses.AddRange(_ocrFixReplaceList.CreateGuessesFromLetters(result, _threeLetterIsoLanguageName));
+                }
+
                 foreach (var g in guesses)
                 {
                     w = g.Trim('\'', '"', '-');

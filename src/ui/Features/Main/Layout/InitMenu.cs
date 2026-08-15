@@ -100,6 +100,14 @@ public static class InitMenu
                 },
                 new MenuItem
                 {
+                    Header = l.EditOriginalSubtitle,
+                    Command = vm.ToggleEditOriginalModeCommand,
+                    ToggleType = MenuItemToggleType.CheckBox,
+                    [!MenuItem.IsCheckedProperty] = new Binding(nameof(vm.IsEditOriginalMode)) { Mode = BindingMode.OneWay },
+                    [!MenuItem.IsVisibleProperty] = new Binding(nameof(vm.ShowColumnOriginalText))
+                },
+                new MenuItem
+                {
                     Header = l.CloseOriginal,
                     Command = vm.FileCloseOriginalCommand,
                     [!MenuItem.IsVisibleProperty] = new Binding(nameof(vm.ShowColumnOriginalText))

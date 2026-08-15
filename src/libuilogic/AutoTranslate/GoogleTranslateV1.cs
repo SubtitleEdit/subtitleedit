@@ -244,9 +244,17 @@ namespace Nikse.SubtitleEdit.UiLogic.AutoTranslate
                 if (lineArr.Count > 0)
                 {
                     var s = lineArr[0].Trim('"');
-                    if (s.EndsWith("\\r\\n", StringComparison.InvariantCulture))
+                    // Google keeps a source line break at a segment's end as an escaped "\r\n",
+                    // "\n" or "\r". AppendLine below re-adds the separator, so a segment still
+                    // carrying its own trailing newline would double into a blank line after
+                    // Regex.Unescape (issue #13614). Strip the trailing newline escape(s) first.
+                    while (s.EndsWith("\\r\\n", StringComparison.Ordinal))
                     {
                         s = s.Remove(s.Length - 4, 4);
+                    }
+                    while (s.EndsWith("\\n", StringComparison.Ordinal) || s.EndsWith("\\r", StringComparison.Ordinal))
+                    {
+                        s = s.Remove(s.Length - 2, 2);
                     }
                     sbAll.AppendLine(s);
                 }

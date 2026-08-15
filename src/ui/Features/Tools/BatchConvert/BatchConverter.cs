@@ -1,4 +1,4 @@
-﻿using Avalonia.Skia;
+using Avalonia.Skia;
 using Nikse.SubtitleEdit.UiLogic.Export;
 using Nikse.SubtitleEdit.Core.BluRaySup;
 using Nikse.SubtitleEdit.Features.Assa.ResolutionResampler;
@@ -6,6 +6,7 @@ using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.ContainerFormats.Matroska;
 using Nikse.SubtitleEdit.Core.ContainerFormats.Mp4;
 using Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream;
+using Nikse.SubtitleEdit.Core.Enums;
 using Nikse.SubtitleEdit.Core.Forms;
 using Nikse.SubtitleEdit.Core.Interfaces;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
@@ -80,6 +81,7 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
 
     private readonly INOcrCaseFixer _nOcrCaseFixer;
     private readonly IBinaryOcrMatcher _binaryOcrMatcher;
+    private OcrLineHeightTracker _lineHeightTracker = new();
     private readonly INamesList _namesList;
     private string _namesListFolder = string.Empty;
     private string _namesListLanguage = string.Empty;
@@ -716,6 +718,7 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
 
     private void RunNOcr(IOcrSubtitle imageSubtitles, BatchConvertItem item, CancellationToken cancellationToken)
     {
+        _lineHeightTracker = new OcrLineHeightTracker { FallbackMinLineHeight = item.Format == FormatBluRaySup ? 25 : 12 };
         var fileName = Path.Combine(Se.OcrFolder, Se.Settings.Ocr.NOcrDatabase + ".nocr");
         var nOcrDb = new NOcrDb(fileName);
         var totalCount = imageSubtitles.Count;
@@ -813,7 +816,8 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
         parentBitmap.MakeTwoColor(200);
         parentBitmap.CropTop(0, new SKColor(0, 0, 0, 0));
         var letters = NikseBitmapImageSplitter2.SplitBitmapToLettersNew(parentBitmap, pixelsAreSpace,
-            false, true, 20, true);
+            false, true, _lineHeightTracker.GetMinLineHeight(), true, _lineHeightTracker.GetAverageLineHeight());
+        _lineHeightTracker.Update(letters);
         var index = 0;
         var matches = new List<NOcrChar>();
         var maxErrorPercent = Se.Settings.Ocr.BinaryOcrMaxErrorPercent > 0 ? Se.Settings.Ocr.BinaryOcrMaxErrorPercent : 7.5;
@@ -918,6 +922,7 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
 
     private void RunBinaryOcr(IOcrSubtitle imageSubtitles, BatchConvertItem item, CancellationToken cancellationToken)
     {
+        _lineHeightTracker = new OcrLineHeightTracker { FallbackMinLineHeight = item.Format == FormatBluRaySup ? 25 : 12 };
         var dbName = string.IsNullOrEmpty(Se.Settings.Tools.BatchConvert.BinaryOcrDatabase)
             ? "Latin"
             : Se.Settings.Tools.BatchConvert.BinaryOcrDatabase;
@@ -1059,7 +1064,8 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
         var parentBitmap = new NikseBitmap2(bitmap);
         parentBitmap.MakeTwoColor(200);
         parentBitmap.CropTop(0, new SKColor(0, 0, 0, 0));
-        var letters = NikseBitmapImageSplitter2.SplitBitmapToLettersNew(parentBitmap, pixelsAreSpace, false, true, 20, true);
+        var letters = NikseBitmapImageSplitter2.SplitBitmapToLettersNew(parentBitmap, pixelsAreSpace, false, true, _lineHeightTracker.GetMinLineHeight(), true, _lineHeightTracker.GetAverageLineHeight());
+        _lineHeightTracker.Update(letters);
         var index = 0;
         var matches = new List<BinaryOcrMatcher.CompareMatch>();
         while (index < letters.Count)
@@ -1116,6 +1122,7 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
 
     private static int? DetectPixelsIsSpace(IOcrSubtitle imageSubtitles, int sampleSize, CancellationToken cancellationToken)
     {
+        var lineHeightTracker = new OcrLineHeightTracker(); // static sweep, so track locally
         var gaps = new List<int>(1024);
         for (var i = 0; i < sampleSize; i++)
         {
@@ -1128,7 +1135,8 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
             var parentBitmap = new NikseBitmap2(bitmap);
             parentBitmap.MakeTwoColor(200);
             parentBitmap.CropTop(0, new SKColor(0, 0, 0, 0));
-            var letters = NikseBitmapImageSplitter2.SplitBitmapToLettersNew(parentBitmap, 1, false, true, 20, true);
+            var letters = NikseBitmapImageSplitter2.SplitBitmapToLettersNew(parentBitmap, 1, false, true, lineHeightTracker.GetMinLineHeight(), true, lineHeightTracker.GetAverageLineHeight());
+            lineHeightTracker.Update(letters);
             foreach (var l in letters)
             {
                 if (l.NikseBitmap == null && l.SpecialCharacter == " " && l.SpacePixels > 0)
@@ -1272,7 +1280,7 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
     /// </returns>
     private async Task<bool> RunOllamaOcr(IOcrSubtitle imageSubtitles, BatchConvertItem item, CancellationToken cancellationToken)
     {
-        var ollamaOcr = new OllamaOcr();
+        using var ollamaOcr = new OllamaOcr();
         var url = Se.Settings.Ocr.OllamaUrl;
         var model = Se.Settings.Ocr.OllamaModel;
         var language = Se.Settings.Ocr.OllamaLanguage;
@@ -1333,7 +1341,7 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
             return false;
         }
 
-        var engine = new LlamaCppOcr(Se.Settings.Ocr.LlamaCppOcrTimeoutMinutes);
+        using var engine = new LlamaCppOcr(Se.Settings.Ocr.LlamaCppOcrTimeoutMinutes);
         var url = LlamaCppServerManager.ApiUrl;
         var modelName = Path.GetFileNameWithoutExtension(model.FileName);
         var language = Se.Settings.Ocr.OllamaLanguage;
@@ -1784,6 +1792,7 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
             s = BridgeGaps(s);
             s = ApplyMinGap(s);
             s = BeautifyTimeCodes(s, item.FileName);
+            s = SnapTimeCodesToFrames(s, item.FileName);
         }
         else
         {
@@ -1802,6 +1811,7 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
             s = FixCommonErrors(s);
             s = MergeLinesWithSameText(s);
             s = MergeLinesWithSameTimeCodes(s, Language);
+            s = ConvertColorsToDialog(s, Language);
             s = MergeShortLines(s);
             s = MultipleReplace(s);
             s = RemoveLineBreaks(s);
@@ -1812,6 +1822,7 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
             s = AssaChangeResolution(s);
             s = AssaChangeStyle(s);
             s = BeautifyTimeCodes(s, item.FileName);
+            s = SnapTimeCodesToFrames(s, item.FileName);
             s = SortBy(s);
         }
 
@@ -1826,6 +1837,11 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
         }
 
         var replaceExpressions = BuildReplaceExpressions();
+
+        // Patterns the match timeout stopped. Retried on the next file - a pattern can be
+        // pathological on one line and harmless on the rest of the batch.
+        var timedOut = new HashSet<string>();
+
         for (var i = 0; i < subtitle.Paragraphs.Count; i++)
         {
             var p = subtitle.Paragraphs[i];
@@ -1845,12 +1861,28 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
                 }
                 else if (item.SearchType == ReplaceExpression.SearchRegEx)
                 {
-                    var r = _compiledRegExList[item.FindWhat];
-                    if (r.IsMatch(newText))
+                    if (timedOut.Contains(item.FindWhat) ||
+                        !_compiledRegExList.TryGetValue(item.FindWhat, out var r))
                     {
-                        hit = true;
-                        ruleInfo = string.IsNullOrEmpty(ruleInfo) ? item.RuleInfo : $"{ruleInfo} + {item.RuleInfo}";
-                        newText = RegexUtils.ReplaceNewLineSafe(r, newText, item.ReplaceWith);
+                        continue; // pattern did not compile, or already gave up - both logged
+                    }
+
+                    try
+                    {
+                        if (r.IsMatch(newText))
+                        {
+                            var replaced = RegexUtils.ReplaceNewLineSafe(r, newText, item.ReplaceWith);
+                            hit = true;
+                            ruleInfo = string.IsNullOrEmpty(ruleInfo) ? item.RuleInfo : $"{ruleInfo} + {item.RuleInfo}";
+                            newText = replaced;
+                        }
+                    }
+                    catch (RegexMatchTimeoutException)
+                    {
+                        // Leave the line alone rather than the whole batch: the timeout already
+                        // cost five seconds here and every remaining line would cost the same.
+                        SeLogger.Error($"Batch convert, multiple replace: {DescribeRule(item)} timed out on line {i + 1} - skipping it for the rest of this file");
+                        timedOut.Add(item.FindWhat);
                     }
                 }
                 else
@@ -1891,16 +1923,46 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
                 var replaceWith = isRegex ? RegexUtils.FixNewLine(rule.ReplaceWith) : rule.ReplaceWith;
 
                 var mpi = new ReplaceExpression(findWhat, replaceWith, rule.Type.ToString(), category.Name + ": " + rule.Description);
-                replaceExpressions.Add(mpi);
                 if (mpi.SearchType == ReplaceExpression.SearchRegEx && !_compiledRegExList.ContainsKey(findWhat))
                 {
-                    _compiledRegExList.Add(findWhat,
-                        new Regex(findWhat, RegexOptions.Compiled | RegexOptions.Multiline));
+                    try
+                    {
+                        // With the match timeout, so a pattern with catastrophic backtracking cannot
+                        // stall the batch - the whole point of running it unattended.
+                        _compiledRegExList.Add(findWhat,
+                            new Regex(findWhat, RegexOptions.Compiled | RegexOptions.Multiline, RegexUtils.UserPatternMatchTimeout));
+                    }
+                    catch (ArgumentException exception)
+                    {
+                        // One saved rule that will not compile used to throw out of here and fail
+                        // every file in the batch with an opaque "parsing ..." status, naming
+                        // neither the rule nor the category. Skip the rule and carry on, the way
+                        // the Multiple replace window does (#13534).
+                        SeLogger.Error(exception, $"Batch convert, multiple replace: skipping rule with invalid regular expression '{findWhat}' in category '{category.Name}'");
+                        continue;
+                    }
                 }
+
+                replaceExpressions.Add(mpi);
             }
         }
 
         return replaceExpressions;
+    }
+
+    /// <summary>
+    /// A rule named so the log pinpoints it. RuleInfo is "category: description" and a description
+    /// is optional - and not unique when it is there - so the pattern is what actually identifies
+    /// the rule in the user's list.
+    /// </summary>
+    internal static string DescribeRule(ReplaceExpression item)
+    {
+        var info = (item.RuleInfo ?? string.Empty).TrimEnd();
+        info = info.TrimEnd(':').TrimEnd();
+
+        return string.IsNullOrEmpty(info)
+            ? $"rule '{item.FindWhat}'"
+            : $"rule '{item.FindWhat}' ({info})";
     }
 
     private Subtitle RemoveFormatting(Subtitle subtitle)
@@ -2171,65 +2233,155 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
             return subtitle;
         }
 
-        // Frame rate comes from either a fixed user-chosen rate or a video file matching
-        // the subtitle file name, when one exists. Shot changes are only available if they
-        // were previously generated/imported for that video (they are cached on disk per
-        // video file).
-        //
-        // Without a fixed rate or a matching video, fall back to the frame rate this batch
-        // is actually producing: the target of the "change frame rate" step when it runs
-        // (it runs before this one), otherwise the project frame rate. Configuration
-        // .Settings.General.DefaultFrameRate is not usable here - nothing in the UI ever
-        // assigns it, so it is always libse's built-in 23.976.
-        var frameRate = _config.ChangeFrameRate.IsActive && _config.ChangeFrameRate.ToFrameRate > 0
-            ? _config.ChangeFrameRate.ToFrameRate
-            : Se.Settings.General.CurrentFrameRate;
-        if (frameRate <= 0)
-        {
-            frameRate = Se.Settings.General.DefaultFrameRate;
-        }
-
-        if (_config.BeautifyTimeCodes.UseFixedFrameRate && _config.BeautifyTimeCodes.FixedFrameRate > 0)
-        {
-            frameRate = _config.BeautifyTimeCodes.FixedFrameRate;
-        }
+        // Shot changes are only available if they were previously generated/imported for the
+        // video matching the subtitle file name (they are cached on disk per video file).
+        var hasVideoFile = FindVideoFileName.TryFindVideoFileName(subtitleFileName, out var videoFileName);
+        var frameRate = ResolveFrameRate(
+            hasVideoFile ? videoFileName : null,
+            _config.BeautifyTimeCodes.UseFixedFrameRate,
+            _config.BeautifyTimeCodes.FixedFrameRate);
 
         var shotChanges = new List<double>();
 
-        if (FindVideoFileName.TryFindVideoFileName(subtitleFileName, out var videoFileName))
+        if (hasVideoFile && _config.BeautifyTimeCodes.SnapToShotChanges)
         {
-            if (!_config.BeautifyTimeCodes.UseFixedFrameRate)
+            try
             {
-                try
-                {
-                    var mediaInfo = FfmpegMediaInfo2.Parse(videoFileName);
-                    if (mediaInfo.FramesRate > 0)
-                    {
-                        frameRate = (double)mediaInfo.FramesRate;
-                    }
-                }
-                catch
-                {
-                    // no ffmpeg or unreadable video file - keep the fallback frame rate
-                }
+                shotChanges = ShotChangesHelper.FromDisk(videoFileName);
             }
-
-            if (_config.BeautifyTimeCodes.SnapToShotChanges)
+            catch
             {
-                try
-                {
-                    shotChanges = ShotChangesHelper.FromDisk(videoFileName);
-                }
-                catch
-                {
-                    // unreadable/corrupt shot-changes cache - beautify without them rather
-                    // than aborting the rest of the batch
-                    shotChanges = new List<double>();
-                }
+                // unreadable/corrupt shot-changes cache - beautify without them rather
+                // than aborting the rest of the batch
+                shotChanges = new List<double>();
             }
         }
 
         new Core.Forms.TimeCodesBeautifier(subtitle, frameRate, new List<double>(), shotChanges).Beautify();
+        return subtitle;
+    }
+
+    private Subtitle SnapTimeCodesToFrames(Subtitle subtitle, string subtitleFileName)
+    {
+        if (!_config.SnapTimeCodesToFrames.IsActive)
+        {
+            return subtitle;
+        }
+
+        string? videoFileName = null;
+        if (!_config.SnapTimeCodesToFrames.UseFixedFrameRate)
+        {
+            FindVideoFileName.TryFindVideoFileName(subtitleFileName, out videoFileName);
+        }
+
+        var frameRate = ResolveFrameRate(
+            videoFileName,
+            _config.SnapTimeCodesToFrames.UseFixedFrameRate,
+            _config.SnapTimeCodesToFrames.FixedFrameRate);
+        if (frameRate < 1)
+        {
+            return subtitle;
+        }
+
+        var frameDurationMs = TimeCode.BaseUnit / frameRate;
+        foreach (var p in subtitle.Paragraphs)
+        {
+            var newStartMs = Math.Round(p.StartTime.TotalMilliseconds / frameDurationMs, MidpointRounding.AwayFromZero) * frameDurationMs;
+            var newEndMs = Math.Round(p.EndTime.TotalMilliseconds / frameDurationMs, MidpointRounding.AwayFromZero) * frameDurationMs;
+
+            // Snapping can collapse start and end to the same frame (or invert them) for
+            // sub-frame durations; keep the cue at least one frame long.
+            if (newEndMs <= newStartMs)
+            {
+                newEndMs = newStartMs + frameDurationMs;
+            }
+
+            p.StartTime.TotalMilliseconds = newStartMs;
+            p.EndTime.TotalMilliseconds = newEndMs;
+        }
+
+        return subtitle;
+    }
+
+    /// <summary>
+    /// Frame rate to use for one file: a fixed user-chosen rate when one is set, otherwise the
+    /// frame rate of <paramref name="videoFileName"/> (a video file matching the subtitle file
+    /// name), when one was found and ffmpeg can read it.
+    ///
+    /// Without either, fall back to the frame rate this batch is actually producing: the target
+    /// of the "change frame rate" step when it runs (it runs before the time code steps),
+    /// otherwise the project frame rate. Configuration.Settings.General.DefaultFrameRate is not
+    /// usable here - nothing in the UI ever assigns it, so it is always libse's built-in 23.976.
+    /// </summary>
+    private double ResolveFrameRate(string? videoFileName, bool useFixedFrameRate, double fixedFrameRate)
+    {
+        if (useFixedFrameRate)
+        {
+            if (fixedFrameRate > 0)
+            {
+                return fixedFrameRate;
+            }
+        }
+        else if (!string.IsNullOrEmpty(videoFileName))
+        {
+            try
+            {
+                var mediaInfo = FfmpegMediaInfo2.Parse(videoFileName);
+                if (mediaInfo.FramesRate > 0)
+                {
+                    return (double)mediaInfo.FramesRate;
+                }
+            }
+            catch
+            {
+                // no ffmpeg or unreadable video file - keep the fallback frame rate
+            }
+        }
+
+        var frameRate = _config.ChangeFrameRate.IsActive && _config.ChangeFrameRate.ToFrameRate > 0
+            ? _config.ChangeFrameRate.ToFrameRate
+            : Se.Settings.General.CurrentFrameRate;
+
+        return frameRate > 0 ? frameRate : Se.Settings.General.DefaultFrameRate;
+    }
+
+    private Subtitle ConvertColorsToDialog(Subtitle subtitle, string language)
+    {
+        if (!_config.ConvertColorsToDialog.IsActive)
+        {
+            return subtitle;
+        }
+
+        var c = _config.ConvertColorsToDialog;
+
+        // The dash/space style is the one configured for the current profile - same mapping as
+        // ConvertColorsToDialogUtils' own convenience overload, but with the language passed in
+        // (it is already detected once per file) instead of re-detecting it here.
+        var dashFirstLine = true;
+        var spaceAfterDash = true;
+        switch (Configuration.Settings.General.DialogStyle)
+        {
+            case DialogType.DashBothLinesWithoutSpace:
+                spaceAfterDash = false;
+                break;
+            case DialogType.DashSecondLineWithSpace:
+                dashFirstLine = false;
+                break;
+            case DialogType.DashSecondLineWithoutSpace:
+                dashFirstLine = false;
+                spaceAfterDash = false;
+                break;
+        }
+
+        ConvertColorsToDialogUtils.ConvertColorsToDialogInSubtitle(
+            subtitle,
+            c.RemoveColorTags,
+            dashFirstLine,
+            spaceAfterDash,
+            c.AddNewLines,
+            c.ReBreakLines,
+            language);
+
         return subtitle;
     }
 

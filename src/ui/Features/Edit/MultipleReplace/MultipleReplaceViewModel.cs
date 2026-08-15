@@ -14,6 +14,7 @@ using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Logic.Media;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -52,9 +53,16 @@ public partial class MultipleReplaceViewModel : ObservableObject
     private readonly IWindowService _windowService;
     private readonly IFileHelper _fileHelper;
     private Subtitle _subtitle;
-    private readonly Dictionary<string, Regex> _compiledRegExList;
+    private readonly ConcurrentDictionary<string, Regex> _compiledRegExList;
+
+    // Pattern -> why it cannot run, or null when it is fine. Every regular expression rule is
+    // checked so a broken one is marked even in an unticked category, so this must not be the
+    // compiled cache: see GetRegexError.
+    private readonly ConcurrentDictionary<string, string?> _regExErrors;
     private readonly Timer _timerReplace;
-    private bool _dirty;
+    private readonly object _previewLock = new();
+    private volatile bool _dirty;
+    private volatile bool _closed;
 
     // Subtitle Edit 4 used Ctrl+Up/Down/Home/End for the four move commands on both the rules
     // and the groups list (#13523). Ctrl+Up/Down is Mission Control on macOS, so show Cmd there.
@@ -75,7 +83,8 @@ public partial class MultipleReplaceViewModel : ObservableObject
         RulesTreeView = new TreeView();
         IsMultipleReplaceDotDotDotButtonsVisible = Se.Settings.Tools.MultipleReplaceShowDotDotDotButtons;
 
-        _compiledRegExList = new Dictionary<string, Regex>();
+        _compiledRegExList = new ConcurrentDictionary<string, Regex>();
+        _regExErrors = new ConcurrentDictionary<string, string?>();
 
         _timerReplace = new Timer();
         _timerReplace.Interval = 250;
@@ -143,15 +152,32 @@ public partial class MultipleReplaceViewModel : ObservableObject
 
     private void TimerReplaceElapsed(object? sender, ElapsedEventArgs e)
     {
-        if (!_dirty)
+        if (!_dirty || _closed)
         {
             return;
         }
 
         _timerReplace.Stop();
         _dirty = false;
-        GeneratePreview();
-        _timerReplace.Start();
+        try
+        {
+            GeneratePreview();
+        }
+        catch (Exception exception)
+        {
+            // The timer is stopped while generating, so an escaping exception used to leave it
+            // stopped for good - the preview then silently froze for the rest of the session and
+            // no rule or category tick ever changed it again (#13534). Retry on the next tick.
+            _dirty = true;
+            SeLogger.Error(exception, "Multiple replace: unable to generate preview");
+        }
+        finally
+        {
+            if (!_closed)
+            {
+                _timerReplace.Start();
+            }
+        }
     }
 
     public void Initialize(Subtitle subtitle)
@@ -167,7 +193,6 @@ public partial class MultipleReplaceViewModel : ObservableObject
                 if (item.DataContext is RuleTreeNode node && node.IsCategory)
                 {
                     item.IsExpanded = node.IsExpanded;
-                    break;
                 }
             }
         });
@@ -295,6 +320,69 @@ public partial class MultipleReplaceViewModel : ObservableObject
                 FixedSubtitle.Paragraphs[fix.Number - 1].Text = _subtitle.Paragraphs[fix.Number - 1].Text;
             }
         }
+    }
+
+    [RelayCommand]
+    private void SelectAllFixes()
+    {
+        foreach (var fix in Fixes)
+        {
+            fix.Apply = true;
+        }
+    }
+
+    [RelayCommand]
+    private void SelectNoFixes()
+    {
+        foreach (var fix in Fixes)
+        {
+            fix.Apply = false;
+        }
+    }
+
+    [RelayCommand]
+    private void InvertFixesSelection()
+    {
+        foreach (var fix in Fixes)
+        {
+            fix.Apply = !fix.Apply;
+        }
+    }
+
+    /// <summary>
+    /// The gestures advertised by the fixes grid context menu (#13502): tick all, untick all and
+    /// invert the "Apply" column, the same set Remove text for hearing impaired and the rule
+    /// category picker use. Called from a tunneling handler on the grid, which has to run before
+    /// the TableView turns Ctrl+A into "select all rows" - and before the window's own key
+    /// handler, where Ctrl+D means "duplicate rule".
+    /// </summary>
+    internal bool HandleFixesSelectionKey(KeyEventArgs e)
+    {
+        var isCommand = e.KeyModifiers.HasFlag(KeyModifiers.Control) || e.KeyModifiers.HasFlag(KeyModifiers.Meta);
+        if (!isCommand || e.KeyModifiers.HasFlag(KeyModifiers.Alt))
+        {
+            return false;
+        }
+
+        var isShift = e.KeyModifiers.HasFlag(KeyModifiers.Shift);
+        if (e.Key == Key.A && !isShift)
+        {
+            SelectAllFixes();
+        }
+        else if (e.Key == Key.D && !isShift)
+        {
+            SelectNoFixes();
+        }
+        else if (e.Key == Key.I && isShift)
+        {
+            InvertFixesSelection();
+        }
+        else
+        {
+            return false;
+        }
+
+        return true;
     }
 
     [RelayCommand]
@@ -605,15 +693,40 @@ public partial class MultipleReplaceViewModel : ObservableObject
             return;
         }
 
-        foreach (var profile in imported)
+        // Let the user pick which of the categories in the file to bring in (#13529). A file with a
+        // single category has nothing to pick, so it goes straight in as before.
+        var toImport = imported;
+        if (imported.Count > 1)
+        {
+            var picked = await _windowService
+                .ShowDialogAsync<CategoryPickerWindow, CategoryPickerViewModel>(Window, vm =>
+                {
+                    vm.InitializeForImport(imported);
+                });
+
+            if (!picked.OkPressed)
+            {
+                return;
+            }
+
+            toImport = picked.Rules.Where(p => p.IsSelected).ToList();
+            if (toImport.Count == 0)
+            {
+                return;
+            }
+        }
+
+        foreach (var profile in toImport)
         {
             Nodes.Add(profile);
         }
 
+        _dirty = true;
+
         await MessageBox.Show(
             Window!,
             Se.Language.General.Information,
-            string.Format(Se.Language.Options.Settings.RuleProfilesImportedX, imported.Count),
+            string.Format(Se.Language.Options.Settings.RuleProfilesImportedX, toImport.Count),
             MessageBoxButtons.OK,
             MessageBoxIcon.Information);
     }
@@ -628,9 +741,9 @@ public partial class MultipleReplaceViewModel : ObservableObject
         }
 
         var result = await _windowService
-        .ShowDialogAsync<CategoryExportWindow, CategoryExportViewModel>(Window, vm =>
+        .ShowDialogAsync<CategoryPickerWindow, CategoryPickerViewModel>(Window, vm =>
         {
-            vm.Initialize(Nodes.ToList(), node);
+            vm.InitializeForExport(Nodes.ToList(), node);
         });
 
         if (!result.OkPressed)
@@ -1233,10 +1346,27 @@ public partial class MultipleReplaceViewModel : ObservableObject
 
     private void GeneratePreview()
     {
+        // Snapshot outside the lock: it hops to the UI thread, and "Ok"/"Apply" call this from
+        // there while the timer thread may already hold the lock.
+        var replaceExpressions = BuildReplaceExpressions();
+
+        lock (_previewLock)
+        {
+            GeneratePreview(replaceExpressions);
+        }
+    }
+
+    // "Ok" and "Apply" generate on the UI thread while the preview timer generates on its own
+    // thread; both write FixedSubtitle and TotalReplaced, so only one may run at a time.
+    private void GeneratePreview(List<ReplaceExpression> replaceExpressions)
+    {
         FixedSubtitle = new Subtitle(_subtitle, false);
         TotalReplaced = 0;
-        var replaceExpressions = BuildReplaceExpressions();
         var fixes = new List<MultipleReplaceFix>();
+
+        // Patterns the match timeout stopped part way through this pass - see the catch below.
+        HashSet<string>? retiredThisPass = null;
+
         for (var i = 0; i < _subtitle.Paragraphs.Count; i++)
         {
             var p = _subtitle.Paragraphs[i];
@@ -1258,15 +1388,35 @@ public partial class MultipleReplaceViewModel : ObservableObject
                 }
                 else if (item.SearchType == ReplaceExpression.SearchRegEx)
                 {
-                    var r = _compiledRegExList[item.FindWhat];
-                    // Match against line-feed-normalized text so a pattern's \n line break matches even
-                    // when the paragraph text uses \r\n (the pattern is FixNewLine'd to \n) (#11956).
-                    if (r.IsMatch(string.Join("\n", newText.SplitToLines())))
+                    // retiredThisPass is null until something times out, so this costs a null
+                    // check per rule per line in the normal case. It is needed because the
+                    // expression list was built before the timeout, and without it every
+                    // remaining line would pay the five seconds again.
+                    if (retiredThisPass?.Contains(item.FindWhat) == true ||
+                        !TryGetRunnableRegex(item.FindWhat, out var r))
                     {
-                        hit = true;
-                        ruleInfo = string.IsNullOrEmpty(ruleInfo) ? item.RuleInfo : $"{ruleInfo} + {item.RuleInfo}";
-                        ruleHits.Add(item);
-                        newText = RegexUtils.ReplaceNewLineSafe(r, newText, item.ReplaceWith);
+                        continue;
+                    }
+
+                    try
+                    {
+                        // Match against line-feed-normalized text so a pattern's \n line break matches even
+                        // when the paragraph text uses \r\n (the pattern is FixNewLine'd to \n) (#11956).
+                        if (r.IsMatch(string.Join("\n", newText.SplitToLines())))
+                        {
+                            var replaced = RegexUtils.ReplaceNewLineSafe(r, newText, item.ReplaceWith);
+                            hit = true;
+                            ruleInfo = string.IsNullOrEmpty(ruleInfo) ? item.RuleInfo : $"{ruleInfo} + {item.RuleInfo}";
+                            ruleHits.Add(item);
+                            newText = replaced;
+                        }
+                    }
+                    catch (RegexMatchTimeoutException)
+                    {
+                        // Five seconds on one line for a pattern that backtracks catastrophically
+                        // is already too much, so retire the rule rather than carrying on with it.
+                        (retiredThisPass ??= new HashSet<string>(StringComparer.Ordinal)).Add(item.FindWhat);
+                        RetireTimedOutRegex(item.FindWhat);
                     }
                 }
                 else
@@ -1312,37 +1462,138 @@ public partial class MultipleReplaceViewModel : ObservableObject
         });
     }
 
-    private HashSet<ReplaceExpression> BuildReplaceExpressions()
+    private List<ReplaceExpression> BuildReplaceExpressions()
     {
-        var replaceExpressions = new HashSet<ReplaceExpression>();
-        foreach (var group in Nodes.Where(p => p.IsActive && p.SubNodes != null))
+        var replaceExpressions = new List<ReplaceExpression>();
+        var errors = new List<(RuleTreeNode Rule, string? Message)>();
+
+        foreach (var group in SnapshotRules())
         {
-            foreach (var rule in group.SubNodes!.Where(p => p.IsActive))
+            var rules = group.Rules;
+            for (var ruleNumber = 1; ruleNumber <= rules.Count; ruleNumber++)
             {
+                var rule = rules[ruleNumber - 1];
+                var isRegex = rule.SearchType == ReplaceExpression.SearchTypeRegularExpression;
                 var findWhat = rule.Find;
-                if (!string.IsNullOrEmpty(findWhat)) // allow space or spaces
+                if (!string.IsNullOrEmpty(findWhat) && isRegex) // allow space or spaces
                 {
-                    var isRegex = rule.SearchType == ReplaceExpression.SearchTypeRegularExpression;
-                    var replaceWith = isRegex ? RegexUtils.FixNewLine(rule.ReplaceWith) : rule.ReplaceWith;
-                    findWhat = isRegex ? RegexUtils.FixNewLine(findWhat) : findWhat;
-                    if (group.SubNodes != null)
-                    {
-                        var ruleInfo = string.IsNullOrEmpty(rule.Description)
-                            ? $"Group name: {group.CategoryName} - Rule number: {group.SubNodes.IndexOf(rule) + 1}"
-                            : $"Group name: {group.CategoryName} - Rule number: {group.SubNodes.IndexOf(rule) + 1}. {rule.Description}";
-                        var mpi = new ReplaceExpression(findWhat, replaceWith, rule.SearchType, ruleInfo);
-                        mpi.RuleTreeNode = rule;
-                        replaceExpressions.Add(mpi);
-                        if (mpi.SearchType == ReplaceExpression.SearchRegEx && !_compiledRegExList.ContainsKey(findWhat))
-                        {
-                            _compiledRegExList.Add(findWhat, new Regex(findWhat, RegexOptions.Compiled | RegexOptions.Multiline));
-                        }
-                    }
+                    findWhat = RegexUtils.FixNewLine(findWhat);
                 }
+
+                // Every regular expression is checked, whether or not it runs, so that a rule
+                // sitting in an unticked category is still flagged as broken in the tree.
+                var error = isRegex && !string.IsNullOrEmpty(findWhat) ? GetRegexError(findWhat) : null;
+                errors.Add((rule, error));
+
+                if (error != null || !group.IsActive || !rule.IsActive || string.IsNullOrEmpty(findWhat))
+                {
+                    continue;
+                }
+
+                var replaceWith = isRegex ? RegexUtils.FixNewLine(rule.ReplaceWith) : rule.ReplaceWith;
+                var ruleInfo = string.IsNullOrEmpty(rule.Description)
+                    ? $"Group name: {group.CategoryName} - Rule number: {ruleNumber}"
+                    : $"Group name: {group.CategoryName} - Rule number: {ruleNumber}. {rule.Description}";
+                var mpi = new ReplaceExpression(findWhat, replaceWith, rule.SearchType, ruleInfo);
+                mpi.RuleTreeNode = rule;
+                replaceExpressions.Add(mpi);
             }
         }
 
+        ReportRuleErrors(errors);
+
         return replaceExpressions;
+    }
+
+    /// <summary>
+    /// Null when the pattern is usable. A pattern that will not compile - or that has already been
+    /// stopped by the match timeout - is skipped rather than allowed to take the whole preview down
+    /// with it (#13534); the rule is marked in the tree instead.
+    /// </summary>
+    private string? GetRegexError(string findWhat)
+    {
+        // Deliberately NOT RegexOptions.Compiled: every regular expression rule is validated,
+        // including the ones in unticked categories that never run, and compiling emits IL that
+        // is never reclaimed. The runnable regex is built lazily in TryGetRunnableRegex instead.
+        return _regExErrors.GetOrAdd(findWhat, static pattern =>
+        {
+            try
+            {
+                _ = new Regex(pattern, RegexOptions.Multiline, RegexUtils.UserPatternMatchTimeout);
+                return null;
+            }
+            catch (ArgumentException exception)
+            {
+                return string.Format(Se.Language.Edit.MultipleReplace.InvalidRegularExpressionX, exception.Message);
+            }
+        });
+    }
+
+    /// <summary>
+    /// The regex a rule actually runs with, built on first use. Carries the match timeout: without
+    /// it a pattern with catastrophic backtracking holds <see cref="_previewLock"/> forever - and
+    /// with it the UI thread, which waits on the same lock in "Ok" and "Apply".
+    /// </summary>
+    private bool TryGetRunnableRegex(string findWhat, out Regex regex)
+    {
+        if (_compiledRegExList.TryGetValue(findWhat, out regex!))
+        {
+            return true;
+        }
+
+        try
+        {
+            regex = new Regex(findWhat, RegexOptions.Compiled | RegexOptions.Multiline, RegexUtils.UserPatternMatchTimeout);
+            _compiledRegExList[findWhat] = regex;
+            return true;
+        }
+        catch (ArgumentException)
+        {
+            regex = null!;
+            return false;
+        }
+    }
+
+    /// <summary>
+    /// Retires a pattern the match timeout stopped. Recording it as an error means the next pass
+    /// leaves the rule out and marks it in the tree, so a rule that is too slow to run says so
+    /// rather than looking like a rule that simply matches nothing.
+    /// </summary>
+    private void RetireTimedOutRegex(string findWhat)
+    {
+        _regExErrors[findWhat] = string.Format(
+            Se.Language.Edit.MultipleReplace.RegularExpressionTooSlowX,
+            RegexUtils.UserPatternMatchTimeout.TotalSeconds);
+        _dirty = true;
+    }
+
+    private void ReportRuleErrors(List<(RuleTreeNode Rule, string? Message)> errors)
+    {
+        if (errors.All(e => e.Message == e.Rule.ErrorMessage))
+        {
+            return;
+        }
+
+        Dispatcher.UIThread.Post(() =>
+        {
+            foreach (var (rule, message) in errors)
+            {
+                rule.ErrorMessage = message;
+            }
+        });
+    }
+
+    /// <summary>
+    /// The rule tree is owned by the UI thread but the preview runs on a timer thread, so copy the
+    /// groups and their rules over there - iterating the live collections could throw "collection
+    /// was modified" mid-edit, which took the whole preview down with it (#13534).
+    /// </summary>
+    private List<(string CategoryName, bool IsActive, List<RuleTreeNode> Rules)> SnapshotRules()
+    {
+        return Dispatcher.UIThread.Invoke(() => Nodes
+            .Where(p => p.SubNodes != null)
+            .Select(p => (p.CategoryName, p.IsActive, Rules: p.SubNodes!.ToList()))
+            .ToList());
     }
 
     public void RulesTreeView_SelectionChanged(object? sender, SelectionChangedEventArgs e)
@@ -1381,6 +1632,13 @@ public partial class MultipleReplaceViewModel : ObservableObject
 
     internal void OnClosing()
     {
+        // The view model is transient, so without this every visit to the dialog leaves another
+        // preview timer ticking for the rest of the process lifetime.
+        _closed = true;
+        _timerReplace.Stop();
+        _timerReplace.Elapsed -= TimerReplaceElapsed;
+        _timerReplace.Dispose();
+
         SaveSettings();
         UiUtil.SaveWindowPosition(Window);
     }

@@ -1,8 +1,8 @@
 using Nikse.SubtitleEdit.Features.SpellCheck;
 using Nikse.SubtitleEdit.UiLogic.SpellCheck;
 using System;
+using System.Buffers;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Nikse.SubtitleEdit.Logic;
 
@@ -26,7 +26,7 @@ public static class SpellCheckWordScanner
             return false;
         }
 
-        if (IsSpecialPattern(word, text))
+        if (IsSpecialPattern(word, text, text.Contains('{'), text.Contains('<')))
         {
             return false;
         }
@@ -46,6 +46,12 @@ public static class SpellCheckWordScanner
             return result;
         }
 
+        // Whether the line has any tag at all is a property of the line, not of the word, but
+        // it used to be re-derived per word by scanning back to the nearest '{' / '<'. This
+        // runs on every keystroke in the edit box, so settle it once for the whole line.
+        var hasAssaTag = text.Contains('{');
+        var hasHtmlTag = text.Contains('<');
+
         foreach (var word in SpellCheckWordLists.Split(text))
         {
             if (string.IsNullOrWhiteSpace(word.Text) || word.Length < 2)
@@ -53,7 +59,7 @@ public static class SpellCheckWordScanner
                 continue;
             }
 
-            if (IsSpecialPattern(word, text))
+            if (IsSpecialPattern(word, text, hasAssaTag, hasHtmlTag))
             {
                 continue;
             }
@@ -67,24 +73,36 @@ public static class SpellCheckWordScanner
         return result;
     }
 
-    private static bool IsSpecialPattern(SpellCheckWord word, string text)
+    // Digits and the separators that can appear inside a number. A word made only of these is
+    // not spell-checkable - IndexOfAnyExcept answers that with one vectorized scan, where the
+    // LINQ All() this replaces paid an enumerator plus a delegate call per character.
+    private static readonly SearchValues<char> NumberChars = SearchValues.Create("0123456789.,-");
+
+    // Necessary first letter of every URL pattern tested below ("http", "https", "www"), so a
+    // word without one cannot match any of them and skips three substring searches.
+    private static readonly SearchValues<char> UrlStartChars = SearchValues.Create("hHwW");
+
+    private static bool IsSpecialPattern(SpellCheckWord word, string text, bool hasAssaTag, bool hasHtmlTag)
     {
+        var wordSpan = word.Text.AsSpan();
+
         // Skip numbers
-        if (word.Text.All(c => char.IsDigit(c) || c == '.' || c == ',' || c == '-'))
+        if (wordSpan.IndexOfAnyExcept(NumberChars) < 0)
         {
             return true;
         }
 
         // Skip URLs
-        if (word.Text.Contains("http://", StringComparison.OrdinalIgnoreCase) ||
-            word.Text.Contains("https://", StringComparison.OrdinalIgnoreCase) ||
-            word.Text.Contains("www.", StringComparison.OrdinalIgnoreCase))
+        if (wordSpan.ContainsAny(UrlStartChars) &&
+            (word.Text.Contains("http://", StringComparison.OrdinalIgnoreCase) ||
+             word.Text.Contains("https://", StringComparison.OrdinalIgnoreCase) ||
+             word.Text.Contains("www.", StringComparison.OrdinalIgnoreCase)))
         {
             return true;
         }
 
         // Skip email-like patterns
-        if (word.Text.Contains('@'))
+        if (wordSpan.Contains('@'))
         {
             return true;
         }
@@ -95,12 +113,12 @@ public static class SpellCheckWordScanner
             return true;
         }
 
-        if (IsBetweenAssaTags(word, text))
+        if (hasAssaTag && IsBetweenAssaTags(word, text))
         {
             return true;
         }
 
-        if (IsInsideHtmlTag(word, text))
+        if (hasHtmlTag && IsInsideHtmlTag(word, text))
         {
             return true;
         }

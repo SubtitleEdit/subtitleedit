@@ -23,11 +23,21 @@ namespace Nikse.SubtitleEdit.UiLogic.Ocr.FixEngine
         private readonly Dictionary<string, string> _endLineReplaceList;
         private readonly Dictionary<string, string> _wholeLineReplaceList;
         private readonly Dictionary<string, string> _partialWordAlwaysReplaceList;
-        private readonly Dictionary<string, string> _partialWordReplaceList;
+
+        // A list of pairs, not a dictionary: the same OCR artifact can have several valid
+        // readings (deu ships i->t and i->l, ii->tt and ii->ü), and the letter guesser wants
+        // to try them all - each guess is only accepted after a dictionary/names check anyway.
+        private readonly List<KeyValuePair<string, string>> _partialWordReplaceList;
         private readonly Dictionary<string, string> _regExList;
         private readonly List<SpellCheckRegex> _regExSpellCheckList;
         private List<Regex>? _replaceRegExes;
         private readonly string _replaceListXmlFileName;
+
+        // Every entry in these two lists used to cost a full substring scan of the line, for every
+        // line: 322 PartialLines plus 145 BeginLines for English. The signature below rules most
+        // of them out without touching the line again - see BigramSignature.
+        private ReplaceEntry[]? _partialLineEntries;
+        private ReplaceEntry[]? _beginLineEntries;
 
         private const string ReplaceListFileNamePostFix = "_OCRFixReplaceList.xml";
 
@@ -53,7 +63,7 @@ namespace Nikse.SubtitleEdit.UiLogic.Ocr.FixEngine
             _endLineReplaceList = new Dictionary<string, string>();
             _wholeLineReplaceList = new Dictionary<string, string>();
             _partialWordAlwaysReplaceList = new Dictionary<string, string>();
-            _partialWordReplaceList = new Dictionary<string, string>();
+            _partialWordReplaceList = new List<KeyValuePair<string, string>>();
             _regExList = new Dictionary<string, string>();
 
             var doc = LoadXmlReplaceListDocument();
@@ -61,7 +71,7 @@ namespace Nikse.SubtitleEdit.UiLogic.Ocr.FixEngine
 
             WordReplaceList = LoadReplaceList(doc, "WholeWords");
             _partialWordAlwaysReplaceList = LoadReplaceList(doc, "PartialWordsAlways");
-            _partialWordReplaceList = LoadReplaceList(doc, "PartialWords");
+            _partialWordReplaceList = LoadReplaceListPairs(doc, "PartialWords");
             PartialLineWordBoundaryReplaceList = LoadReplaceList(doc, "PartialLines");
             _partialLineAlwaysReplaceList = LoadReplaceList(doc, "PartialLinesAlways");
             _beginLineReplaceList = LoadReplaceList(doc, "BeginLines");
@@ -102,16 +112,13 @@ namespace Nikse.SubtitleEdit.UiLogic.Ocr.FixEngine
 
             foreach (var kp in LoadReplaceList(userDoc, "RemovedPartialWords"))
             {
-                if (_partialWordReplaceList.ContainsKey(kp.Key))
-                {
-                    _partialWordReplaceList.Remove(kp.Key);
-                }
+                _partialWordReplaceList.RemoveAll(p => p.Key == kp.Key);
             }
-            foreach (var kp in LoadReplaceList(userDoc, "PartialWords"))
+            foreach (var kp in LoadReplaceListPairs(userDoc, "PartialWords"))
             {
-                if (!_partialWordReplaceList.ContainsKey(kp.Key))
+                if (!_partialWordReplaceList.Any(p => p.Key == kp.Key && p.Value == kp.Value))
                 {
-                    _partialWordReplaceList.Add(kp.Key, kp.Value);
+                    _partialWordReplaceList.Add(kp);
                 }
             }
 
@@ -219,8 +226,16 @@ namespace Nikse.SubtitleEdit.UiLogic.Ocr.FixEngine
                 return list;
             }
 
-            var node = doc.DocumentElement?.SelectSingleNode(name);
-            if (node != null)
+            // SelectNodes, not SelectSingleNode: several shipped lists contain more than one
+            // section with the same name (often an empty placeholder first), and reading only
+            // the first silently drops every entry in the others.
+            var nodes = doc.DocumentElement?.SelectNodes(name);
+            if (nodes == null)
+            {
+                return list;
+            }
+
+            foreach (XmlNode node in nodes)
             {
                 foreach (XmlNode item in node.ChildNodes)
                 {
@@ -241,6 +256,43 @@ namespace Nikse.SubtitleEdit.UiLogic.Ocr.FixEngine
             return list;
         }
 
+        private static List<KeyValuePair<string, string>> LoadReplaceListPairs(XmlDocument doc, string name)
+        {
+            var list = new List<KeyValuePair<string, string>>();
+            if (!IsValidXmlDocument(doc, name))
+            {
+                return list;
+            }
+
+            // See LoadReplaceList: duplicate sections must all be read. fin/fra/hrb/hun/por/spa
+            // ship an empty <PartialWords /> placeholder ahead of the real section.
+            var nodes = doc.DocumentElement?.SelectNodes(name);
+            if (nodes == null)
+            {
+                return list;
+            }
+
+            foreach (XmlNode node in nodes)
+            {
+                foreach (XmlNode item in node.ChildNodes)
+                {
+                    if (!HasValidAttributes(item, false) || item.Attributes == null)
+                    {
+                        continue;
+                    }
+
+                    var to = item.Attributes["to"]?.Value;
+                    var from = item.Attributes["from"]?.Value;
+                    if (to != null && from != null && !list.Any(p => p.Key == from && p.Value == to))
+                    {
+                        list.Add(new KeyValuePair<string, string>(from, to));
+                    }
+                }
+            }
+
+            return list;
+        }
+
         private static Dictionary<string, string> LoadRegExList(XmlDocument doc, string name)
         {
             var list = new Dictionary<string, string>();
@@ -249,8 +301,14 @@ namespace Nikse.SubtitleEdit.UiLogic.Ocr.FixEngine
                 return list;
             }
 
-            var node = doc.DocumentElement?.SelectSingleNode(name);
-            if (node != null)
+            // See LoadReplaceList: duplicate sections must all be read.
+            var nodes = doc.DocumentElement?.SelectNodes(name);
+            if (nodes == null)
+            {
+                return list;
+            }
+
+            foreach (XmlNode node in nodes)
             {
                 foreach (XmlNode item in node.ChildNodes)
                 {
@@ -312,6 +370,123 @@ namespace Nikse.SubtitleEdit.UiLogic.Ocr.FixEngine
             return false;
         }
 
+        /// <summary>
+        /// A replace-list entry plus the signature bit of its first character pair, so a line that
+        /// cannot possibly contain the key is recognised without searching it.
+        /// </summary>
+        private readonly struct ReplaceEntry
+        {
+            public readonly string From;
+            public readonly string To;
+
+            /// <summary>Signature bit of the key's first character pair, or -1 for one-char keys.</summary>
+            public readonly int Bit;
+
+            public ReplaceEntry(string from, string to)
+            {
+                From = from;
+                To = to;
+                Bit = from.Length >= 2 ? BigramSignature.BitIndex(from[0], from[1]) : -1;
+            }
+        }
+
+        /// <summary>
+        /// A 256 bit "which character pairs occur in this text" set. If a key's first character
+        /// pair is missing from the text, the key cannot be a substring of it, so the key can be
+        /// skipped - which keys actually get applied never changes, only how many are searched
+        /// for. Collisions and one-char keys just fall through to the real search, so a false
+        /// positive costs nothing but the scan that would have happened anyway.
+        /// </summary>
+        private readonly struct BigramSignature
+        {
+            private readonly ulong _w0;
+            private readonly ulong _w1;
+            private readonly ulong _w2;
+            private readonly ulong _w3;
+
+            private BigramSignature(ulong w0, ulong w1, ulong w2, ulong w3)
+            {
+                _w0 = w0;
+                _w1 = w1;
+                _w2 = w2;
+                _w3 = w3;
+            }
+
+            public static int BitIndex(char a, char b)
+            {
+                var h = a * 31 + b;
+                return (h ^ (h >> 8)) & 255;
+            }
+
+            public static BigramSignature FromText(string text)
+            {
+                ulong w0 = 0, w1 = 0, w2 = 0, w3 = 0;
+                for (var i = 0; i + 1 < text.Length; i++)
+                {
+                    var bit = BitIndex(text[i], text[i + 1]);
+
+                    // The shift count is masked to 6 bits, so 1UL << bit selects inside the word.
+                    switch (bit >> 6)
+                    {
+                        case 0: w0 |= 1UL << bit; break;
+                        case 1: w1 |= 1UL << bit; break;
+                        case 2: w2 |= 1UL << bit; break;
+                        default: w3 |= 1UL << bit; break;
+                    }
+                }
+
+                return new BigramSignature(w0, w1, w2, w3);
+            }
+
+            public bool MayContain(int bit)
+            {
+                if (bit < 0)
+                {
+                    return true; // one-char key - nothing to rule out on
+                }
+
+                switch (bit >> 6)
+                {
+                    case 0: return (_w0 & (1UL << bit)) != 0;
+                    case 1: return (_w1 & (1UL << bit)) != 0;
+                    case 2: return (_w2 & (1UL << bit)) != 0;
+                    default: return (_w3 & (1UL << bit)) != 0;
+                }
+            }
+        }
+
+        private static ReplaceEntry[] BuildEntries(Dictionary<string, string> list)
+        {
+            var entries = new ReplaceEntry[list.Count];
+            var i = 0;
+            foreach (var kv in list)
+            {
+                entries[i++] = new ReplaceEntry(kv.Key, kv.Value);
+            }
+
+            return entries;
+        }
+
+        private ReplaceEntry[] GetPartialLineEntries()
+        {
+            if (_partialLineEntries == null || _partialLineEntries.Length != PartialLineWordBoundaryReplaceList.Count)
+            {
+                _partialLineEntries = BuildEntries(PartialLineWordBoundaryReplaceList);
+            }
+
+            return _partialLineEntries;
+        }
+
+        private ReplaceEntry[] GetBeginLineEntries()
+        {
+            if (_beginLineEntries == null || _beginLineEntries.Length != _beginLineReplaceList.Count)
+            {
+                _beginLineEntries = BuildEntries(_beginLineReplaceList);
+            }
+
+            return _beginLineEntries;
+        }
+
         public string FixOcrErrorViaLineReplaceList(string input, Subtitle subtitle, int index, ISpellChecker spellCheckManager, List<string> wordsToIgnore, bool spelledOK)
         {
             // Whole fromLine - the dictionary's default comparer is the same ordinal equality
@@ -342,15 +517,22 @@ namespace Nikse.SubtitleEdit.UiLogic.Ocr.FixEngine
             // begin fromLine
             var lines = newText.SplitToLines();
             var sb = new StringBuilder(input.Length + 2);
+            var beginLineEntries = GetBeginLineEntries();
             foreach (var l in lines)
             {
                 var s = l;
-                foreach (var kv in _beginLineReplaceList)
+                var signature = BigramSignature.FromText(s);
+                foreach (var entry in beginLineEntries)
                 {
-                    var from = kv.Key;
+                    if (!signature.MayContain(entry.Bit))
+                    {
+                        continue;
+                    }
+
+                    var from = entry.From;
                     if (s.FastIndexOf(from) >= 0)
                     {
-                        var with = kv.Value;
+                        var with = entry.To;
                         if (s.StartsWith(from, StringComparison.Ordinal))
                         {
                             s = s.Remove(0, from.Length).Insert(0, with);
@@ -362,6 +544,10 @@ namespace Nikse.SubtitleEdit.UiLogic.Ocr.FixEngine
                         {
                             s = s.Replace("\"" + from, "\"" + with);
                         }
+
+                        // A replacement can introduce character pairs a later key needs, so the
+                        // signature has to follow the line. Only reached when a key actually hit.
+                        signature = BigramSignature.FromText(s);
                     }
                 }
                 sb.AppendLine(s);
@@ -391,11 +577,18 @@ namespace Nikse.SubtitleEdit.UiLogic.Ocr.FixEngine
             }
             newText += post;
 
-            foreach (var kv in PartialLineWordBoundaryReplaceList)
+            var partialLineSignature = BigramSignature.FromText(newText);
+            foreach (var entry in GetPartialLineEntries())
             {
-                if (newText.FastIndexOf(kv.Key) >= 0)
+                if (!partialLineSignature.MayContain(entry.Bit))
                 {
-                    newText = ReplaceWord(newText, kv.Key, kv.Value);
+                    continue;
+                }
+
+                if (newText.FastIndexOf(entry.From) >= 0)
+                {
+                    newText = ReplaceWord(newText, entry.From, entry.To);
+                    partialLineSignature = BigramSignature.FromText(newText);
                 }
             }
 
@@ -912,6 +1105,7 @@ namespace Nikse.SubtitleEdit.UiLogic.Ocr.FixEngine
                 if (DeletePartialLineFromWordList(word))
                 {
                     PartialLineWordBoundaryReplaceList.Remove(word);
+                    _partialLineEntries = null;
                     return true;
                 }
                 return false;
@@ -1070,6 +1264,7 @@ namespace Nikse.SubtitleEdit.UiLogic.Ocr.FixEngine
                     if (!PartialLineWordBoundaryReplaceList.ContainsKey(fromWord))
                     {
                         PartialLineWordBoundaryReplaceList.Add(fromWord, toWord);
+                        _partialLineEntries = null;
                     }
                     return true;
                 }

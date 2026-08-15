@@ -20,29 +20,44 @@ public static class ImportOriginalHelper
     /// </param>
     internal record OriginalMatch(Subtitle Projection, List<Paragraph> Unmatched);
 
-    internal static Subtitle GetMatchingOriginalLines(ObservableCollection<SubtitleLineViewModel> current, Subtitle original)
-    {
-        return MatchOriginalLines(current, original).Projection;
-    }
-
     internal static OriginalMatch MatchOriginalLines(ObservableCollection<SubtitleLineViewModel> current, Subtitle original)
     {
         var newOriginal = new Subtitle();
 
         // Tracked by index, not by paragraph identity: two original lines can carry the same text and
-        // timings, and each must be accounted for separately.
+        // timings, and each must be accounted for separately. Also fed back into the search so no
+        // original line is handed to a second row: the last of the three passes matches on nothing
+        // more than overlapping middles, so one original line spanning two working rows - which is
+        // exactly what a line-count mismatch usually is - used to be projected onto both of them,
+        // showing the same source text twice while the line that really had no row became a
+        // reference-only row.
         var used = new bool[original.Paragraphs.Count];
 
+        // Rows claim lines in order, so an earlier row can still take a line by loose middle
+        // overlap that a later row would have matched exactly. Matching every row at once would
+        // need a global assignment; this only has to stop the same line being used twice.
         foreach (var line in current)
         {
-            var index = FindOriginalLineIndex(line, original);
+            // A leftover reference-only row (an original is being replaced by another) displays a
+            // line of the OLD original - it must not claim a line of the new one. It still emits an
+            // empty projection line to keep the projection index-aligned with the rows.
+            var index = line.IsReferenceOnly ? -1 : FindOriginalLineIndex(line, original, used);
             if (index >= 0)
             {
                 newOriginal.Paragraphs.Add(original.Paragraphs[index]);
                 used[index] = true;
+
+                // The row remembers which original line it displays, and the assignment then
+                // sticks - see SubtitleLineViewModel.ReferenceParagraphId (#13594).
+                line.ReferenceParagraphId = original.Paragraphs[index].Id;
             }
             else
             {
+                if (!line.IsReferenceOnly)
+                {
+                    line.ReferenceParagraphId = null;
+                }
+
                 var emptyLine = new Paragraph
                 {
                     StartTime = TimeCode.FromSeconds(line.StartTime.TotalSeconds),
@@ -65,10 +80,20 @@ public static class ImportOriginalHelper
         return new OriginalMatch(newOriginal, unmatched);
     }
 
-    private static int FindOriginalLineIndex(SubtitleLineViewModel line, Subtitle original)
+    /// <param name="used">
+    /// Lines already given to an earlier working row; they are skipped so no original line lands in
+    /// two rows. A row that finds only used lines gets an empty original, which is the truthful
+    /// answer - it has no source line of its own.
+    /// </param>
+    internal static int FindOriginalLineIndex(SubtitleLineViewModel line, Subtitle original, bool[] used)
     {
         for (var i = 0; i < original.Paragraphs.Count; i++)
         {
+            if (used[i])
+            {
+                continue;
+            }
+
             var originalLine = original.Paragraphs[i];
             if (line.StartTime.TotalMilliseconds == originalLine.StartTime.TotalMilliseconds &&
                 line.EndTime.TotalMilliseconds == originalLine.EndTime.TotalMilliseconds)
@@ -80,6 +105,11 @@ public static class ImportOriginalHelper
         // try with some tolerance
         for (var i = 0; i < original.Paragraphs.Count; i++)
         {
+            if (used[i])
+            {
+                continue;
+            }
+
             var originalLine = original.Paragraphs[i];
             if (Math.Abs(line.StartTime.TotalMilliseconds - originalLine.StartTime.TotalMilliseconds) < 250 &&
                 Math.Abs(line.EndTime.TotalMilliseconds - originalLine.EndTime.TotalMilliseconds) < 500)
@@ -92,6 +122,11 @@ public static class ImportOriginalHelper
         var lineMiddle = (line.StartTime.TotalMilliseconds + line.EndTime.TotalMilliseconds) / 2.0;
         for (var i = 0; i < original.Paragraphs.Count; i++)
         {
+            if (used[i])
+            {
+                continue;
+            }
+
             var originalLine = original.Paragraphs[i];
             if (originalLine.StartTime.TotalMilliseconds <= lineMiddle && originalLine.EndTime.TotalMilliseconds >= lineMiddle)
             {

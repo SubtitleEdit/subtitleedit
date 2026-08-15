@@ -108,11 +108,20 @@ public static partial class InitListViewAndEditBox
         vm.SubtitleGrid = subtitleGrid;
         vm.SubtitleGridDragSelect = new TableViewDragSelect(subtitleGrid, vm.ApplyDragSelectRange);
 
+        // Keep the view on the row being edited when a row changes height (#13619). Rows are
+        // one or two text lines, and the virtualizing panel re-estimates its pixel extent from
+        // the average realized row height - so breaking a line into two grew the estimate and
+        // scrolled the grid tens of rows away from the line the user was editing.
+        TableViewScrollAnchor.Attach(subtitleGrid);
+
         // hack to make drag and drop work on the grid - also on empty rows
         var dropHost = new Border
         {
             Background = Brushes.Transparent,
-            Child = vm.SubtitleGrid
+            // Index-mapped scrollbar (#13579): hides the grid's native pixel-mapped vertical
+            // bar and docks a row-index one beside it, so the thumb no longer jitters with
+            // the virtualization panel's extent re-estimates on variable-height rows.
+            Child = new TableViewIndexScrollBar(vm.SubtitleGrid)
         };
         vm.SubtitleGridDropHost = dropHost;
         DragDrop.SetAllowDrop(dropHost, true);
@@ -1942,8 +1951,13 @@ public static partial class InitListViewAndEditBox
         };
         textBox[AutomationProperties.NameProperty] = Se.Language.General.Text;
 
-        // A reference-only row has no translation text to edit - typing would make it a real line.
-        textBox.Bind(TextBox.IsReadOnlyProperty, new Binding(nameof(vm.IsSelectedLineReferenceOnly))
+        // A reference-only row IS editable: typing the missing translation into it is how the line
+        // is adopted from the reference - the first character promotes the row to an ordinary
+        // working line (see MainViewModel.SubtitleTextChanged, #13594).
+        //
+        // In "Edit original" mode, though, the original is the file being worked on, so the
+        // working text box goes read-only to keep the two sides apart.
+        textBox.Bind(TextBox.IsReadOnlyProperty, new Binding(nameof(vm.IsEditOriginalMode))
         {
             Mode = BindingMode.OneWay,
             Source = vm
@@ -2019,6 +2033,10 @@ public static partial class InitListViewAndEditBox
         textBox.FontWeight = appearance.SubtitleTextBoxFontBold ? FontWeight.Bold : FontWeight.Normal;
         textBox.IsUndoEnabled = false;
         textBox.ClearSelectionOnLostFocus = false;
+
+        // Pasted text goes straight into the paragraph via the two-way binding, so its line
+        // breaks must be SE's own - see TextBoxPasteNormalizer (#13591).
+        TextBoxPasteNormalizer.NormalizeLineBreaksOnPaste(textBox);
 
         if (appearance.SubtitleTextBoxCenterText)
         {

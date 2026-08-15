@@ -138,6 +138,12 @@ public class SeGeneral
     public bool WriteAn2Tag { get; set; }
     public bool AutoTrimWhiteSpace { get; set; }
 
+    /// <summary>
+    /// SE 4 parity (#13588): drop lines with no text when a subtitle file is opened or inserted.
+    /// Off by default, like SE 4.
+    /// </summary>
+    public bool RemoveBlankLinesWhenOpening { get; set; }
+
     public long CurrentVideoOffsetInMs = 0;
     public bool CurrentVideoIsSmpte = false;
 

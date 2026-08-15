@@ -192,92 +192,172 @@ public class OcrSubtitleBdn : IOcrSubtitle
         return returnBmp ?? new SKBitmap(1, 1, true);
     }
 
-    // Helper method to make bitmap transparent (replaces WinForms MakeTransparent)
-    private SKBitmap MakeTransparent(SKBitmap original)
+    // Helper method to make bitmap transparent (replaces WinForms MakeTransparent).
+    // Was a per-pixel GetPixel/SetPixel double loop - two native interop calls per pixel,
+    // column-major - i.e. ~4M interop calls for one full-HD subtitle frame, and it runs for
+    // every image of a BDN import. Now a single row-major pass over the raw pixel words.
+    internal static SKBitmap MakeTransparent(SKBitmap original)
     {
         if (original == null)
         {
             return new SKBitmap(1, 1, true);
         }
 
-        var imageInfo = new SKImageInfo(original.Width, original.Height, SKColorType.Rgba8888);
-        var transparent = new SKBitmap(imageInfo);
-
-        using (var canvas = new SKCanvas(transparent))
+        var source = EnsureReadable32Bit(original, out var ownsSource);
+        try
         {
-            canvas.Clear(SKColors.Transparent);
+            var transparent = new SKBitmap(new SKImageInfo(source.Width, source.Height, source.ColorType, source.AlphaType));
 
-            // Get the background color (typically the color at 0,0)
-            var bgColor = original.GetPixel(0, 0);
-
-            using (var paint = new SKPaint())
+            unsafe
             {
-                paint.BlendMode = SKBlendMode.Src;
+                var width = source.Width;
+                var height = source.Height;
+                var srcBase = (byte*)source.GetPixels();
+                var dstBase = (byte*)transparent.GetPixels();
+                var srcStride = source.RowBytes;
+                var dstStride = transparent.RowBytes;
 
-                for (int x = 0; x < original.Width; x++)
+                // The background color is the pixel at (0,0); compare RGB only (alpha ignored,
+                // matching the old ColorsAreEqual). The RGB bytes are the low three lanes in
+                // both Rgba8888 and Bgra8888, so one mask works for either layout.
+                const uint rgbMask = 0x00FFFFFF;
+                var background = *(uint*)srcBase & rgbMask;
+
+                for (var y = 0; y < height; y++)
                 {
-                    for (int y = 0; y < original.Height; y++)
+                    var srcRow = (uint*)(srcBase + y * srcStride);
+                    var dstRow = (uint*)(dstBase + y * dstStride);
+                    for (var x = 0; x < width; x++)
                     {
-                        var pixel = original.GetPixel(x, y);
+                        var pixel = srcRow[x];
+                        dstRow[x] = (pixel & rgbMask) == background ? 0u : pixel;
+                    }
+                }
+            }
 
-                        // Make background color transparent
-                        if (ColorsAreEqual(pixel, bgColor))
+            transparent.NotifyPixelsChanged();
+            return transparent;
+        }
+        finally
+        {
+            if (ownsSource)
+            {
+                source.Dispose();
+            }
+        }
+    }
+
+    // Helper method to apply custom colors (replaces the FastBitmap logic) - same raw-word
+    // rewrite as MakeTransparent (this one runs twice per image part in the merge branch).
+    internal static SKBitmap ApplyCustomColors(SKBitmap original, SKColor background, SKColor pattern, SKColor emphasis1, SKColor emphasis2)
+    {
+        var source = EnsureReadable32Bit(original, out var ownsSource);
+        try
+        {
+            var result = new SKBitmap(new SKImageInfo(source.Width, source.Height, source.ColorType, source.AlphaType));
+
+            unsafe
+            {
+                var width = source.Width;
+                var height = source.Height;
+                var srcBase = (byte*)source.GetPixels();
+                var dstBase = (byte*)result.GetPixels();
+                var srcStride = source.RowBytes;
+                var dstStride = result.RowBytes;
+
+                const uint rgbMask = 0x00FFFFFF;
+                var swapRedBlue = source.ColorType == SKColorType.Bgra8888;
+                var red = PackRgb(SKColors.Red, swapRedBlue);
+                var blue = PackRgb(SKColors.Blue, swapRedBlue);
+                var white = PackRgb(SKColors.White, swapRedBlue);
+                var black = PackRgb(SKColors.Black, swapRedBlue);
+                var emphasis2Packed = Pack(emphasis2, swapRedBlue);
+                var patternPacked = Pack(pattern, swapRedBlue);
+                var backgroundPacked = Pack(background, swapRedBlue);
+                var emphasis1Packed = Pack(emphasis1, swapRedBlue);
+
+                for (var y = 0; y < height; y++)
+                {
+                    var srcRow = (uint*)(srcBase + y * srcStride);
+                    var dstRow = (uint*)(dstBase + y * dstStride);
+                    for (var x = 0; x < width; x++)
+                    {
+                        var pixel = srcRow[x];
+                        var rgb = pixel & rgbMask;
+
+                        if (rgb == red) // normally anti-alias
                         {
-                            transparent.SetPixel(x, y, SKColors.Transparent);
+                            dstRow[x] = emphasis2Packed;
+                        }
+                        else if (rgb == blue) // normally text?
+                        {
+                            dstRow[x] = patternPacked;
+                        }
+                        else if (rgb == white) // normally background
+                        {
+                            dstRow[x] = backgroundPacked;
+                        }
+                        else if (rgb == black) // outline/border
+                        {
+                            dstRow[x] = emphasis1Packed;
                         }
                         else
                         {
-                            transparent.SetPixel(x, y, pixel);
+                            dstRow[x] = pixel;
                         }
                     }
                 }
             }
+
+            result.NotifyPixelsChanged();
+            return result;
         }
-
-        return transparent;
-    }
-
-    // Helper method to apply custom colors (replaces the FastBitmap logic)
-    private SKBitmap ApplyCustomColors(SKBitmap original, SKColor background, SKColor pattern, SKColor emphasis1, SKColor emphasis2)
-    {
-        var imageInfo = new SKImageInfo(original.Width, original.Height, SKColorType.Rgba8888);
-        var result = new SKBitmap(imageInfo);
-
-        for (int x = 0; x < original.Width; x++)
+        finally
         {
-            for (int y = 0; y < original.Height; y++)
+            if (ownsSource)
             {
-                var c = original.GetPixel(x, y);
-
-                if (ColorsAreEqual(c, SKColors.Red)) // normally anti-alias
-                {
-                    result.SetPixel(x, y, emphasis2);
-                }
-                else if (ColorsAreEqual(c, SKColors.Blue)) // normally text?
-                {
-                    result.SetPixel(x, y, pattern);
-                }
-                else if (ColorsAreEqual(c, SKColors.White)) // normally background
-                {
-                    result.SetPixel(x, y, background);
-                }
-                else if (ColorsAreEqual(c, SKColors.Black)) // outline/border
-                {
-                    result.SetPixel(x, y, emphasis1);
-                }
-                else
-                {
-                    result.SetPixel(x, y, c);
-                }
+                source.Dispose();
             }
         }
-
-        return result;
     }
 
-    private bool ColorsAreEqual(SKColor c1, SKColor c2)
+    /// <summary>RGB-only packed value in the bitmap's native lane order (alpha lane zero).</summary>
+    private static uint PackRgb(SKColor c, bool swapRedBlue)
     {
-        return c1.Red == c2.Red && c1.Green == c2.Green && c1.Blue == c2.Blue;
+        return swapRedBlue
+            ? (uint)(c.Red << 16) | (uint)(c.Green << 8) | c.Blue
+            : (uint)(c.Blue << 16) | (uint)(c.Green << 8) | c.Red;
+    }
+
+    /// <summary>Full ARGB packed value in the bitmap's native lane order.</summary>
+    private static uint Pack(SKColor c, bool swapRedBlue)
+    {
+        return (uint)(c.Alpha << 24) | PackRgb(c, swapRedBlue);
+    }
+
+    /// <summary>
+    /// Returns a 32-bit-per-pixel readable view of <paramref name="bitmap"/> - the bitmap
+    /// itself when it already qualifies, otherwise a converted copy the caller must dispose
+    /// (<paramref name="ownsResult"/> is true in that case).
+    /// </summary>
+    private static SKBitmap EnsureReadable32Bit(SKBitmap bitmap, out bool ownsResult)
+    {
+        if ((bitmap.ColorType == SKColorType.Rgba8888 || bitmap.ColorType == SKColorType.Bgra8888) &&
+            bitmap.GetPixels() != IntPtr.Zero)
+        {
+            ownsResult = false;
+            return bitmap;
+        }
+
+        var copy = bitmap.Copy(SKColorType.Rgba8888);
+        if (copy == null)
+        {
+            ownsResult = false;
+            return bitmap;
+        }
+
+        ownsResult = true;
+        return copy;
     }
 
 

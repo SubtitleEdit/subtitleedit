@@ -49,6 +49,8 @@ public class BatchConvertConfig
     public SortBySettings SortBy { get; set; }
     public AdjustImageColorsSettings AdjustImageColors { get; set; }
     public BeautifyTimeCodesSettings2 BeautifyTimeCodes { get; set; }
+    public SnapTimeCodesToFramesSettings SnapTimeCodesToFrames { get; set; }
+    public ConvertColorsToDialogSettings ConvertColorsToDialog { get; set; }
 
     public BatchConvertConfig()
     {
@@ -88,6 +90,8 @@ public class BatchConvertConfig
         SortBy = new SortBySettings();
         AdjustImageColors = new AdjustImageColorsSettings();
         BeautifyTimeCodes = new BeautifyTimeCodesSettings2();
+        SnapTimeCodesToFrames = new SnapTimeCodesToFramesSettings();
+        ConvertColorsToDialog = new ConvertColorsToDialogSettings();
     }
 
     public bool IsTargetFormatImageBased =>
@@ -387,6 +391,31 @@ public class BatchConvertConfig
         {
             SnapToShotChanges = true;
             FixedFrameRate = 23.976;
+        }
+    }
+
+    public class SnapTimeCodesToFramesSettings
+    {
+        public bool IsActive { get; set; }
+        public bool UseFixedFrameRate { get; set; }
+        public double FixedFrameRate { get; set; }
+
+        public SnapTimeCodesToFramesSettings()
+        {
+            FixedFrameRate = 23.976;
+        }
+    }
+
+    public class ConvertColorsToDialogSettings
+    {
+        public bool IsActive { get; set; }
+        public bool RemoveColorTags { get; set; }
+        public bool AddNewLines { get; set; }
+        public bool ReBreakLines { get; set; }
+
+        public ConvertColorsToDialogSettings()
+        {
+            RemoveColorTags = true;
         }
     }
 

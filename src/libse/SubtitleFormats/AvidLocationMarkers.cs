@@ -8,6 +8,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 {
     public class AvidLocationMarkers : SubtitleFormat
     {
+        private static readonly CharLookup TimeCodeChars = CharLookup.Create('0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '.', ':', ',');
+
         private static readonly Regex RegexTimeCode = new Regex(@"^\t\d\d:\d\d:\d\d:\d\d\t[A-Z]\d\t[a-z]{3,8}\t", RegexOptions.Compiled);
 
         public override string Extension => ".txt";
@@ -55,8 +57,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         var arr = match.Value.Split('\t');
                         if (arr.Length== 5 && text.Length > 0)
                         {
-                            if (string.IsNullOrWhiteSpace(text
-                                .RemoveChar('0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '.', ':', ',')))
+                            if (text.IsOnlyCharsOrWhiteSpace(TimeCodeChars))
                             {
                                 _errorCount++;
                             }

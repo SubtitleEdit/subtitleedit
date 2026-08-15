@@ -321,6 +321,29 @@ When you open an original subtitle file (**File → Open original subtitle**), t
 <!-- Screenshot: Main window in translation mode -->
 ![Translation Mode](../screenshots/main-translation-mode.png)
 
+### When the original does not line up 1:1
+
+If the original file does not have the same number of lines as the subtitle you are editing, Subtitle Edit asks how to show it:
+
+- **Show only the matching original lines** — the classic side-by-side view. Lines are paired by time codes; original lines with no counterpart are not shown.
+- **Show all original lines** — original lines with no counterpart appear as extra, dimmed rows (without a line number), placed in time order, so you can see exactly what your subtitle is missing.
+
+The dialog also offers an **Allow edit of original subtitle** check box. Left off (the default), the original is a read-only reference: it is never written to, and closing it leaves the file on disk exactly as it was. Both choices are remembered for the next time.
+
+The dimmed rows belong to the original, so they are not saved with your subtitle, and editing commands (delete, merge, export, …) skip them. To adopt a missing line into your subtitle, select it and simply type or paste the translation — the row immediately becomes a normal line, keeping its timings. **Column → Copy text from original to current** in the grid's context menu does the same while also copying the original text over. You can nudge a dimmed row's start/end/duration first (it stays a dimmed reference row until you type text into it), so an adopted line lands with exactly the timing you want.
+
+Each row remembers which original line it shows, so editing or retiming your own lines never re-shuffles the reference: the dimmed rows only slide to keep time order, and if you delete a row that had adopted a reference line, that line comes back as a dimmed row.
+
+### Edit original mode
+
+**File → Edit original subtitle** (visible while an original is open) switches which file you are editing:
+
+- The original's text becomes editable — including a reference that was opened read-only.
+- The working subtitle's text box goes read-only while the mode is on, so the two sides can't be mixed up. The edit-box label reads *Original text (edit mode)*.
+- Changes to the original are tracked: `Ctrl+S` saves them, and closing the original (or the app) asks about unsaved changes.
+
+Leaving the mode returns the original to the state it was opened with. If it was a read-only reference and you have unsaved edits, Subtitle Edit asks whether to save them, discard them (the reference goes back to exactly what the file contains), or stay in the mode.
+
 ## Launch Parameters
 
 Subtitle Edit accepts a few command-line arguments at startup, useful for desktop shortcuts, file-manager "Open with…" entries, and sync scripts.

@@ -30,4 +30,6 @@ public enum BatchConvertFunctionType
     SortBy,
     AdjustImageColors,
     BeautifyTimeCodes,
+    SnapTimeCodesToFrames,
+    ConvertColorsToDialog,
 }

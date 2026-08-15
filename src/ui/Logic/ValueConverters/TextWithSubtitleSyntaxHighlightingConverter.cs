@@ -60,10 +60,30 @@ public class TextWithSubtitleSyntaxHighlightingConverter : IValueConverter
 
     private static readonly TextDecorationCollection MisspelledDecorations = new() { MisspelledDecoration };
 
-    // Colors parsed out of the subtitle itself (ASSA \c tags, <font color=...>) are arbitrary, so
-    // there is nothing worth caching - but an immutable brush is a plain object where
-    // SolidColorBrush is an AvaloniaObject that drags a property store along for a fixed color.
-    private static ImmutableSolidColorBrush CreateBrush(Color color) => new(color);
+    // Colors parsed out of the subtitle itself (ASSA \c tags, <font color=...>). An immutable
+    // brush is a plain object where SolidColorBrush is an AvaloniaObject that drags a property
+    // store along for a fixed color - but a brush per colored run per repaint still adds up:
+    // a file typically uses a handful of colors across hundreds of lines, and every one of those
+    // runs is rebuilt whenever its row repaints. Unlike the theme palette above these colors are
+    // arbitrary, so the cache is capped and dropped wholesale rather than grown without bound.
+    private static readonly Dictionary<Color, ImmutableSolidColorBrush> DocumentBrushCache = new();
+    private const int DocumentBrushCacheLimit = 256;
+
+    private static ImmutableSolidColorBrush CreateBrush(Color color)
+    {
+        if (!DocumentBrushCache.TryGetValue(color, out var brush))
+        {
+            if (DocumentBrushCache.Count >= DocumentBrushCacheLimit)
+            {
+                DocumentBrushCache.Clear();
+            }
+
+            brush = new ImmutableSolidColorBrush(color);
+            DocumentBrushCache[color] = brush;
+        }
+
+        return brush;
+    }
 
     // <font face="..."> and \fnName repeat the same handful of names down a whole file, and
     // constructing a FontFamily parses the name every time.
@@ -526,7 +546,7 @@ public class TextWithSubtitleSyntaxHighlightingConverter : IValueConverter
                             if (SubtitleSyntaxTokenizer.IsAssColorTag(str.AsSpan(tagNameStart, tagNameEnd - tagNameStart)))
                             {
                                 // Only the color tags need the value as a string
-                                assColor = SubtitleSyntaxTokenizer.TryParseAssColor(str.Substring(tagNameEnd, thisTagEnd - tagNameEnd));
+                                assColor = SubtitleSyntaxTokenizer.TryParseAssColor(str.AsSpan(tagNameEnd, thisTagEnd - tagNameEnd));
                             }
 
                             builder.Append(str, tagNameEnd, thisTagEnd - tagNameEnd,
@@ -729,7 +749,7 @@ public class TextWithSubtitleSyntaxHighlightingConverter : IValueConverter
                         }
                         else if (tagName.Equals("font", StringComparison.OrdinalIgnoreCase))
                         {
-                            ParseFontTag(str.Substring(contentStart, contentEnd - contentStart), state);
+                            ParseFontTag(str.AsSpan(contentStart, contentEnd - contentStart), state);
                         }
                     }
                     i = tagEnd + 1;
@@ -854,12 +874,62 @@ public class TextWithSubtitleSyntaxHighlightingConverter : IValueConverter
         return run;
     }
 
-    private static void ParseFontTag(string tagContent, FormattingState state)
+    /// <summary>
+    /// What a <c>&lt;font ...&gt;</c> tag sets, memoized by the tag's text.
+    /// </summary>
+    private readonly record struct FontTagValues(Color? Color, string? FontName, double? FontSize);
+
+    // A subtitle repeats the same few <font> tags down the whole file, and every visible row
+    // re-parses its own on every repaint: a substring of the tag, up to three regex matches and
+    // a group value per attribute, plus a color parse. Memoize by the tag text and probe with a
+    // span, so a hit costs one dictionary lookup and allocates nothing at all. Capped and
+    // dropped wholesale like the brush cache above - the contents are arbitrary user data.
+    private static readonly Dictionary<string, FontTagValues> FontTagCache = new(StringComparer.Ordinal);
+    private static readonly Dictionary<string, FontTagValues>.AlternateLookup<ReadOnlySpan<char>> FontTagCacheBySpan =
+        FontTagCache.GetAlternateLookup<ReadOnlySpan<char>>();
+    private const int FontTagCacheLimit = 128;
+
+    private static void ParseFontTag(ReadOnlySpan<char> tagContent, FormattingState state)
     {
-        if (string.IsNullOrEmpty(tagContent) || tagContent.Length > 500)
+        if (tagContent.IsEmpty || tagContent.Length > 500)
         {
             return; // Skip empty or excessively long tag content
         }
+
+        if (!FontTagCacheBySpan.TryGetValue(tagContent, out var values))
+        {
+            values = ParseFontTagUncached(tagContent.ToString());
+            if (FontTagCache.Count >= FontTagCacheLimit)
+            {
+                FontTagCache.Clear();
+            }
+
+            FontTagCacheBySpan[tagContent] = values;
+        }
+
+        // Only attributes the tag actually carried are applied, exactly as before: the parse
+        // wrote to the state only inside each attribute's success branch.
+        if (values.Color.HasValue)
+        {
+            state.Color = values.Color;
+        }
+
+        if (values.FontName != null)
+        {
+            state.FontName = values.FontName;
+        }
+
+        if (values.FontSize.HasValue)
+        {
+            state.FontSize = values.FontSize;
+        }
+    }
+
+    private static FontTagValues ParseFontTagUncached(string tagContent)
+    {
+        Color? color = null;
+        string? fontName = null;
+        double? fontSize = null;
 
         try
         {
@@ -877,7 +947,7 @@ public class TextWithSubtitleSyntaxHighlightingConverter : IValueConverter
                     try
                     {
                         var skColor = HtmlUtil.GetColorFromString(colorValue);
-                        state.Color = Color.FromArgb(skColor.Alpha, skColor.Red, skColor.Green, skColor.Blue);
+                        color = Color.FromArgb(skColor.Alpha, skColor.Red, skColor.Green, skColor.Blue);
                     }
                     catch
                     {
@@ -892,10 +962,10 @@ public class TextWithSubtitleSyntaxHighlightingConverter : IValueConverter
                 : Match.Empty;
             if (faceMatch.Success)
             {
-                var fontName = faceMatch.Groups[1].Value.Trim();
-                if (fontName.Length > 0 && fontName.Length <= 100)
+                var face = faceMatch.Groups[1].Value.Trim();
+                if (face.Length > 0 && face.Length <= 100)
                 {
-                    state.FontName = fontName;
+                    fontName = face;
                 }
             }
 
@@ -905,7 +975,7 @@ public class TextWithSubtitleSyntaxHighlightingConverter : IValueConverter
                 : Match.Empty;
             if (sizeMatch.Success && double.TryParse(sizeMatch.Groups[1].Value, out var size))
             {
-                state.FontSize = size;
+                fontSize = size;
             }
         }
         catch (RegexMatchTimeoutException)
@@ -916,6 +986,8 @@ public class TextWithSubtitleSyntaxHighlightingConverter : IValueConverter
         {
             // Ignore any other parsing errors
         }
+
+        return new FontTagValues(color, fontName, fontSize);
     }
 
     /// <summary>
@@ -1407,7 +1479,7 @@ public class TextWithSubtitleSyntaxHighlightingConverter : IValueConverter
                 IBrush valueBrush;
                 if (source.AsSpan(attrStart, attributeNameLength).Equals("color", StringComparison.OrdinalIgnoreCase))
                 {
-                    var parsedColor = SubtitleSyntaxTokenizer.TryParseColor(source.Substring(valueStart, i - valueStart));
+                    var parsedColor = SubtitleSyntaxTokenizer.TryParseColor(source.AsSpan(valueStart, i - valueStart));
                     valueBrush = parsedColor.HasValue
                         ? CreateBrush(parsedColor.Value)
                         : ValuesBrush;

@@ -122,8 +122,8 @@ public class SeWaveform
         WaveformParagraphLeftColor = Color.FromArgb(90, 0, 255, 0).FromColorToHex();
         WaveformParagraphRightColor = Color.FromArgb(90, 255, 0, 0).FromColorToHex();
         WaveformFancyHighColor = Colors.Orange.FromColorToHex();
-        ParagraphBackground = Color.FromArgb(90, 70, 70, 70).FromColorToHex();
-        ParagraphSelectedBackground = Color.FromArgb(90, 70, 70, 120).FromColorToHex();
+        ParagraphBackground = Color.FromArgb(140, 70, 70, 70).FromColorToHex();
+        ParagraphSelectedBackground = Color.FromArgb(140, 70, 70, 120).FromColorToHex();
         ShotChangesSensitivity = 0.4;
         ShotChangesImportTimeCodeFormat = "Seconds";
         SnapToShotChangesPixels = 8;

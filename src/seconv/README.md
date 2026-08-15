@@ -40,6 +40,22 @@ seconv dump-settings > my.json                                   # starter --set
 
 Run `seconv` with no arguments for built-in help, or `seconv formats` to list every format.
 
+## Scripting
+
+Every subcommand takes `--json`, and so does a conversion run. Under `--json`, stdout is one
+JSON document on success and on failure alike — a usage error arrives in the same envelope as
+a failed conversion, so nothing has to be parsed out of stderr.
+
+```bash
+seconv --help-json                              # the whole command line as JSON, reflected off the parser
+seconv formats --json | jq -r '.formats[].id'   # exact tokens --format accepts
+seconv movie.srt subrip --json                  # per-file results
+```
+
+An unrecognised option is an error, never a silent no-op: `seconv` exits 1 and names the closest
+real option rather than converting the file without the operation that was asked for. Exit codes
+are only ever 0 (success) or 1 (any failure).
+
 ## Full reference
 
 ➡ **[Command Line (seconv) — full reference](../../docs/reference/command-line.md)**

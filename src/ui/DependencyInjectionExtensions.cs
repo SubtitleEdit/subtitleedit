@@ -193,7 +193,7 @@ using AudioVisualizerUndockedViewModel = Nikse.SubtitleEdit.Features.Shared.Undo
 using BatchConvertFixCommonErrorsSettingsViewModel = Nikse.SubtitleEdit.Features.Tools.BatchConvert.BatchConvertFixCommonErrorsSettingsViewModel;
 using BatchConvertSettingsViewModel = Nikse.SubtitleEdit.Features.Tools.BatchConvert.BatchConvertSettingsViewModel;
 using BinaryEditViewModel = Nikse.SubtitleEdit.Features.Shared.BinaryEdit.BinaryEditViewModel;
-using CategoryExportViewModel = Nikse.SubtitleEdit.Features.Edit.MultipleReplace.CategoryExportViewModel;
+using CategoryPickerViewModel = Nikse.SubtitleEdit.Features.Edit.MultipleReplace.CategoryPickerViewModel;
 using DownloadSpeechToTextEngineViewModel = Nikse.SubtitleEdit.Features.Video.SpeechToText.DownloadSpeechToTextEngineViewModel;
 using DownloadSpeechToTextModelsViewModel = Nikse.SubtitleEdit.Features.Video.SpeechToText.DownloadSpeechToTextModelsViewModel;
 using GetAudioClipsViewModel = Nikse.SubtitleEdit.Features.Shared.GetAudioClips.GetAudioClipsViewModel;
@@ -352,7 +352,7 @@ public static class DependencyInjectionExtensions
         collection.AddTransient<BurnInResolutionPickerViewModel>();
         collection.AddTransient<BurnInSettingsViewModel>();
         collection.AddTransient<BurnInViewModel>();
-        collection.AddTransient<CategoryExportViewModel>();
+        collection.AddTransient<CategoryPickerViewModel>();
         collection.AddTransient<ChangeCasingViewModel>();
         collection.AddTransient<ChangeFormattingViewModel>();
         collection.AddTransient<ConvertActorsViewModel>();
@@ -405,6 +405,7 @@ public static class DependencyInjectionExtensions
         collection.AddTransient<FindRuleViewModel>();
         collection.AddTransient<FindTextViewModel>();
         collection.AddTransient<FindViewModel>();
+        collection.AddTransient<FixCommonErrorsLogViewModel>();
         collection.AddTransient<FixCommonErrorsProfileViewModel>();
         collection.AddTransient<Features.Tools.AiReview.AiReviewViewModel>();
         collection.AddTransient<Features.Main.AiAssistant.AiAssistantViewModel>();
@@ -448,6 +449,7 @@ public static class DependencyInjectionExtensions
         collection.AddTransient<NOcrSettingsViewModel>();
         collection.AddTransient<NOcrTrainViewModel>();
         collection.AddTransient<LlamaCppOcrSettingsViewModel>();
+        collection.AddTransient<Features.Ocr.CrispEmbedSettings.CrispEmbedSettingsViewModel>();
         collection.AddTransient<LlamaCppEngineSettingsViewModel>();
         collection.AddTransient<Features.Translate.LlamaCppAdvanced.LlamaCppAdvancedSettingsViewModel>();
         collection.AddTransient<OcrViewModel>();

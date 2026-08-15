@@ -33,7 +33,9 @@ public partial class TransparentSettingsViewModel : ObservableObject
     {
         UseSourceFolder = !Se.Settings.Video.Transparent.UseOutputFolder; 
         UseOutputFolder = Se.Settings.Video.Transparent.UseOutputFolder;
-        OutputFolder = Se.Settings.Video.BurnIn.OutputFolder;
+        // This dialog's own folder - it saves to Video.Transparent.OutputFolder below, so loading
+        // burn-in's showed the wrong folder back and hid the fact that the saved one was unused.
+        OutputFolder = Se.Settings.Video.Transparent.OutputFolder;
     }
 
     private void SaveSettings()
@@ -49,7 +51,7 @@ public partial class TransparentSettingsViewModel : ObservableObject
         if (UseOutputFolder && string.IsNullOrWhiteSpace(OutputFolder))
         {
             await MessageBox.Show(Window!, Se.Language.General.Error,
-                "Please select output folder", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                Se.Language.General.PleaseSelectOutputFolder, MessageBoxButtons.OK, MessageBoxIcon.Error);
             return;
         }
 
@@ -61,7 +63,7 @@ public partial class TransparentSettingsViewModel : ObservableObject
     [RelayCommand]
     private async Task BrowseOutputFolder()
     {
-        var folder = await _folderHelper.PickFolderAsync(Window!, "Select output folder");
+        var folder = await _folderHelper.PickFolderAsync(Window!, Se.Language.General.PickOutputFolder);
         if (!string.IsNullOrEmpty(folder))
         {
             OutputFolder = folder;

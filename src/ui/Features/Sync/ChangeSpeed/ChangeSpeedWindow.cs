@@ -14,7 +14,7 @@ public class ChangeSpeedWindow : Window
     public ChangeSpeedWindow(ChangeSpeedViewModel vm)
     {
         UiUtil.InitializeWindow(this, GetType().Name);
-        Title = Se.Language.General.ChangeSpeed;
+        Title = UiUtil.MakeWindowTitle(Se.Language.General.ChangeSpeed);
         SizeToContent = SizeToContent.WidthAndHeight;
         CanResize = false;
         vm.Window = this;

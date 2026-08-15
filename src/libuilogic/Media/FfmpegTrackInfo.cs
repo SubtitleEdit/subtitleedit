@@ -16,12 +16,13 @@ namespace Nikse.SubtitleEdit.UiLogic.Media
         // "-map 0:N". -1 when ffmpeg did not report one.
         public int StreamIndex { get; set; } = -1;
 
+        private static readonly Regex BitRateRegex = new Regex(@"\d+ kb/s", RegexOptions.Compiled);
+
         public int BitRate
         {
             get
             {
-                var regex = new Regex(@"\d+ kb/s");
-                var match = regex.Match(TrackInfo);
+                var match = BitRateRegex.Match(TrackInfo);
                 if (match.Success)
                 {
                     var kb = match.Value.Replace(" kb/s", string.Empty);

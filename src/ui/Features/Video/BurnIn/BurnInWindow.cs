@@ -613,6 +613,7 @@ public class BurnInWindow : Window
 
         var labelVideoExtension = UiUtil.MakeLabel(Se.Language.General.VideoExtension);
         var comboBoxVideoExtension = UiUtil.MakeComboBox(vm.VideoExtensions, vm, nameof(vm.SelectedVideoExtension));
+        comboBoxVideoExtension.SelectionChanged += vm.VideoExtensionChanged;
 
         var grid = new Grid
         {

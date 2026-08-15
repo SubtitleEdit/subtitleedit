@@ -396,6 +396,7 @@ public class LanguageGeneral
     public string StartServer { get; set; }
     public string StopServer { get; set; }
     public string PickOutputFolder { get; set; }
+    public string PleaseSelectOutputFolder { get; set; }
     public string PickResolutionFromCurrentVideo { get; set; }
     public string PickResolutionFromVideoDotDotDot { get; set; }
     public string PickSubtitleFile { get; set; }
@@ -631,6 +632,7 @@ public class LanguageGeneral
     public string UpdateAndClose { get; set; }
     public string UpdateAvailable { get; set; }
     public string UpdateDetails { get; set; }
+    public string UpdateX { get; set; }
     public string UpdatedBy { get; set; }
     public string UpToDate { get; set; }
     public string Url { get; set; }
@@ -1138,6 +1140,7 @@ public class LanguageGeneral
         StartServer = "Start server";
         StopServer = "Stop server";
         PickOutputFolder = "Pick output folder";
+        PleaseSelectOutputFolder = "Please select an output folder";
         PickResolutionFromCurrentVideo = "Pick resolution from current video";
         PickResolutionFromVideoDotDotDot = "Pick resolution from video...";
         PickSubtitleFile = "Pick subtitle file...";
@@ -1373,6 +1376,7 @@ public class LanguageGeneral
         UpdateAndClose = "Update and close";
         UpdateAvailable = "Update available";
         UpdateDetails = "Update details";
+        UpdateX = "Update {0}";
         UpdatedBy = "Updated by";
         UpToDate = "Up to date";
         Url = "URL";

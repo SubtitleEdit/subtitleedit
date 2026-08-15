@@ -189,6 +189,10 @@ public static class InitNativeMacMenu
             v => v.IsVideoLoaded, nameof(MainViewModel.IsVideoLoaded)));
         fileItems.Items.Add(Conditional(Clean(l.OpenOriginal), v => v.FileOpenOriginalCommand,
             v => !v.ShowColumnOriginalText, nameof(MainViewModel.ShowColumnOriginalText)));
+        var editOriginalItem = Toggle(Clean(l.EditOriginalSubtitle), v => v.ToggleEditOriginalModeCommand,
+            v => v.IsEditOriginalMode, nameof(MainViewModel.IsEditOriginalMode));
+        state.Visibilities.Add((editOriginalItem, v => v.ShowColumnOriginalText, [nameof(MainViewModel.ShowColumnOriginalText)]));
+        fileItems.Items.Add(editOriginalItem);
         fileItems.Items.Add(Conditional(Clean(l.CloseOriginal), v => v.FileCloseOriginalCommand,
             v => v.ShowColumnOriginalText, nameof(MainViewModel.ShowColumnOriginalText)));
         // Hidden for a read-only original - see the same item in InitMenu (issue #13449).

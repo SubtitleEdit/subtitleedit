@@ -1313,50 +1313,8 @@ public partial class ReviewSpeechViewModel : ObservableObject
     /// </summary>
     private static bool MatchesPlayPauseShortcut(KeyEventArgs e)
     {
-        var cmdOrWin = OperatingSystem.IsMacOS() ? "Win" : "Ctrl";
-        var toggleKeys = Se.Settings.Shortcuts.FirstOrDefault(s => s.ActionName == nameof(MainViewModel.TogglePlayPauseCommand))?.Keys
-                         ?? [nameof(Key.Space)];
-        var toggle2Keys = Se.Settings.Shortcuts.FirstOrDefault(s => s.ActionName == nameof(MainViewModel.TogglePlayPause2Command))?.Keys
-                          ?? [cmdOrWin, nameof(Key.Space)];
-        return MatchesKeys(e, toggleKeys) || MatchesKeys(e, toggle2Keys);
-    }
-
-    // Matches a stored shortcut key list (modifier tokens + one main key) against a key event.
-    // Multi-key non-modifier chords are not supported here - the full ShortcutManager handles
-    // those in the main window; a dialog only needs the simple form.
-    private static bool MatchesKeys(KeyEventArgs e, List<string> keys)
-    {
-        var modifiers = KeyModifiers.None;
-        Key? mainKey = null;
-        foreach (var token in keys)
-        {
-            if (token is "Ctrl" or "Control" or "LeftCtrl" or "RightCtrl")
-            {
-                modifiers |= KeyModifiers.Control;
-            }
-            else if (token is "Alt" or "LeftAlt" or "RightAlt")
-            {
-                modifiers |= KeyModifiers.Alt;
-            }
-            else if (token is "Shift" or "LeftShift" or "RightShift")
-            {
-                modifiers |= KeyModifiers.Shift;
-            }
-            else if (token is "Win" or "Meta" or "LWin" or "RWin" or "Cmd" or "Command")
-            {
-                modifiers |= KeyModifiers.Meta;
-            }
-            else if (Enum.TryParse<Key>(token, out var key) && mainKey == null)
-            {
-                mainKey = key;
-            }
-            else
-            {
-                return false;
-            }
-        }
-
-        return mainKey != null && mainKey == e.Key && e.KeyModifiers == modifiers;
+        return MainShortcutKeys.Matches(e, nameof(MainViewModel.TogglePlayPauseCommand), [nameof(Key.Space)]) ||
+               MainShortcutKeys.Matches(e, nameof(MainViewModel.TogglePlayPause2Command), [MainShortcutKeys.CtrlOrCmd, nameof(Key.Space)]);
     }
 
     private void TogglePlayPauseSelectedRow()
@@ -1836,6 +1794,47 @@ public partial class ReviewSpeechViewModel : ObservableObject
         }
     }
 
+    /// <summary>
+    /// Drops the playback player and destroys its mpv core on a worker thread.
+    /// <para>
+    /// <c>mpv_terminate_destroy</c> runs libmpv's native win32/audio deinit, which must not happen
+    /// on the UI thread while a window is closing: it leaves <c>Window.CloseInternal()</c> to make
+    /// its next COM call (<c>IFrameworkInputPane.Unadvise</c>) into an apartment libmpv's teardown
+    /// has already disturbed - an access violation no catch block can intercept. Same reasoning,
+    /// and same off-thread cure, as <c>TextToSpeechViewModel.DisposePreviewPlayer</c> (#13376) and
+    /// <c>VideoPlayerControl.CloseAndDisposePlayer</c> (#11176).
+    /// </para>
+    /// Safe to call more than once - the second call finds no player and does nothing.
+    /// </summary>
+    private void DisposePlayerOffThread()
+    {
+        LibMpvDynamicPlayer? player;
+        lock (_playLock)
+        {
+            player = _mpvContext;
+            _mpvContext = null;
+        }
+
+        if (player == null)
+        {
+            return;
+        }
+
+        Task.Run(() =>
+        {
+            try
+            {
+                // Stop first so the core tears down from an idle state instead of mid-playback.
+                player.Stop();
+                player.Dispose();
+            }
+            catch (Exception ex)
+            {
+                SeLogger.Error(ex, "ReviewSpeech: disposing the audio player failed");
+            }
+        });
+    }
+
     internal void OnClosing(WindowClosingEventArgs e)
     {
         // Title-bar X / Alt+F4 bypass the Escape guard, so a regenerate can still be in flight
@@ -1852,11 +1851,8 @@ public partial class ReviewSpeechViewModel : ObservableObject
         {
             try { _cancellationTokenSource.Dispose(); } catch (ObjectDisposedException) { }
         }
-        lock (_playLock)
-        {
-            _mpvContext?.Dispose();
-            _mpvContext = null;
-        }
+
+        DisposePlayerOffThread();
 
         // The waveform mirrors subscribe to PropertyChanged in Initialize so drags
         // on the visualizer write back into the per-row TtsStepResult. Detach now

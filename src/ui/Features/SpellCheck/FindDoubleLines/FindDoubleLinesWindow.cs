@@ -14,7 +14,7 @@ public class FindDoubleLinesWindow : Window
     public FindDoubleLinesWindow(FindDoubleLinesViewModel vm)
     {
         UiUtil.InitializeWindow(this, GetType().Name);
-        Title = Se.Language.General.DoubleLines;
+        Title = UiUtil.MakeWindowTitle(Se.Language.General.DoubleLines);
         CanResize = true;
         Width = 600;
         Height = 700;

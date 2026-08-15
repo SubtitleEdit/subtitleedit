@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Numerics;
 using System.Runtime.InteropServices;
 
 namespace Nikse.SubtitleEdit.Core.Common
@@ -87,20 +88,34 @@ namespace Nikse.SubtitleEdit.Core.Common
             Buffer.BlockCopy(input._bitmapData, 0, _bitmapData, 0, _bitmapData.Length);
         }
 
+        /// <summary>
+        /// One BGRA pixel packed into the uint that <see cref="MemoryMarshal.Cast{TFrom,TTo}(Span{TFrom})"/>
+        /// yields for it. Built through the byte layout so the constant is right on either endianness.
+        /// </summary>
+        private static uint PackBgra(byte blue, byte green, byte red, byte alpha)
+        {
+            Span<byte> bytes = stackalloc byte[4];
+            bytes[0] = blue;
+            bytes[1] = green;
+            bytes[2] = red;
+            bytes[3] = alpha;
+            return MemoryMarshal.Read<uint>(bytes);
+        }
+
         public void ReplaceYellowWithWhite()
         {
-            var buffer = new byte[3];
-            buffer[0] = 255;
-            buffer[1] = 255;
-            buffer[2] = 255;
-            for (int i = 0; i < _bitmapData.Length; i += 4)
+            var keepAlpha = PackBgra(0, 0, 0, 255);
+            var white = PackBgra(255, 255, 255, 0);
+            var data = _bitmapData.AsSpan();
+            var pixels = MemoryMarshal.Cast<byte, uint>(_bitmapData.AsSpan());
+            for (int i = 0, p = 0; p < pixels.Length; i += 4, p++)
             {
-                if (_bitmapData[i + 3] > 200 && // Alpha
-                    _bitmapData[i + 2] > 199 && // Red
-                    _bitmapData[i + 1] > 190 && // Green
-                    _bitmapData[i] < 40) // Blue
+                if (data[i + 3] > 200 && // Alpha
+                    data[i + 2] > 199 && // Red
+                    data[i + 1] > 190 && // Green
+                    data[i] < 40) // Blue
                 {
-                    Buffer.BlockCopy(buffer, 0, _bitmapData, i, 3);
+                    pixels[p] = (pixels[p] & keepAlpha) | white;
                 }
             }
         }
@@ -108,84 +123,69 @@ namespace Nikse.SubtitleEdit.Core.Common
         public void ReplaceColor(int alpha, int red, int green, int blue,
             int alphaTo, int redTo, int greenTo, int blueTo)
         {
-            var buffer = new byte[4];
-            buffer[0] = (byte)blueTo;
-            buffer[1] = (byte)greenTo;
-            buffer[2] = (byte)redTo;
-            buffer[3] = (byte)alphaTo;
-            for (int i = 0; i < _bitmapData.Length; i += 4)
+            if ((uint)alpha > 255 || (uint)red > 255 || (uint)green > 255 || (uint)blue > 255)
             {
-                if (_bitmapData[i + 3] == alpha &&
-                    _bitmapData[i + 2] == red &&
-                    _bitmapData[i + 1] == green &&
-                    _bitmapData[i] == blue)
+                // A channel outside 0-255 can never equal a pixel byte, so nothing would match.
+                return;
+            }
+
+            var from = PackBgra((byte)blue, (byte)green, (byte)red, (byte)alpha);
+            var to = PackBgra((byte)blueTo, (byte)greenTo, (byte)redTo, (byte)alphaTo);
+            var pixels = MemoryMarshal.Cast<byte, uint>(_bitmapData.AsSpan());
+            for (var p = 0; p < pixels.Length; p++)
+            {
+                if (pixels[p] == from)
                 {
-                    Buffer.BlockCopy(buffer, 0, _bitmapData, i, 4);
+                    pixels[p] = to;
                 }
             }
         }
 
         public void InvertColors()
         {
-            for (int i = 0; i < _bitmapData.Length;)
+            var rgb = PackBgra(255, 255, 255, 0);
+            var pixels = MemoryMarshal.Cast<byte, uint>(_bitmapData.AsSpan());
+            for (var p = 0; p < pixels.Length; p++)
             {
-                _bitmapData[i] = (byte)~_bitmapData[i];
-                i++;
-                _bitmapData[i] = (byte)~_bitmapData[i];
-                i++;
-                _bitmapData[i] = (byte)~_bitmapData[i];
-                i += 2;
+                pixels[p] ^= rgb;
             }
         }
 
         public void ReplaceNonWhiteWithTransparent()
         {
-            var buffer = new byte[4];
-            buffer[0] = 0; // B
-            buffer[1] = 0; // G
-            buffer[2] = 0; // R
-            buffer[3] = 0; // A
-            for (int i = 0; i < _bitmapData.Length; i += 4)
+            var data = _bitmapData.AsSpan();
+            var pixels = MemoryMarshal.Cast<byte, uint>(_bitmapData.AsSpan());
+            for (int i = 0, p = 0; p < pixels.Length; i += 4, p++)
             {
-                if (_bitmapData[i + 2] + _bitmapData[i + 1] + _bitmapData[i] < 300)
+                if (data[i + 2] + data[i + 1] + data[i] < 300)
                 {
-                    Buffer.BlockCopy(buffer, 0, _bitmapData, i, 4);
+                    pixels[p] = 0;
                 }
             }
         }
 
         public void ReplaceTransparentWith(SKColor c)
         {
-            var buffer = new byte[4];
-            buffer[0] = c.Blue;
-            buffer[1] = c.Green;
-            buffer[2] = c.Red;
-            buffer[3] = c.Alpha;
-            for (int i = 0; i < _bitmapData.Length; i += 4)
+            var replacement = PackBgra(c.Blue, c.Green, c.Red, c.Alpha);
+            var data = _bitmapData.AsSpan();
+            var pixels = MemoryMarshal.Cast<byte, uint>(_bitmapData.AsSpan());
+            for (int i = 0, p = 0; p < pixels.Length; i += 4, p++)
             {
-                if (_bitmapData[i + 3] < 10)
+                if (data[i + 3] < 10)
                 {
-                    Buffer.BlockCopy(buffer, 0, _bitmapData, i, 4);
+                    pixels[p] = replacement;
                 }
             }
         }
 
         public void MakeOneColor(SKColor c)
         {
-            var buffer = new byte[4];
-            buffer[0] = c.Blue;
-            buffer[1] = c.Green;
-            buffer[2] = c.Red;
-            buffer[3] = c.Alpha;
-
-            var bufferTransparent = new byte[4];
-            bufferTransparent[0] = 0;
-            bufferTransparent[1] = 0;
-            bufferTransparent[2] = 0;
-            bufferTransparent[3] = 0;
-            for (int i = 0; i < _bitmapData.Length; i += 4)
+            var color = PackBgra(c.Blue, c.Green, c.Red, c.Alpha);
+            var data = _bitmapData.AsSpan();
+            var pixels = MemoryMarshal.Cast<byte, uint>(_bitmapData.AsSpan());
+            for (int i = 0, p = 0; p < pixels.Length; i += 4, p++)
             {
-                Buffer.BlockCopy(_bitmapData[i] > 20 ? buffer : bufferTransparent, 0, _bitmapData, i, 4);
+                pixels[p] = data[i] > 20 ? color : 0u;
             }
         }
 
@@ -198,15 +198,63 @@ namespace Nikse.SubtitleEdit.Core.Common
         /// </summary>
         public void MakeBlackAndWhiteForOcr(int brightnessThreshold = 90, int alphaThreshold = 100)
         {
-            var black = new byte[] { 0, 0, 0, 255 };
-            var white = new byte[] { 255, 255, 255, 255 };
-            for (int i = 0; i < _bitmapData.Length; i += 4)
+            var black = PackBgra(0, 0, 0, 255);
+            var white = PackBgra(255, 255, 255, 255);
+            var start = MakeBlackAndWhiteForOcrVector(brightnessThreshold, alphaThreshold, black, white);
+            var data = _bitmapData.AsSpan();
+            var pixels = MemoryMarshal.Cast<byte, uint>(_bitmapData.AsSpan());
+            for (int i = start, p = start / 4; p < pixels.Length; i += 4, p++)
             {
                 // _bitmapData is BGRA: [i]=blue, [i+1]=green, [i+2]=red, [i+3]=alpha.
-                var brightness = Math.Max(_bitmapData[i], Math.Max(_bitmapData[i + 1], _bitmapData[i + 2]));
-                var isText = _bitmapData[i + 3] >= alphaThreshold && brightness >= brightnessThreshold;
-                Buffer.BlockCopy(isText ? black : white, 0, _bitmapData, i, 4);
+                var brightness = Math.Max(data[i], Math.Max(data[i + 1], data[i + 2]));
+                var isText = data[i + 3] >= alphaThreshold && brightness >= brightnessThreshold;
+                pixels[p] = isText ? black : white;
             }
+        }
+
+        /// <summary>
+        /// Vector pass for <see cref="MakeBlackAndWhiteForOcr"/>; returns the number of bytes it
+        /// handled so the caller finishes the tail one pixel at a time. Bails out when a threshold
+        /// falls outside 0-255, since it has to be compared as a byte.
+        /// </summary>
+        private int MakeBlackAndWhiteForOcrVector(int brightnessThreshold, int alphaThreshold, uint black, uint white)
+        {
+            var length = _bitmapData.Length;
+            var step = Vector<byte>.Count;
+            if (!Vector.IsHardwareAccelerated || length < step ||
+                (uint)brightnessThreshold > 255 || (uint)alphaThreshold > 255)
+            {
+                return 0;
+            }
+
+            // One threshold per channel laid out B, G, R, A; Vector<byte>.Count is always a
+            // multiple of four, so the pattern lines up with every pixel in the block.
+            var thresholdBytes = new byte[step];
+            for (var k = 0; k < step; k += 4)
+            {
+                thresholdBytes[k] = (byte)brightnessThreshold;
+                thresholdBytes[k + 1] = (byte)brightnessThreshold;
+                thresholdBytes[k + 2] = (byte)brightnessThreshold;
+                thresholdBytes[k + 3] = (byte)alphaThreshold;
+            }
+
+            var thresholds = new Vector<byte>(thresholdBytes);
+            var rgbMask = new Vector<uint>(PackBgra(255, 255, 255, 0));
+            var alphaMask = new Vector<uint>(PackBgra(0, 0, 0, 255));
+            var blackVector = new Vector<uint>(black);
+            var whiteVector = new Vector<uint>(white);
+
+            var i = 0;
+            for (; i + step <= length; i += step)
+            {
+                var mask = Vector.AsVectorUInt32(Vector.GreaterThanOrEqual(new Vector<byte>(_bitmapData, i), thresholds));
+                // Brightness is the max of B/G/R, so any one of them clearing the threshold is enough.
+                var bright = ~Vector.Equals(mask & rgbMask, Vector<uint>.Zero);
+                var opaque = Vector.Equals(mask & alphaMask, alphaMask);
+                Vector.AsVectorByte(Vector.ConditionalSelect(bright & opaque, blackVector, whiteVector)).CopyTo(_bitmapData, i);
+            }
+
+            return i;
         }
 
         private static SKColor GetOutlineColor(SKColor borderColor)
@@ -1032,15 +1080,7 @@ namespace Nikse.SubtitleEdit.Core.Common
 
         public void Fill(SKColor color)
         {
-            var buffer = new byte[4];
-            buffer[0] = color.Blue;
-            buffer[1] = color.Green;
-            buffer[2] = color.Red;
-            buffer[3] = color.Alpha;
-            for (int i = 0; i < _bitmapData.Length; i += 4)
-            {
-                Buffer.BlockCopy(buffer, 0, _bitmapData, i, 4);
-            }
+            MemoryMarshal.Cast<byte, uint>(_bitmapData.AsSpan()).Fill(PackBgra(color.Blue, color.Green, color.Red, color.Alpha));
         }
 
         public int GetAlpha(int x, int y)
@@ -1052,6 +1092,13 @@ namespace Nikse.SubtitleEdit.Core.Common
         {
             return _bitmapData[index];
         }
+
+        /// <summary>
+        /// Read-only view of the raw BGRA pixel buffer (4 bytes per pixel, row-major,
+        /// Width * 4 bytes per row) so whole-image scans can skip the per-pixel
+        /// <see cref="GetPixel(int,int)"/> SKColor construction.
+        /// </summary>
+        public ReadOnlySpan<byte> GetPixelData() => _bitmapData;
 
         public SKColor GetPixel(int x, int y)
         {
@@ -1130,42 +1177,67 @@ namespace Nikse.SubtitleEdit.Core.Common
             var palette = new List<SKColor> { SKColors.Transparent };
             var pixels = new byte[Width * Height];
 
-            for (int y = 0; y < Height; y++)
-            {
-                for (int x = 0; x < Width; x++)
-                {
-                    var c = GetPixel(x, y);
-                    if (c.Alpha < 5)
-                    {
-                        pixels[y * Width + x] = 0;
-                    }
-                    else
-                    {
-                        int index = FindBestMatch(c, palette, out var maxDiff);
+            // Exact-colour shortcut past the linear palette scan. Only outcomes a later scan is
+            // bound to repeat are cached: FindBestMatch stops at the first entry closer than 4 and
+            // the palette only ever grows at the end, so such a hit can never be overtaken; a
+            // colour that was just appended is found by that same early stop from then on; and once
+            // the palette is full at 255 entries nothing more is added, so every result is frozen.
+            // None of those outcomes appends to the palette, so a hit cannot skip an insertion.
+            // The cache is capped because a photographic source can hold millions of distinct
+            // colours: past the cap the linear scan simply runs again, so the only thing lost is
+            // the shortcut. Subtitle bitmaps stay far below it.
+            const int maxCachedColors = 1 << 16;
+            var seen = new Dictionary<uint, byte>();
+            var data = _bitmapData.AsSpan();
+            var packed = MemoryMarshal.Cast<byte, uint>(_bitmapData.AsSpan());
 
-                        if (index == -1 && palette.Count < 255)
-                        {
-                            index = palette.Count;
-                            palette.Add(c);
-                            pixels[y * Width + x] = (byte)index;
-                        }
-                        else if (palette.Count < 200 && maxDiff > 5)
-                        {
-                            index = palette.Count;
-                            palette.Add(c);
-                            pixels[y * Width + x] = (byte)index;
-                        }
-                        else if (palette.Count < 255 && maxDiff > 15)
-                        {
-                            index = palette.Count;
-                            palette.Add(c);
-                            pixels[y * Width + x] = (byte)index;
-                        }
-                        else if (index >= 0)
-                        {
-                            pixels[y * Width + x] = (byte)index;
-                        }
-                    }
+            for (int p = 0, i = 0; p < pixels.Length; p++, i += 4)
+            {
+                var alpha = data[i + 3];
+                if (alpha < 5)
+                {
+                    pixels[p] = 0;
+                    continue;
+                }
+
+                if (seen.TryGetValue(packed[p], out var known))
+                {
+                    pixels[p] = known;
+                    continue;
+                }
+
+                var c = new SKColor(data[i + 2], data[i + 1], data[i], alpha);
+                var index = FindBestMatch(c, palette, out var maxDiff);
+                byte value;
+                bool repeatable;
+                if (index == -1 && palette.Count < 255)
+                {
+                    value = (byte)palette.Count;
+                    palette.Add(c);
+                    repeatable = true;
+                }
+                else if (palette.Count < 200 && maxDiff > 5)
+                {
+                    value = (byte)palette.Count;
+                    palette.Add(c);
+                    repeatable = true;
+                }
+                else if (palette.Count < 255 && maxDiff > 15)
+                {
+                    value = (byte)palette.Count;
+                    palette.Add(c);
+                    repeatable = true;
+                }
+                else
+                {
+                    value = index >= 0 ? (byte)index : (byte)0;
+                    repeatable = maxDiff < 4 || palette.Count >= 255;
+                }
+
+                pixels[p] = value;
+                if (repeatable && seen.Count < maxCachedColors)
+                {
+                    seen[packed[p]] = value;
                 }
             }
 
@@ -1272,15 +1344,16 @@ namespace Nikse.SubtitleEdit.Core.Common
 
         public void GrayScale()
         {
-            for (int i = 0; i < _bitmapData.Length; i += 4)
+            var data = _bitmapData.AsSpan();
+            for (int i = 0; i < data.Length; i += 4)
             {
-                int medium = Convert.ToInt32((_bitmapData[i + 2] + _bitmapData[i + 1] + _bitmapData[i]) * 1.5 / 3.0 + 2);
+                int medium = Convert.ToInt32((data[i + 2] + data[i + 1] + data[i]) * 1.5 / 3.0 + 2);
                 if (medium > byte.MaxValue)
                 {
                     medium = byte.MaxValue;
                 }
 
-                _bitmapData[i + 2] = _bitmapData[i + 1] = _bitmapData[i] = (byte)medium;
+                data[i + 2] = data[i + 1] = data[i] = (byte)medium;
             }
         }
 
@@ -1290,68 +1363,77 @@ namespace Nikse.SubtitleEdit.Core.Common
         /// <param name="minAlpha">Min alpha value, 0=transparent, 255=fully visible</param>
         public void MakeBackgroundTransparent(int minAlpha)
         {
-            var buffer = new byte[4];
-            buffer[0] = 0; // B
-            buffer[1] = 0; // G
-            buffer[2] = 0; // R
-            buffer[3] = 0; // A
-            for (int i = 0; i < _bitmapData.Length; i += 4)
+            var data = _bitmapData.AsSpan();
+            var pixels = MemoryMarshal.Cast<byte, uint>(_bitmapData.AsSpan());
+            for (int i = 0, p = 0; p < pixels.Length; i += 4, p++)
             {
-                if (_bitmapData[i + 3] < minAlpha)
+                if (data[i + 3] < minAlpha)
                 {
-                    Buffer.BlockCopy(buffer, 0, _bitmapData, i, 4);
+                    pixels[p] = 0;
                 }
             }
         }
 
         public void MakeTwoColor(int minRgb)
         {
-            var buffer = new byte[4];
-            buffer[0] = 0; // B
-            buffer[1] = 0; // G
-            buffer[2] = 0; // R
-            buffer[3] = 0; // A
-            var bufferWhite = new byte[4];
-            bufferWhite[0] = 255; // B
-            bufferWhite[1] = 255; // G
-            bufferWhite[2] = 255; // R
-            bufferWhite[3] = 255; // A
-            for (int i = 0; i < _bitmapData.Length; i += 4)
-            {
-                if (_bitmapData[i + 3] < 1 || _bitmapData[i + 0] + _bitmapData[i + 1] + _bitmapData[i + 2] < minRgb)
-                {
-                    Buffer.BlockCopy(buffer, 0, _bitmapData, i, 4);
-                }
-                else
-                {
-                    Buffer.BlockCopy(bufferWhite, 0, _bitmapData, i, 4);
-                }
-            }
+            MakeTwoColorPacked(minRgb, PackBgra(0, 0, 0, 0), PackBgra(255, 255, 255, 255));
         }
 
         public void MakeTwoColor(int minRgb, SKColor background, SKColor foreground)
         {
-            var bufferBackground = new byte[4];
-            bufferBackground[0] = background.Blue; // B
-            bufferBackground[1] = background.Green; // G
-            bufferBackground[2] = background.Red; // R
-            bufferBackground[3] = 255; // A
-            var bufferForeground = new byte[4];
-            bufferForeground[0] = foreground.Blue; // B
-            bufferForeground[1] = foreground.Green; // G
-            bufferForeground[2] = foreground.Red; // R
-            bufferForeground[3] = 255; // A
-            for (int i = 0; i < _bitmapData.Length; i += 4)
+            MakeTwoColorPacked(minRgb,
+                PackBgra(background.Blue, background.Green, background.Red, 255),
+                PackBgra(foreground.Blue, foreground.Green, foreground.Red, 255));
+        }
+
+        private void MakeTwoColorPacked(int minRgb, uint background, uint foreground)
+        {
+            var start = MakeTwoColorVector(minRgb, background, foreground);
+            var data = _bitmapData.AsSpan();
+            var pixels = MemoryMarshal.Cast<byte, uint>(_bitmapData.AsSpan());
+            for (int i = start, p = start / 4; p < pixels.Length; i += 4, p++)
             {
-                if (_bitmapData[i + 3] < 1 || _bitmapData[i + 0] + _bitmapData[i + 1] + _bitmapData[i + 2] < minRgb)
-                {
-                    Buffer.BlockCopy(bufferBackground, 0, _bitmapData, i, 4);
-                }
-                else
-                {
-                    Buffer.BlockCopy(bufferForeground, 0, _bitmapData, i, 4);
-                }
+                pixels[p] = data[i + 3] < 1 || data[i] + data[i + 1] + data[i + 2] < minRgb
+                    ? background
+                    : foreground;
             }
+        }
+
+        /// <summary>
+        /// Vector pass for <see cref="MakeTwoColorPacked"/>; returns the number of bytes it handled
+        /// so the caller finishes the tail one pixel at a time. Little-endian only: it reads the
+        /// channels out of the packed pixel by value, which the byte-order-neutral masks cannot do
+        /// once three of them have to be added together.
+        /// </summary>
+        private int MakeTwoColorVector(int minRgb, uint background, uint foreground)
+        {
+            var length = _bitmapData.Length;
+            var step = Vector<byte>.Count;
+            // The green and red channels come from re-reading the block one and two bytes along,
+            // so those extra bytes have to stay inside the array.
+            if (!Vector.IsHardwareAccelerated || !BitConverter.IsLittleEndian || minRgb < 0 || length < step + 2)
+            {
+                return 0;
+            }
+
+            var lowByte = new Vector<uint>(0x000000FFu);
+            var alphaMask = new Vector<uint>(0xFF000000u);
+            var limit = new Vector<uint>((uint)minRgb);
+            var backgroundVector = new Vector<uint>(background);
+            var foregroundVector = new Vector<uint>(foreground);
+
+            var i = 0;
+            for (; i + step + 2 <= length; i += step)
+            {
+                var raw = Vector.AsVectorUInt32(new Vector<byte>(_bitmapData, i));
+                var green = Vector.AsVectorUInt32(new Vector<byte>(_bitmapData, i + 1)) & lowByte;
+                var red = Vector.AsVectorUInt32(new Vector<byte>(_bitmapData, i + 2)) & lowByte;
+                var sum = (raw & lowByte) + green + red;
+                var isBackground = Vector.Equals(raw & alphaMask, Vector<uint>.Zero) | Vector.LessThan(sum, limit);
+                Vector.AsVectorByte(Vector.ConditionalSelect(isBackground, backgroundVector, foregroundVector)).CopyTo(_bitmapData, i);
+            }
+
+            return i;
         }
 
         private static readonly byte[] EmptyByteArray = new byte[100000];
@@ -1618,78 +1700,80 @@ namespace Nikse.SubtitleEdit.Core.Common
                 return true;
             }
 
-            for (int i = 0; i < _bitmapData.Length; i++)
+            // The (width, height, byte[]) constructor takes an external buffer, so equal
+            // dimensions do not by themselves guarantee equal buffer lengths.
+            if (_bitmapData.Length != bitmap._bitmapData.Length)
             {
-                if (_bitmapData[i] != bitmap._bitmapData[i])
-                {
-                    return false;
-                }
+                return false;
             }
 
-            return true;
+            return _bitmapData.AsSpan().SequenceEqual(bitmap._bitmapData);
         }
 
         public void SetTransparentTo(SKColor transparent)
         {
-            var buffer = new byte[4];
-            buffer[0] = transparent.Blue;
-            buffer[1] = transparent.Green;
-            buffer[2] = transparent.Red;
-            buffer[3] = transparent.Alpha;
-            for (var i = 0; i < _bitmapData.Length; i += 4)
+            var replacement = PackBgra(transparent.Blue, transparent.Green, transparent.Red, transparent.Alpha);
+            var data = _bitmapData.AsSpan();
+            var pixels = MemoryMarshal.Cast<byte, uint>(_bitmapData.AsSpan());
+            for (int i = 0, p = 0; p < pixels.Length; i += 4, p++)
             {
-                if (_bitmapData[i + 3] == 0)
+                if (data[i + 3] == 0)
                 {
-                    Buffer.BlockCopy(buffer, 0, _bitmapData, i, 4);
+                    pixels[p] = replacement;
                 }
             }
         }
 
-        public void ChangeBrightness(decimal factor)
+        /// <summary>
+        /// Scaled value for every possible channel byte, so the decimal multiply runs 256 times
+        /// instead of once per channel per pixel.
+        /// </summary>
+        private static byte[] BuildScaleTable(decimal factor)
         {
+            var table = new byte[256];
+
+            // The table covers every channel value, not only the ones the bitmap happens to hold,
+            // so a factor big enough to overflow the multiply or the int cast has to be clamped
+            // first. Nothing is lost by it: from 256 up every non-zero channel already saturates
+            // at 255, and any negative factor already floors at 0.
+            var scale = factor > 256m ? 256m : factor < 0m ? 0m : factor;
             if (factor > 1)
             {
-                for (int i = 0; i < _bitmapData.Length; i += 4)
+                for (var v = 0; v < table.Length; v++)
                 {
-                    int r = _bitmapData[i + 2];
-                    int g = _bitmapData[i + 1];
-                    int b = _bitmapData[i];
-                    _bitmapData[i + 2] = (byte)Math.Min(byte.MaxValue, (int)(r * factor));
-                    _bitmapData[i + 1] = (byte)Math.Min(byte.MaxValue, (int)(g * factor));
-                    _bitmapData[i] = (byte)Math.Min(byte.MaxValue, (int)(b * factor));
+                    table[v] = (byte)Math.Min(byte.MaxValue, (int)(v * scale));
                 }
             }
             else
             {
-                for (int i = 0; i < _bitmapData.Length; i += 4)
+                for (var v = 0; v < table.Length; v++)
                 {
-                    int r = _bitmapData[i + 2];
-                    int g = _bitmapData[i + 1];
-                    int b = _bitmapData[i];
-                    _bitmapData[i + 2] = (byte)Math.Max(0, (int)(r * factor));
-                    _bitmapData[i + 1] = (byte)Math.Max(0, (int)(g * factor));
-                    _bitmapData[i] = (byte)Math.Max(0, (int)(b * factor));
+                    table[v] = (byte)Math.Max(0, (int)(v * scale));
                 }
+            }
+
+            return table;
+        }
+
+        public void ChangeBrightness(decimal factor)
+        {
+            var scale = BuildScaleTable(factor);
+            var data = _bitmapData.AsSpan();
+            for (int i = 0; i < data.Length; i += 4)
+            {
+                data[i + 2] = scale[data[i + 2]];
+                data[i + 1] = scale[data[i + 1]];
+                data[i] = scale[data[i]];
             }
         }
 
         public void ChangeAlpha(decimal factor)
         {
-            if (factor > 1)
+            var scale = BuildScaleTable(factor);
+            var data = _bitmapData.AsSpan();
+            for (int i = 0; i < data.Length; i += 4)
             {
-                for (int i = 0; i < _bitmapData.Length; i += 4)
-                {
-                    int a = _bitmapData[i + 3];
-                    _bitmapData[i + 3] = (byte)Math.Min(byte.MaxValue, (int)(a * factor));
-                }
-            }
-            else
-            {
-                for (int i = 0; i < _bitmapData.Length; i += 4)
-                {
-                    int a = _bitmapData[i + 3];
-                    _bitmapData[i + 3] = (byte)Math.Max(0, (int)(a * factor));
-                }
+                data[i + 3] = scale[data[i + 3]];
             }
         }
     }

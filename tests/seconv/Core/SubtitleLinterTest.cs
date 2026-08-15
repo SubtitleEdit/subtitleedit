@@ -103,4 +103,52 @@ public class SubtitleLinterTest : IDisposable
         // in either case there must NOT be a non-empty issue claimed about line content.
         Assert.DoesNotContain(report.Issues, i => i.Type == "line-too-long");
     }
+
+    /// <summary>
+    /// The line-length check skips stripping tags when the raw line already fits, which is only
+    /// sound because stripping cannot lengthen a line. A line that is over the limit only with
+    /// its markup, and under it without, must still come back clean.
+    /// </summary>
+    [Fact]
+    public void Lint_LongOnlyBecauseOfMarkup_IsNotTooLong()
+    {
+        // 40 visible chars (under the 43 default), 63 with the font tag.
+        var text = "<font color=\"#ff0000\">" + new string('x', 40) + "</font>";
+        var path = WriteSrt("markup.srt",
+            $"1\n00:00:01,000 --> 00:00:03,000\n{text}\n");
+
+        var report = SubtitleLinter.Lint(path);
+
+        Assert.DoesNotContain(report.Issues, i => i.Type == "line-too-long");
+    }
+
+    /// <summary>Tag counting is case-insensitive, as the old substring scan was.</summary>
+    [Theory]
+    [InlineData("<I>Open without close.", "mismatched-italic")]
+    [InlineData("<B>Open without close.", "mismatched-bold")]
+    [InlineData("</i>Close without open.", "mismatched-italic")]
+    public void Lint_DetectsMismatchedTagsRegardlessOfCase(string text, string expectedIssue)
+    {
+        var path = WriteSrt("case.srt",
+            $"1\n00:00:01,000 --> 00:00:03,000\n{text}\n");
+
+        var report = SubtitleLinter.Lint(path);
+
+        Assert.Contains(report.Issues, i => i.Type == expectedIssue);
+    }
+
+    /// <summary>Balanced tags — in any case, and several per line — must not be flagged.</summary>
+    [Theory]
+    [InlineData("<i>One</i> and <I>two</I>.")]
+    [InlineData("<b>Bold</b> and <i>italic</i>.")]
+    [InlineData("Plain text with a < less-than sign.")]
+    public void Lint_BalancedTags_AreClean(string text)
+    {
+        var path = WriteSrt("balanced.srt",
+            $"1\n00:00:01,000 --> 00:00:03,000\n{text}\n");
+
+        var report = SubtitleLinter.Lint(path);
+
+        Assert.DoesNotContain(report.Issues, i => i.Type.StartsWith("mismatched-", StringComparison.Ordinal));
+    }
 }

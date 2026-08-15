@@ -19,7 +19,7 @@ public class Se
     internal const int CurrentMacOsFontMigrationVersion = 1;
     internal const int CurrentShortcutsMigrationVersion = 2;
 
-    public static string Version { get; set; } = "v5.2.0-beta10";
+    public static string Version { get; set; } = "v5.2.0-beta14";
 
     public SeGeneral General { get; set; } = new();
     public List<SeShortCut> Shortcuts { get; set; } = new();
@@ -685,6 +685,17 @@ public class Se
         var ss = Configuration.Settings.SubtitleSettings;
         ss.WebVttUseXTimestampMap = Settings.Formats.WebVttUseXTimestampMap;
         ss.WebVttUseMultipleXTimestampMap = Settings.Formats.WebVttUseMultipleXTimestampMap;
+        ss.WebVttMergeLinesWithSameText = Settings.Formats.WebVttMergeLinesWithSameText;
+        ss.WebVttDoNoMergeTags = Settings.Formats.WebVttDoNoMergeTags;
+        ss.WebVttCueAn1 = Settings.Formats.WebVttCueAn1 ?? string.Empty;
+        ss.WebVttCueAn2 = Settings.Formats.WebVttCueAn2 ?? string.Empty;
+        ss.WebVttCueAn3 = Settings.Formats.WebVttCueAn3 ?? string.Empty;
+        ss.WebVttCueAn4 = Settings.Formats.WebVttCueAn4 ?? string.Empty;
+        ss.WebVttCueAn5 = Settings.Formats.WebVttCueAn5 ?? string.Empty;
+        ss.WebVttCueAn6 = Settings.Formats.WebVttCueAn6 ?? string.Empty;
+        ss.WebVttCueAn7 = Settings.Formats.WebVttCueAn7 ?? string.Empty;
+        ss.WebVttCueAn8 = Settings.Formats.WebVttCueAn8 ?? string.Empty;
+        ss.WebVttCueAn9 = Settings.Formats.WebVttCueAn9 ?? string.Empty;
         ss.DCinemaAutoGenerateSubtitleId = dc.DCinemaAutoGenerateSubtitleId;
         ss.DCinemaFontSize = dc.DCinemaFontSize;
         ss.DCinemaBottomMargin = dc.DCinemaBottomMargin;

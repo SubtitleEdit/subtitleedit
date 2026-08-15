@@ -12,7 +12,7 @@ public class ChangeCasingWindow : Window
     public ChangeCasingWindow(ChangeCasingViewModel vm)
     {
         UiUtil.InitializeWindow(this, GetType().Name);
-        Title = Se.Language.General.ChangeCasing;
+        Title = UiUtil.MakeWindowTitle(Se.Language.General.ChangeCasing);
         SizeToContent = SizeToContent.WidthAndHeight;
         MinWidth = 300;
         CanResize = false;

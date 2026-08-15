@@ -11,6 +11,7 @@ namespace SeConv.Core;
 /// </summary>
 internal sealed class BinaryOcrOcrEngine : IOcrEngine
 {
+    private readonly OcrLineHeightTracker _lineHeightTracker = new();
     public string Name => "binaryocr";
 
     private readonly BinaryOcrDb _db;
@@ -48,7 +49,9 @@ internal sealed class BinaryOcrOcrEngine : IOcrEngine
         parent.MakeTwoColor(200);
         parent.CropTop(0, new SKColor(0, 0, 0, 0));
         var letters = NikseBitmapImageSplitter2.SplitBitmapToLettersNew(
-            parent, PixelsAreSpaceDefault, rightToLeft: false, topToBottom: true, minLineHeight: 20, autoHeight: true);
+            parent, PixelsAreSpaceDefault, rightToLeft: false, topToBottom: true,
+            _lineHeightTracker.GetMinLineHeight(), autoHeight: true, _lineHeightTracker.GetAverageLineHeight());
+        _lineHeightTracker.Update(letters);
 
         var matches = new List<BinaryOcrMatcher.CompareMatch>();
         var i = 0;
