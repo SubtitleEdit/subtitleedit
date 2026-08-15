@@ -1558,6 +1558,7 @@
       "xFixedBut": "{0} issue(s) fixed but the subtitle still contains errors - see log for details",
       "xCouldBeFixedBut": "{0} issue(s) could be fixed but the subtitle will still contain errors - see log for details",
       "numberOfImportantLogMessages": "{0} important log messages!",
+      "fixedOkXY": "Fixed and OK - '{0}': {1}",
       "xFixesApplied": "Fixes applied: {0}",
       "xFixesYSelected": "{0} fixes - {1} selected",
       "fixFirstLetterToUppercaseAfterParagraph": "Fix first letter to uppercase after paragraph",

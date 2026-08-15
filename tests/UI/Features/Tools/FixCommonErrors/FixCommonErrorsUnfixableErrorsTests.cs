@@ -113,6 +113,37 @@ public class FixCommonErrorsUnfixableErrorsTests : IDisposable
         Assert.Single(vm.LogEntries);
     }
 
+    /// <summary>
+    /// The other half of the log: what an apply pass actually changed. It is a history, so unlike
+    /// the scan half it accumulates - and it keeps the log worth opening on a subtitle with no
+    /// errors left, which is why the status bar shows a plain "Log" link there.
+    /// </summary>
+    [AvaloniaFact]
+    public async Task Apply_LogsWhatWasFixed()
+    {
+        Se.Settings.Tools.FixCommonErrors.Profiles[0].SelectedRules = new List<string> { nameof(FixUnneededSpaces) };
+
+        var subtitle = new Subtitle();
+        subtitle.Paragraphs.Add(new Paragraph("Hello  there", 0, 2000));
+        subtitle.Paragraphs.Add(new Paragraph("Goodbye  there", 3000, 5000));
+        subtitle.Renumber();
+
+        var vm = new FixCommonErrorsViewModel(new FakeNamesList(), null!, null!);
+        vm.Initialize(subtitle, new SubRip());
+        await vm.DoRefreshFixes();
+        Assert.Empty(vm.AppliedLogEntries); // a scan changes nothing, so it logs no fixes
+
+        await vm.DoApplyFixesCommand.ExecuteAsync(null);
+
+        var entry = Assert.Single(vm.AppliedLogEntries);
+        Assert.Contains(Se.Language.Tools.FixCommonErrors.RemoveUnneededSpaces, entry);
+        Assert.Contains(string.Format(Se.Language.Tools.FixCommonErrors.XFixesApplied, 2), entry);
+
+        // Nothing is broken in this subtitle, so the log is only reachable through its own link.
+        Assert.True(vm.LogIsVisible);
+        Assert.False(vm.ErrorsFoundIsVisible);
+    }
+
     private sealed class FakeNamesList : INamesList
     {
         public void Load(string dictionaryFolder, string languageCode)

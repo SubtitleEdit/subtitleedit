@@ -66,6 +66,7 @@ public class LanguageFixCommonErrors
     public string XFixedBut { get; set; }
     public string XCouldBeFixedBut { get; set; }
     public string NumberOfImportantLogMessages { get; set; }
+    public string FixedOkXY { get; set; }
     public string XFixesApplied { get; set; }
     public string XFixesYSelected { get; set; }
     public string FixFirstLetterToUppercaseAfterParagraph { get; set; }
@@ -191,6 +192,7 @@ public class LanguageFixCommonErrors
         XFixedBut = "{0} issue(s) fixed but the subtitle still contains errors - see log for details";
         XCouldBeFixedBut = "{0} issue(s) could be fixed but the subtitle will still contain errors - see log for details";
         NumberOfImportantLogMessages = "{0} important log messages!";
+        FixedOkXY = "Fixed and OK - '{0}': {1}";
         XFixesApplied = "Fixes applied: {0}";
         XFixesYSelected = "{0} fixes - {1} selected";
         FixFirstLetterToUppercaseAfterParagraph = "Fix first letter to uppercase after paragraph";

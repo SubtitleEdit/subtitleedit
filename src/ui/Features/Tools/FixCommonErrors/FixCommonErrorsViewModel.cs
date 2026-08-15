@@ -57,6 +57,7 @@ public partial class FixCommonErrorsViewModel : ObservableObject, IFixCallbacks
     [ObservableProperty] private bool _analysingIsVisible;
     [ObservableProperty] private string _errorsFoundText = string.Empty;
     [ObservableProperty] private bool _errorsFoundIsVisible;
+    [ObservableProperty] private bool _logIsVisible;
     [ObservableProperty] private string _editTextTotalLength = string.Empty;
     [ObservableProperty] private IBrush _editTextTotalLengthBackground = Brushes.Transparent;
 
@@ -92,6 +93,11 @@ public partial class FixCommonErrorsViewModel : ObservableObject, IFixCallbacks
     // the current state of the subtitle (SE4 showed these in a "Log" tab in step 2) (#13645).
     private readonly List<string> _logEntries = new();
     private int _numberOfImportantLogMessages;
+
+    // The other half of SE4's log: what each apply pass actually changed. Accumulated for as long as
+    // the window is open - it is a history of the applies, not a snapshot like the scan half.
+    private readonly List<string> _appliedLogEntries = new();
+    private bool _hasLogContent;
     private LanguageDisplayItem _oldSelectedLanguage;
     private int _totalErrors;
     private int _totalFixes;
@@ -275,6 +281,7 @@ public partial class FixCommonErrorsViewModel : ObservableObject, IFixCallbacks
         Step2IsVisible = true;
         _oldSelectedLanguage = SelectedLanguage!;
         _totalFixes = 0;
+        _appliedLogEntries.Clear();
         FixesAppliedText = string.Empty;
     }
 
@@ -591,6 +598,7 @@ public partial class FixCommonErrorsViewModel : ObservableObject, IFixCallbacks
         {
             NothingToFixIsVisible = false;
             ErrorsFoundIsVisible = false;
+            LogIsVisible = false;
             AnalysingIsVisible = true;
             await Task.Delay(AnalysingPaintDelayMilliseconds);
 
@@ -603,6 +611,7 @@ public partial class FixCommonErrorsViewModel : ObservableObject, IFixCallbacks
             AnalysingIsVisible = false;
             NothingToFixIsVisible = _nothingToFix;
             ErrorsFoundIsVisible = _hasUnfixableErrors;
+            LogIsVisible = _hasLogContent && !_hasUnfixableErrors;
             _isAnalysing = false;
         }
     }
@@ -634,6 +643,11 @@ public partial class FixCommonErrorsViewModel : ObservableObject, IFixCallbacks
         _hasUnfixableErrors = _totalErrors > 0;
         ErrorsFoundIsVisible = _hasUnfixableErrors && !AnalysingIsVisible;
 
+        // The warning links to the log itself, so a separate "Log" link would just duplicate it -
+        // it is there for the case with a log but no errors, i.e. after a clean apply.
+        _hasLogContent = _logEntries.Count > 0 || _appliedLogEntries.Count > 0;
+        LogIsVisible = _hasLogContent && !_hasUnfixableErrors && !AnalysingIsVisible;
+
         if (!_hasUnfixableErrors)
         {
             ErrorsFoundText = string.Empty;
@@ -660,7 +674,7 @@ public partial class FixCommonErrorsViewModel : ObservableObject, IFixCallbacks
         }
 
         await _windowService.ShowDialogAsync<FixCommonErrorsLogWindow, FixCommonErrorsLogViewModel>(Window,
-            vm => { vm.Initialize(_logEntries, _numberOfImportantLogMessages); });
+            vm => { vm.Initialize(_logEntries, _appliedLogEntries, _numberOfImportantLogMessages); });
     }
 
     private void ApplyFixes()
@@ -673,8 +687,15 @@ public partial class FixCommonErrorsViewModel : ObservableObject, IFixCallbacks
         LoadNamesListIfNeeded();
 
         _totalErrors = 0;
-        _logEntries.Clear();
-        _numberOfImportantLogMessages = 0;
+        if (_previewMode)
+        {
+            // The scan half of the log describes the subtitle as it is right now, so it starts over
+            // with every scan. The applied half is a history and is only cleared when step 2 is
+            // (re-)entered, together with the fix counter it belongs to.
+            _logEntries.Clear();
+            _numberOfImportantLogMessages = 0;
+        }
+
         _allowedFixLookup = null; // fix selection may have changed since the last pass
 
         var subtitle = _previewMode ? new Subtitle(FixedSubtitle, false) : FixedSubtitle;
@@ -1075,9 +1096,17 @@ public partial class FixCommonErrorsViewModel : ObservableObject, IFixCallbacks
 
     internal IReadOnlyList<string> LogEntries => _logEntries;
 
+    internal IReadOnlyList<string> AppliedLogEntries => _appliedLogEntries;
+
+    /// <summary>
+    /// Only the rules use this, and only to report what they could not fix - so it feeds the scan
+    /// half of the log. An apply pass reports the same errors again, but the scan that follows it
+    /// rebuilds this list anyway; keeping them would only duplicate the list, and labelling them as
+    /// applied fixes (which is what SE4 did) would file errors under "Fixed and OK".
+    /// </summary>
     public void LogStatus(string sender, string message)
     {
-        if (string.IsNullOrWhiteSpace(message))
+        if (!_previewMode || string.IsNullOrWhiteSpace(message))
         {
             return;
         }
@@ -1087,7 +1116,9 @@ public partial class FixCommonErrorsViewModel : ObservableObject, IFixCallbacks
 
     public void LogStatus(string sender, string message, bool isImportant)
     {
-        if (isImportant)
+        // Counted for the scan only, like the entries themselves - the number heads the list of
+        // errors the scan found, not the list of fixes an apply pass made.
+        if (isImportant && _previewMode)
         {
             _numberOfImportantLogMessages++;
         }
@@ -1095,6 +1126,10 @@ public partial class FixCommonErrorsViewModel : ObservableObject, IFixCallbacks
         LogStatus(sender, message);
     }
 
+    /// <summary>
+    /// Reported once per rule that changed anything, which makes it the applied half of the log -
+    /// "Fixed and OK - 'Remove unneeded spaces': Fixes applied: 3".
+    /// </summary>
     public void UpdateFixStatus(int fixes, string message)
     {
         if (_previewMode)
@@ -1105,7 +1140,7 @@ public partial class FixCommonErrorsViewModel : ObservableObject, IFixCallbacks
         if (fixes > 0)
         {
             _totalFixes += fixes;
-            //            LogStatus(message, string.Format(LanguageSettings.Current.FixCommonErrors.XFixesApplied, fixes));
+            _appliedLogEntries.Add(string.Format(_language.FixedOkXY, message, string.Format(_language.XFixesApplied, fixes)));
         }
     }
 

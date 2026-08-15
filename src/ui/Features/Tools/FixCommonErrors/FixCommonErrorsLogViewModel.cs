@@ -7,6 +7,7 @@ using Nikse.SubtitleEdit.Logic.Config;
 using Optris.Icons.Avalonia;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Nikse.SubtitleEdit.Features.Tools.FixCommonErrors;
@@ -25,9 +26,20 @@ public partial class FixCommonErrorsLogViewModel : ObservableObject
     public Window? Window { get; set; }
     public Button? CopyButton { get; set; }
 
-    public void Initialize(IEnumerable<string> logEntries, int numberOfImportantLogMessages)
+    /// <summary>
+    /// The scan half first (what is still wrong), then the applied half (what the applies changed),
+    /// separated by a blank line - the order SE4's log tab used.
+    /// </summary>
+    public void Initialize(IEnumerable<string> logEntries, IEnumerable<string> appliedLogEntries, int numberOfImportantLogMessages)
     {
-        LogText = string.Join(Environment.NewLine + Environment.NewLine, logEntries);
+        var separator = Environment.NewLine + Environment.NewLine;
+        var sections = new[]
+        {
+            string.Join(separator, logEntries),
+            string.Join(Environment.NewLine, appliedLogEntries),
+        };
+
+        LogText = string.Join(separator, sections.Where(s => !string.IsNullOrEmpty(s)));
         ImportantMessagesIsVisible = numberOfImportantLogMessages > 0;
         ImportantMessagesText = ImportantMessagesIsVisible
             ? string.Format(Se.Language.Tools.FixCommonErrors.NumberOfImportantLogMessages, numberOfImportantLogMessages)

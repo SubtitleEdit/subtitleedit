@@ -279,6 +279,11 @@ public class FixCommonErrorsWindow : Window
             UiUtil.AttachHoverTooltip(errorsFoundPanel, Se.Language.Tools.FixCommonErrors.Log);
         }
 
+        // The log also holds what the applies changed, so it stays reachable when a subtitle has
+        // no errors left - the warning above links to the same window when it does.
+        var logLink = UiUtil.MakeLink(Se.Language.Tools.FixCommonErrors.Log, vm.ShowLogCommand);
+        logLink.Bind(IsVisibleProperty, new Binding(nameof(vm.LogIsVisible)));
+
         // "Analyzing..." while a re-scan runs, so a scan that ends in the same state as it started
         // still shows that it ran - this is what SE4 does on every re-scan (#12849).
         var analysingText = UiUtil.MakeTextBlock(Se.Language.Tools.FixCommonErrors.Analysing);
@@ -292,7 +297,7 @@ public class FixCommonErrorsWindow : Window
             Spacing = 15,
             HorizontalAlignment = HorizontalAlignment.Left,
             VerticalAlignment = VerticalAlignment.Center,
-            Children = { labelFixesApplied, nothingToFixPanel, errorsFoundPanel, analysingText },
+            Children = { labelFixesApplied, nothingToFixPanel, errorsFoundPanel, logLink, analysingText },
         };
         panelStep2Status.Bind(IsVisibleProperty, new Binding(nameof(vm.Step2IsVisible)));
         grid.Children.Add(panelStep2Status);

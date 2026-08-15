@@ -39,12 +39,16 @@ public class FixCommonErrorsLogWindowTests : IDisposable
     public void LogWindow_ShowsOneLinePerLoggedError()
     {
         var vm = new FixCommonErrorsLogViewModel();
-        vm.Initialize(new[] { "Fix short display times: Unable to fix text number 1: Hello" }, 0);
+        vm.Initialize(
+            new[] { "Fix short display times: Unable to fix text number 1: Hello" },
+            new[] { "Fixed and OK - 'Fix unneeded spaces': Fixes applied: 2" },
+            0);
         var window = new FixCommonErrorsLogWindow(vm);
         _windows.Add(window);
 
         Assert.NotNull(window.Content);
         Assert.Contains("Unable to fix text number 1", vm.LogText);
+        Assert.Contains("Fixes applied: 2", vm.LogText);
         Assert.False(vm.ImportantMessagesIsVisible);
 
         var textBox = window.GetLogicalDescendants().OfType<TextBox>().FirstOrDefault();
@@ -56,10 +60,12 @@ public class FixCommonErrorsLogWindowTests : IDisposable
     public void LogWindow_CountsImportantMessages()
     {
         var vm = new FixCommonErrorsLogViewModel();
-        vm.Initialize(new[] { "a", "b" }, 2);
+        vm.Initialize(new[] { "a", "b" }, Array.Empty<string>(), 2);
 
         Assert.True(vm.ImportantMessagesIsVisible);
         Assert.Contains("2", vm.ImportantMessagesText);
+        // An empty half must not leave the log starting or ending with blank lines.
+        Assert.Equal(vm.LogText.Trim(), vm.LogText);
     }
 
     [AvaloniaFact]
