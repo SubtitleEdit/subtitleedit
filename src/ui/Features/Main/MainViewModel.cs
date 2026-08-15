@@ -3457,11 +3457,11 @@ public partial class MainViewModel :
             var audioTracks = mpv.GetAudioTracks();
             var desiredTrack = audioTracks.FirstOrDefault(p => p.Id == recentFile.AudioTrack);
 
-            // Only switch track and regenerate waveform if different from current
+            // Only switch track and reload the waveform if different from current; PickAudioTrack
+            // itself no-ops on the already-active track (and sets _audioTrack on a real switch).
             if (desiredTrack != null && (_audioTrack == null || _audioTrack.Id != desiredTrack.Id))
             {
-                _audioTrack = desiredTrack;
-                var _ = Task.Run(() => PickAudioTrack(_audioTrack));
+                var _ = Task.Run(() => PickAudioTrack(desiredTrack));
             }
         }
     }
@@ -7237,6 +7237,13 @@ public partial class MainViewModel :
 
         if (vp.VideoPlayer is LibMpvDynamicPlayer mpv && parameter is AudioTrackInfo audioTrack)
         {
+            // No-op when the picked track is already active (e.g. re-picking it from the
+            // Video -> Audio tracks menu) so the waveform isn't cleared and reloaded for nothing.
+            if (_audioTrack != null && audioTrack.FfIndex == _audioTrack.FfIndex)
+            {
+                return;
+            }
+
             mpv.SetAudioTrack(audioTrack.Id);
             _audioTrack = audioTrack;
             var _ = Task.Run(LoadAudioTrackMenuItems);
