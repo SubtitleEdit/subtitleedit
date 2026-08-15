@@ -208,45 +208,56 @@ namespace Nikse.SubtitleEdit.Logic.Media
 
         private static List<string> MakeOpenSubtitlePatterns(bool includeVideoFiles)
         {
+            return GetOpenSubtitleExtensions(includeVideoFiles).Select(p => "*" + p).ToList();
+        }
+
+        /// <summary>
+        /// The file extensions the "open subtitle" file picker offers, including the leading dot.
+        /// Also used when scanning a folder for files to add, so the picker and the folder scan can
+        /// never disagree about what counts as a subtitle file. Casing follows the formats' own
+        /// (a few use upper case), so compare these case-insensitively.
+        /// </summary>
+        public static List<string> GetOpenSubtitleExtensions(bool includeVideoFiles)
+        {
             var existingTypes = new HashSet<string>();
-            var patterns = new List<string>();
+            var extensions = new List<string>();
             foreach (var format in SubtitleFormat.AllSubtitleFormats)
             {
                 if (format.IsTextBased)
                 {
-                    AddExt(existingTypes, patterns, format.Extension);
+                    AddExt(existingTypes, extensions, format.Extension);
                     if (format.AlternateExtensions != null)
                     {
                         foreach (var ext in format.AlternateExtensions)
                         {
-                            AddExt(existingTypes, patterns, ext);
+                            AddExt(existingTypes, extensions, ext);
                         }
                     }
                 }
             }
 
-            AddExt(existingTypes, patterns, ".mks");
-            AddExt(existingTypes, patterns, ".pac");
-            AddExt(existingTypes, patterns, ".890");
-            AddExt(existingTypes, patterns, ".fpc");
+            AddExt(existingTypes, extensions, ".mks");
+            AddExt(existingTypes, extensions, ".pac");
+            AddExt(existingTypes, extensions, ".890");
+            AddExt(existingTypes, extensions, ".fpc");
 
             if (includeVideoFiles)
             {
-                AddExt(existingTypes, patterns, ".mkv");
-                AddExt(existingTypes, patterns, ".mp4");
-                AddExt(existingTypes, patterns, ".ts");
-                AddExt(existingTypes, patterns, ".sup");
+                AddExt(existingTypes, extensions, ".mkv");
+                AddExt(existingTypes, extensions, ".mp4");
+                AddExt(existingTypes, extensions, ".ts");
+                AddExt(existingTypes, extensions, ".sup");
             }
 
-            return patterns;
+            return extensions;
         }
 
-        private static void AddExt(HashSet<string> existingTypes, List<string> patterns, string ext)
+        private static void AddExt(HashSet<string> existingTypes, List<string> extensions, string ext)
         {
             if (!existingTypes.Contains(ext))
             {
                 existingTypes.Add(ext);
-                patterns.Add("*" + ext);
+                extensions.Add(ext);
             }
         }
 
