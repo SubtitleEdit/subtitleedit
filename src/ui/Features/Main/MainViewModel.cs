@@ -17858,6 +17858,22 @@ public partial class MainViewModel :
 
             if (subtitle == null)
             {
+                // SMPTE-TT with bitmap captions: base64 PNGs in <smpte:image> referenced via
+                // smpte:backgroundImage - an import-only format, so Subtitle.Parse never finds
+                // it; route through OCR like the MP4-embedded variant (see IsmtDfxp above)
+                if (ext == ".ttml" || ext == ".xml" || ext == ".dfxp")
+                {
+                    var base64ImageLines = FileUtil.ReadAllLinesShared(fileName, Encoding.UTF8);
+                    var base64ImageFormat = new TimedTextBase64Image();
+                    if (base64ImageFormat.IsMine(base64ImageLines, fileName))
+                    {
+                        var base64ImageSubtitle = new Subtitle();
+                        base64ImageFormat.LoadSubtitle(base64ImageSubtitle, base64ImageLines, fileName);
+                        ImportAndInlineBase64(base64ImageSubtitle, fileName, skipLoadVideo);
+                        return;
+                    }
+                }
+
                 if (FileUtil.IsSpDvdSup(fileName))
                 {
                     ImportAndOcrSpDvdSup(fileName, skipLoadVideo);
