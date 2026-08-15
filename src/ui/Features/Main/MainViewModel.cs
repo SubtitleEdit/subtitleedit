@@ -17714,6 +17714,18 @@ public partial class MainViewModel :
                 return;
             }
 
+            // a DVD .vob is the same MPEG program stream as a VobSub .sub - extract the subtitle
+            // (SPU) stream directly; a .vob without subtitles falls through to the video handling
+            if (ext == ".vob" && FileUtil.IsVobSub(fileName))
+            {
+                var ok = await ImportSubtitleFromVobSubFile(fileName, videoFileName, skipLoadVideo);
+                if (ok)
+                {
+                    SelectAndScrollToRow(0);
+                    return;
+                }
+            }
+
             if (ext == ".idx")
             {
                 var subFile = Path.ChangeExtension(fileName, ".sub");
