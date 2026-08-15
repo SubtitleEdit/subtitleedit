@@ -94,7 +94,20 @@ public class LlamaCppAdvancedSettingsWindow : Window
         var promptBox = MakeMultilineTextBox(vm, nameof(vm.Prompt), 56);
         promptBox.PlaceholderText = LlamaCppAdvancedProtocol.DefaultPrompt;
         SetHint(promptBox, Se.Language.Translate.CustomPromptHint);
-        AddRow(grid, 2, Se.Language.Translate.PromptText, promptBox);
+        // The prompt label carries the reset button, so the editor column keeps its full width.
+        var promptLabel = new StackPanel
+        {
+            Orientation = Orientation.Horizontal,
+            Spacing = 5,
+            VerticalAlignment = VerticalAlignment.Center,
+            Children =
+            {
+                MakeSmallLabel(Se.Language.Translate.PromptText),
+                UiUtil.MakeButton(vm.ResetPromptCommand, IconNames.Restore, Se.Language.Translate.ResetPromptToDefault),
+            },
+        };
+        grid.Add(promptLabel, 2, 0);
+        grid.Add(promptBox, 2, 1);
 
         AddRow(grid, 3, Se.Language.Translate.PreviousLinesAsContext,
             UiUtil.MakeNumericUpDownInt(0, 50, 12, 120, vm, nameof(vm.HistoryPairs)));
