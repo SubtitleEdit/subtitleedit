@@ -228,6 +228,18 @@ public static class LlamaCppServerManager
             "https://huggingface.co/PaddlePaddle/PaddleOCR-VL-1.6-GGUF/resolve/main/PaddleOCR-VL-1.6-GGUF.gguf",
             MmprojFileName: "PaddleOCR-VL-1.6-GGUF-mmproj.gguf",
             MmprojUrl: "https://huggingface.co/PaddlePaddle/PaddleOCR-VL-1.6-GGUF/resolve/main/PaddleOCR-VL-1.6-GGUF-mmproj.gguf"),
+        // HunyuanOCR 1.5 (Tencent, ~1B) - the fastest VLM in this list (~1.6x GLM-OCR per image
+        // on Apple Silicon). Verified 2026-08-15 on the pinned b10310 build, 9-image
+        // EN/DE/FR/ES/IT/ZH/JA/RU subtitle corpus: recognition itself exact in every script,
+        // but two formatting quirks keep it from being the default: it sporadically prefixes a
+        // markdown "# " heading (1/9 images; immune to prompt wording, identical at bf16, and
+        // unstrippable because genuine SDH "# lyrics" hash cues - which it preserves verbatim -
+        // look the same), and it silently drops ♪ note marks. GLM-OCR gets both right.
+        // Q8_0 only: bf16 measured identical on the same corpus while twice the size.
+        new LlamaCppModel("HunyuanOCR 1.5 (Q8_0)", "HunyuanOCR-Q8_0.gguf", "1.3 GB",
+            "https://huggingface.co/ggml-org/HunyuanOCR-GGUF/resolve/main/HunyuanOCR-Q8_0.gguf",
+            MmprojFileName: "mmproj-HunyuanOCR-Q8_0.gguf",
+            MmprojUrl: "https://huggingface.co/ggml-org/HunyuanOCR-GGUF/resolve/main/mmproj-HunyuanOCR-Q8_0.gguf"),
     };
 
     /// <summary>
