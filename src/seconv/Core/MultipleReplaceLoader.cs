@@ -410,11 +410,14 @@ public static class MultipleReplaceLoader
             {
                 if (string.Equals(rule.SearchType, SearchTypeRegularExpression, StringComparison.OrdinalIgnoreCase))
                 {
-                    // RegexOptions.Multiline so ^/$ anchors match at every line boundary, matching
-                    // the UI (MultipleReplaceViewModel compiles with Compiled | Multiline).
+                    // RegexOptions.Multiline so ^/$ anchors match at every line boundary, and the
+                    // same match timeout the UI uses (MultipleReplaceViewModel.TryGetRunnableRegex,
+                    // #13534). Without it a user pattern that backtracks catastrophically never
+                    // returns: `^(a|aa)+$` against 46 'a's followed by '!' hung a conversion
+                    // indefinitely, with no output and no error.
                     compiled.Add(new CompiledRule(
                         RuleKind.Regex,
-                        new Regex(rule.FindWhat, RegexOptions.Compiled | RegexOptions.Multiline),
+                        new Regex(rule.FindWhat, RegexOptions.Compiled | RegexOptions.Multiline, RegexUtils.UserPatternMatchTimeout),
                         rule.FindWhat,
                         rule.ReplaceWith));
                 }
@@ -438,18 +441,44 @@ public static class MultipleReplaceLoader
         }
 
         var activeRules = compiled.ToArray();
+
+        // A pattern the match timeout stops is retired for the rest of the run, mirroring the UI:
+        // the expression list was built before the timeout, so without this every remaining
+        // paragraph pays the full five seconds again. Only allocated once something times out.
+        bool[]? retired = null;
+
         var modified = 0;
         foreach (var paragraph in subtitle.Paragraphs)
         {
             var newText = paragraph.Text ?? string.Empty;
-            foreach (var rule in activeRules)
+            for (var i = 0; i < activeRules.Length; i++)
             {
-                newText = rule.Kind switch
+                if (retired?[i] == true)
                 {
-                    RuleKind.CaseSensitive => newText.Replace(rule.Find, rule.Replace, StringComparison.Ordinal),
-                    RuleKind.Regex => RegexUtils.ReplaceNewLineSafe(rule.Regex!, newText, rule.Replace),
-                    _ => newText.Replace(rule.Find, rule.Replace, StringComparison.OrdinalIgnoreCase),
-                };
+                    continue;
+                }
+
+                var rule = activeRules[i];
+                try
+                {
+                    newText = rule.Kind switch
+                    {
+                        RuleKind.CaseSensitive => newText.Replace(rule.Find, rule.Replace, StringComparison.Ordinal),
+                        RuleKind.Regex => RegexUtils.ReplaceNewLineSafe(rule.Regex!, newText, rule.Replace),
+                        _ => newText.Replace(rule.Find, rule.Replace, StringComparison.OrdinalIgnoreCase),
+                    };
+                }
+                catch (RegexMatchTimeoutException)
+                {
+                    (retired ??= new bool[activeRules.Length])[i] = true;
+
+                    // Stderr, not stdout: a --json run must keep stdout parseable. A rule that is
+                    // too slow to run has to say so — silently dropping it looks identical to a
+                    // rule that simply matched nothing.
+                    Console.Error.WriteLine(
+                        $"warning: multiple-replace rule '{rule.Find}' took longer than " +
+                        $"{RegexUtils.UserPatternMatchTimeout.TotalSeconds:0} seconds on one line and was skipped for the rest of this file.");
+                }
             }
 
             if (newText != paragraph.Text)
