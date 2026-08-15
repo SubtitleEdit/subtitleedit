@@ -662,8 +662,13 @@ public partial class SpeechToTextViewModel : ObservableObject
                 {
                     ProgressOpacity = 0;
                     var partialSub = new Subtitle();
-                    partialSub.Paragraphs.AddRange(_resultList.OrderBy(p => p.Start)
+                    partialSub.Paragraphs.AddRange(_resultList
                         .Select(p => new Paragraph(p.Text, (double)p.Start * 1000.0, (double)p.End * 1000.0)).ToList());
+
+                    // Engine output is not guaranteed to be sorted or free of overlaps
+                    // (issue #13548) - a kept partial must go through the same repair as
+                    // a completed run, or the overlapping cues land in the document.
+                    partialSub = SpeechToTextTimingFixer.SortAndRemoveOverlaps(partialSub);
 
                     if (!IsBatchMode && partialSub.Paragraphs.Count > 0)
                     {
@@ -894,10 +899,26 @@ public partial class SpeechToTextViewModel : ObservableObject
             // the rest to the aligner step.
             LogToConsole($"Speech to text ({settings.WhisperChoice}) done in {_sw.Elapsed}{Environment.NewLine}");
             LogToConsole($"Speech to text: Could not find '{tag}' in text{Environment.NewLine}");
+
+            if (IsBatchMode)
+            {
+                // One failed file must not stall the whole batch: mark this job failed
+                // and move on, exactly like a failed audio extraction. The closing
+                // summary reports the failure count, so nothing is swallowed.
+                if (_batchIndex >= 0 && _batchIndex < _jobItems.Count)
+                {
+                    _jobItems[_batchIndex].Status = Se.Language.General.Error;
+                }
+
+                StartNext(null);
+                return;
+            }
+
             Dispatcher.UIThread.Post(() =>
             {
-                ProgressValue = 100;
                 IsTranscribeEnabled = true;
+                HideProgressBar();
+                ProgressText = string.Empty;
             });
             return;
         }
