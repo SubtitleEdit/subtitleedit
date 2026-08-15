@@ -172,16 +172,8 @@ public partial class BurnInViewModel : ObservableObject
         VideoWidth = 1920;
         VideoHeight = 1080;
 
-        AudioEncodings = new ObservableCollection<string>
-        {
-            "copy",
-            "aac",
-            "ac3",
-            "mp3",
-            "opus",
-            "vorbis",
-        };
-        SelectedAudioEncoding = "copy";
+        AudioEncodings = new ObservableCollection<string>(OutputContainer.GetAudioEncodings(OutputContainer.DefaultExtension));
+        SelectedAudioEncoding = OutputContainer.AudioEncodingCopy;
 
         AudioSampleRates = new ObservableCollection<string>
         {
@@ -212,12 +204,7 @@ public partial class BurnInViewModel : ObservableObject
 
         VideoCrf = new ObservableCollection<string>();
 
-        VideoExtensions = new ObservableCollection<string>
-        {
-            ".mkv",
-            ".mp4",
-            ".mov",
-        };
+        VideoExtensions = new ObservableCollection<string>(OutputContainer.GetExtensions(SelectedVideoEncoding.Codec));
         SelectedVideoExtension = VideoExtensions[0];
 
         JobItems = new ObservableCollection<BurnInJobItem>();
@@ -746,6 +733,12 @@ public partial class BurnInViewModel : ObservableObject
             cutEnd = $"-t {(int)duration.TotalHours:00}:{duration.Minutes:00}:{duration.Seconds:00}.{duration.Milliseconds:000}";
         }
 
+        // The "save as" dialog can end up with another container than the one the audio encoder
+        // list was built for, so pick an encoder the actual output file can hold.
+        var audioEncoding = OutputContainer.GetAudioEncodingFor(
+            Path.GetExtension(jobItem.OutputVideoFileName),
+            SelectedAudioEncoding);
+
         var ffmpegParameters = FfmpegGenerator.GenerateHardcodedVideoFile(
             jobItem.InputVideoFileName,
             jobItem.AssaSubtitleFileName,
@@ -756,7 +749,7 @@ public partial class BurnInViewModel : ObservableObject
             SelectedVideoPreset ?? string.Empty,
             SelectedVideoPixelFormat?.Codec ?? string.Empty,
             SelectedVideoCrf ?? string.Empty,
-            SelectedAudioEncoding,
+            audioEncoding,
             AudioIsStereo,
             SelectedAudioSampleRate.Replace("Hz", string.Empty).Trim(),
             string.Empty,
@@ -1414,12 +1407,13 @@ public partial class BurnInViewModel : ObservableObject
             SelectedVideoCrf = settings.Crf;
         }
 
-        SelectedAudioEncoding = AudioEncodings.Contains(settings.AudioEncoding) ? settings.AudioEncoding : AudioEncodings[0];
+        // Extension first: it decides which audio encoders the container can take.
+        FillVideoExtensions(SelectedVideoEncoding.Codec, settings.OutputExtension);
+        FillAudioEncodings(SelectedVideoExtension, settings.AudioEncoding);
+
         AudioIsStereo = settings.AudioForceStereo;
         SelectedAudioSampleRate = AudioSampleRates.FirstOrDefault(p => p.Replace("Hz", string.Empty).Trim() == settings.AudioSampleRate) ?? AudioSampleRates[1];
         SelectedAudioBitRate = AudioBitRates.Contains(settings.AudioBitRate) ? settings.AudioBitRate : AudioBitRates[2];
-
-        SelectedVideoExtension = VideoExtensions.Contains(settings.OutputExtension) ? settings.OutputExtension : VideoExtensions[0];
 
         UseTargetFileSize = settings.TargetFileSize;
         TargetFileSize = settings.TargetFileSizeMb;
@@ -1650,6 +1644,44 @@ public partial class BurnInViewModel : ObservableObject
 
         FillPreset(SelectedVideoEncoding.Codec);
         FillCrf(SelectedVideoEncoding.Codec);
+        FillVideoExtensions(SelectedVideoEncoding.Codec);
+    }
+
+    internal void VideoExtensionChanged(object? sender, SelectionChangedEventArgs e)
+    {
+        if (_loading)
+        {
+            return;
+        }
+
+        FillAudioEncodings(SelectedVideoExtension);
+    }
+
+    /// <summary>
+    /// Keeps the output extension list to the containers the chosen video codec can be muxed into
+    /// (e.g. VP9 can go to WebM but not to MPEG-TS), and follows up with the audio encoders that
+    /// the resulting container accepts.
+    /// </summary>
+    private void FillVideoExtensions(string videoCodec, string? preferredExtension = null)
+    {
+        var wanted = preferredExtension ?? SelectedVideoExtension;
+        var items = OutputContainer.GetExtensions(videoCodec);
+
+        VideoExtensions.Clear();
+        VideoExtensions.AddRange(items);
+        SelectedVideoExtension = !string.IsNullOrEmpty(wanted) && items.Contains(wanted) ? wanted : items[0];
+
+        FillAudioEncodings(SelectedVideoExtension);
+    }
+
+    private void FillAudioEncodings(string extension, string? preferredAudioEncoding = null)
+    {
+        var wanted = OutputContainer.MigrateAudioEncoding(preferredAudioEncoding ?? SelectedAudioEncoding);
+        var items = OutputContainer.GetAudioEncodings(extension);
+
+        AudioEncodings.Clear();
+        AudioEncodings.AddRange(items);
+        SelectedAudioEncoding = !string.IsNullOrEmpty(wanted) && items.Contains(wanted) ? wanted : items[0];
     }
 
     private void FillPreset(string videoCodec)

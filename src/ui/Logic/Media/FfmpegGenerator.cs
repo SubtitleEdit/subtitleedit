@@ -217,9 +217,12 @@ public class FfmpegGenerator
 
             if (pass == "1")
             {
-                var ext = Path.GetExtension(outputVideoFileName.Trim('"')).ToLowerInvariant().TrimStart('.');
-                var outputType = ext == "mkv" ? "matroska" : ext;
-                outputVideoFileName = Configuration.IsRunningOnWindows ? $"-f {outputType} NUL" : "-f mp4 /dev/null";
+                // The analysis pass writes to the null device, where ffmpeg cannot infer the
+                // muxer from the file name. It has to be the real output muxer: the fixed
+                // "-f mp4" used here on Linux/macOS aborts the pass for any codec mp4 cannot
+                // hold - ProRes gets "Could not find tag for codec prores in stream #0".
+                var outputType = Features.Video.BurnIn.OutputContainer.GetMuxerName(Path.GetExtension(outputVideoFileName.Trim('"')));
+                outputVideoFileName = Configuration.IsRunningOnWindows ? $"-f {outputType} NUL" : $"-f {outputType} /dev/null";
             }
         }
 
