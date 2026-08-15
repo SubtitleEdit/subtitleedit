@@ -7106,6 +7106,12 @@
     <!-- traIIer → trailer : I→l mid lowercase word -->
     <RegEx find="\b([a-zäöüß]+)I([a-zäöüß]+)\b" spellCheck="$1l$2" replaceWith="$1l$2" />
 
+    <!-- einmaI → einmal : trailing I→l in lowercase word -->
+    <RegEx find="\b([a-zäöüß]+)I\b" spellCheck="$1l" replaceWith="$1l" />
+
+    <!-- voII → voll / SoII → Soll / AII → All : trailing II→ll -->
+    <RegEx find="\b([A-ZÄÖÜa-zäöüß][a-zäöüß]*)II\b" spellCheck="$1ll" replaceWith="$1ll" />
+
     <!-- trailing I→l in capitalised word (e.g. BerlinI → Berlinl) -->
     <RegEx find="\b([A-ZÄÖÜ][a-zäöüß]+)I\b" spellCheck="$1l" replaceWith="$1l" />
 
@@ -7116,11 +7122,13 @@
     <!-- "Ich" starts with I but is only 3 chars — safe minimum is 4 -->
     <RegEx find="\bI([a-zäöüß]{4,})\b" spellCheck="l$1" replaceWith="l$1" />
 
-    <!-- leading l→I before 2+ lowercase chars -->
-    <RegEx find="\bl([a-zäöüß]{2,})\b" spellCheck="I$1" replaceWith="I$1" />
+    <!-- lst → Ist / ln → In / lm → Im : leading l→I before lowercase chars.  -->
+    <!-- Safe with a single following char too: no German word is "l"+letter, -->
+    <!-- and the spellCheck gate only fires when the I-form is a real word.   -->
+    <RegEx find="\bl([a-zäöüß]+)\b" spellCheck="I$1" replaceWith="I$1" />
 
-    <!-- standalone l → I (Roman numerals, list markers) -->
-    <RegEx find="\bl\b" replaceWith="I" />
+    <!-- No standalone \bl\b → I rule: "l" is the German liter abbreviation  -->
+    <!-- (2 l Milch), and an unconditional rule would corrupt it.            -->
 
     <!-- ============================================================ -->
     <!-- GERMAN GENITIVE / APOSTROPHE                                 -->
