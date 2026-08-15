@@ -404,6 +404,7 @@ public static class DependencyInjectionExtensions
         collection.AddTransient<FindRuleViewModel>();
         collection.AddTransient<FindTextViewModel>();
         collection.AddTransient<FindViewModel>();
+        collection.AddTransient<FixCommonErrorsLogViewModel>();
         collection.AddTransient<FixCommonErrorsProfileViewModel>();
         collection.AddTransient<Features.Tools.AiReview.AiReviewViewModel>();
         collection.AddTransient<Features.Main.AiAssistant.AiAssistantViewModel>();
