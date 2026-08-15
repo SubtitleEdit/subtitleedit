@@ -63,6 +63,17 @@ public class LanguageVideo
     public string OutputSettingsTitle { get; set; }
     public string TtsCrispAsrSettingsTitle { get; set; }
     public string TtsDownloadEngineTitle { get; set; }
+    public string IndexTts25LicenseTitle { get; set; }
+    public string IndexTts25LicenseHeader { get; set; }
+    public string IndexTts25LicenseIntro { get; set; }
+    public string IndexTts25LicenseReadFullText { get; set; }
+    public string IndexTts25LicenseModelPage { get; set; }
+    public string IndexTts25LicenseAcceptCheckBox { get; set; }
+    public string IndexTts25LicenseAcceptAndDownload { get; set; }
+    public string IndexTts25LicenseDeclined { get; set; }
+    public string IndexTts25SettingsTitle { get; set; }
+    public string IndexTts25Emotion { get; set; }
+    public string IndexTts25EmotionStrength { get; set; }
     public string PickOnlineSubtitleFetching { get; set; }
     public string PickOnlineSubtitleNoneFound { get; set; }
     public string ForcedAligner { get; set; }
@@ -178,5 +189,16 @@ public class LanguageVideo
         OutputSettingsTitle = "Output settings";
         TtsCrispAsrSettingsTitle = "{0} (CrispASR) settings";
         TtsDownloadEngineTitle = "TTS - Download engine";
+        IndexTts25LicenseTitle = "IndexTTS 2.5 - model license";
+        IndexTts25LicenseHeader = "The IndexTTS 2.5 model has its own license";
+        IndexTts25LicenseIntro = "The audio.cpp engine is Apache-2.0, but the IndexTTS 2.5 model weights are licensed by bilibili under terms that are not open source. Please read the main points before downloading.";
+        IndexTts25LicenseReadFullText = "Read the full license";
+        IndexTts25LicenseModelPage = "Model page";
+        IndexTts25LicenseAcceptCheckBox = "I have read and accept the bilibili Model Use License Agreement";
+        IndexTts25LicenseAcceptAndDownload = "Accept and download";
+        IndexTts25LicenseDeclined = "IndexTTS 2.5 cannot be used until the model license is accepted.";
+        IndexTts25SettingsTitle = "IndexTTS 2.5 (audio.cpp) settings";
+        IndexTts25Emotion = "Emotion";
+        IndexTts25EmotionStrength = "Emotion strength";
     }
 }

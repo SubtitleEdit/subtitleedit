@@ -38,6 +38,18 @@ public class SeVideoTextToSpeech
     public double VibeVoiceCrispAsrSpeed { get; set; }
     public string IndexTtsCrispAsrModel { get; set; }
     public double IndexTtsCrispAsrSpeed { get; set; }
+    public string IndexTts25AudioCppModel { get; set; }
+    // Licence version the user accepted for the IndexTTS-2.5 weights (bilibili Model Use
+    // License, not OSI-approved). Empty until accepted; a version bump re-prompts.
+    public string IndexTts25AudioCppLicenseAccepted { get; set; }
+    // ggml backend of the installed audio.cpp archive: metal, cuda, vulkan or cpu.
+    public string IndexTts25AudioCppBackend { get; set; }
+    // The model's own duration control (>1 slower, <1 faster) rather than a resample, so
+    // pitch is unaffected. Valid range 0.5-2.0.
+    public double IndexTts25AudioCppDurationFactor { get; set; }
+    // One of IndexTts25AudioCpp.EmotionNames, or empty/"none" for no emotion conditioning.
+    public string IndexTts25AudioCppEmotion { get; set; }
+    public double IndexTts25AudioCppEmotionAlpha { get; set; }
     public string CosyVoice3CrispAsrModel { get; set; }
     public double CosyVoice3CrispAsrSpeed { get; set; }
     // Display name of the picked CosyVoice3 target language ("Auto" = plain zero-shot cloning).
@@ -140,6 +152,12 @@ public class SeVideoTextToSpeech
         VibeVoiceCrispAsrSpeed = 1.1;
         IndexTtsCrispAsrModel = "Q8_0 (~870 MB)";
         IndexTtsCrispAsrSpeed = 1.0;
+        IndexTts25AudioCppModel = "Q8_0 (~3.3 GB)";
+        IndexTts25AudioCppLicenseAccepted = string.Empty;
+        IndexTts25AudioCppBackend = string.Empty;
+        IndexTts25AudioCppDurationFactor = 1.0;
+        IndexTts25AudioCppEmotion = string.Empty;
+        IndexTts25AudioCppEmotionAlpha = 0.8;
         CosyVoice3CrispAsrModel = "Q4_K (~1.6 GB total)";
         CosyVoice3CrispAsrSpeed = 1.0;
         CosyVoice3CrispAsrLanguage = string.Empty;

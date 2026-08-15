@@ -187,6 +187,22 @@ public static class DownloadHashManager
         public const string Codec = "IndexTtsCrispAsr.Codec";
     }
 
+    public static class IndexTts25AudioCpp
+    {
+        // SHA-256 of the IndexTTS-2.5 GGUFs on audio-cpp/audio.cpp-gguf (HF LFS oid, confirmed
+        // against a local sha256sum of the Q8_0 file), plus the audio.cpp engine archives we
+        // build ourselves in SubtitleEdit/support-files.
+        public const string ModelQ8_0 = "IndexTts25AudioCpp.ModelQ8_0";
+        public const string ModelF16 = "IndexTts25AudioCpp.ModelF16";
+        public const string EngineMacArm64 = "IndexTts25AudioCpp.EngineMacArm64";
+        public const string EngineWindowsCpu = "IndexTts25AudioCpp.EngineWindowsCpu";
+        public const string EngineWindowsVulkan = "IndexTts25AudioCpp.EngineWindowsVulkan";
+        public const string EngineWindowsCuda = "IndexTts25AudioCpp.EngineWindowsCuda";
+        public const string EngineLinuxCpu = "IndexTts25AudioCpp.EngineLinuxCpu";
+        public const string EngineLinuxVulkan = "IndexTts25AudioCpp.EngineLinuxVulkan";
+        public const string EngineLinuxCuda = "IndexTts25AudioCpp.EngineLinuxCuda";
+    }
+
     public static class ZonosTtsCrispAsr
     {
         // SHA-256 of the Zonos-v0.1 transformer (Q8_0) and the shared DAC 44 kHz codec.
@@ -1585,6 +1601,49 @@ public static class DownloadHashManager
                 "fcba9a322d80ef318da8a17c01e8a5e7f299ccdf881c62a43abf62cb3c104268", // indextts-bigvgan.gguf
             },
 
+            // IndexTTS-2.5 weights, from audio-cpp/audio.cpp-gguf. Q8_0 confirmed by local
+            // sha256sum of the downloaded file; F16 is the HF LFS oid.
+            [IndexTts25AudioCpp.ModelQ8_0] = new[]
+            {
+                "5e827b2072042e4a1b21ccf24a5cb4f71cb1011403067a0a9b039311d8b38628", // index-tts2_5-q8_0.gguf
+            },
+            [IndexTts25AudioCpp.ModelF16] = new[]
+            {
+                "87bed9b82fc8f22119a1a1042332091016c28e37f29b0e93343ccdbfa76ef66a", // index-tts2_5-f16.gguf
+            },
+
+            // audio.cpp engine archives we build in SubtitleEdit/support-files
+            // (audiocpp-indextts25-2026-08-16-r4). Newest first — index 0 is the pinned release,
+            // so anything older prompts an update instead of being treated as current.
+            [IndexTts25AudioCpp.EngineMacArm64] = new[]
+            {
+                "7c23622c3d7d75efe3cec61fff542aab0de5c37a8bdef2be23c55b83cfba967a", // audiocpp-indextts25-macos-arm64.tar.gz
+            },
+            [IndexTts25AudioCpp.EngineWindowsCpu] = new[]
+            {
+                "6b843f9cb5ae8e35f5928a4b49ba95419b3083c6c478e0a5006efe9679f25a72", // audiocpp-indextts25-windows-x86_64-cpu.zip
+            },
+            [IndexTts25AudioCpp.EngineWindowsVulkan] = new[]
+            {
+                "25452a065fa525831436d9934d0e4196d1078f780ff32ac5cd74edb0112d556e", // audiocpp-indextts25-windows-x86_64-vulkan.zip
+            },
+            [IndexTts25AudioCpp.EngineWindowsCuda] = new[]
+            {
+                "af3c6c105ae08951d5cf48ffb0b4dc622831e2794b58dd682f23aeeef2724374", // audiocpp-indextts25-windows-x86_64-cuda.zip
+            },
+            [IndexTts25AudioCpp.EngineLinuxCpu] = new[]
+            {
+                "c9a061f7f0682787ca0b4d0a12f882a027d0db29cb3acbf1dbc9ff0a423ce78a", // audiocpp-indextts25-linux-x86_64.tar.gz
+            },
+            [IndexTts25AudioCpp.EngineLinuxVulkan] = new[]
+            {
+                "742263d8173030a3e6cf4603eb255791d73ea1c4a7b30c5886402a48ef49ed8d", // audiocpp-indextts25-linux-x86_64-vulkan.tar.gz
+            },
+            [IndexTts25AudioCpp.EngineLinuxCuda] = new[]
+            {
+                "4d5839e622c532d8bee9f7a9dcde0d40697009fa0698d27ea4142cea19cf0bcf", // audiocpp-indextts25-linux-x86_64-cuda.tar.gz
+            },
+
             // Zonos TTS (CrispASR) — cstr/zonos-v0.1-transformer-GGUF + cstr/dac-44khz-GGUF.
             // Hashes are HF LFS oid (= SHA-256) pulled from the tree API.
             [ZonosTtsCrispAsr.TalkerQ8_0] = new[]
@@ -2492,6 +2551,40 @@ public static class DownloadHashManager
     /// (Windows-only) variant ("cpu" / "vulkan" / "cuda"). Returns null when the
     /// combination is unknown.
     /// </summary>
+    /// <summary>
+    /// Hash key for the audio.cpp archive that backs IndexTTS 2.5, picked from the platform
+    /// and the backend the user chose at install time. macOS has a single arm64 Metal archive.
+    /// </summary>
+    public static string? ResolveIndexTts25AudioCppKey(string? backend)
+    {
+        if (OperatingSystem.IsMacOS())
+        {
+            return IndexTts25AudioCpp.EngineMacArm64;
+        }
+
+        if (OperatingSystem.IsWindows())
+        {
+            return backend switch
+            {
+                "cuda" => IndexTts25AudioCpp.EngineWindowsCuda,
+                "vulkan" => IndexTts25AudioCpp.EngineWindowsVulkan,
+                _ => IndexTts25AudioCpp.EngineWindowsCpu,
+            };
+        }
+
+        if (OperatingSystem.IsLinux())
+        {
+            return backend switch
+            {
+                "cuda" => IndexTts25AudioCpp.EngineLinuxCuda,
+                "vulkan" => IndexTts25AudioCpp.EngineLinuxVulkan,
+                _ => IndexTts25AudioCpp.EngineLinuxCpu,
+            };
+        }
+
+        return null;
+    }
+
     public static string? ResolveOmniVoiceKey(string? windowsVariant)
     {
         if (OperatingSystem.IsWindows())
