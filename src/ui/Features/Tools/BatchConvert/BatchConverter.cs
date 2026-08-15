@@ -6,6 +6,7 @@ using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.ContainerFormats.Matroska;
 using Nikse.SubtitleEdit.Core.ContainerFormats.Mp4;
 using Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream;
+using Nikse.SubtitleEdit.Core.Enums;
 using Nikse.SubtitleEdit.Core.Forms;
 using Nikse.SubtitleEdit.Core.Interfaces;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
@@ -1784,6 +1785,7 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
             s = BridgeGaps(s);
             s = ApplyMinGap(s);
             s = BeautifyTimeCodes(s, item.FileName);
+            s = SnapTimeCodesToFrames(s, item.FileName);
         }
         else
         {
@@ -1802,6 +1804,7 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
             s = FixCommonErrors(s);
             s = MergeLinesWithSameText(s);
             s = MergeLinesWithSameTimeCodes(s, Language);
+            s = ConvertColorsToDialog(s, Language);
             s = MergeShortLines(s);
             s = MultipleReplace(s);
             s = RemoveLineBreaks(s);
@@ -1812,6 +1815,7 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
             s = AssaChangeResolution(s);
             s = AssaChangeStyle(s);
             s = BeautifyTimeCodes(s, item.FileName);
+            s = SnapTimeCodesToFrames(s, item.FileName);
             s = SortBy(s);
         }
 
@@ -2222,65 +2226,155 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
             return subtitle;
         }
 
-        // Frame rate comes from either a fixed user-chosen rate or a video file matching
-        // the subtitle file name, when one exists. Shot changes are only available if they
-        // were previously generated/imported for that video (they are cached on disk per
-        // video file).
-        //
-        // Without a fixed rate or a matching video, fall back to the frame rate this batch
-        // is actually producing: the target of the "change frame rate" step when it runs
-        // (it runs before this one), otherwise the project frame rate. Configuration
-        // .Settings.General.DefaultFrameRate is not usable here - nothing in the UI ever
-        // assigns it, so it is always libse's built-in 23.976.
-        var frameRate = _config.ChangeFrameRate.IsActive && _config.ChangeFrameRate.ToFrameRate > 0
-            ? _config.ChangeFrameRate.ToFrameRate
-            : Se.Settings.General.CurrentFrameRate;
-        if (frameRate <= 0)
-        {
-            frameRate = Se.Settings.General.DefaultFrameRate;
-        }
-
-        if (_config.BeautifyTimeCodes.UseFixedFrameRate && _config.BeautifyTimeCodes.FixedFrameRate > 0)
-        {
-            frameRate = _config.BeautifyTimeCodes.FixedFrameRate;
-        }
+        // Shot changes are only available if they were previously generated/imported for the
+        // video matching the subtitle file name (they are cached on disk per video file).
+        var hasVideoFile = FindVideoFileName.TryFindVideoFileName(subtitleFileName, out var videoFileName);
+        var frameRate = ResolveFrameRate(
+            hasVideoFile ? videoFileName : null,
+            _config.BeautifyTimeCodes.UseFixedFrameRate,
+            _config.BeautifyTimeCodes.FixedFrameRate);
 
         var shotChanges = new List<double>();
 
-        if (FindVideoFileName.TryFindVideoFileName(subtitleFileName, out var videoFileName))
+        if (hasVideoFile && _config.BeautifyTimeCodes.SnapToShotChanges)
         {
-            if (!_config.BeautifyTimeCodes.UseFixedFrameRate)
+            try
             {
-                try
-                {
-                    var mediaInfo = FfmpegMediaInfo2.Parse(videoFileName);
-                    if (mediaInfo.FramesRate > 0)
-                    {
-                        frameRate = (double)mediaInfo.FramesRate;
-                    }
-                }
-                catch
-                {
-                    // no ffmpeg or unreadable video file - keep the fallback frame rate
-                }
+                shotChanges = ShotChangesHelper.FromDisk(videoFileName);
             }
-
-            if (_config.BeautifyTimeCodes.SnapToShotChanges)
+            catch
             {
-                try
-                {
-                    shotChanges = ShotChangesHelper.FromDisk(videoFileName);
-                }
-                catch
-                {
-                    // unreadable/corrupt shot-changes cache - beautify without them rather
-                    // than aborting the rest of the batch
-                    shotChanges = new List<double>();
-                }
+                // unreadable/corrupt shot-changes cache - beautify without them rather
+                // than aborting the rest of the batch
+                shotChanges = new List<double>();
             }
         }
 
         new Core.Forms.TimeCodesBeautifier(subtitle, frameRate, new List<double>(), shotChanges).Beautify();
+        return subtitle;
+    }
+
+    private Subtitle SnapTimeCodesToFrames(Subtitle subtitle, string subtitleFileName)
+    {
+        if (!_config.SnapTimeCodesToFrames.IsActive)
+        {
+            return subtitle;
+        }
+
+        string? videoFileName = null;
+        if (!_config.SnapTimeCodesToFrames.UseFixedFrameRate)
+        {
+            FindVideoFileName.TryFindVideoFileName(subtitleFileName, out videoFileName);
+        }
+
+        var frameRate = ResolveFrameRate(
+            videoFileName,
+            _config.SnapTimeCodesToFrames.UseFixedFrameRate,
+            _config.SnapTimeCodesToFrames.FixedFrameRate);
+        if (frameRate < 1)
+        {
+            return subtitle;
+        }
+
+        var frameDurationMs = TimeCode.BaseUnit / frameRate;
+        foreach (var p in subtitle.Paragraphs)
+        {
+            var newStartMs = Math.Round(p.StartTime.TotalMilliseconds / frameDurationMs, MidpointRounding.AwayFromZero) * frameDurationMs;
+            var newEndMs = Math.Round(p.EndTime.TotalMilliseconds / frameDurationMs, MidpointRounding.AwayFromZero) * frameDurationMs;
+
+            // Snapping can collapse start and end to the same frame (or invert them) for
+            // sub-frame durations; keep the cue at least one frame long.
+            if (newEndMs <= newStartMs)
+            {
+                newEndMs = newStartMs + frameDurationMs;
+            }
+
+            p.StartTime.TotalMilliseconds = newStartMs;
+            p.EndTime.TotalMilliseconds = newEndMs;
+        }
+
+        return subtitle;
+    }
+
+    /// <summary>
+    /// Frame rate to use for one file: a fixed user-chosen rate when one is set, otherwise the
+    /// frame rate of <paramref name="videoFileName"/> (a video file matching the subtitle file
+    /// name), when one was found and ffmpeg can read it.
+    ///
+    /// Without either, fall back to the frame rate this batch is actually producing: the target
+    /// of the "change frame rate" step when it runs (it runs before the time code steps),
+    /// otherwise the project frame rate. Configuration.Settings.General.DefaultFrameRate is not
+    /// usable here - nothing in the UI ever assigns it, so it is always libse's built-in 23.976.
+    /// </summary>
+    private double ResolveFrameRate(string? videoFileName, bool useFixedFrameRate, double fixedFrameRate)
+    {
+        if (useFixedFrameRate)
+        {
+            if (fixedFrameRate > 0)
+            {
+                return fixedFrameRate;
+            }
+        }
+        else if (!string.IsNullOrEmpty(videoFileName))
+        {
+            try
+            {
+                var mediaInfo = FfmpegMediaInfo2.Parse(videoFileName);
+                if (mediaInfo.FramesRate > 0)
+                {
+                    return (double)mediaInfo.FramesRate;
+                }
+            }
+            catch
+            {
+                // no ffmpeg or unreadable video file - keep the fallback frame rate
+            }
+        }
+
+        var frameRate = _config.ChangeFrameRate.IsActive && _config.ChangeFrameRate.ToFrameRate > 0
+            ? _config.ChangeFrameRate.ToFrameRate
+            : Se.Settings.General.CurrentFrameRate;
+
+        return frameRate > 0 ? frameRate : Se.Settings.General.DefaultFrameRate;
+    }
+
+    private Subtitle ConvertColorsToDialog(Subtitle subtitle, string language)
+    {
+        if (!_config.ConvertColorsToDialog.IsActive)
+        {
+            return subtitle;
+        }
+
+        var c = _config.ConvertColorsToDialog;
+
+        // The dash/space style is the one configured for the current profile - same mapping as
+        // ConvertColorsToDialogUtils' own convenience overload, but with the language passed in
+        // (it is already detected once per file) instead of re-detecting it here.
+        var dashFirstLine = true;
+        var spaceAfterDash = true;
+        switch (Configuration.Settings.General.DialogStyle)
+        {
+            case DialogType.DashBothLinesWithoutSpace:
+                spaceAfterDash = false;
+                break;
+            case DialogType.DashSecondLineWithSpace:
+                dashFirstLine = false;
+                break;
+            case DialogType.DashSecondLineWithoutSpace:
+                dashFirstLine = false;
+                spaceAfterDash = false;
+                break;
+        }
+
+        ConvertColorsToDialogUtils.ConvertColorsToDialogInSubtitle(
+            subtitle,
+            c.RemoveColorTags,
+            dashFirstLine,
+            spaceAfterDash,
+            c.AddNewLines,
+            c.ReBreakLines,
+            language);
+
         return subtitle;
     }
 

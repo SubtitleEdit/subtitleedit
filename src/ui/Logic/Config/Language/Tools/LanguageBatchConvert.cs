@@ -45,6 +45,15 @@ public class LanguageBatchConvert
     public string AssaChangeStyleToStyle { get; set; }
     public string AssaChangeStyleImportStyle { get; set; }
     public string AssaChangeStyleTrimUnusedStyles { get; set; }
+    public string ConvertColorsToDialogTitle { get; set; }
+    public string ConvertColorsToDialogRemoveColorTags { get; set; }
+    public string ConvertColorsToDialogAddNewLines { get; set; }
+    public string ConvertColorsToDialogReBreakLines { get; set; }
+    public string SnapTimeCodesToFramesInfo { get; set; }
+    public string AddFolderDotDotDot { get; set; }
+    public string SelectFolderToConvert { get; set; }
+    public string IncludeSubfolders { get; set; }
+    public string ScanningFolderX { get; set; }
 
     public LanguageBatchConvert()
     {
@@ -88,5 +97,14 @@ public class LanguageBatchConvert
         AssaChangeStyleImportStyle = "Import style...";
         AssaChangeStyleTrimUnusedStyles = "Trim unused styles";
         AssaSource = "ASSA source";
+        ConvertColorsToDialogTitle = "Convert colors to dialog";
+        ConvertColorsToDialogRemoveColorTags = "Remove color tags";
+        ConvertColorsToDialogAddNewLines = "Add new lines";
+        ConvertColorsToDialogReBreakLines = "Re-break lines";
+        SnapTimeCodesToFramesInfo = "Rounds every start and end time to the nearest frame. The frame rate is read from a video file with the same name as the subtitle file, unless a fixed frame rate is chosen.";
+        AddFolderDotDotDot = "Add folder...";
+        SelectFolderToConvert = "Select folder with files to convert";
+        IncludeSubfolders = "Include subfolders when adding a folder";
+        ScanningFolderX = "Scanning {0}...";
     }
 }

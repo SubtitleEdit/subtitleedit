@@ -81,6 +81,7 @@ public partial class BatchConvertViewModel : ObservableObject, IClosingCleanup
     [ObservableProperty] private bool _isFilterTextVisible;
     [ObservableProperty] private bool _isRemoveVisible;
     [ObservableProperty] private bool _isOpenContainingFolderVisible;
+    [ObservableProperty] private bool _isScanningFolder;
 
     // Add formatting
     [ObservableProperty] private bool _formattingAddItalic;
@@ -201,6 +202,15 @@ public partial class BatchConvertViewModel : ObservableObject, IClosingCleanup
     [ObservableProperty] private bool _beautifyTimeCodesUseFixedFrameRate;
     [ObservableProperty] private ObservableCollection<double> _beautifyTimeCodesFrameRates;
     [ObservableProperty] private double _selectedBeautifyTimeCodesFrameRate;
+
+    [ObservableProperty] private bool _snapTimeCodesToFramesUseVideoFrameRate;
+    [ObservableProperty] private bool _snapTimeCodesToFramesUseFixedFrameRate;
+    [ObservableProperty] private ObservableCollection<double> _snapTimeCodesToFramesFrameRates;
+    [ObservableProperty] private double _selectedSnapTimeCodesToFramesFrameRate;
+
+    [ObservableProperty] private bool _convertColorsToDialogRemoveColorTags;
+    [ObservableProperty] private bool _convertColorsToDialogAddNewLines;
+    [ObservableProperty] private bool _convertColorsToDialogReBreakLines;
 
     // Bride gaps
     [ObservableProperty] private int _bridgeGapsSmallerThanMs;
@@ -364,6 +374,10 @@ public partial class BatchConvertViewModel : ObservableObject, IClosingCleanup
         };
         SelectedBeautifyTimeCodesFrameRate = BeautifyTimeCodesFrameRates[0];
         BeautifyTimeCodesUseVideoFrameRate = true;
+
+        SnapTimeCodesToFramesFrameRates = new ObservableCollection<double>(BeautifyTimeCodesFrameRates);
+        SelectedSnapTimeCodesToFramesFrameRate = SnapTimeCodesToFramesFrameRates[0];
+        SnapTimeCodesToFramesUseVideoFrameRate = true;
 
         AdjustTypes = new ObservableCollection<AdjustDurationDisplay>(AdjustDurationDisplay.ListAll());
         SelectedAdjustType = AdjustTypes.First();
@@ -669,6 +683,15 @@ public partial class BatchConvertViewModel : ObservableObject, IClosingCleanup
         Se.Settings.Tools.BatchConvert.BeautifyTimeCodesUseFixedFrameRate = BeautifyTimeCodesUseFixedFrameRate;
         Se.Settings.Tools.BatchConvert.BeautifyTimeCodesFixedFrameRate = SelectedBeautifyTimeCodesFrameRate;
 
+        // Snap time codes to frames
+        Se.Settings.Tools.BatchConvert.SnapTimeCodesToFramesUseFixedFrameRate = SnapTimeCodesToFramesUseFixedFrameRate;
+        Se.Settings.Tools.BatchConvert.SnapTimeCodesToFramesFixedFrameRate = SelectedSnapTimeCodesToFramesFrameRate;
+
+        // Convert colors to dialog
+        Se.Settings.Tools.BatchConvert.ConvertColorsToDialogRemoveColorTags = ConvertColorsToDialogRemoveColorTags;
+        Se.Settings.Tools.BatchConvert.ConvertColorsToDialogAddNewLines = ConvertColorsToDialogAddNewLines;
+        Se.Settings.Tools.BatchConvert.ConvertColorsToDialogReBreakLines = ConvertColorsToDialogReBreakLines;
+
         // Adjust image brightness/alpha/color
         Se.Settings.Tools.BatchConvert.ImageAdjustBrightnessOn = ImageAdjustBrightnessOn;
         Se.Settings.Tools.BatchConvert.ImageAdjustBrightness = ImageAdjustBrightness;
@@ -804,6 +827,20 @@ public partial class BatchConvertViewModel : ObservableObject, IClosingCleanup
         {
             SelectedBeautifyTimeCodesFrameRate = beautifyRate;
         }
+
+        // Snap time codes to frames
+        SnapTimeCodesToFramesUseFixedFrameRate = Se.Settings.Tools.BatchConvert.SnapTimeCodesToFramesUseFixedFrameRate;
+        SnapTimeCodesToFramesUseVideoFrameRate = !SnapTimeCodesToFramesUseFixedFrameRate;
+        var snapRate = SnapTimeCodesToFramesFrameRates.FirstOrDefault(p => Math.Abs(p - Se.Settings.Tools.BatchConvert.SnapTimeCodesToFramesFixedFrameRate) < 0.001);
+        if (snapRate > 0)
+        {
+            SelectedSnapTimeCodesToFramesFrameRate = snapRate;
+        }
+
+        // Convert colors to dialog
+        ConvertColorsToDialogRemoveColorTags = Se.Settings.Tools.BatchConvert.ConvertColorsToDialogRemoveColorTags;
+        ConvertColorsToDialogAddNewLines = Se.Settings.Tools.BatchConvert.ConvertColorsToDialogAddNewLines;
+        ConvertColorsToDialogReBreakLines = Se.Settings.Tools.BatchConvert.ConvertColorsToDialogReBreakLines;
 
         SplitBreakSingleLineMaxLength = Se.Settings.General.SubtitleLineMaximumLength;
         SplitBreakMaxNumberOfLines = Se.Settings.General.MaxNumberOfLines;
@@ -1652,9 +1689,159 @@ public partial class BatchConvertViewModel : ObservableObject, IClosingCleanup
     }
 
     [RelayCommand]
+    private async Task AddFolder()
+    {
+        if (Window == null)
+        {
+            return;
+        }
+
+        var folder = await _folderHelper.PickFolderAsync(Window, Se.Language.Tools.BatchConvert.SelectFolderToConvert);
+        if (string.IsNullOrEmpty(folder) || !Directory.Exists(folder))
+        {
+            return;
+        }
+
+        await AddFilesAndFoldersAsync(Array.Empty<string>(), new[] { folder });
+    }
+
+    [RelayCommand]
     private void CancelAddFiles()
     {
         _addFilesCancellationTokenSource.Cancel();
+    }
+
+    private async Task AddFilesAndFoldersAsync(IReadOnlyList<string> fileNames, IReadOnlyList<string> folders)
+    {
+        var allFileNames = new List<string>(fileNames);
+
+        if (folders.Count > 0)
+        {
+            var scanned = await ScanFoldersAsync(folders);
+            if (scanned == null)
+            {
+                return; // cancelled during the scan - add nothing
+            }
+
+            allFileNames.AddRange(scanned);
+        }
+
+        if (allFileNames.Count == 0)
+        {
+            return;
+        }
+
+        await AddFilesAsync(allFileNames);
+    }
+
+    /// <summary>
+    /// Collects the files the batch converter can open from <paramref name="folders"/> (and their
+    /// subfolders when "include subfolders" is on). Walking a deep tree or a network share can take
+    /// a long time, so this runs off the UI thread behind the "please wait" overlay and can be
+    /// cancelled - returns null when it was.
+    /// </summary>
+    private async Task<List<string>?> ScanFoldersAsync(IReadOnlyList<string> folders)
+    {
+        var recursive = Se.Settings.Tools.BatchConvert.ScanFolderRecursive;
+        _addFilesCancellationTokenSource = new CancellationTokenSource();
+        var token = _addFilesCancellationTokenSource.Token;
+
+        AddingFilesProgressValue = 0;
+        AddingFilesProgressMax = 1;
+        AddingFilesStatus = string.Empty;
+        IsScanningFolder = true; // the number of folders is unknown up front - show a marquee
+        IsAddingFiles = true;
+
+        List<string> found;
+        try
+        {
+            found = await Task.Run(() =>
+            {
+                var extensions = new HashSet<string>(FileHelper.GetOpenSubtitleExtensions(true), StringComparer.OrdinalIgnoreCase);
+                var fileNames = new List<string>();
+                foreach (var folder in folders)
+                {
+                    ScanFolder(folder, recursive, extensions, fileNames, token,
+                        currentFolder => Dispatcher.UIThread.Post(() =>
+                            AddingFilesStatus = string.Format(Se.Language.Tools.BatchConvert.ScanningFolderX, currentFolder)));
+                }
+
+                return fileNames;
+            });
+        }
+        finally
+        {
+            // Never leave the overlay up - it blocks the file list and its cancel button is the
+            // only way out of it.
+            IsScanningFolder = false;
+            IsAddingFiles = false;
+            AddingFilesStatus = string.Empty;
+        }
+
+        return token.IsCancellationRequested ? null : found;
+    }
+
+    /// <summary>
+    /// Adds every file in <paramref name="folder"/> with one of <paramref name="extensions"/> to
+    /// <paramref name="fileNames"/>, walking subfolders when <paramref name="recursive"/> is set.
+    /// Unreadable folders are skipped, and cancellation stops the walk part-way.
+    /// </summary>
+    internal static void ScanFolder(
+        string folder,
+        bool recursive,
+        HashSet<string> extensions,
+        List<string> fileNames,
+        CancellationToken token,
+        Action<string> reportCurrentFolder)
+    {
+        var pending = new Stack<string>();
+        pending.Push(folder);
+
+        // Reporting every folder would flood the UI thread on a big tree - one update per ~100 ms
+        // is enough for the user to see the scan is alive and where it is.
+        var lastStatusUpdate = System.Diagnostics.Stopwatch.StartNew();
+        var isFirstFolder = true;
+
+        while (pending.Count > 0 && !token.IsCancellationRequested)
+        {
+            var currentFolder = pending.Pop();
+
+            if (isFirstFolder || lastStatusUpdate.ElapsedMilliseconds > 100)
+            {
+                isFirstFolder = false;
+                lastStatusUpdate.Restart();
+                reportCurrentFolder(currentFolder);
+            }
+
+            try
+            {
+                foreach (var fileName in Directory.EnumerateFiles(currentFolder))
+                {
+                    if (token.IsCancellationRequested)
+                    {
+                        return;
+                    }
+
+                    if (extensions.Contains(Path.GetExtension(fileName)))
+                    {
+                        fileNames.Add(fileName);
+                    }
+                }
+
+                if (recursive)
+                {
+                    foreach (var subFolder in Directory.EnumerateDirectories(currentFolder))
+                    {
+                        pending.Push(subFolder);
+                    }
+                }
+            }
+            catch
+            {
+                // unreadable folder (no permission, removed mid-scan, dead network share) - skip it
+                // and keep scanning the rest rather than failing the whole add
+            }
+        }
     }
 
     private async Task AddFilesAsync(IReadOnlyList<string> fileNames)
@@ -2356,6 +2543,21 @@ public partial class BatchConvertViewModel : ObservableObject, IClosingCleanup
                 FixedFrameRate = SelectedBeautifyTimeCodesFrameRate,
             },
 
+            SnapTimeCodesToFrames = new BatchConvertConfig.SnapTimeCodesToFramesSettings
+            {
+                IsActive = activeFunctions.Contains(BatchConvertFunctionType.SnapTimeCodesToFrames),
+                UseFixedFrameRate = SnapTimeCodesToFramesUseFixedFrameRate,
+                FixedFrameRate = SelectedSnapTimeCodesToFramesFrameRate,
+            },
+
+            ConvertColorsToDialog = new BatchConvertConfig.ConvertColorsToDialogSettings
+            {
+                IsActive = activeFunctions.Contains(BatchConvertFunctionType.ConvertColorsToDialog),
+                RemoveColorTags = ConvertColorsToDialogRemoveColorTags,
+                AddNewLines = ConvertColorsToDialogAddNewLines,
+                ReBreakLines = ConvertColorsToDialogReBreakLines,
+            },
+
             AdjustImageColors = new BatchConvertConfig.AdjustImageColorsSettings
             {
                 IsActive = activeFunctions.Contains(BatchConvertFunctionType.AdjustImageColors),
@@ -2571,15 +2773,18 @@ public partial class BatchConvertViewModel : ObservableObject, IClosingCleanup
 
         var paths = files
             .Select(f => f.Path?.LocalPath)
-            .Where(p => p != null && File.Exists(p))
+            .Where(p => !string.IsNullOrEmpty(p))
             .Select(p => p!)
             .ToList();
-        if (paths.Count == 0)
+
+        var droppedFiles = paths.Where(File.Exists).ToList();
+        var droppedFolders = paths.Where(Directory.Exists).ToList();
+        if (droppedFiles.Count == 0 && droppedFolders.Count == 0)
         {
             return;
         }
 
-        _ = AddFilesAsync(paths);
+        _ = AddFilesAndFoldersAsync(droppedFiles, droppedFolders);
     }
 
     partial void OnSelectedCrispAsrModelChanged(SpeechToTextModelDisplay? value)

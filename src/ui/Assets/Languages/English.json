@@ -1758,7 +1758,16 @@
       "assaChangeStyleFromStyle": "Change style from",
       "assaChangeStyleToStyle": "to",
       "assaChangeStyleImportStyle": "Import style...",
-      "assaChangeStyleTrimUnusedStyles": "Trim unused styles"
+      "assaChangeStyleTrimUnusedStyles": "Trim unused styles",
+      "convertColorsToDialogTitle": "Convert colors to dialog",
+      "convertColorsToDialogRemoveColorTags": "Remove color tags",
+      "convertColorsToDialogAddNewLines": "Add new lines",
+      "convertColorsToDialogReBreakLines": "Re-break lines",
+      "snapTimeCodesToFramesInfo": "Rounds every start and end time to the nearest frame. The frame rate is read from a video file with the same name as the subtitle file, unless a fixed frame rate is chosen.",
+      "addFolderDotDotDot": "Add folder...",
+      "selectFolderToConvert": "Select folder with files to convert",
+      "includeSubfolders": "Include subfolders when adding a folder",
+      "scanningFolderX": "Scanning {0}..."
     },
     "changeCasing": {
       "fixNames": "Fix names",
