@@ -33,6 +33,11 @@ internal class Program
         // Handle legacy /convert syntax and convert to modern syntax
         args = ConvertLegacyArguments(args);
 
+        // Spectre matches option names case-sensitively, but seconv has always accepted the
+        // SE 4.x casings (/fixcommonerrors, --RedoCasing, --FIX-COMMON-ERRORS). Rewrite any
+        // known option to its canonical spelling so strict parsing keeps accepting them.
+        args = CanonicalizeOptionCasing(args);
+
         // Backward-compat: accept the format as the second positional arg
         // (e.g. `seconv *.srt sami`) when --format / -f is not supplied.
         args = TryInjectPositionalFormat(args);
@@ -142,6 +147,16 @@ internal class Program
             config.PropagateExceptions();
         });
 
+        // Under strict parsing Spectre retries a failed parse with a synthetic
+        // "__default_command" token inserted into the args; a value option missing its value
+        // swallows that token and the run "succeeds" (a bare --output-folder converts into a
+        // folder literally named __default_command, exit 0). Catch the missing value first.
+        var missingValue = FindMissingOptionValue(args);
+        if (missingValue != null)
+        {
+            return ReportUsageError($"Option '{missingValue}' expects a value but none was provided.", json);
+        }
+
         try
         {
             return app.Run(args);
@@ -248,6 +263,103 @@ internal class Program
             {
                 return name;
             }
+        }
+
+        return null;
+    }
+
+    /// <summary>
+    /// Rewrites every known option token to the canonical spelling the Spectre templates
+    /// declare, matching case-insensitively and ignoring interior dashes. Embedded values
+    /// (<c>--OUTPUTFOLDER:x</c> / <c>--OUTPUTFOLDER=x</c>) are preserved. Unknown tokens
+    /// pass through untouched for the strict parser to reject.
+    /// </summary>
+    internal static string[] CanonicalizeOptionCasing(string[] args)
+    {
+        var canonicalByKey = new Dictionary<string, string>(StringComparer.Ordinal);
+        foreach (var option in CliSchema.Options)
+        {
+            foreach (var token in new[] { option.Name }.Concat(option.Aliases))
+            {
+                canonicalByKey.TryAdd(NormalizeOptionKey(token), option.Name);
+            }
+        }
+
+        var result = new string[args.Length];
+        for (var i = 0; i < args.Length; i++)
+        {
+            var arg = args[i];
+            result[i] = arg;
+            if (!LooksLikeOption(arg))
+            {
+                continue;
+            }
+
+            // Split an embedded value so only the name part is rewritten.
+            var name = arg;
+            var cut = name.IndexOf('=');
+            var colon = name.IndexOf(':', 2);
+            if (colon >= 0 && (cut < 0 || colon < cut))
+            {
+                cut = colon;
+            }
+            var value = string.Empty;
+            if (cut > 0)
+            {
+                value = name[cut..];
+                name = name[..cut];
+            }
+
+            if (canonicalByKey.TryGetValue(NormalizeOptionKey(name), out var canonical))
+            {
+                result[i] = canonical + value;
+            }
+        }
+
+        return result;
+    }
+
+    private static string NormalizeOptionKey(string token) =>
+        token.TrimStart('-').Replace("-", string.Empty).ToLowerInvariant();
+
+    /// <summary>
+    /// First value-carrying option whose value is missing: the option is the last token, or
+    /// the next token is itself a known option. Options with an optional value (Spectre
+    /// FlagValue, e.g. <c>--apply-min-gap</c>) are exempt, as are the embedded-value forms
+    /// (<c>--opt:value</c> / <c>--opt=value</c>), which never match a bare option token.
+    /// </summary>
+    internal static string? FindMissingOptionValue(string[] args)
+    {
+        var allTokens = new HashSet<string>(CliSchema.AllTokens, StringComparer.OrdinalIgnoreCase);
+        var valueTokens = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+        foreach (var option in CliSchema.Options)
+        {
+            if (option.Type == "flag" || option.ValueOptional)
+            {
+                continue;
+            }
+
+            valueTokens.Add(option.Name);
+            foreach (var alias in option.Aliases)
+            {
+                valueTokens.Add(alias);
+            }
+        }
+
+        for (var i = 0; i < args.Length; i++)
+        {
+            if (!valueTokens.Contains(args[i]))
+            {
+                continue;
+            }
+
+            if (i + 1 >= args.Length || allTokens.Contains(args[i + 1]))
+            {
+                return args[i];
+            }
+
+            // The next token is this option's value.
+            i++;
         }
 
         return null;
@@ -440,8 +552,11 @@ internal class Program
                     continue;
                 }
 
-                // Separate value form (--opt value) — skip the next token as the value
-                if (ValueOptions.Contains(arg) && i + 1 < args.Length)
+                // Separate value form (--opt value) — skip the next token as the value.
+                // An option-looking next token is never a value: it belongs to an option
+                // with an optional value (--apply-min-gap --output-folder x), or the value
+                // is simply missing, which FindMissingOptionValue reports later.
+                if (ValueOptions.Contains(arg) && i + 1 < args.Length && !LooksLikeOption(args[i + 1]))
                 {
                     i++;
                 }
