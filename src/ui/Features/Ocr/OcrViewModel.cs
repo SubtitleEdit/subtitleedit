@@ -1337,11 +1337,48 @@ public partial class OcrViewModel : ObservableObject
             return;
         }
 
-        var result = await _windowService.ShowDialogAsync<LlamaCppOcrSettingsWindow, LlamaCppOcrSettingsViewModel>(Window, vm => vm.Initialize());
+        var result = await _windowService.ShowDialogAsync<LlamaCppOcrSettingsWindow, LlamaCppOcrSettingsViewModel>(Window, vm => vm.Initialize(UpdateLlamaCppOcrEngineAsync));
         if (result.OkPressed)
         {
             LlamaCppUrl = Se.Settings.Ocr.LlamaCppUrl;
         }
+
+        RefreshLlamaCppOcrDots();
+    }
+
+    /// <summary>
+    /// Stops the running llama-server (it holds the binary open and would keep serving a stale build),
+    /// re-downloads the matching llama.cpp build, and refreshes the model list and status indicators.
+    /// Wired to the download button in the llama.cpp OCR settings dialog - the only way to update an
+    /// installed engine from the OCR window, since the model download button never re-fetches the engine.
+    /// </summary>
+    private async Task UpdateLlamaCppOcrEngineAsync()
+    {
+        if (Window == null)
+        {
+            return;
+        }
+
+        LlamaCppServerManager.StopServer();
+        UpdateLlamaCppOcrServerButtonText();
+
+        // Re-download the same backend that is installed (CPU/Vulkan/CUDA all unpack into one
+        // folder); when nothing is installed yet, DownloadAsync falls back to asking the user.
+        var folder = LlamaCppServerManager.GetAndCreateFolder();
+        var variant = LlamaCppServerManager.IsEngineInstalled() && OperatingSystem.IsWindows()
+            ? DownloadHashManager.DetectLlamaCppWindowsVariant(folder)
+            : null;
+
+        var model = SelectedLlamaCppOcrModel?.Model;
+        var downloaded = await LlamaCppDownloadHelper.DownloadAsync(Window, _windowService, model, variant, forceEngineDownload: true);
+        if (downloaded != null)
+        {
+            var selectName = string.IsNullOrEmpty(downloaded) ? model?.FileName : downloaded;
+            SelectedLlamaCppOcrModel = LlamaCppDownloadHelper.PopulateModels(LlamaCppOcrModels, LlamaCppServerManager.OcrModels, selectName);
+        }
+
+        RefreshLlamaCppOcrDots();
+        UpdateLlamaCppOcrServerButtonText();
     }
 
     private void UpdateLlamaCppOcrServerButtonText()
