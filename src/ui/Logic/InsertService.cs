@@ -273,7 +273,7 @@ public class InsertService : IInsertService
                     Language = newParagraph.Language
                 });
             }
-            else if (format.GetType() == typeof(AdvancedSubStationAlpha))
+            else if (format.GetType() == typeof(AdvancedSubStationAlpha) || format.GetType() == typeof(SubStationAlpha))
             {
                 var c = subtitles.GetOrNull(nearestIndex);
                 if (c != null)
@@ -282,8 +282,8 @@ public class InsertService : IInsertService
                     newParagraph.Actor = c.Actor;
                 }
 
-                // use the first style from the file, or the default ASSA storage style for a new file
-                newParagraph.Style = AssaStyleStorageHelper.GetStyleNameForNewParagraph(subtitle);
+                // use the first style from the file, or the default storage styles for a new file
+                newParagraph.Style = AssaStyleStorageHelper.GetStyleNameForNewParagraph(subtitle, format);
             }
         }
     }
