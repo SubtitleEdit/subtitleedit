@@ -6860,7 +6860,14 @@ public partial class MainViewModel :
         }
 
         var idx = SelectedSubtitleIndex ?? 0;
-        var viewModel = await ShowDialogAsync<AiReviewWindow, AiReviewViewModel>(vm => { vm.Initialize(GetUpdateSubtitle(), SelectedSubtitleFormat); });
+
+        // Same filter as GetUpdateSubtitle() below, so index N of the reviewed subtitle is line N
+        // here - that mapping is what lets the review window play the line of a suggestion.
+        var reviewedLines = Subtitles.Where(s => !s.IsReferenceOnly).ToList();
+        var viewModel = await ShowDialogAsync<AiReviewWindow, AiReviewViewModel>(vm =>
+        {
+            vm.Initialize(GetUpdateSubtitle(), SelectedSubtitleFormat, MakeReviewLinePlayer(reviewedLines), StopReviewLinePlayback);
+        });
 
         if (viewModel.OkPressed)
         {
@@ -8003,6 +8010,46 @@ public partial class MainViewModel :
         PinPlayheadTo(item.StartTime.TotalSeconds);
         _playSelectionItem = new PlaySelectionItem([item], item.EndTime, false);
         PlayVideo(vp);
+    }
+
+    /// <summary>
+    /// Builds the "play current line" hook handed to the AI review window: playing a suggestion
+    /// plays the line it belongs to and pauses at its end, so a fix can be checked against the
+    /// audio before it is applied. Null when no video is loaded - the window then hides its play
+    /// button. The list must be in the same order as the reviewed subtitle's paragraphs.
+    /// </summary>
+    private Action<int>? MakeReviewLinePlayer(IReadOnlyList<SubtitleLineViewModel> lines)
+    {
+        if (string.IsNullOrEmpty(_videoFileName))
+        {
+            return null;
+        }
+
+        return index =>
+        {
+            var vp = GetVideoPlayerControl();
+            if (vp == null || index < 0 || index >= lines.Count)
+            {
+                return;
+            }
+
+            PlayLineAndPauseAtEnd(vp, lines[index]);
+        };
+    }
+
+    /// <summary>
+    /// Stops a preview started from a dialog through <see cref="MakeReviewLinePlayer"/>.
+    /// </summary>
+    private void StopReviewLinePlayback()
+    {
+        var vp = GetVideoPlayerControl();
+        if (vp == null)
+        {
+            return;
+        }
+
+        ResetPlaySelection();
+        PauseVideoAndFreezePlayhead(vp);
     }
 
     private bool PlayerSelectedLines(bool loop)
@@ -10360,7 +10407,8 @@ public partial class MainViewModel :
             sub.Paragraphs.Add(line.ToParagraph(SelectedSubtitleFormat));
         }
 
-        var result = await ShowDialogAsync<AiReviewWindow, AiReviewViewModel>(vm => vm.Initialize(sub, SelectedSubtitleFormat));
+        var result = await ShowDialogAsync<AiReviewWindow, AiReviewViewModel>(vm =>
+            vm.Initialize(sub, SelectedSubtitleFormat, MakeReviewLinePlayer(ordered), StopReviewLinePlayback));
         if (!result.OkPressed)
         {
             _shortcutManager.ClearKeys();

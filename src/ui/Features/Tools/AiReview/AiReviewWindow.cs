@@ -365,6 +365,7 @@ public class AiReviewWindow : Window
         dataGrid.Bind(TableView.SelectedItemProperty, new Binding(nameof(vm.SelectedSuggestion)));
         TableViewExtras.AddSpaceToggle<ReviewSuggestionItem>(dataGrid,
             item => item.IsSelected, (item, v) => item.IsSelected = v);
+        dataGrid.DoubleTapped += (_, _) => vm.OnSuggestionsGridDoubleTapped();
 
         var borderGrid = UiUtil.MakeBorderForControlNoPadding(dataGrid);
 
@@ -428,12 +429,23 @@ public class AiReviewWindow : Window
         summaryText.VerticalAlignment = VerticalAlignment.Center;
         summaryText.Opacity = 0.8;
 
+        // Plays the selected suggestion's line in the main window's video player - hidden when no
+        // video is loaded (the view model gets no play hook then).
+        var buttonPlay = UiUtil.MakeButton(Se.Language.General.PlayCurrent, vm.PlayCurrentLineCommand)
+            .WithIconLeft("fa-solid fa-play");
+        buttonPlay.Bind(IsVisibleProperty, new Binding(nameof(vm.IsPlayVisible)));
+        if (Se.Settings.Appearance.ShowHints)
+        {
+            ToolTip.SetTip(buttonPlay, l.PlayCurrentLineHint);
+        }
+
         var leftButtons = new StackPanel
         {
             Orientation = Orientation.Horizontal,
             Spacing = 5,
             Children =
             {
+                buttonPlay.WithMarginRight(10),
                 summaryText.WithMarginRight(10),
                 UiUtil.MakeButton(Se.Language.General.SelectAll, vm.SelectAllCommand),
                 UiUtil.MakeButton(Se.Language.General.InvertSelection, vm.InvertSelectionCommand),

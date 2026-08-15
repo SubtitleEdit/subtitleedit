@@ -1476,7 +1476,8 @@
       "linesXToY": "Lines {0}-{1}",
       "largeChangeWarning": "Large change - looks like a rewrite, review carefully",
       "mismatchWarning": "Does not resemble the original - may belong to a different line",
-      "engineError": "The AI engine could not be reached: {0}"
+      "engineError": "The AI engine could not be reached: {0}",
+      "playCurrentLineHint": "Play the selected line in the video player and pause at its end (also double-click a line)"
     },
     "aiAssistant": {
       "title": "AI assistant",
