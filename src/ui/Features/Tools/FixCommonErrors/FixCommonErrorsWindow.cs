@@ -247,6 +247,38 @@ public class FixCommonErrorsWindow : Window
         };
         nothingToFixPanel.Bind(IsVisibleProperty, new Binding(nameof(vm.NothingToFixIsVisible)));
 
+        // Errors the rules found but could not fix (e.g. a display time that is too short with no
+        // room to extend it). Without this they are silent, and a subtitle full of them still shows
+        // the green "Nothing to fix" - click the warning to see one log line per error (#13645).
+        var errorsFoundBrush = new SolidColorBrush(UiTheme.IsDarkThemeEnabled()
+            ? Color.FromRgb(0xff, 0x8a, 0x80)
+            : Color.FromRgb(0xc4, 0x28, 0x28));
+        var errorsFoundIcon = new Optris.Icons.Avalonia.Icon
+        {
+            Value = IconNames.Alert,
+            FontSize = 16,
+            Foreground = errorsFoundBrush,
+            VerticalAlignment = VerticalAlignment.Center,
+            Cursor = new Cursor(StandardCursorType.Hand),
+        };
+        errorsFoundIcon.PointerPressed += (_, _) => vm.ShowLogCommand.Execute(null);
+        var errorsFoundText = UiUtil.MakeLink(string.Empty, vm.ShowLogCommand);
+        errorsFoundText.Foreground = errorsFoundBrush;
+        errorsFoundText.Bind(TextBlock.TextProperty, new Binding(nameof(vm.ErrorsFoundText)));
+        var errorsFoundPanel = new StackPanel
+        {
+            Orientation = Orientation.Horizontal,
+            Spacing = 6,
+            VerticalAlignment = VerticalAlignment.Center,
+            Children = { errorsFoundIcon, errorsFoundText },
+        };
+        errorsFoundPanel.Bind(IsVisibleProperty, new Binding(nameof(vm.ErrorsFoundIsVisible)));
+        AutomationProperties.SetName(errorsFoundPanel, Se.Language.Tools.FixCommonErrors.Log);
+        if (Se.Settings.Appearance.ShowHints)
+        {
+            UiUtil.AttachHoverTooltip(errorsFoundPanel, Se.Language.Tools.FixCommonErrors.Log);
+        }
+
         // "Analyzing..." while a re-scan runs, so a scan that ends in the same state as it started
         // still shows that it ran - this is what SE4 does on every re-scan (#12849).
         var analysingText = UiUtil.MakeTextBlock(Se.Language.Tools.FixCommonErrors.Analysing);
@@ -260,7 +292,7 @@ public class FixCommonErrorsWindow : Window
             Spacing = 15,
             HorizontalAlignment = HorizontalAlignment.Left,
             VerticalAlignment = VerticalAlignment.Center,
-            Children = { labelFixesApplied, nothingToFixPanel, analysingText },
+            Children = { labelFixesApplied, nothingToFixPanel, errorsFoundPanel, analysingText },
         };
         panelStep2Status.Bind(IsVisibleProperty, new Binding(nameof(vm.Step2IsVisible)));
         grid.Children.Add(panelStep2Status);

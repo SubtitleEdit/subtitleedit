@@ -55,6 +55,8 @@ public partial class FixCommonErrorsViewModel : ObservableObject, IFixCallbacks
     [ObservableProperty] private string _fixesAppliedText = string.Empty;
     [ObservableProperty] private bool _nothingToFixIsVisible;
     [ObservableProperty] private bool _analysingIsVisible;
+    [ObservableProperty] private string _errorsFoundText = string.Empty;
+    [ObservableProperty] private bool _errorsFoundIsVisible;
     [ObservableProperty] private string _editTextTotalLength = string.Empty;
     [ObservableProperty] private IBrush _editTextTotalLengthBackground = Brushes.Transparent;
 
@@ -82,7 +84,14 @@ public partial class FixCommonErrorsViewModel : ObservableObject, IFixCallbacks
     private HashSet<(Guid? id, string action)>? _allowedFixLookup;
     private FixRuleDisplayItem? _currentRunningRule;
     private bool _nothingToFix;
+    private bool _hasUnfixableErrors;
     private bool _isAnalysing;
+
+    // Messages the fix rules report through LogStatus - errors they found but could not fix, e.g. a
+    // too short display time with no room to extend it. Rebuilt by every scan, so it always describes
+    // the current state of the subtitle (SE4 showed these in a "Log" tab in step 2) (#13645).
+    private readonly List<string> _logEntries = new();
+    private int _numberOfImportantLogMessages;
     private LanguageDisplayItem _oldSelectedLanguage;
     private int _totalErrors;
     private int _totalFixes;
@@ -233,6 +242,10 @@ public partial class FixCommonErrorsViewModel : ObservableObject, IFixCallbacks
 
             RefreshFixes();
             FixesAppliedText = string.Format(_language.XFixesApplied, _totalFixes);
+
+            // RefreshFixes re-scanned the fixed subtitle, so _totalErrors/_logEntries now hold the
+            // errors that are still there after applying - report them as "fixed, but..." (#13645).
+            UpdateErrorsFoundStatus(true);
         });
     }
 
@@ -577,6 +590,7 @@ public partial class FixCommonErrorsViewModel : ObservableObject, IFixCallbacks
         try
         {
             NothingToFixIsVisible = false;
+            ErrorsFoundIsVisible = false;
             AnalysingIsVisible = true;
             await Task.Delay(AnalysingPaintDelayMilliseconds);
 
@@ -588,6 +602,7 @@ public partial class FixCommonErrorsViewModel : ObservableObject, IFixCallbacks
         {
             AnalysingIsVisible = false;
             NothingToFixIsVisible = _nothingToFix;
+            ErrorsFoundIsVisible = _hasUnfixableErrors;
             _isAnalysing = false;
         }
     }
@@ -602,8 +617,50 @@ public partial class FixCommonErrorsViewModel : ObservableObject, IFixCallbacks
 
         // Confirm that the scan actually ran when it came up empty - the counters do not change in
         // that case, so without this "Refresh available fixes" looks like a dead button (#12849).
-        _nothingToFix = SelectedProfile != null && Fixes.Count == 0;
+        // A subtitle with errors that cannot be fixed is not "nothing to fix", so the errors found
+        // during the scan take precedence over the green all-clear (#13645).
+        _nothingToFix = SelectedProfile != null && Fixes.Count == 0 && _totalErrors == 0;
         NothingToFixIsVisible = _nothingToFix && !AnalysingIsVisible;
+        UpdateErrorsFoundStatus(false);
+    }
+
+    /// <summary>
+    /// Shows what the scan found but could not fix, in SE4's wording - the count of fixable issues
+    /// is only half the story when the subtitle still contains errors afterwards. The text links to
+    /// the log with one line per error (#13645).
+    /// </summary>
+    private void UpdateErrorsFoundStatus(bool applied)
+    {
+        _hasUnfixableErrors = _totalErrors > 0;
+        ErrorsFoundIsVisible = _hasUnfixableErrors && !AnalysingIsVisible;
+
+        if (!_hasUnfixableErrors)
+        {
+            ErrorsFoundText = string.Empty;
+            return;
+        }
+
+        var fixCount = applied ? _totalFixes : Fixes.Count;
+        if (fixCount == 0)
+        {
+            ErrorsFoundText = _language.NothingFixableBut;
+        }
+        else
+        {
+            ErrorsFoundText = string.Format(applied ? _language.XFixedBut : _language.XCouldBeFixedBut, fixCount);
+        }
+    }
+
+    [RelayCommand]
+    private async Task ShowLog()
+    {
+        if (Window == null)
+        {
+            return;
+        }
+
+        await _windowService.ShowDialogAsync<FixCommonErrorsLogWindow, FixCommonErrorsLogViewModel>(Window,
+            vm => { vm.Initialize(_logEntries, _numberOfImportantLogMessages); });
     }
 
     private void ApplyFixes()
@@ -616,6 +673,8 @@ public partial class FixCommonErrorsViewModel : ObservableObject, IFixCallbacks
         LoadNamesListIfNeeded();
 
         _totalErrors = 0;
+        _logEntries.Clear();
+        _numberOfImportantLogMessages = 0;
         _allowedFixLookup = null; // fix selection may have changed since the last pass
 
         var subtitle = _previewMode ? new Subtitle(FixedSubtitle, false) : FixedSubtitle;
@@ -1014,14 +1073,26 @@ public partial class FixCommonErrorsViewModel : ObservableObject, IFixCallbacks
         };
     }
 
+    internal IReadOnlyList<string> LogEntries => _logEntries;
+
     public void LogStatus(string sender, string message)
     {
-        //TODO: Implement logging functionality
+        if (string.IsNullOrWhiteSpace(message))
+        {
+            return;
+        }
+
+        _logEntries.Add($"{sender}: {message}");
     }
 
     public void LogStatus(string sender, string message, bool isImportant)
     {
-        //TODO: Implement logging functionality
+        if (isImportant)
+        {
+            _numberOfImportantLogMessages++;
+        }
+
+        LogStatus(sender, message);
     }
 
     public void UpdateFixStatus(int fixes, string message)
