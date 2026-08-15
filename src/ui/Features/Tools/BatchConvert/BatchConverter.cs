@@ -81,6 +81,7 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
 
     private readonly INOcrCaseFixer _nOcrCaseFixer;
     private readonly IBinaryOcrMatcher _binaryOcrMatcher;
+    private OcrLineHeightTracker _lineHeightTracker = new();
     private readonly INamesList _namesList;
     private string _namesListFolder = string.Empty;
     private string _namesListLanguage = string.Empty;
@@ -717,6 +718,7 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
 
     private void RunNOcr(IOcrSubtitle imageSubtitles, BatchConvertItem item, CancellationToken cancellationToken)
     {
+        _lineHeightTracker = new OcrLineHeightTracker { FallbackMinLineHeight = item.Format == FormatBluRaySup ? 25 : 12 };
         var fileName = Path.Combine(Se.OcrFolder, Se.Settings.Ocr.NOcrDatabase + ".nocr");
         var nOcrDb = new NOcrDb(fileName);
         var totalCount = imageSubtitles.Count;
@@ -814,7 +816,8 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
         parentBitmap.MakeTwoColor(200);
         parentBitmap.CropTop(0, new SKColor(0, 0, 0, 0));
         var letters = NikseBitmapImageSplitter2.SplitBitmapToLettersNew(parentBitmap, pixelsAreSpace,
-            false, true, 20, true);
+            false, true, _lineHeightTracker.GetMinLineHeight(), true, _lineHeightTracker.GetAverageLineHeight());
+        _lineHeightTracker.Update(letters);
         var index = 0;
         var matches = new List<NOcrChar>();
         var maxErrorPercent = Se.Settings.Ocr.BinaryOcrMaxErrorPercent > 0 ? Se.Settings.Ocr.BinaryOcrMaxErrorPercent : 7.5;
@@ -919,6 +922,7 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
 
     private void RunBinaryOcr(IOcrSubtitle imageSubtitles, BatchConvertItem item, CancellationToken cancellationToken)
     {
+        _lineHeightTracker = new OcrLineHeightTracker { FallbackMinLineHeight = item.Format == FormatBluRaySup ? 25 : 12 };
         var dbName = string.IsNullOrEmpty(Se.Settings.Tools.BatchConvert.BinaryOcrDatabase)
             ? "Latin"
             : Se.Settings.Tools.BatchConvert.BinaryOcrDatabase;
@@ -1060,7 +1064,8 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
         var parentBitmap = new NikseBitmap2(bitmap);
         parentBitmap.MakeTwoColor(200);
         parentBitmap.CropTop(0, new SKColor(0, 0, 0, 0));
-        var letters = NikseBitmapImageSplitter2.SplitBitmapToLettersNew(parentBitmap, pixelsAreSpace, false, true, 20, true);
+        var letters = NikseBitmapImageSplitter2.SplitBitmapToLettersNew(parentBitmap, pixelsAreSpace, false, true, _lineHeightTracker.GetMinLineHeight(), true, _lineHeightTracker.GetAverageLineHeight());
+        _lineHeightTracker.Update(letters);
         var index = 0;
         var matches = new List<BinaryOcrMatcher.CompareMatch>();
         while (index < letters.Count)
@@ -1117,6 +1122,7 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
 
     private static int? DetectPixelsIsSpace(IOcrSubtitle imageSubtitles, int sampleSize, CancellationToken cancellationToken)
     {
+        var lineHeightTracker = new OcrLineHeightTracker(); // static sweep, so track locally
         var gaps = new List<int>(1024);
         for (var i = 0; i < sampleSize; i++)
         {
@@ -1129,7 +1135,8 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
             var parentBitmap = new NikseBitmap2(bitmap);
             parentBitmap.MakeTwoColor(200);
             parentBitmap.CropTop(0, new SKColor(0, 0, 0, 0));
-            var letters = NikseBitmapImageSplitter2.SplitBitmapToLettersNew(parentBitmap, 1, false, true, 20, true);
+            var letters = NikseBitmapImageSplitter2.SplitBitmapToLettersNew(parentBitmap, 1, false, true, lineHeightTracker.GetMinLineHeight(), true, lineHeightTracker.GetAverageLineHeight());
+            lineHeightTracker.Update(letters);
             foreach (var l in letters)
             {
                 if (l.NikseBitmap == null && l.SpecialCharacter == " " && l.SpacePixels > 0)

@@ -226,8 +226,16 @@ namespace Nikse.SubtitleEdit.UiLogic.Ocr.FixEngine
                 return list;
             }
 
-            var node = doc.DocumentElement?.SelectSingleNode(name);
-            if (node != null)
+            // SelectNodes, not SelectSingleNode: several shipped lists contain more than one
+            // section with the same name (often an empty placeholder first), and reading only
+            // the first silently drops every entry in the others.
+            var nodes = doc.DocumentElement?.SelectNodes(name);
+            if (nodes == null)
+            {
+                return list;
+            }
+
+            foreach (XmlNode node in nodes)
             {
                 foreach (XmlNode item in node.ChildNodes)
                 {
@@ -256,8 +264,15 @@ namespace Nikse.SubtitleEdit.UiLogic.Ocr.FixEngine
                 return list;
             }
 
-            var node = doc.DocumentElement?.SelectSingleNode(name);
-            if (node != null)
+            // See LoadReplaceList: duplicate sections must all be read. fin/fra/hrb/hun/por/spa
+            // ship an empty <PartialWords /> placeholder ahead of the real section.
+            var nodes = doc.DocumentElement?.SelectNodes(name);
+            if (nodes == null)
+            {
+                return list;
+            }
+
+            foreach (XmlNode node in nodes)
             {
                 foreach (XmlNode item in node.ChildNodes)
                 {
@@ -286,8 +301,14 @@ namespace Nikse.SubtitleEdit.UiLogic.Ocr.FixEngine
                 return list;
             }
 
-            var node = doc.DocumentElement?.SelectSingleNode(name);
-            if (node != null)
+            // See LoadReplaceList: duplicate sections must all be read.
+            var nodes = doc.DocumentElement?.SelectNodes(name);
+            if (nodes == null)
+            {
+                return list;
+            }
+
+            foreach (XmlNode node in nodes)
             {
                 foreach (XmlNode item in node.ChildNodes)
                 {
