@@ -398,26 +398,40 @@ public static class MultipleReplaceLoader
             return 0;
         }
 
-        // Pre-compile rule patterns once (not per-paragraph):
-        //  - RegularExpression rules use the user pattern with RegexOptions.Multiline so ^/$
-        //    anchors match at every line boundary, matching the UI (MultipleReplaceViewModel
-        //    compiles with Compiled | Multiline).
-        //  - Normal (case-insensitive literal) rules compile an escaped, IgnoreCase pattern
-        //    so the per-paragraph loop no longer re-escapes and re-parses on every line.
-        // A rule with an invalid/empty pattern is left out here so it's skipped entirely.
-        var compiledRegex = new Dictionary<Rule, Regex>();
+        // Resolve every rule once into the shape the per-paragraph loop needs, so that loop only
+        // switches on an enum. Previously it re-compared each rule's SearchType string three
+        // times and re-escaped its replacement text for every single paragraph — with 60 rules
+        // over a 5000-cue file that is 300k string comparisons and 300k throwaway strings.
+        // A rule with an invalid/empty pattern is dropped here so it is skipped entirely.
+        var compiled = new List<CompiledRule>(rules.Count);
         foreach (var rule in rules)
         {
             try
             {
                 if (string.Equals(rule.SearchType, SearchTypeRegularExpression, StringComparison.OrdinalIgnoreCase))
                 {
-                    compiledRegex[rule] = new Regex(rule.FindWhat, RegexOptions.Compiled | RegexOptions.Multiline);
+                    // RegexOptions.Multiline so ^/$ anchors match at every line boundary, matching
+                    // the UI (MultipleReplaceViewModel compiles with Compiled | Multiline).
+                    compiled.Add(new CompiledRule(
+                        RuleKind.Regex,
+                        new Regex(rule.FindWhat, RegexOptions.Compiled | RegexOptions.Multiline),
+                        rule.FindWhat,
+                        rule.ReplaceWith));
                 }
-                else if (!string.Equals(rule.SearchType, SearchTypeCaseSensitive, StringComparison.OrdinalIgnoreCase)
-                         && !string.IsNullOrEmpty(rule.FindWhat))
+                else if (string.Equals(rule.SearchType, SearchTypeCaseSensitive, StringComparison.OrdinalIgnoreCase))
                 {
-                    compiledRegex[rule] = new Regex(Regex.Escape(rule.FindWhat), RegexOptions.Compiled | RegexOptions.IgnoreCase);
+                    compiled.Add(new CompiledRule(RuleKind.CaseSensitive, null, rule.FindWhat, rule.ReplaceWith));
+                }
+                else if (!string.IsNullOrEmpty(rule.FindWhat))
+                {
+                    // Normal = case-insensitive literal, matched through an escaped IgnoreCase
+                    // pattern. The '$' escaping (so the replacement is literal, with no $1/$&
+                    // expansion) is done here rather than per paragraph.
+                    compiled.Add(new CompiledRule(
+                        RuleKind.Literal,
+                        new Regex(Regex.Escape(rule.FindWhat), RegexOptions.Compiled | RegexOptions.IgnoreCase),
+                        rule.FindWhat,
+                        rule.ReplaceWith.Replace("$", "$$")));
                 }
             }
             catch
@@ -426,32 +440,21 @@ public static class MultipleReplaceLoader
             }
         }
 
+        var activeRules = compiled.ToArray();
         var modified = 0;
         foreach (var paragraph in subtitle.Paragraphs)
         {
             var newText = paragraph.Text ?? string.Empty;
-            foreach (var rule in rules)
+            foreach (var rule in activeRules)
             {
-                if (string.Equals(rule.SearchType, SearchTypeCaseSensitive, StringComparison.OrdinalIgnoreCase))
+                newText = rule.Kind switch
                 {
-                    newText = newText.Replace(rule.FindWhat, rule.ReplaceWith);
-                }
-                else if (string.Equals(rule.SearchType, SearchTypeRegularExpression, StringComparison.OrdinalIgnoreCase))
-                {
-                    if (compiledRegex.TryGetValue(rule, out var regex))
-                    {
-                        newText = RegexUtils.ReplaceNewLineSafe(regex, newText, rule.ReplaceWith);
-                    }
-                }
-                else // Normal — case-insensitive literal replace (empty FindWhat = no-op, not compiled)
-                {
-                    if (compiledRegex.TryGetValue(rule, out var regex))
-                    {
-                        // Escape '$' so the replacement is treated literally (no $1/$& expansion).
-                        newText = regex.Replace(newText, rule.ReplaceWith.Replace("$", "$$"));
-                    }
-                }
+                    RuleKind.CaseSensitive => newText.Replace(rule.Find, rule.Replace, StringComparison.Ordinal),
+                    RuleKind.Regex => RegexUtils.ReplaceNewLineSafe(rule.Regex!, newText, rule.Replace),
+                    _ => rule.Regex!.Replace(newText, rule.Replace),
+                };
             }
+
             if (newText != paragraph.Text)
             {
                 paragraph.Text = newText;
@@ -461,4 +464,15 @@ public static class MultipleReplaceLoader
 
         return modified;
     }
+
+    private enum RuleKind
+    {
+        /// <summary>Case-insensitive literal (the XML's "Normal" and the SE5 GUI's "CaseInsensitive").</summary>
+        Literal,
+        CaseSensitive,
+        Regex,
+    }
+
+    /// <summary>A rule with its search kind resolved and its pattern compiled, ready to apply.</summary>
+    private readonly record struct CompiledRule(RuleKind Kind, Regex? Regex, string Find, string Replace);
 }

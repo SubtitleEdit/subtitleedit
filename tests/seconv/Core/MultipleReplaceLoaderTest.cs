@@ -95,4 +95,60 @@ public class MultipleReplaceLoaderTest : IDisposable
         _sub = NewSubtitle();
         Assert.Equal(2, Apply(Xml, ".txt"));  // sniffed as XML by leading '<'
     }
+
+    // Replacement text of a non-regex rule is literal: '$1', '$&' and '$$' are not expanded.
+    // The escaping that guarantees this is done once per rule rather than per paragraph, so pin
+    // it across several paragraphs — a stale or shared escape would show up on the later ones.
+    private const string DollarXml = """
+        <?xml version="1.0" encoding="utf-8"?>
+        <MultipleSearchAndReplaceGroups>
+          <Group>
+            <Name>Dollars</Name>
+            <IsActive>true</IsActive>
+            <Rules>
+              <Rule><Active>true</Active><FindWhat>PRICE</FindWhat><ReplaceWith>$1 and $&amp; and $$</ReplaceWith><SearchType>Normal</SearchType></Rule>
+              <Rule><Active>true</Active><FindWhat>COST</FindWhat><ReplaceWith>$9</ReplaceWith><SearchType>CaseSensitive</SearchType></Rule>
+            </Rules>
+          </Group>
+        </MultipleSearchAndReplaceGroups>
+        """;
+
+    [Fact]
+    public void ReplacementDollarsAreLiteralOnEveryParagraph()
+    {
+        _sub = new Subtitle();
+        _sub.Paragraphs.Add(new Paragraph("a PRICE here", 0, 3000));
+        _sub.Paragraphs.Add(new Paragraph("another price there", 4000, 6000)); // Normal rule is case-insensitive
+        _sub.Paragraphs.Add(new Paragraph("a COST too", 7000, 9000));
+
+        Assert.Equal(3, Apply(DollarXml, ".xml"));
+        Assert.Equal("a $1 and $& and $$ here", _sub.Paragraphs[0].Text);
+        Assert.Equal("another $1 and $& and $$ there", _sub.Paragraphs[1].Text);
+        Assert.Equal("a $9 too", _sub.Paragraphs[2].Text);
+    }
+
+    // A rule whose pattern will not compile is dropped, and the remaining rules still apply.
+    private const string BadRegexXml = """
+        <?xml version="1.0" encoding="utf-8"?>
+        <MultipleSearchAndReplaceGroups>
+          <Group>
+            <Name>Bad</Name>
+            <IsActive>true</IsActive>
+            <Rules>
+              <Rule><Active>true</Active><FindWhat>[unclosed</FindWhat><ReplaceWith>X</ReplaceWith><SearchType>RegularExpression</SearchType></Rule>
+              <Rule><Active>true</Active><FindWhat>colour</FindWhat><ReplaceWith>color</ReplaceWith><SearchType>Normal</SearchType></Rule>
+            </Rules>
+          </Group>
+        </MultipleSearchAndReplaceGroups>
+        """;
+
+    [Fact]
+    public void UncompilableRuleIsSkippedAndOthersStillApply()
+    {
+        _sub = new Subtitle();
+        _sub.Paragraphs.Add(new Paragraph("the colour [unclosed", 0, 3000));
+
+        Assert.Equal(1, Apply(BadRegexXml, ".xml"));
+        Assert.Equal("the color [unclosed", _sub.Paragraphs[0].Text);
+    }
 }
