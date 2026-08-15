@@ -10,6 +10,7 @@
     <WordPart from="f" to="f " />
     <WordPart from="ą" to="ą " />
     <WordPart from="j" to=" j" />
+    <WordPart from="i" to="l" />
   </PartialWords>
   <WholeLines />
   <PartialLinesAlways />
@@ -17,4 +18,10 @@
   <BeginLines />
   <EndLines />
   <RegularExpressions />
+  <RegularExpressionsIfSpelledCorrectly>
+    <!-- Italic l misread as i (#13660): trailing i to l, double ii to ll.  -->
+    <!-- Correct i-words are in the dictionary and protected by the gate.   -->
+    <RegEx find="\b([A-ZĄĆĘŁŃÓŚŹŻa-ząćęłńóśźż][a-ząćęłńóśźż]*)i\b" spellCheck="$1l" replaceWith="$1l" />
+    <RegEx find="\b([A-ZĄĆĘŁŃÓŚŹŻa-ząćęłńóśźż][a-ząćęłńóśźż]*)ii([a-ząćęłńóśźż]*)\b" spellCheck="$1ll$2" replaceWith="$1ll$2" />
+  </RegularExpressionsIfSpelledCorrectly>
 </OCRFixReplaceList>

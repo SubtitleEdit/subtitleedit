@@ -31,4 +31,13 @@
     <RegEx find="\b(?:II|ll)" replaceWith="Il" />
     <RegEx find="([\xf5\xfb])I" replaceWith="$1l" />
   </RegularExpressions>
+  <PartialWords>
+    <WordPart from="i" to="l" />
+  </PartialWords>
+  <RegularExpressionsIfSpelledCorrectly>
+    <!-- Italic l misread as i (#13660): trailing i to l, double ii to ll.  -->
+    <!-- Correct i-words are in the dictionary and protected by the gate.   -->
+    <RegEx find="\b([A-ZÁÉÍÓÖŐÚÜŰa-záéíóöőúüű][a-záéíóöőúüű]*)i\b" spellCheck="$1l" replaceWith="$1l" />
+    <RegEx find="\b([A-ZÁÉÍÓÖŐÚÜŰa-záéíóöőúüű][a-záéíóöőúüű]*)ii([a-záéíóöőúüű]*)\b" spellCheck="$1ll$2" replaceWith="$1ll$2" />
+  </RegularExpressionsIfSpelledCorrectly>
 </OCRFixReplaceList>

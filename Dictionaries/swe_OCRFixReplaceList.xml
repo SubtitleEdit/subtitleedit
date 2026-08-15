@@ -450,6 +450,7 @@
     <WordPart from="tjag" to="t jag" />
     <WordPart from="ejag" to="e jag" />
     <WordPart from="ärp" to="är p" />
+    <WordPart from="i" to="l" />
   </PartialWords>
   <WholeLines />
   <PartialLinesAlways>
@@ -589,5 +590,11 @@
     <!-- inStockholm → in Stockholm -->
     <RegEx find="\bin([A-ZÅÄÖ][a-zåäöé]+)\b" spellCheck="$1" replaceWith="in $1" />
 
+  </RegularExpressionsIfSpelledCorrectly>
+  <RegularExpressionsIfSpelledCorrectly>
+    <!-- Italic l misread as i (#13660): trailing i to l, double ii to ll.  -->
+    <!-- Correct i-words are in the dictionary and protected by the gate.   -->
+    <RegEx find="\b([A-ZÅÄÖa-zåäö][a-zåäö]*)i\b" spellCheck="$1l" replaceWith="$1l" />
+    <RegEx find="\b([A-ZÅÄÖa-zåäö][a-zåäö]*)ii([a-zåäö]*)\b" spellCheck="$1ll$2" replaceWith="$1ll$2" />
   </RegularExpressionsIfSpelledCorrectly>
 </OCRFixReplaceList>
