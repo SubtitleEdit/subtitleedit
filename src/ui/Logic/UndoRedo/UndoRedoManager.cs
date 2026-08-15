@@ -297,6 +297,15 @@ public sealed class UndoRedoManager : IUndoRedoManager
                 return;
             }
 
+            // Re-check: the user may have started a continuous edit while this tick was hashing
+            // and snapshotting (both marshal to the UI thread). Without this, a tick that slipped
+            // through the gate above right as a waveform drag began recorded a state from a few
+            // frames into the drag - an undo step landing in the middle of the drag (#13636).
+            if (client.IsUserEditing())
+            {
+                return;
+            }
+
             lock (_lock)
             {
                 // Re-validate after the lock release/reacquire window — another

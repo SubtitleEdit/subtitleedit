@@ -24873,7 +24873,11 @@ public partial class MainViewModel :
         }
 
         // Dragging in the waveform is the pointer equivalent of typing - see IsUserEditing().
-        return AudioVisualizer?.IsEditingWithPointer == true;
+        // Deliberately the 500 ms settle rather than IsEditingWithPointer's whole-drag window:
+        // undo has to skip the entire drag or it records half-finished times (#13636), but the
+        // preview only pays a wasted refresh, and settling during a held pause is precisely when
+        // the user is looking at the frame - so it keeps the pre-#13636 timing.
+        return AudioVisualizer?.IsPointerEditSettling == true;
     }
 
     // Called at ~60 fps from _cursorTimer (fast settle after edits) and every 400 ms from
