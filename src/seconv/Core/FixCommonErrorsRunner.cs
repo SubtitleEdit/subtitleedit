@@ -144,7 +144,7 @@ internal static class FixCommonErrorsRunner
         // Spanish/Danish/Turkish file that auto-detects wrong still gets its per-language
         // rule. Falls back to content auto-detection, then "en".
         var language = NormalizeLanguageOverride(languageOverride)
-            ?? LanguageAutoDetect.AutoDetectGoogleLanguageOrNull(subtitle)
+            ?? SubtitleLanguageDetector.DetectOrNull(subtitle)
             ?? "en";
         var callbacks = new EmptyFixCallback
         {
@@ -164,12 +164,12 @@ internal static class FixCommonErrorsRunner
         // condition another rule fixes on the next pass. SE4's batch converter ran the
         // whole suite three times per /FixCommonErrors (issue #11873). Run to convergence
         // here - repeat until a pass changes nothing, capped to avoid pathological loops.
-        var previousSnapshot = Snapshot(subtitle);
+        var previousSnapshot = SubtitleSignature.Compute(subtitle);
         for (var pass = 0; pass < MaxPasses; pass++)
         {
             RunSinglePass(subtitle, wanted, language, callbacks);
 
-            var snapshot = Snapshot(subtitle);
+            var snapshot = SubtitleSignature.Compute(subtitle);
             if (snapshot == previousSnapshot)
             {
                 break;
@@ -275,34 +275,6 @@ internal static class FixCommonErrorsRunner
                 // A rogue rule shouldn't kill the conversion. Skip and continue.
             }
         }
-    }
-
-    // A signature of the subtitle's timing + text, used to detect when a Fix Common
-    // Errors pass has stopped changing anything (convergence). A 64-bit FNV-1a hash over
-    // the same fields - only compared against the previous pass within this run, so it
-    // avoids building (and discarding) a full-subtitle string on every pass.
-    private static long Snapshot(Subtitle subtitle)
-    {
-        const long fnvPrime = 1099511628211L;
-        var hash = unchecked((long)14695981039346656037UL); // FNV offset basis
-        unchecked
-        {
-            foreach (var p in subtitle.Paragraphs)
-            {
-                hash = (hash ^ BitConverter.DoubleToInt64Bits(p.StartTime.TotalMilliseconds)) * fnvPrime;
-                hash = (hash ^ BitConverter.DoubleToInt64Bits(p.EndTime.TotalMilliseconds)) * fnvPrime;
-
-                var text = p.Text ?? string.Empty;
-                foreach (var c in text)
-                {
-                    hash = (hash ^ c) * fnvPrime;
-                }
-
-                hash = (hash ^ '\n') * fnvPrime;
-            }
-        }
-
-        return hash;
     }
 
     /// <summary>
