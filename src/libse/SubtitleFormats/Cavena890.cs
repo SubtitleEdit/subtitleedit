@@ -285,8 +285,19 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             0x7C, // э
             0x7B, // ш
             0x50, // П
-            0x52, // П
-            0x68, // П
+            0x52, // Р
+            0x68, // х
+            // Letters that share their glyph with a Latin character are stored as that
+            // Latin byte - map them to the real Cyrillic letter so text round-trips.
+            0x41, // А
+            0x4B, // К
+            0x4D, // М
+            0x4F, // О
+            0x54, // Т
+            0x61, // а
+            0x65, // е
+            0x6B, // к
+            0x6F, // о
         };
 
         private static readonly List<string> RussianLetters = new List<string>
@@ -335,6 +346,15 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             "П",
             "Р",
             "х",
+            "А",
+            "К",
+            "М",
+            "О",
+            "Т",
+            "а",
+            "е",
+            "к",
+            "о",
         };
 
         private static readonly List<Tuple<int, string>> Greek = new List<Tuple<int, string>>
@@ -1632,6 +1652,20 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             }
 
             AddCp1252PassThrough(table, b => RussianCodes.Contains(b));
+
+            // Latin letters whose glyph matches the Cyrillic letter stored at their ASCII byte
+            // (they decode back as the visually identical Cyrillic letter)
+            table['A'] = 0x41;
+            table['E'] = 0x45;
+            table['C'] = 0x53;
+            table['K'] = 0x4B;
+            table['M'] = 0x4D;
+            table['O'] = 0x4F;
+            table['T'] = 0x54;
+            table['a'] = 0x61;
+            table['e'] = 0x65;
+            table['k'] = 0x6B;
+            table['o'] = 0x6F;
             return table;
         });
 

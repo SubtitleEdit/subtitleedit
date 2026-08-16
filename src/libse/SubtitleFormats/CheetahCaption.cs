@@ -238,7 +238,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         {
                             sb.Append(DicCodeLatin[buffer[index]]);
                         }
-                        else if (buffer[index] >= 0xC0 || buffer[index] <= 0x14) // codes/styles?
+                        else if (buffer[index] >= 0xC0 || buffer[index] <= 0x1F) // codes/styles (0x15-0x1F are not text in cp1252 either - e.g. the 0x1E right-align style byte)
                         {
                             if (buffer[index] == 0xd0) // italics
                             {

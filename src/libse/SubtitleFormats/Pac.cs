@@ -1336,6 +1336,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             }
 
             text = MakePacItalicsAndRemoveOtherTags(text);
+            if (!IsFpc)
+            {
+                text = text.Replace("…", "..."); // no PAC code point for ellipsis outside FPC/unicode
+            }
 
             var encoding = GetEncoding(CodePage);
             byte[] textBuffer;
