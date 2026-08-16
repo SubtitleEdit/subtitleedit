@@ -73,6 +73,7 @@ public class SeVideoTextToSpeech
     public string OmniVoiceTtsCppInstruction { get; set; }
     public string ChatterboxModel { get; set; }
     public string ChatterboxCrispAsrLanguage { get; set; }
+    public string ChatterboxCrispAsrSourceLanguage { get; set; }
     public string KokoroVoice { get; set; }
     public string GoogleApiKey { get; set; }
     public string GoogleKeyFile { get; set; }
@@ -182,6 +183,7 @@ public class SeVideoTextToSpeech
         OmniVoiceTtsCppInstruction = string.Empty;
         ChatterboxModel = "Base";
         ChatterboxCrispAsrLanguage = string.Empty;
+        ChatterboxCrispAsrSourceLanguage = string.Empty;
         KokoroVoice = "af_maple";
         GoogleApiKey = string.Empty;
         GoogleKeyFile = string.Empty;
