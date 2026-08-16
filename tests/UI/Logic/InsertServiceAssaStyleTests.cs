@@ -169,6 +169,80 @@ public class InsertServiceAssaStyleTests
     }
 
     [Fact]
+    public void InsertAfter_EmptySubtitle_AppendsInsteadOfThrowing()
+    {
+        var saved = Se.Settings;
+        try
+        {
+            Se.Settings = new Se();
+
+            // "Insert after" on an empty subtitle asks for index 1 - it used to throw.
+            var subtitle = new Subtitle { Header = MakeHeaderWithStyles("Julia Lepetit", "Default") };
+            var subtitles = new ObservableCollection<SubtitleLineViewModel>();
+
+            new InsertService().InsertAfter(new AdvancedSubStationAlpha(), subtitle, subtitles, null, "Hello");
+
+            var line = Assert.Single(subtitles);
+            Assert.Equal("Hello", line.Text);
+            Assert.Equal("Default", line.Style);
+        }
+        finally
+        {
+            Se.Settings = saved;
+        }
+    }
+
+    [Fact]
+    public void InsertAfter_IndexPastTheEnd_AppendsInsteadOfThrowing()
+    {
+        var saved = Se.Settings;
+        try
+        {
+            Se.Settings = new Se();
+
+            var subtitle = new Subtitle { Header = MakeHeaderWithStyles("Julia Lepetit", "Default") };
+            var subtitles = new ObservableCollection<SubtitleLineViewModel>
+            {
+                MakeLine("Yammers, hello.", 1000, 3000, "Julia Lepetit"),
+            };
+
+            new InsertService().InsertAfter(new AdvancedSubStationAlpha(), subtitle, subtitles, 7, "Hello");
+
+            Assert.Equal(2, subtitles.Count);
+            Assert.Equal("Hello", subtitles[1].Text);
+        }
+        finally
+        {
+            Se.Settings = saved;
+        }
+    }
+
+    [Fact]
+    public void InsertBefore_IndexPastTheEnd_AppendsInsteadOfThrowing()
+    {
+        var saved = Se.Settings;
+        try
+        {
+            Se.Settings = new Se();
+
+            var subtitle = new Subtitle { Header = MakeHeaderWithStyles("Julia Lepetit", "Default") };
+            var subtitles = new ObservableCollection<SubtitleLineViewModel>
+            {
+                MakeLine("Yammers, hello.", 1000, 3000, "Julia Lepetit"),
+            };
+
+            new InsertService().InsertBefore(new AdvancedSubStationAlpha(), subtitle, subtitles, 7, "Hello");
+
+            Assert.Equal(2, subtitles.Count);
+            Assert.Equal("Hello", subtitles[1].Text);
+        }
+        finally
+        {
+            Se.Settings = saved;
+        }
+    }
+
+    [Fact]
     public void InsertAfter_SubRip_LeavesStyleAlone()
     {
         var saved = Se.Settings;
