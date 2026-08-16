@@ -75,10 +75,15 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Matroska
         /// opened instantly (#13609). Reading big and sequentially instead lets read-ahead
         /// pipeline the transfer - measured on the reporter's share, ~900 MB streams in about 4 s
         /// while the sparse walk over the same file took over two minutes.
-        /// 64 KB (#13610) already pulls ~80% of the file over the wire, so a larger buffer costs
-        /// almost no extra bytes while cutting the round-trip count proportionally.
+        /// 64 KB (#13610) is the measured optimum: it already pulls ~80% of the file over the wire,
+        /// so the round-trips are amortized, and the reporter's 901 MB file opened in ~5 s - about
+        /// 180 MB/s against a share that streams at ~225 MB/s, i.e. nearly no headroom left. Going
+        /// to 1 MB was tried and was ~2 s *slower* on that same share: at that size practically
+        /// every forward skip falls inside the buffer, so the whole file is transferred, and each
+        /// seek past the buffer end throws away up to 1 MB of already-fetched data. Bigger only
+        /// buys bytes here, not speed.
         /// </summary>
-        private const int NetworkReadBufferSize = 1024 * 1024;
+        private const int NetworkReadBufferSize = 65536;
 
         private static int GetReadBufferSize(string path)
         {
