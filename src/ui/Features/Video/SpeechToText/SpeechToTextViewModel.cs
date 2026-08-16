@@ -946,6 +946,18 @@ public partial class SpeechToTextViewModel : ObservableObject
     /// </summary>
     private static string GetMissingSharedLibraryMessage(string libraryName)
     {
+        // Libraries that ship inside the engine download itself. Telling the user to install
+        // these with their package manager is a dead end - no distro packages them, and the
+        // real cause is a bad or incomplete engine folder (issue #13680).
+        if (MissingSharedLibrary.IsBundledWithEngine(libraryName))
+        {
+            return
+                $"The speech to text engine could not start - the shared library \"{libraryName}\" is missing.{Environment.NewLine}{Environment.NewLine}" +
+                "This library is part of the engine download, so the installed engine is incomplete." +
+                $"{Environment.NewLine}{Environment.NewLine}" +
+                "Re-download the engine (Download button next to the engine) and try again.";
+        }
+
         var message =
             $"The speech to text engine could not start - the shared library \"{libraryName}\" is missing.{Environment.NewLine}{Environment.NewLine}" +
             "Install it with your package manager and try again.";
@@ -3674,6 +3686,26 @@ public partial class SpeechToTextViewModel : ObservableObject
         return p;
     }
 
+    /// <summary>
+    /// Puts the engine folder on the dynamic loader's search path, so an engine that ships its
+    /// own shared libraries next to the executable can find them.
+    ///
+    /// Windows resolves DLLs from the executable's own directory, so this is a Linux/macOS-only
+    /// concern - and there setting WorkingDirectory is not enough, because the loader does not
+    /// search the working directory. The libraries are supposed to carry an $ORIGIN/@loader_path
+    /// RPATH that makes this unnecessary, but whisper.cpp archives shipped for four releases
+    /// without one (issue #13680), so set it as a belt-and-braces measure.
+    /// </summary>
+    private static void AddEngineFolderToLibrarySearchPath(ProcessStartInfo startInfo, string engineFolder)
+    {
+        var variable = OperatingSystem.IsMacOS() ? "DYLD_LIBRARY_PATH" : "LD_LIBRARY_PATH";
+        var existing = startInfo.EnvironmentVariables[variable];
+
+        startInfo.EnvironmentVariables[variable] = string.IsNullOrEmpty(existing)
+            ? engineFolder
+            : engineFolder + Path.PathSeparator + existing;
+    }
+
     private Process GetWhisperProcess(
         ISpeechToTextEngine engine,
         string waveFileName,
@@ -3910,6 +3942,10 @@ public partial class SpeechToTextViewModel : ObservableObject
                 process.StartInfo.EnvironmentVariables["Path"] =
                     process.StartInfo.EnvironmentVariables["Path"]?.TrimEnd(';') + ";" + whisperFolder;
             }
+        }
+        else if (!string.IsNullOrEmpty(whisperFolder))
+        {
+            AddEngineFolderToLibrarySearchPath(process.StartInfo, whisperFolder);
         }
 
         if (settings.WhisperChoice != WhisperChoice.Cpp &&

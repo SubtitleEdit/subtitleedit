@@ -32,4 +32,38 @@ public class MissingSharedLibraryTests
     {
         Assert.Null(MissingSharedLibrary.GetName(line));
     }
+
+    [Fact]
+    public void GetName_WhisperCppLoaderError_ReturnsLibraryName()
+    {
+        // The exact line from issue #13680 (EndeavourOS, whisper.cpp)
+        const string line = "/home/user/.config/Subtitle Edit/SpeechToText/Cpp/whisper-cli: " +
+                            "error while loading shared libraries: libwhisper.so.1: " +
+                            "cannot open shared object file: No such file or directory";
+
+        Assert.Equal("libwhisper.so.1", MissingSharedLibrary.GetName(line));
+    }
+
+    [Theory]
+    [InlineData("libwhisper.so.1")]
+    [InlineData("libggml.so.0")]
+    [InlineData("libggml-base.so.0")]
+    [InlineData("libllama.so")]
+    [InlineData("@rpath/libwhisper.1.dylib")]
+    public void IsBundledWithEngine_EngineOwnedLibrary_ReturnsTrue(string libraryName)
+    {
+        Assert.True(MissingSharedLibrary.IsBundledWithEngine(libraryName));
+    }
+
+    [Theory]
+    [InlineData("libopenblas.so.0")]
+    [InlineData("libvulkan.so.1")]
+    [InlineData("libcudart.so.12")]
+    [InlineData("libstdc++.so.6")]
+    [InlineData("")]
+    [InlineData(null)]
+    public void IsBundledWithEngine_SystemLibrary_ReturnsFalse(string? libraryName)
+    {
+        Assert.False(MissingSharedLibrary.IsBundledWithEngine(libraryName));
+    }
 }
