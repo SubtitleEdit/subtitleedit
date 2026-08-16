@@ -9,6 +9,7 @@ public class LanguageVideo
     public LanguageAudioToText AudioToText { get; set; } = new();
     public LanguageTextToSpeech TextToSpeech { get; set; } = new();
     public LanguageShotChanges ShotChanges { get; set; } = new();
+    public LanguageChapters Chapters { get; set; } = new();
     public LanguageVideoOcr VideoOcr { get; set; } = new();
     public string GoToVideoPosition { get; set; }
     public string GoToVideoPositionDotDotDot { get; set; }

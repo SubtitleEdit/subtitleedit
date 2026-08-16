@@ -21,6 +21,7 @@ using Nikse.SubtitleEdit.Core.BluRaySup;
 using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.Enums;
 using Nikse.SubtitleEdit.Core.ContainerFormats;
+using Nikse.SubtitleEdit.Core.ContainerFormats.Chapters;
 using Nikse.SubtitleEdit.Core.ContainerFormats.Matroska;
 using Nikse.SubtitleEdit.Core.ContainerFormats.Mp4;
 using Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes;
@@ -150,6 +151,7 @@ using Nikse.SubtitleEdit.Features.Video.GoToVideoPosition;
 using Nikse.SubtitleEdit.Features.Video.OpenFromUrl;
 using Nikse.SubtitleEdit.Features.Video.OpenFromUrl.PickOnlineSubtitle;
 using Nikse.SubtitleEdit.Features.Video.ReEncodeVideo;
+using Nikse.SubtitleEdit.Features.Video.Chapters;
 using Nikse.SubtitleEdit.Features.Video.ShotChanges;
 using Nikse.SubtitleEdit.Features.Video.SpeechToText;
 using Nikse.SubtitleEdit.Features.Video.SpeechToText.OpenAiCompatible;
@@ -536,6 +538,12 @@ public partial class MainViewModel :
     private Subtitle _subtitleOriginal;
     private SubtitleFormat? _lastOpenSaveFormat;
     private string? _videoFileName;
+
+    /// <summary>
+    /// Chapters of the current video, in timeline order. Mirrored onto the waveform for drawing and
+    /// persisted next to Subtitle Edit's data, not inside the video.
+    /// </summary>
+    private List<Chapter> _chapters = new();
     private AudioTrackInfo? _audioTrack;
     private string? _audioTrackLangauge;
     private CancellationTokenSource? _statusFadeCts;
@@ -8952,6 +8960,169 @@ public partial class MainViewModel :
             {
                 ExtractShotChanges(_videoFileName, _audioTrack?.FfIndex ?? -1);
             }
+
+            LoadChapters();
+        }
+    }
+
+    /// <summary>
+    /// Chapters edited in Subtitle Edit win over the ones inside the video: the sidecar only exists
+    /// because the user changed something, and re-reading the container would undo that work.
+    /// </summary>
+    private void LoadChapters()
+    {
+        if (AudioVisualizer == null)
+        {
+            return;
+        }
+
+        var videoFileName = _videoFileName ?? string.Empty;
+        var chapters = ChaptersHelper.FromDisk(videoFileName);
+        if (chapters.Count == 0)
+        {
+            chapters = VideoChapterReader.GetChapters(videoFileName);
+        }
+
+        SetChapters(chapters, save: false);
+    }
+
+    private void SetChapters(List<Chapter> chapters, bool save)
+    {
+        if (AudioVisualizer == null)
+        {
+            return;
+        }
+
+        _chapters = chapters.OrderBy(p => p.StartMilliseconds).ToList();
+        AudioVisualizer.Chapters = _chapters
+            .Select(p => new WaveformChapter(p.StartMilliseconds / TimeCode.BaseUnit, p.Title))
+            .ToList();
+
+        if (save && !string.IsNullOrEmpty(_videoFileName))
+        {
+            if (_chapters.Count == 0)
+            {
+                ChaptersHelper.DeleteChapters(_videoFileName);
+            }
+            else
+            {
+                ChaptersHelper.SaveChapters(_videoFileName, _chapters);
+            }
+        }
+
+        _updateAudioVisualizer = true;
+    }
+
+    [RelayCommand]
+    private async Task ShowVideoChapters()
+    {
+        if (Window == null)
+        {
+            return;
+        }
+
+        var result = await ShowDialogAsync<ChaptersWindow, ChaptersViewModel>(vm =>
+        {
+            vm.Initialize(
+                _videoFileName ?? string.Empty,
+                _chapters,
+                () => GetVideoPlayerControl()?.Position ?? 0,
+                seconds =>
+                {
+                    var vp = GetVideoPlayerControl();
+                    if (vp != null)
+                    {
+                        vp.Position = seconds;
+                        AudioVisualizerCenterOnPositionIfNeeded(seconds);
+                        _updateAudioVisualizer = true;
+                    }
+                },
+                // Rounded to a standard rate: the raw measured value can be something like 23.81,
+                // which reads as a mistake sitting in a list of 23.976/24/25.
+                _mediaInfo != null && _mediaInfo.FramesRate > 1
+                    ? FrameRateHelper.RoundToNearestCinematicFrameRate((double)_mediaInfo.FramesRate)
+                    : 0);
+        });
+
+        if (result.OkPressed)
+        {
+            SetChapters(result.GetChapters(), save: true);
+        }
+    }
+
+    [RelayCommand]
+    private void ToggleChapterAtVideoPosition()
+    {
+        var vp = GetVideoPlayerControl();
+        if (string.IsNullOrEmpty(_videoFileName) || vp == null || AudioVisualizer == null)
+        {
+            return;
+        }
+
+        var seconds = AudioVisualizer.CurrentVideoPositionSeconds;
+        var index = AudioVisualizer.GetChapterIndex(seconds);
+
+        var list = _chapters.ToList();
+        if (index >= 0)
+        {
+            list.RemoveAt(index);
+        }
+        else
+        {
+            list.Add(new Chapter(
+                seconds * TimeCode.BaseUnit,
+                string.Format(Se.Language.Video.Chapters.NewChapterTitle, list.Count + 1)));
+        }
+
+        SetChapters(list, save: true);
+    }
+
+    [RelayCommand]
+    private void GoToPreviousChapter()
+    {
+        var vp = GetVideoPlayerControl();
+        if (vp == null || _chapters.Count == 0)
+        {
+            return;
+        }
+
+        var chapter = _chapters.LastOrDefault(p => p.StartMilliseconds / TimeCode.BaseUnit < vp.Position - 0.001);
+        if (chapter == null)
+        {
+            return;
+        }
+
+        GoToChapter(vp, chapter);
+    }
+
+    [RelayCommand]
+    private void GoToNextChapter()
+    {
+        var vp = GetVideoPlayerControl();
+        if (vp == null || _chapters.Count == 0)
+        {
+            return;
+        }
+
+        var chapter = _chapters.FirstOrDefault(p => p.StartMilliseconds / TimeCode.BaseUnit > vp.Position + 0.001);
+        if (chapter == null)
+        {
+            return;
+        }
+
+        GoToChapter(vp, chapter);
+    }
+
+    private void GoToChapter(VideoPlayerControl vp, Chapter chapter)
+    {
+        var seconds = chapter.StartMilliseconds / TimeCode.BaseUnit;
+        vp.Position = seconds;
+        AudioVisualizerCenterOnPositionIfNeeded(seconds);
+        _updateAudioVisualizer = true;
+
+        if (!string.IsNullOrEmpty(chapter.Title))
+        {
+            ShowStatus(chapter.Title);
         }
     }
 
@@ -22056,10 +22227,15 @@ public partial class MainViewModel :
         {
             AudioVisualizer.WavePeaks = null;
             AudioVisualizer.ShotChanges = new List<double>();
+            AudioVisualizer.Chapters = new List<WaveformChapter>();
             AudioVisualizer.StartPositionSeconds = 0;
             AudioVisualizer.CurrentVideoPositionSeconds = 0;
             UpdateShotChangesListMenuItem();
         }
+
+        // Closing the video takes its chapters with it, or the next video would open showing the
+        // previous one's marks.
+        _chapters = new List<Chapter>();
     }
 
     /// <summary>

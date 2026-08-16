@@ -254,6 +254,36 @@ public class AudioVisualizer : Control
         set { _shotChanges = value; }
     }
 
+    private List<WaveformChapter> _chapters = new List<WaveformChapter>();
+
+    /// <summary>
+    /// Chapter marks drawn on the waveform, sorted by time.
+    /// </summary>
+    public List<WaveformChapter> Chapters
+    {
+        get => _chapters;
+        set => _chapters = value ?? new List<WaveformChapter>();
+    }
+
+    /// <summary>
+    /// Index of the chapter within <see cref="ChapterSnapSeconds"/> of <paramref name="seconds"/>,
+    /// or -1. Used to decide whether toggling at the video position adds or removes.
+    /// </summary>
+    public int GetChapterIndex(double seconds)
+    {
+        for (var i = 0; i < _chapters.Count; i++)
+        {
+            if (Math.Abs(_chapters[i].Seconds - seconds) <= ChapterSnapSeconds)
+            {
+                return i;
+            }
+        }
+
+        return -1;
+    }
+
+    public double ChapterSnapSeconds { get; set; } = 0.2;
+
     public void UseSmpteDropFrameTime()
     {
         if (WavePeaks != null)
@@ -1934,6 +1964,7 @@ public class AudioVisualizer : Control
             DrawTimeLine(context, ref renderCtx);
             DrawParagraphs(context, ref renderCtx);
             DrawShotChanges(context, ref renderCtx);
+            DrawChapters(context, ref renderCtx);
             DrawCurrentVideoPosition(context, ref renderCtx);
             DrawNewParagraph(context, ref renderCtx);
 
@@ -3386,6 +3417,103 @@ public class AudioVisualizer : Control
         }
     }
 
+    // Chapter marks: a full-height line plus a labelled flag at the top. The color matches the
+    // Chapters dialog accent so the two read as one feature.
+    private static readonly Color ChapterColor = Color.FromRgb(0xC0, 0x8A, 0xDF);
+    private static readonly Pen _paintChapterPen = new Pen(new SolidColorBrush(ChapterColor, 0.85), 1.5);
+    private static readonly IBrush _paintChapterFlagBrush = new SolidColorBrush(ChapterColor, 0.9);
+    private static readonly IBrush _paintChapterFlagTextBrush = Brushes.Black;
+    private const double ChapterFlagHeight = 15;
+    private const double ChapterFlagMaxWidth = 170;
+    private const double ChapterFlagPadding = 5;
+
+    private readonly Dictionary<string, FormattedText> _chapterTextCache = new(64);
+
+    private FormattedText GetCachedChapterText(string text)
+    {
+        if (!_chapterTextCache.TryGetValue(text, out var formatted))
+        {
+            if (_chapterTextCache.Count > 500)
+            {
+                _chapterTextCache.Clear();
+            }
+
+            formatted = new FormattedText(text, CultureInfo.CurrentCulture, FlowDirection.LeftToRight,
+                _typeface, 10, _paintChapterFlagTextBrush)
+            {
+                MaxTextWidth = ChapterFlagMaxWidth - ChapterFlagPadding * 2,
+                MaxLineCount = 1,
+                Trimming = TextTrimming.CharacterEllipsis,
+            };
+
+            _chapterTextCache[text] = formatted;
+        }
+
+        return formatted;
+    }
+
+    private void DrawChapters(DrawingContext context, ref RenderContext renderCtx)
+    {
+        if (_chapters.Count == 0)
+        {
+            return;
+        }
+
+        // The flag of one chapter must not paint over the next one's, so each flag is clipped to
+        // the space before the following chapter.
+        for (var index = 0; index < _chapters.Count; index++)
+        {
+            var chapter = _chapters[index];
+            var pos = SecondsToXPositionOptimized(chapter.Seconds - renderCtx.StartPositionSeconds, renderCtx.SampleRate, renderCtx.ZoomFactor);
+
+            if (pos >= renderCtx.Width)
+            {
+                break;
+            }
+
+            // A chapter left of the view can still own a flag that reaches into it, so only skip
+            // once the flag is fully off-screen too.
+            if (pos + ChapterFlagMaxWidth < 0)
+            {
+                continue;
+            }
+
+            if (pos >= 0)
+            {
+                context.DrawLine(_paintChapterPen, new Point(pos, 0), new Point(pos, renderCtx.Height));
+            }
+
+            if (string.IsNullOrEmpty(chapter.Title))
+            {
+                continue;
+            }
+
+            var text = GetCachedChapterText(chapter.Title);
+            var flagWidth = Math.Min(ChapterFlagMaxWidth, text.Width + ChapterFlagPadding * 2);
+
+            var nextPos = index + 1 < _chapters.Count
+                ? SecondsToXPositionOptimized(_chapters[index + 1].Seconds - renderCtx.StartPositionSeconds, renderCtx.SampleRate, renderCtx.ZoomFactor)
+                : double.MaxValue;
+
+            var available = nextPos - pos;
+            if (available < 12)
+            {
+                // No room to write anything readable before the next chapter.
+                continue;
+            }
+
+            flagWidth = Math.Min(flagWidth, available);
+
+            var flagRect = new Rect(pos, 0, flagWidth, ChapterFlagHeight);
+            context.DrawRectangle(_paintChapterFlagBrush, null, flagRect, 3, 3);
+
+            using (context.PushClip(flagRect))
+            {
+                context.DrawText(text, new Point(pos + ChapterFlagPadding, (ChapterFlagHeight - text.Height) / 2));
+            }
+        }
+    }
+
     private static readonly Pen _paintPenCursorOnShotChange = new Pen(Brushes.LightCyan, 1.5)
     {
         DashStyle = DashStyle.Dash,
@@ -4107,6 +4235,7 @@ public class AudioVisualizer : Control
         _timeLineTextCache.Clear();
         _paragraphFormattedTextCache.Clear();
         _paragraphTextCache.Clear();
+        _chapterTextCache.Clear();
         _footerNumberDurationCache.Clear();
         _footerCpsCache.Clear();
         _waveformCacheValid = false;

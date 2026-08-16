@@ -63,6 +63,15 @@
     <Content Include="Files\sample_MP4_SRT.mp4">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="Files\sample_MP4_chapters.mp4">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Files\sample_MP4_chapter_track.mp4">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Files\sample_MKV_chapters.mkv">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Files\sample_XSUB.avi">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

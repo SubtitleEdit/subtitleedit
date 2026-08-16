@@ -139,6 +139,7 @@ using Nikse.SubtitleEdit.Features.Translate;
 using Nikse.SubtitleEdit.Features.Translate.LlamaCppEngineSettings;
 using Nikse.SubtitleEdit.Features.Video.BlankVideo;
 using Nikse.SubtitleEdit.Features.Video.BurnIn;
+using Nikse.SubtitleEdit.Features.Video.Chapters;
 using Nikse.SubtitleEdit.Features.Video.CutVideo;
 using Nikse.SubtitleEdit.Features.Video.EmbeddedSubtitlesEdit;
 using Nikse.SubtitleEdit.Features.Video.GoToVideoPosition;
@@ -358,6 +359,8 @@ public static class DependencyInjectionExtensions
         collection.AddTransient<CategoryPickerViewModel>();
         collection.AddTransient<ChangeCasingViewModel>();
         collection.AddTransient<ChangeFormattingViewModel>();
+        collection.AddTransient<ChaptersViewModel>();
+        collection.AddTransient<WriteChaptersToVideoViewModel>();
         collection.AddTransient<ConvertActorsViewModel>();
         collection.AddTransient<ChangeFrameRateViewModel>();
         collection.AddTransient<ChangeSpeedViewModel>();
