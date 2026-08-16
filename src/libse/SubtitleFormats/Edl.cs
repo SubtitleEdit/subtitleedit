@@ -21,11 +21,12 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             sb.AppendLine("TITLE: " + title);
             if (Configuration.Settings.General.CurrentFrameRate % 1.0 > 0.01)
             {
-                sb.AppendLine("FCM: NON-DROP FRAME");
+                // Fractional NTSC rates (29.97/59.94) use drop-frame time code
+                sb.AppendLine("FCM: DROP FRAME");
             }
             else
             {
-                sb.AppendLine("FCM: DROP FRAME");
+                sb.AppendLine("FCM: NON-DROP FRAME");
             }
 
             sb.AppendLine();

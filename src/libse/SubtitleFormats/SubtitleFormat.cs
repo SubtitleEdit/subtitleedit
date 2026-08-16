@@ -135,6 +135,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     new EdiusMarkerList2Ms(),
                     new EdiusMarkerList3Frames(),
                     new EdiusMarkerList3Ms(),
+                    new DaVinciResolveMarkerEdl(), // before Edl - the generic EDL would claim marker files with garbage text
                     new Edl(),
                     new Eeg708(),
                     new ElrPrint(),
