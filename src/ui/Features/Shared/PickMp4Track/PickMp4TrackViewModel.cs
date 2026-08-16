@@ -82,6 +82,11 @@ public partial class PickMp4TrackViewModel : ObservableObject
                 language = string.IsNullOrEmpty(mdia.HandlerName) ? mdia.HandlerType : mdia.HandlerName;
             }
 
+            if (mdia.Minf?.Stbl?.Stsd?.IsForcedSubtitle == true)
+            {
+                language += $" ({Se.Language.General.Forced})";
+            }
+
             var display = new Mp4TrackInfoDisplay
             {
                 HandlerType = mdia.HandlerType,

@@ -18222,8 +18222,11 @@ public partial class MainViewModel :
                 return;
             }
 
+            // A subtitle-only movie (e.g. AVFoundation writes tx3g-only .mov/.mp4 files)
+            // can easily be under 2 KB, so the old 2000-byte floor misrouted those to the
+            // text loader; a failed MP4 parse just falls through to the handlers below.
             if ((ext == ".mp4" || ext == ".m4v" || ext == ".3gp" || ext == ".mov" || ext == ".cmaf" || ext == ".m4a" || ext == ".m4b") &&
-                fileSize > 2000 || ext == ".m4s")
+                fileSize > 100 || ext == ".m4s")
             {
                 if (!new IsmtDfxp().IsMine(null, fileName))
                 {
