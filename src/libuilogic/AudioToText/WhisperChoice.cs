@@ -32,6 +32,7 @@
         public const string CrispAsrMossDiarize = "Crisp ASR MOSS Diarize";
         public const string CrispAsrSenseVoice = "Crisp ASR SenseVoice";
         public const string CrispAsrArk = "Crisp ASR ARK";
+        public const string CrispAsrVoxtral = "Crisp ASR Voxtral";
         public const string OpenAiCompatible = "OpenAI Compatible";
         public const string OpenRouter = "OpenRouter";
         public const string DashScopeQwen3 = "Alibaba Qwen3-ASR";

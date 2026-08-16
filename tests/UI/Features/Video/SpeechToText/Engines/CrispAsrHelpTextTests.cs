@@ -38,4 +38,24 @@ public class CrispAsrHelpTextTests
         // From CrispASRParakeet.txt, i.e. the per-backend header rather than only the common text.
         Assert.Contains("Parakeet", helpText);
     }
+
+    /// <summary>
+    /// The fallback above keeps a missing asset from crashing the dialog, which also means it
+    /// hides one: a backend added without its .txt silently shows the shared text only. Every
+    /// backend the picker offers must ship a header of its own.
+    /// </summary>
+    [AvaloniaFact]
+    public async Task GetHelpText_EveryRegisteredBackend_HasItsOwnHeaderAsset()
+    {
+        var common = await new CrispAsrMadlad().GetHelpText();
+
+        foreach (var backend in new CrispAsrEngine().Backends)
+        {
+            var helpText = await backend.GetHelpText();
+
+            Assert.True(
+                helpText.Length > common.Length,
+                $"Backend \"{backend.Name}\" has no help asset - add Assets/SpeechToText/{backend.Name.Replace(" ", string.Empty)}.txt");
+        }
+    }
 }
