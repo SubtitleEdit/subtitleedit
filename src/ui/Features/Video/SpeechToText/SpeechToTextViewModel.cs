@@ -2282,6 +2282,10 @@ public partial class SpeechToTextViewModel : ObservableObject
         var candidates = new List<string>
         {
             waveFileName + ext,
+            // The engines that read the source file directly are told to write into the extracted
+            // WAV's own per-run folder, and they name the output after their input - so the result
+            // is "<run folder>/<video name><ext>", which none of the other candidates covers.
+            Path.Combine(Path.GetDirectoryName(waveFileName) ?? string.Empty, Path.GetFileNameWithoutExtension(videoFileName) + ext),
             Path.Combine(Directory.GetCurrentDirectory(), Path.GetFileNameWithoutExtension(videoFileName) + ext),
             Path.Combine(Directory.GetCurrentDirectory(), Path.GetFileNameWithoutExtension(waveFileName) + ext),
             Path.Combine(AppContext.BaseDirectory, Path.GetFileNameWithoutExtension(videoFileName) + ext),
@@ -3613,19 +3617,25 @@ public partial class SpeechToTextViewModel : ObservableObject
         _resultList.Clear();
 
         var inputFile = waveFileName;
-        if (!_useCenterChannelOnly &&
-            (engine.Name == WhisperEnginePurfviewFasterWhisperXxl.StaticName) &&
-            (videoFileName.EndsWith(".mkv", StringComparison.OrdinalIgnoreCase) ||
-             videoFileName.EndsWith(".mp4", StringComparison.OrdinalIgnoreCase)) &&
-            _audioTrackNumber < 0)
+        var engineOutputFolder = string.Empty;
+        if (CanEngineReadSourceFileDirectly(engine) && CanSendSourceFileToEngine(videoFileName))
         {
             inputFile = videoFileName;
+        }
+
+        if (!string.Equals(inputFile, waveFileName, StringComparison.OrdinalIgnoreCase))
+        {
+            // Both engines save their output next to the input file, so pointing them at the user's
+            // own media would write "<video>.srt" into that folder - overwriting any subtitle already
+            // sitting there, which SE then deletes again as one of its temp files. Send the output to
+            // the per-run folder instead, the same isolation the extracted WAV gets (#11837).
+            engineOutputFolder = GetSttTempFolder();
         }
 
         try
         {
             _whisperProcess = GetWhisperProcess(engine, inputFile, model.Model.Name, language.Code, DoTranslateToEnglish,
-                OutputHandler);
+                OutputHandler, engineOutputFolder);
         }
         catch (Exception e)
         {
@@ -3706,13 +3716,61 @@ public partial class SpeechToTextViewModel : ObservableObject
             : engineFolder + Path.PathSeparator + existing;
     }
 
+    /// <summary>
+    /// Engines that demux and decode the source media themselves, so they can be pointed at the
+    /// user's original file instead of SE's extracted WAV: Purfview Faster-Whisper-XXL bundles
+    /// ffmpeg, whisper-ctranslate2 bundles PyAV. Verified that the others cannot - whisper.cpp
+    /// answers "failed to read audio data as wav" for an mp4, and CrispASR's own help lists
+    /// flac/mp3/ogg/wav only - so those keep getting the WAV.
+    /// </summary>
+    private static bool CanEngineReadSourceFileDirectly(ISpeechToTextEngine engine)
+    {
+        return engine.Name == WhisperEnginePurfviewFasterWhisperXxl.StaticName ||
+               engine is WhisperEngineCTranslate2;
+    }
+
+    /// <summary>
+    /// True if the source file itself can go to the engine. Neither engine can pick an audio track,
+    /// so a track other than the first one is the one thing only the extracted WAV can express -
+    /// handing over the source file there would silently transcribe the wrong track. SE 4 made the
+    /// same call, though its track number was audio-relative and 0 meant "unspecified", while
+    /// SE 5 stores the global ffmpeg stream index of an always-auto-selected track.
+    /// </summary>
+    private bool CanSendSourceFileToEngine(string videoFileName)
+    {
+        if (_useCenterChannelOnly || string.IsNullOrEmpty(videoFileName) || !File.Exists(videoFileName))
+        {
+            return false;
+        }
+
+        if (_audioTrackNumber < 0)
+        {
+            return true; // no track picked - the engine falls back to the first one, exactly like ffmpeg would
+        }
+
+        try
+        {
+            var audioTracks = FfmpegMediaInfo.Parse(videoFileName).Tracks
+                .Where(t => t.TrackType == FfmpegTrackType.Audio)
+                .ToList();
+
+            return audioTracks.Count > 0 && audioTracks[0].StreamIndex == _audioTrackNumber;
+        }
+        catch (Exception exception)
+        {
+            SeLogger.Error(exception, $"Unable to read audio tracks from: {videoFileName}");
+            return false;
+        }
+    }
+
     private Process GetWhisperProcess(
         ISpeechToTextEngine engine,
         string waveFileName,
         string model,
         string language,
         bool translate,
-        DataReceivedEventHandler? dataReceivedHandler = null)
+        DataReceivedEventHandler? dataReceivedHandler = null,
+        string engineOutputFolder = "")
     {
         if (engine is ChatLlmCppEngine chatLlm)
         {
@@ -3879,8 +3937,20 @@ public partial class SpeechToTextViewModel : ObservableObject
                 : string.Empty;
         }
 
+        // Only set when the engine reads the user's own media instead of the extracted WAV; both
+        // engines accept "--output_dir" (Purfview XXL defaults to the input's folder, ctranslate2
+        // to the working directory). A user who set their own output folder in the extra
+        // parameters keeps it.
+        var outputDirArg = string.Empty;
+        if (!string.IsNullOrEmpty(engineOutputFolder) &&
+            !args.Contains("--output_dir", StringComparison.Ordinal) &&
+            !Regex.IsMatch(args, @"(^|\s)-o(\s|$)"))
+        {
+            outputDirArg = $"--output_dir \"{engineOutputFolder}\" ";
+        }
+
         var parameters =
-            $"{languageArg}--model \"{m}\" {outputSrt}{translateToEnglish}{args} \"{waveFileName}\"{postParams}";
+            $"{languageArg}--model \"{m}\" {outputSrt}{outputDirArg}{translateToEnglish}{args} \"{waveFileName}\"{postParams}";
 
         if (engine is WhisperEngineCTranslate2)
         {
