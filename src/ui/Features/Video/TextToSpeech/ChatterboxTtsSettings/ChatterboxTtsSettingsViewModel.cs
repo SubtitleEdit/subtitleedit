@@ -1,6 +1,7 @@
 using System;
 using System.Collections.ObjectModel;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using Avalonia.Controls;
 using Avalonia.Input;
@@ -42,6 +43,22 @@ public partial class ChatterboxTtsSettingsViewModel : ObservableObject
     /// </summary>
     public ObservableCollection<ChatterboxModelStatusViewModel> Models { get; } = new();
 
+    /// <summary>
+    /// Language spoken in imported reference WAVs, sent as the request's <c>source_lang</c> field
+    /// so cross-lingual cloning engages when the target language differs. "Auto" (empty code)
+    /// sends no field, which leaves the clone speaking the target language with the reference
+    /// language's accent. Chatterbox clones from the WAV alone and never asks for a transcript,
+    /// so unlike CosyVoice3 there is usually nothing to detect this from.
+    /// </summary>
+    public ObservableCollection<TtsLanguage> SourceLanguages { get; } = new(ChatterboxLanguages.All);
+
+    [ObservableProperty] private TtsLanguage? _selectedSourceLanguage;
+
+    partial void OnSelectedSourceLanguageChanged(TtsLanguage? value)
+    {
+        Se.Settings.Video.TextToSpeech.ChatterboxCrispAsrSourceLanguage = value?.Code ?? string.Empty;
+    }
+
     public ChatterboxTtsSettingsViewModel(IWindowService windowService, IFolderHelper folderHelper)
     {
         _windowService = windowService;
@@ -65,6 +82,10 @@ public partial class ChatterboxTtsSettingsViewModel : ObservableObject
     {
         ModelsFolder = ChatterboxTtsCpp.GetSetModelsFolder();
         VoicesFolder = ChatterboxTtsCpp.GetSetVoicesFolder();
+        var savedSourceLanguage = Se.Settings.Video.TextToSpeech.ChatterboxCrispAsrSourceLanguage;
+        SelectedSourceLanguage =
+            SourceLanguages.FirstOrDefault(l => l.Code == savedSourceLanguage && !string.IsNullOrEmpty(l.Code))
+            ?? SourceLanguages.FirstOrDefault();
         Refresh();
     }
 

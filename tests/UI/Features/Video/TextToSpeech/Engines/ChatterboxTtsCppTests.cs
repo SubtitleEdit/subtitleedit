@@ -13,6 +13,57 @@ namespace UITests.Features.Video.TextToSpeech.Engines;
 public class ChatterboxTtsCppTests
 {
     [Fact]
+    public void BuildSpeakPayload_CloningWithTargetLanguage_SendsSourceLang()
+    {
+        // Both sides present is what makes the backend go cross-lingual (CrispASR v0.8.29 #329).
+        var payload = ChatterboxTtsCpp.BuildSpeakPayload("hallo", "/voices/Arnold.wav", "de", "en");
+
+        Assert.Equal("de", payload["language"]);
+        Assert.Equal("en", payload["source_lang"]);
+    }
+
+    [Fact]
+    public void BuildSpeakPayload_WithoutTargetLanguage_SendsNoSourceLang()
+    {
+        // The reference language on its own tells the backend nothing to act on.
+        var payload = ChatterboxTtsCpp.BuildSpeakPayload("hello", "/voices/Arnold.wav", string.Empty, "en");
+
+        Assert.False(payload.ContainsKey("source_lang"));
+    }
+
+    [Fact]
+    public void BuildSpeakPayload_WithBakedDefaultVoice_SendsNoSourceLang()
+    {
+        // Nothing is being cloned from, so there is no reference language to declare.
+        var payload = ChatterboxTtsCpp.BuildSpeakPayload("hallo", string.Empty, "de", "en");
+
+        Assert.False(payload.ContainsKey("source_lang"));
+    }
+
+    [Fact]
+    public void TryReadReferenceTranscript_ReadsTheSidecarBesideTheWav()
+    {
+        var wav = Path.Combine(Path.GetTempPath(), $"chatterbox-ref-{Guid.NewGuid():N}.wav");
+        var sidecar = Path.ChangeExtension(wav, ".txt");
+        try
+        {
+            File.WriteAllText(wav, string.Empty);
+            Assert.Null(ChatterboxTtsCpp.TryReadReferenceTranscript(wav));
+
+            File.WriteAllText(sidecar, "  This is what the reference says.  ");
+            Assert.Equal("This is what the reference says.", ChatterboxTtsCpp.TryReadReferenceTranscript(wav));
+
+            File.WriteAllText(sidecar, "   ");
+            Assert.Null(ChatterboxTtsCpp.TryReadReferenceTranscript(wav));
+        }
+        finally
+        {
+            File.Delete(wav);
+            File.Delete(sidecar);
+        }
+    }
+
+    [Fact]
     public void BuildSpeakPayload_KeepsWavExtensionOnVoiceName()
     {
         // The chatterbox backend does not append an extension, and the server needs the .wav to
