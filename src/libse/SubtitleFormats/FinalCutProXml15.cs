@@ -420,7 +420,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             var g = (double)fontColor.Green / byte.MaxValue;
             var b = (double)fontColor.Blue / byte.MaxValue;
             var a = (double)fontColor.Alpha / byte.MaxValue;
-            var result = $"{r:0.######} {g:0.######} {b:0.######} {a:0.######}";
+            // Invariant culture - a comma-decimal locale (da, de, ...) otherwise writes
+            // "0,960784", which Final Cut Pro cannot parse.
+            var result = string.Format(CultureInfo.InvariantCulture, "{0:0.######} {1:0.######} {2:0.######} {3:0.######}", r, g, b, a);
             return result;
         }
 
@@ -457,17 +459,27 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     {
                         try
                         {
-                            var text = GetInnerText(node.ParentNode);
                             var p = new Paragraph();
-                            p.Text = text.Trim();
-                            if (node.ParentNode.InnerXml.Contains("bold=\"1\""))
+                            if (node.SelectNodes("text-style")?.Count > 0)
                             {
-                                p.Text = "<b>" + p.Text + "</b>";
+                                // Styled runs referencing per-title text-style-defs - keep
+                                // the styling per run instead of flattening any italic/bold
+                                // in the title onto the whole paragraph.
+                                p.Text = GetCaptionText(node.ParentNode);
                             }
-
-                            if (node.ParentNode.InnerXml.Contains("italic=\"1\""))
+                            else
                             {
-                                p.Text = "<i>" + p.Text + "</i>";
+                                var text = GetInnerText(node.ParentNode);
+                                p.Text = text.Trim();
+                                if (node.ParentNode.InnerXml.Contains("bold=\"1\""))
+                                {
+                                    p.Text = "<b>" + p.Text + "</b>";
+                                }
+
+                                if (node.ParentNode.InnerXml.Contains("italic=\"1\""))
+                                {
+                                    p.Text = "<i>" + p.Text + "</i>";
+                                }
                             }
 
                             p.StartTime = DecodeTime(node.ParentNode.Attributes["offset"]);
