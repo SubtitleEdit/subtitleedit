@@ -1818,19 +1818,25 @@ public static class DownloadHashManager
                 "49ef4acfaef0b4989885c258f22eb1355592c5f343897508899a2b598cd683bf", // whispercpp-185 / v1.8.5
                 "81dbd530f21a6daf10b1c9cece61d7e56d774e3bcb3d21af4d17299caa532a4d", // whispercpp-184 / v1.8.4
             },
+            // whispercpp-184 through -191 shipped whisper-cli without the libwhisper.so.1 /
+            // libggml.so.0 it links against, so every one of those installs is broken and the
+            // user needs the -r2 rebuild (issue #13680). They stay listed so an existing install
+            // is still identified rather than reported as unknown.
             [WhisperCpp.LinuxVulkan] = new[]
             {
-                "7969c5a0ba912d0b0d8aaa2bdf911ca7896ef97a89e293d2596a96022c839e80", // whispercpp-191 / v1.9.1 (current download URL)
-                "10aed3a2b28e5ad40fee8267d554f0824943e50e75bfe7bceb7c16b6e3fe8a45", // whispercpp-186 / v1.8.6
-                "c385a01228f85764cfd9b6072e078d03e44f151d71ab145e912425e5cc9a7c8e", // whispercpp-185 / v1.8.5
-                "7a7d131b5fbb605fef6a8d39b6f2480480d8a26ec8a1dbec3b3740485023158d", // whispercpp-184 / v1.8.4
+                "0943f97f58ca98aafa26659e7c4d8d87f474c74f966f0d9ae91491989a32cf2b", // whispercpp-191-r2 / v1.9.1 (current download URL)
+                "7969c5a0ba912d0b0d8aaa2bdf911ca7896ef97a89e293d2596a96022c839e80", // whispercpp-191 / v1.9.1 (missing shared libraries)
+                "10aed3a2b28e5ad40fee8267d554f0824943e50e75bfe7bceb7c16b6e3fe8a45", // whispercpp-186 / v1.8.6 (missing shared libraries)
+                "c385a01228f85764cfd9b6072e078d03e44f151d71ab145e912425e5cc9a7c8e", // whispercpp-185 / v1.8.5 (missing shared libraries)
+                "7a7d131b5fbb605fef6a8d39b6f2480480d8a26ec8a1dbec3b3740485023158d", // whispercpp-184 / v1.8.4 (missing shared libraries)
             },
             [WhisperCpp.LinuxCuda] = new[]
             {
-                "19a232255838c77c9bcddf220292d96dfb62b9a8da1e66ed402961f6a41b1661", // whispercpp-191 / v1.9.1 (current download URL)
-                "b8922f7fc25ff4f602c887655882c4114c005177017335f39181cc0417f0cb03", // whispercpp-186 / v1.8.6
-                "1aee5fddee30f8486275d3b2bd1d568e92615e7b1b063d46c635cb9f44d7d13b", // whispercpp-185 / v1.8.5
-                "708ea1c502ac5082d4eb9afc86c8adb9d67d76da25e70fd81cb6fae2cfcf00ce", // whispercpp-184 / v1.8.4
+                "02129bac653d00d85ef110c24c37eb56d5470d4fee432a09f55ac9fbc63ff768", // whispercpp-191-r2 / v1.9.1 (current download URL)
+                "19a232255838c77c9bcddf220292d96dfb62b9a8da1e66ed402961f6a41b1661", // whispercpp-191 / v1.9.1 (missing shared libraries)
+                "b8922f7fc25ff4f602c887655882c4114c005177017335f39181cc0417f0cb03", // whispercpp-186 / v1.8.6 (missing shared libraries)
+                "1aee5fddee30f8486275d3b2bd1d568e92615e7b1b063d46c635cb9f44d7d13b", // whispercpp-185 / v1.8.5 (missing shared libraries)
+                "708ea1c502ac5082d4eb9afc86c8adb9d67d76da25e70fd81cb6fae2cfcf00ce", // whispercpp-184 / v1.8.4 (missing shared libraries)
             },
 
             // SHA-256 of whisper-cli / whisper-cli.exe extracted from each archive above.
