@@ -32,11 +32,13 @@ using Nikse.SubtitleEdit.Features.Tools.FixCommonErrors;
 using Nikse.SubtitleEdit.Features.Tools.RemoveTextForHearingImpaired;
 using Nikse.SubtitleEdit.Features.Translate;
 using Nikse.SubtitleEdit.Features.Translate.LlamaCppAdvanced;
+using Nikse.SubtitleEdit.Features.Translate.LlamaCppEngineSettings;
 using Nikse.SubtitleEdit.Logic.LlamaCpp;
 using Nikse.SubtitleEdit.Features.Video.SpeechToText;
 using Nikse.SubtitleEdit.Features.Video.SpeechToText.Engines;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
+using Nikse.SubtitleEdit.Logic.Download;
 using Nikse.SubtitleEdit.UiLogic.BatchConvert;
 using Nikse.SubtitleEdit.Logic.Media;
 using System;
@@ -169,6 +171,18 @@ public partial class BatchConvertViewModel : ObservableObject, IClosingCleanup
     [ObservableProperty] private SpeechToTextModelDisplay? _selectedCrispAsrModel;
     [ObservableProperty] private bool _crispAsrModelComboIsVisible;
     [ObservableProperty] private bool _llamaCppAdvancedButtonIsVisible;
+    [ObservableProperty] private bool _llamaCppSettingsButtonIsVisible;
+    [ObservableProperty] private bool _llamaCppEngineSettingsButtonIsVisible;
+    [ObservableProperty] private ObservableCollection<LlamaCppModelDisplay> _llamaCppModels = new();
+    [ObservableProperty] private LlamaCppModelDisplay? _selectedLlamaCppModel;
+    [ObservableProperty] private bool _llamaCppModelComboIsVisible;
+
+    /// <summary>
+    /// Re-assigns the auto-translate engine combo's item template, set by the view. The dots are a
+    /// snapshot taken when a row is first realised, so this is what refreshes them after a batch run
+    /// has downloaded the llama.cpp engine.
+    /// </summary>
+    internal Action? RefreshAutoTranslateEngineDots { get; set; }
 
     // Fix common errors
     [ObservableProperty] private FixCommonErrors.ProfileDisplayItem? _fixCommonErrorsProfile;
@@ -1376,6 +1390,11 @@ public partial class BatchConvertViewModel : ObservableObject, IClosingCleanup
             return false;
         }
 
+        // The engine binary and/or the model may just have been downloaded - re-evaluate the
+        // install dots so they do not keep showing "not installed" until the window is reopened.
+        PopulateLlamaCppModels();
+        RefreshAutoTranslateEngineDots?.Invoke();
+
         return true;
     }
 
@@ -2239,6 +2258,72 @@ public partial class BatchConvertViewModel : ObservableObject, IClosingCleanup
             vm => vm.Initialize());
     }
 
+    /// <summary>
+    /// Installed backend, pinned release and install status for llama.cpp - the same dialog the
+    /// Auto-translate window's gear opens. Its download button routes back through
+    /// <see cref="RedownloadLlamaCppEngineAsync"/> so a running server is stopped first and the
+    /// model list and status dots refresh afterwards.
+    /// </summary>
+    [RelayCommand]
+    private async Task ShowLlamaCppEngineSettings()
+    {
+        if (Window == null)
+        {
+            return;
+        }
+
+        await _windowService.ShowDialogAsync<LlamaCppEngineSettingsWindow, LlamaCppEngineSettingsViewModel>(
+            Window,
+            vm => vm.Initialize(RedownloadLlamaCppEngineAsync));
+
+        PopulateLlamaCppModels();
+        RefreshAutoTranslateEngineDots?.Invoke();
+    }
+
+    private async Task RedownloadLlamaCppEngineAsync()
+    {
+        if (Window == null)
+        {
+            return;
+        }
+
+        LlamaCppServerManager.StopServer();
+
+        // Reuse the installed backend so the user is not re-asked CPU/Vulkan/CUDA on a re-download;
+        // null on a fresh install (or off Windows), which lets DownloadAsync prompt.
+        var variant = OperatingSystem.IsWindows()
+            ? DownloadHashManager.DetectLlamaCppWindowsVariant(LlamaCppServerManager.GetAndCreateFolder())
+            : null;
+
+        await LlamaCppDownloadHelper.DownloadAsync(
+            Window,
+            _windowService,
+            SelectedLlamaCppModel?.Model,
+            variant,
+            forceEngineDownload: true);
+
+        PopulateLlamaCppModels();
+        RefreshAutoTranslateEngineDots?.Invoke(); // the engine binary just changed - amber -> green
+    }
+
+    // Prompt (plus request delay, max bytes and the merge strategy) for the regular llama.cpp
+    // engine - the same window the Auto-translate window's settings button opens, editing the same
+    // shared settings. Its OK writes both Se.Settings.AutoTranslate and Configuration.Settings.Tools,
+    // so a prompt edited here reaches the batch run too.
+    [RelayCommand]
+    private async Task ShowLlamaCppTranslateSettings()
+    {
+        if (Window == null || SelectedAutoTranslator == null)
+        {
+            return;
+        }
+
+        var translator = SelectedAutoTranslator;
+        await _windowService.ShowDialogAsync<TranslateSettingsWindow, TranslateSettingsViewModel>(
+            Window,
+            vm => vm.LoadValues(translator));
+    }
+
     [RelayCommand]
     private async Task RemoveSelectedFiles()
     {
@@ -2727,6 +2812,14 @@ public partial class BatchConvertViewModel : ObservableObject, IClosingCleanup
                 Configuration.Settings.Tools.AutoTranslateDeepLApiKey = AutoTranslateApiKey.Trim();
                 Se.Settings.AutoTranslate.DeepLApiKey = AutoTranslateApiKey.Trim();
             }
+
+            // DeepLTranslate reads the formality from Configuration.Settings.Tools, which SE5 never
+            // persists - without seeding it here the formality chosen in the Auto-translate window
+            // silently reverts to "default" for a batch run.
+            if (!string.IsNullOrEmpty(Se.Settings.AutoTranslate.DeepLFormality))
+            {
+                Configuration.Settings.Tools.AutoTranslateDeepLFormality = Se.Settings.AutoTranslate.DeepLFormality;
+            }
         }
     }
 
@@ -2851,16 +2944,71 @@ public partial class BatchConvertViewModel : ObservableObject, IClosingCleanup
         Configuration.Settings.Tools.AutoTranslateCrispAsrModel = Se.Settings.AutoTranslate.CrispAsrModel;
     }
 
+    // Same setting the Auto-translate window writes, and the one EnsureLlamaCppAvailable reads when
+    // the run starts - so picking a model here decides which one the batch run downloads and serves.
+    partial void OnSelectedLlamaCppModelChanged(LlamaCppModelDisplay? value)
+    {
+        if (value == null)
+        {
+            return;
+        }
+
+        Se.Settings.AutoTranslate.LlamaCppModel = LlamaCppServerManager.GetModelPath(value.Model.FileName);
+    }
+
+    /// <summary>
+    /// Fills the llama.cpp model combo and pre-selects the last-used model, or hides the combo when
+    /// a remote server is configured (it serves whatever model it was started with). Re-filling the
+    /// collection is also what re-evaluates the install dots, so call this again after a download.
+    /// </summary>
+    private void PopulateLlamaCppModels()
+    {
+        if (Se.Settings.AutoTranslate.LlamaCppUseRemoteServer)
+        {
+            // Nothing local to pick or install - the remote server owns both.
+            LlamaCppModelComboIsVisible = false;
+            LlamaCppEngineSettingsButtonIsVisible = false;
+            LlamaCppModels.Clear();
+            SelectedLlamaCppModel = null;
+            return;
+        }
+
+        LlamaCppModelComboIsVisible = true;
+        LlamaCppEngineSettingsButtonIsVisible = true;
+        var savedModelName = Path.GetFileName(Se.Settings.AutoTranslate.LlamaCppModel ?? string.Empty);
+        SelectedLlamaCppModel = LlamaCppDownloadHelper.PopulateModels(LlamaCppModels, GetLlamaCppModelsForEngine(), savedModelName);
+    }
+
+    /// <summary>
+    /// The llama.cpp model list for the currently selected engine: everything for the regular
+    /// engine, but no completion-only models (MiLMMT-46) for the advanced engine - they cannot
+    /// follow its JSON batch protocol.
+    /// </summary>
+    private IReadOnlyList<LlamaCppModel> GetLlamaCppModelsForEngine()
+    {
+        var models = LlamaCppServerManager.GetAllTranslateModels();
+        return SelectedAutoTranslator is LlamaCppAdvancedTranslate
+            ? models.Where(m => !m.CompletionOnly).ToList()
+            : models;
+    }
+
     internal void OnAutoTranslatorChanged()
     {
         var engine = SelectedAutoTranslator;
 
         AutoTranslateModelIsVisible = engine is OllamaTranslate;
         CrispAsrModelComboIsVisible = engine is CrispAsrMadladTranslate;
+        // Both turned back on by PopulateLlamaCppModels for a local llama.cpp.
+        LlamaCppModelComboIsVisible = false;
+        LlamaCppEngineSettingsButtonIsVisible = false;
 
         // Batch size, context history and the synopsis/glossary/style prompt only exist on the
         // advanced engine; they apply to local and remote llama-servers alike.
         LlamaCppAdvancedButtonIsVisible = engine is LlamaCppAdvancedTranslate;
+
+        // The regular llama.cpp engine has no advanced window - its prompt (and the shared
+        // delay/max-bytes/merge settings) live in the translate settings dialog instead.
+        LlamaCppSettingsButtonIsVisible = engine is LlamaCppTranslate;
 
         if (engine is CrispAsrMadladTranslate)
         {
@@ -2914,6 +3062,10 @@ public partial class BatchConvertViewModel : ObservableObject, IClosingCleanup
             AutoTranslateUrlIsVisible = true;
             AutoTranslateApiKey = string.Empty;
             AutoTranslateApiKeyIsVisible = false;
+
+            // A remote server serves whatever model it was started with, so there is nothing to pick
+            // here - same as in the Auto-translate window, which owns that toggle.
+            PopulateLlamaCppModels();
         }
         else if (engine is NoLanguageLeftBehindServe)
         {
