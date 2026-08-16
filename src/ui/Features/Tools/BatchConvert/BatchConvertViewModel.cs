@@ -1351,8 +1351,12 @@ public partial class BatchConvertViewModel : ObservableObject, IClosingCleanup
             return true;
         }
 
-        // Auto-detect: reuse an already-running local server.
-        if (LlamaCppServerManager.IsServerRunning)
+        // Auto-detect: reuse an already-running local server - but not one started with a smaller
+        // context than the selected engine needs (say the advanced engine after an OCR run, or after
+        // the regular engine started the server at the default size). Falling through restarts it
+        // with the right context instead of silently translating in a too-small window.
+        var contextSize = GetLlamaCppContextSize(config.AutoTranslate.Translator);
+        if (LlamaCppServerManager.IsServerRunning && LlamaCppServerManager.RunningContextSize >= contextSize)
         {
             Configuration.Settings.Tools.LlamaCppApiUrl = LlamaCppServerManager.ApiUrl;
             return true;
@@ -1382,7 +1386,7 @@ public partial class BatchConvertViewModel : ObservableObject, IClosingCleanup
         // Auto-start the local server - this points Configuration.Settings.Tools.LlamaCppApiUrl at it.
         try
         {
-            await LlamaCppServerManager.EnsureServerRunningAsync(model, _cancellationToken);
+            await LlamaCppServerManager.EnsureServerRunningAsync(model, _cancellationToken, contextSize);
         }
         catch (Exception ex)
         {
@@ -1396,6 +1400,19 @@ public partial class BatchConvertViewModel : ObservableObject, IClosingCleanup
         RefreshAutoTranslateEngineDots?.Invoke();
 
         return true;
+    }
+
+    /// <summary>
+    /// The advanced engine stuffs history/synopsis/glossary into every request, so it gets the
+    /// user-configurable (default larger) server context; everything else keeps the default. Same
+    /// rule as <c>AutoTranslateViewModel.EnsureLlamaCppReady</c> - without it a batch run served the
+    /// advanced engine from an 8k window while the interactive window used the configured size.
+    /// </summary>
+    private static int GetLlamaCppContextSize(IAutoTranslator? translator)
+    {
+        return translator is LlamaCppAdvancedTranslate
+            ? Math.Clamp(Se.Settings.AutoTranslate.LlamaCppAdvanced.ContextSize, 2048, 262144)
+            : LlamaCppServerManager.DefaultContextSize;
     }
 
     private static bool IsImageBasedInput(BatchConvertItem item)
