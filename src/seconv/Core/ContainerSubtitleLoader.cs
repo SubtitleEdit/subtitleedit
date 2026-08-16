@@ -31,12 +31,14 @@ internal static class ContainerSubtitleLoader
     {
         var ext = Path.GetExtension(filePath).ToLowerInvariant();
 
-        if (ext is ".mkv" or ".mks")
+        // .webm is Matroska too - a WebVTT track muxed into one was falling through to the
+        // text loader, which then failed to detect a format at all.
+        if (ext is ".mkv" or ".mks" or ".webm")
         {
             return LoadMatroska(filePath, options);
         }
 
-        if (ext is ".mp4" or ".m4v" or ".m4s" or ".3gp")
+        if (ext is ".mp4" or ".m4v" or ".m4s" or ".3gp" or ".mov" or ".m4a" or ".m4b" or ".cmaf")
         {
             try
             {
@@ -291,6 +293,23 @@ internal static class ContainerSubtitleLoader
                 catch (Exception ex)
                 {
                     AnsiConsole.MarkupLineInterpolated($"[yellow]Warning: VobSub OCR failed on MKV track #{track.TrackNumber}: {ex.Message}[/]");
+                }
+                continue;
+            }
+
+            if (track.CodecId.Equals("S_DVBSUB", StringComparison.OrdinalIgnoreCase))
+            {
+                try
+                {
+                    var dvbSub = ImageOcrLoader.LoadMatroskaDvbSub(matroska, track, options);
+                    if (dvbSub.Paragraphs.Count > 0)
+                    {
+                        tracks.Add(new LoadedTrack(dvbSub, new SubRip(), SanitizeLang(track.Language), track.TrackNumber));
+                    }
+                }
+                catch (Exception ex)
+                {
+                    AnsiConsole.MarkupLineInterpolated($"[yellow]Warning: DVB-sub decode failed on MKV track #{track.TrackNumber}: {ex.Message}[/]");
                 }
                 continue;
             }

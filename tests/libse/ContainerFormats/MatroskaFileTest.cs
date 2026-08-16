@@ -40,6 +40,31 @@ public class MatroskaFileTest
     }
 
     /// <summary>
+    /// ffmpeg writes an all-ones BlockDuration - its "unknown duration" marker - on the image
+    /// subtitle tracks it muxes. Read as a signed tick count that is negative, so every block
+    /// used to come out ending one millisecond before it started, and the VobSub OCR window
+    /// showed nothing but negative durations. An unusable duration has to read as "unknown".
+    /// </summary>
+    [Fact]
+    public void UnknownBlockDurationIsNotNegative()
+    {
+        var path = Path.Combine(Directory.GetCurrentDirectory(), "Files", "sample_MKV_ffmpeg_VobSub_no_duration.mkv");
+
+        using var matroska = new MatroskaFile(path);
+        Assert.True(matroska.IsValid);
+
+        var tracks = matroska.GetTracks(subtitleOnly: true);
+        Assert.NotEmpty(tracks);
+
+        foreach (var track in tracks)
+        {
+            var subtitles = matroska.GetSubtitle(track.TrackNumber, null);
+            Assert.NotEmpty(subtitles);
+            Assert.All(subtitles, s => Assert.True(s.End >= s.Start, "a block cannot end before it starts"));
+        }
+    }
+
+    /// <summary>
     /// A file truncated mid-cluster (partial download, recording in progress) still declares the
     /// full segment size in its header, so the cluster walk's end position lies beyond EOF. The
     /// walk used to spin forever at EOF (id reads yield None, Seek(0) makes no progress) instead

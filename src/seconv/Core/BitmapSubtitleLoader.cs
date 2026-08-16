@@ -209,6 +209,11 @@ internal static class BitmapSubtitleLoader
             }
         }
 
+        // ffmpeg leaves BlockDuration unset (or "unknown") on the VobSub tracks it muxes, so
+        // every pack came out ending where it started; the sub picture's own stop-display
+        // delay is the real duration. Same repair the .sub/.idx path does.
+        VobSubParser.FixPackTimes(packs);
+
         var items = new List<BitmapSubtitleItem>(packs.Count);
         var skipped = 0;
         foreach (var pack in packs)
@@ -347,6 +352,101 @@ internal static class BitmapSubtitleLoader
         {
             throw new InvalidOperationException("No VobSub subpictures found in MP4 track.");
         }
+        return items;
+    }
+
+    /// <summary>
+    /// DVB subtitles carried in a Matroska track (codec <c>S_DVBSUB</c>). The blocks hold the
+    /// same segments a transport stream would, in one of a few framings, so each is wrapped
+    /// back into a <see cref="DvbSubPes"/> before decoding - mirrors the GUI's MKV DVB path.
+    /// Without this the track fell through to the text loader and produced empty cues.
+    /// </summary>
+    public static IReadOnlyList<BitmapSubtitleItem> LoadMatroskaDvbSub(MatroskaFile matroska, MatroskaTrackInfo track)
+    {
+        var sub = matroska.GetSubtitle(track.TrackNumber, null);
+        var pesList = new List<(DvbSubPes Pes, long Start, long End)>();
+        foreach (var msub in sub)
+        {
+            DvbSubPes? pes = null;
+            var data = msub.GetData(track);
+            if (data == null)
+            {
+                continue;
+            }
+
+            if (data.Length > 9 && data[0] == 15 &&
+                data[1] >= SubtitleSegment.PageCompositionSegment &&
+                data[1] <= SubtitleSegment.DisplayDefinitionSegment) // sync byte + segment id
+            {
+                var buffer = new byte[data.Length + 3];
+                Buffer.BlockCopy(data, 0, buffer, 2, data.Length);
+                buffer[0] = 32;
+                buffer[1] = 0;
+                buffer[^1] = 255;
+                pes = new DvbSubPes(0, buffer);
+            }
+            else if (VobSubParser.IsMpeg2PackHeader(data))
+            {
+                pes = new DvbSubPes(data, Mpeg2Header.Length);
+            }
+            else if (VobSubParser.IsPrivateStream1(data, 0))
+            {
+                pes = new DvbSubPes(data, 0);
+            }
+            else if (data.Length > 9 && data[0] == 32 && data[1] == 0 && data[2] == 14 && data[3] == 16)
+            {
+                pes = new DvbSubPes(0, data);
+            }
+
+            if (pes?.PageCompositions != null && pes.PageCompositions.Any(p => p.Regions.Count > 0))
+            {
+                pesList.Add((pes, msub.Start, msub.End));
+            }
+        }
+
+        if (pesList.Count == 0)
+        {
+            throw new InvalidOperationException($"No DVB subtitles in MKV track #{track.TrackNumber}.");
+        }
+
+        // Same end-time repair as the GUI: a block with no usable duration runs for three
+        // seconds, clipped to the next block's start.
+        var items = new List<BitmapSubtitleItem>(pesList.Count);
+        var skipped = 0;
+        for (var i = 0; i < pesList.Count; i++)
+        {
+            var (pes, start, end) = pesList[i];
+            if (end - start < 200)
+            {
+                end = start + 3000;
+            }
+
+            if (i + 1 < pesList.Count && pesList[i + 1].Start < end)
+            {
+                end = pesList[i + 1].Start - Configuration.Settings.General.MinimumMillisecondsBetweenLines;
+            }
+
+            var bmp = pes.GetImageFull();
+            if (bmp is null)
+            {
+                skipped++;
+                continue;
+            }
+
+            var position = pes.GetPosition();
+            items.Add(new BitmapSubtitleItem(
+                new TimeCode(start),
+                new TimeCode(end),
+                bmp,
+                Position: new SKPointI(position.Left, position.Top)));
+        }
+
+        WarnSkippedBitmaps(skipped, "MKV DVB-sub");
+        if (items.Count == 0)
+        {
+            throw new InvalidOperationException($"No DVB subtitles in MKV track #{track.TrackNumber}.");
+        }
+
         return items;
     }
 
