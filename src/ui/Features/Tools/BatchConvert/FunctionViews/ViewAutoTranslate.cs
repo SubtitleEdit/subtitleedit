@@ -35,13 +35,24 @@ public static class ViewAutoTranslate
         var buttonModel = UiUtil.MakeButtonBrowse(vm.AutoTranslateBrowseModelCommand, nameof(vm.AutoTranslateModelBrowseIsVisible), Se.Language.General.Model).WithMarginLeft(3);
         var labelCrispAsrModel = UiUtil.MakeLabel(Se.Language.General.Model).WithBindVisible(vm, nameof(vm.CrispAsrModelComboIsVisible)).WithMarginLeft(10).WithMarginRight(3);
         var crispAsrModelCombo = UiUtil.MakeComboBox(vm.CrispAsrModels, vm, nameof(vm.SelectedCrispAsrModel), nameof(vm.CrispAsrModelComboIsVisible));
+
+        var buttonAdvanced = UiUtil.MakeButton(Se.Language.Translate.AdvancedDotDotDot, vm.ShowLlamaCppAdvancedSettingsCommand)
+            .WithMarginLeft(10)
+            .WithAccessibleName(Se.Language.Translate.AdvancedSettings);
+        buttonAdvanced.Bind(Button.IsVisibleProperty, new Binding(nameof(vm.LlamaCppAdvancedButtonIsVisible)));
+        if (Se.Settings.Appearance.ShowHints)
+        {
+            ToolTip.SetTip(buttonAdvanced, Se.Language.Translate.AdvancedSettings);
+        }
+
         var panelEngineControls = UiUtil.MakeHorizontalPanel(
             cbEngines,
             labelModel,
             textBoxModel,
             buttonModel,
             labelCrispAsrModel,
-            crispAsrModelCombo);
+            crispAsrModelCombo,
+            buttonAdvanced);
 
         var labelSourceLanguage = UiUtil.MakeLabel(Se.Language.General.From);
         var sourceLangCombo = UiUtil.MakeComboBox(vm.SourceLanguages, vm, nameof(vm.SelectedSourceLanguage));
