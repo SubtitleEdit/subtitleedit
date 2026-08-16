@@ -57,7 +57,11 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
         {
             get
             {
-                var language = Iso639Dash2LanguageCode.List.FirstOrDefault(p => p.ThreeLetterCode == Iso639ThreeLetterCode);
+                // mdhd carries either the ISO 639-2/T (terminology) or the 639-2/B
+                // (bibliographic) code - MP4Box writes whatever "lang=" was given, and
+                // "fre"/"ger"/"dut" are as common in the wild as "fra"/"deu"/"nld".
+                var language = Iso639Dash2LanguageCode.List.FirstOrDefault(p =>
+                    p.ThreeLetterCode == Iso639ThreeLetterCode || p.BibliographicCode == Iso639ThreeLetterCode);
                 return language == null ? "Any" : language.EnglishName;
             }
         }
