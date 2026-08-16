@@ -612,6 +612,7 @@
     "top": "Top",
     "totalAdjustmentX": "Total adjustment: {0}",
     "translate": "Translate",
+    "translatePercentX": "Translating: {0}%",
     "translateRow": "Translate row",
     "translation": "Translation",
     "twoLetterLanguageCode": "Two-letter language code",

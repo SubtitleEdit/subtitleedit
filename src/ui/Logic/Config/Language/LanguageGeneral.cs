@@ -612,6 +612,7 @@ public class LanguageGeneral
     public string Top { get; set; }
     public string TotalAdjustmentX { get; set; }
     public string Translate { get; set; }
+    public string TranslatePercentX { get; set; }
     public string TranslateRow { get; set; }
     public string Translation { get; set; }
     public string TwoLetterLanguageCode { get; set; }
@@ -1354,6 +1355,7 @@ public class LanguageGeneral
         Top = "Top";
         TotalAdjustmentX = "Total adjustment: {0}";
         Translate = "Translate";
+        TranslatePercentX = "Translating: {0}%";
         TranslateRow = "Translate row";
         Translation = "Translation";
         TwoLetterLanguageCode = "Two-letter language code";

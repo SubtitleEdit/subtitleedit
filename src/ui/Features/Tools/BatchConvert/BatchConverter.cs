@@ -350,6 +350,17 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
             {
                 await RunOcrTesseract(imageSubtitle, item, cancellationToken);
             }
+
+            // OCR is only one step of the run - the item still goes through the convert functions
+            // and the save before it can say "Converted". Leaving the last progress value up would
+            // show a finished-looking "OCR: 100%" for that whole stretch, so put the row back to
+            // the plain working status it started this block with. A runner that deliberately left
+            // a terminal status behind (cancelled, an error, "model likely wrong") keeps it - only
+            // our own percentages are reset.
+            if (IsOcrProgressStatus(item.Status))
+            {
+                item.Status = Se.Language.General.OcrDotDotDot;
+            }
         }
 
         // Run convert functions (remove formatting, etc.)
@@ -691,6 +702,46 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
         var text = Nikse.SubtitleEdit.UiLogic.Export.CustomTextFormatter.GenerateCustomText(selectedCustomFormat.ToTemplate(), paragraphsForCustom, item.FileName, string.Empty);
         var path = MakeOutputFileName(item, selectedCustomFormat.Extension);
         await File.WriteAllTextAsync(path, text, cancellationToken);
+    }
+
+    /// <summary>
+    /// True when the status is one of the "OCR: {0}%" progress values the OCR runners write. Used
+    /// to tell our own progress apart from a terminal status a runner deliberately left behind, so
+    /// clearing progress cannot swallow a "Cancelled" or an error. The format string is matched
+    /// rather than hard-coded, since translations move the percent sign and the label.
+    /// </summary>
+    internal static bool IsOcrProgressStatus(string? status)
+    {
+        if (string.IsNullOrEmpty(status))
+        {
+            return false;
+        }
+
+        var format = Se.Language.General.OcrPercentX;
+        var placeholder = format.IndexOf("{0}", StringComparison.Ordinal);
+        if (placeholder < 0)
+        {
+            return false;
+        }
+
+        var prefix = format.AsSpan(0, placeholder);
+        var suffix = format.AsSpan(placeholder + "{0}".Length);
+        if (status.Length <= prefix.Length + suffix.Length ||
+            !status.AsSpan().StartsWith(prefix, StringComparison.Ordinal) ||
+            !status.AsSpan().EndsWith(suffix, StringComparison.Ordinal))
+        {
+            return false;
+        }
+
+        for (var i = prefix.Length; i < status.Length - suffix.Length; i++)
+        {
+            if (!char.IsAsciiDigit(status[i]))
+            {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     private static async Task RunOcrTesseract(IOcrSubtitle imageSubtitles, BatchConvertItem item, CancellationToken cancellationToken)
@@ -1801,7 +1852,7 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
             s = AddFormatting(s);
             s = SplitBreakLongLines(s, Language);
             s = AdjustDisplayDuration(s);
-            s = await AutoTranslate(s, cancellationToken);
+            s = await AutoTranslate(s, item, cancellationToken);
             s = ChangeCasing(s, Language);
             s = OffsetTimeCodes(s);
             s = ChangeFrameRate(s);
@@ -2743,7 +2794,7 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
         return subtitle;
     }
 
-    private async Task<Subtitle> AutoTranslate(Subtitle subtitle, CancellationToken cancellationToken)
+    private async Task<Subtitle> AutoTranslate(Subtitle subtitle, BatchConvertItem item, CancellationToken cancellationToken)
     {
         if (!_config.AutoTranslate.IsActive)
         {
@@ -2769,12 +2820,36 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
         Configuration.Settings.Tools.AutoTranslateCrispAsrExe = Se.Settings.AutoTranslate.CrispAsrExe;
         Configuration.Settings.Tools.AutoTranslateCrispAsrModel = Se.Settings.AutoTranslate.CrispAsrModel;
 
+        // Translating one file can take minutes (local LLM engines especially), so report
+        // progress in the item's status column like the OCR runners do - otherwise the whole
+        // batch looks stalled (#13706). Engines forced into single-line mode raise this once
+        // per line, so only push a status update when the whole percent actually changes.
+        var lastPercent = -1;
+        var statusBeforeTranslate = item.Status;
         var doAutoTranslate = new DoAutoTranslate
         {
             TranslateEachLineSeparately = Se.Settings.AutoTranslate.IsTranslateEachLineSeparately(_config.AutoTranslate.Translator.Name),
+            Progress = (done, total) =>
+            {
+                var percent = total > 0 ? done * 100 / total : 0;
+                if (percent != lastPercent)
+                {
+                    lastPercent = percent;
+                    item.Status = string.Format(Se.Language.General.TranslatePercentX, percent);
+                }
+            },
         };
         var translatedSubtitle = await doAutoTranslate.DoTranslate(subtitle, _config.AutoTranslate.SourceLanguage, _config.AutoTranslate.TargetLanguage,
             _config.AutoTranslate.Translator, cancellationToken);
+
+        // Translating is only one step of the run - the item still goes through the remaining
+        // convert functions and the save before it can say "Converted". Leaving the last progress
+        // value up would show a finished-looking "Translating: 100%" for that whole stretch, so put
+        // the row back in the state a non-translating item is in for the rest of the pipeline.
+        if (lastPercent >= 0)
+        {
+            item.Status = statusBeforeTranslate;
+        }
 
         for (var i = 0; i < subtitle.Paragraphs.Count && i < translatedSubtitle.Count; i++)
         {
