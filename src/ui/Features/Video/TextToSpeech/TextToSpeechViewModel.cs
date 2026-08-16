@@ -33,6 +33,7 @@ using Nikse.SubtitleEdit.Features.Video.TextToSpeech.Qwen3TtsCrispAsrSettings;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.Qwen3TtsSettings;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.ReviewSpeech;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.VibeVoiceCrispAsrSettings;
+using Nikse.SubtitleEdit.Features.Video.TextToSpeech.VoiceCloneConsent;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.Voices;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.VoiceSettings;
 using Nikse.SubtitleEdit.Logic;
@@ -587,6 +588,42 @@ public partial class TextToSpeechViewModel : ObservableObject
         // Without this the user only sees the failure at Generate time with a confusing
         // "add a .txt sidecar" message, which is hard to act on inside the SE UI.
         _ = EnsureClonedVoiceRefTextAsync(value);
+    }
+
+    /// <summary>
+    /// Second half of the first-clone gate (the first is the voice-import dialog): asks before
+    /// synthesising with a cloned voice, and reports whether to go ahead. A no-op for baked-in
+    /// voices and once the terms have been accepted.
+    /// </summary>
+    /// <remarks>
+    /// The import dialog alone would miss every clone that reached the voices folder another way —
+    /// copied in by hand, seeded from a voice pack, or restored as a cast mapping — and would also
+    /// never reach users who imported their clones before this gate existed. Synthesis is the point
+    /// where the cloned audio actually comes into being, so it is the honest place to ask.
+    /// </remarks>
+    private async Task<bool> EnsureVoiceCloningConsentAsync(Voice? voice)
+    {
+        if (Window == null || !VoiceCloningConsent.IsCloneVoice(voice) || VoiceCloningConsent.IsAccepted)
+        {
+            return true;
+        }
+
+        var result = await _windowService.ShowDialogAsync<VoiceCloneConsentWindow, VoiceCloneConsentViewModel>(Window, _ => { });
+
+        // Re-check the stored answer rather than trusting OkPressed alone: closing the window by
+        // any other route must not count as consent.
+        if (!result.OkPressed || !VoiceCloningConsent.IsAccepted)
+        {
+            await MessageBox.Show(
+                Window,
+                Se.Language.Video.TextToSpeech.VoiceCloneConsentTitle,
+                Environment.NewLine + Se.Language.Video.TextToSpeech.VoiceCloneConsentDeclined,
+                MessageBoxButtons.OK,
+                MessageBoxIcon.Information);
+            return false;
+        }
+
+        return true;
     }
 
     private bool _isPromptingForRefText;
@@ -1236,6 +1273,11 @@ public partial class TextToSpeechViewModel : ObservableObject
             return;
         }
 
+        if (!await EnsureVoiceCloningConsentAsync(voice))
+        {
+            return;
+        }
+
         // Free GPU memory held by any other CrispASR-based engine before we load this one's
         // model. Without this, switching between Qwen3 / VibeVoice / IndexTTS / Chatterbox
         // within a session stacks crispasr.exe processes (each holding 1-3 GB of GGUFs)
@@ -1551,6 +1593,11 @@ public partial class TextToSpeechViewModel : ObservableObject
         RefreshDownloadDots?.Invoke();
 
         if (!await TtsVoiceInstaller.EnsureVoiceInstalled(engine, voice, Window, _windowService))
+        {
+            return;
+        }
+
+        if (!await EnsureVoiceCloningConsentAsync(voice))
         {
             return;
         }
