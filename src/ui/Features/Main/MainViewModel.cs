@@ -18433,6 +18433,20 @@ public partial class MainViewModel :
                     }
                 }
 
+                // Image-list xml projects reference png files next to the xml - BDN xml and
+                // Final Cut Pro image xmeml (SE's own "export image based" FCP output). Both
+                // only live in GetTextOtherFormats(), so Subtitle.Parse never finds them;
+                // route through the BDN OCR import like batch convert already does for BDN.
+                if (ext == ".xml")
+                {
+                    var imageListSubtitle = TryLoadImageListXml(fileName);
+                    if (imageListSubtitle != null)
+                    {
+                        ImportAndOcrDost(fileName, imageListSubtitle, skipLoadVideo);
+                        return;
+                    }
+                }
+
                 if (FileUtil.IsSpDvdSup(fileName))
                 {
                     ImportAndOcrSpDvdSup(fileName, skipLoadVideo);
@@ -18967,6 +18981,51 @@ public partial class MainViewModel :
         for (var i = 0; i < Subtitles.Count && i < sub.Paragraphs.Count; i++)
         {
             Subtitles[i].Bookmark = sub.Paragraphs[i].Bookmark;
+        }
+    }
+
+    /// <summary>
+    /// Loads an image-list xml project (BDN xml, or a Final Cut Pro image xmeml where each
+    /// clipitem references a png) whose cues carry image file names for the OCR importer.
+    /// Returns null when the file is neither.
+    /// </summary>
+    private static Subtitle? TryLoadImageListXml(string fileName)
+    {
+        try
+        {
+            var lines = FileUtil.ReadAllLinesShared(fileName, LanguageAutoDetect.GetEncodingFromFile(fileName));
+
+            var bdnXml = new BdnXml();
+            if (bdnXml.IsMine(lines, fileName))
+            {
+                var subtitle = new Subtitle();
+                bdnXml.LoadSubtitle(subtitle, lines, fileName);
+                if (subtitle.Paragraphs.Count > 0)
+                {
+                    subtitle.OriginalFormat = bdnXml;
+                    return subtitle;
+                }
+            }
+
+            // Cheap content gate first - FinalCutProImage has no fast IsMine of its own.
+            if (lines.Any(l => l.Contains("<xmeml", StringComparison.Ordinal)) &&
+                lines.Any(l => l.Contains("<pathurl>", StringComparison.Ordinal)))
+            {
+                var fcpImage = new FinalCutProImage();
+                var subtitle = new Subtitle();
+                fcpImage.LoadSubtitle(subtitle, lines, fileName);
+                if (subtitle.Paragraphs.Count > 0)
+                {
+                    subtitle.OriginalFormat = fcpImage;
+                    return subtitle;
+                }
+            }
+
+            return null;
+        }
+        catch
+        {
+            return null;
         }
     }
 
