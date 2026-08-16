@@ -636,6 +636,11 @@ public static class InitMenu
             },
             new MenuItem
             {
+                Header = Se.Language.Video.Chapters.ChaptersDotDotDot,
+                Command = vm.ShowVideoChaptersCommand,
+            },
+            new MenuItem
+            {
                 Header = Se.Language.Video.ReEncodeVideoForBetterSubtitlingDotDotDot,
                 Command = vm.VideoReEncodeCommand,
             },

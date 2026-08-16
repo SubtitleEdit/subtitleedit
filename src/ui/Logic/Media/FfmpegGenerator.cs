@@ -1410,6 +1410,34 @@ public class FfmpegGenerator
         return args;
     }
 
+    /// <summary>
+    /// Writes chapters into a copy of a video file. Every stream is copied, so nothing is
+    /// re-encoded - only the container's chapter metadata changes.
+    /// </summary>
+    /// <param name="metadataFileName">An ffmetadata file holding the chapters.</param>
+    public static string GetWriteChaptersParameters(string inputFileName, string metadataFileName, string outputFileName)
+    {
+        var args = new List<string>
+        {
+            "-y",
+            $"-i \"{inputFileName}\"",
+            $"-i \"{metadataFileName}\"",
+
+            // Take metadata from the ffmetadata input, which replaces any chapters already there.
+            "-map_metadata 1",
+
+            // Chapters come from the ffmetadata input rather than being carried over from the video.
+            "-map_chapters 1",
+
+            // Every stream of the video is kept, including subtitles and attachments.
+            "-map 0",
+            "-c copy",
+            $"\"{outputFileName}\"",
+        };
+
+        return string.Join(" ", args);
+    }
+
     internal static string AlterEmbeddedTracksMatroska(List<EmbeddedTrack> embeddedTracks, List<EmbeddedTrack> originalTracks, string inputFileName, string outputFileName)
     {
         var args = new List<string>();
