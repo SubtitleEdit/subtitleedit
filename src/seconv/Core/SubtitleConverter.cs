@@ -12,9 +12,15 @@ internal class SubtitleConverter
     // configuration fails before the first file is touched.
     private AutoTranslateRunner? _translateRunner;
 
+    // Output names handed out during the current run - --overwrite must only clobber
+    // files from before the run, never output this run just wrote (two "eng" tracks in
+    // one mkv would otherwise silently overwrite each other).
+    private readonly HashSet<string> _usedOutputFileNames = new(StringComparer.OrdinalIgnoreCase);
+
     public async Task<ConversionResult> ConvertAsync(ConversionOptions options)
     {
         var result = new ConversionResult();
+        _usedOutputFileNames.Clear();
 
         try
         {
@@ -73,11 +79,16 @@ internal class SubtitleConverter
                         continue;
                     }
 
+                    // --translate-to rewrites the content's language, so the output name
+                    // carries the target code ("way.zh-CN.srt") instead of the source
+                    // track's - and a plain file no longer collides with its own input.
+                    var translateToSuffix = _translateRunner?.TargetLanguageCode;
+
                     var tracks = ContainerSubtitleLoader.TryLoadTracks(inputFile, options);
                     if (tracks is null)
                     {
                         // Regular single-file path (text or binary subtitle file)
-                        var outputFile = ResolveOutputFileName(inputFile, options);
+                        var outputFile = ResolveOutputFileName(inputFile, options, translateToSuffix, null, _usedOutputFileNames);
                         if (!options.Quiet)
                         {
                             AnsiConsole.MarkupInterpolated($"[dim]{fileIndex}:[/] [cyan]{Path.GetFileName(inputFile)}[/] [dim]->[/] [green]{outputFile}[/]...");
@@ -111,7 +122,7 @@ internal class SubtitleConverter
 
                         foreach (var track in tracks)
                         {
-                            var outputFile = ResolveOutputFileName(inputFile, options, track.LanguageCode, track.TrackNumber);
+                            var outputFile = ResolveOutputFileName(inputFile, options, translateToSuffix ?? track.LanguageCode, track.TrackNumber, _usedOutputFileNames);
                             var trackLabel = track.TrackNumber.HasValue ? $"#{track.TrackNumber.Value} " : string.Empty;
                             var langLabel = string.IsNullOrEmpty(track.LanguageCode) ? string.Empty : $"[{track.LanguageCode}] ";
                             if (!options.Quiet)
@@ -361,7 +372,7 @@ internal class SubtitleConverter
         int fileIndex,
         Func<IReadOnlyList<BitmapSubtitleLoader.BitmapSubtitleItem>> load)
     {
-        var outputFile = ResolveOutputFileName(inputFile, options);
+        var outputFile = ResolveOutputFileName(inputFile, options, usedNames: _usedOutputFileNames);
         if (!options.Quiet)
         {
             AnsiConsole.MarkupInterpolated($"[dim]{fileIndex}:[/] [cyan]{Path.GetFileName(inputFile)}[/] [dim](img→img)→[/] [green]{outputFile}[/]...");
@@ -441,7 +452,7 @@ internal class SubtitleConverter
         {
             var isVobSub = track.CodecId.Equals("S_VOBSUB", StringComparison.OrdinalIgnoreCase);
             var outputFile = ResolveOutputFileName(
-                inputFile, options, ContainerSubtitleLoader.SanitizeLang(track.Language), track.TrackNumber);
+                inputFile, options, ContainerSubtitleLoader.SanitizeLang(track.Language), track.TrackNumber, _usedOutputFileNames);
 
             if (!options.Quiet)
             {
@@ -524,7 +535,7 @@ internal class SubtitleConverter
             // de-duplication fallback for overwrite collisions), so pass the PID *as* the
             // language suffix to keep each PID's output stably named — otherwise multiple
             // PIDs would collide and only differ by an opaque "_2", "_3" rotation.
-            var outputFile = ResolveOutputFileName(inputFile, options, languageSuffix: $"dvb_pid{pid}", trackNumber: pid);
+            var outputFile = ResolveOutputFileName(inputFile, options, languageSuffix: $"dvb_pid{pid}", trackNumber: pid, usedNames: _usedOutputFileNames);
 
             if (!options.Quiet)
             {
@@ -630,7 +641,7 @@ internal class SubtitleConverter
         foreach (var (items, streamNumber) in streams)
         {
             var languageSuffix = allStreams.Count > 1 && streamNumber.HasValue ? $"xsub_track{streamNumber.Value}" : null;
-            var outputFile = ResolveOutputFileName(inputFile, options, languageSuffix, streamNumber);
+            var outputFile = ResolveOutputFileName(inputFile, options, languageSuffix, streamNumber, _usedOutputFileNames);
 
             if (!options.Quiet)
             {
@@ -898,12 +909,16 @@ internal class SubtitleConverter
     /// between the stem and extension (<c>movie.eng.srt</c>). On collision: tries
     /// <c>movie.#&lt;track&gt;.eng.srt</c> first when a track number is given, then
     /// rotates to <c>name_2.ext</c>, <c>name_3.ext</c>, ... up to 9999.
+    /// A name in <paramref name="usedNames"/> was handed out earlier in this run (e.g.
+    /// the first of two "eng" tracks) and always counts as taken - --overwrite only
+    /// clobbers files from before the run, never the run's own output.
     /// </summary>
     internal static string ResolveOutputFileName(
         string inputFile,
         ConversionOptions options,
         string? languageSuffix = null,
-        int? trackNumber = null)
+        int? trackNumber = null,
+        ISet<string>? usedNames = null)
     {
         string baseName;
         if (!string.IsNullOrEmpty(options.OutputFilename))
@@ -927,8 +942,9 @@ internal class SubtitleConverter
             baseName = Path.Combine(outputFolder, stemWithLang + extension);
         }
 
-        if (options.Overwrite || !File.Exists(baseName))
+        if ((options.Overwrite || !File.Exists(baseName)) && usedNames?.Contains(baseName) != true)
         {
+            usedNames?.Add(baseName);
             return baseName;
         }
 
@@ -941,8 +957,9 @@ internal class SubtitleConverter
         {
             var fileName = Path.GetFileNameWithoutExtension(inputFile);
             var withTrack = Path.Combine(dir, $"{fileName}.#{trackNumber.Value}.{languageSuffix}{ext}");
-            if (!File.Exists(withTrack))
+            if ((options.Overwrite || !File.Exists(withTrack)) && usedNames?.Contains(withTrack) != true)
             {
+                usedNames?.Add(withTrack);
                 return withTrack;
             }
         }
@@ -950,8 +967,9 @@ internal class SubtitleConverter
         for (var i = 2; i < 10_000; i++)
         {
             var candidate = Path.Combine(dir, $"{stem}_{i}{ext}");
-            if (!File.Exists(candidate))
+            if (!File.Exists(candidate) && usedNames?.Contains(candidate) != true)
             {
+                usedNames?.Add(candidate);
                 return candidate;
             }
         }

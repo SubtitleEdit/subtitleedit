@@ -293,6 +293,8 @@ seconv movie.sub subrip --time-codes-only
 
 `--translate-to:<language>` machine-translates each file as part of the conversion (after OCR for image sources, before the cleanup operations). Languages are given as a code or English name (`de`, `German`, `da`, `Danish`, …); the source language is auto-detected per file unless `--translate-from` is set.
 
+Translated output is named with the target language code — `way.srt --translate-to:zh-CN` writes `way.zh-CN.srt` (for container tracks the target code replaces the track's own language suffix, since the content leaves in the target language). An explicit `--output-filename` is used as-is.
+
 | Option | Description |
 |---|---|
 | `--translate-to:<lang>` | Target language — enables translation |
