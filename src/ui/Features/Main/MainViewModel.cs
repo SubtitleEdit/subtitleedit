@@ -419,6 +419,23 @@ public partial class MainViewModel :
     /// </summary>
     public int SubtitleGridSelectedCount => SubtitleGrid.SelectedItems?.Count ?? 0;
 
+    /// <summary>
+    /// Grid index of the topmost selected row, or -1 when nothing editable is selected - SE4's
+    /// <c>FirstSelectedIndex</c>. Commands that write downwards from the selection must start here
+    /// and not at <see cref="SelectedSubtitle"/>: the current row is the moving end of a shift- or
+    /// drag-selection (see <see cref="SelectGridRange"/>), so selecting downwards would put the
+    /// anchor at the *bottom* of the selection while selecting upwards put it at the top - the
+    /// column paste that only worked when the rows were picked bottom-to-top (issue #13682).
+    /// </summary>
+    internal int FirstSelectedSubtitleIndex
+    {
+        get
+        {
+            var selectedItems = SubtitleGridSelectedItems;
+            return selectedItems.Count == 0 ? -1 : Subtitles.IndexOf(selectedItems[0]);
+        }
+    }
+
     private List<SubtitleLineViewModel> GetSelectedSubtitlesInOrder(bool includeReferenceOnly)
     {
         var selected = SubtitleGrid.SelectedItems;
@@ -5465,12 +5482,14 @@ public partial class MainViewModel :
     [RelayCommand]
     private async Task ColumnInsertTextFromSubtitle()
     {
-        if (Window == null || SelectedSubtitle == null)
+        if (Window == null)
         {
             return;
         }
 
-        var idx = Subtitles.IndexOf(SelectedSubtitle);
+        // The texts are written downwards from the first selected row (SE4 parity), so the
+        // selection direction must not matter - see FirstSelectedSubtitleIndex (#13682).
+        var idx = FirstSelectedSubtitleIndex;
         if (idx < 0)
         {
             return;
@@ -5539,12 +5558,16 @@ public partial class MainViewModel :
     [RelayCommand]
     private async Task ColumnPasteFromClipboard()
     {
-        if (Window == null || SelectedSubtitle == null)
+        if (Window == null)
         {
             return;
         }
 
-        var idx = Subtitles.IndexOf(SelectedSubtitle);
+        // The clipboard is pasted downwards from the first selected row (SE4's FirstSelectedIndex),
+        // so the direction the rows were picked in must not matter - see
+        // FirstSelectedSubtitleIndex: anchoring on the current row made a top-to-bottom selection
+        // paste from the bottom row of the selection onto the lines below it (#13682).
+        var idx = FirstSelectedSubtitleIndex;
         if (idx < 0)
         {
             return;
