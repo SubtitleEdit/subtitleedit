@@ -17292,17 +17292,38 @@ public partial class MainViewModel :
             return;
         }
 
+        var text = await ClipboardHelper.GetTextAsync(Window);
+        if (string.IsNullOrEmpty(text))
+        {
+            _shortcutManager.ClearKeys();
+            return;
+        }
+
+        // More than one line selected: paste over the selection instead of adding lines below it -
+        // the translation workflow SE4 had (translate the lines somewhere else, select them here,
+        // Ctrl+V) and which SE5 only offered through "Column > Paste from clipboard" (#13682).
+        var selectedItems = SubtitleGridSelectedItems;
+        if (selectedItems.Count > 1 && PasteOverSelectedLines(selectedItems, text))
+        {
+            _updateAudioVisualizer = true;
+            _shortcutManager.ClearKeys();
+            return;
+        }
+
+        // Insert below the topmost selected row, not below the current one: the current row is the
+        // moving end of a shift-selection, so anchoring there made the paste land below the bottom
+        // row when the rows were picked downwards - see FirstSelectedSubtitleIndex (#13682).
         // No selection: append at the end instead of silently doing nothing - SE4's grid paste
         // covered this state (insert at end), and the Paste helper already supports
         // index >= Count as append (#13200). Empty grid: insert at 0 (the helper handles
         // index 0 with an empty list; a negative index would throw on Insert).
-        var idx = SelectedSubtitleIndex ?? Subtitles.Count;
+        var idx = FirstSelectedSubtitleIndex;
         if (idx < 0 || idx > Subtitles.Count)
         {
             idx = Subtitles.Count;
         }
 
-        var pastedLines = await SubtitleGridCopyPasteHelper.Paste(Window, Subtitles, idx, SelectedSubtitleFormat);
+        var pastedLines = SubtitleGridCopyPasteHelper.PasteText(Subtitles, idx, SelectedSubtitleFormat, text);
         Renumber();
 
         // Select the pasted lines and scroll them into view, like SE4 - otherwise the selection
@@ -17318,6 +17339,81 @@ public partial class MainViewModel :
 
         _updateAudioVisualizer = true;
         _shortcutManager.ClearKeys();
+    }
+
+    /// <summary>
+    /// Pastes <paramref name="text"/> over the selected rows and returns true when it did, so
+    /// <see cref="SubtitleGridPaste"/> can fall back to inserting lines. Two clipboards to tell
+    /// apart, both from SE4's Ctrl+V handler:
+    /// <list type="bullet">
+    /// <item>a subtitle format (SRT, ASSA, ...) replaces the selected lines outright - SE4's
+    /// "multiple lines selected - first delete, then insert" - so the pasted time codes are kept
+    /// and the pasted line count does not have to match the selection.</item>
+    /// <item>plain text writes one clipboard line into each selected row's text and leaves the
+    /// time codes alone, which is what "Column &gt; Paste from clipboard &gt; text only + replace
+    /// existing cells" does. A subtitle whose text is two display lines cannot be expressed this
+    /// way; that is what the subtitle-format clipboard above is for.</item>
+    /// </list>
+    /// Everything here is a normal edit, so the automatic change detection makes it undoable.
+    /// </summary>
+    private bool PasteOverSelectedLines(List<SubtitleLineViewModel> selectedItems, string text)
+    {
+        var firstIndex = Subtitles.IndexOf(selectedItems[0]);
+        if (firstIndex < 0)
+        {
+            return false;
+        }
+
+        var clipboardSubtitle = SubtitleGridCopyPasteHelper.ParseClipboardSubtitle(text, SelectedSubtitleFormat);
+        if (clipboardSubtitle is { Paragraphs.Count: > 0 })
+        {
+            foreach (var item in selectedItems)
+            {
+                Subtitles.Remove(item);
+            }
+
+            // Nothing above the topmost selected row was removed, so it is still the row to insert
+            // at - even when the selection had holes in it (ctrl-click).
+            var insertedLines = new List<SubtitleLineViewModel>(clipboardSubtitle.Paragraphs.Count);
+            var index = firstIndex;
+            foreach (var p in clipboardSubtitle.Paragraphs)
+            {
+                var line = new SubtitleLineViewModel(p, SelectedSubtitleFormat);
+                Subtitles.Insert(index, line);
+                insertedLines.Add(line);
+                index++;
+            }
+
+            Renumber();
+            SelectAndScrollToRange(firstIndex, firstIndex + insertedLines.Count - 1);
+            ShowStatus(string.Format(Se.Language.Main.PastedXLinesOverSelectedLines, insertedLines.Count));
+            return true;
+        }
+
+        var lines = text.SplitToLines();
+        // trailing blank lines are an artifact of the copy, not text to paste (same rule as the
+        // column paste); blank lines inside the block are kept, so the lines stay aligned with the
+        // rows they were translated from
+        var lastLineWithText = lines.FindLastIndex(p => !string.IsNullOrWhiteSpace(p));
+        if (lastLineWithText < 0)
+        {
+            return false;
+        }
+
+        var textLineCount = lastLineWithText + 1;
+        var count = Math.Min(textLineCount, selectedItems.Count);
+        for (var i = 0; i < count; i++)
+        {
+            selectedItems[i].Text = lines[i].Trim();
+        }
+
+        // Clipboard lines past the end of the selection are dropped rather than pushed into the
+        // lines below it, which the user did not select - say so instead of silently doing less.
+        ShowStatus(textLineCount > selectedItems.Count
+            ? string.Format(Se.Language.Main.PastedXOfYLinesOverSelectedLines, count, textLineCount)
+            : string.Format(Se.Language.Main.PastedXLinesOverSelectedLines, count));
+
+        return true;
     }
 
     [RelayCommand]
