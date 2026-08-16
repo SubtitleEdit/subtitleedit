@@ -13,6 +13,7 @@ public class CrispAsrEngineTests
     [InlineData(WhisperChoice.CrispAsrMega, typeof(CrispAsrMega), "mega-asr")]
     [InlineData(WhisperChoice.CrispAsrFunAsrNano, typeof(CrispAsrFunAsrNano), "funasr")]
     [InlineData(WhisperChoice.CrispAsrGigaAm, typeof(CrispAsrGigaAm), "gigaam")]
+    [InlineData(WhisperChoice.CrispAsrVoxtral, typeof(CrispAsrVoxtral), "voxtral")]
     public void TrySelectBackendChoice_SelectsPersistedCrispBackendChoice(string choice, Type backendType, string backendName)
     {
         var engine = new CrispAsrEngine();

@@ -65,6 +65,7 @@ public class SeAudioToText
     public string CommandLineParameterCrispAsrMossDiarize { get; set; } = "--max-len 50 --split-on-punct";
     public string CommandLineParameterCrispAsrSenseVoice { get; set; } = "--max-len 50 --split-on-punct";
     public string CommandLineParameterCrispAsrArk { get; set; } = "--max-len 50 --split-on-punct";
+    public string CommandLineParameterCrispAsrVoxtral { get; set; } = "--max-len 50 --split-on-punct";
     public string CrispAsrForcedAligner { get; set; } = "built-in";
 
     public string WhisperExtraSettingsHistory { get; set; } = string.Empty;
