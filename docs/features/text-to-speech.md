@@ -44,6 +44,21 @@ Some engines require additional configuration:
 - **Model** — Select the voice model
 - **Key file** — Browse for Google Cloud service account key file
 
+## Voice Cloning
+
+Several local engines can clone a voice from a reference recording. The first time you do this — when you import a reference recording, or generate speech with a cloned voice — Subtitle Edit shows a one-time dialog with the terms you are accepting. You have to tick the checkbox before you can continue.
+
+The points that matter:
+
+- Only clone a voice you have the right to use: your own, or one where the speaker has given permission. A voice is personal data and a personality right, so cloning without permission can be unlawful.
+- If you publish audio that imitates a real person, you must say that it is AI-generated. In the EU this is required by the AI Act (Regulation (EU) 2024/1689, article 50), which applies from 2 August 2026.
+- Subtitle Edit turns off the engine's spoken AI disclaimer, inaudible watermark and C2PA signature so the audio can be muxed into your video unchanged — so nothing marks the result as AI-generated for you.
+- Do not use a cloned voice to impersonate someone, or for fraud, harassment or deception.
+- The reference recording stays on your computer. Cloning runs locally and the audio is not uploaded anywhere.
+- Each speech model also has its own license, which may add further limits on commercial use.
+
+Declining just means "not now" — nothing is changed, the clone is refused, and you are asked again the next time. The answer is remembered per terms version, so you are asked again if the terms change.
+
 ## Local SE5 Engines
 
 ### Qwen3 TTS (CrispASR)

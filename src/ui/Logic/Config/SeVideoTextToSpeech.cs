@@ -85,6 +85,12 @@ public class SeVideoTextToSpeech
     // manifest, and refuses to clone a reference WAV at all.
     public bool AcceptVoiceCloning { get; set; }
 
+    // Version stamp of the voice-cloning terms the user accepted in the first-clone dialog, empty
+    // until then. Separate from AcceptVoiceCloning (which defaults on and predates the dialog) so
+    // the prompt can be shown once, and shown again if the terms change.
+    // See Features.Video.TextToSpeech.Engines.VoiceCloningConsent.
+    public string VoiceCloningConsent { get; set; }
+
     // Pro audio post-processing
     public bool ProAudioChainEnabled { get; set; }
 
@@ -180,6 +186,7 @@ public class SeVideoTextToSpeech
         GoogleApiKey = string.Empty;
         GoogleKeyFile = string.Empty;
         AcceptVoiceCloning = true;
+        VoiceCloningConsent = string.Empty;
         ProAudioChainEnabled = false;
         AudioDuckingEnabled = false;
         AudioDuckingOriginalVolume = 15;
