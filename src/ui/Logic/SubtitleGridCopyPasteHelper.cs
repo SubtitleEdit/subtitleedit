@@ -99,16 +99,47 @@ internal static class SubtitleGridCopyPasteHelper
     }
 
     /// <summary>
-    /// Pastes the clipboard content into <paramref name="subtitles"/> at <paramref name="index"/>
+    /// Parses clipboard text as a subtitle, or returns null when no format recognizes it - plain
+    /// text lines (translations copied out of a text document) end up here. Both the paste that
+    /// inserts lines and the paste that overwrites the selection have to tell those two apart, so
+    /// they ask the same question here (#13682).
+    /// </summary>
+    internal static Subtitle? ParseClipboardSubtitle(string? text, SubtitleFormat subtitleFormat)
+    {
+        if (string.IsNullOrEmpty(text))
+        {
+            return null;
+        }
+
+        var lines = text.SplitToLines();
+        var subtitle = Subtitle.Parse(lines, subtitleFormat.Extension);
+        if (subtitle == null)
+        {
+            return null;
+        }
+
+        if (subtitle.Paragraphs.Count > 0)
+        {
+            return subtitle;
+        }
+
+        foreach (SubtitleFormat item in SubtitleFormat.AllSubtitleFormats)
+        {
+            if (item.IsMine(lines, string.Empty))
+            {
+                item.LoadSubtitle(subtitle, lines, string.Empty);
+                return subtitle;
+            }
+        }
+
+        return null;
+    }
+
+    /// <summary>
+    /// Pastes <paramref name="text"/> into <paramref name="subtitles"/> at <paramref name="index"/>
     /// and returns the inserted lines in grid order (empty when nothing was pasted), so the caller
     /// can select and scroll to them like SE4 did (#13705).
     /// </summary>
-    internal static async Task<List<SubtitleLineViewModel>> Paste(Window window, ObservableCollection<SubtitleLineViewModel> subtitles, int index, SubtitleFormat subtitleFormat)
-    {
-        var text = await ClipboardHelper.GetTextAsync(window);
-        return PasteText(subtitles, index, subtitleFormat, text);
-    }
-
     internal static List<SubtitleLineViewModel> PasteText(ObservableCollection<SubtitleLineViewModel> subtitles, int index, SubtitleFormat subtitleFormat, string? text)
     {
         if (string.IsNullOrEmpty(text))
@@ -130,23 +161,14 @@ internal static class SubtitleGridCopyPasteHelper
         }
 
 
-        var lines = text.SplitToLines();
-        var subtitle = Subtitle.Parse(lines, subtitleFormat.Extension);
-        if (subtitle?.Paragraphs.Count > 0)
+        var clipboardSubtitle = ParseClipboardSubtitle(text, subtitleFormat);
+        if (clipboardSubtitle != null)
         {
-            return LoadParagraphs(subtitles, index, subtitleFormat, subtitle);
-        }
-
-        foreach (SubtitleFormat item in SubtitleFormat.AllSubtitleFormats)
-        {
-            if (item.IsMine(lines, string.Empty) && subtitle != null)
-            {
-                item.LoadSubtitle(subtitle, lines, string.Empty);
-                return LoadParagraphs(subtitles, index, subtitleFormat, subtitle);
-            }
+            return LoadParagraphs(subtitles, index, subtitleFormat, clipboardSubtitle);
         }
 
         // fallback - plain text
+        var lines = text.SplitToLines();
         var insertedLines = new List<SubtitleLineViewModel>();
         foreach (var line in lines)
         {
