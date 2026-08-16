@@ -85,6 +85,13 @@ public partial class DownloadTtsViewModel : ObservableObject
     private readonly IQwen3TtsCrispAsrDownloadService _qwen3TtsCrispAsrDownloadService;
     private readonly IVibeVoiceCrispAsrDownloadService _vibeVoiceCrispAsrDownloadService;
     private readonly IIndexTtsCrispAsrDownloadService _indexTtsCrispAsrDownloadService;
+    private readonly IIndexTts25AudioCppDownloadService _indexTts25AudioCppDownloadService;
+    private Task? _downloadTaskIndexTts25AudioCppEngine;
+    private Task? _downloadTaskIndexTts25AudioCppModels;
+    private readonly MemoryStream _downloadStreamIndexTts25AudioCppEngine;
+    private readonly MemoryStream _downloadStreamIndexTts25AudioCppVoices;
+    private Task? _downloadTaskIndexTts25AudioCppVoices;
+    private string _indexTts25AudioCppBackend = IndexTts25AudioCppDownloadService.BackendCpu;
     private readonly ICosyVoice3CrispAsrDownloadService _cosyVoice3CrispAsrDownloadService;
     private readonly IF5TtsCrispAsrDownloadService _f5TtsCrispAsrDownloadService;
     private readonly IVoxCPM2CrispAsrDownloadService _voxCPM2CrispAsrDownloadService;
@@ -121,6 +128,7 @@ public partial class DownloadTtsViewModel : ObservableObject
         IQwen3TtsCrispAsrDownloadService qwen3TtsCrispAsrDownloadService,
         IVibeVoiceCrispAsrDownloadService vibeVoiceCrispAsrDownloadService,
         IIndexTtsCrispAsrDownloadService indexTtsCrispAsrDownloadService,
+        IIndexTts25AudioCppDownloadService indexTts25AudioCppDownloadService,
         ICosyVoice3CrispAsrDownloadService cosyVoice3CrispAsrDownloadService,
         IF5TtsCrispAsrDownloadService f5TtsCrispAsrDownloadService,
         IVoxCPM2CrispAsrDownloadService voxCPM2CrispAsrDownloadService,
@@ -136,6 +144,9 @@ public partial class DownloadTtsViewModel : ObservableObject
         _qwen3TtsCrispAsrDownloadService = qwen3TtsCrispAsrDownloadService;
         _vibeVoiceCrispAsrDownloadService = vibeVoiceCrispAsrDownloadService;
         _indexTtsCrispAsrDownloadService = indexTtsCrispAsrDownloadService;
+        _indexTts25AudioCppDownloadService = indexTts25AudioCppDownloadService;
+        _downloadStreamIndexTts25AudioCppEngine = new MemoryStream();
+        _downloadStreamIndexTts25AudioCppVoices = new MemoryStream();
         _cosyVoice3CrispAsrDownloadService = cosyVoice3CrispAsrDownloadService;
         _f5TtsCrispAsrDownloadService = f5TtsCrispAsrDownloadService;
         _voxCPM2CrispAsrDownloadService = voxCPM2CrispAsrDownloadService;
@@ -772,6 +783,172 @@ public partial class DownloadTtsViewModel : ObservableObject
                 }
                 OkPressed = true;
                 Close();
+            }
+
+            if (_downloadTaskIndexTts25AudioCppEngine is { IsCompletedSuccessfully: true })
+            {
+                _timer.Stop();
+
+                if (_downloadStreamIndexTts25AudioCppEngine.Length == 0)
+                {
+                    ProgressText = Se.Language.General.DownloadFailed;
+                    Error = Se.Language.General.NoDataReceived;
+                    return;
+                }
+
+                var folder = IndexTts25AudioCpp.GetSetEngineFolder();
+                try
+                {
+                    _downloadStreamIndexTts25AudioCppEngine.Position = 0;
+                    // Our archives are flat (binaries, LICENSE, BUILD-INFO.txt at the root) on
+                    // every platform, so no folder level to skip.
+                    _zipUnpacker.UnpackZipStream(_downloadStreamIndexTts25AudioCppEngine, folder, string.Empty, false, new List<string>(), null);
+                    WriteInstalledHashSidecar(folder, _downloadStreamIndexTts25AudioCppEngine, DownloadHashManager.ResolveIndexTts25AudioCppKey(_indexTts25AudioCppBackend));
+                    _downloadStreamIndexTts25AudioCppEngine.Dispose();
+                }
+                catch (Exception ex)
+                {
+                    ProgressText = string.Format(Se.Language.General.UnpackFailed, ex.Message);
+                    Error = ex.Message;
+                    Se.LogError(ex);
+                    return;
+                }
+
+                var serverPath = IndexTts25AudioCpp.GetServerExecutable();
+                if (OperatingSystem.IsLinux())
+                {
+                    if (File.Exists(serverPath))
+                    {
+                        LinuxHelper.MakeExecutable(serverPath);
+                    }
+                }
+                else if (OperatingSystem.IsMacOS())
+                {
+                    if (File.Exists(serverPath))
+                    {
+                        MacHelper.MakeExecutable(serverPath);
+                    }
+                }
+
+                _downloadTaskIndexTts25AudioCppEngine = null;
+                OkPressed = true;
+                Close();
+                return;
+            }
+
+            if (_downloadTaskIndexTts25AudioCppEngine is { IsFaulted: true })
+            {
+                _timer.Stop();
+                var ex = _downloadTaskIndexTts25AudioCppEngine.Exception?.InnerException ?? _downloadTaskIndexTts25AudioCppEngine.Exception;
+                if (ex is OperationCanceledException)
+                {
+                    ProgressText = Se.Language.General.DownloadCanceled;
+                    Close();
+                }
+                else
+                {
+                    ProgressText = Se.Language.General.DownloadFailed;
+                    Error = ex?.Message ?? Se.Language.General.UnknownError;
+                }
+
+                return;
+            }
+
+            if (_downloadTaskIndexTts25AudioCppModels is { IsCompletedSuccessfully: true })
+            {
+                _timer.Stop();
+                _downloadTaskIndexTts25AudioCppModels = null;
+
+                // Chain the shared reference-voice pack (the same voices.zip the other cloning
+                // engines use), so the voice combo is not empty on first run — this engine can
+                // only clone, it has no built-in voices.
+                var voicesFolder = IndexTts25AudioCpp.GetSetVoicesFolder();
+                var voicesAlreadyInstalled = Directory.Exists(voicesFolder)
+                    && Directory.EnumerateFiles(voicesFolder, "*.wav").Any();
+                if (voicesAlreadyInstalled)
+                {
+                    OkPressed = true;
+                    Close();
+                    return;
+                }
+
+                TitleText = string.Format(Se.Language.General.DownloadingX, "IndexTTS 2.5 reference voices");
+                ProgressValue = 0;
+                ProgressText = Se.Language.General.StartingDotDotDot;
+                var voicesProgress = new Progress<float>(number =>
+                {
+                    var percentage = (int)Math.Round(number * 100.0, MidpointRounding.AwayFromZero);
+                    var pctString = percentage.ToString(CultureInfo.InvariantCulture);
+                    ProgressValue = percentage;
+                    ProgressText = string.Format(Se.Language.General.DownloadingXPercent, pctString);
+                });
+                _downloadTaskIndexTts25AudioCppVoices = _qwen3TtsCppDownloadService.DownloadVoices(
+                    _downloadStreamIndexTts25AudioCppVoices, voicesProgress, _cancellationTokenSource.Token);
+                _timer.Start();
+                return;
+            }
+
+            if (_downloadTaskIndexTts25AudioCppVoices is { IsCompletedSuccessfully: true })
+            {
+                _timer.Stop();
+                _downloadTaskIndexTts25AudioCppVoices = null;
+                if (_downloadStreamIndexTts25AudioCppVoices.Length > 0)
+                {
+                    var voicesFolder = IndexTts25AudioCpp.GetSetVoicesFolder();
+                    try
+                    {
+                        _downloadStreamIndexTts25AudioCppVoices.Position = 0;
+                        _zipUnpacker.UnpackZipStream(_downloadStreamIndexTts25AudioCppVoices, voicesFolder, string.Empty, false, new List<string>(), null);
+                        // The pack ships at 16 kHz; IndexTTS clones from 24 kHz references.
+                        ResampleVoicesTo24kHz(voicesFolder);
+                    }
+                    catch (Exception ex)
+                    {
+                        Se.LogError(ex);
+                    }
+
+                    _downloadStreamIndexTts25AudioCppVoices.Dispose();
+                }
+
+                OkPressed = true;
+                Close();
+                return;
+            }
+
+            if (_downloadTaskIndexTts25AudioCppVoices is { IsFaulted: true })
+            {
+                _timer.Stop();
+                _downloadTaskIndexTts25AudioCppVoices = null;
+                if (_cancellationTokenSource.IsCancellationRequested)
+                {
+                    ProgressText = Se.Language.General.DownloadCanceled;
+                    Close();
+                    return;
+                }
+
+                // A missing voice pack is not fatal — the model is already installed and the
+                // user can import their own reference WAV.
+                OkPressed = true;
+                Close();
+                return;
+            }
+
+            if (_downloadTaskIndexTts25AudioCppModels is { IsFaulted: true })
+            {
+                _timer.Stop();
+                var ex = _downloadTaskIndexTts25AudioCppModels.Exception?.InnerException ?? _downloadTaskIndexTts25AudioCppModels.Exception;
+                if (ex is OperationCanceledException)
+                {
+                    ProgressText = Se.Language.General.DownloadCanceled;
+                    Close();
+                }
+                else
+                {
+                    ProgressText = Se.Language.General.DownloadFailed;
+                    Error = ex?.Message ?? Se.Language.General.UnknownError;
+                }
+
+                return;
             }
 
             if (_downloadTaskIndexTtsCrispAsrModels is { IsCompletedSuccessfully: true })
@@ -1900,6 +2077,51 @@ public partial class DownloadTtsViewModel : ObservableObject
 
         _downloadTaskIndexTtsCrispAsrModels =
             _indexTtsCrispAsrDownloadService.DownloadModels(IndexTtsCrispAsr.GetSetModelsFolder(), resolved, downloadProgress, titleProgress, _cancellationTokenSource.Token);
+    }
+
+    /// <summary>
+    /// Downloads the audio.cpp engine archive for the picked backend. The archives are
+    /// .tar.gz on macOS/Linux and .zip on Windows; UnpackZipStream sniffs the gzip magic and
+    /// picks the right reader, so both go through the same call.
+    /// </summary>
+    public void StartDownloadIndexTts25AudioCppEngine(string backend)
+    {
+        _indexTts25AudioCppBackend = backend;
+        TitleText = string.Format(Se.Language.General.DownloadingX, $"audio.cpp ({backend})");
+
+        var downloadProgress = new Progress<float>(number =>
+        {
+            var percentage = (int)Math.Round(number * 100.0, MidpointRounding.AwayFromZero);
+            var pctString = percentage.ToString(CultureInfo.InvariantCulture);
+            ProgressValue = percentage;
+            ProgressText = string.Format(Se.Language.General.DownloadingXPercent, pctString);
+        });
+
+        _downloadTaskIndexTts25AudioCppEngine =
+            _indexTts25AudioCppDownloadService.DownloadEngine(_downloadStreamIndexTts25AudioCppEngine, backend, downloadProgress, _cancellationTokenSource.Token);
+    }
+
+    public void StartDownloadIndexTts25AudioCppModels(string? modelKey = null)
+    {
+        var resolved = IndexTts25AudioCpp.ResolveModelKey(modelKey);
+        var fileName = IndexTts25AudioCpp.GetModelFileName(resolved);
+        TitleText = string.Format(Se.Language.General.DownloadingX, $"IndexTTS 2.5 model ({resolved}): {fileName}");
+
+        var downloadProgress = new Progress<float>(number =>
+        {
+            var percentage = (int)Math.Round(number * 100.0, MidpointRounding.AwayFromZero);
+            var pctString = percentage.ToString(CultureInfo.InvariantCulture);
+            ProgressValue = percentage;
+            ProgressText = string.Format(Se.Language.General.DownloadingXPercent, pctString);
+        });
+
+        var titleProgress = new Action<string>(title =>
+        {
+            Dispatcher.UIThread.Post(() => TitleText = title);
+        });
+
+        _downloadTaskIndexTts25AudioCppModels =
+            _indexTts25AudioCppDownloadService.DownloadModels(resolved, downloadProgress, titleProgress, _cancellationTokenSource.Token);
     }
 
     public void StartDownloadZonosTtsCrispAsrModels()

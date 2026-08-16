@@ -25,6 +25,7 @@ using Nikse.SubtitleEdit.Features.Video.TextToSpeech.OmniVoiceCrispAsrSettings;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.VoxCPM2CrispAsrSettings;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.MossTtsCrispAsrSettings;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.IndexTtsCrispAsrSettings;
+using Nikse.SubtitleEdit.Features.Video.TextToSpeech.IndexTts25AudioCppSettings;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.KokoroTtsSettings;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.PiperSettings;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.OmniVoiceSettings;
@@ -224,6 +225,11 @@ public partial class TextToSpeechViewModel : ObservableObject
             // new VibeVoiceCrispAsr(),
             
             new IndexTtsCrispAsr(),
+
+            // IndexTTS 2.5 on the audio.cpp runtime (not CrispASR): 5 languages, emotion
+            // control and speaking-rate control, with a per-request reference voice so the
+            // server is not restarted when the voice changes.
+            new IndexTts25AudioCpp(),
             
             // F5-TTS (CrispASR) hidden: CrispASR 0.6.12 has no GPU backend for f5-tts, so
             // synthesis runs the fixed 32-step Euler ODE through a 22-layer DiT + Vocos on
@@ -405,6 +411,10 @@ public partial class TextToSpeechViewModel : ObservableObject
         else if (SelectedEngine is IndexTtsCrispAsr)
         {
             Se.Settings.Video.TextToSpeech.IndexTtsCrispAsrModel = SelectedModel ?? IndexTtsCrispAsr.DefaultModelKey;
+        }
+        else if (SelectedEngine is IndexTts25AudioCpp)
+        {
+            Se.Settings.Video.TextToSpeech.IndexTts25AudioCppModel = SelectedModel ?? IndexTts25AudioCpp.DefaultModelKey;
         }
         else if (SelectedEngine is CosyVoice3CrispAsr)
         {
@@ -1152,6 +1162,10 @@ public partial class TextToSpeechViewModel : ObservableObject
         {
             IndexTtsCrispAsr.StopServer();
         }
+        if (keepAlive is not IndexTts25AudioCpp)
+        {
+            IndexTts25AudioCpp.StopServer();
+        }
         if (keepAlive is not CosyVoice3CrispAsr)
         {
             CosyVoice3CrispAsr.StopServer();
@@ -1347,62 +1361,7 @@ public partial class TextToSpeechViewModel : ObservableObject
     [RelayCommand]
     private async Task ShowEngineSettings()
     {
-        if (SelectedEngine is OmniVoiceTtsCpp)
-        {
-            await _windowService.ShowDialogAsync<OmniVoiceSettingsWindow, OmniVoiceSettingsViewModel>(Window!, vm => vm.Initialize());
-        }
-        else if (SelectedEngine is Qwen3TtsCpp)
-        {
-            await _windowService.ShowDialogAsync<Qwen3TtsSettingsWindow, Qwen3TtsSettingsViewModel>(Window!, vm => vm.Initialize());
-        }
-        else if (SelectedEngine is Qwen3TtsCrispAsr)
-        {
-            await _windowService.ShowDialogAsync<Qwen3TtsCrispAsrSettingsWindow, Qwen3TtsCrispAsrSettingsViewModel>(Window!, vm => vm.Initialize());
-        }
-        else if (SelectedEngine is VibeVoiceCrispAsr)
-        {
-            await _windowService.ShowDialogAsync<VibeVoiceCrispAsrSettingsWindow, VibeVoiceCrispAsrSettingsViewModel>(Window!, vm => vm.Initialize());
-        }
-        else if (SelectedEngine is IndexTtsCrispAsr)
-        {
-            await _windowService.ShowDialogAsync<IndexTtsCrispAsrSettingsWindow, IndexTtsCrispAsrSettingsViewModel>(Window!, vm => vm.Initialize());
-        }
-        else if (SelectedEngine is CosyVoice3CrispAsr)
-        {
-            await _windowService.ShowDialogAsync<CosyVoice3CrispAsrSettingsWindow, CosyVoice3CrispAsrSettingsViewModel>(Window!, vm => vm.Initialize());
-        }
-        else if (SelectedEngine is F5TtsCrispAsr)
-        {
-            await _windowService.ShowDialogAsync<F5TtsCrispAsrSettingsWindow, F5TtsCrispAsrSettingsViewModel>(Window!, vm => vm.Initialize());
-        }
-        else if (SelectedEngine is OmniVoiceCrispAsr)
-        {
-            await _windowService.ShowDialogAsync<OmniVoiceCrispAsrSettingsWindow, OmniVoiceCrispAsrSettingsViewModel>(Window!, vm => vm.Initialize());
-        }
-        else if (SelectedEngine is VoxCPM2CrispAsr)
-        {
-            await _windowService.ShowDialogAsync<VoxCPM2CrispAsrSettingsWindow, VoxCPM2CrispAsrSettingsViewModel>(Window!, vm => vm.Initialize());
-        }
-        else if (SelectedEngine is MossTtsCrispAsr)
-        {
-            await _windowService.ShowDialogAsync<MossTtsCrispAsrSettingsWindow, MossTtsCrispAsrSettingsViewModel>(Window!, vm => vm.Initialize());
-        }
-        else if (SelectedEngine is KokoroTtsCpp)
-        {
-            await _windowService.ShowDialogAsync<KokoroTtsSettingsWindow, KokoroTtsSettingsViewModel>(Window!, vm => vm.Initialize());
-        }
-        else if (SelectedEngine is ChatterboxTtsCpp)
-        {
-            await _windowService.ShowDialogAsync<ChatterboxTtsSettingsWindow, ChatterboxTtsSettingsViewModel>(Window!, vm => vm.Initialize());
-        }
-        else if (SelectedEngine is Piper)
-        {
-            await _windowService.ShowDialogAsync<PiperSettingsWindow, PiperSettingsViewModel>(Window!, vm => vm.Initialize());
-        }
-        else
-        {
-            await _windowService.ShowDialogAsync<ElevenLabsSettingsWindow, ElevenLabsSettingsViewModel>(Window!, vm => { });
-        }
+        await TtsEngineSettingsDialog.ShowAsync(SelectedEngine, Window!, _windowService);
 
         // An engine may have been (re)downloaded inside its settings dialog - re-check the
         // install-status dots in the engine and model combos.
@@ -1469,6 +1428,9 @@ public partial class TextToSpeechViewModel : ObservableObject
                 break;
             case IndexTtsCrispAsr:
                 await _windowService.ShowDialogAsync<DownloadTtsWindow, DownloadTtsViewModel>(Window!, vm => vm.StartDownloadIndexTtsCrispAsrModels(IndexTtsCrispAsr.ResolveModelKey(SelectedModel)));
+                break;
+            case IndexTts25AudioCpp:
+                await _windowService.ShowDialogAsync<DownloadTtsWindow, DownloadTtsViewModel>(Window!, vm => vm.StartDownloadIndexTts25AudioCppModels(IndexTts25AudioCpp.ResolveModelKey(SelectedModel)));
                 break;
             case CosyVoice3CrispAsr:
                 await _windowService.ShowDialogAsync<DownloadTtsWindow, DownloadTtsViewModel>(Window!, vm => vm.StartDownloadCosyVoice3CrispAsrModels(CosyVoice3CrispAsr.ResolveModelKey(SelectedModel)));
@@ -1538,6 +1500,9 @@ public partial class TextToSpeechViewModel : ObservableObject
                 ? DownloadDotStatus.UpToDate
                 : DownloadDotStatus.NotInstalled,
             IndexTtsCrispAsr => IndexTtsCrispAsr.AreModelsInstalled(modelKey)
+                ? DownloadDotStatus.UpToDate
+                : DownloadDotStatus.NotInstalled,
+            IndexTts25AudioCpp => IndexTts25AudioCpp.AreModelsInstalled(modelKey)
                 ? DownloadDotStatus.UpToDate
                 : DownloadDotStatus.NotInstalled,
             CosyVoice3CrispAsr => CosyVoice3CrispAsr.AreModelsInstalled(modelKey)
@@ -3507,6 +3472,16 @@ public partial class TextToSpeechViewModel : ObservableObject
             else if (SelectedEngine is IndexTtsCrispAsr)
             {
                 SelectedModel = Models.FirstOrDefault(p => p == Se.Settings.Video.TextToSpeech.IndexTtsCrispAsrModel);
+                if (string.IsNullOrEmpty(SelectedModel))
+                {
+                    SelectedModel = Models.FirstOrDefault();
+                }
+                IsEngineSettingsVisible = true;
+                IsModelDownloadVisible = true;
+            }
+            else if (SelectedEngine is IndexTts25AudioCpp)
+            {
+                SelectedModel = Models.FirstOrDefault(p => p == Se.Settings.Video.TextToSpeech.IndexTts25AudioCppModel);
                 if (string.IsNullOrEmpty(SelectedModel))
                 {
                     SelectedModel = Models.FirstOrDefault();

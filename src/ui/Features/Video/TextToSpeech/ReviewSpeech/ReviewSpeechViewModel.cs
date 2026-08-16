@@ -59,6 +59,9 @@ public partial class ReviewSpeechViewModel : ObservableObject
     [ObservableProperty] private bool _isPlayVisible;
     [ObservableProperty] private bool _isStopVisible;
     [ObservableProperty] private bool _isElevenLabsEngineV3Selected;
+    // Whether the picked engine has a settings dialog. The knobs in there (emotion, speed,
+    // instruction) change how a regenerated line sounds, so they belong next to Regenerate.
+    [ObservableProperty] private bool _isEngineSettingsVisible;
     [ObservableProperty] private double _stability;
     [ObservableProperty] private double _similarity;
     [ObservableProperty] private double _speakerBoost;
@@ -1343,6 +1346,17 @@ public partial class ReviewSpeechViewModel : ObservableObject
     // voice/model/instruction with the engine's defaults.
     private bool _suppressEngineRefreshDispatch;
 
+    [RelayCommand]
+    private async Task ShowEngineSettings()
+    {
+        if (Window == null)
+        {
+            return;
+        }
+
+        await TtsEngineSettingsDialog.ShowAsync(SelectedEngine, Window, _windowService);
+    }
+
     public void SelectedEngineChanged()
     {
         if (_suppressEngineRefreshDispatch)
@@ -1359,6 +1373,7 @@ public partial class ReviewSpeechViewModel : ObservableObject
     public async Task SelectedEngineChangedAsync()
     {
         var engine = SelectedEngine;
+        IsEngineSettingsVisible = TtsEngineSettingsDialog.HasSettings(engine);
         if (engine == null)
         {
             return;
