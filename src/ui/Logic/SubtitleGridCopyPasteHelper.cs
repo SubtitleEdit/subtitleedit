@@ -98,12 +98,22 @@ internal static class SubtitleGridCopyPasteHelper
         return text;
     }
 
-    internal static async Task Paste(Window window, ObservableCollection<SubtitleLineViewModel> subtitles, int index, SubtitleFormat subtitleFormat)
+    /// <summary>
+    /// Pastes the clipboard content into <paramref name="subtitles"/> at <paramref name="index"/>
+    /// and returns the inserted lines in grid order (empty when nothing was pasted), so the caller
+    /// can select and scroll to them like SE4 did (#13705).
+    /// </summary>
+    internal static async Task<List<SubtitleLineViewModel>> Paste(Window window, ObservableCollection<SubtitleLineViewModel> subtitles, int index, SubtitleFormat subtitleFormat)
     {
         var text = await ClipboardHelper.GetTextAsync(window);
+        return PasteText(subtitles, index, subtitleFormat, text);
+    }
+
+    internal static List<SubtitleLineViewModel> PasteText(ObservableCollection<SubtitleLineViewModel> subtitles, int index, SubtitleFormat subtitleFormat, string? text)
+    {
         if (string.IsNullOrEmpty(text))
         {
-            return;
+            return new List<SubtitleLineViewModel>();
         }
 
         var addTimeMilliseconds = (double)0;
@@ -124,8 +134,7 @@ internal static class SubtitleGridCopyPasteHelper
         var subtitle = Subtitle.Parse(lines, subtitleFormat.Extension);
         if (subtitle?.Paragraphs.Count > 0)
         {
-            LoadParagraphs(subtitles, index, subtitleFormat, subtitle);
-            return;
+            return LoadParagraphs(subtitles, index, subtitleFormat, subtitle);
         }
 
         foreach (SubtitleFormat item in SubtitleFormat.AllSubtitleFormats)
@@ -133,12 +142,12 @@ internal static class SubtitleGridCopyPasteHelper
             if (item.IsMine(lines, string.Empty) && subtitle != null)
             {
                 item.LoadSubtitle(subtitle, lines, string.Empty);
-                LoadParagraphs(subtitles, index, subtitleFormat, subtitle);
-                return;
+                return LoadParagraphs(subtitles, index, subtitleFormat, subtitle);
             }
         }
 
         // fallback - plain text
+        var insertedLines = new List<SubtitleLineViewModel>();
         foreach (var line in lines)
         {
             if (!string.IsNullOrWhiteSpace(line))
@@ -150,18 +159,26 @@ internal static class SubtitleGridCopyPasteHelper
                     Text = line.Trim()
                 };
                 subtitles.Insert(index, p);
+                insertedLines.Add(p);
                 index++;
                 addTimeMilliseconds += Se.Settings.General.NewEmptyDefaultMs + Se.Settings.General.MinimumBetweenLines.GetMilliseconds();
             }
         }
+
+        return insertedLines;
     }
 
-    private static void LoadParagraphs(ObservableCollection<SubtitleLineViewModel> subtitles, int index, SubtitleFormat subtitleFormat, Subtitle subtitle)
+    private static List<SubtitleLineViewModel> LoadParagraphs(ObservableCollection<SubtitleLineViewModel> subtitles, int index, SubtitleFormat subtitleFormat, Subtitle subtitle)
     {
+        var insertedLines = new List<SubtitleLineViewModel>(subtitle.Paragraphs.Count);
         foreach (var p in subtitle.Paragraphs)
         {
-            subtitles.Insert(index, new SubtitleLineViewModel(p, subtitleFormat));
+            var line = new SubtitleLineViewModel(p, subtitleFormat);
+            subtitles.Insert(index, line);
+            insertedLines.Add(line);
             index++;
         }
+
+        return insertedLines;
     }
 }

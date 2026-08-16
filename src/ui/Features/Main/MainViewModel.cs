@@ -16679,8 +16679,20 @@ public partial class MainViewModel :
             idx = Subtitles.Count;
         }
 
-        await SubtitleGridCopyPasteHelper.Paste(Window, Subtitles, idx, SelectedSubtitleFormat);
+        var pastedLines = await SubtitleGridCopyPasteHelper.Paste(Window, Subtitles, idx, SelectedSubtitleFormat);
         Renumber();
+
+        // Select the pasted lines and scroll them into view, like SE4 - otherwise the selection
+        // (and with it the edit box) stayed on the line selected before the paste (#13705).
+        if (pastedLines.Count > 0)
+        {
+            var firstIndex = Subtitles.IndexOf(pastedLines[0]);
+            if (firstIndex >= 0)
+            {
+                SelectAndScrollToRange(firstIndex, firstIndex + pastedLines.Count - 1);
+            }
+        }
+
         _updateAudioVisualizer = true;
         _shortcutManager.ClearKeys();
     }
@@ -17458,6 +17470,59 @@ public partial class MainViewModel :
                 {
                     Dispatcher.UIThread.Post(() => TableViewExtras.FocusRow(SubtitleGrid));
                 }
+            }
+        });
+    }
+
+    /// <summary>
+    /// Selects a contiguous block of rows - e.g. everything a paste just inserted - and scrolls
+    /// the first of them into view, leaving that row as the current one so the edit box shows it.
+    /// </summary>
+    private void SelectAndScrollToRange(int startIndex, int endIndex)
+    {
+        if (startIndex < 0 || startIndex >= Subtitles.Count)
+        {
+            return;
+        }
+
+        endIndex = Math.Clamp(endIndex, startIndex, Subtitles.Count - 1);
+        if (endIndex == startIndex)
+        {
+            SelectAndScrollToRow(startIndex);
+            return;
+        }
+
+        _shiftSelectAnchorIndex = -1;
+        _shiftSelectCurrentIndex = -1;
+
+        // The first pasted row goes in first so it becomes the SelectedItem (the row the edit
+        // box shows), then the rest of the block is added to the selection.
+        SelectGridRange(startIndex, endIndex, startIndex);
+        SubtitleGridSelectionChanged();
+
+        // Avalonia keeps the caret index when the bound text changes - same reset as
+        // SelectAndScrollToRow (#12707), as the edit box now shows another line.
+        EditTextBox.CaretIndex = 0;
+        EditTextBoxOriginal.CaretIndex = 0;
+
+        var itemToScroll = Subtitles[startIndex];
+        Dispatcher.UIThread.Post(() =>
+        {
+            if (!Subtitles.Contains(itemToScroll))
+            {
+                return;
+            }
+
+            TableViewExtras.PrePositionScroll(SubtitleGrid, Subtitles.IndexOf(itemToScroll));
+            SubtitleGrid.ScrollIntoView(itemToScroll);
+
+            if (Se.Settings.General.SubtitleGridCenterSelectedRow)
+            {
+                CenterSelectedRowInSubtitleGrid(itemToScroll);
+            }
+            else
+            {
+                EnsureRowFullyVisibleInSubtitleGrid(itemToScroll);
             }
         });
     }
