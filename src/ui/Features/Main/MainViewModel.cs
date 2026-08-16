@@ -19172,6 +19172,11 @@ public partial class MainViewModel :
             }
         }
 
+        // ffmpeg leaves BlockDuration unset (or "unknown") on VobSub tracks it muxes, which
+        // left every pack ending where it started; the sub picture's own stop-display delay
+        // is the real duration. Same repair the .sub/.idx path does.
+        VobSubParser.FixPackTimes(mergedVobSubPacks);
+
         Dispatcher.UIThread.Post(async () =>
         {
             var result = await ShowDialogAsync<OcrWindow, OcrViewModel>(vm => { vm.Initialize(mergedVobSubPacks, idx.Palette, matroskaSubtitleInfo, fileName); });

@@ -107,6 +107,31 @@ public class Mp4EditListTest
         }
     }
 
+    /// <summary>
+    /// QuickTime's "unspecified language" is 0x7FFF, which ffmpeg writes on every track of a
+    /// .mov. Unpacked as a language code it is three DEL characters, which used to reach the
+    /// track picker and (via seconv) output file names.
+    /// </summary>
+    [Theory]
+    [InlineData(0x7FFF)] // QuickTime "unspecified"
+    [InlineData(0x0000)] // all-zero packing unpacks to three backticks
+    public void Iso639ThreeLetterCode_UnspecifiedLanguage_IsEmptyNotControlCharacters(int packedLanguage)
+    {
+        var tempFile = Path.GetTempFileName();
+        try
+        {
+            File.WriteAllBytes(tempFile, BuildTx3gMp4((ushort)packedLanguage));
+            var parser = new MP4Parser(tempFile);
+            var mdhd = parser.GetSubtitleTracks()[0].Mdia.Mdhd;
+            Assert.Equal(string.Empty, mdhd.Iso639ThreeLetterCode);
+            Assert.Equal("Any", mdhd.LanguageString);
+        }
+        finally
+        {
+            File.Delete(tempFile);
+        }
+    }
+
     private static List<Paragraph> ParseWithEditList(params byte[][] editEntries)
     {
         var tempFile = Path.GetTempFileName();

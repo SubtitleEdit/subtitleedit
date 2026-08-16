@@ -50,8 +50,17 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
             var x1 = (char)languageByte1;
             var x2 = (char)languageByte2;
             var x3 = (char)languageByte3;
-            Iso639ThreeLetterCode = x1.ToString(CultureInfo.InvariantCulture) + x2.ToString(CultureInfo.InvariantCulture) + x3.ToString(CultureInfo.InvariantCulture);
+
+            // QuickTime writes 0x7FFF for "unspecified" (ffmpeg does this for every .mov track),
+            // which unpacks to three DEL characters. Anything that is not three lowercase
+            // letters is not a language code - report it as absent so callers fall back
+            // instead of showing, and putting in file names, control characters.
+            Iso639ThreeLetterCode = IsLowerCaseLetter(x1) && IsLowerCaseLetter(x2) && IsLowerCaseLetter(x3)
+                ? x1.ToString(CultureInfo.InvariantCulture) + x2.ToString(CultureInfo.InvariantCulture) + x3.ToString(CultureInfo.InvariantCulture)
+                : string.Empty;
         }
+
+        private static bool IsLowerCaseLetter(char c) => c >= 'a' && c <= 'z';
 
         public string LanguageString
         {

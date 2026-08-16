@@ -684,7 +684,14 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Matroska
                             var duration = ReadUIntAsLong(_stream, _buffer, element.DataSize);
                             if (subtitle != null)
                             {
-                                subtitle.Duration = (long)Math.Round(GetTimeScaledToMilliseconds(duration, _timeCodeScale));
+                                // ffmpeg writes an all-ones BlockDuration (its "unknown" marker) for
+                                // image subtitle tracks it has no duration for, which reads back as a
+                                // negative tick count - treat anything nonsensical as unknown (0) so
+                                // GetSubtitle can derive the end time instead of going backwards.
+                                var scaled = duration < 0
+                                    ? 0
+                                    : (long)Math.Round(GetTimeScaledToMilliseconds(duration, _timeCodeScale));
+                                subtitle.Duration = scaled < 0 ? 0 : scaled;
                             }
                             break;
                         default:
@@ -751,9 +758,12 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Matroska
                 _subtitleRipLoaded = true;
             }
 
-            return _subtitleRipByTrackNumber.TryGetValue(trackNumber, out var subtitles)
-                ? subtitles
-                : new List<MatroskaSubtitle>();
+            if (!_subtitleRipByTrackNumber.TryGetValue(trackNumber, out var subtitles))
+            {
+                return new List<MatroskaSubtitle>();
+            }
+
+            return subtitles;
         }
 
         private void EnsureSubtitleTrackNumbers()

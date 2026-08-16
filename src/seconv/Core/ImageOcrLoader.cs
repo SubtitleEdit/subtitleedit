@@ -171,6 +171,16 @@ internal static class ImageOcrLoader
     }
 
     /// <summary>
+    /// DVB subtitle MKV track (codec <c>S_DVBSUB</c>) → text via the configured OCR engine, or
+    /// time codes only when <see cref="ConversionOptions.TimeCodesOnly"/> is set.
+    /// </summary>
+    public static Subtitle LoadMatroskaDvbSub(MatroskaFile matroska, MatroskaTrackInfo track, ConversionOptions options)
+    {
+        var items = BitmapSubtitleLoader.LoadMatroskaDvbSub(matroska, track);
+        return OcrBitmapItems(items, options, $"{items.Count} MKV DVB-sub image(s) (track #{track.TrackNumber})");
+    }
+
+    /// <summary>
     /// VobSub MP4 track (handler <c>subp</c>) → text via the configured OCR engine, or time
     /// codes only when <see cref="ConversionOptions.TimeCodesOnly"/> is set.
     /// </summary>
