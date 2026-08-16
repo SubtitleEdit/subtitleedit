@@ -297,12 +297,17 @@ public static class DownloadHashManager
 
         // Hashes of the unpacked main executable (whisper-cli / whisper-cli.exe) — used to detect
         // the installed version when no sidecar is present (e.g. installs from older SE builds).
-        // Linux Vulkan and Linux CUDA produce identical whisper-cli binaries (the backend lives in
-        // libggml-*.so), so executable-hash fallback is intentionally Windows + Mac only.
+        // The Linux Vulkan and CUDA builds shipped an identical whisper-cli up to v1.8.4 (the
+        // backend lives in libggml-*.so), and they have differed since v1.8.5. Either way the
+        // lookup is unambiguous: the key comes from the engine choice being asked about, and each
+        // backend has its own install folder, so a hash shared by both lists is simply listed
+        // under both.
         public const string WindowsBlasExecutable = "WhisperCpp.Windows.Blas.Executable";
         public const string WindowsCuBlasExecutable = "WhisperCpp.Windows.CuBlas.Executable";
         public const string WindowsVulkanExecutable = "WhisperCpp.Windows.Vulkan.Executable";
         public const string MacOsExecutable = "WhisperCpp.MacOs.Executable";
+        public const string LinuxVulkanExecutable = "WhisperCpp.Linux.Vulkan.Executable";
+        public const string LinuxCudaExecutable = "WhisperCpp.Linux.Cuda.Executable";
     }
 
     // For each key, hashes are ordered newest-first. Index 0 is the latest known release.
@@ -1868,6 +1873,25 @@ public static class DownloadHashManager
                 "0fd752e0384484eb3a72ce644135f20963879e80624b23f7f739eda187a23359", // whispercpp-185 / v1.8.5
                 "11d902af004d1e79538f8f801b4a42ac3a21094370c9063f67d885d04dccdd96", // whispercpp-184 / v1.8.4
             },
+
+            // The v1.8.4 hash is the same in both Linux lists on purpose - that release shipped a
+            // single whisper-cli for both backends. See the note on LinuxVulkanExecutable.
+            [WhisperCpp.LinuxVulkanExecutable] = new[]
+            {
+                "da61c0c1910c103cf8dea855855f072249689ee2310f375e2b79615cbd012c05", // whispercpp-191-r2 / v1.9.1 (current download URL)
+                "782fac61b9bcfe8f6db22564bb5a2cda2c22550b9ef38064ec5f188bc86dfe79", // whispercpp-191 / v1.9.1 (missing shared libraries)
+                "5a2343777fe57327c8956d836d1515ac422d2e7f9fd33ce4e7e62cfe4cd33cbd", // whispercpp-186 / v1.8.6 (missing shared libraries)
+                "e9d5318d513f9dc23ae9fe35cd2783e8def5c66642079dc6a5074b9e5f0cd61c", // whispercpp-185 / v1.8.5 (missing shared libraries)
+                "315f46514fc09a4fefe2f7b6ae95cfac5441a03b8be04eed1b5f567d5ccc38de", // whispercpp-184 / v1.8.4 (missing shared libraries)
+            },
+            [WhisperCpp.LinuxCudaExecutable] = new[]
+            {
+                "3a4d717745c2d8cf19ca7a954c29c0349a7f158d93a6597bb86e155f0735474a", // whispercpp-191-r2 / v1.9.1 (current download URL)
+                "16a838ae67e248020b9bc65b8584fcc113cf18167c9cfc0a2d98e194fa52cf95", // whispercpp-191 / v1.9.1 (missing shared libraries)
+                "330ff60cbabd8e77137000d05905cabca90e299c455a3282948c9edddf28bcd7", // whispercpp-186 / v1.8.6 (missing shared libraries)
+                "33bad46e07f0d9bb64fc03ca8c7047b212482c1f45536290f80bb0fe716c9775", // whispercpp-185 / v1.8.5 (missing shared libraries)
+                "315f46514fc09a4fefe2f7b6ae95cfac5441a03b8be04eed1b5f567d5ccc38de", // whispercpp-184 / v1.8.4 (missing shared libraries)
+            },
         };
 
     /// <summary>
@@ -2438,9 +2462,10 @@ public static class DownloadHashManager
 
     /// <summary>
     /// Resolves the WhisperCpp executable-hash key for the given engine choice on the current OS.
-    /// Used as a fallback when no sidecar hash exists alongside the install.
-    /// Returns null on Linux: the same whisper-cli binary ships in both the Vulkan and CUDA archives,
-    /// so executable hashing cannot disambiguate.
+    /// Used as a fallback when no sidecar hash exists alongside the install - without it a Linux
+    /// install predating the sidecar reports Unknown, so the user is never told their engine is
+    /// outdated. That mattered for issue #13680, where every Linux build from v1.8.4 to v1.9.1 is
+    /// broken and the update prompt is how affected users learn to re-download.
     /// </summary>
     public static string? ResolveWhisperCppExecutableKey(string? whisperChoice)
     {
@@ -2463,6 +2488,18 @@ public static class DownloadHashManager
         if (OperatingSystem.IsMacOS())
         {
             return whisperChoice == WhisperChoice.Cpp ? WhisperCpp.MacOsExecutable : null;
+        }
+
+        if (OperatingSystem.IsLinux())
+        {
+            // Same mapping as ResolveWhisperCppKey: the default Cpp backend on Linux is the
+            // SE-packaged Vulkan build.
+            return whisperChoice switch
+            {
+                WhisperChoice.Cpp => WhisperCpp.LinuxVulkanExecutable,
+                WhisperChoice.CppCuBlas => WhisperCpp.LinuxCudaExecutable,
+                _ => null,
+            };
         }
 
         return null;
