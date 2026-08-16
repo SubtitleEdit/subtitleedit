@@ -160,4 +160,31 @@ public class OutputFileNameTest : IDisposable
 
         Assert.Equal(absolute, result);
     }
+
+    // Forced tracks (MKV forced flag, MP4 tx3g forced displayFlags) get the player
+    // convention's name token, so they no longer collide with the same-language full track.
+    [Theory]
+    [InlineData("eng", true, "eng.forced")]
+    [InlineData("eng", false, "eng")]
+    [InlineData("", true, "forced")]
+    [InlineData(null, true, "forced")]
+    [InlineData(null, false, null)]
+    public void AppendForcedToken_Cases(string? languageSuffix, bool isForced, string? expected)
+    {
+        Assert.Equal(expected, SubtitleConverter.AppendForcedToken(languageSuffix, isForced));
+    }
+
+    [Fact]
+    public void Resolve_ForcedSuffix_DoesNotCollideWithFullTrack()
+    {
+        var input = Path.Combine(_tempRoot, "video.mp4");
+        File.WriteAllText(input, "");
+        var used = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+
+        var full = SubtitleConverter.ResolveOutputFileName(input, Opts(), SubtitleConverter.AppendForcedToken("eng", false), 2, used);
+        var forced = SubtitleConverter.ResolveOutputFileName(input, Opts(), SubtitleConverter.AppendForcedToken("eng", true), 3, used);
+
+        Assert.Equal(Path.Combine(_tempRoot, "video.eng.vtt"), full);
+        Assert.Equal(Path.Combine(_tempRoot, "video.eng.forced.vtt"), forced);
+    }
 }
