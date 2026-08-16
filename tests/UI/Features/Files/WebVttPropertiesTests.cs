@@ -76,6 +76,11 @@ public class WebVttPropertiesTests
             {
                 window.Close();
             }
+
+            // Any test class running alongside this one that calls Se.UpdateLibSeSettings()
+            // would otherwise copy the flags set above into the shared libse Configuration
+            // and leave them there for the rest of the run.
+            Se.Settings.Formats = new SeFormats();
         }
     }
 

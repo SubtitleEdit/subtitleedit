@@ -12,6 +12,96 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         public override string Name => "Universal Subtitle Format";
 
+        /// <summary>
+        /// Turns the contents of a USF &lt;text&gt; element into subtitle text: line breaks for
+        /// &lt;br/&gt;, Subtitle Edit's own tags for the formatting USF shares with HTML, and the
+        /// plain text of anything else. Also used for USF tracks inside a Matroska file, where
+        /// each block holds one such element and there is no document around it.
+        /// </summary>
+        public static string GetTextFromUsfNode(XmlNode textNode)
+        {
+            var sb = new StringBuilder();
+            AppendUsfNodes(textNode, sb);
+            return sb.ToString().Trim();
+        }
+
+        private static void AppendUsfNodes(XmlNode parent, StringBuilder sb)
+        {
+            foreach (XmlNode node in parent.ChildNodes)
+            {
+                switch (node.Name.Replace("tt:", string.Empty).ToLowerInvariant())
+                {
+                    case "br":
+                        sb.AppendLine();
+                        break;
+                    case "i":
+                    case "b":
+                    case "u":
+                        var tag = node.Name.Replace("tt:", string.Empty).ToLowerInvariant();
+                        sb.Append('<').Append(tag).Append('>');
+                        AppendUsfNodes(node, sb);
+                        sb.Append("</").Append(tag).Append('>');
+                        break;
+                    case "#text":
+                        sb.Append(node.InnerText);
+                        break;
+                    default:
+                        // Unknown inline element (karaoke, ruby, ...) - keep its text, drop the markup
+                        AppendUsfNodes(node, sb);
+                        if (!node.HasChildNodes)
+                        {
+                            sb.Append(node.InnerText);
+                        }
+
+                        break;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Reads the payload of one USF subtitle block as stored inside a Matroska
+        /// <c>S_TEXT/USF</c> track: one or more &lt;text&gt; elements with no document element
+        /// around them. Returns null when the payload is not USF markup after all.
+        /// </summary>
+        public static string GetTextFromMatroskaBlock(string blockText)
+        {
+            if (string.IsNullOrWhiteSpace(blockText) || blockText.IndexOf('<') < 0)
+            {
+                return blockText;
+            }
+
+            try
+            {
+                var xml = new XmlDocument { XmlResolver = null };
+                xml.LoadXml("<root>" + blockText + "</root>");
+
+                // A block is normally a single <text> element; several of them (one per
+                // displayed line) is legal too. Anything else is read as bare markup.
+                var textNodes = xml.DocumentElement.SelectNodes("text");
+                if (textNodes == null || textNodes.Count == 0)
+                {
+                    return GetTextFromUsfNode(xml.DocumentElement);
+                }
+
+                var sb = new StringBuilder();
+                foreach (XmlNode node in textNodes)
+                {
+                    if (sb.Length > 0)
+                    {
+                        sb.AppendLine();
+                    }
+
+                    sb.Append(GetTextFromUsfNode(node));
+                }
+
+                return sb.ToString().Trim();
+            }
+            catch
+            {
+                return null;
+            }
+        }
+
         public override string ToText(Subtitle subtitle, string title)
         {
             string xmlStructure =
@@ -138,21 +228,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     string start = node.Attributes["start"].InnerText;
                     string stop = node.Attributes["stop"].InnerText;
 
-                    text.Clear();
-                    foreach (XmlNode innerNode in node.SelectSingleNode("text").ChildNodes)
-                    {
-                        switch (innerNode.Name.Replace("tt:", string.Empty))
-                        {
-                            case "br":
-                                text.AppendLine();
-                                break;
-                            default:
-                                text.Append(innerNode.InnerText);
-                                break;
-                        }
-                    }
-
-                    subtitle.Paragraphs.Add(new Paragraph(DecodeTimeCode(start), DecodeTimeCode(stop), text.ToString().Trim()));
+                    var paragraphText = GetTextFromUsfNode(node.SelectSingleNode("text"));
+                    subtitle.Paragraphs.Add(new Paragraph(DecodeTimeCode(start), DecodeTimeCode(stop), paragraphText));
                 }
                 catch (Exception ex)
                 {
