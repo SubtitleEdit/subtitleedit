@@ -2126,7 +2126,12 @@ public partial class TextToSpeechViewModel : ObservableObject
     {
         try
         {
+            // Breadcrumb on both sides of Close(): the reported hard crash (#13567) is a native
+            // access violation inside Window.Close() that no catch can see, so a tools log that
+            // ends between these two lines pinpoints it.
+            Se.WriteToolsLog("TTS window: calling Window.Close()");
             Window?.Close();
+            Se.WriteToolsLog("TTS window: Window.Close() returned");
         }
         catch (Exception ex)
         {
@@ -2169,6 +2174,7 @@ public partial class TextToSpeechViewModel : ObservableObject
                 // Stop first so the core tears down from an idle state instead of mid-playback.
                 player.Stop();
                 player.Dispose();
+                Se.WriteToolsLog("TTS window: audio preview player (mpv) destroyed");
             }
             catch (Exception ex)
             {

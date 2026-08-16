@@ -314,21 +314,29 @@ public partial class ReviewSpeechViewModel : ObservableObject
 
         try
         {
+            // Retire the previous row's core on a worker thread - disposing it inline here runs
+            // mpv_terminate_destroy on the UI thread, and every row-to-row transition (including
+            // the auto-continue timer path) would corrupt state that later blows up as an access
+            // violation in IFrameworkInputPane.Unadvise when a window closes (#13567, #13376).
+            DisposePlayerOffThread();
+
+            Se.WriteToolsLog($"TTS review: creating mpv core to play \"{fileName}\"");
+            LibMpvDynamicPlayer player;
             lock (_playLock)
             {
-                _mpvContext?.Stop();
-                _mpvContext?.Dispose();
-
-                _mpvContext = new LibMpvDynamicPlayer();
-                _mpvContext.LoadLib();
-                var err = _mpvContext.Initialize();
+                player = new LibMpvDynamicPlayer();
+                player.LoadLib();
+                var err = player.Initialize();
                 if (err < 0)
                 {
-                    throw new InvalidOperationException($"Failed to initialize mpv: {_mpvContext.GetErrorString(err)}");
+                    throw new InvalidOperationException($"Failed to initialize mpv: {player.GetErrorString(err)}");
                 }
+
+                _mpvContext = player;
             }
 
-            await _mpvContext.LoadAudio(fileName);
+            // Through the local: a close running now can null the field out from under us.
+            await player.LoadAudio(fileName);
         }
         catch (Exception exception)
         {
@@ -1039,14 +1047,13 @@ public partial class ReviewSpeechViewModel : ObservableObject
     [RelayCommand]
     private void Stop()
     {
+        Se.WriteToolsLog("TTS review: Stop clicked");
         _skipAutoContinue = true;
         _cancellationTokenSource.Cancel();
-        lock (_playLock)
-        {
-            _mpvContext?.Stop();
-            _mpvContext?.Dispose();
-            _mpvContext = null;
-        }
+
+        // Off-thread: an inline Dispose here is mpv_terminate_destroy on the UI thread, the
+        // pattern behind the delayed IFrameworkInputPane.Unadvise crash (#13567, #13376).
+        DisposePlayerOffThread();
 
         _playingRow = null;
         IsPlayVisible = true;
@@ -1056,6 +1063,8 @@ public partial class ReviewSpeechViewModel : ObservableObject
     [RelayCommand]
     private void Ok()
     {
+        Se.WriteToolsLog("TTS review: OK clicked - closing");
+
         // Push any edits the user made to row.Text back into the step results so
         // the caller sees them, then publish the included rows as StepResults.
         foreach (var row in Lines)
@@ -1080,6 +1089,7 @@ public partial class ReviewSpeechViewModel : ObservableObject
     [RelayCommand]
     private void Cancel()
     {
+        Se.WriteToolsLog("TTS review: Cancel clicked - closing");
         Close();
     }
 
@@ -1835,6 +1845,7 @@ public partial class ReviewSpeechViewModel : ObservableObject
             return;
         }
 
+        Se.WriteToolsLog("TTS review: disposing playback player (mpv) on worker thread");
         Task.Run(() =>
         {
             try
@@ -1842,6 +1853,7 @@ public partial class ReviewSpeechViewModel : ObservableObject
                 // Stop first so the core tears down from an idle state instead of mid-playback.
                 player.Stop();
                 player.Dispose();
+                Se.WriteToolsLog("TTS review: playback player (mpv) destroyed");
             }
             catch (Exception ex)
             {
@@ -1857,6 +1869,7 @@ public partial class ReviewSpeechViewModel : ObservableObject
         // still holds it) and skip the temp-file sweep below - the unwinding pipeline may still
         // be writing those files.
         var regenerateInFlight = !IsRegenerateEnabled;
+        Se.WriteToolsLog($"TTS review: window closing (regenerate in flight={regenerateInFlight})");
 
         _skipAutoContinue = true;
         _isClosing = true;
