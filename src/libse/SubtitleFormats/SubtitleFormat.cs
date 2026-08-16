@@ -93,6 +93,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     new AdobeEncoreTabs(),
                     new AdobeEncoreWithLineNumbers(),
                     new AdobeEncoreWithLineNumbersNtsc(),
+                    new AdobePremiereMarkersCsv(),
                     new AdvancedSubStationAlpha(),
                     new AQTitle(),
                     new AudacityLabels(),

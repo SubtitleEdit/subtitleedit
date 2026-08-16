@@ -244,4 +244,52 @@ public class AdobeFormatsSweepTest
         Assert.Equal(expectedNumerator, numerator);
         Assert.Equal(expectedDenominator, denominator);
     }
+
+    // Premiere's Markers panel "Export Markers as CSV" is tab-separated despite the
+    // extension; point markers have Out == In and a zero duration.
+    [Fact]
+    public void PremiereMarkersCsvImports()
+    {
+        var savedRate = Configuration.Settings.General.CurrentFrameRate;
+        try
+        {
+            Configuration.Settings.General.CurrentFrameRate = 25.0;
+            var lines = new List<string>
+            {
+                "Marker Name\tDescription\tIn\tOut\tDuration\tMarker Type",
+                "Intro\tOpening narration starts\t00:00:01:00\t00:00:03:00\t00:00:02:00\tComment",
+                "Point\t\t00:00:04:12\t00:00:04:12\t00:00:00:00\tComment",
+            };
+
+            var parsed = Subtitle.Parse(lines, ".csv");
+            Assert.NotNull(parsed);
+            Assert.Equal(new AdobePremiereMarkersCsv().Name, parsed.OriginalFormat.Name);
+            Assert.Equal(2, parsed.Paragraphs.Count);
+            Assert.Equal("Opening narration starts", parsed.Paragraphs[0].Text);
+            Assert.Equal(1000, parsed.Paragraphs[0].StartTime.TotalMilliseconds, 1.0);
+            Assert.Equal(3000, parsed.Paragraphs[0].EndTime.TotalMilliseconds, 1.0);
+            // Point marker: text falls back to the marker name, and it gets a usable duration.
+            Assert.Equal("Point", parsed.Paragraphs[1].Text);
+            Assert.Equal(4480, parsed.Paragraphs[1].StartTime.TotalMilliseconds, 1.0);
+            Assert.Equal(5480, parsed.Paragraphs[1].EndTime.TotalMilliseconds, 1.0);
+        }
+        finally
+        {
+            Configuration.Settings.General.CurrentFrameRate = savedRate;
+        }
+    }
+
+    [Fact]
+    public void PremiereMarkersCsvRoundTrips()
+    {
+        var format = new AdobePremiereMarkersCsv();
+        var raw = format.ToText(MakeReference(), "title");
+
+        var reloaded = new Subtitle();
+        format.LoadSubtitle(reloaded, raw.SplitToLines(), "markers.csv");
+        Assert.Equal(2, reloaded.Paragraphs.Count);
+        Assert.Equal("Hello, Adobe world!", reloaded.Paragraphs[0].Text);
+        Assert.Equal(1000, reloaded.Paragraphs[0].StartTime.TotalMilliseconds, 25.0);
+        Assert.Equal(3000, reloaded.Paragraphs[0].EndTime.TotalMilliseconds, 25.0);
+    }
 }
