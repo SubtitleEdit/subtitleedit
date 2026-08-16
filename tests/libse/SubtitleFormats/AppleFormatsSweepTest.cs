@@ -188,7 +188,7 @@ public class AppleFormatsSweepTest
         var lines = CaptionFcpXml.SplitToLines();
         var parsed = Subtitle.Parse(lines, ".fcpxml");
         Assert.NotNull(parsed);
-        Assert.Equal("Final Cut Pro Xml 1.13", parsed.OriginalFormat.Name);
+        Assert.Equal(new FinalCutProXmlCaptions().Name, parsed.OriginalFormat.Name);
         Assert.Equal(2, parsed.Paragraphs.Count);
 
         // timeline time = parent offset + (caption offset - parent start) - sequence tcStart
@@ -225,6 +225,62 @@ public class AppleFormatsSweepTest
         Assert.Equal("Final Cut Pro Xml 1.13", parsed.OriginalFormat.Name);
         Assert.Equal(2, parsed.Paragraphs.Count);
         Assert.Equal(1000, parsed.Paragraphs[0].StartTime.TotalMilliseconds, 1.0);
+    }
+
+    // Caption-based export: Final Cut Pro imports these via File > Import > XML as real
+    // captions (the native workflow), instead of the title-based exports.
+    [Fact]
+    public void FinalCutProXmlCaptionsExportRoundTrips()
+    {
+        var savedRate = Configuration.Settings.General.CurrentFrameRate;
+        try
+        {
+            Configuration.Settings.General.CurrentFrameRate = 25.0;
+            var s = MakeReference();
+            s.Paragraphs.Add(new Paragraph("{\\an8}<i>Italic</i> and <b>bold</b> runs", 8000, 9500));
+            var format = new FinalCutProXmlCaptions();
+            var raw = format.ToText(s, "My project");
+
+            Assert.Contains("<fcpxml version=\"1.8\">", raw);
+            Assert.Contains("role=\"iTT?captionFormat=ITT.", raw);
+            Assert.Contains("FFVideoFormat1080p25", raw);
+            Assert.Contains("italic=\"1\"", raw);
+            Assert.Contains("bold=\"1\"", raw);
+            Assert.Contains("placement=\"top\"", raw);
+
+            var parsed = Subtitle.Parse(raw.SplitToLines(), ".fcpxml");
+            Assert.NotNull(parsed);
+            Assert.Equal(format.Name, parsed.OriginalFormat.Name);
+            Assert.Equal(3, parsed.Paragraphs.Count);
+            Assert.Equal(1000, parsed.Paragraphs[0].StartTime.TotalMilliseconds, 1.0);
+            Assert.Equal(3000, parsed.Paragraphs[0].EndTime.TotalMilliseconds, 1.0);
+            Assert.Equal("Second line" + Environment.NewLine + "with a line break.", parsed.Paragraphs[1].Text);
+            Assert.Equal("{\\an8}<i>Italic</i> and <b>bold</b> runs", parsed.Paragraphs[2].Text);
+        }
+        finally
+        {
+            Configuration.Settings.General.CurrentFrameRate = savedRate;
+        }
+    }
+
+    // 23.976 fps writes 1001/24000s frame durations; caption times must stay frame-aligned
+    // multiples of it or Final Cut Pro complains about off-frame boundaries.
+    [Fact]
+    public void FinalCutProXmlCaptionsTimesAreFrameAligned()
+    {
+        var savedRate = Configuration.Settings.General.CurrentFrameRate;
+        try
+        {
+            Configuration.Settings.General.CurrentFrameRate = 23.976;
+            var raw = new FinalCutProXmlCaptions().ToText(MakeReference(), "t");
+            Assert.Contains("frameDuration=\"1001/24000s\"", raw);
+            // 1000 ms -> 24 frames -> 24024/24000s
+            Assert.Contains("offset=\"24024/24000s\"", raw);
+        }
+        finally
+        {
+            Configuration.Settings.General.CurrentFrameRate = savedRate;
+        }
     }
 
     // tx3g displayFlags 0x80000000/0x40000000 is how QuickTime/AVFoundation marks a

@@ -510,13 +510,20 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             return fileContent.Contains("<fcpxml version=\"" + FcpXmlVersion + "\">");
         }
 
+        private void LoadCaptions(Subtitle subtitle, XmlDocument xml)
+        {
+            _errorCount += LoadCaptionElements(subtitle, xml);
+        }
+
         /// <summary>
         /// Reads Final Cut Pro caption lanes (the caption workflow used since FCP 10.4) - e.g.
         /// role="iTT?captionFormat=ITT.en" / "CEA?..." / "SRT?..." elements anchored inside
-        /// asset-clips or gaps in the spine.
+        /// asset-clips or gaps in the spine. Returns the number of caption elements that
+        /// could not be read.
         /// </summary>
-        private void LoadCaptions(Subtitle subtitle, XmlDocument xml)
+        internal static int LoadCaptionElements(Subtitle subtitle, XmlDocument xml)
         {
+            var errorCount = 0;
             var tcStartMs = 0.0;
             var sequenceNode = xml.SelectSingleNode("//sequence");
             if (sequenceNode?.Attributes?["tcStart"] != null)
@@ -558,11 +565,12 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 }
                 catch
                 {
-                    _errorCount++;
+                    errorCount++;
                 }
             }
 
             subtitle.Paragraphs.Sort((a, b) => a.StartTime.TotalMilliseconds.CompareTo(b.StartTime.TotalMilliseconds));
+            return errorCount;
         }
 
         private static string GetCaptionText(XmlNode captionNode)
