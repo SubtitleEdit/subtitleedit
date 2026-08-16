@@ -231,12 +231,12 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             try
             {
                 text = Utilities.RemoveSsaTags(text);
-                var lines = text.SplitToLines();
+                var lines = BalanceTagsPerLine(text.SplitToLines());
                 for (int i = 0; i < lines.Count; i++)
                 {
                     var line = lines[i];
                     var paragraphContent = new XmlDocument { PreserveWhitespace = true };
-                    paragraphContent.LoadXml($"<root>{line.Replace("&", "&amp;")}</root>");
+                    paragraphContent.LoadXml($"<root>{TimedText10.EscapeUnsupportedAngleBrackets(line.Replace("&", "&amp;"))}</root>");
                     ConvertParagraphNodeToTtmlNode(paragraphContent.DocumentElement, xml, paragraph);
 
                     if (i < lines.Count - 1)
@@ -258,6 +258,47 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
             div.AppendChild(paragraph);
             return div;
+        }
+
+        /// <summary>
+        /// Each line is parsed as its own XML fragment, so an italic/bold tag spanning a
+        /// line break must be closed at the end of one line and reopened on the next -
+        /// otherwise the parse fails and the markup ends up as literal text.
+        /// </summary>
+        private static List<string> BalanceTagsPerLine(List<string> lines)
+        {
+            var result = new List<string>(lines.Count);
+            var italicOpen = false;
+            var boldOpen = false;
+            foreach (var line in lines)
+            {
+                var current = line;
+                if (italicOpen)
+                {
+                    current = "<i>" + current;
+                }
+
+                if (boldOpen)
+                {
+                    current = "<b>" + current;
+                }
+
+                italicOpen = Utilities.CountTagInText(current, "<i>") > Utilities.CountTagInText(current, "</i>");
+                boldOpen = Utilities.CountTagInText(current, "<b>") > Utilities.CountTagInText(current, "</b>");
+                if (italicOpen)
+                {
+                    current += "</i>";
+                }
+
+                if (boldOpen)
+                {
+                    current += "</b>";
+                }
+
+                result.Add(current);
+            }
+
+            return result;
         }
 
         private static void ConvertParagraphNodeToTtmlNode(XmlNode node, XmlDocument ttmlXml, XmlNode ttmlNode)
