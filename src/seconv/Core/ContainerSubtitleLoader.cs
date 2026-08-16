@@ -2,6 +2,7 @@ using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.ContainerFormats.Matroska;
 using Nikse.SubtitleEdit.Core.ContainerFormats.MaterialExchangeFormat;
 using Nikse.SubtitleEdit.Core.ContainerFormats.Mp4;
+using Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes;
 using Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using Spectre.Console;
@@ -350,8 +351,7 @@ internal static class ContainerSubtitleLoader
                     var vobSub = ImageOcrLoader.LoadMp4VobSub(track, options);
                     if (vobSub.Paragraphs.Count > 0)
                     {
-                        var vobLang = LanguageAutoDetect.AutoDetectGoogleLanguageOrNull(vobSub) ?? string.Empty;
-                        tracks.Add(new LoadedTrack(vobSub, new SubRip(), vobLang, trackId));
+                        tracks.Add(new LoadedTrack(vobSub, new SubRip(), GetMp4TrackLanguage(track, vobSub), trackId));
                     }
                 }
                 catch (Exception ex)
@@ -369,8 +369,7 @@ internal static class ContainerSubtitleLoader
             var subtitle = new Subtitle();
             subtitle.Paragraphs.AddRange(paragraphs);
             subtitle.Renumber();
-            var lang = LanguageAutoDetect.AutoDetectGoogleLanguageOrNull(subtitle) ?? string.Empty;
-            tracks.Add(new LoadedTrack(subtitle, new SubRip(), lang, trackId));
+            tracks.Add(new LoadedTrack(subtitle, new SubRip(), GetMp4TrackLanguage(track, subtitle), trackId));
         }
 
         if (tracks.Count == 0)
@@ -378,6 +377,20 @@ internal static class ContainerSubtitleLoader
             throw new InvalidOperationException($"No subtitle tracks in MP4 file: {filePath}");
         }
         return tracks;
+    }
+
+    /// <summary>
+    /// The language the track declares in its media header, auto-detected from the text only
+    /// when there is none. Auto-detecting regardless labelled every track of a multi-language
+    /// file the same, and the per-track output names then collided - a three track eng/fre/deu
+    /// file wrote one "*.en.srt" that the last track won.
+    /// </summary>
+    private static string GetMp4TrackLanguage(Trak track, Subtitle subtitle)
+    {
+        var lang = SanitizeLang(track.Mdia?.Mdhd?.Iso639ThreeLetterCode);
+        return IsUndeclaredLanguage(lang)
+            ? LanguageAutoDetect.AutoDetectGoogleLanguageOrNull(subtitle) ?? string.Empty
+            : lang;
     }
 
     private static List<LoadedTrack> LoadMcc(string filePath)

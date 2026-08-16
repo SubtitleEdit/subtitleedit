@@ -218,6 +218,8 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4
 
             fs.Close();
 
+            ApplyEditListsToMoovSubtitleTracks();
+
             // Surface the fragmented text tracks (DASH/CMAF subtitle representations, or
             // the subtitle tracks of a muxed fMP4); VttcSubtitle is the first of them.
             foreach (var fragmentedTrack in _fragmentedTextTracks)
@@ -233,6 +235,10 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4
 
                 var merged = MergeLinesSameTextUtils.MergeLinesWithSameTextInSubtitle(fragmentedTrack.Subtitle, false, 250);
                 merged.Header = fragmentedTrack.Subtitle.Header;
+                merged.Renumber();
+
+                // The moov track header still carries the edit list for a fragmented track
+                ShiftParagraphs(merged.Paragraphs, GetEditListOffsetMs(FindTrack(fragmentedTrack.TrackId)));
                 merged.Renumber();
 
                 FragmentedSubtitleTracks.Add(new Mp4FragmentedSubtitleTrack
@@ -254,6 +260,95 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4
 
             CheckForTrunCea608();
             CheckForMoovVideoCea608();
+        }
+
+        private void ApplyEditListsToMoovSubtitleTracks()
+        {
+            if (Moov?.Tracks == null)
+            {
+                return;
+            }
+
+            foreach (var trak in Moov.Tracks)
+            {
+                var mdia = trak?.Mdia;
+                if (mdia == null || !(mdia.IsTextSubtitle || mdia.IsVobSubSubtitle))
+                {
+                    continue;
+                }
+
+                var paragraphs = mdia.Minf?.Stbl?.Paragraphs;
+                if (paragraphs == null || paragraphs.Count == 0)
+                {
+                    continue;
+                }
+
+                // A VobSub track's paragraphs are index-paired with its sub pictures, so
+                // dropping one there would misalign every bitmap after it.
+                ShiftParagraphs(paragraphs, GetEditListOffsetMs(trak), dropBeforeZero: mdia.IsTextSubtitle);
+            }
+        }
+
+        /// <summary>
+        /// Offset in milliseconds that the track's edit list (elst) puts between the media
+        /// timeline the samples are timed on and the presentation timeline the player shows.
+        /// Leading empty edits (media time -1) delay the track; a media start time on the
+        /// first real edit moves it earlier. Anything more elaborate than that cannot be
+        /// expressed as a single offset, so only the leading edits are honoured.
+        /// </summary>
+        private double GetEditListOffsetMs(Trak trak)
+        {
+            var entries = trak?.Edts?.Elst?.Entries;
+            if (entries == null || entries.Count == 0)
+            {
+                return 0;
+            }
+
+            var movieTimeScale = Moov?.Mvhd?.TimeScale > 0 ? Moov.Mvhd.TimeScale : 1000UL;
+            var mediaTimeScale = trak.Mdia?.Mdhd?.TimeScale > 0 ? trak.Mdia.Mdhd.TimeScale : movieTimeScale;
+
+            var offsetMs = 0.0;
+            var index = 0;
+            while (index < entries.Count && entries[index].MediaTime < 0)
+            {
+                offsetMs += entries[index].SegmentDuration / (double)movieTimeScale * 1000.0;
+                index++;
+            }
+
+            if (index < entries.Count)
+            {
+                offsetMs -= entries[index].MediaTime / (double)mediaTimeScale * 1000.0;
+            }
+
+            return offsetMs;
+        }
+
+        /// <summary>
+        /// Moves paragraphs onto the presentation timeline. Anything the edit list pushes
+        /// before zero is not presented, so such cues are dropped (or clipped when they
+        /// straddle zero).
+        /// </summary>
+        private static void ShiftParagraphs(List<Paragraph> paragraphs, double offsetMs, bool dropBeforeZero = true)
+        {
+            if (paragraphs == null || Math.Abs(offsetMs) < 0.001)
+            {
+                return;
+            }
+
+            for (var i = paragraphs.Count - 1; i >= 0; i--)
+            {
+                var p = paragraphs[i];
+                var start = p.StartTime.TotalMilliseconds + offsetMs;
+                var end = p.EndTime.TotalMilliseconds + offsetMs;
+                if (end <= 0 && dropBeforeZero)
+                {
+                    paragraphs.RemoveAt(i);
+                    continue;
+                }
+
+                p.StartTime.TotalMilliseconds = start < 0 ? 0 : start;
+                p.EndTime.TotalMilliseconds = end < 0 ? 0 : end;
+            }
         }
 
         private void CheckForMoovVideoCea608()
