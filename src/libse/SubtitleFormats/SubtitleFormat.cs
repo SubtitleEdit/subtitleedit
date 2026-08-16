@@ -89,6 +89,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     new AdobeAfterEffectsFTME(),
                     new AdobeEncore(),
                     new AdobeEncoreLineTabNewLine(),
+                    new AdobeEncoreLineTabs(),
                     new AdobeEncoreTabs(),
                     new AdobeEncoreWithLineNumbers(),
                     new AdobeEncoreWithLineNumbersNtsc(),
