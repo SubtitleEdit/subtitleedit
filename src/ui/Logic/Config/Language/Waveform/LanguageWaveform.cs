@@ -15,6 +15,9 @@ public class LanguageWaveform
     public string GuessTimeCodesDotDotDot { get; set; }
     public string SeekSilenceDotDotDot { get; set; }
     public string ExtractAudioDotDotDot { get; set; }
+    public string CloneVoiceTo { get; set; }
+    public string CloneVoiceNameTitle { get; set; }
+    public string CloneVoiceExtractFailed { get; set; }
     public string ToggleShotChange { get; set; }
     public string ResetWaveformZoomAndSpeed { get; set; }
     public object ShowOnlyWaveform { get; set; }
@@ -46,6 +49,9 @@ public class LanguageWaveform
         SeekSilence = "Seek silence";
         SeekSilenceDotDotDot = "Seek silence...";
         ExtractAudioDotDotDot = "Extract audio...";
+        CloneVoiceTo = "Clone voice to";
+        CloneVoiceNameTitle = "Name of new voice";
+        CloneVoiceExtractFailed = "Could not extract audio for the selected line.";
         MinSilenceDurationSeconds = "Min. silence duration (seconds):";
         MaxSilenceVolume = "Max. silence volume (0.0 - 1.0):";
         ToggleShotChange = "Toggle shot change";

@@ -44,6 +44,8 @@ public class IndexTts25AudioCpp : ITtsEngine
     public bool HasRegion => false;
     public bool HasModel => true;
     public bool HasKeyFile => false;
+    public bool SupportsVoiceCloning => true;
+    public bool SupportsPerLineVoiceCloning => false;
 
     // The Q8_0 GGUF is the default: same 22.05 kHz output as F16 at 1 GB less on disk. The
     // "orig" dtype build (7.3 GB) is deliberately not offered — it is a debugging artifact.

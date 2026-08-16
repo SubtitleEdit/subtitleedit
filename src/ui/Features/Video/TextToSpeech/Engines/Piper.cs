@@ -23,6 +23,10 @@ public class Piper : ITtsEngine
     public bool HasRegion => false;
     public bool HasModel => false;
     public bool HasKeyFile => false;
+    // Piper's "import voice" takes a trained .onnx model, not a recording of somebody
+    // speaking - nobody is being imitated, so this is not cloning.
+    public bool SupportsVoiceCloning => false;
+    public bool SupportsPerLineVoiceCloning => false;
 
     public Task<bool> IsInstalled(string? region)
     {

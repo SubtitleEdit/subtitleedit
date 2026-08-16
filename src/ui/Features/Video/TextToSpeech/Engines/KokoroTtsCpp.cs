@@ -26,6 +26,8 @@ public class KokoroTtsCpp : ITtsEngine
     public bool HasRegion => false;
     public bool HasModel => false;
     public bool HasKeyFile => false;
+    public bool SupportsVoiceCloning => false;
+    public bool SupportsPerLineVoiceCloning => false;
 
     public const string TtsModelFileName     = "kokoro-v1.1-zh.onnx";
     public const string VoicesModelFileName  = "voices-v1.1-zh.bin";

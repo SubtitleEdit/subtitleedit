@@ -42,6 +42,8 @@ public class ZonosTtsCrispAsr : ITtsEngine
     public bool HasRegion => false;
     public bool HasModel => false;
     public bool HasKeyFile => false;
+    public bool SupportsVoiceCloning => true;
+    public bool SupportsPerLineVoiceCloning => false;
 
     public const string TalkerFileName = "zonos-v0.1-transformer-q8_0.gguf";
     public const string CodecFileName = "dac-44khz-f16.gguf";
