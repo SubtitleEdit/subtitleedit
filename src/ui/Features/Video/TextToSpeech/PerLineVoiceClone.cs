@@ -132,30 +132,14 @@ public static class PerLineVoiceClone
         int audioTrackFfIndex,
         CancellationToken cancellationToken)
     {
-        var arguments = string.Empty;
         try
         {
             Directory.CreateDirectory(outputFolder);
 
             var range = GetReferenceRange(paragraphs, index, videoDurationSeconds);
             var clipFileName = Path.Combine(outputFolder, $"line-{index + 1:0000}.wav");
-            arguments = FfmpegGenerator.ExtractCloneReferenceClipParameters(
-                videoFileName,
-                range.StartSeconds,
-                range.DurationSeconds,
-                clipFileName,
-                audioTrackFfIndex,
-                ReferenceSampleRate);
-
-            using var process = FfmpegGenerator.GetProcess(arguments, (_, _) => { });
-            await process.StartAndWaitAsync(cancellationToken);
-
-            // A 44-byte file is a WAV header with no samples after it - ffmpeg "succeeded" on a
-            // range with nothing in it, and handing that to a cloning model is worse than not
-            // cloning at all.
-            if (process.ExitCode != 0 || !File.Exists(clipFileName) || new FileInfo(clipFileName).Length <= 44)
+            if (!await CutClipAsync(videoFileName, range.StartSeconds, range.DurationSeconds, clipFileName, audioTrackFfIndex, cancellationToken))
             {
-                Se.WriteToolsLog($"Per-line voice clone: could not cut a reference for line {index + 1} ({arguments})");
                 return null;
             }
 
@@ -172,8 +156,57 @@ public static class PerLineVoiceClone
         }
         catch (Exception exception)
         {
-            Se.LogError(exception, $"Per-line voice clone: cutting the reference for line {index + 1} failed ({arguments})");
+            Se.LogError(exception, $"Per-line voice clone: cutting the reference for line {index + 1} failed");
             return null;
+        }
+    }
+
+    /// <summary>
+    /// Cuts exactly the given range out of the video as a cloning-ready mono clip.
+    /// </summary>
+    /// <returns>False when ffmpeg failed or produced no audio; the caller decides what that means.</returns>
+    public static async Task<bool> CutClipAsync(
+        string videoFileName,
+        double startSeconds,
+        double durationSeconds,
+        string outputFileName,
+        int audioTrackFfIndex,
+        CancellationToken cancellationToken)
+    {
+        var arguments = FfmpegGenerator.ExtractCloneReferenceClipParameters(
+            videoFileName,
+            startSeconds,
+            durationSeconds,
+            outputFileName,
+            audioTrackFfIndex,
+            ReferenceSampleRate);
+
+        try
+        {
+            Directory.CreateDirectory(Path.GetDirectoryName(outputFileName)!);
+
+            using var process = FfmpegGenerator.GetProcess(arguments, (_, _) => { });
+            await process.StartAndWaitAsync(cancellationToken);
+
+            // A 44-byte file is a WAV header with no samples after it - ffmpeg "succeeded" on a
+            // range with nothing in it, and handing that to a cloning model is worse than not
+            // cloning at all.
+            if (process.ExitCode != 0 || !File.Exists(outputFileName) || new FileInfo(outputFileName).Length <= 44)
+            {
+                Se.WriteToolsLog($"Voice clone: no audio cut from the video ({arguments})");
+                return false;
+            }
+
+            return true;
+        }
+        catch (OperationCanceledException)
+        {
+            throw;
+        }
+        catch (Exception exception)
+        {
+            Se.LogError(exception, $"Voice clone: cutting audio from the video failed ({arguments})");
+            return false;
         }
     }
 

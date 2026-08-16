@@ -1304,6 +1304,21 @@ public class FfmpegGenerator
     }
 
     /// <summary>
+    /// Build ffmpeg parameters for joining clips cut by
+    /// <see cref="ExtractCloneReferenceClipParameters"/> into one file, in the order listed in
+    /// <paramref name="concatListFileName"/> (an ffmpeg concat demuxer list).
+    /// </summary>
+    /// <remarks>
+    /// Stream copy: the parts were all cut to the same mono PCM16 rate, so there is nothing to
+    /// re-encode. Used to build one long reference for a speaker out of several of their lines -
+    /// a cloning model hears a speaker far better in fifteen seconds than in two.
+    /// </remarks>
+    internal static string ConcatAudioClipsParameters(string concatListFileName, string outputFileName)
+    {
+        return $"-y -f concat -safe 0 -i \"{concatListFileName}\" -c copy \"{outputFileName}\"";
+    }
+
+    /// <summary>
     /// Build ffmpeg parameters for cutting a voice-cloning reference clip out of a video: the
     /// requested range as mono PCM16 at <paramref name="sampleRate"/>.
     /// </summary>

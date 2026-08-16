@@ -44,6 +44,21 @@ public class LanguageTextToSpeech
     public string VoiceCloneTranscriptTitle { get; set; }
     public string UseSpeechToTextDotDotDot { get; set; }
 
+    // Auto cast: find the voices in the video and clone them
+    public string AutoCastMenuItem { get; set; }
+    public string AutoCastSpeakersTitle { get; set; }
+    public string AutoCastSpeakersSubtitle { get; set; }
+    public string AutoCastFoundXSpeakersInYLines { get; set; }
+    public string AutoCastLines { get; set; }
+    public string AutoCastAudio { get; set; }
+    public string AutoCastSays { get; set; }
+    public string AutoCastNeedsVideo { get; set; }
+    public string AutoCastNoSpeakersFound { get; set; }
+    public string AutoCastCloningX { get; set; }
+    public string AutoCastDoneXVoices { get; set; }
+    public string AutoCastNothingCloned { get; set; }
+    public string AutoCastReplaceSubtitleQuestion { get; set; }
+
     // Per-line voice cloning ("Clone from video")
     public string CloneVoicePerLine { get; set; }
     public string CloneVoicePerLinePreparing { get; set; }
@@ -170,6 +185,19 @@ public class LanguageTextToSpeech
         DropAudioFileHereHint = ".wav or .mp3";
         VoiceCloneTranscriptTitle = "Enter transcript of the audio (required for voice cloning)";
         UseSpeechToTextDotDotDot = "Use speech-to-text...";
+        AutoCastMenuItem = "Find voices in video and clone...";
+        AutoCastSpeakersTitle = "Voices found in the video";
+        AutoCastSpeakersSubtitle = "Name each speaker - the name becomes the actor in the subtitle and the name of the cloned voice. Give two speakers the same name to merge them into one voice.";
+        AutoCastFoundXSpeakersInYLines = "{0} speakers in {1} lines";
+        AutoCastLines = "Lines";
+        AutoCastAudio = "Audio";
+        AutoCastSays = "Says";
+        AutoCastNeedsVideo = "Finding the voices needs an open video to listen to.";
+        AutoCastNoSpeakersFound = "No speakers were found. The transcription has to come from a speech-to-text engine that tells speakers apart, such as Crisp ASR MOSS Diarize.";
+        AutoCastCloningX = "Cloning {0}...";
+        AutoCastDoneXVoices = "{0} voices cloned - open Text to speech to generate the dubbing";
+        AutoCastNothingCloned = "None of the voices could be cloned - see the log for details.";
+        AutoCastReplaceSubtitleQuestion = "This replaces the subtitle you have open with the transcription of the video. Continue?";
         CloneVoicePerLine = "Clone from video (voice of each line)";
         CloneVoicePerLinePreparing = "Taking the voice of each line from the video...";
         CloneVoicePerLineNeedsVideo = "Cloning the voice of each line needs the video the subtitle belongs to. Open the video and try again.";

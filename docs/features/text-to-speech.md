@@ -67,6 +67,23 @@ The menu item appears when exactly one subtitle line is selected and the right-c
 
 Pick a line with clean speech: a couple of seconds or more, one speaker, and as little music and effects as possible. The clip is used exactly as it sounds in the video.
 
+### Find Voices in Video and Clone
+
+**Video → More → Find voices in video and clone...** does the whole cast in one go: it works out who speaks in the video, clones each of them, and leaves the cast assigned so the dubbing is ready to generate.
+
+What happens, in order:
+
+1. The video is transcribed with a speech-to-text engine that tells speakers apart — **Crisp ASR MOSS Diarize** is preselected (English and Chinese). You can change the engine in that window if you have another that labels speakers.
+2. The speaker labels the engine writes into the text (`(Speaker 1) …`) are moved into the subtitle's **Actor** field, where they belong.
+3. A dialog lists the speakers with their line count, how much audio each has, and one of their lines so you can tell who is who. Give each speaker a real name — **two speakers with the same name are merged into one voice**, which is how you fix a person diarization split in two. Pick the cloning engine here as well.
+4. Each speaker's voice is cloned from up to ~15 seconds of their own lines (their longest ones, joined), with those lines as the transcript.
+5. The subtitle switches to **ASSA**, which is the format that keeps actors, and the actor column is shown.
+6. The actor→voice cast is remembered, so **Video → Text to speech...** opens with every speaker already assigned to their cloned voice. Press Generate.
+
+If a subtitle is already open, its lines and text are kept — the speakers are matched to your existing lines by time overlap, so a translation is not replaced by the transcription. With nothing open, the transcription becomes the subtitle.
+
+Lines that overlap no detected speech (music, on-screen text) are left without an actor and fall back to the globally selected voice.
+
 ### Clone From Video (Voice of Each Line)
 
 For dubbing a video with several speakers there is a faster way than cloning each of them by hand. With a video open, pick **Clone from video (voice of each line)** at the top of the voice list. Every subtitle line is then spoken in the voice heard in the video at that line — whoever speaks line 12 in the original speaks line 12 in the dub. No reference recordings, no imports, no cast to assign.
