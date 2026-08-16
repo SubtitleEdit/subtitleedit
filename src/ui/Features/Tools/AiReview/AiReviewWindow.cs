@@ -85,12 +85,7 @@ public class AiReviewWindow : Window
             .WithAccessibleName(Se.Language.General.Model);
         // Shared dot template, so the install colours here match auto-translate and the engine
         // settings dialog rather than this window's former bespoke green/grey pair.
-        comboLlamaCppModel.ItemTemplate = StatusDots.ComboItemTemplate<Features.Translate.LlamaCppModelDisplay>(
-            m => m.Model.DisplayName,
-            m => string.IsNullOrEmpty(m.Model.Url)
-                ? (string.IsNullOrEmpty(m.Model.Size) ? Se.Language.General.Custom : $"{Se.Language.General.Custom}, {m.Model.Size}")
-                : (string.IsNullOrEmpty(m.Model.Size) ? null : m.Model.Size),
-            m => m.IsInstalled ? DownloadDotStatus.UpToDate : DownloadDotStatus.NotInstalled);
+        comboLlamaCppModel.ItemTemplate = Features.Translate.AutoTranslateCombos.LlamaCppModelItemTemplate();
 
         comboLlamaCppModel.Bind(IsVisibleProperty, new Binding(nameof(vm.IsLlamaCppVisible)));
 
