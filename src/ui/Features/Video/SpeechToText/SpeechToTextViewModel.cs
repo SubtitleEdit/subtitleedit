@@ -4266,10 +4266,9 @@ public partial class SpeechToTextViewModel : ObservableObject
 
         //-i indicates the input
         //-vn means no video output
-        //-ar 44100 indicates the sampling frequency.
-        //-ab indicates the bit rate (in this example 160kb/s)
-        //-af volume=1.75 will boot volume... 1.0 is normal
-        //-ac 2 means 2 channels
+        //-ar 16000 indicates the sampling frequency.
+        //-b:a indicates the bit rate (only used for the compressed formats)
+        //-ac 1 means 1 channel (mono)
         // "-map 0:a:0" is the first audio stream, "-map 0:a:1" is the second audio stream
 
         var exeFilePath = Se.Settings.General.FfmpegPath;
@@ -4291,8 +4290,8 @@ public partial class SpeechToTextViewModel : ObservableObject
     }
 
     /// <summary>
-    /// ffmpeg argument template for transcoding the source audio. WAV stays on
-    /// the historical pipeline (lossless 16 kHz mono PCM); the compressed
+    /// ffmpeg argument template for transcoding the source audio. WAV stays
+    /// lossless 16 kHz mono PCM, unmodified apart from the downmix; the compressed
     /// formats target ~32 kbit/s mono at 16 kHz, which is plenty for speech
     /// recognition and keeps a 2-hour video well under OpenAI's 25 MB upload
     /// limit. Opus is shipped inside a webm container because OpenAI accepts
@@ -4301,18 +4300,26 @@ public partial class SpeechToTextViewModel : ObservableObject
     private static string GetFfmpegTranscodeFormatString(string audioFormat, bool useCenterChannelOnly)
     {
         var normalized = string.IsNullOrWhiteSpace(audioFormat) ? "wav" : audioFormat.Trim().ToLowerInvariant();
+
+        // No "volume=1.75" here, unlike the waveform extraction in WaveFileExtractor where the boost
+        // only makes the drawing easier to read. +4.9 dB into 16-bit PCM hard-clips every peak of an
+        // already-mastered source - measured at ~5% of all samples pinned to full scale for speech
+        // peaking at -0.5 dBFS - and that distortion costs recognition accuracy (#13738). The gain
+        // buys nothing in return: whisper's log-mel front end clamps to "max - 8 dB" and rescales,
+        // so a uniform gain is normalized away before the model ever sees it.
         var channelArgs = useCenterChannelOnly
-            ? "-af \"pan=mono|c0=FC,volume=1.75\""
-            : "-ac 1 -af volume=1.75";
+            ? "-af \"pan=mono|c0=FC\""
+            : "-ac 1";
 
         return normalized switch
         {
             "mp3" => "-i \"{0}\" -vn -ar 16000 " + channelArgs + " -c:a libmp3lame -b:a 32k -f mp3 {2} \"{1}\"",
             "m4a" => "-i \"{0}\" -vn -ar 16000 " + channelArgs + " -c:a aac -b:a 32k -f ipod {2} \"{1}\"",
             "webm" => "-i \"{0}\" -vn -ar 16000 " + channelArgs + " -c:a libopus -b:a 28k -f webm {2} \"{1}\"",
-            _ => useCenterChannelOnly
-                ? "-i \"{0}\" -vn -ar 16000 -ab 32k -af volume=1.75 -af \"pan=mono|c0=FC\" -f wav {2} \"{1}\""
-                : "-i \"{0}\" -vn -ar 16000 -ac 1 -ab 32k -af volume=1.75 -f wav {2} \"{1}\"",
+            // pcm_s16le is already ffmpeg's default for wav, but spell it out: SE's own peak reader
+            // (WavePeakGenerator2, shared with MakeWavePeaks) only handles integer PCM, so the sample
+            // format must not drift. "-ab" is dropped - it is a no-op for an uncompressed encoder.
+            _ => "-i \"{0}\" -vn -ar 16000 " + channelArgs + " -c:a pcm_s16le -f wav {2} \"{1}\"",
         };
     }
 
