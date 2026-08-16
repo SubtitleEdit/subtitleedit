@@ -220,9 +220,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             new KeyValuePair<string, string>("4f80 1332",           "Ö" ),
             new KeyValuePair<string, string>("13b3",                "ö" ),
             new KeyValuePair<string, string>("ef80 13b3",           "ö" ),
-            new KeyValuePair<string, string>("1334",                ""  ),
-            new KeyValuePair<string, string>("13b5",                ""  ),
-            new KeyValuePair<string, string>("13b6",                ""  ),
+            new KeyValuePair<string, string>("1334",                "ß" ),
+            new KeyValuePair<string, string>("13b5",                "¥" ),
+            new KeyValuePair<string, string>("13b6",                "¤" ),
             new KeyValuePair<string, string>("1337",                "|" ),
             new KeyValuePair<string, string>("1338",                "Å" ),
             new KeyValuePair<string, string>("13b9",                "å" ),
@@ -244,9 +244,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             new KeyValuePair<string, string>("94d6",                ""  ), //94d6=?
             new KeyValuePair<string, string>("94f2",                ""  ),
             new KeyValuePair<string, string>("94f4",                ""  ),
-            new KeyValuePair<string, string>("9723",                " " ), // ?
-            new KeyValuePair<string, string>("97a1",                " " ), // ?
-            new KeyValuePair<string, string>("97a2",                " " ), // ?
+            new KeyValuePair<string, string>("9723",                ""  ), // Tab Offset 3 - positioning only, no glyph
+            new KeyValuePair<string, string>("97a1",                ""  ), // Tab Offset 1
+            new KeyValuePair<string, string>("97a2",                ""  ), // Tab Offset 2
             new KeyValuePair<string, string>("1370",                ""  ), //1370=?
             new KeyValuePair<string, string>("13e0",                ""  ), //13e0=?
             new KeyValuePair<string, string>("13f2",                ""  ), //13f2=?
@@ -539,6 +539,16 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         private static string ToSccText(string text, string language)
         {
+            // Transliterate characters CEA-608 has no code for (they would otherwise be
+            // written as spaces and silently disappear). Before the line-length fix-up so
+            // the expanded text is what gets measured.
+            text = text.Replace("…", "...")
+                .Replace("Æ", "AE")
+                .Replace("æ", "ae")
+                .Replace("Œ", "OE")
+                .Replace("œ", "oe")
+                .Replace("€", "EUR");
+
             text = FixMax4LinesAndMax32CharsPerLine(text, language);
             var topAlign = text.StartsWith("{\\an7}", StringComparison.Ordinal) ||
                            text.StartsWith("{\\an8}", StringComparison.Ordinal) ||
@@ -1170,6 +1180,15 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         {
                             switch (part)
                             {
+                                case "97a1":
+                                    x += 1; // Tab Offset 1 - positioning only, no glyph
+                                    break;
+                                case "97a2":
+                                    x += 2; // Tab Offset 2
+                                    break;
+                                case "9723":
+                                    x += 3; // Tab Offset 3
+                                    break;
                                 case "9440":
                                 case "94e0":
                                     if (!sb.ToString().EndsWith(Environment.NewLine, StringComparison.Ordinal))

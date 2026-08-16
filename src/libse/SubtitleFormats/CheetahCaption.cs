@@ -89,6 +89,89 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             return new TimeCode(buffer[index], buffer[index + 1], buffer[index + 2], FramesToMillisecondsMax999(buffer[index + 3]));
         }
 
+        /// <summary>
+        /// Appends one character to the text bytes. The reader ignores bytes 0x00-0x14 and
+        /// 0xC0-0xFF (control/style codes) and maps 0x81-0x95 via the special-character table,
+        /// so a raw cp1252 byte in those ranges either disappears or turns into the wrong
+        /// character (e.g. '…' is 0x85 in cp1252, which reads back as 'ó'). Characters without
+        /// a safe byte are transliterated to their closest representable form instead.
+        /// </summary>
+        private static void AddTextChar(List<byte> textBytes, char ch, ILookup<char, byte> dictionaryLatinCode, Encoding encoding, bool allowExpansion = true)
+        {
+            if (dictionaryLatinCode.Contains(ch))
+            {
+                foreach (var b in dictionaryLatinCode[ch])
+                {
+                    textBytes.Add(b);
+                }
+
+                return;
+            }
+
+            if (ch == '?')
+            {
+                textBytes.Add((byte)'?');
+                return;
+            }
+
+            var charBytes = encoding.GetBytes(new[] { ch });
+            var firstByte = charBytes[0];
+            if (charBytes.Length == 1 && firstByte > 0x14 && firstByte < 0xC0 && firstByte != (byte)'?' && !DicCodeLatin.ContainsKey(firstByte))
+            {
+                textBytes.Add(firstByte);
+                return;
+            }
+
+            if (!allowExpansion)
+            {
+                textBytes.Add((byte)'?');
+                return;
+            }
+
+            foreach (var c in Transliterate(ch))
+            {
+                AddTextChar(textBytes, c, dictionaryLatinCode, encoding, false);
+            }
+        }
+
+        private static string Transliterate(char ch)
+        {
+            switch (ch)
+            {
+                case 'ß': return "ss";
+                case 'Æ': return "AE";
+                case 'æ': return "ae";
+                case 'Ø': return "O";
+                case 'ø': return "o";
+                case 'Đ': return "D";
+                case 'đ': return "d";
+                case 'Þ': return "Th";
+                case 'þ': return "th";
+                case '…': return "...";
+                case '‘':
+                case '’': return "'";
+                case '“':
+                case '”':
+                case '„': return "\"";
+                case '‚': return ",";
+                case '–':
+                case '—': return "-";
+            }
+
+            // Strip diacritics (e.g. Ü -> U); unmappable characters become '?'
+            var baseChars = new StringBuilder();
+            foreach (var c in ch.ToString().Normalize(NormalizationForm.FormD))
+            {
+                if (System.Globalization.CharUnicodeInfo.GetUnicodeCategory(c) != System.Globalization.UnicodeCategory.NonSpacingMark)
+                {
+                    baseChars.Append(c);
+                }
+            }
+
+            var result = baseChars.ToString().Normalize(NormalizationForm.FormC);
+            return result.Length == 0 || result[0] == ch ? "?" : result;
+        }
+
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)
         {
             subtitle.Paragraphs.Clear();
@@ -317,15 +400,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     }
                     else
                     {
-                        if (dictionaryLatinCode.Contains(text[j]))
-                        {
-                            textBytes.AddRange(dictionaryLatinCode[text[j]]);
-                        }
-                        else
-                        {
-                            textBytes.Add(encoding.GetBytes(new[] { text[j] })[0]);
-                        }
-
+                        AddTextChar(textBytes, text[j], dictionaryLatinCode, encoding);
                         j++;
                     }
                 }

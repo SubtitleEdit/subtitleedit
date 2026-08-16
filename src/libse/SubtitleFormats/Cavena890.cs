@@ -394,7 +394,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             new Tuple<int, string>(0x54, "Υ"),
             new Tuple<int, string>(0x55, "Φ"),
             new Tuple<int, string>(0x56, "Χ"),
-            new Tuple<int, string>(0x57, "ψ"),
+            new Tuple<int, string>(0x57, "Ψ"),
             new Tuple<int, string>(0x58, "Ω"),
             new Tuple<int, string>(0x59, "ά"),
             new Tuple<int, string>(0x5A, "έ"),
@@ -551,6 +551,14 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     case "zh":
                         _languageIdLine1 = LanguageIdChineseSimplified;
                         _languageIdLine2 = LanguageIdChineseSimplified;
+                        break;
+                    case "ar":
+                        _languageIdLine1 = LanguageIdArabic;
+                        _languageIdLine2 = LanguageIdArabic;
+                        break;
+                    case "el":
+                        _languageIdLine1 = LanguageIdGreek;
+                        _languageIdLine2 = LanguageIdGreek;
                         break;
                     case "da":
                         _languageIdLine1 = LanguageIdDanish;
@@ -810,6 +818,15 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         private static void WriteText(Stream fs, string text, bool isLast, int languageIdLine, bool useBox)
         {
+            // Italics are stored per line (the reader closes an open <i> at each line end),
+            // so a tag spanning both lines must be rebalanced onto each line.
+            if (text.StartsWith("<i>", StringComparison.Ordinal) && text.EndsWith("</i>", StringComparison.Ordinal) &&
+                Utilities.CountTagInText(text, "<i>") == 1 && text.Contains(Environment.NewLine))
+            {
+                var innerLines = HtmlUtil.RemoveOpenCloseTags(text, HtmlUtil.TagItalic).SplitToLines();
+                text = string.Join(Environment.NewLine, innerLines.Select(l => "<i>" + l + "</i>"));
+            }
+
             var lines = text.SplitToLines();
             if (lines.Count > 2)
             {
@@ -874,12 +891,31 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 }
             }
 
-            var encoding = Encoding.Default;
+            var encoding = Encoding.GetEncoding(1252);
             var index = 0;
 
             if (languageId == LanguageIdHebrew)
             {
                 text = ReverseAnsi(text);
+            }
+            else if (languageId == LanguageIdRussian || languageId == LanguageIdGreek || languageId == LanguageIdArabic)
+            {
+                // No in-band italic/font codes are decoded for these languages
+                text = HtmlUtil.RemoveHtmlTags(text, true);
+            }
+            else if (languageId != LanguageIdChineseTraditional && languageId != LanguageIdChineseSimplified)
+            {
+                // Transliterate cp1252 characters whose byte doubles as an accent pair
+                // lead (0x80-0x8F) or an italics marker - they cannot be stored as-is.
+                text = text.Replace("…", "...")
+                    .Replace("‚", ",")
+                    .Replace("„", "\"")
+                    .Replace("ˆ", "^")
+                    .Replace("˜", "~")
+                    .Replace("Œ", "OE")
+                    .Replace("œ", "oe")
+                    .Replace("ƒ", "f")
+                    .Replace("‰", "%");
             }
 
             for (var i = 0; i < text.Length; i++)
@@ -916,6 +952,21 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         buffer[index] = encoding.GetBytes(new[] { current })[0];
                     }
 
+                    index++;
+                }
+                else if (languageId == LanguageIdRussian)
+                {
+                    buffer[index] = EncodeChar(current, RussianEncodeTable.Value);
+                    index++;
+                }
+                else if (languageId == LanguageIdGreek)
+                {
+                    buffer[index] = EncodeChar(current, GreekEncodeTable.Value);
+                    index++;
+                }
+                else if (languageId == LanguageIdArabic)
+                {
+                    buffer[index] = EncodeChar(current, ArabicEncodeTable.Value);
                     index++;
                 }
                 else if (languageId == LanguageIdChineseTraditional || languageId == LanguageIdChineseSimplified)
@@ -1480,6 +1531,32 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         {
                             AddTwo(buffer, ref index, 0x86, 0x79);
                         }
+                        else if (current == '♪')
+                        {
+                            buffer[index] = 0xEB;
+                        }
+                        else if (current == 'ł')
+                        {
+                            buffer[index] = 0x7C;
+                        }
+                        else if (current == 'đ')
+                        {
+                            buffer[index] = 0x7D;
+                        }
+                        else if (current == 'Đ')
+                        {
+                            buffer[index] = 0x02;
+                        }
+                        else if (current == '[')
+                        {
+                            // 0x5B means 'Æ', and the reader maps 0xE5 back to '[' only for
+                            // non-Scandinavian languages - Scandinavian files cannot express '['
+                            buffer[index] = IsScandinavian(languageId) ? (byte)'?' : (byte)0xE5;
+                        }
+                        else if (current == ']')
+                        {
+                            buffer[index] = IsScandinavian(languageId) ? (byte)'?' : (byte)0xE6;
+                        }
                         else if (i + 3 < text.Length && text.Substring(i, 3) == "<i>")
                         {
                             buffer[index] = 0x88;
@@ -1492,6 +1569,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         }
                         else
                         {
+                            // cp1252 mirrors the reader's fallback decode; unmappable characters become '?'
                             buffer[index] = encoding.GetBytes(new[] { current })[0];
                         }
 
@@ -1537,6 +1615,81 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             buffer[index] = b1;
             index++;
             buffer[index] = b2;
+        }
+
+        // Encode tables are the exact inverse of the decode tables (first mapping wins), plus a
+        // pass-through for bytes the decoder falls back to cp1252 for - so everything written
+        // here reads back as the same character. Anything unrepresentable becomes '?'.
+        private static readonly Lazy<Dictionary<char, byte>> RussianEncodeTable = new Lazy<Dictionary<char, byte>>(() =>
+        {
+            var table = new Dictionary<char, byte>();
+            for (var i = 0; i < RussianCodes.Count && i < RussianLetters.Count; i++)
+            {
+                if (RussianLetters[i].Length == 1 && !table.ContainsKey(RussianLetters[i][0]))
+                {
+                    table[RussianLetters[i][0]] = (byte)RussianCodes[i];
+                }
+            }
+
+            AddCp1252PassThrough(table, b => RussianCodes.Contains(b));
+            return table;
+        });
+
+        private static readonly Lazy<Dictionary<char, byte>> GreekEncodeTable = new Lazy<Dictionary<char, byte>>(() =>
+        {
+            var table = new Dictionary<char, byte>();
+            foreach (var entry in Greek)
+            {
+                if (entry.Item2.Length == 1 && !table.ContainsKey(entry.Item2[0]))
+                {
+                    table[entry.Item2[0]] = (byte)entry.Item1;
+                }
+            }
+
+            return table;
+        });
+
+        private static readonly Lazy<Dictionary<char, byte>> ArabicEncodeTable = new Lazy<Dictionary<char, byte>>(() =>
+        {
+            var table = new Dictionary<char, byte>();
+            foreach (var entry in ArabicDictionary)
+            {
+                if (entry.Value.Length == 1 && !table.ContainsKey(entry.Value[0]))
+                {
+                    table[entry.Value[0]] = (byte)entry.Key;
+                }
+            }
+
+            AddCp1252PassThrough(table, b => ArabicDictionary.ContainsKey(b));
+            return table;
+        });
+
+        private static void AddCp1252PassThrough(Dictionary<char, byte> table, Func<int, bool> isTakenByTable)
+        {
+            var cp1252 = Encoding.GetEncoding(1252);
+            for (var b = 0x20; b < 0x7F; b++)
+            {
+                if (b == 0x7C || isTakenByTable(b))
+                {
+                    continue; // byte is remapped by the decoder, not identity
+                }
+
+                var ch = cp1252.GetString(new[] { (byte)b })[0];
+                if (!table.ContainsKey(ch))
+                {
+                    table[ch] = (byte)b;
+                }
+            }
+        }
+
+        private static byte EncodeChar(char ch, Dictionary<char, byte> table)
+        {
+            return table.TryGetValue(ch, out var b) ? b : (byte)'?';
+        }
+
+        private static bool IsScandinavian(int languageId)
+        {
+            return languageId == LanguageIdSwedish || languageId == LanguageIdNorwegian || languageId == LanguageIdDanish;
         }
 
         private static void WriteTime(Stream fs, TimeCode timeCode)
@@ -1736,9 +1889,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     {
                         sb.Append(entry.Item2);
                     }
-                    else if (buffer[start + i] != 0x7F)
+                    else if (b != 0x7F)
                     {
-                        throw new InvalidOperationException($"{buffer[start + i]}");
+                        // Unknown byte - decode as cp1252 instead of failing the whole file
+                        sb.Append(encoding.GetString(buffer, start + i, 1));
                     }
                 }
 
@@ -1864,6 +2018,18 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 text = text.Replace(encoding.GetString(new byte[] { 0xBE }), "-");
                 text = FixColors(text);
 
+                // Raw-byte remappings must run before the control-code mappings below - those
+                // produce the same characters (å/æ/â...), and running these replaces later
+                // would clobber them (e.g. 0x1D -> "å" -> "[").
+                text = text.Replace(encoding.GetString(new byte[] { 0xE2 }), "@");
+                if (languageId != LanguageIdSwedish &&
+                    languageId != LanguageIdNorwegian &&
+                    languageId != LanguageIdDanish)
+                {
+                    text = text.Replace(encoding.GetString(new byte[] { 0xE5 }), "[");
+                    text = text.Replace(encoding.GetString(new byte[] { 0xE6 }), "]");
+                }
+
                 text = text.Replace(encoding.GetString(new byte[] { 0x02 }), "Đ");
                 text = text.Replace(encoding.GetString(new byte[] { 0x1B }), "æ");
                 text = text.Replace(encoding.GetString(new byte[] { 0x1C }), "ø");
@@ -1876,15 +2042,6 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 text = text.Replace(encoding.GetString(new byte[] { 0x5D }), "Å");
                 text = text.Replace(encoding.GetString(new byte[] { 0x7C }), "ł");
                 text = text.Replace(encoding.GetString(new byte[] { 0x7D }), "đ");
-                text = text.Replace(encoding.GetString(new byte[] { 0xE2 }), "@");
-
-                if (languageId != LanguageIdSwedish &&
-                    languageId != LanguageIdNorwegian &&
-                    languageId != LanguageIdDanish)
-                {
-                    text = text.Replace(encoding.GetString(new byte[] { 0xE5 }), "[");
-                    text = text.Replace(encoding.GetString(new byte[] { 0xE6 }), "]");
-                }
 
                 text = text.Replace(encoding.GetString(new byte[] { 0xEB }), "♪");
 

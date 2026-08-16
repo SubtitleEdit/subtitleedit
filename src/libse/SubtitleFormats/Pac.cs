@@ -504,7 +504,6 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             { 0xdd, new SpecialCharacter("דּ")},
             { 0xde, new SpecialCharacter("גּ")},
             { 0xdf, new SpecialCharacter("בּ")},
-            { 0x2b, new SpecialCharacter(".")},
             { 0x2e, new SpecialCharacter(".")},
             { 0x2c, new SpecialCharacter(",")}
         };
@@ -1815,6 +1814,14 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                             {
                                 sb.Append(Encoding.ASCII.GetString(buffer, index + 1, 1));
                             }
+                            else if (buffer[index] < 0x80)
+                            {
+                                // Bare single-byte character (files from older writers) - no valid
+                                // CJK double-byte sequence starts below 0x80, so consume just one
+                                // byte to keep the double-byte pairing aligned.
+                                sb.Append(Encoding.ASCII.GetString(buffer, index, 1));
+                                index--; // net advance of one byte (loop adds two)
+                            }
                             else if (buffer.Length > index + 1)
                             {
                                 if (CodePage == CodePageChineseSimplified)
@@ -2450,9 +2457,22 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     result.Add(0x36); // 6
                     result.Add(0x2e); // ?
 
-                    foreach (var b in Encoding.GetEncoding(encoding).GetBytes(line))
+                    // The reader consumes W16 text two bytes at a time and expects single-byte
+                    // characters to be 0x00-prefixed - a bare ASCII byte (e.g. a space between
+                    // Hangul words) would shift the double-byte pairing for the rest of the line.
+                    var lineEncoding = Encoding.GetEncoding(encoding);
+                    foreach (var ch in line)
                     {
-                        result.Add(b);
+                        var charBytes = lineEncoding.GetBytes(ch.ToString());
+                        if (charBytes.Length == 1)
+                        {
+                            result.Add(0);
+                        }
+
+                        foreach (var b in charBytes)
+                        {
+                            result.Add(b);
+                        }
                     }
                 }
                 firstLine = false;
