@@ -16568,10 +16568,15 @@ public partial class MainViewModel :
         EditTextBox.Cut();
     }
 
+    // The "(alternative)" clipboard commands are dispatched through the shortcut manager while
+    // either edit box is focused (their gestures are not in Avalonia's native keymap), so they
+    // must act on the focused box - unlike the primary commands, which the focused control
+    // handles natively and only run from the main text box's context menu.
     [RelayCommand]
     private void TextBoxCut2()
     {
-        EditTextBox.Cut();
+        var textBox = EditTextBoxOriginal.IsFocused ? EditTextBoxOriginal : EditTextBox;
+        textBox.Cut();
     }
 
     [RelayCommand]
@@ -16581,9 +16586,23 @@ public partial class MainViewModel :
     }
 
     [RelayCommand]
+    private void TextBoxCopy2()
+    {
+        var textBox = EditTextBoxOriginal.IsFocused ? EditTextBoxOriginal : EditTextBox;
+        textBox.Copy();
+    }
+
+    [RelayCommand]
     private void TextBoxPaste()
     {
         EditTextBox.Paste();
+    }
+
+    [RelayCommand]
+    private void TextBoxPaste2()
+    {
+        var textBox = EditTextBoxOriginal.IsFocused ? EditTextBoxOriginal : EditTextBox;
+        textBox.Paste();
     }
 
     [RelayCommand]
@@ -23870,9 +23889,10 @@ public partial class MainViewModel :
     // These TextBox-category commands duplicate Avalonia's built-in TextBox key handling and are
     // hardcoded to the primary EditTextBox, so we let the focused control handle them natively
     // instead of routing them through the shortcut manager (they remain for the right-click menu).
+    // The "(alternative)" clipboard commands are NOT skipped: their gestures (e.g. Shift+Delete
+    // for cut) are not in Avalonia's native keymap, so they only work when routed here (#13711).
     private bool IsNativeTextBoxClipboardCommand(IRelayCommand command) =>
         ReferenceEquals(command, TextBoxCutCommand) ||
-        ReferenceEquals(command, TextBoxCut2Command) ||
         ReferenceEquals(command, TextBoxCopyCommand) ||
         ReferenceEquals(command, TextBoxPasteCommand) ||
         ReferenceEquals(command, TextBoxSelectAllCommand);
