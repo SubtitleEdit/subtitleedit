@@ -18,7 +18,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             if (!string.IsNullOrEmpty(fileName) && File.Exists(fileName))
             {
                 var fi = new FileInfo(fileName);
-                if (fi.Length >= 3000 && fi.Length < 1024000) // not too small or too big
+                if (fi.Length >= 2786 && fi.Length < 1024000) // 2713 byte header + at least one 73+ byte record
                 {
                     if (!fileName.EndsWith(Extension, StringComparison.OrdinalIgnoreCase))
                     {
@@ -258,7 +258,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             while (index + textPosition < buffer.Length)
             {
                 int textLength = buffer[index + 16];
-                if (textLength > 0 && index + textPosition + textLength < buffer.Length)
+                if (textLength > 0 && index + textPosition + textLength <= buffer.Length)
                 {
                     string text = GetText(index + textPosition, textLength, buffer);
                     if (!string.IsNullOrWhiteSpace(text))

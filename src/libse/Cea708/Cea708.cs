@@ -180,20 +180,20 @@ namespace Nikse.SubtitleEdit.Core.Cea708
             // G1 character table
             { 160, " " }, // non breaking space
             { 161, "¡" },
-            { 162, "￠" },
-            { 163, "￡" },
+            { 162, "¢" },
+            { 163, "£" },
             { 164, "¤" },
-            { 165, "￥" },
+            { 165, "¥" },
             { 166, "¦" },
             { 167, "§" },
             { 168, "¨" },
             { 169, "©" },
             { 170, "ª" },
             { 171, "«" },
-            { 172, "￢" },
+            { 172, "¬" },
             { 173, "-" },
             { 174, "®" },
-            { 175, "￣" },
+            { 175, "¯" },
             { 176, "°"},
             { 177, "±" },
             { 178, "²" },
@@ -276,7 +276,38 @@ namespace Nikse.SubtitleEdit.Core.Cea708
             { 255, "ÿ" },
         };
 
-        private static Dictionary<string, byte> _textLookupTable;
+        // G2: Extended Control Code Set 1 - reached via the EXT1 (0x10) prefix byte
+        private static readonly Dictionary<byte, string> G2CharLookupTable = new Dictionary<byte, string>
+        {
+            { 0x20, " " }, // transparent space
+            { 0x21, " " }, // non breaking transparent space
+            { 0x25, "…" },
+            { 0x2A, "Š" },
+            { 0x2C, "Œ" },
+            { 0x30, "█" },
+            { 0x31, "‘" }, // '
+            { 0x32, "’" }, // '
+            { 0x33, "“" }, // "
+            { 0x34, "”" }, // "
+            { 0x35, "•" },
+            { 0x39, "™" },
+            { 0x3A, "š" },
+            { 0x3C, "œ" },
+            { 0x3D, "℠" },
+            { 0x3F, "Ÿ" },
+            { 0x76, "⅛" },
+            { 0x77, "⅜" },
+            { 0x78, "⅝" },
+            { 0x79, "⅞" },
+            { 0x7A, "│" },
+            { 0x7B, "┐" },
+            { 0x7C, "└" },
+            { 0x7D, "─" },
+            { 0x7E, "┘" },
+            { 0x7F, "┌" },
+        };
+
+        private static Dictionary<string, byte[]> _textLookupTable;
 
         public static string Decode(int lineIndex, byte[] bytes, CommandState state, bool flush)
         {
@@ -526,26 +557,26 @@ namespace Nikse.SubtitleEdit.Core.Cea708
                 // Lookups
                 else if (b == 0x10 && i < bytes.Length - 1)
                 {
-                    // ext 1
-                    var b2 = bytes[i] << 8 + bytes[i + 1];
+                    // EXT1: the next byte selects from C2/G2/C3/G3
+                    var b2 = bytes[i + 1];
                     i++;
 
-                    if (b2 >= 0x1000 && b2 <= 0x101F)
-                    {
-                        // CL Group: C2: ISO 8859 - Extended Miscellaneous Control Codes
-                    }
-                    else if (b2 >= 0x1020 && b2 <= 0x107F)
+                    if (b2 >= 0x20 && b2 <= 0x7F)
                     {
                         // GL Group: G2: Extended Control Code Set 1
+                        if (G2CharLookupTable.TryGetValue(b2, out var g2Text))
+                        {
+                            var text = new SetText(lineIndex, g2Text);
+                            state.Commands.Add(text);
+                            if (DebugMode)
+                            {
+                                debugBuilder.Append($"{{SetText G2:Text={text.Content}}}");
+                            }
+                        }
                     }
-                    else if (b2 >= 0x1080 && b2 <= 0x109F)
-                    {
-                        // CR Group: C3: Extended Control Code Set 2
-                    }
-                    else if (b2 >= 0x10A0 && b2 <= 0x10FF)
-                    {
-                        // GR Group: G3:  Future characters and icons
-                    }
+
+                    // C2 (0x00-0x1F), C3 (0x80-0x9F): no defined commands in use
+                    // G3 (0xA0-0xFF): icons ([CC] etc.) - skipped
                 }
 
                 else if (b == 0x18 && i < bytes.Length - 2)
@@ -690,12 +721,20 @@ namespace Nikse.SubtitleEdit.Core.Cea708
         {
             if (_textLookupTable == null)
             {
-                var dic = new Dictionary<string, byte>();
+                var dic = new Dictionary<string, byte[]>();
                 foreach (var kvp in SingleCharLookupTable)
                 {
                     if (!string.IsNullOrEmpty(kvp.Value) && !dic.ContainsKey(kvp.Value))
                     {
-                        dic.Add(kvp.Value, kvp.Key);
+                        dic.Add(kvp.Value, new[] { kvp.Key });
+                    }
+                }
+
+                foreach (var kvp in G2CharLookupTable)
+                {
+                    if (!string.IsNullOrEmpty(kvp.Value) && !dic.ContainsKey(kvp.Value))
+                    {
+                        dic.Add(kvp.Value, new byte[] { 0x10, kvp.Key }); // EXT1 + G2 code
                     }
                 }
 
@@ -707,7 +746,7 @@ namespace Nikse.SubtitleEdit.Core.Cea708
             {
                 if (_textLookupTable.TryGetValue(ch.ToString(), out var b))
                 {
-                    bytes.Add(b);
+                    bytes.AddRange(b);
                 }
             }
 
