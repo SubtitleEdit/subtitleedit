@@ -1,6 +1,7 @@
 using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
+using System.Globalization;
 using System.Text;
 
 namespace LibSETests.SubtitleFormats;
@@ -225,6 +226,42 @@ public class AppleFormatsSweepTest
         Assert.Equal("Final Cut Pro Xml 1.13", parsed.OriginalFormat.Name);
         Assert.Equal(2, parsed.Paragraphs.Count);
         Assert.Equal(1000, parsed.Paragraphs[0].StartTime.TotalMilliseconds, 1.0);
+    }
+
+    // The title export always wrote styled runs, but the importer flattened any italic/bold
+    // in the title onto the whole paragraph.
+    [Fact]
+    public void FinalCutProTitleKeepsPartialItalicBoldOnRoundTrip()
+    {
+        var s = new Subtitle();
+        s.Paragraphs.Add(new Paragraph("<i>Italic</i> and <b>bold</b> text.", 1000, 3000));
+        var format = new FinalCutProXml19();
+        var raw = format.ToText(s, "title");
+
+        var reloaded = new Subtitle();
+        format.LoadSubtitle(reloaded, raw.SplitToLines(), "file.fcpxml");
+        Assert.Single(reloaded.Paragraphs);
+        Assert.Equal("<i>Italic</i> and <b>bold</b> text.", reloaded.Paragraphs[0].Text);
+    }
+
+    // A comma-decimal locale used to write fontColor="0,960784 ..." - Final Cut Pro
+    // cannot parse that.
+    [Fact]
+    public void FinalCutProTitleColorsUseInvariantDecimals()
+    {
+        var savedCulture = CultureInfo.CurrentCulture;
+        try
+        {
+            CultureInfo.CurrentCulture = CultureInfo.GetCultureInfo("da-DK");
+            var raw = new FinalCutProXml19().ToText(MakeReference(), "title");
+            var colors = System.Text.RegularExpressions.Regex.Matches(raw, "fontColor=\"[^\"]*\"");
+            Assert.NotEmpty(colors);
+            Assert.All(colors, m => Assert.DoesNotContain(",", m.Value));
+        }
+        finally
+        {
+            CultureInfo.CurrentCulture = savedCulture;
+        }
     }
 
     // Caption-based export: Final Cut Pro imports these via File > Import > XML as real
