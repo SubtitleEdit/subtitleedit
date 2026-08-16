@@ -677,9 +677,10 @@ internal static class OmniVoiceLanguages
     /// for itself (language-agnostic synthesis), which is what both engines did before the
     /// language selection was wired up.
     ///
-    /// Still true on the v0.8.28 pin, despite the runtime having grown a "no language requested;
+    /// Still true on the v0.8.29 pin, despite the runtime having grown a "no language requested;
     /// detected 'x' from the target text" path and a <c>CRISPASR_OMNIVOICE_AUTO_LANG</c> switch
-    /// (probed on v0.8.27; v0.8.28 is a packaging release that changed no omnivoice code):
+    /// (probed on v0.8.27; neither v0.8.28 nor v0.8.29 touches language selection — v0.8.28 was
+    /// packaging only, and v0.8.29's omnivoice work is the reference-duration guard of #363):
     /// probed through <c>/v1/audio/speech</c> with the env var unset, 0 and 1, over short and long
     /// German input at <c>--verbose</c>, that line never fires, so the guess does not reach the
     /// server mode SE runs. An explicit id is a different story — the backend resolves it against

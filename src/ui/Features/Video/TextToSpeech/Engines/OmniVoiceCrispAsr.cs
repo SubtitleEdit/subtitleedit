@@ -57,7 +57,7 @@ namespace Nikse.SubtitleEdit.Features.Video.TextToSpeech.Engines;
 /// per-request field, applied without a restart.
 ///
 /// Honouring <c>language</c> per request needs v0.8.26 or newer, which the pin
-/// (<see cref="Logic.Download.CrispAsrDownloadService"/>, now v0.8.28) satisfies. On the older
+/// (<see cref="Logic.Download.CrispAsrDownloadService"/>, now v0.8.29) satisfies. On the older
 /// v0.8.25 the CLI adapter applied the language once at startup only, so the field was parsed and
 /// ignored and every line stayed language-agnostic (#13273); sending it there is harmless, since
 /// the IDs SE offers are the model's own, so an install predating the bump degrades quietly.

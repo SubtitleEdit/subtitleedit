@@ -225,7 +225,10 @@ public static class SpeechToTextTimingFixer
     ///
     /// Engines are supposed to emit segments in order, but a broken slice/chunk
     /// mapping can send one backwards in time - Crisp ASR + Parakeet did this 18
-    /// times in a 10 minute file (issue #13548), some of them by 10 seconds. The
+    /// times in a 10 minute file (issue #13548), some of them by 10 seconds. That
+    /// particular engine bug was fixed upstream in CrispASR v0.8.29
+    /// (CrispStrobe/CrispASR#356/#357), but this guard stays: it is engine-agnostic,
+    /// and users keep running older installs of every engine here. The
     /// merge step in <see cref="SpeechToTextPostProcessor"/> assumes sorted,
     /// non-overlapping input and fuses gap-free runs, which turns a small
     /// out-of-order emission into a huge overlapping cue, so this has to run
