@@ -309,6 +309,9 @@ public static class LlamaCppServerManager
 
     public static string? RunningModelPath => IsServerRunning ? _serverModelPath : null;
 
+    /// <summary>Context size the running server was started with, or 0 when nothing is running.</summary>
+    public static int RunningContextSize => IsServerRunning ? _serverContextSize : 0;
+
     public static string ApiUrl => $"http://127.0.0.1:{_serverPort}/v1/chat/completions";
 
     public static string GetAndCreateFolder()
