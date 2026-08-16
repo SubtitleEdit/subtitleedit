@@ -7976,6 +7976,7 @@ public partial class MainViewModel :
                     {
                         var newLine = new SubtitleLineViewModel(p, SelectedSubtitleFormat);
                         newLine.SetStartTimeKeepDuration(selectedLine.StartTime + p.StartTime.TimeSpan);
+                        newLine.Style = selectedLine.Style; // the lines replace selectedLine, so they keep its style
                         newLines.Add(newLine);
                     }
                 }
@@ -8000,7 +8001,8 @@ public partial class MainViewModel :
 
         foreach (var line in newLines)
         {
-            _insertService.InsertInCorrectPosition(Subtitles, line);
+            var index = _insertService.InsertInCorrectPosition(Subtitles, line);
+            SetDefaultAssaStyleForNewParagraph(line, index);
         }
 
         if (newLines.Count > 0 || deleteLines.Count > 0)
@@ -14400,6 +14402,7 @@ public partial class MainViewModel :
         var newParagraph =
             new SubtitleLineViewModel(new Paragraph(string.Empty, startMs, endMs), SelectedSubtitleFormat);
         var idx = _insertService.InsertInCorrectPosition(Subtitles, newParagraph);
+        SetDefaultAssaStyleForNewParagraph(newParagraph, idx);
         var next = Subtitles.GetOrNull(idx + 1);
         if (next != null)
         {
@@ -15109,7 +15112,8 @@ public partial class MainViewModel :
         }
 
         var newParagraph = AudioVisualizer.NewSelectionParagraph;
-        _insertService.InsertInCorrectPosition(Subtitles, newParagraph);
+        var index = _insertService.InsertInCorrectPosition(Subtitles, newParagraph);
+        SetDefaultAssaStyleForNewParagraph(newParagraph, index);
         AudioVisualizer.NewSelectionParagraph = null;
         SelectAndScrollToSubtitle(newParagraph);
         Renumber();
@@ -15129,7 +15133,8 @@ public partial class MainViewModel :
         }
 
         var newParagraph = AudioVisualizer.NewSelectionParagraph;
-        _insertService.InsertInCorrectPosition(Subtitles, newParagraph);
+        var index = _insertService.InsertInCorrectPosition(Subtitles, newParagraph);
+        SetDefaultAssaStyleForNewParagraph(newParagraph, index);
         AudioVisualizer.NewSelectionParagraph = null;
         SubtitleGrid.SelectedItem = newParagraph;
         SubtitleGrid.ScrollIntoView(newParagraph);
@@ -15161,7 +15166,8 @@ public partial class MainViewModel :
         }
 
         newParagraph.Text = text.Trim();
-        _insertService.InsertInCorrectPosition(Subtitles, newParagraph);
+        var index = _insertService.InsertInCorrectPosition(Subtitles, newParagraph);
+        SetDefaultAssaStyleForNewParagraph(newParagraph, index);
         AudioVisualizer.NewSelectionParagraph = null;
         SelectAndScrollToSubtitle(newParagraph);
         Renumber();
@@ -15186,6 +15192,12 @@ public partial class MainViewModel :
         // Paste at the waveform cursor rather than the raw player position - after a right-click
         // the cursor is pinned to the clicked spot while the async player seek may still lag.
         var linesInserted = _pasteFromClipboardHelper.PasteFromClipboard(text, AudioVisualizer.CurrentVideoPositionSeconds * 1000.0, Subtitles, SelectedSubtitleFormat);
+        foreach (var line in linesInserted)
+        {
+            // plain text carries no style - pasted ASSA lines keep the one they came with
+            SetDefaultAssaStyleForNewParagraph(line, Subtitles.IndexOf(line));
+        }
+
         Renumber();
         if (linesInserted.Count == 1)
         {
@@ -15277,6 +15289,7 @@ public partial class MainViewModel :
         RunWithoutChangeDetection(() =>
         {
             var idx = _insertService.InsertInCorrectPosition(Subtitles, newParagraph);
+            SetDefaultAssaStyleForNewParagraph(newParagraph, idx);
             var next = Subtitles.GetOrNull(idx + 1);
             if (next != null)
             {
@@ -15318,6 +15331,7 @@ public partial class MainViewModel :
         RunWithoutChangeDetection(() =>
         {
             var idx = _insertService.InsertInCorrectPosition(Subtitles, newParagraph);
+            SetDefaultAssaStyleForNewParagraph(newParagraph, idx);
             var next = Subtitles.GetOrNull(idx + 1);
             if (next != null)
             {
@@ -15637,6 +15651,7 @@ public partial class MainViewModel :
         RunWithoutChangeDetection(() =>
         {
             var idx = _insertService.InsertInCorrectPosition(Subtitles, newParagraph);
+            SetDefaultAssaStyleForNewParagraph(newParagraph, idx);
             var next = Subtitles.GetOrNull(idx + 1);
             if (next != null &&
                 next.StartTime.TotalMilliseconds < endMs &&
@@ -25329,24 +25344,35 @@ public partial class MainViewModel :
     }
 
     /// <summary>
-    /// Sets the style of a newly created ASSA/SSA paragraph to the default storage style (if any).
-    /// Used by insert paths that bypass <see cref="IInsertService"/> (e.g. typing the first line or
-    /// inserting from a waveform selection).
+    /// Sets the style of a newly created ASSA/SSA paragraph. Used by the insert paths that bypass
+    /// <see cref="IInsertService.InsertBefore"/>/<see cref="IInsertService.InsertAfter"/> - the
+    /// waveform and video-position inserts, and typing the first line of an empty file. Without
+    /// it the line is saved with an empty style, which the writer then resolves to whichever
+    /// style sits first in the header (issue #13677).
     /// </summary>
-    private void SetDefaultAssaStyleForNewParagraph(SubtitleLineViewModel newParagraph)
+    /// <param name="insertedIndex">
+    /// Index the paragraph now occupies, so it can keep the style of the line it landed next to.
+    /// Pass -1 when the paragraph is not in <see cref="Subtitles"/> (yet).
+    /// </param>
+    private void SetDefaultAssaStyleForNewParagraph(SubtitleLineViewModel newParagraph, int insertedIndex = -1)
     {
-        if (SelectedSubtitleFormat is not (AdvancedSubStationAlpha or SubStationAlpha))
+        if (SelectedSubtitleFormat is not (AdvancedSubStationAlpha or SubStationAlpha) ||
+            !string.IsNullOrEmpty(newParagraph.Style))
         {
             return;
         }
 
-        newParagraph.Style = AssaStyleStorageHelper.GetStyleNameForNewParagraph(_subtitle, SelectedSubtitleFormat);
+        var neighbor = insertedIndex >= 0
+            ? Subtitles.GetOrNull(insertedIndex - 1) ?? Subtitles.GetOrNull(insertedIndex + 1)
+            : null;
+
+        newParagraph.Style = AssaStyleStorageHelper.GetStyleNameForNewParagraph(_subtitle, SelectedSubtitleFormat, neighbor?.Style);
     }
 
     public void AudioVisualizerOnNewSelectionInsert(object sender, ParagraphEventArgs e)
     {
-        SetDefaultAssaStyleForNewParagraph(e.Paragraph);
         var index = _insertService.InsertInCorrectPosition(Subtitles, e.Paragraph);
+        SetDefaultAssaStyleForNewParagraph(e.Paragraph, index);
         SelectAndScrollToRow(index);
         Renumber();
         _updateAudioVisualizer = true;
@@ -25563,7 +25589,9 @@ public partial class MainViewModel :
 
                             var newParagraph = new Paragraph(text, segStartMs, segEndMs);
                             var newLine = new SubtitleLineViewModel(newParagraph, SelectedSubtitleFormat);
-                            _insertService.InsertInCorrectPosition(Subtitles, newLine);
+                            newLine.Style = originalLine.Style; // the segments replace originalLine, so they keep its style
+                            var newLineIndex = _insertService.InsertInCorrectPosition(Subtitles, newLine);
+                            SetDefaultAssaStyleForNewParagraph(newLine, newLineIndex);
                         }
 
                         Renumber();
