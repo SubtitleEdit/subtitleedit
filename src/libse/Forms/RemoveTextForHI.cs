@@ -530,7 +530,10 @@ namespace Nikse.SubtitleEdit.Core.Forms
                 count++;
             }
             newText = newText.Trim();
-            if ((noOfNames > 0 || removedInFirstLine) && Utilities.GetNumberOfLines(newText) == 2)
+            // a single name that took up a whole line of its own says nothing about the
+            // speakers of the remaining lines - only names removed from a line that
+            // survived (or a second name) mean there really is a dialog here
+            if ((noOfNames > 1 || removedInFirstLine || removedInSecondLine) && Utilities.GetNumberOfLines(newText) == 2)
             {
                 var indexOfDialogChar = newText.IndexOf('-');
                 var insertDash = true;
