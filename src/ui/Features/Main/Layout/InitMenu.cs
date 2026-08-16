@@ -646,6 +646,13 @@ public static class InitMenu
             },
             new MenuItem
             {
+                // Finds who speaks in the video, clones each of them and assigns the cast, so the
+                // whole thing can be dubbed in its own voices (#13698).
+                Header = Se.Language.Video.TextToSpeech.AutoCastMenuItem,
+                Command = vm.ShowVideoAutoCastFromVideoCommand,
+            },
+            new MenuItem
+            {
                 Header = Se.Language.Options.Shortcuts.ToggleWaveformToolbar,
                 Command = vm.ToggleIsWaveformToolbarVisibleCommand,
                 Icon = new Optris.Icons.Avalonia.Icon

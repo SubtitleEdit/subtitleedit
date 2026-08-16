@@ -154,6 +154,8 @@ using Nikse.SubtitleEdit.Features.Video.SpeechToText;
 using Nikse.SubtitleEdit.Features.Video.SpeechToText.OpenAiCompatible;
 using Nikse.SubtitleEdit.Features.Video.VideoOcr;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech;
+using Nikse.SubtitleEdit.Features.Video.TextToSpeech.ActorVoices;
+using Nikse.SubtitleEdit.Features.Video.TextToSpeech.AutoCast;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.Engines;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.ReviewSpeech;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.VoiceCloneConsent;
@@ -8950,6 +8952,270 @@ public partial class MainViewModel :
                 ExtractShotChanges(_videoFileName, _audioTrack?.FfIndex ?? -1);
             }
         }
+    }
+
+    /// <summary>
+    /// Finds who speaks in the video, clones each of them, and sets up the cast so the whole
+    /// video can be dubbed in its own voices (#13698).
+    /// </summary>
+    /// <remarks>
+    /// The steps are: transcribe with a diarizing speech-to-text engine, turn its speaker labels
+    /// into actors, let the user name and merge the speakers, clone one voice per speaker from
+    /// their own lines, and leave the cast assigned so "Text to speech" opens ready to generate.
+    ///
+    /// With a subtitle already open its lines are kept and only labelled with actors - a
+    /// translation is work nobody wants replaced by a transcription. With nothing open the
+    /// transcription becomes the subtitle.
+    /// </remarks>
+    [RelayCommand]
+    private async Task ShowVideoAutoCastFromVideo()
+    {
+        if (Window == null)
+        {
+            return;
+        }
+
+        if (string.IsNullOrEmpty(_videoFileName))
+        {
+            await MessageBox.Show(
+                Window,
+                Se.Language.General.Error,
+                Se.Language.Video.TextToSpeech.AutoCastNeedsVideo,
+                MessageBoxButtons.OK,
+                MessageBoxIcon.Error);
+            return;
+        }
+
+        if (!await RequireFfmpegOk())
+        {
+            return;
+        }
+
+        var engines = TtsEngineCatalog.CreateVoiceCloningEngines();
+        if (engines.Count == 0)
+        {
+            return;
+        }
+
+        // Asked before the transcription rather than after: it can run for minutes, and being
+        // told "no" at the end of it would waste all of it. Shown once ever.
+        var consentOk = await VoiceCloneConsentPrompt.EnsureAsync(
+            engines[0],
+            Window,
+            () => ShowDialogAsync<VoiceCloneConsentWindow, VoiceCloneConsentViewModel>(_ => { }));
+        if (!consentOk)
+        {
+            return;
+        }
+
+        // MOSS Diarize is the engine that tells speakers apart; it is only preselected, so a user
+        // who has another diarizing engine can switch to it in the window.
+        var sttResult = await ShowDialogAsync<SpeechToTextWindow, SpeechToTextViewModel>(vm =>
+            vm.Initialize(_videoFileName, _audioTrack?.FfIndex ?? -1, WhisperChoice.CrispAsrMossDiarize));
+        if (!sttResult.OkPressed || sttResult.TranscribedSubtitle == null || sttResult.TranscribedSubtitle.Paragraphs.Count == 0)
+        {
+            return;
+        }
+
+        var transcription = sttResult.TranscribedSubtitle;
+        var segmentsBySpeaker = new Dictionary<string, List<Paragraph>>(StringComparer.OrdinalIgnoreCase);
+        foreach (var segment in transcription.Paragraphs)
+        {
+            if (!SpeakerLabelParser.TrySplit(segment.Text, out var speaker, out _))
+            {
+                continue;
+            }
+
+            if (!segmentsBySpeaker.TryGetValue(speaker, out var lines))
+            {
+                lines = new List<Paragraph>();
+                segmentsBySpeaker[speaker] = lines;
+            }
+
+            lines.Add(segment);
+        }
+
+        if (segmentsBySpeaker.Count == 0)
+        {
+            await MessageBox.Show(
+                Window,
+                Se.Language.General.Error,
+                Se.Language.Video.TextToSpeech.AutoCastNoSpeakersFound,
+                MessageBoxButtons.OK,
+                MessageBoxIcon.Information);
+            return;
+        }
+
+        // The labels have done their job as data; from here they live in the actor field, and the
+        // text is what gets spoken.
+        SpeakerLabelParser.MoveLabelsToActors(transcription);
+
+        var rows = segmentsBySpeaker
+            .OrderByDescending(p => p.Value.Sum(l => l.Duration.TotalMilliseconds))
+            .Select(p => new AutoCastSpeakerRow(p.Key, p.Value))
+            .ToList();
+
+        var speakersResult = await ShowDialogAsync<AutoCastSpeakersWindow, AutoCastSpeakersViewModel>(vm =>
+            vm.Initialize(rows, engines, engines.FirstOrDefault(e => e.SupportsPerLineVoiceCloning)));
+        if (!speakersResult.OkPressed || speakersResult.SelectedEngine == null)
+        {
+            return;
+        }
+
+        var engine = speakersResult.SelectedEngine;
+        var clonedVoiceNames = await CloneSpeakerVoicesAsync(engine, speakersResult.SpeakersToClone);
+        if (clonedVoiceNames.Count == 0)
+        {
+            await MessageBox.Show(
+                Window,
+                Se.Language.General.Error,
+                Se.Language.Video.TextToSpeech.AutoCastNothingCloned,
+                MessageBoxButtons.OK,
+                MessageBoxIcon.Error);
+            return;
+        }
+
+        ApplyAutoCastToSubtitle(transcription, speakersResult.RenamedSpeakers);
+        SaveAutoCastMappings(engine, clonedVoiceNames);
+
+        ShowStatus(string.Format(Se.Language.Video.TextToSpeech.AutoCastDoneXVoices, clonedVoiceNames.Count));
+    }
+
+    /// <summary>
+    /// Clones one voice per speaker from their own lines in the video, and reports the voice name
+    /// each speaker ended up with.
+    /// </summary>
+    private async Task<Dictionary<string, string>> CloneSpeakerVoicesAsync(
+        ITtsEngine engine,
+        Dictionary<string, List<Paragraph>> speakers)
+    {
+        var clonedVoiceNames = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+        var referenceFolder = Path.Combine(Path.GetTempPath(), "SeAutoCast_" + Guid.NewGuid().ToString("N"));
+
+        try
+        {
+            foreach (var (speakerName, lines) in speakers)
+            {
+                ShowStatus(string.Format(Se.Language.Video.TextToSpeech.AutoCastCloningX, speakerName));
+
+                var referenceFileName = await SpeakerReferenceBuilder.BuildAsync(
+                    _videoFileName!,
+                    lines,
+                    speakerName,
+                    referenceFolder,
+                    _audioTrack?.FfIndex ?? -1,
+                    CancellationToken.None);
+                if (referenceFileName == null)
+                {
+                    continue;
+                }
+
+                var transcript = await ReadReferenceTranscriptAsync(referenceFileName);
+                var imported = await Task.Run(() => VoiceCloneImporter.Import(engine, referenceFileName, transcript));
+                if (imported)
+                {
+                    clonedVoiceNames[speakerName] = Path.GetFileNameWithoutExtension(referenceFileName);
+                }
+            }
+        }
+        catch (Exception exception)
+        {
+            SeLogger.Error(exception, "Auto cast: cloning the speakers failed");
+        }
+        finally
+        {
+            try
+            {
+                if (Directory.Exists(referenceFolder))
+                {
+                    Directory.Delete(referenceFolder, true);
+                }
+            }
+            catch
+            {
+                // Leftovers in the temp folder are not worth telling the user about.
+            }
+        }
+
+        return clonedVoiceNames;
+    }
+
+    private static async Task<string> ReadReferenceTranscriptAsync(string referenceFileName)
+    {
+        var transcriptFileName = Path.ChangeExtension(referenceFileName, ".txt");
+        return File.Exists(transcriptFileName) ? await File.ReadAllTextAsync(transcriptFileName) : string.Empty;
+    }
+
+    /// <summary>
+    /// Puts the speakers into the subtitle as actors and switches to ASSA, the format that keeps
+    /// them.
+    /// </summary>
+    /// <remarks>
+    /// An open subtitle keeps its own lines and only gains actors, matched to the diarized
+    /// segments by overlap; with nothing open, the transcription becomes the subtitle.
+    /// </remarks>
+    private void ApplyAutoCastToSubtitle(Subtitle transcription, Dictionary<string, string> renamedSpeakers)
+    {
+        string Rename(string detected) =>
+            renamedSpeakers.TryGetValue(detected, out var name) && !string.IsNullOrWhiteSpace(name) ? name : detected;
+
+        if (IsEmpty)
+        {
+            foreach (var paragraph in transcription.Paragraphs)
+            {
+                paragraph.Actor = Rename(paragraph.Actor ?? string.Empty);
+            }
+
+            SetSubtitles(transcription);
+        }
+        else
+        {
+            var lines = Subtitles.Select(s => s.ToParagraph()).ToList();
+            var speakerByLine = SpeakerLabelParser.AssignSpeakersByOverlap(lines, transcription.Paragraphs);
+            for (var i = 0; i < Subtitles.Count; i++)
+            {
+                if (speakerByLine.TryGetValue(lines[i], out var speaker))
+                {
+                    Subtitles[i].Actor = Rename(speaker);
+                }
+            }
+        }
+
+        // Actors only survive in ASSA/SSA, and they are invisible until the column is shown.
+        var assaFormat = SubtitleFormats.FirstOrDefault(f => f is AdvancedSubStationAlpha);
+        if (assaFormat != null && SelectedSubtitleFormat is not AdvancedSubStationAlpha and not SubStationAlpha)
+        {
+            SelectedSubtitleFormat = assaFormat;
+        }
+
+        if (!ShowColumnActor)
+        {
+            ToggleShowColumnActor();
+        }
+    }
+
+    /// <summary>
+    /// Remembers actor to voice, so the Text to speech window opens with the cast already assigned.
+    /// </summary>
+    private static void SaveAutoCastMappings(ITtsEngine engine, Dictionary<string, string> clonedVoiceNames)
+    {
+        var mappings = clonedVoiceNames
+            .Select(p => new ActorVoiceMapping
+            {
+                Actor = p.Key,
+                EngineName = engine.Name,
+                VoiceName = p.Value,
+                Model = string.Empty,
+                Instruction = string.Empty,
+            })
+            .ToList();
+
+        // Kept rather than replaced wholesale: a cast the user assigned for other actors in an
+        // earlier session is still theirs, and only the names cloned now are being decided here.
+        var keep = (Se.Settings.Video.TextToSpeech.LastActorVoiceMappings ?? new List<ActorVoiceMapping>())
+            .Where(m => m?.Actor != null && !clonedVoiceNames.ContainsKey(m.Actor));
+        Se.Settings.Video.TextToSpeech.LastActorVoiceMappings = mappings.Concat(keep).ToList();
+        Se.SaveSettings();
     }
 
     [RelayCommand]

@@ -4779,6 +4779,43 @@ public partial class SpeechToTextViewModel : ObservableObject
         }
     }
 
+    /// <summary>
+    /// Selects the engine behind <paramref name="choice"/>, including the ones that live as a
+    /// backend inside the Whisper.cpp or CrispASR engine entries. No-op for an unknown or empty
+    /// choice, leaving the last-used engine selected.
+    /// </summary>
+    private void TrySelectEngineChoice(string? choice)
+    {
+        if (string.IsNullOrEmpty(choice) || GetEffectiveSelectedEngine().Choice == choice)
+        {
+            return;
+        }
+
+        var whisperCppEngine = Engines.OfType<WhisperCppEngine>().FirstOrDefault();
+        var crispAsrEngine = Engines.OfType<CrispAsrEngine>().FirstOrDefault();
+        if (whisperCppEngine != null && whisperCppEngine.TrySelectBackendChoice(choice))
+        {
+            SelectedEngine = whisperCppEngine;
+        }
+        else if (crispAsrEngine != null && crispAsrEngine.TrySelectBackendChoice(choice))
+        {
+            SelectedEngine = crispAsrEngine;
+        }
+        else
+        {
+            var engine = Engines.FirstOrDefault(p => p.Choice == choice);
+            if (engine == null)
+            {
+                return;
+            }
+
+            SelectedEngine = engine;
+        }
+
+        Parameters = GetEffectiveSelectedEngine().CommandLineParameter;
+        EngineChanged();
+    }
+
     private static WhisperLanguage? PickDefaultLanguage(IEnumerable<WhisperLanguage> languages)
     {
         var list = languages as IList<WhisperLanguage> ?? languages.ToList();
@@ -4787,10 +4824,16 @@ public partial class SpeechToTextViewModel : ObservableObject
             ?? list.FirstOrDefault();
     }
 
-    internal void Initialize(string? videoFileName, int audioTrackNumber)
+    /// <param name="preferredEngineChoice">
+    /// A <see cref="WhisperChoice"/> to start on instead of the last-used engine, for callers that
+    /// need a specific one - "find the voices in the video" needs an engine that tells speakers
+    /// apart. The user can still switch it in the window; nothing is forced beyond the first view.
+    /// </param>
+    internal void Initialize(string? videoFileName, int audioTrackNumber, string? preferredEngineChoice = null)
     {
         _videoFileName = videoFileName;
         _audioTrackNumber = audioTrackNumber;
+        TrySelectEngineChoice(preferredEngineChoice);
         if (string.IsNullOrEmpty(_videoFileName) || !File.Exists(_videoFileName))
         {
             IsBatchModeVisible = false;
