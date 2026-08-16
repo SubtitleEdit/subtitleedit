@@ -34,28 +34,36 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         }
 
         /// <summary>
-        /// Helper method to unpack a .prproj file to a temp xml file
+        /// Unpacks a gzipped .prproj into its XML text (uncompressed project files are
+        /// returned as-is). Returns null when the file is neither.
         /// </summary>
         public static string LoadFromZipFile(string fileName)
         {
-            using (var fileToDecompressAsStream = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+            try
             {
-                string decompressedFileName = Path.GetTempFileName() + ".xml";
-                using (var decompressedStream = File.Create(decompressedFileName))
+                using (var fileStream = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
                 {
-                    using (var decompressionStream = new GZipStream(fileToDecompressAsStream, CompressionMode.Decompress))
+                    var header = new byte[2];
+                    var read = fileStream.Read(header, 0, 2);
+                    fileStream.Position = 0;
+                    if (read == 2 && header[0] == 0x1f && header[1] == 0x8b)
                     {
-                        try
+                        using (var decompressionStream = new GZipStream(fileStream, CompressionMode.Decompress))
+                        using (var reader = new StreamReader(decompressionStream, Encoding.UTF8))
                         {
-                            decompressionStream.CopyTo(decompressedStream);
-                            return decompressedFileName;
-                        }
-                        catch
-                        {
-                            return null;
+                            return reader.ReadToEnd();
                         }
                     }
+
+                    using (var reader = new StreamReader(fileStream, Encoding.UTF8))
+                    {
+                        return reader.ReadToEnd();
+                    }
                 }
+            }
+            catch
+            {
+                return null;
             }
         }
 
@@ -142,8 +150,11 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                                 if (long.TryParse(f.Start, NumberStyles.Integer, CultureInfo.InvariantCulture, out var start) &&
                                     long.TryParse(f.End, NumberStyles.Integer, CultureInfo.InvariantCulture, out var end))
                                 {
-                                    p.StartTime.TotalMilliseconds = start / 200000000.0;
-                                    p.EndTime.TotalMilliseconds = end / 200000000.0;
+                                    // Premiere stores 254016000000 ticks per second, i.e.
+                                    // 254016000 ticks per millisecond (a 4-second clip start
+                                    // is 1016064000000 in a real .prproj)
+                                    p.StartTime.TotalMilliseconds = start / 254016000.0;
+                                    p.EndTime.TotalMilliseconds = end / 254016000.0;
                                 }
                             }
                             subtitle.Paragraphs.Add(p);
