@@ -42,6 +42,8 @@ public class IndexTtsCrispAsr : ITtsEngine
     public bool HasRegion => false;
     public bool HasModel => true;
     public bool HasKeyFile => false;
+    public bool SupportsVoiceCloning => true;
+    public bool SupportsPerLineVoiceCloning => false;
 
     // Three GPT quants share the same BigVGAN codec — user picks GPT size vs. quality.
     // Codec sizes (~256 MB) added to each label so the dropdown shows realistic totals.

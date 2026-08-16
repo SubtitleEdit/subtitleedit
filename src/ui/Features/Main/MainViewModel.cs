@@ -154,7 +154,9 @@ using Nikse.SubtitleEdit.Features.Video.SpeechToText;
 using Nikse.SubtitleEdit.Features.Video.SpeechToText.OpenAiCompatible;
 using Nikse.SubtitleEdit.Features.Video.VideoOcr;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech;
+using Nikse.SubtitleEdit.Features.Video.TextToSpeech.Engines;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.ReviewSpeech;
+using Nikse.SubtitleEdit.Features.Video.TextToSpeech.VoiceCloneConsent;
 using Nikse.SubtitleEdit.Features.Video.TransparentSubtitles;
 using Nikse.SubtitleEdit.Features.WebVtt;
 using Nikse.SubtitleEdit.Logic;
@@ -688,6 +690,7 @@ public partial class MainViewModel :
     public MenuItem MenuItemAudioVisualizerSpeechToTextSelectedLines { get; set; }
     public MenuItem MenuItemAudioVisualizerSpeechToTextNewSelection { get; set; }
     public MenuItem MenuItemAudioVisualizerExtractAudio { get; set; }
+    public MenuItem MenuItemAudioVisualizerCloneVoice { get; set; }
     public MenuItem MenuItemAudioVisualizerCopy { get; set; }
     public MenuItem MenuItemAudioVisualizerCopyText { get; set; }
     public ITextBoxWrapper EditTextBoxOriginal { get; set; }
@@ -805,6 +808,7 @@ public partial class MainViewModel :
         MenuItemAudioVisualizerSpeechToTextSelectedLines = new MenuItem();
         MenuItemAudioVisualizerSpeechToTextNewSelection = new MenuItem();
         MenuItemAudioVisualizerExtractAudio = new MenuItem();
+        MenuItemAudioVisualizerCloneVoice = new MenuItem();
         MenuItemAudioVisualizerCopy = new MenuItem();
         MenuItemAudioVisualizerCopyText = new MenuItem();
         MenuItemStyles = new MenuItem();
@@ -4973,6 +4977,165 @@ public partial class MainViewModel :
         return ordered.Select(f => (DisplayName(f), "." + f)).ToList();
     }
 
+    /// <summary>
+    /// Clones the voice heard in the selected subtitle line into <paramref name="engine"/>'s
+    /// voices, so it can be picked for dubbing in the text-to-speech window (#13698).
+    /// </summary>
+    /// <remarks>
+    /// The short way round what used to be "extract audio to a file, open text to speech, pick the
+    /// engine, open voice settings, import, find the file again". Two things are known here that
+    /// the import dialog has to ask for: the audio (it is the line's own time range in the video's
+    /// current audio track) and the reference text (it is the line's text), so the engines that
+    /// want a transcript get a correct one without a Whisper round trip.
+    /// </remarks>
+    [RelayCommand]
+    private async Task WaveformCloneVoiceToEngine(ITtsEngine? engine)
+    {
+        if (Window == null || engine == null || string.IsNullOrEmpty(_videoFileName))
+        {
+            return;
+        }
+
+        var selectedItems = SubtitleGridSelectedItems.Cast<SubtitleLineViewModel>().ToList();
+        if (selectedItems.Count != 1)
+        {
+            return;
+        }
+
+        var line = selectedItems[0];
+
+        // Asked before anything else happens, so a user who declines is not first made to name a
+        // voice. Shown once ever - see VoiceCloningConsent.
+        var consentOk = await VoiceCloneConsentPrompt.EnsureAsync(
+            engine,
+            Window,
+            () => ShowDialogAsync<VoiceCloneConsentWindow, VoiceCloneConsentViewModel>(_ => { }));
+        if (!consentOk)
+        {
+            return;
+        }
+
+        if (!await RequireFfmpegOk())
+        {
+            return;
+        }
+
+        var nameResult = await ShowDialogAsync<PromptTextBoxWindow, PromptTextBoxViewModel>(vm =>
+            vm.Initialize(
+                Se.Language.Waveform.CloneVoiceNameTitle,
+                SuggestCloneVoiceName(line),
+                300,
+                30,
+                returnSubmits: true));
+        if (!nameResult.OkPressed || string.IsNullOrWhiteSpace(nameResult.Text))
+        {
+            return;
+        }
+
+        // The engines name the imported voice after the file they are handed, so the name the user
+        // typed has to survive as a file name.
+        var voiceName = MakeSafeVoiceFileName(nameResult.Text);
+        var tempFolder = Path.Combine(Path.GetTempPath(), "SeVoiceClone_" + Guid.NewGuid().ToString("N"));
+        var clipFileName = Path.Combine(tempFolder, voiceName + ".wav");
+
+        try
+        {
+            Directory.CreateDirectory(tempFolder);
+
+            // Source sample rate and no bit rate: the clip is a lossless hand-off, and every
+            // cloning engine resamples it to whatever its backend wants on import.
+            var arguments = FfmpegGenerator.ExtractAudioClipFromVideoParameters(
+                _videoFileName,
+                line.StartTime.TotalSeconds,
+                line.Duration.TotalSeconds,
+                false,
+                clipFileName,
+                _audioTrack?.FfIndex ?? -1,
+                0,
+                string.Empty);
+
+            using (var process = FfmpegGenerator.GetProcess(arguments, (_, _) => { }))
+            {
+                process.Start();
+                process.BeginOutputReadLine();
+                process.BeginErrorReadLine();
+                await Task.Run(() => process.WaitForExit());
+
+                if (process.ExitCode != 0 || !File.Exists(clipFileName))
+                {
+                    await MessageBox.Show(Window, Se.Language.General.Error, Se.Language.Waveform.CloneVoiceExtractFailed, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+            }
+
+            var transcript = HtmlUtil.RemoveHtmlTags(line.Text ?? string.Empty, true)
+                .Replace('\n', ' ')
+                .Replace('\r', ' ')
+                .Trim();
+            var imported = await Task.Run(() => VoiceCloneImporter.Import(engine, clipFileName, transcript));
+            if (!imported)
+            {
+                await MessageBox.Show(
+                    Window,
+                    Se.Language.General.Error,
+                    string.Format(Se.Language.Video.TextToSpeech.VoiceXCouldNotBeImported, voiceName),
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Error);
+                return;
+            }
+
+            await MessageBox.Show(
+                Window,
+                Se.Language.Video.TextToSpeech.VoiceImportSuccessTitle,
+                string.Format(Se.Language.Video.TextToSpeech.VoiceXImported, voiceName));
+        }
+        catch (Exception exception)
+        {
+            await MessageBox.Show(Window, Se.Language.General.Error, exception.Message, MessageBoxButtons.OK, MessageBoxIcon.Error);
+        }
+        finally
+        {
+            try
+            {
+                if (Directory.Exists(tempFolder))
+                {
+                    Directory.Delete(tempFolder, true);
+                }
+            }
+            catch
+            {
+                // A leftover clip in the temp folder is not worth telling the user about.
+            }
+        }
+    }
+
+    /// <summary>
+    /// The name offered for a voice cloned from <paramref name="line"/>: the actor, if the line
+    /// names one (that is what the user calls this voice anyway), otherwise the video and the line
+    /// number, which at least says where the voice came from.
+    /// </summary>
+    private string SuggestCloneVoiceName(SubtitleLineViewModel line)
+    {
+        var actor = (line.Actor ?? string.Empty).Trim();
+        if (actor.Length > 0)
+        {
+            return actor;
+        }
+
+        var videoName = Path.GetFileNameWithoutExtension(_videoFileName);
+        return string.IsNullOrEmpty(videoName) ? $"voice_{line.Number}" : $"{videoName}_{line.Number}";
+    }
+
+    private static string MakeSafeVoiceFileName(string name)
+    {
+        var safe = new string(name.Trim()
+            .Select(c => Path.GetInvalidFileNameChars().Contains(c) ? '_' : c)
+            .ToArray());
+
+        // A name that was nothing but path characters would leave an empty file name.
+        return string.IsNullOrWhiteSpace(safe) ? "voice" : safe;
+    }
+
     [RelayCommand]
     private async Task WaveformToggleWaveformSpectrogramHeight()
     {
@@ -8814,8 +8977,12 @@ public partial class MainViewModel :
             // Pass SelectedSubtitleFormat explicitly so the TTS window's cast detection uses the
             // user's *current* selection (the editor normalises subtitles to ASSA internally, so
             // subtitle.OriginalFormat doesn't reflect what's shown in the format combo).
+            // The original subtitle travels too when one is loaded: per-line voice cloning cuts
+            // its reference from the video, and the original line - not the translation being
+            // dubbed - is what is spoken in that clip.
             vm.Initialize(GetUpdateSubtitle(), SelectedSubtitleFormat,
-                _videoFileName ?? string.Empty, AudioVisualizer?.WavePeaks, Path.GetTempPath());
+                _videoFileName ?? string.Empty, AudioVisualizer?.WavePeaks, Path.GetTempPath(),
+                ShowColumnOriginalText ? GetUpdateSubtitleOriginal() : null);
         });
 
         // OK is the consent to apply the session's subtitle changes; Cancel/Escape/title-bar
@@ -26214,6 +26381,7 @@ public partial class MainViewModel :
         MenuItemAudioVisualizerSpeechToTextSelectedLines.IsVisible = false;
         MenuItemAudioVisualizerSpeechToTextNewSelection.IsVisible = false;
         MenuItemAudioVisualizerExtractAudio.IsVisible = false;
+        MenuItemAudioVisualizerCloneVoice.IsVisible = false;
         MenuItemAudioVisualizerCopy.IsVisible = false;
         MenuItemAudioVisualizerCopyText.IsVisible = false;
 
@@ -26258,6 +26426,10 @@ public partial class MainViewModel :
             MenuItemAudioVisualizerMergeWithPrevious.IsVisible = selectedIdx > 0;
             MenuItemAudioVisualizerMergeWithNext.IsVisible = !isLast;
             MenuItemAudioVisualizerExtractAudio.IsVisible = !string.IsNullOrEmpty(_videoFileName);
+
+            // Cloning takes the audio of exactly one line, so it lives in this branch only -
+            // the same "one selected line, and the click was on it" case "Extract audio..." uses.
+            MenuItemAudioVisualizerCloneVoice.IsVisible = !string.IsNullOrEmpty(_videoFileName);
             return;
         }
 

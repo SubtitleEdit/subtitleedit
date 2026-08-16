@@ -42,6 +42,8 @@ public class ChatterboxTtsCpp : ITtsEngine
     public bool HasRegion => false;
     public bool HasModel => true;
     public bool HasKeyFile => false;
+    public bool SupportsVoiceCloning => true;
+    public bool SupportsPerLineVoiceCloning => false;
 
     /// <summary>
     /// The only sample rate the chatterbox backend clones from without losing anything. 16 kHz

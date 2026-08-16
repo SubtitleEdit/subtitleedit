@@ -44,6 +44,12 @@ public class LanguageTextToSpeech
     public string VoiceCloneTranscriptTitle { get; set; }
     public string UseSpeechToTextDotDotDot { get; set; }
 
+    // Per-line voice cloning ("Clone from video")
+    public string CloneVoicePerLine { get; set; }
+    public string CloneVoicePerLinePreparing { get; set; }
+    public string CloneVoicePerLineNeedsVideo { get; set; }
+    public string CloneVoicePerLineNoClips { get; set; }
+
     // First-clone consent dialog
     public string VoiceCloneConsentTitle { get; set; }
     public string VoiceCloneConsentHeader { get; set; }
@@ -164,6 +170,10 @@ public class LanguageTextToSpeech
         DropAudioFileHereHint = ".wav or .mp3";
         VoiceCloneTranscriptTitle = "Enter transcript of the audio (required for voice cloning)";
         UseSpeechToTextDotDotDot = "Use speech-to-text...";
+        CloneVoicePerLine = "Clone from video (voice of each line)";
+        CloneVoicePerLinePreparing = "Taking the voice of each line from the video...";
+        CloneVoicePerLineNeedsVideo = "Cloning the voice of each line needs the video the subtitle belongs to. Open the video and try again.";
+        CloneVoicePerLineNoClips = "No audio could be taken from the video, so there is nothing to clone from. Check that the video has an audio track.";
         VoiceCloneConsentTitle = "Voice cloning - before you start";
         VoiceCloneConsentHeader = "You are about to clone a voice";
         VoiceCloneConsentIntro = "Cloning copies a real person's voice. That comes with rules in most places, and in the EU with legal duties that fall on you, not on Subtitle Edit. Please read this once.";

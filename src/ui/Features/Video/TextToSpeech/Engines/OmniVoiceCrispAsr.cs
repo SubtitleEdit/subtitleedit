@@ -71,6 +71,8 @@ public class OmniVoiceCrispAsr : ITtsEngine
     public bool HasRegion => false;
     public bool HasModel => true;
     public bool HasKeyFile => false;
+    public bool SupportsVoiceCloning => true;
+    public bool SupportsPerLineVoiceCloning => false;
 
     // Three quants of the LLM half. The label total includes the F16 tokenizer companion
     // (~403 MB), which every quant shares.

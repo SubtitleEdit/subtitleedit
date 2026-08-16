@@ -143,6 +143,13 @@ public partial class TextToSpeechViewModel : ObservableObject
     public Subtitle? MergedSubtitle { get; private set; }
 
     private Subtitle _subtitle = new();
+
+    // The source-language subtitle, when one is loaded - the transcript of what the video says.
+    private Subtitle? _originalSubtitle;
+    private Dictionary<long, Paragraph>? _originalByStartMs;
+
+    // Reference clip per paragraph for the per-line clone voice, cut before generation starts.
+    private Dictionary<Paragraph, string> _perLineCloneClips = new();
     private readonly IFileHelper _fileHelper;
     private readonly IFolderHelper _folderHelper;
     private string _waveFolder;
@@ -200,88 +207,9 @@ public partial class TextToSpeechViewModel : ObservableObject
         _wavePeakData = new WavePeakData2(1, new List<WavePeak2>());
         _mediaInfo = null;
 
-        Engines =
-        [
-            new EdgeTts(),
-            new AllTalk(ttsDownloadService),
-            new ElevenLabs(ttsDownloadService),
-            new AzureSpeech(ttsDownloadService),
-            new MistralSpeech(ttsDownloadService),
-            new Murf(ttsDownloadService),
-            new GoogleSpeech(ttsDownloadService),
-            new KokoroTtsCpp(),
-            new OmniVoiceTtsCpp(),
-            
-            // CrispASR-based engines grouped at the bottom: both share the same heavy CrispASR
-            // runtime download (~hundreds of MB) and are typically picked together, so we group
-            // them last so the lighter cloud/local engines surface first in the list.
-            // Qwen3TtsCpp hidden: talker produces scrambled noise on 1.7B —
-            // use Qwen3TtsCrispAsr until upstream qwen3-tts.cpp is fixed.
-            new Qwen3TtsCrispAsr(),
-            
-            // VibeVoiceCrispAsr hidden: output quality is unusable in practice even after
-            // bumping the post-synth speed knob (#11223). The engine class + download service +
-            // settings dialog are kept so this becomes a one-line re-enable when upstream
-            // CrispASR's VibeVoice backend ships a higher-quality build.
-            // new VibeVoiceCrispAsr(),
-            
-            new IndexTtsCrispAsr(),
-
-            // IndexTTS 2.5 on the audio.cpp runtime (not CrispASR): 5 languages, emotion
-            // control and speaking-rate control, with a per-request reference voice so the
-            // server is not restarted when the voice changes.
-            new IndexTts25AudioCpp(),
-            
-            // F5-TTS (CrispASR) hidden: CrispASR 0.6.12 has no GPU backend for f5-tts, so
-            // synthesis runs the fixed 32-step Euler ODE through a 22-layer DiT + Vocos on
-            // CPU only. That's 3-8 minutes per short utterance on Mac CPU — unusable for the
-            // typical TTS-from-subtitles workflow. Engine + download service + settings dialog
-            // are kept so this is a one-line re-enable when upstream CrispASR adds Metal/CUDA
-            // support or exposes an --ode-steps flag.
-            //new F5TtsCrispAsr(),
-
-            // VoxCPM2 (CrispASR) — unlike f5-tts, the voxcpm2-tts backend has Metal/CUDA in
-            // CrispASR v0.7.0, so synthesis is fast enough for the TTS-from-subtitles workflow.
-            new VoxCPM2CrispAsr(),
-
-            // MOSS-TTS (CrispASR) — Qwen3-8B backbone + 1.6B transformer codec at 24 kHz with
-            // zero-shot voice cloning, via the moss-tts backend (#12617).
-            new MossTtsCrispAsr(),
-
-            new ZonosTtsCrispAsr(),
-
-            // OmniVoice (CrispASR) — the same model family as the standalone OmniVoice TTS
-            // above, but on the shared CrispASR runtime and as a persistent server, so the
-            // model loads once instead of once per line.
-            new OmniVoiceCrispAsr(),
-
-            new ChatterboxTtsCpp(),
-        ];
-
-        // Insert CosyVoice3 (CrispASR) immediately after IndexTtsCrispAsr to keep the
-        // CrispASR engines grouped visually in the engine combo.
-        var indexTtsIndex = -1;
-        for (var i = 0; i < Engines.Count; i++)
-        {
-            if (Engines[i] is IndexTtsCrispAsr)
-            {
-                indexTtsIndex = i;
-                break;
-            }
-        }
-        if (indexTtsIndex >= 0)
-        {
-            Engines.Insert(indexTtsIndex + 1, new CosyVoice3CrispAsr());
-        }
-        else
-        {
-            Engines.Add(new CosyVoice3CrispAsr());
-        }
-
-        if (!OperatingSystem.IsMacOS())
-        {
-            Engines.Insert(0, new Piper(ttsDownloadService));
-        }
+        // Which engines exist, and in which order, lives in TtsEngineCatalog - the waveform's
+        // "Clone voice to" menu reads the cloning half of the same list.
+        Engines = new ObservableCollection<ITtsEngine>(TtsEngineCatalog.CreateAll(ttsDownloadService));
     }
 
     private void OnTimerOnElapsed(object? sender, ElapsedEventArgs args)
@@ -997,10 +925,23 @@ public partial class TextToSpeechViewModel : ObservableObject
     public void Initialize(Subtitle subtitle, string videoFileName, WavePeakData2? wavePeakData, string waveFolder)
         => Initialize(subtitle, null, videoFileName, wavePeakData, waveFolder);
 
-    public void Initialize(Subtitle subtitle, SubtitleFormat? format, string videoFileName, WavePeakData2? wavePeakData, string waveFolder)
+    /// <param name="originalSubtitle">
+    /// The subtitle in the video's own language, when one is loaded next to the translation. Used
+    /// only by <see cref="PerLineVoiceClone"/>, as the transcript of the reference clip cut from
+    /// the video - it is what is actually spoken there, unlike the translated text being dubbed.
+    /// </param>
+    public void Initialize(
+        Subtitle subtitle,
+        SubtitleFormat? format,
+        string videoFileName,
+        WavePeakData2? wavePeakData,
+        string waveFolder,
+        Subtitle? originalSubtitle = null)
     {
         _subtitle = subtitle;
         _subtitle.RemoveEmptyLines();
+        _originalSubtitle = originalSubtitle;
+        _originalByStartMs = null;
 
         _videoFileName = videoFileName;
         _wavePeakData = wavePeakData;
@@ -1602,6 +1543,27 @@ public partial class TextToSpeechViewModel : ObservableObject
             return;
         }
 
+        // "Clone from video" has no voice of its own to test, so test the one the video's longest
+        // line would be cloned from - the closest thing to "what will this sound like".
+        if (PerLineVoiceClone.IsSelected(voice))
+        {
+            var previewVoice = await MakePerLineClonePreviewVoiceAsync(engine, CancellationToken.None);
+            if (previewVoice == null)
+            {
+                await MessageBox.Show(
+                    Window,
+                    Se.Language.General.Error,
+                    string.IsNullOrEmpty(_videoFileName)
+                        ? Se.Language.Video.TextToSpeech.CloneVoicePerLineNeedsVideo
+                        : Se.Language.Video.TextToSpeech.CloneVoicePerLineNoClips,
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Error);
+                return;
+            }
+
+            voice = previewVoice;
+        }
+
         SaveSettings();
 
         // Free GPU memory held by any other CrispASR engine — see GenerateTts for rationale.
@@ -1700,6 +1662,29 @@ public partial class TextToSpeechViewModel : ObservableObject
         }
     }
 
+    /// <summary>
+    /// Puts "Clone from video" at the top of the voice list when the engine can take a reference
+    /// per line and there is a video to take it from.
+    /// </summary>
+    /// <remarks>
+    /// First rather than last: on a video with several speakers it is the pick that needs no setup
+    /// at all, so it should be the one seen before scrolling a list of imported clones.
+    /// </remarks>
+    private void AddPerLineCloneVoiceIfSupported(ITtsEngine engine)
+    {
+        if (PerLineVoiceClone.CanBeOffered(engine, _videoFileName))
+        {
+            Voices.Insert(0, PerLineVoiceClone.CreateVoice());
+        }
+    }
+
+    /// <summary>
+    /// The first voice that speaks for itself, used wherever a default has to be picked. Cloning
+    /// every speaker in the video is never something to fall into by default - it only happens
+    /// because the user asked for it, or picked it last time.
+    /// </summary>
+    private Voice? FirstOrdinaryVoice() => Voices.FirstOrDefault(v => !PerLineVoiceClone.IsSelected(v));
+
     private async Task RefreshVoices(ITtsEngine engine)
     {
         Voice[] voices;
@@ -1738,9 +1723,11 @@ public partial class TextToSpeechViewModel : ObservableObject
         {
             Voices.Add(voice);
         }
+
+        AddPerLineCloneVoiceIfSupported(engine);
         SelectedVoice = Voices.FirstOrDefault(v => v.Name == currentVoiceName)
                         ?? Voices.FirstOrDefault(v => v.Name == Se.Settings.Video.TextToSpeech.Voice)
-                        ?? Voices.FirstOrDefault();
+                        ?? FirstOrdinaryVoice();
         IsVoiceCountVisible = Voices.Count > 0;
     }
 
@@ -2562,6 +2549,14 @@ public partial class TextToSpeechViewModel : ObservableObject
             // empty, every paragraph falls back to the globally selected engine/voice.
             var castContext = await BuildCastContextAsync();
 
+            // "Clone from video": cut every line's reference before synthesising anything, so a
+            // missing video or a dead ffmpeg is reported once, up front, instead of failing line
+            // by line halfway through a long generation.
+            if (PerLineVoiceClone.IsSelected(voice) && !await PreparePerLineCloneClipsAsync(engine, cancellationToken))
+            {
+                return null;
+            }
+
             // Distinct failure reasons reported by the engines, so the dialogs below can say *why*
             // segments failed (e.g. the ElevenLabs 429 text) instead of a bare count (#12093).
             var errorMessages = new List<string>();
@@ -2776,6 +2771,166 @@ public partial class TextToSpeechViewModel : ObservableObject
         return ctx;
     }
 
+    /// <summary>
+    /// Cuts the per-line reference clips for "Clone from video", reporting progress, and returns
+    /// whether generation may go ahead.
+    /// </summary>
+    private async Task<bool> PreparePerLineCloneClipsAsync(ITtsEngine engine, CancellationToken cancellationToken)
+    {
+        _perLineCloneClips = new Dictionary<Paragraph, string>();
+
+        if (string.IsNullOrEmpty(_videoFileName) || !File.Exists(_videoFileName))
+        {
+            await MessageBox.Show(
+                Window!,
+                Se.Language.General.Error,
+                Se.Language.Video.TextToSpeech.CloneVoicePerLineNeedsVideo,
+                MessageBoxButtons.OK,
+                MessageBoxIcon.Error);
+            return false;
+        }
+
+        // A fresh folder per run: the clips of a previous run belong to whatever the subtitle
+        // looked like then, and the review window still points at the current run's files.
+        var clipFolder = Path.Combine(_waveFolder, "clone-references");
+        try
+        {
+            if (Directory.Exists(clipFolder))
+            {
+                Directory.Delete(clipFolder, true);
+            }
+        }
+        catch (Exception exception)
+        {
+            SeLogger.Error(exception, "Per-line voice clone: could not clear the previous reference clips");
+        }
+
+        ProgressText = Se.Language.Video.TextToSpeech.CloneVoicePerLinePreparing;
+        ProgressValue = 0;
+
+        var videoDurationSeconds = _mediaInfo?.Duration.TotalSeconds ?? 0;
+        _perLineCloneClips = await PerLineVoiceClone.CutReferenceClipsAsync(
+            _videoFileName,
+            _subtitle.Paragraphs,
+            GetSpokenTextInVideo,
+            clipFolder,
+            videoDurationSeconds,
+            audioTrackFfIndex: -1,
+            progress: (done, total) => ProgressValue = total == 0 ? 0 : (double)done / total,
+            cancellationToken);
+
+        if (_perLineCloneClips.Count > 0)
+        {
+            return true;
+        }
+
+        await MessageBox.Show(
+            Window!,
+            Se.Language.General.Error,
+            Se.Language.Video.TextToSpeech.CloneVoicePerLineNoClips,
+            MessageBoxButtons.OK,
+            MessageBoxIcon.Error);
+        return false;
+    }
+
+    /// <summary>
+    /// A voice for "Test voice" when the per-line clone is selected: the longest line's speaker,
+    /// since that line has the most audio to clone from.
+    /// </summary>
+    private async Task<Voice?> MakePerLineClonePreviewVoiceAsync(ITtsEngine engine, CancellationToken cancellationToken)
+    {
+        if (string.IsNullOrEmpty(_videoFileName) || !File.Exists(_videoFileName) || _subtitle.Paragraphs.Count == 0)
+        {
+            return null;
+        }
+
+        var longest = _subtitle.Paragraphs
+            .Select((paragraph, index) => (paragraph, index))
+            .OrderByDescending(p => p.paragraph.Duration.TotalMilliseconds)
+            .First();
+
+        var clipFileName = await PerLineVoiceClone.CutReferenceClipAsync(
+            _videoFileName,
+            _subtitle.Paragraphs,
+            longest.index,
+            GetSpokenTextInVideo(longest.paragraph),
+            Path.Combine(_waveFolder, "clone-reference-preview"),
+            _mediaInfo?.Duration.TotalSeconds ?? 0,
+            audioTrackFfIndex: -1,
+            cancellationToken);
+
+        return clipFileName == null ? null : PerLineVoiceClone.MakeVoiceForClip(engine, clipFileName);
+    }
+
+    /// <summary>
+    /// What the video says during <paramref name="paragraph"/> - the reference clip's transcript.
+    /// </summary>
+    /// <remarks>
+    /// The source-language line when a subtitle in the video's own language is loaded next to the
+    /// translation, matched by start time rather than by index so a translation with merged or
+    /// split lines still lines up. Without an original loaded the line's own text is the best
+    /// guess left; that is right when dubbing a subtitle in the video's language, and merely
+    /// unhelpful (not harmful) when the text has already been translated.
+    /// </remarks>
+    private string GetSpokenTextInVideo(Paragraph paragraph)
+    {
+        var fallback = HtmlUtil.RemoveHtmlTags(paragraph.Text ?? string.Empty, alsoSsaTags: true);
+        if (_originalSubtitle == null || _originalSubtitle.Paragraphs.Count == 0)
+        {
+            return Utilities.UnbreakLine(fallback);
+        }
+
+        // Exact start time is the normal case (a translation keeps the original's timings); the
+        // scan below is for the lines a merge or split moved, and only runs for those.
+        _originalByStartMs ??= _originalSubtitle.Paragraphs
+            .GroupBy(p => (long)Math.Round(p.StartTime.TotalMilliseconds))
+            .ToDictionary(g => g.Key, g => g.First());
+
+        var startMs = (long)Math.Round(paragraph.StartTime.TotalMilliseconds);
+        if (!_originalByStartMs.TryGetValue(startMs, out var best))
+        {
+            best = _originalSubtitle.Paragraphs
+                .OrderBy(p => Math.Abs(p.StartTime.TotalMilliseconds - paragraph.StartTime.TotalMilliseconds))
+                .First();
+        }
+
+        if (Math.Abs(best.StartTime.TotalMilliseconds - paragraph.StartTime.TotalMilliseconds) > 500)
+        {
+            return Utilities.UnbreakLine(fallback);
+        }
+
+        var original = HtmlUtil.RemoveHtmlTags(best.Text ?? string.Empty, alsoSsaTags: true);
+        return Utilities.UnbreakLine(string.IsNullOrWhiteSpace(original) ? fallback : original);
+    }
+
+    /// <summary>
+    /// Swaps the "Clone from video" marker for a real voice built from this paragraph's own clip.
+    /// Any other voice is returned untouched.
+    /// </summary>
+    /// <remarks>
+    /// Lines whose clip could not be cut keep the marker out of the engine's way by falling back
+    /// to the engine's first ordinary voice - one line in the engine's own voice is a better
+    /// outcome than one line that fails.
+    /// </remarks>
+    private Voice ResolvePerLineCloneVoice(ITtsEngine engine, Voice voice, Paragraph paragraph)
+    {
+        if (!PerLineVoiceClone.IsSelected(voice))
+        {
+            return voice;
+        }
+
+        if (_perLineCloneClips.TryGetValue(paragraph, out var clipFileName))
+        {
+            var cloned = PerLineVoiceClone.MakeVoiceForClip(engine, clipFileName);
+            if (cloned != null)
+            {
+                return cloned;
+            }
+        }
+
+        return Voices.FirstOrDefault(v => !PerLineVoiceClone.IsSelected(v)) ?? voice;
+    }
+
     private readonly struct ResolvedVoice
     {
         public ResolvedVoice(ITtsEngine engine, Voice voice, string? model, string text, string instruction)
@@ -2821,19 +2976,19 @@ public partial class TextToSpeechViewModel : ObservableObject
 
         if (string.IsNullOrEmpty(actor) || !ctx.ByActor.TryGetValue(actor, out var mapping))
         {
-            return new ResolvedVoice(defaultEngine, defaultVoice, null, text, globalInstruction);
+            return new ResolvedVoice(defaultEngine, ResolvePerLineCloneVoice(defaultEngine, defaultVoice, paragraph), null, text, globalInstruction);
         }
 
         if (!ctx.EnginesByName.TryGetValue(mapping.EngineName, out var mappedEngine)
             || !ctx.VoicesByEngine.TryGetValue(mapping.EngineName, out var voices))
         {
-            return new ResolvedVoice(defaultEngine, defaultVoice, null, text, globalInstruction);
+            return new ResolvedVoice(defaultEngine, ResolvePerLineCloneVoice(defaultEngine, defaultVoice, paragraph), null, text, globalInstruction);
         }
 
         var mappedVoice = voices.FirstOrDefault(v => string.Equals(v.Name, mapping.VoiceName, StringComparison.OrdinalIgnoreCase));
         if (mappedVoice == null)
         {
-            return new ResolvedVoice(defaultEngine, defaultVoice, null, text, globalInstruction);
+            return new ResolvedVoice(defaultEngine, ResolvePerLineCloneVoice(defaultEngine, defaultVoice, paragraph), null, text, globalInstruction);
         }
 
         // Per-row model overrides the global one; empty string means "use the global model".
@@ -3386,6 +3541,8 @@ public partial class TextToSpeechViewModel : ObservableObject
             {
                 Voices.Add(vo);
             }
+
+            AddPerLineCloneVoiceIfSupported(engine);
             IsVoiceCountVisible = Voices.Count > 0;
 
             var lastVoice = Voices.FirstOrDefault(v => v.Name == Se.Settings.Video.TextToSpeech.Voice);
@@ -3394,7 +3551,7 @@ public partial class TextToSpeechViewModel : ObservableObject
                 lastVoice = Voices.FirstOrDefault(p => p.Name.StartsWith("en", StringComparison.OrdinalIgnoreCase) ||
                                                        p.Name.Contains("English", StringComparison.OrdinalIgnoreCase));
             }
-            SelectedVoice = lastVoice ?? Voices.FirstOrDefault();
+            SelectedVoice = lastVoice ?? FirstOrdinaryVoice();
 
             // Unconditional (handles a null voice fine): gating this on a loaded voice left the
             // previous engine's instruction box and voice-combo lock in place when the new

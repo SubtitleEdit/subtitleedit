@@ -1304,6 +1304,37 @@ public class FfmpegGenerator
     }
 
     /// <summary>
+    /// Build ffmpeg parameters for cutting a voice-cloning reference clip out of a video: the
+    /// requested range as mono PCM16 at <paramref name="sampleRate"/>.
+    /// </summary>
+    /// <remarks>
+    /// Separate from <see cref="ExtractAudioClipFromVideoParameters"/>, which keeps the source
+    /// channel layout because it saves a clip for the user to listen to. A cloning reference is
+    /// read by a model, and every engine that clones wants one mono channel - handing it a stereo
+    /// clip means each engine resamples it again, or worse, clones from a downmix it made itself.
+    /// </remarks>
+    internal static string ExtractCloneReferenceClipParameters(
+        string videoFileName,
+        double startSeconds,
+        double durationSeconds,
+        string outputFileName,
+        int audioTrackFfIndex = -1,
+        int sampleRate = 24000)
+    {
+        var start = $"{startSeconds:0.000}".Replace(",", ".");
+        var duration = $"{durationSeconds:0.000}".Replace(",", ".");
+
+        var args = $"-y -ss {start} -t {duration} -i \"{videoFileName}\"";
+        if (audioTrackFfIndex >= 0)
+        {
+            args += $" -map 0:{audioTrackFfIndex}";
+        }
+
+        args += $" -vn -ar {sampleRate} -ac 1 -c:a pcm_s16le \"{outputFileName}\"";
+        return args;
+    }
+
+    /// <summary>
     /// Build ffmpeg parameters for extracting an audio clip from a video/audio file.
     /// No <c>-c:a</c> is set, so ffmpeg picks the default encoder for the output
     /// extension (typically pcm for .wav, libmp3lame for .mp3, aac for .m4a, flac for .flac).
