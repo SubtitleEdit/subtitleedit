@@ -71,6 +71,11 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
     // "Embed fonts" function does not rescan the font folders for every file.
     private readonly Dictionary<string, List<string>> _fontFilesCache = new(StringComparer.OrdinalIgnoreCase);
 
+    // Output names handed out during the current batch run. A later item must never take
+    // one of these - not even in overwrite mode - or two same-language tracks from one
+    // file would silently clobber each other's output.
+    private readonly HashSet<string> _handedOutOutputFileNames = new(StringComparer.OrdinalIgnoreCase);
+
     public SubtitleFormat Format { get; set; } = new SubRip();
 
     public Encoding Encoding { get; set; } = Encoding.UTF8;
@@ -101,6 +106,7 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
         _config = config;
         _subtitleFormats = SubtitleFormatHelper.GetSubtitleFormatsWithFavoritesAtTop();
         _fontFilesCache.Clear();
+        _handedOutOutputFileNames.Clear();
     }
 
     /// <summary>
@@ -3104,98 +3110,161 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
 
         var targetExtension = extension;
 
-        if (!string.IsNullOrEmpty(item.LanguageCode))
+        var languagePart = GetLanguagePostFix(item);
+        if (languagePart.Length > 0 && fileName.EndsWith(languagePart, StringComparison.InvariantCultureIgnoreCase))
         {
-            if (Se.Settings.Tools.BatchConvert.LanguagePostFix == Se.Language.General.TwoLetterLanguageCode)
-            {
-                var code = item.LanguageCode;
-                if (code.Length == 3)
-                {
-                    code = Iso639Dash2LanguageCode.GetTwoLetterCodeFromThreeLetterCode(code);
-                }
-                else if (code.Length > 3)
-                {
-                    code = Iso639Dash2LanguageCode.GetTwoLetterCodeFromEnglishName(code);
-                }
+            languagePart = string.Empty; // base name already carries the language token
+        }
 
-                if (code.Length == 2 && !fileName.EndsWith("." + code, StringComparison.InvariantCultureIgnoreCase))
-                {
-                    fileName += "." + code;
-                }
+        var outputFileName = Path.Combine(outputFolder, fileName + languagePart + targetExtension);
+        if (!_handedOutOutputFileNames.Contains(outputFileName))
+        {
+            if (targetExtension != string.Empty && !File.Exists(outputFileName) && Directory.Exists(outputFolder))
+            {
+                return TakeOutputFileName(outputFileName);
             }
-            else if (Se.Settings.Tools.BatchConvert.LanguagePostFix == Se.Language.General.ThreeLetterLanguageCode)
-            {
-                var code = item.LanguageCode;
-                if (code.Length == 2)
-                {
-                    code = Iso639Dash2LanguageCode.GetThreeLetterCodeFromTwoLetterCode(code);
-                }
-                else if (code.Length > 3)
-                {
-                    code = Iso639Dash2LanguageCode.GetTwoLetterCodeFromEnglishName(code);
-                    code = Iso639Dash2LanguageCode.GetThreeLetterCodeFromTwoLetterCode(code);
-                }
 
-                if (code.Length == 3 && !fileName.EndsWith("." + code, StringComparison.InvariantCultureIgnoreCase))
-                {
-                    fileName += "." + code;
-                }
+            if (targetExtension == string.Empty)
+            {
+                // Directory output (image exports): an existing folder is written into,
+                // a missing one is created by the export handler - either way the plain
+                // name is fine as long as this run has not used it for another track.
+                return TakeOutputFileName(outputFileName);
             }
-            else if (Se.Settings.Tools.BatchConvert.LanguagePostFix == Se.Language.General.ThreeLetterLanguageCodeBibliographic)
-            {
-                var code = item.LanguageCode;
-                if (code.Length == 2)
-                {
-                    code = Iso639Dash2LanguageCode.GetThreeLetterBibliographicCodeFromTwoLetterCode(code);
-                }
-                else if (code.Length == 3)
-                {
-                    // GetTwoLetterCodeFromThreeLetterCode now matches both /T and /B forms.
-                    var twoLetter = Iso639Dash2LanguageCode.GetTwoLetterCodeFromThreeLetterCode(code);
-                    if (!string.IsNullOrEmpty(twoLetter))
-                    {
-                        code = Iso639Dash2LanguageCode.GetThreeLetterBibliographicCodeFromTwoLetterCode(twoLetter);
-                    }
-                }
-                else if (code.Length > 3)
-                {
-                    code = Iso639Dash2LanguageCode.GetTwoLetterCodeFromEnglishName(code);
-                    code = Iso639Dash2LanguageCode.GetThreeLetterBibliographicCodeFromTwoLetterCode(code);
-                }
 
-                if (code.Length == 3 && !fileName.EndsWith("." + code, StringComparison.InvariantCultureIgnoreCase))
-                {
-                    fileName += "." + code;
-                }
+            if (targetExtension != string.Empty && _config.Overwrite && File.Exists(outputFileName))
+            {
+                File.Delete(outputFileName);
+                return TakeOutputFileName(outputFileName);
             }
         }
 
-        var outputFileName = Path.Combine(outputFolder, fileName + targetExtension);
-        if (targetExtension != string.Empty && !File.Exists(outputFileName) && Directory.Exists(outputFolder))
+        // The name is taken - by an older file, or by another track of this very run
+        // (e.g. two "en" tracks in one mkv - those must not clobber each other, so this
+        // run's own output never falls into the overwrite branch above). Try the track
+        // number first, seconv style: "video.#3.en.srt".
+        if (!string.IsNullOrEmpty(item.TrackNumber) && languagePart.Length > 0)
         {
-            return outputFileName;
+            var withTrack = Path.Combine(outputFolder, fileName + ".#" + item.TrackNumber + languagePart + targetExtension);
+            if (!File.Exists(withTrack) && !Directory.Exists(withTrack) && !_handedOutOutputFileNames.Contains(withTrack))
+            {
+                return TakeOutputFileName(withTrack);
+            }
         }
 
-        if (targetExtension == string.Empty && Directory.Exists(outputFileName))
+        // Counter fallback goes on the base name - "video_2.en.srt" - because the language
+        // token must stay right before the extension for media players to match it.
+        var counter = 2;
+        do
         {
-            return outputFileName;
+            outputFileName = Path.Combine(outputFolder, fileName + $"_{counter}" + languagePart + targetExtension);
+            counter++;
+        } while (File.Exists(outputFileName) || Directory.Exists(outputFileName) || _handedOutOutputFileNames.Contains(outputFileName));
+
+        return TakeOutputFileName(outputFileName);
+    }
+
+    private string TakeOutputFileName(string outputFileName)
+    {
+        _handedOutOutputFileNames.Add(outputFileName);
+        return outputFileName;
+    }
+
+    /// <summary>
+    /// The ".en"-style language token to put before the target extension, or an empty
+    /// string. Auto-translate rewrites the content's language, so when it is active the
+    /// token is the target language - not the source track's - and it also applies to
+    /// plain subtitle files that have no container track language at all (#13707).
+    /// </summary>
+    private string GetLanguagePostFix(BatchConvertItem item)
+    {
+        var languageCode = _config.AutoTranslate.IsActive
+            ? _config.AutoTranslate.TargetLanguage.Code
+            : item.LanguageCode;
+
+        if (string.IsNullOrEmpty(languageCode))
+        {
+            return string.Empty;
         }
 
-        if (targetExtension != string.Empty && _config.Overwrite && File.Exists(outputFileName))
+        // Translator codes can be regional ("zh-CN", "pt-BR") or NLLB-style ("zho_Hans");
+        // the primary subtag carries the language for the two/three-letter mappings.
+        var primary = languageCode.Split('-', '_')[0];
+
+        var code = string.Empty;
+        if (Se.Settings.Tools.BatchConvert.LanguagePostFix == Se.Language.General.TwoLetterLanguageCode)
         {
-            File.Delete(outputFileName);
+            if (primary.Length == 2)
+            {
+                code = primary;
+            }
+            else if (primary.Length == 3)
+            {
+                code = Iso639Dash2LanguageCode.GetTwoLetterCodeFromThreeLetterCode(primary);
+            }
+            else
+            {
+                code = Iso639Dash2LanguageCode.GetTwoLetterCodeFromEnglishName(languageCode);
+            }
+
+            if (code.Length != 2)
+            {
+                code = string.Empty;
+            }
+        }
+        else if (Se.Settings.Tools.BatchConvert.LanguagePostFix == Se.Language.General.ThreeLetterLanguageCode)
+        {
+            if (primary.Length == 2)
+            {
+                code = Iso639Dash2LanguageCode.GetThreeLetterCodeFromTwoLetterCode(primary);
+            }
+            else if (primary.Length == 3)
+            {
+                code = primary;
+            }
+            else
+            {
+                code = Iso639Dash2LanguageCode.GetTwoLetterCodeFromEnglishName(languageCode);
+                code = Iso639Dash2LanguageCode.GetThreeLetterCodeFromTwoLetterCode(code);
+            }
+
+            if (code.Length != 3)
+            {
+                code = string.Empty;
+            }
+        }
+        else if (Se.Settings.Tools.BatchConvert.LanguagePostFix == Se.Language.General.ThreeLetterLanguageCodeBibliographic)
+        {
+            var twoLetter = primary;
+            if (primary.Length == 3)
+            {
+                // GetTwoLetterCodeFromThreeLetterCode matches both /T and /B forms.
+                twoLetter = Iso639Dash2LanguageCode.GetTwoLetterCodeFromThreeLetterCode(primary);
+            }
+            else if (primary.Length != 2)
+            {
+                twoLetter = Iso639Dash2LanguageCode.GetTwoLetterCodeFromEnglishName(languageCode);
+            }
+
+            code = Iso639Dash2LanguageCode.GetThreeLetterBibliographicCodeFromTwoLetterCode(twoLetter);
+            if (code.Length != 3)
+            {
+                code = string.Empty;
+            }
         }
         else
         {
-            var counter = 1;
-            do
-            {
-                outputFileName = Path.Combine(outputFolder, fileName + $"_{counter}" + targetExtension);
-                counter++;
-            } while (File.Exists(outputFileName) || Directory.Exists(outputFileName));
+            return string.Empty; // "No language code"
         }
 
-        return outputFileName;
+        if (code.Length == 0 && _config.AutoTranslate.IsActive)
+        {
+            // A translator code with no ISO 639 mapping (e.g. "fil") still beats no
+            // token at all - it is what media players key on.
+            code = languageCode;
+        }
+
+        return code.Length == 0 ? string.Empty : "." + code;
     }
 
     public bool AllowFix(Paragraph p, string action)

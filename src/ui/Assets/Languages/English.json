@@ -279,7 +279,7 @@
     "keepExistingTimeCodes": "Keep existing time codes (do not add video offset)",
     "keyFile": "Key file",
     "language": "Language",
-    "languagePostFix": "Language post-fix (mkv/mp4)",
+    "languagePostFix": "Language post-fix (mkv/mp4/auto-translate)",
     "layer": "Layer",
     "layerFilterOn": "Layer filter on",
     "left": "Left",
