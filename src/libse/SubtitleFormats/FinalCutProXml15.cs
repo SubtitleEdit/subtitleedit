@@ -432,7 +432,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             var sb = new StringBuilder();
             lines.ForEach(line => sb.AppendLine(line));
             var x = sb.ToString();
-            if (!x.Contains("<fcpxml version=\"" + FcpXmlVersion + "\">"))
+            if (!IsVersionMatch(x))
             {
                 return;
             }
@@ -491,6 +491,11 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                             _errorCount++;
                         }
                     }
+
+                    if (subtitle.Paragraphs.Count == 0)
+                    {
+                        LoadCaptions(subtitle, xml);
+                    }
                 }
                 subtitle.Renumber();
             }
@@ -498,6 +503,145 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             {
                 _errorCount = 1;
             }
+        }
+
+        internal virtual bool IsVersionMatch(string fileContent)
+        {
+            return fileContent.Contains("<fcpxml version=\"" + FcpXmlVersion + "\">");
+        }
+
+        /// <summary>
+        /// Reads Final Cut Pro caption lanes (the caption workflow used since FCP 10.4) - e.g.
+        /// role="iTT?captionFormat=ITT.en" / "CEA?..." / "SRT?..." elements anchored inside
+        /// asset-clips or gaps in the spine.
+        /// </summary>
+        private void LoadCaptions(Subtitle subtitle, XmlDocument xml)
+        {
+            var tcStartMs = 0.0;
+            var sequenceNode = xml.SelectSingleNode("//sequence");
+            if (sequenceNode?.Attributes?["tcStart"] != null)
+            {
+                tcStartMs = DecodeTime(sequenceNode.Attributes["tcStart"]).TotalMilliseconds;
+            }
+
+            foreach (XmlNode node in xml.SelectNodes("//caption"))
+            {
+                try
+                {
+                    var text = GetCaptionText(node);
+                    if (string.IsNullOrWhiteSpace(text))
+                    {
+                        continue;
+                    }
+
+                    var startMs = DecodeTime(node.Attributes["offset"]).TotalMilliseconds;
+                    var durationMs = DecodeTime(node.Attributes["duration"]).TotalMilliseconds;
+
+                    // An anchored item's offset is expressed in the parent clip's local time:
+                    // timeline position = parent offset + (item offset - parent start).
+                    var parent = node.ParentNode;
+                    if (parent?.Attributes?["offset"] != null)
+                    {
+                        var parentOffsetMs = DecodeTime(parent.Attributes["offset"]).TotalMilliseconds;
+                        var parentStartMs = parent.Attributes["start"] != null ? DecodeTime(parent.Attributes["start"]).TotalMilliseconds : 0.0;
+                        startMs = parentOffsetMs + (startMs - parentStartMs);
+                    }
+
+                    startMs -= tcStartMs;
+                    if (startMs < 0 && startMs > -0.5)
+                    {
+                        startMs = 0;
+                    }
+
+                    var p = new Paragraph(text, startMs, startMs + durationMs);
+                    subtitle.Paragraphs.Add(p);
+                }
+                catch
+                {
+                    _errorCount++;
+                }
+            }
+
+            subtitle.Paragraphs.Sort((a, b) => a.StartTime.TotalMilliseconds.CompareTo(b.StartTime.TotalMilliseconds));
+        }
+
+        private static string GetCaptionText(XmlNode captionNode)
+        {
+            // Map text-style-def id -> italic/bold
+            var italicDefs = new HashSet<string>();
+            var boldDefs = new HashSet<string>();
+            foreach (XmlNode def in captionNode.SelectNodes("text-style-def"))
+            {
+                var id = def.Attributes?["id"]?.Value;
+                if (id == null)
+                {
+                    continue;
+                }
+
+                var styleNode = def.SelectSingleNode("text-style");
+                if (styleNode?.Attributes?["italic"]?.Value == "1")
+                {
+                    italicDefs.Add(id);
+                }
+
+                if (styleNode?.Attributes?["bold"]?.Value == "1")
+                {
+                    boldDefs.Add(id);
+                }
+            }
+
+            var sb = new StringBuilder();
+            var placementTop = false;
+            var first = true;
+            foreach (XmlNode textNode in captionNode.SelectNodes("text"))
+            {
+                if (!first)
+                {
+                    sb.Append(Environment.NewLine);
+                }
+
+                first = false;
+                if (textNode.Attributes?["placement"]?.Value == "top")
+                {
+                    placementTop = true;
+                }
+
+                foreach (XmlNode child in textNode.ChildNodes)
+                {
+                    if (child.Name == "text-style")
+                    {
+                        var run = child.InnerText;
+                        var reference = child.Attributes?["ref"]?.Value;
+                        if (reference != null && italicDefs.Contains(reference) && !string.IsNullOrWhiteSpace(run))
+                        {
+                            run = "<i>" + run + "</i>";
+                        }
+
+                        if (reference != null && boldDefs.Contains(reference) && !string.IsNullOrWhiteSpace(run))
+                        {
+                            run = "<b>" + run + "</b>";
+                        }
+
+                        sb.Append(run);
+                    }
+                    else if (child.NodeType == XmlNodeType.Text || child.NodeType == XmlNodeType.CDATA)
+                    {
+                        sb.Append(child.InnerText);
+                    }
+                }
+            }
+
+            var text = sb.ToString()
+                .Replace("\r\n", "\n")
+                .Replace("\r", "\n")
+                .Replace("\n", Environment.NewLine)
+                .Trim();
+            if (placementTop && text.Length > 0)
+            {
+                text = "{\\an8}" + text;
+            }
+
+            return text;
         }
 
         private static string GetInnerText(XmlNode node)

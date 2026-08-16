@@ -655,8 +655,10 @@ namespace Nikse.SubtitleEdit.Core.Cea708
                         }
 
                         y = location.Row;
+                        continue; // consumed - retaining it would append line breaks again on the next flush
                     }
-                    else if (command is SetPenAttributes attributes)
+
+                    if (command is SetPenAttributes attributes)
                     {
                         italicOn = attributes.Italics;
                     }
