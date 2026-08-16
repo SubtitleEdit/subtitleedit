@@ -133,4 +133,68 @@ public class RemoveTextForHITest
 
         Assert.Equal(expected, remover.RemoveTextFromHearImpaired(text, "en"));
     }
+
+    [Theory]
+    [InlineData("UNA:|First officer's log.|Stardate 2122.4.", "First officer's log.|Stardate 2122.4.")]
+    [InlineData("MAN ON RADIO:|Come in.|Do you read me?", "Come in.|Do you read me?")]
+    [InlineData("<i>UNA:|First officer's log.|Stardate 2122.4.</i>", "<i>First officer's log.|Stardate 2122.4.</i>")]
+    public void Colon_ThreeLinesNameOnOwnLine_KeepsSingleSpeaker(string input, string expected)
+    {
+        // The name takes up the whole first line, so removing it leaves two lines
+        // from one and the same speaker - no dialog dashes wanted.
+        var remover = MakeRemover();
+        remover.Settings.RemoveTextBeforeColon = true;
+
+        var text = input.Replace("|", Environment.NewLine);
+
+        Assert.Equal(expected.Replace("|", Environment.NewLine), remover.RemoveTextFromHearImpaired(text, "en"));
+    }
+
+    [Theory]
+    [InlineData("First officer's log.|Stardate 2122.4.|UNA:", "First officer's log.|Stardate 2122.4.")]
+    [InlineData("First officer's log.|Stardate 2122.4.|<i>UNA:</i>", "First officer's log.|Stardate 2122.4.")]
+    [InlineData("First officer's log.|Stardate 2122.4.|- UNA:", "First officer's log.|Stardate 2122.4.")]
+    [InlineData("First officer's log.|Stardate 2122.4.|OLD MAN:", "First officer's log.|Stardate 2122.4.")]
+    [InlineData("First officer's log.|UNA:", "First officer's log.")]
+    public void Colon_TrailingNameOnOwnLine_IsRemoved(string input, string expected)
+    {
+        // The name of the next speaker on a line of its own after the text - the
+        // whole text was left alone before, as its only colon is the last character.
+        var remover = MakeRemover();
+        remover.Settings.RemoveTextBeforeColon = true;
+
+        var text = input.Replace("|", Environment.NewLine);
+
+        Assert.Equal(expected.Replace("|", Environment.NewLine), remover.RemoveTextFromHearImpaired(text, "en"));
+    }
+
+    [Theory]
+    [InlineData("And she would like you to do|three things:")]
+    [InlineData("It was quite a long day|and then he said|something:")]
+    [InlineData("Here is the thing|I wanted to say:")]
+    public void Colon_SentenceEndingInColon_IsKept(string input)
+    {
+        // A sentence that just happens to end in a colon is not a speaker name.
+        var remover = MakeRemover();
+        remover.Settings.RemoveTextBeforeColon = true;
+
+        var text = input.Replace("|", Environment.NewLine);
+
+        Assert.Equal(text, remover.RemoveTextFromHearImpaired(text, "en"));
+    }
+
+    [Theory]
+    [InlineData("UNA:|I have it.|M'BENGA: Good.", "- I have it.|- Good.")]
+    [InlineData("I have it.|M'BENGA: Good.", "- I have it.|- Good.")]
+    public void Colon_NameOnOwnLine_StillDashesRealDialog(string input, string expected)
+    {
+        // A second name was removed from a line that survived, so there really
+        // are two speakers left.
+        var remover = MakeRemover();
+        remover.Settings.RemoveTextBeforeColon = true;
+
+        var text = input.Replace("|", Environment.NewLine);
+
+        Assert.Equal(expected.Replace("|", Environment.NewLine), remover.RemoveTextFromHearImpaired(text, "en"));
+    }
 }

@@ -135,7 +135,8 @@ namespace Nikse.SubtitleEdit.Core.Forms
             // House 7x01 line 52: and she would like you to do three things:
             // Okay or remove???
             var noTagText = HtmlUtil.RemoveHtmlTags(text);
-            if (noTagText.Length > 10 && noTagText.IndexOf(':') == noTagText.Length - 1 && !Utilities.IsAllUppercase(noTagText))
+            if (noTagText.Length > 10 && noTagText.IndexOf(':') == noTagText.Length - 1 && !Utilities.IsAllUppercase(noTagText) &&
+                !EndsWithSpeakerNameLine(text))
             {
                 return preAssTag + text;
             }
@@ -530,7 +531,10 @@ namespace Nikse.SubtitleEdit.Core.Forms
                 count++;
             }
             newText = newText.Trim();
-            if ((noOfNames > 0 || removedInFirstLine) && Utilities.GetNumberOfLines(newText) == 2)
+            // a single name that took up a whole line of its own says nothing about the
+            // speakers of the remaining lines - only names removed from a line that
+            // survived (or a second name) mean there really is a dialog here
+            if ((noOfNames > 1 || removedInFirstLine || removedInSecondLine) && Utilities.GetNumberOfLines(newText) == 2)
             {
                 var indexOfDialogChar = newText.IndexOf('-');
                 var insertDash = true;
@@ -750,6 +754,34 @@ namespace Nikse.SubtitleEdit.Core.Forms
             }
 
             return preAssTag + newText;
+        }
+
+        /// <summary>
+        /// True if the last line is a speaker name on a line of its own, like the "UNA:" in
+        /// "First officer's log." + "Stardate 2122.4." + "UNA:" - as opposed to a sentence
+        /// that just happens to end in a colon.
+        /// </summary>
+        private bool EndsWithSpeakerNameLine(string text)
+        {
+            var lines = text.SplitToLines();
+            if (lines.Count < 2)
+            {
+                return false;
+            }
+
+            // same shape as the last-line check in RemoveColon: the only colon is the last character,
+            // and the line is too short to be a sentence
+            var lastLine = HtmlUtil.RemoveHtmlTags(lines[lines.Count - 1], true).Trim();
+            if (!lastLine.EndsWith(':') || Utilities.CountTagInText(lastLine, ' ') > 1)
+            {
+                return false;
+            }
+
+            var name = lastLine.TrimEnd(':').TrimStart('-', ' ').Trim();
+
+            return name.Length > 0 &&
+                   (Utilities.IsAllUppercase(name) ||
+                    Settings.NameList != null && Settings.NameList.ContainsCaseInsensitive(name, out _));
         }
 
         private static string InsertStartDashInLine(string input)
