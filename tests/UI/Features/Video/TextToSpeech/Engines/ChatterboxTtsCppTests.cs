@@ -301,38 +301,55 @@ public class ChatterboxTtsCppTests
     }
 
     [Fact]
-    public void LegacyEnglishOnlyGguf_IsDetectedBySize()
+    public void RemoveSupersededBaseModels_DeletesTheUnversionedBasePairOnly()
     {
-        // cstr/chatterbox-GGUF was rebuilt in place with multilingual weights; the legacy
-        // English-only files are recognised by exact byte size so they get re-downloaded.
-        // SetLength is metadata-only, so no 630 MB is actually written.
-        var path = Path.Combine(Path.GetTempPath(), $"chatterbox-legacy-test-{Guid.NewGuid():N}.gguf");
+        // The chatterbox-v3-* pair replaced the unversioned Base GGUFs, so those are dead weight
+        // once it is downloaded - up to ~3.4 GB for a user who had all three quantizations.
+        // Turbo keeps its own unversioned names and must survive.
+        var folder = Path.Combine(Path.GetTempPath(), $"chatterbox-cleanup-{Guid.NewGuid():N}");
+        Directory.CreateDirectory(folder);
         try
         {
-            using (var fs = new FileStream(path, FileMode.CreateNew, FileAccess.Write))
+            string[] superseded =
             {
-                fs.SetLength(630_177_120);
+                "chatterbox-t3-q8_0.gguf", "chatterbox-s3gen-q8_0.gguf",
+                "chatterbox-t3-f16.gguf", "chatterbox-s3gen-f16.gguf",
+                "chatterbox-t3-q4_k.gguf", "chatterbox-s3gen-q4_k.gguf",
+            };
+            string[] kept =
+            {
+                "chatterbox-turbo-t3-q8_0.gguf", "chatterbox-turbo-s3gen-q8_0.gguf",
+                ChatterboxTtsCppDownloadService.BaseT3FileName,
+                ChatterboxTtsCppDownloadService.BaseS3GenFileName,
+            };
+
+            foreach (var name in superseded.Concat(kept))
+            {
+                File.WriteAllText(Path.Combine(folder, name), "x");
             }
 
-            Assert.True(Nikse.SubtitleEdit.Logic.Download.ChatterboxTtsCppDownloadService.IsLegacyEnglishOnlyModel(path));
+            ChatterboxTtsCppDownloadService.RemoveSupersededBaseModels(folder);
 
-            using (var fs = new FileStream(path, FileMode.Create, FileAccess.Write))
+            foreach (var name in superseded)
             {
-                fs.SetLength(639_285_952); // the current multilingual T3 — must NOT be flagged
+                Assert.False(File.Exists(Path.Combine(folder, name)), name);
             }
 
-            Assert.False(Nikse.SubtitleEdit.Logic.Download.ChatterboxTtsCppDownloadService.IsLegacyEnglishOnlyModel(path));
+            foreach (var name in kept)
+            {
+                Assert.True(File.Exists(Path.Combine(folder, name)), name);
+            }
         }
         finally
         {
-            File.Delete(path);
+            Directory.Delete(folder, true);
         }
     }
 
     [Theory]
-    [InlineData("Base", "chatterbox-t3-q8_0.gguf", "chatterbox-s3gen-q8_0.gguf", "chatterbox")]
-    [InlineData("Base F16", "chatterbox-t3-f16.gguf", "chatterbox-s3gen-f16.gguf", "chatterbox")]
-    [InlineData("Base Q4_K", "chatterbox-t3-q4_k.gguf", "chatterbox-s3gen-q4_k.gguf", "chatterbox")]
+    [InlineData("Base", "chatterbox-v3-t3-q8_0.gguf", "chatterbox-v3-s3gen-q8_0.gguf", "chatterbox")]
+    [InlineData("Base F16", "chatterbox-v3-t3-f16.gguf", "chatterbox-v3-s3gen-f16.gguf", "chatterbox")]
+    [InlineData("Base Q4_K", "chatterbox-v3-t3-q4_k.gguf", "chatterbox-v3-s3gen-q4_k.gguf", "chatterbox")]
     [InlineData("Turbo", "chatterbox-turbo-t3-q8_0.gguf", "chatterbox-turbo-s3gen-q8_0.gguf", "chatterbox-turbo")]
     public void EachModelKey_MapsToItsOwnGgufPairAndBackend(string modelKey, string t3, string s3gen, string backend)
     {
@@ -375,39 +392,6 @@ public class ChatterboxTtsCppTests
         }).ToList();
         Assert.Equal(files.Count, files.Distinct().Count());
     }
-
-    [Fact]
-    public void LegacySizeCheck_DoesNotFlagTheF16OrQ4KPair()
-    {
-        // The legacy English-only sizes are q8_0-specific. If a newly published quantization
-        // ever matched one of them byte-for-byte it would be re-downloaded forever.
-        long[] currentSizes =
-        {
-            1_138_156_192, // chatterbox-t3-f16.gguf
-            649_353_632,   // chatterbox-s3gen-f16.gguf
-            382_171_840,   // chatterbox-t3-q4_k.gguf
-            254_658_880,   // chatterbox-s3gen-q4_k.gguf
-        };
-
-        var path = Path.Combine(Path.GetTempPath(), $"chatterbox-quant-test-{Guid.NewGuid():N}.gguf");
-        try
-        {
-            foreach (var size in currentSizes)
-            {
-                using (var fs = new FileStream(path, FileMode.Create, FileAccess.Write))
-                {
-                    fs.SetLength(size); // metadata-only, nothing is written
-                }
-
-                Assert.False(ChatterboxTtsCppDownloadService.IsLegacyEnglishOnlyModel(path));
-            }
-        }
-        finally
-        {
-            File.Delete(path);
-        }
-    }
-
     private static string WriteTempWav(byte[] bytes)
     {
         var path = Path.Combine(Path.GetTempPath(), $"chatterbox-ref-test-{Guid.NewGuid():N}.wav");

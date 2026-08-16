@@ -13,10 +13,10 @@ namespace Nikse.SubtitleEdit.Features.Video.TextToSpeech.Engines;
 /// The codes are ISO 639-1 two-letter IDs. CrispASR's chatterbox backend turns the request's
 /// <c>language</c> field into the <c>[xx]</c> language token it prepends to the T3 prompt —
 /// the same mechanism as its CLI <c>-l</c> flag. This only has an effect on the multilingual
-/// Base GGUFs (2454-token text vocab); see
-/// <see cref="Logic.Download.ChatterboxTtsCppDownloadService.IsLegacyEnglishOnlyModel"/> for how
-/// pre-multilingual files are detected and re-downloaded. Chatterbox Turbo is an English-only
-/// distillation, so <see cref="ChatterboxTtsCpp.GetLanguages"/> offers it "Auto" alone.
+/// Base GGUFs (2454-token text vocab), which is what the versioned <c>chatterbox-v3-*</c> pair
+/// in <see cref="Logic.Download.ChatterboxTtsCppDownloadService"/> guarantees. Chatterbox Turbo
+/// is an English-only distillation, so <see cref="ChatterboxTtsCpp.GetLanguages"/> offers it
+/// "Auto" alone.
 ///
 /// The multilingual tokenizer actually carries a few more tags (bg, cs, hu, ro, sk, ta, vi and
 /// special tags like [ipa]); only the 23 languages ResembleAI ships and documents are listed

@@ -274,17 +274,14 @@ public class ChatterboxTtsCpp : ITtsEngine
     public static string GetS3GenModelPath(string? modelKey = null) =>
         Path.Combine(GetSetModelsFolder(), ChatterboxTtsCppDownloadService.GetS3GenFileName(ResolveModelKey(modelKey)));
 
-    // Legacy pre-multilingual Base GGUFs (English-only T3, downloaded before upstream's
-    // 2026-06-18 in-place rebuild of cstr/chatterbox-GGUF) count as NOT installed so the
-    // normal "Download models?" prompt re-fetches the multilingual files — without this,
-    // picking a language changes nothing for those users and there is no visible reason why.
+    // A plain existence check is enough now that the Base pair is the versioned chatterbox-v3-*
+    // artifact: the file name pins which weights it is, so nothing on disk can quietly become
+    // something else. The byte-size probe this replaced existed only because upstream rebuilt
+    // the unversioned names in place (English-only -> multilingual) and left the old files
+    // looking installed; users still holding those get them deleted after the V3 download.
     public static bool AreModelsInstalled(string? modelKey = null)
     {
-        var t3Path = GetT3ModelPath(modelKey);
-        var s3genPath = GetS3GenModelPath(modelKey);
-        return File.Exists(t3Path) && File.Exists(s3genPath)
-            && !ChatterboxTtsCppDownloadService.IsLegacyEnglishOnlyModel(t3Path)
-            && !ChatterboxTtsCppDownloadService.IsLegacyEnglishOnlyModel(s3genPath);
+        return File.Exists(GetT3ModelPath(modelKey)) && File.Exists(GetS3GenModelPath(modelKey));
     }
 
     public Task<Voice[]> GetVoices(string language)
