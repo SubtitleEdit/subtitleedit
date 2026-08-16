@@ -191,6 +191,29 @@ internal static class ImageOcrLoader
     }
 
     /// <summary>
+    /// XSUB (".avi"/".divx" DivX subtitles) → text via the configured OCR engine, or time codes
+    /// only when <see cref="ConversionOptions.TimeCodesOnly"/> is set. One Subtitle per subtitle
+    /// stream in the file; the stream number is returned so the caller can name the outputs.
+    /// </summary>
+    public static List<(Subtitle Subtitle, int? StreamNumber)> LoadXSub(string filePath, ConversionOptions options)
+    {
+        var results = new List<(Subtitle, int?)>();
+        foreach (var (items, streamNumber) in BitmapSubtitleLoader.LoadXSub(filePath))
+        {
+            var label = streamNumber.HasValue
+                ? $"{items.Count} XSUB image(s) (stream #{streamNumber.Value})"
+                : $"{items.Count} XSUB image(s)";
+            var subtitle = OcrBitmapItems(items, options, label);
+            if (subtitle.Paragraphs.Count > 0)
+            {
+                results.Add((subtitle, streamNumber));
+            }
+        }
+
+        return results;
+    }
+
+    /// <summary>
     /// Shared driver for the VobSub sources: recognises each pre-decoded bitmap to text
     /// (or keeps timing with empty text in time-codes-only mode), disposing the bitmaps
     /// afterwards. The OCR engine is only created when recognition is actually needed.

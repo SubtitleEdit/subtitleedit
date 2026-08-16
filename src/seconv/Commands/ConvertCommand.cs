@@ -120,7 +120,7 @@ internal sealed class ConvertCommand : AsyncCommand<ConvertCommand.Settings>
         public string? DictionaryFolder { get; init; }
 
         [CommandOption("--time-codes-only|--timecodesonly")]
-        [Description("For image-based sources (.sup, VobSub .sub/.idx, MKV PGS/VobSub, MP4 VobSub, TS DVB-sub): output time codes only with empty text; skips OCR (no OCR engine required)")]
+        [Description("For image-based sources (.sup, VobSub .sub/.idx, MKV PGS/VobSub, MP4 VobSub, TS DVB-sub, .avi XSUB): output time codes only with empty text; skips OCR (no OCR engine required)")]
         public bool TimeCodesOnly { get; init; }
 
         [CommandOption("--no-vobsub-isolate-colors|--novobsubisolatecolors")]

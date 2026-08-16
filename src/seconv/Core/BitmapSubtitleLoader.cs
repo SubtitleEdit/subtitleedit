@@ -1,5 +1,6 @@
 using Nikse.SubtitleEdit.Core.BluRaySup;
 using Nikse.SubtitleEdit.Core.Common;
+using Nikse.SubtitleEdit.Core.ContainerFormats;
 using Nikse.SubtitleEdit.Core.ContainerFormats.Matroska;
 using Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes;
 using Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream;
@@ -448,6 +449,44 @@ internal static class BitmapSubtitleLoader
         }
 
         return items;
+    }
+
+    /// <summary>
+    /// XSUB ("DivX") subtitles in an .avi/.divx → one bitmap list per subtitle stream (a file
+    /// can carry one stream per language, same as MKV). The packet header carries the bitmap's
+    /// position in the video frame, and the AVI main header the frame size those coordinates
+    /// are in, so an image output keeps the original placement instead of being re-centred.
+    /// </summary>
+    public static List<(IReadOnlyList<BitmapSubtitleItem> Items, int? StreamNumber)> LoadXSub(string filePath)
+    {
+        var avi = XSubParser.ParseAvi(filePath);
+        var screenWidth = avi.VideoWidth > 0 ? avi.VideoWidth : (int?)null;
+        var screenHeight = avi.VideoHeight > 0 ? avi.VideoHeight : (int?)null;
+
+        var results = new List<(IReadOnlyList<BitmapSubtitleItem>, int?)>();
+        foreach (var track in avi.Tracks)
+        {
+            var items = new List<BitmapSubtitleItem>(track.Subtitles.Count);
+            foreach (var xSub in track.Subtitles)
+            {
+                items.Add(new BitmapSubtitleItem(
+                    xSub.Start,
+                    xSub.End,
+                    xSub.GetImage(),
+                    screenWidth,
+                    screenHeight,
+                    new SKPointI(xSub.Left, xSub.Top)));
+            }
+
+            if (items.Count > 0)
+            {
+                // StreamNumber is -1 when the packets were recovered by the parser's fallback
+                // scan and belong to no identifiable stream - report that as "no track number".
+                results.Add((items, track.StreamNumber >= 0 ? track.StreamNumber : (int?)null));
+            }
+        }
+
+        return results;
     }
 
     /// <summary>

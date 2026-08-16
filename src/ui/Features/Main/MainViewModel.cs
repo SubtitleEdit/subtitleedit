@@ -20,6 +20,7 @@ using Nikse.SubtitleEdit.UiLogic.AudioToText;
 using Nikse.SubtitleEdit.Core.BluRaySup;
 using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.Enums;
+using Nikse.SubtitleEdit.Core.ContainerFormats;
 using Nikse.SubtitleEdit.Core.ContainerFormats.Matroska;
 using Nikse.SubtitleEdit.Core.ContainerFormats.Mp4;
 using Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes;
@@ -18393,7 +18394,7 @@ public partial class MainViewModel :
 
     private bool ImportSubtitleFromDivX(string fileName, bool skipLoadVideo = false)
     {
-        var list = DivXSubParser.ImportSubtitleFromDivX(fileName);
+        var list = XSubParser.ParseAviSubtitles(fileName);
         if (list.Count == 0)
         {
             return false;

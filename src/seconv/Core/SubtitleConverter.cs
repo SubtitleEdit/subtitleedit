@@ -346,6 +346,11 @@ internal class SubtitleConverter
             return await PassThroughTransportStreamDvbAsync(inputFile, options, result, fileIndex);
         }
 
+        if (ext is ".avi" or ".divx")
+        {
+            return await PassThroughXSubAsync(inputFile, options, result, fileIndex);
+        }
+
         return false;
     }
 
@@ -541,6 +546,113 @@ internal class SubtitleConverter
                 var msg = ErrorMessageFormatter.FormatForUser(ex, options.Verbose);
                 result.FailedFiles++;
                 result.Errors.Add($"{Path.GetFileName(inputFile)} PID {pid}: {msg}");
+                result.Files.Add(new FileConversionResult(inputFile, null, false, msg));
+                if (!options.Quiet)
+                {
+                    AnsiConsole.MarkupLineInterpolated($" [red]error: {msg}[/]");
+                }
+            }
+            finally
+            {
+                foreach (var item in items)
+                {
+                    item.Dispose();
+                }
+            }
+        }
+
+        await Task.CompletedTask;
+        return true;
+    }
+
+    /// <summary>
+    /// .avi/.divx XSUB → image output without OCR. One output per subtitle stream; the stream
+    /// number is used as the filename suffix (an AVI stream header carries no language) but only
+    /// when the file has more than one, so the usual single-stream file keeps its plain name.
+    /// </summary>
+    private async Task<bool> PassThroughXSubAsync(string inputFile, ConversionOptions options, ConversionResult result, int fileIndex)
+    {
+        var allStreams = BitmapSubtitleLoader.LoadXSub(inputFile);
+        if (allStreams.Count == 0)
+        {
+            // No XSUB packets — let the regular loader report it (it also owns the error text).
+            await Task.CompletedTask;
+            return false;
+        }
+
+        // Every stream is decoded up front, so the ones --track-number rules out have bitmaps
+        // to dispose of.
+        var streams = new List<(IReadOnlyList<BitmapSubtitleLoader.BitmapSubtitleItem> Items, int? StreamNumber)>();
+        foreach (var stream in allStreams)
+        {
+            var selected = options.TrackNumbers.Count == 0
+                           || (stream.StreamNumber.HasValue && options.TrackNumbers.Contains(stream.StreamNumber.Value));
+            if (selected)
+            {
+                streams.Add(stream);
+                continue;
+            }
+
+            foreach (var item in stream.Items)
+            {
+                item.Dispose();
+            }
+        }
+
+        try
+        {
+            if (streams.Count == 0)
+            {
+                throw new InvalidOperationException(
+                    $"XSUB file has {allStreams.Count} subtitle stream(s) but none matched --track-number ({string.Join(",", options.TrackNumbers)}): {inputFile}");
+            }
+
+            if (streams.Count > 1 && !string.IsNullOrEmpty(options.OutputFilename))
+            {
+                throw new InvalidOperationException(
+                    "--output-filename can only target a single subtitle stream. Found "
+                    + $"{streams.Count} XSUB streams in the file.");
+            }
+        }
+        catch
+        {
+            foreach (var (items, _) in streams)
+            {
+                foreach (var item in items)
+                {
+                    item.Dispose();
+                }
+            }
+
+            throw;
+        }
+
+        foreach (var (items, streamNumber) in streams)
+        {
+            var languageSuffix = allStreams.Count > 1 && streamNumber.HasValue ? $"xsub_track{streamNumber.Value}" : null;
+            var outputFile = ResolveOutputFileName(inputFile, options, languageSuffix, streamNumber);
+
+            if (!options.Quiet)
+            {
+                var trackLabel = streamNumber.HasValue ? $"#{streamNumber.Value} " : string.Empty;
+                AnsiConsole.MarkupInterpolated($"[dim]{fileIndex}:[/] [cyan]{Path.GetFileName(inputFile)}[/] [yellow]{trackLabel}[/][dim](XSUB img→img)→[/] [green]{outputFile}[/]...");
+            }
+
+            try
+            {
+                WritePreservedBitmaps(items, outputFile, options);
+                result.SuccessfulFiles++;
+                result.Files.Add(new FileConversionResult(inputFile, outputFile, true, null));
+                if (!options.Quiet)
+                {
+                    AnsiConsole.MarkupLine($" [green]done ({items.Count} bitmap(s)).[/]");
+                }
+            }
+            catch (Exception ex)
+            {
+                var msg = ErrorMessageFormatter.FormatForUser(ex, options.Verbose);
+                result.FailedFiles++;
+                result.Errors.Add($"{Path.GetFileName(inputFile)}: {msg}");
                 result.Files.Add(new FileConversionResult(inputFile, null, false, msg));
                 if (!options.Quiet)
                 {
