@@ -645,25 +645,27 @@ namespace Nikse.SubtitleEdit.Core.Forms
             else if (noOfNames == 2 && Utilities.GetNumberOfLines(newText) == 3 && Utilities.GetNumberOfLines(text) == 3)
             {
                 var dialogHelper = new DialogSplitMerge { DialogStyle = Configuration.Settings.General.DialogStyle, TwoLetterLanguageCode = language };
-                if (dialogHelper.IsDialog(text.SplitToLines()))
+                if (removedInFirstLine && removedInSecondLine)
                 {
-                    if (removedInFirstLine && removedInSecondLine)
+                    // a name was removed from the start of both of the first two lines,
+                    // so this is a dialog no matter what the third line looks like
+                    var arr = newText.SplitToLines();
+
+                    if (!arr[0].Contains('-') && !arr[0].Contains(':'))
                     {
-                        var arr = newText.SplitToLines();
-
-                        if (!arr[0].Contains('-') && !arr[0].Contains(':'))
-                        {
-                            arr[0] = InsertStartDashInLine(arr[0]);
-                        }
-
-                        if (!arr[1].Contains('-') && !arr[1].Contains(':'))
-                        {
-                            arr[1] = InsertStartDashInLine(arr[1]);
-                        }
-
-                        newText = string.Join(Environment.NewLine, arr);
+                        arr[0] = InsertStartDashInLine(arr[0]);
                     }
-                    else if (!removedInFirstLine && removedInSecondLine)
+
+                    if (!arr[1].Contains('-') && !arr[1].Contains(':'))
+                    {
+                        arr[1] = InsertStartDashInLine(arr[1]);
+                    }
+
+                    newText = string.Join(Environment.NewLine, arr);
+                }
+                else if (dialogHelper.IsDialog(text.SplitToLines()))
+                {
+                    if (!removedInFirstLine && removedInSecondLine)
                     {
                         var arr = newText.SplitToLines();
 

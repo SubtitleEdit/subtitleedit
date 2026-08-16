@@ -113,4 +113,24 @@ public class RemoveTextForHITest
 
         Assert.Equal("Hello", remover.RemoveHearImpairedTags("{noise} Hello"));
     }
+
+    // --- Colon: the bug from issue #13681 ---
+
+    [Theory]
+    [InlineData("-UNA: I have it.|-M'BENGA: Good.|Get out of there.")]
+    [InlineData("- UNA: I have it.|- M'BENGA: Good.|Get out of there.")]
+    [InlineData("UNA: I have it.|M'BENGA: Good.|Get out of there.")]
+    public void Colon_ThreeLinesTwoSpeakers_KeepsDialogDashes(string input)
+    {
+        // The second speaker continues on the third line, so the text is not
+        // recognized as a dialog - but two names were removed from the first
+        // two lines, so both lines need a dialog dash.
+        var remover = MakeRemover();
+        remover.Settings.RemoveTextBeforeColon = true;
+
+        var text = input.Replace("|", Environment.NewLine);
+        var expected = "- I have it." + Environment.NewLine + "- Good." + Environment.NewLine + "Get out of there.";
+
+        Assert.Equal(expected, remover.RemoveTextFromHearImpaired(text, "en"));
+    }
 }
