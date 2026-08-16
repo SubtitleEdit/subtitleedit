@@ -10,7 +10,7 @@ using Spectre.Console;
 namespace SeConv.Core;
 
 /// <summary>
-/// Extracts subtitle tracks from container files (.mkv/.mks/.mp4/.m4v/.m4s/.3gp/.mcc).
+/// Extracts subtitle tracks from container files (.mkv/.mks/.mp4/.m4v/.m4s/.3gp/.mcc/.avi).
 /// Each track becomes one <see cref="LoadedTrack"/>; image-codec tracks are skipped
 /// with a stderr warning (deferred to Phase 5 OCR).
 /// </summary>
@@ -123,6 +123,11 @@ internal static class ContainerSubtitleLoader
         if (ext is ".ts" or ".m2ts" or ".mts")
         {
             return LoadTransportStream(filePath, options);
+        }
+
+        if (ext is ".avi" or ".divx")
+        {
+            return LoadXSub(filePath, options);
         }
 
         if (ext == ".mxf")
@@ -443,6 +448,42 @@ internal static class ContainerSubtitleLoader
             throw new InvalidOperationException($"No subtitles recognised in VobSub file: {subPath}");
         }
         return [new LoadedTrack(subtitle, new SubRip(), string.Empty, null)];
+    }
+
+    /// <summary>
+    /// .avi/.divx with XSUB ("DivX") subtitles → one OCR'd track per subtitle stream. An AVI
+    /// stream header carries no language, so multi-stream files are told apart by an
+    /// "xsub_track&lt;n&gt;" suffix (the stream number); the common single-stream file keeps the
+    /// plain output name.
+    /// </summary>
+    private static List<LoadedTrack> LoadXSub(string filePath, ConversionOptions options)
+    {
+        var streams = ImageOcrLoader.LoadXSub(filePath, options);
+        if (streams.Count == 0)
+        {
+            throw new InvalidOperationException($"No XSUB (DivX) subtitles found in: {filePath}");
+        }
+
+        var tracks = new List<LoadedTrack>();
+        foreach (var (subtitle, streamNumber) in streams)
+        {
+            if (options.TrackNumbers.Count > 0 &&
+                (!streamNumber.HasValue || !options.TrackNumbers.Contains(streamNumber.Value)))
+            {
+                continue;
+            }
+
+            var languageSuffix = streams.Count > 1 && streamNumber.HasValue ? $"xsub_track{streamNumber.Value}" : string.Empty;
+            tracks.Add(new LoadedTrack(subtitle, new SubRip(), languageSuffix, streamNumber));
+        }
+
+        if (tracks.Count == 0)
+        {
+            throw new InvalidOperationException(
+                $"XSUB file has {streams.Count} subtitle stream(s) but none matched --track-number ({string.Join(",", options.TrackNumbers)}): {filePath}");
+        }
+
+        return tracks;
     }
 
     private static List<LoadedTrack> LoadTransportStream(string filePath, ConversionOptions options)

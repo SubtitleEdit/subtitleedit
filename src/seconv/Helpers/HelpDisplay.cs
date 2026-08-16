@@ -65,7 +65,7 @@ internal static class HelpDisplay
         ShowParameter(console, "--ocr-db:<path>", ".nocr (--ocr-engine=nocr) or .db (--ocr-engine=binaryocr)");
         ShowParameter(console, "--ocr-model:<model>", "llamacpp OCR .gguf file name/path (default: first downloaded OCR model)");
         ShowParameter(console, "--ocr-url:<url>", "Endpoint of an already-running llama-server for OCR (skips the auto-start)");
-        ShowParameter(console, "--time-codes-only", "Image sources (.sup/VobSub/PGS/DVB) -> text with time codes only; skips OCR");
+        ShowParameter(console, "--time-codes-only", "Image sources (.sup/VobSub/PGS/DVB/XSUB) -> text with time codes only; skips OCR");
         ShowParameter(console, "--no-vobsub-isolate-colors", "Disable VobSub OCR colour isolation (on by default; isolation binarises to black-on-white, dropping outline colours)");
         ShowParameter(console, "--no-pgs-isolate-colors", "Disable PGS/DVB-sub OCR colour isolation (on by default; isolation binarises to black-on-white so the white glyph fill survives the OCR canvas)");
         ShowParameter(console, "--ollama-url:<url>", "Ollama API endpoint (default: http://localhost:11434/api/chat)");
@@ -181,6 +181,9 @@ internal static class HelpDisplay
         ShowExample(console,
             "seconv movie.sup subrip --time-codes-only",
             "Extract only the time codes from a .sup (no OCR; empty text)");
+        ShowExample(console,
+            "seconv movie.avi subrip --ocr-engine:tesseract --ocr-language:eng",
+            "OCR the XSUB (DivX) subtitles of an .avi");
         ShowExample(console,
             "seconv subs.srt customtext --custom-format:my-template.xml",
             "Render via a custom text format template");
