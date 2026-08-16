@@ -169,9 +169,32 @@ public class RemoveTextForHITest
     }
 
     [Theory]
+    [InlineData("First officer's log.|Stardate 2122.4.|MAN ON RADIO:", "First officer's log.|Stardate 2122.4.")]
+    [InlineData("First officer's log.|Stardate 2122.4.|<i>MAN ON RADIO:</i>", "First officer's log.|Stardate 2122.4.")]
+    [InlineData("Come in.|Do you read me?|WOMAN ON TV:", "Come in.|Do you read me?")]
+    [InlineData("Come in.|MAN ON RADIO:", "Come in.")]
+    public void Colon_TrailingMultiWordLabel_IsRemoved(string input, string expected)
+    {
+        // A label of more than two words is only taken when the line before it is a
+        // finished sentence - see Colon_TrailingMultiWordLabel_KeptWhenLineContinues.
+        var remover = MakeRemover();
+        remover.Settings.RemoveTextBeforeColon = true;
+
+        var text = input.Replace("|", Environment.NewLine);
+
+        Assert.Equal(expected.Replace("|", Environment.NewLine), remover.RemoveTextFromHearImpaired(text, "en"));
+    }
+
+    [Theory]
     [InlineData("And she would like you to do|three things:")]
     [InlineData("It was quite a long day|and then he said|something:")]
     [InlineData("Here is the thing|I wanted to say:")]
+    // the last line continues the line before it, so it is a sentence, not a label
+    [InlineData("I could hear the|MAN ON RADIO:")]
+    [InlineData("I HAVE A LIST OF|THINGS TO DO:")]
+    // uppercase sentences after a finished sentence - kept by the narrator check
+    [InlineData("HE SAID THIS TO ME.|HERE IS THE LIST:")]
+    [InlineData("IT WAS A LONG DAY.|AND THEN HE SAID THIS:")]
     public void Colon_SentenceEndingInColon_IsKept(string input)
     {
         // A sentence that just happens to end in a colon is not a speaker name.

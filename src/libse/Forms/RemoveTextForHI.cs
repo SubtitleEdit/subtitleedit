@@ -132,18 +132,19 @@ namespace Nikse.SubtitleEdit.Core.Forms
                 }
             }
 
+            var lines = text.Trim().SplitToLines();
+
             // House 7x01 line 52: and she would like you to do three things:
             // Okay or remove???
             var noTagText = HtmlUtil.RemoveHtmlTags(text);
             if (noTagText.Length > 10 && noTagText.IndexOf(':') == noTagText.Length - 1 && !Utilities.IsAllUppercase(noTagText) &&
-                !EndsWithSpeakerNameLine(text))
+                !IsSpeakerNameLine(lines, lines.Count - 1))
             {
                 return preAssTag + text;
             }
 
             var language = Settings.NameList != null ? Settings.NameList.LanguageName : "en";
             var newText = string.Empty;
-            var lines = text.Trim().SplitToLines();
             var noOfNames = 0;
             var count = 0;
             var removedInFirstLine = false;
@@ -153,7 +154,8 @@ namespace Nikse.SubtitleEdit.Core.Forms
             {
                 var indexOfColon = line.IndexOf(':');
                 var isLastColon = count == lines.Count - 1 && !HtmlUtil.RemoveHtmlTags(line).TrimEnd(':').Contains(':');
-                if (indexOfColon <= 0 || IsInsideBrackets(line, indexOfColon) || (isLastColon && Utilities.CountTagInText(HtmlUtil.RemoveHtmlTags(line), ' ') > 1))
+                if (indexOfColon <= 0 || IsInsideBrackets(line, indexOfColon) ||
+                    (isLastColon && Utilities.CountTagInText(HtmlUtil.RemoveHtmlTags(line), ' ') > 1 && !IsSpeakerNameLine(lines, count)))
                 {
                     newText = (newText + Environment.NewLine + line).Trim();
 
@@ -757,31 +759,51 @@ namespace Nikse.SubtitleEdit.Core.Forms
         }
 
         /// <summary>
-        /// True if the last line is a speaker name on a line of its own, like the "UNA:" in
+        /// True if the line is a speaker name on a line of its own, like the "UNA:" in
         /// "First officer's log." + "Stardate 2122.4." + "UNA:" - as opposed to a sentence
-        /// that just happens to end in a colon.
+        /// that just happens to end in a colon, like "...to do three things:".
         /// </summary>
-        private bool EndsWithSpeakerNameLine(string text)
+        private bool IsSpeakerNameLine(List<string> lines, int index)
         {
-            var lines = text.SplitToLines();
-            if (lines.Count < 2)
+            if (index < 0 || index >= lines.Count)
             {
                 return false;
             }
 
-            // same shape as the last-line check in RemoveColon: the only colon is the last character,
-            // and the line is too short to be a sentence
-            var lastLine = HtmlUtil.RemoveHtmlTags(lines[lines.Count - 1], true).Trim();
-            if (!lastLine.EndsWith(':') || Utilities.CountTagInText(lastLine, ' ') > 1)
+            var line = HtmlUtil.RemoveHtmlTags(lines[index], true).Trim();
+            if (!line.EndsWith(':') || line.TrimEnd(':').Contains(':'))
             {
                 return false;
             }
 
-            var name = lastLine.TrimEnd(':').TrimStart('-', ' ').Trim();
+            var name = line.TrimEnd(':').TrimStart('-', ' ').Trim();
+            if (name.Length == 0 || name.Length > 30)
+            {
+                return false;
+            }
 
-            return name.Length > 0 &&
-                   (Utilities.IsAllUppercase(name) ||
-                    Settings.NameList != null && Settings.NameList.ContainsCaseInsensitive(name, out _));
+            if (!Utilities.IsAllUppercase(name) &&
+                !(Settings.NameList != null && Settings.NameList.ContainsCaseInsensitive(name, out _)))
+            {
+                return false;
+            }
+
+            if (Utilities.CountTagInText(name, ' ') <= 1)
+            {
+                return true;
+            }
+
+            // a label of more than two words, like "MAN ON RADIO:", is easily confused with the tail
+            // of a sentence - only take it when the line before it is a finished sentence, as the
+            // sentence tail would be a continuation of it
+            if (index == 0)
+            {
+                return true;
+            }
+
+            var previous = HtmlUtil.RemoveHtmlTags(lines[index - 1], true).TrimEnd().TrimEnd('"');
+
+            return previous.Length > 0 && ".!?♪♫—".Contains(previous[previous.Length - 1]);
         }
 
         private static string InsertStartDashInLine(string input)
