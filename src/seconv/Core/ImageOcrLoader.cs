@@ -171,6 +171,16 @@ internal static class ImageOcrLoader
     }
 
     /// <summary>
+    /// DVB subtitle MKV track (codec <c>S_DVBSUB</c>) → text via the configured OCR engine, or
+    /// time codes only when <see cref="ConversionOptions.TimeCodesOnly"/> is set.
+    /// </summary>
+    public static Subtitle LoadMatroskaDvbSub(MatroskaFile matroska, MatroskaTrackInfo track, ConversionOptions options)
+    {
+        var items = BitmapSubtitleLoader.LoadMatroskaDvbSub(matroska, track);
+        return OcrBitmapItems(items, options, $"{items.Count} MKV DVB-sub image(s) (track #{track.TrackNumber})");
+    }
+
+    /// <summary>
     /// VobSub MP4 track (handler <c>subp</c>) → text via the configured OCR engine, or time
     /// codes only when <see cref="ConversionOptions.TimeCodesOnly"/> is set.
     /// </summary>
@@ -178,6 +188,29 @@ internal static class ImageOcrLoader
     {
         var items = BitmapSubtitleLoader.LoadMp4VobSub(track);
         return OcrBitmapItems(items, options, $"{items.Count} MP4 VobSub image(s)");
+    }
+
+    /// <summary>
+    /// XSUB (".avi"/".divx" DivX subtitles) → text via the configured OCR engine, or time codes
+    /// only when <see cref="ConversionOptions.TimeCodesOnly"/> is set. One Subtitle per subtitle
+    /// stream in the file; the stream number is returned so the caller can name the outputs.
+    /// </summary>
+    public static List<(Subtitle Subtitle, int? StreamNumber)> LoadXSub(string filePath, ConversionOptions options)
+    {
+        var results = new List<(Subtitle, int?)>();
+        foreach (var (items, streamNumber) in BitmapSubtitleLoader.LoadXSub(filePath))
+        {
+            var label = streamNumber.HasValue
+                ? $"{items.Count} XSUB image(s) (stream #{streamNumber.Value})"
+                : $"{items.Count} XSUB image(s)";
+            var subtitle = OcrBitmapItems(items, options, label);
+            if (subtitle.Paragraphs.Count > 0)
+            {
+                results.Add((subtitle, streamNumber));
+            }
+        }
+
+        return results;
     }
 
     /// <summary>

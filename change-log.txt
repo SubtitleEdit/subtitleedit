@@ -3,6 +3,66 @@ Subtitle Edit Changelog
 
 -----------------------------------------------------------------------------------------------------
 
+v5.2.0-beta15 (16th of August 2026)
+
+* Add IndexTTS 2.5 as a text to speech engine, with emotion and speaking rate control
+* Add MiLMMT-46 translation models to the llama.cpp translate engine
+* Add HunyuanOCR 1.5 to the llama.cpp OCR model list
+* Add the "llama.cpp advanced" engine to batch convert, with custom prompt and parameters - thx emsb8888-prog
+* Add "Convert colors to dialog", "Snap time codes to frames" and "Add folder..." to batch convert
+* Add a "Play current" button to the AI review window
+* Add a reset-to-default button for the auto-translate prompt
+* Add an engine download/update button to the llama.cpp OCR settings - thx fraternl
+* Ask before the first voice clone in "Text to speech"
+* Open SMPTE-TT files with bitmap captions
+* Show "List shot changes" whenever shot changes exist, and keep edits made in the list
+* Show the errors that could not be fixed in "Fix common errors" - thx radektuma
+* Make "seconv" fail on unknown options, and add --json output everywhere plus --help-json
+* Improve subtitle format detection and reading after a sweep of the VideoLAN/CCExtractor sample files
+* Improve OCR line splitting with an adaptive minimum line height, plus an un-italic retry in nOCR
+* Fix reading of Matroska files on a network share being much slower in beta 14 - thx 1476523
+* Fix whisper.cpp not starting on Linux - thx keremyavuz
+* Fix crash when closing "Text to speech" after reviewing audio - thx cvrle77
+* Fix new lines in ASSA getting the first style in the header instead of the neighbouring one - thx Khaztaroth
+* Fix changing format to Advanced Sub Station Alpha ignoring the default styles storage category - thx windias
+* Fix column paste going to the wrong row when the rows were selected top-to-bottom - thx rosilucia-hub
+* Fix "Remove text for hearing impaired" removing dialog dashes in 3-line subtitles - thx ubeccp6a
+* Fix "Remove text for hearing impaired" with a speaker name on a line of its own - thx ubeccp6a
+* Fix speech to text with Qwen3 ASR failing with a JSON error on comma-decimal locales - thx zielinou
+* Fix switching audio track generating a waveform even with auto-generate off - thx Davanix
+* Fix italic OCR losing word spacing and reading "l" as "i" with binary image compare - thx Miggu82
+* Fix OCR replace lists dropping all but the first "if spelled correctly" section - thx Miggu82
+* Fix six small regressions found in the previous day's changes
+* Update Korean translation - thx 12si27
+* Update Polish translation - thx potplayer-fanpack
+* Update Portuguese (Brazil) translation - thx igorruckert
+* Minor performance improvements in seconv and auto-break
+
+-----------------------------------------------------------------------------------------------------
+
+v5.2.0-beta14 (15th of August 2026)
+
+* Add back .webm output for "burn-in subtitle", add .ts, and offer only containers the codec can use
+* Let "Visual sync" find or open a video when only a subtitle is open
+* Show install status dots for llama.cpp in the OCR window engine and model lists
+* Fix OCR with llama.cpp returning nothing but blank lines - thx fraternl
+* Fix "AI review" pairing corrections with the wrong lines - thx coreyjv
+* Fix undo stepping back through a waveform drag instead of to before it - thx thelabcat
+* Fix overlapping lines from speech to text with Crisp ASR and Parakeet - thx perkesfurmah-collab
+* Fix the subtitle grid jumping away from the line being edited when a row changes height - thx radektuma
+* Fix column shortcuts not working while the text box has focus - thx SiaL8er
+* Fix speech to text failing to extract audio with "-map 0:1 matches no streams" - thx slothsh
+* Fix "Fix short display time" listing fixes that change nothing - thx Pemicope
+* Fix Google Translate V1 inserting blank lines in multi-line texts - thx radektuma
+* Fix "Keep partial transcription?" discarding the transcribed lines anyway
+* Fix cancelling speech to text not stopping the rest of a batch
+* Fix engine and ffmpeg processes left running after closing the speech to text window
+* Improve reading of Matroska files on a network share further, now walking clusters in parallel - thx 1476523
+* Update German translation - thx Need74
+* Update Japanese translation - thx hisui3393
+
+-----------------------------------------------------------------------------------------------------
+
 v5.2.0-beta13 (14th of August 2026)
 
 * Add an "Edit original" mode, and make the original reference rows editable in place - thx bichitoxxx

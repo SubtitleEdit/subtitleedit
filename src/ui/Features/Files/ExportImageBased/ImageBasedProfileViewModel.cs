@@ -1,6 +1,5 @@
 ﻿using Avalonia.Controls;
 using Avalonia.Input;
-using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Nikse.SubtitleEdit.Features.Shared;
@@ -21,14 +20,13 @@ public partial class ImageBasedProfileViewModel : ObservableObject
 
     public Window? Window { get; set; }
     public bool OkPressed { get; private set; }
-    public TextBox ProfileNameTextBox { get; internal set; }
+    public Action? FocusProfileName { get; set; }
 
     public ImageBasedProfileViewModel()
     {
         Profiles = new ObservableCollection<ProfileDisplayItem>();
         SelectedProfile = null;
         IsProfileSelected = true;
-        ProfileNameTextBox = new TextBox();
     }
 
     public void Initialize(ObservableCollection<SeExportImagesProfile> profiles, SeExportImagesProfile? selectedProfile)
@@ -52,8 +50,8 @@ public partial class ImageBasedProfileViewModel : ObservableObject
         Profiles.Add(newProfile);
         SelectedProfile = newProfile;
 
-        Dispatcher.UIThread.Invoke(() => { ProfileNameTextBox.Focus(); });
         IsProfileDeleteEnabled = Profiles.Count > 1;
+        FocusProfileName?.Invoke();
     }
 
     [RelayCommand]

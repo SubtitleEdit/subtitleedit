@@ -12,6 +12,7 @@ namespace Nikse.SubtitleEdit.Core.Common
         private const string EndLineChars = ".!?…؟。？！";
         private const string Commas = ",،，、";
         private static readonly char[] PeriodQuestionExclamation = { '.', '?', '!' };
+        private static readonly char[] QuoteChars = { '"', '\'' };
 
         public TextSplit(string text, int singleLineMaxLength, string language)
         {
@@ -24,12 +25,12 @@ namespace Nikse.SubtitleEdit.Core.Common
             {
                 if (text[i] == ' ')
                 {
-                    var l1 = text.Substring(0, i).Trim();
-                    var l2 = text.Substring(i + 1).Trim();
+                    var l1 = text.AsMemory(0, i).Trim();
+                    var l2 = text.AsMemory(i + 1).Trim();
 
                     // One result shared by both lists. _splits is a subset of _allSplits, so
                     // building a second identical instance measured the same two lines twice.
-                    var split = new TextSplitResult(new List<string> { l1, l2 });
+                    var split = new TextSplitResult(new List<ReadOnlyMemory<char>> { l1, l2 });
                     _allSplits.Add(split);
                     if (Utilities.CanBreak(text, i, language))
                     {
@@ -38,9 +39,9 @@ namespace Nikse.SubtitleEdit.Core.Common
                 }
                 else if ((language == "zh" || language == "ja" || language == "ko") && "，。？、?".Contains(text[i]))
                 {
-                    var l1 = text.Substring(0, i + 1).Trim();
-                    var l2 = text.Substring(i + 1).Trim();
-                    var split = new TextSplitResult(new List<string> { l1, l2 });
+                    var l1 = text.AsMemory(0, i + 1).Trim();
+                    var l2 = text.AsMemory(i + 1).Trim();
+                    var split = new TextSplitResult(new List<ReadOnlyMemory<char>> { l1, l2 });
                     _allSplits.Add(split);
                     _splits.Add(split);
                 }
@@ -148,16 +149,16 @@ namespace Nikse.SubtitleEdit.Core.Common
 
         private static bool EndsWith(TextSplitResult textSplitResult, string chars)
         {
-            var line1 = textSplitResult.Lines[0].TrimEnd('"', '\'');
-            return line1.Length > 0 && chars.Contains(line1[line1.Length - 1]);
+            var line1 = textSplitResult.Lines[0].TrimEnd(QuoteChars).Span;
+            return line1.Length > 0 && chars.Contains(line1[^1]);
         }
 
         private static bool IsDialog(TextSplitResult textSplitResult)
         {
-            var line1 = textSplitResult.Lines[0].TrimEnd('"', '\'');
-            var line2 = textSplitResult.Lines[1].TrimStart('"', '\'');
+            var line1 = textSplitResult.Lines[0].TrimEnd(QuoteChars).Span;
+            var line2 = textSplitResult.Lines[1].TrimStart(QuoteChars).Span;
             return line2.Length > 0 && line1.Length > 0 &&
-                   line2.StartsWith('-') && EndLineChars.Contains(line1[line1.Length - 1]);
+                   line2[0] == '-' && EndLineChars.Contains(line1[^1]);
         }
 
         public static List<string> SplitMulti(string input, int numberOfParts, string language)

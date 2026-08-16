@@ -15,12 +15,12 @@ namespace Nikse.SubtitleEdit.Features.Translate.LlamaCppAdvanced;
 /// Shared batch/context translation loop of the "advanced" local-LLM engines: sends numbered
 /// batches with a rolling history of already-translated lines plus user-configured
 /// synopsis/glossary/style, and requires a schema-constrained JSON reply so line alignment is
-/// guaranteed. The Auto-translate loop calls <see cref="TranslateBatchAsync"/> directly; the
-/// plain <see cref="Translate"/> path (used for "translate current line") is a context-free
-/// batch of one. Subclasses only supply the endpoint and, where the server needs one, the
-/// model name.
+/// guaranteed. The Auto-translate loop and batch convert both call <see cref="TranslateBatchAsync"/>
+/// (via <see cref="IBatchContextTranslator"/>); the plain <see cref="Translate"/> path (used for
+/// "translate current line") is a context-free batch of one. Subclasses only supply the endpoint
+/// and, where the server needs one, the model name.
 /// </summary>
-public abstract class AdvancedTranslatorBase : IAutoTranslator, IDisposable
+public abstract class AdvancedTranslatorBase : IAutoTranslator, IBatchContextTranslator, IDisposable
 {
     private LlamaCppAdvancedClient? _client;
 

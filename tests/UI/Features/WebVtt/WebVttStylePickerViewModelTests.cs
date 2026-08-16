@@ -96,16 +96,28 @@ public class WebVttStylePickerViewModelTests : IDisposable
     [AvaloniaFact]
     public void CheckedStylesApplyAsCueClassesOnTheLine()
     {
-        // What the main window does with the picker result.
-        var vm = ShowWindow(MakeStyles());
-        vm.SelectAllCommand.Execute(null);
-        vm.OkCommand.Execute(null);
-        Dispatcher.UIThread.RunJobs();
+        // Merging is what this asserts, so pin it: WebVttPropertiesTests turns the setting on
+        // in the shared libse Configuration and other classes run alongside it, so inheriting
+        // whatever ran first made this pass or fail by scheduling luck.
+        var doNotMerge = Configuration.Settings.SubtitleSettings.WebVttDoNoMergeTags;
+        Configuration.Settings.SubtitleSettings.WebVttDoNoMergeTags = false;
+        try
+        {
+            // What the main window does with the picker result.
+            var vm = ShowWindow(MakeStyles());
+            vm.SelectAllCommand.Execute(null);
+            vm.OkCommand.Execute(null);
+            Dispatcher.UIThread.RunJobs();
 
-        var paragraph = new Paragraph("Hello", 0, 1000);
-        var text = WebVttHelper.SetParagraphStyles(paragraph, vm.CheckedStyles.Select(p => p.ToWebVttStyle()).ToList());
+            var paragraph = new Paragraph("Hello", 0, 1000);
+            var text = WebVttHelper.SetParagraphStyles(paragraph, vm.CheckedStyles.Select(p => p.ToWebVttStyle()).ToList());
 
-        Assert.Equal("<c.red.big>Hello</c>", text);
+            Assert.Equal("<c.red.big>Hello</c>", text);
+        }
+        finally
+        {
+            Configuration.Settings.SubtitleSettings.WebVttDoNoMergeTags = doNotMerge;
+        }
     }
 
     [AvaloniaFact]

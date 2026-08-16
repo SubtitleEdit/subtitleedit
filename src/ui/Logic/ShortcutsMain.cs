@@ -762,12 +762,16 @@ public static class ShortcutsMain
         AddShortcut(shortcuts, vm.SubtitleGridCutCommand, nameof(vm.SubtitleGridCutCommand), ShortcutCategory.SubtitleGrid);
         AddShortcut(shortcuts, vm.SubtitleGridCopyCommand, nameof(vm.SubtitleGridCopyCommand), ShortcutCategory.SubtitleGrid);
         AddShortcut(shortcuts, vm.SubtitleGridPasteCommand, nameof(vm.SubtitleGridPasteCommand), ShortcutCategory.SubtitleGrid);
-        AddShortcut(shortcuts, vm.ColumnDeleteTextCommand, nameof(vm.ColumnDeleteTextCommand), ShortcutCategory.SubtitleGrid);
-        AddShortcut(shortcuts, vm.ColumnDeleteTextAndShiftCellsUpCommand, nameof(vm.ColumnDeleteTextAndShiftCellsUpCommand), ShortcutCategory.SubtitleGrid);
-        AddShortcut(shortcuts, vm.ColumnInsertEmptyTextAndShiftCellsDownCommand, nameof(vm.ColumnInsertEmptyTextAndShiftCellsDownCommand), ShortcutCategory.SubtitleGrid);
-        AddShortcut(shortcuts, vm.ColumnPasteFromClipboardCommand, nameof(vm.ColumnPasteFromClipboardCommand), ShortcutCategory.SubtitleGrid);
-        AddShortcut(shortcuts, vm.ColumnTextUpCommand, nameof(vm.ColumnTextUpCommand), ShortcutCategory.SubtitleGrid);
-        AddShortcut(shortcuts, vm.ColumnTextDownCommand, nameof(vm.ColumnTextDownCommand), ShortcutCategory.SubtitleGrid);
+        // Column commands work on the grid selection, not on the caret, so they are safe to run with
+        // either the grid or a text box focused. In SE4 they were context menu "ShortcutKeys", which
+        // WinForms dispatched form-wide via ToolStripManager, so they always fired regardless of
+        // focus (#13622) - "SubtitleGridAndTextBox" restores that.
+        AddShortcut(shortcuts, vm.ColumnDeleteTextCommand, nameof(vm.ColumnDeleteTextCommand), ShortcutCategory.SubtitleGridAndTextBox);
+        AddShortcut(shortcuts, vm.ColumnDeleteTextAndShiftCellsUpCommand, nameof(vm.ColumnDeleteTextAndShiftCellsUpCommand), ShortcutCategory.SubtitleGridAndTextBox);
+        AddShortcut(shortcuts, vm.ColumnInsertEmptyTextAndShiftCellsDownCommand, nameof(vm.ColumnInsertEmptyTextAndShiftCellsDownCommand), ShortcutCategory.SubtitleGridAndTextBox);
+        AddShortcut(shortcuts, vm.ColumnPasteFromClipboardCommand, nameof(vm.ColumnPasteFromClipboardCommand), ShortcutCategory.SubtitleGridAndTextBox);
+        AddShortcut(shortcuts, vm.ColumnTextUpCommand, nameof(vm.ColumnTextUpCommand), ShortcutCategory.SubtitleGridAndTextBox);
+        AddShortcut(shortcuts, vm.ColumnTextDownCommand, nameof(vm.ColumnTextDownCommand), ShortcutCategory.SubtitleGridAndTextBox);
         AddShortcut(shortcuts, vm.ImportPlainTextCommand, nameof(vm.ImportPlainTextCommand), ShortcutCategory.General, ShortcutGroup.File);
         AddShortcut(shortcuts, vm.ExportEbuStlCommand, nameof(vm.ExportEbuStlCommand), ShortcutCategory.General, ShortcutGroup.File);
         AddShortcut(shortcuts, vm.ExportPacCommand, nameof(vm.ExportPacCommand), ShortcutCategory.General, ShortcutGroup.File);

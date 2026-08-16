@@ -19,7 +19,7 @@ public class Se
     internal const int CurrentMacOsFontMigrationVersion = 1;
     internal const int CurrentShortcutsMigrationVersion = 2;
 
-    public static string Version { get; set; } = "v5.2.0-beta13";
+    public static string Version { get; set; } = "v5.2.0-beta15";
 
     public SeGeneral General { get; set; } = new();
     public List<SeShortCut> Shortcuts { get; set; } = new();
@@ -167,6 +167,10 @@ public class Se
     public static string SpeechToTextFolder => Path.Combine(DataFolder, "SpeechToText");
     public static string CrispAsrFolder => Path.Combine(DataFolder, "CrispASR");
     public static string LlamaCppFolder => Path.Combine(DataFolder, "llama.cpp");
+    // audio.cpp is a multi-model runtime (TTS, ASR, VAD, separation), so it sits at the top
+    // level like CrispASR and llama.cpp rather than under a single feature's folder — the
+    // binaries are shared the moment a second audio.cpp-backed engine is added.
+    public static string AudioCppFolder => Path.Combine(DataFolder, "audio.cpp");
     public static string WaveformsFolder => Path.Combine(DataFolder, "Waveforms");
     public static string SpectrogramsFolder => Path.Combine(DataFolder, "Spectrograms");
     public static string ShotChangesFolder => Path.Combine(DataFolder, "ShotChanges");

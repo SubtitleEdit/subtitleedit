@@ -45,6 +45,46 @@ public static class MissingSharedLibrary
         return name.Length == 0 ? null : name;
     }
 
+    /// <summary>
+    /// True for libraries that are part of an engine download rather than something the user
+    /// installs from their distro. A missing one means the engine folder is incomplete - which
+    /// is what happened to the whisper.cpp Linux archives in issue #13680, where whisper-cli
+    /// shipped without the libwhisper.so.1 and libggml.so.0 it links against.
+    /// </summary>
+    public static bool IsBundledWithEngine(string? libraryName)
+    {
+        if (string.IsNullOrEmpty(libraryName))
+        {
+            return false;
+        }
+
+        // dyld reports the full install name, e.g. "@rpath/libwhisper.1.dylib"
+        var name = libraryName;
+        var slash = name.LastIndexOfAny(new[] { '/', '\\' });
+        if (slash >= 0)
+        {
+            name = name.Substring(slash + 1);
+        }
+
+        foreach (var prefix in BundledLibraryPrefixes)
+        {
+            if (name.StartsWith(prefix, StringComparison.OrdinalIgnoreCase))
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private static readonly string[] BundledLibraryPrefixes =
+    {
+        "libwhisper", // whisper.cpp
+        "libggml",    // whisper.cpp / qwen3-asr.cpp / chatllm.cpp - the ggml core and its backends
+        "libllama",   // llama.cpp based engines
+        "libmtmd",    // llama.cpp multimodal helper
+    };
+
     private static string? GetAfterMarker(string line, string marker)
     {
         var index = line.IndexOf(marker, StringComparison.OrdinalIgnoreCase);

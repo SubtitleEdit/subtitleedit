@@ -219,6 +219,64 @@ public static class SpeechToTextTimingFixer
         return s;
     }
 
+    /// <summary>
+    /// Puts transcription results in time order and removes any overlap between
+    /// neighbors.
+    ///
+    /// Engines are supposed to emit segments in order, but a broken slice/chunk
+    /// mapping can send one backwards in time - Crisp ASR + Parakeet did this 18
+    /// times in a 10 minute file (issue #13548), some of them by 10 seconds. The
+    /// merge step in <see cref="SpeechToTextPostProcessor"/> assumes sorted,
+    /// non-overlapping input and fuses gap-free runs, which turns a small
+    /// out-of-order emission into a huge overlapping cue, so this has to run
+    /// before post-processing.
+    ///
+    /// An overlap is resolved by truncating the earlier paragraph at the start of
+    /// the later one; that keeps every line at the time it was actually spoken
+    /// instead of pushing text minutes away from its audio. When two paragraphs
+    /// share a start time the later one is moved instead, since truncating would
+    /// leave nothing of the first.
+    /// </summary>
+    public static Subtitle SortAndRemoveOverlaps(Subtitle subtitle)
+    {
+        var s = new Subtitle(subtitle);
+        if (s.Paragraphs.Count < 2)
+        {
+            return s;
+        }
+
+        s.Paragraphs.Sort((a, b) =>
+        {
+            var byStart = a.StartTime.TotalMilliseconds.CompareTo(b.StartTime.TotalMilliseconds);
+            return byStart != 0 ? byStart : a.EndTime.TotalMilliseconds.CompareTo(b.EndTime.TotalMilliseconds);
+        });
+
+        for (var i = 1; i < s.Paragraphs.Count; i++)
+        {
+            var prev = s.Paragraphs[i - 1];
+            var p = s.Paragraphs[i];
+            if (p.StartTime.TotalMilliseconds >= prev.EndTime.TotalMilliseconds)
+            {
+                continue;
+            }
+
+            if (p.StartTime.TotalMilliseconds > prev.StartTime.TotalMilliseconds)
+            {
+                prev.EndTime.TotalMilliseconds = p.StartTime.TotalMilliseconds;
+            }
+            else
+            {
+                var durationMs = p.DurationTotalMilliseconds;
+                p.StartTime.TotalMilliseconds = prev.EndTime.TotalMilliseconds;
+                p.EndTime.TotalMilliseconds = p.StartTime.TotalMilliseconds + Math.Max(0, durationMs);
+            }
+        }
+
+        s.Renumber();
+
+        return s;
+    }
+
     public static Subtitle ShortenLongDuration(Subtitle subtitle)
     {
         var s = new Subtitle(subtitle);

@@ -10,7 +10,6 @@ using Nikse.SubtitleEdit.Features.Translate;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Logic.Download;
-using Nikse.SubtitleEdit.Logic.LlamaCpp;
 using Nikse.SubtitleEdit.Logic.ValueConverters;
 using System.Linq;
 using Nikse.SubtitleEdit.UiLogic.LlamaCpp;
@@ -342,7 +341,7 @@ public class VideoOcrWindow : Window
                     ? DownloadDotStatus.UpToDate
                     : DownloadDotStatus.NotInstalled;
             case OcrEngineType.LlamaCpp:
-                return StatusDots.From(LlamaCppServerManager.IsEngineInstalled(), LlamaCppUpdateStatus.GetEngineUpdateStatus());
+                return LlamaCppDownloadHelper.GetEngineDotStatus();
             case OcrEngineType.CrispEmbed:
                 return CrispEmbedEngine.IsEngineInstalled()
                     // Installed: the cheap .installed.sha256 sidecar turns an outdated build amber.
@@ -367,10 +366,7 @@ public class VideoOcrWindow : Window
 
     private static Avalonia.Controls.Templates.FuncDataTemplate<LlamaCppModelDisplay> BuildLlamaCppModelItemTemplate()
     {
-        return StatusDots.ComboItemTemplate<LlamaCppModelDisplay>(
-            model => model.Model.DisplayName,
-            model => model.Model.Size,
-            model => model.IsInstalled ? DownloadDotStatus.UpToDate : DownloadDotStatus.NotInstalled);
+        return LlamaCppDownloadHelper.ModelItemTemplate();
     }
 
     private static Avalonia.Controls.Templates.FuncDataTemplate<CrispEmbedModelDisplay> BuildCrispEmbedModelItemTemplate()

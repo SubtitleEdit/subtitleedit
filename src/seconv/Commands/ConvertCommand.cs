@@ -5,6 +5,7 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Globalization;
 using SeConv.Core;
+using SeConv.Helpers;
 
 namespace SeConv.Commands;
 
@@ -119,7 +120,7 @@ internal sealed class ConvertCommand : AsyncCommand<ConvertCommand.Settings>
         public string? DictionaryFolder { get; init; }
 
         [CommandOption("--time-codes-only|--timecodesonly")]
-        [Description("For image-based sources (.sup, VobSub .sub/.idx, MKV PGS/VobSub, MP4 VobSub, TS DVB-sub): output time codes only with empty text; skips OCR (no OCR engine required)")]
+        [Description("For image-based sources (.sup, VobSub .sub/.idx, MKV PGS/VobSub, MP4 VobSub, TS DVB-sub, .avi XSUB): output time codes only with empty text; skips OCR (no OCR engine required)")]
         public bool TimeCodesOnly { get; init; }
 
         [CommandOption("--no-vobsub-isolate-colors|--novobsubisolatecolors")]
@@ -399,14 +400,15 @@ internal sealed class ConvertCommand : AsyncCommand<ConvertCommand.Settings>
             // Validate input
             if (settings.Pattern.Length == 0)
             {
-                AnsiConsole.MarkupLine("[red]Error: Pattern is required[/]");
-                return 1;
+                return Fail(settings, "Pattern is required.");
             }
 
             if (string.IsNullOrWhiteSpace(settings.Format))
             {
-                AnsiConsole.MarkupLine("[red]Error: Format is required. Use --format <name> or pass it as the second positional argument (e.g. seconv *.srt sami)[/]");
-                return 1;
+                return Fail(
+                    settings,
+                    "Format is required. Use --format <name> or pass it as the second positional argument (e.g. seconv *.srt sami). " +
+                    "List the valid names with: seconv formats --json");
             }
 
             // Validate --ocr-engine: tesseract | nocr | binaryocr | ollama | llamacpp | paddle
@@ -414,10 +416,10 @@ internal sealed class ConvertCommand : AsyncCommand<ConvertCommand.Settings>
             if (!string.IsNullOrWhiteSpace(settings.OcrEngine) &&
                 !supportedEngines.Contains(settings.OcrEngine, StringComparer.OrdinalIgnoreCase))
             {
-                AnsiConsole.MarkupLine(
-                    $"[red]Error: OCR engine '{settings.OcrEngine.EscapeMarkup()}' is not supported (pass via --ocr-engine). " +
-                    "Use one of: tesseract, nocr, binaryocr, ollama, llamacpp, paddle.[/]");
-                return 1;
+                return Fail(
+                    settings,
+                    $"OCR engine '{settings.OcrEngine}' is not supported (pass via --ocr-engine). " +
+                    "Use one of: tesseract, nocr, binaryocr, ollama, llamacpp, paddle.");
             }
 
             // --ocr-model/--ocr-url only apply to the llama.cpp OCR engine - fail fast instead
@@ -426,8 +428,7 @@ internal sealed class ConvertCommand : AsyncCommand<ConvertCommand.Settings>
                                 settings.OcrEngine.Trim().ToLowerInvariant() is "llamacpp" or "llama.cpp" or "llama";
             if ((!string.IsNullOrWhiteSpace(settings.OcrModel) || !string.IsNullOrWhiteSpace(settings.OcrUrl)) && !isLlamaCppOcr)
             {
-                AnsiConsole.MarkupLine("[red]Error: --ocr-model/--ocr-url require --ocr-engine:llamacpp.[/]");
-                return 1;
+                return Fail(settings, "--ocr-model/--ocr-url require --ocr-engine:llamacpp.");
             }
 
             // Validate the translate options: --translate-to is the trigger, the rest refine it.
@@ -437,18 +438,17 @@ internal sealed class ConvertCommand : AsyncCommand<ConvertCommand.Settings>
                  !string.IsNullOrWhiteSpace(settings.TranslateUrl) ||
                  !string.IsNullOrWhiteSpace(settings.TranslateModel)))
             {
-                AnsiConsole.MarkupLine("[red]Error: --translate-from/--translate-engine/--translate-url/--translate-model require --translate-to:<language>.[/]");
-                return 1;
+                return Fail(settings, "--translate-from/--translate-engine/--translate-url/--translate-model require --translate-to:<language>.");
             }
 
             if (!string.IsNullOrWhiteSpace(settings.TranslateEngine) &&
                 !AutoTranslateRunner.SupportedEngines.Contains(settings.TranslateEngine.Trim(), StringComparer.OrdinalIgnoreCase) &&
                 !settings.TranslateEngine.Trim().Equals("llama.cpp", StringComparison.OrdinalIgnoreCase))
             {
-                AnsiConsole.MarkupLine(
-                    $"[red]Error: Translate engine '{settings.TranslateEngine.EscapeMarkup()}' is not supported (pass via --translate-engine). " +
-                    $"Use one of: {string.Join(", ", AutoTranslateRunner.SupportedEngines)}.[/]");
-                return 1;
+                return Fail(
+                    settings,
+                    $"Translate engine '{settings.TranslateEngine}' is not supported (pass via --translate-engine). " +
+                    $"Use one of: {string.Join(", ", AutoTranslateRunner.SupportedEngines)}.");
             }
 
             // Fail fast on a typo in --encoding so we don't silently substitute UTF-8 and
@@ -458,10 +458,10 @@ internal sealed class ConvertCommand : AsyncCommand<ConvertCommand.Settings>
                 !LibSEIntegration.IsSourceEncodingSentinel(settings.Encoding) &&
                 !LibSEIntegration.TryGetEncoding(settings.Encoding, out _))
             {
-                AnsiConsole.MarkupLine(
-                    $"[red]Error: Unknown encoding '{settings.Encoding.EscapeMarkup()}' for --encoding.[/]");
-                AnsiConsole.MarkupLine("[dim]Use 'seconv list-encodings' to see supported encodings, or 'source' to keep the input file's encoding.[/]");
-                return 1;
+                return Fail(
+                    settings,
+                    $"Unknown encoding '{settings.Encoding}' for --encoding. " +
+                    "List the supported encodings with: seconv list-encodings --json. Use 'source' to keep the input file's encoding.");
             }
 
             // Fail fast on a typo in --input-encoding-fallback so we don't silently substitute
@@ -469,10 +469,10 @@ internal sealed class ConvertCommand : AsyncCommand<ConvertCommand.Settings>
             if (!string.IsNullOrWhiteSpace(settings.InputEncodingFallback) &&
                 !LibSEIntegration.TryGetEncoding(settings.InputEncodingFallback, out _))
             {
-                AnsiConsole.MarkupLine(
-                    $"[red]Error: Unknown encoding '{settings.InputEncodingFallback.EscapeMarkup()}' for --input-encoding-fallback.[/]");
-                AnsiConsole.MarkupLine("[dim]Use 'seconv list-encodings' to see supported encodings.[/]");
-                return 1;
+                return Fail(
+                    settings,
+                    $"Unknown encoding '{settings.InputEncodingFallback}' for --input-encoding-fallback. " +
+                    "List the supported encodings with: seconv list-encodings --json");
             }
 
             // Load --settings:path.json overrides into libse Configuration before any conversion.
@@ -509,14 +509,12 @@ internal sealed class ConvertCommand : AsyncCommand<ConvertCommand.Settings>
                 }
                 catch (Exception ex)
                 {
-                    AnsiConsole.MarkupLineInterpolated($"[red]Error loading --settings file: {ex.Message}[/]");
-                    return 1;
+                    return Fail(settings, $"Loading --settings file: {ex.Message}");
                 }
             }
             else if (!string.IsNullOrWhiteSpace(settings.Profile))
             {
-                AnsiConsole.MarkupLine("[red]Error: --profile requires --settings:<path.json>[/]");
-                return 1;
+                return Fail(settings, "--profile requires --settings:<path.json>");
             }
 
             // Image styling flags override the settings JSON. Unlike the JSON (which only warns
@@ -524,13 +522,12 @@ internal sealed class ConvertCommand : AsyncCommand<ConvertCommand.Settings>
             var imageStyleError = ApplyImageStyleFlags(settings, imageStyle);
             if (imageStyleError != null)
             {
-                AnsiConsole.MarkupLineInterpolated($"[red]Error: {imageStyleError}[/]");
-                return 1;
+                return Fail(settings, imageStyleError);
             }
 
             // Must run after the --settings JSON is applied: a bare --apply-min-gap takes its
             // value from libse's (possibly overridden) MinimumMillisecondsBetweenLines.
-            if (!TryResolveApplyMinGap(settings, silent, out var applyMinGapMs))
+            if (!TryResolveApplyMinGap(settings, out var applyMinGapMs))
             {
                 return 1;
             }
@@ -547,8 +544,7 @@ internal sealed class ConvertCommand : AsyncCommand<ConvertCommand.Settings>
                 }
                 catch (ArgumentException ex)
                 {
-                    AnsiConsole.MarkupLineInterpolated($"[red]Error: {ex.Message}[/]");
-                    return 1;
+                    return Fail(settings, ex.Message);
                 }
 
                 // A supplied --fce-language that can't be resolved falls back to auto-detect;
@@ -576,8 +572,7 @@ internal sealed class ConvertCommand : AsyncCommand<ConvertCommand.Settings>
                 }
                 catch (ArgumentException ex)
                 {
-                    AnsiConsole.MarkupLineInterpolated($"[red]Error: {ex.Message}[/]");
-                    return 1;
+                    return Fail(settings, ex.Message);
                 }
             }
 
@@ -614,8 +609,7 @@ internal sealed class ConvertCommand : AsyncCommand<ConvertCommand.Settings>
             // Validate --change-speed (must be > 0; 100 means no change)
             if (settings.ChangeSpeed.HasValue && settings.ChangeSpeed.Value <= 0)
             {
-                AnsiConsole.MarkupLine($"[red]Error: --change-speed must be greater than 0 (got {settings.ChangeSpeed.Value}).[/]");
-                return 1;
+                return Fail(settings, $"--change-speed must be greater than 0 (got {settings.ChangeSpeed.Value}).");
             }
 
             // Parse offset if supplied
@@ -628,8 +622,7 @@ internal sealed class ConvertCommand : AsyncCommand<ConvertCommand.Settings>
                 }
                 catch (FormatException ex)
                 {
-                    AnsiConsole.MarkupLineInterpolated($"[red]Error: {ex.Message}[/]");
-                    return 1;
+                    return Fail(settings, ex.Message);
                 }
             }
 
@@ -643,8 +636,7 @@ internal sealed class ConvertCommand : AsyncCommand<ConvertCommand.Settings>
                 }
                 catch (FormatException ex)
                 {
-                    AnsiConsole.MarkupLineInterpolated($"[red]Error: {ex.Message}[/]");
-                    return 1;
+                    return Fail(settings, ex.Message);
                 }
             }
 
@@ -658,8 +650,7 @@ internal sealed class ConvertCommand : AsyncCommand<ConvertCommand.Settings>
                 }
                 catch (FormatException ex)
                 {
-                    AnsiConsole.MarkupLineInterpolated($"[red]Error: {ex.Message}[/]");
-                    return 1;
+                    return Fail(settings, ex.Message);
                 }
             }
 
@@ -850,18 +841,41 @@ internal sealed class ConvertCommand : AsyncCommand<ConvertCommand.Settings>
         {
             if (settings.Json)
             {
-                Console.Error.WriteLine(System.Text.Json.JsonSerializer.Serialize(new { error = ex.Message }));
+                // The failure envelope goes to stdout like every other --json document: a
+                // caller reading stdout should never have to fall back to stderr to find out
+                // that the run failed.
+                return Fail(settings, ex.InnerException != null
+                    ? $"{ex.Message}: {ex.InnerException.Message}"
+                    : ex.Message);
             }
-            else
+
+            AnsiConsole.MarkupLineInterpolated($"[red]Error: {ex.Message}[/]");
+            if (ex.InnerException != null)
             {
-                AnsiConsole.MarkupLineInterpolated($"[red]Error: {ex.Message}[/]");
-                if (ex.InnerException != null)
-                {
-                    AnsiConsole.MarkupLineInterpolated($"[dim]{ex.InnerException.Message}[/]");
-                }
+                AnsiConsole.MarkupLineInterpolated($"[dim]{ex.InnerException.Message}[/]");
             }
             return 1;
         }
+    }
+
+    /// <summary>
+    /// Reports a validation failure and returns exit code 1. Under <c>--json</c> the message
+    /// goes out in the same envelope a failed conversion uses, so a caller parsing stdout gets
+    /// one document shape on every path instead of JSON on success and plain text on a bad
+    /// option value.
+    /// </summary>
+    private static int Fail(Settings settings, string message)
+    {
+        if (settings.Json)
+        {
+            Console.Out.WriteLine(JsonOut.UsageError(message));
+        }
+        else
+        {
+            AnsiConsole.MarkupLineInterpolated($"[red]Error: {message}[/]");
+        }
+
+        return 1;
     }
 
     private static void PrintWarnings(ConversionResult result)
@@ -914,8 +928,9 @@ internal sealed class ConvertCommand : AsyncCommand<ConvertCommand.Settings>
     /// A bare --apply-min-gap uses libse's MinimumMillisecondsBetweenLines, so it follows the
     /// --settings JSON. Returns false when the value is unusable, after printing the error.
     /// </summary>
-    private static bool TryResolveApplyMinGap(Settings settings, bool silent, out int? gapMs)
+    private static bool TryResolveApplyMinGap(Settings settings, out int? gapMs)
     {
+        var silent = settings.Quiet || settings.Json;
         gapMs = null;
         if (settings.ApplyMinGap?.IsSet != true)
         {
@@ -932,8 +947,7 @@ internal sealed class ConvertCommand : AsyncCommand<ConvertCommand.Settings>
 
         if (!int.TryParse(raw.Trim(), NumberStyles.Integer, CultureInfo.InvariantCulture, out var ms))
         {
-            AnsiConsole.MarkupLineInterpolated(
-                $"[red]Error: --apply-min-gap expects a value in milliseconds, got '{raw}'.[/]");
+            Fail(settings, $"--apply-min-gap expects a value in milliseconds, got '{raw}'.");
             return false;
         }
 

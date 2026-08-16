@@ -285,7 +285,7 @@ public class AssaStylesWindow : Window
             Header = Se.Language.General.Category,
             CellTheme = UiUtil.TableViewCellTheme,
             HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
-            Binding = new Binding(nameof(StyleDisplay.Category)),
+            Binding = new Binding(nameof(StyleDisplay.CategoryDisplay)),
             Width = new GridLength(120),
         });
         dataGrid.Columns.Add(new SeTableViewColumn

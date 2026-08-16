@@ -23,7 +23,11 @@ namespace Nikse.SubtitleEdit.UiLogic.Ocr.FixEngine
         private readonly Dictionary<string, string> _endLineReplaceList;
         private readonly Dictionary<string, string> _wholeLineReplaceList;
         private readonly Dictionary<string, string> _partialWordAlwaysReplaceList;
-        private readonly Dictionary<string, string> _partialWordReplaceList;
+
+        // A list of pairs, not a dictionary: the same OCR artifact can have several valid
+        // readings (deu ships i->t and i->l, ii->tt and ii->ü), and the letter guesser wants
+        // to try them all - each guess is only accepted after a dictionary/names check anyway.
+        private readonly List<KeyValuePair<string, string>> _partialWordReplaceList;
         private readonly Dictionary<string, string> _regExList;
         private readonly List<SpellCheckRegex> _regExSpellCheckList;
         private List<Regex>? _replaceRegExes;
@@ -59,7 +63,7 @@ namespace Nikse.SubtitleEdit.UiLogic.Ocr.FixEngine
             _endLineReplaceList = new Dictionary<string, string>();
             _wholeLineReplaceList = new Dictionary<string, string>();
             _partialWordAlwaysReplaceList = new Dictionary<string, string>();
-            _partialWordReplaceList = new Dictionary<string, string>();
+            _partialWordReplaceList = new List<KeyValuePair<string, string>>();
             _regExList = new Dictionary<string, string>();
 
             var doc = LoadXmlReplaceListDocument();
@@ -67,7 +71,7 @@ namespace Nikse.SubtitleEdit.UiLogic.Ocr.FixEngine
 
             WordReplaceList = LoadReplaceList(doc, "WholeWords");
             _partialWordAlwaysReplaceList = LoadReplaceList(doc, "PartialWordsAlways");
-            _partialWordReplaceList = LoadReplaceList(doc, "PartialWords");
+            _partialWordReplaceList = LoadReplaceListPairs(doc, "PartialWords");
             PartialLineWordBoundaryReplaceList = LoadReplaceList(doc, "PartialLines");
             _partialLineAlwaysReplaceList = LoadReplaceList(doc, "PartialLinesAlways");
             _beginLineReplaceList = LoadReplaceList(doc, "BeginLines");
@@ -108,16 +112,13 @@ namespace Nikse.SubtitleEdit.UiLogic.Ocr.FixEngine
 
             foreach (var kp in LoadReplaceList(userDoc, "RemovedPartialWords"))
             {
-                if (_partialWordReplaceList.ContainsKey(kp.Key))
-                {
-                    _partialWordReplaceList.Remove(kp.Key);
-                }
+                _partialWordReplaceList.RemoveAll(p => p.Key == kp.Key);
             }
-            foreach (var kp in LoadReplaceList(userDoc, "PartialWords"))
+            foreach (var kp in LoadReplaceListPairs(userDoc, "PartialWords"))
             {
-                if (!_partialWordReplaceList.ContainsKey(kp.Key))
+                if (!_partialWordReplaceList.Any(p => p.Key == kp.Key && p.Value == kp.Value))
                 {
-                    _partialWordReplaceList.Add(kp.Key, kp.Value);
+                    _partialWordReplaceList.Add(kp);
                 }
             }
 
@@ -225,8 +226,16 @@ namespace Nikse.SubtitleEdit.UiLogic.Ocr.FixEngine
                 return list;
             }
 
-            var node = doc.DocumentElement?.SelectSingleNode(name);
-            if (node != null)
+            // SelectNodes, not SelectSingleNode: several shipped lists contain more than one
+            // section with the same name (often an empty placeholder first), and reading only
+            // the first silently drops every entry in the others.
+            var nodes = doc.DocumentElement?.SelectNodes(name);
+            if (nodes == null)
+            {
+                return list;
+            }
+
+            foreach (XmlNode node in nodes)
             {
                 foreach (XmlNode item in node.ChildNodes)
                 {
@@ -247,6 +256,43 @@ namespace Nikse.SubtitleEdit.UiLogic.Ocr.FixEngine
             return list;
         }
 
+        private static List<KeyValuePair<string, string>> LoadReplaceListPairs(XmlDocument doc, string name)
+        {
+            var list = new List<KeyValuePair<string, string>>();
+            if (!IsValidXmlDocument(doc, name))
+            {
+                return list;
+            }
+
+            // See LoadReplaceList: duplicate sections must all be read. fin/fra/hrb/hun/por/spa
+            // ship an empty <PartialWords /> placeholder ahead of the real section.
+            var nodes = doc.DocumentElement?.SelectNodes(name);
+            if (nodes == null)
+            {
+                return list;
+            }
+
+            foreach (XmlNode node in nodes)
+            {
+                foreach (XmlNode item in node.ChildNodes)
+                {
+                    if (!HasValidAttributes(item, false) || item.Attributes == null)
+                    {
+                        continue;
+                    }
+
+                    var to = item.Attributes["to"]?.Value;
+                    var from = item.Attributes["from"]?.Value;
+                    if (to != null && from != null && !list.Any(p => p.Key == from && p.Value == to))
+                    {
+                        list.Add(new KeyValuePair<string, string>(from, to));
+                    }
+                }
+            }
+
+            return list;
+        }
+
         private static Dictionary<string, string> LoadRegExList(XmlDocument doc, string name)
         {
             var list = new Dictionary<string, string>();
@@ -255,8 +301,14 @@ namespace Nikse.SubtitleEdit.UiLogic.Ocr.FixEngine
                 return list;
             }
 
-            var node = doc.DocumentElement?.SelectSingleNode(name);
-            if (node != null)
+            // See LoadReplaceList: duplicate sections must all be read.
+            var nodes = doc.DocumentElement?.SelectNodes(name);
+            if (nodes == null)
+            {
+                return list;
+            }
+
+            foreach (XmlNode node in nodes)
             {
                 foreach (XmlNode item in node.ChildNodes)
                 {

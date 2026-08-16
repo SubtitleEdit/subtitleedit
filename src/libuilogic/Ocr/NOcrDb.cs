@@ -64,9 +64,10 @@ public class NOcrDb
         private readonly int _maxWrongPixels;
         private readonly bool _deepSeek;
         private readonly bool _lastDitch;
+        private readonly double _italicFactor;
         private readonly int _hashCode;
 
-        public MatchCacheKey(NikseBitmap2 bitmap, int topMargin, bool deepSeek, int maxWrongPixels, bool lastDitch)
+        public MatchCacheKey(NikseBitmap2 bitmap, int topMargin, bool deepSeek, int maxWrongPixels, bool lastDitch, double italicFactor)
         {
             _pixels = bitmap.GetPixelData().ToArray();
             _width = bitmap.Width;
@@ -74,6 +75,7 @@ public class NOcrDb
             _maxWrongPixels = maxWrongPixels;
             _deepSeek = deepSeek;
             _lastDitch = lastDitch;
+            _italicFactor = italicFactor;
 
             // FNV-1a over the pixel bytes plus the match parameters.
             var hash = unchecked((int)2166136261);
@@ -86,6 +88,7 @@ public class NOcrDb
             hash = unchecked((hash ^ _topMargin) * 16777619);
             hash = unchecked((hash ^ _maxWrongPixels) * 16777619);
             hash = unchecked((hash ^ (_deepSeek ? 1 : 0) ^ (_lastDitch ? 2 : 0)) * 16777619);
+            hash = unchecked((hash ^ _italicFactor.GetHashCode()) * 16777619);
             _hashCode = hash;
         }
 
@@ -97,6 +100,7 @@ public class NOcrDb
                    _maxWrongPixels == other._maxWrongPixels &&
                    _deepSeek == other._deepSeek &&
                    _lastDitch == other._lastDitch &&
+                   _italicFactor.Equals(other._italicFactor) &&
                    _pixels.AsSpan().SequenceEqual(other._pixels);
         }
 
@@ -444,14 +448,19 @@ public class NOcrDb
         return new OcrPoint(maximumX - minimumX, maximumY - minimumY);
     }
 
-    public NOcrChar? GetMatch(NikseBitmap2 parentBitmap, List<ImageSplitterItem2> list, ImageSplitterItem2 item, int topMargin, bool deepSeek, int maxWrongPixels, bool lastDitch = false)
+    /// <param name="italicFactor">
+    /// When greater than zero, a glyph that matches nothing upright is de-slanted by this factor
+    /// and matched again; a hit is returned as italic. Italic subtitles otherwise fail to match
+    /// against upright characters. Pass 0 to disable.
+    /// </param>
+    public NOcrChar? GetMatch(NikseBitmap2 parentBitmap, List<ImageSplitterItem2> list, ImageSplitterItem2 item, int topMargin, bool deepSeek, int maxWrongPixels, bool lastDitch = false, double italicFactor = 0)
     {
         if (item.NikseBitmap == null)
         {
             return null;
         }
 
-        var key = new MatchCacheKey(item.NikseBitmap, topMargin, deepSeek, maxWrongPixels, lastDitch);
+        var key = new MatchCacheKey(item.NikseBitmap, topMargin, deepSeek, maxWrongPixels, lastDitch, italicFactor);
         MatchCacheEntry? cached;
         lock (_lock)
         {
@@ -491,6 +500,23 @@ public class NOcrDb
         // GetMatchSingle re-scanned the whole single-character list a second time for every
         // glyph that wasn't an exact match.
         var single = GetMatchSingle(item.NikseBitmap, topMargin, deepSeek, maxWrongPixels, lastDitch, skipExactCheck: true);
+
+        if (single == null && italicFactor > 0)
+        {
+            // Nothing matched upright. Straighten the glyph and try once more - this is how an
+            // italic 'l' stops being read as an 'i'. A hit is italic by construction, so flag a
+            // copy; the database entry itself must stay upright.
+            var unItalic = item.NikseBitmap.UnItalic(italicFactor);
+            if (unItalic.Width > 0 && unItalic.Height > 0)
+            {
+                var italicMatch = GetMatchSingle(unItalic, topMargin, deepSeek, maxWrongPixels, lastDitch);
+                if (italicMatch != null)
+                {
+                    single = new NOcrChar(italicMatch) { Italic = true };
+                }
+            }
+        }
+
         CacheMatch(key, new MatchCacheEntry { SingleMatch = single });
         return single;
     }

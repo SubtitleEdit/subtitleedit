@@ -50,14 +50,27 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
             var x1 = (char)languageByte1;
             var x2 = (char)languageByte2;
             var x3 = (char)languageByte3;
-            Iso639ThreeLetterCode = x1.ToString(CultureInfo.InvariantCulture) + x2.ToString(CultureInfo.InvariantCulture) + x3.ToString(CultureInfo.InvariantCulture);
+
+            // QuickTime writes 0x7FFF for "unspecified" (ffmpeg does this for every .mov track),
+            // which unpacks to three DEL characters. Anything that is not three lowercase
+            // letters is not a language code - report it as absent so callers fall back
+            // instead of showing, and putting in file names, control characters.
+            Iso639ThreeLetterCode = IsLowerCaseLetter(x1) && IsLowerCaseLetter(x2) && IsLowerCaseLetter(x3)
+                ? x1.ToString(CultureInfo.InvariantCulture) + x2.ToString(CultureInfo.InvariantCulture) + x3.ToString(CultureInfo.InvariantCulture)
+                : string.Empty;
         }
+
+        private static bool IsLowerCaseLetter(char c) => c >= 'a' && c <= 'z';
 
         public string LanguageString
         {
             get
             {
-                var language = Iso639Dash2LanguageCode.List.FirstOrDefault(p => p.ThreeLetterCode == Iso639ThreeLetterCode);
+                // mdhd carries either the ISO 639-2/T (terminology) or the 639-2/B
+                // (bibliographic) code - MP4Box writes whatever "lang=" was given, and
+                // "fre"/"ger"/"dut" are as common in the wild as "fra"/"deu"/"nld".
+                var language = Iso639Dash2LanguageCode.List.FirstOrDefault(p =>
+                    p.ThreeLetterCode == Iso639ThreeLetterCode || p.BibliographicCode == Iso639ThreeLetterCode);
                 return language == null ? "Any" : language.EnglishName;
             }
         }

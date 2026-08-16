@@ -85,12 +85,7 @@ public class AiReviewWindow : Window
             .WithAccessibleName(Se.Language.General.Model);
         // Shared dot template, so the install colours here match auto-translate and the engine
         // settings dialog rather than this window's former bespoke green/grey pair.
-        comboLlamaCppModel.ItemTemplate = StatusDots.ComboItemTemplate<Features.Translate.LlamaCppModelDisplay>(
-            m => m.Model.DisplayName,
-            m => string.IsNullOrEmpty(m.Model.Url)
-                ? (string.IsNullOrEmpty(m.Model.Size) ? Se.Language.General.Custom : $"{Se.Language.General.Custom}, {m.Model.Size}")
-                : (string.IsNullOrEmpty(m.Model.Size) ? null : m.Model.Size),
-            m => m.IsInstalled ? DownloadDotStatus.UpToDate : DownloadDotStatus.NotInstalled);
+        comboLlamaCppModel.ItemTemplate = Features.Translate.AutoTranslateCombos.LlamaCppModelItemTemplate();
 
         comboLlamaCppModel.Bind(IsVisibleProperty, new Binding(nameof(vm.IsLlamaCppVisible)));
 
@@ -365,6 +360,7 @@ public class AiReviewWindow : Window
         dataGrid.Bind(TableView.SelectedItemProperty, new Binding(nameof(vm.SelectedSuggestion)));
         TableViewExtras.AddSpaceToggle<ReviewSuggestionItem>(dataGrid,
             item => item.IsSelected, (item, v) => item.IsSelected = v);
+        dataGrid.DoubleTapped += (_, _) => vm.OnSuggestionsGridDoubleTapped();
 
         var borderGrid = UiUtil.MakeBorderForControlNoPadding(dataGrid);
 
@@ -376,6 +372,9 @@ public class AiReviewWindow : Window
             Height = 6,
             VerticalAlignment = VerticalAlignment.Center,
             [!RangeBase.ValueProperty] = new Binding(nameof(vm.ProgressValue)),
+            // Only meaningful while a review is running - a full bar sitting under a
+            // finished review just looks stuck.
+            [!Visual.IsVisibleProperty] = new Binding(nameof(vm.IsReviewing)),
         };
         var statusText = MakeBoundTextBlock(nameof(vm.StatusText));
         statusText.VerticalAlignment = VerticalAlignment.Center;
@@ -425,12 +424,23 @@ public class AiReviewWindow : Window
         summaryText.VerticalAlignment = VerticalAlignment.Center;
         summaryText.Opacity = 0.8;
 
+        // Plays the selected suggestion's line in the main window's video player - hidden when no
+        // video is loaded (the view model gets no play hook then).
+        var buttonPlay = UiUtil.MakeButton(Se.Language.General.PlayCurrent, vm.PlayCurrentLineCommand)
+            .WithIconLeft("fa-solid fa-play");
+        buttonPlay.Bind(IsVisibleProperty, new Binding(nameof(vm.IsPlayVisible)));
+        if (Se.Settings.Appearance.ShowHints)
+        {
+            ToolTip.SetTip(buttonPlay, l.PlayCurrentLineHint);
+        }
+
         var leftButtons = new StackPanel
         {
             Orientation = Orientation.Horizontal,
             Spacing = 5,
             Children =
             {
+                buttonPlay.WithMarginRight(10),
                 summaryText.WithMarginRight(10),
                 UiUtil.MakeButton(Se.Language.General.SelectAll, vm.SelectAllCommand),
                 UiUtil.MakeButton(Se.Language.General.InvertSelection, vm.InvertSelectionCommand),

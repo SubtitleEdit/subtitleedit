@@ -99,6 +99,7 @@ internal class IconNames
     public const string Regex = "mdi-regex";
     public const string Repeat = "mdi-repeat";
     public const string Refresh = "mdi-refresh";
+    public const string Restore = "mdi-restore";
     public const string ScaleBalance = "mdi-scale-balance";
     public const string SetMerge = "mdi-set-merge";
     public const string SetSplit = "mdi-set-split";

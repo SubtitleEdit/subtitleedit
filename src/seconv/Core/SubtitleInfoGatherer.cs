@@ -34,7 +34,7 @@ internal static class SubtitleInfoGatherer
         }
 
         var language = subtitle.Paragraphs.Count > 0
-            ? LanguageAutoDetect.AutoDetectGoogleLanguageOrNull(subtitle)
+            ? SubtitleLanguageDetector.DetectOrNull(subtitle)
             : null;
 
         return new SubtitleInfo

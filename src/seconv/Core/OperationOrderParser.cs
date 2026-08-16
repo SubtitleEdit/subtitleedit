@@ -18,7 +18,7 @@ internal static class OperationOrderParser
     // The CLI exposes each as a lowercase-hyphenated flag plus a PascalCase alias; both
     // normalize to the canonical name (lower-cased, dashes removed), so this list doubles
     // as the alias table.
-    private static readonly string[] ToggleOperations =
+    internal static readonly string[] ToggleOperations =
     {
         "ApplyDurationLimits",
         "BalanceLines",

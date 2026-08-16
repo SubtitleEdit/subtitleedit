@@ -35,7 +35,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     return false;
                 }
             }
-            if (subtitle.Paragraphs.Count > _errorCount)
+            // a file with parse errors must have enough good cues to outweigh them - blank lines
+            // no longer count as errors, so a couple of time-looking rows in a garbage file
+            // would otherwise be claimed (e.g. the malformed SCC log from #12582)
+            if (subtitle.Paragraphs.Count > _errorCount && (_errorCount == 0 || subtitle.Paragraphs.Count > 4))
             {
                 if (new UnknownSubtitle33().IsMine(lines, fileName) || new UnknownSubtitle36().IsMine(lines, fileName))
                 {
@@ -65,6 +68,13 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             _errorCount = 0;
             foreach (string line in lines)
             {
+                if (string.IsNullOrWhiteSpace(line))
+                {
+                    // don't count blank separator lines as errors - files saved with "\r\r\n"
+                    // line endings get a blank line after every cue (see SplitToLines/#8854)
+                    continue;
+                }
+
                 bool success = false;
                 if (line.IndexOf(':') > 0 && RegexTimeCodes.IsMatch(line))
                 {

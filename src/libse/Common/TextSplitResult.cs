@@ -6,7 +6,7 @@ namespace Nikse.SubtitleEdit.Core.Common
 {
     public class TextSplitResult
     {
-        public List<string> Lines { get; set; }
+        public List<ReadOnlyMemory<char>> Lines { get; set; }
 
         /// <summary>
         /// Per-line pixel widths. Measured on first read - see <see cref="EnsurePixelsMeasured"/>.
@@ -34,7 +34,7 @@ namespace Nikse.SubtitleEdit.Core.Common
         // These run inside the per-candidate sort keys of TextSplit (one candidate per space in
         // the line), where the LINQ Sum overloads allocated a closure and a boxed enumerator
         // per call - for lists that always hold two elements.
-        private static double SumLengths(List<string> lines)
+        private static double SumLengths(List<ReadOnlyMemory<char>> lines)
         {
             double total = 0;
             for (var i = 0; i < lines.Count; i++)
@@ -91,7 +91,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             }
         }
 
-        public static float GetWidth(string text)
+        public static float GetWidth(ReadOnlyMemory<char> text)
         {
             if (text.Length > 128 || !_fontInitialized)
             {
@@ -100,7 +100,7 @@ namespace Nikse.SubtitleEdit.Core.Common
 
             try
             {
-                return _font.MeasureText(text, _paint);
+                return _font.MeasureText(text.Span, _paint);
             }
             catch
             {
@@ -108,7 +108,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             }
         }
 
-        public TextSplitResult(List<string> lines)
+        public TextSplitResult(List<ReadOnlyMemory<char>> lines)
         {
             Lines = lines;
 
@@ -146,7 +146,7 @@ namespace Nikse.SubtitleEdit.Core.Common
 
             if (Math.Abs(SpaceLengthPixels) < 0.01)
             {
-                SpaceLengthPixels = GetWidth(" ");
+                SpaceLengthPixels = GetWidth(" ".AsMemory());
             }
         }
 
@@ -160,7 +160,7 @@ namespace Nikse.SubtitleEdit.Core.Common
         // the process. And because nothing was added to the list, LengthPixels came back with
         // fewer than two entries, which IsBottomHeavy and DiffFromAveragePixelBottomHeavy index
         // directly.
-        private static float EstimateOrMeasure(string line)
+        private static float EstimateOrMeasure(ReadOnlyMemory<char> line)
             => line.Length > 1000 ? line.Length * 7 : GetWidth(line);
 
         public bool IsLineLengthOkay(int singleLineMaxLength)

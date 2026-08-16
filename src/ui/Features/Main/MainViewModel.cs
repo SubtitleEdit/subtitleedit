@@ -20,6 +20,7 @@ using Nikse.SubtitleEdit.UiLogic.AudioToText;
 using Nikse.SubtitleEdit.Core.BluRaySup;
 using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.Enums;
+using Nikse.SubtitleEdit.Core.ContainerFormats;
 using Nikse.SubtitleEdit.Core.ContainerFormats.Matroska;
 using Nikse.SubtitleEdit.Core.ContainerFormats.Mp4;
 using Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes;
@@ -418,6 +419,23 @@ public partial class MainViewModel :
     /// that only ask how many are selected (menu visibility and the like) must not pay for.
     /// </summary>
     public int SubtitleGridSelectedCount => SubtitleGrid.SelectedItems?.Count ?? 0;
+
+    /// <summary>
+    /// Grid index of the topmost selected row, or -1 when nothing editable is selected - SE4's
+    /// <c>FirstSelectedIndex</c>. Commands that write downwards from the selection must start here
+    /// and not at <see cref="SelectedSubtitle"/>: the current row is the moving end of a shift- or
+    /// drag-selection (see <see cref="SelectGridRange"/>), so selecting downwards would put the
+    /// anchor at the *bottom* of the selection while selecting upwards put it at the top - the
+    /// column paste that only worked when the rows were picked bottom-to-top (issue #13682).
+    /// </summary>
+    internal int FirstSelectedSubtitleIndex
+    {
+        get
+        {
+            var selectedItems = SubtitleGridSelectedItems;
+            return selectedItems.Count == 0 ? -1 : Subtitles.IndexOf(selectedItems[0]);
+        }
+    }
 
     private List<SubtitleLineViewModel> GetSelectedSubtitlesInOrder(bool includeReferenceOnly)
     {
@@ -2406,9 +2424,9 @@ public partial class MainViewModel :
         // (issue #12753). Import paths set _converted = true again *after* their ResetSubtitle() call.
         _converted = false;
         _subtitle = new Subtitle();
-        if (SelectedSubtitleFormat is AdvancedSubStationAlpha)
+        if (SelectedSubtitleFormat is AdvancedSubStationAlpha or SubStationAlpha)
         {
-            AssaStyleStorageHelper.ApplyDefaultStorageStyle(_subtitle);
+            AssaStyleStorageHelper.ApplyDefaultStorageStyle(_subtitle, SelectedSubtitleFormat);
         }
 
         _changeSubtitleHash = GetFastHash();
@@ -3457,11 +3475,11 @@ public partial class MainViewModel :
             var audioTracks = mpv.GetAudioTracks();
             var desiredTrack = audioTracks.FirstOrDefault(p => p.Id == recentFile.AudioTrack);
 
-            // Only switch track and regenerate waveform if different from current
+            // Only switch track and reload the waveform if different from current; PickAudioTrack
+            // itself no-ops on the already-active track (and sets _audioTrack on a real switch).
             if (desiredTrack != null && (_audioTrack == null || _audioTrack.Id != desiredTrack.Id))
             {
-                _audioTrack = desiredTrack;
-                var _ = Task.Run(() => PickAudioTrack(_audioTrack));
+                var _ = Task.Run(() => PickAudioTrack(desiredTrack));
             }
         }
     }
@@ -5465,12 +5483,14 @@ public partial class MainViewModel :
     [RelayCommand]
     private async Task ColumnInsertTextFromSubtitle()
     {
-        if (Window == null || SelectedSubtitle == null)
+        if (Window == null)
         {
             return;
         }
 
-        var idx = Subtitles.IndexOf(SelectedSubtitle);
+        // The texts are written downwards from the first selected row (SE4 parity), so the
+        // selection direction must not matter - see FirstSelectedSubtitleIndex (#13682).
+        var idx = FirstSelectedSubtitleIndex;
         if (idx < 0)
         {
             return;
@@ -5539,12 +5559,16 @@ public partial class MainViewModel :
     [RelayCommand]
     private async Task ColumnPasteFromClipboard()
     {
-        if (Window == null || SelectedSubtitle == null)
+        if (Window == null)
         {
             return;
         }
 
-        var idx = Subtitles.IndexOf(SelectedSubtitle);
+        // The clipboard is pasted downwards from the first selected row (SE4's FirstSelectedIndex),
+        // so the direction the rows were picked in must not matter - see
+        // FirstSelectedSubtitleIndex: anchoring on the current row made a top-to-bottom selection
+        // paste from the bottom row of the selection onto the lines below it (#13682).
+        var idx = FirstSelectedSubtitleIndex;
         if (idx < 0)
         {
             return;
@@ -6860,7 +6884,14 @@ public partial class MainViewModel :
         }
 
         var idx = SelectedSubtitleIndex ?? 0;
-        var viewModel = await ShowDialogAsync<AiReviewWindow, AiReviewViewModel>(vm => { vm.Initialize(GetUpdateSubtitle(), SelectedSubtitleFormat); });
+
+        // Same filter as GetUpdateSubtitle() below, so index N of the reviewed subtitle is line N
+        // here - that mapping is what lets the review window play the line of a suggestion.
+        var reviewedLines = Subtitles.Where(s => !s.IsReferenceOnly).ToList();
+        var viewModel = await ShowDialogAsync<AiReviewWindow, AiReviewViewModel>(vm =>
+        {
+            vm.Initialize(GetUpdateSubtitle(), SelectedSubtitleFormat, MakeReviewLinePlayer(reviewedLines), StopReviewLinePlayback);
+        });
 
         if (viewModel.OkPressed)
         {
@@ -7201,10 +7232,17 @@ public partial class MainViewModel :
             return;
         }
 
+        // With a single audio track, toggling lands on the same track - don't reload the waveform.
+        var trackChanged = track.FfIndex != (_audioTrack?.FfIndex ?? -1);
         _audioTrack = track;
         var _ = Task.Run(LoadAudioTrackMenuItems);
 
         ShowStatus(string.Format(Se.Language.Main.AudioTrackIsNowX, track));
+
+        if (trackChanged)
+        {
+            ReloadWaveformForCurrentAudioTrack();
+        }
     }
 
     [RelayCommand]
@@ -7223,26 +7261,44 @@ public partial class MainViewModel :
 
         if (vp.VideoPlayer is LibMpvDynamicPlayer mpv && parameter is AudioTrackInfo audioTrack)
         {
+            // No-op when the picked track is already active (e.g. re-picking it from the
+            // Video -> Audio tracks menu) so the waveform isn't cleared and reloaded for nothing.
+            if (_audioTrack != null && audioTrack.FfIndex == _audioTrack.FfIndex)
+            {
+                return;
+            }
+
             mpv.SetAudioTrack(audioTrack.Id);
             _audioTrack = audioTrack;
             var _ = Task.Run(LoadAudioTrackMenuItems);
             ShowStatus(string.Format(Se.Language.Main.AudioTrackIsNowX, _audioTrack));
 
-            if (AudioVisualizer != null)
-            {
-                Dispatcher.UIThread.Post(() =>
-                {
-                    AudioVisualizer.WavePeaks = null;
-                    AudioVisualizer.ShotChanges = new List<double>();
-                });
-            }
-
-            _updateAudioVisualizer = true;
-
-            // Explicit track pick: show this track's waveform now - from cache if present, else
-            // extract it (regardless of the auto-generate-on-open setting).
-            LoadWaveformAndSpectrogram(_videoFileName, forceGenerate: true);
+            ReloadWaveformForCurrentAudioTrack();
         }
+    }
+
+    // After an audio-track switch, show the new track's waveform from cache, extract it if
+    // auto-generate is on, or fall back to the click-to-generate hint so the user decides -
+    // switching track must not start an extraction when auto-generate is off (#13665).
+    private void ReloadWaveformForCurrentAudioTrack()
+    {
+        if (string.IsNullOrEmpty(_videoFileName))
+        {
+            return;
+        }
+
+        if (AudioVisualizer != null)
+        {
+            Dispatcher.UIThread.Post(() =>
+            {
+                AudioVisualizer.WavePeaks = null;
+                AudioVisualizer.ShotChanges = new List<double>();
+            });
+        }
+
+        _updateAudioVisualizer = true;
+
+        LoadWaveformAndSpectrogram(_videoFileName);
     }
 
     // Set while the waveform toolbar's audio-track combo box is being repopulated/synced in code,
@@ -7921,6 +7977,7 @@ public partial class MainViewModel :
                     {
                         var newLine = new SubtitleLineViewModel(p, SelectedSubtitleFormat);
                         newLine.SetStartTimeKeepDuration(selectedLine.StartTime + p.StartTime.TimeSpan);
+                        newLine.Style = selectedLine.Style; // the lines replace selectedLine, so they keep its style
                         newLines.Add(newLine);
                     }
                 }
@@ -7945,7 +8002,8 @@ public partial class MainViewModel :
 
         foreach (var line in newLines)
         {
-            _insertService.InsertInCorrectPosition(Subtitles, line);
+            var index = _insertService.InsertInCorrectPosition(Subtitles, line);
+            SetDefaultAssaStyleForNewParagraph(line, index);
         }
 
         if (newLines.Count > 0 || deleteLines.Count > 0)
@@ -8003,6 +8061,46 @@ public partial class MainViewModel :
         PinPlayheadTo(item.StartTime.TotalSeconds);
         _playSelectionItem = new PlaySelectionItem([item], item.EndTime, false);
         PlayVideo(vp);
+    }
+
+    /// <summary>
+    /// Builds the "play current line" hook handed to the AI review window: playing a suggestion
+    /// plays the line it belongs to and pauses at its end, so a fix can be checked against the
+    /// audio before it is applied. Null when no video is loaded - the window then hides its play
+    /// button. The list must be in the same order as the reviewed subtitle's paragraphs.
+    /// </summary>
+    private Action<int>? MakeReviewLinePlayer(IReadOnlyList<SubtitleLineViewModel> lines)
+    {
+        if (string.IsNullOrEmpty(_videoFileName))
+        {
+            return null;
+        }
+
+        return index =>
+        {
+            var vp = GetVideoPlayerControl();
+            if (vp == null || index < 0 || index >= lines.Count)
+            {
+                return;
+            }
+
+            PlayLineAndPauseAtEnd(vp, lines[index]);
+        };
+    }
+
+    /// <summary>
+    /// Stops a preview started from a dialog through <see cref="MakeReviewLinePlayer"/>.
+    /// </summary>
+    private void StopReviewLinePlayback()
+    {
+        var vp = GetVideoPlayerControl();
+        if (vp == null)
+        {
+            return;
+        }
+
+        ResetPlaySelection();
+        PauseVideoAndFreezePlayhead(vp);
     }
 
     private bool PlayerSelectedLines(bool loop)
@@ -8684,6 +8782,7 @@ public partial class MainViewModel :
             InitializeWaveformDisplayMode();
 
             AudioVisualizer.ShotChanges = ShotChangesHelper.FromDisk(_videoFileName);
+            UpdateShotChangesListMenuItem();
             if (AudioVisualizer.ShotChanges.Count == 0)
             {
                 ExtractShotChanges(_videoFileName, _audioTrack?.FfIndex ?? -1);
@@ -8904,7 +9003,7 @@ public partial class MainViewModel :
         if (result.OkPressed && result.FfmpegLines.Count > 0)
         {
             AudioVisualizer.ShotChanges = result.FfmpegLines.Select(p => p.Seconds).ToList();
-            ShowShotChangesListMenuItem = AudioVisualizer.ShotChanges.Count > 0;
+            UpdateShotChangesListMenuItem();
             _updateAudioVisualizer = true;
             ShotChangesHelper.SaveShotChanges(_videoFileName, AudioVisualizer.ShotChanges, _audioTrack?.FfIndex ?? -1);
             ShowStatus(string.Format(Se.Language.Main.XShotChangedLoaded, AudioVisualizer.ShotChanges.Count));
@@ -8931,7 +9030,22 @@ public partial class MainViewModel :
 
         if (result.OKProssed && AudioVisualizer != null)
         {
-            AudioVisualizer.ShotChanges = result.ShotChanges.Select(p => p.Seconds).ToList();
+            var shotChanges = result.ShotChanges.Select(p => p.Seconds).ToList();
+            AudioVisualizer.ShotChanges = shotChanges;
+
+            // Deleting/clearing in the list must reach the disk too, or the removed shot
+            // changes are back the next time the video is opened.
+            if (!string.IsNullOrEmpty(_videoFileName))
+            {
+                if (shotChanges.Count == 0)
+                {
+                    ShotChangesHelper.DeleteShotChanges(_videoFileName, _audioTrack?.FfIndex ?? -1);
+                }
+                else
+                {
+                    ShotChangesHelper.SaveShotChanges(_videoFileName, shotChanges, _audioTrack?.FfIndex ?? -1);
+                }
+            }
         }
 
         if (result.GoToPressed && result.SelectedShotChange != null)
@@ -8939,7 +9053,7 @@ public partial class MainViewModel :
             vp.Position = result.SelectedShotChange.Seconds;
         }
 
-        ShowShotChangesListMenuItem = AudioVisualizer?.ShotChanges.Count > 0;
+        UpdateShotChangesListMenuItem();
         _updateAudioVisualizer = true;
     }
 
@@ -8972,8 +9086,17 @@ public partial class MainViewModel :
             ShotChangesHelper.SaveShotChanges(_videoFileName, list, _audioTrack?.FfIndex ?? -1);
         }
 
-        ShowShotChangesListMenuItem = AudioVisualizer?.ShotChanges.Count > 0;
+        UpdateShotChangesListMenuItem();
         _updateAudioVisualizer = true;
+    }
+
+    /// <summary>
+    /// The "List shot changes" menu item hides itself when there is nothing to list, so every path
+    /// that loads, generates, or removes shot changes must refresh it - not just the generate/import dialog.
+    /// </summary>
+    private void UpdateShotChangesListMenuItem()
+    {
+        ShowShotChangesListMenuItem = AudioVisualizer?.ShotChanges?.Count > 0;
     }
 
     [RelayCommand]
@@ -10360,7 +10483,8 @@ public partial class MainViewModel :
             sub.Paragraphs.Add(line.ToParagraph(SelectedSubtitleFormat));
         }
 
-        var result = await ShowDialogAsync<AiReviewWindow, AiReviewViewModel>(vm => vm.Initialize(sub, SelectedSubtitleFormat));
+        var result = await ShowDialogAsync<AiReviewWindow, AiReviewViewModel>(vm =>
+            vm.Initialize(sub, SelectedSubtitleFormat, MakeReviewLinePlayer(ordered), StopReviewLinePlayback));
         if (!result.OkPressed)
         {
             _shortcutManager.ClearKeys();
@@ -14279,6 +14403,7 @@ public partial class MainViewModel :
         var newParagraph =
             new SubtitleLineViewModel(new Paragraph(string.Empty, startMs, endMs), SelectedSubtitleFormat);
         var idx = _insertService.InsertInCorrectPosition(Subtitles, newParagraph);
+        SetDefaultAssaStyleForNewParagraph(newParagraph, idx);
         var next = Subtitles.GetOrNull(idx + 1);
         if (next != null)
         {
@@ -14988,7 +15113,8 @@ public partial class MainViewModel :
         }
 
         var newParagraph = AudioVisualizer.NewSelectionParagraph;
-        _insertService.InsertInCorrectPosition(Subtitles, newParagraph);
+        var index = _insertService.InsertInCorrectPosition(Subtitles, newParagraph);
+        SetDefaultAssaStyleForNewParagraph(newParagraph, index);
         AudioVisualizer.NewSelectionParagraph = null;
         SelectAndScrollToSubtitle(newParagraph);
         Renumber();
@@ -15008,7 +15134,8 @@ public partial class MainViewModel :
         }
 
         var newParagraph = AudioVisualizer.NewSelectionParagraph;
-        _insertService.InsertInCorrectPosition(Subtitles, newParagraph);
+        var index = _insertService.InsertInCorrectPosition(Subtitles, newParagraph);
+        SetDefaultAssaStyleForNewParagraph(newParagraph, index);
         AudioVisualizer.NewSelectionParagraph = null;
         SubtitleGrid.SelectedItem = newParagraph;
         SubtitleGrid.ScrollIntoView(newParagraph);
@@ -15040,7 +15167,8 @@ public partial class MainViewModel :
         }
 
         newParagraph.Text = text.Trim();
-        _insertService.InsertInCorrectPosition(Subtitles, newParagraph);
+        var index = _insertService.InsertInCorrectPosition(Subtitles, newParagraph);
+        SetDefaultAssaStyleForNewParagraph(newParagraph, index);
         AudioVisualizer.NewSelectionParagraph = null;
         SelectAndScrollToSubtitle(newParagraph);
         Renumber();
@@ -15065,6 +15193,12 @@ public partial class MainViewModel :
         // Paste at the waveform cursor rather than the raw player position - after a right-click
         // the cursor is pinned to the clicked spot while the async player seek may still lag.
         var linesInserted = _pasteFromClipboardHelper.PasteFromClipboard(text, AudioVisualizer.CurrentVideoPositionSeconds * 1000.0, Subtitles, SelectedSubtitleFormat);
+        foreach (var line in linesInserted)
+        {
+            // plain text carries no style - pasted ASSA lines keep the one they came with
+            SetDefaultAssaStyleForNewParagraph(line, Subtitles.IndexOf(line));
+        }
+
         Renumber();
         if (linesInserted.Count == 1)
         {
@@ -15156,6 +15290,7 @@ public partial class MainViewModel :
         RunWithoutChangeDetection(() =>
         {
             var idx = _insertService.InsertInCorrectPosition(Subtitles, newParagraph);
+            SetDefaultAssaStyleForNewParagraph(newParagraph, idx);
             var next = Subtitles.GetOrNull(idx + 1);
             if (next != null)
             {
@@ -15197,6 +15332,7 @@ public partial class MainViewModel :
         RunWithoutChangeDetection(() =>
         {
             var idx = _insertService.InsertInCorrectPosition(Subtitles, newParagraph);
+            SetDefaultAssaStyleForNewParagraph(newParagraph, idx);
             var next = Subtitles.GetOrNull(idx + 1);
             if (next != null)
             {
@@ -15516,6 +15652,7 @@ public partial class MainViewModel :
         RunWithoutChangeDetection(() =>
         {
             var idx = _insertService.InsertInCorrectPosition(Subtitles, newParagraph);
+            SetDefaultAssaStyleForNewParagraph(newParagraph, idx);
             var next = Subtitles.GetOrNull(idx + 1);
             if (next != null &&
                 next.StartTime.TotalMilliseconds < endMs &&
@@ -16542,8 +16679,20 @@ public partial class MainViewModel :
             idx = Subtitles.Count;
         }
 
-        await SubtitleGridCopyPasteHelper.Paste(Window, Subtitles, idx, SelectedSubtitleFormat);
+        var pastedLines = await SubtitleGridCopyPasteHelper.Paste(Window, Subtitles, idx, SelectedSubtitleFormat);
         Renumber();
+
+        // Select the pasted lines and scroll them into view, like SE4 - otherwise the selection
+        // (and with it the edit box) stayed on the line selected before the paste (#13705).
+        if (pastedLines.Count > 0)
+        {
+            var firstIndex = Subtitles.IndexOf(pastedLines[0]);
+            if (firstIndex >= 0)
+            {
+                SelectAndScrollToRange(firstIndex, firstIndex + pastedLines.Count - 1);
+            }
+        }
+
         _updateAudioVisualizer = true;
         _shortcutManager.ClearKeys();
     }
@@ -17325,6 +17474,59 @@ public partial class MainViewModel :
         });
     }
 
+    /// <summary>
+    /// Selects a contiguous block of rows - e.g. everything a paste just inserted - and scrolls
+    /// the first of them into view, leaving that row as the current one so the edit box shows it.
+    /// </summary>
+    private void SelectAndScrollToRange(int startIndex, int endIndex)
+    {
+        if (startIndex < 0 || startIndex >= Subtitles.Count)
+        {
+            return;
+        }
+
+        endIndex = Math.Clamp(endIndex, startIndex, Subtitles.Count - 1);
+        if (endIndex == startIndex)
+        {
+            SelectAndScrollToRow(startIndex);
+            return;
+        }
+
+        _shiftSelectAnchorIndex = -1;
+        _shiftSelectCurrentIndex = -1;
+
+        // The first pasted row goes in first so it becomes the SelectedItem (the row the edit
+        // box shows), then the rest of the block is added to the selection.
+        SelectGridRange(startIndex, endIndex, startIndex);
+        SubtitleGridSelectionChanged();
+
+        // Avalonia keeps the caret index when the bound text changes - same reset as
+        // SelectAndScrollToRow (#12707), as the edit box now shows another line.
+        EditTextBox.CaretIndex = 0;
+        EditTextBoxOriginal.CaretIndex = 0;
+
+        var itemToScroll = Subtitles[startIndex];
+        Dispatcher.UIThread.Post(() =>
+        {
+            if (!Subtitles.Contains(itemToScroll))
+            {
+                return;
+            }
+
+            TableViewExtras.PrePositionScroll(SubtitleGrid, Subtitles.IndexOf(itemToScroll));
+            SubtitleGrid.ScrollIntoView(itemToScroll);
+
+            if (Se.Settings.General.SubtitleGridCenterSelectedRow)
+            {
+                CenterSelectedRowInSubtitleGrid(itemToScroll);
+            }
+            else
+            {
+                EnsureRowFullyVisibleInSubtitleGrid(itemToScroll);
+            }
+        });
+    }
+
     // TableView's ScrollIntoView can leave a variable-height row clipped at an edge
     // (same class of problem as DataGrid issue #11723); the helper nudges the scroll
     // offset by exactly how far the realized row pokes out.
@@ -17616,6 +17818,18 @@ public partial class MainViewModel :
                 return;
             }
 
+            // a DVD .vob is the same MPEG program stream as a VobSub .sub - extract the subtitle
+            // (SPU) stream directly; a .vob without subtitles falls through to the video handling
+            if (ext == ".vob" && FileUtil.IsVobSub(fileName))
+            {
+                var ok = await ImportSubtitleFromVobSubFile(fileName, videoFileName, skipLoadVideo);
+                if (ok)
+                {
+                    SelectAndScrollToRow(0);
+                    return;
+                }
+            }
+
             if (ext == ".idx")
             {
                 var subFile = Path.ChangeExtension(fileName, ".sub");
@@ -17748,6 +17962,22 @@ public partial class MainViewModel :
 
             if (subtitle == null)
             {
+                // SMPTE-TT with bitmap captions: base64 PNGs in <smpte:image> referenced via
+                // smpte:backgroundImage - an import-only format, so Subtitle.Parse never finds
+                // it; route through OCR like the MP4-embedded variant (see IsmtDfxp above)
+                if (ext == ".ttml" || ext == ".xml" || ext == ".dfxp")
+                {
+                    var base64ImageLines = FileUtil.ReadAllLinesShared(fileName, Encoding.UTF8);
+                    var base64ImageFormat = new TimedTextBase64Image();
+                    if (base64ImageFormat.IsMine(base64ImageLines, fileName))
+                    {
+                        var base64ImageSubtitle = new Subtitle();
+                        base64ImageFormat.LoadSubtitle(base64ImageSubtitle, base64ImageLines, fileName);
+                        ImportAndInlineBase64(base64ImageSubtitle, fileName, skipLoadVideo);
+                        return;
+                    }
+                }
+
                 if (FileUtil.IsSpDvdSup(fileName))
                 {
                     ImportAndOcrSpDvdSup(fileName, skipLoadVideo);
@@ -18229,7 +18459,7 @@ public partial class MainViewModel :
 
     private bool ImportSubtitleFromDivX(string fileName, bool skipLoadVideo = false)
     {
-        var list = DivXSubParser.ImportSubtitleFromDivX(fileName);
+        var list = XSubParser.ParseAviSubtitles(fileName);
         if (list.Count == 0)
         {
             return false;
@@ -19007,6 +19237,11 @@ public partial class MainViewModel :
                 mergedVobSubPacks.RemoveAt(i);
             }
         }
+
+        // ffmpeg leaves BlockDuration unset (or "unknown") on VobSub tracks it muxes, which
+        // left every pack ending where it started; the sub picture's own stop-display delay
+        // is the real duration. Same repair the .sub/.idx path does.
+        VobSubParser.FixPackTimes(mergedVobSubPacks);
 
         Dispatcher.UIThread.Post(async () =>
         {
@@ -20572,10 +20807,7 @@ public partial class MainViewModel :
         });
     }
 
-    // forceGenerate: extract even when WaveformAutoGenerate (the auto-on-open preference) is off.
-    // Set for explicit user actions like picking an audio track, where showing that track's waveform
-    // is the whole point - if it isn't cached yet we extract it now (and cache it for next time).
-    private void LoadWaveformAndSpectrogram(string videoFileName, bool forceGenerate = false)
+    private void LoadWaveformAndSpectrogram(string videoFileName)
     {
         var trackNumber = _audioTrack?.FfIndex ?? -1;
         var peakWaveFileName = WavePeakGenerator2.GetPeakWaveFileName(videoFileName, trackNumber);
@@ -20587,10 +20819,10 @@ public partial class MainViewModel :
             AudioVisualizer.ClickToGenerateText = Se.Language.Main.ClickToGenerateWaveform;
         }
 
-        // On video open, WaveformAutoGenerate gates whether we auto-extract; cached peaks still load
-        // via the branch below either way. An explicit request (forceGenerate) always extracts a
-        // missing waveform - e.g. switching audio track in the waveform toolbar picker.
-        if (needToGenerate && (Se.Settings.Waveform.WaveformAutoGenerate || forceGenerate))
+        // WaveformAutoGenerate gates whether we auto-extract (on video open and on audio-track
+        // switch, #13665); cached peaks still load via the branch below either way. When it is
+        // off, the click-to-generate hint lets the user start extraction explicitly.
+        if (needToGenerate && Se.Settings.Waveform.WaveformAutoGenerate)
         {
             StartWaveformExtraction(videoFileName, trackNumber, peakWaveFileName, spectrogramFileName);
         }
@@ -20620,6 +20852,7 @@ public partial class MainViewModel :
                     InitializeWaveformDisplayMode();
 
                     AudioVisualizer.ShotChanges = ShotChangesHelper.FromDisk(videoFileName);
+                    UpdateShotChangesListMenuItem();
                     if (AudioVisualizer.ShotChanges.Count == 0)
                     {
                         ExtractShotChanges(videoFileName, trackNumber);
@@ -21253,6 +21486,7 @@ public partial class MainViewModel :
                 if (!_videoOpenTokenSource.IsCancellationRequested && AudioVisualizer != null && AudioVisualizer.ShotChanges != null)
                 {
                     ShotChangesHelper.SaveShotChanges(videoFileName, AudioVisualizer.ShotChanges, audioTrackNumber);
+                    Dispatcher.UIThread.Post(UpdateShotChangesListMenuItem);
                 }
             });
         }
@@ -21310,6 +21544,7 @@ public partial class MainViewModel :
             AudioVisualizer.ShotChanges = new List<double>();
             AudioVisualizer.StartPositionSeconds = 0;
             AudioVisualizer.CurrentVideoPositionSeconds = 0;
+            UpdateShotChangesListMenuItem();
         }
     }
 
@@ -24873,7 +25108,11 @@ public partial class MainViewModel :
         }
 
         // Dragging in the waveform is the pointer equivalent of typing - see IsUserEditing().
-        return AudioVisualizer?.IsEditingWithPointer == true;
+        // Deliberately the 500 ms settle rather than IsEditingWithPointer's whole-drag window:
+        // undo has to skip the entire drag or it records half-finished times (#13636), but the
+        // preview only pays a wasted refresh, and settling during a held pause is precisely when
+        // the user is looking at the frame - so it keeps the pre-#13636 timing.
+        return AudioVisualizer?.IsPointerEditSettling == true;
     }
 
     // Called at ~60 fps from _cursorTimer (fast settle after edits) and every 400 ms from
@@ -25176,24 +25415,35 @@ public partial class MainViewModel :
     }
 
     /// <summary>
-    /// Sets the style of a newly created ASSA paragraph to the default ASSA storage style (if any).
-    /// Used by insert paths that bypass <see cref="IInsertService"/> (e.g. typing the first line or
-    /// inserting from a waveform selection).
+    /// Sets the style of a newly created ASSA/SSA paragraph. Used by the insert paths that bypass
+    /// <see cref="IInsertService.InsertBefore"/>/<see cref="IInsertService.InsertAfter"/> - the
+    /// waveform and video-position inserts, and typing the first line of an empty file. Without
+    /// it the line is saved with an empty style, which the writer then resolves to whichever
+    /// style sits first in the header (issue #13677).
     /// </summary>
-    private void SetDefaultAssaStyleForNewParagraph(SubtitleLineViewModel newParagraph)
+    /// <param name="insertedIndex">
+    /// Index the paragraph now occupies, so it can keep the style of the line it landed next to.
+    /// Pass -1 when the paragraph is not in <see cref="Subtitles"/> (yet).
+    /// </param>
+    private void SetDefaultAssaStyleForNewParagraph(SubtitleLineViewModel newParagraph, int insertedIndex = -1)
     {
-        if (SelectedSubtitleFormat is not AdvancedSubStationAlpha)
+        if (SelectedSubtitleFormat is not (AdvancedSubStationAlpha or SubStationAlpha) ||
+            !string.IsNullOrEmpty(newParagraph.Style))
         {
             return;
         }
 
-        newParagraph.Style = AssaStyleStorageHelper.GetStyleNameForNewParagraph(_subtitle);
+        var neighbor = insertedIndex >= 0
+            ? Subtitles.GetOrNull(insertedIndex - 1) ?? Subtitles.GetOrNull(insertedIndex + 1)
+            : null;
+
+        newParagraph.Style = AssaStyleStorageHelper.GetStyleNameForNewParagraph(_subtitle, SelectedSubtitleFormat, neighbor?.Style);
     }
 
     public void AudioVisualizerOnNewSelectionInsert(object sender, ParagraphEventArgs e)
     {
-        SetDefaultAssaStyleForNewParagraph(e.Paragraph);
         var index = _insertService.InsertInCorrectPosition(Subtitles, e.Paragraph);
+        SetDefaultAssaStyleForNewParagraph(e.Paragraph, index);
         SelectAndScrollToRow(index);
         Renumber();
         _updateAudioVisualizer = true;
@@ -25410,7 +25660,9 @@ public partial class MainViewModel :
 
                             var newParagraph = new Paragraph(text, segStartMs, segEndMs);
                             var newLine = new SubtitleLineViewModel(newParagraph, SelectedSubtitleFormat);
-                            _insertService.InsertInCorrectPosition(Subtitles, newLine);
+                            newLine.Style = originalLine.Style; // the segments replace originalLine, so they keep its style
+                            var newLineIndex = _insertService.InsertInCorrectPosition(Subtitles, newLine);
+                            SetDefaultAssaStyleForNewParagraph(newLine, newLineIndex);
                         }
 
                         Renumber();
@@ -26120,19 +26372,9 @@ public partial class MainViewModel :
                 Number = 1
             };
 
-            if (SelectedSubtitleFormat is AdvancedSubStationAlpha)
+            if (SelectedSubtitleFormat is AdvancedSubStationAlpha or SubStationAlpha)
             {
-                newSubtitle.Style = AssaStyleStorageHelper.GetStyleNameForNewParagraph(_subtitle);
-            }
-            else if (SelectedSubtitleFormat is SubStationAlpha)
-            {
-                if (string.IsNullOrEmpty(_subtitle.Header))
-                {
-                    _subtitle.Header = AdvancedSubStationAlpha.DefaultHeader;
-                }
-
-                var styles = AdvancedSubStationAlpha.GetStylesFromHeader(_subtitle.Header);
-                newSubtitle.Style = styles.Count > 0 ? styles[0] : "Default";
+                newSubtitle.Style = AssaStyleStorageHelper.GetStyleNameForNewParagraph(_subtitle, SelectedSubtitleFormat);
             }
 
             Subtitles.Add(newSubtitle);
@@ -26201,7 +26443,7 @@ public partial class MainViewModel :
 
                     if (oldFormat is SubStationAlpha)
                     {
-                        if (_subtitle.Header != null && !_subtitle.Header.Contains("[V4+ Styles]"))
+                        if (!string.IsNullOrEmpty(_subtitle.Header) && !_subtitle.Header.Contains("[V4+ Styles]"))
                         {
                             _subtitle.Header =
                                 AdvancedSubStationAlpha.GetHeaderAndStylesFromSubStationAlpha(_subtitle.Header);
@@ -26213,6 +26455,10 @@ public partial class MainViewModel :
                                 }
                             }
                         }
+                        else if (string.IsNullOrEmpty(_subtitle.Header))
+                        {
+                            AssaStyleStorageHelper.ApplyDefaultStorageStyle(_subtitle, format);
+                        }
                     }
                     else if (oldFormat is AdvancedSubStationAlpha && string.IsNullOrEmpty(_subtitle.Header))
                     {
@@ -26220,11 +26466,22 @@ public partial class MainViewModel :
                     }
                     else if (oldFormat is not AdvancedSubStationAlpha)
                     {
-                        // converting from a format without ASSA styles - use the default style from the storage styles (if any)
-                        AssaStyleStorageHelper.ApplyDefaultStorageStyle(_subtitle);
+                        // converting from a format without ASSA styles - use the default styles from the storage (if any)
+                        AssaStyleStorageHelper.ApplyDefaultStorageStyle(_subtitle, format);
                     }
 
                     SetAssaResolution(true);
+                }
+                else if (format is SubStationAlpha)
+                {
+                    // converting from a format without SSA/ASSA styles - use the default styles from
+                    // the SSA storage (if any); an ASSA source with a header keeps its own styles
+                    // (the header is converted on save)
+                    if (oldFormat is not (SubStationAlpha or AdvancedSubStationAlpha) ||
+                        string.IsNullOrEmpty(_subtitle.Header))
+                    {
+                        AssaStyleStorageHelper.ApplyDefaultStorageStyle(_subtitle, format);
+                    }
                 }
 
                 // The rebuild below blanks the original column and drops the reference rows, so an

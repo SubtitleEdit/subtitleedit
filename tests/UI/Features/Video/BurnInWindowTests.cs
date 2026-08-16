@@ -177,6 +177,46 @@ public class BurnInWindowTests : IDisposable
             $"Window shrank when generating started ({before:0.#} -> {window.ClientSize.Height:0.#}).");
     }
 
+    // The extension list is only correct if both combo boxes are wired up: the encoder box
+    // rebuilds the container list, and the container box rebuilds the audio encoder list.
+    [AvaloniaFact]
+    public void ContainerAndAudioLists_FollowTheSelectedEncoder()
+    {
+        var window = BuildWindow();
+        var vm = window.DataContext as BurnInViewModel;
+        Assert.NotNull(vm);
+        window.Show();
+
+        var encoderComboBox = window.GetLogicalDescendants().OfType<ComboBox>()
+            .First(c => ReferenceEquals(c.ItemsSource, vm.VideoEncodings));
+        var extensionComboBox = window.GetLogicalDescendants().OfType<ComboBox>()
+            .First(c => ReferenceEquals(c.ItemsSource, vm.VideoExtensions));
+
+        encoderComboBox.SelectedItem = vm.VideoEncodings.First(p => p.Codec == "libvpx-vp9");
+        Avalonia.Threading.Dispatcher.UIThread.RunJobs();
+
+        Assert.Contains(".webm", vm.VideoExtensions);
+        Assert.DoesNotContain(".ts", vm.VideoExtensions);
+
+        extensionComboBox.SelectedItem = ".webm";
+        Avalonia.Threading.Dispatcher.UIThread.RunJobs();
+
+        // WebM holds Opus/Vorbis only, so "copy" (the default) cannot survive the switch.
+        Assert.Equal(".webm", vm.SelectedVideoExtension);
+        Assert.DoesNotContain("copy", vm.AudioEncodings);
+        Assert.DoesNotContain("aac", vm.AudioEncodings);
+        Assert.Contains(vm.SelectedAudioEncoding, vm.AudioEncodings);
+
+        encoderComboBox.SelectedItem = vm.VideoEncodings.First(p => p.Codec == "libx264");
+        Avalonia.Threading.Dispatcher.UIThread.RunJobs();
+
+        // H.264 cannot go into WebM, so the container - and with it the audio list - moves back.
+        Assert.Contains(".ts", vm.VideoExtensions);
+        Assert.DoesNotContain(".webm", vm.VideoExtensions);
+        Assert.Contains(vm.SelectedVideoExtension, vm.VideoExtensions);
+        Assert.Contains(vm.SelectedAudioEncoding, vm.AudioEncodings);
+    }
+
     // Re-locking the minimum for the progress row is height-only, but it used to clear MinWidth
     // along the way and never put it back - so starting (or finishing) a burn-in left the window
     // freely shrinkable sideways, clipping the very content the minimum protects.

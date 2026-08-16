@@ -167,6 +167,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     new Footage(),
                     new GooglePlayJson(),
                     new GpacTtxt(),
+                    new CcExtractorTimedTranscript(),
+                    new Grid608(),
                     new Gremots(),
                     new HollyStarJson(),
                     new ImageLogicAutocaption(),

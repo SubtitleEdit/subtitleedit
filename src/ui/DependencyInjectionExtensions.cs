@@ -160,6 +160,9 @@ using Nikse.SubtitleEdit.Features.Video.TextToSpeech.Qwen3TtsSettings;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.Qwen3TtsCrispAsrSettings;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.VibeVoiceCrispAsrSettings;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.IndexTtsCrispAsrSettings;
+using Nikse.SubtitleEdit.Features.Video.TextToSpeech.IndexTts25License;
+using Nikse.SubtitleEdit.Features.Video.TextToSpeech.VoiceCloneConsent;
+using Nikse.SubtitleEdit.Features.Video.TextToSpeech.IndexTts25AudioCppSettings;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.CosyVoice3CrispAsrSettings;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.F5TtsCrispAsrSettings;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.OmniVoiceCrispAsrSettings;
@@ -275,6 +278,7 @@ public static class DependencyInjectionExtensions
         collection.AddHttpClientWithProxy<IQwen3TtsCrispAsrDownloadService, Qwen3TtsCrispAsrDownloadService>();
         collection.AddHttpClientWithProxy<IVibeVoiceCrispAsrDownloadService, VibeVoiceCrispAsrDownloadService>();
         collection.AddHttpClientWithProxy<IIndexTtsCrispAsrDownloadService, IndexTtsCrispAsrDownloadService>();
+        collection.AddHttpClientWithProxy<IIndexTts25AudioCppDownloadService, IndexTts25AudioCppDownloadService>();
         collection.AddHttpClientWithProxy<ICosyVoice3CrispAsrDownloadService, CosyVoice3CrispAsrDownloadService>();
         collection.AddHttpClientWithProxy<IF5TtsCrispAsrDownloadService, F5TtsCrispAsrDownloadService>();
         collection.AddHttpClientWithProxy<IOmniVoiceCrispAsrDownloadService, OmniVoiceCrispAsrDownloadService>();
@@ -404,6 +408,7 @@ public static class DependencyInjectionExtensions
         collection.AddTransient<FindRuleViewModel>();
         collection.AddTransient<FindTextViewModel>();
         collection.AddTransient<FindViewModel>();
+        collection.AddTransient<FixCommonErrorsLogViewModel>();
         collection.AddTransient<FixCommonErrorsProfileViewModel>();
         collection.AddTransient<Features.Tools.AiReview.AiReviewViewModel>();
         collection.AddTransient<Features.Main.AiAssistant.AiAssistantViewModel>();
@@ -456,6 +461,9 @@ public static class DependencyInjectionExtensions
         collection.AddTransient<Qwen3TtsCrispAsrSettingsViewModel>();
         collection.AddTransient<VibeVoiceCrispAsrSettingsViewModel>();
         collection.AddTransient<IndexTtsCrispAsrSettingsViewModel>();
+        collection.AddTransient<IndexTts25LicenseViewModel>();
+        collection.AddTransient<VoiceCloneConsentViewModel>();
+        collection.AddTransient<IndexTts25AudioCppSettingsViewModel>();
         collection.AddTransient<CosyVoice3CrispAsrSettingsViewModel>();
         collection.AddTransient<F5TtsCrispAsrSettingsViewModel>();
         collection.AddTransient<OmniVoiceCrispAsrSettingsViewModel>();

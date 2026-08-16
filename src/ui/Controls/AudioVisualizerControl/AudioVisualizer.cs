@@ -405,17 +405,44 @@ public class AudioVisualizer : Control
     // Wall clock of the last pointer-driven time code edit (drag move/resize/new selection).
     private long _lastPointerEditMs;
 
+    // True from the press that starts a move/resize/new-selection until the release (or Escape,
+    // Enter, or a lost pointer capture) that ends it - see IsEditingWithPointer. `volatile`
+    // because the undo change-detection timer reads it from a thread-pool thread while the UI
+    // thread writes it, and a stale `false` there is exactly the missed suppression this fixes.
+    private volatile bool _pointerDragActive;
+
     /// <summary>
     /// True while the user is dragging time codes in the waveform - the pointer twin of
-    /// <c>MainViewModel.IsUserEditing</c>'s keyboard check, with the same 500 ms grace.
-    /// A drag rewrites the paragraph times on every undo change-detection tick, and each
-    /// tick that sees a change deep-copies the whole subtitle, so the drag has to suppress
-    /// detection the way typing does; the settled state is captured once the grace expires
-    /// (issue #13234). Deliberately a timestamp rather than "_interactionMode != None": a
-    /// drag that loses pointer capture without a PointerReleased must not be able to leave
-    /// change detection switched off for the rest of the session.
+    /// <c>MainViewModel.IsUserEditing</c>'s keyboard check, with the same 500 ms grace after
+    /// the drag ends. A drag rewrites the paragraph times on every undo change-detection tick,
+    /// and each tick that sees a change deep-copies the whole subtitle and pushes that
+    /// half-finished state onto the undo stack, so the drag has to suppress detection the way
+    /// typing does; the settled state is captured once the grace expires (issue #13234).
+    /// <para>
+    /// The timestamp alone is not enough: it is stamped only by a pointer move that actually
+    /// rewrote the times, so any half second the button is held without the times changing -
+    /// holding still to listen, or fine-tuning inside one pixel column (a same-X move returns
+    /// before the stamp) - reopened the window and banked an intermediate undo entry. Dragging
+    /// around for a while before releasing then produced a whole stack of them, and undo stepped
+    /// back through the middle of the drag instead of to before it (issue #13636). The live drag
+    /// flag closes that; the timestamp still covers the tail after release, and
+    /// <see cref="OnPointerCaptureLost"/> (plus Escape/Enter) makes sure a drag that never sees a
+    /// PointerReleased cannot leave change detection switched off for the rest of the session.
+    /// </para>
     /// </summary>
-    public bool IsEditingWithPointer =>
+    public bool IsEditingWithPointer => _pointerDragActive || IsPointerEditSettling;
+
+    /// <summary>
+    /// The timestamp half of <see cref="IsEditingWithPointer"/> on its own: true for 500 ms after
+    /// the last pointer move that rewrote the time codes, whether or not the button is still down.
+    /// <para>
+    /// This is what the on-video preview settle uses. Its cost of acting mid-drag is one wasted
+    /// refresh, not a wrong undo stack, and pausing inside a drag is exactly when the user wants
+    /// to see the frame they are aiming at - so the preview keeps catching up during a held
+    /// pause instead of waiting for the release.
+    /// </para>
+    /// </summary>
+    public bool IsPointerEditSettling =>
         _lastPointerEditMs != 0 && Environment.TickCount64 - _lastPointerEditMs < 500;
 
     public class PositionEventArgs : EventArgs
@@ -485,6 +512,7 @@ public class AudioVisualizer : Control
         PointerExited += OnPointerExited;
         PointerPressed += OnPointerPressed;
         PointerReleased += OnPointerReleased;
+        PointerCaptureLost += OnPointerCaptureLost;
         PointerWheelChanged += OnPointerWheelChanged;
         Tapped += OnTapped;
         DoubleTapped += (sender, e) =>
@@ -520,6 +548,7 @@ public class AudioVisualizer : Control
         if (e.Key == Key.Escape)
         {
             _interactionMode = InteractionMode.None;
+            _pointerDragActive = false;
             NewSelectionParagraph = null;
             InvalidateVisual();
             e.Handled = true;
@@ -533,6 +562,7 @@ public class AudioVisualizer : Control
             }
 
             _interactionMode = InteractionMode.None;
+            _pointerDragActive = false;
             NewSelectionParagraph = null;
             InvalidateVisual();
             e.Handled = true;
@@ -805,6 +835,11 @@ public class AudioVisualizer : Control
 
     private void OnPointerReleased(object? sender, PointerReleasedEventArgs e)
     {
+        // Cleared up front: every path out of this method ends the drag, and several of them
+        // return early. The 500 ms tail in IsEditingWithPointer takes over from here, so the
+        // settled times still get one - and only one - undo snapshot.
+        _pointerDragActive = false;
+
         _isCtrlDown = e.KeyModifiers.HasFlag(KeyModifiers.Control);
         _isShiftDown = e.KeyModifiers.HasFlag(KeyModifiers.Shift);
         _isAltDown = e.KeyModifiers.HasFlag(KeyModifiers.Alt);
@@ -984,6 +1019,9 @@ public class AudioVisualizer : Control
         _startPointerPosition = point;
         _startPointerSeconds = RelativeXPositionToSeconds(point.X);
         _lastDragPointerX = double.NaN;
+        // Set again below once this press is known to start a drag (see IsEditingWithPointer);
+        // the paths that bail out before that are plain clicks and must not hold the flag.
+        _pointerDragActive = false;
 
         // No waveform yet and auto-generate is off: a click generates it on demand.
         if (WavePeaks == null && ShowClickToGenerateHint &&
@@ -1017,6 +1055,7 @@ public class AudioVisualizer : Control
 
             NewSelectionParagraph.StartTime = TimeSpan.FromSeconds(deltaSeconds);
             NewSelectionParagraph.EndTime = TimeSpan.FromSeconds(deltaSeconds);
+            _pointerDragActive = true;
             InvalidateVisual();
             return;
         }
@@ -1130,6 +1169,18 @@ public class AudioVisualizer : Control
                 _interactionMode = InteractionMode.Moving;
             }
         }
+
+        _pointerDragActive = _interactionMode != InteractionMode.None;
+    }
+
+    /// <summary>
+    /// A drag can end without a PointerReleased - the window loses activation, a flyout grabs the
+    /// pointer, the device disappears. Undo change detection must not stay suppressed afterwards,
+    /// so treat losing the capture as the end of the drag (see <see cref="IsEditingWithPointer"/>).
+    /// </summary>
+    private void OnPointerCaptureLost(object? sender, PointerCaptureLostEventArgs e)
+    {
+        _pointerDragActive = false;
     }
 
     private void OnPointerExited(object? sender, PointerEventArgs e)
@@ -1168,6 +1219,18 @@ public class AudioVisualizer : Control
         if (IsReadOnly)
         {
             return;
+        }
+
+        // Self-heal: a move with no button down means the drag is over, whatever happened to the
+        // release. Belt and braces next to OnPointerCaptureLost so a stuck flag can never keep
+        // undo change detection switched off (see IsEditingWithPointer).
+        if (_pointerDragActive)
+        {
+            var buttons = e.GetCurrentPoint(this).Properties;
+            if (!buttons.IsLeftButtonPressed && !buttons.IsRightButtonPressed && !buttons.IsMiddleButtonPressed)
+            {
+                _pointerDragActive = false;
+            }
         }
 
         var point = e.GetPosition(this);

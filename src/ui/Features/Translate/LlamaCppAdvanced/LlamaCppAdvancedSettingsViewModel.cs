@@ -88,6 +88,12 @@ public partial class LlamaCppAdvancedSettingsViewModel : ObservableObject
         Window?.Close();
     }
 
+    [RelayCommand]
+    private void ResetPrompt()
+    {
+        Prompt = LlamaCppAdvancedProtocol.DefaultPrompt;
+    }
+
     internal void OnKeyDown(KeyEventArgs e)
     {
         if (e.Key == Key.Escape)
