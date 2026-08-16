@@ -3224,6 +3224,18 @@ namespace Nikse.SubtitleEdit.Core.Common
                     }
                 }
             }
+            else if (codecId.StartsWith("S_TEXT/USF", StringComparison.OrdinalIgnoreCase))
+            {
+                // Each USF block holds the <text> element of one subtitle; without this the
+                // track fell through to SubRip below and every cue read as raw XML markup.
+                format = new UniversalSubtitleFormat();
+                foreach (var p in sub)
+                {
+                    var blockText = p.GetText(matroskaSubtitleInfo);
+                    subtitle.Paragraphs.Add(new Paragraph(
+                        UniversalSubtitleFormat.GetTextFromMatroskaBlock(blockText) ?? blockText, p.Start, p.End));
+                }
+            }
             else
             {
                 foreach (var p in sub)
