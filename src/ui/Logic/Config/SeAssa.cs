@@ -37,7 +37,9 @@ public class SeAssa
         AutoSetResolution = true;
         AutoSetResolutionConvert = true;
 
-        StoredStyles = new List<SeAssaStyle>();
+        // Seed the storage so a fresh install (and a settings reset) has a default style to
+        // apply to new/converted ASSA subtitles instead of an empty "Styles saved" list.
+        StoredStyles = new List<SeAssaStyle> { SeAssaStyle.MakeStorageDefault() };
         LastOverrideTag = OverrideTagDisplay.List().First().Tag;
         LastOverrideTags = new List<string>();
 

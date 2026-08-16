@@ -282,8 +282,9 @@ public class InsertService : IInsertService
                     newParagraph.Actor = c.Actor;
                 }
 
-                // use the first style from the file, or the default storage styles for a new file
-                newParagraph.Style = AssaStyleStorageHelper.GetStyleNameForNewParagraph(subtitle, format);
+                // keep the neighbouring line's style (SE 4 parity - #13677), or the default
+                // storage styles for a file that has none yet
+                newParagraph.Style = AssaStyleStorageHelper.GetStyleNameForNewParagraph(subtitle, format, c?.Style);
             }
         }
     }
