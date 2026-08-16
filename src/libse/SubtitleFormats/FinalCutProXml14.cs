@@ -52,7 +52,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 "           <project name=\"We Bought A Zoo\" uid=\"E04A4539-1369-47C8-AC44-F459A96AC90F\">" + Environment.NewLine +
                 "               <sequence duration=\"181421240/24000s\" format=\"r1\" tcStart=\"0s\" tcFormat=\"NDF\" audioLayout=\"stereo\" audioRate=\"48k\">" + Environment.NewLine +
                 "                    <spine>" + Environment.NewLine +
-                "                    <clip>" + Environment.NewLine + // From here down I am unsure how it should be
+                "                    <clip offset=\"0s\" name=\"Subtitles\" duration=\"181421240/24000s\">" + Environment.NewLine +
                 "                    </clip>" + Environment.NewLine +
                 "                    </spine>" + Environment.NewLine +
                 "                </sequence>" + Environment.NewLine +

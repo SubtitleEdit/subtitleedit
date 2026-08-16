@@ -2137,7 +2137,7 @@ public partial class BatchConvertViewModel : ObservableObject, IClosingCleanup
                 }
             }
         }
-        else if (ext == ".mp4" || ext == ".m4v" || ext == ".m4s")
+        else if (ext == ".mp4" || ext == ".m4v" || ext == ".m4s" || ext == ".mov" || ext == ".3gp" || ext == ".m4a" || ext == ".m4b" || ext == ".cmaf")
         {
             var mp4Files = new List<string>();
             var mp4Parser = new MP4Parser(fileName);
