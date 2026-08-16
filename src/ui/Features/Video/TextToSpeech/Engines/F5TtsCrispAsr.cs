@@ -46,6 +46,8 @@ public class F5TtsCrispAsr : ITtsEngine
     public bool HasRegion => false;
     public bool HasModel => true;
     public bool HasKeyFile => false;
+    public bool SupportsVoiceCloning => true;
+    public bool SupportsPerLineVoiceCloning => false;
 
     // Only one quant on the HF repo at time of integration. ModelKey is still exposed so the
     // engine settings dialog can grow new quants without breaking the saved-settings string.

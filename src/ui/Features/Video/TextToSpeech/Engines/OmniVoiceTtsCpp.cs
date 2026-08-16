@@ -29,6 +29,10 @@ public class OmniVoiceTtsCpp : ITtsEngine
     public bool HasRegion => false;
     public bool HasModel => false;
     public bool HasKeyFile => false;
+    public bool SupportsVoiceCloning => true;
+    // Each line is a fresh omnivoice-tts run taking --ref-wav/--ref-text, so a per-line
+    // reference costs nothing beyond cutting the clip.
+    public bool SupportsPerLineVoiceCloning => true;
 
     // Voice-design attribute keywords accepted by omnivoice-tts' --instruct flag (English set).
     // The CLI rejects free text - only these values, comma+space separated, are valid. Grouped

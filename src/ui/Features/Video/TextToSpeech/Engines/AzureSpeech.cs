@@ -20,6 +20,8 @@ public class AzureSpeech : ITtsEngine
     public bool HasRegion => true;
     public bool HasModel => false;
     public bool HasKeyFile => false;
+    public bool SupportsVoiceCloning => false;
+    public bool SupportsPerLineVoiceCloning => false;
 
     public Task<bool> IsInstalled(string? region)
     {

@@ -1022,7 +1022,7 @@ public class LanguageGeneral
         KeepExistingTimeCodes = "Keep existing time codes (do not add video offset)";
         KeyFile = "Key file";
         Language = "Language";
-        LanguagePostFix = "Language post-fix (mkv/mp4)";
+        LanguagePostFix = "Language post-fix (mkv/mp4/auto-translate)";
         Layer = "Layer";
         LayerFilterOn = "Layer filter on";
         Left = "Left";

@@ -217,6 +217,8 @@ The context menu changes dynamically based on context (e.g., whether a new selec
 | **Guess time codes** | Auto-detect subtitle timing from audio silence |
 | **Toggle shot change** | Add or remove a shot change marker at the video position |
 | **Seek silence** | Find the next silent section in the audio |
+| **Extract audio** | Save the selected subtitle's audio to a file |
+| **Clone voice to** | Clone the voice heard in the selected subtitle into a text-to-speech engine that supports voice cloning |
 | **Show only waveform** | Switch to waveform-only display |
 | **Show only spectrogram** | Switch to spectrogram-only display |
 | **Show waveform and spectrogram** | Switch to combined display |

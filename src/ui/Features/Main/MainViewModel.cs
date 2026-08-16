@@ -155,7 +155,11 @@ using Nikse.SubtitleEdit.Features.Video.SpeechToText;
 using Nikse.SubtitleEdit.Features.Video.SpeechToText.OpenAiCompatible;
 using Nikse.SubtitleEdit.Features.Video.VideoOcr;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech;
+using Nikse.SubtitleEdit.Features.Video.TextToSpeech.ActorVoices;
+using Nikse.SubtitleEdit.Features.Video.TextToSpeech.AutoCast;
+using Nikse.SubtitleEdit.Features.Video.TextToSpeech.Engines;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.ReviewSpeech;
+using Nikse.SubtitleEdit.Features.Video.TextToSpeech.VoiceCloneConsent;
 using Nikse.SubtitleEdit.Features.Video.TransparentSubtitles;
 using Nikse.SubtitleEdit.Features.WebVtt;
 using Nikse.SubtitleEdit.Logic;
@@ -689,6 +693,7 @@ public partial class MainViewModel :
     public MenuItem MenuItemAudioVisualizerSpeechToTextSelectedLines { get; set; }
     public MenuItem MenuItemAudioVisualizerSpeechToTextNewSelection { get; set; }
     public MenuItem MenuItemAudioVisualizerExtractAudio { get; set; }
+    public MenuItem MenuItemAudioVisualizerCloneVoice { get; set; }
     public MenuItem MenuItemAudioVisualizerCopy { get; set; }
     public MenuItem MenuItemAudioVisualizerCopyText { get; set; }
     public ITextBoxWrapper EditTextBoxOriginal { get; set; }
@@ -806,6 +811,7 @@ public partial class MainViewModel :
         MenuItemAudioVisualizerSpeechToTextSelectedLines = new MenuItem();
         MenuItemAudioVisualizerSpeechToTextNewSelection = new MenuItem();
         MenuItemAudioVisualizerExtractAudio = new MenuItem();
+        MenuItemAudioVisualizerCloneVoice = new MenuItem();
         MenuItemAudioVisualizerCopy = new MenuItem();
         MenuItemAudioVisualizerCopyText = new MenuItem();
         MenuItemStyles = new MenuItem();
@@ -4974,6 +4980,165 @@ public partial class MainViewModel :
         return ordered.Select(f => (DisplayName(f), "." + f)).ToList();
     }
 
+    /// <summary>
+    /// Clones the voice heard in the selected subtitle line into <paramref name="engine"/>'s
+    /// voices, so it can be picked for dubbing in the text-to-speech window (#13698).
+    /// </summary>
+    /// <remarks>
+    /// The short way round what used to be "extract audio to a file, open text to speech, pick the
+    /// engine, open voice settings, import, find the file again". Two things are known here that
+    /// the import dialog has to ask for: the audio (it is the line's own time range in the video's
+    /// current audio track) and the reference text (it is the line's text), so the engines that
+    /// want a transcript get a correct one without a Whisper round trip.
+    /// </remarks>
+    [RelayCommand]
+    private async Task WaveformCloneVoiceToEngine(ITtsEngine? engine)
+    {
+        if (Window == null || engine == null || string.IsNullOrEmpty(_videoFileName))
+        {
+            return;
+        }
+
+        var selectedItems = SubtitleGridSelectedItems.Cast<SubtitleLineViewModel>().ToList();
+        if (selectedItems.Count != 1)
+        {
+            return;
+        }
+
+        var line = selectedItems[0];
+
+        // Asked before anything else happens, so a user who declines is not first made to name a
+        // voice. Shown once ever - see VoiceCloningConsent.
+        var consentOk = await VoiceCloneConsentPrompt.EnsureAsync(
+            engine,
+            Window,
+            () => ShowDialogAsync<VoiceCloneConsentWindow, VoiceCloneConsentViewModel>(_ => { }));
+        if (!consentOk)
+        {
+            return;
+        }
+
+        if (!await RequireFfmpegOk())
+        {
+            return;
+        }
+
+        var nameResult = await ShowDialogAsync<PromptTextBoxWindow, PromptTextBoxViewModel>(vm =>
+            vm.Initialize(
+                Se.Language.Waveform.CloneVoiceNameTitle,
+                SuggestCloneVoiceName(line),
+                300,
+                30,
+                returnSubmits: true));
+        if (!nameResult.OkPressed || string.IsNullOrWhiteSpace(nameResult.Text))
+        {
+            return;
+        }
+
+        // The engines name the imported voice after the file they are handed, so the name the user
+        // typed has to survive as a file name.
+        var voiceName = MakeSafeVoiceFileName(nameResult.Text);
+        var tempFolder = Path.Combine(Path.GetTempPath(), "SeVoiceClone_" + Guid.NewGuid().ToString("N"));
+        var clipFileName = Path.Combine(tempFolder, voiceName + ".wav");
+
+        try
+        {
+            Directory.CreateDirectory(tempFolder);
+
+            // Source sample rate and no bit rate: the clip is a lossless hand-off, and every
+            // cloning engine resamples it to whatever its backend wants on import.
+            var arguments = FfmpegGenerator.ExtractAudioClipFromVideoParameters(
+                _videoFileName,
+                line.StartTime.TotalSeconds,
+                line.Duration.TotalSeconds,
+                false,
+                clipFileName,
+                _audioTrack?.FfIndex ?? -1,
+                0,
+                string.Empty);
+
+            using (var process = FfmpegGenerator.GetProcess(arguments, (_, _) => { }))
+            {
+                process.Start();
+                process.BeginOutputReadLine();
+                process.BeginErrorReadLine();
+                await Task.Run(() => process.WaitForExit());
+
+                if (process.ExitCode != 0 || !File.Exists(clipFileName))
+                {
+                    await MessageBox.Show(Window, Se.Language.General.Error, Se.Language.Waveform.CloneVoiceExtractFailed, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+            }
+
+            var transcript = HtmlUtil.RemoveHtmlTags(line.Text ?? string.Empty, true)
+                .Replace('\n', ' ')
+                .Replace('\r', ' ')
+                .Trim();
+            var imported = await Task.Run(() => VoiceCloneImporter.Import(engine, clipFileName, transcript));
+            if (!imported)
+            {
+                await MessageBox.Show(
+                    Window,
+                    Se.Language.General.Error,
+                    string.Format(Se.Language.Video.TextToSpeech.VoiceXCouldNotBeImported, voiceName),
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Error);
+                return;
+            }
+
+            await MessageBox.Show(
+                Window,
+                Se.Language.Video.TextToSpeech.VoiceImportSuccessTitle,
+                string.Format(Se.Language.Video.TextToSpeech.VoiceXImported, voiceName));
+        }
+        catch (Exception exception)
+        {
+            await MessageBox.Show(Window, Se.Language.General.Error, exception.Message, MessageBoxButtons.OK, MessageBoxIcon.Error);
+        }
+        finally
+        {
+            try
+            {
+                if (Directory.Exists(tempFolder))
+                {
+                    Directory.Delete(tempFolder, true);
+                }
+            }
+            catch
+            {
+                // A leftover clip in the temp folder is not worth telling the user about.
+            }
+        }
+    }
+
+    /// <summary>
+    /// The name offered for a voice cloned from <paramref name="line"/>: the actor, if the line
+    /// names one (that is what the user calls this voice anyway), otherwise the video and the line
+    /// number, which at least says where the voice came from.
+    /// </summary>
+    private string SuggestCloneVoiceName(SubtitleLineViewModel line)
+    {
+        var actor = (line.Actor ?? string.Empty).Trim();
+        if (actor.Length > 0)
+        {
+            return actor;
+        }
+
+        var videoName = Path.GetFileNameWithoutExtension(_videoFileName);
+        return string.IsNullOrEmpty(videoName) ? $"voice_{line.Number}" : $"{videoName}_{line.Number}";
+    }
+
+    private static string MakeSafeVoiceFileName(string name)
+    {
+        var safe = new string(name.Trim()
+            .Select(c => Path.GetInvalidFileNameChars().Contains(c) ? '_' : c)
+            .ToArray());
+
+        // A name that was nothing but path characters would leave an empty file name.
+        return string.IsNullOrWhiteSpace(safe) ? "voice" : safe;
+    }
+
     [RelayCommand]
     private async Task WaveformToggleWaveformSpectrogramHeight()
     {
@@ -8790,6 +8955,270 @@ public partial class MainViewModel :
         }
     }
 
+    /// <summary>
+    /// Finds who speaks in the video, clones each of them, and sets up the cast so the whole
+    /// video can be dubbed in its own voices (#13698).
+    /// </summary>
+    /// <remarks>
+    /// The steps are: transcribe with a diarizing speech-to-text engine, turn its speaker labels
+    /// into actors, let the user name and merge the speakers, clone one voice per speaker from
+    /// their own lines, and leave the cast assigned so "Text to speech" opens ready to generate.
+    ///
+    /// With a subtitle already open its lines are kept and only labelled with actors - a
+    /// translation is work nobody wants replaced by a transcription. With nothing open the
+    /// transcription becomes the subtitle.
+    /// </remarks>
+    [RelayCommand]
+    private async Task ShowVideoAutoCastFromVideo()
+    {
+        if (Window == null)
+        {
+            return;
+        }
+
+        if (string.IsNullOrEmpty(_videoFileName))
+        {
+            await MessageBox.Show(
+                Window,
+                Se.Language.General.Error,
+                Se.Language.Video.TextToSpeech.AutoCastNeedsVideo,
+                MessageBoxButtons.OK,
+                MessageBoxIcon.Error);
+            return;
+        }
+
+        if (!await RequireFfmpegOk())
+        {
+            return;
+        }
+
+        var engines = TtsEngineCatalog.CreateVoiceCloningEngines();
+        if (engines.Count == 0)
+        {
+            return;
+        }
+
+        // Asked before the transcription rather than after: it can run for minutes, and being
+        // told "no" at the end of it would waste all of it. Shown once ever.
+        var consentOk = await VoiceCloneConsentPrompt.EnsureAsync(
+            engines[0],
+            Window,
+            () => ShowDialogAsync<VoiceCloneConsentWindow, VoiceCloneConsentViewModel>(_ => { }));
+        if (!consentOk)
+        {
+            return;
+        }
+
+        // MOSS Diarize is the engine that tells speakers apart; it is only preselected, so a user
+        // who has another diarizing engine can switch to it in the window.
+        var sttResult = await ShowDialogAsync<SpeechToTextWindow, SpeechToTextViewModel>(vm =>
+            vm.Initialize(_videoFileName, _audioTrack?.FfIndex ?? -1, WhisperChoice.CrispAsrMossDiarize));
+        if (!sttResult.OkPressed || sttResult.TranscribedSubtitle == null || sttResult.TranscribedSubtitle.Paragraphs.Count == 0)
+        {
+            return;
+        }
+
+        var transcription = sttResult.TranscribedSubtitle;
+        var segmentsBySpeaker = new Dictionary<string, List<Paragraph>>(StringComparer.OrdinalIgnoreCase);
+        foreach (var segment in transcription.Paragraphs)
+        {
+            if (!SpeakerLabelParser.TrySplit(segment.Text, out var speaker, out _))
+            {
+                continue;
+            }
+
+            if (!segmentsBySpeaker.TryGetValue(speaker, out var lines))
+            {
+                lines = new List<Paragraph>();
+                segmentsBySpeaker[speaker] = lines;
+            }
+
+            lines.Add(segment);
+        }
+
+        if (segmentsBySpeaker.Count == 0)
+        {
+            await MessageBox.Show(
+                Window,
+                Se.Language.General.Error,
+                Se.Language.Video.TextToSpeech.AutoCastNoSpeakersFound,
+                MessageBoxButtons.OK,
+                MessageBoxIcon.Information);
+            return;
+        }
+
+        // The labels have done their job as data; from here they live in the actor field, and the
+        // text is what gets spoken.
+        SpeakerLabelParser.MoveLabelsToActors(transcription);
+
+        var rows = segmentsBySpeaker
+            .OrderByDescending(p => p.Value.Sum(l => l.Duration.TotalMilliseconds))
+            .Select(p => new AutoCastSpeakerRow(p.Key, p.Value))
+            .ToList();
+
+        var speakersResult = await ShowDialogAsync<AutoCastSpeakersWindow, AutoCastSpeakersViewModel>(vm =>
+            vm.Initialize(rows, engines, engines.FirstOrDefault(e => e.SupportsPerLineVoiceCloning)));
+        if (!speakersResult.OkPressed || speakersResult.SelectedEngine == null)
+        {
+            return;
+        }
+
+        var engine = speakersResult.SelectedEngine;
+        var clonedVoiceNames = await CloneSpeakerVoicesAsync(engine, speakersResult.SpeakersToClone);
+        if (clonedVoiceNames.Count == 0)
+        {
+            await MessageBox.Show(
+                Window,
+                Se.Language.General.Error,
+                Se.Language.Video.TextToSpeech.AutoCastNothingCloned,
+                MessageBoxButtons.OK,
+                MessageBoxIcon.Error);
+            return;
+        }
+
+        ApplyAutoCastToSubtitle(transcription, speakersResult.RenamedSpeakers);
+        SaveAutoCastMappings(engine, clonedVoiceNames);
+
+        ShowStatus(string.Format(Se.Language.Video.TextToSpeech.AutoCastDoneXVoices, clonedVoiceNames.Count));
+    }
+
+    /// <summary>
+    /// Clones one voice per speaker from their own lines in the video, and reports the voice name
+    /// each speaker ended up with.
+    /// </summary>
+    private async Task<Dictionary<string, string>> CloneSpeakerVoicesAsync(
+        ITtsEngine engine,
+        Dictionary<string, List<Paragraph>> speakers)
+    {
+        var clonedVoiceNames = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+        var referenceFolder = Path.Combine(Path.GetTempPath(), "SeAutoCast_" + Guid.NewGuid().ToString("N"));
+
+        try
+        {
+            foreach (var (speakerName, lines) in speakers)
+            {
+                ShowStatus(string.Format(Se.Language.Video.TextToSpeech.AutoCastCloningX, speakerName));
+
+                var referenceFileName = await SpeakerReferenceBuilder.BuildAsync(
+                    _videoFileName!,
+                    lines,
+                    speakerName,
+                    referenceFolder,
+                    _audioTrack?.FfIndex ?? -1,
+                    CancellationToken.None);
+                if (referenceFileName == null)
+                {
+                    continue;
+                }
+
+                var transcript = await ReadReferenceTranscriptAsync(referenceFileName);
+                var imported = await Task.Run(() => VoiceCloneImporter.Import(engine, referenceFileName, transcript));
+                if (imported)
+                {
+                    clonedVoiceNames[speakerName] = Path.GetFileNameWithoutExtension(referenceFileName);
+                }
+            }
+        }
+        catch (Exception exception)
+        {
+            SeLogger.Error(exception, "Auto cast: cloning the speakers failed");
+        }
+        finally
+        {
+            try
+            {
+                if (Directory.Exists(referenceFolder))
+                {
+                    Directory.Delete(referenceFolder, true);
+                }
+            }
+            catch
+            {
+                // Leftovers in the temp folder are not worth telling the user about.
+            }
+        }
+
+        return clonedVoiceNames;
+    }
+
+    private static async Task<string> ReadReferenceTranscriptAsync(string referenceFileName)
+    {
+        var transcriptFileName = Path.ChangeExtension(referenceFileName, ".txt");
+        return File.Exists(transcriptFileName) ? await File.ReadAllTextAsync(transcriptFileName) : string.Empty;
+    }
+
+    /// <summary>
+    /// Puts the speakers into the subtitle as actors and switches to ASSA, the format that keeps
+    /// them.
+    /// </summary>
+    /// <remarks>
+    /// An open subtitle keeps its own lines and only gains actors, matched to the diarized
+    /// segments by overlap; with nothing open, the transcription becomes the subtitle.
+    /// </remarks>
+    private void ApplyAutoCastToSubtitle(Subtitle transcription, Dictionary<string, string> renamedSpeakers)
+    {
+        string Rename(string detected) =>
+            renamedSpeakers.TryGetValue(detected, out var name) && !string.IsNullOrWhiteSpace(name) ? name : detected;
+
+        if (IsEmpty)
+        {
+            foreach (var paragraph in transcription.Paragraphs)
+            {
+                paragraph.Actor = Rename(paragraph.Actor ?? string.Empty);
+            }
+
+            SetSubtitles(transcription);
+        }
+        else
+        {
+            var lines = Subtitles.Select(s => s.ToParagraph()).ToList();
+            var speakerByLine = SpeakerLabelParser.AssignSpeakersByOverlap(lines, transcription.Paragraphs);
+            for (var i = 0; i < Subtitles.Count; i++)
+            {
+                if (speakerByLine.TryGetValue(lines[i], out var speaker))
+                {
+                    Subtitles[i].Actor = Rename(speaker);
+                }
+            }
+        }
+
+        // Actors only survive in ASSA/SSA, and they are invisible until the column is shown.
+        var assaFormat = SubtitleFormats.FirstOrDefault(f => f is AdvancedSubStationAlpha);
+        if (assaFormat != null && SelectedSubtitleFormat is not AdvancedSubStationAlpha and not SubStationAlpha)
+        {
+            SelectedSubtitleFormat = assaFormat;
+        }
+
+        if (!ShowColumnActor)
+        {
+            ToggleShowColumnActor();
+        }
+    }
+
+    /// <summary>
+    /// Remembers actor to voice, so the Text to speech window opens with the cast already assigned.
+    /// </summary>
+    private static void SaveAutoCastMappings(ITtsEngine engine, Dictionary<string, string> clonedVoiceNames)
+    {
+        var mappings = clonedVoiceNames
+            .Select(p => new ActorVoiceMapping
+            {
+                Actor = p.Key,
+                EngineName = engine.Name,
+                VoiceName = p.Value,
+                Model = string.Empty,
+                Instruction = string.Empty,
+            })
+            .ToList();
+
+        // Kept rather than replaced wholesale: a cast the user assigned for other actors in an
+        // earlier session is still theirs, and only the names cloned now are being decided here.
+        var keep = (Se.Settings.Video.TextToSpeech.LastActorVoiceMappings ?? new List<ActorVoiceMapping>())
+            .Where(m => m?.Actor != null && !clonedVoiceNames.ContainsKey(m.Actor));
+        Se.Settings.Video.TextToSpeech.LastActorVoiceMappings = mappings.Concat(keep).ToList();
+        Se.SaveSettings();
+    }
+
     [RelayCommand]
     private async Task ShowVideoTextToSpeech()
     {
@@ -8815,8 +9244,12 @@ public partial class MainViewModel :
             // Pass SelectedSubtitleFormat explicitly so the TTS window's cast detection uses the
             // user's *current* selection (the editor normalises subtitles to ASSA internally, so
             // subtitle.OriginalFormat doesn't reflect what's shown in the format combo).
+            // The original subtitle travels too when one is loaded: per-line voice cloning cuts
+            // its reference from the video, and the original line - not the translation being
+            // dubbed - is what is spoken in that clip.
             vm.Initialize(GetUpdateSubtitle(), SelectedSubtitleFormat,
-                _videoFileName ?? string.Empty, AudioVisualizer?.WavePeaks, Path.GetTempPath());
+                _videoFileName ?? string.Empty, AudioVisualizer?.WavePeaks, Path.GetTempPath(),
+                ShowColumnOriginalText ? GetUpdateSubtitleOriginal() : null);
         });
 
         // OK is the consent to apply the session's subtitle changes; Cancel/Escape/title-bar
@@ -16568,10 +17001,15 @@ public partial class MainViewModel :
         EditTextBox.Cut();
     }
 
+    // The "(alternative)" clipboard commands are dispatched through the shortcut manager while
+    // either edit box is focused (their gestures are not in Avalonia's native keymap), so they
+    // must act on the focused box - unlike the primary commands, which the focused control
+    // handles natively and only run from the main text box's context menu.
     [RelayCommand]
     private void TextBoxCut2()
     {
-        EditTextBox.Cut();
+        var textBox = EditTextBoxOriginal.IsFocused ? EditTextBoxOriginal : EditTextBox;
+        textBox.Cut();
     }
 
     [RelayCommand]
@@ -16581,9 +17019,23 @@ public partial class MainViewModel :
     }
 
     [RelayCommand]
+    private void TextBoxCopy2()
+    {
+        var textBox = EditTextBoxOriginal.IsFocused ? EditTextBoxOriginal : EditTextBox;
+        textBox.Copy();
+    }
+
+    [RelayCommand]
     private void TextBoxPaste()
     {
         EditTextBox.Paste();
+    }
+
+    [RelayCommand]
+    private void TextBoxPaste2()
+    {
+        var textBox = EditTextBoxOriginal.IsFocused ? EditTextBoxOriginal : EditTextBox;
+        textBox.Paste();
     }
 
     [RelayCommand]
@@ -23870,9 +24322,10 @@ public partial class MainViewModel :
     // These TextBox-category commands duplicate Avalonia's built-in TextBox key handling and are
     // hardcoded to the primary EditTextBox, so we let the focused control handle them natively
     // instead of routing them through the shortcut manager (they remain for the right-click menu).
+    // The "(alternative)" clipboard commands are NOT skipped: their gestures (e.g. Shift+Delete
+    // for cut) are not in Avalonia's native keymap, so they only work when routed here (#13711).
     private bool IsNativeTextBoxClipboardCommand(IRelayCommand command) =>
         ReferenceEquals(command, TextBoxCutCommand) ||
-        ReferenceEquals(command, TextBoxCut2Command) ||
         ReferenceEquals(command, TextBoxCopyCommand) ||
         ReferenceEquals(command, TextBoxPasteCommand) ||
         ReferenceEquals(command, TextBoxSelectAllCommand);
@@ -26285,6 +26738,7 @@ public partial class MainViewModel :
         MenuItemAudioVisualizerSpeechToTextSelectedLines.IsVisible = false;
         MenuItemAudioVisualizerSpeechToTextNewSelection.IsVisible = false;
         MenuItemAudioVisualizerExtractAudio.IsVisible = false;
+        MenuItemAudioVisualizerCloneVoice.IsVisible = false;
         MenuItemAudioVisualizerCopy.IsVisible = false;
         MenuItemAudioVisualizerCopyText.IsVisible = false;
 
@@ -26329,6 +26783,10 @@ public partial class MainViewModel :
             MenuItemAudioVisualizerMergeWithPrevious.IsVisible = selectedIdx > 0;
             MenuItemAudioVisualizerMergeWithNext.IsVisible = !isLast;
             MenuItemAudioVisualizerExtractAudio.IsVisible = !string.IsNullOrEmpty(_videoFileName);
+
+            // Cloning takes the audio of exactly one line, so it lives in this branch only -
+            // the same "one selected line, and the click was on it" case "Extract audio..." uses.
+            MenuItemAudioVisualizerCloneVoice.IsVisible = !string.IsNullOrEmpty(_videoFileName);
             return;
         }
 

@@ -20,6 +20,8 @@ public class AllTalk : ITtsEngine
     public bool HasRegion => false;
     public bool HasModel => false;
     public bool HasKeyFile => false;
+    public bool SupportsVoiceCloning => false;
+    public bool SupportsPerLineVoiceCloning => false;
 
     private bool _isInstalled;
     public async Task<bool> IsInstalled(string? region)

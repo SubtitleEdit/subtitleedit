@@ -102,6 +102,52 @@ public class OutputFileNameTest : IDisposable
     }
 
     [Fact]
+    public void Resolve_TwoSameLanguageTracksWithOverwrite_SecondGetsTrackName()
+    {
+        var input = Path.Combine(_tempRoot, "video.mkv");
+        File.WriteAllText(input, "");
+        var used = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+
+        var first = SubtitleConverter.ResolveOutputFileName(input, Opts(overwrite: true), "en", 3, used);
+        var second = SubtitleConverter.ResolveOutputFileName(input, Opts(overwrite: true), "en", 4, used);
+
+        Assert.Equal(Path.Combine(_tempRoot, "video.en.vtt"), first);
+        Assert.Equal(Path.Combine(_tempRoot, "video.#4.en.vtt"), second);
+    }
+
+    [Fact]
+    public void Resolve_SameNameTwiceInRunNoTrackNumber_SecondRotates()
+    {
+        var input = Path.Combine(_tempRoot, "video.srt");
+        File.WriteAllText(input, "");
+        var used = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+
+        // Nothing on disk yet - only the run's own bookkeeping forces the rotation,
+        // as when the first output has been resolved but not written.
+        var first = SubtitleConverter.ResolveOutputFileName(input, Opts(overwrite: true), usedNames: used);
+        var second = SubtitleConverter.ResolveOutputFileName(input, Opts(overwrite: true), usedNames: used);
+
+        Assert.Equal(Path.Combine(_tempRoot, "video.vtt"), first);
+        Assert.Equal(Path.Combine(_tempRoot, "video_2.vtt"), second);
+    }
+
+    [Fact]
+    public void Resolve_TrackNameTakenByRunAndDiskFull_RotatesPastBoth()
+    {
+        var input = Path.Combine(_tempRoot, "video.mkv");
+        File.WriteAllText(input, "");
+        File.WriteAllText(Path.Combine(_tempRoot, "video.en.vtt"), "preexisting");
+        var used = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
+        {
+            Path.Combine(_tempRoot, "video.#4.en.vtt"),
+        };
+
+        var result = SubtitleConverter.ResolveOutputFileName(input, Opts(overwrite: false), "en", 4, used);
+
+        Assert.Equal(Path.Combine(_tempRoot, "video.en_2.vtt"), result);
+    }
+
+    [Fact]
     public void Resolve_AbsoluteOutputFilename_IgnoresOutputFolder()
     {
         var input = Path.Combine(_tempRoot, "input.srt");

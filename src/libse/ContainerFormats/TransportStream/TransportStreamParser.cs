@@ -32,6 +32,16 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
         private SortedDictionary<int, List<DvbSubPes>> SubtitlesLookup { get; set; }
         private SortedDictionary<int, List<TransportStreamSubtitle>> DvbSubtitlesLookup { get; set; } // images
         private bool _isM2TransportStream;
+        private bool _isRs204TransportStream;
+
+        /// <summary>
+        /// How far a subtitle may start before the first video frame and still be treated as the
+        /// same timeline (shown at zero) rather than as a stream whose subtitle timestamps belong
+        /// to a different epoch. Anything under a second is muxer jitter - it must not trigger the
+        /// rebase in the DVB timing loop, because that computes a replacement offset from the
+        /// previous subtitle and keeps it for every cue that follows.
+        /// </summary>
+        private const long MaxSubtitleLeadOverVideoMs = 1000;
 
         public void Parse(string fileName, LoadTransportStreamCallback callback)
         {
@@ -49,6 +59,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
         public void Parse(Stream ms, LoadTransportStreamCallback callback)
         {
             _isM2TransportStream = false;
+            _isRs204TransportStream = false;
             NumberOfNullPackets = 0;
             TotalNumberOfPackets = 0;
             TotalNumberOfPrivateStream1 = 0;
@@ -58,6 +69,10 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
             ms.Position = 0;
             const int packetLength = 188;
             _isM2TransportStream = IsM2TransportStream(ms);
+            _isRs204TransportStream = !_isM2TransportStream && IsRs204TransportStream(ms);
+
+            // Reed-Solomon parity trailing each packet; of no use once the stream is on disk
+            const int rs204ParityLength = 16;
             var packetBuffer = new byte[packetLength];
             var m2TsTimeCodeBuffer = new byte[4];
             long position = 0;
@@ -140,6 +155,12 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
                     }
                     TotalNumberOfPackets++;
                     position += packetLength;
+
+                    if (_isRs204TransportStream)
+                    {
+                        position += rs204ParityLength;
+                        ms.Seek(position, SeekOrigin.Begin);
+                    }
 
                     if (TotalNumberOfPackets % 100000 == 0)
                     {
@@ -305,6 +326,16 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
                         {
                             sub.StartMilliseconds = (ulong)((long)sub.StartMilliseconds - offset);
                             sub.EndMilliseconds = (ulong)((long)sub.EndMilliseconds - offset);
+                        }
+                        else if (offset - (long)sub.StartMilliseconds <= MaxSubtitleLeadOverVideoMs)
+                        {
+                            // Starts a hair before the first video frame - ffmpeg for one puts the
+                            // opening DVB page a millisecond ahead of the first picture. Show it at
+                            // zero and leave the stream's offset alone; the rebase below must not be
+                            // reached by that kind of jitter.
+                            var end = (long)sub.EndMilliseconds - offset;
+                            sub.StartMilliseconds = 0;
+                            sub.EndMilliseconds = end > 0 ? (ulong)end : 0;
                         }
                         else
                         {
@@ -688,6 +719,43 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
                 }
 
                 return false;
+            }
+            finally
+            {
+                ArrayPool<byte>.Shared.Return(buffer);
+            }
+        }
+
+        /// <summary>
+        /// True for a transport stream of 204-byte packets, i.e. the 188-byte packet followed by
+        /// 16 bytes of Reed-Solomon parity. DVB capture cards and professional equipment write
+        /// these; the parity is only of interest to a demodulator, so it is skipped when reading.
+        /// </summary>
+        public static bool IsRs204TransportStream(Stream ms)
+        {
+            const int packetLength = 204;
+            const int requiredLength = packetLength * 2 + 1;
+            if (ms.Length <= requiredLength)
+            {
+                return false;
+            }
+
+            ms.Seek(0, SeekOrigin.Begin);
+            var buffer = ArrayPool<byte>.Shared.Rent(requiredLength);
+            try
+            {
+                ms.ReadFully(buffer, 0, requiredLength);
+                var span = buffer.AsSpan(0, requiredLength);
+
+                // A plain 188-byte stream also has a sync byte at 0, so it has to be ruled out
+                // first - otherwise every normal transport stream would look like RS204 as well.
+                if (span[0] != Packet.SynchronizationByte || span[188] == Packet.SynchronizationByte)
+                {
+                    return false;
+                }
+
+                return span[packetLength] == Packet.SynchronizationByte &&
+                       span[packetLength * 2] == Packet.SynchronizationByte;
             }
             finally
             {

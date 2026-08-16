@@ -253,7 +253,9 @@ public static class ShortcutsMain
         { nameof(MainViewModel.TextBoxCutCommand), Se.Language.Options.Shortcuts.TextBoxCut },
         { nameof(MainViewModel.TextBoxCut2Command), Se.Language.Options.Shortcuts.TextBoxCut2 },
         { nameof(MainViewModel.TextBoxPasteCommand), Se.Language.Options.Shortcuts.TextBoxPaste },
+        { nameof(MainViewModel.TextBoxPaste2Command), Se.Language.Options.Shortcuts.TextBoxPaste2 },
         { nameof(MainViewModel.TextBoxCopyCommand), Se.Language.Options.Shortcuts.TextBoxCopy },
+        { nameof(MainViewModel.TextBoxCopy2Command), Se.Language.Options.Shortcuts.TextBoxCopy2 },
         { nameof(MainViewModel.TextBoxSelectAllCommand), Se.Language.Options.Shortcuts.TextBoxSelectAll },
         { nameof(MainViewModel.TextBoxRemoveAllFormattingCommand), Se.Language.Options.Shortcuts.TextBoxRemoveAllFormatting },
         { nameof(MainViewModel.TextBoxItalicCommand), Se.Language.Options.Shortcuts.TextBoxItalic },
@@ -606,7 +608,9 @@ public static class ShortcutsMain
         AddShortcut(shortcuts, vm.TextBoxCutCommand, nameof(vm.TextBoxCutCommand), ShortcutCategory.TextBox);
         AddShortcut(shortcuts, vm.TextBoxCut2Command, nameof(vm.TextBoxCut2Command), ShortcutCategory.TextBox);
         AddShortcut(shortcuts, vm.TextBoxPasteCommand, nameof(vm.TextBoxPasteCommand), ShortcutCategory.TextBox);
+        AddShortcut(shortcuts, vm.TextBoxPaste2Command, nameof(vm.TextBoxPaste2Command), ShortcutCategory.TextBox);
         AddShortcut(shortcuts, vm.TextBoxCopyCommand, nameof(vm.TextBoxCopyCommand), ShortcutCategory.TextBox);
+        AddShortcut(shortcuts, vm.TextBoxCopy2Command, nameof(vm.TextBoxCopy2Command), ShortcutCategory.TextBox);
         AddShortcut(shortcuts, vm.TextBoxSelectAllCommand, nameof(vm.TextBoxSelectAllCommand), ShortcutCategory.TextBox);
         AddShortcut(shortcuts, vm.TextBoxRemoveAllFormattingCommand, nameof(vm.TextBoxRemoveAllFormattingCommand), ShortcutCategory.TextBox);
         AddShortcut(shortcuts, vm.TextBoxItalicCommand, nameof(vm.TextBoxItalicCommand), ShortcutCategory.TextBox);
@@ -931,6 +935,9 @@ public static class ShortcutsMain
             new(nameof(vm.ShowSourceViewCommand), [nameof(Avalonia.Input.Key.F2)], ShortcutCategory.General),
             // Forward delete for Apple keyboards, where the Delete key is only a backspace.
             new(nameof(vm.TextBoxDeleteForwardCommand), ["Shift", nameof(Avalonia.Input.Key.Back)], ShortcutCategory.TextBox),
+            // Shift+Delete cut is not in Avalonia's native keymap (unlike Ctrl+Insert copy and
+            // Shift+Insert paste), so the Windows-standard gesture needs a default binding, while
+            // the copy/paste alternatives stay unbound by default (#13711).
             new(nameof(vm.TextBoxCut2Command), ["Shift", nameof(Avalonia.Input.Key.Delete) ], ShortcutCategory.TextBox),
             new(nameof(vm.TextBoxCutCommand), [cmd, nameof(Avalonia.Input.Key.X)], ShortcutCategory.TextBox),
             new(nameof(vm.TextBoxPasteCommand), [cmd, nameof(Avalonia.Input.Key.V)], ShortcutCategory.TextBox),

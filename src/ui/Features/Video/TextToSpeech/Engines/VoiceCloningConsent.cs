@@ -72,14 +72,14 @@ public static class VoiceCloningConsent
     }
 
     /// <summary>
-    /// Whether importing a file into <paramref name="engine"/> means cloning a voice.
+    /// Whether handing a recording to <paramref name="engine"/> means cloning a voice.
     /// </summary>
     /// <remarks>
-    /// Every engine that offers "import voice" clones from a reference recording except Piper,
-    /// whose import takes a trained .onnx model — no speaker is being imitated there, so gating it
-    /// would only train users to click through the dialog.
+    /// Reads <see cref="ITtsEngine.SupportsVoiceCloning"/>, which is false for Piper — its import
+    /// takes a trained .onnx model, and no speaker is being imitated there, so gating it would
+    /// only train users to click through the dialog.
     /// </remarks>
-    public static bool RequiresConsent(ITtsEngine? engine) => engine != null && engine is not Piper;
+    public static bool RequiresConsent(ITtsEngine? engine) => engine?.SupportsVoiceCloning == true;
 
     /// <summary>
     /// Whether <paramref name="voice"/> speaks by imitating a reference recording rather than a
@@ -99,6 +99,8 @@ public static class VoiceCloningConsent
     /// </remarks>
     public static bool IsCloneVoice(Voice? voice) => voice?.EngineVoice switch
     {
+        // Clones every speaker in the video, one per line - the most cloning any single pick does.
+        PerLineCloneVoice => true,
         ChatterboxVoice v => !string.IsNullOrEmpty(v.FilePath),
         CosyVoice3Voice v => !string.IsNullOrEmpty(v.FilePath),
         F5TtsVoice v => !string.IsNullOrEmpty(v.FilePath),

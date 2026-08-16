@@ -1,0 +1,106 @@
+using Nikse.SubtitleEdit.Logic.Download;
+using System;
+using System.Collections.Generic;
+
+namespace Nikse.SubtitleEdit.Features.Video.TextToSpeech.Engines;
+
+/// <summary>
+/// The text-to-speech engines SE offers, in the order they are shown.
+/// </summary>
+/// <remarks>
+/// One list, because the engines are now reached from more than one place: the TTS window's engine
+/// combo takes all of them, while the waveform's "Clone voice to" menu takes only the cloning ones.
+/// A second hand-written list would quietly keep offering an engine that was disabled here (see the
+/// commented-out entries below - those are decisions, not leftovers).
+/// </remarks>
+public static class TtsEngineCatalog
+{
+    /// <summary>
+    /// Every engine, in display order: Piper first where it exists, then the cloud/local engines
+    /// with fixed voices, then the cloning engines.
+    /// </summary>
+    public static List<ITtsEngine> CreateAll(ITtsDownloadService ttsDownloadService)
+    {
+        var engines = new List<ITtsEngine>();
+
+        if (!OperatingSystem.IsMacOS())
+        {
+            engines.Add(new Piper(ttsDownloadService));
+        }
+
+        engines.Add(new EdgeTts());
+        engines.Add(new AllTalk(ttsDownloadService));
+        engines.Add(new ElevenLabs(ttsDownloadService));
+        engines.Add(new AzureSpeech(ttsDownloadService));
+        engines.Add(new MistralSpeech(ttsDownloadService));
+        engines.Add(new Murf(ttsDownloadService));
+        engines.Add(new GoogleSpeech(ttsDownloadService));
+        engines.Add(new KokoroTtsCpp());
+
+        engines.AddRange(CreateVoiceCloningEngines());
+
+        return engines;
+    }
+
+    /// <summary>
+    /// The engines that can clone a speaker from a reference recording, i.e. the ones whose
+    /// <see cref="ITtsEngine.SupportsVoiceCloning"/> is true - in display order, and never
+    /// including an engine that <see cref="CreateAll"/> hides.
+    /// </summary>
+    public static List<ITtsEngine> CreateVoiceCloningEngines()
+    {
+        return
+        [
+            new OmniVoiceTtsCpp(),
+
+            // CrispASR-based engines grouped at the bottom: both share the same heavy CrispASR
+            // runtime download (~hundreds of MB) and are typically picked together, so we group
+            // them last so the lighter cloud/local engines surface first in the list.
+            // Qwen3TtsCpp hidden: talker produces scrambled noise on 1.7B —
+            // use Qwen3TtsCrispAsr until upstream qwen3-tts.cpp is fixed.
+            new Qwen3TtsCrispAsr(),
+
+            // VibeVoiceCrispAsr hidden: output quality is unusable in practice even after
+            // bumping the post-synth speed knob (#11223). The engine class + download service +
+            // settings dialog are kept so this becomes a one-line re-enable when upstream
+            // CrispASR's VibeVoice backend ships a higher-quality build.
+            // new VibeVoiceCrispAsr(),
+
+            new IndexTtsCrispAsr(),
+
+            // CosyVoice3 (CrispASR) sits immediately after IndexTtsCrispAsr to keep the CrispASR
+            // engines grouped visually in the engine combo.
+            new CosyVoice3CrispAsr(),
+
+            // IndexTTS 2.5 on the audio.cpp runtime (not CrispASR): 5 languages, emotion
+            // control and speaking-rate control, with a per-request reference voice so the
+            // server is not restarted when the voice changes.
+            new IndexTts25AudioCpp(),
+
+            // F5-TTS (CrispASR) hidden: CrispASR 0.6.12 has no GPU backend for f5-tts, so
+            // synthesis runs the fixed 32-step Euler ODE through a 22-layer DiT + Vocos on
+            // CPU only. That's 3-8 minutes per short utterance on Mac CPU — unusable for the
+            // typical TTS-from-subtitles workflow. Engine + download service + settings dialog
+            // are kept so this is a one-line re-enable when upstream CrispASR adds Metal/CUDA
+            // support or exposes an --ode-steps flag.
+            //new F5TtsCrispAsr(),
+
+            // VoxCPM2 (CrispASR) — unlike f5-tts, the voxcpm2-tts backend has Metal/CUDA in
+            // CrispASR v0.7.0, so synthesis is fast enough for the TTS-from-subtitles workflow.
+            new VoxCPM2CrispAsr(),
+
+            // MOSS-TTS (CrispASR) — Qwen3-8B backbone + 1.6B transformer codec at 24 kHz with
+            // zero-shot voice cloning, via the moss-tts backend (#12617).
+            new MossTtsCrispAsr(),
+
+            new ZonosTtsCrispAsr(),
+
+            // OmniVoice (CrispASR) — the same model family as the standalone OmniVoice TTS
+            // above, but on the shared CrispASR runtime and as a persistent server, so the
+            // model loads once instead of once per line.
+            new OmniVoiceCrispAsr(),
+
+            new ChatterboxTtsCpp(),
+        ];
+    }
+}

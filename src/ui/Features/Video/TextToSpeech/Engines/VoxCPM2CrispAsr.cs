@@ -54,6 +54,8 @@ public class VoxCPM2CrispAsr : ITtsEngine
     public bool HasRegion => false;
     public bool HasModel => true;
     public bool HasKeyFile => false;
+    public bool SupportsVoiceCloning => true;
+    public bool SupportsPerLineVoiceCloning => false;
 
     // Two quants — Q4_K is the lightweight default (~1.7 GB), F16 the reference (~5 GB). The
     // label total includes the tiny shared voxcpm2-ref.gguf companion.

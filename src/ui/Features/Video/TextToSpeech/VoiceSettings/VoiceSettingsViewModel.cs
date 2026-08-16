@@ -324,30 +324,11 @@ public partial class VoiceSettingsViewModel : ObservableObject
     /// go ahead. A no-op once accepted, and for Piper, whose import is a trained model rather than
     /// somebody's voice.
     /// </summary>
-    private async Task<bool> EnsureVoiceCloningConsentAsync()
-    {
-        if (!VoiceCloningConsent.RequiresConsent(_engine) || VoiceCloningConsent.IsAccepted)
-        {
-            return true;
-        }
-
-        var result = await _windowService.ShowDialogAsync<VoiceCloneConsentWindow, VoiceCloneConsentViewModel>(Window!, _ => { });
-
-        // Re-check the stored answer rather than trusting OkPressed alone, matching the IndexTTS
-        // 2.5 licence gate: closing the window by any other route must not count as consent.
-        if (!result.OkPressed || !VoiceCloningConsent.IsAccepted)
-        {
-            await MessageBox.Show(
-                Window!,
-                Se.Language.Video.TextToSpeech.VoiceCloneConsentTitle,
-                Environment.NewLine + Se.Language.Video.TextToSpeech.VoiceCloneConsentDeclined,
-                MessageBoxButtons.OK,
-                MessageBoxIcon.Information);
-            return false;
-        }
-
-        return true;
-    }
+    private Task<bool> EnsureVoiceCloningConsentAsync() =>
+        VoiceCloneConsentPrompt.EnsureAsync(
+            _engine,
+            Window!,
+            () => _windowService.ShowDialogAsync<VoiceCloneConsentWindow, VoiceCloneConsentViewModel>(Window!, _ => { }));
 
     internal void OnDragOver(object? sender, DragEventArgs e)
     {
@@ -495,19 +476,10 @@ public partial class VoiceSettingsViewModel : ObservableObject
     internal void Initialize(ITtsEngine engine)
     {
         _engine = engine;
-        IsImportVoiceVisible = engine.GetType() == typeof(Piper)
-                               || engine.GetType() == typeof(Qwen3TtsCpp)
-                               || engine.GetType() == typeof(Qwen3TtsCrispAsr)
-                               || engine.GetType() == typeof(VibeVoiceCrispAsr)
-                               || engine.GetType() == typeof(IndexTtsCrispAsr)
-                               || engine.GetType() == typeof(IndexTts25AudioCpp)
-                               || engine.GetType() == typeof(CosyVoice3CrispAsr)
-                               || engine.GetType() == typeof(F5TtsCrispAsr)
-                               || engine.GetType() == typeof(VoxCPM2CrispAsr)
-                               || engine.GetType() == typeof(OmniVoiceCrispAsr)
-                               || engine.GetType() == typeof(MossTtsCrispAsr)
-                               || engine.GetType() == typeof(ZonosTtsCrispAsr)
-                               || engine.GetType() == typeof(ChatterboxTtsCpp)
-                               || engine.GetType() == typeof(OmniVoiceTtsCpp);
+
+        // Every cloning engine imports a reference recording; Piper is the one engine that
+        // imports something else (a trained .onnx voice model), so it is named on its own
+        // rather than counted as cloning.
+        IsImportVoiceVisible = engine.SupportsVoiceCloning || engine is Piper;
     }
 }

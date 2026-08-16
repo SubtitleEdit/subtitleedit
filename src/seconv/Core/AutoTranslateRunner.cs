@@ -27,6 +27,33 @@ internal sealed class AutoTranslateRunner
     /// <summary>The resolved local llama.cpp model, exposed for tests.</summary>
     internal LlamaCppModel? LlamaCppModel => _llamaCppModel;
 
+    private string? _targetLanguageCode;
+
+    /// <summary>
+    /// The target language code as the engine knows it ("de", "zh-CN") - --translate-to
+    /// also accepts English names ("German"), and the output file name needs the code.
+    /// Null when the requested language is unknown; TranslateAsync reports that error.
+    /// </summary>
+    public string? TargetLanguageCode
+    {
+        get
+        {
+            if (_targetLanguageCode == null)
+            {
+                try
+                {
+                    _targetLanguageCode = ResolveLanguage(_translator.GetSupportedTargetLanguages(), _options.TranslateTo!, "target").Code;
+                }
+                catch (InvalidOperationException)
+                {
+                    _targetLanguageCode = string.Empty;
+                }
+            }
+
+            return _targetLanguageCode.Length == 0 ? null : _targetLanguageCode;
+        }
+    }
+
     private AutoTranslateRunner(ConversionOptions options, IAutoTranslator translator, LlamaCppModel? llamaCppModel)
     {
         _options = options;
