@@ -122,7 +122,7 @@ internal class SubtitleConverter
 
                         foreach (var track in tracks)
                         {
-                            var outputFile = ResolveOutputFileName(inputFile, options, translateToSuffix ?? track.LanguageCode, track.TrackNumber, _usedOutputFileNames);
+                            var outputFile = ResolveOutputFileName(inputFile, options, AppendForcedToken(translateToSuffix ?? track.LanguageCode, track.IsForced), track.TrackNumber, _usedOutputFileNames);
                             var trackLabel = track.TrackNumber.HasValue ? $"#{track.TrackNumber.Value} " : string.Empty;
                             var langLabel = string.IsNullOrEmpty(track.LanguageCode) ? string.Empty : $"[{track.LanguageCode}] ";
                             if (!options.Quiet)
@@ -452,7 +452,7 @@ internal class SubtitleConverter
         {
             var isVobSub = track.CodecId.Equals("S_VOBSUB", StringComparison.OrdinalIgnoreCase);
             var outputFile = ResolveOutputFileName(
-                inputFile, options, ContainerSubtitleLoader.SanitizeLang(track.Language), track.TrackNumber, _usedOutputFileNames);
+                inputFile, options, AppendForcedToken(ContainerSubtitleLoader.SanitizeLang(track.Language), track.IsForced), track.TrackNumber, _usedOutputFileNames);
 
             if (!options.Quiet)
             {
@@ -901,6 +901,21 @@ internal class SubtitleConverter
             options.PacCodePage,
             options.EbuHeaderFile,
             options);
+    }
+
+    /// <summary>
+    /// Appends the player convention's "forced" name token (<c>movie.eng.forced.srt</c>)
+    /// for forced tracks - MKV forced-display flag, or MP4 tx3g forced displayFlags -
+    /// so a forced track no longer collides with its same-language full track.
+    /// </summary>
+    internal static string? AppendForcedToken(string? languageSuffix, bool isForced)
+    {
+        if (!isForced)
+        {
+            return languageSuffix;
+        }
+
+        return string.IsNullOrEmpty(languageSuffix) ? "forced" : $"{languageSuffix}.forced";
     }
 
     /// <summary>
