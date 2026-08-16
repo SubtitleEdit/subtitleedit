@@ -453,6 +453,13 @@ namespace Nikse.SubtitleEdit.Core.Common
                     {
                         return true;
                     }
+
+                    // 204-byte packets: the same 188 bytes plus Reed-Solomon parity, as written
+                    // by DVB capture cards and professional equipment
+                    if (buffer[i] == Packet.SynchronizationByte && buffer[i + 204] == Packet.SynchronizationByte && buffer[i + 204 * 2] == Packet.SynchronizationByte)
+                    {
+                        return true;
+                    }
                 }
 
                 return buffer[0] == 0x54 && buffer[1] == 0x46 && buffer[2] == 0x72 && buffer[3760] == Packet.SynchronizationByte; // Topfield REC TS file
