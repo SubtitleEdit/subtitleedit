@@ -19,6 +19,7 @@ public static class ProcessExtensions
     public static async Task StartAndWaitAsync(this Process process, CancellationToken cancellationToken)
     {
         process.StartProcess();
+        process.DrainRedirectedOutput();
         try
         {
             await process.WaitForExitAsync(cancellationToken);
@@ -43,6 +44,7 @@ public static class ProcessExtensions
     public static async Task StartAndWaitAsync(this Process process, CancellationToken cancellationToken, TimeSpan timeout)
     {
         process.StartProcess();
+        process.DrainRedirectedOutput();
 
         using var timeoutCts = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
         timeoutCts.CancelAfter(timeout);
@@ -60,6 +62,38 @@ public static class ProcessExtensions
 
             throw new TimeoutException(
                 $"\"{process.StartInfo.FileName} {process.StartInfo.Arguments}\" did not finish within {timeout.TotalSeconds:0} seconds and was killed.");
+        }
+    }
+
+    /// <summary>
+    /// Starts pumping whichever standard streams the caller redirected, so the child can keep
+    /// writing to them.
+    /// </summary>
+    /// <remarks>
+    /// A redirected stream nobody reads is a pipe that fills up, and the child then blocks forever
+    /// on its next write - <see cref="Process.WaitForExitAsync"/> waits just as long. Windows gives
+    /// an anonymous pipe a 4 KB buffer by default, and ffmpeg spends more than that on its banner
+    /// and stream dump alone, so voice cloning hung on Windows while the same code was fine on
+    /// macOS/Linux with their 64 KB pipes (#13768). Doing it here means a caller cannot forget it;
+    /// the callers that read a stream themselves never use these helpers.
+    /// </remarks>
+    private static void DrainRedirectedOutput(this Process process)
+    {
+        try
+        {
+            if (process.StartInfo.RedirectStandardOutput)
+            {
+                process.BeginOutputReadLine();
+            }
+
+            if (process.StartInfo.RedirectStandardError)
+            {
+                process.BeginErrorReadLine();
+            }
+        }
+        catch (InvalidOperationException)
+        {
+            // Already being read asynchronously - nothing to do, the pipe is being drained.
         }
     }
 
