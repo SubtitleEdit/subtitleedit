@@ -224,6 +224,10 @@ public partial class SettingsViewModel : ObservableObject
     [ObservableProperty] private bool _showToolbarHelp;
     [ObservableProperty] private bool _showToolbarEncoding;
     [ObservableProperty] private bool _showToolbarFrameRate;
+    [ObservableProperty] private bool _showToolbarStyleManager;
+    [ObservableProperty] private bool _showToolbarProperties;
+    [ObservableProperty] private bool _showToolbarAttachments;
+    [ObservableProperty] private bool _showToolbarAssaDraw;
 
     [ObservableProperty] private bool _showPluginsMenu;
 
@@ -864,6 +868,10 @@ public partial class SettingsViewModel : ObservableObject
         ShowToolbarHelp = appearance.ToolbarShowHelp;
         ShowToolbarEncoding = appearance.ToolbarShowEncoding;
         ShowToolbarFrameRate = appearance.ToolbarShowFrameRate;
+        ShowToolbarStyleManager = appearance.ToolbarShowStyleManager;
+        ShowToolbarProperties = appearance.ToolbarShowProperties;
+        ShowToolbarAttachments = appearance.ToolbarShowAttachments;
+        ShowToolbarAssaDraw = appearance.ToolbarShowAssaDraw;
         ShowPluginsMenu = appearance.ShowPluginsMenu;
         SubtitleGridFontSize = appearance.SubtitleGridFontSize;
         SubtitleGridTextSingleLine = appearance.SubtitleGridTextSingleLine;
@@ -1700,6 +1708,10 @@ public partial class SettingsViewModel : ObservableObject
         appearance.ToolbarShowHelp = ShowToolbarHelp;
         appearance.ToolbarShowEncoding = ShowToolbarEncoding;
         appearance.ToolbarShowFrameRate = ShowToolbarFrameRate;
+        appearance.ToolbarShowStyleManager = ShowToolbarStyleManager;
+        appearance.ToolbarShowProperties = ShowToolbarProperties;
+        appearance.ToolbarShowAttachments = ShowToolbarAttachments;
+        appearance.ToolbarShowAssaDraw = ShowToolbarAssaDraw;
         appearance.ShowPluginsMenu = ShowPluginsMenu;
         appearance.SubtitleGridFontSize = SubtitleGridFontSize;
         appearance.SubtitleGridTextSingleLine = SubtitleGridTextSingleLine;

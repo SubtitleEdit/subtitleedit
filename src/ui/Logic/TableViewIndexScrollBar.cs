@@ -67,6 +67,9 @@ public sealed class TableViewIndexScrollBar : Grid
     // Non-null only while the left button is held on the trough.
     private TroughHold? _troughHold;
 
+    // Row to put back at the viewport top after a pending row-height change (PreserveTopRow).
+    private double? _preservedRow;
+
     private sealed class TroughHold
     {
         public required DispatcherTimer Timer { get; init; }
@@ -271,6 +274,37 @@ public sealed class TableViewIndexScrollBar : Grid
         }
 
         _syncingBar = false;
+    }
+
+    /// <summary>
+    /// Keeps the row at the viewport top where it is across a change that re-measures every
+    /// row - the OCR grid's Ctrl+plus/minus image zoom. The ScrollViewer preserves its
+    /// *pixel* offset when the rows grow or shrink, so the user lands on a different row
+    /// (zooming out far enough even pins the list to the end); in index units the same view
+    /// is simply the same Value, so re-apply it once the new heights have been measured.
+    /// Call it before making the change. Repeated calls while one is pending keep the first
+    /// row, so holding the zoom key down does not drift.
+    /// </summary>
+    public void PreserveTopRow()
+    {
+        if (_preservedRow != null)
+        {
+            return;
+        }
+
+        _preservedRow = _bar.Value;
+
+        // Loaded priority: after the layout pass that applies the new row heights (and so
+        // after ScrollChanged has re-synced Maximum for the clamp below).
+        Dispatcher.UIThread.Post(() =>
+        {
+            var preserved = _preservedRow;
+            _preservedRow = null;
+            if (preserved is { } value && _scrollViewer != null && _tableView.ItemCount > 0)
+            {
+                ApplyBarValue(Math.Clamp(value, 0, _bar.Maximum));
+            }
+        }, DispatcherPriority.Loaded);
     }
 
     private void QueueApply(double value)

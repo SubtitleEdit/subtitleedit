@@ -499,7 +499,9 @@ public class FfmpegGenerator
             StartInfo =
             {
                 FileName = GetFfmpegLocation(),
-                Arguments = $"-i \"{videoFileName}\" -vf \"select=1\" -vsync vfr \"{outputFileName}\"",
+                // "-vsync vfr" was dropped: ffmpeg 9 removed -vsync and aborts before decoding
+                // anything, and "select=1" already passes every frame through unchanged.
+                Arguments = $"-i \"{videoFileName}\" -vf \"select=1\" \"{outputFileName}\"",
                 UseShellExecute = false,
                 CreateNoWindow = true
             }
@@ -1408,6 +1410,34 @@ public class FfmpegGenerator
         args += $" \"{outputFileName}\"";
 
         return args;
+    }
+
+    /// <summary>
+    /// Writes chapters into a copy of a video file. Every stream is copied, so nothing is
+    /// re-encoded - only the container's chapter metadata changes.
+    /// </summary>
+    /// <param name="metadataFileName">An ffmetadata file holding the chapters.</param>
+    public static string GetWriteChaptersParameters(string inputFileName, string metadataFileName, string outputFileName)
+    {
+        var args = new List<string>
+        {
+            "-y",
+            $"-i \"{inputFileName}\"",
+            $"-i \"{metadataFileName}\"",
+
+            // Take metadata from the ffmetadata input, which replaces any chapters already there.
+            "-map_metadata 1",
+
+            // Chapters come from the ffmetadata input rather than being carried over from the video.
+            "-map_chapters 1",
+
+            // Every stream of the video is kept, including subtitles and attachments.
+            "-map 0",
+            "-c copy",
+            $"\"{outputFileName}\"",
+        };
+
+        return string.Join(" ", args);
     }
 
     internal static string AlterEmbeddedTracksMatroska(List<EmbeddedTrack> embeddedTracks, List<EmbeddedTrack> originalTracks, string inputFileName, string outputFileName)

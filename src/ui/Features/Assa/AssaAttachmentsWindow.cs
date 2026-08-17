@@ -60,9 +60,11 @@ public class AssaAttachmentsWindow : Window
         var buttonAttach = UiUtil.MakeButton(Se.Language.General.AttachDotDotDot, vm.FileAttachCommand);
         var buttonImport = UiUtil.MakeButton(Se.Language.General.ImportDotDotDot, vm.FileImportCommand);
         var buttonExport = UiUtil.MakeButton(Se.Language.General.ExportDotDotDot, vm.FileExportCommand);
+        var buttonTrimFonts = UiUtil.MakeButton(Se.Language.Assa.TrimFontsDotDotDot, vm.TrimFontsToUsedCharactersCommand)
+            .WithIconLeft(IconNames.ContentCut);
         var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand);
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
-        var panelButtons = UiUtil.MakeButtonBar(buttonAttach, buttonImport, buttonExport, buttonOk, buttonCancel);
+        var panelButtons = UiUtil.MakeButtonBar(buttonAttach, buttonImport, buttonExport, buttonTrimFonts, buttonOk, buttonCancel);
 
         grid.Add(labelFontsAndImages, 0);
         grid.Add(previewLine, 0, 1);

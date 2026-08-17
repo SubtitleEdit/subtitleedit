@@ -260,6 +260,13 @@ public class InitWaveform
             };
             flyout.Items.Add(menuItemAddShotChange);
 
+            var menuItemToggleChapter = new MenuItem
+            {
+                Header = Se.Language.Video.Chapters.ToggleChapterAtVideoPosition,
+                Command = vm.ToggleChapterAtVideoPositionCommand,
+            };
+            flyout.Items.Add(menuItemToggleChapter);
+
             var menuItemSeekSilence = new MenuItem
             {
                 Header = Se.Language.Waveform.SeekSilenceDotDotDot,

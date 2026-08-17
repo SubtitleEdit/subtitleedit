@@ -53,6 +53,8 @@ Available toolbar buttons include:
 | **Help** | Show help / about |
 | *...and more* | Configurable in Settings |
 
+Some buttons only appear for certain formats — the style manager, properties, attachments and ASSA draw buttons show up when an ASSA, SSA or WebVTT file is loaded. They can be hidden in **Options → Settings → Toolbar** like any other button.
+
 Note: You can right-click on the **Subtitle format** combobox for a format search window.
 
 <!-- Screenshot: Toolbar -->

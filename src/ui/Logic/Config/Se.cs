@@ -19,7 +19,7 @@ public class Se
     internal const int CurrentMacOsFontMigrationVersion = 1;
     internal const int CurrentShortcutsMigrationVersion = 2;
 
-    public static string Version { get; set; } = "v5.2.0-beta15";
+    public static string Version { get; set; } = "v5.2.0-beta16";
 
     public SeGeneral General { get; set; } = new();
     public List<SeShortCut> Shortcuts { get; set; } = new();
@@ -174,6 +174,7 @@ public class Se
     public static string WaveformsFolder => Path.Combine(DataFolder, "Waveforms");
     public static string SpectrogramsFolder => Path.Combine(DataFolder, "Spectrograms");
     public static string ShotChangesFolder => Path.Combine(DataFolder, "ShotChanges");
+    public static string ChaptersFolder => Path.Combine(DataFolder, "Chapters");
     public static string PluginsFolder => Path.Combine(DataFolder, "Plugins");
 
     /// <summary>Root for persistent per-plugin data folders; not scanned for plugins (no manifest).</summary>
@@ -181,12 +182,56 @@ public class Se
 
     public static string OcrFolder => Path.Combine(DataFolder, "OCR");
     public static string TranslationFolder => Path.Combine(DataFolder, "Languages");
-    public static string PaddleOcrFolder => Path.Combine(OcrFolder, "PaddleOCR3-1");
+    // The folder name carries the PaddleOCR version the bundled standalone engine is built
+    // from (3-4 = PaddleOCR 3.4 = PaddleOCR-Standalone v1.4.0). Bump it whenever the engine
+    // or the support-files bundle moves to a new PaddleOCR release: extracting a new build
+    // over an old one would leave orphaned files from the previous Python/paddle runtime,
+    // and the old models bundle is missing recognition models the current language list
+    // offers (the 3.1 bundle has no arabic/cyrillic/devanagari PP-OCRv5 or el/ta/te/th/ka
+    // models at all). A new folder means engine and models always come from the same release.
+    public static string PaddleOcrFolder => Path.Combine(OcrFolder, "PaddleOCR3-4");
     public static string PaddleOcrModelsFolder => Path.Combine(PaddleOcrFolder, "models");
+
+    /// <summary>Install folders of superseded PaddleOCR versions, deleted after a new install succeeds.</summary>
+    public static IReadOnlyList<string> PaddleOcrLegacyFolders => new[] { Path.Combine(OcrFolder, "PaddleOCR3-1") };
     public static string GoogleLensOcrFolder => Path.Combine(OcrFolder, "Google-Lens");
     public static string CrispEmbedFolder => Path.Combine(OcrFolder, "CrispEmbed");
     public static string VlcFolder => Path.Combine(DataFolder, "VLC");
     public static string SevenZipFolder => Path.Combine(DataFolder, "7Zip");
+    private const string TesseractFolderName = "Tesseract";
+    private const string LegacyTesseractFolderName = "Tesseract550";
+
+    private static readonly Lazy<string> _tesseractDataFolder = new(ResolveTesseractDataFolder);
+
+    // Holds the Tesseract binaries (Windows only) and the downloaded models (all platforms).
+    // The name used to carry the Tesseract version, which orphaned every downloaded model on
+    // each bump - and on macOS/Linux, where the binary comes from brew/apt, models were the
+    // only thing in there. Rename it once, version-less, and move the old folder across.
+    private static string ResolveTesseractDataFolder() => ResolveTesseractDataFolder(DataFolder);
+
+    internal static string ResolveTesseractDataFolder(string dataFolder)
+    {
+        var folder = Path.Combine(dataFolder, TesseractFolderName);
+        var legacyFolder = Path.Combine(dataFolder, LegacyTesseractFolderName);
+        if (Directory.Exists(folder) || !Directory.Exists(legacyFolder))
+        {
+            return folder;
+        }
+
+        try
+        {
+            Directory.Move(legacyFolder, folder);
+        }
+        catch (Exception exception)
+        {
+            // Keep using the old folder rather than silently hiding the models that are in it.
+            SeLogger.Error($"Could not move \"{legacyFolder}\" to \"{folder}\": {exception.Message}");
+            return legacyFolder;
+        }
+
+        return folder;
+    }
+
     private static readonly Lazy<string> _tesseractFolder = new(ResolveTesseractFolder);
     public static string TesseractFolder => _tesseractFolder.Value;
 
@@ -194,7 +239,7 @@ public class Se
     {
         if (OperatingSystem.IsWindows())
         {
-            return Path.Combine(DataFolder, "Tesseract550");
+            return _tesseractDataFolder.Value;
         }
 
         var folders = new List<string>();
@@ -221,7 +266,7 @@ public class Se
             }
         }
 
-        return Path.Combine(DataFolder, "Tesseract550");
+        return _tesseractDataFolder.Value;
     }
 
     private static readonly Lazy<string> _tesseractModelFolder = new(ResolveTesseractModelFolder);
@@ -229,7 +274,7 @@ public class Se
 
     private static string ResolveTesseractModelFolder()
     {
-        var modelFolder = Path.Combine(DataFolder, "Tesseract550", "tessdata");
+        var modelFolder = Path.Combine(_tesseractDataFolder.Value, "tessdata");
         SeedBundledTesseractModels(modelFolder);
         return modelFolder;
     }
@@ -427,6 +472,46 @@ public class Se
     }
 
     /// <summary>
+    /// Drops "-vsync vfr" from a settings file written before ffmpeg 9. ffmpeg 9 removed the
+    /// long-deprecated -vsync option, so it aborts with "Unrecognized option 'vsync'" and shot
+    /// change detection silently finds nothing. The option was a no-op for this command line
+    /// (the output goes to "-f null -"), so removing it changes nothing on older ffmpeg builds.
+    /// A user who has edited the arguments in any other way keeps their own version.
+    /// </summary>
+    internal static void MigrateShotChangesFfmpegArguments(SeVideo video)
+    {
+        var arguments = video.ShowChangesFFmpegArguments;
+        if (string.IsNullOrEmpty(arguments))
+        {
+            return;
+        }
+
+        const string option = "-vsync ";
+        var index = arguments.IndexOf(option, StringComparison.Ordinal);
+        if (index < 0)
+        {
+            return;
+        }
+
+        while (index >= 0)
+        {
+            // -vsync takes a value ("vfr", "0", ...); drop that too, plus the space in front of
+            // the option so the remaining arguments stay separated by single spaces.
+            var end = arguments.IndexOf(' ', index + option.Length);
+            if (end < 0)
+            {
+                end = arguments.Length;
+            }
+
+            var start = index > 0 && arguments[index - 1] == ' ' ? index - 1 : index;
+            arguments = arguments.Remove(start, end - start);
+            index = arguments.IndexOf(option, StringComparison.Ordinal);
+        }
+
+        video.ShowChangesFFmpegArguments = arguments.Trim();
+    }
+
+    /// <summary>
     /// Loads the UI translation named in <see cref="Settings"/>.General.Language into the global
     /// <see cref="Language"/>. Must run before the main window is built: on macOS the native menu
     /// bar is constructed at startup and reads <see cref="Language"/> directly, so the translation
@@ -569,6 +654,8 @@ public class Se
         {
             Settings.Video = new();
         }
+
+        MigrateShotChangesFfmpegArguments(Settings.Video);
 
         if (Settings.Waveform == null)
         {

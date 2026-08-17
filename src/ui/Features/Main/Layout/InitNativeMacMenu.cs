@@ -347,6 +347,8 @@ public static class InitNativeMacMenu
         videoItems.Items.Add(Item(Clean(Se.Language.Video.GenerateBlankVideoDotDotDot), v => v.VideoGenerateBlankCommand));
         videoItems.Items.Add(Item(Clean(Se.Language.Video.EmbedSubtitlesDotDotDot), v => v.VideoEmbedCommand));
         videoItems.Items.Add(new NativeMenuItemSeparator());
+        videoItems.Items.Add(Item(Clean(Se.Language.Video.Chapters.ChaptersDotDotDot), v => v.ShowVideoChaptersCommand));
+        videoItems.Items.Add(new NativeMenuItemSeparator());
         videoItems.Items.Add(Item(Clean(l.GenerateImportShotChanges), v => v.ShowShotChangesSubtitlesCommand));
         videoItems.Items.Add(Conditional(Clean(l.ListShotChanges), v => v.ShowShotChangesListCommand,
             v => v.ShowShotChangesListMenuItem, nameof(MainViewModel.ShowShotChangesListMenuItem)));

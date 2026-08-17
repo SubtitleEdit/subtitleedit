@@ -24,6 +24,9 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Matroska
         private bool _subtitleRipLoaded;
         private List<MatroskaTrackInfo> _tracks;
         private List<MatroskaChapter> _chapters;
+        private List<List<MatroskaChapter>> _chapterEditions;
+        private int _defaultChapterEditionIndex = -1;
+        private bool _chaptersRead;
 
         private readonly Element _segmentElement;
         private long _timeCodeScale = 1000000;
@@ -465,15 +468,46 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Matroska
             }
         }
 
+        /// <summary>
+        /// Chapters of the default edition, or of the first one when no edition is flagged default.
+        /// A file can hold several editions (a theatrical cut and a director's cut, say); returning
+        /// all of them merged would interleave two different timelines into one nonsense list.
+        /// </summary>
         public List<MatroskaChapter> GetChapters()
         {
             ReadChapters();
 
-            return _chapters ?? new List<MatroskaChapter>();
+            if (_chapterEditions == null || _chapterEditions.Count == 0)
+            {
+                return new List<MatroskaChapter>();
+            }
+
+            var index = _defaultChapterEditionIndex >= 0 && _defaultChapterEditionIndex < _chapterEditions.Count
+                ? _defaultChapterEditionIndex
+                : 0;
+
+            return _chapterEditions[index];
+        }
+
+        /// <summary>
+        /// Every chapter edition in the file, in file order.
+        /// </summary>
+        public List<List<MatroskaChapter>> GetChapterEditions()
+        {
+            ReadChapters();
+
+            return _chapterEditions ?? new List<List<MatroskaChapter>>();
         }
 
         private void ReadChapters()
         {
+            if (_chaptersRead)
+            {
+                return;
+            }
+
+            _chaptersRead = true;
+
             // go to segment
             _stream.Seek(_segmentElement.DataPosition, SeekOrigin.Begin);
 
@@ -493,7 +527,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Matroska
 
         private void ReadChaptersElement(Element chaptersElement)
         {
-            _chapters = new List<MatroskaChapter>();
+            _chapterEditions = new List<List<MatroskaChapter>>();
 
             Element element;
             while (_stream.Position < chaptersElement.EndPosition && (element = ReadElement()) != null)
@@ -511,6 +545,9 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Matroska
 
         private void ReadEditionEntryElement(Element editionEntryElement)
         {
+            _chapters = new List<MatroskaChapter>();
+            var isDefault = false;
+
             Element element;
             while (_stream.Position < editionEntryElement.EndPosition && (element = ReadElement()) != null)
             {
@@ -518,11 +555,22 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Matroska
                 {
                     ReadChapterTimeStart(element);
                 }
+                else if (element.Id == ElementId.EditionFlagDefault)
+                {
+                    isDefault = ReadUIntAsLong(element.DataSize) != 0;
+                }
                 else
                 {
                     _stream.Seek(element.DataSize, SeekOrigin.Current);
                 }
             }
+
+            if (isDefault && _defaultChapterEditionIndex < 0)
+            {
+                _defaultChapterEditionIndex = _chapterEditions.Count;
+            }
+
+            _chapterEditions.Add(_chapters);
         }
 
         private void ReadChapterTimeStart(Element chpaterAtom)

@@ -255,6 +255,9 @@ public partial class BatchConvertViewModel : ObservableObject, IClosingCleanup
     [ObservableProperty] private bool _assaChangeStyleTrimUnusedStyles;
 
     // Merge short lines
+    // Embed fonts (ASSA)
+    [ObservableProperty] private bool _assaEmbedFontsTrim;
+
     [ObservableProperty] private int _mergeShortLinesMaxCharacters;
     [ObservableProperty] private int _mergeShortLinesMaxMillisecondsBetweenLines;
     [ObservableProperty] private bool _mergeShortLinesOnlyContinuationLines;
@@ -680,6 +683,9 @@ public partial class BatchConvertViewModel : ObservableObject, IClosingCleanup
         Se.Settings.Tools.BatchConvert.AssaChangeStyleToStyle = AssaChangeStyleToStyle ?? string.Empty;
         Se.Settings.Tools.BatchConvert.AssaChangeStyleTrimUnusedStyles = AssaChangeStyleTrimUnusedStyles;
 
+        // Embed fonts
+        Se.Settings.Tools.BatchConvert.AssaEmbedFontsTrim = AssaEmbedFontsTrim;
+
         // Merge short lines
         Se.Settings.Tools.BatchConvert.MergeShortLinesMaxCharacters = MergeShortLinesMaxCharacters;
         Se.Settings.Tools.BatchConvert.MergeShortLinesMaxMillisecondsBetweenLines = MergeShortLinesMaxMillisecondsBetweenLines;
@@ -935,6 +941,9 @@ public partial class BatchConvertViewModel : ObservableObject, IClosingCleanup
         AssaChangeStyleFromStyle = Se.Settings.Tools.BatchConvert.AssaChangeStyleFromStyle ?? string.Empty;
         AssaChangeStyleToStyle = Se.Settings.Tools.BatchConvert.AssaChangeStyleToStyle ?? string.Empty;
         AssaChangeStyleTrimUnusedStyles = Se.Settings.Tools.BatchConvert.AssaChangeStyleTrimUnusedStyles;
+
+        // Embed fonts
+        AssaEmbedFontsTrim = Se.Settings.Tools.BatchConvert.AssaEmbedFontsTrim;
 
         // Merge short lines
         MergeShortLinesMaxCharacters = Se.Settings.Tools.BatchConvert.MergeShortLinesMaxCharacters;
@@ -1230,7 +1239,8 @@ public partial class BatchConvertViewModel : ObservableObject, IClosingCleanup
                 MessageBoxButtons.Cancel,
                 MessageBoxIcon.Question,
                 "CPU",
-                "GPU CUDA");
+                "GPU CUDA 11",
+                "GPU CUDA 12");
 
             if (answer == MessageBoxResult.Cancel)
             {
@@ -1240,9 +1250,17 @@ public partial class BatchConvertViewModel : ObservableObject, IClosingCleanup
             var result = await _windowService.ShowDialogAsync<DownloadPaddleOcrWindow, DownloadPaddleOcrViewModel>(Window,
                 vm =>
                 {
-                    vm.Initialize(answer == MessageBoxResult.Custom1
-                        ? PaddleOcrDownloadType.EngineCpuLinux
-                        : PaddleOcrDownloadType.EngineGpuLinux);
+                    var engine = PaddleOcrDownloadType.EngineCpuLinux;
+                    if (answer == MessageBoxResult.Custom2)
+                    {
+                        engine = PaddleOcrDownloadType.EngineGpu11Linux;
+                    }
+                    else if (answer == MessageBoxResult.Custom3)
+                    {
+                        engine = PaddleOcrDownloadType.EngineGpu12Linux;
+                    }
+
+                    vm.Initialize(engine);
                 });
 
             if (!result.OkPressed)
@@ -2137,7 +2155,7 @@ public partial class BatchConvertViewModel : ObservableObject, IClosingCleanup
                 }
             }
         }
-        else if (ext == ".mp4" || ext == ".m4v" || ext == ".m4s")
+        else if (ext == ".mp4" || ext == ".m4v" || ext == ".m4s" || ext == ".mov" || ext == ".3gp" || ext == ".m4a" || ext == ".m4b" || ext == ".cmaf")
         {
             var mp4Files = new List<string>();
             var mp4Parser = new MP4Parser(fileName);
@@ -2659,6 +2677,7 @@ public partial class BatchConvertViewModel : ObservableObject, IClosingCleanup
             AssaEmbedFonts = new BatchConvertConfig.AssaEmbedFontsSettings
             {
                 IsActive = activeFunctions.Contains(BatchConvertFunctionType.AssaEmbedFonts),
+                TrimFonts = AssaEmbedFontsTrim,
             },
 
             MergeShortLines = new BatchConvertConfig.MergeShortLinesSettings

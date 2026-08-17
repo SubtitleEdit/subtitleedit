@@ -20,7 +20,8 @@ internal static class ContainerSubtitleLoader
         Subtitle Subtitle,
         SubtitleFormat Format,
         string LanguageCode,
-        int? TrackNumber);
+        int? TrackNumber,
+        bool IsForced = false);
 
     /// <summary>
     /// Returns the list of tracks if <paramref name="filePath"/> is a recognised container,
@@ -275,7 +276,7 @@ internal static class ContainerSubtitleLoader
                     var pgsSub = ImageOcrLoader.LoadMatroskaPgs(matroska, track, options);
                     if (pgsSub.Paragraphs.Count > 0)
                     {
-                        tracks.Add(new LoadedTrack(pgsSub, new SubRip(), SanitizeLang(track.Language), track.TrackNumber));
+                        tracks.Add(new LoadedTrack(pgsSub, new SubRip(), SanitizeLang(track.Language), track.TrackNumber, track.IsForced));
                     }
                 }
                 catch (Exception ex)
@@ -292,7 +293,7 @@ internal static class ContainerSubtitleLoader
                     var vobSub = ImageOcrLoader.LoadMatroskaVobSub(matroska, track, options);
                     if (vobSub.Paragraphs.Count > 0)
                     {
-                        tracks.Add(new LoadedTrack(vobSub, new SubRip(), SanitizeLang(track.Language), track.TrackNumber));
+                        tracks.Add(new LoadedTrack(vobSub, new SubRip(), SanitizeLang(track.Language), track.TrackNumber, track.IsForced));
                     }
                 }
                 catch (Exception ex)
@@ -309,7 +310,7 @@ internal static class ContainerSubtitleLoader
                     var dvbSub = ImageOcrLoader.LoadMatroskaDvbSub(matroska, track, options);
                     if (dvbSub.Paragraphs.Count > 0)
                     {
-                        tracks.Add(new LoadedTrack(dvbSub, new SubRip(), SanitizeLang(track.Language), track.TrackNumber));
+                        tracks.Add(new LoadedTrack(dvbSub, new SubRip(), SanitizeLang(track.Language), track.TrackNumber, track.IsForced));
                     }
                 }
                 catch (Exception ex)
@@ -334,7 +335,7 @@ internal static class ContainerSubtitleLoader
             // gets auto-detected instead of an empty language.
             var lang = SanitizeLang(track.Language);
             lang = IsUndeclaredLanguage(lang) ? LanguageAutoDetect.AutoDetectGoogleLanguageOrNull(subtitle) ?? lang : lang;
-            tracks.Add(new LoadedTrack(subtitle, format, lang, track.TrackNumber));
+            tracks.Add(new LoadedTrack(subtitle, format, lang, track.TrackNumber, track.IsForced));
         }
 
         return tracks;
@@ -368,6 +369,14 @@ internal static class ContainerSubtitleLoader
             {
                 continue;
             }
+
+            // tx3g displayFlags is how QuickTime/AVFoundation marks a forced track
+            var isForced = track.Mdia.Minf?.Stbl?.Stsd?.IsForcedSubtitle == true;
+            if (options.ForcedOnly && !isForced)
+            {
+                continue;
+            }
+
             if (track.Mdia.IsVobSubSubtitle)
             {
                 try
@@ -375,7 +384,7 @@ internal static class ContainerSubtitleLoader
                     var vobSub = ImageOcrLoader.LoadMp4VobSub(track, options);
                     if (vobSub.Paragraphs.Count > 0)
                     {
-                        tracks.Add(new LoadedTrack(vobSub, new SubRip(), GetMp4TrackLanguage(track, vobSub), trackId));
+                        tracks.Add(new LoadedTrack(vobSub, new SubRip(), GetMp4TrackLanguage(track, vobSub), trackId, isForced));
                     }
                 }
                 catch (Exception ex)
@@ -393,7 +402,7 @@ internal static class ContainerSubtitleLoader
             var subtitle = new Subtitle();
             subtitle.Paragraphs.AddRange(paragraphs);
             subtitle.Renumber();
-            tracks.Add(new LoadedTrack(subtitle, new SubRip(), GetMp4TrackLanguage(track, subtitle), trackId));
+            tracks.Add(new LoadedTrack(subtitle, new SubRip(), GetMp4TrackLanguage(track, subtitle), trackId, isForced));
         }
 
         if (tracks.Count == 0)

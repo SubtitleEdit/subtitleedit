@@ -294,6 +294,10 @@ public static class ShortcutsMain
         { nameof(MainViewModel.ToggleShotChangesAtVideoPositionCommand),  Se.Language.General.ToggleShotChangesAtVideoPosition },
         { nameof(MainViewModel.GoToPreviousShotChangeCommand),  Se.Language.General.GoToPreviousShotChange },
         { nameof(MainViewModel.GoToNextShotChangeCommand),  Se.Language.General.GoToNextShotChange },
+        { nameof(MainViewModel.ShowVideoChaptersCommand),  Se.Language.Video.Chapters.Title },
+        { nameof(MainViewModel.ToggleChapterAtVideoPositionCommand),  Se.Language.Video.Chapters.ToggleChapterAtVideoPosition },
+        { nameof(MainViewModel.GoToPreviousChapterCommand),  Se.Language.Video.Chapters.GoToPreviousChapter },
+        { nameof(MainViewModel.GoToNextChapterCommand),  Se.Language.Video.Chapters.GoToNextChapter },
         { nameof(MainViewModel.ExtendSelectedLinesToNextShotChangeOrNextSubtitleCommand),  Se.Language.General.ExtendSelectedLinesToNextShotChangeOrNextSubtitle },
         { nameof(MainViewModel.ExtendSelectedLinesToPreviousShotChangeCommand),  Se.Language.General.ExtendSelectedLinesToPreviousShotChange },
         { nameof(MainViewModel.SnapSelectedLinesToNearestShotChangeCommand),  Se.Language.General.SnapSelectedLinesToNearestShotChange },
@@ -712,6 +716,10 @@ public static class ShortcutsMain
         AddShortcut(shortcuts, vm.SeekSilenceForwardCommand, nameof(vm.SeekSilenceForwardCommand), ShortcutCategory.Waveform);
         AddShortcut(shortcuts, vm.GoToPreviousShotChangeCommand, nameof(vm.GoToPreviousShotChangeCommand), ShortcutCategory.General, ShortcutGroup.Video);
         AddShortcut(shortcuts, vm.GoToNextShotChangeCommand, nameof(vm.GoToNextShotChangeCommand), ShortcutCategory.General, ShortcutGroup.Video);
+        AddShortcut(shortcuts, vm.ShowVideoChaptersCommand, nameof(vm.ShowVideoChaptersCommand), ShortcutCategory.General, ShortcutGroup.Video);
+        AddShortcut(shortcuts, vm.ToggleChapterAtVideoPositionCommand, nameof(vm.ToggleChapterAtVideoPositionCommand), ShortcutCategory.General, ShortcutGroup.Video);
+        AddShortcut(shortcuts, vm.GoToPreviousChapterCommand, nameof(vm.GoToPreviousChapterCommand), ShortcutCategory.General, ShortcutGroup.Video);
+        AddShortcut(shortcuts, vm.GoToNextChapterCommand, nameof(vm.GoToNextChapterCommand), ShortcutCategory.General, ShortcutGroup.Video);
         AddShortcut(shortcuts, vm.ExtendSelectedLinesToNextShotChangeOrNextSubtitleCommand, nameof(vm.ExtendSelectedLinesToNextShotChangeOrNextSubtitleCommand), ShortcutCategory.General);
         AddShortcut(shortcuts, vm.ExtendSelectedLinesToPreviousShotChangeCommand, nameof(vm.ExtendSelectedLinesToPreviousShotChangeCommand), ShortcutCategory.General);
         AddShortcut(shortcuts, vm.SnapSelectedLinesToNearestShotChangeCommand, nameof(vm.SnapSelectedLinesToNearestShotChangeCommand), ShortcutCategory.General);

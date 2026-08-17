@@ -21,6 +21,7 @@ using Nikse.SubtitleEdit.Core.BluRaySup;
 using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.Enums;
 using Nikse.SubtitleEdit.Core.ContainerFormats;
+using Nikse.SubtitleEdit.Core.ContainerFormats.Chapters;
 using Nikse.SubtitleEdit.Core.ContainerFormats.Matroska;
 using Nikse.SubtitleEdit.Core.ContainerFormats.Mp4;
 using Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes;
@@ -150,6 +151,7 @@ using Nikse.SubtitleEdit.Features.Video.GoToVideoPosition;
 using Nikse.SubtitleEdit.Features.Video.OpenFromUrl;
 using Nikse.SubtitleEdit.Features.Video.OpenFromUrl.PickOnlineSubtitle;
 using Nikse.SubtitleEdit.Features.Video.ReEncodeVideo;
+using Nikse.SubtitleEdit.Features.Video.Chapters;
 using Nikse.SubtitleEdit.Features.Video.ShotChanges;
 using Nikse.SubtitleEdit.Features.Video.SpeechToText;
 using Nikse.SubtitleEdit.Features.Video.SpeechToText.OpenAiCompatible;
@@ -536,6 +538,12 @@ public partial class MainViewModel :
     private Subtitle _subtitleOriginal;
     private SubtitleFormat? _lastOpenSaveFormat;
     private string? _videoFileName;
+
+    /// <summary>
+    /// Chapters of the current video, in timeline order. Mirrored onto the waveform for drawing and
+    /// persisted next to Subtitle Edit's data, not inside the video.
+    /// </summary>
+    private List<Chapter> _chapters = new();
     private AudioTrackInfo? _audioTrack;
     private string? _audioTrackLangauge;
     private CancellationTokenSource? _statusFadeCts;
@@ -8952,6 +8960,169 @@ public partial class MainViewModel :
             {
                 ExtractShotChanges(_videoFileName, _audioTrack?.FfIndex ?? -1);
             }
+
+            LoadChapters();
+        }
+    }
+
+    /// <summary>
+    /// Chapters edited in Subtitle Edit win over the ones inside the video: the sidecar only exists
+    /// because the user changed something, and re-reading the container would undo that work.
+    /// </summary>
+    private void LoadChapters()
+    {
+        if (AudioVisualizer == null)
+        {
+            return;
+        }
+
+        var videoFileName = _videoFileName ?? string.Empty;
+        var chapters = ChaptersHelper.FromDisk(videoFileName);
+        if (chapters.Count == 0)
+        {
+            chapters = VideoChapterReader.GetChapters(videoFileName);
+        }
+
+        SetChapters(chapters, save: false);
+    }
+
+    private void SetChapters(List<Chapter> chapters, bool save)
+    {
+        if (AudioVisualizer == null)
+        {
+            return;
+        }
+
+        _chapters = chapters.OrderBy(p => p.StartMilliseconds).ToList();
+        AudioVisualizer.Chapters = _chapters
+            .Select(p => new WaveformChapter(p.StartMilliseconds / TimeCode.BaseUnit, p.Title))
+            .ToList();
+
+        if (save && !string.IsNullOrEmpty(_videoFileName))
+        {
+            if (_chapters.Count == 0)
+            {
+                ChaptersHelper.DeleteChapters(_videoFileName);
+            }
+            else
+            {
+                ChaptersHelper.SaveChapters(_videoFileName, _chapters);
+            }
+        }
+
+        _updateAudioVisualizer = true;
+    }
+
+    [RelayCommand]
+    private async Task ShowVideoChapters()
+    {
+        if (Window == null)
+        {
+            return;
+        }
+
+        var result = await ShowDialogAsync<ChaptersWindow, ChaptersViewModel>(vm =>
+        {
+            vm.Initialize(
+                _videoFileName ?? string.Empty,
+                _chapters,
+                () => GetVideoPlayerControl()?.Position ?? 0,
+                seconds =>
+                {
+                    var vp = GetVideoPlayerControl();
+                    if (vp != null)
+                    {
+                        vp.Position = seconds;
+                        AudioVisualizerCenterOnPositionIfNeeded(seconds);
+                        _updateAudioVisualizer = true;
+                    }
+                },
+                // Rounded to a standard rate: the raw measured value can be something like 23.81,
+                // which reads as a mistake sitting in a list of 23.976/24/25.
+                _mediaInfo != null && _mediaInfo.FramesRate > 1
+                    ? FrameRateHelper.RoundToNearestCinematicFrameRate((double)_mediaInfo.FramesRate)
+                    : 0);
+        });
+
+        if (result.OkPressed)
+        {
+            SetChapters(result.GetChapters(), save: true);
+        }
+    }
+
+    [RelayCommand]
+    private void ToggleChapterAtVideoPosition()
+    {
+        var vp = GetVideoPlayerControl();
+        if (string.IsNullOrEmpty(_videoFileName) || vp == null || AudioVisualizer == null)
+        {
+            return;
+        }
+
+        var seconds = AudioVisualizer.CurrentVideoPositionSeconds;
+        var index = AudioVisualizer.GetChapterIndex(seconds);
+
+        var list = _chapters.ToList();
+        if (index >= 0)
+        {
+            list.RemoveAt(index);
+        }
+        else
+        {
+            list.Add(new Chapter(
+                seconds * TimeCode.BaseUnit,
+                string.Format(Se.Language.Video.Chapters.NewChapterTitle, list.Count + 1)));
+        }
+
+        SetChapters(list, save: true);
+    }
+
+    [RelayCommand]
+    private void GoToPreviousChapter()
+    {
+        var vp = GetVideoPlayerControl();
+        if (vp == null || _chapters.Count == 0)
+        {
+            return;
+        }
+
+        var chapter = _chapters.LastOrDefault(p => p.StartMilliseconds / TimeCode.BaseUnit < vp.Position - 0.001);
+        if (chapter == null)
+        {
+            return;
+        }
+
+        GoToChapter(vp, chapter);
+    }
+
+    [RelayCommand]
+    private void GoToNextChapter()
+    {
+        var vp = GetVideoPlayerControl();
+        if (vp == null || _chapters.Count == 0)
+        {
+            return;
+        }
+
+        var chapter = _chapters.FirstOrDefault(p => p.StartMilliseconds / TimeCode.BaseUnit > vp.Position + 0.001);
+        if (chapter == null)
+        {
+            return;
+        }
+
+        GoToChapter(vp, chapter);
+    }
+
+    private void GoToChapter(VideoPlayerControl vp, Chapter chapter)
+    {
+        var seconds = chapter.StartMilliseconds / TimeCode.BaseUnit;
+        vp.Position = seconds;
+        AudioVisualizerCenterOnPositionIfNeeded(seconds);
+        _updateAudioVisualizer = true;
+
+        if (!string.IsNullOrEmpty(chapter.Title))
+        {
+            ShowStatus(chapter.Title);
         }
     }
 
@@ -17121,17 +17292,38 @@ public partial class MainViewModel :
             return;
         }
 
+        var text = await ClipboardHelper.GetTextAsync(Window);
+        if (string.IsNullOrEmpty(text))
+        {
+            _shortcutManager.ClearKeys();
+            return;
+        }
+
+        // More than one line selected: paste over the selection instead of adding lines below it -
+        // the translation workflow SE4 had (translate the lines somewhere else, select them here,
+        // Ctrl+V) and which SE5 only offered through "Column > Paste from clipboard" (#13682).
+        var selectedItems = SubtitleGridSelectedItems;
+        if (selectedItems.Count > 1 && PasteOverSelectedLines(selectedItems, text))
+        {
+            _updateAudioVisualizer = true;
+            _shortcutManager.ClearKeys();
+            return;
+        }
+
+        // Insert below the topmost selected row, not below the current one: the current row is the
+        // moving end of a shift-selection, so anchoring there made the paste land below the bottom
+        // row when the rows were picked downwards - see FirstSelectedSubtitleIndex (#13682).
         // No selection: append at the end instead of silently doing nothing - SE4's grid paste
         // covered this state (insert at end), and the Paste helper already supports
         // index >= Count as append (#13200). Empty grid: insert at 0 (the helper handles
         // index 0 with an empty list; a negative index would throw on Insert).
-        var idx = SelectedSubtitleIndex ?? Subtitles.Count;
+        var idx = FirstSelectedSubtitleIndex;
         if (idx < 0 || idx > Subtitles.Count)
         {
             idx = Subtitles.Count;
         }
 
-        var pastedLines = await SubtitleGridCopyPasteHelper.Paste(Window, Subtitles, idx, SelectedSubtitleFormat);
+        var pastedLines = SubtitleGridCopyPasteHelper.PasteText(Subtitles, idx, SelectedSubtitleFormat, text);
         Renumber();
 
         // Select the pasted lines and scroll them into view, like SE4 - otherwise the selection
@@ -17147,6 +17339,81 @@ public partial class MainViewModel :
 
         _updateAudioVisualizer = true;
         _shortcutManager.ClearKeys();
+    }
+
+    /// <summary>
+    /// Pastes <paramref name="text"/> over the selected rows and returns true when it did, so
+    /// <see cref="SubtitleGridPaste"/> can fall back to inserting lines. Two clipboards to tell
+    /// apart, both from SE4's Ctrl+V handler:
+    /// <list type="bullet">
+    /// <item>a subtitle format (SRT, ASSA, ...) replaces the selected lines outright - SE4's
+    /// "multiple lines selected - first delete, then insert" - so the pasted time codes are kept
+    /// and the pasted line count does not have to match the selection.</item>
+    /// <item>plain text writes one clipboard line into each selected row's text and leaves the
+    /// time codes alone, which is what "Column &gt; Paste from clipboard &gt; text only + replace
+    /// existing cells" does. A subtitle whose text is two display lines cannot be expressed this
+    /// way; that is what the subtitle-format clipboard above is for.</item>
+    /// </list>
+    /// Everything here is a normal edit, so the automatic change detection makes it undoable.
+    /// </summary>
+    private bool PasteOverSelectedLines(List<SubtitleLineViewModel> selectedItems, string text)
+    {
+        var firstIndex = Subtitles.IndexOf(selectedItems[0]);
+        if (firstIndex < 0)
+        {
+            return false;
+        }
+
+        var clipboardSubtitle = SubtitleGridCopyPasteHelper.ParseClipboardSubtitle(text, SelectedSubtitleFormat);
+        if (clipboardSubtitle is { Paragraphs.Count: > 0 })
+        {
+            foreach (var item in selectedItems)
+            {
+                Subtitles.Remove(item);
+            }
+
+            // Nothing above the topmost selected row was removed, so it is still the row to insert
+            // at - even when the selection had holes in it (ctrl-click).
+            var insertedLines = new List<SubtitleLineViewModel>(clipboardSubtitle.Paragraphs.Count);
+            var index = firstIndex;
+            foreach (var p in clipboardSubtitle.Paragraphs)
+            {
+                var line = new SubtitleLineViewModel(p, SelectedSubtitleFormat);
+                Subtitles.Insert(index, line);
+                insertedLines.Add(line);
+                index++;
+            }
+
+            Renumber();
+            SelectAndScrollToRange(firstIndex, firstIndex + insertedLines.Count - 1);
+            ShowStatus(string.Format(Se.Language.Main.PastedXLinesOverSelectedLines, insertedLines.Count));
+            return true;
+        }
+
+        var lines = text.SplitToLines();
+        // trailing blank lines are an artifact of the copy, not text to paste (same rule as the
+        // column paste); blank lines inside the block are kept, so the lines stay aligned with the
+        // rows they were translated from
+        var lastLineWithText = lines.FindLastIndex(p => !string.IsNullOrWhiteSpace(p));
+        if (lastLineWithText < 0)
+        {
+            return false;
+        }
+
+        var textLineCount = lastLineWithText + 1;
+        var count = Math.Min(textLineCount, selectedItems.Count);
+        for (var i = 0; i < count; i++)
+        {
+            selectedItems[i].Text = lines[i].Trim();
+        }
+
+        // Clipboard lines past the end of the selection are dropped rather than pushed into the
+        // lines below it, which the user did not select - say so instead of silently doing less.
+        ShowStatus(textLineCount > selectedItems.Count
+            ? string.Format(Se.Language.Main.PastedXOfYLinesOverSelectedLines, count, textLineCount)
+            : string.Format(Se.Language.Main.PastedXLinesOverSelectedLines, count));
+
+        return true;
     }
 
     [RelayCommand]
@@ -18222,8 +18489,11 @@ public partial class MainViewModel :
                 return;
             }
 
+            // A subtitle-only movie (e.g. AVFoundation writes tx3g-only .mov/.mp4 files)
+            // can easily be under 2 KB, so the old 2000-byte floor misrouted those to the
+            // text loader; a failed MP4 parse just falls through to the handlers below.
             if ((ext == ".mp4" || ext == ".m4v" || ext == ".3gp" || ext == ".mov" || ext == ".cmaf" || ext == ".m4a" || ext == ".m4b") &&
-                fileSize > 2000 || ext == ".m4s")
+                fileSize > 100 || ext == ".m4s")
             {
                 if (!new IsmtDfxp().IsMine(null, fileName))
                 {
@@ -18426,6 +18696,20 @@ public partial class MainViewModel :
                         var base64ImageSubtitle = new Subtitle();
                         base64ImageFormat.LoadSubtitle(base64ImageSubtitle, base64ImageLines, fileName);
                         ImportAndInlineBase64(base64ImageSubtitle, fileName, skipLoadVideo);
+                        return;
+                    }
+                }
+
+                // Image-list xml projects reference png files next to the xml - BDN xml and
+                // Final Cut Pro image xmeml (SE's own "export image based" FCP output). Both
+                // only live in GetTextOtherFormats(), so Subtitle.Parse never finds them;
+                // route through the BDN OCR import like batch convert already does for BDN.
+                if (ext == ".xml")
+                {
+                    var imageListSubtitle = TryLoadImageListXml(fileName);
+                    if (imageListSubtitle != null)
+                    {
+                        ImportAndOcrDost(fileName, imageListSubtitle, skipLoadVideo);
                         return;
                     }
                 }
@@ -18964,6 +19248,51 @@ public partial class MainViewModel :
         for (var i = 0; i < Subtitles.Count && i < sub.Paragraphs.Count; i++)
         {
             Subtitles[i].Bookmark = sub.Paragraphs[i].Bookmark;
+        }
+    }
+
+    /// <summary>
+    /// Loads an image-list xml project (BDN xml, or a Final Cut Pro image xmeml where each
+    /// clipitem references a png) whose cues carry image file names for the OCR importer.
+    /// Returns null when the file is neither.
+    /// </summary>
+    private static Subtitle? TryLoadImageListXml(string fileName)
+    {
+        try
+        {
+            var lines = FileUtil.ReadAllLinesShared(fileName, LanguageAutoDetect.GetEncodingFromFile(fileName));
+
+            var bdnXml = new BdnXml();
+            if (bdnXml.IsMine(lines, fileName))
+            {
+                var subtitle = new Subtitle();
+                bdnXml.LoadSubtitle(subtitle, lines, fileName);
+                if (subtitle.Paragraphs.Count > 0)
+                {
+                    subtitle.OriginalFormat = bdnXml;
+                    return subtitle;
+                }
+            }
+
+            // Cheap content gate first - FinalCutProImage has no fast IsMine of its own.
+            if (lines.Any(l => l.Contains("<xmeml", StringComparison.Ordinal)) &&
+                lines.Any(l => l.Contains("<pathurl>", StringComparison.Ordinal)))
+            {
+                var fcpImage = new FinalCutProImage();
+                var subtitle = new Subtitle();
+                fcpImage.LoadSubtitle(subtitle, lines, fileName);
+                if (subtitle.Paragraphs.Count > 0)
+                {
+                    subtitle.OriginalFormat = fcpImage;
+                    return subtitle;
+                }
+            }
+
+            return null;
+        }
+        catch
+        {
+            return null;
         }
     }
 
@@ -21994,10 +22323,15 @@ public partial class MainViewModel :
         {
             AudioVisualizer.WavePeaks = null;
             AudioVisualizer.ShotChanges = new List<double>();
+            AudioVisualizer.Chapters = new List<WaveformChapter>();
             AudioVisualizer.StartPositionSeconds = 0;
             AudioVisualizer.CurrentVideoPositionSeconds = 0;
             UpdateShotChangesListMenuItem();
         }
+
+        // Closing the video takes its chapters with it, or the next video would open showing the
+        // previous one's marks.
+        _chapters = new List<Chapter>();
     }
 
     /// <summary>
@@ -23399,6 +23733,13 @@ public partial class MainViewModel :
     };
 
     /// <summary>
+    /// Editing keys that never type a character, so holding Shift with them is a real chord rather
+    /// than "the same key, shifted" - unlike Shift+A, which is just an uppercase A. Bare Delete and
+    /// Back still edit the text box as usual; only the Shift variants reach shortcut dispatch.
+    /// </summary>
+    private static readonly HashSet<Key> NonTypingEditKeys = [Key.Delete, Key.Back];
+
+    /// <summary>
     /// Activates the main menu bar for keyboard navigation (Windows standard F10; bare Alt is handled
     /// by Avalonia's built-in AccessKeyHandler), remembering the control that had focus so it can be
     /// restored on deactivation. Returns false on platforms with a native menu (macOS), where the
@@ -24133,8 +24474,14 @@ public partial class MainViewModel :
                         }
                     }
 
-                    if (!Se.Settings.Tools.AllowSingleLetterShortcutsInTextbox && !AlwaysAllowedSingleKeyShortcuts.Contains(key) &&
-                        (keyEventArgs.KeyModifiers == KeyModifiers.None || keyEventArgs.KeyModifiers == KeyModifiers.Shift))
+                    // Shift counts as "no modifier" here because Shift+<letter> is just typing an
+                    // uppercase letter - but only for keys that actually type something. Shift with
+                    // an editing key is a real chord (Shift+Delete cut, Shift+Back forward delete),
+                    // and treating it as a bare key made those shipped TextBox shortcuts unreachable:
+                    // Shift+Delete fell through to Avalonia's plain delete instead of cutting (#13711).
+                    var isBareKeyChord = keyEventArgs.KeyModifiers == KeyModifiers.None ||
+                                         (keyEventArgs.KeyModifiers == KeyModifiers.Shift && !NonTypingEditKeys.Contains(key));
+                    if (!Se.Settings.Tools.AllowSingleLetterShortcutsInTextbox && !AlwaysAllowedSingleKeyShortcuts.Contains(key) && isBareKeyChord)
                     {
                         return; // allow single key shortcuts in text input if enabled in settings, or if it's not an allowed single key shortcut
                     }

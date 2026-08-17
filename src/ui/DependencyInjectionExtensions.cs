@@ -139,6 +139,7 @@ using Nikse.SubtitleEdit.Features.Translate;
 using Nikse.SubtitleEdit.Features.Translate.LlamaCppEngineSettings;
 using Nikse.SubtitleEdit.Features.Video.BlankVideo;
 using Nikse.SubtitleEdit.Features.Video.BurnIn;
+using Nikse.SubtitleEdit.Features.Video.Chapters;
 using Nikse.SubtitleEdit.Features.Video.CutVideo;
 using Nikse.SubtitleEdit.Features.Video.EmbeddedSubtitlesEdit;
 using Nikse.SubtitleEdit.Features.Video.GoToVideoPosition;
@@ -230,7 +231,6 @@ public static class DependencyInjectionExtensions
         collection.AddTransient<IBatchConvertItemSplitter, BatchConvertTransportStreamSplitter>();
         collection.AddTransient<IBluRayHelper, BluRayHelper>();
         collection.AddTransient<ICasingToggler, CasingToggler>();
-        collection.AddTransient<IChatLlmDownloadService, ChatLlmDownloadService>();
         collection.AddTransient<IColorService, ColorService>();
         collection.AddHttpClientWithProxy<ICrispAsrDownloadService, CrispAsrDownloadService>();
         collection.AddTransient<IDictionaryInitializer, DictionaryInitializer>();
@@ -265,7 +265,6 @@ public static class DependencyInjectionExtensions
         collection.AddHttpClientWithProxy<IFfmpegDownloadService, FfmpegDownloadService>();
         collection.AddHttpClientWithProxy<ILibMpvDownloadService, LibMpvDownloadService>();
         collection.AddHttpClientWithProxy<ILibVlcDownloadService, LibVlcDownloadService>();
-        collection.AddHttpClientWithProxy<IPaddleOcrDownloadService, PaddleOcrDownloadService>();
         collection.AddHttpClientWithProxy<ICrispEmbedDownloadService, CrispEmbedDownloadService>();
         collection.AddHttpClientWithProxy<ISpellCheckDictionaryDownloadService, SpellCheckDictionaryDownloadService>();
         collection.AddHttpClientWithProxy<ITesseractDownloadService, TesseractDownloadService>();
@@ -358,6 +357,8 @@ public static class DependencyInjectionExtensions
         collection.AddTransient<CategoryPickerViewModel>();
         collection.AddTransient<ChangeCasingViewModel>();
         collection.AddTransient<ChangeFormattingViewModel>();
+        collection.AddTransient<ChaptersViewModel>();
+        collection.AddTransient<WriteChaptersToVideoViewModel>();
         collection.AddTransient<ConvertActorsViewModel>();
         collection.AddTransient<ChangeFrameRateViewModel>();
         collection.AddTransient<ChangeSpeedViewModel>();

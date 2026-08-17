@@ -35,14 +35,14 @@ $FadeIn             =   0
 $FadeOut                =   0
 $TapeOffset         =   FALSE
 
-\\Colour 0 = Black
-\\Colour 1 = Red
-\\Colour 2 = Green
-\\Colour 3 = Yellow
-\\Colour 4 = Blue
-\\Colour 5 = Magenta
-\\Colour 6 = Cyan
-\\Colour 7 = White
+//Colour 0 = Black
+//Colour 1 = Red
+//Colour 2 = Green
+//Colour 3 = Yellow
+//Colour 4 = Blue
+//Colour 5 = Magenta
+//Colour 6 = Cyan
+//Colour 7 = White
 ";
 
             var lastVerticalAlign = "$VertAlign     = Bottom";
@@ -114,11 +114,11 @@ $TapeOffset         =   FALSE
         private static string EncodeText(string input)
         {
             var text = input.Replace("<b>", "^B")
-                            .Replace("</b>", string.Empty)
+                            .Replace("</b>", "^B")
                             .Replace("<i>", "^I")
-                            .Replace("</i>", string.Empty)
+                            .Replace("</i>", "^I")
                             .Replace("<u>", "^U")
-                            .Replace("</u>", string.Empty);
+                            .Replace("</u>", "^U");
             return HtmlUtil.RemoveHtmlTags(text, true).Replace(Environment.NewLine, "|");
         }
 
@@ -173,24 +173,8 @@ $TapeOffset         =   FALSE
         }
 
         private static string DecodeText(string text)
-        { // TODO: Improve end tags
-            text = text.Replace("|", Environment.NewLine);
-            if (text.Contains("^B"))
-            {
-                text = text.Replace("^B", "<b>") + "</b>";
-            }
-
-            if (text.Contains("^I"))
-            {
-                text = text.Replace("^I", "<i>") + "</i>";
-            }
-
-            if (text.Contains("^U"))
-            {
-                text = text.Replace("^U", "<u>") + "</u>";
-            }
-
-            return text;
+        {
+            return Spruce.DecodeStyleToggles(text.Replace("|", Environment.NewLine));
         }
     }
 }

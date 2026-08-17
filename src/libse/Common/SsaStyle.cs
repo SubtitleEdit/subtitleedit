@@ -125,7 +125,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                 }
                 else if (f == "tertiarycolour")
                 {
-                    sb.Append(ColorTranslator.ToWin32(Tertiary));
+                    sb.Append(ColorTranslator.ToWin32(Outline)); // SSA v4's TertiaryColour is the outline color
                 }
                 else if (f == "backcolour")
                 {
@@ -193,7 +193,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                 }
                 else if (f == "alignment")
                 {
-                    sb.Append(Alignment);
+                    sb.Append(AdvancedSubStationAlpha.AssAlignmentToSsaV4Alignment(Alignment));
                 }
                 else if (f == "alphalevel")
                 {
@@ -360,11 +360,13 @@ namespace Nikse.SubtitleEdit.Core.Common
                 }
                 else if (f == "tertiarycolour")
                 {
+                    // SSA v4's TertiaryColour is [V4+ Styles]' OutlineColour. Reading it into
+                    // Tertiary only dropped the outline color of every .ssa file. #13734
                     result.Tertiary = AdvancedSubStationAlpha.GetSsaColor(v, SKColors.Yellow);
+                    result.Outline = AdvancedSubStationAlpha.GetSsaColor(v, SKColors.Black);
                 }
                 else if (f == "backcolour")
                 {
-                    result.Outline = AdvancedSubStationAlpha.GetSsaColor(v, SKColors.Black);
                     result.Background = AdvancedSubStationAlpha.GetSsaColor(v, SKColors.Black);
                 }
                 else if (f == "bold")
@@ -377,35 +379,37 @@ namespace Nikse.SubtitleEdit.Core.Common
                 }
                 else if (f == "outline")
                 {
-                    if (decimal.TryParse(f, NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out var number))
+                    // These five parsed the field *name* instead of its value, so outline/shadow
+                    // width and all three margins silently fell back to the defaults. #13734
+                    if (decimal.TryParse(v, NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out var number))
                     {
                         result.OutlineWidth = number;
                     }
                 }
                 else if (f == "shadow")
                 {
-                    if (decimal.TryParse(f, NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out var number))
+                    if (decimal.TryParse(v, NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out var number))
                     {
                         result.ShadowWidth = number;
                     }
                 }
                 else if (f == "marginl")
                 {
-                    if (int.TryParse(f, out var number))
+                    if (int.TryParse(v, NumberStyles.Integer, CultureInfo.InvariantCulture, out var number))
                     {
                         result.MarginLeft = number;
                     }
                 }
                 else if (f == "marginr")
                 {
-                    if (int.TryParse(f, out var number))
+                    if (int.TryParse(v, NumberStyles.Integer, CultureInfo.InvariantCulture, out var number))
                     {
                         result.MarginRight = number;
                     }
                 }
                 else if (f == "marginv")
                 {
-                    if (int.TryParse(f, out var number))
+                    if (int.TryParse(v, NumberStyles.Integer, CultureInfo.InvariantCulture, out var number))
                     {
                         result.MarginVertical = number;
                     }
@@ -416,39 +420,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                 }
                 else if (f == "alignment")
                 {
-                    switch (v)
-                    {
-                        case "1":
-                            result.Alignment = "1"; // bottom left
-                            break;
-                        case "2":
-                            result.Alignment = "2"; // bottom center
-                            break;
-                        case "3":
-                            result.Alignment = "3"; // bottom right
-                            break;
-                        case "9":
-                            result.Alignment = "4"; // middle left
-                            break;
-                        case "10":
-                            result.Alignment = "5"; // middle center
-                            break;
-                        case "11":
-                            result.Alignment = "6"; // middle right
-                            break;
-                        case "5":
-                            result.Alignment = "7"; // top left
-                            break;
-                        case "6":
-                            result.Alignment = "8"; // top center
-                            break;
-                        case "7":
-                            result.Alignment = "9"; // top right
-                            break;
-                        default:
-                            result.Alignment = "2";
-                            break;
-                    }
+                    result.Alignment = AdvancedSubStationAlpha.SsaV4AlignmentToAssAlignment(v);
                 }
             }
 
@@ -475,7 +447,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             return "Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, TertiaryColour, BackColour, Bold, Italic, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, AlphaLevel, Encoding"
                 .Replace(" ", string.Empty)
                 .ToLowerInvariant()
-                .Split();
+                .Split(','); // spaces are already gone, so a whitespace split returned one big field
         }
     }
 }

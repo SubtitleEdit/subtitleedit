@@ -274,17 +274,14 @@ public class ChatterboxTtsCpp : ITtsEngine
     public static string GetS3GenModelPath(string? modelKey = null) =>
         Path.Combine(GetSetModelsFolder(), ChatterboxTtsCppDownloadService.GetS3GenFileName(ResolveModelKey(modelKey)));
 
-    // Legacy pre-multilingual Base GGUFs (English-only T3, downloaded before upstream's
-    // 2026-06-18 in-place rebuild of cstr/chatterbox-GGUF) count as NOT installed so the
-    // normal "Download models?" prompt re-fetches the multilingual files — without this,
-    // picking a language changes nothing for those users and there is no visible reason why.
+    // A plain existence check is enough now that the Base pair is the versioned chatterbox-v3-*
+    // artifact: the file name pins which weights it is, so nothing on disk can quietly become
+    // something else. The byte-size probe this replaced existed only because upstream rebuilt
+    // the unversioned names in place (English-only -> multilingual) and left the old files
+    // looking installed; users still holding those get them deleted after the V3 download.
     public static bool AreModelsInstalled(string? modelKey = null)
     {
-        var t3Path = GetT3ModelPath(modelKey);
-        var s3genPath = GetS3GenModelPath(modelKey);
-        return File.Exists(t3Path) && File.Exists(s3genPath)
-            && !ChatterboxTtsCppDownloadService.IsLegacyEnglishOnlyModel(t3Path)
-            && !ChatterboxTtsCppDownloadService.IsLegacyEnglishOnlyModel(s3genPath);
+        return File.Exists(GetT3ModelPath(modelKey)) && File.Exists(GetS3GenModelPath(modelKey));
     }
 
     public Task<Voice[]> GetVoices(string language)
@@ -369,11 +366,34 @@ public class ChatterboxTtsCpp : ITtsEngine
             ? string.Empty
             : ChatterboxLanguages.ResolveLanguageArg(language);
 
-        var payload = BuildSpeakPayload(inputText, chatterboxVoice.FilePath, languageArg);
+        // Language the reference recording is spoken in (CrispASR v0.8.29 / #329). The backend
+        // needs BOTH sides before it goes cross-lingual, so without this an English reference
+        // asked for German keeps the English accent. Only meaningful when actually cloning and
+        // when a target language was asked for at all.
+        var sourceLanguageArg = !string.IsNullOrEmpty(chatterboxVoice.FilePath) && !string.IsNullOrEmpty(languageArg)
+            ? ChatterboxLanguages.ResolveSourceLanguageArg(TryReadReferenceTranscript(chatterboxVoice.FilePath))
+            : string.Empty;
+
+        if (string.IsNullOrEmpty(sourceLanguageArg)
+            && !string.IsNullOrEmpty(chatterboxVoice.FilePath)
+            && !string.IsNullOrEmpty(languageArg))
+        {
+            // Target language asked for, reference language unknowable: the clone keeps the
+            // reference's accent and nothing in the 200 response says so. Same wording as the
+            // CosyVoice3 path, which hit this first.
+            Se.WriteToolsLog(
+                $"Chatterbox TTS: target language '{languageArg}' requested for cloned voice "
+                + $"'{chatterboxVoice}', but the language of its reference WAV is unknown. Synthesis "
+                + "stays zero-shot and keeps the reference's accent - set \"Reference language\" in "
+                + "the Chatterbox settings window to enable cross-lingual synthesis.",
+                true);
+        }
+
+        var payload = BuildSpeakPayload(inputText, chatterboxVoice.FilePath, languageArg, sourceLanguageArg);
 
         var body = JsonSerializer.Serialize(payload);
         using var content = new StringContent(body, Encoding.UTF8, "application/json");
-        Se.WriteToolsLog($"Chatterbox TTS: POST {ServerBaseUrl}/v1/audio/speech (voice={chatterboxVoice}, model={modelKey}, textLen={text.Length}, language={(string.IsNullOrEmpty(languageArg) ? "(auto)" : languageArg)})");
+        Se.WriteToolsLog($"Chatterbox TTS: POST {ServerBaseUrl}/v1/audio/speech (voice={chatterboxVoice}, model={modelKey}, textLen={text.Length}, language={(string.IsNullOrEmpty(languageArg) ? "(auto)" : languageArg)}, sourceLanguage={(string.IsNullOrEmpty(sourceLanguageArg) ? "(none)" : sourceLanguageArg)})");
         HttpResponseMessage response;
         try
         {
@@ -465,7 +485,11 @@ public class ChatterboxTtsCpp : ITtsEngine
     /// the one SE engine that hard-requires the attestations. An empty path falls back to the
     /// model's baked default voice, which is not cloning and needs no attestation.
     /// </remarks>
-    internal static Dictionary<string, object> BuildSpeakPayload(string inputText, string? voiceFilePath, string? languageCode = null)
+    internal static Dictionary<string, object> BuildSpeakPayload(
+        string inputText,
+        string? voiceFilePath,
+        string? languageCode = null,
+        string? sourceLanguageCode = null)
     {
         var payload = new Dictionary<string, object>
         {
@@ -478,6 +502,15 @@ public class ChatterboxTtsCpp : ITtsEngine
             payload["language"] = languageCode;
         }
 
+        // Only alongside a reference and a target language: on its own the field says what a
+        // recording that is not being cloned from is spoken in, which is nothing.
+        if (!string.IsNullOrEmpty(sourceLanguageCode)
+            && !string.IsNullOrEmpty(voiceFilePath)
+            && !string.IsNullOrEmpty(languageCode))
+        {
+            payload["source_lang"] = sourceLanguageCode;
+        }
+
         if (!string.IsNullOrEmpty(voiceFilePath))
         {
             payload["voice"] = Path.GetFileName(voiceFilePath);
@@ -485,6 +518,37 @@ public class ChatterboxTtsCpp : ITtsEngine
         }
 
         return payload;
+    }
+
+    /// <summary>
+    /// The spoken text of a reference WAV, read from the <c>.txt</c> sidecar the other cloning
+    /// engines use, or null when there is none. Chatterbox itself never needs the transcript —
+    /// it clones from the audio alone — so this exists only to detect what language the
+    /// reference is in for <c>source_lang</c>.
+    /// </summary>
+    internal static string? TryReadReferenceTranscript(string? referenceWavPath)
+    {
+        if (string.IsNullOrEmpty(referenceWavPath))
+        {
+            return null;
+        }
+
+        try
+        {
+            var sidecar = Path.ChangeExtension(referenceWavPath, ".txt");
+            if (!File.Exists(sidecar))
+            {
+                return null;
+            }
+
+            var text = File.ReadAllText(sidecar).Trim();
+            return string.IsNullOrEmpty(text) ? null : text;
+        }
+        catch
+        {
+            // A sidecar we cannot read is the same as no sidecar - detection just declines.
+            return null;
+        }
     }
 
     /// <summary>

@@ -328,6 +328,9 @@ public class BatchConvertConfig
     public class AssaEmbedFontsSettings
     {
         public bool IsActive { get; set; }
+
+        /// <summary>Trim each embedded font to the glyphs the subtitle's text uses (see <see cref="FontTrimmer"/>).</summary>
+        public bool TrimFonts { get; set; }
     }
 
     public class MergeShortLinesSettings

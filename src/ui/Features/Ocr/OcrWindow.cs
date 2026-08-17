@@ -575,6 +575,13 @@ public class OcrWindow : Window
                 },
         });
 
+        // Index-mapped scrollbar (#13579), like the main subtitle grid: the native bar is
+        // pixel-mapped and the virtualizing panel estimates its extent from the average
+        // realized row height, so the thumb jumps around while scrolling. Rows here vary
+        // even more than in the main grid - each holds a subtitle bitmap - so hide the
+        // native vertical bar and dock a row-index one beside the grid instead.
+        var scrollBarHost = new TableViewIndexScrollBar(dataGridSubtitle);
+
         // The image thumbnails scale with Ctrl+plus/minus (Image.MaxWidth/MaxHeight are
         // bound to the VM) - keep the pixel-sized image column in step with the zoom.
         var imageColumn = dataGridSubtitle.Columns[dataGridSubtitle.Columns.Count - 2];
@@ -583,6 +590,11 @@ public class OcrWindow : Window
             if (args.PropertyName == nameof(vm.ImageMaxWidth))
             {
                 imageColumn.Width = new GridLength(vm.ImageMaxWidth + cellChrome);
+
+                // Zooming re-measures every row, and the ScrollViewer keeps its pixel
+                // offset - which lands on a different row (zooming out far enough pins the
+                // list to its end). Stay on the row the user was looking at.
+                scrollBarHost.PreserveTopRow();
             }
         };
 
@@ -717,7 +729,7 @@ public class OcrWindow : Window
 
         vm.SubtitleGrid.ContextFlyout = flyout;
 
-        return UiUtil.MakeBorderForControlNoPadding(dataGridSubtitle).WithMarginBottom(5);
+        return UiUtil.MakeBorderForControlNoPadding(scrollBarHost).WithMarginBottom(5);
     }
 
     private static Border MakeEditView(OcrViewModel vm)

@@ -261,7 +261,9 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
             }
         }
         else if (IsMp4SubtitleFormat(item.Format) &&
-                 (item.FileName.EndsWith(".mp4") || item.FileName.EndsWith(".m4v") || item.FileName.EndsWith(".m4s")))
+                 (item.FileName.EndsWith(".mp4") || item.FileName.EndsWith(".m4v") || item.FileName.EndsWith(".m4s") ||
+                  item.FileName.EndsWith(".mov") || item.FileName.EndsWith(".3gp") || item.FileName.EndsWith(".m4a") ||
+                  item.FileName.EndsWith(".m4b") || item.FileName.EndsWith(".cmaf")))
         {
             var mp4Files = new List<string>();
             var mp4Parser = new MP4Parser(item.FileName);
@@ -1728,7 +1730,7 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
                 // styles that are actually written and the embedding is not overwritten.
                 if (_config.AssaEmbedFonts.IsActive)
                 {
-                    AssaFontEmbedder.EmbedUsedFonts(s, cancellationToken, _fontFilesCache);
+                    AssaFontEmbedder.EmbedUsedFonts(s, cancellationToken, _fontFilesCache, _config.AssaEmbedFonts.TrimFonts);
                 }
             }
 

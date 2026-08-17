@@ -189,6 +189,102 @@ public partial class AssaAttachmentsViewModel : ObservableObject
         }
     }
 
+    /// <summary>
+    /// Trims all embedded font attachments to the glyphs the current subtitle text uses
+    /// (see <see cref="FontTrimmer"/>), after a confirmation - the trimmed fonts cannot
+    /// display characters that are added to the subtitle later.
+    /// </summary>
+    [RelayCommand]
+    private async Task TrimFontsToUsedCharacters()
+    {
+        if (Window == null)
+        {
+            return;
+        }
+
+        var fonts = Attachments.Where(a => a.Category == Se.Language.General.Fonts && a.Bytes.Length > 0).ToList();
+        if (fonts.Count == 0)
+        {
+            await MessageBox.Show(Window, Se.Language.Assa.Attachments, Se.Language.Assa.TrimFontsNoFontsToTrim, MessageBoxButtons.OK);
+            return;
+        }
+
+        // Trim up front (nothing is applied yet), so the confirmation can show each
+        // font's old -> new size and the total saving before the user decides.
+        var usedTextLines = AssaFontEmbedder.GetUsedTextLines(_subtitle);
+        long savedBytes = 0;
+        var results = new List<(AssaAttachmentItem Font, FontTrimmer.TrimResult Result)>();
+        var reportLines = new List<string>();
+        foreach (var font in fonts)
+        {
+            var result = FontTrimmer.Trim(font.Bytes, usedTextLines);
+            results.Add((font, result));
+            if (result.Trimmed)
+            {
+                savedBytes += font.Bytes.Length - result.Bytes.Length;
+                reportLines.Add(
+                    $"{font.FileName}: {Utilities.FormatBytesToDisplayFileSize(font.Bytes.Length)} -> " +
+                    Utilities.FormatBytesToDisplayFileSize(result.Bytes.Length));
+            }
+            else
+            {
+                reportLines.Add($"{font.FileName}: {FontTrimmer.GetSkipReasonDisplay(result.SkipReason)}");
+            }
+        }
+
+        var trimmableCount = results.Count(r => r.Result.Trimmed);
+        if (trimmableCount == 0)
+        {
+            await MessageBox.Show(
+                Window,
+                Se.Language.Assa.Attachments,
+                string.Format(
+                    Se.Language.Assa.TrimFontsXFontsTrimmedSavedYZ,
+                    0,
+                    Utilities.FormatBytesToDisplayFileSize(0),
+                    string.Join(Environment.NewLine, reportLines)),
+                MessageBoxButtons.OK);
+            return;
+        }
+
+        var message =
+            string.Format(Se.Language.Assa.TrimFontsPromptX, trimmableCount) + Environment.NewLine + Environment.NewLine +
+            string.Join(Environment.NewLine, reportLines) + Environment.NewLine + Environment.NewLine +
+            string.Format(Se.Language.Assa.TrimFontsTotalSavingX, Utilities.FormatBytesToDisplayFileSize(savedBytes));
+        var answer = await MessageBox.Show(Window, Se.Language.Assa.Attachments, message, MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+        if (answer != MessageBoxResult.Yes)
+        {
+            return;
+        }
+
+        var selectedFileName = SelectedAttachment?.FileName;
+        foreach (var (font, result) in results)
+        {
+            if (!result.Trimmed)
+            {
+                continue;
+            }
+
+            // replace the row so the grid picks up the new size (the item is not observable)
+            var trimmed = new AssaAttachmentItem
+            {
+                FileName = font.FileName,
+                Category = font.Category,
+                Bytes = result.Bytes,
+                Content = UUEncoding.UUEncode(result.Bytes).Trim(),
+                Size = Utilities.FormatBytesToDisplayFileSize(result.Bytes.Length),
+                FontName = font.FontName,
+            };
+            Attachments[Attachments.IndexOf(font)] = trimmed;
+            if (font.FileName == selectedFileName)
+            {
+                SelectedAttachment = trimmed;
+            }
+        }
+
+        UpdatePreview();
+    }
+
     [RelayCommand]
     private void AttachmentRemove()
     {

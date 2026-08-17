@@ -31,6 +31,7 @@ public class SeAssa
     public bool HideLayersFromWaveform { get; set; }
     public bool HideLayersFromSubtitleGrid { get; set; }
     public bool HideLayersFromVideoPreview { get; set; }
+    public bool FontCollectorTrimFonts { get; set; }
 
     public SeAssa()
     {

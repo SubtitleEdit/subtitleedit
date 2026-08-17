@@ -106,8 +106,13 @@ public partial class DownloadTesseractViewModel : ObservableObject, IClosingClea
     private void UnpackTesseract()
     {
         _downloadStream.Position = 0;
+        TesseractDownloadService.RemoveOldWindowsBinaries();
         _zipUnpacker.UnpackZipStream(_downloadStream, Se.TesseractFolder);
         _downloadStream.Dispose();
+
+        // Only stamp the version once the unpack succeeded - otherwise a failed unpack is
+        // recorded as current and the update is never retried.
+        TesseractDownloadService.WriteVersionFile();
     }
 
     private void Close()
@@ -141,7 +146,7 @@ public partial class DownloadTesseractViewModel : ObservableObject, IClosingClea
             StatusText = string.Format(Se.Language.General.DownloadingXPercent, pctString);
         });
 
-        var folder = Se.FfmpegFolder;
+        var folder = Se.TesseractFolder;
         if (!Directory.Exists(folder))
         {
             Directory.CreateDirectory(folder);

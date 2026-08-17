@@ -173,7 +173,12 @@ $ColorIndex4    = 3
 
         private static string DecodeText(string input)
         {
-            var text = input.Replace("|", Environment.NewLine);
+            return DecodeStyleToggles(input.Replace("|", Environment.NewLine));
+        }
+
+        internal static string DecodeStyleToggles(string input)
+        {
+            var text = input;
 
             //^IBrillstein^I
             if (text.Contains(Bold))

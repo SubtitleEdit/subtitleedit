@@ -31,6 +31,13 @@ Manage fonts and images embedded as attachments in an Advanced SubStation Alpha 
 - Delete individual attachments or clear all attachments.
 - View attachment names and sizes.
 
+### Trim Fonts to Used Characters
+- **Trim fonts to used characters...** rewrites each embedded TrueType font so that only the glyphs used by the subtitle's text keep their outlines - a full CJK font of many megabytes typically shrinks to a few hundred kilobytes.
+- Character coverage, kerning, ligatures and complex-script shaping (Arabic, Indic, ...) are preserved for the text the subtitle actually contains, and the font's family name is unchanged.
+- Trim as a final step: text added to the subtitle later may display with missing characters, since its glyphs were removed. Re-embed the full font if the text changes.
+- Only TrueType fonts with glyf outlines can be trimmed; CFF-based OpenType fonts and font collections (.ttc) are kept unchanged.
+- The same trimming is available as a checkbox in the font collector's **Embed fonts in subtitle** and in batch convert's **Embed fonts** function.
+
 ## Keyboard Shortcuts
 
 | Shortcut | Action |

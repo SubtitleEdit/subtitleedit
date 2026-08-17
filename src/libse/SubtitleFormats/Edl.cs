@@ -19,33 +19,31 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         {
             var sb = new StringBuilder();
             sb.AppendLine("TITLE: " + title);
-            if (Configuration.Settings.General.CurrentFrameRate % 1.0 > 0.01)
-            {
-                sb.AppendLine("FCM: NON-DROP FRAME");
-            }
-            else
-            {
-                sb.AppendLine("FCM: DROP FRAME");
-            }
+            // Time codes are written with ':' separators and no drop-frame arithmetic, which
+            // is non-drop time code at every frame rate (the old header said DROP FRAME for
+            // integer rates - exactly backwards, and NLEs trust this line).
+            sb.AppendLine("FCM: NON-DROP FRAME");
 
             sb.AppendLine();
             const string writeFormat = "{0:000000}  {1}       {2}     {3}        {4} {5} {6} {7}";
+            var eventNumber = 0;
             for (int index = 0; index < subtitle.Paragraphs.Count; index++)
             {
-                int no = index + 1;
                 var p = subtitle.Paragraphs[index];
                 if (index == 0 && p.StartTime.TotalSeconds > 1)
                 {
                     var start = new TimeCode(p.StartTime.TotalMilliseconds - 1000.0);
                     var end = new TimeCode(p.StartTime.TotalMilliseconds - 1);
-                    sb.AppendLine(string.Format(writeFormat, no, "BL", "V", "C", EncodeTimeCode(start), EncodeTimeCode(end), EncodeTimeCode(start), EncodeTimeCode(end)));
+                    eventNumber++;
+                    sb.AppendLine(string.Format(writeFormat, eventNumber, "BL", "V", "C", EncodeTimeCode(start), EncodeTimeCode(end), EncodeTimeCode(start), EncodeTimeCode(end)));
                     sb.AppendLine();
                 }
                 var text = HtmlUtil.RemoveHtmlTags(p.Text, true);
-                sb.AppendLine(string.Format(writeFormat, no, "AX", "V", "C", EncodeTimeCode(p.StartTime), EncodeTimeCode(p.EndTime), EncodeTimeCode(p.StartTime), EncodeTimeCode(p.EndTime)));
+                eventNumber++;
+                sb.AppendLine(string.Format(writeFormat, eventNumber, "AX", "V", "C", EncodeTimeCode(p.StartTime), EncodeTimeCode(p.EndTime), EncodeTimeCode(p.StartTime), EncodeTimeCode(p.EndTime)));
                 sb.AppendLine(TextPrefix + text);
                 sb.AppendLine();
-                var next = subtitle.GetParagraphOrDefault(no);
+                var next = subtitle.GetParagraphOrDefault(index + 1);
                 if (next != null && next.StartTime.TotalMilliseconds > p.EndTime.TotalMilliseconds + 100)
                 {
                     var start = new TimeCode(p.EndTime.TotalMilliseconds + 1);
@@ -54,7 +52,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     {
                         end = new TimeCode(next.StartTime.TotalMilliseconds - 1);
                     }
-                    sb.AppendLine(string.Format(writeFormat, no, "BL", "V", "C", EncodeTimeCode(start), EncodeTimeCode(end), EncodeTimeCode(start), EncodeTimeCode(end)));
+                    eventNumber++;
+                    sb.AppendLine(string.Format(writeFormat, eventNumber, "BL", "V", "C", EncodeTimeCode(start), EncodeTimeCode(end), EncodeTimeCode(start), EncodeTimeCode(end)));
                     sb.AppendLine();
                 }
             }
@@ -73,12 +72,20 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             Paragraph lastParagraph = null;
             int count = 0;
             var splitChar = new[] { ' ' };
-            foreach (string line in lines)
+            foreach (string rawLine in lines)
             {
+                // NLEs pad event rows with trailing spaces (Premiere, Avid, Nucoda all do)
+                var line = rawLine.TrimEnd();
                 bool isTimeCode = false;
                 if (line.Length > 0)
                 {
                     bool success = false;
+                    if (IsSkippableComment(line))
+                    {
+                        count++;
+                        continue;
+                    }
+
                     if (line.Length > 65 && line.Length < 500 && line.IndexOf(':') > 20)
                     {
                         var match = Regex.Match(line);
@@ -129,13 +136,46 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             }
             foreach (var paragraph in subtitle.Paragraphs)
             {
-                if (paragraph.Text.StartsWith(TextPrefix, StringComparison.Ordinal))
-                {
-                    paragraph.Text = paragraph.Text.Remove(0, TextPrefix.Length).TrimStart();
-                }
+                paragraph.Text = StripClipNamePrefix(paragraph.Text);
             }
 
             subtitle.Renumber();
+        }
+
+        /// <summary>
+        /// EDL comment/metadata lines that must not leak into the cue text: any "*" comment
+        /// except the clip name (Avid writes "* FROM CLIP: path", Nucoda "* FROM FILE: path",
+        /// screening EDLs "*SOURCE FILE: ..."), and M2 motion-memory lines.
+        /// </summary>
+        private static bool IsSkippableComment(string line)
+        {
+            if (line.StartsWith("M2", StringComparison.Ordinal) && line.Length > 2 && line[2] == ' ')
+            {
+                return true;
+            }
+
+            if (!line.StartsWith('*'))
+            {
+                return false;
+            }
+
+            var body = line.TrimStart('*').TrimStart();
+            return !body.StartsWith("FROM CLIP NAME:", StringComparison.OrdinalIgnoreCase);
+        }
+
+        /// <summary>
+        /// The clip name line appears in the wild as "* FROM CLIP NAME: ", "*FROM CLIP NAME: "
+        /// and bare "FROM CLIP NAME: ".
+        /// </summary>
+        private static string StripClipNamePrefix(string text)
+        {
+            var s = text.TrimStart('*').TrimStart();
+            if (s.StartsWith("FROM CLIP NAME:", StringComparison.OrdinalIgnoreCase))
+            {
+                return s.Remove(0, "FROM CLIP NAME:".Length).TrimStart();
+            }
+
+            return text;
         }
 
     }
