@@ -45,6 +45,9 @@ public partial class PointSyncViewModel : ObservableObject
     private string _videoFileName;
     private AudioVisualizer? _audioVisualizer;
 
+    // Only passed on to "Set sync point", which draws the subtitle on its video (#13767).
+    private VideoPreviewSubtitleContext _previewContext = VideoPreviewSubtitleContext.Default;
+
     public PointSyncViewModel(IFileHelper fileHelper, IWindowService windowService)
     {
         _fileHelper = fileHelper;
@@ -61,8 +64,9 @@ public partial class PointSyncViewModel : ObservableObject
     public void Initialize(
         List<SubtitleLineViewModel> subtitles,
         List<SubtitleLineViewModel> selectedSubtitles,
-        string videoFileName, 
-        string fileName, 
+        string videoFileName,
+        string fileName,
+        VideoPreviewSubtitleContext previewContext,
         AudioVisualizer? audioVisualizer)
     {
         Subtitles.Clear();
@@ -70,6 +74,7 @@ public partial class PointSyncViewModel : ObservableObject
         FileName = fileName;
         _videoFileName = videoFileName;
         _audioVisualizer = audioVisualizer;
+        _previewContext = previewContext;
 
         if (Subtitles.Count > 0)
         {
@@ -93,7 +98,7 @@ public partial class PointSyncViewModel : ObservableObject
 
         var result = await _windowService.ShowDialogAsync<SetSyncPointWindow, SetSyncPointViewModel>(Window, vm =>
         {
-            vm.Initialize(Subtitles.ToList(), SelectedSubtitle, _videoFileName, FileName, _audioVisualizer);
+            vm.Initialize(Subtitles.ToList(), SelectedSubtitle, _videoFileName, FileName, _previewContext, _audioVisualizer);
         });
 
         // Keep a video opened (or found) in there, so the next sync point starts with it loaded -
