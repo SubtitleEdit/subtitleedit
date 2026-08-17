@@ -247,10 +247,13 @@ public partial class AssaAttachmentsViewModel : ObservableObject
             return;
         }
 
+        // The [Fonts] section stores 3 bytes as 4 characters, so the .ass file shrinks by more
+        // than the raw font-byte difference - same math as the font collector's prompt.
+        var savedEncodedBytes = (long)(savedBytes * 4.0 / 3.0);
         var message =
             string.Format(Se.Language.Assa.TrimFontsPromptX, trimmableCount) + Environment.NewLine + Environment.NewLine +
             string.Join(Environment.NewLine, reportLines) + Environment.NewLine + Environment.NewLine +
-            string.Format(Se.Language.Assa.TrimFontsTotalSavingX, Utilities.FormatBytesToDisplayFileSize(savedBytes));
+            string.Format(Se.Language.Assa.TrimFontsTotalSavingX, Utilities.FormatBytesToDisplayFileSize(savedEncodedBytes));
         var answer = await MessageBox.Show(Window, Se.Language.Assa.Attachments, message, MessageBoxButtons.YesNo, MessageBoxIcon.Question);
         if (answer != MessageBoxResult.Yes)
         {
