@@ -17,8 +17,8 @@ public interface ILibMpvDownloadService
 public class LibMpvDownloadService : ILibMpvDownloadService
 {
     private readonly HttpClient _httpClient;
-    private const string WindowsUrl = "https://github.com/SubtitleEdit/support-files/releases/download/libmpv-2026-04-21/libmpv2-win64.zip";
-    private const string WindowsUrlArm = "https://github.com/SubtitleEdit/support-files/releases/download/libmpv-2026-04-21/libmpv2-win-arm64.zip";
+    private const string WindowsUrl = "https://github.com/SubtitleEdit/support-files/releases/download/libmpv-2026-08-14/libmpv2-win64.zip";
+    private const string WindowsUrlArm = "https://github.com/SubtitleEdit/support-files/releases/download/libmpv-2026-08-14/libmpv2-win-arm64.zip";
     private const string MacUrl = "";
     private const string MacUrlArm = "";
 
