@@ -3,6 +3,42 @@ Subtitle Edit Changelog
 
 -----------------------------------------------------------------------------------------------------
 
+v5.2.0-beta16 (17th of August 2026)
+
+* Add a chapter editor with Matroska/MP4/OGM chapter formats (Video > More > Chapters) - thx alex64-pb
+* Add "Find voices in video and clone them all", plus cloning the voice of each line from the video - thx invio-a11y
+* Add the Voxtral backend to Crisp ASR speech to text - thx AmineI
+* Add "Final Cut Pro Xml Captions" export
+* Add DaVinci Resolve marker EDL import/export
+* Add reading of Adobe Premiere Pro "Markers" panel csv exports
+* Add text box "Copy (alternative)"/"Paste (alternative)" shortcuts, and make Shift+Delete really cut - thx GrampaWildWilly
+* Add .avi/XSUB reading to "seconv"
+* Add reading of IEEE float and WAVE_FORMAT_EXTENSIBLE wav files for the waveform
+* Open BDN xml and Final Cut Pro image xmeml from the main window (via OCR)
+* Show translation progress in batch convert - thx emsb8888-prog
+* Name batch auto-translated files after the target language - thx emsb8888-prog
+* Name forced container tracks with a ".forced" token in "seconv"
+* Update Crisp ASR to v0.8.29, and Chatterbox to the versioned V3 models with cross-lingual voice cloning
+* Improve container support after sweeps of MP4Box, ffmpeg, mkvmerge, TSDuck and Bento4 output
+* Improve broadcast format round-trips (PAC, Cavena 890, SCC, Cheetah, MacCaption, EBU-TT-D, Ayato, CapMaker Plus, IMSC 1.1)
+* Improve Apple format support - read Final Cut Pro captions and current fcpxml versions
+* Improve Adobe format support - read the EDLs and XMP markers Premiere/After Effects write, fix Encore round-trips
+* Fix negative time codes being zeroed when selecting a line - thx DexKen
+* Fix reading of Matroska files on a network share still being slower than in beta 13 - thx 1476523
+* Fix Ctrl+V in the subtitle grid not selecting/scrolling to the pasted lines - thx Davanix
+* Fix Ctrl/Cmd+V not overwriting the selected lines in the subtitle grid - thx rosilucia-hub
+* Fix Sub Station Alpha (.ssa) style colors being written as unreadable 32-bit values - thx schabau
+* Fix speech to text clipping the audio sent to the engine - thx AmineI
+* Fix Faster-Whisper XXL/CTranslate2 getting the extracted wav instead of the source file - thx popoche
+* Fix DVB subtitle timing when a cue starts at the video's first frame
+* Fix the DaVinci Resolve csv "Play" flag being read from the wrong column
+* Update Bulgarian translation - thx jekovcar
+* Update French translation - thx Need74
+* Update Polish translation - thx potplayer-fanpack
+* Update Russian translation - thx jekovcar
+
+-----------------------------------------------------------------------------------------------------
+
 v5.2.0-beta15 (16th of August 2026)
 
 * Add IndexTTS 2.5 as a text to speech engine, with emotion and speaking rate control
