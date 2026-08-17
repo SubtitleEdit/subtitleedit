@@ -626,6 +626,8 @@ public partial class MainViewModel :
     private const double PlayheadPauseSettleMs = 300; // mpv's reported position lags ~100-200 ms after a pause
     private bool _playheadPausedSettled; // set once mpv's clock has come to rest after a pause and the cursor has landed on it
     private const double PlayheadPausedSettleStableMs = 100; // mpv's position unchanged this long after a pause = its clock is at rest -> snap the cursor there once
+    private bool _playheadResyncOnPlay; // armed while paused: re-seed the estimate from mpv once playback actually moves again
+    private const double PlayheadResyncOnPlayThresholdSeconds = 0.04; // ~one frame; below this the standing residual isn't worth moving the cursor for
     private CancellationTokenSource _videoOpenTokenSource;
     private readonly HashSet<string> _waveformsBeingGenerated = new(StringComparer.OrdinalIgnoreCase);
     private readonly Lock _waveformsBeingGeneratedLock = new();
@@ -25423,6 +25425,15 @@ public partial class MainViewModel :
 
         var nowTimestamp = Stopwatch.GetTimestamp();
 
+        // Any tick with mpv stopped arms a one-shot resync for when playback starts again (see the
+        // resync block in the playing branch). Armed here rather than in PlayVideo so every way of
+        // starting playback is covered - the player's own toolbar button, a click on the video
+        // surface, shortcuts, play-selection - not just the paths that route through the view model.
+        if (!isPlaying)
+        {
+            _playheadResyncOnPlay = true;
+        }
+
         // A fresh user seek (e.g. clicking the waveform) is pinned to the clicked position: mpv
         // applies the pause+seek asynchronously, so for ~100-200 ms vp.VideoPlayer.Position still
         // reports the old spot. Hold the target until mpv's reported position actually arrives (or a
@@ -25455,6 +25466,8 @@ public partial class MainViewModel :
 
             if (isPlaying)
             {
+                // Seeded straight from mpv, so there is no standing residual left to resync.
+                _playheadResyncOnPlay = false;
                 _playheadEstimateSeconds = rawPosition;
                 return rawPosition;
             }
@@ -25496,6 +25509,30 @@ public partial class MainViewModel :
             }
 
             var rawFrozenSeconds = (nowTimestamp - _playheadLastRawChangeTs) / (double)Stopwatch.Frequency;
+
+            // Playback just resumed: re-seed the estimate from mpv's real position, once, on the first
+            // tick where its clock actually moves.
+            //
+            // While paused the cursor deliberately carries a residual: it dead-freezes at the keypress
+            // instant while mpv keeps decoding ~100-200 ms past it, and #12740 leaves that gap alone so
+            // the cursor doesn't drift after the time display has stopped. mpv then resumes from *its*
+            // position, not the cursor's, so without this the cursor starts playback already behind the
+            // audio - and the forward-only drift correction below only closes it at ~1.2x, i.e. half a
+            // second for a 100 ms residual and a full second for 200 ms. That is heard as the speech
+            // starting before the cursor reaches it on the waveform (discussion #10824). A paused seek
+            // adds the same debt from the other end: Position reports the requested target while paused,
+            // so any difference between that and where mpv really landed only shows up once it plays.
+            //
+            // Correcting here rather than at the pause keeps #12740 intact, and a jump at the instant the
+            // cursor starts moving is far less visible than one after it has come to rest.
+            if (_playheadResyncOnPlay && rawChanged)
+            {
+                _playheadResyncOnPlay = false;
+                if (Math.Abs(rawPosition - _playheadEstimateSeconds) > PlayheadResyncOnPlayThresholdSeconds)
+                {
+                    _playheadEstimateSeconds = rawPosition;
+                }
+            }
 
             // Only extrapolate while mpv's clock is actually advancing. After a paused seek mpv's
             // time-pos (and the video) freezes for ~400 ms while it re-primes, then resumes at 1x from
