@@ -864,7 +864,7 @@ public partial class MainViewModel :
             "60",
             "120"
         };
-        SelectedFrameRate = FrameRates[0];
+        SetSelectedFrameRate(Se.Settings.General.CurrentFrameRate);
 
         StatusTextLeft = string.Empty;
         StatusTextRight = string.Empty;
@@ -21725,9 +21725,10 @@ public partial class MainViewModel :
         try
         {
             _mediaInfo = FfmpegMediaInfo2.Parse(videoFileName);
-            SelectedFrameRate = _mediaInfo?.FramesRate.ToString(CultureInfo.InvariantCulture) ?? FrameRates[0];
-            Se.Settings.General.CurrentFrameRate = (double)(_mediaInfo?.FramesRate ?? 23.976m);
-            Configuration.Settings.General.CurrentFrameRate = (double)(_mediaInfo?.FramesRate ?? 23.976m);
+            var videoFrameRate = (double)(_mediaInfo?.FramesRate ?? 23.976m);
+            SetSelectedFrameRate(videoFrameRate);
+            Se.Settings.General.CurrentFrameRate = videoFrameRate;
+            Configuration.Settings.General.CurrentFrameRate = videoFrameRate;
             _updateAudioVisualizer = true;
 
             if (IsFormatAssa)
@@ -21790,6 +21791,51 @@ public partial class MainViewModel :
             Configuration.Settings.General.CurrentFrameRate = frameRate;
             _updateAudioVisualizer = true;
         }
+    }
+
+    /// <summary>
+    /// Shows a frame rate in the toolbar frame rate combo box, adding it to the list first when it
+    /// is not one of the presets.
+    /// </summary>
+    internal void SetSelectedFrameRate(double frameRate)
+    {
+        SelectedFrameRate = FrameRateHelper.SelectInList(FrameRates, frameRate);
+    }
+
+    /// <summary>
+    /// The SE 4 "..." button next to the toolbar frame rate combo box: pick a video file and use
+    /// its frame rate, without opening the video in the player.
+    /// </summary>
+    [RelayCommand]
+    private async Task GetFrameRateFromVideoFile()
+    {
+        var fileName = await _fileHelper.PickOpenVideoFile(Window!, Se.Language.General.OpenVideoFileTitle);
+        if (string.IsNullOrEmpty(fileName))
+        {
+            _shortcutManager.ClearKeys();
+            return;
+        }
+
+        var frameRate = 0.0;
+        try
+        {
+            var mediaInfo = await Task.Run(() => FfmpegMediaInfo2.Parse(fileName));
+            frameRate = (double)mediaInfo.FramesRate;
+        }
+        catch
+        {
+            // Unreadable video file - keep the current frame rate, like SE 4 did.
+        }
+
+        if (frameRate > 0)
+        {
+            SetSelectedFrameRate(frameRate);
+            Se.Settings.General.CurrentFrameRate = frameRate;
+            Configuration.Settings.General.CurrentFrameRate = frameRate;
+            _updateAudioVisualizer = true;
+        }
+
+        _shortcutManager.ClearKeys();
     }
 
     private void LoadAudioTrackMenuItems()

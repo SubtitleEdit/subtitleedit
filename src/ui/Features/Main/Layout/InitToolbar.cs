@@ -587,6 +587,18 @@ public static class InitToolbar
             };
             stackPanelRight.Children.Add(comboBoxFrameRate);
             comboBoxFrameRate.SelectionChanged += vm.ComboBoxFrameRateSelectionChanged;
+
+            // SE 4 had a "..." button right next to the combo box for reading the frame rate
+            // out of a video file without opening it in the player.
+            stackPanelRight.Children.Add(new Button
+            {
+                Content = "...",
+                Command = vm.GetFrameRateFromVideoFileCommand,
+                Background = Brushes.Transparent,
+                VerticalAlignment = VerticalAlignment.Center,
+                [AutomationProperties.NameProperty] = languageHints.GetFrameRateFromVideoFileHint,
+                [ToolTip.TipProperty] = UiUtil.MakeToolTip(languageHints.GetFrameRateFromVideoFileHint, shortcuts),
+            });
         }
 
         var grid = new Grid

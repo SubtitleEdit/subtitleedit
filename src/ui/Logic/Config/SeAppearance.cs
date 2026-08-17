@@ -153,6 +153,7 @@ public class SeAppearance
         ToolbarShowSourceView = false;
         ToolbarShowHelp = true;
         ToolbarShowEncoding = false;
+        ToolbarShowFrameRate = false;
         ToolbarShowStyleManager = true;
         ToolbarShowProperties = true;
         ToolbarShowAttachments = true;
