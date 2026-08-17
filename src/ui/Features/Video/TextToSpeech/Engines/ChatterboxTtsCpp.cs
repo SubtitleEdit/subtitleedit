@@ -404,9 +404,13 @@ public class ChatterboxTtsCpp : ITtsEngine
             // Connection dropped before a response — typically the server crashed
             // during synth (ggml fault, OOM, etc.). Attach what the server printed
             // so the user/we can see the underlying reason.
+            //
+            // Let the process finish dying first: the fatal lines are still travelling through the
+            // async stderr reader when the socket drops, so snapshotting straight away captured a
+            // log that stopped at the last normal line and said nothing about the crash (#13572).
+            var died = await WaitForServerExitAsync(TimeSpan.FromSeconds(2));
             var serverLog = SnapshotServerLog();
             var launchCommand = _serverLaunchCommand;
-            var died = _serverProcess?.HasExited == true;
             if (died)
             {
                 StopServerInternal();
@@ -417,13 +421,28 @@ public class ChatterboxTtsCpp : ITtsEngine
             Se.LogError(ex, failMsg);
             Se.WriteToolsLog(failMsg);
 
-            var prefix = LooksLikeUpstreamChatterboxCrash(serverLog)
-                ? "Chatterbox TTS hit a CrispASR runtime bug during synthesis (ggml tensor read out of bounds). "
-                  + "This is an upstream issue — please file it at https://github.com/CrispStrobe/CrispASR/issues with the server log below. "
-                  + "The crash reproduces on the CPU and Vulkan builds (chatterbox's T3 step runs on CPU regardless of the build); "
-                  + "the CUDA build may avoid it but is unverified."
-                : "Chatterbox TTS request failed — "
-                  + (died ? "the crispasr server crashed during synthesis." : "the connection to the crispasr server was dropped.");
+            string prefix;
+            if (LooksLikeCudaBackendCrash(serverLog))
+            {
+                prefix = "Chatterbox TTS hit a CrispASR bug in the CUDA backend during synthesis "
+                         + "(CUDA error in ggml_cuda_cpy). Switch CrispASR to the Vulkan build - "
+                         + "Video → Audio to text → engine settings → re-download - which does not run "
+                         + "this code path, or generate one voice per run: the reported crashes all land "
+                         + "on the first step after the cloned voice changes between lines. "
+                         + "Please also report it at https://github.com/CrispStrobe/CrispASR/issues with the server log below.";
+            }
+            else if (LooksLikeUpstreamChatterboxCrash(serverLog))
+            {
+                prefix = "Chatterbox TTS hit a CrispASR runtime bug during synthesis (ggml tensor read out of bounds). "
+                         + "This is an upstream issue — please file it at https://github.com/CrispStrobe/CrispASR/issues with the server log below. "
+                         + "The crash reproduces on the CPU and Vulkan builds (chatterbox's T3 step runs on CPU regardless of the build); "
+                         + "the CUDA build does not hit this one, but has a crash of its own (#13572).";
+            }
+            else
+            {
+                prefix = "Chatterbox TTS request failed — "
+                         + (died ? "the crispasr server crashed during synthesis." : "the connection to the crispasr server was dropped.");
+            }
 
             throw new InvalidOperationException(
                 prefix
@@ -630,6 +649,11 @@ public class ChatterboxTtsCpp : ITtsEngine
                 CreateNoWindow = true,
                 RedirectStandardError = true,
                 RedirectStandardOutput = true,
+                // The server writes UTF-8. Without these the reader decodes it in the OS default
+                // codepage, and non-ASCII text in the captured log - the line being synthesised,
+                // upstream's em dashes - reaches bug reports as mojibake (#13572).
+                StandardOutputEncoding = Encoding.UTF8,
+                StandardErrorEncoding = Encoding.UTF8,
             };
             psi.ArgumentList.Add("--server");
             psi.ArgumentList.Add("--backend");
@@ -779,6 +803,27 @@ public class ChatterboxTtsCpp : ITtsEngine
         return output.Contains("tensor read out of bounds", StringComparison.Ordinal);
     }
 
+    /// <summary>
+    /// The CUDA build's own chatterbox synth crash (#13572), distinct from the CPU/Vulkan assert
+    /// above:
+    /// <code>
+    /// chatterbox[ar]: step=0 tok=3704
+    /// CUDA error: invalid argument
+    ///   current device: 0, in function ggml_cuda_cpy at ggml/src/ggml-cuda/cpy.cu:474
+    ///   cudaMemcpyAsync(src1_ddc, src0_ddc, ggml_nbytes(src0), cudaMemcpyDeviceToDevice, main_stream)
+    /// </code>
+    /// Both reports on that issue crash at the first autoregressive step of the request that
+    /// switches to a different cloned voice, right after the new conditionals are installed - and
+    /// a device-to-device copy failing with "invalid argument" is what a buffer that is not device
+    /// memory looks like. Matched on the ggml function name plus the generic "CUDA error" banner so
+    /// a fault in another op is still recognised as a CUDA one.
+    /// </summary>
+    internal static bool LooksLikeCudaBackendCrash(string output)
+    {
+        return output.Contains("CUDA error", StringComparison.Ordinal)
+               || output.Contains("ggml_cuda_cpy", StringComparison.Ordinal);
+    }
+
     internal static bool LooksLikeCloneReferenceRejected(string output)
     {
         // The chatterbox backend clones from the reference WAV natively and only accepts
@@ -891,6 +936,56 @@ public class ChatterboxTtsCpp : ITtsEngine
     /// TTS window closes, so the four CrispASR-based TTS engines don't pile up in VRAM.
     /// </summary>
     public static void StopServer() => StopServerInternal();
+
+    /// <summary>
+    /// Waits up to <paramref name="timeout"/> for a server believed to have crashed to actually
+    /// exit, and for the last of its output to reach <c>_serverLog</c>. Returns whether it exited.
+    /// </summary>
+    /// <remarks>
+    /// <see cref="Process.WaitForExitAsync"/> waits for the redirected stdout/stderr readers to
+    /// reach EOF as well as for the process itself - that drain is the whole point here. The crash
+    /// report in #13572 lost the "CUDA error: invalid argument" line that named the fault, because
+    /// the socket dropped a moment before the reader delivered it. Bounded by the token so a
+    /// reader held open by an inherited handle cannot stall a generation run.
+    /// </remarks>
+    private static async Task<bool> WaitForServerExitAsync(TimeSpan timeout)
+    {
+        var p = _serverProcess;
+        if (p == null)
+        {
+            return false;
+        }
+
+        try
+        {
+            using var cts = new CancellationTokenSource(timeout);
+            await p.WaitForExitAsync(cts.Token);
+            return true;
+        }
+        catch (OperationCanceledException)
+        {
+            // Timed out. The process may still have exited with only the drain outstanding, in
+            // which case this is a crash with a possibly-truncated log rather than a live server.
+            return SafeHasExited(p);
+        }
+        catch
+        {
+            // Disposed or never started - nothing to drain.
+            return false;
+        }
+    }
+
+    private static bool SafeHasExited(Process p)
+    {
+        try
+        {
+            return p.HasExited;
+        }
+        catch
+        {
+            return false;
+        }
+    }
 
     private static void StopServerInternal()
     {
