@@ -219,6 +219,8 @@ public static class DownloadHashManager
         // crispasr 0.6.12's sibling discovery is hardcoded to those filenames.
         public const string LlmQ4K = "CosyVoice3CrispAsr.LlmQ4K";
         public const string LlmF16 = "CosyVoice3CrispAsr.LlmF16";
+        public const string LlmRlQ4K = "CosyVoice3CrispAsr.LlmRlQ4K";
+        public const string LlmRlF16 = "CosyVoice3CrispAsr.LlmRlF16";
         public const string FlowF16 = "CosyVoice3CrispAsr.FlowF16";
         public const string HiftF16 = "CosyVoice3CrispAsr.HiftF16";
         public const string S3TokF16 = "CosyVoice3CrispAsr.S3TokF16";
@@ -1691,6 +1693,16 @@ public static class DownloadHashManager
             [CosyVoice3CrispAsr.LlmF16] = new[]
             {
                 "f13149e1f695d79dcc707de45b3df58ccaf2ab7eba1dad4168ae2c778efe4e67", // cosyvoice3-llm-f16.gguf
+            },
+            // The RL talkers (upstream llm.rl.pt), uploaded 2026-08-05. Same size as the non-RL
+            // pair, so the hash is the only thing that tells a mixed-up download apart.
+            [CosyVoice3CrispAsr.LlmRlQ4K] = new[]
+            {
+                "6f70770750c3f302a6b1732fc9a02d97f33d86aa77282e46237cff3c55510d60", // cosyvoice3-llm-rl-q4_k.gguf
+            },
+            [CosyVoice3CrispAsr.LlmRlF16] = new[]
+            {
+                "f7d5ace0dde950dc0f0dd53e347d51e6f4304f8181d6ed657d11288b09ca2497", // cosyvoice3-llm-rl-f16.gguf
             },
             [CosyVoice3CrispAsr.FlowF16] = new[]
             {
