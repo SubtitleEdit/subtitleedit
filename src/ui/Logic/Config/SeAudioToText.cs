@@ -46,7 +46,6 @@ public class SeAudioToText
     public string CommandLineParameterPurfviewFasterWhisperXxl { get; set; } = "--standard";
     public string CommandLineParameterOpenAi { get; set; } = string.Empty;
     public string CommandLineParameterQwen3AsrCpp { get; set; } = string.Empty;
-    public string CommandLineParameterChatLlm { get; set; } = string.Empty;
     public string CommandLineParameterCrispAsrCanary { get; set; } = "--max-len 50 --split-on-punct";
     public string CommandLineParameterCrispAsrCohere { get; set; } = "--max-len 50 --split-on-punct";
     public string CommandLineParameterCrispAsrFireRed { get; set; } = "--max-len 50 --split-on-punct";

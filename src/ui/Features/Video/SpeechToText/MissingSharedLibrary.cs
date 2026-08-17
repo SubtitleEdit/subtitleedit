@@ -80,7 +80,7 @@ public static class MissingSharedLibrary
     private static readonly string[] BundledLibraryPrefixes =
     {
         "libwhisper", // whisper.cpp
-        "libggml",    // whisper.cpp / qwen3-asr.cpp / chatllm.cpp - the ggml core and its backends
+        "libggml",    // whisper.cpp / qwen3-asr.cpp - the ggml core and its backends
         "libllama",   // llama.cpp based engines
         "libmtmd",    // llama.cpp multimodal helper
     };
