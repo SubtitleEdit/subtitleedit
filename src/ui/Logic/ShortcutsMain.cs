@@ -942,7 +942,11 @@ public static class ShortcutsMain
             new(nameof(vm.ShowHelpCommand), [nameof(Avalonia.Input.Key.F1)], ShortcutCategory.General),
             new(nameof(vm.ShowSourceViewCommand), [nameof(Avalonia.Input.Key.F2)], ShortcutCategory.General),
             // Forward delete for Apple keyboards, where the Delete key is only a backspace.
-            new(nameof(vm.TextBoxDeleteForwardCommand), ["Shift", nameof(Avalonia.Input.Key.Back)], ShortcutCategory.TextBox),
+            // Default on macOS only: on PC keyboards Shift is often still held right after
+            // typing an uppercase letter, and there Shift+Backspace must stay a backspace.
+            .. OperatingSystem.IsMacOS()
+                ? new SeShortCut[] { new(nameof(vm.TextBoxDeleteForwardCommand), ["Shift", nameof(Avalonia.Input.Key.Back)], ShortcutCategory.TextBox) }
+                : [],
             // Shift+Delete cut is not in Avalonia's native keymap (unlike Ctrl+Insert copy and
             // Shift+Insert paste), so the Windows-standard gesture needs a default binding, while
             // the copy/paste alternatives stay unbound by default (#13711).
