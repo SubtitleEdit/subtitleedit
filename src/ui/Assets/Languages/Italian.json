@@ -1,4 +1,4 @@
-﻿{
+{
   "title": "SubtitleEdit",
   "version": "v. 5.2.0-beta16",
   "translatedBy": "v. 17.08.2026 di bovirus e GitGianluc",
@@ -907,6 +907,7 @@
       "webVttStylesHint": "Gestore stili WebVTT",
       "ssaPropertiesHint": "Proprietà Sub Station Alpha",
       "ssaAttachmentsHint": "Allegati Sub Station Alpha"
+      "getFrameRateFromVideoFileHint": "Ottieni frequenza fotogrammi dal file video"
     },
     "waveform": {
       "playPauseHint": "Riproduci/pausa {0}",
