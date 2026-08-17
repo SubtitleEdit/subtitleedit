@@ -38,6 +38,18 @@ public class SeVideoTextToSpeech
     public double VibeVoiceCrispAsrSpeed { get; set; }
     public string IndexTtsCrispAsrModel { get; set; }
     public double IndexTtsCrispAsrSpeed { get; set; }
+    public string IndexTts25AudioCppModel { get; set; }
+    // Licence version the user accepted for the IndexTTS-2.5 weights (bilibili Model Use
+    // License, not OSI-approved). Empty until accepted; a version bump re-prompts.
+    public string IndexTts25AudioCppLicenseAccepted { get; set; }
+    // ggml backend of the installed audio.cpp archive: metal, cuda, vulkan or cpu.
+    public string IndexTts25AudioCppBackend { get; set; }
+    // The model's own duration control (>1 slower, <1 faster) rather than a resample, so
+    // pitch is unaffected. Valid range 0.5-2.0.
+    public double IndexTts25AudioCppDurationFactor { get; set; }
+    // One of IndexTts25AudioCpp.EmotionNames, or empty/"none" for no emotion conditioning.
+    public string IndexTts25AudioCppEmotion { get; set; }
+    public double IndexTts25AudioCppEmotionAlpha { get; set; }
     public string CosyVoice3CrispAsrModel { get; set; }
     public double CosyVoice3CrispAsrSpeed { get; set; }
     // Display name of the picked CosyVoice3 target language ("Auto" = plain zero-shot cloning).
@@ -61,6 +73,7 @@ public class SeVideoTextToSpeech
     public string OmniVoiceTtsCppInstruction { get; set; }
     public string ChatterboxModel { get; set; }
     public string ChatterboxCrispAsrLanguage { get; set; }
+    public string ChatterboxCrispAsrSourceLanguage { get; set; }
     public string KokoroVoice { get; set; }
     public string GoogleApiKey { get; set; }
     public string GoogleKeyFile { get; set; }
@@ -72,6 +85,12 @@ public class SeVideoTextToSpeech
     // Turn it off and CrispASR keeps its audible AI disclaimer, inaudible watermark and C2PA
     // manifest, and refuses to clone a reference WAV at all.
     public bool AcceptVoiceCloning { get; set; }
+
+    // Version stamp of the voice-cloning terms the user accepted in the first-clone dialog, empty
+    // until then. Separate from AcceptVoiceCloning (which defaults on and predates the dialog) so
+    // the prompt can be shown once, and shown again if the terms change.
+    // See Features.Video.TextToSpeech.Engines.VoiceCloningConsent.
+    public string VoiceCloningConsent { get; set; }
 
     // Pro audio post-processing
     public bool ProAudioChainEnabled { get; set; }
@@ -140,6 +159,12 @@ public class SeVideoTextToSpeech
         VibeVoiceCrispAsrSpeed = 1.1;
         IndexTtsCrispAsrModel = "Q8_0 (~870 MB)";
         IndexTtsCrispAsrSpeed = 1.0;
+        IndexTts25AudioCppModel = "Q8_0 (~3.3 GB)";
+        IndexTts25AudioCppLicenseAccepted = string.Empty;
+        IndexTts25AudioCppBackend = string.Empty;
+        IndexTts25AudioCppDurationFactor = 1.0;
+        IndexTts25AudioCppEmotion = string.Empty;
+        IndexTts25AudioCppEmotionAlpha = 0.8;
         CosyVoice3CrispAsrModel = "Q4_K (~1.6 GB total)";
         CosyVoice3CrispAsrSpeed = 1.0;
         CosyVoice3CrispAsrLanguage = string.Empty;
@@ -158,10 +183,12 @@ public class SeVideoTextToSpeech
         OmniVoiceTtsCppInstruction = string.Empty;
         ChatterboxModel = "Base";
         ChatterboxCrispAsrLanguage = string.Empty;
+        ChatterboxCrispAsrSourceLanguage = string.Empty;
         KokoroVoice = "af_maple";
         GoogleApiKey = string.Empty;
         GoogleKeyFile = string.Empty;
         AcceptVoiceCloning = true;
+        VoiceCloningConsent = string.Empty;
         ProAudioChainEnabled = false;
         AudioDuckingEnabled = false;
         AudioDuckingOriginalVolume = 15;

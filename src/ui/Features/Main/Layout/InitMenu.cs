@@ -641,6 +641,11 @@ public static class InitMenu
             },
             new MenuItem
             {
+                Header = Se.Language.Video.Chapters.ChaptersDotDotDot,
+                Command = vm.ShowVideoChaptersCommand,
+            },
+            new MenuItem
+            {
                 Header = Se.Language.Video.ReEncodeVideoForBetterSubtitlingDotDotDot,
                 Command = vm.VideoReEncodeCommand,
             },
@@ -648,6 +653,13 @@ public static class InitMenu
             {
                 Header = Se.Language.Video.CutVideoDotDotDot,
                 Command = vm.VideoCutCommand,
+            },
+            new MenuItem
+            {
+                // Finds who speaks in the video, clones each of them and assigns the cast, so the
+                // whole thing can be dubbed in its own voices (#13698).
+                Header = Se.Language.Video.TextToSpeech.AutoCastMenuItem,
+                Command = vm.ShowVideoAutoCastFromVideoCommand,
             },
             new MenuItem
             {

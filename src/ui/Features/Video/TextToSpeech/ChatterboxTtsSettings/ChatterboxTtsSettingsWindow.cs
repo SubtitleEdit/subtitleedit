@@ -102,6 +102,8 @@ public class ChatterboxTtsSettingsWindow : Window
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
             },
             ColumnSpacing = 12,
             RowSpacing = 10,
@@ -132,6 +134,25 @@ public class ChatterboxTtsSettingsWindow : Window
             [!TextBox.TextProperty] = new Binding(nameof(vm.ModelsFolder)),
         };
         grid.Add(folderText, 3, 1);
+
+        // Language spoken in imported reference WAVs — sent as `source_lang` so cross-lingual
+        // cloning engages when the target language differs. Chatterbox clones from the WAV alone
+        // and never asks for a transcript, so there is normally nothing to detect this from.
+        grid.Add(MakeLabel("Reference language"), 4, 0);
+        var sourceLanguageCombo = UiUtil.MakeComboBox(vm.SourceLanguages, vm, nameof(vm.SelectedSourceLanguage));
+        var sourceLanguageHint = new TextBlock
+        {
+            Text = "Language spoken in imported reference WAVs (for cross-lingual cloning).",
+            FontSize = 12,
+            Opacity = 0.75,
+            VerticalAlignment = VerticalAlignment.Center,
+            Margin = new Thickness(8, 0, 0, 0),
+        };
+        grid.Add(new StackPanel
+        {
+            Orientation = Orientation.Horizontal,
+            Children = { sourceLanguageCombo, sourceLanguageHint },
+        }, 4, 1);
 
         return new Border
         {

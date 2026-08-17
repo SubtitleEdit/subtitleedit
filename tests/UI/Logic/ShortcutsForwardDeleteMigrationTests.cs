@@ -6,9 +6,10 @@ namespace UITests.Logic;
 
 /// <summary>
 /// "Text box: Delete selection (no clipboard)" grew into the forward-delete (Delete key) command
-/// - defaulting to Shift+Backspace so Apple keyboards, whose Delete key is only a backspace, get
-/// a real Delete key. The rename is carried into persisted settings by shortcut migration v2 so
-/// user assignments (including a deliberately cleared binding) survive the upgrade.
+/// - defaulting to Shift+Backspace on macOS only, so Apple keyboards, whose Delete key is only a
+/// backspace, get a real Delete key while PC keyboards keep Shift+Backspace as a backspace. The
+/// rename is carried into persisted settings by shortcut migration v2 so user assignments
+/// (including a deliberately cleared binding) survive the upgrade.
 /// </summary>
 public class ShortcutsForwardDeleteMigrationTests
 {
@@ -16,13 +17,22 @@ public class ShortcutsForwardDeleteMigrationTests
     private const string NewName = nameof(MainViewModel.TextBoxDeleteForwardCommand);
 
     [Fact]
-    public void DefaultBindsShiftBackspaceToForwardDelete()
+    public void ForwardDeleteDefaultsToShiftBackspaceOnMacOsOnly()
     {
         // GetDefaultShortcuts only uses the vm parameter for nameof() - never dereferenced.
         var defaults = ShortcutsMain.GetDefaultShortcuts(null!);
 
-        var forwardDelete = defaults.Single(s => s.ActionName == NewName);
-        Assert.Equal(new[] { "Shift", "Back" }, forwardDelete.Keys);
+        var forwardDelete = defaults.SingleOrDefault(s => s.ActionName == NewName);
+        if (OperatingSystem.IsMacOS())
+        {
+            Assert.Equal(new[] { "Shift", "Back" }, forwardDelete!.Keys);
+        }
+        else
+        {
+            // No default off macOS - the command stays bindable in the shortcuts dialog.
+            Assert.Null(forwardDelete);
+        }
+
         Assert.DoesNotContain(defaults, s => s.ActionName == OldName);
     }
 

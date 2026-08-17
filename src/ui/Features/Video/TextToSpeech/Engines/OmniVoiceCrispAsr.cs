@@ -57,7 +57,7 @@ namespace Nikse.SubtitleEdit.Features.Video.TextToSpeech.Engines;
 /// per-request field, applied without a restart.
 ///
 /// Honouring <c>language</c> per request needs v0.8.26 or newer, which the pin
-/// (<see cref="Logic.Download.CrispAsrDownloadService"/>, now v0.8.28) satisfies. On the older
+/// (<see cref="Logic.Download.CrispAsrDownloadService"/>, now v0.8.29) satisfies. On the older
 /// v0.8.25 the CLI adapter applied the language once at startup only, so the field was parsed and
 /// ignored and every line stayed language-agnostic (#13273); sending it there is harmless, since
 /// the IDs SE offers are the model's own, so an install predating the bump degrades quietly.
@@ -71,6 +71,8 @@ public class OmniVoiceCrispAsr : ITtsEngine
     public bool HasRegion => false;
     public bool HasModel => true;
     public bool HasKeyFile => false;
+    public bool SupportsVoiceCloning => true;
+    public bool SupportsPerLineVoiceCloning => false;
 
     // Three quants of the LLM half. The label total includes the F16 tokenizer companion
     // (~403 MB), which every quant shares.
@@ -598,6 +600,11 @@ public class OmniVoiceCrispAsr : ITtsEngine
                 CreateNoWindow = true,
                 RedirectStandardError = true,
                 RedirectStandardOutput = true,
+                // The server writes UTF-8. Without these the reader decodes it in the OS default
+                // codepage, and non-ASCII text in the captured log - the line being synthesised,
+                // upstream's em dashes - reaches bug reports as mojibake (#13572).
+                StandardOutputEncoding = Encoding.UTF8,
+                StandardErrorEncoding = Encoding.UTF8,
             };
             psi.ArgumentList.Add("--server");
             psi.ArgumentList.Add("--backend");

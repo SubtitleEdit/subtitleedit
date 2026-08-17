@@ -13,6 +13,57 @@ namespace UITests.Features.Video.TextToSpeech.Engines;
 public class ChatterboxTtsCppTests
 {
     [Fact]
+    public void BuildSpeakPayload_CloningWithTargetLanguage_SendsSourceLang()
+    {
+        // Both sides present is what makes the backend go cross-lingual (CrispASR v0.8.29 #329).
+        var payload = ChatterboxTtsCpp.BuildSpeakPayload("hallo", "/voices/Arnold.wav", "de", "en");
+
+        Assert.Equal("de", payload["language"]);
+        Assert.Equal("en", payload["source_lang"]);
+    }
+
+    [Fact]
+    public void BuildSpeakPayload_WithoutTargetLanguage_SendsNoSourceLang()
+    {
+        // The reference language on its own tells the backend nothing to act on.
+        var payload = ChatterboxTtsCpp.BuildSpeakPayload("hello", "/voices/Arnold.wav", string.Empty, "en");
+
+        Assert.False(payload.ContainsKey("source_lang"));
+    }
+
+    [Fact]
+    public void BuildSpeakPayload_WithBakedDefaultVoice_SendsNoSourceLang()
+    {
+        // Nothing is being cloned from, so there is no reference language to declare.
+        var payload = ChatterboxTtsCpp.BuildSpeakPayload("hallo", string.Empty, "de", "en");
+
+        Assert.False(payload.ContainsKey("source_lang"));
+    }
+
+    [Fact]
+    public void TryReadReferenceTranscript_ReadsTheSidecarBesideTheWav()
+    {
+        var wav = Path.Combine(Path.GetTempPath(), $"chatterbox-ref-{Guid.NewGuid():N}.wav");
+        var sidecar = Path.ChangeExtension(wav, ".txt");
+        try
+        {
+            File.WriteAllText(wav, string.Empty);
+            Assert.Null(ChatterboxTtsCpp.TryReadReferenceTranscript(wav));
+
+            File.WriteAllText(sidecar, "  This is what the reference says.  ");
+            Assert.Equal("This is what the reference says.", ChatterboxTtsCpp.TryReadReferenceTranscript(wav));
+
+            File.WriteAllText(sidecar, "   ");
+            Assert.Null(ChatterboxTtsCpp.TryReadReferenceTranscript(wav));
+        }
+        finally
+        {
+            File.Delete(wav);
+            File.Delete(sidecar);
+        }
+    }
+
+    [Fact]
     public void BuildSpeakPayload_KeepsWavExtensionOnVoiceName()
     {
         // The chatterbox backend does not append an extension, and the server needs the .wav to
@@ -249,39 +300,70 @@ public class ChatterboxTtsCppTests
         Assert.Equal(expected, ChatterboxTtsCpp.LooksLikeCloneReferenceRejected(serverLog));
     }
 
-    [Fact]
-    public void LegacyEnglishOnlyGguf_IsDetectedBySize()
+    [Theory]
+    // Verbatim from the crash in #13572 - the CUDA build dying at the first AR step of the
+    // request that switches cloned voice.
+    [InlineData("chatterbox[ar]: step=0 tok=3704\nCUDA error: invalid argument\n  current device: 0, in function ggml_cuda_cpy at D:\\a\\CrispASR\\CrispASR\\ggml\\src\\ggml-cuda\\cpy.cu:474", true)]
+    // A CUDA fault in another op still counts: the advice (use the Vulkan build) is the same.
+    [InlineData("CUDA error: out of memory", true)]
+    // The CPU/Vulkan assert is a different bug with different advice - it must not match here.
+    [InlineData("ggml-backend.cpp:349: GGML_ASSERT(offset + size <= ggml_nbytes(tensor) && \"tensor read out of bounds\") failed", false)]
+    [InlineData("crispasr-server: synthesized 13.4s audio in 6.87s (RTF=0.51)", false)]
+    public void LooksLikeCudaBackendCrash_MatchesOnlyTheCudaFault(string serverLog, bool expected)
     {
-        // cstr/chatterbox-GGUF was rebuilt in place with multilingual weights; the legacy
-        // English-only files are recognised by exact byte size so they get re-downloaded.
-        // SetLength is metadata-only, so no 630 MB is actually written.
-        var path = Path.Combine(Path.GetTempPath(), $"chatterbox-legacy-test-{Guid.NewGuid():N}.gguf");
+        Assert.Equal(expected, ChatterboxTtsCpp.LooksLikeCudaBackendCrash(serverLog));
+    }
+
+    [Fact]
+    public void RemoveSupersededBaseModels_DeletesTheUnversionedBasePairOnly()
+    {
+        // The chatterbox-v3-* pair replaced the unversioned Base GGUFs, so those are dead weight
+        // once it is downloaded - up to ~3.4 GB for a user who had all three quantizations.
+        // Turbo keeps its own unversioned names and must survive.
+        var folder = Path.Combine(Path.GetTempPath(), $"chatterbox-cleanup-{Guid.NewGuid():N}");
+        Directory.CreateDirectory(folder);
         try
         {
-            using (var fs = new FileStream(path, FileMode.CreateNew, FileAccess.Write))
+            string[] superseded =
             {
-                fs.SetLength(630_177_120);
+                "chatterbox-t3-q8_0.gguf", "chatterbox-s3gen-q8_0.gguf",
+                "chatterbox-t3-f16.gguf", "chatterbox-s3gen-f16.gguf",
+                "chatterbox-t3-q4_k.gguf", "chatterbox-s3gen-q4_k.gguf",
+            };
+            string[] kept =
+            {
+                "chatterbox-turbo-t3-q8_0.gguf", "chatterbox-turbo-s3gen-q8_0.gguf",
+                ChatterboxTtsCppDownloadService.BaseT3FileName,
+                ChatterboxTtsCppDownloadService.BaseS3GenFileName,
+            };
+
+            foreach (var name in superseded.Concat(kept))
+            {
+                File.WriteAllText(Path.Combine(folder, name), "x");
             }
 
-            Assert.True(Nikse.SubtitleEdit.Logic.Download.ChatterboxTtsCppDownloadService.IsLegacyEnglishOnlyModel(path));
+            ChatterboxTtsCppDownloadService.RemoveSupersededBaseModels(folder);
 
-            using (var fs = new FileStream(path, FileMode.Create, FileAccess.Write))
+            foreach (var name in superseded)
             {
-                fs.SetLength(639_285_952); // the current multilingual T3 — must NOT be flagged
+                Assert.False(File.Exists(Path.Combine(folder, name)), name);
             }
 
-            Assert.False(Nikse.SubtitleEdit.Logic.Download.ChatterboxTtsCppDownloadService.IsLegacyEnglishOnlyModel(path));
+            foreach (var name in kept)
+            {
+                Assert.True(File.Exists(Path.Combine(folder, name)), name);
+            }
         }
         finally
         {
-            File.Delete(path);
+            Directory.Delete(folder, true);
         }
     }
 
     [Theory]
-    [InlineData("Base", "chatterbox-t3-q8_0.gguf", "chatterbox-s3gen-q8_0.gguf", "chatterbox")]
-    [InlineData("Base F16", "chatterbox-t3-f16.gguf", "chatterbox-s3gen-f16.gguf", "chatterbox")]
-    [InlineData("Base Q4_K", "chatterbox-t3-q4_k.gguf", "chatterbox-s3gen-q4_k.gguf", "chatterbox")]
+    [InlineData("Base", "chatterbox-v3-t3-q8_0.gguf", "chatterbox-v3-s3gen-q8_0.gguf", "chatterbox")]
+    [InlineData("Base F16", "chatterbox-v3-t3-f16.gguf", "chatterbox-v3-s3gen-f16.gguf", "chatterbox")]
+    [InlineData("Base Q4_K", "chatterbox-v3-t3-q4_k.gguf", "chatterbox-v3-s3gen-q4_k.gguf", "chatterbox")]
     [InlineData("Turbo", "chatterbox-turbo-t3-q8_0.gguf", "chatterbox-turbo-s3gen-q8_0.gguf", "chatterbox-turbo")]
     public void EachModelKey_MapsToItsOwnGgufPairAndBackend(string modelKey, string t3, string s3gen, string backend)
     {
@@ -324,39 +406,6 @@ public class ChatterboxTtsCppTests
         }).ToList();
         Assert.Equal(files.Count, files.Distinct().Count());
     }
-
-    [Fact]
-    public void LegacySizeCheck_DoesNotFlagTheF16OrQ4KPair()
-    {
-        // The legacy English-only sizes are q8_0-specific. If a newly published quantization
-        // ever matched one of them byte-for-byte it would be re-downloaded forever.
-        long[] currentSizes =
-        {
-            1_138_156_192, // chatterbox-t3-f16.gguf
-            649_353_632,   // chatterbox-s3gen-f16.gguf
-            382_171_840,   // chatterbox-t3-q4_k.gguf
-            254_658_880,   // chatterbox-s3gen-q4_k.gguf
-        };
-
-        var path = Path.Combine(Path.GetTempPath(), $"chatterbox-quant-test-{Guid.NewGuid():N}.gguf");
-        try
-        {
-            foreach (var size in currentSizes)
-            {
-                using (var fs = new FileStream(path, FileMode.Create, FileAccess.Write))
-                {
-                    fs.SetLength(size); // metadata-only, nothing is written
-                }
-
-                Assert.False(ChatterboxTtsCppDownloadService.IsLegacyEnglishOnlyModel(path));
-            }
-        }
-        finally
-        {
-            File.Delete(path);
-        }
-    }
-
     private static string WriteTempWav(byte[] bytes)
     {
         var path = Path.Combine(Path.GetTempPath(), $"chatterbox-ref-test-{Guid.NewGuid():N}.wav");

@@ -32,6 +32,7 @@ public class LanguageMainToolbar
     public string WebVttStylesHint { get; set; }
     public string SsaPropertiesHint { get; set; }
     public string SsaAttachmentsHint { get; set; }
+    public string GetFrameRateFromVideoFileHint { get; set; }
 
 
     public LanguageMainToolbar()
@@ -66,5 +67,6 @@ public class LanguageMainToolbar
         WebVttStylesHint = "WebVTT style manager";
         SsaPropertiesHint = "Sub Station Alpha properties";
         SsaAttachmentsHint = "Sub Station Alpha attachments";
+        GetFrameRateFromVideoFileHint = "Get frame rate from video file";
     }
 }

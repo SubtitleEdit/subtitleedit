@@ -47,6 +47,8 @@ public class Qwen3TtsCrispAsr : ITtsEngine
     public bool HasRegion => false;
     public bool HasModel => true;
     public bool HasKeyFile => false;
+    public bool SupportsVoiceCloning => true;
+    public bool SupportsPerLineVoiceCloning => false;
 
     public const string ModelKeyVoiceDesign = "1.7B VoiceDesign";
     public const string ModelKeyCustomVoice = "1.7B CustomVoice";
@@ -956,6 +958,11 @@ public class Qwen3TtsCrispAsr : ITtsEngine
                 CreateNoWindow = true,
                 RedirectStandardError = true,
                 RedirectStandardOutput = true,
+                // The server writes UTF-8. Without these the reader decodes it in the OS default
+                // codepage, and non-ASCII text in the captured log - the line being synthesised,
+                // upstream's em dashes - reaches bug reports as mojibake (#13572).
+                StandardOutputEncoding = Encoding.UTF8,
+                StandardErrorEncoding = Encoding.UTF8,
             };
             psi.ArgumentList.Add("--server");
             psi.ArgumentList.Add("--backend");

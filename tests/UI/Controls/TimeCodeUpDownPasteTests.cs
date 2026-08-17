@@ -31,6 +31,8 @@ public class TimeCodeUpDownPasteTests
     [InlineData("01:02,300", 62300)]      // mm:ss,fff
     [InlineData("01:00:00,000", 3600000)]
     [InlineData("359999999", 359999999)]  // max in-range milliseconds (99:59:59,999)
+    [InlineData("-5", -5)]                // negative time codes are legal - see #13695
+    [InlineData("-00:00:05,500", -5500)]
     public void ParsesAcceptedInput(string input, int expectedMs)
     {
         var (ok, value) = Parse(input);
@@ -42,7 +44,7 @@ public class TimeCodeUpDownPasteTests
     [InlineData("")]
     [InlineData("   ")]
     [InlineData("abc")]
-    [InlineData("-5")]           // negative not a valid time code
+    [InlineData("-")]            // a sign on its own is not a time code
     [InlineData("5:5")]          // too few parts to be a time code
     [InlineData("360000000")]    // one ms past the max range
     [InlineData("99999999999999999")] // huge bare number: would overflow TimeSpan.FromMilliseconds

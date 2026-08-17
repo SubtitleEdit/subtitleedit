@@ -676,6 +676,12 @@ public partial class AiReviewViewModel : ObservableObject
     }
 
     [RelayCommand]
+    private void SelectNone()
+    {
+        SetAllSelected(false);
+    }
+
+    [RelayCommand]
     private void InvertSelection()
     {
         _syncingSelection = true;

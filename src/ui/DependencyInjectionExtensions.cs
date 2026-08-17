@@ -140,6 +140,7 @@ using Nikse.SubtitleEdit.Features.Translate;
 using Nikse.SubtitleEdit.Features.Translate.LlamaCppEngineSettings;
 using Nikse.SubtitleEdit.Features.Video.BlankVideo;
 using Nikse.SubtitleEdit.Features.Video.BurnIn;
+using Nikse.SubtitleEdit.Features.Video.Chapters;
 using Nikse.SubtitleEdit.Features.Video.CutVideo;
 using Nikse.SubtitleEdit.Features.Video.EmbeddedSubtitlesEdit;
 using Nikse.SubtitleEdit.Features.Video.GoToVideoPosition;
@@ -161,6 +162,9 @@ using Nikse.SubtitleEdit.Features.Video.TextToSpeech.Qwen3TtsSettings;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.Qwen3TtsCrispAsrSettings;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.VibeVoiceCrispAsrSettings;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.IndexTtsCrispAsrSettings;
+using Nikse.SubtitleEdit.Features.Video.TextToSpeech.IndexTts25License;
+using Nikse.SubtitleEdit.Features.Video.TextToSpeech.VoiceCloneConsent;
+using Nikse.SubtitleEdit.Features.Video.TextToSpeech.IndexTts25AudioCppSettings;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.CosyVoice3CrispAsrSettings;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.F5TtsCrispAsrSettings;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.OmniVoiceCrispAsrSettings;
@@ -228,7 +232,6 @@ public static class DependencyInjectionExtensions
         collection.AddTransient<IBatchConvertItemSplitter, BatchConvertTransportStreamSplitter>();
         collection.AddTransient<IBluRayHelper, BluRayHelper>();
         collection.AddTransient<ICasingToggler, CasingToggler>();
-        collection.AddTransient<IChatLlmDownloadService, ChatLlmDownloadService>();
         collection.AddTransient<IColorService, ColorService>();
         collection.AddHttpClientWithProxy<ICrispAsrDownloadService, CrispAsrDownloadService>();
         collection.AddTransient<IDictionaryInitializer, DictionaryInitializer>();
@@ -255,6 +258,7 @@ public static class DependencyInjectionExtensions
         collection.AddTransient<IThemeInitializer, ThemeInitializer>();
         collection.AddTransient<ITtsDownloadService, TtsDownloadService>();
         collection.AddTransient<IUndoRedoManager, UndoRedoManager>();
+        collection.AddTransient<IVideoPreviewSubtitle, VideoPreviewSubtitle>();
         collection.AddTransient<IVlcReloader, VlcReloader>();
         collection.AddTransient<IWindowService, WindowService>();
         collection.AddTransient<IZipUnpacker, ZipUnpacker>();
@@ -263,7 +267,6 @@ public static class DependencyInjectionExtensions
         collection.AddHttpClientWithProxy<IFfmpegDownloadService, FfmpegDownloadService>();
         collection.AddHttpClientWithProxy<ILibMpvDownloadService, LibMpvDownloadService>();
         collection.AddHttpClientWithProxy<ILibVlcDownloadService, LibVlcDownloadService>();
-        collection.AddHttpClientWithProxy<IPaddleOcrDownloadService, PaddleOcrDownloadService>();
         collection.AddHttpClientWithProxy<ICrispEmbedDownloadService, CrispEmbedDownloadService>();
         collection.AddHttpClientWithProxy<ISpellCheckDictionaryDownloadService, SpellCheckDictionaryDownloadService>();
         collection.AddHttpClientWithProxy<ITesseractDownloadService, TesseractDownloadService>();
@@ -276,6 +279,7 @@ public static class DependencyInjectionExtensions
         collection.AddHttpClientWithProxy<IQwen3TtsCrispAsrDownloadService, Qwen3TtsCrispAsrDownloadService>();
         collection.AddHttpClientWithProxy<IVibeVoiceCrispAsrDownloadService, VibeVoiceCrispAsrDownloadService>();
         collection.AddHttpClientWithProxy<IIndexTtsCrispAsrDownloadService, IndexTtsCrispAsrDownloadService>();
+        collection.AddHttpClientWithProxy<IIndexTts25AudioCppDownloadService, IndexTts25AudioCppDownloadService>();
         collection.AddHttpClientWithProxy<ICosyVoice3CrispAsrDownloadService, CosyVoice3CrispAsrDownloadService>();
         collection.AddHttpClientWithProxy<IF5TtsCrispAsrDownloadService, F5TtsCrispAsrDownloadService>();
         collection.AddHttpClientWithProxy<IOmniVoiceCrispAsrDownloadService, OmniVoiceCrispAsrDownloadService>();
@@ -355,6 +359,8 @@ public static class DependencyInjectionExtensions
         collection.AddTransient<CategoryPickerViewModel>();
         collection.AddTransient<ChangeCasingViewModel>();
         collection.AddTransient<ChangeFormattingViewModel>();
+        collection.AddTransient<ChaptersViewModel>();
+        collection.AddTransient<WriteChaptersToVideoViewModel>();
         collection.AddTransient<ConvertActorsViewModel>();
         collection.AddTransient<ChangeFrameRateViewModel>();
         collection.AddTransient<ChangeSpeedViewModel>();
@@ -458,6 +464,9 @@ public static class DependencyInjectionExtensions
         collection.AddTransient<Qwen3TtsCrispAsrSettingsViewModel>();
         collection.AddTransient<VibeVoiceCrispAsrSettingsViewModel>();
         collection.AddTransient<IndexTtsCrispAsrSettingsViewModel>();
+        collection.AddTransient<IndexTts25LicenseViewModel>();
+        collection.AddTransient<VoiceCloneConsentViewModel>();
+        collection.AddTransient<IndexTts25AudioCppSettingsViewModel>();
         collection.AddTransient<CosyVoice3CrispAsrSettingsViewModel>();
         collection.AddTransient<F5TtsCrispAsrSettingsViewModel>();
         collection.AddTransient<OmniVoiceCrispAsrSettingsViewModel>();

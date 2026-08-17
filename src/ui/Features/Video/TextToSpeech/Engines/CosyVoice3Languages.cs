@@ -107,9 +107,11 @@ internal static class CosyVoice3Languages
         && All.Any(l => !string.IsNullOrEmpty(l.Code) && string.Equals(l.Code, code, StringComparison.OrdinalIgnoreCase));
 
     /// <summary>
-    /// The language of a cloning reference, resolved the way the backend documents it: the
-    /// explicit "Reference language" pick from the settings window first, then a best-effort
-    /// detection over the reference transcript.
+    /// The language of a cloning reference: a best-effort detection over the reference
+    /// transcript first, then the explicit "Reference language" pick from the settings window.
+    /// The transcript is the text actually spoken in THIS reference (cloning always supplies
+    /// one for this engine), so it outranks the global pick, which goes stale the moment
+    /// references come from a video in another language (per-line clone-from-video).
     /// </summary>
     /// <remarks>
     /// The backend only goes cross-lingual once it knows BOTH the target and the reference
@@ -117,18 +119,20 @@ internal static class CosyVoice3Languages
     /// which is every en→de / en→fr / en→ru pair a dubbing workflow actually asks for. Detecting
     /// SE-side means a user who imported an English reference and asked for German gets
     /// cross-lingual synthesis without first finding a combo box in an engine settings window.
-    /// The explicit pick still wins, and a detection outside CosyVoice3's nine languages is
-    /// discarded rather than sent (the backend would reject it).
+    /// The explicit pick covers the transcripts the detector declines on, and a detection
+    /// outside CosyVoice3's nine languages is discarded rather than sent (the backend would
+    /// reject it).
     /// </remarks>
     public static string ResolveSourceLanguageArg(string? refText)
     {
-        var configured = (Se.Settings.Video.TextToSpeech.CosyVoice3CrispAsrSourceLanguage ?? string.Empty).Trim();
-        if (IsSupported(configured))
+        var detected = DetectSourceLanguage(refText);
+        if (!string.IsNullOrEmpty(detected))
         {
-            return configured;
+            return detected;
         }
 
-        return DetectSourceLanguage(refText);
+        var configured = (Se.Settings.Video.TextToSpeech.CosyVoice3CrispAsrSourceLanguage ?? string.Empty).Trim();
+        return IsSupported(configured) ? configured : string.Empty;
     }
 
     /// <summary>

@@ -220,9 +220,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             new KeyValuePair<string, string>("4f80 1332",           "Ö" ),
             new KeyValuePair<string, string>("13b3",                "ö" ),
             new KeyValuePair<string, string>("ef80 13b3",           "ö" ),
-            new KeyValuePair<string, string>("1334",                ""  ),
-            new KeyValuePair<string, string>("13b5",                ""  ),
-            new KeyValuePair<string, string>("13b6",                ""  ),
+            new KeyValuePair<string, string>("1334",                "ß" ),
+            new KeyValuePair<string, string>("13b5",                "¥" ),
+            new KeyValuePair<string, string>("13b6",                "¤" ),
             new KeyValuePair<string, string>("1337",                "|" ),
             new KeyValuePair<string, string>("1338",                "Å" ),
             new KeyValuePair<string, string>("13b9",                "å" ),
@@ -244,9 +244,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             new KeyValuePair<string, string>("94d6",                ""  ), //94d6=?
             new KeyValuePair<string, string>("94f2",                ""  ),
             new KeyValuePair<string, string>("94f4",                ""  ),
-            new KeyValuePair<string, string>("9723",                " " ), // ?
-            new KeyValuePair<string, string>("97a1",                " " ), // ?
-            new KeyValuePair<string, string>("97a2",                " " ), // ?
+            new KeyValuePair<string, string>("9723",                ""  ), // Tab Offset 3 - positioning only, no glyph
+            new KeyValuePair<string, string>("97a1",                ""  ), // Tab Offset 1
+            new KeyValuePair<string, string>("97a2",                ""  ), // Tab Offset 2
             new KeyValuePair<string, string>("1370",                ""  ), //1370=?
             new KeyValuePair<string, string>("13e0",                ""  ), //13e0=?
             new KeyValuePair<string, string>("13f2",                ""  ), //13f2=?
@@ -404,7 +404,140 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             new KeyValuePair<string, string>("d580 923d 923d",      "Û"),
         };
 
-        private static readonly Dictionary<string, string> LettersCodeLookup = LetterDictionary.ToDictionary(p => p.Key, p => p.Value);
+        private static readonly Dictionary<string, string> LettersCodeLookup = BuildLettersCodeLookup();
+
+        // CEA-608 extended characters (the 0x12/0x13 sets) erase the preceding standard
+        // character, so compliant encoders transmit a standard fallback letter first
+        // ("o" + extended "ö"). Generate a "fallback + extended" combined entry for every
+        // extended character so files from compliant encoders decode without doubled letters.
+        private static Dictionary<string, string> BuildLettersCodeLookup()
+        {
+            var lookup = new Dictionary<string, string>();
+            foreach (var p in LetterDictionary)
+            {
+                if (!lookup.ContainsKey(p.Key))
+                {
+                    lookup.Add(p.Key, p.Value);
+                }
+            }
+
+            foreach (var p in LetterDictionary)
+            {
+                if (!IsExtendedCharCode(p.Key) || p.Value.Length != 1)
+                {
+                    continue;
+                }
+
+                var fallback = GetExtendedCharFallback(p.Value[0]);
+                if (fallback == null)
+                {
+                    continue;
+                }
+
+                var fallbackCode = LetterDictionary.FirstOrDefault(x => x.Value == fallback).Key;
+                if (fallbackCode != null && fallbackCode.Length == 2)
+                {
+                    var combined = fallbackCode + "80 " + p.Key;
+                    if (!lookup.ContainsKey(combined))
+                    {
+                        lookup.Add(combined, p.Value);
+                    }
+                }
+            }
+
+            return lookup;
+        }
+
+        private static bool IsExtendedCharCode(string code)
+        {
+            return code.Length == 4 &&
+                   (code.StartsWith("12", StringComparison.Ordinal) ||
+                    code.StartsWith("92", StringComparison.Ordinal) ||
+                    code.StartsWith("13", StringComparison.Ordinal) ||
+                    code.StartsWith("93", StringComparison.Ordinal));
+        }
+
+        private static string GetExtendedCharFallback(char ch)
+        {
+            switch (ch)
+            {
+                case 'ß': return "s";
+                case '«':
+                case '»':
+                case '“':
+                case '”': return "\"";
+                case '‘':
+                case '’': return "'";
+                case '—': return "-";
+            }
+
+            var stripped = new StringBuilder();
+            foreach (var c in ch.ToString().Normalize(NormalizationForm.FormD))
+            {
+                if (System.Globalization.CharUnicodeInfo.GetUnicodeCategory(c) != System.Globalization.UnicodeCategory.NonSpacingMark)
+                {
+                    stripped.Append(c);
+                }
+            }
+
+            var result = stripped.ToString();
+            return result.Length == 1 && result[0] != ch && result[0] < 0x80 ? result : null;
+        }
+
+        // Writer counterpart of the combined decode entries: insert the standard fallback
+        // letter before each extended character, as CEA-608 decoders erase it again.
+        // Without it, spec-compliant decoders erase the real preceding character instead
+        // ("schön" displayed as "scön").
+        private static readonly Lazy<Dictionary<char, char>> ExtendedCharWriteFallbacks = new Lazy<Dictionary<char, char>>(() =>
+        {
+            // The first dictionary entry per character is what the encoder emits. Some
+            // characters already encode as a multi-word "fallback + extended" sequence
+            // (e.g. ä = "6180 1331 1331") - only characters that encode as a bare
+            // extended code need a fallback inserted.
+            var primaryCodes = new Dictionary<char, string>();
+            foreach (var p in LetterDictionary)
+            {
+                if (p.Value.Length == 1 && !primaryCodes.ContainsKey(p.Value[0]))
+                {
+                    primaryCodes.Add(p.Value[0], p.Key);
+                }
+            }
+
+            var map = new Dictionary<char, char>();
+            foreach (var kvp in primaryCodes)
+            {
+                var ch = kvp.Key;
+                if (ch == '’' || !IsExtendedCharCode(kvp.Value))
+                {
+                    continue; // '’' has its own encode branch
+                }
+
+                var fallback = GetExtendedCharFallback(ch);
+                var fallbackCode = fallback == null ? null : LetterDictionary.FirstOrDefault(x => x.Value == fallback).Key;
+                if (fallbackCode != null && fallbackCode.Length == 2)
+                {
+                    map.Add(ch, fallback[0]);
+                }
+            }
+
+            return map;
+        });
+
+        private static string InsertExtendedCharFallbacks(string text)
+        {
+            var sb = new StringBuilder(text.Length + 4);
+            foreach (var ch in text)
+            {
+                if (ExtendedCharWriteFallbacks.Value.TryGetValue(ch, out var fallback))
+                {
+                    sb.Append(fallback);
+                }
+
+                sb.Append(ch);
+            }
+
+            return sb.ToString();
+        }
 
         public override string Extension => ".scc";
 
@@ -539,6 +672,16 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         private static string ToSccText(string text, string language)
         {
+            // Transliterate characters CEA-608 has no code for (they would otherwise be
+            // written as spaces and silently disappear). Before the line-length fix-up so
+            // the expanded text is what gets measured.
+            text = text.Replace("…", "...")
+                .Replace("Æ", "AE")
+                .Replace("æ", "ae")
+                .Replace("Œ", "OE")
+                .Replace("œ", "oe")
+                .Replace("€", "EUR");
+
             text = FixMax4LinesAndMax32CharsPerLine(text, language);
             var topAlign = text.StartsWith("{\\an7}", StringComparison.Ordinal) ||
                            text.StartsWith("{\\an8}", StringComparison.Ordinal) ||
@@ -572,6 +715,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 var centerCodes = GetCenterCodes(HtmlUtil.RemoveHtmlTags(text), count, lines.Count, topAlign, leftAlign, rightAlign, verticalCenter);
                 sb.Append(centerCodes);
                 count++;
+                text = InsertExtendedCharFallbacks(text); // after centering - fallback chars are erased again and take no screen cell
                 int i = 0;
                 string code = string.Empty;
                 if (italic > 0)
@@ -1170,6 +1314,15 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         {
                             switch (part)
                             {
+                                case "97a1":
+                                    x += 1; // Tab Offset 1 - positioning only, no glyph
+                                    break;
+                                case "97a2":
+                                    x += 2; // Tab Offset 2
+                                    break;
+                                case "9723":
+                                    x += 3; // Tab Offset 3
+                                    break;
                                 case "9440":
                                 case "94e0":
                                     if (!sb.ToString().EndsWith(Environment.NewLine, StringComparison.Ordinal))

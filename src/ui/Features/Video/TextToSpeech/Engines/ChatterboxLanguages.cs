@@ -1,3 +1,4 @@
+using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Logic.Config;
 using System;
 using System.Linq;
@@ -12,10 +13,10 @@ namespace Nikse.SubtitleEdit.Features.Video.TextToSpeech.Engines;
 /// The codes are ISO 639-1 two-letter IDs. CrispASR's chatterbox backend turns the request's
 /// <c>language</c> field into the <c>[xx]</c> language token it prepends to the T3 prompt —
 /// the same mechanism as its CLI <c>-l</c> flag. This only has an effect on the multilingual
-/// Base GGUFs (2454-token text vocab); see
-/// <see cref="Logic.Download.ChatterboxTtsCppDownloadService.IsLegacyEnglishOnlyModel"/> for how
-/// pre-multilingual files are detected and re-downloaded. Chatterbox Turbo is an English-only
-/// distillation, so <see cref="ChatterboxTtsCpp.GetLanguages"/> offers it "Auto" alone.
+/// Base GGUFs (2454-token text vocab), which is what the versioned <c>chatterbox-v3-*</c> pair
+/// in <see cref="Logic.Download.ChatterboxTtsCppDownloadService"/> guarantees. Chatterbox Turbo
+/// is an English-only distillation, so <see cref="ChatterboxTtsCpp.GetLanguages"/> offers it
+/// "Auto" alone.
 ///
 /// The multilingual tokenizer actually carries a few more tags (bg, cs, hu, ro, sk, ta, vi and
 /// special tags like [ipa]); only the 23 languages ResembleAI ships and documents are listed
@@ -123,4 +124,63 @@ internal static class ChatterboxLanguages
     public static bool IsSupported(string? code) =>
         !string.IsNullOrWhiteSpace(code)
         && Catalog.Any(l => string.Equals(l.Code, code, StringComparison.OrdinalIgnoreCase));
+
+    /// <summary>
+    /// The language of a cloning reference, sent as the request's <c>source_lang</c> field: a
+    /// best-effort detection over <paramref name="refText"/> (the transcript sidecar beside the
+    /// reference WAV) first, then the explicit "Reference language" pick from the engine
+    /// settings window. The sidecar holds the text actually spoken in THIS reference - per-line
+    /// clone-from-video writes one per clip - so it outranks the global pick, which describes
+    /// the user's own imported reference and goes stale the moment references come from a video
+    /// in another language.
+    /// </summary>
+    /// <remarks>
+    /// Chatterbox V3 follows upstream's cross-lingual recommendation once it knows what language
+    /// the reference is spoken in: it drops to CFG weight 0, which keeps the speaker's timbre
+    /// while shedding the reference language's accent. Without it an English reference asked for
+    /// German keeps the English accent — the same hole CosyVoice3 had in #13272, and the reason
+    /// the server grew a per-request <c>source_lang</c> in CrispASR v0.8.29 (#329).
+    ///
+    /// Unlike CosyVoice3, Chatterbox clones from the WAV alone and never asks for a transcript,
+    /// so the settings pick is the path most users will take; the sidecar is only read when one
+    /// happens to exist (which is what a reference cut by another SE feature leaves behind).
+    /// </remarks>
+    public static string ResolveSourceLanguageArg(string? refText)
+    {
+        var detected = DetectSourceLanguage(refText);
+        if (!string.IsNullOrEmpty(detected))
+        {
+            return detected;
+        }
+
+        var configured = (Se.Settings.Video.TextToSpeech.ChatterboxCrispAsrSourceLanguage ?? string.Empty).Trim();
+        return IsSupported(configured) ? configured : string.Empty;
+    }
+
+    /// <summary>
+    /// Best-effort language of <paramref name="refText"/>, or an empty string when it cannot be
+    /// determined or is not one of Chatterbox's 23 languages. Uses the same detector the rest of
+    /// SE uses for subtitle language (function words first, then writing system).
+    /// </summary>
+    public static string DetectSourceLanguage(string? refText)
+    {
+        if (string.IsNullOrWhiteSpace(refText))
+        {
+            return string.Empty;
+        }
+
+        try
+        {
+            var subtitle = new Subtitle();
+            subtitle.Paragraphs.Add(new Paragraph(refText, 0, 0));
+            var detected = LanguageAutoDetect.AutoDetectGoogleLanguageOrNull(subtitle);
+            return IsSupported(detected) ? detected! : string.Empty;
+        }
+        catch
+        {
+            // Detection is an optimization - a failure just means we send no source_lang and the
+            // clone stays plain zero-shot.
+            return string.Empty;
+        }
+    }
 }

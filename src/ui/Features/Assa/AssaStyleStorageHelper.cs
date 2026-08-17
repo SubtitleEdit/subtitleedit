@@ -68,20 +68,23 @@ public static class AssaStyleStorageHelper
     }
 
     /// <summary>
-    /// Decides which style name a new ASSA/SSA paragraph should use:
-    /// if the file already defines styles, the first file style is used; otherwise the default
-    /// storage styles (if any) become the file's styles and the default one is used.
+    /// Decides which style name a new ASSA/SSA paragraph should use.
+    /// When the file already defines styles, see <see cref="ResolveExistingFileStyle"/>; otherwise
+    /// the default storage styles (if any) become the file's styles and the default one is used.
     /// Falls back to "Default". The subtitle header is updated when the storage styles are applied.
     /// </summary>
-    public static string GetStyleNameForNewParagraph(Subtitle subtitle, SubtitleFormat format)
+    /// <param name="neighborStyle">
+    /// Style of the line the new paragraph is inserted next to, when there is one.
+    /// </param>
+    public static string GetStyleNameForNewParagraph(Subtitle subtitle, SubtitleFormat format, string? neighborStyle = null)
     {
-        // if the file already defines styles, use the first one
+        // if the file already defines styles, pick one of those
         if (HasSsaOrAssaStyles(subtitle.Header))
         {
             var existingStyles = AdvancedSubStationAlpha.GetStylesFromHeader(subtitle.Header);
             if (existingStyles.Count > 0)
             {
-                return existingStyles[0];
+                return ResolveExistingFileStyle(existingStyles, format, neighborStyle);
             }
         }
 
@@ -102,6 +105,33 @@ public static class AssaStyleStorageHelper
         }
 
         return AdvancedSubStationAlpha.GetStylesFromHeader(subtitle.Header).FirstOrDefault() ?? "Default";
+    }
+
+    /// <summary>
+    /// Picks a style for a new paragraph among the styles a file already defines (issue #13677).
+    /// The header order is not a ranking - SE 4 kept the style of the line the new line was
+    /// inserted next to, and just taking the first header style made every new line adopt
+    /// whichever style happened to sit at the top. Order of preference:
+    /// the neighbouring line's style, the style flagged as default in the storage, a style
+    /// literally named "Default", and only then the first style in the header.
+    /// </summary>
+    private static string ResolveExistingFileStyle(List<string> existingStyles, SubtitleFormat format, string? neighborStyle)
+    {
+        return FindStyle(existingStyles, neighborStyle) ??
+               FindStyle(existingStyles, GetDefaultStorageStyle(format)?.Name) ??
+               FindStyle(existingStyles, "Default") ??
+               existingStyles[0];
+    }
+
+    /// <summary>
+    /// Returns the file's spelling of <paramref name="name"/>, or null when the file has no such
+    /// style. Style names are matched case-insensitively, like the rest of the ASSA style lookups.
+    /// </summary>
+    private static string? FindStyle(List<string> existingStyles, string? name)
+    {
+        return string.IsNullOrEmpty(name)
+            ? null
+            : existingStyles.FirstOrDefault(s => s.Equals(name, StringComparison.OrdinalIgnoreCase));
     }
 
     /// <summary>

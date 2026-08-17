@@ -31,6 +31,7 @@ public partial class GetAudioClipsViewModel : ObservableObject
     private bool _useCenterChannelOnly;
     private readonly CancellationTokenSource _cancellationTokenSource;
     private List<SubtitleLineViewModel> _lines;
+    private int _started;
 
     public GetAudioClipsViewModel()
     {
@@ -66,9 +67,7 @@ public partial class GetAudioClipsViewModel : ObservableObject
             }
 
             count++;
-            var pecentage = (double)count / _lines.Count * 100.0;
-            Progress = pecentage;
-            StatusText = string.Format(Se.Language.General.FileXOfY, count, _lines.Count);
+            ReportProgress(count);
 
             var outputFileName = Path.Combine(Path.GetTempPath(), $"se_audioclip_{Guid.NewGuid()}.wav");
             var process = GetExtractProcess(_videoFileName, line, outputFileName);
@@ -111,6 +110,25 @@ public partial class GetAudioClipsViewModel : ObservableObject
         Close();
     }
 
+    /// <summary>
+    /// Pushes the progress of clip <paramref name="count"/> to the UI.
+    /// </summary>
+    /// <remarks>
+    /// ExtractLines runs on a worker thread, and these two properties are bound to the progress
+    /// bar and the status line - so the assignments have to be marshalled, the same way this class
+    /// already marshals its message box and its Close().
+    /// </remarks>
+    private void ReportProgress(int count)
+    {
+        var percentage = (double)count / _lines.Count * 100.0;
+        var status = string.Format(Se.Language.General.FileXOfY, count, _lines.Count);
+        Dispatcher.UIThread.Post(() =>
+        {
+            Progress = percentage;
+            StatusText = status;
+        });
+    }
+
     private Process GetExtractProcess(string videoFileName, SubtitleLineViewModel line, string outputFileName)
     {
         var arguments = FfmpegGenerator.ExtractAudioClipFromVideoParameters(
@@ -143,9 +161,25 @@ public partial class GetAudioClipsViewModel : ObservableObject
         Close();
     }
 
-    public void StartAudioExtract()
+    /// <summary>
+    /// Starts the extraction, once. Returns false when a run is already going.
+    /// </summary>
+    /// <remarks>
+    /// The window used to start this from its <c>Activated</c> event, which fires again every time
+    /// the user tabs away and back - so a second extraction loop began from line one while the
+    /// first was still running, and the two fought over the progress counter (#13777). The window
+    /// starts it from <c>Loaded</c> now; this guard keeps the invariant with the state it belongs
+    /// to, since a second loop also appends to <see cref="AudioClips"/> from another thread.
+    /// </remarks>
+    public bool StartAudioExtract()
     {
+        if (Interlocked.Exchange(ref _started, 1) != 0)
+        {
+            return false;
+        }
+
         _ = Task.Run(ExtractLines, _cancellationTokenSource.Token);
+        return true;
     }
 
     internal void OnKeyDown(KeyEventArgs e)

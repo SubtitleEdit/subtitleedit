@@ -65,9 +65,15 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 }
                 else
                 {
-                    if (p?.Text.Length < 200)
+                    // Bound by line count, not character count - the old 200-character cap
+                    // silently truncated long (e.g. SDH) cues.
+                    if (p != null && Utilities.GetNumberOfLines(p.Text) < 5)
                     {
                         p.Text = (p.Text + Environment.NewLine + line).Trim();
+                    }
+                    else
+                    {
+                        _errorCount++;
                     }
                 }
             }

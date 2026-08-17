@@ -53,6 +53,9 @@ public partial class PointSyncViaOtherViewModel : ObservableObject
     private string _videoFileName;
     private List<SubtitleLineViewModel> _originalSubtitles;
 
+    // Only passed on to "Set sync point via video", which draws the subtitle on its video (#13767).
+    private VideoPreviewSubtitleContext _previewContext = VideoPreviewSubtitleContext.Default;
+
     public PointSyncViaOtherViewModel(IFileHelper fileHelper, IWindowService windowService)
     {
         _fileHelper = fileHelper;
@@ -68,13 +71,14 @@ public partial class PointSyncViaOtherViewModel : ObservableObject
         _originalSubtitles = new List<SubtitleLineViewModel>();
     }
 
-    public void Initialize(List<SubtitleLineViewModel> subtitles, string videoFileName, string fileName)
+    public void Initialize(List<SubtitleLineViewModel> subtitles, string videoFileName, string fileName, VideoPreviewSubtitleContext previewContext)
     {
         Subtitles.Clear();
         Subtitles.AddRange(subtitles);
         _originalSubtitles = subtitles.Select(s => new SubtitleLineViewModel(s)).ToList();
         FileName = fileName;
         _videoFileName = videoFileName;
+        _previewContext = previewContext;
 
         if (Subtitles.Count > 0)
         {
@@ -227,7 +231,7 @@ public partial class PointSyncViaOtherViewModel : ObservableObject
 
         var result = await _windowService.ShowDialogAsync<SetSyncPointWindow, SetSyncPointViewModel>(Window, vm =>
         {
-            vm.Initialize(Subtitles.ToList(), left, _videoFileName, FileName, null);
+            vm.Initialize(Subtitles.ToList(), left, _videoFileName, FileName, _previewContext, null);
         });
 
         // Keep a video opened (or found) in there - also when the dialog was cancelled.

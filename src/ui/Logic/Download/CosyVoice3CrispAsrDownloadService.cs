@@ -31,6 +31,8 @@ public class CosyVoice3CrispAsrDownloadService : ICosyVoice3CrispAsrDownloadServ
     {
         [CosyVoice3CrispAsr.LlmQ4KFileName] = RepoBase + CosyVoice3CrispAsr.LlmQ4KFileName,
         [CosyVoice3CrispAsr.LlmF16FileName] = RepoBase + CosyVoice3CrispAsr.LlmF16FileName,
+        [CosyVoice3CrispAsr.LlmRlQ4KFileName] = RepoBase + CosyVoice3CrispAsr.LlmRlQ4KFileName,
+        [CosyVoice3CrispAsr.LlmRlF16FileName] = RepoBase + CosyVoice3CrispAsr.LlmRlF16FileName,
         [CosyVoice3CrispAsr.FlowF16FileName] = RepoBase + CosyVoice3CrispAsr.FlowF16FileName,
         [CosyVoice3CrispAsr.HiftF16FileName] = RepoBase + CosyVoice3CrispAsr.HiftF16FileName,
         [CosyVoice3CrispAsr.S3TokF16FileName] = RepoBase + CosyVoice3CrispAsr.S3TokF16FileName,
@@ -113,6 +115,14 @@ public class CosyVoice3CrispAsrDownloadService : ICosyVoice3CrispAsrDownloadServ
         if (string.Equals(fileName, CosyVoice3CrispAsr.LlmF16FileName, StringComparison.OrdinalIgnoreCase))
         {
             return DownloadHashManager.CosyVoice3CrispAsr.LlmF16;
+        }
+        if (string.Equals(fileName, CosyVoice3CrispAsr.LlmRlQ4KFileName, StringComparison.OrdinalIgnoreCase))
+        {
+            return DownloadHashManager.CosyVoice3CrispAsr.LlmRlQ4K;
+        }
+        if (string.Equals(fileName, CosyVoice3CrispAsr.LlmRlF16FileName, StringComparison.OrdinalIgnoreCase))
+        {
+            return DownloadHashManager.CosyVoice3CrispAsr.LlmRlF16;
         }
         if (string.Equals(fileName, CosyVoice3CrispAsr.FlowF16FileName, StringComparison.OrdinalIgnoreCase))
         {

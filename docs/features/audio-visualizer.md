@@ -96,6 +96,7 @@ Right-click on the waveform for options including:
 - Merge subtitles
 - Delete subtitle
 - Go to subtitle
+- Extract audio, or clone the voice heard in the selected subtitle into a TTS engine (**Clone voice to**)
 - Zoom controls
 
 <!-- Screenshot: Waveform context menu -->

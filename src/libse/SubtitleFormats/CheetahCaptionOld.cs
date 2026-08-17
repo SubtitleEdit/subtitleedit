@@ -52,6 +52,11 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 // Write text lines - line 1 at 0x1a (38 bytes), line 2 at 0x40 (38 bytes)
                 var text = HtmlUtil.RemoveHtmlTags(p.Text);
                 var lines = text.SplitToLines();
+                if (lines.Count > 2)
+                {
+                    // Only two line slots exist - re-break instead of dropping line three
+                    lines = Utilities.AutoBreakLine(text).SplitToLines();
+                }
                 WriteTextLine(record, 0x1a, lines.Count > 0 ? lines[0] : string.Empty, encoding);
                 WriteTextLine(record, 0x40, lines.Count > 1 ? lines[1] : string.Empty, encoding);
 
@@ -63,7 +68,51 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         private static void WriteTextLine(byte[] record, int offset, string text, Encoding encoding)
         {
-            var bytes = encoding.GetBytes(text.Length > 38 ? text.Substring(0, 38) : text);
+            // The old Cheetah format (and its reader) is ASCII only - transliterate accented
+            // characters to their base letter instead of letting ASCII turn them all into '?'.
+            var sb = new StringBuilder(text.Length);
+            foreach (var ch in text)
+            {
+                if (ch < 0x80)
+                {
+                    sb.Append(ch);
+                    continue;
+                }
+
+                switch (ch)
+                {
+                    case 'ß': sb.Append("ss"); break;
+                    case 'Æ': sb.Append("AE"); break;
+                    case 'æ': sb.Append("ae"); break;
+                    case 'Ø': sb.Append('O'); break;
+                    case 'ø': sb.Append('o'); break;
+                    case 'Đ': sb.Append('D'); break;
+                    case 'đ': sb.Append('d'); break;
+                    case '…': sb.Append("..."); break;
+                    case '‘':
+                    case '’': sb.Append('\''); break;
+                    case '“':
+                    case '”':
+                    case '„': sb.Append('"'); break;
+                    case '–':
+                    case '—': sb.Append('-'); break;
+                    default:
+                        var stripped = new StringBuilder();
+                        foreach (var c in ch.ToString().Normalize(NormalizationForm.FormD))
+                        {
+                            if (System.Globalization.CharUnicodeInfo.GetUnicodeCategory(c) != System.Globalization.UnicodeCategory.NonSpacingMark && c < 0x80)
+                            {
+                                stripped.Append(c);
+                            }
+                        }
+
+                        sb.Append(stripped.Length > 0 ? stripped.ToString() : "?");
+                        break;
+                }
+            }
+
+            var safeText = sb.ToString();
+            var bytes = encoding.GetBytes(safeText.Length > 38 ? safeText.Substring(0, 38) : safeText);
             Array.Copy(bytes, 0, record, offset, bytes.Length);
         }
 

@@ -24,6 +24,9 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Matroska
         private bool _subtitleRipLoaded;
         private List<MatroskaTrackInfo> _tracks;
         private List<MatroskaChapter> _chapters;
+        private List<List<MatroskaChapter>> _chapterEditions;
+        private int _defaultChapterEditionIndex = -1;
+        private bool _chaptersRead;
 
         private readonly Element _segmentElement;
         private long _timeCodeScale = 1000000;
@@ -75,10 +78,15 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Matroska
         /// opened instantly (#13609). Reading big and sequentially instead lets read-ahead
         /// pipeline the transfer - measured on the reporter's share, ~900 MB streams in about 4 s
         /// while the sparse walk over the same file took over two minutes.
-        /// 64 KB (#13610) already pulls ~80% of the file over the wire, so a larger buffer costs
-        /// almost no extra bytes while cutting the round-trip count proportionally.
+        /// 64 KB (#13610) is the measured optimum: it already pulls ~80% of the file over the wire,
+        /// so the round-trips are amortized, and the reporter's 901 MB file opened in ~5 s - about
+        /// 180 MB/s against a share that streams at ~225 MB/s, i.e. nearly no headroom left. Going
+        /// to 1 MB was tried and was ~2 s *slower* on that same share: at that size practically
+        /// every forward skip falls inside the buffer, so the whole file is transferred, and each
+        /// seek past the buffer end throws away up to 1 MB of already-fetched data. Bigger only
+        /// buys bytes here, not speed.
         /// </summary>
-        private const int NetworkReadBufferSize = 1024 * 1024;
+        private const int NetworkReadBufferSize = 65536;
 
         private static int GetReadBufferSize(string path)
         {
@@ -460,15 +468,46 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Matroska
             }
         }
 
+        /// <summary>
+        /// Chapters of the default edition, or of the first one when no edition is flagged default.
+        /// A file can hold several editions (a theatrical cut and a director's cut, say); returning
+        /// all of them merged would interleave two different timelines into one nonsense list.
+        /// </summary>
         public List<MatroskaChapter> GetChapters()
         {
             ReadChapters();
 
-            return _chapters ?? new List<MatroskaChapter>();
+            if (_chapterEditions == null || _chapterEditions.Count == 0)
+            {
+                return new List<MatroskaChapter>();
+            }
+
+            var index = _defaultChapterEditionIndex >= 0 && _defaultChapterEditionIndex < _chapterEditions.Count
+                ? _defaultChapterEditionIndex
+                : 0;
+
+            return _chapterEditions[index];
+        }
+
+        /// <summary>
+        /// Every chapter edition in the file, in file order.
+        /// </summary>
+        public List<List<MatroskaChapter>> GetChapterEditions()
+        {
+            ReadChapters();
+
+            return _chapterEditions ?? new List<List<MatroskaChapter>>();
         }
 
         private void ReadChapters()
         {
+            if (_chaptersRead)
+            {
+                return;
+            }
+
+            _chaptersRead = true;
+
             // go to segment
             _stream.Seek(_segmentElement.DataPosition, SeekOrigin.Begin);
 
@@ -488,7 +527,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Matroska
 
         private void ReadChaptersElement(Element chaptersElement)
         {
-            _chapters = new List<MatroskaChapter>();
+            _chapterEditions = new List<List<MatroskaChapter>>();
 
             Element element;
             while (_stream.Position < chaptersElement.EndPosition && (element = ReadElement()) != null)
@@ -506,6 +545,9 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Matroska
 
         private void ReadEditionEntryElement(Element editionEntryElement)
         {
+            _chapters = new List<MatroskaChapter>();
+            var isDefault = false;
+
             Element element;
             while (_stream.Position < editionEntryElement.EndPosition && (element = ReadElement()) != null)
             {
@@ -513,11 +555,22 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Matroska
                 {
                     ReadChapterTimeStart(element);
                 }
+                else if (element.Id == ElementId.EditionFlagDefault)
+                {
+                    isDefault = ReadUIntAsLong(element.DataSize) != 0;
+                }
                 else
                 {
                     _stream.Seek(element.DataSize, SeekOrigin.Current);
                 }
             }
+
+            if (isDefault && _defaultChapterEditionIndex < 0)
+            {
+                _defaultChapterEditionIndex = _chapterEditions.Count;
+            }
+
+            _chapterEditions.Add(_chapters);
         }
 
         private void ReadChapterTimeStart(Element chpaterAtom)
@@ -684,7 +737,14 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Matroska
                             var duration = ReadUIntAsLong(_stream, _buffer, element.DataSize);
                             if (subtitle != null)
                             {
-                                subtitle.Duration = (long)Math.Round(GetTimeScaledToMilliseconds(duration, _timeCodeScale));
+                                // ffmpeg writes an all-ones BlockDuration (its "unknown" marker) for
+                                // image subtitle tracks it has no duration for, which reads back as a
+                                // negative tick count - treat anything nonsensical as unknown (0) so
+                                // GetSubtitle can derive the end time instead of going backwards.
+                                var scaled = duration < 0
+                                    ? 0
+                                    : (long)Math.Round(GetTimeScaledToMilliseconds(duration, _timeCodeScale));
+                                subtitle.Duration = scaled < 0 ? 0 : scaled;
                             }
                             break;
                         default:
@@ -751,9 +811,12 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Matroska
                 _subtitleRipLoaded = true;
             }
 
-            return _subtitleRipByTrackNumber.TryGetValue(trackNumber, out var subtitles)
-                ? subtitles
-                : new List<MatroskaSubtitle>();
+            if (!_subtitleRipByTrackNumber.TryGetValue(trackNumber, out var subtitles))
+            {
+                return new List<MatroskaSubtitle>();
+            }
+
+            return subtitles;
         }
 
         private void EnsureSubtitleTrackNumbers()
@@ -839,23 +902,36 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Matroska
             {
                 var beforeReadElementIdPosition = _stream.Position;
                 var id = (ElementId)ReadVariableLengthUInt(false);
-                if (id == ElementId.None && beforeReadElementIdPosition + 1000 < _stream.Length)
+                if (id == ElementId.None)
                 {
-                    // Error mode: search for start of next cluster, will be very slow
-                    const int maxErrors = 5_000_000;
-                    var errors = 0;
-                    var max = _stream.Length;
-                    while (id != ElementId.Cluster && beforeReadElementIdPosition + 1000 < max)
+                    if (beforeReadElementIdPosition + 1000 < _stream.Length)
                     {
-                        errors++;
-                        if (errors > maxErrors)
+                        // Error mode: search for start of next cluster, will be very slow
+                        const int maxErrors = 5_000_000;
+                        var errors = 0;
+                        var max = _stream.Length;
+                        while (id != ElementId.Cluster && beforeReadElementIdPosition + 1000 < max)
                         {
-                            return; // we give up
-                        }
+                            errors++;
+                            if (errors > maxErrors)
+                            {
+                                return; // we give up
+                            }
 
-                        beforeReadElementIdPosition++;
-                        _stream.Seek(beforeReadElementIdPosition, SeekOrigin.Begin);
-                        id = (ElementId)ReadVariableLengthUInt(false);
+                            beforeReadElementIdPosition++;
+                            _stream.Seek(beforeReadElementIdPosition, SeekOrigin.Begin);
+                            id = (ElementId)ReadVariableLengthUInt(false);
+                        }
+                    }
+
+                    if (id == ElementId.None)
+                    {
+                        // At (or almost at) end of stream and no next element found. A file that
+                        // is truncated mid-cluster (partial download, in-progress recording)
+                        // declares a segment size far beyond the real file size, so the loop
+                        // condition alone never terminates: reads at EOF yield id None and size 0,
+                        // and Seek(0) makes no progress - SE would spin at 100% CPU forever here.
+                        return;
                     }
                 }
 

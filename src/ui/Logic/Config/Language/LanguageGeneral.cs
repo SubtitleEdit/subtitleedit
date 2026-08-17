@@ -614,6 +614,7 @@ public class LanguageGeneral
     public string Top { get; set; }
     public string TotalAdjustmentX { get; set; }
     public string Translate { get; set; }
+    public string TranslatePercentX { get; set; }
     public string TranslateRow { get; set; }
     public string Translation { get; set; }
     public string TwoLetterLanguageCode { get; set; }
@@ -1023,7 +1024,7 @@ public class LanguageGeneral
         KeepExistingTimeCodes = "Keep existing time codes (do not add video offset)";
         KeyFile = "Key file";
         Language = "Language";
-        LanguagePostFix = "Language post-fix (mkv/mp4)";
+        LanguagePostFix = "Language post-fix (mkv/mp4/auto-translate)";
         Layer = "Layer";
         LayerFilterOn = "Layer filter on";
         Left = "Left";
@@ -1358,6 +1359,7 @@ public class LanguageGeneral
         Top = "Top";
         TotalAdjustmentX = "Total adjustment: {0}";
         Translate = "Translate";
+        TranslatePercentX = "Translating: {0}%";
         TranslateRow = "Translate row";
         Translation = "Translation";
         TwoLetterLanguageCode = "Two-letter language code";

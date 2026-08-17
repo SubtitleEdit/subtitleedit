@@ -31,13 +31,16 @@ public class SeAssa
     public bool HideLayersFromWaveform { get; set; }
     public bool HideLayersFromSubtitleGrid { get; set; }
     public bool HideLayersFromVideoPreview { get; set; }
+    public bool FontCollectorTrimFonts { get; set; }
 
     public SeAssa()
     {
         AutoSetResolution = true;
         AutoSetResolutionConvert = true;
 
-        StoredStyles = new List<SeAssaStyle>();
+        // Seed the storage so a fresh install (and a settings reset) has a default style to
+        // apply to new/converted ASSA subtitles instead of an empty "Styles saved" list.
+        StoredStyles = new List<SeAssaStyle> { SeAssaStyle.MakeStorageDefault() };
         LastOverrideTag = OverrideTagDisplay.List().First().Tag;
         LastOverrideTags = new List<string>();
 

@@ -149,6 +149,10 @@ public partial class SpeechToTextViewModel : ObservableObject
     private string? _videoFileName;
     private string _audioFileName = string.Empty;
     private int _audioTrackNumber;
+
+    // The file _audioTrackNumber was picked from. A stream index only means anything in its own
+    // file, and batch mode reuses this view model for other videos - see GetFfmpegProcess.
+    private string? _audioTrackVideoFileName;
     private readonly List<string> _filesToDelete = new();
     private string? _sttTempFolder;
     private readonly ConcurrentQueue<string> _outputText = new();
@@ -196,7 +200,6 @@ public partial class SpeechToTextViewModel : ObservableObject
     private string _error;
     private List<AudioClip>? _audioClips;
     private bool _audioClipsAutoStart;
-    private string _chatLlmText = string.Empty;
     private string _qwen3AsrOutputJsonPath = string.Empty;
     private int? _qwen3AsrExitCode;
 
@@ -258,7 +261,6 @@ public partial class SpeechToTextViewModel : ObservableObject
             OperatingSystem.IsLinux() ||
             OperatingSystem.IsMacOS())
         {
-            //Engines.Add(new ChatLlmCppEngine());
             Engines.Add(new Qwen3AsrCppEngine());
         }
 
@@ -455,7 +457,7 @@ public partial class SpeechToTextViewModel : ObservableObject
 
     private static bool IsTranslateAvailable(ISpeechToTextEngine engine)
     {
-        return engine is not ChatLlmCppEngine and not Qwen3AsrCppEngine and not ICrispAsrEngine and not IOnlineSttEngine;
+        return engine is not Qwen3AsrCppEngine and not ICrispAsrEngine and not IOnlineSttEngine;
     }
 
     private void UpdateBackendSelectionUi()
@@ -756,12 +758,6 @@ public partial class SpeechToTextViewModel : ObservableObject
 
             var engine = GetEffectiveSelectedEngine();
 
-            if (engine is ChatLlmCppEngine chatLlm)
-            {
-                ProcessChatLlmTranscription(settings, chatLlm);
-                return;
-            }
-
             if (engine is Qwen3AsrCppEngine)
             {
                 ProcessQwen3AsrCppTranscription(settings);
@@ -838,114 +834,24 @@ public partial class SpeechToTextViewModel : ObservableObject
         }
     }
 
-    private void ProcessChatLlmTranscription(SeAudioToText settings, ChatLlmCppEngine chatLlm)
-    {
-        var sbLog = new StringBuilder();
-        foreach (var s in _outputText)
-        {
-            sbLog.AppendLine(s.TrimEnd());
-        }
-
-        var text = sbLog.ToString();
-
-        if (!string.IsNullOrEmpty(text) && !string.IsNullOrEmpty(_chatLlmText))
-        {
-            var originalText = _chatLlmText;
-            _chatLlmText = string.Empty;
-            var lines = text.SplitToLines();
-            var subtitle = new Subtitle();
-            new SubRip().LoadSubtitle(subtitle, lines, string.Empty);
-            if (subtitle.Paragraphs.Count > 0)
-            {
-                var last = subtitle.Paragraphs.Last();
-                var indexOfTimings = last.Text.IndexOf("\ntimings:");
-                if (indexOfTimings > 0)
-                {
-                    last.Text = last.Text.Substring(0, indexOfTimings).Trim();
-                }
-
-                ReInsertPeriodsEtc(originalText, subtitle);
-                FixNegativeDuration(subtitle);
-
-                var postProcessedSubtitle = PostProcess(subtitle);
-
-                if (_audioClips != null && ResultAudioClips.Count > 0)
-                {
-                    var outputAudioClip = ResultAudioClips.FirstOrDefault(p => p.AudioFileName == _videoFileName);
-                    if (outputAudioClip != null)
-                    {
-                        outputAudioClip.Transcription = new Subtitle(postProcessedSubtitle);
-                    }
-                }
-
-                Dispatcher.UIThread.Invoke<Task>(async () =>
-                {
-                    LogToConsole($"Speech to text ({settings.WhisperChoice}) done in {_sw.Elapsed}{Environment.NewLine}");
-                    ProgressValue = 100;
-                    await MakeResult(postProcessedSubtitle);
-                });
-            }
-
-            return;
-        }
-
-
-        var tag = "<asr_text>";
-        var start = text.IndexOf(tag);
-        if (start < 0)
-        {
-            // No transcription marker in the output - the engine failed. Stop here
-            // instead of chopping an arbitrary prefix off the log text and feeding
-            // the rest to the aligner step.
-            LogToConsole($"Speech to text ({settings.WhisperChoice}) done in {_sw.Elapsed}{Environment.NewLine}");
-            LogToConsole($"Speech to text: Could not find '{tag}' in text{Environment.NewLine}");
-
-            if (IsBatchMode)
-            {
-                // One failed file must not stall the whole batch: mark this job failed
-                // and move on, exactly like a failed audio extraction. The closing
-                // summary reports the failure count, so nothing is swallowed.
-                if (_batchIndex >= 0 && _batchIndex < _jobItems.Count)
-                {
-                    _jobItems[_batchIndex].Status = Se.Language.General.Error;
-                }
-
-                StartNext(null);
-                return;
-            }
-
-            Dispatcher.UIThread.Post(() =>
-            {
-                IsTranscribeEnabled = true;
-                HideProgressBar();
-                ProgressText = string.Empty;
-            });
-            return;
-        }
-
-        text = text.Remove(0, start + tag.Length);
-        LogToConsole($"Speech to text step 1/2 ({settings.WhisperChoice}) done in {_sw.Elapsed}{Environment.NewLine}");
-        LogToConsole($"Speech to text step 2/2 ({settings.WhisperChoice}) qwen3-focedaligner-0.6b.bin starting...");
-
-        _chatLlmText = text;
-
-        sbLog.Clear();
-        _outputText.Clear();
-
-        var exe = chatLlm.GetExecutable();
-        var chatLlmParams = $" -m \"{chatLlm.GetModelForCmdLine("qwen3-focedaligner-0.6b.bin")}\" --multimedia-file-tags {{{{ }}}} -p \"{{{{audio:{_audioFileName}}}}}{_chatLlmText}\"";
-
-        _whisperProcess = StartEngineProcess(exe, chatLlmParams, OutputHandler);
-
-        _timerWhisper.Start();
-    }
-
     /// <summary>
     /// Builds the message shown when the engine binary could not be started because a shared
     /// library it links against is missing (issue #12970).
     /// </summary>
     private static string GetMissingSharedLibraryMessage(string libraryName)
     {
+        // Libraries that ship inside the engine download itself. Telling the user to install
+        // these with their package manager is a dead end - no distro packages them, and the
+        // real cause is a bad or incomplete engine folder (issue #13680).
+        if (MissingSharedLibrary.IsBundledWithEngine(libraryName))
+        {
+            return
+                $"The speech to text engine could not start - the shared library \"{libraryName}\" is missing.{Environment.NewLine}{Environment.NewLine}" +
+                "This library is part of the engine download, so the installed engine is incomplete." +
+                $"{Environment.NewLine}{Environment.NewLine}" +
+                "Re-download the engine (Download button next to the engine) and try again.";
+        }
+
         var message =
             $"The speech to text engine could not start - the shared library \"{libraryName}\" is missing.{Environment.NewLine}{Environment.NewLine}" +
             "Install it with your package manager and try again.";
@@ -1691,63 +1597,6 @@ public partial class SpeechToTextViewModel : ObservableObject
         }
     }
 
-    /// <summary>
-    /// Re-inserts periods, exclamation marks, and question marks into the subtitle text based on the original text.
-    /// </summary>
-    private static void ReInsertPeriodsEtc(string originalText, Subtitle subtitle)
-    {
-        var words = originalText.Split([' ', '\r', '\n'], StringSplitOptions.RemoveEmptyEntries);
-        var wordIndex = 0;
-        var consecutiveNoMatch = 0;
-        const int maxConsecutiveNoMatch = 10;
-
-        foreach (var p in subtitle.Paragraphs)
-        {
-            // each paragraph.Text contains one word
-            var text = p.Text.Trim();
-            if (string.IsNullOrEmpty(text))
-            {
-                continue;
-            }
-
-            if (wordIndex >= words.Length)
-            {
-                break;
-            }
-
-            // Try to find matching word in original text (look ahead a few words in case of slight misalignment)
-            var found = false;
-            var searchEnd = Math.Min(wordIndex + 5, words.Length);
-
-            for (var i = wordIndex; i < searchEnd; i++)
-            {
-                var originalWord = words[i];
-                var cleanWord = originalWord.TrimEnd('.', '!', '?', ',');
-
-                if (string.Equals(text, cleanWord, StringComparison.OrdinalIgnoreCase))
-                {
-                    // Found match - restore punctuation/casing from original word
-                    p.Text = originalWord;
-
-                    wordIndex = i + 1;
-                    found = true;
-                    consecutiveNoMatch = 0;
-                    break;
-                }
-            }
-
-            if (!found)
-            {
-                consecutiveNoMatch++;
-                if (consecutiveNoMatch >= maxConsecutiveNoMatch)
-                {
-                    // Exit if no words match for a while
-                    return;
-                }
-            }
-        }
-    }
-
     private string GetProgressText()
     {
         if (IsBatchMode)
@@ -2211,9 +2060,9 @@ public partial class SpeechToTextViewModel : ObservableObject
         }
 
         var whisperFolder = engine.GetAndCreateWhisperFolder();
-        var srtCandidates = GetResultFileCandidates(".srt", waveFileName, videoFileName, whisperFolder, outputText);
-        var vttCandidates = GetResultFileCandidates(".vtt", waveFileName, videoFileName, whisperFolder, outputText);
-        var assaCandidates = GetResultFileCandidates(".ass", waveFileName, videoFileName, whisperFolder, outputText);
+        var srtCandidates = GetResultFileCandidates(".srt", waveFileName, videoFileName, whisperFolder, outputText, _sttTempFolder);
+        var vttCandidates = GetResultFileCandidates(".vtt", waveFileName, videoFileName, whisperFolder, outputText, _sttTempFolder);
+        var assaCandidates = GetResultFileCandidates(".ass", waveFileName, videoFileName, whisperFolder, outputText, _sttTempFolder);
 
         var srtFileName = srtCandidates.FirstOrDefault(File.Exists);
         var vttFileName = vttCandidates.FirstOrDefault(File.Exists);
@@ -2265,11 +2114,15 @@ public partial class SpeechToTextViewModel : ObservableObject
         return true;
     }
 
-    private static List<string> GetResultFileCandidates(string ext, string waveFileName, string videoFileName, string whisperFolder, ConcurrentQueue<string> outputText)
+    private static List<string> GetResultFileCandidates(string ext, string waveFileName, string videoFileName, string whisperFolder, ConcurrentQueue<string> outputText, string sttTempFolder = "")
     {
         var candidates = new List<string>
         {
             waveFileName + ext,
+            // The engines that read the source file directly are told to write into the extracted
+            // WAV's own per-run folder, and they name the output after their input - so the result
+            // is "<run folder>/<video name><ext>", which none of the other candidates covers.
+            Path.Combine(Path.GetDirectoryName(waveFileName) ?? string.Empty, Path.GetFileNameWithoutExtension(videoFileName) + ext),
             Path.Combine(Directory.GetCurrentDirectory(), Path.GetFileNameWithoutExtension(videoFileName) + ext),
             Path.Combine(Directory.GetCurrentDirectory(), Path.GetFileNameWithoutExtension(waveFileName) + ext),
             Path.Combine(AppContext.BaseDirectory, Path.GetFileNameWithoutExtension(videoFileName) + ext),
@@ -2281,6 +2134,14 @@ public partial class SpeechToTextViewModel : ObservableObject
         if (waveFileName.EndsWith(".wav", StringComparison.OrdinalIgnoreCase))
         {
             candidates.Add(waveFileName.Remove(waveFileName.Length - 4) + ext);
+        }
+
+        if (!string.IsNullOrEmpty(sttTempFolder))
+        {
+            // A pre-extracted 16 kHz WAV skips extraction, so the engines' contained output lands
+            // in the per-run folder under the USER'S file name - no other candidate covers that.
+            candidates.Add(Path.Combine(sttTempFolder, Path.GetFileNameWithoutExtension(videoFileName) + ext));
+            candidates.Add(Path.Combine(sttTempFolder, Path.GetFileNameWithoutExtension(waveFileName) + ext));
         }
 
         if (!string.IsNullOrEmpty(whisperFolder))
@@ -3365,8 +3226,6 @@ public partial class SpeechToTextViewModel : ObservableObject
             // Engines without native timestamps need a forced-aligner model on disk.
             var alignerOk = engine switch
             {
-                ChatLlmCppEngine chatLlm =>
-                    await EnsureAlignerModelDownloadedAsync(engine, chatLlm.ForcedAlignerModel, "Chat LLM"),
                 Qwen3AsrCppEngine qwen3Asr =>
                     await EnsureAlignerModelDownloadedAsync(engine, qwen3Asr.ForcedAlignerModel, "Qwen3 ASR CPP"),
                 CrispAsrQwen3 crispQwen3Engine when SelectedForcedAligner is null or { IsBuiltIn: true } =>
@@ -3601,19 +3460,29 @@ public partial class SpeechToTextViewModel : ObservableObject
         _resultList.Clear();
 
         var inputFile = waveFileName;
-        if (!_useCenterChannelOnly &&
-            (engine.Name == WhisperEnginePurfviewFasterWhisperXxl.StaticName) &&
-            (videoFileName.EndsWith(".mkv", StringComparison.OrdinalIgnoreCase) ||
-             videoFileName.EndsWith(".mp4", StringComparison.OrdinalIgnoreCase)) &&
-            _audioTrackNumber < 0)
+        var engineOutputFolder = string.Empty;
+        if (CanEngineReadSourceFileDirectly(engine) && CanSendSourceFileToEngine(videoFileName))
         {
             inputFile = videoFileName;
+        }
+
+        if (CanEngineReadSourceFileDirectly(engine) &&
+            !inputFile.StartsWith(GetSttTempFolder(), StringComparison.OrdinalIgnoreCase))
+        {
+            // Both engines save their output next to the input file, so pointing them at the user's
+            // own media would write "<video>.srt" into that folder - overwriting any subtitle already
+            // sitting there, which SE then deletes again as one of its temp files. Send the output to
+            // the per-run folder instead, the same isolation the extracted WAV gets (#11837). The
+            // input is the user's own file both when the source file is sent directly and when a
+            // pre-extracted 16 kHz WAV skipped the extraction step, so key on the location, not on
+            // which of the two paths was taken.
+            engineOutputFolder = GetSttTempFolder();
         }
 
         try
         {
             _whisperProcess = GetWhisperProcess(engine, inputFile, model.Model.Name, language.Code, DoTranslateToEnglish,
-                OutputHandler);
+                OutputHandler, engineOutputFolder);
         }
         catch (Exception e)
         {
@@ -3674,40 +3543,79 @@ public partial class SpeechToTextViewModel : ObservableObject
         return p;
     }
 
+    /// <summary>
+    /// Puts the engine folder on the dynamic loader's search path, so an engine that ships its
+    /// own shared libraries next to the executable can find them.
+    ///
+    /// Windows resolves DLLs from the executable's own directory, so this is a Linux/macOS-only
+    /// concern - and there setting WorkingDirectory is not enough, because the loader does not
+    /// search the working directory. The libraries are supposed to carry an $ORIGIN/@loader_path
+    /// RPATH that makes this unnecessary, but whisper.cpp archives shipped for four releases
+    /// without one (issue #13680), so set it as a belt-and-braces measure.
+    /// </summary>
+    private static void AddEngineFolderToLibrarySearchPath(ProcessStartInfo startInfo, string engineFolder)
+    {
+        var variable = OperatingSystem.IsMacOS() ? "DYLD_LIBRARY_PATH" : "LD_LIBRARY_PATH";
+        var existing = startInfo.EnvironmentVariables[variable];
+
+        startInfo.EnvironmentVariables[variable] = string.IsNullOrEmpty(existing)
+            ? engineFolder
+            : engineFolder + Path.PathSeparator + existing;
+    }
+
+    /// <summary>
+    /// Engines that demux and decode the source media themselves, so they can be pointed at the
+    /// user's original file instead of SE's extracted WAV: Purfview Faster-Whisper-XXL bundles
+    /// ffmpeg, whisper-ctranslate2 bundles PyAV. Verified that the others cannot - whisper.cpp
+    /// answers "failed to read audio data as wav" for an mp4, and CrispASR's own help lists
+    /// flac/mp3/ogg/wav only - so those keep getting the WAV.
+    /// </summary>
+    private static bool CanEngineReadSourceFileDirectly(ISpeechToTextEngine engine)
+    {
+        return engine.Name == WhisperEnginePurfviewFasterWhisperXxl.StaticName ||
+               engine is WhisperEngineCTranslate2;
+    }
+
+    /// <summary>
+    /// True if the source file itself can go to the engine, which is only safe when there is
+    /// exactly one audio track: with several, the engines read the FIRST audio stream (Purfview
+    /// XXL's --ff_track defaults to 1, CTranslate2's PyAV decode is hardcoded to the first and has
+    /// no selector) - not the container's default track that mpv plays and the waveform shows, and
+    /// not a track the user picked. The extracted WAV expresses both: the picked track via -map on
+    /// the video it was picked from, and otherwise ffmpeg's automatic selection, which honors the
+    /// default-track flag like mpv does (verified both ways on a two-track file). SE 4 drew the
+    /// same line at "anything but the default first track goes through the WAV".
+    /// </summary>
+    private bool CanSendSourceFileToEngine(string videoFileName)
+    {
+        if (_useCenterChannelOnly || string.IsNullOrEmpty(videoFileName) || !File.Exists(videoFileName))
+        {
+            return false;
+        }
+
+        try
+        {
+            var audioTrackCount = FfmpegMediaInfo.Parse(videoFileName).Tracks
+                .Count(t => t.TrackType == FfmpegTrackType.Audio);
+
+            return audioTrackCount == 1;
+        }
+        catch (Exception exception)
+        {
+            SeLogger.Error(exception, $"Unable to read audio tracks from: {videoFileName}");
+            return false;
+        }
+    }
+
     private Process GetWhisperProcess(
         ISpeechToTextEngine engine,
         string waveFileName,
         string model,
         string language,
         bool translate,
-        DataReceivedEventHandler? dataReceivedHandler = null)
+        DataReceivedEventHandler? dataReceivedHandler = null,
+        string engineOutputFolder = "")
     {
-        if (engine is ChatLlmCppEngine chatLlm)
-        {
-            var exe = chatLlm.GetExecutable();
-            var chatLlmParams = $" -m \"{chatLlm.GetModelForCmdLine(model)}\" -p \"{waveFileName}\"";
-
-            if (OperatingSystem.IsWindows())
-            {
-                var ffmpegPath = Se.Settings.General.FfmpegPath;
-                var targetFfmpegPath = Path.Combine(Path.GetDirectoryName(exe) ?? string.Empty, "ffmpeg.exe");
-                if (!string.IsNullOrEmpty(ffmpegPath) && File.Exists(ffmpegPath) &&
-                    !File.Exists(targetFfmpegPath))
-                {
-                    try
-                    {
-                        File.Copy(ffmpegPath, targetFfmpegPath, false);
-                    }
-                    catch (Exception ex)
-                    {
-                        SeLogger.Error(ex, "Error copying ffmpeg to chat-llm folder");
-                    }
-                }
-            }
-
-            return StartEngineProcess(exe, chatLlmParams, dataReceivedHandler);
-        }
-
         if (engine is Qwen3AsrCppEngine qwen3Asr)
         {
             var exe = qwen3Asr.GetExecutable();
@@ -3847,8 +3755,20 @@ public partial class SpeechToTextViewModel : ObservableObject
                 : string.Empty;
         }
 
+        // Only set when the engine reads the user's own media instead of the extracted WAV; both
+        // engines accept "--output_dir" (Purfview XXL defaults to the input's folder, ctranslate2
+        // to the working directory). A user who set their own output folder in the extra
+        // parameters keeps it.
+        var outputDirArg = string.Empty;
+        if (!string.IsNullOrEmpty(engineOutputFolder) &&
+            !args.Contains("--output_dir", StringComparison.Ordinal) &&
+            !Regex.IsMatch(args, @"(^|\s)-o(\s|$)"))
+        {
+            outputDirArg = $"--output_dir \"{engineOutputFolder}\" ";
+        }
+
         var parameters =
-            $"{languageArg}--model \"{m}\" {outputSrt}{translateToEnglish}{args} \"{waveFileName}\"{postParams}";
+            $"{languageArg}--model \"{m}\" {outputSrt}{outputDirArg}{translateToEnglish}{args} \"{waveFileName}\"{postParams}";
 
         if (engine is WhisperEngineCTranslate2)
         {
@@ -3910,6 +3830,10 @@ public partial class SpeechToTextViewModel : ObservableObject
                 process.StartInfo.EnvironmentVariables["Path"] =
                     process.StartInfo.EnvironmentVariables["Path"]?.TrimEnd(';') + ";" + whisperFolder;
             }
+        }
+        else if (!string.IsNullOrEmpty(whisperFolder))
+        {
+            AddEngineFolderToLibrarySearchPath(process.StartInfo, whisperFolder);
         }
 
         if (settings.WhisperChoice != WhisperChoice.Cpp &&
@@ -3984,6 +3908,9 @@ public partial class SpeechToTextViewModel : ObservableObject
                 if (waveFile.Header != null && waveFile.Header.SampleRate == 16000)
                 {
                     _videoFileName = videoFileName;
+                    // No extraction happened - clear a stale name from an earlier run so result
+                    // discovery falls back to the video file name deterministically.
+                    _audioFileName = string.Empty;
                     var startOk = TranscribeViaWhisper(videoFileName, _videoFileName);
                     return startOk;
                 }
@@ -4206,6 +4133,41 @@ public partial class SpeechToTextViewModel : ObservableObject
         return (decimal)(TimeCode.ParseToMilliseconds(timeCode) / 1000.0);
     }
 
+    /// <summary>
+    /// The "-map" argument for extracting <paramref name="inputFileName"/>'s audio, or an empty
+    /// string to leave the choice to ffmpeg's automatic stream selection.
+    /// </summary>
+    /// <remarks>
+    /// A stream index only addresses a stream in the file it was read from, so it is applied to
+    /// that file alone: batch mode reuses this view model for other videos, and "transcribe
+    /// selected lines" feeds it already-demuxed "se_audioclip_*.wav" clips.
+    ///
+    /// The trailing "?" (#13621, same fix as in WaveFileExtractor for #10835) only covers stream N
+    /// being *missing* - it does nothing when N exists but is the wrong kind. A file whose audio is
+    /// stream 0 and video stream 1 (ffmpeg lists streams in container order, and plenty of muxers
+    /// put audio first) got "-map 0:1" pointing at its video, which -vn then dropped: "Output file
+    /// does not contain any stream", ffmpeg exit -22, and the run aborted with "Generated audio
+    /// file not found" (#13781).
+    ///
+    /// Do not "fix" the no-map fallback to "-map 0:a:0?" (tried in #13787, reverted): ffmpeg's
+    /// automatic selection prefers the stream with the default disposition (verified on the
+    /// bundled ffmpeg 7.1.1 - a default-flagged stereo track beats a non-flagged 5.1), and that
+    /// is the wanted behavior. It is the same track a fresh mpv plays and the main window follows
+    /// on open (#13233 - the first track can be commentary or audio description), while the first
+    /// track in container order is only mpv's last-resort fallback.
+    /// </remarks>
+    internal static string BuildAudioMapParameter(string inputFileName, int audioTrackNumber, string? audioTrackVideoFileName)
+    {
+        if (audioTrackNumber < 0 ||
+            string.IsNullOrEmpty(audioTrackVideoFileName) ||
+            !string.Equals(inputFileName, audioTrackVideoFileName, StringComparison.OrdinalIgnoreCase))
+        {
+            return string.Empty;
+        }
+
+        return $"-map 0:{audioTrackNumber}?";
+    }
+
     private Process? GetFfmpegProcess(string videoFileName, int audioTrackNumber, string outAudioFile, string audioFormat = "wav")
     {
         if (!File.Exists(Se.Settings.General.FfmpegPath) && Configuration.IsRunningOnWindows)
@@ -4213,27 +4175,15 @@ public partial class SpeechToTextViewModel : ObservableObject
             return null;
         }
 
-        // The trailing "?" makes the stream map optional (#13621, same fix as in
-        // WaveFileExtractor for #10835). The track index belongs to the video the user
-        // picked it from, but this method also runs on inputs that never had it: the
-        // already-demuxed "se_audioclip_*.wav" clips from "transcribe selected lines",
-        // and any unrelated file added in batch mode. Without the "?", "-map 0:1" on a
-        // single-stream wav aborts ffmpeg ("Stream map '0:1' matches no streams"); with
-        // it, ffmpeg falls back to automatic stream selection and picks the audio.
-        var audioParameter = string.Empty;
-        if (audioTrackNumber >= 0)
-        {
-            audioParameter = $"-map 0:{audioTrackNumber}?";
-        }
+        var audioParameter = BuildAudioMapParameter(videoFileName, audioTrackNumber, _audioTrackVideoFileName);
 
         var fFmpegAudioTranscodeSettings = GetFfmpegTranscodeFormatString(audioFormat, _useCenterChannelOnly);
 
         //-i indicates the input
         //-vn means no video output
-        //-ar 44100 indicates the sampling frequency.
-        //-ab indicates the bit rate (in this example 160kb/s)
-        //-af volume=1.75 will boot volume... 1.0 is normal
-        //-ac 2 means 2 channels
+        //-ar 16000 indicates the sampling frequency.
+        //-b:a indicates the bit rate (only used for the compressed formats)
+        //-ac 1 means 1 channel (mono)
         // "-map 0:a:0" is the first audio stream, "-map 0:a:1" is the second audio stream
 
         var exeFilePath = Se.Settings.General.FfmpegPath;
@@ -4255,8 +4205,8 @@ public partial class SpeechToTextViewModel : ObservableObject
     }
 
     /// <summary>
-    /// ffmpeg argument template for transcoding the source audio. WAV stays on
-    /// the historical pipeline (lossless 16 kHz mono PCM); the compressed
+    /// ffmpeg argument template for transcoding the source audio. WAV stays
+    /// lossless 16 kHz mono PCM, unmodified apart from the downmix; the compressed
     /// formats target ~32 kbit/s mono at 16 kHz, which is plenty for speech
     /// recognition and keeps a 2-hour video well under OpenAI's 25 MB upload
     /// limit. Opus is shipped inside a webm container because OpenAI accepts
@@ -4265,18 +4215,26 @@ public partial class SpeechToTextViewModel : ObservableObject
     private static string GetFfmpegTranscodeFormatString(string audioFormat, bool useCenterChannelOnly)
     {
         var normalized = string.IsNullOrWhiteSpace(audioFormat) ? "wav" : audioFormat.Trim().ToLowerInvariant();
+
+        // No "volume=1.75" here, unlike the waveform extraction in WaveFileExtractor where the boost
+        // only makes the drawing easier to read. +4.9 dB into 16-bit PCM hard-clips every peak of an
+        // already-mastered source - measured at ~5% of all samples pinned to full scale for speech
+        // peaking at -0.5 dBFS - and that distortion costs recognition accuracy (#13738). The gain
+        // buys nothing in return: whisper's log-mel front end clamps to "max - 8 dB" and rescales,
+        // so a uniform gain is normalized away before the model ever sees it.
         var channelArgs = useCenterChannelOnly
-            ? "-af \"pan=mono|c0=FC,volume=1.75\""
-            : "-ac 1 -af volume=1.75";
+            ? "-af \"pan=mono|c0=FC\""
+            : "-ac 1";
 
         return normalized switch
         {
             "mp3" => "-i \"{0}\" -vn -ar 16000 " + channelArgs + " -c:a libmp3lame -b:a 32k -f mp3 {2} \"{1}\"",
             "m4a" => "-i \"{0}\" -vn -ar 16000 " + channelArgs + " -c:a aac -b:a 32k -f ipod {2} \"{1}\"",
             "webm" => "-i \"{0}\" -vn -ar 16000 " + channelArgs + " -c:a libopus -b:a 28k -f webm {2} \"{1}\"",
-            _ => useCenterChannelOnly
-                ? "-i \"{0}\" -vn -ar 16000 -ab 32k -af volume=1.75 -af \"pan=mono|c0=FC\" -f wav {2} \"{1}\""
-                : "-i \"{0}\" -vn -ar 16000 -ac 1 -ab 32k -af volume=1.75 -f wav {2} \"{1}\"",
+            // pcm_s16le is already ffmpeg's default for wav, but spell it out: SE's own peak reader
+            // (WavePeakGenerator2, shared with MakeWavePeaks) only handles integer PCM, so the sample
+            // format must not drift. "-ab" is dropped - it is a no-op for an uncompressed encoder.
+            _ => "-i \"{0}\" -vn -ar 16000 " + channelArgs + " -c:a pcm_s16le -f wav {2} \"{1}\"",
         };
     }
 
@@ -4743,6 +4701,43 @@ public partial class SpeechToTextViewModel : ObservableObject
         }
     }
 
+    /// <summary>
+    /// Selects the engine behind <paramref name="choice"/>, including the ones that live as a
+    /// backend inside the Whisper.cpp or CrispASR engine entries. No-op for an unknown or empty
+    /// choice, leaving the last-used engine selected.
+    /// </summary>
+    private void TrySelectEngineChoice(string? choice)
+    {
+        if (string.IsNullOrEmpty(choice) || GetEffectiveSelectedEngine().Choice == choice)
+        {
+            return;
+        }
+
+        var whisperCppEngine = Engines.OfType<WhisperCppEngine>().FirstOrDefault();
+        var crispAsrEngine = Engines.OfType<CrispAsrEngine>().FirstOrDefault();
+        if (whisperCppEngine != null && whisperCppEngine.TrySelectBackendChoice(choice))
+        {
+            SelectedEngine = whisperCppEngine;
+        }
+        else if (crispAsrEngine != null && crispAsrEngine.TrySelectBackendChoice(choice))
+        {
+            SelectedEngine = crispAsrEngine;
+        }
+        else
+        {
+            var engine = Engines.FirstOrDefault(p => p.Choice == choice);
+            if (engine == null)
+            {
+                return;
+            }
+
+            SelectedEngine = engine;
+        }
+
+        Parameters = GetEffectiveSelectedEngine().CommandLineParameter;
+        EngineChanged();
+    }
+
     private static WhisperLanguage? PickDefaultLanguage(IEnumerable<WhisperLanguage> languages)
     {
         var list = languages as IList<WhisperLanguage> ?? languages.ToList();
@@ -4751,10 +4746,17 @@ public partial class SpeechToTextViewModel : ObservableObject
             ?? list.FirstOrDefault();
     }
 
-    internal void Initialize(string? videoFileName, int audioTrackNumber)
+    /// <param name="preferredEngineChoice">
+    /// A <see cref="WhisperChoice"/> to start on instead of the last-used engine, for callers that
+    /// need a specific one - "find the voices in the video" needs an engine that tells speakers
+    /// apart. The user can still switch it in the window; nothing is forced beyond the first view.
+    /// </param>
+    internal void Initialize(string? videoFileName, int audioTrackNumber, string? preferredEngineChoice = null)
     {
         _videoFileName = videoFileName;
         _audioTrackNumber = audioTrackNumber;
+        _audioTrackVideoFileName = videoFileName;
+        TrySelectEngineChoice(preferredEngineChoice);
         if (string.IsNullOrEmpty(_videoFileName) || !File.Exists(_videoFileName))
         {
             IsBatchModeVisible = false;
@@ -4772,6 +4774,10 @@ public partial class SpeechToTextViewModel : ObservableObject
     internal void InitializeBatch(List<AudioClip> audioClips, int audioTrackNumber, bool autoStart, string? language)
     {
         _audioTrackNumber = audioTrackNumber;
+
+        // The clips are already-demuxed single-stream wavs, so the video's stream index does not
+        // address anything in them - leave the owning file unset and let ffmpeg pick the audio.
+        _audioTrackVideoFileName = null;
         IsBatchMode = true;
         _audioClips = audioClips;
         _audioClipsAutoStart = autoStart;

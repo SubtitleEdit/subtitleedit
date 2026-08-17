@@ -20,6 +20,8 @@ using Nikse.SubtitleEdit.UiLogic.AudioToText;
 using Nikse.SubtitleEdit.Core.BluRaySup;
 using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.Enums;
+using Nikse.SubtitleEdit.Core.ContainerFormats;
+using Nikse.SubtitleEdit.Core.ContainerFormats.Chapters;
 using Nikse.SubtitleEdit.Core.ContainerFormats.Matroska;
 using Nikse.SubtitleEdit.Core.ContainerFormats.Mp4;
 using Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes;
@@ -150,12 +152,17 @@ using Nikse.SubtitleEdit.Features.Video.GoToVideoPosition;
 using Nikse.SubtitleEdit.Features.Video.OpenFromUrl;
 using Nikse.SubtitleEdit.Features.Video.OpenFromUrl.PickOnlineSubtitle;
 using Nikse.SubtitleEdit.Features.Video.ReEncodeVideo;
+using Nikse.SubtitleEdit.Features.Video.Chapters;
 using Nikse.SubtitleEdit.Features.Video.ShotChanges;
 using Nikse.SubtitleEdit.Features.Video.SpeechToText;
 using Nikse.SubtitleEdit.Features.Video.SpeechToText.OpenAiCompatible;
 using Nikse.SubtitleEdit.Features.Video.VideoOcr;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech;
+using Nikse.SubtitleEdit.Features.Video.TextToSpeech.ActorVoices;
+using Nikse.SubtitleEdit.Features.Video.TextToSpeech.AutoCast;
+using Nikse.SubtitleEdit.Features.Video.TextToSpeech.Engines;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.ReviewSpeech;
+using Nikse.SubtitleEdit.Features.Video.TextToSpeech.VoiceCloneConsent;
 using Nikse.SubtitleEdit.Features.Video.TransparentSubtitles;
 using Nikse.SubtitleEdit.Features.WebVtt;
 using Nikse.SubtitleEdit.Logic;
@@ -420,6 +427,23 @@ public partial class MainViewModel :
     /// </summary>
     public int SubtitleGridSelectedCount => SubtitleGrid.SelectedItems?.Count ?? 0;
 
+    /// <summary>
+    /// Grid index of the topmost selected row, or -1 when nothing editable is selected - SE4's
+    /// <c>FirstSelectedIndex</c>. Commands that write downwards from the selection must start here
+    /// and not at <see cref="SelectedSubtitle"/>: the current row is the moving end of a shift- or
+    /// drag-selection (see <see cref="SelectGridRange"/>), so selecting downwards would put the
+    /// anchor at the *bottom* of the selection while selecting upwards put it at the top - the
+    /// column paste that only worked when the rows were picked bottom-to-top (issue #13682).
+    /// </summary>
+    internal int FirstSelectedSubtitleIndex
+    {
+        get
+        {
+            var selectedItems = SubtitleGridSelectedItems;
+            return selectedItems.Count == 0 ? -1 : Subtitles.IndexOf(selectedItems[0]);
+        }
+    }
+
     private List<SubtitleLineViewModel> GetSelectedSubtitlesInOrder(bool includeReferenceOnly)
     {
         var selected = SubtitleGrid.SelectedItems;
@@ -515,6 +539,12 @@ public partial class MainViewModel :
     private Subtitle _subtitleOriginal;
     private SubtitleFormat? _lastOpenSaveFormat;
     private string? _videoFileName;
+
+    /// <summary>
+    /// Chapters of the current video, in timeline order. Mirrored onto the waveform for drawing and
+    /// persisted next to Subtitle Edit's data, not inside the video.
+    /// </summary>
+    private List<Chapter> _chapters = new();
     private AudioTrackInfo? _audioTrack;
     private string? _audioTrackLangauge;
     private CancellationTokenSource? _statusFadeCts;
@@ -597,6 +627,8 @@ public partial class MainViewModel :
     private const double PlayheadPauseSettleMs = 300; // mpv's reported position lags ~100-200 ms after a pause
     private bool _playheadPausedSettled; // set once mpv's clock has come to rest after a pause and the cursor has landed on it
     private const double PlayheadPausedSettleStableMs = 100; // mpv's position unchanged this long after a pause = its clock is at rest -> snap the cursor there once
+    private bool _playheadResyncOnPlay; // armed while paused: re-seed the estimate from mpv once playback actually moves again
+    private const double PlayheadResyncOnPlayThresholdSeconds = 0.04; // ~one frame; below this the standing residual isn't worth moving the cursor for
     private CancellationTokenSource _videoOpenTokenSource;
     private readonly HashSet<string> _waveformsBeingGenerated = new(StringComparer.OrdinalIgnoreCase);
     private readonly Lock _waveformsBeingGeneratedLock = new();
@@ -672,6 +704,7 @@ public partial class MainViewModel :
     public MenuItem MenuItemAudioVisualizerSpeechToTextSelectedLines { get; set; }
     public MenuItem MenuItemAudioVisualizerSpeechToTextNewSelection { get; set; }
     public MenuItem MenuItemAudioVisualizerExtractAudio { get; set; }
+    public MenuItem MenuItemAudioVisualizerCloneVoice { get; set; }
     public MenuItem MenuItemAudioVisualizerCopy { get; set; }
     public MenuItem MenuItemAudioVisualizerCopyText { get; set; }
     public ITextBoxWrapper EditTextBoxOriginal { get; set; }
@@ -789,6 +822,7 @@ public partial class MainViewModel :
         MenuItemAudioVisualizerSpeechToTextSelectedLines = new MenuItem();
         MenuItemAudioVisualizerSpeechToTextNewSelection = new MenuItem();
         MenuItemAudioVisualizerExtractAudio = new MenuItem();
+        MenuItemAudioVisualizerCloneVoice = new MenuItem();
         MenuItemAudioVisualizerCopy = new MenuItem();
         MenuItemAudioVisualizerCopyText = new MenuItem();
         MenuItemStyles = new MenuItem();
@@ -833,7 +867,7 @@ public partial class MainViewModel :
             "60",
             "120"
         };
-        SelectedFrameRate = FrameRates[0];
+        SetSelectedFrameRate(Se.Settings.General.CurrentFrameRate);
 
         StatusTextLeft = string.Empty;
         StatusTextRight = string.Empty;
@@ -4957,6 +4991,165 @@ public partial class MainViewModel :
         return ordered.Select(f => (DisplayName(f), "." + f)).ToList();
     }
 
+    /// <summary>
+    /// Clones the voice heard in the selected subtitle line into <paramref name="engine"/>'s
+    /// voices, so it can be picked for dubbing in the text-to-speech window (#13698).
+    /// </summary>
+    /// <remarks>
+    /// The short way round what used to be "extract audio to a file, open text to speech, pick the
+    /// engine, open voice settings, import, find the file again". Two things are known here that
+    /// the import dialog has to ask for: the audio (it is the line's own time range in the video's
+    /// current audio track) and the reference text (it is the line's text), so the engines that
+    /// want a transcript get a correct one without a Whisper round trip.
+    /// </remarks>
+    [RelayCommand]
+    private async Task WaveformCloneVoiceToEngine(ITtsEngine? engine)
+    {
+        if (Window == null || engine == null || string.IsNullOrEmpty(_videoFileName))
+        {
+            return;
+        }
+
+        var selectedItems = SubtitleGridSelectedItems.Cast<SubtitleLineViewModel>().ToList();
+        if (selectedItems.Count != 1)
+        {
+            return;
+        }
+
+        var line = selectedItems[0];
+
+        // Asked before anything else happens, so a user who declines is not first made to name a
+        // voice. Shown once ever - see VoiceCloningConsent.
+        var consentOk = await VoiceCloneConsentPrompt.EnsureAsync(
+            engine,
+            Window,
+            () => ShowDialogAsync<VoiceCloneConsentWindow, VoiceCloneConsentViewModel>(_ => { }));
+        if (!consentOk)
+        {
+            return;
+        }
+
+        if (!await RequireFfmpegOk())
+        {
+            return;
+        }
+
+        var nameResult = await ShowDialogAsync<PromptTextBoxWindow, PromptTextBoxViewModel>(vm =>
+            vm.Initialize(
+                Se.Language.Waveform.CloneVoiceNameTitle,
+                SuggestCloneVoiceName(line),
+                300,
+                30,
+                returnSubmits: true));
+        if (!nameResult.OkPressed || string.IsNullOrWhiteSpace(nameResult.Text))
+        {
+            return;
+        }
+
+        // The engines name the imported voice after the file they are handed, so the name the user
+        // typed has to survive as a file name.
+        var voiceName = MakeSafeVoiceFileName(nameResult.Text);
+        var tempFolder = Path.Combine(Path.GetTempPath(), "SeVoiceClone_" + Guid.NewGuid().ToString("N"));
+        var clipFileName = Path.Combine(tempFolder, voiceName + ".wav");
+
+        try
+        {
+            Directory.CreateDirectory(tempFolder);
+
+            // Source sample rate and no bit rate: the clip is a lossless hand-off, and every
+            // cloning engine resamples it to whatever its backend wants on import.
+            var arguments = FfmpegGenerator.ExtractAudioClipFromVideoParameters(
+                _videoFileName,
+                line.StartTime.TotalSeconds,
+                line.Duration.TotalSeconds,
+                false,
+                clipFileName,
+                _audioTrack?.FfIndex ?? -1,
+                0,
+                string.Empty);
+
+            using (var process = FfmpegGenerator.GetProcess(arguments, (_, _) => { }))
+            {
+                process.Start();
+                process.BeginOutputReadLine();
+                process.BeginErrorReadLine();
+                await Task.Run(() => process.WaitForExit());
+
+                if (process.ExitCode != 0 || !File.Exists(clipFileName))
+                {
+                    await MessageBox.Show(Window, Se.Language.General.Error, Se.Language.Waveform.CloneVoiceExtractFailed, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+            }
+
+            var transcript = HtmlUtil.RemoveHtmlTags(line.Text ?? string.Empty, true)
+                .Replace('\n', ' ')
+                .Replace('\r', ' ')
+                .Trim();
+            var imported = await Task.Run(() => VoiceCloneImporter.Import(engine, clipFileName, transcript));
+            if (!imported)
+            {
+                await MessageBox.Show(
+                    Window,
+                    Se.Language.General.Error,
+                    string.Format(Se.Language.Video.TextToSpeech.VoiceXCouldNotBeImported, voiceName),
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Error);
+                return;
+            }
+
+            await MessageBox.Show(
+                Window,
+                Se.Language.Video.TextToSpeech.VoiceImportSuccessTitle,
+                string.Format(Se.Language.Video.TextToSpeech.VoiceXImported, voiceName));
+        }
+        catch (Exception exception)
+        {
+            await MessageBox.Show(Window, Se.Language.General.Error, exception.Message, MessageBoxButtons.OK, MessageBoxIcon.Error);
+        }
+        finally
+        {
+            try
+            {
+                if (Directory.Exists(tempFolder))
+                {
+                    Directory.Delete(tempFolder, true);
+                }
+            }
+            catch
+            {
+                // A leftover clip in the temp folder is not worth telling the user about.
+            }
+        }
+    }
+
+    /// <summary>
+    /// The name offered for a voice cloned from <paramref name="line"/>: the actor, if the line
+    /// names one (that is what the user calls this voice anyway), otherwise the video and the line
+    /// number, which at least says where the voice came from.
+    /// </summary>
+    private string SuggestCloneVoiceName(SubtitleLineViewModel line)
+    {
+        var actor = (line.Actor ?? string.Empty).Trim();
+        if (actor.Length > 0)
+        {
+            return actor;
+        }
+
+        var videoName = Path.GetFileNameWithoutExtension(_videoFileName);
+        return string.IsNullOrEmpty(videoName) ? $"voice_{line.Number}" : $"{videoName}_{line.Number}";
+    }
+
+    private static string MakeSafeVoiceFileName(string name)
+    {
+        var safe = new string(name.Trim()
+            .Select(c => Path.GetInvalidFileNameChars().Contains(c) ? '_' : c)
+            .ToArray());
+
+        // A name that was nothing but path characters would leave an empty file name.
+        return string.IsNullOrWhiteSpace(safe) ? "voice" : safe;
+    }
+
     [RelayCommand]
     private async Task WaveformToggleWaveformSpectrogramHeight()
     {
@@ -5466,12 +5659,14 @@ public partial class MainViewModel :
     [RelayCommand]
     private async Task ColumnInsertTextFromSubtitle()
     {
-        if (Window == null || SelectedSubtitle == null)
+        if (Window == null)
         {
             return;
         }
 
-        var idx = Subtitles.IndexOf(SelectedSubtitle);
+        // The texts are written downwards from the first selected row (SE4 parity), so the
+        // selection direction must not matter - see FirstSelectedSubtitleIndex (#13682).
+        var idx = FirstSelectedSubtitleIndex;
         if (idx < 0)
         {
             return;
@@ -5540,12 +5735,16 @@ public partial class MainViewModel :
     [RelayCommand]
     private async Task ColumnPasteFromClipboard()
     {
-        if (Window == null || SelectedSubtitle == null)
+        if (Window == null)
         {
             return;
         }
 
-        var idx = Subtitles.IndexOf(SelectedSubtitle);
+        // The clipboard is pasted downwards from the first selected row (SE4's FirstSelectedIndex),
+        // so the direction the rows were picked in must not matter - see
+        // FirstSelectedSubtitleIndex: anchoring on the current row made a top-to-bottom selection
+        // paste from the bottom row of the selection onto the lines below it (#13682).
+        var idx = FirstSelectedSubtitleIndex;
         if (idx < 0)
         {
             return;
@@ -7989,6 +8188,7 @@ public partial class MainViewModel :
                     {
                         var newLine = new SubtitleLineViewModel(p, SelectedSubtitleFormat);
                         newLine.SetStartTimeKeepDuration(selectedLine.StartTime + p.StartTime.TimeSpan);
+                        newLine.Style = selectedLine.Style; // the lines replace selectedLine, so they keep its style
                         newLines.Add(newLine);
                     }
                 }
@@ -8013,7 +8213,8 @@ public partial class MainViewModel :
 
         foreach (var line in newLines)
         {
-            _insertService.InsertInCorrectPosition(Subtitles, line);
+            var index = _insertService.InsertInCorrectPosition(Subtitles, line);
+            SetDefaultAssaStyleForNewParagraph(line, index);
         }
 
         if (newLines.Count > 0 || deleteLines.Count > 0)
@@ -8797,7 +8998,434 @@ public partial class MainViewModel :
             {
                 ExtractShotChanges(_videoFileName, _audioTrack?.FfIndex ?? -1);
             }
+
+            LoadChapters();
         }
+    }
+
+    /// <summary>
+    /// Chapters edited in Subtitle Edit win over the ones inside the video: the sidecar only exists
+    /// because the user changed something, and re-reading the container would undo that work.
+    /// </summary>
+    private void LoadChapters()
+    {
+        if (AudioVisualizer == null)
+        {
+            return;
+        }
+
+        var videoFileName = _videoFileName ?? string.Empty;
+        var chapters = ChaptersHelper.FromDisk(videoFileName);
+        if (chapters.Count == 0)
+        {
+            chapters = VideoChapterReader.GetChapters(videoFileName);
+        }
+
+        SetChapters(chapters, save: false);
+    }
+
+    private void SetChapters(List<Chapter> chapters, bool save)
+    {
+        if (AudioVisualizer == null)
+        {
+            return;
+        }
+
+        _chapters = chapters.OrderBy(p => p.StartMilliseconds).ToList();
+        AudioVisualizer.Chapters = _chapters
+            .Select(p => new WaveformChapter(p.StartMilliseconds / TimeCode.BaseUnit, p.Title))
+            .ToList();
+
+        if (save && !string.IsNullOrEmpty(_videoFileName))
+        {
+            if (_chapters.Count == 0)
+            {
+                ChaptersHelper.DeleteChapters(_videoFileName);
+            }
+            else
+            {
+                ChaptersHelper.SaveChapters(_videoFileName, _chapters);
+            }
+        }
+
+        _updateAudioVisualizer = true;
+    }
+
+    [RelayCommand]
+    private async Task ShowVideoChapters()
+    {
+        if (Window == null)
+        {
+            return;
+        }
+
+        var result = await ShowDialogAsync<ChaptersWindow, ChaptersViewModel>(vm =>
+        {
+            vm.Initialize(
+                _videoFileName ?? string.Empty,
+                _chapters,
+                () => GetVideoPlayerControl()?.Position ?? 0,
+                seconds =>
+                {
+                    var vp = GetVideoPlayerControl();
+                    if (vp != null)
+                    {
+                        vp.Position = seconds;
+                        AudioVisualizerCenterOnPositionIfNeeded(seconds);
+                        _updateAudioVisualizer = true;
+                    }
+                },
+                // Rounded to a standard rate: the raw measured value can be something like 23.81,
+                // which reads as a mistake sitting in a list of 23.976/24/25.
+                _mediaInfo != null && _mediaInfo.FramesRate > 1
+                    ? FrameRateHelper.RoundToNearestCinematicFrameRate((double)_mediaInfo.FramesRate)
+                    : 0);
+        });
+
+        if (result.OkPressed)
+        {
+            SetChapters(result.GetChapters(), save: true);
+        }
+    }
+
+    [RelayCommand]
+    private void ToggleChapterAtVideoPosition()
+    {
+        var vp = GetVideoPlayerControl();
+        if (string.IsNullOrEmpty(_videoFileName) || vp == null || AudioVisualizer == null)
+        {
+            return;
+        }
+
+        var seconds = AudioVisualizer.CurrentVideoPositionSeconds;
+        var index = AudioVisualizer.GetChapterIndex(seconds);
+
+        var list = _chapters.ToList();
+        if (index >= 0)
+        {
+            list.RemoveAt(index);
+        }
+        else
+        {
+            list.Add(new Chapter(
+                seconds * TimeCode.BaseUnit,
+                string.Format(Se.Language.Video.Chapters.NewChapterTitle, list.Count + 1)));
+        }
+
+        SetChapters(list, save: true);
+    }
+
+    [RelayCommand]
+    private void GoToPreviousChapter()
+    {
+        var vp = GetVideoPlayerControl();
+        if (vp == null || _chapters.Count == 0)
+        {
+            return;
+        }
+
+        var chapter = _chapters.LastOrDefault(p => p.StartMilliseconds / TimeCode.BaseUnit < vp.Position - 0.001);
+        if (chapter == null)
+        {
+            return;
+        }
+
+        GoToChapter(vp, chapter);
+    }
+
+    [RelayCommand]
+    private void GoToNextChapter()
+    {
+        var vp = GetVideoPlayerControl();
+        if (vp == null || _chapters.Count == 0)
+        {
+            return;
+        }
+
+        var chapter = _chapters.FirstOrDefault(p => p.StartMilliseconds / TimeCode.BaseUnit > vp.Position + 0.001);
+        if (chapter == null)
+        {
+            return;
+        }
+
+        GoToChapter(vp, chapter);
+    }
+
+    private void GoToChapter(VideoPlayerControl vp, Chapter chapter)
+    {
+        var seconds = chapter.StartMilliseconds / TimeCode.BaseUnit;
+        vp.Position = seconds;
+        AudioVisualizerCenterOnPositionIfNeeded(seconds);
+        _updateAudioVisualizer = true;
+
+        if (!string.IsNullOrEmpty(chapter.Title))
+        {
+            ShowStatus(chapter.Title);
+        }
+    }
+
+    /// <summary>
+    /// Finds who speaks in the video, clones each of them, and sets up the cast so the whole
+    /// video can be dubbed in its own voices (#13698).
+    /// </summary>
+    /// <remarks>
+    /// The steps are: transcribe with a diarizing speech-to-text engine, turn its speaker labels
+    /// into actors, let the user name and merge the speakers, clone one voice per speaker from
+    /// their own lines, and leave the cast assigned so "Text to speech" opens ready to generate.
+    ///
+    /// With a subtitle already open its lines are kept and only labelled with actors - a
+    /// translation is work nobody wants replaced by a transcription. With nothing open the
+    /// transcription becomes the subtitle.
+    /// </remarks>
+    [RelayCommand]
+    private async Task ShowVideoAutoCastFromVideo()
+    {
+        if (Window == null)
+        {
+            return;
+        }
+
+        if (string.IsNullOrEmpty(_videoFileName))
+        {
+            await MessageBox.Show(
+                Window,
+                Se.Language.General.Error,
+                Se.Language.Video.TextToSpeech.AutoCastNeedsVideo,
+                MessageBoxButtons.OK,
+                MessageBoxIcon.Error);
+            return;
+        }
+
+        if (!await RequireFfmpegOk())
+        {
+            return;
+        }
+
+        var engines = TtsEngineCatalog.CreateVoiceCloningEngines();
+        if (engines.Count == 0)
+        {
+            return;
+        }
+
+        // Asked before the transcription rather than after: it can run for minutes, and being
+        // told "no" at the end of it would waste all of it. Shown once ever.
+        var consentOk = await VoiceCloneConsentPrompt.EnsureAsync(
+            engines[0],
+            Window,
+            () => ShowDialogAsync<VoiceCloneConsentWindow, VoiceCloneConsentViewModel>(_ => { }));
+        if (!consentOk)
+        {
+            return;
+        }
+
+        // MOSS Diarize is the engine that tells speakers apart; it is only preselected, so a user
+        // who has another diarizing engine can switch to it in the window.
+        var sttResult = await ShowDialogAsync<SpeechToTextWindow, SpeechToTextViewModel>(vm =>
+            vm.Initialize(_videoFileName, _audioTrack?.FfIndex ?? -1, WhisperChoice.CrispAsrMossDiarize));
+        if (!sttResult.OkPressed || sttResult.TranscribedSubtitle == null || sttResult.TranscribedSubtitle.Paragraphs.Count == 0)
+        {
+            return;
+        }
+
+        var transcription = sttResult.TranscribedSubtitle;
+        var segmentsBySpeaker = new Dictionary<string, List<Paragraph>>(StringComparer.OrdinalIgnoreCase);
+        foreach (var segment in transcription.Paragraphs)
+        {
+            if (!SpeakerLabelParser.TrySplit(segment.Text, out var speaker, out _))
+            {
+                continue;
+            }
+
+            if (!segmentsBySpeaker.TryGetValue(speaker, out var lines))
+            {
+                lines = new List<Paragraph>();
+                segmentsBySpeaker[speaker] = lines;
+            }
+
+            lines.Add(segment);
+        }
+
+        if (segmentsBySpeaker.Count == 0)
+        {
+            await MessageBox.Show(
+                Window,
+                Se.Language.General.Error,
+                Se.Language.Video.TextToSpeech.AutoCastNoSpeakersFound,
+                MessageBoxButtons.OK,
+                MessageBoxIcon.Information);
+            return;
+        }
+
+        // The labels have done their job as data; from here they live in the actor field, and the
+        // text is what gets spoken.
+        SpeakerLabelParser.MoveLabelsToActors(transcription);
+
+        var rows = segmentsBySpeaker
+            .OrderByDescending(p => p.Value.Sum(l => l.Duration.TotalMilliseconds))
+            .Select(p => new AutoCastSpeakerRow(p.Key, p.Value))
+            .ToList();
+
+        var speakersResult = await ShowDialogAsync<AutoCastSpeakersWindow, AutoCastSpeakersViewModel>(vm =>
+            vm.Initialize(rows, engines, engines.FirstOrDefault(e => e.SupportsPerLineVoiceCloning)));
+        if (!speakersResult.OkPressed || speakersResult.SelectedEngine == null)
+        {
+            return;
+        }
+
+        var engine = speakersResult.SelectedEngine;
+        var clonedVoiceNames = await CloneSpeakerVoicesAsync(engine, speakersResult.SpeakersToClone);
+        if (clonedVoiceNames.Count == 0)
+        {
+            await MessageBox.Show(
+                Window,
+                Se.Language.General.Error,
+                Se.Language.Video.TextToSpeech.AutoCastNothingCloned,
+                MessageBoxButtons.OK,
+                MessageBoxIcon.Error);
+            return;
+        }
+
+        ApplyAutoCastToSubtitle(transcription, speakersResult.RenamedSpeakers);
+        SaveAutoCastMappings(engine, clonedVoiceNames);
+
+        ShowStatus(string.Format(Se.Language.Video.TextToSpeech.AutoCastDoneXVoices, clonedVoiceNames.Count));
+    }
+
+    /// <summary>
+    /// Clones one voice per speaker from their own lines in the video, and reports the voice name
+    /// each speaker ended up with.
+    /// </summary>
+    private async Task<Dictionary<string, string>> CloneSpeakerVoicesAsync(
+        ITtsEngine engine,
+        Dictionary<string, List<Paragraph>> speakers)
+    {
+        var clonedVoiceNames = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+        var referenceFolder = Path.Combine(Path.GetTempPath(), "SeAutoCast_" + Guid.NewGuid().ToString("N"));
+
+        try
+        {
+            foreach (var (speakerName, lines) in speakers)
+            {
+                ShowStatus(string.Format(Se.Language.Video.TextToSpeech.AutoCastCloningX, speakerName));
+
+                var referenceFileName = await SpeakerReferenceBuilder.BuildAsync(
+                    _videoFileName!,
+                    lines,
+                    speakerName,
+                    referenceFolder,
+                    _audioTrack?.FfIndex ?? -1,
+                    CancellationToken.None);
+                if (referenceFileName == null)
+                {
+                    continue;
+                }
+
+                var transcript = await ReadReferenceTranscriptAsync(referenceFileName);
+                var imported = await Task.Run(() => VoiceCloneImporter.Import(engine, referenceFileName, transcript));
+                if (imported)
+                {
+                    clonedVoiceNames[speakerName] = Path.GetFileNameWithoutExtension(referenceFileName);
+                }
+            }
+        }
+        catch (Exception exception)
+        {
+            SeLogger.Error(exception, "Auto cast: cloning the speakers failed");
+        }
+        finally
+        {
+            try
+            {
+                if (Directory.Exists(referenceFolder))
+                {
+                    Directory.Delete(referenceFolder, true);
+                }
+            }
+            catch
+            {
+                // Leftovers in the temp folder are not worth telling the user about.
+            }
+        }
+
+        return clonedVoiceNames;
+    }
+
+    private static async Task<string> ReadReferenceTranscriptAsync(string referenceFileName)
+    {
+        var transcriptFileName = Path.ChangeExtension(referenceFileName, ".txt");
+        return File.Exists(transcriptFileName) ? await File.ReadAllTextAsync(transcriptFileName) : string.Empty;
+    }
+
+    /// <summary>
+    /// Puts the speakers into the subtitle as actors and switches to ASSA, the format that keeps
+    /// them.
+    /// </summary>
+    /// <remarks>
+    /// An open subtitle keeps its own lines and only gains actors, matched to the diarized
+    /// segments by overlap; with nothing open, the transcription becomes the subtitle.
+    /// </remarks>
+    private void ApplyAutoCastToSubtitle(Subtitle transcription, Dictionary<string, string> renamedSpeakers)
+    {
+        string Rename(string detected) =>
+            renamedSpeakers.TryGetValue(detected, out var name) && !string.IsNullOrWhiteSpace(name) ? name : detected;
+
+        if (IsEmpty)
+        {
+            foreach (var paragraph in transcription.Paragraphs)
+            {
+                paragraph.Actor = Rename(paragraph.Actor ?? string.Empty);
+            }
+
+            SetSubtitles(transcription);
+        }
+        else
+        {
+            var lines = Subtitles.Select(s => s.ToParagraph()).ToList();
+            var speakerByLine = SpeakerLabelParser.AssignSpeakersByOverlap(lines, transcription.Paragraphs);
+            for (var i = 0; i < Subtitles.Count; i++)
+            {
+                if (speakerByLine.TryGetValue(lines[i], out var speaker))
+                {
+                    Subtitles[i].Actor = Rename(speaker);
+                }
+            }
+        }
+
+        // Actors only survive in ASSA/SSA, and they are invisible until the column is shown.
+        var assaFormat = SubtitleFormats.FirstOrDefault(f => f is AdvancedSubStationAlpha);
+        if (assaFormat != null && SelectedSubtitleFormat is not AdvancedSubStationAlpha and not SubStationAlpha)
+        {
+            SelectedSubtitleFormat = assaFormat;
+        }
+
+        if (!ShowColumnActor)
+        {
+            ToggleShowColumnActor();
+        }
+    }
+
+    /// <summary>
+    /// Remembers actor to voice, so the Text to speech window opens with the cast already assigned.
+    /// </summary>
+    private static void SaveAutoCastMappings(ITtsEngine engine, Dictionary<string, string> clonedVoiceNames)
+    {
+        var mappings = clonedVoiceNames
+            .Select(p => new ActorVoiceMapping
+            {
+                Actor = p.Key,
+                EngineName = engine.Name,
+                VoiceName = p.Value,
+                Model = string.Empty,
+                Instruction = string.Empty,
+            })
+            .ToList();
+
+        // Kept rather than replaced wholesale: a cast the user assigned for other actors in an
+        // earlier session is still theirs, and only the names cloned now are being decided here.
+        var keep = (Se.Settings.Video.TextToSpeech.LastActorVoiceMappings ?? new List<ActorVoiceMapping>())
+            .Where(m => m?.Actor != null && !clonedVoiceNames.ContainsKey(m.Actor));
+        Se.Settings.Video.TextToSpeech.LastActorVoiceMappings = mappings.Concat(keep).ToList();
+        Se.SaveSettings();
     }
 
     [RelayCommand]
@@ -8825,8 +9453,12 @@ public partial class MainViewModel :
             // Pass SelectedSubtitleFormat explicitly so the TTS window's cast detection uses the
             // user's *current* selection (the editor normalises subtitles to ASSA internally, so
             // subtitle.OriginalFormat doesn't reflect what's shown in the format combo).
+            // The original subtitle travels too when one is loaded: per-line voice cloning cuts
+            // its reference from the video, and the original line - not the translation being
+            // dubbed - is what is spoken in that clip.
             vm.Initialize(GetUpdateSubtitle(), SelectedSubtitleFormat,
-                _videoFileName ?? string.Empty, AudioVisualizer?.WavePeaks, Path.GetTempPath());
+                _videoFileName ?? string.Empty, AudioVisualizer?.WavePeaks, Path.GetTempPath(),
+                ShowColumnOriginalText ? GetUpdateSubtitleOriginal() : null);
         });
 
         // OK is the consent to apply the session's subtitle changes; Cancel/Escape/title-bar
@@ -9767,6 +10399,16 @@ public partial class MainViewModel :
         });
     }
 
+    /// <summary>
+    /// What the sync dialogs need to draw the subtitle on their own video the way it is drawn on
+    /// the main one (discussion #13767) - they only get line view models, which carry neither the
+    /// header nor the timing mode.
+    /// </summary>
+    private VideoPreviewSubtitleContext MakeVideoPreviewSubtitleContext()
+    {
+        return new VideoPreviewSubtitleContext(SelectedSubtitleFormat, _subtitle.Header, IsSmpteTimingEnabled);
+    }
+
     [RelayCommand]
     private async Task ShowVisualSync()
     {
@@ -9784,7 +10426,7 @@ public partial class MainViewModel :
         var result = await ShowDialogAsync<VisualSyncWindow, VisualSyncViewModel>(vm =>
         {
             var paragraphs = Subtitles.Select(p => new SubtitleLineViewModel(p)).ToList();
-            vm.Initialize(paragraphs, _videoFileName, _subtitleFileName, AudioVisualizer, _audioTrack?.Id ?? -1);
+            vm.Initialize(paragraphs, _videoFileName, _subtitleFileName, MakeVideoPreviewSubtitleContext(), AudioVisualizer, _audioTrack?.Id ?? -1);
         });
 
         if (result.OkPressed)
@@ -9820,7 +10462,7 @@ public partial class MainViewModel :
         var result = await ShowDialogAsync<VisualSyncWindow, VisualSyncViewModel>(vm =>
         {
             var paragraphs = selectedLines.Select(p => new SubtitleLineViewModel(p)).ToList();
-            vm.Initialize(paragraphs, _videoFileName, _subtitleFileName, AudioVisualizer, _audioTrack?.Id ?? -1);
+            vm.Initialize(paragraphs, _videoFileName, _subtitleFileName, MakeVideoPreviewSubtitleContext(), AudioVisualizer, _audioTrack?.Id ?? -1);
         });
 
         if (!result.OkPressed)
@@ -9916,7 +10558,7 @@ public partial class MainViewModel :
         {
             var selectedItems = SubtitleGridSelectedItems.Cast<SubtitleLineViewModel>().ToList();
             var paragraphs = Subtitles.Select(p => new SubtitleLineViewModel(p)).ToList();
-            vm.Initialize(paragraphs, selectedItems, _videoFileName ?? string.Empty, _subtitleFileName ?? string.Empty, AudioVisualizer);
+            vm.Initialize(paragraphs, selectedItems, _videoFileName ?? string.Empty, _subtitleFileName ?? string.Empty, MakeVideoPreviewSubtitleContext(), AudioVisualizer);
         });
 
         if (result.OkPressed)
@@ -9950,7 +10592,7 @@ public partial class MainViewModel :
         var result = await ShowDialogAsync<PointSyncViaOtherWindow, PointSyncViaOtherViewModel>(vm =>
         {
             var paragraphs = Subtitles.Select(p => new SubtitleLineViewModel(p)).ToList();
-            vm.Initialize(paragraphs, _videoFileName ?? string.Empty, _subtitleFileName ?? string.Empty);
+            vm.Initialize(paragraphs, _videoFileName ?? string.Empty, _subtitleFileName ?? string.Empty, MakeVideoPreviewSubtitleContext());
         });
 
         if (result.OkPressed)
@@ -14413,6 +15055,7 @@ public partial class MainViewModel :
         var newParagraph =
             new SubtitleLineViewModel(new Paragraph(string.Empty, startMs, endMs), SelectedSubtitleFormat);
         var idx = _insertService.InsertInCorrectPosition(Subtitles, newParagraph);
+        SetDefaultAssaStyleForNewParagraph(newParagraph, idx);
         var next = Subtitles.GetOrNull(idx + 1);
         if (next != null)
         {
@@ -15122,7 +15765,8 @@ public partial class MainViewModel :
         }
 
         var newParagraph = AudioVisualizer.NewSelectionParagraph;
-        _insertService.InsertInCorrectPosition(Subtitles, newParagraph);
+        var index = _insertService.InsertInCorrectPosition(Subtitles, newParagraph);
+        SetDefaultAssaStyleForNewParagraph(newParagraph, index);
         AudioVisualizer.NewSelectionParagraph = null;
         SelectAndScrollToSubtitle(newParagraph);
         Renumber();
@@ -15142,7 +15786,8 @@ public partial class MainViewModel :
         }
 
         var newParagraph = AudioVisualizer.NewSelectionParagraph;
-        _insertService.InsertInCorrectPosition(Subtitles, newParagraph);
+        var index = _insertService.InsertInCorrectPosition(Subtitles, newParagraph);
+        SetDefaultAssaStyleForNewParagraph(newParagraph, index);
         AudioVisualizer.NewSelectionParagraph = null;
         SubtitleGrid.SelectedItem = newParagraph;
         SubtitleGrid.ScrollIntoView(newParagraph);
@@ -15174,7 +15819,8 @@ public partial class MainViewModel :
         }
 
         newParagraph.Text = text.Trim();
-        _insertService.InsertInCorrectPosition(Subtitles, newParagraph);
+        var index = _insertService.InsertInCorrectPosition(Subtitles, newParagraph);
+        SetDefaultAssaStyleForNewParagraph(newParagraph, index);
         AudioVisualizer.NewSelectionParagraph = null;
         SelectAndScrollToSubtitle(newParagraph);
         Renumber();
@@ -15199,6 +15845,12 @@ public partial class MainViewModel :
         // Paste at the waveform cursor rather than the raw player position - after a right-click
         // the cursor is pinned to the clicked spot while the async player seek may still lag.
         var linesInserted = _pasteFromClipboardHelper.PasteFromClipboard(text, AudioVisualizer.CurrentVideoPositionSeconds * 1000.0, Subtitles, SelectedSubtitleFormat);
+        foreach (var line in linesInserted)
+        {
+            // plain text carries no style - pasted ASSA lines keep the one they came with
+            SetDefaultAssaStyleForNewParagraph(line, Subtitles.IndexOf(line));
+        }
+
         Renumber();
         if (linesInserted.Count == 1)
         {
@@ -15290,6 +15942,7 @@ public partial class MainViewModel :
         RunWithoutChangeDetection(() =>
         {
             var idx = _insertService.InsertInCorrectPosition(Subtitles, newParagraph);
+            SetDefaultAssaStyleForNewParagraph(newParagraph, idx);
             var next = Subtitles.GetOrNull(idx + 1);
             if (next != null)
             {
@@ -15331,6 +15984,7 @@ public partial class MainViewModel :
         RunWithoutChangeDetection(() =>
         {
             var idx = _insertService.InsertInCorrectPosition(Subtitles, newParagraph);
+            SetDefaultAssaStyleForNewParagraph(newParagraph, idx);
             var next = Subtitles.GetOrNull(idx + 1);
             if (next != null)
             {
@@ -15650,6 +16304,7 @@ public partial class MainViewModel :
         RunWithoutChangeDetection(() =>
         {
             var idx = _insertService.InsertInCorrectPosition(Subtitles, newParagraph);
+            SetDefaultAssaStyleForNewParagraph(newParagraph, idx);
             var next = Subtitles.GetOrNull(idx + 1);
             if (next != null &&
                 next.StartTime.TotalMilliseconds < endMs &&
@@ -16565,10 +17220,15 @@ public partial class MainViewModel :
         EditTextBox.Cut();
     }
 
+    // The "(alternative)" clipboard commands are dispatched through the shortcut manager while
+    // either edit box is focused (their gestures are not in Avalonia's native keymap), so they
+    // must act on the focused box - unlike the primary commands, which the focused control
+    // handles natively and only run from the main text box's context menu.
     [RelayCommand]
     private void TextBoxCut2()
     {
-        EditTextBox.Cut();
+        var textBox = EditTextBoxOriginal.IsFocused ? EditTextBoxOriginal : EditTextBox;
+        textBox.Cut();
     }
 
     [RelayCommand]
@@ -16578,9 +17238,23 @@ public partial class MainViewModel :
     }
 
     [RelayCommand]
+    private void TextBoxCopy2()
+    {
+        var textBox = EditTextBoxOriginal.IsFocused ? EditTextBoxOriginal : EditTextBox;
+        textBox.Copy();
+    }
+
+    [RelayCommand]
     private void TextBoxPaste()
     {
         EditTextBox.Paste();
+    }
+
+    [RelayCommand]
+    private void TextBoxPaste2()
+    {
+        var textBox = EditTextBoxOriginal.IsFocused ? EditTextBoxOriginal : EditTextBox;
+        textBox.Paste();
     }
 
     [RelayCommand]
@@ -16666,20 +17340,128 @@ public partial class MainViewModel :
             return;
         }
 
+        var text = await ClipboardHelper.GetTextAsync(Window);
+        if (string.IsNullOrEmpty(text))
+        {
+            _shortcutManager.ClearKeys();
+            return;
+        }
+
+        // More than one line selected: paste over the selection instead of adding lines below it -
+        // the translation workflow SE4 had (translate the lines somewhere else, select them here,
+        // Ctrl+V) and which SE5 only offered through "Column > Paste from clipboard" (#13682).
+        var selectedItems = SubtitleGridSelectedItems;
+        if (selectedItems.Count > 1 && PasteOverSelectedLines(selectedItems, text))
+        {
+            _updateAudioVisualizer = true;
+            _shortcutManager.ClearKeys();
+            return;
+        }
+
+        // Insert below the topmost selected row, not below the current one: the current row is the
+        // moving end of a shift-selection, so anchoring there made the paste land below the bottom
+        // row when the rows were picked downwards - see FirstSelectedSubtitleIndex (#13682).
         // No selection: append at the end instead of silently doing nothing - SE4's grid paste
         // covered this state (insert at end), and the Paste helper already supports
         // index >= Count as append (#13200). Empty grid: insert at 0 (the helper handles
         // index 0 with an empty list; a negative index would throw on Insert).
-        var idx = SelectedSubtitleIndex ?? Subtitles.Count;
+        var idx = FirstSelectedSubtitleIndex;
         if (idx < 0 || idx > Subtitles.Count)
         {
             idx = Subtitles.Count;
         }
 
-        await SubtitleGridCopyPasteHelper.Paste(Window, Subtitles, idx, SelectedSubtitleFormat);
+        var pastedLines = SubtitleGridCopyPasteHelper.PasteText(Subtitles, idx, SelectedSubtitleFormat, text);
         Renumber();
+
+        // Select the pasted lines and scroll them into view, like SE4 - otherwise the selection
+        // (and with it the edit box) stayed on the line selected before the paste (#13705).
+        if (pastedLines.Count > 0)
+        {
+            var firstIndex = Subtitles.IndexOf(pastedLines[0]);
+            if (firstIndex >= 0)
+            {
+                SelectAndScrollToRange(firstIndex, firstIndex + pastedLines.Count - 1);
+            }
+        }
+
         _updateAudioVisualizer = true;
         _shortcutManager.ClearKeys();
+    }
+
+    /// <summary>
+    /// Pastes <paramref name="text"/> over the selected rows and returns true when it did, so
+    /// <see cref="SubtitleGridPaste"/> can fall back to inserting lines. Two clipboards to tell
+    /// apart, both from SE4's Ctrl+V handler:
+    /// <list type="bullet">
+    /// <item>a subtitle format (SRT, ASSA, ...) replaces the selected lines outright - SE4's
+    /// "multiple lines selected - first delete, then insert" - so the pasted time codes are kept
+    /// and the pasted line count does not have to match the selection.</item>
+    /// <item>plain text writes one clipboard line into each selected row's text and leaves the
+    /// time codes alone, which is what "Column &gt; Paste from clipboard &gt; text only + replace
+    /// existing cells" does. A subtitle whose text is two display lines cannot be expressed this
+    /// way; that is what the subtitle-format clipboard above is for.</item>
+    /// </list>
+    /// Everything here is a normal edit, so the automatic change detection makes it undoable.
+    /// </summary>
+    private bool PasteOverSelectedLines(List<SubtitleLineViewModel> selectedItems, string text)
+    {
+        var firstIndex = Subtitles.IndexOf(selectedItems[0]);
+        if (firstIndex < 0)
+        {
+            return false;
+        }
+
+        var clipboardSubtitle = SubtitleGridCopyPasteHelper.ParseClipboardSubtitle(text, SelectedSubtitleFormat);
+        if (clipboardSubtitle is { Paragraphs.Count: > 0 })
+        {
+            foreach (var item in selectedItems)
+            {
+                Subtitles.Remove(item);
+            }
+
+            // Nothing above the topmost selected row was removed, so it is still the row to insert
+            // at - even when the selection had holes in it (ctrl-click).
+            var insertedLines = new List<SubtitleLineViewModel>(clipboardSubtitle.Paragraphs.Count);
+            var index = firstIndex;
+            foreach (var p in clipboardSubtitle.Paragraphs)
+            {
+                var line = new SubtitleLineViewModel(p, SelectedSubtitleFormat);
+                Subtitles.Insert(index, line);
+                insertedLines.Add(line);
+                index++;
+            }
+
+            Renumber();
+            SelectAndScrollToRange(firstIndex, firstIndex + insertedLines.Count - 1);
+            ShowStatus(string.Format(Se.Language.Main.PastedXLinesOverSelectedLines, insertedLines.Count));
+            return true;
+        }
+
+        var lines = text.SplitToLines();
+        // trailing blank lines are an artifact of the copy, not text to paste (same rule as the
+        // column paste); blank lines inside the block are kept, so the lines stay aligned with the
+        // rows they were translated from
+        var lastLineWithText = lines.FindLastIndex(p => !string.IsNullOrWhiteSpace(p));
+        if (lastLineWithText < 0)
+        {
+            return false;
+        }
+
+        var textLineCount = lastLineWithText + 1;
+        var count = Math.Min(textLineCount, selectedItems.Count);
+        for (var i = 0; i < count; i++)
+        {
+            selectedItems[i].Text = lines[i].Trim();
+        }
+
+        // Clipboard lines past the end of the selection are dropped rather than pushed into the
+        // lines below it, which the user did not select - say so instead of silently doing less.
+        ShowStatus(textLineCount > selectedItems.Count
+            ? string.Format(Se.Language.Main.PastedXOfYLinesOverSelectedLines, count, textLineCount)
+            : string.Format(Se.Language.Main.PastedXLinesOverSelectedLines, count));
+
+        return true;
     }
 
     [RelayCommand]
@@ -17459,6 +18241,59 @@ public partial class MainViewModel :
         });
     }
 
+    /// <summary>
+    /// Selects a contiguous block of rows - e.g. everything a paste just inserted - and scrolls
+    /// the first of them into view, leaving that row as the current one so the edit box shows it.
+    /// </summary>
+    private void SelectAndScrollToRange(int startIndex, int endIndex)
+    {
+        if (startIndex < 0 || startIndex >= Subtitles.Count)
+        {
+            return;
+        }
+
+        endIndex = Math.Clamp(endIndex, startIndex, Subtitles.Count - 1);
+        if (endIndex == startIndex)
+        {
+            SelectAndScrollToRow(startIndex);
+            return;
+        }
+
+        _shiftSelectAnchorIndex = -1;
+        _shiftSelectCurrentIndex = -1;
+
+        // The first pasted row goes in first so it becomes the SelectedItem (the row the edit
+        // box shows), then the rest of the block is added to the selection.
+        SelectGridRange(startIndex, endIndex, startIndex);
+        SubtitleGridSelectionChanged();
+
+        // Avalonia keeps the caret index when the bound text changes - same reset as
+        // SelectAndScrollToRow (#12707), as the edit box now shows another line.
+        EditTextBox.CaretIndex = 0;
+        EditTextBoxOriginal.CaretIndex = 0;
+
+        var itemToScroll = Subtitles[startIndex];
+        Dispatcher.UIThread.Post(() =>
+        {
+            if (!Subtitles.Contains(itemToScroll))
+            {
+                return;
+            }
+
+            TableViewExtras.PrePositionScroll(SubtitleGrid, Subtitles.IndexOf(itemToScroll));
+            SubtitleGrid.ScrollIntoView(itemToScroll);
+
+            if (Se.Settings.General.SubtitleGridCenterSelectedRow)
+            {
+                CenterSelectedRowInSubtitleGrid(itemToScroll);
+            }
+            else
+            {
+                EnsureRowFullyVisibleInSubtitleGrid(itemToScroll);
+            }
+        });
+    }
+
     // TableView's ScrollIntoView can leave a variable-height row clipped at an edge
     // (same class of problem as DataGrid issue #11723); the helper nudges the scroll
     // offset by exactly how far the realized row pokes out.
@@ -17702,8 +18537,11 @@ public partial class MainViewModel :
                 return;
             }
 
+            // A subtitle-only movie (e.g. AVFoundation writes tx3g-only .mov/.mp4 files)
+            // can easily be under 2 KB, so the old 2000-byte floor misrouted those to the
+            // text loader; a failed MP4 parse just falls through to the handlers below.
             if ((ext == ".mp4" || ext == ".m4v" || ext == ".3gp" || ext == ".mov" || ext == ".cmaf" || ext == ".m4a" || ext == ".m4b") &&
-                fileSize > 2000 || ext == ".m4s")
+                fileSize > 100 || ext == ".m4s")
             {
                 if (!new IsmtDfxp().IsMine(null, fileName))
                 {
@@ -17748,6 +18586,18 @@ public partial class MainViewModel :
                 }
 
                 return;
+            }
+
+            // a DVD .vob is the same MPEG program stream as a VobSub .sub - extract the subtitle
+            // (SPU) stream directly; a .vob without subtitles falls through to the video handling
+            if (ext == ".vob" && FileUtil.IsVobSub(fileName))
+            {
+                var ok = await ImportSubtitleFromVobSubFile(fileName, videoFileName, skipLoadVideo);
+                if (ok)
+                {
+                    SelectAndScrollToRow(0);
+                    return;
+                }
             }
 
             if (ext == ".idx")
@@ -17882,6 +18732,36 @@ public partial class MainViewModel :
 
             if (subtitle == null)
             {
+                // SMPTE-TT with bitmap captions: base64 PNGs in <smpte:image> referenced via
+                // smpte:backgroundImage - an import-only format, so Subtitle.Parse never finds
+                // it; route through OCR like the MP4-embedded variant (see IsmtDfxp above)
+                if (ext == ".ttml" || ext == ".xml" || ext == ".dfxp")
+                {
+                    var base64ImageLines = FileUtil.ReadAllLinesShared(fileName, Encoding.UTF8);
+                    var base64ImageFormat = new TimedTextBase64Image();
+                    if (base64ImageFormat.IsMine(base64ImageLines, fileName))
+                    {
+                        var base64ImageSubtitle = new Subtitle();
+                        base64ImageFormat.LoadSubtitle(base64ImageSubtitle, base64ImageLines, fileName);
+                        ImportAndInlineBase64(base64ImageSubtitle, fileName, skipLoadVideo);
+                        return;
+                    }
+                }
+
+                // Image-list xml projects reference png files next to the xml - BDN xml and
+                // Final Cut Pro image xmeml (SE's own "export image based" FCP output). Both
+                // only live in GetTextOtherFormats(), so Subtitle.Parse never finds them;
+                // route through the BDN OCR import like batch convert already does for BDN.
+                if (ext == ".xml")
+                {
+                    var imageListSubtitle = TryLoadImageListXml(fileName);
+                    if (imageListSubtitle != null)
+                    {
+                        ImportAndOcrDost(fileName, imageListSubtitle, skipLoadVideo);
+                        return;
+                    }
+                }
+
                 if (FileUtil.IsSpDvdSup(fileName))
                 {
                     ImportAndOcrSpDvdSup(fileName, skipLoadVideo);
@@ -18363,7 +19243,7 @@ public partial class MainViewModel :
 
     private bool ImportSubtitleFromDivX(string fileName, bool skipLoadVideo = false)
     {
-        var list = DivXSubParser.ImportSubtitleFromDivX(fileName);
+        var list = XSubParser.ParseAviSubtitles(fileName);
         if (list.Count == 0)
         {
             return false;
@@ -18416,6 +19296,51 @@ public partial class MainViewModel :
         for (var i = 0; i < Subtitles.Count && i < sub.Paragraphs.Count; i++)
         {
             Subtitles[i].Bookmark = sub.Paragraphs[i].Bookmark;
+        }
+    }
+
+    /// <summary>
+    /// Loads an image-list xml project (BDN xml, or a Final Cut Pro image xmeml where each
+    /// clipitem references a png) whose cues carry image file names for the OCR importer.
+    /// Returns null when the file is neither.
+    /// </summary>
+    private static Subtitle? TryLoadImageListXml(string fileName)
+    {
+        try
+        {
+            var lines = FileUtil.ReadAllLinesShared(fileName, LanguageAutoDetect.GetEncodingFromFile(fileName));
+
+            var bdnXml = new BdnXml();
+            if (bdnXml.IsMine(lines, fileName))
+            {
+                var subtitle = new Subtitle();
+                bdnXml.LoadSubtitle(subtitle, lines, fileName);
+                if (subtitle.Paragraphs.Count > 0)
+                {
+                    subtitle.OriginalFormat = bdnXml;
+                    return subtitle;
+                }
+            }
+
+            // Cheap content gate first - FinalCutProImage has no fast IsMine of its own.
+            if (lines.Any(l => l.Contains("<xmeml", StringComparison.Ordinal)) &&
+                lines.Any(l => l.Contains("<pathurl>", StringComparison.Ordinal)))
+            {
+                var fcpImage = new FinalCutProImage();
+                var subtitle = new Subtitle();
+                fcpImage.LoadSubtitle(subtitle, lines, fileName);
+                if (subtitle.Paragraphs.Count > 0)
+                {
+                    subtitle.OriginalFormat = fcpImage;
+                    return subtitle;
+                }
+            }
+
+            return null;
+        }
+        catch
+        {
+            return null;
         }
     }
 
@@ -19141,6 +20066,11 @@ public partial class MainViewModel :
                 mergedVobSubPacks.RemoveAt(i);
             }
         }
+
+        // ffmpeg leaves BlockDuration unset (or "unknown") on VobSub tracks it muxes, which
+        // left every pack ending where it started; the sub picture's own stop-display delay
+        // is the real duration. Same repair the .sub/.idx path does.
+        VobSubParser.FixPackTimes(mergedVobSubPacks);
 
         Dispatcher.UIThread.Post(async () =>
         {
@@ -20843,10 +21773,14 @@ public partial class MainViewModel :
         try
         {
             _mediaInfo = FfmpegMediaInfo2.Parse(videoFileName);
-            SelectedFrameRate = _mediaInfo?.FramesRate.ToString(CultureInfo.InvariantCulture) ?? FrameRates[0];
-            Se.Settings.General.CurrentFrameRate = (double)(_mediaInfo?.FramesRate ?? 23.976m);
-            Configuration.Settings.General.CurrentFrameRate = (double)(_mediaInfo?.FramesRate ?? 23.976m);
-            _updateAudioVisualizer = true;
+            var videoFrameRate = (double)(_mediaInfo?.FramesRate ?? 23.976m);
+            if (videoFrameRate > 0)
+            {
+                SetSelectedFrameRate(videoFrameRate);
+                Se.Settings.General.CurrentFrameRate = videoFrameRate;
+                Configuration.Settings.General.CurrentFrameRate = videoFrameRate;
+                _updateAudioVisualizer = true;
+            }
 
             if (IsFormatAssa)
             {
@@ -20907,7 +21841,60 @@ public partial class MainViewModel :
             Se.Settings.General.CurrentFrameRate = frameRate;
             Configuration.Settings.General.CurrentFrameRate = frameRate;
             _updateAudioVisualizer = true;
+
+            if (Se.Settings.General.UseFrameMode)
+            {
+                foreach (var s in Subtitles)
+                {
+                    s.RefreshTimeCodes();
+                }
+            }
         }
+    }
+
+    /// <summary>
+    /// Shows a frame rate in the toolbar frame rate combo box, adding it to the list first when it
+    /// is not one of the presets.
+    /// </summary>
+    internal void SetSelectedFrameRate(double frameRate)
+    {
+        SelectedFrameRate = FrameRateHelper.SelectInList(FrameRates, frameRate);
+    }
+
+    /// <summary>
+    /// The SE 4 "..." button next to the toolbar frame rate combo box: pick a video file and use
+    /// its frame rate, without opening the video in the player.
+    /// </summary>
+    [RelayCommand]
+    private async Task GetFrameRateFromVideoFile()
+    {
+        var fileName = await _fileHelper.PickOpenVideoFile(Window!, Se.Language.General.OpenVideoFileTitle);
+        if (string.IsNullOrEmpty(fileName))
+        {
+            _shortcutManager.ClearKeys();
+            return;
+        }
+
+        var frameRate = 0.0;
+        try
+        {
+            var mediaInfo = await Task.Run(() => FfmpegMediaInfo2.Parse(fileName));
+            frameRate = (double)mediaInfo.FramesRate;
+        }
+        catch
+        {
+            // Unreadable video file - keep the current frame rate, like SE 4 did.
+        }
+
+        if (frameRate > 0)
+        {
+            SetSelectedFrameRate(frameRate);
+            Se.Settings.General.CurrentFrameRate = frameRate;
+            Configuration.Settings.General.CurrentFrameRate = frameRate;
+            _updateAudioVisualizer = true;
+        }
+
+        _shortcutManager.ClearKeys();
     }
 
     private void LoadAudioTrackMenuItems()
@@ -21441,10 +22428,15 @@ public partial class MainViewModel :
         {
             AudioVisualizer.WavePeaks = null;
             AudioVisualizer.ShotChanges = new List<double>();
+            AudioVisualizer.Chapters = new List<WaveformChapter>();
             AudioVisualizer.StartPositionSeconds = 0;
             AudioVisualizer.CurrentVideoPositionSeconds = 0;
             UpdateShotChangesListMenuItem();
         }
+
+        // Closing the video takes its chapters with it, or the next video would open showing the
+        // previous one's marks.
+        _chapters = new List<Chapter>();
     }
 
     /// <summary>
@@ -22846,6 +23838,13 @@ public partial class MainViewModel :
     };
 
     /// <summary>
+    /// Editing keys that never type a character, so holding Shift with them is a real chord rather
+    /// than "the same key, shifted" - unlike Shift+A, which is just an uppercase A. Bare Delete and
+    /// Back still edit the text box as usual; only the Shift variants reach shortcut dispatch.
+    /// </summary>
+    private static readonly HashSet<Key> NonTypingEditKeys = [Key.Delete, Key.Back];
+
+    /// <summary>
     /// Activates the main menu bar for keyboard navigation (Windows standard F10; bare Alt is handled
     /// by Avalonia's built-in AccessKeyHandler), remembering the control that had focus so it can be
     /// restored on deactivation. Returns false on platforms with a native menu (macOS), where the
@@ -23580,8 +24579,14 @@ public partial class MainViewModel :
                         }
                     }
 
-                    if (!Se.Settings.Tools.AllowSingleLetterShortcutsInTextbox && !AlwaysAllowedSingleKeyShortcuts.Contains(key) &&
-                        (keyEventArgs.KeyModifiers == KeyModifiers.None || keyEventArgs.KeyModifiers == KeyModifiers.Shift))
+                    // Shift counts as "no modifier" here because Shift+<letter> is just typing an
+                    // uppercase letter - but only for keys that actually type something. Shift with
+                    // an editing key is a real chord (Shift+Delete cut, Shift+Back forward delete),
+                    // and treating it as a bare key made those shipped TextBox shortcuts unreachable:
+                    // Shift+Delete fell through to Avalonia's plain delete instead of cutting (#13711).
+                    var isBareKeyChord = keyEventArgs.KeyModifiers == KeyModifiers.None ||
+                                         (keyEventArgs.KeyModifiers == KeyModifiers.Shift && !NonTypingEditKeys.Contains(key));
+                    if (!Se.Settings.Tools.AllowSingleLetterShortcutsInTextbox && !AlwaysAllowedSingleKeyShortcuts.Contains(key) && isBareKeyChord)
                     {
                         return; // allow single key shortcuts in text input if enabled in settings, or if it's not an allowed single key shortcut
                     }
@@ -23769,9 +24774,10 @@ public partial class MainViewModel :
     // These TextBox-category commands duplicate Avalonia's built-in TextBox key handling and are
     // hardcoded to the primary EditTextBox, so we let the focused control handle them natively
     // instead of routing them through the shortcut manager (they remain for the right-click menu).
+    // The "(alternative)" clipboard commands are NOT skipped: their gestures (e.g. Shift+Delete
+    // for cut) are not in Avalonia's native keymap, so they only work when routed here (#13711).
     private bool IsNativeTextBoxClipboardCommand(IRelayCommand command) =>
         ReferenceEquals(command, TextBoxCutCommand) ||
-        ReferenceEquals(command, TextBoxCut2Command) ||
         ReferenceEquals(command, TextBoxCopyCommand) ||
         ReferenceEquals(command, TextBoxPasteCommand) ||
         ReferenceEquals(command, TextBoxSelectAllCommand);
@@ -24455,6 +25461,15 @@ public partial class MainViewModel :
 
         var nowTimestamp = Stopwatch.GetTimestamp();
 
+        // Any tick with mpv stopped arms a one-shot resync for when playback starts again (see the
+        // resync block in the playing branch). Armed here rather than in PlayVideo so every way of
+        // starting playback is covered - the player's own toolbar button, a click on the video
+        // surface, shortcuts, play-selection - not just the paths that route through the view model.
+        if (!isPlaying)
+        {
+            _playheadResyncOnPlay = true;
+        }
+
         // A fresh user seek (e.g. clicking the waveform) is pinned to the clicked position: mpv
         // applies the pause+seek asynchronously, so for ~100-200 ms vp.VideoPlayer.Position still
         // reports the old spot. Hold the target until mpv's reported position actually arrives (or a
@@ -24487,6 +25502,8 @@ public partial class MainViewModel :
 
             if (isPlaying)
             {
+                // Seeded straight from mpv, so there is no standing residual left to resync.
+                _playheadResyncOnPlay = false;
                 _playheadEstimateSeconds = rawPosition;
                 return rawPosition;
             }
@@ -24528,6 +25545,30 @@ public partial class MainViewModel :
             }
 
             var rawFrozenSeconds = (nowTimestamp - _playheadLastRawChangeTs) / (double)Stopwatch.Frequency;
+
+            // Playback just resumed: re-seed the estimate from mpv's real position, once, on the first
+            // tick where its clock actually moves.
+            //
+            // While paused the cursor deliberately carries a residual: it dead-freezes at the keypress
+            // instant while mpv keeps decoding ~100-200 ms past it, and #12740 leaves that gap alone so
+            // the cursor doesn't drift after the time display has stopped. mpv then resumes from *its*
+            // position, not the cursor's, so without this the cursor starts playback already behind the
+            // audio - and the forward-only drift correction below only closes it at ~1.2x, i.e. half a
+            // second for a 100 ms residual and a full second for 200 ms. That is heard as the speech
+            // starting before the cursor reaches it on the waveform (discussion #10824). A paused seek
+            // adds the same debt from the other end: Position reports the requested target while paused,
+            // so any difference between that and where mpv really landed only shows up once it plays.
+            //
+            // Correcting here rather than at the pause keeps #12740 intact, and a jump at the instant the
+            // cursor starts moving is far less visible than one after it has come to rest.
+            if (_playheadResyncOnPlay && rawChanged)
+            {
+                _playheadResyncOnPlay = false;
+                if (Math.Abs(rawPosition - _playheadEstimateSeconds) > PlayheadResyncOnPlayThresholdSeconds)
+                {
+                    _playheadEstimateSeconds = rawPosition;
+                }
+            }
 
             // Only extrapolate while mpv's clock is actually advancing. After a paused seek mpv's
             // time-pos (and the video) freezes for ~400 ms while it re-primes, then resumes at 1x from
@@ -25314,24 +26355,35 @@ public partial class MainViewModel :
     }
 
     /// <summary>
-    /// Sets the style of a newly created ASSA/SSA paragraph to the default storage style (if any).
-    /// Used by insert paths that bypass <see cref="IInsertService"/> (e.g. typing the first line or
-    /// inserting from a waveform selection).
+    /// Sets the style of a newly created ASSA/SSA paragraph. Used by the insert paths that bypass
+    /// <see cref="IInsertService.InsertBefore"/>/<see cref="IInsertService.InsertAfter"/> - the
+    /// waveform and video-position inserts, and typing the first line of an empty file. Without
+    /// it the line is saved with an empty style, which the writer then resolves to whichever
+    /// style sits first in the header (issue #13677).
     /// </summary>
-    private void SetDefaultAssaStyleForNewParagraph(SubtitleLineViewModel newParagraph)
+    /// <param name="insertedIndex">
+    /// Index the paragraph now occupies, so it can keep the style of the line it landed next to.
+    /// Pass -1 when the paragraph is not in <see cref="Subtitles"/> (yet).
+    /// </param>
+    private void SetDefaultAssaStyleForNewParagraph(SubtitleLineViewModel newParagraph, int insertedIndex = -1)
     {
-        if (SelectedSubtitleFormat is not (AdvancedSubStationAlpha or SubStationAlpha))
+        if (SelectedSubtitleFormat is not (AdvancedSubStationAlpha or SubStationAlpha) ||
+            !string.IsNullOrEmpty(newParagraph.Style))
         {
             return;
         }
 
-        newParagraph.Style = AssaStyleStorageHelper.GetStyleNameForNewParagraph(_subtitle, SelectedSubtitleFormat);
+        var neighbor = insertedIndex >= 0
+            ? Subtitles.GetOrNull(insertedIndex - 1) ?? Subtitles.GetOrNull(insertedIndex + 1)
+            : null;
+
+        newParagraph.Style = AssaStyleStorageHelper.GetStyleNameForNewParagraph(_subtitle, SelectedSubtitleFormat, neighbor?.Style);
     }
 
     public void AudioVisualizerOnNewSelectionInsert(object sender, ParagraphEventArgs e)
     {
-        SetDefaultAssaStyleForNewParagraph(e.Paragraph);
         var index = _insertService.InsertInCorrectPosition(Subtitles, e.Paragraph);
+        SetDefaultAssaStyleForNewParagraph(e.Paragraph, index);
         SelectAndScrollToRow(index);
         Renumber();
         _updateAudioVisualizer = true;
@@ -25548,7 +26600,9 @@ public partial class MainViewModel :
 
                             var newParagraph = new Paragraph(text, segStartMs, segEndMs);
                             var newLine = new SubtitleLineViewModel(newParagraph, SelectedSubtitleFormat);
-                            _insertService.InsertInCorrectPosition(Subtitles, newLine);
+                            newLine.Style = originalLine.Style; // the segments replace originalLine, so they keep its style
+                            var newLineIndex = _insertService.InsertInCorrectPosition(Subtitles, newLine);
+                            SetDefaultAssaStyleForNewParagraph(newLine, newLineIndex);
                         }
 
                         Renumber();
@@ -26171,6 +27225,7 @@ public partial class MainViewModel :
         MenuItemAudioVisualizerSpeechToTextSelectedLines.IsVisible = false;
         MenuItemAudioVisualizerSpeechToTextNewSelection.IsVisible = false;
         MenuItemAudioVisualizerExtractAudio.IsVisible = false;
+        MenuItemAudioVisualizerCloneVoice.IsVisible = false;
         MenuItemAudioVisualizerCopy.IsVisible = false;
         MenuItemAudioVisualizerCopyText.IsVisible = false;
 
@@ -26215,6 +27270,10 @@ public partial class MainViewModel :
             MenuItemAudioVisualizerMergeWithPrevious.IsVisible = selectedIdx > 0;
             MenuItemAudioVisualizerMergeWithNext.IsVisible = !isLast;
             MenuItemAudioVisualizerExtractAudio.IsVisible = !string.IsNullOrEmpty(_videoFileName);
+
+            // Cloning takes the audio of exactly one line, so it lives in this branch only -
+            // the same "one selected line, and the click was on it" case "Extract audio..." uses.
+            MenuItemAudioVisualizerCloneVoice.IsVisible = !string.IsNullOrEmpty(_videoFileName);
             return;
         }
 

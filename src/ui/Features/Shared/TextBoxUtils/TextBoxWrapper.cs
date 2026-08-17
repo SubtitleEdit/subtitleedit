@@ -78,8 +78,17 @@ public class TextBoxWrapper : ITextBoxWrapper
     public Control ContentControl => _textBox;
 
     public bool IsFocused => _textBox.IsFocused;
+    public bool IsReadOnly => _textBox.IsReadOnly;
+
     public void Cut()
     {
+        // TextBox.Cut writes the clipboard before its own read-only check, so cutting in a
+        // read-only box would clobber the clipboard while deleting nothing.
+        if (_textBox.IsReadOnly)
+        {
+            return;
+        }
+
         _textBox.Cut();
     }
 
@@ -105,6 +114,11 @@ public class TextBoxWrapper : ITextBoxWrapper
 
     public void DeleteForward()
     {
+        if (_textBox.IsReadOnly)
+        {
+            return;
+        }
+
         if (_textBox.SelectionStart != _textBox.SelectionEnd)
         {
             _textBox.SelectedText = string.Empty;

@@ -83,59 +83,66 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             sb.AppendLine("Time Code Rate=30DF"); // 30DF = 30 drop frame = 29.97
             sb.AppendLine();
 
+            var savedFrameRate = Configuration.Settings.General.CurrentFrameRate;
             Configuration.Settings.General.CurrentFrameRate = GetFrameForCalculation(29.97);
-
-            var timeCode = new TimeCode();
-            if (subtitle.Paragraphs.Count > 0 && subtitle.Paragraphs[0].StartTime.Hours > 0)
+            try
             {
-                timeCode = new TimeCode(subtitle.Paragraphs[0].StartTime.Hours, 0, 0, 0);
-            }
+                var timeCode = new TimeCode();
+                if (subtitle.Paragraphs.Count > 0 && subtitle.Paragraphs[0].StartTime.Hours > 0)
+                {
+                    timeCode = new TimeCode(subtitle.Paragraphs[0].StartTime.Hours, 0, 0, 0);
+                }
 
-            var i = 0;
-            var counter = 0;
-            int frameNo = 0;
-            while (i < subtitle.Paragraphs.Count)
+                var i = 0;
+                var counter = 0;
+                int frameNo = 0;
+                while (i < subtitle.Paragraphs.Count)
+                {
+                    var p = subtitle.Paragraphs[i];
+                    if (timeCode.TotalMilliseconds < p.StartTime.TotalMilliseconds)
+                    {
+                        // write empty lines (filler)
+                        var empty = VancDataWriter.GenerateEmpty(counter++);
+                        var s = $"{ToTimeCode(timeCode.TotalMilliseconds)}\t{CompressHex(empty)}";
+                        sb.AppendLine(s);
+                        frameNo = StepToNextFrame(frameNo, timeCode);
+                        continue;
+                    }
+
+                    // write text lines
+                    var lines = VancDataWriter.GenerateLinesFromText(p.Text, counter);
+                    counter += lines.Length;
+                    foreach (var line in lines)
+                    {
+                        sb.AppendLine($"{ToTimeCode(timeCode.TotalMilliseconds)}\t{CompressHex(line)}");
+                        frameNo = StepToNextFrame(frameNo, timeCode);
+                    }
+
+                    // filler between start/end text
+                    while (timeCode.TotalMilliseconds < p.EndTime.TotalMilliseconds)
+                    {
+                        // write empty lines (filler)
+                        var empty = VancDataWriter.GenerateEmpty(counter++);
+                        sb.AppendLine($"{ToTimeCode(timeCode.TotalMilliseconds)}\t{CompressHex(empty)}");
+                        frameNo = StepToNextFrame(frameNo, timeCode);
+                    }
+
+                    // write end text
+                    var endTimeText = VancDataWriter.GenerateTextInit(counter++);
+                    sb.AppendLine($"{ToTimeCode(timeCode.TotalMilliseconds)}\t{CompressHex(endTimeText)}");
+                    frameNo = StepToNextFrame(frameNo, timeCode);
+                    i++;
+                }
+
+                var lastLine = VancDataWriter.GenerateEmpty(counter);
+                sb.AppendLine($"{ToTimeCode(timeCode.TotalMilliseconds)}\t{CompressHex(lastLine)}");
+
+                return sb.ToString();
+            }
+            finally
             {
-                var p = subtitle.Paragraphs[i];
-                if (timeCode.TotalMilliseconds < p.StartTime.TotalMilliseconds)
-                {
-                    // write empty lines (filler)
-                    var empty = VancDataWriter.GenerateEmpty(counter++);
-                    var s = $"{ToTimeCode(timeCode.TotalMilliseconds)}\t{CompressHex(empty)}";
-                    sb.AppendLine(s);
-                    frameNo = StepToNextFrame(frameNo, timeCode);
-                    continue;
-                }
-
-                // write text lines
-                var lines = VancDataWriter.GenerateLinesFromText(p.Text, counter);
-                counter += lines.Length;
-                foreach (var line in lines)
-                {
-                    sb.AppendLine($"{ToTimeCode(timeCode.TotalMilliseconds)}\t{CompressHex(line)}");
-                    frameNo = StepToNextFrame(frameNo, timeCode);
-                }
-
-                // filler between start/end text
-                while (timeCode.TotalMilliseconds < p.EndTime.TotalMilliseconds)
-                {
-                    // write empty lines (filler)
-                    var empty = VancDataWriter.GenerateEmpty(counter++);
-                    sb.AppendLine($"{ToTimeCode(timeCode.TotalMilliseconds)}\t{CompressHex(empty)}");
-                    frameNo = StepToNextFrame(frameNo, timeCode);
-                }
-
-                // write end text
-                var endTimeText = VancDataWriter.GenerateTextInit(counter++);
-                sb.AppendLine($"{ToTimeCode(timeCode.TotalMilliseconds)}\t{CompressHex(endTimeText)}");
-                frameNo = StepToNextFrame(frameNo, timeCode);
-                i++;
+                Configuration.Settings.General.CurrentFrameRate = savedFrameRate;
             }
-
-            var lastLine = VancDataWriter.GenerateEmpty(counter);
-            sb.AppendLine($"{ToTimeCode(timeCode.TotalMilliseconds)}\t{CompressHex(lastLine)}");
-
-            return sb.ToString();
         }
 
         private static int StepToNextFrame(int frameNo, TimeCode timeCode)

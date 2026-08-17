@@ -128,8 +128,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             var text = Utilities.RemoveSsaTags(raw);
 
             // EBU-TT-D: all character content must live inside tt:span elements, one or more
-            // spans per line with tt:br between lines.
+            // spans per line with tt:br between lines. Tag state carries across lines so an
+            // <i> opened on line one still applies to line two.
             var first = true;
+            var tagState = new TagState();
             foreach (var line in text.SplitToLines())
             {
                 if (!first)
@@ -137,7 +139,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     paragraph.AppendChild(xml.CreateElement("br", TtmlNamespace));
                 }
 
-                foreach (var segment in SplitToStyledSegments(line))
+                foreach (var segment in SplitToStyledSegments(line, tagState))
                 {
                     var span = xml.CreateElement("span", TtmlNamespace);
                     var style = xml.CreateAttribute("style");
@@ -173,21 +175,25 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             public bool Bold { get; }
         }
 
+        private class TagState
+        {
+            public int Italic;
+            public int Bold;
+        }
+
         // Splits one line into plain/italic/bold segments; any other tags (font/underline) are
         // dropped, keeping their inner text.
-        private static List<StyledSegment> SplitToStyledSegments(string line)
+        private static List<StyledSegment> SplitToStyledSegments(string line, TagState state)
         {
             var segments = new List<StyledSegment>();
             var sb = new StringBuilder();
-            var italic = 0;
-            var bold = 0;
             var i = 0;
 
             void Flush()
             {
                 if (sb.Length > 0)
                 {
-                    segments.Add(new StyledSegment(sb.ToString(), italic > 0, bold > 0));
+                    segments.Add(new StyledSegment(sb.ToString(), state.Italic > 0, state.Bold > 0));
                     sb.Clear();
                 }
             }
@@ -205,10 +211,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                             Flush();
                             switch (tag)
                             {
-                                case "i": italic++; break;
-                                case "/i": italic = Math.Max(0, italic - 1); break;
-                                case "b": bold++; break;
-                                case "/b": bold = Math.Max(0, bold - 1); break;
+                                case "i": state.Italic++; break;
+                                case "/i": state.Italic = Math.Max(0, state.Italic - 1); break;
+                                case "b": state.Bold++; break;
+                                case "/b": state.Bold = Math.Max(0, state.Bold - 1); break;
                             }
                         }
                         else if (!tag.StartsWith("font", StringComparison.Ordinal) && tag != "/font" &&

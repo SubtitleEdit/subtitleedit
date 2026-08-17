@@ -20,6 +20,8 @@ public class GoogleSpeech : ITtsEngine
     public bool HasRegion => false;
     public bool HasModel => false;
     public bool HasKeyFile => true;
+    public bool SupportsVoiceCloning => false;
+    public bool SupportsPerLineVoiceCloning => false;
 
     public Task<bool> IsInstalled(string? region)
     {
