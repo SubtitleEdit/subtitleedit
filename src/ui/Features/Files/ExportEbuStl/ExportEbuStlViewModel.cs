@@ -170,6 +170,8 @@ public partial class ExportEbuStlViewModel : ObservableObject
             new("29", "Turkish"),
             new("2A", "Flemish"),
             new("2B", "Wallon"),
+            new("2D", "German - hearing impaired (VA-MAL)"),
+new("2F", "French - hearing impaired (VF-MAL)"),
             new("7F", "Amharic"),
             new("7E", "Arabic"),
             new("7D", "Armenian"),

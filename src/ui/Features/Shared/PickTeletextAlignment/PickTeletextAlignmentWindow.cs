@@ -18,11 +18,18 @@ public class PickTeletextAlignmentWindow : Window
         vm.Window = this;
         DataContext = vm;
 
-        var lineLabel = new Label
-        {
-            Content = "Teletext line:",
-            VerticalAlignment = VerticalAlignment.Center,
-        };
+        var lineCheckBox = new CheckBox
+{
+    Content = "Teletext line:",
+    VerticalAlignment = VerticalAlignment.Center,
+};
+
+lineCheckBox.Bind(
+    CheckBox.IsCheckedProperty,
+    new Binding(nameof(vm.ApplyTeletextLine))
+    {
+        Mode = BindingMode.TwoWay
+    });
 
         var lineBox = new NumericUpDown
         {
@@ -38,11 +45,18 @@ public class PickTeletextAlignmentWindow : Window
                 Mode = BindingMode.TwoWay
             });
 
-        var alignmentLabel = new Label
-        {
-            Content = "Alignment:",
-            VerticalAlignment = VerticalAlignment.Center,
-        };
+        var alignmentCheckBox = new CheckBox
+{
+    Content = "Alignment:",
+    VerticalAlignment = VerticalAlignment.Center,
+};
+
+alignmentCheckBox.Bind(
+    CheckBox.IsCheckedProperty,
+    new Binding(nameof(vm.ApplyHorizontalAlignment))
+    {
+        Mode = BindingMode.TwoWay
+    });
 
         var alignmentBox = new ComboBox
         {
@@ -89,10 +103,10 @@ previewCheckBox.Bind(
             RowSpacing = 10,
         };
 
-        grid.Add(lineLabel, 0, 0);
+        grid.Add(lineCheckBox, 0, 0);
         grid.Add(lineBox, 0, 1);
 
-        grid.Add(alignmentLabel, 1, 0);
+        grid.Add(alignmentCheckBox, 1, 0);
         grid.Add(alignmentBox, 1, 1);
 
         grid.Add(previewCheckBox, 2, 1);

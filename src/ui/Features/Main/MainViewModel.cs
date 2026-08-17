@@ -12909,31 +12909,43 @@ private async Task ShowTeletextAlignmentPicker()
     var result = await ShowDialogAsync<PickTeletextAlignmentWindow, PickTeletextAlignmentViewModel>(
         vm => vm.Initialize(selected, TeletextAlignmentPreview));
 
-    if (result.OkPressed)
-{
-    TeletextAlignmentPreview = result.Preview;
-    
-    var marginV = (result.TeletextLine - 1).ToString();
-
-    foreach (var item in selectedItems)
+    if (!result.OkPressed)
     {
-        item.MarginV = marginV;
+        return;
     }
 
-    var alignment = result.HorizontalAlignment switch
-    {
-        "Left" => "an1",
-        "Right" => "an3",
-        _ => "an2",
-    };
+    TeletextAlignmentPreview = result.Preview;
 
-    SetAlignmentToSelected(alignment);
+    // Teletext line is only changed when explicitly selected.
+    if (result.ApplyTeletextLine)
+    {
+        var marginV = (result.TeletextLine - 1).ToString();
+
+        foreach (var item in selectedItems)
+        {
+            item.MarginV = marginV;
+        }
+    }
+
+    // Horizontal alignment is only changed when explicitly selected.
+    if (result.ApplyHorizontalAlignment)
+    {
+        var alignment = result.HorizontalAlignment switch
+        {
+            "Left" => "an1",
+            "Right" => "an3",
+            _ => "an2",
+        };
+
+        SetAlignmentToSelected(alignment);
+    }
+
     foreach (var item in selectedItems)
-{
-    item.RefreshTeletextDisplay();
-}
+    {
+        item.RefreshTeletextDisplay();
+    }
+
     _updateAudioVisualizer = true;
-}
 }
     [RelayCommand]
     private void DoAlignmentAn1()

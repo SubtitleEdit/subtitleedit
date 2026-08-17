@@ -21,6 +21,12 @@ public partial class PickTeletextAlignmentViewModel : ObservableObject
     [ObservableProperty]
 private bool preview;
 
+[ObservableProperty]
+private bool applyTeletextLine = true;
+
+[ObservableProperty]
+private bool applyHorizontalAlignment = true;
+
     [RelayCommand]
     private void Ok()
     {
