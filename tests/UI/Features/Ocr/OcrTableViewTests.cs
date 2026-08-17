@@ -1,11 +1,15 @@
+using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Controls.Primitives;
 using Avalonia.Headless.XUnit;
+using Avalonia.Layout;
 using Avalonia.Threading;
 using Avalonia.VisualTree;
 using Microsoft.Extensions.DependencyInjection;
 using Nikse.SubtitleEdit;
 using Nikse.SubtitleEdit.Features.Ocr;
 using Nikse.SubtitleEdit.Features.Ocr.OcrSubtitle;
+using Nikse.SubtitleEdit.Logic;
 using SkiaSharp;
 
 namespace UITests.Features.Ocr;
@@ -165,6 +169,56 @@ public class OcrTableViewTests
             .Select(t => t.Text)
             .ToList();
         Assert.Contains("Line 2000", lastRowTexts);
+
+        window.Close();
+    }
+
+    [AvaloniaFact]
+    public void OcrWindow_UsesIndexMappedScrollBar()
+    {
+        // Same fix as the main subtitle grid (#13579): the rows here hold a bitmap each and
+        // vary even more in height, so the virtualizing panel's pixel-extent estimate - and
+        // with it the native thumb - moves on every scroll. The grid is wrapped in
+        // TableViewIndexScrollBar, which hides the native vertical bar and maps its own to
+        // row indices.
+        var vm = MakeViewModel(500);
+        var window = ShowWindow(vm);
+        var tableView = GetTableView(window);
+
+        var wrapper = window.GetVisualDescendants().OfType<TableViewIndexScrollBar>().Single();
+        var bar = wrapper.BarForTest;
+        var scrollViewer = tableView.GetVisualDescendants().OfType<ScrollViewer>().First();
+
+        var nativeBar = tableView.GetVisualDescendants().OfType<ScrollBar>()
+            .First(s => s.Orientation == Orientation.Vertical && !ReferenceEquals(s, bar));
+        Assert.False(nativeBar.IsVisible, "the native pixel-mapped vertical bar should be hidden");
+
+        // Row units, not pixels: a handful of rows out of 500 are visible, so the maximum
+        // sits just below the row count while the pixel extent is many thousands.
+        Assert.InRange(bar.Maximum, 400, 499);
+        Assert.True(scrollViewer.Extent.Height - scrollViewer.Viewport.Height > bar.Maximum * 2,
+            "sanity: the pixel extent should be far larger than the row-based maximum");
+
+        // The bar drives the view in row indices...
+        bar.Value = 250;
+        wrapper.ApplyPendingForTest();
+        window.UpdateLayout();
+        var row = tableView.ContainerFromIndex(250);
+        Assert.NotNull(row);
+        var viewportOrigin = (Visual?)scrollViewer.Presenter ?? scrollViewer;
+        var top = ((Visual)row!).TranslatePoint(new Point(0, 0), viewportOrigin)!.Value.Y;
+        Assert.InRange(top, -1, 1);
+
+        // ...and scrolling the view drives the bar back, without ever moving backwards.
+        var previous = bar.Value;
+        for (var i = 0; i < 10; i++)
+        {
+            scrollViewer.Offset = new Vector(0, scrollViewer.Offset.Y + 120);
+            window.UpdateLayout();
+            Assert.True(bar.Value >= previous - 0.001,
+                $"thumb moved backwards while scrolling down: {previous} -> {bar.Value}");
+            previous = bar.Value;
+        }
 
         window.Close();
     }

@@ -717,7 +717,12 @@ public class OcrWindow : Window
 
         vm.SubtitleGrid.ContextFlyout = flyout;
 
-        return UiUtil.MakeBorderForControlNoPadding(dataGridSubtitle).WithMarginBottom(5);
+        // Index-mapped scrollbar (#13579), like the main subtitle grid: the native bar is
+        // pixel-mapped and the virtualizing panel estimates its extent from the average
+        // realized row height, so the thumb jumps around while scrolling. Rows here vary
+        // even more than in the main grid - each holds a subtitle bitmap - so hide the
+        // native vertical bar and dock a row-index one beside the grid instead.
+        return UiUtil.MakeBorderForControlNoPadding(new TableViewIndexScrollBar(dataGridSubtitle)).WithMarginBottom(5);
     }
 
     private static Border MakeEditView(OcrViewModel vm)
