@@ -3580,7 +3580,7 @@ public partial class SpeechToTextViewModel : ObservableObject
 
         if (_audioTrackNumber < 0)
         {
-            return true; // no track picked - the engine falls back to the first one, exactly like ffmpeg would
+            return true; // no track picked - the engine takes the first audio track, the same one the WAV extraction maps
         }
 
         try
@@ -4122,8 +4122,8 @@ public partial class SpeechToTextViewModel : ObservableObject
     }
 
     /// <summary>
-    /// The "-map" argument for extracting <paramref name="inputFileName"/>'s audio, or an empty
-    /// string to leave the choice to ffmpeg's automatic stream selection.
+    /// The "-map" argument for extracting <paramref name="inputFileName"/>'s audio: the picked
+    /// stream for the file it was picked from, the first audio track for everything else.
     /// </summary>
     /// <remarks>
     /// A stream index only addresses a stream in the file it was read from, so it is applied to
@@ -4135,8 +4135,17 @@ public partial class SpeechToTextViewModel : ObservableObject
     /// stream 0 and video stream 1 (ffmpeg lists streams in container order, and plenty of muxers
     /// put audio first) got "-map 0:1" pointing at its video, which -vn then dropped: "Output file
     /// does not contain any stream", ffmpeg exit -22, and the run aborted with "Generated audio
-    /// file not found" (#13781). Without a map, ffmpeg picks the best audio stream by itself,
-    /// which is what these inputs want anyway.
+    /// file not found" (#13781).
+    ///
+    /// Every other input gets the audio-relative "-map 0:a:0?", which is valid for any stream
+    /// layout. Leaving the choice to ffmpeg's automatic selection is not the same thing: it
+    /// prefers the stream with the default disposition (verified on the bundled ffmpeg 7.1.1 -
+    /// a default-flagged stereo track beats a non-flagged 5.1), while the engines that decode
+    /// the source file themselves take the first audio track in container order - Purfview XXL
+    /// per its author (whisper-standalone-win #185), whisper-ctranslate2 via faster-whisper's
+    /// hardcoded "container.decode(audio=0)". On a file whose default-flagged track is not the
+    /// first, the same batch would transcribe different tracks depending on the engine; mapping
+    /// the first audio track keeps every path on the same one.
     /// </remarks>
     internal static string BuildAudioMapParameter(string inputFileName, int audioTrackNumber, string? audioTrackVideoFileName)
     {
@@ -4144,7 +4153,7 @@ public partial class SpeechToTextViewModel : ObservableObject
             string.IsNullOrEmpty(audioTrackVideoFileName) ||
             !string.Equals(inputFileName, audioTrackVideoFileName, StringComparison.OrdinalIgnoreCase))
         {
-            return string.Empty;
+            return "-map 0:a:0?";
         }
 
         return $"-map 0:{audioTrackNumber}?";
