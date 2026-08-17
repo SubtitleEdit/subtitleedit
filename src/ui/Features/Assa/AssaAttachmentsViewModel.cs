@@ -209,36 +209,61 @@ public partial class AssaAttachmentsViewModel : ObservableObject
             return;
         }
 
-        var answer = await MessageBox.Show(
-            Window,
-            Se.Language.Assa.Attachments,
-            string.Format(Se.Language.Assa.TrimFontsPromptX, fonts.Count),
-            MessageBoxButtons.YesNo,
-            MessageBoxIcon.Question);
+        // Trim up front (nothing is applied yet), so the confirmation can show each
+        // font's old -> new size and the total saving before the user decides.
+        var usedTextLines = AssaFontEmbedder.GetUsedTextLines(_subtitle);
+        long savedBytes = 0;
+        var results = new List<(AssaAttachmentItem Font, FontTrimmer.TrimResult Result)>();
+        var reportLines = new List<string>();
+        foreach (var font in fonts)
+        {
+            var result = FontTrimmer.Trim(font.Bytes, usedTextLines);
+            results.Add((font, result));
+            if (result.Trimmed)
+            {
+                savedBytes += font.Bytes.Length - result.Bytes.Length;
+                reportLines.Add(
+                    $"{font.FileName}: {Utilities.FormatBytesToDisplayFileSize(font.Bytes.Length)} -> " +
+                    Utilities.FormatBytesToDisplayFileSize(result.Bytes.Length));
+            }
+            else
+            {
+                reportLines.Add($"{font.FileName}: {FontTrimmer.GetSkipReasonDisplay(result.SkipReason)}");
+            }
+        }
+
+        var trimmableCount = results.Count(r => r.Result.Trimmed);
+        if (trimmableCount == 0)
+        {
+            await MessageBox.Show(
+                Window,
+                Se.Language.Assa.Attachments,
+                string.Format(
+                    Se.Language.Assa.TrimFontsXFontsTrimmedSavedYZ,
+                    0,
+                    Utilities.FormatBytesToDisplayFileSize(0),
+                    string.Join(Environment.NewLine, reportLines)),
+                MessageBoxButtons.OK);
+            return;
+        }
+
+        var message =
+            string.Format(Se.Language.Assa.TrimFontsPromptX, trimmableCount) + Environment.NewLine + Environment.NewLine +
+            string.Join(Environment.NewLine, reportLines) + Environment.NewLine + Environment.NewLine +
+            string.Format(Se.Language.Assa.TrimFontsTotalSavingX, Utilities.FormatBytesToDisplayFileSize(savedBytes));
+        var answer = await MessageBox.Show(Window, Se.Language.Assa.Attachments, message, MessageBoxButtons.YesNo, MessageBoxIcon.Question);
         if (answer != MessageBoxResult.Yes)
         {
             return;
         }
 
-        var usedTextLines = AssaFontEmbedder.GetUsedTextLines(_subtitle);
         var selectedFileName = SelectedAttachment?.FileName;
-        long savedBytes = 0;
-        var trimmedCount = 0;
-        var reportLines = new List<string>();
-        foreach (var font in fonts)
+        foreach (var (font, result) in results)
         {
-            var result = FontTrimmer.Trim(font.Bytes, usedTextLines);
             if (!result.Trimmed)
             {
-                reportLines.Add($"{font.FileName}: {FontTrimmer.GetSkipReasonDisplay(result.SkipReason)}");
                 continue;
             }
-
-            savedBytes += font.Bytes.Length - result.Bytes.Length;
-            trimmedCount++;
-            reportLines.Add(
-                $"{font.FileName}: {Utilities.FormatBytesToDisplayFileSize(font.Bytes.Length)} -> " +
-                Utilities.FormatBytesToDisplayFileSize(result.Bytes.Length));
 
             // replace the row so the grid picks up the new size (the item is not observable)
             var trimmed = new AssaAttachmentItem
@@ -258,16 +283,6 @@ public partial class AssaAttachmentsViewModel : ObservableObject
         }
 
         UpdatePreview();
-
-        await MessageBox.Show(
-            Window,
-            Se.Language.Assa.Attachments,
-            string.Format(
-                Se.Language.Assa.TrimFontsXFontsTrimmedSavedYZ,
-                trimmedCount,
-                Utilities.FormatBytesToDisplayFileSize(savedBytes),
-                string.Join(Environment.NewLine, reportLines)),
-            MessageBoxButtons.OK);
     }
 
     [RelayCommand]
