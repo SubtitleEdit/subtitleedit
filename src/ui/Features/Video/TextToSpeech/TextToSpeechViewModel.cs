@@ -2560,6 +2560,7 @@ public partial class TextToSpeechViewModel : ObservableObject
             // Distinct failure reasons reported by the engines, so the dialogs below can say *why*
             // segments failed (e.g. the ElevenLabs 429 text) instead of a bare count (#12093).
             var errorMessages = new List<string>();
+            _speakRetryFailures = 0;
 
             for (var index = 0; index < _subtitle.Paragraphs.Count; index++)
             {
@@ -2582,11 +2583,8 @@ public partial class TextToSpeechViewModel : ObservableObject
                 // the row's engine isn't CrispASR-backed. Off the UI thread because Kill +
                 // WaitForExit can take a few seconds per stuck process.
                 await Task.Run(() => StopOtherCrispAsrServers(resolution.Engine));
-                var speakResult = await TtsInstructionSwap.RunAsync(
-                    resolution.Engine,
-                    resolution.Instruction,
-                    () => resolution.Engine.Speak(resolution.Text, _waveFolder, resolution.Voice,
-                        language, region, model, cancellationToken));
+                var speakResult = await SpeakOneParagraphAsync(
+                    resolution, language, region, model, cancellationToken);
                 if (speakResult.Error && !string.IsNullOrEmpty(speakResult.ErrorMessage) && !errorMessages.Contains(speakResult.ErrorMessage))
                 {
                     errorMessages.Add(speakResult.ErrorMessage);
@@ -2611,6 +2609,18 @@ public partial class TextToSpeechViewModel : ObservableObject
                 if (cancellationToken.IsCancellationRequested)
                 {
                     return null;
+                }
+
+                // Surviving a crash mid-batch (see SpeakOneParagraphAsync) is worth it because
+                // there is finished work to save. When nothing has succeeded yet and the engine has
+                // now failed a retry twice in a row, it is not crashing - it is not working at all
+                // (missing executable, bad settings), and grinding through the remaining lines only
+                // delays the same error. Stop here; the "failed for all segments" report below
+                // names the reason.
+                if (_speakRetryFailures >= 2 && resultList.TrueForAll(r => string.IsNullOrEmpty(r.CurrentFileName)))
+                {
+                    SeLogger.Error($"TextToSpeech: giving up after {resultList.Count} segments - the engine failed every attempt.");
+                    break;
                 }
             }
             ProgressValue = 100;
@@ -2715,6 +2725,82 @@ public partial class TextToSpeechViewModel : ObservableObject
                 }
             });
             return null;
+        }
+    }
+
+    /// <summary>
+    /// Number of retries in <see cref="SpeakOneParagraphAsync"/> that failed in a row. Reset at the
+    /// start of every generation run.
+    /// </summary>
+    private int _speakRetryFailures;
+
+    /// <summary>
+    /// Synthesises one paragraph, turning an engine that *throws* into an errored
+    /// <see cref="TtsResult"/> instead of letting the failure unwind the whole run.
+    /// </summary>
+    /// <remarks>
+    /// A local-server engine can die in the middle of a batch: CrispASR's chatterbox backend
+    /// crashes on the CUDA build at the first autoregressive step after a voice change (#13572).
+    /// That arrived here as an exception, escaped the generate loop into its catch-all, and
+    /// returned null - so every segment already synthesised (five to ten minutes of work in that
+    /// report) was discarded because of one bad line. Now the line is recorded as failed and the
+    /// run continues; the existing "N of M segments failed - continue?" prompt reports it.
+    ///
+    /// One retry per line, because the engines stop their crashed server on the way out, so the
+    /// retry's Speak() starts a fresh one and a transient crash costs nothing. Retrying stops once
+    /// two retries in a row have also failed: that is a broken engine rather than a transient
+    /// crash, and there is no point paying for a second attempt on every remaining line.
+    /// </remarks>
+    private async Task<TtsResult> SpeakOneParagraphAsync(
+        ResolvedVoice resolution,
+        TtsLanguage? language,
+        string? region,
+        string? model,
+        CancellationToken cancellationToken)
+    {
+        try
+        {
+            return await TtsInstructionSwap.RunAsync(
+                resolution.Engine,
+                resolution.Instruction,
+                () => resolution.Engine.Speak(resolution.Text, _waveFolder, resolution.Voice,
+                    language, region, model, cancellationToken));
+        }
+        catch (OperationCanceledException)
+        {
+            throw; // user cancel - not a segment failure
+        }
+        catch (Exception ex)
+        {
+            SeLogger.Error(ex, $"TextToSpeech: engine '{resolution.Engine.Name}' threw while generating a segment.");
+            Se.WriteToolsLog($"TTS generation: engine '{resolution.Engine.Name}' failed on a segment - {ex.Message}", true);
+
+            if (_speakRetryFailures >= 2)
+            {
+                return new TtsResult { Error = true, ErrorMessage = ex.Message };
+            }
+
+            try
+            {
+                var retried = await TtsInstructionSwap.RunAsync(
+                    resolution.Engine,
+                    resolution.Instruction,
+                    () => resolution.Engine.Speak(resolution.Text, _waveFolder, resolution.Voice,
+                        language, region, model, cancellationToken));
+                _speakRetryFailures = 0;
+                Se.WriteToolsLog("TTS generation: the segment succeeded on retry");
+                return retried;
+            }
+            catch (OperationCanceledException)
+            {
+                throw;
+            }
+            catch (Exception retryException)
+            {
+                _speakRetryFailures++;
+                SeLogger.Error(retryException, $"TextToSpeech: engine '{resolution.Engine.Name}' threw again on retry.");
+                return new TtsResult { Error = true, ErrorMessage = retryException.Message };
+            }
         }
     }
 

@@ -300,6 +300,20 @@ public class ChatterboxTtsCppTests
         Assert.Equal(expected, ChatterboxTtsCpp.LooksLikeCloneReferenceRejected(serverLog));
     }
 
+    [Theory]
+    // Verbatim from the crash in #13572 - the CUDA build dying at the first AR step of the
+    // request that switches cloned voice.
+    [InlineData("chatterbox[ar]: step=0 tok=3704\nCUDA error: invalid argument\n  current device: 0, in function ggml_cuda_cpy at D:\\a\\CrispASR\\CrispASR\\ggml\\src\\ggml-cuda\\cpy.cu:474", true)]
+    // A CUDA fault in another op still counts: the advice (use the Vulkan build) is the same.
+    [InlineData("CUDA error: out of memory", true)]
+    // The CPU/Vulkan assert is a different bug with different advice - it must not match here.
+    [InlineData("ggml-backend.cpp:349: GGML_ASSERT(offset + size <= ggml_nbytes(tensor) && \"tensor read out of bounds\") failed", false)]
+    [InlineData("crispasr-server: synthesized 13.4s audio in 6.87s (RTF=0.51)", false)]
+    public void LooksLikeCudaBackendCrash_MatchesOnlyTheCudaFault(string serverLog, bool expected)
+    {
+        Assert.Equal(expected, ChatterboxTtsCpp.LooksLikeCudaBackendCrash(serverLog));
+    }
+
     [Fact]
     public void RemoveSupersededBaseModels_DeletesTheUnversionedBasePairOnly()
     {

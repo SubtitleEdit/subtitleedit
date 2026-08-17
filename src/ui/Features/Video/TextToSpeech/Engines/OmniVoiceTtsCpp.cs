@@ -250,6 +250,11 @@ public class OmniVoiceTtsCpp : ITtsEngine
             CreateNoWindow = true,
             RedirectStandardInput = true,
             RedirectStandardOutput = true,
+            // The server writes UTF-8. Without these the reader decodes it in the OS default
+            // codepage, and non-ASCII text in the captured log - the line being synthesised,
+            // upstream's em dashes - reaches bug reports as mojibake (#13572).
+            StandardOutputEncoding = Encoding.UTF8,
+            StandardErrorEncoding = Encoding.UTF8,
             RedirectStandardError = true,
             StandardInputEncoding = Encoding.UTF8,
         };
