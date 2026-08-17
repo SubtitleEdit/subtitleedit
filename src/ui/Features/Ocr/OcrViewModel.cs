@@ -2480,7 +2480,8 @@ public partial class OcrViewModel : ObservableObject
                     MessageBoxButtons.Cancel,
                     MessageBoxIcon.Question,
                     "CPU",
-                    "GPU CUDA");
+                    "GPU CUDA 11",
+                    "GPU CUDA 12");
 
                 if (answer == MessageBoxResult.Cancel)
                 {
@@ -2491,9 +2492,17 @@ public partial class OcrViewModel : ObservableObject
                 var result = await _windowService.ShowDialogAsync<DownloadPaddleOcrWindow, DownloadPaddleOcrViewModel>(Window!,
                     vm =>
                     {
-                        vm.Initialize(answer == MessageBoxResult.Custom1
-                            ? PaddleOcrDownloadType.EngineCpuLinux
-                            : PaddleOcrDownloadType.EngineGpuLinux);
+                        var engine = PaddleOcrDownloadType.EngineCpuLinux;
+                        if (answer == MessageBoxResult.Custom2)
+                        {
+                            engine = PaddleOcrDownloadType.EngineGpu11Linux;
+                        }
+                        else if (answer == MessageBoxResult.Custom3)
+                        {
+                            engine = PaddleOcrDownloadType.EngineGpu12Linux;
+                        }
+
+                        vm.Initialize(engine);
                     });
 
                 _isCtrlDown = false;

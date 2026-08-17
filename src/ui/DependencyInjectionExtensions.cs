@@ -266,7 +266,6 @@ public static class DependencyInjectionExtensions
         collection.AddHttpClientWithProxy<IFfmpegDownloadService, FfmpegDownloadService>();
         collection.AddHttpClientWithProxy<ILibMpvDownloadService, LibMpvDownloadService>();
         collection.AddHttpClientWithProxy<ILibVlcDownloadService, LibVlcDownloadService>();
-        collection.AddHttpClientWithProxy<IPaddleOcrDownloadService, PaddleOcrDownloadService>();
         collection.AddHttpClientWithProxy<ICrispEmbedDownloadService, CrispEmbedDownloadService>();
         collection.AddHttpClientWithProxy<ISpellCheckDictionaryDownloadService, SpellCheckDictionaryDownloadService>();
         collection.AddHttpClientWithProxy<ITesseractDownloadService, TesseractDownloadService>();

@@ -91,7 +91,8 @@ public static class PaddleOcrInstallHelper
                     MessageBoxButtons.Cancel,
                     MessageBoxIcon.Question,
                     "CPU",
-                    "GPU CUDA");
+                    "GPU CUDA 11",
+                    "GPU CUDA 12");
 
                 if (answer == MessageBoxResult.Cancel)
                 {
@@ -101,9 +102,17 @@ public static class PaddleOcrInstallHelper
                 var result = await windowService.ShowDialogAsync<DownloadPaddleOcrWindow, DownloadPaddleOcrViewModel>(window,
                     vm =>
                     {
-                        vm.Initialize(answer == MessageBoxResult.Custom1
-                            ? PaddleOcrDownloadType.EngineCpuLinux
-                            : PaddleOcrDownloadType.EngineGpuLinux);
+                        var engine = PaddleOcrDownloadType.EngineCpuLinux;
+                        if (answer == MessageBoxResult.Custom2)
+                        {
+                            engine = PaddleOcrDownloadType.EngineGpu11Linux;
+                        }
+                        else if (answer == MessageBoxResult.Custom3)
+                        {
+                            engine = PaddleOcrDownloadType.EngineGpu12Linux;
+                        }
+
+                        vm.Initialize(engine);
                     });
 
                 if (!result.OkPressed)

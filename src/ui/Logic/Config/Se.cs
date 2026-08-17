@@ -182,8 +182,18 @@ public class Se
 
     public static string OcrFolder => Path.Combine(DataFolder, "OCR");
     public static string TranslationFolder => Path.Combine(DataFolder, "Languages");
-    public static string PaddleOcrFolder => Path.Combine(OcrFolder, "PaddleOCR3-1");
+    // The folder name carries the PaddleOCR version the bundled standalone engine is built
+    // from (3-4 = PaddleOCR 3.4 = PaddleOCR-Standalone v1.4.0). Bump it whenever the engine
+    // or the support-files bundle moves to a new PaddleOCR release: extracting a new build
+    // over an old one would leave orphaned files from the previous Python/paddle runtime,
+    // and the old models bundle is missing recognition models the current language list
+    // offers (the 3.1 bundle has no arabic/cyrillic/devanagari PP-OCRv5 or el/ta/te/th/ka
+    // models at all). A new folder means engine and models always come from the same release.
+    public static string PaddleOcrFolder => Path.Combine(OcrFolder, "PaddleOCR3-4");
     public static string PaddleOcrModelsFolder => Path.Combine(PaddleOcrFolder, "models");
+
+    /// <summary>Install folders of superseded PaddleOCR versions, deleted after a new install succeeds.</summary>
+    public static IReadOnlyList<string> PaddleOcrLegacyFolders => new[] { Path.Combine(OcrFolder, "PaddleOCR3-1") };
     public static string GoogleLensOcrFolder => Path.Combine(OcrFolder, "Google-Lens");
     public static string CrispEmbedFolder => Path.Combine(OcrFolder, "CrispEmbed");
     public static string VlcFolder => Path.Combine(DataFolder, "VLC");
