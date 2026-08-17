@@ -4354,20 +4354,31 @@ public partial class OcrViewModel : ObservableObject
         if (OperatingSystem.IsWindows())
         {
             var tesseractExe = Path.Combine(Se.TesseractFolder, "tesseract.exe");
-            if (File.Exists(tesseractExe))
+            var isOutdated = TesseractDownloadService.IsWindowsBuildOutdated();
+            var isInstalled = File.Exists(tesseractExe);
+            if (isInstalled && !isOutdated)
             {
                 return true;
             }
 
             var answer = await MessageBox.Show(
                 Window!,
-                "Download Tesseract OCR?",
-                $"{Environment.NewLine}\"Tesseract\" requires downloading Tesseract OCR.{Environment.NewLine}{Environment.NewLine}Download and use Tesseract OCR?",
+                isOutdated ? "Update Tesseract OCR?" : "Download Tesseract OCR?",
+                isOutdated
+                    ? $"{Environment.NewLine}A newer Tesseract OCR ({TesseractDownloadService.WindowsVersion}) is available.{Environment.NewLine}{Environment.NewLine}Download and use it? Your downloaded languages are kept."
+                    : $"{Environment.NewLine}\"Tesseract\" requires downloading Tesseract OCR.{Environment.NewLine}{Environment.NewLine}Download and use Tesseract OCR?",
                 MessageBoxButtons.YesNoCancel,
                 MessageBoxIcon.Question);
 
             if (answer != MessageBoxResult.Yes)
             {
+                // Declining an update must not break OCR - keep running the installed build.
+                if (isInstalled)
+                {
+                    TesseractDownloadService.DeclineWindowsUpdate();
+                    return true;
+                }
+
                 return false;
             }
 

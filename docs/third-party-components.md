@@ -31,7 +31,7 @@ Subtitle Edit stores these components in its **Data Folder**.
 | **FFmpeg** | `ffmpeg.exe`, `ffprobe.exe` (optional) | `[Data Folder]/ffmpeg` |
 | **MPV** | `libmpv-2.dll` | `[Data Folder]` (root) |
 | **yt-dlp** | `yt-dlp.exe` | `[Data Folder]` (root) |
-| **Tesseract** | `tesseract.exe`, `tessdata/` folder | `[Data Folder]/Tesseract550` |
+| **Tesseract** | `tesseract.exe`, `tessdata/` folder | `[Data Folder]/Tesseract` |
 | **Whisper CPP** | `whisper-cli.exe`, `Models/` folder | `[Data Folder]/SpeechToText/Cpp` |
 | **Purfview Faster-Whisper XXL** | `faster-whisper-xxl.exe`, `_models/` folder | `[Data Folder]/SpeechToText/Purfview-Faster-Whisper-XXL` |
 | **Crisp ASR** | `crispasr.exe`, `models/` folder | `[Data Folder]/CrispASR` |
@@ -83,7 +83,7 @@ Used to enable mpv to stream online videos (e.g., YouTube, Vimeo, and [many othe
 Used for converting image-based subtitles (Sup/VobSub) to text.
 
 *   **Download:** [UB-Mannheim Tesseract](https://github.com/UB-Mannheim/tesseract/wiki)
-*   **Destination:** `[Data Folder]/Tesseract550`
+*   **Destination:** `[Data Folder]/Tesseract`
 *   **Files:** The content of the installation folder (containing `tesseract.exe` and `tessdata` folder) should be placed here.
 
 ### Whisper CPP (Speech-to-Text)

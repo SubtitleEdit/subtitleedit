@@ -188,6 +188,40 @@ public class Se
     public static string CrispEmbedFolder => Path.Combine(OcrFolder, "CrispEmbed");
     public static string VlcFolder => Path.Combine(DataFolder, "VLC");
     public static string SevenZipFolder => Path.Combine(DataFolder, "7Zip");
+    private const string TesseractFolderName = "Tesseract";
+    private const string LegacyTesseractFolderName = "Tesseract550";
+
+    private static readonly Lazy<string> _tesseractDataFolder = new(ResolveTesseractDataFolder);
+
+    // Holds the Tesseract binaries (Windows only) and the downloaded models (all platforms).
+    // The name used to carry the Tesseract version, which orphaned every downloaded model on
+    // each bump - and on macOS/Linux, where the binary comes from brew/apt, models were the
+    // only thing in there. Rename it once, version-less, and move the old folder across.
+    private static string ResolveTesseractDataFolder() => ResolveTesseractDataFolder(DataFolder);
+
+    internal static string ResolveTesseractDataFolder(string dataFolder)
+    {
+        var folder = Path.Combine(dataFolder, TesseractFolderName);
+        var legacyFolder = Path.Combine(dataFolder, LegacyTesseractFolderName);
+        if (Directory.Exists(folder) || !Directory.Exists(legacyFolder))
+        {
+            return folder;
+        }
+
+        try
+        {
+            Directory.Move(legacyFolder, folder);
+        }
+        catch (Exception exception)
+        {
+            // Keep using the old folder rather than silently hiding the models that are in it.
+            SeLogger.Error($"Could not move \"{legacyFolder}\" to \"{folder}\": {exception.Message}");
+            return legacyFolder;
+        }
+
+        return folder;
+    }
+
     private static readonly Lazy<string> _tesseractFolder = new(ResolveTesseractFolder);
     public static string TesseractFolder => _tesseractFolder.Value;
 
@@ -195,7 +229,7 @@ public class Se
     {
         if (OperatingSystem.IsWindows())
         {
-            return Path.Combine(DataFolder, "Tesseract550");
+            return _tesseractDataFolder.Value;
         }
 
         var folders = new List<string>();
@@ -222,7 +256,7 @@ public class Se
             }
         }
 
-        return Path.Combine(DataFolder, "Tesseract550");
+        return _tesseractDataFolder.Value;
     }
 
     private static readonly Lazy<string> _tesseractModelFolder = new(ResolveTesseractModelFolder);
@@ -230,7 +264,7 @@ public class Se
 
     private static string ResolveTesseractModelFolder()
     {
-        var modelFolder = Path.Combine(DataFolder, "Tesseract550", "tessdata");
+        var modelFolder = Path.Combine(_tesseractDataFolder.Value, "tessdata");
         SeedBundledTesseractModels(modelFolder);
         return modelFolder;
     }
