@@ -577,12 +577,20 @@ public partial class FontCollectorViewModel : ObservableObject
         foreach (var file in files)
         {
             byte[] bytes;
+            var skipNote = string.Empty;
             try
             {
                 bytes = await File.ReadAllBytesAsync(file);
                 if (usedTextLines != null)
                 {
-                    bytes = FontTrimmer.Trim(bytes, usedTextLines).Bytes;
+                    var trimResult = FontTrimmer.Trim(bytes, usedTextLines);
+                    bytes = trimResult.Bytes;
+                    if (!trimResult.Trimmed)
+                    {
+                        // Trimming was asked for but not possible (CFF, collection, ...) - say so
+                        // in the confirmation instead of silently listing the full size.
+                        skipNote = " - " + FontTrimmer.GetSkipReasonDisplay(trimResult.SkipReason);
+                    }
                 }
             }
             catch (Exception exception)
@@ -593,7 +601,7 @@ public partial class FontCollectorViewModel : ObservableObject
 
             fileBytes.Add((file, bytes));
             totalBytes += bytes.Length;
-            fileLines.Add($"{Path.GetFileName(file)} ({Utilities.FormatBytesToDisplayFileSize(bytes.Length)})");
+            fileLines.Add($"{Path.GetFileName(file)} ({Utilities.FormatBytesToDisplayFileSize(bytes.Length)}){skipNote}");
         }
 
         if (fileBytes.Count == 0)

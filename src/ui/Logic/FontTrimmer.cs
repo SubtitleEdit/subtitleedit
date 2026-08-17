@@ -232,20 +232,25 @@ public static class FontTrimmer
 
             // Shape script by script so a mixed line (e.g. Latin + Arabic) gives every
             // script its own shaper - one buffer would shape it all as the first script.
+            // Each run is shaped horizontally and vertically: a font used by a vertical
+            // "@" style gets its glyphs substituted via the 'vert' feature (rotated
+            // brackets, vertical kana), and those alternates must survive the trim too.
             foreach (var run in SplitToScriptRuns(line))
             {
-                using var buffer = new HarfBuzzSharp.Buffer();
-                buffer.AddUtf16(run);
-                buffer.GuessSegmentProperties();
-                font.Shape(buffer);
-                foreach (var info in buffer.GlyphInfos)
-                {
-                    used.Add(info.Codepoint);
-                }
+                AddShapedGlyphs(font, run, used, vertical: false);
+                AddShapedGlyphs(font, run, used, vertical: true);
             }
 
             for (var i = 0; i < line.Length; i += char.IsSurrogatePair(line, i) ? 2 : 1)
             {
+                // A lone surrogate (possible in text decoded from a corrupt file) has no
+                // code point - skip it instead of letting ConvertToUtf32 throw, which
+                // would abort trimming for every font.
+                if (char.IsSurrogate(line[i]) && !char.IsSurrogatePair(line, i))
+                {
+                    continue;
+                }
+
                 var codepoint = char.ConvertToUtf32(line, i);
                 if (seenCodepoints.Add(codepoint) && font.TryGetGlyph(codepoint, out var glyph))
                 {
@@ -255,6 +260,23 @@ public static class FontTrimmer
         }
 
         return used;
+    }
+
+    private static void AddShapedGlyphs(HarfBuzzSharp.Font font, string run, HashSet<uint> used, bool vertical)
+    {
+        using var buffer = new HarfBuzzSharp.Buffer();
+        buffer.AddUtf16(run);
+        buffer.GuessSegmentProperties();
+        if (vertical)
+        {
+            buffer.Direction = Direction.TopToBottom;
+        }
+
+        font.Shape(buffer);
+        foreach (var info in buffer.GlyphInfos)
+        {
+            used.Add(info.Codepoint);
+        }
     }
 
     /// <summary>
@@ -269,7 +291,11 @@ public static class FontTrimmer
         for (var i = 0; i < text.Length;)
         {
             var next = i + (char.IsSurrogatePair(text, i) ? 2 : 1);
-            var bucket = GetScriptBucket(char.ConvertToUtf32(text, i));
+            // A lone surrogate has no code point - treat it as neutral so it stays with
+            // the current run (HarfBuzz replaces it while shaping).
+            var bucket = char.IsSurrogate(text[i]) && !char.IsSurrogatePair(text, i)
+                ? -1
+                : GetScriptBucket(char.ConvertToUtf32(text, i));
             if (bucket >= 0)
             {
                 if (runBucket < 0)

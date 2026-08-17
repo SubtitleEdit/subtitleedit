@@ -100,6 +100,17 @@ public class FixStartWithUppercaseLetterAfterPeriodInsideParagraphTest
         Assert.Equal(expected, Fix(input, "es"));
     }
 
+    // A decimal number or clock time has the inner-period shape but is no abbreviation - the
+    // sentence-ending period after it must still capitalize the next word.
+    [Theory]
+    [InlineData("It costs 3.50. that's cheap.", "It costs 3.50. That's cheap.")]
+    [InlineData("La reunión es a las 8.30. no llegues tarde.", "La reunión es a las 8.30. No llegues tarde.")]
+    [InlineData("The score was 2.1. we lost anyway.", "The score was 2.1. We lost anyway.")]
+    public void StillCapitalizesAfterDecimalNumberSentenceEnding(string input, string expected)
+    {
+        Assert.Equal(expected, Fix(input, "en"));
+    }
+
     // The abbreviation list is matched case insensitively - subtitles use both "Dr." and "dr.".
     [Theory]
     [InlineData("I met dr. smith today.")]

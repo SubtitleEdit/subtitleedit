@@ -49,7 +49,9 @@ public class WavePeakFloatWavTests
             writer.Write((short)bitsPerSample); // wValidBitsPerSample
             writer.Write(0x4); // dwChannelMask - front center
             writer.Write((short)audioFormat); // first two bytes of the SubFormat GUID
-            writer.Write(new byte[14]); // rest of the GUID
+            // Rest of the KSDATAFORMAT base GUID (xxxxxxxx-0000-0010-8000-00AA00389B71), which is
+            // what marks the first two bytes as a wrapped format tag.
+            writer.Write(new byte[] { 0x00, 0x00, 0x00, 0x00, 0x10, 0x00, 0x80, 0x00, 0x00, 0xAA, 0x00, 0x38, 0x9B, 0x71 });
         }
 
         writer.Write(Encoding.UTF8.GetBytes("data"));
@@ -101,11 +103,29 @@ public class WavePeakFloatWavTests
         }, extensible: true)));
         Assert.True(extensiblePcm.IsSupported);
         Assert.Equal(WaveHeader2.AudioFormatPcm, extensiblePcm.Header.AudioFormat);
+        Assert.True(extensiblePcm.Header.IsExtensibleFormat);
 
         using var extensibleFloat = new WavePeakGenerator2(new MemoryStream(
             BuildWav(3, 32, i => BitConverter.GetBytes(SampleAt(i)), extensible: true)));
         Assert.True(extensibleFloat.IsSupported);
         Assert.Equal(WaveHeader2.AudioFormatIeeeFloat, extensibleFloat.Header.AudioFormat);
+        Assert.True(extensibleFloat.Header.IsExtensibleFormat);
+    }
+
+    [Fact]
+    public void ExtensibleWavWithVendorSubFormatIsNotUnwrapped()
+    {
+        // Only a SubFormat GUID on the KSDATAFORMAT base wraps a format tag - a vendor GUID that
+        // merely starts with 0x0001 must not be misread as PCM (it would render as noise).
+        var bytes = BuildWav(1, 16, i => BitConverter.GetBytes((short)(SampleAt(i) * short.MaxValue)), extensible: true);
+        for (var i = 0; i < 14; i++)
+        {
+            bytes[46 + i] = (byte)(0x10 + i); // SubFormat GUID tail at file offset 46
+        }
+
+        var header = new WaveHeader2(new MemoryStream(bytes));
+        Assert.Equal(0xFFFE, header.AudioFormat);
+        Assert.False(header.IsExtensibleFormat);
     }
 
     [Fact]

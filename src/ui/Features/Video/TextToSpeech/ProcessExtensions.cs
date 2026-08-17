@@ -79,13 +79,22 @@ public static class ProcessExtensions
     /// </remarks>
     private static void DrainRedirectedOutput(this Process process)
     {
+        // Each stream gets its own try: if stdout is already being read by the caller, stderr
+        // still needs draining here - one shared try would skip it and bring the pipe hang back.
         try
         {
             if (process.StartInfo.RedirectStandardOutput)
             {
                 process.BeginOutputReadLine();
             }
+        }
+        catch (InvalidOperationException)
+        {
+            // Already being read asynchronously - nothing to do, the pipe is being drained.
+        }
 
+        try
+        {
             if (process.StartInfo.RedirectStandardError)
             {
                 process.BeginErrorReadLine();

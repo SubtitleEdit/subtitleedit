@@ -724,6 +724,10 @@ public class Se
     {
         Configuration.Settings.General.FFmpegLocation = Settings.General.FfmpegPath;
         Configuration.Settings.General.UseTimeFormatHHMMSSFF = Settings.General.UseFrameMode;
+        if (Settings.General.CurrentFrameRate > 0)
+        {
+            Configuration.Settings.General.CurrentFrameRate = Settings.General.CurrentFrameRate;
+        }
 
         Configuration.Settings.Proxy.ProxyAddress = Settings.General.ProxyAddress ?? string.Empty;
         Configuration.Settings.Proxy.UserName = Settings.General.ProxyUserName ?? string.Empty;

@@ -1072,6 +1072,14 @@ public class ChatterboxTtsCpp : ITtsEngine
                 return false;
             }
 
+            // An extensible header carries the right samples but not the plain fmt-16 header a
+            // strict WAV reader expects - normalize it like any other mismatch (the safe
+            // direction; common recorders emit extensible even for mono 16-bit).
+            if (header.IsExtensibleFormat)
+            {
+                return false;
+            }
+
             return (header.AudioFormat == WaveHeader2.AudioFormatPcm && header.BitsPerSample == 16)
                    || (header.AudioFormat == AudioFormatIeeeFloat && header.BitsPerSample == 32);
         }

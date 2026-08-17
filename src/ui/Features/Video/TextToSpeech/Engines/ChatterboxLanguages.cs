@@ -126,10 +126,13 @@ internal static class ChatterboxLanguages
         && Catalog.Any(l => string.Equals(l.Code, code, StringComparison.OrdinalIgnoreCase));
 
     /// <summary>
-    /// The language of a cloning reference, sent as the request's <c>source_lang</c> field: the
-    /// explicit "Reference language" pick from the engine settings window first, then a
+    /// The language of a cloning reference, sent as the request's <c>source_lang</c> field: a
     /// best-effort detection over <paramref name="refText"/> (the transcript sidecar beside the
-    /// reference WAV, when the user wrote one).
+    /// reference WAV) first, then the explicit "Reference language" pick from the engine
+    /// settings window. The sidecar holds the text actually spoken in THIS reference - per-line
+    /// clone-from-video writes one per clip - so it outranks the global pick, which describes
+    /// the user's own imported reference and goes stale the moment references come from a video
+    /// in another language.
     /// </summary>
     /// <remarks>
     /// Chatterbox V3 follows upstream's cross-lingual recommendation once it knows what language
@@ -144,13 +147,14 @@ internal static class ChatterboxLanguages
     /// </remarks>
     public static string ResolveSourceLanguageArg(string? refText)
     {
-        var configured = (Se.Settings.Video.TextToSpeech.ChatterboxCrispAsrSourceLanguage ?? string.Empty).Trim();
-        if (IsSupported(configured))
+        var detected = DetectSourceLanguage(refText);
+        if (!string.IsNullOrEmpty(detected))
         {
-            return configured;
+            return detected;
         }
 
-        return DetectSourceLanguage(refText);
+        var configured = (Se.Settings.Video.TextToSpeech.ChatterboxCrispAsrSourceLanguage ?? string.Empty).Trim();
+        return IsSupported(configured) ? configured : string.Empty;
     }
 
     /// <summary>

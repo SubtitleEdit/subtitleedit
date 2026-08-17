@@ -91,6 +91,24 @@ public class FontTrimmerTests
         Assert.False(HasInk(result.Bytes, 'D'));
     }
 
+    // A lone surrogate (corrupt UTF-16 input) must not abort the trim - the invalid unit
+    // is skipped and the rest of the line still drives the used-glyph set.
+    [Theory]
+    [InlineData("AB\uD800")]
+    [InlineData("\uDC00AB")]
+    [InlineData("A\uD800B")]
+    public void Trim_LoneSurrogateInTextIsIgnored(string usedLine)
+    {
+        var original = LoadFixture("SeTrimTest.ttf");
+        var result = FontTrimmer.Trim(original, new[] { usedLine });
+
+        Assert.True(result.Trimmed);
+        Assert.Equal(FontTrimmer.TrimSkipReason.None, result.SkipReason);
+        Assert.True(HasInk(result.Bytes, 'A'));
+        Assert.True(HasInk(result.Bytes, 'B'));
+        Assert.False(HasInk(result.Bytes, 'F'));
+    }
+
     [Fact]
     public void Trim_KeepsComponentsOfUsedCompositeGlyphs()
     {
