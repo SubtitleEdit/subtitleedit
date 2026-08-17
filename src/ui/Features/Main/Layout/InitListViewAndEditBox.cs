@@ -1127,7 +1127,7 @@ public static partial class InitListViewAndEditBox
         flyout.Items.Add(fontNameMenuItem);
         var teletextAlignmentMenuItem = new MenuItem
 {
-    Header = "Teletext alignment...",
+    Header = Se.Language.General.TeletextAlignment + "...",
     Command = vm.ShowTeletextAlignmentPickerCommand,
     DataContext = vm,
 };

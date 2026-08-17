@@ -11239,7 +11239,8 @@ private bool _teletextAlignmentPreview;
         var oldSettngsSerialized = JsonSerializer.Serialize(Se.Settings);
 
         var viewModel = await ShowDialogAsync<SettingsWindow, SettingsViewModel>(
-            vm => { vm.Initialize(this); });
+    vm => { vm.Initialize(this); });
+
 
         if (!viewModel.OkPressed)
         {
@@ -12953,11 +12954,11 @@ if (result.ApplyLineShift && result.LineShift != 0)
     if (result.ApplyHorizontalAlignment)
     {
         var alignment = result.HorizontalAlignment switch
-        {
-            "Left" => "an1",
-            "Right" => "an3",
-            _ => "an2",
-        };
+{
+    var value when value == Se.Language.General.Left => "an1",
+    var value when value == Se.Language.General.Right => "an3",
+    _ => "an2",
+};
 
         SetAlignmentToSelected(alignment);
     }

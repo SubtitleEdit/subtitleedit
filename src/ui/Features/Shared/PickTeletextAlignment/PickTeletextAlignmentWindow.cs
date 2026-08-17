@@ -12,7 +12,7 @@ public class PickTeletextAlignmentWindow : Window
     public PickTeletextAlignmentWindow(PickTeletextAlignmentViewModel vm)
     {
         UiUtil.InitializeWindow(this, GetType().Name);
-        Title = "Teletext alignment";
+        Title = Se.Language.General.TeletextAlignment;
         CanResize = false;
         SizeToContent = SizeToContent.WidthAndHeight;
         vm.Window = this;
@@ -20,7 +20,7 @@ public class PickTeletextAlignmentWindow : Window
 
         var lineCheckBox = new CheckBox
 {
-    Content = "Teletext line:",
+    Content = Se.Language.General.TeletextLine + ":",
     VerticalAlignment = VerticalAlignment.Center,
 };
 
@@ -47,7 +47,7 @@ lineCheckBox.Bind(
 
         var alignmentCheckBox = new CheckBox
 {
-    Content = "Alignment:",
+    Content = Se.Language.General.Alignment + ":",
     VerticalAlignment = VerticalAlignment.Center,
 };
 
@@ -60,7 +60,12 @@ alignmentCheckBox.Bind(
 
         var alignmentBox = new ComboBox
         {
-            ItemsSource = new[] { "Left", "Center", "Right" },
+            ItemsSource = new[]
+{
+    Se.Language.General.Left,
+    Se.Language.General.Center,
+    Se.Language.General.Right
+},
             Width = 150,
         };
         alignmentBox.Bind(
@@ -71,7 +76,7 @@ alignmentCheckBox.Bind(
             });
           var shiftCheckBox = new CheckBox
 {
-    Content = "Shift line by:",
+    Content = Se.Language.General.ShiftLineBy + ":",
     VerticalAlignment = VerticalAlignment.Center,
 };
 
@@ -98,7 +103,7 @@ shiftBox.Bind(
     });  
 var previewCheckBox = new CheckBox
 {
-    Content = "Preview",
+    Content = Se.Language.General.Preview,
 };
 
 previewCheckBox.Bind(
@@ -108,9 +113,8 @@ previewCheckBox.Bind(
         Mode = BindingMode.TwoWay
     });
     
-        var okButton = UiUtil.MakeButton("OK", vm.OkCommand).WithMinWidth(100);
-        var cancelButton = UiUtil.MakeButton("Cancel", vm.CancelCommand).WithMinWidth(100);
-
+        var okButton = UiUtil.MakeButton(Se.Language.General.Ok, vm.OkCommand).WithMinWidth(100);
+var cancelButton = UiUtil.MakeButton(Se.Language.General.Cancel, vm.CancelCommand).WithMinWidth(100);
         var grid = new Grid
         {
             RowDefinitions =

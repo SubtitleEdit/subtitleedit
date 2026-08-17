@@ -521,6 +521,7 @@ public class LanguageGeneral
     public string Shadow { get; set; }
     public string ShadowColor { get; set; }
     public string ShadowWidth { get; set; }
+    public string ShiftLineBy { get; set; } = string.Empty;
     public string Shortcut { get; set; }
     public string Shortcuts { get; set; }
     public string Show { get; set; }
@@ -588,6 +589,8 @@ public class LanguageGeneral
     public string System { get; set; }
     public string TargetEncoding { get; set; }
     public string TargetFormat { get; set; }
+    public string TeletextAlignment { get; set; } = string.Empty;
+    public string TeletextLine { get; set; } = string.Empty;
     public string TenHours { get; set; }
     public string Text { get; set; }
     public string TextColor { get; set; }

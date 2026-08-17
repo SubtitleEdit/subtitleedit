@@ -3,6 +3,7 @@ using Avalonia.Input;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Nikse.SubtitleEdit.Features.Main;
+using Nikse.SubtitleEdit.Logic.Config;
 
 namespace Nikse.SubtitleEdit.Features.Shared.PickTeletextAlignment;
 
@@ -16,7 +17,7 @@ public partial class PickTeletextAlignmentViewModel : ObservableObject
     private int teletextLine = 23;
 
     [ObservableProperty]
-    private string horizontalAlignment = "Center";
+    private string horizontalAlignment = string.Empty;
 
     [ObservableProperty]
 private bool preview;
@@ -54,7 +55,7 @@ internal void Initialize(SubtitleLineViewModel? selectedSubtitle, bool preview)
     if (selectedSubtitle == null)
     {
         TeletextLine = 23;
-        HorizontalAlignment = "Center";
+        HorizontalAlignment = Se.Language.General.Center;
         return;
     }
 
@@ -75,17 +76,17 @@ internal void Initialize(SubtitleLineViewModel? selectedSubtitle, bool preview)
         text.StartsWith("{\\an4}") ||
         text.StartsWith("{\\an7}"))
     {
-        HorizontalAlignment = "Left";
+        HorizontalAlignment = Se.Language.General.Left;
     }
     else if (text.StartsWith("{\\an3}") ||
              text.StartsWith("{\\an6}") ||
              text.StartsWith("{\\an9}"))
     {
-        HorizontalAlignment = "Right";
+        HorizontalAlignment = Se.Language.General.Right;
     }
     else
     {
-        HorizontalAlignment = "Center";
+        HorizontalAlignment = Se.Language.General.Center;
     }
 }
 
