@@ -906,7 +906,8 @@
       "ssaStylesHint": "Stili Sub Station Alpha",
       "webVttStylesHint": "Gestore stili WebVTT",
       "ssaPropertiesHint": "Proprietà Sub Station Alpha",
-      "ssaAttachmentsHint": "Allegati Sub Station Alpha"
+      "ssaAttachmentsHint": "Allegati Sub Station Alpha",
+      "getFrameRateFromVideoFileHint": "Ottieni frequenza fotogrammi dal file video"
     },
     "waveform": {
       "playPauseHint": "Riproduci/pausa {0}",
