@@ -100,6 +100,7 @@ public class LanguageSettings
     public string AutoBackupDeleteAfterDays { get; set; }
     public string AutoConvertToUtf8 { get; set; }
     public string AutoTrimWhiteSpace { get; set; }
+    public string RemoveBlankLinesWhenOpening { get; set; }
     public string DefaultEncoding { get; set; }
     public string ColorDurationTooShort { get; set; }
     public string ColorDurationTooLong { get; set; }
@@ -145,6 +146,7 @@ public class LanguageSettings
     public string ShowToolbarSaveAs { get; set; }
     public string ShowToolbarFind { get; set; }
     public string ShowToolbarReplace { get; set; }
+    public string ShowToolbarMultipleReplace { get; set; }
     public string ShowToolbarSpellCheck { get; set; }
     public string ShowToolbarFixCommonErrors { get; set; }
     public string ShowToolbarRemoveTextForHi { get; set; }
@@ -159,6 +161,10 @@ public class LanguageSettings
     public string ShowToolbarHelp { get; set; }
     public string ShowToolbarEncoding { get; set; }
     public string ShowToolbarFrameRate { get; set; }
+    public string ShowToolbarStyleManager { get; set; }
+    public string ShowToolbarProperties { get; set; }
+    public string ShowToolbarAttachments { get; set; }
+    public string ShowToolbarAssaDraw { get; set; }
     public string ShowPluginsMenu { get; set; }
 
     // Network
@@ -168,6 +174,13 @@ public class LanguageSettings
     public string ProxyUseSystemCredentials { get; set; }
     public string ProxyBypassList { get; set; }
     public string ProxyBypassListHint { get; set; }
+
+    // Updates
+    public string Updates { get; set; }
+    public string CheckForUpdatesOnStartup { get; set; }
+    public string CheckForUpdatesChannel { get; set; }
+    public string CheckForUpdatesChannelStable { get; set; }
+    public string CheckForUpdatesChannelStableAndBeta { get; set; }
 
     public string DefaultFormat { get; set; }
     public string DefaultSaveAsFormat { get; set; }
@@ -409,6 +422,7 @@ public class LanguageSettings
         AutoBackupDeleteAfterDays = "Auto-backup retention (days)";
         AutoConvertToUtf8 = "Auto-convert encoding to UTF-8 on open";
         AutoTrimWhiteSpace = "Auto-trim white-space";
+        RemoveBlankLinesWhenOpening = "Remove blank lines when opening a subtitle";
         DefaultEncoding = "Default encoding";
         ColorDurationTooShort = "Color duration if too short";
         ColorDurationTooLong = "Color duration if too long";
@@ -455,6 +469,7 @@ public class LanguageSettings
         ShowToolbarSaveAs = "Show save as icon";
         ShowToolbarFind = "Show find icon";
         ShowToolbarReplace = "Show replace icon";
+        ShowToolbarMultipleReplace = "Show multiple replace icon";
         ShowToolbarSpellCheck = "Show spell check icon";
         ShowToolbarFixCommonErrors = "Show fix common errors icon";
         ShowToolbarRemoveTextForHi = "Show remove text for hearing impaired icon";
@@ -469,6 +484,10 @@ public class LanguageSettings
         ShowToolbarHelp = "Show help icon";
         ShowToolbarEncoding = "Show encoding";
         ShowToolbarFrameRate = "Show frame rate";
+        ShowToolbarStyleManager = "Show style manager icon (ASSA/SSA/WebVTT)";
+        ShowToolbarProperties = "Show properties icon (ASSA/SSA)";
+        ShowToolbarAttachments = "Show attachments icon (ASSA/SSA)";
+        ShowToolbarAssaDraw = "Show ASSA draw icon (ASSA)";
         ShowPluginsMenu = "Show Plugins menu";
 
         // Network
@@ -478,6 +497,13 @@ public class LanguageSettings
         ProxyUseSystemCredentials = "Use system credentials";
         ProxyBypassList = "Bypass proxy for";
         ProxyBypassListHint = "Semicolon separated host names that connect directly, e.g. \"internal.company.com;example.org\"";
+
+        // Updates
+        Updates = "Updates";
+        CheckForUpdatesOnStartup = "Check for updates when the app starts";
+        CheckForUpdatesChannel = "Notify about";
+        CheckForUpdatesChannelStable = "Stable versions only";
+        CheckForUpdatesChannelStableAndBeta = "Stable and beta versions";
 
         ShowStopButton = "Show stop button";
         ShowFullscreenButton = "Show full-screen button";

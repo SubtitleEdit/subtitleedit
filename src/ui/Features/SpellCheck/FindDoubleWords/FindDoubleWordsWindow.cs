@@ -14,7 +14,7 @@ public class FindDoubleWordsWindow : Window
     public FindDoubleWordsWindow(FindDoubleWordsViewModel vm)
     {
         UiUtil.InitializeWindow(this, GetType().Name);
-        Title = Se.Language.General.DoubleWords;
+        Title = UiUtil.MakeWindowTitle(Se.Language.General.DoubleWords);
         CanResize = true;
         Width = 600;
         Height = 700;

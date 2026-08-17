@@ -1,6 +1,5 @@
 ﻿using Avalonia.Controls;
 using Avalonia.Input;
-using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Nikse.SubtitleEdit.Logic.Config;
@@ -23,7 +22,7 @@ public partial class FixCommonErrorsProfileViewModel : ObservableObject
     public Window? Window { get; set; }
 
     public bool OkPressed { get; private set; }
-    public TextBox ProfileNameTextBox { get; internal set; }
+    public Action? FocusProfileName { get; set; }
 
     private List<FixRuleDisplayItem> _fixRules;
 
@@ -33,7 +32,6 @@ public partial class FixCommonErrorsProfileViewModel : ObservableObject
         Profiles = new ObservableCollection<ProfileDisplayItem>();
         SelectedProfile = null;
         IsProfileSelected = true;
-        ProfileNameTextBox = new TextBox();
     }
 
     public void Initialize(List<FixRuleDisplayItem> allFixRules, string? selectedProfileName)
@@ -69,12 +67,8 @@ public partial class FixCommonErrorsProfileViewModel : ObservableObject
         var newProfile = MakeDefaultProfile("");
         Profiles.Add(newProfile);
         SelectedProfile = newProfile;
-
-        Dispatcher.UIThread.Invoke(() =>
-        {
-            ProfileNameTextBox.Focus();
-            IsProfileDeleteEnabled = Profiles.Count > 1;
-        });
+        IsProfileDeleteEnabled = Profiles.Count > 1;
+        FocusProfileName?.Invoke();
     }
 
     [RelayCommand]

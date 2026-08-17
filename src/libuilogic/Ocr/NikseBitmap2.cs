@@ -560,6 +560,68 @@ public class NikseBitmap2
         return 0;
     }
 
+    /// <summary>
+    /// Removes the slant from an italic glyph by shearing: the top row stays where it is and
+    /// every row below is shifted right in proportion to <paramref name="factor"/>, so a
+    /// right-leaning glyph is straightened. Transparent columns are then cropped off the sides
+    /// so the result can be compared against upright nOCR characters; the top is deliberately
+    /// left alone because callers match using the glyph's original top margin.
+    /// </summary>
+    /// <param name="factor">Slant as a fraction of the height, e.g. 0.2 for ~11 degrees.</param>
+    public NikseBitmap2 UnItalic(double factor)
+    {
+        // The extra 4 columns absorb the per-row rounding, matching what SE 4 reserved.
+        var maxShift = (int)(Height * factor);
+        var newWidth = Width + maxShift + 4;
+        var newWidthX4 = newWidth * 4;
+        var newBitmapData = new byte[Height * newWidthX4];
+        for (var y = 0; y < Height; y++)
+        {
+            var shift = (int)Math.Round(y * factor, MidpointRounding.AwayFromZero);
+            Buffer.BlockCopy(_bitmapData, y * _widthX4, newBitmapData, y * newWidthX4 + shift * 4, _widthX4);
+        }
+
+        return new NikseBitmap2(newWidth, Height, newBitmapData).CropTransparentSides();
+    }
+
+    /// <summary>
+    /// Returns a copy with fully transparent columns removed from the left and right edges.
+    /// Rows are untouched, so any vertical margin the caller tracks stays valid.
+    /// </summary>
+    public NikseBitmap2 CropTransparentSides()
+    {
+        var left = -1;
+        var right = -1;
+        for (var x = 0; x < Width; x++)
+        {
+            for (var y = 0; y < Height; y++)
+            {
+                if (GetAlpha(x, y) != 0)
+                {
+                    if (left < 0)
+                    {
+                        left = x;
+                    }
+
+                    right = x;
+                    break;
+                }
+            }
+        }
+
+        if (left < 0)
+        {
+            return new NikseBitmap2(this); // fully transparent - nothing to crop against
+        }
+
+        if (left == 0 && right == Width - 1)
+        {
+            return new NikseBitmap2(this);
+        }
+
+        return CopyRectangle(new NikseRectangle(left, 0, right - left + 1, Height));
+    }
+
     public void CropTop(int maximumCropping, SKColor transparentColor)
     {
         var done = false;

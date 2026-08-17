@@ -221,6 +221,41 @@ public class CrispAsrTtsLanguagesTests
     }
 
     [Fact]
+    public void Chatterbox_ResolveSourceLanguageArg_ExplicitPickWinsOverDetection()
+    {
+        // Chatterbox clones from the WAV alone and never asks for a transcript, so the settings
+        // pick is the path most users take - it has to beat whatever a stray sidecar says.
+        using var _ = new ChatterboxReferenceLanguageScope("fr");
+
+        Assert.Equal("fr", ChatterboxLanguages.ResolveSourceLanguageArg(
+            "The quick brown fox is not what it seems, and there is nothing we can do about it."));
+    }
+
+    [Fact]
+    public void Chatterbox_ResolveSourceLanguageArg_NoPick_FallsBackToTheSidecar()
+    {
+        using var _ = new ChatterboxReferenceLanguageScope(string.Empty);
+
+        Assert.Equal("en", ChatterboxLanguages.ResolveSourceLanguageArg(
+            "The quick brown fox is not what it seems, and there is nothing we can do about it."));
+        Assert.Equal("de", ChatterboxLanguages.ResolveSourceLanguageArg(
+            "Ich habe das Buch nicht gelesen, aber es ist mir egal, was du davon hältst."));
+        Assert.Equal(string.Empty, ChatterboxLanguages.ResolveSourceLanguageArg(null));
+    }
+
+    [Fact]
+    public void Chatterbox_DetectSourceLanguage_OutsideItsLanguages_ReturnsEmpty()
+    {
+        // Chatterbox knows 23 languages; Czech is not one of them, and the [cs] tag exists in the
+        // vocab without being advertised as trained - so a detection outside the list is dropped
+        // rather than sent.
+        using var _ = new ChatterboxReferenceLanguageScope(string.Empty);
+
+        Assert.Equal(string.Empty, ChatterboxLanguages.DetectSourceLanguage(
+            "Nečetl jsem tu knihu, ale je mi jedno, co si o tom myslíš ty."));
+    }
+
+    [Fact]
     public void ResolveSourceLanguageArg_NoPick_DetectsPerVoice()
     {
         // One global setting cannot be right for a user with reference WAVs in two languages,
@@ -316,5 +351,24 @@ internal sealed class SavedReferenceLanguageScope : IDisposable
     public void Dispose()
     {
         Se.Settings.Video.TextToSpeech.CosyVoice3CrispAsrSourceLanguage = _original;
+    }
+}
+
+/// <summary>
+/// Sets Chatterbox's "Reference language" pick (an ISO code) and restores it afterwards.
+/// </summary>
+internal sealed class ChatterboxReferenceLanguageScope : IDisposable
+{
+    private readonly string _original;
+
+    public ChatterboxReferenceLanguageScope(string code)
+    {
+        _original = Se.Settings.Video.TextToSpeech.ChatterboxCrispAsrSourceLanguage;
+        Se.Settings.Video.TextToSpeech.ChatterboxCrispAsrSourceLanguage = code;
+    }
+
+    public void Dispose()
+    {
+        Se.Settings.Video.TextToSpeech.ChatterboxCrispAsrSourceLanguage = _original;
     }
 }

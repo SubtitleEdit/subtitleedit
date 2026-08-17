@@ -49,6 +49,10 @@ public class AudioVisualizerRenderBenchmarks
     private AudioVisualizer _audioVisualizer = null!;
     private List<SubtitleLineViewModel> _subtitles = null!;
     private readonly List<SubtitleLineViewModel> _noSelection = new();
+    private List<SubtitleLineViewModel> _dragSelection = null!;
+    private SubtitleLineViewModel _draggedLine = null!;
+    private int _draggedIndex;
+    private double _draggedOriginalEndSeconds;
     private double _positionSeconds;
     private double _viewSeconds;
     private int _frameIndex;
@@ -84,6 +88,48 @@ public class AudioVisualizerRenderBenchmarks
         _viewSeconds = WidthPx / (double)PeaksPerSecond; // ZoomFactor is 1.0
         _positionSeconds = 10;
         _frameIndex = 0;
+
+        // A selected line inside the static view for SelectedLineDragFrame.
+        _draggedIndex = _subtitles.FindIndex(p => p.StartTime.TotalSeconds > 12);
+        _draggedLine = _subtitles[_draggedIndex];
+        _draggedOriginalEndSeconds = _draggedLine.EndTime.TotalSeconds;
+        _dragSelection = new List<SubtitleLineViewModel> { _draggedLine };
+    }
+
+    [Benchmark]
+    public void SelectedLineDragFrame()
+    {
+        // What a waveform drag of a selected line looks like to Render (#13600): the view stands
+        // still, the cursor glides, and the selected line's end time moves a little on every
+        // frame (one pointer move). Before the classic style painted selection as a draw-time
+        // overlay, every one of these frames missed the waveform cache (the key hashed the
+        // selection's times) and re-ran the full per-pixel geometry build - i.e. this scenario
+        // cost ForcedRebuildFrame; now (classic) it should cost StaticViewPlaybackFrame.
+        const double viewStart = 10;
+        _positionSeconds += FrameSeconds;
+        if (_positionSeconds > viewStart + _viewSeconds - 1)
+        {
+            _positionSeconds = viewStart + 1;
+        }
+
+        var endSeconds = _draggedLine.EndTime.TotalSeconds + 0.008;
+        if (endSeconds > viewStart + _viewSeconds - 1)
+        {
+            endSeconds = _draggedOriginalEndSeconds;
+        }
+
+        _draggedLine.EndTime = TimeSpan.FromSeconds(endSeconds);
+
+        if (++_frameIndex % 3 == 0)
+        {
+            _audioVisualizer.SetPosition(viewStart, _subtitles, _positionSeconds, _draggedIndex, _dragSelection);
+        }
+        else
+        {
+            _audioVisualizer.CurrentVideoPositionSeconds = _positionSeconds;
+        }
+
+        RenderFrame();
     }
 
     [Benchmark]

@@ -60,7 +60,10 @@ public class SeVideo
         OpenSearchParentFolder = true;
         CutType = Features.Video.CutVideo.CutType.MergeSegments.ToString();
         CutDefaultVideoExtension = ".mkv";
-        ShowChangesFFmpegArguments = "-i \"{0}\" -vf \"select=gt(scene\\,{1}),showinfo\" -threads 0 -vsync vfr -f null -";
+        // No "-vsync vfr": ffmpeg 9 removed the long-deprecated -vsync option and aborts with
+        // "Unrecognized option 'vsync'", so shot change detection found nothing. It never did
+        // anything here anyway - the output is discarded by "-f null -".
+        ShowChangesFFmpegArguments = "-i \"{0}\" -vf \"select=gt(scene\\,{1}),showinfo\" -threads 0 -f null -";
         MoveVideoPositionCustom1Back = 2000; // 2 seconds
         MoveVideoPositionCustom1Forward = 2000; // 2 seconds
         MoveVideoPositionCustom2Back = 5000; // 5 seconds

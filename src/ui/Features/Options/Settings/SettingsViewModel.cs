@@ -14,6 +14,7 @@ using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.Enums;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using Nikse.SubtitleEdit.Features.Assa;
+using Nikse.SubtitleEdit.Features.Help.CheckForUpdates;
 using Nikse.SubtitleEdit.Features.Main;
 using Nikse.SubtitleEdit.Features.Options.DoNotBreakAfterList;
 using Nikse.SubtitleEdit.Features.Options.Settings.SyntaxColorTooWideSettings;
@@ -153,6 +154,7 @@ public partial class SettingsViewModel : ObservableObject
     [ObservableProperty] private bool _autoConvertToUtf8;
     [ObservableProperty] private bool _forceCrLfOnSave;
     [ObservableProperty] private bool _autoTrimWhiteSpace;
+    [ObservableProperty] private bool _removeBlankLinesWhenOpening;
 
     [ObservableProperty] private ObservableCollection<string> _subtitleEnterKeyActionTypes;
     [ObservableProperty] private string _selectedSubtitleEnterKeyActionType;
@@ -205,6 +207,7 @@ public partial class SettingsViewModel : ObservableObject
     [ObservableProperty] private bool _showToolbarSaveAs;
     [ObservableProperty] private bool _showToolbarFind;
     [ObservableProperty] private bool _showToolbarReplace;
+    [ObservableProperty] private bool _showToolbarMultipleReplace;
     [ObservableProperty] private bool _showToolbarSpellCheck;
     [ObservableProperty] private bool _showToolbarFixCommonErrors;
     [ObservableProperty] private bool _showToolbarRemoveTextForHi;
@@ -221,6 +224,10 @@ public partial class SettingsViewModel : ObservableObject
     [ObservableProperty] private bool _showToolbarHelp;
     [ObservableProperty] private bool _showToolbarEncoding;
     [ObservableProperty] private bool _showToolbarFrameRate;
+    [ObservableProperty] private bool _showToolbarStyleManager;
+    [ObservableProperty] private bool _showToolbarProperties;
+    [ObservableProperty] private bool _showToolbarAttachments;
+    [ObservableProperty] private bool _showToolbarAssaDraw;
 
     [ObservableProperty] private bool _showPluginsMenu;
 
@@ -284,6 +291,10 @@ public partial class SettingsViewModel : ObservableObject
     [ObservableProperty] private string _proxyDomain = string.Empty;
     [ObservableProperty] private bool _proxyUseDefaultCredentials;
     [ObservableProperty] private string _proxyBypassList = string.Empty;
+    [ObservableProperty] private bool _checkForUpdatesOnStartup;
+    [ObservableProperty] private ObservableCollection<string> _updateChannels;
+    [ObservableProperty] private string _selectedUpdateChannel;
+    private string _loadedUpdateChannel = string.Empty;
     [ObservableProperty] private int _waveformTextFontSize;
     [ObservableProperty] private bool _waveformTextFontBold;
     [ObservableProperty] private Color _waveformTextColor;
@@ -445,6 +456,13 @@ public partial class SettingsViewModel : ObservableObject
         MpvPreviewFontAlignments = new ObservableCollection<AlignmentItem>(AlignmentItem.Alignments);
         MpvPreviewSelectedFontAlignment = MpvPreviewFontAlignments[7];
         LibVlcStatus = string.Empty;
+
+        UpdateChannels =
+        [
+            Se.Language.Options.Settings.CheckForUpdatesChannelStable,
+            Se.Language.Options.Settings.CheckForUpdatesChannelStableAndBeta,
+        ];
+        SelectedUpdateChannel = UpdateChannels[0];
 
         Themes = [Se.Language.General.System, Se.Language.General.Light, Se.Language.General.Dark, Se.Language.General.Classic, "Pastel"];
         SelectedTheme = Themes[0];
@@ -755,6 +773,7 @@ public partial class SettingsViewModel : ObservableObject
         AutoConvertToUtf8 = general.AutoConvertToUtf8;
         ForceCrLfOnSave = general.ForceCrLfOnSave;
         AutoTrimWhiteSpace = general.AutoTrimWhiteSpace;
+        RemoveBlankLinesWhenOpening = general.RemoveBlankLinesWhenOpening;
 
         SelectedDefaultSubtitleFormat = general.DefaultSubtitleFormat;
         if (!DefaultSubtitleFormats.Contains(SelectedDefaultSubtitleFormat))
@@ -833,6 +852,7 @@ public partial class SettingsViewModel : ObservableObject
         ShowToolbarSaveAs = appearance.ToolbarShowSaveAs;
         ShowToolbarFind = appearance.ToolbarShowFind;
         ShowToolbarReplace = appearance.ToolbarShowReplace;
+        ShowToolbarMultipleReplace = appearance.ToolbarShowMultipleReplace;
         ShowToolbarSpellCheck = appearance.ToolbarShowSpellCheck;
         ShowToolbarFixCommonErrors = appearance.ToolbarShowFixCommonErrors;
         ShowToolbarRemoveTextForHi = appearance.ToolbarShowRemoveTextForHi;
@@ -848,6 +868,10 @@ public partial class SettingsViewModel : ObservableObject
         ShowToolbarHelp = appearance.ToolbarShowHelp;
         ShowToolbarEncoding = appearance.ToolbarShowEncoding;
         ShowToolbarFrameRate = appearance.ToolbarShowFrameRate;
+        ShowToolbarStyleManager = appearance.ToolbarShowStyleManager;
+        ShowToolbarProperties = appearance.ToolbarShowProperties;
+        ShowToolbarAttachments = appearance.ToolbarShowAttachments;
+        ShowToolbarAssaDraw = appearance.ToolbarShowAssaDraw;
         ShowPluginsMenu = appearance.ShowPluginsMenu;
         SubtitleGridFontSize = appearance.SubtitleGridFontSize;
         SubtitleGridTextSingleLine = appearance.SubtitleGridTextSingleLine;
@@ -1031,6 +1055,11 @@ public partial class SettingsViewModel : ObservableObject
         ProxyDomain = Se.Settings.General.ProxyDomain ?? string.Empty;
         ProxyUseDefaultCredentials = Se.Settings.General.ProxyUseDefaultCredentials;
         ProxyBypassList = Se.Settings.General.ProxyBypassList ?? string.Empty;
+        CheckForUpdatesOnStartup = Se.Settings.General.CheckForUpdatesOnStartup;
+        SelectedUpdateChannel = UpdateCheckService.IncludePrereleases()
+            ? Se.Language.Options.Settings.CheckForUpdatesChannelStableAndBeta
+            : Se.Language.Options.Settings.CheckForUpdatesChannelStable;
+        _loadedUpdateChannel = SelectedUpdateChannel;
         SetFfmpegStatus();
         SetLibMpvStatus();
         SetLibVlcStatus();
@@ -1604,6 +1633,7 @@ public partial class SettingsViewModel : ObservableObject
         general.AutoConvertToUtf8 = AutoConvertToUtf8;
         general.ForceCrLfOnSave = ForceCrLfOnSave;
         general.AutoTrimWhiteSpace = AutoTrimWhiteSpace;
+        general.RemoveBlankLinesWhenOpening = RemoveBlankLinesWhenOpening;
 
         general.DefaultSubtitleFormat = SelectedDefaultSubtitleFormat;
         general.DefaultSaveAsFormat = SelectedSaveSubtitleFormat;
@@ -1662,6 +1692,7 @@ public partial class SettingsViewModel : ObservableObject
         appearance.ToolbarShowSaveAs = ShowToolbarSaveAs;
         appearance.ToolbarShowFind = ShowToolbarFind;
         appearance.ToolbarShowReplace = ShowToolbarReplace;
+        appearance.ToolbarShowMultipleReplace = ShowToolbarMultipleReplace;
         appearance.ToolbarShowSpellCheck = ShowToolbarSpellCheck;
         appearance.ToolbarShowFixCommonErrors = ShowToolbarFixCommonErrors;
         appearance.ToolbarShowRemoveTextForHi = ShowToolbarRemoveTextForHi;
@@ -1677,6 +1708,10 @@ public partial class SettingsViewModel : ObservableObject
         appearance.ToolbarShowHelp = ShowToolbarHelp;
         appearance.ToolbarShowEncoding = ShowToolbarEncoding;
         appearance.ToolbarShowFrameRate = ShowToolbarFrameRate;
+        appearance.ToolbarShowStyleManager = ShowToolbarStyleManager;
+        appearance.ToolbarShowProperties = ShowToolbarProperties;
+        appearance.ToolbarShowAttachments = ShowToolbarAttachments;
+        appearance.ToolbarShowAssaDraw = ShowToolbarAssaDraw;
         appearance.ShowPluginsMenu = ShowPluginsMenu;
         appearance.SubtitleGridFontSize = SubtitleGridFontSize;
         appearance.SubtitleGridTextSingleLine = SubtitleGridTextSingleLine;
@@ -1837,6 +1872,15 @@ public partial class SettingsViewModel : ObservableObject
         general.ProxyDomain = ProxyDomain;
         general.ProxyUseDefaultCredentials = ProxyUseDefaultCredentials;
         general.ProxyBypassList = ProxyBypassList;
+        general.CheckForUpdatesOnStartup = CheckForUpdatesOnStartup;
+        if (SelectedUpdateChannel != _loadedUpdateChannel)
+        {
+            // Only an actual change is stored, so an untouched dropdown keeps the
+            // "auto" default (beta users follow betas, stable users stable only).
+            general.CheckForUpdatesChannel = SelectedUpdateChannel == Se.Language.Options.Settings.CheckForUpdatesChannelStableAndBeta
+                ? UpdateCheckService.ChannelBeta
+                : UpdateCheckService.ChannelStable;
+        }
 
         general.CurrentProfile = SelectedProfile;
         general.Profiles.Clear();

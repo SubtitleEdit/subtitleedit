@@ -111,7 +111,7 @@ public class InsertService : IInsertService
             newParagraph.EndTime = TimeSpan.FromMilliseconds(newParagraph.StartTime.TotalMilliseconds + Se.Settings.General.SubtitleMinimumDisplayMilliseconds);
         }
 
-        subtitles.Insert(firstSelectedIndex, newParagraph);
+        subtitles.Insert(ClampInsertIndex(subtitles, firstSelectedIndex), newParagraph);
     }
 
     public void InsertAfter(SubtitleFormat format, Subtitle subtitle, ObservableCollection<SubtitleLineViewModel> subtitles, int? index, string text)
@@ -201,7 +201,21 @@ public class InsertService : IInsertService
             newParagraph.Duration = newParagraph.EndTime - newParagraph.StartTime;
         }
 
-        subtitles.Insert(firstSelectedIndex + 1, newParagraph);
+        subtitles.Insert(ClampInsertIndex(subtitles, firstSelectedIndex + 1), newParagraph);
+    }
+
+    /// <summary>
+    /// Keeps the insert position inside the collection. "Insert after" on an empty subtitle asks
+    /// for index 1, and a stale selection index can point past the end - both used to throw.
+    /// </summary>
+    private static int ClampInsertIndex(ObservableCollection<SubtitleLineViewModel> subtitles, int index)
+    {
+        if (index < 0)
+        {
+            return 0;
+        }
+
+        return index > subtitles.Count ? subtitles.Count : index;
     }
 
     public int InsertInCorrectPosition(ObservableCollection<SubtitleLineViewModel> subtitles, SubtitleLineViewModel paragraph)
@@ -273,7 +287,7 @@ public class InsertService : IInsertService
                     Language = newParagraph.Language
                 });
             }
-            else if (format.GetType() == typeof(AdvancedSubStationAlpha))
+            else if (format.GetType() == typeof(AdvancedSubStationAlpha) || format.GetType() == typeof(SubStationAlpha))
             {
                 var c = subtitles.GetOrNull(nearestIndex);
                 if (c != null)
@@ -282,8 +296,9 @@ public class InsertService : IInsertService
                     newParagraph.Actor = c.Actor;
                 }
 
-                // use the first style from the file, or the default ASSA storage style for a new file
-                newParagraph.Style = AssaStyleStorageHelper.GetStyleNameForNewParagraph(subtitle);
+                // keep the neighbouring line's style (SE 4 parity - #13677), or the default
+                // storage styles for a file that has none yet
+                newParagraph.Style = AssaStyleStorageHelper.GetStyleNameForNewParagraph(subtitle, format, c?.Style);
             }
         }
     }

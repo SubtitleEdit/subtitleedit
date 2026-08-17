@@ -68,6 +68,8 @@ public class MossTtsCrispAsr : ITtsEngine
     public bool HasRegion => false;
     public bool HasModel => true;
     public bool HasKeyFile => false;
+    public bool SupportsVoiceCloning => true;
+    public bool SupportsPerLineVoiceCloning => false;
 
     // Four backbone quants — Q4_K is the default (~7 GB), F16 the reference (~17 GB), with
     // Q6_K/Q8_0 in between (added upstream 2026-07-27, TTS round-trip validated; #12905). All

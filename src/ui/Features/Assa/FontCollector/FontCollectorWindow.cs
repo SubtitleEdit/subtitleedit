@@ -143,7 +143,8 @@ public class FontCollectorWindow : Window
             .WithIconLeft(IconNames.Paperclip);
         var buttonCopyToSeFolder = UiUtil.MakeButton(Se.Language.Assa.FontCollectorCopyFontsToSeFontsFolder, vm.CopyFontsToSeFontsFolderCommand)
             .WithIconLeft(IconNames.FormatFont);
-        var buttonBar = UiUtil.MakeButtonBar(buttonEmbedFonts, buttonCopyToSeFolder);
+        var checkBoxTrimFonts = UiUtil.MakeCheckBox(Se.Language.Assa.FontCollectorTrimFonts, vm, nameof(vm.TrimFontsToUsedCharacters));
+        var buttonBar = UiUtil.MakeButtonBar(buttonEmbedFonts, buttonCopyToSeFolder, checkBoxTrimFonts);
 
         var grid = new Grid
         {

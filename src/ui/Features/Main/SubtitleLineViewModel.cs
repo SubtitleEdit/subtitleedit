@@ -8,6 +8,7 @@ using SkiaSharp;
 using SkiaSharp.HarfBuzz;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 
@@ -16,7 +17,37 @@ namespace Nikse.SubtitleEdit.Features.Main;
 public partial class SubtitleLineViewModel : ObservableObject
 {
     [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(NumberDisplay))]
     private int _number;
+
+    /// <summary>
+    /// A display-only row: it exists so that a line in the reference original that has no
+    /// counterpart in the working subtitle is still visible in the grid, side by side with the rest
+    /// (issue #13449). It is never part of the working subtitle - it is filtered out of
+    /// <see cref="MainViewModel.GetUpdateSubtitle"/> (so it can never be saved), out of the change
+    /// hash, out of numbering and out of the waveform. Only <see cref="OriginalText"/> and the time
+    /// codes carry data; <see cref="Text"/> stays empty until the user types into it, which
+    /// promotes the row to an ordinary working line keeping the reference timings (#13594).
+    /// Observable so the promotion re-renders the row live (dim, number).
+    /// </summary>
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(NumberDisplay))]
+    private bool _isReferenceOnly;
+
+    /// <summary>
+    /// The <see cref="Paragraph.Id"/> of the original-subtitle line this row displays - matched
+    /// working rows and reference-only rows alike. The assignment is made once, when the original
+    /// is opened (or the grid rebuilt wholesale), and then sticks: retiming or editing a row never
+    /// re-matches it onto a different original line, so rows do not shuffle around under the user
+    /// (#13594). Null when no original line belongs to this row.
+    /// </summary>
+    public Guid? ReferenceParagraphId { get; set; }
+
+    /// <summary>
+    /// The number column's text: blank for a reference-only row, which has no number because it is
+    /// not part of the working subtitle.
+    /// </summary>
+    public string NumberDisplay => IsReferenceOnly ? string.Empty : Number.ToString(CultureInfo.InvariantCulture);
 
     [ObservableProperty]
     private string? _bookmark;
@@ -141,6 +172,8 @@ public partial class SubtitleLineViewModel : ObservableObject
         NewSection = p.NewSection;
         Forced = p.Forced;
         _bookmark = p.Bookmark;
+        _isReferenceOnly = p.IsReferenceOnly;
+        ReferenceParagraphId = p.ReferenceParagraphId;
 
         Id = generateNewId ? Guid.NewGuid() : p.Id;
 
@@ -188,7 +221,10 @@ public partial class SubtitleLineViewModel : ObservableObject
             Number = Number,
             StartTime = new TimeCode(StartTime),
             EndTime = new TimeCode(EndTime),
-            Text = Text,
+            // TrimEnd: the edit text box is bound raw, so a trailing Enter lives in Text
+            // until the row loses selection - it must never reach saved files or tools
+            // (SE4 kept the same invariant by trimming in the TextChanged handler) - #13389.
+            Text = Text.TrimEnd(),
             Actor = Actor,
             Style = Style,
             Language = Language,
@@ -219,7 +255,7 @@ public partial class SubtitleLineViewModel : ObservableObject
             Number = Number,
             StartTime = new TimeCode(StartTime),
             EndTime = new TimeCode(EndTime),
-            Text = OriginalText,
+            Text = OriginalText.TrimEnd(),
             Actor = Actor,
             Style = Style,
             Language = Language,
@@ -869,6 +905,29 @@ public partial class SubtitleLineViewModel : ObservableObject
     public void RefreshText()
     {
         OnPropertyChanged(nameof(Text));
+    }
+
+    /// <summary>
+    /// Removes trailing whitespace - typically an empty line left by pressing Enter at the
+    /// end of the text - from <see cref="Text"/> and <see cref="OriginalText"/>. Called when
+    /// the row loses selection, so the line count/CPS shown in the grid match what
+    /// <see cref="ToParagraph"/> commits (#13389). Not safe to run while the row is still
+    /// bound to the edit text box: the TwoWay binding would push the trimmed value back and
+    /// delete a newline the user just typed.
+    /// </summary>
+    public void TrimTrailingTextWhitespace()
+    {
+        var trimmed = Text.TrimEnd();
+        if (trimmed.Length != Text.Length)
+        {
+            Text = trimmed;
+        }
+
+        var trimmedOriginal = OriginalText.TrimEnd();
+        if (trimmedOriginal.Length != OriginalText.Length)
+        {
+            OriginalText = trimmedOriginal;
+        }
     }
 
     /// <summary>

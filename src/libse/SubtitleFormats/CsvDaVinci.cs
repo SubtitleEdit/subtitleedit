@@ -31,7 +31,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         p.EndTime.ToHHMMSSFF(),
                         actor,
                         text,
-                        bool.TryParse(p.Effect, out var s) ? s.ToString().ToUpperInvariant() : "False"));
+                        bool.TryParse(p.Effect, out var s) && s ? "True" : "False"));
             }
 
             return sb.ToString().Trim();
@@ -49,7 +49,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     var p = new Paragraph(start, end, line.Text)
                     {
                         Actor = line.Character,
-                        Effect = line.Play.ToString().ToUpperInvariant()
+                        Effect = line.Play ? "True" : "False"
                     };
                     subtitle.Paragraphs.Add(p);
                 }
@@ -126,7 +126,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     csvLine.Text = fields[textIndex];
                 }
 
-                if (playIndex < fields.Count && bool.TryParse(fields[textIndex], out var doPlay))
+                if (playIndex < fields.Count && bool.TryParse(fields[playIndex], out var doPlay))
                 {
                     csvLine.Play = doPlay;
                 }

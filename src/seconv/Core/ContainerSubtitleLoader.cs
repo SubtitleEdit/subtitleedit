@@ -2,6 +2,7 @@ using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.ContainerFormats.Matroska;
 using Nikse.SubtitleEdit.Core.ContainerFormats.MaterialExchangeFormat;
 using Nikse.SubtitleEdit.Core.ContainerFormats.Mp4;
+using Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes;
 using Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using Spectre.Console;
@@ -9,7 +10,7 @@ using Spectre.Console;
 namespace SeConv.Core;
 
 /// <summary>
-/// Extracts subtitle tracks from container files (.mkv/.mks/.mp4/.m4v/.m4s/.3gp/.mcc).
+/// Extracts subtitle tracks from container files (.mkv/.mks/.mp4/.m4v/.m4s/.3gp/.mcc/.avi).
 /// Each track becomes one <see cref="LoadedTrack"/>; image-codec tracks are skipped
 /// with a stderr warning (deferred to Phase 5 OCR).
 /// </summary>
@@ -19,7 +20,8 @@ internal static class ContainerSubtitleLoader
         Subtitle Subtitle,
         SubtitleFormat Format,
         string LanguageCode,
-        int? TrackNumber);
+        int? TrackNumber,
+        bool IsForced = false);
 
     /// <summary>
     /// Returns the list of tracks if <paramref name="filePath"/> is a recognised container,
@@ -30,12 +32,14 @@ internal static class ContainerSubtitleLoader
     {
         var ext = Path.GetExtension(filePath).ToLowerInvariant();
 
-        if (ext is ".mkv" or ".mks")
+        // .webm is Matroska too - a WebVTT track muxed into one was falling through to the
+        // text loader, which then failed to detect a format at all.
+        if (ext is ".mkv" or ".mks" or ".webm")
         {
             return LoadMatroska(filePath, options);
         }
 
-        if (ext is ".mp4" or ".m4v" or ".m4s" or ".3gp")
+        if (ext is ".mp4" or ".m4v" or ".m4s" or ".3gp" or ".mov" or ".m4a" or ".m4b" or ".cmaf")
         {
             try
             {
@@ -120,6 +124,11 @@ internal static class ContainerSubtitleLoader
         if (ext is ".ts" or ".m2ts" or ".mts")
         {
             return LoadTransportStream(filePath, options);
+        }
+
+        if (ext is ".avi" or ".divx")
+        {
+            return LoadXSub(filePath, options);
         }
 
         if (ext == ".mxf")
@@ -267,7 +276,7 @@ internal static class ContainerSubtitleLoader
                     var pgsSub = ImageOcrLoader.LoadMatroskaPgs(matroska, track, options);
                     if (pgsSub.Paragraphs.Count > 0)
                     {
-                        tracks.Add(new LoadedTrack(pgsSub, new SubRip(), SanitizeLang(track.Language), track.TrackNumber));
+                        tracks.Add(new LoadedTrack(pgsSub, new SubRip(), SanitizeLang(track.Language), track.TrackNumber, track.IsForced));
                     }
                 }
                 catch (Exception ex)
@@ -284,12 +293,29 @@ internal static class ContainerSubtitleLoader
                     var vobSub = ImageOcrLoader.LoadMatroskaVobSub(matroska, track, options);
                     if (vobSub.Paragraphs.Count > 0)
                     {
-                        tracks.Add(new LoadedTrack(vobSub, new SubRip(), SanitizeLang(track.Language), track.TrackNumber));
+                        tracks.Add(new LoadedTrack(vobSub, new SubRip(), SanitizeLang(track.Language), track.TrackNumber, track.IsForced));
                     }
                 }
                 catch (Exception ex)
                 {
                     AnsiConsole.MarkupLineInterpolated($"[yellow]Warning: VobSub OCR failed on MKV track #{track.TrackNumber}: {ex.Message}[/]");
+                }
+                continue;
+            }
+
+            if (track.CodecId.Equals("S_DVBSUB", StringComparison.OrdinalIgnoreCase))
+            {
+                try
+                {
+                    var dvbSub = ImageOcrLoader.LoadMatroskaDvbSub(matroska, track, options);
+                    if (dvbSub.Paragraphs.Count > 0)
+                    {
+                        tracks.Add(new LoadedTrack(dvbSub, new SubRip(), SanitizeLang(track.Language), track.TrackNumber, track.IsForced));
+                    }
+                }
+                catch (Exception ex)
+                {
+                    AnsiConsole.MarkupLineInterpolated($"[yellow]Warning: DVB-sub decode failed on MKV track #{track.TrackNumber}: {ex.Message}[/]");
                 }
                 continue;
             }
@@ -309,7 +335,7 @@ internal static class ContainerSubtitleLoader
             // gets auto-detected instead of an empty language.
             var lang = SanitizeLang(track.Language);
             lang = IsUndeclaredLanguage(lang) ? LanguageAutoDetect.AutoDetectGoogleLanguageOrNull(subtitle) ?? lang : lang;
-            tracks.Add(new LoadedTrack(subtitle, format, lang, track.TrackNumber));
+            tracks.Add(new LoadedTrack(subtitle, format, lang, track.TrackNumber, track.IsForced));
         }
 
         return tracks;
@@ -343,6 +369,14 @@ internal static class ContainerSubtitleLoader
             {
                 continue;
             }
+
+            // tx3g displayFlags is how QuickTime/AVFoundation marks a forced track
+            var isForced = track.Mdia.Minf?.Stbl?.Stsd?.IsForcedSubtitle == true;
+            if (options.ForcedOnly && !isForced)
+            {
+                continue;
+            }
+
             if (track.Mdia.IsVobSubSubtitle)
             {
                 try
@@ -350,8 +384,7 @@ internal static class ContainerSubtitleLoader
                     var vobSub = ImageOcrLoader.LoadMp4VobSub(track, options);
                     if (vobSub.Paragraphs.Count > 0)
                     {
-                        var vobLang = LanguageAutoDetect.AutoDetectGoogleLanguageOrNull(vobSub) ?? string.Empty;
-                        tracks.Add(new LoadedTrack(vobSub, new SubRip(), vobLang, trackId));
+                        tracks.Add(new LoadedTrack(vobSub, new SubRip(), GetMp4TrackLanguage(track, vobSub), trackId, isForced));
                     }
                 }
                 catch (Exception ex)
@@ -369,8 +402,7 @@ internal static class ContainerSubtitleLoader
             var subtitle = new Subtitle();
             subtitle.Paragraphs.AddRange(paragraphs);
             subtitle.Renumber();
-            var lang = LanguageAutoDetect.AutoDetectGoogleLanguageOrNull(subtitle) ?? string.Empty;
-            tracks.Add(new LoadedTrack(subtitle, new SubRip(), lang, trackId));
+            tracks.Add(new LoadedTrack(subtitle, new SubRip(), GetMp4TrackLanguage(track, subtitle), trackId, isForced));
         }
 
         if (tracks.Count == 0)
@@ -378,6 +410,20 @@ internal static class ContainerSubtitleLoader
             throw new InvalidOperationException($"No subtitle tracks in MP4 file: {filePath}");
         }
         return tracks;
+    }
+
+    /// <summary>
+    /// The language the track declares in its media header, auto-detected from the text only
+    /// when there is none. Auto-detecting regardless labelled every track of a multi-language
+    /// file the same, and the per-track output names then collided - a three track eng/fre/deu
+    /// file wrote one "*.en.srt" that the last track won.
+    /// </summary>
+    private static string GetMp4TrackLanguage(Trak track, Subtitle subtitle)
+    {
+        var lang = SanitizeLang(track.Mdia?.Mdhd?.Iso639ThreeLetterCode);
+        return IsUndeclaredLanguage(lang)
+            ? LanguageAutoDetect.AutoDetectGoogleLanguageOrNull(subtitle) ?? string.Empty
+            : lang;
     }
 
     private static List<LoadedTrack> LoadMcc(string filePath)
@@ -411,6 +457,42 @@ internal static class ContainerSubtitleLoader
             throw new InvalidOperationException($"No subtitles recognised in VobSub file: {subPath}");
         }
         return [new LoadedTrack(subtitle, new SubRip(), string.Empty, null)];
+    }
+
+    /// <summary>
+    /// .avi/.divx with XSUB ("DivX") subtitles → one OCR'd track per subtitle stream. An AVI
+    /// stream header carries no language, so multi-stream files are told apart by an
+    /// "xsub_track&lt;n&gt;" suffix (the stream number); the common single-stream file keeps the
+    /// plain output name.
+    /// </summary>
+    private static List<LoadedTrack> LoadXSub(string filePath, ConversionOptions options)
+    {
+        var streams = ImageOcrLoader.LoadXSub(filePath, options);
+        if (streams.Count == 0)
+        {
+            throw new InvalidOperationException($"No XSUB (DivX) subtitles found in: {filePath}");
+        }
+
+        var tracks = new List<LoadedTrack>();
+        foreach (var (subtitle, streamNumber) in streams)
+        {
+            if (options.TrackNumbers.Count > 0 &&
+                (!streamNumber.HasValue || !options.TrackNumbers.Contains(streamNumber.Value)))
+            {
+                continue;
+            }
+
+            var languageSuffix = streams.Count > 1 && streamNumber.HasValue ? $"xsub_track{streamNumber.Value}" : string.Empty;
+            tracks.Add(new LoadedTrack(subtitle, new SubRip(), languageSuffix, streamNumber));
+        }
+
+        if (tracks.Count == 0)
+        {
+            throw new InvalidOperationException(
+                $"XSUB file has {streams.Count} subtitle stream(s) but none matched --track-number ({string.Join(",", options.TrackNumbers)}): {filePath}");
+        }
+
+        return tracks;
     }
 
     private static List<LoadedTrack> LoadTransportStream(string filePath, ConversionOptions options)

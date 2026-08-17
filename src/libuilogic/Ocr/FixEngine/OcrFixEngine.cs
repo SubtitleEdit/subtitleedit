@@ -380,6 +380,14 @@ public partial class OcrFixEngine : IOcrFixEngine, IDoSpell
                     }
                 }
 
+                if (w.Length > 4)
+                {
+                    // Substitute the replace list's <PartialWords> pairs (e.g. italic OCR often
+                    // reads 'l' as 'i': "viei" -> "viel"); a guess only wins if the dictionary
+                    // or names list below confirms it.
+                    guesses.AddRange(_ocrFixReplaceList.CreateGuessesFromLetters(result, _threeLetterIsoLanguageName));
+                }
+
                 foreach (var g in guesses)
                 {
                     w = g.Trim('\'', '"', '-');
@@ -522,15 +530,21 @@ public partial class OcrFixEngine : IOcrFixEngine, IDoSpell
             return false;
         }
 
-        var letters = word.Where(char.IsLetter).ToArray();
-        if (letters.Length == 0)
+        var letterCount = 0;
+        var uppercaseCount = 0;
+        for (int i = 0; i < word.Length; i++)
         {
-            return false;
+            if (char.IsLetter(word[i]))
+            {
+                letterCount++;
+                if (char.IsUpper(word[i]))
+                {
+                    uppercaseCount++;
+                }
+            }
         }
 
-        var uppercaseCount = letters.Count(char.IsUpper);
-
-        return uppercaseCount > letters.Length / 2.0;
+        return uppercaseCount > letterCount / 2;
     }
 
     public void ChangeAll(string from, string to)

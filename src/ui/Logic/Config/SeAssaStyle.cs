@@ -1,8 +1,48 @@
-﻿using Nikse.SubtitleEdit.Features.Assa;
+﻿using Nikse.SubtitleEdit.Core.Common;
+using Nikse.SubtitleEdit.Features.Assa;
 
 namespace Nikse.SubtitleEdit.Logic.Config;
 public class SeAssaStyle
 {
+    /// <summary>
+    /// The style the styles storage is seeded with on first start and after a settings reset:
+    /// the built-in "Default" style, flagged as the storage default so new and converted ASSA/SSA
+    /// subtitles have something to follow. Built from <see cref="SsaStyle"/>'s own defaults rather
+    /// than a copy of them, and without going through <see cref="StyleDisplay"/> - this runs while
+    /// <see cref="Se.Settings"/> is still being constructed, so it must not touch Se.
+    /// </summary>
+    public static SeAssaStyle MakeStorageDefault()
+    {
+        var style = new SsaStyle();
+        return new SeAssaStyle
+        {
+            Name = style.Name,
+            FontName = style.FontName,
+            FontSize = style.FontSize,
+            ColorPrimary = style.Primary.ToAvaloniaColor().FromColorToHex(),
+            ColorSecondary = style.Secondary.ToAvaloniaColor().FromColorToHex(),
+            ColorOutline = style.Outline.ToAvaloniaColor().FromColorToHex(),
+            ColorShadow = style.Background.ToAvaloniaColor().FromColorToHex(),
+            OutlineWidth = style.OutlineWidth,
+            ShadowWidth = style.ShadowWidth,
+            Bold = style.Bold,
+            Italic = style.Italic,
+            Underline = style.Underline,
+            Strikeout = style.Strikeout,
+            ScaleX = style.ScaleX,
+            ScaleY = style.ScaleY,
+            Spacing = style.Spacing,
+            Angle = style.Angle,
+            Alignment = style.Alignment,
+            MarginLeft = style.MarginLeft,
+            MarginRight = style.MarginRight,
+            MarginVertical = style.MarginVertical,
+            UseOpaqueBox = style.BorderStyle == "4",
+            UseOpaqueBoxPerLine = style.BorderStyle == "3",
+            IsDefault = true,
+        };
+    }
+
     public SeAssaStyle(StyleDisplay style)
     {
         Name = style.Name;

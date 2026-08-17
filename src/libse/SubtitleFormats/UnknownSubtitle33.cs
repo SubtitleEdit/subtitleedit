@@ -76,7 +76,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             foreach (string line in lines)
             {
                 string s = line.Trim();
-                if (s.Length > 4 && s[2] == ':' && RegexTimeCodes.Match(s).Success)
+                if (s.Length > 4 && s[2] == ':' && RegexTimeCodes.IsMatch(s))
                 {
                     if (p != null && !string.IsNullOrEmpty(p.Text))
                     {
@@ -103,7 +103,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         _errorCount++;
                     }
                 }
-                else if (p != null && RegexNumberAndText.Match(s).Success)
+                else if (p != null && RegexNumberAndText.IsMatch(s))
                 {
                     if (p.Text.Length > 1000)
                     {

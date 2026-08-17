@@ -134,6 +134,42 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
                         }
                     }
                 }
+                else if (Name == "stz2") // compact sample sizes
+                {
+                    // ISO/IEC 14496-12 8.7.3.3: same information as "stsz", with the entries
+                    // packed into 4, 8 or 16 bits each instead of a full word. Bento4's
+                    // mp4compact rewrites a file this way, and without this the track came out
+                    // with no sample sizes at all, i.e. no subtitles.
+                    Buffer = new byte[Size - 4];
+                    fs.ReadFully(Buffer, 0, Buffer.Length);
+                    var fieldSize = Buffer[7]; // 3 bytes reserved, then the field size
+                    var sampleCount = GetUInt(8);
+                    StszSampleCount = sampleCount;
+
+                    if (fieldSize == 4 || fieldSize == 8 || fieldSize == 16)
+                    {
+                        var available = Buffer.Length - 12;
+                        var maxEntries = fieldSize == 4 ? available * 2 : available / (fieldSize / 8);
+                        var entries = (int)Math.Min(Math.Min(sampleCount, (uint)maxEntries), MaxRunLengthEntries);
+                        SampleSizes.Capacity = entries;
+                        for (var i = 0; i < entries; i++)
+                        {
+                            switch (fieldSize)
+                            {
+                                case 4:
+                                    var b = Buffer[12 + i / 2];
+                                    SampleSizes.Add((uint)(i % 2 == 0 ? b >> 4 : b & 0x0F));
+                                    break;
+                                case 8:
+                                    SampleSizes.Add(Buffer[12 + i]);
+                                    break;
+                                default:
+                                    SampleSizes.Add((uint)GetWord(12 + i * 2));
+                                    break;
+                            }
+                        }
+                    }
+                }
                 else if (Name == "stts") // sample table time to sample map
                 {
                     //https://developer.apple.com/library/mac/#documentation/QuickTime/QTFF/QTFFChap2/qtff2.html#//apple_ref/doc/uid/TP40000939-CH204-SW1

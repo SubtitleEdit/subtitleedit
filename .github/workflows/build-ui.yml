@@ -322,9 +322,9 @@ jobs:
 
       - name: Download libmpv for Windows
         run: |
-          Invoke-WebRequest -Uri "https://github.com/SubtitleEdit/support-files/releases/download/libmpv-2026-04-21/libmpv2-win64.zip" -OutFile "libmpv2-64.zip"
+          Invoke-WebRequest -Uri "https://github.com/SubtitleEdit/support-files/releases/download/libmpv-2026-08-14/libmpv2-win64.zip" -OutFile "libmpv2-64.zip"
           Expand-Archive -Path "libmpv2-64.zip" -DestinationPath "libmpv-temp"
-          Invoke-WebRequest -Uri "https://github.com/SubtitleEdit/support-files/releases/download/libmpv-2026-04-21/libmpv2-win-arm64.zip" -OutFile "libmpv2-arm64.zip"
+          Invoke-WebRequest -Uri "https://github.com/SubtitleEdit/support-files/releases/download/libmpv-2026-08-14/libmpv2-win-arm64.zip" -OutFile "libmpv2-arm64.zip"
           Expand-Archive -Path "libmpv2-arm64.zip" -DestinationPath "libmpv-arm64-temp"
 
       - name: Publish Windows x64 app

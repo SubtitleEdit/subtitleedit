@@ -14,6 +14,9 @@ namespace Nikse.SubtitleEdit.Core.Dictionaries
         private readonly HashSet<string> _namesMultiList;
         private readonly HashSet<string> _namesMultiListUppercase;
         private readonly HashSet<string> _blackList;
+
+        // Lazy reverse index for IsInNamesMultiWordList, see GetMultiNamePartIndex.
+        private Dictionary<string, List<string>> _namesMultiListParts;
         public string LanguageName { get; private set; }
 
         public NameList(string dictionaryFolder, string languageName, bool useOnlineNameList, string namesUrl)
@@ -187,6 +190,7 @@ namespace Nikse.SubtitleEdit.Core.Dictionaries
                 // Try removing name from both lists
                 _namesList.Remove(name);
                 _namesMultiList.Remove(name);
+                _namesMultiListParts = null;
 
                 var fileName = GetLocalNamesUserFileName();
                 var nameListXml = CreateDocument(fileName);
@@ -264,8 +268,13 @@ namespace Nikse.SubtitleEdit.Core.Dictionaries
 
         private bool TryAdd(string name)
         {
-            var collection = name.Contains(" ") ? _namesMultiList : _namesList;
-            return collection.Add(name);
+            if (name.Contains(" "))
+            {
+                _namesMultiListParts = null;
+                return _namesMultiList.Add(name);
+            }
+
+            return _namesList.Add(name);
         }
 
         private static XmlDocument CreateDocument(string fileName)
@@ -290,9 +299,6 @@ namespace Nikse.SubtitleEdit.Core.Dictionaries
                 return false;
             }
 
-            var text = input.Replace(Environment.NewLine, " ");
-            text = text.FixExtraSpaces();
-
             if (_namesMultiList.Contains(word))
             {
                 return true;
@@ -303,20 +309,60 @@ namespace Nikse.SubtitleEdit.Core.Dictionaries
                 return true;
             }
 
-            foreach (var multiWordName in _namesMultiList)
+            // This runs once per word of every line during spell check (and up to four times per
+            // word from the OCR fix engine), so the common answer - "this word is not part of any
+            // multi-word name" - must be a single lookup. Scanning all several hundred multi-word
+            // names, with three string concatenations each, plus normalizing the whole line first,
+            // was pure waste for every ordinary word.
+            if (!GetMultiNamePartIndex().TryGetValue(word, out var candidates))
             {
-                if (text.FastIndexOf(multiWordName) < 0)
-                {
-                    continue;
-                }
+                return false;
+            }
 
-                if (multiWordName.StartsWith(word + " ", StringComparison.Ordinal) || multiWordName.EndsWith(" " + word, StringComparison.Ordinal) || multiWordName.Contains(" " + word + " "))
+            var text = input.Replace(Environment.NewLine, " ");
+            text = text.FixExtraSpaces();
+
+            foreach (var multiWordName in candidates)
+            {
+                if (text.FastIndexOf(multiWordName) >= 0)
                 {
                     return true;
                 }
             }
 
             return false;
+        }
+
+        /// <summary>
+        /// Each space-delimited part of every multi-word name, mapped to the names containing it -
+        /// exactly the names the scan in <see cref="IsInNamesMultiWordList"/> could accept for that
+        /// word. Built on first use and dropped whenever the multi-word list changes.
+        /// </summary>
+        private Dictionary<string, List<string>> GetMultiNamePartIndex()
+        {
+            var index = _namesMultiListParts;
+            if (index != null)
+            {
+                return index;
+            }
+
+            index = new Dictionary<string, List<string>>();
+            foreach (var multiWordName in _namesMultiList)
+            {
+                foreach (var part in multiWordName.Split(' ', StringSplitOptions.RemoveEmptyEntries))
+                {
+                    if (!index.TryGetValue(part, out var names))
+                    {
+                        names = new List<string>();
+                        index[part] = names;
+                    }
+
+                    names.Add(multiWordName);
+                }
+            }
+
+            _namesMultiListParts = index;
+            return index;
         }
 
         public bool ContainsCaseInsensitive(string name, out string newName)

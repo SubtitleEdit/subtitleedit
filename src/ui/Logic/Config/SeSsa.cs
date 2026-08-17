@@ -8,6 +8,8 @@ public class SeSsa
 
     public SeSsa()
     {
-        StoredStyles = new List<SeAssaStyle>();
+        // SSA keeps its own storage - seed it too, so a fresh install (and a settings reset) has
+        // a default style rather than an empty "Styles saved" list.
+        StoredStyles = new List<SeAssaStyle> { SeAssaStyle.MakeStorageDefault() };
     }
 }

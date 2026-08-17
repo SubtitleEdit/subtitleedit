@@ -23,7 +23,9 @@ public class LanguageAiReview
     public string LineX { get; set; }
     public string LinesXToY { get; set; }
     public string LargeChangeWarning { get; set; }
+    public string MismatchWarning { get; set; }
     public string EngineError { get; set; }
+    public string PlayCurrentLineHint { get; set; }
 
     public LanguageAiReview()
     {
@@ -48,6 +50,8 @@ public class LanguageAiReview
         LineX = "Line {0}";
         LinesXToY = "Lines {0}-{1}";
         LargeChangeWarning = "Large change - looks like a rewrite, review carefully";
+        MismatchWarning = "Does not resemble the original - may belong to a different line";
         EngineError = "The AI engine could not be reached: {0}";
+        PlayCurrentLineHint = "Play the selected line in the video player and pause at its end (also double-click a line)";
     }
 }

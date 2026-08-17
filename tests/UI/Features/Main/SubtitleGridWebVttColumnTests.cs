@@ -46,6 +46,7 @@ public class SubtitleGridWebVttColumnTests : IDisposable
         window.Show();
 
         var vm = (MainViewModel)view.DataContext!;
+        window.SuppressSaveChangesPromptOnClose(vm);
         vm.ShowColumnStyle = true;
         vm.ShowColumnActor = true;
         vm.Subtitles.Add(new SubtitleLineViewModel(

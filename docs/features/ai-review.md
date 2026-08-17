@@ -47,6 +47,10 @@ Each suggestion shows:
 
 Filter the grid with the category chips above it. Press **Apply N fixes** to apply the checked suggestions - this is a single undo step (Ctrl+Z reverts everything).
 
+### Listening to a line
+
+When a video is loaded, a **Play current** button appears at the bottom left. It plays the selected suggestion's line in the video player and pauses at the end of the line, so you can hear what was actually said before deciding on a fix. Double-clicking a suggestion does the same, as does F5 (or Ctrl/Cmd+Space) - F5 follows your *Play selected lines* shortcut. Space is not used for playback here: it toggles the **Apply** checkbox of the selected row.
+
 ## Sentences across multiple lines
 
 Lines are grouped into sentence units, so a sentence that continues over several subtitles is always reviewed as a whole, and the model sees a couple of surrounding lines as read-only context. Corrections never move words between lines, so timing and reading speed are unaffected. Suggestions belonging to the same sentence are checked and unchecked together.

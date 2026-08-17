@@ -564,12 +564,15 @@ internal static class LibSEIntegration
     /// <c>null</c> or empty to run all FCE rules.
     /// <paramref name="fixCommonErrorsLanguage"/> forces the language used for FCE gating /
     /// OCR-fix (from <c>--fce-language</c>); pass <c>null</c> to auto-detect from content.
+    /// <paramref name="removeFormattingRules"/> is consulted only when <c>removeformatting</c>
+    /// is in the operation list — pass <c>null</c> to strip every tag wholesale.
     /// </summary>
     public static void ApplyOperations(
         Subtitle subtitle,
         List<string> operations,
         IReadOnlyList<string>? fixCommonErrorsRules = null,
-        string? fixCommonErrorsLanguage = null)
+        string? fixCommonErrorsLanguage = null,
+        IReadOnlyList<string>? removeFormattingRules = null)
     {
         if (subtitle == null || operations == null || operations.Count == 0)
         {
@@ -578,7 +581,7 @@ internal static class LibSEIntegration
 
         foreach (var operation in operations)
         {
-            ApplyOperation(subtitle, operation, fixCommonErrorsRules, fixCommonErrorsLanguage);
+            ApplyOperation(subtitle, operation, fixCommonErrorsRules, fixCommonErrorsLanguage, removeFormattingRules);
         }
     }
 
@@ -586,7 +589,8 @@ internal static class LibSEIntegration
         Subtitle subtitle,
         string operation,
         IReadOnlyList<string>? fixCommonErrorsRules,
-        string? fixCommonErrorsLanguage)
+        string? fixCommonErrorsLanguage,
+        IReadOnlyList<string>? removeFormattingRules)
     {
         switch (operation.ToLowerInvariant())
         {
@@ -598,7 +602,7 @@ internal static class LibSEIntegration
                 {
                     var hiSettings = new RemoveTextForHISettings(subtitle);
                     var hiLib = new RemoveTextForHI(hiSettings);
-                    var hiLanguage = LanguageAutoDetect.AutoDetectGoogleLanguage(subtitle);
+                    var hiLanguage = SubtitleLanguageDetector.Detect(subtitle);
                     var hiIndex = subtitle.Paragraphs.Count - 1;
                     while (hiIndex >= 0)
                     {
@@ -662,7 +666,7 @@ internal static class LibSEIntegration
 
             case "balancelines":
                 {
-                    var balanceLanguage = LanguageAutoDetect.AutoDetectGoogleLanguage(subtitle);
+                    var balanceLanguage = SubtitleLanguageDetector.Detect(subtitle);
                     foreach (var p in subtitle.Paragraphs)
                     {
                         p.Text = Utilities.AutoBreakLine(p.Text, balanceLanguage, false);
@@ -672,7 +676,7 @@ internal static class LibSEIntegration
 
             case "redocasing":
                 {
-                    var casingLanguage = LanguageAutoDetect.AutoDetectGoogleLanguage(subtitle);
+                    var casingLanguage = SubtitleLanguageDetector.Detect(subtitle);
                     var fixCasing = new FixCasing(casingLanguage)
                     {
                         FixNormal = true,
@@ -685,7 +689,7 @@ internal static class LibSEIntegration
                 break;
 
             case "removeformatting":
-                RemoveFormatting(subtitle);
+                RemoveFormattingRunner.Run(subtitle, removeFormattingRules);
                 break;
 
             case "removelinebreaks":
@@ -723,7 +727,7 @@ internal static class LibSEIntegration
 
             case "convertcolorstodialog":
                 {
-                    var ctdLanguage = LanguageAutoDetect.AutoDetectGoogleLanguage(subtitle);
+                    var ctdLanguage = SubtitleLanguageDetector.Detect(subtitle);
                     ConvertColorsToDialogUtils.ConvertColorsToDialogInSubtitle(subtitle, true, false, false, false, false, ctdLanguage);
                 }
                 break;
@@ -749,14 +753,6 @@ internal static class LibSEIntegration
             default:
                 // Unknown operation - ignore or log warning
                 break;
-        }
-    }
-
-    private static void RemoveFormatting(Subtitle subtitle)
-    {
-        foreach (var p in subtitle.Paragraphs)
-        {
-            p.Text = HtmlUtil.RemoveHtmlTags(p.Text, true);
         }
     }
 
@@ -830,9 +826,9 @@ internal static class LibSEIntegration
             return;
         }
 
-        var paragraphs = subtitle.Paragraphs.Skip(count).ToList();
-        subtitle.Paragraphs.Clear();
-        subtitle.Paragraphs.AddRange(paragraphs);
+        // RemoveRange in place: the copy-out/clear/copy-back shape allocated a second list of
+        // every surviving paragraph just to drop a handful from the front.
+        subtitle.Paragraphs.RemoveRange(0, Math.Min(count, subtitle.Paragraphs.Count));
         subtitle.Renumber();
     }
 
@@ -843,10 +839,8 @@ internal static class LibSEIntegration
             return;
         }
 
-        var keep = Math.Max(0, subtitle.Paragraphs.Count - count);
-        var paragraphs = subtitle.Paragraphs.Take(keep).ToList();
-        subtitle.Paragraphs.Clear();
-        subtitle.Paragraphs.AddRange(paragraphs);
+        var remove = Math.Min(count, subtitle.Paragraphs.Count);
+        subtitle.Paragraphs.RemoveRange(subtitle.Paragraphs.Count - remove, remove);
         subtitle.Renumber();
     }
 
@@ -1159,6 +1153,7 @@ internal static class LibSEIntegration
             "bluraysup" or "blurayup" or "sup" => "Blu-ray sup",
             "vobsub" => "VobSub",
             "bdnxml" or "bdn-xml" => "BDN-XML",
+            "bdnxml8bit" or "bdn-xml8bit" or "bdnxml8-bit" or "bdn-xml8-bit" => "BDN-XML 8-bit",
             "dost" or "dostimage" => "DOST/image",
             "fcp" or "fcpimage" => "FCP/image",
             "dcinemainterop" or "dcinema-interop" => "D-Cinema interop/png",

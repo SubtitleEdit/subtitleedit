@@ -657,6 +657,15 @@ public class NikseBitmapImageSplitter2
             while (x < bmpWidth)
             {
                 var currentY = y + yChange;
+                if (currentY < 0 || currentY >= bmpHeight)
+                {
+                    // The up/down slides can push the path past the bitmap when minLineHeight is
+                    // small (adaptive values go below 10 for DVD-sized fonts) - treat it like any
+                    // other blocked path instead of reading out of bounds.
+                    started = true;
+                    break;
+                }
+
                 var a1 = bmp.GetAlpha(x, currentY);
                 var a2 = currentY + 1 < bmpHeight ? bmp.GetAlpha(x, currentY + 1) : 0;
 

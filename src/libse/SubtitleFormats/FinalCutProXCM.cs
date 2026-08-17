@@ -30,7 +30,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 "<?xml version=\"1.0\" encoding=\"utf-8\" standalone=\"no\"?>" + Environment.NewLine +
                 "<!DOCTYPE fcpxml>" + Environment.NewLine +
                 Environment.NewLine +
-                "<fcpxml version=\"1.1\">" + Environment.NewLine +
+                "<fcpxml version=\"1.2\">" + Environment.NewLine + // chapter-marker exists from FCPXML 1.2
                 "  <project name=\"Subtitle Edit subtitle\" uid=\"C1E80D31-57D4-4E6C-84F6-86A75DCB7A54\" eventID=\"B5C98F73-1D7E-4205-AEF3-1485842EB191\" location=\"file://localhost/Volumes/Macintosh%20HD/Final%20Cut%20Projects/Yma%20Sumac/Yma%20LIVE%20in%20Moscow/\" >" + Environment.NewLine +
                 "    <resources>" + Environment.NewLine +
                 "      <format id=\"r1\" name=\"FFVideoFormatDV720x480i5994\" frameDuration=\"2002/60000s\" fieldOrder=\"lower first\" width=\"720\" height=\"480\" paspH=\"10\" paspV=\"11\"/>" + Environment.NewLine +

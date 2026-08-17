@@ -31,7 +31,7 @@ Generate speech audio from subtitle text using various TTS engines.
 - **Kokoro TTS** — Local downloadable Kokoro TTS server and models
 - **OmniVoice TTS** — Local CPU TTS with voice cloning and many languages
 - **Qwen3 TTS (CrispASR)** — Local Qwen3 TTS running through the CrispASR runtime (VoiceDesign, CustomVoice, and Voice clone 1.7B models)
-- **Chatterbox TTS (CrispASR)** — Chatterbox TTS via the CrispASR runtime, with voice cloning (Base or Turbo model)
+- **Chatterbox TTS (CrispASR)** — Chatterbox TTS via the CrispASR runtime, with voice cloning (multilingual Base or English-only Turbo model)
 
 Local downloadable engines are installed into the Subtitle Edit data folder when you accept the download prompt.
 
@@ -43,6 +43,57 @@ Some engines require additional configuration:
 - **Region** — Select the Azure region (for Azure engine)
 - **Model** — Select the voice model
 - **Key file** — Browse for Google Cloud service account key file
+
+## Voice Cloning
+
+Several local engines can clone a voice from a reference recording. The first time you do this — when you import a reference recording, or generate speech with a cloned voice — Subtitle Edit shows a one-time dialog with the terms you are accepting. You have to tick the checkbox before you can continue.
+
+The points that matter:
+
+- Only clone a voice you have the right to use: your own, or one where the speaker has given permission. A voice is personal data and a personality right, so cloning without permission can be unlawful.
+- If you publish audio that imitates a real person, you must say that it is AI-generated. In the EU this is required by the AI Act (Regulation (EU) 2024/1689, article 50), which applies from 2 August 2026.
+- Subtitle Edit turns off the engine's spoken AI disclaimer, inaudible watermark and C2PA signature so the audio can be muxed into your video unchanged — so nothing marks the result as AI-generated for you.
+- Do not use a cloned voice to impersonate someone, or for fraud, harassment or deception.
+- The reference recording stays on your computer. Cloning runs locally and the audio is not uploaded anywhere.
+- Each speech model also has its own license, which may add further limits on commercial use.
+
+Declining just means "not now" — nothing is changed, the clone is refused, and you are asked again the next time. The answer is remembered per terms version, so you are asked again if the terms change.
+
+### Cloning a Voice Heard in the Video
+
+You do not have to prepare a reference recording by hand. In the main window, right-click a subtitle line in the waveform and choose **Clone voice to** → *engine name*. Subtitle Edit cuts the audio for that line out of the video's current audio track, asks what to call the new voice (pre-filled with the line's actor, or the video name and line number), and imports it as a cloned voice for the chosen engine. The line's own text is used as the transcript the cloning engines want, so you are not asked to type it.
+
+The menu item appears when exactly one subtitle line is selected and the right-click was on that line, and a video is open. Only engines that can clone are listed. The new voice is then in the voice list for that engine the next time you open **Video → Text to speech...**.
+
+Pick a line with clean speech: a couple of seconds or more, one speaker, and as little music and effects as possible. The clip is used exactly as it sounds in the video.
+
+### Find Voices in Video and Clone
+
+**Video → More → Find voices in video and clone...** does the whole cast in one go: it works out who speaks in the video, clones each of them, and leaves the cast assigned so the dubbing is ready to generate.
+
+What happens, in order:
+
+1. The video is transcribed with a speech-to-text engine that tells speakers apart — **Crisp ASR MOSS Diarize** is preselected (English and Chinese). You can change the engine in that window if you have another that labels speakers.
+2. The speaker labels the engine writes into the text (`(Speaker 1) …`) are moved into the subtitle's **Actor** field, where they belong.
+3. A dialog lists the speakers with their line count, how much audio each has, and one of their lines so you can tell who is who. Give each speaker a real name — **two speakers with the same name are merged into one voice**, which is how you fix a person diarization split in two. Pick the cloning engine here as well.
+4. Each speaker's voice is cloned from up to ~15 seconds of their own lines (their longest ones, joined), with those lines as the transcript.
+5. The subtitle switches to **ASSA**, which is the format that keeps actors, and the actor column is shown.
+6. The actor→voice cast is remembered, so **Video → Text to speech...** opens with every speaker already assigned to their cloned voice. Press Generate.
+
+If a subtitle is already open, its lines and text are kept — the speakers are matched to your existing lines by time overlap, so a translation is not replaced by the transcription. With nothing open, the transcription becomes the subtitle.
+
+Lines that overlap no detected speech (music, on-screen text) are left without an actor and fall back to the globally selected voice.
+
+### Clone From Video (Voice of Each Line)
+
+For dubbing a video with several speakers there is a faster way than cloning each of them by hand. With a video open, pick **Clone from video (voice of each line)** at the top of the voice list. Every subtitle line is then spoken in the voice heard in the video at that line — whoever speaks line 12 in the original speaks line 12 in the dub. No reference recordings, no imports, no cast to assign.
+
+Before generating, Subtitle Edit cuts one short reference clip per line out of the video's audio. Lines shorter than about three seconds are grown into the silence around them, but never into the neighbouring line — a reference with two speakers in it would clone the wrong person.
+
+- **Supported engines:** OmniVoice TTS. The entry only appears for engines that accept a reference for each line; engines that load their reference when their server starts would have to reload the model for every line.
+- **Reference text:** if you have the original subtitle loaded next to the translation, its lines are used as the transcript of the clips — that is what the video actually says, and it makes cloning noticeably better. Without an original loaded, the line's own text is used.
+- **Test voice** previews the clone taken from the longest line of the subtitle.
+- Quality depends on the source audio. Loud music or two people talking over each other in a line makes that line's clone worse. Longer subtitle lines clone better than very short ones, so a subtitle segmented into full sentences gives the best result.
 
 ## Local SE5 Engines
 
@@ -60,6 +111,8 @@ Qwen3 TTS runs through the CrispASR runtime and shares the `CrispASR/models` dir
 Chatterbox TTS runs through the CrispASR runtime (shared with the speech-to-text feature) and supports voice cloning.
 
 - Available model choices are **Base** and **Turbo**.
+- The **Base** model is multilingual: pick one of its 23 languages (Arabic, Chinese, Danish, Dutch, English, Finnish, French, German, Greek, Hebrew, Hindi, Italian, Japanese, Korean, Malay, Norwegian, Polish, Portuguese, Russian, Spanish, Swahili, Swedish, Turkish) in the language dropdown. **Auto** sends no language and lets the model guess — non-English text usually comes out with an English accent that way, so picking the language explicitly is recommended. **Turbo** is an English-only distillation and has no language choice.
+- If the models were downloaded before the multilingual release, Subtitle Edit will prompt to download them again — the older files are English-only and ignore the language selection.
 - Imported reference WAV voices are sent as the per-request voice for runtime cloning.
 
 ### Kokoro TTS
@@ -72,7 +125,7 @@ Kokoro TTS runs a local server with downloadable models.
 
 ### OmniVoice TTS
 
-OmniVoice TTS runs the omnivoice-tts CLI on CPU. It supports a large set of languages and voice cloning from reference WAV files (with an accompanying transcript).
+OmniVoice TTS runs the omnivoice-tts CLI on CPU. It supports a large set of languages and voice cloning from reference WAV files (with an accompanying transcript). Because each line is a separate run that takes its own reference, it is also the engine behind **Clone from video (voice of each line)**.
 
 ### MistralSpeech
 
@@ -94,7 +147,7 @@ Behavior depends on the selected model:
 
 ## Review Audio Clips
 
-When **Review audio clips** is enabled, a dedicated review window opens after generation. This window lets you inspect, play, and regenerate audio for every subtitle line before the result is used. A 120px waveform of the original video audio is shown above the grid as a reference. Per-session review state (clips, history, includes, edits) is persisted to `SubtitleEditTts.json` so you can return to the same review later.
+When **Review audio clips** is enabled, a dedicated review window opens after generation. This window lets you inspect, play, and regenerate audio for every subtitle line before the result is used. A 120px waveform of the original video audio is shown above the grid as a reference. The session (clips, per-line voice and engine, includes, text edits) can be written to `SubtitleEditTts.json` and imported again later — see [Continuing a Session Later](#continuing-a-session-later). Regeneration history is kept for the current session only and is not part of the export.
 
 ### The Review Grid
 
@@ -138,6 +191,24 @@ Uncheck the **Include** checkbox on any row to exclude that line's audio from th
 ### Exporting Clips
 
 Click **Export** to save all audio clips and a `SubtitleEditTts.json` metadata file to a folder of your choice. The JSON file records the audio file names, subtitle timings, voice names, engine names, speed factors, and text for each line, making it easy to re-import or post-process the clips externally.
+
+## Continuing a Session Later
+
+A long video does not have to be dubbed in one sitting. Export the session when you stop, and import it when you come back:
+
+1. In the review window, click **Export...** and pick a folder. Subtitle Edit writes `SubtitleEditTts.json` there, plus a `wav` subfolder with every generated clip.
+2. Next time, open **Video → Text to speech...** and click **Import...**, then pick that `SubtitleEditTts.json`.
+3. The review window opens again with all the lines and their audio, and you carry on where you left off.
+
+What comes back with the session:
+
+- Every line's generated clip, text and timing
+- The engine, model, voice, instruction and speed factor each line was generated with
+- The **Include** checkboxes
+- The actor/voice **cast** mapping, so regenerating uses the same voices
+- The video the session was made from — you do not have to open it first
+
+From there you can play, edit text, regenerate single lines, and finish the session normally. Keep the `wav` folder next to the JSON file: the clip paths are stored relative to it, so the whole folder can be moved or copied to another machine.
 
 ### Keyboard Shortcuts
 

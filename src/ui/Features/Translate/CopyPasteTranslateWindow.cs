@@ -14,7 +14,7 @@ public class CopyPasteTranslateWindow : Window
     public CopyPasteTranslateWindow(CopyPasteTranslateViewModel vm)
     {
         UiUtil.InitializeWindow(this, GetType().Name);
-        Title = Se.Language.Translate.TranslateViaCopyPaste;
+        Title = UiUtil.MakeWindowTitle(Se.Language.Translate.TranslateViaCopyPaste);
         CanResize = true;
         Width = 900;
         Height = 800;

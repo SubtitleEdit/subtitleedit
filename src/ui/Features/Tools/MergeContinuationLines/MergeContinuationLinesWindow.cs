@@ -21,7 +21,7 @@ public class MergeContinuationLinesWindow : Window
     public MergeContinuationLinesWindow(MergeContinuationLinesViewModel vm)
     {
         UiUtil.InitializeWindow(this, GetType().Name);
-        Title = Se.Language.Tools.MergeContinuationLines.Title;
+        Title = UiUtil.MakeWindowTitle(Se.Language.Tools.MergeContinuationLines.Title);
         CanResize = true;
         Width = 1000;
         Height = 700;

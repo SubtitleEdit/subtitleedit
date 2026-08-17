@@ -29,6 +29,7 @@ public partial class BatchConvertSettingsViewModel : ObservableObject
     [ObservableProperty] private bool _useOutputFolder;
     [ObservableProperty] private string _outputFolder;
     [ObservableProperty] private bool _overwrite;
+    [ObservableProperty] private bool _scanFolderRecursive;
     [ObservableProperty] private ObservableCollection<string> _targetEncodings;
     [ObservableProperty] private string? _selectedTargetEncoding;
 
@@ -201,6 +202,7 @@ public partial class BatchConvertSettingsViewModel : ObservableObject
             ?? TargetEncodings.First();
         SelectedOcrEngine = OcrEngines.FirstOrDefault(p => p == Se.Settings.Tools.BatchConvert.OcrEngine) ?? OcrEngines.First();
         VobSubIsolateColors = Se.Settings.Tools.BatchConvert.VobSubIsolateColors;
+        ScanFolderRecursive = Se.Settings.Tools.BatchConvert.ScanFolderRecursive;
     }
 
     private void SaveSettings()
@@ -212,6 +214,7 @@ public partial class BatchConvertSettingsViewModel : ObservableObject
         Se.Settings.Tools.BatchConvert.LanguagePostFix = SelectedLanguagePostFix ?? Se.Language.General.TwoLetterLanguageCode;
         Se.Settings.Tools.BatchConvert.OcrEngine = SelectedOcrEngine ?? "nOcr";
         Se.Settings.Tools.BatchConvert.VobSubIsolateColors = VobSubIsolateColors;
+        Se.Settings.Tools.BatchConvert.ScanFolderRecursive = ScanFolderRecursive;
 
         var ocrEngine = SelectedOcrEngine;
         if (ocrEngine == "Tesseract")
@@ -335,8 +338,8 @@ public partial class BatchConvertSettingsViewModel : ObservableObject
     {
         if (UseOutputFolder && string.IsNullOrWhiteSpace(OutputFolder))
         {
-            await MessageBox.Show(Window!, "Error",
-                "Please select output folder", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            await MessageBox.Show(Window!, Se.Language.General.Error,
+                Se.Language.General.PleaseSelectOutputFolder, MessageBoxButtons.OK, MessageBoxIcon.Error);
             return;
         }
 
@@ -376,7 +379,7 @@ public partial class BatchConvertSettingsViewModel : ObservableObject
     [RelayCommand]
     private async Task BrowseOutputFolder()
     {
-        var folder = await _folderHelper.PickFolderAsync(Window!, "Select output folder");
+        var folder = await _folderHelper.PickFolderAsync(Window!, Se.Language.General.PickOutputFolder);
         if (!string.IsNullOrEmpty(folder))
         {
             OutputFolder = folder;
@@ -428,8 +431,10 @@ public partial class BatchConvertSettingsViewModel : ObservableObject
 
         if (ocrEngine == "PaddleOCR")
         {
-            SelectedPaddleOcrLanguage = PaddleOcrLanguages
-                .FirstOrDefault(p => p.Code == Se.Settings.Tools.BatchConvert.PaddleLanguage) ?? PaddleOcrLanguages.FirstOrDefault();
+            var paddleLanguage = PaddleOcr.NormalizeLanguageCode(Se.Settings.Tools.BatchConvert.PaddleLanguage);
+            SelectedPaddleOcrLanguage = PaddleOcrLanguages.FirstOrDefault(p => p.Code == paddleLanguage) ??
+                                        PaddleOcrLanguages.FirstOrDefault(p => p.Code == "en") ??
+                                        PaddleOcrLanguages.FirstOrDefault();
         }
 
         if (ocrEngine == "BinaryOcr")

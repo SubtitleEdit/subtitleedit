@@ -22,7 +22,7 @@ public class FixNetflixErrorsWindow : Window
     public FixNetflixErrorsWindow(FixNetflixErrorsViewModel vm)
     {
         UiUtil.InitializeWindow(this, GetType().Name);
-        Title = Se.Language.Tools.NetflixCheckAndFix.Title;
+        Title = UiUtil.MakeWindowTitle(Se.Language.Tools.NetflixCheckAndFix.Title);
         Width = 1100;
         Height = 680;
         MinWidth = 900;

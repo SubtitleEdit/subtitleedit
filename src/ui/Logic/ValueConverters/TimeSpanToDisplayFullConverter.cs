@@ -17,10 +17,20 @@ public class TimeSpanToDisplayFullConverter : IValueConverter
     private const string ZeroTime = "00:00:00,000";
     private static readonly char[] SplitChars = ['.', ':', ';', ','];
 
+    // The start and end time of every visible row go through here twice per repaint - see
+    // TimeCodeDisplayCache.
+    private readonly TimeCodeDisplayCache _cache = new();
+
     public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
         if (value is TimeSpan ts)
         {
+            if (_cache.TryGet(ts.Ticks, out var cached))
+            {
+                return cached;
+            }
+
+            var key = ts.Ticks;
             if (Se.Settings.General.CurrentVideoOffsetInMs != 0)
             {
                 ts = ts.Add(TimeSpan.FromMilliseconds(Se.Settings.General.CurrentVideoOffsetInMs));
@@ -28,12 +38,12 @@ public class TimeSpanToDisplayFullConverter : IValueConverter
 
             _formattingTimeCode.TimeSpan = ts;
 
-            if (Se.Settings.General.UseFrameMode)
-            {
-                return _formattingTimeCode.ToHHMMSSFF();
-            }
+            var formatted = Se.Settings.General.UseFrameMode
+                ? _formattingTimeCode.ToHHMMSSFF()
+                : _formattingTimeCode.ToString();
 
-            return _formattingTimeCode.ToString();
+            _cache.Set(key, formatted);
+            return formatted;
         }
 
         return Se.Settings.General.UseFrameMode ? ZeroFrameMode : ZeroTime;

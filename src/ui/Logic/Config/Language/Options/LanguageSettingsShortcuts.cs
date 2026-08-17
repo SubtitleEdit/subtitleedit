@@ -75,6 +75,7 @@ public class LanguageSettingsShortcuts
     public string AddOrEditBookmark { get; set; }
     public string ToggleBookmark { get; set; }
     public string GoToNextBookmark { get; set; }
+    public string GoToNextEmptyLine { get; set; }
     public string ToggleWaveformToolbar { get; set; }
     public string ToggleSubtitleGridFormatting { get; set; }
     public string WaveformSetStartAndSetEndOfPreviousMinusGap { get; set; }
@@ -98,7 +99,9 @@ public class LanguageSettingsShortcuts
     public string TextBoxCut { get; set; }
     public string TextBoxCut2 { get; set; }
     public string TextBoxPaste { get; set; }
+    public string TextBoxPaste2 { get; set; }
     public string TextBoxCopy { get; set; }
+    public string TextBoxCopy2 { get; set; }
     public string TextBoxSelectAll { get; set; }
     public string SubtitleGridCut { get; set; }
     public string SubtitleGridCopy { get; set; }
@@ -331,6 +334,7 @@ public class LanguageSettingsShortcuts
         AddOrEditBookmark = "Add or edit bookmark";
         ToggleBookmark = "Toggle bookmark (selected lines, no text)";
         GoToNextBookmark = "Go to next bookmark";
+        GoToNextEmptyLine = "Go to next empty line";
         ToggleWaveformToolbar = "Toggle waveform toolbar";
         ToggleSubtitleGridFormatting = "Toggle grid formatting (show formatting/show tags/no formatting)";
         WaveformSetStartAndSetEndOfPreviousMinusGap = "Set start and set end of previous minus gap";
@@ -354,7 +358,9 @@ public class LanguageSettingsShortcuts
         TextBoxCut = "Text box: Cut";
         TextBoxCut2 = "Text box: Cut (alternative)";
         TextBoxPaste = "Text box: Paste";
+        TextBoxPaste2 = "Text box: Paste (alternative)";
         TextBoxCopy = "Text box: Copy";
+        TextBoxCopy2 = "Text box: Copy (alternative)";
         TextBoxSelectAll = "Text box: Select all";
         SubtitleGridCut = "Subtitle grid: Cut";
         SubtitleGridCopy = "Subtitle grid: Copy";

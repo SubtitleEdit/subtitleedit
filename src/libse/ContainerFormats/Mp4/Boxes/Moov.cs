@@ -12,6 +12,11 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
         public List<Trak> Tracks;
         public List<Trex> Trexs = new List<Trex>();
 
+        /// <summary>
+        /// Nero chapter list from moov/udta, when the file has one.
+        /// </summary>
+        public Chpl Chpl;
+
         public Moov(Stream fs, ulong maximumLength)
         {
             Tracks = new List<Trak>();
@@ -50,6 +55,26 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
                     }
 
                     Position = mvexEnd;
+                }
+                else if (Name == "udta") // User Data Box - holds the Nero chapter list
+                {
+                    var udtaEnd = Position;
+                    while (fs.Position < (long)udtaEnd)
+                    {
+                        if (!InitializeSizeAndName(fs))
+                        {
+                            return;
+                        }
+
+                        if (Name == "chpl")
+                        {
+                            Chpl = new Chpl(fs, Size);
+                        }
+
+                        fs.Seek((long)Position, SeekOrigin.Begin);
+                    }
+
+                    Position = udtaEnd;
                 }
 
                 fs.Seek((long)Position, SeekOrigin.Begin);

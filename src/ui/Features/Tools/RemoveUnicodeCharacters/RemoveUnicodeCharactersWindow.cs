@@ -16,7 +16,7 @@ public class RemoveUnicodeCharactersWindow : Window
     public RemoveUnicodeCharactersWindow(RemoveUnicodeCharactersViewModel vm)
     {
         UiUtil.InitializeWindow(this, GetType().Name);
-        Title = Se.Language.Tools.RemoveUnicodeCharacters.Title;
+        Title = UiUtil.MakeWindowTitle(Se.Language.Tools.RemoveUnicodeCharacters.Title);
         CanResize = true;
         Width = 800;
         Height = 600;

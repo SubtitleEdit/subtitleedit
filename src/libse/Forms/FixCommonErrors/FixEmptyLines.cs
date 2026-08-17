@@ -6,6 +6,8 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
 {
     public class FixEmptyLines : IFixCommonError
     {
+        private static readonly CharLookup UnicodeControlCharLookup = CharLookup.Create(StringExtensions.UnicodeControlChars);
+
         public static class Language
         {
             public static string RemovedEmptyLine { get; set; } = "Remove empty line";
@@ -163,7 +165,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
             {
                 var p = subtitle.Paragraphs[i];
                 var text = HtmlUtil.RemoveHtmlTags(p.Text, true).Trim();
-                if (callbacks.AllowFix(p, fixAction0) && string.IsNullOrEmpty(text.RemoveControlCharacters().RemoveChar(StringExtensions.UnicodeControlChars)))
+                if (callbacks.AllowFix(p, fixAction0) && text.RemoveControlCharacters().IsOnlyChars(UnicodeControlCharLookup))
                 {
                     subtitle.Paragraphs.RemoveAt(i);
                     emptyLinesRemoved++;

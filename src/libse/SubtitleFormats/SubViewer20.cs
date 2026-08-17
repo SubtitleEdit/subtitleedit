@@ -23,7 +23,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         public override bool IsMine(List<string> lines, string fileName)
         {
             var sbv = new YouTubeSbv();
-            if (sbv.IsMine(lines, fileName) && !string.Join(string.Empty, lines.ToArray()).Contains("[br]"))
+            // "[br]" cannot straddle a line, so probe the lines directly - joining them built
+            // the whole file into one string on every ".sub" probe.
+            if (sbv.IsMine(lines, fileName) && !lines.Exists(l => l.Contains("[br]", StringComparison.Ordinal)))
             {
                 return false;
             }

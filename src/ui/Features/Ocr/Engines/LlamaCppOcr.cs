@@ -1,4 +1,4 @@
-﻿using Nikse.SubtitleEdit.Core.Common;
+using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Logic;
 using SkiaSharp;
 using System;
@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace Nikse.SubtitleEdit.Features.Ocr.Engines;
 
-public class LlamaCppOcr
+public class LlamaCppOcr : IDisposable
 {
     private readonly HttpClient _httpClient;
 
@@ -98,6 +98,15 @@ public class LlamaCppOcr
         }
         catch (Exception ex)
         {
+            // Record it so the caller can tell a real failure apart from a textless image: the
+            // OCR loops fail fast on a non-empty Error and otherwise grind through the whole job
+            // only to report "no text found". A non-success HTTP status has already stored the
+            // (more informative) response body in Error.
+            if (string.IsNullOrEmpty(Error))
+            {
+                Error = ex.Message;
+            }
+
             SeLogger.Error(ex, "Error calling llama.cpp for OCR");
             return string.Empty;
         }
@@ -126,5 +135,15 @@ public class LlamaCppOcr
         }
 
         return squareBitmap;
+    }
+
+    /// <summary>
+    /// A new engine (and so a new HttpClient, handler and connection pool) is built per OCR run
+    /// from several call sites; without disposal those pile up and eventually exhaust sockets.
+    /// </summary>
+    public void Dispose()
+    {
+        _httpClient.Dispose();
+        GC.SuppressFinalize(this);
     }
 }

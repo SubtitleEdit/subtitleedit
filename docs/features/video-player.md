@@ -19,8 +19,11 @@ Subtitle Edit includes an integrated video player for previewing subtitles with 
 | Play/Pause toggle | Toggle video playback |
 | Play | Start playback |
 | Pause | Pause playback |
-| Play next | Play the next subtitle |
+| Play next (and stop / and loop) | Play the next subtitle, then stop or loop |
+| Play previous (and stop / and loop) | Play the previous subtitle, then stop or loop |
 | Play selected lines | Play only the selected subtitle lines |
+
+> **Note:** When a "play and stop" playback stops, the video parks on the **last visible frame** of the line (one frame before its end time) rather than exactly on the end time. This keeps the line you just played visible on the video — stopping exactly on the end time would show a blank frame, or the next line when two lines share a boundary. The played line also stays selected in the subtitle grid.
 
 ## Navigation
 

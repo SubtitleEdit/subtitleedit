@@ -57,14 +57,6 @@ namespace Nikse.SubtitleEdit.Core.Common
         private static partial Regex NumberSeparatorNumberRegExGen();
         private static readonly Regex NumberSeparatorNumberRegEx = NumberSeparatorNumberRegExGen();
 
-        [GeneratedRegex("^\\d+$")]
-        private static partial Regex RegexIsNumberGen();
-        private static readonly Regex RegexIsNumber = RegexIsNumberGen();
-
-        [GeneratedRegex("^\\d+x\\d+$")]
-        private static partial Regex RegexIsEpisodeNumberGen();
-        private static readonly Regex RegexIsEpisodeNumber = RegexIsEpisodeNumberGen();
-
         [GeneratedRegex(@"(\d) (\.)")]
         private static partial Regex RegexNumberSpacePeriodGen();
         private static readonly Regex RegexNumberSpacePeriod = RegexNumberSpacePeriodGen();
@@ -94,8 +86,6 @@ namespace Nikse.SubtitleEdit.Core.Common
         private static readonly Regex RegexLetterSpacePeriodSpaceLetter = RegexLetterSpacePeriodSpaceLetterGen();
 #else
         private static readonly Regex NumberSeparatorNumberRegEx = new Regex(@"\b\d+[\.:;] \d+\b", RegexOptions.Compiled);
-        private static readonly Regex RegexIsNumber = new Regex("^\\d+$", RegexOptions.Compiled);
-        private static readonly Regex RegexIsEpisodeNumber = new Regex("^\\d+x\\d+$", RegexOptions.Compiled);
         private static readonly Regex RegexNumberSpacePeriod = new Regex(@"(\d) (\.)", RegexOptions.Compiled);
         private static readonly Regex RegexOrdinalSt = new Regex(@"(1) (st)\b", RegexOptions.Compiled);
         private static readonly Regex RegexOrdinalNd = new Regex(@"(2) (nd)\b", RegexOptions.Compiled);
@@ -126,20 +116,48 @@ namespace Nikse.SubtitleEdit.Core.Common
             return true;
         }
 
+        private static readonly char[] CurrencyAndPercentChars = { '$', '\u00A3', '\u00A5', '%', '*' };
+
+        /// <summary>
+        /// Same answer as the <c>^\d+$</c> and <c>^\d+x\d+$</c> regexes this used to run, without
+        /// the trimmed copy and without entering the regex engine. Two details are kept
+        /// deliberately: <c>\d</c> is <c>\p{Nd}</c>, i.e. <see cref="char.IsDigit(char)"/> and not
+        /// just '0'-'9', and .NET's <c>$</c> also matches immediately before a single trailing
+        /// line feed.
+        /// </summary>
         public static bool IsNumber(string s)
         {
-            s = s.Trim('$', '£', '¥', '%', '*');
-            if (RegexIsNumber.IsMatch(s))
+            var span = s.AsSpan().Trim(CurrencyAndPercentChars.AsSpan());
+            if (span.Length > 0 && span[span.Length - 1] == '\n')
             {
-                return true;
+                span = span.Slice(0, span.Length - 1);
             }
 
-            if (RegexIsEpisodeNumber.IsMatch(s))
+            if (span.Length == 0)
             {
-                return true;
+                return false;
             }
 
-            return false;
+            var separator = -1;
+            for (var i = 0; i < span.Length; i++)
+            {
+                if (char.IsDigit(span[i]))
+                {
+                    continue;
+                }
+
+                if (span[i] == 'x' && separator < 0)
+                {
+                    separator = i;
+                    continue;
+                }
+
+                return false;
+            }
+
+            // All digits: ^\d+$. Otherwise the only non-digit seen was a single 'x', which must
+            // have at least one digit on either side: ^\d+x\d+$.
+            return separator < 0 || (separator > 0 && separator < span.Length - 1);
         }
 
         public static SubtitleFormat GetSubtitleFormatByFriendlyName(string friendlyName)
@@ -486,9 +504,8 @@ namespace Nikse.SubtitleEdit.Core.Common
                         foreach (var item in list)
                         {
                             index += item;
-                            if (htmlTags.ContainsKey(index))
+                            if (htmlTags.TryGetValue(index, out var v))
                             {
-                                var v = htmlTags[index];
                                 if (v.StartsWith("</", StringComparison.Ordinal))
                                 {
                                     v = Environment.NewLine + v;
@@ -861,15 +878,17 @@ namespace Nikse.SubtitleEdit.Core.Common
                 int six = 0;
                 foreach (var letter in s)
                 {
-                    if (Environment.NewLine.Contains(letter))
+                    if (letter == '\r' || letter == '\n')
                     {
                         sb.Append(letter);
                     }
                     else
                     {
-                        if (htmlTags.ContainsKey(six))
+                        // One probe per character instead of two - auto-break runs this per line
+                        // on every split/merge, and per keystroke with auto-break while typing.
+                        if (htmlTags.TryGetValue(six, out var tag))
                         {
-                            sb.Append(htmlTags[six]);
+                            sb.Append(tag);
                         }
                         sb.Append(letter);
                         six++;
@@ -878,15 +897,48 @@ namespace Nikse.SubtitleEdit.Core.Common
 
                 for (int i = 0; i < 15; i++)
                 {
-                    if (htmlTags.ContainsKey(six + i))
+                    if (htmlTags.TryGetValue(six + i, out var tag))
                     {
-                        sb.Append(htmlTags[six + i]);
+                        sb.Append(tag);
                     }
                 }
 
                 return sb.ToString();
             }
             return s;
+        }
+
+        /// <summary>
+        /// Same answer as <c>s == s.ToUpperInvariant()</c>, without allocating the uppercased
+        /// copy. The hearing-impaired and casing rules ask this several times per subtitle line.
+        /// </summary>
+        public static bool IsAllUppercase(string s)
+        {
+            for (var i = 0; i < s.Length; i++)
+            {
+                if (char.ToUpperInvariant(s[i]) != s[i])
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+        /// <summary>
+        /// Same answer as <c>s != s.ToLowerInvariant()</c>, without allocating the lowercased copy.
+        /// </summary>
+        public static bool HasUppercase(string s)
+        {
+            for (var i = 0; i < s.Length; i++)
+            {
+                if (char.ToLowerInvariant(s[i]) != s[i])
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
 
         public static string UnbreakLine(string text)
@@ -1530,6 +1582,14 @@ namespace Nikse.SubtitleEdit.Core.Common
             return count;
         }
 
+        /// <summary>
+        /// True if <paramref name="text"/> starts with <paramref name="startTag"/> and ends with
+        /// <paramref name="endTag"/>, ignoring leading dialog dashes/dots/spaces and trailing
+        /// punctuation ('.', '!', '?', '-') and spaces.
+        /// The skipped characters must not overlap the tags: <paramref name="startTag"/> must not
+        /// begin with ' ', '.' or '-', and <paramref name="endTag"/> must not end with
+        /// ' ', '.', '!', '?' or '-' (always true for HTML tags like "&lt;i&gt;").
+        /// </summary>
         public static bool StartsAndEndsWithTag(string text, string startTag, string endTag)
         {
             if (string.IsNullOrWhiteSpace(text))
@@ -1542,35 +1602,24 @@ namespace Nikse.SubtitleEdit.Core.Common
                 return false;
             }
 
-            while (text.Contains("  "))
+            var startIndex = 0;
+            while (startIndex < text.Length && (text[startIndex] == ' ' || text[startIndex] == '.' || text[startIndex] == '-'))
             {
-                text = text.Replace("  ", " ");
+                startIndex++;
             }
 
-            var s1 = "- " + startTag;
-            var s2 = "-" + startTag;
-            var s3 = "- ..." + startTag;
-            var s4 = "- " + startTag + "..."; // - <i>...
-
-            var e1 = endTag + ".";
-            var e2 = endTag + "!";
-            var e3 = endTag + "?";
-            var e4 = endTag + "...";
-            var e5 = endTag + "-";
-
-            bool isStart = false;
-            bool isEnd = false;
-            if (text.StartsWith(startTag, StringComparison.Ordinal) || text.StartsWith(s1, StringComparison.Ordinal) || text.StartsWith(s2, StringComparison.Ordinal) || text.StartsWith(s3, StringComparison.Ordinal) || text.StartsWith(s4, StringComparison.Ordinal))
+            if (!text.AsSpan(startIndex).StartsWith(startTag))
             {
-                isStart = true;
+                return false;
             }
 
-            if (text.EndsWith(endTag, StringComparison.Ordinal) || text.EndsWith(e1, StringComparison.Ordinal) || text.EndsWith(e2, StringComparison.Ordinal) || text.EndsWith(e3, StringComparison.Ordinal) || text.EndsWith(e4, StringComparison.Ordinal) || text.EndsWith(e5, StringComparison.Ordinal))
+            var endIndex = text.Length - 1;
+            while (endIndex >= startIndex && (text[endIndex] == '.' || text[endIndex] == '!' || text[endIndex] == '?' || text[endIndex] == '-' || text[endIndex] == ' '))
             {
-                isEnd = true;
+                endIndex--;
             }
 
-            return isStart && isEnd;
+            return text.AsSpan(0, endIndex + 1).EndsWith(endTag);
         }
 
         public static Paragraph GetOriginalParagraph(int index, Paragraph paragraph, List<Paragraph> originalParagraphs)
@@ -2497,6 +2546,19 @@ namespace Nikse.SubtitleEdit.Core.Common
         private static readonly string RunQuoteNewLine = "\"" + Environment.NewLine;
 
         /// <summary>
+        /// The five characters <see cref="RemoveUnneededSpaces"/> drops or substitutes: the
+        /// zero-width space, the zero-width no-break space, the operating-system-command
+        /// control character, the tab and the no-break space.
+        /// </summary>
+        private static readonly char[] UnneededSpaceRewriteChars =
+            { '\u200B', '\uFEFF', '\u009D', '\t', '\u00A0' };
+
+#if NET8_0_OR_GREATER
+        private static readonly System.Buffers.SearchValues<char> UnneededSpaceRewriteCharsSearchValues =
+            System.Buffers.SearchValues.Create(UnneededSpaceRewriteChars);
+#endif
+
+        /// <summary>
         /// Remove unneeded spaces
         /// </summary>
         /// <param name="input">text string to remove unneeded spaces from</param>
@@ -2510,31 +2572,46 @@ namespace Nikse.SubtitleEdit.Core.Common
             const char operatingSystemCommand = '\u009D';
 
             var text = input.Trim();
-            var len = text.Length;
-            var count = 0;
-            var textChars = new char[len];
-            for (var i = 0; i < len; i++)
+
+            // The rewrite below allocated a char[] and a new string for every line, even
+            // though almost no line contains any of the five characters it exists to drop or
+            // substitute. One vectorized scan decides that, and lines without them keep the
+            // original instance. This method runs per paragraph in fix common errors, in the
+            // OCR fix engine and in batch convert.
+#if NET8_0_OR_GREATER
+            var needsNormalize = text.AsSpan().ContainsAny(UnneededSpaceRewriteCharsSearchValues);
+#else
+            var needsNormalize = text.AsSpan().IndexOfAny(UnneededSpaceRewriteChars) >= 0;
+#endif
+            if (needsNormalize)
             {
-                var ch = text[i];
-                switch (ch)
+                var len = text.Length;
+                var count = 0;
+                var textChars = new char[len];
+                for (var i = 0; i < len; i++)
                 {
-                    // Ignore: \u200B, \uFEFF and \u009D.
-                    case zeroWidthSpace:
-                    case zeroWidthNoBreakSpace:
-                    case operatingSystemCommand:
-                        break;
-                    // Replace: \t or \u00A0 with white-space.
-                    case '\t':
-                    case noBreakSpace:
-                        textChars[count++] = ' ';
-                        break;
-                    default:
-                        textChars[count++] = ch;
-                        break;
+                    var ch = text[i];
+                    switch (ch)
+                    {
+                        // Ignore: \u200B, \uFEFF and \u009D.
+                        case zeroWidthSpace:
+                        case zeroWidthNoBreakSpace:
+                        case operatingSystemCommand:
+                            break;
+                        // Replace: \t or \u00A0 with white-space.
+                        case '\t':
+                        case noBreakSpace:
+                            textChars[count++] = ' ';
+                            break;
+                        default:
+                            textChars[count++] = ch;
+                            break;
+                    }
                 }
+                // Construct new string from textChars.
+                text = new string(textChars, 0, count);
             }
-            // Construct new string from textChars.
-            text = new string(textChars, 0, count);
+
             text = text.FixExtraSpaces();
 
             if (text.EndsWith(' '))
@@ -2543,12 +2620,18 @@ namespace Nikse.SubtitleEdit.Core.Common
             }
 
             const string ellipses = "...";
-            text = text.Replace(". . ..", ellipses);
-            text = text.Replace(". ...", ellipses);
-            text = text.Replace(". .. .", ellipses);
-            text = text.Replace(". . .", ellipses);
-            text = text.Replace(". ..", ellipses);
-            text = text.Replace(".. .", ellipses);
+
+            // Every one of the six spaced-ellipsis spellings contains ". ", so a line without
+            // that pair cannot match any of them and skips six full scans.
+            if (text.Contains(". ", StringComparison.Ordinal))
+            {
+                text = text.Replace(". . ..", ellipses);
+                text = text.Replace(". ...", ellipses);
+                text = text.Replace(". .. .", ellipses);
+                text = text.Replace(". . .", ellipses);
+                text = text.Replace(". ..", ellipses);
+                text = text.Replace(".. .", ellipses);
+            }
 
             // Fix recursive: ...
             while (text.Contains("...."))
@@ -2556,12 +2639,17 @@ namespace Nikse.SubtitleEdit.Core.Common
                 text = text.Replace("....", ellipses);
             }
 
-            text = text.Replace(RunSpaceEllipsisNewLine, RunEllipsisNewLine);
-            text = text.Replace(RunNewLineEllipsisSpace, RunNewLineEllipsis);
-            text = text.Replace(RunNewLineItalicEllipsisSpace, RunNewLineItalicEllipsis);
-            text = text.Replace(RunNewLineDashEllipsisSpace, RunNewLineDashEllipsis);
-            text = text.Replace(RunNewLineItalicDashEllipsisSpace, RunNewLineItalicDashEllipsis);
-            text = text.Replace(RunNewLineDashEllipsisSpace, RunNewLineDashEllipsis);
+            // All six patterns embed Environment.NewLine, so a single-line text - which is
+            // most of a subtitle file - can skip the lot after one character scan.
+            if (text.Contains('\n'))
+            {
+                text = text.Replace(RunSpaceEllipsisNewLine, RunEllipsisNewLine);
+                text = text.Replace(RunNewLineEllipsisSpace, RunNewLineEllipsis);
+                text = text.Replace(RunNewLineItalicEllipsisSpace, RunNewLineItalicEllipsis);
+                text = text.Replace(RunNewLineDashEllipsisSpace, RunNewLineDashEllipsis);
+                text = text.Replace(RunNewLineItalicDashEllipsisSpace, RunNewLineItalicDashEllipsis);
+                text = text.Replace(RunNewLineDashEllipsisSpace, RunNewLineDashEllipsis);
+            }
 
             if (text.StartsWith("... ", StringComparison.Ordinal))
             {
@@ -2776,7 +2864,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             text = text.Trim();
             text = text.Replace(RunNewLineSpaceOnly, Environment.NewLine);
 
-            if (text.Contains("-") && text.Length > 2 && !text.StartsWith("--", StringComparison.Ordinal))
+            if (text.Contains('-') && text.Length > 2 && !text.StartsWith("--", StringComparison.Ordinal))
             {
                 var dialogHelper = new DialogSplitMerge { DialogStyle = Configuration.Settings.General.DialogStyle, ContinuationStyle = Configuration.Settings.General.ContinuationStyle };
                 text = dialogHelper.RemoveSpaces(text);
@@ -3136,6 +3224,18 @@ namespace Nikse.SubtitleEdit.Core.Common
                     }
                 }
             }
+            else if (codecId.StartsWith("S_TEXT/USF", StringComparison.OrdinalIgnoreCase))
+            {
+                // Each USF block holds the <text> element of one subtitle; without this the
+                // track fell through to SubRip below and every cue read as raw XML markup.
+                format = new UniversalSubtitleFormat();
+                foreach (var p in sub)
+                {
+                    var blockText = p.GetText(matroskaSubtitleInfo);
+                    subtitle.Paragraphs.Add(new Paragraph(
+                        UniversalSubtitleFormat.GetTextFromMatroskaBlock(blockText) ?? blockText, p.Start, p.End));
+                }
+            }
             else
             {
                 foreach (var p in sub)
@@ -3286,11 +3386,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                 subtitle.Header = subtitle.Header.Trim() + Environment.NewLine;
             }
 
-            lines = new List<string>();
-            foreach (string l in subtitle.Header.Trim().SplitToLines())
-            {
-                lines.Add(l);
-            }
+            lines = subtitle.Header.Trim().SplitToLines();
 
             const string timeCodeFormat = "{0}:{1:00}:{2:00}.{3:00}"; // h:mm:ss.cc
             foreach (var mp in sub)

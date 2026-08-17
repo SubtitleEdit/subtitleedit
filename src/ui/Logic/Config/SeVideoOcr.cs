@@ -15,6 +15,8 @@ public class SeVideoOcr
     public string GlmLanguage { get; set; }
     public string LlamaCppModel { get; set; }
     public string LlamaCppLanguage { get; set; }
+    public string CrispEmbedBackend { get; set; }
+    public string CrispEmbedModel { get; set; }
     public int FramesPerSecond { get; set; }
     public int ImageSimilarityPercent { get; set; }
     public int TextSimilarityPercent { get; set; }
@@ -43,6 +45,11 @@ public class SeVideoOcr
         GlmLanguage = "English";
         LlamaCppModel = string.Empty;
         LlamaCppLanguage = "English";
+
+        // Same defaults as the OCR window (SeOcr), but tracked per feature: the best backend for
+        // burned-in video text is not necessarily the best one for subtitle bitmaps.
+        CrispEmbedBackend = "GLM-OCR";
+        CrispEmbedModel = "glm-ocr-q8_0.gguf";
         FramesPerSecond = 5;
         ImageSimilarityPercent = 92;
         TextSimilarityPercent = 80;

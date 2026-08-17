@@ -386,7 +386,20 @@ namespace Nikse.SubtitleEdit.Core.VobSub
                 }
             }
 
-            // Fix subs with no duration (completely normal) or negative duration or duration > 10 seconds
+            FixPackTimes(list);
+
+            return list;
+        }
+
+        /// <summary>
+        /// Fixes packs with no duration (completely normal), a negative duration, or a duration
+        /// longer than the maximum display time. The sub picture's own stop-display delay is
+        /// preferred; failing that the pack runs up to the next one, or three seconds for the
+        /// last one. Also used for VobSub tracks read out of a Matroska file, whose container
+        /// block durations are often missing or (with ffmpeg) an "unknown" marker.
+        /// </summary>
+        public static void FixPackTimes(List<VobSubMergedPack> list)
+        {
             for (int i = 0; i < list.Count; i++)
             {
                 VobSubMergedPack pack = list[i];
@@ -411,8 +424,6 @@ namespace Nikse.SubtitleEdit.Core.VobSub
                     }
                 }
             }
-
-            return list;
         }
 
         public static bool IsMpeg2PackHeader(byte[] buffer)

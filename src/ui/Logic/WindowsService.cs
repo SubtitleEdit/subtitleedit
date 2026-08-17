@@ -1,8 +1,13 @@
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
+using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
+using Avalonia.Input;
+using Avalonia.Interactivity;
 using Avalonia.Threading;
+using Avalonia.VisualTree;
 using Microsoft.Extensions.DependencyInjection;
 using Nikse.SubtitleEdit.Features.Main.MainHelpers;
 using Nikse.SubtitleEdit.Features.Options.Settings;
@@ -151,8 +156,12 @@ namespace Nikse.SubtitleEdit.Logic
             ApplyRightToLeftSettings(window);
             UiTheme.ApplyScaleToWindow(window);
 
+            // Show without activating: the callers are the undocked video/waveform tool windows,
+            // and taking the foreground from the window the user is in - the main window during
+            // startup (#13569), or a dialog whose Apply rebuilt the layout (#13398) - is never
+            // wanted. They stay on top via KeepTopmostWhileOwnerActive, not via focus.
+            window.ShowActivated = false;
             window.Show();
-            window.Focus();
 
             return viewModel;
         }
@@ -167,18 +176,7 @@ namespace Nikse.SubtitleEdit.Logic
             ApplyRightToLeftSettings(window);
             UiTheme.ApplyScaleToWindow(window);
 
-            // Keep the dialog above undocked tool windows (audio visualizer / video player), which
-            // float on top of the main window via the same helper. Without this the dialog opens
-            // behind them in undocked mode. (#11971)
-            KeepTopmostWhileOwnerActive(window, owner);
-
-            // Drop the undocked windows' topmost for the dialog's lifetime and make sure the
-            // dialog really gets OS activation, not just top-of-z-order drawing (#13325).
-            using var undockedSuspension = SuspendUndockedTopmost();
-            ActivateWhenOpened(window);
-
-            await YieldForPendingFlyoutDismissAsync();
-            await window.ShowDialog(owner);
+            await ShowModalAsync(owner, window);
 
             return window;
         }
@@ -207,20 +205,56 @@ namespace Nikse.SubtitleEdit.Logic
             ApplyRightToLeftSettings(window);
             UiTheme.ApplyScaleToWindow(window);
 
+            await ShowModalAsync(owner, window);
+
+            return viewModel;
+        }
+
+        /// <summary>
+        /// Shows an already-constructed window as a modal dialog with the shared foreground
+        /// handling every modal in SE needs: kept above the undocked tool windows (#11971),
+        /// undocked topmost suspended for its lifetime (#13325), and foreground enforced while it
+        /// is open (#13405). Use this instead of calling <see cref="Window.ShowDialog(Window)"/>
+        /// directly - a bare ShowDialog is how dialogs end up drawn on top but never activated.
+        /// </summary>
+        public static Task ShowModalAsync(Window owner, Window dialog)
+        {
+            return RunModalAsync(owner, dialog, () => dialog.ShowDialog(owner));
+        }
+
+        /// <summary>
+        /// Same as <see cref="ShowModalAsync(Window, Window)"/> for dialogs closed with a result.
+        /// </summary>
+        public static async Task<TResult> ShowModalAsync<TResult>(Window owner, Window dialog)
+        {
+            TResult result = default!;
+            await RunModalAsync(owner, dialog, async () => result = await dialog.ShowDialog<TResult>(owner));
+            return result;
+        }
+
+        private static async Task RunModalAsync(Window owner, Window dialog, Func<Task> showDialog)
+        {
             // Keep the dialog above undocked tool windows (audio visualizer / video player), which
             // float on top of the main window via the same helper. Without this the dialog opens
             // behind them in undocked mode. (#11971)
-            KeepTopmostWhileOwnerActive(window, owner);
+            KeepTopmostWhileOwnerActive(dialog, owner);
 
-            // Drop the undocked windows' topmost for the dialog's lifetime and make sure the
-            // dialog really gets OS activation, not just top-of-z-order drawing (#13325).
+            // Drop the undocked windows' topmost for the dialog's lifetime and keep OS activation
+            // on the dialog, not just top-of-z-order drawing (#13325/#13405).
             using var undockedSuspension = SuspendUndockedTopmost();
-            ActivateWhenOpened(window);
+            var foregroundEnforcement = EnforceModalForegroundWhileOpen(dialog, owner);
 
-            await YieldForPendingFlyoutDismissAsync();
-            await window.ShowDialog(owner);
-
-            return viewModel;
+            _openModalCount++;
+            try
+            {
+                await YieldForPendingFlyoutDismissAsync();
+                await showDialog();
+            }
+            finally
+            {
+                _openModalCount--;
+                foregroundEnforcement.Dispose();
+            }
         }
 
         // When a dialog is launched from a context menu item, the command runs synchronously while the
@@ -300,11 +334,35 @@ namespace Nikse.SubtitleEdit.Logic
         /// Keeps the undocked tool windows non-topmost while <paramref name="flyout"/> is open,
         /// so its popup (a plain non-topmost native window) is not covered by them in undocked
         /// mode (#13325). Cascaded submenus are covered too: they belong to the same open flyout.
+        ///
+        /// The suspension is keyed to Opening, not Opened: Opened fires after the popup's
+        /// native window is already on screen, and on Windows demoting a topmost window
+        /// (SetWindowPos HWND_NOTOPMOST) re-inserts it at the top of the non-topmost band -
+        /// above the popup it was supposed to uncover, so the tool windows kept covering the
+        /// grid's context menu (#13493). At Opening the popup does not exist yet; it is
+        /// created right after, on top of the just-demoted tool windows. The main menu never
+        /// had this problem because Menu.Opened fires before any drop-down popup opens.
         /// </summary>
-        public static void SuspendUndockedTopmostWhileOpen(FlyoutBase flyout)
+        public static void SuspendUndockedTopmostWhileOpen(PopupFlyoutBase flyout)
         {
             IDisposable? suspension = null;
-            flyout.Opened += (_, _) => suspension ??= SuspendUndockedTopmost();
+            flyout.Opening += (_, _) =>
+            {
+                suspension ??= SuspendUndockedTopmost();
+
+                // A subclass can cancel the open in OnOpening after the event has been raised;
+                // Closed then never fires and the suspension would leak, leaving the tool
+                // windows permanently non-topmost. No SE flyout cancels today - this is a
+                // cheap backstop.
+                Dispatcher.UIThread.Post(() =>
+                {
+                    if (!flyout.IsOpen)
+                    {
+                        suspension?.Dispose();
+                        suspension = null;
+                    }
+                }, DispatcherPriority.Background);
+            };
             flyout.Closed += (_, _) =>
             {
                 suspension?.Dispose();
@@ -313,7 +371,9 @@ namespace Nikse.SubtitleEdit.Logic
         }
 
         /// <summary>
-        /// Same as <see cref="SuspendUndockedTopmostWhileOpen(FlyoutBase)"/> for the main menu bar.
+        /// Same as <see cref="SuspendUndockedTopmostWhileOpen(PopupFlyoutBase)"/> for the main
+        /// menu bar. Opened is early enough here: MenuBase raises it when the bar opens,
+        /// before any drop-down popup window is created.
         /// </summary>
         public static void SuspendUndockedTopmostWhileOpen(MenuBase menu)
         {
@@ -326,22 +386,264 @@ namespace Nikse.SubtitleEdit.Logic
             };
         }
 
+        // Every open modal shown through this service (dialogs and message boxes) counts here.
+        // While a modal is open its owner is input-disabled, so any code path that would give the
+        // owner keyboard focus is wrong by definition - the main window consults this before
+        // pulling the caret back on re-activation (#13405).
+        private static int _openModalCount;
+
         /// <summary>
-        /// Explicitly activates <paramref name="window"/> once it has opened, in case the OS
-        /// left foreground/keyboard focus on another window during the open (seen on Windows in
-        /// undocked mode, where the dialog was drawn on top but never activated - gray buttons,
-        /// no keyboard focus - #13325). Posted at Background priority so pending activation and
-        /// topmost changes settle first; a no-op when the window is already active.
+        /// True while any modal dialog shown through <see cref="ShowModalAsync(Window, Window)"/>
+        /// (which includes every ShowDialogAsync call and <see cref="Features.Shared.MessageBox"/>)
+        /// is open.
         /// </summary>
-        public static void ActivateWhenOpened(Window window)
+        public static bool IsModalDialogOpen => _openModalCount > 0;
+
+        /// <summary>
+        /// Test hook: clears the open-modal count left behind by tests that tore a dialog down
+        /// without completing its ShowDialog task.
+        /// </summary>
+        internal static void ResetOpenModalsForTests()
         {
-            window.Opened += (_, _) => Dispatcher.UIThread.Post(() =>
+            _openModalCount = 0;
+            _modalFrames.Clear();
+        }
+
+        /// <summary>
+        /// Keeps OS activation on <paramref name="dialog"/> for as long as it is open.
+        ///
+        /// A modal's owner is input-disabled, yet Windows happily leaves (or puts) keyboard focus
+        /// on it: the open-time topmost churn in undocked mode (#13325), a rebuild of the undocked
+        /// windows (#13398), or a modal opening right as the previous one closes (#13405) all end
+        /// in the same state - the dialog drawn on top, gray buttons, and every key landing in the
+        /// window underneath. A one-shot activation at open time only wins when the steal has
+        /// already happened, so instead enforce the invariant for the dialog's lifetime: whenever
+        /// the owner ends up active while the dialog is open, hand activation to the dialog. The
+        /// owner.IsActive guard scopes this to the unambiguously broken state - it never yanks
+        /// foreground from other applications or from the (independent, enabled) undocked tool
+        /// windows.
+        ///
+        /// OS activation is only half of the invariant. Avalonia routes every key press to its
+        /// single app-global focused element, no matter which window the OS delivered the key to
+        /// (KeyboardDevice.ProcessRawEvent). So a deferred Focus() call into the owner - the menu
+        /// bar's post-close focus restore, a posted grid-focus after an edit - lands after the
+        /// dialog opened and silently re-routes the keyboard into the disabled owner while the
+        /// dialog stays OS-active with an active-looking title bar: Esc is dead and Tab visibly
+        /// walks the window underneath, with no hint at all (#13405 beta-9 feedback). Activation
+        /// events never fire for this state, so it is also enforced directly: focus landing on the
+        /// owner while the dialog is open is handed straight back to the dialog, and the key that
+        /// slipped through is swallowed rather than delivered to the input-disabled owner.
+        /// </summary>
+        private static IDisposable EnforceModalForegroundWhileOpen(Window dialog, Window owner)
+        {
+            var disposed = false;
+            var frame = new ModalFrame(dialog, owner);
+            _modalFrames.Add(frame);
+
+            void BounceToDialog()
             {
-                if (window.IsVisible && !window.IsActive)
+                if (!disposed && owner.IsActive && !dialog.IsActive && !dialog.IsClosing())
                 {
-                    window.Activate();
+                    dialog.Activate();
                 }
-            }, DispatcherPriority.Background);
+            }
+
+            void OnActivationChanged(object? sender, EventArgs e)
+            {
+                // Deferred so IsActive has settled on both windows (Deactivated of one window can
+                // fire before Activated of the other).
+                Dispatcher.UIThread.Post(BounceToDialog, DispatcherPriority.Background);
+            }
+
+            void OnOpened(object? sender, EventArgs e)
+            {
+                // The unconditional one-shot from #13325: when no SE window kept activation (the
+                // user is in another application), Activate() still requests attention there.
+                Dispatcher.UIThread.Post(() =>
+                {
+                    if (!disposed && dialog.IsVisible && !dialog.IsActive)
+                    {
+                        dialog.Activate();
+                    }
+                }, DispatcherPriority.Background);
+
+                // The open-time churn can leave the dialog inactive without any activation event
+                // ever firing afterwards (the owner never lost activation, so nothing changes) -
+                // re-check on short timers as well. Guarded by owner.IsActive, so they are no-ops
+                // in every healthy state.
+                DispatcherTimer.RunOnce(BounceToDialog, TimeSpan.FromMilliseconds(150));
+                DispatcherTimer.RunOnce(BounceToDialog, TimeSpan.FromMilliseconds(450));
+            }
+
+            void OnDialogGotFocus(object? sender, FocusChangedEventArgs e)
+            {
+                // Remember where the keyboard focus lives inside the dialog, so a reclaim can
+                // put it back exactly where it was instead of on the first focusable control.
+                if (e.Source is InputElement element && element != dialog &&
+                    TopLevel.GetTopLevel(element) == dialog)
+                {
+                    frame.LastDialogFocus = element;
+                }
+            }
+
+            void OnOwnerGotFocus(object? sender, FocusChangedEventArgs e)
+            {
+                if (disposed || !dialog.IsVisible || dialog.IsClosing())
+                {
+                    return; // before open / during close, focus in the owner is legitimate
+                }
+
+                // Deferred so an immediately-following focus change (the dialog taking focus
+                // itself) wins without a fight; the reclaim re-checks the state when it runs.
+                Dispatcher.UIThread.Post(ReclaimKeyboardFocusFromDisabledOwner, DispatcherPriority.Background);
+            }
+
+            void OnOwnerKeyInput(object? sender, RoutedEventArgs e)
+            {
+                if (disposed || !dialog.IsVisible || dialog.IsClosing())
+                {
+                    return;
+                }
+
+                // A key reaching the input-disabled owner is always wrong - swallow it (better a
+                // dead keystroke than one editing the subtitle underneath the dialog) and repair.
+                e.Handled = true;
+                Dispatcher.UIThread.Post(ReclaimKeyboardFocusFromDisabledOwner, DispatcherPriority.Background);
+            }
+
+            owner.Activated += OnActivationChanged;
+            dialog.Deactivated += OnActivationChanged;
+            dialog.Opened += OnOpened;
+            // handledEventsToo: a control marking GotFocus handled must not hide the steal.
+            dialog.AddHandler(InputElement.GotFocusEvent, OnDialogGotFocus, RoutingStrategies.Bubble, handledEventsToo: true);
+            owner.AddHandler(InputElement.GotFocusEvent, OnOwnerGotFocus, RoutingStrategies.Bubble, handledEventsToo: true);
+            // Tunnel: run before the owner's own handlers (shortcut manager, text boxes) see the key.
+            // Key-up included: the AccessKeyHandler arms on Alt key-down but opens the menu bar on
+            // the key-up, so letting the release through would pop the disabled owner's menu.
+            owner.AddHandler(InputElement.KeyDownEvent, OnOwnerKeyInput, RoutingStrategies.Tunnel);
+            owner.AddHandler(InputElement.KeyUpEvent, OnOwnerKeyInput, RoutingStrategies.Tunnel);
+            owner.AddHandler(InputElement.TextInputEvent, OnOwnerKeyInput, RoutingStrategies.Tunnel);
+
+            return new ActionDisposable(() =>
+            {
+                disposed = true;
+                _modalFrames.Remove(frame);
+                owner.Activated -= OnActivationChanged;
+                dialog.Deactivated -= OnActivationChanged;
+                dialog.Opened -= OnOpened;
+                dialog.RemoveHandler(InputElement.GotFocusEvent, OnDialogGotFocus);
+                owner.RemoveHandler(InputElement.GotFocusEvent, OnOwnerGotFocus);
+                owner.RemoveHandler(InputElement.KeyDownEvent, OnOwnerKeyInput);
+                owner.RemoveHandler(InputElement.KeyUpEvent, OnOwnerKeyInput);
+                owner.RemoveHandler(InputElement.TextInputEvent, OnOwnerKeyInput);
+            });
+        }
+
+        // The open modals in open order - the last entry is the top-most dialog, the only window
+        // that may hold keyboard focus. The owners in this list (which include the lower dialogs
+        // of a nested chain) are exactly the input-disabled windows; independent enabled windows
+        // (undocked video player / audio visualizer) are never in it.
+        private static readonly List<ModalFrame> _modalFrames = new();
+
+        private sealed class ModalFrame
+        {
+            public ModalFrame(Window dialog, Window owner)
+            {
+                Dialog = dialog;
+                Owner = owner;
+            }
+
+            public Window Dialog { get; }
+            public Window Owner { get; }
+            public IInputElement? LastDialogFocus { get; set; }
+        }
+
+        /// <summary>
+        /// Moves the app-global keyboard focus back into the top-most open modal when it has ended
+        /// up in one of the input-disabled windows below it (or nowhere useful at all). No-op when
+        /// focus is already in the dialog or in an independent, enabled window.
+        /// </summary>
+        private static void ReclaimKeyboardFocusFromDisabledOwner()
+        {
+            if (_modalFrames.Count == 0)
+            {
+                return;
+            }
+
+            var frame = _modalFrames[^1];
+            var dialog = frame.Dialog;
+            if (!dialog.IsVisible || dialog.IsClosing())
+            {
+                return;
+            }
+
+            var focusedTopLevel = dialog.FocusManager?.GetFocusedElement() is Visual focusedVisual
+                ? TopLevel.GetTopLevel(focusedVisual)
+                : null;
+            if (focusedTopLevel == dialog)
+            {
+                return; // healthy
+            }
+
+            if (focusedTopLevel != null && !IsDisabledByOpenModal(focusedTopLevel))
+            {
+                return; // focus is in an enabled window (e.g. the undocked video player) - legitimate
+            }
+
+            // Focus is in a disabled owner, on a detached control (a closed popup's item), or
+            // nowhere: the dialog is the only right place for it while it is open. Prefer the
+            // control that last held the caret; fall back to the first focusable control when it
+            // cannot take focus anymore (hidden page, disabled button).
+            if (frame.LastDialogFocus is InputElement last &&
+                TopLevel.GetTopLevel(last) == dialog &&
+                last.Focus())
+            {
+                return;
+            }
+
+            (FindFirstFocusable(dialog) as InputElement)?.Focus();
+        }
+
+        private static IInputElement? FindFirstFocusable(Visual root)
+        {
+            foreach (var visual in root.GetVisualDescendants())
+            {
+                if (visual is InputElement { Focusable: true, IsEffectivelyEnabled: true, IsEffectivelyVisible: true } element)
+                {
+                    return element;
+                }
+            }
+
+            return null;
+        }
+
+        private static bool IsDisabledByOpenModal(TopLevel topLevel)
+        {
+            foreach (var frame in _modalFrames)
+            {
+                if (frame.Owner == topLevel)
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        private sealed class ActionDisposable : IDisposable
+        {
+            private Action? _dispose;
+
+            public ActionDisposable(Action dispose)
+            {
+                _dispose = dispose;
+            }
+
+            public void Dispose()
+            {
+                _dispose?.Invoke();
+                _dispose = null;
+            }
         }
 
         /// <summary>

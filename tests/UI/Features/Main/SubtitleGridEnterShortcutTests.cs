@@ -36,6 +36,7 @@ public class SubtitleGridEnterShortcutTests
         window.UpdateLayout();
 
         var vm = (MainViewModel)view.DataContext!;
+        window.SuppressSaveChangesPromptOnClose(vm);
         for (var i = 0; i < lineCount; i++)
         {
             vm.Subtitles.Add(new SubtitleLineViewModel(new Paragraph($"Line {i + 1}", i * 2000, i * 2000 + 1500), null!)

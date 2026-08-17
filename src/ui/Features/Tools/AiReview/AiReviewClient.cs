@@ -18,6 +18,11 @@ public class AiReviewClient : IDisposable
 {
     private readonly HttpClient _httpClient;
 
+    // A server accepts or rejects an optional parameter for every request alike, so remember what it
+    // turned down instead of paying a failed request per chunk for the rest of the run.
+    private bool _temperatureUnsupported;
+    private bool _jsonObjectUnsupported;
+
     public string Error { get; private set; } = string.Empty;
 
     public AiReviewClient()
@@ -32,13 +37,40 @@ public class AiReviewClient : IDisposable
 
         // AI review wants a JSON object back; the text box assistant wants the plain
         // reply, so it passes preferJsonObject: false to avoid a JSON-wrapped answer.
-        // Some servers reject response_format, so a JSON request also retries plain.
-        var response = await PostAsync(url,
-            BuildRequestJson(model, systemPrompt, userContent, jsonMode: preferJsonObject),
-            apiKey, cancellationToken);
-        if (!response.ok && preferJsonObject && !cancellationToken.IsCancellationRequested)
+        var jsonMode = preferJsonObject && !_jsonObjectUnsupported;
+        var includeTemperature = !_temperatureUnsupported;
+
+        (bool ok, string body) response;
+        while (true)
         {
-            response = await PostAsync(url, BuildRequestJson(model, systemPrompt, userContent, jsonMode: false), apiKey, cancellationToken);
+            response = await PostAsync(url,
+                BuildRequestJson(model, systemPrompt, userContent, jsonMode, includeTemperature),
+                apiKey, cancellationToken);
+            if (response.ok || cancellationToken.IsCancellationRequested)
+            {
+                break;
+            }
+
+            // OpenAI's reasoning models (gpt-5*, o*) only accept the default temperature and answer
+            // "Unsupported value: 'temperature' does not support 0 with this model" - see issue #13473.
+            if (includeTemperature && IsUnsupportedParameter(response.body, "temperature"))
+            {
+                _temperatureUnsupported = true;
+                includeTemperature = false;
+                continue;
+            }
+
+            // Some servers reject response_format, so a JSON request also retries plain. Only remember
+            // it when the server actually named the parameter - a rate limit or a network blip must not
+            // downgrade every later request in the run.
+            if (jsonMode)
+            {
+                _jsonObjectUnsupported = IsUnsupportedParameter(response.body, "response_format");
+                jsonMode = false;
+                continue;
+            }
+
+            break;
         }
 
         if (!response.ok)
@@ -51,7 +83,43 @@ public class AiReviewClient : IDisposable
         return ExtractContent(response.body);
     }
 
-    private static string BuildRequestJson(string model, string systemPrompt, string userContent, bool jsonMode)
+    /// <summary>
+    /// True when an error body blames a request parameter by name, like OpenAI's
+    /// "Unsupported value: 'temperature' does not support 0 with this model." (issue #13473).
+    /// </summary>
+    internal static bool IsUnsupportedParameter(string? body, string parameterName)
+    {
+        if (string.IsNullOrEmpty(body))
+        {
+            return false;
+        }
+
+        // The rejection keyword must sit near the parameter name: some servers echo the whole
+        // submitted request in their error body, so the name plus a stray "invalid" about
+        // something else entirely (a bad API key, say) must not downgrade every later request
+        // in the run.
+        var index = body.IndexOf(parameterName, StringComparison.OrdinalIgnoreCase);
+        while (index >= 0)
+        {
+            var start = Math.Max(0, index - 120);
+            var length = Math.Min(body.Length - start, parameterName.Length + 240);
+            var nearby = body.AsSpan(start, length);
+            if (nearby.Contains("unsupported", StringComparison.OrdinalIgnoreCase) ||
+                nearby.Contains("not support", StringComparison.OrdinalIgnoreCase) ||
+                nearby.Contains("unrecognized", StringComparison.OrdinalIgnoreCase) ||
+                nearby.Contains("invalid", StringComparison.OrdinalIgnoreCase) ||
+                nearby.Contains("unknown", StringComparison.OrdinalIgnoreCase))
+            {
+                return true;
+            }
+
+            index = body.IndexOf(parameterName, index + parameterName.Length, StringComparison.OrdinalIgnoreCase);
+        }
+
+        return false;
+    }
+
+    internal static string BuildRequestJson(string model, string systemPrompt, string userContent, bool jsonMode, bool includeTemperature)
     {
         using var stream = new System.IO.MemoryStream();
         using (var writer = new Utf8JsonWriter(stream))
@@ -62,7 +130,11 @@ public class AiReviewClient : IDisposable
                 writer.WriteString("model", model);
             }
 
-            writer.WriteNumber("temperature", 0);
+            if (includeTemperature)
+            {
+                writer.WriteNumber("temperature", 0);
+            }
+
             writer.WriteBoolean("stream", false);
             if (jsonMode)
             {

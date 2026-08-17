@@ -10,6 +10,7 @@ using Avalonia.Interactivity;
 using Avalonia.Media;
 using Avalonia.Threading;
 using Nikse.SubtitleEdit.Logic.Config;
+using System;
 
 namespace Nikse.SubtitleEdit.Features.Tools.RemoveTextForHearingImpaired;
 
@@ -25,7 +26,7 @@ public class RemoveTextForHearingImpairedWindow : Window
     public RemoveTextForHearingImpairedWindow(RemoveTextForHearingImpairedViewModel vm)
     {
         UiUtil.InitializeWindow(this, GetType().Name);
-        Title = Se.Language.General.RemoveTextForHearingImpaired;
+        Title = UiUtil.MakeWindowTitle(Se.Language.General.RemoveTextForHearingImpaired);
         Width = 910;
         Height = 640;
         MinWidth = 800;
@@ -366,6 +367,18 @@ public class RemoveTextForHearingImpairedWindow : Window
         TableViewExtras.AddSpaceToggle<RemoveItem>(dataGrid,
             item => item.Apply, (item, v) => item.Apply = v);
 
+        dataGrid.ContextMenu = MakeFixesContextMenu(vm);
+
+        // The context menu gestures must mean the same with the grid focused, so take them
+        // before the TableView (a ListBox) turns Ctrl+A into "select all rows" (#13496).
+        dataGrid.AddHandler(InputElement.KeyDownEvent, (object? _, KeyEventArgs e) =>
+        {
+            if (vm.HandleFixesSelectionKey(e))
+            {
+                e.Handled = true;
+            }
+        }, RoutingStrategies.Tunnel);
+
         var labelLinesFound = UiUtil.MakeLabel().WithBindText(vm, new Binding($"{nameof(vm.Fixes)}.{nameof(vm.Fixes.Count)}")
         {
             Mode = BindingMode.OneWay,
@@ -393,6 +406,41 @@ public class RemoveTextForHearingImpairedWindow : Window
         grid.Add(labelLinesFound, 1, 0);
 
         return grid;
+    }
+
+    // Mass-ticking the "Apply" column by hand is not an option on a long list (1259 fixes in
+    // the report on #13496), so offer tick all / untick all / invert with SE's usual gestures.
+    private static ContextMenu MakeFixesContextMenu(RemoveTextForHearingImpairedViewModel vm)
+    {
+        var commandModifier = OperatingSystem.IsMacOS() ? KeyModifiers.Meta : KeyModifiers.Control;
+
+        return new ContextMenu
+        {
+            Items =
+            {
+                new MenuItem
+                {
+                    Header = Se.Language.General.SelectAll,
+                    DataContext = vm,
+                    Command = vm.SelectAllFixesCommand,
+                    InputGesture = new KeyGesture(Key.A, commandModifier),
+                },
+                new MenuItem
+                {
+                    Header = Se.Language.General.SelectNone,
+                    DataContext = vm,
+                    Command = vm.SelectNoFixesCommand,
+                    InputGesture = new KeyGesture(Key.D, commandModifier),
+                },
+                new MenuItem
+                {
+                    Header = Se.Language.General.InvertSelection,
+                    DataContext = vm,
+                    Command = vm.InvertFixesSelectionCommand,
+                    InputGesture = new KeyGesture(Key.I, commandModifier | KeyModifiers.Shift),
+                },
+            },
+        };
     }
 
     protected override void OnKeyDown(KeyEventArgs e)

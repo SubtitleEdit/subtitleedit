@@ -39,7 +39,10 @@ public static class WaveFileExtractor
             if (settings.General.FfmpegUseCenterChannelOnly &&
                 FfmpegMediaInfo.Parse(inputVideoFile).HasFrontCenterAudio(audioTrackNumber))
             {
-                fFmpegWaveTranscodeSettings = "-i \"{0}\" -vn -ar 24000 -ab 128 -af volume=1.75 -af \"pan=mono|c0=FC\" -f wav {2} \"{1}\"";
+                // Both filters go in one "-af" chain: ffmpeg keeps only the last "-af" per output
+                // stream, so the older two-option form silently dropped the volume boost and drew
+                // center-channel waveforms quieter than every other waveform.
+                fFmpegWaveTranscodeSettings = "-i \"{0}\" -vn -ar 24000 -ab 128 -af \"pan=mono|c0=FC,volume=1.75\" -f wav {2} \"{1}\"";
                 encoderName += " FC";
             }
 

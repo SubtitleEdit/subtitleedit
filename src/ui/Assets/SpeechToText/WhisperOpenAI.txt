@@ -1,5 +1,5 @@
-﻿ --device DEVICE       device to use for PyTorch inference (default: cpu)
- --temperature TEMPERATURE
+  --device DEVICE       device to use for PyTorch inference (default: cpu)
+  --temperature TEMPERATURE
                         temperature to use for sampling (default: 0)
   --best_of BEST_OF     number of candidates when sampling with non-zero temperature (default: 5)
   --beam_size BEAM_SIZE
@@ -14,6 +14,9 @@
                         characters except common punctuations (default: -1)
   --initial_prompt INITIAL_PROMPT
                         optional text to provide as a prompt for the first window. (default: None)
+  --carry_initial_prompt CARRY_INITIAL_PROMPT
+                        if True, prepend initial_prompt to every internal decode() call. May reduce the effectiveness
+                        of condition_on_previous_text (default: False)
   --condition_on_previous_text CONDITION_ON_PREVIOUS_TEXT
                         if True, provide the previous output of the model as a prompt for the next window; disabling
                         may make the text inconsistent across windows, but the model becomes less prone to getting
@@ -48,5 +51,14 @@
                         the line (default: None)
   --max_line_count MAX_LINE_COUNT
                         (requires --word_timestamps True) the maximum number of lines in a segment (default: None)
+  --max_words_per_line MAX_WORDS_PER_LINE
+                        (requires --word_timestamps True, no effect with --max_line_width) the maximum number of words
+                        in a segment (default: None)
   --threads THREADS     number of threads used by torch for CPU inference; supercedes MKL_NUM_THREADS/OMP_NUM_THREADS
                         (default: 0)
+  --clip_timestamps CLIP_TIMESTAMPS
+                        comma-separated list start,end,start,end,... timestamps (in seconds) of clips to process,
+                        where the last end timestamp defaults to the end of the file (default: 0)
+  --hallucination_silence_threshold HALLUCINATION_SILENCE_THRESHOLD
+                        (requires --word_timestamps True) skip silent periods longer than this threshold (in seconds)
+                        when a possible hallucination is detected (default: None)

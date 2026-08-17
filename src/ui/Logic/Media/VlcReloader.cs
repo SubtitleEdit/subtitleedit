@@ -54,7 +54,7 @@ public class VlcReloader : IVlcReloader
                 defaultStyle.BorderStyle = "3";
                 subtitle = new Subtitle(subtitle);
                 subtitle = WebVttToAssa.Convert(subtitle, defaultStyle, VideoWidth, VideoHeight);
-                AddSecondarySubtitle(subtitle, subtitleSecondary);
+                SecondarySubtitleMerger.AddSecondarySubtitle(subtitle, subtitleSecondary);
                 text = subtitle.ToText(_assFormat);
             }
             else
@@ -130,7 +130,7 @@ public class VlcReloader : IVlcReloader
                     }
                 }
 
-                AddSecondarySubtitle(subtitle, subtitleSecondary);
+                SecondarySubtitleMerger.AddSecondarySubtitle(subtitle, subtitleSecondary);
                 var hash = subtitle.GetFastHashCode(null);
                 if (hash != _mpvSubOldHash || string.IsNullOrEmpty(_mpvTextOld))
                 {
@@ -169,23 +169,6 @@ public class VlcReloader : IVlcReloader
         catch (Exception exception)
         {
             Se.LogError(exception);
-        }
-    }
-
-    private static void AddSecondarySubtitle(Subtitle subtitle, Subtitle? subtitleSecondary)
-    {
-        if (subtitleSecondary == null)
-        {
-            return;
-        }
-
-
-        var styleName = subtitleSecondary.Paragraphs.FirstOrDefault()?.Extra ?? "Secondary";
-        var style = AdvancedSubStationAlpha.GetSsaStyle(styleName, subtitleSecondary.Header);
-        subtitle.Header = AdvancedSubStationAlpha.AddSsaStyle(style, subtitle.Header);
-        foreach (var p in subtitleSecondary.Paragraphs)
-        {
-            subtitle.Paragraphs.Add(p);
         }
     }
 

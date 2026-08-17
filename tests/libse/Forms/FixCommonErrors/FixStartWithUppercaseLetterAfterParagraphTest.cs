@@ -46,6 +46,13 @@ public class FixStartWithUppercaseLetterAfterParagraphTest
         Assert.Equal("he is asleep.", Fix("It is 5 a.m.", "he is asleep.", "en"));
     }
 
+    // ...including the Spanish doubled-letter plurals, where the group is two letters (#13773).
+    [Fact]
+    public void KeepsLowercaseAfterSpanishDoubledAbbreviation()
+    {
+        Assert.Equal("desde hace años.", Fix("Vivo en EE.UU.", "desde hace años.", "es"));
+    }
+
     // A line ending with a quotation mark is not a paragraph end - the quote is not
     // preceded by sentence-ending punctuation, so the next line continues the sentence.
     // ("\"u\"" is three characters, so this is the pre-existing long-line path - kept as a

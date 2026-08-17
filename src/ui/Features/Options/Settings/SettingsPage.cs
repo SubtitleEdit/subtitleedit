@@ -11,6 +11,7 @@ using Avalonia.Media;
 using Avalonia.Platform;
 using Avalonia.Threading;
 using CommunityToolkit.Mvvm.Input;
+using Nikse.SubtitleEdit.Features.Help.CheckForUpdates;
 using Nikse.SubtitleEdit.Features.Shared.PickLanguage;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
@@ -275,6 +276,7 @@ public class SettingsPage : UserControl
             MakeCheckboxSetting(Se.Language.Options.Settings.AutoConvertToUtf8, nameof(_vm.AutoConvertToUtf8)),
             MakeCheckboxSetting(Se.Language.Options.Settings.ForceCrLfOnSave, nameof(_vm.ForceCrLfOnSave)),
             MakeCheckboxSetting(Se.Language.Options.Settings.AutoTrimWhiteSpace, nameof(_vm.AutoTrimWhiteSpace)),
+            MakeCheckboxSetting(Se.Language.Options.Settings.RemoveBlankLinesWhenOpening, nameof(_vm.RemoveBlankLinesWhenOpening)),
             new SettingsItem(Se.Language.Options.Settings.DefaultEncoding, () => new ComboBox
             {
                 Width = 200,
@@ -801,6 +803,7 @@ public class SettingsPage : UserControl
             MakeCheckboxSetting(Se.Language.Options.Settings.ShowToolbarSaveAs, nameof(_vm.ShowToolbarSaveAs)),
             MakeCheckboxSetting(Se.Language.Options.Settings.ShowToolbarFind, nameof(_vm.ShowToolbarFind)),
             MakeCheckboxSetting(Se.Language.Options.Settings.ShowToolbarReplace, nameof(_vm.ShowToolbarReplace)),
+            MakeCheckboxSetting(Se.Language.Options.Settings.ShowToolbarMultipleReplace, nameof(_vm.ShowToolbarMultipleReplace)),
             MakeCheckboxSetting(Se.Language.Options.Settings.ShowToolbarSpellCheck, nameof(_vm.ShowToolbarSpellCheck)),
             MakeCheckboxSetting(Se.Language.Options.Settings.ShowToolbarFixCommonErrors, nameof(_vm.ShowToolbarFixCommonErrors)),
             MakeCheckboxSetting(Se.Language.Options.Settings.ShowToolbarRemoveTextForHi, nameof(_vm.ShowToolbarRemoveTextForHi)),
@@ -816,6 +819,10 @@ public class SettingsPage : UserControl
             MakeCheckboxSetting(Se.Language.Options.Settings.ShowToolbarHelp, nameof(_vm.ShowToolbarHelp)),
             MakeCheckboxSetting(Se.Language.Options.Settings.ShowToolbarEncoding, nameof(_vm.ShowToolbarEncoding)),
             MakeCheckboxSetting(Se.Language.Options.Settings.ShowToolbarFrameRate, nameof(_vm.ShowToolbarFrameRate)),
+            MakeCheckboxSetting(Se.Language.Options.Settings.ShowToolbarStyleManager, nameof(_vm.ShowToolbarStyleManager)),
+            MakeCheckboxSetting(Se.Language.Options.Settings.ShowToolbarProperties, nameof(_vm.ShowToolbarProperties)),
+            MakeCheckboxSetting(Se.Language.Options.Settings.ShowToolbarAttachments, nameof(_vm.ShowToolbarAttachments)),
+            MakeCheckboxSetting(Se.Language.Options.Settings.ShowToolbarAssaDraw, nameof(_vm.ShowToolbarAssaDraw)),
         ]));
 
         sections.Add(new SettingsSection(Se.Language.Options.Settings.Network, IconNames.Network, "#6bb84e",
@@ -836,6 +843,26 @@ public class SettingsPage : UserControl
                 return textBox;
             }),
         ]));
+
+        var updateItems = new List<SettingsItem>();
+        if (!UpdateCheckService.IsStoreManagedInstall)
+        {
+            // Store-managed installs (Flatpak) update through the store, so the startup check is hidden there.
+            updateItems.Add(MakeCheckboxSetting(Se.Language.Options.Settings.CheckForUpdatesOnStartup, nameof(_vm.CheckForUpdatesOnStartup)));
+        }
+
+        updateItems.Add(new SettingsItem(Se.Language.Options.Settings.CheckForUpdatesChannel, () => new ComboBox
+        {
+            MinWidth = 200,
+            DataContext = _vm,
+            [!ItemsControl.ItemsSourceProperty] = new Binding(nameof(_vm.UpdateChannels)),
+            [!SelectingItemsControl.SelectedItemProperty] = new Binding(nameof(_vm.SelectedUpdateChannel))
+            {
+                Mode = BindingMode.TwoWay,
+            }
+        }));
+
+        sections.Add(new SettingsSection(Se.Language.Options.Settings.Updates, IconNames.CloudDownload, "#d0a24e", updateItems));
 
         if (OperatingSystem.IsWindows())
         {

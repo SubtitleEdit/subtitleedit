@@ -52,9 +52,10 @@ public partial class CompareViewModel : ObservableObject
     private List<SubtitleLineViewModel> _rightLines = new();
     private string _language = string.Empty;
 
-    private static readonly IBrush ListViewRed = new SolidColorBrush(Color.FromArgb(180, 255, 235, 233));
-    private static readonly IBrush ListViewGreen = new SolidColorBrush(Color.FromArgb(180, 230, 255, 237));
-    private static readonly IBrush ListViewOrange = new SolidColorBrush(Color.FromArgb(180, 255, 248, 220));
+    // Theme aware - the light pastels are unreadable under the dark theme's near-white text (#13435).
+    private static IBrush ListViewRed => CompareColors.OnlyInOneFileRow;
+    private static IBrush ListViewGreen => CompareColors.TextOrTimeDifferenceRow;
+    private static IBrush ListViewOrange => CompareColors.NumberDifferenceRow;
     private static readonly IBrush TransparentBrush = new SolidColorBrush(Colors.Transparent);
 
     public CompareViewModel(IFileHelper fileHelper, IFolderHelper folderHelper)
@@ -814,24 +815,17 @@ public partial class CompareViewModel : ObservableObject
 
     private static string GetHtmlBackgroundColor(IBrush brush)
     {
-        if (brush == null)
+        // The exported page is white with black text, so a highlight always exports as its
+        // light pastel - the dark theme's row brushes would render as near-black cells.
+        var exportColor = CompareColors.GetExportColor(brush);
+        if (exportColor == null)
         {
             return string.Empty;
         }
 
-        if (brush is SolidColorBrush solidColorBrush)
-        {
-            if (solidColorBrush.Color == Colors.Transparent)
-            {
-                return string.Empty;
-            }
-
-            var c = solidColorBrush.Color;
-            var htmlColor = $"#{c.R:X2}{c.G:X2}{c.B:X2}";
-            return $" style='background-color:{htmlColor}'";
-        }
-
-        return string.Empty;
+        var c = exportColor.Value;
+        var htmlColor = $"#{c.R:X2}{c.G:X2}{c.B:X2}";
+        return $" style='background-color:{htmlColor}'";
     }
 
     private void Close()

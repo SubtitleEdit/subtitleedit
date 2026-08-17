@@ -43,7 +43,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 string s = line.Trim();
                 string[] arr = line.Split();
                 var timeCode = arr[arr.Length - 1];
-                if (line.IndexOf(':') > 0 && (RegexTimeCodesAm.Match(timeCode).Success || RegexTimeCodesPm.Match(timeCode).Success))
+                if (line.IndexOf(':') > 0 && (RegexTimeCodesAm.IsMatch(timeCode) || RegexTimeCodesPm.IsMatch(timeCode)))
                 {
                     try
                     {

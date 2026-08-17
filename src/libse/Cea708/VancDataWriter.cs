@@ -64,9 +64,12 @@ namespace Nikse.SubtitleEdit.Core.Cea708
             }
             commands.Clear();
 
+            var row = 0;
             foreach (var line in lines)
             {
-                var c1 = new SetPenLocation();
+                // Each line goes on its own row - the reader turns a row increase into a line break.
+                var c1 = new SetPenLocation { Row = row };
+                row++;
                 if (c1.GetBytes().Length + bytes.Count > 32)
                 {
                     counter = FlushCommands(counter, bytes, results);

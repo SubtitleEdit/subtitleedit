@@ -18,7 +18,7 @@ using System.Timers;
 
 namespace Nikse.SubtitleEdit.Features.Tools.RemoveTextForHearingImpaired;
 
-public partial class RemoveTextForHearingImpairedViewModel : ObservableObject
+public partial class RemoveTextForHearingImpairedViewModel : ObservableObject, IClosingCleanup
 {
     public class LanguageItem
     {
@@ -83,6 +83,7 @@ public partial class RemoveTextForHearingImpairedViewModel : ObservableObject
     private Subtitle _subtitle;
     private RemoveTextForHI? _removeTextForHiLib;
     private readonly Timer _timer;
+    private volatile bool _isClosing;
     private readonly IWindowService _windowService;
     private Action<Subtitle>? _applyCallback;
 
@@ -237,6 +238,68 @@ public partial class RemoveTextForHearingImpairedViewModel : ObservableObject
     }
 
     [RelayCommand]
+    private void SelectAllFixes()
+    {
+        foreach (var fix in Fixes)
+        {
+            fix.Apply = true;
+        }
+    }
+
+    [RelayCommand]
+    private void SelectNoFixes()
+    {
+        foreach (var fix in Fixes)
+        {
+            fix.Apply = false;
+        }
+    }
+
+    [RelayCommand]
+    private void InvertFixesSelection()
+    {
+        foreach (var fix in Fixes)
+        {
+            fix.Apply = !fix.Apply;
+        }
+    }
+
+    /// <summary>
+    /// The gestures advertised by the fixes grid context menu (#13496): tick all, untick all
+    /// and invert the "Apply" column. Called both from the window (focus sits on a button) and
+    /// from a tunneling handler on the grid, which would otherwise swallow Ctrl+A as
+    /// "select all rows".
+    /// </summary>
+    internal bool HandleFixesSelectionKey(KeyEventArgs e)
+    {
+        var isCommand = e.KeyModifiers.HasFlag(KeyModifiers.Control) || e.KeyModifiers.HasFlag(KeyModifiers.Meta);
+        if (!isCommand || e.KeyModifiers.HasFlag(KeyModifiers.Alt))
+        {
+            return false;
+        }
+
+        var isShift = e.KeyModifiers.HasFlag(KeyModifiers.Shift);
+        if (e.Key == Key.A && !isShift)
+        {
+            SelectAllFixes();
+        }
+        else if (e.Key == Key.D && !isShift)
+        {
+            SelectNoFixes();
+        }
+        else if (e.Key == Key.I && isShift)
+        {
+            InvertFixesSelection();
+        }
+        else
+        {
+            return false;
+        }
+
+        return true;
+    }
+
+    [RelayCommand]
     private async Task EditInterjections()
     {
         await _windowService.ShowDialogAsync<InterjectionsWindow, InterjectionsViewModel>(Window!, vm => 
@@ -247,6 +310,11 @@ public partial class RemoveTextForHearingImpairedViewModel : ObservableObject
 
     private void TimerElapsed(object? sender, ElapsedEventArgs e)
     {
+        if (_isClosing)
+        {
+            return;
+        }
+
         _timer.Stop();
 
         try
@@ -258,10 +326,29 @@ public partial class RemoveTextForHearingImpairedViewModel : ObservableObject
             return;
         }
 
-        _timer.Start();
+        // Guard the restart: OnClosingCleanup may have disposed the timer while this handler ran,
+        // and Start() on a disposed timer throws ObjectDisposedException (no longer swallowed on
+        // modern .NET), crashing the app from a thread-pool thread. (#12739)
+        if (!_isClosing)
+        {
+            _timer.Start();
+        }
     }
 
-    private void GeneratePreview()
+    /// <summary>
+    /// Runs on every close path via the central hook in <see cref="UiUtil.InitializeWindow"/>.
+    /// Without it the 500 ms preview timer went on ticking for the rest of the session -
+    /// regenerating the whole fix list on the UI thread over a closed window's subtitle - and a
+    /// fresh timer was added every time the dialog was opened, from the tools menu and from batch
+    /// convert alike.
+    /// </summary>
+    public void OnClosingCleanup()
+    {
+        _isClosing = true;
+        _timer.StopAndDispose(TimerElapsed);
+    }
+
+    internal void GeneratePreview()
     {
         if (_removeTextForHiLib == null)
         {
@@ -284,7 +371,7 @@ public partial class RemoveTextForHearingImpairedViewModel : ObservableObject
             var p = _subtitle.Paragraphs[index];
             _removeTextForHiLib.WarningIndex = index - 1;
             var newText = _removeTextForHiLib.RemoveTextFromHearImpaired(p.Text, _subtitle, index, twoLetterIsoLanguageName);
-            if (p.Text.RemoveChar(' ') != newText.RemoveChar(' '))
+            if (IsVisibleChange(p.Text, newText))
             {
                 var apply = true;
                 var oldItem = Fixes.FirstOrDefault(f => f.Index == index);
@@ -318,6 +405,22 @@ public partial class RemoveTextForHearingImpairedViewModel : ObservableObject
 
         Fixes.Clear();
         Fixes.AddRange(newFixes);
+    }
+
+    /// <summary>
+    /// True when the HI pass changed something the user would actually see in the fix list.
+    /// Trailing white space is ignored: RemoveTextFromHearImpaired rebuilds the text and drops
+    /// e.g. a trailing empty line, which would otherwise list a "fix" whose before and after
+    /// render identically (#13389). Line breaks are compared normalized for the same reason -
+    /// the rebuilt text always uses <see cref="Environment.NewLine"/>, so a paragraph that came
+    /// in with a foreign line break (pasted from a LF file, say) would be listed unchanged
+    /// (#13591).
+    /// </summary>
+    internal static bool IsVisibleChange(string before, string after)
+    {
+        return Flatten(before) != Flatten(after);
+
+        static string Flatten(string text) => text.NormalizeLineBreaks().Trim().RemoveChar(' ');
     }
 
     public RemoveTextForHISettings GetSettings(Subtitle subtitle)
@@ -364,6 +467,10 @@ public partial class RemoveTextForHearingImpairedViewModel : ObservableObject
         {
             e.Handled = true;
             UiUtil.ShowHelp("features/remove-text-hi");
+        }
+        else if (HandleFixesSelectionKey(e))
+        {
+            e.Handled = true;
         }
     }
 

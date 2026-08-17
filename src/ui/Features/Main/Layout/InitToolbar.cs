@@ -153,6 +153,19 @@ public static class InitToolbar
             isLastSeparator = false;
         }
 
+        if (appearance.ToolbarShowMultipleReplace)
+        {
+            stackPanelLeft.Children.Add(new Button
+            {
+                Content = MakeImage("MultipleReplace"),
+                Command = vm.ShowMultipleReplaceCommand,
+                Background = Brushes.Transparent,
+                [AutomationProperties.NameProperty] = languageHints.MultipleReplaceHint,
+                [ToolTip.TipProperty] = UiUtil.MakeToolTip(languageHints.MultipleReplaceHint, shortcuts, nameof(vm.ShowMultipleReplaceCommand)),
+            });
+            isLastSeparator = false;
+        }
+
 
         if (!isLastSeparator)
         {
@@ -336,129 +349,165 @@ public static class InitToolbar
             isLastSeparator = false;
         }
 
+        // The format specific icons below only appear for ASSA/SSA/WebVTT, and each one can be
+        // hidden from settings just like the icons above. A format only gets its separator when
+        // at least one of its own icons is still enabled.
+        var showAssaIcons = appearance.ToolbarShowStyleManager || appearance.ToolbarShowProperties ||
+                            appearance.ToolbarShowAttachments || appearance.ToolbarShowAssaDraw;
+        var showSsaIcons = appearance.ToolbarShowStyleManager || appearance.ToolbarShowProperties ||
+                           appearance.ToolbarShowAttachments;
+        var showWebVttIcons = appearance.ToolbarShowStyleManager;
+
         if (!isLastSeparator)
         {
-            var assaSeparator = MakeSeparator();
-            stackPanelLeft.Children.Add(assaSeparator);
-            assaSeparator.DataContext = vm;
-            assaSeparator.Bind(Visual.IsVisibleProperty, new Binding(nameof(vm.IsFormatAssa)) { Mode = BindingMode.TwoWay });
+            if (showAssaIcons)
+            {
+                var assaSeparator = MakeSeparator();
+                stackPanelLeft.Children.Add(assaSeparator);
+                assaSeparator.DataContext = vm;
+                assaSeparator.Bind(Visual.IsVisibleProperty, new Binding(nameof(vm.IsFormatAssa)) { Mode = BindingMode.TwoWay });
+            }
 
-            var ssaSeparator = MakeSeparator();
-            stackPanelLeft.Children.Add(ssaSeparator);
-            ssaSeparator.DataContext = vm;
-            ssaSeparator.Bind(Visual.IsVisibleProperty, new Binding(nameof(vm.IsFormatSsa)) { Mode = BindingMode.TwoWay });
+            if (showSsaIcons)
+            {
+                var ssaSeparator = MakeSeparator();
+                stackPanelLeft.Children.Add(ssaSeparator);
+                ssaSeparator.DataContext = vm;
+                ssaSeparator.Bind(Visual.IsVisibleProperty, new Binding(nameof(vm.IsFormatSsa)) { Mode = BindingMode.TwoWay });
+            }
 
-            var webVttSeparator = MakeSeparator();
-            stackPanelLeft.Children.Add(webVttSeparator);
-            webVttSeparator.DataContext = vm;
-            webVttSeparator.Bind(Visual.IsVisibleProperty, new Binding(nameof(vm.IsFormatWebVtt)) { Mode = BindingMode.TwoWay });
+            if (showWebVttIcons)
+            {
+                var webVttSeparator = MakeSeparator();
+                stackPanelLeft.Children.Add(webVttSeparator);
+                webVttSeparator.DataContext = vm;
+                webVttSeparator.Bind(Visual.IsVisibleProperty, new Binding(nameof(vm.IsFormatWebVtt)) { Mode = BindingMode.TwoWay });
+            }
 
             isLastSeparator = true;
         }
 
-        stackPanelLeft.Children.Add(new Button
+        if (appearance.ToolbarShowStyleManager)
         {
-            Content = MakeImage("AssaStyle"),
-            Command = vm.ShowWebVttStylesCommand,
-            Background = Brushes.Transparent,
-            [AutomationProperties.NameProperty] = languageHints.WebVttStylesHint,
-            [ToolTip.TipProperty] = UiUtil.MakeToolTip(languageHints.WebVttStylesHint, shortcuts, nameof(vm.ShowWebVttStylesCommand)),
-            [!Visual.IsVisibleProperty] = new Binding(nameof(vm.IsFormatWebVtt))
+            stackPanelLeft.Children.Add(new Button
             {
-                Source = vm,
-            },
-        });
+                Content = MakeImage("AssaStyle"),
+                Command = vm.ShowWebVttStylesCommand,
+                Background = Brushes.Transparent,
+                [AutomationProperties.NameProperty] = languageHints.WebVttStylesHint,
+                [ToolTip.TipProperty] = UiUtil.MakeToolTip(languageHints.WebVttStylesHint, shortcuts, nameof(vm.ShowWebVttStylesCommand)),
+                [!Visual.IsVisibleProperty] = new Binding(nameof(vm.IsFormatWebVtt))
+                {
+                    Source = vm,
+                },
+            });
 
-        stackPanelLeft.Children.Add(new Button
-        {
-            Content = MakeImage("AssaStyle"),
-            Command = vm.ShowAssaStylesCommand,
-            Background = Brushes.Transparent,
-            [AutomationProperties.NameProperty] = languageHints.AssaStylesHint,
-            [ToolTip.TipProperty] = UiUtil.MakeToolTip(languageHints.AssaStylesHint, shortcuts, nameof(vm.ShowAssaStylesCommand)),
-            [!Visual.IsVisibleProperty] = new Binding(nameof(vm.IsFormatAssa))
+            stackPanelLeft.Children.Add(new Button
             {
-                Source = vm,
-            },
-        });
+                Content = MakeImage("AssaStyle"),
+                Command = vm.ShowAssaStylesCommand,
+                Background = Brushes.Transparent,
+                [AutomationProperties.NameProperty] = languageHints.AssaStylesHint,
+                [ToolTip.TipProperty] = UiUtil.MakeToolTip(languageHints.AssaStylesHint, shortcuts, nameof(vm.ShowAssaStylesCommand)),
+                [!Visual.IsVisibleProperty] = new Binding(nameof(vm.IsFormatAssa))
+                {
+                    Source = vm,
+                },
+            });
 
-        stackPanelLeft.Children.Add(new Button
-        {
-            Content = MakeImage("AssaStyle"),
-            Command = vm.ShowSsaStylesCommand,
-            Background = Brushes.Transparent,
-            [AutomationProperties.NameProperty] = languageHints.SsaStylesHint,
-            [ToolTip.TipProperty] = UiUtil.MakeToolTip(languageHints.SsaStylesHint, shortcuts, nameof(vm.ShowSsaStylesCommand)),
-            [!Visual.IsVisibleProperty] = new Binding(nameof(vm.IsFormatSsa))
+            stackPanelLeft.Children.Add(new Button
             {
-                Source = vm,
-            },
-        });
+                Content = MakeImage("AssaStyle"),
+                Command = vm.ShowSsaStylesCommand,
+                Background = Brushes.Transparent,
+                [AutomationProperties.NameProperty] = languageHints.SsaStylesHint,
+                [ToolTip.TipProperty] = UiUtil.MakeToolTip(languageHints.SsaStylesHint, shortcuts, nameof(vm.ShowSsaStylesCommand)),
+                [!Visual.IsVisibleProperty] = new Binding(nameof(vm.IsFormatSsa))
+                {
+                    Source = vm,
+                },
+            });
+        }
 
-        stackPanelLeft.Children.Add(new Button
+        if (appearance.ToolbarShowProperties)
         {
-            Content = MakeImage("AssaProperties"),
-            Command = vm.ShowSsaPropertiesCommand,
-            Background = Brushes.Transparent,
-            [AutomationProperties.NameProperty] = languageHints.SsaPropertiesHint,
-            [ToolTip.TipProperty] = UiUtil.MakeToolTip(languageHints.SsaPropertiesHint, shortcuts, nameof(vm.ShowSsaPropertiesCommand)),
-            [!Visual.IsVisibleProperty] = new Binding(nameof(vm.IsFormatSsa))
+            stackPanelLeft.Children.Add(new Button
             {
-                Source = vm,
-            },
-        });
+                Content = MakeImage("AssaProperties"),
+                Command = vm.ShowSsaPropertiesCommand,
+                Background = Brushes.Transparent,
+                [AutomationProperties.NameProperty] = languageHints.SsaPropertiesHint,
+                [ToolTip.TipProperty] = UiUtil.MakeToolTip(languageHints.SsaPropertiesHint, shortcuts, nameof(vm.ShowSsaPropertiesCommand)),
+                [!Visual.IsVisibleProperty] = new Binding(nameof(vm.IsFormatSsa))
+                {
+                    Source = vm,
+                },
+            });
+        }
 
-        stackPanelLeft.Children.Add(new Button
+        if (appearance.ToolbarShowAttachments)
         {
-            Content = MakeImage("AssaAttachments"),
-            Command = vm.ShowSsaAttachmentsCommand,
-            Background = Brushes.Transparent,
-            [AutomationProperties.NameProperty] = languageHints.SsaAttachmentsHint,
-            [ToolTip.TipProperty] = UiUtil.MakeToolTip(languageHints.SsaAttachmentsHint, shortcuts, nameof(vm.ShowSsaAttachmentsCommand)),
-            [!Visual.IsVisibleProperty] = new Binding(nameof(vm.IsFormatSsa))
+            stackPanelLeft.Children.Add(new Button
             {
-                Source = vm,
-            },
-        });
+                Content = MakeImage("AssaAttachments"),
+                Command = vm.ShowSsaAttachmentsCommand,
+                Background = Brushes.Transparent,
+                [AutomationProperties.NameProperty] = languageHints.SsaAttachmentsHint,
+                [ToolTip.TipProperty] = UiUtil.MakeToolTip(languageHints.SsaAttachmentsHint, shortcuts, nameof(vm.ShowSsaAttachmentsCommand)),
+                [!Visual.IsVisibleProperty] = new Binding(nameof(vm.IsFormatSsa))
+                {
+                    Source = vm,
+                },
+            });
+        }
 
-        stackPanelLeft.Children.Add(new Button
+        if (appearance.ToolbarShowProperties)
         {
-            Content = MakeImage("AssaProperties"),
-            Command = vm.ShowAssaPropertiesCommand,
-            Background = Brushes.Transparent,
-            [AutomationProperties.NameProperty] = languageHints.AssaPropertiesHint,
-            [ToolTip.TipProperty] = UiUtil.MakeToolTip(languageHints.AssaPropertiesHint, shortcuts, nameof(vm.ShowAssaPropertiesCommand)),
-            [!Visual.IsVisibleProperty] = new Binding(nameof(vm.IsFormatAssa))
+            stackPanelLeft.Children.Add(new Button
             {
-                Source = vm,
-            },
-        });
+                Content = MakeImage("AssaProperties"),
+                Command = vm.ShowAssaPropertiesCommand,
+                Background = Brushes.Transparent,
+                [AutomationProperties.NameProperty] = languageHints.AssaPropertiesHint,
+                [ToolTip.TipProperty] = UiUtil.MakeToolTip(languageHints.AssaPropertiesHint, shortcuts, nameof(vm.ShowAssaPropertiesCommand)),
+                [!Visual.IsVisibleProperty] = new Binding(nameof(vm.IsFormatAssa))
+                {
+                    Source = vm,
+                },
+            });
+        }
 
-        stackPanelLeft.Children.Add(new Button
+        if (appearance.ToolbarShowAttachments)
         {
-            Content = MakeImage("AssaAttachments"),
-            Command = vm.ShowAssaAttachmentsCommand,
-            Background = Brushes.Transparent,
-            [AutomationProperties.NameProperty] = languageHints.AssaAttachmentsHint,
-            [ToolTip.TipProperty] = UiUtil.MakeToolTip(languageHints.AssaAttachmentsHint, shortcuts, nameof(vm.ShowAssaAttachmentsCommand)),
-            [!Visual.IsVisibleProperty] = new Binding(nameof(vm.IsFormatAssa))
+            stackPanelLeft.Children.Add(new Button
             {
-                Source = vm,
-            },
-        });
+                Content = MakeImage("AssaAttachments"),
+                Command = vm.ShowAssaAttachmentsCommand,
+                Background = Brushes.Transparent,
+                [AutomationProperties.NameProperty] = languageHints.AssaAttachmentsHint,
+                [ToolTip.TipProperty] = UiUtil.MakeToolTip(languageHints.AssaAttachmentsHint, shortcuts, nameof(vm.ShowAssaAttachmentsCommand)),
+                [!Visual.IsVisibleProperty] = new Binding(nameof(vm.IsFormatAssa))
+                {
+                    Source = vm,
+                },
+            });
+        }
 
-        stackPanelLeft.Children.Add(new Button
+        if (appearance.ToolbarShowAssaDraw)
         {
-            Content = MakeImage("AssaDraw"),
-            Command = vm.ShowAssaDrawCommand,
-            Background = Brushes.Transparent,
-            [AutomationProperties.NameProperty] = languageHints.AssaDrawHint,
-            [ToolTip.TipProperty] = UiUtil.MakeToolTip(languageHints.AssaDrawHint, shortcuts, nameof(vm.ShowAssaDrawCommand)),
-            [!Visual.IsVisibleProperty] = new Binding(nameof(vm.IsFormatAssa))
+            stackPanelLeft.Children.Add(new Button
             {
-                Source = vm,
-            },
-        });
+                Content = MakeImage("AssaDraw"),
+                Command = vm.ShowAssaDrawCommand,
+                Background = Brushes.Transparent,
+                [AutomationProperties.NameProperty] = languageHints.AssaDrawHint,
+                [ToolTip.TipProperty] = UiUtil.MakeToolTip(languageHints.AssaDrawHint, shortcuts, nameof(vm.ShowAssaDrawCommand)),
+                [!Visual.IsVisibleProperty] = new Binding(nameof(vm.IsFormatAssa))
+                {
+                    Source = vm,
+                },
+            });
+        }
 
         var stackPanelRight = new StackPanel
         {

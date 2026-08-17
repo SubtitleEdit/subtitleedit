@@ -10,7 +10,7 @@ public class RenumberWindow : Window
     public RenumberWindow(RenumberViewModel vm)
     {
         UiUtil.InitializeWindow(this, GetType().Name);
-        Title = Se.Language.Tools.Renumber.Title;
+        Title = UiUtil.MakeWindowTitle(Se.Language.Tools.Renumber.Title);
         CanResize = false;
         Width = 350;
         Height = 180;

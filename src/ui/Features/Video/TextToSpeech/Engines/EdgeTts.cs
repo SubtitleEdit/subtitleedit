@@ -22,6 +22,8 @@ public class EdgeTts : ITtsEngine
     public bool HasRegion => false;
     public bool HasModel => false;
     public bool HasKeyFile => false;
+    public bool SupportsVoiceCloning => false;
+    public bool SupportsPerLineVoiceCloning => false;
 
     private static string? _cachedExecutableFileName;
 

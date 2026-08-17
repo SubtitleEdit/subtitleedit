@@ -124,7 +124,7 @@ public partial class WaveformThemesViewModel : ObservableObject
         var vm = new PromptTextBoxViewModel();
         vm.Initialize("Save custom theme", $"Custom {_customThemeCount}", 200, 30, returnSubmits: true);
         var promptWindow = new PromptTextBoxWindow(vm);
-        await promptWindow.ShowDialog(Window);
+        await WindowService.ShowModalAsync(Window, promptWindow);
 
         if (!vm.OkPressed || string.IsNullOrWhiteSpace(vm.Text))
         {
@@ -308,8 +308,8 @@ public partial class WaveformThemesViewModel : ObservableObject
         SelectedColor = Color.FromArgb(150, 0, 120, 255),
         CursorColor = Colors.Cyan,
         ShotChangeColor = Colors.AntiqueWhite,
-        ParagraphBackgroundColor = Color.FromArgb(90, 70, 70, 70),
-        ParagraphSelectedBackgroundColor = Color.FromArgb(90, 70, 70, 120),
+        ParagraphBackgroundColor = Color.FromArgb(140, 70, 70, 70),
+        ParagraphSelectedBackgroundColor = Color.FromArgb(140, 70, 70, 120),
         ParagraphLeftColor = Color.FromArgb(90, 0, 255, 0),
         ParagraphRightColor = Color.FromArgb(90, 255, 0, 0),
         FancyHighColor = Colors.Orange,

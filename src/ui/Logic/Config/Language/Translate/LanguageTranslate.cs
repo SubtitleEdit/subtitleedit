@@ -15,6 +15,7 @@ public class LanguageTranslate
     public string DelayInSecondsBetweenRequests { get; set; }
     public string MaxBytesPerRequest { get; set; }
     public string PromptText { get; set; }
+    public string ResetPromptToDefault { get; set; }
     public string TranslateEachLineSeparately { get; set; }
     public string TranslationError { get; set; }
     public string TranslationFailedMessage { get; set; }
@@ -68,6 +69,7 @@ public class LanguageTranslate
         DelayInSecondsBetweenRequests = "Delay in seconds between requests";
         MaxBytesPerRequest = "Max bytes per request";
         PromptText = "Prompt text";
+        ResetPromptToDefault = "Reset prompt to default";
         TranslateEachLineSeparately = "Translate each line separately";
         TranslationError = "Translation error";
         TranslationFailedMessage = "{0} translation failed.";

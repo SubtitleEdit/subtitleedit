@@ -55,6 +55,7 @@ public class SeAppearance
     public bool ToolbarShowSaveAs { get; set; }
     public bool ToolbarShowFind { get; set; }
     public bool ToolbarShowReplace { get; set; }
+    public bool ToolbarShowMultipleReplace { get; set; }
     public bool ToolbarShowFixCommonErrors { get; set; }
     public bool ToolbarShowSpellCheck { get; set; }
     public bool ToolbarShowRemoveTextForHi { get; set; }
@@ -70,6 +71,12 @@ public class SeAppearance
     public bool ToolbarShowHelp { get; set; }
     public bool ToolbarShowEncoding { get; set; }
     public bool ToolbarShowFrameRate { get; set; }
+
+    // Format specific icons - only visible for ASSA/SSA/WebVTT
+    public bool ToolbarShowStyleManager { get; set; }
+    public bool ToolbarShowProperties { get; set; }
+    public bool ToolbarShowAttachments { get; set; }
+    public bool ToolbarShowAssaDraw { get; set; }
     public bool ShowPluginsMenu { get; set; }
     public bool RightToLeft { get; set; }
     public bool ShowLayer { get; set; }
@@ -131,6 +138,7 @@ public class SeAppearance
         ToolbarShowSaveAs = false;
         ToolbarShowFind = true;
         ToolbarShowReplace = true;
+        ToolbarShowMultipleReplace = false;
         ToolbarShowFixCommonErrors = false;
         ToolbarShowSpellCheck = true;
         ToolbarShowRemoveTextForHi = false;
@@ -145,6 +153,10 @@ public class SeAppearance
         ToolbarShowSourceView = false;
         ToolbarShowHelp = true;
         ToolbarShowEncoding = false;
+        ToolbarShowStyleManager = true;
+        ToolbarShowProperties = true;
+        ToolbarShowAttachments = true;
+        ToolbarShowAssaDraw = true;
         ShowPluginsMenu = false;
 
         TextBoxShowButtonAutoBreak = true;

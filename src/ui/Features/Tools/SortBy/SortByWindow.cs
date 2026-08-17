@@ -19,7 +19,7 @@ public class SortByWindow : Window
     public SortByWindow(SortByViewModel vm)
     {
         UiUtil.InitializeWindow(this, GetType().Name);
-        Title = Se.Language.Tools.SortBy.Title;
+        Title = UiUtil.MakeWindowTitle(Se.Language.Tools.SortBy.Title);
         CanResize = true;
         Width = 1200;
         Height = 800;

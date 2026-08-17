@@ -27,6 +27,25 @@ public class UndoRedoManagerTests
         }
     }
 
+    /// <summary>Starts "editing" while the snapshot is being taken - a drag that begins after the
+    /// tick already passed the IsUserEditing() gate (issue #13636).</summary>
+    private sealed class EditingStartsWhileSnapshottingClient : IUndoRedoClient
+    {
+        private bool _editing;
+
+        public int Hash { get; set; }
+        public SubtitleLineViewModel[] Subtitles { get; set; } = [];
+
+        public int GetFastHash() => Hash;
+        public bool IsUserEditing() => _editing;
+
+        public UndoRedoItem MakeUndoRedoObject(string description)
+        {
+            _editing = true;
+            return MakeItem(description, Hash, Subtitles);
+        }
+    }
+
     private sealed class BlockingHashClient : IUndoRedoClient
     {
         public ManualResetEventSlim HashEntered { get; } = new();
@@ -568,6 +587,25 @@ public class UndoRedoManagerTests
         manager.CheckForChanges(null);
 
         Assert.Equal(0, manager.UndoCount);
+    }
+
+    [Fact]
+    public void CheckForChanges_DoesNotAddEntry_WhenEditStartsDuringSnapshot_Issue13636()
+    {
+        // The gate is re-checked after the snapshot: a tick that passed the check just as a
+        // waveform drag began would otherwise record a state from a few frames into the drag
+        // (hashing and snapshotting both marshal to the busy UI thread), leaving an undo step
+        // in the middle of the drag.
+        var lines = new[] { MakeLine("hello") };
+        var client = new EditingStartsWhileSnapshottingClient { Hash = 2, Subtitles = lines };
+        var manager = new UndoRedoManager();
+        manager.SetupChangeDetection(client, TimeSpan.FromHours(1));
+        manager.StartChangeDetection();
+        manager.Do(MakeItem("initial", 1, [MakeLine("hello", 500)]));
+
+        manager.CheckForChanges(null);
+
+        Assert.Equal(1, manager.UndoCount);
     }
 
     [Fact]

@@ -41,6 +41,10 @@ public partial class OpenSecondarySubtitleViewModel : ObservableObject
     public VideoPlayerControl VideoPlayerControl { get; set; }
     public ComboBox ComboBoxParagraphs { get; set; }
 
+    // Stable per-dialog style name: regenerating it in every BuildAssaSubtitle call made the
+    // serialized preview text differ on every 500 ms tick, forcing a SubReload twice a second
+    // (the "flicker" in issue #13425).
+    private readonly string _styleName = "Style" + Guid.NewGuid().ToString().Replace("-", string.Empty);
     private Subtitle _secondarySubtitle = new Subtitle();
     private Subtitle _subtitle = new Subtitle();
     private SubtitleFormat _subtitleFormat = new SubRip();
@@ -280,7 +284,7 @@ public partial class OpenSecondarySubtitleViewModel : ObservableObject
     {
         var style = new SsaStyle
         {
-            Name = "Style" + Guid.NewGuid().ToString().Replace("-", string.Empty),
+            Name = _styleName,
             FontName = "Arial",
             FontSize = FontSize,
             Primary = SubtitleColor.ToSKColor(),
@@ -297,11 +301,6 @@ public partial class OpenSecondarySubtitleViewModel : ObservableObject
             ScaleX = 100,
             ScaleY = 100,
         };
-
-        if (!mergeWithSubtitle && _subtitleFormat.GetType() != typeof(AdvancedSubStationAlpha))
-        {
-            style.FontSize = Se.Settings.Video.MpvPreviewFontSize;
-        }
 
         style.Outline = new SkiaSharp.SKColor(style.Outline.Red, style.Outline.Green, style.Outline.Blue, SubtitleColor.A);
         style.Background = new SkiaSharp.SKColor(style.Background.Red, style.Background.Green, style.Background.Blue, SubtitleColor.A);
