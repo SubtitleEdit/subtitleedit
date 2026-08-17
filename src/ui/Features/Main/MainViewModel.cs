@@ -23733,6 +23733,13 @@ public partial class MainViewModel :
     };
 
     /// <summary>
+    /// Editing keys that never type a character, so holding Shift with them is a real chord rather
+    /// than "the same key, shifted" - unlike Shift+A, which is just an uppercase A. Bare Delete and
+    /// Back still edit the text box as usual; only the Shift variants reach shortcut dispatch.
+    /// </summary>
+    private static readonly HashSet<Key> NonTypingEditKeys = [Key.Delete, Key.Back];
+
+    /// <summary>
     /// Activates the main menu bar for keyboard navigation (Windows standard F10; bare Alt is handled
     /// by Avalonia's built-in AccessKeyHandler), remembering the control that had focus so it can be
     /// restored on deactivation. Returns false on platforms with a native menu (macOS), where the
@@ -24467,8 +24474,14 @@ public partial class MainViewModel :
                         }
                     }
 
-                    if (!Se.Settings.Tools.AllowSingleLetterShortcutsInTextbox && !AlwaysAllowedSingleKeyShortcuts.Contains(key) &&
-                        (keyEventArgs.KeyModifiers == KeyModifiers.None || keyEventArgs.KeyModifiers == KeyModifiers.Shift))
+                    // Shift counts as "no modifier" here because Shift+<letter> is just typing an
+                    // uppercase letter - but only for keys that actually type something. Shift with
+                    // an editing key is a real chord (Shift+Delete cut, Shift+Back forward delete),
+                    // and treating it as a bare key made those shipped TextBox shortcuts unreachable:
+                    // Shift+Delete fell through to Avalonia's plain delete instead of cutting (#13711).
+                    var isBareKeyChord = keyEventArgs.KeyModifiers == KeyModifiers.None ||
+                                         (keyEventArgs.KeyModifiers == KeyModifiers.Shift && !NonTypingEditKeys.Contains(key));
+                    if (!Se.Settings.Tools.AllowSingleLetterShortcutsInTextbox && !AlwaysAllowedSingleKeyShortcuts.Contains(key) && isBareKeyChord)
                     {
                         return; // allow single key shortcuts in text input if enabled in settings, or if it's not an allowed single key shortcut
                     }
