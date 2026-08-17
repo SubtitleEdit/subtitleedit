@@ -149,6 +149,10 @@ public partial class SpeechToTextViewModel : ObservableObject
     private string? _videoFileName;
     private string _audioFileName = string.Empty;
     private int _audioTrackNumber;
+
+    // The file _audioTrackNumber was picked from. A stream index only means anything in its own
+    // file, and batch mode reuses this view model for other videos - see GetFfmpegProcess.
+    private string? _audioTrackVideoFileName;
     private readonly List<string> _filesToDelete = new();
     private string? _sttTempFolder;
     private readonly ConcurrentQueue<string> _outputText = new();
@@ -4117,6 +4121,35 @@ public partial class SpeechToTextViewModel : ObservableObject
         return (decimal)(TimeCode.ParseToMilliseconds(timeCode) / 1000.0);
     }
 
+    /// <summary>
+    /// The "-map" argument for extracting <paramref name="inputFileName"/>'s audio, or an empty
+    /// string to leave the choice to ffmpeg's automatic stream selection.
+    /// </summary>
+    /// <remarks>
+    /// A stream index only addresses a stream in the file it was read from, so it is applied to
+    /// that file alone: batch mode reuses this view model for other videos, and "transcribe
+    /// selected lines" feeds it already-demuxed "se_audioclip_*.wav" clips.
+    ///
+    /// The trailing "?" (#13621, same fix as in WaveFileExtractor for #10835) only covers stream N
+    /// being *missing* - it does nothing when N exists but is the wrong kind. A file whose audio is
+    /// stream 0 and video stream 1 (ffmpeg lists streams in container order, and plenty of muxers
+    /// put audio first) got "-map 0:1" pointing at its video, which -vn then dropped: "Output file
+    /// does not contain any stream", ffmpeg exit -22, and the run aborted with "Generated audio
+    /// file not found" (#13781). Without a map, ffmpeg picks the best audio stream by itself,
+    /// which is what these inputs want anyway.
+    /// </remarks>
+    internal static string BuildAudioMapParameter(string inputFileName, int audioTrackNumber, string? audioTrackVideoFileName)
+    {
+        if (audioTrackNumber < 0 ||
+            string.IsNullOrEmpty(audioTrackVideoFileName) ||
+            !string.Equals(inputFileName, audioTrackVideoFileName, StringComparison.OrdinalIgnoreCase))
+        {
+            return string.Empty;
+        }
+
+        return $"-map 0:{audioTrackNumber}?";
+    }
+
     private Process? GetFfmpegProcess(string videoFileName, int audioTrackNumber, string outAudioFile, string audioFormat = "wav")
     {
         if (!File.Exists(Se.Settings.General.FfmpegPath) && Configuration.IsRunningOnWindows)
@@ -4124,18 +4157,7 @@ public partial class SpeechToTextViewModel : ObservableObject
             return null;
         }
 
-        // The trailing "?" makes the stream map optional (#13621, same fix as in
-        // WaveFileExtractor for #10835). The track index belongs to the video the user
-        // picked it from, but this method also runs on inputs that never had it: the
-        // already-demuxed "se_audioclip_*.wav" clips from "transcribe selected lines",
-        // and any unrelated file added in batch mode. Without the "?", "-map 0:1" on a
-        // single-stream wav aborts ffmpeg ("Stream map '0:1' matches no streams"); with
-        // it, ffmpeg falls back to automatic stream selection and picks the audio.
-        var audioParameter = string.Empty;
-        if (audioTrackNumber >= 0)
-        {
-            audioParameter = $"-map 0:{audioTrackNumber}?";
-        }
+        var audioParameter = BuildAudioMapParameter(videoFileName, audioTrackNumber, _audioTrackVideoFileName);
 
         var fFmpegAudioTranscodeSettings = GetFfmpegTranscodeFormatString(audioFormat, _useCenterChannelOnly);
 
@@ -4715,6 +4737,7 @@ public partial class SpeechToTextViewModel : ObservableObject
     {
         _videoFileName = videoFileName;
         _audioTrackNumber = audioTrackNumber;
+        _audioTrackVideoFileName = videoFileName;
         TrySelectEngineChoice(preferredEngineChoice);
         if (string.IsNullOrEmpty(_videoFileName) || !File.Exists(_videoFileName))
         {
@@ -4733,6 +4756,10 @@ public partial class SpeechToTextViewModel : ObservableObject
     internal void InitializeBatch(List<AudioClip> audioClips, int audioTrackNumber, bool autoStart, string? language)
     {
         _audioTrackNumber = audioTrackNumber;
+
+        // The clips are already-demuxed single-stream wavs, so the video's stream index does not
+        // address anything in them - leave the owning file unset and let ffmpeg pick the audio.
+        _audioTrackVideoFileName = null;
         IsBatchMode = true;
         _audioClips = audioClips;
         _audioClipsAutoStart = autoStart;
