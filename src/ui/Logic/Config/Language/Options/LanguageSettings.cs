@@ -161,6 +161,10 @@ public class LanguageSettings
     public string ShowToolbarHelp { get; set; }
     public string ShowToolbarEncoding { get; set; }
     public string ShowToolbarFrameRate { get; set; }
+    public string ShowToolbarStyleManager { get; set; }
+    public string ShowToolbarProperties { get; set; }
+    public string ShowToolbarAttachments { get; set; }
+    public string ShowToolbarAssaDraw { get; set; }
     public string ShowPluginsMenu { get; set; }
 
     // Network
@@ -480,6 +484,10 @@ public class LanguageSettings
         ShowToolbarHelp = "Show help icon";
         ShowToolbarEncoding = "Show encoding";
         ShowToolbarFrameRate = "Show frame rate";
+        ShowToolbarStyleManager = "Show style manager icon (ASSA/SSA/WebVTT)";
+        ShowToolbarProperties = "Show properties icon (ASSA/SSA)";
+        ShowToolbarAttachments = "Show attachments icon (ASSA/SSA)";
+        ShowToolbarAssaDraw = "Show ASSA draw icon (ASSA)";
         ShowPluginsMenu = "Show Plugins menu";
 
         // Network
