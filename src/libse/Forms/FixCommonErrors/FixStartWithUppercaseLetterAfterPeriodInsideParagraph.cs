@@ -71,11 +71,9 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                             }
                         }
 
-                        start += 3;
-                        if (start < text.Length)
-                        {
-                            start = text.IndexOfAny(ExpectedChars, start);
-                        }
+                        // Search on from the next character - skipping further would hop over a
+                        // sentence end sitting close behind, e.g. the second period of "2.1. we".
+                        start = text.IndexOfAny(ExpectedChars, start + 1);
                     }
                     text = st.CombineWithPrePost(text);
                     if (oldText != text)

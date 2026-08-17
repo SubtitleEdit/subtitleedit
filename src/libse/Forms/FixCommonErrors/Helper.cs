@@ -53,10 +53,12 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
         /// </summary>
         private static bool IsInnerPeriodAbbreviation(string text, int index)
         {
-            // The letters directly before the period at index ("UU" of "EE.UU.").
+            // The letters directly before the period at index ("UU" of "EE.UU."). Letters only:
+            // digit groups would make a decimal or clock time ("3.50.", "8.30.") pass as an
+            // abbreviation and swallow a genuine sentence end.
             var lastGroupEnd = index - 1;
             var i = lastGroupEnd;
-            while (i >= 0 && char.IsLetterOrDigit(text[i]))
+            while (i >= 0 && char.IsLetter(text[i]))
             {
                 i--;
             }
@@ -70,7 +72,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
             // ...and the letters before that inner period ("EE").
             var firstGroupEnd = i - 1;
             i = firstGroupEnd;
-            while (i >= 0 && char.IsLetterOrDigit(text[i]))
+            while (i >= 0 && char.IsLetter(text[i]))
             {
                 i--;
             }
