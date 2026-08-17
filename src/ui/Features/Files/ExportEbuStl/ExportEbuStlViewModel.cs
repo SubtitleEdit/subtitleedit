@@ -287,6 +287,8 @@ new("2F", "French - hearing impaired (VF-MAL)"),
             SelectedTopAlignment = 0;
             SelectedBottomAlignment = 2;
             SelectedRowsAddByNewLine = 2;
+            UseBox = Configuration.Settings.SubtitleSettings.EbuStlTeletextUseBox;
+UseDoubleHeight = Configuration.Settings.SubtitleSettings.EbuStlTeletextUseDoubleHeight;
 
             if (!string.IsNullOrEmpty(_subtitle.Header) &&
     _subtitle.Header.Length == 1024 &&
