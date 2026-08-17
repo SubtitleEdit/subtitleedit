@@ -3565,11 +3565,14 @@ public partial class SpeechToTextViewModel : ObservableObject
     }
 
     /// <summary>
-    /// True if the source file itself can go to the engine. Neither engine can pick an audio track,
-    /// so a track other than the first one is the one thing only the extracted WAV can express -
-    /// handing over the source file there would silently transcribe the wrong track. SE 4 made the
-    /// same call, though its track number was audio-relative and 0 meant "unspecified", while
-    /// SE 5 stores the global ffmpeg stream index of an always-auto-selected track.
+    /// True if the source file itself can go to the engine, which is only safe when there is
+    /// exactly one audio track: with several, the engines read the FIRST audio stream (Purfview
+    /// XXL's --ff_track defaults to 1, CTranslate2's PyAV decode is hardcoded to the first and has
+    /// no selector) - not the container's default track that mpv plays and the waveform shows, and
+    /// not a track the user picked. The extracted WAV expresses both: the picked track via -map on
+    /// the video it was picked from, and otherwise ffmpeg's automatic selection, which honors the
+    /// default-track flag like mpv does (verified both ways on a two-track file). SE 4 drew the
+    /// same line at "anything but the default first track goes through the WAV".
     /// </summary>
     private bool CanSendSourceFileToEngine(string videoFileName)
     {
@@ -3578,18 +3581,12 @@ public partial class SpeechToTextViewModel : ObservableObject
             return false;
         }
 
-        if (_audioTrackNumber < 0)
-        {
-            return true; // no track picked - the engine takes the first audio track, the same one the WAV extraction maps
-        }
-
         try
         {
-            var audioTracks = FfmpegMediaInfo.Parse(videoFileName).Tracks
-                .Where(t => t.TrackType == FfmpegTrackType.Audio)
-                .ToList();
+            var audioTrackCount = FfmpegMediaInfo.Parse(videoFileName).Tracks
+                .Count(t => t.TrackType == FfmpegTrackType.Audio);
 
-            return audioTracks.Count > 0 && audioTracks[0].StreamIndex == _audioTrackNumber;
+            return audioTrackCount == 1;
         }
         catch (Exception exception)
         {
@@ -4122,8 +4119,8 @@ public partial class SpeechToTextViewModel : ObservableObject
     }
 
     /// <summary>
-    /// The "-map" argument for extracting <paramref name="inputFileName"/>'s audio: the picked
-    /// stream for the file it was picked from, the first audio track for everything else.
+    /// The "-map" argument for extracting <paramref name="inputFileName"/>'s audio, or an empty
+    /// string to leave the choice to ffmpeg's automatic stream selection.
     /// </summary>
     /// <remarks>
     /// A stream index only addresses a stream in the file it was read from, so it is applied to
@@ -4137,15 +4134,12 @@ public partial class SpeechToTextViewModel : ObservableObject
     /// does not contain any stream", ffmpeg exit -22, and the run aborted with "Generated audio
     /// file not found" (#13781).
     ///
-    /// Every other input gets the audio-relative "-map 0:a:0?", which is valid for any stream
-    /// layout. Leaving the choice to ffmpeg's automatic selection is not the same thing: it
-    /// prefers the stream with the default disposition (verified on the bundled ffmpeg 7.1.1 -
-    /// a default-flagged stereo track beats a non-flagged 5.1), while the engines that decode
-    /// the source file themselves take the first audio track in container order - Purfview XXL
-    /// per its author (whisper-standalone-win #185), whisper-ctranslate2 via faster-whisper's
-    /// hardcoded "container.decode(audio=0)". On a file whose default-flagged track is not the
-    /// first, the same batch would transcribe different tracks depending on the engine; mapping
-    /// the first audio track keeps every path on the same one.
+    /// Do not "fix" the no-map fallback to "-map 0:a:0?" (tried in #13787, reverted): ffmpeg's
+    /// automatic selection prefers the stream with the default disposition (verified on the
+    /// bundled ffmpeg 7.1.1 - a default-flagged stereo track beats a non-flagged 5.1), and that
+    /// is the wanted behavior. It is the same track a fresh mpv plays and the main window follows
+    /// on open (#13233 - the first track can be commentary or audio description), while the first
+    /// track in container order is only mpv's last-resort fallback.
     /// </remarks>
     internal static string BuildAudioMapParameter(string inputFileName, int audioTrackNumber, string? audioTrackVideoFileName)
     {
@@ -4153,7 +4147,7 @@ public partial class SpeechToTextViewModel : ObservableObject
             string.IsNullOrEmpty(audioTrackVideoFileName) ||
             !string.Equals(inputFileName, audioTrackVideoFileName, StringComparison.OrdinalIgnoreCase))
         {
-            return "-map 0:a:0?";
+            return string.Empty;
         }
 
         return $"-map 0:{audioTrackNumber}?";
