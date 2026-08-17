@@ -212,23 +212,33 @@ public class CrispAsrTtsLanguagesTests
     }
 
     [Fact]
-    public void ResolveSourceLanguageArg_ExplicitPickWinsOverDetection()
+    public void ResolveSourceLanguageArg_TranscriptDetectionOutranksThePick()
     {
+        // The transcript is the text actually spoken in THIS reference (per-line
+        // clone-from-video makes one per clip), so it beats a stale global pick; the pick
+        // covers the transcripts the detector declines on.
         using var _ = new SavedReferenceLanguageScope("fr");
 
-        Assert.Equal("fr", CosyVoice3Languages.ResolveSourceLanguageArg(
+        Assert.Equal("en", CosyVoice3Languages.ResolveSourceLanguageArg(
             "The quick brown fox is not what it seems, and there is nothing we can do about it."));
+        Assert.Equal("fr", CosyVoice3Languages.ResolveSourceLanguageArg(
+            "Jeg har ikke læst bogen, men jeg er ligeglad med hvad du mener om den."));
+        Assert.Equal("fr", CosyVoice3Languages.ResolveSourceLanguageArg(null));
     }
 
     [Fact]
-    public void Chatterbox_ResolveSourceLanguageArg_ExplicitPickWinsOverDetection()
+    public void Chatterbox_ResolveSourceLanguageArg_TranscriptDetectionOutranksThePick()
     {
-        // Chatterbox clones from the WAV alone and never asks for a transcript, so the settings
-        // pick is the path most users take - it has to beat whatever a stray sidecar says.
+        // Per-line clone-from-video writes a sidecar with the line spoken in each clip - that
+        // per-reference evidence beats the global pick, which describes the user's own imported
+        // reference; the pick covers references without a (detectable) sidecar.
         using var _ = new ChatterboxReferenceLanguageScope("fr");
 
-        Assert.Equal("fr", ChatterboxLanguages.ResolveSourceLanguageArg(
+        Assert.Equal("en", ChatterboxLanguages.ResolveSourceLanguageArg(
             "The quick brown fox is not what it seems, and there is nothing we can do about it."));
+        Assert.Equal("fr", ChatterboxLanguages.ResolveSourceLanguageArg(
+            "Nečetl jsem tu knihu, ale je mi jedno, co si o tom myslíš ty."));
+        Assert.Equal("fr", ChatterboxLanguages.ResolveSourceLanguageArg(null));
     }
 
     [Fact]
