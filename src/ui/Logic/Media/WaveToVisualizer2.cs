@@ -24,6 +24,11 @@ public class WaveHeader2
     public const int AudioFormatIeeeFloat = 3;
     private const int AudioFormatExtensible = 0xFFFE;
 
+    // Bytes 2-15 of a SubFormat GUID on the KSDATAFORMAT base
+    // (xxxxxxxx-0000-0010-8000-00AA00389B71), whose first two bytes are the wrapped format tag.
+    private static readonly byte[] KsDataFormatBaseGuidTail =
+        { 0x00, 0x00, 0x00, 0x00, 0x10, 0x00, 0x80, 0x00, 0x00, 0xAA, 0x00, 0x38, 0x9B, 0x71 };
+
     public string ChunkId { get; private set; }
     public uint ChunkSize { get; private set; }
     public string Format { get; private set; }
@@ -38,6 +43,13 @@ public class WaveHeader2
     /// 0xFFFE = WAVE_FORMAT_EXTENSIBLE, Determined by SubFormat
     /// </summary>
     public int AudioFormat { get; private set; }
+
+    /// <summary>
+    /// True when the file's format tag was WAVE_FORMAT_EXTENSIBLE and <see cref="AudioFormat"/>
+    /// holds the unwrapped SubFormat tag. Consumers that hand the file to an external tool with
+    /// a stricter WAV reader can use this to normalize the file first.
+    /// </summary>
+    public bool IsExtensibleFormat { get; private set; }
 
     public int NumberOfChannels { get; private set; }
 
@@ -105,10 +117,13 @@ public class WaveHeader2
         // bytes hold it. ffmpeg writes this form for more than two channels and for 24-bit, so
         // without unwrapping it a perfectly ordinary 24-bit or 5.1 wav looks unreadable.
         // Layout after wBitsPerSample: cbSize (16), wValidBitsPerSample (18), dwChannelMask (20),
-        // SubFormat GUID (24).
-        if (AudioFormat == AudioFormatExtensible && fmtBuffer.Length >= 26)
+        // SubFormat GUID (24). Only a GUID on the KSDATAFORMAT base is a wrapped format tag - a
+        // vendor GUID that merely starts with 0x0001 must not be misread as PCM.
+        if (AudioFormat == AudioFormatExtensible && fmtBuffer.Length >= 40 &&
+            fmtBuffer.Slice(26, 14).SequenceEqual(KsDataFormatBaseGuidTail))
         {
             AudioFormat = BitConverter.ToUInt16(fmtBuffer.Slice(24));
+            IsExtensibleFormat = true;
         }
 
         // Read data chunk header
