@@ -499,7 +499,9 @@ public class FfmpegGenerator
             StartInfo =
             {
                 FileName = GetFfmpegLocation(),
-                Arguments = $"-i \"{videoFileName}\" -vf \"select=1\" -vsync vfr \"{outputFileName}\"",
+                // "-vsync vfr" was dropped: ffmpeg 9 removed -vsync and aborts before decoding
+                // anything, and "select=1" already passes every frame through unchanged.
+                Arguments = $"-i \"{videoFileName}\" -vf \"select=1\" \"{outputFileName}\"",
                 UseShellExecute = false,
                 CreateNoWindow = true
             }

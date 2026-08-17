@@ -438,6 +438,46 @@ public class Se
     }
 
     /// <summary>
+    /// Drops "-vsync vfr" from a settings file written before ffmpeg 9. ffmpeg 9 removed the
+    /// long-deprecated -vsync option, so it aborts with "Unrecognized option 'vsync'" and shot
+    /// change detection silently finds nothing. The option was a no-op for this command line
+    /// (the output goes to "-f null -"), so removing it changes nothing on older ffmpeg builds.
+    /// A user who has edited the arguments in any other way keeps their own version.
+    /// </summary>
+    internal static void MigrateShotChangesFfmpegArguments(SeVideo video)
+    {
+        var arguments = video.ShowChangesFFmpegArguments;
+        if (string.IsNullOrEmpty(arguments))
+        {
+            return;
+        }
+
+        const string option = "-vsync ";
+        var index = arguments.IndexOf(option, StringComparison.Ordinal);
+        if (index < 0)
+        {
+            return;
+        }
+
+        while (index >= 0)
+        {
+            // -vsync takes a value ("vfr", "0", ...); drop that too, plus the space in front of
+            // the option so the remaining arguments stay separated by single spaces.
+            var end = arguments.IndexOf(' ', index + option.Length);
+            if (end < 0)
+            {
+                end = arguments.Length;
+            }
+
+            var start = index > 0 && arguments[index - 1] == ' ' ? index - 1 : index;
+            arguments = arguments.Remove(start, end - start);
+            index = arguments.IndexOf(option, StringComparison.Ordinal);
+        }
+
+        video.ShowChangesFFmpegArguments = arguments.Trim();
+    }
+
+    /// <summary>
     /// Loads the UI translation named in <see cref="Settings"/>.General.Language into the global
     /// <see cref="Language"/>. Must run before the main window is built: on macOS the native menu
     /// bar is constructed at startup and reads <see cref="Language"/> directly, so the translation
@@ -580,6 +620,8 @@ public class Se
         {
             Settings.Video = new();
         }
+
+        MigrateShotChangesFfmpegArguments(Settings.Video);
 
         if (Settings.Waveform == null)
         {
