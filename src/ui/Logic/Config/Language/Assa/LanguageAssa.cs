@@ -69,6 +69,7 @@ public class LanguageAssa
     public string TrimFontsPromptX { get; set; }
     public string TrimFontsNoFontsToTrim { get; set; }
     public string TrimFontsXFontsTrimmedSavedYZ { get; set; }
+    public string TrimFontsTotalSavingX { get; set; }
     public string TrimFontsReasonNotTrueType { get; set; }
     public string TrimFontsReasonFontCollection { get; set; }
     public string TrimFontsReasonCouldNotParse { get; set; }
@@ -307,6 +308,7 @@ public class LanguageAssa
         TrimFontsPromptX = "Trim {0} embedded font(s) to only the characters currently used?\n\nText added to the subtitle later may show missing characters, so trim as a final step.";
         TrimFontsNoFontsToTrim = "No embedded fonts to trim.";
         TrimFontsXFontsTrimmedSavedYZ = "{0} font(s) trimmed, saving {1}.\n\n{2}";
+        TrimFontsTotalSavingX = "Total saving: {0}";
         TrimFontsReasonNotTrueType = "only TrueType fonts can be trimmed";
         TrimFontsReasonFontCollection = "font collections are not supported";
         TrimFontsReasonCouldNotParse = "the font could not be read";
