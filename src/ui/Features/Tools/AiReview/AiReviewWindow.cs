@@ -443,6 +443,7 @@ public class AiReviewWindow : Window
                 buttonPlay.WithMarginRight(10),
                 summaryText.WithMarginRight(10),
                 UiUtil.MakeButton(Se.Language.General.SelectAll, vm.SelectAllCommand),
+                UiUtil.MakeButton(Se.Language.General.SelectNone, vm.SelectNoneCommand),
                 UiUtil.MakeButton(Se.Language.General.InvertSelection, vm.InvertSelectionCommand),
             },
         };
