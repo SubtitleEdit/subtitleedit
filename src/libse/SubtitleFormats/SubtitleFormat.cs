@@ -563,29 +563,6 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         public bool BatchMode { get; set; }
         public double? BatchSourceFrameRate { get; set; }
 
-        /// <summary>
-        /// Trims leading/trailing whitespace inside the builder - the "sb.ToString().Trim()"
-        /// idiom in ToText implementations allocates the whole output an extra time.
-        /// </summary>
-        protected static void TrimBuilder(StringBuilder sb)
-        {
-            while (sb.Length > 0 && char.IsWhiteSpace(sb[sb.Length - 1]))
-            {
-                sb.Length--;
-            }
-
-            var start = 0;
-            while (start < sb.Length && char.IsWhiteSpace(sb[start]))
-            {
-                start++;
-            }
-
-            if (start > 0)
-            {
-                sb.Remove(0, start);
-            }
-        }
-
         public static string ToUtf8XmlString(XmlDocument xml, bool omitXmlDeclaration = false)
         {
             var settings = new XmlWriterSettings

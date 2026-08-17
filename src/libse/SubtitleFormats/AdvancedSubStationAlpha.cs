@@ -323,7 +323,7 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text"
 
             // Trim inside the builder instead of "sb.ToString().Trim() + newline", which
             // allocated the whole multi-megabyte output twice more.
-            TrimBuilder(sb);
+            sb.Trim();
             return sb.Append(Environment.NewLine).ToString();
         }
 
@@ -340,13 +340,13 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text"
                 fragment = 0;
             }
 
-            AppendNumber(sb, ts.Days * 24 + ts.Hours, 1);
+            sb.AppendNumber(ts.Days * 24 + ts.Hours, 1);
             sb.Append(':');
-            AppendNumber(sb, ts.Minutes, 2);
+            sb.AppendNumber(ts.Minutes, 2);
             sb.Append(':');
-            AppendNumber(sb, ts.Seconds, 2);
+            sb.AppendNumber(ts.Seconds, 2);
             sb.Append('.');
-            AppendNumber(sb, fragment, 2);
+            sb.AppendNumber(fragment, 2);
             return sb;
         }
 
@@ -366,24 +366,6 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text"
             }
 
             sb.Append(span);
-        }
-
-        // Matches "{0:00}"-style formatting: sign first, then the absolute value padded with
-        // leading zeros to minDigits.
-        private static void AppendNumber(StringBuilder sb, int value, int minDigits)
-        {
-            if (value < 0)
-            {
-                sb.Append('-');
-                value = -value;
-            }
-
-            if (minDigits >= 2 && value < 10)
-            {
-                sb.Append('0');
-            }
-
-            sb.Append(value);
         }
 
         public static string GetHeaderAndStylesFromSubStationAlpha(string header)
