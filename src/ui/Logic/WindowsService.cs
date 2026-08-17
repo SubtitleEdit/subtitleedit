@@ -243,6 +243,7 @@ namespace Nikse.SubtitleEdit.Logic
             // on the dialog, not just top-of-z-order drawing (#13325/#13405).
             using var undockedSuspension = SuspendUndockedTopmost();
             var foregroundEnforcement = EnforceModalForegroundWhileOpen(dialog, owner);
+            var minimizeMirror = MirrorMinimizeWithOwner(dialog, owner);
 
             _openModalCount++;
             try
@@ -253,6 +254,7 @@ namespace Nikse.SubtitleEdit.Logic
             finally
             {
                 _openModalCount--;
+                minimizeMirror.Dispose();
                 foregroundEnforcement.Dispose();
             }
         }
@@ -442,7 +444,10 @@ namespace Nikse.SubtitleEdit.Logic
 
             void BounceToDialog()
             {
-                if (!disposed && owner.IsActive && !dialog.IsActive && !dialog.IsClosing())
+                // The minimized check: while the dialog (and via MirrorMinimizeWithOwner the
+                // whole pair) is minimized, activation churn must not pop it back up (#13788).
+                if (!disposed && owner.IsActive && !dialog.IsActive && !dialog.IsClosing() &&
+                    dialog.WindowState != WindowState.Minimized)
                 {
                     dialog.Activate();
                 }
@@ -461,7 +466,8 @@ namespace Nikse.SubtitleEdit.Logic
                 // user is in another application), Activate() still requests attention there.
                 Dispatcher.UIThread.Post(() =>
                 {
-                    if (!disposed && dialog.IsVisible && !dialog.IsActive)
+                    if (!disposed && dialog.IsVisible && !dialog.IsActive &&
+                        dialog.WindowState != WindowState.Minimized)
                     {
                         dialog.Activate();
                     }
@@ -537,6 +543,131 @@ namespace Nikse.SubtitleEdit.Logic
                 owner.RemoveHandler(InputElement.KeyUpEvent, OnOwnerKeyInput);
                 owner.RemoveHandler(InputElement.TextInputEvent, OnOwnerKeyInput);
             });
+        }
+
+        /// <summary>
+        /// Minimizes and restores <paramref name="owner"/> together with <paramref name="dialog"/>
+        /// (and vice versa) for as long as the dialog is open.
+        ///
+        /// A modal's owner is input-disabled, so its own caption buttons are dead - on Windows the
+        /// user can minimize e.g. the batch convert dialog from its taskbar button, and the main
+        /// window then stays on screen, unminimizable, blocking the desktop (#13788). While a
+        /// modal is open the owner is unusable on its own, so minimizing either window means "get
+        /// SubtitleEdit out of my way": the whole pair steps aside, and restoring either brings
+        /// both back. Nested modals cascade naturally - the outer frame's dialog is the inner
+        /// frame's owner. The undocked tool windows are independent (never in the owner chain)
+        /// and deliberately not part of the mirror.
+        /// </summary>
+        private static IDisposable MirrorMinimizeWithOwner(Window dialog, Window owner)
+        {
+            // Guards this frame's own writes: setting one window's state fires its PropertyChanged
+            // synchronously, which must not bounce back as a user action. Other frames of a nested
+            // chain have their own flag and do react - that is what makes the cascade work.
+            var syncing = false;
+
+            // Restore targets. A window is never restored to Minimized; if a state was somehow
+            // captured as such, fall back to Normal.
+            var ownerRestoreState = NonMinimized(owner.WindowState);
+            var dialogRestoreState = NonMinimized(dialog.WindowState);
+
+            // True while the owner's minimize came from this mirror (the user minimized the
+            // dialog) rather than from the user minimizing the owner itself. Decides whether
+            // closing the dialog while minimized should bring the owner back.
+            var ownerMinimizedByMirror = false;
+
+            void OnDialogStateChanged(object? sender, AvaloniaPropertyChangedEventArgs e)
+            {
+                if (e.Property != Window.WindowStateProperty || syncing)
+                {
+                    return;
+                }
+
+                syncing = true;
+                try
+                {
+                    if (dialog.WindowState == WindowState.Minimized)
+                    {
+                        if (owner.WindowState != WindowState.Minimized)
+                        {
+                            ownerRestoreState = owner.WindowState;
+                            owner.WindowState = WindowState.Minimized;
+                            ownerMinimizedByMirror = true;
+                        }
+                    }
+                    else
+                    {
+                        dialogRestoreState = dialog.WindowState;
+                        if (owner.WindowState == WindowState.Minimized)
+                        {
+                            owner.WindowState = ownerRestoreState;
+                        }
+
+                        ownerMinimizedByMirror = false;
+                    }
+                }
+                finally
+                {
+                    syncing = false;
+                }
+            }
+
+            void OnOwnerStateChanged(object? sender, AvaloniaPropertyChangedEventArgs e)
+            {
+                if (e.Property != Window.WindowStateProperty || syncing)
+                {
+                    return;
+                }
+
+                syncing = true;
+                try
+                {
+                    if (owner.WindowState == WindowState.Minimized)
+                    {
+                        if (dialog.WindowState != WindowState.Minimized)
+                        {
+                            dialogRestoreState = dialog.WindowState;
+                            dialog.WindowState = WindowState.Minimized;
+                        }
+                    }
+                    else
+                    {
+                        ownerRestoreState = owner.WindowState;
+                        ownerMinimizedByMirror = false;
+                        if (dialog.WindowState == WindowState.Minimized)
+                        {
+                            dialog.WindowState = dialogRestoreState;
+                        }
+                    }
+                }
+                finally
+                {
+                    syncing = false;
+                }
+            }
+
+            dialog.PropertyChanged += OnDialogStateChanged;
+            owner.PropertyChanged += OnOwnerStateChanged;
+
+            return new ActionDisposable(() =>
+            {
+                dialog.PropertyChanged -= OnDialogStateChanged;
+                owner.PropertyChanged -= OnOwnerStateChanged;
+
+                // The dialog closing while the pair is minimized takes its taskbar button with it;
+                // bring the owner back when this mirror minimized it, so the app does not end up
+                // as a minimized main window the user never asked for (and whose -32000 minimized
+                // position would otherwise be persisted on exit). When the user minimized the
+                // owner itself, their choice is left alone.
+                if (ownerMinimizedByMirror && owner.WindowState == WindowState.Minimized)
+                {
+                    owner.WindowState = ownerRestoreState;
+                }
+            });
+        }
+
+        private static WindowState NonMinimized(WindowState state)
+        {
+            return state == WindowState.Minimized ? WindowState.Normal : state;
         }
 
         // The open modals in open order - the last entry is the top-most dialog, the only window
