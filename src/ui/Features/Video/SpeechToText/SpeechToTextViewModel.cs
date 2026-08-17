@@ -3565,11 +3565,14 @@ public partial class SpeechToTextViewModel : ObservableObject
     }
 
     /// <summary>
-    /// True if the source file itself can go to the engine. Neither engine can pick an audio track,
-    /// so a track other than the first one is the one thing only the extracted WAV can express -
-    /// handing over the source file there would silently transcribe the wrong track. SE 4 made the
-    /// same call, though its track number was audio-relative and 0 meant "unspecified", while
-    /// SE 5 stores the global ffmpeg stream index of an always-auto-selected track.
+    /// True if the source file itself can go to the engine, which is only safe when there is
+    /// exactly one audio track: with several, the engines read the FIRST audio stream (Purfview
+    /// XXL's --ff_track defaults to 1, CTranslate2's PyAV decode is hardcoded to the first and has
+    /// no selector) - not the container's default track that mpv plays and the waveform shows, and
+    /// not a track the user picked. The extracted WAV expresses both: the picked track via -map on
+    /// the video it was picked from, and otherwise ffmpeg's automatic selection, which honors the
+    /// default-track flag like mpv does (verified both ways on a two-track file). SE 4 drew the
+    /// same line at "anything but the default first track goes through the WAV".
     /// </summary>
     private bool CanSendSourceFileToEngine(string videoFileName)
     {
@@ -3578,18 +3581,12 @@ public partial class SpeechToTextViewModel : ObservableObject
             return false;
         }
 
-        if (_audioTrackNumber < 0)
-        {
-            return true; // no track picked - the engine falls back to the first one, exactly like ffmpeg would
-        }
-
         try
         {
-            var audioTracks = FfmpegMediaInfo.Parse(videoFileName).Tracks
-                .Where(t => t.TrackType == FfmpegTrackType.Audio)
-                .ToList();
+            var audioTrackCount = FfmpegMediaInfo.Parse(videoFileName).Tracks
+                .Count(t => t.TrackType == FfmpegTrackType.Audio);
 
-            return audioTracks.Count > 0 && audioTracks[0].StreamIndex == _audioTrackNumber;
+            return audioTrackCount == 1;
         }
         catch (Exception exception)
         {

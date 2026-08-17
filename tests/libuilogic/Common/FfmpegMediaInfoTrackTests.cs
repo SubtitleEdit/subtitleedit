@@ -75,4 +75,22 @@ Input #0, matroska,webm, from 'movie.mkv':
         Assert.False(info.HasFrontCenterAudio(0));
         Assert.False(info.HasFrontCenterAudio(-1));
     }
+
+    // Audio-only containers (.mka, .m4a) can carry several audio tracks too - the speech-to-text
+    // "send the source file to the engine" gate counts audio tracks to spot them, since the
+    // direct-reading engines only ever see the first track.
+    [Fact]
+    public void ParseLog_CountsAudioTracksInAudioOnlyContainer()
+    {
+        var info = FfmpegMediaInfo.ParseLog(@"
+Input #0, matroska,webm, from 'audiobook.mka':
+  Duration: 00:01:00.00, start: 0.000000, bitrate: 256 kb/s
+    Stream #0:0(eng): Audio: aac (LC), 48000 Hz, stereo, fltp, 128 kb/s
+    Stream #0:1(spa): Audio: aac (LC), 48000 Hz, stereo, fltp, 128 kb/s
+");
+        var audio = info.Tracks.Where(t => t.TrackType == FfmpegTrackType.Audio).ToList();
+        Assert.Equal(2, audio.Count);
+        Assert.Equal(0, audio[0].StreamIndex);
+        Assert.Equal(1, audio[1].StreamIndex);
+    }
 }
