@@ -19,7 +19,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                 return false;
             }
 
-            if (index - 3 > 0 && char.IsLetterOrDigit(text[index - 1]) && text[index - 2] == '.') // e.g: O.R.
+            if (IsInnerPeriodAbbreviation(text, index)) // e.g: O.R., a.m., EE.UU.
             {
                 return true;
             }
@@ -36,6 +36,54 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
             }
 
             return callbacks.GetAbbreviations().Contains(word + ".");
+        }
+
+        /// <summary>How many letters an inner-period abbreviation may have between two periods.</summary>
+        /// <remarks>
+        /// Two covers the doubled-letter plurals ("EE.UU.", "AA.VV."); three is room for the rare
+        /// longer group without letting a real sentence end ("Vino a casa. Ya.") look like one.
+        /// </remarks>
+        private const int MaxInnerPeriodGroupLength = 3;
+
+        /// <summary>
+        /// True for an abbreviation written with a period inside it - "U.S.", "a.m.", and the
+        /// Spanish doubled-letter plurals "EE.UU." / "AA.VV." (#13773). These are recognized by
+        /// shape, so they need no entry in the per-language abbreviation list (an entry could not
+        /// match anyway: the lookup above stops walking at the inner period).
+        /// </summary>
+        private static bool IsInnerPeriodAbbreviation(string text, int index)
+        {
+            // The letters directly before the period at index ("UU" of "EE.UU.").
+            var lastGroupEnd = index - 1;
+            var i = lastGroupEnd;
+            while (i >= 0 && char.IsLetterOrDigit(text[i]))
+            {
+                i--;
+            }
+
+            var lastGroupLength = lastGroupEnd - i;
+            if (lastGroupLength < 1 || lastGroupLength > MaxInnerPeriodGroupLength || i < 0 || text[i] != '.')
+            {
+                return false;
+            }
+
+            // ...and the letters before that inner period ("EE").
+            var firstGroupEnd = i - 1;
+            i = firstGroupEnd;
+            while (i >= 0 && char.IsLetterOrDigit(text[i]))
+            {
+                i--;
+            }
+
+            var firstGroupLength = firstGroupEnd - i;
+            if (firstGroupLength < 1 || firstGroupLength > MaxInnerPeriodGroupLength)
+            {
+                return false;
+            }
+
+            // The whole thing has to start at a word boundary, so a period landing mid-word does
+            // not turn its tail into an abbreviation.
+            return i < 0 || !char.IsLetterOrDigit(text[i]);
         }
 
         /// <summary>
