@@ -1,6 +1,7 @@
 using Avalonia.Controls;
 using Avalonia.Layout;
 using Avalonia.Media;
+using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 
 namespace Nikse.SubtitleEdit.Features.Tools.BatchConvert.FunctionViews;
@@ -24,6 +25,8 @@ public static class ViewAssaEmbedFonts
             TextWrapping = TextWrapping.Wrap,
         };
 
+        var checkBoxTrimFonts = UiUtil.MakeCheckBox(Se.Language.Assa.FontCollectorTrimFonts, vm, nameof(vm.AssaEmbedFontsTrim));
+
         return new StackPanel
         {
             Orientation = Orientation.Vertical,
@@ -33,6 +36,7 @@ public static class ViewAssaEmbedFonts
             {
                 labelHeader,
                 labelInfo,
+                checkBoxTrimFonts,
             }
         };
     }

@@ -93,6 +93,8 @@ public class SeBatchConvert
     public string AssaHeader { get; set; }
     public string AssaFooter { get; set; }
 
+    public bool AssaEmbedFontsTrim { get; set; }
+
     public int MergeShortLinesMaxCharacters { get; set; }
     public int MergeShortLinesMaxMillisecondsBetweenLines { get; set; }
     public bool MergeShortLinesOnlyContinuationLines { get; set; }

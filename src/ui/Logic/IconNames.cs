@@ -29,6 +29,7 @@ internal class IconNames
     public const string Close = "mdi-close";
     public const string ClosedCaption = "mdi-closed-caption";
     public const string Cogs = "mdi-cogs";
+    public const string ContentCut = "mdi-content-cut";
     public const string ContentSave = "mdi-content-save";
     public const string Copy = "mdi-content-copy";
     public const string Creation = "mdi-creation";
