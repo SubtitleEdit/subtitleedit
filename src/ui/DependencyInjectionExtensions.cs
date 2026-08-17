@@ -231,7 +231,6 @@ public static class DependencyInjectionExtensions
         collection.AddTransient<IBatchConvertItemSplitter, BatchConvertTransportStreamSplitter>();
         collection.AddTransient<IBluRayHelper, BluRayHelper>();
         collection.AddTransient<ICasingToggler, CasingToggler>();
-        collection.AddTransient<IChatLlmDownloadService, ChatLlmDownloadService>();
         collection.AddTransient<IColorService, ColorService>();
         collection.AddHttpClientWithProxy<ICrispAsrDownloadService, CrispAsrDownloadService>();
         collection.AddTransient<IDictionaryInitializer, DictionaryInitializer>();
