@@ -108,6 +108,10 @@ public partial class DownloadPaddleOcrViewModel : ObservableObject, IClosingClea
                             ProgressText = string.Format(Se.Language.General.DownloadingXPercent, pctString);
                         }), _cancellationTokenSource.Token);
 
+                        // The timer was stopped above and only restarted here, after _downloadTask
+                        // points at the new download - without this the chained part is never
+                        // observed and the dialog hangs at 100%.
+                        _timer.Start();
                     });
                     return;
                 }
