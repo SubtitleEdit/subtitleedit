@@ -21726,10 +21726,13 @@ public partial class MainViewModel :
         {
             _mediaInfo = FfmpegMediaInfo2.Parse(videoFileName);
             var videoFrameRate = (double)(_mediaInfo?.FramesRate ?? 23.976m);
-            SetSelectedFrameRate(videoFrameRate);
-            Se.Settings.General.CurrentFrameRate = videoFrameRate;
-            Configuration.Settings.General.CurrentFrameRate = videoFrameRate;
-            _updateAudioVisualizer = true;
+            if (videoFrameRate > 0)
+            {
+                SetSelectedFrameRate(videoFrameRate);
+                Se.Settings.General.CurrentFrameRate = videoFrameRate;
+                Configuration.Settings.General.CurrentFrameRate = videoFrameRate;
+                _updateAudioVisualizer = true;
+            }
 
             if (IsFormatAssa)
             {
@@ -21790,6 +21793,14 @@ public partial class MainViewModel :
             Se.Settings.General.CurrentFrameRate = frameRate;
             Configuration.Settings.General.CurrentFrameRate = frameRate;
             _updateAudioVisualizer = true;
+
+            if (Se.Settings.General.UseFrameMode)
+            {
+                foreach (var s in Subtitles)
+                {
+                    s.RefreshTimeCodes();
+                }
+            }
         }
     }
 
