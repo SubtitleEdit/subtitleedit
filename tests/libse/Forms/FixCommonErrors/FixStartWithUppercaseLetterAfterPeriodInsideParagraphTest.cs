@@ -67,6 +67,39 @@ public class FixStartWithUppercaseLetterAfterPeriodInsideParagraphTest
         Assert.Equal(input, Fix(input, "nl"));
     }
 
+    // Spanish doubles the letters to make an abbreviation plural - "EE.UU." (Estados Unidos),
+    // "AA.VV.", "RR.HH." - so the group before the inner period is two letters, not one (#13773).
+    [Theory]
+    [InlineData("Vivo en EE.UU. desde hace años.")]
+    [InlineData("Viajé a EE.UU. con ellos.")]
+    [InlineData("Publicado por AA.VV. el año pasado.")]
+    [InlineData("Habla con RR.HH. mañana.")]
+    public void Spanish_KeepsLowercaseAfterDoubledAbbreviation(string input)
+    {
+        Assert.Equal(input, Fix(input, "es"));
+    }
+
+    // An inner-period abbreviation is recognized at the very start of the line too - the old
+    // shape check needed three characters of run-up and silently skipped these.
+    [Theory]
+    [InlineData("U.S. army units arrived.")]
+    [InlineData("EE.UU. envió tropas.")]
+    public void KeepsLowercaseAfterMultiDotAbbreviationAtLineStart(string input)
+    {
+        Assert.Equal(input, Fix(input, "en"));
+    }
+
+    // A real sentence ending is still a sentence ending: two short words around a period are
+    // only an abbreviation when the period sits *inside* the token.
+    [Theory]
+    [InlineData("Vino a casa. ya es tarde.", "Vino a casa. Ya es tarde.")]
+    [InlineData("Se fue. no volvió.", "Se fue. No volvió.")]
+    [InlineData("Es la una. son las dos.", "Es la una. Son las dos.")]
+    public void Spanish_StillCapitalizesAfterASentenceEnding(string input, string expected)
+    {
+        Assert.Equal(expected, Fix(input, "es"));
+    }
+
     // The abbreviation list is matched case insensitively - subtitles use both "Dr." and "dr.".
     [Theory]
     [InlineData("I met dr. smith today.")]
