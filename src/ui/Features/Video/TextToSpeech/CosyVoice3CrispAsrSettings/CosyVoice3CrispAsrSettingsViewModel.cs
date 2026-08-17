@@ -39,6 +39,12 @@ public partial class CosyVoice3CrispAsrSettingsViewModel : ObservableObject
     [ObservableProperty] private string _f16BundleLabel = string.Empty;
     [ObservableProperty] private IBrush _f16BundleBrush = Grey();
 
+    [ObservableProperty] private string _rlQ4KBundleLabel = string.Empty;
+    [ObservableProperty] private IBrush _rlQ4KBundleBrush = Grey();
+
+    [ObservableProperty] private string _rlF16BundleLabel = string.Empty;
+    [ObservableProperty] private IBrush _rlF16BundleBrush = Grey();
+
     [ObservableProperty] private string _presetsLabel = string.Empty;
     [ObservableProperty] private string _voicesLabel = string.Empty;
 
@@ -155,6 +161,18 @@ public partial class CosyVoice3CrispAsrSettingsViewModel : ObservableObject
             IsEngineInstalled,
             label => F16BundleLabel = label,
             brush => F16BundleBrush = brush);
+
+        ApplyModelStatus(
+            CosyVoice3CrispAsr.AreModelsInstalled(CosyVoice3CrispAsr.ModelKeyRlQ4K),
+            IsEngineInstalled,
+            label => RlQ4KBundleLabel = label,
+            brush => RlQ4KBundleBrush = brush);
+
+        ApplyModelStatus(
+            CosyVoice3CrispAsr.AreModelsInstalled(CosyVoice3CrispAsr.ModelKeyRlF16),
+            IsEngineInstalled,
+            label => RlF16BundleLabel = label,
+            brush => RlF16BundleBrush = brush);
 
         try
         {

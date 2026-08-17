@@ -66,12 +66,21 @@ public class CosyVoice3CrispAsr : ITtsEngine
 
     // Two LLM quants — Q4_K is the lightweight default (~1.6 GB total), F16 the reference (~2.5 GB).
     // The label total covers every required companion (flow / hift / s3tok / campplus / voices).
+    // Each quant also comes as an RL talker (#13272): upstream ships two checkpoints for the same
+    // architecture, llm.pt and llm.rl.pt, the latter tuned by the authors for speech quality,
+    // pronunciation accuracy and generation stability. Only the talker differs - flow, HiFT,
+    // CAMPPlus, the speech tokenizer and the voice bank are shared - so an RL pick is the same
+    // bundle with a different LLM file and costs nothing extra beyond that one download.
     public const string ModelKeyQ4K = "Q4_K (~1.6 GB total)";
     public const string ModelKeyF16 = "F16 (~2.5 GB total)";
+    public const string ModelKeyRlQ4K = "RL Q4_K (~1.6 GB total)";
+    public const string ModelKeyRlF16 = "RL F16 (~2.5 GB total)";
     public const string DefaultModelKey = ModelKeyQ4K;
 
     public const string LlmQ4KFileName = "cosyvoice3-llm-q4_k.gguf";
     public const string LlmF16FileName = "cosyvoice3-llm-f16.gguf";
+    public const string LlmRlQ4KFileName = "cosyvoice3-llm-rl-q4_k.gguf";
+    public const string LlmRlF16FileName = "cosyvoice3-llm-rl-f16.gguf";
     public const string FlowF16FileName = "cosyvoice3-flow-f16.gguf";
     public const string HiftF16FileName = "cosyvoice3-hift-f16.gguf";
     public const string S3TokF16FileName = "cosyvoice3-s3tok-f16.gguf";
@@ -96,7 +105,7 @@ public class CosyVoice3CrispAsr : ITtsEngine
     /// </summary>
     public static string[] GetRequiredFileNames(string? modelKey) => new[]
     {
-        ResolveModelKey(modelKey) == ModelKeyF16 ? LlmF16FileName : LlmQ4KFileName,
+        GetLlmFileName(modelKey),
         FlowF16FileName,
         HiftF16FileName,
         S3TokF16FileName,
@@ -126,6 +135,10 @@ public class CosyVoice3CrispAsr : ITtsEngine
     {
         [LlmQ4KFileName] = 383891200L,
         [LlmF16FileName] = 1289653952L,
+        // The RL talkers are the same architecture and quantisation recipe, hence byte-identical
+        // sizes to their non-RL counterparts. The file name is what tells them apart.
+        [LlmRlQ4KFileName] = 383891200L,
+        [LlmRlF16FileName] = 1289653952L,
         [FlowF16FileName] = 665140992L,
         [HiftF16FileName] = 41601888L,
         [S3TokF16FileName] = 484406944L,
@@ -144,6 +157,8 @@ public class CosyVoice3CrispAsr : ITtsEngine
         return modelKey switch
         {
             ModelKeyF16 => ModelKeyF16,
+            ModelKeyRlQ4K => ModelKeyRlQ4K,
+            ModelKeyRlF16 => ModelKeyRlF16,
             _ => ModelKeyQ4K,
         };
     }
@@ -151,6 +166,8 @@ public class CosyVoice3CrispAsr : ITtsEngine
     public static string GetLlmFileName(string? modelKey) => ResolveModelKey(modelKey) switch
     {
         ModelKeyF16 => LlmF16FileName,
+        ModelKeyRlQ4K => LlmRlQ4KFileName,
+        ModelKeyRlF16 => LlmRlF16FileName,
         _ => LlmQ4KFileName,
     };
 
@@ -452,7 +469,7 @@ public class CosyVoice3CrispAsr : ITtsEngine
 
     public Task<string[]> GetRegions() => Task.FromResult(Array.Empty<string>());
 
-    public Task<string[]> GetModels() => Task.FromResult(new[] { ModelKeyQ4K, ModelKeyF16 });
+    public Task<string[]> GetModels() => Task.FromResult(new[] { ModelKeyQ4K, ModelKeyF16, ModelKeyRlQ4K, ModelKeyRlF16 });
 
     public Task<TtsLanguage[]> GetLanguages(Voice voice, string? model) => Task.FromResult(CosyVoice3Languages.All);
 
