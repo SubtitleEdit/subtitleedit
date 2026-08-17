@@ -27,28 +27,28 @@ public class SpeechToTextAudioMapTests
         Assert.Equal("-map 0:1?", SpeechToTextViewModel.BuildAudioMapParameter(Video.ToUpperInvariant(), 1, Video));
     }
 
-    // The reported failure: another video in the batch, where stream 1 is video, not audio. The
-    // audio-relative map is valid for any layout, and matches the first-in-container-order track
-    // the source-decoding engines (Purfview XXL, whisper-ctranslate2) pick - ffmpeg's automatic
-    // selection would follow the default disposition instead, which is not always the first track.
+    // The reported failure: another video in the batch, where stream 1 is video, not audio. No
+    // map at all - ffmpeg's automatic selection honors the default-track flag, the same track a
+    // fresh mpv plays and the main window follows on open (#13233). Not "-map 0:a:0?" (#13787,
+    // reverted): the first track in container order can be commentary or audio description.
     [Fact]
-    public void MapsFirstAudioTrack_ForAnotherFileInTheBatch()
+    public void MapsNothing_ForAnotherFileInTheBatch()
     {
-        Assert.Equal("-map 0:a:0?", SpeechToTextViewModel.BuildAudioMapParameter(@"G:\1.mp4", 1, Video));
+        Assert.Equal(string.Empty, SpeechToTextViewModel.BuildAudioMapParameter(@"G:\1.mp4", 1, Video));
     }
 
     // "Transcribe selected lines" feeds single-stream wav clips cut from the video.
     [Fact]
-    public void MapsFirstAudioTrack_ForADemuxedAudioClip()
+    public void MapsNothing_ForADemuxedAudioClip()
     {
-        Assert.Equal("-map 0:a:0?", SpeechToTextViewModel.BuildAudioMapParameter(@"C:\Temp\se_audioclip_x.wav", 1, null));
+        Assert.Equal(string.Empty, SpeechToTextViewModel.BuildAudioMapParameter(@"C:\Temp\se_audioclip_x.wav", 1, null));
     }
 
-    // No track picked (no video loaded) - first audio track, same as the direct-source engines.
+    // No track picked (no video loaded) - ffmpeg selects the default-flagged audio itself.
     [Fact]
-    public void MapsFirstAudioTrack_WhenNoTrackWasChosen()
+    public void MapsNothing_WhenNoTrackWasChosen()
     {
-        Assert.Equal("-map 0:a:0?", SpeechToTextViewModel.BuildAudioMapParameter(Video, -1, Video));
+        Assert.Equal(string.Empty, SpeechToTextViewModel.BuildAudioMapParameter(Video, -1, Video));
     }
 
     // Track 0 is a real choice, not "unset" - the reporter's file has its audio there.

@@ -4119,8 +4119,8 @@ public partial class SpeechToTextViewModel : ObservableObject
     }
 
     /// <summary>
-    /// The "-map" argument for extracting <paramref name="inputFileName"/>'s audio: the picked
-    /// stream for the file it was picked from, the first audio track for everything else.
+    /// The "-map" argument for extracting <paramref name="inputFileName"/>'s audio, or an empty
+    /// string to leave the choice to ffmpeg's automatic stream selection.
     /// </summary>
     /// <remarks>
     /// A stream index only addresses a stream in the file it was read from, so it is applied to
@@ -4134,15 +4134,12 @@ public partial class SpeechToTextViewModel : ObservableObject
     /// does not contain any stream", ffmpeg exit -22, and the run aborted with "Generated audio
     /// file not found" (#13781).
     ///
-    /// Every other input gets the audio-relative "-map 0:a:0?", which is valid for any stream
-    /// layout. Leaving the choice to ffmpeg's automatic selection is not the same thing: it
-    /// prefers the stream with the default disposition (verified on the bundled ffmpeg 7.1.1 -
-    /// a default-flagged stereo track beats a non-flagged 5.1), while the engines that decode
-    /// the source file themselves take the first audio track in container order - Purfview XXL
-    /// per its author (whisper-standalone-win #185), whisper-ctranslate2 via faster-whisper's
-    /// hardcoded "container.decode(audio=0)". On a file whose default-flagged track is not the
-    /// first, the same batch would transcribe different tracks depending on the engine; mapping
-    /// the first audio track keeps every path on the same one.
+    /// Do not "fix" the no-map fallback to "-map 0:a:0?" (tried in #13787, reverted): ffmpeg's
+    /// automatic selection prefers the stream with the default disposition (verified on the
+    /// bundled ffmpeg 7.1.1 - a default-flagged stereo track beats a non-flagged 5.1), and that
+    /// is the wanted behavior. It is the same track a fresh mpv plays and the main window follows
+    /// on open (#13233 - the first track can be commentary or audio description), while the first
+    /// track in container order is only mpv's last-resort fallback.
     /// </remarks>
     internal static string BuildAudioMapParameter(string inputFileName, int audioTrackNumber, string? audioTrackVideoFileName)
     {
@@ -4150,7 +4147,7 @@ public partial class SpeechToTextViewModel : ObservableObject
             string.IsNullOrEmpty(audioTrackVideoFileName) ||
             !string.Equals(inputFileName, audioTrackVideoFileName, StringComparison.OrdinalIgnoreCase))
         {
-            return "-map 0:a:0?";
+            return string.Empty;
         }
 
         return $"-map 0:{audioTrackNumber}?";
