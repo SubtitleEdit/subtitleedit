@@ -8,6 +8,21 @@ public partial class ReviewSuggestionItem : ObservableObject
 {
     [ObservableProperty] private bool _isSelected;
 
+    /// <summary>
+    /// Set when this suggestion shares its sentence unit with another suggestion - the whole unit
+    /// is checked and applied as one, so the row says which lines it drags along with it. Empty
+    /// for a suggestion that stands alone. See <see cref="ReviewUnitLinks"/>.
+    /// </summary>
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(IsLinked))]
+    [NotifyPropertyChangedFor(nameof(ApplyAccessibleName))]
+    private string _linkedLinesText = string.Empty;
+
+    public bool IsLinked => !string.IsNullOrEmpty(LinkedLinesText);
+
+    /// <summary>Name for the apply checkbox - a screen reader gets the linked lines too, not just the category.</summary>
+    public string ApplyAccessibleName => IsLinked ? $"{CategoryDisplay} - {LinkedLinesText}" : CategoryDisplay;
+
     public int Number { get; init; }
     public int ParagraphIndex { get; init; }
     public int UnitId { get; init; }

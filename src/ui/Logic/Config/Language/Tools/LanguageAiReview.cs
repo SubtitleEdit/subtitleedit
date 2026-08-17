@@ -22,6 +22,7 @@ public class LanguageAiReview
     public string XNeedACloserLook { get; set; }
     public string LineX { get; set; }
     public string LinesXToY { get; set; }
+    public string LinkedLinesHint { get; set; }
     public string LargeChangeWarning { get; set; }
     public string MismatchWarning { get; set; }
     public string EngineError { get; set; }
@@ -49,6 +50,7 @@ public class LanguageAiReview
         XNeedACloserLook = "{0} suggestion(s) need a closer look";
         LineX = "Line {0}";
         LinesXToY = "Lines {0}-{1}";
+        LinkedLinesHint = "{0} are one sentence - they are applied together";
         LargeChangeWarning = "Large change - looks like a rewrite, review carefully";
         MismatchWarning = "Does not resemble the original - may belong to a different line";
         EngineError = "The AI engine could not be reached: {0}";

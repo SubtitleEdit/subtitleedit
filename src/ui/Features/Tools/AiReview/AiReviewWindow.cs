@@ -228,12 +228,23 @@ public class AiReviewWindow : Window
                     {
                         Background = Brushes.Transparent,
                         Padding = new Thickness(4),
-                        Child = new CheckBox
+                        Child = new StackPanel
                         {
-                            Focusable = false,
-                            [!ToggleButton.IsCheckedProperty] = new Binding(nameof(ReviewSuggestionItem.IsSelected)),
-                            [!AutomationProperties.NameProperty] = new Binding(nameof(ReviewSuggestionItem.CategoryDisplay)),
+                            Orientation = Orientation.Horizontal,
+                            Spacing = 4,
                             HorizontalAlignment = HorizontalAlignment.Center,
+                            VerticalAlignment = VerticalAlignment.Center,
+                            Children =
+                            {
+                                new CheckBox
+                                {
+                                    Focusable = false,
+                                    [!ToggleButton.IsCheckedProperty] = new Binding(nameof(ReviewSuggestionItem.IsSelected)),
+                                    [!AutomationProperties.NameProperty] = new Binding(nameof(ReviewSuggestionItem.ApplyAccessibleName)),
+                                    VerticalAlignment = VerticalAlignment.Center,
+                                },
+                                MakeLinkedLinesIcon(),
+                            },
                         },
                     }),
                     Width = new GridLength(80), // content-sized (Auto) on the DataGrid; TableView treats Auto as star
@@ -506,6 +517,30 @@ public class AiReviewWindow : Window
         };
         Closing += delegate { vm.OnClosing(); };
         KeyDown += (_, e) => vm.OnKeyDown(e);
+    }
+
+    /// <summary>
+    /// The marker on a row whose sentence unit holds more than one suggestion: checking such a row
+    /// also checks its siblings (they are applied as one), which reads as "one click selected two
+    /// rows" without a visible reason (issue #13775). Bound, not built from the item, because a
+    /// unit only becomes linked when a later reply adds its second suggestion.
+    /// </summary>
+    private static Control MakeLinkedLinesIcon()
+    {
+        var icon = new Optris.Icons.Avalonia.Icon
+        {
+            Value = "mdi-link-variant",
+            FontSize = 13,
+            Opacity = 0.7,
+            VerticalAlignment = VerticalAlignment.Center,
+        };
+        icon.Bind(IsVisibleProperty, new Binding(nameof(ReviewSuggestionItem.IsLinked)));
+        if (Se.Settings.Appearance.ShowHints)
+        {
+            icon.Bind(ToolTip.TipProperty, new Binding(nameof(ReviewSuggestionItem.LinkedLinesText)));
+        }
+
+        return icon;
     }
 
     private static IBrush GetCategoryBrush(ReviewCategory category)

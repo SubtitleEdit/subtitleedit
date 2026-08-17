@@ -1478,6 +1478,7 @@
       "xNeedACloserLook": "{0} suggestion(s) need a closer look",
       "lineX": "Line {0}",
       "linesXToY": "Lines {0}-{1}",
+      "linkedLinesHint": "{0} are one sentence - they are applied together",
       "largeChangeWarning": "Large change - looks like a rewrite, review carefully",
       "mismatchWarning": "Does not resemble the original - may belong to a different line",
       "engineError": "The AI engine could not be reached: {0}",

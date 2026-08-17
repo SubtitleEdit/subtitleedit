@@ -178,7 +178,18 @@ public partial class AiReviewViewModel : ObservableObject
 
     partial void OnSelectedSuggestionChanged(ReviewSuggestionItem? value)
     {
-        if (value == null)
+        UpdateReasonText();
+    }
+
+    /// <summary>
+    /// Rebuilds the reason strip for the selected suggestion. Also called while a review is still
+    /// streaming in: SelectionMode.AlwaysSelected picks the first suggestion the moment it arrives,
+    /// and the rest of its sentence unit only shows up in later replies - the strip said "Line 7"
+    /// for a fix that in the end drags line 8 along with it (issue #13775).
+    /// </summary>
+    private void UpdateReasonText()
+    {
+        if (SelectedSuggestion is not { } value)
         {
             ReasonText = string.Empty;
             return;
@@ -562,6 +573,10 @@ public partial class AiReviewViewModel : ObservableObject
             Suggestions.Add(item);
         }
 
+        // A unit only becomes a linked one when its second suggestion arrives, so recompute the
+        // whole set - the earlier rows need the link marker too.
+        ReviewUnitLinks.Update(_allSuggestions);
+        UpdateReasonText();
         UpdateChipCounts();
         UpdateSummary();
     }

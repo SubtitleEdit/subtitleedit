@@ -53,7 +53,7 @@ When a video is loaded, a **Play current** button appears at the bottom left. It
 
 ## Sentences across multiple lines
 
-Lines are grouped into sentence units, so a sentence that continues over several subtitles is always reviewed as a whole, and the model sees a couple of surrounding lines as read-only context. Corrections never move words between lines, so timing and reading speed are unaffected. Suggestions belonging to the same sentence are checked and unchecked together.
+Lines are grouped into sentence units, so a sentence that continues over several subtitles is always reviewed as a whole, and the model sees a couple of surrounding lines as read-only context. Corrections never move words between lines, so timing and reading speed are unaffected. Suggestions belonging to the same sentence are checked and unchecked together - such rows carry a link icon next to their checkbox naming the lines they are applied with, and selecting one shows the whole span ("Lines 7-8") in the reason strip below the grid.
 
 ## The prompt
 
