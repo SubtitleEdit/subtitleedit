@@ -841,8 +841,12 @@
     <!-- Terminaciones ción/sión -->
     <RegEx find="([sc]i)o(n)\b" replaceWith="$1ó$2" />
     <RegEx find="([SC]I)O(N)\b" replaceWith="$1Ó$2" />
-    <!-- "i" en vez de "l" en terminaciones «clón» -->
-    <RegEx find="clón\b" replaceWith="ción" />
+    <!-- "l" en vez de "i" en terminaciones «cclón» y «uclón» (acclón, soluclón).
+         Sin diccionario esta es la única red de seguridad, así que sólo se aplica
+         donde no existe ninguna palabra real: «-cción» y «-ución». El caso general
+         («estaclón», «canclón»...) está más abajo, protegido por el corrector, para
+         no romper palabras reales como «ciclón» o «anticiclón» (#13701). -->
+    <RegEx find="([cu])clón\b" replaceWith="$1ción" />
     <!-- "si" en vez de "sl" -->
     <RegEx find="\b([Ss])(l)\b" replaceWith="$1i" />
     <!-- Para corregir por ej. raclones, perforaclones, opclones, etc -->
@@ -965,5 +969,9 @@
 
     <!-- word-initial ii to ll (iiegar to llegar) -->
     <RegEx find="\bii([a-záéíóúñü]+)\b" spellCheck="ll$1" replaceWith="ll$1" />
+
+    <!-- Terminación «clón» por «ción»: estaclón to estación, canclón to canción (#13701).
+         Palabras reales como «ciclón», «anticiclón» o «choclón» las protege el corrector. -->
+    <RegEx find="\b([A-ZÁÉÍÓÚÑÜa-záéíóúñü]+)clón\b" spellCheck="$1ción" replaceWith="$1ción" />
   </RegularExpressionsIfSpelledCorrectly>
 </OCRFixReplaceList>
