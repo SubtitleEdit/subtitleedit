@@ -2060,9 +2060,9 @@ public partial class SpeechToTextViewModel : ObservableObject
         }
 
         var whisperFolder = engine.GetAndCreateWhisperFolder();
-        var srtCandidates = GetResultFileCandidates(".srt", waveFileName, videoFileName, whisperFolder, outputText);
-        var vttCandidates = GetResultFileCandidates(".vtt", waveFileName, videoFileName, whisperFolder, outputText);
-        var assaCandidates = GetResultFileCandidates(".ass", waveFileName, videoFileName, whisperFolder, outputText);
+        var srtCandidates = GetResultFileCandidates(".srt", waveFileName, videoFileName, whisperFolder, outputText, _sttTempFolder);
+        var vttCandidates = GetResultFileCandidates(".vtt", waveFileName, videoFileName, whisperFolder, outputText, _sttTempFolder);
+        var assaCandidates = GetResultFileCandidates(".ass", waveFileName, videoFileName, whisperFolder, outputText, _sttTempFolder);
 
         var srtFileName = srtCandidates.FirstOrDefault(File.Exists);
         var vttFileName = vttCandidates.FirstOrDefault(File.Exists);
@@ -2114,7 +2114,7 @@ public partial class SpeechToTextViewModel : ObservableObject
         return true;
     }
 
-    private static List<string> GetResultFileCandidates(string ext, string waveFileName, string videoFileName, string whisperFolder, ConcurrentQueue<string> outputText)
+    private static List<string> GetResultFileCandidates(string ext, string waveFileName, string videoFileName, string whisperFolder, ConcurrentQueue<string> outputText, string sttTempFolder = "")
     {
         var candidates = new List<string>
         {
@@ -2134,6 +2134,14 @@ public partial class SpeechToTextViewModel : ObservableObject
         if (waveFileName.EndsWith(".wav", StringComparison.OrdinalIgnoreCase))
         {
             candidates.Add(waveFileName.Remove(waveFileName.Length - 4) + ext);
+        }
+
+        if (!string.IsNullOrEmpty(sttTempFolder))
+        {
+            // A pre-extracted 16 kHz WAV skips extraction, so the engines' contained output lands
+            // in the per-run folder under the USER'S file name - no other candidate covers that.
+            candidates.Add(Path.Combine(sttTempFolder, Path.GetFileNameWithoutExtension(videoFileName) + ext));
+            candidates.Add(Path.Combine(sttTempFolder, Path.GetFileNameWithoutExtension(waveFileName) + ext));
         }
 
         if (!string.IsNullOrEmpty(whisperFolder))
@@ -3458,12 +3466,16 @@ public partial class SpeechToTextViewModel : ObservableObject
             inputFile = videoFileName;
         }
 
-        if (!string.Equals(inputFile, waveFileName, StringComparison.OrdinalIgnoreCase))
+        if (CanEngineReadSourceFileDirectly(engine) &&
+            !inputFile.StartsWith(GetSttTempFolder(), StringComparison.OrdinalIgnoreCase))
         {
             // Both engines save their output next to the input file, so pointing them at the user's
             // own media would write "<video>.srt" into that folder - overwriting any subtitle already
             // sitting there, which SE then deletes again as one of its temp files. Send the output to
-            // the per-run folder instead, the same isolation the extracted WAV gets (#11837).
+            // the per-run folder instead, the same isolation the extracted WAV gets (#11837). The
+            // input is the user's own file both when the source file is sent directly and when a
+            // pre-extracted 16 kHz WAV skipped the extraction step, so key on the location, not on
+            // which of the two paths was taken.
             engineOutputFolder = GetSttTempFolder();
         }
 
@@ -3896,6 +3908,9 @@ public partial class SpeechToTextViewModel : ObservableObject
                 if (waveFile.Header != null && waveFile.Header.SampleRate == 16000)
                 {
                     _videoFileName = videoFileName;
+                    // No extraction happened - clear a stale name from an earlier run so result
+                    // discovery falls back to the video file name deterministically.
+                    _audioFileName = string.Empty;
                     var startOk = TranscribeViaWhisper(videoFileName, _videoFileName);
                     return startOk;
                 }
