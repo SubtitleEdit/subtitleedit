@@ -1730,7 +1730,7 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
                 // styles that are actually written and the embedding is not overwritten.
                 if (_config.AssaEmbedFonts.IsActive)
                 {
-                    AssaFontEmbedder.EmbedUsedFonts(s, cancellationToken, _fontFilesCache);
+                    AssaFontEmbedder.EmbedUsedFonts(s, cancellationToken, _fontFilesCache, _config.AssaEmbedFonts.TrimFonts);
                 }
             }
 

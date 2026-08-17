@@ -255,6 +255,9 @@ public partial class BatchConvertViewModel : ObservableObject, IClosingCleanup
     [ObservableProperty] private bool _assaChangeStyleTrimUnusedStyles;
 
     // Merge short lines
+    // Embed fonts (ASSA)
+    [ObservableProperty] private bool _assaEmbedFontsTrim;
+
     [ObservableProperty] private int _mergeShortLinesMaxCharacters;
     [ObservableProperty] private int _mergeShortLinesMaxMillisecondsBetweenLines;
     [ObservableProperty] private bool _mergeShortLinesOnlyContinuationLines;
@@ -680,6 +683,9 @@ public partial class BatchConvertViewModel : ObservableObject, IClosingCleanup
         Se.Settings.Tools.BatchConvert.AssaChangeStyleToStyle = AssaChangeStyleToStyle ?? string.Empty;
         Se.Settings.Tools.BatchConvert.AssaChangeStyleTrimUnusedStyles = AssaChangeStyleTrimUnusedStyles;
 
+        // Embed fonts
+        Se.Settings.Tools.BatchConvert.AssaEmbedFontsTrim = AssaEmbedFontsTrim;
+
         // Merge short lines
         Se.Settings.Tools.BatchConvert.MergeShortLinesMaxCharacters = MergeShortLinesMaxCharacters;
         Se.Settings.Tools.BatchConvert.MergeShortLinesMaxMillisecondsBetweenLines = MergeShortLinesMaxMillisecondsBetweenLines;
@@ -935,6 +941,9 @@ public partial class BatchConvertViewModel : ObservableObject, IClosingCleanup
         AssaChangeStyleFromStyle = Se.Settings.Tools.BatchConvert.AssaChangeStyleFromStyle ?? string.Empty;
         AssaChangeStyleToStyle = Se.Settings.Tools.BatchConvert.AssaChangeStyleToStyle ?? string.Empty;
         AssaChangeStyleTrimUnusedStyles = Se.Settings.Tools.BatchConvert.AssaChangeStyleTrimUnusedStyles;
+
+        // Embed fonts
+        AssaEmbedFontsTrim = Se.Settings.Tools.BatchConvert.AssaEmbedFontsTrim;
 
         // Merge short lines
         MergeShortLinesMaxCharacters = Se.Settings.Tools.BatchConvert.MergeShortLinesMaxCharacters;
@@ -2659,6 +2668,7 @@ public partial class BatchConvertViewModel : ObservableObject, IClosingCleanup
             AssaEmbedFonts = new BatchConvertConfig.AssaEmbedFontsSettings
             {
                 IsActive = activeFunctions.Contains(BatchConvertFunctionType.AssaEmbedFonts),
+                TrimFonts = AssaEmbedFontsTrim,
             },
 
             MergeShortLines = new BatchConvertConfig.MergeShortLinesSettings

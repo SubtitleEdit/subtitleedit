@@ -55,6 +55,15 @@ public static class FontTrimmer
         }
     }
 
+    /// <summary>User-facing text for a skip reason (used by the attachments window and the font collector).</summary>
+    public static string GetSkipReasonDisplay(TrimSkipReason reason) => reason switch
+    {
+        TrimSkipReason.NotTrueType => Se.Language.Assa.TrimFontsReasonNotTrueType,
+        TrimSkipReason.FontCollection => Se.Language.Assa.TrimFontsReasonFontCollection,
+        TrimSkipReason.NoSavings => Se.Language.Assa.TrimFontsReasonNoSavings,
+        _ => Se.Language.Assa.TrimFontsReasonCouldNotParse,
+    };
+
     private const uint TagHead = 0x68656164; // 'head'
     private const uint TagMaxp = 0x6D617870; // 'maxp'
     private const uint TagLoca = 0x6C6F6361; // 'loca'

@@ -64,6 +64,15 @@ public class LanguageAssa
     public string FontCollectorAndXMoreFonts { get; set; }
     public string FontCollectorNoFontsToEmbed { get; set; }
     public string FontCollectorXFontFilesEmbedded { get; set; }
+    public string FontCollectorTrimFonts { get; set; }
+    public string TrimFontsDotDotDot { get; set; }
+    public string TrimFontsPromptX { get; set; }
+    public string TrimFontsNoFontsToTrim { get; set; }
+    public string TrimFontsXFontsTrimmedSavedYZ { get; set; }
+    public string TrimFontsReasonNotTrueType { get; set; }
+    public string TrimFontsReasonFontCollection { get; set; }
+    public string TrimFontsReasonCouldNotParse { get; set; }
+    public string TrimFontsReasonNoSavings { get; set; }
 
     // Resolution Resampler
     public string ResolutionResamplerTitle { get; set; }
@@ -293,6 +302,15 @@ public class LanguageAssa
         FontCollectorAndXMoreFonts = "...and {0} more";
         FontCollectorNoFontsToEmbed = "No new fonts to embed - the needed fonts are already embedded or were not found.";
         FontCollectorXFontFilesEmbedded = "{0} font file(s) embedded in the subtitle.";
+        FontCollectorTrimFonts = "Only embed used characters (trim fonts)";
+        TrimFontsDotDotDot = "Trim fonts to used characters...";
+        TrimFontsPromptX = "Trim {0} embedded font(s) to only the characters currently used?\n\nText added to the subtitle later may show missing characters, so trim as a final step.";
+        TrimFontsNoFontsToTrim = "No embedded fonts to trim.";
+        TrimFontsXFontsTrimmedSavedYZ = "{0} font(s) trimmed, saving {1}.\n\n{2}";
+        TrimFontsReasonNotTrueType = "only TrueType fonts can be trimmed";
+        TrimFontsReasonFontCollection = "font collections are not supported";
+        TrimFontsReasonCouldNotParse = "the font could not be read";
+        TrimFontsReasonNoSavings = "no size reduction";
         ResolutionResamplerTitle = "Change resolution";
         ResolutionResamplerSourceRes = "Source resolution";
         ResolutionResamplerTargetRes = "Target resolution";

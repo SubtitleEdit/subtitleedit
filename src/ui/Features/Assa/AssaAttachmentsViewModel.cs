@@ -189,6 +189,87 @@ public partial class AssaAttachmentsViewModel : ObservableObject
         }
     }
 
+    /// <summary>
+    /// Trims all embedded font attachments to the glyphs the current subtitle text uses
+    /// (see <see cref="FontTrimmer"/>), after a confirmation - the trimmed fonts cannot
+    /// display characters that are added to the subtitle later.
+    /// </summary>
+    [RelayCommand]
+    private async Task TrimFontsToUsedCharacters()
+    {
+        if (Window == null)
+        {
+            return;
+        }
+
+        var fonts = Attachments.Where(a => a.Category == Se.Language.General.Fonts && a.Bytes.Length > 0).ToList();
+        if (fonts.Count == 0)
+        {
+            await MessageBox.Show(Window, Se.Language.Assa.Attachments, Se.Language.Assa.TrimFontsNoFontsToTrim, MessageBoxButtons.OK);
+            return;
+        }
+
+        var answer = await MessageBox.Show(
+            Window,
+            Se.Language.Assa.Attachments,
+            string.Format(Se.Language.Assa.TrimFontsPromptX, fonts.Count),
+            MessageBoxButtons.YesNo,
+            MessageBoxIcon.Question);
+        if (answer != MessageBoxResult.Yes)
+        {
+            return;
+        }
+
+        var usedTextLines = AssaFontEmbedder.GetUsedTextLines(_subtitle);
+        var selectedFileName = SelectedAttachment?.FileName;
+        long savedBytes = 0;
+        var trimmedCount = 0;
+        var reportLines = new List<string>();
+        foreach (var font in fonts)
+        {
+            var result = FontTrimmer.Trim(font.Bytes, usedTextLines);
+            if (!result.Trimmed)
+            {
+                reportLines.Add($"{font.FileName}: {FontTrimmer.GetSkipReasonDisplay(result.SkipReason)}");
+                continue;
+            }
+
+            savedBytes += font.Bytes.Length - result.Bytes.Length;
+            trimmedCount++;
+            reportLines.Add(
+                $"{font.FileName}: {Utilities.FormatBytesToDisplayFileSize(font.Bytes.Length)} -> " +
+                Utilities.FormatBytesToDisplayFileSize(result.Bytes.Length));
+
+            // replace the row so the grid picks up the new size (the item is not observable)
+            var trimmed = new AssaAttachmentItem
+            {
+                FileName = font.FileName,
+                Category = font.Category,
+                Bytes = result.Bytes,
+                Content = UUEncoding.UUEncode(result.Bytes).Trim(),
+                Size = Utilities.FormatBytesToDisplayFileSize(result.Bytes.Length),
+                FontName = font.FontName,
+            };
+            Attachments[Attachments.IndexOf(font)] = trimmed;
+            if (font.FileName == selectedFileName)
+            {
+                SelectedAttachment = trimmed;
+            }
+        }
+
+        UpdatePreview();
+
+        await MessageBox.Show(
+            Window,
+            Se.Language.Assa.Attachments,
+            string.Format(
+                Se.Language.Assa.TrimFontsXFontsTrimmedSavedYZ,
+                trimmedCount,
+                Utilities.FormatBytesToDisplayFileSize(savedBytes),
+                string.Join(Environment.NewLine, reportLines)),
+            MessageBoxButtons.OK);
+    }
+
     [RelayCommand]
     private void AttachmentRemove()
     {
